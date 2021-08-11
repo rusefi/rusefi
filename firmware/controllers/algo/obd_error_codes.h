@@ -19,6 +19,7 @@ extern "C"
 
 // Back in the day we wanted enums to be 32 bit integers.
 // as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
+#define ENUM_16_BITS 60000
 #define ENUM_32_BITS 2000000000
 
 typedef enum {
@@ -1982,7 +1983,7 @@ typedef enum {
 	CUSTOM_ERR_6628 = 6628,
 	CUSTOM_STACK_6629 = 6629,
 
-	CUSTOM_IGN_MATH_STATE = 6630,
+	CUSTOM_ERR_6030 = 6630,
 	CUSTOM_ERR_6631 = 6631,
 	CUSTOM_ERR_6632 = 6632,
 	CUSTOM_ANGLE_NAN = 6633,
@@ -2083,7 +2084,7 @@ typedef enum {
 	CUSTOM_NO_ETB_FOR_IDLE = 6723,
 	CUSTOM_ERR_TLE8888_RESPONSE = 6724,
 	CUSTOM_ERR_CJ125_DIAG = 6725,
-	CUSTOM_ERR_VVT_OUT_OF_RANGE = 6726,
+	NO_LONGER_USED_CUSTOM_ERR_VVT_OUT_OF_RANGE = 6726,
 	CUSTOM_VVT_MODE_NOT_SELECTED = 6727,
 	CUSTOM_ERR_6728 = 6728,
 	CUSTOM_ERR_6729 = 6729,

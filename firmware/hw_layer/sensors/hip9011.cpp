@@ -32,22 +32,14 @@
  * @Spilly
  */
 
-#include "global.h"
-#include "engine.h"
-#include "settings.h"
+#include "pch.h"
+
 #include "hardware.h"
-#include "rpm_calculator.h"
 #include "trigger_central.h"
 #include "hip9011_logic.h"
 #include "hip9011.h"
-#include "adc_inputs.h"
-#include "perf_trace.h"
-#include "thread_priority.h"
-
-#include "engine_controller.h"
 
 #if EFI_PROD_CODE
-#include "pin_repository.h"
 #include "mpu_util.h"
 #include "os_util.h"
 #endif
@@ -209,8 +201,6 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 
 	return ret;
 }
-
-EXTERN_ENGINE;
 
 static int hip_wake_driver(void)
 {

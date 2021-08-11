@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "timer.h"
-#include "global.h"
 
 void Timer::reset() {
 	m_lastReset = getTimeNowNt();
@@ -35,7 +36,7 @@ float Timer::getElapsedSeconds() const {
 }
 
 float Timer::getElapsedSeconds(efitick_t nowNt) const {
-	return 1e-6 * getElapsedUs(nowNt);
+	return 1 / US_PER_SECOND_F * getElapsedUs(nowNt);
 }
 
 float Timer::getElapsedUs(efitick_t nowNt) const {

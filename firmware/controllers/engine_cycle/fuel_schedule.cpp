@@ -4,12 +4,8 @@
  * Handles injection scheduling
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
+#include "pch.h"
 #include "event_registry.h"
-
-EXTERN_ENGINE;
 
 #if EFI_ENGINE_CONTROL
 

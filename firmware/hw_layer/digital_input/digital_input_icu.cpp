@@ -24,15 +24,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "digital_input_icu.h"
+#include "pch.h"
 
-#include "fl_stack.h"
+#include "digital_input_icu.h"
 
 #if EFI_ICU_INPUTS && HAL_USE_ICU
 
 #include "mpu_util.h"
 #include "eficonsole.h"
-#include "pin_repository.h"
 
 static void icuWidthCallback(ICUDriver *driver);
 static void icuPeriordCallBack(ICUDriver *driver);
@@ -206,9 +205,8 @@ ICUDriver * getInputCaptureDriver(const char *msg, brain_pin_e hwPin) {
 	return nullptr;
 }
 
-static void turnOnCapturePin(const char *msg, brain_pin_e brainPin) {
-	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
-	if (driver != NULL) {
+static void turnOnCapturePin(const char *msg, ICUDriver* driver, brain_pin_e brainPin) {
+	if (driver) {
 		iomode_t mode = (iomode_t) PAL_MODE_ALTERNATE(getAlternateFunctions(driver));
 		efiSetPadMode(msg, brainPin, mode);
 	}
@@ -271,7 +269,7 @@ static void startInputDriver(const char *msg, /*nullable*/digital_input_s *hw) {
 digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	ICUDriver *driver = getInputCaptureDriver(msg, brainPin);
 	if (!driver) {
-		warning(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "w_not input pin");
+		firmwareError(CUSTOM_ERR_INVALID_INPUT_ICU_PIN, "Invalid %s input pin: %s", msg, hwPortname(brainPin));
 		return nullptr;
 	}
 
@@ -281,7 +279,7 @@ digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
 	hw->started = false;
 	hw->brainPin = brainPin;
 	hw->driver = driver;
-	turnOnCapturePin(msg, brainPin);
+	turnOnCapturePin(msg, driver, brainPin);
 
 	startInputDriver(msg, hw);
 	return hw;

@@ -1,9 +1,5 @@
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
 #include "speed_density_airmass.h"
-#include "perf_trace.h"
-
-EXTERN_ENGINE;
 
 AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 	ScopePerf perf(PE::GetSpeedDensityFuel);

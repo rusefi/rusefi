@@ -9,14 +9,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #include "ford_aspire.h"
 
-#include "allsensors.h"
-#include "engine_math.h"
 #include "advance_map.h"
-#include "engine_configuration.h"
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 static const int8_t default_aspire_timing_table[16][16] = {
@@ -39,8 +36,6 @@ static const int8_t default_aspire_timing_table[16][16] = {
 /* Load 4.400000 */{	-0,	-5,	-0,	-0,	-0,	-0,	-1,	+7,	-1,	-1,	-2,	-2,	-2,	+12,	+12,	+12}
 };
 #endif
-
-EXTERN_CONFIG;
 
 static void setDefaultAspireMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
@@ -89,6 +84,8 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_FORD_ASPIRE;
+
+	engineConfiguration->triggerInputDebugPins[0] = GPIOC_15;
 
 	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
 	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;

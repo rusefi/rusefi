@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "trigger_decoder.h"
-#include "engine_math.h"
-#include "allsensors.h"
-#include "engine_controller.h"
 #include "ford_aspire.h"
 #include "dodge_neon.h"
 #include "ford_1995_inline_6.h"
@@ -21,7 +19,6 @@
 #include "fuel_math.h"
 #include "spark_logic.h"
 #include "trigger_universal.h"
-#include "sensor.h"
 
 using ::testing::_;
 

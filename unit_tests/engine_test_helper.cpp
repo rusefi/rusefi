@@ -5,18 +5,16 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
-#include "engine_test_helper.h"
-#include "stddef.h"
+#include "pch.h"
+
 #include "trigger_decoder.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "accel_enrichment.h"
-#include "allsensors.h"
-#include "engine_controller.h"
 #include "advance_map.h"
-#include "sensor.h"
 #include "tooth_logger.h"
 #include "logicdata.h"
+#include "hardware.h"
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -111,6 +109,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->mockAirmassModel = &mockAirmass;
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
+
+	initHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 EngineTestHelper::~EngineTestHelper() {
@@ -172,7 +173,7 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	handleShaftSignal(0, true, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
@@ -180,7 +181,7 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	handleShaftSignal(0, false, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {

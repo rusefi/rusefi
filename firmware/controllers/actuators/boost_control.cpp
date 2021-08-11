@@ -4,18 +4,11 @@
  *  Created on: 13. des. 2019
  *      Author: Ola Ruud
  */
-#include "global.h"
+#include "pch.h"
 
 #if EFI_BOOST_CONTROL
 
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
-#include "engine.h"
 #include "boost_control.h"
-#include "sensor.h"
-#include "pin_repository.h"
-#include "pwm_generator_logic.h"
 #include "pid_auto_tune.h"
 #include "electronic_throttle.h"
 
@@ -24,8 +17,6 @@
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
 #endif
-
-EXTERN_ENGINE;
 
 static boostOpenLoop_Map3D_t boostMapOpen;
 static boostOpenLoop_Map3D_t boostMapClosed;

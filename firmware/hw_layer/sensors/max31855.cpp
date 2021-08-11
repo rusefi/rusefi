@@ -12,15 +12,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "max31855.h"
 
 #include "hardware.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
-#include "settings.h"
-#include "pin_repository.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_MAX_31855
@@ -30,8 +28,6 @@
 static SPIDriver *driver;
 
 static SPIConfig spiConfig[EGT_CHANNEL_COUNT];
-
-EXTERN_ENGINE;
 
 static void showEgtInfo(void) {
 #if EFI_PROD_CODE

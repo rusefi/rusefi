@@ -1,18 +1,15 @@
+#include "pch.h"
+
 #include "lua.hpp"
 #include "lua_hooks.h"
 
-#include "engine.h"
-#include "loggingcentral.h"
-#include "sensor.h"
-#include "adc_inputs.h"
-#include "efilib.h"
-#include "tunerstudio_outputs.h"
-#include "pwm_generator_logic.h"
+#include "fuel_math.h"
+#include "airmass.h"
+#include "lua_airmass.h"
+#include "can_msg_tx.h"
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
-
-EXTERN_ENGINE;
 
 static int lua_efi_print(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
@@ -62,6 +59,68 @@ static int lua_table3d(lua_State* l) {
 
 	lua_pushnumber(l, result);
 	return 1;
+}
+
+static int lua_txCan(lua_State* l) {
+	auto channel = luaL_checkinteger(l, 1);
+	// TODO: support multiple channels
+	luaL_argcheck(l, channel == 1, 1, "only channel 1 currently supported");
+
+	auto id = luaL_checkinteger(l, 2);
+	auto ext = luaL_checkinteger(l, 3);
+
+	// Check that ID is valid based on std vs. ext
+	if (ext == 0) {
+		luaL_argcheck(l, id <= 0x7FF, 2, "ID specified is greater than max std ID");
+	} else {
+		luaL_argcheck(l, id <= 0x1FFF'FFFF, 2, "ID specified is greater than max ext ID");
+	}
+
+	luaL_checktype(l, 4, LUA_TTABLE);
+
+	// conform ext parameter to true/false
+	CanTxMessage msg(id, 8, ext == 0 ? false : true);
+
+	// Unfortunately there is no way to inspect the length of a table,
+	// so we have to just iterate until we run out of numbers
+	uint8_t dlc = 0;
+
+	while (true) {
+		lua_pushnumber(l, dlc + 1);
+		auto elementType = lua_gettable(l, 4);
+		auto val = lua_tointeger(l, -1);
+		lua_pop(l, 1);
+
+		if (elementType == LUA_TNIL) {
+			// we're done, this is the end of the array.
+			break;
+		}
+
+		if (elementType != LUA_TNUMBER) {
+			// We're not at the end, but this isn't a number!
+			luaL_error(l, "Unexpected CAN data at position %d: %s", dlc, lua_tostring(l, -1));
+		}
+
+		// This element is valid, increment DLC
+		dlc++;
+
+		if (dlc > 8) {
+			luaL_error(l, "CAN frame length cannot be longer than 8");
+		}
+
+		msg[dlc - 1] = val;
+	}
+
+	msg.setDlc(dlc);
+
+	// no return value
+	return 0;
+}
+
+static LuaAirmass luaAirmass;
+
+AirmassModelBase& getLuaAirmassModel() {
+	return luaAirmass;
 }
 
 #if !EFI_UNIT_TEST
@@ -177,6 +236,42 @@ static int lua_setDebug(lua_State* l) {
 	return 0;
 }
 
+static auto lua_getAirmassResolveMode(lua_State* l) {
+	if (lua_gettop(l) == 0) {
+		// zero args, return configured mode
+		return CONFIG(fuelAlgorithm);
+	} else {
+		return static_cast<engine_load_mode_e>(luaL_checkinteger(l, 1));
+	}
+}
+
+static int lua_getAirmass(lua_State* l) {
+	auto airmassMode = lua_getAirmassResolveMode(l);
+	auto airmass = getAirmassModel(airmassMode);
+
+	if (!airmass) {
+		return luaL_error(l, "null airmass");
+	}
+
+	auto rpm = Sensor::get(SensorType::Rpm).value_or(0);
+	auto result = airmass->getAirmass(rpm).CylinderAirmass;
+
+	lua_pushnumber(l, result);
+	return 1;
+}
+
+static int lua_setAirmass(lua_State* l) {
+	float airmass = luaL_checknumber(l, 1);
+	float engineLoadPercent = luaL_checknumber(l, 2);
+
+	airmass = clampF(0, airmass, 10);
+	engineLoadPercent = clampF(0, engineLoadPercent, 1000);
+
+	luaAirmass.setAirmass({airmass, engineLoadPercent});
+
+	return 0;
+}
+
 static int lua_stopEngine(lua_State*) {
 	doScheduleStopEngine();
 
@@ -190,6 +285,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
 	lua_register(l, "table3d", lua_table3d);
+	lua_register(l, "txCan", lua_txCan);
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);
@@ -199,6 +295,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getFan", lua_fan);
 	lua_register(l, "getDigital", lua_getDigital);
 	lua_register(l, "setDebug", lua_setDebug);
+	lua_register(l, "getAirmass", lua_getAirmass);
+	lua_register(l, "setAirmass", lua_setAirmass);
 
 	lua_register(l, "stopEngine", lua_stopEngine);
 #endif

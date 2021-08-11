@@ -1,7 +1,5 @@
 #pragma once
 
-#include "engine.h"
-
 class ValueProvider3D;
 
 using mass_t = float;

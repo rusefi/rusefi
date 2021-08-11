@@ -1,8 +1,7 @@
-#include "defaults.h"
-#include "engine_configuration.h"
-#include "table_helper.h"
+#include "pch.h"
 
-EXTERN_CONFIG;
+#include "defaults.h"
+#include "table_helper.h"
 
 void setDefaultCranking(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->cranking.rpm = 550;
@@ -17,7 +16,7 @@ void setDefaultCranking(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// IAC
 	engineConfiguration->crankingIACposition = 50;
-	engineConfiguration->afterCrankingIACtaperDuration = 35;
+	engineConfiguration->afterCrankingIACtaperDuration = 200;
 
 	// After start enrichment
 #if !EFI_UNIT_TEST

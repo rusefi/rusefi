@@ -10,15 +10,13 @@
  * @author andreika, (c) 2017
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
-#include "allsensors.h"
 #include "tunerstudio.h"
 
 #include "tunerstudio_io.h"
 #include "bluetooth.h"
-#include "engine_configuration.h"
-#include "thread_priority.h"
 
 #if EFI_BLUETOOTH_SETUP
 
@@ -43,8 +41,6 @@ static SerialTsChannelBase *tsChannel;
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
 static thread_t *btThread = nullptr;
 static thread_reference_t btThreadRef = nullptr; // used by thread suspend/resume as a flag
-
-EXTERN_ENGINE;
 
 
 // Main communication code

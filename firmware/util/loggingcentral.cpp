@@ -21,12 +21,10 @@
  * @author Matthew Kennedy
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
-#include "efilib.h"
-#include "loggingcentral.h"
 #include "thread_controller.h"
-#include "thread_priority.h"
 
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::writeLine(LogLineBuffer* line) {

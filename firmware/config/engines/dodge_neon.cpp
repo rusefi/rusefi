@@ -12,13 +12,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #include "dodge_neon.h"
-#include "engine_configuration.h"
-#include "thermistors.h"
-#include "engine_math.h"
-#include "allsensors.h"
 
 #include "custom_engine.h"
 
@@ -85,8 +81,6 @@ static const uint8_t veDodgeNeon2003Table[16][16] = {
 		{/* 15 120.000	*//* 0 650.0*/50,	/* 1 800.0*/50,	/* 2 1050.0*/50,	/* 3 1300.0*/50,	/* 4 1550.0*/50,	/* 5 1800.0*/50,	/* 6 2050.0*/50,	/* 7 2300.0*/50,	/* 8 2550.0*/50,	/* 9 2800.0*/50,	/* 10 3050.0*/50,	/* 11 3300.0*/50,	/* 12 3550.0*/50,	/* 13 3800.0*/50,	/* 14 4050.0*/50,	/* 15 7000.0*/50,	},
 };
 
-
-EXTERN_CONFIG;
 
 void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

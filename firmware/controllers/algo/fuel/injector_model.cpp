@@ -1,8 +1,6 @@
-#include "injector_model.h"
-#include "tunerstudio_outputs.h"
-#include "map.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "injector_model.h"
 
 void InjectorModelBase::prepare() {
 	m_massFlowRate = getInjectorMassFlowRate();
@@ -130,7 +128,7 @@ float InjectorModel::correctShortPulse(float baseDuration) const {
 }
 
 float InjectorModel::correctInjectionPolynomial(float baseDuration) const {
-	if (baseDuration > CONFIG(applyNonlinearBelowPulse)) {
+	if (baseDuration > USF2MS(CONFIG(applyNonlinearBelowPulse))) {
 		// Large pulse, skip correction.
 		return baseDuration;
 	}

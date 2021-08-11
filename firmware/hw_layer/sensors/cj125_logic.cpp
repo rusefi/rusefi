@@ -5,11 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
 #include "cj125_logic.h"
-#include "engine.h"
-#include "error_handling.h"
-
-EXTERN_ENGINE;
 
 #define LOW_VOLTAGE "Low Voltage"
 

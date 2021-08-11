@@ -6,19 +6,14 @@
  * @author Konstantin Smola, (c) 2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_AUX_SERIAL
 
 #include "serial.h"
-#include "engine_configuration.h"
-#include "pin_repository.h"
 #include "serial_hw.h"
 #include "string.h"
 #include "mpu_util.h"
-#include "engine.h"
-
-EXTERN_ENGINE;
 
 static bool isSerialEnabled = false;
 static bool isSerialTXEnabled = false;

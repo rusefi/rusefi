@@ -19,18 +19,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "engine_math.h"
-#include "engine_configuration.h"
-#include "interpolation.h"
-#include "allsensors.h"
-#include "sensor.h"
+#include "pch.h"
+
 #include "event_registry.h"
-#include "efi_gpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
 
-EXTERN_ENGINE;
 #if EFI_UNIT_TEST
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
@@ -132,6 +126,7 @@ static const int order_1_2_7_8_4_5_6_3[] = { 1, 2, 7, 8, 4, 5, 6, 3 };
 static const int order_1_3_7_2_6_5_4_8[] = { 1, 3, 7, 2, 6, 5, 4, 8 };
 static const int order_1_2_3_4_5_6_7_8[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 static const int order_1_5_4_8_6_3_7_2[] = { 1, 5, 4, 8, 6, 3, 7, 2 };
+static const int order_1_8_7_3_6_5_4_2[] = { 1, 8, 7, 3, 6, 5, 4, 2 };
 
 // 9 cylinder
 static const int order_1_2_3_4_5_6_7_8_9[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -186,6 +181,7 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_3_7_2_6_5_4_8:
 	case FO_1_2_3_4_5_6_7_8:
 	case FO_1_5_4_8_6_3_7_2:
+	case FO_1_8_7_3_6_5_4_2:
 		return 8;
 
 // 9 cylinder radial
@@ -265,6 +261,9 @@ static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		return order_1_2_3_4_5_6_7_8;
 	case FO_1_5_4_8_6_3_7_2:
 		return order_1_5_4_8_6_3_7_2;
+	case FO_1_8_7_3_6_5_4_2:
+		return order_1_8_7_3_6_5_4_2;
+
 
 // 9 cylinder
 	case FO_1_2_3_4_5_6_7_8_9:

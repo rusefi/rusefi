@@ -6,9 +6,9 @@
  * @author Matthew Kennedy
  */
 
+#include "pch.h"
+
 #include "dc_motor.h"
-#include "efi_gpio.h"
-#include "pwm_generator_logic.h"
 
 TwoPinDcMotor::TwoPinDcMotor(OutputPin& disablePin)
 	: m_disable(&disablePin)

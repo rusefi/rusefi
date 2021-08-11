@@ -5,8 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "cj125_logic.h"
-#include "engine_test_helper.h"
 
 class TestSpi : public Cj125SpiStream {
 public:

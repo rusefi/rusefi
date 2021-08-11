@@ -5,26 +5,20 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "software_knock.h"
 #include "spark_logic.h"
 #include "os_access.h"
-#include "engine_math.h"
 
 #include "utlist.h"
 #include "event_queue.h"
-#include "perf_trace.h"
 #include "tooth_logger.h"
 
 #include "hip9011.h"
-#include "engine_ptr.h"
 
 #if EFI_ENGINE_CONTROL
 
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
-
-EXTERN_ENGINE;
 #if EFI_UNIT_TEST
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
@@ -45,6 +39,10 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 #if EFI_UNIT_TEST
 	Engine *engine = event->engine;
 #endif /* EFI_UNIT_TEST */
+
+	efitick_t nowNt = getTimeNowNt();
+	engine->mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
+	engine->mostRecentSparkEvent = nowNt;
 
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->name, (int)getTimeNowUs(),
@@ -129,11 +127,11 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 }
 
 static void chargeTrailingSpark(IgnitionOutputPin* pin) {
-	pin->setValue(1);
+	pin->setHigh();
 }
 
 static void fireTrailingSpark(IgnitionOutputPin* pin) {
-	pin->setValue(0);
+	pin->setLow();
 }
 
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
@@ -201,8 +199,8 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
-		engine->executor.scheduleByTimestampNt(&event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
-		engine->executor.scheduleByTimestampNt(&event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
+		engine->executor.scheduleByTimestampNt("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
+		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
 		if (CONFIG(enableTrailingSparks)) {
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
@@ -218,7 +216,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	}
 
 #if EFI_SOFTWARE_KNOCK
-	startKnockSampling(event->cylinderNumber);
+	knockSamplingCallback(event->cylinderNumber, nowNt);
 #endif
 #if EFI_HIP_9011
 	hip9011_onFireEvent(event->cylinderNumber, nowNt);
@@ -285,10 +283,12 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	}
 
 	if (CONFIG(enableTrailingSparks)) {
+		IgnitionOutputPin *output = &enginePins.trailingCoils[event->cylinderNumber];
+		INJECT_ENGINE_REFERENCE(output);
 		// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 		scheduleByAngle(
 			&event->trailingSparkCharge, nowNt, ENGINE(engineState.trailingSparkAngle),
-			{ &chargeTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
+			{ &chargeTrailingSpark, output }
 			PASS_ENGINE_PARAMETER_SUFFIX
 		);
 	}

@@ -1,11 +1,8 @@
+#include "pch.h"
+
 #include "adc_subscription.h"
 
-#include "adc_inputs.h"
-#include "engine.h"
-#include "perf_trace.h"
 #include "biquad.h"
-
-EXTERN_ENGINE;
 
 #if EFI_UNIT_TEST
 
@@ -50,8 +47,10 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 		return;
 	}
 
+#if EFI_PROD_CODE
 	// Enable the input pin
 	efiSetPadMode(name, getAdcChannelBrainPin(name, channel), PAL_MODE_INPUT_ANALOG);
+#endif /* EFI_PROD_CODE */
 
 	// if 0, default to the board's divider coefficient
 	if (voltsPerAdcVolt == 0) {

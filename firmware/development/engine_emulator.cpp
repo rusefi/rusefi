@@ -8,13 +8,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "engine_emulator.h"
 
 #include "poten.h"
 #include "trigger_emulator_algo.h"
-
-EXTERN_ENGINE;
 
 void initEngineEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (hasFirmwareError())

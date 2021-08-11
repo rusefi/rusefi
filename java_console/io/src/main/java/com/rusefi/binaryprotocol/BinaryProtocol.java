@@ -68,6 +68,7 @@ public class BinaryProtocol {
     private final IoStream stream;
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
+    public String signature;
 
     private BinaryProtocolState state = new BinaryProtocolState();
 
@@ -88,10 +89,6 @@ public class BinaryProtocol {
 
     public static String findCommand(byte command) {
         switch (command) {
-            case Fields.TS_SD_R_COMMAND:
-                return "SD_R_COMMAND";
-            case Fields.TS_SD_W_COMMAND:
-                return "SD_W_COMMAND";
             case Fields.TS_PAGE_COMMAND:
                 return "PAGE";
             case Fields.TS_COMMAND_F:
@@ -224,20 +221,19 @@ public class BinaryProtocol {
     }
 
     /**
-     * this method would switch controller to binary protocol and read configuration snapshot from controller
+     * this method reads configuration snapshot from controller
      *
      * @return true if everything fine
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
         try {
             HelloCommand.send(stream);
-            String response = HelloCommand.getHelloResponse(incomingData);
-            System.out.println("Got " + response);
-            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(response));
+            signature = HelloCommand.getHelloResponse(incomingData);
+            System.out.println("Got " + signature);
+            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
             return false;
         }
-//        switchToBinaryProtocol();
         readImage(Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
             return false;

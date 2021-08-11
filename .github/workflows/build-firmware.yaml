@@ -1,4 +1,4 @@
-name: Build Firmware
+name: FW
 
 on: [push, pull_request]
 
@@ -15,13 +15,17 @@ jobs:
         #
         # see also gen_config where we have a similar list for all boards!
         #
-        build-target: [hellen72, hellenNA6, hellen128, hellen121vag, hellen121nissan, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_f7_hardware_QC_special_build, proteus_h7, proteus_legacy, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7]
+        build-target: [hellen72, hellen-nb1, hellenNA6, hellen128, hellen121vag, hellen121nissan, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_f7_hardware_QC_special_build, proteus_h7, proteus_legacy, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7, atlas]
         
         include:
           # Board configurations
           - build-target: hellen72
             folder: hellen/hellen72
             ini-file: rusefi_hellen72.ini
+
+          - build-target: hellen-nb1
+            folder: hellen/hellen-nb1
+            ini-file: rusefi_hellen-nb1.ini
 
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
@@ -38,6 +42,10 @@ jobs:
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
+
+          - build-target: hellen154hyundai
+            folder: hellen/hellen154hyundai
+            ini-file: rusefi_hellen154hyundai.ini
 
           - build-target: cypress
             folder: hellen
@@ -115,6 +123,10 @@ jobs:
             folder: subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
 
+          - build-target: atlas
+            folder: atlas
+            ini-file: rusefi_atlas.ini
+
     steps:
     - uses: actions/checkout@v1
       with:
@@ -128,8 +140,15 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
+        sudo apt-get install zip
+        sudo apt-get install dosfstools
 
-    - name: Generate Configs
+    - name: Generate Default config
+      # todo: why do we even need this 'gen_config_default.sh' here?!
+      working-directory: ./firmware/
+      run: bash gen_config_default.sh
+
+    - name: Generate Configs for build-target
       if: ${{ matrix.skip-config != 'yes' }}
       working-directory: ./firmware/
       run: |
@@ -145,16 +164,12 @@ jobs:
           bash config/boards/subaru_eg33/config/gen_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
         else
-          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
+          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
         fi
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
-
-    - name: Generate Default config
-      working-directory: ./firmware/
-      run: bash gen_config_default.sh
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
@@ -253,11 +268,16 @@ jobs:
       with:
         java-version: '8'
 
+    - name: Install multilib, mingw, and ncftp
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools zip dosfstools
+
     - name: Generate Enum Strings
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
 
-    - name: Generate Configs
+    - name: Generate Default Configs
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 
@@ -274,11 +294,6 @@ jobs:
         tar -xvf compiler.tar.xz
         echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2020-q2-update/bin"
   
-    - name: Install multilib, mingw, and ncftp
-      run: |
-        sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp
-
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
       run: arm-none-eabi-gcc -v

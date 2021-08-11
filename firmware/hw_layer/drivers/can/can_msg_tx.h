@@ -56,9 +56,13 @@ public:
 	 */
 	void setBit(size_t byteIdx, size_t bitIdx);
 
+	void setDlc(uint8_t dlc);
+
 protected:
 #if EFI_CAN_SUPPORT
 	CANTxFrame m_frame;
+#else // not EFI_CAN_SUPPORT
+	uint8_t m_data8[8];
 #endif // EFI_CAN_SUPPORT
 
 private:

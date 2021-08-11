@@ -5,22 +5,18 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "local_version_holder.h"
-#include "allsensors.h"
 #include "vvt.h"
 
-#include "tunerstudio_outputs.h"
 #include "fsio_impl.h"
-#include "engine_math.h"
-#include "pin_repository.h"
 
 #define NO_PIN_PERIOD 500
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
-
-EXTERN_ENGINE;
 
 static fsio8_Map3D_u8t vvtTable1;
 static fsio8_Map3D_u8t vvtTable2;

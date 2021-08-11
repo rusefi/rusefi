@@ -27,12 +27,27 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+### Added
+ - RUSEFI MSD now contains bundle-specific URL #2848
+ - Nissan 4 cylinder QR trigger wheel #3118
+
+## Removed
+ -  TS file read feature #3004
+
+## July 2021 Release "Ice Cream Day"
+
 ### Breaking Changes
  - vvtOffset field migrated to four vvtOffsets fields. Anyone using VVT would need to manually adjust their configuration.  
 
 ### Added
  - Injector nonlinearity (small pulse) correction - so far just polynomial, but table modes coming soon.
- - 1-4-3-6-2-5 firing order for VAG v6  
+ - 1-4-3-6-2-5 firing order for VAG v6
+ - vq30de trigger wheel decoder #2974
+ - new hardware testing console commands #2978
+ 
+### Fixed
+ - rusEFI console start-up speed #2964
+ - wrong handling of symmetrical crank wheels NB2 VQ35 Renix #2980   
 
 ## June 2021 Release "National Logistics Day"
 

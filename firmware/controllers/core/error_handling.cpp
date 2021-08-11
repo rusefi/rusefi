@@ -5,9 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 #include "os_access.h"
-#include "perf_trace.h"
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
@@ -15,8 +14,6 @@ static critical_msg_t criticalErrorMessageBuffer;
 #if EFI_HD44780_LCD
 #include "HD44780.h"
 #endif /* EFI_HD44780_LCD */
-
-EXTERN_ENGINE;
 
 extern int warningEnabled;
 

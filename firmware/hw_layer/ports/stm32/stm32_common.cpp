@@ -6,8 +6,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_ptr.h"
-#include "efi_gpio.h"
+#include "pch.h"
+
 #include "expected.h"
 #include "hardware.h"
 
@@ -19,18 +19,12 @@
 #include "stm32h7xx_hal_flash.h"
 #endif
 
-#ifndef EFI_PIN_ADC9
-#define EFI_PIN_ADC9 GPIOB_1
-#endif /* EFI_PIN_ADC9 */
-
 #define _2_MHZ 2'000'000
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
 #include "backup_ram.h"
 #endif /* EFI_PROD_CODE */
-
-EXTERN_ENGINE;
 
 #if HAL_USE_ADC
 
@@ -75,7 +69,7 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
 	case EFI_ADC_8:
 		return GPIOB_0;
 	case EFI_ADC_9:
-		return EFI_PIN_ADC9;
+		return GPIOB_1;
 	case EFI_ADC_10:
 		return GPIOC_0;
 	case EFI_ADC_11:
@@ -114,7 +108,7 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 		return EFI_ADC_7;
 	case GPIOB_0:
 		return EFI_ADC_8;
-	case EFI_PIN_ADC9:
+	case GPIOB_1:
 		return EFI_ADC_9;
 	case GPIOC_0:
 		return EFI_ADC_10;
@@ -315,6 +309,13 @@ stm32_hardware_pwm* getNextPwmDevice() {
 #endif
 
 void jump_to_bootloader() {
+	#ifdef STM32H7XX
+		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
+		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
+		// See https://community.st.com/s/question/0D53W00000vQEWsSAO/stm32h743-dfu-entry-doesnt-work-unless-boot0-held-high-at-poweron
+		RCC->AHB1ENR &= ~(RCC_AHB1ENR_USB1OTGHSEN | RCC_AHB1ENR_USB2OTGFSEN);
+	#endif
+
 	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
 	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM
 	// and now reboot

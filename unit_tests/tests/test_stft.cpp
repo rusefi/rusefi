@@ -1,12 +1,7 @@
+#include "pch.h"
 
-#include "engine_test_helper.h"
 #include "closed_loop_fuel_cell.h"
 #include "closed_loop_fuel.h"
-
-#include "engine.h"
-
-#include "gtest/gtest.h"
-#include "gmock/gmock.h"
 
 using ::testing::_;
 using ::testing::Return;

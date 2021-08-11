@@ -7,19 +7,14 @@
  * @author Konstantin Smola, (c) 2020
  */
 
-#include "globalaccess.h"
+#include "pch.h"
 
 #if EFI_AUX_SERIAL
-#include "engine.h"
 #include "serial.h"
 #include "serial_hw.h"
 #include "serial_sensor.h"
 
-#include "allsensors.h"
 #include "vehicle_speed.h"
-#include "thread_priority.h"
-
-EXTERN_ENGINE;
 
 uint8_t ser_buffer[SERBUFFLEN] = {};
 size_t innovate_msg_len = 1;

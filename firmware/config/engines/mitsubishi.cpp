@@ -9,12 +9,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "fsio_impl.h"
 #include "mitsubishi.h"
-#include "allsensors.h"
-
-EXTERN_CONFIG;
 
 void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

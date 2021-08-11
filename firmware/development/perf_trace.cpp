@@ -7,9 +7,8 @@
  */
 
 
-#include "efifeatures.h"
-#include "perf_trace.h"
-#include "efitime.h"
+#include "pch.h"
+
 #include "os_util.h"
 
 #ifndef ENABLE_PERF_TRACE

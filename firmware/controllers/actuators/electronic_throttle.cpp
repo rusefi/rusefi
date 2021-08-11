@@ -72,18 +72,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 
 #include "electronic_throttle_impl.h"
-#include "engine.h"
-#include "tps.h"
-#include "sensor.h"
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
-#include "thread_priority.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -94,8 +90,6 @@
 #endif /* ETB_MAX_COUNT */
 
 static pedal2tps_t pedal2tpsMap;
-
-EXTERN_ENGINE;
 
 constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 
@@ -188,6 +182,11 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	if (function == ETB_Throttle1 || function == ETB_Throttle2) {
 		// We don't need to init throttles, so nothing to do here.
 		if (!initializeThrottles) {
+			return false;
+		}
+
+		// If no sensor is configured for this throttle, skip initialization.
+		if (!Sensor::hasSensor(functionToTpsSensorPrimary(function))) {
 			return false;
 		}
 
@@ -872,6 +871,8 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// voltage, not ADC like with TPS
 	engineConfiguration->throttlePedalUpVoltage = 0;
 	engineConfiguration->throttlePedalWOTVoltage = 5;
+
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 5.0;
 
 	engineConfiguration->etb = {
 		1,		// Kp

@@ -234,7 +234,7 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE6240_PIN_16 = 214,
 } brain_pin_e;
 
-/* Plase keep updating these defines */
+/* Please keep updating these defines */
 #define BRAIN_PIN_ONCHIP_LAST	GPIOI_15
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
 #define BRAIN_PIN_LAST 			TLE8888_PIN_WAKE

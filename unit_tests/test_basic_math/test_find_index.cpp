@@ -5,10 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine_math.h"
+#include "pch.h"
 #include "interpolation.h"
-#include "unit_test_framework.h"
 
 static void testIndex(const int expected, const float array[], int size, float value) {
 	ASSERT_EQ(expected, findIndex(array, size, value));

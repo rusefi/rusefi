@@ -1,6 +1,5 @@
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "timer.h"
-
 
 TEST(util, timer) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

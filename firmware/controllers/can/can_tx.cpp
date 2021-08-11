@@ -7,18 +7,15 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "globalaccess.h"
-#if EFI_CAN_SUPPORT
+#include "pch.h"
 
-#include "engine.h"
+#if EFI_CAN_SUPPORT
 #include "can.h"
 #include "can_hw.h"
 #include "can_dash.h"
 #include "obd2.h"
 #include "can_sensor.h"
-#include "thread_priority.h"
-
-EXTERN_ENGINE;
+#include "rusefi_wideband.h"
 
 extern CanListener* canListeners_head;
 
@@ -56,6 +53,10 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	}
 
 	updateDash(cycle);
+
+	if (CONFIG(enableAemXSeries) && cycle.isInterval(CI::_50ms)) {
+		sendWidebandInfo();
+	}
 
 	cycleCount++;
 }

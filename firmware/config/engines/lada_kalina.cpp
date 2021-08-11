@@ -7,11 +7,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "lada_kalina.h"
 #include "custom_engine.h"
 #include "fsio_impl.h"
-
-EXTERN_CONFIG;
 
 #if (BOARD_TLE8888_COUNT > 0)
 void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

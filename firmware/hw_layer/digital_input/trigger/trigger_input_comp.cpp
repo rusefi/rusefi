@@ -7,7 +7,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
  
-#include "global.h"
+#include "pch.h"
 
 #if (EFI_SHAFT_POSITION_INPUT && HAL_USE_COMP) || defined(__DOXYGEN__)
 
@@ -15,8 +15,6 @@
 
 #include "trigger_input.h"
 #include "digital_input_icu.h"
-
-EXTERN_ENGINE;
 
 static volatile int centeredDacValue = 127;
 static volatile int toothCnt = 0;

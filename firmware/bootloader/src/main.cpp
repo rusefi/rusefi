@@ -1,7 +1,7 @@
 
-#include "global.h"
+#include "pch.h"
+
 #include "hardware.h"
-#include "efi_gpio.h"
 
 #ifdef __cplusplus
 extern "C"

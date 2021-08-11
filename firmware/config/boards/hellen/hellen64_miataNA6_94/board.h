@@ -44,7 +44,9 @@
  * Pulldowns are more safe because most of MCU outputs on Hellen are high-active.
  */
 #define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT
+#ifndef EFI_DR_DEFAULT
 #define EFI_DR_DEFAULT PIN_PUPDR_PULLDOWN
+#endif
 
 // See https://github.com/rusefi/rusefi/issues/397
 #define DEFAULT_GPIO_SPEED PIN_OSPEED_HIGH

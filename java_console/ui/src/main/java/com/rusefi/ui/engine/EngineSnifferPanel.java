@@ -278,6 +278,9 @@ public class EngineSnifferPanel {
             signalBody = Color.yellow;
         } else if (name.startsWith("t")) {
             // trigger
+        } else if (name.startsWith("r")) {
+            // trailing coil
+            signalBody = new Color(0xffa400); // golden yellow
         } else if (name.startsWith("c")) {
             // coil
             signalBody = Color.darkGray;

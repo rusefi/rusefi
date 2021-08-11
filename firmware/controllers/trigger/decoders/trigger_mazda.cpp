@@ -18,8 +18,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "pch.h"
+
 #include "trigger_mazda.h"
-#include "error_handling.h"
 
 #define NB_CRANK_MAGIC 70
 
@@ -69,7 +70,11 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 
 	s->tdcPosition = 60 + 655;
 
+	// Nominal gap 70/110 = 0.636
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
+	// Nominal gap 110/70 = 1.571
+	s->setSecondTriggerSynchronizationGap2(1.05f, 1.8f);
+
 	// todo: NB2 fronts are inverted comparing to NB1, life is not perfect :(
 	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, T_PRIMARY, TV_FALL);
 	s->addEventAngle(180.0f - NB_CRANK_MAGIC, T_PRIMARY, TV_RISE);
@@ -180,14 +185,16 @@ void configureMazdaProtegeLx(TriggerWaveform *s) {
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->setTriggerSynchronizationGap2(8.50 * TRIGGER_GAP_DEVIATION_LOW, 14.0);
-
+	// Nominal gap is 8.92
+	s->setTriggerSynchronizationGap2(7, 13);
+	// Nominal gap is 0.128
+	s->setSecondTriggerSynchronizationGap2(0.06f, 0.16f);
 
 	s->addEvent720(325, T_PRIMARY, TV_FALL);
 	s->addEvent720(360, T_PRIMARY, TV_RISE);
 
 	s->addEvent720(641, T_PRIMARY, TV_FALL);
-	s->addEvent720(677, T_PRIMARY, TV_RISE);
+	s->addEvent720(679, T_PRIMARY, TV_RISE);
 
 	s->addEvent720(700, T_PRIMARY, TV_FALL);
 	s->addEvent720(720, T_PRIMARY, TV_RISE);

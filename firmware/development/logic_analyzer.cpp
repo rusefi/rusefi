@@ -11,23 +11,16 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
 #include "logic_analyzer.h"
 #include "os_access.h"
 #include "eficonsole.h"
-#include "pin_repository.h"
-#include "allsensors.h"
-#include "engine_configuration.h"
 #include "trigger_central.h"
 #include "os_util.h"
-#include "engine_math.h"
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
 
 #if EFI_LOGIC_ANALYZER
-
-EXTERN_ENGINE;
 
 #define CHART_RESET_DELAY 1
 #define MAX_ICU_COUNT 5

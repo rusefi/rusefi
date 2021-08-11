@@ -11,12 +11,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "ford_1995_inline_6.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 
-EXTERN_CONFIG;
+#include "ford_1995_inline_6.h"
 
 /**
  * @brief Default values for persistent properties
@@ -95,6 +92,4 @@ void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_8;
 	engineConfiguration->triggerInputPins[1] = GPIOA_5;
-	engineConfiguration->logicAnalyzerPins[0] = GPIOC_6;
-	engineConfiguration->logicAnalyzerPins[1] = GPIOE_5;
 }

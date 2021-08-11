@@ -5,12 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_controller.h"
-#include "perf_trace.h"
+#include "pch.h"
 #include "os_access.h"
-#include "settings.h"
-
-EXTERN_ENGINE;
 
 extern ButtonDebounce startStopButtonDebounce;
 

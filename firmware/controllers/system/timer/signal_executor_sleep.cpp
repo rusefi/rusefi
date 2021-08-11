@@ -22,15 +22,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "scheduler.h"
 #include "main_trigger_callback.h"
-
-#if EFI_SIMULATOR
-// this is about debugging
-#include "efi_gpio.h"
-#endif /* EFI_SIMULATOR */
 
 #if EFI_PRINTF_FUEL_DETAILS
 bool printSchedulerDebug = true;
@@ -38,12 +33,12 @@ bool printSchedulerDebug = true;
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
-void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+void SleepExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
 	scheduleForLater(scheduling, timeUs - getTimeNowUs(), action);
 }
 
-void SleepExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
-	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
+void SleepExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
 }
 
 static void timerCallback(scheduling_s *scheduling) {

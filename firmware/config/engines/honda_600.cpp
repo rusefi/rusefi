@@ -7,10 +7,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "engine_template.h"
 #include "honda_600.h"
-#include "allsensors.h"
-#include "engine_math.h"
 #include "custom_engine.h"
 
 #if EFI_PROD_CODE
@@ -33,8 +33,6 @@ static const uint8_t default_custom_timing_table[16][16] = {
  /* Load 100% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
 };
 #endif
-
-EXTERN_CONFIG;
 
 static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);

@@ -7,14 +7,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #if EFI_INTERNAL_FLASH
 #include "os_access.h"
 #include "flash_main.h"
 #include "eficonsole.h"
 
 #include "flash_int.h"
-#include "engine_math.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -22,11 +22,7 @@
 
 #include "runtime_state.h"
 
-#include "engine_controller.h"
-
 static bool needToWriteConfiguration = false;
-
-EXTERN_ENGINE;
 
 extern persistent_config_container_s persistentState;
 
@@ -96,14 +92,26 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 
 	auto err = intFlashErase(storageAddress, sizeof(TStorage));
 	if (FLASH_RETURN_SUCCESS != err) {
-		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at 0x%08x", storageAddress);
+		firmwareError(OBD_PCM_Processor_Fault, "Failed to erase flash at 0x%08x: %d", storageAddress, err);
 		return err;
 	}
 
-	return intFlashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
+	err = intFlashWrite(storageAddress, reinterpret_cast<const char*>(&data), sizeof(TStorage));
+	if (FLASH_RETURN_SUCCESS != err) {
+		firmwareError(OBD_PCM_Processor_Fault, "Failed to write flash at 0x%08x: %d", storageAddress, err);
+		return err;
+	}
+
+	return err;
 }
 
+bool burnWithoutFlash = false;
+
 void writeToFlashNow(void) {
+	if (burnWithoutFlash) {
+		needToWriteConfiguration = false;
+		return;
+	}
 	efiPrintf("Writing pending configuration...");
 
 	// Set up the container

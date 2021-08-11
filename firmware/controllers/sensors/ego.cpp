@@ -11,17 +11,13 @@
  * 3) CJ125 internal wideband controller is known to work with both 4.2 and 4.9
  *
  */
-#include "ego.h"
-#include "interpolation.h"
-#include "engine.h"
-#include "adc_inputs.h"
+#include "pch.h"
+
 #include "cyclic_buffer.h"
 
 #if EFI_CJ125
 #include "cj125.h"
 #endif /* EFI_CJ125 */
-
-EXTERN_ENGINE;
 
 #ifdef EFI_NARROW_EGO_AVERAGING
 // Needed by narrow EGOs (see updateEgoAverage()).

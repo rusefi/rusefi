@@ -9,8 +9,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "cdm_ion_sense.h"
-#include "engine.h"
 
 CdmState::CdmState() {
 	accumilatingAtRevolution = 0;
@@ -50,8 +51,6 @@ void CdmState::onNewSignal(int currentRevolution) {
 #if EFI_CDM_INTEGRATION
 
 #include "digital_input_exti.h"
-
-EXTERN_ENGINE;
 
 static CdmState instance;
 

@@ -7,20 +7,15 @@
 
 // todo: move this code to more proper locations
 
-#include "engine.h"
-#include "thermistors.h"
+#include "pch.h"
+
 #include "speed_density.h"
-#include "allsensors.h"
 #include "fuel_math.h"
-#include "engine_math.h"
 #include "advance_map.h"
 #include "aux_valves.h"
-#include "perf_trace.h"
 #include "closed_loop_fuel.h"
-#include "sensor.h"
 #include "launch_control.h"
 #include "injector_model.h"
-
 
 #if EFI_PROD_CODE
 #include "svnversion.h"
@@ -29,8 +24,6 @@
 #if ! EFI_UNIT_TEST
 #include "status_loop.h"
 #endif
-
-EXTERN_ENGINE;
 
 WarningCodeState::WarningCodeState() {
 	clear();
@@ -135,7 +128,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
 	if (engineConfiguration->postCrankingFactor > 1.0f) {
 		// convert to microsecs and then to seconds
-		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / 1000000.0f;
+		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / US_PER_SECOND_F;
 		// use interpolation for correction taper
 		running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
 			engineConfiguration->postCrankingDurationSec, 1.0f, running.timeSinceCrankingInSecs);
@@ -191,7 +184,7 @@ void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUF
 	float newTCharge = getTCharge(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
-	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / 1000000.0f;
+	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / US_PER_SECOND_F;
 	if (!cisnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
 		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);

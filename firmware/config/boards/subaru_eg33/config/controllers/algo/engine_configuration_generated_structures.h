@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri Jul 09 14:08:45 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Aug 11 06:06:35 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -648,6 +648,29 @@ struct dc_io {
 	/** total size 4*/
 };
 
+// start of vr_threshold_s
+struct vr_threshold_s {
+	/**
+	 * offset 0
+	 */
+	brain_pin_e pin;
+	/**
+	 * offset 1
+	 */
+	uint8_t pad[3];
+	/**
+	rpm
+	 * offset 4
+	 */
+	uint8_t rpmBins[6];
+	/**
+	volts
+	 * offset 10
+	 */
+	uint8_t values[6];
+	/** total size 16*/
+};
+
 // start of engine_configuration_s
 struct engine_configuration_s {
 	/**
@@ -1283,7 +1306,7 @@ struct engine_configuration_s {
 	 */
 	output_pin_e fanPin;
 	/**
-	 * some cars have a switch to indicate that clutch pedal is all the way down
+	 * Some cars have a switch to indicate that clutch pedal is all the way down
 	 * offset 664
 	 */
 	switch_input_pin_e clutchDownPin;
@@ -1881,10 +1904,10 @@ struct engine_configuration_s {
 	uint8_t multisparkMaxExtraSparkCount;
 	/**
 	offset 976 bit 0 */
-	bool todoClutchUpPinInverted : 1;
+	bool clutchUpPinInverted : 1;
 	/**
 	offset 976 bit 1 */
-	bool todoClutchDownPinInverted : 1;
+	bool clutchDownPinInverted : 1;
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 976 bit 2 */
@@ -1902,6 +1925,7 @@ struct engine_configuration_s {
 	offset 976 bit 6 */
 	bool launchDisableBySpeed : 1;
 	/**
+	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	offset 976 bit 7 */
 	bool enableCanVss : 1;
 	/**
@@ -2146,10 +2170,14 @@ struct engine_configuration_s {
 	 */
 	float vvtOffsetsPadding[CAM_INPUTS_COUNT_padding];
 	/**
-	units
 	 * offset 1244
 	 */
-	int unusedAtOldBoardConfigurationEnd[53];
+	vr_threshold_s vrThreshold[2];
+	/**
+	units
+	 * offset 1276
+	 */
+	int unusedAtOldBoardConfigurationEnd[45];
 	/**
 	kg
 	 * offset 1456
@@ -2446,19 +2474,18 @@ struct engine_configuration_s {
 	 */
 	int16_t primeInjFalloffTemperature;
 	/**
-	 * At what trigger index should some ignition-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.
-	index
+	mult
 	 * offset 1488
 	 */
-	int ignMathCalculateAtIndex;
+	float turboSpeedSensorMultiplier;
 	/**
 	 * offset 1492
 	 */
-	int16_t unused1492;
+	brain_pin_e camInputsDebug[CAM_INPUTS_COUNT];
 	/**
-	 * offset 1494
+	 * offset 1496
 	 */
-	int16_t unused1494;
+	uint8_t camInputsDebugPadding[CAM_INPUTS_COUNT_padding];
 	/**
 	 * Extra idle target speed when A/C is enabled. Some cars need the extra speed to keep the AC efficient while idling.
 	RPM
@@ -2538,6 +2565,7 @@ struct engine_configuration_s {
 	 */
 	float crankingTpsBins[CRANKING_CURVE_SIZE];
 	/**
+	 * Duration in ms or duty cycle depending on selected mode
 	 * offset 1704
 	 */
 	float tachPulseDuractionMs;
@@ -2576,7 +2604,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 1756
 	 */
-	float unused1756;
+	brain_pin_e triggerInputDebugPins[TRIGGER_INPUT_PIN_COUNT];
+	/**
+	 * offset 1759
+	 */
+	brain_input_pin_e turboSpeedSensorInputPin;
 	/**
 	x
 	 * offset 1760
@@ -2929,76 +2961,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_498_8 : 1;
+	bool unusedBit_500_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_498_9 : 1;
+	bool unusedBit_500_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_498_10 : 1;
+	bool unusedBit_500_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_498_11 : 1;
+	bool unusedBit_500_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_498_12 : 1;
+	bool unusedBit_500_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_498_13 : 1;
+	bool unusedBit_500_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_498_14 : 1;
+	bool unusedBit_500_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_498_15 : 1;
+	bool unusedBit_500_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_498_16 : 1;
+	bool unusedBit_500_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_498_17 : 1;
+	bool unusedBit_500_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_498_18 : 1;
+	bool unusedBit_500_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_498_19 : 1;
+	bool unusedBit_500_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_498_20 : 1;
+	bool unusedBit_500_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_498_21 : 1;
+	bool unusedBit_500_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_498_22 : 1;
+	bool unusedBit_500_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_498_23 : 1;
+	bool unusedBit_500_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_498_24 : 1;
+	bool unusedBit_500_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_498_25 : 1;
+	bool unusedBit_500_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_498_26 : 1;
+	bool unusedBit_500_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_498_27 : 1;
+	bool unusedBit_500_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_498_28 : 1;
+	bool unusedBit_500_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_498_29 : 1;
+	bool unusedBit_500_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_498_30 : 1;
+	bool unusedBit_500_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_498_31 : 1;
+	bool unusedBit_500_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3282,7 +3314,12 @@ struct engine_configuration_s {
 	units
 	 * offset 2511
 	 */
-	uint8_t unused2508[3];
+	uint8_t unused2508;
+	/**
+	Deg
+	 * offset 2512
+	 */
+	int16_t knockSamplingDuration;
 	/**
 	Hz
 	 * offset 2514
@@ -4268,4 +4305,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri Jul 09 14:08:45 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Aug 11 06:06:35 UTC 2021

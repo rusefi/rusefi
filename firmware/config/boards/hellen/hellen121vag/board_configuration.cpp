@@ -10,14 +10,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
-
-EXTERN_ENGINE;
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
-
 angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX);
 void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore);

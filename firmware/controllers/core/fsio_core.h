@@ -7,9 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
-#include "fl_stack.h"
-
 #define MAX_TABLE_INDEX 4
 
 typedef enum {

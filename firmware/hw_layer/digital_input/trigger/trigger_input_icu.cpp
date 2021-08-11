@@ -12,7 +12,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 int icuRisingCallbackCounter = 0;
 int icuFallingCallbackCounter = 0;
@@ -22,8 +22,6 @@ int icuFallingCallbackCounter = 0;
 #include "trigger_input.h"
 #include "digital_input_icu.h"
 #include "tooth_logger.h"
-
-EXTERN_ENGINE;
 
 static void vvtRisingCallback(void *arg) {
 	efitick_t now = getTimeNowNt();

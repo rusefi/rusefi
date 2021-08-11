@@ -1,5 +1,10 @@
+/**
+ * @file Lps25Sensor.cpp
+ */
+
+#include "pch.h"
+
 #include "Lps25Sensor.h"
-#include "global.h"
 
 Lps25Sensor::Lps25Sensor(Lps25& sensor)
 	: StoredValueSensor(SensorType::BarometricPressure, MS2NT(1000))

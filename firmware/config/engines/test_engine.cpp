@@ -11,11 +11,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_configuration.h"
+#include "pch.h"
 #include "test_engine.h"
-#include "engine_math.h"
-
-EXTERN_CONFIG;
 
 // TEST_ENGINE
 void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

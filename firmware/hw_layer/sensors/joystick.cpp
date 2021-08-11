@@ -13,14 +13,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 #include "joystick.h"
-#include "pin_repository.h"
 #include "digital_input_exti.h"
-
-EXTERN_ENGINE;
 
 static int joyTotal = 0;
 static int joyCenter;
@@ -124,8 +121,6 @@ void initJoystick() {
 // not used so far	applyPin(CONFIG(joystickCPin));
 	channel = getHwPin("joy", CONFIG(joystickDPin));
 	efiExtiEnablePin("joy", CONFIG(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
-
-	startJoystickPins();
 }
 
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */

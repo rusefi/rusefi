@@ -1,7 +1,4 @@
-#include "global.h"
-#include "sensor.h"
-#include "efilib.h"
-#include "loggingcentral.h"
+#include "pch.h"
 
 static const char* const s_sensorNames[] = {
 	"Invalid",

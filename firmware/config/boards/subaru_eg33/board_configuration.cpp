@@ -7,16 +7,10 @@
  * @author Andrey Gusakov, 2021
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
-
-EXTERN_ENGINE;
 
 void setPinConfigurationOverrides(void) {
 

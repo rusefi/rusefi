@@ -1,4 +1,4 @@
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "tunerstudio_io.h"
 
 static uint8_t st5TestBuffer[16000];

@@ -1,14 +1,10 @@
+#include "pch.h"
+
 #include "init.h"
-#include "adc_inputs.h"
 #include "adc_subscription.h"
-#include "engine.h"
-#include "error_handling.h"
-#include "global.h"
 #include "functional_sensor.h"
 #include "proxy_sensor.h"
 #include "linear_func.h"
-
-EXTERN_ENGINE;
 
 static LinearFunc oilpSensorFunc;
 static FunctionalSensor oilpSensor(SensorType::OilPressure, /* timeout = */ MS2NT(50));

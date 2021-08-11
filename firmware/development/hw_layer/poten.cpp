@@ -6,19 +6,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "poten.h"
 #include "eficonsole.h"
-#include "pin_repository.h"
-#include "engine_configuration.h"
-#include "engine.h"
 #include "hardware.h"
 #include "mpu_util.h"
 
 #if HAL_USE_SPI
-
-EXTERN_ENGINE;
 
 /**
  * MCP42010 digital potentiometer driver

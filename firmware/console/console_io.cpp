@@ -34,18 +34,16 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "engine.h"
+#include "pch.h"
+
 #include "console_io.h"
 #include "os_util.h"
 #include "tunerstudio.h"
 #include "connector_uart_dma.h"
-#include "thread_priority.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif /*EFI_SIMULATOR */
-
-EXTERN_ENGINE;
 
 bool consoleByteArrived = false;
 

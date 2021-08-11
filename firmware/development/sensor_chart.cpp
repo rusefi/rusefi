@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "sensor_chart.h"
-#include "engine.h"
-#include "rpm_calculator.h"
 
 #if EFI_SENSOR_CHART
 #include "status_loop.h"
@@ -20,8 +18,6 @@ static Logging scLogging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER))
 #endif /* EFI_TEXT_LOGGING */
 
 static int initialized = false;
-
-EXTERN_ENGINE;
 
 enum class ScState {
 	PreArm,

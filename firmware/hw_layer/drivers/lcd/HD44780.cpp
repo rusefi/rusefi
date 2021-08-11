@@ -7,17 +7,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_HD44780_LCD
 
 #include "HD44780.h"
-#include "pin_repository.h"
 #include "string.h"
-
-#include "engine.h"
-
-EXTERN_ENGINE;
 
 enum {
 	LCD_HD44780_DISPLAY_CLEAR = 0x01,
@@ -72,11 +67,6 @@ static void lcdSleep(int period) {
 
 //static char txbuf[1];
 #define LCD_PORT_EXP_ADDR 0x20
-
-// todo: use this method wider!
-static void writePad(const char *msg, brain_pin_e pin, int bit) {
-	palWritePad(getHwPort(msg, pin), getHwPin(msg, pin), bit);
-}
 
 static bool lcd_HD44780_is_enabled(void) {
 	/* check for valid LCD setting */

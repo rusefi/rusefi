@@ -1,11 +1,8 @@
-#include "init.h"
-#include "adc_inputs.h"
-#include "adc_subscription.h"
-#include "engine.h"
-#include "global.h"
-#include "functional_sensor.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "init.h"
+#include "adc_subscription.h"
+#include "functional_sensor.h"
 
 // These aux sensors just read voltage - so the converter function has nothing to do
 struct IdentityFunction : public SensorConverter {

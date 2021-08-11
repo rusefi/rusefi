@@ -7,14 +7,7 @@
  * @author andreika, (c) 2019
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_configuration.h"
-#include "adc_inputs.h"
-#include "engine_math.h"
-#include "tps.h"
-
-EXTERN_ENGINE;
+#include "pch.h"
 
 #if 0
 char __debugBuffer[80];

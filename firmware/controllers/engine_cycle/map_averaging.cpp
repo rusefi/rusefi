@@ -21,22 +21,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "os_access.h"
+#include "pch.h"
 
-#include "map.h"
+#include "os_access.h"
 
 #if EFI_MAP_AVERAGING
 
 #include "map_averaging.h"
 #include "trigger_central.h"
-#include "adc_inputs.h"
-#include "allsensors.h"
-#include "engine_configuration.h"
-#include "interpolation.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "perf_trace.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -91,8 +83,6 @@ static int averagedMapBufIdx = 0;
 #define NO_VALUE_YET -100
 // this is 'minimal averaged' MAP within avegaging window
 static float currentPressure = NO_VALUE_YET;
-
-EXTERN_ENGINE;
 
 /**
  * here we have averaging start and averaging end points for each cylinder

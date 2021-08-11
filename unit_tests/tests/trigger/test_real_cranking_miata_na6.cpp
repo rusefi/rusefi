@@ -5,7 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "logicdata_csv_reader.h"
 
 extern int timeNowUs;
@@ -30,7 +31,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, trigger_wh
 	EXPAND_Engine;
 	timeNowUs = 1'000'000 * timestampS;
 	printf("MIATANA: posting time=%d event=%d\n", timeNowUs, event);
-	engine->triggerCentral.handleShaftSignal(event, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleShaftSignal((int)channel, !isFall, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 TEST(cranking, hardcodedRealCranking) {
@@ -166,9 +167,9 @@ TEST(cranking, hardcodedRealCranking) {
 }
 
 TEST(cranking, naCrankFromFile) {
-	CsvReader reader(2);
+	CsvReader reader(2, /* vvtCount */ 0);
 	int indeces[2] = {1, 0};
-	reader.open("tests/trigger/recourses/cranking_na_4.csv", indeces);
+	reader.open("tests/trigger/resources/cranking_na_4.csv", indeces);
 
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_VAF);
 

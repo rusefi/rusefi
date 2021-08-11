@@ -14,12 +14,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "fsio_impl.h"
 #include "mazda_miata.h"
-#include "engine_math.h"
 #include "advance_map.h"
-#include "allsensors.h"
 #include "custom_engine.h"
 
 
@@ -74,8 +73,6 @@ static const uint8_t miataNA8_maf_advance_table[16][16] = { {/*0  engineLoad=1.2
 		+29, /*7 3693.0*/+33, /*8 4106.0*/+36, /*9 4520.0*/+37, /*10 4933.0*/+36, /*11 5346.0*/
 		+29, /*12 5760.0*/+28, /*13 6173.0*/+28, /*14 6586.0*/+27, /*15 7000.0*/+27 } };
 #endif
-
-EXTERN_ENGINE;
 
 static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;

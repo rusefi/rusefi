@@ -5,24 +5,14 @@
  *
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-#include "global.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
-#include "adc_inputs.h"
-#include "interpolation.h"
-#include "map.h"
-#include "engine_controller.h"
-#include "sensor.h"
+#include "pch.h"
 
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"
 #include "digital_input_exti.h"
-#include "pin_repository.h"
 #endif
 
 #if EFI_ANALOG_SENSORS
-
-EXTERN_ENGINE;
 
 static FastInterpolation customMap;
 static efitick_t prevWidthTimeNt = 0;
@@ -229,7 +219,7 @@ static void applyConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void digitalMapWidthCallback(void) {
 	efitick_t nowNt = getTimeNowNt();
 
-	mapFreq = 1000000.0 / NT2US(nowNt - prevWidthTimeNt);
+	mapFreq = US_PER_SECOND_F / NT2US(nowNt - prevWidthTimeNt);
 
 	prevWidthTimeNt = nowNt;
 }

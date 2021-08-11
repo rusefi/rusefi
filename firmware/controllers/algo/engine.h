@@ -19,6 +19,7 @@
 #include "buttonshift.h"
 #include "gear_controller.h"
 #include "limp_manager.h"
+#include "pin_repository.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -69,15 +70,18 @@ protected:
 
 class VvtTriggerConfiguration final : public TriggerConfiguration {
 public:
-	VvtTriggerConfiguration() : TriggerConfiguration("TRG ") {}
-	// todo: is it possible to make 'index' constructor argument?
-	int index = 0;
+	const int index;
+
+	VvtTriggerConfiguration(const char * prefix, const int index) : TriggerConfiguration(prefix), index(index) {
+	}
 
 protected:
 	bool isUseOnlyRisingEdgeForTrigger() const override;
 	bool isVerboseTriggerSynchDetails() const override;
 	trigger_type_e getType() const override;
 };
+
+#define DEFAULT_MOCK_SPEED -1
 
 class Engine final : public TriggerStateListener {
 public:
@@ -87,6 +91,8 @@ public:
 	bool isPwmEnabled = true;
 
 	const char *prevOutputName = nullptr;
+
+	PinRepository pinRepository;
 
 	InjectionEvent primeInjEvent;
 
@@ -99,8 +105,24 @@ public:
 
 	GearControllerBase *gearController;
 
+
+	float mockVehicleSpeed = DEFAULT_MOCK_SPEED; // in kilometers per hour
+
+	efitick_t vssLastSignalTimeNt = 0;
+	efitick_t vssDiff = 0;
+
+	efitick_t mostRecentSparkEvent;
+	efitick_t mostRecentTimeBetweenSparkEvents;
+	efitick_t mostRecentIgnitionEvent;
+	efitick_t mostRecentTimeBetweenIgnitionEvents;
+
 	PrimaryTriggerConfiguration primaryTriggerConfiguration;
-	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK];
+#if CAMS_PER_BANK == 1
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}};
+#else
+	VvtTriggerConfiguration vvtTriggerConfiguration[CAMS_PER_BANK] = {{"VVT1 ", 0}, {"VVT2 ", 1}};
+#endif
+
 	efitick_t startStopStateLastPushTime = 0;
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -400,4 +422,8 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #define HW_CHECK_RPM 200
 
-
+// These externs aren't needed for unit tests - everything is injected instead
+#if !EFI_UNIT_TEST
+extern Engine ___engine;
+extern Engine *engine;
+#endif // EFI_UNIT_TEST

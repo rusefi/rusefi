@@ -11,7 +11,9 @@
 #include "global.h"
 #include "adc_math.h"
 
+#ifndef SLOW_ADC_RATE
 #define SLOW_ADC_RATE 500
+#endif
 
 static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	if (hwChannel <= EFI_ADC_NONE) {
@@ -60,7 +62,11 @@ void removeChannel(const char *name, adc_channel_e setting);
 
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
-#else
-#define getAdcValue(msg, channel) 0
 #endif /* HAL_USE_ADC */
 
+void printFullAdcReport(void);
+
+#if HAL_USE_ADC
+// This callback is called by the ADC driver when a new fast ADC sample is ready
+void onFastAdcComplete(adcsample_t* samples);
+#endif

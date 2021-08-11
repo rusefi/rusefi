@@ -1,9 +1,6 @@
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "injector_model.h"
-#include "mocks.h"
 #include "mock/mock_sensor.h"
-
-#include "gtest/gtest.h"
 
 using ::testing::_;
 using ::testing::StrictMock;
@@ -67,7 +64,7 @@ TEST(InjectorModel, nonlinearPolynomial) {
 	InjectorModel dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(applyNonlinearBelowPulse) = 10;
+	CONFIG(applyNonlinearBelowPulse) = MS2US(10);
 
 	for (int i = 0; i < 8; i++) {
 		CONFIG(injectorCorrectionPolynomial)[i] = i + 1;

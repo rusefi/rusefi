@@ -14,13 +14,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
 #include "fsio_impl.h"
-#include "ego.h"
-#include "thermistors.h"
-
-EXTERN_CONFIG;
 
 // todo: why would this not work?
 //extern const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT];

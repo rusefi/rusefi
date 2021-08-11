@@ -5,10 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_configuration.h"
-#include "table_helper.h"
-
-EXTERN_CONFIG;
+#include "pch.h"
 
 // todo: use these defaults wider? make them global defaults maybe?
 static const float hardCodedcrankingFuelBins[8] = {-20.0, -10.0, 3.6799927, 22.77002, 34.049805, 49.95996, 65.0, 90.0};

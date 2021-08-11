@@ -6,12 +6,9 @@
  * @author Matthew Kennedy, (c) 2021
  */
 
-#include "engine_ptr.h"
-#include "persistent_configuration.h"
+#include "pch.h"
 
 #if HAL_USE_ADC
-
-EXTERN_CONFIG;
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define SLOW_ADC_OVERSAMPLE      8

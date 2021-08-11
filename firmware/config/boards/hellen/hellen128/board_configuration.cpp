@@ -10,14 +10,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
-
-EXTERN_ENGINE;
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -117,6 +111,8 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
+
+	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -179,16 +175,16 @@ void setBoardDefaultConfiguration(void) {
  * @todo    Add your board-specific code, if any.
  */
 void setSdCardConfigurationOverrides(void) {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOA_15;
+//	engineConfiguration->spi3mosiPin = GPIOC_12;
+//	engineConfiguration->spi3misoPin = GPIOC_11;
+//	engineConfiguration->spi3sckPin = GPIOC_10;
+//	engineConfiguration->sdCardCsPin = GPIOA_15;
 
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->spi2mosiPin = GPIOB_15;
+	engineConfiguration->spi2misoPin = GPIOB_14;
+	engineConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->sdCardCsPin = GPIOB_12;
+	CONFIG(is_enabled_spi_2) = true;
 }

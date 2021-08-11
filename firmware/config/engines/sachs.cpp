@@ -8,11 +8,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "sachs.h"
-#include "allsensors.h"
-#include "engine_math.h"
+#include "pch.h"
 
-EXTERN_CONFIG;
+#include "sachs.h"
 
 void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

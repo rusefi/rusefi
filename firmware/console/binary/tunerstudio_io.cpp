@@ -5,15 +5,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 #include "os_access.h"
 #include "tunerstudio_io.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif // EFI_SIMULATOR
-
-EXTERN_ENGINE;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 size_t TsChannelBase::read(uint8_t* buffer, size_t size) {

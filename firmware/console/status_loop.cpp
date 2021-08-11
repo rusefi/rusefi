@@ -24,21 +24,16 @@
  *
  */
 
-#include "global.h"
+#include "pch.h"
 #include "status_loop.h"
 #include "hip9011_logic.h"
-#include "engine_controller.h"
 
-#include "adc_inputs.h"
 #if EFI_LOGIC_ANALYZER
 #include "logic_analyzer.h"
 #endif /* EFI_LOGIC_ANALYZER */
 
 #include "trigger_central.h"
-#include "allsensors.h"
 #include "sensor_reader.h"
-#include "io_pins.h"
-#include "efi_gpio.h"
 #include "mmc_card.h"
 #include "console_io.h"
 #include "malfunction_central.h"
@@ -48,15 +43,11 @@
 #include "tunerstudio.h"
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
-#include "engine_math.h"
 #include "spark_logic.h"
 #include "idle_thread.h"
-#include "engine_configuration.h"
 #include "os_util.h"
 #include "svnversion.h"
-#include "engine.h"
 #include "lcd_controller.h"
-#include "settings.h"
 #include "can_hw.h"
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
@@ -140,8 +131,6 @@ static NO_CACHE char sdLogBuffer[150];
 static uint64_t binaryLogCount = 0;
 
 #endif /* EFI_FILE_LOGGING */
-
-EXTERN_ENGINE;
 
 /**
  * This is useful if we are changing engine mode dynamically
@@ -332,11 +321,11 @@ static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPi
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static void initStatusLeds(void) {
-	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, &LED_COMMUNICATION_BRAIN_PIN_MODE);
+	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, &LED_COMMUNICATION_BRAIN_PIN_MODE, true);
 	// checkEnginePin is already initialized by the time we get here
 
-	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, &LED_WARNING_BRAIN_PIN_MODE);
-	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin, &LED_RUNING_BRAIN_PIN_MODE);
+	enginePins.warningLedPin.initPin("led: warning status", engineConfiguration->warningLedPin, &LED_WARNING_BRAIN_PIN_MODE, true);
+	enginePins.runningLedPin.initPin("led: running status", engineConfiguration->runningLedPin, &LED_RUNING_BRAIN_PIN_MODE, true);
 }
 
 #if EFI_PROD_CODE
@@ -481,10 +470,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_PROD_CODE
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
-
-#if EFI_SIMULATOR
-	tsOutputChannels->sd_status = 1 + 4;
-#endif
 
 	// header
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
@@ -695,11 +680,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
 #endif /* EFI_INTERNAL_FLASH */
 
-#if EFI_FILE_LOGGING
-	tsOutputChannels->hasSdCard = isSdCardAlive();
-#endif /* EFI_FILE_LOGGING */
-
 	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
+	tsOutputChannels->isFan2On = enginePins.fanRelay2.getLogicValue();
 	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	tsOutputChannels->isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
 	tsOutputChannels->isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();
@@ -876,6 +858,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 			float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
+
+			tsOutputChannels->debugIntField1 = engine->mostRecentTimeBetweenSparkEvents;
+			tsOutputChannels->debugIntField2 = engine->mostRecentTimeBetweenIgnitionEvents;
 		}
 		break;
 	case DBG_ION:

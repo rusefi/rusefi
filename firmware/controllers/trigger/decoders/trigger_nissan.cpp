@@ -129,7 +129,7 @@ void initializeNissanVQvvt(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(5);
 }
 
-void initializeNissanVQcrank(TriggerWaveform *s) {
+void initializeNissanVQ35crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
 	s->setTriggerSynchronizationGap(0.33);
 
@@ -141,4 +141,63 @@ void initializeNissanVQcrank(TriggerWaveform *s) {
 		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
 		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
 	}
+}
+
+void initializeNissanQR25crank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+	s->setTriggerSynchronizationGap(0.33);
+	s->setSecondTriggerSynchronizationGap(3);
+
+	s->tdcPosition = 585;
+
+	float currentAngle = 20;
+	for (int i = 0;i < 16;i++) {
+		currentAngle += 10;
+		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
+		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
+	}
+}
+
+static void addvq30tooth(TriggerWaveform *s, float angle) {
+	s->addEvent360(angle - 4, T_PRIMARY, TV_RISE);
+	s->addEvent360(angle, T_PRIMARY, TV_FALL);
+}
+
+void initializeNissanVQ30cam(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->tdcPosition = 00;
+
+	int x = 360 + 52;
+
+	addvq30tooth(s, x - (360 - 9 * 0));
+	addvq30tooth(s, x - (360 - 9 * 1));
+	addvq30tooth(s, x - (360 - 9 * 2));
+
+	addvq30tooth(s, x - (252 + 9 * 5));
+	addvq30tooth(s, x - (252 + 9 * 4));
+	addvq30tooth(s, x - (252 + 9 * 3));
+	addvq30tooth(s, x - (252 + 9 * 2));
+	addvq30tooth(s, x - (252 + 9 * 1));
+	addvq30tooth(s, x - (252 + 9 * 0));
+
+	addvq30tooth(s, x - (236        ));
+
+	addvq30tooth(s, x - (152 + 9 * 3));
+	addvq30tooth(s, x - (152 + 9 * 2));
+	addvq30tooth(s, x - (152 + 9 * 1));
+	addvq30tooth(s, x - (152 + 9 * 0));
+
+	addvq30tooth(s, x - (85 + 9 * 4));
+	addvq30tooth(s, x - (85 + 9 * 3));
+	addvq30tooth(s, x - (85 + 9 * 2));
+	addvq30tooth(s, x - (85 + 9 * 1));
+	addvq30tooth(s, x - (85 + 9 * 0));
+
+	addvq30tooth(s, x - (52 + 9 * 1));
+	addvq30tooth(s, x - (52 + 9 * 0));
+
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 5.78 * TRIGGER_GAP_DEVIATION_LOW, 5.78 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.38 * TRIGGER_GAP_DEVIATION_LOW, 0.38 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.67 * TRIGGER_GAP_DEVIATION_LOW, 2.67 * TRIGGER_GAP_DEVIATION_HIGH);
 }

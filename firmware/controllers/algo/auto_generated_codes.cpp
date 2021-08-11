@@ -1,6 +1,6 @@
 #include "global.h"
 #include "obd_error_codes.h"
-// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Sat Jul 03 20:51:11 EDT 2021
+// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Fri Jul 23 12:39:04 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -57,6 +57,8 @@ case CUSTOM_ENGINE_REF:
   return "CUSTOM_ENGINE_REF";
 case CUSTOM_ERR_2ND_WATCHDOG:
   return "CUSTOM_ERR_2ND_WATCHDOG";
+case CUSTOM_ERR_6030:
+  return "CUSTOM_ERR_6030";
 case CUSTOM_ERR_6102:
   return "CUSTOM_ERR_6102";
 case CUSTOM_ERR_6122:
@@ -463,8 +465,6 @@ case CUSTOM_ERR_UNEXPECTED_SPI:
   return "CUSTOM_ERR_UNEXPECTED_SPI";
 case CUSTOM_ERR_UNKNOWN_PORT:
   return "CUSTOM_ERR_UNKNOWN_PORT";
-case CUSTOM_ERR_VVT_OUT_OF_RANGE:
-  return "CUSTOM_ERR_VVT_OUT_OF_RANGE";
 case CUSTOM_ERR_WAVE_1:
   return "CUSTOM_ERR_WAVE_1";
 case CUSTOM_ERR_WAVE_2:
@@ -491,8 +491,6 @@ case CUSTOM_ICU_DRIVER_STATE:
   return "CUSTOM_ICU_DRIVER_STATE";
 case CUSTOM_IDLE_WAVE_CNT:
   return "CUSTOM_IDLE_WAVE_CNT";
-case CUSTOM_IGN_MATH_STATE:
-  return "CUSTOM_IGN_MATH_STATE";
 case CUSTOM_IH_STACK:
   return "CUSTOM_IH_STACK";
 case CUSTOM_INJ_DURATION:
@@ -769,6 +767,8 @@ case ERROR_TRIGGER_DRAMA:
   return "ERROR_TRIGGER_DRAMA";
 case Internal_ForceMyEnumIntSize_cranking_obd_code:
   return "Internal_ForceMyEnumIntSize_cranking_obd_code";
+case NO_LONGER_USED_CUSTOM_ERR_VVT_OUT_OF_RANGE:
+  return "NO_LONGER_USED_CUSTOM_ERR_VVT_OUT_OF_RANGE";
 case OBD_Barometric_Press_Circ:
   return "OBD_Barometric_Press_Circ";
 case OBD_Barometric_Press_Circ_Range_Perf:

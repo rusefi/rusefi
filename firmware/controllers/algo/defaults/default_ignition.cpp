@@ -1,9 +1,7 @@
-#include "defaults.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
-#include "table_helper.h"
+#include "pch.h"
 
-EXTERN_CONFIG;
+#include "defaults.h"
+#include "table_helper.h"
 
 static void setDefaultMultisparkParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 1ms spark + 2ms dwell

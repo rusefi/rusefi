@@ -7,11 +7,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "fsio_impl.h"
 #include "cli_registry.h"
-#include "engine_test_helper.h"
-#include "thermistors.h"
-#include "allsensors.h"
 
 #define TEST_POOL_SIZE 256
 

@@ -7,33 +7,20 @@
  * This is just the hardware interface - deciding where to put the valve happens in idle_thread.cpp
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_IDLE_CONTROL
-#include "engine_configuration.h"
 #include "idle_hardware.h"
 
-#include "engine.h"
 #include "electronic_throttle.h"
 
-#include "pwm_generator_logic.h"
 #include "dc_motors.h"
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
-#include "pin_repository.h"
 static StepDirectionStepper iacStepperHw;
 static DualHBridgeStepper iacHbridgeHw;
 StepperMotor iacMotor;
 #endif /* EFI_UNIT_TEST */
-
-EXTERN_ENGINE;
-
-/**
- * When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
- * todo: why do we have this logic? is this ever useful?
- * See
- */
-static percent_t idlePositionSensitivityThreshold = 0.0f;
 
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
@@ -41,13 +28,6 @@ static SimplePwm idleSolenoidClose("idle close");
 extern efitimeus_t timeToStopIdleTest;
 
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	bool prettyClose = absF(position - engine->engineState.idle.currentIdlePosition) < idlePositionSensitivityThreshold;
-	// The threshold is dependent on IAC type (see initIdleHardware())
-	if (prettyClose) {
-		return; // value is pretty close, let's leave the poor valve alone
-	}
-
-	
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
@@ -138,9 +118,6 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 
 		iacMotor.initialize(hw, CONFIG(idleStepperTotalSteps));
-
-		// This greatly improves PID accuracy for steppers with a small number of steps
-		idlePositionSensitivityThreshold = 1.0f / engineConfiguration->idleStepperTotalSteps;
 	} else if (engineConfiguration->useETBforIdleControl || !isBrainPinValid(CONFIG(idle).solenoidPin)) {
 		// here we do nothing for ETB idle and for no idle
 	} else {
@@ -166,8 +143,6 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				&enginePins.secondIdleSolenoidPin,
 				CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)));
 		}
-
-		idlePositionSensitivityThreshold = 0.0f;
 	}
 }
 
