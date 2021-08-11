@@ -10,15 +10,18 @@
 static void initSensorCli();
 
 static void initAfrInput(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if !EFI_UNIT_TEST
 	auto name = "AFR";
 	brain_pin_e pin = getAdcChannelBrainPin(name, engineConfiguration->afr.hwChannel);
 	efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 }
 
 static void deinitAfrInput(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	auto name = "AFR";
-	brain_pin_e pin = getAdcChannelBrainPin(name, engineConfiguration->afr.hwChannel);
+#if !EFI_UNIT_TEST
+	brain_pin_e pin = getAdcChannelBrainPin("AFR", engineConfiguration->afr.hwChannel);
 	efiSetPadUnused(pin PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 }
 
 void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
