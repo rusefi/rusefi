@@ -5,6 +5,8 @@ pins:
 
   - pin: A2    
     function: ECU power supply from ignition key
+    class: [analog_inputs]
+    id: EFI_ADC_5
     type: 12v
 
   - pin: A3
