@@ -144,6 +144,8 @@ void stopTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+static const char* const camNames[] = { "cam1", "cam2", "cam3", "cam4"};
+
 void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
@@ -154,7 +156,7 @@ void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
 		if (isConfigurationChanged(camInputs[i])) {
-			turnOnTriggerInputPin("Cam", i, false);
+			turnOnTriggerInputPin(camNames[i], i, false);
 		}
 	}
 }

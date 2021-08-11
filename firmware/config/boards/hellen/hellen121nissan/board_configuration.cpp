@@ -81,7 +81,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_6;
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
