@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Aug 10 02:25:01 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Aug 11 01:59:23 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1000,6 +1000,8 @@ case TT_SUBARU_7_WITHOUT_6:
   return "TT_SUBARU_7_WITHOUT_6";
 case TT_SUBARU_SVX:
   return "TT_SUBARU_SVX";
+case TT_TEMP_62:
+  return "TT_TEMP_62";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:
