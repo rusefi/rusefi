@@ -1,7 +1,6 @@
-#include "fuel_pump.h"
-#include "engine.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "fuel_pump.h"
 
 auto timeSinceBoot(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_MAIN_RELAY_CONTROL
