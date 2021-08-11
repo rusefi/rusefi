@@ -32,6 +32,8 @@ void setHellen121nissanVQ(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 4;
 	strcpy(CONFIG(engineCode), "VQ");
 
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
+
 	engineConfiguration->vvtMode[0] = VVT_NISSAN_VQ;
 
 	// we have this here and not in board_configuration.cpp so that unit test would get this value
