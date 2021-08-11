@@ -185,6 +185,11 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 			return false;
 		}
 
+		// If no sensor is configured for this throttle, skip initialization.
+		if (!Sensor::hasSensor(functionToTpsSensorPrimary(function))) {
+			return false;
+		}
+
 		if (!Sensor::isRedundant(m_positionSensor)) {
 			firmwareError(
 				OBD_Throttle_Position_Sensor_Circuit_Malfunction,
