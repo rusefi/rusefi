@@ -501,15 +501,6 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 
-	if (engineConfiguration->useFSIO12ForIdleOffset) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_OFFSET, "idle offset", &ENGINE(fsioState.fsioIdleOffset) PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (engineConfiguration->useFSIO13ForIdleMinValue) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE, "idle minValue", &ENGINE(fsioState.fsioIdleMinValue) PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (engineConfiguration->useFSIO15ForIdleRpmAdjustment) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_IDLE_TARGET_RPM, "RPM target", &ENGINE(fsioState.fsioIdleTargetRPMAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
-	}
 	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
 		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioState.fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
