@@ -2,25 +2,24 @@
 
 #include "init.h"
 #include "vehicle_speed.h"
-#include "function_pointer_sensor.h"
+#include "frequency_sensor.h"
+#include "vehicle_speed_converter.h"
 
-struct GetVehicleSpeedWrapper {
-	DECLARE_ENGINE_PTR;
+static FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
+static VehicleSpeedConverter vehicleSpeedConverter;
 
-	float getVehicleSpeed() {
-		return ::getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
-	}
-};
 
-static GetVehicleSpeedWrapper vehicleSpeedWrapper;
-
-static FunctionPointerSensor vehicleSpeedSensor(SensorType::VehicleSpeed,
-[]() {
-	return vehicleSpeedWrapper.getVehicleSpeed();
-});
 
 void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&vehicleSpeedWrapper);
 
+	auto pin = CONFIG(vehicleSpeedSensorInputPin);
+
+	// Nothing to do if no sensor configured
+	if (!isBrainPinValid(pin)) {
+		return;
+	}
+
+	vehicleSpeedSensor.setFunction(vehicleSpeedConverter);
+	vehicleSpeedSensor.init(pin);
 	vehicleSpeedSensor.Register();
 }
