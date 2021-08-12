@@ -10,7 +10,7 @@ static VehicleSpeedConverter vehicleSpeedConverter;
 
 
 
-void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initVehicleSpeedSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	auto pin = CONFIG(vehicleSpeedSensorInputPin);
 
