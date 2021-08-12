@@ -12,3 +12,4 @@ INIT_SRC_CPP =	$(PROJECT_DIR)/init/sensor/init_sensors.cpp \
 				$(PROJECT_DIR)/init/sensor/init_baro.cpp \
 				$(PROJECT_DIR)/init/sensor/init_fuel_level.cpp \
 				$(PROJECT_DIR)/init/sensor/init_aux.cpp \
+				$(PROJECT_DIR)/init/sensor/init_vehicle_speed_sensor.cpp \

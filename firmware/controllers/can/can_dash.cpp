@@ -173,7 +173,7 @@ void canMazdaRX8(CanCycle cycle) {
 		{
 			CanTxMessage msg(CAN_MAZDA_RX_RPM_SPEED);
 
-			float kph = getVehicleSpeed();
+			float kph = Sensor::get(SensorType::VehicleSpeed).value_or(0);
 
 			msg.setShortValue(SWAP_UINT16(GET_RPM() * 4), 0);
 			msg.setShortValue(0xFFFF, 2);
@@ -497,7 +497,8 @@ void canDashboardBMWE90(CanCycle cycle)
 		}
 
 		{ //E90_SPEED
-			float mph = getVehicleSpeed() * 0.6213712;
+			auto vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0); 
+			float mph = vehicleSpeed * 0.6213712;
 			mph_ctr = ((TIME_I2MS(chVTGetSystemTime()) - mph_timer) / 50);
 			mph_a = (mph_ctr * mph / 2);
 			mph_2a = mph_a + mph_last;
@@ -753,7 +754,8 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x36C, 8);
 			/* Wheel Speed Front Left */
-			tmp = (getVehicleSpeed() * 10 );
+			auto vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+			tmp = (vehicleSpeed * 10 );
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Wheel Speed Front Right */
@@ -815,7 +817,8 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x370, 8);
 			/* Vehicle Speed */
-			tmp = (getVehicleSpeed() * 10 );
+			auto vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+			tmp = (vehicleSpeed * 10 );
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* unused */
