@@ -29,12 +29,6 @@ TEST(idle, fsioPidParameters) {
 	engineConfiguration->idleRpmPid.minValue = 30;
 	engineConfiguration->acIdleExtraMin = 30;
 
-	engineConfiguration->useFSIO12ForIdleOffset = true;
-	applyFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_ENGINE_PARAMETER_SUFFIX);
-
-	engineConfiguration->useFSIO13ForIdleMinValue = true;
-	applyFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_ENGINE_PARAMETER_SUFFIX);
-
 	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 	setMockState(engineConfiguration->acSwitch, true);
 	timeNowUs += MS2US(15);
@@ -49,9 +43,6 @@ TEST(idle, fsioPidParameters) {
 	ASSERT_FALSE(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(50, getIdlePidOffset(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(60, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
-
 
 	// todo finish this unit test!
 //	timeNowUs = MS2US(700);
