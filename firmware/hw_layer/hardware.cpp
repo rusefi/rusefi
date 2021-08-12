@@ -62,6 +62,10 @@
 #include "flash_main.h"
 #endif
 
+#if HAL_USE_PAL && EFI_PROD_CODE
+#include "digital_input_exti.h"
+#endif // HAL_USE_PAL
+
 #if EFI_CAN_SUPPORT
 #include "can_vss.h"
 #endif
@@ -507,6 +511,10 @@ void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if HAL_USE_PAL && EFI_PROD_CODE
+	efiExtiInit();
+#endif // HAL_USE_PAL
+
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
 	if (hasFirmwareError())
