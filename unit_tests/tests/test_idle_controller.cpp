@@ -425,7 +425,7 @@ TEST(idle_v2, IntegrationManual) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
-	setMockVehicleSpeed(15 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm
@@ -460,7 +460,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
-	setMockVehicleSpeed(15 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm
@@ -498,7 +498,7 @@ TEST(idle_v2, IntegrationClamping) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
-	setMockVehicleSpeed(15 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm
