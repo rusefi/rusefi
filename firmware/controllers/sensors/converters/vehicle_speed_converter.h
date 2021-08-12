@@ -5,10 +5,6 @@ class VehicleSpeedConverter : public SensorConverter {
 public:
 	DECLARE_ENGINE_PTR;
 
-	VehicleSpeedConverter() {
-
-	}
-
 	SensorResult 
 	convert(float frequency) const override {
 		auto speed = frequency * engineConfiguration->vehicleSpeedCoef;
