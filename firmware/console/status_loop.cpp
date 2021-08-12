@@ -695,7 +695,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 #endif /* EFI_VEHICLE_SPEED */
 #endif /* EFI_PROD_CODE */
-	
+
 	tsOutputChannels->fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 	tsOutputChannels->totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
 
