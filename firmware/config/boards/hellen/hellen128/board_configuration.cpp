@@ -164,6 +164,12 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
 
+	//Set default ETB config
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6; // out_pwm2
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
+	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	CONFIG(etb_use_two_wires) = true;
+
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MERCEDES);
 	strcpy(CONFIG(engineCode), "");
 
