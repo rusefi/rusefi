@@ -16,12 +16,6 @@
 #define MAGIC_OFFSET_FOR_ENGINE_WARNING 4
 // see useFSIO5ForCriticalIssueEngineStop
 #define MAGIC_OFFSET_FOR_CRITICAL_ENGINE 5
-// see useFSIO12ForIdleOffset
-#define MAGIC_OFFSET_FOR_IDLE_OFFSET 12
-// see useFSIO13ForIdleMinValue
-#define MAGIC_OFFSET_FOR_IDLE_MIN_VALUE 13
-// see useFSIO15ForIdleRpmAdjustment
-#define MAGIC_OFFSET_FOR_IDLE_TARGET_RPM 15
 // see useFSIO16ForTimingAdjustment
 #define MAGIC_OFFSET_FOR_TIMING_FSIO 16
 
