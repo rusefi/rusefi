@@ -6,11 +6,10 @@
 
 #if EFI_UNIT_TEST
 
-void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
-									  adc_channel_e channel,
-									  float lowpassCutoff,
-									  float voltsPerAdcVolt /*= 0.0f*/)
-{
+/*static*/ void AdcSubscription::SubscribeSensor(FunctionalSensor&, adc_channel_e, float, float) {
+}
+
+/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor&) {
 }
 
 #else
@@ -23,10 +22,24 @@ struct AdcSubscriptionEntry {
 	bool HasUpdated = false;
 };
 
-static size_t s_nextEntry = 0;
 static AdcSubscriptionEntry s_entries[16];
 
-void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
+static AdcSubscriptionEntry* findEntry(FunctionalSensor* sensor) {
+	for (size_t i = 0; i < efi::size(s_entries); i++) {
+		if (s_entries[i].Sensor == sensor) {
+			return &s_entries[i];
+		}
+	}
+
+	return nullptr;
+}
+
+static AdcSubscriptionEntry* findEntry() {
+	// Find an entry with no sensor set
+	return findEntry(nullptr);
+}
+
+/*static*/ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 									  adc_channel_e channel,
 									  float lowpassCutoff,
 									  float voltsPerAdcVolt /*= 0.0f*/) {
@@ -41,8 +54,10 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 		return;
 	}
 
-	// Ensure that enough entries are available
-	if (s_nextEntry >= efi::size(s_entries)) {
+	auto entry = findEntry();
+
+	// Ensure that a free entry was found
+	if (!entry) {
 		firmwareError(CUSTOM_INVALID_ADC, "too many ADC subscriptions");
 		return;
 	}
@@ -58,20 +73,44 @@ void AdcSubscription::SubscribeSensor(FunctionalSensor &sensor,
 	}
 
 	// Populate the entry
-	auto &entry = s_entries[s_nextEntry];
-	entry.Sensor = &sensor;
-	entry.VoltsPerAdcVolt = voltsPerAdcVolt;
-	entry.Channel = channel;
-	entry.Filter.configureLowpass(SLOW_ADC_RATE, lowpassCutoff);
+	entry->VoltsPerAdcVolt = voltsPerAdcVolt;
+	entry->Channel = channel;
+	entry->Filter.configureLowpass(SLOW_ADC_RATE, lowpassCutoff);
 
-	s_nextEntry++;
+	// Set the sensor last - it's the field we use to determine whether this entry is in use
+	entry->Sensor = &sensor;
+}
+
+/*static*/ void AdcSubscription::UnsubscribeSensor(FunctionalSensor& sensor) {
+	auto entry = findEntry(&sensor);
+
+	if (!entry) {
+		// This sensor wasn't configured, skip it
+		return;
+	}
+
+#if EFI_PROD_CODE
+	// Release the pin
+	efiSetPadUnused(getAdcChannelBrainPin("adc unsubscribe", entry->Channel));
+#endif // EFI_PROD_CODE
+
+	// clear the sensor first to mark this entry not in use
+	entry->Sensor = nullptr;
+
+	entry->VoltsPerAdcVolt = 0;
+	entry->Channel = EFI_ADC_NONE;
 }
 
 void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 	ScopePerf perf(PE::AdcSubscriptionUpdateSubscribers);
 
-	for (size_t i = 0; i < s_nextEntry; i++) {
+	for (size_t i = 0; i < efi::size(s_entries); i++) {
 		auto &entry = s_entries[i];
+
+		if (!entry.Sensor) {
+			// Skip unconfigured entries
+			continue;
+		}
 
 		float mcuVolts = getVoltage("sensor", entry.Channel);
 		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
