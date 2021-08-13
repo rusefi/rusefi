@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Aug 11 06:06:31 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Aug 13 19:04:40 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2295,7 +2295,7 @@ struct engine_configuration_s {
 	bool useFSIO12ForServo5 : 1;
 	/**
 	offset 1464 bit 26 */
-	bool useFSIO15ForIdleRpmAdjustment : 1;
+	bool unusedBitHere1 : 1;
 	/**
 	 * Sometimes we just have to shut the engine down. Use carefully!
 	offset 1464 bit 27 */
@@ -2306,10 +2306,10 @@ struct engine_configuration_s {
 	bool useFSIO4ForSeriousEngineWarning : 1;
 	/**
 	offset 1464 bit 29 */
-	bool useFSIO12ForIdleOffset : 1;
+	bool unusedBitHere2 : 1;
 	/**
 	offset 1464 bit 30 */
-	bool useFSIO13ForIdleMinValue : 1;
+	bool unusedBitHere3 : 1;
 	/**
 	offset 1464 bit 31 */
 	bool useFSIO6ForRevLimiter : 1;
@@ -4299,4 +4299,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Aug 11 06:06:31 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Aug 13 19:04:40 UTC 2021
