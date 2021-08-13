@@ -1122,11 +1122,11 @@ bit hasFrequencyReportingMapSensor
 	bit useFSIO10ForServo3
 	bit useFSIO11ForServo4
 	bit useFSIO12ForServo5
-bit useFSIO15ForIdleRpmAdjustment
+bit unusedBitHere1
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
-bit useFSIO12ForIdleOffset
-bit useFSIO13ForIdleMinValue
+bit unusedBitHere2
+bit unusedBitHere3
 bit useFSIO6ForRevLimiter
 
 	adc_channel_e hipOutputChannel;
