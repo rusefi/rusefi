@@ -72,14 +72,6 @@ Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return &industrialWithOverrideIdlePid;
 }
 
-float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOffset();
-}
-
-float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getMinValue();
-}
-
 static uint32_t lastCrankingCyclesCounter = 0;
 static float lastCrankingIacPosition;
 
