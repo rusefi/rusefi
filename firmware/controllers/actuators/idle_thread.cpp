@@ -164,9 +164,6 @@ int IdleController::getTargetRpm(float clt) const {
 	// Bump for AC
 	target += engine->acSwitchState ? CONFIG(acIdleRpmBump) : 0;
 
-	// Bump by FSIO
-	target += engine->fsioState.fsioIdleTargetRPMAdjustment;
-
 	return target;
 }
 

@@ -74,7 +74,6 @@ class FsioState {
 public:
 	FsioState();
 	float fsioTimingAdjustment = 0;
-	float fsioIdleTargetRPMAdjustment = 0;
 	float servoValues[SERVO_COUNT];
 	float fsioLastValue[FSIO_COMMAND_COUNT];
 
