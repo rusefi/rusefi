@@ -78,9 +78,6 @@ public:
 	float servoValues[SERVO_COUNT];
 	float fsioLastValue[FSIO_COMMAND_COUNT];
 
-	float fsioIdleOffset = 0;
-	float fsioIdleMinValue = 0;
-
 	float fsioRpmHardLimit;
 
 #if EFI_UNIT_TEST
