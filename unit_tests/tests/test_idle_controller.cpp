@@ -12,12 +12,9 @@
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "electronic_throttle.h"
-#include "vehicle_speed.h"
 
 using ::testing::StrictMock;
 using ::testing::_;
-
-extern int timeNowUs;
 
 using ICP = IIdleController::Phase;
 
