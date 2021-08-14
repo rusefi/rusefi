@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Aug 13 19:04:37 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 14 06:51:24 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1664,11 +1664,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t mc33_hvolt;
 	/**
-	 * Additional idle PID minValue while A/C is active
-	Percent
 	 * offset 761
 	 */
-	uint8_t acIdleExtraMin;
+	uint8_t unused761;
 	/**
 	 * Optional Radiator Fan used with A/C
 	 * offset 762
@@ -4305,4 +4303,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Aug 13 19:04:37 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 14 06:51:24 UTC 2021

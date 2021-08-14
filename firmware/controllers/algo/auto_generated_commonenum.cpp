@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Aug 11 01:59:23 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Aug 14 06:50:48 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -256,8 +256,6 @@ case DBG_FSIO_EXPRESSION_1_7:
   return "DBG_FSIO_EXPRESSION_1_7";
 case DBG_FSIO_EXPRESSION_8_14:
   return "DBG_FSIO_EXPRESSION_8_14";
-case DBG_FSIO_SPECIAL:
-  return "DBG_FSIO_SPECIAL";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
 case DBG_GPPWM:
@@ -302,6 +300,8 @@ case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
+case DBG_UNUSED_42:
+  return "DBG_UNUSED_42";
 case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
