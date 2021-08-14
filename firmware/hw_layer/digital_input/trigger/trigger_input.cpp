@@ -174,14 +174,10 @@ void turnOnTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void stopTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
-		if (isConfigurationChanged(triggerInputDebugPins[i])) {
-			efiSetPadUnused(activeConfiguration.triggerInputDebugPins[i] PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		efiSetPadUnusedIfConfigurationChanged(triggerInputDebugPins[i]);
 	}
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		if (isConfigurationChanged(camInputsDebug[i])) {
-			efiSetPadUnused(activeConfiguration.camInputsDebug[i] PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		efiSetPadUnusedIfConfigurationChanged(camInputsDebug[i]);
 	}
 }
 

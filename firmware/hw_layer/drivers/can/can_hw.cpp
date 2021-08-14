@@ -197,13 +197,8 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (isConfigurationChanged(canTxPin)) {
-		efiSetPadUnused(activeConfiguration.canTxPin);
-	}
-
-	if (isConfigurationChanged(canRxPin)) {
-		efiSetPadUnused(activeConfiguration.canRxPin);
-	}
+	efiSetPadUnusedIfConfigurationChanged(canTxPin);
+	efiSetPadUnusedIfConfigurationChanged(canRxPin);
 }
 
 // at the moment we support only very limited runtime configuration change, still not supporting online CAN toggle
@@ -224,12 +219,8 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	if (isConfigurationChanged(canTxPin)) {
-		efiSetPadMode("CAN TX", CONFIG(canTxPin), PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	}
-	if (isConfigurationChanged(canRxPin)) {
-		efiSetPadMode("CAN RX", CONFIG(canRxPin), PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
-	}
+	efiSetPadModeIfConfigurationChanged("CAN TX", canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadModeIfConfigurationChanged("CAN RX", canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
 void initCan(void) {
