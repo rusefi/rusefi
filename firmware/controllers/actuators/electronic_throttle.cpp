@@ -80,7 +80,6 @@
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
-#include "thread_priority.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -183,6 +182,11 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	if (function == ETB_Throttle1 || function == ETB_Throttle2) {
 		// We don't need to init throttles, so nothing to do here.
 		if (!initializeThrottles) {
+			return false;
+		}
+
+		// If no sensor is configured for this throttle, skip initialization.
+		if (!Sensor::hasSensor(functionToTpsSensorPrimary(function))) {
 			return false;
 		}
 

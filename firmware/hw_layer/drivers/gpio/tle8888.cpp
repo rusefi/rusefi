@@ -29,7 +29,7 @@
  * Andrey Gusakov, (c) 2019
  */
 
-#include "global.h"
+#include "pch.h"
 
 #include "gpio/tle8888.h"
 
@@ -38,9 +38,7 @@
 #include "persistent_configuration.h"
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
-#include "pin_repository.h"
 #include "os_util.h"
-#include "thread_priority.h"
 
 /*
  * TODO list:

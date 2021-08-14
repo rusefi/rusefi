@@ -8,9 +8,6 @@
 #pragma once
 
 #include "efifeatures.h"
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
 
 void initCan(void);
 void setCanType(int type);

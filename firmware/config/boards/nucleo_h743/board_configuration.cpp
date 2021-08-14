@@ -1,4 +1,4 @@
-#include "adc_inputs.h"
+#include "pch.h"
 
 /**
  * @brief   Board-specific pin configuration code overrides. Needed by bootloader code.

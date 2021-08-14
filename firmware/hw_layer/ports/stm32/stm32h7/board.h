@@ -27,14 +27,9 @@
 /*===========================================================================*/
 
 /*
- * Setup for STMicroelectronics STM32 Nucleo144-H743ZI board.
- */
-
-/*
  * Board identifier.
  */
-#define BOARD_ST_NUCLEO144_H743ZI
-#define BOARD_NAME                  "STMicroelectronics STM32 Nucleo144-H743ZI"
+#define BOARD_NAME                  "H7 rusEFI"
 
 #define EFI_USB_AF 10U
 #define EFI_USB_SERIAL_DM GPIOA_11
@@ -44,7 +39,9 @@
  * input-floating is the default pin mode. input-output boards should provision appropriate pull-ups/pull-downs.
  */
 #define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT
-#define EFI_DR_DEFAULT PIN_PUPDR_FLOATING
+#ifndef EFI_DR_DEFAULT
+#define EFI_DR_DEFAULT PIN_PUPDR_PULLDOWN
+#endif
 
 // See https://github.com/rusefi/rusefi/issues/397
 #define DEFAULT_GPIO_SPEED PIN_OSPEED_HIGH

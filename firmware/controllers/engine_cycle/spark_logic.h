@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
-
 void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 void turnSparkPinHigh(IgnitionEvent *event);
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event);

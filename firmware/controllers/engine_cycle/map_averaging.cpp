@@ -29,7 +29,6 @@
 
 #include "map_averaging.h"
 #include "trigger_central.h"
-#include "adc_inputs.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"

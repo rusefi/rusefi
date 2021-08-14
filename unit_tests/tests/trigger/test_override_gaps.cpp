@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "engine_test_helper.h"
-#include "globalaccess.h"
+#include "pch.h"
 
 TEST(subaru, overrideGap) {
 	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);

@@ -1,8 +1,7 @@
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Aug 02 17:34:38 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 14 15:25:16 UTC 2021
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 static LENameOrdinalPair leacIdleExtraOffset(FSIO_SETTING_ACIDLEEXTRAOFFSET, "cfg_acIdleExtraOffset");
-static LENameOrdinalPair leacIdleExtraMin(FSIO_SETTING_ACIDLEEXTRAMIN, "cfg_acIdleExtraMin");
 static LENameOrdinalPair leboostPid_offset(FSIO_SETTING_BOOSTPID_OFFSET, "cfg_boostPid_offset");
 static LENameOrdinalPair leboostPid_minValue(FSIO_SETTING_BOOSTPID_MINVALUE, "cfg_boostPid_minValue");
 static LENameOrdinalPair lealternatorControl_offset(FSIO_SETTING_ALTERNATORCONTROL_OFFSET, "cfg_alternatorControl_offset");

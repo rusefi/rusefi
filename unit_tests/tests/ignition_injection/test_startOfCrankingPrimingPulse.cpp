@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

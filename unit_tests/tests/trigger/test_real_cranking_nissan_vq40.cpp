@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "logicdata_csv_reader.h"
 
 TEST(realCrankingVQ40, normalCranking) {
@@ -13,7 +13,7 @@ TEST(realCrankingVQ40, normalCranking) {
 	int indeces[] = {0};
 
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", indeces);
-	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN);
+	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN_6_CYL);
 
 	bool hasSeenFirstVvt = false;
 

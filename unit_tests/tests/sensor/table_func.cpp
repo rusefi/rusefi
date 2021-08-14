@@ -1,6 +1,6 @@
-#include "table_func.h"
+#include "pch.h"
 
-#include <gtest/gtest.h>
+#include "table_func.h"
 
 TEST(TableFuncTest, basic) {
 	float in[] = { 0, 10 };

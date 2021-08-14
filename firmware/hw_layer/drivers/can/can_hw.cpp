@@ -12,19 +12,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_CAN_SUPPORT
 
 #include "can.h"
-#include "engine_configuration.h"
-#include "pin_repository.h"
 #include "can_hw.h"
 #include "can_msg_tx.h"
 #include "string.h"
 #include "mpu_util.h"
-#include "engine.h"
-#include "thread_priority.h"
 
 static int canReadCounter = 0;
 int canWriteOk = 0;
@@ -200,33 +196,13 @@ void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->canReadEnabled = false;
 }
 
-// todo: we usually use 'activeConfiguration' for 'stopPin' why this unusual code here?
-// this is related to #1375
-static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
-static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
-
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiSetPadUnused(currentTxPin);
-	efiSetPadUnused(currentRxPin);
+	efiSetPadUnusedIfConfigurationChanged(canTxPin);
+	efiSetPadUnusedIfConfigurationChanged(canRxPin);
 }
 
+// at the moment we support only very limited runtime configuration change, still not supporting online CAN toggle
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// Store pins so we can disable later
-	currentTxPin = CONFIG(canTxPin);
-	currentRxPin = CONFIG(canRxPin);
-
-	efiSetPadMode("CAN TX", currentTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	efiSetPadMode("CAN RX", currentRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
-}
-
-void initCan(void) {
-	addConsoleAction("caninfo", canInfo);
-
-	isCanEnabled = 
-		(isBrainPinValid(CONFIG(canTxPin))) && // both pins are set...
-		(isBrainPinValid(CONFIG(canRxPin))) &&
-		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
-
 	// nothing to do if we aren't enabled...
 	if (!isCanEnabled) {
 		return;
@@ -240,6 +216,23 @@ void initCan(void) {
 
 	if (!isValidCanRxPin(CONFIG(canRxPin))) {
 		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
+		return;
+	}
+
+	efiSetPadModeIfConfigurationChanged("CAN TX", canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadModeIfConfigurationChanged("CAN RX", canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+}
+
+void initCan(void) {
+	addConsoleAction("caninfo", canInfo);
+
+	isCanEnabled = 
+		(isBrainPinValid(CONFIG(canTxPin))) && // both pins are set...
+		(isBrainPinValid(CONFIG(canRxPin))) &&
+		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
+
+	// nothing to do if we aren't enabled...
+	if (!isCanEnabled) {
 		return;
 	}
 
@@ -259,8 +252,6 @@ void initCan(void) {
 	default:
 		break;
 	}
-
-	startCanPins();
 
 	// Initialize hardware
 #if STM32_CAN_USE_CAN2

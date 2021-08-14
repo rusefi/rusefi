@@ -19,6 +19,7 @@ extern "C"
 
 // Back in the day we wanted enums to be 32 bit integers.
 // as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
+#define ENUM_16_BITS 60000
 #define ENUM_32_BITS 2000000000
 
 typedef enum {

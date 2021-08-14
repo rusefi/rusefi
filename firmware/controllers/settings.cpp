@@ -11,13 +11,9 @@
 #if !EFI_UNIT_TEST
 #include "os_access.h"
 #include "eficonsole.h"
-#include "adc_inputs.h"
-#include "thermistors.h"
-#include "adc_inputs.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
 #include "idle_thread.h"
-#include "allsensors.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
 
@@ -1056,6 +1052,7 @@ const command_f_s commandsF[] = {
 		{"fsio_curve_2_value", setFsioCurve2Value},
 #if EFI_PROD_CODE
 #if EFI_VEHICLE_SPEED
+		//todo: This function become deprecated soon
 		{"mock_vehicle_speed", setMockVehicleSpeed},
 #endif /* EFI_VEHICLE_SPEED */
 #if EFI_IDLE_CONTROL

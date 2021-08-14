@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include "global.h"
-
 template<typename T, int MAXSIZE>
 class FLStack {
 public:

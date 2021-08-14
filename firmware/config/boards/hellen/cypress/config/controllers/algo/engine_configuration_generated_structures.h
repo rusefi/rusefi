@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Aug 02 17:34:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Aug 14 15:25:20 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1664,11 +1664,9 @@ struct engine_configuration_s {
 	 */
 	uint8_t mc33_hvolt;
 	/**
-	 * Additional idle PID minValue while A/C is active
-	Percent
 	 * offset 761
 	 */
-	uint8_t acIdleExtraMin;
+	uint8_t unused761;
 	/**
 	 * Optional Radiator Fan used with A/C
 	 * offset 762
@@ -1925,6 +1923,7 @@ struct engine_configuration_s {
 	offset 976 bit 6 */
 	bool launchDisableBySpeed : 1;
 	/**
+	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	offset 976 bit 7 */
 	bool enableCanVss : 1;
 	/**
@@ -2294,7 +2293,7 @@ struct engine_configuration_s {
 	bool useFSIO12ForServo5 : 1;
 	/**
 	offset 1464 bit 26 */
-	bool useFSIO15ForIdleRpmAdjustment : 1;
+	bool unusedBitHere1 : 1;
 	/**
 	 * Sometimes we just have to shut the engine down. Use carefully!
 	offset 1464 bit 27 */
@@ -2305,10 +2304,10 @@ struct engine_configuration_s {
 	bool useFSIO4ForSeriousEngineWarning : 1;
 	/**
 	offset 1464 bit 29 */
-	bool useFSIO12ForIdleOffset : 1;
+	bool unusedBitHere2 : 1;
 	/**
 	offset 1464 bit 30 */
-	bool useFSIO13ForIdleMinValue : 1;
+	bool unusedBitHere3 : 1;
 	/**
 	offset 1464 bit 31 */
 	bool useFSIO6ForRevLimiter : 1;
@@ -3313,7 +3312,12 @@ struct engine_configuration_s {
 	units
 	 * offset 2511
 	 */
-	uint8_t unused2508[3];
+	uint8_t unused2508;
+	/**
+	Deg
+	 * offset 2512
+	 */
+	int16_t knockSamplingDuration;
 	/**
 	Hz
 	 * offset 2514
@@ -4299,4 +4303,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Aug 02 17:34:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Aug 14 15:25:20 UTC 2021

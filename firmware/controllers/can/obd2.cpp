@@ -30,7 +30,6 @@
 #include "can_msg_tx.h"
 #include "vehicle_speed.h"
 #include "fuel_math.h"
-#include "thermistors.h"
 
 static const int16_t supportedPids0120[] = { 
 	PID_MONITOR_STATUS,
@@ -137,7 +136,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 2, GET_RPM() * ODB_RPM_MULT);	//	rotation/min.	(A*256+B)/4
 		break;
 	case PID_SPEED:
-		obdSendValue(_1_MODE, pid, 1, getVehicleSpeed());
+		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::VehicleSpeed).value_or(0));
 		break;
 	case PID_TIMING_ADVANCE: {
 		float timing = engine->engineState.timingAdvance;

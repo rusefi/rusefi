@@ -73,6 +73,8 @@ enum class SensorType : unsigned char {
 	Aux3 = 32,
 	Aux4 = 33,
 
+	VehicleSpeed = 34,
+
 	// Leave me at the end!
-	PlaceholderLast = 34,
+	PlaceholderLast = 35,
 };

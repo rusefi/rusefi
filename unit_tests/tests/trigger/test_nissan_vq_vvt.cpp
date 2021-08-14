@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "trigger_nissan.h"
 #include "nissan_vq.h"
 
@@ -66,7 +66,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 
 
 TEST(nissan, vq_vvt) {
-	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN);
+	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN_6_CYL);
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 

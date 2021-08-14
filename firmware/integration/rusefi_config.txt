@@ -289,7 +289,7 @@ float baseFuel;+Base mass of the per-cylinder fuel injected during cranking. Thi
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 3000, 0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "VVT1 PID", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "FSIO_SPECIAL", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "VVT1 PID", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "INVALID", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 custom debug_mode_e 4 bits, U32, @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define VM_VVT_INACTIVE 0
@@ -452,7 +452,8 @@ end_struct
 #define TT_TT_NISSAN_VQ35 58
 #define TT_TT_VVT_NISSAN_VQ35 59
 #define TT_TT_NISSAN_VQ30 60
-
+#define TT_TT_NISSAN_QR25 61
+#define TT_TT_TEMP_62 62
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define DBG_DBG_LOGIC_ANALYZER 45
@@ -507,7 +508,7 @@ end_struct
 #define ET_HELLEN_NB2 69
 
 #define ET_HELLEN_121_VAG 71
-#define ET_HELLEN_121_NISSAN 72 
+#define ET_HELLEN_121_NISSAN_6_CYL 72
 #define ET_HELLEN_55_BMW 73
 #define ET_HELLEN_88_BMW 74
 #define ET_HELLEN_134_BMW 75
@@ -521,7 +522,12 @@ end_struct
 #define ET_HELLEN_NA94 80
 
 #define ET_HELLEN_121_VAG_8_CYL 81
- 
+#define ET_HELLEN_154_HYUNDAI 82
+#define ET_HELLEN_NB1 83
+#define ET_HELLEN_121_NISSAN_4_CYL 84
+#define ET_HELLEN_121_NISSAN_8_CYL 85
+#define ET_HELLEN_NB2_36 86
+#define ET_HELLEN_121_NISSAN_ALMERA_N16 87
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 #define ET_TEST_ROTARY 107
@@ -690,9 +696,9 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "trg61", "trg62", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "Nissan QR25", "trg62", "trg63", "INVALID"
 
-custom trigger_type_e 4 bits, U32, @OFFSET@, [0:5], @@trigger_type_e_enum@@
+custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
 	trigger_type_e type;+https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
 
 	bit todoRemoveMeOneDay0
@@ -893,7 +899,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
 	uint8_t mc33_hvolt;;"v", 1, 0, 40, 70, 0
-	uint8_t fsio_visible acIdleExtraMin;+Additional idle PID minValue while A/C is active;"Percent", 1, 0, 0, 255, 0
+	uint8_t unused761;;"", 1, 0, 0, 255, 0
 
 output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e acFanPinMode;
@@ -993,7 +999,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableLaunchRetard
 	bit enableLaunchBoost
 	bit launchDisableBySpeed
-	bit enableCanVss
+	bit enableCanVss;+Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
@@ -1117,11 +1123,11 @@ bit hasFrequencyReportingMapSensor
 	bit useFSIO10ForServo3
 	bit useFSIO11ForServo4
 	bit useFSIO12ForServo5
-bit useFSIO15ForIdleRpmAdjustment
+bit unusedBitHere1
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
-bit useFSIO12ForIdleOffset
-bit useFSIO13ForIdleMinValue
+bit unusedBitHere2
+bit unusedBitHere3
 bit useFSIO6ForRevLimiter
 
 	adc_channel_e hipOutputChannel;
@@ -1389,7 +1395,8 @@ tle8888_mode_e tle8888mode;
 	uint16_t applyNonlinearBelowPulse;+Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.;"ms", {1/1000}, 0, 0, 30, 3
 	custom InjectorNonlinearMode 1 bits, U08, @OFFSET@, [0:0], "None", "Polynomial"
 	InjectorNonlinearMode injectorNonlinearMode
-	uint8_t[3] unused2508;;"units", 1, 0, -20, 100, 0
+	uint8_t unused2508;;"units", 1, 0, -20, 100, 0
+	int16_t knockSamplingDuration;;"Deg", 1, 0, 0, 720, 0
 	int16_t etbFreq;;"Hz", 1, 0, 0, @@ETB_HW_MAX_FREQUENCY@@, 0
 	pid_s etbWastegatePid;
 	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0

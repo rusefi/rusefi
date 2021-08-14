@@ -15,13 +15,17 @@ jobs:
         #
         # see also gen_config where we have a similar list for all boards!
         #
-        build-target: [hellen72, hellenNA6, hellen128, hellen121vag, hellen121nissan, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_f7_hardware_QC_special_build, proteus_h7, proteus_legacy, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7, atlas]
+        build-target: [hellen72, hellen-nb1, hellenNA6, hellen128, hellen121vag, hellen121nissan, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_f7_hardware_QC_special_build, proteus_h7, proteus_legacy, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7, atlas]
         
         include:
           # Board configurations
           - build-target: hellen72
             folder: hellen/hellen72
             ini-file: rusefi_hellen72.ini
+
+          - build-target: hellen-nb1
+            folder: hellen/hellen-nb1
+            ini-file: rusefi_hellen-nb1.ini
 
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
@@ -38,6 +42,10 @@ jobs:
           - build-target: hellen121nissan
             folder: hellen/hellen121nissan
             ini-file: rusefi_hellen121nissan.ini
+
+          - build-target: hellen154hyundai
+            folder: hellen/hellen154hyundai
+            ini-file: rusefi_hellen154hyundai.ini
 
           - build-target: cypress
             folder: hellen

@@ -7,11 +7,7 @@
 
 #pragma once
 
-#include <cstdint>
-#include <cstddef>
-#include "efitime.h"
 #include "rusefi_enums.h"
-#include "engine.h"
 
 #if EFI_UNIT_TEST
 #include "logicdata.h"

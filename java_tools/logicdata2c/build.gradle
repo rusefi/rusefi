@@ -1,0 +1,22 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+defaultTasks 'jar'
+
+dependencies {
+    implementation 'junit:junit:4.8.2'
+}
+
+jar {
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+            'Main-Class': 'com.rusefi.LogicData2C'
+        )
+    }
+}

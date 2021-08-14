@@ -17,8 +17,6 @@
 #include "global.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33972.h"
-#include "pin_repository.h"
-#include "thread_priority.h"
 
 #if (BOARD_MC33972_COUNT > 0)
 

@@ -5,10 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "thermistors.h"
-#include "allsensors.h"
-#include "engine_test_helper.h"
+#include "pch.h"
 
 TEST(sensors, mapDecoding) {
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);

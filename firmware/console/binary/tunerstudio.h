@@ -10,7 +10,6 @@
 #include "tunerstudio_io.h"
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
 #include "thread_controller.h"
 #include "thread_priority.h"
 

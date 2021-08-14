@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "init.h"
-#include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "functional_sensor.h"
 #include "proxy_sensor.h"

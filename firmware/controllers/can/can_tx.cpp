@@ -15,7 +15,6 @@
 #include "can_dash.h"
 #include "obd2.h"
 #include "can_sensor.h"
-#include "thread_priority.h"
 #include "rusefi_wideband.h"
 
 extern CanListener* canListeners_head;

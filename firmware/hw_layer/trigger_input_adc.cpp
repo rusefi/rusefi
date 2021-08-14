@@ -7,13 +7,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
  
-#include "global.h"
+#include "pch.h"
 
 #if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
 
 #include "trigger_input.h"
 #include "digital_input_exti.h"
-#include "adc_inputs.h"
 
 //!!!!!!!!!!!!!!!
 extern "C" void toggleLed(int led, int mode);

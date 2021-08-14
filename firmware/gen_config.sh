@@ -16,7 +16,24 @@ mkdir build
 # firmware\tunerstudio\generated and firmware\controllers\generated folders
 # maybe one day we will automate but not yet
 #
-for BOARD in "f429-discovery f429-discovery" "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" "hellen/hellen121vag hellen121vag" "hellen/hellen121nissan hellen121nissan" "hellen/hellen72 hellen72" "hellen/hellen64_miataNA6_94 hellenNA6" "microrusefi mre_f7" "microrusefi mre_f4" "frankenso frankenso_na6" "prometheus prometheus_469" "prometheus prometheus_405" "proteus proteus_f7" "proteus proteus_f4" "atlas atlas"; do
+for BOARD in \
+   "f429-discovery f429-discovery" \
+   "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
+   "hellen/hellen121vag hellen121vag" \
+   "hellen/hellen121nissan hellen121nissan" \
+   "hellen/hellen154hyundai hellen154hyundai" \
+   "hellen/hellen72 hellen72" \
+   "hellen/hellen-nb1 hellen-nb1" \
+   "hellen/hellen64_miataNA6_94 hellenNA6" \
+   "microrusefi mre_f7" \
+   "microrusefi mre_f4" \
+   "frankenso frankenso_na6" \
+   "prometheus prometheus_469" \
+   "prometheus prometheus_405" \
+   "proteus proteus_f7" \
+   "proteus proteus_f4" \
+   "atlas atlas"\
+   ; do
  BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
  INI=$(echo "$BOARD" | cut -d " " -f 3)

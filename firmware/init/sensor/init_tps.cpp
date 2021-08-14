@@ -1,6 +1,5 @@
 #include "pch.h"
 
-#include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"

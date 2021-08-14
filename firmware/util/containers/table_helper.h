@@ -8,7 +8,6 @@
 #pragma once
 
 #include <math.h>
-#include "error_handling.h"
 #include "interpolation.h"
 #include "efilib.h"
 #include "efi_ratio.h"
