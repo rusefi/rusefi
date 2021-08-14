@@ -181,7 +181,26 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) 
  * connectivity so no console output here
  */
 static persisted_configuration_state_e readConfiguration() {
+	persisted_configuration_state_e result = CRC_FAILED;
+
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
+	auto firstCopyAddr = getFlashAddrFirstCopy();
+	auto secondyCopyAddr = getFlashAddrSecondCopy();
+
+	result = doReadConfiguration(firstCopyAddr);
+
+	if (result != PC_OK) {
+		efiPrintf("Reading second configuration copy");
+		result = doReadConfiguration(secondyCopyAddr);
+	}
+
+	return result;
+}
+
+void readFromFlash() {
+	persisted_configuration_state_e result = PC_OK;
+
+#if HW_CHECK_MODE
 	/*
 	 * getFlashAddr does device validation, we want validation to be invoked even while we are
 	 * HW_CHECK_MODE mode where we would not need actual address
@@ -190,16 +209,10 @@ static persisted_configuration_state_e readConfiguration() {
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
-#if HW_CHECK_MODE
-	persisted_configuration_state_e result = PC_OK;
 	resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
-#else // HW_CHECK_MODE
-	persisted_configuration_state_e result = doReadConfiguration(firstCopyAddr);
-
-	if (result != PC_OK) {
-		efiPrintf("Reading second configuration copy");
-		result = doReadConfiguration(secondyCopyAddr);
-	}
+#else
+	result = readConfiguration();
+#endif
 
 	if (result == CRC_FAILED) {
 	    // we are here on first boot on brand new chip
@@ -213,16 +226,11 @@ static persisted_configuration_state_e readConfiguration() {
 		 */
 		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-#endif // HW_CHECK_MODE
+
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
 	memset(persistentState.persistentConfiguration.warning_message , 0, ERROR_BUFFER_SIZE);
 	validateConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	return result;
-}
-
-void readFromFlash() {
-	persisted_configuration_state_e result = readConfiguration();
 
 	if (result == CRC_FAILED) {
 		efiPrintf("Need to reset flash to default due to CRC");
