@@ -81,7 +81,7 @@ public:
 
 	bool Register(Sensor* sensor) {
 		// If there's somebody already here - a consumer tried to double-register a sensor
-		if (m_sensor) {
+		if (m_sensor && m_sensor != sensor) {
 			// This sensor has already been registered. Don't re-register it.
 			firmwareError(CUSTOM_OBD_26, "Duplicate registration for sensor \"%s\"", sensor->getSensorName());
 			return false;
