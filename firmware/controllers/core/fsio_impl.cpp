@@ -446,10 +446,6 @@ static bool updateValueOrWarning(int humanIndex, const char *msg, float *value D
 	}
 }
 
-static void useFsioForServo(int servoIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	updateValueOrWarning(8 + servoIndex, "servo", &engine->fsioState.servoValues[servoIndex] PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
 /**
  * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
  */
@@ -501,30 +497,9 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 
-	if (engineConfiguration->useFSIO16ForTimingAdjustment) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_TIMING_FSIO, "timing", &ENGINE(fsioState.fsioTimingAdjustment) PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-
 	if (engineConfiguration->useFSIO6ForRevLimiter) {
 		updateValueOrWarning(6, "rpm limit", &ENGINE(fsioState.fsioRpmHardLimit) PASS_ENGINE_PARAMETER_SUFFIX);
 	}
-
-	if (engineConfiguration->useFSIO8ForServo1) {
-		useFsioForServo(0 PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (engineConfiguration->useFSIO9ForServo2) {
-		useFsioForServo(1 PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (engineConfiguration->useFSIO10ForServo3) {
-		useFsioForServo(2 PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (engineConfiguration->useFSIO11ForServo4) {
-		useFsioForServo(3 PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-	if (engineConfiguration->useFSIO12ForServo5) {
-		useFsioForServo(4 PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-
 }
 
 

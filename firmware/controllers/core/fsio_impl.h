@@ -16,8 +16,6 @@
 #define MAGIC_OFFSET_FOR_ENGINE_WARNING 4
 // see useFSIO5ForCriticalIssueEngineStop
 #define MAGIC_OFFSET_FOR_CRITICAL_ENGINE 5
-// see useFSIO16ForTimingAdjustment
-#define MAGIC_OFFSET_FOR_TIMING_FSIO 16
 
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, float, float> fsio8_Map3D_f32t;
 typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, uint8_t, float> fsio8_Map3D_u8t;
