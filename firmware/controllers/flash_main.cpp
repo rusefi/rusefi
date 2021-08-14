@@ -108,6 +108,8 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 bool burnWithoutFlash = false;
 
 void writeToFlashNow(void) {
+	bool isSuccess = false;
+
 	if (burnWithoutFlash) {
 		needToWriteConfiguration = false;
 		return;
@@ -119,12 +121,14 @@ void writeToFlashNow(void) {
 	persistentState.version = FLASH_DATA_VERSION;
 	persistentState.value = flashStateCrc(&persistentState);
 
+#if EFI_STORAGE_INT_FLASH == TRUE
 	// Flash two copies
 	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
 	int result2 = eraseAndFlashCopy(getFlashAddrSecondCopy(), persistentState);
 
 	// handle success/failure
-	bool isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
+	isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
+#endif
 
 	if (isSuccess) {
 		efiPrintf("FLASH_SUCCESS");
@@ -184,6 +188,8 @@ static persisted_configuration_state_e readConfiguration() {
 	persisted_configuration_state_e result = CRC_FAILED;
 
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "read f", PC_ERROR);
+
+#if EFI_STORAGE_INT_FLASH == TRUE
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
@@ -193,6 +199,7 @@ static persisted_configuration_state_e readConfiguration() {
 		efiPrintf("Reading second configuration copy");
 		result = doReadConfiguration(secondyCopyAddr);
 	}
+#endif
 
 	return result;
 }

@@ -403,4 +403,8 @@
 #define CONFIG_RESET_SWITCH_PIN 6
 #endif
 
+#ifndef EFI_STORAGE_INT_FLASH
+#define EFI_STORAGE_INT_FLASH   TRUE
+#endif
+
 #define EFI_JOYSTICK TRUE
