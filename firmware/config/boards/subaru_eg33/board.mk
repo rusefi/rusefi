@@ -36,3 +36,6 @@ DDEFS += -DUART_USE_WAIT=FALSE
 ALLCSRC   += $(BOARDSRC)
 ALLCPPSRC += $(BOARDCPPSRC)
 ALLINC    += $(BOARDINC)
+
+#Serial flash support
+include $(PROJECT_DIR)/hw_layer/drivers/flash/sst26f_jedec.mk
