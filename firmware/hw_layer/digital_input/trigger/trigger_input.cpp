@@ -183,10 +183,10 @@ void stopTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void startTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
-		efiSetPadModeIfConfigurationChanged("trigger debug", triggerInputDebugPins[i], PAL_MODE_OUTPUT_PUSHPULL PASS_ENGINE_PARAMETER_SUFFIX);
+		efiSetPadModeIfConfigurationChanged("trigger debug", triggerInputDebugPins[i], PAL_MODE_OUTPUT_PUSHPULL);
 	}
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		efiSetPadModeIfConfigurationChanged("cam debug", camInputsDebug[i], PAL_MODE_OUTPUT_PUSHPULL PASS_ENGINE_PARAMETER_SUFFIX);
+		efiSetPadModeIfConfigurationChanged("cam debug", camInputsDebug[i], PAL_MODE_OUTPUT_PUSHPULL);
 	}
 }
 
