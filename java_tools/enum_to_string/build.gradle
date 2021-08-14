@@ -1,0 +1,27 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+defaultTasks 'jar'
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '2.0.1'
+    implementation 'junit:junit:4.8.2'
+    implementation project(':logging')
+    implementation project(':logging-api')
+    implementation fileTree(dir: '../../java_console/lib', include: 'annotations.jar')
+}
+
+jar {
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+            'Main-Class': 'com.rusefi.EnumToString'
+        )
+    }
+}

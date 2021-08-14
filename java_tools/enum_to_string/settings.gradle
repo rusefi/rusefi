@@ -1,0 +1,4 @@
+include ':logging'
+project(':logging').projectDir = new File('../../java_console/logging')
+include ':logging-api'
+project(':logging-api').projectDir = new File('../../java_console/logging-api')
