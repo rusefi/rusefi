@@ -407,4 +407,8 @@
 #define EFI_STORAGE_INT_FLASH   TRUE
 #endif
 
+#ifndef EFI_STORAGE_EXT_SNOR
+#define EFI_STORAGE_EXT_SNOR    FALSE
+#endif
+
 #define EFI_JOYSTICK TRUE
