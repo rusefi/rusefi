@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 14 06:51:24 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 14 15:25:16 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -414,6 +414,7 @@ public class Fields {
 	public static final int ET_HELLEN_121_NISSAN_4_CYL = 84;
 	public static final int ET_HELLEN_121_NISSAN_6_CYL = 72;
 	public static final int ET_HELLEN_121_NISSAN_8_CYL = 85;
+	public static final int ET_HELLEN_121_NISSAN_ALMERA_N16 = 87;
 	public static final int ET_HELLEN_121_VAG = 71;
 	public static final int ET_HELLEN_121_VAG_5_CYL = 77;
 	public static final int ET_HELLEN_121_VAG_6_CYL = 78;
@@ -1584,7 +1585,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.08.14.all.3432050331";
+	public static final String TS_SIGNATURE = "rusEFI 2021.08.14.all.3326857117";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
