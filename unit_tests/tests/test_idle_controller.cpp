@@ -12,44 +12,9 @@
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "electronic_throttle.h"
-#include "vehicle_speed.h"
 
 using ::testing::StrictMock;
 using ::testing::_;
-
-extern IdleController idleControllerInstance;
-extern int timeNowUs;
-
-TEST(idle, fsioPidParameters) {
-	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
-
-	engineConfiguration->idleRpmPid.offset = 40;
-	engineConfiguration->acIdleExtraOffset = 10;
-
-	engineConfiguration->idleRpmPid.minValue = 30;
-	engineConfiguration->acIdleExtraMin = 30;
-
-	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
-	setMockState(engineConfiguration->acSwitch, true);
-	timeNowUs += MS2US(15);
-	ASSERT_TRUE(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(40, getIdlePidOffset(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(30, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-	setMockState(engineConfiguration->acSwitch, false);
-	timeNowUs += MS2US(15);
-	ASSERT_FALSE(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// todo finish this unit test!
-//	timeNowUs = MS2US(700);
-	idleControllerInstance.update();
-//	ASSERT_EQ(0, engine->acSwitchLastChangeTime);
-//	ASSERT_EQ(1, engine->acSwitchState);
-}
 
 using ICP = IIdleController::Phase;
 

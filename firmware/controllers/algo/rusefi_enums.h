@@ -814,7 +814,7 @@ typedef enum {
 	DBG_ETB_AUTOTUNE = 39,
 	DBG_COMPOSITE_LOG = 40,
 	DBG_FSIO_EXPRESSION_8_14 = 41,
-	DBG_FSIO_SPECIAL = 42,
+	DBG_UNUSED_42 = 42,
 	DBG_INJECTOR_COMPENSATION = 43,
 	DBG_DYNO_VIEW = 44,
 	// todo: because of getEnumOptionsForTunerStudio 'getEnumOptionsForTunerStudio' would not work here
