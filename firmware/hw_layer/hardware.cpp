@@ -375,10 +375,6 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	enginePins.startPins();
 
-#if EFI_CAN_SUPPORT
-	startCanPins();
-#endif /* EFI_CAN_SUPPORT */
-
 #if EFI_AUX_SERIAL
 	startAuxSerialPins();
 #endif /* EFI_AUX_SERIAL */
@@ -508,6 +504,10 @@ void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_CAN_SUPPORT
+	startCanPins();
+#endif /* EFI_CAN_SUPPORT */
 }
 
 void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
