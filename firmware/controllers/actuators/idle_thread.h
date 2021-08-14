@@ -94,9 +94,7 @@ void setIdleDFactor(float value);
 void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setTargetIdleRpm(int value);
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration);
-float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

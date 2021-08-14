@@ -56,31 +56,7 @@ static bool wasResetPid = false;
 static bool mustResetPid = false;
 static efitimeus_t restoreAfterPidResetTimeUs = 0;
 
-
-class PidWithOverrides : public PidIndustrial {
-public:
-	float getOffset() const override {
-#if EFI_UNIT_TEST
-	EXPAND_Engine;
-#endif
-		return parameters->offset;
-	}
-
-	float getMinValue() const override {
-#if EFI_UNIT_TEST
-	EXPAND_Engine;
-#endif
-	float result = parameters->minValue;
-#if EFI_FSIO
-			if (engineConfiguration->useFSIO13ForIdleMinValue) {
-				return result + ENGINE(fsioState.fsioIdleMinValue);
-			}
-#endif /* EFI_FSIO */
-		return result;
-	}
-};
-
-static PidWithOverrides industrialWithOverrideIdlePid;
+static PidIndustrial industrialWithOverrideIdlePid;
 
 #if EFI_IDLE_PID_CIC
 // Use PID with CIC integrator
@@ -94,14 +70,6 @@ Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_IDLE_PID_CIC */
 	return &industrialWithOverrideIdlePid;
-}
-
-float getIdlePidOffset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getOffset();
-}
-
-float getIdlePidMinValue(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->getMinValue();
 }
 
 static uint32_t lastCrankingCyclesCounter = 0;
@@ -187,9 +155,6 @@ int IdleController::getTargetRpm(float clt) const {
 
 	// Bump for AC
 	target += engine->acSwitchState ? CONFIG(acIdleRpmBump) : 0;
-
-	// Bump by FSIO
-	target += engine->fsioState.fsioIdleTargetRPMAdjustment;
 
 	return target;
 }
