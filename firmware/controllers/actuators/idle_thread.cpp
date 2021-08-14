@@ -63,13 +63,7 @@ public:
 #if EFI_UNIT_TEST
 	EXPAND_Engine;
 #endif
-		float result = parameters->offset;
-#if EFI_FSIO
-			if (engineConfiguration->useFSIO12ForIdleOffset) {
-				return result + ENGINE(fsioState.fsioIdleOffset);
-			}
-#endif /* EFI_FSIO */
-		return result;
+		return parameters->offset;
 	}
 
 	float getMinValue() const override {
