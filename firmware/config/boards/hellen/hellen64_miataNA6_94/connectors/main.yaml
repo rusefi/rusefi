@@ -293,6 +293,7 @@ pins:
     ts_name: intMAP (A15)
 
 info:
+  title: Hellen Miata NA6
   image:
     file: main.jpg
   pins:
