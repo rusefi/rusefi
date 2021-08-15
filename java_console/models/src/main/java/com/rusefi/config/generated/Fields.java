@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Aug 14 15:25:16 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 15 06:46:35 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1279,6 +1279,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1270116060;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1585,7 +1586,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.08.14.all.3326857117";
+	public static final String TS_SIGNATURE = "rusEFI 2021.08.15.all.1270116060";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1712,6 +1713,12 @@ public class Fields {
 	public static final int unusedBitHere1_offset = 1464;
 	public static final int unusedBitHere2_offset = 1464;
 	public static final int unusedBitHere3_offset = 1464;
+	public static final int unusedBitWasHere16_offset = 1464;
+	public static final int unusedBitWasHere1_offset = 1464;
+	public static final int unusedBitWasHere2_offset = 1464;
+	public static final int unusedBitWasHere3_offset = 1464;
+	public static final int unusedBitWasHere4_offset = 1464;
+	public static final int unusedBitWasHere5_offset = 1464;
 	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding8_offset = 4010;
@@ -1721,15 +1728,9 @@ public class Fields {
 	public static final int useETBforIdleControl_offset = 744;
 	public static final int useFixedBaroCorrFromMap_offset = 1476;
 	public static final int useFordRedundantTps_offset = 76;
-	public static final int useFSIO10ForServo3_offset = 1464;
-	public static final int useFSIO11ForServo4_offset = 1464;
-	public static final int useFSIO12ForServo5_offset = 1464;
-	public static final int useFSIO16ForTimingAdjustment_offset = 1464;
 	public static final int useFSIO4ForSeriousEngineWarning_offset = 1464;
 	public static final int useFSIO5ForCriticalIssueEngineStop_offset = 1464;
 	public static final int useFSIO6ForRevLimiter_offset = 1464;
-	public static final int useFSIO8ForServo1_offset = 1464;
-	public static final int useFSIO9ForServo2_offset = 1464;
 	public static final int useFSIOTableForCanSniffingFiltering_offset = 76;
 	public static final int useHbridges_offset = 976;
 	public static final int useIacPidMultTable_offset = 1476;
@@ -2397,7 +2398,7 @@ public class Fields {
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1464, FieldType.BIT, 8);
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1464, FieldType.BIT, 9);
 	public static final Field USELINEARIATSENSOR = Field.create("USELINEARIATSENSOR", 1464, FieldType.BIT, 10);
-	public static final Field USEFSIO16FORTIMINGADJUSTMENT = Field.create("USEFSIO16FORTIMINGADJUSTMENT", 1464, FieldType.BIT, 11);
+	public static final Field UNUSEDBITWASHERE16 = Field.create("UNUSEDBITWASHERE16", 1464, FieldType.BIT, 11);
 	public static final Field TACHPULSEDURATIONASDUTYCYCLE = Field.create("TACHPULSEDURATIONASDUTYCYCLE", 1464, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1464, FieldType.BIT, 13);
 	public static final Field INVERTPRIMARYTRIGGERSIGNAL = Field.create("INVERTPRIMARYTRIGGERSIGNAL", 1464, FieldType.BIT, 14);
@@ -2407,11 +2408,11 @@ public class Fields {
 	public static final Field LAUNCHFUELCUTENABLE = Field.create("LAUNCHFUELCUTENABLE", 1464, FieldType.BIT, 18);
 	public static final Field LAUNCHSPARKCUTENABLE = Field.create("LAUNCHSPARKCUTENABLE", 1464, FieldType.BIT, 19);
 	public static final Field HASFREQUENCYREPORTINGMAPSENSOR = Field.create("HASFREQUENCYREPORTINGMAPSENSOR", 1464, FieldType.BIT, 20);
-	public static final Field USEFSIO8FORSERVO1 = Field.create("USEFSIO8FORSERVO1", 1464, FieldType.BIT, 21);
-	public static final Field USEFSIO9FORSERVO2 = Field.create("USEFSIO9FORSERVO2", 1464, FieldType.BIT, 22);
-	public static final Field USEFSIO10FORSERVO3 = Field.create("USEFSIO10FORSERVO3", 1464, FieldType.BIT, 23);
-	public static final Field USEFSIO11FORSERVO4 = Field.create("USEFSIO11FORSERVO4", 1464, FieldType.BIT, 24);
-	public static final Field USEFSIO12FORSERVO5 = Field.create("USEFSIO12FORSERVO5", 1464, FieldType.BIT, 25);
+	public static final Field UNUSEDBITWASHERE1 = Field.create("UNUSEDBITWASHERE1", 1464, FieldType.BIT, 21);
+	public static final Field UNUSEDBITWASHERE2 = Field.create("UNUSEDBITWASHERE2", 1464, FieldType.BIT, 22);
+	public static final Field UNUSEDBITWASHERE3 = Field.create("UNUSEDBITWASHERE3", 1464, FieldType.BIT, 23);
+	public static final Field UNUSEDBITWASHERE4 = Field.create("UNUSEDBITWASHERE4", 1464, FieldType.BIT, 24);
+	public static final Field UNUSEDBITWASHERE5 = Field.create("UNUSEDBITWASHERE5", 1464, FieldType.BIT, 25);
 	public static final Field UNUSEDBITHERE1 = Field.create("UNUSEDBITHERE1", 1464, FieldType.BIT, 26);
 	public static final Field USEFSIO5FORCRITICALISSUEENGINESTOP = Field.create("USEFSIO5FORCRITICALISSUEENGINESTOP", 1464, FieldType.BIT, 27);
 	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1464, FieldType.BIT, 28);
@@ -3536,7 +3537,7 @@ public class Fields {
 	CANREADENABLED,
 	CANWRITEENABLED,
 	USELINEARIATSENSOR,
-	USEFSIO16FORTIMINGADJUSTMENT,
+	UNUSEDBITWASHERE16,
 	TACHPULSEDURATIONASDUTYCYCLE,
 	ISALTERNATORCONTROLENABLED,
 	INVERTPRIMARYTRIGGERSIGNAL,
@@ -3546,11 +3547,11 @@ public class Fields {
 	LAUNCHFUELCUTENABLE,
 	LAUNCHSPARKCUTENABLE,
 	HASFREQUENCYREPORTINGMAPSENSOR,
-	USEFSIO8FORSERVO1,
-	USEFSIO9FORSERVO2,
-	USEFSIO10FORSERVO3,
-	USEFSIO11FORSERVO4,
-	USEFSIO12FORSERVO5,
+	UNUSEDBITWASHERE1,
+	UNUSEDBITWASHERE2,
+	UNUSEDBITWASHERE3,
+	UNUSEDBITWASHERE4,
+	UNUSEDBITWASHERE5,
 	UNUSEDBITHERE1,
 	USEFSIO5FORCRITICALISSUEENGINESTOP,
 	USEFSIO4FORSERIOUSENGINEWARNING,

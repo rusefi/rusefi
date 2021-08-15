@@ -1326,8 +1326,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.08.14
-#define SIGNATURE_HASH 2218202189
+#define SIGNATURE_DATE 2021.08.15
+#define SIGNATURE_HASH 164148492
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1683,7 +1683,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.08.14.hellen_cypress.2218202189"
+#define TS_SIGNATURE "rusEFI 2021.08.15.hellen_cypress.164148492"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1813,6 +1813,12 @@
 #define unusedBitHere1_offset 1464
 #define unusedBitHere2_offset 1464
 #define unusedBitHere3_offset 1464
+#define unusedBitWasHere16_offset 1464
+#define unusedBitWasHere1_offset 1464
+#define unusedBitWasHere2_offset 1464
+#define unusedBitWasHere3_offset 1464
+#define unusedBitWasHere4_offset 1464
+#define unusedBitWasHere5_offset 1464
 #define unusedOldBiquad_offset 2331
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding8_offset 4010
@@ -1822,15 +1828,9 @@
 #define useETBforIdleControl_offset 744
 #define useFixedBaroCorrFromMap_offset 1476
 #define useFordRedundantTps_offset 76
-#define useFSIO10ForServo3_offset 1464
-#define useFSIO11ForServo4_offset 1464
-#define useFSIO12ForServo5_offset 1464
-#define useFSIO16ForTimingAdjustment_offset 1464
 #define useFSIO4ForSeriousEngineWarning_offset 1464
 #define useFSIO5ForCriticalIssueEngineStop_offset 1464
 #define useFSIO6ForRevLimiter_offset 1464
-#define useFSIO8ForServo1_offset 1464
-#define useFSIO9ForServo2_offset 1464
 #define useFSIOTableForCanSniffingFiltering_offset 76
 #define useHbridges_offset 976
 #define useIacPidMultTable_offset 1476

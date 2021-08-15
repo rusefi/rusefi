@@ -12,7 +12,7 @@
 #define acSwitch_offset 1469
 #define acSwitchMode_offset 4516
 #define adc_channel_e_auto_enum "EFI_ADC_NONE", "EFI_ADC_0", "EFI_ADC_1", "EFI_ADC_2", "EFI_ADC_3", "EFI_ADC_4", "EFI_ADC_5", "EFI_ADC_6", "EFI_ADC_7", "EFI_ADC_8", "EFI_ADC_9", "EFI_ADC_10", "EFI_ADC_11", "EFI_ADC_12", "EFI_ADC_13", "EFI_ADC_14", "EFI_ADC_15", "EFI_ADC3_4", "EFI_ADC3_5", "EFI_ADC3_6", "EFI_ADC3_7", "EFI_ADC3_8", "EFI_ADC3_9", "EFI_ADC3_14", "EFI_ADC3_15", "EFI_ADC_LAST_CHANNEL", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "EFI_ADC_ERROR"
-#define adc_channel_e_enum "NONE","AUX0_18 - MAP Ain","INVALID","INVALID","B05 - MAF Ain","INVALID","AUX0_19 - IAT Ain","INVALID","INVALID","A06 - Oxyg 2 Ain","A04 - EGR t Ain","INVALID","A18 - AUX0 Ain","B02 - TPS Ain","INVALID","A03 - Coolant t Ain","A06 - Oxyg 1 Ain"
+#define adc_channel_e_enum "NONE","AUX0_18 - MAP Ain","INVALID","INVALID","B05 - MAF Ain","INVALID","AUX0_19 - IAT Ain","A02 - VBat","INVALID","A06 - Oxyg 2 Ain","A04 - EGR t Ain","INVALID","A18 - AUX0 Ain","B02 - TPS Ain","INVALID","A03 - Coolant t Ain","A06 - Oxyg 1 Ain"
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
 #define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 548
@@ -1327,8 +1327,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.08.14
-#define SIGNATURE_HASH 15337003
+#define SIGNATURE_DATE 2021.08.15
+#define SIGNATURE_HASH 3728639423
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1684,7 +1684,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.08.14.subaru_eg33_f7.15337003"
+#define TS_SIGNATURE "rusEFI 2021.08.15.subaru_eg33_f7.3728639423"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1814,6 +1814,12 @@
 #define unusedBitHere1_offset 1464
 #define unusedBitHere2_offset 1464
 #define unusedBitHere3_offset 1464
+#define unusedBitWasHere16_offset 1464
+#define unusedBitWasHere1_offset 1464
+#define unusedBitWasHere2_offset 1464
+#define unusedBitWasHere3_offset 1464
+#define unusedBitWasHere4_offset 1464
+#define unusedBitWasHere5_offset 1464
 #define unusedOldBiquad_offset 2331
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding8_offset 4010
@@ -1823,15 +1829,9 @@
 #define useETBforIdleControl_offset 744
 #define useFixedBaroCorrFromMap_offset 1476
 #define useFordRedundantTps_offset 76
-#define useFSIO10ForServo3_offset 1464
-#define useFSIO11ForServo4_offset 1464
-#define useFSIO12ForServo5_offset 1464
-#define useFSIO16ForTimingAdjustment_offset 1464
 #define useFSIO4ForSeriousEngineWarning_offset 1464
 #define useFSIO5ForCriticalIssueEngineStop_offset 1464
 #define useFSIO6ForRevLimiter_offset 1464
-#define useFSIO8ForServo1_offset 1464
-#define useFSIO9ForServo2_offset 1464
 #define useFSIOTableForCanSniffingFiltering_offset 76
 #define useHbridges_offset 976
 #define useIacPidMultTable_offset 1476

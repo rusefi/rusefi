@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 14 15:25:18 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 15 06:46:37 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2241,9 +2241,8 @@ struct engine_configuration_s {
 	offset 1464 bit 10 */
 	bool useLinearIatSensor : 1;
 	/**
-	 * See fsioTimingAdjustment
 	offset 1464 bit 11 */
-	bool useFSIO16ForTimingAdjustment : 1;
+	bool unusedBitWasHere16 : 1;
 	/**
 	 * Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	offset 1464 bit 12 */
@@ -2278,19 +2277,19 @@ struct engine_configuration_s {
 	bool hasFrequencyReportingMapSensor : 1;
 	/**
 	offset 1464 bit 21 */
-	bool useFSIO8ForServo1 : 1;
+	bool unusedBitWasHere1 : 1;
 	/**
 	offset 1464 bit 22 */
-	bool useFSIO9ForServo2 : 1;
+	bool unusedBitWasHere2 : 1;
 	/**
 	offset 1464 bit 23 */
-	bool useFSIO10ForServo3 : 1;
+	bool unusedBitWasHere3 : 1;
 	/**
 	offset 1464 bit 24 */
-	bool useFSIO11ForServo4 : 1;
+	bool unusedBitWasHere4 : 1;
 	/**
 	offset 1464 bit 25 */
-	bool useFSIO12ForServo5 : 1;
+	bool unusedBitWasHere5 : 1;
 	/**
 	offset 1464 bit 26 */
 	bool unusedBitHere1 : 1;
@@ -4297,4 +4296,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 14 15:25:18 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 15 06:46:37 UTC 2021
