@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Aug 15 06:46:41 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Aug 15 19:37:16 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1681,10 +1681,18 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
 	/**
+	 * offset 770
+	 */
+	uint8_t unusedpinModesWhereHere[10];
+	/**
 	 * todo: more comments
 	 * offset 780
 	 */
 	output_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 786
+	 */
+	uint8_t unusedOutputWhereHere[10];
 	/**
 	 * offset 796
 	 */
@@ -1781,9 +1789,17 @@ struct engine_configuration_s {
 	 */
 	fsio_pwm_freq_t fsioFrequency[FSIO_COMMAND_COUNT];
 	/**
+	 * offset 844
+	 */
+	int16_t unusedOutputFreqWhereHere[10];
+	/**
 	 * offset 864
 	 */
 	fsio_setting_t fsio_setting[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 888
+	 */
+	int unusedSettings[10];
 	/**
 	 * offset 928
 	 */
@@ -1865,6 +1881,10 @@ struct engine_configuration_s {
 	 * offset 952
 	 */
 	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 958
+	 */
+	uint8_t unusedDigital[10];
 	/**
 	 * offset 968
 	 */
@@ -1999,10 +2019,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_291_30 : 1;
+	bool unusedBit_296_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_291_31 : 1;
+	bool unusedBit_296_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2520,6 +2540,10 @@ struct engine_configuration_s {
 	 */
 	pin_input_mode_e fsioInputModes[FSIO_COMMAND_COUNT];
 	/**
+	 * offset 1522
+	 */
+	uint8_t unusedFsioInputs[10];
+	/**
 	count
 	 * offset 1532
 	 */
@@ -2958,76 +2982,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_500_8 : 1;
+	bool unusedBit_506_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_500_9 : 1;
+	bool unusedBit_506_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_500_10 : 1;
+	bool unusedBit_506_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_500_11 : 1;
+	bool unusedBit_506_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_500_12 : 1;
+	bool unusedBit_506_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_500_13 : 1;
+	bool unusedBit_506_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_500_14 : 1;
+	bool unusedBit_506_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_500_15 : 1;
+	bool unusedBit_506_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_500_16 : 1;
+	bool unusedBit_506_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_500_17 : 1;
+	bool unusedBit_506_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_500_18 : 1;
+	bool unusedBit_506_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_500_19 : 1;
+	bool unusedBit_506_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_500_20 : 1;
+	bool unusedBit_506_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_500_21 : 1;
+	bool unusedBit_506_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_500_22 : 1;
+	bool unusedBit_506_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_500_23 : 1;
+	bool unusedBit_506_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_500_24 : 1;
+	bool unusedBit_506_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_500_25 : 1;
+	bool unusedBit_506_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_500_26 : 1;
+	bool unusedBit_506_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_500_27 : 1;
+	bool unusedBit_506_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_500_28 : 1;
+	bool unusedBit_506_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_500_29 : 1;
+	bool unusedBit_506_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_500_30 : 1;
+	bool unusedBit_506_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_500_31 : 1;
+	bool unusedBit_506_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4024,6 +4048,10 @@ struct persistent_config_s {
 	 */
 	le_formula_t fsioFormulas[FSIO_COMMAND_COUNT];
 	/**
+	 * offset 7872
+	 */
+	uint8_t unusedFormulas[2000];
+	/**
 	 * offset 9872
 	 */
 	le_formula_t timingMultiplier;
@@ -4302,4 +4330,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Aug 15 06:46:41 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Aug 15 19:37:16 UTC 2021
