@@ -1,0 +1,8 @@
+plugins {
+    id 'java-library'
+}
+
+dependencies {
+  implementation project(':logging-api')
+  implementation fileTree(dir: '../lib', include: 'annotations.jar')
+}

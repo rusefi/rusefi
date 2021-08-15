@@ -1,0 +1,2 @@
+include ':logging-api'
+project(':logging-api').projectDir = new File('../logging-api')
