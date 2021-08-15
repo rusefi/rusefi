@@ -207,12 +207,7 @@ void EnableToothLogger() {
 	ToothLoggerEnabled = true;
 
 
-	// Tell TS that we're ready for it to read out the log
-	// nb: this is a lie, as we may not have written anything
-	// yet.  However, we can let it continuously read out the buffer
-	// as we update it, which looks pretty nice.
 	setToothLogReady(false);
-
 }
 
 void EnableToothLoggerIfNotEnabled() {
@@ -227,15 +222,11 @@ void DisableToothLogger() {
 }
 
 ToothLoggerBuffer GetToothLoggerBuffer() {
+	// tell TS that we do not have data until we have data again
+	setToothLogReady(false);
 	if (firstBuffer) {
-#if EFI_TUNER_STUDIO		
-		setToothLogReady(false);
-#endif		
 		return { reinterpret_cast<uint8_t*>(ptr_buffer_second), (sizeof(buffer)/2) };
 	} else {
-#if EFI_TUNER_STUDIO		
-		setToothLogReady(false);
-#endif		
 		return { reinterpret_cast<uint8_t*>(ptr_buffer_first), (sizeof(buffer)/2) };
 	}
 }
