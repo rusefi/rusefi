@@ -152,7 +152,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
 #define TRIGGER_INPUT_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define FSIO_COMMAND_COUNT 16
+#define FSIO_COMMAND_COUNT 6
 
 #define VEHICLE_INFO_SIZE 32
 
@@ -906,7 +906,9 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
+	uint8_t[10] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
 	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
+	uint8_t[10] unusedOutputWhereHere;;"", 1, 0, 0, 255, 0
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
 
 
@@ -935,10 +937,12 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 
 custom fsio_pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	fsio_pwm_freq_t[FSIO_COMMAND_COUNT iterate] fsioFrequency;
+	int16_t[10] unusedOutputFreqWhereHere;;"", 1, 0, 0, 255, 0
 
 
 custom fsio_setting_t 4 scalar, F32, @OFFSET@, 		"Val",	   1,	   0, 0, 18000,	  2
 	fsio_setting_t[FSIO_COMMAND_COUNT iterate] fsio_setting;
+    int[10] unusedSettings;;"", 1, 0, 0, 255, 0
 
 ! todo: migrate to spi_pins & combine with spi pin modes
 	brain_pin_e spi1mosiPin;
@@ -984,6 +988,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
 	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
 	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;todo:not finished\nThese input pins allow us to pull toggle buttons state;
+    uint8_t[10] unusedDigital;;"", 1, 0, 0, 255, 0
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;+Some vehicles have a switch to indicate that clutch pedal is all the way up
@@ -1193,7 +1198,8 @@ float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
 	float knockVThreshold;;"V", 1, 0, 1, 5, 2
 
 	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
-	
+	uint8_t[10] unusedFsioInputs;;"", 1, 0, 0, 255, 0
+
 	int idleStepperTotalSteps;;"count", 1, 0, 5, 3000, 0
 
 float noAccelAfterHardLimitPeriodSecs;TODO: finish this #413;"sec", 1, 0, 0, 60, 0
@@ -1601,6 +1607,7 @@ float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparate
 float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 2
 
 le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
+uint8_t[2000] unusedFormulas;;"", 1, 0, 0, 255, 0
 	le_formula_t timingMultiplier;
 	le_formula_t timingAdditive;
 
