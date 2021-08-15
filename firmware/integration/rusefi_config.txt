@@ -1107,7 +1107,7 @@ end_struct
 	bit canReadEnabled;enable can_read/disable can_read
 	bit canWriteEnabled;enable can_write/disable can_write
 	bit useLinearIatSensor
-	bit useFSIO16ForTimingAdjustment;+See fsioTimingAdjustment
+	bit unusedBitWasHere16
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";+Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
@@ -1118,11 +1118,11 @@ bit cutSparkOnHardLimit,"yes","no"
 bit launchFuelCutEnable
 bit launchSparkCutEnable;+This is the Cut Mode normally used
 bit hasFrequencyReportingMapSensor
-	bit useFSIO8ForServo1
-	bit useFSIO9ForServo2
-	bit useFSIO10ForServo3
-	bit useFSIO11ForServo4
-	bit useFSIO12ForServo5
+	bit unusedBitWasHere1
+	bit unusedBitWasHere2
+	bit unusedBitWasHere3
+	bit unusedBitWasHere4
+	bit unusedBitWasHere5
 bit unusedBitHere1
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
