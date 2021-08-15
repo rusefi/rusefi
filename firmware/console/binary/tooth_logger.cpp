@@ -113,7 +113,7 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 	}
 
 	// Don't log at significant engine speed
-	if (engine->rpmCalculator.getRpm() > 4000) {
+	if (engine->rpmCalculator.getRpm() > CONFIG(engineSnifferRpmThreshold)) {
 		return;
 	}
 
