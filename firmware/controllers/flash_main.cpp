@@ -76,9 +76,13 @@ void writeToFlashIfPending() {
 	// with a flash write thread, the schedule happens directly from
 	// setNeedToWriteConfiguration, so there's nothing to do here
 	if (allowFlashWhileRunning() || !getNeedToWriteConfiguration()) {
+		// Allow sensor timeouts again now that we're done (and a little time has passed)
+		Sensor::inhibitTimeouts(false);
 		return;
 	}
 
+	// Prevent sensor timeouts while flashing
+	Sensor::inhibitTimeouts(true);
 	writeToFlashNow();
 }
 
@@ -119,9 +123,6 @@ void writeToFlashNow(void) {
 	persistentState.version = FLASH_DATA_VERSION;
 	persistentState.value = flashStateCrc(&persistentState);
 
-	// Prevent sensors from timing out during the flash
-	Sensor::inhibitTimeouts(true);
-
 	// Flash two copies
 	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
 	int result2 = eraseAndFlashCopy(getFlashAddrSecondCopy(), persistentState);
@@ -140,10 +141,6 @@ void writeToFlashNow(void) {
 
 	// Write complete, clear the flag
 	needToWriteConfiguration = false;
-
-	// Sleep a moment to let sensors update, then allow sensor timeouts again
-	chThdSleepMilliseconds(100);
-	Sensor::inhibitTimeouts(false);
 }
 
 static bool isValidCrc(persistent_config_container_s *state) {
