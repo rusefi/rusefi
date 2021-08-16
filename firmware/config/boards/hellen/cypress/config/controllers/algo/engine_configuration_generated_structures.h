@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Aug 15 19:37:14 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Aug 16 10:56:56 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4050,7 +4050,7 @@ struct persistent_config_s {
 	/**
 	 * offset 7872
 	 */
-	uint8_t unusedFormulas[2000];
+	lua_script_t luaScript;
 	/**
 	 * offset 9872
 	 */
@@ -4207,9 +4207,10 @@ struct persistent_config_s {
 	 */
 	float vvtTable2RpmBins[FSIO_TABLE_8];
 	/**
+	L
 	 * offset 16032
 	 */
-	lua_script_t luaScript;
+	float unusedLuaWasHere[64];
 	/**
 	 * offset 16288
 	 */
@@ -4330,4 +4331,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Aug 15 19:37:14 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Aug 16 10:56:56 UTC 2021

@@ -1030,7 +1030,7 @@
 #define lps25BaroSensorScl_offset 1458
 #define lps25BaroSensorSda_offset 1459
 #define LUA_PWM_COUNT 8
-#define LUA_SCRIPT_SIZE 256
+#define LUA_SCRIPT_SIZE 2000
 #define luaOutputPins1_offset 1220
 #define luaOutputPins2_offset 1221
 #define luaOutputPins3_offset 1222
@@ -1039,7 +1039,7 @@
 #define luaOutputPins6_offset 1225
 #define luaOutputPins7_offset 1226
 #define luaOutputPins8_offset 1227
-#define luaScript_offset 16004
+#define luaScript_offset 7844
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -1237,8 +1237,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.08.15
-#define SIGNATURE_HASH 3831106423
+#define SIGNATURE_DATE 2021.08.16
+#define SIGNATURE_HASH 2220236160
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1594,7 +1594,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.08.15.kin.3831106423"
+#define TS_SIGNATURE "rusEFI 2021.08.16.kin.2220236160"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1731,8 +1731,8 @@
 #define unusedBitWasHere4_offset 1464
 #define unusedBitWasHere5_offset 1464
 #define unusedDigital_offset 958
-#define unusedFormulas_offset 7844
 #define unusedFsioInputs_offset 1522
+#define unusedLuaWasHere_offset 16004
 #define unusedOldBiquad_offset 2323
 #define unusedOutputFreqWhereHere_offset 844
 #define unusedOutputWhereHere_offset 786
