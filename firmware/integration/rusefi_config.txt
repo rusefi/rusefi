@@ -1607,7 +1607,7 @@ float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparate
 float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 2
 
 le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
-uint8_t[2000] unusedFormulas;;"", 1, 0, 0, 255, 0
+lua_script_t luaScript;
 	le_formula_t timingMultiplier;
 	le_formula_t timingAdditive;
 
@@ -1653,9 +1653,9 @@ fsio_table_8x8_u8t vvtTable2;
 float[FSIO_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
 float[FSIO_TABLE_8] vvtTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
 
-#define LUA_SCRIPT_SIZE 256
+#define LUA_SCRIPT_SIZE 2000
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
-lua_script_t luaScript;
+float[64] unusedLuaWasHere;;"L", 1, 0, 0, 255, 0
 
 ignition_table_t ignitionTable;
 float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 2
