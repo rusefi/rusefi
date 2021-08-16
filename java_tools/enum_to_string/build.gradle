@@ -5,10 +5,6 @@ plugins {
 
 apply from: '../../android/dependencies.gradle'
 
-repositories {
-    mavenCentral()
-}
-
 defaultTasks 'shadowJar'
 
 dependencies {
