@@ -93,6 +93,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	resetConfigurationExt(configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 
+	validateConfig(PASS_CONFIG_PARAMETER_SIGNATURE);
+
 	enginePins.startPins();
 
 	commonInitEngineController(PASS_ENGINE_PARAMETER_SIGNATURE);
