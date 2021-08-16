@@ -2,10 +2,6 @@ plugins {
     id 'java-library'
 }
 
-repositories {
-    mavenCentral()
-}
-
 defaultTasks 'jar'
 
 apply from: '../../android/dependencies.gradle'
