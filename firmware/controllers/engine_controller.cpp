@@ -654,8 +654,11 @@ bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		ensureArrayIsAscending("Map estimate TPS", config->mapEstimateTpsBins);
 	}
 
-	ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
-	ensureArrayIsAscending("Ignition load", config->mafDecodingBins);
+	if (config->mapEstimateRpmBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
+	}
+
+	ensureArrayIsAscending("MAF decoding", config->mafDecodingBins);
 
 	// Cranking tables
 	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
@@ -665,9 +668,16 @@ bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Idle tables
 	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
 	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
-	ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
-	ensureArrayIsAscending("Idle VE", config->idleVeBins);
-	ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
+	if (engineConfiguration->iacCoastingBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
+	}
+	if (config->idleVeBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Idle VE", config->idleVeBins);
+	}
+	if (config->idleAdvanceBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
+	}
+
 
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
