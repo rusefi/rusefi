@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+}
+
+defaultTasks 'jar'
+
+dependencies {
+    implementation 'junit:junit:4.8.2'
+    implementation fileTree(dir: '../../java_console/lib', include: 'annotations.jar')
+}
+
+jar {
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+            'Main-Class': 'rusefi.Bin2Header'
+        )
+    }
+}
