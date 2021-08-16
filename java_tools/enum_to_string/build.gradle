@@ -5,20 +5,15 @@ plugins {
 
 apply from: '../../android/dependencies.gradle'
 
-repositories {
-    mavenCentral()
-}
-
 defaultTasks 'shadowJar'
 
 dependencies {
     // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
-    implementation 'com.google.code.findbugs:jsr305:2.0.1'
+    implementation libs.jsr305
     implementation project(':logging')
     implementation project(':logging-api')
-    implementation fileTree(dir: '../../java_console/lib', include: 'annotations.jar')
-
-    implementation libs.junit
+    implementation libs.annotations
+    testImplementation libs.junit
 }
 
 /*
@@ -56,8 +51,8 @@ shadowJar {
      and loggin-api as in build.xml
     */
     dependencies {
-        exclude(dependency('com.google.code.findbugs:jsr305:.*'))
-        exclude(dependency('junit:junit:.*'))
-        exclude 'annotations.jar'
+        exclude(dependency(libs.jsr305))
+        exclude(dependency(libs.junit))
+        exclude(dependency(libs.annotations))
     }
 }
