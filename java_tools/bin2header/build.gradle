@@ -4,9 +4,11 @@ plugins {
 
 defaultTasks 'jar'
 
+apply from: '../../android/dependencies.gradle'
+
 dependencies {
-    implementation 'junit:junit:4.8.2'
-    implementation fileTree(dir: '../../java_console/lib', include: 'annotations.jar')
+    testImplementation libs.junit
+    implementation libs.annotations
 }
 
 jar {

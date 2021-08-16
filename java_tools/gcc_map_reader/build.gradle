@@ -3,13 +3,12 @@ plugins {
     id 'application'
 }
 
-
 defaultTasks 'jar'
 
 apply from: '../../android/dependencies.gradle'
 
 dependencies {
-    implementation libs.junit
+    testImplementation libs.junit
 }
 
 jar {
