@@ -30,7 +30,7 @@ void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 	for (size_t i = 0; i < TSize - 1; i++) {
 		auto cur = values[i];
 		auto next = values[i + 1];
-		if (next < cur) {
+		if (next <= cur) {
 			firmwareError(CUSTOM_ERR_AXIS_ORDER, "Invalid table axis (must be ascending!): %s %f %f", msg, cur, next);
 		}
 	}
