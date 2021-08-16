@@ -689,7 +689,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_VEHICLE_SPEED
-	float vehicleSpeed = getVehicleSpeed();
+	float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
 	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
 	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
 
@@ -798,10 +798,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->debugFloatField5 = getFsioOutputValue(11 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField6 = getFsioOutputValue(12 PASS_ENGINE_PARAMETER_SUFFIX);
 		tsOutputChannels->debugFloatField7 = getFsioOutputValue(13 PASS_ENGINE_PARAMETER_SUFFIX);
-		break;
-	case DBG_FSIO_SPECIAL:
-		tsOutputChannels->debugFloatField1 = ENGINE(fsioState.fsioIdleOffset);
-		tsOutputChannels->debugFloatField2 = ENGINE(fsioState.fsioIdleMinValue);
 		break;
 #endif /* EFI_FSIO */
 	case DBG_VEHICLE_SPEED_SENSOR:

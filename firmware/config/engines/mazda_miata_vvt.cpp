@@ -794,4 +794,12 @@ void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 110; // convert 12to10 bit (ADC/4)
 
 }
+
+void setMiataNB2_Hellen72_36(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
+	engineConfiguration->globalTriggerAngleOffset = 76;
+}
+
 #endif // HW_HELLEN

@@ -63,7 +63,7 @@ static void populateFrame(Speeds& msg) {
     msg.injDuty = getInjectorDutyCycle(rpm);
     msg.coilDuty = getCoilDutyCycle(rpm);
 
-    msg.vssKph = getVehicleSpeed();
+    msg.vssKph = Sensor::get(SensorType::VehicleSpeed).value_or(0);
 }
 
 struct PedalAndTps {

@@ -48,6 +48,7 @@ pins:
     ts_name: 14 - Cam Left
 
   - pin: 21a
+# Q307
     id: GPIOD_9
     class: outputs
     ts_name: 21 - INJ_5
@@ -55,6 +56,7 @@ pins:
     type: inj
 
   - pin: 22a
+# Q309
     id: GPIOD_11
     class: outputs
     ts_name: 22 - INJ_3
@@ -62,6 +64,7 @@ pins:
     type: inj
 
   - pin: 23a
+# Q312
     id: GPIOG_7
     class: outputs
     ts_name: 23 - INJ_1
@@ -88,6 +91,7 @@ pins:
     function: IAT sensor
 
   - pin: 40a
+# Q311
     id: GPIOF_12
     class: outputs
     ts_name: 40 - INJ_6
@@ -95,6 +99,7 @@ pins:
     type: inj
 
   - pin: 41a
+# Q310
     id: GPIOD_10
     class: outputs
     ts_name: 41 - INJ_4
@@ -102,6 +107,7 @@ pins:
     type: inj
 
   - pin: 42a
+# Q305
     id: GPIOG_8
     class: outputs
     ts_name: 42 - INJ_2
@@ -287,6 +293,7 @@ pins:
 
 
 info:
+  title: Hellen 121 Nissan
   image:
     file: main.jpg
   pins:

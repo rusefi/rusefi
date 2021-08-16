@@ -12,53 +12,9 @@
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "electronic_throttle.h"
-#include "vehicle_speed.h"
 
 using ::testing::StrictMock;
 using ::testing::_;
-
-extern IdleController idleControllerInstance;
-extern int timeNowUs;
-
-TEST(idle, fsioPidParameters) {
-	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
-
-	engineConfiguration->idleRpmPid.offset = 40;
-	engineConfiguration->acIdleExtraOffset = 10;
-
-	engineConfiguration->idleRpmPid.minValue = 30;
-	engineConfiguration->acIdleExtraMin = 30;
-
-	engineConfiguration->useFSIO12ForIdleOffset = true;
-	applyFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_OFFSET), "ac_on_switch 0 cfg_acIdleExtraOffset if" PASS_ENGINE_PARAMETER_SUFFIX);
-
-	engineConfiguration->useFSIO13ForIdleMinValue = true;
-	applyFsioExpression(QUOTE(MAGIC_OFFSET_FOR_IDLE_MIN_VALUE), "ac_on_switch 0 cfg_acIdleExtraMin if" PASS_ENGINE_PARAMETER_SUFFIX);
-
-	ASSERT_EQ(1, hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
-	setMockState(engineConfiguration->acSwitch, true);
-	timeNowUs += MS2US(15);
-	ASSERT_TRUE(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(40, getIdlePidOffset(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(30, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-	setMockState(engineConfiguration->acSwitch, false);
-	timeNowUs += MS2US(15);
-	ASSERT_FALSE(getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(50, getIdlePidOffset(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(60, getIdlePidMinValue(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-
-	// todo finish this unit test!
-//	timeNowUs = MS2US(700);
-	idleControllerInstance.update();
-//	ASSERT_EQ(0, engine->acSwitchLastChangeTime);
-//	ASSERT_EQ(1, engine->acSwitchState);
-}
 
 using ICP = IIdleController::Phase;
 
@@ -425,7 +381,7 @@ TEST(idle_v2, IntegrationManual) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
-	setMockVehicleSpeed(15 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm
@@ -460,7 +416,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
-	setMockVehicleSpeed(15 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm
@@ -498,7 +454,7 @@ TEST(idle_v2, IntegrationClamping) {
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
-	setMockVehicleSpeed(15 PASS_ENGINE_PARAMETER_SUFFIX);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
 	ENGINE(rpmCalculator.mockRpm) = 950;
 
 	// Target of 1000 rpm

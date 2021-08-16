@@ -9,9 +9,11 @@ pins:
     type: inj
 
   - pin: 2
+    id: EFI_ADC_6
+    class: analog_inputs
     function: 12V supply from Main Relay
-    type: 12V
-    color: black
+    ts_name: A02 - VBat
+    type: at
 
   - pin: 3
     id: EFI_ADC_14

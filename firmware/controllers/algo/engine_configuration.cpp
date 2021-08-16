@@ -398,8 +398,10 @@ void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
+
+	engineConfiguration->knockSamplingDuration = 45;
 
 	engineConfiguration->knockNoise[0] = 2; // 800
 	engineConfiguration->knockNoise[1] = 2; // 1700
@@ -941,6 +943,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #if HW_HELLEN
 	case HELLEN_NB2:
 		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_NB2_36:
+		setMiataNB2_Hellen72_36(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HELLEN72_ETB:
 		setHellen72etb(PASS_CONFIG_PARAMETER_SIGNATURE);

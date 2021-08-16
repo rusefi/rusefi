@@ -19,6 +19,7 @@ static Biquad knockFilter;
 static volatile bool knockIsSampling = false;
 static volatile bool knockNeedsProcess = false;
 static volatile size_t sampleCount = 0;
+static int cylinderIndexCopy;
 
 chibios_rt::BinarySemaphore knockSem(/* taken =*/ true);
 
@@ -105,7 +106,7 @@ const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
 	return &adcConvGroupCh1;
 }
 
-void startKnockSampling(uint8_t cylinderIndex) {
+static void startKnockSampling(uint8_t cylinderIndex) {
 	if (!CONFIG(enableSoftwareKnock)) {
 		return;
 	}
@@ -126,8 +127,8 @@ void startKnockSampling(uint8_t cylinderIndex) {
 		return;
 	}
 
-	// Sample for 45 degrees
-	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * 45 * 1e-6;
+	// Sample for XX degrees
+	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * CONFIG(knockSamplingDuration) / US_PER_SECOND_F;
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
@@ -139,6 +140,20 @@ void startKnockSampling(uint8_t cylinderIndex) {
 
 	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
 	lastKnockSampleTime = getTimeNowNt();
+}
+
+static void startKnockSamplingNoParam(void *arg) {
+	// ugly as hell but that's error: cast between incompatible function types from 'void (*)(uint8_t)' {aka 'void (*)(unsigned char)'} to 'schfunc_t' {aka 'void (*)(void*)'} [-Werror=cast-function-type]
+	startKnockSampling(cylinderIndexCopy);
+}
+
+static scheduling_s startSampling;
+
+void knockSamplingCallback(uint8_t cylinderIndex, efitick_t nowNt) {
+	cylinderIndexCopy = cylinderIndex;
+
+	scheduleByAngle(&startSampling, nowNt,
+			/*angle*/CONFIG(knockDetectionWindowStart), startKnockSamplingNoParam PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 class KnockThread : public ThreadController<256> {
@@ -188,6 +203,10 @@ void processLastKnockEvent() {
 		float volts = ratio * sampleBuffer[i];
 
 		float filtered = knockFilter.filter(volts);
+		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
+			tsOutputChannels.debugFloatField1 = volts;
+			tsOutputChannels.debugFloatField2 = filtered;
+		}
 
 		sumSq += filtered * filtered;
 	}

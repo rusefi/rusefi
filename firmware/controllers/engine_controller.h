@@ -8,6 +8,7 @@
 
 #pragma once
 
+bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initEngineContoller(DECLARE_ENGINE_PARAMETER_SIGNATURE);

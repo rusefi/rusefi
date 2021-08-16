@@ -392,6 +392,12 @@ static void handleCommandX14(uint16_t index) {
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected dbank command", index);
 #endif
 		return;
+	case 0x15:
+#if EFI_PROD_CODE
+		extern bool burnWithoutFlash;
+		burnWithoutFlash = true;
+#endif // EFI_PROD_CODE
+		return;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected bench x14 %d", index);
 	}

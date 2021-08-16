@@ -94,14 +94,12 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
-		tsOutputChannels.debugFloatField3 = engine->fsioState.fsioTimingAdjustment;
 		tsOutputChannels.debugFloatField4 = pidTimingCorrection;
 		tsOutputChannels.debugIntField1 = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 	}
 
 	return iatCorrection
-		+ engine->fsioState.fsioTimingAdjustment
 		+ engine->engineState.cltTimingCorrection
 		+ pidTimingCorrection
 		// todo: uncomment once we get usable knock   - engine->knockCount

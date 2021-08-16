@@ -62,6 +62,10 @@
 #include "flash_main.h"
 #endif
 
+#if HAL_USE_PAL && EFI_PROD_CODE
+#include "digital_input_exti.h"
+#endif // HAL_USE_PAL
+
 #if EFI_CAN_SUPPORT
 #include "can_vss.h"
 #endif
@@ -371,10 +375,6 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	enginePins.startPins();
 
-#if EFI_CAN_SUPPORT
-	startCanPins();
-#endif /* EFI_CAN_SUPPORT */
-
 #if EFI_AUX_SERIAL
 	startAuxSerialPins();
 #endif /* EFI_AUX_SERIAL */
@@ -504,9 +504,17 @@ void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_CAN_SUPPORT
+	startCanPins();
+#endif /* EFI_CAN_SUPPORT */
 }
 
 void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if HAL_USE_PAL && EFI_PROD_CODE
+	efiExtiInit();
+#endif // HAL_USE_PAL
+
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
 	if (hasFirmwareError())

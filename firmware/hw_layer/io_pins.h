@@ -19,6 +19,15 @@
 	efiAssertVoid(CUSTOM_INVALID_MODE_SETTING, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
  }
 
+#define efiSetPadModeIfConfigurationChanged(msg, pin, mode)                      \
+	if (isConfigurationChanged(pin)) {                                           \
+		efiSetPadMode(msg, CONFIG(pin), mode PASS_ENGINE_PARAMETER_SUFFIX);      \
+	}
+
+#define efiSetPadUnusedIfConfigurationChanged(pin)                               \
+	if (isConfigurationChanged(pin)) {                                           \
+		efiSetPadUnused(activeConfiguration.pin PASS_ENGINE_PARAMETER_SUFFIX);   \
+	}
 
 EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode DECLARE_ENGINE_PARAMETER_SUFFIX);
 EXTERNC void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode);

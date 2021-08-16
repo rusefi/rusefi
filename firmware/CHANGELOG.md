@@ -31,6 +31,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - RUSEFI MSD now contains bundle-specific URL #2848
  - Nissan 4 cylinder QR trigger wheel #3118
 
+### Fixed
+ - Composite Logger uses same engineSnifferRpmThreshold setting as engine sniffer #3161
+
 ## Removed
  -  TS file read feature #3004
 

@@ -219,7 +219,7 @@ static void applyConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void digitalMapWidthCallback(void) {
 	efitick_t nowNt = getTimeNowNt();
 
-	mapFreq = 1000000.0 / NT2US(nowNt - prevWidthTimeNt);
+	mapFreq = US_PER_SECOND_F / NT2US(nowNt - prevWidthTimeNt);
 
 	prevWidthTimeNt = nowNt;
 }

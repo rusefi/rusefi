@@ -15,6 +15,8 @@ void setHellen121nissanQR(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 2;
 	strcpy(CONFIG(engineCode), "QR");
 
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIO_UNASSIGNED;
+
 	engineConfiguration->vvtMode[0] = VVT_NISSAN_VQ;
 
 	// we have this here and not in board_configuration.cpp so that unit test would get this value

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Aug 08 06:27:19 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Aug 14 06:50:48 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -256,8 +256,6 @@ case DBG_FSIO_EXPRESSION_1_7:
   return "DBG_FSIO_EXPRESSION_1_7";
 case DBG_FSIO_EXPRESSION_8_14:
   return "DBG_FSIO_EXPRESSION_8_14";
-case DBG_FSIO_SPECIAL:
-  return "DBG_FSIO_SPECIAL";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
 case DBG_GPPWM:
@@ -302,6 +300,8 @@ case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
+case DBG_UNUSED_42:
+  return "DBG_UNUSED_42";
 case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
@@ -446,6 +446,8 @@ case HELLEN_NA94:
   return "HELLEN_NA94";
 case HELLEN_NB2:
   return "HELLEN_NB2";
+case HELLEN_NB2_36:
+  return "HELLEN_NB2_36";
 case HONDA_600:
   return "HONDA_600";
 case HONDA_ACCORD_1_24_SHIFTED:
@@ -998,6 +1000,8 @@ case TT_SUBARU_7_WITHOUT_6:
   return "TT_SUBARU_7_WITHOUT_6";
 case TT_SUBARU_SVX:
   return "TT_SUBARU_SVX";
+case TT_TEMP_62:
+  return "TT_TEMP_62";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:

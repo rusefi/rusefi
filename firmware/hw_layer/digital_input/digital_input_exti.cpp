@@ -19,6 +19,11 @@
  */
 
 static ioportmask_t ext_used = 0;
+static const char *EXT_USED[16];
+
+void efiExtiInit() {
+	memset(EXT_USED, 0, sizeof(EXT_USED));
+}
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
 void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palcallback_t cb, void *cb_data) {
@@ -54,6 +59,7 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 
 	/* mark used */
 	ext_used |= PAL_PORT_BIT(index);
+	EXT_USED[index] = msg;
 }
 
 void efiExtiDisablePin(brain_pin_e brainPin)
