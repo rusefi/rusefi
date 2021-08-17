@@ -157,7 +157,7 @@ pins:
     function: NC
 
   - pin: C31
-    id: EFI_ADC_1
+    id: EFI_ADC_0
     class: analog_inputs
     ts_name: C31 - O2S
     function: Front O2 Sensor Signal
@@ -596,6 +596,16 @@ pins:
   - pin: F21
     function: igniter
     type: ign
+
+  - pin: P30
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: P30_IN_AUX4
+
+  - pin: P32
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: P31_IN_O2S2
 
 info:
   image:
