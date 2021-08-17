@@ -50,7 +50,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 
 	// get advance from the separate table for Idle
-	if (CONFIG(useSeparateAdvanceForIdle) && isIdling()) {
+	if (CONFIG(useSeparateAdvanceForIdle) && isIdlingOrTaper()) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);

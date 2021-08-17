@@ -59,8 +59,8 @@ public:
 	float getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) override;
 
 	// Allow querying state from outside
-	bool isIdling() {
-		return m_lastPhase == Phase::Idling;
+	bool isIdlingOrTaper() {
+		return m_lastPhase == Phase::Idling || m_lastPhase == Phase::CrankToIdleTaper;
 	}
 
 private:
@@ -79,7 +79,7 @@ percent_t getIdlePosition();
 
 float getIdleTimingAdjustment(int rpm);
 
-bool isIdling();
+bool isIdlingOrTaper();
 
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);

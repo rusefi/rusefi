@@ -507,8 +507,8 @@ float getIdleTimingAdjustment(int rpm) {
 	return idleControllerInstance.getIdleTimingAdjustment(rpm);
 }
 
-bool isIdling() {
-	return idleControllerInstance.isIdling();
+bool isIdlingOrTaper() {
+	return idleControllerInstance.isIdlingOrTaper();
 }
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
