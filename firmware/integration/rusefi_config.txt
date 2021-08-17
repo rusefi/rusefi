@@ -567,7 +567,7 @@ bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
 bit useInstantRpmForIdle;
-bit unused76b19;
+bit useSeparateIdleTablesForCrankingTaper;+This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 bit launchControlEnabled;
 bit rollingLaunchEnabled;
 bit antiLagEnabled;
