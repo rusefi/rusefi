@@ -51,10 +51,13 @@
 #define JEDEC_CMD_WRITE_DISABLE                     0x04
 #define JEDEC_CMD_READ_STATUS_REGISTER              0x05
 #define JEDEC_CMD_WRITE_ENABLE                      0x06
+#define JEDEC_CMD_FAST_READ                         0x0B
 #define JEDEC_CMD_SUBSECTOR_ERASE                   0x20
 #define JEDEC_CMD_READ_CONFIGURATION_REGISTER       0x35
+#define JEDEC_CMD_READ_DUAL                         0x3B
 #define JEDEC_CMD_BULK_ERASE                        0xC7
 #define JEDEC_CMD_RESET_ENABLE                      0x66
+#define JEDEC_CMD_READ_QUAD                         0x6B
 #define JEDEC_CMD_GLOBAL_BLOCK_PROTECTION_UNLOCK    0x98
 #define JEDEC_CMD_RESET_MEMORY                      0x99
 /** @} */
