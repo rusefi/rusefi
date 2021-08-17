@@ -188,7 +188,7 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 
 	// If still in the cranking taper, disable closed loop idle
 	if (crankingTaperFraction < 1) {
-		return Phase::CrankToRunTaper;
+		return Phase::CrankToIdleTaper;
 	}
 
 	// No other conditions met, we are idling!

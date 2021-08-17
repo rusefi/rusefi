@@ -18,7 +18,7 @@ struct IIdleController {
 		Cranking,	// Below cranking threshold
 		Idling,		// Below idle RPM, off throttle
 		Coasting,	// Off throttle but above idle RPM
-		CrankToRunTaper, // Taper between cranking and running
+		CrankToIdleTaper, // Taper between cranking and idling
 		Running,	// On throttle
 	};
 
