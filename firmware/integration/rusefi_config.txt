@@ -1727,6 +1727,7 @@ end_struct
 
 
 #define GAUGE_NAME_VERSION "firmware"
+#define GAUGE_NAME_UPTIME "Uptime"
 #define GAUGE_NAME_TRG_ERR "trg err"
 
 #define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"

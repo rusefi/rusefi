@@ -1009,7 +1009,7 @@ gaugeCategory = ECU Status
    recentErrorCode6Gauge = recentErrorCode6, "Error#7", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode7Gauge = recentErrorCode7, "Error#8", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    firmwareVersionGauge  = firmwareVersion , "ECU Software Version", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   timeSecondsGauge     =   seconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
+   timeSecondsGauge     =   seconds, @@GAUGE_NAME_UPTIME@@, "sec",     0,   100,     0,    0,    100,  100,   0,   0
    tuneCrc16Gauge = tuneCrc16, "tune CRC16", "",     0,  64000,     0,    0,   64000, 64000,   0,   0
 
 
@@ -1254,6 +1254,7 @@ gaugeCategory = DynoView
 [Datalog]
    ;       Channel          Label          Type    Format
    entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
+   entry = seconds,         @@GAUGE_NAME_UPTIME@@,      float,  "%.3f"
    entry = RPMValue,        @@GAUGE_NAME_RPM@@,         int,    "%d"
    entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
    entry = coolant,         @@GAUGE_NAME_CLT@@,         float,  "%.2f"
