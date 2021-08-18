@@ -5,7 +5,7 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "advance_map.h"
 
 TEST(Multispark, DefaultConfiguration) {

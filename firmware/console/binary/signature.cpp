@@ -8,7 +8,8 @@
  * @author andreika (c) 2020
  */
 
-#include "efilib.h"
+#include "pch.h"
+
 #include "signature.h"
 
 // We take these precautions to avoid redefinition of signature in generated .h files
@@ -26,10 +27,9 @@
 #define SIGNATURE_NAME signature_
 #define SIGNATURE_EXT .h
 
-#define SIGNATURE_H QUOTE(SIGNATURE_NAME SHORT_BOARD_NAME SIGNATURE_EXT)
-
 #if !EFI_UNIT_TEST
-#include SIGNATURE_H
+#define SIGNATURE_H_FILENAME QUOTE(SIGNATURE_NAME SHORT_BOARD_NAME SIGNATURE_EXT)
+#include SIGNATURE_H_FILENAME
 
 #pragma message ("TS_SIGNATURE: " TS_SIGNATURE)
 

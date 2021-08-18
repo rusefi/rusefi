@@ -122,6 +122,12 @@ public:
 	static void resetAllMocks();
 
 	/*
+	 * Inhibit sensor timeouts. Used if you're doing something that will block sensor updates, such as 
+	 * erasing flash memory (which stalls the CPU on some MCUs)
+	 */
+	static void inhibitTimeouts(bool inhibit);
+
+	/*
 	 * Get a friendly name for the sensor.
 	 * For example, CLT, IAT, Throttle Position 2, etc.
 	 */
@@ -159,6 +165,8 @@ protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
 		: m_type(type) {}
+
+	static bool s_inhibitSensorTimeouts;
 
 private:
 	const SensorType m_type;

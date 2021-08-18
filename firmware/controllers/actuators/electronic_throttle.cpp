@@ -80,7 +80,6 @@
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "pid_auto_tune.h"
-#include "thread_priority.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -183,6 +182,11 @@ bool EtbController::init(etb_function_e function, DcMotor *motor, pid_s *pidPara
 	if (function == ETB_Throttle1 || function == ETB_Throttle2) {
 		// We don't need to init throttles, so nothing to do here.
 		if (!initializeThrottles) {
+			return false;
+		}
+
+		// If no sensor is configured for this throttle, skip initialization.
+		if (!Sensor::hasSensor(functionToTpsSensorPrimary(function))) {
 			return false;
 		}
 
@@ -639,8 +643,8 @@ struct EtbImpl final : public EtbController {
 		motor->set(0.5f);
 		motor->enable();
 		chThdSleepMilliseconds(1000);
-		float primaryMax = Sensor::getRaw(functionToTpsSensorPrimary(myFunction)) * TPS_TS_CONVERSION;
-		float secondaryMax = Sensor::getRaw(functionToTpsSensorSecondary(myFunction)) * TPS_TS_CONVERSION;
+		float primaryMax = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
+		float secondaryMax = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
 
 		// Let it return
 		motor->set(0);
@@ -649,8 +653,8 @@ struct EtbImpl final : public EtbController {
 		// Now grab closed
 		motor->set(-0.5f);
 		chThdSleepMilliseconds(1000);
-		float primaryMin = Sensor::getRaw(functionToTpsSensorPrimary(myFunction)) * TPS_TS_CONVERSION;
-		float secondaryMin = Sensor::getRaw(functionToTpsSensorSecondary(myFunction)) * TPS_TS_CONVERSION;
+		float primaryMin = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
+		float secondaryMin = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
 
 		// Finally disable and reset state
 		motor->disable();
@@ -664,17 +668,17 @@ struct EtbImpl final : public EtbController {
 
 		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
 		tsOutputChannels.calibrationMode = functionToCalModePriMax(myFunction);
-		tsOutputChannels.calibrationValue = primaryMax;
+		tsOutputChannels.calibrationValue = primaryMax * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 		tsOutputChannels.calibrationMode = functionToCalModePriMin(myFunction);
-		tsOutputChannels.calibrationValue = primaryMin;
+		tsOutputChannels.calibrationValue = primaryMin * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 
 		tsOutputChannels.calibrationMode = functionToCalModeSecMax(myFunction);
-		tsOutputChannels.calibrationValue = secondaryMax;
+		tsOutputChannels.calibrationValue = secondaryMax * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 		tsOutputChannels.calibrationMode = functionToCalModeSecMin(myFunction);
-		tsOutputChannels.calibrationValue = secondaryMin;
+		tsOutputChannels.calibrationValue = secondaryMin * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 
 		tsOutputChannels.calibrationMode = TsCalMode::None;

@@ -8,9 +8,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "subaru.h"
 #include "custom_engine.h"
-#include "allsensors.h"
 
 void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankenso_01_LCD(engineConfiguration);

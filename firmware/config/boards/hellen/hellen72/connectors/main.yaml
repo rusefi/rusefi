@@ -459,6 +459,7 @@ pins:
     function: Evap
 
 info:
+  title: Hellen Miata NB2
   image:
     file: main.jpg
   pins:

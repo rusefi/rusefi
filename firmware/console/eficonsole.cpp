@@ -21,7 +21,8 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "globalaccess.h"
+#include "pch.h"
+
 #include "os_access.h"
 #include "eficonsole.h"
 #include "console_io.h"
@@ -48,7 +49,7 @@ static void sayHello(void) {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " detected HSE clock %.2f MHz PLLM = %d", hseFrequencyMhz, autoDetectedRoundedMhz);
 #endif /* ENABLE_AUTO_DETECT_HSE */
 
-#if defined(STM32F4) || defined(STM32F7)
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);
 
@@ -64,7 +65,7 @@ static void sayHello(void) {
 		firmwareError(OBD_PCM_Processor_Fault, "rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
 	}
 
-	efiPrintf("rev=%x size=%d", mcuRevision, flashSize);
+	efiPrintf("MCU rev=%x size=%d", mcuRevision, flashSize);
 #endif
 
 

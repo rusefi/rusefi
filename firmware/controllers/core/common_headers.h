@@ -21,7 +21,6 @@
 #include <math.h>
 #include <stdio.h>
 
-#include "error_handling.h"
 #include "auto_generated_enums.h"
 #include "auto_generated_commonenum.h"
 #include "efilib.h"
@@ -30,7 +29,6 @@
 #ifdef __cplusplus
 #include "engine_ptr.h"
 #include "datalogging.h"
-#include "loggingcentral.h"
 #include "cli_registry.h"
 #endif /* __cplusplus */
 

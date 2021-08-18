@@ -83,8 +83,6 @@
 #include "init.h"
 #endif /* EFI_UNIT_TEST */
 
-#include "adc_inputs.h"
-
 #if EFI_PROD_CODE
 #include "pwm_tester.h"
 #include "lcd_controller.h"
@@ -612,6 +610,90 @@ void commonInitEngineController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_ENGINE_CONTROL */
 
 	initTachometer(PASS_ENGINE_PARAMETER_SIGNATURE);
+}
+
+// Returns false if there's an obvious problem with the loaded configuration
+bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	if (CONFIG(specs.cylindersCount) > MAX_CYLINDER_COUNT) {
+		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
+		return false;
+	}
+
+	// Fueling
+	{
+		ensureArrayIsAscending("VE load", config->veLoadBins);
+		ensureArrayIsAscending("VE RPM", config->veRpmBins);
+
+		ensureArrayIsAscending("Lambda/AFR load", config->lambdaLoadBins);
+		ensureArrayIsAscending("Lambda/AFR RPM", config->lambdaRpmBins);
+
+		ensureArrayIsAscending("Fuel CLT mult", config->cltFuelCorrBins);
+		ensureArrayIsAscending("Fuel IAT mult", config->iatFuelCorrBins);
+
+		ensureArrayIsAscending("Injection phase load", config->injPhaseLoadBins);
+		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
+
+		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
+		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
+	}
+
+	// Ignition
+	{
+		ensureArrayIsAscending("Dwell RPM", engineConfiguration->sparkDwellRpmBins);
+
+		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
+		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
+
+		ensureArrayIsAscending("Ignition CLT corr", engineConfiguration->cltTimingBins);
+
+		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrLoadBins);
+		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
+	}
+
+	if (config->mapEstimateTpsBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Map estimate TPS", config->mapEstimateTpsBins);
+	}
+
+	if (config->mapEstimateRpmBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
+	}
+
+	ensureArrayIsAscending("MAF decoding", config->mafDecodingBins);
+
+	// Cranking tables
+	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
+	ensureArrayIsAscending("Cranking duration", config->crankingCycleBins);
+	ensureArrayIsAscending("Cranking TPS", engineConfiguration->crankingTpsBins);
+
+	// Idle tables
+	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
+	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
+	if (engineConfiguration->iacCoastingBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
+	}
+	if (config->idleVeBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Idle VE", config->idleVeBins);
+	}
+	if (config->idleAdvanceBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
+	}
+
+
+	// Boost
+	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
+	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+
+	// ETB
+	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
+	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
+
+	// VVT
+	ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
+	ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
+	ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
+	ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+
+	return true;
 }
 
 #if !EFI_UNIT_TEST

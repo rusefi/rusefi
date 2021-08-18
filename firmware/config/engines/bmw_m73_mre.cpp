@@ -60,6 +60,8 @@
  *
  */
 
+#include "pch.h"
+
 #include "bmw_m73.h"
 #include "fsio_impl.h"
 

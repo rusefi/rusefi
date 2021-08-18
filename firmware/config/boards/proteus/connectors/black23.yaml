@@ -118,6 +118,7 @@ pins:
     type: 12v
 
 info:
+  title: Proteus
   image:
     file: black23.jpg
   pins:

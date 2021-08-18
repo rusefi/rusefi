@@ -22,6 +22,7 @@ import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
 /**
  * Download fresh copy of {@link #PLUGIN_BODY_JAR} and launch {@link #PLUGIN_ENTRY_CLASS} via reflection.
+ * @see ConnectionAndMeta#BASE_URL_LATEST
  */
 public class Updater {
     private static final String PLUGIN_ENTRY_CLASS = "com.rusefi.ts_plugin.PluginEntry";

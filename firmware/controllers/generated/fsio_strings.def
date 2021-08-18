@@ -1,10 +1,8 @@
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 01 01:23:38 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 17 21:33:54 UTC 2021
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
 	case FSIO_SETTING_ACIDLEEXTRAOFFSET:
 		return "cfg_acIdleExtraOffset";
-	case FSIO_SETTING_ACIDLEEXTRAMIN:
-		return "cfg_acIdleExtraMin";
 	case FSIO_SETTING_BOOSTPID_OFFSET:
 		return "cfg_boostPid_offset";
 	case FSIO_SETTING_BOOSTPID_MINVALUE:

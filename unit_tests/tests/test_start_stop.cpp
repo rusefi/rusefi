@@ -5,8 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
 */
 
-#include "engine_test_helper.h"
-#include "engine_controller.h"
+#include "pch.h"
 
 TEST(start, startStop) {
 	std::unordered_map<SensorType, float> sensorVals = {{ SensorType::AcceleratorPedal, 0 }};

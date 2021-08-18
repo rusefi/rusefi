@@ -14,7 +14,7 @@
  */
 float getVehicleSpeed(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initVehicleSpeed();
-void setMockVehicleSpeed(float speedKPH);
+void setMockVehicleSpeed(float speedKPH DECLARE_ENGINE_PARAMETER_SUFFIX);
 bool hasVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void stopVSSPins(void);
 void startVSSPins(void);

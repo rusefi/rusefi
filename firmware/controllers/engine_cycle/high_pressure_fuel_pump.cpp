@@ -8,10 +8,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "pin_repository.h"
+#include "pch.h"
+
 #include "high_pressure_fuel_pump.h"
 #include "spark_logic.h"
-#include "map.h"
 
 #if EFI_HPFP
 

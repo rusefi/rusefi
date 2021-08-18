@@ -3,6 +3,8 @@ include ':shared_io'
 project(':shared_io').projectDir = new File('../java_console/shared_io')
 include ':ecu_io'
 project(':ecu_io').projectDir = new File('../java_console/io')
+include ':logging'
+project(':logging').projectDir = new File('../java_console/logging')
 include ':logging-api'
 project(':logging-api').projectDir = new File('../java_console/logging-api')
 include ':inifile'
@@ -11,3 +13,13 @@ include ':models'
 project(':models').projectDir = new File('../java_console/models')
 include ':autoupdate'
 project(':autoupdate').projectDir = new File('../java_console/autoupdate')
+include ':gcc_map_reader'
+project(':gcc_map_reader').projectDir = new File('../java_tools/gcc_map_reader')
+include ':logicdata2c'
+project(':logicdata2c').projectDir = new File('../java_tools/logicdata2c')
+include ':version2header'
+project(':version2header').projectDir = new File('../java_tools/version2header')
+include ':enum_to_string'
+project(':enum_to_string').projectDir = new File('../java_tools/enum_to_string')
+include ':bin2header'
+project(':bin2header').projectDir = new File('../java_tools/bin2header')

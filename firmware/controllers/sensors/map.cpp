@@ -7,8 +7,6 @@
  */
 #include "pch.h"
 
-#include "adc_inputs.h"
-
 #if EFI_PROD_CODE
 #include "digital_input_icu.h"
 #include "digital_input_exti.h"
@@ -221,7 +219,7 @@ static void applyConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void digitalMapWidthCallback(void) {
 	efitick_t nowNt = getTimeNowNt();
 
-	mapFreq = 1000000.0 / NT2US(nowNt - prevWidthTimeNt);
+	mapFreq = US_PER_SECOND_F / NT2US(nowNt - prevWidthTimeNt);
 
 	prevWidthTimeNt = nowNt;
 }

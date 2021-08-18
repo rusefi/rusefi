@@ -15,12 +15,10 @@
  */
 
 #include "pch.h"
+
 #include "cj125.h"
-#include "thread_priority.h"
 
 #if EFI_CJ125
-
-#include "adc_inputs.h"
 
 #if HAL_USE_SPI
 #include "mpu_util.h"

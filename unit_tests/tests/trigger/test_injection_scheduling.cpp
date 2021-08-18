@@ -1,9 +1,6 @@
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "main_trigger_callback.h"
 #include "injector_model.h"
-
-#include <gmock/gmock.h>
-#include "mocks.h"
 
 using ::testing::_;
 using ::testing::StrictMock;

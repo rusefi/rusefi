@@ -183,6 +183,7 @@ pins:
     function: Knock input 2 on 0.4
 
 info:
+  title: Proteus
   image:
     file: white35.jpg
   pins:

@@ -2,5 +2,6 @@ ext.libs = [
         junit      : "junit:junit:4.13",
         annotations: "org.jetbrains:annotations:16.0.1",
         javaxJson  : "javax.json:javax.json-api:1.1.4",
-        snakeyaml  : "org.yaml:snakeyaml:1.26"
+        snakeyaml  : "org.yaml:snakeyaml:1.26",
+        jsr305     : "com.google.code.findbugs:jsr305:3.0.2"
 ]

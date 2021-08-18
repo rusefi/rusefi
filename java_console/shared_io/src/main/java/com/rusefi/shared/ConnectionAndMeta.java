@@ -16,7 +16,7 @@ public class ConnectionAndMeta {
 
     private static final int BUFFER_SIZE = 32 * 1024;
     public static final int STEPS = 1000;
-    private String zipFileName;
+    private final String zipFileName;
     private HttpsURLConnection httpConnection;
     private long completeFileSize;
     private long lastModified;

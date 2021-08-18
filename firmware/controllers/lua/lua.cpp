@@ -2,7 +2,6 @@
 
 #include "rusefi_lua.h"
 #include "thread_controller.h"
-#include "thread_priority.h"
 
 #if EFI_LUA
 

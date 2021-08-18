@@ -8,11 +8,8 @@
 
 #pragma once
 
-#include "engine.h"
-#include "pin_repository.h"
 #include "trigger_structure.h"
 #include "trigger_central.h"
-
 
 #define TRIGGER_BAIL_IF_DISABLED          \
     if (!engine->hwTriggerInputEnabled) { \

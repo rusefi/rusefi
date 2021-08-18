@@ -362,7 +362,7 @@ pins:
     color: light green
 
 info:
-  title: MicroRusEFI
+  title: microRusEFI
   name: Main Connector
   id: main
   image:

@@ -13,8 +13,6 @@
  */
 #include "pch.h"
 
-#include "ego.h"
-#include "adc_inputs.h"
 #include "cyclic_buffer.h"
 
 #if EFI_CJ125

@@ -12,7 +12,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 int icuRisingCallbackCounter = 0;
 int icuFallingCallbackCounter = 0;

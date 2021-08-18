@@ -18,7 +18,7 @@ void DynoView::update(vssSrc src) {
     efitimeus_t timeNow, deltaTime = 0.0;
     float speed,deltaSpeed = 0.0;
     timeNow = getTimeNowUs();
-    speed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
+    speed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
     if (src == ICU) {
         speed = efiRound(speed,1.0);
     } else {
@@ -69,7 +69,7 @@ void DynoView::update(vssSrc src) {
  */
 void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
     if (deltaSpeed != 0.0) {
-        acceleration = ((deltaSpeed / 3.6) / (deltaTime / 1000000.0));
+        acceleration = ((deltaSpeed / 3.6) / (deltaTime / US_PER_SECOND_F));
         if (direction) {
             //decceleration
             acceleration *= -1;

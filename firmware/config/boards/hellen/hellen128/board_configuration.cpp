@@ -10,12 +10,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -168,6 +164,12 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
 
+	//Set default ETB config
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6; // out_pwm2
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
+	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	CONFIG(etb_use_two_wires) = true;
+
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MERCEDES);
 	strcpy(CONFIG(engineCode), "");
 
@@ -179,16 +181,16 @@ void setBoardDefaultConfiguration(void) {
  * @todo    Add your board-specific code, if any.
  */
 void setSdCardConfigurationOverrides(void) {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOA_15;
+//	engineConfiguration->spi3mosiPin = GPIOC_12;
+//	engineConfiguration->spi3misoPin = GPIOC_11;
+//	engineConfiguration->spi3sckPin = GPIOC_10;
+//	engineConfiguration->sdCardCsPin = GPIOA_15;
 
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->spi2mosiPin = GPIOB_15;
+	engineConfiguration->spi2misoPin = GPIOB_14;
+	engineConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->sdCardCsPin = GPIOB_12;
+	CONFIG(is_enabled_spi_2) = true;
 }

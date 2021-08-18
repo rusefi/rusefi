@@ -5,32 +5,23 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "vehicle_speed.h"
-
-#define DEFAULT_MOCK_SPEED -1
-
-static float mockVehicleSpeed = DEFAULT_MOCK_SPEED; // in kilometers per hour
+#include "pch.h"
 
 #if EFI_VEHICLE_SPEED
 
-#include "engine.h"
 #include "digital_input_icu.h"
 #include "digital_input_exti.h"
-#include "pin_repository.h"
 #include "can_vss.h"
-
-
-// todo: move from static into Engine GOD object in order for tests reset
-static efitick_t lastSignalTimeNt = 0;
-static efitick_t vssDiff = 0;
-
 
 /**
  * @return vehicle speed, in kilometers per hour
  */
 float getVehicleSpeed(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (mockVehicleSpeed != DEFAULT_MOCK_SPEED)
-		return mockVehicleSpeed;
+	if (engine->mockVehicleSpeed != DEFAULT_MOCK_SPEED)
+		return engine->mockVehicleSpeed;
 #if EFI_CAN_SUPPORT
 	if (CONFIG(enableCanVss)) {
 		return getVehicleCanSpeed();
@@ -39,18 +30,18 @@ float getVehicleSpeed(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!hasVehicleSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE))
 		return 0;
 	efitick_t nowNt = getTimeNowNt();
-	if (nowNt - lastSignalTimeNt > NT_PER_SECOND)
+	if (nowNt - engine->vssLastSignalTimeNt > NT_PER_SECOND)
 		return 0; // previous signal time is too long ago - we are stopped
 
-	return engineConfiguration->vehicleSpeedCoef * NT_PER_SECOND / vssDiff;
+	return engineConfiguration->vehicleSpeedCoef * NT_PER_SECOND / engine->vssDiff;
 }
 
 // todo: make this method public and invoke this method from test
 void vsCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->engineState.vssEventCounter++;
 	efitick_t nowNt = getTimeNowNt();
-	vssDiff = nowNt - lastSignalTimeNt;
-	lastSignalTimeNt = nowNt;
+	engine->vssDiff = nowNt - engine->vssLastSignalTimeNt;
+	engine->vssLastSignalTimeNt = nowNt;
 }
 
 #if ! EFI_UNIT_TEST
@@ -67,7 +58,7 @@ static void speedInfo(void) {
 			engineConfiguration->vehicleSpeedCoef,
 			engine->engineState.vssEventCounter,
 			getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE));
-	efiPrintf("vss diff %d", vssDiff);
+	efiPrintf("vss diff %d", engine->vssDiff);
 }
 #endif // EFI_UNIT_TEST
 
@@ -102,7 +93,9 @@ void startVSSPins(void) {
 #elif HAL_USE_ICU
 	digital_input_s* vehicleSpeedInput = startDigitalCapture("VSS", CONFIG(vehicleSpeedSensorInputPin));
 
-	vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, nullptr);
+	if (vehicleSpeedInput) {
+		vehicleSpeedInput->widthListeners.registerCallback((VoidInt) vsAnaWidthCallback, nullptr);
+	}
 #else
 	#error "HAL_USE_ICU or HAL_VSS_USE_PAL should be enabled to use EFI_VEHICLE_SPEED"
 #endif /* HAL_VSS_USE_PAL, HAL_USE_ICU */
@@ -136,7 +129,7 @@ float getVehicleSpeed(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 
-void setMockVehicleSpeed(float speedKPH) {
-	mockVehicleSpeed = speedKPH;
+void setMockVehicleSpeed(float speedKPH DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	engine->mockVehicleSpeed = speedKPH;
 }
 

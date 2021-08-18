@@ -1,0 +1,617 @@
+pins:
+  - pin: K1
+    function: GND
+    type: gnd
+  - pin: K2
+    function: V ign
+
+  - pin: K3
+    function: GND
+    type: gnd
+  - pin: K4
+    function: V raw
+
+  - pin: K5
+    function: GND
+    type: gnd
+  - pin: K6
+    function: 12v perm
+
+  - pin: K10
+    function: presure sensor
+
+  - pin: K11
+    function: Analog Ground
+
+  - pin: K12
+    ts_name: KNOCK - k12
+    function: Knock sens. in
+
+  - pin: K13
+    function: Analog Ground
+
+  - pin: K14
+    function: Analog Ground
+
+  - pin: K15
+    function: Cam Sensor
+    ts_name: Cam - k15
+
+  - pin: K16
+    function: Analog Ground
+
+
+  - pin: K17
+    function: Crank Sensor
+    # IN_CRANK AIN24 A24
+    id: [GPIOB_1]
+    class: [event_inputs]
+    ts_name: Crank - k17
+
+  - pin: K22
+    ts_name: Wastegate Position - 22
+
+  - pin: K25
+    id: GPIOG_7
+    class: outputs
+    ts_name: INJ_1 k25
+    function: Injector 1
+    type: inj
+
+  - pin: K26
+    id: GPIOG_8
+    class: outputs
+    ts_name: INJ_2 k26
+    function: Injector 2
+    type: inj
+
+  - pin: K27
+    id: GPIOD_11
+    class: outputs
+    ts_name: INJ_3 k27
+    function: Injector 3
+    type: inj
+
+  - pin: K28
+    id: GPIOD_10
+    class: outputs
+    ts_name: INJ_4 k28
+    function: Injector 4
+    type: inj
+
+  - pin: K30
+    function: Sensor 5v
+
+  - pin: K34
+    function: Analog Ground
+
+  - pin: K37
+    function: Analog Ground
+
+  - pin: K39
+    function: Analog Ground
+
+  - pin: K44
+    function: Analog Ground
+
+  - pin: K57
+    function: Analog Ground
+
+  - pin: K59
+    function: Analog Ground
+
+  - pin: K61
+    function: Analog Ground
+
+  - pin: K79
+    function: Analog Ground
+
+  - pin: A2
+    function: Shield Ground
+
+  - pin: A15
+    function: Ground
+
+  - pin: A43
+    function: Clutch Input
+  - pin: A45
+    function: DC Wastegate Pos
+
+  - pin: A57
+    function: AC Request Switch
+
+  - pin: A60
+    function: DC Wastegate Neg
+
+info:
+  image:
+    file: main.jpg
+  pins:
+    - pin: K1
+      x: 1900
+      y: 660
+    - pin: K2
+      x: 2055
+      y: 660
+
+    - pin: K3
+      x: 1900
+      y: 458
+    - pin: K4
+      x: 2055
+      y: 458
+
+    - pin: K5
+      x: 1900
+      y: 259
+    - pin: K6
+      x: 2055
+      y: 259
+
+    - pin: K7
+      x: 2251
+      y: 660
+    - pin: K8
+      x: 2340
+      y: 660
+    - pin: K9
+      x: 2412
+      y: 660
+    - pin: K10
+      x: 2492
+      y: 660
+    - pin: K11
+      x: 2566
+      y: 660
+    - pin: K12
+      x: 2633
+      y: 660
+    - pin: K13
+      x: 2714
+      y: 660
+    - pin: K14
+      x: 2791
+      y: 660
+    - pin: K15
+      x: 2865
+      y: 660
+    - pin: K16
+      x: 2940
+      y: 660
+    - pin: K17
+      x: 3011
+      y: 660
+    - pin: K18
+      x: 3086
+      y: 660
+    - pin: K19
+      x: 3161
+      y: 660
+    - pin: K20
+      x: 3235
+      y: 660
+    - pin: K21
+      x: 3314
+      y: 660
+    - pin: K22
+      x: 3386
+      y: 660
+    - pin: K23
+      x: 3458
+      y: 660
+    - pin: K24
+      x: 3530
+      y: 660
+    - pin: K25
+      x: 3605
+      y: 660
+    - pin: K26
+      x: 3681
+      y: 660
+    - pin: K27
+      x: 3754
+      y: 660
+    - pin: K28
+      x: 3827
+      y: 660
+
+
+
+
+    - pin: K29
+      x: 2251
+      y: 571
+    - pin: K30
+      x: 2340
+      y: 571
+    - pin: K31
+      x: 2412
+      y: 571
+    - pin: K32
+      x: 2492
+      y: 571
+    - pin: K33
+      x: 2566
+      y: 571
+    - pin: K34
+      x: 2633
+      y: 571
+    - pin: K35
+      x: 2714
+      y: 571
+    - pin: K36
+      x: 2791
+      y: 571
+    - pin: K37
+      x: 2865
+      y: 571
+    - pin: K38
+      x: 2940
+      y: 571
+    - pin: K39
+      x: 3011
+      y: 571
+    - pin: K40
+      x: 3086
+      y: 571
+    - pin: K41
+      x: 3161
+      y: 571
+    - pin: K42
+      x: 3235
+      y: 571
+    - pin: K43
+      x: 3314
+      y: 571
+    - pin: K44
+      x: 3386
+      y: 571
+    - pin: K45
+      x: 3458
+      y: 571
+    - pin: K46
+      x: 3530
+      y: 571
+    - pin: K47
+      x: 3605
+      y: 571
+    - pin: K48
+      x: 3681
+      y: 571
+    - pin: K49
+      x: 3754
+      y: 571
+    - pin: K50
+      x: 3827
+      y: 571
+
+
+
+    - pin: K51
+      x: 2251
+      y: 342
+    - pin: K52
+      x: 2340
+      y: 342
+    - pin: K53
+      x: 2412
+      y: 342
+    - pin: K54
+      x: 2492
+      y: 342
+    - pin: K55
+      x: 2566
+      y: 342
+    - pin: K56
+      x: 2633
+      y: 342
+    - pin: K57
+      x: 2714
+      y: 342
+    - pin: K58
+      x: 2791
+      y: 342
+    - pin: K59
+      x: 2865
+      y: 342
+    - pin: K60
+      x: 2940
+      y: 342
+    - pin: K61
+      x: 3011
+      y: 342
+    - pin: K62
+      x: 3086
+      y: 342
+    - pin: K63
+      x: 3161
+      y: 342
+    - pin: K64
+      x: 3235
+      y: 342
+    - pin: K65
+      x: 3314
+      y: 342
+    - pin: K66
+      x: 3386
+      y: 342
+    - pin: K67
+      x: 3458
+      y: 342
+    - pin: K68
+      x: 3530
+      y: 342
+    - pin: K69
+      x: 3605
+      y: 342
+    - pin: K70
+      x: 3681
+      y: 342
+    - pin: K71
+      x: 3754
+      y: 342
+    - pin: K72
+      x: 3827
+      y: 342
+
+
+
+
+    - pin: K73
+      x: 2251
+      y: 258
+    - pin: K74
+      x: 2340
+      y: 258
+    - pin: K75
+      x: 2412
+      y: 258
+    - pin: K76
+      x: 2492
+      y: 258
+    - pin: K77
+      x: 2566
+      y: 258
+    - pin: K78
+      x: 2633
+      y: 258
+    - pin: K79
+      x: 2714
+      y: 258
+    - pin: K80
+      x: 2791
+      y: 258
+    - pin: K81
+      x: 2865
+      y: 258
+    - pin: K82
+      x: 2940
+      y: 258
+    - pin: K83
+      x: 3011
+      y: 258
+    - pin: K84
+      x: 3086
+      y: 258
+    - pin: K85
+      x: 3161
+      y: 258
+    - pin: K86
+      x: 3235
+      y: 258
+    - pin: K87
+      x: 3314
+      y: 258
+    - pin: K88
+      x: 3386
+      y: 258
+    - pin: K89
+      x: 3458
+      y: 258
+    - pin: K90
+      x: 3530
+      y: 258
+    - pin: K91
+      x: 3605
+      y: 258
+    - pin: K92
+      x: 3681
+      y: 258
+    - pin: K93
+      x: 3754
+      y: 258
+    - pin: K94
+      x: 3827
+      y: 258
+
+
+    - pin: A1
+      x: 301
+      y: 660
+    - pin: A2
+      x: 410
+      y: 660
+    - pin: A3
+      x: 520
+      y: 660
+    - pin: A4
+      x: 623
+      y: 660
+    - pin: A5
+      x: 724
+      y: 660
+    - pin: A6
+      x: 815
+      y: 660
+    - pin: A7
+      x: 897
+      y: 660
+    - pin: A8
+      x: 967
+      y: 660
+    - pin: A9
+      x: 1044
+      y: 660
+    - pin: A10
+      x: 1118
+      y: 660
+    - pin: A11
+      x: 1193
+      y: 660
+    - pin: A12
+      x: 1270
+      y: 660
+    - pin: A13
+      x: 1348
+      y: 660
+    - pin: A14
+      x: 1414
+      y: 660
+    - pin: A15
+      x: 1504
+      y: 660
+
+
+
+
+    - pin: A16
+      x: 301
+      y: 577
+    - pin: A17
+      x: 410
+      y: 577
+    - pin: A18
+      x: 520
+      y: 577
+    - pin: A19
+      x: 623
+      y: 577
+    - pin: A20
+      x: 724
+      y: 577
+    - pin: A21
+      x: 815
+      y: 577
+    - pin: A22
+      x: 897
+      y: 577
+    - pin: A23
+      x: 967
+      y: 577
+    - pin: A24
+      x: 1044
+      y: 577
+    - pin: A25
+      x: 1118
+      y: 577
+    - pin: A26
+      x: 1193
+      y: 577
+    - pin: A27
+      x: 1270
+      y: 577
+    - pin: A28
+      x: 1348
+      y: 577
+    - pin: A29
+      x: 1414
+      y: 577
+    - pin: A30
+      x: 1504
+      y: 577
+
+
+
+    - pin: A31
+      x: 301
+      y: 353
+    - pin: A32
+      x: 410
+      y: 353
+    - pin: A33
+      x: 520
+      y: 353
+    - pin: A34
+      x: 623
+      y: 353
+    - pin: A35
+      x: 724
+      y: 353
+    - pin: A36
+      x: 815
+      y: 353
+    - pin: A37
+      x: 897
+      y: 353
+    - pin: A38
+      x: 967
+      y: 353
+    - pin: A39
+      x: 1044
+      y: 353
+    - pin: A40
+      x: 1118
+      y: 353
+    - pin: A41
+      x: 1193
+      y: 353
+    - pin: A42
+      x: 1270
+      y: 353
+    - pin: A43
+      x: 1348
+      y: 353
+    - pin: A44
+      x: 1414
+      y: 353
+    - pin: A45
+      x: 1504
+      y: 353
+
+
+
+    - pin: A46
+      x: 301
+      y: 264
+    - pin: A47
+      x: 410
+      y: 264
+    - pin: A48
+      x: 520
+      y: 264
+    - pin: A49
+      x: 623
+      y: 264
+    - pin: A50
+      x: 724
+      y: 264
+    - pin: A51
+      x: 815
+      y: 264
+    - pin: A52
+      x: 897
+      y: 264
+    - pin: A53
+      x: 967
+      y: 264
+    - pin: A54
+      x: 1044
+      y: 264
+    - pin: A55
+      x: 1118
+      y: 264
+    - pin: A56
+      x: 1193
+      y: 264
+    - pin: A57
+      x: 1270
+      y: 264
+    - pin: A58
+      x: 1348
+      y: 264
+    - pin: A59
+      x: 1414
+      y: 264
+    - pin: A60
+      x: 1504
+      y: 264

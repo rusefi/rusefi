@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Aug 01 01:22:54 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Aug 14 06:50:48 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -148,6 +148,8 @@ case CAN_BUS_BMW_E90:
   return "CAN_BUS_BMW_E90";
 case CAN_BUS_GENESIS_COUPE:
   return "CAN_BUS_GENESIS_COUPE";
+case CAN_BUS_HONDA_K:
+  return "CAN_BUS_HONDA_K";
 case CAN_BUS_Haltech:
   return "CAN_BUS_Haltech";
 case CAN_BUS_MAZDA_RX8:
@@ -254,8 +256,6 @@ case DBG_FSIO_EXPRESSION_1_7:
   return "DBG_FSIO_EXPRESSION_1_7";
 case DBG_FSIO_EXPRESSION_8_14:
   return "DBG_FSIO_EXPRESSION_8_14";
-case DBG_FSIO_SPECIAL:
-  return "DBG_FSIO_SPECIAL";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
 case DBG_GPPWM:
@@ -300,6 +300,8 @@ case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
+case DBG_UNUSED_42:
+  return "DBG_UNUSED_42";
 case DBG_VEHICLE_SPEED_SENSOR:
   return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
@@ -412,8 +414,10 @@ case GY6_139QMB:
   return "GY6_139QMB";
 case HELLEN72_ETB:
   return "HELLEN72_ETB";
-case HELLEN_121_NISSAN:
-  return "HELLEN_121_NISSAN";
+case HELLEN_121_NISSAN_4_CYL:
+  return "HELLEN_121_NISSAN_4_CYL";
+case HELLEN_121_NISSAN_6_CYL:
+  return "HELLEN_121_NISSAN_6_CYL";
 case HELLEN_121_VAG:
   return "HELLEN_121_VAG";
 case HELLEN_121_VAG_5_CYL:
@@ -428,6 +432,8 @@ case HELLEN_128_MERCEDES:
   return "HELLEN_128_MERCEDES";
 case HELLEN_134_BMW:
   return "HELLEN_134_BMW";
+case HELLEN_154_HYUNDAI:
+  return "HELLEN_154_HYUNDAI";
 case HELLEN_154_VAG:
   return "HELLEN_154_VAG";
 case HELLEN_55_BMW:
@@ -440,6 +446,8 @@ case HELLEN_NA94:
   return "HELLEN_NA94";
 case HELLEN_NB2:
   return "HELLEN_NB2";
+case HELLEN_NB2_36:
+  return "HELLEN_NB2_36";
 case HONDA_600:
   return "HONDA_600";
 case HONDA_ACCORD_1_24_SHIFTED:
@@ -964,6 +972,8 @@ case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MITSUBISHI:
   return "TT_MITSUBISHI";
+case TT_NISSAN_QR25:
+  return "TT_NISSAN_QR25";
 case TT_NISSAN_SR20VE:
   return "TT_NISSAN_SR20VE";
 case TT_NISSAN_SR20VE_360:
@@ -990,6 +1000,8 @@ case TT_SUBARU_7_WITHOUT_6:
   return "TT_SUBARU_7_WITHOUT_6";
 case TT_SUBARU_SVX:
   return "TT_SUBARU_SVX";
+case TT_TEMP_62:
+  return "TT_TEMP_62";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:

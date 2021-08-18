@@ -5,6 +5,9 @@ pins:
 
   - pin: A2    
     function: ECU power supply from ignition key
+    class: analog_inputs
+    id: EFI_ADC_5
+    ts_name: Battery Sense
     type: 12v
 
   - pin: A3
@@ -154,7 +157,7 @@ pins:
     function: NC
 
   - pin: C31
-    id: EFI_ADC_1
+    id: EFI_ADC_0
     class: analog_inputs
     ts_name: C31 - O2S
     function: Front O2 Sensor Signal
@@ -593,6 +596,16 @@ pins:
   - pin: F21
     function: igniter
     type: ign
+
+  - pin: P30
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: P30_IN_AUX4
+
+  - pin: P32
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: P31_IN_O2S2
 
 info:
   image:

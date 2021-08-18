@@ -6,13 +6,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-
+#include "pch.h"
 
 #include "os_access.h"
 #include "trigger_input.h"
 #include "servo.h"
-#include "adc_inputs.h"
 #include "can_hw.h"
 #include "hardware.h"
 #include "rtc_helper.h"
@@ -44,14 +42,11 @@
 #include "histogram.h"
 #include "gps_uart.h"
 #include "HD44780.h"
-#include "settings.h"
 #include "joystick.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"
 #include "svnversion.h"
-#include "engine_configuration.h"
 #include "vvt.h"
-#include "perf_trace.h"
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
 #include "software_knock.h"
@@ -66,6 +61,10 @@
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
 #endif
+
+#if HAL_USE_PAL && EFI_PROD_CODE
+#include "digital_input_exti.h"
+#endif // HAL_USE_PAL
 
 #if EFI_CAN_SUPPORT
 #include "can_vss.h"
@@ -376,10 +375,6 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	enginePins.startPins();
 
-#if EFI_CAN_SUPPORT
-	startCanPins();
-#endif /* EFI_CAN_SUPPORT */
-
 #if EFI_AUX_SERIAL
 	startAuxSerialPins();
 #endif /* EFI_AUX_SERIAL */
@@ -504,12 +499,22 @@ void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	startJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
+	validateTriggerInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+#if EFI_CAN_SUPPORT
+	startCanPins();
+#endif /* EFI_CAN_SUPPORT */
 }
 
 void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+#if HAL_USE_PAL && EFI_PROD_CODE
+	efiExtiInit();
+#endif // HAL_USE_PAL
+
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
 	if (hasFirmwareError())

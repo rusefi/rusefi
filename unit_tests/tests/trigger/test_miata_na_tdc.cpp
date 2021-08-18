@@ -1,5 +1,5 @@
-#include "engine_test_helper.h"
-#include "globalaccess.h"
+#include "pch.h"
+
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
 

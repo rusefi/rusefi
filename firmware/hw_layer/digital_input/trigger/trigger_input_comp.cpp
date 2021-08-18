@@ -7,7 +7,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
  
-#include "global.h"
+#include "pch.h"
 
 #if (EFI_SHAFT_POSITION_INPUT && HAL_USE_COMP) || defined(__DOXYGEN__)
 

@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include "engine.h"
-
+bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
 void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initEngineContoller(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -31,4 +30,3 @@ void setMockIatVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setMockCltVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);
-

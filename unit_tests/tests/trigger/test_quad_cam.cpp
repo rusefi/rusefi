@@ -3,7 +3,7 @@
  *
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 
 TEST(trigger, testQuadCam) {
 	// setting some weird engine

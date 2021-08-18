@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "global.h"
+#include "pch.h"
 #include "trigger_input.h"
 
 /* TODO:
@@ -144,6 +144,8 @@ void stopTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
+static const char* const camNames[] = { "cam1", "cam2", "cam3", "cam4"};
+
 void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
@@ -154,7 +156,7 @@ void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
 		if (isConfigurationChanged(camInputs[i])) {
-			turnOnTriggerInputPin("Cam", i, false);
+			turnOnTriggerInputPin(camNames[i], i, false);
 		}
 	}
 }
@@ -172,27 +174,19 @@ void turnOnTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void stopTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
-		if (isConfigurationChanged(triggerInputDebugPins[i])) {
-			efiSetPadUnused(activeConfiguration.triggerInputDebugPins[i] PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		efiSetPadUnusedIfConfigurationChanged(triggerInputDebugPins[i]);
 	}
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		if (isConfigurationChanged(camInputsDebug[i])) {
-			efiSetPadUnused(activeConfiguration.camInputsDebug[i] PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		efiSetPadUnusedIfConfigurationChanged(camInputsDebug[i]);
 	}
 }
 
 void startTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
-		if (isConfigurationChanged(triggerInputDebugPins[i])) {
-			efiSetPadMode("trigger debug", CONFIG(triggerInputDebugPins[i]), PAL_MODE_OUTPUT_PUSHPULL PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		efiSetPadModeIfConfigurationChanged("trigger debug", triggerInputDebugPins[i], PAL_MODE_OUTPUT_PUSHPULL);
 	}
 	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		if (isConfigurationChanged(camInputsDebug[i])) {
-			efiSetPadMode("cam debug", CONFIG(camInputsDebug[i]), PAL_MODE_OUTPUT_PUSHPULL PASS_ENGINE_PARAMETER_SUFFIX);
-		}
+		efiSetPadModeIfConfigurationChanged("cam debug", camInputsDebug[i], PAL_MODE_OUTPUT_PUSHPULL);
 	}
 }
 

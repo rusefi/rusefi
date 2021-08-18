@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "global.h"
-#include "engine_configuration_generated_structures.h"
 #include "cyclic_buffer.h"
 #include "timer.h"
 
@@ -75,13 +73,7 @@ public:
 class FsioState {
 public:
 	FsioState();
-	float fsioTimingAdjustment = 0;
-	float fsioIdleTargetRPMAdjustment = 0;
-	float servoValues[SERVO_COUNT];
 	float fsioLastValue[FSIO_COMMAND_COUNT];
-
-	float fsioIdleOffset = 0;
-	float fsioIdleMinValue = 0;
 
 	float fsioRpmHardLimit;
 

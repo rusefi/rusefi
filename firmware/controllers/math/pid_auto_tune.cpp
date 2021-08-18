@@ -23,9 +23,9 @@
 // IEEE Transactions on Control Systems Technology, vol 6 no 1, January 1998.
 // as reported on http://www.mstarlabs.com/control/znrule.html
 
+#include "pch.h"
+
 #include "pid_auto_tune.h"
-#include "efilib.h"
-#include "efitime.h"
 
 #if EFI_UNIT_TEST
 extern bool verboseMode;

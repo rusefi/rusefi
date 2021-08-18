@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
-
 #if EFI_MAP_AVERAGING
 
 #if HAL_USE_ADC

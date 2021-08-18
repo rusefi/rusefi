@@ -1,6 +1,6 @@
+#include "pch.h"
+
 #include "limp_manager.h"
-#include "engine_test_helper.h"
-#include <gtest/gtest.h>
 
 TEST(limp, testFatalError) {
 	LimpManager dut;
