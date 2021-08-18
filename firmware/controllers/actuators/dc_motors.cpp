@@ -64,6 +64,8 @@ public:
 		int clampedFrequency = maxI(100, frequency);
 
 		if (useTwoWires) {
+			m_pinEnable.initPin("ETB Enable", pinEnable);
+
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
 			startSimplePwmHard(&m_pwm1, "ETB Dir 1",
@@ -85,6 +87,9 @@ public:
 
 			dcMotor.configure(wrappedEnable, m_pwm1, m_pwm2);
 		} else {
+			m_pinDir1.initPin("ETB Dir 1", pinDir1);
+			m_pinDir2.initPin("ETB Dir 2", pinDir2);
+
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
 			startSimplePwmHard(&m_pwm1, "ETB Enable",
