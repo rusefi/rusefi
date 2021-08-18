@@ -52,8 +52,8 @@ shadowJar {
   }
 
   /*
-   to keep only classes from logging
-   and loggin-api as in build.xml
+   to keep only required
+   dependencies in resulting jar
   */
   dependencies {
       exclude(dependency(libs.junit))
@@ -62,6 +62,8 @@ shadowJar {
   }
 }
 
+
+// custom task from build.xml
 tasks.register('launcher_local_install', Copy) {
   dependsOn tasks.shadowJar
   from layout.buildDirectory.dir( jarDir + '/' + jarName + '.jar')
