@@ -36,7 +36,7 @@
         <delete file="${jar_file}"/>
 
         <copy todir="build/classes">
-            <fileset dir="../ts_plugin_launcher/resources" includes="**/*.png"/>
+            <fileset dir="../ts_plugin_launcher/src/main/resources" includes="**/*.png"/>
             <fileset dir="${console_path}/shared_ui/resources" includes="**/*.png"/>
         </copy>
 
