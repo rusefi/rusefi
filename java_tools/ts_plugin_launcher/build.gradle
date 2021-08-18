@@ -13,17 +13,21 @@ dependencies {
   implementation ts_plugin_libs.httpcore
   implementation ts_plugin_libs.httpmime
   implementation ts_plugin_libs.httpclient
-  // to automatically exclude transitive dependencies of that project
+  // to automatically exclude transitive dependencies of these projects
   shadow project(':autoupdate')
-  implementation project(':shared_io')
+  shadow project(':shared_io')
   implementation ts_plugin_libs.launcher_api
   implementation libs.commons_logging
 }
 
 def TODAY = new Date().format('yyyy-MM-dd HH:mm:ss')
+def jarName = 'rusefi_ts_plugin_launcher'
+def jarDir = 'jar'
+def localPath = '.efianalytics/TunerStudio/plugins'
+def userHome = System.properties['user.home']
 
 jar {
-  archiveBaseName = 'rusefi_ts_plugin_launcher'
+  archiveBaseName = jarName
 
   manifest {
     attributes(
@@ -39,10 +43,10 @@ shadowJar {
    to exclude suffix '-all'
    in resulting archive file name
   */
-  archiveBaseName = 'rusefi_ts_plugin_launcher'
+  archiveBaseName = jarName
   archiveClassifier = ''
 
-  destinationDirectory = file( 'build/jar' )
+  destinationDirectory = file( 'build' + '/' + jarDir )
   manifest {
       inheritFrom project.tasks.jar.manifest
   }
@@ -56,4 +60,10 @@ shadowJar {
       exclude(dependency(libs.annotations))
       exclude(dependency(ts_plugin_libs.launcher_api))
   }
+}
+
+tasks.register('launcher_local_install', Copy) {
+  dependsOn tasks.shadowJar
+  from layout.buildDirectory.dir( jarDir + '/' + jarName + '.jar')
+  into layout.buildDirectory.dir(userHome + '/' + localPath)
 }
