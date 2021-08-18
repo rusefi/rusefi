@@ -3,7 +3,7 @@ plugins {
   id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
-defaultTasks 'jar'
+defaultTasks 'shadowJar'
 
 apply from: '../../android/dependencies.gradle'
 
@@ -13,9 +13,11 @@ dependencies {
   implementation ts_plugin_libs.httpcore
   implementation ts_plugin_libs.httpmime
   implementation ts_plugin_libs.httpclient
-  implementation project(':autoupdate')
+  // to automatically exclude transitive dependencies of that project
+  shadow project(':autoupdate')
   implementation project(':shared_io')
   implementation ts_plugin_libs.launcher_api
+  implementation libs.commons_logging
 }
 
 def TODAY = new Date().format('yyyy-MM-dd HH:mm:ss')
@@ -43,5 +45,15 @@ shadowJar {
   destinationDirectory = file( 'build/jar' )
   manifest {
       inheritFrom project.tasks.jar.manifest
+  }
+
+  /*
+   to keep only classes from logging
+   and loggin-api as in build.xml
+  */
+  dependencies {
+      exclude(dependency(libs.junit))
+      exclude(dependency(libs.annotations))
+      exclude(dependency(ts_plugin_libs.launcher_api))
   }
 }
