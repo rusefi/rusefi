@@ -11,9 +11,8 @@
 #define TAG "LUA "
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#include "ch.h"
-
 #define LUA_HEAP_SIZE 20000
+static char luaHeap[LUA_HEAP_SIZE];
 
 static memory_heap_t heap;
 
@@ -204,8 +203,6 @@ struct LuaThread : ThreadController<4096> {
 
 	void ThreadTask() override;
 };
-
-static char luaHeap[LUA_HEAP_SIZE];
 
 static bool needsReset = false;
 
