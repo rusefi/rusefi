@@ -5,3 +5,10 @@ ext.libs = [
         snakeyaml  : "org.yaml:snakeyaml:1.26",
         jsr305     : "com.google.code.findbugs:jsr305:3.0.2"
 ]
+
+ext.ts_plugin_libs = [
+        httpclient  : "org.apache.httpcomponents:httpclient:4.5.12",
+        httpcore    : "org.apache.httpcomponents:httpcore:4.4.13",
+        httpmime    : "org.apache.httpcomponents:httpmime:4.5.12",
+        launcher_api: fileTree( dir: "lib", include: "TunerStudioPluginAPI.jar" )
+]

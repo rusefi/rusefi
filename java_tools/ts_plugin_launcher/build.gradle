@@ -1,0 +1,47 @@
+plugins {
+  id 'java-library'
+  id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+defaultTasks 'jar'
+
+apply from: '../../android/dependencies.gradle'
+
+dependencies {
+  testImplementation libs.junit
+  implementation libs.annotations
+  implementation ts_plugin_libs.httpcore
+  implementation ts_plugin_libs.httpmime
+  implementation ts_plugin_libs.httpclient
+  implementation project(':autoupdate')
+  implementation project(':shared_io')
+  implementation ts_plugin_libs.launcher_api
+}
+
+def TODAY = new Date().format('yyyy-MM-dd HH:mm:ss')
+
+jar {
+  archiveBaseName = 'rusefi_ts_plugin_launcher'
+
+  manifest {
+    attributes(
+      'Built-Date': TODAY,
+      'Signature-Vendor': 'rusEFI LLC',
+      'ApplicationPlugin': 'com.rusefi.ts_plugin.TsPluginLauncher'
+    )
+  }
+}
+
+shadowJar {
+  /*
+   to exclude suffix '-all'
+   in resulting archive file name
+  */
+  archiveBaseName = 'rusefi_ts_plugin_launcher'
+  archiveClassifier = ''
+
+  destinationDirectory = file( 'build/jar' )
+  manifest {
+      inheritFrom project.tasks.jar.manifest
+  }
+}
