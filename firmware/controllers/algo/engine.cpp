@@ -340,15 +340,6 @@ Engine::Engine() {
 	reset();
 }
 
-/**
- * @see scheduleStopEngine()
- * @return true if there is a reason to stop engine
- */
-bool Engine::needToStopEngine(efitick_t nowNt) const {
-	return stopEngineRequestTimeNt != 0 &&
-			nowNt - stopEngineRequestTimeNt	< 3 * NT_PER_SECOND;
-}
-
 int Engine::getGlobalConfigurationVersion(void) const {
 	return globalConfigurationVersion;
 }
@@ -674,10 +665,9 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiPrintf("Starting doScheduleStopEngine");
-	engine->stopEngineRequestTimeNt = getTimeNowNt();
+	engine->limpManager.stopEngine();
 	engine->ignitionOnTimeNt = 0;
-	// let's close injectors or else if these happen to be open right now
-	enginePins.stopPins();
+
 	// todo: initiate stepper motor parking
 	// make sure we have stored all the info
 #if EFI_PROD_CODE

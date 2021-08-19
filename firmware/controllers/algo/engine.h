@@ -197,7 +197,6 @@ public:
 
 #endif /* EFI_ENGINE_CONTROL */
 
-	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
 	 * That's the linked list of pending events scheduled in relation to trigger
@@ -226,12 +225,6 @@ public:
 	efitimems64_t callFromPitStopEndTime = 0;
 
 	RpmCalculator rpmCalculator;
-
-	/**
-	 * this is about 'stopengine' command
-	 */
-	efitick_t stopEngineRequestTimeNt = 0;
-
 
 	bool startStopState = false;
 	int startStopStateToggleCounter = 0;

@@ -59,6 +59,11 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		m_hadOilPressureAfterStart = false;
 	}
 
+	// If we're in engine stop mode, inhibit fuel
+	if (isEngineStop(nowNt)) {
+		allowFuel.clear();
+	}
+
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
 }
@@ -75,6 +80,21 @@ void LimpManager::fatalError() {
 	m_allowTriggerInput.clear();
 
 	setFaultRevLimit(0);
+}
+
+void LimpManager::stopEngine() {
+	m_engineStopTime = getTimeNowNt();
+}
+
+bool LimpManager::isEngineStop(efitick_t nowNt) {
+	if (m_engineStopTime == 0) {
+		return false;
+	}
+
+	auto timeSinceStop = nowNt - m_engineStopTime;
+
+	// If there was stop requested in the past 5 seconds, we're in stop mode
+	return timeSinceStop < MS2NT(5000);
 }
 
 void LimpManager::setFaultRevLimit(int limit) {
