@@ -76,7 +76,7 @@ public:
 				0
 			);
 
-			startSimplePwmHard(&m_pwm1, "ETB Dir 2",
+			startSimplePwmHard(&m_pwm2, "ETB Dir 2",
 				executor,
 				pinDir2,
 				&m_pinDir2,
