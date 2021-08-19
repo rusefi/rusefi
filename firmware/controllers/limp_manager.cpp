@@ -60,7 +60,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		m_hadOilPressureAfterStart = false;
 	}
 
-	if (engine->needToStopEngine(nowNt)) {
+	// If we're in engine stop mode, inhibit fuel
+	if (isEngineStop(nowNt)) {
 		/**
 		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
 		 */
@@ -74,6 +75,7 @@ todo AndreiKA this change breaks 22 unit tests?
 		allowSpark.clear();
 */
 	}
+
 
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
@@ -91,6 +93,21 @@ void LimpManager::fatalError() {
 	m_allowTriggerInput.clear(ClearReason::Fatal);
 
 	setFaultRevLimit(0);
+}
+
+void LimpManager::stopEngine() {
+	m_engineStopTime = getTimeNowNt();
+}
+
+bool LimpManager::isEngineStop(efitick_t nowNt) {
+	if (m_engineStopTime == 0) {
+		return false;
+	}
+
+	auto timeSinceStop = nowNt - m_engineStopTime;
+
+	// If there was stop requested in the past 5 seconds, we're in stop mode
+	return timeSinceStop < MS2NT(5000);
 }
 
 void LimpManager::setFaultRevLimit(int limit) {

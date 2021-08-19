@@ -354,15 +354,6 @@ Engine::Engine() {
 	reset();
 }
 
-/**
- * @see scheduleStopEngine()
- * @return true if there is a reason to stop engine
- */
-bool Engine::needToStopEngine(efitick_t nowNt) const {
-	return stopEngineRequestTimeNt != 0 &&
-			nowNt - stopEngineRequestTimeNt	< 3 * NT_PER_SECOND;
-}
-
 int Engine::getGlobalConfigurationVersion(void) const {
 	return globalConfigurationVersion;
 }
@@ -661,7 +652,7 @@ void Engine::periodicFastCallback() {
 
 void doScheduleStopEngine() {
 	efiPrintf("Starting doScheduleStopEngine");
-	engine->stopEngineRequestTimeNt = getTimeNowNt();
+	engine->limpManager.stopEngine();
 	engine->ignitionOnTimeNt = 0;
 	// todo: initiate stepper motor parking
 	// make sure we have stored all the info
