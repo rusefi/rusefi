@@ -97,8 +97,8 @@ static int lua_setTickRate(lua_State* l) {
 	return 0;
 }
 
-static LuaHandle setupLuaState() {
-	LuaHandle ls = lua_newstate(myAlloc, NULL);
+static LuaHandle setupLuaState(lua_Alloc alloc) {
+	LuaHandle ls = lua_newstate(alloc, NULL);
 
 	if (!ls) {
 		firmwareError(OBD_PCM_Processor_Fault, "Failed to start Lua interpreter");
@@ -213,10 +213,10 @@ static bool needsReset = false;
 // Returns true if it should be re-called immediately,
 // or false if there was a problem setting up the interpreter
 // or parsing the script.
-static bool runOneLua() {
+static bool runOneLua(lua_Alloc alloc, const char* script) {
 	needsReset = false;
 
-	auto ls = setupLuaState();
+	auto ls = setupLuaState(alloc);
 
 	// couldn't start Lua interpreter, bail out
 	if (!ls) {
@@ -226,7 +226,7 @@ static bool runOneLua() {
 	// Reset default tick rate
 	luaTickPeriodMs = 100;
 
-	if (!loadScript(ls, config->luaScript)) {
+	if (!loadScript(ls, script)) {
 		return false;
 	}
 
@@ -249,7 +249,7 @@ void LuaThread::ThreadTask() {
 	chHeapObjectInit(&heap, &luaHeap, sizeof(luaHeap));
 
 	while (!chThdShouldTerminateX()) {
-		bool wasOk = runOneLua();
+		bool wasOk = runOneLua(myAlloc, config->luaScript);
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin
