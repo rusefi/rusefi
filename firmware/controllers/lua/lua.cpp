@@ -297,7 +297,7 @@ void startLua() {
 #include <string>
 
 static LuaHandle runScript(const char* script) {
-	auto ls = setupLuaState();
+	auto ls = setupLuaState(myAlloc);
 
 	if (!ls) {
 		throw new std::logic_error("Call to setupLuaState failed, returned null");
@@ -363,7 +363,7 @@ int testLuaReturnsInteger(const char* script) {
 }
 
 void testLuaExecString(const char* script) {
-	auto ls = setupLuaState();
+	auto ls = setupLuaState(myAlloc);
 
 	if (!ls) {
 		throw new std::logic_error("Call to setupLuaState failed, returned null");
