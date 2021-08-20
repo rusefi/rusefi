@@ -7,6 +7,6 @@ public:
 
 	SensorResult convert(float frequency) const override {
 		auto speed = frequency * engineConfiguration->vehicleSpeedCoef;
-		return speed;
+		return 133;
 	}
 };
