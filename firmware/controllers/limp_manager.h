@@ -43,7 +43,8 @@ public:
 	void fatalError();
 	void stopEngine();
 
-	bool isEngineStop(efitick_t nowNt);
+	bool isEngineStop(efitick_t nowNt) const;
+	float getTimeSinceEngineStop(efitick_t nowNt) const;
 
 private:
 	void setFaultRevLimit(int limit);
@@ -61,5 +62,5 @@ private:
 
 	bool m_hadOilPressureAfterStart = false;
 
-	efitick_t m_engineStopTime = 0;
+	Timer m_engineStopTimer;
 };

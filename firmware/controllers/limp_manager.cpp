@@ -83,18 +83,18 @@ void LimpManager::fatalError() {
 }
 
 void LimpManager::stopEngine() {
-	m_engineStopTime = getTimeNowNt();
+	m_engineStopTimer.reset();
 }
 
-bool LimpManager::isEngineStop(efitick_t nowNt) {
-	if (m_engineStopTime == 0) {
-		return false;
-	}
-
-	auto timeSinceStop = nowNt - m_engineStopTime;
+bool LimpManager::isEngineStop(efitick_t nowNt) const {
+	float timeSinceStop = getTimeSinceEngineStop(nowNt);
 
 	// If there was stop requested in the past 5 seconds, we're in stop mode
-	return timeSinceStop < MS2NT(5000);
+	return timeSinceStop < 5;
+}
+
+float LimpManager::getTimeSinceEngineStop(efitick_t nowNt) const {
+	return m_engineStopTimer.getElapsedSeconds(nowNt);
 }
 
 void LimpManager::setFaultRevLimit(int limit) {
