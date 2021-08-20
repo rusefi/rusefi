@@ -390,9 +390,9 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 
-#if EFI_VEHICLE_SPEED && ! EFI_UNIT_TEST
+/* #if EFI_VEHICLE_SPEED && ! EFI_UNIT_TEST
 	startVSSPins();
-#endif /* EFI_VEHICLE_SPEED */
+#endif  EFI_VEHICLE_SPEED  */
 
 #if EFI_BOOST_CONTROL
 	startBoostPin();
@@ -474,9 +474,9 @@ void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	stopSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
-#if EFI_VEHICLE_SPEED
+/* #if EFI_VEHICLE_SPEED
 	stopVSSPins();
-#endif /* EFI_VEHICLE_SPEED */
+#endif  EFI_VEHICLE_SPEED */
 
 #if EFI_LOGIC_ANALYZER
 	stopLogicAnalyzerPins();
