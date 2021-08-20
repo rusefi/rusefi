@@ -596,9 +596,9 @@ void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initAuxSerial();
 #endif /* EFI_AUX_SERIAL */
 
-/*#if EFI_VEHICLE_SPEED
+#if EFI_VEHICLE_SPEED
 	initVehicleSpeed();
-#endif // EFI_VEHICLE_SPEED*/
+#endif // EFI_VEHICLE_SPEED
 
 #if EFI_CAN_SUPPORT
 	initCanVssSupport();
