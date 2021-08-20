@@ -55,7 +55,7 @@ bool LaunchControlBase::isInsideSwitchCondition() const {
  * then we have to return true, and trust that we would disable by other condition!
  */ 
 bool LaunchControlBase::isInsideSpeedCondition() const {
-	int speed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+	int speed = Sensor::get(SensorType::VehicleSpeed).value_or(4);
 	
 	return (CONFIG(launchSpeedTreshold) > speed) || (!(CONFIG(launchActivationMode) ==  ALWAYS_ACTIVE_LAUNCH));
 }
