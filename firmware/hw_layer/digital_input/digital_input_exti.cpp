@@ -27,7 +27,7 @@ void efiExtiInit() {
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
 void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palcallback_t cb, void *cb_data) {
-	firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "Enter en");
+	efiPrintfInternal("Enter en");
 	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin)) {
@@ -64,7 +64,7 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 
 void efiExtiDisablePin(brain_pin_e brainPin)
 {
-	firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "Enter dis");
+	efiPrintfInternal("Enter dis");
 	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin))
