@@ -20,7 +20,7 @@ void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	vehicleSpeedSensor.setFunction(vehicleSpeedConverter);
-	vehicleSpeedSensor.init(pin);
+	vehicleSpeedSensor.init(pin, "vss");
 	vehicleSpeedSensor.Register();
 }
 
