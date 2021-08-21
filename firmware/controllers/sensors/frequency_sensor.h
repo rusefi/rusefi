@@ -3,13 +3,18 @@
 
 class FrequencySensor : public FunctionalSensor {
 public:
-	FrequencySensor(SensorType type, efitick_t timeoutPeriod)
-		: FunctionalSensor(type, timeoutPeriod) { }
+	FrequencySensor(SensorType type, efitick_t timeoutPeriod, brain_pin_e pin)
+		: FunctionalSensor(type, timeoutPeriod)
+		, m_pin(pin) 
+	{
+		
+	}
 
-	void init(brain_pin_e pin, const char* const msg);
+	void init(const char* const msg);
 	void deInit();
 
 	void onEdge(efitick_t nowNt);
+	brain_pin_e getPin(void);
 
 private:
 	Timer m_edgeTimer;
