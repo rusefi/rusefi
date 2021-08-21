@@ -20,7 +20,6 @@
  * @return vehicle speed, in kilometers per hour
  */
 float getVehicleSpeed(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return 111;
 	if (engine->mockVehicleSpeed != DEFAULT_MOCK_SPEED)
 		return engine->mockVehicleSpeed;
 #if EFI_CAN_SUPPORT
@@ -114,13 +113,13 @@ void initVehicleSpeed() {
 #if EFI_UNIT_TEST
 
 float getVehicleSpeed(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return 112;
+	
 	// Mock return to be used in unit tests
 	return mockVehicleSpeed;	
 }
 #else
 float getVehicleSpeed(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return 113;
+	
 	// no VSS support
 	return 0;	
 }
