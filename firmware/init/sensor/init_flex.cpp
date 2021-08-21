@@ -21,3 +21,7 @@ void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	flexSensor.init(pin);
 	flexSensor.Register();
 }
+
+void deInitFlexSensor() {
+	flexSensor.deInit();
+}

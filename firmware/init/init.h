@@ -36,3 +36,4 @@ void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void deInitFlexSensor();
