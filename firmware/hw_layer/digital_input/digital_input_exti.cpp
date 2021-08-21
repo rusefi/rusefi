@@ -86,7 +86,7 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	}
 
 	if(brainPin == 10) {
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %d: MY_MARK STOP USED HERE", msg, brainPin);
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, ": pin %d: MY_MARK STOP USED HERE", brainPin);
 	}
 
 	ioline_t line = PAL_LINE(port, index);
