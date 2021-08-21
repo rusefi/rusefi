@@ -53,6 +53,10 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 		return;
 	}
 
+	if(brainPin == 10) {
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %d: MY_MARK START USED HERE", msg, brainPin);
+	}
+
 	ioline_t line = PAL_LINE(port, index);
 	palEnableLineEvent(line, mode);
 	palSetLineCallback(line, cb, cb_data);
@@ -79,6 +83,10 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	/* is this index was used? */
 	if (!(ext_used & PAL_PORT_BIT(index))) {
 		return;
+	}
+
+	if(brainPin == 10) {
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %d: MY_MARK STOP USED HERE", msg, brainPin);
 	}
 
 	ioline_t line = PAL_LINE(port, index);
