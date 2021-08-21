@@ -23,3 +23,7 @@ void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	vehicleSpeedSensor.init(pin);
 	vehicleSpeedSensor.Register();
 }
+
+void deInitVehicleSpeedSensor() {
+	vehicleSpeedSensor.deInit();
+}
