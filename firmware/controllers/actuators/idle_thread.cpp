@@ -437,7 +437,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		float crankingTaper = getCrankingTaperFraction();
 
 		// Determine what operation phase we're in - idling or not
-		float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(2);
+		float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
 		auto phase = determinePhase(rpm, targetRpm, tps, vehicleSpeed, crankingTaper);
 		m_lastPhase = phase;
 

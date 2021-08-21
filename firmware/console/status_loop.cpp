@@ -689,7 +689,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_VEHICLE_SPEED
-	float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(1);
+	float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
 	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
 	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
 
