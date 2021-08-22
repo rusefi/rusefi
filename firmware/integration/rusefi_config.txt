@@ -78,6 +78,7 @@ struct_no_prefix engine_configuration_s
 #define FSIO_ANALOG_INPUT_COUNT 4
 
 #define LUA_PWM_COUNT 8
+#define LUA_ANALOG_INPUT_COUNT 8
 
 ! V engines or flat engines would have pairs of shafts with same trigger shape and target position
 #define BANKS_COUNT 2
@@ -906,7 +907,8 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
-	uint8_t[10] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
+	uint8_t[2] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
+	adc_channel_e[LUA_ANALOG_INPUT_COUNT iterate] luaAnalogInputs;
 	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 	uint8_t[10] unusedOutputWhereHere;;"", 1, 0, 0, 255, 0
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
