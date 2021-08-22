@@ -22,7 +22,7 @@ static int lua_efi_print(lua_State* l) {
 
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
-#if ! EFI_UNIT_TEST
+#if EFI_PROD_CODE
 	readPin(msg);
 #endif
 	return 0;
