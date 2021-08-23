@@ -101,7 +101,7 @@ void setNeedToWriteConfiguration(void) {
 	needToWriteConfiguration = true;
 
 #if EFI_FLASH_WRITE_THREAD
-	if (allowFlashWhileRunning()) {
+	if (allowFlashWhileRunning() || (EFI_STORAGE_EXT_SNOR == TRUE)) {
 		// Signal the flash writer thread to wake up and write at its leisure
 		flashWriteSemaphore.signal();
 	}
