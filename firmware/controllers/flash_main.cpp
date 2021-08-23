@@ -64,7 +64,7 @@ const MFSConfig mfsd_nor_config = {
 	.bank1_sectors	= 128U
 };
 
-#define EFI_MSF_SETTINGS_RECORD_ID		1
+#define EFI_MFS_SETTINGS_RECORD_ID		1
 
 #endif
 
@@ -171,7 +171,7 @@ void writeToFlashNow(void) {
 	 * do we need to have two copies?
 	 * do we need to protect it with CRC? */
 
-	err = mfsWriteRecord(&mfsd, EFI_MSF_SETTINGS_RECORD_ID,
+	err = mfsWriteRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
 						 sizeof(persistentState), (uint8_t *)&persistentState);
 
 	if (err == MFS_NO_ERROR)
@@ -249,7 +249,7 @@ static persisted_configuration_state_e readConfiguration() {
 #if EFI_STORAGE_EXT_SNOR == TRUE
 	mfs_error_t err;
 	size_t settings_size = sizeof(persistentState);
-	err = mfsReadRecord(&mfsd, EFI_MSF_SETTINGS_RECORD_ID,
+	err = mfsReadRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
 						&settings_size, (uint8_t *)&persistentState);
 
 	if ((err == MFS_NO_ERROR) && (sizeof(persistentState) == settings_size))
