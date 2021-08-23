@@ -359,7 +359,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].iFactor = 0.1;
 	engineConfiguration->auxPid[0].dFactor = 0.1;
 
-	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
+//	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 	engineConfiguration->fanOnTemperature = 92;
 	engineConfiguration->fanOffTemperature = 89;
