@@ -14,6 +14,7 @@ jobs:
         # set up what each of these boards needs to build.
         #
         # see also gen_config where we have a similar list for all boards!
+        # see also build-primary-bundle where default/primary bundle is build separately
         #
         build-target: [hellen72, hellen-nb1, hellenNA6, hellen128, hellen121vag, hellen121nissan, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_f7_hardware_QC_special_build, proteus_h7, proteus_legacy, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7, atlas]
         

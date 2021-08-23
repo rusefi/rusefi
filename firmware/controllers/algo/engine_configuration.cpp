@@ -366,7 +366,7 @@ static void setCanFrankensoDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * see also setDefaultIdleSpeedTarget()
  */
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 90, 10);
+	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
 	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
 }
 

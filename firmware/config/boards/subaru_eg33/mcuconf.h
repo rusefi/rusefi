@@ -82,6 +82,10 @@
 #define STM32_WSPI_USE_QUADSPI1         TRUE
 #define STM32_WSPI_QUADSPI1_DMA_STREAM  STM32_DMA_STREAM_ID(2, 7)
 #define JEDEC_BUS_MODE                  JEDEC_BUS_MODE_WSPI4L
-#define STM32_WSPI_QUADSPI1_PRESCALER_VALUE 40
+/* QSPI is clocked from AHB clock, which is 216 MHz max
+ * Maximum CLK rate for SST26VF is 104/80MHz for Fast Read and
+ * Page program
+ * 216 / 3 = 72 MHz */
+#define STM32_WSPI_QUADSPI1_PRESCALER_VALUE 3
 
 #endif /* _MCUCONF_SUBARUEG33_H_ */

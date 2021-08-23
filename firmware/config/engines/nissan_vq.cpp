@@ -42,3 +42,12 @@ void setHellen121nissanVQ(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtOffsets[0] = NISSAN_VQ_VVT_OFFSET;
 	engineConfiguration->vvtOffsets[1 * CAMS_PER_BANK] = NISSAN_VQ_VVT_OFFSET - NISSAN_VQ_CAM_OFFSET;
 }
+
+void setHellen121nissanAltimaN16(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// https://en.wikipedia.org/wiki/Nissan_QG_engine
+	// https://en.wikipedia.org/wiki/N-VCT
+	setHellen121nissanQR(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->specs.displacement = 1.8;
+	strcpy(CONFIG(engineCode), "N16");
+
+}

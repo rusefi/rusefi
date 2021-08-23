@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 14 15:25:18 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 22 04:10:30 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1681,10 +1681,22 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
 	/**
+	 * offset 770
+	 */
+	uint8_t unusedpinModesWhereHere[2];
+	/**
+	 * offset 772
+	 */
+	adc_channel_e luaAnalogInputs[LUA_ANALOG_INPUT_COUNT];
+	/**
 	 * todo: more comments
 	 * offset 780
 	 */
 	output_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 786
+	 */
+	uint8_t unusedOutputWhereHere[10];
 	/**
 	 * offset 796
 	 */
@@ -1781,9 +1793,17 @@ struct engine_configuration_s {
 	 */
 	fsio_pwm_freq_t fsioFrequency[FSIO_COMMAND_COUNT];
 	/**
+	 * offset 844
+	 */
+	int16_t unusedOutputFreqWhereHere[10];
+	/**
 	 * offset 864
 	 */
 	fsio_setting_t fsio_setting[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 888
+	 */
+	int unusedSettings[10];
 	/**
 	 * offset 928
 	 */
@@ -1865,6 +1885,10 @@ struct engine_configuration_s {
 	 * offset 952
 	 */
 	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 958
+	 */
+	uint8_t unusedDigital[10];
 	/**
 	 * offset 968
 	 */
@@ -1999,10 +2023,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_291_30 : 1;
+	bool unusedBit_297_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_291_31 : 1;
+	bool unusedBit_297_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2241,9 +2265,8 @@ struct engine_configuration_s {
 	offset 1464 bit 10 */
 	bool useLinearIatSensor : 1;
 	/**
-	 * See fsioTimingAdjustment
 	offset 1464 bit 11 */
-	bool useFSIO16ForTimingAdjustment : 1;
+	bool unusedBitWasHere16 : 1;
 	/**
 	 * Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	offset 1464 bit 12 */
@@ -2278,19 +2301,19 @@ struct engine_configuration_s {
 	bool hasFrequencyReportingMapSensor : 1;
 	/**
 	offset 1464 bit 21 */
-	bool useFSIO8ForServo1 : 1;
+	bool unusedBitWasHere1 : 1;
 	/**
 	offset 1464 bit 22 */
-	bool useFSIO9ForServo2 : 1;
+	bool unusedBitWasHere2 : 1;
 	/**
 	offset 1464 bit 23 */
-	bool useFSIO10ForServo3 : 1;
+	bool unusedBitWasHere3 : 1;
 	/**
 	offset 1464 bit 24 */
-	bool useFSIO11ForServo4 : 1;
+	bool unusedBitWasHere4 : 1;
 	/**
 	offset 1464 bit 25 */
-	bool useFSIO12ForServo5 : 1;
+	bool unusedBitWasHere5 : 1;
 	/**
 	offset 1464 bit 26 */
 	bool unusedBitHere1 : 1;
@@ -2520,6 +2543,10 @@ struct engine_configuration_s {
 	 * offset 1516
 	 */
 	pin_input_mode_e fsioInputModes[FSIO_COMMAND_COUNT];
+	/**
+	 * offset 1522
+	 */
+	uint8_t unusedFsioInputs[10];
 	/**
 	count
 	 * offset 1532
@@ -2959,76 +2986,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_500_8 : 1;
+	bool unusedBit_507_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_500_9 : 1;
+	bool unusedBit_507_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_500_10 : 1;
+	bool unusedBit_507_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_500_11 : 1;
+	bool unusedBit_507_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_500_12 : 1;
+	bool unusedBit_507_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_500_13 : 1;
+	bool unusedBit_507_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_500_14 : 1;
+	bool unusedBit_507_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_500_15 : 1;
+	bool unusedBit_507_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_500_16 : 1;
+	bool unusedBit_507_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_500_17 : 1;
+	bool unusedBit_507_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_500_18 : 1;
+	bool unusedBit_507_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_500_19 : 1;
+	bool unusedBit_507_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_500_20 : 1;
+	bool unusedBit_507_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_500_21 : 1;
+	bool unusedBit_507_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_500_22 : 1;
+	bool unusedBit_507_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_500_23 : 1;
+	bool unusedBit_507_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_500_24 : 1;
+	bool unusedBit_507_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_500_25 : 1;
+	bool unusedBit_507_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_500_26 : 1;
+	bool unusedBit_507_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_500_27 : 1;
+	bool unusedBit_507_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_500_28 : 1;
+	bool unusedBit_507_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_500_29 : 1;
+	bool unusedBit_507_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_500_30 : 1;
+	bool unusedBit_507_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_500_31 : 1;
+	bool unusedBit_507_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4019,6 +4046,10 @@ struct persistent_config_s {
 	 */
 	le_formula_t fsioFormulas[FSIO_COMMAND_COUNT];
 	/**
+	 * offset 7844
+	 */
+	lua_script_t luaScript;
+	/**
 	 * offset 9844
 	 */
 	le_formula_t timingMultiplier;
@@ -4174,9 +4205,10 @@ struct persistent_config_s {
 	 */
 	float vvtTable2RpmBins[FSIO_TABLE_8];
 	/**
+	L
 	 * offset 16004
 	 */
-	lua_script_t luaScript;
+	float unusedLuaWasHere[64];
 	/**
 	 * offset 16260
 	 */
@@ -4297,4 +4329,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Aug 14 15:25:18 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Aug 22 04:10:30 UTC 2021

@@ -93,6 +93,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3; // 34 In PPS1
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14; // 35 In PPS2
 
+	CONFIG(throttlePedalUpVoltage) = 0.4;
+	CONFIG(throttlePedalWOTVoltage) = 2;
+	CONFIG(throttlePedalSecondaryUpVoltage) = 0.7;
+	CONFIG(throttlePedalSecondaryWOTVoltage) = 4.1;
+
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
 

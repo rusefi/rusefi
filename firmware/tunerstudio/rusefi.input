@@ -1009,7 +1009,7 @@ gaugeCategory = ECU Status
    recentErrorCode6Gauge = recentErrorCode6, "Error#7", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode7Gauge = recentErrorCode7, "Error#8", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    firmwareVersionGauge  = firmwareVersion , "ECU Software Version", "%",     0,   100,     0,    0,    100,  100,   0,   0
-   timeSecondsGauge     =   seconds, "Uptime", "sec",     0,   100,     0,    0,    100,  100,   0,   0
+   timeSecondsGauge     =   seconds, @@GAUGE_NAME_UPTIME@@, "sec",     0,   100,     0,    0,    100,  100,   0,   0
    tuneCrc16Gauge = tuneCrc16, "tune CRC16", "",     0,  64000,     0,    0,   64000, 64000,   0,   0
 
 
@@ -1254,6 +1254,7 @@ gaugeCategory = DynoView
 [Datalog]
    ;       Channel          Label          Type    Format
    entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
+   entry = seconds,         @@GAUGE_NAME_UPTIME@@,      float,  "%.3f"
    entry = RPMValue,        @@GAUGE_NAME_RPM@@,         int,    "%d"
    entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
    entry = coolant,         @@GAUGE_NAME_CLT@@,         float,  "%.2f"
@@ -1540,7 +1541,8 @@ menuDialog = main
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
 
 		subMenu = std_separator
-		subMenu = luaOutputs,			"Lua PWM Outputs"
+		subMenu = luaOutputs,			    "Lua PWM Outputs"
+		subMenu = luaAnalogInputs,  		"Lua Analog Inputs"
 
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
@@ -3305,25 +3307,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		field = "use FSIO #6 for rev limiter", useFSIO6ForRevLimiter
 		field = "#6",									fsioFormulas6
-
 		field = "#7",									fsioFormulas7
-
-		field = "use FSIO #8 for servo #1",	useFSIO8ForServo1
 		field = "#8",									fsioFormulas8
-		field = "use FSIO #9 for servo #2",	useFSIO9ForServo2
-		field = "#9",									fsioFormulas9
-		field = "use FSIO #10 for servo #3",	useFSIO10ForServo3
-		field = "#10",									fsioFormulas10
-		field = "use FSIO #11 for servo #4",	useFSIO11ForServo4
-		field = "#11",									fsioFormulas11
-		field = "use FSIO #12 for servo #5",	useFSIO12ForServo5
-		field = "#12",									fsioFormulas12
-		field = "#13",									fsioFormulas13
-		field = "#14",									fsioFormulas14
-		field = "#15",									fsioFormulas15
-		field = "use FSIO #16 for timing adjustment",	useFSIO16ForTimingAdjustment
-		field = "#16",									fsioFormulas16
-		
+
 	dialog = fsioInputsDialog, "FSIO inputs"
 		field = "ADC #1",								fsioAdc1
 		field = "ADC #2",								fsioAdc2
@@ -3342,6 +3328,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "output #5", 							luaOutputPins6
 		field = "output #6", 							luaOutputPins7
 		field = "output #7", 							luaOutputPins8
+
+	dialog = luaAnalogInputs, "Lua Analog Inputs"
+		field = "Input #0", 							luaAnalogInputs1
+		field = "Input #1", 							luaAnalogInputs2
+		field = "Input #2", 							luaAnalogInputs3
+		field = "Input #3", 							luaAnalogInputs4
+		field = "Input #4", 							luaAnalogInputs5
+		field = "Input #5", 							luaAnalogInputs6
+		field = "Input #6", 							luaAnalogInputs7
+		field = "Input #7", 							luaAnalogInputs8
 
 	dialog = transmissionPanel
 		field = "TCU Enabled"		tcuEnabled

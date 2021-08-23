@@ -116,9 +116,13 @@ void writeToFlashIfPending() {
 	// with a flash write thread, the schedule happens directly from
 	// setNeedToWriteConfiguration, so there's nothing to do here
 	if (allowFlashWhileRunning() || !getNeedToWriteConfiguration()) {
+		// Allow sensor timeouts again now that we're done (and a little time has passed)
+		Sensor::inhibitTimeouts(false);
 		return;
 	}
 
+	// Prevent sensor timeouts while flashing
+	Sensor::inhibitTimeouts(true);
 	writeToFlashNow();
 }
 
@@ -329,6 +333,10 @@ static void writeConfigCommand() {
 void initFlash() {
 #if EFI_STORAGE_EXT_SNOR == TRUE
 	mfs_error_t err;
+
+#if SNOR_SHARED_BUS == FALSE
+	wspiStart(&WSPID1, &WSPIcfg1);
+#endif
 
 	/* Initializing and starting snor1 driver.*/
 	snorObjectInit(&snor1);

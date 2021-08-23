@@ -53,15 +53,14 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	deinitTps();
-
 	deinitAfrInput(PASS_ENGINE_PARAMETER_SIGNATURE);
-
+	deInitFlexSensor();
 	reconfigureVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	reconfigureThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 	initAfrInput(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 
 // Mocking/testing helpers

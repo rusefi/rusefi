@@ -37,6 +37,11 @@ public:
 			return unexpected;
 		}
 
+		// Timeouts are disabled, return last value
+		if (Sensor::s_inhibitSensorTimeouts) {
+			return value;
+		}
+
 		if (m_timeoutPeriod != 0) { // zero m_timeoutPeriod means value lasts forever
 			if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
 				return unexpected;

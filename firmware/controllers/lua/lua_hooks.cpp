@@ -7,6 +7,7 @@
 #include "airmass.h"
 #include "lua_airmass.h"
 #include "can_msg_tx.h"
+#include "settings.h"
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
@@ -16,6 +17,14 @@ static int lua_efi_print(lua_State* l) {
 
 	efiPrintf("LUA: %s", msg);
 
+	return 0;
+}
+
+static int lua_readpin(lua_State* l) {
+	auto msg = luaL_checkstring(l, 1);
+#if EFI_PROD_CODE
+	readPin(msg);
+#endif
 	return 0;
 }
 
@@ -281,6 +290,7 @@ static int lua_stopEngine(lua_State*) {
 
 void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "print", lua_efi_print);
+	lua_register(l, "readpin", lua_readpin);
 	lua_register(l, "getSensor", lua_getSensor);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);

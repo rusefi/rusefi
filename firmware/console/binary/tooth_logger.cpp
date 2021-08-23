@@ -70,6 +70,12 @@ int copyCompositeEvents(CompositeEvent *events) {
 
 #endif // EFI_UNIT_TEST
 
+static void setToothLogReady(bool value) {
+#if EFI_TUNER_STUDIO
+	tsOutputChannels.toothLogReady = value;
+#endif // EFI_TUNER_STUDIO
+}
+
 static void SetNextCompositeEntry(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	uint32_t nowUs = NT2US(timestamp);
 	
@@ -89,20 +95,14 @@ static void SetNextCompositeEntry(efitick_t timestamp DECLARE_ENGINE_PARAMETER_S
 	//If we hit the end, loop
 	if ((firstBuffer) && (NextIdx >= (COMPOSITE_PACKET_COUNT/2))) {
 		/* first half is full */
-#if EFI_TUNER_STUDIO		
-		tsOutputChannels.toothLogReady = true;
-#endif		
+		setToothLogReady(true);
 		firstBuffer = false;
 	}
 	if ((!firstBuffer) && (NextIdx >= sizeof(buffer) / sizeof(buffer[0]))) {
-#if EFI_TUNER_STUDIO		
-		tsOutputChannels.toothLogReady = true;
-#endif		
+		setToothLogReady(true);
 		NextIdx = 0;
 		firstBuffer = true;
 	}
-
-	/////tsOutputChannels.toothLogReady = true;
 
 }
 
@@ -113,7 +113,7 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 	}
 
 	// Don't log at significant engine speed
-	if (engine->rpmCalculator.getRpm() > 4000) {
+	if (engine->rpmCalculator.getRpm() > CONFIG(engineSnifferRpmThreshold)) {
 		return;
 	}
 
@@ -206,13 +206,8 @@ void EnableToothLogger() {
 	// Enable logging of edges as they come
 	ToothLoggerEnabled = true;
 
-#if EFI_TUNER_STUDIO
-	// Tell TS that we're ready for it to read out the log
-	// nb: this is a lie, as we may not have written anything
-	// yet.  However, we can let it continuously read out the buffer
-	// as we update it, which looks pretty nice.
-	tsOutputChannels.toothLogReady = false;
-#endif // EFI_TUNER_STUDIO
+
+	setToothLogReady(false);
 }
 
 void EnableToothLoggerIfNotEnabled() {
@@ -223,21 +218,15 @@ void EnableToothLoggerIfNotEnabled() {
 
 void DisableToothLogger() {
 	ToothLoggerEnabled = false;
-#if EFI_TUNER_STUDIO
-	tsOutputChannels.toothLogReady = false;
-#endif // EFI_TUNER_STUDIO
+	setToothLogReady(false);
 }
 
 ToothLoggerBuffer GetToothLoggerBuffer() {
+	// tell TS that we do not have data until we have data again
+	setToothLogReady(false);
 	if (firstBuffer) {
-#if EFI_TUNER_STUDIO		
-		tsOutputChannels.toothLogReady = false;
-#endif		
 		return { reinterpret_cast<uint8_t*>(ptr_buffer_second), (sizeof(buffer)/2) };
 	} else {
-#if EFI_TUNER_STUDIO		
-		tsOutputChannels.toothLogReady = false;
-#endif		
 		return { reinterpret_cast<uint8_t*>(ptr_buffer_first), (sizeof(buffer)/2) };
 	}
 }

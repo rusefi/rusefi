@@ -236,6 +236,7 @@ pins:
     type: hl
 
 info:
+  title: Proteus
   image:
     file: black35.jpg
   pins:

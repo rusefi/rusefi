@@ -379,7 +379,7 @@ void snor_device_init(SNORDriver *devp) {
       WSPI_CFG_CMD_MODE_ONE_LINE | WSPI_CFG_CMD_SIZE_8 |
       WSPI_CFG_ADDR_MODE_ONE_LINE |
       WSPI_CFG_DATA_MODE_ONE_LINE,
-      JEDEC_CMD_READ, 0, 0);
+      JEDEC_CMD_FAST_READ, 0, 0);
   }
 
   /* TODO: get from SFDP */

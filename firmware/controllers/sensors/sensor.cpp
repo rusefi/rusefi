@@ -261,6 +261,12 @@ bool Sensor::Register() {
 	return s_sensorNames[static_cast<size_t>(type)];
 }
 
+/*static*/ bool Sensor::s_inhibitSensorTimeouts = false;
+
+/*static*/ void Sensor::inhibitTimeouts(bool inhibit) {
+	Sensor::s_inhibitSensorTimeouts = inhibit;
+}
+
 // Print information about all sensors
 /*static*/ void Sensor::showAllSensorInfo() {
 	for (size_t i = 1; i < efi::size(s_sensorRegistry); i++) {
