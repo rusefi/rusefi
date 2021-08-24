@@ -295,13 +295,6 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }
 
-void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
-	enableChannel(hwChannel);
-
-	brain_pin_e pin = getAdcChannelBrainPin(msg, hwChannel);
-	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
-}
-
 adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 	return hardwareIndexByIndernalAdcIndex[index];
 }
@@ -420,14 +413,12 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 #if EFI_USE_FAST_ADC
 	if (mode == ADC_FAST) {
-		fastAdc.enableChannelAndPin(name, setting);
+		fastAdc.enableChannel(setting);
 		return;
 	}
 #endif
 
-	// Slow ADC always samples all channels, simply set the input mode
-	brain_pin_e pin = getAdcChannelBrainPin(name, setting);
-	efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
+	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
@@ -459,8 +450,6 @@ static void configureInputs(void) {
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 
 	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
-
-	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
 
 	if (CONFIG(isCJ125Enabled)) {
 		addChannel("CJ125 UR", engineConfiguration->cj125ur, ADC_SLOW);

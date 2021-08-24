@@ -103,24 +103,9 @@ void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 						false);
 }
 
-void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	configTherm(clt,
-				fclt,
-				CONFIG(clt),
-				CONFIG(useLinearCltSensor));
-
-	configTherm(iat,
-				fiat,
-				CONFIG(iat),
-				CONFIG(useLinearIatSensor));
-
-	configTherm(aux1,
-				faux1,
-				CONFIG(auxTempSensor1),
-				false);
-
-	configTherm(aux2,
-				faux2,
-				CONFIG(auxTempSensor2),
-				false);
+void deinitThermistors() {
+	AdcSubscription::UnsubscribeSensor(clt);
+	AdcSubscription::UnsubscribeSensor(iat);
+	AdcSubscription::UnsubscribeSensor(aux1);
+	AdcSubscription::UnsubscribeSensor(aux2);
 }
