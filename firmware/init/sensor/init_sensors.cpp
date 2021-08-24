@@ -19,7 +19,7 @@ static void initAfrInput(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static void deinitAfrInput(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_PROD_CODE
-	brain_pin_e pin = getAdcChannelBrainPin("AFR", engineConfiguration->afr.hwChannel);
+	brain_pin_e pin = getAdcChannelBrainPin("AFR", activeConfiguration.afr.hwChannel);
 	efiSetPadUnused(pin PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
