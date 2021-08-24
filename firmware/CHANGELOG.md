@@ -30,6 +30,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  - RUSEFI MSD now contains bundle-specific URL #2848
  - Nissan 4 cylinder QR trigger wheel #3118
+ - 1-6-2-4-3-5 firing order for all our 911 fans!
 
 ### Fixed
  - Composite Logger uses same engineSnifferRpmThreshold setting as engine sniffer #3161
