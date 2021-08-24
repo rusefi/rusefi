@@ -32,7 +32,7 @@ void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Sensor reconfiguration
-void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void deinitVbatt();
 void deinitTps();
 void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
