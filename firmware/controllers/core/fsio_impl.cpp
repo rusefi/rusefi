@@ -490,10 +490,6 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 	}
 #endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
-
-	if (engineConfiguration->useFSIO6ForRevLimiter) {
-		updateValueOrWarning(6, "rpm limit", &ENGINE(fsioState.fsioRpmHardLimit) PASS_ENGINE_PARAMETER_SUFFIX);
-	}
 }
 
 
