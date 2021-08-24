@@ -248,7 +248,7 @@ static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 	case FO_1_4_3_6_2_5:
 		return order_1_4_3_6_2_5;
 	case FO_1_6_2_4_3_5:
-		return order_1_6_2_4_3_5:
+		return order_1_6_2_4_3_5;
 
 // 8 cylinder
 	case FO_1_8_4_3_6_5_7_2:
