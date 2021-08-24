@@ -436,6 +436,7 @@
 #define ET_HELLEN_121_NISSAN_8_CYL 85
 #define ET_HELLEN_121_NISSAN_ALMERA_N16 87
 #define ET_HELLEN_121_VAG 71
+#define ET_HELLEN_121_VAG_4_CYL 71
 #define ET_HELLEN_121_VAG_5_CYL 77
 #define ET_HELLEN_121_VAG_6_CYL 78
 #define ET_HELLEN_121_VAG_8_CYL 81
@@ -1267,7 +1268,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.08.24
-#define SIGNATURE_HASH 3178390286
+#define SIGNATURE_HASH 1485414701
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1623,7 +1624,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.08.24.hellen_cypress.3178390286"
+#define TS_SIGNATURE "rusEFI 2021.08.24.hellen_cypress.1485414701"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
