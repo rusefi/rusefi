@@ -1,3 +1,5 @@
+# https://docs.google.com/spreadsheets/d/1x9pB8oRpY1ISkrGYIsa5j2MrnQVA644REb9Ebl41tcw
+
 pins:
   - pin: A1
     function: NC
