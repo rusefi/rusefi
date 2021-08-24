@@ -37,3 +37,4 @@ void deinitTps();
 void deinitThermistors();
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void deInitFlexSensor();
+void deInitVehicleSpeedSensor();

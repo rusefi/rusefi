@@ -75,8 +75,6 @@ public:
 	FsioState();
 	float fsioLastValue[FSIO_COMMAND_COUNT];
 
-	float fsioRpmHardLimit;
-
 #if EFI_UNIT_TEST
 	float mockFan = 0;
 	float mockRpm = 0;

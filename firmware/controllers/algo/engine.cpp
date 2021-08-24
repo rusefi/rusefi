@@ -649,13 +649,6 @@ operation_mode_e Engine::getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
 }
 
-int Engine::getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->useFSIO6ForRevLimiter) {
-		return fsioState.fsioRpmHardLimit;
-	}
-	return CONFIG(rpmHardLimit);
-}
-
 /**
  * The idea of this method is to execute all heavy calculations in a lower-priority thread,
  * so that trigger event handler/IO scheduler tasks are faster.

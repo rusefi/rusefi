@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 22 04:10:28 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 24 05:22:17 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2333,7 +2333,7 @@ struct engine_configuration_s {
 	bool unusedBitHere3 : 1;
 	/**
 	offset 1464 bit 31 */
-	bool useFSIO6ForRevLimiter : 1;
+	bool unusedBitHere4 : 1;
 	/**
 	 * offset 1468
 	 */
@@ -4335,4 +4335,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Aug 22 04:10:28 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Aug 24 05:22:17 UTC 2021
