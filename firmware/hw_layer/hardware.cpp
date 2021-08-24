@@ -50,6 +50,7 @@
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
 #include "software_knock.h"
+#include "init.h"
 #if EFI_MC33816
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
@@ -290,6 +291,10 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
      */
 	ButtonDebounce::stopConfigurationList();
 
+#if EFI_PROD_CODE
+	stopSensors();
+#endif // EFI_PROD_CODE
+
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -341,6 +346,10 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	stopTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	enginePins.unregisterPins();
+
+#if EFI_PROD_CODE
+	reconfigureSensors();
+#endif /* EFI_PROD_CODE */
 
 	ButtonDebounce::startConfigurationList();
 

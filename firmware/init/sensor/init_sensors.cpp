@@ -76,7 +76,7 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initSensorCli();
 }
 
-void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitOldAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	deinitTps();
@@ -84,7 +84,9 @@ void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	deinitThermistors();
 	deInitFlexSensor();
 	deInitVehicleSpeedSensor();
+}
 
+void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
