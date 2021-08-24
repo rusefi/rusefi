@@ -1266,8 +1266,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.08.22
-#define SIGNATURE_HASH 3205464224
+#define SIGNATURE_DATE 2021.08.24
+#define SIGNATURE_HASH 1235041162
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1623,7 +1623,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.08.22.all.3205464224"
+#define TS_SIGNATURE "rusEFI 2021.08.24.all.1235041162"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1753,6 +1753,7 @@
 #define unusedBitHere1_offset 1464
 #define unusedBitHere2_offset 1464
 #define unusedBitHere3_offset 1464
+#define unusedBitHere4_offset 1464
 #define unusedBitWasHere16_offset 1464
 #define unusedBitWasHere1_offset 1464
 #define unusedBitWasHere2_offset 1464
@@ -1777,7 +1778,6 @@
 #define useFordRedundantTps_offset 76
 #define useFSIO4ForSeriousEngineWarning_offset 1464
 #define useFSIO5ForCriticalIssueEngineStop_offset 1464
-#define useFSIO6ForRevLimiter_offset 1464
 #define useFSIOTableForCanSniffingFiltering_offset 76
 #define useHbridges_offset 976
 #define useIacPidMultTable_offset 1476
