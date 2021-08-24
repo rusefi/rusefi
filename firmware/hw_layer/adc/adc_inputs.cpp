@@ -445,16 +445,9 @@ static void configureInputs(void) {
 
 	addChannel("HIP9011", engineConfiguration->hipOutputChannel, ADC_FAST);
 
-	addChannel("Baro Press", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 
 	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
-
-	if (CONFIG(isCJ125Enabled)) {
-		addChannel("CJ125 UR", engineConfiguration->cj125ur, ADC_SLOW);
-		addChannel("CJ125 UA", engineConfiguration->cj125ua, ADC_SLOW);
-	}
 
 	setAdcChannelOverrides();
 }
