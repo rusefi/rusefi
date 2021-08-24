@@ -34,6 +34,6 @@ void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 // Sensor reconfiguration
 void deinitVbatt();
 void deinitTps();
-void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void deinitThermistors();
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void deInitFlexSensor();

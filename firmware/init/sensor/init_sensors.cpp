@@ -81,13 +81,13 @@ void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	deinitTps();
 	deinitVbatt();
+	deinitThermistors();
 	deInitFlexSensor();
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
-	reconfigureThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
-
+	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	initOldAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
