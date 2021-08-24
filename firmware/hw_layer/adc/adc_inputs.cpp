@@ -295,10 +295,6 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }
 
-void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
-	enableChannel(hwChannel);
-}
-
 adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 	return hardwareIndexByIndernalAdcIndex[index];
 }
@@ -417,7 +413,7 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 #if EFI_USE_FAST_ADC
 	if (mode == ADC_FAST) {
-		fastAdc.enableChannelAndPin(name, setting);
+		fastAdc.enableChannel(setting);
 		return;
 	}
 #endif
