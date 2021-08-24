@@ -2,18 +2,21 @@ pins:
   - pin: K1
     function: GND
     type: gnd
+
   - pin: K2
     function: V ign
 
   - pin: K3
     function: GND
     type: gnd
+
   - pin: K4
     function: V raw
 
   - pin: K5
     function: GND
     type: gnd
+
   - pin: K6
     function: 12v perm
 
@@ -82,8 +85,24 @@ pins:
   - pin: K30
     function: Sensor 5v
 
+  - pin: K31
+    ts_name: Map Sensor K31
+    function: Manifold Pressure Sensor
+
+  - pin: K32
+    ts_name: TPS 2
+    function: TPS 2 sensor input
+
+  - pin: K33
+    ts_name: CLT
+    function: CLT
+
   - pin: K34
     function: Analog Ground
+
+  - pin: K36
+    ts_name: PPS 2
+    function: PPS 2 sensor input
 
   - pin: K37
     function: Analog Ground
@@ -103,8 +122,40 @@ pins:
   - pin: K61
     function: Analog Ground
 
+  - pin: K77
+    function: CAN bus high
+    type: can
+
+  - pin: K78
+    function: CAN bus low
+    type: can
+
   - pin: K79
     function: Analog Ground
+
+  - pin: K80
+    ts_name: TPS 1
+    function: TPS 1 sensor input
+
+  - pin: K82
+    ts_name: PPS 1
+    function: PPS 1 sensor input
+
+  - pin: K85
+    function: Analog Ground
+
+  - pin: K86
+    ts_name: Tacho
+    function: Tachometer
+
+  - pin: K92
+    ts_name: MIL
+    function: Check Engine Light
+
+  - pin: A1
+    ts_name: Coil 4
+    function: Coil 4
+    type: ign
 
   - pin: A2
     function: Shield Ground
@@ -112,10 +163,31 @@ pins:
   - pin: A15
     function: Ground
 
+  - pin: A16
+    ts_name: Coil 2
+    function: Coil 2
+    type: ign
+
+  - pin: A29
+    class: switch_inputs
+    ts_name: rake Input
+    function: Brake Switch
+
+
+  - pin: A31
+    ts_name: Coil 1
+    function: Coil 1
+    type: ign
+
   - pin: A43
     function: Clutch Input
   - pin: A45
     function: DC Wastegate Pos
+
+  - pin: A46
+    ts_name: Coil 3
+    function: Coil 3
+    type: ign
 
   - pin: A57
     function: AC Request Switch
