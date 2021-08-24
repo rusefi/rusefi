@@ -297,9 +297,6 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 
 void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
 	enableChannel(hwChannel);
-
-	brain_pin_e pin = getAdcChannelBrainPin(msg, hwChannel);
-	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
 }
 
 adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
