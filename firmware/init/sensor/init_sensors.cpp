@@ -31,7 +31,7 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 #endif
 }
 
-static void initOldAnalogInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void initOldAnalogInputs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	initIfValid("AFR", engineConfiguration->afr.hwChannel);
 	initIfValid("MAP", engineConfiguration->map.sensor.hwChannel);
 	initIfValid("Baro", engineConfiguration->baroSensor.hwChannel);
@@ -40,7 +40,7 @@ static void initOldAnalogInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initIfValid("CJ125 UA", engineConfiguration->cj125ua);
 }
 
-static void deInitOldAnalogInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void deInitOldAnalogInputs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
 	deInitIfValid("MAP", activeConfiguration.map.sensor.hwChannel);
 	deInitIfValid("Baro", activeConfiguration.baroSensor.hwChannel);
@@ -70,14 +70,14 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		initMaf(PASS_CONFIG_PARAMETER_SIGNATURE);
 	#endif
 
-	initOldAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initOldAnalogInputs(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
 }
 
 void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	deInitOldAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	deInitOldAnalogInputs(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	deinitTps();
 	deinitVbatt();
@@ -86,7 +86,7 @@ void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitVehicleSpeedSensor();
 }
 
-void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void reconfigureSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -95,7 +95,7 @@ void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVehicleSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	initOldAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initOldAnalogInputs(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 
 // Mocking/testing helpers
