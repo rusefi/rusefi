@@ -9,31 +9,44 @@
 
 static void initSensorCli();
 
-static void initAfrInput(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	auto channel = engineConfiguration->afr.hwChannel;
-
+void initIfValid(const char* msg, adc_channel_e channel) {
 	if (!isAdcChannelValid(channel)) {
 		return;
 	}
 
 #if EFI_PROD_CODE
-	auto name = "AFR";
-	brain_pin_e pin = getAdcChannelBrainPin(name, channel);
-	efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
+	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 }
 
-static void deinitAfrInput(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	auto channel = activeConfiguration.afr.hwChannel;
-
+void deInitIfValid(const char* msg, adc_channel_e channel) {
 	if (!isAdcChannelValid(channel)) {
 		return;
 	}
 
 #if EFI_PROD_CODE
-	brain_pin_e pin = getAdcChannelBrainPin("AFR", channel);
+	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
 	efiSetPadUnused(pin PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
+}
+
+static void initOldAnalogInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	initIfValid("AFR", engineConfiguration->afr.hwChannel);
+	initIfValid("MAP", engineConfiguration->map.sensor.hwChannel);
+	initIfValid("Baro", engineConfiguration->baroSensor.hwChannel);
+	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
+	initIfValid("CJ125 UR", engineConfiguration->cj125ur);
+	initIfValid("CJ125 UA", engineConfiguration->cj125ua);
+}
+
+static void deInitOldAnalogInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
+	deInitIfValid("MAP", activeConfiguration.map.sensor.hwChannel);
+	deInitIfValid("Baro", activeConfiguration.baroSensor.hwChannel);
+	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
+	deInitIfValid("CJ125 UR", activeConfiguration.cj125ur);
+	deInitIfValid("CJ125 UA", activeConfiguration.cj125ua);
 }
 
 void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -57,15 +70,16 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		initMaf(PASS_CONFIG_PARAMETER_SIGNATURE);
 	#endif
 
-	initAfrInput(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initOldAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
 }
 
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	deInitOldAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+
 	deinitTps();
-	deinitAfrInput(PASS_ENGINE_PARAMETER_SIGNATURE);
 	deinitVbatt();
 	deInitFlexSensor();
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -74,8 +88,9 @@ void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	initAfrInput(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	initOldAnalogInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 // Mocking/testing helpers

@@ -425,9 +425,7 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 	}
 #endif
 
-	// Slow ADC always samples all channels, simply set the input mode
-	brain_pin_e pin = getAdcChannelBrainPin(name, setting);
-	efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
+	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
