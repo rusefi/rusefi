@@ -86,7 +86,7 @@ void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitVehicleSpeedSensor();
 }
 
-void reconfigureSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);

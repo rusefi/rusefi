@@ -348,7 +348,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	enginePins.unregisterPins();
 
 #if EFI_PROD_CODE
-	reconfigureSensors();
+	reconfigureSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE */
 
 	ButtonDebounce::startConfigurationList();
