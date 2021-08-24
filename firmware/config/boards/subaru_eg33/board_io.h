@@ -435,7 +435,7 @@
 							 PIN_PUPDR_FLOATING( 4)	| \
 							 PIN_PUPDR_FLOATING( 5)	| \
 							 PIN_PUPDR_FLOATING( 6)	| \
-							 PIN_PUPDR_FLOATING( 7)	| \
+							 PIN_PUPDR_PULLUP( 7)	| \
 							 PIN_PUPDR_FLOATING( 8)	| \
 							 PIN_PUPDR_PULLUP( 9)	| \
 							 PIN_PUPDR_FLOATING(10)	| \
@@ -744,10 +744,10 @@
 							 DEFAULT_GPIO_SPEED( 6)	| \
 							 DEFAULT_GPIO_SPEED( 7)	| \
 							 DEFAULT_GPIO_SPEED( 8)	| \
-							 DEFAULT_GPIO_SPEED( 9)	| \
-							 DEFAULT_GPIO_SPEED(10)	| \
-							 DEFAULT_GPIO_SPEED(11)	| \
-							 DEFAULT_GPIO_SPEED(12)	| \
+							 PIN_OSPEED_HIGH( 9)	| \
+							 PIN_OSPEED_HIGH(10)	| \
+							 PIN_OSPEED_HIGH(11)	| \
+							 PIN_OSPEED_HIGH(12)	| \
 							 DEFAULT_GPIO_SPEED(13)	| \
 							 DEFAULT_GPIO_SPEED(14)	| \
 							 DEFAULT_GPIO_SPEED(15))
