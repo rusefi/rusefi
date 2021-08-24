@@ -162,7 +162,15 @@ pins:
     ts_name: In D2
     class: switch_inputs
     function: IN_D2
-    
+
+  - pin: 58a
+    function: CAN bus low
+    type: can
+
+  - pin: 60a
+    function: CAN bus high
+    type: can
+
   - pin: 65a
     id: GPIOH_14
     class: outputs

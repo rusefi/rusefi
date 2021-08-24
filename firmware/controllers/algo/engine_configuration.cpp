@@ -91,7 +91,6 @@
 #include "hardware.h"
 
 #if EFI_PROD_CODE
-#include "init.h"
 #include "board.h"
 #endif /* EFI_PROD_CODE */
 
@@ -174,9 +173,6 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
  */
-#if EFI_PROD_CODE
-	reconfigureSensors();
-#endif /* EFI_PROD_CODE */
 	engine->preCalculate(PASS_ENGINE_PARAMETER_SIGNATURE);
 #if EFI_ALTERNATOR_CONTROL
 	onConfigurationChangeAlternatorCallback(&activeConfiguration);
@@ -976,8 +972,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_154_HYUNDAI:
 		break;
 	case HELLEN_NA6:
-	case HELLEN_NA94:
 		setHellenNA6(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_NA94:
+		setHellenNA94(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 #endif // HW_HELLEN
 #if HW_FRANKENSO

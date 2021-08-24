@@ -22,6 +22,6 @@ void initVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	vbattSensor.Register();
 }
 
-void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	vbattFunc.configure(0, 0, 1, engineConfiguration->vbattDividerCoeff, 0, 50);
+void deinitVbatt() {
+	AdcSubscription::UnsubscribeSensor(vbattSensor);
 }

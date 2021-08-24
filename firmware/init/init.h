@@ -9,6 +9,8 @@
 // Call this once at startup to initialize, configure, and subscribe sensors
 void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
+void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
 // Call this whenever the configuration may have changed, so any sensors
 // can be reconfigured with the new settings.
 // Note: this may not be necessarily possible for all sensors, so some may
@@ -32,7 +34,9 @@ void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Sensor reconfiguration
-void reconfigureVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void reconfigureThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void deinitVbatt();
+void deinitTps();
+void deinitThermistors();
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void deInitFlexSensor();
+void deInitVehicleSpeedSensor();

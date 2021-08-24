@@ -87,4 +87,6 @@ TESTS_SRC_CPP = \
 	tests/test_stepper.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
 	tests/sensor/test_vehicle_speed.cpp \
+	tests/sensor/test_vehicle_speed_converter.cpp
+	
 

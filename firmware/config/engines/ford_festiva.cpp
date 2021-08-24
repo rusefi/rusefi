@@ -276,8 +276,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //  we wanted to have a timinig table adjustment switch here
 //	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PC2
 
-	strcpy(config->fsioFormulas[15], ANALOG_CONDITION);
-
 	// end of Ford Escort GT config
 }
 

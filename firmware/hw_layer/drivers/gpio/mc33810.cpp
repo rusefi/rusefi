@@ -339,10 +339,12 @@ int Mc33810::chip_init()
 			goto err_gpios;
 		}
 
-		ret = spi_rw(MC_CMD_MODE_SELECT(0xf << 8), NULL);
+		/* set IGN/GP outputs to GP mode - to be fixed!
+		 * disable retry after recovering from under/overvoltage */
+		ret = spi_rw(MC_CMD_MODE_SELECT((0xf << 8) | (1 << 6)) , NULL);
 		if (ret) {
 			goto err_gpios;
-		}		
+		}
 	}
 
 	/* n. set EN pin low - active */

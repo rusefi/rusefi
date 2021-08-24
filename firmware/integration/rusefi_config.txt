@@ -78,6 +78,7 @@ struct_no_prefix engine_configuration_s
 #define FSIO_ANALOG_INPUT_COUNT 4
 
 #define LUA_PWM_COUNT 8
+#define LUA_ANALOG_INPUT_COUNT 8
 
 ! V engines or flat engines would have pairs of shafts with same trigger shape and target position
 #define BANKS_COUNT 2
@@ -508,6 +509,7 @@ end_struct
 #define ET_HELLEN_NB2 69
 
 #define ET_HELLEN_121_VAG 71
+#define ET_HELLEN_121_VAG_4_CYL 71
 #define ET_HELLEN_121_NISSAN_6_CYL 72
 #define ET_HELLEN_55_BMW 73
 #define ET_HELLEN_88_BMW 74
@@ -620,7 +622,7 @@ uint32_t cylindersCount;;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
 ! FO_1_8_4_3_6_5_7_2 = 5
 ! FO_1_2_4_5_3 = 6
 
-custom firing_order_e 4 bits, U32, @OFFSET@, [0:4], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "fo29", "fo30", "fo31"
+custom firing_order_e 4 bits, U32, @OFFSET@, [0:5], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "fo30", "fo31", "fo32", "fo33"
 firing_order_e firingOrder;
 end_struct
 
@@ -906,7 +908,8 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
-	uint8_t[10] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
+	uint8_t[2] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
+	adc_channel_e[LUA_ANALOG_INPUT_COUNT iterate] luaAnalogInputs;
 	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 	uint8_t[10] unusedOutputWhereHere;;"", 1, 0, 0, 255, 0
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
@@ -1133,7 +1136,7 @@ bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
 bit unusedBitHere2
 bit unusedBitHere3
-bit useFSIO6ForRevLimiter
+bit unusedBitHere4
 
 	adc_channel_e hipOutputChannel;
 	switch_input_pin_e acSwitch;A/C button input;

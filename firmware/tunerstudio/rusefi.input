@@ -1541,7 +1541,8 @@ menuDialog = main
 		subMenu = fsioCurve4,			    "FSIO Curve #4"
 
 		subMenu = std_separator
-		subMenu = luaOutputs,			"Lua PWM Outputs"
+		subMenu = luaOutputs,			    "Lua PWM Outputs"
+		subMenu = luaAnalogInputs,  		"Lua Analog Inputs"
 
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
@@ -3304,10 +3305,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "use FSIO #5 for critical engine stop", useFSIO5ForCriticalIssueEngineStop
 		field = "#5",									fsioFormulas5
 
-		field = "use FSIO #6 for rev limiter", useFSIO6ForRevLimiter
 		field = "#6",									fsioFormulas6
-		field = "#7",									fsioFormulas7
-		field = "#8",									fsioFormulas8
 
 	dialog = fsioInputsDialog, "FSIO inputs"
 		field = "ADC #1",								fsioAdc1
@@ -3327,6 +3325,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "output #5", 							luaOutputPins6
 		field = "output #6", 							luaOutputPins7
 		field = "output #7", 							luaOutputPins8
+
+	dialog = luaAnalogInputs, "Lua Analog Inputs"
+		field = "Input #0", 							luaAnalogInputs1
+		field = "Input #1", 							luaAnalogInputs2
+		field = "Input #2", 							luaAnalogInputs3
+		field = "Input #3", 							luaAnalogInputs4
+		field = "Input #4", 							luaAnalogInputs5
+		field = "Input #5", 							luaAnalogInputs6
+		field = "Input #6", 							luaAnalogInputs7
+		field = "Input #7", 							luaAnalogInputs8
 
 	dialog = transmissionPanel
 		field = "TCU Enabled"		tcuEnabled

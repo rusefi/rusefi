@@ -50,6 +50,7 @@
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
 #include "software_knock.h"
+#include "init.h"
 #if EFI_MC33816
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
@@ -290,6 +291,10 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
      */
 	ButtonDebounce::stopConfigurationList();
 
+#if EFI_PROD_CODE
+	stopSensors();
+#endif // EFI_PROD_CODE
+
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -342,6 +347,10 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	enginePins.unregisterPins();
 
+#if EFI_PROD_CODE
+	reconfigureSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif /* EFI_PROD_CODE */
+
 	ButtonDebounce::startConfigurationList();
 
 	/*******************************************
@@ -390,9 +399,9 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif
 
-#if EFI_VEHICLE_SPEED && ! EFI_UNIT_TEST
+/* #if EFI_VEHICLE_SPEED && ! EFI_UNIT_TEST
 	startVSSPins();
-#endif /* EFI_VEHICLE_SPEED */
+#endif  EFI_VEHICLE_SPEED  */
 
 #if EFI_BOOST_CONTROL
 	startBoostPin();
@@ -474,9 +483,9 @@ void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	stopSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
-#if EFI_VEHICLE_SPEED
+/* #if EFI_VEHICLE_SPEED
 	stopVSSPins();
-#endif /* EFI_VEHICLE_SPEED */
+#endif  EFI_VEHICLE_SPEED */
 
 #if EFI_LOGIC_ANALYZER
 	stopLogicAnalyzerPins();
@@ -596,9 +605,9 @@ void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initAuxSerial();
 #endif /* EFI_AUX_SERIAL */
 
-#if EFI_VEHICLE_SPEED
+/*#if EFI_VEHICLE_SPEED
 	initVehicleSpeed();
-#endif // EFI_VEHICLE_SPEED
+#endif // EFI_VEHICLE_SPEED*/
 
 #if EFI_CAN_SUPPORT
 	initCanVssSupport();

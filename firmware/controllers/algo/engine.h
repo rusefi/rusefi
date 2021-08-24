@@ -286,8 +286,6 @@ public:
 
 	bool isRunningPwmTest = false;
 
-	int getRpmHardLimit(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
 	FsioState fsioState;
 
 	/**

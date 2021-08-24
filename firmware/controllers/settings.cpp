@@ -466,7 +466,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 }
 
 // this method is useful for desperate time debugging
-static void readPin(const char *pinName) {
+void readPin(const char *pinName) {
 	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
 		return;

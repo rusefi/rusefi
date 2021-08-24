@@ -7,7 +7,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowSpark = CONFIG(isIgnitionEnabled);
 
 	// User-configured hard RPM limit
-	if (rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (rpm > CONFIG(rpmHardLimit)) {
 		if (CONFIG(cutFuelOnHardLimit)) {
 			allowFuel.clear();
 		}

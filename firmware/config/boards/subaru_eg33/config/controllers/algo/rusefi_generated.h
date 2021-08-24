@@ -436,6 +436,7 @@
 #define ET_HELLEN_121_NISSAN_8_CYL 85
 #define ET_HELLEN_121_NISSAN_ALMERA_N16 87
 #define ET_HELLEN_121_VAG 71
+#define ET_HELLEN_121_VAG_4_CYL 71
 #define ET_HELLEN_121_VAG_5_CYL 77
 #define ET_HELLEN_121_VAG_6_CYL 78
 #define ET_HELLEN_121_VAG_8_CYL 81
@@ -1049,8 +1050,17 @@
 #define lowPressureFuel_value2_offset 3324
 #define lps25BaroSensorScl_offset 1458
 #define lps25BaroSensorSda_offset 1459
+#define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_PWM_COUNT 8
 #define LUA_SCRIPT_SIZE 2000
+#define luaAnalogInputs1_offset 772
+#define luaAnalogInputs2_offset 773
+#define luaAnalogInputs3_offset 774
+#define luaAnalogInputs4_offset 775
+#define luaAnalogInputs5_offset 776
+#define luaAnalogInputs6_offset 777
+#define luaAnalogInputs7_offset 778
+#define luaAnalogInputs8_offset 779
 #define luaOutputPins1_offset 1220
 #define luaOutputPins2_offset 1221
 #define luaOutputPins3_offset 1222
@@ -1167,7 +1177,7 @@
 #define oilPressure_value2_offset 2708
 #define onOffAlternatorLogic_offset 744
 #define operation_mode_e_auto_enum "OM_NONE", "FOUR_STROKE_CRANK_SENSOR", "FOUR_STROKE_CAM_SENSOR", "TWO_STROKE", "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR", "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR"
-#define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D05 - Self Shutdown","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D17 - FAN 1 relay","D03 - FAN 2 relay","C16 - Tacho out","C14 - FPump modulator","D23 - Fuel Pump relay","D22 - EGR control","D19 - Check Engine indicator","C15 - AUX1 OD out","D18 - Auxillary air valve","D06 - Absorber purge valve","D02 - IDLE open","D01 - IDLE close","AUX0_17 - AUX0 OD output 0","AUX0_14 - AUX0 OD output 1","B08 - AC clutch","D20 - Inertia-Resonance Super-Charger control","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D13 - Injector 1","D11 - Injector 3","A01 - Injector 5","INVALID","D07 - Ignition Cyl 4","D09 - Ignition Cyl 3","INVALID","D21 - Ignition Cyl 5","D12 - Injector 2","D26 - Injector 4","A12 - Injector 6","INVALID","INVALID","D16 - Ignition Cyl 6","D08 - Ignition Cyl 2","D10 - Ignition Cyl 1"
+#define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D05 - Self Shutdown","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D17 - FAN 1 relay","D03 - FAN 2 relay","C16 - Tacho out","C14 - FPump modulator","D23 - Fuel Pump relay","D22 - EGR control","D19 - Check Engine indicator","C15 - AUX1 OD out","D18 - Auxillary air valve","D06 - Absorber purge valve","D02 - IDLE open","D01 - IDLE close","AUX0_17 - AUX0 OD output 0","AUX0_14 - AUX0 OD output 1","B08 - AC clutch","D20 - Inertia-Resonance Super-Charger control","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D13 - Injector 1","D11 - Injector 3","A01 - Injector 5","INVALID","D07 - Ignition Cyl 4","D09 - Ignition Cyl 3","INVALID","D21 - Ignition Cyl 5","D12 - Injector 2","D26 - Injector 4","A12 - Injector 6","INVALID","INVALID","D16 - Ignition Cyl 1","D08 - Ignition Cyl 6","D10 - Ignition Cyl 2"
 #define overrideCrankingIacSetting_offset 1476
 #define overrideTriggerGaps_offset 76
 #define PACK_ADD_TEMPERATURE 40
@@ -1258,8 +1268,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.08.17
-#define SIGNATURE_HASH 4032609519
+#define SIGNATURE_DATE 2021.08.24
+#define SIGNATURE_HASH 34793307
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1615,7 +1625,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.08.17.subaru_eg33_f7.4032609519"
+#define TS_SIGNATURE "rusEFI 2021.08.24.subaru_eg33_f7.34793307"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1715,36 +1725,37 @@
 #define unusedAtOldBoardConfigurationEnd_offset 1276
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_296_30_offset 976
-#define unusedBit_296_31_offset 976
+#define unusedBit_297_30_offset 976
+#define unusedBit_297_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_506_10_offset 2116
-#define unusedBit_506_11_offset 2116
-#define unusedBit_506_12_offset 2116
-#define unusedBit_506_13_offset 2116
-#define unusedBit_506_14_offset 2116
-#define unusedBit_506_15_offset 2116
-#define unusedBit_506_16_offset 2116
-#define unusedBit_506_17_offset 2116
-#define unusedBit_506_18_offset 2116
-#define unusedBit_506_19_offset 2116
-#define unusedBit_506_20_offset 2116
-#define unusedBit_506_21_offset 2116
-#define unusedBit_506_22_offset 2116
-#define unusedBit_506_23_offset 2116
-#define unusedBit_506_24_offset 2116
-#define unusedBit_506_25_offset 2116
-#define unusedBit_506_26_offset 2116
-#define unusedBit_506_27_offset 2116
-#define unusedBit_506_28_offset 2116
-#define unusedBit_506_29_offset 2116
-#define unusedBit_506_30_offset 2116
-#define unusedBit_506_31_offset 2116
-#define unusedBit_506_8_offset 2116
-#define unusedBit_506_9_offset 2116
+#define unusedBit_507_10_offset 2116
+#define unusedBit_507_11_offset 2116
+#define unusedBit_507_12_offset 2116
+#define unusedBit_507_13_offset 2116
+#define unusedBit_507_14_offset 2116
+#define unusedBit_507_15_offset 2116
+#define unusedBit_507_16_offset 2116
+#define unusedBit_507_17_offset 2116
+#define unusedBit_507_18_offset 2116
+#define unusedBit_507_19_offset 2116
+#define unusedBit_507_20_offset 2116
+#define unusedBit_507_21_offset 2116
+#define unusedBit_507_22_offset 2116
+#define unusedBit_507_23_offset 2116
+#define unusedBit_507_24_offset 2116
+#define unusedBit_507_25_offset 2116
+#define unusedBit_507_26_offset 2116
+#define unusedBit_507_27_offset 2116
+#define unusedBit_507_28_offset 2116
+#define unusedBit_507_29_offset 2116
+#define unusedBit_507_30_offset 2116
+#define unusedBit_507_31_offset 2116
+#define unusedBit_507_8_offset 2116
+#define unusedBit_507_9_offset 2116
 #define unusedBitHere1_offset 1464
 #define unusedBitHere2_offset 1464
 #define unusedBitHere3_offset 1464
+#define unusedBitHere4_offset 1464
 #define unusedBitWasHere16_offset 1464
 #define unusedBitWasHere1_offset 1464
 #define unusedBitWasHere2_offset 1464
@@ -1769,7 +1780,6 @@
 #define useFordRedundantTps_offset 76
 #define useFSIO4ForSeriousEngineWarning_offset 1464
 #define useFSIO5ForCriticalIssueEngineStop_offset 1464
-#define useFSIO6ForRevLimiter_offset 1464
 #define useFSIOTableForCanSniffingFiltering_offset 76
 #define useHbridges_offset 976
 #define useIacPidMultTable_offset 1476

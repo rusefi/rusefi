@@ -6,10 +6,12 @@ public:
 	FrequencySensor(SensorType type, efitick_t timeoutPeriod)
 		: FunctionalSensor(type, timeoutPeriod) { }
 
-	void init(brain_pin_e pin);
+	void init(brain_pin_e pin, const char* const msg);
+	void deInit();
 
 	void onEdge(efitick_t nowNt);
 
 private:
 	Timer m_edgeTimer;
+	brain_pin_e m_pin = GPIO_UNASSIGNED;
 };
