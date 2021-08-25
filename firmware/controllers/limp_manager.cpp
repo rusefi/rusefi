@@ -59,6 +59,10 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		m_hadOilPressureAfterStart = false;
 	}
 
+	if (engine->needToStopEngine(nowNt)) {
+		allowFuel.clear();
+	}
+
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
 }
