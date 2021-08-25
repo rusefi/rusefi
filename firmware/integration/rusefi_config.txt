@@ -1662,11 +1662,11 @@ float[64] unusedLuaWasHere;;"L", 1, 0, 0, 255, 0
 
 ignition_table_t ignitionTable;
 float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 2
-uint16_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM", 1, 0, 0, 18000, 2
+uint8_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 ve_table_t veTable;
 float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 400, 2
-uint16_t[FUEL_RPM_COUNT] veRpmBins;;"RPM", 1, 0, 0, 18000, 2
+uint8_t[FUEL_RPM_COUNT] veRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 #if LAMBDA
 lambda_table_t lambdaTable;
