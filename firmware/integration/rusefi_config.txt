@@ -61,7 +61,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10003
+#define FLASH_DATA_VERSION 10010
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -608,7 +608,7 @@ ThermistorConf iat;
 	float knockBandCustom;+We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override;"kHz", 1, 0, 0, 20, 2
 
 
-float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On Single Coil or Wasted Spark setups you have to lower dwell at high RPM;"RPM", 1, 0, 0, 18000, 2
+uint8_t[DWELL_CURVE_SIZE] sparkDwellRpmBins;On Single Coil or Wasted Spark setups you have to lower dwell at high RPM;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms", 1, 0, 0, 30, 2
 
 struct_no_prefix specs_s
@@ -1210,7 +1210,7 @@ float noAccelAfterHardLimitPeriodSecs;TODO: finish this #413;"sec", 1, 0, 0, 60,
 int mapAveragingSchedulingAtIndex;+At what trigger index should some MAP-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
 
 float[BARO_CORR_SIZE] baroCorrPressureBins;;"kPa", 1, 0, 0, 200, 2
-float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM", 1, 0, 0, 18000, 2
+uint8_t[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 baro_corr_table_t baroCorrTable;
 	
@@ -1261,7 +1261,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 
 	float[ENGINE_NOISE_CURVE_SIZE] knockNoise;Knock sensor output knock detection threshold depending on current RPM;"v", 1, 0, 0, 10, 2
-	float[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 18000, 2
+	uint8_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 	float throttlePedalUpVoltage;;"voltage", 1, 0, -6, 6, 2
 	float throttlePedalWOTVoltage;+Pedal in the floor;"voltage", 1, 0, -6, 6, 2
@@ -1636,11 +1636,11 @@ float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
 angle_table_t ignitionIatCorrTable;
 float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 2
-float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+uint8_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
 
 angle_table_t injectionPhase;
 float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 500, 2
-float[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+uint8_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
 
 tcubinary_table_t tcuSolenoidTable;
 
@@ -1652,21 +1652,21 @@ uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 fsio_table_8x8_u8t vvtTable1;
 float[FSIO_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] vvtTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] vvtTable1RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
 
 fsio_table_8x8_u8t vvtTable2;
 float[FSIO_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] vvtTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] vvtTable2RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
 
 float[64] unusedLuaWasHere;;"L", 1, 0, 0, 255, 0
 
 ignition_table_t ignitionTable;
 float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 2
-float[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+uint8_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
 
 ve_table_t veTable;
 float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 400, 2
-float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+uint8_t[FUEL_RPM_COUNT] veRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
 
 #if LAMBDA
 lambda_table_t lambdaTable;
@@ -1680,7 +1680,7 @@ afr_table_t lambdaTable;
 ! end_union
 
 float[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 500, 2
-float[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 2
+uint8_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
 
 tps_tps_table_t tpsTpsAccelTable;
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
@@ -1688,19 +1688,19 @@ float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in 
 
 fsio_table_8x8_f32t fsioTable1;
 float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	  1, 0, 0, 30000, 2
-float[FSIO_TABLE_8] fsioTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] fsioTable1RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
 
 fsio_table_8x8_u8t fsioTable2;
 float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	  1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] fsioTable2RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
 
 fsio_table_8x8_u8t fsioTable3;
 float[FSIO_TABLE_8] fsioTable3LoadBins;;"L",	  1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable3RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] fsioTable3RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
 
 fsio_table_8x8_u8t fsioTable4;
 float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	  1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] fsioTable4RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
 
 
 end_struct
