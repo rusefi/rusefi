@@ -98,10 +98,6 @@ bool RpmCalculator::isRunning() const {
  * @return true if engine is spinning (cranking or running)
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
-	if (ENGINE(needToStopEngine(nowNt))) {
-		return false;
-	}
-
 	/**
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
