@@ -1468,7 +1468,7 @@ tle8888_mode_e tle8888mode;
 	pin_output_mode_e tle8888_csPinMode;
 	brain_pin_e mc33816_cs;
 
-float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM", 1, 0, 0, 18000, 2
+uint8_t[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvanceBins;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 2000, 2
 float[CRANKING_ADVANCE_CURVE_SIZE] crankingAdvance    ;+Optional timing advance table for Cranking (see useSeparateAdvanceForCranking);"deg", 1, 0, -20, 90, 2
 
 	brain_pin_e[SERVO_COUNT iterate] servoOutputPins;todo: more comments
@@ -1604,9 +1604,9 @@ uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C", 1, 0, -100, 250, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%", 1, 0, 0, 500, 2
 
-float[IDLE_ADVANCE_CURVE_SIZE] idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", 1, 0, 0, 18000, 2
+uint8_t[IDLE_ADVANCE_CURVE_SIZE] idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg", 1, 0, -20, 90, 2
-float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", 1, 0, 0, 18000, 2
+uint8_t[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 2
 
 le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
@@ -1636,11 +1636,11 @@ float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
 angle_table_t ignitionIatCorrTable;
 float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 2
-uint8_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
+uint8_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 angle_table_t injectionPhase;
 float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 500, 2
-uint8_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
+uint8_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 tcubinary_table_t tcuSolenoidTable;
 
@@ -1648,25 +1648,25 @@ float vssFilterReciprocal;+Good example: number of tooth on wheel, For Can 10 is
 
 map_estimate_table_t mapEstimateTable;
 uint16_t[FUEL_LOAD_COUNT] mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
-uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
+uint8_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 0
 
 fsio_table_8x8_u8t vvtTable1;
 float[FSIO_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
-uint8_t[FSIO_TABLE_8] vvtTable1RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] vvtTable1RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 fsio_table_8x8_u8t vvtTable2;
 float[FSIO_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
-uint8_t[FSIO_TABLE_8] vvtTable2RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] vvtTable2RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 float[64] unusedLuaWasHere;;"L", 1, 0, 0, 255, 0
 
 ignition_table_t ignitionTable;
 float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 2
-uint8_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
+uint16_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM", 1, 0, 0, 18000, 2
 
 ve_table_t veTable;
 float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 400, 2
-uint8_t[FUEL_RPM_COUNT] veRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
+uint16_t[FUEL_RPM_COUNT] veRpmBins;;"RPM", 1, 0, 0, 18000, 2
 
 #if LAMBDA
 lambda_table_t lambdaTable;
@@ -1680,7 +1680,7 @@ afr_table_t lambdaTable;
 ! end_union
 
 float[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 500, 2
-uint8_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 18000, 2
+uint8_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 tps_tps_table_t tpsTpsAccelTable;
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
@@ -1688,19 +1688,19 @@ float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in 
 
 fsio_table_8x8_f32t fsioTable1;
 float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	  1, 0, 0, 30000, 2
-uint8_t[FSIO_TABLE_8] fsioTable1RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] fsioTable1RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 fsio_table_8x8_u8t fsioTable2;
 float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	  1, 0, 0, 255, 0
-uint8_t[FSIO_TABLE_8] fsioTable2RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] fsioTable2RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 fsio_table_8x8_u8t fsioTable3;
 float[FSIO_TABLE_8] fsioTable3LoadBins;;"L",	  1, 0, 0, 255, 0
-uint8_t[FSIO_TABLE_8] fsioTable3RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] fsioTable3RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 fsio_table_8x8_u8t fsioTable4;
 float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	  1, 0, 0, 255, 0
-uint8_t[FSIO_TABLE_8] fsioTable4RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 25500, 2
+uint8_t[FSIO_TABLE_8] fsioTable4RpmBins;;"RPM", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 2
 
 
 end_struct
