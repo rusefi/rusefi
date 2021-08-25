@@ -402,8 +402,6 @@ static bool mountMmc() {
 
 	bool hasUsb = usbResult == MSG_OK;
 
-	msdObjectInit(&USBMSD1);
-
 	// If we have a device AND USB is connected, mount the card to USB, otherwise
 	// mount the null device and try to mount the filesystem ourselves
 	if (cardBlockDevice && hasUsb) {
