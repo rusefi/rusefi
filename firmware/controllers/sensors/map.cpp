@@ -244,7 +244,7 @@ static void printMAPInfo(void) {
 #endif // EFI_MAP_AVERAGING
 
 		adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
-		static char pinNameBuffer[16];
+		char pinNameBuffer[16];
 
 		efiPrintf("MAP %.2fv @%s", getVoltage("mapinfo", mapAdc PASS_ENGINE_PARAMETER_SUFFIX),
 				getPinNameByAdcChannel("map", mapAdc, pinNameBuffer));
