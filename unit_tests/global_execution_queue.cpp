@@ -70,6 +70,15 @@ void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduli
 	scheduleByTimestamp("test", scheduling, NT2US(timeNt), action);
 }
 
+void TestExecutor::cancel(scheduling_s* s) {
+	if (m_mockExecutor) {
+		m_mockExecutor->cancel(s);
+		return;
+	}
+
+	schedulingQueue.remove(s);
+}
+
 void TestExecutor::setMockExecutor(ExecutorInterface* exec) {
 	m_mockExecutor = exec;
 }
