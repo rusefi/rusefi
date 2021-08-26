@@ -69,7 +69,7 @@ static void orderCallback(void *a) {
 	prevValue = value;
 }
 
-TEST(misc, testSignalExecutor3) {
+TEST(EventQueue, simple) {
 	EventQueue eq;
 
 	scheduling_s s1;
@@ -82,7 +82,7 @@ TEST(misc, testSignalExecutor3) {
 	eq.executeAll(100);
 }
 
-TEST(misc, testSignalExecutor) {
+TEST(EventQueue, complex) {
 	EventQueue eq;
 	ASSERT_EQ(eq.getNextEventTime(0), unexpected);
 	scheduling_s s1;
@@ -151,4 +151,65 @@ TEST(misc, testSignalExecutor) {
 	eq.executeAll(11);
 
 	ASSERT_EQ(2, callbackCounter);
+}
+
+class EventQueueRemoveTest : public ::testing::Test {
+protected:
+	EventQueue dut;
+	scheduling_s s1, s2, s3;
+
+	void SetUp() override {
+		dut.insertTask(&s1, 100, callback);
+		dut.insertTask(&s2, 200, callback);
+		dut.insertTask(&s3, 300, callback);
+
+		// Check that things are assembled as we think
+		ASSERT_EQ(&s1, dut.getElementAtIndexForUnitText(0));
+		ASSERT_EQ(&s2, dut.getElementAtIndexForUnitText(1));
+		ASSERT_EQ(&s3, dut.getElementAtIndexForUnitText(2));
+		ASSERT_EQ(nullptr, dut.getElementAtIndexForUnitText(3));
+	}
+};
+
+TEST_F(EventQueueRemoveTest, removeHead) {
+	// Remove the element at the head
+	dut.remove(&s1);
+
+	// Check that it's gone
+	ASSERT_EQ(&s2, dut.getElementAtIndexForUnitText(0));
+	ASSERT_EQ(&s3, dut.getElementAtIndexForUnitText(1));
+	ASSERT_EQ(nullptr, dut.getElementAtIndexForUnitText(2));
+}
+
+TEST_F(EventQueueRemoveTest, removeMiddle) {
+	// Remove the element in the middle
+	dut.remove(&s2);
+
+	// Check that it's gone
+	ASSERT_EQ(&s1, dut.getElementAtIndexForUnitText(0));
+	ASSERT_EQ(&s3, dut.getElementAtIndexForUnitText(1));
+	ASSERT_EQ(nullptr, dut.getElementAtIndexForUnitText(2));
+}
+
+TEST_F(EventQueueRemoveTest, removeEnd) {
+	// Remove the element at the end
+	dut.remove(&s3);
+
+	// Check that it's gone
+	ASSERT_EQ(&s1, dut.getElementAtIndexForUnitText(0));
+	ASSERT_EQ(&s2, dut.getElementAtIndexForUnitText(1));
+	ASSERT_EQ(nullptr, dut.getElementAtIndexForUnitText(2));
+}
+
+TEST_F(EventQueueRemoveTest, removeNotPresent) {
+	scheduling_s s4;
+
+	// Remove an element not already in the list - shouldn't fail
+	EXPECT_NO_THROW(dut.remove(&s4));
+
+	// Check that the list didn't change
+	ASSERT_EQ(&s1, dut.getElementAtIndexForUnitText(0));
+	ASSERT_EQ(&s2, dut.getElementAtIndexForUnitText(1));
+	ASSERT_EQ(&s3, dut.getElementAtIndexForUnitText(2));
+	ASSERT_EQ(nullptr, dut.getElementAtIndexForUnitText(3));
 }
