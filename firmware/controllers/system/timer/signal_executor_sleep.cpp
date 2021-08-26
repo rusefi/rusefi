@@ -92,12 +92,8 @@ void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, acti
 }
 
 void SleepExecutor::cancel(scheduling_s* s) {
-	int isArmed = chVTIsArmedI(&scheduling->timer);
-	if (isArmed) {
-		/**
-		 * timer reuse is normal for example in case of sudden RPM increase
-		 */
-		chVTResetI(&scheduling->timer);
+	if (chVTIsArmedI(&s->timer)) {
+		chVTResetI(&s->timer);
 	}
 
 	s->action = {};
