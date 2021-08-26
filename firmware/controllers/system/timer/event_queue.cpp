@@ -77,6 +77,11 @@ void EventQueue::remove(scheduling_s* scheduling) {
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 
+	// Special case: event isn't scheduled, so don't cancel it
+	if (!scheduling->action) {
+		return;
+	}
+
 	// Special case: empty list, nothing to do
 	if (!head) {
 		return;
