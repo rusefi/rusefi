@@ -76,10 +76,10 @@ static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 #define UD_ELEMENT_POOL_SIZE 64
 
 static LEElement sysElements[SYS_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
-CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
+LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
 static LEElement userElements[UD_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
-CCM_OPTIONAL LEElementPool userPool(userElements, UD_ELEMENT_POOL_SIZE);
+LEElementPool userPool(userElements, UD_ELEMENT_POOL_SIZE);
 
 class FsioPointers {
 public:
@@ -277,7 +277,7 @@ void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfigura
 #endif
 }
 
-static LECalculator calc CCM_OPTIONAL;
+static LECalculator calc;
 
 static SimplePwm fsioPwm[FSIO_COMMAND_COUNT] CCM_OPTIONAL;
 

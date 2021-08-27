@@ -103,7 +103,7 @@ private:
 	}
 };
 
-static MILController instance CCM_OPTIONAL;
+static MILController instance;
 
 #if TEST_MIL_CODE
 static void testMil(void) {

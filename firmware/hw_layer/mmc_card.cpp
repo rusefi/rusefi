@@ -106,6 +106,7 @@ static void printError(const char *str, FRESULT f_error) {
 }
 
 static FIL FDLogFile NO_CACHE;
+static FIL FDCurrFile NO_CACHE;
 
 // 10 because we want at least 4 character name
 #define MIN_FILE_INDEX 10
@@ -131,8 +132,8 @@ static void sdStatistics(void) {
 }
 
 static void incLogFileName(void) {
-	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
-	FRESULT err = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
+	memset(&FDCurrFile, 0, sizeof(FIL));						// clear the memory
+	FRESULT err = f_open(&FDCurrFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
 
 	char data[_MAX_FILLER];
 	UINT result = 0;
@@ -140,10 +141,10 @@ static void incLogFileName(void) {
 			logFileIndex = MIN_FILE_INDEX;
 			efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, err);
 	} else {
-		f_read(&FDLogFile, (void*)data, sizeof(data), &result);
+		f_read(&FDCurrFile, (void*)data, sizeof(data), &result);
 
 		efiPrintf("Got content [%s] size %d", data, result);
-		f_close(&FDLogFile);
+		f_close(&FDCurrFile);
 		if (result < 5) {
             data[result] = 0;
 			logFileIndex = maxI(MIN_FILE_INDEX, atoi(data));
@@ -157,10 +158,10 @@ static void incLogFileName(void) {
 		}
 	}
 
-	err = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_OPEN_ALWAYS | FA_WRITE);
+	err = f_open(&FDCurrFile, LOG_INDEX_FILENAME, FA_OPEN_ALWAYS | FA_WRITE);
 	itoa10(data, logFileIndex);
-	f_write(&FDLogFile, (void*)data, strlen(data), &result);
-	f_close(&FDLogFile);
+	f_write(&FDCurrFile, (void*)data, strlen(data), &result);
+	f_close(&FDCurrFile);
 	efiPrintf("Done %d", logFileIndex);
 }
 
@@ -400,6 +401,8 @@ static bool mountMmc() {
 	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(5000));
 
 	bool hasUsb = usbResult == MSG_OK;
+
+	msdObjectInit(&USBMSD1);
 
 	// If we have a device AND USB is connected, mount the card to USB, otherwise
 	// mount the null device and try to mount the filesystem ourselves
