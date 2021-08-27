@@ -77,6 +77,11 @@ void EventQueue::remove(scheduling_s* scheduling) {
 		assertListIsSorted();
 #endif /* EFI_UNIT_TEST */
 
+	// Special case: event isn't scheduled, so don't cancel it
+	if (!scheduling->action) {
+		return;
+	}
+
 	// Special case: empty list, nothing to do
 	if (!head) {
 		return;
@@ -97,8 +102,9 @@ void EventQueue::remove(scheduling_s* scheduling) {
 			current = current->nextScheduling_s;
 		}
 
-		// Walked off the end, not present, nothing more to do
+		// Walked off the end, this is an error since this *should* have been scheduled
 		if (!current) {
+			firmwareError(OBD_PCM_Processor_Fault, "EventQueue::remove didn't find element");
 			return;
 		}
 
