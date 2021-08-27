@@ -41,8 +41,6 @@ static int timerRestartCounter = 0;
 
 static const char * msg;
 
-static char buff[32];
-
 static int timerFreezeCounter = 0;
 static int setHwTimerCounter = 0;
 static bool hwStarted = false;
@@ -110,9 +108,7 @@ class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 	void PeriodicTask() override {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
-			strcpy(buff, "no_event");
-			itoa10(&buff[8], lastSetTimerTimeNt);
-			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
+			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, "no event %d", lastSetTimerTimeNt);
 			return;
 		}
 
