@@ -18,7 +18,6 @@
 #include "trigger_emulator_algo.h"
 
 #if EFI_PROD_CODE
-#include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
 #include "rusefi.h"

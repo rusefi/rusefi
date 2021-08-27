@@ -16,7 +16,6 @@
 #include "rtc_helper.h"
 #include "os_util.h"
 #include "bench_test.h"
-#include "vehicle_speed.h"
 #include "yaw_rate_sensor.h"
 #include "pin_repository.h"
 #include "max31855.h"
