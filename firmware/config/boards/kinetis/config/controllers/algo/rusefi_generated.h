@@ -1127,6 +1127,7 @@
 #define mc33_t_peak_off_offset 4476
 #define mc33_t_peak_tot_offset 4478
 #define measureMapOnlyInOneCylinder_offset 744
+#define minimumBoostClosedLoopMap_offset 761
 #define minOilPressureAfterStart_offset 446
 #define MLQ_FIELD_HEADER_SIZE 55
 #define MLQ_HEADER_SIZE 22
@@ -1248,8 +1249,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.08.24
-#define SIGNATURE_HASH 2804706769
+#define SIGNATURE_DATE 2021.08.27
+#define SIGNATURE_HASH 1111754025
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1605,7 +1606,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.08.24.kin.2804706769"
+#define TS_SIGNATURE "rusEFI 2021.08.27.kin.1111754025"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1691,7 +1692,6 @@
 #define unused4028_offset 4000
 #define unused6312_offset 6284
 #define unused744b4_offset 744
-#define unused761_offset 761
 #define unused76b19_offset 76
 #define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476

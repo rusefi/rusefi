@@ -1146,6 +1146,7 @@
 #define mc33_t_peak_off_offset 4504
 #define mc33_t_peak_tot_offset 4506
 #define measureMapOnlyInOneCylinder_offset 744
+#define minimumBoostClosedLoopMap_offset 761
 #define minOilPressureAfterStart_offset 446
 #define MLQ_FIELD_HEADER_SIZE 55
 #define MLQ_HEADER_SIZE 22
@@ -1269,7 +1270,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.08.27
-#define SIGNATURE_HASH 2407502238
+#define SIGNATURE_HASH 1779956070
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1625,7 +1626,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.08.27.subaru_eg33_f7.2407502238"
+#define TS_SIGNATURE "rusEFI 2021.08.27.subaru_eg33_f7.1779956070"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1711,7 +1712,6 @@
 #define unused4028_offset 4028
 #define unused6312_offset 6312
 #define unused744b4_offset 744
-#define unused761_offset 761
 #define unused76b19_offset 76
 #define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476
