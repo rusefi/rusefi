@@ -106,6 +106,12 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 		return 0;
 	}
 
+	if (manifoldPressure < CONFIG(minimumBoostClosedLoopMap)) {
+		// We're below the CL threshold, inhibit CL for now
+		m_pid.reset();
+		return 0;
+	}
+
 	float closedLoop = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
 
 #if EFI_TUNER_STUDIO
