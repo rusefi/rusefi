@@ -67,4 +67,5 @@ struct ExecutorInterface {
 	virtual void scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) = 0;
 	virtual void scheduleByTimestampNt(const char *msg, scheduling_s *scheduling, efitime_t timeUs, action_s action) = 0;
 	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) = 0;
+	virtual void cancel(scheduling_s* scheduling) = 0;
 };
