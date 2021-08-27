@@ -91,4 +91,12 @@ void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, acti
 	doScheduleForLater(scheduling, delayUs, action);
 }
 
+void SleepExecutor::cancel(scheduling_s* s) {
+	if (chVTIsArmedI(&s->timer)) {
+		chVTResetI(&s->timer);
+	}
+
+	s->action = {};
+}
+
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
