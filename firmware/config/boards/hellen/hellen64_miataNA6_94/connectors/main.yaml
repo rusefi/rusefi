@@ -128,7 +128,7 @@ pins:
   - pin: 2J
     id: GPIOF_12
     class: outputs
-    ts_name: 2A - Boost Control
+    ts_name: 2J - Boost Control
     function: Boost Control Solenoid
     
   - pin: 2K     
