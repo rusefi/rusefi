@@ -35,9 +35,9 @@ public:
 	/**
 	 * This invokes PeriodicTask() immediately and starts the cycle of invocations and sleeps
 	 */
-    virtual void Start() {
+	virtual void Start() {
 		chVTObjectInit(&timer);
-    	runAndScheduleNext(this);
-    }
+		runAndScheduleNext(this);
+	}
 };
 
