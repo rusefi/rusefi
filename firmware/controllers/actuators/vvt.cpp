@@ -99,7 +99,7 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 
 #if EFI_AUX_PID
 
-static VvtController instances[CAM_INPUTS_COUNT] CCM_OPTIONAL;
+static VvtController instances[CAM_INPUTS_COUNT];
 
 static void turnAuxPidOn(int index) {
 	if (!isBrainPinValid(engineConfiguration->auxPidPins[index])) {

@@ -17,8 +17,8 @@
 struct AdcSubscriptionEntry {
 	FunctionalSensor *Sensor;
 	float VoltsPerAdcVolt;
-	Biquad Filter;
 	adc_channel_e Channel;
+	Biquad Filter;
 	bool HasUpdated = false;
 };
 

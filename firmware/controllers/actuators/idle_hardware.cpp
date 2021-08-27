@@ -17,9 +17,9 @@
 #include "dc_motors.h"
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
-static StepDirectionStepper iacStepperHw CCM_OPTIONAL;
-static DualHBridgeStepper iacHbridgeHw CCM_OPTIONAL;
-StepperMotor iacMotor CCM_OPTIONAL;
+static StepDirectionStepper iacStepperHw;
+static DualHBridgeStepper iacHbridgeHw;
+StepperMotor iacMotor;
 #endif /* EFI_UNIT_TEST */
 
 static SimplePwm idleSolenoidOpen("idle open");
