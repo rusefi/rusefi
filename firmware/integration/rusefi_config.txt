@@ -901,7 +901,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
 
 	uint8_t mc33_hvolt;;"v", 1, 0, 40, 70, 0
-	uint8_t unused761;;"", 1, 0, 0, 255, 0
+	uint8_t minimumBoostClosedLoopMap;+Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"kPa", 1, 0, 0, 255, 0
 
 output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e acFanPinMode;
