@@ -265,6 +265,7 @@ void setBoardDefaultConfiguration(void) {
 		setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
 }
 
+/* Schematic RefDef DA3 */
 static const struct mc33810_config mc33810_odd = {
 	.spi_bus = &SPID5,
 	.spi_config = {
@@ -291,7 +292,7 @@ static const struct mc33810_config mc33810_odd = {
 		[2] = {.port = GPIOI, .pad = 4},	/* INJ 5 */
 		[3] = {.port = GPIOB, .pad = 9},	/* INJ 7 */
 		/* ignition pre-dirvers */
-		[4] = {.port = GPIOB, .pad = 3},	/* IGN 1 */
+		[4] = {.port = GPIOB, .pad = 3},	/* IGN 4 */
 		[5] = {.port = GPIOB, .pad = 4},	/* IGN 3 */
 		[6] = {.port = GPIOB, .pad = 5},	/* IGN 7 */
 		[7] = {.port = GPIOB, .pad = 8},	/* IGN 5 */
@@ -300,6 +301,7 @@ static const struct mc33810_config mc33810_odd = {
 	.en = {.port = GPIOI, .pad = 7}
 };
 
+/* Schematic RefDef DA22 */
 static const struct mc33810_config mc33810_even = {
 	.spi_bus = &SPID5,
 	.spi_config = {
@@ -326,10 +328,10 @@ static const struct mc33810_config mc33810_even = {
 		[2] = {.port = GPIOE, .pad = 5},	/* INJ 6 */
 		[3] = {.port = GPIOE, .pad = 6},	/* INJ 8 */
 		/* ignition pre-dirvers */
-		[4] = {.port = GPIOC, .pad = 14},	/* IGN 2 */
-		[5] = {.port = GPIOC, .pad = 13},	/* IGN 4 */
-		[6] = {.port = GPIOC, .pad = 15},	/* IGN 6 */
-		[7] = {.port = GPIOI, .pad = 9},	/* IGN 8 */
+		[4] = {.port = GPIOI, .pad = 9},	/* IGN 8 */
+		[5] = {.port = GPIOC, .pad = 15},	/* IGN 6 */
+		[6] = {.port = GPIOC, .pad = 14},	/* IGN 2 */
+		[7] = {.port = GPIOC, .pad = 13},	/* IGN 1 */
 	},
 	/* en shared between two chips */
 	.en = {.port = nullptr, .pad = 0}
