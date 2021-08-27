@@ -106,6 +106,7 @@ void setBoardConfigOverrides(void) {
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
+    // this specific Hellen has less common pull-up value R49
 	engineConfiguration->clt.config.bias_resistor = 2700;
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
