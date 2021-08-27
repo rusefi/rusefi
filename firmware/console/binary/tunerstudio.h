@@ -30,8 +30,7 @@ typedef struct {
 
 extern tunerstudio_counters_s tsState;
 
-// SD protocol file removal is one of the stack consuming use-cases
-#define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
+#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
 
 /**
  * handle non CRC wrapped command
