@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "dynoview.h"
-#include "vehicle_speed.h"
 
 void printResults(DynoView *dut) {
 #ifdef DBG_TESTS    

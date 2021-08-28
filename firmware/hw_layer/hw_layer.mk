@@ -29,7 +29,6 @@ HW_LAYER_EMS_CPP = \
 	$(PROJECT_DIR)/hw_layer/sensors/hip9011.cpp \
 	$(PROJECT_DIR)/hw_layer/sensors/hip9011_logic.cpp \
 	$(PROJECT_DIR)/hw_layer/mc33816.cpp \
-	$(PROJECT_DIR)/hw_layer/vehicle_speed.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper.cpp \
 	$(PROJECT_DIR)/hw_layer/stepper_dual_hbridge.cpp \
 	$(PROJECT_DIR)/hw_layer/servo.cpp \

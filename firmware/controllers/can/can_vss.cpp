@@ -11,7 +11,6 @@
 
 #if EFI_CAN_SUPPORT
 #include "can.h"
-#include "vehicle_speed.h"
 #include "dynoview.h"
 
 static bool isInit = false;

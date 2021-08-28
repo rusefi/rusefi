@@ -14,7 +14,6 @@
 #include "can.h"
 #include "fuel_math.h"
 #include "spark_logic.h"
-#include "vehicle_speed.h"
 
 struct Status {
     uint16_t warningCounter;

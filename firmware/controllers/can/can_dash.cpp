@@ -13,7 +13,6 @@
 #include "can_dash.h"
 #include "can_msg_tx.h"
 
-#include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "fuel_math.h"
 // CAN Bus ID for broadcast
