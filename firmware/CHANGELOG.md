@@ -27,6 +27,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+## August 2021 Release - "Lottery Day"
+
 ### Added
  - RUSEFI MSD now contains bundle-specific URL #2848
  - Nissan 4 cylinder QR trigger wheel #3118
