@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "init.h"
-#include "vehicle_speed.h"
 #include "frequency_sensor.h"
 #include "vehicle_speed_converter.h"
 

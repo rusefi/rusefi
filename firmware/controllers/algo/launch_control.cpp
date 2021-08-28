@@ -9,7 +9,6 @@
 
 #if EFI_LAUNCH_CONTROL
 #include "boost_control.h"
-#include "vehicle_speed.h"
 #include "launch_control.h"
 #include "periodic_task.h"
 #include "advance_map.h"
@@ -18,7 +17,7 @@
 
 static bool isInit = false;
 
-LaunchControlBase launchInstance;
+static LaunchControlBase launchInstance;
 
 static int retardThresholdRpm;
 

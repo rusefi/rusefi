@@ -28,7 +28,6 @@
 #include "obd2.h"
 #include "can.h"
 #include "can_msg_tx.h"
-#include "vehicle_speed.h"
 #include "fuel_math.h"
 
 static const int16_t supportedPids0120[] = { 

@@ -18,7 +18,6 @@
 #include "trigger_emulator_algo.h"
 
 #if EFI_PROD_CODE
-#include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
 #include "rusefi.h"
@@ -1051,10 +1050,6 @@ const command_f_s commandsF[] = {
 		{"fsio_curve_1_value", setFsioCurve1Value},
 		{"fsio_curve_2_value", setFsioCurve2Value},
 #if EFI_PROD_CODE
-#if EFI_VEHICLE_SPEED
-		//todo: This function become deprecated soon
-		{"mock_vehicle_speed", setMockVehicleSpeed},
-#endif /* EFI_VEHICLE_SPEED */
 #if EFI_IDLE_CONTROL
 		{"idle_offset", setIdleOffset},
 		{"idle_p", setIdlePFactor},

@@ -9,9 +9,8 @@
 
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
-#include "vehicle_speed.h"
 
-DynoView dynoInstance;
+static DynoView dynoInstance;
 
 void DynoView::update(vssSrc src) {
 

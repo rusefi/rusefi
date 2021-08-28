@@ -65,7 +65,6 @@ extern bool main_loop_started;
 #include "pin_repository.h"
 #include "flash_main.h"
 #include "max31855.h"
-#include "vehicle_speed.h"
 #include "single_timer_executor.h"
 #include "periodic_task.h"
 extern int icuRisingCallbackCounter;
