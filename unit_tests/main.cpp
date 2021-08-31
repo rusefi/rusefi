@@ -6,9 +6,8 @@
  */
 
 
+#include "pch.h"
 #include <stdlib.h>
-#include "gtest/gtest.h"
-#include "engine_test_helper.h"
 
 GTEST_API_ int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);
