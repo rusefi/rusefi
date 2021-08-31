@@ -739,6 +739,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		initializeSubaru_SVX(this);
 		break;
 
+	case TT_SUBARU_SVX_CRANK_1:
+
+	case TT_SUBARU_SVX_CAM_VVT:
+
 	default:
 		setShapeDefinitionError(true);
 		warning(CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerConfig->type);
