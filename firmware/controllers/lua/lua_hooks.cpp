@@ -303,7 +303,7 @@ static int lua_stopEngine(lua_State*) {
 
 void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "print", lua_efi_print);
-	lua_register(l, "readpin", lua_readpin);
+	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "getAnalog", lua_getAnalog);
 	lua_register(l, "getSensor", lua_getSensor);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
