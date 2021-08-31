@@ -740,8 +740,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_SUBARU_SVX_CRANK_1:
+		initializeSubaru_SVX(this);
+		break;
 
 	case TT_SUBARU_SVX_CAM_VVT:
+		initializeSubaru_SVX(this);
+		break;
 
 	default:
 		setShapeDefinitionError(true);
