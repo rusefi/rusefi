@@ -10,3 +10,10 @@ Unit tests are not aware of ChibiOS or ARM or else, they are just plain C/C++ wh
 [Code Coverage Report](https://rusefi.com/docs/unit_tests_coverage/)
 
 See also [https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation](https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation)
+
+# Triggers Images
+
+One of the unit_tests artifacts is triggers.txt
+
+Once we have triggers.txt updated by unit_tests we can invoke firmware/gen_trigger_images.bat in order
+to generate actual trigger images.
