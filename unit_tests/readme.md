@@ -13,7 +13,9 @@ See also [https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation](htt
 
 # Triggers Images
 
-One of the unit_tests artifacts is triggers.txt
+Trigger images generation is still a two-step manual process:
 
-Once we have triggers.txt updated by unit_tests we can invoke firmware/gen_trigger_images.bat in order
+Step 1: Invoke unit_tests. One of the unit_tests artifacts is triggers.txt
+
+Step 2: Once we have triggers.txt updated by unit_tests we can invoke firmware/gen_trigger_images.bat in order
 to generate actual trigger images.
