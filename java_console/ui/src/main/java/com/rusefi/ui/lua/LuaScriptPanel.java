@@ -14,11 +14,14 @@ import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
+import static com.rusefi.ui.util.UiUtils.trueLayout;
+
 public class LuaScriptPanel {
     private final UIContext context;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
     private final JTextArea scriptText = new JTextArea();
+    private boolean isFirstRender = true;
 
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
@@ -31,7 +34,7 @@ public class LuaScriptPanel {
         JButton writeButton = new JButton("Write to ECU");
         JButton resetButton = new JButton("Reset/Reload Lua");
 
-        readButton.addActionListener(e -> read());
+        readButton.addActionListener(e -> readFromECU());
         writeButton.addActionListener(e -> write());
         resetButton.addActionListener(e -> resetLua());
 
@@ -43,7 +46,7 @@ public class LuaScriptPanel {
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
         scriptText.setTabSize(2);
-        scriptPanel.add(this.scriptText, BorderLayout.CENTER);
+        scriptPanel.add(scriptText, BorderLayout.CENTER);
 
         //centerPanel.add(, BorderLayout.WEST);
         JPanel messagesPanel = new JPanel(new BorderLayout());
@@ -51,10 +54,27 @@ public class LuaScriptPanel {
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
-        JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel);
+        JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel) {
+            @Override
+            public void paint(Graphics g) {
+                super.paint(g);
+                if (isFirstRender) {
+                    readFromECU();
+                    isFirstRender = true;
+                }
+            }
+        };
 
-        this.mainPanel.add(upperPanel, BorderLayout.NORTH);
-        this.mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(upperPanel, BorderLayout.NORTH);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+
+        trueLayout(mainPanel);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                centerPanel.setDividerLocation(centerPanel.getSize().width / 2);
+            }
+        });
     }
 
     public JPanel getPanel() {
@@ -68,11 +88,11 @@ public class LuaScriptPanel {
         };
     }
 
-    void read() {
-        BinaryProtocol bp = this.context.getLinkManager().getCurrentStreamState();
+    void readFromECU() {
+        BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
 
         if (bp == null) {
-            // TODO: Handle missing ECU
+            scriptText.setText("No ECU located");
             return;
         }
 
