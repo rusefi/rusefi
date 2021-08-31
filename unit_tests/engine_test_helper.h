@@ -10,6 +10,7 @@
 #include "trigger_central.h"
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
+#include "engine.h"
 
 #include <unordered_map>
 
