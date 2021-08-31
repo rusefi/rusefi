@@ -1,7 +1,6 @@
 package com.rusefi.ui.lua;
 
 import com.opensr5.ConfigurationImage;
-import com.rusefi.FixedCommandControl;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.MessagesPanel;
@@ -10,24 +9,20 @@ import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.widgets.AnyCommand;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 public class LuaScriptPanel {
     private final UIContext context;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
-    private final JTextArea scriptText;
+    private final JTextArea scriptText = new JTextArea();
 
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
-        this.command = AnyCommand.createField(context, config, true, true);
+        command = AnyCommand.createField(context, config, true, true);
 
         // Upper panel: command entry, etc
         JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
@@ -43,12 +38,11 @@ public class LuaScriptPanel {
         upperPanel.add(readButton);
         upperPanel.add(writeButton);
         upperPanel.add(resetButton);
-        upperPanel.add(this.command.getContent());
+        upperPanel.add(command.getContent());
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
-        this.scriptText = new JTextArea();
-        this.scriptText.setTabSize(2);
+        scriptText.setTabSize(2);
         scriptPanel.add(this.scriptText, BorderLayout.CENTER);
 
         //centerPanel.add(, BorderLayout.WEST);
@@ -68,12 +62,9 @@ public class LuaScriptPanel {
     }
 
     public ActionListener getTabSelectedListener() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (command != null)
-                    command.requestFocus();
-            }
+        return e -> {
+            if (command != null)
+                command.requestFocus();
         };
     }
 
@@ -88,13 +79,18 @@ public class LuaScriptPanel {
         ConfigurationImage image = bp.getControllerConfiguration();
         ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.luaScript_offset, Fields.LUA_SCRIPT_SIZE);
 
-        byte scriptArr[] = new byte[Fields.LUA_SCRIPT_SIZE];
+        byte[] scriptArr = new byte[Fields.LUA_SCRIPT_SIZE];
         luaScriptBuffer.get(scriptArr);
 
+        int i = findNullTerminator(scriptArr);
+        scriptText.setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    private static int findNullTerminator(byte[] scriptArr) {
         int i;
-        // Find the null terminator
         for (i = 0; i < scriptArr.length && scriptArr[i] != 0; i++) ;
-        scriptText.setText(new String(scriptArr, 0, i, Charset.forName("ASCII")));
+        return i;
     }
 
     void write() {
@@ -102,8 +98,8 @@ public class LuaScriptPanel {
 
         String script = scriptText.getText();
 
-        byte paddedScript[] = new byte[Fields.LUA_SCRIPT_SIZE];
-        byte scriptBytes[] = script.getBytes(StandardCharsets.US_ASCII);
+        byte[] paddedScript = new byte[Fields.LUA_SCRIPT_SIZE];
+        byte[] scriptBytes = script.getBytes(StandardCharsets.US_ASCII);
         System.arraycopy(scriptBytes, 0, paddedScript, 0, scriptBytes.length);
 
         int idx = 0;
@@ -111,7 +107,7 @@ public class LuaScriptPanel {
 
         do {
             remaining = paddedScript.length - idx;
-            int thisWrite = remaining > Fields.BLOCKING_FACTOR ? Fields.BLOCKING_FACTOR : remaining;
+            int thisWrite = Math.min(remaining, Fields.BLOCKING_FACTOR);
 
             bp.writeData(paddedScript, idx, Fields.luaScript_offset + idx, thisWrite);
 
