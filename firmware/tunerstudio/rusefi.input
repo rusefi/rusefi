@@ -2669,6 +2669,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = idleStepperHw, "Stepper Hardware"
 		field = "Idle Stepper Step Pin",				idle_stepperStepPin
 		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin
+		field = "Idle Stepper Dir Pin Mode",			stepperDirectionPinMode
 		field = "Idle Stepper Enable Pin",				stepperEnablePin
 		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode
 
