@@ -449,10 +449,6 @@ static void configureInputs(void) {
 
 	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
 
-	for (int i = 0;i < LUA_ANALOG_INPUT_COUNT;i++) {
-		addChannel("LUA", engineConfiguration->luaAnalogInputs[i], ADC_FAST);
-	}
-
 	setAdcChannelOverrides();
 }
 

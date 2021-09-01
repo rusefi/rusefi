@@ -75,6 +75,7 @@ struct_no_prefix engine_configuration_s
 ! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 256
 
+#define AUX_ANALOG_INPUT_COUNT 4
 #define FSIO_ANALOG_INPUT_COUNT 4
 
 #define LUA_PWM_COUNT 8
@@ -910,8 +911,8 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
-	uint8_t[2] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
-	adc_channel_e[LUA_ANALOG_INPUT_COUNT iterate] luaAnalogInputs;
+	uint8_t[10] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
+	uint8_t[8] luaAnalogInputs;
 	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 	uint8_t[10] unusedOutputWhereHere;;"", 1, 0, 0, 255, 0
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;

@@ -1542,7 +1542,6 @@ menuDialog = main
 
 		subMenu = std_separator
 		subMenu = luaOutputs,			    "Lua PWM Outputs"
-		subMenu = luaAnalogInputs,  		"Lua Analog Inputs"
 
 		subMenu = std_separator
 		subMenu = tcuControls,			"Transmission Settings"
@@ -3325,16 +3324,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "output #5", 							luaOutputPins6
 		field = "output #6", 							luaOutputPins7
 		field = "output #7", 							luaOutputPins8
-
-	dialog = luaAnalogInputs, "Lua Analog Inputs"
-		field = "Input #0", 							luaAnalogInputs1
-		field = "Input #1", 							luaAnalogInputs2
-		field = "Input #2", 							luaAnalogInputs3
-		field = "Input #3", 							luaAnalogInputs4
-		field = "Input #4", 							luaAnalogInputs5
-		field = "Input #5", 							luaAnalogInputs6
-		field = "Input #6", 							luaAnalogInputs7
-		field = "Input #7", 							luaAnalogInputs8
 
 	dialog = transmissionPanel
 		field = "TCU Enabled"		tcuEnabled
