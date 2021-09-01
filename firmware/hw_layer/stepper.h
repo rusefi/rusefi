@@ -51,6 +51,11 @@ public:
 
     bool step(bool positive) override;
 
+	void sleep(void) override;
+
+protected:
+	bool update(float dutyMult);
+
 private:
     DcMotor* m_motorPhaseA = nullptr;
     DcMotor* m_motorPhaseB = nullptr;
