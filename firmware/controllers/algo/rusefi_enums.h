@@ -1075,6 +1075,13 @@ typedef enum __attribute__ ((__packed__)) {
 } etb_function_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	STEPPER_FULL = 0,
+	STEPPER_HALF = 2,
+	STEPPER_FOURTH = 4,
+	STEPPER_EIGHTH = 8,
+} stepper_num_micro_steps_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	IPT_Low = 0,
 	IPT_High = 1,
 } injector_pressure_type_e;
