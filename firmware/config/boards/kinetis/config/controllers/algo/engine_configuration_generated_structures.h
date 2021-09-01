@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 01 06:46:13 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 01 11:58:11 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3117,7 +3117,7 @@ struct engine_configuration_s {
 	 * todo: rename to fsioAnalogInputs
 	 * offset 2200
 	 */
-	adc_channel_e fsioAdc[FSIO_ANALOG_INPUT_COUNT];
+	adc_channel_e fsioAdc[AUX_ANALOG_INPUT_COUNT];
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -4327,4 +4327,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 01 06:46:13 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 01 11:58:11 UTC 2021
