@@ -2673,18 +2673,33 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Idle Stepper Enable Pin",				stepperEnablePin
 		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode
 
-	dialog = idleStepper, "Stepper"
+	dialog = idleStepperHwType, "", xAxis
+		panel = idleStepperHw,	East, { useStepperIdle && !useHbridges }
+		panel = stepperHbridgeHardware,	West, { useStepperIdle && useHbridges }
+
+	dialog = idleStepperGeneral, ""
 		field = "Drive stepper with dual H bridges",	useHbridges, useStepperIdle
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
-		panel = idleStepperHw, { useStepperIdle && !useHbridges }
-		panel = hbridgeHardware, { useStepperIdle && useHbridges }
 
-	dialog = idleHwType, "Idle Valve Hardware",	border
-		panel = idleSolenoid,				West
-		panel = idleStepper,				East
+	dialog = idleStepperMicro, "Micro-Stepping"
+		field = "Stepping Mode",						stepperNumMicroSteps, useHbridges
+		field = "Min. Duty Cycle",						stepperMinDutyCycle, { useHbridges && stepperNumMicroSteps > 1 }
+		field = "Max. Duty Cycle",						stepperMaxDutyCycle, { useHbridges && stepperNumMicroSteps > 1 }
+
+	dialog = idleStepperSettings, "", xAxis
+		panel = idleStepperGeneral, East
+		panel = idleStepperMicro, West
+
+	dialog = idleStepper, "Stepper"
+		panel = idleStepperSettings
+		panel = idleStepperHwType
+
+	dialog = idleHwType, "Idle Valve Hardware", yAxis
+		panel = idleStepper
+		panel = idleSolenoid
 
 	dialog = idlehw, "", yAxis
 		field = "!ECU reboot needed to apply these settings"
