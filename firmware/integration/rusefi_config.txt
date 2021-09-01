@@ -912,7 +912,6 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
 	uint8_t[10] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
-	uint8_t[8] luaAnalogInputs;
 	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 	uint8_t[10] unusedOutputWhereHere;;"", 1, 0, 0, 255, 0
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
