@@ -34,7 +34,7 @@ static int lua_readpin(lua_State* l) {
 	return 1;
 }
 
-static int lua_getAnalog(lua_State* l) {
+static int lua_getAuxAnalog(lua_State* l) {
 	auto sensorIndex = luaL_checkinteger(l, 1);
 
 	lua_pushnumber(l, sensorIndex);
@@ -304,7 +304,7 @@ static int lua_stopEngine(lua_State*) {
 void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "readPin", lua_readpin);
-	lua_register(l, "getAnalog", lua_getAnalog);
+	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
 	lua_register(l, "getSensor", lua_getSensor);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
