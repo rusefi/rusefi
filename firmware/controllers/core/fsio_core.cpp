@@ -229,7 +229,7 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		return unexpected;
 	case LE_METHOD_FSIO_ANALOG_INPUT:
 	{
-		int index = clampF(0, pop(LE_METHOD_FSIO_ANALOG_INPUT), FSIO_ANALOG_INPUT_COUNT - 1);
+		int index = clampF(0, pop(LE_METHOD_FSIO_ANALOG_INPUT), AUX_ANALOG_INPUT_COUNT - 1);
 		int sensorIdx = static_cast<int>(SensorType::Aux1) + index;
 		return Sensor::get(static_cast<SensorType>(sensorIdx));
 	}

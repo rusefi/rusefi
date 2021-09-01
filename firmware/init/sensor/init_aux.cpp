@@ -20,7 +20,7 @@ static FunctionalSensor auxSensors[] = {
 	{ SensorType::Aux4, MS2NT(50) },
 };
 
-static_assert(efi::size(auxSensors) == FSIO_ANALOG_INPUT_COUNT);
+static_assert(efi::size(auxSensors) == AUX_ANALOG_INPUT_COUNT);
 
 void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	for (size_t i = 0; i < efi::size(CONFIG(fsioAdc)); i++) {

@@ -1352,7 +1352,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 float[MAP_ACCEL_TAPER] mapAccelTaperBins;;"counter", 1, 0, 0, 300, 0
 float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 
-	adc_channel_e[FSIO_ANALOG_INPUT_COUNT iterate] fsioAdc;todo: rename to fsioAnalogInputs
+	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] fsioAdc;todo: rename to fsioAnalogInputs
 	float fixedTiming;Fixed timing, useful for TDC testing;"deg", 1, 0, -720, 720, 2
 	float mapLowValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
 	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
