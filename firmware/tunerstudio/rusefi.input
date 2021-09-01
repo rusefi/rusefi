@@ -753,14 +753,14 @@ enable2ndByteCanID = false
 	curve = cltIdleRPMCurve, "Idle Target RPM"
       columnLabel = "Coolant", "RPM"
       xAxis       = -40, 120, 9
-      yAxis       =  0, 8000, 9
+      yAxis       = 0, 2400, 13
       xBins       = cltIdleRpmBins, coolant
       yBins       = cltIdleRpm, RPMValue
       gauge       = CLTGauge
 
 	curve = idleAdvanceCurve, "Idle Advance Angle"
       columnLabel = "RPM", "degrees"
-      xAxis       = 0, 8000, 9
+      xAxis       = 0, 2400, 13
       yAxis       = -100, 100, 11
       xBins       = idleAdvanceBins, RPMValue
       yBins       = idleAdvance
@@ -768,7 +768,7 @@ enable2ndByteCanID = false
 
 	curve = idleVeCurve, "Idle VE"
       columnLabel = "RPM", "%"
-      xAxis       = 0, 8000, 9
+      xAxis       = 0, 2400, 13
       yAxis       = 0, 250, 11
       xBins       = idleVeBins, RPMValue
       yBins       = idleVe
@@ -780,7 +780,7 @@ enable2ndByteCanID = false
     
 	curve = crankingAdvanceCurve, "Cranking Advance Angle"
       columnLabel = "RPM", "degrees"
-      xAxis       = 0, 8000, 9
+      xAxis       = 0, 2400, 13
       yAxis       = -100, 100, 11
       xBins       = crankingAdvanceBins, RPMValue
       yBins       = crankingAdvance
