@@ -2645,7 +2645,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 
-	dialog = hbridgeHardware, "H-Bridge Hardware"
+	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
 		field = "PWM Frequency",						etbFreq
 		field = "Two-wire mode",						etb_use_two_wires
 		field = "No1 Direction #1",						etbIo1_directionPin1
@@ -2656,6 +2656,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No2 Direction #2",						etbIo2_directionPin2
 		field = "No2 Control",							etbIo2_controlPin
 		field = "No2 Disable",							etbIo2_disablePin
+
+	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
+		field = "Inverted driver pins",					stepperDcInvertedPins
+		field = "No1 Direction #1",						stepperDcIo1_directionPin1
+		field = "No1 Direction #2",						stepperDcIo1_directionPin2
+		field = "No1 Disable",							stepperDcIo1_disablePin
+		field = "No2 Direction #1",						stepperDcIo2_directionPin1
+		field = "No2 Direction #2",						stepperDcIo2_directionPin2
+		field = "No2 Disable",							stepperDcIo2_disablePin
 
 	dialog = idleStepperHw, "Stepper Hardware"
 		field = "Idle Stepper Step Pin",				idle_stepperStepPin
@@ -3444,7 +3453,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "H-Bridge #2 function",					etbFunctions2
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
-		panel = hbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) }
+		panel = etbHbridgeHardware,						{ throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@ || (useStepperIdle && useHbridges) }
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
