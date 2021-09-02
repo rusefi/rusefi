@@ -34,17 +34,8 @@ static int lua_readpin(lua_State* l) {
 	return 1;
 }
 
-static int lua_getAuxAnalog(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
-
-	lua_pushnumber(l, sensorIndex);
-	return 1;
-}
-
-static int lua_getSensor(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
-
-	auto result = Sensor::get(static_cast<SensorType>(sensorIndex));
+static int getSensor(lua_State* l, SensorType type) {
+	auto result = Sensor::get(type);
 
 	if (result) {
 		// return value if valid
@@ -55,6 +46,20 @@ static int lua_getSensor(lua_State* l) {
 	}
 
 	return 1;
+}
+
+static int lua_getAuxAnalog(lua_State* l) {
+	auto sensorIndex = luaL_checkinteger(l, 1);
+
+	auto type = static_cast<SensorType>(sensorIndex + static_cast<int>(SensorType::Aux1));
+
+	return getSensor(l, type);
+}
+
+static int lua_getSensor(lua_State* l) {
+	auto sensorIndex = luaL_checkinteger(l, 1);
+
+	return getSensor(l, static_cast<SensorType>(sensorIndex));
 }
 
 static int lua_getSensorRaw(lua_State* l) {
