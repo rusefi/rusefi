@@ -30,8 +30,8 @@ static const int8_t microPhases[] = {
 };
 
 static const int maxNumSteps = 8;
-static const int tableSizeMask = (sizeof(microPhases) / sizeof(int8_t) - 1);
-static const float phaseDutyCycleDivisor = 1 / (100.0f * 100.0f);	// both the phase degrees and duty cycle settings are in %
+static constexpr int tableSizeMask = efi::size(microPhases) - 1;
+static constexpr float phaseDutyCycleDivisor = 1.0f / (100.0f * 100.0f);	// both the phase degrees and duty cycle settings are in %
 
 
 void DualHBridgeStepper::initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, float reactionTime)
@@ -63,6 +63,10 @@ bool DualHBridgeStepper::step(bool positive) {
 		}
 		return true;
 	}
+
+    // For the full-stepping mode, we use a traditional "two phase on" drive model
+    // because "wave drive" (one phase on) method has less torque.
+    // For explanation, pls see: https://github.com/rusefi/rusefi/pull/3213#discussion_r700746453
 
     // step phase, wrapping
     if (positive) {

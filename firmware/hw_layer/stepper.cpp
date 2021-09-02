@@ -193,7 +193,8 @@ void StepperHw::sleep(void) {
 }
 
 void StepperHw::pause(int divisor) const {
-	chThdSleepMicroseconds((int)(MS2US(m_reactionTime)) / divisor);
+	// currently we can't sleep less than 1ms (see #3214)
+	chThdSleepMicroseconds(maxI(MS2US(1), (int)(MS2US(m_reactionTime)) / divisor));
 }
 
 void StepperHw::setReactionTime(float ms) {
