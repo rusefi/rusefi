@@ -16,10 +16,11 @@ TwoPinDcMotor::TwoPinDcMotor(OutputPin& disablePin)
 	disable();
 }
 
-void TwoPinDcMotor::configure(IPwm& enable, IPwm& dir1, IPwm& dir2) {
+void TwoPinDcMotor::configure(IPwm& enable, IPwm& dir1, IPwm& dir2, bool isInverted) {
 	m_enable = &enable;
 	m_dir1 = &dir1;
 	m_dir2 = &dir2;
+	m_isInverted = isInverted;
 }
 
 void TwoPinDcMotor::enable() {
@@ -87,7 +88,7 @@ bool TwoPinDcMotor::set(float duty)
 
 	m_enable->setSimplePwmDutyCycle(enableDuty);
 	float recipDuty = 0;
-	if (CONFIG(stepperDcInvertedPins)) {
+	if (m_isInverted) {
 		dirDuty = 1.0f - dirDuty;
 		recipDuty = 1.0f;
 	}
