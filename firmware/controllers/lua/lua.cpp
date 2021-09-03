@@ -14,16 +14,39 @@
 static char luaUserHeap[20000];
 static char luaSystemHeap[100];
 
-static constexpr size_t luaHeapSizes = { efi::size(luaUserHeap), efi::size(luaSystemHeap) };
-static char* luaHeaps[] = { luaUserHeap, luaSystemHeap };
+class Heap {
+	memory_heap_t m_heap;
 
-static memory_heap_t heaps[efi::size(luaHeaps)];
+	const size_t m_size;
 
-static int32_t memoryUsed[efi::size(luaHeaps)] = {0};
+public:
+	template<size_t TSize>
+	Heap(char (&buffer)[TSize])
+		: m_size(TSize)
+	{
+		chHeapObjectInit(&m_heap, buffer, TSize);
+	}
+
+	void* alloc(size_t n) {
+		return chHeapAlloc(&m_heap, n);
+	}
+
+	void free(void* obj) {
+		chHeapFree(obj);
+	}
+
+	size_t size() {
+		return m_size;
+	}
+};
+
+static Heap heaps[] = { luaUserHeap, luaSystemHeap };
+
+static int32_t memoryUsed[efi::size(heaps)] = {0};
 
 template <int HeapIdx>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
-	static_assert(HeapIdx < efi::size(luaHeaps));
+	static_assert(HeapIdx < efi::size(heaps));
 
 	if (CONFIG(debugMode) == DBG_LUA) {
 		switch (HeapIdx) {
@@ -35,14 +58,14 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 	if (nsize == 0) {
 		// requested size is zero, free if necessary and return nullptr
 		if (ptr) {
-			chHeapFree(ptr);
+			heaps[HeapIdx].free(ptr);
 			memoryUsed[HeapIdx] -= osize;
 		}
 
 		return nullptr;
 	}
 
-	void *new_mem = chHeapAlloc(&heaps[HeapIdx], nsize);
+	void *new_mem = heaps[HeapIdx].alloc(nsize);
 	memoryUsed[HeapIdx] += nsize;
 
 	if (!ptr) {
@@ -53,7 +76,7 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 	// An old pointer was passed in, copy the old data in, then free
 	if (new_mem != nullptr) {
 		memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
-		chHeapFree(ptr);
+		heaps[HeapIdx].free(ptr);
 		memoryUsed[HeapIdx] -= osize;
 	}
 
@@ -272,10 +295,6 @@ void LuaThread::ThreadTask() {
 static LuaThread luaThread;
 
 void startLua() {
-	for (size_t i = 0; i < efi::size(luaHeaps); i++) {
-		chHeapObjectInit(&heaps[i], &luaHeaps[i], luaHeapSizes[i]);
-	}
-
 	luaThread.Start();
 
 	addConsoleActionS("lua", [](const char* str){
@@ -294,8 +313,11 @@ void startLua() {
 	});
 
 	addConsoleAction("luamemory", [](){
-		float pct = 100.0f * memoryUsed / LUA_HEAP_SIZE;
-		efiPrintf("Lua memory: %d / %d bytes = %.1f%%", memoryUsed, LUA_HEAP_SIZE, pct);
+		for (size_t i = 0; i < efi::size(heaps); i++) {
+			auto heapSize = heaps[i].size();
+			float pct = 100.0f * memoryUsed[i] / heapSize;
+			efiPrintf("Lua memory heap %d: %d / %d bytes = %.1f%%", i, memoryUsed, heapSize, pct);
+		}
 	});
 }
 
