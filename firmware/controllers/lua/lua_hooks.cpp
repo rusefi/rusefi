@@ -9,6 +9,8 @@
 #include "can_msg_tx.h"
 #include "settings.h"
 #include <new>
+#include "luaaa.hpp"
+using namespace luaaa;
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
@@ -307,58 +309,11 @@ static int lua_stopEngine(lua_State*) {
 }
 #endif // EFI_UNIT_TEST
 
-int timer_create (lua_State * ls)
-{
-	void *pData = lua_newuserdata(ls, sizeof(Timer));
- Timer * timer = new (pData) Timer;
- luaL_getmetatable(ls, "MetaTimer");
-    lua_setmetatable(ls, -2);
-
- return 1;
-}
-
-int timer_destroy (lua_State * ls)
-{
- luaL_checktype(ls, 1, LUA_TUSERDATA);
- Timer * timer = reinterpret_cast<Timer*>(lua_touserdata(ls, 1));
- timer->~Timer();
-
- return 0;
-}
-
-int timer_reset (lua_State * ls)
-{
- luaL_checktype(ls, 1, LUA_TUSERDATA);
- Timer * timer = reinterpret_cast<Timer*>(lua_touserdata(ls, 1));
- timer->reset();
-
- return 0;
-}
-
-static const luaL_Reg Timer_funcs[] =
-{
-    {"create", timer_create},
-    {0, 0}
-};
-
-static const luaL_Reg Timer_methods[] =
-{
- {"__gc", timer_destroy},
- {"reset", timer_reset},
-    {0, 0}
-};
-
 void configureRusefiLuaHooks(lua_State* l) {
-	// Initialize Lua interface in some function...
-	luaL_newmetatable(l, "MetaTimer");
-	lua_pushstring(l, "__index");
-	lua_pushvalue(l, -2);
-	lua_settable(l, -3);
 
-	//luaL_openlib(l, 0, Timer_methods, 0);
-	lua_getglobal(l, 0);
-	lua_setglobal(l, 0);
-	//luaL_openlib(l, "Timer", Timer_funcs, 0);
+	LuaClass<Timer> luaTimer(l, "Timer");
+	luaTimer.fun("reset", &Timer::resetNoArg);
+//	luaTimer.fun("getElapsedSeconds", &Timer::getElapsedSeconds);
 
 
 	lua_register(l, "print", lua_efi_print);

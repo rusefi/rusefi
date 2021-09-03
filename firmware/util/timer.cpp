@@ -2,6 +2,11 @@
 
 #include "timer.h"
 
+// ugly to make luaaa not get confused about overloaded method
+void Timer::resetNoArg() {
+	reset();
+}
+
 void Timer::reset() {
 	m_lastReset = getTimeNowNt();
 }

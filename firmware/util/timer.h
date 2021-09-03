@@ -9,6 +9,7 @@
 class Timer {
 public:
 	void reset();
+	void resetNoArg();
 
 	// Reset the timer to a known timestamp (don't take a timestamp internally)
 	void reset(efitick_t nowNt);
