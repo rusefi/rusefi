@@ -994,11 +994,11 @@ gaugeCategory = Sensors - Extra 2
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
-   idlePosSensGauge  = idlePositionSensor,      "Idle position sensor",       "%",        0,    100,       0,      0,     100,   100,   1,   1
+   idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
 
 gaugeCategory = ECU Status
-   warningCounterGauge = warningCounter, "Warning count", "",     0,   100,     0,    0,    100,  100,   0,   0
-   lastErrorCodeGauge = lastErrorCode, "Last error", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
+   lastErrorCodeGauge = lastErrorCode, @@GAUGE_NAME_LAST_ERROR@@, "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    triggerErrorsCounterGauge = totalTriggerErrorCounter, "Trigger error count", "count",     0,   15000,     0,    0,    6000,  6000,   0,   0
    recentErrorCode0Gauge = recentErrorCode0, "Error#1", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode1Gauge = recentErrorCode1, "Error#2", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
@@ -1008,9 +1008,9 @@ gaugeCategory = ECU Status
    recentErrorCode5Gauge = recentErrorCode5, "Error#6", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode6Gauge = recentErrorCode6, "Error#7", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    recentErrorCode7Gauge = recentErrorCode7, "Error#8", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   firmwareVersionGauge  = firmwareVersion , "ECU Software Version", "%",     0,   100,     0,    0,    100,  100,   0,   0
+   firmwareVersionGauge  = firmwareVersion , @@GAUGE_NAME_FW_VERSION@@, "%",     0,   100,     0,    0,    100,  100,   0,   0
    timeSecondsGauge     =   seconds, @@GAUGE_NAME_UPTIME@@, "sec",     0,   100,     0,    0,    100,  100,   0,   0
-   tuneCrc16Gauge = tuneCrc16, "tune CRC16", "",     0,  64000,     0,    0,   64000, 64000,   0,   0
+   tuneCrc16Gauge = tuneCrc16, @@GAUGE_NAME_TUNE_CRC16@@, "",     0,  64000,     0,    0,   64000, 64000,   0,   0
 
 
 gaugeCategory = Debug  
