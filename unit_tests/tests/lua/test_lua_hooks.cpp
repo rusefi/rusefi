@@ -76,13 +76,12 @@ TEST(LuaHooks, CanTxDataLength) {
 
 static const char* timerTest = R"(
 function testFunc()
-    local a = Timer.new
-	return 133
+	local a = Timer.new()
+	a:reset()
+	return a:getElapsedSeconds()
 end
 )";
 
 TEST(LuaHooks, TestLuaTimer) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-
-	EXPECT_EQ(testLuaReturnsNumber(timerTest), 133);
+	EXPECT_EQ(testLuaReturnsNumber(timerTest), 0);
 }

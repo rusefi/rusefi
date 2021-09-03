@@ -312,9 +312,10 @@ static int lua_stopEngine(lua_State*) {
 void configureRusefiLuaHooks(lua_State* l) {
 
 	LuaClass<Timer> luaTimer(l, "Timer");
-	luaTimer.fun("reset", &Timer::resetNoArg);
-//	luaTimer.fun("getElapsedSeconds", &Timer::getElapsedSeconds);
-
+	luaTimer
+		.ctor()
+		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
+		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
 
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "readPin", lua_readpin);
