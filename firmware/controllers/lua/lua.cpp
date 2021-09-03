@@ -23,6 +23,8 @@ static int32_t memoryUsed[efi::size(luaHeaps)] = {0};
 
 template <int HeapIdx>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
+	static_assert(HeapIdx < efi::size(luaHeaps));
+
 	if (CONFIG(debugMode) == DBG_LUA) {
 		switch (HeapIdx) {
 			case 0: tsOutputChannels.debugIntField1 = memoryUsed[HeapIdx]; break;
