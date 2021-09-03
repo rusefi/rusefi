@@ -20,20 +20,20 @@ class Heap {
 	size_t m_memoryUsed = 0;
 	const size_t m_size;
 
-public:
-	template<size_t TSize>
-	Heap(char (&buffer)[TSize])
-		: m_size(TSize)
-	{
-		chHeapObjectInit(&m_heap, buffer, TSize);
-	}
-
 	void* alloc(size_t n) {
 		return chHeapAlloc(&m_heap, n);
 	}
 
 	void free(void* obj) {
 		chHeapFree(obj);
+	}
+
+public:
+	template<size_t TSize>
+	Heap(char (&buffer)[TSize])
+		: m_size(TSize)
+	{
+		chHeapObjectInit(&m_heap, buffer, TSize);
 	}
 
 	void* realloc(void* ptr, size_t osize, size_t nsize) {
