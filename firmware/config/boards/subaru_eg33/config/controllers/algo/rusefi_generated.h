@@ -675,14 +675,17 @@
 #define GAUGE_NAME_FUEL_VE "fuel: VE"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
 #define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
+#define GAUGE_NAME_FW_VERSION "ECU Software Version"
 #define GAUGE_NAME_IAC "Idle Air Valve"
 #define GAUGE_NAME_IAT "IAT"
+#define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
 #define GAUGE_NAME_IGNITION_LOAD "ign: load"
 #define GAUGE_NAME_INJECTOR_LAG "fuel: injector lag"
 #define GAUGE_NAME_KNOCK_COUNTER "knock: counter"
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
 #define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_LAMBDA2 "Lambda 2"
+#define GAUGE_NAME_LAST_ERROR "Last error"
 #define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
@@ -699,6 +702,7 @@
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_TRG_ERR "trg err"
+#define GAUGE_NAME_TUNE_CRC16 "tune CRC16"
 #define GAUGE_NAME_UPTIME "Uptime"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_VERSION "firmware"
@@ -707,6 +711,7 @@
 #define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"
 #define GAUGE_NAME_VVT_B2E "VVT: bank 2 exhaust"
 #define GAUGE_NAME_VVT_B2I "VVT: bank 2 intake"
+#define GAUGE_NAME_WARNING_COUNT "Warning count"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
@@ -1262,8 +1267,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.09.01
-#define SIGNATURE_HASH 1618109354
+#define SIGNATURE_DATE 2021.09.03
+#define SIGNATURE_HASH 4011062195
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1619,7 +1624,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.09.01.subaru_eg33_f7.1618109354"
+#define TS_SIGNATURE "rusEFI 2021.09.03.subaru_eg33_f7.4011062195"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

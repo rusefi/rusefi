@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 01 11:58:09 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Sep 03 10:34:20 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -654,14 +654,17 @@ public class Fields {
 	public static final String GAUGE_NAME_FUEL_VE = "fuel: VE";
 	public static final String GAUGE_NAME_FUEL_WALL_AMOUNT = "fuel: wall amount";
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "fuel: wall corr ms";
+	public static final String GAUGE_NAME_FW_VERSION = "ECU Software Version";
 	public static final String GAUGE_NAME_IAC = "Idle Air Valve";
 	public static final String GAUGE_NAME_IAT = "IAT";
+	public static final String GAUGE_NAME_IDLE_POSITION = "Idle position sensor";
 	public static final String GAUGE_NAME_IGNITION_LOAD = "ign: load";
 	public static final String GAUGE_NAME_INJECTOR_LAG = "fuel: injector lag";
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "knock: counter";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "knock: current level";
 	public static final String GAUGE_NAME_LAMBDA = "Lambda";
 	public static final String GAUGE_NAME_LAMBDA2 = "Lambda 2";
+	public static final String GAUGE_NAME_LAST_ERROR = "Last error";
 	public static final String GAUGE_NAME_MAF = "MAF";
 	public static final String GAUGE_NAME_MAP = "MAP";
 	public static final String GAUGE_NAME_OIL_PRESSURE = "Oil Pressure";
@@ -678,6 +681,7 @@ public class Fields {
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
 	public static final String GAUGE_NAME_TRG_ERR = "trg err";
+	public static final String GAUGE_NAME_TUNE_CRC16 = "tune CRC16";
 	public static final String GAUGE_NAME_UPTIME = "Uptime";
 	public static final String GAUGE_NAME_VBAT = "VBatt";
 	public static final String GAUGE_NAME_VERSION = "firmware";
@@ -686,6 +690,7 @@ public class Fields {
 	public static final String GAUGE_NAME_VVT_B1I = "VVT: bank 1 intake";
 	public static final String GAUGE_NAME_VVT_B2E = "VVT: bank 2 exhaust";
 	public static final String GAUGE_NAME_VVT_B2I = "VVT: bank 2 intake";
+	public static final String GAUGE_NAME_WARNING_COUNT = "Warning count";
 	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
 	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
 	public static final String GAUGE_NAME_WG_POSITION = "Wastegate position sensor";
@@ -1214,6 +1219,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 2056853712;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1520,7 +1526,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.09.01.all.4126705865";
+	public static final String TS_SIGNATURE = "rusEFI 2021.09.03.all.2056853712";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
