@@ -314,7 +314,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	LuaClass<Timer> luaTimer(l, "Timer");
 	luaTimer
 		.ctor()
-		.fun("reset", static_cast<void(Timer::*)()>(&Timer::reset))
+		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
 		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
 
 	lua_register(l, "print", lua_efi_print);
