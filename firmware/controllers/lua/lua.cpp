@@ -17,6 +17,7 @@ static char luaSystemHeap[100];
 class Heap {
 	memory_heap_t m_heap;
 
+	size_t m_memoryUsed = 0;
 	const size_t m_size;
 
 public:
@@ -35,14 +36,45 @@ public:
 		chHeapFree(obj);
 	}
 
-	size_t size() {
+	void* realloc(void* ptr, size_t osize, size_t nsize) {
+		if (nsize == 0) {
+			// requested size is zero, free if necessary and return nullptr
+			if (ptr) {
+				free(ptr);
+				m_memoryUsed -= osize;
+			}
+
+			return nullptr;
+		}
+
+		void *new_mem = alloc(nsize);
+		m_memoryUsed += nsize;
+
+		if (!ptr) {
+			// No old pointer passed in, simply return allocated block
+			return new_mem;
+		}
+
+		// An old pointer was passed in, copy the old data in, then free
+		if (new_mem != nullptr) {
+			memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
+			free(ptr);
+			m_memoryUsed -= osize;
+		}
+
+		return new_mem;
+	}
+
+	size_t size() const {
 		return m_size;
+	}
+
+	size_t used() const {
+		return m_memoryUsed;
 	}
 };
 
 static Heap heaps[] = { luaUserHeap, luaSystemHeap };
-
-static int32_t memoryUsed[efi::size(heaps)] = {0};
 
 template <int HeapIdx>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
@@ -50,37 +82,12 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 
 	if (CONFIG(debugMode) == DBG_LUA) {
 		switch (HeapIdx) {
-			case 0: tsOutputChannels.debugIntField1 = memoryUsed[HeapIdx]; break;
-			case 1: tsOutputChannels.debugIntField2 = memoryUsed[HeapIdx]; break;
+			case 0: tsOutputChannels.debugIntField1 = heaps[HeapIdx].used(); break;
+			case 1: tsOutputChannels.debugIntField2 = heaps[HeapIdx].used(); break;
 		}
 	}
 
-	if (nsize == 0) {
-		// requested size is zero, free if necessary and return nullptr
-		if (ptr) {
-			heaps[HeapIdx].free(ptr);
-			memoryUsed[HeapIdx] -= osize;
-		}
-
-		return nullptr;
-	}
-
-	void *new_mem = heaps[HeapIdx].alloc(nsize);
-	memoryUsed[HeapIdx] += nsize;
-
-	if (!ptr) {
-		// No old pointer passed in, simply return allocated block
-		return new_mem;
-	}
-
-	// An old pointer was passed in, copy the old data in, then free
-	if (new_mem != nullptr) {
-		memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
-		heaps[HeapIdx].free(ptr);
-		memoryUsed[HeapIdx] -= osize;
-	}
-
-	return new_mem;
+	return heaps[HeapIdx].realloc(ptr, osize, nsize);
 }
 #else // not EFI_PROD_CODE
 // Non-MCU code can use plain realloc function instead of custom implementation
@@ -315,7 +322,8 @@ void startLua() {
 	addConsoleAction("luamemory", [](){
 		for (size_t i = 0; i < efi::size(heaps); i++) {
 			auto heapSize = heaps[i].size();
-			float pct = 100.0f * memoryUsed[i] / heapSize;
+			auto memoryUsed = heaps[i].used();
+			float pct = 100.0f * memoryUsed / heapSize;
 			efiPrintf("Lua memory heap %d: %d / %d bytes = %.1f%%", i, memoryUsed, heapSize, pct);
 		}
 	});
