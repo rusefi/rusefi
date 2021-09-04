@@ -29,3 +29,7 @@
 	path = firmware/ext/lua
 	url = https://github.com/rusefi/lua
 	branch = rusefi-5.4.3
+[submodule "firmware/controllers/lua/luaaa"]
+	path = firmware/controllers/lua/luaaa
+	url = https://github.com/rusefi/luaaa
+	branch = rusefi_prod

@@ -8,6 +8,9 @@
 #include "lua_airmass.h"
 #include "can_msg_tx.h"
 #include "settings.h"
+#include <new>
+#include "luaaa.hpp"
+using namespace luaaa;
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
@@ -307,6 +310,13 @@ static int lua_stopEngine(lua_State*) {
 #endif // EFI_UNIT_TEST
 
 void configureRusefiLuaHooks(lua_State* l) {
+
+	LuaClass<Timer> luaTimer(l, "Timer");
+	luaTimer
+		.ctor()
+		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
+		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
+
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
