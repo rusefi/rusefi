@@ -73,3 +73,15 @@ TEST(LuaHooks, CanTxDataLength) {
 	// invalid: not a table
 	EXPECT_ANY_THROW(testLuaExecString("txCan(1, 0, 0, 26)"));
 }
+
+static const char* timerTest = R"(
+function testFunc()
+	local a = Timer.new()
+	a:reset()
+	return a:getElapsedSeconds()
+end
+)";
+
+TEST(LuaHooks, TestLuaTimer) {
+	EXPECT_EQ(testLuaReturnsNumber(timerTest), 0);
+}
