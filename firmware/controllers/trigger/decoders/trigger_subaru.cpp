@@ -143,6 +143,25 @@ void initializeSubaru7_6(TriggerWaveform *s) {
 	initializeSubaru7_6(s, true);
 }
 
+/*
+ * Falling edges showed only:
+ *              6       3       2       5       4       1
+ * Cr #1 |-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+ * Cr #2 ---|-|-|---|-|-----|-------|-|-|---|-|-----|-------
+ * Cam   -|-------------------------------------------------
+ *
+ * Cr #1 last falling edge BTDC: 10
+ * Cr #2 single tooth's falling edge BTDC #1, #2: (55 + 1)
+ * There is no details about gap betweent Cr #2 tooths in 2 and 3 groups.
+ * Looking at timing diagram it is same as for Cr #1 = 30 degrees.
+ * So:
+ * Cr #2 two tooth group BTDC #3, #4: (55 + 1), (55 + 1 - 30)
+ * Cr #2 three tooth group BTDC #5, #6: (55 + 1), (55 + 1 - 30), (55 + 1 - 60) - last event actually after DTC
+ * Again there is no details about Cam tooth position, looking at
+ * diagrams it is about 30 degrees after #1 TDC
+ * Cam single tooth falling edge BTDC #6: (120 - 30) = 90
+ */
+
 void initializeSubaru_SVX(TriggerWaveform *s) {
 	int n;
 	float cam_offset = 15.0;
@@ -154,7 +173,7 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 #define CRANK_1_RISE(n)		(CRANK_1_FALL(n) - width)
 
 	/* T_CHANNEL_3 currently not supported, to keep trigger decode happy
-	 * set cam second as secondary, so logic will be able to sync
+	 * set cam second as primary, so logic will be able to sync
 	 * Crank angle sensor #1 = T_SECONDARY
 	 * Crank andle sensor #2 = T_CHANNEL_3 - not supported yet
 	 * Cam angle sensor = T_PRIMARY */
