@@ -182,8 +182,9 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 #define SVX_CAM				T_PRIMARY
 
 #ifdef SVX_CRANK_2
-	/* crank 2 falling happens between crank #1 fallings */
-	float crank_2_offset = 15.0;
+	/* Cr #2 signle tooth falling edge is (55 + 1) BTDC
+	 * closest Cr #1 falling edge is (10 + 30) BTDC */
+	float crank_2_offset = (10.0 + 30.0 + 30.0) - (55.0 + 1.0);
 #endif
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
