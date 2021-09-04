@@ -205,6 +205,11 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
+	/* we should use only falling edges */
+	s->useRiseEdge = false;
+	s->isSynchronizationNeeded = false;
+	s->useOnlyPrimaryForSync = true;
+
 	/* counting Crank #1 tooths, should reach 23 at the end */
 	n = 0;
 	/******  0  *****/
@@ -291,10 +296,8 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 	/* +10 - TDC #4 */
 	/****** 720 *****/
 
-	s->isSynchronizationNeeded = false;
-	s->useOnlyPrimaryForSync = true;
-
-	s->tdcPosition = -60;
+	/* from sichronization point, which is Cam falling */
+	s->tdcPosition = 720 - 30;
 
 #undef SUBARU_SVX_CRANK1_PULSE
 #undef SUBARU_SVX_CRANK2_PULSE
