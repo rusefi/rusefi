@@ -143,18 +143,34 @@ void initializeSubaru7_6(TriggerWaveform *s) {
 	initializeSubaru7_6(s, true);
 }
 
+/*
+ * Falling edges showed only:
+ *              6       3       2       5       4       1
+ * Cr #1 |-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
+ * Cr #2 ---|-|-|---|-|-----|-------|-|-|---|-|-----|-------
+ * Cam   -|-------------------------------------------------
+ *
+ * Cr #1 last falling edge BTDC: 10
+ * Cr #2 single tooth's falling edge BTDC #1, #2: (55 + 1)
+ * There is no details about gap betweent Cr #2 tooths in 2 and 3 groups.
+ * Looking at timing diagram it is same as for Cr #1 = 30 degrees.
+ * So:
+ * Cr #2 two tooth group BTDC #3, #4: (55 + 1), (55 + 1 - 30)
+ * Cr #2 three tooth group BTDC #5, #6: (55 + 1), (55 + 1 - 30), (55 + 1 - 60) - last event actually after DTC
+ * Again there is no details about Cam tooth position, looking at
+ * diagrams it is about 30 degrees after #1 TDC
+ * Cam single tooth falling edge BTDC #6: (120 - 30) = 90
+ */
+
 void initializeSubaru_SVX(TriggerWaveform *s) {
 	int n;
-	float cam_offset = 15.0;
 	/* we should use only falling edges */
 	float width = 5.0;
 
-	/* additional 10 degrees should be removed!!! */
-#define CRANK_1_FALL(n)		(20.0 + 10.0 + 30.0 * (n))
-#define CRANK_1_RISE(n)		(CRANK_1_FALL(n) - width)
+	float offset = 10.0; /* to make last event @ 720 */
 
 	/* T_CHANNEL_3 currently not supported, to keep trigger decode happy
-	 * set cam second as secondary, so logic will be able to sync
+	 * set cam second as primary, so logic will be able to sync
 	 * Crank angle sensor #1 = T_SECONDARY
 	 * Crank andle sensor #2 = T_CHANNEL_3 - not supported yet
 	 * Cam angle sensor = T_PRIMARY */
@@ -162,161 +178,128 @@ void initializeSubaru_SVX(TriggerWaveform *s) {
 //#define SVX_CRANK_2			T_CHANNEL_3
 #define SVX_CAM				T_PRIMARY
 
+#define CRANK_1_FALL(n)		(20.0 + offset + 30.0 * (n))
+#define CRANK_1_RISE(n)		(CRANK_1_FALL(n) - width)
+
+#define SUBARU_SVX_CRANK1_PULSE(n) \
+	s->addEventAngle(20 + (30 * (n)) + offset - width, SVX_CRANK_1, TV_RISE);	\
+	s->addEventAngle(20 + (30 * (n)) + offset, SVX_CRANK_1, TV_FALL)
+
+	/* cam falling edge offset from preceding Cr #1 falling edge */
+	float cam_offset = (10.0 + 30.0 + 30.0 + 30.0) - 90.0;
+#define SUBARU_SVX_CAM_PULSE(n) \
+	s->addEvent720(CRANK_1_RISE(n) + cam_offset, SVX_CAM, TV_RISE);	\
+	s->addEvent720(CRANK_1_FALL(n) + cam_offset, SVX_CAM, TV_FALL)
+
 #ifdef SVX_CRANK_2
-	/* crank 2 falling happens between crank #1 fallings */
-	float crank_2_offset = 15.0;
+	/* Cr #2 signle tooth falling edge is (55 + 1) BTDC
+	 * preceding Cr #1 falling edge is (10 + 30 + 30) BTDC */
+	float crank_2_offset = (10.0 + 30.0 + 30.0) - (55.0 + 1.0);
+
+	#define SUBARU_SVX_CRANK2_PULSE(n) \
+		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE); \
+		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL)
+#else
+	#define SUBARU_SVX_CRANK2_PULSE(n)	(void)(n)
 #endif
 
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	/******  0  *****/
-	n = 0;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	n = 1;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - one 1/1 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 2;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	n = 3;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* +10 - TDC #1 */
-	n = 4;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-			/* cam - one */
-			s->addEvent720(CRANK_1_RISE(n) + cam_offset, SVX_CAM, TV_RISE);
-			s->addEvent720(CRANK_1_FALL(n) + cam_offset, SVX_CAM, TV_FALL);
-	n = 5;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - three - 1/3 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 6;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - three - 2/3 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 7;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* +10 - TDC #6 */
-	#ifdef SVX_CRANK_2
-		/* crank #2 - three - 3/3 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 8;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	n = 9;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - two - 1/2 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 10;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - two - 2/2 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 11;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* +10 - TDC #3 */
-
-	/****** 360 *****/
-	n = 12;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	n = 13;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - one - 1/1 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 14;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	n = 15;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* +10 - TDC #2 */
-	n = 16;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	n = 17;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - three - 1/3 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 18;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - three - 2/3 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 19;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* +10 - TDC #5 */
-	#ifdef SVX_CRANK_2
-		/* crank #2 - three - 3/3 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 20;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	n = 21;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - two - 1/2 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 22;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	#ifdef SVX_CRANK_2
-		/* crank #2 - two - 2/2 */
-		s->addEvent720(CRANK_1_RISE(n) + crank_2_offset, SVX_CRANK_2, TV_RISE);
-		s->addEvent720(CRANK_1_FALL(n) + crank_2_offset, SVX_CRANK_2, TV_FALL);
-	#endif
-	n = 23;
-	s->addEvent720(CRANK_1_RISE(n), SVX_CRANK_1, TV_RISE);
-	s->addEvent720(CRANK_1_FALL(n), SVX_CRANK_1, TV_FALL);
-	/* +10 - TDC #4 */
-	/****** 720 *****/
-
+	/* we should use only falling edges */
+	s->useRiseEdge = false;
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
 
-	s->tdcPosition = -60;
+	/* counting Crank #1 tooths, should reach 23 at the end */
+	n = 0;
+	/******  0  *****/
+	SUBARU_SVX_CRANK1_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - one 1/1 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	/* +10 - TDC #1 */
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+			/* cam - one */
+			SUBARU_SVX_CAM_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - three - 1/3 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - three - 2/3 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	/* +10 - TDC #6 */
+		/* crank #2 - three - 3/3 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - two - 1/2 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - two - 2/2 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	/* +10 - TDC #3 */
+
+	/****** 360 *****/
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - one - 1/1 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	/* +10 - TDC #2 */
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - three - 1/3 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - three - 2/3 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	/* +10 - TDC #5 */
+		/* crank #2 - three - 3/3 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - two - 1/2 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+		/* crank #2 - two - 2/2 */
+		SUBARU_SVX_CRANK2_PULSE(n);
+	n++;
+	SUBARU_SVX_CRANK1_PULSE(n);
+	/* +10 - TDC #4 */
+	/****** 720 *****/
+
+	/* from sichronization point, which is Cam falling */
+	s->tdcPosition = 720 - 30;
+
+#undef SUBARU_SVX_CRANK1_PULSE
+#undef SUBARU_SVX_CRANK2_PULSE
+#undef SUBARU_SVX_CAM_PULSE
 }
