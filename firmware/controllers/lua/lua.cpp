@@ -11,8 +11,8 @@
 #define TAG "LUA "
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-static char luaUserHeap[20000];
-static char luaSystemHeap[100];
+static char luaUserHeap[10000];
+static char luaSystemHeap[10000];
 
 class Heap {
 	memory_heap_t m_heap;
@@ -97,8 +97,9 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 }
 #endif // EFI_PROD_CODE
 
-class LuaHandle {
+class LuaHandle final {
 public:
+	LuaHandle() : LuaHandle(nullptr) { }
 	LuaHandle(lua_State* ptr) : m_ptr(ptr) { }
 
 	// Don't allow copying!
@@ -109,6 +110,14 @@ public:
 	LuaHandle(LuaHandle&& rhs) {
 		m_ptr = rhs.m_ptr;
 		rhs.m_ptr = nullptr;
+	}
+
+	// Move assignment operator
+	LuaHandle& operator=(LuaHandle&& rhs) {
+		m_ptr = rhs.m_ptr;
+		rhs.m_ptr = nullptr;
+
+		return *this;
 	}
 
 	// Destruction cleans up lua state
@@ -301,8 +310,32 @@ void LuaThread::ThreadTask() {
 
 static LuaThread luaThread;
 
+static LuaHandle systemLua;
+
+void initSystemLua() {
+	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
+
+	Timer startTimer;
+	startTimer.reset();
+
+	systemLua = setupLuaState(myAlloc<1>);
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
+
+	if (!loadScript(systemLua, "function x() end")) {
+		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
+		systemLua = nullptr;
+		return;
+	}
+
+	auto startTime = startTimer.getElapsedSeconds();
+	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
+}
+
 void startLua() {
 	luaThread.Start();
+
+	initSystemLua();
 
 	addConsoleActionS("lua", [](const char* str){
 		if (interactivePending) {
