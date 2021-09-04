@@ -322,7 +322,11 @@ void initSystemLua() {
 
 	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
 
-	efiAssertVoid(OBD_PCM_Processor_Fault, loadScript(systemLua, "function x() end"), "system lua script load fail");
+	if (!loadScript(systemLua, "function x() end")) {
+		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
+		systemLua = nullptr;
+		return;
+	}
 
 	auto startTime = startTimer.getElapsedSeconds();
 	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
