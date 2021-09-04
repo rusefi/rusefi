@@ -414,9 +414,9 @@ static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Ignition
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("to queue sparkDown ind=%d %d %s now=%d for id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), event->sparkEvent.position.triggerEventIndex);
 #endif /* SPARK_EXTREME_LOGGING */
+
+		// TODO: schedule in the future past expected time
 	}
-
-
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
@@ -493,6 +493,9 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, 
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("time to invoke ind=%d %d %d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* SPARK_EXTREME_LOGGING */
+
+			// In case this event was scheduled by overdwell protection, cancel it so we can re-schedule at the correct time
+			engine->executor.cancel(sDown);
 
 			scheduleByAngle(
 				sDown,
