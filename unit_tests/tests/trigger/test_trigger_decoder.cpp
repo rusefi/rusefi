@@ -1130,7 +1130,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	ASSERT_EQ( 3000,  GET_RPM()) << "testSparkReverseOrderBug319: RPM";
 
 
-	ASSERT_EQ( 7,  engine->executor.size()) << "testSparkReverseOrderBug319: queue size";
+	ASSERT_EQ( 8,  engine->executor.size()) << "testSparkReverseOrderBug319: queue size";
 	eth.executeActions();
 	printf("***************************************************\r\n");
 
