@@ -15,12 +15,22 @@ void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// Nothing to do if no sensor configured
 	if (!isBrainPinValid(pin)) {
-		return;
-	}
 
-	vehicleSpeedSensor.setFunction(vehicleSpeedConverter);
-	vehicleSpeedSensor.init(pin, "vss");
-	vehicleSpeedSensor.Register();
+		//check if we do have can vss
+		if (CONFIG(enableCanVss))
+		{
+			//can init
+			vehicleSpeedSensor.setFunction(vehicleSpeedConverter);
+			vehicleSpeedSensor.Register();
+		} else {
+			return;
+		}
+	} else {
+
+		vehicleSpeedSensor.setFunction(vehicleSpeedConverter);
+		vehicleSpeedSensor.init(pin, "vss");
+		vehicleSpeedSensor.Register();
+	}
 }
 
 void deInitVehicleSpeedSensor() {
