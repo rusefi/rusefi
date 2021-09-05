@@ -28,7 +28,7 @@ endif
 #USE_OPT += -Wno-error=format= -Wno-error=register -Wno-error=write-strings
 
 # See explanation in main firmware Makefile for these three defines
-USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
+USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0 -fsanitize=address
 
 # Pretend we are all different hardware so that all canned engine configs are included
 USE_OPT += -DHW_MICRO_RUSEFI=1 -DHW_PROTEUS=1 -DHW_FRANKENSO=1 -DHW_HELLEN=1
@@ -175,7 +175,7 @@ ULIBDIR =
 
 # List all user libraries here
 ULIBS = -lm
-ULIBS += --coverage
+ULIBS += --coverage -fsanitize=address
 
 #
 # End of user defines

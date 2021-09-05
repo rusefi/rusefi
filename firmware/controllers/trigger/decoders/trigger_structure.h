@@ -105,11 +105,11 @@ public:
 	 * this flag tells us if we should ignore events on second input channel
 	 * that's the way to ignore noise from the disconnected wire
 	 */
-	bool needSecondTriggerInput;
+	bool needSecondTriggerInput = false;
 	/**
 	 * true value here means that we do not have a valid trigger configuration
 	 */
-	bool shapeDefinitionError;
+	bool shapeDefinitionError = false;
 
 	/**
 	 * https://github.com/rusefi/rusefi/issues/898
@@ -119,7 +119,7 @@ public:
 	 *
 	 * One day a nicer implementation could be simply ignoring 'useOnlyRisingEdgeForTrigger' in case of 'bothFrontsRequired'
 	 */
-	bool bothFrontsRequired;
+	bool bothFrontsRequired = false;
 
 	/**
 	 * this variable is incremented after each trigger shape redefinition

@@ -437,6 +437,11 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 
 void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	if (shapeDefinitionError) {
+		// Nothing to do here if there's a problem with the trigger shape
+		return;
+	}
+
 	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
 
 	int engineCycleInt = (int) getEngineCycle(operationMode);
