@@ -16,13 +16,17 @@ void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Nothing to do if no sensor configured
 	if (!isBrainPinValid(pin)) {
 
+#if EFI_CAN_SUPPORT
 		//check if we do have can vss
 		if (CONFIG(enableCanVss))
 		{
 			//can init
 			vehicleSpeedSensor.setFunction(vehicleSpeedConverter);
 			vehicleSpeedSensor.Register();
-		} else {
+		} 
+		else 
+#endif		
+		{
 			return;
 		}
 	} else {
