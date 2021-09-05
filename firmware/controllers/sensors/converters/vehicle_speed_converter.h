@@ -9,11 +9,13 @@ public:
 	SensorResult convert(float frequency) const override {
 		
 		if (CONFIG(enableCanVss)) {
-			auto speed = getVehicleCanSpeed();
+			auto speed_can = getVehicleCanSpeed();
+			return speed_can;
 		} else {
 			auto speed = frequency * engineConfiguration->vehicleSpeedCoef;
+			return speed;
 		}
 	
-		return speed;
+		return 0;
 	}
 };
