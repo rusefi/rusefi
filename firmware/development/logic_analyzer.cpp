@@ -239,7 +239,7 @@ void stopLogicAnalyzerPins() {
 	}
 }
 
-static void getChannelFreqAndDuty(int index, float *duty, scaled_channel<uint32_t> *freq) {
+static void getChannelFreqAndDuty(int index, scaled_channel<float> *duty, scaled_channel<uint32_t> *freq) {
 
 	float high,period;
 

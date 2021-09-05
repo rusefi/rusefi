@@ -207,13 +207,13 @@ struct TunerStudioOutputChannels {
 	int16_t recentErrorCodes[8]; // 152-166
 
 	// Debug
-	float debugFloatField1; // 168
-	float debugFloatField2;
-	float debugFloatField3;
-	float debugFloatField4;
-	float debugFloatField5;
-	float debugFloatField6;
-	float debugFloatField7;
+	scaled_channel<float> debugFloatField1; // 168
+	scaled_channel<float> debugFloatField2;
+	scaled_channel<float> debugFloatField3;
+	scaled_channel<float> debugFloatField4;
+	scaled_channel<float> debugFloatField5;
+	scaled_channel<float> debugFloatField6;
+	scaled_channel<float> debugFloatField7;
 	scaled_channel<uint32_t> debugIntField1;
 	scaled_channel<uint32_t> debugIntField2;
 	scaled_channel<uint32_t> debugIntField3;

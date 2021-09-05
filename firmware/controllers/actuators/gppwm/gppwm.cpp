@@ -54,7 +54,7 @@ void updateGppwm() {
 
 #ifdef EFI_TUNER_STUDIO
 		if (CONFIG(debugMode) == DBG_GPPWM) {
-			float* debugFloats = &tsOutputChannels.debugFloatField1;
+			scaled_channel<float>* debugFloats = &tsOutputChannels.debugFloatField1;
 			debugFloats[i] = result;
 		}
 #endif
