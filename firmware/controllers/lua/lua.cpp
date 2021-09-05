@@ -93,6 +93,15 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 // Non-MCU code can use plain realloc function instead of custom implementation
 template <int /*ignored*/>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
+	if (!nsize) {
+		free(ptr);
+		return nullptr;
+	}
+
+	if (!ptr) {
+		return malloc(nsize);
+	}
+
 	return realloc(ptr, nsize);
 }
 #endif // EFI_PROD_CODE
@@ -375,23 +384,23 @@ static LuaHandle runScript(const char* script) {
 	auto ls = setupLuaState(myAlloc<0>);
 
 	if (!ls) {
-		throw new std::logic_error("Call to setupLuaState failed, returned null");
+		throw std::logic_error("Call to setupLuaState failed, returned null");
 	}
 
 	if (!loadScript(ls, script)) {
-		throw new std::logic_error("Call to loadScript failed");
+		throw std::logic_error("Call to loadScript failed");
 	}
 
 	lua_getglobal(ls, "testFunc");
 	if (lua_isnil(ls, -1)) {
-		throw new std::logic_error("Failed to find function testFunc");
+		throw std::logic_error("Failed to find function testFunc");
 	}
 
 	int status = lua_pcall(ls, 0, 1, 0);
 
 	if (0 != status) {
 		std::string msg = std::string("lua error while running script: ") + lua_tostring(ls, -1);
-		throw new std::logic_error(msg);
+		throw std::logic_error(msg);
 	}
 
 	return ls;
@@ -407,7 +416,7 @@ expected<float> testLuaReturnsNumberOrNil(const char* script) {
 
 	// If not nil, it should be a number
 	if (!lua_isnumber(ls, -1)) {
-		throw new std::logic_error("Returned value is not a number");
+		throw std::logic_error("Returned value is not a number");
 	}
 
 	// pop the return value
@@ -431,7 +440,7 @@ int testLuaReturnsInteger(const char* script) {
 
 	// pop the return value;
 	if (!lua_isinteger(ls, -1)) {
-		throw new std::logic_error("Returned value is not an integer");
+		throw std::logic_error("Returned value is not an integer");
 	}
 
 	return lua_tointeger(ls, -1);
@@ -441,11 +450,11 @@ void testLuaExecString(const char* script) {
 	auto ls = setupLuaState(myAlloc<0>);
 
 	if (!ls) {
-		throw new std::logic_error("Call to setupLuaState failed, returned null");
+		throw std::logic_error("Call to setupLuaState failed, returned null");
 	}
 
 	if (!loadScript(ls, script)) {
-		throw new std::logic_error("Call to loadScript failed");
+		throw std::logic_error("Call to loadScript failed");
 	}
 }
 
