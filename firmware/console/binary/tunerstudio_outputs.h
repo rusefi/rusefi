@@ -217,8 +217,8 @@ struct TunerStudioOutputChannels {
 	scaled_channel<uint32_t> debugIntField1;
 	scaled_channel<uint32_t> debugIntField2;
 	scaled_channel<uint32_t> debugIntField3;
-	int16_t debugIntField4;
-	int16_t debugIntField5; // 210
+	scaled_channel<uint16_t> debugIntField4;
+	scaled_channel<uint16_t> debugIntField5; // 210
 
 	// accelerometer
 	int16_t accelerationX; // 212
