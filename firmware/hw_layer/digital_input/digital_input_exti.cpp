@@ -49,8 +49,10 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 
 	/* is this index already used? */
 	if (ext_used & PAL_PORT_BIT(index)) {
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %d: exti index already used by %s", msg,
-		brainPin,
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %s/index %d: exti index already used by %s",
+		msg,
+		hwPortname(brainPin),
+		index,
 		EXT_USED[index]);
 		return;
 	}
@@ -88,6 +90,7 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 
 	/* mark unused */
 	ext_used &= ~PAL_PORT_BIT(index);
+	EXT_USED[index] = nullptr;
 }
 
 digital_input_s* startDigitalCaptureExti(const char *msg, brain_pin_e brainPin) {
