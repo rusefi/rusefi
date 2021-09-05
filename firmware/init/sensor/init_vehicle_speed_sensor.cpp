@@ -3,7 +3,6 @@
 #include "init.h"
 #include "frequency_sensor.h"
 #include "vehicle_speed_converter.h"
-#include "can_vss.h"
 
 static FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
 static VehicleSpeedConverter vehicleSpeedConverter;

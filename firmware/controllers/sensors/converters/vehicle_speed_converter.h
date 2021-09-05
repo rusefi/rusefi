@@ -7,11 +7,15 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	SensorResult convert(float frequency) const override {
-		
+
+#if EFI_CAN_SUPPORT		
 		if (CONFIG(enableCanVss)) {
 			auto speed_can = getVehicleCanSpeed();
 			return speed_can;
-		} else {
+		} 
+		else 
+#endif		
+		{
 			auto speed = frequency * engineConfiguration->vehicleSpeedCoef;
 			return speed;
 		}
