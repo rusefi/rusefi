@@ -49,7 +49,9 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 
 	/* is this index already used? */
 	if (ext_used & PAL_PORT_BIT(index)) {
-		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %d: exti index already used", msg, brainPin);
+		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %d: exti index already used by %s", msg,
+		brainPin,
+		EXT_USED[index]);
 		return;
 	}
 
