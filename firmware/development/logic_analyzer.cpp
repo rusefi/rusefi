@@ -273,7 +273,7 @@ void reportLogicAnalyzerToTS() {
 	getChannelFreqAndDuty(1,&tsOutputChannels.debugFloatField2, &tsOutputChannels.debugIntField2);
 	getChannelFreqAndDuty(2,&tsOutputChannels.debugFloatField3, &tsOutputChannels.debugIntField3);
 	getChannelFreqAndDuty(3,&tsOutputChannels.debugFloatField4, &tmp);
-	tsOutputChannels.debugIntField4 = tmp;
+	tsOutputChannels.debugIntField4 = (uint16_t)tmp;
 #endif	
 }
 
