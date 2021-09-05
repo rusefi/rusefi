@@ -202,8 +202,8 @@ struct TunerStudioOutputChannels {
 	// Errors
 	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
-	int16_t warningCounter; // 148
-	int16_t lastErrorCode; // 150
+	scaled_channel<uint16_t> warningCounter; // 148
+	scaled_channel<uint16_t> lastErrorCode; // 150
 	int16_t recentErrorCodes[8]; // 152-166
 
 	// Debug
@@ -214,9 +214,9 @@ struct TunerStudioOutputChannels {
 	float debugFloatField5;
 	float debugFloatField6;
 	float debugFloatField7;
-	int debugIntField1;
-	int debugIntField2;
-	int debugIntField3;
+	scaled_channel<uint32_t> debugIntField1;
+	scaled_channel<uint32_t> debugIntField2;
+	scaled_channel<uint32_t> debugIntField3;
 	int16_t debugIntField4;
 	int16_t debugIntField5; // 210
 
