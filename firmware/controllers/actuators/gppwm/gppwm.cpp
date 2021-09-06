@@ -34,7 +34,9 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		// Setup pin & pwm
 		pins[i].initPin("gp pwm", cfg.pin);
-		startSimplePwm(&outputs[i], "gp pwm", &engine->executor, &pins[i], freq, 0);
+		if (usePwm) {
+			startSimplePwm(&outputs[i], "gp pwm", &engine->executor, &pins[i], freq, 0);
+		}
 
 		// Set up this channel's lookup table
 		tables[i]->init(cfg.table, cfg.loadBins, cfg.rpmBins);
