@@ -536,6 +536,8 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 
 			if (i == 0 && CONFIG(artificialTestMisfire) && (engine->globalSparkIdCounter % ((int)engineConfiguration->fsio_setting[5]) == 0)) {
 				// artificial misfire on cylinder #1 for testing purposes
+				// enable artificialMisfire
+				// set_fsio_setting 6 20
 				warning(CUSTOM_ERR_6729, "artificial misfire on cylinder #1 for testing purposes %d", engine->globalSparkIdCounter);
 				continue;
 			}
