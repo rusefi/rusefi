@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri Sep 03 10:34:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Sep 06 00:26:00 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -189,13 +189,13 @@ struct gppwm_channel {
 	 */
 	uint16_t pwmFrequency;
 	/**
-	 * In on-off mode, turn the output on when the table value is above this duty.
+	 * Hysteresis: in on-off mode, turn the output on when the table value is above this duty.
 	%
 	 * offset 4
 	 */
 	uint8_t onAboveDuty;
 	/**
-	 * In on-off mode, turn the output off when the table value is below this duty.
+	 * Hysteresis: in on-off mode, turn the output off when the table value is below this duty.
 	%
 	 * offset 5
 	 */
@@ -4333,4 +4333,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri Sep 03 10:34:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Sep 06 00:26:00 UTC 2021
