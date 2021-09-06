@@ -49,7 +49,7 @@ void GppwmChannel::setOutput(float result) {
 		if (m_config->offBelowDuty >  m_config->onAboveDuty) {
 			firmwareError(CUSTOM_ERR_6122, "You can't have off below %f greater than on above %f",
 					m_config->offBelowDuty,
-					m_config->onBelowDuty);
+					m_config->onAboveDuty);
 		}
 		// Apply hysteresis with provided values
 		if (m_state && result < m_config->offBelowDuty) {
