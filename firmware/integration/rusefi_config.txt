@@ -1861,6 +1861,8 @@ end_struct
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 #define ENGINE_MAKE_VAG "VAG"
 
+#define CMD_SET "set"
+#define CMD_GET "get"
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_FUEL_BENCH "fuelbench"
