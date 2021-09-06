@@ -3587,6 +3587,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "use FSIO Table CAN Sniffing Filtering",useFSIOTableForCanSniffingFiltering
 		field = "turbo speed sensor",                   turboSpeedSensorInputPin
 		field = "turbo speed multiplier",               turboSpeedSensorMultiplier
+		field = "Artificial Misfire",                   artificialTestMisfire
 		panel = allTriggerDebug
 
        help = helpGeneral, "rusEFI General Help"
