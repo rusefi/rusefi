@@ -534,7 +534,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 			if (event->dwellPosition.triggerEventIndex != trgEventIndex)
 				continue;
 
-			if (i == 0 && CONFIG(artificialTestMisfire) && (engine->globalSparkIdCounter % ((int)engineConfiguration->fsio_setting[5]) == 0)) {
+			if (i == 0 && CONFIG(artificialTestMisfire) && (getRevolutionCounter() % ((int)engineConfiguration->fsio_setting[5]) == 0)) {
 				// artificial misfire on cylinder #1 for testing purposes
 				// enable artificialMisfire
 				// set_fsio_setting 6 20
