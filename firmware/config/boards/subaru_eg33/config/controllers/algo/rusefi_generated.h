@@ -65,6 +65,7 @@
 #define antiLagEnabled_offset 76
 #define antiLagRpmTreshold_offset 824
 #define applyNonlinearBelowPulse_offset 2508
+#define artificialTestMisfire_offset 76
 #define AUX_ANALOG_INPUT_COUNT 4
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define auxFastSensor1_adcChannel_offset 680
@@ -971,7 +972,6 @@
 #define isMapAveragingEnabled_offset 1476
 #define isSdCardEnabled_offset 744
 #define issue_294_29_offset 76
-#define issue_294_30_offset 76
 #define issue_294_31_offset 76
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
@@ -1268,7 +1268,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.09.06
-#define SIGNATURE_HASH 3951101949
+#define SIGNATURE_HASH 1939105591
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1624,7 +1624,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.09.06.subaru_eg33_f7.3951101949"
+#define TS_SIGNATURE "rusEFI 2021.09.06.subaru_eg33_f7.1939105591"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

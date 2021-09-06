@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 06 00:25:52 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 06 14:16:01 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -797,7 +797,7 @@ struct engine_configuration_s {
 	bool issue_294_29 : 1;
 	/**
 	offset 76 bit 29 */
-	bool issue_294_30 : 1;
+	bool artificialTestMisfire : 1;
 	/**
 	offset 76 bit 30 */
 	bool issue_294_31 : 1;
@@ -4333,4 +4333,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 06 00:25:52 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 06 14:16:01 UTC 2021

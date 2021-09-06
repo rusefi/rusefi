@@ -64,6 +64,7 @@
 #define antiLagEnabled_offset 76
 #define antiLagRpmTreshold_offset 824
 #define applyNonlinearBelowPulse_offset 2500
+#define artificialTestMisfire_offset 76
 #define AUX_ANALOG_INPUT_COUNT 4
 #define AUX_DIGITAL_VALVE_COUNT 2
 #define auxFastSensor1_adcChannel_offset 680
@@ -952,7 +953,6 @@
 #define isMapAveragingEnabled_offset 1476
 #define isSdCardEnabled_offset 744
 #define issue_294_29_offset 76
-#define issue_294_30_offset 76
 #define issue_294_31_offset 76
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
@@ -1248,7 +1248,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.09.06
-#define SIGNATURE_HASH 3285384114
+#define SIGNATURE_HASH 1539808120
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1604,7 +1604,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.09.06.kin.3285384114"
+#define TS_SIGNATURE "rusEFI 2021.09.06.kin.1539808120"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
