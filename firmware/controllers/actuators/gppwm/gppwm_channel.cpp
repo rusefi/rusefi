@@ -46,6 +46,11 @@ void GppwmChannel::setOutput(float result) {
 		m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
 	} else {
 		efiAssertVoid(OBD_PCM_Processor_Fault, m_output, "m_output null");
+		if (m_config->offBelowDuty >  m_config->onAboveDuty) {
+			firmwareError(CUSTOM_ERR_6122, "You can't have off below %f greater than on above %f",
+					m_config->offBelowDuty,
+					m_config->onBelowDuty);
+		}
 		// Apply hysteresis with provided values
 		if (m_state && result < m_config->offBelowDuty) {
 			m_state = false;

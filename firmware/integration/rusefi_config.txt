@@ -346,8 +346,8 @@ struct gppwm_channel
 	uint8_t dutyIfError;+If an error (with a sensor, etc) is detected, this value is used instead of reading from the table.\nThis should be a safe value for whatever hardware is connected to prevent damage.;"%", 1, 0, 0, 100, 0
 	uint16_t pwmFrequency;+Select a frequency to run PWM at.\nSet this to 0hz to enable on-off mode.;"hz", 1, 0, 0, 500, 0
 
-	uint8_t onAboveDuty;+In on-off mode, turn the output on when the table value is above this duty.;"%", 1, 0, 0, 100, 0
-	uint8_t offBelowDuty;+In on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
+	uint8_t onAboveDuty;+Hysteresis: in on-off mode, turn the output on when the table value is above this duty.;"%", 1, 0, 0, 100, 0
+	uint8_t offBelowDuty;+Hysteresis: in on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
 
 	gppwm_channel_e loadAxis;+Selects the load axis to use for the table.;
 	uint8_t alignmentFill_map;;"unit", 1, 0, 0, 100, 0
