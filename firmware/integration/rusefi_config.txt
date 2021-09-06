@@ -582,7 +582,7 @@ bit useTLE8888_stepper
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit useFSIOTableForCanSniffingFiltering
 bit issue_294_29
-bit issue_294_30
+bit artificialTestMisfire,"Danger Mode","No thank you"
 bit issue_294_31,"si_example","nada_example"
 
 
