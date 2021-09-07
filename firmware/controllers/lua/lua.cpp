@@ -12,7 +12,7 @@
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 static char luaUserHeap[10000];
-static char luaSystemHeap[10000];
+static char luaSystemHeap[15000];
 
 class Heap {
 	memory_heap_t m_heap;
