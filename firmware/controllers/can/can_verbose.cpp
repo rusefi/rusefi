@@ -131,7 +131,7 @@ static void populateFrame(Fueling& msg) {
 
 struct Fueling2 {
 	scaled_channel<uint16_t> fuelConsumedGram;
-	scaled_channel<uint16_t PACK_MULT_FUEL_FLOW> fuelFlowRate;
+	scaled_channel<uint16_t, PACK_MULT_FUEL_FLOW> fuelFlowRate;
 	scaled_percent fuelTrim[2];
 };
 
@@ -142,7 +142,6 @@ static void populateFrame(Fueling2& msg) {
 	for (size_t i = 0; i < 2; i++) {
 		msg.fuelTrim[i] = 100.0f * (ENGINE(stftCorrection)[i] - 1.0f);
 	}
-	
 }
 
 void sendCanVerbose() {
