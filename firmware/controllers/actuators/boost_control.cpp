@@ -63,7 +63,7 @@ expected<float> BoostController::getSetpoint() const {
 }
 
 expected<percent_t> BoostController::getOpenLoop(float target) const {
-	// Boost control open loop doesn't care about target - only MAP/RPM
+	// Boost control open loop doesn't care about target - only TPS/RPM
 	UNUSED(target);
 
 	float rpm = GET_RPM();
@@ -88,7 +88,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) const {
 	return openLoop;
 }
 
-expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
+percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressure) {
 	// If we're in open loop only mode, make no closed loop correction.
 	if (engineConfiguration->boostType != CLOSED_LOOP) {
 		return 0;
@@ -112,12 +112,16 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 		return 0;
 	}
 
-	float closedLoop = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	return m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+}
+
+expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
+	auto closedLoop = getClosedLoopImpl(target, manifoldPressure);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
-		m_pid.postState(&tsOutputChannels);
 		tsOutputChannels.debugFloatField2 = closedLoop;
+		tsOutputChannels.debugFloatField3 = target;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -126,6 +130,13 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 
 void BoostController::setOutput(expected<float> output) {
 	percent_t percent = output.value_or(CONFIG(boostControlSafeDutyCycle));
+
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_BOOST) {
+		tsOutputChannels.debugFloatField3 = percent;
+	}
+#endif /* EFI_TUNER_STUDIO */
+
 	float duty = PERCENT_TO_DUTY(percent);
 
 	if (m_pwm) {
