@@ -196,6 +196,33 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	return true;
 }
 
+static LuaHandle systemLua;
+
+const char* getSystemLuaScript();
+
+void initSystemLua() {
+	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
+
+	Timer startTimer;
+	startTimer.reset();
+
+	systemLua = setupLuaState(myAlloc<1>);
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
+
+	if (!loadScript(systemLua, getSystemLuaScript())) {
+		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
+		systemLua = nullptr;
+		return;
+	}
+
+	auto startTime = startTimer.getElapsedSeconds();
+
+#if !EFI_UNIT_TEST
+	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
+#endif
+}
+
 #if !EFI_UNIT_TEST
 static bool interactivePending = false;
 static char interactiveCmd[100];
@@ -319,28 +346,6 @@ void LuaThread::ThreadTask() {
 
 static LuaThread luaThread;
 
-static LuaHandle systemLua;
-
-void initSystemLua() {
-	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
-
-	Timer startTimer;
-	startTimer.reset();
-
-	systemLua = setupLuaState(myAlloc<1>);
-
-	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
-
-	if (!loadScript(systemLua, "function x() end")) {
-		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
-		systemLua = nullptr;
-		return;
-	}
-
-	auto startTime = startTimer.getElapsedSeconds();
-	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
-}
-
 void startLua() {
 	luaThread.Start();
 
@@ -374,7 +379,7 @@ void startLua() {
 #else // not EFI_UNIT_TEST
 
 void startLua() {
-	// todo
+	initSystemLua();
 }
 
 #include <stdexcept>
