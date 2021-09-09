@@ -688,10 +688,17 @@ bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
 
 	// VVT
-	ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
-	ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
-	ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
-	ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+	if (CONFIG(camInputs[0]) != GPIO_UNASSIGNED) {
+		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
+		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
+	}
+
+#if CAM_INPUTS_COUNT != 1
+	if (CONFIG(camInputs[1]) != GPIO_UNASSIGNED) {
+		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
+		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+	}
+#endif
 
 	return true;
 }
