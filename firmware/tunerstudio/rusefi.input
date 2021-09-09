@@ -1328,8 +1328,8 @@ gaugeCategory = DynoView
    entry = debugIntField5,     {bitStringValue( debugFieldI5List,  debugMode )},int,"%d", { !enableLogDebugChannels }
 
 
-   entry = engineMakeCodeNameCrc16,   "Engine CRC16",int,"%d"
-   entry = tuneCrc16,   "Tune CRC16",int,"%d"
+   entry = engineMakeCodeNameCrc16,   @@GAUGE_NAME_ENGINE_CRC16@@,int,"%d"
+   entry = tuneCrc16,   @@GAUGE_NAME_TUNE_CRC16@@,int,"%d"
 
    entry = engineMode,   "Engine Mode",int,"%d"
    entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
