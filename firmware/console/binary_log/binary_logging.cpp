@@ -37,6 +37,8 @@ static constexpr LogField fields[] = {
 	{tsOutputChannels.lambda2, GAUGE_NAME_LAMBDA2, "", 3},
 	{tsOutputChannels.warningCounter, GAUGE_NAME_WARNING_COUNTER, "", 0},
 	{tsOutputChannels.lastErrorCode, GAUGE_NAME_WARNING_LAST, "", 0},
+	{tsOutputChannels.tuneCrc16, GAUGE_NAME_TUNE_CRC16, "", 0},
+	{tsOutputChannels.engineMakeCodeNameCrc16, GAUGE_NAME_ENGINE_CRC16, "", 0},
 	{tsOutputChannels.debugIntField1, GAUGE_NAME_DEBUG_I1, "", 0},
 	{tsOutputChannels.debugIntField2, GAUGE_NAME_DEBUG_I2, "", 0},
 	{tsOutputChannels.debugIntField3, GAUGE_NAME_DEBUG_I3, "", 0},

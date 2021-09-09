@@ -198,7 +198,7 @@ struct TunerStudioOutputChannels {
 	scaled_channel<uint16_t, 100> ignitionLoad; // 136
 
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	int16_t engineMakeCodeNameCrc16; // 138
+	scaled_channel<uint16_t> engineMakeCodeNameCrc16; // 138
 	// Errors
 	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
@@ -235,7 +235,7 @@ struct TunerStudioOutputChannels {
 	scaled_voltage rawIat;				// 240
 	scaled_voltage rawOilPressure;		// 242
 
-	int16_t tuneCrc16; // 244
+	scaled_channel<uint16_t> tuneCrc16; // 244
 
 	// Offset 246: bits
 	uint8_t sd_logging_internal : 1;	// bit 0
