@@ -26,16 +26,15 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ## Month 202x Release - "Release Name"
-### Added
- - rusEFI console Lua tab loads scripts from ECU on start
 
-## August 2021 Release - "Lottery Day"
+## September 2021 Release - "Iguana Awareness Day"
 
 ### Added
  - RUSEFI MSD now contains bundle-specific URL #2848
  - Nissan 4 cylinder QR trigger wheel #3118
  - 1-6-2-4-3-5 firing order for all our 911 fans!
  - Add minimum MAP threshold for closed-loop boost control
+ - rusEFI console Lua tab loads scripts from ECU on start
 
 ### Fixed
  - Composite Logger uses same engineSnifferRpmThreshold setting as engine sniffer #3161
