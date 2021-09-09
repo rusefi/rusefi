@@ -1747,7 +1747,6 @@ end_struct
 #define GAUGE_NAME_RPM "RPM"
 #define GAUGE_NAME_CLT "CLT"
 #define GAUGE_NAME_IAT "IAT"
-#define GAUGE_NAME_OIL_PRESSURE "Oil Press"
 #define GAUGE_NAME_AUX_TEMP1 "Aux temp 1"
 #define GAUGE_NAME_AUX_TEMP2 "Aux temp 2"
 #define GAUGE_NAME_TPS "TPS"
