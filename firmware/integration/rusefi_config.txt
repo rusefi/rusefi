@@ -1761,7 +1761,8 @@ end_struct
 #define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
 #define GAUGE_NAME_WARNING_COUNT "Warning count"
 #define GAUGE_NAME_LAST_ERROR "Last error"
-#define GAUGE_NAME_TUNE_CRC16 "tune CRC16"
+#define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
+#define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 
 #define GAUGE_NAME_RAW_FUEL_PRESSURE_LOW "Fuel pressure raw (low)"
