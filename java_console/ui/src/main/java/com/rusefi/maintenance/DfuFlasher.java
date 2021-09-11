@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.rusefi.StartupFrame.appendBundleName;
+
 /**
  * @see FirmwareFlasher
  */
@@ -69,14 +71,14 @@ public class DfuFlasher {
             }
         }
         StatusWindow wnd = new StatusWindow();
-        wnd.showFrame("DFU status " + Launcher.CONSOLE_VERSION);
+        wnd.showFrame(appendBundleName("DFU status " + Launcher.CONSOLE_VERSION));
         wnd.appendMsg(messages.toString());
         ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
     }
 
     public static void runDfuProgramming() {
         StatusWindow wnd = new StatusWindow();
-        wnd.showFrame("DFU status " + Launcher.CONSOLE_VERSION);
+        wnd.showFrame(appendBundleName("DFU status " + Launcher.CONSOLE_VERSION));
         ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
     }
 

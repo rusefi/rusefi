@@ -69,8 +69,7 @@ public class StartupFrame {
     public StartupFrame() {
 //        AudioPlayback.start();
         String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
-        String bundleName = Autoupdate.readBundleFullName();
-        frame = new JFrame(title + " " + (bundleName != null ? bundleName : "Unknown bundle"));
+        frame = new JFrame(appendBundleName(title));
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -83,6 +82,12 @@ public class StartupFrame {
         });
         AutoupdateUtil.setAppIcon(frame);
         SerialPortScanner.INSTANCE.startTimer();
+    }
+
+    @NotNull
+    public static String appendBundleName(String title) {
+        String bundleName = Autoupdate.readBundleFullName();
+        return title + " " + (bundleName != null ? bundleName : "Unknown bundle");
     }
 
     public void chooseSerialPort() {
