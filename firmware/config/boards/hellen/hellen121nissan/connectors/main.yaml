@@ -122,7 +122,7 @@ pins:
 
 
   - pin: 50a
-# in_tps AIN17 PA4
+# in_tps AIN17 PA4 U108
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 50 - TPS 1
@@ -157,7 +157,7 @@ pins:
     function: GNDA many sensors
 
   - pin: 69a
-# in_aux1 AIN23 PB0
+# in_aux1 AIN23 PB0 U109
     id: EFI_ADC_8
     class: analog_inputs
     ts_name: 69 - TPS 2
