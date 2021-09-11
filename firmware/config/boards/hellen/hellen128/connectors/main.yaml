@@ -552,6 +552,8 @@ pins:
     type: ign
 
   - pin: F13
+# OUT_IGN4 Q3
+# CLK230
     id: GPIOE_3
     class: outputs
     ts_name: F13 - IGN 4
@@ -589,6 +591,8 @@ pins:
     type: ign
     
   - pin: F20
+# OUT_IGN4 Q1
+# CLK230
     id: GPIOI_8
     class: outputs
     ts_name: F20 - IGN 1
@@ -596,6 +600,7 @@ pins:
     type: ign
 
   - pin: F21
+# For Supercharger Clutch Activation on M111 4 cylinder compression, REMOVE F17. Install R80
     function: igniter
     type: ign
 
