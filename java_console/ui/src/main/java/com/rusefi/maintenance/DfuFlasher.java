@@ -105,7 +105,11 @@ public class DfuFlasher {
                     }
                     wnd.appendMsg(s);
                 }, stdout);
-        if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
+        if (stdout.toString().contains("Matching not good")) {
+            // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
+            wnd.appendMsg("VERIFICATION ERROR maybe nDBANK issue?");
+            wnd.appendMsg("https://github.com/rusefi/rusefi/wiki/HOWTO-nDBANK");
+        } else if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.appendMsg("SUCCESS!");
         } else {
