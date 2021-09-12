@@ -56,6 +56,8 @@ void configureTriTach(TriggerWaveform * s) {
 void configureFordPip(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
+	s->tdcPosition = 662.5;
+
 	s->setTriggerSynchronizationGap(0.66);
 	s->setSecondTriggerSynchronizationGap(1.25);
 	/**
