@@ -49,7 +49,28 @@ void configureTriTach(TriggerWaveform * s) {
 			NO_RIGHT_FILTER);
 }
 
+/**
+ * based on https://fordsix.com/threads/understanding-standard-and-signature-pip-thick-film-ignition.81515/
+ * based on https://www.w8ji.com/distributor_stabbing.htm
+ */
 void configureFordPip(TriggerWaveform * s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->setTriggerSynchronizationGap(0.66);
+	s->setSecondTriggerSynchronizationGap(1.25);
+	/**
+	 * sensor is mounted on distributor but trigger shape is defined in engine cycle angles
+	 */
+	int oneCylinder = s->getCycleDuration() / 8;
+
+	s->addEventAngle(oneCylinder * 0.75, T_PRIMARY, TV_RISE);
+	s->addEventAngle(oneCylinder, T_PRIMARY, TV_FALL);
+
+
+	for (int i = 2;i<=8;i++) {
+		s->addEventAngle(oneCylinder * (i - 0.5), T_PRIMARY, TV_RISE);
+		s->addEventAngle(oneCylinder * i, T_PRIMARY, TV_FALL);
+	}
 
 }
 

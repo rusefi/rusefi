@@ -509,6 +509,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_FORD_TFI_PIP:
+		configureFordPip(this);
+		break;
+
 	case TT_FORD_ST170:
 		configureFordST170(this);
 		break;
