@@ -4009,3 +4009,21 @@ event 46 1 0 680.00
 event 47 1 1 705.00
 event 48 1 0 710.00
 event 49 0 1 715.00
+TRIGGERTYPE 65 16 TT_FORD_TFI_PIP 0.00
+# duty 0.53 0.00
+event 0 0 1 0.00
+event 1 0 0 45.00
+event 2 0 1 90.00
+event 3 0 0 135.00
+event 4 0 1 180.00
+event 5 0 0 225.00
+event 6 0 1 270.00
+event 7 0 0 315.00
+event 8 0 1 360.00
+event 9 0 0 405.00
+event 10 0 1 450.00
+event 11 0 0 495.00
+event 12 0 1 540.00
+event 13 0 0 585.00
+event 14 0 1 652.50
+event 15 0 0 675.00
