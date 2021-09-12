@@ -49,6 +49,10 @@ void configureTriTach(TriggerWaveform * s) {
 			NO_RIGHT_FILTER);
 }
 
+void configureFordPip(TriggerWaveform * s) {
+
+}
+
 void configureFordST170(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	int width = 10;
