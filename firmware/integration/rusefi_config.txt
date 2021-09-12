@@ -458,6 +458,7 @@ end_struct
 #define TT_TT_TEMP_62 62
 #define TT_TT_SUBARU_SVX_CRANK_1 63
 #define TT_TT_SUBARU_SVX_CAM_VVT 64
+#define TT_TT_FORD_TFI_PIP 65
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define DBG_DBG_LOGIC_ANALYZER 45
