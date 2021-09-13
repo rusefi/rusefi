@@ -81,7 +81,19 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
-		dwellMs = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		auto base = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		auto voltageMult = 0.02f * 
+			interpolate2d(
+				10 * Sensor::get(SensorType::BatteryVoltage),
+				engineConfiguration->dwellVoltageCorrVoltBins,
+				engineConfiguration->dwellVoltageCorrValues);
+
+		// for compat (table full of zeroes)
+		if (voltageMult < 0.1f) {
+			voltageMult = 1;
+		}
+
+		dwellMs = base * voltageMult;
 	}
 
 	if (cisnan(dwellMs) || dwellMs <= 0) {
