@@ -1097,7 +1097,9 @@ struct vr_threshold_s
 	uint8_t[6] values;;"volts", 0.01, 0, 0, 2.5, 2
 end_struct
 
-	vr_threshold_s[2 iterate] vrThreshold;
+! todo: should be '3' since we are dreaming of Honda triple-channel distributor
+#define VR_THRESHOLD_COUNT 2
+	vr_threshold_s[VR_THRESHOLD_COUNT iterate] vrThreshold;
 
 	int[45] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
