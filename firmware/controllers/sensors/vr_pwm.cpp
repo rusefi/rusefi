@@ -2,8 +2,8 @@
 
 #include "vr_pwm.h"
 
-static OutputPin pins[2];
-static SimplePwm pwms[2];
+static OutputPin pins[VR_THRESHOLD_COUNT];
+static SimplePwm pwms[VR_THRESHOLD_COUNT];
 
 static void updateVrPwm(int rpm, size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	auto& cfg = CONFIG(vrThreshold)[index];
