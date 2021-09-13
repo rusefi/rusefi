@@ -1270,8 +1270,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.09.12
-#define SIGNATURE_HASH 225456830
+#define SIGNATURE_DATE 2021.09.13
+#define SIGNATURE_HASH 986921057
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1627,7 +1627,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.09.12.subaru_eg33_f7.225456830"
+#define TS_SIGNATURE "rusEFI 2021.09.13.subaru_eg33_f7.986921057"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1825,6 +1825,7 @@
 #define veTable_offset 17440
 #define VM_VVT_INACTIVE 0
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
+#define VR_THRESHOLD_COUNT 2
 #define vr_threshold_s_size 16
 #define vRefAdcChannel_offset 1470
 #define vrThreshold1_offset 1244

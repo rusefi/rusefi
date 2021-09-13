@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 12 15:59:39 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 13 15:18:36 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2192,7 +2192,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1244
 	 */
-	vr_threshold_s vrThreshold[2];
+	vr_threshold_s vrThreshold[VR_THRESHOLD_COUNT];
 	/**
 	units
 	 * offset 1276
@@ -4333,4 +4333,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 12 15:59:39 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 13 15:18:36 UTC 2021

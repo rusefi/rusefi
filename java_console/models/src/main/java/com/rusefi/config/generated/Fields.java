@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 12 15:59:34 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 13 15:18:32 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1528,7 +1528,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.09.12.all.2566576605";
+	public static final String TS_SIGNATURE = "rusEFI 2021.09.13.all.2941899522";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1720,6 +1720,7 @@ public class Fields {
 	public static final int veRpmBins_offset = 18528;
 	public static final int veTable_offset = 17440;
 	public static final int VM_VVT_INACTIVE = 0;
+	public static final int VR_THRESHOLD_COUNT = 2;
 	public static final int vr_threshold_s_size = 16;
 	public static final int vRefAdcChannel_offset = 1470;
 	public static final int vrThreshold1_offset = 1244;
