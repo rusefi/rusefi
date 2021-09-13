@@ -82,7 +82,12 @@ crc_t flashStateCrc(persistent_config_container_s *state) {
 #if EFI_FLASH_WRITE_THREAD
 chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
 
+#if EFI_STORAGE_EXT_SNOR == TRUE
+/* in case of MFS we need more stack */
+static THD_WORKING_AREA(flashWriteStack, 3 * UTILITY_THREAD_STACK_SIZE);
+#else
 static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
+#endif
 static void flashWriteThread(void*) {
 	chRegSetThreadName("flash writer");
 
