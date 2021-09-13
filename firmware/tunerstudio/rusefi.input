@@ -3397,7 +3397,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		; Neutral position handling not yet implemented!
 		;field = "Neutral Position",						etbNeutralPosition
 
-	dialog = etbDialog, "Electronic Throttle Body (beta)", border
+	dialog = etbDialog, "Electronic Throttle Body", border
 		topicHelp = "etbHelp"
 		panel = etbDialogLeft, West
 		panel = etbDialogRight, East
