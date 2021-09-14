@@ -174,6 +174,18 @@ void setBoardDefaultConfiguration(void) {
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MERCEDES);
 	strcpy(CONFIG(engineCode), "");
 
+	/**
+	 * Jimmy best tune
+	 * https://rusefi.com/online/view.php?msq=626
+	 */
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
+	engineConfiguration->throttlePedalUpVoltage = 1.49;
+	engineConfiguration->throttlePedalWOTVoltage = 4.72;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 1.34;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.24;
+
+
 	hellenWbo();
 }
 
