@@ -145,7 +145,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->canRxPin = GPIOD_0;
 
 //	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
-//	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 //	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
 
@@ -173,6 +173,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+	engineConfiguration->luaOutputPins[0] = GPIOG_5; // 104 ETB Relay
 
 	hellenWbo();
 }
