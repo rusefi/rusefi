@@ -176,6 +176,10 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->luaOutputPins[0] = GPIOG_5; // 104 ETB Relay
 
+	engineConfiguration->throttlePedalUpVoltage = 0.75;
+	engineConfiguration->throttlePedalWOTVoltage = 4.45;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.43;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.20;
 	hellenWbo();
 }
 
