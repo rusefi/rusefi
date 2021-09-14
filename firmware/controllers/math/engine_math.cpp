@@ -84,7 +84,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		auto base = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
 		auto voltageMult = 0.02f * 
 			interpolate2d(
-				10 * Sensor::get(SensorType::BatteryVoltage),
+				10 * Sensor::get(SensorType::BatteryVoltage).value_or(0),
 				engineConfiguration->dwellVoltageCorrVoltBins,
 				engineConfiguration->dwellVoltageCorrValues);
 
