@@ -29,6 +29,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Added
  - Ford PIP trigger decoder https://github.com/rusefi/rusefi/wiki/Images/triggers/trigger_65.png
+ - Dwell battery voltage correction table
 
 ## September 2021 Release - "Iguana Awareness Day"
 
