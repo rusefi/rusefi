@@ -864,7 +864,6 @@ void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// Default is to run each throttle off its respective hbridge
 	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
-	engineConfiguration->etbFunctions[1] = ETB_Throttle2;
 
 	engineConfiguration->etbFreq = DEFAULT_ETB_PWM_FREQUENCY;
 
