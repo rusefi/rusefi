@@ -597,7 +597,7 @@ enable2ndByteCanID = false
       xBins       = mapAccelTaperBins
       yBins       = mapAccelTaperMult
 
-	curve = dwellCorrection, "Dwell time RPM based"
+	curve = dwellCorrection, "Dwell time base"
       columnLabel = "RPM", "Dwell"
       xAxis       =  0, 8000, 9
       yAxis       =  0,  8, 9
@@ -606,9 +606,9 @@ enable2ndByteCanID = false
       gauge       = RPMGauge
 
 	curve = dwellVoltageCorrection, "Dwell voltage correction"
-      columnLabel = "Battery Volts", "Dwell"
-      xAxis       =  0, 8000, 9
-      yAxis       =  6, 16, 5
+      columnLabel = "Battery Volts", "Multiplier"
+      xAxis       =  6, 16, 5
+      yAxis       =  0, 3, 7
       xBins       = dwellVoltageCorrVoltBins, VBatt
       yBins       = dwellVoltageCorrValues
       gauge       = VBattGauge
