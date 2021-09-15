@@ -597,13 +597,21 @@ enable2ndByteCanID = false
       xBins       = mapAccelTaperBins
       yBins       = mapAccelTaperMult
 
-	curve = dwellCorrection, "Dwell time RPM based"
+	curve = dwellCorrection, "Dwell time base"
       columnLabel = "RPM", "Dwell"
       xAxis       =  0, 8000, 9
       yAxis       =  0,  8, 9
       xBins       = sparkDwellRpmBins, RPMValue
       yBins       = sparkDwellValues
       gauge       = RPMGauge
+
+	curve = dwellVoltageCorrection, "Dwell voltage correction"
+      columnLabel = "Battery Volts", "Multiplier"
+      xAxis       =  6, 16, 5
+      yAxis       =  0, 3, 7
+      xBins       = dwellVoltageCorrVoltBins, VBatt
+      yBins       = dwellVoltageCorrValues
+      gauge       = VBattGauge
     
    curve = map_samplingAngleCurve, "MAP Sampling Start Angle"
       columnLabel = "RPM", "Angle"
@@ -2064,7 +2072,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = multisparkDwellParams
 
 	dialog = dwellSettings, "", yAxis
-		panel = dwellCorrection,	Center
+		panel = dwellCorrection
+		panel = dwellVoltageCorrection
 		
 ;			Sensors->AUX1 Thermistor Sensor Setting
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
