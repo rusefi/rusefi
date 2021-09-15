@@ -180,6 +180,12 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->throttlePedalWOTVoltage = 4.45;
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.43;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.20;
+
+	engineConfiguration->tpsMin = 100;
+	engineConfiguration->tpsMax = 889;
+
+	engineConfiguration->tps1SecondaryMin = 891;
+	engineConfiguration->tps1SecondaryMax = 102;
 	hellenWbo();
 }
 
