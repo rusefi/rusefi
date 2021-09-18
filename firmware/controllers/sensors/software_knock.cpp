@@ -233,7 +233,8 @@ void processLastKnockEvent() {
 	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(db, lastKnockTime);
 
 	// If this was a knock, count it!
-	if (cylPeak > ENGINE(knockThreshold)) {
+	bool isKnock = db > knockThreshold;
+	if (isKnock) {
 		tsOutputChannels.knockCount++;
 	}
 }
