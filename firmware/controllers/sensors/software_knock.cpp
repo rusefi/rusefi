@@ -232,6 +232,10 @@ void processLastKnockEvent() {
 	tsOutputChannels.knockLevels[currentCylinderIndex] = roundf(cylPeak);
 	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(db, lastKnockTime);
 
+	// If this was a knock, count it!
+	if (cylPeak > ENGINE(knockThreshold)) {
+		tsOutputChannels.knockCount++;
+	}
 }
 
 void KnockThread::ThreadTask() {
