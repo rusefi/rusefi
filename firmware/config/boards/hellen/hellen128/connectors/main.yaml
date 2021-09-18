@@ -515,7 +515,7 @@ pins:
     type: ign
 
   - pin: F6
-# OUT_IGN3 Q2
+# OUT_IGN3 Q5
 # used as Coil#2 on M104
     id: GPIOE_4
     class: outputs
