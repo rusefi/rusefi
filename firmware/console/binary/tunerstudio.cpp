@@ -121,6 +121,9 @@ static void printErrorCounters(void) {
 
 void printTsStats(void) {
 #if EFI_PROD_CODE
+	efiPrintf("Primary Channel RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
+	efiPrintf("Primary Channel TX", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
+
 	if (false) {
 		// todo: is this code needed somewhere else?
 		efiPrintf("TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
@@ -156,9 +159,9 @@ static void bluetoothSPP(const char *baudRate, const char *name, const char *pin
 }
 #endif  /* EFI_BLUETOOTH_SETUP */
 
-void tunerStudioDebug(const char *msg) {
+void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
-	efiPrintf("%s", msg);
+	efiPrintf("%s: %s", tsChannel->name, msg);
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
@@ -271,7 +274,7 @@ static void handleGetStructContent(TsChannelBase* tsChannel, int structId, int s
 static bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) {
 	if (offset + count > getTunerStudioPageSize()) {
 		efiPrintf("TS: Project mismatch? Too much configuration requested %d/%d", offset, count);
-		tunerStudioError("ERROR: out of range");
+		tunerStudioError(tsChannel, "ERROR: out of range");
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return true;
 	}
@@ -332,7 +335,7 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 
 	tsState.writeValueCommandCounter++;
 
-	tunerStudioDebug("got W (Write)"); // we can get a lot of these
+	tunerStudioDebug(tsChannel, "got W (Write)"); // we can get a lot of these
 
 	if (validateOffsetCount(offset, 1, tsChannel)) {
 		return;
@@ -462,7 +465,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	uint8_t secondByte;
 	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT);
 	if (received != 1) {
-		tunerStudioError("TS: ERROR: no second byte");
+		tunerStudioError(tsChannel, "TS: ERROR: no second byte");
 		return -1;
 	}
 
@@ -470,14 +473,14 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 
 	if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
 		efiPrintf("TunerStudio: %s invalid size: %d", tsChannel->name, incomingPacketSize);
-		tunerStudioError("ERROR: CRC header size");
+		tunerStudioError(tsChannel, "ERROR: CRC header size");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 		return -1;
 	}
 
 	received = tsChannel->readTimeout((uint8_t* )tsChannel->scratchBuffer, 1, TS_COMMUNICATION_TIMEOUT);
 	if (received != 1) {
-		tunerStudioError("ERROR: did not receive command");
+		tunerStudioError(tsChannel, "ERROR: did not receive command");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 		return -1;
 	}
@@ -498,7 +501,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	if (received != expectedSize) {
 		efiPrintf("Got only %d bytes while expecting %d for command %c", received,
 				expectedSize, command);
-		tunerStudioError("ERROR: not enough bytes in stream");
+		tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 		return -1;
 	}
@@ -515,7 +518,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 
 		efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
 				actualCrc, expectedCrc);
-		tunerStudioError("ERROR: CRC issue");
+		tunerStudioError(tsChannel, "ERROR: CRC issue");
 		sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
 		return -1;
 	}
@@ -559,8 +562,8 @@ void syncTunerStudioCopy(void) {
 tunerstudio_counters_s tsState;
 TunerStudioOutputChannels tsOutputChannels;
 
-void tunerStudioError(const char *msg) {
-	tunerStudioDebug(msg);
+void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
+	tunerStudioDebug(tsChannel, msg);
 	printErrorCounters();
 	tsState.errorCounter++;
 }
@@ -589,7 +592,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	 * this is NOT a standard TunerStudio command, this is my own
 	 * extension of the protocol to simplify troubleshooting
 	 */
-	tunerStudioDebug("got T (Test)");
+	tunerStudioDebug(tsChannel, "got T (Test)");
 	tsChannel->write((const uint8_t*)VCS_VERSION, sizeof(VCS_VERSION));
 
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
@@ -671,7 +674,7 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
 		 * Currently on some firmware versions the F command is not used and is just ignored by the firmware as a unknown command."
 		 */
 
-		tunerStudioDebug("not ignoring F");
+		tunerStudioDebug(tsChannel, "not ignoring F");
 		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
 		return true;
 	} else {
@@ -699,7 +702,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 		cmdOutputChannels(tsChannel, offset, count);
 		break;
 	case TS_HELLO_COMMAND:
-		tunerStudioDebug("got Query command");
+		tunerStudioDebug(tsChannel, "got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
 		break;
 	case TS_GET_FIRMWARE_VERSION:
@@ -841,7 +844,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 	}
 	default:
 		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
-		tunerStudioError("ERROR: ignoring unexpected command");
+		tunerStudioError(tsChannel, "ERROR: ignoring unexpected command");
 		return false;
 	}
 
