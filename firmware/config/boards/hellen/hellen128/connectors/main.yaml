@@ -594,7 +594,7 @@ pins:
     type: ign
     
   - pin: F20
-# OUT_IGN4 Q1
+# OUT_IGN1 Q1
 # CLK230
 # Used as coil#3 on M104
     id: GPIOI_8
