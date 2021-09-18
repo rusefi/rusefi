@@ -858,7 +858,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
-	case HELLEN_128_MERCEDES:
+	case HELLEN_128_MERCEDES_4_CYL:
+	case HELLEN_128_MERCEDES_6_CYL:
+	case HELLEN_128_MERCEDES_8_CYL:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
