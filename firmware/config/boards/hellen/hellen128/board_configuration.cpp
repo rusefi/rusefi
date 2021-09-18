@@ -114,6 +114,7 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
+	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
 }
 
@@ -178,6 +179,8 @@ void setBoardDefaultConfiguration(void) {
 	/**
 	 * Jimmy best tune
 	 * https://rusefi.com/online/view.php?msq=626
+	 * md_sanci latest tune
+	 * https://rusefi.com/online/view.php?msq=630
 	 */
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
