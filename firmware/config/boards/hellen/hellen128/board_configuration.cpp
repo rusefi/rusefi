@@ -146,10 +146,10 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
+	engineConfiguration->fuelPumpPin = GPIOD_15;
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
