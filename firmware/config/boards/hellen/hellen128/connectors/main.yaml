@@ -515,6 +515,8 @@ pins:
     type: ign
 
   - pin: F6
+# OUT_IGN3 Q2
+# used as Coil#2 on M104
     id: GPIOE_4
     class: outputs
     ts_name: F6 - IGN 3
@@ -554,6 +556,7 @@ pins:
   - pin: F13
 # OUT_IGN4 Q3
 # CLK230
+# used as Coil#1 on M104 https://github.com/rusefi/rusefi/wiki/1997-e320
     id: GPIOE_3
     class: outputs
     ts_name: F13 - IGN 4
@@ -593,6 +596,7 @@ pins:
   - pin: F20
 # OUT_IGN4 Q1
 # CLK230
+# Used as coil#3 on M104
     id: GPIOI_8
     class: outputs
     ts_name: F20 - IGN 1
