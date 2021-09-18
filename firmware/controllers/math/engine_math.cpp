@@ -130,6 +130,8 @@ static const int order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[] = { 1, 2, 3, 4, 5,
 static const int order_1_6_3_2_5_4[] = {1, 6, 3, 2, 5, 4};
 static const int order_1_4_3_6_2_5[] = {1, 4, 3, 6, 2, 5};
 static const int order_1_6_2_4_3_5[] = {1, 6, 2, 4, 3, 5};
+static const int order_1_6_5_4_3_2[] = {1, 6, 5, 4, 3, 2};
+static const int order_1_4_5_2_3_6[] = {1, 4, 5, 2, 3, 6};
 
 // 8 cylinder
 static const int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
@@ -185,6 +187,8 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_6_3_2_5_4:
 	case FO_1_4_3_6_2_5:
 	case FO_1_6_2_4_3_5:
+	case FO_1_6_5_4_3_2:
+	case FO_1_4_5_2_3_6:
 		return 6;
 
 // 8 cylinder
@@ -261,6 +265,10 @@ static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		return order_1_4_3_6_2_5;
 	case FO_1_6_2_4_3_5:
 		return order_1_6_2_4_3_5;
+	case FO_1_6_5_4_3_2:
+		return order_1_6_5_4_3_2;
+	case FO_1_4_5_2_3_6:
+		return order_1_4_5_2_3_6;
 
 // 8 cylinder
 	case FO_1_8_4_3_6_5_7_2:
