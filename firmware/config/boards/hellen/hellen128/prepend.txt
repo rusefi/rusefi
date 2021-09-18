@@ -24,3 +24,4 @@
 #define show_Frankenso_presets false
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
+#define show_Hellen128merc_presets false
