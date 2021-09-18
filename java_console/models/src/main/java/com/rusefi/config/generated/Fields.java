@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Sep 15 12:20:08 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Sep 18 02:17:23 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -429,6 +429,9 @@ public class Fields {
 	public static final int ET_HELLEN_121_VAG_V6_CYL = 78;
 	public static final int ET_HELLEN_121_VAG_VR6_CYL = 79;
 	public static final int ET_HELLEN_128_MERCEDES = 36;
+	public static final int ET_HELLEN_128_MERCEDES_4_CYL = 36;
+	public static final int ET_HELLEN_128_MERCEDES_6_CYL = 88;
+	public static final int ET_HELLEN_128_MERCEDES_8_CYL = 89;
 	public static final int ET_HELLEN_134_BMW = 75;
 	public static final int ET_HELLEN_154_HYUNDAI = 82;
 	public static final int ET_HELLEN_154_VAG = 76;
@@ -1224,7 +1227,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1782843515;
+	public static final int SIGNATURE_HASH = 1529213781;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1531,7 +1534,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.09.15.all.1782843515";
+	public static final String TS_SIGNATURE = "rusEFI 2021.09.18.all.1529213781";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
