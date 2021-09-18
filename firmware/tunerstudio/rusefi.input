@@ -1514,7 +1514,7 @@ menuDialog = main
         subMenu = vvtTable2Tbl,             "VVT exhaust target"
 
 		subMenu = std_separator
-		subMenu = fsioInputsDialog,        	"FSIO inputs"
+		subMenu = auxInputsDialog,        	"Aux inputs"
 		subMenu = fsioOutputsDialog,        "FSIO outputs"
 		subMenu = fsioFormulas,				"FSIO Formulas"
 
@@ -3246,7 +3246,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		field = "#6",									fsioFormulas6
 
-	dialog = fsioInputsDialog, "FSIO inputs"
+	dialog = auxInputsDialog, "Aux inputs"
 		field = "ADC #1",								fsioAdc1
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
