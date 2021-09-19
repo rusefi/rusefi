@@ -199,6 +199,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_LAMBDA_CFG 147
 #define PACK_MULT_FUEL_MASS 100
+#define PACK_PERCENT_BYTE_MULT 100.0
 #define PACK_MULT_FUEL_FLOW 200
 #define FSIO_TABLE_8 8
 
@@ -1101,7 +1102,7 @@ struct vr_threshold_s
 	brain_pin_e pin;
 	uint8_t[3] pad;;"",1,0,0,0,0
 	uint8_t[6] rpmBins;;"rpm", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 0
-	uint8_t[6] values;;"volts", 0.01, 0, 0, 2.5, 2
+	uint8_t[6] values;;"volts", {1/@@PACK_PERCENT_BYTE_MULT@@}, 0, 0, 2.5, 2
 end_struct
 
 ! todo: should be '3' since we are dreaming of Honda triple-channel distributor
