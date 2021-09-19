@@ -112,7 +112,7 @@ typedef enum {
 
 	CAMARO_4 = ET_CAMARO,
 
-	HELLEN_128_MERCEDES = ET_HELLEN_128_MERCEDES,
+	HELLEN_128_MERCEDES_4_CYL = ET_HELLEN_128_MERCEDES_4_CYL,
 
 	MRE_SUBARU_EJ18 = ET_MRE_SUBARU_EJ18,
 
@@ -211,6 +211,11 @@ typedef enum {
 	HELLEN_121_NISSAN_4_CYL = ET_HELLEN_121_NISSAN_4_CYL,
 
 	HELLEN_NB2_36 = ET_HELLEN_NB2_36,
+
+	HELLEN_128_MERCEDES_6_CYL = ET_HELLEN_128_MERCEDES_6_CYL,
+
+	HELLEN_128_MERCEDES_8_CYL = ET_HELLEN_128_MERCEDES_8_CYL,
+
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -412,6 +417,11 @@ typedef enum {
 
 	TT_TEMP_62 = TT_TT_TEMP_62,
 
+	TT_SUBARU_SVX_CRANK_1 = TT_TT_SUBARU_SVX_CRANK_1,
+
+	TT_SUBARU_SVX_CAM_VVT = TT_TT_SUBARU_SVX_CAM_VVT,
+
+	TT_FORD_TFI_PIP = TT_TT_FORD_TFI_PIP,
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
@@ -419,7 +429,7 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 63, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 66, // this is used if we want to iterate over all trigger types
 
 	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,

@@ -2,8 +2,8 @@
 
 #include "vr_pwm.h"
 
-static OutputPin pins[2];
-static SimplePwm pwms[2];
+static OutputPin pins[VR_THRESHOLD_COUNT];
+static SimplePwm pwms[VR_THRESHOLD_COUNT];
 
 static void updateVrPwm(int rpm, size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	auto& cfg = CONFIG(vrThreshold)[index];
@@ -12,7 +12,7 @@ static void updateVrPwm(int rpm, size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return;
 	}
 
-	float thresholdVoltage = interpolate2d(rpm / RPM_1_BYTE_PACKING_MULT, cfg.rpmBins, cfg.values) / 100.0f;
+	float thresholdVoltage = interpolate2d(rpm / RPM_1_BYTE_PACKING_MULT, cfg.rpmBins, cfg.values) / PACK_PERCENT_BYTE_MULT;
 
 	// 0v   threshold voltage = 3.3v output from mcu = 100% duty
 	// 2.5v threshold voltage = 0v   output from mcu = 0% duty

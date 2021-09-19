@@ -760,6 +760,11 @@ void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(etbIo[0].directionPin1) = GPIOC_6;
 	CONFIG(etbIo[0].directionPin2) = GPIOC_7;
 	engineConfiguration->etb_use_two_wires = true;
-
 }
 
+void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
+		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600 / RPM_1_BYTE_PACKING_MULT, 7000 / RPM_1_BYTE_PACKING_MULT, 100 / RPM_1_BYTE_PACKING_MULT);
+		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
+	}
+}

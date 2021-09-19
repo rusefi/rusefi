@@ -533,6 +533,15 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 			IgnitionEvent *event = &ENGINE(ignitionEvents.elements[i]);
 			if (event->dwellPosition.triggerEventIndex != trgEventIndex)
 				continue;
+
+			if (i == 0 && CONFIG(artificialTestMisfire) && (getRevolutionCounter() % ((int)engineConfiguration->fsio_setting[5]) == 0)) {
+				// artificial misfire on cylinder #1 for testing purposes
+				// enable artificialMisfire
+				// set_fsio_setting 6 20
+				warning(CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->globalSparkIdCounter);
+				continue;
+			}
+
 			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}

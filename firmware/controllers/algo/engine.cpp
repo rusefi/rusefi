@@ -637,6 +637,7 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 			&& type != TT_ONE
 			&& type != TT_ONE_PLUS_ONE
 			&& type != TT_3_1_CAM
+			&& type != TT_36_2_2_2
 			&& type != TT_TOOTHED_WHEEL_60_2
 			&& type != TT_TOOTHED_WHEEL_36_1;
 }

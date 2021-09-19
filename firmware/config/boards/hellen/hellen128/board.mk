@@ -6,7 +6,7 @@ BOARDINC = $(BOARDS_DIR)/hellen/hellen128
 
 # Set this if you want a default engine type other than normal hellen128
 ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_128_MERCEDES
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_128_MERCEDES_4_CYL
 endif
 
 ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)

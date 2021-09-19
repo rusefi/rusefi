@@ -323,7 +323,7 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("AuxT1", engineConfiguration->auxTempSensor1.adcChannel);
 	printAnalogChannelInfo("AuxT2", engineConfiguration->auxTempSensor2.adcChannel);
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
-	for (int i = 0; i < FSIO_ANALOG_INPUT_COUNT ; i++) {
+	for (int i = 0; i < AUX_ANALOG_INPUT_COUNT ; i++) {
 		adc_channel_e ch = engineConfiguration->fsioAdc[i];
 		printAnalogChannelInfo("FSIO analog", ch);
 	}
@@ -678,6 +678,15 @@ bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
 	}
 
+	for (size_t index = 0; index < efi::size(CONFIG(vrThreshold)); index++) {
+		auto& cfg = CONFIG(vrThreshold)[index];
+
+		if (cfg.pin == GPIO_UNASSIGNED) {
+			continue;
+		}
+		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
+		ensureArrayIsAscending("VR values", cfg.values);
+	}
 
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
@@ -688,10 +697,17 @@ bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
 
 	// VVT
-	ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
-	ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
-	ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
-	ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+	if (CONFIG(camInputs[0]) != GPIO_UNASSIGNED) {
+		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
+		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
+	}
+
+#if CAM_INPUTS_COUNT != 1
+	if (CONFIG(camInputs[1]) != GPIO_UNASSIGNED) {
+		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
+		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+	}
+#endif
 
 	return true;
 }
@@ -769,7 +785,7 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 10000
+#define RAM_UNUSED_SIZE 8000
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 600

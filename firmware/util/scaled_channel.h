@@ -34,6 +34,11 @@ public:
 		return m_value / (float)mult;
 	}
 
+    // Postfix increment operator
+	T operator ++(int) {
+		return (m_value / (float)mult) + 1;
+	}
+
 	constexpr const char* getFirstByteAddr() const {
 		return &m_firstByte;
 	}

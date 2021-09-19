@@ -198,27 +198,27 @@ struct TunerStudioOutputChannels {
 	scaled_channel<uint16_t, 100> ignitionLoad; // 136
 
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	int16_t engineMakeCodeNameCrc16; // 138
+	scaled_channel<uint16_t> engineMakeCodeNameCrc16; // 138
 	// Errors
 	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
-	int16_t warningCounter; // 148
-	int16_t lastErrorCode; // 150
+	scaled_channel<uint16_t> warningCounter; // 148
+	scaled_channel<uint16_t> lastErrorCode; // 150
 	int16_t recentErrorCodes[8]; // 152-166
 
 	// Debug
-	float debugFloatField1; // 168
-	float debugFloatField2;
-	float debugFloatField3;
-	float debugFloatField4;
-	float debugFloatField5;
-	float debugFloatField6;
-	float debugFloatField7;
-	int debugIntField1;
-	int debugIntField2;
-	int debugIntField3;
-	int16_t debugIntField4;
-	int16_t debugIntField5; // 210
+	scaled_channel<float> debugFloatField1; // 168
+	scaled_channel<float> debugFloatField2;
+	scaled_channel<float> debugFloatField3;
+	scaled_channel<float> debugFloatField4;
+	scaled_channel<float> debugFloatField5;
+	scaled_channel<float> debugFloatField6;
+	scaled_channel<float> debugFloatField7;
+	scaled_channel<uint32_t> debugIntField1;
+	scaled_channel<uint32_t> debugIntField2;
+	scaled_channel<uint32_t> debugIntField3;
+	scaled_channel<uint16_t> debugIntField4;
+	scaled_channel<uint16_t> debugIntField5; // 210
 
 	// accelerometer
 	int16_t accelerationX; // 212
@@ -235,7 +235,7 @@ struct TunerStudioOutputChannels {
 	scaled_voltage rawIat;				// 240
 	scaled_voltage rawOilPressure;		// 242
 
-	int16_t tuneCrc16; // 244
+	scaled_channel<uint16_t> tuneCrc16; // 244
 
 	// Offset 246: bits
 	uint8_t sd_logging_internal : 1;	// bit 0
@@ -246,7 +246,7 @@ struct TunerStudioOutputChannels {
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	int8_t knockLevels[12];		// 250
+	scaled_channel<int8_t> knockLevels[12];		// 250
 
 	int8_t tcuDesiredGear; // 262
 	scaled_channel<uint8_t, 2> flexPercent;		// 263

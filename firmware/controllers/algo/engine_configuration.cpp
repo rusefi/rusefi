@@ -57,6 +57,7 @@
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
 #include "m111.h"
+#include "mercedes.h"
 
 #include "citroenBerlingoTU3JP.h"
 #include "mitsubishi.h"
@@ -858,7 +859,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
-	case HELLEN_128_MERCEDES:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -937,6 +937,15 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif // HARDWARE_CI
 #endif // HW_PROTEUS
 #if HW_HELLEN
+	case HELLEN_128_MERCEDES_4_CYL:
+		setHellenMercedes128_4_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_128_MERCEDES_6_CYL:
+		setHellenMercedes128_6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_128_MERCEDES_8_CYL:
+		setHellenMercedes128_8_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case HELLEN_NB2:
 		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;

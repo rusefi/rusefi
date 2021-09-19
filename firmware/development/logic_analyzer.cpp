@@ -239,7 +239,7 @@ void stopLogicAnalyzerPins() {
 	}
 }
 
-void getChannelFreqAndDuty(int index, float *duty, int *freq) {
+static void getChannelFreqAndDuty(int index, scaled_channel<float> *duty, scaled_channel<uint32_t> *freq) {
 
 	float high,period;
 
@@ -268,12 +268,12 @@ void getChannelFreqAndDuty(int index, float *duty, int *freq) {
 
 void reportLogicAnalyzerToTS() {
 #if EFI_TUNER_STUDIO	
-	int tmp;
+	scaled_channel<uint32_t> tmp;
 	getChannelFreqAndDuty(0,&tsOutputChannels.debugFloatField1, &tsOutputChannels.debugIntField1);
 	getChannelFreqAndDuty(1,&tsOutputChannels.debugFloatField2, &tsOutputChannels.debugIntField2);
 	getChannelFreqAndDuty(2,&tsOutputChannels.debugFloatField3, &tsOutputChannels.debugIntField3);
 	getChannelFreqAndDuty(3,&tsOutputChannels.debugFloatField4, &tmp);
-	tsOutputChannels.debugIntField4 = (int16_t)tmp;
+	tsOutputChannels.debugIntField4 = (uint16_t)tmp;
 #endif	
 }
 
