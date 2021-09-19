@@ -88,6 +88,18 @@ static constexpr LogField fields[] = {
 	{tsOutputChannels.fuelFlowRate, GAUGE_NAME_FUEL_FLOW, "g/s", 3},
 	{tsOutputChannels.totalFuelConsumption, GAUGE_NAME_FUEL_CONSUMPTION, "g", 1},
 	{tsOutputChannels.knockLevel, GAUGE_NAME_KNOCK_LEVEL, "dBv", 0},
+	{tsOutputChannels.knockLevels[0],  "Knock 1",  "dBv", 0},
+	{tsOutputChannels.knockLevels[1],  "Knock 2",  "dBv", 0},
+	{tsOutputChannels.knockLevels[2],  "Knock 3",  "dBv", 0},
+	{tsOutputChannels.knockLevels[3],  "Knock 4",  "dBv", 0},
+	{tsOutputChannels.knockLevels[4],  "Knock 5",  "dBv", 0},
+	{tsOutputChannels.knockLevels[5],  "Knock 6",  "dBv", 0},
+	{tsOutputChannels.knockLevels[6],  "Knock 7",  "dBv", 0},
+	{tsOutputChannels.knockLevels[7],  "Knock 8",  "dBv", 0},
+	{tsOutputChannels.knockLevels[8],  "Knock 9",  "dBv", 0},
+	{tsOutputChannels.knockLevels[9],  "Knock 10", "dBv", 0},
+	{tsOutputChannels.knockLevels[10], "Knock 11", "dBv", 0},
+	{tsOutputChannels.knockLevels[11], "Knock 12", "dBv", 0},
 };
 
 static constexpr uint16_t computeFieldsRecordLength() {

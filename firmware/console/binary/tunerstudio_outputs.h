@@ -246,7 +246,7 @@ struct TunerStudioOutputChannels {
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	int8_t knockLevels[12];		// 250
+	scaled_channel<int8_t> knockLevels[12];		// 250
 
 	int8_t tcuDesiredGear; // 262
 	scaled_channel<uint8_t, 2> flexPercent;		// 263
