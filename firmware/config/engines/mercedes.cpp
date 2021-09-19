@@ -10,6 +10,7 @@
 
 static void common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
 }
 
 void setHellenMercedes128_4_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

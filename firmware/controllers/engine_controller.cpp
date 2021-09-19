@@ -678,6 +678,15 @@ bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
 	}
 
+	for (size_t index = 0; index < efi::size(CONFIG(vrThreshold)); index++) {
+		auto& cfg = CONFIG(vrThreshold)[index];
+
+		if (cfg.pin == GPIO_UNASSIGNED) {
+			continue;
+		}
+		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
+		ensureArrayIsAscending("VR values", cfg.values);
+	}
 
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
