@@ -764,7 +764,7 @@ void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
-		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600, 7000, 100);
+		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600 / RPM_1_BYTE_PACKING_MULT, 7000 / RPM_1_BYTE_PACKING_MULT, 100 / RPM_1_BYTE_PACKING_MULT);
 		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
 	}
 }
