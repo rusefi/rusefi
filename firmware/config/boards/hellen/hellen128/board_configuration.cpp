@@ -115,7 +115,6 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
-	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
 }
 
