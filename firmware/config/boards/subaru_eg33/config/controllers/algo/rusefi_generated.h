@@ -1202,6 +1202,7 @@
 #define PACK_MULT_PRESSURE 30
 #define PACK_MULT_TEMPERATURE 100
 #define PACK_MULT_VOLTAGE 1000
+#define PACK_PERCENT_BYTE_MULT 100.0
 #define pauseEtbControl_offset 744
 #define PEDAL_TO_TPS_SIZE 8
 #define pedalToTpsPedalBins_offset 6464
@@ -1274,8 +1275,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.09.18
-#define SIGNATURE_HASH 2400978213
+#define SIGNATURE_DATE 2021.09.19
+#define SIGNATURE_HASH 235397357
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1631,7 +1632,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.09.18.subaru_eg33_f7.2400978213"
+#define TS_SIGNATURE "rusEFI 2021.09.19.subaru_eg33_f7.235397357"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
