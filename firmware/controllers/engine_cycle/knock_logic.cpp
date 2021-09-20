@@ -56,9 +56,13 @@ void onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnock
 
 	// Pass through all-cylinders peak detector
 	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
-#endif // EFI_TUNER_STUDIO
 
-	// TODO: detect whether this event was knock or not
+	// If this was a knock, count it!
+	bool isKnock = dbv > ENGINE(engineState).knockThreshold;
+	if (isKnock) {
+		tsOutputChannels.knockCount++;
+	}
+#endif // EFI_TUNER_STUDIO
 
 	// TODO: retard timing, then put it back!
 }
