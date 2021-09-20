@@ -294,6 +294,7 @@ enable2ndByteCanID = false
 
 ; Knock
       knockLevel      = scalar,  F32,    108,  "Volts",      1,         0
+	  knockCount      = scalar,  U16,    306,  "count",      1,         0
 
 ; Mode, firmware, protocol, run time
 ; TS requires 'seconds' name since it has special internal meaning
@@ -979,6 +980,7 @@ gaugeCategory = Sensors - Extra 2
    egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
    rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "RPM/s",        -2000,      2000,       -2000,      2000,       -2000,     2000,   0,   0
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
+   knockCountGauge   = knockCount, "Knock count",          "count",        0, 10000, 0, 0, 10000, 10000, 0, 0
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
