@@ -7,7 +7,6 @@
 static FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
 static VehicleSpeedConverter vehicleSpeedConverter;
 
-
 void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&vehicleSpeedConverter);
 
@@ -19,7 +18,7 @@ void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	vehicleSpeedSensor.setFunction(vehicleSpeedConverter);
-	vehicleSpeedSensor.init(pin, "vss");
+	vehicleSpeedSensor.init(pin);
 	vehicleSpeedSensor.Register();
 }
 

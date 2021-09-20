@@ -22,7 +22,7 @@ public:
 	}
 
 	float GetFrequencyBySpeedAndCoef(float speed, float coef) {
-		return (speed / coef);
+		return (speed / coef) / 60;
 	}
 
 	void TestForSpeedWithCoef(float expectedSpeed, float coef)
