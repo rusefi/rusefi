@@ -299,6 +299,10 @@ typedef enum {
 
 	TT_DODGE_STRATUS = 22,
 
+    /**
+     * Subaru but also Mazda RX-8
+     * We suspect that it's VR
+     */
 	TT_36_2_2_2 = TT_TT_36_2_2_2,
 
 	/**
