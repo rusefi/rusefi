@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 19 02:15:04 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Sep 20 03:05:53 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1048,7 +1048,7 @@ public class Fields {
 	public static final int mafDecoding_offset = 10784;
 	public static final int mafDecodingBins_offset = 11808;
 	public static final int mafSensorType_offset = 948;
-	public static final String MAIN_HELP_URL = "https://rusefi.com/s/hellen128merc";
+	public static final String MAIN_HELP_URL = "https://rusefi.com/s/hellen121nissan";
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
 	public static final int mainUnusedEnd_offset = 4612;
@@ -1226,6 +1226,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 319760614;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1532,7 +1533,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.09.19.hellen128.4083304921";
+	public static final String TS_SIGNATURE = "rusEFI 2021.09.20.hellen154hyundai.319760614";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1810,7 +1811,7 @@ public class Fields {
 	public static final Field MAP_SENSOR_LOWVALUE = Field.create("MAP_SENSOR_LOWVALUE", 236, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_HIGHVALUE = Field.create("MAP_SENSOR_HIGHVALUE", 240, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_TYPE = Field.create("MAP_SENSOR_TYPE", 244, FieldType.INT);
-	public static final String[] adc_channel_e = {"NONE","C31 - O2S","P31_IN_O2S2","INVALID","C24 - PPS1","E31 - TPS1","Battery Sense","E40 - IN_CAM","P30_IN_AUX4","E34 - TPS2","E37 - Crank Input","E47 - MAF","E23 - MAP","E29 - Coolant Temp","E45 - IAT","C25 - PPS2"};
+	public static final String[] adc_channel_e = {"Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"};
 	public static final Field MAP_SENSOR_HWCHANNEL = Field.create("MAP_SENSOR_HWCHANNEL", 248, FieldType.INT8, adc_channel_e);
 	public static final Field CLT_TEMPC_1 = Field.create("CLT_TEMPC_1", 252, FieldType.FLOAT);
 	public static final Field CLT_TEMPC_2 = Field.create("CLT_TEMPC_2", 256, FieldType.FLOAT);
@@ -1913,7 +1914,7 @@ public class Fields {
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 544, FieldType.FLOAT);
 	public static final Field ADCVCC = Field.create("ADCVCC", 548, FieldType.FLOAT);
 	public static final Field MAXKNOCKSUBDEG = Field.create("MAXKNOCKSUBDEG", 552, FieldType.FLOAT);
-	public static final String[] brain_input_pin_e = {"NONE","INVALID","INVALID","INVALID","INVALID","C24 - PPS1","E31 - TPS1","INVALID","E40 - IN_CAM","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","E34 - TPS2","E37 - Crank Input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","E47 - MAF","E23 - MAP","E29 - Coolant Temp","E45 - IAT","C25 - PPS2"};
+	public static final String[] brain_input_pin_e = {"NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Crank - k17"};
 	public static final Field CAMINPUTS1 = Field.create("CAMINPUTS1", 556, FieldType.INT8, brain_input_pin_e);
 	public static final Field CAMINPUTS2 = Field.create("CAMINPUTS2", 557, FieldType.INT8, brain_input_pin_e);
 	public static final Field CAMINPUTS3 = Field.create("CAMINPUTS3", 558, FieldType.INT8, brain_input_pin_e);
@@ -1935,7 +1936,7 @@ public class Fields {
 	public static final Field BAROSENSOR_TYPE = Field.create("BAROSENSOR_TYPE", 592, FieldType.INT);
 	public static final Field BAROSENSOR_HWCHANNEL = Field.create("BAROSENSOR_HWCHANNEL", 596, FieldType.INT8, adc_channel_e);
 	public static final Field IDLE_SOLENOIDFREQUENCY = Field.create("IDLE_SOLENOIDFREQUENCY", 600, FieldType.INT);
-	public static final String[] output_pin_e = {"NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","E13 - INJ 5","E4 - INJ_4/VVT","E3 - INJ 3","A6 - Fan Control","INVALID","INVALID","C29 - Fuel Pump","INVALID","INVALID","F4 - IGN 5","F13 - IGN 4","F6 - IGN 3","F16 - IGN 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","E14 - INJ 6","E25 - INJ 7","E26 - INJ 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","E1 - INJ 1","E2- INJ 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C21 - Evap Purge Control","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","F17 - IGN 6","F9 - IGN 7","F11 - IGN 8","F20 - IGN 1"};
+	public static final String[] output_pin_e = {"NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INJ_4 k28","INJ_3 k27","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INJ_1 k25","INJ_2 k26"};
 	public static final Field IDLE_SOLENOIDPIN = Field.create("IDLE_SOLENOIDPIN", 604, FieldType.INT8, output_pin_e);
 	public static final Field IDLE_STEPPERDIRECTIONPIN = Field.create("IDLE_STEPPERDIRECTIONPIN", 605, FieldType.INT8, output_pin_e);
 	public static final Field IDLE_STEPPERSTEPPIN = Field.create("IDLE_STEPPERSTEPPIN", 606, FieldType.INT8, output_pin_e);
