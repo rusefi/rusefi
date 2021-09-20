@@ -619,6 +619,7 @@ pins:
     ts_name: P31_IN_O2S2
 
 info:
+  title: Hellen 128 Mercedes
   image:
     file: main.jpg
   pins:
