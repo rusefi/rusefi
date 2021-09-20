@@ -10,8 +10,10 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	SensorResult convert(float frequency) const override {
-		auto speed = frequency * engineConfiguration->turboSpeedSensorMultiplier;
-		return speed;
+		auto hz = frequency * engineConfiguration->turboSpeedSensorMultiplier;
+
+		auto rpm = hz * 60;
+
+		return rpm;
 	}
 };
-
