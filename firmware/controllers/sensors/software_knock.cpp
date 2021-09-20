@@ -4,7 +4,6 @@
 #include "thread_controller.h"
 #include "knock_logic.h"
 #include "software_knock.h"
-#include "peak_detect.h"
 
 #if EFI_SOFTWARE_KNOCK
 
@@ -142,7 +141,7 @@ static void startKnockSampling(uint8_t cylinderIndex) {
 	lastKnockSampleTime = getTimeNowNt();
 }
 
-static void startKnockSamplingNoParam(void *arg) {
+static void startKnockSamplingNoParam(void*) {
 	// ugly as hell but that's error: cast between incompatible function types from 'void (*)(uint8_t)' {aka 'void (*)(unsigned char)'} to 'schfunc_t' {aka 'void (*)(void*)'} [-Werror=cast-function-type]
 	startKnockSampling(cylinderIndexCopy);
 }
@@ -176,10 +175,6 @@ void initSoftwareKnock() {
 		kt.Start();
 	}
 }
-
-using PD = PeakDetect<float, MS2NT(100)>;
-static PD peakDetectors[12];
-static PD allCylinderPeakDetector;
 
 void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
@@ -226,12 +221,7 @@ void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	// Pass through peak detector
-	float cylPeak = peakDetectors[currentCylinderIndex].detect(db, lastKnockTime);
-
-	tsOutputChannels.knockLevels[currentCylinderIndex] = roundf(cylPeak);
-	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(db, lastKnockTime);
-
+	onKnockSenseCompleted(currentCylinderIndex, db, lastKnockTime);
 }
 
 void KnockThread::ThreadTask() {

@@ -8,6 +8,7 @@
 #include "pch.h"
 #include "knock_logic.h"
 #include "os_access.h"
+#include "peak_detect.h"
 
 int getCylinderKnockBank(uint8_t cylinderIndex) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
@@ -41,4 +42,21 @@ int getCylinderKnockBank(uint8_t cylinderIndex) {
 		default:
 			return 0;
 	}
+}
+
+using PD = PeakDetect<float, MS2NT(100)>;
+static PD peakDetectors[12];
+static PD allCylinderPeakDetector;
+
+void onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
+	// Pass through per-cylinder peak detector
+	float cylPeak = peakDetectors[cylinderIndex].detect(dbv, lastKnockTime);
+	tsOutputChannels.knockLevels[cylinderIndex] = roundf(cylPeak);
+
+	// Pass through all-cylinders peak detector
+	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
+
+	// TODO: detect whether this event was knock or not
+
+	// TODO: retard timing, then put it back!
 }

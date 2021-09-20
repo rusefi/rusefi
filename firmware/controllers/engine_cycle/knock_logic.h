@@ -8,3 +8,5 @@
 #pragma once
 
 int getCylinderKnockBank(uint8_t cylinderIndex);
+
+void onKnockSenseCompleted(uint8_t cylinderIndex, float levelDbv, efitick_t lastKnockTime);
