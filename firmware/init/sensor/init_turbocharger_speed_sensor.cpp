@@ -4,7 +4,7 @@
 #include "frequency_sensor.h"
 #include "turbocharger_speed_converter.h"
 
-static FrequencySensor turbochargerSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
+static FrequencySensor turbochargerSpeedSensor(SensorType::TurbochargerSpeed, MS2NT(500));
 static TurbochargerSpeedConverter turbochargerSpeedConverter;
 
 
@@ -19,7 +19,7 @@ void initTurbochargerSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	turbochargerSpeedSensor.setFunction(turbochargerSpeedConverter);
-	turbochargerSpeedSensor.init(pin, "tcss");
+	turbochargerSpeedSensor.init(pin);
 	turbochargerSpeedSensor.Register();
 }
 
