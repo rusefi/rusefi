@@ -38,6 +38,7 @@
 #include "trigger_central.h"
 #include "hip9011_logic.h"
 #include "hip9011.h"
+#include "knock_logic.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -242,6 +243,9 @@ static void endIntegration(HIP9011 *hip) {
 	 */
 	if (hip->state == IS_INTEGRATING) {
 		intHold.setLow();
+
+		hip->knockSampleTimestamp = getTimeNowNt();
+
 		if (instance.adv_mode) {
 			/* read value over SPI in thread mode */
 			hip->state = NOT_READY;
@@ -486,9 +490,8 @@ static msg_t hipThread(void *arg) {
 				/* report */
 				engine->knockLogic(knockVolts);
 
-				/* TunerStudio */
-				tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
-				tsOutputChannels.knockLevel = knockVolts;
+				// TODO: convert knock level to dBv
+				onKnockSenseCompleted(instance.cylinderNumber, knockVolts, instance.knockSampleTimestamp);
 
 				#if EFI_HIP_9011_DEBUG
 					/* debug */
