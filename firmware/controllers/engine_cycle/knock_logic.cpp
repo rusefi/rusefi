@@ -85,7 +85,7 @@ static void startKnockSampling(void*) {
 	// Look up which channel this cylinder uses
 	auto channel = getCylinderKnockBank(cylinderIndexCopy);
 
-	// ugly as hell but that's error: cast between incompatible function types from 'void (*)(uint8_t)' {aka 'void (*)(unsigned char)'} to 'schfunc_t' {aka 'void (*)(void*)'} [-Werror=cast-function-type]
+	// Call the driver to begin sampling
 	onStartKnockSampling(cylinderIndexCopy, samplingSeconds, channel);
 }
 
