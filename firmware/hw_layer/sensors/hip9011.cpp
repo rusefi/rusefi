@@ -257,6 +257,19 @@ static void endIntegration(HIP9011 *hip) {
 	}
 }
 
+void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds) {
+	/* TODO: @dron0gus: not sure if we need the expectedCylinderNumber logic at all
+
+	Something like this might be right:
+
+	startIntegration(&instance);
+
+	efitick_t windowLength = USF2NT(1e6 * samplingTimeSeconds);
+
+	engine->executor.scheduleByTimestampNt("knock", &hardware.endTimer, getTimeNowNt() + windowLength, { endIntegration, &instance });
+	*/
+}
+
 /**
  * Ignition callback used to start HIP integration and schedule finish
  */
