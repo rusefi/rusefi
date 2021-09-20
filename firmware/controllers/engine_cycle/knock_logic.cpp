@@ -49,12 +49,14 @@ static PD peakDetectors[12];
 static PD allCylinderPeakDetector;
 
 void onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
+#if EFI_TUNER_STUDIO
 	// Pass through per-cylinder peak detector
 	float cylPeak = peakDetectors[cylinderIndex].detect(dbv, lastKnockTime);
 	tsOutputChannels.knockLevels[cylinderIndex] = roundf(cylPeak);
 
 	// Pass through all-cylinders peak detector
 	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
+#endif // EFI_TUNER_STUDIO
 
 	// TODO: detect whether this event was knock or not
 
