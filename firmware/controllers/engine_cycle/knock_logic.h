@@ -9,4 +9,5 @@
 
 int getCylinderKnockBank(uint8_t cylinderIndex);
 
+void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
 void onKnockSenseCompleted(uint8_t cylinderIndex, float levelDbv, efitick_t lastKnockTime);

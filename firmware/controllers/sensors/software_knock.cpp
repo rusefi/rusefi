@@ -18,7 +18,6 @@ static Biquad knockFilter;
 static volatile bool knockIsSampling = false;
 static volatile bool knockNeedsProcess = false;
 static volatile size_t sampleCount = 0;
-static int cylinderIndexCopy;
 
 chibios_rt::BinarySemaphore knockSem(/* taken =*/ true);
 
@@ -93,9 +92,9 @@ static const ADCConversionGroup adcConvGroupCh2 = { FALSE, 1, &completionCallbac
 };
 #endif // KNOCK_HAS_CH2
 
-const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
+const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
 #if KNOCK_HAS_CH2
-	if (getCylinderKnockBank(cylinderIndex)) {
+	if (channelIdx == 1) {
 		return &adcConvGroupCh2;
 	}
 #else
@@ -105,12 +104,8 @@ const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
 	return &adcConvGroupCh1;
 }
 
-static void startKnockSampling(uint8_t cylinderIndex) {
+void onStartKnockSampling(uint8_t cylinderIndex, float samplingSeconds, uint8_t channelIdx) {
 	if (!CONFIG(enableSoftwareKnock)) {
-		return;
-	}
-
-	if (!engine->rpmCalculator.isRunning()) {
 		return;
 	}
 
@@ -126,33 +121,18 @@ static void startKnockSampling(uint8_t cylinderIndex) {
 		return;
 	}
 
-	// Sample for XX degrees
-	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * CONFIG(knockSamplingDuration) / US_PER_SECOND_F;
+	// Convert sampling time to number of samples
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
 	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
-	auto conversionGroup = getConversionGroup(cylinderIndex);
+	auto conversionGroup = getConversionGroup(channelIdx);
 
 	// Stash the current cylinder's index so we can store the result appropriately
 	currentCylinderIndex = cylinderIndex;
 
 	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
 	lastKnockSampleTime = getTimeNowNt();
-}
-
-static void startKnockSamplingNoParam(void*) {
-	// ugly as hell but that's error: cast between incompatible function types from 'void (*)(uint8_t)' {aka 'void (*)(unsigned char)'} to 'schfunc_t' {aka 'void (*)(void*)'} [-Werror=cast-function-type]
-	startKnockSampling(cylinderIndexCopy);
-}
-
-static scheduling_s startSampling;
-
-void knockSamplingCallback(uint8_t cylinderIndex, efitick_t nowNt) {
-	cylinderIndexCopy = cylinderIndex;
-
-	scheduleByAngle(&startSampling, nowNt,
-			/*angle*/CONFIG(knockDetectionWindowStart), startKnockSamplingNoParam PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 class KnockThread : public ThreadController<256> {

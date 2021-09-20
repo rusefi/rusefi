@@ -66,3 +66,38 @@ void onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnock
 
 	// TODO: retard timing, then put it back!
 }
+
+// This callback is to be implemented by the knock sense driver
+void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds, uint8_t channelIdx);
+
+static uint8_t cylinderIndexCopy;
+
+// Called when its time to start listening for knock
+// Does some math, then hands off to the driver to start any sampling hardware
+static void startKnockSampling(void*) {
+	if (!engine->rpmCalculator.isRunning()) {
+		return;
+	}
+
+	// Convert sampling angle to time
+	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * CONFIG(knockSamplingDuration) / US_PER_SECOND_F;
+
+	// Look up which channel this cylinder uses
+	auto channel = getCylinderKnockBank(cylinderIndexCopy);
+
+	// ugly as hell but that's error: cast between incompatible function types from 'void (*)(uint8_t)' {aka 'void (*)(unsigned char)'} to 'schfunc_t' {aka 'void (*)(void*)'} [-Werror=cast-function-type]
+	onStartKnockSampling(cylinderIndexCopy, samplingSeconds, channel);
+}
+
+static scheduling_s startSampling;
+
+void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
+	cylinderIndexCopy = cylinderIndex;
+
+	scheduleByAngle(&startSampling, nowNt,
+			/*angle*/CONFIG(knockDetectionWindowStart), startKnockSampling PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_HIP_9011
+	hip9011_onFireEvent(cylinderIndex, nowNt);
+#endif
+}
