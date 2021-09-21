@@ -701,9 +701,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
 	}
 
-	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
-	tsOutputChannels->knockEverIndicator = engine->knockEver;
-
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;
 	tsOutputChannels->brakePedalState = engine->brakePedalState;

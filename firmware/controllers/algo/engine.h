@@ -290,15 +290,6 @@ public:
 	FsioState fsioState;
 
 	/**
-	 * Are we experiencing knock right now?
-	 */
-	bool knockNow = false;
-	/**
-	 * Have we experienced knock since engine was started?
-	 */
-	bool knockEver = false;
-
-	/**
 	 * are we running any kind of functional test? this affect
 	 * some areas
 	 */

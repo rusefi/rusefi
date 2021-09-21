@@ -188,8 +188,6 @@ enable2ndByteCanID = false
       needBurn        = bits,    U32,      0,    [9:9], "true", "false";
       clutchUpState    =bits,    U32,      0,  [11:11], "true", "false";
       clutchDownState  =bits,    U32,      0,  [12:12], "true", "false";
-      knockEverIndicator=bits,   U32,      0,  [13:13], "true", "false";
-      knockNowIndicator=bits,    U32,      0,  [14:14], "true", "false";
       brakePedalIndicator=bits,  U32,      0,  [15:15], "true", "false";
       toothLogReady      =bits,  U32,      0,  [16:16], "true", "false";
       acSwitchState     =bits,   U32,      0,  [17:17], "true", "false";
@@ -1221,10 +1219,6 @@ gaugeCategory = DynoView
 
 ;  not implemented
 ;    indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
-
-
-    indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
-    indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
 
 	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
 	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
