@@ -50,7 +50,9 @@ using PD = PeakDetect<float, MS2NT(100)>;
 static PD peakDetectors[12];
 static PD allCylinderPeakDetector;
 
-void onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
+bool Engine::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
+	bool isKnock = dbv > ENGINE(engineState).knockThreshold;
+
 #if EFI_TUNER_STUDIO
 	// Pass through per-cylinder peak detector
 	float cylPeak = peakDetectors[cylinderIndex].detect(dbv, lastKnockTime);
@@ -60,13 +62,14 @@ void onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnock
 	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
 
 	// If this was a knock, count it!
-	bool isKnock = dbv > ENGINE(engineState).knockThreshold;
 	if (isKnock) {
 		tsOutputChannels.knockCount++;
 	}
 #endif // EFI_TUNER_STUDIO
 
 	// TODO: retard timing, then put it back!
+
+	return isKnock;
 }
 
 // This callback is to be implemented by the knock sense driver
@@ -76,7 +79,9 @@ static uint8_t cylinderIndexCopy;
 
 // Called when its time to start listening for knock
 // Does some math, then hands off to the driver to start any sampling hardware
-static void startKnockSampling(void*) {
+static void startKnockSampling(Engine* engine) {
+	EXPAND_Engine;
+
 	if (!engine->rpmCalculator.isRunning()) {
 		return;
 	}
@@ -93,12 +98,12 @@ static void startKnockSampling(void*) {
 
 static scheduling_s startSampling;
 
-void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
+void Engine::onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
 	cylinderIndexCopy = cylinderIndex;
 
 #if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
 	scheduleByAngle(&startSampling, nowNt,
-			/*angle*/CONFIG(knockDetectionWindowStart), startKnockSampling PASS_ENGINE_PARAMETER_SUFFIX);
+			/*angle*/CONFIG(knockDetectionWindowStart), { startKnockSampling, engine } PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
 #if EFI_HIP_9011

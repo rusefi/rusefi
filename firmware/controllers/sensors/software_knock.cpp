@@ -201,7 +201,7 @@ void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	onKnockSenseCompleted(currentCylinderIndex, db, lastKnockTime);
+	engine->onKnockSenseCompleted(currentCylinderIndex, db, lastKnockTime);
 }
 
 void KnockThread::ThreadTask() {

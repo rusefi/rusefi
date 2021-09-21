@@ -386,6 +386,11 @@ public:
 	 */
 	float getTimeIgnitionSeconds(void) const;
 
+	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
+
+	// onKnockSenseCompleted is the callback from the knock sense driver to report a sensed knock level
+	bool onKnockSenseCompleted(uint8_t cylinderIndex, float levelDbv, efitick_t lastKnockTime);
+
 	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
 	void printKnockState(void);
 
