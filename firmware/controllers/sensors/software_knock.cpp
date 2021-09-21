@@ -98,7 +98,7 @@ const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
 		return &adcConvGroupCh2;
 	}
 #else
-	(void)cylinderIndex;
+	(void)channelIdx;
 #endif // KNOCK_HAS_CH2
 
 	return &adcConvGroupCh1;
