@@ -616,11 +616,6 @@ static void showHipInfo(void) {
 	efiPrintf(" PaSDO=0x%x",
 		instance.prescaler);
 
-	efiPrintf(" knockVThreshold=%.2f knockCount=%d maxKnockSubDeg=%.2f",
-		engineConfiguration->knockVThreshold,
-		engine->knockCount,
-		engineConfiguration->maxKnockSubDeg);
-
 	efiPrintf(" IntHold %s (mode 0x%x)",
 		hwPortname(CONFIG(hip9011IntHoldPin)),
 		CONFIG(hip9011IntHoldPinMode));
@@ -661,16 +656,6 @@ static void showHipInfo(void) {
 	}
 }
 
-static void setMaxKnockSubDeg(int value) {
-    engineConfiguration->maxKnockSubDeg = value;
-    showHipInfo();
-}
-
-static void setKnockThresh(float value) {
-    engineConfiguration->knockVThreshold = value;
-    showHipInfo();
-}
-
 static void setPrescalerAndSDO(int value) {
 	engineConfiguration->hip9011PrescalerAndSDO = value;
 }
@@ -690,8 +675,6 @@ static void hip_addconsoleActions(void) {
 	addConsoleActionF("set_gain", setHipGain);
 	addConsoleActionF("set_band", setHipBand);
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
-    addConsoleActionF("set_knock_threshold", setKnockThresh);
-    addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
 }
 
 #endif /* EFI_HIP_9011_DEBUG */

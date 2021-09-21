@@ -729,7 +729,7 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
 
 	float adcVcc;;"volts", 1, 0, 0, 6, 3
-	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking;"Deg", 1, 0, 0, 100, 0
+	float unused552;;"Deg", 1, 0, 0, 100, 0
 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	uint8_t[CAM_INPUTS_COUNT_padding] camInputsPadding;;
 	
@@ -1211,7 +1211,7 @@ bit unused_1484_bit_31
 
 
 float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
-	float knockVThreshold;;"V", 1, 0, 1, 5, 2
+	float unused1512;;"", 1, 0, 1, 5, 2
 
 	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
 	uint8_t[10] unusedFsioInputs;;"", 1, 0, 0, 255, 0

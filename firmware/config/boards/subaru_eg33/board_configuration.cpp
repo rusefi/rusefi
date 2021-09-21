@@ -209,9 +209,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->hip9011PrescalerAndSDO = (0x6 << 1); //HIP_16MHZ_PRESCALER;
 	engineConfiguration->hip9011Gain = 1.0;
 	engineConfiguration->knockBandCustom = 0.0;
-	engineConfiguration->knockVThreshold = 4.0;
 	engineConfiguration->cylinderBore = 96.9;
-	engineConfiguration->maxKnockSubDeg = 20.0;
 
 	/* Cylinder to knock bank mapping */
 	engineConfiguration->knockBankCyl1 = 0;

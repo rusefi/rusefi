@@ -2810,7 +2810,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
 		field = "Enabled",								isHip9011Enabled
-		field = "Threshold",							knockVThreshold, {isHip9011Enabled == 1}
 		field = "!ECU reboot needed to apply these settings"
 		field = "IntHold pin (hip9011 input)",      	hip9011IntHoldPin, {isHip9011Enabled == 1}
 		field = "IntHold pin (hip9011 input) mode",		hip9011IntHoldPinMode, {isHip9011Enabled == 1}
