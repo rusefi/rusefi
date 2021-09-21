@@ -7,7 +7,6 @@
 
 #include "pch.h"
 
-#include "software_knock.h"
 #include "spark_logic.h"
 #include "os_access.h"
 
@@ -15,7 +14,7 @@
 #include "event_queue.h"
 #include "tooth_logger.h"
 
-#include "hip9011.h"
+#include "knock_logic.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -215,12 +214,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-#if EFI_SOFTWARE_KNOCK
-	knockSamplingCallback(event->cylinderNumber, nowNt);
-#endif
-#if EFI_HIP_9011
-	hip9011_onFireEvent(event->cylinderNumber, nowNt);
-#endif
+	engine->onSparkFireKnockSense(event->cylinderNumber, nowNt);
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
