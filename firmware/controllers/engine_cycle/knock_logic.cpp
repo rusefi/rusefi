@@ -94,8 +94,10 @@ static scheduling_s startSampling;
 void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
 	cylinderIndexCopy = cylinderIndex;
 
+#if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
 	scheduleByAngle(&startSampling, nowNt,
 			/*angle*/CONFIG(knockDetectionWindowStart), startKnockSampling PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
 
 #if EFI_HIP_9011
 	hip9011_onFireEvent(cylinderIndex, nowNt);
