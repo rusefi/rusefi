@@ -64,7 +64,6 @@ static MenuItem miAfr(&miSensors, LL_AFR);
 static MenuItem miBaro(&miSensors, LL_BARO);
 static MenuItem miMapV(&miSensors, LL_MAF_V);
 static MenuItem miMapKgHr(&miSensors, LL_MAF_KG_HR);
-static MenuItem miKnock(&miSensors, LL_KNOCK);
 
 static MenuItem miStopEngine(&miBench, "stop engine", scheduleStopEngine);
 static MenuItem miTestFan(&miBench, "test fan", fanBench);
@@ -194,10 +193,6 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		return;
 	case LL_VBATT:
 		lcdPrintf("Battery %.2fv", Sensor::get(SensorType::BatteryVoltage).value_or(0));
-		return;
-	case LL_KNOCK:
-		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
-		lcdPrintf("Knock %s %.2fv", buffer, engine->knockVolts);
 		return;
 
 #if	EFI_ANALOG_SENSORS
