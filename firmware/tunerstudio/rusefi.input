@@ -141,10 +141,10 @@ enable2ndByteCanID = false
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
 #if LAMBDA
-       veAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, egoCorrection, { 1 }
+       veAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, { 100 + fuelPidCorrection }, { 1 }
        lambdaTargetTables = lambdaTableTbl, afrTSCustom
 #else
-       veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
+       veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, { 100 + fuelPidCorrection }, { 1 }
        lambdaTargetTables = afrTableTbl, afrTSCustom
 #endif
 
@@ -417,7 +417,6 @@ enable2ndByteCanID = false
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
-      egoCorrection   = { 100 }
       time            = { timeNow }
 
 	; These "synthetic" channels provide the Y-axis (load) value for gen purp PWM table's Y axes
@@ -1134,10 +1133,10 @@ gaugeCategory = DynoView
     
 ;                    wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
 #if LAMBDA
-     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, egoCorrection
+     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, { 100 + fuelPidCorrection }
      lambdaTargetTables = lambdaTableTbl, afrTSCustom
 #else
-     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, egoCorrection
+     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, { 100 + fuelPidCorrection }
      lambdaTargetTables = afrTableTbl, afrTSCustom
 #endif
 
