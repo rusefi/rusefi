@@ -1475,7 +1475,7 @@ tle8888_mode_e tle8888mode;
 	brain_input_pin_e flexSensorPin;+Continental/GM flex fuel sensor, 50-150hz type;
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
-	adc_channel_e externalKnockSenseAdc;
+	uint8_t unused3103;;"",1,0,0,1,0
 	output_pin_e stepperEnablePin;
 	brain_pin_e tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;

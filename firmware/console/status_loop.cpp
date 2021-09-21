@@ -626,9 +626,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
-	//tsOutputChannels->knockCount = engine->knockCount;
-	//tsOutputChannels->knockLevel = engine->knockVolts;
-
 #if HW_CHECK_MODE
 	tsOutputChannels->hasCriticalError = 1;
 #else

@@ -500,9 +500,6 @@ static msg_t hipThread(void *arg) {
 
 			/* Check for correct cylinder/input */
 			if (correctCylinder) {
-				/* report */
-				engine->knockLogic(knockVolts);
-
 				// TODO: convert knock level to dBv
 				engine->onKnockSenseCompleted(instance.cylinderNumber, knockVolts, instance.knockSampleTimestamp);
 
@@ -662,8 +659,6 @@ static void showHipInfo(void) {
 			normalizedValueMax[i]);
 		normalizedValueMax[i] = 0.0;
 	}
-
-	engine->printKnockState();
 }
 
 static void setMaxKnockSubDeg(int value) {

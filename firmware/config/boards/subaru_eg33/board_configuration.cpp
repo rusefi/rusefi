@@ -159,7 +159,6 @@ void setBoardDefaultConfiguration(void) {
 	//setFsio(0, (GPIOB_1), STARTER_RELAY_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
 
 	/* not used */
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
 	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;

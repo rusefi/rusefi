@@ -297,17 +297,6 @@ public:
 	 * Have we experienced knock since engine was started?
 	 */
 	bool knockEver = false;
-	/**
-     * KnockCount is directly proportional to the degrees of ignition
-     * advance removed
-     */
-    int knockCount = 0;
-
-    float knockVolts = 0;
-
-    bool knockDebug = false;
-
-	efitimeus_t timeOfLastKnockEvent = 0;
 
 	/**
 	 * are we running any kind of functional test? this affect
@@ -390,9 +379,6 @@ public:
 
 	// onKnockSenseCompleted is the callback from the knock sense driver to report a sensed knock level
 	bool onKnockSenseCompleted(uint8_t cylinderIndex, float levelDbv, efitick_t lastKnockTime);
-
-	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void printKnockState(void);
 
 	AirmassModelBase* mockAirmassModel = nullptr;
 
