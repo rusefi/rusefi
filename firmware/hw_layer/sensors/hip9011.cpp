@@ -257,7 +257,7 @@ static void endIntegration(HIP9011 *hip) {
 	}
 }
 
-void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds) {
+void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds, uint8_t channelIdx) {
 	/* TODO: @dron0gus: not sure if we need the expectedCylinderNumber logic at all
 
 	Something like this might be right:
