@@ -10,6 +10,8 @@
 #include "os_access.h"
 #include "peak_detect.h"
 
+#include "hip9011.h"
+
 int getCylinderKnockBank(uint8_t cylinderIndex) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
 	switch (cylinderIndex) {
