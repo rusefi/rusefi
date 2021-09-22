@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Sep 19 01:14:49 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Sep 22 00:43:28 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1157,12 +1157,10 @@ struct engine_configuration_s {
 	 */
 	float adcVcc;
 	/**
-	 * maximum total number of degrees to subtract from ignition advance
-	 * when knocking
 	Deg
 	 * offset 552
 	 */
-	float maxKnockSubDeg;
+	float unused552;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	 * offset 556
@@ -2543,10 +2541,9 @@ struct engine_configuration_s {
 	 */
 	float idleStepperReactionTime;
 	/**
-	V
 	 * offset 1512
 	 */
-	float knockVThreshold;
+	float unused1512;
 	/**
 	 * offset 1516
 	 */
@@ -3549,7 +3546,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3103
 	 */
-	adc_channel_e externalKnockSenseAdc;
+	uint8_t unused3103;
 	/**
 	 * offset 3104
 	 */
@@ -4343,4 +4340,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Sep 19 01:14:49 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Sep 22 00:43:28 UTC 2021

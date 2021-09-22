@@ -507,7 +507,6 @@
 #define etbWastegatePid_offset_offset 2520
 #define etbWastegatePid_periodMs_offset 2522
 #define etbWastegatePid_pFactor_offset 2508
-#define externalKnockSenseAdc_offset 3075
 #define extraInjectionOffset_offset 432
 #define failedMapFallback_offset 541
 #define fan1ExtraIdle_offset 2246
@@ -990,7 +989,6 @@
 #define knockNoise_offset 1820
 #define knockNoiseRpmBins_offset 1852
 #define knockSamplingDuration_offset 2504
-#define knockVThreshold_offset 1512
 #define lambdaLoadBins_offset 18820
 #define lambdaRpmBins_offset 18884
 #define lambdaTable_offset 18564
@@ -1112,7 +1110,6 @@
 #define maxAcRpm_offset 1708
 #define maxAcTps_offset 1710
 #define maxIdleVss_offset 445
-#define maxKnockSubDeg_offset 552
 #define mc33816_cs_offset 3079
 #define mc33816_driven_offset 2599
 #define mc33816_flag0_offset 1774
@@ -1255,8 +1252,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.09.19
-#define SIGNATURE_HASH 643046562
+#define SIGNATURE_DATE 2021.09.22
+#define SIGNATURE_HASH 1954796009
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1612,7 +1609,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.09.19.kin.643046562"
+#define TS_SIGNATURE "rusEFI 2021.09.22.kin.1954796009"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1689,16 +1686,19 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
+#define unused1512_offset 1512
 #define unused2260_offset 2252
 #define unused2432_offset 2424
 #define unused244_2_offset 2416
 #define unused244_3_offset 2420
 #define unused2508_offset 2503
 #define unused2536_offset 2528
+#define unused3103_offset 3075
 #define unused3328_offset 3312
 #define unused3942_offset 3964
 #define unused3988_offset 3960
 #define unused4028_offset 4000
+#define unused552_offset 552
 #define unused6312_offset 6284
 #define unused744b4_offset 744
 #define unused76b19_offset 76
