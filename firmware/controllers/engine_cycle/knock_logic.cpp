@@ -73,7 +73,11 @@ bool Engine::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t l
 }
 
 // This callback is to be implemented by the knock sense driver
-void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds, uint8_t channelIdx);
+__attribute__((weak)) void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds, uint8_t channelIdx) {
+	UNUSED(cylinderIndex);
+	UNUSED(samplingTimeSeconds);
+	UNUSED(channelIdx);
+}
 
 static uint8_t cylinderIndexCopy;
 
