@@ -500,9 +500,6 @@ static msg_t hipThread(void *arg) {
 
 			/* Check for correct cylinder/input */
 			if (correctCylinder) {
-				/* report */
-				engine->knockLogic(knockVolts);
-
 				// TODO: convert knock level to dBv
 				engine->onKnockSenseCompleted(instance.cylinderNumber, knockVolts, instance.knockSampleTimestamp);
 
@@ -619,11 +616,6 @@ static void showHipInfo(void) {
 	efiPrintf(" PaSDO=0x%x",
 		instance.prescaler);
 
-	efiPrintf(" knockVThreshold=%.2f knockCount=%d maxKnockSubDeg=%.2f",
-		engineConfiguration->knockVThreshold,
-		engine->knockCount,
-		engineConfiguration->maxKnockSubDeg);
-
 	efiPrintf(" IntHold %s (mode 0x%x)",
 		hwPortname(CONFIG(hip9011IntHoldPin)),
 		CONFIG(hip9011IntHoldPinMode));
@@ -662,18 +654,6 @@ static void showHipInfo(void) {
 			normalizedValueMax[i]);
 		normalizedValueMax[i] = 0.0;
 	}
-
-	engine->printKnockState();
-}
-
-static void setMaxKnockSubDeg(int value) {
-    engineConfiguration->maxKnockSubDeg = value;
-    showHipInfo();
-}
-
-static void setKnockThresh(float value) {
-    engineConfiguration->knockVThreshold = value;
-    showHipInfo();
 }
 
 static void setPrescalerAndSDO(int value) {
@@ -695,8 +675,6 @@ static void hip_addconsoleActions(void) {
 	addConsoleActionF("set_gain", setHipGain);
 	addConsoleActionF("set_band", setHipBand);
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
-    addConsoleActionF("set_knock_threshold", setKnockThresh);
-    addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
 }
 
 #endif /* EFI_HIP_9011_DEBUG */

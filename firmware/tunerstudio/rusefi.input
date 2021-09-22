@@ -188,8 +188,6 @@ enable2ndByteCanID = false
       needBurn        = bits,    U32,      0,    [9:9], "true", "false";
       clutchUpState    =bits,    U32,      0,  [11:11], "true", "false";
       clutchDownState  =bits,    U32,      0,  [12:12], "true", "false";
-      knockEverIndicator=bits,   U32,      0,  [13:13], "true", "false";
-      knockNowIndicator=bits,    U32,      0,  [14:14], "true", "false";
       brakePedalIndicator=bits,  U32,      0,  [15:15], "true", "false";
       toothLogReady      =bits,  U32,      0,  [16:16], "true", "false";
       acSwitchState     =bits,   U32,      0,  [17:17], "true", "false";
@@ -1221,10 +1219,6 @@ gaugeCategory = DynoView
 
 ;  not implemented
 ;    indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
-
-
-    indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
-    indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
 
 	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
 	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
@@ -2419,7 +2413,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TLE 8888 spi",                         tle8888spiDevice @@if_ts_show_spi
 		field = "AUX Serial TX", 						auxSerialTxPin
 		field = "AUX Serial RX", 						auxSerialRxPin
-		field = "External Knock",						externalKnockSenseAdc
 		field = "Start/Stop Button",					startStopButtonPin
 		field = "Upshift Pin",							tcuUpshiftButtonPin
 		field = "Downshift Pin",						tcuDownshiftButtonPin
@@ -2817,7 +2810,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
 		field = "Enabled",								isHip9011Enabled
-		field = "Threshold",							knockVThreshold, {isHip9011Enabled == 1}
 		field = "!ECU reboot needed to apply these settings"
 		field = "IntHold pin (hip9011 input)",      	hip9011IntHoldPin, {isHip9011Enabled == 1}
 		field = "IntHold pin (hip9011 input) mode",		hip9011IntHoldPinMode, {isHip9011Enabled == 1}
