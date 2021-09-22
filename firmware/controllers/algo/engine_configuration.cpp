@@ -437,9 +437,6 @@ static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	engineConfiguration->hip9011Gain = 1;
-	engineConfiguration->knockVThreshold = 4;
-	engineConfiguration->maxKnockSubDeg = 20;
-
 
 	if (!CONFIG(useTpicAdvancedMode)) {
 	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0

@@ -193,7 +193,6 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 
 	// not used
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
 	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;

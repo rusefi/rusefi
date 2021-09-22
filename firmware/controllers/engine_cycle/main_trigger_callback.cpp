@@ -437,14 +437,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 		}
 	}
 
-	if (trgEventIndex == 0) {
-		if (isAdcChannelValid(CONFIG(externalKnockSenseAdc))) {
-			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc PASS_ENGINE_PARAMETER_SUFFIX);
-			engine->knockLogic(externalKnockValue PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-	}
-
-
 	/**
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time

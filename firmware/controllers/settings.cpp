@@ -784,8 +784,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
 		engineConfiguration->useTpicAdvancedMode = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "knockdebug")) {
-		engine->knockDebug = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
