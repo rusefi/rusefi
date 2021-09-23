@@ -72,6 +72,14 @@ void Engine::resetEngineSnifferIfInTestMode() {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
+Engine* Engine::getInstance() {
+#if EFI_UNIT_TEST
+	return nullptr;
+#else
+	return engine;
+#endif
+}
+
 trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
 	case VVT_2JZ:

@@ -88,6 +88,9 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	Engine();
+
+	static Engine* getInstance();
+
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
 
@@ -220,6 +223,11 @@ public:
 	efitimems64_t callFromPitStopEndTime = 0;
 
 	RpmCalculator rpmCalculator;
+
+
+	RpmCalculator* getRpmCalculator() {
+		return &rpmCalculator;
+	}
 
 	/**
 	 * this is about 'stopengine' command
