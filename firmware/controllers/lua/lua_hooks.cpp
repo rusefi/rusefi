@@ -311,9 +311,11 @@ static int lua_stopEngine(lua_State*) {
 
 void configureRusefiLuaHooks(lua_State* l) {
 
+	LuaModule(l).fun("getEngineInstance", &Engine::getInstance);
+
 	LuaClass<Engine> luaEngine(l, "Engine");
 	luaEngine
-	    .fun("getInstance",  			&Engine::getInstance            )
+//	    .fun("getInstance",  			&Engine::getInstance            )
 		.fun("getRpmCalculator",            &Engine::getRpmCalculator            )
 ;
 
