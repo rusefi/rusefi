@@ -313,14 +313,14 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	LuaClass<Engine> luaEngine(l, "Engine");
 	luaEngine
-	    .fun("getInsance",  			 static_cast<Engine* (*)()     >(&Engine::getInstance            ))
-		.fun("getRpmCalculator",             static_cast<RpmCalculator* (Engine::*)()     >(&Engine::getRpmCalculator            ))
+	    .fun("getInstance",  			&Engine::getInstance            )
+		.fun("getRpmCalculator",            &Engine::getRpmCalculator            )
 ;
 
 
 	LuaClass<RpmCalculator> luaRpmCalculator(l, "RpmCalculator");
 	luaRpmCalculator
-	.fun("getRpm",             static_cast<int (RpmCalculator::*)()   const  >(&RpmCalculator::getRpm            ))
+	.fun("getRpm",             &RpmCalculator::getRpm            )
 	;
 
 	LuaClass<Timer> luaTimer(l, "Timer");
