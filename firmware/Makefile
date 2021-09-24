@@ -116,7 +116,7 @@ endif
 # Stack size to be allocated to the Cortex-M process stack. This stack is
 # the stack used by the main() thread.
 ifeq ($(USE_PROCESS_STACKSIZE),)
-  USE_PROCESS_STACKSIZE = 0x0A00
+  USE_PROCESS_STACKSIZE = 0x0600
 endif
 
 # Stack size to the allocated to the Cortex-M main/exceptions stack. This
