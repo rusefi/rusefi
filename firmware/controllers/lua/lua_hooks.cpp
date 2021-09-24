@@ -309,7 +309,7 @@ static int lua_stopEngine(lua_State*) {
 }
 
 static int lua_setTimingAdd(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);;
+	ENGINE(engineState).luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
 
 	return 0;
 }
