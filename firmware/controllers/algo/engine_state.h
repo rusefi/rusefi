@@ -13,6 +13,10 @@
 #include "pid.h"
 #include "engine_state_generated.h"
 
+struct LuaAdjustments {
+	float ignitionTimingAdd = 0;
+};
+
 class EngineState : public engine_state2_s {
 public:
 	EngineState();
@@ -86,4 +90,6 @@ public:
 
 	float targetLambda = 0.0f;
 	float stoichiometricRatio = 0.0f;
+
+	LuaAdjustments luaAdjustments;
 };
