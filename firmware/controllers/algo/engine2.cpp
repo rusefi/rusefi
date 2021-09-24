@@ -138,7 +138,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineNoiseHipLevel = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
+	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise);
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);

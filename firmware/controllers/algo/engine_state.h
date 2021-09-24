@@ -36,7 +36,7 @@ public:
 	 */
 	float airFlow = 0;
 
-	float engineNoiseHipLevel = 0;
+	float knockThreshold = 0;
 
 	float auxValveStart = 0;
 	float auxValveEnd = 0;

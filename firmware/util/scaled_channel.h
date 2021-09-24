@@ -12,6 +12,7 @@
 #pragma once
 
 #include <cstdint>
+#include <type_traits>
 
 #include "rusefi_generated.h"
 
@@ -22,6 +23,8 @@
 // float x = myVar; // converts back to float, returns 2.4f
 template <typename T, int mult = 1>
 class scaled_channel {
+	using TSelf = scaled_channel<T, mult>;
+
 public:
 	constexpr scaled_channel() : m_value(static_cast<T>(0)) { }
 	constexpr scaled_channel(float val)
@@ -35,8 +38,14 @@ public:
 	}
 
     // Postfix increment operator
-	T operator ++(int) {
-		return (m_value / (float)mult) + 1;
+	// only enable if:
+	//  - base type T is an integral type (integer)
+	//  - multiplier is equal to 1
+	void operator++(int) {
+		static_assert(mult == 1, "Increment operator only supported for non-scaled integer types");
+		static_assert(std::is_integral_v<T>, "Increment operator only supported for non-scaled integer types");
+
+		m_value++;
 	}
 
 	constexpr const char* getFirstByteAddr() const {

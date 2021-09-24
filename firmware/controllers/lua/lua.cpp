@@ -11,8 +11,16 @@
 #define TAG "LUA "
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-static char luaUserHeap[10000];
-static char luaSystemHeap[15000];
+
+#ifndef RAM_UNUSED_SIZE
+#define LUA_USER_HEAP 12000
+#endif
+#ifndef CCM_UNUSED_SIZE
+#define LUA_SYSTEM_HEAP 15000
+#endif
+
+static char luaUserHeap[LUA_USER_HEAP];
+static char luaSystemHeap[LUA_SYSTEM_HEAP];
 
 class Heap {
 	memory_heap_t m_heap;

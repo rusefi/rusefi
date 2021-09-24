@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 06 15:03:13 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Sep 22 00:43:26 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1157,12 +1157,10 @@ struct engine_configuration_s {
 	 */
 	float adcVcc;
 	/**
-	 * maximum total number of degrees to subtract from ignition advance
-	 * when knocking
 	Deg
 	 * offset 552
 	 */
-	float maxKnockSubDeg;
+	float unused552;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	 * offset 556
@@ -1683,18 +1681,28 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
 	/**
+	volts
 	 * offset 770
 	 */
-	uint8_t unusedpinModesWhereHere[10];
+	uint8_t dwellVoltageCorrVoltBins[DWELL_CURVE_SIZE];
+	/**
+	 * offset 778
+	 */
+	uint8_t unusedpinModesWhereHere[2];
 	/**
 	 * todo: more comments
 	 * offset 780
 	 */
 	output_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
 	/**
+	multiplier
 	 * offset 786
 	 */
-	uint8_t unusedOutputWhereHere[10];
+	uint8_t dwellVoltageCorrValues[DWELL_CURVE_SIZE];
+	/**
+	 * offset 794
+	 */
+	uint8_t unusedOutputWhereHere[2];
 	/**
 	 * offset 796
 	 */
@@ -2021,10 +2029,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_296_30 : 1;
+	bool unusedBit_298_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_296_31 : 1;
+	bool unusedBit_298_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2192,7 +2200,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1244
 	 */
-	vr_threshold_s vrThreshold[2];
+	vr_threshold_s vrThreshold[VR_THRESHOLD_COUNT];
 	/**
 	units
 	 * offset 1276
@@ -2533,10 +2541,9 @@ struct engine_configuration_s {
 	 */
 	float idleStepperReactionTime;
 	/**
-	V
 	 * offset 1512
 	 */
-	float knockVThreshold;
+	float unused1512;
 	/**
 	 * offset 1516
 	 */
@@ -2984,76 +2991,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_506_8 : 1;
+	bool unusedBit_508_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_506_9 : 1;
+	bool unusedBit_508_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_506_10 : 1;
+	bool unusedBit_508_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_506_11 : 1;
+	bool unusedBit_508_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_506_12 : 1;
+	bool unusedBit_508_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_506_13 : 1;
+	bool unusedBit_508_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_506_14 : 1;
+	bool unusedBit_508_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_506_15 : 1;
+	bool unusedBit_508_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_506_16 : 1;
+	bool unusedBit_508_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_506_17 : 1;
+	bool unusedBit_508_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_506_18 : 1;
+	bool unusedBit_508_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_506_19 : 1;
+	bool unusedBit_508_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_506_20 : 1;
+	bool unusedBit_508_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_506_21 : 1;
+	bool unusedBit_508_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_506_22 : 1;
+	bool unusedBit_508_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_506_23 : 1;
+	bool unusedBit_508_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_506_24 : 1;
+	bool unusedBit_508_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_506_25 : 1;
+	bool unusedBit_508_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_506_26 : 1;
+	bool unusedBit_508_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_506_27 : 1;
+	bool unusedBit_508_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_506_28 : 1;
+	bool unusedBit_508_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_506_29 : 1;
+	bool unusedBit_508_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_506_30 : 1;
+	bool unusedBit_508_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_506_31 : 1;
+	bool unusedBit_508_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3539,7 +3546,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3103
 	 */
-	adc_channel_e externalKnockSenseAdc;
+	uint8_t unused3103;
 	/**
 	 * offset 3104
 	 */
@@ -4333,4 +4340,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 06 15:03:13 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Sep 22 00:43:26 UTC 2021

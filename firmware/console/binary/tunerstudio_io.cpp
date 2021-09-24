@@ -73,6 +73,10 @@ void TsChannelBase::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf
 	write(crcBuffer, sizeof(crcBuffer));
 }
 
+TsChannelBase::TsChannelBase(const char *name) {
+	this->name = name;
+}
+
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */

@@ -32,6 +32,7 @@ void initFuelLevel(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initBaro(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initTurbochargerSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Sensor reconfiguration
 void deinitVbatt();
@@ -40,3 +41,4 @@ void deinitThermistors();
 void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void deInitFlexSensor();
 void deInitVehicleSpeedSensor();
+void deinitTurbochargerSpeedSensor();
