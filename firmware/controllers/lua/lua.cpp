@@ -344,6 +344,9 @@ void LuaThread::ThreadTask() {
 	while (!chThdShouldTerminateX()) {
 		bool wasOk = runOneLua(myAlloc<0>, config->luaScript);
 
+		// Reset any lua adjustments the script made
+		ENGINE(engineState).luaAdjustments = {};
+
 		if (!wasOk) {
 			// Something went wrong executing the script, spin
 			// until reset invoked (maybe the user fixed the script)
