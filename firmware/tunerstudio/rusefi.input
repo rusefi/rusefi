@@ -535,7 +535,7 @@ enable2ndByteCanID = false
 
 	curve = knockThresholdCurve, "Engine knock threshold RPM based"
       columnLabel = "RPM", "Threshold"
-      xAxis       =  0, 8000, 10
+      xAxis       =  0, 8000, 9
       yAxis       =  0,  8, 10
       xBins       = knockNoiseRpmBins, RPMValue
       yBins       = knockNoise
@@ -543,7 +543,7 @@ enable2ndByteCanID = false
 
 	curve = swKnockThresholdCurve, "Engine knock threshold RPM based"
       columnLabel = "RPM", "Threshold dB"
-      xAxis       =  0, 8000, 10
+      xAxis       =  0, 8000, 9
       yAxis       =  -30,  0, 10
       xBins       = ignitionRpmBins,  RPMValue
       yBins       = knockBaseNoise
@@ -614,7 +614,7 @@ enable2ndByteCanID = false
     
    curve = map_samplingAngleCurve, "MAP Sampling Start Angle"
       columnLabel = "RPM", "Angle"
-      xAxis       =  0, 8000, 10
+      xAxis       =  0, 8000, 9
       yAxis       =  0,  180, 10
       xBins       = map_samplingAngleBins, RPMValue
       yBins       = map_samplingAngle
@@ -622,7 +622,7 @@ enable2ndByteCanID = false
    
    curve = map_samplingWindowCurve, "MAP Sampling Duration"
       columnLabel = "RPM", "Window"
-      xAxis       =  0, 8000, 10
+      xAxis       =  0, 8000, 9
       yAxis       =  0,  180, 10
       xBins       = map_samplingWindowBins, RPMValue
       yBins       = map_samplingWindow
@@ -768,8 +768,8 @@ enable2ndByteCanID = false
     
 	curve = crankingAdvanceCurve, "Cranking Advance Angle"
       columnLabel = "RPM", "degrees"
-      xAxis       = 0, 2400, 13
-      yAxis       = -100, 100, 11
+      xAxis       = 0, 1200, 13
+      yAxis       = -30, 30, 11
       xBins       = crankingAdvanceBins, RPMValue
       yBins       = crankingAdvance
       gauge       = RPMGauge
