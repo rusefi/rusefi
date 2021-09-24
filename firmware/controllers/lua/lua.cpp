@@ -331,6 +331,8 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 }
 
 void LuaThread::ThreadTask() {
+	initSystemLua();
+
 	while (!chThdShouldTerminateX()) {
 		bool wasOk = runOneLua(myAlloc<0>, config->luaScript);
 
@@ -348,8 +350,6 @@ static LuaThread luaThread;
 
 void startLua() {
 	luaThread.Start();
-
-	initSystemLua();
 
 	addConsoleActionS("lua", [](const char* str){
 		if (interactivePending) {
