@@ -16,7 +16,7 @@
 #define LUA_USER_HEAP 12000
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define LUA_SYSTEM_HEAP 10000
+#define LUA_SYSTEM_HEAP 15000
 #endif
 
 static char luaUserHeap[LUA_USER_HEAP];
