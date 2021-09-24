@@ -8,6 +8,9 @@
 #include "pch.h"
 #include "knock_logic.h"
 #include "os_access.h"
+#include "peak_detect.h"
+
+#include "hip9011.h"
 
 int getCylinderKnockBank(uint8_t cylinderIndex) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
@@ -41,4 +44,73 @@ int getCylinderKnockBank(uint8_t cylinderIndex) {
 		default:
 			return 0;
 	}
+}
+
+using PD = PeakDetect<float, MS2NT(100)>;
+static PD peakDetectors[12];
+static PD allCylinderPeakDetector;
+
+bool Engine::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
+	bool isKnock = dbv > ENGINE(engineState).knockThreshold;
+
+#if EFI_TUNER_STUDIO
+	// Pass through per-cylinder peak detector
+	float cylPeak = peakDetectors[cylinderIndex].detect(dbv, lastKnockTime);
+	tsOutputChannels.knockLevels[cylinderIndex] = roundf(cylPeak);
+
+	// Pass through all-cylinders peak detector
+	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
+
+	// If this was a knock, count it!
+	if (isKnock) {
+		tsOutputChannels.knockCount++;
+	}
+#endif // EFI_TUNER_STUDIO
+
+	// TODO: retard timing, then put it back!
+
+	return isKnock;
+}
+
+// This callback is to be implemented by the knock sense driver
+__attribute__((weak)) void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds, uint8_t channelIdx) {
+	UNUSED(cylinderIndex);
+	UNUSED(samplingTimeSeconds);
+	UNUSED(channelIdx);
+}
+
+static uint8_t cylinderIndexCopy;
+
+// Called when its time to start listening for knock
+// Does some math, then hands off to the driver to start any sampling hardware
+static void startKnockSampling(Engine* engine) {
+	EXPAND_Engine;
+
+	if (!engine->rpmCalculator.isRunning()) {
+		return;
+	}
+
+	// Convert sampling angle to time
+	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * CONFIG(knockSamplingDuration) / US_PER_SECOND_F;
+
+	// Look up which channel this cylinder uses
+	auto channel = getCylinderKnockBank(cylinderIndexCopy);
+
+	// Call the driver to begin sampling
+	onStartKnockSampling(cylinderIndexCopy, samplingSeconds, channel);
+}
+
+static scheduling_s startSampling;
+
+void Engine::onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
+	cylinderIndexCopy = cylinderIndex;
+
+#if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
+	scheduleByAngle(&startSampling, nowNt,
+			/*angle*/CONFIG(knockDetectionWindowStart), { startKnockSampling, engine } PASS_ENGINE_PARAMETER_SUFFIX);
+#endif
+
+#if EFI_HIP_9011
+	hip9011_onFireEvent(cylinderIndex, nowNt);
+#endif
 }

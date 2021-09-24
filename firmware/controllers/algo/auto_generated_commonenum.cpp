@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Aug 31 05:42:43 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Sep 17 23:02:58 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -428,8 +428,12 @@ case HELLEN_121_VAG_V6_CYL:
   return "HELLEN_121_VAG_V6_CYL";
 case HELLEN_121_VAG_VR6_CYL:
   return "HELLEN_121_VAG_VR6_CYL";
-case HELLEN_128_MERCEDES:
-  return "HELLEN_128_MERCEDES";
+case HELLEN_128_MERCEDES_4_CYL:
+  return "HELLEN_128_MERCEDES_4_CYL";
+case HELLEN_128_MERCEDES_6_CYL:
+  return "HELLEN_128_MERCEDES_6_CYL";
+case HELLEN_128_MERCEDES_8_CYL:
+  return "HELLEN_128_MERCEDES_8_CYL";
 case HELLEN_134_BMW:
   return "HELLEN_134_BMW";
 case HELLEN_154_HYUNDAI:
@@ -932,6 +936,8 @@ case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
 case TT_FORD_ST170:
   return "TT_FORD_ST170";
+case TT_FORD_TFI_PIP:
+  return "TT_FORD_TFI_PIP";
 case TT_GM_60_2_2_2:
   return "TT_GM_60_2_2_2";
 case TT_GM_7X:

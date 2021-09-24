@@ -18,7 +18,7 @@ void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 
 	flexSensor.setFunction(converter);
-	flexSensor.init(pin, "flex");
+	flexSensor.init(pin);
 	flexSensor.Register();
 }
 

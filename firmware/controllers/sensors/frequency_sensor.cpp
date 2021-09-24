@@ -14,12 +14,12 @@ static void freqSensorExtiCallback(void* arg) {
 	inst->onEdge(getTimeNowNt());
 }
 
-void FrequencySensor::init(brain_pin_e pin, const char* const msg) {
+void FrequencySensor::init(brain_pin_e pin) {
 	m_pin = pin;
 
 #if EFI_PROD_CODE
 	// todo: refactor https://github.com/rusefi/rusefi/issues/2123
-	efiExtiEnablePin(msg, pin, 
+	efiExtiEnablePin(getSensorName(), pin, 
 		PAL_EVENT_MODE_FALLING_EDGE,
 		freqSensorExtiCallback, reinterpret_cast<void*>(this));
 #endif // EFI_PROD_CODE

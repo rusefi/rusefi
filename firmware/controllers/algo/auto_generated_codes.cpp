@@ -1,6 +1,6 @@
 #include "global.h"
 #include "obd_error_codes.h"
-// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Fri Jul 23 12:39:04 UTC 2021
+// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Thu Sep 09 00:35:46 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -23,6 +23,8 @@ case CUSTOM_APPEND_STACK:
   return "CUSTOM_APPEND_STACK";
 case CUSTOM_APPLY_STACK:
   return "CUSTOM_APPLY_STACK";
+case CUSTOM_ARTIFICIAL_MISFIRE:
+  return "CUSTOM_ARTIFICIAL_MISFIRE";
 case CUSTOM_AUX_OUT_OF_ORDER:
   return "CUSTOM_AUX_OUT_OF_ORDER";
 case CUSTOM_CJ125_0:
@@ -289,8 +291,6 @@ case CUSTOM_ERR_6709:
   return "CUSTOM_ERR_6709";
 case CUSTOM_ERR_6728:
   return "CUSTOM_ERR_6728";
-case CUSTOM_ERR_6729:
-  return "CUSTOM_ERR_6729";
 case CUSTOM_ERR_ADCANCE_CALC_ANGLE:
   return "CUSTOM_ERR_ADCANCE_CALC_ANGLE";
 case CUSTOM_ERR_ADC_CHANNEL:

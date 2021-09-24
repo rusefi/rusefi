@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -190,6 +191,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
+	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
 	hellenWbo();
 }
 

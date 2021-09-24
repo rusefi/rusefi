@@ -62,8 +62,8 @@ struct TunerStudioOutputChannels {
 	unsigned int unusedBit10 : 1; // bit 10
 	unsigned int clutchUpState : 1; // bit 11
 	unsigned int clutchDownState : 1; // bit 12
-	unsigned int knockEverIndicator : 1; // bit 13
-	unsigned int knockNowIndicator : 1; // bit 14
+	unsigned int unusedb13 : 1; // bit 13
+	unsigned int unusedb14 : 1; // bit 14
 	unsigned int brakePedalState : 1; // bit 15. 0 - not pressed, 1 = pressed
 	unsigned int toothLogReady : 1; // bit 16
 	unsigned int acSwitchState : 1; // bit 17. 0 - not pressed, 1 = pressed
@@ -198,7 +198,7 @@ struct TunerStudioOutputChannels {
 	scaled_channel<uint16_t, 100> ignitionLoad; // 136
 
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	int16_t engineMakeCodeNameCrc16; // 138
+	scaled_channel<uint16_t> engineMakeCodeNameCrc16; // 138
 	// Errors
 	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
@@ -235,7 +235,7 @@ struct TunerStudioOutputChannels {
 	scaled_voltage rawIat;				// 240
 	scaled_voltage rawOilPressure;		// 242
 
-	int16_t tuneCrc16; // 244
+	scaled_channel<uint16_t> tuneCrc16; // 244
 
 	// Offset 246: bits
 	uint8_t sd_logging_internal : 1;	// bit 0
@@ -246,7 +246,7 @@ struct TunerStudioOutputChannels {
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	int8_t knockLevels[12];		// 250
+	scaled_channel<int8_t> knockLevels[12];		// 250
 
 	int8_t tcuDesiredGear; // 262
 	scaled_channel<uint8_t, 2> flexPercent;		// 263
@@ -281,7 +281,9 @@ struct TunerStudioOutputChannels {
 	scaled_voltage rawTps2Primary;		// 302
 	scaled_voltage rawTps2Secondary;	// 304
 
-	uint8_t unusedAtTheEnd[32]; // we have some unused bytes to allow compatible TS changes
+	scaled_channel<uint16_t> knockCount;
+
+	uint8_t unusedAtTheEnd[30]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

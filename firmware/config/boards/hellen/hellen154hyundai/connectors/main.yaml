@@ -196,6 +196,7 @@ pins:
     function: DC Wastegate Neg
 
 info:
+  title: Hellen 154 Hyundai
   image:
     file: main.jpg
   pins:

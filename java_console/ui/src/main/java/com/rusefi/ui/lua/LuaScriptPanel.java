@@ -97,6 +97,10 @@ public class LuaScriptPanel {
         }
 
         ConfigurationImage image = bp.getControllerConfiguration();
+        if (image == null) {
+            scriptText.setText("No configuration image");
+            return;
+        }
         ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.luaScript_offset, Fields.LUA_SCRIPT_SIZE);
 
         byte[] scriptArr = new byte[Fields.LUA_SCRIPT_SIZE];

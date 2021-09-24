@@ -64,6 +64,7 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initBaro(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initAuxSensors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVehicleSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTurbochargerSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	#if !EFI_UNIT_TEST
 		initFuelLevel(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -84,6 +85,7 @@ void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deinitThermistors();
 	deInitFlexSensor();
 	deInitVehicleSpeedSensor();
+	deinitTurbochargerSpeedSensor();
 }
 
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -94,6 +96,7 @@ void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVehicleSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTurbochargerSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initOldAnalogInputs(PASS_CONFIG_PARAMETER_SIGNATURE);
 }

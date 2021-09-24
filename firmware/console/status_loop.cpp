@@ -626,9 +626,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
-	//tsOutputChannels->knockCount = engine->knockCount;
-	//tsOutputChannels->knockLevel = engine->knockVolts;
-
 #if HW_CHECK_MODE
 	tsOutputChannels->hasCriticalError = 1;
 #else
@@ -703,9 +700,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	for (int i = 0; i < 8;i++) {
 		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
 	}
-
-	tsOutputChannels->knockNowIndicator = engine->knockCount > 0;
-	tsOutputChannels->knockEverIndicator = engine->knockEver;
 
 	tsOutputChannels->clutchUpState = engine->clutchUpState;
 	tsOutputChannels->clutchDownState = engine->clutchDownState;

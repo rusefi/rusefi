@@ -188,8 +188,6 @@ enable2ndByteCanID = false
       needBurn        = bits,    U32,      0,    [9:9], "true", "false";
       clutchUpState    =bits,    U32,      0,  [11:11], "true", "false";
       clutchDownState  =bits,    U32,      0,  [12:12], "true", "false";
-      knockEverIndicator=bits,   U32,      0,  [13:13], "true", "false";
-      knockNowIndicator=bits,    U32,      0,  [14:14], "true", "false";
       brakePedalIndicator=bits,  U32,      0,  [15:15], "true", "false";
       toothLogReady      =bits,  U32,      0,  [16:16], "true", "false";
       acSwitchState     =bits,   U32,      0,  [17:17], "true", "false";
@@ -294,6 +292,7 @@ enable2ndByteCanID = false
 
 ; Knock
       knockLevel      = scalar,  F32,    108,  "Volts",      1,         0
+	  knockCount      = scalar,  U16,    306,  "count",      1,         0
 
 ; Mode, firmware, protocol, run time
 ; TS requires 'seconds' name since it has special internal meaning
@@ -597,13 +596,21 @@ enable2ndByteCanID = false
       xBins       = mapAccelTaperBins
       yBins       = mapAccelTaperMult
 
-	curve = dwellCorrection, "Dwell time RPM based"
+	curve = dwellCorrection, "Dwell time base"
       columnLabel = "RPM", "Dwell"
       xAxis       =  0, 8000, 9
       yAxis       =  0,  8, 9
       xBins       = sparkDwellRpmBins, RPMValue
       yBins       = sparkDwellValues
       gauge       = RPMGauge
+
+	curve = dwellVoltageCorrection, "Dwell voltage correction"
+      columnLabel = "Battery Volts", "Multiplier"
+      xAxis       =  6, 16, 5
+      yAxis       =  0, 3, 7
+      xBins       = dwellVoltageCorrVoltBins, VBatt
+      yBins       = dwellVoltageCorrValues
+      gauge       = VBattGauge
     
    curve = map_samplingAngleCurve, "MAP Sampling Start Angle"
       columnLabel = "RPM", "Angle"
@@ -971,6 +978,7 @@ gaugeCategory = Sensors - Extra 2
    egt8Gauge         = egt8, "EGT#8", "C", 0, 2000
    rpmAccelerationGa = rpmAcceleration,     "rpm delta",        "RPM/s",        -2000,      2000,       -2000,      2000,       -2000,     2000,   0,   0
    knockLevelGauge   = knockLevel,"Knock level",           "volts",        0,      7,      10,     10,     100,   100,   1,   2
+   knockCountGauge   = knockCount, "Knock count",          "count",        0, 10000, 0, 0, 10000, 10000, 0, 0
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
@@ -1212,10 +1220,6 @@ gaugeCategory = DynoView
 ;  not implemented
 ;    indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
 
-
-    indicator = { knockEverIndicator }, "",   "Knock recently",   white, black, red,   black
-    indicator = { knockNowIndicator }, "no knock",   "Knock NOW",   white, black, red,   black
-
 	indicator = { sd_present }, "no SD card", "SD card OK",   white, black, green, black
 	indicator = { sd_logging_internal }, "SD logging", "SD logging", white, black, green, black
 	indicator = { sd_msd }, "SD USB", "SD USB", white, black, green, black
@@ -1239,16 +1243,16 @@ gaugeCategory = DynoView
    entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
    entry = coolant,         @@GAUGE_NAME_CLT@@,         float,  "%.2f"
    entry = intake,          @@GAUGE_NAME_IAT@@,         float,  "%.2f"
-   entry = oilPressure,		"Oil Press",   float,  "%.1f"
+   entry = oilPressure,		@@GAUGE_NAME_OIL_PRESSURE@@,float,  "%.1f"
    entry = TPSValue,        @@GAUGE_NAME_TPS@@,         float,  "%.2f"
    entry = TPS2Value,       @@GAUGE_NAME_TPS2@@,        float, "%.2f"
    entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
    entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
    entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
    entry = AFRValue2,       @@GAUGE_NAME_AFR2@@,        float,  "%.2f"
-   entry = lambdaValue,     @@GAUGE_NAME_LAMBDA@@,     float,  "%.2f"
-   entry = lambdaValue2,     @@GAUGE_NAME_LAMBDA2@@,    float,  "%.2f"
-   entry = VBatt,           @@GAUGE_NAME_VBAT@@,       float,  "%.2f"
+   entry = lambdaValue,     @@GAUGE_NAME_LAMBDA@@,      float,  "%.2f"
+   entry = lambdaValue2,    @@GAUGE_NAME_LAMBDA2@@,     float,  "%.2f"
+   entry = VBatt,           @@GAUGE_NAME_VBAT@@,        float,  "%.2f"
    entry = fuelingLoad,     @@GAUGE_NAME_FUEL_LOAD@@,     float, "%.1f"
    entry = ignitionLoad,    @@GAUGE_NAME_IGNITION_LOAD@@, float, "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
@@ -1328,8 +1332,8 @@ gaugeCategory = DynoView
    entry = debugIntField5,     {bitStringValue( debugFieldI5List,  debugMode )},int,"%d", { !enableLogDebugChannels }
 
 
-   entry = engineMakeCodeNameCrc16,   "Engine CRC16",int,"%d"
-   entry = tuneCrc16,   "Tune CRC16",int,"%d"
+   entry = engineMakeCodeNameCrc16,   @@GAUGE_NAME_ENGINE_CRC16@@,int,"%d"
+   entry = tuneCrc16,   @@GAUGE_NAME_TUNE_CRC16@@,int,"%d"
 
    entry = engineMode,   "Engine Mode",int,"%d"
    entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
@@ -1506,7 +1510,7 @@ menuDialog = main
         subMenu = vvtTable2Tbl,             "VVT exhaust target"
 
 		subMenu = std_separator
-		subMenu = fsioInputsDialog,        	"FSIO inputs"
+		subMenu = auxInputsDialog,        	"Aux inputs"
 		subMenu = fsioOutputsDialog,        "FSIO outputs"
 		subMenu = fsioFormulas,				"FSIO Formulas"
 
@@ -1765,6 +1769,10 @@ cmd_set_engine_type_hellen_121_vag_5				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@
 cmd_set_engine_type_hellen_121_vag_v6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_V6_CYL_16_hex@@"
 cmd_set_engine_type_hellen_121_vag_vr6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_VR6_CYL_16_hex@@"
 cmd_set_engine_type_hellen_121_vag_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_8_CYL_16_hex@@"
+
+cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_4_CYL_16_hex@@"
+cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_128_merc_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_8_CYL_16_hex@@"
 
 
 ; MIATA_NA6_MAP = 41
@@ -2064,7 +2072,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = multisparkDwellParams
 
 	dialog = dwellSettings, "", yAxis
-		panel = dwellCorrection,	Center
+		panel = dwellCorrection
+		panel = dwellVoltageCorrection
 		
 ;			Sensors->AUX1 Thermistor Sensor Setting
 	dialog = auxTempSensor1Sensor,	"aux1 Thermistor Settings"
@@ -2132,7 +2141,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Up voltage",							throttlePedalUpVoltage
 		field = "Down (WOT) voltage",					throttlePedalWOTVoltage
 		field = "Accelerator position 2nd sensor",		throttlePedalPositionSecondAdcChannel
-		field = "Up voltage"							throttlePedalSecondaryUpVoltage
+		field = "Up voltage",	    					throttlePedalSecondaryUpVoltage
 		field = "Down (WOT) voltage",					throttlePedalSecondaryWOTVoltage
 
 	dialog = pedalGauges
@@ -2404,7 +2413,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TLE 8888 spi",                         tle8888spiDevice @@if_ts_show_spi
 		field = "AUX Serial TX", 						auxSerialTxPin
 		field = "AUX Serial RX", 						auxSerialRxPin
-		field = "External Knock",						externalKnockSenseAdc
 		field = "Start/Stop Button",					startStopButtonPin
 		field = "Upshift Pin",							tcuUpshiftButtonPin
 		field = "Downshift Pin",						tcuDownshiftButtonPin
@@ -2802,7 +2810,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 ;			Engine->hip9011 Settings
 	dialog = hipFunction, "HIP9011 Settings (knock decoder)"
 		field = "Enabled",								isHip9011Enabled
-		field = "Threshold",							knockVThreshold, {isHip9011Enabled == 1}
 		field = "!ECU reboot needed to apply these settings"
 		field = "IntHold pin (hip9011 input)",      	hip9011IntHoldPin, {isHip9011Enabled == 1}
 		field = "IntHold pin (hip9011 input) mode",		hip9011IntHoldPinMode, {isHip9011Enabled == 1}
@@ -3237,7 +3244,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		field = "#6",									fsioFormulas6
 
-	dialog = fsioInputsDialog, "FSIO inputs"
+	dialog = auxInputsDialog, "Aux inputs"
 		field = "ADC #1",								fsioAdc1
 		field = "ADC #2",								fsioAdc2
 		field = "ADC #3",								fsioAdc3
@@ -3397,7 +3404,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		; Neutral position handling not yet implemented!
 		;field = "Neutral Position",						etbNeutralPosition
 
-	dialog = etbDialog, "Electronic Throttle Body (beta)", border
+	dialog = etbDialog, "Electronic Throttle Body", border
 		topicHelp = "etbHelp"
 		panel = etbDialogLeft, West
 		panel = etbDialogRight, East
@@ -3486,6 +3493,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Hellen 121 VAG v6",			cmd_set_engine_type_hellen_121_vag_v6@@if_show_Hellen121vag_presets
 		commandButton = "Hellen 121 VAG vr6",			cmd_set_engine_type_hellen_121_vag_vr6@@if_show_Hellen121vag_presets
 		commandButton = "Hellen 121 VAG v8",			cmd_set_engine_type_hellen_121_vag_8@@if_show_Hellen121vag_presets
+
+		commandButton = "Hellen 128 Merc 4 cyl",		cmd_set_engine_type_hellen_128_merc_4@@if_show_Hellen128merc_presets
+		commandButton = "Hellen 128 Merc 6 cyl",		cmd_set_engine_type_hellen_128_merc_6@@if_show_Hellen128merc_presets
+		commandButton = "Hellen 128 Merc v8",			cmd_set_engine_type_hellen_128_merc_8@@if_show_Hellen128merc_presets
 
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test@@if_show_test_presets
 		commandButton = "TLE8888 test bench", cmd_set_engine_type_8888_test@@if_show_test_presets
