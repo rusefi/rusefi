@@ -606,7 +606,7 @@ enable2ndByteCanID = false
 
 	curve = dwellVoltageCorrection, "Dwell voltage correction"
       columnLabel = "Battery Volts", "Multiplier"
-      xAxis       =  6, 16, 5
+      xAxis       =  6, 16, 11
       yAxis       =  0, 3, 7
       xBins       = dwellVoltageCorrVoltBins, VBatt
       yBins       = dwellVoltageCorrValues
@@ -629,11 +629,12 @@ enable2ndByteCanID = false
 	  gauge       = MAPGauge
 
    curve = injectorsDeadTime, "Injector dead time"
-      columnLabel = "Voltage", "Dead Time"
-      xAxis       =  8, 16, 9
-      yAxis       = 0, 2, 5
+      columnLabel = "Battery", "Dead Time"
+      xAxis       = 6, 16, 11
+      yAxis       = 0, 8, 9
       xBins       = injector_battLagCorrBins, VBatt
       yBins       = injector_battLagCorr
+      gauge       = VBattGauge
 
 	curve = vrThresholdCurve1, "VR 1 Threshold"
 	  columnLabel = "RPM", "Voltage"
