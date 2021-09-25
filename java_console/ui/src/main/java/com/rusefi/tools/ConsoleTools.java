@@ -239,7 +239,7 @@ public class ConsoleTools {
 
     public static void startAndConnect(final Function<LinkManager, Void> onConnectionEstablished) {
 
-        String autoDetectedPort = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return;
@@ -342,7 +342,7 @@ public class ConsoleTools {
 
     @Nullable
     private static String autoDetectPort() {
-        String autoDetectedPort = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return null;
@@ -367,7 +367,8 @@ public class ConsoleTools {
     }
 
     static void detect(String[] strings) throws IOException {
-        String autoDetectedPort = autoDetectPort();
+        SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = detectResult.getSerialPort();
         if (autoDetectedPort == null) {
             System.out.println(RUS_EFI_NOT_DETECTED);
             return;
@@ -413,9 +414,9 @@ public class ConsoleTools {
         });
         responseBuffer.append(textResponse + "\r\n", LinkManager.ENCODER);
 
-        System.out.println("Signature: " + SerialAutoChecker.SIGNATURE);
+        System.out.println("Signature: " + detectResult.getSignature());
         System.out.println("It says " + messages);
-        Pair<String, String> stringPair = SignatureHelper.getUrl(SerialAutoChecker.SIGNATURE);
+        Pair<String, String> stringPair = SignatureHelper.getUrl(detectResult.getSignature());
         if (stringPair != null)
             System.out.println("Ini file: " + stringPair.first);
         System.exit(0);

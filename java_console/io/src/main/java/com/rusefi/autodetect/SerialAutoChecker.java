@@ -6,6 +6,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -18,18 +19,18 @@ public class SerialAutoChecker implements Runnable {
     private final static Logging log = Logging.getLogging(SerialAutoChecker.class);
     private final String serialPort;
     private final CountDownLatch portFound;
-    private final AtomicReference<String> result;
+    private final AtomicReference<AutoDetectResult> result;
+    @Nullable
     private final Function<IoStream, Void> callback;
-    public static String SIGNATURE;
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result, Function<IoStream, Void> callback) {
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<AutoDetectResult> result, Function<IoStream, Void> callback) {
         this.serialPort = serialPort;
         this.portFound = portFound;
         this.result = result;
         this.callback = callback;
     }
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<String> result) {
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<AutoDetectResult> result) {
         this(serialPort, portFound, result, null);
     }
 
@@ -38,13 +39,13 @@ public class SerialAutoChecker implements Runnable {
         IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         boolean isPortFound = false;
+        String signature;
         try {
             HelloCommand.send(stream);
-            byte[] response = incomingData.getPacket("");
+            byte[] response = incomingData.getPacket("auto detect");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK))
                 return;
-            String signature = new String(response, 1, response.length - 1);
-            SIGNATURE = signature;
+            signature = new String(response, 1, response.length - 1);
             log.info("Got signature=" + signature + " from " + serialPort);
             if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
                 if (callback != null) {
@@ -61,8 +62,27 @@ public class SerialAutoChecker implements Runnable {
             /**
              * propagating result after closing the port so that it could be used right away
              */
-            result.set(serialPort);
+            result.set(new AutoDetectResult(serialPort, signature));
             portFound.countDown();
+        }
+    }
+
+    public static class AutoDetectResult {
+
+        private final String serialPort;
+        private final String signature;
+
+        public AutoDetectResult(String serialPort, String signature) {
+            this.serialPort = serialPort;
+            this.signature = signature;
+        }
+
+        public String getSerialPort() {
+            return serialPort;
+        }
+
+        public String getSignature() {
+            return signature;
         }
     }
 }
