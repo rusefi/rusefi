@@ -346,7 +346,7 @@ static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
 }
 
-static void setDefaultFrankensoStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultFrankensoStepperIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idle.stepperDirectionPin = GPIOE_10;
 	engineConfiguration->idle.stepperStepPin = GPIOE_12;
 	engineConfiguration->stepperEnablePin = GPIOE_14;
@@ -722,7 +722,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
  */
 void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultFrankensoStepperIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setCanFrankensoDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
