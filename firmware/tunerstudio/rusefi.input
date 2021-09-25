@@ -1018,7 +1018,7 @@ gaugeCategory = Debug
 
 
 gaugeCategory = Sensors - Basic
-   RPMGauge        = RPMValue,           "RPM - engine speed",       "RPM",       0,   15000,     200,    500,    6000,  6000,   0,   0
+   RPMGauge          = RPMValue,           "RPM - engine speed",       "RPM",       0,   {rpmHardLimit + 2000},     200,    {cranking_rpm},    {rpmHardLimit - 500},  {rpmHardLimit},   0,   0
    CLTGauge          = coolant,       "Coolant temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
    IATGauge          = intake,     "Intake air temp",        "deg C",      -40,    140,     -15,      1,      95,   110,   1,   1
    afr1Gauge         = AFRValue, @@GAUGE_NAME_AFR@@,          "",       10,   19.4,      12,     13,      15,    16,   2,   2
