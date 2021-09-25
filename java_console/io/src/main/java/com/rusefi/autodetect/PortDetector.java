@@ -29,19 +29,24 @@ public class PortDetector {
      * @return port name on which rusEFI was detected or null if none
      */
     @Nullable
-    public static String autoDetectSerial(Function<IoStream, Void> callback) {
+    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<IoStream, Void> callback) {
         String rusEfiAddress = System.getProperty("rusefi.address");
-        if (rusEfiAddress != null)
-            return rusEfiAddress;
+        if (rusEfiAddress != null) {
+            return getSignatureFromPorts(callback, new String[] {rusEfiAddress});
+        }
         String[] serialPorts = getPortNames();
         if (serialPorts.length == 0) {
             log.error("No serial ports detected");
-            return null;
+            return new SerialAutoChecker.AutoDetectResult(null, null);
         }
         log.info("Trying " + Arrays.toString(serialPorts));
+        return getSignatureFromPorts(callback, serialPorts);
+    }
+
+    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(Function<IoStream, Void> callback, String[] serialPorts) {
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
-        AtomicReference<String> result = new AtomicReference<>();
+        AtomicReference<SerialAutoChecker.AutoDetectResult> result = new AtomicReference<>();
         for (String serialPort : serialPorts) {
             Thread thread = AUTO_DETECT_PORT.newThread(new SerialAutoChecker(serialPort, portFound, result, callback));
             serialFinder.add(thread);
@@ -67,9 +72,9 @@ public class PortDetector {
     }
 
     @Nullable
-    public static String autoDetectPort(JFrame parent) {
-        String autoDetectedPort = autoDetectSerial(null);
-        if (autoDetectedPort == null) {
+    public static SerialAutoChecker.AutoDetectResult autoDetectPort(JFrame parent) {
+        SerialAutoChecker.AutoDetectResult autoDetectedPort = autoDetectSerial(null);
+        if (autoDetectedPort.getSerialPort() == null) {
             JOptionPane.showMessageDialog(parent, "Failed to located device");
             return null;
         }
@@ -79,7 +84,7 @@ public class PortDetector {
     public static String autoDetectSerialIfNeeded(String port) {
         if (!isAutoPort(port))
             return port;
-        return autoDetectSerial(null);
+        return autoDetectSerial(null).getSerialPort();
     }
 
     public static boolean isAutoPort(String port) {

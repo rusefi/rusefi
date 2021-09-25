@@ -62,7 +62,7 @@ public class DfuFlasher {
             port = PortDetector.autoDetectSerial(stream -> {
                 DfuHelper.sendDfuRebootCommand(stream, messages);
                 return null;
-            });
+            }).getSerialPort();
             if (port == null) {
                 JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI serial port not detected");
                 return;

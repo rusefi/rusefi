@@ -37,7 +37,7 @@ public class ControllerConnectorState {
         FileLog.MAIN.start();
         String port = System.getProperty("ecu.port");
         if (port == null) {
-            port = PortDetector.autoDetectSerial(null);
+            port = PortDetector.autoDetectSerial(null).getSerialPort();
             if (port == null)
                 throw new IllegalStateException("ECU serial not detected");
         }
