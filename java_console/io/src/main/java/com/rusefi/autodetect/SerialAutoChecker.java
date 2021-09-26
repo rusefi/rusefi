@@ -21,9 +21,9 @@ public class SerialAutoChecker implements Runnable {
     private final CountDownLatch portFound;
     private final AtomicReference<AutoDetectResult> result;
     @Nullable
-    private final Function<IoStream, Void> callback;
+    private final Function<CallbackContext, Void> callback;
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<AutoDetectResult> result, Function<IoStream, Void> callback) {
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
         this.serialPort = serialPort;
         this.portFound = portFound;
         this.result = result;
@@ -49,7 +49,7 @@ public class SerialAutoChecker implements Runnable {
             log.info("Got signature=" + signature + " from " + serialPort);
             if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
                 if (callback != null) {
-                    callback.apply(stream);
+                    callback.apply(new CallbackContext(stream, signature));
                 }
                 isPortFound = true;
             }
@@ -64,6 +64,24 @@ public class SerialAutoChecker implements Runnable {
              */
             result.set(new AutoDetectResult(serialPort, signature));
             portFound.countDown();
+        }
+    }
+
+    public static class CallbackContext {
+        private final IoStream stream;
+        private final String signature;
+
+        public CallbackContext(IoStream stream, String signature) {
+            this.stream = stream;
+            this.signature = signature;
+        }
+
+        public String getSignature() {
+            return signature;
+        }
+
+        public IoStream getStream() {
+            return stream;
         }
     }
 

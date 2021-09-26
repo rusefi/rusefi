@@ -59,8 +59,8 @@ public class DfuFlasher {
             messages.append("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
             // it's more reliable this way
-            port = PortDetector.autoDetectSerial(stream -> {
-                DfuHelper.sendDfuRebootCommand(stream, messages);
+            port = PortDetector.autoDetectSerial(callbackContext -> {
+                DfuHelper.sendDfuRebootCommand(callbackContext.getStream(), messages);
                 return null;
             }).getSerialPort();
             if (port == null) {
