@@ -468,6 +468,7 @@
 #define etb_dFactor_offset 1744
 #define ETB_ETB_None 0
 #define etb_function_e_auto_enum "ETB_None", "ETB_Throttle1", "ETB_Throttle2", "ETB_IdleValve", "ETB_Wastegate"
+#define ETB_FUNCTION_NONE 0
 #define ETB_HW_MAX_FREQUENCY 10000
 #define etb_iFactor_offset 1740
 #define etb_iTermMax_offset 3930
@@ -1253,7 +1254,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.09.26
-#define SIGNATURE_HASH 1790648713
+#define SIGNATURE_HASH 1575434451
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1609,7 +1610,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.09.26.kin.1790648713"
+#define TS_SIGNATURE "rusEFI 2021.09.26.kin.1575434451"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

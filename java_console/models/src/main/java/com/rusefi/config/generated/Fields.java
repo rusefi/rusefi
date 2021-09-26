@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 26 21:55:32 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Sep 26 22:02:23 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -466,6 +466,7 @@ public class Fields {
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;
 	public static final int ETB_ETB_None = 0;
+	public static final int ETB_FUNCTION_NONE = 0;
 	public static final int ETB_HW_MAX_FREQUENCY = 10000;
 	public static final int etb_iFactor_offset = 1740;
 	public static final int etb_iTermMax_offset = 3958;
@@ -1529,7 +1530,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.09.26.all.3613537957";
+	public static final String TS_SIGNATURE = "rusEFI 2021.09.26.all.3762171903";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
