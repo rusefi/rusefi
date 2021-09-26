@@ -30,11 +30,7 @@ public class SerialAutoChecker implements Runnable {
         this.callback = callback;
     }
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<AutoDetectResult> result) {
-        this(serialPort, portFound, result, null);
-    }
-
-    @Override
+   @Override
     public void run() {
         IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
         IncomingDataBuffer incomingData = stream.getDataBuffer();
