@@ -32,16 +32,20 @@ public class DfuHelper {
             if (!bundleName.equalsIgnoreCase(s.getBundle())) {
                 String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundle(), bundleName);
                 FileLog.MAIN.logLine(message);
-                JOptionPane.showMessageDialog(parent, message);
-                // in case of mismatched bundle type we are supposed do close connection
-                // and properly handle the case of user hitting "Update Firmware" again
-                // closing connection is a mess on Windows so it's simpler to just exit
-                new Thread(() -> {
-                    // let's have a delay and separate thread to address
-                    // "wrong bundle" warning text sometimes not visible #3267
-                    sleep(5 * SECOND);
-                    System.exit(-5);
-                }).start();
+
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(parent, message);
+                    // in case of mismatched bundle type we are supposed do close connection
+                    // and properly handle the case of user hitting "Update Firmware" again
+                    // closing connection is a mess on Windows so it's simpler to just exit
+                    new Thread(() -> {
+                        // let's have a delay and separate thread to address
+                        // "wrong bundle" warning text sometimes not visible #3267
+                        sleep(5 * SECOND);
+                        System.exit(-5);
+                    }).start();
+                });
+
                 return false;
             }
         }
