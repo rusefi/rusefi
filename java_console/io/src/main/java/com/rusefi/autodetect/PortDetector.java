@@ -48,7 +48,12 @@ public class PortDetector {
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<SerialAutoChecker.AutoDetectResult> result = new AtomicReference<>();
         for (String serialPort : serialPorts) {
-            Thread thread = AUTO_DETECT_PORT.newThread(new SerialAutoChecker(serialPort, portFound, result, callback));
+            Thread thread = AUTO_DETECT_PORT.newThread(new Runnable() {
+                @Override
+                public void run() {
+                    new SerialAutoChecker(serialPort, portFound).run(result, callback);
+                }
+            });
             serialFinder.add(thread);
             thread.start();
         }
