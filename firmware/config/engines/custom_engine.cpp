@@ -689,6 +689,14 @@ void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 /**
+ * set engine_type 108
+ */
+void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
+}
+
+/**
  * set engine_type 107
  */
 void setRotary(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

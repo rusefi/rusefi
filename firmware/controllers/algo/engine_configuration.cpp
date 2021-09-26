@@ -1115,6 +1115,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TEST_33816:
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case TEST_108:
+		setVrThresholdTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case TEST_109:
+	case TEST_110:
 	case TEST_ROTARY:
 		setRotary(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
