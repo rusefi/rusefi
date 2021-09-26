@@ -692,6 +692,8 @@ void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * set engine_type 108
  */
 void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->trigger.type = TT_HONDA_1_24;
+
 	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
 }
