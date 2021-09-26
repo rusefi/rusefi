@@ -259,6 +259,12 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	case GPIOD_14: return stm32_pwm_config{&PWMD4, 2, 2};
 	case GPIOD_15: return stm32_pwm_config{&PWMD4, 3, 2};
 #endif
+#if STM32_PWM_USE_TIM5
+	case GPIOA_0: return stm32_pwm_config{&PWMD5, 0, 2};
+	case GPIOA_1: return stm32_pwm_config{&PWMD5, 1, 2};
+	case GPIOA_2: return stm32_pwm_config{&PWMD5, 2, 2};
+	case GPIOA_3: return stm32_pwm_config{&PWMD5, 3, 2};
+#endif
 #if STM32_PWM_USE_TIM8
 	case GPIOC_6: return stm32_pwm_config{&PWMD8, 0, 3};
 	case GPIOC_7: return stm32_pwm_config{&PWMD8, 1, 3};
