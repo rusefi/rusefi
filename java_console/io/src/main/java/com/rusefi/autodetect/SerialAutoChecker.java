@@ -15,15 +15,15 @@ import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
-public class SerialAutoChecker implements Runnable {
+public class SerialAutoChecker {
     private final static Logging log = Logging.getLogging(SerialAutoChecker.class);
     private final String serialPort;
     private final CountDownLatch portFound;
     private final AtomicReference<AutoDetectResult> result;
     @Nullable
-    private final Function<IoStream, Void> callback;
+    private final Function<CallbackContext, Void> callback;
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<AutoDetectResult> result, Function<IoStream, Void> callback) {
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
         this.serialPort = serialPort;
         this.portFound = portFound;
         this.result = result;
@@ -34,9 +34,16 @@ public class SerialAutoChecker implements Runnable {
         this(serialPort, portFound, result, null);
     }
 
-    @Override
-    public void run() {
+    public void openAndRunLogic() {
         IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
+        try {
+            runLogic(stream);
+        } finally {
+            stream.close();
+        }
+    }
+
+    public void runLogic(IoStream stream) {
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         boolean isPortFound = false;
         String signature;
@@ -49,14 +56,12 @@ public class SerialAutoChecker implements Runnable {
             log.info("Got signature=" + signature + " from " + serialPort);
             if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
                 if (callback != null) {
-                    callback.apply(stream);
+                    callback.apply(new CallbackContext(stream, signature));
                 }
                 isPortFound = true;
             }
         } catch (IOException ignore) {
             return;
-        } finally {
-            stream.close();
         }
         if (isPortFound) {
             /**
@@ -64,6 +69,24 @@ public class SerialAutoChecker implements Runnable {
              */
             result.set(new AutoDetectResult(serialPort, signature));
             portFound.countDown();
+        }
+    }
+
+    public static class CallbackContext {
+        private final IoStream stream;
+        private final String signature;
+
+        public CallbackContext(IoStream stream, String signature) {
+            this.stream = stream;
+            this.signature = signature;
+        }
+
+        public String getSignature() {
+            return signature;
+        }
+
+        public IoStream getStream() {
+            return stream;
         }
     }
 
