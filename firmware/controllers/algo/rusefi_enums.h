@@ -232,6 +232,10 @@ typedef enum {
 
 	TEST_ROTARY = ET_TEST_ROTARY,
 
+	TEST_108 = 108,
+	TEST_109 = 109,
+	TEST_110 = 110,
+
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
 

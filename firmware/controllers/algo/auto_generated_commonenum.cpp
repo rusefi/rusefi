@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Sep 17 23:02:58 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Sep 26 02:05:28 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -534,6 +534,12 @@ case SUBARUEJ20G_DEFAULTS:
   return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
+case TEST_108:
+  return "TEST_108";
+case TEST_109:
+  return "TEST_109";
+case TEST_110:
+  return "TEST_110";
 case TEST_33816:
   return "TEST_33816";
 case TEST_CIVIC_4_0_BOTH:
