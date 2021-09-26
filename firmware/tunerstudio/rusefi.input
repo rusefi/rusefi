@@ -490,6 +490,8 @@ enable2ndByteCanID = false
 
      requiresPowerCycle = etb_use_two_wires
      requiresPowerCycle = etbFreq
+     requiresPowerCycle = etbFunctions1
+     requiresPowerCycle = etbFunctions2
 
      requiresPowerCycle = idle_solenoidFrequency
      requiresPowerCycle = boostPwmFrequency
