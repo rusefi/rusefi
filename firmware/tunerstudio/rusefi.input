@@ -2642,7 +2642,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
 		panel = idleStepperHw, { useStepperIdle && !useHbridgesToDriveIdleStepper }
         ; todo: reminder that enable condition has to match in both usages of hbridgeHardware due to TS defect?
-		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 = @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
+		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
 	dialog = idleHwType, "Idle Valve Hardware",	border
 		panel = idleSolenoid,				West
@@ -3388,7 +3388,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
 		; another todo: split panel into two panels so that we can enable/disable h-bridge #1 separately from h-bridge #2
-		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 = @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
+		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
