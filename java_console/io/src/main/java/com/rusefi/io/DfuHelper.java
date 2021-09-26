@@ -14,6 +14,8 @@ import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class DfuHelper {
+    private static final String PREFIX = "rusefi_bundle";
+
     public static void sendDfuRebootCommand(IoStream stream, StringBuilder messages) {
         byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
         try {
@@ -29,7 +31,14 @@ public class DfuHelper {
         RusEfiSignature s = SignatureHelper.parse(signature);
         String bundleName = Autoupdate.readBundleFullName();
         if (bundleName != null && s != null) {
-            if (!bundleName.equalsIgnoreCase(s.getBundle())) {
+            String signatureWithPrefix;
+            if ("all".equals(s.getBundle())) {
+                signatureWithPrefix = PREFIX;
+            } else {
+                signatureWithPrefix = PREFIX + s.getBundle();
+            }
+
+            if (!bundleName.equalsIgnoreCase(signatureWithPrefix)) {
                 String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundle(), bundleName);
                 FileLog.MAIN.logLine(message);
 
