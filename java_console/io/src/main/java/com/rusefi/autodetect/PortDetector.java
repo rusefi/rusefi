@@ -3,6 +3,7 @@ package com.rusefi.autodetect;
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.LinkManager;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -27,7 +28,7 @@ public class PortDetector {
      * @param callback
      * @return port name on which rusEFI was detected or null if none
      */
-    @Nullable
+    @NotNull
     public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
         String rusEfiAddress = System.getProperty("rusefi.address");
         if (rusEfiAddress != null) {
@@ -42,6 +43,7 @@ public class PortDetector {
         return getSignatureFromPorts(callback, serialPorts);
     }
 
+    @NotNull
     private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(Function<SerialAutoChecker.CallbackContext, Void> callback, String[] serialPorts) {
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
@@ -61,11 +63,15 @@ public class PortDetector {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-        log.debug("Found " + result.get() + " now stopping threads");
         for (Thread thread : serialFinder)
             thread.interrupt();
+
+        SerialAutoChecker.AutoDetectResult autoDetectResult = result.get();
+        if (autoDetectResult == null)
+            autoDetectResult = new SerialAutoChecker.AutoDetectResult(null, null);
+        log.debug("Found " + autoDetectResult + " now stopping threads");
 //        FileLog.MAIN.logLine("Returning " + result.get());
-        return result.get();
+        return autoDetectResult;
     }
 
     private static String[] getPortNames() {
