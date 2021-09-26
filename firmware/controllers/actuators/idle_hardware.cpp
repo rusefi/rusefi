@@ -91,7 +91,7 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(useStepperIdle)) {
 		StepperHw* hw;
 
-		if (CONFIG(useHbridges)) {
+		if (CONFIG(useHbridgesToDriveIdleStepper)) {
 			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0], 2, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
 			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1], 3, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
 
