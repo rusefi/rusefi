@@ -5,7 +5,6 @@ import com.rusefi.ConsoleUI;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
-import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
@@ -17,10 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 import static com.rusefi.StartupFrame.appendBundleName;
 
@@ -57,18 +53,14 @@ public class DfuFlasher {
 
         if (!PortDetector.isAutoPort(port)) {
             messages.append("Using selected " + port + "\n");
-            Function<SerialAutoChecker.CallbackContext, Void> callback = null; // todo
-            AtomicReference<SerialAutoChecker.AutoDetectResult> result = new AtomicReference<>();
-            SerialAutoChecker checker = new SerialAutoChecker(port, new CountDownLatch(1), result, callback);
             IoStream stream = SerialIoStreamJSerialComm.openPort(port);
-            checker.runLogic(stream);
             DfuHelper.sendDfuRebootCommand(stream, messages);
         } else {
             messages.append("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
             // it's more reliable this way
-            port = PortDetector.autoDetectSerial(callbackContext -> {
-                DfuHelper.sendDfuRebootCommand(callbackContext.getStream(), messages);
+            port = PortDetector.autoDetectSerial(stream -> {
+                DfuHelper.sendDfuRebootCommand(stream, messages);
                 return null;
             }).getSerialPort();
             if (port == null) {

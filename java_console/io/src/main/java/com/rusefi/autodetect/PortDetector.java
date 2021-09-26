@@ -29,7 +29,7 @@ public class PortDetector {
      * @return port name on which rusEFI was detected or null if none
      */
     @Nullable
-    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
+    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<IoStream, Void> callback) {
         String rusEfiAddress = System.getProperty("rusefi.address");
         if (rusEfiAddress != null) {
             return getSignatureFromPorts(callback, new String[] {rusEfiAddress});
@@ -43,16 +43,12 @@ public class PortDetector {
         return getSignatureFromPorts(callback, serialPorts);
     }
 
-    public static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(Function<SerialAutoChecker.CallbackContext, Void> callback, String[] serialPorts) {
+    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(Function<IoStream, Void> callback, String[] serialPorts) {
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<SerialAutoChecker.AutoDetectResult> result = new AtomicReference<>();
         for (String serialPort : serialPorts) {
-            Thread thread = AUTO_DETECT_PORT.newThread(
-                    () -> {
-                        SerialAutoChecker checker = new SerialAutoChecker(serialPort, portFound, result, callback);
-                        checker.openAndRunLogic();
-                    });
+            Thread thread = AUTO_DETECT_PORT.newThread(new SerialAutoChecker(serialPort, portFound, result, callback));
             serialFinder.add(thread);
             thread.start();
         }
