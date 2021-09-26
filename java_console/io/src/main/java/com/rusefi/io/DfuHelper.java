@@ -1,5 +1,6 @@
 package com.rusefi.io;
 
+import com.rusefi.FileLog;
 import com.rusefi.RusEfiSignature;
 import com.rusefi.SignatureHelper;
 import com.rusefi.autoupdate.Autoupdate;
@@ -8,6 +9,9 @@ import com.rusefi.config.generated.Fields;
 
 import javax.swing.*;
 import java.io.IOException;
+
+import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
 public class DfuHelper {
     public static void sendDfuRebootCommand(IoStream stream, StringBuilder messages) {
@@ -26,11 +30,18 @@ public class DfuHelper {
         String bundleName = Autoupdate.readBundleFullName();
         if (bundleName != null && s != null) {
             if (!bundleName.equalsIgnoreCase(s.getBundle())) {
-                JOptionPane.showMessageDialog(parent, String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundle(), bundleName));
+                String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundle(), bundleName);
+                FileLog.MAIN.logLine(message);
+                JOptionPane.showMessageDialog(parent, message);
                 // in case of mismatched bundle type we are supposed do close connection
                 // and properly handle the case of user hitting "Update Firmware" again
                 // closing connection is a mess on Windows so it's simpler to just exit
-                System.exit(-5);
+                new Thread(() -> {
+                    // let's have a delay and separate thread to address
+                    // "wrong bundle" warning text sometimes not visible #3267
+                    sleep(5 * SECOND);
+                    System.exit(-5);
+                }).start();
                 return false;
             }
         }
