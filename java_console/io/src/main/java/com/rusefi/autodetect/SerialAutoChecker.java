@@ -6,7 +6,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -15,23 +14,17 @@ import java.util.function.Function;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
-public class SerialAutoChecker implements Runnable {
+public class SerialAutoChecker {
     private final static Logging log = Logging.getLogging(SerialAutoChecker.class);
     private final String serialPort;
     private final CountDownLatch portFound;
-    private final AtomicReference<AutoDetectResult> result;
-    @Nullable
-    private final Function<CallbackContext, Void> callback;
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound) {
         this.serialPort = serialPort;
         this.portFound = portFound;
-        this.result = result;
-        this.callback = callback;
     }
 
-   @Override
-    public void run() {
+    public void run(AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
         IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         boolean isPortFound = false;
