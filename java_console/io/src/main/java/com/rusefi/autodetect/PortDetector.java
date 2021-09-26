@@ -2,7 +2,6 @@ package com.rusefi.autodetect;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.Nullable;
 
@@ -51,7 +50,7 @@ public class PortDetector {
             Thread thread = AUTO_DETECT_PORT.newThread(new Runnable() {
                 @Override
                 public void run() {
-                    new SerialAutoChecker(serialPort, portFound).run(result, callback);
+                    new SerialAutoChecker(serialPort, portFound).openAndCheckResponse(result, callback);
                 }
             });
             serialFinder.add(thread);

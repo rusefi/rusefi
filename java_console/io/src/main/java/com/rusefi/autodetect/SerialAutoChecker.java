@@ -24,30 +24,33 @@ public class SerialAutoChecker {
         this.portFound = portFound;
     }
 
-    public void run(AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
-        IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
+    public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
         IncomingDataBuffer incomingData = stream.getDataBuffer();
-        boolean isPortFound = false;
-        String signature;
         try {
             HelloCommand.send(stream);
             byte[] response = incomingData.getPacket("auto detect");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK))
-                return;
-            signature = new String(response, 1, response.length - 1);
-            log.info("Got signature=" + signature + " from " + serialPort);
-            if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
-                if (callback != null) {
-                    callback.apply(new CallbackContext(stream, signature));
-                }
-                isPortFound = true;
+                return null;
+            String signature = new String(response, 1, response.length - 1);
+            if (!signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
+                return null;
             }
+            log.info("Got signature=" + signature + " from " + serialPort);
+            if (callback != null) {
+                callback.apply(new CallbackContext(stream, signature));
+            }
+            return signature;
         } catch (IOException ignore) {
-            return;
-        } finally {
-            stream.close();
+            return null;
         }
-        if (isPortFound) {
+    }
+
+    public void openAndCheckResponse(AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
+        String signature;
+        try (IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort)) {
+            signature = checkResponse(stream, callback);
+        }
+        if (signature != null) {
             /**
              * propagating result after closing the port so that it could be used right away
              */
