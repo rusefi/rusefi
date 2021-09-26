@@ -215,6 +215,7 @@ struct_no_prefix engine_configuration_s
 #define MAP_ACCEL_TAPER 8
 #define ADC_CHANNEL_NONE 0
 #define ETB_FUNCTION_NONE 0
+#define DC_FUNCTION_IDLE 3
 
 #define BARO_CORR_SIZE 4
 
