@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 26 22:35:59 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 27 03:23:14 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2202,10 +2202,14 @@ struct engine_configuration_s {
 	 */
 	vr_threshold_s vrThreshold[VR_THRESHOLD_COUNT];
 	/**
-	units
 	 * offset 1276
 	 */
-	int unusedAtOldBoardConfigurationEnd[45];
+	gppwm_note_t gpPwmNote[GPPWM_CHANNELS];
+	/**
+	units
+	 * offset 1340
+	 */
+	int unusedAtOldBoardConfigurationEnd[29];
 	/**
 	kg
 	 * offset 1456
@@ -2991,76 +2995,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_508_8 : 1;
+	bool unusedBit_509_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_508_9 : 1;
+	bool unusedBit_509_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_508_10 : 1;
+	bool unusedBit_509_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_508_11 : 1;
+	bool unusedBit_509_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_508_12 : 1;
+	bool unusedBit_509_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_508_13 : 1;
+	bool unusedBit_509_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_508_14 : 1;
+	bool unusedBit_509_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_508_15 : 1;
+	bool unusedBit_509_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_508_16 : 1;
+	bool unusedBit_509_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_508_17 : 1;
+	bool unusedBit_509_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_508_18 : 1;
+	bool unusedBit_509_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_508_19 : 1;
+	bool unusedBit_509_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_508_20 : 1;
+	bool unusedBit_509_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_508_21 : 1;
+	bool unusedBit_509_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_508_22 : 1;
+	bool unusedBit_509_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_508_23 : 1;
+	bool unusedBit_509_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_508_24 : 1;
+	bool unusedBit_509_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_508_25 : 1;
+	bool unusedBit_509_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_508_26 : 1;
+	bool unusedBit_509_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_508_27 : 1;
+	bool unusedBit_509_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_508_28 : 1;
+	bool unusedBit_509_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_508_29 : 1;
+	bool unusedBit_509_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_508_30 : 1;
+	bool unusedBit_509_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_508_31 : 1;
+	bool unusedBit_509_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4340,4 +4344,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Sep 26 22:35:59 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 27 03:23:14 UTC 2021
