@@ -3337,7 +3337,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "PID max",							etbWastegatePid_maxValue, { isBoostControlEnabled }
 
 	help = veTableDialogHelp, "Volumetric Efficiency"
-        text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode"
+        text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode. VE incorporates pressure ratio as measured by MAP sensor in boost (no VE ever above 105%ish)"
         webHelp = "https://rusefi.com/s/fuel"
         
     help = fuelHelp, "Fuel Control"    
