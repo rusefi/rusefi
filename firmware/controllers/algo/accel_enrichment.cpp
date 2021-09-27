@@ -95,10 +95,12 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	float alpha = expf_taylor(-120 / (rpm * tau));
 	float beta = CONFIG(DISPLAY_CONFIG(wwaeBeta));
 
+#if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
 		tsOutputChannels.debugFloatField1 = alpha;
 		tsOutputChannels.debugFloatField2 = beta;
 	}
+#endif // EFI_TUNER_STUDIO
 
 	// If beta is larger than alpha, the system is underdamped.
 	// For reasonable values {tau, beta}, this should only be possible
@@ -111,10 +113,12 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	float fuelFilmMass = wallFuel;
 	float M_cmd = (desiredFuel - (1 - alpha) * fuelFilmMass) / (1 - beta);
 
+#if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
 		tsOutputChannels.debugFloatField3 = fuelFilmMass;
 		tsOutputChannels.debugFloatField4 = M_cmd;
 	}
+#endif // EFI_TUNER_STUDIO
 
 	// We can't inject a negative amount of fuel
 	// If this goes below zero we will be over-fueling slightly,
@@ -126,9 +130,11 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	// remainder on walls from last time + new from this time
 	float fuelFilmMassNext = alpha * fuelFilmMass + beta * M_cmd;
 
+#if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
 		tsOutputChannels.debugFloatField5 = fuelFilmMassNext;
 	}
+#endif // EFI_TUNER_STUDIO
 
 	DISPLAY_TEXT(Current_Wall_Fuel_Film);
 	DISPLAY_FIELD(wallFuel) = fuelFilmMassNext;
