@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Sep 26 02:05:28 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 27 17:04:22 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -210,8 +210,6 @@ case Force_4_bytes_size_cranking_ignition_mode:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_16:
-  return "DBG_16";
 case DBG_34:
   return "DBG_34";
 case DBG_ALTERNATOR_PID:
@@ -314,6 +312,8 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
+case DBG_WALL_WETTING:
+  return "DBG_WALL_WETTING";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
 case MODE_52:

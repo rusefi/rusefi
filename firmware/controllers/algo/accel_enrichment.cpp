@@ -95,6 +95,11 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	float alpha = expf_taylor(-120 / (rpm * tau));
 	float beta = CONFIG(DISPLAY_CONFIG(wwaeBeta));
 
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		tsOutputChannels.debugFloatField1 = alpha;
+		tsOutputChannels.debugFloatField2 = beta;
+	}
+
 	// If beta is larger than alpha, the system is underdamped.
 	// For reasonable values {tau, beta}, this should only be possible
 	// at extremely low engine speeds (<300rpm ish)
@@ -105,7 +110,12 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 
 	float fuelFilmMass = wallFuel;
 	float M_cmd = (desiredFuel - (1 - alpha) * fuelFilmMass) / (1 - beta);
-	
+
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		tsOutputChannels.debugFloatField3 = fuelFilmMass;
+		tsOutputChannels.debugFloatField4 = M_cmd;
+	}
+
 	// We can't inject a negative amount of fuel
 	// If this goes below zero we will be over-fueling slightly,
 	// but that's ok.
@@ -115,6 +125,10 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 
 	// remainder on walls from last time + new from this time
 	float fuelFilmMassNext = alpha * fuelFilmMass + beta * M_cmd;
+
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		tsOutputChannels.debugFloatField5 = fuelFilmMassNext;
+	}
 
 	DISPLAY_TEXT(Current_Wall_Fuel_Film);
 	DISPLAY_FIELD(wallFuel) = fuelFilmMassNext;
