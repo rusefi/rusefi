@@ -1082,11 +1082,13 @@ typedef enum __attribute__ ((__packed__)) {
 } afr_override_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	ETB_None = 0,
+// todo: rename to HB_None?
+	ETB_None = ETB_FUNCTION_NONE,
 	ETB_Throttle1 = 1,
 	ETB_Throttle2 = 2,
-	ETB_IdleValve = 3,
+	ETB_IdleValve = DC_FUNCTION_IDLE,
 	ETB_Wastegate = 4,
+// todo: rename to dc_function_e? rename to hbrg_function_e?
 } etb_function_e;
 
 typedef enum __attribute__ ((__packed__)) {
