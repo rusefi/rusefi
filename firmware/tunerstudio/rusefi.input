@@ -3634,6 +3634,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Duty if error", gppwm1_dutyIfError, {gppwm1_pin != 0}
 		field = ""
 		field = "Load Axis", gppwm1_loadAxis, {gppwm1_pin != 0}
+		field = "Note", gpPwmNote1
 		field = ""
 		field = ""
 		field = ""
@@ -3655,6 +3656,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Duty if error", gppwm2_dutyIfError, {gppwm2_pin != 0}
 		field = ""
 		field = "Load Axis", gppwm2_loadAxis, {gppwm2_pin != 0}
+		field = "Note", gpPwmNote2
 		field = ""
 		field = ""
 		field = ""
@@ -3676,6 +3678,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Duty if error", gppwm3_dutyIfError, {gppwm3_pin != 0}
 		field = ""
 		field = "Load Axis", gppwm3_loadAxis, {gppwm3_pin != 0}
+		field = "Note", gpPwmNote3
 		field = ""
 		field = ""
 		field = ""
@@ -3697,6 +3700,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Duty if error", gppwm4_dutyIfError, {gppwm4_pin != 0}
 		field = ""
 		field = "Load Axis", gppwm4_loadAxis, {gppwm4_pin != 0}
+		field = "Note", gpPwmNote4
 		field = ""
 		field = ""
 		field = ""

@@ -253,6 +253,7 @@ custom boost_target_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array, U08,
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
 #define GPPWM_CHANNELS 4
+#define GPPWM_NOTE_SIZE 16
 
 custom gppwm_table_t	@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@ array, U08, @OFFSET@, [@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@], "duty", 1, 0, 0, 100, 0
 
@@ -1000,6 +1001,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 #define ERROR_BUFFER_SIZE 120
 
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
+	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
 	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
@@ -1111,7 +1113,8 @@ end_struct
 #define VR_THRESHOLD_COUNT 2
 	vr_threshold_s[VR_THRESHOLD_COUNT iterate] vrThreshold;
 
-	int[45] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+    gppwm_note_t[GPPWM_CHANNELS iterate] gpPwmNote;
+	int[29] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	brain_pin_e lps25BaroSensorScl
 	brain_pin_e lps25BaroSensorSda

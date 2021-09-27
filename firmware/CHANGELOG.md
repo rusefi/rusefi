@@ -35,6 +35,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - Fix of 36/2/2/2 attributes to help rotary #3242
  - SD card doesn't work on H7
  - rusEFI console to validate current bundle against bundle already in ECU #3266
+ - GPPWM usability: notes field #3270
 
 ## September 2021 Release - "Iguana Awareness Day"
 
