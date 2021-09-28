@@ -6,7 +6,7 @@ BOARDINC = $(BOARDS_DIR)/hellen/hellen-nb1
 
 # Set this if you want a default engine type other than normal hellen-nb1
 ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=ET_HELLEN_NB1
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_NB1
 endif
 
 # 144 package MCU
