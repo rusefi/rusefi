@@ -30,6 +30,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  - Ford PIP trigger decoder https://github.com/rusefi/rusefi/wiki/Images/triggers/trigger_65.png
  - Dwell battery voltage correction table
+ - rusEFI firmware feature should be honest about it's Windows-only limitation
 
 ### Fixed
  - Fix of 36/2/2/2 attributes to help rotary #3242

@@ -25,7 +25,7 @@ import static com.rusefi.StartupFrame.appendBundleName;
  * @see FirmwareFlasher
  */
 public class DfuFlasher {
-    public static final String DFU_BINARY = Launcher.TOOLS_PATH + File.separator + "DfuSe/DfuSeCommand.exe";
+    private static final String DFU_BINARY = Launcher.TOOLS_PATH + File.separator + "DfuSe/DfuSeCommand.exe";
     private static final String DFU_SETUP_EXE = "https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe";
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
@@ -70,6 +70,11 @@ public class DfuFlasher {
         wnd.showFrame(appendBundleName("DFU status " + Launcher.CONSOLE_VERSION));
         wnd.appendMsg(messages.toString());
         if (isSignatureValidated.get()) {
+            if (!ProgramSelector.IS_WIN) {
+                wnd.appendMsg("Switched to DFU mode!");
+                wnd.appendMsg("rusEFI console can only program on Windows");
+                return;
+            }
             ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
         } else {
             wnd.appendMsg("Please use manual DFU to change bundle type.");
