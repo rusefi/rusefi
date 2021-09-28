@@ -1,10 +1,10 @@
 /**
- * @file boards/hellen/hellen64_miataNA6_94/board_configuration.cpp
+ * @file boards/hellen/hellen-nb1/board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen64_miataNA6_94 board
+ * @brief Configuration defaults for the hellen-nb1 board
  *
- * See https://rusefi.com/s/hellenNA6
+ * See http://rusefi.com/s/hellenNB1
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
