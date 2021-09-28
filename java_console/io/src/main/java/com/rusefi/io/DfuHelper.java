@@ -21,7 +21,7 @@ public class DfuHelper {
         try {
             stream.sendPacket(command);
             stream.close();
-            messages.append("Reboot command sent!\n");
+            messages.append(String.format("Reboot command [%s] sent into %s!\n", Fields.CMD_REBOOT_DFU, stream));
         } catch (IOException e) {
             messages.append("Error " + e);
         }
