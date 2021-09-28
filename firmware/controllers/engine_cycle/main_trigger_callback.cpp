@@ -244,6 +244,8 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 
 	// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
+/*
+ * Wall Wetting would totally skip fuel on sudden deceleration a
 	if (rpm > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = outputs[0]->name;
 		if (engine->prevOutputName == outputName
@@ -253,6 +255,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		}
 		engine->prevOutputName = outputName;
 	}
+*/
 
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
