@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 27 17:04:22 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Sep 27 22:25:31 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -448,6 +448,8 @@ case HELLEN_NA6:
   return "HELLEN_NA6";
 case HELLEN_NA94:
   return "HELLEN_NA94";
+case HELLEN_NB1:
+  return "HELLEN_NB1";
 case HELLEN_NB2:
   return "HELLEN_NB2";
 case HELLEN_NB2_36:
