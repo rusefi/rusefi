@@ -780,7 +780,7 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 #if HW_HELLEN
-void setHellen144LedPins() {
+void setHellen144LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
@@ -790,7 +790,7 @@ void setHellen144LedPins() {
 	engineConfiguration->warningLedPin = GPIOE_8;
 }
 
-void setHellen176LedPins() {
+void setHellen176LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
