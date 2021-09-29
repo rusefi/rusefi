@@ -778,3 +778,23 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
 	}
 }
+
+void setHellen144LedPins() {
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
+	engineConfiguration->communicationLedPin = GPIOE_7;
+#endif /* EFI_COMMUNICATION_PIN */
+	engineConfiguration->runningLedPin = GPIOG_1;
+	engineConfiguration->warningLedPin = GPIOE_8;
+}
+
+void setHellen176LedPins() {
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
+	engineConfiguration->communicationLedPin = GPIOH_10;
+#endif /* EFI_COMMUNICATION_PIN */
+	engineConfiguration->runningLedPin = GPIOH_9;  // green
+	engineConfiguration->warningLedPin = GPIOH_11; // yellow
+}

@@ -35,3 +35,6 @@ void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setRotary(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+void setHellen144LedPins();
+void setHellen176LedPins();
