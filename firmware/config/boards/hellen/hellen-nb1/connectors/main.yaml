@@ -326,7 +326,30 @@ pins:
   - pin: 4L
     function: WBO
     
-  
+  - pin: int_pps1
+    id: [GPIOA_3, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
+    ts_name: PPS1
+    
+  - pin: int_tps2
+    id: [GPIOA_1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
+    ts_name: TPS1
+    
+  - pin: int_etb+
+    id: GPIOC_7
+    class: outputs
+    ts_name: ETB +
+    
+  - pin: int_etb-
+    id: GPIOC_8
+    class: outputs
+    ts_name: ETB +
+    
+  - pin: int_etb_EN
+    id: GPIOC_6
+    class: outputs
+    ts_name: ETB +
  
 
 info:
