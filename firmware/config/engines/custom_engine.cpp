@@ -779,6 +779,7 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
+#if HW_HELLEN
 void setHellen144LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
@@ -798,3 +799,4 @@ void setHellen176LedPins() {
 	engineConfiguration->runningLedPin = GPIOH_9;  // green
 	engineConfiguration->warningLedPin = GPIOH_11; // yellow
 }
+#endif //HW_HELLEN
