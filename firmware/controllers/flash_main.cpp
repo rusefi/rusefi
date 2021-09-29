@@ -223,7 +223,10 @@ typedef enum {
 	PC_ERROR = 4
 } persisted_configuration_state_e;
 
-static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) {
+/**
+ * Read single copy of rusEFI configuration from flash
+ */
+static persisted_configuration_state_e readOneConfigurationCopy(flashaddr_t address) {
 	efiPrintf("readFromFlash %x", address);
 
 	// error already reported, return
@@ -245,6 +248,8 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) 
 /**
  * this method could and should be executed before we have any
  * connectivity so no console output here
+ *
+ * in this method we read first copy of configuration in flash. if that first copy has CRC or other issues we read second copy.
  */
 static persisted_configuration_state_e readConfiguration() {
 	persisted_configuration_state_e result = CRC_FAILED;
@@ -265,11 +270,11 @@ static persisted_configuration_state_e readConfiguration() {
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
-	result = doReadConfiguration(firstCopyAddr);
+	result = readOneConfigurationCopy(firstCopyAddr);
 
 	if (result != PC_OK) {
 		efiPrintf("Reading second configuration copy");
-		result = doReadConfiguration(secondyCopyAddr);
+		result = readOneConfigurationCopy(secondyCopyAddr);
 	}
 #endif
 
