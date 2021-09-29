@@ -91,7 +91,6 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->setTriggerSynchronizationGap3(0, 0.065, 0.17f);
 	s->useRiseEdge = false;
-	s->bothFrontsRequired = true;
 	s->useOnlyPrimaryForSync = true;
 	efiAssertVoid(OBD_PCM_Processor_Fault, s->gapBothDirections == false, "NB1 trigger measures on FALL events");
 
