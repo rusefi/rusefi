@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -48,16 +49,6 @@ static void setIgnitionPins() {
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-}
-
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOE_7;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOG_1;  // green
-	engineConfiguration->warningLedPin = GPIOE_8; // yellow
 }
 
 static void setupVbatt() {
@@ -104,7 +95,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
