@@ -35,7 +35,7 @@ public class DfuHelper {
             if ("all".equals(s.getBundle())) {
                 signatureWithPrefix = PREFIX;
             } else {
-                signatureWithPrefix = PREFIX + s.getBundle();
+                signatureWithPrefix = PREFIX + "_" + s.getBundle();
             }
 
             if (!bundleName.equalsIgnoreCase(signatureWithPrefix)) {
