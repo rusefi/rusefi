@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Thu Sep 30 04:24:00 UTC 2021 -->
+<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Thu Sep 30 19:22:37 UTC 2021 -->
 
     <rom>
         <romid>

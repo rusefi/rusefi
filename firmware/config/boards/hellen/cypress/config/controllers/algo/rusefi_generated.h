@@ -930,6 +930,7 @@
 #define IM_IM_BATCH 2
 #define IM_IM_SINGLE_POINT 3
 #define IM_IM_WASTED_SPARK 2
+#define imuType_offset 778
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
@@ -1288,7 +1289,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
 #define SIGNATURE_DATE 2021.09.30
-#define SIGNATURE_HASH 601239397
+#define SIGNATURE_HASH 2110414632
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1644,7 +1645,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.09.30.hellen_cypress.601239397"
+#define TS_SIGNATURE "rusEFI 2021.09.30.hellen_cypress.2110414632"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1753,33 +1754,33 @@
 #define unusedAtOldBoardConfigurationEnd_offset 1340
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_298_30_offset 976
-#define unusedBit_298_31_offset 976
+#define unusedBit_299_30_offset 976
+#define unusedBit_299_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_509_10_offset 2116
-#define unusedBit_509_11_offset 2116
-#define unusedBit_509_12_offset 2116
-#define unusedBit_509_13_offset 2116
-#define unusedBit_509_14_offset 2116
-#define unusedBit_509_15_offset 2116
-#define unusedBit_509_16_offset 2116
-#define unusedBit_509_17_offset 2116
-#define unusedBit_509_18_offset 2116
-#define unusedBit_509_19_offset 2116
-#define unusedBit_509_20_offset 2116
-#define unusedBit_509_21_offset 2116
-#define unusedBit_509_22_offset 2116
-#define unusedBit_509_23_offset 2116
-#define unusedBit_509_24_offset 2116
-#define unusedBit_509_25_offset 2116
-#define unusedBit_509_26_offset 2116
-#define unusedBit_509_27_offset 2116
-#define unusedBit_509_28_offset 2116
-#define unusedBit_509_29_offset 2116
-#define unusedBit_509_30_offset 2116
-#define unusedBit_509_31_offset 2116
-#define unusedBit_509_8_offset 2116
-#define unusedBit_509_9_offset 2116
+#define unusedBit_510_10_offset 2116
+#define unusedBit_510_11_offset 2116
+#define unusedBit_510_12_offset 2116
+#define unusedBit_510_13_offset 2116
+#define unusedBit_510_14_offset 2116
+#define unusedBit_510_15_offset 2116
+#define unusedBit_510_16_offset 2116
+#define unusedBit_510_17_offset 2116
+#define unusedBit_510_18_offset 2116
+#define unusedBit_510_19_offset 2116
+#define unusedBit_510_20_offset 2116
+#define unusedBit_510_21_offset 2116
+#define unusedBit_510_22_offset 2116
+#define unusedBit_510_23_offset 2116
+#define unusedBit_510_24_offset 2116
+#define unusedBit_510_25_offset 2116
+#define unusedBit_510_26_offset 2116
+#define unusedBit_510_27_offset 2116
+#define unusedBit_510_28_offset 2116
+#define unusedBit_510_29_offset 2116
+#define unusedBit_510_30_offset 2116
+#define unusedBit_510_31_offset 2116
+#define unusedBit_510_8_offset 2116
+#define unusedBit_510_9_offset 2116
 #define unusedBitHere1_offset 1464
 #define unusedBitHere2_offset 1464
 #define unusedBitHere3_offset 1464
@@ -1796,7 +1797,7 @@
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 844
 #define unusedOutputWhereHere_offset 794
-#define unusedpinModesWhereHere_offset 778
+#define unusedpinModesWhereHere_offset 779
 #define unusedSettings_offset 888
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding8_offset 4010
