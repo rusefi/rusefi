@@ -81,6 +81,7 @@ void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitOldAnalogInputs(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	deinitTps();
+	deinitOilPressure();
 	deinitVbatt();
 	deinitThermistors();
 	deInitFlexSensor();
@@ -89,9 +90,8 @@ void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
-
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
