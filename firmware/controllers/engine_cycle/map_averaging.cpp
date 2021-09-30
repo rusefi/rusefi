@@ -327,10 +327,6 @@ float getMap(void) {
 	if (!isAdcChannelValid(engineConfiguration->map.sensor.hwChannel))
 		return 0;
 
-	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		return getRawMap();
-	}
-
 #if EFI_ANALOG_SENSORS
 	if (!isValidRpm(GET_RPM()) || currentPressure == NO_VALUE_YET)
 		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
