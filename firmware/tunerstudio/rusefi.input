@@ -2269,7 +2269,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "AFR ADC input", 						afr_hwChannel
 		field = "Baro ADC input", 						baroSensor_hwChannel
 		field = "MAP ADC input", 						map_sensor_hwChannel
-		field = "FrequencyReportingMapInputPin",		frequencyReportingMapInputPin
 		field = "FuelLevelSensor", 						fuelLevelSensor
 		field = "Vehicle Speed Input pin",				vehicleSpeedSensorInputPin
 		field = "clutchDownPin",						clutchDownPin
@@ -2557,14 +2556,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "MAP voltage low point", 	 		    mapLowValueVoltage,  { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
 		field = "MAP value high point",               	map_sensor_highValue,{ map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
 		field = "MAP voltage high value",               mapHighValueVoltage, { map_sensor_hwChannel != @@ADC_CHANNEL_NONE@@ && map_sensor_type == 0 }
-		
-	dialog = mapSensorFreq, "MAP frequency sensor", yAxis
-		field = "MAP Freq",								frequencyReportingMapInputPin
-		field = "0 kPa freq",							mapFrequency0Kpa
-		field = "100 kpa freq",							mapFrequency100Kpa
 
 	dialog = mapCommon, "MAP common settings"
-		field = "frequency-based MAP",					hasFrequencyReportingMapSensor
 		field = "Low value threshold",					mapErrorDetectionTooLow
 		field = "High value threshold",					mapErrorDetectionTooHigh
 		field = ""
@@ -2573,8 +2566,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = mapSettings, "", yAxis
 		panel = mapCommon
-		panel = mapSensorAnalog, {hasFrequencyReportingMapSensor == 0}
-		panel = mapSensorFreq, {hasFrequencyReportingMapSensor == 1}
+		panel = mapSensorAnalog
 
 	dialog = baroSettings, "Baro sensor"
 		field = "Baro ADC input",						baroSensor_hwChannel

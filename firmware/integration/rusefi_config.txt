@@ -777,8 +777,8 @@ end_struct
 
 	float manIdlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
 
-float mapFrequency0Kpa;;"Hz", 1, 0, 0, 100000, 2
-float mapFrequency100Kpa;;"Hz", 1, 0, 0, 100000, 2
+float unused612;;"", 1, 0, 0, 1, 0
+float unused616;;"", 1, 0, 0, 1, 0
 
 ! todo: rename to triggerSimulatorRpm
 	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm", 1, 0, 0, 30000, 0
@@ -1011,7 +1011,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;+Some vehicles have a switch to indicate that clutch pedal is all the way up
-	brain_input_pin_e frequencyReportingMapInputPin;
+	uint8_t unused970;;"", 1, 0, 0, 1, 0
 	pin_input_mode_e clutchUpPinMode;
 	uint16_t multisparkMaxRpm;+Disable multispark above this engine speed.;"rpm", 1, 0, 0, 3000, 0
 	uint8_t multisparkMaxSparkingAngle;+This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
@@ -1144,7 +1144,7 @@ bit cutFuelOnHardLimit,"yes","no"
 bit cutSparkOnHardLimit,"yes","no"
 bit launchFuelCutEnable
 bit launchSparkCutEnable;+This is the Cut Mode normally used
-bit hasFrequencyReportingMapSensor
+bit unused1464b20
 	bit unusedBitWasHere1
 	bit unusedBitWasHere2
 	bit unusedBitWasHere3
