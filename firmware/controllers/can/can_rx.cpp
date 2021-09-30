@@ -98,6 +98,19 @@ void registerCanSensor(CanSensorBase& sensor) {
 	sensor.Register();
 }
 
+#define VAG_YAW_RATE_G_LAT 0x130
+#define VAG_YAW_ACCEL_G_LONG 0x131
+
+static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
+	if (CONFIG(imuType) == IMU_VAG) {
+		if (CAN_SID(frame) == VAG_YAW_RATE_G_LAT) {
+			efiPrintf("CAN_rx VAG_YAW_RATE_G_LAT");
+		} else if (CAN_SID(frame) == VAG_YAW_ACCEL_G_LONG) {
+			efiPrintf("CAN_rx VAG_YAW_ACCEL_G_LONG");
+		}
+	}
+}
+
 void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
 	if (CONFIG(debugMode) == DBG_CAN) {
 		printPacket(frame);
@@ -105,8 +118,12 @@ void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
 
 	serviceCanSubscribers(frame, nowNt);
 
+	// todo: convert to CanListener or not?
 	//Vss is configurable, should we handle it here:
 	processCanRxVss(frame, nowNt);
+
+	// todo: convert to CanListener or not?
+	processCanRxImu(frame, nowNt);
 
 #if EFI_CANBUS_SLAVE
 	if (CAN_EID(frame) == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
