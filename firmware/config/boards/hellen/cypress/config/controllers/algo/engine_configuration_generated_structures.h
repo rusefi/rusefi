@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 27 21:21:50 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Sep 30 03:54:32 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3946,10 +3946,15 @@ struct engine_configuration_s {
 	 */
 	float triggerGapOverride[GAP_TRACKING_LENGTH];
 	/**
-	units
+	Percent
 	 * offset 4612
 	 */
-	int mainUnusedEnd[347];
+	int8_t fuelTrim[MAX_CYLINDER_COUNT];
+	/**
+	units
+	 * offset 4624
+	 */
+	int mainUnusedEnd[344];
 	/** total size 6000*/
 };
 
@@ -4344,4 +4349,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Sep 27 21:21:50 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Sep 30 03:54:32 UTC 2021
