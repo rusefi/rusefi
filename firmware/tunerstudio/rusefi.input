@@ -141,10 +141,10 @@ enable2ndByteCanID = false
 
         ;    tableName,  lambdaTargetTableName, lambdaChannel, egoCorrectionChannel, activeCondition
 #if LAMBDA
-       veAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, egoCorrection, { 1 }
+       veAnalyzeMap = veTableTbl, lambdaTableTbl, lambdaValue, egoCorrectionForVeAnalyze, { 1 }
        lambdaTargetTables = lambdaTableTbl, afrTSCustom
 #else
-       veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, egoCorrection, { 1 }
+       veAnalyzeMap = veTableTbl, afrTableTbl, AFRValue, egoCorrectionForVeAnalyze, { 1 }
        lambdaTargetTables = afrTableTbl, afrTSCustom
 #endif
 
@@ -415,8 +415,9 @@ enable2ndByteCanID = false
 	LM_SPEED_DENSITY = {3},
 	LM_REAL_MAF = {4}
 
-      egoCorrection   = { 100 }
       time            = { timeNow }
+
+	  egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection }
 
 	; These "synthetic" channels provide the Y-axis (load) value for gen purp PWM table's Y axes
 	gppwm1_load = {(gppwm1_loadAxis == 0) ? TPSValue : ((gppwm1_loadAxis == 1) ? MAPValue : ((gppwm1_loadAxis == 2) ? coolant : ((gppwm1_loadAxis == 3) ? intake : ((gppwm1_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
@@ -1135,10 +1136,10 @@ gaugeCategory = DynoView
     
 ;                    wueCurveName, afrTempCompensationCurve, lambdaTargetTableName, lambdaChannel, coolantTempChannel, egoCorrectionChannel, wueChannel, activeCondition
 #if LAMBDA
-     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, egoCorrection
+     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, lambdaTableTbl, lambdaValue, coolant, cltCorrection, egoCorrectionForVeAnalyze
      lambdaTargetTables = lambdaTableTbl, afrTSCustom
 #else
-     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, egoCorrection
+     wueAnalyzeMap = wueAnalyzer_warmup_curve, wueAfrTargetOffsetCurve, afrTableTbl, AFRValue, coolant, cltCorrection, egoCorrectionForVeAnalyze
      lambdaTargetTables = afrTableTbl, afrTSCustom
 #endif
 
