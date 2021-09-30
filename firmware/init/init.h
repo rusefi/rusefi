@@ -38,7 +38,7 @@ void initTurbochargerSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void deinitVbatt();
 void deinitTps();
 void deinitThermistors();
-void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void deinitOilPressure();
 void deInitFlexSensor();
 void deInitVehicleSpeedSensor();
 void deinitTurbochargerSpeedSensor();
