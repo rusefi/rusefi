@@ -101,7 +101,21 @@ void registerCanSensor(CanSensorBase& sensor) {
 #define VAG_YAW_RATE_G_LAT 0x130
 #define VAG_YAW_ACCEL_G_LONG 0x131
 
+static uint16_t getLSB_intel(const CANRxFrame& frame, int offset) {
+	return (frame.data8[offset + 1] << 8) + frame.data8[offset];
+}
+
+static int16_t getShiftedLSB_intel(const CANRxFrame& frame, int offset) {
+	return getLSB_intel(frame, offset) - 0x8000;
+}
+
 static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
+	if (CAN_SID(frame) == 0x130) {
+		float a = getShiftedLSB_intel(frame, 0);
+		float b = getShiftedLSB_intel(frame, 4);
+		efiPrintf("CAN_rx 130 %f %f", a, b);
+	}
+
 	if (CONFIG(imuType) == IMU_VAG) {
 		if (CAN_SID(frame) == VAG_YAW_RATE_G_LAT) {
 			efiPrintf("CAN_rx VAG_YAW_RATE_G_LAT");
