@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Sep 30 15:15:34 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Sep 30 19:30:21 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -357,21 +357,6 @@ case Force_4_bytes_size_ego_sensor:
   }
  return NULL;
 }
-const char *getEmu_type_e(emu_type_e value){
-switch(value) {
-case IMU_NONE:
-  return "IMU_NONE";
-case IMU_TYPE_2:
-  return "IMU_TYPE_2";
-case IMU_TYPE_3:
-  return "IMU_TYPE_3";
-case IMU_TYPE_4:
-  return "IMU_TYPE_4";
-case IMU_VAG:
-  return "IMU_VAG";
-  }
- return NULL;
-}
 const char *getEngine_load_mode_e(engine_load_mode_e value){
 switch(value) {
 case Force_4_bytes_size_engine_load_mode:
@@ -700,6 +685,21 @@ case IM_TWO_COILS:
   return "IM_TWO_COILS";
 case IM_WASTED_SPARK:
   return "IM_WASTED_SPARK";
+  }
+ return NULL;
+}
+const char *getImu_type_e(imu_type_e value){
+switch(value) {
+case IMU_NONE:
+  return "IMU_NONE";
+case IMU_TYPE_2:
+  return "IMU_TYPE_2";
+case IMU_TYPE_3:
+  return "IMU_TYPE_3";
+case IMU_TYPE_4:
+  return "IMU_TYPE_4";
+case IMU_VAG:
+  return "IMU_VAG";
   }
  return NULL;
 }
