@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
@@ -238,7 +239,8 @@ public class StartupFrame {
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
         String selectedPort = comboPorts.getSelectedItem().toString();
         if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
-            String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame).getSerialPort();
+            SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectPort(StartupFrame.this.frame);
+            String autoDetectedPort = detectResult == null ? null : detectResult.getSerialPort();
             if (autoDetectedPort == null)
                 return;
             selectedPort = autoDetectedPort;
