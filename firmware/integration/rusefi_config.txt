@@ -1594,7 +1594,7 @@ tChargeMode_e tChargeMode;
 
 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverride;;"ratio", 1, 0, 0, 20, 2
 
-int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", PERCENT_TRIM_BYTE_PACKING_DIV, 0, -25, 25, 2
+int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACKING_DIV@@, 0, -25, 25, 2
 
 	int[344] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
