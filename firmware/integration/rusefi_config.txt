@@ -921,7 +921,10 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
-	uint8_t[2] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
+ 	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "type 2", "type 2", "type 2"
+	imu_type_e imuType
+
+	uint8_t[1] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
 	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
 
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2

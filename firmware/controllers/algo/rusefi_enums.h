@@ -744,6 +744,15 @@ typedef enum {
 	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
 } can_vss_nbc_e;
 
+// inertia measurement unit, yawn accelerometer
+typedef enum  __attribute__ ((__packed__)) {
+	IMU_NONE = 0,
+	IMU_VAG = 1,
+	IMU_TYPE_2 = 2,
+	IMU_TYPE_3 = 3,
+	IMU_TYPE_4 = 4,
+} emu_type_e;
+
 typedef enum {
 	ES_BPSX_D1 = 0,
 	/**
