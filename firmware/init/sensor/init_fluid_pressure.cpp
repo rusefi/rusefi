@@ -61,6 +61,6 @@ void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 void deinitOilPressure() {
 	AdcSubscription::UnsubscribeSensor(oilpSensor);
-	AdcSubscription::UnsubscribeSensor(fuelPressureFuncLow);
-	AdcSubscription::UnsubscribeSensor(fuelPressureFuncHigh);
+	AdcSubscription::UnsubscribeSensor(fuelPressureSensorLow);
+	AdcSubscription::UnsubscribeSensor(fuelPressureSensorHigh);
 }
