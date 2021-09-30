@@ -526,7 +526,6 @@
 #define fixedTiming_offset 2204
 #define FLASH_DATA_VERSION 10003
 #define flexSensorPin_offset 3072
-#define frequencyReportingMapInputPin_offset 970
 #define FSIO_ANALOG_INPUT_COUNT 4
 #define FSIO_COMMAND_COUNT 6
 #define FSIO_CURVE_16 16
@@ -783,7 +782,6 @@
 #define gps_rx_pin_offset 656
 #define gps_tx_pin_offset 657
 #define hardCutRpmRange_offset 1048
-#define hasFrequencyReportingMapSensor_offset 1464
 #define HD44780_db4_offset 652
 #define HD44780_db5_offset 653
 #define HD44780_db6_offset 654
@@ -1110,8 +1108,6 @@
 #define mapEstimateRpmBins_offset 15716
 #define mapEstimateTable_offset 15172
 #define mapEstimateTpsBins_offset 15684
-#define mapFrequency0Kpa_offset 612
-#define mapFrequency100Kpa_offset 616
 #define mapHighValueVoltage_offset 2212
 #define mapLowValueVoltage_offset 2208
 #define mapMinBufferLength_offset 812
@@ -1273,7 +1269,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.09.30
-#define SIGNATURE_HASH 530364609
+#define SIGNATURE_HASH 3698582425
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1629,7 +1625,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.09.30.kin.530364609"
+#define TS_SIGNATURE "rusEFI 2021.09.30.kin.3698582425"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1701,6 +1697,7 @@
 #define unused1130_offset 2116
 #define unused1366_offset 2656
 #define unused1464b0_offset 1464
+#define unused1464b20_offset 1464
 #define unused1464b4_offset 1464
 #define unused1476b19_offset 1476
 #define unused1476b20_offset 1476
@@ -1719,9 +1716,12 @@
 #define unused3988_offset 3960
 #define unused4028_offset 4000
 #define unused552_offset 552
+#define unused612_offset 612
+#define unused616_offset 616
 #define unused6312_offset 6284
 #define unused744b4_offset 744
 #define unused76b19_offset 76
+#define unused970_offset 970
 #define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476

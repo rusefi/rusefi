@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Sep 30 03:54:28 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Sep 30 04:23:58 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -524,7 +524,6 @@ public class Fields {
 	public static final int fixedTiming_offset = 2204;
 	public static final int FLASH_DATA_VERSION = 10003;
 	public static final int flexSensorPin_offset = 3100;
-	public static final int frequencyReportingMapInputPin_offset = 970;
 	public static final int FSIO_ANALOG_INPUT_COUNT = 4;
 	public static final int FSIO_COMMAND_COUNT = 6;
 	public static final int FSIO_CURVE_16 = 16;
@@ -779,7 +778,6 @@ public class Fields {
 	public static final int gps_rx_pin_offset = 656;
 	public static final int gps_tx_pin_offset = 657;
 	public static final int hardCutRpmRange_offset = 1048;
-	public static final int hasFrequencyReportingMapSensor_offset = 1464;
 	public static final int HD44780_db4_offset = 652;
 	public static final int HD44780_db5_offset = 653;
 	public static final int HD44780_db6_offset = 654;
@@ -1095,8 +1093,6 @@ public class Fields {
 	public static final int mapEstimateRpmBins_offset = 15744;
 	public static final int mapEstimateTable_offset = 15200;
 	public static final int mapEstimateTpsBins_offset = 15712;
-	public static final int mapFrequency0Kpa_offset = 612;
-	public static final int mapFrequency100Kpa_offset = 616;
 	public static final int mapHighValueVoltage_offset = 2212;
 	public static final int mapLowValueVoltage_offset = 2208;
 	public static final int mapMinBufferLength_offset = 812;
@@ -1242,6 +1238,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1638593717;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1548,7 +1545,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.09.30.all.2722476013";
+	public static final String TS_SIGNATURE = "rusEFI 2021.09.30.all.1638593717";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1617,6 +1614,7 @@ public class Fields {
 	public static final int unused1130_offset = 2116;
 	public static final int unused1366_offset = 2684;
 	public static final int unused1464b0_offset = 1464;
+	public static final int unused1464b20_offset = 1464;
 	public static final int unused1464b4_offset = 1464;
 	public static final int unused1476b19_offset = 1476;
 	public static final int unused1476b20_offset = 1476;
@@ -1635,9 +1633,12 @@ public class Fields {
 	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;
 	public static final int unused552_offset = 552;
+	public static final int unused612_offset = 612;
+	public static final int unused616_offset = 616;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b4_offset = 744;
 	public static final int unused76b19_offset = 76;
+	public static final int unused970_offset = 970;
 	public static final int unused976b11_offset = 976;
 	public static final int unused_1484_bit_24_offset = 1476;
 	public static final int unused_1484_bit_25_offset = 1476;
@@ -1960,8 +1961,8 @@ public class Fields {
 	public static final Field IDLE_STEPPERSTEPPIN = Field.create("IDLE_STEPPERSTEPPIN", 606, FieldType.INT8, output_pin_e);
 	public static final Field IDLE_SOLENOIDPINMODE = Field.create("IDLE_SOLENOIDPINMODE", 607, FieldType.INT8, pin_output_mode_e);
 	public static final Field MANIDLEPOSITION = Field.create("MANIDLEPOSITION", 608, FieldType.FLOAT);
-	public static final Field MAPFREQUENCY0KPA = Field.create("MAPFREQUENCY0KPA", 612, FieldType.FLOAT);
-	public static final Field MAPFREQUENCY100KPA = Field.create("MAPFREQUENCY100KPA", 616, FieldType.FLOAT);
+	public static final Field UNUSED612 = Field.create("UNUSED612", 612, FieldType.FLOAT);
+	public static final Field UNUSED616 = Field.create("UNUSED616", 616, FieldType.FLOAT);
 	public static final Field TRIGGERSIMULATORFREQUENCY = Field.create("TRIGGERSIMULATORFREQUENCY", 620, FieldType.INT);
 	public static final Field INJECTIONPINS1 = Field.create("INJECTIONPINS1", 624, FieldType.INT8, output_pin_e);
 	public static final Field INJECTIONPINS2 = Field.create("INJECTIONPINS2", 625, FieldType.INT8, output_pin_e);
@@ -2179,7 +2180,7 @@ public class Fields {
 	public static final Field FSIODIGITALINPUTS6 = Field.create("FSIODIGITALINPUTS6", 957, FieldType.INT8, brain_pin_e);
 	public static final Field VEHICLESPEEDSENSORINPUTPIN = Field.create("VEHICLESPEEDSENSORINPUTPIN", 968, FieldType.INT8, brain_input_pin_e);
 	public static final Field CLUTCHUPPIN = Field.create("CLUTCHUPPIN", 969, FieldType.INT8, switch_input_pin_e);
-	public static final Field FREQUENCYREPORTINGMAPINPUTPIN = Field.create("FREQUENCYREPORTINGMAPINPUTPIN", 970, FieldType.INT8, brain_input_pin_e);
+	public static final Field UNUSED970 = Field.create("UNUSED970", 970, FieldType.INT8);
 	public static final Field CLUTCHUPPINMODE = Field.create("CLUTCHUPPINMODE", 971, FieldType.INT8, pin_input_mode_e);
 	public static final Field MULTISPARKMAXRPM = Field.create("MULTISPARKMAXRPM", 972, FieldType.INT16);
 	public static final Field MULTISPARKMAXSPARKINGANGLE = Field.create("MULTISPARKMAXSPARKINGANGLE", 974, FieldType.INT8);
@@ -2336,7 +2337,7 @@ public class Fields {
 	public static final Field CUTSPARKONHARDLIMIT = Field.create("CUTSPARKONHARDLIMIT", 1464, FieldType.BIT, 17);
 	public static final Field LAUNCHFUELCUTENABLE = Field.create("LAUNCHFUELCUTENABLE", 1464, FieldType.BIT, 18);
 	public static final Field LAUNCHSPARKCUTENABLE = Field.create("LAUNCHSPARKCUTENABLE", 1464, FieldType.BIT, 19);
-	public static final Field HASFREQUENCYREPORTINGMAPSENSOR = Field.create("HASFREQUENCYREPORTINGMAPSENSOR", 1464, FieldType.BIT, 20);
+	public static final Field UNUSED1464B20 = Field.create("UNUSED1464B20", 1464, FieldType.BIT, 20);
 	public static final Field UNUSEDBITWASHERE1 = Field.create("UNUSEDBITWASHERE1", 1464, FieldType.BIT, 21);
 	public static final Field UNUSEDBITWASHERE2 = Field.create("UNUSEDBITWASHERE2", 1464, FieldType.BIT, 22);
 	public static final Field UNUSEDBITWASHERE3 = Field.create("UNUSEDBITWASHERE3", 1464, FieldType.BIT, 23);
@@ -3051,8 +3052,8 @@ public class Fields {
 	IDLE_STEPPERSTEPPIN,
 	IDLE_SOLENOIDPINMODE,
 	MANIDLEPOSITION,
-	MAPFREQUENCY0KPA,
-	MAPFREQUENCY100KPA,
+	UNUSED612,
+	UNUSED616,
 	TRIGGERSIMULATORFREQUENCY,
 	INJECTIONPINS1,
 	INJECTIONPINS2,
@@ -3266,7 +3267,7 @@ public class Fields {
 	FSIODIGITALINPUTS6,
 	VEHICLESPEEDSENSORINPUTPIN,
 	CLUTCHUPPIN,
-	FREQUENCYREPORTINGMAPINPUTPIN,
+	UNUSED970,
 	CLUTCHUPPINMODE,
 	MULTISPARKMAXRPM,
 	MULTISPARKMAXSPARKINGANGLE,
@@ -3421,7 +3422,7 @@ public class Fields {
 	CUTSPARKONHARDLIMIT,
 	LAUNCHFUELCUTENABLE,
 	LAUNCHSPARKCUTENABLE,
-	HASFREQUENCYREPORTINGMAPSENSOR,
+	UNUSED1464B20,
 	UNUSEDBITWASHERE1,
 	UNUSEDBITWASHERE2,
 	UNUSEDBITWASHERE3,

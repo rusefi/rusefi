@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Sep 30 03:54:30 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Sep 30 04:24:01 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1212,15 +1212,13 @@ struct engine_configuration_s {
 	 */
 	float manIdlePosition;
 	/**
-	Hz
 	 * offset 612
 	 */
-	float mapFrequency0Kpa;
+	float unused612;
 	/**
-	Hz
 	 * offset 616
 	 */
-	float mapFrequency100Kpa;
+	float unused616;
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
@@ -1907,7 +1905,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 970
 	 */
-	brain_input_pin_e frequencyReportingMapInputPin;
+	uint8_t unused970;
 	/**
 	 * offset 971
 	 */
@@ -2308,7 +2306,7 @@ struct engine_configuration_s {
 	bool launchSparkCutEnable : 1;
 	/**
 	offset 1464 bit 20 */
-	bool hasFrequencyReportingMapSensor : 1;
+	bool unused1464b20 : 1;
 	/**
 	offset 1464 bit 21 */
 	bool unusedBitWasHere1 : 1;
@@ -4343,4 +4341,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Sep 30 03:54:30 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Sep 30 04:24:01 UTC 2021
