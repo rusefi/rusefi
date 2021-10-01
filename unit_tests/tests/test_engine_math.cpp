@@ -93,3 +93,7 @@ TEST(misc, testIgnitionMapGenerator) {
     assertEqualsM2("4400", 41.9, getInitialAdvance(4400, 40, 36), 0.1);
     assertEqualsM2("20@800", 14.2, getInitialAdvance(800, 20, 36), 0.2);
 }
+
+float getMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return engine->mockMapValue;
+}

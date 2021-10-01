@@ -109,6 +109,18 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 }
 
 /**
+ * This function adds an error if MAP sensor value is outside of expected range
+ * @return unchanged mapKPa parameter
+ */
+float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorDetectionTooLow) || mapKPa > CONFIG(mapErrorDetectionTooHigh)) {
+		warning(OBD_Manifold_Absolute_Pressure_Circuit_Malfunction, "unexpected MAP value: %.2f", mapKPa);
+		return 0;
+	}
+	return mapKPa;
+}
+
+/**
  * This function checks if Baro/MAP sensor value is inside of expected range
  * @return unchanged mapKPa parameter or NaN
  */
@@ -141,7 +153,7 @@ float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * @return Manifold Absolute Pressure, in kPa
  */
-static float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	float voltage = getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
 	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER_SUFFIX);
 }
@@ -211,8 +223,9 @@ static void printMAPInfo(void) {
 	efiPrintf("instant value=%.2fkPa", getRawMap());
 
 #if EFI_MAP_AVERAGING
-	efiPrintf("map type=%d/%s mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
+	efiPrintf("map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 			getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
+			getMap(),
 			mapMinBufferLength);
 #endif // EFI_MAP_AVERAGING
 
