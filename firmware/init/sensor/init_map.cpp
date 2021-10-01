@@ -66,6 +66,8 @@ static MapCfg getMapCfg(air_pressure_sensor_type_e sensorType DECLARE_CONFIG_PAR
 		return {0, 2.5, 5, 117};
 	case MT_BOSCH_2_5:
 		return {0.4 , 20 , 4.65, 250};
+	case MT_MPXH6400:
+		return {1, 90, 3, 250};
 	default:
 		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: decoder %d", sensorType);
 		// falls through to custom
