@@ -98,6 +98,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 	case MT_MPX4100:
 	case MT_BOSCH_2_5:
 	case MT_MAZDA_1_BAR:
+	case MT_MPXH6400:
 		return getDecoder(mapConfig->type)->getValue(voltage);
 	default:
 		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: pressure %d", mapConfig->type);
@@ -179,6 +180,7 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 		return &mpx4100;
 	case MT_MPX4250A:
 		return &mpx4250A;
+	case MT_MPXH6400:
 	case MT_HONDA3BAR:
 		return &honda3bar;
 	case MT_DODGE_NEON_2003:

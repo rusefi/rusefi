@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Sep 30 19:30:21 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Sep 30 21:33:23 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -100,6 +100,8 @@ case MT_MPX4250:
   return "MT_MPX4250";
 case MT_MPX4250A:
   return "MT_MPX4250A";
+case MT_MPXH6400:
+  return "MT_MPXH6400";
 case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
 case MT_TOYOTA_89420_02010:
