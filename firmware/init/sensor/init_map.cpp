@@ -21,15 +21,22 @@ static FunctionPointerSensor baroSensor(SensorType::BarometricPressure,
 	return baroWrapper.getBaro();
 });
 
+// This converter is shared between both fast and slow: the only difference is
+// how the *voltage* is determined, not how its converted to a pressure.
 static LinearFunc mapConverter;
 static FunctionalSensor slowMapSensor(SensorType::MapSlow, MS2NT(50));
-static FunctionalSensor fastMapSensor(SensorType::MapFast, MS2NT(100));
 
+// lowest reasonable idle is maybe 600 rpm
+// one sample per cycle (1 cylinder, or "sample one cyl" mode) gives a period of 100ms
+// add some margin -> 200ms timeout for fast MAP sampling
+static FunctionalSensor fastMapSensor(SensorType::MapFast, MS2NT(200));
+
+// This is called from the fast ADC completion callback
 void onMapAveraged(float volts, efitick_t nowNt) {
 	fastMapSensor.postRawValue(volts, nowNt);
 }
 
-// Combine MAP sensors: prefer fast sensor, but use slow if unavailable.
+// Combine MAP sensors: prefer fast sensor, but use slow if fast is unavailable.
 static FallbackSensor mapCombiner(SensorType::Map, SensorType::MapFast, SensorType::MapSlow);
 
 // helper struct for the local getMapCfg function
