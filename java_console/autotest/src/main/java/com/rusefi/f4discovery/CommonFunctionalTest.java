@@ -206,7 +206,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.setEngineType(ET_DODGE_NEON_2003_CRANK);
         ecu.sendCommand("set wwaeTau 0");
         ecu.sendCommand("set wwaeBeta 0");
-        ecu.sendCommand("set mock_map_voltage 1");
+        ecu.sendCommand("set_sensor_mock 4 69.12"); // MAP
         ecu.sendCommand("set_sensor_mock 27 12");
         ecu.sendCommand("disable cylinder_cleanup");
         EngineChart chart;
@@ -322,7 +322,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
 
         // switching to Speed Density
-        ecu.sendCommand("set mock_map_voltage 1");
+        ecu.sendCommand("set_sensor_mock 4 69.12"); // MAP
         sendComplexCommand("set algorithm 3");
         ecu.changeRpm(2600);
         ecu.changeRpm(2000);
@@ -351,8 +351,8 @@ public class CommonFunctionalTest extends RusefiTestBase {
     public void testFordAspire() {
         ecu.setEngineType(ET_FORD_ASPIRE);
         ecu.sendCommand("disable cylinder_cleanup");
-        ecu.sendCommand("set mock_map_voltage 1");
-        ecu.sendCommand("set_sensor_mock 27 12");
+        ecu.sendCommand("set_sensor_mock 4 69.12"); // MAP
+        ecu.sendCommand("set_sensor_mock 27 12"); // vbatt
         String msg;
         EngineChart chart;
         // todo: interesting changeRpm(100);
