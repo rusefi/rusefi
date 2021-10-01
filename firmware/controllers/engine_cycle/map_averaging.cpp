@@ -300,26 +300,6 @@ static void showMapStats(void) {
 	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 
-#if EFI_PROD_CODE
-
-/**
- * Because of MAP window averaging, MAP is only available while engine is spinning
- * @return Manifold Absolute Pressure, in kPa
- */
-float getMap(void) {
-	if (!isAdcChannelValid(engineConfiguration->map.sensor.hwChannel))
-		return 0;
-
-#if EFI_ANALOG_SENSORS
-	if (!isValidRpm(GET_RPM()) || currentPressure == NO_VALUE_YET)
-		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
-	return validateMap(currentPressure);
-#else
-	return 100;
-#endif
-}
-#endif /* EFI_PROD_CODE */
-
 void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_UNIT_TEST
 	addConsoleAction("faststat", showMapStats);
@@ -327,18 +307,5 @@ void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
-
-#else
-
-#if EFI_PROD_CODE
-
-float getMap(void) {
-#if EFI_ANALOG_SENSORS
-	return getRawMap();
-#else
-	return NAN;
-#endif /* EFI_ANALOG_SENSORS */
-}
-#endif /* EFI_PROD_CODE */
 
 #endif /* EFI_MAP_AVERAGING */
