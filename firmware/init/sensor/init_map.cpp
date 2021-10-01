@@ -45,8 +45,8 @@ struct MapCfg {
 	float map1, map2;
 };
 
-static MapCfg getMapCfg(air_pressure_sensor_type_e sensorType DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	switch (sensorType) {
+static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	switch (engineConfiguration->map.sensor.type) {
 	case MT_DENSO183:
 		return {0, -6.64, 5, 182.78};
 	case MT_MPX4250:
@@ -90,8 +90,8 @@ static MapCfg getMapCfg(air_pressure_sensor_type_e sensorType DECLARE_CONFIG_PAR
 	}}
 }
 
-void configureMapFunction(air_pressure_sensor_type_e sensorType DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	auto cfg = getMapCfg(sensorType PASS_CONFIG_PARAMETER_SUFFIX);
+void configureMapFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	auto cfg = getMapCfg(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	mapConverter.configure(
 		cfg.v1,
@@ -110,7 +110,7 @@ void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (isAdcChannelValid(mapChannel)) {
 		// Set up the conversion function
-		configureMapFunction(engineConfiguration->map.sensor.type PASS_CONFIG_PARAMETER_SUFFIX);
+		configureMapFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 		// Both sensors use the same converter function
 		slowMapSensor.setFunction(mapConverter);
