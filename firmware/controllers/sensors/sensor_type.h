@@ -81,5 +81,5 @@ enum class SensorType : unsigned char {
 	MapSlow = 37,
 
 	// Leave me at the end!
-	PlaceholderLast = 36,
+	PlaceholderLast = 38,
 };
