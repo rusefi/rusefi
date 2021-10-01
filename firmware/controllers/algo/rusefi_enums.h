@@ -919,6 +919,8 @@ typedef enum {
 
 	MT_GM_1_BAR = 13,
 
+	MT_MPXH6400 = 14,
+
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
 
