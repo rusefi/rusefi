@@ -37,7 +37,7 @@
 #define afterstartEnrich_offset 6156
 #define afterstartHoldTime_offset 6124
 #define air_pressure_sensor_config_s_size 16
-#define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR", "MT_GM_2_BAR", "MT_GM_1_BAR"
+#define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR", "MT_GM_2_BAR", "MT_GM_1_BAR", "MT_MPXH6400"
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2247_offset 2247
 #define alignmentFill_at_4511_offset 4511
@@ -911,6 +911,7 @@
 #define IM_IM_BATCH 2
 #define IM_IM_SINGLE_POINT 3
 #define IM_IM_WASTED_SPARK 2
+#define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_TYPE_2", "IMU_TYPE_3", "IMU_TYPE_4"
 #define imuType_offset 778
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
@@ -1269,8 +1270,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.09.30
-#define SIGNATURE_HASH 2188350420
+#define SIGNATURE_DATE 2021.10.01
+#define SIGNATURE_HASH 119235035
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1626,7 +1627,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.09.30.kin.2188350420"
+#define TS_SIGNATURE "rusEFI 2021.10.01.kin.119235035"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
