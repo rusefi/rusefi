@@ -1170,8 +1170,6 @@
 #define MLQ_FIELD_HEADER_SIZE 55
 #define MLQ_HEADER_SIZE 22
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
-#define MOCK_CLT_COMMAND "mock_clt_voltage"
-#define MOCK_IAT_COMMAND "mock_iat_voltage"
 #define MOCK_MAF_COMMAND "mock_maf_voltage"
 #define MOCK_MAP_COMMAND "mock_map_voltage"
 #define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
@@ -1291,7 +1289,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.10.01
-#define SIGNATURE_HASH 793288084
+#define SIGNATURE_HASH 4183728456
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1647,7 +1645,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.10.01.subaru_eg33_f7.793288084"
+#define TS_SIGNATURE "rusEFI 2021.10.01.subaru_eg33_f7.4183728456"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

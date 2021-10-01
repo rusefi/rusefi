@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 01 01:56:32 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 01 13:23:25 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1135,8 +1135,6 @@ public class Fields {
 	public static final int MLQ_FIELD_HEADER_SIZE = 55;
 	public static final int MLQ_HEADER_SIZE = 22;
 	public static final String MOCK_AFR_COMMAND = "mock_afr_voltage";
-	public static final String MOCK_CLT_COMMAND = "mock_clt_voltage";
-	public static final String MOCK_IAT_COMMAND = "mock_iat_voltage";
 	public static final String MOCK_MAF_COMMAND = "mock_maf_voltage";
 	public static final String MOCK_MAP_COMMAND = "mock_map_voltage";
 	public static final String MOCK_PPS_POSITION_COMMAND = "mock_pps_position";
@@ -1239,6 +1237,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1825851947;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1545,7 +1544,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.01.all.3133306615";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.01.all.1825851947";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
