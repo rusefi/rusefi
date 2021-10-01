@@ -48,6 +48,8 @@ static FastInterpolation mpx4250(0, 8, 5, 260);
 
 static FastInterpolation mpx4250A(0.25, 20, 4.875, 250);
 
+static FastInterpolation mpxh6400(1 /*volts*/, 90 /*value*/, 3, 250);
+
 static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
 
 /**
@@ -181,6 +183,7 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 	case MT_MPX4250A:
 		return &mpx4250A;
 	case MT_MPXH6400:
+		return &mpxh6400;
 	case MT_HONDA3BAR:
 		return &honda3bar;
 	case MT_DODGE_NEON_2003:
