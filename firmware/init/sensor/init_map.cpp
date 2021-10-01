@@ -46,7 +46,8 @@ struct MapCfg {
 };
 
 static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	switch (engineConfiguration->map.sensor.type) {
+	auto sensorType = engineConfiguration->map.sensor.type;
+	switch (sensorType) {
 	case MT_DENSO183:
 		return {0, -6.64, 5, 182.78};
 	case MT_MPX4250:
