@@ -1729,8 +1729,6 @@ float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to u
 
 end_struct
 
-#define MOCK_IAT_COMMAND "mock_iat_voltage"
-#define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_MAP_COMMAND "mock_map_voltage"
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
 #define MOCK_MAF_COMMAND "mock_maf_voltage"
