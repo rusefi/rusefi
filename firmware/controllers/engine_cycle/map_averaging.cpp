@@ -149,8 +149,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 }
 #endif
 
-static void endAveraging(void *arg) {
-	(void) arg;
+static void endAveraging(void*) {
 #if ! EFI_UNIT_TEST
 	chibios_rt::CriticalSectionLocker csl;
 #endif
