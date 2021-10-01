@@ -85,6 +85,7 @@ void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitFlexSensor();
 	deInitVehicleSpeedSensor();
 	deinitTurbochargerSpeedSensor();
+	deinitMap();
 }
 
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

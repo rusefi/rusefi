@@ -129,3 +129,7 @@ void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		baroSensor.Register();
 	}
 }
+
+void deinitMap() {
+	AdcSubscription::UnsubscribeSensor(slowMapSensor);
+}
