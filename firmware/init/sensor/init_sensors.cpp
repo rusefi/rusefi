@@ -33,7 +33,6 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 
 static void initOldAnalogInputs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	initIfValid("AFR", engineConfiguration->afr.hwChannel);
-	initIfValid("MAP", engineConfiguration->map.sensor.hwChannel);
 	initIfValid("Baro", engineConfiguration->baroSensor.hwChannel);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 	initIfValid("CJ125 UR", engineConfiguration->cj125ur);
@@ -42,7 +41,6 @@ static void initOldAnalogInputs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 static void deInitOldAnalogInputs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
-	deInitIfValid("MAP", activeConfiguration.map.sensor.hwChannel);
 	deInitIfValid("Baro", activeConfiguration.baroSensor.hwChannel);
 	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
 	deInitIfValid("CJ125 UR", activeConfiguration.cj125ur);
