@@ -48,7 +48,7 @@ static FastInterpolation mpx4250(0, 8, 5, 260);
 
 static FastInterpolation mpx4250A(0.25, 20, 4.875, 250);
 
-static FastInterpolation mpxh6400(1 /*volts*/, 90 /*value*/, 3, 250);
+static FastInterpolation mpxh6400(1 /*volts*/, 90 /*kPa*/, 3 /*volts*/, 250 /*kPa*/);
 
 static FastInterpolation mpx4100(0.3, 20, 4.9, 105);
 
