@@ -53,6 +53,9 @@ static const char* const s_sensorNames[] = {
 	"Vehicle speed",
 
 	"Turbo speed",
+
+	"MAP (fast)",
+	"MAP (slow)",
 };
 
 // This struct represents one sensor in the registry.
