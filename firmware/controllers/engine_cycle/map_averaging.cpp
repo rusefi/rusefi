@@ -158,6 +158,10 @@ static void endAveraging(void*) {
 #if HAL_USE_ADC
 	if (mapMeasurementsCounter > 0) {
 		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
+
+		void onMapAveraged(float volts, efitick_t nowNt);
+		onMapAveraged(v_averagedMapValue, getTimeNowNt());
+
 		// todo: move out of locked context?
 		averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
 		// increment circular running buffer index
