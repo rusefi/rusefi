@@ -689,6 +689,16 @@ void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 /**
+ * set engine_type 108
+ */
+void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->trigger.type = TT_HONDA_1_24;
+
+	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
+}
+
+/**
  * set engine_type 107
  */
 void setRotary(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -760,6 +770,33 @@ void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(etbIo[0].directionPin1) = GPIOC_6;
 	CONFIG(etbIo[0].directionPin2) = GPIOC_7;
 	engineConfiguration->etb_use_two_wires = true;
-
 }
 
+void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
+		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600 / RPM_1_BYTE_PACKING_MULT, 7000 / RPM_1_BYTE_PACKING_MULT, 100 / RPM_1_BYTE_PACKING_MULT);
+		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
+	}
+}
+
+#if HW_HELLEN
+void setHellen144LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
+	engineConfiguration->communicationLedPin = GPIOE_7;
+#endif /* EFI_COMMUNICATION_PIN */
+	engineConfiguration->runningLedPin = GPIOG_1;
+	engineConfiguration->warningLedPin = GPIOE_8;
+}
+
+void setHellen176LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
+	engineConfiguration->communicationLedPin = GPIOH_10;
+#endif /* EFI_COMMUNICATION_PIN */
+	engineConfiguration->runningLedPin = GPIOH_9;  // green
+	engineConfiguration->warningLedPin = GPIOH_11; // yellow
+}
+#endif //HW_HELLEN

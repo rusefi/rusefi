@@ -734,6 +734,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		CONFIG(verboseTLE8888) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
+		CONFIG(artificialTestMisfire) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
 		CONFIG(displayLogicLevelsInEngineSniffer) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
@@ -782,8 +784,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
 		engineConfiguration->useTpicAdvancedMode = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "knockdebug")) {
-		engine->knockDebug = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
@@ -1025,11 +1025,9 @@ struct command_f_s {
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 #if EFI_ENABLE_MOCK_ADC
-		{MOCK_IAT_COMMAND, setMockIatVoltage},
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
-		{MOCK_CLT_COMMAND, setMockCltVoltage},
 #endif // EFI_ENABLE_MOCK_ADC
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},

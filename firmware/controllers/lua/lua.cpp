@@ -11,10 +11,19 @@
 #define TAG "LUA "
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-static char luaUserHeap[10000];
-static char luaSystemHeap[10000];
+
+#ifndef RAM_UNUSED_SIZE
+#define LUA_USER_HEAP 12000
+#endif
+#ifndef CCM_UNUSED_SIZE
+#define LUA_SYSTEM_HEAP 15000
+#endif
+
+static char luaUserHeap[LUA_USER_HEAP];
+static char luaSystemHeap[LUA_SYSTEM_HEAP];
 
 class Heap {
+public:
 	memory_heap_t m_heap;
 
 	size_t m_memoryUsed = 0;
@@ -93,6 +102,15 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 // Non-MCU code can use plain realloc function instead of custom implementation
 template <int /*ignored*/>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
+	if (!nsize) {
+		free(ptr);
+		return nullptr;
+	}
+
+	if (!ptr) {
+		return malloc(nsize);
+	}
+
 	return realloc(ptr, nsize);
 }
 #endif // EFI_PROD_CODE
@@ -185,6 +203,44 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "script loaded successfully!");
 
 	return true;
+}
+
+static LuaHandle systemLua;
+
+const char* getSystemLuaScript();
+
+static void printStats() {
+#if !EFI_UNIT_TEST
+	size_t freeRam;
+	chHeapStatus(&heaps[0].m_heap, &freeRam, nullptr);
+	efiPrintf("User free %d of %d", freeRam, sizeof(luaUserHeap));
+	chHeapStatus(&heaps[1].m_heap, &freeRam, nullptr);
+	efiPrintf("System free %d of %d", freeRam, sizeof(luaSystemHeap));
+#endif
+}
+
+void initSystemLua() {
+	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
+
+	Timer startTimer;
+	startTimer.reset();
+
+	systemLua = setupLuaState(myAlloc<1>);
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
+
+	if (!loadScript(systemLua, getSystemLuaScript())) {
+		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
+		systemLua = nullptr;
+		return;
+	}
+
+	auto startTime = startTimer.getElapsedSeconds();
+	addConsoleAction("luastats", printStats);
+
+#if !EFI_UNIT_TEST
+	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
+#endif
 }
 
 #if !EFI_UNIT_TEST
@@ -295,8 +351,13 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 }
 
 void LuaThread::ThreadTask() {
+	initSystemLua();
+
 	while (!chThdShouldTerminateX()) {
 		bool wasOk = runOneLua(myAlloc<0>, config->luaScript);
+
+		// Reset any lua adjustments the script made
+		ENGINE(engineState).luaAdjustments = {};
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin
@@ -310,32 +371,8 @@ void LuaThread::ThreadTask() {
 
 static LuaThread luaThread;
 
-static LuaHandle systemLua;
-
-void initSystemLua() {
-	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
-
-	Timer startTimer;
-	startTimer.reset();
-
-	systemLua = setupLuaState(myAlloc<1>);
-
-	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
-
-	if (!loadScript(systemLua, "function x() end")) {
-		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
-		systemLua = nullptr;
-		return;
-	}
-
-	auto startTime = startTimer.getElapsedSeconds();
-	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
-}
-
 void startLua() {
 	luaThread.Start();
-
-	initSystemLua();
 
 	addConsoleActionS("lua", [](const char* str){
 		if (interactivePending) {
@@ -365,7 +402,7 @@ void startLua() {
 #else // not EFI_UNIT_TEST
 
 void startLua() {
-	// todo
+	initSystemLua();
 }
 
 #include <stdexcept>
@@ -375,23 +412,23 @@ static LuaHandle runScript(const char* script) {
 	auto ls = setupLuaState(myAlloc<0>);
 
 	if (!ls) {
-		throw new std::logic_error("Call to setupLuaState failed, returned null");
+		throw std::logic_error("Call to setupLuaState failed, returned null");
 	}
 
 	if (!loadScript(ls, script)) {
-		throw new std::logic_error("Call to loadScript failed");
+		throw std::logic_error("Call to loadScript failed");
 	}
 
 	lua_getglobal(ls, "testFunc");
 	if (lua_isnil(ls, -1)) {
-		throw new std::logic_error("Failed to find function testFunc");
+		throw std::logic_error("Failed to find function testFunc");
 	}
 
 	int status = lua_pcall(ls, 0, 1, 0);
 
 	if (0 != status) {
 		std::string msg = std::string("lua error while running script: ") + lua_tostring(ls, -1);
-		throw new std::logic_error(msg);
+		throw std::logic_error(msg);
 	}
 
 	return ls;
@@ -407,7 +444,7 @@ expected<float> testLuaReturnsNumberOrNil(const char* script) {
 
 	// If not nil, it should be a number
 	if (!lua_isnumber(ls, -1)) {
-		throw new std::logic_error("Returned value is not a number");
+		throw std::logic_error("Returned value is not a number");
 	}
 
 	// pop the return value
@@ -431,7 +468,7 @@ int testLuaReturnsInteger(const char* script) {
 
 	// pop the return value;
 	if (!lua_isinteger(ls, -1)) {
-		throw new std::logic_error("Returned value is not an integer");
+		throw std::logic_error("Returned value is not an integer");
 	}
 
 	return lua_tointeger(ls, -1);
@@ -441,11 +478,11 @@ void testLuaExecString(const char* script) {
 	auto ls = setupLuaState(myAlloc<0>);
 
 	if (!ls) {
-		throw new std::logic_error("Call to setupLuaState failed, returned null");
+		throw std::logic_error("Call to setupLuaState failed, returned null");
 	}
 
 	if (!loadScript(ls, script)) {
-		throw new std::logic_error("Call to loadScript failed");
+		throw std::logic_error("Call to loadScript failed");
 	}
 }
 

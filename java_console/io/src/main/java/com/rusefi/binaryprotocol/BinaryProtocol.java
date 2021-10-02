@@ -220,6 +220,11 @@ public class BinaryProtocol {
         linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
+    public String getSignature() throws IOException {
+        HelloCommand.send(stream);
+        return HelloCommand.getHelloResponse(incomingData);
+    }
+
     /**
      * this method reads configuration snapshot from controller
      *
@@ -227,8 +232,7 @@ public class BinaryProtocol {
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
         try {
-            HelloCommand.send(stream);
-            signature = HelloCommand.getHelloResponse(incomingData);
+            signature = getSignature();
             System.out.println("Got " + signature);
             SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {

@@ -34,7 +34,6 @@ TESTS_SRC_CPP = \
 	tests/test_hardware_reinit.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
-	tests/test_on_demand_parameters.cpp \
 	tests/test_hip9011.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
@@ -86,6 +85,8 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_all_triggers.cpp \
 	tests/test_stepper.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
+	tests/sensor/test_turbocharger_speed_converter.cpp \
 	tests/sensor/test_vehicle_speed_converter.cpp
+
 	
 

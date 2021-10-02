@@ -477,38 +477,6 @@ void Engine::setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	injectEngineReferences();
 }
 
-void Engine::printKnockState(void) {
-	efiPrintf("knock now=%s/ever=%s", boolToString(knockNow), boolToString(knockEver));
-}
-
-void Engine::knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	this->knockVolts = knockVolts;
-    knockNow = knockVolts > engineConfiguration->knockVThreshold;
-    /**
-     * KnockCount is directly proportional to the degrees of ignition
-     * advance removed
-     * ex: degrees to subtract = knockCount;
-     */
-
-    /**
-     * TODO use knockLevel as a factor for amount of ignition advance
-     * to remove
-     * Perhaps allow the user to set a multiplier
-     * ex: degrees to subtract = knockCount + (knockLevel * X)
-     * X = user configurable multiplier
-     */
-    if (knockNow) {
-        knockEver = true;
-        timeOfLastKnockEvent = getTimeNowUs();
-        if (knockCount < engineConfiguration->maxKnockSubDeg)
-            knockCount++;
-    } else if (knockCount >= 1) {
-        knockCount--;
-	} else {
-        knockCount = 0;
-    }
-}
-
 void Engine::watchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
@@ -637,6 +605,7 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 			&& type != TT_ONE
 			&& type != TT_ONE_PLUS_ONE
 			&& type != TT_3_1_CAM
+			&& type != TT_36_2_2_2
 			&& type != TT_TOOTHED_WHEEL_60_2
 			&& type != TT_TOOTHED_WHEEL_36_1;
 }

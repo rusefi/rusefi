@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Aug 31 05:42:43 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Sep 30 21:33:23 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -100,6 +100,8 @@ case MT_MPX4250:
   return "MT_MPX4250";
 case MT_MPX4250A:
   return "MT_MPX4250A";
+case MT_MPXH6400:
+  return "MT_MPXH6400";
 case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
 case MT_TOYOTA_89420_02010:
@@ -210,8 +212,6 @@ case Force_4_bytes_size_cranking_ignition_mode:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_16:
-  return "DBG_16";
 case DBG_34:
   return "DBG_34";
 case DBG_ALTERNATOR_PID:
@@ -314,6 +314,8 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
+case DBG_WALL_WETTING:
+  return "DBG_WALL_WETTING";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
 case MODE_52:
@@ -428,8 +430,12 @@ case HELLEN_121_VAG_V6_CYL:
   return "HELLEN_121_VAG_V6_CYL";
 case HELLEN_121_VAG_VR6_CYL:
   return "HELLEN_121_VAG_VR6_CYL";
-case HELLEN_128_MERCEDES:
-  return "HELLEN_128_MERCEDES";
+case HELLEN_128_MERCEDES_4_CYL:
+  return "HELLEN_128_MERCEDES_4_CYL";
+case HELLEN_128_MERCEDES_6_CYL:
+  return "HELLEN_128_MERCEDES_6_CYL";
+case HELLEN_128_MERCEDES_8_CYL:
+  return "HELLEN_128_MERCEDES_8_CYL";
 case HELLEN_134_BMW:
   return "HELLEN_134_BMW";
 case HELLEN_154_HYUNDAI:
@@ -444,6 +450,8 @@ case HELLEN_NA6:
   return "HELLEN_NA6";
 case HELLEN_NA94:
   return "HELLEN_NA94";
+case HELLEN_NB1:
+  return "HELLEN_NB1";
 case HELLEN_NB2:
   return "HELLEN_NB2";
 case HELLEN_NB2_36:
@@ -530,6 +538,12 @@ case SUBARUEJ20G_DEFAULTS:
   return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
+case TEST_108:
+  return "TEST_108";
+case TEST_109:
+  return "TEST_109";
+case TEST_110:
+  return "TEST_110";
 case TEST_33816:
   return "TEST_33816";
 case TEST_CIVIC_4_0_BOTH:
@@ -673,6 +687,21 @@ case IM_TWO_COILS:
   return "IM_TWO_COILS";
 case IM_WASTED_SPARK:
   return "IM_WASTED_SPARK";
+  }
+ return NULL;
+}
+const char *getImu_type_e(imu_type_e value){
+switch(value) {
+case IMU_NONE:
+  return "IMU_NONE";
+case IMU_TYPE_2:
+  return "IMU_TYPE_2";
+case IMU_TYPE_3:
+  return "IMU_TYPE_3";
+case IMU_TYPE_4:
+  return "IMU_TYPE_4";
+case IMU_VAG:
+  return "IMU_VAG";
   }
  return NULL;
 }
@@ -932,6 +961,8 @@ case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
 case TT_FORD_ST170:
   return "TT_FORD_ST170";
+case TT_FORD_TFI_PIP:
+  return "TT_FORD_TFI_PIP";
 case TT_GM_60_2_2_2:
   return "TT_GM_60_2_2_2";
 case TT_GM_7X:

@@ -26,16 +26,26 @@ Release template (copy/paste this for new release):
 All notable user-facing or behavior-altering changes will be documented in this file.
 
 ## Month 202x Release - "Release Name"
-### Added
- - rusEFI console Lua tab loads scripts from ECU on start
 
-## August 2021 Release - "Lottery Day"
+### Added
+ - Ford PIP trigger decoder https://github.com/rusefi/rusefi/wiki/Images/triggers/trigger_65.png
+ - Dwell battery voltage correction table
+ - rusEFI firmware feature should be honest about it's Windows-only limitation
+
+### Fixed
+ - Fix of 36/2/2/2 attributes to help rotary #3242
+ - SD card doesn't work on H7
+ - rusEFI console to validate current bundle against bundle already in ECU #3266
+ - GPPWM usability: notes field #3270
+
+## September 2021 Release - "Iguana Awareness Day"
 
 ### Added
  - RUSEFI MSD now contains bundle-specific URL #2848
  - Nissan 4 cylinder QR trigger wheel #3118
  - 1-6-2-4-3-5 firing order for all our 911 fans!
  - Add minimum MAP threshold for closed-loop boost control
+ - rusEFI console Lua tab loads scripts from ECU on start
 
 ### Fixed
  - Composite Logger uses same engineSnifferRpmThreshold setting as engine sniffer #3161

@@ -244,6 +244,8 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 
 	// we are ignoring low RPM in order not to handle "engine was stopped to engine now running" transition
+/*
+ * Wall Wetting would totally skip fuel on sudden deceleration a
 	if (rpm > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = outputs[0]->name;
 		if (engine->prevOutputName == outputName
@@ -253,6 +255,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		}
 		engine->prevOutputName = outputName;
 	}
+*/
 
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
@@ -324,6 +327,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	// If duty cycle is high, impose a fuel cut rev limiter.
 	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
 	if (getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX) > 96.0f) {
+		warning(CUSTOM_OBD_63, "Injector Duty cycle cut");
 		return;
 	}
 
@@ -436,14 +440,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 	}
-
-	if (trgEventIndex == 0) {
-		if (isAdcChannelValid(CONFIG(externalKnockSenseAdc))) {
-			float externalKnockValue = getVoltageDivided("knock", engineConfiguration->externalKnockSenseAdc PASS_ENGINE_PARAMETER_SUFFIX);
-			engine->knockLogic(externalKnockValue PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-	}
-
 
 	/**
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for

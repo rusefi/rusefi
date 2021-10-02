@@ -84,9 +84,4 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingRpmBin(800, 15000 PASS_CONFIG_PARAMETER_SUFFIX);
 	setLinearCurve(config->veRpmBins, 7000, 15000, 1);
 	setLinearCurve(config->lambdaRpmBins, 500, 7000, 1);
-
-	engineConfiguration->hasFrequencyReportingMapSensor = true;
-	engineConfiguration->frequencyReportingMapInputPin = GPIOC_6;
-	engineConfiguration->mapFrequency100Kpa = 159;
-	engineConfiguration->mapFrequency0Kpa = 80;
 }

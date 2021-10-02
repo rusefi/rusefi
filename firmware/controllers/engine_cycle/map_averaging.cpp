@@ -51,14 +51,6 @@ static volatile int measurementsPerRevolutionCounter = 0;
 static volatile int measurementsPerRevolution = 0;
 
 /**
- * In this lock-free implementation 'readIndex' is always pointing
- * to the consistent copy of accumulator and counter pair
- */
-static int readIndex = 0;
-static float accumulators[2];
-static int counters[2];
-
-/**
  * Running MAP accumulator - sum of all measurements within averaging window
  */
 static volatile float mapAdcAccumulator = 0;
@@ -148,18 +140,6 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	}
 #endif /* EFI_SENSOR_CHART */
 
-	/**
-	 * Local copy is now safe, but it's an overkill: we only
-	 * have one writing thread anyway
-	 */
-	int readIndexLocal = readIndex;
-	int writeIndex = readIndexLocal ^ 1;
-	accumulators[writeIndex] = accumulators[readIndexLocal] + adcValue;
-	counters[writeIndex] = counters[readIndexLocal] + 1;
-	// this would commit the new pair of values
-	readIndex = writeIndex;
-
-	// todo: migrate to the lock-free implementation
 	{
 		// with locking we will have a consistent state
 		chibios_rt::CriticalSectionLocker csl;
@@ -169,8 +149,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 }
 #endif
 
-static void endAveraging(void *arg) {
-	(void) arg;
+static void endAveraging(void*) {
 #if ! EFI_UNIT_TEST
 	chibios_rt::CriticalSectionLocker csl;
 #endif
@@ -326,10 +305,6 @@ static void showMapStats(void) {
 float getMap(void) {
 	if (!isAdcChannelValid(engineConfiguration->map.sensor.hwChannel))
 		return 0;
-
-	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		return getRawMap();
-	}
 
 #if EFI_ANALOG_SENSORS
 	if (!isValidRpm(GET_RPM()) || currentPressure == NO_VALUE_YET)

@@ -16,5 +16,6 @@
     <orderEntry type="library" exported="" name="annotations" level="project" />
     <orderEntry type="module" module-name="inifile" exported="" />
     <orderEntry type="library" name="mockito-all-1.10.19" level="project" />
+    <orderEntry type="module" module-name="logging" />
   </component>
 </module>

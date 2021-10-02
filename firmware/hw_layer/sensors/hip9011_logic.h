@@ -128,6 +128,9 @@ public:
 
 	float rpmLookup[INT_LOOKUP_SIZE];
 
+	// Timestamp of the last sensed event
+	efitick_t knockSampleTimestamp = 0;
+
 	#if EFI_HIP_9011_DEBUG
 		/* SPI counters */
 		int correctResponsesCount = 0;

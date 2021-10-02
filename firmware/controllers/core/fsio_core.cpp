@@ -233,8 +233,6 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		int sensorIdx = static_cast<int>(SensorType::Aux1) + index;
 		return Sensor::get(static_cast<SensorType>(sensorIdx));
 	}
-	case LE_METHOD_KNOCK:
-		return ENGINE(knockCount);
 	case LE_UNDEFINED:
 		warning(CUSTOM_UNKNOWN_FSIO, "FSIO undefined action");
 		return unexpected;

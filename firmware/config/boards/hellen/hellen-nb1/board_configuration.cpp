@@ -1,10 +1,10 @@
 /**
- * @file boards/hellen/hellen64_miataNA6_94/board_configuration.cpp
+ * @file boards/hellen/hellen-nb1/board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen64_miataNA6_94 board
+ * @brief Configuration defaults for the hellen-nb1 board
  *
- * See https://rusefi.com/s/hellenNA6
+ * See http://rusefi.com/s/hellenNB1
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7;
@@ -56,16 +57,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
-}
-
 static void setupVbatt() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
@@ -104,7 +95,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 

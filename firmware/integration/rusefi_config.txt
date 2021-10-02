@@ -180,6 +180,7 @@ struct_no_prefix engine_configuration_s
 ! 
 #define RPM_1_BYTE_PACKING_MULT 50
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
+#define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 
 ! These are used currently only for output channels - but could be for config as well
 #define PACK_MULT_PRESSURE 30
@@ -199,6 +200,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_LAMBDA_CFG 147
 #define PACK_MULT_FUEL_MASS 100
+#define PACK_PERCENT_BYTE_MULT 100.0
 #define PACK_MULT_FUEL_FLOW 200
 #define FSIO_TABLE_8 8
 
@@ -213,6 +215,8 @@ struct_no_prefix engine_configuration_s
 #define TPS_TPS_ACCEL_TABLE 8
 #define MAP_ACCEL_TAPER 8
 #define ADC_CHANNEL_NONE 0
+#define ETB_FUNCTION_NONE 0
+#define DC_FUNCTION_IDLE 3
 
 #define BARO_CORR_SIZE 4
 
@@ -250,6 +254,7 @@ custom boost_target_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array, U08,
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
 #define GPPWM_CHANNELS 4
+#define GPPWM_NOTE_SIZE 16
 
 custom gppwm_table_t	@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@ array, U08, @OFFSET@, [@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@], "duty", 1, 0, 0, 100, 0
 
@@ -291,7 +296,7 @@ float baseFuel;+Base mass of the per-cylinder fuel injected during cranking. Thi
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 3000, 0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "VVT1 PID", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "mode16", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "INVALID", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "FSIO_ADC", "VVT1 PID", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "VSS", "SD card", "sr5", "Knock", "Wall Wetting", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "FSIO_EXPRESSION_1_7", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "FSIO_EXPRESSION_8_14", "INVALID", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 custom debug_mode_e 4 bits, U32, @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define VM_VVT_INACTIVE 0
@@ -346,8 +351,8 @@ struct gppwm_channel
 	uint8_t dutyIfError;+If an error (with a sensor, etc) is detected, this value is used instead of reading from the table.\nThis should be a safe value for whatever hardware is connected to prevent damage.;"%", 1, 0, 0, 100, 0
 	uint16_t pwmFrequency;+Select a frequency to run PWM at.\nSet this to 0hz to enable on-off mode.;"hz", 1, 0, 0, 500, 0
 
-	uint8_t onAboveDuty;+In on-off mode, turn the output on when the table value is above this duty.;"%", 1, 0, 0, 100, 0
-	uint8_t offBelowDuty;+In on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
+	uint8_t onAboveDuty;+Hysteresis: in on-off mode, turn the output on when the table value is above this duty.;"%", 1, 0, 0, 100, 0
+	uint8_t offBelowDuty;+Hysteresis: in on-off mode, turn the output off when the table value is below this duty.;"%", 1, 0, 0, 100, 0
 
 	gppwm_channel_e loadAxis;+Selects the load axis to use for the table.;
 	uint8_t alignmentFill_map;;"unit", 1, 0, 0, 100, 0
@@ -357,7 +362,7 @@ struct gppwm_channel
 	gppwm_table_t table;
 end_struct
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:3], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "INVALID", "INVALID"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar"
 
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
@@ -458,6 +463,7 @@ end_struct
 #define TT_TT_TEMP_62 62
 #define TT_TT_SUBARU_SVX_CRANK_1 63
 #define TT_TT_SUBARU_SVX_CAM_VVT 64
+#define TT_TT_FORD_TFI_PIP 65
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define DBG_DBG_LOGIC_ANALYZER 45
@@ -491,7 +497,7 @@ end_struct
 #define ET_VW_ABA 32
 #define ET_HELLEN_NA6 34
 #define ET_CAMARO 35
-#define ET_HELLEN_128_MERCEDES 36
+#define ET_HELLEN_128_MERCEDES_4_CYL 36
 #define ET_MRE_SUBARU_EJ18 37
 
 #define ET_BMW_M73_F 40
@@ -533,6 +539,8 @@ end_struct
 #define ET_HELLEN_121_NISSAN_8_CYL 85
 #define ET_HELLEN_NB2_36 86
 #define ET_HELLEN_121_NISSAN_ALMERA_N16 87
+#define ET_HELLEN_128_MERCEDES_6_CYL 88
+#define ET_HELLEN_128_MERCEDES_8_CYL 89
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 #define ET_TEST_ROTARY 107
@@ -582,7 +590,7 @@ bit useTLE8888_stepper
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit useFSIOTableForCanSniffingFiltering
 bit issue_294_29
-bit issue_294_30
+bit artificialTestMisfire,"Danger Mode","No thank you"
 bit issue_294_31,"si_example","nada_example"
 
 
@@ -625,7 +633,7 @@ uint32_t cylindersCount;;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
 ! FO_1_8_4_3_6_5_7_2 = 5
 ! FO_1_2_4_5_3 = 6
 
-custom firing_order_e 4 bits, U32, @OFFSET@, [0:5], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "fo30", "fo31", "fo32", "fo33"
+custom firing_order_e 4 bits, U32, @OFFSET@, [0:5], "One Cylinder", "1-3-4-2", "1-2-4-3", "1-3-2-4", "1-5-3-6-2-4", "1-8-4-3-6-5-7-2", "1-2-4-5-3", "1-4-2-5-3-6", "1-2", "1-2-3-4-5-6", "1-2-3", "1-8-7-2-6-5-4-3", "1-5-4-2-6-3-7-8", "1-6-3-2-5-4", "1-10-9-4-3-6-5-8-7_2", "1-7-5-11-3-9-6-12-2-8-4-10", "1-7-4-10-2-8-6-12-3-9-5-11", "1-4-3-2", "1-12-5-8-3-10-6-7-2-11-4-9", "1-2-7-8-4-5-6-3", "1-3-7-2-6-5-4-8", "1-2-3-4-5-6-7-8-9", "INVALID", "1-2-3-4-5-6-7-8-9-10-11-12", "1-3-2", "1-2-3-4-5-6-7-8", "1-5-4-8-6-3-7-2", "1-4-3-6-2-5", "1-8-7-3-6-5-4-2", "1-6-2-4-3-5", "1-6-5-4-3-2", "1-4-5-2-3-6", "fo32", "fo33", "fo34", "fo35", "fo36", "fo37"
 firing_order_e firingOrder;
 end_struct
 
@@ -701,7 +709,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "Nissan QR25", "trg62", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "trg65", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "Nissan QR25", "trg62", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "trg66", "trg67", "INVALID"
 
 custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
 	trigger_type_e type;+https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
@@ -725,7 +733,7 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
 
 	float adcVcc;;"volts", 1, 0, 0, 6, 3
-	float maxKnockSubDeg;maximum total number of degrees to subtract from ignition advance\nwhen knocking;"Deg", 1, 0, 0, 100, 0
+	float unused552;;"Deg", 1, 0, 0, 100, 0
 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	uint8_t[CAM_INPUTS_COUNT_padding] camInputsPadding;;
 	
@@ -769,8 +777,8 @@ end_struct
 
 	float manIdlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
 
-float mapFrequency0Kpa;;"Hz", 1, 0, 0, 100000, 2
-float mapFrequency100Kpa;;"Hz", 1, 0, 0, 100000, 2
+float unused612;;"", 1, 0, 0, 1, 0
+float unused616;;"", 1, 0, 0, 1, 0
 
 ! todo: rename to triggerSimulatorRpm
 	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm", 1, 0, 0, 30000, 0
@@ -911,9 +919,17 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 
 	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
-	uint8_t[10] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
+	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
+
+ 	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "type 2", "type 2", "type 2"
+	imu_type_e imuType
+
+	uint8_t[1] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
 	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
-	uint8_t[10] unusedOutputWhereHere;;"", 1, 0, 0, 255, 0
+
+	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
+
+	uint8_t[2] unusedOutputWhereHere;;"", 1, 0, 0, 255, 0
 	brain_pin_e[EGT_CHANNEL_COUNT iterate] max31855_cs;
 
 
@@ -989,6 +1005,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 #define ERROR_BUFFER_SIZE 120
 
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
+	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
 	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
@@ -997,14 +1014,14 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;+Some vehicles have a switch to indicate that clutch pedal is all the way up
-	brain_input_pin_e frequencyReportingMapInputPin;
+	uint8_t unused970;;"", 1, 0, 0, 1, 0
 	pin_input_mode_e clutchUpPinMode;
 	uint16_t multisparkMaxRpm;+Disable multispark above this engine speed.;"rpm", 1, 0, 0, 3000, 0
 	uint8_t multisparkMaxSparkingAngle;+This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.;"deg", 1, 0, 0, 60, 0
 	uint8_t multisparkMaxExtraSparkCount;+Configures the maximum number of extra sparks to fire (does not include main spark);"count", 1, 0, 1, 5, 0
 	bit clutchUpPinInverted
 	bit clutchDownPinInverted
-	bit useHbridges;+If enabled we use two H-bridges to drive stepper idle air valve
+	bit useHbridgesToDriveIdleStepper;+If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
 	bit enableLaunchBoost
@@ -1093,12 +1110,15 @@ struct vr_threshold_s
 	brain_pin_e pin;
 	uint8_t[3] pad;;"",1,0,0,0,0
 	uint8_t[6] rpmBins;;"rpm", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 0
-	uint8_t[6] values;;"volts", 0.01, 0, 0, 2.5, 2
+	uint8_t[6] values;;"volts", {1/@@PACK_PERCENT_BYTE_MULT@@}, 0, 0, 2.5, 2
 end_struct
 
-	vr_threshold_s[2 iterate] vrThreshold;
+! todo: should be '3' since we are dreaming of Honda triple-channel distributor
+#define VR_THRESHOLD_COUNT 2
+	vr_threshold_s[VR_THRESHOLD_COUNT iterate] vrThreshold;
 
-	int[45] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
+    gppwm_note_t[GPPWM_CHANNELS iterate] gpPwmNote;
+	int[29] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	brain_pin_e lps25BaroSensorScl
 	brain_pin_e lps25BaroSensorSda
@@ -1127,7 +1147,7 @@ bit cutFuelOnHardLimit,"yes","no"
 bit cutSparkOnHardLimit,"yes","no"
 bit launchFuelCutEnable
 bit launchSparkCutEnable;+This is the Cut Mode normally used
-bit hasFrequencyReportingMapSensor
+bit unused1464b20
 	bit unusedBitWasHere1
 	bit unusedBitWasHere2
 	bit unusedBitWasHere3
@@ -1200,7 +1220,7 @@ bit unused_1484_bit_31
 
 
 float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
-	float knockVThreshold;;"V", 1, 0, 1, 5, 2
+	float unused1512;;"", 1, 0, 1, 5, 2
 
 	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
 	uint8_t[10] unusedFsioInputs;;"", 1, 0, 0, 255, 0
@@ -1464,7 +1484,7 @@ tle8888_mode_e tle8888mode;
 	brain_input_pin_e flexSensorPin;+Continental/GM flex fuel sensor, 50-150hz type;
 	brain_pin_e test557pin
 	pin_output_mode_e stepperDirectionPinMode;
-	adc_channel_e externalKnockSenseAdc;
+	uint8_t unused3103;;"",1,0,0,1,0
 	output_pin_e stepperEnablePin;
 	brain_pin_e tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;
@@ -1577,7 +1597,9 @@ tChargeMode_e tChargeMode;
 
 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverride;;"ratio", 1, 0, 0, 20, 2
 
-	int[347] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACKING_DIV@@, 0, -25, 25, 2
+
+	int[344] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1707,8 +1729,6 @@ float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to u
 
 end_struct
 
-#define MOCK_IAT_COMMAND "mock_iat_voltage"
-#define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_MAP_COMMAND "mock_map_voltage"
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
 #define MOCK_MAF_COMMAND "mock_maf_voltage"
@@ -1761,7 +1781,8 @@ end_struct
 #define GAUGE_NAME_IDLE_POSITION "Idle position sensor"
 #define GAUGE_NAME_WARNING_COUNT "Warning count"
 #define GAUGE_NAME_LAST_ERROR "Last error"
-#define GAUGE_NAME_TUNE_CRC16 "tune CRC16"
+#define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
+#define GAUGE_NAME_ENGINE_CRC16 "Engine CRC16"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 
 #define GAUGE_NAME_RAW_FUEL_PRESSURE_LOW "Fuel pressure raw (low)"
@@ -1861,6 +1882,8 @@ end_struct
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 #define ENGINE_MAKE_VAG "VAG"
 
+#define CMD_SET "set"
+#define CMD_GET "get"
 #define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
 #define CMD_MIL_BENCH "milbench"
 #define CMD_FUEL_BENCH "fuelbench"

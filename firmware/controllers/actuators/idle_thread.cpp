@@ -85,12 +85,12 @@ void idleDebug(const char *msg, percent_t value) {
 static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	efiPrintf("useStepperIdle=%s useHbridges=%s",
-			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
+			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridgesToDriveIdleStepper)));
 	efiPrintf("idleMode=%s position=%.2f",
 			idleModeStr, getIdlePosition());
 
 	if (CONFIG(useStepperIdle)) {
-		if (CONFIG(useHbridges)) {
+		if (CONFIG(useHbridgesToDriveIdleStepper)) {
 			efiPrintf("Coil A:");
 			efiPrintf(" pin1=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin1)));
 			efiPrintf(" pin2=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin2)));

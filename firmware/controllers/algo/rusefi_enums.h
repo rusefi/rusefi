@@ -112,7 +112,7 @@ typedef enum {
 
 	CAMARO_4 = ET_CAMARO,
 
-	HELLEN_128_MERCEDES = ET_HELLEN_128_MERCEDES,
+	HELLEN_128_MERCEDES_4_CYL = ET_HELLEN_128_MERCEDES_4_CYL,
 
 	MRE_SUBARU_EJ18 = ET_MRE_SUBARU_EJ18,
 
@@ -207,10 +207,18 @@ typedef enum {
 
 	HELLEN_NA94 = ET_HELLEN_NA94,
 
+    // 82
 	HELLEN_154_HYUNDAI = ET_HELLEN_154_HYUNDAI,
+	HELLEN_NB1 = ET_HELLEN_NB1,
+	// 84
 	HELLEN_121_NISSAN_4_CYL = ET_HELLEN_121_NISSAN_4_CYL,
 
 	HELLEN_NB2_36 = ET_HELLEN_NB2_36,
+
+	HELLEN_128_MERCEDES_6_CYL = ET_HELLEN_128_MERCEDES_6_CYL,
+
+	HELLEN_128_MERCEDES_8_CYL = ET_HELLEN_128_MERCEDES_8_CYL,
+
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -226,6 +234,10 @@ typedef enum {
 	BMW_M73_MRE_SLAVE = 105,
 
 	TEST_ROTARY = ET_TEST_ROTARY,
+
+	TEST_108 = 108,
+	TEST_109 = 109,
+	TEST_110 = 110,
 
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
@@ -294,6 +306,10 @@ typedef enum {
 
 	TT_DODGE_STRATUS = 22,
 
+    /**
+     * Subaru but also Mazda RX-8
+     * We suspect that it's VR
+     */
 	TT_36_2_2_2 = TT_TT_36_2_2_2,
 
 	/**
@@ -416,13 +432,15 @@ typedef enum {
 
 	TT_SUBARU_SVX_CAM_VVT = TT_TT_SUBARU_SVX_CAM_VVT,
 
+	TT_FORD_TFI_PIP = TT_TT_FORD_TFI_PIP,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 65, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 66, // this is used if we want to iterate over all trigger types
 
 	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
@@ -726,6 +744,15 @@ typedef enum {
 	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
 } can_vss_nbc_e;
 
+// inertia measurement unit, yawn accelerometer
+typedef enum  __attribute__ ((__packed__)) {
+	IMU_NONE = 0,
+	IMU_VAG = 1,
+	IMU_TYPE_2 = 2,
+	IMU_TYPE_3 = 3,
+	IMU_TYPE_4 = 4,
+} imu_type_e;
+
 typedef enum {
 	ES_BPSX_D1 = 0,
 	/**
@@ -777,7 +804,7 @@ typedef enum {
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
-	DBG_16 = 16,
+	DBG_WALL_WETTING = 16,
 	/**
 	 * See also DBG_ELECTRONIC_THROTTLE_EXTRA
 	 */
@@ -891,6 +918,8 @@ typedef enum {
 	MT_GM_2_BAR = 12,
 
 	MT_GM_1_BAR = 13,
+
+	MT_MPXH6400 = 14,
 
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
 } air_pressure_sensor_type_e;
@@ -1067,11 +1096,13 @@ typedef enum __attribute__ ((__packed__)) {
 } afr_override_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	ETB_None = 0,
+// todo: rename to HB_None?
+	ETB_None = ETB_FUNCTION_NONE,
 	ETB_Throttle1 = 1,
 	ETB_Throttle2 = 2,
-	ETB_IdleValve = 3,
+	ETB_IdleValve = DC_FUNCTION_IDLE,
 	ETB_Wastegate = 4,
+// todo: rename to dc_function_e? rename to hbrg_function_e?
 } etb_function_e;
 
 typedef enum __attribute__ ((__packed__)) {

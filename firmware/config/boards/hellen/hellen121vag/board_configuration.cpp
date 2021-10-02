@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -53,16 +54,6 @@ static void setIgnitionPins() {
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-}
-
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
 }
 
 static void setupVbatt() {
@@ -112,7 +103,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
@@ -190,6 +181,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
+	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
 	hellenWbo();
 }
 

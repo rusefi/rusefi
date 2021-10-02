@@ -150,8 +150,8 @@ pins:
     color: dark green
 
   - pin: 22
-    id: [GPIOA_3, EFI_ADC_3]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOA_3, GPIOA_3, EFI_ADC_3]
+    class: [event_inputs, switch_inputs, analog_inputs]
     color: dark green
     ts_name: 22 - AN temp 4
     type: at
@@ -165,8 +165,8 @@ pins:
     type: at
 
   - pin: 24
-    id: [GPIOA_2, EFI_ADC_2]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOA_2, GPIOA_2, EFI_ADC_2]
+    class: [event_inputs, switch_inputs, analog_inputs]
     color: dark green
     ts_name: 24 - AN temp 3
     type: at

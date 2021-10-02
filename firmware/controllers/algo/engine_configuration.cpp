@@ -57,6 +57,7 @@
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
 #include "m111.h"
+#include "mercedes.h"
 
 #include "citroenBerlingoTU3JP.h"
 #include "mitsubishi.h"
@@ -345,7 +346,7 @@ static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
 }
 
-static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultFrankensoStepperIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idle.stepperDirectionPin = GPIOE_10;
 	engineConfiguration->idle.stepperStepPin = GPIOE_12;
 	engineConfiguration->stepperEnablePin = GPIOE_14;
@@ -436,9 +437,6 @@ static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	engineConfiguration->hip9011Gain = 1;
-	engineConfiguration->knockVThreshold = 4;
-	engineConfiguration->maxKnockSubDeg = 20;
-
 
 	if (!CONFIG(useTpicAdvancedMode)) {
 	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
@@ -597,8 +595,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->useStepperIdle = false;
 
-	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	setDefaultGppwmParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if !EFI_UNIT_TEST
@@ -726,7 +722,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
  */
 void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-
+	setDefaultFrankensoStepperIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setCanFrankensoDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
@@ -858,7 +854,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
-	case HELLEN_128_MERCEDES:
+	case HELLEN_NB1:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -937,6 +933,15 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif // HARDWARE_CI
 #endif // HW_PROTEUS
 #if HW_HELLEN
+	case HELLEN_128_MERCEDES_4_CYL:
+		setHellenMercedes128_4_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_128_MERCEDES_6_CYL:
+		setHellenMercedes128_6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_128_MERCEDES_8_CYL:
+		setHellenMercedes128_8_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case HELLEN_NB2:
 		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1111,6 +1116,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TEST_33816:
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case TEST_108:
+		setVrThresholdTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case TEST_109:
+	case TEST_110:
 	case TEST_ROTARY:
 		setRotary(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;

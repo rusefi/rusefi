@@ -33,6 +33,8 @@ public:
 	void setOutput(expected<percent_t> outputValue) override;
 
 private:
+	percent_t getClosedLoopImpl(float target, float manifoldPressure);
+
 	bool m_shouldResetPid = false;
 	Pid m_pid;
 

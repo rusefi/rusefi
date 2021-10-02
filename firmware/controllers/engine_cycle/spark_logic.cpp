@@ -7,7 +7,6 @@
 
 #include "pch.h"
 
-#include "software_knock.h"
 #include "spark_logic.h"
 #include "os_access.h"
 
@@ -15,7 +14,7 @@
 #include "event_queue.h"
 #include "tooth_logger.h"
 
-#include "hip9011.h"
+#include "knock_logic.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -127,10 +126,16 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 }
 
 static void chargeTrailingSpark(IgnitionOutputPin* pin) {
+#if SPARK_EXTREME_LOGGING
+	efiPrintf("chargeTrailingSpark %s", pin->name);
+#endif /* SPARK_EXTREME_LOGGING */
 	pin->setHigh();
 }
 
 static void fireTrailingSpark(IgnitionOutputPin* pin) {
+#if SPARK_EXTREME_LOGGING
+	efiPrintf("fireTrailingSpark %s", pin->name);
+#endif /* SPARK_EXTREME_LOGGING */
 	pin->setLow();
 }
 
@@ -203,6 +208,10 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
 		if (CONFIG(enableTrailingSparks)) {
+#if SPARK_EXTREME_LOGGING
+	efiPrintf("scheduleByAngle TrailingSparks");
+#endif /* SPARK_EXTREME_LOGGING */
+
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 			scheduleByAngle(
 				&event->trailingSparkFire, nowNt, ENGINE(engineState.trailingSparkAngle),
@@ -215,12 +224,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
-#if EFI_SOFTWARE_KNOCK
-	knockSamplingCallback(event->cylinderNumber, nowNt);
-#endif
-#if EFI_HIP_9011
-	hip9011_onFireEvent(event->cylinderNumber, nowNt);
-#endif
+	engine->onSparkFireKnockSense(event->cylinderNumber, nowNt);
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
@@ -541,6 +545,15 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 			IgnitionEvent *event = &ENGINE(ignitionEvents.elements[i]);
 			if (event->dwellPosition.triggerEventIndex != trgEventIndex)
 				continue;
+
+			if (i == 0 && CONFIG(artificialTestMisfire) && (getRevolutionCounter() % ((int)engineConfiguration->fsio_setting[5]) == 0)) {
+				// artificial misfire on cylinder #1 for testing purposes
+				// enable artificialMisfire
+				// set_fsio_setting 6 20
+				warning(CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->globalSparkIdCounter);
+				continue;
+			}
+
 			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}

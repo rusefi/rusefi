@@ -75,6 +75,8 @@ enum class SensorType : unsigned char {
 
 	VehicleSpeed = 34,
 
+	TurbochargerSpeed = 35,
+
 	// Leave me at the end!
-	PlaceholderLast = 35,
+	PlaceholderLast = 36,
 };

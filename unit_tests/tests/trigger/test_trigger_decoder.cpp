@@ -332,7 +332,7 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 15,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 
 
-	eth.clearQueue();
+	eth.executeActions();
 
 //	debugSignalExecutor = true;
 
@@ -916,8 +916,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 ////	assertInjectorDownEvent("8@8", 8, MS2US(45), 1);
 ////	assertInjectorDownEvent("8@9", 9, MS2US(55), 0);
 
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
+/*
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
+*/
 }
 
 void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -942,7 +944,7 @@ TEST(big, testTwoWireBatch) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
-	eth.clearQueue();
+	eth.executeActions();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -970,7 +972,7 @@ TEST(big, testSequential) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
-	eth.clearQueue();
+	eth.executeActions();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -1094,8 +1096,10 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
+	/*
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
+*/
 }
 
 TEST(big, testSparkReverseOrderBug319) {

@@ -69,6 +69,11 @@ public:
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
 	void fireTriggerEventsWithDuration(float delayMs);
+	/**
+	 * todo: better method name since this method executes events in the FUTURE
+	 * looks like such a method should be used only in some pretty narrow circumstances
+	 * a healthy test should probably use executeActions instead?
+	 */
 	void clearQueue();
 
 	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);

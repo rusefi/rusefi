@@ -307,6 +307,30 @@ static int lua_stopEngine(lua_State*) {
 
 	return 0;
 }
+
+static int lua_setTimingAdd(lua_State* l) {
+	ENGINE(engineState).luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+
+	return 0;
+}
+
+static int lua_setTimingMult(lua_State* l) {
+	ENGINE(engineState).luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
+
+	return 0;
+}
+
+static int lua_setFuelAdd(lua_State* l) {
+	ENGINE(engineState).luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
+
+	return 0;
+}
+
+static int lua_setFuelMult(lua_State* l) {
+	ENGINE(engineState).luaAdjustments.fuelMult = luaL_checknumber(l, 1);
+
+	return 0;
+}
 #endif // EFI_UNIT_TEST
 
 void configureRusefiLuaHooks(lua_State* l) {
@@ -338,5 +362,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "setAirmass", lua_setAirmass);
 
 	lua_register(l, "stopEngine", lua_stopEngine);
+
+	lua_register(l, "setTimingAdd", lua_setTimingAdd);
+	lua_register(l, "setTimingMult", lua_setTimingMult);
+
+	lua_register(l, "setFuelAdd", lua_setFuelAdd);
+	lua_register(l, "setFuelMult", lua_setFuelMult);
 #endif
 }
