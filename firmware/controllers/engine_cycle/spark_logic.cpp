@@ -378,6 +378,8 @@ static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Ignition
 
 	event->sparkId = engine->globalSparkIdCounter++;
 
+	efitick_t chargeTime = 0;
+
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling
 	 */
@@ -393,7 +395,7 @@ static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Ignition
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, { &turnSparkPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
+		chargeTime = scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, { &turnSparkPinHigh, event } PASS_ENGINE_PARAMETER_SUFFIX);
 
 		event->sparksRemaining = ENGINE(engineState.multispark.count);
 	} else {
@@ -418,9 +420,13 @@ static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Ignition
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("to queue sparkDown ind=%d %d %s now=%d for id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), event->sparkEvent.position.triggerEventIndex);
 #endif /* SPARK_EXTREME_LOGGING */
+
+		if (!limitedSpark && engine->enableOverdwellProtection) {
+			// auto fire spark at 1.5x nominal dwell
+			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
+			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { fireSparkAndPrepareNextSchedule, event });
+		}
 	}
-
-
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
@@ -482,7 +488,6 @@ static void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initializeIgnitionActions(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-
 static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	AngleBasedEvent *current, *tmp;
 
@@ -497,6 +502,9 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, 
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("time to invoke ind=%d %d %d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* SPARK_EXTREME_LOGGING */
+
+			// In case this event was scheduled by overdwell protection, cancel it so we can re-schedule at the correct time
+			engine->executor.cancel(sDown);
 
 			scheduleByAngle(
 				sDown,
