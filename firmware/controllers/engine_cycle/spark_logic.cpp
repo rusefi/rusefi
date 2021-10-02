@@ -435,7 +435,6 @@ static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Ignition
 			// auto fire spark at 1.5x nominal dwell
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
-			}
 		}
 	}
 
