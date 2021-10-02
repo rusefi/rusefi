@@ -332,7 +332,7 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 15,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 
 
-	eth.clearQueue();
+	eth.executeActions();
 
 //	debugSignalExecutor = true;
 
@@ -944,7 +944,7 @@ TEST(big, testTwoWireBatch) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
-	eth.clearQueue();
+	eth.executeActions();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -972,7 +972,7 @@ TEST(big, testSequential) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
-	eth.clearQueue();
+	eth.executeActions();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
