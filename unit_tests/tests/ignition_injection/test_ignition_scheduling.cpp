@@ -40,7 +40,10 @@ TEST(ignition, twoCoils) {
 TEST(ignition, trailingSpark) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
+	/**
 	// TODO #3220: this feature makes this test sad, eventually remove this line (and the ability to disable it altogether)
+	 * I am pretty sure that it's about usage of improper method clearQueue() below see it's comment
+	 */
 	engine->enableOverdwellProtection = false;
 
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
