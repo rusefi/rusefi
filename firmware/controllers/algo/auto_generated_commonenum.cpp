@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Sep 30 21:33:23 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Oct 02 11:25:28 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -526,10 +526,18 @@ case PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case PROTEUS_DEFAULTS:
   return "PROTEUS_DEFAULTS";
+case PROTEUS_HONDA_ELEMENT_2003:
+  return "PROTEUS_HONDA_ELEMENT_2003";
+case PROTEUS_HONDA_OBD2A:
+  return "PROTEUS_HONDA_OBD2A";
 case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
+case PROTEUS_N73:
+  return "PROTEUS_N73";
 case PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
+case PROTEUS_VAG_80_18T:
+  return "PROTEUS_VAG_80_18T";
 case SACHS:
   return "SACHS";
 case SUBARUEG33_DEFAULTS:
