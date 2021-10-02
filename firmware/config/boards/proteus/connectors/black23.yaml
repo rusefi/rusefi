@@ -78,7 +78,8 @@ pins:
     type: vr
 
   - pin: 14
-    function: Reserved For Future Use
+    function: Ground
+    type: gnd
 
   - pin: 15
     function: ETB 2 positive
