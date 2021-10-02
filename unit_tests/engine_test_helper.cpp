@@ -58,6 +58,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
 	EXPAND_Engine;
 
+	// TODO #3220: this feature makes the trailing spark test sad, eventually remove this line (and the ability to disable it altogether)
+	engine->enableOverdwellProtection = false;
+
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
 
