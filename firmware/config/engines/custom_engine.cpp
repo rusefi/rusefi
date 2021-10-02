@@ -696,6 +696,9 @@ void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
+
+	engineConfiguration->triggerInputPins[0] = GPIOA_5;
+	engineConfiguration->triggerInputPins[1] = GPIOC_6;
 }
 
 /**
