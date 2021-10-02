@@ -871,7 +871,7 @@ bit is_enabled_spi_1
 bit is_enabled_spi_2
 	bit is_enabled_spi_3
 	bit isSdCardEnabled;enable sd/disable sd
-	bit enableOverdwellProtection
+	bit unused744b4
 	bit isEngineControlEnabled
 	bit isHip9011Enabled
 	bit isVerboseAlternator
