@@ -305,7 +305,16 @@ const char *NamedOutputPin::getShortName() const {
 	return shortName == nullptr ? name : shortName;
 }
 
+#if EFI_UNIT_TEST
+extern bool verboseMode;
+#endif // EFI_UNIT_TEST
+
 void NamedOutputPin::setHigh() {
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		efiPrintf("pin %s goes high", name);
+	}
+#endif // EFI_UNIT_TEST
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
@@ -319,6 +328,12 @@ void NamedOutputPin::setHigh() {
 }
 
 void NamedOutputPin::setLow() {
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		efiPrintf("pin %s goes low", name);
+	}
+#endif // EFI_UNIT_TEST
+
 	// turn off the output
 	setValue(false);
 
@@ -401,6 +416,12 @@ void OutputPin::setValue(int logicValue) {
 // todo: https://github.com/rusefi/rusefi/issues/1638
 //	ScopePerf perf(PE::OutputPinSetValue);
 #endif // ENABLE_PERF_TRACE
+
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		efiPrintf("pin goes %d", logicValue);
+	}
+#endif // EFI_UNIT_TEST
 
 	// Always store the current logical value of the pin (so it can be
 	// used internally even if not connected to a real hardware pin)
