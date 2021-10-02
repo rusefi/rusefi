@@ -421,7 +421,7 @@ static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Ignition
 		efiPrintf("to queue sparkDown ind=%d %d %s now=%d for id=%d", trgEventIndex, getRevolutionCounter(), event->getOutputForLoggins()->name, (int)getTimeNowUs(), event->sparkEvent.position.triggerEventIndex);
 #endif /* SPARK_EXTREME_LOGGING */
 
-		if (!limitedSpark) {
+		if (!limitedSpark && CONFIG(enableOverdwellProtection)) {
 			// auto fire spark at 1.5x nominal dwell
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { fireSparkAndPrepareNextSchedule, event });
