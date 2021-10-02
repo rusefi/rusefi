@@ -83,14 +83,21 @@ TEST(ignition, trailingSpark) {
 
 	// Fire trigger fall - should schedule ignition chargings (rising edges)
 	eth.fireFall(20);
-	eth.clearQueue();
+	eth.moveTimeForwardMs(18);
+	eth.executeActions();
 
-	// Primary and secondary coils should be low
+	// Primary low, scheduling trailing
 	EXPECT_EQ(enginePins.coils[0].getLogicValue(), true);
+	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), false);
+
+	eth.moveTimeForwardMs(2);
+	eth.executeActions();
+
+	// and secondary coils should be low
 	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), true);
 
 	// Fire trigger rise - should schedule ignition firings
-	eth.fireRise(20);
+	eth.fireRise(0);
 	eth.moveTimeForwardMs(1);
 	eth.executeActions();
 
