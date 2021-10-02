@@ -1415,7 +1415,7 @@ menuDialog = main
 		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
 		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
 		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
-		subMenu = fuelTrimSettings,         "Fuel Trim", 0, {isInjectionEnabled == 1}
+;		subMenu = fuelTrimSettings,         "Fuel Trim", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Air mass model
