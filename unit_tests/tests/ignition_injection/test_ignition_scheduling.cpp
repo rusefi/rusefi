@@ -57,6 +57,7 @@ TEST(ignition, trailingSpark) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
+	ASSERT_EQ( 3000,  GET_RPM()) << "RPM#0";
 	eth.clearQueue();
 
 	/**
@@ -72,7 +73,7 @@ TEST(ignition, trailingSpark) {
 	EXPECT_EQ(engine->executor.size(), 2);
 
 	// execute all actions
-	eth.clearQueue();
+	eth.executeActions();
 
 	// Primary and secondary coils should be low - primary just fired
 	EXPECT_EQ(enginePins.coils[0].getLogicValue(), false);
