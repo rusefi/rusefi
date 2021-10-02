@@ -35,20 +35,28 @@
 #endif
 
 #include "defaults.h"
-#include "custom_engine.h"
-#include "engine_template.h"
-#include "bmw_m73.h"
 
+#include "bmw_m73.h"
+#include "bmw_n73.h"
+
+#include "citroenBerlingoTU3JP.h"
+#include "custom_engine.h"
 #include "dodge_neon.h"
 #include "dodge_ram.h"
+
+#include "engine_template.h"
 
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
 
+#include "honda_accord.h"
+#include "honda_k_dbc.h"
+#include "honda_600.h"
+
+#include "GY6_139QMB.h"
+
 #include "nissan_primera.h"
 #include "nissan_vq.h"
-#include "honda_accord.h"
-#include "GY6_139QMB.h"
 
 #include "mazda_miata.h"
 #include "mazda_miata_1_6.h"
@@ -58,20 +66,18 @@
 #include "mazda_626.h"
 #include "m111.h"
 #include "mercedes.h"
-
-#include "citroenBerlingoTU3JP.h"
 #include "mitsubishi.h"
+#include "me7pnp.h"
+
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
 #include "vw.h"
-#include "me7pnp.h"
 #include "vw_b6.h"
 #include "chevrolet_camaro_4.h"
 #include "toyota_jzs147.h"
 #include "ford_festiva.h"
 #include "lada_kalina.h"
-#include "honda_600.h"
 #include "boost_control.h"
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
@@ -923,6 +929,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case PROTEUS_HONDA_ELEMENT_2003:
+		setProteusHondaElement2003(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_HONDA_OBD2A:
+	case PROTEUS_VAG_80_18T:
+	case PROTEUS_N73:
 	case PROTEUS_MIATA_NB2:
 		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
