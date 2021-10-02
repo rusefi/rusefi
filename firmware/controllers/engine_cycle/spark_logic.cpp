@@ -126,10 +126,16 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 }
 
 static void chargeTrailingSpark(IgnitionOutputPin* pin) {
+#if SPARK_EXTREME_LOGGING
+	efiPrintf("chargeTrailingSpark %s", pin->name);
+#endif /* SPARK_EXTREME_LOGGING */
 	pin->setHigh();
 }
 
 static void fireTrailingSpark(IgnitionOutputPin* pin) {
+#if SPARK_EXTREME_LOGGING
+	efiPrintf("fireTrailingSpark %s", pin->name);
+#endif /* SPARK_EXTREME_LOGGING */
 	pin->setLow();
 }
 
@@ -202,6 +208,10 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
 		if (CONFIG(enableTrailingSparks)) {
+#if SPARK_EXTREME_LOGGING
+	efiPrintf("scheduleByAngle TrailingSparks");
+#endif /* SPARK_EXTREME_LOGGING */
+
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 			scheduleByAngle(
 				&event->trailingSparkFire, nowNt, ENGINE(engineState.trailingSparkAngle),
