@@ -1877,6 +1877,7 @@ end_struct
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
+#define ENGINE_MAKE_HONDA "Honda"
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_NISSAN "Nissan"
