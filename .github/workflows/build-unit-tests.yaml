@@ -63,7 +63,7 @@ jobs:
       run: sudo apt-get install ncftp lcov
 
     - name: Generate Code Coverage
-      if: ${{ matrix.os != 'macos-latest' }}
+      if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
