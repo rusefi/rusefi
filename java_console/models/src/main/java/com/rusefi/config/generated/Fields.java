@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 01 13:23:25 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Oct 02 15:22:42 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -457,8 +457,12 @@ public class Fields {
 	public static final int ET_NISSAN_PRIMERA = 5;
 	public static final int ET_PROTEUS_ANALOG_PWM_TEST = 106;
 	public static final int ET_PROTEUS_BMW_M73 = 63;
+	public static final int ET_PROTEUS_HONDA_ELEMENT_2003 = 90;
+	public static final int ET_PROTEUS_HONDA_OBD2A = 91;
 	public static final int ET_PROTEUS_MIATA_NB2 = 67;
+	public static final int ET_PROTEUS_N73 = 93;
 	public static final int ET_PROTEUS_QC_TEST_BOARD = 42;
+	public static final int ET_PROTEUS_VAG_80_18T = 92;
 	public static final int ET_SACHS = 29;
 	public static final int ET_TEST_ROTARY = 107;
 	public static final int ET_VW_ABA = 32;
@@ -1237,7 +1241,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1825851947;
+	public static final int SIGNATURE_HASH = 450893112;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1544,7 +1548,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.01.all.1825851947";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.02.all.450893112";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
