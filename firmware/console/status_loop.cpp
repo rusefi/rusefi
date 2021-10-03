@@ -648,7 +648,9 @@ static void updateFlags() {
 	tsOutputChannels.clutchDownState = engine->clutchDownState;
 	tsOutputChannels.brakePedalState = engine->brakePedalState;
 
+#if EFI_PROD_CODE
 	tsOutputChannels.isTriggerError = isTriggerErrorNow();
+#endif // EFI_PROD_CODE
 
 #if EFI_INTERNAL_FLASH
 	tsOutputChannels.needBurn = getNeedToWriteConfiguration();
