@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.Nullable;
@@ -88,10 +89,12 @@ public enum FileLog {
     private FileOutputStream openLog() throws FileNotFoundException {
         String date = Logger.getDate();
         createFolderIfNeeded();
-        currentLogName = name() + "_rfi_report_" + date + ".csv";
-        String fileName = Logger.DIR + currentLogName;
-        rlog("Writing to " + fileName);
-        return new FileOutputStream(fileName, true);
+        String shortFileName = name() + "_rfi_report_" + date;
+        Logging.configureLogFile(Logger.DIR + shortFileName + ".log");
+        currentLogName = shortFileName + ".csv";
+        String fullFileName = Logger.DIR + currentLogName;
+        rlog("Writing to " + fullFileName);
+        return new FileOutputStream(fullFileName, true);
     }
 
     public static void createFolderIfNeeded() {
