@@ -524,6 +524,7 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(fanPin) = GPIO_UNASSIGNED;
 	CONFIG(fuelPumpPin) = GPIO_UNASSIGNED;
 
+#if EFI_PROD_CODE
 	engineConfiguration->injectionPins[0] = PROTEUS_LS_1;
 	engineConfiguration->injectionPins[1] = PROTEUS_LS_2;
 	engineConfiguration->injectionPins[2] = PROTEUS_LS_3;
@@ -564,6 +565,7 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fsioOutputPins[6] = GPIOD_14;// "Highside 4"    # pin 14/black35
 	engineConfiguration->fsioOutputPins[7] = GPIOG_4;//  "Ign 10"
 
+#endif // EFI_PROD_CODE
 
 	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
