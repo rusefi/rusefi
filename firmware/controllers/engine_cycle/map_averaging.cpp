@@ -159,6 +159,8 @@ static void endAveraging(void*) {
 	if (mapMeasurementsCounter > 0) {
 		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
 
+		// TODO: how to reconcile onMapAveraged with multiple-cycle averaging (minimuming?)?
+		// see https://github.com/rusefi/rusefi/issues/3309
 		void onMapAveraged(float volts, efitick_t nowNt);
 		onMapAveraged(v_averagedMapValue, getTimeNowNt());
 
