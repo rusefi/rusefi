@@ -860,7 +860,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
-	case HELLEN_NB1:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -959,6 +958,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case HELLEN_NB2_36:
 		setMiataNB2_Hellen72_36(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_NB1:
+		setHellenNB1(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HELLEN72_ETB:
 		setHellen72etb(PASS_CONFIG_PARAMETER_SIGNATURE);
