@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class WarningPanel {
         }
     });
 
-    public WarningPanel() {
+    public WarningPanel(Node config) {
         label.setForeground(Color.red);
         panel.add(label);
 
@@ -65,6 +66,7 @@ public class WarningPanel {
         panel.add(reset);
         // todo: only display label if logs are being recorded
         panel.add(new JLabel(FileLog.LOG_INFO_TEXT));
+        panel.add(new LogSizeControl(config).getContent());
     }
 
     private void clear() {
@@ -72,7 +74,7 @@ public class WarningPanel {
         reset.setEnabled(false);
     }
 
-    public JPanel getPanel() {
+    public JPanel getPanel(Node config) {
         return panel;
     }
 }
