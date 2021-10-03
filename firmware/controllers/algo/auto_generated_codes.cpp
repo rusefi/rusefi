@@ -1,6 +1,6 @@
 #include "global.h"
 #include "obd_error_codes.h"
-// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Sun Oct 03 01:28:41 EDT 2021
+// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Sun Oct 03 01:41:19 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -269,8 +269,6 @@ case CUSTOM_ERR_6669:
   return "CUSTOM_ERR_6669";
 case CUSTOM_ERR_6670:
   return "CUSTOM_ERR_6670";
-case CUSTOM_ERR_6675:
-  return "CUSTOM_ERR_6675";
 case CUSTOM_ERR_6684:
   return "CUSTOM_ERR_6684";
 case CUSTOM_ERR_6685:
@@ -749,6 +747,8 @@ case CUSTOM_UNKNOWN_FSIO:
   return "CUSTOM_UNKNOWN_FSIO";
 case CUSTOM_VVT_MODE_NOT_SELECTED:
   return "CUSTOM_VVT_MODE_NOT_SELECTED";
+case CUSTOM_VVT_SYNC_POSITION:
+  return "CUSTOM_VVT_SYNC_POSITION";
 case CUSTOM_WRONG_ALGORITHM:
   return "CUSTOM_WRONG_ALGORITHM";
 case CUSTOM_ZERO_DWELL:
