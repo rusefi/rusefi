@@ -26,18 +26,18 @@ static const brain_pin_e injPins[] = {
 };
 
 static const brain_pin_e ignPins[] = {
-	GPIOD_4,
-	GPIOD_3,
-	GPIOC_9,
-	GPIOC_8,
-	GPIOC_7,
-	GPIOG_8,
-	GPIOG_7,
-	GPIOG_6,
-	GPIOG_5,
-	GPIOG_4,
-	GPIOG_3,
-	GPIOG_2,
+	PROTEUS_HS_1,
+	PROTEUS_HS_2,
+	PROTEUS_HS_3,
+	PROTEUS_HS_4,
+	PROTEUS_HS_5,
+	PROTEUS_HS_6,
+	PROTEUS_HS_7,
+	PROTEUS_HS_8,
+	PROTEUS_HS_9,
+	PROTEUS_HS_10,
+	PROTEUS_HS_11,
+	PROTEUS_HS_12,
 };
 
 static void setInjectorPins() {
@@ -108,13 +108,11 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs
 #if VR_HW_CHECK_MODE
 	// set_trigger_input_pin 0 PE7
-	// GPIOE_7:  "VR 1"
-	engineConfiguration->triggerInputPins[0] = GPIOE_7;
-	// GPIOE_8:  "VR 2"
-	engineConfiguration->camInputs[0] = GPIOE_8;
+	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+	engineConfiguration->camInputs[0] = PROTEUS_VR_2;
 #else
 	// Digital channel 1 as default - others not set
-	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 #endif
 

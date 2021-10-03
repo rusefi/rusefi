@@ -540,19 +540,19 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 
-	engineConfiguration->ignitionPins[0] = GPIOD_4;//  "Ign 1"
-	engineConfiguration->ignitionPins[1] = GPIOD_3;//  "Ign 2"
-	engineConfiguration->ignitionPins[2] = GPIOC_8;//  "Ign 4"
-	engineConfiguration->ignitionPins[3] = GPIOC_7;//  "Ign 5"
-	engineConfiguration->ignitionPins[4] = GPIOG_8;//  "Ign 6"
-	engineConfiguration->ignitionPins[5] = GPIOG_7;//  "Ign 7"
+	engineConfiguration->ignitionPins[0] = PROTEUS_HS_1;
+	engineConfiguration->ignitionPins[1] = PROTEUS_HS_2;
+	engineConfiguration->ignitionPins[2] = PROTEUS_HS_4;
+	engineConfiguration->ignitionPins[3] = PROTEUS_HS_5;
+	engineConfiguration->ignitionPins[4] = PROTEUS_HS_6;
+	engineConfiguration->ignitionPins[5] = PROTEUS_HS_7;
 
 	engineConfiguration->ignitionPins[6] = GPIOD_15;// "Highside 3"    # pin 13/black35
-	engineConfiguration->ignitionPins[7] = GPIOC_9;//  "Ign 3"
-	engineConfiguration->ignitionPins[8] = GPIOG_5;//  "Ign 9"
-	engineConfiguration->ignitionPins[9] = GPIOG_6;//  "Ign 8"
-	engineConfiguration->ignitionPins[10] = GPIOA_9;//  "Highside 1"    # pin 2/black35
-	engineConfiguration->ignitionPins[11] = GPIOG_2;//  "Ign 12"
+	engineConfiguration->ignitionPins[7] = PROTEUS_HS_3;
+	engineConfiguration->ignitionPins[8] = PROTEUS_HS_9;
+	engineConfiguration->ignitionPins[9] = PROTEUS_HS_8;
+	engineConfiguration->ignitionPins[10] = PROTEUS_HS_1;
+	engineConfiguration->ignitionPins[11] = PROTEUS_HS_12;
 
 	engineConfiguration->fsioOutputPins[0] = GPIOE_2;//  "Lowside 16"    # pin 23/black35
 	engineConfiguration->fsioOutputPins[1] = GPIOG_14;// "Lowside 7"
