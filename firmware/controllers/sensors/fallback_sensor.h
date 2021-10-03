@@ -21,7 +21,7 @@ public:
 		return Sensor::get(m_fallback);
 	}
 
-	void showInfo(const char* sensorName) const override {};
+	void showInfo(const char* sensorName) const override;
 
 private:
 	const SensorType m_primary;

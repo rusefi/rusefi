@@ -3,6 +3,7 @@
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
 #include "redundant_ford_tps.h"
+#include "fallback_sensor.h"
 #include "Lps25Sensor.h"
 #include "linear_func.h"
 #include "resistance_func.h"
@@ -37,6 +38,10 @@ void RedundantSensor::showInfo(const char* sensorName) const {
 
 void RedundantFordTps::showInfo(const char* sensorName) const {
 	efiPrintf("Sensor \"%s\" is Ford-type redundant TPS combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+}
+
+void FallbackSensor::showInfo(const char* sensorName) const {
+	efiPrintf("Sensor \"%s\" is fallback sensor with primary \"%s\" and fallback \"%s\"", sensorName, getSensorName(m_primary), getSensorName(m_fallback));
 }
 
 void RpmCalculator::showInfo(const char* /*sensorName*/) const {
