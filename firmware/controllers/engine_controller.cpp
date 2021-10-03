@@ -111,18 +111,6 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_ENGINE_CONTROL
 }
 
-#if EFI_ENABLE_MOCK_ADC
-
-static void initMockVoltage(void) {
-#if EFI_SIMULATOR
-	setMockCltVoltage(2);
-	setMockIatVoltage(2);
-#endif /* EFI_SIMULATOR */
-}
-
-#endif /* EFI_ENABLE_MOCK_ADC */
-
-
 #if !EFI_UNIT_TEST
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -518,11 +506,6 @@ void commonInitEngineController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
-
-
-#if EFI_ENABLE_MOCK_ADC
-	initMockVoltage();
-#endif /* EFI_ENABLE_MOCK_ADC */
 
 #if EFI_SENSOR_CHART
 	initSensorChart();

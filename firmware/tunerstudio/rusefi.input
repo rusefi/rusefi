@@ -1415,7 +1415,7 @@ menuDialog = main
 		subMenu = injectionSettings,		"Injection hardware", 0, {isInjectionEnabled == 1}
 		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
 		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
-		subMenu = fuelTrimSettings,         "Fuel Trim", 0, {isInjectionEnabled == 1}
+;		subMenu = fuelTrimSettings,         "Fuel Trim", 0, {isInjectionEnabled == 1}
 		subMenu = std_separator
 
 		# Air mass model
@@ -3357,6 +3357,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
         text = "More about electronic throttle body on the web"
         webHelp = "https://rusefi.com/s/etb"
 
+    help = vrThresholdHelp, "VR Sensor Threshold"
+        text = "This is about rusEFI VR Discrete decoder"
+        webHelp = "https://rusefi.com/"
+
     help = tpsTpsHelp, "Acceleration Enrichment"
         text = "More about Tps To Tps acceleration on the web"
         webHelp = "https://rusefi.com/s/tpstps"
@@ -3629,6 +3633,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = vrThresholdCurve2
 
 	dialog = vrThreshold
+	    topicHelp = "vrThresholdHelp"
 		panel = vrThreshold1
 		panel = vrThreshold2
 

@@ -385,6 +385,7 @@
 #define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
+#define ENGINE_MAKE_HONDA "Honda"
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_MERCEDES "Mercedes"
@@ -458,8 +459,12 @@
 #define ET_NISSAN_PRIMERA 5
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 #define ET_PROTEUS_BMW_M73 63
+#define ET_PROTEUS_HONDA_ELEMENT_2003 90
+#define ET_PROTEUS_HONDA_OBD2A 91
 #define ET_PROTEUS_MIATA_NB2 67
+#define ET_PROTEUS_N73 93
 #define ET_PROTEUS_QC_TEST_BOARD 42
+#define ET_PROTEUS_VAG_80_18T 92
 #define ET_SACHS 29
 #define ET_TEST_ROTARY 107
 #define ET_VW_ABA 32
@@ -1151,8 +1156,6 @@
 #define MLQ_FIELD_HEADER_SIZE 55
 #define MLQ_HEADER_SIZE 22
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
-#define MOCK_CLT_COMMAND "mock_clt_voltage"
-#define MOCK_IAT_COMMAND "mock_iat_voltage"
 #define MOCK_MAF_COMMAND "mock_maf_voltage"
 #define MOCK_MAP_COMMAND "mock_map_voltage"
 #define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
@@ -1270,8 +1273,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.10.01
-#define SIGNATURE_HASH 119235035
+#define SIGNATURE_DATE 2021.10.02
+#define SIGNATURE_HASH 2790504706
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1627,7 +1630,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.01.kin.119235035"
+#define TS_SIGNATURE "rusEFI 2021.10.02.kin.2790504706"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

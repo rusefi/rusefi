@@ -542,6 +542,11 @@ end_struct
 #define ET_HELLEN_128_MERCEDES_6_CYL 88
 #define ET_HELLEN_128_MERCEDES_8_CYL 89
 
+#define ET_PROTEUS_HONDA_ELEMENT_2003 90
+#define ET_PROTEUS_HONDA_OBD2A 91
+#define ET_PROTEUS_VAG_80_18T 92
+#define ET_PROTEUS_N73 93
+
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 #define ET_TEST_ROTARY 107
 
@@ -1729,8 +1734,6 @@ float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to u
 
 end_struct
 
-#define MOCK_IAT_COMMAND "mock_iat_voltage"
-#define MOCK_CLT_COMMAND "mock_clt_voltage"
 #define MOCK_MAP_COMMAND "mock_map_voltage"
 #define MOCK_AFR_COMMAND "mock_afr_voltage"
 #define MOCK_MAF_COMMAND "mock_maf_voltage"
@@ -1874,6 +1877,7 @@ end_struct
 #define GAUGE_NAME_DEBUG_I4 "debug i4"
 #define GAUGE_NAME_DEBUG_I5 "debug i5"
 
+#define ENGINE_MAKE_HONDA "Honda"
 #define ENGINE_MAKE_MAZDA "Mazda"
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_NISSAN "Nissan"

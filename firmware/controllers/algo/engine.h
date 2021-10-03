@@ -88,6 +88,7 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	Engine();
+	bool enableOverdwellProtection = true;
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
 
