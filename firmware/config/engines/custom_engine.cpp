@@ -25,6 +25,9 @@
 #include "scheduler.h"
 #endif /* EFI_PROD_CODE */
 
+#if HW_PROTEUS & EFI_PROD_CODE
+#include "proteus_meta.h"
+#endif
 
 #if EFI_PROD_CODE
 static int periodIndex = 0;
