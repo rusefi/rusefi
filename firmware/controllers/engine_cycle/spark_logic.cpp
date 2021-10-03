@@ -372,7 +372,7 @@ static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Ignition
 		return;
 	}
 	if (cisnan(sparkAngle)) {
-		warning(CUSTOM_ERR_6688, "NaN advance");
+		warning(CUSTOM_ADVANCE_SPARK, "NaN advance");
 		return;
 	}
 
