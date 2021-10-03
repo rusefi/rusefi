@@ -8,10 +8,11 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {
 	GPIOD_7,
-	GPIOG_9,
+	PROTEUS_LS_2,
 	GPIOG_10,
 	GPIOG_11,
 	GPIOG_12,
