@@ -27,3 +27,27 @@
 #define PROTEUS_LS_10 GPIOB_6
 #define PROTEUS_LS_11 GPIOB_7
 #define PROTEUS_LS_12 GPIOB_8
+
+// pin 2/black35
+#define PROTEUS_HS_1 GPIOD_4
+
+// pin 1/black35
+#define PROTEUS_HS_2 GPIOD_3
+
+// pin 22/black35
+#define PROTEUS_HS_3 GPIOC_9
+#define PROTEUS_HS_4 GPIOC_8
+#define PROTEUS_HS_5 GPIOC_7
+#define PROTEUS_HS_6 GPIOG_8
+#define PROTEUS_HS_7 GPIOG_7
+#define PROTEUS_HS_8 GPIOG_6
+#define PROTEUS_HS_9 GPIOG_5
+#define PROTEUS_HS_10 GPIOG_4
+#define PROTEUS_HS_11 GPIOG_3
+#define PROTEUS_HS_12 GPIOG_2
+
+
+#define PROTEUS_VR_1 GPIOE_7
+#define PROTEUS_VR_2 GPIOE_8
+
+#define PROTEUS_DIGITAL_1 GPIOC_6
