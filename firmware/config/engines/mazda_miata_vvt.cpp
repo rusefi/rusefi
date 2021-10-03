@@ -55,7 +55,7 @@
 #include "hip9011_logic.h"
 
 
-#if HW_PROTEUS
+#if HW_PROTEUS & EFI_PROD_CODE
 #include "proteus_meta.h"
 #endif
 
@@ -754,6 +754,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
+    #if EFI_PROD_CODE
     engineConfiguration->ignitionPins[0] = PROTEUS_HS_1;
     engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
     engineConfiguration->ignitionPins[2] = PROTEUS_HS_3;
@@ -773,6 +774,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     CONFIG(enableSoftwareKnock) = true;
 
     engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
+#endif // EFI_PROD_CODE
 
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
