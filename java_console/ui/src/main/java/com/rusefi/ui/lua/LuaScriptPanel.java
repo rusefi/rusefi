@@ -50,7 +50,7 @@ public class LuaScriptPanel {
 
         //centerPanel.add(, BorderLayout.WEST);
         JPanel messagesPanel = new JPanel(new BorderLayout());
-        MessagesPanel mp = new MessagesPanel(null);
+        MessagesPanel mp = new MessagesPanel(null, config);
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
