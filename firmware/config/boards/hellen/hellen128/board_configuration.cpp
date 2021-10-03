@@ -13,13 +13,14 @@
 #include "pch.h"
 #include "fsio_impl.h"
 #include "custom_engine.h"
+#include "../hellen_meta.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
+	engineConfiguration->injectionPins[0] = H176_LS_1;
 	engineConfiguration->injectionPins[1] = GPIOG_8;
 	engineConfiguration->injectionPins[2] = GPIOD_11;
 	engineConfiguration->injectionPins[3] = GPIOD_10;
@@ -156,9 +157,9 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
 
 	//Set default ETB config
-	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6; // out_pwm2
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
-	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
+	engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
+	engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
 	CONFIG(etb_use_two_wires) = true;
 
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MERCEDES);
