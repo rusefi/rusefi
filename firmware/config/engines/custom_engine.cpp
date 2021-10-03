@@ -524,16 +524,16 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(fanPin) = GPIO_UNASSIGNED;
 	CONFIG(fuelPumpPin) = GPIO_UNASSIGNED;
 
-	engineConfiguration->injectionPins[0] = GPIOD_7; //  "Lowside 1"
-	engineConfiguration->injectionPins[1] = GPIOG_9;//  "Lowside 2"
-	engineConfiguration->injectionPins[2] = GPIOG_10;// "Lowside 3"
-	engineConfiguration->injectionPins[3] = GPIOG_11;// "Lowside 4"
+	engineConfiguration->injectionPins[0] = PROTEUS_LS_1;
+	engineConfiguration->injectionPins[1] = PROTEUS_LS_2;
+	engineConfiguration->injectionPins[2] = PROTEUS_LS_3;
+	engineConfiguration->injectionPins[3] = PROTEUS_LS_4;
 	engineConfiguration->injectionPins[4] = GPIOG_12;// "Lowside 5"
 	engineConfiguration->injectionPins[5] = GPIOG_13;// "Lowside 6"
 	engineConfiguration->injectionPins[6] = GPIOB_5;//  "Lowside 9"
 	engineConfiguration->injectionPins[7] = GPIOB_4;//  "Lowside 8"
 	engineConfiguration->injectionPins[8] = GPIOB_7;//  "Lowside 11"
-	engineConfiguration->injectionPins[9] = GPIOB_6;//  "Lowside 10"
+	engineConfiguration->injectionPins[9] = PROTEUS_LS_10;
 	engineConfiguration->injectionPins[10] = GPIOB_8;//  "Lowside 12"
 	engineConfiguration->injectionPins[11] = GPIOB_9;//  "Lowside 13"    # pin 10/black35
 
