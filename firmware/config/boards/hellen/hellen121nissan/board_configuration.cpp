@@ -13,19 +13,19 @@
 #include "pch.h"
 #include "fsio_impl.h"
 #include "custom_engine.h"
+#include "../hellen_meta.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
-	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
-	engineConfiguration->injectionPins[3] = GPIOD_10;
-	engineConfiguration->injectionPins[4] = GPIOD_9;
-	engineConfiguration->injectionPins[5] = GPIOF_12;
-
+	engineConfiguration->injectionPins[0] = H144_LS_1;
+	engineConfiguration->injectionPins[1] = H144_LS_2;
+	engineConfiguration->injectionPins[2] = H144_LS_3;
+	engineConfiguration->injectionPins[3] = H144_LS_4;
+	engineConfiguration->injectionPins[4] = H144_LS_5;
+	engineConfiguration->injectionPins[5] = H144_LS_6;
 
 	// Disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT;i++) {
