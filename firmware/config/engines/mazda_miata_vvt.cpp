@@ -243,10 +243,27 @@ void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].maxValue = 44;
 }
 
-static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+/**
+ * stuff common between NA1 and NB2
+ */
+static void setCommonMazdaNB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
+
+	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
+	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
+	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
+
+	copyArray(config->ignitionRpmBins, ignition18vvtRpmBins);
+	copyArray(config->ignitionLoadBins, ignition18vvtLoadBins);
+#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
+	copyTable(config->ignitionTable, mapBased18vvtTimingTable);
+#endif
+	// enable cylinder_cleanup
+	engineConfiguration->isCylinderCleanupEnabled = true;
+	// set_whole_ve_map 80
+	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->idleMode = IM_AUTO;
 
@@ -254,10 +271,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 1.839;
 	engineConfiguration->cylinderBore = 83;
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
-	strcpy(CONFIG(engineCode), "NB2");
-
-	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
 
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
@@ -279,8 +292,31 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+
+	//set idle_offset 30
+	engineConfiguration->idleRpmPid.offset = 30;
+	engineConfiguration->idleRpmPid.pFactor = 0.07;
+	engineConfiguration->idleRpmPid.iFactor = 01;
+	engineConfiguration->idleRpmPid.dFactor = 5;
+	engineConfiguration->idleRpmPid.periodMs = 10;
+
+	miataNA_setCltIdleCorrBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setIacCoastingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+}
+
+static void setMazdaMiataEngineNB1Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setCommonMazdaNB(PASS_CONFIG_PARAMETER_SIGNATURE);
+	strcpy(CONFIG(engineCode), "NB1");
+}
+
+static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	strcpy(CONFIG(engineCode), "NB2");
+
+	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
+	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
 	 * 01-05 (purple) - #195500-4060
@@ -314,39 +350,17 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtMode[0] = VVT_MIATA_NB2;
 	engineConfiguration->vvtOffsets[0] = 98; // 2003 red car value
 
-	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
-	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
-	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
-
-	copyArray(config->ignitionRpmBins, ignition18vvtRpmBins);
-	copyArray(config->ignitionLoadBins, ignition18vvtLoadBins);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTable(config->ignitionTable, mapBased18vvtTimingTable);
-#endif
+	setCommonMazdaNB(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	// enable cylinder_cleanup
-	engineConfiguration->isCylinderCleanupEnabled = true;
 
-	// set_whole_ve_map 80
-	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 //	CONFIG(debugTriggerSync) = GPIOD_3;
 
 //	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
 
-	//set idle_offset 30
-	engineConfiguration->idleRpmPid.offset = 30;
-	engineConfiguration->idleRpmPid.pFactor = 0.07;
-	engineConfiguration->idleRpmPid.iFactor = 01;
-	engineConfiguration->idleRpmPid.dFactor = 5;
-	engineConfiguration->idleRpmPid.periodMs = 10;
-
-	miataNA_setCltIdleCorrBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	miataNA_setIacCoastingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 } // end of setMazdaMiataEngineNB2Defaults
 
@@ -783,6 +797,10 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 #endif // HW_PROTEUS
 
 #if HW_HELLEN
+void setHellenNB1(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setMazdaMiataEngineNB1Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+}
+
 void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 	strcpy(CONFIG(vehicleName), "H72 test");
