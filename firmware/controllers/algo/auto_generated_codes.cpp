@@ -1,6 +1,6 @@
 #include "global.h"
 #include "obd_error_codes.h"
-// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Thu Sep 09 00:35:46 UTC 2021
+// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Sun Oct 03 01:28:41 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -15,6 +15,8 @@ case CUSTOM_6051:
   return "CUSTOM_6051";
 case CUSTOM_ADD_BASE:
   return "CUSTOM_ADD_BASE";
+case CUSTOM_ADVANCE_SPARK:
+  return "CUSTOM_ADVANCE_SPARK";
 case CUSTOM_ANGLE_NAN:
   return "CUSTOM_ANGLE_NAN";
 case CUSTOM_APPEND_NULL:
@@ -57,6 +59,8 @@ case CUSTOM_EMPTY_FSIO_STACK:
   return "CUSTOM_EMPTY_FSIO_STACK";
 case CUSTOM_ENGINE_REF:
   return "CUSTOM_ENGINE_REF";
+case CUSTOM_ERROR_ICU:
+  return "CUSTOM_ERROR_ICU";
 case CUSTOM_ERR_2ND_WATCHDOG:
   return "CUSTOM_ERR_2ND_WATCHDOG";
 case CUSTOM_ERR_6030:
@@ -267,26 +271,12 @@ case CUSTOM_ERR_6670:
   return "CUSTOM_ERR_6670";
 case CUSTOM_ERR_6675:
   return "CUSTOM_ERR_6675";
-case CUSTOM_ERR_6676:
-  return "CUSTOM_ERR_6676";
-case CUSTOM_ERR_6679:
-  return "CUSTOM_ERR_6679";
-case CUSTOM_ERR_6680:
-  return "CUSTOM_ERR_6680";
-case CUSTOM_ERR_6682:
-  return "CUSTOM_ERR_6682";
 case CUSTOM_ERR_6684:
   return "CUSTOM_ERR_6684";
 case CUSTOM_ERR_6685:
   return "CUSTOM_ERR_6685";
 case CUSTOM_ERR_6686:
   return "CUSTOM_ERR_6686";
-case CUSTOM_ERR_6687:
-  return "CUSTOM_ERR_6687";
-case CUSTOM_ERR_6688:
-  return "CUSTOM_ERR_6688";
-case CUSTOM_ERR_6703:
-  return "CUSTOM_ERR_6703";
 case CUSTOM_ERR_6709:
   return "CUSTOM_ERR_6709";
 case CUSTOM_ERR_6728:
@@ -305,6 +295,8 @@ case CUSTOM_ERR_ADC_USED:
   return "CUSTOM_ERR_ADC_USED";
 case CUSTOM_ERR_ANGLE:
   return "CUSTOM_ERR_ANGLE";
+case CUSTOM_ERR_ANGLE_CR:
+  return "CUSTOM_ERR_ANGLE_CR";
 case CUSTOM_ERR_ARRAY_IS_FULL:
   return "CUSTOM_ERR_ARRAY_IS_FULL";
 case CUSTOM_ERR_ARRAY_REMOVE:
@@ -317,6 +309,8 @@ case CUSTOM_ERR_ASSERT_VOID:
   return "CUSTOM_ERR_ASSERT_VOID";
 case CUSTOM_ERR_AXIS_ORDER:
   return "CUSTOM_ERR_AXIS_ORDER";
+case CUSTOM_ERR_BENCH_PARAM:
+  return "CUSTOM_ERR_BENCH_PARAM";
 case CUSTOM_ERR_BOTH_FRONTS_REQUIRED:
   return "CUSTOM_ERR_BOTH_FRONTS_REQUIRED";
 case CUSTOM_ERR_BUFF_INIT_ERROR:
@@ -473,6 +467,8 @@ case CUSTOM_ERR_ZERO_CRANKING_FUEL:
   return "CUSTOM_ERR_ZERO_CRANKING_FUEL";
 case CUSTOM_EVENT_6626:
   return "CUSTOM_EVENT_6626";
+case CUSTOM_FIRING_LENGTH:
+  return "CUSTOM_FIRING_LENGTH";
 case CUSTOM_FLSTACK:
   return "CUSTOM_FLSTACK";
 case CUSTOM_FSIO_INVALID_EXPRESSION:
@@ -705,6 +701,8 @@ case CUSTOM_STACK_6627:
   return "CUSTOM_STACK_6627";
 case CUSTOM_STACK_6629:
   return "CUSTOM_STACK_6629";
+case CUSTOM_STACK_ADC:
+  return "CUSTOM_STACK_ADC";
 case CUSTOM_STACK_ADC_6671:
   return "CUSTOM_STACK_ADC_6671";
 case CUSTOM_STACK_SPI:
@@ -713,6 +711,8 @@ case CUSTOM_SYNC_COUNT_MISMATCH:
   return "CUSTOM_SYNC_COUNT_MISMATCH";
 case CUSTOM_SYNC_ERROR:
   return "CUSTOM_SYNC_ERROR";
+case CUSTOM_TIMER_WATCHDOG:
+  return "CUSTOM_TIMER_WATCHDOG";
 case CUSTOM_TLE8888:
   return "CUSTOM_TLE8888";
 case CUSTOM_TOO_LONG_CRANKING_FUEL_INJECTION:

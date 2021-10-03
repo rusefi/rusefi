@@ -118,7 +118,7 @@ static char icuError[30];
 void efiIcuStart(const char *msg, ICUDriver *icup, const ICUConfig *config) {
 	if (icup->state != ICU_STOP && icup->state != ICU_READY) {
 		chsnprintf(icuError, sizeof(icuError), "ICU already used %s", msg);
-		firmwareError(CUSTOM_ERR_6679, icuError);
+		firmwareError(CUSTOM_ERROR_ICU, icuError);
 		return;
 	}
 	icuStart(icup, config);
