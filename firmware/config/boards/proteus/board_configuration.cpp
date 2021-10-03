@@ -11,18 +11,18 @@
 #include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {
-	GPIOD_7,
+	PROTEUS_LS_1,
 	PROTEUS_LS_2,
-	GPIOG_10,
-	GPIOG_11,
-	GPIOG_12,
-	GPIOG_13,
-	GPIOG_14,
-	GPIOB_4,
-	GPIOB_5,
-	GPIOB_6,
-	GPIOB_7,
-	GPIOB_8
+	PROTEUS_LS_3,
+	PROTEUS_LS_4,
+	PROTEUS_LS_5,
+	PROTEUS_LS_6,
+	PROTEUS_LS_7,
+	PROTEUS_LS_8,
+	PROTEUS_LS_9,
+	PROTEUS_LS_10,
+	PROTEUS_LS_11,
+	PROTEUS_LS_12
 };
 
 static const brain_pin_e ignPins[] = {

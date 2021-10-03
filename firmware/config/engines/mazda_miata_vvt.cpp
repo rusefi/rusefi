@@ -54,6 +54,11 @@
 #include "mazda_miata_base_maps.h"
 #include "hip9011_logic.h"
 
+
+#if HW_PROTEUS
+#include "proteus_meta.h"
+#endif
+
 static const float injectorLagBins[VBAT_INJECTOR_CURVE_SIZE] = {
         6.0,         8.0,        10.0,        11.0,
         12.0,        13.0,  14.0,        15.0
@@ -758,16 +763,16 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 
-    engineConfiguration->injectionPins[0] = GPIOD_7;  // BLU  # pin 3/black35
-    engineConfiguration->injectionPins[1] = GPIOG_9;  // BLK  # pin 15/black35
-    engineConfiguration->injectionPins[2] = GPIOG_10; // GRN  # pin 4/black35
-    engineConfiguration->injectionPins[3] = GPIOG_11; // WHT  # pin 16/black35
+    engineConfiguration->injectionPins[0] = PROTEUS_LS_1;  // BLU  # pin 3/black35
+    engineConfiguration->injectionPins[1] = PROTEUS_LS_2;  // BLK
+    engineConfiguration->injectionPins[2] = PROTEUS_LS_3; // GRN
+    engineConfiguration->injectionPins[3] = PROTEUS_LS_4; // WHT
     engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 
     CONFIG(enableSoftwareKnock) = true;
 
-    engineConfiguration->malfunctionIndicatorPin = GPIOB_6; // "Lowside 10"    # pin 20/black35
+    engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
 
     engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
 
