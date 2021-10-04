@@ -42,3 +42,4 @@ void deinitOilPressure();
 void deInitFlexSensor();
 void deInitVehicleSpeedSensor();
 void deinitTurbochargerSpeedSensor();
+void deinitMap();
