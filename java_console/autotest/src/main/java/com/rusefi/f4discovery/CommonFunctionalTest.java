@@ -458,6 +458,12 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNull("hard limit check", chart, EngineChart.INJECTOR_1);
     }
 
+    @Test
+    public void testStackOverflow() {
+        // This ECU command has a built in check to make sure no threads are near overflow
+        ecu.sendCommand("threadsinfo");
+    }
+
     /**
      * This method waits for longer then usual.
      * todo: inline this method? complex and less complex seem to have same timeout these days?
