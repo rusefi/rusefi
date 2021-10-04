@@ -64,8 +64,8 @@ static volatile int mapMeasurementsCounter = 0;
  */
 static float v_averagedMapValue;
 
-// allow a bit more smoothing
-#define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT * 2)
+// allow smoothing up to number of cylinders
+#define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
 // in MAP units, not voltage!
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
