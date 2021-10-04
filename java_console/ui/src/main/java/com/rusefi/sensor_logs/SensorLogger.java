@@ -79,6 +79,10 @@ public class SensorLogger {
             Sensor.debugIntField4,
             Sensor.debugIntField5,
 
+            Sensor.knockLevel,
+            Sensor.wastegatePosition,
+            Sensor.idlePositionSensor,
+
             Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,
 

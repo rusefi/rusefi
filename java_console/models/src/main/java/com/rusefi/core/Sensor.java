@@ -90,6 +90,7 @@ public enum Sensor {
     // Fuel system
 
     // Knock
+    knockLevel(GAUGE_NAME_KNOCK_LEVEL, SensorCategory.DEBUG, FieldType.FLOAT, 108, 0, 5),
 
     // Mode, firmware, protocol, run time
     TIME_SECONDS(GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, 112, 1, 0, 5, ""),
@@ -100,7 +101,7 @@ public enum Sensor {
     engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
     totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 140, 0, 5),
-    lastErrorCode("last error", SensorCategory.STATUS, FieldType.INT, 150, 0, 5),
+    lastErrorCode(GAUGE_NAME_WARNING_LAST, SensorCategory.STATUS, FieldType.INT, 150, 0, 5),
 
     // Debug
     debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, 168, 0, 5),
@@ -115,12 +116,17 @@ public enum Sensor {
     debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 204, 0, 5),
     debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 208, 0, 5),
     debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 210, 0, 5),
+    // accelerationX; // 212
+    // accelerationY; // 214
 
     tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.UINT16, 244, 0, 5),
 
     // Raw sensors
     rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 238, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
     rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 240, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+
+    wastegatePosition(GAUGE_NAME_WG_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 268, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
+    idlePositionSensor(GAUGE_NAME_IDLE_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 270, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 
     vvtPositionB1E(GAUGE_NAME_VVT_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 290, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
     vvtPositionB2I(GAUGE_NAME_VVT_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 292, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
