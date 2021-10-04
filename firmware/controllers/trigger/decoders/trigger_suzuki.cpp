@@ -8,7 +8,27 @@
 #include "trigger_subaru.h"
 
 void initializeSuzukiG13B(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
+	float w = 5;
+
+	s->addEvent720(180 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(180, T_PRIMARY, TV_FALL);
+
+	s->addEvent720(30 + 180 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(30 + 180, T_PRIMARY, TV_FALL);
+
+	s->addEvent720(360 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(360, T_PRIMARY, TV_FALL);
+
+	s->addEvent720(540 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(540, T_PRIMARY, TV_FALL);
+
+	s->addEvent720(720 - w, T_PRIMARY, TV_RISE);
+	s->addEvent720(720, T_PRIMARY, TV_FALL);
+
+	s->setTriggerSynchronizationGap(0.14);
+	s->setSecondTriggerSynchronizationGap(1);
 }
 
 
