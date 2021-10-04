@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 04 15:11:25 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 04 22:59:39 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -862,7 +862,6 @@ struct engine_configuration_s {
 	 */
 	uint16_t etbRevLimitRange;
 	/**
-	 * @see hasMapSensor
 	 * @see isMapAveragingEnabled
 	 * offset 108
 	 */
@@ -4352,4 +4351,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 04 15:11:25 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 04 22:59:39 UTC 2021
