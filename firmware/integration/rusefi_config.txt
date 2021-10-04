@@ -1765,6 +1765,9 @@ end_struct
 #define GAUGE_NAME_VVT_B2I "VVT: bank 2 intake"
 #define GAUGE_NAME_VVT_B2E "VVT: bank 2 exhaust"
 
+#define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
+#define GAUGE_NAME_CURRENT_GEAR "Current Gear"
+
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"
 #define GAUGE_NAME_VBAT "VBatt"
