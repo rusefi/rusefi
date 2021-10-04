@@ -9,6 +9,7 @@ TRIGGER_DECODERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_mitsubishi.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_nissan.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_subaru.cpp \
+	$(CONTROLLERS_DIR)/trigger/decoders/trigger_suzuki.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_toyota.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_gm.cpp \
 	$(CONTROLLERS_DIR)/trigger/decoders/trigger_honda.cpp \
