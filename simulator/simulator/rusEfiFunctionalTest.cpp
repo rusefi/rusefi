@@ -34,10 +34,6 @@ int getRemainingStack(thread_t *otp) {
 	return 99999;
 }
 
-float getMap(void) {
-	return getRawMap();
-}
-
 static void assertString(const char*actual, const char *expected) {
 	if (strcmp(actual, expected) != 0) {
 		firmwareError(OBD_PCM_Processor_Fault, "chprintf test: got %s while %s", actual, expected);

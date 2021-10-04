@@ -70,11 +70,6 @@ static float v_averagedMapValue;
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
-// we need this 'NO_VALUE_YET' to properly handle transition from engine not running to engine already running
-// but prior to first processed result
-#define NO_VALUE_YET -100
-// this is 'minimal averaged' MAP within avegaging window
-static float currentPressure = NO_VALUE_YET;
 
 /**
  * here we have averaging start and averaging end points for each cylinder
@@ -132,7 +127,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
 				== 0) {
 			float voltage = adcToVoltsDivided(adcValue);
-			float currentPressure = getMapByVoltage(voltage);
+			float currentPressure = convertMap(voltage).value_or(0);
 			scAddData(
 					getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX),
 					currentPressure);
@@ -174,8 +169,6 @@ static void endAveraging(void*) {
 			}
 
 			onMapAveraged(minPressure, getTimeNowNt());
-
-			currentPressure = minPressure;
 		}
 	} else {
 		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
@@ -199,7 +192,7 @@ static void applyMapMinBufferLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
-	tsOutputChannels->debugFloatField3 = currentPressure;
+	tsOutputChannels->debugFloatField3 = Sensor::get(SensorType::MapFast).value_or(0);
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 #endif /* EFI_TUNER_STUDIO */
@@ -304,26 +297,6 @@ static void showMapStats(void) {
 	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 
-#if EFI_PROD_CODE
-
-/**
- * Because of MAP window averaging, MAP is only available while engine is spinning
- * @return Manifold Absolute Pressure, in kPa
- */
-float getMap(void) {
-	if (!isAdcChannelValid(engineConfiguration->map.sensor.hwChannel))
-		return 0;
-
-#if EFI_ANALOG_SENSORS
-	if (!isValidRpm(GET_RPM()) || currentPressure == NO_VALUE_YET)
-		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
-	return validateMap(currentPressure);
-#else
-	return 100;
-#endif
-}
-#endif /* EFI_PROD_CODE */
-
 void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_UNIT_TEST
 	addConsoleAction("faststat", showMapStats);
@@ -331,18 +304,5 @@ void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
-
-#else
-
-#if EFI_PROD_CODE
-
-float getMap(void) {
-#if EFI_ANALOG_SENSORS
-	return getRawMap();
-#else
-	return NAN;
-#endif /* EFI_ANALOG_SENSORS */
-}
-#endif /* EFI_PROD_CODE */
 
 #endif /* EFI_MAP_AVERAGING */
