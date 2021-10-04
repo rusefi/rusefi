@@ -370,7 +370,6 @@ enable2ndByteCanID = false
 
 ; Transmission
       tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
-      tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
 
 	knock1 = scalar, S08, 250, "dbv", 1, 0
 	knock2 = scalar, S08, 251, "dbv", 1, 0
@@ -385,6 +384,7 @@ enable2ndByteCanID = false
     knock11 = scalar,S08, 260, "dbv", 1, 0
     knock12 = scalar,S08, 261, "dbv", 1, 0
 
+    tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
 	flexPercent = scalar, U08, 263, "%", 0.5, 0
 
 	rawIdlePositionSensor = scalar,	 U16,    264, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
