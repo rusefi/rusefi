@@ -8,6 +8,7 @@
 #include "linear_func.h"
 #include "resistance_func.h"
 #include "thermistor_func.h"
+#include "identity_func.h"
 
 void ProxySensor::showInfo(const char* sensorName) const {
 	efiPrintf("Sensor \"%s\" proxied from sensor \"%s\"", sensorName, getSensorName(m_proxiedSensor));
@@ -72,4 +73,8 @@ void ResistanceFunc::showInfo(float testInputValue) const {
 void ThermistorFunc::showInfo(float testInputValue) const {
 	const auto [valid, value] = convert(testInputValue);
 	efiPrintf("    %.1f ohms -> valid: %s. %.1f deg C", testInputValue, boolToString(valid), value);
+}
+
+void IdentityFunction::showInfo(float /*testInputValue*/) const {
+	efiPrintf("    Identity function passes along value.");
 }
