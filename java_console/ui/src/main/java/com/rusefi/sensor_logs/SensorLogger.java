@@ -59,7 +59,10 @@ public class SensorLogger {
             Sensor.runningFuel,
             Sensor.injectorLagMs,
 
-            Sensor.vvtPosition,
+            Sensor.vvtPositionB1I,
+            Sensor.vvtPositionB1E,
+            Sensor.vvtPositionB2I,
+            Sensor.vvtPositionB2E,
             Sensor.VSS,
             Sensor.SPEED2RPM,
 
