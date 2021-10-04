@@ -948,7 +948,7 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	output_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
 	switch_input_pin_e startStopButtonPin;See also starterControlPin
 	
-	int mapMinBufferLength;;"count", 1, 0, 0, 24, 0
+	int mapMinBufferLength;+This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.;"count", 1, 0, 1, 24, 0
 	int16_t idlePidDeactivationTpsThreshold;+Below this throttle position, the engine is considered idling.;"%", 1, 0, 0, 50, 0
 	int16_t stepperParkingExtraSteps;;"%", 1, 0, 0, 3000, 0
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0

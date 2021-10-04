@@ -2563,7 +2563,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "High value threshold",					mapErrorDetectionTooHigh
 		field = ""
 		field = "Measure Map Only In One Cylinder",		measureMapOnlyInOneCylinder
-		field = "Minimum MAP samples",					mapMinBufferLength
+		field = "Cylinder count to sample MAP",					mapMinBufferLength
 
 	dialog = mapSettings, "", yAxis
 		panel = mapCommon
