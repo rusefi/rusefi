@@ -159,22 +159,24 @@ static void endAveraging(void*) {
 	if (mapMeasurementsCounter > 0) {
 		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
 
-		// TODO: how to reconcile onMapAveraged with multiple-cycle averaging (minimuming?)?
-		// see https://github.com/rusefi/rusefi/issues/3309
-		void onMapAveraged(float volts, efitick_t nowNt);
-		onMapAveraged(v_averagedMapValue, getTimeNowNt());
+		SensorResult mapValue = convertMap(v_averagedMapValue);
 
-		// todo: move out of locked context?
-		averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
-		// increment circular running buffer index
-		averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
-		// find min. value (only works for pressure values, not raw voltages!)
-		float minPressure = averagedMapRunningBuffer[0];
-		for (int i = 1; i < mapMinBufferLength; i++) {
-			if (averagedMapRunningBuffer[i] < minPressure)
-				minPressure = averagedMapRunningBuffer[i];
+		// Skip update if conversion invalid
+		if (mapValue) {
+			averagedMapRunningBuffer[averagedMapBufIdx] = mapValue.Value;
+			// increment circular running buffer index
+			averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
+			// find min. value (only works for pressure values, not raw voltages!)
+			float minPressure = averagedMapRunningBuffer[0];
+			for (int i = 1; i < mapMinBufferLength; i++) {
+				if (averagedMapRunningBuffer[i] < minPressure)
+					minPressure = averagedMapRunningBuffer[i];
+			}
+
+			onMapAveraged(minPressure, getTimeNowNt());
+
+			currentPressure = minPressure;
 		}
-		currentPressure = minPressure;
 	} else {
 		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
 	}

@@ -19,6 +19,9 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 
+void onMapAveraged(float mapKpa, efitick_t nowNt);
+SensorResult convertMap(float volts);
+
 #if EFI_TUNER_STUDIO
 void postMapState(TunerStudioOutputChannels *tsOutputChannels);
 #endif

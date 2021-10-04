@@ -5,6 +5,7 @@
 #include "fallback_sensor.h"
 #include "functional_sensor.h"
 #include "function_pointer_sensor.h"
+#include "identity_func.h"
 
 struct GetBaroWrapper {
 	DECLARE_ENGINE_PTR;
@@ -32,8 +33,13 @@ static FunctionalSensor slowMapSensor(SensorType::MapSlow, MS2NT(50));
 static FunctionalSensor fastMapSensor(SensorType::MapFast, MS2NT(200));
 
 // This is called from the fast ADC completion callback
-void onMapAveraged(float volts, efitick_t nowNt) {
-	fastMapSensor.postRawValue(volts, nowNt);
+void onMapAveraged(float mapKpa, efitick_t nowNt) {
+	// This sensor uses identity function, so it's kPa in, kPa out
+	fastMapSensor.postRawValue(mapKpa, nowNt);
+}
+
+SensorResult convertMap(float volts) {
+	return mapConverter.convert(volts);
 }
 
 // Combine MAP sensors: prefer fast sensor, but use slow if fast is unavailable.
@@ -113,9 +119,8 @@ void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// Set up the conversion function
 		configureMapFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-		// Both sensors use the same converter function
 		slowMapSensor.setFunction(mapConverter);
-		fastMapSensor.setFunction(mapConverter);
+		fastMapSensor.setFunction(identityFunction);
 
 		slowMapSensor.Register();
 		fastMapSensor.Register();
