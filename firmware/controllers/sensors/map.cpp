@@ -73,12 +73,6 @@ static FastInterpolation mazda1bar(0 /* volts */, 2.5 /* kPa */, 5 /* volts */ ,
  */
 static FastInterpolation bosch2_5(0.4 /* volts */, 20 /* kPa */, 4.65 /* volts */ , 250 /* kPa */);
 
-/**
- * We hold a reference to current decoder to reduce code branching
- * to lookup decoder each time we need to decode
- */
-static FastInterpolation *mapDecoder;
-
 static FastInterpolation *getDecoder(air_pressure_sensor_type_e type);
 
 float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -109,18 +103,6 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
 }
 
 /**
- * This function adds an error if MAP sensor value is outside of expected range
- * @return unchanged mapKPa parameter
- */
-float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (cisnan(mapKPa) || mapKPa < CONFIG(mapErrorDetectionTooLow) || mapKPa > CONFIG(mapErrorDetectionTooHigh)) {
-		warning(OBD_Manifold_Absolute_Pressure_Circuit_Malfunction, "unexpected MAP value: %.2f", mapKPa);
-		return 0;
-	}
-	return mapKPa;
-}
-
-/**
  * This function checks if Baro/MAP sensor value is inside of expected range
  * @return unchanged mapKPa parameter or NaN
  */
@@ -134,34 +116,6 @@ static float validateBaroMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return mapKPa;
 }
 
-/**
- * @brief	MAP value decoded according to current settings
- * @returns kPa value
- */
-float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-#if EFI_ENABLE_MOCK_ADC
-	int mapChannel = engineConfiguration->map.sensor.hwChannel;
-	if (engine->engineState.mockAdcState.hasMockAdc[mapChannel])
-		voltage = adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(mapChannel) * engineConfiguration->analogInputDividerCoefficient);
-#endif
-
-	// todo: migrate to mapDecoder once parameter listeners are ready
-	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
-	return decodePressure(voltage, apConfig PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-/**
- * @return Manifold Absolute Pressure, in kPa
- */
-float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	float voltage = getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
-	return getMapByVoltage(voltage PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return isAdcChannelValid(engineConfiguration->map.sensor.hwChannel);
-}
-
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Override the real Baro sensor with the stored initial MAP value, if the option is set.
 	if (CONFIG(useFixedBaroCorrFromMap))
@@ -172,8 +126,6 @@ float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 	switch (type) {
-	case MT_CUSTOM:
-		return &customMap;
 	case MT_DENSO183:
 		return &denso183;
 	case MT_MPX4250:
@@ -211,7 +163,6 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 static void applyConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
 	customMap.init(0, apConfig->lowValue, 5, apConfig->highValue);
-	mapDecoder = getDecoder(engineConfiguration->map.sensor.type);
 }
 
 #if EFI_PROD_CODE
@@ -220,12 +171,12 @@ extern int mapMinBufferLength;
 
 static void printMAPInfo(void) {
 #if EFI_ANALOG_SENSORS
-	efiPrintf("instant value=%.2fkPa", getRawMap());
+	efiPrintf("instant value=%.2fkPa", Sensor::get(SensorType::Map).value_or(0));
 
 #if EFI_MAP_AVERAGING
 	efiPrintf("map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 			getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
-			getMap(),
+			Sensor::get(SensorType::Map).value_or(0),
 			mapMinBufferLength);
 #endif // EFI_MAP_AVERAGING
 
@@ -259,11 +210,10 @@ static void printMAPInfo(void) {
 
 void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	applyConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-	//engine->configurationListeners.registerCallback(applyConfiguration);
 
 	if (CONFIG(useFixedBaroCorrFromMap)) {
 		// Read initial MAP sensor value and store it for Baro correction.
-		storedInitialBaroPressure = getRawMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+		storedInitialBaroPressure = Sensor::get(SensorType::MapSlow).value_or(101.325);
 		efiPrintf("Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);
 		// validate if it's within a reasonable range (the engine should not be spinning etc.)
 		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure PASS_ENGINE_PARAMETER_SUFFIX);

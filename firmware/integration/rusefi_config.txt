@@ -613,7 +613,7 @@ float primingSquirtDurationMs;;"*C", 1, 0, -40, 200, 1
 	uint16_t etbRevLimitStart;+Once engine speed passes this value, start reducing ETB angle.;"rpm", 1, 0, 0, 15000, 0
 	uint16_t etbRevLimitRange;+This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.;"rpm", 1, 0, 0, 2000, 0
 
-MAP_sensor_config_s map;@see hasMapSensor\n@see isMapAveragingEnabled
+MAP_sensor_config_s map;@see isMapAveragingEnabled
 
 
 ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!
