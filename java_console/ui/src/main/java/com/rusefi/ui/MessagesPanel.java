@@ -15,17 +15,19 @@ import java.awt.*;
  * Andrey Belomutskiy, (c) 2013-2020
  *
  * @see AnyCommand
+ * @see MessagesView
  */
 public class MessagesPanel {
     private static final String FONT_SIZE = "font_size";
     private static final String FONT_NAME = "font_name";
 
-    private final MessagesView messagesView = new MessagesView();
+    private final MessagesView messagesView;
 
     private final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
 
-    public MessagesPanel(JComponent extraButton) {
+    public MessagesPanel(JComponent extraButton, Node config) {
         JPanel middlePanel = new JPanel(new BorderLayout());
+        messagesView = new MessagesView(config);
         middlePanel.add(messagesView.messagesScroll, BorderLayout.CENTER);
 //        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
 

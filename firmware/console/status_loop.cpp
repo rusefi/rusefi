@@ -459,6 +459,204 @@ extern HIP9011 instance;
 
 #if EFI_TUNER_STUDIO
 
+static void updateTempSensors() {
+	SensorResult clt = Sensor::get(SensorType::Clt);
+	tsOutputChannels.coolantTemperature = clt.Value;
+	tsOutputChannels.isCltError = !clt.Valid;
+
+	SensorResult iat = Sensor::get(SensorType::Iat);
+	tsOutputChannels.intakeAirTemperature = iat.Value;
+	tsOutputChannels.isIatError = !iat.Valid;
+
+	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
+	tsOutputChannels.auxTemp1 = auxTemp1.Value;
+
+	SensorResult auxTemp2 = Sensor::get(SensorType::AuxTemp2);
+	tsOutputChannels.auxTemp2 = auxTemp2.Value;
+}
+
+static void updateThrottles() {
+	SensorResult tps1 = Sensor::get(SensorType::Tps1);
+	tsOutputChannels.throttlePosition = tps1.Value;
+	tsOutputChannels.isTpsError = !tps1.Valid;
+	tsOutputChannels.tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
+
+	SensorResult tps2 = Sensor::get(SensorType::Tps2);
+	tsOutputChannels.throttle2Position = tps2.Value;
+	// If we don't have a TPS2 at all, don't turn on the failure light
+	tsOutputChannels.isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
+
+	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
+	tsOutputChannels.pedalPosition = pedal.Value;
+	// Only report fail if you have one (many people don't)
+	tsOutputChannels.isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+}
+
+static void updateLambda() {
+	float lambdaValue = Sensor::get(SensorType::Lambda1).value_or(0);
+	tsOutputChannels.lambda = lambdaValue;
+	tsOutputChannels.airFuelRatio = lambdaValue * ENGINE(engineState.stoichiometricRatio);
+
+	float lambda2Value = Sensor::get(SensorType::Lambda2).value_or(0);
+	tsOutputChannels.lambda2 = lambda2Value;
+	tsOutputChannels.airFuelRatio2 = lambda2Value * ENGINE(engineState.stoichiometricRatio);
+}
+
+static void updateFuelSensors() {
+	// Low pressure is directly in kpa
+	tsOutputChannels.lowFuelPressure = Sensor::get(SensorType::FuelPressureLow).Value;
+	// High pressure is in bar, aka 100 kpa
+	tsOutputChannels.highFuelPressure = KPA2BAR(Sensor::get(SensorType::FuelPressureHigh).Value);
+
+	tsOutputChannels.flexPercent = Sensor::get(SensorType::FuelEthanolPercent).Value;
+
+	tsOutputChannels.fuelTankLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
+}
+
+static void updateVvtSensors() {
+#if EFI_SHAFT_POSITION_INPUT
+	// 248
+	tsOutputChannels.vvtPositionB1I = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+	tsOutputChannels.vvtPositionB1E = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/1);
+	tsOutputChannels.vvtPositionB2I = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
+	tsOutputChannels.vvtPositionB2E = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/1);
+#endif
+}
+
+static void updateVehicleSpeed(int rpm) {
+#if EFI_VEHICLE_SPEED
+	float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+	tsOutputChannels.vehicleSpeedKph = vehicleSpeed;
+	tsOutputChannels.speedToRpmRatio = vehicleSpeed / rpm;
+#endif /* EFI_VEHICLE_SPEED */
+}
+
+static void updateRawSensors() {
+	tsOutputChannels.rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
+	tsOutputChannels.rawTps1Secondary = Sensor::getRaw(SensorType::Tps1Secondary);
+	tsOutputChannels.rawTps2Primary = Sensor::getRaw(SensorType::Tps2Primary);
+	tsOutputChannels.rawTps2Secondary = Sensor::getRaw(SensorType::Tps2Secondary);
+	tsOutputChannels.rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
+	tsOutputChannels.rawPpsSecondary = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
+	tsOutputChannels.rawClt = Sensor::getRaw(SensorType::Clt);
+	tsOutputChannels.rawIat = Sensor::getRaw(SensorType::Iat);
+	tsOutputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
+	tsOutputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
+	tsOutputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
+	tsOutputChannels.massAirFlowVoltage = Sensor::getRaw(SensorType::Maf);
+	tsOutputChannels.rawWastegatePositionSensor = Sensor::getRaw(SensorType::WastegatePosition);
+	tsOutputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
+}
+
+static void updateSensors(int rpm) {
+	updateTempSensors();
+	updateThrottles();
+	updateRawSensors();
+	updateLambda();
+	updateFuelSensors();
+	updateVvtSensors();
+	updateVehicleSpeed(rpm);
+
+	tsOutputChannels.vBatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
+	tsOutputChannels.baroPressure = Sensor::get(SensorType::BarometricPressure).value_or(0);
+	tsOutputChannels.manifoldAirPressure = Sensor::get(SensorType::Map).value_or(0);
+
+	tsOutputChannels.oilPressure = Sensor::get(SensorType::OilPressure).Value;
+
+	tsOutputChannels.idlePositionSensor = Sensor::get(SensorType::IdlePosition).value_or(0);
+
+	tsOutputChannels.wastegatePosition = Sensor::get(SensorType::WastegatePosition).value_or(0);
+
+#if	HAL_USE_ADC
+	tsOutputChannels.internalMcuTemperature = getMCUInternalTemperature();
+#endif /* HAL_USE_ADC */
+
+	// tCharge depends on the previous state, so we should use the stored value.
+	tsOutputChannels.tCharge = ENGINE(engineState.sd.tCharge);
+}
+
+static void updateFuelCorrections() {
+	tsOutputChannels.baroCorrection = engine->engineState.baroCorrection;
+	tsOutputChannels.iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
+	tsOutputChannels.cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
+
+	tsOutputChannels.fuelTrim[0] = 100.0f * (ENGINE(stftCorrection)[0] - 1.0f);
+	tsOutputChannels.fuelTrim[1] = 100.0f * (ENGINE(stftCorrection)[1] - 1.0f);
+
+	tsOutputChannels.injectorLagMs = ENGINE(engineState.running.injectorLag);
+}
+
+static void updateFuelLoads() {
+	tsOutputChannels.fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels.ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels.veTableYAxis = ENGINE(engineState.currentVeLoad);
+	tsOutputChannels.afrTableYAxis = ENGINE(engineState.currentAfrLoad);
+}
+
+static void updateFuelResults() {
+	tsOutputChannels.chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
+
+	tsOutputChannels.fuelBase = engine->engineState.baseFuel * 1000;	// Convert grams to mg
+	tsOutputChannels.fuelRunning = ENGINE(engineState.running.fuel);
+	tsOutputChannels.actualLastInjection = ENGINE(actualLastInjection)[0];
+
+	tsOutputChannels.fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
+	tsOutputChannels.totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
+}
+
+static void updateFuelInfo() {
+	updateFuelCorrections();
+	updateFuelLoads();
+	updateFuelResults();
+
+	const auto& wallFuel = ENGINE(injectionEvents.elements[0].wallFuel);
+	tsOutputChannels.wallFuelAmount = wallFuel.getWallFuel();
+	tsOutputChannels.wallFuelCorrection = wallFuel.wallFuelCorrection;
+
+	tsOutputChannels.injectionOffset = engine->engineState.injectionOffset;
+
+	tsOutputChannels.veValue = engine->engineState.currentVe;
+	tsOutputChannels.currentTargetAfr = ENGINE(engineState.targetAFR);
+	tsOutputChannels.targetLambda = ENGINE(engineState.targetLambda);
+
+	tsOutputChannels.crankingFuelMass = ENGINE(engineState.cranking.fuel);
+}
+
+static void updateIgnition(int rpm) {
+	float timing = engine->engineState.timingAdvance;
+	tsOutputChannels.ignitionAdvance = timing > 360 ? timing - 720 : timing;
+	// 60
+	tsOutputChannels.sparkDwell = ENGINE(engineState.sparkDwell);
+
+	tsOutputChannels.coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+}
+
+static void updateFlags() {
+	tsOutputChannels.isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
+	tsOutputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
+	tsOutputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
+	tsOutputChannels.isO2HeaterOn = enginePins.o2heater.getLogicValue();
+	tsOutputChannels.isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
+	tsOutputChannels.isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();
+	tsOutputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
+
+#if EFI_LAUNCH_CONTROL
+	tsOutputChannels.launchTriggered = engine->isLaunchCondition;
+#endif
+
+	tsOutputChannels.clutchUpState = engine->clutchUpState;
+	tsOutputChannels.clutchDownState = engine->clutchDownState;
+	tsOutputChannels.brakePedalState = engine->brakePedalState;
+
+#if EFI_PROD_CODE
+	tsOutputChannels.isTriggerError = isTriggerErrorNow();
+#endif // EFI_PROD_CODE
+
+#if EFI_INTERNAL_FLASH
+	tsOutputChannels.needBurn = getNeedToWriteConfiguration();
+#endif /* EFI_INTERNAL_FLASH */
+}
+
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SHAFT_POSITION_INPUT
 	int rpm = Sensor::get(SensorType::Rpm).Value;
@@ -476,73 +674,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// offset 0
 	tsOutputChannels->rpm = rpm;
 
-	SensorResult clt = Sensor::get(SensorType::Clt);
-	tsOutputChannels->coolantTemperature = clt.Value;
-	tsOutputChannels->isCltError = !clt.Valid;
-
-	SensorResult iat = Sensor::get(SensorType::Iat);
-	tsOutputChannels->intakeAirTemperature = iat.Value;
-	tsOutputChannels->isIatError = !iat.Valid;
-
-	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
-	tsOutputChannels->auxTemp1 = auxTemp1.Value;
-
-	SensorResult auxTemp2 = Sensor::get(SensorType::AuxTemp2);
-	tsOutputChannels->auxTemp2 = auxTemp2.Value;
-
-	SensorResult tps1 = Sensor::get(SensorType::Tps1);
-	tsOutputChannels->throttlePosition = tps1.Value;
-	tsOutputChannels->isTpsError = !tps1.Valid;
-	tsOutputChannels->tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
-
-	SensorResult tps2 = Sensor::get(SensorType::Tps2);
-	tsOutputChannels->throttle2Position = tps2.Value;
-	// If we don't have a TPS2 at all, don't turn on the failure light
-	tsOutputChannels->isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
-
-	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
-	tsOutputChannels->pedalPosition = pedal.Value;
-	// Only report fail if you have one (many people don't)
-	tsOutputChannels->isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
-
-	// Set raw sensors
-	tsOutputChannels->rawTps1Primary = Sensor::getRaw(SensorType::Tps1Primary);
-	tsOutputChannels->rawTps1Secondary = Sensor::getRaw(SensorType::Tps1Secondary);
-	tsOutputChannels->rawTps2Primary = Sensor::getRaw(SensorType::Tps2Primary);
-	tsOutputChannels->rawTps2Secondary = Sensor::getRaw(SensorType::Tps2Secondary);
-	tsOutputChannels->rawPpsPrimary = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
-	tsOutputChannels->rawPpsSecondary = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
-	tsOutputChannels->rawClt = Sensor::getRaw(SensorType::Clt);
-	tsOutputChannels->rawIat = Sensor::getRaw(SensorType::Iat);
-	tsOutputChannels->rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
-	tsOutputChannels->rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
-	tsOutputChannels->rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
-	tsOutputChannels->massAirFlowVoltage = Sensor::getRaw(SensorType::Maf);
-
-	float lambdaValue = Sensor::get(SensorType::Lambda1).value_or(0);
-	tsOutputChannels->lambda = lambdaValue;
-	tsOutputChannels->airFuelRatio = lambdaValue * ENGINE(engineState.stoichiometricRatio);
-
-	float lambda2Value = Sensor::get(SensorType::Lambda2).value_or(0);
-	tsOutputChannels->lambda2 = lambda2Value;
-	tsOutputChannels->airFuelRatio2 = lambda2Value * ENGINE(engineState.stoichiometricRatio);
-
-	tsOutputChannels->fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	tsOutputChannels->ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	tsOutputChannels->veTableYAxis = ENGINE(engineState.currentVeLoad);
-	tsOutputChannels->afrTableYAxis = ENGINE(engineState.currentAfrLoad);
-
-	// offset 28
-	tsOutputChannels->vBatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
-
-	// offset 36
-	tsOutputChannels->baroPressure = Sensor::get(SensorType::BarometricPressure).value_or(0);
-
-	// 48
-	tsOutputChannels->fuelBase = engine->engineState.baseFuel * 1000;	// Convert grams to mg
-	// 64
-	tsOutputChannels->actualLastInjection = ENGINE(actualLastInjection)[0];
-
+	updateSensors(rpm);
+	updateFuelInfo();
+	updateIgnition(rpm);
+	updateFlags();
 
 	// 104
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
@@ -557,70 +692,24 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->orderingErrorCounter = engine->triggerCentral.triggerState.orderingErrorCounter;
 	// 68
-	tsOutputChannels->baroCorrection = engine->engineState.baroCorrection;
 	// 140
 #if EFI_ENGINE_CONTROL
 	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 #endif
 
-	tsOutputChannels->fuelTankLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
-	// 160
-	const auto& wallFuel = ENGINE(injectionEvents.elements[0].wallFuel);
-	tsOutputChannels->wallFuelAmount = wallFuel.getWallFuel();
-
-	tsOutputChannels->wallFuelCorrection = wallFuel.wallFuelCorrection;
-
-
-	tsOutputChannels->iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
-
-	tsOutputChannels->cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
-	// 188
-	tsOutputChannels->fuelRunning = ENGINE(engineState.running.fuel);
-	// 196
-	tsOutputChannels->injectorLagMs = ENGINE(engineState.running.injectorLag);
 	// 224
 	efitimesec_t timeSeconds = getTimeNowSeconds();
 	tsOutputChannels->timeSeconds = timeSeconds;
-
-#if EFI_SHAFT_POSITION_INPUT
-	// 248
-	tsOutputChannels->vvtPositionB1I = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
-	tsOutputChannels->vvtPositionB1E = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/1);
-	tsOutputChannels->vvtPositionB2I = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
-	tsOutputChannels->vvtPositionB2E = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/1);
-#endif
 
 	// 252
 	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
 	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
-	// 268
-	tsOutputChannels->fuelTrim[0] = 100.0f * (ENGINE(stftCorrection)[0] - 1.0f);
-	tsOutputChannels->fuelTrim[1] = 100.0f * (ENGINE(stftCorrection)[1] - 1.0f);
 
 	// 276
 	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
 	// 278
 	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
-	// 280
-	tsOutputChannels->oilPressure = Sensor::get(SensorType::OilPressure).Value;
-
-	// Low pressure is directly in kpa
-	tsOutputChannels->lowFuelPressure = Sensor::get(SensorType::FuelPressureLow).Value;
-	// High pressure is in bar, aka 100 kpa
-	tsOutputChannels->highFuelPressure = KPA2BAR(Sensor::get(SensorType::FuelPressureHigh).Value);
-
-	tsOutputChannels->flexPercent = Sensor::get(SensorType::FuelEthanolPercent).Value;
-
-	// 288
-	tsOutputChannels->injectionOffset = engine->engineState.injectionOffset;
-
-	// offset 112
-	tsOutputChannels->veValue = engine->engineState.currentVe;
-	tsOutputChannels->currentTargetAfr = ENGINE(engineState.targetAFR);
-	tsOutputChannels->targetLambda = ENGINE(engineState.targetLambda);
-
-	tsOutputChannels->manifoldAirPressure = Sensor::get(SensorType::Map).value_or(0);
 
 #if EFI_DYNO_VIEW
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -637,10 +726,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->isKnockChipOk = (instance.invalidResponsesCount == 0);
 #endif /* EFI_HIP_9011 */
 
-#if EFI_LAUNCH_CONTROL
-	tsOutputChannels->launchTriggered = engine->isLaunchCondition;
-#endif
-
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 	// engine load acceleration
 	if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
@@ -649,10 +734,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
 
 	tsOutputChannels->checkEngine = hasErrorCodes();
-
-#if	HAL_USE_ADC
-	tsOutputChannels->internalMcuTemperature = getMCUInternalTemperature();
-#endif /* HAL_USE_ADC */
 
 #if EFI_MAX_31855
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
@@ -663,60 +744,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->idlePosition = getIdlePosition();
 #endif
 
-	tsOutputChannels->idlePositionSensor = Sensor::get(SensorType::IdlePosition).value_or(0);
-	tsOutputChannels->rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
-
-	tsOutputChannels->wastegatePosition = Sensor::get(SensorType::WastegatePosition).value_or(0);
-	tsOutputChannels->rawWastegatePositionSensor = Sensor::getRaw(SensorType::WastegatePosition);
-
-#if EFI_PROD_CODE
-	tsOutputChannels->isTriggerError = isTriggerErrorNow();
-
-#if EFI_INTERNAL_FLASH
-	tsOutputChannels->needBurn = getNeedToWriteConfiguration();
-#endif /* EFI_INTERNAL_FLASH */
-
-	tsOutputChannels->isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
-	tsOutputChannels->isFanOn = enginePins.fanRelay.getLogicValue();
-	tsOutputChannels->isFan2On = enginePins.fanRelay2.getLogicValue();
-	tsOutputChannels->isO2HeaterOn = enginePins.o2heater.getLogicValue();
-	tsOutputChannels->isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
-	tsOutputChannels->isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();
-	tsOutputChannels->isCylinderCleanupActivated = engine->isCylinderCleanupMode;
-
-#if EFI_VEHICLE_SPEED
-	float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
-	tsOutputChannels->vehicleSpeedKph = vehicleSpeed;
-	tsOutputChannels->speedToRpmRatio = vehicleSpeed / rpm;
-
-#endif /* EFI_VEHICLE_SPEED */
-#endif /* EFI_PROD_CODE */
-
-	tsOutputChannels->fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
-	tsOutputChannels->totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
-
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
 	for (int i = 0; i < 8;i++) {
 		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
 	}
-
-	tsOutputChannels->clutchUpState = engine->clutchUpState;
-	tsOutputChannels->clutchDownState = engine->clutchDownState;
-	tsOutputChannels->brakePedalState = engine->brakePedalState;
-
-#if EFI_ENGINE_CONTROL
-	// tCharge depends on the previous state, so we should use the stored value.
-	tsOutputChannels->tCharge = ENGINE(engineState.sd.tCharge);
-	float timing = engine->engineState.timingAdvance;
-	tsOutputChannels->ignitionAdvance = timing > 360 ? timing - 720 : timing;
-	// 60
-	tsOutputChannels->sparkDwell = ENGINE(engineState.sparkDwell);
-	tsOutputChannels->crankingFuelMass = ENGINE(engineState.cranking.fuel);
-	tsOutputChannels->chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
-
-	tsOutputChannels->coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-#endif // EFI_ENGINE_CONTROL
 
 	switch (engineConfiguration->debugMode)	{
 	case DBG_START_STOP:

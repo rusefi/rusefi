@@ -242,13 +242,13 @@ struct TunerStudioOutputChannels {
 	uint8_t sd_msd : 1;					// bit 1
 	uint8_t isFan2On : 1;				// bit 2
 
-	int8_t tcuCurrentGear; // 247
+	scaled_channel<uint8_t> tcuCurrentGear; // 247
 
 	scaled_voltage rawPpsSecondary;		// 248
 
 	scaled_channel<int8_t> knockLevels[12];		// 250
 
-	int8_t tcuDesiredGear; // 262
+	scaled_channel<uint8_t> tcuDesiredGear; // 262
 	scaled_channel<uint8_t, 2> flexPercent;		// 263
 
 	scaled_voltage rawIdlePositionSensor;	// 264

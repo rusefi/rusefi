@@ -370,7 +370,6 @@ enable2ndByteCanID = false
 
 ; Transmission
       tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
-      tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
 
 	knock1 = scalar, S08, 250, "dbv", 1, 0
 	knock2 = scalar, S08, 251, "dbv", 1, 0
@@ -385,6 +384,7 @@ enable2ndByteCanID = false
     knock11 = scalar,S08, 260, "dbv", 1, 0
     knock12 = scalar,S08, 261, "dbv", 1, 0
 
+    tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
 	flexPercent = scalar, U08, 263, "%", 0.5, 0
 
 	rawIdlePositionSensor = scalar,	 U16,    264, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
@@ -1112,8 +1112,8 @@ gaugeCategory = Sensors - Raw
    rawHighFuelPressureGauge = rawHighFuelPressure,"Raw fuel pressure (high) voltage","V", 0, 5, 0, 0, 5, 5, 3, 0
 
 gaugeCategory = Transmission
-   desiredGearGauge = tcuDesiredGear, "Desired", "gear", -1, 10, -1, -1, 10, 10, 0, 0
-   currentGearGauge = tcuCurrentGear, "Current", "gear", -1, 10, -1, -1, 10, 10, 0, 0
+   desiredGearGauge = tcuDesiredGear, @@GAUGE_NAME_DESIRED_GEAR@@, "gear", -1, 10, -1, -1, 10, 10, 0, 0
+   currentGearGauge = tcuCurrentGear, @@GAUGE_NAME_CURRENT_GEAR@@, "gear", -1, 10, -1, -1, 10, 10, 0, 0
 
 gaugeCategory = Knock
    knock1Gauge = knock1, "Knock Cyl 1", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
@@ -1366,8 +1366,8 @@ gaugeCategory = DynoView
    entry = etbTarget,      "ETB Target", float, "%.3f"
    
 ; Transmission
-   entry = tcuDesiredGear,  "Desired Gear", int, "%d"
-   entry = tcuCurrentGear,  "Current Gear", int, "%d"
+   entry = tcuDesiredGear,  @@GAUGE_NAME_DESIRED_GEAR@@, int, "%d"
+   entry = tcuCurrentGear,  @@GAUGE_NAME_CURRENT_GEAR@@, int, "%d"
 
    entry = knock1, "Knock 1", int, "%d"
    entry = knock2, "Knock 2", int, "%d"

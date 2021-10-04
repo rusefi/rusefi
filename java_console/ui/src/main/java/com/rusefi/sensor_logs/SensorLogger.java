@@ -59,7 +59,10 @@ public class SensorLogger {
             Sensor.runningFuel,
             Sensor.injectorLagMs,
 
-            Sensor.vvtPosition,
+            Sensor.vvtPositionB1I,
+            Sensor.vvtPositionB1E,
+            Sensor.vvtPositionB2I,
+            Sensor.vvtPositionB2E,
             Sensor.VSS,
             Sensor.SPEED2RPM,
 
@@ -75,6 +78,14 @@ public class SensorLogger {
             Sensor.debugIntField3,
             Sensor.debugIntField4,
             Sensor.debugIntField5,
+
+            Sensor.knockLevel,
+            Sensor.wastegatePosition,
+            Sensor.idlePositionSensor,
+            Sensor.airFuelRatio,
+            Sensor.airFuelRatio2,
+            Sensor.lowFuelPressure,
+            Sensor.highFuelPressure,
 
             Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,

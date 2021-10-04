@@ -214,6 +214,13 @@ pins:
     ts_name: 3J - O2S2
     function: Rear O2 Sensor Signal
     
+  - pin: 3M
+    id: GPIOD_14
+    class: outputs
+    ts_name: 2Q - IDLE
+    function: IAC (negative), with diode
+    type: ls
+    
   - pin: 3N
     id: GPIOG_2
     class: outputs
