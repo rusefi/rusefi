@@ -17,15 +17,8 @@ void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
  */
 float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-/**
- * @return MAP value averaged within a window of measurement
- */
-float getMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
 float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
-float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define KPA_PER_PSI 6.89475728f
 
