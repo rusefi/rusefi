@@ -82,6 +82,10 @@ public class SensorLogger {
             Sensor.knockLevel,
             Sensor.wastegatePosition,
             Sensor.idlePositionSensor,
+            Sensor.airFuelRatio,
+            Sensor.airFuelRatio2,
+            Sensor.lowFuelPressure,
+            Sensor.highFuelPressure,
 
             Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,

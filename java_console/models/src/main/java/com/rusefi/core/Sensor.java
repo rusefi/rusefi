@@ -128,6 +128,13 @@ public enum Sensor {
     wastegatePosition(GAUGE_NAME_WG_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 268, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
     idlePositionSensor(GAUGE_NAME_IDLE_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 270, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 
+    lowFuelPressure(GAUGE_NAME_FUEL_PRESSURE_LOW, SensorCategory.OPERATIONS, FieldType.INT16, 276, 1.0 / PACK_MULT_PRESSURE, 10, 20, "afr"),
+    highFuelPressure(GAUGE_NAME_FUEL_PRESSURE_HIGH, SensorCategory.OPERATIONS, FieldType.INT16, 278, 1.0 / PACK_MULT_HIGH_PRESSURE, 10, 20, "afr"),
+
+
+    airFuelRatio(GAUGE_NAME_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 282, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
+    airFuelRatio2(GAUGE_NAME_AFR2, SensorCategory.OPERATIONS, FieldType.INT16, 288, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
+
     vvtPositionB1E(GAUGE_NAME_VVT_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 290, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
     vvtPositionB2I(GAUGE_NAME_VVT_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 292, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
     vvtPositionB2E(GAUGE_NAME_VVT_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 294, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
