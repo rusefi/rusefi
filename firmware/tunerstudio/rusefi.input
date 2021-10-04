@@ -484,6 +484,7 @@ enable2ndByteCanID = false
 	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
 	maintainConstantValue = etb_dFactor, { (calibrationMode == 5 ) ? calibrationValue : etb_dFactor }
 
+     requiresPowerCycle = useETBforIdleControl
      requiresPowerCycle = warningLedPin
      requiresPowerCycle = runningLedPin
      requiresPowerCycle = binarySerialTxPin
