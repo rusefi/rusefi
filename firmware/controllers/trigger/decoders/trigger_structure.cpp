@@ -508,6 +508,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		initializeMazdaMiataVVtTestShape(this);
 		break;
 
+	case TT_SUZUKI_G13B:
 	case TT_FORD_TFI_PIP:
 		configureFordPip(this);
 		break;

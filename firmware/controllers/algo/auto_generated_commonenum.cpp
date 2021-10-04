@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Oct 02 11:25:28 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Oct 04 11:08:38 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -1043,6 +1043,8 @@ case TT_SUBARU_SVX_CAM_VVT:
   return "TT_SUBARU_SVX_CAM_VVT";
 case TT_SUBARU_SVX_CRANK_1:
   return "TT_SUBARU_SVX_CRANK_1";
+case TT_SUZUKI_G13B:
+  return "TT_SUZUKI_G13B";
 case TT_TEMP_62:
   return "TT_TEMP_62";
 case TT_TOOTHED_WHEEL:
