@@ -125,6 +125,9 @@ public enum Sensor {
     rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 238, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
     rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 240, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
 
+    tcuDesiredGear(GAUGE_NAME_DESIRED_GEAR, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 262, 1.0, 0, 100, "gear"),
+    flexPercent(GAUGE_NAME_FLEX, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 263, 1.0 / 2, 0, 100, "%"),
+
     wastegatePosition(GAUGE_NAME_WG_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 268, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
     idlePositionSensor(GAUGE_NAME_IDLE_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 270, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 

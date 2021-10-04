@@ -86,6 +86,8 @@ static constexpr LogField fields[] = {
 	{tsOutputChannels.fuelingLoad, GAUGE_NAME_FUEL_LOAD, "%", 1},
 	{tsOutputChannels.ignitionLoad, GAUGE_NAME_IGNITION_LOAD, "%", 1},
 	{tsOutputChannels.massAirFlow, GAUGE_NAME_AIR_FLOW, "kg/h", 1},
+	{tsOutputChannels.tcuDesiredGear, GAUGE_NAME_DESIRED_GEAR, "gear", 0},
+	{tsOutputChannels.tcuCurrentGear, GAUGE_NAME_CURRENT_GEAR, "gear", 0},
 	{tsOutputChannels.flexPercent, GAUGE_NAME_FLEX, "%", 1},
 	{tsOutputChannels.fuelFlowRate, GAUGE_NAME_FUEL_FLOW, "g/s", 3},
 	{tsOutputChannels.totalFuelConsumption, GAUGE_NAME_FUEL_CONSUMPTION, "g", 1},
