@@ -226,6 +226,13 @@ TEST(SensorInit, Map) {
 	auto s = Sensor::getSensorOfType(SensorType::Map);
 	ASSERT_NE(nullptr, s);
 
-	engine->mockMapValue = 55;
-	EXPECT_FLOAT_EQ(55.0f, Sensor::get(SensorType::Map).value_or(0));
+	Sensor::setMockValue(SensorType::MapFast, 25);
+	Sensor::setMockValue(SensorType::MapSlow, 75);
+
+	// Should prefer fast MAP
+	EXPECT_FLOAT_EQ(25, Sensor::get(SensorType::Map).value_or(0));
+
+	// But when that fails, should return slow MAP
+	Sensor::resetMockValue(SensorType::MapFast);
+	EXPECT_FLOAT_EQ(75, Sensor::get(SensorType::Map).value_or(0));
 }

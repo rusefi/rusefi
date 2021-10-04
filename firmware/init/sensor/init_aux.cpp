@@ -3,15 +3,9 @@
 #include "init.h"
 #include "adc_subscription.h"
 #include "functional_sensor.h"
+#include "identity_func.h"
 
 // These aux sensors just read voltage - so the converter function has nothing to do
-struct IdentityFunction : public SensorConverter {
-	SensorResult convert(float raw) const {
-		return raw;
-	}
-};
-
-static IdentityFunction func;
 
 static FunctionalSensor auxSensors[] = {
 	{ SensorType::Aux1, MS2NT(50) },
@@ -32,7 +26,7 @@ void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		}
 
 		auto& sensor = auxSensors[i];
-		sensor.setFunction(func);
+		sensor.setFunction(identityFunction);
 		sensor.Register();
 
 		AdcSubscription::SubscribeSensor(sensor, channel, 10);
