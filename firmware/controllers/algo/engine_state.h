@@ -68,8 +68,6 @@ public:
 	float currentVeLoad = 0;
 	float currentAfrLoad = 0;
 
-	int vssEventCounter = 0;
-
 	float fuelingLoad = 0;
 	float ignitionLoad = 0;
 
