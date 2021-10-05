@@ -54,6 +54,11 @@ public class PortDetector {
                 public void run() {
                     new SerialAutoChecker(serialPort, portFound).openAndCheckResponse(result, callback);
                 }
+
+                @Override
+                public String toString() {
+                    return serialPort + " " + super.toString();
+                }
             });
             serialFinder.add(thread);
             thread.start();
@@ -63,8 +68,16 @@ public class PortDetector {
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-        for (Thread thread : serialFinder)
-            thread.interrupt();
+        log.info("Now interrupting " + serialFinder);
+        try {
+            for (Thread thread : serialFinder) {
+                log.info("Interrupting " + thread);
+                thread.interrupt();
+            }
+        } catch (RuntimeException e) {
+            log.error("Unexpected runtime", e);
+        }
+        log.info("Done interrupting!");
 
         SerialAutoChecker.AutoDetectResult autoDetectResult = result.get();
         if (autoDetectResult == null)
