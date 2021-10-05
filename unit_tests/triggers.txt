@@ -4087,21 +4087,15 @@ event 12 0 1 540.00
 event 13 0 0 585.00
 event 14 0 1 652.50
 event 15 0 0 675.00
-TRIGGERTYPE 66 16 TT_SUZUKI_G13B 662.50
-# duty 0.53 0.00
+TRIGGERTYPE 66 10 TT_SUZUKI_G13B 0.00
+# duty 0.97 0.00
 event 0 0 1 0.00
-event 1 0 0 45.00
-event 2 0 1 90.00
-event 3 0 0 135.00
-event 4 0 1 180.00
-event 5 0 0 225.00
-event 6 0 1 270.00
-event 7 0 0 315.00
-event 8 0 1 360.00
-event 9 0 0 405.00
-event 10 0 1 450.00
-event 11 0 0 495.00
-event 12 0 1 540.00
-event 13 0 0 585.00
-event 14 0 1 652.50
-event 15 0 0 675.00
+event 1 0 0 5.00
+event 2 0 1 140.00
+event 3 0 0 145.00
+event 4 0 1 320.00
+event 5 0 0 325.00
+event 6 0 1 500.00
+event 7 0 0 505.00
+event 8 0 1 680.00
+event 9 0 0 685.00
