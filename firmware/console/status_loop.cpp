@@ -657,6 +657,20 @@ static void updateFlags() {
 #endif /* EFI_INTERNAL_FLASH */
 }
 
+static void updateTpsDebug() {
+	// TPS 1 pri/sec split
+	tsOutputChannels.debugFloatField1 = Sensor::get(SensorType::Tps1Primary).value_or(0) - Sensor::get(SensorType::Tps1Secondary).value_or(0);
+	// TPS 2 pri/sec split
+	tsOutputChannels.debugFloatField2 = Sensor::get(SensorType::Tps2Primary).value_or(0) - Sensor::get(SensorType::Tps2Secondary).value_or(0);
+	// TPS1 - TPS2 split
+	tsOutputChannels.debugFloatField3 = Sensor::get(SensorType::Tps1).value_or(0) - Sensor::get(SensorType::Tps2).value_or(0);
+	// Pedal pri/sec split
+	tsOutputChannels.debugFloatField4 = Sensor::get(SensorType::AcceleratorPedalPrimary).value_or(0) - Sensor::get(SensorType::AcceleratorPedalSecondary).value_or(0);
+
+	// TPS 1 pri/sec ratio - useful for ford ETB that has partial-range second channel
+	tsOutputChannels.debugFloatField5 = 100 * Sensor::get(SensorType::Tps1Primary).value_or(0) / Sensor::get(SensorType::Tps1Secondary).value_or(0);
+}
+
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_SHAFT_POSITION_INPUT
 	int rpm = Sensor::get(SensorType::Rpm).Value;
@@ -824,26 +838,11 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 #endif /* EFI_CAN_SUPPORT */
 	case DBG_ANALOG_INPUTS:
-		tsOutputChannels->debugFloatField1 = isAdcChannelValid(engineConfiguration->vbattAdcChannel) ? getVoltageDivided("vbatt", engineConfiguration->vbattAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField2 = Sensor::getRaw(SensorType::Tps1);
-		tsOutputChannels->debugFloatField3 = isAdcChannelValid(engineConfiguration->mafAdcChannel) ? getVoltageDivided("maf", engineConfiguration->mafAdcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		tsOutputChannels->debugFloatField4 = isAdcChannelValid(engineConfiguration->map.sensor.hwChannel) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField5 = isAdcChannelValid(engineConfiguration->clt.adcChannel) ? getVoltageDivided("clt", engineConfiguration->clt.adcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField6 = isAdcChannelValid(engineConfiguration->iat.adcChannel) ? getVoltageDivided("iat", engineConfiguration->iat.adcChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		tsOutputChannels->debugFloatField7 = isAdcChannelValid(engineConfiguration->afr.hwChannel) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
 		break;
 	case DBG_ANALOG_INPUTS2:
-		// TPS 1 pri/sec split
-		tsOutputChannels->debugFloatField1 = Sensor::get(SensorType::Tps1Primary).value_or(0) - Sensor::get(SensorType::Tps1Secondary).value_or(0);
-		// TPS 2 pri/sec split
-		tsOutputChannels->debugFloatField2 = Sensor::get(SensorType::Tps2Primary).value_or(0) - Sensor::get(SensorType::Tps2Secondary).value_or(0);
-		// TPS1 - TPS2 split
-		tsOutputChannels->debugFloatField3 = Sensor::get(SensorType::Tps1).value_or(0) - Sensor::get(SensorType::Tps2).value_or(0);
-		// Pedal pri/sec split
-		tsOutputChannels->debugFloatField4 = Sensor::get(SensorType::AcceleratorPedalPrimary).value_or(0) - Sensor::get(SensorType::AcceleratorPedalSecondary).value_or(0);
-
-		// TPS 1 pri/sec ratio - useful for ford ETB that has partial-range second channel
-		tsOutputChannels->debugFloatField5 = 100 * Sensor::get(SensorType::Tps1Primary).value_or(0) / Sensor::get(SensorType::Tps1Secondary).value_or(0);
+		updateTpsDebug();
 		break;
 	case DBG_INSTANT_RPM:
 		{
