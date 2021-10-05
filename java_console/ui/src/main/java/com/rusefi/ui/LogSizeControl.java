@@ -12,7 +12,7 @@ public class LogSizeControl {
     private final JPanel content = new JPanel(new FlowLayout());
 
     public LogSizeControl(Node config) {
-        content.add(new JLabel("On screen lines: "));
+        content.add(new JLabel("On screen bytes: "));
         JTextField lines = new JTextField(8);
         content.add(lines);
         lines.setText(Integer.toString(getValue(config)));
