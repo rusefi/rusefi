@@ -657,6 +657,8 @@ static void updateFlags() {
 #endif /* EFI_INTERNAL_FLASH */
 }
 
+// weird thing: one of the reasons for this to be a separate method is stack usage reduction in non-optimized build
+// see https://github.com/rusefi/rusefi/issues/3302 and linked tickets
 static void updateTpsDebug() {
 	// TPS 1 pri/sec split
 	tsOutputChannels.debugFloatField1 = Sensor::get(SensorType::Tps1Primary).value_or(0) - Sensor::get(SensorType::Tps1Secondary).value_or(0);
