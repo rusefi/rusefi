@@ -798,15 +798,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		// debugFloatField6 used
 		// no one uses shaft so far		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
 		break;
-	case DBG_FSIO_ADC:
-		// todo: implement a proper loop
-		if (isAdcChannelValid(engineConfiguration->fsioAdc[0])) {
-			tsOutputChannels->debugFloatField1 = getVoltage("fsio", engineConfiguration->fsioAdc[0] PASS_ENGINE_PARAMETER_SUFFIX);
-		}
-		break;
-	case DBG_VEHICLE_SPEED_SENSOR:
-		tsOutputChannels->debugIntField1 = engine->engineState.vssEventCounter;
-		break;
 	case DBG_CRANKING_DETAILS:
 		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
 		break;
