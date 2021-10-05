@@ -1290,8 +1290,8 @@ gaugeCategory = DynoView
    entry = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, int, "%d"
    entry = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, float, "%.2f"
 
-   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f", { LIS302DLCsPin != 0 }
-   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f", { LIS302DLCsPin != 0 }
+   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0 }
+   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
    entry = egt1,	        "EGT1",	float,"%.1f", { max31855_cs1 != 0}
    entry = egt2,	        "EGT2",	float,"%.1f", { max31855_cs2 != 0}
    entry = egt3,	        "EGT3",	float,"%.1f", { max31855_cs3 != 0}
@@ -1379,7 +1379,7 @@ gaugeCategory = DynoView
    entry = knock7, "Knock 7", int, "%d"
    entry = knock8, "Knock 8", int, "%d"
 
-   entry = VssAcceleration, "Accel", float, "%.3f"
+   entry = VssAcceleration, "Vss Accel", float, "%.3f"
 
    entry = flexPercent, @@GAUGE_NAME_FLEX@@, int, "%d"
 
