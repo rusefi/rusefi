@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Oct 04 11:08:38 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Oct 05 19:41:47 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -250,12 +250,6 @@ case DBG_ETB_LOGIC:
   return "DBG_ETB_LOGIC";
 case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
-case DBG_FSIO_ADC:
-  return "DBG_FSIO_ADC";
-case DBG_FSIO_EXPRESSION_1_7:
-  return "DBG_FSIO_EXPRESSION_1_7";
-case DBG_FSIO_EXPRESSION_8_14:
-  return "DBG_FSIO_EXPRESSION_8_14";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
 case DBG_GPPWM:
@@ -302,8 +296,6 @@ case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
-case DBG_VEHICLE_SPEED_SENSOR:
-  return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
   return "DBG_VVT";
 case DBG_VVT_1_PID:
