@@ -39,6 +39,11 @@ static constexpr LogField fields[] = {
 	{tsOutputChannels.lastErrorCode, GAUGE_NAME_WARNING_LAST, "", 0},
 	{tsOutputChannels.tuneCrc16, GAUGE_NAME_TUNE_CRC16, "", 0},
 	{tsOutputChannels.engineMakeCodeNameCrc16, GAUGE_NAME_ENGINE_CRC16, "", 0},
+
+	{tsOutputChannels.firmwareVersion, GAUGE_NAME_VERSION, "", 0},
+	{tsOutputChannels.accelerationX, GAUGE_NAME_ACCEL_X, "", 2},
+	{tsOutputChannels.accelerationY, GAUGE_NAME_ACCEL_Y, "", 2},
+
 	{tsOutputChannels.debugIntField1, GAUGE_NAME_DEBUG_I1, "", 0},
 	{tsOutputChannels.debugIntField2, GAUGE_NAME_DEBUG_I2, "", 0},
 	{tsOutputChannels.debugIntField3, GAUGE_NAME_DEBUG_I3, "", 0},
