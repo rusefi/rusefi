@@ -715,7 +715,7 @@ static void showEthInfo(void) {
 	efiPrintf("etbAutoTune=%d",
 			engine->etbAutoTune);
 
-	efiPrintf("TPS=%.2f", Sensor::get(SensorType::Tps1).value_or(0));
+	efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
 
 	efiPrintf("etbControlPin=%s duty=%.2f freq=%d",

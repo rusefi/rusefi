@@ -62,7 +62,7 @@ static void populateFrame(Speeds& msg) {
 	msg.injDuty = getInjectorDutyCycle(rpm);
 	msg.coilDuty = getCoilDutyCycle(rpm);
 
-	msg.vssKph = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+	msg.vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 }
 
 struct PedalAndTps {
@@ -90,16 +90,16 @@ struct Sensors1 {
 };
 
 static void populateFrame(Sensors1& msg) {
-	msg.map = Sensor::get(SensorType::Map).value_or(0);
+	msg.map = Sensor::getOrZero(SensorType::Map);
 
-	msg.clt = Sensor::get(SensorType::Clt).value_or(0) + PACK_ADD_TEMPERATURE;
-	msg.iat = Sensor::get(SensorType::Iat).value_or(0) + PACK_ADD_TEMPERATURE;
+	msg.clt = Sensor::getOrZero(SensorType::Clt) + PACK_ADD_TEMPERATURE;
+	msg.iat = Sensor::getOrZero(SensorType::Iat) + PACK_ADD_TEMPERATURE;
 
-	msg.aux1 = Sensor::get(SensorType::AuxTemp1).value_or(0) + PACK_ADD_TEMPERATURE;
-	msg.aux2 = Sensor::get(SensorType::AuxTemp2).value_or(0) + PACK_ADD_TEMPERATURE;
+	msg.aux1 = Sensor::getOrZero(SensorType::AuxTemp1) + PACK_ADD_TEMPERATURE;
+	msg.aux2 = Sensor::getOrZero(SensorType::AuxTemp2) + PACK_ADD_TEMPERATURE;
 
 	msg.mcuTemp = getMCUInternalTemperature();
-	msg.fuelLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
+	msg.fuelLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
 
 struct Sensors2 {
@@ -110,10 +110,10 @@ struct Sensors2 {
 };
 
 static void populateFrame(Sensors2& msg) {
-	msg.afr = Sensor::get(SensorType::Lambda1).value_or(0) * STOICH_RATIO;
+	msg.afr = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
 	msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
-	msg.vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
+	msg.vbatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 }
 
 struct Fueling {
