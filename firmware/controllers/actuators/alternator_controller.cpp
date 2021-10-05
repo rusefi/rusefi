@@ -115,7 +115,7 @@ void showAltInfo(void) {
 			engineConfiguration->alternatorControl.periodMs);
 	efiPrintf("p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
-	efiPrintf("vbatt=%.2f/duty=%.2f/target=%.2f", Sensor::get(SensorType::BatteryVoltage).value_or(0), currentAltDuty,
+	efiPrintf("vbatt=%.2f/duty=%.2f/target=%.2f", Sensor::getOrZero(SensorType::BatteryVoltage), currentAltDuty,
 			engineConfiguration->targetVBatt);
 }
 

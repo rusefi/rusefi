@@ -9,7 +9,7 @@ static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
 
 static bool getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	auto rpm = Sensor::get(SensorType::Rpm).value_or(0);
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	// Engine too slow, disable
 	if (rpm < 500) {
@@ -42,7 +42,7 @@ static bool getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// TPS too high, disable
 	auto maxTps = CONFIG(maxAcTps);
 	if (maxTps != 0) {
-		auto tps = Sensor::get(SensorType::Tps1).value_or(0);
+		auto tps = Sensor::getOrZero(SensorType::Tps1);
 
 		if (maxTpsDeadband.gt(maxTps, tps)) {
 			return false;

@@ -418,7 +418,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 
 		// On failed sensor, use 0 deg C - should give a safe highish idle
-		float clt = Sensor::get(SensorType::Clt).value_or(0);
+		float clt = Sensor::getOrZero(SensorType::Clt);
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 		float rpm;
@@ -436,7 +436,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		float crankingTaper = getCrankingTaperFraction();
 
 		// Determine what operation phase we're in - idling or not
-		float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+		float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 		auto phase = determinePhase(rpm, targetRpm, tps, vehicleSpeed, crankingTaper);
 		m_lastPhase = phase;
 
