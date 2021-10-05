@@ -340,8 +340,8 @@ enable2ndByteCanID = false
       debugIntField5  = scalar,  S16,    210,    "val",           1,       0.0
 
 ; Accel
-      accelerationX   = scalar,  S16,    212,      "G",        0.01,         0
-      accelerationY   = scalar,  S16,    214,      "G",        0.01,         0
+      accelerationX   = scalar,  S16,    212,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
+      accelerationY   = scalar,  S16,    214,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
 
 ; egt
       egt1            = scalar,  S16,    216,  "deg C",      1,         0

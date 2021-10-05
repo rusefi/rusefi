@@ -101,6 +101,10 @@ void registerCanSensor(CanSensorBase& sensor) {
 #define VAG_YAW_RATE_G_LAT 0x130
 #define VAG_YAW_ACCEL_G_LONG 0x131
 
+#define MM5_10_YAW_Y 0x174
+#define MM5_10_ROLL_X 0x178
+#define MM5_10_Z 0x17C
+
 static uint16_t getLSB_intel(const CANRxFrame& frame, int offset) {
 	return (frame.data8[offset + 1] << 8) + frame.data8[offset];
 }
@@ -110,6 +114,7 @@ static int16_t getShiftedLSB_intel(const CANRxFrame& frame, int offset) {
 }
 
 static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
+/*
 	if (CAN_SID(frame) == 0x130) {
 		float a = getShiftedLSB_intel(frame, 0);
 		float b = getShiftedLSB_intel(frame, 4);
@@ -123,6 +128,29 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 			efiPrintf("CAN_rx VAG_YAW_ACCEL_G_LONG");
 		}
 	}
+	*/
+
+
+
+	if (CONFIG(imuType) == IMU_MM5_10) {
+#define MM5_10_RATE_QUANT 0.005
+#define MM5_10_ACC_QUANT 0.0001274
+
+		if (CAN_SID(frame) == MM5_10_YAW_Y) {
+			float yaw = getShiftedLSB_intel(frame, 0);
+			float accY = getShiftedLSB_intel(frame, 4);
+
+			efiPrintf("CAN_rx MM5_10_YAW_Y %f %f", yaw, accY);
+			engine->sensors.accelerometer.y = accY * MM5_10_ACC_QUANT;
+		} else if (CAN_SID(frame) == MM5_10_ROLL_X) {
+			float roll = getShiftedLSB_intel(frame, 0);
+			float accX = getShiftedLSB_intel(frame, 4);
+			efiPrintf("CAN_rx MM5_10_ROLL_X %f %f", roll, accX);
+
+			engine->sensors.accelerometer.x = accX * MM5_10_ACC_QUANT;
+		}
+	}
+
 }
 
 void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {

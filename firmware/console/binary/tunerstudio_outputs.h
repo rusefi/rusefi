@@ -221,8 +221,8 @@ struct TunerStudioOutputChannels {
 	scaled_channel<uint16_t> debugIntField5; // 210
 
 	// accelerometer
-	int16_t accelerationX; // 212
-	int16_t accelerationY; // 214
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationX; // 212
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationY; // 214
 
 	// EGT
 	egt_values_s egtValues; // 216
