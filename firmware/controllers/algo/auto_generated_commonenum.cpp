@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Oct 05 19:41:47 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Oct 05 16:10:02 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -692,10 +692,10 @@ case IM_WASTED_SPARK:
 }
 const char *getImu_type_e(imu_type_e value){
 switch(value) {
+case IMU_MM5_10:
+  return "IMU_MM5_10";
 case IMU_NONE:
   return "IMU_NONE";
-case IMU_TYPE_2:
-  return "IMU_TYPE_2";
 case IMU_TYPE_3:
   return "IMU_TYPE_3";
 case IMU_TYPE_4:

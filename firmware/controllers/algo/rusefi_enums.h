@@ -758,7 +758,11 @@ typedef enum {
 typedef enum  __attribute__ ((__packed__)) {
 	IMU_NONE = 0,
 	IMU_VAG = 1,
-	IMU_TYPE_2 = 2,
+	/**
+	 * f037000002
+	 * https://github.com/rusefi/rusefi_documentation/blob/master/OEM-Docs/Bosch/Data%20Sheet_68903691_Acceleration_Sensor_MM5.10.pdf
+	 */
+	IMU_MM5_10 = 2,
 	IMU_TYPE_3 = 3,
 	IMU_TYPE_4 = 4,
 } imu_type_e;
