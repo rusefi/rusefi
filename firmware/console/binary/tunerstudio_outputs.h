@@ -170,9 +170,9 @@ struct TunerStudioOutputChannels {
 	scaled_channel<float> knockLevel; // 108
 
 	// Mode, firmware, protocol, run time
-	uint32_t timeSeconds; // 112
-	uint32_t engineMode; // 116
-	uint32_t firmwareVersion; // 120
+	scaled_channel<uint32_t> timeSeconds; // 112
+	scaled_channel<uint32_t> engineMode; // 116
+	scaled_channel<uint32_t> firmwareVersion; // 120
 	// todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 	// rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 
