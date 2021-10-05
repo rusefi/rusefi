@@ -547,22 +547,15 @@ static void updateRawSensors() {
 	tsOutputChannels.rawWastegatePositionSensor = Sensor::getRaw(SensorType::WastegatePosition);
 	tsOutputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 }
-
-static void updateSensors(int rpm) {
-	updateTempSensors();
-	updateThrottles();
-	updateRawSensors();
-	updateLambda();
-	updateFuelSensors();
-	updateVvtSensors();
-	updateVehicleSpeed(rpm);
-
-	tsOutputChannels.vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
+static void updatePressures() {
 	tsOutputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
 	tsOutputChannels.manifoldAirPressure = Sensor::getOrZero(SensorType::Map);
-
 	tsOutputChannels.oilPressure = Sensor::get(SensorType::OilPressure).Value;
+}
 
+static void updateMiscSensors() {
+	tsOutputChannels.vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
+	
 	tsOutputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
 	tsOutputChannels.wastegatePosition = Sensor::getOrZero(SensorType::WastegatePosition);
@@ -573,6 +566,18 @@ static void updateSensors(int rpm) {
 
 	// tCharge depends on the previous state, so we should use the stored value.
 	tsOutputChannels.tCharge = ENGINE(engineState.sd.tCharge);
+}
+
+static void updateSensors(int rpm) {
+	updateTempSensors();
+	updateThrottles();
+	updateRawSensors();
+	updateLambda();
+	updateFuelSensors();
+	updateVvtSensors();
+	updateVehicleSpeed(rpm);
+	updatePressures();
+	updateMiscSensors();
 }
 
 static void updateFuelCorrections() {
