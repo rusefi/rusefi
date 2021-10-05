@@ -87,6 +87,13 @@ public:
 	static SensorResult get(SensorType type);
 
 	/*
+	 * Get a reading from the specified sensor, or zero if unavailable.
+	 */
+	static float getOrZero(SensorType type) {
+		return Sensor::get(type).value_or(0);
+	}
+
+	/*
 	 * Get a raw (unconverted) value from the sensor, if available.
 	 */
 	static float getRaw(SensorType type);

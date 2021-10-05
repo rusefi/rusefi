@@ -8,8 +8,8 @@ AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTab
 float AirmassVeModelBase::getVeLoadAxis(float passedLoad) const {
 	switch(CONFIG(veOverrideMode)) {
 		case VE_None: return passedLoad;
-		case VE_MAP: return Sensor::get(SensorType::Map).value_or(0);
-		case VE_TPS: return Sensor::get(SensorType::Tps1).value_or(0);
+		case VE_MAP: return Sensor::getOrZero(SensorType::Map);
+		case VE_TPS: return Sensor::getOrZero(SensorType::Tps1);
 		default: return 0;
 	}
 }

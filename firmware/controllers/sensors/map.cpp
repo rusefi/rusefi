@@ -171,12 +171,12 @@ extern int mapMinBufferLength;
 
 static void printMAPInfo(void) {
 #if EFI_ANALOG_SENSORS
-	efiPrintf("instant value=%.2fkPa", Sensor::get(SensorType::Map).value_or(0));
+	efiPrintf("instant value=%.2fkPa", Sensor::getOrZero(SensorType::Map));
 
 #if EFI_MAP_AVERAGING
 	efiPrintf("map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 			getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
-			Sensor::get(SensorType::Map).value_or(0),
+			Sensor::getOrZero(SensorType::Map),
 			mapMinBufferLength);
 #endif // EFI_MAP_AVERAGING
 

@@ -110,17 +110,17 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_AC_TOGGLE:
 		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case LE_METHOD_COOLANT:
-		return Sensor::get(SensorType::Clt).value_or(0);
+		return Sensor::getOrZero(SensorType::Clt);
 	case LE_METHOD_IS_COOLANT_BROKEN:
 		return !Sensor::get(SensorType::Clt).Valid;
 	case LE_METHOD_INTAKE_AIR:
-		return Sensor::get(SensorType::Iat).value_or(0);
+		return Sensor::getOrZero(SensorType::Iat);
 	case LE_METHOD_RPM:
-		return Sensor::get(SensorType::Rpm).value_or(0);
+		return Sensor::getOrZero(SensorType::Rpm);
 	case LE_METHOD_MAF:
-		return Sensor::get(SensorType::Maf).value_or(0);
+		return Sensor::getOrZero(SensorType::Maf);
 	case LE_METHOD_MAP:
-		return Sensor::get(SensorType::Map).value_or(0);
+		return Sensor::getOrZero(SensorType::Map);
 #if EFI_SHAFT_POSITION_INPUT
 	case LE_METHOD_INTAKE_VVT:
 		return engine->triggerCentral.getVVTPosition(0, 0);
@@ -147,13 +147,13 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_IN_MR_BENCH:
 		return engine->isInMainRelayBench();
 	case LE_METHOD_VBATT:
-		return Sensor::get(SensorType::BatteryVoltage).value_or(0);
+		return Sensor::getOrZero(SensorType::BatteryVoltage);
 	case LE_METHOD_TPS:
-		return Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
+		return Sensor::getOrZero(SensorType::DriverThrottleIntent);
 	case LE_METHOD_FUEL_FLOW_RATE:
 		return engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 	case LE_METHOD_OIL_PRESSURE:
-		return Sensor::get(SensorType::OilPressure).value_or(0);
+		return Sensor::getOrZero(SensorType::OilPressure);
 	// cfg_xxx references are code generated
 #include "fsio_getters.def"
 	default:
@@ -682,7 +682,7 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// see MAIN_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(mainRelayPin))) {
-		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (Sensor::get(SensorType::BatteryVoltage).value_or(0) > LOW_VBATT) || engine->isInShutdownMode());
+		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (Sensor::getOrZero(SensorType::BatteryVoltage) > LOW_VBATT) || engine->isInShutdownMode());
 	}
 	// see STARTER_RELAY_LOGIC
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin))) {

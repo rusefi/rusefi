@@ -357,7 +357,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 	void PeriodicTask() override {
 		counter++;
 
-		bool lowVBatt = Sensor::get(SensorType::BatteryVoltage).value_or(0) < LOW_VBATT;
+		bool lowVBatt = Sensor::getOrZero(SensorType::BatteryVoltage) < LOW_VBATT;
 
 		if (counter == 1) {
 			// first invocation of BlinkingTask
@@ -493,11 +493,11 @@ static void updateThrottles() {
 }
 
 static void updateLambda() {
-	float lambdaValue = Sensor::get(SensorType::Lambda1).value_or(0);
+	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	tsOutputChannels.lambda = lambdaValue;
 	tsOutputChannels.airFuelRatio = lambdaValue * ENGINE(engineState.stoichiometricRatio);
 
-	float lambda2Value = Sensor::get(SensorType::Lambda2).value_or(0);
+	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
 	tsOutputChannels.lambda2 = lambda2Value;
 	tsOutputChannels.airFuelRatio2 = lambda2Value * ENGINE(engineState.stoichiometricRatio);
 }
@@ -510,7 +510,7 @@ static void updateFuelSensors() {
 
 	tsOutputChannels.flexPercent = Sensor::get(SensorType::FuelEthanolPercent).Value;
 
-	tsOutputChannels.fuelTankLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
+	tsOutputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
 
 static void updateVvtSensors() {
@@ -525,7 +525,7 @@ static void updateVvtSensors() {
 
 static void updateVehicleSpeed(int rpm) {
 #if EFI_VEHICLE_SPEED
-	float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+	float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 	tsOutputChannels.vehicleSpeedKph = vehicleSpeed;
 	tsOutputChannels.speedToRpmRatio = vehicleSpeed / rpm;
 #endif /* EFI_VEHICLE_SPEED */
@@ -547,19 +547,18 @@ static void updateRawSensors() {
 	tsOutputChannels.rawWastegatePositionSensor = Sensor::getRaw(SensorType::WastegatePosition);
 	tsOutputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 }
-
 static void updatePressures() {
-	tsOutputChannels.baroPressure = Sensor::get(SensorType::BarometricPressure).value_or(0);
-	tsOutputChannels.manifoldAirPressure = Sensor::get(SensorType::Map).value_or(0);
+	tsOutputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
+	tsOutputChannels.manifoldAirPressure = Sensor::getOrZero(SensorType::Map);
 	tsOutputChannels.oilPressure = Sensor::get(SensorType::OilPressure).Value;
 }
 
 static void updateMiscSensors() {
-	tsOutputChannels.vBatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
+	tsOutputChannels.vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 	
-	tsOutputChannels.idlePositionSensor = Sensor::get(SensorType::IdlePosition).value_or(0);
+	tsOutputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
-	tsOutputChannels.wastegatePosition = Sensor::get(SensorType::WastegatePosition).value_or(0);
+	tsOutputChannels.wastegatePosition = Sensor::getOrZero(SensorType::WastegatePosition);
 
 #if	HAL_USE_ADC
 	tsOutputChannels.internalMcuTemperature = getMCUInternalTemperature();
@@ -667,16 +666,16 @@ static void updateFlags() {
 // see https://github.com/rusefi/rusefi/issues/3302 and linked tickets
 static void updateTpsDebug() {
 	// TPS 1 pri/sec split
-	tsOutputChannels.debugFloatField1 = Sensor::get(SensorType::Tps1Primary).value_or(0) - Sensor::get(SensorType::Tps1Secondary).value_or(0);
+	tsOutputChannels.debugFloatField1 = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
 	// TPS 2 pri/sec split
-	tsOutputChannels.debugFloatField2 = Sensor::get(SensorType::Tps2Primary).value_or(0) - Sensor::get(SensorType::Tps2Secondary).value_or(0);
+	tsOutputChannels.debugFloatField2 = Sensor::getOrZero(SensorType::Tps2Primary) - Sensor::getOrZero(SensorType::Tps2Secondary);
 	// TPS1 - TPS2 split
-	tsOutputChannels.debugFloatField3 = Sensor::get(SensorType::Tps1).value_or(0) - Sensor::get(SensorType::Tps2).value_or(0);
+	tsOutputChannels.debugFloatField3 = Sensor::getOrZero(SensorType::Tps1) - Sensor::getOrZero(SensorType::Tps2);
 	// Pedal pri/sec split
-	tsOutputChannels.debugFloatField4 = Sensor::get(SensorType::AcceleratorPedalPrimary).value_or(0) - Sensor::get(SensorType::AcceleratorPedalSecondary).value_or(0);
+	tsOutputChannels.debugFloatField4 = Sensor::getOrZero(SensorType::AcceleratorPedalPrimary) - Sensor::getOrZero(SensorType::AcceleratorPedalSecondary);
 
 	// TPS 1 pri/sec ratio - useful for ford ETB that has partial-range second channel
-	tsOutputChannels.debugFloatField5 = 100 * Sensor::get(SensorType::Tps1Primary).value_or(0) / Sensor::get(SensorType::Tps1Secondary).value_or(0);
+	tsOutputChannels.debugFloatField5 = 100 * Sensor::getOrZero(SensorType::Tps1Primary) / Sensor::getOrZero(SensorType::Tps1Secondary);
 }
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -750,7 +749,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 
-	tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / Sensor::get(SensorType::Map).value_or(0);
+	tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / Sensor::getOrZero(SensorType::Map);
 
 	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
 
