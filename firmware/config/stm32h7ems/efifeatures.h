@@ -2,9 +2,6 @@
 
 #pragma once
 
-#undef EFI_MAP_AVERAGING
-#define EFI_MAP_AVERAGING FALSE
-
 #undef EFI_USE_FAST_ADC
 // https://github.com/rusefi/rusefi/issues/3301 "H7 is currently actually using fast ADC exclusively - it just needs a bit of plumbing to make it work."
 #define EFI_USE_FAST_ADC FALSE
