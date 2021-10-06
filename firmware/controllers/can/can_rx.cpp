@@ -152,6 +152,7 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 			engine->sensors.accelerometer.x = accX * MM5_10_ACC_QUANT;
 		} else if (CAN_SID(frame) == MM5_10_Z) {
 			float accZ = getShiftedLSB_intel(frame, 4);
+			efiPrintf("CAN_rx MM5_10_Z %f", accZ);
 			engine->sensors.accelerometer.z = accZ * MM5_10_ACC_QUANT;
 		}
 	}
