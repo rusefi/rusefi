@@ -645,8 +645,10 @@
 #define GAP_TRACKING_LENGTH 18
 #define gapTrackingLengthOverride_offset 444
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
+#define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
+#define GAUGE_NAME_ACCEL_YAW "Acceleration: Yaw"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
@@ -1308,8 +1310,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.10.05
-#define SIGNATURE_HASH 1353325450
+#define SIGNATURE_DATE 2021.10.06
+#define SIGNATURE_HASH 418236383
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1665,7 +1667,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.10.05.subaru_eg33_f7.1353325450"
+#define TS_SIGNATURE "rusEFI 2021.10.06.subaru_eg33_f7.418236383"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

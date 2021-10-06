@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Oct 05 20:13:54 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 04:30:40 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -624,8 +624,10 @@ public class Fields {
 	public static final int GAP_TRACKING_LENGTH = 18;
 	public static final int gapTrackingLengthOverride_offset = 444;
 	public static final String GAUGE_COIL_DWELL_TIME = "dwell: coil charge time";
+	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
 	public static final String GAUGE_NAME_ACCEL_X = "Acceleration: X";
 	public static final String GAUGE_NAME_ACCEL_Y = "Acceleration: Y";
+	public static final String GAUGE_NAME_ACCEL_YAW = "Acceleration: Yaw";
 	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
@@ -1563,7 +1565,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.05.all.3307270377";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.06.all.2372349116";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
