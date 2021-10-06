@@ -15,7 +15,10 @@
 class StepperHw {
 public:
 	virtual bool step(bool positive) = 0;
-	void pause() const;
+	// pause between steps
+	void pause(int divisor = 1) const;
+	// pause and enter the idle mode (less current consumption)
+	virtual void sleep(void);
 
 protected:
 	void setReactionTime(float ms);
@@ -47,6 +50,11 @@ public:
     void initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, float reactionTime);
 
     bool step(bool positive) override;
+
+	void sleep(void) override;
+
+protected:
+	bool update(float dutyMult);
 
 private:
     DcMotor* m_motorPhaseA = nullptr;

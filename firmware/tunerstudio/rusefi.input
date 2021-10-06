@@ -2635,7 +2635,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 
-	dialog = hbridgeHardware, "H-Bridge Hardware"
+	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
 		field = "PWM Frequency",						etbFreq
 		field = "Two-wire mode",						etb_use_two_wires
 		field = "No1 Direction #1",						etbIo1_directionPin1
@@ -2647,25 +2647,49 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No2 Control",							etbIo2_controlPin
 		field = "No2 Disable",							etbIo2_disablePin
 
+	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
+		field = "Inverted driver pins",					stepperDcInvertedPins
+		field = "No1 Direction #1",						stepperDcIo1_directionPin1
+		field = "No1 Direction #2",						stepperDcIo1_directionPin2
+		field = "No1 Disable",							stepperDcIo1_disablePin
+		field = "No2 Direction #1",						stepperDcIo2_directionPin1
+		field = "No2 Direction #2",						stepperDcIo2_directionPin2
+		field = "No2 Disable",							stepperDcIo2_disablePin
+
 	dialog = idleStepperHw, "Stepper Hardware"
 		field = "Idle Stepper Step Pin",				idle_stepperStepPin
 		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin
+		field = "Idle Stepper Dir Pin Mode",			stepperDirectionPinMode
 		field = "Idle Stepper Enable Pin",				stepperEnablePin
 		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode
 
-	dialog = idleStepper, "Stepper"
+	dialog = idleStepperHwType, "", xAxis
+		panel = idleStepperHw,	East, { useStepperIdle && !useHbridgesToDriveIdleStepper }
+		panel = stepperHbridgeHardware,	West, { useStepperIdle && useHbridgesToDriveIdleStepper }
+
+	dialog = idleStepperGeneral, ""
 		field = "Drive stepper with dual H bridges",	useHbridgesToDriveIdleStepper, useStepperIdle
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
-		panel = idleStepperHw, { useStepperIdle && !useHbridgesToDriveIdleStepper }
-        ; todo: reminder that enable condition has to match in both usages of hbridgeHardware due to TS defect?
-		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
-	dialog = idleHwType, "Idle Valve Hardware",	border
-		panel = idleSolenoid,				West
-		panel = idleStepper,				East
+	dialog = idleStepperMicro, "Micro-Stepping"
+		field = "Stepping Mode",						stepperNumMicroSteps, useHbridges
+		field = "Min. Duty Cycle",						stepperMinDutyCycle, { useHbridges && stepperNumMicroSteps > 1 }
+		field = "Max. Duty Cycle",						stepperMaxDutyCycle, { useHbridges && stepperNumMicroSteps > 1 }
+
+	dialog = idleStepperSettings, "", xAxis
+		panel = idleStepperGeneral, East
+		panel = idleStepperMicro, West
+
+	dialog = idleStepper, "Stepper"
+		panel = idleStepperSettings
+		panel = idleStepperHwType
+
+	dialog = idleHwType, "Idle Valve Hardware", yAxis
+		panel = idleStepper
+		panel = idleSolenoid
 
 	dialog = idlehw, "", yAxis
 		field = "!ECU reboot needed to apply these settings"
@@ -3413,7 +3437,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
 		; another todo: split panel into two panels so that we can enable/disable h-bridge #1 separately from h-bridge #2
-		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
+		panel = etbHbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"

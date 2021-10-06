@@ -52,6 +52,7 @@ public:
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
 			brain_pin_e pinDisable,
+			bool isInverted,
 			ExecutorInterface* executor,
 			int frequency) {
 		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
@@ -85,7 +86,7 @@ public:
 			);
 #endif // EFI_UNIT_TEST
 
-			dcMotor.configure(wrappedEnable, m_pwm1, m_pwm2);
+			dcMotor.configure(wrappedEnable, m_pwm1, m_pwm2, isInverted);
 		} else {
 			m_pinDir1.initPin("ETB Dir 1", pinDir1);
 			m_pinDir2.initPin("ETB Dir 2", pinDir2);
@@ -101,7 +102,7 @@ public:
 			);
 #endif // EFI_UNIT_TEST
 
-			dcMotor.configure(m_pwm1, wrappedDir1, wrappedDir2);
+			dcMotor.configure(m_pwm1, wrappedDir1, wrappedDir2, isInverted);
 		}
 	}
 };
@@ -117,6 +118,7 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENG
 		io.directionPin1,
 		io.directionPin2,
 		io.disablePin,
+		CONFIG(stepperDcInvertedPins),
 		&ENGINE(executor),
 		CONFIG(etbFreq)
 	);
