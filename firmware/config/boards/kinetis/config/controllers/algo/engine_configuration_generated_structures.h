@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 01 11:58:11 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Oct 06 04:37:35 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -189,13 +189,13 @@ struct gppwm_channel {
 	 */
 	uint16_t pwmFrequency;
 	/**
-	 * In on-off mode, turn the output on when the table value is above this duty.
+	 * Hysteresis: in on-off mode, turn the output on when the table value is above this duty.
 	%
 	 * offset 4
 	 */
 	uint8_t onAboveDuty;
 	/**
-	 * In on-off mode, turn the output off when the table value is below this duty.
+	 * Hysteresis: in on-off mode, turn the output off when the table value is below this duty.
 	%
 	 * offset 5
 	 */
@@ -797,7 +797,7 @@ struct engine_configuration_s {
 	bool issue_294_29 : 1;
 	/**
 	offset 76 bit 29 */
-	bool issue_294_30 : 1;
+	bool artificialTestMisfire : 1;
 	/**
 	offset 76 bit 30 */
 	bool issue_294_31 : 1;
@@ -862,7 +862,6 @@ struct engine_configuration_s {
 	 */
 	uint16_t etbRevLimitRange;
 	/**
-	 * @see hasMapSensor
 	 * @see isMapAveragingEnabled
 	 * offset 108
 	 */
@@ -1157,12 +1156,10 @@ struct engine_configuration_s {
 	 */
 	float adcVcc;
 	/**
-	 * maximum total number of degrees to subtract from ignition advance
-	 * when knocking
 	Deg
 	 * offset 552
 	 */
-	float maxKnockSubDeg;
+	float unused552;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	 * offset 556
@@ -1214,15 +1211,13 @@ struct engine_configuration_s {
 	 */
 	float manIdlePosition;
 	/**
-	Hz
 	 * offset 612
 	 */
-	float mapFrequency0Kpa;
+	float unused612;
 	/**
-	Hz
 	 * offset 616
 	 */
-	float mapFrequency100Kpa;
+	float unused616;
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
@@ -1683,18 +1678,32 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
 	/**
+	volts
 	 * offset 770
 	 */
-	uint8_t unusedpinModesWhereHere[10];
+	uint8_t dwellVoltageCorrVoltBins[DWELL_CURVE_SIZE];
+	/**
+	 * offset 778
+	 */
+	imu_type_e imuType;
+	/**
+	 * offset 779
+	 */
+	uint8_t unusedpinModesWhereHere[1];
 	/**
 	 * todo: more comments
 	 * offset 780
 	 */
 	output_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
 	/**
+	multiplier
 	 * offset 786
 	 */
-	uint8_t unusedOutputWhereHere[10];
+	uint8_t dwellVoltageCorrValues[DWELL_CURVE_SIZE];
+	/**
+	 * offset 794
+	 */
+	uint8_t unusedOutputWhereHere[2];
 	/**
 	 * offset 796
 	 */
@@ -1733,6 +1742,7 @@ struct engine_configuration_s {
 	 */
 	switch_input_pin_e startStopButtonPin;
 	/**
+	 * This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.
 	count
 	 * offset 812
 	 */
@@ -1899,7 +1909,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 970
 	 */
-	brain_input_pin_e frequencyReportingMapInputPin;
+	uint8_t unused970;
 	/**
 	 * offset 971
 	 */
@@ -1931,7 +1941,7 @@ struct engine_configuration_s {
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 976 bit 2 */
-	bool useHbridges : 1;
+	bool useHbridgesToDriveIdleStepper : 1;
 	/**
 	offset 976 bit 3 */
 	bool multisparkEnable : 1;
@@ -2021,10 +2031,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_296_30 : 1;
+	bool unusedBit_299_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_296_31 : 1;
+	bool unusedBit_299_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2192,12 +2202,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 1244
 	 */
-	vr_threshold_s vrThreshold[2];
+	vr_threshold_s vrThreshold[VR_THRESHOLD_COUNT];
 	/**
-	units
 	 * offset 1276
 	 */
-	int unusedAtOldBoardConfigurationEnd[45];
+	gppwm_note_t gpPwmNote[GPPWM_CHANNELS];
+	/**
+	units
+	 * offset 1340
+	 */
+	int unusedAtOldBoardConfigurationEnd[29];
 	/**
 	kg
 	 * offset 1456
@@ -2296,7 +2310,7 @@ struct engine_configuration_s {
 	bool launchSparkCutEnable : 1;
 	/**
 	offset 1464 bit 20 */
-	bool hasFrequencyReportingMapSensor : 1;
+	bool unused1464b20 : 1;
 	/**
 	offset 1464 bit 21 */
 	bool unusedBitWasHere1 : 1;
@@ -2533,10 +2547,9 @@ struct engine_configuration_s {
 	 */
 	float idleStepperReactionTime;
 	/**
-	V
 	 * offset 1512
 	 */
-	float knockVThreshold;
+	float unused1512;
 	/**
 	 * offset 1516
 	 */
@@ -2984,76 +2997,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_506_8 : 1;
+	bool unusedBit_510_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_506_9 : 1;
+	bool unusedBit_510_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_506_10 : 1;
+	bool unusedBit_510_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_506_11 : 1;
+	bool unusedBit_510_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_506_12 : 1;
+	bool unusedBit_510_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_506_13 : 1;
+	bool unusedBit_510_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_506_14 : 1;
+	bool unusedBit_510_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_506_15 : 1;
+	bool unusedBit_510_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_506_16 : 1;
+	bool unusedBit_510_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_506_17 : 1;
+	bool unusedBit_510_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_506_18 : 1;
+	bool unusedBit_510_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_506_19 : 1;
+	bool unusedBit_510_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_506_20 : 1;
+	bool unusedBit_510_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_506_21 : 1;
+	bool unusedBit_510_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_506_22 : 1;
+	bool unusedBit_510_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_506_23 : 1;
+	bool unusedBit_510_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_506_24 : 1;
+	bool unusedBit_510_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_506_25 : 1;
+	bool unusedBit_510_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_506_26 : 1;
+	bool unusedBit_510_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_506_27 : 1;
+	bool unusedBit_510_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_506_28 : 1;
+	bool unusedBit_510_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_506_29 : 1;
+	bool unusedBit_510_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_506_30 : 1;
+	bool unusedBit_510_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_506_31 : 1;
+	bool unusedBit_510_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3533,7 +3546,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3075
 	 */
-	adc_channel_e externalKnockSenseAdc;
+	uint8_t unused3103;
 	/**
 	 * offset 3076
 	 */
@@ -3929,10 +3942,15 @@ struct engine_configuration_s {
 	 */
 	float triggerGapOverride[GAP_TRACKING_LENGTH];
 	/**
-	units
+	Percent
 	 * offset 4584
 	 */
-	int mainUnusedEnd[347];
+	int8_t fuelTrim[MAX_CYLINDER_COUNT];
+	/**
+	units
+	 * offset 4596
+	 */
+	int mainUnusedEnd[344];
 	/** total size 5972*/
 };
 
@@ -4327,4 +4345,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Sep 01 11:58:11 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Oct 06 04:37:35 UTC 2021

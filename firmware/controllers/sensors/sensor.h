@@ -87,6 +87,13 @@ public:
 	static SensorResult get(SensorType type);
 
 	/*
+	 * Get a reading from the specified sensor, or zero if unavailable.
+	 */
+	static float getOrZero(SensorType type) {
+		return Sensor::get(type).value_or(0);
+	}
+
+	/*
 	 * Get a raw (unconverted) value from the sensor, if available.
 	 */
 	static float getRaw(SensorType type);
@@ -141,7 +148,7 @@ public:
 	// this should be field lookup and simple math.
 	virtual SensorResult get() const = 0;
 
-	// Retrieve whether the sensor is present.  Some sensors may be registered but not present, ie if inintialization failed.
+	// Retrieve whether the sensor is present.  Some sensors may be registered but not present, i.e. if initialization failed.
 	virtual bool hasSensor() const {
 		return true;
 	}

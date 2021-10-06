@@ -26,7 +26,7 @@ void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->stepperDcIo[1].directionPin2 = TLE8888_PIN_24;
 	/* IDLE configuration */
 	engineConfiguration->useStepperIdle = true;
-	engineConfiguration->useHbridges = true;
+	engineConfiguration->useHbridgesToDriveIdleStepper = true;
 	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->useTLE8888_stepper = true;
 }

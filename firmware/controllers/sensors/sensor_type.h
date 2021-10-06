@@ -75,6 +75,13 @@ enum class SensorType : unsigned char {
 
 	VehicleSpeed = 34,
 
+	TurbochargerSpeed = 35,
+
+	// Fast MAP is synchronous to crank angle - user selectable phase/window
+	MapFast = 36,
+	// Slow MAP is asynchronous - not synced to anything, normal analog sampling
+	MapSlow = 37,
+
 	// Leave me at the end!
-	PlaceholderLast = 35,
+	PlaceholderLast = 38,
 };

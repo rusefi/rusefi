@@ -16,6 +16,7 @@ public class ProgramSelector {
     private static final String AUTO_DFU = "Auto DFU";
     private static final String MANUAL_DFU = "Manual DFU";
     private static final String ST_LINK = "ST-LINK";
+    public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
 
     private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware";
 
@@ -27,8 +28,10 @@ public class ProgramSelector {
          * todo: add FULL AUTO mode which would fire up DFU and ST-LINK in parallel hoping that one of those would work?
          */
         mode.addItem(AUTO_DFU);
-        mode.addItem(MANUAL_DFU);
-        mode.addItem(ST_LINK);
+        if (IS_WIN) {
+            mode.addItem(MANUAL_DFU);
+            mode.addItem(ST_LINK);
+        }
 
         controls.add(mode);
 
@@ -56,7 +59,7 @@ public class ProgramSelector {
 
                 if (isAutoDfu) {
                     DfuFlasher.doAutoDfu(comboPorts.getSelectedItem(), comboPorts);
-                } else if (isManualDfu){
+                } else if (isManualDfu) {
                     DfuFlasher.runDfuProgramming();
                 } else {
                     FirmwareFlasher.doUpdateFirmware(FirmwareFlasher.IMAGE_FILE, updateFirmware);

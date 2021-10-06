@@ -12,17 +12,14 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
+#include "../hellen_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
+	engineConfiguration->injectionPins[0] = H176_LS_1;
 	engineConfiguration->injectionPins[1] = GPIOG_8;
 	engineConfiguration->injectionPins[2] = GPIOD_11;
 	engineConfiguration->injectionPins[3] = GPIOD_10;
-
-	//engineConfiguration->injectionPins[4] = GPIOD_9;
-	//engineConfiguration->injectionPins[5] = GPIOF_12;
-	//engineConfiguration->injectionPins[6] = GPIOF_13;
-	//engineConfiguration->injectionPins[7] = GPIOF_14;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -54,16 +51,6 @@ static void setIgnitionPins() {
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-}
-
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
 }
 
 static void setupVbatt() {
@@ -104,7 +91,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 

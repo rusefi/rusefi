@@ -1,10 +1,10 @@
 /**
- * @file boards/hellen/hellen64_miataNA6_94/board_configuration.cpp
+ * @file boards/hellen/hellen-nb1/board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen64_miataNA6_94 board
+ * @brief Configuration defaults for the hellen-nb1 board
  *
- * See https://rusefi.com/s/hellenNA6
+ * See http://rusefi.com/s/hellenNB1
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -12,17 +12,14 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
+#include "../hellen_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
-	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
-	engineConfiguration->injectionPins[3] = GPIOD_10;
-
-	//engineConfiguration->injectionPins[4] = GPIOD_9;
-	//engineConfiguration->injectionPins[5] = GPIOF_12;
-	//engineConfiguration->injectionPins[6] = GPIOF_13;
-	//engineConfiguration->injectionPins[7] = GPIOF_14;
+	engineConfiguration->injectionPins[0] = H144_LS_1;
+	engineConfiguration->injectionPins[1] = H144_LS_2;
+	engineConfiguration->injectionPins[2] = H144_LS_3;
+	engineConfiguration->injectionPins[3] = H144_LS_4;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -54,16 +51,6 @@ static void setIgnitionPins() {
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-}
-
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
 }
 
 static void setupVbatt() {
@@ -104,7 +91,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 

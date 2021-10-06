@@ -8,6 +8,9 @@
 #include "lua_airmass.h"
 #include "can_msg_tx.h"
 #include "settings.h"
+#include <new>
+#include "luaaa.hpp"
+using namespace luaaa;
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
@@ -34,17 +37,8 @@ static int lua_readpin(lua_State* l) {
 	return 1;
 }
 
-static int lua_getAuxAnalog(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
-
-	lua_pushnumber(l, sensorIndex);
-	return 1;
-}
-
-static int lua_getSensor(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
-
-	auto result = Sensor::get(static_cast<SensorType>(sensorIndex));
+static int getSensor(lua_State* l, SensorType type) {
+	auto result = Sensor::get(type);
 
 	if (result) {
 		// return value if valid
@@ -55,6 +49,20 @@ static int lua_getSensor(lua_State* l) {
 	}
 
 	return 1;
+}
+
+static int lua_getAuxAnalog(lua_State* l) {
+	auto sensorIndex = luaL_checkinteger(l, 1);
+
+	auto type = static_cast<SensorType>(sensorIndex + static_cast<int>(SensorType::Aux1));
+
+	return getSensor(l, type);
+}
+
+static int lua_getSensor(lua_State* l) {
+	auto sensorIndex = luaL_checkinteger(l, 1);
+
+	return getSensor(l, static_cast<SensorType>(sensorIndex));
 }
 
 static int lua_getSensorRaw(lua_State* l) {
@@ -275,7 +283,7 @@ static int lua_getAirmass(lua_State* l) {
 		return luaL_error(l, "null airmass");
 	}
 
-	auto rpm = Sensor::get(SensorType::Rpm).value_or(0);
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 	auto result = airmass->getAirmass(rpm).CylinderAirmass;
 
 	lua_pushnumber(l, result);
@@ -299,9 +307,40 @@ static int lua_stopEngine(lua_State*) {
 
 	return 0;
 }
+
+static int lua_setTimingAdd(lua_State* l) {
+	ENGINE(engineState).luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+
+	return 0;
+}
+
+static int lua_setTimingMult(lua_State* l) {
+	ENGINE(engineState).luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
+
+	return 0;
+}
+
+static int lua_setFuelAdd(lua_State* l) {
+	ENGINE(engineState).luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
+
+	return 0;
+}
+
+static int lua_setFuelMult(lua_State* l) {
+	ENGINE(engineState).luaAdjustments.fuelMult = luaL_checknumber(l, 1);
+
+	return 0;
+}
 #endif // EFI_UNIT_TEST
 
 void configureRusefiLuaHooks(lua_State* l) {
+
+	LuaClass<Timer> luaTimer(l, "Timer");
+	luaTimer
+		.ctor()
+		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
+		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
+
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
@@ -323,5 +362,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "setAirmass", lua_setAirmass);
 
 	lua_register(l, "stopEngine", lua_stopEngine);
+
+	lua_register(l, "setTimingAdd", lua_setTimingAdd);
+	lua_register(l, "setTimingMult", lua_setTimingMult);
+
+	lua_register(l, "setFuelAdd", lua_setFuelAdd);
+	lua_register(l, "setFuelMult", lua_setFuelMult);
 #endif
 }

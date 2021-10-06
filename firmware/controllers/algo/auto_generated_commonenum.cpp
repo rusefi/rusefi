@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Aug 31 05:42:43 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Oct 05 16:10:02 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -100,6 +100,8 @@ case MT_MPX4250:
   return "MT_MPX4250";
 case MT_MPX4250A:
   return "MT_MPX4250A";
+case MT_MPXH6400:
+  return "MT_MPXH6400";
 case MT_SUBY_DENSO:
   return "MT_SUBY_DENSO";
 case MT_TOYOTA_89420_02010:
@@ -210,8 +212,6 @@ case Force_4_bytes_size_cranking_ignition_mode:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
-case DBG_16:
-  return "DBG_16";
 case DBG_34:
   return "DBG_34";
 case DBG_ALTERNATOR_PID:
@@ -250,12 +250,6 @@ case DBG_ETB_LOGIC:
   return "DBG_ETB_LOGIC";
 case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
-case DBG_FSIO_ADC:
-  return "DBG_FSIO_ADC";
-case DBG_FSIO_EXPRESSION_1_7:
-  return "DBG_FSIO_EXPRESSION_1_7";
-case DBG_FSIO_EXPRESSION_8_14:
-  return "DBG_FSIO_EXPRESSION_8_14";
 case DBG_FUEL_PID_CORRECTION:
   return "DBG_FUEL_PID_CORRECTION";
 case DBG_GPPWM:
@@ -302,8 +296,6 @@ case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
-case DBG_VEHICLE_SPEED_SENSOR:
-  return "DBG_VEHICLE_SPEED_SENSOR";
 case DBG_VVT:
   return "DBG_VVT";
 case DBG_VVT_1_PID:
@@ -314,6 +306,8 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
+case DBG_WALL_WETTING:
+  return "DBG_WALL_WETTING";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
 case MODE_52:
@@ -428,8 +422,12 @@ case HELLEN_121_VAG_V6_CYL:
   return "HELLEN_121_VAG_V6_CYL";
 case HELLEN_121_VAG_VR6_CYL:
   return "HELLEN_121_VAG_VR6_CYL";
-case HELLEN_128_MERCEDES:
-  return "HELLEN_128_MERCEDES";
+case HELLEN_128_MERCEDES_4_CYL:
+  return "HELLEN_128_MERCEDES_4_CYL";
+case HELLEN_128_MERCEDES_6_CYL:
+  return "HELLEN_128_MERCEDES_6_CYL";
+case HELLEN_128_MERCEDES_8_CYL:
+  return "HELLEN_128_MERCEDES_8_CYL";
 case HELLEN_134_BMW:
   return "HELLEN_134_BMW";
 case HELLEN_154_HYUNDAI:
@@ -444,6 +442,8 @@ case HELLEN_NA6:
   return "HELLEN_NA6";
 case HELLEN_NA94:
   return "HELLEN_NA94";
+case HELLEN_NB1:
+  return "HELLEN_NB1";
 case HELLEN_NB2:
   return "HELLEN_NB2";
 case HELLEN_NB2_36:
@@ -518,10 +518,18 @@ case PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case PROTEUS_DEFAULTS:
   return "PROTEUS_DEFAULTS";
+case PROTEUS_HONDA_ELEMENT_2003:
+  return "PROTEUS_HONDA_ELEMENT_2003";
+case PROTEUS_HONDA_OBD2A:
+  return "PROTEUS_HONDA_OBD2A";
 case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
+case PROTEUS_N73:
+  return "PROTEUS_N73";
 case PROTEUS_QC_TEST_BOARD:
   return "PROTEUS_QC_TEST_BOARD";
+case PROTEUS_VAG_80_18T:
+  return "PROTEUS_VAG_80_18T";
 case SACHS:
   return "SACHS";
 case SUBARUEG33_DEFAULTS:
@@ -530,6 +538,12 @@ case SUBARUEJ20G_DEFAULTS:
   return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
+case TEST_108:
+  return "TEST_108";
+case TEST_109:
+  return "TEST_109";
+case TEST_110:
+  return "TEST_110";
 case TEST_33816:
   return "TEST_33816";
 case TEST_CIVIC_4_0_BOTH:
@@ -673,6 +687,21 @@ case IM_TWO_COILS:
   return "IM_TWO_COILS";
 case IM_WASTED_SPARK:
   return "IM_WASTED_SPARK";
+  }
+ return NULL;
+}
+const char *getImu_type_e(imu_type_e value){
+switch(value) {
+case IMU_MM5_10:
+  return "IMU_MM5_10";
+case IMU_NONE:
+  return "IMU_NONE";
+case IMU_TYPE_3:
+  return "IMU_TYPE_3";
+case IMU_TYPE_4:
+  return "IMU_TYPE_4";
+case IMU_VAG:
+  return "IMU_VAG";
   }
  return NULL;
 }
@@ -932,6 +961,8 @@ case TT_FORD_ASPIRE:
   return "TT_FORD_ASPIRE";
 case TT_FORD_ST170:
   return "TT_FORD_ST170";
+case TT_FORD_TFI_PIP:
+  return "TT_FORD_TFI_PIP";
 case TT_GM_60_2_2_2:
   return "TT_GM_60_2_2_2";
 case TT_GM_7X:
@@ -1004,6 +1035,8 @@ case TT_SUBARU_SVX_CAM_VVT:
   return "TT_SUBARU_SVX_CAM_VVT";
 case TT_SUBARU_SVX_CRANK_1:
   return "TT_SUBARU_SVX_CRANK_1";
+case TT_SUZUKI_G13B:
+  return "TT_SUZUKI_G13B";
 case TT_TEMP_62:
   return "TT_TEMP_62";
 case TT_TOOTHED_WHEEL:

@@ -715,7 +715,7 @@ static void showEthInfo(void) {
 	efiPrintf("etbAutoTune=%d",
 			engine->etbAutoTune);
 
-	efiPrintf("TPS=%.2f", Sensor::get(SensorType::Tps1).value_or(0));
+	efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
 
 	efiPrintf("etbControlPin=%s duty=%.2f freq=%d",
@@ -1009,7 +1009,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
-		firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "No ETB to use for idle");
+		firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "ETB idle does not work with unhappy accelerator pedal.");
 		return;
 	}
 

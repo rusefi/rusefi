@@ -15,7 +15,7 @@ extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
 class UsbChannel : public TsChannelBase {
 public:
 	UsbChannel(SerialUSBDriver& driver)
-		: m_channel(reinterpret_cast<BaseChannel*>(&driver))
+		: TsChannelBase("USB"), m_channel(reinterpret_cast<BaseChannel*>(&driver))
 	{
 	}
 

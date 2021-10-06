@@ -76,3 +76,7 @@ TEST(LuaBasic, ExpectNumOrNilReturnsNothing) {
 		end
 	)"), unexpected);
 }
+
+TEST(SystemLua, ScriptLoads) {
+	startLua();
+}

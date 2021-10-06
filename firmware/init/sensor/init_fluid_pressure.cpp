@@ -17,18 +17,6 @@ static FunctionalSensor fuelPressureSensorHigh(SensorType::FuelPressureHigh, /* 
 
 static ProxySensor injectorPressure(SensorType::FuelPressureInjector);
 
-static void configureFluidPressure(LinearFunc& func, const linear_sensor_s& cfg) {
-	float val1 = cfg.value1;
-	float val2 = cfg.value2;
-
-	// Limit to max given pressure - val1 or val2 could be larger
-	// (sensor may be backwards, high voltage = low pressure)
-	float greaterOutput = val1 > val2 ? val1 : val2;
-
-	// Allow slightly negative output (-5kpa) so as to not fail the sensor when engine is off
-	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
-}
-
 /**
  * @param bandwidth Hertz, used by low pass filter in to analog subscribers
  */
@@ -40,7 +28,16 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 		return;
 	}
 
-	configureFluidPressure(func, cfg);
+	float val1 = cfg.value1;
+	float val2 = cfg.value2;
+
+	// Limit to max given pressure - val1 or val2 could be larger
+	// (sensor may be backwards, high voltage = low pressure)
+	float greaterOutput = val1 > val2 ? val1 : val2;
+
+	// Allow slightly negative output (-5kpa) so as to not fail the sensor when engine is off
+	func.configure(cfg.v1, val1, cfg.v2, val2, /*minOutput*/ -5, greaterOutput);
+
 	sensor.setFunction(func);
 
 	AdcSubscription::SubscribeSensor(sensor, channel, bandwidth);
@@ -62,8 +59,8 @@ void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	injectorPressure.Register();
 }
 
-void reconfigureOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	configureFluidPressure(oilpSensorFunc, CONFIG(oilPressure));
-	configureFluidPressure(fuelPressureFuncLow, CONFIG(lowPressureFuel));
-	configureFluidPressure(fuelPressureFuncHigh, CONFIG(highPressureFuel));
+void deinitOilPressure() {
+	AdcSubscription::UnsubscribeSensor(oilpSensor);
+	AdcSubscription::UnsubscribeSensor(fuelPressureSensorLow);
+	AdcSubscription::UnsubscribeSensor(fuelPressureSensorHigh);
 }

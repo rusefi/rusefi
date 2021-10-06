@@ -57,7 +57,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	eth.fireFall(200);
 
 	// now clear and advance more
-	eth.clearQueue();
+	eth.executeActions();
 
 	eth.fireRise(200);
 

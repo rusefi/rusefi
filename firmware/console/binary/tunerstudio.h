@@ -44,8 +44,8 @@ void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
 char *getWorkingPageAddr();
 
-void tunerStudioDebug(const char *msg);
-void tunerStudioError(const char *msg);
+void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
+void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printTsStats(void);

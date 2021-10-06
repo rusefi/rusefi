@@ -12,19 +12,20 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
+#include "../hellen_meta.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
-	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
-	engineConfiguration->injectionPins[3] = GPIOD_10;
-	engineConfiguration->injectionPins[4] = GPIOD_9;
-	engineConfiguration->injectionPins[5] = GPIOF_12;
-
+	engineConfiguration->injectionPins[0] = H144_LS_1;
+	engineConfiguration->injectionPins[1] = H144_LS_2;
+	engineConfiguration->injectionPins[2] = H144_LS_3;
+	engineConfiguration->injectionPins[3] = H144_LS_4;
+	engineConfiguration->injectionPins[4] = H144_LS_5;
+	engineConfiguration->injectionPins[5] = H144_LS_6;
 
 	// Disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT;i++) {
@@ -48,16 +49,6 @@ static void setIgnitionPins() {
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-}
-
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOE_7;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOG_1;  // green
-	engineConfiguration->warningLedPin = GPIOE_8; // yellow
 }
 
 static void setupVbatt() {
@@ -104,7 +95,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
@@ -144,8 +135,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
-//	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
-//	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
+	engineConfiguration->fuelPumpPin = GPIOD_12;	// OUT_IO9 // 113 Fuel Pump Relay
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 //	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
 
@@ -174,6 +165,18 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
+	engineConfiguration->luaOutputPins[0] = GPIOG_5; // 104 ETB Relay
+
+	engineConfiguration->throttlePedalUpVoltage = 0.75;
+	engineConfiguration->throttlePedalWOTVoltage = 4.45;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.43;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.20;
+
+	engineConfiguration->tpsMin = 100;
+	engineConfiguration->tpsMax = 889;
+
+	engineConfiguration->tps1SecondaryMin = 891;
+	engineConfiguration->tps1SecondaryMax = 102;
 	hellenWbo();
 }
 

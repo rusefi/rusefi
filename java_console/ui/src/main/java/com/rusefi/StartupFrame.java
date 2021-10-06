@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
@@ -69,8 +70,7 @@ public class StartupFrame {
     public StartupFrame() {
 //        AudioPlayback.start();
         String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
-        String bundleName = Autoupdate.readBundleFullName();
-        frame = new JFrame(title + " " + (bundleName != null ? bundleName : "Unknown bundle"));
+        frame = new JFrame(appendBundleName(title));
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -83,6 +83,12 @@ public class StartupFrame {
         });
         AutoupdateUtil.setAppIcon(frame);
         SerialPortScanner.INSTANCE.startTimer();
+    }
+
+    @NotNull
+    public static String appendBundleName(String title) {
+        String bundleName = Autoupdate.readBundleFullName();
+        return title + " " + (bundleName != null ? bundleName : "Unknown bundle");
     }
 
     public void chooseSerialPort() {
@@ -233,7 +239,8 @@ public class StartupFrame {
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
         String selectedPort = comboPorts.getSelectedItem().toString();
         if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
-            String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame);
+            SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectPort(StartupFrame.this.frame);
+            String autoDetectedPort = detectResult == null ? null : detectResult.getSerialPort();
             if (autoDetectedPort == null)
                 return;
             selectedPort = autoDetectedPort;

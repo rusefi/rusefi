@@ -39,7 +39,7 @@ public class BroadcastTab {
             }
 
             new Thread(() -> {
-                String autoDetectedPort = PortDetector.autoDetectSerial(null);
+                String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
                 SwingUtilities.invokeLater(() -> {
                     startBroadcasting(authToken, autoDetectedPort);
                 });

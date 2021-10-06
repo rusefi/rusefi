@@ -11,54 +11,113 @@
 #define TAG "LUA "
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-#define LUA_HEAP_SIZE 20000
-static char luaHeap[LUA_HEAP_SIZE];
 
-static memory_heap_t heap;
+#ifndef RAM_UNUSED_SIZE
+#define LUA_USER_HEAP 12000
+#endif
+#ifndef CCM_UNUSED_SIZE
+#define LUA_SYSTEM_HEAP 15000
+#endif
 
-static int32_t memoryUsed = 0;
+static char luaUserHeap[LUA_USER_HEAP];
+static char luaSystemHeap[LUA_SYSTEM_HEAP];
 
-static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
-	if (CONFIG(debugMode) == DBG_LUA) {
-		tsOutputChannels.debugIntField1 = memoryUsed;
+class Heap {
+public:
+	memory_heap_t m_heap;
+
+	size_t m_memoryUsed = 0;
+	const size_t m_size;
+
+	void* alloc(size_t n) {
+		return chHeapAlloc(&m_heap, n);
 	}
 
-	if (nsize == 0) {
-		// requested size is zero, free if necessary and return nullptr
-		if (ptr) {
-			chHeapFree(ptr);
-			memoryUsed -= osize;
+	void free(void* obj) {
+		chHeapFree(obj);
+	}
+
+public:
+	template<size_t TSize>
+	Heap(char (&buffer)[TSize])
+		: m_size(TSize)
+	{
+		chHeapObjectInit(&m_heap, buffer, TSize);
+	}
+
+	void* realloc(void* ptr, size_t osize, size_t nsize) {
+		if (nsize == 0) {
+			// requested size is zero, free if necessary and return nullptr
+			if (ptr) {
+				free(ptr);
+				m_memoryUsed -= osize;
+			}
+
+			return nullptr;
 		}
 
-		return nullptr;
-	}
+		void *new_mem = alloc(nsize);
+		m_memoryUsed += nsize;
 
-	void *new_mem = chHeapAlloc(&heap, nsize);
-	memoryUsed += nsize;
+		if (!ptr) {
+			// No old pointer passed in, simply return allocated block
+			return new_mem;
+		}
 
-	if (!ptr) {
-		// No old pointer passed in, simply return allocated block
+		// An old pointer was passed in, copy the old data in, then free
+		if (new_mem != nullptr) {
+			memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
+			free(ptr);
+			m_memoryUsed -= osize;
+		}
+
 		return new_mem;
 	}
 
-	// An old pointer was passed in, copy the old data in, then free
-	if (new_mem != nullptr) {
-		memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
-		chHeapFree(ptr);
-		memoryUsed -= osize;
+	size_t size() const {
+		return m_size;
 	}
 
-	return new_mem;
+	size_t used() const {
+		return m_memoryUsed;
+	}
+};
+
+static Heap heaps[] = { luaUserHeap, luaSystemHeap };
+
+template <int HeapIdx>
+static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
+	static_assert(HeapIdx < efi::size(heaps));
+
+	if (CONFIG(debugMode) == DBG_LUA) {
+		switch (HeapIdx) {
+			case 0: tsOutputChannels.debugIntField1 = heaps[HeapIdx].used(); break;
+			case 1: tsOutputChannels.debugIntField2 = heaps[HeapIdx].used(); break;
+		}
+	}
+
+	return heaps[HeapIdx].realloc(ptr, osize, nsize);
 }
 #else // not EFI_PROD_CODE
 // Non-MCU code can use plain realloc function instead of custom implementation
+template <int /*ignored*/>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
+	if (!nsize) {
+		free(ptr);
+		return nullptr;
+	}
+
+	if (!ptr) {
+		return malloc(nsize);
+	}
+
 	return realloc(ptr, nsize);
 }
 #endif // EFI_PROD_CODE
 
-class LuaHandle {
+class LuaHandle final {
 public:
+	LuaHandle() : LuaHandle(nullptr) { }
 	LuaHandle(lua_State* ptr) : m_ptr(ptr) { }
 
 	// Don't allow copying!
@@ -69,6 +128,14 @@ public:
 	LuaHandle(LuaHandle&& rhs) {
 		m_ptr = rhs.m_ptr;
 		rhs.m_ptr = nullptr;
+	}
+
+	// Move assignment operator
+	LuaHandle& operator=(LuaHandle&& rhs) {
+		m_ptr = rhs.m_ptr;
+		rhs.m_ptr = nullptr;
+
+		return *this;
 	}
 
 	// Destruction cleans up lua state
@@ -136,6 +203,44 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "script loaded successfully!");
 
 	return true;
+}
+
+static LuaHandle systemLua;
+
+const char* getSystemLuaScript();
+
+static void printStats() {
+#if !EFI_UNIT_TEST
+	size_t freeRam;
+	chHeapStatus(&heaps[0].m_heap, &freeRam, nullptr);
+	efiPrintf("User free %d of %d", freeRam, sizeof(luaUserHeap));
+	chHeapStatus(&heaps[1].m_heap, &freeRam, nullptr);
+	efiPrintf("System free %d of %d", freeRam, sizeof(luaSystemHeap));
+#endif
+}
+
+void initSystemLua() {
+	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
+
+	Timer startTimer;
+	startTimer.reset();
+
+	systemLua = setupLuaState(myAlloc<1>);
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
+
+	if (!loadScript(systemLua, getSystemLuaScript())) {
+		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
+		systemLua = nullptr;
+		return;
+	}
+
+	auto startTime = startTimer.getElapsedSeconds();
+	addConsoleAction("luastats", printStats);
+
+#if !EFI_UNIT_TEST
+	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
+#endif
 }
 
 #if !EFI_UNIT_TEST
@@ -246,10 +351,13 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 }
 
 void LuaThread::ThreadTask() {
-	chHeapObjectInit(&heap, &luaHeap, sizeof(luaHeap));
+	initSystemLua();
 
 	while (!chThdShouldTerminateX()) {
-		bool wasOk = runOneLua(myAlloc, config->luaScript);
+		bool wasOk = runOneLua(myAlloc<0>, config->luaScript);
+
+		// Reset any lua adjustments the script made
+		ENGINE(engineState).luaAdjustments = {};
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin
@@ -282,41 +390,45 @@ void startLua() {
 	});
 
 	addConsoleAction("luamemory", [](){
-		float pct = 100.0f * memoryUsed / LUA_HEAP_SIZE;
-		efiPrintf("Lua memory: %d / %d bytes = %.1f%%", memoryUsed, LUA_HEAP_SIZE, pct);
+		for (size_t i = 0; i < efi::size(heaps); i++) {
+			auto heapSize = heaps[i].size();
+			auto memoryUsed = heaps[i].used();
+			float pct = 100.0f * memoryUsed / heapSize;
+			efiPrintf("Lua memory heap %d: %d / %d bytes = %.1f%%", i, memoryUsed, heapSize, pct);
+		}
 	});
 }
 
 #else // not EFI_UNIT_TEST
 
 void startLua() {
-	// todo
+	initSystemLua();
 }
 
 #include <stdexcept>
 #include <string>
 
 static LuaHandle runScript(const char* script) {
-	auto ls = setupLuaState(myAlloc);
+	auto ls = setupLuaState(myAlloc<0>);
 
 	if (!ls) {
-		throw new std::logic_error("Call to setupLuaState failed, returned null");
+		throw std::logic_error("Call to setupLuaState failed, returned null");
 	}
 
 	if (!loadScript(ls, script)) {
-		throw new std::logic_error("Call to loadScript failed");
+		throw std::logic_error("Call to loadScript failed");
 	}
 
 	lua_getglobal(ls, "testFunc");
 	if (lua_isnil(ls, -1)) {
-		throw new std::logic_error("Failed to find function testFunc");
+		throw std::logic_error("Failed to find function testFunc");
 	}
 
 	int status = lua_pcall(ls, 0, 1, 0);
 
 	if (0 != status) {
 		std::string msg = std::string("lua error while running script: ") + lua_tostring(ls, -1);
-		throw new std::logic_error(msg);
+		throw std::logic_error(msg);
 	}
 
 	return ls;
@@ -332,7 +444,7 @@ expected<float> testLuaReturnsNumberOrNil(const char* script) {
 
 	// If not nil, it should be a number
 	if (!lua_isnumber(ls, -1)) {
-		throw new std::logic_error("Returned value is not a number");
+		throw std::logic_error("Returned value is not a number");
 	}
 
 	// pop the return value
@@ -356,21 +468,21 @@ int testLuaReturnsInteger(const char* script) {
 
 	// pop the return value;
 	if (!lua_isinteger(ls, -1)) {
-		throw new std::logic_error("Returned value is not an integer");
+		throw std::logic_error("Returned value is not an integer");
 	}
 
 	return lua_tointeger(ls, -1);
 }
 
 void testLuaExecString(const char* script) {
-	auto ls = setupLuaState(myAlloc);
+	auto ls = setupLuaState(myAlloc<0>);
 
 	if (!ls) {
-		throw new std::logic_error("Call to setupLuaState failed, returned null");
+		throw std::logic_error("Call to setupLuaState failed, returned null");
 	}
 
 	if (!loadScript(ls, script)) {
-		throw new std::logic_error("Call to loadScript failed");
+		throw std::logic_error("Call to loadScript failed");
 	}
 }
 

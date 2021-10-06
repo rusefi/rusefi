@@ -80,7 +80,7 @@ void StepperMotorBase::setInitialPosition(void) {
 	bool isRunning = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
 	// now check if stepper motor re-initialization is requested - if the throttle pedal is pressed at startup
-	auto tpsPos = Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
+	auto tpsPos = Sensor::getOrZero(SensorType::DriverThrottleIntent);
 	bool forceStepperParking = !isRunning && tpsPos > STEPPER_PARKING_TPS;
 	if (CONFIG(stepperForceParkingEveryRestart))
 		forceStepperParking = true;

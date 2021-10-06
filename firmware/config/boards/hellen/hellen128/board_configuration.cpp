@@ -12,13 +12,15 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
+#include "../hellen_meta.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
+	engineConfiguration->injectionPins[0] = H176_LS_1;
 	engineConfiguration->injectionPins[1] = GPIOG_8;
 	engineConfiguration->injectionPins[2] = GPIOD_11;
 	engineConfiguration->injectionPins[3] = GPIOD_10;
@@ -53,16 +55,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
-}
-
 static void setupVbatt() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
@@ -86,6 +78,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = GPIOA_6;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
+	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
@@ -102,7 +95,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
@@ -112,8 +105,6 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
-
-	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -143,10 +134,10 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
-	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
+	engineConfiguration->fuelPumpPin = GPIOD_15;
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -166,13 +157,27 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
 
 	//Set default ETB config
-	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6; // out_pwm2
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
-	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
+	engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
+	engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
 	CONFIG(etb_use_two_wires) = true;
 
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_MERCEDES);
 	strcpy(CONFIG(engineCode), "");
+
+	/**
+	 * Jimmy best tune
+	 * https://rusefi.com/online/view.php?msq=626
+	 * md_sanci latest tune
+	 * https://rusefi.com/online/view.php?msq=630
+	 */
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
+	engineConfiguration->throttlePedalUpVoltage = 1.49;
+	engineConfiguration->throttlePedalWOTVoltage = 4.72;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 1.34;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.24;
+
 
 	hellenWbo();
 }

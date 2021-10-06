@@ -13,6 +13,13 @@
 #include "pid.h"
 #include "engine_state_generated.h"
 
+struct LuaAdjustments {
+	float ignitionTimingAdd = 0;
+	float ignitionTimingMult = 1;
+	float fuelAdd = 0;
+	float fuelMult = 1;
+};
+
 class EngineState : public engine_state2_s {
 public:
 	EngineState();
@@ -32,7 +39,7 @@ public:
 	 */
 	float airFlow = 0;
 
-	float engineNoiseHipLevel = 0;
+	float knockThreshold = 0;
 
 	float auxValveStart = 0;
 	float auxValveEnd = 0;
@@ -61,8 +68,6 @@ public:
 	float currentVeLoad = 0;
 	float currentAfrLoad = 0;
 
-	int vssEventCounter = 0;
-
 	float fuelingLoad = 0;
 	float ignitionLoad = 0;
 
@@ -86,4 +91,6 @@ public:
 
 	float targetLambda = 0.0f;
 	float stoichiometricRatio = 0.0f;
+
+	LuaAdjustments luaAdjustments;
 };

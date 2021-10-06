@@ -24,7 +24,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 
 	// Limit fuel only on boost pressure (limiting spark bends valves)
 	if (CONFIG(boostCutPressure) != 0) {
-		if (Sensor::get(SensorType::Map).value_or(0) > CONFIG(boostCutPressure)) {
+		if (Sensor::getOrZero(SensorType::Map) > CONFIG(boostCutPressure)) {
 			allowFuel.clear();
 		}
 	}

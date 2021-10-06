@@ -85,12 +85,12 @@ void idleDebug(const char *msg, percent_t value) {
 static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	efiPrintf("useStepperIdle=%s useHbridges=%s",
-			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
+			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridgesToDriveIdleStepper)));
 	efiPrintf("idleMode=%s position=%.2f",
 			idleModeStr, getIdlePosition());
 
 	if (CONFIG(useStepperIdle)) {
-		if (CONFIG(useHbridges)) {
+		if (CONFIG(useHbridgesToDriveIdleStepper)) {
 			efiPrintf("Coil A:");
 			efiPrintf(" pin1=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin1)));
 			efiPrintf(" pin2=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin2)));
@@ -187,7 +187,7 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 
 	// If still in the cranking taper, disable closed loop idle
 	if (crankingTaperFraction < 1) {
-		return Phase::CrankToRunTaper;
+		return Phase::CrankToIdleTaper;
 	}
 
 	// No other conditions met, we are idling!
@@ -418,7 +418,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 
 		// On failed sensor, use 0 deg C - should give a safe highish idle
-		float clt = Sensor::get(SensorType::Clt).value_or(0);
+		float clt = Sensor::getOrZero(SensorType::Clt);
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 		float rpm;
@@ -436,7 +436,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		float crankingTaper = getCrankingTaperFraction();
 
 		// Determine what operation phase we're in - idling or not
-		float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+		float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 		auto phase = determinePhase(rpm, targetRpm, tps, vehicleSpeed, crankingTaper);
 		m_lastPhase = phase;
 
@@ -506,8 +506,8 @@ float getIdleTimingAdjustment(int rpm) {
 	return idleControllerInstance.getIdleTimingAdjustment(rpm);
 }
 
-bool isIdling() {
-	return idleControllerInstance.isIdling();
+bool isIdlingOrTaper() {
+	return idleControllerInstance.isIdlingOrTaper();
 }
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

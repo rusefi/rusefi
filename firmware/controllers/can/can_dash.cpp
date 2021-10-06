@@ -156,7 +156,7 @@ void canDashboardBMW(CanCycle cycle) {
 
 		{
 			CanTxMessage msg(CAN_BMW_E46_DME2);
-			msg.setShortValue((int) ((Sensor::get(SensorType::Clt).value_or(0) + 48.373) / 0.75), 1);
+			msg.setShortValue((int) ((Sensor::getOrZero(SensorType::Clt) + 48.373) / 0.75), 1);
 		}
 	}
 }
@@ -172,7 +172,7 @@ void canMazdaRX8(CanCycle cycle) {
 		{
 			CanTxMessage msg(CAN_MAZDA_RX_RPM_SPEED);
 
-			float kph = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+			float kph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
 			msg.setShortValue(SWAP_UINT16(GET_RPM() * 4), 0);
 			msg.setShortValue(0xFFFF, 2);
@@ -196,7 +196,8 @@ void canMazdaRX8(CanCycle cycle) {
 			CanTxMessage msg(CAN_MAZDA_RX_STATUS_2);
 			auto clt = Sensor::get(SensorType::Clt);
 			msg[0] = (uint8_t)(clt.value_or(0) + 69); //temp gauge //~170 is red, ~165 last bar, 152 centre, 90 first bar, 92 second bar
-			msg[1] = ((int16_t)(engine->engineState.vssEventCounter*(engineConfiguration->vehicleSpeedCoef*0.277*2.58))) & 0xff;
+			// TODO: fixme!
+			//msg[1] = ((int16_t)(engine->engineState.vssEventCounter*(engineConfiguration->vehicleSpeedCoef*0.277*2.58))) & 0xff;
 			msg[2] = 0x00; // unknown
 			msg[3] = 0x00; //unknown
 			msg[4] = 0x01; //Oil Pressure (not really a gauge)
@@ -222,7 +223,7 @@ void canDashboardFiat(CanCycle cycle) {
 		{
 			//Fiat Dashboard
 			CanTxMessage msg(CAN_FIAT_MOTOR_INFO);
-			msg.setShortValue((int) (Sensor::get(SensorType::Clt).value_or(0) - 40), 3); //Coolant Temp
+			msg.setShortValue((int) (Sensor::getOrZero(SensorType::Clt) - 40), 3); //Coolant Temp
 			msg.setShortValue(GET_RPM() / 32, 6); //RPM
 		}
 	}
@@ -236,7 +237,7 @@ void canDashboardVAG(CanCycle cycle) {
 			msg.setShortValue(GET_RPM() * 4, 2); //RPM
 		}
 
-		float clt = Sensor::get(SensorType::Clt).value_or(0);
+		float clt = Sensor::getOrZero(SensorType::Clt);
 
 		{
 			CanTxMessage msg(CAN_VAG_CLT);
@@ -274,7 +275,7 @@ void canDashboardW202(CanCycle cycle) {
 	if (cycle.isInterval(CI::_100ms)) {
 		{
 			CanTxMessage msg(W202_STAT_2); //dlc 7
-			msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + 40); // CLT -40 offset
+			msg[0] = (int)(Sensor::getOrZero(SensorType::Clt) + 40); // CLT -40 offset
 			msg[1] = 0x3D; // TBD
 			msg[2] = 0x63; // Const
 			msg[3] = 0x41; // Const
@@ -324,7 +325,7 @@ void canDashboardGenesisCoupe(CanCycle cycle) {
 		}
 		{
 			CanTxMessage msg(GENESIS_COUPLE_COOLANT_329, 8);
-			int clt = Sensor::get(SensorType::Clt).value_or(0) * 2;
+			int clt = Sensor::getOrZero(SensorType::Clt) * 2;
 			msg[1] = clt;
 		}
 	}
@@ -343,7 +344,7 @@ void canDashboardNissanVQ(CanCycle cycle) {
 		{
 			CanTxMessage msg(NISSAN_CLT_551, 8);
 
-			int clt = Sensor::get(SensorType::Clt).value_or(0);
+			int clt = Sensor::getOrZero(SensorType::Clt);
 			msg[0] = clt + 45;
 		}
 
@@ -355,7 +356,7 @@ void canDashboardNissanVQ(CanCycle cycle) {
 			const uint8_t magicByte[4] = {0x03, 0x23, 0x42, 0x63};
 
 			msg[0] = magicByte[rollingId];
-			msg[1] = (int)(Sensor::get(SensorType::AcceleratorPedal).value_or(0) * 255 / 100);
+			msg[1] = (int)(Sensor::getOrZero(SensorType::AcceleratorPedal) * 255 / 100);
 
 			// thank you "102 CAN Communication decoded"
 #define CAN_23D_RPM_MULT 3.15
@@ -423,8 +424,8 @@ void canDashboardBMWE90(CanCycle cycle)
 			if (tmp_cnt >= 0x0F)
 				tmp_cnt = 0x00;
 			CanTxMessage msg(E90_TEMP, 8);
-			msg[0] = (int)(Sensor::get(SensorType::Clt).value_or(0) + e90_temp_offset); //coolant
-			msg[1] = (int)(Sensor::get(SensorType::AuxTemp1).value_or(0) + e90_temp_offset); //oil (AuxTemp1)
+			msg[0] = (int)(Sensor::getOrZero(SensorType::Clt) + e90_temp_offset); //coolant
+			msg[1] = (int)(Sensor::getOrZero(SensorType::AuxTemp1) + e90_temp_offset); //oil (AuxTemp1)
 			msg[2] = tmp_cnt;
 			msg[3] = 0xC8;
 			msg[4] = 0xA7;
@@ -496,7 +497,7 @@ void canDashboardBMWE90(CanCycle cycle)
 		}
 
 		{ //E90_SPEED
-			auto vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0); 
+			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed); 
 			float mph = vehicleSpeed * 0.6213712;
 			mph_ctr = ((TIME_I2MS(chVTGetSystemTime()) - mph_timer) / 50);
 			mph_a = (mph_ctr * mph / 2);
@@ -549,11 +550,11 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* MAP */
-			tmp = (((uint16_t)(Sensor::get(SensorType::Map).value_or(0))) * 10); 
+			tmp = (((uint16_t)(Sensor::getOrZero(SensorType::Map))) * 10); 
 			msg[2] = (tmp >> 8);
 			msg[3] = (tmp & 0x00ff);
 			/* TPS  y = x/10 */
-			tmp = (uint16_t)((float)(Sensor::get(SensorType::Tps1).value_or(0)) * 10);
+			tmp = (uint16_t)((float)(Sensor::getOrZero(SensorType::Tps1)) * 10);
 			msg[4] = (tmp >> 8);
 			msg[5] = (tmp & 0x00ff);
 			/* Coolant pressure */
@@ -565,15 +566,15 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x361, 8);
 			/* Fuel pressure */
-			tmp =  (uint16_t)(Sensor::get(SensorType::FuelPressureLow).value_or(0));
+			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::FuelPressureLow));
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp&0x00ff);
 			/* Oil pressure */
-			tmp =  (uint16_t)(Sensor::get(SensorType::OilPressure).value_or(0));
+			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::OilPressure));
 			msg[2] = (tmp >> 8);
 			msg[3] = (tmp & 0x00ff);
 			/* Engine Demand */
-			tmp =  (uint16_t)(Sensor::get(SensorType::Map).value_or(0));
+			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Map));
 			msg[4] = (tmp >> 8);
 			msg[5] = (tmp & 0x00ff);
 			/* Wastegate Pressure */
@@ -685,11 +686,11 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x368, 8);
 			/* Wideband Sensor 1 */
-			tmp =  (uint16_t)(Sensor::get(SensorType::Lambda1).value_or(0)) * 1000;
+			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Lambda1)) * 1000;
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Wideband Sensor 2 */
-			tmp =  (uint16_t)(Sensor::get(SensorType::Lambda2).value_or(0) * 1000);
+			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::Lambda2) * 1000);
 			msg[2] = (tmp >> 8);
 			msg[3] = (tmp & 0x00ff);
 			/* Wideband Sensor 3 */
@@ -753,7 +754,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x36C, 8);
 			/* Wheel Speed Front Left */
-			auto vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 			tmp = (vehicleSpeed * 10 );
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
@@ -816,7 +817,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x370, 8);
 			/* Vehicle Speed */
-			auto vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+			auto vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 			tmp = (vehicleSpeed * 10 );
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
@@ -953,7 +954,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x372, 8);
 			/* Battery Voltage */
-			tmp =  (uint16_t)(Sensor::get(SensorType::BatteryVoltage).value_or(0) * 10);
+			tmp =  (uint16_t)(Sensor::getOrZero(SensorType::BatteryVoltage) * 10);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* unused */
@@ -1042,7 +1043,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x3E0, 8);
 			/* Coolant temperature in K y = x/10 */
-			tmp = ((Sensor::get(SensorType::Clt).value_or(0) + 273.15) * 10);
+			tmp = ((Sensor::getOrZero(SensorType::Clt) + 273.15) * 10);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Air Temperature */

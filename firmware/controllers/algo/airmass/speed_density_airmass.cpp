@@ -42,7 +42,7 @@ float SpeedDensityAirmass::getMap(int rpm) const {
 	float fallbackMap;
 	if (CONFIG(enableMapEstimationTableFallback)) {
 		// if the map estimation table is enabled, estimate map based on the TPS and RPM
-		fallbackMap = m_mapEstimationTable->getValue(rpm, TPS_2_BYTE_PACKING_MULT * Sensor::get(SensorType::Tps1).value_or(0));
+		fallbackMap = m_mapEstimationTable->getValue(rpm, TPS_2_BYTE_PACKING_MULT * Sensor::getOrZero(SensorType::Tps1));
 	} else {
 		fallbackMap = CONFIG(failedMapFallback);
 	}

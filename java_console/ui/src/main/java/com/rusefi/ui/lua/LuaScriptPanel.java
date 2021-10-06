@@ -50,7 +50,7 @@ public class LuaScriptPanel {
 
         //centerPanel.add(, BorderLayout.WEST);
         JPanel messagesPanel = new JPanel(new BorderLayout());
-        MessagesPanel mp = new MessagesPanel(null);
+        MessagesPanel mp = new MessagesPanel(null, config);
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
@@ -97,6 +97,10 @@ public class LuaScriptPanel {
         }
 
         ConfigurationImage image = bp.getControllerConfiguration();
+        if (image == null) {
+            scriptText.setText("No configuration image");
+            return;
+        }
         ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.luaScript_offset, Fields.LUA_SCRIPT_SIZE);
 
         byte[] scriptArr = new byte[Fields.LUA_SCRIPT_SIZE];

@@ -81,7 +81,19 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
-		dwellMs = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		auto base = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		auto voltageMult = 0.02f * 
+			interpolate2d(
+				10 * Sensor::getOrZero(SensorType::BatteryVoltage),
+				engineConfiguration->dwellVoltageCorrVoltBins,
+				engineConfiguration->dwellVoltageCorrValues);
+
+		// for compat (table full of zeroes)
+		if (voltageMult < 0.1f) {
+			voltageMult = 1;
+		}
+
+		dwellMs = base * voltageMult;
 	}
 
 	if (cisnan(dwellMs) || dwellMs <= 0) {
@@ -118,6 +130,8 @@ static const int order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[] = { 1, 2, 3, 4, 5,
 static const int order_1_6_3_2_5_4[] = {1, 6, 3, 2, 5, 4};
 static const int order_1_4_3_6_2_5[] = {1, 4, 3, 6, 2, 5};
 static const int order_1_6_2_4_3_5[] = {1, 6, 2, 4, 3, 5};
+static const int order_1_6_5_4_3_2[] = {1, 6, 5, 4, 3, 2};
+static const int order_1_4_5_2_3_6[] = {1, 4, 5, 2, 3, 6};
 
 // 8 cylinder
 static const int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
@@ -173,6 +187,8 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_6_3_2_5_4:
 	case FO_1_4_3_6_2_5:
 	case FO_1_6_2_4_3_5:
+	case FO_1_6_5_4_3_2:
+	case FO_1_4_5_2_3_6:
 		return 6;
 
 // 8 cylinder
@@ -249,6 +265,10 @@ static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
 		return order_1_4_3_6_2_5;
 	case FO_1_6_2_4_3_5:
 		return order_1_6_2_4_3_5;
+	case FO_1_6_5_4_3_2:
+		return order_1_6_5_4_3_2;
+	case FO_1_4_5_2_3_6:
+		return order_1_4_5_2_3_6;
 
 // 8 cylinder
 	case FO_1_8_4_3_6_5_7_2:
@@ -308,7 +328,7 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	if (firingOrderLength < 1 || firingOrderLength > MAX_CYLINDER_COUNT) {
-		firmwareError(CUSTOM_ERR_6687, "fol %d", firingOrderLength);
+		firmwareError(CUSTOM_FIRING_LENGTH, "fol %d", firingOrderLength);
 		return 1;
 	}
 	if (engineConfiguration->specs.cylindersCount != firingOrderLength) {

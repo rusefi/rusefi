@@ -15,6 +15,7 @@ dependencies {
     implementation project(':models')
     implementation project(':logging-api')
     implementation project(':shared_io')
+    implementation project(':logging')
 
     implementation libs.annotations
     implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.6.2'

@@ -62,8 +62,8 @@ struct TunerStudioOutputChannels {
 	unsigned int unusedBit10 : 1; // bit 10
 	unsigned int clutchUpState : 1; // bit 11
 	unsigned int clutchDownState : 1; // bit 12
-	unsigned int knockEverIndicator : 1; // bit 13
-	unsigned int knockNowIndicator : 1; // bit 14
+	unsigned int unusedb13 : 1; // bit 13
+	unsigned int unusedb14 : 1; // bit 14
 	unsigned int brakePedalState : 1; // bit 15. 0 - not pressed, 1 = pressed
 	unsigned int toothLogReady : 1; // bit 16
 	unsigned int acSwitchState : 1; // bit 17. 0 - not pressed, 1 = pressed
@@ -170,9 +170,9 @@ struct TunerStudioOutputChannels {
 	scaled_channel<float> knockLevel; // 108
 
 	// Mode, firmware, protocol, run time
-	uint32_t timeSeconds; // 112
-	uint32_t engineMode; // 116
-	uint32_t firmwareVersion; // 120
+	scaled_channel<uint32_t> timeSeconds; // 112
+	scaled_channel<uint32_t> engineMode; // 116
+	scaled_channel<uint32_t> firmwareVersion; // 120
 	// todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 	// rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 
@@ -198,31 +198,31 @@ struct TunerStudioOutputChannels {
 	scaled_channel<uint16_t, 100> ignitionLoad; // 136
 
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	int16_t engineMakeCodeNameCrc16; // 138
+	scaled_channel<uint16_t> engineMakeCodeNameCrc16; // 138
 	// Errors
 	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
-	int16_t warningCounter; // 148
-	int16_t lastErrorCode; // 150
+	scaled_channel<uint16_t> warningCounter; // 148
+	scaled_channel<uint16_t> lastErrorCode; // 150
 	int16_t recentErrorCodes[8]; // 152-166
 
 	// Debug
-	float debugFloatField1; // 168
-	float debugFloatField2;
-	float debugFloatField3;
-	float debugFloatField4;
-	float debugFloatField5;
-	float debugFloatField6;
-	float debugFloatField7;
-	int debugIntField1;
-	int debugIntField2;
-	int debugIntField3;
-	int16_t debugIntField4;
-	int16_t debugIntField5; // 210
+	scaled_channel<float> debugFloatField1; // 168
+	scaled_channel<float> debugFloatField2;
+	scaled_channel<float> debugFloatField3;
+	scaled_channel<float> debugFloatField4;
+	scaled_channel<float> debugFloatField5;
+	scaled_channel<float> debugFloatField6;
+	scaled_channel<float> debugFloatField7;
+	scaled_channel<uint32_t> debugIntField1;
+	scaled_channel<uint32_t> debugIntField2;
+	scaled_channel<uint32_t> debugIntField3;
+	scaled_channel<uint16_t> debugIntField4;
+	scaled_channel<uint16_t> debugIntField5; // 210
 
 	// accelerometer
-	int16_t accelerationX; // 212
-	int16_t accelerationY; // 214
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationX; // 212
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationY; // 214
 
 	// EGT
 	egt_values_s egtValues; // 216
@@ -235,20 +235,20 @@ struct TunerStudioOutputChannels {
 	scaled_voltage rawIat;				// 240
 	scaled_voltage rawOilPressure;		// 242
 
-	int16_t tuneCrc16; // 244
+	scaled_channel<uint16_t> tuneCrc16; // 244
 
 	// Offset 246: bits
 	uint8_t sd_logging_internal : 1;	// bit 0
 	uint8_t sd_msd : 1;					// bit 1
 	uint8_t isFan2On : 1;				// bit 2
 
-	int8_t tcuCurrentGear; // 247
+	scaled_channel<uint8_t> tcuCurrentGear; // 247
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	int8_t knockLevels[12];		// 250
+	scaled_channel<int8_t> knockLevels[12];		// 250
 
-	int8_t tcuDesiredGear; // 262
+	scaled_channel<uint8_t> tcuDesiredGear; // 262
 	scaled_channel<uint8_t, 2> flexPercent;		// 263
 
 	scaled_voltage rawIdlePositionSensor;	// 264
@@ -281,7 +281,12 @@ struct TunerStudioOutputChannels {
 	scaled_voltage rawTps2Primary;		// 302
 	scaled_voltage rawTps2Secondary;	// 304
 
-	uint8_t unusedAtTheEnd[32]; // we have some unused bytes to allow compatible TS changes
+	scaled_channel<uint16_t> knockCount;// 306
+
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationZ; // 308
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationRoll; // 310
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationYaw; // 312
+	uint8_t unusedAtTheEnd[24]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

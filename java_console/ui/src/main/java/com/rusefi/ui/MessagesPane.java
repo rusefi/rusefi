@@ -13,6 +13,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * One of console top level tabs
+ * @see MessagesPanel
+ */
 public class MessagesPane {
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:Software:dev_console_commands";
 
@@ -30,7 +34,7 @@ public class MessagesPane {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
         command = AnyCommand.createArea(uiContext, config, config.getProperty(AnyCommand.KEY), true, false);
-        final MessagesPanel upperPanel = new MessagesPanel(command.getContent());
+        final MessagesPanel upperPanel = new MessagesPanel(command.getContent(), config);
         upperPanel.loadFont(config);
 
         JPanel middlePanel = new JPanel(new BorderLayout());
@@ -49,7 +53,7 @@ public class MessagesPane {
 
         statsPanel.add(new RpmLabel(uiContext).getContent());
         statsPanel.add(new IdleLabel());
-        statsPanel.add(new WarningPanel().getPanel());
+        statsPanel.add(new WarningPanel(config).getPanel(config));
 
         content.add(statsPanel, BorderLayout.SOUTH);
 
@@ -70,11 +74,6 @@ public class MessagesPane {
     }
 
     public ActionListener getTabSelectedListener() {
-        return new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                command.requestFocus();
-            }
-        };
+        return e -> command.requestFocus();
     }
 }
