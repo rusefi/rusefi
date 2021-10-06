@@ -342,6 +342,9 @@ enable2ndByteCanID = false
 ; Accel
       accelerationX   = scalar,  S16,    212,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
       accelerationY   = scalar,  S16,    214,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
+      accelerationZ   = scalar,  S16,    308,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
+      accelerationRoll= scalar,  S16,    310,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
+      accelerationYaw = scalar,  S16,    312,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
 
 ; egt
       egt1            = scalar,  S16,    216,  "deg C",      1,         0
@@ -1039,6 +1042,9 @@ gaugeCategory = Sensors - Extra 1
    VSSGauge          = vehicleSpeedKph,     "Vehicle speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
    accelerationXGauge = accelerationX,       @@GAUGE_NAME_ACCEL_X@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   accelerationZGauge = accelerationZ,       @@GAUGE_NAME_ACCEL_Z@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   accelerationRollGauge=accelerationRoll,   @@GAUGE_NAME_ACCEL_ROLL@@,   "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   accelerationYawGauge=accelerationYaw,     @@GAUGE_NAME_ACCEL_YAW@@,    "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    atmPresCGauge     = baroPressure,          @@GAUGE_NAME_BARO_PRESSURE@@,       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0
    vvtPositionB1IGauge = vvtPositionB1I, @@GAUGE_NAME_VVT_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
    vvtPositionB1EGauge = vvtPositionB1E, @@GAUGE_NAME_VVT_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
@@ -1290,8 +1296,11 @@ gaugeCategory = DynoView
    entry = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, int, "%d"
    entry = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, float, "%.2f"
 
-   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0 }
-   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
+   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	  float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0 }
+   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	  float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
+   entry = accelerationZ,	@@GAUGE_NAME_ACCEL_Z@@,   float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
+   entry = accelerationRoll,@@GAUGE_NAME_ACCEL_ROLL@@,float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
+   entry = accelerationYaw,	@@GAUGE_NAME_ACCEL_YAW@@, float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
    entry = egt1,	        "EGT1",	float,"%.1f", { max31855_cs1 != 0}
    entry = egt2,	        "EGT2",	float,"%.1f", { max31855_cs2 != 0}
    entry = egt3,	        "EGT3",	float,"%.1f", { max31855_cs3 != 0}

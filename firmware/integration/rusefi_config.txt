@@ -1806,6 +1806,8 @@ end_struct
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
+#define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
+#define GAUGE_NAME_ACCEL_YAW "Acceleration: Yaw"
 
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
 
