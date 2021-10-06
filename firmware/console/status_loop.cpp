@@ -731,6 +731,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
 	// 278
 	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
+	tsOutputChannels->accelerationY = engine->sensors.accelerometer.z;
+	tsOutputChannels->accelerationRoll = engine->sensors.accelerometer.roll;
+	tsOutputChannels->accelerationYaw = engine->sensors.accelerometer.yaw;
 
 #if EFI_DYNO_VIEW
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);

@@ -281,9 +281,12 @@ struct TunerStudioOutputChannels {
 	scaled_voltage rawTps2Primary;		// 302
 	scaled_voltage rawTps2Secondary;	// 304
 
-	scaled_channel<uint16_t> knockCount;
+	scaled_channel<uint16_t> knockCount;// 306
 
-	uint8_t unusedAtTheEnd[30]; // we have some unused bytes to allow compatible TS changes
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationZ; // 308
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationRoll; // 310
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationYaw; // 312
+	uint8_t unusedAtTheEnd[24]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
