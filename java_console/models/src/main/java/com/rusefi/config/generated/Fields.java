@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 04:37:32 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 16:17:23 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1260,7 +1260,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 471549847;
+	public static final int SIGNATURE_HASH = 1059139501;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1567,7 +1567,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.06.all.471549847";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.06.all.1059139501";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1660,7 +1660,6 @@ public class Fields {
 	public static final int unused616_offset = 616;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b4_offset = 744;
-	public static final int unused76b19_offset = 76;
 	public static final int unused970_offset = 970;
 	public static final int unused976b11_offset = 976;
 	public static final int unused_1484_bit_24_offset = 1476;
@@ -1743,6 +1742,7 @@ public class Fields {
 	public static final int useRunningMathForCranking_offset = 76;
 	public static final int useSeparateAdvanceForCranking_offset = 1476;
 	public static final int useSeparateAdvanceForIdle_offset = 1476;
+	public static final int useSeparateIdleTablesForCrankingTaper_offset = 76;
 	public static final int useSeparateVeForIdle_offset = 1476;
 	public static final int useSerialPort_offset = 744;
 	public static final int useStepperIdle_offset = 744;
@@ -1827,7 +1827,7 @@ public class Fields {
 	public static final Field USECICPIDFORIDLE = Field.create("USECICPIDFORIDLE", 76, FieldType.BIT, 16);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 76, FieldType.BIT, 17);
 	public static final Field USEINSTANTRPMFORIDLE = Field.create("USEINSTANTRPMFORIDLE", 76, FieldType.BIT, 18);
-	public static final Field UNUSED76B19 = Field.create("UNUSED76B19", 76, FieldType.BIT, 19);
+	public static final Field USESEPARATEIDLETABLESFORCRANKINGTAPER = Field.create("USESEPARATEIDLETABLESFORCRANKINGTAPER", 76, FieldType.BIT, 19);
 	public static final Field LAUNCHCONTROLENABLED = Field.create("LAUNCHCONTROLENABLED", 76, FieldType.BIT, 20);
 	public static final Field ROLLINGLAUNCHENABLED = Field.create("ROLLINGLAUNCHENABLED", 76, FieldType.BIT, 21);
 	public static final Field ANTILAGENABLED = Field.create("ANTILAGENABLED", 76, FieldType.BIT, 22);
@@ -2928,7 +2928,7 @@ public class Fields {
 	USECICPIDFORIDLE,
 	USETLE8888_CRANKING_HACK,
 	USEINSTANTRPMFORIDLE,
-	UNUSED76B19,
+	USESEPARATEIDLETABLESFORCRANKINGTAPER,
 	LAUNCHCONTROLENABLED,
 	ROLLINGLAUNCHENABLED,
 	ANTILAGENABLED,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 04:37:32 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 16:17:23 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -762,8 +762,9 @@ struct engine_configuration_s {
 	offset 76 bit 18 */
 	bool useInstantRpmForIdle : 1;
 	/**
+	 * This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 	offset 76 bit 19 */
-	bool unused76b19 : 1;
+	bool useSeparateIdleTablesForCrankingTaper : 1;
 	/**
 	offset 76 bit 20 */
 	bool launchControlEnabled : 1;
@@ -4351,4 +4352,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 04:37:32 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 16:17:23 UTC 2021
