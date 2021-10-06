@@ -280,4 +280,22 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	return true;
 }
 
+FastAdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return invalidToken;
+	}
+
+	// TODO: implement me!
+	return invalidToken;
+}
+
+adcsample_t getFastAdc(FastAdcToken token) {
+	if (token == invalidToken) {
+		return 0;
+	}
+
+	// TODO: implement me!
+	return 0;
+}
+
 #endif /* EFI_PROD_CODE */
