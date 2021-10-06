@@ -141,13 +141,18 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 			float accY = getShiftedLSB_intel(frame, 4);
 
 			efiPrintf("CAN_rx MM5_10_YAW_Y %f %f", yaw, accY);
+			engine->sensors.accelerometer.yaw = yaw * MM5_10_RATE_QUANT;
 			engine->sensors.accelerometer.y = accY * MM5_10_ACC_QUANT;
 		} else if (CAN_SID(frame) == MM5_10_ROLL_X) {
 			float roll = getShiftedLSB_intel(frame, 0);
 			float accX = getShiftedLSB_intel(frame, 4);
 			efiPrintf("CAN_rx MM5_10_ROLL_X %f %f", roll, accX);
 
+			engine->sensors.accelerometer.roll = roll * MM5_10_RATE_QUANT;
 			engine->sensors.accelerometer.x = accX * MM5_10_ACC_QUANT;
+		} else if (CAN_SID(frame) == MM5_10_Z) {
+			float accZ = getShiftedLSB_intel(frame, 4);
+			engine->sensors.accelerometer.z = accZ * MM5_10_ACC_QUANT;
 		}
 	}
 
