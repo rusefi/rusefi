@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Oct 05 16:10:02 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Oct 06 17:59:31 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -866,6 +866,19 @@ case _2_5MHz:
   return "_2_5MHz";
 case _5MHz:
   return "_5MHz";
+  }
+ return NULL;
+}
+const char *getStepper_num_micro_steps_e(stepper_num_micro_steps_e value){
+switch(value) {
+case STEPPER_EIGHTH:
+  return "STEPPER_EIGHTH";
+case STEPPER_FOURTH:
+  return "STEPPER_FOURTH";
+case STEPPER_FULL:
+  return "STEPPER_FULL";
+case STEPPER_HALF:
+  return "STEPPER_HALF";
   }
  return NULL;
 }
