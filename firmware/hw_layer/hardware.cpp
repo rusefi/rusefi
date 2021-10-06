@@ -158,8 +158,7 @@ void onFastAdcCompleteInternal(adcsample_t* samples);
 void onFastAdcComplete(adcsample_t* samples) {
 #if HAL_TRIGGER_USE_ADC
 	// we need to call this ASAP, because trigger processing is time-critical
-	if (triggerSampleIndex >= 0)
-		triggerAdcCallback(getFastAdc(triggerSampleIndex));
+	triggerAdcCallback(getFastAdc(triggerSampleIndex));
 #endif /* HAL_TRIGGER_USE_ADC */
 
 	// store the values for averaging
