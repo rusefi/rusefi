@@ -47,8 +47,10 @@ static FallbackSensor mapCombiner(SensorType::Map, SensorType::MapFast, SensorTy
 
 // helper struct for the local getMapCfg function
 struct MapCfg {
-	float v1, v2;
-	float map1, map2;
+	float v1;
+	float map1;
+	float v2;
+	float map2;
 };
 
 static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
