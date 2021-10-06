@@ -8,6 +8,7 @@
 
 #include "pch.h"
 #include "mpu_util.h"
+#include "map_averaging.h"
 
 void portInitAdc() {
 	// Init slow ADC
@@ -21,6 +22,15 @@ void portInitAdc() {
 float getMcuTemperature() {
 	// Ugh, internal temp sensor is wired to ADC3, which makes it nearly useless on the H7.
 	return 0;
+}
+
+adcsample_t* fastSampleBuffer;
+
+static void adc_callback(ADCDriver *adcp) {
+	// State may not be complete if we get a callback for "half done"
+	if (adcp->state == ADC_COMPLETE) {
+		onFastAdcComplete(adcp->samples);
+	}
 }
 
 // ADC Clock is 25MHz
@@ -37,7 +47,7 @@ constexpr size_t slowChannelCount = 16;
 static constexpr ADCConversionGroup convGroupSlow = {
 	.circular			= true,		// Continuous mode means we will auto re-trigger on every timer event
 	.num_channels		= slowChannelCount,
-	.end_cb				= nullptr,
+	.end_cb				= adc_callback,
 	.error_cb			= nullptr,
 	.cfgr				= ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos),	// External trigger ch4, rising edge: TIM3 TRGO
 	.cfgr2				= 	3 << ADC_CFGR2_OVSR_Pos |	// Oversample by 4x (register contains N-1)
@@ -101,6 +111,8 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	}
 	didStart = true;
 
+	fastSampleBuffer = convertedSamples;
+
 	{
 		chibios_rt::CriticalSectionLocker csl;
 		// Oversampling and right-shift happen in hardware, so we can sample directly to the output buffer
@@ -124,4 +136,23 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 
 	// Return true if OK
 	return true;
+}
+
+static constexpr FastAdcToken invalidToken = (FastAdcToken)(-1);
+
+FastAdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return invalidToken;
+	}
+
+	// H7 always samples all fast channels, nothing to do here but compute index
+	return channel - EFI_ADC_0;
+}
+
+adcsample_t getFastAdc(FastAdcToken token) {
+	if (token == invalidToken) {
+		return 0;
+	}
+
+	return fastSampleBuffer[token];
 }
