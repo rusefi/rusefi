@@ -32,6 +32,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - Dwell battery voltage correction table
  - rusEFI firmware feature should be honest about it's Windows-only limitation
  - Bosch MM5.10 accelerometer integration
+ - CLT/IAT sensor calibration presets
 
 ### Fixed
  - Fix of 36/2/2/2 attributes to help rotary #3242
