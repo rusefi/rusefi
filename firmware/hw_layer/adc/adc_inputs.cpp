@@ -75,17 +75,6 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 	memset(internalAdcIndexByHardwareIndex, 0xFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
-#if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
-/**
- * 8000 RPM is 133Hz
- * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
- */
-// todo: migrate to continuous ADC mode? probably not - we cannot afford the callback in
-// todo: continuous mode. todo: look into our options
-#define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
-#define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
-#endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
-
 #endif // EFI_USE_FAST_ADC
 
 // is there a reason to have this configurable at runtime?

@@ -60,6 +60,25 @@ void removeChannel(const char *name, adc_channel_e setting);
 
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
+#if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
+/**
+ * 8000 RPM is 133Hz
+ * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
+ */
+// todo: migrate to continuous ADC mode? probably not - we cannot afford the callback in
+// todo: continuous mode. todo: look into our options
+#define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
+#define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
+#endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
+
+// This callback is called by the ADC driver when a new fast ADC sample is ready
+void onFastAdcComplete(adcsample_t* samples);
+
+
+using FastAdcToken = size_t;
+
+FastAdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
+adcsample_t getFastAdc(FastAdcToken token);
 #else
 #define getAdcValue(msg, channel) 0
 #endif /* HAL_USE_ADC */
