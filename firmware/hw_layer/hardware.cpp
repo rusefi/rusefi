@@ -137,6 +137,8 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 }
 #endif
 
+#if HAL_USE_ADC
+
 static FastAdcToken fastMapSampleIndex;
 static FastAdcToken hipSampleIndex;
 
@@ -144,7 +146,6 @@ static FastAdcToken hipSampleIndex;
 static FastAdcToken triggerSampleIndex;
 #endif
 
-#if HAL_USE_ADC
 extern AdcDevice fastAdc;
 
 #if EFI_FASTER_UNIFORM_ADC
