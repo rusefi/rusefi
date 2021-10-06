@@ -137,11 +137,8 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 }
 #endif
 
-#define TPS_IS_SLOW -1
-
 static int fastMapSampleIndex;
 static int hipSampleIndex;
-static int tpsSampleIndex;
 
 #if HAL_TRIGGER_USE_ADC
 static int triggerSampleIndex;
@@ -219,9 +216,6 @@ void onFastAdcComplete(adcsample_t* buffer) {
 		hipAdcCallback(buffer[hipSampleIndex]);
 	}
 #endif /* EFI_HIP_9011 */
-//		if (tpsSampleIndex != TPS_IS_SLOW) {
-//			tpsFastAdc = buffer[tpsSampleIndex];
-//		}
 }
 #endif /* HAL_USE_ADC */
 
@@ -231,9 +225,6 @@ static void calcFastAdcIndexes(void) {
 	hipSampleIndex =
 			isAdcChannelValid(engineConfiguration->hipOutputChannel) ?
 					fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel] : -1;
-	tpsSampleIndex =
-			isAdcChannelValid(engineConfiguration->tps1_1AdcChannel) ?
-					fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->tps1_1AdcChannel] : TPS_IS_SLOW;
 #if HAL_TRIGGER_USE_ADC
 	adc_channel_e triggerChannel = getAdcChannelForTrigger();
 	triggerSampleIndex = isAdcChannelValid(triggerChannel) ?
