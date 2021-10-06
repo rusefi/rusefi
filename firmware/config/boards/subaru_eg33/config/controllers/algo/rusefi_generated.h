@@ -461,6 +461,7 @@
 #define ET_HELLEN_NA6 34
 #define ET_HELLEN_NA94 80
 #define ET_HELLEN_NB1 83
+#define ET_HELLEN_NB1_36 94
 #define ET_HELLEN_NB2 69
 #define ET_HELLEN_NB2_36 86
 #define ET_MIATA_TCU_PROTEUS 1
@@ -1311,7 +1312,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.10.06
-#define SIGNATURE_HASH 418236383
+#define SIGNATURE_HASH 2308025588
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1667,7 +1668,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.10.06.subaru_eg33_f7.418236383"
+#define TS_SIGNATURE "rusEFI 2021.10.06.subaru_eg33_f7.2308025588"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
