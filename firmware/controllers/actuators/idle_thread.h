@@ -18,7 +18,7 @@ struct IIdleController {
 		Cranking,	// Below cranking threshold
 		Idling,		// Below idle RPM, off throttle
 		Coasting,	// Off throttle but above idle RPM
-		CrankToRunTaper, // Taper between cranking and running
+		CrankToIdleTaper, // Taper between cranking and idling
 		Running,	// On throttle
 	};
 
@@ -59,8 +59,8 @@ public:
 	float getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) override;
 
 	// Allow querying state from outside
-	bool isIdling() {
-		return m_lastPhase == Phase::Idling;
+	bool isIdlingOrTaper() {
+		return m_lastPhase == Phase::Idling || (CONFIG(useSeparateIdleTablesForCrankingTaper) && m_lastPhase == Phase::CrankToIdleTaper);
 	}
 
 private:
@@ -79,7 +79,7 @@ percent_t getIdlePosition();
 
 float getIdleTimingAdjustment(int rpm);
 
-bool isIdling();
+bool isIdlingOrTaper();
 
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);
