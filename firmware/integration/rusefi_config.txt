@@ -784,7 +784,11 @@ end_struct
 
 	float manIdlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
 
-float unused612;;"", 1, 0, 0, 1, 0
+uint8_t knockRetardPerEvent;+Ignition timing to remove when a knock event occurs.;"deg", 0.1, 0, 0, 10, 1
+uint8_t knockRetardReapplyRate;+After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
+uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 0
+
+uint8_t unused615;;"", 1, 0, 0, 1, 0
 float unused616;;"", 1, 0, 0, 1, 0
 
 ! todo: rename to triggerSimulatorRpm
