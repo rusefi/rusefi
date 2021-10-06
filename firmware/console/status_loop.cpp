@@ -731,7 +731,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->accelerationX = engine->sensors.accelerometer.x;
 	// 278
 	tsOutputChannels->accelerationY = engine->sensors.accelerometer.y;
-	tsOutputChannels->accelerationY = engine->sensors.accelerometer.z;
+	tsOutputChannels->accelerationZ = engine->sensors.accelerometer.z;
 	tsOutputChannels->accelerationRoll = engine->sensors.accelerometer.roll;
 	tsOutputChannels->accelerationYaw = engine->sensors.accelerometer.yaw;
 
