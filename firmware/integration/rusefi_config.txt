@@ -1356,7 +1356,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit enableVerboseCan2Tx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 	bit can2ReadEnabled;enable can_read/disable can_read
 	bit can2WriteEnabled;enable can_write/disable can_write
-	bit unused1126
+	bit stepperDcInvertedPins;+Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	bit unused1127
 	bit unused1128
 	bit unused1129
@@ -1437,7 +1437,13 @@ tle8888_mode_e tle8888mode;
 	int16_t knockSamplingDuration;;"Deg", 1, 0, 0, 720, 0
 	int16_t etbFreq;;"Hz", 1, 0, 0, @@ETB_HW_MAX_FREQUENCY@@, 0
 	pid_s etbWastegatePid;
-	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
+
+#define stepper_num_micro_steps_e_enum "Full-Step (Default)", "INVALID", "Half-Step", "INVALID", "1/4 Micro-Step", "INVALID", "INVALID", "INVALID", "1/8 Micro-Step"
+custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_micro_steps_e_enum@@
+	stepper_num_micro_steps_e stepperNumMicroSteps;+For micro-stepping, make sure that PWM frequency (etbFreq) is high enough;
+	uint8_t stepperMinDutyCycle;+Use to limit the current when the stepper motor is idle, not moving (100% = no limit);"%", 1, 0, 0, 100, 0
+	uint8_t stepperMaxDutyCycle;+Use to limit the max.current through the stepper motor (100% = no limit);"%", 1, 0, 0, 100, 0
+	uint8_t unused2536;;"units", 1, 0, -20, 100, 0
 
 	angle_t[MAX_CYLINDER_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction;"deg", 1, 0, -720, 720, 1
 
