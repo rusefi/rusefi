@@ -29,7 +29,7 @@ public class rusEFIVersion {
         } else {
             throw new IllegalArgumentException("Unhandled url protocol: " +
                     resource.getProtocol() + " for class: " +
-                    clazz.getName() + " resource: " + resource.toString());
+                    clazz.getName() + " resource: " + resource);
         }
     }
 }
