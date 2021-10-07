@@ -66,6 +66,12 @@ public class SensorLogger {
             Sensor.VSS,
             Sensor.SPEED2RPM,
 
+            Sensor.accelerationX,
+            Sensor.accelerationY,
+            Sensor.accelerationZ,
+            Sensor.accelerationRoll,
+            Sensor.accelerationYaw,
+
             Sensor.debugFloatField1,
             Sensor.debugFloatField2,
             Sensor.debugFloatField3,

@@ -187,7 +187,7 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 
 	// If still in the cranking taper, disable closed loop idle
 	if (crankingTaperFraction < 1) {
-		return Phase::CrankToRunTaper;
+		return Phase::CrankToIdleTaper;
 	}
 
 	// No other conditions met, we are idling!
@@ -506,8 +506,8 @@ float getIdleTimingAdjustment(int rpm) {
 	return idleControllerInstance.getIdleTimingAdjustment(rpm);
 }
 
-bool isIdling() {
-	return idleControllerInstance.isIdling();
+bool isIdlingOrTaper() {
+	return idleControllerInstance.isIdlingOrTaper();
 }
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

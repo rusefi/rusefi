@@ -84,7 +84,14 @@ public class ConsoleTools {
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
-        registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+        registerTool(Fields.CMD_REBOOT_DFU, args -> {
+            sendCommand(Fields.CMD_REBOOT_DFU);
+            /**
+             * AndreiKA reports that auto-detect fails to interrupt communication threads while in native code
+             * See https://github.com/rusefi/rusefi/issues/3300
+             */
+            System.exit(0);
+        }, "Sends a command to switch rusEFI controller into DFU mode.");
     }
 
     private static void localProxy(String[] strings) throws IOException {

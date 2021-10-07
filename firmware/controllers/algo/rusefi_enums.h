@@ -754,7 +754,10 @@ typedef enum {
 	Force_4_bytes_size_can_vss_nbc_e = ENUM_32_BITS,
 } can_vss_nbc_e;
 
-// inertia measurement unit, yawn accelerometer
+/**
+ * inertia measurement unit, yawn accelerometer
+ * By the way both kinds of BOSCH use Housing : TE 1-967640-1, pins 144969-1 seal 967056-1 plug 967067-2
+ */
 typedef enum  __attribute__ ((__packed__)) {
 	IMU_NONE = 0,
 	IMU_VAG = 1,
@@ -1114,6 +1117,13 @@ typedef enum __attribute__ ((__packed__)) {
 	ETB_Wastegate = 4,
 // todo: rename to dc_function_e? rename to hbrg_function_e?
 } etb_function_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	STEPPER_FULL = 0,
+	STEPPER_HALF = 2,
+	STEPPER_FOURTH = 4,
+	STEPPER_EIGHTH = 8,
+} stepper_num_micro_steps_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	IPT_Low = 0,

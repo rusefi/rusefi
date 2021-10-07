@@ -342,6 +342,9 @@ enable2ndByteCanID = false
 ; Accel
       accelerationX   = scalar,  S16,    212,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
       accelerationY   = scalar,  S16,    214,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
+      accelerationZ   = scalar,  S16,    308,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
+      accelerationRoll= scalar,  S16,    310,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
+      accelerationYaw = scalar,  S16,    312,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
 
 ; egt
       egt1            = scalar,  S16,    216,  "deg C",      1,         0
@@ -1039,6 +1042,9 @@ gaugeCategory = Sensors - Extra 1
    VSSGauge          = vehicleSpeedKph,     "Vehicle speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
    accelerationXGauge = accelerationX,       @@GAUGE_NAME_ACCEL_X@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   accelerationZGauge = accelerationZ,       @@GAUGE_NAME_ACCEL_Z@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   accelerationRollGauge=accelerationRoll,   @@GAUGE_NAME_ACCEL_ROLL@@,   "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
+   accelerationYawGauge=accelerationYaw,     @@GAUGE_NAME_ACCEL_YAW@@,    "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    atmPresCGauge     = baroPressure,          @@GAUGE_NAME_BARO_PRESSURE@@,       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0
    vvtPositionB1IGauge = vvtPositionB1I, @@GAUGE_NAME_VVT_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
    vvtPositionB1EGauge = vvtPositionB1E, @@GAUGE_NAME_VVT_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
@@ -1290,8 +1296,11 @@ gaugeCategory = DynoView
    entry = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, int, "%d"
    entry = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, float, "%.2f"
 
-   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0 }
-   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
+   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	  float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0 }
+   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	  float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
+   entry = accelerationZ,	@@GAUGE_NAME_ACCEL_Z@@,   float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
+   entry = accelerationRoll,@@GAUGE_NAME_ACCEL_ROLL@@,float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
+   entry = accelerationYaw,	@@GAUGE_NAME_ACCEL_YAW@@, float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
    entry = egt1,	        "EGT1",	float,"%.1f", { max31855_cs1 != 0}
    entry = egt2,	        "EGT2",	float,"%.1f", { max31855_cs2 != 0}
    entry = egt3,	        "EGT3",	float,"%.1f", { max31855_cs3 != 0}
@@ -1764,6 +1773,7 @@ cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_
 cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NA6_16_hex@@"
 cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NA94_16_hex@@"
 
+cmd_set_engine_type_hellen_NB1_36					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NB1_36_16_hex@@"
 cmd_set_engine_type_hellen_NB2_36					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_NB2_36_16_hex@@"
 
 cmd_set_engine_type_hellen_nissan_121_4		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_NISSAN_4_CYL_16_hex@@"
@@ -2462,6 +2472,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Input channel",						clt_adcChannel
 		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 
+		settingSelector = "Common CLT Sensors"
+			settingOption = "GM CLT", clt_tempC_1=0,clt_resistance_1=9240,clt_tempC_2=40,clt_resistance_2=1459,clt_tempC_3=100,clt_resistance_3=177,useLinearCltSensor=0
+			settingOption = "Miata NA", clt_tempC_1=-20,clt_resistance_1=16150,clt_tempC_2=40,clt_resistance_2=1150,clt_tempC_3=80,clt_resistance_3=330,useLinearCltSensor=0
+			settingOption = "Miata NB", clt_tempC_1=-10,clt_resistance_1=9000,clt_tempC_2=20,clt_resistance_2=2500,clt_tempC_3=80,clt_resistance_3=320,useLinearCltSensor=0
+			settingOption = "Bosch Various", clt_tempC_1=0,clt_resistance_1=5896,clt_tempC_2=50,clt_resistance_2=834,clt_tempC_3=100,clt_resistance_3=187,useLinearCltSensor=0
+
 		field = "#Input three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
@@ -2488,6 +2504,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
 		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+		settingSelector = "Common IAT Sensors", {iat_adcChannel != 0}
+			settingOption = "GM IAT", iat_tempC_1=8.9,iat_resistance_1=7000,iat_tempC_2=30.6,iat_resistance_2=1930,iat_tempC_3=63.3,iat_resistance_3=560,useLinearIatSensor=0
+			settingOption = "Miata NA/NB", iat_tempC_1=-20,iat_resistance_1=16150,iat_tempC_2=40,iat_resistance_2=1150,iat_tempC_3=80,iat_resistance_3=330,useLinearIatSensor=0
+			settingOption = "Bosch Various", iat_tempC_1=-10,iat_resistance_1=9397,iat_tempC_2=30,iat_resistance_2=1707,iat_tempC_3=70,iat_resistance_3=436,useLinearIatSensor=0
 
 		field = "#Input three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
@@ -2625,7 +2646,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 
-	dialog = hbridgeHardware, "H-Bridge Hardware"
+	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
 		field = "PWM Frequency",						etbFreq
 		field = "Two-wire mode",						etb_use_two_wires
 		field = "No1 Direction #1",						etbIo1_directionPin1
@@ -2637,25 +2658,49 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No2 Control",							etbIo2_controlPin
 		field = "No2 Disable",							etbIo2_disablePin
 
+	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
+		field = "Inverted driver pins",					stepperDcInvertedPins
+		field = "No1 Direction #1",						stepperDcIo1_directionPin1
+		field = "No1 Direction #2",						stepperDcIo1_directionPin2
+		field = "No1 Disable",							stepperDcIo1_disablePin
+		field = "No2 Direction #1",						stepperDcIo2_directionPin1
+		field = "No2 Direction #2",						stepperDcIo2_directionPin2
+		field = "No2 Disable",							stepperDcIo2_disablePin
+
 	dialog = idleStepperHw, "Stepper Hardware"
 		field = "Idle Stepper Step Pin",				idle_stepperStepPin
 		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin
+		field = "Idle Stepper Dir Pin Mode",			stepperDirectionPinMode
 		field = "Idle Stepper Enable Pin",				stepperEnablePin
 		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode
 
-	dialog = idleStepper, "Stepper"
+	dialog = idleStepperHwType, "", xAxis
+		panel = idleStepperHw,	East, { useStepperIdle && !useHbridgesToDriveIdleStepper }
+		panel = stepperHbridgeHardware,	West, { useStepperIdle && useHbridgesToDriveIdleStepper }
+
+	dialog = idleStepperGeneral, ""
 		field = "Drive stepper with dual H bridges",	useHbridgesToDriveIdleStepper, useStepperIdle
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
-		panel = idleStepperHw, { useStepperIdle && !useHbridgesToDriveIdleStepper }
-        ; todo: reminder that enable condition has to match in both usages of hbridgeHardware due to TS defect?
-		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
-	dialog = idleHwType, "Idle Valve Hardware",	border
-		panel = idleSolenoid,				West
-		panel = idleStepper,				East
+	dialog = idleStepperMicro, "Micro-Stepping"
+		field = "Stepping Mode",						stepperNumMicroSteps, useHbridges
+		field = "Min. Duty Cycle",						stepperMinDutyCycle, { useHbridges && stepperNumMicroSteps > 1 }
+		field = "Max. Duty Cycle",						stepperMaxDutyCycle, { useHbridges && stepperNumMicroSteps > 1 }
+
+	dialog = idleStepperSettings, "", xAxis
+		panel = idleStepperGeneral, East
+		panel = idleStepperMicro, West
+
+	dialog = idleStepper, "Stepper"
+		panel = idleStepperSettings
+		panel = idleStepperHwType
+
+	dialog = idleHwType, "Idle Valve Hardware", yAxis
+		panel = idleStepper
+		panel = idleSolenoid
 
 	dialog = idlehw, "", yAxis
 		field = "!ECU reboot needed to apply these settings"
@@ -2698,6 +2743,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = idleExtra, "Extra Idle Features"
 		field = "Use idle ignition table",	useSeparateAdvanceForIdle
 		field = "Use idle VE table",		useSeparateVeForIdle
+		field = "Use idle tables for cranking taper",		useSeparateIdleTablesForCrankingTaper
 		field = "Use coasting idle table",	useIacTableForCoasting, {idleMode == 0}
 		field = useInstantRpmForIdle,					useInstantRpmForIdle
 		field = "Detailed status in console",			isVerboseIAC
@@ -3402,7 +3448,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
 		; another todo: split panel into two panels so that we can enable/disable h-bridge #1 separately from h-bridge #2
-		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
+		panel = etbHbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
@@ -3502,6 +3548,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Hellen NA6",				cmd_set_engine_type_hellen_NA6@@if_show_HellenNA6_presets
 		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_HellenNA6_presets
 
+        commandButton = "Hellen NB1 36 wheel",		cmd_set_engine_type_hellen_NB2_36@@if_show_HellenNB1_presets
         commandButton = "Hellen NB2 36 wheel",		cmd_set_engine_type_hellen_NB2_36@@if_show_HellenNB2_presets
 
 		commandButton = "Hellen Nissan 4 cylinder",			cmd_set_engine_type_hellen_nissan_121_4@@if_show_Hellen121nissan_presets

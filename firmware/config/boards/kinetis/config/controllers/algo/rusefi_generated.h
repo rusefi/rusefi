@@ -442,6 +442,7 @@
 #define ET_HELLEN_NA6 34
 #define ET_HELLEN_NA94 80
 #define ET_HELLEN_NB1 83
+#define ET_HELLEN_NB1_36 94
 #define ET_HELLEN_NB2 69
 #define ET_HELLEN_NB2_36 86
 #define ET_MIATA_TCU_PROTEUS 1
@@ -626,8 +627,10 @@
 #define GAP_TRACKING_LENGTH 18
 #define gapTrackingLengthOverride_offset 444
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
+#define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
 #define GAUGE_NAME_ACCEL_X "Acceleration: X"
 #define GAUGE_NAME_ACCEL_Y "Acceleration: Y"
+#define GAUGE_NAME_ACCEL_YAW "Acceleration: Yaw"
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
@@ -1288,8 +1291,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.10.05
-#define SIGNATURE_HASH 2029643717
+#define SIGNATURE_DATE 2021.10.06
+#define SIGNATURE_HASH 695634253
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1325,6 +1328,9 @@
 #define startStopButtonMode_offset 1773
 #define startStopButtonPin_offset 811
 #define startUpFuelPumpDuration_offset 1892
+#define stepper_num_micro_steps_e_auto_enum "STEPPER_FULL", "INVALID", "STEPPER_HALF", "INVALID", "STEPPER_FOURTH", "INVALID", "INVALID", "INVALID", "STEPPER_EIGHTH"
+#define stepper_num_micro_steps_e_enum "Full-Step (Default)", "INVALID", "Half-Step", "INVALID", "1/4 Micro-Step", "INVALID", "INVALID", "INVALID", "1/8 Micro-Step"
+#define stepperDcInvertedPins_offset 2116
 #define stepperDcIo1_controlPin_offset 1090
 #define stepperDcIo1_directionPin1_offset 1088
 #define stepperDcIo1_directionPin2_offset 1089
@@ -1339,6 +1345,9 @@
 #define stepperEnablePin_offset 3076
 #define stepperEnablePinMode_offset 2597
 #define stepperForceParkingEveryRestart_offset 744
+#define stepperMaxDutyCycle_offset 2530
+#define stepperMinDutyCycle_offset 2529
+#define stepperNumMicroSteps_offset 2528
 #define stepperParkingExtraSteps_offset 818
 #define STFT_BANK_COUNT 2
 #define stft_cell_cfg_s_size 4
@@ -1645,7 +1654,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.05.kin.2029643717"
+#define TS_SIGNATURE "rusEFI 2021.10.06.kin.695634253"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1711,7 +1720,6 @@
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
 #define unused1059_offset 3936
-#define unused1126_offset 2116
 #define unused1127_offset 2116
 #define unused1128_offset 2116
 #define unused1129_offset 2116
@@ -1730,7 +1738,7 @@
 #define unused244_2_offset 2416
 #define unused244_3_offset 2420
 #define unused2508_offset 2503
-#define unused2536_offset 2528
+#define unused2536_offset 2531
 #define unused3103_offset 3075
 #define unused3328_offset 3312
 #define unused3942_offset 3964
@@ -1741,7 +1749,6 @@
 #define unused616_offset 616
 #define unused6312_offset 6284
 #define unused744b4_offset 744
-#define unused76b19_offset 76
 #define unused970_offset 970
 #define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476
@@ -1824,6 +1831,7 @@
 #define useRunningMathForCranking_offset 76
 #define useSeparateAdvanceForCranking_offset 1476
 #define useSeparateAdvanceForIdle_offset 1476
+#define useSeparateIdleTablesForCrankingTaper_offset 76
 #define useSeparateVeForIdle_offset 1476
 #define useSerialPort_offset 744
 #define useStepperIdle_offset 744

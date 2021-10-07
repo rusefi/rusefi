@@ -137,7 +137,7 @@ void StepperMotorBase::doIteration() {
 	}
 
 	if (targetPosition == currentPosition) {
-		m_hw->pause();
+		m_hw->sleep();
 		m_isBusy = false;
 		return;
 	}
@@ -188,8 +188,13 @@ bool StepDirectionStepper::pulse() {
 	return true;
 }
 
-void StepperHw::pause() const {
-	chThdSleepMicroseconds((int)(MS2US(m_reactionTime)));
+void StepperHw::sleep(void) {
+	pause();
+}
+
+void StepperHw::pause(int divisor) const {
+	// currently we can't sleep less than 1ms (see #3214)
+	chThdSleepMicroseconds(maxI(MS2US(1), (int)(MS2US(m_reactionTime)) / divisor));
 }
 
 void StepperHw::setReactionTime(float ms) {

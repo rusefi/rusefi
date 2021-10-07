@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Oct 05 20:13:56 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Oct 06 18:00:12 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -762,8 +762,9 @@ struct engine_configuration_s {
 	offset 76 bit 18 */
 	bool useInstantRpmForIdle : 1;
 	/**
+	 * This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 	offset 76 bit 19 */
-	bool unused76b19 : 1;
+	bool useSeparateIdleTablesForCrankingTaper : 1;
 	/**
 	offset 76 bit 20 */
 	bool launchControlEnabled : 1;
@@ -2981,8 +2982,9 @@ struct engine_configuration_s {
 	offset 2116 bit 2 */
 	bool can2WriteEnabled : 1;
 	/**
+	 * Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	offset 2116 bit 3 */
-	bool unused1126 : 1;
+	bool stepperDcInvertedPins : 1;
 	/**
 	offset 2116 bit 4 */
 	bool unused1127 : 1;
@@ -3360,10 +3362,27 @@ struct engine_configuration_s {
 	 */
 	pid_s etbWastegatePid;
 	/**
-	units
+	 * For micro-stepping, make sure that PWM frequency (etbFreq) is high enough
 	 * offset 2528
 	 */
-	uint8_t unused2536[4];
+	stepper_num_micro_steps_e stepperNumMicroSteps;
+	/**
+	 * Use to limit the current when the stepper motor is idle, not moving (100% = no limit)
+	%
+	 * offset 2529
+	 */
+	uint8_t stepperMinDutyCycle;
+	/**
+	 * Use to limit the max.current through the stepper motor (100% = no limit)
+	%
+	 * offset 2530
+	 */
+	uint8_t stepperMaxDutyCycle;
+	/**
+	units
+	 * offset 2531
+	 */
+	uint8_t unused2536;
 	/**
 	 * per-cylinder timing correction
 	deg
@@ -4345,4 +4364,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Oct 05 20:13:56 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Oct 06 18:00:12 UTC 2021

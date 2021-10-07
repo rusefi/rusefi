@@ -43,6 +43,9 @@ static constexpr LogField fields[] = {
 	{tsOutputChannels.firmwareVersion, GAUGE_NAME_VERSION, "", 0},
 	{tsOutputChannels.accelerationX, GAUGE_NAME_ACCEL_X, "", 2},
 	{tsOutputChannels.accelerationY, GAUGE_NAME_ACCEL_Y, "", 2},
+	{tsOutputChannels.accelerationZ, GAUGE_NAME_ACCEL_Z, "", 2},
+	{tsOutputChannels.accelerationRoll, GAUGE_NAME_ACCEL_ROLL, "", 2},
+	{tsOutputChannels.accelerationYaw, GAUGE_NAME_ACCEL_YAW, "", 2},
 
 	{tsOutputChannels.debugIntField1, GAUGE_NAME_DEBUG_I1, "", 0},
 	{tsOutputChannels.debugIntField2, GAUGE_NAME_DEBUG_I2, "", 0},
