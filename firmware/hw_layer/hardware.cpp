@@ -148,53 +148,16 @@ static FastAdcToken triggerSampleIndex;
 
 extern AdcDevice fastAdc;
 
-#if EFI_FASTER_UNIFORM_ADC
-static int adcCallbackCounter = 0;
-static volatile int averagedSamples[ADC_MAX_CHANNELS_COUNT];
-static adcsample_t avgBuf[ADC_MAX_CHANNELS_COUNT];
+/**
+ * This method is not in the adc* lower-level file because it is more business logic then hardware.
+ */
+void onFastAdcComplete(adcsample_t*) {
+	ScopePerf perf(PE::AdcCallbackFast);
 
-void onFastAdcCompleteInternal(adcsample_t* samples);
-
-void onFastAdcComplete(adcsample_t* samples) {
 #if HAL_TRIGGER_USE_ADC
 	// we need to call this ASAP, because trigger processing is time-critical
 	triggerAdcCallback(getFastAdc(triggerSampleIndex));
 #endif /* HAL_TRIGGER_USE_ADC */
-
-	// store the values for averaging
-	for (int i = fastAdc.size() - 1; i >= 0; i--) {
-		averagedSamples[i] += samples[i];
-	}
-
-	// if it's time to process the data
-	if (++adcCallbackCounter >= ADC_BUF_NUM_AVG) {
-		// get an average
-		for (int i = fastAdc.size() - 1; i >= 0; i--) {
-			avgBuf[i] = (adcsample_t)(averagedSamples[i] / ADC_BUF_NUM_AVG);	// todo: rounding?
-		}
-
-		// call the real callback (see below)
-		onFastAdcCompleteInternal(samples);
-
-		// reset the avg buffer & counter
-		for (int i = fastAdc.size() - 1; i >= 0; i--) {
-			averagedSamples[i] = 0;
-		}
-		adcCallbackCounter = 0;
-	}
-}
-
-#endif /* EFI_FASTER_UNIFORM_ADC */
-
-/**
- * This method is not in the adc* lower-level file because it is more business logic then hardware.
- */
-#if EFI_FASTER_UNIFORM_ADC
-void onFastAdcCompleteInternal(adcsample_t*) {
-#else
-void onFastAdcComplete(adcsample_t*) {
-#endif
-	ScopePerf perf(PE::AdcCallbackFast);
 
 	/**
 	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
@@ -237,13 +200,6 @@ static void adcConfigListener(Engine *engine) {
 }
 
 static void turnOnHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_FASTER_UNIFORM_ADC
-	for (int i = 0; i < ADC_MAX_CHANNELS_COUNT; i++) {
-		averagedSamples[i] = 0;
-	}
-	adcCallbackCounter = 0;
-#endif /* EFI_FASTER_UNIFORM_ADC */
-
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	turnOnTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
