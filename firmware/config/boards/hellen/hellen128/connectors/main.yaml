@@ -189,7 +189,11 @@ pins:
     function: NC K line
  
   - pin: C40
-    function: proto via
+    id: [GPIOF_10]
+    class: [switch_inputs]
+    ts_name: C40 start button
+    function: Start button
+    type: din
 
   - pin: D1
     function: NC

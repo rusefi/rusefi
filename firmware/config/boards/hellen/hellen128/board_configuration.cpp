@@ -140,6 +140,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 
 	CONFIG(starterControlPin) = H176_OUT_IO10;
+	CONFIG(startStopButtonPin) = H176_IN_A16;
+	CONFIG(startStopButtonMode) = PI_PULLDOWN;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
