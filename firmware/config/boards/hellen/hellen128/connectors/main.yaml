@@ -198,7 +198,11 @@ pins:
     function: proto via
 
   - pin: D3
-    function: proto via
+    id: GPIOI_0
+    class: outputs
+    ts_name: D3 - Starter Enable
+    function: low side relay control
+    type: ls
 
   - pin: D4
     function: NC
