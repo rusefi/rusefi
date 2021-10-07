@@ -139,6 +139,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
 
+	CONFIG(starterControlPin) = H176_OUT_IO10;
+
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
