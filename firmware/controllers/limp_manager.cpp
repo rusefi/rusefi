@@ -60,6 +60,9 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 
 	if (engine->needToStopEngine(nowNt)) {
+		/**
+		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
+		 */
 		allowFuel.clear();
 	}
 
