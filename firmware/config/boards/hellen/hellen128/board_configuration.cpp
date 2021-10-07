@@ -21,13 +21,13 @@ static void hellenWbo() {
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
-	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
-	engineConfiguration->injectionPins[3] = GPIOD_10;
-	engineConfiguration->injectionPins[4] = GPIOD_9;
-	engineConfiguration->injectionPins[5] = GPIOF_12;
-	engineConfiguration->injectionPins[6] = GPIOF_13;
-	engineConfiguration->injectionPins[7] = GPIOF_14;
+	engineConfiguration->injectionPins[1] = H176_LS_2;
+	engineConfiguration->injectionPins[2] = H176_LS_3;
+	engineConfiguration->injectionPins[3] = H176_LS_4;
+	engineConfiguration->injectionPins[4] = H176_LS_5;
+	engineConfiguration->injectionPins[5] = H176_LS_6;
+	engineConfiguration->injectionPins[6] = H176_LS_7;
+	engineConfiguration->injectionPins[7] = H176_LS_8;
 
 	// Disable remainder
 	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
@@ -103,8 +103,8 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->clt.config.bias_resistor = 2700;
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = H176_CAN_TX;
+	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
 void setPinConfigurationOverrides(void) {
