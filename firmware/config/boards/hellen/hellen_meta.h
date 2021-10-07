@@ -32,3 +32,5 @@
 
 #define H176_CAN_RX GPIOD_0
 #define H176_CAN_TX GPIOD_1
+
+#define H176_IN_A16 GPIOF_10
