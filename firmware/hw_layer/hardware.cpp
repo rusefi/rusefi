@@ -148,6 +148,12 @@ static FastAdcToken triggerSampleIndex;
 
 extern AdcDevice fastAdc;
 
+#ifdef FAST_ADC_SKIP
+// No reason to enable if N = 1
+static_assert(FAST_ADC_SKIP > 1);
+static size_t fastAdcSkipCount = 0;
+#endif // FAST_ADC_SKIP
+
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
@@ -158,6 +164,16 @@ void onFastAdcComplete(adcsample_t*) {
 	// we need to call this ASAP, because trigger processing is time-critical
 	triggerAdcCallback(getFastAdc(triggerSampleIndex));
 #endif /* HAL_TRIGGER_USE_ADC */
+
+#ifdef FAST_ADC_SKIP
+	// If we run the fast ADC _very_ fast for triggerAdcCallback's benefit, we may want to
+	// skip most of the samples for the rest of the callback.
+	if (fastAdcSkipCount++ == FAST_ADC_SKIP) {
+		fastAdcSkipCount = 0;
+	} else {
+		return;
+	}
+#endif
 
 	/**
 	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
