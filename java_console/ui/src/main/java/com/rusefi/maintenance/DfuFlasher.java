@@ -40,15 +40,20 @@ public class DfuFlasher {
         if (!PortDetector.isAutoPort(port)) {
             messages.append("Using selected " + port + "\n");
             IoStream stream = SerialIoStreamJSerialComm.openPort(port);
-            AtomicReference<String> result = new AtomicReference<>();
+            AtomicReference<String> signature = new AtomicReference<>();
             new SerialAutoChecker(port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
                 @Override
                 public Void apply(SerialAutoChecker.CallbackContext callbackContext) {
-                    result.set(callbackContext.getSignature());
+                    signature.set(callbackContext.getSignature());
                     return null;
                 }
             });
-            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, result.get(), stream, messages);
+            if (signature.get() == null) {
+                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI has not responded on selected " + port + "\n" +
+                        "Maybe try automatic serial port detection?");
+                return;
+            }
+            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, messages);
             isSignatureValidated.set(isSignatureValidatedLocal);
         } else {
             messages.append("Auto-detecting port...\n");
