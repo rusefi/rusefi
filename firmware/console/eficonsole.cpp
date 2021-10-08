@@ -36,6 +36,52 @@ static void myerror() {
 	firmwareError(CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
 }
 
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+
+#define HWREG(x)                                                              \
+        (*((volatile unsigned long *)(x)))
+
+#define NVIC_FAULT_STAT         0xE000ED28  // Configurable Fault Status
+#define NVIC_FAULT_STAT_BFARV   0x00008000  // Bus Fault Address Register Valid
+#define NVIC_CFG_CTRL_BFHFNMIGN 0x00000100  // Ignore Bus Fault in NMI and
+                                            // Fault
+#define NVIC_CFG_CTRL           0xE000ED14  // Configuration and Control
+
+
+/**
+ * @brief Probe an address to see if can be read without generating a bus fault
+ * @details This function must be called with the processor in privileged mode.
+ *          It:
+ *          - Clear any previous indication of a bus fault in the BFARV bit
+ *          - Temporarily sets the processor to Ignore Bus Faults with all interrupts and fault handlers disabled
+ *          - Attempt to read from read_address, ignoring the result
+ *          - Checks to see if the read caused a bus fault, by checking the BFARV bit is set
+ *          - Re-enables Bus Faults and all interrupts and fault handlers
+ * @param[in] read_address The address to try reading a byte from
+ * @return Returns true if no bus fault occurred reading from read_address, or false if a bus fault occurred.
+ */
+bool read_probe (volatile const char *read_address)
+{
+    bool address_readable = true;
+
+    /* Clear any existing indication of a bus fault - BFARV is write one to clear */
+    HWREG (NVIC_FAULT_STAT) |= NVIC_FAULT_STAT_BFARV;
+
+    HWREG (NVIC_CFG_CTRL) |= NVIC_CFG_CTRL_BFHFNMIGN;
+    asm volatile ("  CPSID f;");
+    *read_address;
+    if ((HWREG (NVIC_FAULT_STAT) & NVIC_FAULT_STAT_BFARV) != 0)
+    {
+        address_readable = false;
+    }
+    asm volatile ("  CPSIE f;");
+    HWREG (NVIC_CFG_CTRL) &= ~NVIC_CFG_CTRL_BFHFNMIGN;
+
+    return address_readable;
+}
+
+#endif
+
 static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2021. All rights reserved.");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
@@ -52,6 +98,10 @@ static void sayHello() {
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);
+
+	efiPrintf("can read 0x20000010 %d", read_probe((const char *)0x20000010));
+	efiPrintf("can read 0x20020010 %d", read_probe((const char *)0x20020010));
+	efiPrintf("can read 0x20070010 %d", read_probe((const char *)0x20070010));
 
 #define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
 #define MCU_REVISION_MASK  0xfff
