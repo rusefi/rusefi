@@ -37,6 +37,8 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 
 TRIGGER_USE_ADC = yes
 
+DDEFS += -DFAST_ADC_SKIP=3 -DH7_ADC_SPEED=20000
+
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
 

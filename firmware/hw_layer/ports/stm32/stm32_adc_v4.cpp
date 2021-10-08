@@ -10,6 +10,10 @@
 #include "mpu_util.h"
 #include "map_averaging.h"
 
+#ifndef H7_ADC_SPEED
+#define H7_ADC_SPEED (10000)
+#endif
+
 void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
@@ -119,8 +123,8 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 		adcStartConversionI(&ADCD1, &convGroupSlow, convertedSamples, 1);
 	}
 
-	constexpr uint32_t samplingRate = 10000;
-	constexpr uint32_t timerCountFrequency = samplingRate * 100;
+	constexpr uint32_t samplingRate = H7_ADC_SPEED;
+	constexpr uint32_t timerCountFrequency = samplingRate * 10;
 	constexpr uint32_t timerPeriod = timerCountFrequency / samplingRate;
 
 	static constexpr GPTConfig gptCfg = {
