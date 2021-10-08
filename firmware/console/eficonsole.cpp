@@ -65,7 +65,8 @@ static void sayHello(void) {
 		firmwareError(OBD_PCM_Processor_Fault, "rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
 	}
 
-	efiPrintf("MCU rev=%x size=%d", mcuRevision, flashSize);
+	// todo: bug, at the moment we report 1MB on dual-bank F7
+	efiPrintf("MCU rev=%x flashSize=%d", mcuRevision, flashSize);
 #endif
 
 
