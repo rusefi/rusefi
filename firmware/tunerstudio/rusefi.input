@@ -2686,9 +2686,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
 
 	dialog = idleStepperMicro, "Micro-Stepping"
-		field = "Stepping Mode",						stepperNumMicroSteps, useHbridges
-		field = "Min. Duty Cycle",						stepperMinDutyCycle, { useHbridges && stepperNumMicroSteps > 1 }
-		field = "Max. Duty Cycle",						stepperMaxDutyCycle, { useHbridges && stepperNumMicroSteps > 1 }
+		field = "Stepping Mode",						stepperNumMicroSteps, useHbridgesToDriveIdleStepper
+		field = "Min. Duty Cycle",						stepperMinDutyCycle, { useHbridgesToDriveIdleStepper && stepperNumMicroSteps > 1 }
+		field = "Max. Duty Cycle",						stepperMaxDutyCycle, { useHbridgesToDriveIdleStepper && stepperNumMicroSteps > 1 }
 
 	dialog = idleStepperSettings, "", xAxis
 		panel = idleStepperGeneral, East
