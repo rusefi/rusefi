@@ -209,16 +209,6 @@ static LuaHandle systemLua;
 
 const char* getSystemLuaScript();
 
-static void printStats() {
-#if !EFI_UNIT_TEST
-	size_t freeRam;
-	chHeapStatus(&heaps[0].m_heap, &freeRam, nullptr);
-	efiPrintf("User free %d of %d", freeRam, sizeof(luaUserHeap));
-	chHeapStatus(&heaps[1].m_heap, &freeRam, nullptr);
-	efiPrintf("System free %d of %d", freeRam, sizeof(luaSystemHeap));
-#endif
-}
-
 void initSystemLua() {
 	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
 
@@ -236,7 +226,6 @@ void initSystemLua() {
 	}
 
 	auto startTime = startTimer.getElapsedSeconds();
-	addConsoleAction("luastats", printStats);
 
 #if !EFI_UNIT_TEST
 	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
