@@ -66,6 +66,11 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		allowFuel.clear();
 	}
 
+	if (!engine->isMainRelayEnabled(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		allowFuel.clear();
+		allowSpark.clear();
+	}
+
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;
 }
