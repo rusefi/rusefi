@@ -567,8 +567,11 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// and we want to turn on the main relay only when 100% sure.
 		if ((Sensor::get(SensorType::BatteryVoltage).value_or(0) > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			ignitionOnTimeNt = getTimeNowNt();
-			stopEngineRequestTimeNt = 0;
-			efiPrintf("Ignition voltage detected! Cancel the engine shutdown!");
+			efiPrintf("Ignition voltage detected!");
+			if (stopEngineRequestTimeNt != 0) {
+				efiPrintf("Cancel the engine shutdown!");
+				stopEngineRequestTimeNt = 0;
+			}
 		}
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */
