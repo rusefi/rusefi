@@ -13,11 +13,11 @@
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
 #ifndef LUA_USER_HEAP
-#define LUA_USER_HEAP 0
+#define LUA_USER_HEAP 1
 #endif // LUA_USER_HEAP
 
 #ifndef LUA_SYSTEM_HEAP
-#define LUA_SYSTEM_HEAP 0
+#define LUA_SYSTEM_HEAP 1
 #endif // LUA_SYSTEM_HEAP
 
 static char luaUserHeap[LUA_USER_HEAP];
@@ -211,7 +211,7 @@ static LuaHandle systemLua;
 const char* getSystemLuaScript();
 
 void initSystemLua() {
-#if LUA_SYSTEM_HEAP > 0
+#if LUA_SYSTEM_HEAP > 1
 	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
 
 	Timer startTimer;
@@ -361,12 +361,12 @@ void LuaThread::ThreadTask() {
 	}
 }
 
-#if LUA_USER_HEAP > 0
+#if LUA_USER_HEAP > 1
 static LuaThread luaThread;
 #endif
 
 void startLua() {
-#if LUA_USER_HEAP > 0
+#if LUA_USER_HEAP > 1
 	luaThread.Start();
 
 	addConsoleActionS("lua", [](const char* str){
