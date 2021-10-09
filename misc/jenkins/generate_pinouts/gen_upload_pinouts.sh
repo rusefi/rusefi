@@ -46,3 +46,4 @@ if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "Uploaded!"
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }
+
