@@ -12,12 +12,13 @@
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-#ifndef RAM_UNUSED_SIZE
+#ifndef LUA_USER_HEAP
 #define LUA_USER_HEAP 12000
-#endif
-#ifndef CCM_UNUSED_SIZE
+#endif // LUA_USER_HEAP
+
+#ifndef LUA_SYSTEM_HEAP
 #define LUA_SYSTEM_HEAP 15000
-#endif
+#endif // LUA_SYSTEM_HEAP
 
 static char luaUserHeap[LUA_USER_HEAP];
 static char luaSystemHeap[LUA_SYSTEM_HEAP];
