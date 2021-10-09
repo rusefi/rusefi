@@ -48,4 +48,4 @@ jobs:
       - name: Upload rusEFI Android application
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         working-directory: .
-        run: java_console/upload_server.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} . android/app/build/outputs/apk/release/rusEFI-release.apk
+        run: java_console/upload_file.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} . android/app/build/outputs/apk/release/rusEFI-release.apk
