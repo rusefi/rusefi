@@ -11,6 +11,6 @@ if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
  exit 0
 fi
 
-echo -e "\nUploading plugin body"
+echo -e "\nUploading file: $5"
 
-ncftpput -m -R -v -u "$1" -p "$2" "$3" $4 $5
+ncftpput -r 999 -m -R -v -u "$1" -p "$2" "$3" $4 $5

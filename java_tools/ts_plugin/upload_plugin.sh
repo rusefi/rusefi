@@ -8,4 +8,4 @@ fi
 
 echo -e "\nUploading plugin body"
 
-ncftpput -m -R -v -u "$1" -p "$2" "$3" autoupdate build/jar/rusefi_plugin_body.jar
+ncftpput -r 999 -m -R -v -u "$1" -p "$2" "$3" autoupdate build/jar/rusefi_plugin_body.jar
