@@ -122,6 +122,22 @@ pins:
   - pin: K61
     function: Analog Ground
 
+  - pin: K64
+# H144_OUT_IO3
+    id: GPIOG_14
+    class: outputs
+    ts_name: Main Relay K64
+    function: Main relay control
+    type: ls
+
+  - pin: K70
+# H144_OUT_IO9
+    id: GPIOG_13
+    class: outputs
+    ts_name: Fuel Pump K70
+    function: Fuel Pump Relay
+    type: ls
+
   - pin: K77
     function: CAN bus high
     type: can
@@ -148,7 +164,15 @@ pins:
     ts_name: Tacho
     function: Tachometer
 
+  - pin: K88
+    # H144_OUT_IO8
+    id: GPIOG_4
+    ts_name: Fan Relay HI
+    function: Fan relay high
+
   - pin: K92
+    # H144_OUT_PWM8
+    id: GPIOD_12
     ts_name: MIL
     function: Check Engine Light
 
