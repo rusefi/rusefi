@@ -1911,6 +1911,7 @@ end_struct
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 #define ENGINE_MAKE_VAG "VAG"
+#define ENGINE_MAKE_Hyundai "Hyundai"
 
 #define CMD_SET "set"
 #define CMD_GET "get"
