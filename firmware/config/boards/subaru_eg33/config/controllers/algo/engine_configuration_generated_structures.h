@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Oct 06 18:00:16 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Oct 09 20:35:17 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4370,4 +4370,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Oct 06 18:00:16 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Oct 09 20:35:17 UTC 2021
