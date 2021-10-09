@@ -14,11 +14,11 @@
 
 #ifndef LUA_USER_HEAP
 #define LUA_USER_HEAP 0
-#endif
+#endif // LUA_USER_HEAP
 
 #ifndef LUA_SYSTEM_HEAP
 #define LUA_SYSTEM_HEAP 0
-#endif
+#endif // LUA_SYSTEM_HEAP
 
 static char luaUserHeap[LUA_USER_HEAP];
 static char luaSystemHeap[LUA_SYSTEM_HEAP];
