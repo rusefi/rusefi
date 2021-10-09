@@ -68,8 +68,14 @@
 static time_msecs_t mph_timer;
 static time_msecs_t mph_ctr;
 
+/**
+ * https://docs.google.com/spreadsheets/d/1IkP05ODpjNt-k4YQLYl58_TNlN9U4IBu5z7i0BPVEM4
+ */
 #define GENESIS_COUPLE_RPM_316 0x316
 #define GENESIS_COUPLE_COOLANT_329 0x329
+#define GENESIS_COUPLE_SENSORS_382 0x382
+// when A/C compressor is allowed to be on, these values need to be sent so the A/C panel activates the compressor
+#define GENESIS_COUPLE_AC_ENABLE_18F 0x18F
 
 #define NISSAN_RPM_1F9 0x1F9
 // Nissan z33 350Z and else
