@@ -57,3 +57,8 @@
 
 // F7 may have dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #define EFI_FLASH_WRITE_THREAD TRUE
+
+#undef LUA_USER_HEAP
+#define LUA_USER_HEAP 100000
+#undef LUA_SYSTEM_HEAP
+#define LUA_SYSTEM_HEAP 100000
