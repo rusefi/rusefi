@@ -156,8 +156,10 @@ void setBoardDefaultConfiguration(void) {
 	// fuel system is fixed pressure 85psi
 	// flow rate P2 = flow rate P1 * sqrt(P2/P1)
 	engineConfiguration->injector.flow = 354.19; // https://www.google.com/search?q=315*sqrt%2855%2F43.5%29
+	engineConfiguration->fuelReferencePressure = PSI2KPA(55);
 	// todo: split engine generations
 	engineConfiguration->injector.flow = 629.03; // https://www.google.com/search?q=450*sqrt%2885%2F43.5%29
+	engineConfiguration->fuelReferencePressure = PSI2KPA(85);
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 
