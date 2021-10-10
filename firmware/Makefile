@@ -166,6 +166,7 @@ include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
 endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
 include $(CHIBIOS)/os/hal/lib/complex/mfs/hal_mfs.mk
 
 ifeq ($(USE_FATFS),yes)
@@ -209,6 +210,7 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 CSRC =  $(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
+	$(CHIBIOS)/os/various/evtimer.c \
 	$(TRIGGER_SRC) \
 	$(TRIGGER_DECODERS_SRC) \
 	$(DEV_SRC) \
