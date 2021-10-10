@@ -76,8 +76,8 @@ static void setupDefaultSensorInputs() {
 	// todo: this requires unit test change
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
+	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
+	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
@@ -86,9 +86,9 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_13;
+	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
