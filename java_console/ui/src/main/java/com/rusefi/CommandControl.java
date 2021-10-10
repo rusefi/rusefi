@@ -18,7 +18,6 @@ abstract class CommandControl {
     public static final String TEST = "Test";
     public static final String SET = "Set";
     protected final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-    final JButton test;
     private final UIContext uiContext;
 
     public CommandControl(UIContext uiContext, String labelText, String iconFileName, String buttonText, JComponent... components) {
@@ -28,8 +27,8 @@ abstract class CommandControl {
         rightVerticalPanel.add(new JLabel(labelText));
         for (JComponent component : components)
             rightVerticalPanel.add(component);
-        test = new JButton(buttonText);
-        rightVerticalPanel.add(test);
+        JButton button = new JButton(buttonText);
+        rightVerticalPanel.add(button);
 
         panel.add(new JLabel(icon));
         panel.add(rightVerticalPanel);
@@ -38,7 +37,7 @@ abstract class CommandControl {
 
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP)));
 
-        test.addActionListener(createButtonListener());
+        button.addActionListener(createButtonListener());
     }
 
     @NotNull
