@@ -155,7 +155,7 @@ public class RecentCommands {
     }
 
     public void add(String command) {
-        if (command.startsWith(getSetCommand(CMD_DATE))) {
+        if (isBoringCommand(command)) {
             // not useful to remember this one
             return;
         }
@@ -196,6 +196,10 @@ public class RecentCommands {
             }
         });
         getConfig().getRoot().setProperty(KEY, pack());
+    }
+
+    private static boolean isBoringCommand(String command) {
+        return command.startsWith(getSetCommand(CMD_DATE));
     }
 
     public static JComponent createButton(UIContext uiContext, final AtomicBoolean reentrant, final String command) {
