@@ -1790,6 +1790,8 @@ cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@
 cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
 cmd_set_engine_type_hellen_128_merc_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_8_CYL_16_hex@@"
 
+cmd_set_engine_type_hellen_couple_bk1               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_154_HYUNDAI_COUPE_BK1_16_hex@@"
+cmd_set_engine_type_hellen_couple_bk2               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_154_HYUNDAI_COUPE_BK2_16_hex@@"
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NA6_16_hex@@"
@@ -3564,6 +3566,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Hellen 128 Merc 4 cyl",		cmd_set_engine_type_hellen_128_merc_4@@if_show_Hellen128merc_presets
 		commandButton = "Hellen 128 Merc 6 cyl",		cmd_set_engine_type_hellen_128_merc_6@@if_show_Hellen128merc_presets
 		commandButton = "Hellen 128 Merc v8",			cmd_set_engine_type_hellen_128_merc_8@@if_show_Hellen128merc_presets
+
+		commandButton = "Hellen Genesis Couple BK1",    cmd_set_engine_type_hellen_couple_bk1@@if_show_Hellen_hyundai_154
+		commandButton = "Hellen Genesis Couple BK2",    cmd_set_engine_type_hellen_couple_bk2@@if_show_Hellen_hyundai_154
 
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test@@if_show_test_presets
 		commandButton = "TLE8888 test bench", cmd_set_engine_type_8888_test@@if_show_test_presets
