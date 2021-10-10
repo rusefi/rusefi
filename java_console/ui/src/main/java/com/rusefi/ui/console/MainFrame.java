@@ -66,8 +66,7 @@ public class MainFrame {
                 if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
                     long unixGmtTime = System.currentTimeMillis() / 1000L;
                     long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
-                    consoleUI.uiContext.getCommandQueue().write("set " +
-                                    Fields.CMD_DATE +
+                    consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Fields.CMD_DATE) +
                                     " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
                             InvocationConfirmationListener.VOID, false);
                 }
