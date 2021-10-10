@@ -78,6 +78,20 @@ struct EthernetThread : public TunerstudioThread {
 static EthernetThread ethernetConsole;
 
 void startEthernetConsole() {
+	efiSetPadMode("ethernet", GPIOA_1, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", GPIOA_2, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", GPIOA_7, PAL_MODE_ALTERNATE(0xb));
+
+	efiSetPadMode("ethernet", GPIOC_1, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", GPIOC_4, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", GPIOC_5, PAL_MODE_ALTERNATE(0xb));
+
+	efiSetPadMode("ethernet", GPIOD_5, PAL_MODE_ALTERNATE(0xb));
+
+	efiSetPadMode("ethernet", GPIOG_11, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", GPIOG_13, PAL_MODE_ALTERNATE(0xb));
+	efiSetPadMode("ethernet", GPIOG_14, PAL_MODE_ALTERNATE(0xb));
+
 	ethernetConsole.Start();
 }
 
