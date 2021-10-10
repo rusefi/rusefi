@@ -71,8 +71,8 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = GPIOA_6;
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7;
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
+	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
+	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
@@ -81,9 +81,9 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_13;
+	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
@@ -134,14 +134,22 @@ void setBoardDefaultConfiguration(void) {
 //	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 //	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
+	engineConfiguration->malfunctionIndicatorPin = H144_OUT_PWM8;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbIo[0].directionPin1 = GPIOD_15; // out_pwm7
-	engineConfiguration->etbIo[0].directionPin2 = GPIOD_14; // out_pwm6
-	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM2;
+	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM3;
+	engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
 	CONFIG(etb_use_two_wires) = true;
+
+	// wastegate DC motor
+	engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM4;
+	engineConfiguration->etbIo[1].directionPin2 = H144_OUT_PWM5;
+	engineConfiguration->etbIo[1].controlPin = H144_OUT_IO13;
+	CONFIG(etb_use_two_wires) = true;
+	CONFIG(etbFunctions)[1] = ETB_Wastegate;
 
 	// Some sensible defaults for other options
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);

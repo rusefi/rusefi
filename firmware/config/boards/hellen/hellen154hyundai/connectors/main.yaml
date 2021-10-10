@@ -90,10 +90,16 @@ pins:
     function: Manifold Pressure Sensor
 
   - pin: K32
+# IN_AUX1 AIN23 PB0
+    id: EFI_ADC_8
+    class: analog_inputs
     ts_name: TPS 2
     function: TPS 2 sensor input
 
   - pin: K33
+# IN_CLT AIN11
+    id: EFI_ADC_12
+    class: analog_inputs
     ts_name: CLT
     function: CLT
 
@@ -101,6 +107,9 @@ pins:
     function: Analog Ground
 
   - pin: K36
+# IN_AUX2 AIN21 PC4
+    id: EFI_ADC_14
+    class: analog_inputs
     ts_name: PPS 2
     function: PPS 2 sensor input
 
@@ -112,6 +121,13 @@ pins:
 
   - pin: K44
     function: Analog Ground
+
+  - pin: K53
+    # IN_IAT AIN14 PC3
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: IAT
+    function: IAT
 
   - pin: K57
     function: Analog Ground
@@ -138,6 +154,14 @@ pins:
     function: Fuel Pump Relay
     type: ls
 
+  - pin: K71
+    ts_name: ETB w1
+    function: DC Motor w1
+
+  - pin: K72
+    ts_name: ETB w2
+    function: DC Motor w2
+
   - pin: K77
     function: CAN bus high
     type: can
@@ -150,6 +174,8 @@ pins:
     function: Analog Ground
 
   - pin: K80
+# IN_TPS AIN17 PA4
+    class: analog_inputs
     ts_name: TPS 1
     function: TPS 1 sensor input
 
