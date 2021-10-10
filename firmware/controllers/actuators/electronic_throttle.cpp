@@ -942,7 +942,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// this command is useful for real hardware test with known cheap hardware
 	addConsoleAction("etb_test_hw", [](){
-		setToyota89281_33010_pedal_position_sensor(PASS_CONFIG_PARAMETER_SIGNATURE);
+		set18919_AM810_pedal_position_sensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 	});
 
 #endif /* EFI_PROD_CODE */
@@ -1032,6 +1032,13 @@ void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			etb->setWastegatePosition(pos);
 		}
 	}
+}
+
+void set18919_AM810_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->throttlePedalUpVoltage = 0.1;
+	engineConfiguration->throttlePedalWOTVoltage = 4.5;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.1;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.2;
 }
 
 void setToyota89281_33010_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {

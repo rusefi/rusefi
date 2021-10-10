@@ -16,8 +16,12 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setToyota89281_33010_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setHitachiEtbCalibration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+// these two sensors use same plug but have different calibrations and even rotate in different directions
+void set18919_AM810_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setToyota89281_33010_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
 
 void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
