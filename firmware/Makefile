@@ -166,7 +166,11 @@ include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
 endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
-include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
+
+ifeq ($(LWIP),yes)
+	include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
+endif
+
 include $(CHIBIOS)/os/hal/lib/complex/mfs/hal_mfs.mk
 
 ifeq ($(USE_FATFS),yes)
