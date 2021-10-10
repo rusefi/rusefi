@@ -175,7 +175,7 @@
 #define STM32_MAC_PHY_TIMEOUT               100
 #define STM32_MAC_ETH1_CHANGE_PHY_STATE     TRUE
 #define STM32_MAC_ETH1_IRQ_PRIORITY         13
-#define STM32_MAC_IP_CHECKSUM_OFFLOAD       0
+#define STM32_MAC_IP_CHECKSUM_OFFLOAD       3
 
 /*
  * PWM driver system settings.
