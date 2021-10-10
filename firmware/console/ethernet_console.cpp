@@ -1,5 +1,7 @@
 #include "pch.h"
 
+#if EFI_ETHERNET
+
 #include "lwipthread.h"
 
 #include "lwip/sockets.h"
@@ -78,3 +80,5 @@ static EthernetThread ethernetConsole;
 void startEthernetConsole() {
 	ethernetConsole.Start();
 }
+
+#endif // EFI_ETHERNET
