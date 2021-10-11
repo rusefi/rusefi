@@ -10,6 +10,29 @@
 #include "mpu_util.h"
 #include "map_averaging.h"
 
+#ifndef H7_ADC_SPEED
+#define H7_ADC_SPEED (10000)
+#endif
+
+#ifndef H7_ADC_OVERSAMPLE
+#define H7_ADC_OVERSAMPLE (4)
+#endif
+
+static_assert((H7_ADC_OVERSAMPLE & (H7_ADC_OVERSAMPLE - 1)) == 0, "H7_ADC_OVERSAMPLE must be a power of 2");
+
+constexpr size_t log2_int(size_t x) {
+	size_t result = 0;
+	while (x >>= 1) result++;
+	return result;
+}
+
+// poor man's unit test
+static_assert(log2_int(4) == 2);
+static_assert(log2_int(16) == 4);
+
+// Shift the result by log2(N) bits to divide by N
+static constexpr int H7_ADC_SHIFT_BITS = log2_int(H7_ADC_OVERSAMPLE);
+
 void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
@@ -50,8 +73,8 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.end_cb				= adc_callback,
 	.error_cb			= nullptr,
 	.cfgr				= ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos),	// External trigger ch4, rising edge: TIM3 TRGO
-	.cfgr2				= 	3 << ADC_CFGR2_OVSR_Pos |	// Oversample by 4x (register contains N-1)
-							2 << ADC_CFGR2_OVSS_Pos |	// shift the result right 2 bits to make a 16 bit result out of the 18 bit internal sum (4x oversampled)
+	.cfgr2				= 	(H7_ADC_OVERSAMPLE - 1) << ADC_CFGR2_OVSR_Pos |	// Oversample by Nx (register contains N-1)
+							H7_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
 							ADC_CFGR2_ROVSE,			// Enable oversampling
 	.ccr				= 0,
 	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
@@ -119,8 +142,8 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 		adcStartConversionI(&ADCD1, &convGroupSlow, convertedSamples, 1);
 	}
 
-	constexpr uint32_t samplingRate = 10000;
-	constexpr uint32_t timerCountFrequency = samplingRate * 100;
+	constexpr uint32_t samplingRate = H7_ADC_SPEED;
+	constexpr uint32_t timerCountFrequency = samplingRate * 10;
 	constexpr uint32_t timerPeriod = timerCountFrequency / samplingRate;
 
 	static constexpr GPTConfig gptCfg = {
