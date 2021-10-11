@@ -13,6 +13,7 @@
 #include "pch.h"
 #include "fsio_impl.h"
 #include "custom_engine.h"
+#include "electronic_throttle_impl.h"
 #include "../hellen_meta.h"
 
 static void hellenWbo() {
@@ -137,6 +138,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
 	engineConfiguration->etbIo[0].controlPin = GPIOA_8; // ETB_EN out_io12
 	CONFIG(etb_use_two_wires) = true;
+
+	setBoschVAGETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->isSdCardEnabled = true;
 
