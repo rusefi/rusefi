@@ -37,8 +37,11 @@ pins:
     function: Analog Ground
 
   - pin: K15
+# cam2 IN_VSS
+    id: [GPIOF_11]
     function: Cam Sensor
-    ts_name: Cam - k15
+    class: [event_inputs]
+    ts_name: Cam - K15
 
   - pin: K16
     function: Analog Ground
@@ -49,10 +52,10 @@ pins:
     # IN_CRANK AIN24 A24
     id: [GPIOB_1]
     class: [event_inputs]
-    ts_name: Crank - k17
+    ts_name: Crank - K17
 
   - pin: K22
-    ts_name: Wastegate Position - 22
+    ts_name: BK2 Wastegate Position - 22
 
   - pin: K25
     id: GPIOG_7
@@ -83,7 +86,8 @@ pins:
     type: inj
 
   - pin: K30
-    function: Sensor 5v
+    function: sensor +5v feed
+    type: 5v
 
   - pin: K31
     ts_name: Map Sensor K31
@@ -119,8 +123,16 @@ pins:
   - pin: K39
     function: Analog Ground
 
+  - pin: K43
+    function: sensor +5v feed
+    type: 5v
+
   - pin: K44
     function: Analog Ground
+
+  - pin: K47
+    class: outputs
+    function: BK1 Wastegate Solenoid
 
   - pin: K53
     # IN_IAT AIN14 PC3
@@ -135,8 +147,23 @@ pins:
   - pin: K59
     function: Analog Ground
 
+  - pin: K60
+    function: sensor +5v feed
+    type: 5v
+
   - pin: K61
     function: Analog Ground
+
+  - pin: K62
+# cam1 IN_CAM
+    id: [GPIOA_6]
+    function: Cam Sensor
+    class: [event_inputs]
+    ts_name: Cam - K62
+
+  - pin: K63
+    function: sensor +5v feed
+    type: 5v
 
   - pin: K64
 # H144_OUT_IO3
@@ -232,7 +259,7 @@ pins:
   - pin: A43
     function: Clutch Input
   - pin: A45
-    function: DC Wastegate Pos
+    function: BK2 DC Wastegate Pos
 
   - pin: A46
     ts_name: Coil 3
@@ -243,7 +270,7 @@ pins:
     function: AC Request Switch
 
   - pin: A60
-    function: DC Wastegate Neg
+    function: BK2 DC Wastegate Neg
 
 info:
   title: Hellen 154 Hyundai
