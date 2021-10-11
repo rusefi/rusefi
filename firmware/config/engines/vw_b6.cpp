@@ -10,6 +10,7 @@
 #include "vw_b6.h"
 #include "custom_engine.h"
 #include "table_helper.h"
+#include "electronic_throttle_impl.h"
 
 /**
  * set engine_type 62
@@ -124,21 +125,11 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
-
-
 	// "7 - Lowside 1"
 	engineConfiguration->hpfpValvePin = TLE8888_PIN_6;
 
+	setBoschVAGETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	// set tps_min 890
-	engineConfiguration->tpsMin = 890; // convert 12to10 bit (ADC/4)
-	// set tps_max 70
-	engineConfiguration->tpsMax = 70; // convert 12to10 bit (ADC/4)
-
-	engineConfiguration->etb.pFactor = 5.12;
-	engineConfiguration->etb.iFactor = 47;
-	engineConfiguration->etb.dFactor = 0.088;
-	engineConfiguration->etb.offset = 0;
 
 	engineConfiguration->injector.flow = 300;
 	engineConfiguration->tempHpfpStart = 120;

@@ -845,6 +845,21 @@ static const float boschBiasValues[] = {
 	-15, -15, -10, 0, 19, 20, 26, 28
 };
 
+void setBoschVAGETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// set tps_min 890
+	engineConfiguration->tpsMin = 890; // convert 12to10 bit (ADC/4)
+	// set tps_max 70
+	engineConfiguration->tpsMax = 70; // convert 12to10 bit (ADC/4)
+
+	engineConfiguration->tps1SecondaryMin = 102;
+	engineConfiguration->tps1SecondaryMax = 891;
+
+	engineConfiguration->etb.pFactor = 5.12;
+	engineConfiguration->etb.iFactor = 47;
+	engineConfiguration->etb.dFactor = 0.088;
+	engineConfiguration->etb.offset = 0;
+}
+
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(CONFIG(etbBiasBins), boschBiasBins);
 	copyArray(CONFIG(etbBiasValues), boschBiasValues);
