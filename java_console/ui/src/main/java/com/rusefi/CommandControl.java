@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.autoupdate.AutoupdateUtil;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -12,6 +11,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
+ * A control which sends specific command defined by @link {@link #getCommand()} method
+ *
+ * @see com.rusefi.ui.widgets.AnyCommand for free type command control
  * Andrey Belomutskiy, (c) 2013-2020
  */
 abstract class CommandControl {
