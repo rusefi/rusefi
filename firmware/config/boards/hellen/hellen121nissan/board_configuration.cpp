@@ -172,6 +172,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.43;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.20;
 
+	// this calibration reminds me of VAG just flipped?
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 889;
 
