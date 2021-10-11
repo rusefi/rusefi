@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class rusEFIVersion {
-    public static final int CONSOLE_VERSION = 20211007;
+    public static final int CONSOLE_VERSION = 20211010;
     public static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     public static long classBuildTimeMillis() {
