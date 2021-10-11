@@ -55,7 +55,7 @@
 #endif
 
 #define LWIP_LINK_POLL_INTERVAL   TIME_S2I(1)
-#define LWIP_IPADDR(p)            IP4_ADDR(p, 192, 168, 10, 14)
+#define LWIP_IPADDR(p)            IP4_ADDR(p, 192, 168, 10, 1)
 #define LWIP_GATEWAY(p)           IP4_ADDR(p, 192, 168, 10, 1)
 
 #define LWIP_COMPAT_SOCKETS 0
