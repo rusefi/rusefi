@@ -38,6 +38,13 @@
 #define H144_OUT_IO12 GPIOA_8
 #define H144_OUT_IO13 GPIOG_6
 
+// A24
+#define H144_IN_CRANK GPIOB_1
+// A19
+#define H144_IN_CAM GPIOA_6
+// DIN5
+#define H144_IN_VSS GPIOF_11
+
 // IN_CLT AIN11 PC2
 #define H144_IN_CLT EFI_ADC_12
 #define H144_IN_IAT EFI_ADC_13
@@ -48,6 +55,8 @@
 #define H144_IN_AUX1 EFI_ADC_8
 //
 #define H144_IN_AUX2 EFI_ADC_14
+
+#define H144_IN_D_AUX4 GPIOA_7
 
 #define H176_LS_1 GPIOG_7
 #define H176_LS_2 GPIOG_8
