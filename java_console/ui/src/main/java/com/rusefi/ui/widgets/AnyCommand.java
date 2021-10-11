@@ -29,6 +29,7 @@ import java.util.function.Function;
 /**
  * Date: 3/20/13
  * Andrey Belomutskiy, (c) 2013-2020
+ * @see com.rusefi.CommandControl for hard-coded commands
  */
 public class AnyCommand {
     private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("AnyCommand");
@@ -53,16 +54,11 @@ public class AnyCommand {
         content.add(text);
         JButton go = new JButton("Go");
         go.setContentAreaFilled(false);
-        go.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                send();
-            }
-        });
+        go.addActionListener(e -> send());
         content.add(go);
 
         uiContext.getCommandQueue().addListener(command -> {
-            if (listenToCommands && !reentrant)
+            if (listenToCommands && !reentrant && RecentCommands.isBoringCommand(command))
                 text.setText(command);
         });
 

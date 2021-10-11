@@ -198,7 +198,7 @@ public class RecentCommands {
         getConfig().getRoot().setProperty(KEY, pack());
     }
 
-    private static boolean isBoringCommand(String command) {
+    public static boolean isBoringCommand(String command) {
         return command.startsWith(getSetCommand(CMD_DATE));
     }
 
