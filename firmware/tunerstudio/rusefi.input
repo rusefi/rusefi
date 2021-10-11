@@ -2163,7 +2163,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 
-	dialog = tpsSensor, "TPS"
+	dialog = tpsSensorLeft, "TPS"
 		panel = tpsLimits
 		panel = tpsNum1
 		panel = tpsNum2
@@ -2181,9 +2181,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		gauge = rawPpsPrimaryGauge
 		gauge = rawPpsSecondaryGauge
 
+    dialog = tpsGauges
+		gauge = rawTps1PrimaryGauge
+		gauge = rawTps1SecondaryGauge
+		gauge = rawTps2PrimaryGauge
+		gauge = rawTps2SecondaryGauge
+
 	dialog = pedalSensor, "Accelerator pedal", border
 		panel = pedalSensorLeft, West
 		panel = pedalGauges, East
+
+	dialog = tpsSensor, "TPS", border
+		panel = tpsSensorLeft, West
+		panel = tpsGauges, East
 
 	dialog = wastegatePosConfig, "Wastegate position sensor"
 		field = "Input pin",							wastegatePositionSensor
