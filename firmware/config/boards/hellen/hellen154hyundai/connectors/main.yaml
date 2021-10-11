@@ -110,12 +110,16 @@ pins:
   - pin: K34
     function: Analog Ground
 
-  - pin: K36
+  - pin: K35
 # IN_AUX2 AIN21 PC4
     id: EFI_ADC_14
     class: analog_inputs
     ts_name: PPS 2
     function: PPS 2 sensor input
+
+  - pin: K36
+    function: sensor +5v feed
+    type: 5v
 
   - pin: K37
     function: Analog Ground
