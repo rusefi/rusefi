@@ -8,3 +8,7 @@
 #pragma once
 
 #include "engine_configuration.h"
+
+void setGenesisCoupeBK1(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+void setGenesisCoupeBK2(DECLARE_CONFIG_PARAMETER_SIGNATURE);
