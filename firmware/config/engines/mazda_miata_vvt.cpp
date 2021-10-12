@@ -256,6 +256,8 @@ static void setCommonMazdaNB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
 
+	engineConfiguration->idle.solenoidFrequency = 300;
+
 	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
 	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
 	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
@@ -792,7 +794,6 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->fuelPumpPin = GPIOG_13;// "Lowside 6"     # pin 6/black35
 
     engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
-    engineConfiguration->idle.solenoidFrequency = 300;
 
 
     engineConfiguration->fanPin = GPIOB_7;
