@@ -145,6 +145,10 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
 	engineConfiguration->auxPidPins[0] = GPIOI_0;    // 4R - VVT (O5)
 
+    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
+    engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)
+
+
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
