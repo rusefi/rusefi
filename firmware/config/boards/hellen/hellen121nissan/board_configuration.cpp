@@ -36,12 +36,12 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOC_13;
-	engineConfiguration->ignitionPins[1] = GPIOE_5;
-	engineConfiguration->ignitionPins[2] = GPIOE_4;
-	engineConfiguration->ignitionPins[3] = GPIOE_3;
-	engineConfiguration->ignitionPins[4] = GPIOE_2;
-	engineConfiguration->ignitionPins[5] = GPIOB_8;
+	engineConfiguration->ignitionPins[0] = H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = H144_IGN_4;
+	engineConfiguration->ignitionPins[4] = H144_IGN_5;
+	engineConfiguration->ignitionPins[5] = H144_IGN_6;
 	
 	// disable remainder
 	for (int i = 6; i < MAX_CYLINDER_COUNT; i++) {

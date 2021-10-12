@@ -14,6 +14,13 @@
 #define H144_LS_5 GPIOD_9
 #define H144_LS_6 GPIOF_12
 
+#define H144_IGN_1 GPIOC_13
+#define H144_IGN_2 GPIOE_5
+#define H144_IGN_3 GPIOE_4
+#define H144_IGN_4 GPIOE_3
+#define H144_IGN_5 GPIOE_2
+#define H144_IGN_6 GPIOB_8
+
 #define H144_OUT_PWM1 GPIOD_13
 #define H144_OUT_PWM2 GPIOC_6
 #define H144_OUT_PWM3 GPIOC_7
@@ -56,6 +63,7 @@
 //
 #define H144_IN_AUX2 EFI_ADC_14
 
+#define H144_IN_D_2 GPIOE_13
 #define H144_IN_D_AUX4 GPIOA_7
 
 #define H176_LS_1 GPIOG_7
