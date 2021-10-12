@@ -7,6 +7,15 @@
 
 #include "honda_k_dbc.h"
 
+#if HW_PROTEUS & EFI_PROD_CODE
+#include "proteus_meta.h"
+#endif
+
 void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.displacement = 2.4;
+}
+
+void setProteusHondaOBD2A(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }

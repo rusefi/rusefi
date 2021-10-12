@@ -933,6 +933,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setProteusHondaElement2003(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROTEUS_HONDA_OBD2A:
+		setProteusHondaOBD2A(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case PROTEUS_VAG_80_18T:
 	case PROTEUS_N73:
 	case PROTEUS_MIATA_NB2:
