@@ -1,6 +1,6 @@
 #
 # CONNECTOR MAPPING NEEDED
-# 
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
 #
 
 pins:
@@ -76,6 +76,7 @@ pins:
     type: ls
     
   - pin: 1S
+    #H144_OUT_IO6
     id: GPIOG_11
     class: outputs
     ts_name: 1S - AC Relay
@@ -146,6 +147,7 @@ pins:
     function: Crankshaft Sensor
     
   - pin: 2K
+#  H144_OUT_PWM1
     id: GPIOD_13
     class: outputs
     ts_name: 2K - TACH

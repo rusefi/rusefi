@@ -64,6 +64,8 @@
 #define H144_IN_AUX2 EFI_ADC_14
 
 #define H144_IN_D_2 GPIOE_13
+// A22
+#define H144_IN_D_AUX3 GPIOC_5
 #define H144_IN_D_AUX4 GPIOA_7
 
 #define H176_LS_1 GPIOG_7
