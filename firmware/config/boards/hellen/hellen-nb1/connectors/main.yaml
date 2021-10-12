@@ -26,7 +26,7 @@ pins:
     function: Brake Switch
 
   - pin: 1E
-    id: GPIOG_9
+    id: GPIOG_4
     class: outputs
     ts_name: 1E - Check Engine Light
     function: Check Engine Light
