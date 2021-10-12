@@ -1,3 +1,5 @@
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+
 pins:
   - pin: 1
     class: outputs
