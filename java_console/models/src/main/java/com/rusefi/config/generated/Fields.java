@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Oct 12 02:59:01 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Oct 12 04:14:57 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1572,7 +1572,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.12.hellen-nb1.4213862466";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.12.hellen-nb1.3445291029";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1982,7 +1982,7 @@ public class Fields {
 	public static final Field BAROSENSOR_TYPE = Field.create("BAROSENSOR_TYPE", 592, FieldType.INT);
 	public static final Field BAROSENSOR_HWCHANNEL = Field.create("BAROSENSOR_HWCHANNEL", 596, FieldType.INT8, adc_channel_e);
 	public static final Field IDLE_SOLENOIDFREQUENCY = Field.create("IDLE_SOLENOIDFREQUENCY", 600, FieldType.INT);
-	public static final String[] output_pin_e = {"NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3V - O2H2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3D - MAP","INVALID","INVALID","INVALID","INVALID","ETB +","ETB +","ETB +","INVALID","INVALID","INVALID","INVALID","3G - IGN_1 (1&4)","INVALID","INVALID","INVALID","INVALID","INVALID","1U - O2H","INVALID","INVALID","INVALID","INVALID","INVALID","4E - VVT","3Z - INJ_4","3Y - INJ_3","1R - ECF","2K - TACH","2Q - IDLE","1O - ALTERN","INVALID","INVALID","INVALID","INVALID","INVALID","3H - IGN_2 (2&3)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3T/4D - BOOST OUT","INVALID","3Q - VICS","INVALID","INVALID","INVALID","2M US / 2P EUROPE - FPUMP","INVALID","INVALID","INVALID","INVALID","3W - INJ_1","3X - INJ_2","1E - Check Engine Light","INVALID","1S - AC Relay","1Q - Aternator Warning Lamp"};
+	public static final String[] output_pin_e = {"NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3V - O2H2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3D - MAP","INVALID","INVALID","INVALID","INVALID","ETB +","ETB +","ETB +","INVALID","INVALID","INVALID","INVALID","3G - IGN_1 (1&4)","INVALID","INVALID","INVALID","INVALID","INVALID","1U - O2H","INVALID","INVALID","INVALID","INVALID","INVALID","4E - VVT","3Z - INJ_4","3Y - INJ_3","1R - ECF","2K - TACH","2Q - IDLE","1O - ALTERN","INVALID","INVALID","INVALID","INVALID","INVALID","3H - IGN_2 (2&3)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3T/4D - BOOST OUT","INVALID","3Q - VICS","INVALID","INVALID","INVALID","2M US / 2P EUROPE - FPUMP","INVALID","1E - Check Engine Light","INVALID","INVALID","3W - INJ_1","3X - INJ_2","INVALID","INVALID","1S - AC Relay","1Q - Aternator Warning Lamp"};
 	public static final Field IDLE_SOLENOIDPIN = Field.create("IDLE_SOLENOIDPIN", 604, FieldType.INT8, output_pin_e);
 	public static final Field IDLE_STEPPERDIRECTIONPIN = Field.create("IDLE_STEPPERDIRECTIONPIN", 605, FieldType.INT8, output_pin_e);
 	public static final Field IDLE_STEPPERSTEPPIN = Field.create("IDLE_STEPPERSTEPPIN", 606, FieldType.INT8, output_pin_e);

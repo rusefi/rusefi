@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Oct 12 02:59:01 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Oct 12 04:14:57 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1221,7 +1221,7 @@
 #define oilPressure_value2_offset 2708
 #define onOffAlternatorLogic_offset 744
 #define operation_mode_e_auto_enum "OM_NONE", "FOUR_STROKE_CRANK_SENSOR", "FOUR_STROKE_CAM_SENSOR", "TWO_STROKE", "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR", "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR"
-#define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3V - O2H2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3D - MAP","INVALID","INVALID","INVALID","INVALID","ETB +","ETB +","ETB +","INVALID","INVALID","INVALID","INVALID","3G - IGN_1 (1&4)","INVALID","INVALID","INVALID","INVALID","INVALID","1U - O2H","INVALID","INVALID","INVALID","INVALID","INVALID","4E - VVT","3Z - INJ_4","3Y - INJ_3","1R - ECF","2K - TACH","2Q - IDLE","1O - ALTERN","INVALID","INVALID","INVALID","INVALID","INVALID","3H - IGN_2 (2&3)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3T/4D - BOOST OUT","INVALID","3Q - VICS","INVALID","INVALID","INVALID","2M US / 2P EUROPE - FPUMP","INVALID","INVALID","INVALID","INVALID","3W - INJ_1","3X - INJ_2","1E - Check Engine Light","INVALID","1S - AC Relay","1Q - Aternator Warning Lamp"
+#define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3V - O2H2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3D - MAP","INVALID","INVALID","INVALID","INVALID","ETB +","ETB +","ETB +","INVALID","INVALID","INVALID","INVALID","3G - IGN_1 (1&4)","INVALID","INVALID","INVALID","INVALID","INVALID","1U - O2H","INVALID","INVALID","INVALID","INVALID","INVALID","4E - VVT","3Z - INJ_4","3Y - INJ_3","1R - ECF","2K - TACH","2Q - IDLE","1O - ALTERN","INVALID","INVALID","INVALID","INVALID","INVALID","3H - IGN_2 (2&3)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3T/4D - BOOST OUT","INVALID","3Q - VICS","INVALID","INVALID","INVALID","2M US / 2P EUROPE - FPUMP","INVALID","1E - Check Engine Light","INVALID","INVALID","3W - INJ_1","3X - INJ_2","INVALID","INVALID","1S - AC Relay","1Q - Aternator Warning Lamp"
 #define overrideCrankingIacSetting_offset 1476
 #define overrideTriggerGaps_offset 76
 #define PACK_ADD_TEMPERATURE 40
@@ -1318,7 +1318,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen-nb1
 #define SIGNATURE_DATE 2021.10.12
-#define SIGNATURE_HASH 4213862466
+#define SIGNATURE_HASH 3445291029
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1680,7 +1680,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.10.12.hellen-nb1.4213862466"
+#define TS_SIGNATURE "rusEFI 2021.10.12.hellen-nb1.3445291029"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -6292,4 +6292,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Oct 12 02:59:01 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Oct 12 04:14:57 UTC 2021
