@@ -60,4 +60,12 @@
 
 #define LWIP_COMPAT_SOCKETS 0
 
+#define LWIP_RAW 0
+#define LWIP_TCP 1
+#define LWIP_UDP 0
+#define LWIP_STATS 0
+
+// In theory we're only talking to a single PC, so we don't need a big ARP table
+#define ARP_TABLE_SIZE 4
+
 #endif /* LWIP_HDR_LWIPOPTS_H__ */
