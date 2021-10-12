@@ -43,8 +43,7 @@ pins:
     class: outputs
     ts_name: 1I AC Fan Relay
     function: AC Fan Relay
-    type: gnd
-
+    
   - pin: 1J    
     function: CAN -
     type: ls
@@ -72,7 +71,7 @@ pins:
   - pin: 1R
     id: GPIOD_12
     class: outputs
-    ts_name: 2B - ECF
+    ts_name: 1R - ECF
     function: Engine Radiator Fan   
     type: ls
     
