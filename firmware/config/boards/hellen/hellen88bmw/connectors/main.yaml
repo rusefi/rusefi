@@ -1,4 +1,14 @@
 pins:
+  - pin: 1
+    class: outputs
+    function: Fuel Pump Relay Output (low)
+    ts_name: 1 - OUT_PUMP
+
+  - pin: 3
+    function: Injector 5 Output
+    class: outputs
+    ts_name: 3 - INJ_5
+    type: inj
 
 info:
   title: Hellen 88 BMW
