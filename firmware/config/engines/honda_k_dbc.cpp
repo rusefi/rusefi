@@ -14,6 +14,7 @@
 void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2.4;
+	engineConfiguration->trigger.type = TT_HONDA_K_12_1;
 }
 
 void setProteusHondaOBD2A(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
