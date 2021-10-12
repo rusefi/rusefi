@@ -22,6 +22,7 @@ for BOARD in \
    "hellen/hellen121vag hellen121vag" \
    "hellen/hellen121nissan hellen121nissan" \
    "hellen/hellen154hyundai hellen154hyundai" \
+   "hellen/hellen88bmw hellen88bmw" \
    "hellen/hellen72 hellen72" \
    "hellen/hellen-nb1 hellen-nb1" \
    "hellen/hellen64_miataNA6_94 hellenNA6" \
