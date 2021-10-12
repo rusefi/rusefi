@@ -812,8 +812,6 @@ void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
     setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 	strcpy(CONFIG(vehicleName), "H72 test");
 
-    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
-    engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)
 
 	// set tps_min 90
 	engineConfiguration->tpsMin = 110; // convert 12to10 bit (ADC/4)
