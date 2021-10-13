@@ -72,9 +72,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
-	// todo: remove from default since 4 cylinder does not use it
-	// todo: this requires unit test change
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
