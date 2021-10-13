@@ -56,6 +56,9 @@ pins:
     class: [event_inputs]
     ts_name: Crank - K17
 
+  - pin: K21
+    ts_name: Ambient Temperature
+
   - pin: K22
     ts_name: BK2 Wastegate Position - 22
 
@@ -92,6 +95,9 @@ pins:
     type: 5v
 
   - pin: K31
+# IN_MAP1 AIN9
+    id: EFI_ADC_10
+    class: analog_inputs
     ts_name: Map Sensor K31
     function: Manifold Pressure Sensor
 
@@ -129,6 +135,9 @@ pins:
   - pin: K39
     function: Analog Ground
 
+  - pin: K40
+    function: Vehicle Speed Sensor
+
   - pin: K43
     function: sensor +5v feed
     type: 5v
@@ -149,6 +158,12 @@ pins:
 
   - pin: K57
     function: Analog Ground
+
+  - pin: K58
+# IN_O2S2 AIN12 PA1 EFI_ADC_1
+    class: analog_inputs
+    ts_name: Oil Temp
+    function: Oil Temperature
 
   - pin: K59
     function: Analog Ground
