@@ -69,23 +69,25 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_VSS;
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
+
+    engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
-	engineConfiguration->afr.hwChannel = EFI_ADC_1;
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 
-	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->auxTempSensor1.adcChannel = H144_IN_O2S2;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
