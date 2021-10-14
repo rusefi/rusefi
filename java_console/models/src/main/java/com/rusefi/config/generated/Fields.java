@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 14 04:52:16 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Oct 14 19:59:06 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1042,7 +1042,7 @@ public class Fields {
 	public static final int launchTimingRetard_offset = 320;
 	public static final int launchTimingRpmRange_offset = 1036;
 	public static final int launchTpsTreshold_offset = 1056;
-	public static final int LDS_AC_STATE = 12;
+	public static final int LDS_AC_CONTROL_STATE_INDEX = 12;
 	public static final int LDS_ALTERNATOR_PID_STATE_INDEX = 9;
 	public static final int LDS_CJ125_PID_STATE_INDEX = 10;
 	public static final int LDS_ENGINE_STATE_INDEX = 3;
@@ -1050,7 +1050,7 @@ public class Fields {
 	public static final int LDS_FUEL_TRIM_STATE_INDEX = 4;
 	public static final int LDS_IDLE_PID_STATE_INDEX = 8;
 	public static final int LDS_SPEED_DENSITY_STATE_INDEX = 2;
-	public static final int LDS_TPS_TPS_ENEICHMENT_STATE_INDEX = 5;
+	public static final int LDS_TPS_TPS_ENRICHMENT_STATE_INDEX = 5;
 	public static final int LDS_TRIGGER_CENTRAL_STATE_INDEX = 6;
 	public static final int LDS_TRIGGER_STATE_STATE_INDEX = 11;
 	public static final int LE_COMMAND_LENGTH = 200;
@@ -1263,6 +1263,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1342632392;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1573,7 +1574,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.14.all.2633279962";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.14.all.1342632392";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
