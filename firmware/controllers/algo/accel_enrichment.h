@@ -11,7 +11,7 @@
 
 #include "cyclic_buffer.h"
 #include "table_helper.h"
-#include "wall_fuel_generated.h"
+#include "wall_fuel_state_generated.h"
 
 typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float> tps_tps_Map3D_t;
 
