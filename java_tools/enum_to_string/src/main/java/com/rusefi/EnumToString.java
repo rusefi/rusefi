@@ -26,37 +26,17 @@ public class EnumToString {
 
     private final static StringBuilder headerFileContent = new StringBuilder();
 
-    private final static String KEY_INPUT_PATH = "-enumInputPath";
     public final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
-    private final static String KEY_OUTPUT = "-outputPath";
-    private final static String KEY_OUTPUT_FILE = "-generatedFile";
-    private static String fileSuffix = "enums";
 
     public static void main(String[] args) throws IOException {
-        if (args.length < 4) {
-            SystemOut.println("Please specify at least\n\n" +
-                            KEY_ENUM_INPUT_FILE + "XXX\n" +
-                            KEY_OUTPUT + "XXX\n"
-            );
-            return;
-        }
+        InvokeReader invokeReader = new InvokeReader(args).invoke();
+        String outputPath = invokeReader.getOutputPath();
 
-        String inputPath = ".";
-        String outputPath = null;
         EnumsReader enumsReader = new EnumsReader();
         EnumToString state = new EnumToString();
-        for (int i = 0; i < args.length - 1; i += 2) {
-            String key = args[i];
-            if (key.equals(KEY_INPUT_PATH)) {
-                inputPath = Objects.requireNonNull(args[i + 1], KEY_INPUT_PATH);
-            } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
-                String headerInputFile = args[i + 1];
-                state.consumeFile(enumsReader, inputPath, headerInputFile);
-            } else if (key.equals(KEY_OUTPUT_FILE)) {
-                fileSuffix = args[i + 1];
-            } else if (key.equals(KEY_OUTPUT)) {
-                outputPath = args[i + 1];
-            }
+
+        for (String inputFile : invokeReader.getInputFiles()) {
+            state.consumeFile(enumsReader, invokeReader.getInputPath(), inputFile);
         }
 
         headerFileContent.append("#pragma once\n");
@@ -75,7 +55,7 @@ public class EnumToString {
 
         new File(outputPath).mkdirs();
         state.writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
-                fileSuffix);
+                InvokeReader.fileSuffix);
         SystemOut.close();
     }
 
@@ -89,15 +69,14 @@ public class EnumToString {
         bw.close();
     }
 
-    private void consumeFile(EnumsReader enumsReader, String inputPath, String headerInputFileName) throws IOException {
+    public void consumeFile(EnumsReader enumsReader, String inputPath, String headerInputFileName) throws IOException {
         Objects.requireNonNull(inputPath, "inputPath");
         File f = new File(inputPath + File.separator + headerInputFileName);
         SystemOut.println("Reading enums from " + headerInputFileName);
-        String simpleFileName = f.getName();
 
-        bothFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + " ");
+        bothFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + f.getName() + " ");
 
-        includesSection.append("#include \"" + simpleFileName + "\"\n");
+        includesSection.append("#include \"" + f.getName() + "\"\n");
         enumsReader.read(new FileReader(f));
     }
 
@@ -142,4 +121,5 @@ public class EnumToString {
     public String getCppFileContent() {
         return cppFileContent.toString();
     }
+
 }

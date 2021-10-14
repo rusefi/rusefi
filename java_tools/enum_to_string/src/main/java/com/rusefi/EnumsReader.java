@@ -3,14 +3,22 @@ package com.rusefi;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.SystemOut;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.*;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class EnumsReader {
     private final Map<String, Value> currentValues = new TreeMap<>();
 
     private final Map<String, Map<String, Value>> enums = new TreeMap<>();
+
+    @NotNull
+    static List<Value> getSortedByOrder(Map<String, Value> brain_pin_e) {
+        Set<Value> byOrdinal = new TreeSet<>(Comparator.comparingInt(Value::getIntValue));
+        byOrdinal.addAll(brain_pin_e.values());
+        return new ArrayList<>(byOrdinal);
+    }
 
     public Map<String /*enum name*/, Map<String/*enum member*/, Value>> getEnums() {
         return enums;
@@ -24,6 +32,9 @@ public class EnumsReader {
         boolean isInsideEnum = false;
         BufferedReader reader = new BufferedReader(in);
         String line;
+
+        boolean withAutoValue = false;
+
         while ((line = reader.readLine()) != null) {
             line = removeSpaces(line);
 
@@ -31,11 +42,15 @@ public class EnumsReader {
             if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
                 SystemOut.println("  EnumsReader: Entering enum");
                 currentValues.clear();
+                withAutoValue = false;
                 isInsideEnum = true;
             } else if (line.startsWith("}") && line.endsWith(";")) {
                 isInsideEnum = false;
                 line = line.substring(1, line.length() - 1);
-                SystemOut.println("  EnumsReader: Ending enum " + line  + " found " + currentValues.size() + " values");
+                SystemOut.println("  EnumsReader: Ending enum " + line + " found " + currentValues.size() + " values");
+                if (withAutoValue)
+                    validateValues(currentValues);
+
                 enums.put(line, new TreeMap<>(currentValues));
             } else {
                 if (isInsideEnum) {
@@ -46,6 +61,9 @@ public class EnumsReader {
                         if (index != -1) {
                             value = line.substring(index + 1);
                             line = line.substring(0, index);
+                        } else {
+                            value = Integer.toString(currentValues.size());
+                            withAutoValue = true;
                         }
                         SystemOut.println("    EnumsReader: Line " + line);
                         currentValues.put(line, new Value(line, value));
@@ -56,6 +74,14 @@ public class EnumsReader {
             }
         }
         return this;
+    }
+
+    private void validateValues(Map<String, Value> currentValues) {
+        for (Map.Entry<String, Value> entry : currentValues.entrySet()) {
+            int v = entry.getValue().getIntValue();
+            if (v < 0 || v >= currentValues.size())
+                throw new IllegalStateException("Unexpected " + entry);
+        }
     }
 
     private static String removeSpaces(String line) {
