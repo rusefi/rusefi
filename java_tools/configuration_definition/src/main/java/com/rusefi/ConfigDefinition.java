@@ -229,7 +229,7 @@ public class ConfigDefinition {
 
         if (!enumInputFiles.isEmpty()) {
             for (String ef : enumInputFiles) {
-                state.enumsReader.process(".", ef);
+                state.enumsReader.read(".", ef);
             }
 
             SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
