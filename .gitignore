@@ -2,6 +2,7 @@
 build/
 build_kinetis/
 pinouts
+workarea
 out/
 logs/
 blbuild/
