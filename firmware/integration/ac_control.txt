@@ -8,4 +8,6 @@ bit tpsTooHigh
 
 bit acButtonState
 
+int latest_usage_ac_control;
+
 end_struct
