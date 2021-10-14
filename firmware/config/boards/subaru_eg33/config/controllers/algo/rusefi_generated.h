@@ -1074,6 +1074,7 @@
 #define launchTimingRetard_offset 320
 #define launchTimingRpmRange_offset 1036
 #define launchTpsTreshold_offset 1056
+#define LDS_AC_STATE 12
 #define LDS_ALTERNATOR_PID_STATE_INDEX 9
 #define LDS_CJ125_PID_STATE_INDEX 10
 #define LDS_ENGINE_STATE_INDEX 3
@@ -1313,8 +1314,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.10.12
-#define SIGNATURE_HASH 1611402750
+#define SIGNATURE_DATE 2021.10.14
+#define SIGNATURE_HASH 159269561
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1676,7 +1677,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.10.12.subaru_eg33_f7.1611402750"
+#define TS_SIGNATURE "rusEFI 2021.10.14.subaru_eg33_f7.159269561"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
