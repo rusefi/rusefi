@@ -1,10 +1,10 @@
 package com.rusefi;
 
 import com.rusefi.enum_reader.Value;
+
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class EnumToStringTest {
-    public static EnumsReader process(Reader reader) throws IOException {
-        EnumsReader enumsReader = new EnumsReader();
-        enumsReader.process(reader);
-        EnumToString.outputData(enumsReader);
-        return enumsReader;
+    public static EnumToString process(EnumsReader enumsReader) {
+        EnumToString enumToString = new EnumToString();
+        enumToString.outputData(enumsReader);
+        return enumToString;
     }
 
     @Test
@@ -34,13 +33,14 @@ public class EnumToStringTest {
 
     @Test
     public void parseEnum() throws IOException {
-        EnumToString.clear();
-        EnumsReader enumsReader = process(new StringReader(
+        final StringReader reader = new StringReader(
                 "typedef enum {\n" +
                         "\tGPIO_UNASSIGNED = 0,\n" +
                         "\tGPIO_INVALID = 1,\n" +
                         "\tGPIO_HEX = 0xA1,\n" +
-                        "}brain_pin_e; // hello"));
+                        "}brain_pin_e; // hello");
+        EnumsReader enumsReader = new EnumsReader().read(reader);
+        EnumToString enumToString = process(enumsReader);
 
         List<Value> values = new ArrayList<>(enumsReader.getEnums().get("brain_pin_e").values());
         assertEquals(3, values.size());
@@ -62,17 +62,18 @@ public class EnumToStringTest {
                 "  return \"GPIO_UNASSIGNED\";\n" +
                 "  }\n" +
                 " return NULL;\n" +
-                "}\n", EnumToString.getCppFileContent());
+                "}\n", enumToString.getCppFileContent());
     }
 
     @Test
     public void parsePackedEnum() throws IOException {
-        EnumToString.clear();
-        process(new StringReader(
+        final StringReader reader = new StringReader(
                 "typedef enum __attribute__ ((__packed__)) {\n" +
                         "\tGPIO_UNASSIGNED = 0,\n" +
                         "\tGPIO_INVALID = 1,\n" +
-                        "} brain_pin_e ;"));
+                        "} brain_pin_e ;");
+        EnumsReader enumsReader = new EnumsReader().read(reader);
+        EnumToString enumToString = process(enumsReader);
         assertEquals("const char *getBrain_pin_e(brain_pin_e value){\n" +
                 "switch(value) {\n" +
                 "case GPIO_INVALID:\n" +
@@ -81,6 +82,17 @@ public class EnumToStringTest {
                 "  return \"GPIO_UNASSIGNED\";\n" +
                 "  }\n" +
                 " return NULL;\n" +
-                "}\n", EnumToString.getCppFileContent());
+                "}\n", enumToString.getCppFileContent());
+    }
+
+    @Test
+    public void parseEnumWithoutExplicitValues() throws IOException {
+        final StringReader reader = new StringReader(
+                "typedef enum {\n" +
+                        "\tGPIO_UNASSIGNED,\n" +
+                        "\tGPIO_INVALID,\n" +
+                        "\tGPIO_HEX,\n" +
+                        "}brain_pin_e; // hello");
+        EnumsReader enumsReader = new EnumsReader().read(reader);
     }
 }
