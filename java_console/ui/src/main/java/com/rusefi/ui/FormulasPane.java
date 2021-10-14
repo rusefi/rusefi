@@ -4,10 +4,19 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.Field;
+import com.rusefi.config.generated.AcControl;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.enums.live_data_e;
+import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.ui.config.ConfigField;
+import com.rusefi.ui.livedata.VariableValueSource;
+import com.rusefi.ui.livedocs.LiveDocHolder;
+import com.rusefi.ui.livedocs.LiveDocsRegistry;
+import com.rusefi.ui.livedocs.RefreshActions;
+import com.rusefi.ui.livedocs.RefreshActionsMap;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +30,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 /**
@@ -42,7 +52,41 @@ public class FormulasPane {
     public FormulasPane(UIContext uiContext) {
         this.uiContext = uiContext;
 
+
+        AtomicReference<byte[]> reference = new AtomicReference<>();
+
         JPanel vertical = new JPanel(new VerticalFlowLayout());
+        LiveDataParserPanel livePanel = new LiveDataParserPanel(new VariableValueSource() {
+            @Override
+            public Object getValue(String name) {
+                byte[] bytes = reference.get();
+                if (bytes == null)
+                    return null;
+                Field f = Field.findField(AcControl.VALUES, "", name);
+                int number = f.getValue(new ConfigurationImage(bytes)).intValue();
+                System.out.println("getValue");
+                return number != 0;
+            }
+        });
+        RefreshActionsMap refreshActionsMap = new RefreshActionsMap();
+        refreshActionsMap.put(live_data_e.LDS_AC_CONTROL, new RefreshActions() {
+            @Override
+            public void refresh(BinaryProtocol bp, byte[] response) {
+                reference.set(response);
+                livePanel.refresh();
+            }
+        });
+
+        LiveDocsRegistry.INSTANCE.register(new LiveDocHolder(live_data_e.LDS_AC_CONTROL, refreshActionsMap) {
+            @Override
+            public boolean isVisible() {
+                JPanel panel = livePanel.getContent();
+                boolean isVisible = !panel.getVisibleRect().isEmpty();
+                return isVisible && isRecursivelyVisible(panel);
+            }
+        });
+
+        vertical.add(livePanel.getContent());
         vertical.add(formulaProxy);
 
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -273,5 +317,10 @@ public class FormulasPane {
 
     public JPanel getContent() {
         return content;
+    }
+
+    static boolean isRecursivelyVisible(Container c) {
+        Container parent = c.getParent();
+        return c.isVisible() && (parent == null || isRecursivelyVisible(parent));
     }
 }

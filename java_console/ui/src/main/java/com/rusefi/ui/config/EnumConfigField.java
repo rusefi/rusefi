@@ -55,6 +55,8 @@ public class EnumConfigField extends BaseConfigField {
                 if (ec)
                     return;
                 String value = (String) view.getSelectedItem();
+                if (value == null)
+                    throw new NullPointerException(field.getName());
                 int ordinal = ordinals.get(value);
                 sendValue(field, Integer.toString(ordinal));
             }

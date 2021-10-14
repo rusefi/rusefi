@@ -1,10 +1,7 @@
 package com.rusefi.ldmp;
 
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.EngineState;
-import com.rusefi.config.generated.PidState;
-import com.rusefi.config.generated.TriggerCentral;
-import com.rusefi.config.generated.TriggerState;
+import com.rusefi.config.generated.*;
 import com.rusefi.enums.live_data_e;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,8 +11,7 @@ import java.util.Map;
 public enum StateDictionary {
     INSTANCE;
 
-    public static final int NONE = -1;
-    private Map<live_data_e, Field[]> map = new HashMap<>();
+    private final Map<live_data_e, Field[]> map = new HashMap<>();
 
     StateDictionary() {
         register(live_data_e.LDS_SPEED_DENSITY, EngineState.VALUES); // 2
@@ -28,7 +24,7 @@ public enum StateDictionary {
         // LDS_ALTERNATOR_PID
         // LDS_CJ125_PID
         register(live_data_e.LDS_TRIGGER_STATE, TriggerState.VALUES); // 11
-        register(live_data_e.LDS_AC_STATE, AcControl.VALUES); // 12
+        register(live_data_e.LDS_AC_CONTROL, AcControl.VALUES); // 12
     }
 
     private void register(live_data_e ldsIndex, Field[] values) {
