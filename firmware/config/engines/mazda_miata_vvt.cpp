@@ -258,6 +258,15 @@ static void setCommonMazdaNB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->idle.solenoidFrequency = 300;
 
+	CONFIG(isAlternatorControlEnabled) = true;
+	// enable altdebug
+	engineConfiguration->targetVBatt = 13.8;
+	engineConfiguration->alternatorControl.offset = 40;
+	engineConfiguration->alternatorControl.pFactor = 14;
+	engineConfiguration->alternatorControl.iFactor = 0.1;
+	engineConfiguration->alternatorControl.dFactor = 0;
+	engineConfiguration->alternatorControl.periodMs = 10;
+
 	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
 	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
 	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
@@ -342,15 +351,6 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->crankingIACposition = 60;
 	engineConfiguration->afterCrankingIACtaperDuration = 250;
-
-	CONFIG(isAlternatorControlEnabled) = true;
-	// enable altdebug
-	engineConfiguration->targetVBatt = 13.8;
-	engineConfiguration->alternatorControl.offset = 40;
-	engineConfiguration->alternatorControl.pFactor = 14;
-	engineConfiguration->alternatorControl.iFactor = 0.1;
-	engineConfiguration->alternatorControl.dFactor = 0;
-	engineConfiguration->alternatorControl.periodMs = 10;
 
 
 	engineConfiguration->vvtCamSensorUseRise = true;
