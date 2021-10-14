@@ -12,6 +12,7 @@
 
 #include "efifeatures.h"
 #include "obd_error_codes.h"
+#include "live_data_ids.h"
 #include "rusefi_generated.h"
 // we do not want to start the search for header from current folder so we use brackets here
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
