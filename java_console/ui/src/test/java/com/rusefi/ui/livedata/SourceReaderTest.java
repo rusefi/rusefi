@@ -1,20 +1,20 @@
 package com.rusefi.ui.livedata;
 
+import com.rusefi.livedata.LiveDataParserPanel;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 import static org.junit.Assert.assertNotNull;
 
 public class SourceReaderTest {
     @Test
-    public void testResourceLocated() throws URISyntaxException, FileNotFoundException {
-        URL cpp = getClass().getResource("/c_sources/ac_control.cpp");
-        assertNotNull(cpp);
-        new FileReader(new File(cpp.toURI()));
+    public void testResourceLocated() throws URISyntaxException, IOException {
+        String fileName = "ac_control.cpp";
+        String content = LiveDataParserPanel.getContent(getClass(), fileName);
+        assertNotNull(content);
+
     }
+
 }
