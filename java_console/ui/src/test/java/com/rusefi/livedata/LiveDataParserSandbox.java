@@ -1,7 +1,5 @@
 package com.rusefi.livedata;
 
-import com.rusefi.core.ValueSource;
-import com.rusefi.ui.livedata.LiveDataParserTest;
 import com.rusefi.ui.livedata.VariableValueSource;
 import com.rusefi.ui.util.FrameHelper;
 
@@ -20,7 +18,6 @@ public class LiveDataParserSandbox {
                 return values.get(name);
             }
         };
-
 
         new FrameHelper().showFrame(new LiveDataParserPanel(valueSource).getContent());
     }
