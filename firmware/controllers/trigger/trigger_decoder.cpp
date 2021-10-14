@@ -527,32 +527,6 @@ void TriggerState::decodeTriggerEvent(
 		bool isSynchronizationPoint;
 		bool wasSynchronized = getShaftSynchronized();
 
-		DISPLAY_STATE(Trigger_State)
-		DISPLAY_TEXT(Current_Gap);
-		DISPLAY(DISPLAY_FIELD(currentGap));
-		DISPLAY_TEXT(EOL);
-
-		DISPLAY_STATE(Trigger_Central)
-		DISPLAY(DISPLAY_CONFIG(TRIGGERINPUTPINS1));
-		DISPLAY_TEXT("Trigger 1: Fall");
-		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS1));
-		DISPLAY_TEXT(", Rise");
-		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS2));
-		DISPLAY_TEXT(EOL);
-
-		DISPLAY(DISPLAY_CONFIG(TRIGGERINPUTPINS2));
-		DISPLAY_TEXT("Trigger 2: Fall");
-		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS3));
-		DISPLAY_TEXT(", Rise");
-		DISPLAY(DISPLAY_FIELD(HWEVENTCOUNTERS4));
-		DISPLAY_TEXT(EOL);
-
-		DISPLAY_TEXT(VVT_1);
-		DISPLAY(DISPLAY_CONFIG(CAMINPUTS1));
-		DISPLAY(DISPLAY_FIELD(vvtEventRiseCounter));
-		DISPLAY(DISPLAY_FIELD(vvtEventFallCounter));
-		DISPLAY(DISPLAY_FIELD(vvtCamCounter));
-
 		if (triggerShape.isSynchronizationNeeded) {
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 

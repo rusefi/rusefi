@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/ac_control.txt Thu Oct 14 00:25:42 EDT 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/ac_control.txt Thu Oct 14 14:49:24 EDT 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -101,8 +101,12 @@ struct ac_control_s {
 	/**
 	offset 0 bit 31 */
 	bool unusedBit_6_31 : 1;
-	/** total size 4*/
+	/**
+	 * offset 4
+	 */
+	int latest_usage_ac_control = (int)0;
+	/** total size 8*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/ac_control.txt Thu Oct 14 00:25:42 EDT 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/ac_control.txt Thu Oct 14 14:49:24 EDT 2021
