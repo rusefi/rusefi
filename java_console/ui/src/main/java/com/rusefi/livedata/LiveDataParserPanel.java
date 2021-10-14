@@ -37,9 +37,12 @@ public class LiveDataParserPanel {
     private static final Logging log = getLogging(LiveDataParserPanel.class);
 
     private final JPanel content = new JPanel(new BorderLayout());
+    private final JTextPane text = new JTextPane();
+    private final VariableValueSource valueSource;
+    private String sourceCode;
 
     public LiveDataParserPanel(VariableValueSource valueSource) {
-        JTextPane text = new JTextPane();
+        this.valueSource = valueSource;
 
         JScrollPane rightScrollPane = new JScrollPane(text,
                 VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -47,24 +50,10 @@ public class LiveDataParserPanel {
         content.add(rightScrollPane);
 
         try {
-            String sourceCode = getContent(getClass(), "ac_control.cpp");
+            sourceCode = getContent(getClass(), "ac_control.cpp");
             text.setText(sourceCode);
 
-            ParseTree tree = getParseTree(sourceCode);
-
-            StyleContext sc = StyleContext.getDefaultStyleContext();
-
-            StyledDocument style = text.getStyledDocument();
-            AttributeSet oldSet = style.getCharacterElement(0).getAttributes();
-
-
-            applyVariables(valueSource, sourceCode, new SourceCodePainter() {
-                @Override
-                public void paint(Color color, Range range) {
-                    AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
-                    style.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
-                }
-            }, tree);
+            refresh();
         } catch (IOException | URISyntaxException e) {
             log.warn("Error reading: " + e);
         }
@@ -84,8 +73,13 @@ public class LiveDataParserPanel {
     }
 
     @NotNull
-    public static ParseTree getParseTree(String sourceCode) throws IOException {
-        CharStream in = new ANTLRInputStream(new ByteArrayInputStream(sourceCode.getBytes()));
+    public static ParseTree getParseTree(String sourceCode) {
+        CharStream in;
+        try {
+            in = new ANTLRInputStream(new ByteArrayInputStream(sourceCode.getBytes()));
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
         CPP14Parser parser = new CPP14Parser(new CommonTokenStream(new CPP14Lexer(in)));
         return parser.translationUnit();
     }
@@ -141,5 +135,23 @@ public class LiveDataParserPanel {
 
     public JPanel getContent() {
         return content;
+    }
+
+    public void refresh() {
+        ParseTree tree = getParseTree(sourceCode);
+
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+
+        StyledDocument styledDocument = text.getStyledDocument();
+        AttributeSet oldSet = styledDocument.getCharacterElement(0).getAttributes();
+        styledDocument.setCharacterAttributes(0, sourceCode.length(), sc.getEmptySet(), true);
+
+        applyVariables(valueSource, sourceCode, new SourceCodePainter() {
+            @Override
+            public void paint(Color color, Range range) {
+                AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
+                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
+            }
+        }, tree);
     }
 }
