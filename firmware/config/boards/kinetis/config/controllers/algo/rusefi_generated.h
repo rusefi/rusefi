@@ -1055,17 +1055,6 @@
 #define launchTimingRetard_offset 320
 #define launchTimingRpmRange_offset 1036
 #define launchTpsTreshold_offset 1056
-#define LDS_AC_STATE 12
-#define LDS_ALTERNATOR_PID_STATE_INDEX 9
-#define LDS_CJ125_PID_STATE_INDEX 10
-#define LDS_ENGINE_STATE_INDEX 3
-#define LDS_ETB_PID_STATE_INDEX 7
-#define LDS_FUEL_TRIM_STATE_INDEX 4
-#define LDS_IDLE_PID_STATE_INDEX 8
-#define LDS_SPEED_DENSITY_STATE_INDEX 2
-#define LDS_TPS_TPS_ENEICHMENT_STATE_INDEX 5
-#define LDS_TRIGGER_CENTRAL_STATE_INDEX 6
-#define LDS_TRIGGER_STATE_STATE_INDEX 11
 #define LE_COMMAND_LENGTH 200
 #define linear_sensor_s_size 20
 #define LIS302DLCsPin_offset 2043
@@ -1294,8 +1283,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.10.14
-#define SIGNATURE_HASH 556646134
+#define SIGNATURE_DATE 2021.10.15
+#define SIGNATURE_HASH 3838955665
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1657,7 +1646,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.14.kin.556646134"
+#define TS_SIGNATURE "rusEFI 2021.10.15.kin.3838955665"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
