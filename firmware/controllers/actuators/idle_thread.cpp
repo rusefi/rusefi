@@ -598,46 +598,9 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_UNIT_TEST */
 
-	DISPLAY_STATE(Engine)
-	DISPLAY_TEXT(Idle_State);
-	engine->engineState.idle.DISPLAY_FIELD(idleState) = INIT;
-	DISPLAY_TEXT(EOL);
-	DISPLAY_TEXT(Base_Position);
-	engine->engineState.idle.DISPLAY_FIELD(baseIdlePosition) = -100.0f;
-	DISPLAY_TEXT(Position_with_Adjustments);
-	engine->engineState.idle.DISPLAY_FIELD(currentIdlePosition) = -100.0f;
-	DISPLAY_TEXT(EOL);
-	DISPLAY_TEXT(EOL);
-	DISPLAY_SENSOR(TPS);
-	DISPLAY_TEXT(EOL);
-	DISPLAY_TEXT(Throttle_Up_State);
-	DISPLAY(DISPLAY_FIELD(throttlePedalUpState));
-	DISPLAY(DISPLAY_CONFIG(throttlePedalUpPin));
-
-	DISPLAY_TEXT(eol);
-	DISPLAY(DISPLAY_IF(isAutomaticIdle))
-
-		DISPLAY_STATE(idle_pid)
-		DISPLAY_TEXT(Output);
-		DISPLAY(DISPLAY_FIELD(output));
-		DISPLAY_TEXT(iTerm);
-		DISPLAY(DISPLAY_FIELD(iTerm));
-		DISPLAY_TEXT(eol);
-
-		DISPLAY_TEXT(Settings);
-		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_PFACTOR));
-		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_IFACTOR));
-		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_DFACTOR));
-		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_OFFSET));
-
-
-		DISPLAY_TEXT(eol);
-		DISPLAY_TEXT(ETB_Idle);
-		DISPLAY_STATE(Engine)
-		DISPLAY(DISPLAY_FIELD(etbIdleAddition));
-	/* DISPLAY_ELSE */
-			DISPLAY_TEXT(Manual_idle_control);
-	/* DISPLAY_ENDIF */
+	engine->engineState.idle.idleState = INIT;
+	engine->engineState.idle.baseIdlePosition = -100.0f;
+	engine->engineState.idle.currentIdlePosition = -100.0f;
 
 #if ! EFI_UNIT_TEST
 
