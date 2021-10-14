@@ -16,11 +16,11 @@ public class EnumsReader {
         return enums;
     }
 
-    public void process(String path, String fileName) throws IOException {
-        process(new FileReader(path + File.separator + fileName));
+    public EnumsReader read(String path, String fileName) throws IOException {
+        return read(new FileReader(path + File.separator + fileName));
     }
 
-    public void process(Reader in) throws IOException {
+    public EnumsReader read(Reader in) throws IOException {
         boolean isInsideEnum = false;
         BufferedReader reader = new BufferedReader(in);
         String line;
@@ -55,6 +55,7 @@ public class EnumsReader {
                 }
             }
         }
+        return this;
     }
 
     private static String removeSpaces(String line) {
