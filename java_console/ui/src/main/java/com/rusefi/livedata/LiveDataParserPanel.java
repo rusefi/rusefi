@@ -30,6 +30,9 @@ import static com.devexperts.logging.Logging.getLogging;
 import static javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED;
 import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
+/**
+ * this panel shows a live view of rusEFI firmware C/C++ code
+ */
 public class LiveDataParserPanel {
     private static final Logging log = getLogging(LiveDataParserPanel.class);
 
@@ -58,14 +61,10 @@ public class LiveDataParserPanel {
             applyVariables(valueSource, sourceCode, new SourceCodePainter() {
                 @Override
                 public void paint(Color color, Range range) {
-
                     AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
                     style.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
-
                 }
             }, tree);
-
-
         } catch (IOException | URISyntaxException e) {
             log.warn("Error reading: " + e);
         }

@@ -13,7 +13,7 @@ public enum StateDictionary {
     INSTANCE;
 
     public static final int NONE = -1;
-    private Map<Integer, Field[]> map = new HashMap<>();
+    private final Map<Integer, Field[]> map = new HashMap<>();
 
     StateDictionary() {
         register(Fields.LDS_SPEED_DENSITY_STATE_INDEX, EngineState.VALUES); // 2
@@ -26,6 +26,7 @@ public enum StateDictionary {
         // LDS_ALTERNATOR_PID_STATE_INDEX
         // LDS_CJ125_PID_STATE_INDEX
         register(Fields.LDS_TRIGGER_STATE_STATE_INDEX, TriggerState.VALUES); // 11
+        register(Fields.LDS_AC_STATE, AcControl.VALUES); // 12
     }
 
     private void register(int ldsIndex, Field[] values) {
