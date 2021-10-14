@@ -19,7 +19,7 @@ public enum StateDictionary {
         register(Fields.LDS_SPEED_DENSITY_STATE_INDEX, EngineState.VALUES); // 2
         register(Fields.LDS_ENGINE_STATE_INDEX, EngineState.VALUES); // 3
         register(Fields.LDS_FUEL_TRIM_STATE_INDEX, EngineState.VALUES);
-        register(Fields.LDS_TPS_TPS_ENEICHMENT_STATE_INDEX, EngineState.VALUES); // 5
+        register(Fields.LDS_TPS_TPS_ENRICHMENT_STATE_INDEX, EngineState.VALUES); // 5
         register(Fields.LDS_TRIGGER_CENTRAL_STATE_INDEX, TriggerCentral.VALUES);
         register(Fields.LDS_ETB_PID_STATE_INDEX, PidState.VALUES); // 7
         register(Fields.LDS_IDLE_PID_STATE_INDEX, PidState.VALUES);
