@@ -4,7 +4,7 @@ echo "This batch files reads rusefi_enums.h and produces auto_generated_enums.* 
 
 rm gen_enum_to_string.log
 
-java -DSystemOut.name=gen_java_enum -cp ../java_tools/enum2string.jar com.rusefi.ToJavaEnum -enumInputFile controllers/algo/live_data_ids.h -outputPath ../java_console/ui/src/main/java/com/rusefi/enums
+java -DSystemOut.name=gen_java_enum -cp ../java_tools/enum2string.jar com.rusefi.ToJavaEnum -enumInputFile controllers/algo/live_data_ids.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
 
 java -DSystemOut.name=gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
