@@ -80,8 +80,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 
 	// if tau is really small, we get div/0.
 	// you probably meant to disable wwae.
-	DISPLAY_STATE(wall_fuel)
-	float tau = CONFIG(DISPLAY_CONFIG(wwaeTau));
+	float tau = CONFIG(wwaeTau);
 	if (tau < 0.01f) {
 		return desiredFuel;
 	}
@@ -93,7 +92,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	}
 
 	float alpha = expf_taylor(-120 / (rpm * tau));
-	float beta = CONFIG(DISPLAY_CONFIG(wwaeBeta));
+	float beta = CONFIG(wwaeBeta);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
@@ -136,11 +135,8 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	}
 #endif // EFI_TUNER_STUDIO
 
-	DISPLAY_TEXT(Current_Wall_Fuel_Film);
-	DISPLAY_FIELD(wallFuel) = fuelFilmMassNext;
-	DISPLAY_TEXT(Fuel correction);
-	DISPLAY_FIELD(wallFuelCorrection) = M_cmd - desiredFuel;
-	DISPLAY_TEXT(ms);
+	wallFuel = fuelFilmMassNext;
+	wallFuelCorrection = M_cmd - desiredFuel;
 	return M_cmd;
 }
 
