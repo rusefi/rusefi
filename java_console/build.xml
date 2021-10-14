@@ -135,6 +135,10 @@
             <fileset dir="romraider/resources" includes="**/*.*"/>
         </copy>
 
+        <copy todir="build/classes/c_sources" flatten="true">
+            <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
+        </copy>
+
         <tstamp>
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
