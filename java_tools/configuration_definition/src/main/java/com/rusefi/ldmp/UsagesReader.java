@@ -24,7 +24,6 @@ public class UsagesReader {
         List<String> usages = (List) data.get("Usages");
         SystemOut.println("Usages: " + usages);
         for (String fileName : usages) {
-            LiveDocsMetaParser.handleMetaData(destination, fileName);
         }
     }
 }

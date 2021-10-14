@@ -8,7 +8,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.config.ConfigField;
-import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
@@ -40,14 +39,10 @@ public class FormulasPane {
     private final UIContext uiContext;
     private boolean isPaused;
 
-    private JPanel liveDocs;
-
     public FormulasPane(UIContext uiContext) {
         this.uiContext = uiContext;
 
         JPanel vertical = new JPanel(new VerticalFlowLayout());
-        liveDocs = LiveDocPanel.createLiveDocumentationPanel(uiContext);
-        vertical.add(liveDocs);
         vertical.add(formulaProxy);
 
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
