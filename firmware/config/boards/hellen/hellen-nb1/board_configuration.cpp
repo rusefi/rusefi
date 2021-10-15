@@ -133,6 +133,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
     engineConfiguration->tachOutputPin = H144_OUT_PWM1;
 	engineConfiguration->alternatorControlPin = H144_OUT_PWM7;
+	engineConfiguration->fan2Pin = H144_OUT_IO2;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
