@@ -253,7 +253,7 @@ pins:
     type: inj
     
   - pin: 3V
-    id: GPIOA_9
+    id: GPIOG_13
     class: outputs
     ts_name: 3V - O2H2
     function: Rear O2 sensor heater
