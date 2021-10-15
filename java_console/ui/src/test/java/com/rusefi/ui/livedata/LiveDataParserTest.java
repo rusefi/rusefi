@@ -26,7 +26,7 @@ public class LiveDataParserTest {
             }
         };
 
-        String s = "bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {\n" +
+        String sourceCode = "bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {\n" +
                 "\tauto rpm = Sensor::getOrZero(SensorType::Rpm);\n" +
                 "\n" +
                 "\tengineTooSlow = rpm < 500;\n" +
@@ -34,9 +34,9 @@ public class LiveDataParserTest {
                 "\tif (engineTooSlow) {\n" +
                 "\t\treturn true;\n" +
                 "\t} else {\n  " +
-                "auto ff2 = 1;\n" +
+                "auto ff2 = CONFIG(Alternatorcontrolpin);\n" +
                 "\t}\n  " +
-                "auto ff = 1;\n" +
+                "auto ff = CONFIG(tpsMax);\n" +
                 "\tif (engineTooFast) {\n" +
                 "\t\treturn false;\n" +
                 "\t} \n  " +
@@ -45,15 +45,21 @@ public class LiveDataParserTest {
 
         SourceCodePainter painter = new SourceCodePainter() {
             @Override
-            public void paint(Color color, Range range) {
+            public void paintBackground(Color color, Range range) {
                 System.out.println("paint " + color + " " + range);
             }
+
+            @Override
+            public void paintForeground(Color color, Range range) {
+                System.out.println("paintForeground");
+
+            }
         };
-        ParseTree tree = LiveDataParserPanel.getParseTree(s);
+        ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
         new ParseTreeWalker().walk(new PrintCPP14ParserListener(), tree);
 
 
-        LiveDataParserPanel.applyVariables(valueSource, s, painter, tree);
+        LiveDataParserPanel.applyVariables(valueSource, sourceCode, painter, tree);
 
     }
 

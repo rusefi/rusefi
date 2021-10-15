@@ -33,7 +33,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void enterPrimaryExpression(CPP14Parser.PrimaryExpressionContext ctx) {
-        System.out.println("enterPrimaryExpression");
+        System.out.println("enterPrimaryExpression " + ctx.getText());
 
     }
 

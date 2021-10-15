@@ -43,7 +43,7 @@ public class LinkManager implements Closeable {
     public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue;
 
-    private LinkConnector connector;
+    private LinkConnector connector = LinkConnector.VOID;
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
@@ -205,6 +205,7 @@ public class LinkManager implements Closeable {
         connector.connectAndReadConfiguration(stateListener);
     }
 
+    @NotNull
     public LinkConnector getConnector() {
         return connector;
     }
