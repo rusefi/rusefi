@@ -12,11 +12,15 @@ java -DSystemOut.name=gen_enum_to_string \
 	-generatedFile codes \
 	-enumInputFile controllers/algo/obd_error_codes.h
 
+[ $? -eq 0 ] || { echo "ERROR generating obd_error_codes"; exit 1; }
+
 java -DSystemOut.name=gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/algo \
 	-generatedFile commonenum \
 	-enumInputFile controllers/algo/rusefi_enums.h
+
+[ $? -eq 0 ] || { echo "ERROR generating enums"; exit 1; }
 
 # TODO: rearrange enums so that we have WAY less duplicated generated code? at the moment too many enums are generated 4 times
 
@@ -24,6 +28,16 @@ java -DSystemOut.name=gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/algo \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
+
+[ $? -eq 0 ] || { echo "ERROR generating hw_enums"; exit 1; }
+
+java -DSystemOut.name=gen_enum_to_string \
+	-jar ../java_tools/enum2string.jar \
+	-outputPath controllers/sensors \
+	-generatedFile sensor \
+	-enumInputFile controllers/sensors/sensor_type.h
+
+[ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
 pwd
 cd config/boards/kinetis/config
