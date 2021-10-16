@@ -18,7 +18,7 @@
  * maybe we just need a better naming convention?
  **************************************
  */
-enum class SensorType : unsigned char {
+typedef enum  __attribute__ ((__packed__)) {
 	Invalid = 0,
 	Clt = 1,
 	Iat = 2,
@@ -84,4 +84,4 @@ enum class SensorType : unsigned char {
 
 	// Leave me at the end!
 	PlaceholderLast = 38,
-};
+} SensorType;
