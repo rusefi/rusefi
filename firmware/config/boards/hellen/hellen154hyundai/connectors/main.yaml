@@ -223,11 +223,14 @@ pins:
 
   - pin: K80
 # IN_TPS AIN17 PA4
+    id: EFI_ADC_4
     class: analog_inputs
     ts_name: TPS 1
     function: TPS 1 sensor input
 
   - pin: K82
+    id: EFI_ADC_3
+    class: analog_inputs
     ts_name: PPS 1
     function: PPS 1 sensor input
 
