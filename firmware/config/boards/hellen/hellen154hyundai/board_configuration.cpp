@@ -127,12 +127,12 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->isSdCardEnabled = true;
 
 	CONFIG(enableSoftwareKnock) = true;
-	CONFIG(canNbcType) = CAN_BUS_NISSAN_VQ;
+	CONFIG(canNbcType) = CAN_BUS_GENESIS_COUPE;
 
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
 
-//	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
+	engineConfiguration->fuelPumpPin = H144_OUT_IO9;
 //	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 //	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
@@ -141,8 +141,9 @@ void setBoardDefaultConfiguration(void) {
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM2;
-	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM3;
+	// control pins are inverted since overall ECU pinout seems to be inverted
+	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
+	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
 	engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
 	CONFIG(etb_use_two_wires) = true;
 
@@ -173,7 +174,12 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-	hellenWbo();
+	// very similar to Nissan?
+	engineConfiguration->tpsMin = 100;
+	engineConfiguration->tpsMax = 914;
+
+	engineConfiguration->tps1SecondaryMin = 880;
+	engineConfiguration->tps1SecondaryMax = 68;
 }
 
 /**
