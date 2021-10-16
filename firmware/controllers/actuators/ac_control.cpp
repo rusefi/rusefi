@@ -34,14 +34,14 @@ bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// Engine too hot, disable
 	auto maxClt = CONFIG(maxAcClt);
-	engineTooHot = (maxClt != 0) && maxCltDeadband.gt(maxClt, clt.Value);
+	engineTooHot = (maxClt != 0) && maxCltDeadband.gt(clt.Value, maxClt);
 	if (engineTooHot) {
 		return false;
 	}
 
 	// TPS too high, disable
 	auto maxTps = CONFIG(maxAcTps);
-	tpsTooHigh = maxTps != 0 && maxTpsDeadband.gt(maxTps, Sensor::getOrZero(SensorType::Tps1));
+	tpsTooHigh = maxTps != 0 && maxTpsDeadband.gt(Sensor::getOrZero(SensorType::Tps1), maxTps);
 	if (tpsTooHigh) {
 			return false;
 	}
