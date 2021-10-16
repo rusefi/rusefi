@@ -27,8 +27,8 @@ mkdir $CONSOLE_FOLDER
 mkdir $DRIVERS_FOLDER
 ls -l $FOLDER
 
-wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe -P $DRIVERS_FOLDER
-[ -e $DRIVERS_FOLDER/silent_st_drivers.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers.exe"; exit 1; }
+wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
+[ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
 
 if [ "$INI_FILE_OVERRIDE" = "no" ]; then
     INI_FILE_OVERRIDE="rusefi.ini"
@@ -67,7 +67,9 @@ RUSEFI_CONSOLE_SETTINGS=""
 # cp firmware/svnversion.h $FOLDER
 
 cp -r misc/install/openocd $CONSOLE_FOLDER
+rem TODO: remove DfuSe soon?
 cp -r misc/install/DfuSe $CONSOLE_FOLDER
+cp -r misc/install/STM32_Programmer_CLI $CONSOLE_FOLDER
 # 407 has additional version of firmware
 #cp firmware/deliver/rusefi_no_asserts.bin $FOLDER
 #cp firmware/deliver/rusefi_no_asserts.dfu $FOLDER
