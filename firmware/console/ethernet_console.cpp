@@ -37,11 +37,11 @@ public:
 	}
 
 	void write(const uint8_t* buffer, size_t size) override {
-		lwip_send(connectionSocket, buffer, size, 0);
+		lwip_send(connectionSocket, buffer, size, /*flags =*/ 0);
 	}
 
-	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override {
-		auto result = lwip_recv(connectionSocket, buffer, size, 0);
+	size_t readTimeout(uint8_t* buffer, size_t size, int /*timeout*/) override {
+		auto result = lwip_recv(connectionSocket, buffer, size, /*flags =*/ 0);
 
 		if (result == -1) {
 			do_connection();
@@ -78,6 +78,8 @@ struct EthernetThread : public TunerstudioThread {
 static EthernetThread ethernetConsole;
 
 void startEthernetConsole() {
+#ifndef STM32H7
+	// TODO: why does this break H7? I thought the pins were the same?
 	efiSetPadMode("ethernet", GPIOA_1, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("ethernet", GPIOA_2, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("ethernet", GPIOA_7, PAL_MODE_ALTERNATE(0xb));
@@ -91,6 +93,7 @@ void startEthernetConsole() {
 	efiSetPadMode("ethernet", GPIOG_11, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("ethernet", GPIOG_13, PAL_MODE_ALTERNATE(0xb));
 	efiSetPadMode("ethernet", GPIOG_14, PAL_MODE_ALTERNATE(0xb));
+#endif // STM32H7
 
 	ethernetConsole.Start();
 }
