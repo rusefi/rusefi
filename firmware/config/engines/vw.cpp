@@ -7,13 +7,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "vw.h"
 #include "custom_engine.h"
-#include "ego.h"
-#include "engine_math.h"
-
-EXTERN_CONFIG;
 
 // VW_ABA
 // set engine_type 32
@@ -65,4 +62,30 @@ void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(isSdCardEnabled) = false;
 	engineConfiguration->tpsMin = 740;
 	engineConfiguration->tpsMax = 135;
+}
+
+void setHellen121Vag_5_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 5;
+	engineConfiguration->specs.displacement = 2.5;
+	engineConfiguration->specs.firingOrder = FO_1_2_4_5_3;
+}
+
+void setHellen121Vag_vr6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 6;
+	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
+}
+
+void setHellen121Vag_v6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 6;
+	engineConfiguration->specs.displacement = 2.7;
+
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = GPIOA_7; // 87a
+
+	engineConfiguration->specs.firingOrder = FO_1_4_3_6_2_5;
+}
+
+void setHellen121Vag_8_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 8;
+	engineConfiguration->specs.displacement = 4.2;
+	engineConfiguration->specs.firingOrder = FO_1_5_4_8_6_3_7_2;
 }

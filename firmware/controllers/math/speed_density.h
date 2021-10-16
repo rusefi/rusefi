@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
 #include "airmass.h"
 #include "speed_density_base.h"
 
@@ -16,5 +15,4 @@
 
 temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-void setDefaultVETable(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE);

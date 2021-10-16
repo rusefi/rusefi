@@ -56,7 +56,6 @@ using SensorResult = expected<float>;
 
 // Fwd declare - nobody outside of Sensor.cpp needs to see inside this type
 class SensorRegistryEntry;
-class Logging;
 
 class Sensor {
 public:
@@ -66,13 +65,13 @@ public:
 	bool Register();
 
 	// Print information about this sensor
-	virtual void showInfo(Logging* logger, const char* sensorName) const = 0;
+	virtual void showInfo(const char* sensorName) const = 0;
 
 	// Print information about all sensors
-	static void showAllSensorInfo(Logging* logger);
+	static void showAllSensorInfo();
 
 	// Print information about a particular sensor
-	static void showInfo(Logging* logger, SensorType type);
+	static void showInfo(SensorType type);
 
 	// Remove all sensors from the sensor registry - tread carefully if you use this outside of a unit test
 	static void resetRegistry();
@@ -86,6 +85,13 @@ public:
 	 * Get a reading from the specified sensor.
 	 */
 	static SensorResult get(SensorType type);
+
+	/*
+	 * Get a reading from the specified sensor, or zero if unavailable.
+	 */
+	static float getOrZero(SensorType type) {
+		return Sensor::get(type).value_or(0);
+	}
 
 	/*
 	 * Get a raw (unconverted) value from the sensor, if available.
@@ -123,6 +129,12 @@ public:
 	static void resetAllMocks();
 
 	/*
+	 * Inhibit sensor timeouts. Used if you're doing something that will block sensor updates, such as 
+	 * erasing flash memory (which stalls the CPU on some MCUs)
+	 */
+	static void inhibitTimeouts(bool inhibit);
+
+	/*
 	 * Get a friendly name for the sensor.
 	 * For example, CLT, IAT, Throttle Position 2, etc.
 	 */
@@ -135,6 +147,11 @@ public:
 	// it is unwise to synchronously read the sensor or do anything otherwise costly here.  At the most,
 	// this should be field lookup and simple math.
 	virtual SensorResult get() const = 0;
+
+	// Retrieve whether the sensor is present.  Some sensors may be registered but not present, i.e. if initialization failed.
+	virtual bool hasSensor() const {
+		return true;
+	}
 
 	/*
 	 * Get an unconverted value from the sensor, if available.
@@ -155,6 +172,8 @@ protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
 		: m_type(type) {}
+
+	static bool s_inhibitSensorTimeouts;
 
 private:
 	const SensorType m_type;

@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "sensor_chart.h"
-#include "engine.h"
-#include "rpm_calculator.h"
 
 #if EFI_SENSOR_CHART
 #include "status_loop.h"
@@ -19,10 +17,17 @@ static char LOGGING_BUFFER[SC_BUFFER_SIZE] CCM_OPTIONAL;
 static Logging scLogging("analog chart", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 #endif /* EFI_TEXT_LOGGING */
 
-static int pendingData = false;
 static int initialized = false;
 
-EXTERN_ENGINE;
+enum class ScState {
+	PreArm,
+	Armed,
+	Logging,
+	Full
+};
+
+static ScState state = ScState::PreArm;
+static uint32_t lastRevCount = 0;
 
 void scAddData(float angle, float value) {
 #if EFI_TEXT_LOGGING
@@ -30,56 +35,61 @@ void scAddData(float angle, float value) {
 		return; // this is possible because of initialization sequence
 	}
 
-	if (engineConfiguration->sensorChartFrequency < 2) {
-		/**
-		 * analog chart frequency cannot be 1 because of the way
-		 * data flush is implemented, see below
-		 */
-		//todofirmwareError()
+	// Don't log if we need a flush
+	if (state == ScState::Full) {
 		return;
 	}
 
-	if (getRevolutionCounter() % engineConfiguration->sensorChartFrequency != 0) {
-		/**
-		 * We are here if we do NOT need to add an event to the analog chart
-		 */
-		if (pendingData) {
-			/**
-			 * We are here if that's the first time we do not need to add
-			 * data after we have added some data - meaning it's time to flush
-			 */
-			// message terminator
-			scLogging.appendPrintf(DELIMETER);
-			// output pending data
-			scheduleLogging(&scLogging);
-			pendingData = false;
+	auto currentRev = getRevolutionCounter();
+
+	if (state == ScState::PreArm) {
+		// nothing to do - we just need to grab the rev counter once so we can detect a change
+		state = ScState::Armed;
+	} else if (state == ScState::Armed) {
+		// If armed, wait for a NEW revolution to start
+		if (lastRevCount != currentRev) {
+			state = ScState::Logging;
+
+			// Reset logging and append header
+			scLogging.reset();
+			scLogging.appendPrintf( "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
 		}
-		return;
-	}
-	if (!pendingData) {
-		pendingData = true;
-		scLogging.reset();
-		// message header
-		scLogging.appendPrintf( "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
+	} else if (state == ScState::Logging) {
+		// If running and the revolution idx changes, terminate logging and wait for flush
+		if (lastRevCount != currentRev) {
+			state = ScState::Full;
+		}
 	}
 
-	if (scLogging.remainingSize() > 100) {
-		scLogging.appendPrintf( "%.2f|%.2f|", angle, value);
+	lastRevCount = currentRev;
+
+	if (state == ScState::Logging) {
+		if (scLogging.remainingSize() > 100) {
+			scLogging.appendPrintf( "%.2f|%.2f|", angle, value);
+		} else {
+			state = ScState::Full;
+		}
 	}
 #endif /* EFI_TEXT_LOGGING */
-}
-
-static void setSensorChartFrequency(int value) {
-	engineConfiguration->sensorChartFrequency = value;
 }
 
 void initSensorChart(void) {
 #if EFI_SIMULATOR
 	printf("initSensorChart\n");
 #endif
-	addConsoleActionI("set_sensor_chart_freq", setSensorChartFrequency);
 
 	initialized = true;
+}
+
+void publishSensorChartIfFull() {
+	if (state != ScState::Full) {
+		return;
+	}
+
+	scLogging.appendPrintf(DELIMETER);
+	scheduleLogging(&scLogging);
+
+	state = ScState::Armed;
 }
 
 #endif /* EFI_SENSOR_CHART */

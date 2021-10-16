@@ -24,8 +24,6 @@
 #include "eficonsole.h"
 #endif /* __cplusplus */
 
-#define efiSetPadMode(msg, brainPin, mode) {}
-
 #define hasOsPanicError() (FALSE)
 
 #define US_TO_NT_MULTIPLIER 100
@@ -45,8 +43,6 @@
 
 // project-wide default thread stack size
 #define UTILITY_THREAD_STACK_SIZE 1384
-
-extern BaseChannel serialAdapterInstance;
 
 #define UNIT_TEST_BUSY_WAIT_CALLBACK() {}
 

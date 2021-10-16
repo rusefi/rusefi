@@ -21,22 +21,11 @@
  * @author Matthew Kennedy
  */
 
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
 #include "trigger_central.h"
 #include "accel_enrichment.h"
-#include "allsensors.h"
-#include "engine_math.h"
-#include "perf_trace.h"
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
 
-EXTERN_ENGINE;
-
-tps_tps_Map3D_t tpsTpsMap("tpsTps");
-
-static Logging *logger = nullptr;
+static tps_tps_Map3D_t tpsTpsMap;
 
 void WallFuel::resetWF() {
 	wallFuel = 0;
@@ -91,8 +80,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 
 	// if tau is really small, we get div/0.
 	// you probably meant to disable wwae.
-	DISPLAY_STATE(wall_fuel)
-	float tau = CONFIG(DISPLAY_CONFIG(wwaeTau));
+	float tau = CONFIG(wwaeTau);
 	if (tau < 0.01f) {
 		return desiredFuel;
 	}
@@ -104,7 +92,14 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	}
 
 	float alpha = expf_taylor(-120 / (rpm * tau));
-	float beta = CONFIG(DISPLAY_CONFIG(wwaeBeta));
+	float beta = CONFIG(wwaeBeta);
+
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		tsOutputChannels.debugFloatField1 = alpha;
+		tsOutputChannels.debugFloatField2 = beta;
+	}
+#endif // EFI_TUNER_STUDIO
 
 	// If beta is larger than alpha, the system is underdamped.
 	// For reasonable values {tau, beta}, this should only be possible
@@ -116,7 +111,14 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 
 	float fuelFilmMass = wallFuel;
 	float M_cmd = (desiredFuel - (1 - alpha) * fuelFilmMass) / (1 - beta);
-	
+
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		tsOutputChannels.debugFloatField3 = fuelFilmMass;
+		tsOutputChannels.debugFloatField4 = M_cmd;
+	}
+#endif // EFI_TUNER_STUDIO
+
 	// We can't inject a negative amount of fuel
 	// If this goes below zero we will be over-fueling slightly,
 	// but that's ok.
@@ -127,11 +129,14 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	// remainder on walls from last time + new from this time
 	float fuelFilmMassNext = alpha * fuelFilmMass + beta * M_cmd;
 
-	DISPLAY_TEXT(Current_Wall_Fuel_Film);
-	DISPLAY_FIELD(wallFuel) = fuelFilmMassNext;
-	DISPLAY_TEXT(Fuel correction);
-	DISPLAY_FIELD(wallFuelCorrection) = M_cmd - desiredFuel;
-	DISPLAY_TEXT(ms);
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		tsOutputChannels.debugFloatField5 = fuelFilmMassNext;
+	}
+#endif // EFI_TUNER_STUDIO
+
+	wallFuel = fuelFilmMassNext;
+	wallFuelCorrection = M_cmd - desiredFuel;
 	return M_cmd;
 }
 
@@ -242,7 +247,7 @@ float LoadAccelEnrichment::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGN
 		if (distance <= 0) // checking if indexes are out of order due to circular buffer nature
 			distance += minI(cb.getCount(), cb.getSize());
 
-		taper = interpolate2d("accel", distance, engineConfiguration->mapAccelTaperBins, engineConfiguration->mapAccelTaperMult);
+		taper = interpolate2d(distance, engineConfiguration->mapAccelTaperBins, engineConfiguration->mapAccelTaperMult);
 
 		result = taper * d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
 	} else if (d < -engineConfiguration->engineLoadDecelEnleanmentThreshold) {
@@ -326,17 +331,14 @@ AccelEnrichment::AccelEnrichment() {
 #if ! EFI_UNIT_TEST
 
 static void accelInfo() {
-	if (!logger) {
-		return;
-	}
-//	scheduleMsg(logger, "EL accel length=%d", mapInstance.cb.getSize());
-	scheduleMsg(logger, "EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
-	scheduleMsg(logger, "EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
+//	efiPrintf("EL accel length=%d", mapInstance.cb.getSize());
+	efiPrintf("EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
+	efiPrintf("EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
 
-//	scheduleMsg(logger, "TPS accel length=%d", tpsInstance.cb.getSize());
-	scheduleMsg(logger, "TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
+//	efiPrintf("TPS accel length=%d", tpsInstance.cb.getSize());
+	efiPrintf("TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
 
-	scheduleMsg(logger, "beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
+	efiPrintf("beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
 }
 
 void setEngineLoadAccelThr(float value) {
@@ -376,7 +378,7 @@ void setDecelMult(float value) {
 
 void setTpsAccelLen(int length) {
 	if (length < 1) {
-		scheduleMsg(logger, "Length should be positive");
+		efiPrintf("Length should be positive");
 		return;
 	}
 	engine->tpsAccelEnrichment.setLength(length);
@@ -385,7 +387,7 @@ void setTpsAccelLen(int length) {
 
 void setEngineLoadAccelLen(int length) {
 	if (length < 1) {
-		scheduleMsg(logger, "Length should be positive");
+		efiPrintf("Length should be positive");
 		return;
 	}
 	engine->engineLoadAccelEnrichment.setLength(length);
@@ -400,8 +402,7 @@ void updateAccelParameters() {
 #endif /* ! EFI_UNIT_TEST */
 
 
-void initAccelEnrichment(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
 #if ! EFI_UNIT_TEST

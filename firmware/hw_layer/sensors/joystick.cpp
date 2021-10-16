@@ -13,14 +13,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 #include "joystick.h"
-#include "pin_repository.h"
 #include "digital_input_exti.h"
-
-EXTERN_ENGINE;
 
 static int joyTotal = 0;
 static int joyCenter;
@@ -32,7 +29,6 @@ static int joyD = 0;
 // 50ms
 #define NT_EVENT_GAP US2NT(50 *1000)
 
-static Logging *sharedLogger;
 static efitick_t lastEventTime = 0;
 
 static bool isJitter() {
@@ -78,20 +74,20 @@ static void extCallback(ioportmask_t channel) {
 }
 
 static void joystickInfo(void) {
-	scheduleMsg(sharedLogger, "total %d center=%d@%s", joyTotal, joyCenter,
+	efiPrintf("total %d center=%d@%s", joyTotal, joyCenter,
 			hwPortname(CONFIG(joystickCenterPin)));
-	scheduleMsg(sharedLogger, "a=%d@%s", joyA, hwPortname(CONFIG(joystickAPin)));
-	scheduleMsg(sharedLogger, "b=%d@%s", joyB, hwPortname(CONFIG(joystickBPin)));
-	scheduleMsg(sharedLogger, "c=%d@%s", joyC, hwPortname(CONFIG(joystickCPin)));
-	scheduleMsg(sharedLogger, "d=%d@%s", joyD, hwPortname(CONFIG(joystickDPin)));
+	efiPrintf("a=%d@%s", joyA, hwPortname(CONFIG(joystickAPin)));
+	efiPrintf("b=%d@%s", joyB, hwPortname(CONFIG(joystickBPin)));
+	efiPrintf("c=%d@%s", joyC, hwPortname(CONFIG(joystickCPin)));
+	efiPrintf("d=%d@%s", joyD, hwPortname(CONFIG(joystickDPin)));
 }
 
 static bool isJoystickEnabled() {
-	return CONFIG(joystickCenterPin) != GPIO_UNASSIGNED ||
-			CONFIG(joystickAPin) != GPIO_UNASSIGNED ||
-			// not used so far			CONFIG(joystickBPin) != GPIO_UNASSIGNED ||
-			// not used so far	CONFIG(joystickCPin) != GPIO_UNASSIGNED ||
-			CONFIG(joystickDPin) != GPIO_UNASSIGNED;
+	return (isBrainPinValid(CONFIG(joystickCenterPin)) &&
+			isBrainPinValid(CONFIG(joystickAPin)) &&
+			// not used so far	isBrainPinValid(CONFIG(joystickBPin)) &&
+			// not used so far	isBrainPinValid(CONFIG(joystickCPin)) &&
+			isBrainPinValid(CONFIG(joystickDPin)));
 }
 
 void stopJoystickPins() {
@@ -111,12 +107,11 @@ void startJoystickPins() {
 	efiSetPadModeWithoutOwnershipAcquisition("joy D", CONFIG(joystickDPin), PAL_MODE_INPUT_PULLUP);
 }
 
-void initJoystick(Logging *shared) {
+void initJoystick() {
 	int channel;
 	addConsoleAction("joystickinfo", joystickInfo);
 	if (!isJoystickEnabled())
 		return;
-	sharedLogger = shared;
 
 	channel = getHwPin("joy", CONFIG(joystickCenterPin));
 	efiExtiEnablePin("joy", CONFIG(joystickCenterPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
@@ -126,8 +121,6 @@ void initJoystick(Logging *shared) {
 // not used so far	applyPin(CONFIG(joystickCPin));
 	channel = getHwPin("joy", CONFIG(joystickDPin));
 	efiExtiEnablePin("joy", CONFIG(joystickDPin), PAL_EVENT_MODE_RISING_EDGE, (palcallback_t)(void *)extCallback, (void *)channel);
-
-	startJoystickPins();
 }
 
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */

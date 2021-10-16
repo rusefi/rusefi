@@ -13,3 +13,8 @@
 #define adc_channel_e_enum      "Disabled", "PA2", "PA3", "INVALID", "PD3", "INVALID", "INVALID", "INVALID", "PB12", "PB13", "INVALID", "PE2", "INVALID", "PC14", "PC15", "PC16", "PC17"
 
 #define ts_show_trigger_comparator true
+
+#define CAMS_PER_BANK 1
+#define BANKS_COUNT 1
+#define CAMS_PER_BANK_padding 1
+#define CAM_INPUTS_COUNT_padding 3

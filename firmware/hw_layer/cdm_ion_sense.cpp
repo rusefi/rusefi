@@ -9,8 +9,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "cdm_ion_sense.h"
-#include "engine.h"
 
 CdmState::CdmState() {
 	accumilatingAtRevolution = 0;
@@ -51,8 +52,6 @@ void CdmState::onNewSignal(int currentRevolution) {
 
 #include "digital_input_exti.h"
 
-EXTERN_ENGINE;
-
 static CdmState instance;
 
 int getCurrentCdmValue(int currentRevolution) {
@@ -74,12 +73,7 @@ static void extIonCallback(void *arg) {
 }
 
 void cdmIonInit(void) {
-	if (CONFIG(cdmInputPin) == GPIO_UNASSIGNED) {
-		return;
-	}
-	int pin = (int)CONFIG(cdmInputPin);
-	if (pin <= 0 || pin > (int)GPIO_UNASSIGNED) {
-		// todo: remove this protection once we migrate to new mandatory configuration
+	if (!isBrainPinValid(CONFIG(cdmInputPin))) {
 		return;
 	}
 

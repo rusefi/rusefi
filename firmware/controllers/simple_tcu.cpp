@@ -1,8 +1,6 @@
-#include "simple_tcu.h"
-#include "efi_gpio.h"
-#include "engine_configuration.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "simple_tcu.h"
 
 void SimpleTransmissionController::init() {
     for (size_t i = 0; i < efi::size(CONFIG(tcu_solenoid)); i++) {
@@ -18,4 +16,14 @@ void SimpleTransmissionController::update(gear_e gear) {
     }
     setCurrentGear(gear);
     postState();
+
+#if EFI_TUNER_STUDIO
+    if (engineConfiguration->debugMode == DBG_TCU) {
+        tsOutputChannels.debugIntField1 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][0];
+        tsOutputChannels.debugIntField2 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][1];
+        tsOutputChannels.debugIntField3 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][2];
+        tsOutputChannels.debugIntField4 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][3];
+        tsOutputChannels.debugIntField5 = config->tcuSolenoidTable[static_cast<int>(gear) + 1][4];
+    }
+#endif
 }

@@ -12,11 +12,12 @@
 
 #include "global.h"
 
-void initBenchTest(Logging *sharedLogger);
+void initBenchTest();
 
 bool isRunningBenchTest(void);
 
 void fanBench(void);
+void fan2Bench(void);
 void fuelPumpBench(void);
 void acRelayBench(void);
 void milBench(void);

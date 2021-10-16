@@ -1,8 +1,6 @@
-#include "injector_model.h"
-#include "tunerstudio_outputs.h"
-#include "map.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "injector_model.h"
 
 void InjectorModelBase::prepare() {
 	m_massFlowRate = getInjectorMassFlowRate();
@@ -20,9 +18,14 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 expected<float> InjectorModel::getAbsoluteRailPressure() const {
 	switch (CONFIG(injectorCompensationMode)) {
 		case ICM_FixedRailPressure:
-			// TODO: should this add baro pressure instead of 1atm?
-			return (CONFIG(fuelReferencePressure) + 101.325f);
+			// Add barometric pressure, as "fixed" really means "fixed pressure above atmosphere"
+			return CONFIG(fuelReferencePressure) + Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
 		case ICM_SensedRailPressure:
+			if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
+				firmwareError(OBD_PCM_Processor_Fault, "Fuel pressure compensation is set to use a pressure sensor, but none is configured.");
+				return unexpected;
+			}
+
 			// TODO: what happens when the sensor fails?
 			return Sensor::get(SensorType::FuelPressureInjector);
 		default: return unexpected;
@@ -50,8 +53,13 @@ float InjectorModel::getInjectorFlowRatio() const {
 		return 1.0f;
 	}
 
-	// TODO: what to do when pressureDelta is less than 0?
 	float pressureDelta = absRailPressure.Value - map.Value;
+
+	// Somehow pressure delta is less than 0, assume failed sensor and return default flow
+	if (pressureDelta <= 0) {
+		return 1.0f;
+	}
+
 	float pressureRatio = pressureDelta / referencePressure;
 	float flowRatio = sqrtf(pressureRatio);
 
@@ -78,8 +86,7 @@ float InjectorModel::getInjectorMassFlowRate() const {
 
 float InjectorModel::getDeadtime() const {
 	return interpolate2d(
-		"lag",
-		ENGINE(sensors.vBatt),
+		Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
 		engineConfiguration->injector.battLagCorrBins,
 		engineConfiguration->injector.battLagCorr
 	);
@@ -95,9 +102,47 @@ float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
 
 	if (baseDuration <= 0) {
-		// If 0 duration, don't add deadtime, just skip the injection.
+		// If 0 duration, don't correct or add deadtime, just skip the injection.
 		return 0.0f;
-	} else {
-		return baseDuration + m_deadtime;
 	}
+
+	// Correct short pulses (if enabled)
+	baseDuration = correctShortPulse(baseDuration);
+
+	return baseDuration + m_deadtime;
+}
+
+float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
+	// Convert from ms -> grams
+	return duration * m_massFlowRate * 0.001f;
+}
+
+float InjectorModel::correctShortPulse(float baseDuration) const {
+	switch (CONFIG(injectorNonlinearMode)) {
+	case INJ_PolynomialAdder:
+		return correctInjectionPolynomial(baseDuration);
+	case INJ_None:
+	default:
+		return baseDuration;
+	}
+}
+
+float InjectorModel::correctInjectionPolynomial(float baseDuration) const {
+	if (baseDuration > USF2MS(CONFIG(applyNonlinearBelowPulse))) {
+		// Large pulse, skip correction.
+		return baseDuration;
+	}
+
+	auto& is = CONFIG(injectorCorrectionPolynomial);
+	float xi = 1;
+
+	float adder = 0;
+
+	// Add polynomial terms, starting with x^0
+	for (size_t i = 0; i < efi::size(is); i++) {
+		adder += is[i] * xi;
+		xi *= baseDuration;
+	}
+
+	return baseDuration + adder;
 }

@@ -1,10 +1,8 @@
+#include "pch.h"
+
 #include "unit_test_framework.h"
 #include "init.h"
-#include "sensor.h"
 #include "functional_sensor.h"
-
-#include "engine_test_helper.h"
-#include <gtest/gtest.h>
 
 static void postToFuncSensor(Sensor* s, float value) {
 	static_cast<FunctionalSensor*>(s)->postRawValue(value, getTimeNowNt());
@@ -93,8 +91,9 @@ TEST(SensorInit, TpsValuesTooClose) {
 	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 	Sensor::resetRegistry();
 
-	// Reconfiguration should also work without error
-	EXPECT_NO_FATAL_ERROR(reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	// de-init and re-init should also work without error
+	EXPECT_NO_FATAL_ERROR(deinitTps());
+	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
 }
 
 TEST(SensorInit, Pedal) {
@@ -227,6 +226,13 @@ TEST(SensorInit, Map) {
 	auto s = Sensor::getSensorOfType(SensorType::Map);
 	ASSERT_NE(nullptr, s);
 
-	engine->mockMapValue = 55;
-	EXPECT_FLOAT_EQ(55.0f, Sensor::get(SensorType::Map).value_or(0));
+	Sensor::setMockValue(SensorType::MapFast, 25);
+	Sensor::setMockValue(SensorType::MapSlow, 75);
+
+	// Should prefer fast MAP
+	EXPECT_FLOAT_EQ(25, Sensor::getOrZero(SensorType::Map));
+
+	// But when that fails, should return slow MAP
+	Sensor::resetMockValue(SensorType::MapFast);
+	EXPECT_FLOAT_EQ(75, Sensor::getOrZero(SensorType::Map));
 }

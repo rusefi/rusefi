@@ -8,14 +8,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "high_pressure_fuel_pump.h"
 #include "spark_logic.h"
-#include "map.h"
 
 #if EFI_HPFP
-
-EXTERN_ENGINE
-;
 
 #define LOBE_COUNT 3
 
@@ -68,7 +66,7 @@ void hpfpPlainPinTurnOn(HpfpActor *current) {
 }
 
 void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->hpfpValvePin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->hpfpValvePin)) {
 		return;
 	}
 

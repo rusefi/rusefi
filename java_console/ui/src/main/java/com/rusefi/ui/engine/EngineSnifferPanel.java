@@ -132,9 +132,8 @@ public class EngineSnifferPanel {
             lowerButtons.add(new ConfigField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
-            lowerButtons.add(new ConfigField(uiContext, Fields.SENSORCHARTFREQUENCY, "Frequency").getContent());
             lowerButtons.add(new ConfigField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
-            lowerButtons.add(new ConfigField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threashold").getContent());
+            lowerButtons.add(new ConfigField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
             bottomPanel.add(lowerButtons, BorderLayout.NORTH);
         }
 
@@ -168,7 +167,7 @@ public class EngineSnifferPanel {
         });
 
         mainPanel.add(chartPanel, BorderLayout.CENTER);
-        mainPanel.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
+        mainPanel.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
     }
 
     private void setPaused(JButton pauseButton, boolean isPaused) {
@@ -279,6 +278,9 @@ public class EngineSnifferPanel {
             signalBody = Color.yellow;
         } else if (name.startsWith("t")) {
             // trigger
+        } else if (name.startsWith("r")) {
+            // trailing coil
+            signalBody = new Color(0xffa400); // golden yellow
         } else if (name.startsWith("c")) {
             // coil
             signalBody = Color.darkGray;

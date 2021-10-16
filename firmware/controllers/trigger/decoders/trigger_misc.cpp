@@ -49,9 +49,35 @@ void configureTriTach(TriggerWaveform * s) {
 			NO_RIGHT_FILTER);
 }
 
+/**
+ * based on https://fordsix.com/threads/understanding-standard-and-signature-pip-thick-film-ignition.81515/
+ * based on https://www.w8ji.com/distributor_stabbing.htm
+ */
+void configureFordPip(TriggerWaveform * s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->tdcPosition = 662.5;
+
+	s->setTriggerSynchronizationGap(0.66);
+	s->setSecondTriggerSynchronizationGap(1.25);
+	/**
+	 * sensor is mounted on distributor but trigger shape is defined in engine cycle angles
+	 */
+	int oneCylinder = s->getCycleDuration() / 8;
+
+	s->addEventAngle(oneCylinder * 0.75, T_PRIMARY, TV_RISE);
+	s->addEventAngle(oneCylinder, T_PRIMARY, TV_FALL);
+
+
+	for (int i = 2;i<=8;i++) {
+		s->addEventAngle(oneCylinder * (i - 0.5), T_PRIMARY, TV_RISE);
+		s->addEventAngle(oneCylinder * i, T_PRIMARY, TV_FALL);
+	}
+
+}
+
 void configureFordST170(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->isSynchronizationNeeded = true;
 	int width = 10;
 
 	int total = s->getCycleDuration() / 8;
@@ -92,4 +118,45 @@ void configureDaihatsu4(TriggerWaveform * s) {
 	s->addEventAngle(s->getCycleDuration() - width, T_PRIMARY, TV_RISE);
 	s->addEventAngle(s->getCycleDuration(), T_PRIMARY, TV_FALL);
 
+}
+
+void configureBarra3plus1cam(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->useRiseEdge = true;
+	// TODO: gapBothDirections?
+
+	// This wheel has four teeth
+	// two short gaps, and two long gaps
+	// short = 60 deg
+	// long = 120 deg
+
+	{
+		int offset = 120;
+
+		s->addEventAngle(offset + 2 * 0 - 10, T_PRIMARY, TV_RISE);
+		s->addEventAngle(offset + 2 * 0 +  0, T_PRIMARY, TV_FALL);
+
+		// short gap 60 deg
+
+		s->addEventAngle(offset + 2 * 60 - 10, T_PRIMARY, TV_RISE);
+		s->addEventAngle(offset + 2 * 60 +  0, T_PRIMARY, TV_FALL);
+
+		// long gap 120 deg
+
+		s->addEventAngle(offset + 2 * 180 - 10, T_PRIMARY, TV_RISE);
+		s->addEventAngle(offset + 2 * 180 +  0, T_PRIMARY, TV_FALL);
+
+		// long gap 120 deg
+
+		s->addEventAngle(offset + 2 * 300 - 10, T_PRIMARY, TV_RISE);
+		s->addEventAngle(offset + 2 * 300 +  0, T_PRIMARY, TV_FALL);
+
+		// short gap, 60 deg back to zero/720
+	}
+
+	// sync tooth is the zero tooth, the first short gap after two long gaps
+	s->setTriggerSynchronizationGap3(0, 1.6f, 2.4f);
+	// previous gap should be 1.0
+	s->setTriggerSynchronizationGap3(1, 0.8f, 1.2f);
 }

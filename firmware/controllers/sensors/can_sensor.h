@@ -13,46 +13,20 @@
 #include "can_msg_tx.h"
 #include "obd2.h"
 #include "can.h"
+#include "can_listener.h"
 
 /**
  * Sensor which reads it's value from CAN
  */
-class CanSensorBase : public StoredValueSensor {
+class CanSensorBase : public StoredValueSensor, public CanListener {
 public:
 	CanSensorBase(uint32_t eid, SensorType type, efitick_t timeout)
 		: StoredValueSensor(type, timeout)
-		, m_eid(eid)
+		, CanListener(eid)
 	{
 	}
 
-	virtual CanSensorBase* request() {
-		return m_next;
-	}
-
-	void showInfo(Logging* logger, const char* sensorName) const override;
-
-	CanSensorBase* processFrame(const CANRxFrame& frame, efitick_t nowNt) {
-		if (frame.EID == m_eid) {
-			decodeFrame(frame, nowNt);
-		}
-
-		return m_next;
-	}
-
-	uint32_t getEid() {
-		return m_eid;
-	}
-
-	void setNext(CanSensorBase* next) {
-		m_next = next;
-	}
-
-protected:
-	virtual void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) = 0;
-	CanSensorBase* m_next = nullptr;
-
-private:
-	const uint32_t m_eid;
+	void showInfo(const char* sensorName) const override;
 };
 
 template <typename TStorage, int TScale>
@@ -105,7 +79,7 @@ public:
 		setValidValue(fValue, nowNt);
 	}
 
-	CanSensorBase* request() override {
+	CanListener* request() override {
 		{
 			CanTxMessage msg(OBD_TEST_REQUEST);
 			msg[0] = _OBD_2;
@@ -115,7 +89,7 @@ public:
 		// let's sleep on write update after each OBD request, this would give read thread a chance to read response
 		// todo: smarter logic of all this with with semaphore not just sleep
 		chThdSleepMilliseconds(300);
-		return m_next;
+		return CanListener::request();
 	}
 
 	int PID;

@@ -18,7 +18,7 @@ void addSkippedToothTriggerEvents(trigger_wheel_e wheel, TriggerWaveform *s,
 		float offset, float engineCycle, float filterLeft, float filterRight);
 
 
-void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);;
+void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeethCount, int skippedCount, operation_mode_e operationMode);
 
 // TT_3_1_CAM
 void configure3_1_cam(TriggerWaveform *s);
@@ -26,3 +26,6 @@ void configure3_1_cam(TriggerWaveform *s);
 void configureOnePlusOne(TriggerWaveform *s);
 // TT_VVT_BOSCH_QUICK_START
 void configureQuickStartSenderWheel(TriggerWaveform *s);
+
+// TT_KAWA_KX450F
+void configureKawaKX450F(TriggerWaveform *s);

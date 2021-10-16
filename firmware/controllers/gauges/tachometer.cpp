@@ -8,10 +8,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "tachometer.h"
-#include "pwm_generator_logic.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "tachometer.h"
 
 static SimplePwm tachControl("tach"); 
 static float tachFreq;  
@@ -67,7 +66,7 @@ void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tachHasInit = false;
-	if (CONFIG(tachOutputPin) == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(CONFIG(tachOutputPin))) {
 		return;
 	}
 

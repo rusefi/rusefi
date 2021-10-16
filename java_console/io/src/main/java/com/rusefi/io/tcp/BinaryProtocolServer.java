@@ -66,7 +66,7 @@ public class BinaryProtocolServer {
         try {
             start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
         } catch (IOException e) {
-            log.error("Error starting local proxy", e);
+            log.warn("Error starting local proxy: " + e);
         }
     }
 
@@ -189,10 +189,6 @@ public class BinaryProtocolServer {
                 System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes());
-            } else if (command == TS_SD_R_COMMAND) {
-                handleSD_R_command(stream, packet, payload);
-            } else if (command == TS_SD_W_COMMAND) {
-                handleSD_W_command(stream, packet, payload);
             } else if (command == Fields.TS_OUTPUT_COMMAND) {
                 DataInputStream dis = new DataInputStream(new ByteArrayInputStream(payload, 1, payload.length - 1));
                 int offset = swap16(dis.readShort());
@@ -218,137 +214,6 @@ public class BinaryProtocolServer {
                 log.info("Error: unexpected " + BinaryProtocol.findCommand(command));
             }
         }
-    }
-
-    private void handleSD_W_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
-        log.info("TS_SD: 'w' " + IoStream.printHexBinary(packet.packet));
-        if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_INFO) {
-
-            if (payload[6] == TS_SD_PROTOCOL_DO) {
-                log.info("TS_SD: do command, command=" + payload[payload.length - 1]);
-                sendOkResponse(stream);
-            } else if (payload[6] == TS_SD_PROTOCOL_READ_DIR) {
-                log.info("TS_SD: read directory command " + payload[payload.length - 1]);
-                sendOkResponse(stream);
-            } else if (payload[6] == TS_SD_PROTOCOL_REMOVE_FILE) {
-                String pattern = new String(payload, 7, 4);
-                log.info("TS_SD: remove file command " + Arrays.toString(packet.packet) + " " + pattern);
-
-                sendOkResponse(stream);
-            } else if (payload[6] == TS_SD_PROTOCOL_FETCH_COMPRESSED) {
-                log.info("TS_SD: read compressed file command " + Arrays.toString(packet.packet));
-                ByteBuffer bb = ByteBuffer.wrap(payload, 7, 8);
-                bb.order(ByteOrder.BIG_ENDIAN);
-                int sectorNumber = bb.getInt();
-                int sectorCount = bb.getInt();
-                log.info("TS_SD: sectorNumber=" + sectorNumber + ", sectorCount=" + sectorCount);
-                sendOkResponse(stream);
-            } else {
-                log.info("TS_SD: Got unexpected w fetch " + IoStream.printHexBinary(packet.packet));
-            }
-        } else {
-            log.info("TS_SD: Got unexpected w " + IoStream.printHexBinary(packet.packet));
-        }
-    }
-
-    private void handleSD_R_command(TcpIoStream stream, Packet packet, byte[] payload) throws IOException {
-        log.info("TS_SD: 'r' " + IoStream.printHexBinary(packet.packet));
-        if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_RTC) {
-            log.info("TS_SD: RTC read command");
-            byte[] response = new byte[9];
-            stream.sendPacket(response);
-        } else if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_INFO) {
-            ByteBuffer bb = ByteBuffer.wrap(payload, 5, 2);
-            bb.order(ByteOrder.BIG_ENDIAN);
-            int bufferLength = bb.getShort();
-            log.info("TS_SD: fetch buffer command, length=" + bufferLength);
-
-            byte[] response = new byte[1 + bufferLength];
-
-            response[0] = TS_RESPONSE_OK;
-
-            if (bufferLength == 16) {
-                response[1] = 1 + 4; // Card present + Ready
-                response[2] = 0; // Y - error code
-
-                response[3] = 2; // higher byte of '512' sector size
-                response[4] = 0; // lower byte
-
-                response[5] = 0;
-                response[6] = 0x20; // 0x20 00 00 of 512 is 1G virtual card
-                response[7] = 0;
-                response[8] = 0;
-
-                response[9] = 0;
-                response[10] = 1; // number of files
-            } else if (bufferLength == 0x202){
-                // SD read directory command
-                //
-
-                setFileEntry(response, 0, "hello123mlq", (int) new File(TEST_FILE).length());
-                setFileEntry(response, 1, "he      mlq", 1024);
-                setFileEntry(response, 2, "_333o123mlq", 1000000);
-
-            } else {
-                log.info("TS_SD: Got unexpected r fetch " + IoStream.printHexBinary(packet.packet));
-                return;
-            }
-            log.info("TS_SD: sending " + IoStream.printHexBinary(response));
-            stream.sendPacket(response);
-        } else if (payload[1] == 0 && payload[2] == TS_SD_PROTOCOL_FETCH_DATA) {
-            ByteBuffer bb = ByteBuffer.wrap(payload, 3, 4);
-            bb.order(ByteOrder.BIG_ENDIAN);
-            int blockNumber = bb.getShort();
-            int suffix = bb.getShort();
-            log.info("TS_SD: fetch data command blockNumber=" + blockNumber + ", requesting=" + suffix);
-
-
-
-            File f = new File(BinaryProtocolServer.TEST_FILE);
-            FileInputStream fis = new FileInputStream(f);
-            int size = (int) f.length();
-
-
-            int offset = blockNumber * FAST_TRANSFER_PACKET_SIZE;
-            int len = Math.max(0, Math.min(size - offset, FAST_TRANSFER_PACKET_SIZE));
-
-            byte[] response = new byte[1 + 2 + len];
-            response[0] = TS_RESPONSE_OK;
-            response[1] = payload[3];
-            response[2] = payload[4];
-
-            if (len > 0) {
-                fis.skip(offset);
-                log.info("TS_SD reading " + offset + " " + len + " of " + size);
-                fis.read(response, 3, len);
-            }
-
-            stream.sendPacket(response);
-        } else {
-            log.info("TS_SD: Got unexpected r " + IoStream.printHexBinary(packet.packet));
-        }
-    }
-
-    private static void setFileEntry(byte[] response, int index, String fileName, int fileSize) {
-        int offset = 1 + 32 * index;
-        System.arraycopy(fileName.getBytes(), 0, response, offset, 11);
-        response[offset + 11] = 1; // file
-        //  12-15 = undefined
-
-        response[offset + 14] = 0x11;
-        response[offset + 15] = 0x13; // time
-
-        response[offset + 16] = 0x24;
-        response[offset + 17] = 0x25; // 0x2425 = FAT16 date format September 4, 1998
-
-        for (int i = 18; i < 22; i++)
-            response[offset + i] = (byte) (i + 10 * index); // sector number
-
-        for (int i = 24; i < 28; i++) {
-            response[offset + i] = (byte) (i + index);
-        }
-
-        IoHelper.putInt(response, offset + 28, IoHelper.swap32(fileSize));
     }
 
     private static void sendOkResponse(TcpIoStream stream) throws IOException {

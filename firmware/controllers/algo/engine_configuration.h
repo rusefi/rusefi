@@ -21,16 +21,10 @@
 
 #define MOCK_UNDEFINED -1
 
-float getRpmMultiplier(operation_mode_e mode);
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setLambdaMap(lambda_table_t table, float value);
-/**
- * See also setLinearCurve()
- */
-void setMap(fuel_table_t table, float value);
 void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
@@ -44,14 +38,10 @@ void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
-
-#define MEMCPY(dest, src) {memcpy(dest, src, sizeof(src));}
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engine);
 void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
@@ -60,26 +50,40 @@ typedef void (*configuration_callback_t)(engine_configuration_s*);
 
 #ifdef __cplusplus
 // because of 'Logging' class parameter these functions are visible only to C++ code but C code
-void resetConfigurationExt(Logging * logger, configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
-void resetConfigurationExt(Logging * logger, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void loadConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void resetConfigurationExt(engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 #endif /* __cplusplus */
 
-struct ConfigOverrides {
-	// CAN pinout
-	brain_pin_e canTxPin;
-	brain_pin_e canRxPin;
-};
+void setBoardDefaultConfiguration(void);
+void setBoardConfigOverrides(void);
 
-const ConfigOverrides& getConfigOverrides();
+#if !EFI_UNIT_TEST
+extern engine_configuration_s *engineConfiguration;
+extern persistent_config_container_s persistentState;
+extern persistent_config_s *config;
+#endif // EFI_UNIT_TEST
 
-// If the overide value is default initialized
-// Use the value from config if not overriden
-// Otherwise use the override
-// the == decltype(CONFIG(__x__)){} part means
-// - take the type of the corresponding config field
-// - default construct (ie, 0) an object of the corresponding type
-// - check if the override value matches that (GPIO_UNASSIGNED, SPI_NONE, etc)
-// If it matches, that field hasn't been overridden, so read from the config.
-#define CONFIG_OVERRIDE(__x__) (			\
-	(( getConfigOverrides().__x__ ) == decltype(CONFIG(__x__)){}) \
-	? (CONFIG( __x__ )) : ( getConfigOverrides().__x__ ))
+/**
+ * & is reference in C++ (not C)
+ * Ref is a pointer that:
+ *   you access with dot instead of arrow
+ *   Cannot be null
+ * This is about EFI_ACTIVE_CONFIGURATION_IN_FLASH
+ */
+extern engine_configuration_s & activeConfiguration;
+
+#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
+// We store a special changeable copy of configuration is RAM, so we can just compare them
+#define isConfigurationChanged(x) (engineConfiguration->x != activeConfiguration.x)
+#else
+// We cannot call prepareVoidConfiguration() for activeConfiguration if it's stored in flash,
+// so we need to tell the firmware that it's "void" (i.e. zeroed, invalid) by setting a special flag variable,
+// and then we consider 'x' as changed if it's just non-zero.
+extern bool isActiveConfigurationVoid;
+#define isConfigurationChanged(x) ((engineConfiguration->x != activeConfiguration.x) || (isActiveConfigurationVoid && engineConfiguration->x != 0))
+#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
+
+#define isPinOrModeChanged(pin, mode) (isConfigurationChanged(pin) || isConfigurationChanged(mode))

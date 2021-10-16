@@ -20,9 +20,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "pch.h"
+
 #include "event_registry.h"
-#include "global.h"
-#include "engine_math.h"
 
 InjectionEvent::InjectionEvent() {
 	memset(outputs, 0, sizeof(outputs));

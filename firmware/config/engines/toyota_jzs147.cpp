@@ -17,12 +17,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "toyota_jzs147.h"
 #include "custom_engine.h"
-#include "thermistors.h"
 #include "mazda_miata_vvt.h"
-
-EXTERN_CONFIG;
 
 static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE); // default pinout
@@ -110,7 +109,7 @@ void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED; // cam sensor will he handled by custom vtti code
 
 	engineConfiguration->camInputs[0] = GPIOC_6;
-	engineConfiguration->vvtMode = VVT_2JZ;
+	engineConfiguration->vvtMode[0] = VVT_2JZ;
 
 	// set global_trigger_offset_angle 155
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo

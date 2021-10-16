@@ -16,19 +16,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_HD44780_LCD
 #include "os_access.h"
 
 #include "lcd_controller.h"
-#include "lcd_HD44780.h"
-#include "rpm_calculator.h"
-#include "allsensors.h"
-#include "engine.h"
+#include "HD44780.h"
 #include "rtc_helper.h"
-#include "io_pins.h"
-#include "efi_gpio.h"
 #include "svnversion.h"
 #include "joystick.h"
 #include "utlist.h"
@@ -36,14 +31,9 @@
 #include "memstreams.h"
 #include "settings.h"
 #include "bench_test.h"
-#include "engine_controller.h"
 #include "mmc_card.h"
 #include "idle_thread.h"
 #include "fuel_math.h"
-#include "sensor.h"
-
-
-EXTERN_ENGINE;
 
 static MenuItem ROOT(NULL, NULL);
 
@@ -74,7 +64,6 @@ static MenuItem miAfr(&miSensors, LL_AFR);
 static MenuItem miBaro(&miSensors, LL_BARO);
 static MenuItem miMapV(&miSensors, LL_MAF_V);
 static MenuItem miMapKgHr(&miSensors, LL_MAF_KG_HR);
-static MenuItem miKnock(&miSensors, LL_KNOCK);
 
 static MenuItem miStopEngine(&miBench, "stop engine", scheduleStopEngine);
 static MenuItem miTestFan(&miBench, "test fan", fanBench);
@@ -171,10 +160,10 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %.2f", Sensor::get(SensorType::Clt).value_or(0));
+		lcdPrintf("Coolant %.2f", Sensor::getOrZero(SensorType::Clt));
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %.2f", Sensor::get(SensorType::Iat).value_or(0));
+		lcdPrintf("Intake Air %.2f", Sensor::getOrZero(SensorType::Iat));
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
@@ -191,7 +180,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 	case LL_TPS:
 		getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, buffer);
 
-		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::get(SensorType::Tps1).value_or(0));
+		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::getOrZero(SensorType::Tps1));
 		return;
 	case LL_FUEL_CLT_CORRECTION:
 		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -203,16 +192,12 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);
 		return;
 	case LL_VBATT:
-		lcdPrintf("Battery %.2fv", getVBatt(PASS_ENGINE_PARAMETER_SIGNATURE));
-		return;
-	case LL_KNOCK:
-		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
-		lcdPrintf("Knock %s %.2fv", buffer, engine->knockVolts);
+		lcdPrintf("Battery %.2fv", Sensor::getOrZero(SensorType::BatteryVoltage));
 		return;
 
 #if	EFI_ANALOG_SENSORS
 	case LL_BARO:
-		if (hasBaroSensor()) {
+		if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 			lcdPrintf("Baro: %.2f", getBaroPressure());
 		} else {
 			lcdPrintf("Baro: none");
@@ -221,28 +206,28 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 #endif
 	case LL_AFR:
 		if (Sensor::hasSensor(SensorType::Lambda1)) {
-			lcdPrintf("AFR: %.2f", Sensor::get(SensorType::Lambda1).value_or(0));
+			lcdPrintf("AFR: %.2f", Sensor::getOrZero(SensorType::Lambda1));
 		} else {
 			lcdPrintf("AFR: none");
 		}
 		return;
 	case LL_MAP:
-		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("MAP %.2f", Sensor::get(SensorType::Map).value_or(0));
+		if (Sensor::hasSensor(SensorType::Map)) {
+			lcdPrintf("MAP %.2f", Sensor::getOrZero(SensorType::Map));
 		} else {
 			lcdPrintf("MAP: none");
 		}
 		return;
 	case LL_MAF_V:
-		if (hasMafSensor()) {
-			lcdPrintf("MAF: %.2fv", getMafVoltage(PASS_ENGINE_PARAMETER_SIGNATURE));
+		if (Sensor::hasSensor(SensorType::Maf)) {
+			lcdPrintf("MAF: %.2fv", Sensor::getRaw(SensorType::Maf));
 		} else {
 			lcdPrintf("MAF: none");
 		}
 		return;
 	case LL_MAF_KG_HR:
-		if (hasMafSensor()) {
-			lcdPrintf("MAF: %.2f kg/hr", getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE));
+		if (Sensor::hasSensor(SensorType::Maf)) {
+			lcdPrintf("MAF: %.2f kg/hr", Sensor::getOrZero(SensorType::Maf));
 		} else {
 			lcdPrintf("MAF: none");
 		}

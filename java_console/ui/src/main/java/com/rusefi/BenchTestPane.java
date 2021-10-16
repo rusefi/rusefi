@@ -4,6 +4,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.UIContext;
+import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +19,7 @@ public class BenchTestPane {
     private final JPanel content = new JPanel(new GridLayout(2, 5));
     private final UIContext uiContext;
 
-    public BenchTestPane(UIContext uiContext) {
+    public BenchTestPane(UIContext uiContext, PersistentConfiguration config) {
         this.uiContext = uiContext;
         content.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -45,7 +46,7 @@ public class BenchTestPane {
                 return Fields.CMD_REBOOT_DFU;
             }
         }.getContent());
-        content.add(new MessagesView().messagesScroll);
+        content.add(new MessagesView(config.getRoot()).messagesScroll);
     }
 
     private Component grabPerformanceTrace() {
@@ -106,7 +107,7 @@ public class BenchTestPane {
     }
 
     private Component createSparkTest() {
-        final JComboBox<Integer> indexes = createIndexCombo(Fields.IGNITION_PIN_COUNT);
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.MAX_CYLINDER_COUNT);
         CommandControl panel = new CommandControl(uiContext,"Spark #", "spark.jpg", TEST, indexes) {
             @Override
             protected String getCommand() {
@@ -117,7 +118,7 @@ public class BenchTestPane {
     }
 
     private Component createInjectorTest() {
-        final JComboBox<Integer> indexes = createIndexCombo(Fields.INJECTION_PIN_COUNT);
+        final JComboBox<Integer> indexes = createIndexCombo(Fields.MAX_CYLINDER_COUNT);
         CommandControl panel = new CommandControl(uiContext,"Injector #", "injector.png", TEST, indexes) {
             @Override
             protected String getCommand() {

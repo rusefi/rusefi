@@ -7,8 +7,6 @@
 
 #pragma once
 
-#define USB_SERIAL_DRIVER SD2
-
 #ifdef __cplusplus
 extern "C"
 {

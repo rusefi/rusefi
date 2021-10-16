@@ -1,0 +1,86 @@
+#16 pin connector
+
+pins:
+  - pin: 1
+    id: GPIOH_10
+    class: event_inputs
+    function: Crank 1 VR+
+    ts_name: A08 - Crank 1 VR+
+    type: vr
+
+  - pin: 2
+    function: Crank 1 VR sensors GND
+    type: sgnd
+
+  - pin: 3
+    function: Crank 1 VR sensors shield
+    type: sgnd
+
+  - pin: 4
+    function: Knock sensors shield
+    type: sgnd
+
+  - pin: 5
+    function: Knock input 1
+
+  - pin: 6
+    function: Knock input 1
+
+  - pin: 7
+    function: SSM Tx (5V UART)
+
+  - pin: 8
+    function: SSM Rx (5V UART)
+
+  - pin: 9
+    id: MC33972_PIN_16
+    class: switch_inputs
+    function: Air Condition request Din
+    ts_name: C09 - Air Condition request Din
+    type: av
+
+  - pin: 10
+    id: MC33972_PIN_5
+    class: switch_inputs
+    function: Starter Din
+    ts_name: C10 - Starter Din
+    type: av
+
+  - pin: 11
+    function: "Opt Supply (+12)"
+    type: 5v
+
+  - pin: 12
+    id: MC33972_PIN_6
+    class: switch_inputs
+    function: Memory SW Din
+    ts_name: C12 - Memory SW Din
+    type: av
+
+  - pin: 13
+    id: MC33972_PIN_7
+    class: switch_inputs
+    function: Test SW Din
+    ts_name: C13 - Test SW Din
+    type: av
+
+  - pin: 14
+    id: TLE6240_PIN_4
+    class: outputs
+    function: FPump modulator (low = high flow)
+    ts_name: C14 - FPump modulator
+    type: gp_low
+
+  - pin: 15
+    id: TLE6240_PIN_8
+    class: outputs
+    function: AUX1 OD out
+    ts_name: C15 - AUX1 OD out
+    type: gp_low
+
+  - pin: 16
+    id: TLE6240_PIN_3
+    class: outputs
+    function: Tacho out
+    ts_name: C16 - Tacho out
+    type: gp_low

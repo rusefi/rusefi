@@ -1,10 +1,11 @@
 # ARM Cortex-Mx common makefile scripts and rules.
 
-# Output directory and files
 ifeq ($(BUILDDIR),)
+  # Define if not specified
   BUILDDIR = build
 endif
 ifeq ($(BUILDDIR),.)
+  # Redefine if pointing at current folder
   BUILDDIR = build
 endif
 OUTFILES = $(BUILDDIR)/$(PROJECT)
@@ -164,6 +165,7 @@ else
 endif
 
 $(BUILDDIR)/$(PROJECT): $(OBJS)
+	rm -rf $(BUILDDIR)/obj/*gcda
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
 	$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
@@ -172,10 +174,12 @@ else
 	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
 endif
 
-clean:
+clean: CLEAN_RULE_HOOK
 	@echo Cleaning
 	-rm -fR .dep $(BUILDDIR)
 	@echo Done
+
+CLEAN_RULE_HOOK:
 
 #
 # Include the dependency files, should be the last of the makefile

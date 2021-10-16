@@ -5,28 +5,35 @@
  * @author Andrey Belomutskiy, (c) 2012-2014
  */
 
-#include "engine_test_helper.h"
-#include "stddef.h"
+#include "pch.h"
+
 #include "trigger_decoder.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "accel_enrichment.h"
-#include "allsensors.h"
-#include "engine_controller.h"
 #include "advance_map.h"
-#include "sensor.h"
 #include "tooth_logger.h"
 #include "logicdata.h"
+#include "hardware.h"
+
+#if EFI_ENGINE_SNIFFER
+#include "engine_sniffer.h"
+extern WaveChart waveChart;
+#endif /* EFI_ENGINE_SNIFFER */
+
 
 extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
+extern bool printTriggerTrace;
 extern bool printFuelDebug;
+extern int minCrankingRpm;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
+	minCrankingRpm = 0;
 	EnableToothLogger();
 }
 
@@ -38,7 +45,19 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordere
 	: EngineTestHelper(engineType, &emptyCallbackWithConfiguration, sensorValues) {
 }
 
+warningBuffer_t *EngineTestHelper::recentWarnings() {
+	return &unitTestWarningCodeState.recentWarnings;
+}
+
+int EngineTestHelper::getWarningCounter() {
+	return unitTestWarningCodeState.warningCounter;
+}
+
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
+	Engine *engine = &this->engine;
+	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
+	EXPAND_Engine;
+
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
 
@@ -50,13 +69,12 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
+	INJECT_ENGINE_REFERENCE(&enginePins);
 	enginePins.reset();
 	enginePins.unregisterPins();
 
-	persistent_config_s *config = &persistentConfig;
-	Engine *engine = &this->engine;
-	engine->setConfig(config);
-	engine_configuration_s *engineConfiguration = engine->engineConfigurationPtr;
+	INJECT_ENGINE_REFERENCE(&waveChart);
+	waveChart.init();
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -30, 1.5);
@@ -73,11 +91,13 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	resetConfigurationExt(NULL, configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
 
-	enginePins.startPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	validateConfig(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	commonInitEngineController(NULL PASS_ENGINE_PARAMETER_SUFFIX);
+	enginePins.startPins();
+
+	commonInitEngineController(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
 	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
@@ -91,12 +111,17 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	engine->mockAirmassModel = &mockAirmass;
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
+
+	initHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 EngineTestHelper::~EngineTestHelper() {
+	Engine *engine = &this->engine;
+	EXPAND_Engine;
 	// Write history to file
 	std::stringstream filePath;
-	filePath << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
 	writeEvents(filePath.str().c_str());
 
 	// Cleanup
@@ -128,7 +153,7 @@ void EngineTestHelper::fireRise(float delayMs) {
 }
 
 void EngineTestHelper::smartFireRise(float delayMs) {
-	smartMoveTimeForwardUs(MS2US(delayMs));
+	moveTimeForwardAndInvokeEventsUs(MS2US(delayMs));
 	firePrimaryTriggerRise();
 }
 
@@ -138,7 +163,7 @@ void EngineTestHelper::fireFall(float delayMs) {
 }
 
 void EngineTestHelper::smartFireFall(float delayMs) {
-	smartMoveTimeForwardUs(MS2US(delayMs));
+	moveTimeForwardAndInvokeEventsUs(MS2US(delayMs));
 	firePrimaryTriggerFall();
 }
 
@@ -150,7 +175,7 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_RISING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
+	handleShaftSignal(0, true, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
@@ -158,7 +183,7 @@ void EngineTestHelper::firePrimaryTriggerFall() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, nowNt, engine, engine->engineConfigurationPtr, &persistentConfig);
+	handleShaftSignal(0, false, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
@@ -197,6 +222,10 @@ void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
 	moveTimeForwardUs(MS2US(deltaTimeMs));
 }
 
+void EngineTestHelper::moveTimeForwardSec(float deltaTimeSec) {
+	moveTimeForwardUs(MS2US(1000 * deltaTimeSec));
+}
+
 void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
@@ -204,19 +233,21 @@ void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	timeNowUs += deltaTimeUs;
 }
 
-void EngineTestHelper::smartMoveTimeForwardSeconds(int deltaTimeSeconds) {
-	smartMoveTimeForwardUs(MS2US(1000 * deltaTimeSeconds));
+void EngineTestHelper::moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds) {
+	moveTimeForwardAndInvokeEventsUs(MS2US(1000 * deltaTimeSeconds));
 }
 
 /**
- * this method executed all pending events wile
+ * this method executes all pending events while moving time forward
  */
-void EngineTestHelper::smartMoveTimeForwardUs(int deltaTimeUs) {
+void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
-		printf("smartMoveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
+		printf("moveTimeForwardAndInvokeEventsUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
-	int targetTime = timeNowUs + deltaTimeUs;
+	setTimeAndInvokeEventsUs(timeNowUs + deltaTimeUs);
+}
 
+void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 	while (true) {
 		scheduling_s* nextScheduledEvent = engine.executor.getHead();
 		if (nextScheduledEvent == nullptr) {
@@ -311,7 +342,7 @@ void EngineTestHelper::applyTriggerWaveform() {
 	Engine *engine = &this->engine;
 	EXPAND_Engine
 
-	ENGINE(initializeTriggerWaveform(NULL PASS_ENGINE_PARAMETER_SUFFIX));
+	ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
 
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -327,8 +358,6 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 		trigger_type_e trigger) {
 	Engine *engine = &eth->engine;
 	EXPAND_Engine
-
-	eth->clearQueue();
 
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
 	engineConfiguration->specs.cylindersCount = 4;
@@ -353,6 +382,21 @@ void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARA
 	applyTriggerWaveform();
 }
 
+void EngineTestHelper::executeUntil(int timeUs) {
+	scheduling_s *head;
+	while ((head = engine.executor.getHead()) != nullptr) {
+		if (head->momentX > timeUs) {
+			break;
+		}
+		setTimeAndInvokeEventsUs(head->momentX);
+	}
+}
+
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {
 	setupSimpleTestEngineWithMaf(eth, injectionMode, TT_ONE);
+}
+
+void setVerboseTrigger(bool isEnabled) {
+	printTriggerDebug = isEnabled;
+	printTriggerTrace = isEnabled;
 }

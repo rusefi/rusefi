@@ -1,12 +1,16 @@
 #pragma once
 
 #include "engine_ptr.h"
+#include "rusefi_types.h"
 
 #include <cstdint>
 
 // Only allows clearing the value, but never resetting it.
 class Clearable {
 public:
+	Clearable() : m_value(true) {}
+	Clearable(bool value) : m_value(value) {}
+
 	void clear() {
 		m_value = false;
 	}
@@ -24,7 +28,7 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	// This is called from periodicFastCallback to update internal state
-	void updateState(int rpm);
+	void updateState(int rpm, efitick_t nowNt);
 
 	// Other subsystems call these APIs to determine their behavior
 	bool allowElectronicThrottle() const;
@@ -49,6 +53,8 @@ private:
 	Clearable m_allowIgnition;
 	Clearable m_allowTriggerInput;
 
-	bool m_transientLimitInjection = false;
-	bool m_transientLimitIgnition = false;
+	bool m_transientAllowInjection = true;
+	bool m_transientAllowIgnition = true;
+
+	bool m_hadOilPressureAfterStart = false;
 };

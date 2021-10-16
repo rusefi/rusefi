@@ -50,7 +50,7 @@ public:
 	volatile efitimeus_t last_wave_high_widthUs = 0; // time period in systimer ticks
 };
 
-void initWaveAnalyzer(Logging *sharedLogger);
+void initWaveAnalyzer();
 void startLogicAnalyzerPins();
 void stopLogicAnalyzerPins();
 void printWave(Logging *logging);

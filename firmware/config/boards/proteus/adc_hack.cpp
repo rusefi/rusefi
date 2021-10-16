@@ -6,13 +6,9 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "ch.h"
-#include "hal.h"
+#include "pch.h"
 
-#include "mpu_util.h"
-#include "io_pins.h"
-
-#include "efilib.h"
+#if USE_ADC3_VBATT_HACK
 
 static ADCConversionGroup adcConvGroup = { FALSE, 1, nullptr, nullptr,
 	0,
@@ -28,7 +24,7 @@ static ADCConversionGroup adcConvGroup = { FALSE, 1, nullptr, nullptr,
 	ADC_SQR3_SQ1_N(ADC_CHANNEL_IN9)	// sqr3 - vbatt is on pf3 = adc9
 };
 
-__ALIGNED(32) adcsample_t samples[8];
+static NO_CACHE adcsample_t samples[8];
 
 // we use this as a hook to run near the rest of ADC init...
 void setAdcChannelOverrides(void) {
@@ -42,9 +38,6 @@ adcsample_t vbattSampleProteus = 0;
 void proteusAdcHack()
 {
 	adcConvert(&ADCD3, &adcConvGroup, samples, 8);
-#if defined(STM32F7XX)
-	SCB_InvalidateDCache_by_Addr(reinterpret_cast<uint32_t*>(samples), sizeof(samples));
-#endif /* STM32F7XX */
 
 	uint32_t sum = 0;
 
@@ -54,3 +47,5 @@ void proteusAdcHack()
 
 	vbattSampleProteus = sum / efi::size(samples);
 }
+
+#endif /* USE_ADC3_VBATT_HACK */

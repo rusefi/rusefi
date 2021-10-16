@@ -9,11 +9,9 @@
 
 #pragma once
 
-#include "engine.h"
-
 #include "event_registry.h"
 
-void initMainEventListener(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initMainEventListener(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 

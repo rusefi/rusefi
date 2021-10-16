@@ -1,31 +1,73 @@
+#include "pch.h"
+
 #include "limp_manager.h"
-#include "engine.h"
-#include "efilib.h"
 
-EXTERN_ENGINE;
+void LimpManager::updateState(int rpm, efitick_t nowNt) {
+	Clearable allowFuel = CONFIG(isInjectionEnabled);
+	Clearable allowSpark = CONFIG(isIgnitionEnabled);
 
-void LimpManager::updateState(int rpm) {
 	// User-configured hard RPM limit
-	bool isRevLimited = rpm > engine->getRpmHardLimit(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (rpm > CONFIG(rpmHardLimit)) {
+		if (CONFIG(cutFuelOnHardLimit)) {
+			allowFuel.clear();
+		}
 
-	// TODO: user configurable what gets limited
-	bool limitFuel = isRevLimited;
-	bool limitSpark = isRevLimited;
+		if (CONFIG(cutSparkOnHardLimit)) {
+			allowSpark.clear();
+		}
+	}
 
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {
-		limitFuel = true;
+		allowFuel.clear();
 	}
 
 	// Limit fuel only on boost pressure (limiting spark bends valves)
 	if (CONFIG(boostCutPressure) != 0) {
-		if (Sensor::get(SensorType::Map).value_or(0) > CONFIG(boostCutPressure)) {
-			limitFuel = true;
+		if (Sensor::getOrZero(SensorType::Map) > CONFIG(boostCutPressure)) {
+			allowFuel.clear();
 		}
 	}
 
-	m_transientLimitInjection = limitFuel;
-	m_transientLimitIgnition = limitSpark;
+	if (ENGINE(rpmCalculator).isRunning()) {
+		uint16_t minOilPressure = CONFIG(minOilPressureAfterStart);
+
+		// Only check if the setting is enabled
+		if (minOilPressure > 0) {
+			// Has it been long enough we should have pressure?
+			bool isTimedOut = ENGINE(rpmCalculator).getTimeSinceEngineStart(nowNt) > 5.0f;
+
+			// Only check before timed out
+			if (!isTimedOut) {
+				auto oilp = Sensor::get(SensorType::OilPressure);
+
+				if (oilp) {
+					// We had oil pressure! Set the flag.
+					if (oilp.Value > minOilPressure) {
+						m_hadOilPressureAfterStart = true;
+					}
+				}
+			}
+
+			// If time is up, the sensor works, and no pressure, kill the engine.
+			if (isTimedOut && !m_hadOilPressureAfterStart) {
+				allowFuel.clear();
+			}
+		}
+	} else {
+		// reset state in case of stalled engine
+		m_hadOilPressureAfterStart = false;
+	}
+
+	if (engine->needToStopEngine(nowNt)) {
+		/**
+		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
+		 */
+		allowFuel.clear();
+	}
+
+	m_transientAllowInjection = allowFuel;
+	m_transientAllowIgnition = allowSpark;
 }
 
 void LimpManager::etbProblem() {
@@ -57,9 +99,9 @@ bool LimpManager::allowTriggerInput() const {
 }
 
 bool LimpManager::allowInjection() const {
-	return !m_transientLimitInjection && m_allowInjection;
+	return m_transientAllowInjection && m_allowInjection;
 }
 
 bool LimpManager::allowIgnition() const {
-	return !m_transientLimitIgnition && m_allowIgnition;
+	return m_transientAllowIgnition && m_allowIgnition;
 }

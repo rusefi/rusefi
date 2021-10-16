@@ -27,15 +27,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "thermistors.h"
+#include "pch.h"
+
 #include "honda_accord.h"
-#include "engine_math.h"
-#include "settings.h"
 #include "advance_map.h"
 #include "custom_engine.h"
-
-EXTERN_CONFIG;
 
 static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
@@ -67,9 +63,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	 */
 	setCommonNTCSensor(&engineConfiguration->clt, 1500);
 	setCommonNTCSensor(&engineConfiguration->iat, 1500);
-	
-	// set cranking_charge_angle 35
-	engineConfiguration->crankingChargeAngle = 70;
+
 	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = -45;
 
@@ -80,12 +74,6 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
 	// set_cranking_rpm 2000
 	engineConfiguration->cranking.rpm = 500;
-
-
-	// set ignition_offset 350
-//	engineConfiguration->ignitionOffset = 350;
-	 // set injection_offset 510
-//	engineConfiguration->extraInjectionOffset = 510;
 
 
 	/**

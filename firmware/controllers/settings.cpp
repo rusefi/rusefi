@@ -6,35 +6,21 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #if !EFI_UNIT_TEST
 #include "os_access.h"
-#include "settings.h"
 #include "eficonsole.h"
-#include "engine_configuration.h"
-#include "adc_inputs.h"
-#include "engine_controller.h"
-#include "thermistors.h"
-#include "adc_inputs.h"
-#include "interpolation.h"
-#include "map.h"
 #include "trigger_decoder.h"
 #include "console_io.h"
-#include "engine.h"
-#include "efi_gpio.h"
-#include "engine_math.h"
 #include "idle_thread.h"
-#include "allsensors.h"
 #include "alternator_controller.h"
 #include "trigger_emulator_algo.h"
-#include "sensor.h"
 
 #if EFI_PROD_CODE
-#include "vehicle_speed.h"
 #include "rtc_helper.h"
 #include "can_hw.h"
 #include "rusefi.h"
-#include "pin_repository.h"
 #include "hardware.h"
 #endif /* EFI_PROD_CODE */
 
@@ -56,13 +42,8 @@ extern WaveChart waveChart;
 #define SETTINGS_LOGGING_BUFFER_SIZE 1000
 #endif /* SETTINGS_LOGGING_BUFFER_SIZE */
 
-static char LOGGING_BUFFER[SETTINGS_LOGGING_BUFFER_SIZE];
-static Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-
-EXTERN_ENGINE;
-
-void printSpiState(Logging *logger, const engine_configuration_s *engineConfiguration) {
-	scheduleMsg(logger, "spi 1=%s/2=%s/3=%s/4=%s",
+void printSpiState(const engine_configuration_s *engineConfiguration) {
+	efiPrintf("spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),
 		boolToString(engineConfiguration->is_enabled_spi_2),
 		boolToString(engineConfiguration->is_enabled_spi_3),
@@ -72,81 +53,38 @@ void printSpiState(Logging *logger, const engine_configuration_s *engineConfigur
 extern engine_configuration_s *engineConfiguration;
 
 static void printOutputs(const engine_configuration_s *engineConfiguration) {
-	scheduleMsg(&logger, "injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	efiPrintf("injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->injectionPins[i];
-		scheduleMsg(&logger, "injection #%d @ %s", (1 + i), hwPortname(brainPin));
+		efiPrintf("injection #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
-	scheduleMsg(&logger, "ignitionPins: mode %s", getPin_output_mode_e(engineConfiguration->ignitionPinMode));
-	for (int i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+	efiPrintf("ignitionPins: mode %s", getPin_output_mode_e(engineConfiguration->ignitionPinMode));
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		brain_pin_e brainPin = engineConfiguration->ignitionPins[i];
-		scheduleMsg(&logger, "ignition #%d @ %s", (1 + i), hwPortname(brainPin));
+		efiPrintf("ignition #%d @ %s", (1 + i), hwPortname(brainPin));
 	}
 
-	scheduleMsg(&logger, "idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(engineConfiguration->idle.solenoidPinMode),
+	efiPrintf("idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(engineConfiguration->idle.solenoidPinMode),
 			hwPortname(engineConfiguration->idle.solenoidPin), engineConfiguration->idle.solenoidFrequency);
-	scheduleMsg(&logger, "malfunctionIndicator: %s mode=%s", hwPortname(engineConfiguration->malfunctionIndicatorPin),
+	efiPrintf("malfunctionIndicator: %s mode=%s", hwPortname(engineConfiguration->malfunctionIndicatorPin),
 			getPin_output_mode_e(engineConfiguration->malfunctionIndicatorPinMode));
 
-	scheduleMsg(&logger, "fuelPumpPin: mode %s @ %s", getPin_output_mode_e(engineConfiguration->fuelPumpPinMode),
+	efiPrintf("fuelPumpPin: mode %s @ %s", getPin_output_mode_e(engineConfiguration->fuelPumpPinMode),
 			hwPortname(engineConfiguration->fuelPumpPin));
 
-	scheduleMsg(&logger, "fanPin: mode %s @ %s", getPin_output_mode_e(engineConfiguration->fanPinMode),
+	efiPrintf("fanPin: mode %s @ %s", getPin_output_mode_e(engineConfiguration->fanPinMode),
 			hwPortname(engineConfiguration->fanPin));
 
-	scheduleMsg(&logger, "mainRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->mainRelayPinMode),
+	efiPrintf("mainRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->mainRelayPinMode),
 			hwPortname(engineConfiguration->mainRelayPin));
 
-	scheduleMsg(&logger, "starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisablePinMode),
+	efiPrintf("starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisablePinMode),
 			hwPortname(engineConfiguration->starterRelayDisablePin));
 
-	scheduleMsg(&logger, "alternator field: mode %s @ %s",
+	efiPrintf("alternator field: mode %s @ %s",
 			getPin_output_mode_e(engineConfiguration->alternatorControlPinMode),
 			hwPortname(engineConfiguration->alternatorControlPin));
-}
-
-
-/**
- * These should be not very long because these are displayed on the LCD as is
- */
-const char* getConfigurationName(engine_type_e engineType) {
-	switch (engineType) {
-	case DEFAULT_FRANKENSO:
-		return "DEFAULT_FRANKENSO";
-	case DODGE_NEON_1995:
-		return "Neon95";
-	case FORD_ASPIRE_1996:
-		return "Aspire";
-	case NISSAN_PRIMERA:
-		return "Primera";
-	case HONDA_ACCORD_CD:
-		return "Accord3";
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		return "Accord2";
-	case HONDA_ACCORD_1_24_SHIFTED:
-		return "Accord24sh";
-	case HONDA_ACCORD_CD_DIP:
-		return "HondaD";
-	case FORD_INLINE_6_1995:
-		return "Fordi6";
-	case GY6_139QMB:
-		return "Gy6139";
-	case MAZDA_MIATA_NB1:
-		return "MiataNB1";
-	case FORD_ESCORT_GT:
-		return "EscrtGT";
-	case CITROEN_TU3JP:
-		return "TU3JP";
-	case MITSU_4G93:
-		return "Mi4G93";
-	case MIATA_1990:
-		return "MX590";
-	case MIATA_1996:
-		return "MX596";
-	default:
-		return getEngine_type_e(engineType);
-	}
 }
 
 /**
@@ -154,72 +92,66 @@ const char* getConfigurationName(engine_type_e engineType) {
  */
 void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
-	scheduleMsg(&logger, "Template %s/%d trigger %s/%s/%d", getConfigurationName(engineConfiguration->engineType),
+	efiPrintf("Template %s/%d trigger %s/%s/%d", getConfigurationName(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
 			getEngine_load_mode_e(engineConfiguration->fuelAlgorithm), engineConfiguration->fuelAlgorithm);
 
 
-	scheduleMsg(&logger, "configurationVersion=%d", engine->getGlobalConfigurationVersion());
+	efiPrintf("configurationVersion=%d", engine->getGlobalConfigurationVersion());
 
-	scheduleMsg(&logger, "rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
+	efiPrintf("rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
 			engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	scheduleMsg(&logger, "globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
+	efiPrintf("globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 
-	scheduleMsg(&logger, "=== cranking ===");
-	scheduleMsg(&logger, "crankingRpm: %d", engineConfiguration->cranking.rpm);
-	scheduleMsg(&logger, "cranking injection %s", getInjection_mode_e(engineConfiguration->crankingInjectionMode));
+	efiPrintf("=== cranking ===");
+	efiPrintf("crankingRpm: %d", engineConfiguration->cranking.rpm);
+	efiPrintf("cranking injection %s", getInjection_mode_e(engineConfiguration->crankingInjectionMode));
 
-	if (engineConfiguration->useConstantDwellDuringCranking) {
-		scheduleMsg(&logger, "ignitionDwellForCrankingMs=%.2f", engineConfiguration->ignitionDwellForCrankingMs);
-	} else {
-		scheduleMsg(&logger, "cranking charge charge angle=%.2f fire at %.2f", engineConfiguration->crankingChargeAngle,
-				engineConfiguration->crankingTimingAngle);
-	}
+	efiPrintf("cranking timing %.2f", engineConfiguration->crankingTimingAngle);
 
-	scheduleMsg(&logger, "=== ignition ===");
+	efiPrintf("=== ignition ===");
 
-	scheduleMsg(&logger, "ignitionMode: %s/enabled=%s", getIgnition_mode_e(engineConfiguration->ignitionMode),
+	efiPrintf("ignitionMode: %s/enabled=%s", getIgnition_mode_e(engineConfiguration->ignitionMode),
 			boolToString(engineConfiguration->isIgnitionEnabled));
-	scheduleMsg(&logger, "timingMode: %s", getTiming_mode_e(engineConfiguration->timingMode));
+	efiPrintf("timingMode: %s", getTiming_mode_e(engineConfiguration->timingMode));
 	if (engineConfiguration->timingMode == TM_FIXED) {
-		scheduleMsg(&logger, "fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
+		efiPrintf("fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
 	}
-	scheduleMsg(&logger, "ignitionOffset=%.2f", engineConfiguration->ignitionOffset);
 
-	scheduleMsg(&logger, "=== injection ===");
-	scheduleMsg(&logger, "injection %s offset=%.2f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
+	efiPrintf("=== injection ===");
+	efiPrintf("injection %s offset=%.2f/enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
 			(double) engineConfiguration->extraInjectionOffset, boolToString(engineConfiguration->isInjectionEnabled));
 
 	printOutputs(engineConfiguration);
 
-	scheduleMsg(&logger, "map_avg=%s/wa=%s",
+	efiPrintf("map_avg=%s/wa=%s",
 			boolToString(engineConfiguration->isMapAveragingEnabled),
 			boolToString(engineConfiguration->isWaveAnalyzerEnabled));
 
-	scheduleMsg(&logger, "isManualSpinningMode=%s/isCylinderCleanupEnabled=%s",
+	efiPrintf("isManualSpinningMode=%s/isCylinderCleanupEnabled=%s",
 			boolToString(engineConfiguration->isManualSpinningMode),
 			boolToString(engineConfiguration->isCylinderCleanupEnabled));
 
-	scheduleMsg(&logger, "clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
+	efiPrintf("clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
 			boolToString(engine->clutchUpState));
-	scheduleMsg(&logger, "clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
+	efiPrintf("clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
 			boolToString(engine->clutchDownState));
 
-	scheduleMsg(&logger, "digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
+	efiPrintf("digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
-		scheduleMsg(&logger, "digitalPotentiometer CS%d %s", i,
+		efiPrintf("digitalPotentiometer CS%d %s", i,
 				hwPortname(engineConfiguration->digitalPotentiometerChipSelect[i]));
 	}
 #if EFI_PROD_CODE
 
-	printSpiState(&logger, engineConfiguration);
+	printSpiState(engineConfiguration);
 
 #endif /* EFI_PROD_CODE */
 }
 
-static void doPrintConfiguration() {
+static void doPrintConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	printConfiguration(engineConfiguration);
 }
 
@@ -233,23 +165,6 @@ static void setTimingMode(int value) {
 	engineConfiguration->timingMode = (timing_mode_e) value;
 	doPrintConfiguration();
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-
-void setEngineType(int value) {
-	{
-		chibios_rt::CriticalSectionLocker csl;
-
-		engineConfiguration->engineType = (engine_type_e) value;
-		resetConfigurationExt(&logger, (engine_type_e) value PASS_ENGINE_PARAMETER_SUFFIX);
-		engine->resetEngineSnifferIfInTestMode();
-
-	#if EFI_INTERNAL_FLASH
-		writeToFlashNow();
-	//	scheduleReset();
-	#endif /* EFI_PROD_CODE */
-	}
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	doPrintConfiguration();
 }
 
 static void setIdleSolenoidFrequency(int value) {
@@ -274,12 +189,6 @@ static void setIdlePinMode(int value) {
 
 static void setInjectionOffset(float value) {
 	engineConfiguration->extraInjectionOffset = value;
-	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-}
-
-static void setIgnitionOffset(float value) {
-	engineConfiguration->ignitionOffset = value;
 	doPrintConfiguration();
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -309,27 +218,27 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 	auto raw = Sensor::getRaw(sensor);
 
 	if (!tps.Valid) {
-		scheduleMsg(&logger, "TPS not valid");
+		efiPrintf("TPS not valid");
 	}
 
 	char pinNameBuffer[16];
 
-	scheduleMsg(&logger, "tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
+	efiPrintf("tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
 			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
 
 
-	scheduleMsg(&logger, "current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.Value);
+	efiPrintf("current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.Value);
 }
 
 void printTPSInfo(void) {
-	scheduleMsg(&logger, "pedal up %f / down %f",
+	efiPrintf("pedal up %f / down %f",
 			engineConfiguration->throttlePedalUpVoltage,
 			engineConfiguration->throttlePedalWOTVoltage);
 
 	auto pps = Sensor::get(SensorType::AcceleratorPedal);
 
 	if (!pps.Valid) {
-		scheduleMsg(&logger, "PPS not valid");
+		efiPrintf("PPS not valid");
 	}
 
 	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
@@ -338,12 +247,12 @@ void printTPSInfo(void) {
 
 static void printTemperatureInfo(void) {
 #if EFI_ANALOG_SENSORS
-	Sensor::showAllSensorInfo(&logger);
+	Sensor::showAllSensorInfo();
 
-	scheduleMsg(&logger, "fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
+	efiPrintf("fan=%s @ %s", boolToString(enginePins.fanRelay.getLogicValue()),
 			hwPortname(engineConfiguration->fanPin));
 
-	scheduleMsg(&logger, "A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
+	efiPrintf("A/C relay=%s @ %s", boolToString(enginePins.acRelay.getLogicValue()),
 			hwPortname(engineConfiguration->acRelayPin));
 
 #endif /* EFI_ANALOG_SENSORS */
@@ -378,13 +287,13 @@ static void setRpmHardLimit(int value) {
 
 static void setCrankingIACExtra(float percent) {
 	engineConfiguration->crankingIACposition = percent;
-	scheduleMsg(&logger, "cranking_iac %.2f", percent);
+	efiPrintf("cranking_iac %.2f", percent);
 
 }
 
 static void setCrankingFuel(float timeMs) {
 	engineConfiguration->cranking.baseFuel = timeMs;
-	scheduleMsg(&logger, "cranking_fuel %.2f", timeMs);
+	efiPrintf("cranking_fuel %.2f", timeMs);
 
 	printTemperatureInfo();
 }
@@ -445,7 +354,7 @@ static void setTriggerType(int value) {
 	engineConfiguration->trigger.type = (trigger_type_e) value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
-	scheduleMsg(&logger, "Do you need to also invoke set operation_mode X?");
+	efiPrintf("Do you need to also invoke set operation_mode X?");
 	engine->resetEngineSnifferIfInTestMode();
 }
 
@@ -459,22 +368,15 @@ static void setInjectorLag(float voltage, float value) {
 
 static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (total < 1 || skipped >= total) {
-		scheduleMsg(&logger, "invalid parameters %d %d", total, skipped);
+		efiPrintf("invalid parameters %d %d", total, skipped);
 		return;
 	}
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = total;
 	engineConfiguration->trigger.customSkippedToothCount = skipped;
 
-	scheduleMsg(&logger, "toothed: total=%d/skipped=%d", total, skipped);
+	efiPrintf("toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->ambiguousOperationMode);
-//	initializeTriggerWaveform(&logger, engineConfiguration, engineConfiguration2);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	doPrintConfiguration();
-}
-
-static void setCrankingChargeAngle(float value) {
-	engineConfiguration->crankingChargeAngle = value;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 	doPrintConfiguration();
 }
@@ -482,13 +384,13 @@ static void setCrankingChargeAngle(float value) {
 static void setGlobalFuelCorrection(float value) {
 	if (value < 0.01 || value > 50)
 		return;
-	scheduleMsg(&logger, "setting fuel mult=%.2f", value);
+	efiPrintf("setting fuel mult=%.2f", value);
 	engineConfiguration->globalFuelCorrection = value;
 }
 
 static void setFanSetting(float onTempC, float offTempC) {
 	if (onTempC <= offTempC) {
-		scheduleMsg(&logger, "ON temp [%.2f] should be above OFF temp [%.2f]", onTempC, offTempC);
+		efiPrintf("ON temp [%.2f] should be above OFF temp [%.2f]", onTempC, offTempC);
 		return;
 	}
 	engineConfiguration->fanOnTemperature = onTempC;
@@ -497,7 +399,7 @@ static void setFanSetting(float onTempC, float offTempC) {
 
 static void setWholeTimingMap(float value) {
 	// todo: table helper?
-	scheduleMsg(&logger, "Setting whole timing map to %.2f", value);
+	efiPrintf("Setting whole timing map to %.2f", value);
 	for (int l = 0; l < IGN_LOAD_COUNT; l++) {
 		for (int r = 0; r < IGN_RPM_COUNT; r++) {
 			config->ignitionTable[l][r] = value;
@@ -506,24 +408,22 @@ static void setWholeTimingMap(float value) {
 }
 
 static void setWholePhaseMapCmd(float value) {
-	scheduleMsg(&logger, "Setting whole injection phase map to %.2f", value);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	setMap(config->injectionPhase, value);
-#endif
+	efiPrintf("Setting whole injection phase map to %.2f", value);
+	setTable(config->injectionPhase, value);
 }
 
 static void setWholeTimingMapCmd(float value) {
-	scheduleMsg(&logger, "Setting whole timing advance map to %.2f", value);
+	efiPrintf("Setting whole timing advance map to %.2f", value);
 	setWholeTimingMap(value);
 	engine->resetEngineSnifferIfInTestMode();
 }
 
 static void setWholeVeCmd(float value) {
-	scheduleMsg(&logger, "Setting whole VE map to %.2f", value);
+	efiPrintf("Setting whole VE map to %.2f", value);
 	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
-		scheduleMsg(&logger, "WARNING: setting VE map not in SD mode is pointless");
+		efiPrintf("WARNING: setting VE map not in SD mode is pointless");
 	}
-	setMap(config->veTable, value);
+	setTable(config->veTable, value);
 	engine->resetEngineSnifferIfInTestMode();
 }
 
@@ -537,6 +437,14 @@ static void setPotSpi(int spi) {
 	engineConfiguration->digitalPotentiometerSpiDevice = (spi_device_e) spi;
 }
 
+static brain_pin_e parseBrainPinWithErrorMessage(const char *pinName) {
+	brain_pin_e pin = parseBrainPin(pinName);
+	if (pin == GPIO_INVALID) {
+		efiPrintf("invalid pin name [%s]", pinName);
+	}
+	return pin;
+}
+
 /**
  * For example:
  *   set_ignition_pin 1 PD7
@@ -545,37 +453,53 @@ static void setPotSpi(int spi) {
  */
 static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index >= IGNITION_PIN_COUNT)
+	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	scheduleMsg(&logger, "setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
+	efiPrintf("setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->ignitionPins[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 // this method is useful for desperate time debugging
-static void readPin(const char *pinName) {
-	brain_pin_e pin = parseBrainPin(pinName);
+void readPin(const char *pinName) {
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
 	int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
-	scheduleMsg(&logger, "pin %s value %d", hwPortname(pin), physicalValue);
+	efiPrintf("pin %s value %d", hwPortname(pin), physicalValue);
+}
+
+
+// this method is useful for desperate time debugging or hardware validation
+static void benchSetPinValue(const char *pinName, int bit) {
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
+	if (pin == GPIO_INVALID) {
+		return;
+	}
+	palWritePad(getHwPort("write", pin), getHwPin("write", pin), bit);
+	efiPrintf("pin %s set value", hwPortname(pin));
+	readPin(pinName);
+}
+
+static void benchClearPin(const char *pinName) {
+	benchSetPinValue(pinName, 0);
+}
+
+static void benchSetPin(const char *pinName) {
+	benchSetPinValue(pinName, 1);
 }
 
 static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const char *name) {
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	scheduleMsg(&logger, "setting %s pin to %s please save&restart", name, hwPortname(pin));
+	efiPrintf("setting %s pin to %s please save&restart", name, hwPortname(pin));
 	*targetPin = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -640,15 +564,13 @@ static void setFuelPumpPin(const char *pinName) {
 
 static void setInjectionPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index >= INJECTION_PIN_COUNT)
+	if (index < 0 || index >= MAX_CYLINDER_COUNT)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	scheduleMsg(&logger, "setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
+	efiPrintf("setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->injectionPins[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -663,13 +585,11 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index > 2)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	scheduleMsg(&logger, "setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
+	efiPrintf("setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->triggerInputPins[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -690,12 +610,11 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index >= EGT_CHANNEL_COUNT)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	scheduleMsg(&logger, "setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
+	efiPrintf("setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->max31855_cs[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -704,12 +623,11 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	int index = atoi(indexStr);
 	if (index < 0 || index >= TRIGGER_SIMULATOR_PIN_COUNT)
 		return;
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	scheduleMsg(&logger, "setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
+	efiPrintf("setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->triggerSimulatorPins[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -718,37 +636,36 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 // set_analog_input_pin pps pa4
 // set_analog_input_pin afr none
 static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
 	adc_channel_e channel = getAdcChannel(pin);
 	if (channel == EFI_ADC_ERROR) {
-		scheduleMsg(&logger, "Error with [%s]", pinName);
+		efiPrintf("Error with [%s]", pinName);
 		return;
 	}
 	if (strEqual("map", sensorStr)) {
 		engineConfiguration->map.sensor.hwChannel = channel;
-		scheduleMsg(&logger, "setting MAP to %s/%d", pinName, channel);
+		efiPrintf("setting MAP to %s/%d", pinName, channel);
 	} else if (strEqual("pps", sensorStr)) {
 		engineConfiguration->throttlePedalPositionAdcChannel = channel;
-		scheduleMsg(&logger, "setting PPS to %s/%d", pinName, channel);
+		efiPrintf("setting PPS to %s/%d", pinName, channel);
 	} else if (strEqual("afr", sensorStr)) {
 		engineConfiguration->afr.hwChannel = channel;
-		scheduleMsg(&logger, "setting AFR to %s/%d", pinName, channel);
+		efiPrintf("setting AFR to %s/%d", pinName, channel);
 	} else if (strEqual("clt", sensorStr)) {
 		engineConfiguration->clt.adcChannel = channel;
-		scheduleMsg(&logger, "setting CLT to %s/%d", pinName, channel);
+		efiPrintf("setting CLT to %s/%d", pinName, channel);
 	} else if (strEqual("iat", sensorStr)) {
 		engineConfiguration->iat.adcChannel = channel;
-		scheduleMsg(&logger, "setting IAT to %s/%d", pinName, channel);
+		efiPrintf("setting IAT to %s/%d", pinName, channel);
 	} else if (strEqual("tps", sensorStr)) {
 		engineConfiguration->tps1_1AdcChannel = channel;
-		scheduleMsg(&logger, "setting TPS1 to %s/%d", pinName, channel);
+		efiPrintf("setting TPS1 to %s/%d", pinName, channel);
 	} else if (strEqual("tps2", sensorStr)) {
 		engineConfiguration->tps2_1AdcChannel = channel;
-		scheduleMsg(&logger, "setting TPS2 to %s/%d", pinName, channel);
+		efiPrintf("setting TPS2 to %s/%d", pinName, channel);
 	}
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
@@ -759,23 +676,21 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	if (index < 0 || index > 2) {
 		return;
 	}
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	scheduleMsg(&logger, "setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
+	efiPrintf("setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->logicAnalyzerPins[index] = pin;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
 static void showPinFunction(const char *pinName) {
-	brain_pin_e pin = parseBrainPin(pinName);
+	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
 	if (pin == GPIO_INVALID) {
-		scheduleMsg(&logger, "invalid pin name [%s]", pinName);
 		return;
 	}
-	scheduleMsg(&logger, "Pin %s: [%s]", pinName, getPinFunction(pin));
+	efiPrintf("Pin %s: [%s]", pinName, getPinFunction(pin));
 }
 
 #endif /* EFI_PROD_CODE */
@@ -791,7 +706,7 @@ static void setTimingMap(const char * rpmStr, const char *loadStr, const char *v
 	loadIndex = loadIndex < 0 ? 0 : loadIndex;
 
 	config->ignitionTable[loadIndex][rpmIndex] = value;
-	scheduleMsg(&logger, "Setting timing map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
+	efiPrintf("Setting timing map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
 }
 
 static void setSpiMode(int index, bool mode) {
@@ -806,10 +721,10 @@ static void setSpiMode(int index, bool mode) {
 		engineConfiguration->is_enabled_spi_3 = mode;
 		break;
 	default:
-		scheduleMsg(&logger, "invalid spi index %d", index);
+		efiPrintf("invalid spi index %d", index);
 		return;
 	}
-	printSpiState(&logger, engineConfiguration);
+	printSpiState(engineConfiguration);
 }
 
 static void enableOrDisable(const char *param, bool isEnabled) {
@@ -819,12 +734,14 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		CONFIG(verboseTLE8888) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
+		CONFIG(artificialTestMisfire) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
+		CONFIG(displayLogicLevelsInEngineSniffer) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
 		CONFIG(enableVerboseCanTx) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "cranking_constant_dwell")) {
-		engineConfiguration->useConstantDwellDuringCranking = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
 		engineConfiguration->isCJ125Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125verbose")) {
@@ -863,18 +780,10 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
 		engineConfiguration->isVerboseAuxPid1 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug2")) {
-		engineConfiguration->isVerboseAuxPid2 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug3")) {
-		engineConfiguration->isVerboseAuxPid3 = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "auxdebug4")) {
-		engineConfiguration->isVerboseAuxPid4 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altdebug")) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
 		engineConfiguration->useTpicAdvancedMode = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "knockdebug")) {
-		engine->knockDebug = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
@@ -897,8 +806,20 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->invertCamVVTSignal = isEnabled;
 	} else if (strEqualCaseInsensitive(param, CMD_IGNITION)) {
 		engineConfiguration->isIgnitionEnabled = isEnabled;
+#if EFI_EMULATE_POSITION_SENSORS
 	} else if (strEqualCaseInsensitive(param, CMD_SELF_STIMULATION)) {
-		engine->directSelfStimulation = isEnabled;
+		if (isEnabled) {
+			enableTriggerStimulator();
+		} else {
+			disableTriggerStimulator();
+		}
+	} else if (strEqualCaseInsensitive(param, CMD_EXTERNAL_STIMULATION)) {
+		if (isEnabled) {
+			enableExternalTriggerStimulator();
+		} else {
+			disableTriggerStimulator();
+		}
+#endif
 	} else if (strEqualCaseInsensitive(param, "engine_control")) {
 		engineConfiguration->isEngineControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "map_avg")) {
@@ -910,10 +831,10 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "cylinder_cleanup")) {
 		engineConfiguration->isCylinderCleanupEnabled = isEnabled;
 	} else {
-		scheduleMsg(&logger, "unexpected [%s]", param);
+		efiPrintf("unexpected [%s]", param);
 		return; // well, MISRA would not like this 'return' here :(
 	}
-	scheduleMsg(&logger, "[%s] %s", param, isEnabled ? "enabled" : "disabled");
+	efiPrintf("[%s] %s", param, isEnabled ? "enabled" : "disabled");
 }
 
 static void enable(const char *param) {
@@ -944,24 +865,24 @@ static void printAllInfo(void) {
 	printTemperatureInfo();
 	printTPSInfo();
 #if EFI_ENGINE_SNIFFER
-	scheduleMsg(&logger, "waveChartUsedSize=%d", waveChartUsedSize);
+	efiPrintf("waveChartUsedSize=%d", waveChartUsedSize);
 #endif
 }
 
-typedef struct {
+struct plain_get_integer_s {
 	const char *token;
 	int *value;
-} plain_get_integer_s;
+};
 
-typedef struct {
+struct plain_get_short_s {
 	const char *token;
 	uint16_t *value;
-} plain_get_short_s;
+};
 
-typedef struct {
+struct plain_get_float_s {
 	const char *token;
 	float *value;
-} plain_get_float_s;
+};
 
 
 #if ! EFI_UNIT_TEST
@@ -1004,7 +925,6 @@ const plain_get_float_s getF_plain[] = {
 		{"adcVcc", &engineConfiguration->adcVcc},
 		{"cranking_dwell", &engineConfiguration->ignitionDwellForCrankingMs},
 		{"idle_position", &engineConfiguration->manIdlePosition},
-		{"ignition_offset", &engineConfiguration->ignitionOffset},
 		{"injection_offset", &engineConfiguration->extraInjectionOffset},
 		{"global_trigger_offset_angle", &engineConfiguration->globalTriggerAngleOffset},
 		{"global_fuel_correction", &engineConfiguration->globalFuelCorrection},
@@ -1013,7 +933,6 @@ const plain_get_float_s getF_plain[] = {
 		{"iat_bias", &engineConfiguration->iat.config.bias_resistor},
 		{"cranking_fuel", &engineConfiguration->cranking.baseFuel},
 		{"cranking_timing_angle", &engineConfiguration->crankingTimingAngle},
-		{"cranking_charge_angle", &engineConfiguration->crankingChargeAngle},
 };
 #endif /* EFI_UNIT_TEST */
 
@@ -1024,7 +943,7 @@ static void getValue(const char *paramStr) {
 		const plain_get_integer_s *currentI = &getI_plain[0];
 		while (currentI < getI_plain + sizeof(getI_plain)/sizeof(getI_plain[0])) {
 			if (strEqualCaseInsensitive(paramStr, currentI->token)) {
-				scheduleMsg(&logger, "%s value: %d", currentI->token, *currentI->value);
+				efiPrintf("%s value: %d", currentI->token, *currentI->value);
 				return;
 			}
 			currentI++;
@@ -1035,7 +954,7 @@ static void getValue(const char *paramStr) {
 	while (currentF < getF_plain + sizeof(getF_plain)/sizeof(getF_plain[0])) {
 		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
 			float value = *currentF->value;
-			scheduleMsg(&logger, "%s value: %.2f", currentF->token, value);
+			efiPrintf("%s value: %.2f", currentF->token, value);
 			return;
 		}
 		currentF++;
@@ -1046,33 +965,33 @@ static void getValue(const char *paramStr) {
 
 
 	if (strEqualCaseInsensitive(paramStr, "isCJ125Enabled")) {
-		scheduleMsg(&logger, "isCJ125Enabled=%d", engineConfiguration->isCJ125Enabled);
+		efiPrintf("isCJ125Enabled=%d", engineConfiguration->isCJ125Enabled);
 #if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "bor")) {
 		showBor();
 #endif /* EFI_PROD_CODE */
 	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
-		scheduleMsg(&logger, "tps_min=%d", engineConfiguration->tpsMin);
+		efiPrintf("tps_min=%d", engineConfiguration->tpsMin);
 	} else if (strEqualCaseInsensitive(paramStr, "trigger_only_front")) {
-		scheduleMsg(&logger, "trigger_only_front=%d", engineConfiguration->useOnlyRisingEdgeForTrigger);
+		efiPrintf("trigger_only_front=%d", engineConfiguration->useOnlyRisingEdgeForTrigger);
 	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
-		scheduleMsg(&logger, "tps_max=%d", engineConfiguration->tpsMax);
+		efiPrintf("tps_max=%d", engineConfiguration->tpsMax);
 	} else if (strEqualCaseInsensitive(paramStr, "global_trigger_offset_angle")) {
-		scheduleMsg(&logger, "global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
+		efiPrintf("global_trigger_offset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 	} else if (strEqualCaseInsensitive(paramStr, "trigger_hw_input")) {
-		scheduleMsg(&logger, "trigger_hw_input=%s", boolToString(engine->hwTriggerInputEnabled));
+		efiPrintf("trigger_hw_input=%s", boolToString(engine->hwTriggerInputEnabled));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_1")) {
-		scheduleMsg(&logger, "is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
+		efiPrintf("is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_2")) {
-		scheduleMsg(&logger, "is_enabled_spi_2=%s", boolToString(engineConfiguration->is_enabled_spi_2));
+		efiPrintf("is_enabled_spi_2=%s", boolToString(engineConfiguration->is_enabled_spi_2));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_3")) {
-		scheduleMsg(&logger, "is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
+		efiPrintf("is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
 	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
-		scheduleMsg(&logger, "vvtCamSensorUseRise=%s", boolToString(engineConfiguration->vvtCamSensorUseRise));
+		efiPrintf("vvtCamSensorUseRise=%s", boolToString(engineConfiguration->vvtCamSensorUseRise));
 	} else if (strEqualCaseInsensitive(paramStr, "invertCamVVTSignal")) {
-		scheduleMsg(&logger, "invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
+		efiPrintf("invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
-		scheduleMsg(&logger, "isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
+		efiPrintf("isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
 	}
 
 #if EFI_RTC
@@ -1081,7 +1000,7 @@ static void getValue(const char *paramStr) {
 	}
 #endif
 	else {
-		scheduleMsg(&logger, "Invalid Parameter: %s", paramStr);
+		efiPrintf("Invalid Parameter: %s", paramStr);
 	}
 }
 
@@ -1093,34 +1012,29 @@ static void setFsioCurve2Value(float value) {
 	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
 }
 
-typedef struct {
+struct command_i_s {
 	const char *token;
 	VoidInt callback;
-} command_i_s;
+};
 
-typedef struct {
+struct command_f_s {
 	const char *token;
 	VoidFloat callback;
-} command_f_s;
+};
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 #if EFI_ENABLE_MOCK_ADC
-		{MOCK_IAT_COMMAND, setMockIatVoltage},
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
-		{"mock_vbatt_voltage", setMockVBattVoltage},
-		{MOCK_CLT_COMMAND, setMockCltVoltage},
 #endif // EFI_ENABLE_MOCK_ADC
-		{"ignition_offset", setIgnitionOffset},
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},
 		{"cranking_fuel", setCrankingFuel},
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
-		{"cranking_charge_angle", setCrankingChargeAngle},
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
@@ -1134,9 +1048,6 @@ const command_f_s commandsF[] = {
 		{"fsio_curve_1_value", setFsioCurve1Value},
 		{"fsio_curve_2_value", setFsioCurve2Value},
 #if EFI_PROD_CODE
-#if EFI_VEHICLE_SPEED
-		{"mock_vehicle_speed", setMockVehicleSpeed},
-#endif /* EFI_VEHICLE_SPEED */
 #if EFI_IDLE_CONTROL
 		{"idle_offset", setIdleOffset},
 		{"idle_p", setIdlePFactor},
@@ -1280,9 +1191,9 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setTriggerEmulatorRPM(valueI);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
-		engineConfiguration->vvtOffset = valueF;
+		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
-		engineConfiguration->vvtMode = (vvt_mode_e)valueI;
+		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
 		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
@@ -1378,7 +1289,10 @@ void initSettings(void) {
 	addConsoleActionS("set_cj125_heater_pin", setCj125HeaterPin);
 	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
+	addConsoleActionS("bench_clearpin", benchClearPin);
+	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
+	addConsoleAction("adc_report", printFullAdcReport);
 	addConsoleActionS("set_can_rx_pin", setCanRxPin);
 	addConsoleActionS("set_can_tx_pin", setCanTxPin);
 
@@ -1394,3 +1308,65 @@ void initSettings(void) {
 }
 
 #endif /* !EFI_UNIT_TEST */
+
+/**
+ * These should be not very long because these are displayed on the LCD as is
+ */
+const char* getConfigurationName(engine_type_e engineType) {
+	switch (engineType) {
+	case DEFAULT_FRANKENSO:
+		return "DEFAULT_FRANKENSO";
+	case DODGE_NEON_1995:
+		return "Neon95";
+	case FORD_ASPIRE_1996:
+		return "Aspire";
+	case NISSAN_PRIMERA:
+		return "Primera";
+	case HONDA_ACCORD_CD:
+		return "Accord3";
+	case HONDA_ACCORD_CD_TWO_WIRES:
+		return "Accord2";
+	case HONDA_ACCORD_1_24_SHIFTED:
+		return "Accord24sh";
+	case HONDA_ACCORD_CD_DIP:
+		return "HondaD";
+	case FORD_INLINE_6_1995:
+		return "Fordi6";
+	case GY6_139QMB:
+		return "Gy6139";
+	case MAZDA_MIATA_NB1:
+		return "MiataNB1";
+	case FORD_ESCORT_GT:
+		return "EscrtGT";
+	case CITROEN_TU3JP:
+		return "TU3JP";
+	case MITSU_4G93:
+		return "Mi4G93";
+	case MIATA_1990:
+		return "MX590";
+	case MIATA_1996:
+		return "MX596";
+	default:
+		return getEngine_type_e(engineType);
+	}
+}
+
+void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	{
+#if EFI_PROD_CODE
+		chibios_rt::CriticalSectionLocker csl;
+#endif /* EFI_PROD_CODE */
+
+		engineConfiguration->engineType = (engine_type_e)value;
+		resetConfigurationExt((engine_type_e)value PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->resetEngineSnifferIfInTestMode();
+
+	#if EFI_INTERNAL_FLASH
+		writeToFlashNow();
+	#endif /* EFI_INTERNAL_FLASH */
+	}
+	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+#if ! EFI_UNIT_TEST
+	doPrintConfiguration();
+#endif /* EFI_UNIT_TEST */
+}

@@ -5,6 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "trigger_universal.h"
 
 /**
@@ -100,11 +102,28 @@ void configure3_1_cam(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 }
 
+/**
+ * https://rusefi.com/forum/viewtopic.php?f=5&t=1977
+ */
+void configureKawaKX450F(TriggerWaveform *s) {
+	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+
+	s->setTriggerSynchronizationGap(2.28);
+
+	float toothWidth = 3 / 20.0;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, 18, 0, toothWidth, 0, engineCycle,
+			NO_LEFT_FILTER, 720 - 39);
+
+	s->addEvent(0.97, T_PRIMARY, TV_RISE);
+	s->addEvent(1, T_PRIMARY, TV_FALL);
+}
+
 void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	s->useRiseEdge = false;
-	s->gapBothDirections = false;
 
 	int offset = 2 * 20;
 

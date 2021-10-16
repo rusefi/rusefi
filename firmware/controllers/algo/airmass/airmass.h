@@ -1,7 +1,5 @@
 #pragma once
 
-#include "engine.h"
-
 class ValueProvider3D;
 
 struct AirmassResult {
@@ -9,12 +7,15 @@ struct AirmassResult {
 	float EngineLoadPercent = 100;
 };
 
-class AirmassModelBase {
+struct AirmassModelBase {
+	virtual AirmassResult getAirmass(int rpm) = 0;
+};
+
+class AirmassVeModelBase : public AirmassModelBase {
 public:
 	DECLARE_ENGINE_PTR;
 
-	explicit AirmassModelBase(const ValueProvider3D& veTable);
-	virtual AirmassResult getAirmass(int rpm) = 0;
+	explicit AirmassVeModelBase(const ValueProvider3D& veTable);
 
 protected:
 	// Retrieve the user-calibrated volumetric efficiency from the table

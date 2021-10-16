@@ -147,6 +147,10 @@ typedef struct {
    * @brief Receive error callback.
    */
   uartecb_t                 rxerr_cb;
+  /**
+   * @brief   Receiver timeout (idle) callback.
+   */
+  uartcb_t                  timeout_cb;
   /* End of the mandatory fields.*/
   /**
    * @brief Bit rate.
@@ -164,12 +168,6 @@ typedef struct {
    * @brief Initialization value for the CR3 register.
    */
   uint16_t                  cr3;
-  /* Additional (optional) handlers. Placed here for the struct compatibility.*/
-  /**
-   * @brief   Receiver timeout (idle) callback.
-   * @details Handles an idle interrupt for USARTv1.
-   */
-  uartcb_t                  timeout_cb;
   /**
    * @brief Half-transfer receive buffer callback.
    */

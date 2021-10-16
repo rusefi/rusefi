@@ -3,7 +3,7 @@
     <property name="hw_tests" value="build_hw"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
     <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
-    <property name="lib_list" value="lib/mockito-all-1.10.19.jar:../java_tools/configuration_definition/lib/snakeyaml.jar:lib/log4j-api-2.13.3.jar:lib/log4j-core-2.13.3.jar:lib/jsr305-2.0.1.jar:lib/dfu/dfu_java.jar:lib/dfu/IntelHexParser.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar"/>
+    <property name="lib_list" value="lib/mockito-all-1.10.19.jar:../java_tools/configuration_definition/lib/snakeyaml.jar:lib/log4j-api-2.13.3.jar:lib/log4j-core-2.13.3.jar:lib/jsr305-2.0.1.jar:lib/dfu/dfu_java.jar:lib/dfu/IntelHexParser.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar:../java_tools/configuration_definition/lib/antlr-4.5-complete.jar"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -21,7 +21,7 @@
                 destdir="autoupdate_build/classes"
                 classpath="lib/annotations.jar"
         >
-            <src path="autoupdate/src"/>
+            <src path="autoupdate/src/main/java"/>
             <src path="shared_io/src/main/java"/>
         </javac>
     </target>
@@ -46,10 +46,10 @@
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
                classpath="${lib_list}">
-            <src path="autotest/src"/>
+            <src path="autotest/src/main/java"/>
             <src path="autoupdate/src/main/java"/>
-            <src path="../java_tools/configuration_definition/src"/>
-            <src path="../java_tools/enum_to_string/src"/>
+            <src path="../java_tools/configuration_definition/src/main/java"/>
+            <src path="../java_tools/enum_to_string/src/main/java"/>
             <src path="../java_tools/proxy_server/src/main/java"/>
             <src path="../java_tools/proxy_server/src/test/java"/>
             <src path="io/src/main/java"/>
@@ -58,16 +58,16 @@
             <src path="models/src/test/java"/>
             <src path="inifile/src/main/java"/>
             <src path="inifile/src/test/java"/>
-            <src path="shared_ui/src"/>
+            <src path="shared_ui/src/main/java"/>
             <src path="shared_io/src/main/java"/>
 <!--            <src path="shared_io/src/test/java"/>-->
             <src path="logging-api/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
-            <src path="romraider/src"/>
-            <src path="logging/src"/>
+            <src path="romraider/src/main/java"/>
+            <src path="logging/src/main/java"/>
             <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
-            <src path="tools/src"/>
+            <src path="tools/src/main/java"/>
             <!-- uncomment if you want to compile under java 11
             // see https://github.com/rusefi/rusefi/issues/1526
             please remove the space between '-' and '-add-exports' it should be double-dash
@@ -90,14 +90,14 @@
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="build">
 <!--                at the moment we do NOT have any tests matching this pattern - all hardware tests are not inside 'test' folders -->
-                <fileset dir="autotest/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="autoupdate/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="autoupdate/src/main/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="io/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="inifile/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="models/src/test/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
-                <fileset dir="romraider/src" includes="**/test/**/*Test.java"/>
-                <fileset dir="logging/src" includes="**/test/**/*Test.java"/>
+                <fileset dir="romraider/src/main/java" includes="**/test/**/*Test.java"/>
+                <fileset dir="logging/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
     </target>
@@ -135,6 +135,10 @@
             <fileset dir="romraider/resources" includes="**/*.*"/>
         </copy>
 
+        <copy todir="build/classes/c_sources" flatten="true">
+            <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
+        </copy>
+
         <tstamp>
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
@@ -156,6 +160,7 @@
             <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>
+            <zipfileset src="../java_tools/configuration_definition/lib/antlr-4.5-complete.jar" includes="**/*.class"/>
             <zipfileset src="lib/jSerialComm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-aarch64.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-arm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
@@ -187,7 +192,7 @@
 
     </target>
 
-    <target name="real_hardware_functional_test" depends="jar">
+    <target name="hardware_ci_f4_discovery" depends="jar">
         <mkdir dir="${hw_tests}"/>
         <junit fork="no"
                maxmemory="512m"
@@ -201,7 +206,29 @@
             <classpath
                     path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
             <batchtest todir="${hw_tests}">
-                <fileset dir="autotest/src" includes="**/*Test.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/common/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/f4discovery/*.java"/>
+            </batchtest>
+            <formatter type="plain" usefile="false" /> <!-- to screen -->
+        </junit>
+    </target>
+
+    <target name="hardware_ci_proteus" depends="jar">
+        <mkdir dir="${hw_tests}"/>
+        <junit fork="no"
+               maxmemory="512m"
+               printsummary="yes"
+               showoutput="true"
+               haltonfailure="yes">
+
+            <jvmarg value="-ea"/>
+            <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
+            <formatter type="brief"/>
+            <classpath
+                    path="build/classes:lib/junit.jar:${lib_list}:lib/commons-logging.jar"/>
+            <batchtest todir="${hw_tests}">
+                <fileset dir="autotest/src/main/java" includes="**/common/*.java"/>
+                <fileset dir="autotest/src/main/java" includes="**/proteus/*.java"/>
             </batchtest>
             <formatter type="plain" usefile="false" /> <!-- to screen -->
         </junit>

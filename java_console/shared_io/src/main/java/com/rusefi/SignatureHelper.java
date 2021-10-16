@@ -13,25 +13,21 @@ import static com.rusefi.shared.FileUtil.RUSEFI_SETTINGS_FOLDER;
 public class SignatureHelper {
     private final static String LOCAL_INI = RUSEFI_SETTINGS_FOLDER + File.separator + "ini_database";
 
-    public static final String PREFIX = "rusEFI ";
-    public static final char SLASH = '/';
+    // todo: find a way to reference Fields.PROTOCOL_SIGNATURE_PREFIX
+    private static final String PREFIX = "rusEFI ";
+    private static final char SLASH = '/';
 
     public static Pair<String, String> getUrl(String signature) {
-        if (signature == null || !signature.startsWith(PREFIX))
-            return null;
-        signature = signature.substring(PREFIX.length()).trim();
-        String[] elements = signature.split("\\.");
-        if (elements.length != 5)
+        RusEfiSignature s = parse(signature);
+        if (s == null)
             return null;
 
-        String year = elements[0];
-        String month = elements[1];
-        String day = elements[2];
-        String bundle = elements[3];
-        String hash = elements[4];
-
-        String fileName = hash + ".ini";
-        return new Pair("https://rusefi.com/online/ini/rusefi/" + year + SLASH + month + SLASH + day + SLASH + bundle + SLASH + fileName, fileName);
+        String fileName = s.getHash() + ".ini";
+        return new Pair("https://rusefi.com/online/ini/rusefi/" + s.getYear() + SLASH +
+                s.getMonth() + SLASH +
+                s.getDay() + SLASH +
+                s.getBundle() + SLASH +
+                fileName, fileName);
     }
 
     public static String downloadIfNotAvailable(Pair<String, String> p) {
@@ -54,5 +50,22 @@ public class SignatureHelper {
             System.err.println(e.getMessage());
             return null;
         }
+    }
+
+    public static RusEfiSignature parse(String signature) {
+        if (signature == null || !signature.startsWith(PREFIX))
+            return null;
+        signature = signature.substring(PREFIX.length()).trim();
+        String[] elements = signature.split("\\.");
+        if (elements.length != 5)
+            return null;
+
+        String year = elements[0];
+        String month = elements[1];
+        String day = elements[2];
+        String bundle = elements[3];
+        String hash = elements[4];
+
+        return new RusEfiSignature(year, month, day, bundle, hash);
     }
 }

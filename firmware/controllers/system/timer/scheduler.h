@@ -6,12 +6,11 @@
  */
 #pragma once
 
-#include "global.h"
-
 typedef void (*schfunc_t)(void *);
 
 class action_s {
 public:
+	// Default constructor constructs null action (ie, implicit bool conversion returns false)
 	action_s() = default;
 
 	// Allow implicit conversion from schfunc_t to action_s
@@ -27,6 +26,10 @@ public:
 	schfunc_t getCallback() const;
 	void * getArgument() const;
 
+	operator bool() const {
+		return callback != nullptr;
+	}
+
 private:
 	schfunc_t callback = nullptr;
 	void *param = nullptr;
@@ -35,16 +38,18 @@ private:
 /**
  * This structure holds information about an event scheduled in the future: when to execute what callback with what parameters
  */
+#pragma pack(push, 4)
 struct scheduling_s {
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 	virtual_timer_t timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
+	DECLARE_ENGINE_PTR;
+
 	/**
 	 * timestamp represented as 64-bit value of ticks since MCU start
 	 */
 	volatile efitime_t momentX = 0;
-	bool isScheduled = false;
 
 	/**
 	 * Scheduler implementation uses a sorted linked list of these scheduling records.
@@ -53,12 +58,14 @@ struct scheduling_s {
 
 	action_s action;
 };
+#pragma pack(pop)
 
 struct ExecutorInterface {
 	/**
 	 * see also scheduleByAngle
 	 */
-	virtual void scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) = 0;
-	virtual void scheduleByTimestampNt(scheduling_s *scheduling, efitime_t timeUs, action_s action) = 0;
+	virtual void scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) = 0;
+	virtual void scheduleByTimestampNt(const char *msg, scheduling_s *scheduling, efitime_t timeUs, action_s action) = 0;
 	virtual void scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) = 0;
+	virtual void cancel(scheduling_s* scheduling) = 0;
 };

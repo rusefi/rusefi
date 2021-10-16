@@ -7,19 +7,15 @@
 
 // todo: move this code to more proper locations
 
-#include "engine.h"
-#include "thermistors.h"
+#include "pch.h"
+
 #include "speed_density.h"
-#include "allsensors.h"
 #include "fuel_math.h"
-#include "engine_math.h"
 #include "advance_map.h"
 #include "aux_valves.h"
-#include "perf_trace.h"
 #include "closed_loop_fuel.h"
-#include "sensor.h"
 #include "launch_control.h"
-
+#include "injector_model.h"
 
 #if EFI_PROD_CODE
 #include "svnversion.h"
@@ -28,11 +24,6 @@
 #if ! EFI_UNIT_TEST
 #include "status_loop.h"
 #endif
-
-EXTERN_ENGINE;
-
-// this does not look exactly right
-extern LoggingWithStorage engineLogger;
 
 WarningCodeState::WarningCodeState() {
 	clear();
@@ -68,41 +59,32 @@ MockAdcState::MockAdcState() {
 #if EFI_ENABLE_MOCK_ADC
 void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
-	scheduleMsg(&engineLogger, "fake voltage: channel %d value %.2f", hwChannel, voltage);
+	efiPrintf("fake voltage: channel %d value %.2f", hwChannel, voltage);
 
 	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
 	hasMockAdc[hwChannel] = true;
 }
 #endif /* EFI_ENABLE_MOCK_ADC */
 
-FuelConsumptionState::FuelConsumptionState() {
-	accumulatedSecondPrevNt = accumulatedMinutePrevNt = getTimeNowNt();
-}
+void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
+	m_consumedGrams += grams;
 
-void FuelConsumptionState::addData(float durationMs) {
-	if (durationMs > 0.0f) {
-		perSecondAccumulator += durationMs;
-		perMinuteAccumulator += durationMs;
+	float elapsedSecond = m_timer.getElapsedSecondsAndReset(nowNt);
+
+	// If it's been a long time since last injection, ignore this pulse
+	if (elapsedSecond > 0.2f) {
+		m_rate = 0;
+	} else {
+		m_rate = grams / elapsedSecond;
 	}
 }
 
-void FuelConsumptionState::update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efitick_t deltaNt = nowNt - accumulatedSecondPrevNt;
-	if (deltaNt >= NT_PER_SECOND) {
-		perSecondConsumption = getFuelRate(perSecondAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
-		perSecondAccumulator = 0;
-		accumulatedSecondPrevNt = nowNt;
-	}
-
-	deltaNt = nowNt - accumulatedMinutePrevNt;
-	if (deltaNt >= NT_PER_SECOND * 60) {
-		perMinuteConsumption = getFuelRate(perMinuteAccumulator, deltaNt PASS_ENGINE_PARAMETER_SUFFIX);
-		perMinuteAccumulator = 0;
-		accumulatedMinutePrevNt = nowNt;
-	}
+float FuelConsumptionState::getConsumedGrams() const {
+	return m_consumedGrams;
 }
 
-TransmissionState::TransmissionState() {
+float FuelConsumptionState::getConsumptionGramPerSecond() const {
+	return m_rate;
 }
 
 EngineState::EngineState() {
@@ -139,19 +121,14 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	running.pidCorrection = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// update fuel consumption states
-	fuelConsumption.update(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// post-cranking fuel enrichment.
-	// for compatibility reasons, apply only if the factor is greater than zero (0.01 margin used)
-	if (engineConfiguration->postCrankingFactor > 0.01f) {
+	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
+	if (engineConfiguration->postCrankingFactor > 1.0f) {
 		// convert to microsecs and then to seconds
-		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / 1000000.0f;
+		running.timeSinceCrankingInSecs = NT2US(timeSinceCranking) / US_PER_SECOND_F;
 		// use interpolation for correction taper
 		running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
 			engineConfiguration->postCrankingDurationSec, 1.0f, running.timeSinceCrankingInSecs);
@@ -161,27 +138,43 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	engineNoiseHipLevel = interpolate2d("knock", rpm, engineConfiguration->knockNoiseRpmBins,
+	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise);
 
 	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	auto tps = Sensor::get(SensorType::Tps1);
 	updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
-	ENGINE(injectionDuration) = getInjectionDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+	float injectionMass = getInjectionMass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	auto clResult = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	// compute per-bank fueling
+	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
+		float corr = clResult.banks[i];
+		ENGINE(injectionMass)[i] = injectionMass * corr;
+		ENGINE(stftCorrection)[i] = corr;
+	}
+
+	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
+	ENGINE(injectionDuration) = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
 	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	injectionOffset = getInjectionOffset(rpm, fuelLoad PASS_ENGINE_PARAMETER_SUFFIX);
 
 	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+
+	// TODO: calculate me from a table!
+	trailingSparkAngle = CONFIG(trailingSparkAngle);
+
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_LAUNCH_CONTROL
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif //EFI_LAUNCH_CONTROL
 
-	engine->limpManager.updateState(rpm);
+	engine->limpManager.updateState(rpm, nowNt);
 
 #endif // EFI_ENGINE_CONTROL
 }
@@ -191,7 +184,7 @@ void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUF
 	float newTCharge = getTCharge(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
-	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / 1000000.0f;
+	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / US_PER_SECOND_F;
 	if (!cisnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
 		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);
@@ -219,17 +212,17 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 		pumpsCounter = newValue;
 
 		if (pumpsCounter == PUMPS_TO_PRIME) {
-			scheduleMsg(&engineLogger, "let's squirt prime pulse %.2f", pumpsCounter);
+			efiPrintf("let's squirt prime pulse %.2f", pumpsCounter);
 			pumpsCounter = 0;
 		} else {
-			scheduleMsg(&engineLogger, "setPumpsCounter %d", pumpsCounter);
+			efiPrintf("setPumpsCounter %d", pumpsCounter);
 		}
 	}
 }
 
 void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (GET_RPM() == 0) {
-		bool isTpsAbove50 = Sensor::get(SensorType::DriverThrottleIntent).value_or(0) >= 50;
+		bool isTpsAbove50 = Sensor::getOrZero(SensorType::DriverThrottleIntent) >= 50;
 
 		if (this->isTpsAbove50 != isTpsAbove50) {
 			setPumpsCounter(pumpsCounter + 1);
@@ -281,7 +274,7 @@ bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
-	return engine->triggerCentral.vvtTriggerType;
+	return engine->triggerCentral.vvtTriggerType[index];
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {

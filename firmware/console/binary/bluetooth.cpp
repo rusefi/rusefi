@@ -10,14 +10,13 @@
  * @author andreika, (c) 2017
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
-#include "allsensors.h"
 #include "tunerstudio.h"
 
 #include "tunerstudio_io.h"
 #include "bluetooth.h"
-#include "engine_configuration.h"
 
 #if EFI_BLUETOOTH_SETUP
 
@@ -36,17 +35,12 @@ static const int baudRates[] = { 0, 1200, 2400, 4800, 9600, 19200, 38400, 57600,
 static const int baudRateIndexList[] = { 4 /*9600*/, 6 /*38400*/, 8 /*115200*/, 7, 5, 3, 2, 1, -1 };
 static const int btModuleTimeout = TIME_MS2I(1000);
 
-static ts_channel_s *tsChannel;
+static SerialTsChannelBase *tsChannel;
 
 
 static THD_WORKING_AREA(btThreadStack, UTILITY_THREAD_STACK_SIZE);
 static thread_t *btThread = nullptr;
 static thread_reference_t btThreadRef = nullptr; // used by thread suspend/resume as a flag
-
-static LoggingWithStorage btLogger("bluetooth");
-
-
-EXTERN_ENGINE;
 
 
 // Main communication code
@@ -79,42 +73,15 @@ static void runCommands() {
 		
 		// if the baud rate is changed, reinit the UART
 		if (baudIdx != prevBaudIdx || restoreAndExit) {
-#if EFI_USB_SERIAL
-			// if we have USB we assume BT operates on primary TTL
-			// todo: we need to clean a lot in this area :(
-#ifdef EFI_CONSOLE_SERIAL_DEVICE
-			extern SerialConfig serialConfig;
-			sdStop(EFI_CONSOLE_SERIAL_DEVICE);
-#endif /*  EFI_CONSOLE_SERIAL_DEVICE */
-#ifdef EFI_CONSOLE_UART_DEVICE
-			extern UARTConfig uartConfig;
-			uartStop(EFI_CONSOLE_UART_DEVICE);
-#endif /* EFI_CONSOLE_UART_DEVICE */
+			tsChannel->stop();
 
-#else
-			// deinit UART
-			if (!stopTsPort(tsChannel)) {
-				scheduleMsg(&btLogger, "Failed! Cannot restart serial port connection!");
-				return;
-			}
-#endif /* EFI_USB_SERIAL */
 			chThdSleepMilliseconds(10);	// safety
+
 			// change the port speed
 			CONFIG(tunerStudioSerialSpeed) = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
 
-#if EFI_USB_SERIAL
-#ifdef EFI_CONSOLE_SERIAL_DEVICE
-			serialConfig.speed = CONFIG(tunerStudioSerialSpeed);
-			sdStart(EFI_CONSOLE_SERIAL_DEVICE, &serialConfig);
-#endif /*  EFI_CONSOLE_SERIAL_DEVICE */
-#ifdef EFI_CONSOLE_UART_DEVICE
-			uartConfig.speed = CONFIG(tunerStudioSerialSpeed);
-			uartStart(EFI_CONSOLE_UART_DEVICE, &uartConfig);
-#endif /* EFI_CONSOLE_UART_DEVICE */
-#else
-			// init UART
-			startTsPort(tsChannel);
-#endif /* EFI_USB_SERIAL */
+			tsChannel->start(CONFIG(tunerStudioSerialSpeed));
+
 			chThdSleepMilliseconds(10);	// safety
 			prevBaudIdx = baudIdx;
 		}
@@ -124,18 +91,18 @@ static void runCommands() {
 			break;
 
 		// send current command
-		sr5WriteData(tsChannel, (uint8_t *)commands[cmdIdx], strlen(commands[cmdIdx]));
+		tsChannel->write((uint8_t*)commands[cmdIdx], strlen(commands[cmdIdx]));
 		
 		// waiting for an answer
 		bool wasAnswer = false;
-		if (sr5ReadDataTimeout(tsChannel, buffer, 2, btModuleTimeout) == 2) {
+		if (tsChannel->readTimeout(buffer, 2, btModuleTimeout) == 2) {
 			wasAnswer = (buffer[0] == 'O' && buffer[1] == 'K') || 
 				(buffer[0] == '+' && (buffer[1] >= 'A' && buffer[1] <= 'Z'));
 		}
 
 		// wait 1 second and skip all remaining response bytes from the bluetooth module
 		while (true) {
-			if (sr5ReadDataTimeout(tsChannel, buffer, 1, btModuleTimeout) < 1)
+			if (tsChannel->readTimeout(buffer, 1, btModuleTimeout) < 1)
 				break;
 		}
 		
@@ -157,19 +124,19 @@ static void runCommands() {
 
 	// the connection is already restored to the current baud rate, so print the result
 	if (cmdIdx == numCommands)
-		scheduleMsg(&btLogger, "SUCCESS! All commands (%d of %d) passed to the Bluetooth module!", cmdIdx, numCommands);
+		efiPrintf("SUCCESS! All commands (%d of %d) passed to the Bluetooth module!", cmdIdx, numCommands);
 	else
-		scheduleMsg(&btLogger, "FAIL! Only %d commands (of %d total) were passed to the Bluetooth module!", cmdIdx, numCommands);
+		efiPrintf("FAIL! Only %d commands (of %d total) were passed to the Bluetooth module!", cmdIdx, numCommands);
 }
 
 static THD_FUNCTION(btThreadEntryPoint, arg) {
 	(void) arg;
 	chRegSetThreadName("bluetooth thread");
 
-	scheduleMsg(&btLogger, "*** Bluetooth module setup procedure ***");
-	scheduleMsg(&btLogger, "!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
-	scheduleMsg(&btLogger, "TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
-	scheduleMsg(&btLogger, "After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
+	efiPrintf("*** Bluetooth module setup procedure ***");
+	efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
+	efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
+	efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
 
 	// now wait
 	chSysLock();
@@ -177,7 +144,7 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chSysUnlock();
 	
 	if (msg == MSG_TIMEOUT) {
-		scheduleMsg(&btLogger, "The Bluetooth module init procedure is cancelled (timeout)!");
+		efiPrintf("The Bluetooth module init procedure is cancelled (timeout)!");
 		return;
 	} else {
 		// call this when the thread is resumed (after the disconnect)
@@ -191,19 +158,19 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chThdExit(MSG_OK);
 }
 
-void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
+void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
 	tsChannel = btChan;
 	
 	// if a binary protocol uses USB, we cannot init the bluetooth module!
 	if (!CONFIG(useSerialPort)) {
-		scheduleMsg(&btLogger, "Failed! Serial Port connection is disabled!");
+		efiPrintf("Failed! Serial Port connection is disabled!");
 		return;
 	}
 
 	if (btProcessIsStarted) {
-		scheduleMsg(&btLogger, "The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");
+		efiPrintf("The Bluetooth module init procedure is already started and waiting! To cancel it, run \"bluetooth_cancel\" command!");
 		return;
 	}
 
@@ -224,10 +191,10 @@ void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const c
 	// check the baud rate index
 	if (setBaudIdx < 1) {
 		if (baud == 0)
-			scheduleMsg(&btLogger, "The <baud> parameter is set to zero! The baud rate won't be set!");
+			efiPrintf("The <baud> parameter is set to zero! The baud rate won't be set!");
 		else { 
 			// unknown baud rate
-			scheduleMsg(&btLogger, "Wrong <baud> parameter '%s'! %s", baudRate, usage);
+			efiPrintf("Wrong <baud> parameter '%s'! %s", baudRate, usage);
 			return;
 		}
 	} else {
@@ -237,7 +204,7 @@ void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const c
 	
 	// 2) check name
 	if (name == NULL || strlen(name) < 1 || strlen(name) > 20) {
-		scheduleMsg(&btLogger, "Wrong <name> parameter! Up to 20 characters expected! %s", usage);
+		efiPrintf("Wrong <name> parameter! Up to 20 characters expected! %s", usage);
 		return;
 	}
 
@@ -251,7 +218,7 @@ void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const c
 		}
 	}
 	if (numDigits != 4) {
-		scheduleMsg(&btLogger, "Wrong <pincode> parameter! 4 digits expected! %s", usage);
+		efiPrintf("Wrong <pincode> parameter! 4 digits expected! %s", usage);
 		return;
 	}
 
@@ -280,7 +247,7 @@ void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const c
 		break;
 	default:
 		// todo: add support for other BT module types
-		scheduleMsg(&btLogger, "This Bluetooth module is currently not supported!");
+		efiPrintf("This Bluetooth module is currently not supported!");
 		return;
 	}
 	commands[numCommands++] = cmdHello; // this command is added to test a connection
@@ -289,7 +256,7 @@ void bluetoothStart(ts_channel_s *btChan, bluetooth_module_e moduleType, const c
    	commands[numCommands++] = cmdPin;
    	
    	// create a thread to execute these commands later
-   	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), NORMALPRIO, (tfunc_t)btThreadEntryPoint, NULL);
+   	btThread = chThdCreateStatic(btThreadStack, sizeof(btThreadStack), PRIO_CONSOLE, (tfunc_t)btThreadEntryPoint, NULL);
    	
 	btProcessIsStarted = true;
 }
@@ -305,7 +272,7 @@ void bluetoothSoftwareDisconnectNotify() {
 
 void bluetoothCancel() {
 	if (!btProcessIsStarted) {
-		scheduleMsg(&btLogger, "The Bluetooth module init procedure was not started! Nothing to cancel!");
+		efiPrintf("The Bluetooth module init procedure was not started! Nothing to cancel!");
 		return;
 	}
 
@@ -316,7 +283,7 @@ void bluetoothCancel() {
 	chThdTerminate(btThread);
 	
 	btProcessIsStarted = false;
-	scheduleMsg(&btLogger, "The Bluetooth module init procedure is cancelled!");
+	efiPrintf("The Bluetooth module init procedure is cancelled!");
 }
 
 #endif /* EFI_BLUETOOTH_SETUP */

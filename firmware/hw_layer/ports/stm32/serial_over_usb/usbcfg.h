@@ -21,6 +21,8 @@ extern const USBConfig usbcfg;
 extern SerialUSBConfig serusbcfg;
 extern SerialUSBDriver SDU1;
 
+EXTERNC void usbPopulateSerialNumber(const uint8_t* serialNumber, size_t bytes);
+
 #endif  /* USBCFG_H */
 
 /** @} */

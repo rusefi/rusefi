@@ -13,6 +13,13 @@
 #include "pid.h"
 #include "engine_state_generated.h"
 
+struct LuaAdjustments {
+	float ignitionTimingAdd = 0;
+	float ignitionTimingMult = 1;
+	float fuelAdd = 0;
+	float fuelMult = 1;
+};
+
 class EngineState : public engine_state2_s {
 public:
 	EngineState();
@@ -32,7 +39,7 @@ public:
 	 */
 	float airFlow = 0;
 
-	float engineNoiseHipLevel = 0;
+	float knockThreshold = 0;
 
 	float auxValveStart = 0;
 	float auxValveEnd = 0;
@@ -40,13 +47,17 @@ public:
 	/**
 	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
 	 */
-	angle_t mapAveragingStart[INJECTION_PIN_COUNT];
+	angle_t mapAveragingStart[MAX_CYLINDER_COUNT];
 	angle_t mapAveragingDuration = 0;
 
 	/**
 	 * timing advance is angle distance before Top Dead Center (TDP), i.e. "10 degree timing advance" means "happens 10 degrees before TDC"
 	 */
 	angle_t timingAdvance = 0;
+
+	// Angle between firing the main (primary) spark and the secondary (trailing) spark
+	angle_t trailingSparkAngle = 0;
+
 	// fuel-related;
 	float fuelCutoffCorrection = 0;
 	efitick_t coastingFuelCutStartTime = 0;
@@ -56,8 +67,6 @@ public:
 	float currentVe = 0;
 	float currentVeLoad = 0;
 	float currentAfrLoad = 0;
-
-	int vssEventCounter = 0;
 
 	float fuelingLoad = 0;
 	float ignitionLoad = 0;
@@ -82,4 +91,6 @@ public:
 
 	float targetLambda = 0.0f;
 	float stoichiometricRatio = 0.0f;
+
+	LuaAdjustments luaAdjustments;
 };

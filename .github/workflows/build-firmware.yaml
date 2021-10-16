@@ -1,4 +1,4 @@
-name: Build Firmware
+name: FW
 
 on: [push, pull_request]
 
@@ -12,10 +12,46 @@ jobs:
       matrix:
         # What boards should we build for? In the 'include' section below,
         # set up what each of these boards needs to build.
-        build-target: [cypress, frankenso_na6, kinetis, mre_f4, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, stm32f746_nucleo, stm32f767_nucleo]
+        #
+        # see also gen_config where we have a similar list for all boards!
+        # see also build-primary-bundle where default/primary bundle is build separately
+        #
+        build-target: [hellen72, hellen88bmw, hellen-nb1, hellenNA6, hellen128, hellen121vag, hellen121nissan, cypress, frankenso_na6, kinetis, mre_f4, mre_f4_recovery, mre_f4_hardware_QC_special_build, mre_f7, prometheus_405, prometheus_469, proteus_f4, proteus_f4_hardware_QC_special_build, proteus_f7, proteus_f7_hardware_QC_special_build, proteus_h7, proteus_legacy, stm32f767_nucleo, stm32h743_nucleo, subaru_eg33_f7, atlas]
         
         include:
           # Board configurations
+          - build-target: hellen72
+            folder: hellen/hellen72
+            ini-file: rusefi_hellen72.ini
+
+          - build-target: hellen88bmw
+            folder: hellen/hellen88bmw
+            ini-file: rusefi_hellen88bmw.ini
+
+          - build-target: hellen-nb1
+            folder: hellen/hellen-nb1
+            ini-file: rusefi_hellen-nb1.ini
+
+          - build-target: hellenNA6
+            folder: hellen/hellen64_miataNA6_94
+            ini-file: rusefi_hellenNA6.ini
+
+          - build-target: hellen128
+            folder: hellen/hellen128
+            ini-file: rusefi_hellen128mercedes.ini
+
+          - build-target: hellen121vag
+            folder: hellen/hellen121vag
+            ini-file: rusefi_hellen121vag.ini
+
+          - build-target: hellen121nissan
+            folder: hellen/hellen121nissan
+            ini-file: rusefi_hellen121nissan.ini
+
+          - build-target: hellen154hyundai
+            folder: hellen/hellen154hyundai
+            ini-file: rusefi_hellen154hyundai.ini
+
           - build-target: cypress
             folder: hellen
             ini-file: rusefi_hellen_cypress.ini
@@ -29,6 +65,10 @@ jobs:
             ini-file: rusefi_kinetis.ini
 
           - build-target: mre_f4
+            folder: microrusefi
+            ini-file: rusefi_mre_f4.ini
+
+          - build-target: mre_f4_recovery
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
 
@@ -61,11 +101,17 @@ jobs:
             folder: proteus
             ini-file: rusefi_proteus_f7.ini
 
-          - build-target: stm32f746_nucleo
-            folder: nucleo_f746
-            ini-file: no
-            console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
-            skip-config: yes
+          - build-target: proteus_f7_hardware_QC_special_build
+            folder: proteus
+            ini-file: rusefi_proteus_f7.ini
+
+          - build-target: proteus_h7
+            folder: proteus
+            ini-file: rusefi_proteus_h7.ini
+
+          - build-target: proteus_legacy
+            folder: proteus
+            ini-file: rusefi_proteus_f7.ini
 
           - build-target: stm32f767_nucleo
             folder: nucleo_f767
@@ -73,12 +119,41 @@ jobs:
             console-settings: firmware/config/boards/nucleo_f767/rusefi_console_properties.xml
             skip-config: yes
 
+          - build-target: stm32h743_nucleo
+            folder: nucleo_h743
+            ini-file: no
+            skip-config: yes
+
+          - build-target: subaru_eg33_f7
+            folder: subaru_eg33
+            ini-file: rusefi_subaru_eg33_f7.ini
+
+          - build-target: atlas
+            folder: atlas
+            ini-file: rusefi_atlas.ini
+
     steps:
     - uses: actions/checkout@v1
       with:
         submodules: recursive
-  
-    - name: Generate Configs
+
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '8'
+
+    - name: Install multilib, mingw, ncftp and mtools
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
+        sudo apt-get install zip
+        sudo apt-get install dosfstools
+
+    - name: Generate Default config
+      # todo: why do we even need this 'gen_config_default.sh' here?!
+      working-directory: ./firmware/
+      run: bash gen_config_default.sh
+
+    - name: Generate Configs for build-target
       if: ${{ matrix.skip-config != 'yes' }}
       working-directory: ./firmware/
       run: |
@@ -90,17 +165,16 @@ jobs:
           cd config/boards/hellen/cypress/config
           bash gen_config.sh
           [ $? -eq 0 ] || { echo "ERROR generating board hellen_cypress hellen_cypress"; exit 1; }
+        elif [ "${{ matrix.build-target }}" = "subaru_eg33_f7" ]; then
+          bash config/boards/subaru_eg33/config/gen_config.sh
+          [ $? -eq 0 ] || { echo "ERROR generating board subaru_eg33 subaru_eg33_f7"; exit 1; }
         else
-          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}}
+          bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
         fi
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
-
-    - name: Generate Default config
-      working-directory: ./firmware/
-      run: bash gen_config_default.sh
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
@@ -118,12 +192,6 @@ jobs:
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
-
-    - name: Install multilib, mingw, and ncftp
-      run: |
-        sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp
-
 
     - name: Configs Set FTP variables
       env:
@@ -165,28 +233,28 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.bin
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.bin
+        path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.hex
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.hex
+        path: ./firmware/deliver/rusefi*.hex
 
     - name: Upload build dfu
       if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.dfu
-        path: ./firmware/deliver/rusefi_${{matrix.build-target}}.dfu
+        path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
@@ -201,12 +269,20 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: recursive
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '8'
+
+    - name: Install multilib, mingw, and ncftp
+      run: |
+        sudo apt-get update
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools zip dosfstools
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
 
-    - name: Generate Configs
+    - name: Generate Default Configs
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 
@@ -223,11 +299,6 @@ jobs:
         tar -xvf compiler.tar.xz
         echo "::add-path::`pwd`/gcc-arm-none-eabi-9-2020-q2-update/bin"
   
-    - name: Install multilib, mingw, and ncftp
-      run: |
-        sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp
-
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
       run: arm-none-eabi-gcc -v

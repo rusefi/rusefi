@@ -11,14 +11,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "GY6_139QMB.h"
-#include "engine_math.h"
-#include "engine_configuration.h"
-#include "allsensors.h"
-#include "advance_map.h"
+#include "pch.h"
 
-EXTERN_CONFIG;
+#include "GY6_139QMB.h"
+#include "advance_map.h"
 
 static void setDefault139qmbMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);

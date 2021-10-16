@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "datalogging.h"
 #include "rusefi_types.h"
 
 typedef enum {
@@ -50,7 +49,7 @@ extern "C"
 char *validateSecureLine(char *line);
 void resetConsoleActions(void);
 void helpCommand(void);
-void initConsoleLogic(Logging *sharedLogger);
+void initConsoleLogic();
 void handleConsoleLine(char *line);
 int findEndOfToken(const char *line);
 char *unquote(char *line);

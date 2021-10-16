@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "global.h"
 #include "obd_error_codes.h"
 
 #ifdef __cplusplus
@@ -23,7 +22,8 @@ extern "C"
  */
 bool warning(obd_code_e code, const char *fmt, ...);
 
-typedef uint8_t critical_msg_t[ERROR_BUFFER_SIZE];
+typedef char critical_msg_t[ERROR_BUFFER_SIZE];
+
 /**
  * Something really bad had happened - firmware cannot function, we cannot run the engine
  * We definitely use this critical error approach in case of invalid configuration. If user sets a self-contradicting
@@ -38,10 +38,8 @@ extern bool hasFirmwareErrorFlag;
 #define hasFirmwareError() hasFirmwareErrorFlag
 
 // todo: rename to getCriticalErrorMessage
-char *getFirmwareError(void);
-
-// todo: rename to getWarningMessage?
-char *getWarningMessage(void);
+const char* getFirmwareError(void);
+const char* getWarningMessage(void);
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion(void);

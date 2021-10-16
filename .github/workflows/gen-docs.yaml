@@ -11,24 +11,22 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        submodules: recursive
         fetch-depth: 0
 
-    - name: Install ncftp, kicad, xvfb, and doxygen
+    - name: Install prerequisite software
       run: |
-        sudo add-apt-repository ppa:js-reynaud/kicad-5.1
         sudo apt-get update
-        sudo apt-get install ncftp kicad doxygen xvfb
+        sudo apt-get install doxygen graphviz ncftp
 
     - name: Set FTP variables
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
-        if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
+        if [ "${{github.ref}}" = "refs/heads/master" ]; then
           echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
           echo "::set-env name=RUSEFI_DOXYGEN_FTP_USER::${{secrets.RUSEFI_DOXYGEN_FTP_USER}}";
           echo "::set-env name=RUSEFI_DOXYGEN_FTP_PASS::${{secrets.RUSEFI_DOXYGEN_FTP_PASS}}";
         fi
 
     - name: Generate documentation
-      run: xvfb-run bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh
+      run: bash ./misc/jenkins/generate_doxygen/gen_upload_docs.sh

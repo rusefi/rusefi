@@ -6,17 +6,13 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_PROD_CODE
 
 #include "mpu_util.h"
 #include "flash_int.h"
-#include "engine.h"
-#include "pin_repository.h"
 #include "os_util.h"
-
-EXTERN_ENGINE;
 
 extern "C" {
 	void _unhandled_exception(void);
@@ -238,6 +234,10 @@ CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 
 #endif /* EFI_CAN_SUPPORT */
 
+bool allowFlashWhileRunning() {
+	return false;
+}
+
 size_t flashSectorSize(flashsector_t sector) {
 	// sectors 0..11 are the 1st memory bank (1Mb), and 12..23 are the 2nd (the same structure).
 	if (sector <= 3 || (sector >= 12 && sector <= 15))
@@ -255,6 +255,44 @@ uintptr_t getFlashAddrFirstCopy() {
 
 uintptr_t getFlashAddrSecondCopy() {
 	return FLASH_ADDR_SECOND_COPY;
+}
+
+void portInitAdc() {
+	// Init slow ADC
+	adcStart(&ADCD1, NULL);
+
+	// Init fast ADC (MAP sensor)
+	adcStart(&ADCD2, NULL);
+}
+
+float getMcuTemperature() {
+	// TODO: implement me!
+	return 0;
+}
+
+bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
+	// TODO: implement me!
+	return true;
+}
+
+static constexpr FastAdcToken invalidToken = (FastAdcToken)(-1);
+
+FastAdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return invalidToken;
+	}
+
+	// TODO: implement me!
+	return invalidToken;
+}
+
+adcsample_t getFastAdc(FastAdcToken token) {
+	if (token == invalidToken) {
+		return 0;
+	}
+
+	// TODO: implement me!
+	return 0;
 }
 
 #endif /* EFI_PROD_CODE */

@@ -1,15 +1,7 @@
-#include "global.h"
+#include "pch.h"
 
 #if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
-#include "efilib.h"
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#include "engine.h"
-
-EXTERN_ENGINE;
-#endif
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
@@ -37,11 +29,11 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	if (isRusefiController && CONFIG(debugMode) == DBG_RUSEFI_WIDEBAND) {
 		float pumpDuty = frame.data8[2] / 255.0f;
 		float sensorEsr = frame.data8[3] * 4;
-		float heaterDuty = frame.data8[4] / 255.0f;
+		float nernstVoltage = frame.data8[4] / 200.0f;
 
 		tsOutputChannels.debugFloatField1 = pumpDuty;
 		tsOutputChannels.debugFloatField2 = sensorEsr;
-		tsOutputChannels.debugFloatField3 = heaterDuty;
+		tsOutputChannels.debugFloatField3 = nernstVoltage;
 		tsOutputChannels.debugFloatField4 = lambdaFloat;
 	}
 #endif

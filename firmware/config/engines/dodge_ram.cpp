@@ -7,13 +7,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "dodge_ram.h"
 #include "custom_engine.h"
-#include "allsensors.h"
-#include "engine_math.h"
-
-EXTERN_CONFIG;
 
 void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -23,9 +20,6 @@ void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.flow = 243.6; // 23.2lb/h
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
-
-	// set cranking_charge_angle 30
-	engineConfiguration->crankingChargeAngle = 30;
 
 	//Base engine setting
 	engineConfiguration->specs.cylindersCount = 8;

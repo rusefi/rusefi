@@ -11,11 +11,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_configuration.h"
+#include "pch.h"
 #include "test_engine.h"
-#include "engine_math.h"
-
-EXTERN_CONFIG;
 
 // TEST_ENGINE
 void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -51,11 +48,6 @@ void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // #4
 	engineConfiguration->ignitionPins[4] = GPIO_UNASSIGNED; // #5
 	engineConfiguration->ignitionPins[5] = GPIO_UNASSIGNED; // #6
-
-	engineConfiguration->logicAnalyzerPins[0] = GPIO_UNASSIGNED;
-	engineConfiguration->logicAnalyzerPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->logicAnalyzerPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->logicAnalyzerPins[3] = GPIO_UNASSIGNED;
 }
 
 void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -75,7 +67,7 @@ void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// set global_trigger_offset_angle 0
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
-	engineConfiguration->vvtMode = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
 	engineConfiguration->debugMode = DBG_VVT;
 }
 
@@ -99,3 +91,25 @@ void setTestEngineIssue366rise(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 }
 #endif /* EFI_UNIT_TEST */
+
+#ifdef HARDWARE_CI
+void setProteusAnalogPwmTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// lowest cpu trigger possible
+	engineConfiguration->trigger.type = TT_ONE;
+
+	// Disable trigger stim
+	engineConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
+
+	// The idle control pin is connected to the default TPS input, analog volt 2
+	engineConfiguration->idle.solenoidPin = GPIOG_4;
+
+	// 5893hz is coprime with the analog sample rate, 500hz, so hopefully we get less aliasing
+	engineConfiguration->idle.solenoidFrequency = 5893;
+
+	// Test range is 20% to 80%
+	engineConfiguration->tpsMin = 200;
+	engineConfiguration->tpsMax = 800;
+}
+#endif

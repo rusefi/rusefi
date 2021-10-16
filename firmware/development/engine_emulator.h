@@ -7,6 +7,6 @@
 
 #pragma once
 
-#include "engine.h"
-void initEngineEmulator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+#include "engine_ptr.h"
+void initEngineEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

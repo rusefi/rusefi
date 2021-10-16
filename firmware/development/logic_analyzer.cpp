@@ -11,23 +11,16 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
 #include "logic_analyzer.h"
 #include "os_access.h"
 #include "eficonsole.h"
-#include "pin_repository.h"
-#include "allsensors.h"
-#include "engine_configuration.h"
 #include "trigger_central.h"
 #include "os_util.h"
-#include "engine_math.h"
 #include "rpm_calculator.h"
 #include "engine_sniffer.h"
 
 #if EFI_LOGIC_ANALYZER
-
-EXTERN_ENGINE;
 
 #define CHART_RESET_DELAY 1
 #define MAX_ICU_COUNT 5
@@ -44,8 +37,6 @@ static volatile efitimeus_t previousEngineCycleTimeUs = 0;
 
 static int waveReaderCount = 0;
 static WaveReader readers[MAX_ICU_COUNT];
-
-static Logging * logger;
 
 static void ensureInitialized(WaveReader *reader) {
 	/*may be*/UNUSED(reader);
@@ -108,7 +99,7 @@ static void initWave(const char *name, int index) {
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
 	WaveReader *reader = &readers[index];
 
-	if (brainPin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(brainPin)) {
 		/**
 		 *  in case we are running, and we select none for a channel that was running, 
 		 *  this way we ensure that we do not get false report from that channel 
@@ -128,7 +119,7 @@ static void initWave(const char *name, int index) {
 		reader->hw->setPeriodCallback((VoidInt)(void*) waIcuPeriodCallback, (void*) reader);
 	}
 
-	scheduleMsg(logger, "wave%d input on %s", index, hwPortname(brainPin));
+	efiPrintf("wave%d input on %s", index, hwPortname(brainPin));
 }
 
 WaveReader::WaveReader() {
@@ -220,11 +211,10 @@ void printWave(Logging *logging) {
 }
 
 void showWaveInfo(void) {
-	scheduleMsg(logger, "logic input #1: %d/%d", readers[0].fallEventCounter, readers[0].riseEventCounter);
+	efiPrintf("logic input #1: %d/%d", readers[0].fallEventCounter, readers[0].riseEventCounter);
 }
 
-void initWaveAnalyzer(Logging *sharedLogger) {
-	logger = sharedLogger;
+void initWaveAnalyzer() {
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -243,13 +233,13 @@ void stopLogicAnalyzerPins() {
 	for (int index = 0; index < LOGIC_ANALYZER_CHANNEL_COUNT; index++) {
 		brain_pin_e brainPin = activeConfiguration.logicAnalyzerPins[index];
 
-		if (brainPin != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(brainPin)) {
 			stopDigitalCapture("wave input", brainPin);
 		}
 	}
 }
 
-void getChannelFreqAndDuty(int index, float *duty, int *freq) {
+static void getChannelFreqAndDuty(int index, scaled_channel<float> *duty, scaled_channel<uint32_t> *freq) {
 
 	float high,period;
 
@@ -278,12 +268,12 @@ void getChannelFreqAndDuty(int index, float *duty, int *freq) {
 
 void reportLogicAnalyzerToTS() {
 #if EFI_TUNER_STUDIO	
-	int tmp;
+	scaled_channel<uint32_t> tmp;
 	getChannelFreqAndDuty(0,&tsOutputChannels.debugFloatField1, &tsOutputChannels.debugIntField1);
 	getChannelFreqAndDuty(1,&tsOutputChannels.debugFloatField2, &tsOutputChannels.debugIntField2);
 	getChannelFreqAndDuty(2,&tsOutputChannels.debugFloatField3, &tsOutputChannels.debugIntField3);
 	getChannelFreqAndDuty(3,&tsOutputChannels.debugFloatField4, &tmp);
-	tsOutputChannels.debugIntField4 = (int16_t)tmp;
+	tsOutputChannels.debugIntField4 = (uint16_t)tmp;
 #endif	
 }
 

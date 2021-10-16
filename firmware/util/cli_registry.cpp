@@ -14,9 +14,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "cli_registry.h"
-#include "efilib.h"
 
 #if ! EFI_UNIT_TEST
 #include "eficonsole.h"
@@ -24,8 +23,6 @@
 
 // todo: support \t as well
 #define SPACE_CHAR ' '
-
-static Logging * logging;
 
 static int consoleActionCount = 0;
 static TokenCallback consoleActions[CONSOLE_MAX_ACTIONS] CCM_OPTIONAL;
@@ -170,20 +167,20 @@ static int getParameterCount(action_type_e parameterType) {
 void helpCommand(void) {
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	scheduleMsg(logging, "%d actions available", consoleActionCount);
+	efiPrintf("%d actions available", consoleActionCount);
 	for (int i = 0; i < consoleActionCount; i++) {
 		TokenCallback *current = &consoleActions[i];
-		scheduleMsg(logging, "  %s: %d parameters", current->token, getParameterCount(current->parameterType));
+		efiPrintf("  %s: %d parameters", current->token, getParameterCount(current->parameterType));
 	}
 #endif
-	scheduleMsg(logging, "For more visit http://rusefi.com/wiki/index.php?title=Manual:Software:dev_console_commands");
+	efiPrintf("For more visit http://rusefi.com/wiki/index.php?title=Manual:Software:dev_console_commands");
 }
 
 /**
  * @brief This is just a test function
  */
 static void echo(int value) {
-	print("got value: %d\r\n", value);
+	efiPrintf("got value: %d", value);
 }
 
 char *unquote(char *line) {
@@ -342,7 +339,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		int value1 = atoi(parameter);
 		if (absI(value1) == ERROR_CODE) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-			scheduleMsg(logging, "not an integer [%s]", parameter);
+			efiPrintf("not an integer [%s]", parameter);
 #endif
 			return;
 		}
@@ -350,7 +347,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		int value2 = atoi(parameter);
 		if (absI(value2) == ERROR_CODE) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-			scheduleMsg(logging, "not an integer [%s]", parameter);
+			efiPrintf("not an integer [%s]", parameter);
 #endif
 			return;
 		}
@@ -371,7 +368,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 	if (current->parameterType == FLOAT_PARAMETER) {
 		float value = atoff(parameter);
 		if (cisnan(value)) {
-			print("invalid float [%s]\r\n", parameter);
+			efiPrintf("invalid float [%s]", parameter);
 			return;
 		}
 		VoidFloat callbackF = (VoidFloat) current->callback;
@@ -388,7 +385,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		REPLACE_SPACES_WITH_ZERO;
 		float value1 = atoff(parameter);
 		if (cisnan(value1)) {
-			print("invalid float [%s]\r\n", parameter);
+			efiPrintf("invalid float [%s]", parameter);
 			return;
 		}
 
@@ -396,7 +393,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		float value2 = atoff(parameter);
 
 		if (cisnan(value2)) {
-			print("invalid float [%s]\r\n", parameter);
+			efiPrintf("invalid float [%s]", parameter);
 			return;
 		}
 	if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
@@ -417,7 +414,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		int value1 = atoi(parameter);
 		if (absI(value1) == ERROR_CODE) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-			scheduleMsg(logging, "not an integer [%s]", parameter);
+			efiPrintf("not an integer [%s]", parameter);
 #endif
 			return;
 		}
@@ -425,7 +422,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 		float value2 = atoff(parameter);
 
 		if (cisnan(value2)) {
-			print("invalid float [%s]\r\n", parameter);
+			efiPrintf("invalid float [%s]", parameter);
 			return;
 		}
 		
@@ -437,7 +434,7 @@ void handleActionWithParameter(TokenCallback *current, char *parameter) {
 
 	int value = atoi(parameter);
 	if (absI(value) == ERROR_CODE) {
-		print("invalid integer [%s]\r\n", parameter);
+		efiPrintf("invalid integer [%s]", parameter);
 		return;
 	}
 
@@ -469,8 +466,7 @@ int tokenLength(const char *msgp) {
 	return result;
 }
 
-void initConsoleLogic(Logging *sharedLogger) {
-	logging = sharedLogger;
+void initConsoleLogic() {
 //	resetConsoleActions();
 	addConsoleAction("help", helpCommand);
 	addConsoleActionI("echo", echo);
@@ -493,7 +489,7 @@ char *validateSecureLine(char *line) {
 		char *divider = line;
 		while (*divider != '!') {
 			if (*divider == '\0') {
-				print("Divider not found [%s]\r\n", line);
+				efiPrintf("Divider not found [%s]", line);
 				return NULL;
 			}
 			divider++;
@@ -503,7 +499,7 @@ char *validateSecureLine(char *line) {
 		line = divider;
 		int actualLength = strlen(line);
 		if (expectedLength != actualLength) {
-			print("Error detected: expected %d but got %d in [%s]\r\n", expectedLength, actualLength, line);
+			efiPrintf("Error detected: expected %d but got %d in [%s]", expectedLength, actualLength, line);
 			return NULL;
 		}
 	}
@@ -562,18 +558,18 @@ void handleConsoleLine(char *line) {
 	if (lineLength > 100) {
 		// todo: better max size logic
 		// todo: better reaction to excessive line
-		print("Long line?\r\n");
+		efiPrintf("Long line?");
 		return;
 	}
 
 	bool isKnownComman = handleConsoleLineInternal(line, lineLength);
 
 	if (!isKnownComman) {
-		scheduleMsg(logging, "unknown command [%s]", line);
+		efiPrintf("unknown command [%s]", line);
 		return;
 	}
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	scheduleMsg(logging, "confirmation_%s:%d", line, lineLength);
+	efiPrintf("confirmation_%s:%d", line, lineLength);
 #endif
 }

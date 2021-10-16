@@ -5,36 +5,19 @@
  *      Author: Ola Ruud
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if EFI_LAUNCH_CONTROL
 #include "boost_control.h"
-#include "vehicle_speed.h"
 #include "launch_control.h"
-#include "io_pins.h"
-#include "engine_configuration.h"
-#include "engine_controller.h"
 #include "periodic_task.h"
-#include "pin_repository.h"
-#include "allsensors.h"
-#include "sensor.h"
-#include "engine_math.h"
-#include "efi_gpio.h"
 #include "advance_map.h"
 #include "engine_state.h"
 #include "advance_map.h"
 
 static bool isInit = false;
-static Logging *logger;
 
-LaunchControlBase launchInstance;
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
-EXTERN_ENGINE;
+static LaunchControlBase launchInstance;
 
 static int retardThresholdRpm;
 
@@ -45,22 +28,15 @@ static int retardThresholdRpm;
 bool LaunchControlBase::isInsideSwitchCondition() const {
 	switch (CONFIG(launchActivationMode)) {
 	case SWITCH_INPUT_LAUNCH:
-		if (CONFIG(launchActivatePin) != GPIO_UNASSIGNED) {
+		if (isBrainPinValid(CONFIG(launchActivatePin))) {
 			//todo: we should take into consideration if this sw is pulled high or low!
 			engine->launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
 		}
 		return engine->launchActivatePinState;
 
 	case CLUTCH_INPUT_LAUNCH:
-		if (CONFIG(clutchDownPin) != GPIO_UNASSIGNED) {
-			engine->clutchDownState = efiReadPin(CONFIG(clutchDownPin));
-			
-			if (CONFIG(clutchDownPinMode) == PI_PULLDOWN)
-			{
-				return !engine->clutchDownState;
-			} else {
-				return engine->clutchDownState;
-			}
+		if (isBrainPinValid(CONFIG(clutchDownPin))) {
+			return engine->clutchDownState;
 		} else {
 			return false;
 		}
@@ -78,7 +54,7 @@ bool LaunchControlBase::isInsideSwitchCondition() const {
  * then we have to return true, and trust that we would disable by other condition!
  */ 
 bool LaunchControlBase::isInsideSpeedCondition() const {
-	int speed = getVehicleSpeed();
+	int speed = Sensor::getOrZero(SensorType::VehicleSpeed);
 	
 	return (CONFIG(launchSpeedTreshold) > speed) || (!(CONFIG(launchActivationMode) ==  ALWAYS_ACTIVE_LAUNCH));
 }
@@ -205,8 +181,7 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 	} 
 }
 
-void initLaunchControl(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
+void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&launchInstance);
 
 	isInit = true;

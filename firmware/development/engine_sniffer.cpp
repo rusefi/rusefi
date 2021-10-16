@@ -24,22 +24,17 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "engine.h"
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "engine_sniffer.h"
-#include "adc_inputs.h"
 
 #if EFI_ENGINE_SNIFFER
 
-#include "engine_configuration.h"
 #include "eficonsole.h"
 #include "status_loop.h"
-#include "perf_trace.h"
 
 #define CHART_DELIMETER	'!'
 
-EXTERN_ENGINE;
 extern uint32_t maxLockedDuration;
 
 /**
@@ -58,12 +53,6 @@ int waveChartUsedSize;
 
 //#define DEBUG_WAVE 1
 
-#if DEBUG_WAVE
-static LoggingWithStorage debugLogging("debug");
-#endif /* DEBUG_WAVE */
-
-static LoggingWithStorage logger("wave info");
-
 /**
  * We want to skip some engine cycles to skip what was scheduled before parameters were changed
  */
@@ -75,7 +64,7 @@ static void resetNow(void) {
 	skipUntilEngineCycle = getRevolutionCounter() + 3;
 	waveChart.reset();
 }
-#endif
+#endif // EFI_UNIT_TEST
 
 WaveChart::WaveChart() : logging("wave chart", WAVE_LOGGING_BUFFER, sizeof(WAVE_LOGGING_BUFFER)) {
 }
@@ -87,7 +76,7 @@ void WaveChart::init() {
 
 void WaveChart::reset() {
 #if DEBUG_WAVE
-	scheduleSimpleMsg(&debugLogging, "reset while at ", counter);
+	efiPrintf("reset while at ", counter);
 #endif /* DEBUG_WAVE */
 	logging.reset();
 	counter = 0;
@@ -115,9 +104,14 @@ bool WaveChart::isFull() const {
 	return counter >= CONFIG(engineChartSize);
 }
 
+int WaveChart::getSize() {
+	return counter;
+}
+
+#if ! EFI_UNIT_TEST
 static void printStatus(void) {
-	scheduleMsg(&logger, "engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
-	scheduleMsg(&logger, "engine chart size=%d", engineConfiguration->engineChartSize);
+	efiPrintf("engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
+	efiPrintf("engine chart size=%d", engineConfiguration->engineChartSize);
 }
 
 static void setChartActive(int value) {
@@ -135,6 +129,7 @@ void setChartSize(int newSize) {
 	engineConfiguration->engineChartSize = newSize;
 	printStatus();
 }
+#endif // EFI_UNIT_TEST
 
 void WaveChart::publishIfFull() {
 	if (isFull() || isStartedTooLongAgo()) {
@@ -148,7 +143,7 @@ void WaveChart::publish() {
 	waveChartUsedSize = logging.loggingSize();
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
-	scheduleSimpleMsg(&debugLogging, "IT'S TIME", strlen(l->buffer));
+	efiPrintf("IT'S TIME", strlen(l->buffer));
 #endif
 	if (ENGINE(isEngineChartEnabled)) {
 		scheduleLogging(&logging);
@@ -186,7 +181,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 
 	efiAssertVoid(CUSTOM_ERR_6653, isInitialized, "chart not initialized");
 #if DEBUG_WAVE
-	scheduleSimpleMsg(&debugLogging, "current", chart->counter);
+	efiPrintf("current", chart->counter);
 #endif /* DEBUG_WAVE */
 	if (isFull()) {
 		return;
@@ -236,17 +231,16 @@ void initWaveChart(WaveChart *chart) {
 	 */
 	chart->init();
 
-	printStatus();
-
 #if EFI_HISTOGRAMS
 	initHistogram(&engineSnifferHisto, "wave chart");
 #endif /* EFI_HISTOGRAMS */
 
+#if ! EFI_UNIT_TEST
+	printStatus();
 	addConsoleActionI("chartsize", setChartSize);
 	addConsoleActionI("chart", setChartActive);
-#if ! EFI_UNIT_TEST
 	addConsoleAction(CMD_RESET_ENGINE_SNIFFER, resetNow);
-#endif
+#endif // EFI_UNIT_TEST
 }
 
 #endif /* EFI_ENGINE_SNIFFER */

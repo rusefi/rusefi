@@ -18,9 +18,9 @@ import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.rusefi.IoUtil.getEnableCommand;
+import static com.rusefi.IoUtil.*;
+import static com.rusefi.config.generated.Fields.CMD_DATE;
 import static com.rusefi.config.generated.Fields.CMD_TRIGGERINFO;
-import static com.rusefi.IoUtil.getDisableCommand;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 /**
@@ -155,6 +155,10 @@ public class RecentCommands {
     }
 
     public void add(String command) {
+        if (isBoringCommand(command)) {
+            // not useful to remember this one
+            return;
+        }
         synchronized (entries) {
             entries.put(new Entry(command), null);
         }
@@ -192,6 +196,10 @@ public class RecentCommands {
             }
         });
         getConfig().getRoot().setProperty(KEY, pack());
+    }
+
+    public static boolean isBoringCommand(String command) {
+        return command.startsWith(getSetCommand(CMD_DATE));
     }
 
     public static JComponent createButton(UIContext uiContext, final AtomicBoolean reentrant, final String command) {

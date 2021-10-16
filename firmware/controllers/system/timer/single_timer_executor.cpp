@@ -20,20 +20,16 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
 #include "single_timer_executor.h"
 #include "efitime.h"
-#include "perf_trace.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 
 #include "microsecond_timer.h"
-#include "tunerstudio_outputs.h"
 #include "os_util.h"
-
-#include "engine.h"
-EXTERN_ENGINE;
 
 uint32_t hwSetTimerDuration;
 
@@ -50,7 +46,7 @@ SingleTimerExecutor::SingleTimerExecutor()
 }
 
 void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
-	scheduleByTimestamp(scheduling, getTimeNowUs() + delayUs, action);
+	scheduleByTimestamp("scheduleForLater", scheduling, getTimeNowUs() + delayUs, action);
 }
 
 /**
@@ -63,11 +59,11 @@ void SingleTimerExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs
  * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
  * @param [in] dwell the number of ticks of output duration.
  */
-void SingleTimerExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
-	scheduleByTimestampNt(scheduling, US2NT(timeUs), action);
+void SingleTimerExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+	scheduleByTimestampNt(msg, scheduling, US2NT(timeUs), action);
 }
 
-void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitime_t nt, action_s action) {
+void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitime_t nt, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS
@@ -75,7 +71,7 @@ void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitim
 
 	if (deltaTimeNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
-		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d", deltaTimeNt);
+		firmwareError(CUSTOM_ERR_TASK_TIMER_OVERFLOW, "scheduleByTimestampNt() too far: %d %s", deltaTimeNt, msg);
 		return;
 	}
 #endif
@@ -92,6 +88,13 @@ void SingleTimerExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitim
 			scheduleTimerCallback();
 		}
 	}
+}
+
+void SingleTimerExecutor::cancel(scheduling_s* scheduling) {
+	// Lock for queue removal - we may already be locked, but that's ok
+	chibios_rt::CriticalSectionLocker csl;
+
+	queue.remove(scheduling);
 }
 
 void SingleTimerExecutor::onTimerCallback() {

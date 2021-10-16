@@ -80,15 +80,9 @@ float postCrankingFuelCorrection
 	
 
 	floatms_t injectorLag;injectorLag(VBatt)\nthis value depends on a slow-changing VBatt value, so\nwe update it once in a while
-	
-	floatms_t pidCorrection;closed-loop fuel correction
-	
 
-floatms_t baseFuel;
+	floatms_t baseFuel;
 	floatms_t fuel;Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.\nWithout injector lag.\n@see baseFuel\n@see actualLastInjection
-
-	
-
 ! end of running_fuel_s structure definition
 end_struct
 

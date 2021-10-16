@@ -1,0 +1,28 @@
+#define MAIN_HELP_URL "https://rusefi.com/s/hellenNA6"
+
+#define ts_show_hip9011 false
+#define ts_show_cj125 false
+
+//Jokeri says it's better with full pinout just in case
+//#define ts_show_full_pinout false
+
+#define ts_show_lcd false
+#define ts_show_joystick false
+#define ts_show_egt false
+#define ts_show_gps false
+#define ts_show_etb_pins false
+#define ts_show_analog_divider false
+#define ts_show_spi true
+#define ts_show_sd_card true
+#define ts_show_can_pins false
+#define ts_show_tunerstudio_port false
+#define ts_show_can2 false
+#define ts_show_software_knock true
+#define ts_show_hardware_simulator false
+
+#define show_test_presets false
+#define show_Frankenso_presets false
+#define show_microRusEFI_presets false
+#define show_Proteus_presets false
+#define show_Hellen_presets true
+#define show_HellenNA6_presets true

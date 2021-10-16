@@ -19,7 +19,6 @@ typedef uint32_t ioportid_t;
 typedef uint32_t ioportmask_t;
 
 #define DL_OUTPUT_BUFFER 200
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 100
 
 // just a stub implementation for unit tests
 #define EXPECTED_REMAINING_STACK 1
@@ -30,6 +29,7 @@ typedef uint32_t ioportmask_t;
 
 
 #ifdef __cplusplus
+#include "mock-threads.h"
 // todo: include it right here? #include "unit_test_framework.h"
 extern "C"
 {
@@ -42,8 +42,6 @@ typedef int bool_t;
 typedef uint32_t systime_t;
 
 void chDbgAssert(int c, char *msg, void *arg);
-
-void print(const char *fmt, ...);
 
 #define TICKS_IN_MS 100
 
@@ -63,14 +61,6 @@ void print(const char *fmt, ...);
 #define EFI_ERROR_CODE 0xffffffff
 
 #define CCM_OPTIONAL
-
-#define EXTERN_ENGINE extern EnginePins enginePins; \
-	 extern engine_configuration_s & activeConfiguration
-
-#define EXTERN_CONFIG
-
-#define DEFINE_CONFIG_PARAM(x, y) , x y
-#define PASS_CONFIG_PARAM(x) , x
 
 /**
  * this macro provides references to engine from EngineTestHelper

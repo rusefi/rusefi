@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<style>
+###CSS###
+</style>
+
+<script type="text/javascript">
+###JS###
+</script>
+</head>
+<body>
+
+<template id="pin-template">
+  <div class="pin-marker"></div>
+</template>
+
+<template id="table-template">
+  <tr class="data">
+    <td class="pin-data" data-field="pin"></td>
+    <td class="ts-data" data-field="ts_name"></td>
+    <td class="type-data" data-field="type"</td>
+    <td class="function-data" data-field="function"></td>
+    <td class="color-data" data-field="color"></td>
+  </tr>
+</template>
+
+<template id="connector-template">
+  <div class="container">
+    <h2 class="connector-name"></h2>
+    <div class="connector-container">
+      <div class="connector-div">
+        <img class="connector-img"></img>
+      </div>
+    </div>
+    <table class="info-table">
+      <thead>
+        <tr>
+          <th class="pin-header" data-field="pin">Pin Number</th>
+          <th class="ts-header" data-field="ts_name">TS Name</th>
+          <th class="type-header" data-field="type">Type</th>
+          <th class="function-header" data-field="function">Typical Function</th>
+          <th class="color-header" data-field="color">Pigtail Color</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+    <h2>Full Pinout Table</h2>
+    <div class="table-wrapper">
+      <table class="pinout-table">
+        <thead>
+          <tr>
+            <th class="pin-header" data-field="pin">Pin Number</th>
+            <th class="ts-header" data-field="ts_name">TS Name</th>
+            <th class="type-header" data-field="type">Type</th>
+            <th class="function-header" data-field="function">Typical Function</th>
+            <th class="color-header" data-field="color">Pigtail Color</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+</body>
+</html>

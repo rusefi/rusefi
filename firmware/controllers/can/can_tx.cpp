@@ -7,62 +7,96 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "globalaccess.h"
-#if EFI_CAN_SUPPORT
+#include "pch.h"
 
-#include "engine.h"
+#if EFI_CAN_SUPPORT
 #include "can.h"
 #include "can_hw.h"
 #include "can_dash.h"
 #include "obd2.h"
 #include "can_sensor.h"
+#include "rusefi_wideband.h"
 
-EXTERN_ENGINE;
+extern CanListener* canListeners_head;
 
-extern CanSensorBase* cansensors_head;
 
 CanWrite::CanWrite()
-	: PeriodicController("CAN TX", NORMALPRIO, 50)
+	: PeriodicController("CAN TX", PRIO_CAN_TX, CAN_CYCLE_FREQ)
 {
 }
 
 void CanWrite::PeriodicTask(efitime_t nowNt) {
 	UNUSED(nowNt);
+	static uint16_t cycleCount = 0;
+	CanCycle cycle(cycleCount);
 
+	//in case we have Verbose Can enabled, we should keep user configured period
 	if (CONFIG(enableVerboseCanTx)) {
-		void sendCanVerbose();
-		sendCanVerbose();
+		uint16_t cycleCountsPeriodMs = cycleCount * CAN_CYCLE_PERIOD;
+		if (0 != CONFIG(canSleepPeriodMs)) {
+			if (cycleCountsPeriodMs % CONFIG(canSleepPeriodMs)) {
+				void sendCanVerbose();
+				sendCanVerbose();
+			}
+		}
 	}
 
-	CanSensorBase* current = cansensors_head;
+	CanListener* current = canListeners_head;
 
 	while (current) {
 		current = current->request();
 	}
 
-	// Transmit dash data, if enabled
-	switch (CONFIG(canNbcType)) {
-	case CAN_BUS_NBC_BMW:
-		canDashboardBMW();
-		break;
-	case CAN_BUS_NBC_FIAT:
-		canDashboardFiat();
-		break;
-	case CAN_BUS_NBC_VAG:
-		canDashboardVAG();
-		break;
-	case CAN_BUS_MAZDA_RX8:
-		canMazdaRX8();
-		break;
-	case CAN_BUS_W202_C180:
-		canDashboardW202();
-		break;
-	case CAN_BUS_BMW_E90:
-		canDashboardBMWE90();
-		break;
-	default:
-		break;
+	if (cycle.isInterval(CI::_MAX_Cycle)) {
+		//we now reset cycleCount since we reached max cycle count
+		cycleCount = 0;
 	}
+
+	updateDash(cycle);
+
+	if (CONFIG(enableAemXSeries) && cycle.isInterval(CI::_50ms)) {
+		sendWidebandInfo();
+	}
+
+	cycleCount++;
+}
+
+CanInterval CanCycle::computeFlags(uint32_t cycleCount) {
+	CanInterval cycleMask = CanInterval::_5ms;
+
+	if ((cycleCount % 2) == 0) {
+		cycleMask |= CI::_10ms;
+	}
+
+	if ((cycleCount % 4) == 0) {
+		cycleMask |= CI::_20ms;
+	}
+
+	if ((cycleCount % 10) == 0) {
+		cycleMask |= CI::_50ms;
+	}
+
+	if ((cycleCount % 20) == 0) {
+		cycleMask |= CI::_100ms;
+	}
+
+	if ((cycleCount % 40) == 0) {
+		cycleMask |= CI::_200ms;
+	}
+
+	if ((cycleCount % 50) == 0) {
+		cycleMask |= CI::_250ms;
+	}
+
+	if ((cycleCount % 100) == 0) {
+		cycleMask |= CI::_500ms;
+	}
+
+	if ((cycleCount % 200) == 0) {
+		cycleMask |= CI::_1000ms;
+	}
+
+	return cycleMask;
 }
 
 #endif // EFI_CAN_SUPPORT

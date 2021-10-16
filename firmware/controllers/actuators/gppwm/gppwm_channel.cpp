@@ -1,22 +1,17 @@
 
+#include "pch.h"
+
 #include "gppwm_channel.h"
 
-#include "engine.h"
-#include "pwm_generator_logic.h"
 #include "table_helper.h"
 #include "expected.h"
-#include "sensor.h"
-#include "engine_math.h"
-
-EXTERN_ENGINE;
 
 expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	switch (channel) {
 	case GPPWM_Tps:
 		return Sensor::get(SensorType::Tps1);
-	case GPPWM_Map: {
+	case GPPWM_Map:
 		return Sensor::get(SensorType::Map);
-	}
 	case GPPWM_Clt:
 		return Sensor::get(SensorType::Clt);
 	case GPPWM_Iat:
@@ -25,9 +20,19 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 		return getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
 	case GPPWM_IgnLoad:
 		return getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	default:
-		return unexpected;
+	case GPPWM_AuxTemp1:
+		return Sensor::get(SensorType::AuxTemp1);
+	case GPPWM_AuxTemp2:
+		return Sensor::get(SensorType::AuxTemp2);
+	case GPPWM_Zero:
+		return 0;
+	case GPPWM_AccelPedal:
+		return Sensor::get(SensorType::AcceleratorPedal);
+	case GPPWM_Vbatt:
+		return Sensor::get(SensorType::BatteryVoltage);
 	}
+
+	return unexpected;
 }
 
 void GppwmChannel::setOutput(float result) {
@@ -41,6 +46,11 @@ void GppwmChannel::setOutput(float result) {
 		m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
 	} else {
 		efiAssertVoid(OBD_PCM_Processor_Fault, m_output, "m_output null");
+		if (m_config->offBelowDuty > m_config->onAboveDuty) {
+			firmwareError(CUSTOM_ERR_6122, "You can't have off below %d greater than on above %d",
+					m_config->offBelowDuty,
+					m_config->onAboveDuty);
+		}
 		// Apply hysteresis with provided values
 		if (m_state && result < m_config->offBelowDuty) {
 			m_state = false;
@@ -52,7 +62,7 @@ void GppwmChannel::setOutput(float result) {
 	}
 }
 
-void GppwmChannel::init(bool usePwm, SimplePwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config) {
+void GppwmChannel::init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config) {
 	m_usePwm = usePwm;
 	m_pwm = pwm;
 	m_output = outputPin;

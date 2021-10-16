@@ -1,0 +1,347 @@
+pins:
+  - pin: 1
+    id: GPIOA_8
+    function: output
+    class: outputs
+    ts_name: Highside 2
+    type: hs
+
+  - pin: 2
+    id: GPIOA_9
+    function: output
+    class: outputs
+    ts_name: Highside 1
+    type: hs
+
+  - pin: 3
+    id: GPIOD_7
+    function: "Injector #1"
+    class: outputs
+    ts_name: Lowside 1
+    type: ls
+
+  - pin: 4
+    id: GPIOG_10
+    function: "Injector #3"
+    class: outputs
+    ts_name: Lowside 3
+    type: ls
+
+  - pin: 5
+    id: GPIOG_12
+    function: "Injector #5"
+    class: outputs
+    ts_name: Lowside 5
+    type: ls
+
+  - pin: 6
+    id: GPIOG_13
+    function: "Injector #6"
+    class: outputs
+    ts_name: Lowside 6
+    type: ls
+
+  - pin: 7
+    id: GPIOG_14
+    function: "Injector #7"
+    class: outputs
+    ts_name: Lowside 7
+    type: ls
+
+  - pin: 8
+    id: GPIOB_5
+    function: "Injector #9"
+    class: outputs
+    ts_name: Lowside 9
+    type: ls
+
+  - pin: 9
+    id: GPIOB_7
+    function: "Injector #11"
+    class: outputs
+    ts_name: Lowside 11
+    type: ls
+
+  - pin: 10
+    id: GPIOB_9
+    function: main relay
+    class: outputs
+    ts_name: Lowside 13
+    type: ls
+
+  - pin: 11
+    id: GPIOE_0
+    function: Lowside output
+    class: outputs
+    ts_name: Lowside 14
+    type: ls
+
+  - pin: 12
+    id: GPIOE_1
+    function: radiator fan relay
+    class: outputs
+    ts_name: Lowside 15
+    type: ls
+
+  - pin: 13
+    id: GPIOD_15
+    function: output
+    class: outputs
+    ts_name: Highside 3
+    type: hs
+
+  - pin: 14
+    id: GPIOD_14
+    function: output
+    class: outputs
+    ts_name: Highside 4
+    type: hs
+
+  - pin: 15
+    id: GPIOG_9
+    function: "Injector #2"
+    class: outputs
+    ts_name: Lowside 2
+    type: ls
+
+  - pin: 16
+    id: GPIOG_11
+    function: "Injector #4"
+    class: outputs
+    ts_name: Lowside 4
+    type: ls
+
+  - pin: 17
+    function: Power GND
+    type: gnd
+
+  - pin: 18
+    function: Power GND
+    type: gnd
+
+  - pin: 19
+    id: GPIOB_4
+    function: "Injector #8"
+    class: outputs
+    ts_name: Lowside 8
+    type: ls
+
+  - pin: 20
+    id: GPIOB_6
+    function: "Injector #10"
+    class: outputs
+    ts_name: Lowside 10
+    type: ls
+
+  - pin: 21
+    id: GPIOB_8
+    function: "Injector #12"
+    class: outputs
+    ts_name: Lowside 12
+    type: ls
+
+  - pin: 22
+    id: GPIOC_9
+    function: Ignition cylinder 3
+    class: outputs
+    ts_name: Ign 3
+    type: hl
+
+  - pin: 23
+    id: GPIOE_2
+    function: Fuel Pump
+    class: outputs
+    ts_name: Lowside 16
+    type: ls
+
+  - pin: 24
+    function: Power GND
+    type: gnd
+
+  - pin: 25
+    id: GPIOG_2
+    function: Ignition cylinder 12
+    class: outputs
+    ts_name: Ign 12
+    type: hl
+
+  - pin: 26
+    id: GPIOG_3
+    function: Ignition cylinder 11
+    class: outputs
+    ts_name: Ign 11
+    type: hl
+
+  - pin: 27
+    id: GPIOG_4
+    function: Ignition cylinder 10
+    class: outputs
+    ts_name: Ign 10
+    type: hl
+
+  - pin: 28
+    id: GPIOG_5
+    function: Ignition cylinder 9
+    class: outputs
+    ts_name: Ign 9
+    type: hl
+
+  - pin: 29
+    id: GPIOG_6
+    function: Ignition cylinder 8
+    class: outputs
+    ts_name: Ign 8
+    type: hl
+
+  - pin: 30
+    id: GPIOG_7
+    function: Ignition cylinder 7
+    class: outputs
+    ts_name: Ign 7
+    type: hl
+
+  - pin: 31
+    id: GPIOG_8
+    function: Ignition cylinder 6
+    class: outputs
+    ts_name: Ign 6
+    type: hl
+
+  - pin: 32
+    id: GPIOC_7
+    function: Ignition cylinder 5
+    class: outputs
+    ts_name: Ign 5
+    type: hl
+
+  - pin: 33
+    id: GPIOC_8
+    function: Ignition cylinder 4
+    class: outputs
+    ts_name: Ign 4
+    type: hl
+
+  - pin: 34
+    id: GPIOD_3
+    function: Ignition cylinder 2
+    class: outputs
+    ts_name: Ign 2
+    type: hl
+
+  - pin: 35
+    id: GPIOD_4
+    function: Ignition cylinder 1
+    class: outputs
+    ts_name: Ign 1
+    type: hl
+
+info:
+  title: Proteus
+  image:
+    file: black35.jpg
+  pins:
+    - pin: 1
+      x: 294
+      y: 300
+    - pin: 2
+      x: 398
+      y: 300
+    - pin: 3
+      x: 502
+      y: 300
+    - pin: 4
+      x: 606
+      y: 300
+    - pin: 5
+      x: 710
+      y: 300
+    - pin: 6
+      x: 814
+      y: 300
+    - pin: 7
+      x: 918
+      y: 300
+    - pin: 8
+      x: 1022
+      y: 300
+    - pin: 9
+      x: 1126
+      y: 300
+    - pin: 10
+      x: 1230
+      y: 300
+    - pin: 11
+      x: 1334
+      y: 300
+    - pin: 12
+      x: 1438
+      y: 300
+    - pin: 13
+      x: 346
+      y: 405
+    - pin: 14
+      x: 450
+      y: 405
+    - pin: 15
+      x: 554
+      y: 405
+    - pin: 16
+      x: 658
+      y: 405
+    - pin: 17
+      x: 762
+      y: 405
+    - pin: 18
+      x: 866
+      y: 405
+    - pin: 19
+      x: 970
+      y: 405
+    - pin: 20
+      x: 1074
+      y: 405
+    - pin: 21
+      x: 1178
+      y: 405
+    - pin: 22
+      x: 1282
+      y: 405
+    - pin: 23
+      x: 1386
+      y: 405
+    - pin: 24 
+      x: 294
+      y: 510
+    - pin: 25
+      x: 398
+      y: 510
+    - pin: 26 
+      x: 502
+      y: 510
+    - pin: 27
+      x: 606
+      y: 510
+    - pin: 28
+      x: 710
+      y: 510
+    - pin: 29
+      x: 814
+      y: 510
+    - pin: 30
+      x: 918
+      y: 510
+    - pin: 31
+      x: 1022
+      y: 510
+    - pin: 32
+      x: 1126
+      y: 510
+    - pin: 33
+      x: 1230
+      y: 510
+    - pin: 34 
+      x: 1334
+      y: 510
+    - pin: 35
+      x: 1438
+      y: 510

@@ -5,16 +5,28 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
 #include "trigger_vw.h"
 #include "trigger_universal.h"
 
-void setVwConfiguration(TriggerWaveform *s) {
-	efiAssertVoid(CUSTOM_ERR_6660, s != NULL, "TriggerWaveform is NULL");
-
+void setSkodaFavorit(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
-	s->isSynchronizationNeeded = true;
+	s->addEvent360(46, T_PRIMARY, TV_RISE);
+	s->addEvent360(177, T_PRIMARY, TV_FALL);
 
+	s->addEvent360(180, T_PRIMARY, TV_RISE);
+	s->addEvent360(183, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(226, T_PRIMARY, TV_RISE);
+	s->addEvent360(360, T_PRIMARY, TV_FALL);
+
+	s->tdcPosition = 180 - 46;
+	s->setTriggerSynchronizationGap(3.91);
+}
+
+void setVwConfiguration(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	int totalTeethCount = 60;
 	int skippedCount = 2;
@@ -30,4 +42,6 @@ void setVwConfiguration(TriggerWaveform *s) {
 	s->addEventClamped(0 + engineCycle, T_PRIMARY, TV_FALL, NO_LEFT_FILTER, NO_RIGHT_FILTER);
 
 	s->setTriggerSynchronizationGap2(1.6, 4);
+	s->setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+	s->setThirdTriggerSynchronizationGap(1);
 }

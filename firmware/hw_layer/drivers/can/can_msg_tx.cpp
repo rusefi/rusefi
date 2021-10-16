@@ -7,15 +7,12 @@
  * @author Matthew Kennedy, (c) 2012-2020
  */
 
-#include "efifeatures.h"
-#include "global.h"
+#include "pch.h"
+
+#include "can_msg_tx.h"
 
 #if EFI_CAN_SUPPORT
-#include "can_msg_tx.h"
-#include "engine_configuration.h"
-
-EXTERN_CONFIG
-extern LoggingWithStorage sharedLogger;
+#include "can.h"
 
 extern int canWriteOk;
 extern int canWriteNotOk;
@@ -27,10 +24,24 @@ extern int canWriteNotOk;
 }
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
+#ifndef STM32H7XX
+	// ST bxCAN device
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
-	m_frame.EID = eid;
 	m_frame.RTR = CAN_RTR_DATA;
-	m_frame.DLC = dlc;
+#else /* if STM32H7XX */
+	// Bosch M_CAN FDCAN device
+	m_frame.common.XTD = isExtended;
+	m_frame.common.RTR = 0;
+#endif
+
+	if (isExtended) {
+		CAN_EID(m_frame) = eid;
+	} else {
+		CAN_SID(m_frame) = eid;
+	}
+
+	setDlc(dlc);
+
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
 }
 
@@ -43,7 +54,7 @@ CanTxMessage::~CanTxMessage() {
 	}
 
 	if (CONFIG(debugMode) == DBG_CAN) {
-		scheduleMsg(&sharedLogger, "Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", m_frame.SID, m_frame.DLC,
+		efiPrintf("Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", CAN_SID(m_frame), m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
 				m_frame.data8[2], m_frame.data8[3],
 				m_frame.data8[4], m_frame.data8[5],
@@ -59,6 +70,10 @@ CanTxMessage::~CanTxMessage() {
 	}
 }
 
+void CanTxMessage::setDlc(uint8_t dlc) {
+	m_frame.DLC = dlc;
+}
+
 uint8_t& CanTxMessage::operator[](size_t index) {
 	return m_frame.data8[index];
 }
@@ -71,5 +86,21 @@ void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
 void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 	m_frame.data8[byteIdx] |= 1 << bitIdx;
 }
+
+#else
+
+CanTxMessage::CanTxMessage(uint32_t /*eid*/, uint8_t /*dlc*/, bool /*isExtended*/) {
+
+}
+
+CanTxMessage::~CanTxMessage() {
+
+}
+
+uint8_t& CanTxMessage::operator[](size_t index) {
+	return m_data8[index];
+}
+
+void CanTxMessage::setDlc(uint8_t) { }
 
 #endif // EFI_CAN_SUPPORT

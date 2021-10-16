@@ -7,14 +7,8 @@
  * @author andreika, (c) 2017
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
-
-EXTERN_ENGINE;
 
 #ifdef STM32F469xx
 static bool is469 = true;
@@ -44,7 +38,6 @@ static void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.flow = 200;
 	
 	engineConfiguration->cranking.baseFuel = 25;		// ???
-	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->rpmHardLimit = 8500; // yes, 3k. let's play it safe for now
@@ -128,10 +121,10 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
 	// TODO: remove it when the bootloader is ready
 	chThdSleepMilliseconds(2000);
@@ -200,7 +193,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_DEFAULT;
 
 	// not used
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
 	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
@@ -216,9 +208,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->triggerSimulatorPinModes[1] = OM_DEFAULT;
 	engineConfiguration->triggerSimulatorPinModes[2] = OM_DEFAULT;
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIO_UNASSIGNED;
-
-	engineConfiguration->digitalPotentiometerSpiDevice = SPI_NONE;
-	engineConfiguration->max31855spiDevice = SPI_NONE;
 
 	/////////////////////////////////////////////////////////
 	

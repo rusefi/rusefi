@@ -5,13 +5,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
+
 #include "vw_b6.h"
 #include "custom_engine.h"
 #include "table_helper.h"
-#include "map.h"
-
-EXTERN_CONFIG;
+#include "electronic_throttle_impl.h"
 
 /**
  * set engine_type 62
@@ -22,19 +21,20 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->vvtMode = VVT_BOSCH_QUICK_START;
+	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
-	/*
-	todo:
-	1214 cc/min
-"High"
-"Sensed Rail Pressure"
-10000 kPa
-
-
-	*/
-
+	// Injectors flow 1214 cc/min at 100 bar pressure
+	engineConfiguration->injector.flow = 1214;
+	// Use high pressure sensor
+	engineConfiguration->injectorPressureType = IPT_High;
+	// Automatic compensation of injector flow based on rail pressure
+	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
+	// Reference rail pressure is 10 000 kPa = 100 bar
+	engineConfiguration->fuelReferencePressure = 10000;
+	//setting "flat" 0.2 ms injector's lag time
+	setArrayValues(engineConfiguration->injector.battLagCorr, 0.2);
+	
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_VAG);
 	strcpy(CONFIG(engineCode), "BPY");
 
@@ -117,7 +117,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTable(coolantControl->table, (uint8_t)value);
 	// for now I just want to stop radiator whine
 	// todo: enable cooling!
-/*
+	/*
     for (int load = 0; load < GPPWM_LOAD_COUNT; load++) {
 		for (int r = 0; r < GPPWM_RPM_COUNT; r++) {
 			engineConfiguration->gppwm[0].table[load][r] = value;
@@ -125,21 +125,11 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
-
-
 	// "7 - Lowside 1"
 	engineConfiguration->hpfpValvePin = TLE8888_PIN_6;
 
+	setBoschVAGETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	// set tps_min 890
-	engineConfiguration->tpsMin = 890; // convert 12to10 bit (ADC/4)
-	// set tps_max 70
-	engineConfiguration->tpsMax = 70; // convert 12to10 bit (ADC/4)
-
-	engineConfiguration->etb.pFactor = 5.12;
-	engineConfiguration->etb.iFactor =	47;
-	engineConfiguration->etb.dFactor = 0.088;
-	engineConfiguration->etb.offset = 0;
 
 	engineConfiguration->injector.flow = 300;
 	engineConfiguration->tempHpfpStart = 120;

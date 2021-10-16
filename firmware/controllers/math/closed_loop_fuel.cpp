@@ -1,19 +1,26 @@
+#include "pch.h"
+
 #include "closed_loop_fuel.h"
 #include "closed_loop_fuel_cell.h"
-
-#include "engine.h"
-
-#include "sensor.h"
-#include "engine_math.h"
 #include "deadband.h"
 
-EXTERN_ENGINE;
+struct FuelingBank {
+	ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
+};
 
-ClosedLoopFuelCellImpl cells[STFT_CELL_COUNT];
+static FuelingBank banks[STFT_BANK_COUNT];
 
 static Deadband<25> idleDeadband;
 static Deadband<2> overrunDeadband;
 static Deadband<2> loadDeadband;
+
+static SensorType getSensorForBankIndex(size_t index) {
+	switch (index) {
+		case 0: return SensorType::Lambda1;
+		case 1: return SensorType::Lambda2;
+		default: return SensorType::Invalid;
+	}
+}
 
 size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 	// Low RPM -> idle
@@ -66,12 +73,12 @@ static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
-bool shouldUpdateCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool shouldUpdateCorrection(SensorType sensor DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	const auto& cfg = CONFIG(stft);
 
 	// Pause (but don't reset) correction if the AFR is off scale.
 	// It's probably a transient and poorly tuned transient correction
-	auto afr = Sensor::get(SensorType::Lambda1).value_or(0) * 14.7f;
+	auto afr = Sensor::get(sensor).value_or(0) * STOICH_RATIO;
 	if (!afr || afr < (cfg.minAfr * 0.1f) || afr > (cfg.maxAfr * 0.1f)) {
 		return false;
 	}
@@ -79,9 +86,9 @@ bool shouldUpdateCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
-float fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+ClosedLoopFuelResult fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (!shouldCorrect(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		return 1.0f;
+		return {};
 	}
 
 	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE), CONFIG(stft));
@@ -92,14 +99,22 @@ float fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif // EFI_TUNER_STUDIO
 
-	auto& cell = cells[binIdx];
+	ClosedLoopFuelResult result;
 
-	// todo: push configuration at startup
-	cell.configure(&CONFIG(stft.cellCfgs[binIdx]));
+	for (int i = 0; i < STFT_BANK_COUNT; i++) {
+		auto& cell = banks[i].cells[binIdx];
 
-	if (shouldUpdateCorrection(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		cell.update(CONFIG(stft.deadband) * 0.001f, CONFIG(stftIgnoreErrorMagnitude) PASS_ENGINE_PARAMETER_SUFFIX);
+		SensorType sensor = getSensorForBankIndex(i);
+
+		// todo: push configuration at startup
+		cell.configure(&CONFIG(stft.cellCfgs[binIdx]), sensor);
+
+		if (shouldUpdateCorrection(sensor PASS_ENGINE_PARAMETER_SUFFIX)) {
+			cell.update(CONFIG(stft.deadband) * 0.001f, CONFIG(stftIgnoreErrorMagnitude) PASS_ENGINE_PARAMETER_SUFFIX);
+		}
+
+		result.banks[i] = cell.getAdjustment();
 	}
 
-	return cell.getAdjustment();
+	return result;
 }

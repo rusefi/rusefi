@@ -7,11 +7,7 @@
 
 #pragma once
 
-#include "engine_configuration.h"
-
 #include "trigger_structure.h"
-#include "table_helper.h"
-#include "engine.h"
 
 void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX);
 
@@ -34,18 +30,11 @@ void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
  */
 #define getOneDegreeTimeUs(rpm) (1000000.0f * 60 / 360 / (rpm))
 
-/**
- * @return float, time needed to rotate crankshaft by one degree, in native clicks.
- */
-#define getOneDegreeTimeNt(rpm) (US2NT(1000000) * 60.0f / 360 / (rpm))
-
 floatms_t getCrankshaftRevolutionTimeMs(int rpm);
 floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 float getFuelingLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-// getEngineLoadT is deprecated - please use one of the above functions, getFuelingLoad or getIgnitionMode
-float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -58,6 +47,7 @@ ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
+int getNextFiringCylinderId(int prevCylinderId DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);

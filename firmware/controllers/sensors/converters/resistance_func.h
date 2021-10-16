@@ -16,7 +16,7 @@ public:
 
 	SensorResult convert(float inputValue) const override;
 
-	void showInfo(Logging* logger, float testInputValue) const override;
+	void showInfo(float testInputValue) const override;
 
 private:
 	float m_supplyVoltage = 5.0f;

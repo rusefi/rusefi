@@ -32,7 +32,7 @@
 #define STM32_SYSCLK 192000000	// 192 MHz
 
 #define _CHIBIOS_RT_CONF_
-#define _CHIBIOS_RT_CONF_VER_5_1_
+#define _CHIBIOS_RT_CONF_VER_6_1_
 
 /*
  * __process_stack_size__ and __process_stack_size__ defaults are each hard-coded as 0x400 in ChibiOS rules.mk files
@@ -43,20 +43,6 @@
  * "__process_stack_size__ is the stack of the C-runtime, in ChibiOS the "main" thread uses the C-runtime stack."
  *
  */
-
-#define PORT_IDLE_THREAD_STACK_SIZE     32
-
-// See global_shared.h notes about stack requirements
-// see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
-#define PORT_INT_REQUIRED_STACK 	128
-
-#define CHPRINTF_USE_FLOAT          	TRUE
-
-#if !defined(EFI_CLOCK_LOCKS) || defined(__DOXYGEN__)
-// looks like this value could not be defined in efifeatures.h - please define either externally or just change the value here
- #define EFI_CLOCK_LOCKS FALSE
-#endif /* EFI_CLOCK_LOCKS */
-
 
 #include "chconf_common.h"
 
@@ -425,6 +411,50 @@
 #define CH_CFG_USE_OBJ_FIFOS                FALSE
 #endif
 
+/**
+ * @brief   Pipes APIs.
+ * @details If enabled then the pipes APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_PIPES)
+#define CH_CFG_USE_PIPES                    FALSE
+#endif
+
+/**
+ * @brief   Objects Caches APIs.
+ * @details If enabled then the objects caches APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_OBJ_CACHES)
+#define CH_CFG_USE_OBJ_CACHES               FALSE
+#endif
+
+/**
+ * @brief   Delegate threads APIs.
+ * @details If enabled then the delegate threads APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_DELEGATES)
+#define CH_CFG_USE_DELEGATES                FALSE
+#endif
+
+/**
+ * @brief   Jobs Queues APIs.
+ * @details If enabled then the jobs queues APIs are included
+ *          in the kernel.
+ *
+ * @note    The default is @p TRUE.
+ */
+#if !defined(CH_CFG_USE_JOBS)
+#define CH_CFG_USE_JOBS                     FALSE
+#endif
+
 /** @} */
 
 /*===========================================================================*/
@@ -558,17 +588,6 @@
  */
 #if !defined(CH_DBG_TRACE_BUFFER_SIZE)
 #define CH_DBG_TRACE_BUFFER_SIZE            128
-#endif
-
-/**
- * @brief   Debug option, trace buffer.
- * @details If enabled then the context switch circular trace buffer is
- *          activated.
- *
- * @note    The default is @p FALSE.
- */
-#ifndef CH_DBG_ENABLE_TRACE
-#define CH_DBG_ENABLE_TRACE                 FALSE
 #endif
 
 /**
@@ -709,37 +728,6 @@
 /*===========================================================================*/
 /* Port-specific settings (override port settings defaulted in chcore.h).    */
 /*===========================================================================*/
-
-#ifndef __ASSEMBLER__
-
-#ifdef __cplusplus
-extern "C"
-#endif
-void chDbgPanic3(const char *msg, const char * file, int line);
-#endif
-
-/**
- * declared as a macro so that this code does not use stack
- * so that it would not crash the error handler in case of stack issues
- */
-#if CH_DBG_SYSTEM_STATE_CHECK
-#define hasOsPanicError() (ch.dbg.panic_msg != NULL)
-#else
-#define hasOsPanicError() (FALSE)
-#endif
-
-
-#define chDbgAssert(c, remark) do {                                              \
-  if (CH_DBG_ENABLE_ASSERTS != FALSE) {                                     \
-    if (!(c)) {                                                             \
-  /*lint -restore*/                                                         \
-      chSysHalt(remark);                                                    \
-    }                                                                       \
-  }                                                                         \
-} while (false)
-
-#define ENABLE_PERF_TRACE FALSE
-#define TRACE_BUFFER_LENGTH 1
 
 #endif  /* CHCONF_H */
 

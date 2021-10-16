@@ -7,9 +7,8 @@
 
 #pragma once
 
-#include "global.h"
-#include "engine_configuration_generated_structures.h"
 #include "cyclic_buffer.h"
+#include "timer.h"
 
 #define MOCK_ADC_SIZE 26
 
@@ -28,6 +27,8 @@ public:
 	float x = 0; // G value
 	float y = 0;
 	float z = 0;
+	float yaw = 0;
+	float roll = 0;
 };
 
 class SensorsState {
@@ -35,32 +36,28 @@ public:
 	SensorsState();
 
 	Accelerometer accelerometer;
-
-	float vBatt = 0;
-	/**
-	 * that's fuel in tank - just a gauge
-	 */
-	percent_t fuelTankLevel = 0;
 };
 
 class FuelConsumptionState {
 public:
-	FuelConsumptionState();
-	void addData(float durationMs);
-	void update(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-	float perSecondConsumption = 0;
-	float perMinuteConsumption = 0;
-	float perSecondAccumulator = 0;
-	float perMinuteAccumulator = 0;
-	efitick_t accumulatedSecondPrevNt;
-	efitick_t accumulatedMinutePrevNt;
+	void consumeFuel(float grams, efitick_t nowNt);
+
+	float getConsumedGrams() const;
+	float getConsumptionGramPerSecond() const;
+
+private:
+	float m_consumedGrams = 0;
+	float m_rate = 0;
+
+	Timer m_timer;
 };
 
 class TransmissionState {
 public:
-	TransmissionState();
 	gear_e gearSelectorPosition;
 };
+
+typedef cyclic_buffer<int, 8> warningBuffer_t;
 
 class WarningCodeState {
 public:
@@ -72,21 +69,13 @@ public:
 	int lastErrorCode;
 	efitimesec_t timeOfPreviousWarning;
 	// todo: we need a way to post multiple recent warnings into TS
-	cyclic_buffer<int, 8> recentWarnings;
+	warningBuffer_t recentWarnings;
 };
 
 class FsioState {
 public:
 	FsioState();
-	float fsioTimingAdjustment = 0;
-	float fsioIdleTargetRPMAdjustment = 0;
-	float servoValues[SERVO_COUNT];
 	float fsioLastValue[FSIO_COMMAND_COUNT];
-
-	float fsioIdleOffset = 0;
-	float fsioIdleMinValue = 0;
-
-	float fsioRpmHardLimit;
 
 #if EFI_UNIT_TEST
 	float mockFan = 0;

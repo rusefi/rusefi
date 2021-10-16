@@ -45,7 +45,7 @@ enum class PE : uint8_t {
 	GetSpeedDensityFuel,
 	WallFuelAdjust,
 	MapAveragingTriggerCallback,
-	AdcCallbackFastComplete,
+	Unused1,
 	SingleTimerExecutorScheduleByTimestamp,
 	GetTimeNowUs,
 	EventQueueExecuteCallback,
@@ -64,6 +64,7 @@ enum class PE : uint8_t {
 	GlobalUnlock,
 	SoftwareKnockProcess,
 	LogTriggerTooth,
+	LuaTickFunction,
 	// enum_end_tag
 	// The tag above is consumed by PerfTraceTool.java
 	// please note that the tool requires a comma at the end of last value

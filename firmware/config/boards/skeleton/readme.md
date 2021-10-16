@@ -1,3 +1,5 @@
+# Skeleton Board
+
 This directory contains an example of the files needed to configure the
 firmware for a specific RusEFI board.
 

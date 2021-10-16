@@ -7,17 +7,10 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_configuration.h"
-#include "adc_inputs.h"
-#include "engine_math.h"
-#include "tps.h"
+#include "pch.h"
 #include "trigger_input.h"
 
-EXTERN_ENGINE;
-
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -43,7 +36,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injector.flow = 200;
 	
 	engineConfiguration->cranking.baseFuel = 25;		// ???
-	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
@@ -120,9 +112,9 @@ void setBoardConfigurationOverrides(void) {
 
 	// todo:
 	int i;
-	for (i = 0; i < INJECTION_PIN_COUNT; i++)
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
-	for (i = 0; i < IGNITION_PIN_COUNT; i++)
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	
 	engineConfiguration->adcVcc = 5.0f;

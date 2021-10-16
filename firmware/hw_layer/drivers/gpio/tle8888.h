@@ -39,8 +39,10 @@
 
 /* note that spi transfer should be LSB first */
 struct tle8888_config {
+#if HAL_USE_SPI
 	SPIDriver		*spi_bus;
 	SPIConfig	spi_config;
+#endif
 	/* bidirectional, check DS */
 	struct {
 		ioportid_t		port;
@@ -54,7 +56,7 @@ struct tle8888_config {
 	/* IN9..IN12 to output mapping */
 	struct {
 		/* ...used to drive output (starts from 1, as in DS, coders gonna hate) */
-		int 			output;
+		uint8_t 			output;
 	} direct_maps[TLE8888_DIRECT_MISC];
 	struct {
 		ioportid_t		port;
@@ -70,26 +72,16 @@ struct tle8888_config {
 	bool			stepper;
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
 /**
  * @return return gpio chip base
  */
-int tle8888_add(unsigned int index, const struct tle8888_config *cfg);
+int tle8888_add(brain_pin_e base, unsigned int index, const struct tle8888_config *cfg);
 
 /* debug */
-void tle8888_read_reg(uint16_t reg, uint16_t *val);
-void tle8888_req_init(void);
+void tle8888_req_init();
+void tle8888_dump_regs();
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio_debug_struct.h"
 void tle8888PostState(TsDebugChannels *tsDebugChannels);
 #endif /* EFI_TUNER_STUDIO */
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-

@@ -3,8 +3,8 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -15,5 +15,6 @@
     <orderEntry type="module" module-name="io" exported="" />
     <orderEntry type="module" module-name="models" exported="" />
     <orderEntry type="module" module-name="inifile" exported="" />
+    <orderEntry type="module" module-name="logging" exported="" />
   </component>
 </module>

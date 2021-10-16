@@ -67,6 +67,8 @@ public class TriggerImage {
                 return "Subaru 7/6";
             case Fields.TT_TT_GM_LS_24:
                 return "GM 24x";
+            case Fields.TT_TT_SKODA_FAVORIT:
+                return "Skoda Favorit";
             case Fields.TT_TT_GM_7X:
                 return "GM 7x";
             case Fields.TT_TT_CHRYSLER_NGC_36_2_2:
@@ -91,6 +93,8 @@ public class TriggerImage {
                 return "TriTach";
             case Fields.TT_TT_TOOTHED_WHEEL_60_2:
                 return "60/2";
+            case Fields.TT_TT_GM_60_2_2_2:
+                return "GM 60/2/2/2";
         }
         return triggerName.triggerName;
     }
@@ -235,7 +239,6 @@ public class TriggerImage {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
-                g.setColor(Color.black);
 
                 int middle = WHEEL_BORDER + WHEEL_DIAMETER / 2;
                 if (showTdc) {
@@ -245,12 +248,14 @@ public class TriggerImage {
                     int smallY = (int) (WHEEL_DIAMETER / 2 * Math.cos(tdcAngle));
 
                     int tdcMarkRadius = 8;
+                    g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
                     g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
                             2 * tdcMarkRadius,
                             2 * tdcMarkRadius);
 
                     g.drawString("TDC", middle + smallX + tdcMarkRadius * 2, middle + smallY);
                 }
+                g.setColor(Color.black);
 
                 for (int i = 0; i < wheel.size(); i++) {
                     TriggerSignal current = wheel.get(i);
@@ -397,13 +402,23 @@ public class TriggerImage {
             if (id != null)
                 g.drawString(id, 0, (int) (h * 0.9));
 
-            g.setColor(Color.green);
+            g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
             int tdcFontSize = (int) (f.getSize() * 1.5);
             g.setFont(new Font(f.getName(), Font.BOLD, tdcFontSize));
-            g.drawString("tdcPosition " + formatTdcPosition(), 0, tdcFontSize);
+            String tdcMessage;
+            if (tdcPosition != 0) {
+                tdcMessage = "TDC " + formatTdcPosition() + " degree from synchronization point";
+            } else {
+                tdcMessage = "TDC at synchronization point";
+            }
+            g.drawString("     " + tdcMessage, 0, tdcFontSize);
 
             int tdcX = (int) (w / 720.0 * tdcPosition);
             g.drawLine(tdcX, 0, tdcX, h);
+            Graphics2D g2 = (Graphics2D) g;
+            g2.rotate(Math.PI / 2);
+            g2.drawString("TDC", 60, -tdcX - 3);
+            g2.rotate(-Math.PI / 2);
         }
 
         private String formatTdcPosition() {

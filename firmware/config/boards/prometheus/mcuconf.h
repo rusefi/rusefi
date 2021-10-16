@@ -8,7 +8,7 @@
  */
 
 #include "efifeatures.h"
-#include "../../stm32f4ems/mcuconf.h"
+#include "../../../hw_layer/ports/stm32/stm32f4/cfg/mcuconf.h"
 
 #ifndef _MCUCONF_PROMETHEUS_H_
 #define _MCUCONF_PROMETHEUS_H_
@@ -43,11 +43,7 @@
 #define STM32_SERIAL_USE_USART3             FALSE
 
 #undef STM32_SERIAL_USE_UART4
-#if (TS_UART_DMA_MODE || TS_UART_MODE)
 #define STM32_SERIAL_USE_UART4              FALSE
-#else
-#define STM32_SERIAL_USE_UART4              TRUE
-#endif
 
 #undef STM32_UART_USE_USART3
 #define STM32_UART_USE_USART3               FALSE

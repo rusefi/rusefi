@@ -1,0 +1,274 @@
+.pin-marker {
+  position: absolute;
+  z-index: 1;
+  border-radius: 50%;
+  background-color: white;
+  border: 0.21vw black solid;
+  cursor: pointer;
+  color: black;
+  text-align: center;
+  line-height: 200%;
+}
+
+[data-type*="12v"],
+[data-type*="12V"] {
+  border-color: yellow;
+}
+
+[data-type*="5v"],
+[data-type*="5V"] {
+  border-color: red;
+}
+
+[data-type*="at"] {
+  border-color: green;
+}
+
+[data-type*="av"] {
+  border-color: brown;
+}
+
+[data-type*="can"] {
+  border-color: blue;
+}
+
+[data-type*="din"] {
+  border-color: lime;
+}
+
+[data-type*="etb"] {
+  border-color: darkcyan;
+}
+
+[data-type*="gnd"] {
+  border-color: darkgreen;
+}
+
+[data-type*="gp_high"] {
+  border-color: aqua;
+}
+
+[data-type*="gp_low"] {
+  border-color: aquamarine;
+}
+
+[data-type*="gp_pp"] {
+  border-color: cyan;
+}
+
+[data-type*="hall"] {
+  border-color: darkolivegreen;
+}
+
+[data-type*="hl"] {
+  border-color: gold;
+}
+
+[data-type*="hs"] {
+  border-color: indigo;
+}
+
+[data-type*="ign"] {
+  border-color: magenta;
+}
+
+[data-type*="inj"] {
+  border-color: maroon;
+}
+
+[data-type*="ls"] {
+  border-color: lightgreen;
+}
+
+[data-type*="mr"] {
+  border-color: firebrick;
+}
+
+[data-type*="pgnd"] {
+  border-color: coral;
+}
+
+[data-type*="sgnd"] {
+  border-color: olive;
+}
+
+[data-type*="usb"] {
+  border-color: lightseagreen;
+}
+
+[data-type*="vr"] {
+  border-color: sienna;
+}
+
+.pin-marker:hover {
+  transform: scale(2);
+  z-index: 2;
+}
+
+.pin-marker.highlight {
+  background-color: #fc935a;
+}
+
+.pin-marker.selected {
+  background-color: #f15a24;
+  color: white;
+}
+
+.connector-container {
+  width: 100%;
+  overflow-x: scroll;
+  position: relative;
+  height: max(3in, 50vh);
+}
+
+.connector-div {
+  height: 100%;
+  position: relative;
+  z-index: 0;
+  width: max-content;
+}
+
+.connector-img {
+  height: 100%;
+  min-width: 100%;
+}
+
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: clamp(100%, 100%, 1000px);
+  text-align: left;
+}
+
+@media (min-width: 1000px) {
+  table {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 1000px) {
+  table {
+    word-wrap: break-word;
+    font-size: 2.5rem;
+  }
+}
+
+table tbody tr {
+  cursor: pointer;
+}
+
+@media screen {
+  td.pin-data {
+    border-color: black;
+  }
+}
+
+table td, table th {
+    border: 1px solid black;
+  padding: 8px;
+}
+
+table tr:nth-child(even){
+  background-color: #fc935a;
+}
+
+table tr:hover {
+  background-color: #f15a24;
+}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #f15a24;
+  color: black;
+}
+
+.info-table {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: black;
+    color: white;
+  }
+
+  td.pin-data {
+    border: 1px solid #ddd;
+  }
+
+  table td, table th {
+    border: 1px solid #ddd;
+  }
+
+  table th {
+    color: white;
+  }
+
+  table tr:nth-child(even){
+    background-color: #230c00;
+    color: white;
+  }
+
+  table tr:hover {
+    background-color: #f15a24;
+  }
+}
+
+@media print {
+  .container {
+    height: 99vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .info-table, .ts-data, .ts-header, .type-data, .type-header, .color-data, .color-header, thead {
+    display: none;
+  }
+  .connector-container {
+    flex: 0 1 auto;
+    height: unset;
+    min-height: 2in;
+  }
+  .connector-div {
+    max-width: 100%;
+    height: unset;
+  }
+  .connector-img {
+    max-width: 100% !important;
+    max-height: 3in;
+  }
+  h2 {
+    font-size: 14px;
+  }
+  th {
+    font-size: 12px;
+  }
+  td {
+    font-size: 10px;
+  }
+  td:not(.pin-data) {
+    border: none !important;
+  }
+  td.pin-data {
+    border-width: 3px;
+    border-radius: 10px;
+    width: 10px;
+    margin: 0px;
+    padding: 0px;
+  }
+  html, tr {
+    background-color: white !important;
+    color: black !important;
+  }
+  table {
+    width: auto;
+    border-collapse: separate;
+  }
+  .table-wrapper { 
+    column-count: 4;
+  }
+  table, tbody, tr {
+    display: block;
+  }
+}

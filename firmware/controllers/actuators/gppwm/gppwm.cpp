@@ -1,20 +1,16 @@
 
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
 
 #include "gppwm_channel.h"
-#include "pwm_generator_logic.h"
-
-EXTERN_ENGINE;
 
 static GppwmChannel channels[GPPWM_CHANNELS];
 static OutputPin pins[GPPWM_CHANNELS];
 static SimplePwm outputs[GPPWM_CHANNELS];
 
-static gppwm_Map3D_t table1("GPPWM 1");
-static gppwm_Map3D_t table2("GPPWM 2");
-static gppwm_Map3D_t table3("GPPWM 3");
-static gppwm_Map3D_t table4("GPPWM 4");
+static gppwm_Map3D_t table1;
+static gppwm_Map3D_t table2;
+static gppwm_Map3D_t table3;
+static gppwm_Map3D_t table4;
 
 static gppwm_Map3D_t* tables[] = {
 	&table1,
@@ -28,7 +24,7 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		auto& cfg = CONFIG(gppwm)[i];
 
 		// If no pin, don't enable this channel.
-		if (cfg.pin == GPIO_UNASSIGNED) {
+		if (!isBrainPinValid(cfg.pin)) {
 			continue;
 		}
 
@@ -38,7 +34,9 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		// Setup pin & pwm
 		pins[i].initPin("gp pwm", cfg.pin);
-		startSimplePwm(&outputs[i], "gp pwm", &engine->executor, &pins[i], freq, 0);
+		if (usePwm) {
+			startSimplePwm(&outputs[i], "gp pwm", &engine->executor, &pins[i], freq, 0);
+		}
 
 		// Set up this channel's lookup table
 		tables[i]->init(cfg.table, cfg.loadBins, cfg.rpmBins);
@@ -58,7 +56,7 @@ void updateGppwm() {
 
 #ifdef EFI_TUNER_STUDIO
 		if (CONFIG(debugMode) == DBG_GPPWM) {
-			float* debugFloats = &tsOutputChannels.debugFloatField1;
+			scaled_channel<float>* debugFloats = &tsOutputChannels.debugFloatField1;
 			debugFloats[i] = result;
 		}
 #endif

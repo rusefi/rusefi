@@ -6,14 +6,14 @@
 
 struct gppwm_channel;
 class OutputPin;
-class SimplePwm;
+struct IPwm;
 class ValueProvider3D;
 
 class GppwmChannel {
 public:
 	DECLARE_ENGINE_PTR;
 
-	void init(bool usePwm, SimplePwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
+	void init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
 	float update();
 	percent_t getOutput() const;
 	void setOutput(float result);
@@ -25,7 +25,7 @@ private:
 	// Configuration fields
 	const gppwm_channel* m_config = nullptr;
 	bool m_usePwm = false;
-	SimplePwm* m_pwm = nullptr;
+	IPwm* m_pwm = nullptr;
 	OutputPin* m_output = nullptr;
 	const ValueProvider3D* m_table = nullptr;
 };

@@ -9,7 +9,6 @@ export "EXTRA_PARAMS=-DDUMMY -DSHORT_BOARD_NAME=kin -DCPU_MKE16F512VLH16 -DCPU_M
 # set BUILDDIR=build_kinetis
 export BUILDDIR=build
 export PROJECT_BOARD=kinetis
-export USE_SMART_BUILD=yes
 export PROJECT_CPU=kinetis
 export DEBUG_LEVEL_OPT="-O2"
 export USE_FATFS=no

@@ -10,9 +10,11 @@
 
 #include "device_mpu_util.h"
 
-// 12mhz was chosen because it's the GCD of (168, 180, 216), the three speeds of STM32 currently supported
+#define MCU_SERIAL_NUMBER_BYTES 12
+
+// 4mhz was chosen because it's the GCD of (84, 108, 200), the three speeds of STM32 TIM5 clock currently supported
 // https://www.wolframalpha.com/input/?i=common+factors+of+168+180+216
-#define US_TO_NT_MULTIPLIER (12)
+#define US_TO_NT_MULTIPLIER (4)
 
 // Scheduler queue timer - use TIM5
 #define SCHEDULER_PWM_DEVICE PWMD5

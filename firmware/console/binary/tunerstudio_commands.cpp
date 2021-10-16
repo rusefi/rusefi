@@ -1,4 +1,4 @@
-#include "global.h"
+#include "pch.h"
 
 #include "tunerstudio_impl.h"
 #include "tunerstudio.h"
@@ -12,9 +12,9 @@
  * @brief 'Output' command sends out a snapshot of current values
  * Gauges refresh
  */
-void TunerStudio::cmdOutputChannels(ts_channel_s *tsChannel, uint16_t offset, uint16_t count) {
+void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) {
 	if (offset + count > sizeof(TunerStudioOutputChannels)) {
-		scheduleMsg(tsLogger, "TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
+		efiPrintf("TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
 				sizeof(TunerStudioOutputChannels));
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
@@ -23,7 +23,7 @@ void TunerStudio::cmdOutputChannels(ts_channel_s *tsChannel, uint16_t offset, ui
 	tsState.outputChannelsCommandCounter++;
 	prepareTunerStudioOutputs();
 	// this method is invoked too often to print any debug information
-	sr5SendResponse(tsChannel, TS_CRC, ((const uint8_t *) &tsOutputChannels) + offset, count);
+	tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(&tsOutputChannels) + offset, count);
 }
 
 #endif // EFI_TUNER_STUDIO

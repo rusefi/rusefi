@@ -117,11 +117,15 @@ private:
 
 struct hardware_pwm;
 
-class SimplePwm : public PwmConfig {
+struct IPwm {
+	virtual void setSimplePwmDutyCycle(float dutyCycle) = 0;
+};
+
+class SimplePwm : public PwmConfig, public IPwm {
 public:
 	SimplePwm();
 	explicit SimplePwm(const char *name);
-	virtual void setSimplePwmDutyCycle(float dutyCycle);
+	void setSimplePwmDutyCycle(float dutyCycle) override;
 	pin_state_t pinStates[2];
 	SingleChannelStateSequence sr[1];
 	float _switchTimes[2];
@@ -145,7 +149,7 @@ void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
 void startSimplePwm(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		OutputPin *output,
-		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback = (pwm_gen_callback*)applyPinState);
+		float frequency, float dutyCycle);
 
 /**
  * initialize GPIO pin and start a one-channel software PWM driver.
@@ -156,7 +160,7 @@ void startSimplePwmExt(SimplePwm *state,
 		const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output,
-		float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback = (pwm_gen_callback*)applyPinState);
+		float frequency, float dutyCycle);
 
 void startSimplePwmHard(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,

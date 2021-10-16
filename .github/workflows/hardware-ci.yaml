@@ -1,0 +1,77 @@
+name: HW CI
+
+on: [push, pull_request]
+
+jobs:
+  build-firmware:
+    strategy:
+      # Let all builds finish even if one fails early
+      fail-fast: false
+      matrix:
+        build-target: [f4-disco, proteus]
+
+        include:
+          - build-target: f4-disco
+            script: hardware_ci_f4_discovery
+            board: st_stm32f4
+            runs-on: hw-ci-f4-discovery
+
+          - build-target: proteus
+            script: hardware_ci_proteus
+            board: proteus
+            runs-on: hw-ci-proteus
+
+    runs-on: ${{matrix.runs-on}}
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+
+    - name: Identify Agent
+      run: uname -a
+
+    - name: Generate Configs for HW CI
+      working-directory: ./firmware/
+      run: bash gen_config_default.sh
+
+    - name: Generate Enum Strings
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
+
+    - name: Generate Default config
+      working-directory: ./firmware/
+      run: bash gen_config_default.sh
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: bash gen_live_documentation.sh
+
+    # Make sure the compiler works
+    - name: Test Compiler
+      run: arm-none-eabi-gcc -v
+
+    # We aren't guaranteed a clean machine every time, so manually clean the output
+    - name: Clean Build
+      working-directory: ./firmware
+      run: make clean
+
+    - name: Build Firmware
+      working-directory: ./firmware
+      run: make -j6 EXTRA_PARAMS="-DHARDWARE_CI" PROJECT_BOARD=${{matrix.board}}
+
+    - name: Check for STLINK
+      run: lsusb | grep 'ST-LINK\|STLINK'
+
+    - name: OpenOCD wipe & flash STM32
+      working-directory: ./firmware
+      run: openocd -f "interface/stlink.cfg" -f "target/stm32f4x.cfg" -c init -c targets -c "reset halt" -c "flash erase_sector 0 0 11" -c "flash write_image "build/rusefi.bin" 0x08000000" -c "reset run" -c "shutdown"
+
+    - name: Generate Java (Antlr)
+      working-directory: ./java_tools/configuration_definition
+      run: ant antlr
+
+    # This both compiles and runs HW CI tests
+    - name: Run Hardware CI
+      working-directory: ./java_console
+      run: ant ${{matrix.script}}

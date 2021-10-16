@@ -9,8 +9,6 @@
 
 #include "trigger_structure.h"
 
-#define MIATA_NA_GAP 1.4930f
-
 void initializeMazdaMiataNaShape(TriggerWaveform *s);
 void initializeMazdaMiataNb1Shape(TriggerWaveform *s);
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s);

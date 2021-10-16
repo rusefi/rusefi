@@ -22,15 +22,10 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "scheduler.h"
 #include "main_trigger_callback.h"
-
-#if EFI_SIMULATOR
-// this is about debugging
-#include "efi_gpio.h"
-#endif /* EFI_SIMULATOR */
 
 #if EFI_PRINTF_FUEL_DETAILS
 bool printSchedulerDebug = true;
@@ -38,12 +33,12 @@ bool printSchedulerDebug = true;
 
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 
-void SleepExecutor::scheduleByTimestamp(scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+void SleepExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
 	scheduleForLater(scheduling, timeUs - getTimeNowUs(), action);
 }
 
-void SleepExecutor::scheduleByTimestampNt(scheduling_s* scheduling, efitick_t timeNt, action_s action) {
-	scheduleByTimestamp(scheduling, NT2US(timeNt), action);
+void SleepExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
 }
 
 static void timerCallback(scheduling_s *scheduling) {
@@ -83,7 +78,7 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 
 #if EFI_SIMULATOR
 	if (action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
-		printf("setTime cb=turnInjectionPinLow p=%d\r\n", (int)action.getArgument());
+		//printf("setTime cb=turnInjectionPinLow p=%d\r\n", (int)action.getArgument());
 	} else {
 //		printf("setTime cb=%d p=%d\r\n", (int)callback, (int)param);
 	}
@@ -94,6 +89,14 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 
 void SleepExecutor::scheduleForLater(scheduling_s *scheduling, int delayUs, action_s action) {
 	doScheduleForLater(scheduling, delayUs, action);
+}
+
+void SleepExecutor::cancel(scheduling_s* s) {
+	if (chVTIsArmedI(&s->timer)) {
+		chVTResetI(&s->timer);
+	}
+
+	s->action = {};
 }
 
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */

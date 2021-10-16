@@ -27,8 +27,11 @@ public class PresetsPane {
         content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso Miata NB2", "/engines/miata_nb.png", Fields.ET_FRANKENSO_MIATA_NB2).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NA6 MAP", "engines/miata_na.png", Fields.ET_MRE_MIATA_NA6_MAP).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NA6 VAF", "engines/miata_na.png", Fields.ET_MRE_MIATA_NA6_VAF).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata 94 MAP", "engines/miata_na.png", Fields.ET_MRE_MIATA_94_MAP).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAP", "engines/miata_nb.png", Fields.ET_MRE_MIATA_NB2_MAP).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAF", "engines/miata_nb.png", Fields.ET_MRE_MIATA_NB2_MAF).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Proteus NB2 MAP", "engines/miata_nb.png", Fields.ET_PROTEUS_MIATA_NB2).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Hellen72 NB2 MAP", "engines/miata_nb.png", Fields.ET_HELLEN_NB2).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata Defaults", "", Fields.ET_MRE_DEFAULTS).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso V12", "/engines/v12", TEST_V_12).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "ETB bench", "", ETB_BENCH).getContent());

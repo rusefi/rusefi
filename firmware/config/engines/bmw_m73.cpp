@@ -36,11 +36,15 @@
  * ECU pin 28: OUT         RED injector #5
  * ECU pin 32: IN          ORG VR positive crankshaft sensor - only 2x 5k per channel, R111 not installed, W1002 not installed
  * ECU pin 34: IN              IAT sensor (only on second ECU)
+ * ECU pin 36: IN              Knock Sensor #2
+ * ECU pin 37: GND             Knock Sensor GND
  * ECU pin 40: OUT BRN/BLK GRN injector #3
  * ECU pin 41: OUT BRN/WHT BLU injector #1
  * ECU pin 45: GND             crankshaft shield
  * ECU pin 46: IN  BLK     BLU VR negative crankshaft sensor
  * ECU pin 47: GND BRN     BLK IAT sensor Ground (only on second ECU)
+ * ECU pin 49: IN              Knock Sensor #1
+ * ECU pin 50: GND             Knock Sensor GND
  *
  * Plug #4 40 pin
  * ECU pin 6:  IN              start signal from ignition key
@@ -70,11 +74,11 @@
 
 #include "bmw_m73.h"
 #include "custom_engine.h"
+#include "hip9011_logic.h"
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
-#endif
-
-EXTERN_CONFIG;
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 13641435991 injector
@@ -88,7 +92,7 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(isFasterEngineSpinUpEnabled) = true;
 	CONFIG(fuelAlgorithm) = LM_ALPHA_N;
 
-	engineConfiguration->vvtMode = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -102,6 +106,8 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set cranking_fuel 15
 	engineConfiguration->cranking.baseFuel = 30;
+
+	engineConfiguration->cylinderBore = 85.0;
 }
 
 
@@ -194,14 +200,14 @@ GPIOA_6
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_4; // PA4
 
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin1 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[0].controlPin = GPIO_UNASSIGNED;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOC_8;
 	engineConfiguration->etbIo[0].directionPin2 = GPIOC_9;
 	CONFIG(etb_use_two_wires) = true;
 
 	// PWM pin
-	engineConfiguration->etbIo[1].controlPin1 = GPIO_UNASSIGNED;
+	engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
 	// DIR pin
 	engineConfiguration->etbIo[1].directionPin1 = GPIOB_9;
 	engineConfiguration->etbIo[1].directionPin2 = GPIOB_8;

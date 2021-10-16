@@ -22,16 +22,14 @@ class AdcDevice {
 public:
 	explicit AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len);
 	void enableChannel(adc_channel_e hwChannelIndex);
-	void enableChannelAndPin(const char *msg, adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcHardwareIndexByInternalIndex(int index) const;
-	int internalAdcIndexByHardwareIndex[ADC_MAX_CHANNELS_COUNT + 4];
+	uint8_t internalAdcIndexByHardwareIndex[EFI_ADC_LAST_CHANNEL];
 	bool isHwUsed(adc_channel_e hwChannel) const;
 	int size() const;
 	void init(void);
 	uint32_t conversionCount = 0;
 	uint32_t errorsCount = 0;
 	int getAdcValueByIndex(int internalIndex) const;
-	void invalidateSamplesCache();
 
 	adcsample_t *samples;
 	size_t buf_len;
@@ -39,13 +37,14 @@ public:
 	int getAdcValueByHwChannel(adc_channel_e hwChannel) const;
 
 	adc_state values;
-	size_t channelCount = 0;
 private:
 	ADCConversionGroup* hwConfig;
 	/**
 	 * Number of ADC channels in use
 	 */
-	 
+	size_t channelCount = 0;
+
+	/* STM32 has up-to 4 additional channels routed to internal voltage sources */
 	adc_channel_e hardwareIndexByIndernalAdcIndex[ADC_MAX_CHANNELS_COUNT + 4];
 };
 

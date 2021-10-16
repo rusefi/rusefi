@@ -15,20 +15,7 @@ pwd
 bash gen_signature.sh hellen_cypress
 
 java \
- -DSystemOut.name=gen_config_hellen_cypress_board \
- -cp ../java_tools/ConfigDefinition.jar \
- com.rusefi.board_generator.BoardReader \
- -yaml config/boards/hellen/cypress/mapping.yaml \
- -firmware_path . \
- -output_file tunerstudio/generated/hellen_cypress_prefix.txt \
- -enumInputFile controllers/algo/rusefi_enums.h \
- -enumInputFile config/boards/hellen/cypress/rusefi_hw_enums.h
-
-[ $? -eq 0 ] || { echo "ERROR generating TunerStudio board config for hellen_cypress"; exit 1; }
-
-java \
  -DSystemOut.name=gen_config_hellen_cypress \
- -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition integration/rusefi_config.txt \
  -cache hellen_cypress \
@@ -44,7 +31,8 @@ java \
  -signature tunerstudio/generated/signature_hellen_cypress.txt \
  -signature_destination controllers/generated/signature_hellen_cypress.h \
  -enumInputFile controllers/algo/rusefi_enums.h \
- -prepend config/boards/hellen/cypress/config/rusefi_config_hellen_cypress.txt \
+ -enumInputFile controllers/algo/rusefi_hw_enums.h \
+ -board hellen_cypress \
  -prepend config/boards/hellen/cypress/config/tunerstudio/generated/hellen_cypress_prefix.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for hellen_cypress"; exit 1; }

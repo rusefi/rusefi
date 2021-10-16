@@ -1,7 +1,7 @@
 [submodule "firmware/ChibiOS"]
 	path = firmware/ChibiOS
 	url = https://github.com/rusefi/ChibiOS.git
-	branch = stable_18.2.rusefi
+	branch = stable_20.3.x.rusefi
 [submodule "firmware/ChibiOS-Contrib"]
 	path = firmware/ChibiOS-Contrib
 	url = https://github.com/ChibiOS/ChibiOS-Contrib.git
@@ -21,3 +21,15 @@
 [submodule "firmware/controllers/can/wideband_firmware"]
 	path = firmware/controllers/can/wideband_firmware
 	url = https://github.com/mck1117/wideband
+	branch = master
+[submodule "firmware/ext/uzlib"]
+	path = firmware/ext/uzlib
+	url = https://github.com/pfalcon/uzlib
+[submodule "firmware/ext/lua"]
+	path = firmware/ext/lua
+	url = https://github.com/rusefi/lua
+	branch = rusefi-5.4.3
+[submodule "firmware/controllers/lua/luaaa"]
+	path = firmware/controllers/lua/luaaa
+	url = https://github.com/rusefi/luaaa
+	branch = rusefi_prod_2019

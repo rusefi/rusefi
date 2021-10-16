@@ -5,14 +5,11 @@
  * @author Matthew Kennedy, (c) 2020
  */
 
-#include "engine_configuration.h"
+#include "pch.h"
 
 #if EFI_CAN_SUPPORT
 #include "can_sensor.h"
 #include "can.h"
-
-EXTERN_CONFIG
-;
 
 CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
 	CAN_DEFAULT_BASE + CAN_PEDAL_TPS_OFFSET, /*offset =*/ 0,

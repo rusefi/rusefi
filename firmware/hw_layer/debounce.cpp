@@ -5,13 +5,12 @@
  * @date Aug 31, 2020
  * @author David Holdeman, (c) 2020
  */
+#include "pch.h"
+
 #include "debounce.h"
-#include "pin_repository.h"
-#include "engine_configuration.h"
 #include "hardware.h"
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;
-static Logging *logger;
 
 ButtonDebounce::ButtonDebounce(const char *name)
 	: m_name(name)
@@ -87,7 +86,7 @@ bool ButtonDebounce::readPinEvent() {
 }
 
 bool ButtonDebounce::readPinState() {
-    if (*m_pin == GPIO_UNASSIGNED) {
+    if (!isBrainPinValid(*m_pin)) {
         return false;
     }
     efitick_t timeNow = getTimeNowNt();
@@ -118,17 +117,15 @@ void ButtonDebounce::debug() {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
-        scheduleMsg(logger, "%s timeLast %d", listItem->m_name, listItem->timeLast);
-        scheduleMsg(logger, "physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
+        efiPrintf("%s timeLast %d", listItem->m_name, listItem->timeLast);
+        efiPrintf("physical state %d value %d", efiReadPin(listItem->active_pin), listItem->storedValue);
 #endif
 
         listItem = listItem->nextDebounce;
     }
 }
 
-void initButtonDebounce(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initButtonDebounce() {
 #if !EFI_UNIT_TEST
 	addConsoleAction("debounce", ButtonDebounce::debug);
 #endif /* EFI_UNIT_TEST */

@@ -14,7 +14,6 @@
 #include "trigger_structure.h"
 #include "accel_enrichment.h"
 
-#define MAX_INJECTION_OUTPUT_COUNT INJECTION_PIN_COUNT
 #define MAX_WIRES_COUNT 2
 
 class Engine;
@@ -32,7 +31,8 @@ public:
 	 */
 	bool isSimultanious = false;
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
-	int ownIndex = 0;
+	uint8_t ownIndex = 0;
+	uint8_t cylinderNumber = 0;
 	DECLARE_ENGINE_PTR;
 	event_trigger_position_s injectionStart;
 
@@ -58,6 +58,9 @@ class FuelSchedule {
 public:
 	FuelSchedule();
 
+	// Call this function if something happens that requires a rebuild, like a change to the trigger pattern
+	void invalidate();
+
 	// Call this every trigger tooth.  It will schedule all required injector events.
 	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
@@ -72,11 +75,8 @@ public:
 	/**
 	 * injection events, per cylinder
 	 */
-	InjectionEvent elements[MAX_INJECTION_OUTPUT_COUNT];
-	bool isReady;
-
-private:
-	void clear();
+	InjectionEvent elements[MAX_CYLINDER_COUNT];
+	bool isReady = false;
 };
 
 class AngleBasedEvent {
@@ -98,6 +98,9 @@ public:
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
 	scheduling_s dwellStartTimer;
 	AngleBasedEvent sparkEvent;
+
+	scheduling_s trailingSparkCharge;
+	scheduling_s trailingSparkFire;
 
 	// How many additional sparks should we fire after the first one?
 	// For single sparks, this should be zero.
@@ -128,14 +131,12 @@ public:
 	IgnitionOutputPin *getOutputForLoggins();
 };
 
-#define MAX_IGNITION_EVENT_COUNT IGNITION_PIN_COUNT
-
 class IgnitionEventList {
 public:
 	/**
 	 * ignition events, per cylinder
 	 */
-	IgnitionEvent elements[MAX_IGNITION_EVENT_COUNT];
+	IgnitionEvent elements[MAX_CYLINDER_COUNT];
 	bool isReady = false;
 };
 

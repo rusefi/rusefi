@@ -11,19 +11,16 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "event_queue.h"
 #include "efitime.h"
 #include "os_util.h"
-#include "perf_trace.h"
 
 #if EFI_UNIT_TEST
 extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
-
-uint32_t maxSchedulingPrecisionLoss = 0;
 
 
 /**
@@ -39,7 +36,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
 
 // please note that simulator does not use this code at all - simulator uses signal_executor_sleep
 
-	if (scheduling->isScheduled) {
+	if (scheduling->action) {
 #if EFI_UNIT_TEST
 		if (verboseMode) {
 			printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
@@ -51,7 +48,6 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
 
 	scheduling->momentX = timeX;
 	scheduling->action = action;
-	scheduling->isScheduled = true;
 
 	if (head == NULL || timeX < head->momentX) {
 		// here we insert into head of the linked list
@@ -74,6 +70,57 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
 #endif /* EFI_UNIT_TEST */
 		return false;
 	}
+}
+
+void EventQueue::remove(scheduling_s* scheduling) {
+#if EFI_UNIT_TEST
+		assertListIsSorted();
+#endif /* EFI_UNIT_TEST */
+
+	// Special case: event isn't scheduled, so don't cancel it
+	if (!scheduling->action) {
+		return;
+	}
+
+	// Special case: empty list, nothing to do
+	if (!head) {
+		return;
+	}
+
+	// Special case: is the item to remove at the head?
+	if (scheduling == head) {
+		head = head->nextScheduling_s;
+		scheduling->nextScheduling_s = nullptr;
+		scheduling->action = {};
+	} else {
+		auto prev = head;	// keep track of the element before the one to remove, so we can link around it
+		auto current = prev->nextScheduling_s;
+
+		// Find our element
+		while (current && current != scheduling) {
+			prev = current;
+			current = current->nextScheduling_s;
+		}
+
+		// Walked off the end, this is an error since this *should* have been scheduled
+		if (!current) {
+			firmwareError(OBD_PCM_Processor_Fault, "EventQueue::remove didn't find element");
+			return;
+		}
+
+		efiAssertVoid(OBD_PCM_Processor_Fault, current == scheduling, "current not equal to scheduling");
+
+		// Link around the removed item
+		prev->nextScheduling_s = current->nextScheduling_s;
+
+		// Clean the item to remove
+		current->nextScheduling_s = nullptr;
+		current->action = {};
+	}
+
+#if EFI_UNIT_TEST
+	assertListIsSorted();
+#endif /* EFI_UNIT_TEST */
 }
 
 /**
@@ -159,16 +206,19 @@ bool EventQueue::executeOne(efitime_t now) {
 	// step the head forward, unlink this element, clear scheduled flag
 	head = current->nextScheduling_s;
 	current->nextScheduling_s = nullptr;
-	current->isScheduled = false;
+
+	// Grab the action but clear it in the event so we can reschedule from the action's execution
+	auto action = current->action;
+	current->action = {};
 
 #if EFI_UNIT_TEST
-	printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)current->action.getArgument());
+	printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)action.getArgument());
 #endif
 
 	// Execute the current element
 	{
 		ScopePerf perf2(PE::EventQueueExecuteCallback);
-		current->action.execute();
+		action.execute();
 	}
 
 #if EFI_UNIT_TEST
@@ -208,9 +258,7 @@ scheduling_s *EventQueue::getElementAtIndexForUnitText(int index) {
 			return current;
 		index--;
 	}
-#if EFI_UNIT_TEST
-	firmwareError(OBD_PCM_Processor_Fault, "getForUnitText: null");
-#endif /* EFI_UNIT_TEST */
+
 	return NULL;
 }
 
@@ -223,7 +271,6 @@ void EventQueue::clear(void) {
 
 		// Reset this element
 		x->momentX = 0;
-		x->isScheduled = false;
 		x->nextScheduling_s = nullptr;
 		x->action = {};
 	}

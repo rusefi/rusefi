@@ -1,9 +1,8 @@
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "injector_model.h"
-#include "mocks.h"
+#include "mock/mock_sensor.h"
 
-#include "gtest/gtest.h"
-
+using ::testing::_;
 using ::testing::StrictMock;
 
 class MockInjectorModel : public InjectorModelBase {
@@ -12,6 +11,7 @@ public:
 	MOCK_METHOD(float, getInjectorMassFlowRate, (), (const, override));
 	MOCK_METHOD(float, getInjectorFlowRatio, (), (const, override));
 	MOCK_METHOD(expected<float>, getAbsoluteRailPressure, (), (const, override));
+	MOCK_METHOD(float, correctShortPulse, (float baseDuration), (const, override));
 };
 
 TEST(InjectorModel, Prepare) {
@@ -27,14 +27,57 @@ TEST(InjectorModel, getInjectionDuration) {
 	StrictMock<MockInjectorModel> dut;
 
 	EXPECT_CALL(dut, getDeadtime())
-		.WillRepeatedly(Return(2.0f));
+		.WillOnce(Return(2.0f));
 	EXPECT_CALL(dut, getInjectorMassFlowRate())
-		.WillRepeatedly(Return(4.8f)); // 400cc/min
+		.WillOnce(Return(4.8f)); // 400cc/min
+	EXPECT_CALL(dut, correctShortPulse(_))
+		.Times(2)
+		.WillRepeatedly([](float b) { return b; });
 
 	dut.prepare();
 
 	EXPECT_NEAR(dut.getInjectionDuration(0.01f), 10 / 4.8f + 2.0f, EPS4D);
 	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 20 / 4.8f + 2.0f, EPS4D);
+}
+
+TEST(InjectorModel, getInjectionDurationNonlinear) {
+	StrictMock<MockInjectorModel> dut;
+
+	EXPECT_CALL(dut, getDeadtime())
+		.WillOnce(Return(2.0f));
+	EXPECT_CALL(dut, getInjectorMassFlowRate())
+		.WillOnce(Return(4.8f)); // 400cc/min
+
+	// Dummy nonlinearity correction: just doubles the pulse
+	EXPECT_CALL(dut, correctShortPulse(_))
+		.Times(2)
+		.WillRepeatedly([](float b) { return 2 * b; });
+
+	dut.prepare();
+
+	EXPECT_NEAR(dut.getInjectionDuration(0.01f), 2 * 10 / 4.8f + 2.0f, EPS4D);
+	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 2 * 20 / 4.8f + 2.0f, EPS4D);
+}
+
+TEST(InjectorModel, nonlinearPolynomial) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	InjectorModel dut;
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	CONFIG(applyNonlinearBelowPulse) = MS2US(10);
+
+	for (int i = 0; i < 8; i++) {
+		CONFIG(injectorCorrectionPolynomial)[i] = i + 1;
+	}
+
+	// expect return of the original value, plus polynomial f(x)
+	EXPECT_NEAR(dut.correctInjectionPolynomial(-3), -3 + -13532, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(-2), -2 +   -711, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(-1), -1 +     -4, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(0),   0 +      1, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(1),   1 +     36, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(2),   2 +   1793, EPS4D);
+	EXPECT_NEAR(dut.correctInjectionPolynomial(3),   3 +  24604, EPS4D);
 }
 
 TEST(InjectorModel, Deadtime) {
@@ -49,10 +92,10 @@ TEST(InjectorModel, Deadtime) {
 	InjectorModel dut;
 	INJECT_ENGINE_REFERENCE(&dut);
 
-	engine->sensors.vBatt = 3;
+	Sensor::setMockValue(SensorType::BatteryVoltage, 3);
 	EXPECT_EQ(dut.getDeadtime(), 6);
 
-	engine->sensors.vBatt = 7;
+	Sensor::setMockValue(SensorType::BatteryVoltage, 7);
 	EXPECT_EQ(dut.getDeadtime(), 14);
 }
 
@@ -115,6 +158,26 @@ TEST_P(FlowRateFixture, PressureRatio) {
 	EXPECT_FLOAT_EQ(expectedFlowRatio, dut.getInjectorFlowRatio());
 }
 
+TEST(InjectorModel, NegativePressureDelta) {
+	StrictMock<TesterGetRailPressure> dut;
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Use injector compensation
+	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
+
+	// Reference pressure is 400kPa 
+	engineConfiguration->fuelReferencePressure = 400.0f;
+
+	EXPECT_CALL(dut, getAbsoluteRailPressure()).WillOnce(Return(50));
+	// MAP sensor reads more pressure than fuel rail
+	Sensor::setMockValue(SensorType::Map, 100);
+
+	// Flow ratio defaults to 1.0 in this case
+	EXPECT_FLOAT_EQ(1.0f, dut.getInjectorFlowRatio());
+}
+
 TEST(InjectorModel, VariableInjectorFlowModeNone) {
 	StrictMock<TesterGetRailPressure> dut;
 
@@ -169,7 +232,27 @@ TEST(InjectorModel, FailedPressureSensor) {
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
 
 	// Sensor is broken!
-	Sensor::resetMockValue(SensorType::FuelPressureInjector);
+	// We have to register a broken sensor because the fuel pressure comp system
+	// has different logic for missing sensor
+	MockSensor ms(SensorType::FuelPressureInjector);
+	ms.invalidate();
+	ms.Register();
 
 	EXPECT_EQ(1.0f, dut.getInjectorFlowRatio());
+}
+
+TEST(InjectorModel, MissingPressureSensor) {
+	InjectorModel dut;
+
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	INJECT_ENGINE_REFERENCE(&dut);
+
+	// Reference pressure is 350kpa
+	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
+
+	// Sensor is missing!
+	Sensor::resetMockValue(SensorType::FuelPressureInjector);
+
+	// Missing sensor should trigger a fatal as it's a misconfiguration
+	EXPECT_FATAL_ERROR(dut.getInjectorFlowRatio());
 }

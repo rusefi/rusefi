@@ -1,5 +1,17 @@
-ext.libs = [
-        junit      : "junit:junit:4.13",
-        annotations: "org.jetbrains:annotations:16.0.1",
-        javaxJson  : "javax.json:javax.json-api:1.1.4"
-]
+ext {
+  libs = [
+          junit          : "junit:junit:4.13",
+          annotations    : "org.jetbrains:annotations:16.0.1",
+          javaxJson      : "javax.json:javax.json-api:1.1.4",
+          snakeyaml      : "org.yaml:snakeyaml:1.26",
+          jsr305         : "com.google.code.findbugs:jsr305:3.0.2",
+          commons_logging: "commons-logging:commons-logging:1.2"
+  ]
+
+  ts_plugin_libs = [
+          httpclient  : "org.apache.httpcomponents:httpclient:4.5.12",
+          httpcore    : "org.apache.httpcomponents:httpcore:4.4.13",
+          httpmime    : "org.apache.httpcomponents:httpmime:4.5.12",
+          launcher_api: fileTree( dir: "lib", include: "TunerStudioPluginAPI.jar" )
+  ]
+}

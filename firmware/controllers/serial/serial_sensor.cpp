@@ -6,16 +6,14 @@
  * @author Konstantin Smola, (c) 2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #if EFI_AUX_SERIAL
 #include "serial.h"
 #include "serial_sensor.h"
-#include "engine.h"
 
 #define NUM_INNOVATE_O2_SENSORS 1
 #define AFR_MULTIPLIER 147
-
-EXTERN_ENGINE;
 
 volatile float InnovateLC2AFR = AFR_ERROR;
 
@@ -33,15 +31,14 @@ typedef enum
 	SUPP_V_LOW = 9
 } sensor_error_code_t;
 
-typedef struct
-{
+struct sensor_data_t {
 	int function_code;
 	float AFR;
 	float AFR_multiplier;
 	float lambda;
 	float warmup;
 	sensor_error_code_t error_code;
-} sensor_data_t;
+};
 
 static sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS];
 

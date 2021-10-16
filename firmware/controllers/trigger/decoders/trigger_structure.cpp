@@ -19,9 +19,9 @@
  */
 
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
-#include "engine.h"
 #include "trigger_chrysler.h"
 #include "trigger_gm.h"
 #include "trigger_nissan.h"
@@ -29,6 +29,7 @@
 #include "trigger_misc.h"
 #include "trigger_mitsubishi.h"
 #include "trigger_subaru.h"
+#include "trigger_suzuki.h"
 #include "trigger_structure.h"
 #include "trigger_toyota.h"
 #include "trigger_renix.h"
@@ -40,11 +41,6 @@
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
-
-#include "engine_configuration.h"
-		extern persistent_config_container_s persistentState;
-
-EXTERN_ENGINE;
 
 void event_trigger_position_s::setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
@@ -117,13 +113,14 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
 /**
  * physical primary trigger duration
  * @see getEngineCycle
+ * @see getCrankDivider
  */
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
 	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
-		return 120;
+		return 720 / SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
-		return 180;
+		return 720 / SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_CRANK_SENSOR:
 	case TWO_STROKE:
 		return 360;
@@ -140,6 +137,7 @@ angle_t TriggerWaveform::getCycleDuration() const {
  */
 size_t TriggerWaveform::getLength() const {
 	/**
+	 * 6 for FOUR_STROKE_THREE_TIMES_CRANK_SENSOR
 	 * 4 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 * 2 for FOUR_STROKE_CRANK_SENSOR
 	 * 1 otherwise
@@ -149,10 +147,6 @@ size_t TriggerWaveform::getLength() const {
 }
 
 angle_t TriggerWaveform::getAngle(int index) const {
-	// todo: why is this check here? looks like the code below could be used universally
-	if (operationMode == FOUR_STROKE_CAM_SENSOR) {
-		return getSwitchAngle(index);
-	}
 	/**
 	 * FOUR_STROKE_CRANK_SENSOR magic:
 	 * We have two crank shaft revolutions for each engine cycle
@@ -163,7 +157,10 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	int crankCycle = index / privateTriggerDefinitionSize;
 	int remainder = index % privateTriggerDefinitionSize;
 
-	return getCycleDuration() * crankCycle + getSwitchAngle(remainder);
+	auto cycleStartAngle = getCycleDuration() * crankCycle;
+	auto positionWithinCycle = getSwitchAngle(remainder);
+
+	return cycleStartAngle + positionWithinCycle;
 }
 
 void TriggerWaveform::addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight) {
@@ -183,21 +180,26 @@ operation_mode_e TriggerWaveform::getOperationMode() const {
 extern bool printTriggerDebug;
 #endif
 
-void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
-	UNUSED(useOnlyRisingEdgeForTrigger);
+size_t TriggerWaveform::getExpectedEventCount(int channelIndex) const {
+	return expectedEventCount[channelIndex];
+}
 
+void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger) {
 	if (!useOnlyRisingEdgeForTrigger) {
-		for (int i = 0;i<efi::size(expectedEventCount);i++) {
-			if (expectedEventCount[i] % 2 != 0) {
-				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, expectedEventCount[i]);
+		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
+			if (getExpectedEventCount(i) % 2 != 0) {
+				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, getExpectedEventCount(i));
 			}
 		}
 	}
 
-	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? expectedEventCount[0] == 1 : expectedEventCount[0] == 2;
+	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? getExpectedEventCount(0) == 1 : getExpectedEventCount(0) == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "trigger sync constraint violation");
+	}
+	if (isSingleToothOnPrimaryChannel) {
+		useOnlyPrimaryForSync = true;
 	}
 
 // todo: move the following logic from below here
@@ -209,6 +211,10 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 
 void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
 	addEvent(angle / 720, channelIndex, state);
+}
+
+void TriggerWaveform::addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
+	addEvent(CRANK_MODE_MULTIPLIER * angle / 720, channelIndex, state);
 }
 
 void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
@@ -342,8 +348,8 @@ void TriggerWaveform::setTriggerSynchronizationGap2(float syncRatioFrom, float s
 void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRatioFrom, float syncRatioTo) {
 	isSynchronizationNeeded = true;
 	efiAssertVoid(OBD_PCM_Processor_Fault, gapIndex >= 0 && gapIndex < GAP_TRACKING_LENGTH, "gapIndex out of range");
-	this->syncronizationRatioFrom[gapIndex] = syncRatioFrom;
-	this->syncronizationRatioTo[gapIndex] = syncRatioTo;
+	syncronizationRatioFrom[gapIndex] = syncRatioFrom;
+	syncronizationRatioTo[gapIndex] = syncRatioTo;
 	if (gapIndex == 0) {
 		// we have a special case here - only sync with one gap has this feature
 		this->syncRatioAvg = (int)efiRound((syncRatioFrom + syncRatioTo) * 0.5f, 1.0f);
@@ -361,10 +367,10 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 /**
  * this method is only used on initialization
  */
-int TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) const {
-	int engineCycleEventCount = getLength();
+uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t targetAngle) const {
+	size_t engineCycleEventCount = getLength();
 
-	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount > 0, "engineCycleEventCount", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount != 0 && engineCycleEventCount <= 0xFFFF, "engineCycleEventCount", 0);
 
 	uint32_t left = 0;
 	uint32_t right = engineCycleEventCount - 1;
@@ -377,9 +383,9 @@ int TriggerWaveform::findAngleIndex(TriggerFormDetails *details, float target) c
         int middle = (left + right) / 2;
 		angle_t eventAngle = details->eventAngles[middle];
 
-        if (eventAngle < target) {
+        if (eventAngle < targetAngle) {
             left = middle + 1;
-        } else if (eventAngle > target) {
+        } else if (eventAngle > targetAngle) {
             right = middle - 1;
         } else {
             // Values are equal
@@ -413,26 +419,41 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 
 	int triggerEventIndex = details->triggerIndexByAngle[(int)angle];
 	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];
-	if (angle < triggerEventAngle) {
+	angle_t offsetFromTriggerEvent = angle - triggerEventAngle;
+
+	// Guarantee that we aren't going to try and schedule an event prior to the tooth
+	if (offsetFromTriggerEvent < 0) {
 		warning(CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION, "angle constraint violation in findTriggerPosition(): %.2f/%.2f", angle, triggerEventAngle);
 		return;
 	}
 
-	position->triggerEventIndex = triggerEventIndex;
-	position->angleOffsetFromTriggerEvent = angle - triggerEventAngle;
+	{
+		// This must happen under lock so that the tooth and offset don't get partially read and mismatched
+		chibios_rt::CriticalSectionLocker csl;
+
+		position->triggerEventIndex = triggerEventIndex;
+		position->angleOffsetFromTriggerEvent = offsetFromTriggerEvent;
+	}
 }
 
 void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+	if (shapeDefinitionError) {
+		// Nothing to do here if there's a problem with the trigger shape
+		return;
+	}
+
 	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
 
 	int engineCycleInt = (int) getEngineCycle(operationMode);
 	for (int angle = 0; angle < engineCycleInt; angle++) {
-		int triggerShapeIndex = findAngleIndex(details, angle);
+		uint16_t triggerShapeIndex = findAngleIndex(details, angle);
+
 		if (useOnlyRisingEdgeForTriggerTemp) {
-			// we need even index for front_only mode - so if odd indexes are rounded down
-			triggerShapeIndex = triggerShapeIndex & 0xFFFFFFFE;
+			// we need even index for front_only mode - so if odd indexes are rounded down by clearing the low bit
+			triggerShapeIndex &= 0xFFFE;
 		}
+
 		details->triggerIndexByAngle[angle] = triggerShapeIndex;
 	}
 #endif
@@ -458,11 +479,11 @@ void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_e ambiguousOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
+void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperationMode, bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig) {
 
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_ERR_6641, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init t");
-	scheduleMsg(logger, "initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
+	efiPrintf("initializeTriggerWaveform(%s/%d)", getTrigger_type_e(triggerConfig->type), (int) triggerConfig->type);
 #endif
 
 	shapeDefinitionError = false;
@@ -486,6 +507,14 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_MAZDA_MIATA_VVT_TEST:
 		initializeMazdaMiataVVtTestShape(this);
+		break;
+
+	case TT_SUZUKI_G13B:
+		initializeSuzukiG13B(this);
+		break;
+
+	case TT_FORD_TFI_PIP:
+		configureFordPip(this);
 		break;
 
 	case TT_FORD_ST170:
@@ -533,6 +562,35 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		configureFordAspireTriggerWaveform(this);
 		break;
 
+	case TT_VVT_NISSAN_VQ35:
+		initializeNissanVQvvt(this);
+		break;
+
+	case TT_NISSAN_QR25:
+	case TT_TEMP_62:
+		initializeNissanQR25crank(this);
+		break;
+
+	case TT_NISSAN_VQ30:
+		initializeNissanVQ30cam(this);
+		break;
+
+	case TT_NISSAN_VQ35:
+		initializeNissanVQ35crank(this);
+		break;
+
+	case TT_KAWA_KX450F:
+		configureKawaKX450F(this);
+		break;
+
+	case TT_SKODA_FAVORIT:
+		setSkodaFavorit(this);
+		break;
+
+	case TT_GM_60_2_2_2:
+		configureGm60_2_2_2(this);
+		break;
+
 	case TT_GM_7X:
 		configureGmTriggerWaveform(this);
 		break;
@@ -567,10 +625,12 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_TOOTHED_WHEEL_36_2:
 		setToothedWheelConfiguration(this, 36, 2, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_60_2_VW:
@@ -579,10 +639,15 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 
 	case TT_TOOTHED_WHEEL_36_1:
 		setToothedWheelConfiguration(this, 36, 1, ambiguousOperationMode);
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
 	case TT_VVT_BOSCH_QUICK_START:
 		configureQuickStartSenderWheel(this);
+		break;
+
+	case TT_VVT_BARRA_3_PLUS_1:
+		configureBarra3plus1cam(this);
 		break;
 
 	case TT_HONDA_K_12_1:
@@ -685,6 +750,14 @@ void TriggerWaveform::initializeTriggerWaveform(Logging *logger, operation_mode_
 		break;
 
 	case TT_SUBARU_SVX:
+		initializeSubaru_SVX(this);
+		break;
+
+	case TT_SUBARU_SVX_CRANK_1:
+		initializeSubaru_SVX(this);
+		break;
+
+	case TT_SUBARU_SVX_CAM_VVT:
 		initializeSubaru_SVX(this);
 		break;
 

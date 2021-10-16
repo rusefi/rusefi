@@ -15,20 +15,7 @@ pwd
 bash gen_signature.sh kin
 
 java \
- -DSystemOut.name=gen_config_kinetis_board \
- -cp ../java_tools/ConfigDefinition.jar \
- com.rusefi.board_generator.BoardReader \
- -yaml config/boards/kinetis/mapping.yaml \
- -firmware_path . \
- -output_file tunerstudio/generated/kinetis_prefix.txt \
- -enumInputFile controllers/algo/rusefi_enums.h \
- -enumInputFile config/boards/kinetis/rusefi_hw_enums.h
-
-[ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for kinetis"; exit 1; }
-
-java \
  -DSystemOut.name=gen_config_kinetis \
- -Drusefi.generator.lazyfile.enabled=true \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition integration/rusefi_config.txt \
  -cache kinetis \
@@ -44,7 +31,8 @@ java \
  -signature tunerstudio/generated/signature_kin.txt \
  -signature_destination controllers/generated/signature_kin.h \
  -enumInputFile controllers/algo/rusefi_enums.h \
- -prepend config/boards/kinetis/config/rusefi_config_kinetis.txt \
- -prepend config/boards/kinetis/config/tunerstudio/generated/kinetis_prefix.txt
+ -enumInputFile controllers/algo/rusefi_hw_enums.h \
+ -board kinetis \
+ -prepend config/boards/kinetis/config/rusefi_config_kinetis.txt
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for kinetis"; exit 1; }

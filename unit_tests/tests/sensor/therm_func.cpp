@@ -2,9 +2,9 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "unit_test_framework.h"
+#include "pch.h"
+
 #include "thermistor_func.h"
-#include "thermistors.h"
 
 TEST(thermistor, Thermistor1) {
 	ThermistorFunc tf;
@@ -33,4 +33,23 @@ TEST(thermistor, ThermistorNeon) {
 	assertEqualsM("A", 0.0009, tf.m_a);
 	assertEqualsM("B", 0.0003, tf.m_b);
 	ASSERT_NEAR(0.0, tf.m_c, EPS4D);
+}
+
+TEST(thermistor, PtcAirCooledMotorcycle) {
+	// data from https://static.chipdip.ru/lib/033/DOC001033132.pdf
+	thermistor_conf_s tc = {0, 100, 200, 486, 975, 1679, 0};
+
+	ThermistorFunc tf;
+	tf.configure(tc);
+
+	// calibrated points should be almost perfect
+	ASSERT_NEAR(tf.convert(486).value_or(0), 0, 0.1);
+	ASSERT_NEAR(tf.convert(975).value_or(0), 100, 0.1);
+	ASSERT_NEAR(tf.convert(1679).value_or(0), 200, 0.1);
+
+	// Other points should be pretty good
+	ASSERT_NEAR(tf.convert(414).value_or(0), -20, 2);
+	ASSERT_NEAR(tf.convert(704).value_or(0), 50, 2);
+	ASSERT_NEAR(tf.convert(1300).value_or(0), 150, 2);
+	ASSERT_NEAR(tf.convert(1846).value_or(0), 220, 2);
 }

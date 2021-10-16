@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
@@ -23,9 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
-import static com.rusefi.ui.util.UiUtils.getAllComponents;
-import static com.rusefi.ui.util.UiUtils.setToolTip;
-import static java.awt.image.ImageObserver.ABORT;
+import static com.rusefi.ui.util.UiUtils.*;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 /**
@@ -39,7 +38,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  */
 public class StartupFrame {
     private static final String LOGO = "/com/rusefi/logo.gif";
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2020";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 
@@ -50,10 +49,10 @@ public class StartupFrame {
     @NotNull
     private List<String> currentlyDisplayedPorts = new ArrayList<>();
     private boolean isFirstTimeApplyingPorts = true;
-    private JPanel leftPanel = new JPanel(new VerticalFlowLayout());
+    private final JPanel leftPanel = new JPanel(new VerticalFlowLayout());
 
-    private JPanel realHardwarePanel = new JPanel(new MigLayout());
-    private JPanel miscPanel = new JPanel(new MigLayout()) {
+    private final JPanel realHardwarePanel = new JPanel(new MigLayout());
+    private final JPanel miscPanel = new JPanel(new MigLayout()) {
         @Override
         public Dimension getPreferredSize() {
             // want miscPanel and realHardwarePanel to be the same width
@@ -66,13 +65,12 @@ public class StartupFrame {
      * closing the application.
      */
     private boolean isProceeding;
-    private JLabel noPortsMessage = new JLabel("No ports found!");
+    private final JLabel noPortsMessage = new JLabel("No ports found!");
 
     public StartupFrame() {
 //        AudioPlayback.start();
         String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
-        String bundleName = Autoupdate.readBundleFullName();
-        frame = new JFrame(title + " " + (bundleName != null ? bundleName : "Unknown bundle"));
+        frame = new JFrame(appendBundleName(title));
         frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -85,6 +83,12 @@ public class StartupFrame {
         });
         AutoupdateUtil.setAppIcon(frame);
         SerialPortScanner.INSTANCE.startTimer();
+    }
+
+    @NotNull
+    public static String appendBundleName(String title) {
+        String bundleName = Autoupdate.readBundleFullName();
+        return title + " " + (bundleName != null ? bundleName : "Unknown bundle");
     }
 
     public void chooseSerialPort() {
@@ -152,29 +156,11 @@ public class StartupFrame {
             realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
         }
 
-        SerialPortScanner.INSTANCE.listeners.add(new SerialPortScanner.Listener() {
-            @Override
-            public void onChange() {
-                List<String> ports = SerialPortScanner.INSTANCE.getKnownPorts();
-                if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
-                    FileLog.MAIN.logLine("Available ports " + ports);
-                    isFirstTimeApplyingPorts = false;
-                    connectPanel.setVisible(!ports.isEmpty());
-                    noPortsMessage.setVisible(ports.isEmpty());
-//        panel.add(comboSpeeds); // todo: finish speed selector UI component
-//            horizontalLine.setVisible(!ports.isEmpty());
+        SerialPortScanner.INSTANCE.listeners.add(() -> SwingUtilities.invokeLater(this::applyKnownPorts));
 
-                    applyPortSelectionToUIcontrol(ports);
-                    currentlyDisplayedPorts = ports;
-                    UiUtils.trueLayout(connectPanel);
-                    frame.pack();
-                }
-
-            }
-        });
-
-
-        SerialPortScanner.INSTANCE.findAllAvailablePorts();
+        // todo: invoke this NOT on AWT thread?
+        SerialPortScanner.INSTANCE.findAllAvailablePorts(false);
+        applyKnownPorts();
 
         final JButton buttonLogViewer = new JButton();
         buttonLogViewer.setText("Start " + LinkManager.LOG_VIEWER);
@@ -215,6 +201,23 @@ public class StartupFrame {
         }
     }
 
+    private void applyKnownPorts() {
+        List<String> ports = SerialPortScanner.INSTANCE.getKnownPorts();
+        if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
+            FileLog.MAIN.logLine("Rendering available ports: " + ports);
+            isFirstTimeApplyingPorts = false;
+            connectPanel.setVisible(!ports.isEmpty());
+            noPortsMessage.setVisible(ports.isEmpty());
+//        panel.add(comboSpeeds); // todo: finish speed selector UI component
+//            horizontalLine.setVisible(!ports.isEmpty());
+
+            applyPortSelectionToUIcontrol(ports);
+            currentlyDisplayedPorts = ports;
+            UiUtils.trueLayout(connectPanel);
+            frame.pack();
+        }
+    }
+
     public static void setFrameIcon(Frame frame) {
         ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
         if (icon != null)
@@ -236,7 +239,8 @@ public class StartupFrame {
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
         String selectedPort = comboPorts.getSelectedItem().toString();
         if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
-            String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame);
+            SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectPort(StartupFrame.this.frame);
+            String autoDetectedPort = detectResult == null ? null : detectResult.getSerialPort();
             if (autoDetectedPort == null)
                 return;
             selectedPort = autoDetectedPort;
@@ -305,6 +309,7 @@ public class StartupFrame {
             comboPorts.addItem(port);
         String defaultPort = getConfig().getRoot().getProperty(ConsoleUI.PORT_KEY);
         comboPorts.setSelectedItem(defaultPort);
+        trueLayout(comboPorts);
     }
 
     private static JComboBox<String> createSpeedCombo() {

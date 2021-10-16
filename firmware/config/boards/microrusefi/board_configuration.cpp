@@ -18,23 +18,8 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
-
-EXTERN_ENGINE;
-
-static const ConfigOverrides configOverrides = {
-	.canTxPin = GPIOB_6,
-	.canRxPin = GPIOB_12,
-};
-
-const ConfigOverrides& getConfigOverrides() {
-	return configOverrides;
-}
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = TLE8888_PIN_1;
@@ -43,7 +28,7 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[3] = TLE8888_PIN_4;
 
 	// Disable remainder
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -58,7 +43,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = GPIOD_1;
 
 	// disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -120,7 +105,7 @@ static void setupEtb() {
 	// DIS - disables motor (enable low)
 
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
+	engineConfiguration->etbIo[0].controlPin = GPIOC_7;
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
 	// Disable pin
@@ -161,11 +146,9 @@ static void setupDefaultSensorInputs() {
 
 	// clt = "18 - AN temp 1"
 	engineConfiguration->clt.adcChannel = EFI_ADC_0;
-	engineConfiguration->clt.config.bias_resistor = 2700;
 
 	// iat = "23 - AN temp 2"
 	engineConfiguration->iat.adcChannel = EFI_ADC_1;
-	engineConfiguration->iat.config.bias_resistor = 2700;
 
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor1, 2700);
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor2, 2700);
@@ -174,6 +157,28 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_2;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_3;
 #endif // HW_CHECK_MODE
+}
+
+void setBoardConfigOverrides(void) {
+	setLedPins();
+	setupVbatt();
+	setupTle8888();
+	setupEtb();
+
+	engineConfiguration->clt.config.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
+
+	engineConfiguration->canTxPin = GPIOB_6;
+	engineConfiguration->canRxPin = GPIOB_12;
+
+	// SPI for SD card
+	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->sdCardCsPin = GPIOB_9;
+
+	engineConfiguration->spi3mosiPin = GPIOC_12;
+	engineConfiguration->spi3misoPin = GPIOC_11;
+	engineConfiguration->spi3sckPin = GPIOC_10;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -190,22 +195,15 @@ void setSerialConfigurationOverrides(void) {
 
 
 /**
- * @brief   Board-specific configuration code overrides.
+ * @brief   Board-specific configuration defaults.
  *
  * See also setDefaultEngineConfiguration
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
-	setLedPins();
-	setupVbatt();
-	setupTle8888();
-	setupEtb();
-
-	engineConfiguration->canTxPin = GPIOB_6;
-	engineConfiguration->canRxPin = GPIOB_12;
 
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
@@ -214,14 +212,7 @@ void setBoardConfigurationOverrides(void) {
 	// TLE8888_PIN_21: "35 - GP Out 1"
 	engineConfiguration->fuelPumpPin = TLE8888_PIN_21;
 
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOB_9;
-	CONFIG(is_enabled_spi_3) = true;
 //	engineConfiguration->isSdCardEnabled = true;
-
 
 	// TLE8888 high current low side: VVT2 IN9 / OUT5
 	// GPIOE_10: "3 - Lowside 2"
@@ -246,9 +237,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
-}
-
-void setAdcChannelOverrides(void) {
 }
 
 /**

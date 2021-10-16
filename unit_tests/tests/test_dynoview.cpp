@@ -1,10 +1,6 @@
-#include "engine_test_helper.h"
-#include "engine_controller.h"
+#include "pch.h"
+
 #include "dynoview.h"
-#include "vehicle_speed.h"
-
-#include <gtest/gtest.h>
-
 
 void printResults(DynoView *dut) {
 #ifdef DBG_TESTS    
@@ -30,11 +26,11 @@ TEST(DynoView, VSS_T1) {
     engineConfiguration->vehicleWeight = 900; 
     eth.moveTimeForwardMs(50);
 	
-    setMockVehicleSpeed(18.0);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 18.0);
     dut.update(ICU);
 
-    eth.smartMoveTimeForwardSeconds(20);
-    setMockVehicleSpeed(126.0);
+    eth.moveTimeForwardAndInvokeEventsSec(20);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 126.0);
     dut.update(ICU);
 
     ASSERT_EQ(1.5, dut.getAcceleration()); 
@@ -50,7 +46,7 @@ TEST(DynoView, algo) {
     engineConfiguration->vehicleWeight = 900; 
 
     //to capture vss
-    setMockVehicleSpeed(35*3.6);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 35*3.6);
     dut.update(ICU);
 
     dut.setAcceleration(1.5);
@@ -76,12 +72,12 @@ TEST(DynoView, VSS_fast) {
     engine->rpmCalculator.mockRpm = 2200;
     eth.moveTimeForwardMs(50);
 	
-    setMockVehicleSpeed(50.0);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 50.0);
     dut.update(CAN);
 
     //delay 50ms
     eth.moveTimeForwardMs(50);
-    setMockVehicleSpeed(50.252);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 50.252);
     dut.update(CAN);
 
     ASSERT_EQ(1259, dut.getEngineForce());
@@ -100,12 +96,12 @@ TEST(DynoView, VSS_Torque) {
     engine->rpmCalculator.mockRpm = 2200;
     eth.moveTimeForwardMs(50);
 	
-    setMockVehicleSpeed(80.0);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 80.0);
     dut.update(CAN);
 
     //delay 50ms
     eth.moveTimeForwardMs(50);
-    setMockVehicleSpeed(80.504);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 80.504);
     dut.update(CAN);
 
     ASSERT_EQ(242, dut.getEngineTorque());

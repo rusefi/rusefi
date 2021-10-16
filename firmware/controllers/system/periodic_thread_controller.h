@@ -60,8 +60,7 @@ private:
     {
         OnStarted();
 
-        while(true)
-        {
+        while(!chThdShouldTerminateX()) {
             systime_t before = chVTGetSystemTime();
             efitick_t nowNt = getTimeNowNt();
 
@@ -79,7 +78,9 @@ private:
             // doing work, so the loop runs at a predictable 500hz.
             chThdSleepUntilWindowed(before, before + m_period);
         }
-    }
+
+		firmwareError(OBD_PCM_Processor_Fault, "Thread died: %s", this->m_name);
+	}
 
 public:
     PeriodicController(const char* name, tprio_t priority, float frequencyHz)

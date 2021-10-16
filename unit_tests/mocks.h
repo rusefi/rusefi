@@ -5,6 +5,8 @@
 #include "table_helper.h"
 #include "pwm_generator_logic.h"
 #include "airmass.h"
+#include "injector_model.h"
+#include "stepper.h"
 
 #include "gmock/gmock.h"
 
@@ -38,10 +40,10 @@ public:
 
 class MockVp3d : public ValueProvider3D {
 public:
-	MOCK_METHOD(float, getValue, (float xRpm, float y), (const, override));
+	MOCK_METHOD(float, getValue, (float xColumn, float yRow), (const, override));
 };
 
-class MockPwm : public SimplePwm {
+class MockPwm : public IPwm {
 public:
 	MOCK_METHOD(void, setSimplePwmDutyCycle, (float dutyCycle), (override));
 };
@@ -53,16 +55,29 @@ public:
 
 class MockExecutor : public TestExecutor {
 public:
-	MOCK_METHOD(void, scheduleByTimestamp, (scheduling_s *scheduling, efitimeus_t timeUs, action_s action), (override));
-	MOCK_METHOD(void, scheduleByTimestampNt, (scheduling_s *scheduling, efitime_t timeUs, action_s action), (override));
+	MOCK_METHOD(void, scheduleByTimestamp, (const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action), (override));
+	MOCK_METHOD(void, scheduleByTimestampNt, (const char *msg, scheduling_s *scheduling, efitime_t timeUs, action_s action), (override));
 	MOCK_METHOD(void, scheduleForLater, (scheduling_s *scheduling, int delayUs, action_s action), (override));
+	MOCK_METHOD(void, cancel, (scheduling_s*), (override));
 };
 
-class MockAirmass : public AirmassModelBase {
+class MockAirmass : public AirmassVeModelBase {
 public:
-	MockAirmass() : AirmassModelBase(veTable) {}
+	MockAirmass() : AirmassVeModelBase(veTable) {}
 
 	MockVp3d veTable;
 
 	MOCK_METHOD(AirmassResult, getAirmass, (int rpm), (override));
+};
+
+class MockInjectorModel2 : public IInjectorModel {
+public:
+	MOCK_METHOD(void, prepare, (), (override));
+	MOCK_METHOD(floatms_t, getInjectionDuration, (float fuelMassGram), (const, override));
+	MOCK_METHOD(float, getFuelMassForDuration, (floatms_t duration), (const, override));
+};
+
+class MockStepperHardware : public StepperHw {
+public:
+	MOCK_METHOD(bool, step, (bool positive), (override));
 };

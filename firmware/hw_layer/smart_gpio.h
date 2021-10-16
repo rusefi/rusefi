@@ -13,24 +13,17 @@
  #include "drivers/gpio/mc33972.h"
  #include "drivers/gpio/tle8888.h"
  #include "drivers/gpio/drv8860.h"
-
- #define BOARD_EXT_PINREPOPINS (\
- 	BOARD_TLE6240_COUNT * TLE6240_OUTPUTS + \
- 	BOARD_MC33972_COUNT * MC33972_INPUTS  + \
- 	BOARD_TLE8888_COUNT * TLE8888_OUTPUTS + \
- 	BOARD_DRV8860_COUNT * DRV8860_OUTPUTS)
-
-#else /* EFI_PROD_CODE */
- #define BOARD_EXT_PINREPOPINS 0
 #endif /* EFI_PROD_CODE */
 
 #if EFI_UNIT_TEST
  #define BOARD_EXT_GPIOCHIPS 3
 #else
- #define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT + BOARD_DRV8860_COUNT)
+ #define BOARD_EXT_GPIOCHIPS			(BOARD_TLE6240_COUNT + BOARD_MC33972_COUNT + BOARD_TLE8888_COUNT + BOARD_DRV8860_COUNT + BOARD_MC33810_COUNT)
 #endif
 
 void initSmartGpio(void);
 void startSmartCsPins(void);
 void stopSmartCsPins(void);
+
+void tle8888startup(void);
 

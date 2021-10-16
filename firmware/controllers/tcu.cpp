@@ -6,8 +6,9 @@
  * @author David Holdeman, (c) 2020
  */
 
+#include "pch.h"
+
 #include "tcu.h"
-#include "tunerstudio_outputs.h"
 
 void TransmissionControllerBase::update(gear_e gear) {
     setCurrentGear(gear);

@@ -25,19 +25,15 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_MALFUNCTION_INDICATOR
-#include "io_pins.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
-#include "efi_gpio.h"
 #include "os_access.h"
 #include "periodic_thread_controller.h"
 
 #define TEST_MIL_CODE FALSE
-
-EXTERN_ENGINE;
 
 #define MFI_LONG_BLINK	1500
 #define MFI_SHORT_BLINK	400
@@ -107,7 +103,7 @@ private:
 	}
 };
 
-static MILController instance;
+static MILController instance CCM_OPTIONAL;
 
 #if TEST_MIL_CODE
 static void testMil(void) {
@@ -117,7 +113,7 @@ static void testMil(void) {
 #endif /* TEST_MIL_CODE */
 
 bool isMilEnabled() {
-	return CONFIG(malfunctionIndicatorPin) != GPIO_UNASSIGNED;
+	return isBrainPinValid(CONFIG(malfunctionIndicatorPin));
 }
 
 void initMalfunctionIndicator(void) {

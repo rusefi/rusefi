@@ -1,8 +1,6 @@
+#include "pch.h"
+
 #include "mock/mock_sensor.h"
-
-#include "sensor.h"
-
-#include <gtest/gtest.h>
 
 class SensorMocking : public ::testing::Test {
 protected:

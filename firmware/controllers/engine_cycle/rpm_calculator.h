@@ -11,6 +11,7 @@
 #include "globalaccess.h"
 #include "scheduler.h"
 #include "stored_value_sensor.h"
+#include "timer.h"
 
 // we use this value in case of noise on trigger input lines
 #define NOISY_RPM -1
@@ -104,6 +105,10 @@ public:
 	 * see also SC_RPM_ACCEL
 	 */
 	float getRpmAcceleration() const;
+
+	// Get elapsed time (seconds) since the engine transitioned to the running state.
+	float getTimeSinceEngineStart(efitick_t nowNt) const;
+
 	/**
 	 * this is RPM on previous engine cycle.
 	 */
@@ -113,14 +118,15 @@ public:
 	 * NaN while engine is not spinning
 	 */
 	volatile floatus_t oneDegreeUs = NAN;
-	volatile efitick_t lastRpmEventTimeNt = 0;
+
+	Timer lastTdcTimer;
 
 	// RPM rate of change, in RPM per second
 	float rpmRate = 0;
 
 protected:
 	// Print sensor info - current RPM state
-	void showInfo(Logging* logger, const char* sensorName) const override;
+	void showInfo(const char* sensorName) const override;
 
 private:
 	/**
@@ -151,6 +157,8 @@ private:
 	 * Needed by spinning-up logic.
 	 */
 	bool isSpinning = false;
+
+	Timer engineStartTimer;
 };
 
 // Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
@@ -166,14 +174,14 @@ void tdcMarkCallback(
 /**
  * @brief   Initialize RPM calculator
  */
-void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 #define getRevolutionCounter() ENGINE(rpmCalculator.getRevolutionCounterM())
 
 #if EFI_ENGINE_SNIFFER
-#define addEngineSnifferEvent(name, msg) if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); }
+#define addEngineSnifferEvent(name, msg) { efiAssertVoid(OBD_PCM_Processor_Fault, engine!=NULL, "engine ptr missing");  if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); } }
  #else
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */

@@ -12,19 +12,11 @@
  */
 #define BOARD_NAME "Deucalion/Kinetis"
 
-/*
- * Board voltages.
- * Required for performance limits calculation.
- */
-//#define STM32_VDD                   300U
-
-
 #if !defined(_FROM_ASM_)
 #ifdef __cplusplus
 extern "C" {
 #endif
   void boardInit(void);
-  void setBoardConfigurationOverrides(void);
   void setPinConfigurationOverrides(void);
   void setSerialConfigurationOverrides(void);
   void setSdCardConfigurationOverrides(void);

@@ -8,19 +8,8 @@
 
 #pragma once
 
-#include "engine.h"
-
-typedef enum {
-	PC_OK = 0,
-	CRC_FAILED = 1,
-	INCOMPATIBLE_VERSION = 2,
-	RESET_REQUESTED = 3,
-	PC_ERROR = 4
-} persisted_configuration_state_e;
-
-persisted_configuration_state_e readConfiguration(Logging * logger);
-void readFromFlash(void);
-void initFlash(Logging *sharedLogger);
+void readFromFlash();
+void initFlash();
 
 /**
  * Because of hardware-related issues, stm32f4 chip is totally

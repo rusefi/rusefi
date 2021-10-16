@@ -5,10 +5,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "thermistors.h"
-#include "allsensors.h"
-#include "engine_test_helper.h"
+#include "pch.h"
+
+TEST(sensors, vrThreshold) {
+	WITH_ENGINE_TEST_HELPER(HELLEN_128_MERCEDES_4_CYL);
+
+	auto& cfg = CONFIG(vrThreshold)[0];
+	ASSERT_FLOAT_EQ(0.8 * PACK_PERCENT_BYTE_MULT, cfg.values[2]);
+}
 
 TEST(sensors, mapDecoding) {
 	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);

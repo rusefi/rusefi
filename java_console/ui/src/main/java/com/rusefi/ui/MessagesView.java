@@ -4,6 +4,7 @@ import com.opensr5.Logger;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
+import com.rusefi.ui.storage.Node;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -21,13 +22,15 @@ public class MessagesView {
 
     private final Style bold;
     private final Style italic;
+    private final Node config;
 
     private boolean isPaused;
 
     protected final JTextPane messages = new JTextPane();
     public final JScrollPane messagesScroll = new JScrollPane(messages, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-    public MessagesView() {
+    public MessagesView(Node config) {
+        this.config = config;
         messages.setEditable(false);
 
         JPopupMenu menu = createPopupMenu();
@@ -105,8 +108,9 @@ does not work? maybe wrong UI colors since control is not editable?
 
     private void append(String line, Class clazz) {
         Document d = messages.getDocument();
-        if (d.getLength() > MAX_SIZE)
-            clearMessages(d);
+        int logSizeControl = LogSizeControl.getValue(config);
+        if (d.getLength() > logSizeControl)
+            clearMessages(d, logSizeControl);
         try {
             d.insertString(d.getLength(), line + "\r\n", getStyle(clazz));
             messages.select(d.getLength(), d.getLength());
@@ -129,9 +133,9 @@ does not work? maybe wrong UI colors since control is not editable?
     }
 
 
-    private void clearMessages(Document d) {
+    private void clearMessages(Document d, int logSizeControl) {
         try {
-            d.remove(0, d.getLength());
+            d.remove(0, d.getLength() - logSizeControl / 2);
         } catch (BadLocationException e) {
             throw new IllegalStateException(e);
         }
@@ -139,7 +143,7 @@ does not work? maybe wrong UI colors since control is not editable?
 
     public void clear() {
         Document d = messages.getDocument();
-        clearMessages(d);
+        clearMessages(d, 0);
     }
 
     public void setPaused(boolean isPaused) {

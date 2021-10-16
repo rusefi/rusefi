@@ -1,0 +1,13 @@
+struct_no_prefix ac_control_s
+
+bit engineTooSlow
+bit engineTooFast
+bit noClt
+bit engineTooHot
+bit tpsTooHigh
+
+bit acButtonState
+
+int latest_usage_ac_control;
+
+end_struct

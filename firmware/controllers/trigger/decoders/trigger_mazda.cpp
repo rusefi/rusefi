@@ -18,18 +18,26 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "pch.h"
+
 #include "trigger_mazda.h"
+
+#define NB_CRANK_MAGIC 70
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->setTriggerSynchronizationGap2(1.4930 * 0.6f, 1.4930 * 1.3f);
+
+	// nominal gap is 0.325
+	s->setTriggerSynchronizationGap2(0.1, 0.4);
+	// nominal gap is ~1.6
+	s->setSecondTriggerSynchronizationGap2(1.2, 1.8);
+
 	s->useRiseEdge = false;
 
 	s->bothFrontsRequired = true;
+	s->gapBothDirections = true;
 
-	s->tdcPosition = 294;
-
-	s->isSynchronizationNeeded = true;
+	s->tdcPosition = 5.181;
 
 	/**
 	 * http://rusefi.com/forum/viewtopic.php?f=3&t=729&p=12983#p12983
@@ -39,7 +47,7 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 
 	s->addEvent720(216.897031, T_PRIMARY, TV_RISE);
 	s->addEvent720(232.640068, T_SECONDARY, TV_RISE);
-	s->addEvent720(288.819688, T_PRIMARY, TV_FALL);
+	s->addEvent720(288.819688, T_PRIMARY, TV_FALL);		// <-- This edge is the sync point
 	s->addEvent720(302.646323, T_SECONDARY, TV_FALL);
 
 	s->addEvent720(412.448056, T_SECONDARY, TV_RISE);
@@ -62,20 +70,27 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 
 	s->tdcPosition = 60 + 655;
 
+	// Nominal gap 70/110 = 0.636
 	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
-	// 384
-	s->addEventAngle(96.0f, T_PRIMARY, TV_FALL);
-	// 400
-	s->addEventAngle(100.0f, T_PRIMARY, TV_RISE);
-	s->addEventAngle(176.0f, T_PRIMARY, TV_FALL);
+	// Nominal gap 110/70 = 1.571
+	s->setSecondTriggerSynchronizationGap2(1.05f, 1.8f);
+
+	// todo: NB2 fronts are inverted comparing to NB1, life is not perfect :(
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, T_PRIMARY, TV_FALL);
+	s->addEventAngle(180.0f - NB_CRANK_MAGIC, T_PRIMARY, TV_RISE);
+	s->addEventAngle(180.0f - 4, T_PRIMARY, TV_FALL);
 	s->addEventAngle(180.0f, T_PRIMARY, TV_RISE);
+}
+
+static void addNBCrankTooth(TriggerWaveform *s, angle_t angle, trigger_wheel_e const channelIndex) {
+	s->addEvent720(angle, channelIndex, TV_RISE);
+	s->addEvent720(angle + 4, channelIndex, TV_FALL);
 }
 
 static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float offset) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->setTriggerSynchronizationGap3(0, 0.065, 0.17f);
 	s->useRiseEdge = false;
-	s->bothFrontsRequired = true;
 	s->useOnlyPrimaryForSync = true;
 	efiAssertVoid(OBD_PCM_Processor_Fault, s->gapBothDirections == false, "NB1 trigger measures on FALL events");
 
@@ -86,14 +101,10 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	 */
 	s->addEvent720(20.0f, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(offset + 66.0f, T_SECONDARY,  TV_RISE);
-	s->addEvent720(offset + 70.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 136.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 140.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 246.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 250.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 316.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 320.0f, T_SECONDARY, TV_FALL);
+	addNBCrankTooth(s, offset + 66.0f, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + NB_CRANK_MAGIC, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 180, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 180 + NB_CRANK_MAGIC, T_SECONDARY);
 
 	s->addEvent720(340.0f, T_PRIMARY, TV_RISE);
 	s->addEvent720(360.0f, T_PRIMARY, TV_FALL);
@@ -101,14 +112,10 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	s->addEvent720(380.0f, T_PRIMARY, TV_RISE);
 	s->addEvent720(400.0f, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(offset + 426.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 430.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 496.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 500.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 606.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 610.0f, T_SECONDARY, TV_FALL);
-	s->addEvent720(offset + 676.0f, T_SECONDARY, TV_RISE);
-	s->addEvent720(offset + 680.0f, T_SECONDARY, TV_FALL);
+	addNBCrankTooth(s, offset + 66.0f + 360, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 360 + NB_CRANK_MAGIC, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 540, T_SECONDARY);
+	addNBCrankTooth(s, offset + 66.0f + 540 + NB_CRANK_MAGIC, T_SECONDARY);
 
 	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
 }
@@ -151,8 +158,6 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
-	s->useOnlyPrimaryForSync = true;
-
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */
@@ -179,14 +184,16 @@ void configureMazdaProtegeLx(TriggerWaveform *s) {
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->setTriggerSynchronizationGap2(8.50 * 0.75, 14.0);
-
+	// Nominal gap is 8.92
+	s->setTriggerSynchronizationGap2(7, 13);
+	// Nominal gap is 0.128
+	s->setSecondTriggerSynchronizationGap2(0.06f, 0.16f);
 
 	s->addEvent720(325, T_PRIMARY, TV_FALL);
 	s->addEvent720(360, T_PRIMARY, TV_RISE);
 
 	s->addEvent720(641, T_PRIMARY, TV_FALL);
-	s->addEvent720(677, T_PRIMARY, TV_RISE);
+	s->addEvent720(679, T_PRIMARY, TV_RISE);
 
 	s->addEvent720(700, T_PRIMARY, TV_FALL);
 	s->addEvent720(720, T_PRIMARY, TV_RISE);

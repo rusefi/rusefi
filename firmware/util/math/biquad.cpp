@@ -5,10 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "biquad.h"
-#include "error_handling.h"
+#include "pch.h"
 
-#include "efilib.h"
+#include "biquad.h"
 
 Biquad::Biquad() {
 // Default to passthru
@@ -49,7 +48,6 @@ void Biquad::configureLowpass(float samplingFrequency, float cutoffFrequency, fl
 	float K = getK(samplingFrequency, cutoffFrequency);
 	float norm = getNorm(K, Q);
 
-	norm = 1 / (1 + K / Q + K * K);
 	a0 = K * K * norm;
 	a1 = 2 * a0;
 	a2 = a0;

@@ -39,4 +39,4 @@ private:
     static ButtonDebounce* s_firstDebounce;
 };
 
-void initButtonDebounce(Logging *sharedLogger);
+void initButtonDebounce();

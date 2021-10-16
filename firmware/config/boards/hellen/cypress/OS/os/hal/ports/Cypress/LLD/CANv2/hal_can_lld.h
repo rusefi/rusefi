@@ -353,6 +353,8 @@ extern "C" {
   void can_lld_receive(CANDriver *canp,
                        canmbx_t mailbox,
                        CANRxFrame *ctfp);
+  void can_lld_abort(CANDriver *canp,
+                     canmbx_t mailbox);
 #if CAN_USE_SLEEP_MODE
   void can_lld_sleep(CANDriver *canp);
   void can_lld_wakeup(CANDriver *canp);

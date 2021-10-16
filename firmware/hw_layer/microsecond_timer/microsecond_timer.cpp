@@ -11,20 +11,18 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "microsecond_timer.h"
 #include "port_microsecond_timer.h"
 
 #if EFI_PROD_CODE
 
 #include "periodic_task.h"
-#include "engine.h"
-EXTERN_ENGINE;
 
 // Just in case we have a mechanism to validate that hardware timer is clocked right and all the
 // conversions between wall clock and hardware frequencies are done right
 // delay in milliseconds
-#define TEST_CALLBACK_DELAY 30
+#define TEST_CALLBACK_DELAY 10
 // if hardware timer is 20% off we throw a critical error and call it a day
 // maybe this threshold should be 5%? 10%?
 #define TIMER_PRECISION_THRESHOLD 0.2
@@ -42,8 +40,6 @@ static int timerCallbackCounter = 0;
 static int timerRestartCounter = 0;
 
 static const char * msg;
-
-static char buff[32];
 
 static int timerFreezeCounter = 0;
 static int setHwTimerCounter = 0;
@@ -112,15 +108,13 @@ class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 	void PeriodicTask() override {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
-			strcpy(buff, "no_event");
-			itoa10(&buff[8], lastSetTimerTimeNt);
-			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, buff);
+			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, "no event %d", lastSetTimerTimeNt);
 			return;
 		}
 
 		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
 		// 2 seconds of inactivity would not look right
-		efiAssertVoid(CUSTOM_ERR_6682, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
+		efiAssertVoid(CUSTOM_TIMER_WATCHDOG, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
 	}
 
 	int getPeriodMs() override {
@@ -166,7 +160,7 @@ static void validateHardwareTimer() {
 	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
 	engine->executor.scheduleForLater(&watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
 
-	chThdSleepMilliseconds(2 * TEST_CALLBACK_DELAY);
+	chThdSleepMilliseconds(TEST_CALLBACK_DELAY + 2);
 	if (!testSchedulingHappened) {
 		firmwareError(CUSTOM_ERR_TIMER_TEST_CALLBACK_NOT_HAPPENED, "hwTimer not alive");
 	}

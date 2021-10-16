@@ -1,28 +1,27 @@
+#include "pch.h"
 
-#include "global.h"
-#include "engine.h"
 #include "biquad.h"
-#include "perf_trace.h"
 #include "thread_controller.h"
+#include "knock_logic.h"
 #include "software_knock.h"
 
 #if EFI_SOFTWARE_KNOCK
 
-EXTERN_ENGINE;
-
 #include "knock_config.h"
+#include "ch.hpp"
 
-adcsample_t sampleBuffer[2000];
-int8_t currentCylinderIndex = 0;
-Biquad knockFilter;
+static NO_CACHE adcsample_t sampleBuffer[2000];
+static int8_t currentCylinderIndex = 0;
+static efitick_t lastKnockSampleTime = 0;
+static Biquad knockFilter;
 
 static volatile bool knockIsSampling = false;
 static volatile bool knockNeedsProcess = false;
 static volatile size_t sampleCount = 0;
 
-binary_semaphore_t knockSem;
+chibios_rt::BinarySemaphore knockSem(/* taken =*/ true);
 
-static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
+static void completionCallback(ADCDriver* adcp) {
 	palClearPad(GPIOD, 2);
 
 	if (adcp->state == ADC_COMPLETE) {
@@ -30,7 +29,7 @@ static void completionCallback(ADCDriver* adcp, adcsample_t*, size_t) {
 
 		// Notify the processing thread that it's time to process this sample
 		chSysLockFromISR();
-		chBSemSignalI(&knockSem);
+		knockSem.signalI();
 		chSysUnlockFromISR();
 	}
 }
@@ -91,44 +90,22 @@ static const ADCConversionGroup adcConvGroupCh2 = { FALSE, 1, &completionCallbac
 	0,	// sqr2
 	ADC_SQR3_SQ1_N(KNOCK_ADC_CH2)
 };
-
-static bool cylinderUsesChannel2(uint8_t cylinderIndex) {
-	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
-	switch (cylinderIndex) {
-		case 0: return CONFIG(knockBankCyl1);
-		case 1: return CONFIG(knockBankCyl2);
-		case 2: return CONFIG(knockBankCyl3);
-		case 3: return CONFIG(knockBankCyl4);
-		case 4: return CONFIG(knockBankCyl5);
-		case 5: return CONFIG(knockBankCyl6);
-		case 6: return CONFIG(knockBankCyl7);
-		case 7: return CONFIG(knockBankCyl8);
-		case 8: return CONFIG(knockBankCyl9);
-		case 9: return CONFIG(knockBankCyl10);
-		case 10: return CONFIG(knockBankCyl11);
-		case 11: return CONFIG(knockBankCyl12);
-		default: return false;
-	}
-}
-
 #endif // KNOCK_HAS_CH2
 
-const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
+const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
 #if KNOCK_HAS_CH2
-	if (cylinderUsesChannel2(cylinderIndex)) {
+	if (channelIdx == 1) {
 		return &adcConvGroupCh2;
 	}
+#else
+	(void)channelIdx;
 #endif // KNOCK_HAS_CH2
 
 	return &adcConvGroupCh1;
 }
 
-void startKnockSampling(uint8_t cylinderIndex) {
+void onStartKnockSampling(uint8_t cylinderIndex, float samplingSeconds, uint8_t channelIdx) {
 	if (!CONFIG(enableSoftwareKnock)) {
-		return;
-	}
-
-	if (!engine->rpmCalculator.isRunning()) {
 		return;
 	}
 
@@ -144,31 +121,29 @@ void startKnockSampling(uint8_t cylinderIndex) {
 		return;
 	}
 
-	// Sample for 45 degrees
-	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * 45 * 1e-6;
+	// Convert sampling time to number of samples
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
 	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
-	auto conversionGroup = getConversionGroup(cylinderIndex);
+	auto conversionGroup = getConversionGroup(channelIdx);
 
 	// Stash the current cylinder's index so we can store the result appropriately
 	currentCylinderIndex = cylinderIndex;
 
 	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
+	lastKnockSampleTime = getTimeNowNt();
 }
 
 class KnockThread : public ThreadController<256> {
 public:
-	KnockThread() : ThreadController("knock", NORMALPRIO - 10) {}
+	KnockThread() : ThreadController("knock", PRIO_KNOCK_PROCESS) {}
 	void ThreadTask() override;
 };
 
 static KnockThread kt;
 
 void initSoftwareKnock() {
-	chBSemObjectInit(&knockSem, TRUE);
-
 	if (CONFIG(enableSoftwareKnock)) {
 		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * CONFIG(knockBandCustom), 3);
 		adcStart(&KNOCK_ADC, nullptr);
@@ -188,23 +163,34 @@ void processLastKnockEvent() {
 
 	float sumSq = 0;
 
+	// todo: reduce magic constants. engineConfiguration->adcVcc?
 	constexpr float ratio = 3.3f / 4095.0f;
 
 	size_t localCount = sampleCount;
 
 	// Prepare the steady state at vcc/2 so that there isn't a step
 	// when samples begin
+	// todo: reduce magic constants. engineConfiguration->adcVcc?
 	knockFilter.cookSteadyState(3.3f / 2);
 
 	// Compute the sum of squares
-	for (size_t i = 0; i < localCount; i++)
-	{
+	for (size_t i = 0; i < localCount; i++) {
 		float volts = ratio * sampleBuffer[i];
 
 		float filtered = knockFilter.filter(volts);
+		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
+			tsOutputChannels.debugFloatField1 = volts;
+			tsOutputChannels.debugFloatField2 = filtered;
+		}
 
 		sumSq += filtered * filtered;
 	}
+
+	// take a local copy
+	auto lastKnockTime = lastKnockSampleTime;
+
+	// We're done with inspecting the buffer, another sample can be taken
+	knockNeedsProcess = false;
 
 	// mean of squares (not yet root)
 	float meanSquares = sumSq / localCount;
@@ -212,15 +198,15 @@ void processLastKnockEvent() {
 	// RMS
 	float db = 10 * log10(meanSquares);
 
-	tsOutputChannels.knockLevels[currentCylinderIndex] = roundf(clampF(-100, db, 100));
-	tsOutputChannels.knockLevel = db;
+	// clamp to reasonable range
+	db = clampF(-100, db, 100);
 
-	knockNeedsProcess = false;
+	engine->onKnockSenseCompleted(currentCylinderIndex, db, lastKnockTime);
 }
 
 void KnockThread::ThreadTask() {
-	while(1) {
-		chBSemWait(&knockSem);
+	while (1) {
+		knockSem.wait();
 
 		ScopePerf perf(PE::SoftwareKnockProcess);
 		processLastKnockEvent();

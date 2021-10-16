@@ -7,14 +7,7 @@
 
 #pragma once
 
-#include "engine_state_generated.h"
 #include "pid_state_generated.h"
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-#include "tunerstudio_outputs.h"
-#else
-#include "engine.h"
-#endif
 
 // See PidCic below
 #define PID_AVG_BUF_SIZE_SHIFT 5
@@ -30,7 +23,6 @@
 #define MS2SEC(x) (x * 0.001)
 
 struct pid_s;
-class Logging;
 
 /**
  * default basic implementation also known as PidParallelController
@@ -60,8 +52,8 @@ public:
 	float getP(void) const;
 	float getI(void) const;
 	float getD(void) const;
-	virtual float getOffset(void) const;
-	virtual float getMinValue(void) const;
+	float getOffset() const;
+	float getMinValue() const;
 	float getIntegration(void) const;
 	float getPrevError(void) const;
 	void setErrorAmplification(float coef);
@@ -69,7 +61,7 @@ public:
 	void postState(TunerStudioOutputChannels *tsOutputChannels) const;
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) const;
 #endif /* EFI_TUNER_STUDIO */
-	void showPidStatus(Logging *logging, const char*msg) const;
+	void showPidStatus(const char* msg) const;
 	void sleep();
 	int resetCounter;
 	// todo: move this to pid_s one day

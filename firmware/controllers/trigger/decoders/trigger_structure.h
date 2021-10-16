@@ -10,8 +10,8 @@
 
 #pragma once
 
+#include "engine_ptr.h"
 #include "state_sequence.h"
-#include "globalaccess.h"
 #include "engine_configuration_generated_structures.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720
@@ -75,8 +75,6 @@ class TriggerState;
 class TriggerFormDetails;
 class TriggerConfiguration;
 
-// https://github.com/rusefi/rusefi/issues/2010 shows the corner case wheel with huge depth requirement
-#define GAP_TRACKING_LENGTH 18
 
 /**
  * @brief Trigger shape has all the fields needed to describe and decode trigger signal.
@@ -85,7 +83,7 @@ class TriggerConfiguration;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(Logging *logger, operation_mode_e ambiguousOperationMode,
+	void initializeTriggerWaveform(operation_mode_e ambiguousOperationMode,
 			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
 	void setShapeDefinitionError(bool value);
 
@@ -107,11 +105,11 @@ public:
 	 * this flag tells us if we should ignore events on second input channel
 	 * that's the way to ignore noise from the disconnected wire
 	 */
-	bool needSecondTriggerInput;
+	bool needSecondTriggerInput = false;
 	/**
 	 * true value here means that we do not have a valid trigger configuration
 	 */
-	bool shapeDefinitionError;
+	bool shapeDefinitionError = false;
 
 	/**
 	 * https://github.com/rusefi/rusefi/issues/898
@@ -121,7 +119,7 @@ public:
 	 *
 	 * One day a nicer implementation could be simply ignoring 'useOnlyRisingEdgeForTrigger' in case of 'bothFrontsRequired'
 	 */
-	bool bothFrontsRequired;
+	bool bothFrontsRequired = false;
 
 	/**
 	 * this variable is incremented after each trigger shape redefinition
@@ -180,10 +178,12 @@ public:
 
 	void calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrigger);
 
+	size_t getExpectedEventCount(int channelIndex) const;
+
 	/**
 	 * This is used for signal validation
 	 */
-	uint32_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	size_t expectedEventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 #if EFI_UNIT_TEST
 	/**
@@ -216,20 +216,25 @@ public:
 
 	bool useOnlyRisingEdgeForTriggerTemp;
 
-	/* 0..1 angle range */
+	/* (0..1] angle range */
 	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
-	/* 0..720 angle range
+	/* (0..720] angle range
 	 * Deprecated!
 	 */
 	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
 	/**
+	 * this method helps us use real world 350 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
+	 */
+	void addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
+
+	/**
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
-	 * For example, 0..180 for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
 	 */
 	void addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
-	/* 0..720 angle range
+	/* (0..720] angle range
 	 * Deprecated?
 	 */
 	void addEventClamped(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam, float filterLeft, float filterRight);
@@ -271,10 +276,11 @@ public:
 			const trigger_config_s& triggerConfig
 			);
 
+	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
+
 private:
 	trigger_shape_helper h;
 
-	int findAngleIndex(TriggerFormDetails *details, float angle) const;
 
 	/**
 	 * Working buffer for 'wave' instance
@@ -312,7 +318,7 @@ public:
 	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
 	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
 	 */
-	int triggerIndexByAngle[720];
+	uint16_t triggerIndexByAngle[720];
 };
 
 void findTriggerPosition(
@@ -323,6 +329,6 @@ void findTriggerPosition(
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 
-#define TRIGGER_WAVEFORM(x) ENGINE(triggerCentral.triggerShape.x)
+#define TRIGGER_WAVEFORM(x) ENGINE(triggerCentral.triggerShape).x
 
 #define getTriggerSize() TRIGGER_WAVEFORM(privateTriggerDefinitionSize)

@@ -1,0 +1,1017 @@
+# https://docs.google.com/spreadsheets/d/1x9pB8oRpY1ISkrGYIsa5j2MrnQVA644REb9Ebl41tcw
+
+pins:
+  - pin: A1
+    function: NC
+    type:
+
+  - pin: A2    
+    function: ECU power supply from ignition key
+    class: analog_inputs
+    id: EFI_ADC_5
+    ts_name: Battery Sense
+    type: 12v
+
+  - pin: A3
+    function: PCM (ECU) GND
+    type: gnd
+
+  - pin: A4
+    function: NC
+    
+  - pin: A5
+    function: NC
+    
+  - pin: A6
+    id: GPIOD_12
+    class: outputs
+    ts_name: A6 - Fan Control
+    function: low side control
+    type: ls
+
+  - pin: A7
+    function: power GND
+    type: gnd
+
+  - pin: A8
+    function: power GND
+    type: gnd
+
+  - pin: B1
+    function: NC
+
+  - pin: B2
+    function: NC
+
+  - pin: B3
+    function: NC
+
+  - pin: B4
+    function: 12V Constant
+    type: 12v
+
+  - pin: C1
+    function: NC
+
+  - pin: C2
+    function: NC
+
+  - pin: C3
+    function: NC
+
+  - pin: C4
+    function: NC
+
+  - pin: C5
+    function: NC
+
+  - pin: C6
+    function: NC
+
+  - pin: C7
+    function: NC
+
+  - pin: C8
+    function: NC
+
+  - pin: C9
+    function: NC
+
+  - pin: C10
+    function: NC
+
+  - pin: C11
+    function: NC
+
+  - pin: C12
+    function: NC
+
+  - pin: C13
+    function: NC
+
+  - pin: C14
+    function: NC
+
+  - pin: C15
+    function: NC
+
+  - pin: C16
+    function: NC
+    
+  - pin: C17
+    function: NC
+    
+  - pin: C18
+    function: NC
+
+  - pin: C19
+    function: NC
+
+  - pin: C20
+    function: NC
+    
+  - pin: C21
+    id: GPIOH_14
+    class: outputs
+    ts_name: C21 - Evap Purge Control
+    function: low side solenoid control
+    type: ls
+
+  - pin: C22    
+    function: sensor +5v feed
+    type: 5v
+
+  - pin: C23
+    function: analog GND
+    type: gnd
+
+  - pin: C24
+    id: [GPIOA_3, EFI_ADC_3]
+    class: [event_inputs, analog_inputs]
+    ts_name: C24 - PPS1
+    function: PPS1 analog input
+    
+  - pin: C25
+    id: [GPIOC_4, EFI_ADC_14]
+    class: [event_inputs, analog_inputs]
+    ts_name: C25 - PPS2
+    function: PPS2 analog input
+    
+  - pin: C26
+    function: analog GND
+    type: gnd
+
+  - pin: C27    
+    function: sensor +5v feed
+    type: 5v
+
+  - pin: C28
+    function: NC
+
+  - pin: C29
+    id: GPIOD_15
+    class: outputs
+    ts_name: C29 - Fuel Pump
+    function: low side relay control
+    type: ls
+
+  - pin: C30
+    function: NC
+
+  - pin: C31
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: C31 - O2S
+    function: Front O2 Sensor Signal
+
+  - pin: C32
+    function: NC
+
+  - pin: C33
+    function: NC
+
+  - pin: C34
+    function: NC
+
+  - pin: C35
+    function: proto via
+
+  - pin: C36
+    function: NC
+
+  - pin: C37
+    function: NC
+
+  - pin: C38
+    function: proto via
+
+  - pin: C39
+    function: NC K line
+ 
+  - pin: C40
+    id: [GPIOF_10]
+    class: [switch_inputs]
+    ts_name: C40 start button
+    function: Start button
+    type: din
+
+  - pin: D1
+    function: NC
+
+  - pin: D2
+    function: proto via
+
+  - pin: D3
+    id: GPIOI_0
+    class: outputs
+    ts_name: D3 - Starter Enable
+    function: low side relay control
+    type: ls
+
+  - pin: D4
+    function: NC
+
+  - pin: D5
+    function: NC
+
+  - pin: D6
+    function: NC
+
+  - pin: D7
+    function: NC
+
+  - pin: D8
+    id:
+    class:
+    ts_name: D8 - WBO
+    function: analog input WBO
+    type: av
+
+  - pin: D9
+    id:
+    class:
+    ts_name:
+    function: analog input WBO
+    type: av
+
+  - pin: D10
+    function: NC
+    
+  - pin: D11    
+    function: CAN_H
+    type: can
+
+  - pin: D12    
+    function: CAN_L
+    type: can
+
+  - pin: D13
+    function: NC
+
+  - pin: D14
+    function: proto via
+
+  - pin: D15
+    function: NC
+
+  - pin: D16
+    function: NC
+
+  - pin: D17
+    function: NC
+
+  - pin: D18
+    function: NC
+
+  - pin: D19
+    function: proto via
+
+  - pin: D20
+    function: proto via
+
+  - pin: D21
+    function: proto via
+
+  - pin: D22
+    function: proto via
+
+  - pin: D23
+    function: proto via
+
+  - pin: D24
+    function: proto via
+    
+  - pin: E1
+    id: GPIOG_7
+    class: outputs
+    ts_name: E1 - INJ 1
+    function: injector output 1
+    type: inj
+
+  - pin: E2
+    id: GPIOG_8
+    class: outputs
+    ts_name: E2- INJ 2
+    function: injector output 2
+    type: inj
+
+  - pin: E3
+    id: GPIOD_11
+    class: outputs
+    ts_name: E3 - INJ 3
+    function: injector output 3
+    type: inj
+
+  - pin: E4
+    id: GPIOD_10
+    class: outputs
+    ts_name: E4 - INJ_4/VVT
+    function: "230: 1.5A low side VVT solenoid / 430 injector output 4"
+    type: inj
+
+  - pin: E5
+    function: NC
+
+  - pin: E6
+    function: NC
+
+  - pin: E7
+    function: NC
+
+  - pin: E8
+    function: NC
+
+  - pin: E9
+    function: NC
+
+  - pin: E10
+    function: NC
+
+  - pin: E11
+    function: NC
+
+  - pin: E12
+    function: NC
+
+  - pin: E13
+    id: GPIOD_9
+    class: outputs
+    ts_name: E13 - INJ 5
+    function: injector output 5
+    type: inj
+
+  - pin: E14
+    id: GPIOF_12
+    class: outputs
+    ts_name: E14 - INJ 6
+    function: injector output 6
+    type: inj
+
+  - pin: E15
+    function: proto via
+
+  - pin: E16
+    function: proto via
+
+  - pin: E17
+    function: proto via
+
+  - pin: E18
+    function: NC
+
+  - pin: E19
+    function: NC
+    
+  - pin: E20
+    function: NC
+
+  - pin: E21
+    function: NC
+
+  - pin: E22    
+    function: sensor +5v feed
+    type: 5v
+
+  - pin: E23
+    id: [GPIOC_1, EFI_ADC_11]
+    class: [event_inputs, analog_inputs]
+    ts_name: E23 - MAP
+    function: analog input MAP
+    type: av
+
+  - pin: E24
+    function: analog GND
+    type: gnd
+
+  - pin: E25
+    id: GPIOF_13
+    class: outputs
+    ts_name: E25 - INJ 7
+    function: injector output 7
+    type: inj
+
+  - pin: E26
+    id: GPIOF_14
+    class: outputs
+    ts_name: E26 - INJ 8
+    function: injector output 8
+    type: inj
+
+  - pin: E27
+    function: NC
+
+  - pin: E28
+    function: analog GND
+    type: gnd
+
+  - pin: E29
+    id: [GPIOC_2, EFI_ADC_12]
+    class: [event_inputs, analog_inputs]
+    ts_name: E29 - Coolant Temp
+    function: analog input CLT
+    type: av
+
+  - pin: E30
+    function: NC
+
+  - pin: E31
+    id: [GPIOA_4, EFI_ADC_4]
+    class: [event_inputs, analog_inputs]
+    ts_name: E31 - TPS1
+    function: analog input TPS1
+    type: av
+
+  - pin: E32
+    function: analog GND
+    type: gnd
+
+  - pin: E33    
+    function: sensor +5v feed
+    type: 5v
+
+  - pin: E34
+    id: [GPIOB_0, EFI_ADC_8]
+    class: [event_inputs, analog_inputs]
+    ts_name: E34 - TPS2
+    function: analog input TPS2
+    type: av
+
+  - pin: E35
+    function: NC
+
+  - pin: E36
+    function: NC
+
+  - pin: E37
+    id: [GPIOB_1, EFI_ADC_9]
+    class: [event_inputs, analog_inputs]
+    ts_name: E37 - Crank Input
+    function: VR-
+    type: vr
+
+  - pin: E38    
+    function: VR+
+    type: vr
+
+  - pin: E39
+    function: analog GND
+    type: gnd
+
+  - pin: E40
+    id: [GPIOA_6, EFI_ADC_6]
+    class: [event_inputs, analog_inputs]
+    ts_name: E40 - IN_CAM
+    function: digital input CAM input
+    type: vr
+
+  - pin: E41
+    function: knock sensor GND
+    type: gnd
+    
+  - pin: E42    
+    ts_name: E42 - KNOCK
+    function: knock sensor signal
+
+  - pin: E43
+    function: NC
+
+  - pin: E44
+    function: NC
+
+  - pin: E45
+    id: [GPIOC_3, EFI_ADC_13]
+    class: [event_inputs, analog_inputs]
+    ts_name: E45 - IAT
+    function: analog input IAT
+    type: av
+
+  - pin: E46   
+    function: sensor +5v feed
+    type: 5v
+
+  - pin: E47
+    id: [GPIOC_0, EFI_ADC_10]
+    class: [event_inputs, analog_inputs]
+    ts_name: E47 - MAF
+    function: analog input + proto via
+    type: av
+
+  - pin: E48
+    function: analog GND
+    type: gnd
+
+  - pin: F1
+    ts_name: F1 - ETB (-)
+    function: DC Motor -
+
+  - pin: F2    
+    ts_name: F2 ETB (+)
+    function: DC Motor +
+
+  - pin: F3
+    function: NC
+
+  - pin: F4
+    id: GPIOE_2
+    class: outputs 
+    ts_name: F4 - IGN 5
+    function: igniter
+    type: ign
+
+  - pin: F5
+    function: igniter
+    type: ign
+
+  - pin: F6
+# OUT_IGN3 Q5
+# used as Coil#2 on M104
+    id: GPIOE_4
+    class: outputs
+    ts_name: F6 - IGN 3
+    function: igniter
+    type: ign
+
+  - pin: F7
+    function: igniter
+    type: ign
+
+  - pin: F8
+    function: power GND
+    type: gnd
+
+  - pin: F9
+    id: GPIOI_6
+    class: outputs
+    ts_name: F9 - IGN 7
+    function: igniter
+    type: ign
+
+  - pin: F10
+    function: igniter
+    type: ign
+
+  - pin: F11
+    id: GPIOI_7
+    class: outputs
+    ts_name: F11 - IGN 8
+    function: igniter
+    type: ign
+
+  - pin: F12
+    function: igniter
+    type: ign
+
+  - pin: F13
+# OUT_IGN4 Q3
+# CLK230
+# used as Coil#1 on M104 https://github.com/rusefi/rusefi/wiki/1997-e320
+    id: GPIOE_3
+    class: outputs
+    ts_name: F13 - IGN 4
+    function: igniter
+    type: ign
+
+  - pin: F14
+    function: igniter
+    type: ign
+
+  - pin: F15
+    function: power GND
+    type: gnd
+
+  - pin: F16
+    id: GPIOE_5
+    class: outputs
+    ts_name: F16 - IGN 2
+    function: igniter
+    type: ign
+
+  - pin: F17
+    id: GPIOI_5
+    class: outputs
+    ts_name: F17 - IGN 6
+    function: igniter
+    type: ign
+
+  - pin: F18
+    function: igniter
+    type: ign
+
+  - pin: F19
+    function: igniter
+    type: ign
+    
+  - pin: F20
+# OUT_IGN1 Q1
+# CLK230
+# Used as coil#3 on M104
+    id: GPIOI_8
+    class: outputs
+    ts_name: F20 - IGN 1
+    function: igniter
+    type: ign
+
+  - pin: F21
+# For Supercharger Clutch Activation on M111 4 cylinder compression, REMOVE F17. Install R80
+    function: igniter
+    type: ign
+
+  - pin: P30
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: P30_IN_AUX4
+
+  - pin: P32
+    id: EFI_ADC_1
+    class: analog_inputs
+    ts_name: P31_IN_O2S2
+
+info:
+  title: Hellen 128 Mercedes
+  image:
+    file: main.jpg
+  pins:
+    - pin: A1
+      x: 293
+      y: 657
+    - pin: A2
+      x: 454
+      y: 657
+    - pin: A3
+      x: 615
+      y: 657
+    - pin: A4
+      x: 776
+      y: 657
+    - pin: A5
+      x: 293
+      y: 520
+    - pin: A6
+      x: 454
+      y: 520
+    - pin: A7
+      x: 615
+      y: 520
+    - pin: A8
+      x: 776
+      y: 520
+    - pin: B1
+      x: 293
+      y: 257
+    - pin: B2
+      x: 454
+      y: 257
+    - pin: B3
+      x: 615
+      y: 257
+    - pin: B4
+      x: 776
+      y: 257
+    - pin: C11
+      x: 1021
+      y: 572
+    - pin: C12
+      x: 1086
+      y: 572
+    - pin: C13
+      x: 1152
+      y: 572
+    - pin: C21
+      x: 1021
+      y: 342
+    - pin: C22
+      x: 1086
+      y: 342
+    - pin: C23
+      x: 1151
+      y: 342
+    - pin: C24
+      x: 1216
+      y: 342
+    - pin: C25
+      x: 1281
+      y: 342
+    - pin: C26
+      x: 1346
+      y: 342
+    - pin: C27
+      x: 1411
+      y: 342
+    - pin: C28
+      x: 1476
+      y: 342
+    - pin: C29
+      x: 1541
+      y: 342
+    - pin: C30
+      x: 1606
+      y: 342
+    - pin: C31
+      x: 1021
+      y: 265
+    - pin: C32
+      x: 1086
+      y: 265
+    - pin: C33
+      x: 1151
+      y: 265
+    - pin: C34
+      x: 1216
+      y: 265
+    - pin: C35
+      x: 1281
+      y: 265
+    - pin: C36
+      x: 1346
+      y: 265
+    - pin: C37
+      x: 1411
+      y: 265
+    - pin: C38
+      x: 1476
+      y: 265
+    - pin: C39
+      x: 1541
+      y: 265
+    - pin: C40
+      x: 1606
+      y: 265
+    - pin: D1
+      x: 1794
+      y: 647
+    - pin: D2
+      x: 1859
+      y: 647
+    - pin: D3
+      x: 1924
+      y: 647
+    - pin: D4
+      x: 1989
+      y: 647
+    - pin: D5
+      x: 2054
+      y: 647
+    - pin: D6
+      x: 2119
+      y: 647
+    - pin: D7
+      x: 1794
+      y: 572
+    - pin: D8
+      x: 1859
+      y: 572
+    - pin: D9
+      x: 1924
+      y: 572
+    - pin: D10
+      x: 1989
+      y: 572
+    - pin: D11
+      x: 2054
+      y: 572
+    - pin: D12
+      x: 2119
+      y: 572
+    - pin: D13
+      x: 1794
+      y: 342
+    - pin: D14
+      x: 1859
+      y: 342
+    - pin: D15
+      x: 1924
+      y: 342
+    - pin: D16
+      x: 1989
+      y: 342
+    - pin: D17
+      x: 2054
+      y: 342
+    - pin: D18
+      x: 2119
+      y: 342
+    - pin: D19
+      x: 1794
+      y: 265
+    - pin: D20
+      x: 1859
+      y: 265
+    - pin: D21
+      x: 1924
+      y: 265
+    - pin: D22
+      x: 1989
+      y: 265
+    - pin: D23
+      x: 2054
+      y: 265
+    - pin: D24
+      x: 2119
+      y: 265
+    - pin: E1
+      x: 2307
+      y: 647
+    - pin: E2
+      x: 2372
+      y: 647
+    - pin: E3
+      x: 2437
+      y: 647
+    - pin: E4
+      x: 2502
+      y: 647
+    - pin: E5
+      x: 2567
+      y: 647
+    - pin: E6
+      x: 2632
+      y: 647
+    - pin: E7
+      x: 2697
+      y: 647
+    - pin: E8
+      x: 2762
+      y: 647
+    - pin: E9
+      x: 2827
+      y: 647
+    - pin: E10
+      x: 2892
+      y: 647
+    - pin: E11
+      x: 2957
+      y: 647
+    - pin: E12
+      x: 3022
+      y: 647
+    - pin: E13
+      x: 2307
+      y: 572
+    - pin: E14
+      x: 2372
+      y: 572
+    - pin: E15
+      x: 2437
+      y: 572
+    - pin: E16
+      x: 2502
+      y: 572
+    - pin: E17
+      x: 2567
+      y: 572
+    - pin: E18
+      x: 2632
+      y: 572
+    - pin: E19
+      x: 2697
+      y: 572
+    - pin: E20
+      x: 2762
+      y: 572
+    - pin: E21
+      x: 2827
+      y: 572
+    - pin: E22
+      x: 2892
+      y: 572
+    - pin: E23
+      x: 2957
+      y: 572
+    - pin: E24
+      x: 3022
+      y: 572
+    - pin: E25
+      x: 2307
+      y: 342
+    - pin: E26
+      x: 2372
+      y: 342
+    - pin: E27
+      x: 2437
+      y: 342
+    - pin: E28
+      x: 2502
+      y: 342
+    - pin: E29
+      x: 2567
+      y: 342
+    - pin: E30
+      x: 2632
+      y: 342
+    - pin: E31
+      x: 2697
+      y: 342
+    - pin: E32
+      x: 2762
+      y: 342
+    - pin: E33
+      x: 2827
+      y: 342
+    - pin: E34
+      x: 2892
+      y: 342
+    - pin: E35
+      x: 2957
+      y: 342
+    - pin: E36
+      x: 3022
+      y: 342
+    - pin: E37
+      x: 2307
+      y: 265
+    - pin: E38
+      x: 2372
+      y: 265
+    - pin: E39
+      x: 2437
+      y: 265
+    - pin: E40
+      x: 2502
+      y: 265
+    - pin: E41
+      x: 2567
+      y: 265
+    - pin: E42
+      x: 2632
+      y: 265
+    - pin: E43
+      x: 2697
+      y: 265
+    - pin: E44
+      x: 2762
+      y: 265
+    - pin: E45
+      x: 2827
+      y: 265
+    - pin: E46
+      x: 2892
+      y: 265
+    - pin: E47
+      x: 2957
+      y: 265
+    - pin: E48
+      x: 3022
+      y: 265
+    - pin: F1
+      x: 3275
+      y: 657
+    - pin: F2
+      x: 3405
+      y: 657
+    - pin: F3
+      x: 3535
+      y: 657
+    - pin: F4
+      x: 3665
+      y: 657
+    - pin: F5
+      x: 3795
+      y: 657
+    - pin: F6
+      x: 3925
+      y: 657
+    - pin: F7
+      x: 4055
+      y: 657
+    - pin: F8
+      x: 3275
+      y: 515
+    - pin: F9
+      x: 3405
+      y: 515
+    - pin: F10
+      x: 3535
+      y: 515
+    - pin: F11
+      x: 3665
+      y: 515
+    - pin: F12
+      x: 3795
+      y: 515
+    - pin: F13
+      x: 3925
+      y: 515
+    - pin: F14
+      x: 4055
+      y: 515
+    - pin: F15
+      x: 3275
+      y: 320
+    - pin: F16
+      x: 3405
+      y: 320
+    - pin: F17
+      x: 3535
+      y: 320
+    - pin: F18
+      x: 3665
+      y: 320
+    - pin: F19
+      x: 3795
+      y: 320
+    - pin: F20
+      x: 3925
+      y: 320
+    - pin: F21
+      x: 4055
+      y: 320

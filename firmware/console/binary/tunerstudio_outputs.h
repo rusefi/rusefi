@@ -14,9 +14,9 @@
 #include "scaled_channel.h"
 #include "tunerstudio_debug_struct.h"
 
-typedef struct {
+struct egt_values_s {
 	uint16_t values[EGT_CHANNEL_COUNT];
-} egt_values_s;
+};
 
 
 enum class TsCalMode : uint8_t {
@@ -42,17 +42,17 @@ enum class TsCalMode : uint8_t {
  *
  * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
  */
-typedef struct {
+struct TunerStudioOutputChannels {
 	/* see also [OutputChannels] in rusefi.input */
 
 	/**
 	 * Yes, I do not really enjoy packing bits into integers but we simply have too many boolean flags and I cannot
 	 * water 4 bytes per traffic - I want gauges to work as fast as possible
 	 */
-	unsigned int hasSdCard : 1; // bit 0, 72
-	unsigned int isIgnitionEnabled : 1; // bit 1
-	unsigned int isInjectionEnabled : 1; // bit 2
-	unsigned int isCylinderCleanupEnabled : 1; // bit 3
+	unsigned int sd_present : 1; // bit 0, 72
+	unsigned int isIgnitionEnabledIndicator : 1; // bit 1
+	unsigned int isInjectionEnabledIndicator : 1; // bit 2
+	unsigned int unusedb3 : 1; // bit 3
 	unsigned int isCylinderCleanupActivated : 1; // bit 4
 	unsigned int isFuelPumpOn : 1; // bit 5
 	unsigned int isFanOn : 1; // bit 6
@@ -62,8 +62,8 @@ typedef struct {
 	unsigned int unusedBit10 : 1; // bit 10
 	unsigned int clutchUpState : 1; // bit 11
 	unsigned int clutchDownState : 1; // bit 12
-	unsigned int knockEverIndicator : 1; // bit 13
-	unsigned int knockNowIndicator : 1; // bit 14
+	unsigned int unusedb13 : 1; // bit 13
+	unsigned int unusedb14 : 1; // bit 14
 	unsigned int brakePedalState : 1; // bit 15. 0 - not pressed, 1 = pressed
 	unsigned int toothLogReady : 1; // bit 16
 	unsigned int acSwitchState : 1; // bit 17. 0 - not pressed, 1 = pressed
@@ -71,7 +71,7 @@ typedef struct {
 	unsigned int isCltError : 1; // bit 19
 	unsigned int isMapError : 1; // bit 20
 	unsigned int isIatError : 1; // bit 21
-	unsigned int unusedAt22 : 1; // bit 22
+	unsigned int acState : 1; // bit 22 - 1 if AC is engaged, 0 otherwise
 	unsigned int isTriggerError : 1; // bit 23
 	unsigned int hasCriticalError : 1; // bit 24
 	unsigned int isWarnNow : 1; // bit 25
@@ -80,6 +80,7 @@ typedef struct {
 	unsigned int launchTriggered : 1; // bit 28
 	unsigned int isTps2Error : 1; // bit 29
 	unsigned int isIdleClosedLoop : 1; // bit 30
+	unsigned int isIdleCoasting : 1; // bit 31
 
 	// RPM, vss
 	scaled_channel<uint16_t> rpm;   // 4
@@ -106,12 +107,12 @@ typedef struct {
 	scaled_pressure baroPressure; // 32
 
 	scaled_lambda lambda; // 34
-	scaled_channel<uint16_t, 100> engineLoad; // 36
+	uint16_t unused36; // 36
 
 	// misc sensors
 	scaled_voltage vBatt; // 38
 	scaled_pressure oilPressure; // 40
-	scaled_angle vvtPosition; // 42
+	scaled_angle vvtPositionB1I; // 42
 
 	// Fuel math
 	scaled_channel<uint16_t, 1000> chargeAirMass; // 44  cylinder airmass in mg, 0-65 grams
@@ -133,7 +134,7 @@ typedef struct {
 	scaled_percent iatCorrection; // 64
 	scaled_percent cltCorrection; // 66
 	scaled_percent baroCorrection; // 68
-	scaled_percent shortTermFuelTrim; // 70
+	uint16_t unused70; // 70
 
 	// Wall model AE
 	scaled_ms wallFuelAmount; // 72
@@ -158,19 +159,20 @@ typedef struct {
 
 	// Fuel system
 	scaled_percent fuelTankLevel; // 98
-	float fuelConsumptionPerHour; // 100
+	scaled_channel<uint16_t> totalFuelConsumption; // 100
+	scaled_channel<uint16_t, PACK_MULT_FUEL_FLOW> fuelFlowRate; // 102
 
 	// Y axis values for selectable tables
 	scaled_channel<uint16_t, 100> veTableYAxis;  // 104
 	scaled_channel<uint16_t, 100> afrTableYAxis; // 106
 
 	// Knock
-	float knockLevel; // 108
+	scaled_channel<float> knockLevel; // 108
 
 	// Mode, firmware, protocol, run time
-	uint32_t timeSeconds; // 112
-	uint32_t engineMode; // 116
-	uint32_t firmwareVersion; // 120
+	scaled_channel<uint32_t> timeSeconds; // 112
+	scaled_channel<uint32_t> engineMode; // 116
+	scaled_channel<uint32_t> firmwareVersion; // 120
 	// todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 	// rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
 
@@ -196,31 +198,31 @@ typedef struct {
 	scaled_channel<uint16_t, 100> ignitionLoad; // 136
 
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	int16_t engineMakeCodeNameCrc16; // 138
+	scaled_channel<uint16_t> engineMakeCodeNameCrc16; // 138
 	// Errors
 	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
 	int orderingErrorCounter; // 144
-	int16_t warningCounter; // 148
-	int16_t lastErrorCode; // 150
+	scaled_channel<uint16_t> warningCounter; // 148
+	scaled_channel<uint16_t> lastErrorCode; // 150
 	int16_t recentErrorCodes[8]; // 152-166
 
 	// Debug
-	float debugFloatField1; // 168
-	float debugFloatField2;
-	float debugFloatField3;
-	float debugFloatField4;
-	float debugFloatField5;
-	float debugFloatField6;
-	float debugFloatField7;
-	int debugIntField1;
-	int debugIntField2;
-	int debugIntField3;
-	int16_t debugIntField4;
-	int16_t debugIntField5; // 210
+	scaled_channel<float> debugFloatField1; // 168
+	scaled_channel<float> debugFloatField2;
+	scaled_channel<float> debugFloatField3;
+	scaled_channel<float> debugFloatField4;
+	scaled_channel<float> debugFloatField5;
+	scaled_channel<float> debugFloatField6;
+	scaled_channel<float> debugFloatField7;
+	scaled_channel<uint32_t> debugIntField1;
+	scaled_channel<uint32_t> debugIntField2;
+	scaled_channel<uint32_t> debugIntField3;
+	scaled_channel<uint16_t> debugIntField4;
+	scaled_channel<uint16_t> debugIntField5; // 210
 
 	// accelerometer
-	int16_t accelerationX; // 212
-	int16_t accelerationY; // 214
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationX; // 212
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationY; // 214
 
 	// EGT
 	egt_values_s egtValues; // 216
@@ -233,17 +235,20 @@ typedef struct {
 	scaled_voltage rawIat;				// 240
 	scaled_voltage rawOilPressure;		// 242
 
-	int16_t tuneCrc16; // 244
+	scaled_channel<uint16_t> tuneCrc16; // 244
 
-	uint8_t sd_status; // 246
+	// Offset 246: bits
+	uint8_t sd_logging_internal : 1;	// bit 0
+	uint8_t sd_msd : 1;					// bit 1
+	uint8_t isFan2On : 1;				// bit 2
 
-	int8_t tcuCurrentGear; // 247
+	scaled_channel<uint8_t> tcuCurrentGear; // 247
 
 	scaled_voltage rawPpsSecondary;		// 248
 
-	int8_t knockLevels[12];		// 250
+	scaled_channel<int8_t> knockLevels[12];		// 250
 
-	int8_t tcuDesiredGear; // 262
+	scaled_channel<uint8_t> tcuDesiredGear; // 262
 	scaled_channel<uint8_t, 2> flexPercent;		// 263
 
 	scaled_voltage rawIdlePositionSensor;	// 264
@@ -266,8 +271,22 @@ typedef struct {
 	scaled_lambda lambda2; // 286
 	scaled_afr airFuelRatio2; // 288
 
-	//288
-	uint8_t unusedAtTheEnd[48]; // we have some unused bytes to allow compatible TS changes
+	scaled_angle vvtPositionB1E; // 290
+	scaled_angle vvtPositionB2I; // 292
+	scaled_angle vvtPositionB2E; // 294
+
+	scaled_percent fuelTrim[2];	// 296 & 298
+
+	scaled_voltage rawTps1Secondary;	// 300
+	scaled_voltage rawTps2Primary;		// 302
+	scaled_voltage rawTps2Secondary;	// 304
+
+	scaled_channel<uint16_t> knockCount;// 306
+
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationZ; // 308
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationRoll; // 310
+	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationYaw; // 312
+	uint8_t unusedAtTheEnd[24]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
@@ -276,7 +295,6 @@ typedef struct {
 
 	/* see also [OutputChannels] in rusefi.input */
 	/* see also TS_OUTPUT_SIZE in rusefi_config.txt */
-
-} TunerStudioOutputChannels;
+};
 
 extern TunerStudioOutputChannels tsOutputChannels;

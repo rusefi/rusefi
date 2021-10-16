@@ -16,11 +16,12 @@
 #include "map.h"
 #include "maf.h"
 #include "ego.h"
-#include "voltage.h"
 #include "thermistors.h"
 #include "adc_inputs.h"
 
-void initSensors(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX);
+#define LOW_VBATT 7
+
+void initSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);

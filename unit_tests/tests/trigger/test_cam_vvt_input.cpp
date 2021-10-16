@@ -5,10 +5,14 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 extern WarningCodeState unitTestWarningCodeState;
 
-TEST(sensors, testNoStartUpWarningsNoSyncronizationTrigger) {
+#include "engine_sniffer.h"
+extern WaveChart waveChart;
+
+TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
@@ -19,7 +23,7 @@ TEST(sensors, testNoStartUpWarningsNoSyncronizationTrigger) {
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarningsNoSyncronizationTrigger";
 }
 
-TEST(sensors, testNoStartUpWarnings) {
+TEST(trigger, testNoStartUpWarnings) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 3;
@@ -54,7 +58,7 @@ TEST(sensors, testNoStartUpWarnings) {
 	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(1));
 }
 
-TEST(sensors, testNoisyInput) {
+TEST(trigger, testNoisyInput) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoisyInput RPM";
@@ -75,15 +79,15 @@ TEST(sensors, testNoisyInput) {
 	ASSERT_EQ(OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, unitTestWarningCodeState.recentWarnings.get(1)) << "@0";
 }
 
-TEST(sensors, testCamInput) {
+TEST(trigger, testCamInput) {
 	// setting some weird engine
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	engineConfiguration->vvtMode = VVT_FIRST_HALF;
-	engineConfiguration->vvtOffset = 720;
+	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
+	engineConfiguration->vvtOffsets[0] = 360;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
@@ -107,31 +111,33 @@ TEST(sensors, testCamInput) {
 
 	for (int i = 0; i < 600;i++) {
 		eth.moveTimeForwardUs(MS2US(10));
-		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 		eth.moveTimeForwardUs(MS2US(40));
 		eth.firePrimaryTriggerRise();
 	}
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	ASSERT_NEAR(720 - 181, engine->triggerCentral.getVVTPosition(), EPS3D);
+	ASSERT_NEAR(-181, engine->triggerCentral.getVVTPosition(0, 0), EPS3D);
 }
 
-TEST(sensors, testNB2CamInput) {
+TEST(trigger, testNB2CamInput) {
 	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
-	ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+
+	ASSERT_EQ( 0,  GET_RPM());
 	for (int i = 0; i < 7;i++) {
 		eth.fireRise(25);
-		ASSERT_EQ( 0,  GET_RPM()) << "testNB2CamInput RPM";
+		ASSERT_EQ( 0,  GET_RPM());
 	}
 	eth.fireRise(25);
 	// first time we have RPM
-	ASSERT_EQ(1200,  GET_RPM()) << "testNB2CamInput RPM";
+	ASSERT_EQ(1200,  GET_RPM());
 
 	int totalRevolutionCountBeforeVvtSync = 10;
 	// need to be out of VVT sync to see VVT sync in action
@@ -142,24 +148,39 @@ TEST(sensors, testNB2CamInput) {
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
-	// this would be ignored since we only consume the other kind of fronts here
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
-	eth.moveTimeForwardUs(MS2US(20));
-	// this would be be first VVT signal - gap duration would be calculated against 'DEEP_IN_THE_PAST_SECONDS' initial value
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	eth.moveTimeForwardUs(MS2US(20));
-	// this second important front would give us first real VVT gap duration
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
-
-	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition());
-	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+	// first gap - long
 
 	eth.moveTimeForwardUs(MS2US(130));
-	// this third important front would give us first comparison between two real gaps
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US( 30));
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
-	ASSERT_NEAR(-67.6 - 720 - 720, engine->triggerCentral.getVVTPosition(), EPS3D);
+	// second gap - short
+
+	eth.moveTimeForwardUs(MS2US(10));
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US(10));
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+
+	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition(0, 0));
+	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+
+	// Third gap - long
+
+	eth.moveTimeForwardUs(MS2US(130));
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.moveTimeForwardUs(MS2US( 30));
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+
+	EXPECT_NEAR(-211.59f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 2, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
+
+	float dutyCycleNt = engine->triggerCentral.vvtState[0][0].currentCycle.totalTimeNtCopy[0];
+	EXPECT_FLOAT_EQ(27'000'000, dutyCycleNt);
+	EXPECT_FLOAT_EQ(0.056944445f, engine->triggerCentral.vvtShape[0].expectedDutyCycle[0]);
+
+	EXPECT_EQ(28, waveChart.getSize());
 }

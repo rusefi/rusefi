@@ -12,13 +12,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if EFI_SERVO || EFI_SIMULATOR
 #include "servo.h"
-#include "pin_repository.h"
-
-EXTERN_ENGINE;
 
 // This thread calls scheduleForLater which eventually could trip the main trigger callback
 // if self stimulation (heh) is enabled, which uses a TON of stack space.
@@ -63,7 +60,7 @@ void initServo(void) {
 		pins[i].initPin("servo", p);
 	}
 
-	chThdCreateStatic(servoThreadStack, sizeof(servoThreadStack), NORMALPRIO, (tfunc_t)(void*) seThread, NULL);
+	chThdCreateStatic(servoThreadStack, sizeof(servoThreadStack), PRIO_SERVO, (tfunc_t)(void*) seThread, NULL);
 }
 #endif /* EFI_SERVO */
 

@@ -15,7 +15,10 @@
 class StepperHw {
 public:
 	virtual bool step(bool positive) = 0;
-	void pause() const;
+	// pause between steps
+	void pause(int divisor = 1) const;
+	// pause and enter the idle mode (less current consumption)
+	virtual void sleep(void);
 
 protected:
 	void setReactionTime(float ms);
@@ -48,6 +51,11 @@ public:
 
     bool step(bool positive) override;
 
+	void sleep(void) override;
+
+protected:
+	bool update(float dutyMult);
+
 private:
     DcMotor* m_motorPhaseA = nullptr;
     DcMotor* m_motorPhaseB = nullptr;
@@ -55,14 +63,13 @@ private:
     uint8_t m_phase = 0;
 };
 
-class StepperMotor final : private ThreadController<UTILITY_THREAD_STACK_SIZE> {
+class StepperMotorBase {
 public:
-	StepperMotor();
+	virtual void initialize(StepperHw* hardware, int totalSteps);
+	void doIteration();
 
-	void initialize(StepperHw *hardware, int totalSteps, Logging *sharedLogger);
-
-	void setTargetPosition(int targetPosition);
-	int getTargetPosition() const;
+	void setTargetPosition(float targetPositionSteps);
+	float getTargetPosition() const;
 
 	bool isBusy() const;
 
@@ -70,7 +77,6 @@ public:
 	int m_totalSteps = 0;
 
 protected:
-	void ThreadTask() override;
 	void setInitialPosition(void);
 
 	void saveStepperPos(int pos);
@@ -79,10 +85,30 @@ protected:
 	void changeCurrentPosition(bool positive);
 	void postCurrentPosition(void);
 
-private:
 	StepperHw* m_hw = nullptr;
 
-	int m_targetPosition = 0;
+	float m_targetPosition = 0;
 	bool initialPositionSet = false;
+	bool m_isBusy = false;
 };
 
+#if !EFI_UNIT_TEST
+
+class StepperMotor final : public StepperMotorBase, private ThreadController<UTILITY_THREAD_STACK_SIZE> {
+public:
+	StepperMotor() : ThreadController("stepper", PRIO_STEPPER) {}
+
+	void initialize(StepperHw* hardware, int totalSteps);
+
+	void ThreadTask() override {
+		// Require hardware to be set
+		if (!m_hw) {
+			return;
+		}
+
+		while (true) {
+			doIteration();
+		}
+	}
+};
+#endif

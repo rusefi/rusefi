@@ -5,29 +5,19 @@
  * @author Alexandru Miculescu, (c) 2012-2020
  */
 
-#include "engine.h"
+#include "pch.h"
 
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
-#include "vehicle_speed.h"
 
-static Logging *logger;
-
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-extern TunerStudioOutputChannels tsOutputChannels;
-#endif /* EFI_TUNER_STUDIO */
-
-EXTERN_ENGINE;
-
-DynoView dynoInstance;
+static DynoView dynoInstance;
 
 void DynoView::update(vssSrc src) {
 
     efitimeus_t timeNow, deltaTime = 0.0;
     float speed,deltaSpeed = 0.0;
     timeNow = getTimeNowUs();
-    speed = getVehicleSpeed();
+    speed = Sensor::getOrZero(SensorType::VehicleSpeed);
     if (src == ICU) {
         speed = efiRound(speed,1.0);
     } else {
@@ -78,7 +68,7 @@ void DynoView::update(vssSrc src) {
  */
 void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
     if (deltaSpeed != 0.0) {
-        acceleration = ((deltaSpeed / 3.6) / (deltaTime / 1000000.0));
+        acceleration = ((deltaSpeed / 3.6) / (deltaTime / US_PER_SECOND_F));
         if (direction) {
             //decceleration
             acceleration *= -1;
@@ -154,10 +144,11 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Only updates if we have Vss from input pin.
  */
 void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if ((CONFIG(vehicleSpeedSensorInputPin) != GPIO_UNASSIGNED) &&
-        (!CONFIG(enableCanVss))) {
-        dynoInstance.update(ICU);
-    }
+	if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
+		(!CONFIG(enableCanVss))) {
+		INJECT_ENGINE_REFERENCE(&dynoInstance);
+		dynoInstance.update(ICU);
+	}
 }
 
 /**
@@ -170,10 +161,6 @@ void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
     }
     
     dynoInstance.update(CAN);
-}
-
-void initDynoView(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	logger = sharedLogger;
 }
 
 #endif /* EFI_DYNO_VIEW */

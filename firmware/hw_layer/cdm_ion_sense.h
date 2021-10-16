@@ -30,7 +30,6 @@ public:
 };
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
 void ionPostState(TunerStudioOutputChannels *tsOutputChannels);
 #endif
 

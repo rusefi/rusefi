@@ -5,16 +5,11 @@
  *      Author: Ola
  */
 
+#include "pch.h"
+
 #include "me7pnp.h"
-
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 #include "cj125.h"
-
-EXTERN_ENGINE;
 
 /**
  * set engine_type 102
@@ -141,7 +136,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* STM32_HAS_GPIOF */
 	setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
-	engineConfiguration->auxPidFrequency[3] = 25;
+	// is this needed? engineConfiguration->auxPidFrequency[3] = 25;
 	CONFIG(etb_use_two_wires) = true;
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
@@ -166,7 +161,6 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// VVT Settings
 
-	engineConfiguration->activateAuxPid1 = true;
 	engineConfiguration->auxPidFrequency[0] = 300;
 	engineConfiguration->fsio_setting[0] = 0.0;
 	engineConfiguration->auxPid[0].pFactor = 2;
@@ -185,8 +179,6 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//Configuration 3 : 2 Wires
 
 	engineConfiguration->acRelayPin = GPIO_UNASSIGNED;
-	engineConfiguration->acCutoffLowRpm = 400;
-	engineConfiguration->acCutoffHighRpm = 4500;
 	engineConfiguration->acIdleRpmBump = 200;
 	// TODO: AC driver request input PE13 and AC compressor input-output PE7
 

@@ -20,8 +20,6 @@ import java.util.function.Supplier;
  * @see PluginBodySandbox
  */
 public class PluginEntry implements TsPluginBody {
-    private static final String LOCAL_SD_CARD = "Local SD Card";
-    private static final String REMOTE_SD_CARD = "Remote SD Card";
     private final JPanel content = new JPanel(new BorderLayout());
 
     static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
@@ -48,31 +46,12 @@ public class PluginEntry implements TsPluginBody {
         TuneUploadTab tuneUploadTab = new TuneUploadTab(controllerAccessSupplier);
         LogUploadSelector logUploadTab = new LogUploadSelector(controllerAccessSupplier);
         BroadcastTab broadcastTab = new BroadcastTab();
-        Component localSdCard = new LocalSdCardReader(controllerAccessSupplier).getContent();
-        Component remoteSdCard = new RemoteSdCardReader(controllerAccessSupplier).getContent();
-        RemoteTab remoteTab = new RemoteTab(new RemoteTab.Listener() {
-            @Override
-            public void onConnected() {
-                tabbedPane.remove(localSdCard);
-                tabbedPane.addTab(REMOTE_SD_CARD, remoteSdCard);
-            }
-        });
-
-        RemoteTabController.INSTANCE.listeners.add(new RemoteTabController.Listener() {
-            @Override
-            public void onChange(RemoteTabController.State state) {
-                if (state == RemoteTabController.State.NOT_CONNECTED) {
-                    tabbedPane.remove(remoteSdCard);
-                    tabbedPane.addTab(LOCAL_SD_CARD, localSdCard);
-                }
-            }
-        });
+        RemoteTab remoteTab = new RemoteTab();
 
         tabbedPane.addTab("Tune Upload", tuneUploadTab.getContent());
         tabbedPane.addTab("Log Upload", logUploadTab.getContent());
         tabbedPane.addTab("Broadcast", broadcastTab.getContent());
         tabbedPane.addTab("Remote ECU", remoteTab.getContent());
-        tabbedPane.addTab(LOCAL_SD_CARD, localSdCard);
         this.content.add(tabbedPane);
 
         InstanceAuthContext.startup();

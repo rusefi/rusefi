@@ -1,4 +1,4 @@
-name: Build Simulator
+name: Simulator
 
 on: [push, pull_request]
 
@@ -15,12 +15,17 @@ jobs:
     - name: Install multilib
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib
+        sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
 
-    - name: Generate Configs
+    - name: Generate Configs for simulator
       working-directory: ./firmware/
       run: |
         bash gen_config_default.sh
+
+    - name: Generate Enums
+      working-directory: ./firmware/
+      run: |
+        bash gen_enum_to_string.sh
 
     - name: Compile Simulator
       working-directory: ./simulator/

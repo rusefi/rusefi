@@ -2,9 +2,9 @@
 
 #include "airmass.h"
 
-class MafAirmass final : public AirmassModelBase {
+class MafAirmass final : public AirmassVeModelBase {
 public:
-	explicit MafAirmass(const ValueProvider3D& veTable) : AirmassModelBase(veTable) {}
+	explicit MafAirmass(const ValueProvider3D& veTable) : AirmassVeModelBase(veTable) {}
 
 	AirmassResult getAirmass(int rpm) override;
 

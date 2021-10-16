@@ -8,6 +8,7 @@
 [![Rusefi on Slack](https://img.shields.io/badge/slack-rusefi-orange.svg?style=flat&logo=slack)](https://rusefi.slack.com)
 </div>
 
+
 # rusEFI
 
 Current binaries are always available on our [build server](http://rusefi.com/build_server/)
@@ -24,8 +25,8 @@ Important note - we now use submodules:
 
 # What do we have here?
  * [Firmware](/firmware) Source code for open source engine control unit for stm32 chips
- * [Hardware](/hardware) KiCAD files for all our PCBs
- * [rusEfi console](/java_console) rusEfi own naive tuning software
+ * [Hardware](/hardware) KiCAD files for our older PCBs
+ * [rusEFI console](/java_console) rusEFI own naive tuning software
  * [Simulator](/simulator) win32 or posix version of firmware allows to explore without any hardware 
  * [Unit Tests](/unit_tests) Unit tests of firmware pieces
  * [Misc tools](/java_tools) Misc development utilities
@@ -70,20 +71,20 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 | 01/11/2019    | r16346    | bugfix #663: SPI fixes for CJ125 for stm32 errata STM32f405/7/15/17 |
 | 12/09/2018    | r16057    | electronic throttle body control is now BETA version |
 | 08/19/2018    | r15811    | bugfix #604: no interpolation outside of the table |
-| 01/29/2018    | r15514    | improvement #215: CJ125 wideband contoller |
+| 01/29/2018    | r15514    | improvement #215: CJ125 wideband controller |
 | 01/23/2018    | r15442    | improvement #463: ChibiOS 17 / 4 |
 | 01/07/2018    | r14952    | usability & minor bugfix #532 idle defaults are broken |
 | 12/17/2017    | r14892    | bugfix #513: console: erase on older chips does not work |
 | 11/26/2017    | r14789    | bugfix #500: set_rpn_expression command is broken |
 | 11/23/2017    | r14779    | bugfix #497: engine does not start with SD card |
 | 11/19/2017    | r14766    | improvement #496: console flasher to support older boards |
-| 11/19/2017    | r14760    | improvement #495: incomppatible change - larger settings area |
+| 11/19/2017    | r14760    | improvement #495: incompatible change - larger settings area |
 | 11/06/2017    | r14733    | improvement #487: single-point injection mode |
 | 10/26/2017    | r14700    | improvement #385: narrow band to wide band conversion table |
 | 08/31/2017    |           | improvement #442: ADC_VCC should be configurable |
 | 07/24/2017    | r14513    | bugfix #307: TS bench test blinks three times |
 | 07/13/2017    | r14476    | bugfix #461: SAXParserException on console start-up due to damaged settings.xml file |
-| 07/09/2017    | r14473    | improvement: IAC solenoid frequencty changeable on the fly |
+| 07/09/2017    | r14473    | improvement: IAC solenoid frequency changeable on the fly |
 | 06/19/2017    | r14393    | bugfix: pinMode, milMode |
 | 05/27/2017    | r14221    | improvement: ochGetCommand to support offset and count |
 | 05/05/2017    | r13974    | bugfix #404: 36/1 FATAL error: angle range trgSync |
@@ -101,7 +102,7 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 | 02/20/2017    | r12939    | https://github.com/rusefi/rusefi is now the official primary repository |
 | 02/18/2017    | r11565    | improvement: level1 default brown out https://sourceforge.net/p/rusefi/tickets/354/ |
 | 02/18/2017    | r11554    | bugfix: rusEfi console program/erase buttons fixed with ST-LINK 2.1 |
-| 12/09/2016    | r10991    | bugfixes, bugfixes, bugfixes & releave 1.0
+| 12/09/2016    | r10991    | bugfixes, bugfixes, bugfixes & release 1.0
 | 02/15/2016	| r9600     | automatic warm-up fuel correction, performance improvements
 | 08/31/2015	| r8725     | acceleration fuel correction, console improvements
 | 07/06/2015	| r8554     | more CAN, better console, bugfixes, performance
@@ -114,10 +115,10 @@ See https://rusefi.com/forum/viewtopic.php?f=5&t=9
 | 01/12/2014	| r1007	    | refactoring, refactoring & refactoring
 | 12/19/2013	| r605	    | ignition control & a little bit of CAN bus
 | 11/08/2013	| r100	    | Tuner Studio fuel map tuning, fuel pump control
-| 10/14/2013	| r39	    | USB serial bug, missing IAR files, self-containted Makefile
+| 10/14/2013	| r39	    | USB serial bug, missing IAR files, self-contained Makefile
 | 10/13/2013	| r33	    | IAR project file
 | 10/04/2013	| r26	    | Patched ChibiOS/RT 2.6.1 sources are now included
-| 09/23/2013	| r20	    | Tuner Studio integration, configuraton persistence
+| 09/23/2013	| r20	    | Tuner Studio integration, configuration persistence
 | 08/30/2013	| r14	    | initial documentation & refactoring. tunerstudio integration
 | 08/03/2013	| r13	    | wideband O2 input, better idling algorithm, serial-over-USB
 | 07/05/2013	| r10	    | Second CKP, sequential injection.

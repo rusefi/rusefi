@@ -7,12 +7,12 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <string.h>
 #include <math.h>
-#include "efilib.h"
 #include "datalogging.h"
 #include "histogram.h"
-#include "error_handling.h"
 
 const char * boolToString(bool value) {
 	return value ? "Yes" : "No";
@@ -57,6 +57,10 @@ float maxF(float i1, float i2) {
 
 float minF(float i1, float i2) {
 	return i1 < i2 ? i1 : i2;
+}
+
+int clampI(int min, int clamp, int max) {
+	return maxI(min, minI(clamp, max));
 }
 
 float clampF(float min, float clamp, float max) {
@@ -237,7 +241,7 @@ float atoff(const char *param) {
 	char *string = todofixthismesswithcopy;
 	if (indexOf(string, 'n') != -1 || indexOf(string, 'N') != -1) {
 #if ! EFI_SIMULATOR
-		print("NAN from [%s]\r\n", string);
+		efiPrintf("NAN from [%s]", string);
 #endif
 		return (float) NAN;
 	}

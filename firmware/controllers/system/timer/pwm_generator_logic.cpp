@@ -8,16 +8,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
-#include "pwm_generator_logic.h"
-#include "perf_trace.h"
-
-EXTERN_ENGINE;
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
-#include "engine.h"
 #endif // EFI_PROD_CODE
 
 // 1% duty cycle
@@ -113,7 +108,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	float switchTime = state->mode == PM_NORMAL ? state->multiChannelStateSequence.getSwitchTime(state->safe.phaseIndex) : 1;
 	float periodNt = state->safe.periodNt;
 #if DEBUG_PWM
-	scheduleMsg(&logger, "iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
+	efiPrintf("iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
 #endif /* DEBUG_PWM */
 
 	/**
@@ -123,7 +118,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	uint32_t timeToSwitchNt = (uint32_t)((iteration + switchTime) * periodNt);
 
 #if DEBUG_PWM
-	scheduleMsg(&logger, "start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
+	efiPrintf("start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
 #endif /* DEBUG_PWM */
 	return state->safe.startNt + timeToSwitchNt;
 }
@@ -170,7 +165,7 @@ void PwmConfig::handleCycleStart() {
 
 			forceCycleStart = false;
 #if DEBUG_PWM
-			scheduleMsg(&logger, "state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
+			efiPrintf("state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
 #endif
 		}
 }
@@ -184,8 +179,8 @@ efitick_t PwmConfig::togglePwmState() {
 	}
 
 #if DEBUG_PWM
-	scheduleMsg(&logger, "togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
-	scheduleMsg(&logger, "period=%.2f safe.period=%.2f", period, safe.periodNt);
+	efiPrintf("togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
+	efiPrintf("period=%.2f safe.period=%.2f", period, safe.periodNt);
 #endif
 
 	if (cisnan(periodNt)) {
@@ -224,7 +219,7 @@ efitick_t PwmConfig::togglePwmState() {
 
 	efitick_t nextSwitchTimeNt = getNextSwitchTimeNt(this);
 #if DEBUG_PWM
-	scheduleMsg(&logger, "%s: nextSwitchTime %d", state->name, nextSwitchTime);
+	efiPrintf("%s: nextSwitchTime %d", state->name, nextSwitchTime);
 #endif /* DEBUG_PWM */
 
 	// If we're very far behind schedule, restart the cycle fresh to avoid scheduling a huge pile of events all at once
@@ -269,7 +264,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 
-	state->executor->scheduleByTimestampNt(&state->scheduling, switchTimeNt, { timerCallback, state });
+	state->executor->scheduleByTimestampNt("pwm", &state->scheduling, switchTimeNt, { timerCallback, state });
 	state->dbgNestingLevel--;
 }
 
@@ -335,12 +330,11 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 }
 
 void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
-		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+		OutputPin *output, float frequency, float dutyCycle) {
 	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
 	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
-	efiAssertVoid(CUSTOM_ERR_PWM_CALLBACK_ASSERT, stateChangeCallback != NULL, "listener");
 	if (frequency < 1) {
-		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
+		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
 	}
 
@@ -353,17 +347,17 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 	state->outputPins[0] = output;
 
 	state->setFrequency(frequency);
-	state->weComplexInit(msg, executor, 2, switchTimes, 1, pinStates, NULL, stateChangeCallback);
+	state->weComplexInit(msg, executor, 2, switchTimes, 1, pinStates, NULL, (pwm_gen_callback*)applyPinState);
 }
 
 void startSimplePwmExt(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
-		float dutyCycle, pwm_gen_callback *stateChangeCallback) {
+		float dutyCycle) {
 
 	output->initPin(msg, brainPin);
 
-	startSimplePwm(state, msg, executor, output, frequency, dutyCycle, stateChangeCallback);
+	startSimplePwm(state, msg, executor, output, frequency, dutyCycle);
 }
 
 void startSimplePwmHard(SimplePwm *state, const char *msg,

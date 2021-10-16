@@ -7,13 +7,10 @@
 
 #pragma once
 
-#include "engine.h"
 #include "trigger_central.h"
-#include "rpm_calculator.h"
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
-#include "sensor.h"
-#include "mocks.h"
+#include "engine.h"
 
 #include <unordered_map>
 
@@ -37,6 +34,9 @@ public:
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback, const std::unordered_map<SensorType, float>& sensorValues);
 	~EngineTestHelper();
 
+	warningBuffer_t *recentWarnings();
+	int getWarningCounter();
+
 	void applyTriggerWaveform();
 	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
 	/**
@@ -53,8 +53,10 @@ public:
 	 */
 	void smartFireRise(float delayMs);
 	void smartFireFall(float delayMs);
-	void smartMoveTimeForwardUs(int deltaTimeUs);
-	void smartMoveTimeForwardSeconds(int deltaTimeSeconds);
+	void moveTimeForwardAndInvokeEventsUs(int deltaTimeUs);
+	void setTimeAndInvokeEventsUs(int timeNowUs);
+	void executeUntil(int timeUs);
+	void moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds);
 	void smartFireTriggerEvents2(int count, float delayMs);
 
 	/**
@@ -67,6 +69,11 @@ public:
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
 	void fireTriggerEventsWithDuration(float delayMs);
+	/**
+	 * todo: better method name since this method executes events in the FUTURE
+	 * looks like such a method should be used only in some pretty narrow circumstances
+	 * a healthy test should probably use executeActions instead?
+	 */
 	void clearQueue();
 
 	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);
@@ -82,6 +89,7 @@ public:
 
 	int executeActions();
 	void moveTimeForwardMs(float deltaTimeMs);
+	void moveTimeForwardSec(float deltaTimeSec);
 	efitimeus_t getTimeNowUs(void);
 
 	Engine engine;
@@ -95,3 +103,5 @@ private:
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode = IM_BATCH);
 void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode, trigger_type_e trigger);
+
+void setVerboseTrigger(bool isEnabled);

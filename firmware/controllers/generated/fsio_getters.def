@@ -1,14 +1,8 @@
-// this file was generated automatically by rusEfi tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jan 06 03:31:41 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 15 01:55:57 UTC 2021
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
-	case FSIO_SETTING_FANONTEMPERATURE:
-		return engineConfiguration->fanOnTemperature;
-	case FSIO_SETTING_FANOFFTEMPERATURE:
-		return engineConfiguration->fanOffTemperature;
 	case FSIO_SETTING_ACIDLEEXTRAOFFSET:
 		return engineConfiguration->acIdleExtraOffset;
-	case FSIO_SETTING_ACIDLEEXTRAMIN:
-		return engineConfiguration->acIdleExtraMin;
 	case FSIO_SETTING_BOOSTPID_OFFSET:
 		return engineConfiguration->boostPid.offset;
 	case FSIO_SETTING_BOOSTPID_MINVALUE:
@@ -39,14 +33,6 @@
 		return engineConfiguration->auxPid[1].offset;
 	case FSIO_SETTING_AUXPID2_MINVALUE:
 		return engineConfiguration->auxPid[1].minValue;
-	case FSIO_SETTING_AUXPID3_OFFSET:
-		return engineConfiguration->auxPid[2].offset;
-	case FSIO_SETTING_AUXPID3_MINVALUE:
-		return engineConfiguration->auxPid[2].minValue;
-	case FSIO_SETTING_AUXPID4_OFFSET:
-		return engineConfiguration->auxPid[3].offset;
-	case FSIO_SETTING_AUXPID4_MINVALUE:
-		return engineConfiguration->auxPid[3].minValue;
 	case FSIO_SETTING_IDLETIMINGPID_OFFSET:
 		return engineConfiguration->idleTimingPid.offset;
 	case FSIO_SETTING_IDLETIMINGPID_MINVALUE:

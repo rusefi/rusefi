@@ -205,21 +205,6 @@ typedef enum {
 } adcerror_t;
 
 /**
- * @brief   Type of a structure representing an ADC driver.
- */
-typedef struct ADCDriver ADCDriver;
-
-/**
- * @brief   ADC notification callback type.
- *
- * @param[in] adcp      pointer to the @p ADCDriver object triggering the
- *                      callback
- * @param[in] buffer    pointer to the most recent samples data
- * @param[in] n         number of buffer rows available starting from @p buffer
- */
-typedef void (*adccallback_t)(ADCDriver *adcp, adcsample_t *buffer, size_t n);
-
-/**
  * @brief   ADC error callback type.
  *
  * @param[in] adcp      pointer to the @p ADCDriver object triggering the
@@ -228,82 +213,46 @@ typedef void (*adccallback_t)(ADCDriver *adcp, adcsample_t *buffer, size_t n);
  */
 typedef void (*adcerrorcallback_t)(ADCDriver *adcp, adcerror_t err);
 
+
 /**
- * @brief   Conversion group configuration structure.
- * @details This implementation-dependent structure describes a conversion
- *          operation.
+ * @brief   Low level fields of the ADC configuration structure.
  */
-typedef struct {
-  /**
-   * @brief   Enables the circular buffer mode for the group.
-   */
-  bool                      circular;
-  /**
-   * @brief   Number of the analog channels belonging to the conversion group.
-   */
-  adc_channels_num_t        num_channels;
-  /**
-   * @brief   Callback function associated to the group or @p NULL.
-   */
-  adccallback_t             end_cb;
-  /**
-   * @brief   Error callback or @p NULL.
-   */
-  adcerrorcallback_t        error_cb;
-  /* End of the mandatory fields.*/
-#ifdef KE1xF
-  /* [andreika]: these are STM32-compatible fields, we'll convert them into Kinetis ones */
-  /**
-   * @brief   ADC CR1 register initialization data.
-   * @note    All the required bits must be defined into this field except
-   *          @p ADC_CR1_SCAN that is enforced inside the driver.
-   */
-  uint32_t                  cr1;
-  /**
-   * @brief   ADC CR2 register initialization data.
-   * @note    All the required bits must be defined into this field except
-   *          @p ADC_CR2_DMA, @p ADC_CR2_CONT and @p ADC_CR2_ADON that are
-   *          enforced inside the driver.
-   */
-  uint32_t                  cr2;
-  /**
-   * @brief   ADC SMPR1 register initialization data.
-   * @details In this field must be specified the sample times for channels
-   *          10...18.
-   */
-  uint32_t                  smpr1;
-  /**
-   * @brief   ADC SMPR2 register initialization data.
-   * @details In this field must be specified the sample times for channels
-   *          0...9.
-   */
-  uint32_t                  smpr2;
-  /**
-   * @brief   ADC watchdog high threshold register.
-   * @details This field defines the high threshold of the analog watchdog.
-   */
-  uint16_t                  htr;
-  /**
-   * @brief   ADC watchdog low threshold register.
-   * @details This field defines the low threshold of the analog watchdog.
-   */
-  uint16_t                  ltr;
-  /**
-   * @brief   ADC SQR1 register initialization data.
-   * @details Conversion group sequence 13...16 + sequence length.
-   */
-  uint32_t                  sqr1;
-  /**
-   * @brief   ADC SQR2 register initialization data.
-   * @details Conversion group sequence 7...12.
-   */
-  uint32_t                  sqr2;
-  /**
-   * @brief   ADC SQR3 register initialization data.
-   * @details Conversion group sequence 1...6.
-   */
-  uint32_t                  sqr3;
-#else
+#define adc_lld_configuration_group_fields                                  \
+  /* [andreika]: these are STM32-compatible fields, we'll convert them into Kinetis ones */ \
+  /* ADC CR1 register initialization data.                                  \
+     NOTE: All the required bits must be defined into this field except     \
+           @p ADC_CR1_SCAN that is enforced inside the driver.*/            \
+  uint32_t                  cr1;                                            \
+  /* ADC CR2 register initialization data.                                  \
+     NOTE: All the required bits must be defined into this field except     \
+           @p ADC_CR2_DMA, @p ADC_CR2_CONT and @p ADC_CR2_ADON that are     \
+           enforced inside the driver.*/                                    \
+  uint32_t                  cr2;                                            \
+  /* ADC SMPR1 register initialization data.                                \
+     NOTE: In this field must be specified the sample times for channels    \
+           10...18.*/                                                       \
+  uint32_t                  smpr1;                                          \
+  /* ADC SMPR2 register initialization data.                                \
+     NOTE: In this field must be specified the sample times for channels    \
+           0...9.*/                                                         \
+  uint32_t                  smpr2;                                          \
+  /* ADC watchdog high threshold register.                                  \
+     NOTE: This field defines the high threshold of the analog watchdog.*/  \
+  uint16_t                  htr;                                            \
+  /* ADC watchdog low threshold register.                                   \
+     NOTE: This field defines the low threshold of the analog watchdog.*/   \
+  uint16_t                  ltr;                                            \
+  /* ADC SQR1 register initialization data.                                 \
+     NOTE: Conversion group sequence 13...16 + sequence length.*/           \
+  uint32_t                  sqr1;                                           \
+  /* ADC SQR2 register initialization data.                                 \
+     NOTE: Conversion group sequence 7...12.*/                              \
+  uint32_t                  sqr2;                                           \
+  /* ADC SQR3 register initialization data.                                 \
+     NOTE: Conversion group sequence 1...6.*/                               \
+  uint32_t                  sqr3
+
+#if 0
   /**
    * @brief   Bitmask of channels for ADC conversion.
    */
@@ -319,94 +268,34 @@ typedef struct {
    */
   uint32_t                  sc3;
 #endif
-} ADCConversionGroup;
 
 /**
- * @brief   Driver configuration structure.
- * @note    It could be empty on some architectures.
+ * @brief   Low level fields of the ADC configuration structure.
  */
-typedef struct {
-  /* Perform first time calibration */
-  bool                      calibrate;
-} ADCConfig;
+#define adc_lld_config_fields                                               \
+  /* Perform first time calibration */                                      \
+  bool                      calibrate
 
 /**
- * @brief   Structure representing an ADC driver.
+ * @brief   Low level fields of the ADC driver structure.
  */
-struct ADCDriver {
-  /**
-   * @brief Driver state.
-   */
-  adcstate_t                state;
-  /**
-   * @brief Current configuration data.
-   */
-  const ADCConfig           *config;
-  /**
-   * @brief Current samples buffer pointer or @p NULL.
-   */
-  adcsample_t               *samples;
-  /**
-   * @brief Current samples buffer depth or @p 0.
-   */
-  size_t                    depth;
-  /**
-   * @brief Current conversion group pointer or @p NULL.
-   */
-  const ADCConversionGroup  *grpp;
-#if ADC_USE_WAIT || defined(__DOXYGEN__)
-  /**
-   * @brief Waiting thread.
-   */
-  thread_reference_t        thread;
-#endif
-#if ADC_USE_MUTUAL_EXCLUSION || defined(__DOXYGEN__)
-  /**
-   * @brief Mutex protecting the peripheral.
-   */
-  mutex_t                   mutex;
-#endif /* ADC_USE_MUTUAL_EXCLUSION */
-#if defined(ADC_DRIVER_EXT_FIELDS)
-  ADC_DRIVER_EXT_FIELDS
-#endif
-  /* End of the mandatory fields.*/
-  /**
-   * @brief Pointer to the ADCx registers block.
-   */
-  ADC_TypeDef               *adc;
-  /**
-   * @brief Number of samples expected.
-   */
-  size_t                    number_of_samples;
-  /**
-   * @brief Current position in the buffer.
-   */
-  size_t                    current_index;
-  /**
-   * @brief Current channel index into group channel_mask.
-   */
-  size_t                    current_channel;
-
-#ifdef KE1xF
-  /**
-   * @brief ADC12 driver config.
-   */
-  adc12_config_t            adc12Cfg;
-  /**
-   * @brief Current channel config struct.
-   */
-  adc12_channel_config_t    adc12ChannelCfg;
-  
-  /**
-   * @brief   Channel group index used to select software or hardware conversion triggering.
-   */
-  uint32_t                  channelGroup;
-  /**
-   * @brief   Bitmask of channels for ADC conversion.
-   */
-  int8_t                  channelIndices[ADC_NUM_CHANNELS];
-#endif /* KE1xF */
-};
+#define adc_lld_driver_fields                                               \
+  /* Pointer to the ADCx registers block. */                                \
+  ADC_TypeDef               *adc;                                           \
+  /* Number of samples expected. */                                         \
+  size_t                    number_of_samples;                              \
+  /* Current position in the buffer. */                                     \
+  size_t                    current_index;                                  \
+  /* Current channel index into group channel_mask. */                      \
+  size_t                    current_channel;                                \
+  /* ADC12 driver config. */                                                \
+  adc12_config_t            adc12Cfg;                                       \
+  /* Current channel config struct. */                                      \
+  adc12_channel_config_t    adc12ChannelCfg;                                \
+  /*  Channel group index used to select software or hardware conversion triggering. */ \
+  uint32_t                  channelGroup;                                   \
+  /*   Bitmask of channels for ADC conversion. */                           \
+  int8_t                  channelIndices[ADC_NUM_CHANNELS]
 
 /*===========================================================================*/
 /* Driver macros.                                                            */

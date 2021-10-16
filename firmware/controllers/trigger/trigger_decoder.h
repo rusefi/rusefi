@@ -11,6 +11,7 @@
 #include "trigger_structure.h"
 #include "engine_configuration.h"
 #include "trigger_state_generated.h"
+#include "timer.h"
 
 class TriggerState;
 
@@ -53,7 +54,7 @@ typedef struct {
 	 * values are used to detect trigger signal errors.
 	 * see TriggerWaveform
 	 */
-	uint32_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
+	size_t eventCount[PWM_PHASE_MAX_WAVE_PER_PWM];
 	/**
 	 * This array is used to calculate duty cycle of each trigger channel.
 	 * Current implementation is a bit funny - it does not really consider if an event
@@ -66,6 +67,10 @@ typedef struct {
 	 * Here we accumulate the amount of time this signal was ON within current trigger cycle
 	 */
 	uint32_t totalTimeNt[PWM_PHASE_MAX_WAVE_PER_PWM];
+
+#if EFI_UNIT_TEST
+	uint32_t totalTimeNtCopy[PWM_PHASE_MAX_WAVE_PER_PWM];
+#endif // EFI_UNIT_TEST
 } current_cycle_state_s;
 
 /**
@@ -84,8 +89,9 @@ public:
 	/**
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
-	bool isEvenRevolution() const;
 	void incrementTotalEventCounter();
+	angle_t syncSymmetricalCrank(int divider, int remainder, angle_t engineCycle);
+
 	efitime_t getTotalEventCounter() const;
 
 	void decodeTriggerEvent(
@@ -109,7 +115,8 @@ public:
 	 */
 	bool shaft_is_synchronized;
 	efitick_t mostRecentSyncTime;
-	volatile efitick_t previousShaftEventTimeNt;
+
+	Timer previousEventTimer;
 
 	void setTriggerErrorState();
 
@@ -125,6 +132,7 @@ public:
 	efitick_t toothed_previous_time;
 
 	current_cycle_state_s currentCycle;
+	const char *name = nullptr;
 
 	int expectedTotalTime[PWM_PHASE_MAX_WAVE_PER_PWM];
 
@@ -136,6 +144,7 @@ public:
 
 	void resetTriggerState();
 	void setShaftSynchronized(bool value);
+	bool getShaftSynchronized();
 
 	/**
 	 * this is start of real trigger cycle
@@ -169,7 +178,11 @@ private:
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
 	TriggerStateWithRunningStatistics();
-	float instantRpm = 0;
+
+	float getInstantRpm() const {
+		return m_instantRpm;
+	}
+
 	/**
 	 * timestamp of each trigger wheel tooth
 	 */
@@ -187,22 +200,27 @@ public:
 	 */
 	float prevInstantRpmValue = 0;
 	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	float calculateInstantRpm(TriggerFormDetails *triggerFormDetails, int *prevIndex, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	void runtimeStatistics(TriggerFormDetails *triggerFormDetails, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void updateInstantRpm(TriggerFormDetails *triggerFormDetails, uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
 	 * Needed for early spin-up RPM detection.
 	 */
 	void setLastEventTimeForInstantRpm(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+private:
+	float calculateInstantRpm(TriggerFormDetails *triggerFormDetails, uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+
+	float m_instantRpm = 0;
+	float m_instantRpmRatio = 0;
+
 };
 
 angle_t getEngineCycle(operation_mode_e operationMode);
 
 class Engine;
-
-void initTriggerDecoderLogger(Logging *sharedLogger);
 
 void calculateTriggerSynchPoint(
 	TriggerWaveform& shape,

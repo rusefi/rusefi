@@ -1,0 +1,1820 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="SCHVerif.xsd">
+<Device>
+		<DeviceID>0x501</DeviceID>
+		<Vendor>STMicroelectronics</Vendor>
+		<Type>MPU</Type>
+		<CPU>Cortex-A7</CPU>
+		<Name>STM32MP13xx</Name>
+		<Series>STM32MP</Series>
+		<Description>ARM 32-bit Cortex-A7 based device, CPU clock up to 600MHz</Description>
+		<!-- Gonfigurations' List -->
+		<Configurations>
+			<!-- Bootloader Interface -->
+			<Interface name="Bootloader">
+				<Configuration number="0x0">
+					<ReadRegister address="0x0" mask="0x0" value="0x4"/>
+				</Configuration>
+			</Interface>
+		</Configurations>
+		<!-- Peripherals -->
+		<Peripherals>
+			<Peripheral>
+				<Name>Embedded SRAM</Name>
+				<Type>Storage</Type>
+				<Description/>
+				<ErasedValue>0xFF</ErasedValue>
+				<Access>RWE</Access>
+				<!-- dummy -->
+				<Configuration>
+					<Parameters address="0x10000000" name="SRAM" size="0x20000"/>
+					<Description/>
+					<Organization>Single</Organization>
+					<Bank>
+						<Field>
+							<Parameters address="0x10000000" name="SRAM" occurence="0x1" size="0x20000"/>
+						</Field>
+					</Bank>
+				</Configuration>
+			</Peripheral>
+			<Peripheral>
+				<Name>OTP Memory</Name>
+				<Type>Configuration</Type>
+				<Description/>
+				<Access>RW</Access>
+				<Bank>
+					<Parameters address="0x0" name="Bank 1" size="0x400"/>
+					<Category>
+						<Name>OTP</Name>
+						<Field>
+							<Parameters address="0x0" name="Struct_version" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>none</Name>
+									<Description>none</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x4" name="BSEC_OTP_CONFIG" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>TR</Name>
+									<Description>set SAFMEM Ring current level, default value = 0b00</Description>
+									<BitOffset>0x7</BitOffset>
+									<BitWidth>0x2</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>PRGWIDTH</Name>
+									<Description>SAFMEM Programming Pulse Width, default value = 0b0001</Description>
+									<BitOffset>0x3</BitOffset>
+									<BitWidth>0x4</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>FRC</Name>
+									<Description>SAFMEM CLOCK frequency range selection, default value = 0b11</Description>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x2</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>PWRUP</Name>
+									<Description>SAFMEM Power up control</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xC" name="BSEC_OTP_Status" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BIST2LOCK</Name>
+									<Description>0: BIST2 is not locked, 1: BIST2 is locked.</Description>
+									<BitOffset>0x7</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>BIST1LOCK</Name>
+									<Description>0: BIST1 is not locked, 1: BIST1 is locked.</Description>
+									<BitOffset>0x6</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>PWRON</Name>
+									<Description>0: SAFMEM is in Power Off, 1: SAFMEM is in Power On.</Description>
+									<BitOffset>0x5</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>PROGFAIL</Name>
+									<Description>0: SAFMEM last programming was successful, 1: SAFMEM last programming failed.</Description>
+									<BitOffset>0x4</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>BUSY</Name>
+									<Description>0: SAFMEM is Idle, 1: SAFMEM operation is on going.</Description>
+									<BitOffset>0x3</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>INVALID</Name>
+									<Description>0: OTP mode is not OTP-INVALID, 1: OTP mode is OTP-INVALID.</Description>
+									<BitOffset>0x2</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>FULLDBG</Name>
+									<Description>0: OTP mode is OTP-OPEN1, 1: OTP mode is OTP-OPEN2.</Description>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>SECURE</Name>
+									<Description>0: OTP mode is not OTP-SECURED, 1: OTP mode is OTP-SECURED.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x10" name="BSEC_OTP_LOCK" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>GPLOCK</Name>
+									<Description>0: SAFMEM Programming is allowed, 1: SAFMEM Programming is disabled until next sytem reste.</Description>
+									<BitOffset>0x4</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>FENREG</Name>
+									<Description>0: BSEC_FENABLE register is not Locked, 1: BSEC_FENABLE register is Locked until the next System-Reset.</Description>
+									<BitOffset>0x3</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>DENREG</Name>
+									<Description>0: BSEC_DENABLE register is not Locked, 1: BSEC_DENABLE register is Locked until the next System-Reset.</Description>
+									<BitOffset>0x2</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>OTP</Name>
+									<Description>0: upper OTP region access is not locked, 1: upper OTP region access is Locked until the next System-Reset, when locked, the upper region OTP can not be R out from SAFMEM.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x14" name="BSEC_DENABLE" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>DBGSWENABLE</Name>
+									<Description>Control Self Hosted Debug enable with signal dbgswenable. 0: memory-mapped accesses to all ETM registers are disabled and return Error, 1: no effect on external debugger accesses.</Description>
+									<BitOffset>0xA</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>CFGSDISABLE</Name>
+									<Description>Write access to secure GIC registers disable with signal: cfgsdisable. 0: no effect, all GIC registers can be accessed, 1: Disable write access to some Secure GIC registers.</Description>
+									<BitOffset>0x9</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>CP15SDISABLE</Name>
+									<Description>Write access to some secure Cortex-A7 CP15 registers is disabled for CPUx. 0: All CP15 registers can be accessed, 1: Disable write access to some Secure CP15 registers into Cortex-A7 corresponding CPU.</Description>
+									<BitOffset>0x7</BitOffset>
+									<BitWidth>0x2</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>SPNIDEN</Name>
+									<Description>Secure Privilege Non Invasive Debug enable with signal spiden. 0: Secure Privilege Non Invasive Debug Disabled, 1: Secure Privilege Non Invasive Debug Enabled.</Description>
+									<BitOffset>0x6</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>SPIDEN</Name>
+									<Description>Secure Privilege Invasive Debug enable with signal spniden. 0: Secure Privilege Invasive Debug Disabled, 1: Secure Privilege Invasive Debug Enabled.</Description>
+									<BitOffset>0x5</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>HDPEN</Name>
+									<Description>Hardware Debug Port enable with signal hdpen. 0: Hardware Debug Port Disabled, 1: Hardware Debug Port Enabled.</Description>
+									<BitOffset>0x4</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>DEVICEEN</Name>
+									<Description>Controls the access to Debug component via external debug port by signal deviceen. 0: Disabled, 1: Enabled.</Description>
+									<BitOffset>0x3</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>NIDEN</Name>
+									<Description>Non Invasive Debug enable with signal niden. 0: Non Invasive Debug Disabled, 1: Non Invasive Debug Enabled.</Description>
+									<BitOffset>0x2</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>DBGEN</Name>
+									<Description>Debug enable with signal dbgen. 0: Disabled, 1: Enabled.</Description>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>DFTEN</Name>
+									<Description>DFT enable with signal dften. 0: DFT Disabled, 1: DFT Enabled.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x18" name="BSEC_FENABLE" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CAN_disable</Name>
+									<Description>0: CAN interface is enabled, 1: CAN interface is disabled.</Description>
+									<BitOffset>0x3</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>GPU_disable</Name>
+									<Description>0: GPU enabled, 1: GPU disabled.</Description>
+									<BitOffset>0x2</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Dual_A7_disable</Name>
+									<Description>0: Cortex A7 Dual CPU, 1: Cortex A7 Single CPU.</Description>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Crypto_disable</Name>
+									<Description>0: All crypto HW accelerators are enabled(default), 1: All crypto HW accelerators are disabled for export license control.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1C" name="Write_R_Conf" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>W_R conf</Name>
+									<Description>This Bit determins weither the OTP file will be written in BSEC or programmed in SAFMEM</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x20" name="BSEC_OTP_DISTURBED0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_DISTURBED0</Name>
+									<Description>If the Bit is set to 1 that means that the last Ring of the corresponding word has been disturbed; abnormal Ring conditions in decoding circuitry and Ring voltages have been detected</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x24" name="BSEC_OTP_DISTURBED1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_DISTURBED1</Name>
+									<Description>If the Bit is set to 1 that means that the last Ring of the corresponding word has been disturbed; abnormal Ring conditions in decoding circuitry and Ring voltages have been detected</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x28" name="BSEC_OTP_DISTURBED2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_DISTURBED2</Name>
+									<Description>If the Bit is set to 1 that means that the last Ring of the corresponding word has been disturbed; abnormal Ring conditions in decoding circuitry and Ring voltages have been detected</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x38" name="BSEC_OTP_ERROR0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_ERROR0</Name>
+									<Description>If the Bit is set to 1 that means that the last R operation of the word concerned has revealed a redundancy or ECC check error.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x3C" name="BSEC_OTP_ERROR1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_ERROR1</Name>
+									<Description>If the Bit is set to 1 that means that the last R operation of the word concerned has revealed a redundancy or ECC check error.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x40" name="BSEC_OTP_ERROR2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_ERROR2</Name>
+									<Description>If the Bit is set to 1 that means that the last R operation of the word concerned has revealed a redundancy or ECC check error.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x50" name="BSEC_OTP_WRLOCK0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_WRLOCK0</Name>
+									<Description>If the Bit is set to 1 that means that the correspanding OTP word is under programming permenant lock.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x54" name="BSEC_OTP_WRLOCK1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_WRLOCK1</Name>
+									<Description>If the Bit is set to 1 that means that the correspanding OTP word is under programming permenant lock.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x58" name="BSEC_OTP_WRLOCK2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_WRLOCK2</Name>
+									<Description>If the Bit is set to 1 that means that the correspanding OTP word is under programming permenant lock.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x68" name="BSEC_OTP_SPLOCK0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SPLOCK0</Name>
+									<Description>If the Bit is set to 1 that means that the correspanding OTP word is under programming sticky lock until next system-reset</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x6C" name="BSEC_OTP_SPLOCK1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SPLOCK1</Name>
+									<Description>If the Bit is set to 1 that means that the correspanding OTP word is under programming sticky lock until next system-reset</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x70" name="BSEC_OTP_SPLOCK2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SPLOCK2</Name>
+									<Description>If the Bit is set to 1 that means that the correspanding OTP word is under programming sticky lock until next system-reset</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x80" name="BSEC_OTP_SWLOCK0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SWLOCK0</Name>
+									<Description>If the Bit is set to 1 that means that any attempt to write to the correspanding OTP shadow register will be prevented until next system-reset</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x84" name="BSEC_OTP_SWLOCK1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SWLOCK1</Name>
+									<Description>If the Bit is set to 1 that means that any attempt to write to the correspanding OTP shadow register will be prevented until next system-reset</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x8C" name="BSEC_OTP_SWLOCK2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SWLOCK2</Name>
+									<Description>If the Bit is set to 1 that means that any attempt to write to the correspanding OTP shadow register will be prevented until next system-reset</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x98" name="BSEC_OTP_SRLOCK0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SRLOCK0</Name>
+									<Description>If the Bit is set to 1 that means that any attempt to reload to the correspanding OTP shadow register will be prevented until next system-reset. Instead a R command, shall clear the shadow register</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x9C" name="BSEC_OTP_SRLOCK1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SRLOCK1</Name>
+									<Description>If the Bit is set to 1 that means that any attempt to reload to the correspanding OTP shadow register will be prevented until next system-reset. Instead a R command, shall clear the shadow register</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xA0" name="BSEC_OTP_SRLOCK2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>BSEC_OTP_SRLOCK2</Name>
+									<Description>If the Bit is set to 1 that means that any attempt to reload to the correspanding OTP shadow register will be prevented until next system-reset. Instead a R command, shall clear the shadow register</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xB0" name="CFG0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG0</Name>
+									<Description>These bits determins the OTP mode encoding</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x7</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xB4" name="CFG1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>fdis3</Name>
+									<Description>Disable CAN</Description>
+									<BitOffset>0x3</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>fdis2</Name>
+									<Description>Disable GPU</Description>
+									<BitOffset>0x2</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>fdis1</Name>
+									<Description>Disable CPU1</Description>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>fdis0</Name>
+									<Description>Disable Crypto (license export)</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xB8" name="CFG2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>rma_force</Name>
+									<Description>RMA force Bit</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>rma_relock</Name>
+									<Description>RMA relock Bit</Description>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xBC" name="CFG3" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG3</Name>
+									<Description>These bits determins the BOOT source definition</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xC0" name="CFG4" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG4</Name>
+									<Description>These bits determins the BOOT monotonic counter</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xC4" name="CFG5" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG5</Name>
+									<Description>These bits determins the BOOT AFmux configuration</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xC8" name="CFG6" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG6</Name>
+									<Description>These bits determins the BOOT AFmux configuration</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xCC" name="CFG7" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG7</Name>
+									<Description>These bits determins the BOOT AFmux configuration</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xD0" name="CFG8" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG8</Name>
+									<Description>BOOT/Device configuration.</Description>
+									<BitOffset>0x2</BitOffset>
+									<BitWidth>0x1E</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>rma_relock</Name>
+									<Description>RMA relock Bit</Description>
+									<BitOffset>0x1</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>rma_lock</Name>
+									<Description>RMA lock Bit</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x1</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xD4" name="CFG9" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG9</Name>
+									<Description>These bits determin the device configuration.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xD8" name="CFG10" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG10</Name>
+									<Description>These bits determin the device configuration.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xDC" name="CFG11" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG11</Name>
+									<Description>These bits determin the device configuration.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xE0" name="CFG12" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>CFG12</Name>
+									<Description>These bits determin the device configuration.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xE4" name="ID0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>ID0</Name>
+									<Description>Lot ID on 42bit (11LSB's)</Description>
+									<BitOffset>0x15</BitOffset>
+									<BitWidth>0xB</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>ID0</Name>
+									<Description>Wafer ID</Description>
+									<BitOffset>0x10</BitOffset>
+									<BitWidth>0x5</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>ID0</Name>
+									<Description>Wafer Y coordinates</Description>
+									<BitOffset>0x8</BitOffset>
+									<BitWidth>0x8</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>ID0</Name>
+									<Description>Wafer X coordinates</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x8</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xE8" name="ID1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>ID1</Name>
+									<Description>Lot ID on 42bit (31MSB's)</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xEC" name="ID2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>ID2</Name>
+									<Description>Test program flow T[12],F[12],Q[12]</Description>
+									<BitOffset>0x14</BitOffset>
+									<BitWidth>0xC</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>ID2</Name>
+									<Description>FT program revision</Description>
+									<BitOffset>0xA</BitOffset>
+									<BitWidth>0xA</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>ID2</Name>
+									<Description>EWS program revision</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0xA</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xF0" name="HW0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>HW0</Name>
+									<Description>Analog TRIM</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xF4" name="HW1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>HW1</Name>
+									<Description>Analog TRIM</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xF8" name="HW2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>HW2</Name>
+									<Description>Analog TRIM and hardware options</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xFC" name="HW3" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>HW3</Name>
+									<Description>Analog TRIM</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x100" name="HW4" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>HW4</Name>
+									<Description>not used yet</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x104" name="HW5" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>HW5</Name>
+									<Description>memory repair bits</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x108" name="HW6" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>HW6</Name>
+									<Description>memory repair bits</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x10C" name="HW7" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>HW7</Name>
+									<Description>reserved</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x110" name="PKH0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>PKH0</Name>
+									<Description>Public Key Hash</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x114" name="PKH1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>PKH1</Name>
+									<Description>Public Key Hash</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x118" name="PKH2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>PKH2</Name>
+									<Description>Public Key Hash</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x11C" name="PKH3" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>PKH3</Name>
+									<Description>Public Key Hash</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x120" name="PKH4" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>PKH4</Name>
+									<Description>Public Key Hash</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x124" name="PKH5" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>PKH5</Name>
+									<Description>Public Key Hash</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x128" name="PKH6" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>PKH6</Name>
+									<Description>Public Key Hash</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x12C" name="PKH7" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>PKH7</Name>
+									<Description>Public Key Hash</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x130" name="XK0" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK0</Name>
+									<Description>ST ECDSA Private Key for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x134" name="XK1" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK1</Name>
+									<Description>ST ECDSA Private Key for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x138" name="XK2" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK2</Name>
+									<Description>ST ECDSA Private Key for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x13C" name="XK3" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK3</Name>
+									<Description>ST ECDSA Private Key for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x140" name="XK4" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK4</Name>
+									<Description>ST ECDSA Private Key for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x144" name="XK5" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK5</Name>
+									<Description>ST ECDSA Private Key for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x148" name="XK6" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK6</Name>
+									<Description>ST ECDSA Private Key for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x14C" name="XK7" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK7</Name>
+									<Description>ST ECDSA Private Key for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x150" name="XK8" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK8</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x154" name="XK9" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK9</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x158" name="XK10" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK10</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x15C" name="XK11" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK11</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x160" name="XK12" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK12</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x164" name="XK13" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK13</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x168" name="XK14" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK14</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x16C" name="XK15" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK15</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x170" name="XK16" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK16</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x174" name="XK17" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK17</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x178" name="XK18" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK18</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x17C" name="XK19" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK19</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x180" name="XK20" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK20</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x184" name="XK21" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK21</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x188" name="XK22" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK22</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x18C" name="XK23" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK23</Name>
+									<Description>ST Public ECDSA Chip Certificate for SSP</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x190" name="XK24" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK24</Name>
+									<Description>RMA lock and relock passwords</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x194" name="XK25" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK25</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x198" name="XK26" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK26</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x19C" name="XK27" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK27</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1A0" name="XK28" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK28</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1A4" name="XK29" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK29</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1A8" name="XK30" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK30</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1AC" name="XK31" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK31</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1B0" name="XK32" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK32</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1B4" name="XK33" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK33</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1B8" name="XK34" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK34</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1BC" name="XK35" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK35</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1C0" name="XK36" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK36</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1C4" name="XK37" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK37</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1C8" name="XK38" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK38</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1CC" name="XK39" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK39</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1D0" name="XK40" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK40</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1D4" name="XK41" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK41</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1D8" name="XK42" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK42</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1DC" name="XK43" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK43</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1E0" name="XK44" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK44</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1E4" name="XK45" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK45</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1E8" name="XK46" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK46</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1EC" name="XK47" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK47</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1F0" name="XK48" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK48</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1F4" name="XK49" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK49</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1F8" name="XK50" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK50</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1FC" name="XK51" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK51</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x200" name="XK52" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK52</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x204" name="XK53" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK53</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x208" name="XK54" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK54</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x20C" name="XK55" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK55</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x210" name="XK56" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK56</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x214" name="XK57" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK57</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x218" name="XK58" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK58</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x21C" name="XK59" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK59</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x220" name="XK60" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK60</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x224" name="XK61" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK61</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x228" name="XK62" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK62</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x22C" name="XK63" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>XK63</Name>
+									<Description>OEM OTP secret word</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x3F0" name="BSEC_HWCFGR" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>ECC_USE</Name>
+									<Description>SAFMEM use ECC for Upper OTP bits. 0x0: No, 0x1: Yes, others: reserved.</Description>
+									<BitOffset>0x4</BitOffset>
+									<BitWidth>0x4</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>SAFMEM_SIZE</Name>
+									<Description>SAFMEM size. 0x2: 2KBits, 0x4: 4KBits, 0x8: 8KBits, others: reserved.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x4</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x3F4" name="BSEC_VER" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>MAJREV</Name>
+									<Description>IP Version major revision information.</Description>
+									<BitOffset>0x4</BitOffset>
+									<BitWidth>0x4</BitWidth>
+									<Access>R</Access>
+								</Bit>
+								<Bit>
+									<Name>MINREV</Name>
+									<Description>IP Version minor revision information.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x4</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x3F8" name="BSEC_ID" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>ID</Name>
+									<Description>IP Identification.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x3FC" name="BSEC_SID" size="0x04"/>
+							<AssignedBits>
+								<Bit>
+									<Name>ID</Name>
+									<Description>IP Magic Identification.</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+					</Category>
+				</Bank>
+			</Peripheral>
+		</Peripherals>
+	</Device>
+</Root>

@@ -60,10 +60,10 @@
  *
  */
 
+#include "pch.h"
+
 #include "bmw_m73.h"
 #include "fsio_impl.h"
-
-EXTERN_CONFIG;
 
 void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 13641435991 injector

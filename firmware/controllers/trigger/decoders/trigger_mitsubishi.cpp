@@ -25,7 +25,6 @@ void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->addEvent720(x + 360 + y, T_SECONDARY, TV_RISE);
 	s->addEvent720(x + 540, T_SECONDARY, TV_FALL);
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
-	s->useOnlyPrimaryForSync = true;
 }
 
 /**

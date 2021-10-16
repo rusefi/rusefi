@@ -23,9 +23,9 @@
 // IEEE Transactions on Control Systems Technology, vol 6 no 1, January 1998.
 // as reported on http://www.mstarlabs.com/control/znrule.html
 
+#include "pch.h"
+
 #include "pid_auto_tune.h"
-#include "efilib.h"
-#include "efitime.h"
 
 #if EFI_UNIT_TEST
 extern bool verboseMode;
@@ -90,7 +90,7 @@ void PID_AutoTune::SetLookbackSec(int value)
 
 double inline PID_AutoTune::fastArcTan(double x)
 {
-  // source: “Efficient approximations for the arctangent function”, Rajan, S. Sichun Wang Inkol, R. Joyal, A., May 2006
+  // source: ï¿½Efficient approximations for the arctangent functionï¿½, Rajan, S. Sichun Wang Inkol, R. Joyal, A., May 2006
   //return CONST_PI / 4.0 * x - x * (abs(x) - 1.0) * (0.2447 + 0.0663 * abs(x));
 
   // source: "Understanding Digital Signal Processing", 2nd Ed, Richard G. Lyons, eq. 13-107
@@ -115,7 +115,7 @@ double PID_AutoTune::calculatePhaseLag(double inducedAmplitude)
 
 void PID_AutoTune::setState(PidAutoTune_AutoTunerState state) {
 	this->state = state;
-	scheduleMsg(logger, "setState %s", getPidAutoTune_AutoTunerState(state));
+	efiPrintf("setState %s", getPidAutoTune_AutoTunerState(state));
 #if EFI_UNIT_TEST
 	if (verboseMode)
 		printf("setState %s\r\n", getPidAutoTune_AutoTunerState(state));
@@ -124,7 +124,7 @@ void PID_AutoTune::setState(PidAutoTune_AutoTunerState state) {
 
 void PID_AutoTune::setPeakType(PidAutoTune_Peak peakType) {
 	this->peakType = peakType;
-	scheduleMsg(logger, "setPeakType %s", getPidAutoTune_Peak(peakType));
+	efiPrintf("setPeakType %s", getPidAutoTune_Peak(peakType));
 #if EFI_UNIT_TEST
 	if (verboseMode)
 		printf("peakType %s\r\n", getPidAutoTune_Peak(peakType));
@@ -168,7 +168,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
     }
     else
     {
-    	scheduleMsg(logger, "starting...");
+    	efiPrintf("starting...");
     	setState(RELAY_STEP_UP);
     }
   }
@@ -180,7 +180,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 	  if (verboseMode)
 		  printf("too soon for new input %d %d %d\r\n", now, lastTime, sampleTime);
 #endif /* EFI_UNIT_TEST */
-	scheduleMsg(logger, "AT skipping now=%d %d %d", now, lastTime, sampleTime);
+	efiPrintf("AT skipping now=%d %d %d", now, lastTime, sampleTime);
 
     return false;
   }
@@ -200,13 +200,13 @@ bool PID_AutoTune::Runtime(Logging *logger)
   // check input and change relay state if necessary
   if ((state == RELAY_STEP_UP) && (refVal > setpoint + workingNoiseBand))
   {
-	  scheduleMsg(logger, "noise crossed up %f s=%f n=%f", refVal, setpoint, workingNoiseBand);
+	  efiPrintf("noise crossed up %f s=%f n=%f", refVal, setpoint, workingNoiseBand);
 	  setState(RELAY_STEP_DOWN);
     justChanged = true;
   }
   else if ((state == RELAY_STEP_DOWN) && (refVal < setpoint - workingNoiseBand))
   {
-	  scheduleMsg(logger, "noise crossed down %f s=%f n=%f", refVal, setpoint, workingNoiseBand);
+	  efiPrintf("noise crossed down %f s=%f n=%f", refVal, setpoint, workingNoiseBand);
 	  setState(RELAY_STEP_UP);
     justChanged = true;
   }
@@ -330,7 +330,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #if defined (AUTOTUNE_RELAY_BIAS)
     setOutput(outputStart + workingOstep + relayBias);
 #else
-	  scheduleMsg(logger, "AT adding %f", workingOutputstep);
+	  efiPrintf("AT adding %f", workingOutputstep);
     setOutput(outputStart + workingOutputstep);
 #endif
 
@@ -341,7 +341,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #if defined (AUTOTUNE_RELAY_BIAS)
 	  setOutput(outputStart - workingOstep + relayBias);
 #else
-	  scheduleMsg(logger, "AT subtracting %f", workingOutputstep);
+	  efiPrintf("AT subtracting %f", workingOutputstep);
 	  setOutput(outputStart - workingOutputstep);
 #endif
 
@@ -371,7 +371,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
   if (inputCount <= nLookBack)
   {
     lastInputs[nLookBack - inputCount] = refVal;
-	  scheduleMsg(logger, "AT need more data %d %d", inputCount, nLookBack);
+	  efiPrintf("AT need more data %d %d", inputCount, nLookBack);
 #if EFI_UNIT_TEST
 	  if (verboseMode) {
 		  printf("need more data %d %d\r\n", inputCount, nLookBack);
@@ -398,7 +398,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
     lastInputs[i + 1] = val;
   }
   lastInputs[0] = refVal;
-  scheduleMsg(logger, "isMin=%d isMax=%d", isMin, isMax);
+  efiPrintf("isMin=%d isMax=%d", isMin, isMax);
 
   // for AMIGOf tuning rule, perform an initial
   // step change to calculate process gain K_process
@@ -538,7 +538,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
   if (justChanged)
   {
     peakCount++;
-    scheduleMsg(logger, "peakCount=%d", peakCount);
+    efiPrintf("peakCount=%d", peakCount);
 
 
 #if defined (AUTOTUNE_DEBUG)
@@ -634,7 +634,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #endif
 
     // source for AMIGOf PI auto tuning method:
-    // "Revisiting the Ziegler-Nichols tuning rules for PI control —
+    // "Revisiting the Ziegler-Nichols tuning rules for PI control ï¿½
     //  Part II. The frequency response method."
     // T. Hagglund and K. J. Astrom
     // Asian Journal of Control, Vol. 6, No. 4, pp. 469-482, December 2004
@@ -648,14 +648,14 @@ bool PID_AutoTune::Runtime(Logging *logger)
       Serial.println(phaseLag / CONST_PI * 180.0);
 #endif
 
-      // check that phase lag is within acceptable bounds, ideally between 120° and 140°
-      // but 115° to 145° will just about do, and might converge quicker
+      // check that phase lag is within acceptable bounds, ideally between 120ï¿½ and 140ï¿½
+      // but 115ï¿½ to 145ï¿½ will just about do, and might converge quicker
       if (abs(phaseLag - CONST_PI * 130.0 / 180.0) > (CONST_PI * 15.0 / 180.0))
       {
         // phase lag outside the desired range
         // set noiseBand to new estimate
-        // aiming for 135° = 0.75 * pi (radians)
-        // sin(135°) = sqrt(2)/2
+        // aiming for 135ï¿½ = 0.75 * pi (radians)
+        // sin(135ï¿½) = sqrt(2)/2
         // NB noiseBand = 0.5 * hysteresis
         newWorkingNoiseBand = 0.5 * inducedAmplitude * CONST_SQRT2_DIV_2;
 
@@ -723,7 +723,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 
   // autotune algorithm has terminated
   // reset autotuner variables
-  scheduleMsg(logger, "AT done");
+  efiPrintf("AT done");
   setOutput( outputStart);
 
   if (state == FAILED)
@@ -790,7 +790,7 @@ bool PID_AutoTune::Runtime(Logging *logger)
 #if EFI_UNIT_TEST
 		printf("Happy end AMIGOF_PI!\r\n");
 #endif /* EFI_UNIT_TEST */
-	scheduleMsg(logger, "output %f", output);
+	efiPrintf("output %f", output);
     // converged
     return true;
   }
@@ -824,7 +824,7 @@ float PID_AutoTune::GetKd() const
 void PID_AutoTune::setOutput(float output) {
 	this->output = output;
 
-	scheduleMsg(logger, "setOutput %f %s", output, getPidAutoTune_AutoTunerState(state));
+	efiPrintf("setOutput %f %s", output, getPidAutoTune_AutoTunerState(state));
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {

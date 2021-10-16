@@ -1,0 +1,787 @@
+pins:
+  - pin: 1a
+    function: GND
+    type: GND
+
+  - pin: 4a
+    class: outputs
+    ts_name: ETB_OUT+
+    function: +ETB_OUT
+
+  - pin: 5a
+    class: outputs
+    ts_name: ETB_OUT-
+    function: -ETB_OUT
+
+  - pin: 7a
+    function: USB +
+    
+  - pin: 8a
+    function: USB -
+    
+  - pin: 10a
+    id: GPIOF_13
+    ts_name: 10 - VTC Left
+    class: outputs
+    function: Intake VTC solenoid Bank 2
+ # OUT_C-IVC_L OUT_INJ7 
+
+  - pin: 11a
+    id: GPIOF_14
+    ts_name: 11 - VTC Right
+    class: outputs
+    function: Intake VTC solenoid Bank 1
+ # OUT_C-IVC_R OUT_INJ8
+ 
+  - pin: 13a
+    function: Crank Sensor
+# IN_CRANK AIN24 A24
+    id: [GPIOB_1]
+    class: [event_inputs]
+    ts_name: 13 - Crank
+
+  - pin: 14a
+    function: Cam Sensor Left
+# IN_CAM_L IN_CAM AIN19 A19
+    id: [GPIOA_6]
+    class: [event_inputs]
+    ts_name: 14 - Cam Left
+
+  - pin: 21a
+# Q307
+    id: GPIOD_9
+    class: outputs
+    ts_name: 21 - INJ_5
+    function: Injector 5
+    type: inj
+
+  - pin: 22a
+# Q309
+    id: GPIOD_11
+    class: outputs
+    ts_name: 22 - INJ_3
+    function: Injector 3
+    type: inj
+
+  - pin: 23a
+# Q312
+    id: GPIOG_7
+    class: outputs
+    ts_name: 23 - INJ_1
+    function: Injector 1
+    type: inj
+    
+  - pin: 29a
+    id: GPIOD_3
+    ts_name: 29 - VIAS
+    class: outputs
+    function: VIAS control Solenoid
+
+  - pin: 33a
+    function: Cam Sensor Right
+# IN_CAM_R IN_AUX4 AIN20 A20
+    id: [GPIOA_7]
+    class: [event_inputs]
+    ts_name: 33 - Cam Right
+    
+  - pin: 34a
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 34 - IAT
+    function: IAT sensor
+
+  - pin: 40a
+# Q311
+    id: GPIOF_12
+    class: outputs
+    ts_name: 40 - INJ_6
+    function: Injector 6
+    type: inj
+
+  - pin: 41a
+# Q310
+    id: GPIOD_10
+    class: outputs
+    ts_name: 41 - INJ_4
+    function: Injector 4
+    type: inj
+
+  - pin: 42a
+# Q305
+    id: GPIOG_8
+    class: outputs
+    ts_name: 42 - INJ_2
+    function: Injector 2
+    type: inj
+
+  - pin: 47a
+    function: +5v TPS sensors
+
+  - pin: 48a
+    function: +5v EVAP sensor
+
+
+  - pin: 50a
+# in_tps AIN17 PA4 U108
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 50 - TPS 1
+    function: TPS 1 sensor input  
+
+  - pin: 60a
+    id: GPIOE_2
+    class: outputs
+    ts_name: 60 - Coil 5
+    function: Coil 5
+    type: ign
+
+  - pin: 61a
+    id: GPIOE_4
+    class: outputs
+    ts_name: 61 - Coil 3
+    function: Coil 3
+    type: ign
+
+  - pin: 62a
+    id: GPIOC_13
+    class: outputs
+    ts_name: 62 - Coil 1
+    function: Coil 1
+    type: ign
+
+
+  - pin: 66a
+    function: GNDA TPS sensors
+
+  - pin: 67a
+    function: GNDA many sensors
+
+  - pin: 69a
+# in_aux1 AIN23 PB0 U109
+    id: EFI_ADC_8
+    class: analog_inputs
+    ts_name: 69 - TPS 2
+    function: TPS 2 sensor input  
+
+  - pin: 73a
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 73 - CLT
+    function: CLT sensor
+
+  - pin: 78a
+    function: GNDA
+
+  - pin: 79a
+    id: GPIOB_8
+    class: outputs
+    ts_name: 79 - Coil 6
+    function: Coil 6
+    type: ign
+
+  - pin: 80a
+    id: GPIOE_3
+    class: outputs
+    ts_name: 80 - Coil 4
+    function: Coil 4
+    type: ign
+
+  - pin: 81a
+    id: GPIOE_5
+    class: outputs
+    ts_name: 81 - Coil 2
+    function: Coil 2
+    type: ign
+
+
+  - pin: 82a
+    function: GNDA pedal sensor 1
+
+  - pin: 83a
+    function: GNDA pedal sensor 2
+
+
+  - pin: 86a
+    function: CAN bus low
+    type: can
+
+  - pin: 90a
+    function: +5v pedal sensor 1
+
+  - pin: 91a
+    function: +5v pedal sensor 2
+
+
+  - pin: 94a
+    function: CAN bus high
+    type: can
+
+  - pin: 98a
+# IN_AUX2 AIN21 A21 PC4 U109
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: 98 - PPS 2
+    function: PPS 2 sensor input 
+    
+  - pin: 101a
+    id: GPIOF_9
+    class: switch_inputs
+    ts_name: 101 - Brake Input
+    function: Brake Switch
+
+  - pin: 102a
+    id: GPIOF_10
+    class: switch_inputs
+    ts_name: 102 - Power Steering Input
+    function: Power Steering Switch
+
+  - pin: 104a
+# LOW6_DIODE _IO4
+    id: GPIOG_5
+    class: outputs
+    ts_name: 104 ETB Relay
+    function: ETB relay control
+    type: ls
+
+  - pin: 106a
+# IN_PPS, AIN18, A18, PA3 U106
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: 106 - PPS 1
+    function: PPS 1 sensor input  
+
+
+  - pin: 109a
+# VIGN PA5
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 109 Ignition Key Voltage
+    function: +12V engine ECU power source, run/start
+
+  - pin: 111a
+# OUT_IO3
+    id: GPIOG_14
+    class: outputs
+    ts_name: 111 Main Relay
+    function: Main relay control
+    type: ls
+
+  - pin: 113a
+# OUT_PWM8
+    id: GPIOD_12
+    class: outputs
+    ts_name: 113 Fuel Pump Relay
+    function: Fuel Pump control
+    type: ls
+
+  - pin: 115a
+    function: GND
+    type: GND
+
+  - pin: 116a
+    function: GND
+    type: GND
+
+  - pin: 119a
+    function: +12v from main relay
+
+  - pin: 120a
+    function: +12v from main relay
+
+  - pin: 121a
+    function: Bat+ (Hot all times), 12v 20A fuse from battery
+
+
+info:
+  title: Hellen 121 Nissan
+  image:
+    file: main.jpg
+  pins:
+    - pin: 1a
+      x: 286
+      y: 582
+
+    - pin: 2a
+      x: 456
+      y: 582
+
+    - pin: 3a
+      x: 375
+      y: 405
+
+    - pin: 4a
+      x: 286
+      y: 250
+
+    - pin: 5a
+      x: 456
+      y: 250
+
+# 6-24 segment
+    - pin: 6a
+      x: 2193
+      y: 250
+
+    - pin: 7a
+      x: 2113
+      y: 250
+
+    - pin: 8a
+      x: 2033
+      y: 250
+
+    - pin: 9a
+      x: 1953
+      y: 250
+
+    - pin: 10a
+      x: 1873
+      y: 250
+
+    - pin: 11a
+      x: 1793
+      y: 250
+
+    - pin: 12a
+      x: 1713
+      y: 250
+
+    - pin: 13a
+      x: 1633
+      y: 250
+
+    - pin: 14a
+      x: 1553
+      y: 250
+
+    - pin: 15a
+      x: 1473
+      y: 250
+
+    - pin: 16a
+      x: 1393
+      y: 250
+
+    - pin: 17a
+      x: 1313
+      y: 250
+
+    - pin: 18a
+      x: 1233
+      y: 250
+
+    - pin: 19a
+      x: 1153
+      y: 250
+
+    - pin: 20a
+      x: 1073
+      y: 250
+
+    - pin: 21a
+      x: 993
+      y: 250
+
+    - pin: 22a
+      x: 913
+      y: 250
+
+    - pin: 23a
+      x: 833
+      y: 250
+
+    - pin: 24a
+      x: 753
+      y: 250
+
+# 25-43 segment
+    - pin: 25a
+      x: 2193
+      y: 330
+
+    - pin: 26a
+      x: 2113
+      y: 330
+
+    - pin: 27a
+      x: 2033
+      y: 330
+
+    - pin: 28a
+      x: 1953
+      y: 330
+
+    - pin: 29a
+      x: 1873
+      y: 330
+
+    - pin: 30a
+      x: 1793
+      y: 330
+
+    - pin: 31a
+      x: 1713
+      y: 330
+
+    - pin: 32a
+      x: 1633
+      y: 330
+
+    - pin: 33a
+      x: 1553
+      y: 330
+
+    - pin: 34a
+      x: 1473
+      y: 330
+
+    - pin: 35a
+      x: 1393
+      y: 330
+
+    - pin: 36a
+      x: 1313
+      y: 330
+
+    - pin: 37a
+      x: 1233
+      y: 330
+
+    - pin: 38a
+      x: 1153
+      y: 330
+
+    - pin: 39a
+      x: 1073
+      y: 330
+
+    - pin: 40a
+      x: 993
+      y: 330
+
+    - pin: 41a
+      x: 913
+      y: 330
+
+    - pin: 42a
+      x: 833
+      y: 330
+
+    - pin: 43a
+      x: 753
+      y: 330
+
+# 44-62 segment
+    - pin: 44a
+      x: 2193
+      y: 495
+
+    - pin: 45a
+      x: 2113
+      y: 495
+
+    - pin: 46a
+      x: 2033
+      y: 495
+
+    - pin: 47a
+      x: 1953
+      y: 495
+
+    - pin: 48a
+      x: 1873
+      y: 495
+
+    - pin: 49a
+      x: 1793
+      y: 495
+
+    - pin: 50a
+      x: 1713
+      y: 495
+
+    - pin: 51a
+      x: 1633
+      y: 495
+
+    - pin: 52a
+      x: 1553
+      y: 495
+
+    - pin: 53a
+      x: 1473
+      y: 495
+
+    - pin: 54a
+      x: 1393
+      y: 495
+
+    - pin: 55a
+      x: 1313
+      y: 495
+
+    - pin: 56a
+      x: 1233
+      y: 495
+
+    - pin: 57a
+      x: 1153
+      y: 495
+
+    - pin: 58a
+      x: 1073
+      y: 495
+
+    - pin: 59a
+      x: 993
+      y: 495
+
+    - pin: 60a
+      x: 913
+      y: 495
+
+    - pin: 61a
+      x: 833
+      y: 495
+
+    - pin: 62a
+      x: 732
+      y: 495
+
+# 63-81 segment
+    - pin: 63a
+      x: 2193
+      y: 579
+
+    - pin: 64a
+      x: 2113
+      y: 579
+
+    - pin: 65a
+      x: 2033
+      y: 579
+
+    - pin: 66a
+      x: 1953
+      y: 579
+
+    - pin: 67a
+      x: 1873
+      y: 579
+
+    - pin: 68a
+      x: 1793
+      y: 579
+
+    - pin: 69a
+      x: 1713
+      y: 579
+
+    - pin: 70a
+      x: 1633
+      y: 579
+
+    - pin: 71a
+      x: 1553
+      y: 579
+
+    - pin: 72a
+      x: 1473
+      y: 579
+
+    - pin: 73a
+      x: 1393
+      y: 579
+
+    - pin: 74a
+      x: 1313
+      y: 579
+
+    - pin: 75a
+      x: 1233
+      y: 579
+
+    - pin: 76a
+      x: 1153
+      y: 579
+
+    - pin: 77a
+      x: 1073
+      y: 579
+
+    - pin: 78a
+      x: 993
+      y: 579
+
+    - pin: 79a
+      x: 913
+      y: 579
+
+    - pin: 80a
+      x: 833
+      y: 579
+
+    - pin: 81a
+      x: 732
+      y: 579
+
+# 82-89 segment
+    - pin: 82a
+      x: 2724
+      y: 585
+
+    - pin: 83a
+      x: 2802
+      y: 585
+
+    - pin: 84a
+      x: 2877
+      y: 585
+
+    - pin: 85a
+      x: 2958
+      y: 585
+
+    - pin: 86a
+      x: 3048
+      y: 585
+
+    - pin: 87a
+      x: 3123
+      y: 585
+
+    - pin: 88a
+      x: 3201
+      y: 585
+
+    - pin: 89a
+      x: 3282
+      y: 585
+
+# 90-97 segment
+    - pin: 90a
+      x: 2724
+      y: 507
+
+    - pin: 91a
+      x: 2802
+      y: 507
+
+    - pin: 92a
+      x: 2877
+      y: 507
+
+    - pin: 93a
+      x: 2958
+      y: 507
+
+    - pin: 94a
+      x: 3048
+      y: 507
+
+    - pin: 95a
+      x: 3123
+      y: 507
+
+    - pin: 96a
+      x: 3201
+      y: 507
+
+    - pin: 97a
+      x: 3282
+      y: 507
+
+# 98-105 segment
+    - pin: 98a
+      x: 2724
+      y: 336
+
+    - pin: 99a
+      x: 2802
+      y: 336
+
+    - pin: 100a
+      x: 2877
+      y: 336
+
+    - pin: 101a
+      x: 2958
+      y: 336
+
+    - pin: 102a
+      x: 3048
+      y: 336
+
+    - pin: 103a
+      x: 3123
+      y: 336
+
+    - pin: 104a
+      x: 3201
+      y: 336
+
+    - pin: 105a
+      x: 3282
+      y: 336
+
+# 106-113 segment
+    - pin: 106a
+      x: 2724
+      y: 258
+
+    - pin: 107a
+      x: 2802
+      y: 258
+
+    - pin: 108a
+      x: 2877
+      y: 258
+
+    - pin: 109a
+      x: 2958
+      y: 258
+
+    - pin: 110a
+      x: 3048
+      y: 258
+
+    - pin: 111a
+      x: 3123
+      y: 258
+
+    - pin: 112a
+      x: 3201
+      y: 258
+
+    - pin: 113a
+      x: 3282
+      y: 258
+
+    - pin: 115a
+      x: 3700
+      y: 585
+
+    - pin: 116a
+      x: 3882
+      y: 585
+
+    - pin: 117a
+      x: 3615
+      y: 414
+
+    - pin: 118a
+      x: 3780
+      y: 414
+
+    - pin: 119a
+      x: 3516
+      y: 261
+
+    - pin: 120a
+      x: 3700
+      y: 261
+
+    - pin: 121a
+      x: 3882
+      y: 261
+      

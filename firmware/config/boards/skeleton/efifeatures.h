@@ -45,14 +45,6 @@
 
 // Internal MCU features
 
-// Use STM32 Core Coupled Memory as general purpose RAM.
-#define EFI_USE_CCM TRUE
-
-// Support USB Mass Storage Devices
-// Typically off as it requires USB OTG and power output.
-#define HAL_USE_USB_MSD FALSE
-
-
 // Hardware feature and chip support
 // Some require a non-zero count to include support, others are TRUE/FALSE
 // Other inconsistencies, such as naming, abound.
@@ -87,13 +79,13 @@
 #define BOARD_TLE6240_COUNT	0
 #define BOARD_MC33972_COUNT	0
 #define BOARD_TLE8888_COUNT 	0
+#define BOARD_MC33810_COUNT	0
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
  * probably want EFI_ENABLE_ASSERTS to be FALSE. Also you would probably want to FALSE
  * CH_DBG_ENABLE_CHECKS
  * CH_DBG_ENABLE_ASSERTS
- * CH_DBG_ENABLE_TRACE
  * in chconf.h
  *
  */
@@ -107,10 +99,6 @@
 
 
 #define EFI_ICU_INPUTS TRUE
-
-#ifndef HAL_TRIGGER_USE_PAL
-#define HAL_TRIGGER_USE_PAL FALSE
-#endif /* HAL_TRIGGER_USE_PAL */
 
 #ifndef HAL_TRIGGER_USE_PAL
 #define HAL_TRIGGER_USE_PAL FALSE
@@ -168,8 +156,6 @@
 
 
 #define EFI_NARROW_EGO_AVERAGING TRUE
-
-#define EFI_DENSO_ADC FALSE
 
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE
@@ -246,7 +232,7 @@
 
 // todo: most of this should become configurable
 
-// todo: switch to continues ADC conversion for fast ADC?
+// todo: switch to continuous ADC conversion for fast ADC?
 #define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 
 #define EFI_SPI1_AF 5
@@ -334,15 +320,8 @@
 #define CONFIG_RESET_SWITCH_PIN 6
 #endif
 
-/**
- * This is the size of the MemoryStream used by chvprintf
- */
-#define INTERMEDIATE_LOGGING_BUFFER_SIZE 2000
-
-
 // Enable file logging (like SD card) logic
 #define EFI_FILE_LOGGING FALSE
-#define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
 
 #define EFI_USB_SERIAL TRUE
 
@@ -360,7 +339,6 @@
 #undef TS_SERIAL_DEVICE
 #undef TS_UART_MODE
 #define EFI_CONSOLE_SERIAL_DEVICE (&SD1)
-//#define EFI_CONSOLE_USB_DEVICE SDU1
 #define EFI_UART_ECHO_TEST_MODE TRUE
 
 // USART3 is Alternate Function 7, UART4 is AF8

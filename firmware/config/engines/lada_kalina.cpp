@@ -7,11 +7,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "lada_kalina.h"
 #include "custom_engine.h"
 #include "fsio_impl.h"
-
-EXTERN_CONFIG;
 
 #if (BOARD_TLE8888_COUNT > 0)
 void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -26,7 +26,7 @@ void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->stepperDcIo[1].directionPin2 = TLE8888_PIN_24;
 	/* IDLE configuration */
 	engineConfiguration->useStepperIdle = true;
-	engineConfiguration->useHbridges = true;
+	engineConfiguration->useHbridgesToDriveIdleStepper = true;
 	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->useTLE8888_stepper = true;
 }
@@ -36,14 +36,6 @@ void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 void setLadaKalina(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 	disableLCD(engineConfiguration);
-
-	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db4 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db5 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db6 = GPIO_UNASSIGNED;
-	engineConfiguration->HD44780_db7 = GPIO_UNASSIGNED;
-
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;

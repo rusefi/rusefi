@@ -19,18 +19,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "engine_math.h"
-#include "engine_configuration.h"
-#include "interpolation.h"
-#include "allsensors.h"
-#include "sensor.h"
+#include "pch.h"
+
 #include "event_registry.h"
-#include "efi_gpio.h"
 #include "fuel_math.h"
 #include "advance_map.h"
 
-EXTERN_ENGINE;
 #if EFI_UNIT_TEST
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
@@ -58,26 +52,6 @@ float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 /**
- * @brief Returns engine load according to selected engine_load_mode
- *
- */
-float getEngineLoadT(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine 2NULL", NAN);
-	efiAssert(CUSTOM_ERR_ASSERT, engineConfiguration!=NULL, "engineConfiguration 2NULL", NAN);
-	switch (engineConfiguration->fuelAlgorithm) {
-	case LM_SPEED_DENSITY:
-		return Sensor::get(SensorType::Map).value_or(0);
-	case LM_ALPHA_N:
-		return Sensor::get(SensorType::Tps1).value_or(0);
-	case LM_REAL_MAF:
-		return getRealMaf(PASS_ENGINE_PARAMETER_SIGNATURE);
-	default:
-		firmwareError(CUSTOM_UNKNOWN_ALGORITHM, "Unexpected engine load parameter: %d", engineConfiguration->fuelAlgorithm);
-		return 0;
-	}
-}
-
-/**
  * see also setConstantDwell
  */
 void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -96,16 +70,6 @@ void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->sparkDwellValues[7] = 0;
 }
 
-static floatms_t getCrankingSparkDwell(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->useConstantDwellDuringCranking) {
-		return engineConfiguration->ignitionDwellForCrankingMs;
-	} else {
-		// technically this could be implemented via interpolate2d
-		float angle = engineConfiguration->crankingChargeAngle;
-		return getOneDegreeTimeMs(GET_RPM()) * angle;
-	}
-}
-
 /**
  * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
  */
@@ -113,11 +77,23 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	float dwellMs;
 	if (ENGINE(rpmCalculator).isCranking()) {
-		dwellMs = getCrankingSparkDwell(PASS_ENGINE_PARAMETER_SIGNATURE);
+		dwellMs = CONFIG(ignitionDwellForCrankingMs);
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
-		dwellMs = interpolate2d("dwell", rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		auto base = interpolate2d(rpm, engineConfiguration->sparkDwellRpmBins, engineConfiguration->sparkDwellValues);
+		auto voltageMult = 0.02f * 
+			interpolate2d(
+				10 * Sensor::getOrZero(SensorType::BatteryVoltage),
+				engineConfiguration->dwellVoltageCorrVoltBins,
+				engineConfiguration->dwellVoltageCorrValues);
+
+		// for compat (table full of zeroes)
+		if (voltageMult < 0.1f) {
+			voltageMult = 1;
+		}
+
+		dwellMs = base * voltageMult;
 	}
 
 	if (cisnan(dwellMs) || dwellMs <= 0) {
@@ -131,6 +107,7 @@ floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif
 }
 
+static const int order_1[] = {1};
 
 static const int order_1_2[] = {1, 2};
 
@@ -151,6 +128,10 @@ static const int order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[] = { 1, 5, 3, 6, 2,
 static const int order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[] = { 1, 4, 2, 5, 3, 6 };
 static const int order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[] = { 1, 2, 3, 4, 5, 6 };
 static const int order_1_6_3_2_5_4[] = {1, 6, 3, 2, 5, 4};
+static const int order_1_4_3_6_2_5[] = {1, 4, 3, 6, 2, 5};
+static const int order_1_6_2_4_3_5[] = {1, 6, 2, 4, 3, 5};
+static const int order_1_6_5_4_3_2[] = {1, 6, 5, 4, 3, 2};
+static const int order_1_4_5_2_3_6[] = {1, 4, 5, 2, 3, 6};
 
 // 8 cylinder
 static const int order_1_8_4_3_6_5_7_2[] = { 1, 8, 4, 3, 6, 5, 7, 2 };
@@ -158,6 +139,9 @@ static const int order_1_8_7_2_6_5_4_3[] = { 1, 8, 7, 2, 6, 5, 4, 3 };
 static const int order_1_5_4_2_6_3_7_8[] = { 1, 5, 4, 2, 6, 3, 7, 8 };
 static const int order_1_2_7_8_4_5_6_3[] = { 1, 2, 7, 8, 4, 5, 6, 3 };
 static const int order_1_3_7_2_6_5_4_8[] = { 1, 3, 7, 2, 6, 5, 4, 8 };
+static const int order_1_2_3_4_5_6_7_8[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
+static const int order_1_5_4_8_6_3_7_2[] = { 1, 5, 4, 8, 6, 3, 7, 2 };
+static const int order_1_8_7_3_6_5_4_2[] = { 1, 8, 7, 3, 6, 5, 4, 2 };
 
 // 9 cylinder
 static const int order_1_2_3_4_5_6_7_8_9[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -201,6 +185,10 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_4_2_5_3_6:
 	case FO_1_2_3_4_5_6:
 	case FO_1_6_3_2_5_4:
+	case FO_1_4_3_6_2_5:
+	case FO_1_6_2_4_3_5:
+	case FO_1_6_5_4_3_2:
+	case FO_1_4_5_2_3_6:
 		return 6;
 
 // 8 cylinder
@@ -209,6 +197,9 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	case FO_1_5_4_2_6_3_7_8:
 	case FO_1_2_7_8_4_5_6_3:
 	case FO_1_3_7_2_6_5_4_8:
+	case FO_1_2_3_4_5_6_7_8:
+	case FO_1_5_4_8_6_3_7_2:
+	case FO_1_8_7_3_6_5_4_2:
 		return 8;
 
 // 9 cylinder radial
@@ -235,6 +226,98 @@ static int getFiringOrderLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return 1;
 }
 
+static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
+{
+	switch (CONFIG(specs.firingOrder)) {
+	case FO_1:
+		return order_1;
+// 2 cylinder
+	case FO_1_2:
+		return order_1_2;
+// 3 cylinder
+	case FO_1_2_3:
+		return order_1_2_3;
+	case FO_1_3_2:
+		return order_1_3_2;
+// 4 cylinder
+	case FO_1_3_4_2:
+		return order_1_THEN_3_THEN_4_THEN2;
+	case FO_1_2_4_3:
+		return order_1_THEN_2_THEN_4_THEN3;
+	case FO_1_3_2_4:
+		return order_1_THEN_3_THEN_2_THEN4;
+	case FO_1_4_3_2:
+		return order_1_THEN_4_THEN_3_THEN2;
+// 5 cylinder
+	case FO_1_2_4_5_3:
+		return order_1_2_4_5_3;
+
+// 6 cylinder
+	case FO_1_5_3_6_2_4:
+		return order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4;
+	case FO_1_4_2_5_3_6:
+		return order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6;
+	case FO_1_2_3_4_5_6:
+		return order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6;
+	case FO_1_6_3_2_5_4:
+		return order_1_6_3_2_5_4;
+	case FO_1_4_3_6_2_5:
+		return order_1_4_3_6_2_5;
+	case FO_1_6_2_4_3_5:
+		return order_1_6_2_4_3_5;
+	case FO_1_6_5_4_3_2:
+		return order_1_6_5_4_3_2;
+	case FO_1_4_5_2_3_6:
+		return order_1_4_5_2_3_6;
+
+// 8 cylinder
+	case FO_1_8_4_3_6_5_7_2:
+		return order_1_8_4_3_6_5_7_2;
+	case FO_1_8_7_2_6_5_4_3:
+		return order_1_8_7_2_6_5_4_3;
+	case FO_1_5_4_2_6_3_7_8:
+		return order_1_5_4_2_6_3_7_8;
+	case FO_1_2_7_8_4_5_6_3:
+		return order_1_2_7_8_4_5_6_3;
+	case FO_1_3_7_2_6_5_4_8:
+		return order_1_3_7_2_6_5_4_8;
+	case FO_1_2_3_4_5_6_7_8:
+		return order_1_2_3_4_5_6_7_8;
+	case FO_1_5_4_8_6_3_7_2:
+		return order_1_5_4_8_6_3_7_2;
+	case FO_1_8_7_3_6_5_4_2:
+		return order_1_8_7_3_6_5_4_2;
+
+
+// 9 cylinder
+	case FO_1_2_3_4_5_6_7_8_9:
+		return order_1_2_3_4_5_6_7_8_9;
+
+
+// 10 cylinder
+	case FO_1_10_9_4_3_6_5_8_7_2:
+		return order_1_10_9_4_3_6_5_8_7_2;
+
+// 12 cylinder
+	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
+		return order_1_7_5_11_3_9_6_12_2_8_4_10;
+	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
+		return order_1_7_4_10_2_8_6_12_3_9_5_11;
+	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
+		return order_1_12_5_8_3_10_6_7_2_11_4_9;
+	case FO_1_2_3_4_5_6_7_8_9_10_11_12:
+		return order_1_2_3_4_5_6_7_8_9_10_11_12;
+
+// do not ask
+	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
+		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10;
+
+	default:
+		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", CONFIG(specs.firingOrder));
+	}
+
+	return NULL;
+}
 
 /**
  * @param index from zero to cylindersCount - 1
@@ -244,8 +327,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (firingOrderLength < 1 || firingOrderLength > INJECTION_PIN_COUNT) {
-		firmwareError(CUSTOM_ERR_6687, "fol %d", firingOrderLength);
+	if (firingOrderLength < 1 || firingOrderLength > MAX_CYLINDER_COUNT) {
+		firmwareError(CUSTOM_FIRING_LENGTH, "fol %d", firingOrderLength);
 		return 1;
 	}
 	if (engineConfiguration->specs.cylindersCount != firingOrderLength) {
@@ -260,76 +343,27 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 1;
 	}
 
-	switch (CONFIG(specs.firingOrder)) {
-	case FO_1:
-		return 1;
-// 2 cylinder
-	case FO_1_2:
-		return order_1_2[index];
-// 3 cylinder
-	case FO_1_2_3:
-		return order_1_2_3[index];
-	case FO_1_3_2:
-		return order_1_3_2[index];
-// 4 cylinder
-	case FO_1_3_4_2:
-		return order_1_THEN_3_THEN_4_THEN2[index];
-	case FO_1_2_4_3:
-		return order_1_THEN_2_THEN_4_THEN3[index];
-	case FO_1_3_2_4:
-		return order_1_THEN_3_THEN_2_THEN4[index];
-	case FO_1_4_3_2:
-		return order_1_THEN_4_THEN_3_THEN2[index];
-// 5 cylinder
-	case FO_1_2_4_5_3:
-		return order_1_2_4_5_3[index];
+	const int *firingOrderTable = getFiringOrderTable(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (firingOrderTable)
+		return firingOrderTable[index];
+	/* else
+		error already reported */
 
-// 6 cylinder
-	case FO_1_5_3_6_2_4:
-		return order_1_THEN_5_THEN_3_THEN_6_THEN_2_THEN_4[index];
-	case FO_1_4_2_5_3_6:
-		return order_1_THEN_4_THEN_2_THEN_5_THEN_3_THEN_6[index];
-	case FO_1_2_3_4_5_6:
-		return order_1_THEN_2_THEN_3_THEN_4_THEN_5_THEN_6[index];
-	case FO_1_6_3_2_5_4:
-		return order_1_6_3_2_5_4[index];
+	return 1;
+}
 
-// 8 cylinder
-	case FO_1_8_4_3_6_5_7_2:
-		return order_1_8_4_3_6_5_7_2[index];
-	case FO_1_8_7_2_6_5_4_3:
-		return order_1_8_7_2_6_5_4_3[index];
-	case FO_1_5_4_2_6_3_7_8:
-		return order_1_5_4_2_6_3_7_8[index];
-	case FO_1_2_7_8_4_5_6_3:
-		return order_1_2_7_8_4_5_6_3[index];
-	case FO_1_3_7_2_6_5_4_8:
-		return order_1_3_7_2_6_5_4_8[index];
+/**
+ * @param prevCylinderId from one to cylindersCount
+ * @return cylinderId from one to cylindersCount
+ */
+int getNextFiringCylinderId(int prevCylinderId DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
+	const int *firingOrderTable = getFiringOrderTable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	case FO_1_2_3_4_5_6_7_8_9:
-		return order_1_2_3_4_5_6_7_8_9[index];
-
-
-// 10 cylinder
-	case FO_1_10_9_4_3_6_5_8_7_2:
-		return order_1_10_9_4_3_6_5_8_7_2[index];
-
-// 12 cylinder
-	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
-		return order_1_7_5_11_3_9_6_12_2_8_4_10[index];
-	case FO_1_7_4_10_2_8_6_12_3_9_5_11:
-		return order_1_7_4_10_2_8_6_12_3_9_5_11[index];
-	case FO_1_12_5_8_3_10_6_7_2_11_4_9:
-		return order_1_12_5_8_3_10_6_7_2_11_4_9[index];
-	case FO_1_2_3_4_5_6_7_8_9_10_11_12:
-		return order_1_2_3_4_5_6_7_8_9_10_11_12[index];
-
-// do not ask
-	case FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10:
-		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[index];
-
-	default:
-		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", CONFIG(specs.firingOrder));
+	if (firingOrderTable) {
+		for (size_t i = 0; i < firingOrderLength; i++)
+			if (firingOrderTable[i] == prevCylinderId)
+				return firingOrderTable[(i + 1) % firingOrderLength];
 	}
 	return 1;
 }
@@ -360,8 +394,9 @@ static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUF
 }
 
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	(void)ignitionMode;
 #if EFI_ENGINE_CONTROL
-	for (int cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif /* EFI_ENGINE_CONTROL */
@@ -405,13 +440,16 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	for (int i = 0; i < CONFIG(specs.cylindersCount); i++) {
+	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		ENGINE(ignitionPositionWithinEngineCycle[i]) = ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 	}
 
 	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
 
 	TRIGGER_WAVEFORM(prepareShape(&ENGINE(triggerCentral.triggerFormDetails) PASS_ENGINE_PARAMETER_SUFFIX));
+
+	// Fuel schedule may now be completely wrong, force a reset
+	ENGINE(injectionEvents).invalidate();
 }
 
 void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX) {

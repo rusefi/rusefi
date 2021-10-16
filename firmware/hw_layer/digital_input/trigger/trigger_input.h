@@ -8,17 +8,30 @@
 
 #pragma once
 
-#include "engine.h"
-#include "pin_repository.h"
 #include "trigger_structure.h"
 #include "trigger_central.h"
 
+#define TRIGGER_BAIL_IF_DISABLED          \
+    if (!engine->hwTriggerInputEnabled) { \
+		return;                           \
+	}
+
+#define TRIGGER_BAIL_IF_SELF_STIM                                 \
+    if (engine->directSelfStimulation) {                          \
+		/* sensor noise + self-stim = loss of trigger sync */     \
+		return;                                                   \
+	}
+
+
 #define TRIGGER_SUPPORTED_CHANNELS 2
 
-void turnOnTriggerInputPins(Logging *sharedLogger);
-void applyNewTriggerInputPins(void);
-void startTriggerInputPins(void);
-void stopTriggerInputPins(void);
+void turnOnTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void applyNewTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void stopTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+void stopTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #if HAL_TRIGGER_USE_ADC && HAL_USE_ADC
 // This detector has 2 modes for low-RPM (ADC) and fast-RPM (EXTI)

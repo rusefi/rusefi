@@ -7,15 +7,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "mazda_626.h"
-#include "engine_math.h"
-#include "custom_engine.h"
-#include "allsensors.h"
-#include "fsio_impl.h"
-#include "settings.h"
+#include "pch.h"
 
-EXTERN_CONFIG;
+#include "mazda_626.h"
+#include "custom_engine.h"
+#include "fsio_impl.h"
 
 void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -39,8 +35,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// chartsize 600
 	engineConfiguration->engineChartSize = 600;
 
-	engineConfiguration->sensorChartFrequency = 2;
-
 	engineConfiguration->injector.flow = 330;
 	engineConfiguration->specs.displacement = 2.0;
 
@@ -51,7 +45,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// set cranking_timing_angle 15
 	engineConfiguration->crankingTimingAngle = 8;
-	engineConfiguration->crankingChargeAngle = 70;
 
 	// set cranking_fuel 9
 	engineConfiguration->cranking.baseFuel = 30;
@@ -96,8 +89,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	// backup main relay pin
 //	setFsio(0, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 //#endif
-
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_4;
 
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOA_5;

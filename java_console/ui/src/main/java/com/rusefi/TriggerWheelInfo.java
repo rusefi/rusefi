@@ -101,6 +101,11 @@ class TriggerWheelInfo {
                 id == Fields.TT_TT_RENIX_66_2_2_2 ||
                 id == Fields.TT_TT_MIATA_VVT ||
                 id == Fields.TT_TT_TRI_TACH ||
+                id == Fields.TT_TT_60_2_VW ||
+                id == Fields.TT_TT_SKODA_FAVORIT ||
+                id == Fields.TT_TT_KAWA_KX450F ||
+                id == Fields.TT_TT_NISSAN_VQ35 ||
+                id == Fields.TT_TT_NISSAN_QR25 ||
                 id == Fields.TT_TT_GM_7X;
     }
 
@@ -110,6 +115,7 @@ class TriggerWheelInfo {
     private boolean isSecondCamBased() {
         return id == Fields.TT_TT_MAZDA_MIATA_NA ||
                 id == Fields.TT_TT_MAZDA_DOHC_1_4 ||
+                id == Fields.TT_TT_GM_60_2_2_2 ||
                 id == Fields.TT_TT_FORD_ASPIRE;
     }
 }

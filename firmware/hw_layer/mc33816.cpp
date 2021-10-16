@@ -14,20 +14,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_MC33816
 
 #include "mc33816.h"
 #include "mc33816_memory_map.h"
-#include "engine.h"
-#include "efi_gpio.h"
 #include "hardware.h"
 #include "mc33816_data.h"
 #include "mpu_util.h"
-#include "voltage.h"
-
-EXTERN_ENGINE;
 
 static bool isInitializaed = false;
 
@@ -40,7 +35,6 @@ static bool flag0after = false;
 
 static unsigned short mcChipId;
 static unsigned short mcDriverStatus;
-static Logging* logger;
 
 static SPIConfig spiCfg = { .circular = false,
 		.end_cb = NULL,
@@ -61,21 +55,21 @@ static bool validateChipId() {
 
 static void showStats() {
 	if (!isInitializaed) {
-		scheduleMsg(logger, "WAITINIG FOR VBatt...");
+		efiPrintf("WAITINIG FOR VBatt...");
 	}
 	// x9D is product code or something, and 43 is the revision?
-	scheduleMsg(logger, "MC 0x%x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
+	efiPrintf("MC 0x%x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
 
-    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
-    	scheduleMsg(logger, "flag0 before %d after %d", flag0before, flag0after);
+    if (isBrainPinValid(CONFIG(mc33816_flag0))) {
+    	efiPrintf("flag0 before %d after %d", flag0before, flag0after);
 
-    	scheduleMsg(logger, "flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
+    	efiPrintf("flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
 
     } else {
-    	scheduleMsg(logger, "No flag0 pin selected");
+    	efiPrintf("No flag0 pin selected");
     }
-    scheduleMsg(logger, "MC voltage %d", CONFIG(mc33_hvolt));
-    scheduleMsg(logger, "MC driver status 0x%x", mcDriverStatus);
+    efiPrintf("MC voltage %d", CONFIG(mc33_hvolt));
+    efiPrintf("MC driver status 0x%x", mcDriverStatus);
 }
 
 static void mcRestart();
@@ -83,26 +77,18 @@ static void mcRestart();
 
 // Receive 16bits
 unsigned short recv_16bit_spi() {
-	unsigned short ret;
-	//spiSelect(driver);
-	spiReceive(driver, 1, &ret);
-	//spiUnselect(driver);
-	return ret;
+	return spiPolledExchange(driver, 0xFFFF);
 }
 
 // This could be used to detect if check byte is wrong.. or use a FLAG after init
 unsigned short txrx_16bit_spi(const unsigned short param) {
-	unsigned short ret;
-	//spiSelect(driver);
-	spiExchange(driver, 1, &param, &ret);
-	//spiUnselect(driver);
-	return ret;
+	return spiPolledExchange(driver, param);
 }
 
 // Send 16bits
 static void spi_writew(unsigned short param) {
 	//spiSelect(driver);
-	spiSend(driver, 1, &param);
+	spiPolledExchange(driver, param);
 	//spiUnselect(driver);
 }
 
@@ -422,19 +408,16 @@ static void download_register(int r_target) {
 
 static bool haveMc33816 = false;
 
-void initMc33816(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void initMc33816() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
 	// Pins
-	if (CONFIG(mc33816_cs) == GPIO_UNASSIGNED ||
-			CONFIG(mc33816_rstb) == GPIO_UNASSIGNED ||
-			CONFIG(mc33816_driven) == GPIO_UNASSIGNED
-			) {
+	if (!isBrainPinValid(CONFIG(mc33816_cs)) ||
+		!isBrainPinValid(CONFIG(mc33816_rstb)) ||
+		!isBrainPinValid(CONFIG(mc33816_driven))) {
 		return;
 	}
-	if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+	if (isBrainPinValid(CONFIG(mc33816_flag0))) {
 		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
 	}
 
@@ -477,13 +460,13 @@ static void mcRestart() {
 	flag0before = false;
 	flag0after = false;
 
-	scheduleMsg(logger, "MC Restart");
+	efiPrintf("MC Restart");
 	showStats();
 
 	driven.setValue(0); // ensure driven is off
 
-	if (engine->sensors.vBatt < LOW_VBATT) {
-		scheduleMsg(logger, "GDI not Restarting until we see VBatt");
+	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
+		efiPrintf("GDI not Restarting until we see VBatt");
 		return;
 	}
 
@@ -495,7 +478,7 @@ static void mcRestart() {
 	chThdSleepMilliseconds(10);
 	resetB.setValue(1);
 	chThdSleepMilliseconds(10);
-    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+    if (isBrainPinValid(CONFIG(mc33816_flag0))) {
    		flag0before = efiReadPin(CONFIG(mc33816_flag0));
     }
 
@@ -524,7 +507,7 @@ static void mcRestart() {
      * current configuration of REG_MAIN would toggle flag0 from LOW to HIGH
      */
     download_register(REG_MAIN);    // download main register configurations
-    if (CONFIG(mc33816_flag0) != GPIO_UNASSIGNED) {
+    if (isBrainPinValid(CONFIG(mc33816_flag0))) {
    		flag0after = efiReadPin(CONFIG(mc33816_flag0));
    		if (flag0before || !flag0after) {
    			firmwareError(OBD_PCM_Processor_Fault, "MC33 flag0 transition no buena");
@@ -578,7 +561,7 @@ void initMc33816IfNeeded() {
 	if (!haveMc33816) {
 		return;
 	}
-	if (engine->sensors.vBatt < LOW_VBATT) {
+	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
 		isInitializaed = false;
 	} else {
 		if (!isInitializaed) {

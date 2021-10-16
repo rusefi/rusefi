@@ -1,15 +1,12 @@
-#include "global.h"
-#include "adc_inputs.h"
+#include "pch.h"
+
 #include "adc_subscription.h"
-#include "engine.h"
-#include "error_handling.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
+#include "redundant_ford_tps.h"
 #include "proxy_sensor.h"
 #include "linear_func.h"
 #include "tps.h"
-
-EXTERN_ENGINE;
 
 LinearFunc tpsFunc1p(TPS_TS_CONVERSION);
 LinearFunc tpsFunc1s(TPS_TS_CONVERSION);
@@ -21,8 +18,13 @@ FunctionalSensor tpsSens1s(SensorType::Tps1Secondary, MS2NT(10));
 FunctionalSensor tpsSens2p(SensorType::Tps2Primary, MS2NT(10));
 FunctionalSensor tpsSens2s(SensorType::Tps2Secondary, MS2NT(10));
 
+// Used in case of "normal", non-Ford ETB TPS
 RedundantSensor tps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
 RedundantSensor tps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
+
+// Used only in case of weird Ford-style ETB TPS
+RedundantFordTps fordTps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
+RedundantFordTps fordTps2(SensorType::Tps2, SensorType::Tps2Primary, SensorType::Tps2Secondary);
 
 LinearFunc pedalFuncPrimary;
 LinearFunc pedalFuncSecondary;
@@ -53,7 +55,7 @@ static bool configureTps(LinearFunc& func, adc_channel_e channel, float closed, 
 
 	// If the voltage for closed vs. open is very near, something is wrong with your calibration
 	if (split < 0.5f) {
-		firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Sensor \"%s\" problem: open %f/closed %f calibration values are too close together.  Please check your wiring!", msg,
+		firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "\"%s\" problem: open %.2f/closed %.2f cal values are too close together. Check your calibration and wiring!", msg,
 				open,
 				closed);
 		return false;
@@ -81,12 +83,16 @@ static bool initTpsFunc(LinearFunc& func, FunctionalSensor& sensor, adc_channel_
 	return sensor.Register();
 }
 
-static void initTpsFuncAndRedund(RedundantSensor& redund, LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
+static void initTpsFuncAndRedund(RedundantSensor& redund, RedundantFordTps* fordTps, bool isFordTps, LinearFunc& func, FunctionalSensor& sensor, adc_channel_e channel, float closed, float open, float min, float max) {
 	bool hasSecond = initTpsFunc(func, sensor, channel, closed, open, min, max);
 
-	redund.configure(5.0f, !hasSecond);
-
-	redund.Register();
+	if (isFordTps && fordTps) {
+		fordTps->configure(5.0f, 52.6f);
+		fordTps->Register();
+	} else {
+		redund.configure(5.0f, !hasSecond);
+		redund.Register();
+	}
 }
 
 void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -94,12 +100,18 @@ void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	percent_t max = CONFIG(tpsErrorDetectionTooHigh);
 
 	if (!CONFIG(consumeObdSensors)) {
+		// primary TPS sensors
 		initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max);
-		initTpsFuncAndRedund(tps1, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
 		initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max);
-		initTpsFuncAndRedund(tps2, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
+
+		// Secondary TPS sensors (and redundant combining)
+		bool isFordTps = CONFIG(useFordRedundantTps);
+		initTpsFuncAndRedund(tps1, &fordTps1, isFordTps, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
+		initTpsFuncAndRedund(tps2, &fordTps2, isFordTps, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
+
+		// Pedal sensors
 		initTpsFunc(pedalFuncPrimary, pedalSensorPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
-		initTpsFuncAndRedund(pedal, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+		initTpsFuncAndRedund(pedal, nullptr, false, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
 
 		// TPS-like stuff that isn't actually a TPS
 		initTpsFunc(wastegateFunc, wastegateSens, CONFIG(wastegatePositionSensor), CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max);
@@ -116,18 +128,16 @@ void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	driverIntent.Register();
 }
 
-void reconfigureTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	float min = CONFIG(tpsErrorDetectionTooLow);
-	float max = CONFIG(tpsErrorDetectionTooHigh);
+void deinitTps() {
+	AdcSubscription::UnsubscribeSensor(tpsSens1p);
+	AdcSubscription::UnsubscribeSensor(tpsSens1s);
 
-	configureTps(tpsFunc1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max, tpsSens1p.getSensorName());
-	configureTps(tpsFunc1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max, tpsSens1s.getSensorName());
-	configureTps(tpsFunc2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max, tpsSens2p.getSensorName());
-	configureTps(tpsFunc2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max, tpsSens2s.getSensorName());
+	AdcSubscription::UnsubscribeSensor(tpsSens2p);
+	AdcSubscription::UnsubscribeSensor(tpsSens2s);
 
-	configureTps(pedalFuncPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max, pedalSensorPrimary.getSensorName());
-	configureTps(pedalFuncSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max, pedalSensorSecondary.getSensorName());
+	AdcSubscription::UnsubscribeSensor(pedalSensorPrimary);
+	AdcSubscription::UnsubscribeSensor(pedalSensorSecondary);
 
-	configureTps(wastegateFunc, CONFIG(wastegatePositionSensor), CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max, wastegateSens.getSensorName());
-	configureTps(idlePosFunc, CONFIG(idlePositionSensor), CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max, idlePosSens.getSensorName());
+	AdcSubscription::UnsubscribeSensor(wastegateSens);
+	AdcSubscription::UnsubscribeSensor(idlePosSens);
 }

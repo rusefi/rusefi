@@ -8,10 +8,9 @@
 
 #pragma once
 
-#include <stdarg.h>
-#include <stdint.h>
-
-#define DELIMETER	","
+#include <cstdarg>
+#include <cstdint>
+#include <cstddef>
 
 // todo: migrate to external buffer so that different instances have different
 // size of buffers?
@@ -22,7 +21,6 @@ public:
 
 	void reset();
 
-	void vappendPrintf(const char *fmt, va_list arg);
 	void append(const char *text);
 	void appendFast(const char *text);
 	void appendPrintf(const char *fmt, ...);
@@ -49,7 +47,7 @@ public:
 	}
 
 //private:
-	bool validateBuffer(const char *text, uint32_t extraLen);
+	bool validateBuffer(uint32_t extraLen);
 
 	const char* const name = nullptr;
 
@@ -71,28 +69,10 @@ public:
 class LoggingWithStorage : public Logging {
 public:
 	explicit LoggingWithStorage(const char *name);
-	char DEFAULT_BUFFER[200];
+	char DEFAULT_BUFFER[100];
 };
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
 
 void appendMsgPrefix(Logging *logging);
 void appendMsgPostfix(Logging *logging);
-
-
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-void printMsg(Logging *logging, const char *fmt, ...);
-
-/**
- * this method copies the line into the intermediate buffer for later output by
- * the main thread
- */
-void scheduleLogging(Logging *logging);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */

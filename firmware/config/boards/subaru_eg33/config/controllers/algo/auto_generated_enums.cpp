@@ -1,0 +1,503 @@
+#include "global.h"
+#include "rusefi_hw_enums.h"
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Mon Jul 12 21:09:56 EDT 2021
+// see also gen_config_and_enums.bat
+
+
+
+const char *getAdc_channel_e(adc_channel_e value){
+switch(value) {
+case EFI_ADC3_14:
+  return "EFI_ADC3_14";
+case EFI_ADC3_15:
+  return "EFI_ADC3_15";
+case EFI_ADC3_4:
+  return "EFI_ADC3_4";
+case EFI_ADC3_5:
+  return "EFI_ADC3_5";
+case EFI_ADC3_6:
+  return "EFI_ADC3_6";
+case EFI_ADC3_7:
+  return "EFI_ADC3_7";
+case EFI_ADC3_8:
+  return "EFI_ADC3_8";
+case EFI_ADC3_9:
+  return "EFI_ADC3_9";
+case EFI_ADC_0:
+  return "EFI_ADC_0";
+case EFI_ADC_1:
+  return "EFI_ADC_1";
+case EFI_ADC_10:
+  return "EFI_ADC_10";
+case EFI_ADC_11:
+  return "EFI_ADC_11";
+case EFI_ADC_12:
+  return "EFI_ADC_12";
+case EFI_ADC_13:
+  return "EFI_ADC_13";
+case EFI_ADC_14:
+  return "EFI_ADC_14";
+case EFI_ADC_15:
+  return "EFI_ADC_15";
+case EFI_ADC_2:
+  return "EFI_ADC_2";
+case EFI_ADC_3:
+  return "EFI_ADC_3";
+case EFI_ADC_4:
+  return "EFI_ADC_4";
+case EFI_ADC_5:
+  return "EFI_ADC_5";
+case EFI_ADC_6:
+  return "EFI_ADC_6";
+case EFI_ADC_7:
+  return "EFI_ADC_7";
+case EFI_ADC_8:
+  return "EFI_ADC_8";
+case EFI_ADC_9:
+  return "EFI_ADC_9";
+case EFI_ADC_ERROR:
+  return "EFI_ADC_ERROR";
+case EFI_ADC_LAST_CHANNEL:
+  return "EFI_ADC_LAST_CHANNEL";
+case EFI_ADC_NONE:
+  return "EFI_ADC_NONE";
+  }
+ return NULL;
+}
+const char *getBrain_pin_diag_e(brain_pin_diag_e value){
+switch(value) {
+case PIN_DRIVER_OVERTEMP:
+  return "PIN_DRIVER_OVERTEMP";
+case PIN_INVALID:
+  return "PIN_INVALID";
+case PIN_OK:
+  return "PIN_OK";
+case PIN_OPEN:
+  return "PIN_OPEN";
+case PIN_OVERLOAD:
+  return "PIN_OVERLOAD";
+case PIN_SHORT_TO_BAT:
+  return "PIN_SHORT_TO_BAT";
+case PIN_SHORT_TO_GND:
+  return "PIN_SHORT_TO_GND";
+  }
+ return NULL;
+}
+const char *getBrain_pin_e(brain_pin_e value){
+switch(value) {
+case GPIOA_0:
+  return "GPIOA_0";
+case GPIOA_1:
+  return "GPIOA_1";
+case GPIOA_10:
+  return "GPIOA_10";
+case GPIOA_11:
+  return "GPIOA_11";
+case GPIOA_12:
+  return "GPIOA_12";
+case GPIOA_13:
+  return "GPIOA_13";
+case GPIOA_14:
+  return "GPIOA_14";
+case GPIOA_15:
+  return "GPIOA_15";
+case GPIOA_2:
+  return "GPIOA_2";
+case GPIOA_3:
+  return "GPIOA_3";
+case GPIOA_4:
+  return "GPIOA_4";
+case GPIOA_5:
+  return "GPIOA_5";
+case GPIOA_6:
+  return "GPIOA_6";
+case GPIOA_7:
+  return "GPIOA_7";
+case GPIOA_8:
+  return "GPIOA_8";
+case GPIOA_9:
+  return "GPIOA_9";
+case GPIOB_0:
+  return "GPIOB_0";
+case GPIOB_1:
+  return "GPIOB_1";
+case GPIOB_10:
+  return "GPIOB_10";
+case GPIOB_11:
+  return "GPIOB_11";
+case GPIOB_12:
+  return "GPIOB_12";
+case GPIOB_13:
+  return "GPIOB_13";
+case GPIOB_14:
+  return "GPIOB_14";
+case GPIOB_15:
+  return "GPIOB_15";
+case GPIOB_2:
+  return "GPIOB_2";
+case GPIOB_3:
+  return "GPIOB_3";
+case GPIOB_4:
+  return "GPIOB_4";
+case GPIOB_5:
+  return "GPIOB_5";
+case GPIOB_6:
+  return "GPIOB_6";
+case GPIOB_7:
+  return "GPIOB_7";
+case GPIOB_8:
+  return "GPIOB_8";
+case GPIOB_9:
+  return "GPIOB_9";
+case GPIOC_0:
+  return "GPIOC_0";
+case GPIOC_1:
+  return "GPIOC_1";
+case GPIOC_10:
+  return "GPIOC_10";
+case GPIOC_11:
+  return "GPIOC_11";
+case GPIOC_12:
+  return "GPIOC_12";
+case GPIOC_13:
+  return "GPIOC_13";
+case GPIOC_14:
+  return "GPIOC_14";
+case GPIOC_15:
+  return "GPIOC_15";
+case GPIOC_2:
+  return "GPIOC_2";
+case GPIOC_3:
+  return "GPIOC_3";
+case GPIOC_4:
+  return "GPIOC_4";
+case GPIOC_5:
+  return "GPIOC_5";
+case GPIOC_6:
+  return "GPIOC_6";
+case GPIOC_7:
+  return "GPIOC_7";
+case GPIOC_8:
+  return "GPIOC_8";
+case GPIOC_9:
+  return "GPIOC_9";
+case GPIOD_0:
+  return "GPIOD_0";
+case GPIOD_1:
+  return "GPIOD_1";
+case GPIOD_10:
+  return "GPIOD_10";
+case GPIOD_11:
+  return "GPIOD_11";
+case GPIOD_12:
+  return "GPIOD_12";
+case GPIOD_13:
+  return "GPIOD_13";
+case GPIOD_14:
+  return "GPIOD_14";
+case GPIOD_15:
+  return "GPIOD_15";
+case GPIOD_2:
+  return "GPIOD_2";
+case GPIOD_3:
+  return "GPIOD_3";
+case GPIOD_4:
+  return "GPIOD_4";
+case GPIOD_5:
+  return "GPIOD_5";
+case GPIOD_6:
+  return "GPIOD_6";
+case GPIOD_7:
+  return "GPIOD_7";
+case GPIOD_8:
+  return "GPIOD_8";
+case GPIOD_9:
+  return "GPIOD_9";
+case GPIOE_0:
+  return "GPIOE_0";
+case GPIOE_1:
+  return "GPIOE_1";
+case GPIOE_10:
+  return "GPIOE_10";
+case GPIOE_11:
+  return "GPIOE_11";
+case GPIOE_12:
+  return "GPIOE_12";
+case GPIOE_13:
+  return "GPIOE_13";
+case GPIOE_14:
+  return "GPIOE_14";
+case GPIOE_15:
+  return "GPIOE_15";
+case GPIOE_2:
+  return "GPIOE_2";
+case GPIOE_3:
+  return "GPIOE_3";
+case GPIOE_4:
+  return "GPIOE_4";
+case GPIOE_5:
+  return "GPIOE_5";
+case GPIOE_6:
+  return "GPIOE_6";
+case GPIOE_7:
+  return "GPIOE_7";
+case GPIOE_8:
+  return "GPIOE_8";
+case GPIOE_9:
+  return "GPIOE_9";
+case GPIOF_0:
+  return "GPIOF_0";
+case GPIOF_1:
+  return "GPIOF_1";
+case GPIOF_10:
+  return "GPIOF_10";
+case GPIOF_11:
+  return "GPIOF_11";
+case GPIOF_12:
+  return "GPIOF_12";
+case GPIOF_13:
+  return "GPIOF_13";
+case GPIOF_14:
+  return "GPIOF_14";
+case GPIOF_15:
+  return "GPIOF_15";
+case GPIOF_2:
+  return "GPIOF_2";
+case GPIOF_3:
+  return "GPIOF_3";
+case GPIOF_4:
+  return "GPIOF_4";
+case GPIOF_5:
+  return "GPIOF_5";
+case GPIOF_6:
+  return "GPIOF_6";
+case GPIOF_7:
+  return "GPIOF_7";
+case GPIOF_8:
+  return "GPIOF_8";
+case GPIOF_9:
+  return "GPIOF_9";
+case GPIOG_0:
+  return "GPIOG_0";
+case GPIOG_1:
+  return "GPIOG_1";
+case GPIOG_10:
+  return "GPIOG_10";
+case GPIOG_11:
+  return "GPIOG_11";
+case GPIOG_12:
+  return "GPIOG_12";
+case GPIOG_13:
+  return "GPIOG_13";
+case GPIOG_14:
+  return "GPIOG_14";
+case GPIOG_15:
+  return "GPIOG_15";
+case GPIOG_2:
+  return "GPIOG_2";
+case GPIOG_3:
+  return "GPIOG_3";
+case GPIOG_4:
+  return "GPIOG_4";
+case GPIOG_5:
+  return "GPIOG_5";
+case GPIOG_6:
+  return "GPIOG_6";
+case GPIOG_7:
+  return "GPIOG_7";
+case GPIOG_8:
+  return "GPIOG_8";
+case GPIOG_9:
+  return "GPIOG_9";
+case GPIOH_0:
+  return "GPIOH_0";
+case GPIOH_1:
+  return "GPIOH_1";
+case GPIOH_10:
+  return "GPIOH_10";
+case GPIOH_11:
+  return "GPIOH_11";
+case GPIOH_12:
+  return "GPIOH_12";
+case GPIOH_13:
+  return "GPIOH_13";
+case GPIOH_14:
+  return "GPIOH_14";
+case GPIOH_15:
+  return "GPIOH_15";
+case GPIOH_2:
+  return "GPIOH_2";
+case GPIOH_3:
+  return "GPIOH_3";
+case GPIOH_4:
+  return "GPIOH_4";
+case GPIOH_5:
+  return "GPIOH_5";
+case GPIOH_6:
+  return "GPIOH_6";
+case GPIOH_7:
+  return "GPIOH_7";
+case GPIOH_8:
+  return "GPIOH_8";
+case GPIOH_9:
+  return "GPIOH_9";
+case GPIOI_0:
+  return "GPIOI_0";
+case GPIOI_1:
+  return "GPIOI_1";
+case GPIOI_10:
+  return "GPIOI_10";
+case GPIOI_11:
+  return "GPIOI_11";
+case GPIOI_12:
+  return "GPIOI_12";
+case GPIOI_13:
+  return "GPIOI_13";
+case GPIOI_14:
+  return "GPIOI_14";
+case GPIOI_15:
+  return "GPIOI_15";
+case GPIOI_2:
+  return "GPIOI_2";
+case GPIOI_3:
+  return "GPIOI_3";
+case GPIOI_4:
+  return "GPIOI_4";
+case GPIOI_5:
+  return "GPIOI_5";
+case GPIOI_6:
+  return "GPIOI_6";
+case GPIOI_7:
+  return "GPIOI_7";
+case GPIOI_8:
+  return "GPIOI_8";
+case GPIOI_9:
+  return "GPIOI_9";
+case GPIO_INVALID:
+  return "GPIO_INVALID";
+case GPIO_UNASSIGNED:
+  return "GPIO_UNASSIGNED";
+case MC33810_0_GD_0:
+  return "MC33810_0_GD_0";
+case MC33810_0_GD_1:
+  return "MC33810_0_GD_1";
+case MC33810_0_GD_2:
+  return "MC33810_0_GD_2";
+case MC33810_0_GD_3:
+  return "MC33810_0_GD_3";
+case MC33810_0_OUT_0:
+  return "MC33810_0_OUT_0";
+case MC33810_0_OUT_1:
+  return "MC33810_0_OUT_1";
+case MC33810_0_OUT_2:
+  return "MC33810_0_OUT_2";
+case MC33810_0_OUT_3:
+  return "MC33810_0_OUT_3";
+case MC33810_1_GD_0:
+  return "MC33810_1_GD_0";
+case MC33810_1_GD_1:
+  return "MC33810_1_GD_1";
+case MC33810_1_GD_2:
+  return "MC33810_1_GD_2";
+case MC33810_1_GD_3:
+  return "MC33810_1_GD_3";
+case MC33810_1_OUT_0:
+  return "MC33810_1_OUT_0";
+case MC33810_1_OUT_1:
+  return "MC33810_1_OUT_1";
+case MC33810_1_OUT_2:
+  return "MC33810_1_OUT_2";
+case MC33810_1_OUT_3:
+  return "MC33810_1_OUT_3";
+case MC33972_PIN_1:
+  return "MC33972_PIN_1";
+case MC33972_PIN_10:
+  return "MC33972_PIN_10";
+case MC33972_PIN_11:
+  return "MC33972_PIN_11";
+case MC33972_PIN_12:
+  return "MC33972_PIN_12";
+case MC33972_PIN_13:
+  return "MC33972_PIN_13";
+case MC33972_PIN_14:
+  return "MC33972_PIN_14";
+case MC33972_PIN_15:
+  return "MC33972_PIN_15";
+case MC33972_PIN_16:
+  return "MC33972_PIN_16";
+case MC33972_PIN_17:
+  return "MC33972_PIN_17";
+case MC33972_PIN_18:
+  return "MC33972_PIN_18";
+case MC33972_PIN_19:
+  return "MC33972_PIN_19";
+case MC33972_PIN_2:
+  return "MC33972_PIN_2";
+case MC33972_PIN_20:
+  return "MC33972_PIN_20";
+case MC33972_PIN_21:
+  return "MC33972_PIN_21";
+case MC33972_PIN_22:
+  return "MC33972_PIN_22";
+case MC33972_PIN_3:
+  return "MC33972_PIN_3";
+case MC33972_PIN_4:
+  return "MC33972_PIN_4";
+case MC33972_PIN_5:
+  return "MC33972_PIN_5";
+case MC33972_PIN_6:
+  return "MC33972_PIN_6";
+case MC33972_PIN_7:
+  return "MC33972_PIN_7";
+case MC33972_PIN_8:
+  return "MC33972_PIN_8";
+case MC33972_PIN_9:
+  return "MC33972_PIN_9";
+case TLE6240_PIN_1:
+  return "TLE6240_PIN_1";
+case TLE6240_PIN_10:
+  return "TLE6240_PIN_10";
+case TLE6240_PIN_11:
+  return "TLE6240_PIN_11";
+case TLE6240_PIN_12:
+  return "TLE6240_PIN_12";
+case TLE6240_PIN_13:
+  return "TLE6240_PIN_13";
+case TLE6240_PIN_14:
+  return "TLE6240_PIN_14";
+case TLE6240_PIN_15:
+  return "TLE6240_PIN_15";
+case TLE6240_PIN_16:
+  return "TLE6240_PIN_16";
+case TLE6240_PIN_2:
+  return "TLE6240_PIN_2";
+case TLE6240_PIN_3:
+  return "TLE6240_PIN_3";
+case TLE6240_PIN_4:
+  return "TLE6240_PIN_4";
+case TLE6240_PIN_5:
+  return "TLE6240_PIN_5";
+case TLE6240_PIN_6:
+  return "TLE6240_PIN_6";
+case TLE6240_PIN_7:
+  return "TLE6240_PIN_7";
+case TLE6240_PIN_8:
+  return "TLE6240_PIN_8";
+case TLE6240_PIN_9:
+  return "TLE6240_PIN_9";
+  }
+ return NULL;
+}
+const char *getPin_mode_e(pin_mode_e value){
+switch(value) {
+case PO_DEFAULT:
+  return "PO_DEFAULT";
+case PO_OPENDRAIN:
+  return "PO_OPENDRAIN";
+case PO_PULLDOWN:
+  return "PO_PULLDOWN";
+case PO_PULLUP:
+  return "PO_PULLUP";
+  }
+ return NULL;
+}

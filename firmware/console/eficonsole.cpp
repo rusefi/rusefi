@@ -21,13 +21,12 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "globalaccess.h"
+#include "pch.h"
+
 #include "os_access.h"
 #include "eficonsole.h"
 #include "console_io.h"
 #include "svnversion.h"
-
-static LoggingWithStorage logger("console");
 
 static void testCritical(void) {
 	chDbgCheck(0);
@@ -37,80 +36,90 @@ static void myerror(void) {
 	firmwareError(CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
 }
 
-static void sayNothing(void) {
-	/**
-	 * @see EngineState#TS_PROTOCOL_TAG
-	 * this empty response is part of protocol check
-	 * todo: make this logic smarter?
-	 */
-}
-
 static void sayHello(void) {
-	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2020. All rights reserved.");
-	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
-	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
-	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
-	scheduleMsg(&logger, PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2021. All rights reserved.");
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
+	efiPrintf(PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
+	efiPrintf(PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
+	efiPrintf(PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
 
-#if defined(STM32F4) || defined(STM32F7)
+#ifdef ENABLE_AUTO_DETECT_HSE
+	extern float hseFrequencyMhz;
+	extern uint8_t autoDetectedRoundedMhz;
+	efiPrintf(PROTOCOL_HELLO_PREFIX " detected HSE clock %.2f MHz PLLM = %d", hseFrequencyMhz, autoDetectedRoundedMhz);
+#endif /* ENABLE_AUTO_DETECT_HSE */
+
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
-	scheduleMsg(&logger, "UID=%x %x %x", uid[0], uid[1], uid[2]);
+	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);
+
+#define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
+#define MCU_REVISION_MASK  0xfff
+
+	int mcuRevision = DBGMCU->IDCODE & MCU_REVISION_MASK;
+
+#define MIN_FLASH_SIZE 1024
+
+	int flashSize = TM_ID_GetFlashSize();
+	if (flashSize < MIN_FLASH_SIZE) {
+		firmwareError(OBD_PCM_Processor_Fault, "rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
+	}
+
+	// todo: bug, at the moment we report 1MB on dual-bank F7
+	efiPrintf("MCU rev=%x flashSize=%d", mcuRevision, flashSize);
 #endif
 
 
 #ifdef CH_FREQUENCY
-	scheduleMsg(&logger, "CH_FREQUENCY=%d", CH_FREQUENCY);
+	efiPrintf("CH_FREQUENCY=%d", CH_FREQUENCY);
 #endif
 
 #ifdef CORTEX_MAX_KERNEL_PRIORITY
-	scheduleMsg(&logger, "CORTEX_MAX_KERNEL_PRIORITY=%d", CORTEX_MAX_KERNEL_PRIORITY);
+	efiPrintf("CORTEX_MAX_KERNEL_PRIORITY=%d", CORTEX_MAX_KERNEL_PRIORITY);
 #endif
 
 #ifdef STM32_ADCCLK
-	scheduleMsg(&logger, "STM32_ADCCLK=%d", STM32_ADCCLK);
-	scheduleMsg(&logger, "STM32_TIMCLK1=%d", STM32_TIMCLK1);
-	scheduleMsg(&logger, "STM32_TIMCLK2=%d", STM32_TIMCLK2);
+	efiPrintf("STM32_ADCCLK=%d", STM32_ADCCLK);
+	efiPrintf("STM32_TIMCLK1=%d", STM32_TIMCLK1);
+	efiPrintf("STM32_TIMCLK2=%d", STM32_TIMCLK2);
 #endif
 #ifdef STM32_PCLK1
-	scheduleMsg(&logger, "STM32_PCLK1=%d", STM32_PCLK1);
-	scheduleMsg(&logger, "STM32_PCLK2=%d", STM32_PCLK2);
+	efiPrintf("STM32_PCLK1=%d", STM32_PCLK1);
+	efiPrintf("STM32_PCLK2=%d", STM32_PCLK2);
 #endif
 
-	scheduleMsg(&logger, "PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
+	efiPrintf("PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
 
-	scheduleMsg(&logger, "CH_DBG_ENABLE_ASSERTS=%d", CH_DBG_ENABLE_ASSERTS);
+	efiPrintf("CH_DBG_ENABLE_ASSERTS=%d", CH_DBG_ENABLE_ASSERTS);
 #ifdef CH_DBG_ENABLED
-	scheduleMsg(&logger, "CH_DBG_ENABLED=%d", CH_DBG_ENABLED);
+	efiPrintf("CH_DBG_ENABLED=%d", CH_DBG_ENABLED);
 #endif
-	scheduleMsg(&logger, "CH_DBG_SYSTEM_STATE_CHECK=%d", CH_DBG_SYSTEM_STATE_CHECK);
-	scheduleMsg(&logger, "CH_DBG_ENABLE_STACK_CHECK=%d", CH_DBG_ENABLE_STACK_CHECK);
+	efiPrintf("CH_DBG_SYSTEM_STATE_CHECK=%d", CH_DBG_SYSTEM_STATE_CHECK);
+	efiPrintf("CH_DBG_ENABLE_STACK_CHECK=%d", CH_DBG_ENABLE_STACK_CHECK);
 
 #ifdef EFI_LOGIC_ANALYZER
-	scheduleMsg(&logger, "EFI_LOGIC_ANALYZER=%d", EFI_LOGIC_ANALYZER);
+	efiPrintf("EFI_LOGIC_ANALYZER=%d", EFI_LOGIC_ANALYZER);
 #endif
 #ifdef EFI_TUNER_STUDIO
-	scheduleMsg(&logger, "EFI_TUNER_STUDIO=%d", EFI_TUNER_STUDIO);
+	efiPrintf("EFI_TUNER_STUDIO=%d", EFI_TUNER_STUDIO);
 #else
-	scheduleMsg(&logger, "EFI_TUNER_STUDIO=%d", 0);
+	efiPrintf("EFI_TUNER_STUDIO=%d", 0);
 #endif
 
 #ifdef EFI_SIGNAL_EXECUTOR_SLEEP
-	scheduleMsg(&logger, "EFI_SIGNAL_EXECUTOR_SLEEP=%d", EFI_SIGNAL_EXECUTOR_SLEEP);
+	efiPrintf("EFI_SIGNAL_EXECUTOR_SLEEP=%d", EFI_SIGNAL_EXECUTOR_SLEEP);
 #endif
 
 #ifdef EFI_SIGNAL_EXECUTOR_HW_TIMER
-	scheduleMsg(&logger, "EFI_SIGNAL_EXECUTOR_HW_TIMER=%d", EFI_SIGNAL_EXECUTOR_HW_TIMER);
+	efiPrintf("EFI_SIGNAL_EXECUTOR_HW_TIMER=%d", EFI_SIGNAL_EXECUTOR_HW_TIMER);
 #endif
 
 #if defined(EFI_SHAFT_POSITION_INPUT)
-	scheduleMsg(&logger, "EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
+	efiPrintf("EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
 #endif
 #ifdef EFI_INTERNAL_ADC
-	scheduleMsg(&logger, "EFI_INTERNAL_ADC=%d", EFI_INTERNAL_ADC);
+	efiPrintf("EFI_INTERNAL_ADC=%d", EFI_INTERNAL_ADC);
 #endif
-
-//	printSimpleMsg(&logger, "", );
-//	printSimpleMsg(&logger, "", );
 
 	/**
 	 * Time to finish output. This is needed to avoid mix-up of this methods output and console command confirmation
@@ -119,12 +128,13 @@ static void sayHello(void) {
 }
 
 void validateStack(const char*msg, obd_code_e code, int desiredStackUnusedSize) {
-
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 	int unusedStack = CountFreeStackSpace(chThdGetSelfX()->wabase);
 	if (unusedStack < desiredStackUnusedSize) {
 		warning(code, "Stack low on %s: %d", msg, unusedStack);
 	}
+#else
+	(void)msg; (void)code; (void)desiredStackUnusedSize;
 #endif
 }
 
@@ -151,53 +161,36 @@ static void cmd_threads(void) {
 
 	thread_t* tp = chRegFirstThread();
 
-	scheduleMsg(&logger, "name\twabase\ttime\tfree stack");
+	efiPrintf("name\twabase\ttime\tfree stack");
 
 	while (tp) {
 		int freeBytes = CountFreeStackSpace(tp->wabase);
-		scheduleMsg(&logger, "%s\t%08x\t%lu\t%d", tp->name, tp->wabase, tp->time, freeBytes);
+		efiPrintf("%s\t%08x\t%lu\t%d", tp->name, tp->wabase, tp->time, freeBytes);
+
+		if (freeBytes < 100) {
+			firmwareError(OBD_PCM_Processor_Fault, "Ran out of stack on thread %s, %d bytes remain", tp->name, freeBytes);
+		}
 
 		tp = chRegNextThread(tp);
 	}
 
 	int isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(0x20000000));
-	scheduleMsg(&logger, "isr\t0\t0\t%d", isrSpace);
+	efiPrintf("isr\t0\t0\t%d", isrSpace);
 
 #else // CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 
-  scheduleMsg(&logger, "CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS is not enabled");
+  efiPrintf("CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS is not enabled");
 
 #endif
 }
 
-/**
- * This methods prints the message to whatever is configured as our primary console
- */
-void print(const char *format, ...) {
-#if !EFI_UART_ECHO_TEST_MODE
-	if (!isCommandLineConsoleReady()) {
-		return;
-	}
-	BaseSequentialStream * channel = (BaseSequentialStream*) getConsoleChannel();
-	if (channel == nullptr) {
-		return;
-	}
-	va_list ap;
-	va_start(ap, format);
-	chvprintf(channel, format, ap);
-	va_end(ap);
-#else
-	UNUSED(format);
-#endif /* EFI_UART_ECHO_TEST_MODE */
-}
+void initializeConsole() {
+	initConsoleLogic();
 
-void initializeConsole(Logging *sharedLogger) {
-	initConsoleLogic(sharedLogger);
-
-	startConsole(sharedLogger, &handleConsoleLine);
+	startConsole(&handleConsoleLine);
 
 	sayHello();
-	addConsoleAction("test", sayNothing);
+	addConsoleAction("test", [](){ /* do nothing */});
 	addConsoleAction("hello", sayHello);
 #if EFI_HAS_RESET
 	addConsoleAction("reset", scheduleReset);

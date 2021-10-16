@@ -4,16 +4,12 @@
  * @date Apr 20, 2018
  */
 
-#include "global.h"
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "trigger_decoder.h"
-#include "engine_math.h"
-#include "allsensors.h"
-#include "rpm_calculator.h"
 #include "event_queue.h"
 #include "trigger_central.h"
 #include "main_trigger_callback.h"
-#include "engine.h"
 #include "advance_map.h"
 #include "speed_density.h"
 #include "fuel_math.h"
@@ -27,7 +23,7 @@ static void fireEvent(EngineTestHelper *eth, bool isRise) {
 	// but for noise filtering, both edges should be processed, so we fire falling events too
 	if (isRise)
 		eth->firePrimaryTriggerRise();
-	else if (eth->engine.engineConfigurationPtr->useNoiselessTriggerDecoder)
+	else if (eth->engine.engineConfiguration->useNoiselessTriggerDecoder)
 		eth->firePrimaryTriggerFall();
 }
 

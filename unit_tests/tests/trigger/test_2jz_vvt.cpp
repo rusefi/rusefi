@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 
 TEST(sensors, test2jz) {
 
@@ -28,9 +28,9 @@ TEST(sensors, test2jz) {
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// currentPosition
-	ASSERT_NEAR(608.2 - 720, engine->triggerCentral.currentVVTEventPosition, EPS3D);
+	ASSERT_NEAR(608.2 - 720, engine->triggerCentral.currentVVTEventPosition[0][0], EPS3D);
 }

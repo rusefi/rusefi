@@ -13,15 +13,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "globalaccess.h"
+#include "pch.h"
 #include "os_access.h"
-#include "engine.h"
-#include "rpm_calculator.h"
 
 #include "trigger_central.h"
-#include "engine_configuration.h"
-#include "engine_math.h"
-#include "perf_trace.h"
 #include "tooth_logger.h"
 
 #if EFI_PROD_CODE
@@ -82,10 +77,6 @@ int RpmCalculator::getRpm() const {
 
 #if EFI_SHAFT_POSITION_INPUT
 
-EXTERN_ENGINE;
-
-static Logging * logger;
-
 RpmCalculator::RpmCalculator() :
 		StoredValueSensor(SensorType::Rpm, 0)
 	{
@@ -94,9 +85,6 @@ RpmCalculator::RpmCalculator() :
 #endif /* EFI_PROD_CODE */
 	// todo: reuse assignRpmValue() method which needs PASS_ENGINE_PARAMETER_SUFFIX
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
-
-	// we need this initial to have not_running at first invocation
-	lastRpmEventTimeNt = (efitick_t) DEEP_IN_THE_PAST_SECONDS * NT_PER_SECOND;
 }
 
 /**
@@ -110,19 +98,19 @@ bool RpmCalculator::isRunning() const {
  * @return true if engine is spinning (cranking or running)
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
-	if (ENGINE(needToStopEngine(nowNt))) {
-		return false;
-	}
-
 	/**
 	 * note that the result of this subtraction could be negative, that would happen if
 	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
 	 */
-	bool noRpmEventsForTooLong = nowNt - lastRpmEventTimeNt >= NT_PER_SECOND * NO_RPM_EVENTS_TIMEOUT_SECS; // Anything below 60 rpm is not running
+
+	// Anything below 60 rpm is not running
+	bool noRpmEventsForTooLong = lastTdcTimer.getElapsedSeconds(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
+
 	/**
 	 * Also check if there were no trigger events
 	 */
-	bool noTriggerEventsForTooLong = nowNt - engine->triggerCentral.triggerState.previousShaftEventTimeNt >= NT_PER_SECOND;
+	bool noTriggerEventsForTooLong = engine->triggerCentral.getTimeSinceTriggerEvent(nowNt) >= 1;
+
 	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
 		return false;
 	}
@@ -162,6 +150,11 @@ void RpmCalculator::setRpmValue(float value) {
 	if (rpmValue == 0) {
 		state = STOPPED;
 	} else if (rpmValue >= CONFIG(cranking.rpm)) {
+		if (state != RUNNING) {
+			// Store the time the engine started
+			engineStartTimer.reset();
+		}
+
 		state = RUNNING;
 	} else if (state == STOPPED || state == SPINNING_UP) {
 		/**
@@ -208,7 +201,7 @@ void RpmCalculator::setStopped() {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
-		scheduleMsg(logger, "engine stopped");
+		efiPrintf("engine stopped");
 	}
 	state = STOPPED;
 }
@@ -252,8 +245,9 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	if (index == 0) {
 		bool hadRpmRecently = rpmState->checkIfSpinning(nowNt);
 
+		float periodSeconds = engine->rpmCalculator.lastTdcTimer.getElapsedSecondsAndReset(nowNt);
+
 		if (hadRpmRecently) {
-			int32_t diffNt = (int32_t)(nowNt - rpmState->lastRpmEventTimeNt);
 		/**
 		 * Four stroke cycle is two crankshaft revolutions
 		 *
@@ -261,24 +255,26 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 * and each revolution of crankshaft consists of two engine cycles revolutions
 		 *
 		 */
-			if (diffNt == 0) {
+			if (periodSeconds == 0) {
 				rpmState->setRpmValue(NOISY_RPM);
 				rpmState->rpmRate = 0;
 			} else {
 				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
-				float rpm = 60.0 * NT_PER_SECOND * mult / diffNt;
+				float rpm = 60 * mult / periodSeconds;
 
 				auto rpmDelta = rpm - rpmState->previousRpmValue;
-				rpmState->rpmRate = rpmDelta / (mult * 1e-6 * NT2US(diffNt));
+				rpmState->rpmRate = rpmDelta / (mult * periodSeconds);
 
 				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
-				
 			}
+		} else {
+			// we are here only once trigger is synchronized for the first time
+			// while transitioning  from 'spinning' to 'running'
+			engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
-		rpmState->onNewEngineCycle();
-		rpmState->lastRpmEventTimeNt = nowNt;
-	}
 
+		rpmState->onNewEngineCycle();
+	}
 
 #if EFI_SENSOR_CHART
 	// this 'index==0' case is here so that it happens after cycle callback so
@@ -290,24 +286,22 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	}
 #endif /* EFI_SENSOR_CHART */
 
+	// Always update instant RPM even when not spinning up
+	engine->triggerCentral.triggerState.updateInstantRpm(&engine->triggerCentral.triggerFormDetails, index, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+
 	if (rpmState->isSpinningUp()) {
-		// we are here only once trigger is synchronized for the first time
-		// while transitioning  from 'spinning' to 'running'
-		// Replace 'normal' RPM with instant RPM for the initial spin-up period
-		engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
-		int prevIndex;
-		float instantRpm = engine->triggerCentral.triggerState.calculateInstantRpm(&engine->triggerCentral.triggerFormDetails,
-				&prevIndex, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-		// validate instant RPM - we shouldn't skip the cranking state
-		instantRpm = minF(instantRpm, CONFIG(cranking.rpm) - 1);
+		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+
 		rpmState->assignRpmValue(instantRpm);
 #if 0
-		scheduleMsg(logger, "** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
+		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
 #endif
 	}
 }
 
-static scheduling_s tdcScheduler[2];
+float RpmCalculator::getTimeSinceEngineStart(efitick_t nowNt) const {
+	return engineStartTimer.getElapsedSeconds(nowNt);
+}
 
 static char rpmBuffer[_MAX_FILLER];
 
@@ -316,6 +310,7 @@ static char rpmBuffer[_MAX_FILLER];
  * digital sniffer.
  */
 static void onTdcCallback(Engine *engine) {
+	UNUSED(engine);
 #if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
 		return;
@@ -338,7 +333,7 @@ static void onTdcCallback(Engine *engine) {
 void tdcMarkCallback(
 		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled)) {
+	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled) && ENGINE(tdcMarkEnabled)) {
 		// two instances of scheduling_s are needed to properly handle event overlap
 		int revIndex2 = getRevolutionCounter() % 2;
 		int rpm = GET_RPM();
@@ -347,7 +342,7 @@ void tdcMarkCallback(
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
 			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
-			scheduleByAngle(&tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
+			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
 					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
 		}
 	}
@@ -358,22 +353,18 @@ void tdcMarkCallback(
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
 float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efitick_t timeSinceZeroAngleNt = timeNt
-			- engine->rpmCalculator.lastRpmEventTimeNt;
+	float timeSinceZeroAngle = engine->rpmCalculator.lastTdcTimer.getElapsedSeconds(timeNt);
 
-	/**
-	 * even if we use 'getOneDegreeTimeUs' macros here, it looks like the
-	 * compiler is not smart enough to figure out that "A / ( B / C)" could be optimized into
-	 * "A * C / B" in order to replace a slower division with a faster multiplication.
-	 */
 	int rpm = GET_RPM();
-	return rpm == 0 ? NAN : timeSinceZeroAngleNt / getOneDegreeTimeNt(rpm);
+
+	float oneDegreeSeconds = (60.0f / 360) / rpm;
+
+	return rpm == 0 ? NAN : timeSinceZeroAngle / oneDegreeSeconds;
 }
 
-void initRpmCalculator(Logging *sharedLogger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	INJECT_ENGINE_REFERENCE(&ENGINE(rpmCalculator));
 
-	logger = sharedLogger;
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		return;
@@ -400,7 +391,7 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 	int32_t delayNt = USF2NT(delayUs);
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
-	ENGINE(executor.scheduleByTimestampNt(timer, delayedTime, action));
+	ENGINE(executor.scheduleByTimestampNt("angle", timer, delayedTime, action));
 
 	return delayedTime;
 }

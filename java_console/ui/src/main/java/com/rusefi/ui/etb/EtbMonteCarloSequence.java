@@ -79,7 +79,7 @@ public class EtbMonteCarloSequence {
                 boolean shouldRun = currentValue < bestResultSoFar;
                 if (!shouldRun) {
                     MessagesCentral.getInstance().postMessage(EtbMonteCarloSequence.class,
-                            "Two much error accumulated, aborting! " + currentValue + " > " + bestResultSoFar);
+                            "Too much error accumulated, aborting! " + currentValue + " > " + bestResultSoFar);
 
                 }
                 return shouldRun;

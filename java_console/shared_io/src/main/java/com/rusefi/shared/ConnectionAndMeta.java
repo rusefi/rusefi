@@ -16,7 +16,7 @@ public class ConnectionAndMeta {
 
     private static final int BUFFER_SIZE = 32 * 1024;
     public static final int STEPS = 1000;
-    private String zipFileName;
+    private final String zipFileName;
     private HttpsURLConnection httpConnection;
     private long completeFileSize;
     private long lastModified;
@@ -77,6 +77,7 @@ public class ConnectionAndMeta {
         ctx.init(new KeyManager[0], new TrustManager[]{new AcceptAnyCertificateTrustManager()}, new SecureRandom());
 
         URL url = new URL(baseUrl + zipFileName);
+        System.out.println("Connecting to " + url);
         httpConnection = (HttpsURLConnection) url.openConnection();
         httpConnection.setSSLSocketFactory(ctx.getSocketFactory());
         completeFileSize = httpConnection.getContentLength();

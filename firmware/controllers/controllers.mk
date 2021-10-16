@@ -12,13 +12,15 @@ CONTROLLERSSRC =
 	
 CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/electronic_throttle.cpp \
+	$(CONTROLLERS_DIR)/actuators/ac_control.cpp \
 	$(CONTROLLERS_DIR)/actuators/alternator_controller.cpp \
 	$(CONTROLLERS_DIR)/actuators/boost_control.cpp \
 	$(CONTROLLERS_DIR)/actuators/dc_motors.cpp \
+	$(CONTROLLERS_DIR)/actuators/fan_control.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_hardware.cpp \
 	$(CONTROLLERS_DIR)/actuators/idle_thread.cpp \
 	$(CONTROLLERS_DIR)/actuators/pwm_tester.cpp \
-	$(CONTROLLERS_DIR)/actuators/algo/aux_pid.cpp \
+	$(CONTROLLERS_DIR)/actuators/vvt.cpp \
 	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm_channel.cpp \
 	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm.cpp \
 	$(CONTROLLERS_DIR)/gauges/tachometer.cpp \
@@ -34,6 +36,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/engine_cycle/high_pressure_fuel_pump.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/rpm_calculator.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/spark_logic.cpp \
+	$(CONTROLLERS_DIR)/engine_cycle/knock_logic.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/main_trigger_callback.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/aux_valves.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/fuel_schedule.cpp \
@@ -42,7 +45,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
-	$(CONTORLLERS_DIR)/can/wideband_bootloader.cpp \
+	$(CONTORLLERS_DIR)/can/rusefi_wideband.cpp \
 	$(CONTROLLERS_DIR)/can/can_tx.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash.cpp \
 	$(CONTROLLERS_DIR)/can/can_vss.cpp \
@@ -64,6 +67,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/system/timer \
 	$(CONTROLLERS_DIR)/algo \
 	$(CONTROLLERS_DIR)/algo/airmass \
+	$(CONTROLLERS_DIR)/algo/defaults \
 	$(CONTROLLERS_DIR)/algo/fuel \
 	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \

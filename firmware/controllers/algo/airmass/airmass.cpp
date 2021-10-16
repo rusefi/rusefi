@@ -1,20 +1,20 @@
+#include "pch.h"
+
 #include "airmass.h"
-#include "sensor.h"
+#include "idle_thread.h"
 
-EXTERN_ENGINE;
+AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
 
-AirmassModelBase::AirmassModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
-
-float AirmassModelBase::getVeLoadAxis(float passedLoad) const {
+float AirmassVeModelBase::getVeLoadAxis(float passedLoad) const {
 	switch(CONFIG(veOverrideMode)) {
 		case VE_None: return passedLoad;
-		case VE_MAP: return Sensor::get(SensorType::Map).value_or(0);
-		case VE_TPS: return Sensor::get(SensorType::Tps1).value_or(0);
+		case VE_MAP: return Sensor::getOrZero(SensorType::Map);
+		case VE_TPS: return Sensor::getOrZero(SensorType::Tps1);
 		default: return 0;
 	}
 }
 
-float AirmassModelBase::getVe(int rpm, float load) const {
+float AirmassVeModelBase::getVe(int rpm, float load) const {
 	efiAssert(OBD_PCM_Processor_Fault, m_veTable != nullptr, "VE table null", 0);
 
 	// Override the load value if necessary
@@ -23,9 +23,9 @@ float AirmassModelBase::getVe(int rpm, float load) const {
 	float ve = m_veTable->getValue(rpm, load);
 
 	auto tps = Sensor::get(SensorType::Tps1);
-	// get VE from the separate table for Idle
-	if (tps.Valid && CONFIG(useSeparateVeForIdle)) {
-		float idleVe = interpolate2d("idleVe", rpm, config->idleVeBins, config->idleVe);
+	// get VE from the separate table for Idle if idling
+	if (isIdlingOrTaper() && tps && CONFIG(useSeparateVeForIdle)) {
+		float idleVe = interpolate2d(rpm, config->idleVeBins, config->idleVe);
 		// interpolate between idle table and normal (running) table using TPS threshold
 		ve = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), ve, tps.Value);
 	}

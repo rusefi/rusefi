@@ -12,6 +12,7 @@
 
 #include "sensor.h"
 #include "pid.h"
+#include "error_accumulator.h"
 
 /**
  * Hard code ETB update speed.
@@ -22,8 +23,6 @@
 #define ETB_LOOP_FREQUENCY 500
 #define DEFAULT_ETB_PWM_FREQUENCY 800
 
-class Logging;
-
 class EtbController : public IEtbController {
 public:
 	bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles) override;
@@ -32,14 +31,14 @@ public:
 	void reset() override;
 
 	// Update the controller's state: read sensors, send output, etc
-	void update();
+	void update() override;
 
 	// Called when the configuration may have changed.  Controller will
 	// reset if necessary.
 	void onConfigurationChange(pid_s* previousConfiguration);
 	
 	// Print this throttle's status.
-	void showStatus(Logging* logger);
+	void showStatus();
 
 	// Helpers for individual parts of throttle control
 	expected<percent_t> observePlant() const override;
@@ -51,7 +50,7 @@ public:
 
 	expected<percent_t> getOpenLoop(percent_t target) const override;
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;
-	expected<percent_t> getClosedLoopAutotune(percent_t actualThrottlePosition);
+	expected<percent_t> getClosedLoopAutotune(percent_t setpoint, percent_t actualThrottlePosition);
 
 	void setOutput(expected<percent_t> outputValue) override;
 
@@ -74,12 +73,16 @@ private:
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
+	ErrorAccumulator m_errorAccumulator;
 
 	// Pedal -> target map
 	const ValueProvider3D* m_pedalMap = nullptr;
 
 	float m_idlePosition = 0;
 	float m_wastegatePosition = 0;
+
+	// This is set if automatic PID cal shoudl be run
+	bool m_isAutotune = false;
 
 	// Autotune helpers
 	bool m_lastIsPositive = false;

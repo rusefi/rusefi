@@ -7,10 +7,8 @@
  * @author Matthew Kennedy, (C) 2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "speed_density_base.h"
-
-EXTERN_ENGINE;
 
 /**
  * Derived via:
@@ -25,7 +23,7 @@ float idealGasLaw(float volume, float pressure, float temperature) {
 	return volume * pressure / (AIR_R * temperature);
 }
 
-float SpeedDensityBase::getAirmassImpl(float ve, float manifoldPressure, float temperature DECLARE_ENGINE_PARAMETER_SUFFIX) {
+/*static*/ float SpeedDensityBase::getAirmassImpl(float ve, float manifoldPressure, float temperature DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	float cycleAir = ve * idealGasLaw(CONFIG(specs.displacement), manifoldPressure, temperature);
 	return cycleAir / CONFIG(specs.cylindersCount);
 }

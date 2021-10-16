@@ -1,3 +1,5 @@
+#define MAIN_HELP_URL "https://github.com/rusefi/rusefi/wiki/Proteus-Manual"
+
 #define ts_show_hip9011 false
 #define ts_show_cj125 false
 #define ts_show_full_pinout false
@@ -12,6 +14,10 @@
 #define ts_show_tunerstudio_port false
 #define ts_show_can2 false
 #define ts_show_software_knock true
+#define ts_show_hardware_simulator false
 
+#define show_test_presets false
 #define show_Frankenso_presets false
 #define show_microRusEFI_presets false
+#define show_Proteus_presets true
+#define ts_show_f7_presets true

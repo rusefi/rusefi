@@ -20,21 +20,15 @@
  *
  * These initialization functions are called from
  * firmware/controllers/algo/engine_configuration.cpp
- *  void setBoardConfigurationOverrides(void);
+ *  void setBoardDefaultConfiguration(void);
  *  void setPinConfigurationOverrides(void);
  *  void setSerialConfigurationOverrides(void);
  *
  * Future: Clean up the distinction between these functions.
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
-
-EXTERN_ENGINE;
 
 // An example of how to configure complex features on the board.
 // Generally these should be local (static) functions, one function per chip.
@@ -66,7 +60,7 @@ static void setupTle9201Etb() {
 	// This chip has PWM/DIR, not dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 	// PWM and DIR pins
-	engineConfiguration->etbIo[0].controlPin1 = GPIOC_7;
+	engineConfiguration->etbIo[0].controlPin = GPIOC_7;
 	engineConfiguration->etbIo[0].directionPin1 = GPIOA_8;
 	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 }
@@ -134,7 +128,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add any board-specific code
  */
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 
 	// Set indicator LED pins.
 	// This is often redundant with efifeatures.h or the run-time config
@@ -152,7 +146,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injectionPins[2] = GPIOE_12;
 	engineConfiguration->injectionPins[3] = GPIOE_11;
 	// Disable the remainder only when they may never be assigned
-	for (int i = 4; i < INJECTION_PIN_COUNT;i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -163,7 +157,7 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->ignitionPins[2] = GPIOD_2;
 	engineConfiguration->ignitionPins[3] = GPIOD_1;
 	// Disable remainder
-	for (int i = 4; i < IGNITION_PIN_COUNT; i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
@@ -226,9 +220,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 }
 
-void setAdcChannelOverrides(void) {
-}
-
 /*
  * Local variables:
  *  c-basic-indent: 4

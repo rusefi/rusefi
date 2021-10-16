@@ -7,34 +7,81 @@
 
 #include "trigger_gm.h"
 
+static float addTooth(float offset, TriggerWaveform *s) {
+	s->addEventAngle(offset, T_SECONDARY, TV_RISE);
+	offset += CRANK_MODE_MULTIPLIER * 3;
+	s->addEventAngle(offset, T_SECONDARY, TV_FALL);
+	offset += CRANK_MODE_MULTIPLIER * 3;
+	return offset;
+}
+
+/**
+ * https://github.com/rusefi/rusefi/issues/2264
+ * GM/Daewoo Distributor on the F8CV
+ */
+void configureGm60_2_2_2(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->isSynchronizationNeeded = false;
+
+	float m = CRANK_MODE_MULTIPLIER;
+	int offset = 1 * m;
+
+	for (int i=0;i<12;i++) {
+		offset = addTooth(offset, s);
+	}
+
+	offset += m * 2 * 6;
+
+	for (int i=0;i<18;i++) {
+		offset = addTooth(offset, s);
+	}
+
+	offset += m * 2 * 6;
+
+	for (int i=0;i<18;i++) {
+		offset = addTooth(offset, s);
+	}
+
+	offset += m * 2 * 6;
+
+	for (int i=0;i<5;i++) {
+		offset = addTooth(offset, s);
+	}
+
+
+	s->addEventAngle(m * (360 - 6), T_PRIMARY, TV_RISE);
+
+	offset = addTooth(offset, s);
+
+	s->addEventAngle(m * (360), T_PRIMARY, TV_FALL);
+
+}
+
 void configureGmTriggerWaveform(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
-	// all angles are x2 here - so, 5 degree width is 10
-	float w = 10;
+	float w = 5;
 
-	float m = CRANK_MODE_MULTIPLIER;
+	s->addEvent360(60 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(60, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 60 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 60, T_PRIMARY, TV_FALL);
+	s->addEvent360(120 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(120.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 120 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 120.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(180 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(180, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 180 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 180, T_PRIMARY, TV_FALL);
+	s->addEvent360(240 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(240.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 240 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 240.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(300 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(300.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 300 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 300.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(350 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(350.0, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(m * 350 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 350.0, T_PRIMARY, TV_FALL);
-
-	s->addEvent720(m * 360 - w, T_PRIMARY, TV_RISE);
-	s->addEvent720(m * 360.0, T_PRIMARY, TV_FALL);
+	s->addEvent360(360 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(360.0, T_PRIMARY, TV_FALL);
 
 	s->setTriggerSynchronizationGap(6);
 }

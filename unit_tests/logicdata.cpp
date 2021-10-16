@@ -32,6 +32,7 @@
 
 #define SIGN_FLAG 0x80000000L
 
+// todo: numChannels 7 or numChannels 8 does not work? :(
 #define numChannels 6
 #define reservedDurationInSamples 10
 

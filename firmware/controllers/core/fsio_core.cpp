@@ -13,23 +13,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_FSIO
 #include "os_access.h"
 
 #include "fsio_core.h"
 #include "fsio_impl.h"
-#include "adc_inputs.h"
-
-extern fsio8_Map3D_f32t fsioTable1;
-extern fsio8_Map3D_u8t fsioTable2;
-extern fsio8_Map3D_u8t fsioTable3;
-extern fsio8_Map3D_u8t fsioTable4;
-
-static fsio8_Map3D_u8t * fsio8t_tables[] = {NULL, NULL, &fsioTable2, &fsioTable3, &fsioTable4};
-
-EXTERN_ENGINE;
 
 LENameOrdinalPair * LE_FIRST = nullptr;
 
@@ -42,6 +32,7 @@ static LENameOrdinalPair leAnd2(LE_OPERATOR_AND, "&");
 static LENameOrdinalPair leOr(LE_OPERATOR_OR, "or");
 static LENameOrdinalPair leOr2(LE_OPERATOR_OR, "|");
 static LENameOrdinalPair leNot(LE_OPERATOR_NOT, "not");
+static LENameOrdinalPair leNot2(LE_OPERATOR_NOT, "!");
 
 static LENameOrdinalPair leAdd(LE_OPERATOR_ADDITION, "+");
 static LENameOrdinalPair leSub(LE_OPERATOR_SUBTRACTION, "-");
@@ -72,7 +63,6 @@ LEElement::LEElement() {
 
 void LEElement::clear() {
 	action = LE_UNDEFINED;
-	next = nullptr;
 	fValue = NAN;
 }
 
@@ -95,27 +85,9 @@ LECalculator::LECalculator() {
 }
 
 void LECalculator::reset() {
-	first = nullptr;
 	stack.reset();
 	currentCalculationLogPosition = 0;
 	memset(calcLogAction, 0, sizeof(calcLogAction));
-}
-
-void LECalculator::reset(LEElement *element) {
-	reset();
-	add(element);
-}
-
-void LECalculator::add(LEElement *element) {
-	if (first == nullptr) {
-		first = element;
-	} else {
-		LEElement *last = first;
-		while (last->next != NULL) {
-			last = last->next;
-		}
-		last->next = element;
-	}
 }
 
 bool float2bool(float v) {
@@ -184,7 +156,7 @@ static FsioResult doBinaryNumeric(le_action_e action, float v1, float v2) {
 /**
  * @return true in case of error, false otherwise
  */
-FsioResult LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", unexpected);
 #endif
@@ -248,15 +220,8 @@ FsioResult LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAME
 		if (index < 1 || index > MAX_TABLE_INDEX) {
 			return unexpected;
 		} else {
-			if (index == 1) {
-				fsio8_Map3D_f32t *t = &fsioTable1;
-
-				return t->getValue(xValue, yValue);
-			} else {
-				fsio8_Map3D_u8t *t = fsio8t_tables[index];
-
-				return t->getValue(xValue, yValue);
-			}
+			// index parameter is 1-based, getFSIOTable is 0-based
+			return getFSIOTable(index - 1)->getValue(xValue, yValue);
 		}
 	}
 	case LE_METHOD_FSIO_DIGITAL_INPUT:
@@ -264,11 +229,10 @@ FsioResult LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAME
 		return unexpected;
 	case LE_METHOD_FSIO_ANALOG_INPUT:
 	{
-		int index = clampF(0, pop(LE_METHOD_FSIO_ANALOG_INPUT), FSIO_ANALOG_INPUT_COUNT - 1);
-		return getVoltage("fsio", engineConfiguration->fsioAdc[index] PASS_ENGINE_PARAMETER_SUFFIX);
+		int index = clampF(0, pop(LE_METHOD_FSIO_ANALOG_INPUT), AUX_ANALOG_INPUT_COUNT - 1);
+		int sensorIdx = static_cast<int>(SensorType::Aux1) + index;
+		return Sensor::get(static_cast<SensorType>(sensorIdx));
 	}
-	case LE_METHOD_KNOCK:
-		return ENGINE(knockCount);
 	case LE_UNDEFINED:
 		warning(CUSTOM_UNKNOWN_FSIO, "FSIO undefined action");
 		return unexpected;
@@ -277,26 +241,18 @@ FsioResult LECalculator::processElement(LEElement *element DECLARE_ENGINE_PARAME
 	}
 }
 
-float LECalculator::getValue2(float selfValue, LEElement *fistElementInList DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	reset(fistElementInList);
-	return getValue(selfValue PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
-bool LECalculator::isEmpty() const {
-	return first == NULL;
-}
-
-float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (isEmpty()) {
-		warning(CUSTOM_NO_FSIO, "no FSIO code");
+float LECalculator::evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	if (!element) {
+		warning(CUSTOM_NO_FSIO, "%s no FSIO code", msg);
 		return NAN;
 	}
-	LEElement *element = first;
 
-	stack.reset();
+	reset();
 
 	int counter = 0;
-	while (element != NULL) {
+
+	// while not a return statement, execute instructions
+	while (element->action != LE_METHOD_RETURN) {
 		efiAssert(CUSTOM_ERR_ASSERT, counter < 200, "FSIOcount", NAN); // just in case
 
 		if (element->action == LE_METHOD_SELF) {
@@ -311,39 +267,33 @@ float LECalculator::getValue(float selfValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 			push(element->action, result.Value);
 		}
-		element = element->next;
+
+		// Step forward to the next instruction in sequence
+		element++;
 		counter++;
 	}
+
+	// The stack should have exactly one element on it
 	if (stack.size() != 1) {
-		warning(CUSTOM_FSIO_STACK_SIZE, "unexpected FSIO stack size: %d", stack.size());
+		warning(CUSTOM_FSIO_STACK_SIZE, "%s unexpected FSIO stack size at return: %d", msg, stack.size());
 		return NAN;
 	}
 	return stack.pop();
 }
 
 LEElementPool::LEElementPool(LEElement *pool, int size) {
-	this->pool = pool;
+	this->m_pool = pool;
 	this->size = size;
 	reset();
 }
 
 void LEElementPool::reset() {
-	index = 0;
+	// Next free element is the first one
+	m_nextFree = m_pool;
 }
 
 int LEElementPool::getSize() const {
-	return index;
-}
-
-LEElement *LEElementPool::next() {
-	if (index >= size) {
-		// todo: this should not be a fatal error, just an error
-		firmwareError(CUSTOM_ERR_FSIO_POOL, "LE_ELEMENT_POOL_SIZE overflow");
-		return NULL;
-	}
-	LEElement *result = &pool[index++];
-	result->clear();
-	return result;
+	return m_nextFree - m_pool;
 }
 
 bool isNumeric(const char* line) {
@@ -392,9 +342,9 @@ le_action_e parseAction(const char * line) {
 
 static char parsingBuffer[64];
 
-LEElement *LEElementPool::parseExpression(const char * line) {
-	LEElement *first = nullptr;
-	LEElement *last = nullptr;
+LEElement* LEElementPool::parseExpression(const char * line) {
+	LEElement* expressionHead = m_nextFree;
+	LEElement* n = expressionHead;
 
 	while (true) {
 		line = getNextToken(line, parsingBuffer, sizeof(parsingBuffer));
@@ -403,12 +353,13 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 			/**
 			 * No more tokens in this line, parsing complete!
 			 */
-			return first;
-		}
 
-		LEElement *n = next();
-		if (!n) {
-			return nullptr;
+			// Push a return statement on the end
+			n->init(LE_METHOD_RETURN);
+
+			// The next available element is the one after the return
+			m_nextFree = n + 1;
+			return expressionHead;
 		}
 
 		if (isNumeric(parsingBuffer)) {
@@ -428,17 +379,7 @@ LEElement *LEElementPool::parseExpression(const char * line) {
 			n->init(action);
 		}
 
-		// If this is the first time through, set the first element.
-		if (!first) {
-			first = n;
-		}
-
-		// If not the first, link the list
-		if (last) {
-			last->next = n;
-		}
-
-		last = n;
+		n++;
 	}
 }
 

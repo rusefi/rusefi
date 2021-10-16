@@ -50,6 +50,7 @@ public:
 	 * O(size) - linear search in sorted linked list
 	 */
 	bool insertTask(scheduling_s *scheduling, efitime_t timeX, action_s action);
+	void remove(scheduling_s* scheduling);
 
 	int executeAll(efitime_t now);
 	bool executeOne(efitime_t now);

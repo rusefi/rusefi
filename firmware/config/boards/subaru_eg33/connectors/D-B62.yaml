@@ -1,0 +1,173 @@
+#26 pin connector
+
+pins:
+
+  - pin: 1
+    id: TLE6240_PIN_12
+    class: outputs
+    function: IDLE close
+    ts_name: D01 - IDLE close
+    type: gp_low
+
+  - pin: 2
+    id: TLE6240_PIN_11
+    class: outputs
+    function: IDLE open
+    ts_name: D02 - IDLE open
+    type: gp_low
+
+  - pin: 3
+    id: TLE6240_PIN_2
+    class: outputs
+    function: FAN 2 relay
+    ts_name: D03 - FAN 2 relay
+    type: gp_low
+
+  - pin: 4
+    id: MC33972_PIN_8
+    class: switch_inputs
+    function: California ID Din
+    ts_name: D04 - California ID Din
+    type: av
+
+  - pin: 5
+    id: GPIOH_7
+    class: outputs
+    function: Self Shutdown
+    ts_name: D05 - Self Shutdown
+    type: gp_high
+
+  - pin: 6
+    id: TLE6240_PIN_10
+    class: outputs
+    function: Absorber purge valve
+    ts_name: D06 - Absorber purge valve
+    type: gp_low
+
+  - pin: 7
+    id: MC33810_0_GD_0
+    class: outputs
+    function: Ignition 4
+    ts_name: D07 - Ignition Cyl 4
+    type: ign
+
+  - pin: 8
+    id: MC33810_1_GD_2
+    class: outputs
+    function: Ignition 2
+    ts_name: D08 - Ignition Cyl 2
+    type: ign
+
+  - pin: 9
+    id: MC33810_0_GD_1
+    class: outputs
+    function: Ignition 3
+    ts_name: D09 - Ignition Cyl 3
+    type: ign
+
+  - pin: 10
+    id: MC33810_1_GD_3
+    class: outputs
+    function: Ignition 1
+    ts_name: D10 - Ignition Cyl 1
+    type: ign
+
+  - pin: 11
+    id: MC33810_0_OUT_1
+    class: outputs
+    function: Injector 3
+    ts_name: D11 - Injector 3
+    type: inj
+
+  - pin: 12
+    id: MC33810_1_OUT_0
+    class: outputs
+    function: Injector 2
+    ts_name: D12 - Injector 2
+    type: inj
+
+  - pin: 13
+    id: MC33810_0_OUT_0
+    class: outputs
+    function: Injector 1
+    ts_name: D13 - Injector 1
+    type: inj
+
+  - pin: 14
+    function: Power GND
+    type: pgnd
+
+  - pin: 15
+    function: Ignition GND
+    type: pgnd
+
+  - pin: 16
+    id: MC33810_1_GD_1
+    class: outputs
+    function: Ignition 6
+    ts_name: D16 - Ignition Cyl 6
+    type: ign
+
+  - pin: 17
+    id: TLE6240_PIN_1
+    class: outputs
+    function: FAN 1 relay
+    ts_name: D17 - FAN 1 relay
+    type: gp_low
+
+  - pin: 18
+    id: TLE6240_PIN_9
+    class: outputs
+    function: Auxillary air valve
+    ts_name: D18 - Auxillary air valve
+    type: gp_low
+
+  - pin: 19
+    id: TLE6240_PIN_7
+    class: outputs
+    function: Check Engine indicator
+    ts_name: D19 - Check Engine indicator
+    type: gp_low
+
+  - pin: 20
+    id: TLE6240_PIN_16
+    class: outputs
+    function: Inertia-Resonance Super-Charger control
+    ts_name: D20 - Inertia-Resonance Super-Charger control
+    type: gp_low
+
+  - pin: 21
+    id: MC33810_0_GD_3
+    class: outputs
+    function: Ignition 5
+    ts_name: D21 - Ignition Cyl 5
+    type: ign
+
+  - pin: 22
+    id: TLE6240_PIN_6
+    class: outputs
+    function: EGR control
+    ts_name: D22 - EGR control
+    type: gp_low
+
+  - pin: 23
+    id: TLE6240_PIN_5
+    class: outputs
+    function: Fuel Pump relay
+    ts_name: D23 - Fuel Pump relay
+    type: gp_low
+
+  - pin: 24
+    function: Injector GND
+    type: pgnd
+
+  - pin: 25
+    function: Injector GND
+    type: pgnd
+
+  - pin: 26
+    id: MC33810_1_OUT_1
+    class: outputs
+    function: Injector 4
+    ts_name: D26 - Injector 4
+    type: inj

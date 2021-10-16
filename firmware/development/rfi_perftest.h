@@ -9,4 +9,4 @@
 
 #include "global.h"
 
-void initTimePerfActions(Logging *sharedLogger);
+void initTimePerfActions();

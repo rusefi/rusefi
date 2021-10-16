@@ -6,25 +6,18 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_PWM_TESTER
 
 #include "pwm_tester.h"
-#include "state_requence.h"
-#include "pwm_generator_logic.h"
-#include "engine.h"
-
-static LoggingWithStorage logger;
 
 static SimplePwm pwmTest[5];
 
 extern OutputPin warningLedPin;
 
-EXTERN_ENGINE;
-
 static void startPwmTest(int freq) {
-	scheduleMsg(&logger, "running pwm test @%d", freq);
+	efiPrintf("running pwm test @%d", freq);
 
 	engine->isRunningPwmTest = true;
 

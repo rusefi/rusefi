@@ -2,9 +2,9 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "thermistor_func.h"
+#include "pch.h"
 
-#include "thermistors.h"
+#include "thermistor_func.h"
 
 #include <math.h>
 
@@ -24,6 +24,12 @@ SensorResult ThermistorFunc::convert(float ohms) const {
 	float kelvin = 1 / recip;
 
 	float celsius = convertKelvinToCelcius(kelvin);
+
+	// bounds check result - please don't try to run rusEfi when colder than -50C
+	// high end limit is required as this could be an oil temp sensor
+	if (celsius < -50 || celsius > 250) {
+		return unexpected;
+	}
 
 	return celsius;
 }

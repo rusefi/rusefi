@@ -19,8 +19,10 @@
 #define TLE6240_POLL_INTERVAL_MS	100
 
 struct tle6240_config {
+#if HAL_USE_SPI
 	SPIDriver		*spi_bus;
 	SPIConfig	spi_config;
+#endif
 	struct {
 		ioportid_t		port;
 		uint_fast8_t	pad;
@@ -31,14 +33,4 @@ struct tle6240_config {
 	} reset;
 };
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif /* __cplusplus */
-
-int tle6240_add(unsigned int index, const struct tle6240_config *cfg);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
-
+int tle6240_add(brain_pin_e base, unsigned int index, const struct tle6240_config *cfg);

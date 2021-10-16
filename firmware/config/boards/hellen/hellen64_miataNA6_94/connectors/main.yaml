@@ -1,0 +1,482 @@
+#
+# open issues: knock do we need to do anything?
+# todo: we've inherited dual mode on A/C etc from H72 needs to be addressed
+#
+
+pins:
+  - pin: 1A
+    function: 12V all times
+    type: 12V
+  
+  - pin: 1B
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 1B - Battery Sense
+    function: ECU power in start & run
+    type: 12V
+
+  - pin: 1D
+    function: CAN bus high
+    type: can
+
+  - pin: 1F
+    function: CAN bus low
+    type: can
+
+  - pin: 1E
+    id: GPIOG_9
+    class: outputs
+    ts_name: 1E - Check Engine Light
+    function: Check Engine Light
+    type: ls
+
+  - pin: 1F
+    function: Tachometer
+    
+  - pin: 1G
+    id: GPIOI_8
+    class: outputs
+    ts_name: 1G - Ignition 1 & 4
+    type: ign
+ 
+  - pin: 1H
+    id: GPIOE_5
+    class: outputs
+    ts_name: 1H - Ignition 2 & 3
+    type: ign
+
+  - pin: 1I
+    function: USB GND
+    type: gnd
+
+  - pin: 1J
+    id: GPIOH_15
+    class: outputs
+    ts_name: 1J - AC Relay
+    function: A/C Relay
+    type: ls
+
+  - pin: 1L
+    id: GPIOD_12
+    class: outputs
+    ts_name: Radiator Fan
+    function: Radiator Fan Relay
+    type: ls
+
+  - pin: 1M
+    id: GPIOF_11
+    class: event_inputs
+    ts_name: 1M - VSS
+    function: VSS IN
+    
+  - pin: 1N
+    ts_name: 1N - 5v ref NA6
+    function: Sensor +5V
+
+  - pin: 1Q
+    id: [GPIOC_5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 1Q AC Switch
+    function: A/C switch input
+    type: din
+
+  - pin: 1R      
+    function: Coolant Fan Relay
+    
+
+  - pin: 1S
+    ts_name: 1S - Heate Input
+    function: Heater Input
+
+  - pin: 1T
+    function: EGR Solenoid
+
+  - pin: 1V
+    id: [GPIOC_4, EFI_ADC_14]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 1V - Clutch Switch
+    function: Clutch switch input
+    type: din
+
+  - pin: 2A     
+    function: GND
+
+  - pin: 2B    
+    function: +5v
+    
+  - pin: 2C    
+    function: WBO Heater -
+
+  - pin: 2D    
+    function: +12v
+   
+  - pin: 2E     
+    function: WBO R Trim
+
+  - pin: 2F    
+    function: WBO Ip 
+    
+  - pin: 2G     
+    function: WBO Vs/Ip
+
+  - pin: 2H    
+    function: WBO Vs  
+  
+  - pin: 2I
+    function: VVT Output
+    
+  - pin: 2J
+    id: GPIOF_12
+    class: outputs
+    ts_name: 2J - Boost Control
+    function: Boost Control Solenoid
+    
+  - pin: 2K     
+    function: GND
+  
+  - pin: 2L
+    id: GPIOF_3
+    class: event_inputs
+    ts_name: 2L - Flex Fuel
+    function: Flex Fuel Input
+  
+  - pin: 2M
+    id: [GPIOC_1, EFI_ADC_11]
+    class: [switch_inputs, analog_inputs] 
+    ts_name: 2M - Pressure Sensor
+    function: pressure input 
+    
+  - pin: 2N 
+    id: [GPIOA_1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 2N - Temperature Sensor
+    function: temp input
+
+  - pin: 2O    
+    function: +5v 
+    
+  - pin: 2P
+    function: Knock Input   
+
+  - pin: 3A
+    function: Power GND
+    type: pgnd
+    color: white
+
+  - pin: 3B
+    function: Power GND
+    type: pgnd
+    color: white
+
+  - pin: 3C
+    function: Sensor GND
+    type: gnd
+    color: white
+  
+  - pin: 3D
+    function: Sensor GND
+    type: gnd
+    color: white
+
+  - pin: 3E
+    id: GPIOB_1
+    class: event_inputs
+    ts_name: 3E - CRANK
+    function: Crankshaft Sensor
+  
+  - pin: 3F
+    function: MAF GND
+    type: gnd
+    color: white
+
+  - pin: 3G
+    id: GPIOA_6
+    class: event_inputs
+    ts_name: 3G - CAM
+    function: Camshaft Sensor
+    
+  - pin: 3I
+    id: GPIOI_0
+    class: outputs
+    ts_name: Tachometer
+    function: tachometer
+    
+  - pin: 3K
+    class: outputs
+    ts_name: 3K - TPS 5v 94-95
+    function: 5v reference
+    
+  - pin: 3L
+    function: TPS INPUT
+    
+  - pin: 3M
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: TPS Input
+    function: TPS INPUT
+
+  - pin: 3O
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 3O - MAF
+    function: MAF Input
+
+  - pin: 3P
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 3P - IAT
+    function: IAT sensor
+            
+  - pin: 3S
+    id: GPIOD_9  
+    class: outputs
+    ts_name: 3S - A/C Fan 94-95
+    function: A/C Fan
+
+  - pin: 3T
+    id: GPIOG_2
+    class: outputs
+    ts_name: Fuel Pump Relay
+    function: Fuel Pump Relay
+    type: ls
+
+  - pin: 3N
+    id: EFI_ADC_0
+    class: analog_inputs
+    ts_name: 3N - O2S
+    function: External Wideband signal
+
+  - pin: 3Q
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 3Q - CLT
+    function: CLT sensor
+
+  - pin: 3U
+    id: GPIOG_7
+    class: outputs
+    ts_name: 3U - Injector 1
+    function: Injector #1
+    type: inj
+
+  - pin: 3V
+    id: GPIOG_8
+    class: outputs
+    ts_name: 3V - Injector 2
+    function: Injector #2
+    type: inj
+
+  - pin: 3W
+    id: GPIOD_14
+    class: outputs
+    ts_name: 3W - IDLE
+    function: IAC idle
+    type: ls
+
+  - pin: 3Y
+    id: GPIOD_11
+    class: outputs
+    ts_name: 3Y - Injector 3
+    function: Injector #3
+    type: inj
+
+  - pin: 3Z
+    id: GPIOD_10
+    class: outputs
+    ts_name: 3Z - Injector 4
+    function: Injector #4
+    type: inj
+    
+  - pin: int_map
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: intMAP (A15)
+
+info:
+  title: Hellen Miata NA6
+  image:
+    file: main.jpg
+  pins:
+    - pin: 1A
+      x: 3984
+      y: 312
+    - pin: 1B
+      x: 3984
+      y: 512
+
+    - pin: 1C
+      x: 3860
+      y: 312
+    - pin: 1D
+      x: 3860
+      y: 512
+
+    - pin: 1E
+      x: 3735
+      y: 352
+    - pin: 1F
+      x: 3735
+      y: 544
+
+    - pin: 1G
+      x: 3624
+      y: 352
+    - pin: 1H
+      x: 3624
+      y: 544
+
+    - pin: 1I
+      x: 3508
+      y: 352
+    - pin: 1J
+      x: 3508
+      y: 544
+
+    - pin: 1M
+      x: 3284
+      y: 352
+    - pin: 1N
+      x: 3284
+      y: 544
+
+    - pin: 1R
+      x: 3062
+      y: 544
+
+    - pin: 1S
+      x: 2952
+      y: 352
+    - pin: 1T
+      x: 2952
+      y: 544
+
+    - pin: 1V
+      x: 2838
+      y: 512
+      
+    - pin: 2A
+      x: 2616
+      y: 352
+      
+    - pin: 2B
+      x: 2616
+      y: 544
+
+    - pin: 2C
+      x: 2506
+      y: 352
+      
+    - pin: 2D
+      x: 2506
+      y: 544
+
+    - pin: 2E
+      x: 2396
+      y: 352
+      
+    - pin: 2F
+      x: 2396
+      y: 544
+
+    - pin: 2G
+      x: 2286
+      y: 352
+      
+    - pin: 2H
+      x: 2286
+      y: 544
+
+    - pin: 2I
+      x: 2176
+      y: 352
+      
+    - pin: 2J
+      x: 2176
+      y: 544
+  
+    - pin: 2K
+      x: 2066
+      y: 352
+      
+    - pin: 2L
+      x: 2066
+      y: 544
+
+    - pin: 2M
+      x: 1956
+      y: 352
+      
+    - pin: 2N
+      x: 1956
+      y: 544
+
+    - pin: 2O
+      x: 1846
+      y: 352
+      
+    - pin: 2P
+      x: 1846
+      y: 544
+
+    - pin: 3A
+      x: 1604
+      y: 312
+    - pin: 3B
+      x: 1604
+      y: 512
+
+    - pin: 3C
+      x: 1488
+      y: 312
+    - pin: 3D
+      x: 1488
+      y: 512
+
+    - pin: 3E
+      x: 1368
+      y: 360
+    - pin: 3F
+      x: 1368
+      y: 552
+
+    - pin: 3G
+      x: 1256
+      y: 360
+
+    - pin: 3I
+      x: 1140
+      y: 360
+    - pin: 3J
+      x: 1140
+      y: 552
+
+    - pin: 3O
+      x: 807
+      y: 360
+    - pin: 3P
+      x: 807
+      y: 552
+
+    - pin: 3Q
+      x: 690
+      y: 360
+
+
+    - pin: 3U
+      x: 460
+      y: 312
+    - pin: 3V
+      x: 460
+      y: 512
+
+    - pin: 3W
+      x: 330
+      y: 312
+
+    - pin: 3Y
+      x: 200
+      y: 312
+    - pin: 3Z
+      x: 200
+      y: 512
+

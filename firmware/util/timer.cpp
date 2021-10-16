@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "timer.h"
-#include "global.h"
 
 void Timer::reset() {
 	m_lastReset = getTimeNowNt();
@@ -35,6 +36,10 @@ float Timer::getElapsedSeconds() const {
 }
 
 float Timer::getElapsedSeconds(efitick_t nowNt) const {
+	return 1 / US_PER_SECOND_F * getElapsedUs(nowNt);
+}
+
+float Timer::getElapsedUs(efitick_t nowNt) const {
 	auto delta = nowNt - m_lastReset;
 
 	// Yes, things can happen slightly in the future if we get a lucky interrupt between
@@ -50,7 +55,7 @@ float Timer::getElapsedSeconds(efitick_t nowNt) const {
 
 	auto delta32 = (uint32_t)delta;
 
-	return 1e-6 * NT2US(delta32);
+	return NT2US(delta32);
 }
 
 float Timer::getElapsedSecondsAndReset(efitick_t nowNt) {

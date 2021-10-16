@@ -12,7 +12,6 @@
 #include "engine_configuration.h"
 
 void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 /**
@@ -52,4 +51,11 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE);
  */
 void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
+/**
+ * set engine_type 69
+ */
+void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
+void setMiataNB2_Hellen72_36(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+void setHellenNB1(DECLARE_CONFIG_PARAMETER_SIGNATURE);

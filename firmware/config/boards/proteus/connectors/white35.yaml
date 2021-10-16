@@ -1,0 +1,295 @@
+pins:
+  - pin: 1
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 2
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 3
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 4
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 5
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 6
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 7
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 8
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 9
+    function: "Analog Voltage +5 supply #1"
+    type: 5v
+
+  - pin: 10
+    function: "Analog Voltage +5 supply #2"
+    type: 5v
+
+  - pin: 11
+    function: 12V protected output for sensors
+    type: 12v
+
+  - pin: 12
+    function: 12V protected output for sensors
+    type: 12v
+
+  - pin: 13
+    id: [GPIOC_0, EFI_ADC_10]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 1
+    function: "Analog Voltage Input #1"
+    type: av
+
+  - pin: 14
+    id: [GPIOC_2, EFI_ADC_12]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 3
+    function: "Analog Voltage Input #3"
+    type: av
+
+  - pin: 15
+    id: [GPIOA_0, EFI_ADC_0]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 5
+    function: "Analog Voltage Input #5"
+    type: av
+
+  - pin: 16
+    id: [GPIOA_2, EFI_ADC_2]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 7
+    function: "Analog Voltage Input #7"
+    type: av
+
+  - pin: 17
+    id: [GPIOA_4, EFI_ADC_4]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 9
+    function: "Analog Voltage Input #9"
+    type: av
+
+  - pin: 18
+    id: [GPIOA_6, EFI_ADC_6]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 11
+    function: "Analog Voltage Input #11"
+    type: av
+
+  - pin: 19
+    id: [GPIOC_4, EFI_ADC_14]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Temp 1
+    function: "Analog Thermistor Input #1"
+    type: at
+
+  - pin: 20
+    id: [GPIOB_0, EFI_ADC_8]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Temp 3
+    function: "Analog Thermistor Input #3"
+    type: at
+
+  - pin: 21
+    function: "Analog Voltage +5 supply #1"
+    type: 5v
+
+  - pin: 22
+    function: "Analog Voltage +5 supply #2"
+    type: 5v
+
+  - pin: 23
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 24
+    id: [GPIOC_1, EFI_ADC_11]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 2
+    function: "Analog Voltage Input #2"
+    type: av
+
+  - pin: 25
+    id: [GPIOC_3, EFI_ADC_13]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 4
+    function: "Analog Voltage Input #4"
+    type: av
+
+  - pin: 26
+    id: [GPIOA_1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 6
+    function: "Analog Voltage Input #6"
+    type: av
+
+  - pin: 27
+    id: [GPIOA_3, EFI_ADC_3]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 8
+    function: "Analog Voltage Input #8"
+    type: av
+
+  - pin: 28
+    id: [GPIOA_5, EFI_ADC_5]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Volt 10
+    function: "Analog Voltage Input #10"
+    type: av
+
+  - pin: 29
+    function: Sensor GND
+    type: sgnd
+
+  - pin: 30
+    id: [GPIOC_5, EFI_ADC_15]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Temp 2
+    function: Intake air temperature
+    type: at
+
+  - pin: 31
+    id: [GPIOB_1, EFI_ADC_9]
+    class: [switch_inputs, analog_inputs]
+    ts_name: Analog Temp 4
+    function: "Analog Thermistor Input #4"
+    type: at
+
+  - pin: 32
+    function: "Analog Voltage +5 supply #1"
+    type: 5v
+
+  - pin: 33
+    function: "Analog Voltage +5 supply #2"
+    type: 5v
+
+  - pin: 34
+    function: Knock input 1 on 0.4. Due to a hardware defect, knock hardware can't work on v0.3 :(
+
+  - pin: 35
+    function: Knock input 2 on 0.4
+
+info:
+  title: Proteus
+  image:
+    file: white35.jpg
+  pins:
+    - pin: 1
+      x: 216
+      y: 288
+    - pin: 2
+      x: 320
+      y: 288
+    - pin: 3
+      x: 424
+      y: 288
+    - pin: 4
+      x: 528
+      y: 288
+    - pin: 5
+      x: 632
+      y: 288
+    - pin: 6
+      x: 736
+      y: 288
+    - pin: 7
+      x: 840
+      y: 288
+    - pin: 8
+      x: 944
+      y: 288
+    - pin: 9
+      x: 1048
+      y: 288
+    - pin: 10
+      x: 1152
+      y: 288
+    - pin: 11
+      x: 1256
+      y: 288
+    - pin: 12
+      x: 1360
+      y: 288
+    - pin: 13
+      x: 268
+      y: 392
+    - pin: 14
+      x: 372
+      y: 392
+    - pin: 15
+      x: 476
+      y: 392
+    - pin: 16
+      x: 580
+      y: 392
+    - pin: 17
+      x: 684
+      y: 392
+    - pin: 18
+      x: 788
+      y: 392
+    - pin: 19
+      x: 892
+      y: 392
+    - pin: 20
+      x: 996
+      y: 392
+    - pin: 21
+      x: 1100
+      y: 392
+    - pin: 22
+      x: 1204
+      y: 392
+    - pin: 23
+      x: 1308
+      y: 392
+    - pin: 24
+      x: 216
+      y: 496
+    - pin: 25
+      x: 320
+      y: 496
+    - pin: 26
+      x: 424
+      y: 496
+    - pin: 27
+      x: 528
+      y: 496
+    - pin: 28
+      x: 632
+      y: 496
+    - pin: 29
+      x: 736
+      y: 496
+    - pin: 30
+      x: 840
+      y: 496
+    - pin: 31
+      x: 944
+      y: 496
+    - pin: 32
+      x: 1048
+      y: 496
+    - pin: 33
+      x: 1152
+      y: 496
+    - pin: 34
+      x: 1256
+      y: 496
+    - pin: 35
+      x: 1360
+      y: 496
+

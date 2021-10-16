@@ -1,7 +1,6 @@
-#include "fuel_computer.h"
-#include "map.h"
+#include "pch.h"
 
-EXTERN_ENGINE;
+#include "fuel_computer.h"
 
 mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const {
 	load = getTargetLambdaLoadAxis(load);
@@ -21,13 +20,12 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const
 FuelComputer::FuelComputer(const ValueProvider3D& lambdaTable) : m_lambdaTable(&lambdaTable) {}
 
 float FuelComputer::getStoichiometricRatio() const {
-	// TODO: vary this with ethanol content/configured setting/whatever
 	float primary = (float)CONFIG(stoichRatioPrimary) / PACK_MULT_AFR_CFG;
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (primary < 5) {
 		// 14.7 = E0 gasoline AFR
-		primary = 14.7f;
+		primary = STOICH_RATIO;
 	}
 
 	// Without an ethanol/flex sensor, return primary configured stoich ratio

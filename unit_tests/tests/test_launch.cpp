@@ -1,9 +1,6 @@
-#include "engine_test_helper.h"
-#include "engine_controller.h"
-#include "launch_control.h"
-#include "vehicle_speed.h"
+#include "pch.h"
 
-#include <gtest/gtest.h>
+#include "launch_control.h"
 
 TEST(LaunchControl, TpsCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
@@ -37,10 +34,10 @@ TEST(LaunchControl, VSSCondition) {
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
     engineConfiguration->launchSpeedTreshold = 30; 
 	engineConfiguration->launchDisableBySpeed = 1;
-	setMockVehicleSpeed(10);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
     EXPECT_TRUE(dut.isInsideSpeedCondition());
 
-	setMockVehicleSpeed(40);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
 	EXPECT_FALSE(dut.isInsideSpeedCondition());
 
 }
@@ -82,16 +79,21 @@ TEST(LaunchControl, SwitchInputCondition) {
 	engineConfiguration->clutchDownPin = GPIOG_2;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	setMockState(engineConfiguration->clutchDownPin, true);
+	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	setMockState(engineConfiguration->clutchDownPin, false);
+	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
+	engineConfiguration->clutchDownPinInverted = true;
 	setMockState(engineConfiguration->clutchDownPin, false);
+	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	setMockState(engineConfiguration->clutchDownPin, true);
+	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 }
@@ -111,7 +113,7 @@ TEST(LaunchControl, CombinedCondition) {
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
-	setMockVehicleSpeed(10);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
 	engine->rpmCalculator.mockRpm = 1200;
 
     EXPECT_FALSE(dut.isLaunchConditionMet(1200));
@@ -119,7 +121,7 @@ TEST(LaunchControl, CombinedCondition) {
 	engine->rpmCalculator.mockRpm = 3200;
 	EXPECT_TRUE(dut.isLaunchConditionMet(3200));
 
-	setMockVehicleSpeed(40);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
 	EXPECT_FALSE(dut.isLaunchConditionMet(3200));
 
 }
@@ -128,9 +130,7 @@ TEST(LaunchControl, CompleteRun) {
 	bool spark, fuel;
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	LoggingWithStorage logger("test");
-
-	initLaunchControl(&logger,PASS_ENGINE_PARAMETER_SIGNATURE);
+	initLaunchControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	//load default config
 	setDefaultLaunchParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -145,7 +145,7 @@ TEST(LaunchControl, CompleteRun) {
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
-	setMockVehicleSpeed(10);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
 	engine->rpmCalculator.mockRpm = 1200;
 
 	//update condition check
@@ -165,7 +165,7 @@ TEST(LaunchControl, CompleteRun) {
 
 
 	//we have a 3 seconds delay to actually enable it!
-	eth.smartMoveTimeForwardSeconds(1);
+	eth.moveTimeForwardAndInvokeEventsSec(1);
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
 	spark = false;
 	fuel = false;
@@ -174,7 +174,7 @@ TEST(LaunchControl, CompleteRun) {
 	EXPECT_FALSE(spark);
 	EXPECT_FALSE(fuel);
 
-	eth.smartMoveTimeForwardSeconds(3);
+	eth.moveTimeForwardAndInvokeEventsSec(3);
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
 	spark = false;
 	fuel = false;
@@ -183,7 +183,7 @@ TEST(LaunchControl, CompleteRun) {
 	EXPECT_TRUE(spark);
 	EXPECT_FALSE(fuel);
 
-	setMockVehicleSpeed(40);
+	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
 	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
 	spark = false;
 	fuel = false;

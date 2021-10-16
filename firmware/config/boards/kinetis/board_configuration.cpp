@@ -7,21 +7,14 @@
  * @author andreika, (c) 2019
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_configuration.h"
-#include "adc_inputs.h"
-#include "engine_math.h"
-#include "tps.h"
-
-EXTERN_ENGINE;
+#include "pch.h"
 
 #if 0
 char __debugBuffer[80];
 int __debugEnabled = 0;
 #endif
 
-void setBoardConfigurationOverrides(void) {
+void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -44,7 +37,6 @@ void setBoardConfigurationOverrides(void) {
 	engineConfiguration->injector.flow = 200;
 	
 	engineConfiguration->cranking.baseFuel = 25;		// ???
-	engineConfiguration->crankingChargeAngle = 70;
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
@@ -85,9 +77,9 @@ void setBoardConfigurationOverrides(void) {
 	
 	// todo:
 	int i;
-	for (i = 0; i < INJECTION_PIN_COUNT; i++)
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
-	for (i = 0; i < IGNITION_PIN_COUNT; i++)
+	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	
 	engineConfiguration->adcVcc = 5.0f;
@@ -123,4 +115,16 @@ void setAdcChannelOverrides(void) {
 	
 	removeChannel("TPS", engineConfiguration->tps1_1AdcChannel);
 	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+}
+
+#include <setjmp.h>
+
+void longjmp(jmp_buf /*env*/, int /*status*/) {
+	// noop, but noreturn
+	while (1) { }
+}
+
+int setjmp(jmp_buf /*env*/) {
+	// Fake return 0, not implemented
+	return 0;
 }

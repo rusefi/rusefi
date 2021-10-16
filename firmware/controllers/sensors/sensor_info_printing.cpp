@@ -1,43 +1,52 @@
-#include "global.h"
+#include "pch.h"
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
 #include "redundant_sensor.h"
-#include "rpm_calculator.h"
+#include "redundant_ford_tps.h"
+#include "fallback_sensor.h"
+#include "Lps25Sensor.h"
 #include "linear_func.h"
 #include "resistance_func.h"
 #include "thermistor_func.h"
-#include "efilib.h"
-#include "loggingcentral.h"
+#include "identity_func.h"
 
-void ProxySensor::showInfo(Logging* logger, const char* sensorName) const {
-	scheduleMsg(logger, "Sensor \"%s\" proxied from sensor \"%s\"", sensorName, getSensorName(m_proxiedSensor));
+void ProxySensor::showInfo(const char* sensorName) const {
+	efiPrintf("Sensor \"%s\" proxied from sensor \"%s\"", sensorName, getSensorName(m_proxiedSensor));
 }
 
-void FunctionalSensor::showInfo(Logging* logger, const char* sensorName) const {
+void FunctionalSensor::showInfo(const char* sensorName) const {
 	const auto [valid, value] = get();
-	scheduleMsg(logger, "Sensor \"%s\": Raw value: %.2f Valid: %s Converted value %.2f", sensorName, m_rawValue, boolToString(valid), value);
+	efiPrintf("Sensor \"%s\": Raw value: %.2f Valid: %s Converted value %.2f", sensorName, m_rawValue, boolToString(valid), value);
 
 	// now print out the underlying function's info
 	if (auto func = m_function) {
-		func->showInfo(logger, m_rawValue);
+		func->showInfo(m_rawValue);
 	}
 }
 
 #if EFI_CAN_SUPPORT
 #include "can_sensor.h"
 
-void CanSensorBase::showInfo(Logging* logger, const char* sensorName) const {
+void CanSensorBase::showInfo(const char* sensorName) const {
 	const auto [valid, value] = get();
-	scheduleMsg(logger, "CAN Sensor \"%s\": valid: %s value: %.2f", sensorName, boolToString(valid), value);
+	efiPrintf("CAN Sensor \"%s\": valid: %s value: %.2f", sensorName, boolToString(valid), value);
 }
 #endif // EFI_CAN_SUPPORT
 
-void RedundantSensor::showInfo(Logging* logger, const char* sensorName) const {
-	scheduleMsg(logger, "Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+void RedundantSensor::showInfo(const char* sensorName) const {
+	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
 }
 
-void RpmCalculator::showInfo(Logging* logger, const char* /*sensorName*/) const {
-	scheduleMsg(logger, "RPM sensor: stopped: %d spinning up: %d cranking: %d running: %d rpm: %f", 
+void RedundantFordTps::showInfo(const char* sensorName) const {
+	efiPrintf("Sensor \"%s\" is Ford-type redundant TPS combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
+}
+
+void FallbackSensor::showInfo(const char* sensorName) const {
+	efiPrintf("Sensor \"%s\" is fallback sensor with primary \"%s\" and fallback \"%s\"", sensorName, getSensorName(m_primary), getSensorName(m_fallback));
+}
+
+void RpmCalculator::showInfo(const char* /*sensorName*/) const {
+	efiPrintf("RPM sensor: stopped: %d spinning up: %d cranking: %d running: %d rpm: %f", 
 		isStopped(),
 		isSpinningUp(),
 		isCranking(),
@@ -46,18 +55,26 @@ void RpmCalculator::showInfo(Logging* logger, const char* /*sensorName*/) const 
 	);
 }
 
-void LinearFunc::showInfo(Logging* logger, float testRawValue) const {
-	scheduleMsg(logger, "    Linear function slope: %.2f offset: %.2f min: %.1f max: %.1f", m_a, m_b, m_minOutput, m_maxOutput);
+void Lps25Sensor::showInfo(const char* sensorName) const {
+	efiPrintf("%s: LPS25 baro %.2f kPa", sensorName, get().Value);
+}
+
+void LinearFunc::showInfo(float testRawValue) const {
+	efiPrintf("    Linear function slope: %.2f offset: %.2f min: %.1f max: %.1f", m_a, m_b, m_minOutput, m_maxOutput);
 	const auto [valid, value] = convert(testRawValue);
-	scheduleMsg(logger, "      raw value %.2f converts to %.2f valid: %s", testRawValue, value, boolToString(valid));
+	efiPrintf("      raw value %.2f converts to %.2f valid: %s", testRawValue, value, boolToString(valid));
 }
 
-void ResistanceFunc::showInfo(Logging* logger, float testInputValue) const {
+void ResistanceFunc::showInfo(float testInputValue) const {
 	const auto result = convert(testInputValue);
-	scheduleMsg(logger, "    %.2f volts -> %.1f ohms with supply voltage %.2f and pullup %.1f.", testInputValue, result.Value, m_supplyVoltage, m_pullupResistor);
+	efiPrintf("    %.2f volts -> %.1f ohms with supply voltage %.2f and pullup %.1f.", testInputValue, result.Value, m_supplyVoltage, m_pullupResistor);
 }
 
-void ThermistorFunc::showInfo(Logging* logger, float testInputValue) const {
+void ThermistorFunc::showInfo(float testInputValue) const {
 	const auto [valid, value] = convert(testInputValue);
-	scheduleMsg(logger, "    %.1f ohms -> valid: %s. %.1f deg C", testInputValue, boolToString(valid), value);
+	efiPrintf("    %.1f ohms -> valid: %s. %.1f deg C", testInputValue, boolToString(valid), value);
+}
+
+void IdentityFunction::showInfo(float /*testInputValue*/) const {
+	efiPrintf("    Identity function passes along value.");
 }

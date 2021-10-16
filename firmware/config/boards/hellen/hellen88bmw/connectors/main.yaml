@@ -1,0 +1,122 @@
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+
+pins:
+  - pin: 1
+    id: GPIOG_14
+    class: outputs
+    function: Fuel Pump Relay Output (low)
+    ts_name: 1 - OUT_PUMP
+
+  - pin: 3
+    id: GPIOD_9
+    function: Injector 5 Output
+    class: outputs
+    ts_name: 3 - INJ_5
+    type: inj
+
+  - pin: 4
+    id: GPIOF_12
+    function: Injector 6 Output
+    class: outputs
+    ts_name: 4 - INJ_6
+    type: inj
+
+  - pin: 5
+    id: GPIOD_10
+    function: Injector 4 Output
+    class: outputs
+    ts_name: 5 - INJ_4
+    type: inj
+
+  - pin: 8
+    ts_name: CEL
+
+  - pin: 16
+    id: [GPIOB_1, EFI_ADC_9]
+    class: [event_inputs, analog_inputs]
+    ts_name: 16 - CRANK
+    function: Crankshaft Sensor
+
+  - pin: 17
+    id: [GPIOA_6, EFI_ADC_6]
+    class: [event_inputs, analog_inputs]
+    ts_name: 17 - CAM
+    function: Camshaft Sensor
+
+  - pin: 23
+    id: GPIOE_3
+    class: outputs
+    ts_name: 23 - Coil 4
+    function: Coil 4
+    type: ign
+
+  - pin: 24
+    id: GPIOB_8
+    class: outputs
+    ts_name: 24 - Coil 6
+    function: Coil 6
+    type: ign
+
+  - pin: 25
+    id: GPIOE_2
+    class: outputs
+    ts_name: 25 - Coil 5
+    function: Coil 5
+    type: ign
+
+  - pin: 27
+    id: GPIOD_3
+    class: outputs
+    ts_name: 27 - MAIN
+    function: Main relay control
+    type: ls
+
+  - pin: 31
+    id: GPIOD_11
+    function: Injector 3 Output
+    class: outputs
+    ts_name: 31 - INJ_3
+    type: inj
+
+  - pin: 32
+    id: GPIOG_8
+    function: Injector 2 Output
+    class: outputs
+    ts_name: 32 - INJ_2
+    type: inj
+
+  - pin: 33
+    id: GPIOG_7
+    function: Injector 1 Output
+    class: outputs
+    ts_name: 33 - INJ_1
+    type: inj
+
+  - pin: 50
+    id: GPIOC_13
+    class: outputs
+    ts_name: 50 - Coil 1
+    function: Coil 1
+    type: ign
+
+
+  - pin: 51
+    id: GPIOE_5
+    class: outputs
+    ts_name: 51 - Coil 2
+    function: Coil 2
+    type: ign
+
+  - pin: 52
+    id: GPIOE_4
+    class: outputs
+    ts_name: 52 - Coil 3
+    function: Coil 3
+    type: ign
+
+
+
+
+info:
+  title: Hellen 88 BMW
+  pins:

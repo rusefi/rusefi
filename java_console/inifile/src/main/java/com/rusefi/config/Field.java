@@ -49,10 +49,17 @@ public class Field {
         this.options = options;
     }
 
+    public static Field findField(Field[] values, String instancePrefix, String fieldName) {
+        Field field = findFieldOrNull(values, instancePrefix, fieldName);
+        if (field == null)
+            throw new IllegalStateException("No field: " + fieldName);
+        return field;
+    }
+
     /**
      * Finds field by name, ignoring case
      */
-    public static Field findField(Field[] values, String instancePrefix, String fieldName) {
+    public static Field findFieldOrNull(Field[] values, String instancePrefix, String fieldName) {
         Objects.requireNonNull(fieldName);
         for (Field f : values) {
             if (fieldName.equalsIgnoreCase(f.getName()))
@@ -66,7 +73,7 @@ public class Field {
                     return f;
             }
         }
-        throw new IllegalStateException("No field: " + fieldName);
+        return null;
     }
 
     public static int getStructureSize(Field[] values) {
@@ -159,7 +166,7 @@ public class Field {
     // todo: rename to getNumberValue?
     @NotNull
     public Double getValue(ConfigurationImage ci, double multiplier) {
-        Objects.requireNonNull(ci);
+        Objects.requireNonNull(ci, "ConfigurationImage");
         Number value;
         ByteBuffer wrapped = ci.getByteBuffer(getOffset(), type.getStorageSize());
         if (bitOffset != NO_BIT_OFFSET) {

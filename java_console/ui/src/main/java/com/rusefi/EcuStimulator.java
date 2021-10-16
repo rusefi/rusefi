@@ -164,7 +164,7 @@ public class EcuStimulator {
         double advance = advances.get(MEASURES / 2);
 
 //        if (dwell > 40)
-//            throw new IllegalStateException("Unexpected value, how comes? " + dwell);
+//            throw new IllegalStateException("Unexpected value, how come? " + dwell);
 
         log("Stimulator result: " + rpm + "@" + engineLoad + ": " + dwell + ", adv=" + advance);
 

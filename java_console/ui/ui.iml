@@ -31,5 +31,6 @@
     <orderEntry type="library" scope="TEST" name="takes" level="project" />
     <orderEntry type="library" name="dfu_java" level="project" />
     <orderEntry type="module" module-name="proxy_server" scope="TEST" />
+    <orderEntry type="library" name="antlr" level="project" />
   </component>
 </module>

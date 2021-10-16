@@ -13,10 +13,22 @@ rem diff -uwr Chibios.16_rusefi Chibios.16_original > rusefi_chibios_16.patch
 rem diff -uwr Chibios.16_original Chibios.16_rusefi > chibios_rusefi_16.patch
 
  
-git clone -b stable_17.6.x https://github.com/rusefi/ChibiOS Chibios.17_original
+git clone -b stable_17.6.x        https://github.com/rusefi/ChibiOS Chibios.17_original
 git -C Chibios.17_original pull
-git clone -b stable_17.6.rusefi https://github.com/rusefi/ChibiOS Chibios.17_rusefi
+git clone -b stable_17.6.rusefi   https://github.com/rusefi/ChibiOS Chibios.17_rusefi
 git -C Chibios.17_rusefi pull
 
+git clone -b stable_18.2.x        https://github.com/rusefi/ChibiOS Chibios.18_original
+git -C Chibios.18_original pull
+git clone -b stable_18.2.rusefi   https://github.com/rusefi/ChibiOS Chibios.18_rusefi
+git -C Chibios.18_rusefi pull
+
+git clone -b stable_20.3.x        https://github.com/rusefi/ChibiOS Chibios.20_original
+git -C Chibios.20_original pull
+git clone -b stable_20.3.x.rusefi https://github.com/rusefi/ChibiOS Chibios.20_rusefi
+git -C Chibios.20_rusefi pull
 
 diff -uwr Chibios.17_original Chibios.17_rusefi > chibios_rusefi_17.patch
+diff -uwr Chibios.18_original Chibios.18_rusefi > chibios_rusefi_18.patch
+diff -uwr Chibios.20_original Chibios.20_rusefi > chibios_rusefi_20.patch
+

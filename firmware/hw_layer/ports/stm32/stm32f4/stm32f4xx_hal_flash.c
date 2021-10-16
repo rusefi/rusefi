@@ -406,6 +406,7 @@ void HAL_FLASH_IRQHandler(void)
   */
 __weak void HAL_FLASH_EndOfOperationCallback(uint32_t ReturnValue)
 {
+  (void)ReturnValue;
   /* NOTE : This function Should not be modified, when the callback is needed,
             the HAL_FLASH_EndOfOperationCallback could be implemented in the user file
    */ 
@@ -421,6 +422,7 @@ __weak void HAL_FLASH_EndOfOperationCallback(uint32_t ReturnValue)
   */
 __weak void HAL_FLASH_OperationErrorCallback(uint32_t ReturnValue)
 {
+  (void)ReturnValue;
   /* NOTE : This function Should not be modified, when the callback is needed,
             the HAL_FLASH_OperationErrorCallback could be implemented in the user file
    */ 
@@ -565,9 +567,9 @@ uint32_t HAL_FLASH_GetError(void)
   * @retval HAL Status
   */
 HAL_StatusTypeDef FLASH_WaitForLastOperation(uint32_t Timeout)
-{ 
+{
+  (void)Timeout;
 
-  
   /* Clear Error Code */
   pFlash.ErrorCode = HAL_FLASH_ERROR_NONE;
   

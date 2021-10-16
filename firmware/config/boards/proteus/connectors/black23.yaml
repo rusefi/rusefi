@@ -1,0 +1,200 @@
+pins:
+  - pin: 1
+    id: [GPIOE_11, GPIOE_11]
+    class: [event_inputs, switch_inputs]
+    function: Digital trigger/switch input
+    ts_name: Digital 2
+    type: din
+
+  - pin: 2
+    id: [GPIOE_12, GPIOE_12]
+    class: [event_inputs, switch_inputs]
+    function: Digital trigger/switch input
+    ts_name: Digital 3
+    type: din
+
+  - pin: 3
+    id: [GPIOE_13, GPIOE_13]
+    class: [event_inputs, switch_inputs]
+    function: Digital trigger/switch input
+    ts_name: Digital 4
+    type: din
+
+  - pin: 4
+    function: "Variable Reluctance #2 positive"
+    type: vr
+
+  - id: GPIOE_8
+    class: event_inputs
+    ts_name: VR 2
+
+  - pin: 5
+    function: "Variable Reluctance #1 positive"
+    type: vr
+
+  - id: GPIOE_7
+    class: event_inputs
+    ts_name: VR 1
+
+  - pin: 6
+    function: ETB 1 negative
+    type: etb
+
+  - pin: 7
+    function: ETB 1 positive
+    type: etb
+
+  - pin: 8
+    function: ETB 2 negative
+    type: etb
+
+  - pin: 9
+    id: [GPIOE_14, GPIOE_14]
+    class: [event_inputs, switch_inputs]
+    function: Digital trigger/switch input
+    ts_name: Digital 5
+    type: din    
+
+  - pin: 10
+    id: [GPIOC_6, GPIOC_6]
+    class: [event_inputs, switch_inputs]
+    function: Digital trigger/switch input
+    ts_name: Digital 1
+    type: din
+
+  - pin: 11
+    id: [GPIOE_15, GPIOE_15]
+    class: [event_inputs, switch_inputs]
+    function: Digital trigger/switch input
+    ts_name: Digital 6
+    type: din
+
+  - pin: 12
+    function: "Variable Reluctance #2 negative"
+    type: vr
+
+  - pin: 13
+    function: "Variable Reluctance #1 negative"
+    type: vr
+
+  - pin: 14
+    function: Ground
+    type: gnd
+
+  - pin: 15
+    function: ETB 2 positive
+    type: etb
+
+  - pin: 16
+    function: CAN bus low
+    type: can
+
+  - pin: 17
+    function: CAN bus high
+    type: can
+
+  - pin: 18
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Battery Sense
+    function: Ignition power / ECU power source. Connect this pin to the output of your ignition switch.
+    type: 12v
+
+  - pin: 19
+    function: Power GND
+    type: gnd
+
+  - pin: 20
+    function: Power GND
+    type: gnd
+
+  - pin: 21
+    function: CAN2 software not ready
+
+  - pin: 22
+    function: CAN2 software not ready
+
+  - pin: 23
+    function: Power supply from main relay. Connect this pin to the output of the car's main relay that also powers injectors, coils, etc. Supplies power to electronic throttle drivers and high side outputs.
+    type: 12v
+
+info:
+  title: Proteus
+  image:
+    file: black23.jpg
+  pins:
+    - pin: 1
+      x: 239
+      y: 312
+    - pin: 2
+      x: 343
+      y: 312
+    - pin: 3
+      x: 447
+      y: 312
+    - pin: 4
+      x: 551
+      y: 312
+    - pin: 5
+      x: 655
+      y: 312
+    - pin: 6
+      x: 759
+      y: 312
+    - pin: 7
+      x: 863
+      y: 312
+    - pin: 8
+      x: 967
+      y: 312
+    - pin: 9
+      x: 291
+      y: 412
+    - pin: 10
+      x: 395
+      y: 412
+    - pin: 11
+      x: 499
+      y: 412
+    - pin: 12
+      x: 603
+      y: 412
+    - pin: 13
+      x: 707
+      y: 412
+    - pin: 14
+      x: 811
+      y: 412
+    - pin: 15
+      x: 915
+      y: 412
+    - pin: 16
+      x: 239
+      y: 512
+    - pin: 17
+      x: 343
+      y: 512
+    - pin: 18
+      x: 447
+      y: 512
+    - pin: 19
+      x: 551
+      y: 512
+    - pin: 20
+      x: 655
+      y: 512
+    - pin: 21
+      x: 759
+      y: 512
+    - pin: 22
+      x: 863
+      y: 512
+    - pin: 23
+      x: 967
+      y: 512
+
+
+
+
+
+

@@ -7,22 +7,17 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
  
-#include "global.h"
+#include "pch.h"
 
 #if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
 
 #include "trigger_input.h"
 #include "digital_input_exti.h"
-#include "adc_inputs.h"
 
 //!!!!!!!!!!!!!!!
 extern "C" void toggleLed(int led, int mode);
 #define BOARD_MOD1_PORT GPIOD
 #define BOARD_MOD1_PIN 5
-
-EXTERN_ENGINE
-;
-static Logging *logger;
 
 #if 0
 static volatile int centeredDacValue = 127;
@@ -88,7 +83,7 @@ static void setHysteresis(int sign) {
 		toothCnt = 0;
 		prevNt = nowNt;
 #ifdef TRIGGER_COMP_EXTREME_LOGGING
-		scheduleMsg(logger, "* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
+		efiPrintf("* f=%f d=%d", curVrFreqNt * 1000.0f, dacHysteresisDelta);
 #endif /* TRIGGER_COMP_EXTREME_LOGGING */
 	}
 #endif /* EFI_TRIGGER_COMP_ADAPTIVE_HYSTERESIS */
@@ -114,20 +109,8 @@ static void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 	// todo: support for 3rd trigger input channel
 	// todo: start using real event time from HW event, not just software timer?
 
-	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
-		return;
-	}
-	trigger_event_e signal;
-	if (isRising) {
-		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_FALLING : SHAFT_PRIMARY_RISING) : 
-			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_FALLING : SHAFT_SECONDARY_RISING);
-	}
-	else {
-		signal = isPrimary ? (engineConfiguration->invertPrimaryTriggerSignal ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING) : 
-			(engineConfiguration->invertSecondaryTriggerSignal ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING);
-	}
 	// call the main trigger handler
-	hwHandleShaftSignal(signal, stamp);
+	hwHandleShaftSignal(isPrimary ? 0 : 1, isRising, stamp);
 #endif
 }
 
@@ -181,9 +164,7 @@ static void comp_cam_callback(COMPDriver *comp) {
 }
 #endif
 
-void turnOnTriggerInputPins(Logging *sharedLogger) {
-	logger = sharedLogger;
-
+void turnOnTriggerInputPins() {
 	applyNewTriggerInputPins();
 }
 
@@ -229,7 +210,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	brain_pin_e brainPin = isTriggerShaft ?
 		CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
 
-	if (brainPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(brainPin))
 		return 0;
 #if 0
 	centeredDacValue = getDacValue(CONFIG(triggerCompCenterVolt) PASS_ENGINE_PARAMETER_SUFFIX);	// usually 2.5V resistor divider
@@ -244,7 +225,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	float saturatedToothDurationUs = 60.0f * US_PER_SECOND_F / satRpm / hystUpdatePeriodNumEvents;
 	saturatedVrFreqNt = 1.0f / US2NT(saturatedToothDurationUs);
 	
-	scheduleMsg(logger, "startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
+	efiPrintf("startTIPins(): cDac=%d hystMin=%d hystMax=%d satRpm=%.0f satFreq*1k=%f period=%d", 
 		centeredDacValue, dacHysteresisMin, dacHysteresisMax, satRpm, saturatedVrFreqNt * 1000.0f, hystUpdatePeriodNumEvents);
 #endif
 
@@ -254,7 +235,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	triggerInputPin = getHwPin("trg", brainPin);
 
 	ioline_t pal_line = PAL_LINE(triggerInputPort, triggerInputPin);
-	scheduleMsg(logger, "turnOnTriggerInputPin %s l=%d", hwPortname(brainPin), pal_line);
+	efiPrintf("turnOnTriggerInputPin %s l=%d", hwPortname(brainPin), pal_line);
 	
 	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
 	
@@ -275,7 +256,7 @@ void startTriggerInputPins(void) {
 
 
 void stopTriggerInputPins(void) {
-	scheduleMsg(logger, "stopTIPins();");
+	efiPrintf("stopTIPins();");
 
 #if 0
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
@@ -292,7 +273,7 @@ void stopTriggerInputPins(void) {
 adc_channel_e getAdcChannelForTrigger(void) {
 	// todo: add other trigger or cam channels?
 	brain_pin_e brainPin = CONFIG(triggerInputPins)[0];
-	if (brainPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(brainPin))
 		return EFI_ADC_NONE;
 	return getAdcChannel(brainPin);
 }

@@ -18,55 +18,19 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "global.h"
-#include "engine_configuration.h"
-#include "engine.h"
+#include "pch.h"
+
 #include "advance_map.h"
-#include "interpolation.h"
-#include "engine_math.h"
-#include "sensor.h"
 #include "idle_thread.h"
-#include "allsensors.h"
 #include "launch_control.h"
 
 #if EFI_ENGINE_CONTROL
 
-EXTERN_ENGINE;
+static ign_Map3D_t advanceMap;
+static ign_Map3D_t iatAdvanceCorrectionMap;
 
-static ign_Map3D_t advanceMap("advance");
-// This coeff in ctor parameter is sufficient for int16<->float conversion!
-static ign_Map3D_t iatAdvanceCorrectionMap("iat corr");
-
-// Init PID later (make it compatible with unit-tests)
-static Pid idleTimingPid;
-static bool shouldResetTimingPid = false;
-
-static int minCrankingRpm = 0;
-
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-static const float iatTimingRpmBins[IGN_LOAD_COUNT] = {880,	1260,	1640,	2020,	2400,	2780,	3000,	3380,	3760,	4140,	4520,	5000,	5700,	6500,	7200,	8000};
-
-//880	1260	1640	2020	2400	2780	3000	3380	3760	4140	4520	5000	5700	6500	7200	8000
-static const ignition_table_t defaultIatTiming = {
-		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
-		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
-		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
-		{ 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2, 2, 2},
-		{3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 3.5, 2, 2, 2, 2, 2},
-		{ 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2},
-		{ 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-		{ 0, 0, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9, -0.9},
-		{ -3.3, -3.4, -4.9, -4.9, -4.9, -4.9, -4.4, -4.4, -4.4, -4.4, -4.4, -0.9, -0.9, -0.9, -0.9, -0.9},
-		{ -4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -2.4, -2.4, -2.4, -2.4, -2.4},
-		{ -4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -2.9, -2.9, -2.9, -2.9, -2.9},
-		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
-		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
-		{-4.4, -4.9, -5.9, -5.9, -5.9, -5.9, -4.9, -4.9, -4.9, -4.9, -4.9, -3.9, -3.9, -3.9, -3.9, -3.9},
-};
-
-#endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
+// todo: reset this between cranking attempts?! #2735
+int minCrankingRpm = 0;
 
 /**
  * @return ignition timing angle advance before TDC
@@ -86,8 +50,8 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 
 	// get advance from the separate table for Idle
-	if (CONFIG(useSeparateAdvanceForIdle)) {
-		float idleAdvance = interpolate2d("idleAdvance", rpm, config->idleAdvanceBins, config->idleAdvance);
+	if (CONFIG(useSeparateAdvanceForIdle) && isIdlingOrTaper()) {
+		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
 		if (valid) {
@@ -96,7 +60,6 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 		}
 	}
 
-	
 #if EFI_LAUNCH_CONTROL
 	if (engine->isLaunchCondition && CONFIG(enableLaunchRetard)) {
         if (CONFIG(launchSmoothRetard)) {
@@ -122,54 +85,21 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (!iatValid) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue((float) rpm, iat);
+		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
 	}
 
-	// PID Ignition Advance angle correction
-	float pidTimingCorrection = 0.0f;
-	if (CONFIG(useIdleTimingPidControl)) {
-		int targetRpm = ENGINE(idleController)->getTargetRpm(Sensor::get(SensorType::Clt).value_or(0));
-		int rpmDelta = absI(rpm - targetRpm);
-
-		auto [valid, tps] = Sensor::get(SensorType::Tps1);
-
-		// If TPS is invalid, or we aren't in the region, so reset state and don't apply PID
-		if (!valid || tps >= CONFIG(idlePidDeactivationTpsThreshold)) {
-			// we are not in the idle mode anymore, so the 'reset' flag will help us when we return to the idle.
-			shouldResetTimingPid = true;
-		} 
-		else if (rpmDelta > CONFIG(idleTimingPidDeadZone) && rpmDelta < CONFIG(idleTimingPidWorkZone) + CONFIG(idlePidFalloffDeltaRpm)) {
-			// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
-			// So if we need to reset the PID, let's do it now
-			if (shouldResetTimingPid) {
-				idleTimingPid.reset();
-				shouldResetTimingPid = false;
-			}
-			// get PID value (this is not an actual Advance Angle, but just a additive correction!)
-			percent_t timingRawCorr = idleTimingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
-			// tps idle-running falloff
-			pidTimingCorrection = interpolateClamped(0.0f, timingRawCorr, CONFIG(idlePidDeactivationTpsThreshold), 0.0f, tps);
-			// rpm falloff
-			pidTimingCorrection = interpolateClamped(0.0f, pidTimingCorrection, CONFIG(idlePidFalloffDeltaRpm), 0.0f, rpmDelta - CONFIG(idleTimingPidWorkZone));
-		} else {
-			shouldResetTimingPid = true;
-		}
-	} else {
-		shouldResetTimingPid = true;
-	}
+	float pidTimingCorrection = getIdleTimingAdjustment(rpm);
 
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.debugFloatField1 = iatCorrection;
 		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
-		tsOutputChannels.debugFloatField3 = engine->fsioState.fsioTimingAdjustment;
 		tsOutputChannels.debugFloatField4 = pidTimingCorrection;
 		tsOutputChannels.debugIntField1 = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 	}
 
 	return iatCorrection
-		+ engine->fsioState.fsioTimingAdjustment
 		+ engine->engineState.cltTimingCorrection
 		+ pidTimingCorrection
 		// todo: uncomment once we get usable knock   - engine->knockCount
@@ -182,7 +112,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// get advance from the separate table for Cranking
 	if (CONFIG(useSeparateAdvanceForCranking)) {
-		return interpolate2d("crankingAdvance", rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
+		return interpolate2d(rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
@@ -205,7 +135,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	bool isCranking = ENGINE(rpmCalculator).isCranking();
 	if (isCranking) {
 		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
-		assertAngleRange(angle, "crAngle", CUSTOM_ERR_6680);
+		assertAngleRange(angle, "crAngle", CUSTOM_ERR_ANGLE_CR);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
@@ -228,7 +158,6 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 	}
 
-	angle -= engineConfiguration->ignitionOffset;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
 	fixAngle(angle, "getAdvance", CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 	return angle;
@@ -275,24 +204,12 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-void setDefaultIatTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	MEMCPY(config->ignitionIatCorrRpmBins, iatTimingRpmBins);
-	MEMCPY(config->ignitionIatCorrTable, defaultIatTiming);
-#else
-	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/0, 6000, 1);
-#endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
-}
-
 void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);
 	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
 			config->ignitionIatCorrRpmBins);
-	// init timing PID
-	idleTimingPid = Pid(&CONFIG(idleTimingPid));
 }
 
 /**

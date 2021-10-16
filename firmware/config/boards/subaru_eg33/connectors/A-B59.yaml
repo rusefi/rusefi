@@ -1,0 +1,129 @@
+# 22-pin connector
+
+pins:
+  - pin: 1
+    id: MC33810_0_OUT_2
+    class: outputs
+    function: Injector 5
+    ts_name: A01 - Injector 5
+    type: inj
+
+  - pin: 2
+    id: EFI_ADC_6
+    class: analog_inputs
+    function: 12V supply from Main Relay
+    ts_name: A02 - VBat
+    type: at
+
+  - pin: 3
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: CLT sensor
+    ts_name: A03 - Coolant t Ain
+    type: at
+
+  - pin: 4
+    id: EFI_ADC_9
+    class: analog_inputs
+    function: CLT sensor
+    ts_name: A04 - EGR t Ain
+    type: at
+
+  - pin: 5
+    id: EFI_ADC_8
+    class: analog_inputs
+    function: Narrow AFR Bank 2
+    ts_name: A06 - Oxyg 2 Ain
+    type: av
+
+  - pin: 6
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Narrow AFR Bank 1
+    ts_name: A06 - Oxyg 1 Ain
+    type: av
+
+  - pin: 7
+    id: GPIOH_12
+    class: event_inputs
+    function: Cam VR+
+    ts_name: A07 - Cam VR+
+    type: vr
+
+  - pin: 8
+    id: GPIOE_9
+    class: event_inputs
+    function: Crank 2 VR+
+    ts_name: A08 - Crank 2 VR+
+    type: vr
+
+  - pin: 9
+    function: Cam and Crank 2 VR sensor GND
+    type: sgnd
+
+  - pin: 10
+    function: Cam and Crank 2 VR sensors shield
+    type: sgnd
+
+  - pin: 11
+    function: Power GND
+    type: pgnd
+
+  - pin: 12
+    id: MC33810_1_OUT_2
+    class: outputs
+    function: Injector 6
+    ts_name: A12 - Injector 6
+    type: inj
+
+  - pin: 13
+    function: 12V supply from Main Relay
+    type: 12V
+
+  - pin: 14
+    function: Ground (Body)
+    type: pgnd
+
+  - pin: 15
+    function: Backup 12V supply (always on)
+    type: 12V
+
+  - pin: 16
+    id: EFI_ADC3_10
+    class: analog_inputs
+    function: Atm Pressure Sensor output to TCU
+    ts_name: (BUG!) A16 - Atm Pressure Sensor Ain
+    type: av
+
+  - pin: 17
+    function: AFR sensors shield
+    type: sgnd
+
+  - pin: 18
+    id: EFI_ADC_11
+    class: analog_inputs
+    function: AUX0 Ain
+    ts_name: A18 - AUX0 Ain
+    type: av
+
+  - pin: 19
+    id: MC33972_PIN_22
+    class: switch_inputs
+    function: AC Ctrl Din
+    ts_name: A19 - AC Ctrl Din
+    type: av
+
+  - pin: 20
+    id: MC33972_PIN_21
+    class: switch_inputs
+    function: Torque Ctrl Din
+    ts_name: A20 - Torque Ctrl Din
+    type: av
+
+  - pin: 11
+    function: Sensors GND
+    type: sgnd
+
+  - pin: 22
+    function: Power GND
+    type: pgnd

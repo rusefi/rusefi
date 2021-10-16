@@ -9,7 +9,7 @@ PDL_DIR = $(CYPRESS_CONTRIB)/os/hal/ports/Cypress/PDL
 
 BOARDSRC = $(BOARD_DIR)/board.c
 	
-BOARDSRC_CPP = $(BOARD_DIR)/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 # Required include directories
 BOARDINC = $(BOARD_DIR)
@@ -17,11 +17,15 @@ BOARDINC += $(BOARD_DIR)/config/controllers/algo
 
 BOARDINC += $(PDL_DIR)/driver $(PDL_DIR)/driver/gpio $(PDL_DIR)/driver/usb $(PDL_DIR)/driver/mfs $(PDL_DIR)/midware/usb/device
 
-BOARDSRC_CPP += $(CONTROLLERS_ALGO_AUTO_GENERATED_ENUMS)
+BOARDCPPSRC += $(CONTROLLERS_ALGO_AUTO_GENERATED_ENUMS)
 
 # Define linker script file here
-LDSCRIPT= $(STARTUPLD)/cypress_S6E2CxAH.ld
+LDSCRIPT= $(STARTUPLD_CYPRESS)/cypress_S6E2CxAH.ld
 
 #PLATFORMSRC += $(PLATFORMSRC_CONTRIB)
 #PLATFORMINC += $(PLATFORMINC_CONTRIB)
 
+# Shared variables
+ALLCSRC   += $(BOARDSRC)
+ALLCPPSRC += $(BOARDCPPSRC)
+ALLINC    += $(BOARDINC)

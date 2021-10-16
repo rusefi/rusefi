@@ -23,23 +23,25 @@ class PinRepository {
 	 */
 	PinRepository();
 	int totalPinsUsed = 0;
+	const char *PIN_USED[BRAIN_PIN_TOTAL_PINS];
 };
 
 #endif /* __cplusplus */
 
+bool isBrainPinValid(brain_pin_e brainPin);
+
 void initPinRepository(void);
 EXTERNC bool brain_pin_is_onchip(brain_pin_e brainPin);
 EXTERNC bool brain_pin_is_ext(brain_pin_e brainPin);
-EXTERNC void tle8888_dump_regs(void);
 
 /**
  * Usually high-level code would invoke efiSetPadMode, not this method directly
  */
-EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg);
+EXTERNC bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PARAMETER_SUFFIX);
 /**
  * See also efiSetPadUnused
  */
-EXTERNC void brain_pin_markUnused(brain_pin_e brainPin);
+EXTERNC void brain_pin_markUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX);
 const char * getPinFunction(brain_input_pin_e brainPin);
 
 #if EFI_PROD_CODE
@@ -49,13 +51,14 @@ EXTERNC void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin);
 #endif /* EFI_PROD_CODE*/
 
 /* defined in ports/ */
-int getBrainIndex(ioportid_t port, ioportmask_t pin);
-ioportid_t getBrainPort(brain_pin_e brainPin);
+int getPortPinIndex(ioportid_t port, ioportmask_t pin);
+ioportid_t getBrainPinPort(brain_pin_e brainPin);
 int getBrainPinIndex(brain_pin_e brainPin);
-unsigned int getNumBrainPins(void);
-void initBrainUsedPins(void);
+int brainPin_to_index(brain_pin_e brainPin);
+unsigned int getBrainPinOnchipNum(void);
+unsigned int getBrainPinTotalNum(void);
 
 #ifdef __cplusplus
-const char* & getBrainUsedPin(unsigned int idx);
+const char* & getBrainUsedPin(unsigned int idx DECLARE_ENGINE_PARAMETER_SUFFIX);
 #endif
 

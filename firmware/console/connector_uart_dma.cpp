@@ -7,70 +7,75 @@
 
 #include "connector_uart_dma.h"
 
-#if TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
-
-#if TS_UART_DMA_MODE && PRIMARY_UART_DMA_MODE
- #error "Only single-DMA implemented right now"
-#endif
-
-EXTERN_CONFIG;
-
-// Async. FIFO buffer takes some RAM...
-uart_dma_s tsUartDma;
+#if HAL_USE_UART && EFI_USE_UART_DMA
 
 /* Common function for all DMA-UART IRQ handlers. */
-static void tsCopyDataFromDMA(UARTDriver *uartp) {
+void UartDmaTsChannel::copyDataFromDMA() {
 	chSysLockFromISR();
 	// get 0-based DMA buffer position
-	int dmaPos = TS_DMA_BUFFER_SIZE - dmaStreamGetTransactionSize(uartp->dmarx);
+	int dmaPos = TS_DMA_BUFFER_SIZE - dmaStreamGetTransactionSize(m_driver->dmarx);
 	// if the position is wrapped (circular DMA-mode enabled)
-	if (dmaPos < tsUartDma.readPos)
+	if (dmaPos < readPos)
 		dmaPos += TS_DMA_BUFFER_SIZE;
 	// we need to update the current readPos
-	int newReadPos = tsUartDma.readPos;
+	int newReadPos = readPos;
 	for (int i = newReadPos; i < dmaPos; ) {
-		if (iqPutI(&tsUartDma.fifoRxQueue, tsUartDma.dmaBuffer[newReadPos]) != Q_OK) {
+		if (iqPutI(&fifoRxQueue, dmaBuffer[newReadPos]) != Q_OK) {
 			break; // todo: ignore overflow?
 		}
 		// the read position should always stay inside the buffer range
 		newReadPos = (++i) & (TS_DMA_BUFFER_SIZE - 1);
 	}
-	tsUartDma.readPos = newReadPos;
+	readPos = newReadPos;
 	chSysUnlockFromISR();
 }
 
 /* We use the same handler code for both halves. */
 static void tsRxIRQHalfHandler(UARTDriver *uartp, uartflags_t full) {
-	UNUSED(uartp);
 	UNUSED(full);
-	tsCopyDataFromDMA(uartp);
+	reinterpret_cast<UartDmaTsChannel*>(uartp->dmaAdapterInstance)->copyDataFromDMA();
 }
 
 /* This handler is called right after the UART receiver has finished its work. */
 static void tsRxIRQIdleHandler(UARTDriver *uartp) {
 	UNUSED(uartp);
-	tsCopyDataFromDMA(uartp);
+	reinterpret_cast<UartDmaTsChannel*>(uartp->dmaAdapterInstance)->copyDataFromDMA();
 }
 
-/* Note: This structure is modified from the default ChibiOS layout! */
-static UARTConfig tsDmaUartConfig = {
-	.txend1_cb = NULL, .txend2_cb = NULL, .rxend_cb = NULL, .rxchar_cb = NULL, .rxerr_cb = NULL,
-	.speed = 0, .cr1 = 0, .cr2 = 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN, .cr3 = 0,
-	.timeout_cb = tsRxIRQIdleHandler, .rxhalf_cb = tsRxIRQHalfHandler
-};
+UartDmaTsChannel::UartDmaTsChannel(UARTDriver& driver)
+	: UartTsChannel(driver)
+{
+	// Store a pointer to this instance so we can get it back later in the DMA callback
+	driver.dmaAdapterInstance = this;
 
-void startUartDmaConnector(UARTDriver *uartp DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	print("Using UART-DMA mode");
-	// init FIFO queue
-	iqObjectInit(&tsUartDma.fifoRxQueue, tsUartDma.buffer, sizeof(tsUartDma.buffer), NULL, NULL);
-
-	// start DMA driver
-	tsDmaUartConfig.speed = CONFIG(tunerStudioSerialSpeed);
-	uartStart(uartp, &tsDmaUartConfig);
-
-	// start continuous DMA transfer using our circular buffer
-	tsUartDma.readPos = 0;
-	uartStartReceive(uartp, sizeof(tsUartDma.dmaBuffer), tsUartDma.dmaBuffer);
+	iqObjectInit(&fifoRxQueue, buffer, sizeof(buffer), nullptr, nullptr);
 }
 
-#endif // TS_UART_DMA_MODE || PRIMARY_UART_DMA_MODE
+void UartDmaTsChannel::start(uint32_t baud) {
+	m_config = {
+		.txend1_cb		= NULL,
+		.txend2_cb		= NULL,
+		.rxend_cb		= NULL,
+		.rxchar_cb		= NULL,
+		.rxerr_cb		= NULL,
+		.timeout_cb		= tsRxIRQIdleHandler,
+		.speed			= baud,
+		.cr1			= 0,
+		.cr2			= 0/*USART_CR2_STOP1_BITS*/ | USART_CR2_LINEN,
+		.cr3			= 0,
+		.rxhalf_cb		= tsRxIRQHalfHandler
+	};
+
+	uartStart(m_driver, &m_config);
+
+	// Start the buffered read process
+	readPos = 0;
+	uartStartReceive(m_driver, sizeof(dmaBuffer), dmaBuffer);
+}
+
+size_t UartDmaTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
+	// Instead of reading from the device, read from our custom RX queue
+	return iqReadTimeout(&fifoRxQueue, buffer, size, timeout);
+}
+
+#endif // HAL_USE_UART && EFI_USE_UART_DMA

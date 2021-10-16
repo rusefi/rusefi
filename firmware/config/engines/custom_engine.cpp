@@ -11,9 +11,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "custom_engine.h"
-#include "allsensors.h"
-#include "engine_math.h"
 #include "fsio_impl.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
@@ -25,14 +25,15 @@
 #include "scheduler.h"
 #endif /* EFI_PROD_CODE */
 
-EXTERN_ENGINE;
-
+#if HW_PROTEUS & EFI_PROD_CODE
+#include "proteus_meta.h"
+#endif
 
 #if EFI_PROD_CODE
 static int periodIndex = 0;
 
 static OutputPin testPin;
-scheduling_s scheduling;
+static scheduling_s testScheduling;
 
 static int test557[] = {5, 5, 10, 10, 20, 20, 50, 50, 100, 100, 200, 200, 500, 500, 500, 500};
 #define TEST_LEN 16
@@ -43,15 +44,14 @@ static void toggleTestAndScheduleNext(void *) {
 	testPin.toggle();
 	periodIndex = (periodIndex + 1) % TEST_LEN;
 	testTime += test557[periodIndex];
-	engine->executor.scheduleByTimestamp(&scheduling, testTime, &toggleTestAndScheduleNext);
-
+	engine->executor.scheduleByTimestamp("test", &testScheduling, testTime, &toggleTestAndScheduleNext);
 }
 
 /**
  * https://github.com/rusefi/rusefi/issues/557 common rail / direct injection scheduling control test
  */
 void runSchedulingPrecisionTestIfNeeded(void) {
-	if (engineConfiguration->test557pin == GPIO_UNASSIGNED) {
+	if (!isBrainPinValid(engineConfiguration->test557pin)) {
 		return;
 	}
 
@@ -267,7 +267,7 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	CONFIG(etbIo[0].directionPin1) = GPIOC_7; // Frankenso high-side in order to get 5v control
 	CONFIG(etbIo[0].directionPin2) = GPIOC_9;
-	CONFIG(etbIo[0].controlPin1) = GPIOE_14;
+	CONFIG(etbIo[0].controlPin) = GPIOE_14;
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setBoschVNH2SP30Curve(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -527,35 +527,36 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(fanPin) = GPIO_UNASSIGNED;
 	CONFIG(fuelPumpPin) = GPIO_UNASSIGNED;
 
-	engineConfiguration->injectionPins[0] = GPIOD_7; //  "Lowside 1"
-	engineConfiguration->injectionPins[1] = GPIOG_9;//  "Lowside 2"
-	engineConfiguration->injectionPins[2] = GPIOG_10;// "Lowside 3"
-	engineConfiguration->injectionPins[3] = GPIOG_11;// "Lowside 4"
+#if EFI_PROD_CODE
+	engineConfiguration->injectionPins[0] = PROTEUS_LS_1;
+	engineConfiguration->injectionPins[1] = PROTEUS_LS_2;
+	engineConfiguration->injectionPins[2] = PROTEUS_LS_3;
+	engineConfiguration->injectionPins[3] = PROTEUS_LS_4;
 	engineConfiguration->injectionPins[4] = GPIOG_12;// "Lowside 5"
 	engineConfiguration->injectionPins[5] = GPIOG_13;// "Lowside 6"
 	engineConfiguration->injectionPins[6] = GPIOB_5;//  "Lowside 9"
 	engineConfiguration->injectionPins[7] = GPIOB_4;//  "Lowside 8"
 	engineConfiguration->injectionPins[8] = GPIOB_7;//  "Lowside 11"
-	engineConfiguration->injectionPins[9] = GPIOB_6;//  "Lowside 10"
+	engineConfiguration->injectionPins[9] = PROTEUS_LS_10;
 	engineConfiguration->injectionPins[10] = GPIOB_8;//  "Lowside 12"
 	engineConfiguration->injectionPins[11] = GPIOB_9;//  "Lowside 13"    # pin 10/black35
 
 
 
 
-	engineConfiguration->ignitionPins[0] = GPIOD_4;//  "Ign 1"
-	engineConfiguration->ignitionPins[1] = GPIOD_3;//  "Ign 2"
-	engineConfiguration->ignitionPins[2] = GPIOC_8;//  "Ign 4"
-	engineConfiguration->ignitionPins[3] = GPIOC_7;//  "Ign 5"
-	engineConfiguration->ignitionPins[4] = GPIOG_8;//  "Ign 6"
-	engineConfiguration->ignitionPins[5] = GPIOG_7;//  "Ign 7"
+	engineConfiguration->ignitionPins[0] = PROTEUS_HS_1;
+	engineConfiguration->ignitionPins[1] = PROTEUS_HS_2;
+	engineConfiguration->ignitionPins[2] = PROTEUS_HS_4;
+	engineConfiguration->ignitionPins[3] = PROTEUS_HS_5;
+	engineConfiguration->ignitionPins[4] = PROTEUS_HS_6;
+	engineConfiguration->ignitionPins[5] = PROTEUS_HS_7;
 
 	engineConfiguration->ignitionPins[6] = GPIOD_15;// "Highside 3"    # pin 13/black35
-	engineConfiguration->ignitionPins[7] = GPIOC_9;//  "Ign 3"
-	engineConfiguration->ignitionPins[8] = GPIOG_5;//  "Ign 9"
-	engineConfiguration->ignitionPins[9] = GPIOG_6;//  "Ign 8"
-	engineConfiguration->ignitionPins[10] = GPIOA_9;//  "Highside 1"    # pin 2/black35
-	engineConfiguration->ignitionPins[11] = GPIOG_2;//  "Ign 12"
+	engineConfiguration->ignitionPins[7] = PROTEUS_HS_3;
+	engineConfiguration->ignitionPins[8] = PROTEUS_HS_9;
+	engineConfiguration->ignitionPins[9] = PROTEUS_HS_8;
+	engineConfiguration->ignitionPins[10] = PROTEUS_HS_1;
+	engineConfiguration->ignitionPins[11] = PROTEUS_HS_12;
 
 	engineConfiguration->fsioOutputPins[0] = GPIOE_2;//  "Lowside 16"    # pin 23/black35
 	engineConfiguration->fsioOutputPins[1] = GPIOG_14;// "Lowside 7"
@@ -567,16 +568,15 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fsioOutputPins[6] = GPIOD_14;// "Highside 4"    # pin 14/black35
 	engineConfiguration->fsioOutputPins[7] = GPIOG_4;//  "Ign 10"
 
+#endif // EFI_PROD_CODE
 
 	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
 #endif // HW_PROTEUS
 
 void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	for (int i = 0; i < IGNITION_PIN_COUNT;i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
-	}
-	for (int i = 0; i < INJECTION_PIN_COUNT;i++) {
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
 	}
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
@@ -693,6 +693,41 @@ void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(mc33_t_hold_tot) = 10000;
 }
 
+/**
+ * set engine_type 108
+ */
+void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->trigger.type = TT_HONDA_1_24;
+
+	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
+
+	engineConfiguration->triggerInputPins[0] = GPIOA_5;
+	engineConfiguration->triggerInputPins[1] = GPIOC_6;
+}
+
+/**
+ * set engine_type 107
+ */
+void setRotary(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->specs.cylindersCount = 2;
+	engineConfiguration->specs.firingOrder = FO_1_2;
+
+	engineConfiguration->trigger.type = TT_36_2_2_2;
+	setOperationMode(engineConfiguration, TWO_STROKE);
+
+	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(CONFIG(engineCode), "13B");
+	strcpy(CONFIG(vehicleName), "test");
+
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED; // injector in default pinout
+	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+
+	engineConfiguration->enableTrailingSparks = true;
+	engineConfiguration->trailingCoilPins[0] = GPIOC_9;
+	engineConfiguration->trailingCoilPins[1] = GPIOE_10;
+}
 
 /**
  * set engine_type 103
@@ -738,3 +773,38 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
 	setBoschHDEV_5_injectors(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
+
+void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	CONFIG(etbIo[0].directionPin1) = GPIOC_6;
+	CONFIG(etbIo[0].directionPin2) = GPIOC_7;
+	engineConfiguration->etb_use_two_wires = true;
+}
+
+void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
+		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600 / RPM_1_BYTE_PACKING_MULT, 7000 / RPM_1_BYTE_PACKING_MULT, 100 / RPM_1_BYTE_PACKING_MULT);
+		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
+	}
+}
+
+#if HW_HELLEN
+void setHellen144LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
+	engineConfiguration->communicationLedPin = GPIOE_7;
+#endif /* EFI_COMMUNICATION_PIN */
+	engineConfiguration->runningLedPin = GPIOG_1;
+	engineConfiguration->warningLedPin = GPIOE_8;
+}
+
+void setHellen176LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+#ifdef EFI_COMMUNICATION_PIN
+	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
+#else
+	engineConfiguration->communicationLedPin = GPIOH_10;
+#endif /* EFI_COMMUNICATION_PIN */
+	engineConfiguration->runningLedPin = GPIOH_9;  // green
+	engineConfiguration->warningLedPin = GPIOH_11; // yellow
+}
+#endif //HW_HELLEN

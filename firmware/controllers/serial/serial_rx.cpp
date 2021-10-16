@@ -7,20 +7,12 @@
  * @author Konstantin Smola, (c) 2020
  */
 
-#include "globalaccess.h"
+#include "pch.h"
 
 #if EFI_AUX_SERIAL
-#include "engine.h"
 #include "serial.h"
 #include "serial_hw.h"
 #include "serial_sensor.h"
-
-#include "allsensors.h"
-#include "vehicle_speed.h"
-
-EXTERN_ENGINE;
-
-static LoggingWithStorage logger("AUX Serial RX");
 
 uint8_t ser_buffer[SERBUFFLEN] = {};
 size_t innovate_msg_len = 1;
@@ -29,7 +21,7 @@ uint8_t sb = 0;
 bool clear_ser_buffer = false;
 
 SerialRead::SerialRead()
-	: ThreadController("AUX Serial RX", NORMALPRIO) {
+	: ThreadController("AUX Serial RX", PRIO_AUX_SERIAL) {
 }
 
 void SerialRead::ThreadTask() {

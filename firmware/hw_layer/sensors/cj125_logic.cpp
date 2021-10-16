@@ -5,11 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
 #include "cj125_logic.h"
-#include "engine.h"
-#include "error_handling.h"
-
-EXTERN_ENGINE;
 
 #define LOW_VOLTAGE "Low Voltage"
 
@@ -20,10 +17,10 @@ CJ125::CJ125() : wboHeaterControl("wbo"),
 void CJ125::SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// limit duty cycle for sensor safety
 	// todo: would be much nicer to have continuous function (vBatt)
-	float maxDuty = (engine->sensors.vBatt > CJ125_HEATER_LIMITING_VOLTAGE) ? CJ125_HEATER_LIMITING_RATE : 1.0f;
+	float maxDuty = (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > CJ125_HEATER_LIMITING_VOLTAGE) ? CJ125_HEATER_LIMITING_RATE : 1.0f;
 	heaterDuty = (value < CJ125_HEATER_MIN_DUTY) ? 0.0f : minF(maxF(value, 0.0f), maxDuty);
 #ifdef CJ125_DEBUG
-	scheduleMsg(logger, "cjSetHeater: %.2f", heaterDuty);
+	efiPrintf("cjSetHeater: %.2f", heaterDuty);
 #endif
 	// a little trick to disable PWM if needed.
 	// todo: this should be moved to wboHeaterControl.setPwmDutyCycle()
@@ -41,41 +38,41 @@ bool CJ125::isWorkingState(void) const {
 	return state != CJ125_ERROR && state != CJ125_INIT && state != CJ125_IDLE;
 }
 
-void CJ125::StartHeaterControl(pwm_gen_callback *stateChangeCallback DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void CJ125::StartHeaterControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// todo: use custom pin state method, turn pin off while not running
 	startSimplePwmExt(&wboHeaterControl, "wboHeaterPin",
 			&engine->executor,
 			CONFIG(wboHeaterPin),
-			&wboHeaterPin, CJ125_HEATER_PWM_FREQ, 0.0f, stateChangeCallback);
+			&wboHeaterPin, CJ125_HEATER_PWM_FREQ, 0.0f);
 	SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-static void printDiagCode(Logging * logging, const char *msg, int code, const char *code1message) {
+static void printDiagCode(const char *msg, int code, const char *code1message) {
 	switch(code & 0x3) {
 	case 0:
-		scheduleMsg(logging, "%s Short to GND", msg);
+		efiPrintf("%s Short to GND", msg);
 		return;
 	case 1:
-		scheduleMsg(logging, "%s %s", msg, code1message);
+		efiPrintf("%s %s", msg, code1message);
 		return;
 	case 2:
-		scheduleMsg(logging, "%s Short to Vbatt", msg);
+		efiPrintf("%s Short to Vbatt", msg);
 		return;
 	case 3:
-		scheduleMsg(logging, "%s LOOKS GOOD", msg);
+		efiPrintf("%s LOOKS GOOD", msg);
 		return;
 	}
 }
 
 void CJ125::printDiag() {
 	if (diag == CJ125_DIAG_NORM) {
-		scheduleMsg(logger, "cj125: diag Looks great!");
+		efiPrintf("cj125: diag Looks great!");
 	} else {
-		scheduleMsg(logger, "cj125: diag NOT GOOD");
-		printDiagCode(logger, "VM", diag, LOW_VOLTAGE);
-		printDiagCode(logger, "UN", diag >> 2, LOW_VOLTAGE);
-		printDiagCode(logger, "IA", diag >> 4, LOW_VOLTAGE);
-		printDiagCode(logger, "HR", diag >> 6, "open load");
+		efiPrintf("cj125: diag NOT GOOD");
+		printDiagCode("VM", diag, LOW_VOLTAGE);
+		printDiagCode("UN", diag >> 2, LOW_VOLTAGE);
+		printDiagCode("IA", diag >> 4, LOW_VOLTAGE);
+		printDiagCode("HR", diag >> 6, "open load");
 /* todo: do we want to throw CRITICAL on diag start-up error? probably not?
 		firmwareError(CUSTOM_ERR_CJ125_DIAG, "CJ125 is not well");
 */
@@ -99,14 +96,14 @@ bool CJ125::cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	int init2 = spi->ReadRegister(INIT_REG2_RD);
 
 	diag = spi->ReadRegister(DIAG_REG_RD);
-	scheduleMsg(logger, "cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
+	efiPrintf("cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
 	if (ident != CJ125_IDENT) {
-		scheduleMsg(logger, "cj125: Error! Wrong ident! Cannot communicate with CJ125!");
+		efiPrintf("cj125: Error! Wrong ident! Cannot communicate with CJ125!");
 		setError(CJ125_ERROR_WRONG_IDENT PASS_ENGINE_PARAMETER_SUFFIX);
 		return false;
 	}
 	if (init1 != CJ125_INIT1_NORMAL_17 || init2 != CJ125_INIT2_DIAG) {
-		scheduleMsg(logger, "cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
+		efiPrintf("cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
 		setError(CJ125_ERROR_WRONG_IDENT PASS_ENGINE_PARAMETER_SUFFIX);
 		return false;
 	}

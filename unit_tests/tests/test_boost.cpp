@@ -1,8 +1,6 @@
-#include "boost_control.h"
-#include "engine_controller.h"
-#include "engine_test_helper.h"
+#include "pch.h"
 
-#include "mocks.h"
+#include "boost_control.h"
 
 using ::testing::_;
 using ::testing::StrictMock;
@@ -89,10 +87,16 @@ TEST(BoostControl, ClosedLoop) {
 
 	// Enable closed loop
 	CONFIG(boostType) = CLOSED_LOOP;
+	// Minimum 75kpa
+	CONFIG(minimumBoostClosedLoopMap) = 75;
 
 	// At 0 RPM, closed loop is disabled
 	ENGINE(rpmCalculator.mockRpm) = 0;
 	EXPECT_EQ(0, bc.getClosedLoop(150, 100).value_or(-1000));
+
+	// too low MAP, disable closed loop
+	ENGINE(rpmCalculator.mockRpm) = 0;
+	EXPECT_EQ(0, bc.getClosedLoop(150, 50).value_or(-1000));
 
 	// With RPM, we should get an output
 	ENGINE(rpmCalculator.mockRpm) = 1000;

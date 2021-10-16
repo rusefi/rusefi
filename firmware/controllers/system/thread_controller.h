@@ -8,9 +8,6 @@
 #pragma once
 
 #include "global.h"
-#include "controller_base.h"
-
-#if ! EFI_UNIT_TEST
 
 /**
  * @brief A base class for a controller that requires its own thread.
@@ -20,7 +17,7 @@
  * allocate the stack at compile time, it has to be a template parameter instead of a normal parameter)
  */
 template <int TStackSize>
-class ThreadController : public ControllerBase
+class ThreadController
 {
 private:
     THD_WORKING_AREA(m_threadstack, TStackSize);
@@ -46,10 +43,12 @@ protected:
     virtual void ThreadTask() = 0;
     thread_t* m_thread;
 
+	const char* const m_name;
+
 public:
     ThreadController(const char* name, tprio_t priority)
-        : ControllerBase(name)
-        , m_prio(priority)
+		: m_prio(priority)
+		, m_name(name)
     {
     }
 
@@ -59,14 +58,12 @@ public:
     void Start()
     {
 		if (m_isStarted) {
-			warning(CUSTOM_OBD_6003, "Tried to start thread %s but it was already running", GetName());
+			warning(CUSTOM_OBD_6003, "Tried to start thread %s but it was already running", m_name);
 			return;
 		}
 
         m_thread = chThdCreateStatic(m_threadstack, sizeof(m_threadstack), m_prio, StaticThreadTaskAdapter, this);
-        m_thread->name = GetName();
+		m_thread->name = m_name;
 		m_isStarted = true;
     }
 };
-
-#endif

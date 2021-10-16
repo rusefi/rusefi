@@ -11,11 +11,14 @@ import java.util.List;
 
 public class CompositeParser {
     private static final Logging log = Logging.getLogging(CompositeParser.class);
+	// 1 second
+	private static final int maxDeltaTime = 1000000;
 
     public static List<CompositeEvent> parse(byte[] response) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(response);
         byteBuffer.order(ByteOrder.BIG_ENDIAN);
         int ptr = 1;
+        int curTime = 0, prevTime = 0;
 
         List<CompositeEvent> events = new ArrayList<>();
 
@@ -34,7 +37,18 @@ public class CompositeParser {
 
             ptr += Fields.COMPOSITE_PACKET_SIZE;
 
-            events.add(new CompositeEvent(timestamp, primaryTrigger, secondaryTrigger, trg, sync, coil, injector));
+            // 'timestamp' is an integer type for now, and sadly, but it overflows...
+            // this is an attempt of temporary workaround
+            int dt = timestamp - prevTime;
+            // we allow time to increment only in small amounts.
+            // so if any time discontinuities occur, we jump 1 sec.
+            if (dt < 0 || dt > maxDeltaTime)
+                dt = maxDeltaTime;
+            // we want to catch integer overflows here
+            curTime = Math.addExact(curTime, dt);
+            prevTime = timestamp;
+
+            events.add(new CompositeEvent(curTime, primaryTrigger, secondaryTrigger, trg, sync, coil, injector));
         }
         return events;
     }

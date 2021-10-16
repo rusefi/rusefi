@@ -16,10 +16,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "accelerometer.h"
 #include "hardware.h"
-
-EXTERN_ENGINE;
 
 #if EFI_MEMS
 #include "mpu_util.h"
@@ -75,7 +75,7 @@ private:
 static BenchController instance;
 
 void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (engineConfiguration->LIS302DLCsPin == GPIO_UNASSIGNED)
+	if (!isBrainPinValid(engineConfiguration->LIS302DLCsPin))
 		return; // not used
 
 	if (!CONFIG(is_enabled_spi_1))

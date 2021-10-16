@@ -5,14 +5,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
+#include "pch.h"
+
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
-
-#define SIMULATION_CYCLE_PERIOD 720000
-
-EXTERN_ENGINE;
 
 #if EFI_UNIT_TEST
 	extern bool printTriggerTrace;
@@ -33,6 +29,13 @@ bool isUsefulSignal(trigger_event_e signal, const TriggerConfiguration& triggerC
 extern bool printTriggerDebug;
 #endif /* ! EFI_UNIT_TEST */
 
+int getSimulatedEventTime(const TriggerWaveform& shape, int i) {
+	int stateIndex = i % shape.getSize();
+	int loopIndex = i / shape.getSize();
+
+	return (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave.getSwitchTime(stateIndex)));
+}
+
 void TriggerStimulatorHelper::feedSimulatedEvent(
 		const TriggerStateCallback triggerCycleCallback,
 		const TriggerConfiguration& triggerConfiguration,
@@ -44,9 +47,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 	int stateIndex = i % shape.getSize();
 	int size = shape.getSize();
 
-	int loopIndex = i / shape.getSize();
-
-	int time = (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave.getSwitchTime(stateIndex)));
+	int time = getSimulatedEventTime(shape, i);
 
 	const MultiChannelStateSequence& multiChannelStateSequence = shape.wave;
 
@@ -71,41 +72,24 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 	// todo: code duplication with TriggerEmulatorHelper::handleEmulatorCallback?
 
-	if (needEvent(stateIndex, size, multiChannelStateSequence, 0)) {
-		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/0, stateIndex);
-		trigger_event_e event = currentValue ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING;
-		if (isUsefulSignal(event, triggerConfiguration)) {
-			state.decodeTriggerEvent(shape,
+	constexpr trigger_event_e riseEvents[] = { SHAFT_PRIMARY_RISING, SHAFT_SECONDARY_RISING, SHAFT_3RD_RISING };
+	constexpr trigger_event_e fallEvents[] = { SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_FALLING, SHAFT_3RD_FALLING };
+
+
+	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
+		if (needEvent(stateIndex, size, multiChannelStateSequence, i)) {
+			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
+			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
+			if (isUsefulSignal(event, triggerConfiguration)) {
+				state.decodeTriggerEvent(shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
 					event, time);
+			}
 		}
 	}
 
-	if (needEvent(stateIndex, size, multiChannelStateSequence, 1)) {
-		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/1, stateIndex);
-		trigger_event_e event = currentValue ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING;
-		if (isUsefulSignal(event, triggerConfiguration)) {
-			state.decodeTriggerEvent(shape,
-					triggerCycleCallback,
-					/* override */ nullptr,
-					triggerConfiguration,
-					event, time);
-		}
-	}
-
-	if (needEvent(stateIndex, size, multiChannelStateSequence, 2)) {
-		pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/2, stateIndex);
-		trigger_event_e event = currentValue ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
-		if (isUsefulSignal(event, triggerConfiguration)) {
-			state.decodeTriggerEvent(shape,
-					triggerCycleCallback,
-					/* override */ nullptr,
-					triggerConfiguration,
-					event, time);
-		}
-	}
 }
 
 void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
@@ -162,7 +146,7 @@ uint32_t TriggerStimulatorHelper::findTriggerSyncPoint(
 				triggerConfiguration,
 				state, shape, i);
 
-		if (state.shaft_is_synchronized) {
+		if (state.getShaftSynchronized()) {
 			return i;
 		}
 	}

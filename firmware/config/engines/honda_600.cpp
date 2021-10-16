@@ -7,10 +7,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "engine_template.h"
 #include "honda_600.h"
-#include "allsensors.h"
-#include "engine_math.h"
 #include "custom_engine.h"
 
 #if EFI_PROD_CODE
@@ -18,7 +18,7 @@
 #endif
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-static const ignition_table_t default_custom_timing_table = {
+static const uint8_t default_custom_timing_table[16][16] = {
   /* RPM			   0   500   1000   1500   2000   2500   3000   3500   4000    4500   5000    5500   6000   6500   7000	 */
   /* Load  0% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
   /* Load 10% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
@@ -34,14 +34,12 @@ static const ignition_table_t default_custom_timing_table = {
 };
 #endif
 
-EXTERN_CONFIG;
-
 static void setDefaultCustomMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setTimingLoadBin(0,100 PASS_CONFIG_PARAMETER_SUFFIX);
 	setTimingRpmBin(0,7000 PASS_CONFIG_PARAMETER_SUFFIX);
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	MEMCPY(config->ignitionTable, default_custom_timing_table);
+	copyTable(config->ignitionTable, default_custom_timing_table);
 #endif
 }
 
@@ -75,9 +73,8 @@ void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankenso_01_LCD(engineConfiguration);
 	commonFrankensoAnalogInputs(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	setMap(config->injectionPhase, 320);
-#endif
+	setTable(config->injectionPhase, 320.0f);
+
 	/**
 	 * Frankenso analog #1 PC2 ADC12 CLT
 	 * Frankenso analog #2 PC1 ADC11 IAT

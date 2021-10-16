@@ -1,7 +1,8 @@
-.svn*
 .dep*
 build/
 build_kinetis/
+pinouts
+workarea
 out/
 logs/
 blbuild/
@@ -21,3 +22,6 @@ err.txt
 log.txt
 *.rusefi_binary
 *.msq
+
+# Eclipse
+.metadata/

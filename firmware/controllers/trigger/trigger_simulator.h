@@ -8,7 +8,11 @@
 
 #pragma once
 
+#define SIMULATION_CYCLE_PERIOD 720000
+
 #include "trigger_decoder.h"
+
+int getSimulatedEventTime(const TriggerWaveform& shape, int i);
 
 class TriggerStimulatorHelper {
 public:
@@ -26,7 +30,6 @@ public:
 			TriggerWaveform& shape
 			);
 
-private:
 	// send next event so that we can see how state reacts
 	void feedSimulatedEvent(const TriggerStateCallback triggerCycleCallback,
 			const TriggerConfiguration& triggerConfiguration,

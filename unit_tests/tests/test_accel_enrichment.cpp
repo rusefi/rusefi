@@ -8,9 +8,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
+
 #include "accel_enrichment.h"
-#include "sensor.h"
 
 TEST(fuel, testTpsAccelEnrichmentMath) {
 	printf("====================================================================================== testAccelEnrichment\r\n");
@@ -104,8 +104,7 @@ TEST(fuel, testAccelEnrichmentFractionalTps) {
 		}
 	}
 
-	LoggingWithStorage logger("test");
-	initAccelEnrichment(&logger PASS_ENGINE_PARAMETER_SUFFIX);
+	initAccelEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engine->rpmCalculator.setRpmValue(600);
 	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);

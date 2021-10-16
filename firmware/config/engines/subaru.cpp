@@ -8,10 +8,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "subaru.h"
 #include "custom_engine.h"
-
-EXTERN_CONFIG;
 
 void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setFrankenso_01_LCD(engineConfiguration);
@@ -20,8 +20,6 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 5;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-
-	engineConfiguration->sensorChartFrequency = 2;
 
 	engineConfiguration->useStepperIdle = true;
 
@@ -58,7 +56,60 @@ void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
 #endif /* BOARD_TLE8888_COUNT */
 
-	// this car has high-side main relay WOW so we have to hard wire it to ingition switch
+	// this car has high-side main relay WOW so we have to hard wire it to ignition switch
 
 
+}
+
+/*
+ * Subaru SVX (Alcyone SVX)
+ */
+
+void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+
+	engineConfiguration->trigger.type = TT_SUBARU_SVX;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+
+	engineConfiguration->specs.cylindersCount = 6;
+	engineConfiguration->specs.firingOrder = FO_1_6_3_2_5_4;
+
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	/* TODO: */
+	engineConfiguration->globalTriggerAngleOffset = 114;	// the end of 19th tooth?
+
+	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
+
+	engineConfiguration->specs.displacement = 3.30;
+	engineConfiguration->injector.flow = 250;
+
+	engineConfiguration->cranking.baseFuel = 5;		// ???
+	engineConfiguration->cranking.rpm = 400;
+
+	engineConfiguration->rpmHardLimit = 6500;
+
+	engineConfiguration->idleStepperReactionTime = 10;
+	engineConfiguration->stepperDirectionPinMode = OM_INVERTED;
+	engineConfiguration->useLinearCltSensor = true;
+
+	engineConfiguration->canReadEnabled = true;
+	engineConfiguration->canWriteEnabled = false;
+
+	/* Fully closed - 0.9V, fully opened - 4.7 (?) */
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.9);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.7);
+	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
+	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
+
+	engineConfiguration->mapMinBufferLength = 4;
+
+	/* idle configuration */
+	engineConfiguration->manIdlePosition = 30;
+	engineConfiguration->idle.solenoidFrequency = 250;
+
+	/* Check this */
+	engineConfiguration->tachPulsePerRev = 2;
 }
