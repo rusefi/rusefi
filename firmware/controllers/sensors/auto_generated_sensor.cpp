@@ -1,0 +1,90 @@
+#include "global.h"
+#include "sensor_type.h"
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Sat Oct 16 17:24:03 EDT 2021
+// see also gen_config_and_enums.bat
+
+
+
+const char *getSensorType(SensorType value){
+switch(value) {
+case AcceleratorPedal:
+  return "AcceleratorPedal";
+case AcceleratorPedalPrimary:
+  return "AcceleratorPedalPrimary";
+case AcceleratorPedalSecondary:
+  return "AcceleratorPedalSecondary";
+case Aux1:
+  return "Aux1";
+case Aux2:
+  return "Aux2";
+case Aux3:
+  return "Aux3";
+case Aux4:
+  return "Aux4";
+case AuxTemp1:
+  return "AuxTemp1";
+case AuxTemp2:
+  return "AuxTemp2";
+case BarometricPressure:
+  return "BarometricPressure";
+case BatteryVoltage:
+  return "BatteryVoltage";
+case Clt:
+  return "Clt";
+case DriverThrottleIntent:
+  return "DriverThrottleIntent";
+case FuelEthanolPercent:
+  return "FuelEthanolPercent";
+case FuelLevel:
+  return "FuelLevel";
+case FuelPressureHigh:
+  return "FuelPressureHigh";
+case FuelPressureInjector:
+  return "FuelPressureInjector";
+case FuelPressureLow:
+  return "FuelPressureLow";
+case Iat:
+  return "Iat";
+case IdlePosition:
+  return "IdlePosition";
+case Invalid:
+  return "Invalid";
+case Lambda1:
+  return "Lambda1";
+case Lambda2:
+  return "Lambda2";
+case Maf:
+  return "Maf";
+case Map:
+  return "Map";
+case MapFast:
+  return "MapFast";
+case MapSlow:
+  return "MapSlow";
+case OilPressure:
+  return "OilPressure";
+case PlaceholderLast:
+  return "PlaceholderLast";
+case Rpm:
+  return "Rpm";
+case Tps1:
+  return "Tps1";
+case Tps1Primary:
+  return "Tps1Primary";
+case Tps1Secondary:
+  return "Tps1Secondary";
+case Tps2:
+  return "Tps2";
+case Tps2Primary:
+  return "Tps2Primary";
+case Tps2Secondary:
+  return "Tps2Secondary";
+case TurbochargerSpeed:
+  return "TurbochargerSpeed";
+case VehicleSpeed:
+  return "VehicleSpeed";
+case WastegatePosition:
+  return "WastegatePosition";
+  }
+ return NULL;
+}
