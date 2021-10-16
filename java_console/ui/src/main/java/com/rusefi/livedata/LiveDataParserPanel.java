@@ -106,11 +106,11 @@ public class LiveDataParserPanel {
     }
 
     public static String getContent(Class<?> clazz, String fileName) throws IOException, URISyntaxException {
-        URL cpp = clazz.getResource("/c_sources/" + fileName);
+        InputStream cpp = clazz.getResourceAsStream("/c_sources/" + fileName);
         String line;
 
         StringBuilder result = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(new File(cpp.toURI())))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(cpp))) {
             while ((line = br.readLine()) != null) {
                 result.append(line + "\n");
             }
