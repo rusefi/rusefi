@@ -16,69 +16,69 @@
  **************************************
  */
 typedef enum  __attribute__ ((__packed__)) {
-	Invalid = 0,
-	Clt = 1,
-	Iat = 2,
-	Rpm = 3,
-	Map = 4,
-	Maf = 5,
+	Invalid,
+	Clt,
+	Iat,
+	Rpm,
+	Map,
+	Maf,
 
-	OilPressure = 6,
+	OilPressure,
 
-	FuelPressureLow = 7, // in kPa
-	FuelPressureHigh = 8, // in kPa
-	FuelPressureInjector = 9,
+	FuelPressureLow, // in kPa
+	FuelPressureHigh, // in kPa
+	FuelPressureInjector,
 
 	// This is the "resolved" position, potentially composited out of the following two
-	Tps1 = 10,
+	Tps1,
 	// This is the first sensor
-	Tps1Primary = 11,
+	Tps1Primary,
 	// This is the second sensor
-	Tps1Secondary = 12,
+	Tps1Secondary,
 
-	Tps2 = 13,
-	Tps2Primary = 14,
-	Tps2Secondary = 15,
+	Tps2,
+	Tps2Primary,
+	Tps2Secondary,
 
 	// Redundant and combined sensors for acc pedal
-	AcceleratorPedal = 16,
-	AcceleratorPedalPrimary = 17,
-	AcceleratorPedalSecondary = 18,
+	AcceleratorPedal,
+	AcceleratorPedalPrimary,
+	AcceleratorPedalSecondary,
 
 	// This maps to the pedal if we have one, and Tps1 if not.
-	DriverThrottleIntent = 19,
+	DriverThrottleIntent,
 
-	AuxTemp1 = 20,
-	AuxTemp2 = 21,
+	AuxTemp1,
+	AuxTemp2,
 
-	Lambda1 = 22,
-	Lambda2 = 23,
+	Lambda1,
+	Lambda2,
 
-	WastegatePosition = 24,
-	IdlePosition = 25,
+	WastegatePosition,
+	IdlePosition,
 
-	FuelEthanolPercent = 26,
+	FuelEthanolPercent,
 
-	BatteryVoltage = 27,
+	BatteryVoltage,
 
-	BarometricPressure = 28,
+	BarometricPressure,
 
-	FuelLevel = 29,
+	FuelLevel,
 
-	Aux1 = 30,
-	Aux2 = 31,
-	Aux3 = 32,
-	Aux4 = 33,
+	Aux1,
+	Aux2,
+	Aux3,
+	Aux4,
 
-	VehicleSpeed = 34,
+	VehicleSpeed,
 
-	TurbochargerSpeed = 35,
+	TurbochargerSpeed,
 
 	// Fast MAP is synchronous to crank angle - user selectable phase/window
-	MapFast = 36,
+	MapFast,
 	// Slow MAP is asynchronous - not synced to anything, normal analog sampling
-	MapSlow = 37,
+	MapSlow,
 
 	// Leave me at the end!
-	PlaceholderLast = 38,
+	PlaceholderLast,
 } SensorType;
