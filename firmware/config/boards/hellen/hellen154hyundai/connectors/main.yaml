@@ -6,6 +6,10 @@ pins:
     type: gnd
 
   - pin: K2
+    # VIGN PA5
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: K2 Ignition Key Voltage
     function: V ign
 
   - pin: K3
