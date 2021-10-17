@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 17 19:12:35 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 17 20:27:41 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -13,7 +13,7 @@
 #define acSwitch_offset 1469
 #define acSwitchMode_offset 4516
 #define adc_channel_e_auto_enum "EFI_ADC_NONE", "EFI_ADC_0", "EFI_ADC_1", "EFI_ADC_2", "EFI_ADC_3", "EFI_ADC_4", "EFI_ADC_5", "EFI_ADC_6", "EFI_ADC_7", "EFI_ADC_8", "EFI_ADC_9", "EFI_ADC_10", "EFI_ADC_11", "EFI_ADC_12", "EFI_ADC_13", "EFI_ADC_14", "EFI_ADC_15", "EFI_ADC_LAST_CHANNEL", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "EFI_ADC_ERROR"
-#define adc_channel_e_enum "NONE","INVALID","INVALID","INVALID","PPS 1","TPS 1","INVALID","INVALID","INVALID","TPS 2","INVALID","Map Sensor K31","INVALID","CLT","IAT","PPS 2"
+#define adc_channel_e_enum "NONE","INVALID","INVALID","INVALID","PPS 1","TPS 1","K2 Ignition Key Voltage","INVALID","INVALID","TPS 2","INVALID","Map Sensor K31","INVALID","CLT","IAT","PPS 2"
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
 #define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 548
@@ -1303,7 +1303,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen154hyundai
 #define SIGNATURE_DATE 2021.10.17
-#define SIGNATURE_HASH 813628720
+#define SIGNATURE_HASH 1056000202
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1665,7 +1665,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.10.17.hellen154hyundai.813628720"
+#define TS_SIGNATURE "rusEFI 2021.10.17.hellen154hyundai.1056000202"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -6281,4 +6281,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 17 19:12:35 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 17 20:27:41 UTC 2021

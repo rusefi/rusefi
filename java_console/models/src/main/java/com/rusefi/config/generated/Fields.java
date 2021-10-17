@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 17 19:12:35 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 17 20:27:41 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1248,7 +1248,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 813628720;
+	public static final int SIGNATURE_HASH = 1056000202;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1559,7 +1559,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.17.hellen154hyundai.813628720";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.17.hellen154hyundai.1056000202";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1848,7 +1848,7 @@ public class Fields {
 	public static final Field MAP_SENSOR_LOWVALUE = Field.create("MAP_SENSOR_LOWVALUE", 236, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_HIGHVALUE = Field.create("MAP_SENSOR_HIGHVALUE", 240, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_TYPE = Field.create("MAP_SENSOR_TYPE", 244, FieldType.INT);
-	public static final String[] adc_channel_e = {"NONE","INVALID","INVALID","INVALID","PPS 1","TPS 1","INVALID","INVALID","INVALID","TPS 2","INVALID","Map Sensor K31","INVALID","CLT","IAT","PPS 2"};
+	public static final String[] adc_channel_e = {"NONE","INVALID","INVALID","INVALID","PPS 1","TPS 1","K2 Ignition Key Voltage","INVALID","INVALID","TPS 2","INVALID","Map Sensor K31","INVALID","CLT","IAT","PPS 2"};
 	public static final Field MAP_SENSOR_HWCHANNEL = Field.create("MAP_SENSOR_HWCHANNEL", 248, FieldType.INT8, adc_channel_e);
 	public static final Field CLT_TEMPC_1 = Field.create("CLT_TEMPC_1", 252, FieldType.FLOAT);
 	public static final Field CLT_TEMPC_2 = Field.create("CLT_TEMPC_2", 256, FieldType.FLOAT);
