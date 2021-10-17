@@ -14,10 +14,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ParseState extends RusefiConfigGrammarBaseListener {
-    Map<String, Definition> definitions = new HashMap<>();
-    Map<String, Struct> structs = new HashMap<>();
-    List<Struct> structList = new ArrayList<>();
-    Map<String, Typedef> typedefs = new HashMap<>();
+    private final Map<String, Definition> definitions = new HashMap<>();
+    private final Map<String, Struct> structs = new HashMap<>();
+    private final List<Struct> structList = new ArrayList<>();
+    private final Map<String, Typedef> typedefs = new HashMap<>();
 
     private final EnumsReader enumsReader;
 
@@ -176,7 +176,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         FieldOptions options = new FieldOptions();
         handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-        this.typedefs.put(this.typedefName, new ScalarTypedef(this.typedefName, datatype, options));
+        typedefs.put(this.typedefName, new ScalarTypedef(this.typedefName, datatype, options));
     }
 
     @Override
@@ -219,7 +219,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
                         .toArray(n -> new String[n]);                       // Convert back to array
         }
 
-        this.typedefs.put(this.typedefName, new EnumTypedef(this.typedefName, datatype, endBit, values));
+        typedefs.put(this.typedefName, new EnumTypedef(this.typedefName, datatype, endBit, values));
     }
 
     @Override
@@ -229,7 +229,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         FieldOptions options = new FieldOptions();
         handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-        this.typedefs.put(this.typedefName, new ArrayTypedef(this.typedefName, this.arrayDim, datatype, options));
+        typedefs.put(this.typedefName, new ArrayTypedef(this.typedefName, this.arrayDim, datatype, options));
     }
 
     @Override
@@ -328,7 +328,7 @@ public class ParseState extends RusefiConfigGrammarBaseListener {
         }
 
         // Check first if we have a typedef for this type
-        Typedef typedef = this.typedefs.get(type);
+        Typedef typedef = typedefs.get(type);
 
         FieldOptions options = null;
         if (typedef != null) {
