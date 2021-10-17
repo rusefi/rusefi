@@ -1740,7 +1740,6 @@ fsio_table_8x8_u8t fsioTable4;
 float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	  1, 0, 0, 255, 0
 float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
-
 end_struct
 
 #define MOCK_MAP_COMMAND "mock_map_voltage"
