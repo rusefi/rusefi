@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 17 17:00:48 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 17 17:27:54 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1248,6 +1248,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1599066502;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1558,7 +1559,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.17.hellen154hyundai.3770702477";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.17.hellen154hyundai.1599066502";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1950,7 +1951,7 @@ public class Fields {
 	public static final Field GLOBALFUELCORRECTION = Field.create("GLOBALFUELCORRECTION", 544, FieldType.FLOAT);
 	public static final Field ADCVCC = Field.create("ADCVCC", 548, FieldType.FLOAT);
 	public static final Field UNUSED552 = Field.create("UNUSED552", 552, FieldType.FLOAT);
-	public static final String[] brain_input_pin_e = {"NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Cam - K62","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Crank - K17","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Cam - K15"};
+	public static final String[] brain_input_pin_e = {"NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Cam - K62","Cam - K15","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Crank - K17","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","K40 VSS"};
 	public static final Field CAMINPUTS1 = Field.create("CAMINPUTS1", 556, FieldType.INT8, brain_input_pin_e);
 	public static final Field CAMINPUTS2 = Field.create("CAMINPUTS2", 557, FieldType.INT8, brain_input_pin_e);
 	public static final Field CAMINPUTS3 = Field.create("CAMINPUTS3", 558, FieldType.INT8, brain_input_pin_e);
