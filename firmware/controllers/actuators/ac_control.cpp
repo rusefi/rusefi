@@ -12,43 +12,36 @@ bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	latest_usage_ac_control = getTimeNowSeconds();
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-	engineTooSlow = rpm < 500;
-
-	if (engineTooSlow) {
+	ANNOTATE_IF(engineTooSlow, rpm < 500) {
 		return false;
 	}
 
 	auto maxRpm = CONFIG(maxAcRpm);
-	engineTooFast = maxRpm != 0 && maxRpmDeadband.gt(rpm, maxRpm);
-	if (engineTooFast) {
+	ANNOTATE_IF(engineTooFast, maxRpm != 0 && maxRpmDeadband.gt(rpm, maxRpm)) {
 		return false;
 	}
 
 	auto clt = Sensor::get(SensorType::Clt);
 
-	noClt = !clt;
 	// No AC with failed CLT
-	if (noClt) {
+	ANNOTATE_IF(noClt, !clt) {
 		return false;
 	}
 
 	// Engine too hot, disable
 	auto maxClt = CONFIG(maxAcClt);
-	engineTooHot = (maxClt != 0) && maxCltDeadband.gt(clt.Value, maxClt);
-	if (engineTooHot) {
+	ANNOTATE_IF(engineTooHot, (maxClt != 0) && maxCltDeadband.gt(clt.Value, maxClt)) {
 		return false;
 	}
 
 	// TPS too high, disable
 	auto maxTps = CONFIG(maxAcTps);
-	tpsTooHigh = maxTps != 0 && maxTpsDeadband.gt(Sensor::getOrZero(SensorType::Tps1), maxTps);
-	if (tpsTooHigh) {
-			return false;
+	ANNOTATE_IF(tpsTooHigh, maxTps != 0 && maxTpsDeadband.gt(Sensor::getOrZero(SensorType::Tps1), maxTps)) {
+		return false;
 	}
 
-	acButtonState = ENGINE(acSwitchState);
 	// All conditions allow AC, simply pass thru switch
-	return acButtonState;
+	ANNOTATE_RETURN(acButtonState, ENGINE(acSwitchState));
 }
 
 bool AcState::updateAc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

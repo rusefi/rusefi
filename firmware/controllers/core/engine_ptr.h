@@ -106,3 +106,8 @@ struct persistent_config_s;
 
 	#define EXPAND_Engine
 #endif // EFI_UNIT_TEST
+
+
+// Uses TGeneratedBase to avoid name collisions with locals/globals
+#define ANNOTATE_IF(result, expr) if ((TGeneratedBase::result = static_cast<bool>(expr)))
+#define ANNOTATE_RETURN(result, expr) return (TGeneratedBase::result = expr)
