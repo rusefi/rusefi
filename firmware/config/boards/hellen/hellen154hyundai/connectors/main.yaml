@@ -244,16 +244,20 @@ pins:
   - pin: K88
     # H144_OUT_IO8
     id: GPIOG_4
+    class: outputs
     ts_name: Fan Relay HI
     function: Fan relay high
 
   - pin: K92
     # H144_OUT_PWM8
     id: GPIOD_12
+    class: outputs
     ts_name: MIL
     function: Check Engine Light
 
   - pin: A1
+    id: GPIOE_3
+    class: outputs
     ts_name: Coil 4
     function: Coil 4
     type: ign
@@ -265,17 +269,21 @@ pins:
     function: Ground
 
   - pin: A16
+    id: GPIOE_5
+    class: outputs
     ts_name: Coil 2
     function: Coil 2
     type: ign
 
   - pin: A29
     class: switch_inputs
-    ts_name: rake Input
+    ts_name: Brake Input
     function: Brake Switch
 
 
   - pin: A31
+    id: GPIOC_13
+    class: outputs
     ts_name: Coil 1
     function: Coil 1
     type: ign
@@ -286,6 +294,8 @@ pins:
     function: BK2 DC Wastegate Pos
 
   - pin: A46
+    id: GPIOE_4
+    class: outputs
     ts_name: Coil 3
     function: Coil 3
     type: ign
