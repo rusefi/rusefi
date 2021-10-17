@@ -199,16 +199,6 @@ void setTpsDecelMult(float value) {
 	accelInfo();
 }
 
-void setDecelThr(float value) {
-	engineConfiguration->engineLoadDecelEnleanmentThreshold = value;
-	accelInfo();
-}
-
-void setDecelMult(float value) {
-	engineConfiguration->engineLoadDecelEnleanmentMultiplier = value;
-	accelInfo();
-}
-
 void setTpsAccelLen(int length) {
 	if (length < 1) {
 		efiPrintf("Length should be positive");
