@@ -21,6 +21,7 @@
 #include "limp_manager.h"
 #include "pin_repository.h"
 #include "ac_control.h"
+#include "idle_state_generated.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -321,6 +322,8 @@ public:
 	 */
 	void onTriggerSignalEvent();
 	EngineState engineState;
+	idle_state_s idle;
+
 	SensorsState sensors;
 	efitick_t mainRelayBenchStartNt = 0;
 

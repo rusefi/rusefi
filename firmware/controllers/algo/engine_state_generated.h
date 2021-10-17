@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Oct 17 01:53:35 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Oct 16 23:39:25 EDT 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -127,36 +127,6 @@ struct speed_density_s {
 	/** total size 24*/
 };
 
-// start of idle_state_s
-struct idle_state_s {
-	/**
-	 * offset 0
-	 */
-	idle_state_e idleState = (idle_state_e)0;
-	/**
-	 * that's current position with CLT and IAT corrections
-	 * offset 4
-	 */
-	percent_t currentIdlePosition = (percent_t)0;
-	/**
-	 * current position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
-	 * offset 8
-	 */
-	percent_t baseIdlePosition = (percent_t)0;
-	/**
-	 * true in IDLE throttle pedal state, false if driver is touching the pedal
-	 * todo: better name for this field?
-	 * offset 12
-	 */
-	int throttlePedalUpState = (int)0;
-	/**
-	 * ETB position adjustment related to idle RPM control
-	 * offset 16
-	 */
-	percent_t etbIdleAddition = (percent_t)0;
-	/** total size 20*/
-};
-
 // start of cranking_fuel_s
 struct cranking_fuel_s {
 	/**
@@ -235,174 +205,74 @@ struct engine_state2_s {
 	/**
 	 * offset 24
 	 */
-	idle_state_s idle;
-	/**
-	 * offset 44
-	 */
 	float targetAFR = (float)0;
 	/**
-	 * offset 48
+	 * offset 28
 	 */
 	float engineCycleDurationMs = (float)0;
 	/**
-	 * offset 52
+	 * offset 32
 	 */
 	float minRpmKcurrentTPS = (float)0;
 	/**
-	 * offset 56
+	 * offset 36
 	 */
 	int currentTpsAdc = (int)0;
 	/**
-	 * offset 60
+	 * offset 40
 	 */
 	float tpsVoltageMCU = (float)0;
 	/**
-	 * offset 64
+	 * offset 44
 	 */
 	float tpsVoltageBoard = (float)0;
 	/**
-	 * offset 68
+	 * offset 48
 	 */
 	float currentBaroCorrectedVE = (float)0;
 	/**
-	 * offset 72
+	 * offset 52
 	 */
 	float injectorFlowCorrection = (float)0;
 	/**
-	 * offset 76
+	 * offset 56
 	 */
 	float baroCorrection = (float)0;
 	/**
-	offset 80 bit 0 */
-	bool isCrankingState : 1;
-	/**
-	offset 80 bit 1 */
-	bool isAutomaticIdle : 1;
-	/**
-	offset 80 bit 2 */
-	bool unusedBit_13_2 : 1;
-	/**
-	offset 80 bit 3 */
-	bool unusedBit_13_3 : 1;
-	/**
-	offset 80 bit 4 */
-	bool unusedBit_13_4 : 1;
-	/**
-	offset 80 bit 5 */
-	bool unusedBit_13_5 : 1;
-	/**
-	offset 80 bit 6 */
-	bool unusedBit_13_6 : 1;
-	/**
-	offset 80 bit 7 */
-	bool unusedBit_13_7 : 1;
-	/**
-	offset 80 bit 8 */
-	bool unusedBit_13_8 : 1;
-	/**
-	offset 80 bit 9 */
-	bool unusedBit_13_9 : 1;
-	/**
-	offset 80 bit 10 */
-	bool unusedBit_13_10 : 1;
-	/**
-	offset 80 bit 11 */
-	bool unusedBit_13_11 : 1;
-	/**
-	offset 80 bit 12 */
-	bool unusedBit_13_12 : 1;
-	/**
-	offset 80 bit 13 */
-	bool unusedBit_13_13 : 1;
-	/**
-	offset 80 bit 14 */
-	bool unusedBit_13_14 : 1;
-	/**
-	offset 80 bit 15 */
-	bool unusedBit_13_15 : 1;
-	/**
-	offset 80 bit 16 */
-	bool unusedBit_13_16 : 1;
-	/**
-	offset 80 bit 17 */
-	bool unusedBit_13_17 : 1;
-	/**
-	offset 80 bit 18 */
-	bool unusedBit_13_18 : 1;
-	/**
-	offset 80 bit 19 */
-	bool unusedBit_13_19 : 1;
-	/**
-	offset 80 bit 20 */
-	bool unusedBit_13_20 : 1;
-	/**
-	offset 80 bit 21 */
-	bool unusedBit_13_21 : 1;
-	/**
-	offset 80 bit 22 */
-	bool unusedBit_13_22 : 1;
-	/**
-	offset 80 bit 23 */
-	bool unusedBit_13_23 : 1;
-	/**
-	offset 80 bit 24 */
-	bool unusedBit_13_24 : 1;
-	/**
-	offset 80 bit 25 */
-	bool unusedBit_13_25 : 1;
-	/**
-	offset 80 bit 26 */
-	bool unusedBit_13_26 : 1;
-	/**
-	offset 80 bit 27 */
-	bool unusedBit_13_27 : 1;
-	/**
-	offset 80 bit 28 */
-	bool unusedBit_13_28 : 1;
-	/**
-	offset 80 bit 29 */
-	bool unusedBit_13_29 : 1;
-	/**
-	offset 80 bit 30 */
-	bool unusedBit_13_30 : 1;
-	/**
-	offset 80 bit 31 */
-	bool unusedBit_13_31 : 1;
-	/**
-	 * offset 84
+	 * offset 60
 	 */
 	cranking_fuel_s cranking;
 	/**
-	 * offset 104
+	 * offset 80
 	 */
 	running_fuel_s running;
 	/**
-	 * offset 132
+	 * offset 108
 	 */
 	percent_t etbFeedForward = (percent_t)0;
 	/**
-	 * offset 136
+	 * offset 112
 	 */
 	percent_t targetFromTable = (percent_t)0;
 	/**
 	 * ignition dwell duration in ms
 	 * See also dwellAngle
-	 * offset 140
+	 * offset 116
 	 */
 	floatms_t sparkDwell = (floatms_t)0;
 	/**
 	 * ignition dwell duration as crankshaft angle
 	 * NAN if engine is stopped
 	 * See also sparkDwell
-	 * offset 144
+	 * offset 120
 	 */
 	angle_t dwellAngle = (angle_t)0;
 	/**
-	 * offset 148
+	 * offset 124
 	 */
 	angle_t cltTimingCorrection = (angle_t)0;
-	/** total size 152*/
+	/** total size 128*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sun Oct 17 01:53:35 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Oct 16 23:39:25 EDT 2021
