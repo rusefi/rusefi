@@ -55,6 +55,7 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
         }
 
         content.append("\t/** total size " + currentOffset + "*/" + EOL);
+        content.append("\tusing TGeneratedBase = " + structure.name + ";" + EOL);
         content.append("};" + EOL + EOL);
     }
 
