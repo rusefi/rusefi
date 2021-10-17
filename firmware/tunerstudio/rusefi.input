@@ -265,9 +265,9 @@ enable2ndByteCanID = false
       wallFuelCorrection=scalar, S16,     74,       "ms",0.001,         0
 
 ; TPS/load AE
-      engineLoadDelta = scalar,  S16,     76,    "value",{1/@@PACK_MULT_PERCENT@@},         0
+      unusedLoadDelta = scalar,  S16,     76,    "value",{1/@@PACK_MULT_PERCENT@@},         0
       deltaTps        = scalar,  S16,     78,    "ratio",{1/@@PACK_MULT_PERCENT@@},         0
-      engineLoadAccelExtra=scalar,S16,    80,    "value",{1/@@PACK_MULT_PERCENT@@},         0
+      unusedLoadAccelExtra=scalar,S16,    80,    "value",{1/@@PACK_MULT_PERCENT@@},         0
       tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/@@PACK_MULT_MS@@},         0
 
 ; Ignition
@@ -1066,8 +1066,6 @@ gaugeCategory = Ignition
    ignitionLoadGauge = ignitionLoad, @@GAUGE_NAME_IGNITION_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
 
 gaugeCategory = Acceleration Enrichment
-   engineLoadDeltaGauge = engineLoadDelta,"AE: load change","value",      0,    120,      10,     10,     100,   100,   1,   1
-   engineLoadAccelExtraGauge = engineLoadAccelExtra,"AE: load extra","value",      0,    120,      10,     10,     100,   100,   1,   1
    deltaTpsGauge     = deltaTps,                "AE: TPS change",            "",        0,    120,      10,     10,     100,   100,   1,   1
    tpsAccelFuelGauge = tpsAccelFuel,"AE: TPS enrich",             "ms",        0,    120,      10,     10,     100,   100,   1,   1
    wallFuelAmountGauge = wallFuelAmount, "AE: wall amount", "ms",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1309,9 +1307,6 @@ gaugeCategory = DynoView
    entry = egt6,	        "EGT6",	float,"%.1f", { max31855_cs6 != 0}
    entry = egt7,	        "EGT7",	float,"%.1f", { max31855_cs7 != 0}
    entry = egt8,	        "EGT8",	float,"%.1f", { max31855_cs8 != 0}
-
-   entry = engineLoadAccelExtra, @@GAUGE_NAME_FUEL_EL_EXTRA@@,float,  "%.3f"
-   entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
 
    entry = deltaTps,		@@GAUGE_NAME_FUEL_TPS_ROC@@,float,  "%.3f"
    entry = tpsAccelFuel,    @@GAUGE_NAME_FUEL_TPS_EXTRA@@,    float,  "%.3f"
@@ -3236,13 +3231,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = crankingIAC
 		panel = crankingAdv
 
-	dialog = EngineLoadAccelPanel, "Engine Load (alpha version)"
-		field = "Length",						engineLoadAccelLength
-		field = "Accel threshold", 				engineLoadAccelEnrichmentThreshold
-		field = "Accel multiplier",	 			engineLoadAccelEnrichmentMultiplier
-		field = "Decel threshold", 				engineLoadDecelEnleanmentThreshold
-		field = "Decel multiplier",	 			engineLoadDecelEnleanmentMultiplier
-
 	dialog = TpsAccelPanel, "TPS"
 		field = "Set 'Debug Mode' to see detailed 'TPS acceleration enrichment' diagnostics"
    		field = "Length",						tpsAccelLength
@@ -3262,7 +3250,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = AccelEnrich,	"Accel/Decel Enrichment"
 		panel = TpsAccelPanel
 		panel = WallWettingAccelPanel
-		panel = EngineLoadAccelPanel
 		field = "No accel after RPM hard limit",		noAccelAfterHardLimitPeriodSecs
 		
 		
