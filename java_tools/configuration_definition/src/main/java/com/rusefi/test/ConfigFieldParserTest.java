@@ -360,7 +360,7 @@ public class ConfigFieldParserTest {
                 "\t */\n" +
                 "\tint field[ERROR_BUFFER_SIZE];\n" +
                 "\t/** total size 4*/\n" +
-                "\tusing TGeneratedBase = pid_s;\n" +
+                "\tprotected: using TGeneratedBase = pid_s;\n" +
                 "};\n" +
                 "\n", consumer.getContent().toString());
     }

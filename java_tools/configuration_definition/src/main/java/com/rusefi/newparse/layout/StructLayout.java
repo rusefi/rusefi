@@ -194,6 +194,7 @@ public class StructLayout extends Layout {
         this.children.forEach(c -> c.writeCLayout(ps));
 
         ps.println("\t/** total size " + getSize() + "*/");
+        ps.println("\tprotected: using TGeneratedBase = " + this.typeName + ";");
         ps.println("};");
         ps.println();
     }
