@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/pid_state.txt Mon Jul 06 06:07:19 UTC 2020
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) util/math/pid_state.txt Sat Oct 16 20:21:21 EDT 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -40,7 +40,5 @@ struct pid_state_s {
 	/** total size 28*/
 };
 
-typedef struct pid_state_s pid_state_s;
-
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/pid_state.txt Mon Jul 06 06:07:19 UTC 2020
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) util/math/pid_state.txt Sat Oct 16 20:21:21 EDT 2021

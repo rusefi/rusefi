@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Sat May 08 21:43:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Oct 16 21:02:44 EDT 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -135,8 +135,6 @@ struct speed_density_s {
 	/** total size 32*/
 };
 
-typedef struct speed_density_s speed_density_s;
-
 // start of idle_state_s
 struct idle_state_s {
 	/**
@@ -167,8 +165,6 @@ struct idle_state_s {
 	/** total size 20*/
 };
 
-typedef struct idle_state_s idle_state_s;
-
 // start of cranking_fuel_s
 struct cranking_fuel_s {
 	/**
@@ -197,8 +193,6 @@ struct cranking_fuel_s {
 	floatms_t fuel = (floatms_t)0;
 	/** total size 20*/
 };
-
-typedef struct cranking_fuel_s cranking_fuel_s;
 
 // start of running_fuel_s
 struct running_fuel_s {
@@ -239,8 +233,6 @@ struct running_fuel_s {
 	floatms_t fuel = (floatms_t)0;
 	/** total size 28*/
 };
-
-typedef struct running_fuel_s running_fuel_s;
 
 // start of engine_state2_s
 struct engine_state2_s {
@@ -420,7 +412,5 @@ struct engine_state2_s {
 	/** total size 160*/
 };
 
-typedef struct engine_state2_s engine_state2_s;
-
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/engine_state.txt Sat May 08 21:43:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Sat Oct 16 21:02:44 EDT 2021
