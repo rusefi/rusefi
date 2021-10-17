@@ -15,10 +15,6 @@
 #include "custom_engine.h"
 #include "../hellen_meta.h"
 
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
 	engineConfiguration->injectionPins[1] = H144_LS_2;
@@ -71,10 +67,19 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = H144_IN_CAM;
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = H144_IN_D_AUX4;
 
+	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
+	engineConfiguration->vvtMode[1 * CAMS_PER_BANK] = VVT_SECOND_HALF;
+
     engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
+	CONFIG(useETBforIdleControl) = true;
+
+	engineConfiguration->throttlePedalUpVoltage = 0.73;
+	engineConfiguration->throttlePedalWOTVoltage = 4.0;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.34;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 1.86;
 
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
@@ -169,6 +174,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->specs.displacement = 1.998;
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_Hyundai);
 	strcpy(CONFIG(engineCode), "Theta II");
+	engineConfiguration->globalTriggerAngleOffset = 90;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
