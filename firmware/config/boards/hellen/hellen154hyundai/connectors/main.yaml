@@ -40,7 +40,7 @@ pins:
 
   - pin: K15
 # cam2 IN_VSS
-    id: [GPIOF_11]
+    id: [GPIOA_7]
     function: Cam Sensor
     class: [event_inputs]
     ts_name: Cam - K15
@@ -136,6 +136,9 @@ pins:
     function: Analog Ground
 
   - pin: K40
+    id: GPIOF_11
+    class: event_inputs
+    ts_name: K40 VSS
     function: Vehicle Speed Sensor
 
   - pin: K43
