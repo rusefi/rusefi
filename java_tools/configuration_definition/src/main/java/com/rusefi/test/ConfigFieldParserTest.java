@@ -48,6 +48,24 @@ public class ConfigFieldParserTest {
                 "; total TS size = 8\n", new String(writer.toCharArray()));
     }
 
+    @Test(expected = IllegalStateException.class)
+    public void testSameFieldTwice() throws IOException {
+        String test = "struct pid_s\n" +
+                "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "int afr_type2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
+            @Override
+            public void endFile() {
+            }
+        };
+        state.readBufferedReader(reader, Arrays.asList(consumer));
+    }
+
     @Test
     public void testCustomEnum() throws IOException {
         String test = "struct pid_s\n" +
