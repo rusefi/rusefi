@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) util/math/pid_state.txt Sat Oct 16 20:21:21 EDT 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) util/math/pid_state.txt Sun Oct 17 01:13:39 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -41,4 +41,4 @@ struct pid_state_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) util/math/pid_state.txt Sat Oct 16 20:21:21 EDT 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) util/math/pid_state.txt Sun Oct 17 01:13:39 UTC 2021
