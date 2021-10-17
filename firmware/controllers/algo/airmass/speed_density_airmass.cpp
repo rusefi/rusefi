@@ -34,13 +34,17 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 }
 
 float SpeedDensityAirmass::getMap(int rpm) const {
-	float fallbackMap;
-	if (CONFIG(enableMapEstimationTableFallback)) {
-		// if the map estimation table is enabled, estimate map based on the TPS and RPM
-		fallbackMap = m_mapEstimationTable->getValue(rpm, TPS_2_BYTE_PACKING_MULT * Sensor::getOrZero(SensorType::Tps1));
+	SensorResult map = Sensor::get(SensorType::Map);
+	if (map) {
+		return map.Value;
 	} else {
-		fallbackMap = CONFIG(failedMapFallback);
-	}
+		float fallbackMap;
+		if (CONFIG(enableMapEstimationTableFallback)) {
+		// if the map estimation table is enabled, estimate map based on the TPS and RPM
+			fallbackMap = m_mapEstimationTable->getValue(rpm, TPS_2_BYTE_PACKING_MULT * Sensor::getOrZero(SensorType::Tps1));
+		} else {
+			fallbackMap = CONFIG(failedMapFallback);
+		}
 
 #if EFI_TUNER_STUDIO
 	if (CONFIG(debugMode) == DBG_MAP) {
@@ -48,5 +52,6 @@ float SpeedDensityAirmass::getMap(int rpm) const {
 	}
 #endif // EFI_TUNER_STUDIO
 
-	return Sensor::get(SensorType::Map).value_or(fallbackMap);
+		return fallbackMap;
+	}
 }
