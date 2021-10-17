@@ -39,8 +39,8 @@ pins:
     function: Analog Ground
 
   - pin: K15
-# cam2 IN_VSS
-    id: [GPIOF_11]
+# cam2  IN_AUX4
+    id: [GPIOA_7]
     function: Cam Sensor
     class: [event_inputs]
     ts_name: Cam - K15
@@ -136,6 +136,9 @@ pins:
     function: Analog Ground
 
   - pin: K40
+    id: GPIOF_11
+    class: event_inputs
+    ts_name: K40 VSS
     function: Vehicle Speed Sensor
 
   - pin: K43
@@ -244,16 +247,20 @@ pins:
   - pin: K88
     # H144_OUT_IO8
     id: GPIOG_4
+    class: outputs
     ts_name: Fan Relay HI
     function: Fan relay high
 
   - pin: K92
     # H144_OUT_PWM8
     id: GPIOD_12
+    class: outputs
     ts_name: MIL
     function: Check Engine Light
 
   - pin: A1
+    id: GPIOE_3
+    class: outputs
     ts_name: Coil 4
     function: Coil 4
     type: ign
@@ -265,17 +272,21 @@ pins:
     function: Ground
 
   - pin: A16
+    id: GPIOE_5
+    class: outputs
     ts_name: Coil 2
     function: Coil 2
     type: ign
 
   - pin: A29
     class: switch_inputs
-    ts_name: rake Input
+    ts_name: Brake Input
     function: Brake Switch
 
 
   - pin: A31
+    id: GPIOC_13
+    class: outputs
     ts_name: Coil 1
     function: Coil 1
     type: ign
@@ -286,6 +297,8 @@ pins:
     function: BK2 DC Wastegate Pos
 
   - pin: A46
+    id: GPIOE_4
+    class: outputs
     ts_name: Coil 3
     function: Coil 3
     type: ign

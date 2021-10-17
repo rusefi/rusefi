@@ -805,9 +805,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 // no one uses shaft so far		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugIntField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
+#endif /* EFI_PROD_CODE */
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.vvtEventRiseCounter;
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.vvtEventFallCounter;
-#endif /* EFI_PROD_CODE */
 
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);

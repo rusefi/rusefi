@@ -40,19 +40,6 @@
 #include "stepper.h"
 #endif
 
-// todo: move all static vars to engine->idle?
-
-static bool shouldResetPid = false;
-// The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
-// The throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).
-// We set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.
-// See automaticIdleController().
-static bool mightResetPid = false;
-
-// This is needed to slowly turn on the PID back after it was reset.
-static bool wasResetPid = false;
-// This is used when the PID configuration is changed, to guarantee the reset
-static bool mustResetPid = false;
 static efitimeus_t restoreAfterPidResetTimeUs = 0;
 
 static PidIndustrial industrialWithOverrideIdlePid;
@@ -70,9 +57,6 @@ Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_IDLE_PID_CIC */
 	return &industrialWithOverrideIdlePid;
 }
-
-static uint32_t lastCrankingCyclesCounter = 0;
-static float lastCrankingIacPosition;
 
 static iacPidMultiplier_t iacPidMultMap;
 
@@ -281,31 +265,26 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 }
 
 /**
- * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
- */
-static percent_t blipIdlePosition;
-static efitimeus_t timeToStopBlip = 0;
-efitimeus_t timeToStopIdleTest = 0;
-
-/**
  * I use this questionable feature to tune acceleration enrichment
  */
 static void blipIdle(int idlePosition, int durationMs) {
-	if (timeToStopBlip != 0) {
+#if ! EFI_UNIT_TEST
+	if (engine->timeToStopBlip != 0) {
 		return; // already in idle blip
 	}
-	blipIdlePosition = idlePosition;
-	timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
+	engine->blipIdlePosition = idlePosition;
+	engine->timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
+#endif // EFI_UNIT_TEST
 }
 
-static void finishIdleTestIfNeeded() {
-	if (timeToStopIdleTest != 0 && getTimeNowUs() > timeToStopIdleTest)
-		timeToStopIdleTest = 0;
+static void finishIdleTestIfNeeded(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engine->timeToStopIdleTest != 0 && getTimeNowUs() > engine->timeToStopIdleTest)
+		engine->timeToStopIdleTest = 0;
 }
 
-static void undoIdleBlipIfNeeded() {
-	if (timeToStopBlip != 0 && getTimeNowUs() > timeToStopBlip) {
-		timeToStopBlip = 0;
+static void undoIdleBlipIfNeeded(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engine->timeToStopBlip != 0 && getTimeNowUs() > engine->timeToStopBlip) {
+		engine->timeToStopBlip = 0;
 	}
 }
 
@@ -315,15 +294,15 @@ static void undoIdleBlipIfNeeded() {
 float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
 	auto idlePid = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (shouldResetPid) {
+	if (engine->idle.shouldResetPid) {
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-		if (idlePid->getIntegration() <= 0 || mustResetPid) {
+		if (idlePid->getIntegration() <= 0 || engine->idle.mustResetPid) {
 			idlePid->reset();
-			mustResetPid = false;
+			engine->idle.mustResetPid = false;
 		}
 //			alternatorPidResetCounter++;
-		shouldResetPid = false;
-		wasResetPid = true;
+		engine->idle.shouldResetPid = false;
+		engine->idle.wasResetPid = true;
 	}
 
 	// todo: move this to pid_s one day
@@ -335,9 +314,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	if (phase != IIdleController::Phase::Idling) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
-		if (mightResetPid) {
-			mightResetPid = false;
-			shouldResetPid = true;
+		if (engine->idle.mightResetPid) {
+			engine->idle.mightResetPid = false;
+			engine->idle.shouldResetPid = true;
 		}
 
 		engine->idle.idleState = TPS_THRESHOLD;
@@ -364,9 +343,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	}
 
 	// if PID was previously reset, we store the time when it turned on back (see errorAmpCoef correction below)
-	if (wasResetPid) {
+	if (engine->idle.wasResetPid) {
 		restoreAfterPidResetTimeUs = nowUs;
-		wasResetPid = false;
+		engine->idle.wasResetPid = false;
 	}
 	// increase the errorAmpCoef slowly to restore the process correctly after the PID reset
 	// todo: move restoreAfterPidResetTimeUs to idle?
@@ -380,7 +359,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	engine->idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
-	mightResetPid = true;
+	engine->idle.mightResetPid = true;
 
 	// Apply PID Multiplier if used
 	if (CONFIG(useIacPidMultTable)) {
@@ -447,13 +426,13 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus("idle");
 		}
 
-		finishIdleTestIfNeeded();
-		undoIdleBlipIfNeeded();
+		finishIdleTestIfNeeded(PASS_ENGINE_PARAMETER_SIGNATURE);
+		undoIdleBlipIfNeeded(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		percent_t iacPosition;
 
-		if (timeToStopBlip != 0) {
-			iacPosition = blipIdlePosition;
+		if (engine->timeToStopBlip != 0) {
+			iacPosition = engine->blipIdlePosition;
 			engine->idle.idleState = BLIP;
 		} else {
 			// Always apply closed loop correction
@@ -539,8 +518,8 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->isSame(&previousConfiguration->idleRpmPid);
-	mustResetPid = shouldResetPid;
+	engine->idle.shouldResetPid = !getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->isSame(&previousConfiguration->idleRpmPid);
+	engine->idle.mustResetPid = engine->idle.shouldResetPid;
 }
 
 void setTargetIdleRpm(int value) {
@@ -576,7 +555,7 @@ void setIdleDFactor(float value) {
  * Idle test would activate the solenoid for three seconds
  */
 void startIdleBench(void) {
-	timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
+	engine->timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
 	efiPrintf("idle valve bench test");
 	showIdleInfo();
 }

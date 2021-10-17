@@ -73,6 +73,7 @@
 #define H144_IN_D_2 GPIOE_13
 // A22
 #define H144_IN_D_AUX3 GPIOC_5
+// A20 AIN20
 #define H144_IN_D_AUX4 GPIOA_7
 
 #define H176_LS_1 GPIOG_7
