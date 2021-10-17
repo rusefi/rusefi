@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/wall_fuel_state.txt Mon Jul 06 06:07:20 UTC 2020
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/wall_fuel_state.txt Sat Oct 16 21:02:47 EDT 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -18,7 +18,5 @@ struct wall_fuel_state {
 	/** total size 8*/
 };
 
-typedef struct wall_fuel_state wall_fuel_state;
-
 // end
-// this section was generated automatically by rusEfi tool ConfigDefinition.jar based on (unknown script) integration/wall_fuel_state.txt Mon Jul 06 06:07:20 UTC 2020
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/wall_fuel_state.txt Sat Oct 16 21:02:47 EDT 2021
