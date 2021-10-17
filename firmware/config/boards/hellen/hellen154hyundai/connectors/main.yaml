@@ -39,7 +39,7 @@ pins:
     function: Analog Ground
 
   - pin: K15
-# cam2 IN_VSS
+# cam2  IN_AUX4
     id: [GPIOA_7]
     function: Cam Sensor
     class: [event_inputs]
