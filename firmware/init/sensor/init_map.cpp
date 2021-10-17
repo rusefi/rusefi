@@ -80,6 +80,7 @@ static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	case MT_MAZDA_1_BAR:
 		return {0, 2.5, 5, 117};
 	case MT_BOSCH_2_5:
+	// kpa=54.11764705882353v−1.6470588235294201
 		return {0.4 , 20 , 4.65, 250};
 	case MT_MPXH6400:
 		return {0.2, 20, 4.8, 400};
