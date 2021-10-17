@@ -15,12 +15,9 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 
 	auto map = getMap(rpm);
 
-	float adjustedMap = map;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
+	float ve = getVe(rpm, map);
 
-	float ve = getVe(rpm, adjustedMap);
-
-	float airMass = getAirmassImpl(ve, adjustedMap, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
+	float airMass = getAirmassImpl(ve, map, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
 	if (cisnan(airMass)) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
 		return {};
