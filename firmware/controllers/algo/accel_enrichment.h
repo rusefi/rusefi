@@ -58,7 +58,4 @@ void setTpsDecelThr(float value);
 void setTpsDecelMult(float value);
 void setTpsAccelLen(int length);
 
-void setDecelThr(float value);
-void setDecelMult(float value);
-
 void updateAccelParameters();

@@ -1038,8 +1038,6 @@ const command_f_s commandsF[] = {
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
 		{"cranking_priming_pulse", setCrankingPrimingPulse},
-		{"engine_decel_threshold", setDecelThr},
-		{"engine_decel_multiplier", setDecelMult},
 		{"flat_injector_lag", setFlatInjectorLag},
 #endif // EFI_ENGINE_CONTROL
 		{"fsio_curve_1_value", setFsioCurve1Value},
