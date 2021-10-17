@@ -115,37 +115,6 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATUR
 	return extraFuel;
 }
 
-float LoadAccelEnrichment::getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	float d = (cb.get(index) - (cb.get(index - 1))) * CONFIG(specs.cylindersCount);
-
-	float result = 0;
-	int distance = 0;
-	float taper = 0;
-	if (d > engineConfiguration->engineLoadAccelEnrichmentThreshold) {
-
-		distance = cb.currentIndex - index;
-		if (distance <= 0) // checking if indexes are out of order due to circular buffer nature
-			distance += minI(cb.getCount(), cb.getSize());
-
-		taper = interpolate2d(distance, engineConfiguration->mapAccelTaperBins, engineConfiguration->mapAccelTaperMult);
-
-		result = taper * d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
-	} else if (d < -engineConfiguration->engineLoadDecelEnleanmentThreshold) {
-		result = d * engineConfiguration->engineLoadAccelEnrichmentMultiplier;
-	}
-
-	if (engineConfiguration->debugMode == DBG_EL_ACCEL) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1 = distance;
-		tsOutputChannels.debugFloatField1 = result;
-		tsOutputChannels.debugFloatField2 = taper;
-#endif /* EFI_TUNER_STUDIO */
-	}
-	return result;
-}
-
 void AccelEnrichment::resetAE() {
 	cb.clear();
 }
@@ -201,10 +170,6 @@ void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void LoadAccelEnrichment::onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	onNewValue(getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
-}
-
 AccelEnrichment::AccelEnrichment() {
 	resetAE();
 	cb.setSize(4);
@@ -213,24 +178,10 @@ AccelEnrichment::AccelEnrichment() {
 #if ! EFI_UNIT_TEST
 
 static void accelInfo() {
-//	efiPrintf("EL accel length=%d", mapInstance.cb.getSize());
-	efiPrintf("EL accel th=%.2f/mult=%.2f", engineConfiguration->engineLoadAccelEnrichmentThreshold, engineConfiguration->engineLoadAccelEnrichmentMultiplier);
-	efiPrintf("EL decel th=%.2f/mult=%.2f", engineConfiguration->engineLoadDecelEnleanmentThreshold, engineConfiguration->engineLoadDecelEnleanmentMultiplier);
-
 //	efiPrintf("TPS accel length=%d", tpsInstance.cb.getSize());
 	efiPrintf("TPS accel th=%.2f/mult=%.2f", engineConfiguration->tpsAccelEnrichmentThreshold, -1);
 
 	efiPrintf("beta=%.2f/tau=%.2f", engineConfiguration->wwaeBeta, engineConfiguration->wwaeTau);
-}
-
-void setEngineLoadAccelThr(float value) {
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = value;
-	accelInfo();
-}
-
-void setEngineLoadAccelMult(float value) {
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = value;
-	accelInfo();
 }
 
 void setTpsAccelThr(float value) {
@@ -267,17 +218,7 @@ void setTpsAccelLen(int length) {
 	accelInfo();
 }
 
-void setEngineLoadAccelLen(int length) {
-	if (length < 1) {
-		efiPrintf("Length should be positive");
-		return;
-	}
-	engine->engineLoadAccelEnrichment.setLength(length);
-	accelInfo();
-}
-
 void updateAccelParameters() {
-	setEngineLoadAccelLen(engineConfiguration->engineLoadAccelLength);
 	setTpsAccelLen(engineConfiguration->tpsAccelLength);
 }
 

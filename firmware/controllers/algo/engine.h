@@ -249,7 +249,6 @@ public:
 	 */
 	angle_t engineCycle;
 
-	LoadAccelEnrichment engineLoadAccelEnrichment;
 	TpsAccelEnrichment tpsAccelEnrichment;
 
 	TriggerCentral triggerCentral;

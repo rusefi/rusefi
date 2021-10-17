@@ -183,7 +183,6 @@ efitimesec_t getTimeNowSeconds(void) {
 }
 
 static void resetAccel(void) {
-	engine->engineLoadAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.resetAE();
 
 	for (size_t i = 0; i < efi::size(engine->injectionEvents.elements); i++)

@@ -31,15 +31,6 @@ public:
 	int onUpdateInvocationCounter = 0;
 };
 
-class LoadAccelEnrichment : public AccelEnrichment {
-public:
-	/**
-	 * @return Extra engine load value for fuel logic calculation
-	 */
-	float getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-};
-
 class TpsAccelEnrichment : public AccelEnrichment {
 public:
 	/**
@@ -61,10 +52,6 @@ private:
 };
 
 void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-void setEngineLoadAccelLen(int len);
-void setEngineLoadAccelThr(float value);
-void setEngineLoadAccelMult(float value);
 
 void setTpsAccelThr(float value);
 void setTpsDecelThr(float value);

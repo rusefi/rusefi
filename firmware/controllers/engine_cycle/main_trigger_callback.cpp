@@ -314,7 +314,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1) PASS_ENGINE_PARAMETER_SUFFIX));
 	if (trgEventIndex == 0) {
 		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
-		ENGINE(engineLoadAccelEnrichment.onEngineCycle(PASS_ENGINE_PARAMETER_SIGNATURE));
 	}
 
 	if (limitedFuel) {
