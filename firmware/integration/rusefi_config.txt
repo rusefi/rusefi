@@ -1322,10 +1322,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	int engineLoadAccelLength;;"cycles", 1, 0, 1, 200, 0
 	
-	float engineLoadDecelEnleanmentThreshold;;"roc", 1, 0, 0, 200, 3
-	float engineLoadDecelEnleanmentMultiplier;;"coeff", 1, 0, 0, 200, 3
-	float engineLoadAccelEnrichmentThreshold;;"roc", 1, 0, 0, 200, 3
-	float engineLoadAccelEnrichmentMultiplier;;"coeff", 1, 0, 0, 200, 3
+	float unusedEL1;;"roc", 1, 0, 0, 200, 3
+	float unusedEL1;;"coeff", 1, 0, 0, 200, 3
+	float unusedEL1;;"roc", 1, 0, 0, 200, 3
+	float unusedEL1;;"coeff", 1, 0, 0, 200, 3
 
 
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0

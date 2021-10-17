@@ -752,10 +752,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 
-	tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / Sensor::getOrZero(SensorType::Map);
-
-	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
-
 	tsOutputChannels->checkEngine = hasErrorCodes();
 
 #if EFI_MAX_31855
