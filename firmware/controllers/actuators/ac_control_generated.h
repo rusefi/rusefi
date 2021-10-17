@@ -106,6 +106,9 @@ struct ac_control_s {
 	 */
 	int latest_usage_ac_control = (int)0;
 	/** total size 8*/
+
+protected:
+	using TGeneratedBase = ac_control_s;
 };
 
 // end
