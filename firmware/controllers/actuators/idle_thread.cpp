@@ -40,7 +40,7 @@
 #include "stepper.h"
 #endif
 
-// todo: move all static vars to engine->engineState.idle?
+// todo: move all static vars to engine->idle?
 
 static bool shouldResetPid = false;
 // The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
@@ -129,7 +129,7 @@ void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 percent_t getIdlePosition() {
-	return engine->engineState.idle.currentIdlePosition;
+	return engine->idle.currentIdlePosition;
 }
 
 void setManualIdleValvePosition(int positionPercent) {
@@ -340,7 +340,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			shouldResetPid = true;
 		}
 
-		engine->engineState.idle.idleState = TPS_THRESHOLD;
+		engine->idle.idleState = TPS_THRESHOLD;
 
 		// We aren't idling, so don't apply any correction.  A positive correction could inhibit a return to idle.
 		m_lastAutomaticPosition = 0;
@@ -351,7 +351,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	bool acToggleJustTouched = (nowUs - engine->acSwitchLastChangeTime) < MS2US(500);
 	// check if within the dead zone
 	if (!acToggleJustTouched && absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
-		engine->engineState.idle.idleState = RPM_DEAD_ZONE;
+		engine->idle.idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
 		return m_lastAutomaticPosition;
 	}
@@ -369,15 +369,15 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		wasResetPid = false;
 	}
 	// increase the errorAmpCoef slowly to restore the process correctly after the PID reset
-	// todo: move restoreAfterPidResetTimeUs to engineState.idle?
-	efitimeus_t timeSincePidResetUs = nowUs - /*engine->engineState.idle.*/restoreAfterPidResetTimeUs;
+	// todo: move restoreAfterPidResetTimeUs to idle?
+	efitimeus_t timeSincePidResetUs = nowUs - /*engine->idle.*/restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
 	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	idlePid->setErrorAmplification(errorAmpCoef);
 
 	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
-	engine->engineState.idle.idleState = PID_VALUE;
+	engine->idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
 	mightResetPid = true;
@@ -440,10 +440,10 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		auto phase = determinePhase(rpm, targetRpm, tps, vehicleSpeed, crankingTaper);
 		m_lastPhase = phase;
 
-		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
+		bool isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
-		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
-			efiPrintf("Idle state %s", getIdle_state_e(engine->engineState.idle.idleState));
+		if (engineConfiguration->isVerboseIAC && isAutomaticIdle) {
+			efiPrintf("Idle state %s", getIdle_state_e(engine->idle.idleState));
 			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus("idle");
 		}
 
@@ -454,11 +454,11 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 		if (timeToStopBlip != 0) {
 			iacPosition = blipIdlePosition;
-			engine->engineState.idle.idleState = BLIP;
+			engine->idle.idleState = BLIP;
 		} else {
 			// Always apply closed loop correction
 			iacPosition = getOpenLoop(phase, clt, tps, crankingTaper);
-			engine->engineState.idle.baseIdlePosition = iacPosition;
+			engine->idle.baseIdlePosition = iacPosition;
 
 			// If TPS is working and automatic mode enabled, add any automatic correction
 			if (tps.Valid && engineConfiguration->idleMode == IM_AUTO) {
@@ -476,7 +476,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
 				getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->postState(&tsOutputChannels, 1000000);
-				tsOutputChannels.debugIntField4 = engine->engineState.idle.idleState;
+				tsOutputChannels.debugIntField4 = engine->idle.idleState;
 			} else {
 				tsOutputChannels.debugFloatField1 = iacPosition;
 				extern StepperMotor iacMotor;
@@ -485,7 +485,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		}
 #endif /* EFI_TUNER_STUDIO */
 
-		engine->engineState.idle.currentIdlePosition = iacPosition;
+		engine->idle.currentIdlePosition = iacPosition;
 
 		return iacPosition;
 }
@@ -598,9 +598,9 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_UNIT_TEST */
 
-	engine->engineState.idle.idleState = INIT;
-	engine->engineState.idle.baseIdlePosition = -100.0f;
-	engine->engineState.idle.currentIdlePosition = -100.0f;
+	engine->idle.idleState = INIT;
+	engine->idle.baseIdlePosition = -100.0f;
+	engine->idle.currentIdlePosition = -100.0f;
 
 #if ! EFI_UNIT_TEST
 

@@ -323,7 +323,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->clutchUpState = CONFIG(clutchUpPinInverted) ^ efiReadPin(CONFIG(clutchUpPin));
 	}
 	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
-		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+		engine->idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
 	}
 
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {

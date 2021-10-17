@@ -20,6 +20,9 @@ bash gen_live_documentation_one_file.sh trigger_state TriggerState.java controll
 bash gen_live_documentation_one_file.sh wall_fuel_state WallFuelState.java controllers/algo
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 
+bash gen_live_documentation_one_file.sh idle_state IdleState.java controllers/actuators
+[ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
+
 java -DSystemOut.name=gen_live_documentation \
  -cp ../java_tools/ConfigDefinition.jar \
  com.rusefi.ldmp.UsagesReader integration/LiveData.yaml
