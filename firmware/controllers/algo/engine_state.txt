@@ -15,9 +15,6 @@ float Tcharge_coff
 
 floatms_t airFlow
 
-float manifoldAirPressureAccelerationAdjustment;
-float adjustedManifoldAirPressure;
-
 
 ! speed_density_s
 end_struct

@@ -15,7 +15,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 
 	auto map = getMap(rpm);
 
-	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map;
+	float adjustedMap = map;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
 
 	float ve = getVe(rpm, adjustedMap);
@@ -26,8 +26,8 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		return {};
 	}
 #if EFI_PRINTF_FUEL_DETAILS
-	printf("getSpeedDensityAirmass map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
-			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
+	printf("getSpeedDensityAirmass map=%.2f\n",
+			map);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	return {
