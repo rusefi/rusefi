@@ -56,7 +56,7 @@ void UartTsChannel::stop() {
 	uartStop(m_driver);
 }
 
-void UartTsChannel::write(const uint8_t* buffer, size_t size) {
+void UartTsChannel::write(const uint8_t* buffer, size_t size, bool) {
 	uartSendTimeout(m_driver, &size, buffer, BINARY_IO_TIMEOUT);
 }
 
