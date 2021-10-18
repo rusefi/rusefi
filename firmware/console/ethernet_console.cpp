@@ -37,6 +37,8 @@ public:
 	}
 
 	void write(const uint8_t* buffer, size_t size, bool isEndOfPacket) override {
+		// If not the end of a packet, set the MSG_MORE flag to indicate to the transport
+		// that we have more to add to the buffer before queuing a flush.
 		auto flags = isEndOfPacket ? 0 : MSG_MORE;
 		lwip_send(connectionSocket, buffer, size, flags);
 	}
