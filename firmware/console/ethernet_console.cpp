@@ -36,8 +36,9 @@ public:
 		return connectionSocket != -1;
 	}
 
-	void write(const uint8_t* buffer, size_t size) override {
-		lwip_send(connectionSocket, buffer, size, /*flags =*/ 0);
+	void write(const uint8_t* buffer, size_t size, bool isEndOfPacket) override {
+		auto flags = isEndOfPacket ? 0 : MSG_MORE;
+		lwip_send(connectionSocket, buffer, size, flags);
 	}
 
 	size_t readTimeout(uint8_t* buffer, size_t size, int /*timeout*/) override {

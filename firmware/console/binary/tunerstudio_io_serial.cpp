@@ -23,7 +23,7 @@ void SerialTsChannel::stop() {
 	sdStop(m_driver);
 }
 
-void SerialTsChannel::write(const uint8_t* buffer, size_t size) {
+void SerialTsChannel::write(const uint8_t* buffer, size_t size, bool) {
 	chnWriteTimeout(m_driver, buffer, size, BINARY_IO_TIMEOUT);
 }
 
