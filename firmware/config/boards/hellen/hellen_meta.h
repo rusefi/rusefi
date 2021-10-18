@@ -97,3 +97,10 @@
 #define H176_CAN_TX GPIOD_1
 
 #define H176_IN_A16 GPIOF_10
+
+
+// looks like same pins 144 and 176
+#define H_SPI2_MOSI GPIOB_15
+#define H_SPI2_MISO GPIOB_14
+#define H_SPI2_SCK GPIOB_13
+#define H_SPI2_CS GPIOB_12
