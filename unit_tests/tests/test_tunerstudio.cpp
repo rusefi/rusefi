@@ -7,7 +7,7 @@ class MockTsChannel : public TsChannelBase {
 public:
 	MockTsChannel() : TsChannelBase("Test") { }
 
-	void write(const uint8_t* buffer, size_t size) override {
+	void write(const uint8_t* buffer, size_t size, bool /*isLastWriteInTransaction*/) override {
 		memcpy(&st5TestBuffer[writeIdx], buffer, size);
 		writeIdx += size;
 	}
