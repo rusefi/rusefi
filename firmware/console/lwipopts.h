@@ -76,4 +76,9 @@
 #define LWIP_ETHADDR_4 0x34
 #define LWIP_ETHADDR_5 0x56
 
+#include "rusefi_generated.h"
+
+// Ensure that one TCP segment can always fit an entire response to TS - we never need to split a TS packet across multiple frames.
+#define TCP_MSS (BLOCKING_FACTOR + 10)
+
 #endif /* LWIP_HDR_LWIPOPTS_H__ */
