@@ -245,8 +245,19 @@ pins:
     function: Analog Ground
 
   - pin: K86
+    # H144_OUT_PWM7
+    id: GPIOD_15
+    class: outputs
     ts_name: Tacho
     function: Tachometer
+
+  - pin: K87
+    # H144_OUT_IO10
+    id: GPIOG_12
+    class: outputs
+    ts_name: K87 AC Relay
+    function: A/C Relay
+    type: ls
 
   - pin: K88
     # H144_OUT_IO8
