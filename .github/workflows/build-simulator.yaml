@@ -31,6 +31,10 @@ jobs:
       working-directory: ./simulator/
       run: bash compile.sh
 
+    - name: Run Simulator (10 seconds)
+      working-directory: ./simulator/
+      run: ./build/rusefi_simulator 10
+
     - name: Upload built simulator
       uses: actions/upload-artifact@v2
       with:
