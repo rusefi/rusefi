@@ -29,7 +29,7 @@ static bool getByte(uint8_t *b) {
 }
 
 static void sendByte(uint8_t b) {
-	blTsChannel.write(&b, 1);
+	blTsChannel.write(&b, 1, true);
 }
 
 static uint8_t dfuCalcChecksum(const uint8_t *buf, uint8_t size) {  
@@ -171,7 +171,7 @@ static void dfuHandleRead(void) {
 		intFlashRead(addr, (char *)buffer, numBytes);
 
 	// transmit data
-	blTsChannel.write(buffer, numBytes);
+	blTsChannel.write(buffer, numBytes, true);
 }
 
 static void dfuHandleWrite(void) {
