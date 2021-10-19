@@ -128,7 +128,7 @@ cd $FOLDER
 zip -r ../$UPDATE_BUNDLE_FILE *
 cd ..
 ls -l $UPDATE_BUNDLE_FILE
-if [ -n "$RUSEFI_FTP_SERVER" ]; then
+if [ -n "$RUSEFI_BUILD_FTP_USER" ]; then
  echo put $UPDATE_BUNDLE_FILE autoupdate > cmd
  cat cmd
  sshpass -p $RUSEFI_BUILD_FTP_PASS sftp -o StrictHostKeyChecking=no $RUSEFI_BUILD_FTP_USER@$RUSEFI_FTP_SERVER <<< `cat cmd`
@@ -137,6 +137,8 @@ if [ -n "$RUSEFI_FTP_SERVER" ]; then
   echo "autoupdate upload failed"
   exit 1
  fi
+else
+  echo "Upload not configured"
 fi
 cd ..
 mv temp/$UPDATE_BUNDLE_FILE artifacts
