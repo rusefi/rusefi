@@ -40,6 +40,18 @@ enable2ndByteCanID = false
    versionInfo    = "V"  ; firmwave version for title bar.
    signature    = @@TS_SIGNATURE@@ ; signature is expected to be 7 or more characters.
 
+   ; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
+   useLegacyFTempUnits = false
+
+   ; Optimize comms for fast rusefi ECUs
+   noCommReadDelay = true;
+   defaultRuntimeRecordPerSec = 100;
+   maxUnusedRuntimeRange = 1000;
+
+   ; Set default IP/port to our IP/port
+   defaultIpAddress = 192.168.10.1;
+   defaultIpPort = 29000;
+
 [Constants]
 ; new packet serial format with CRC
    messageEnvelopeFormat = msEnvelope_1.0
@@ -55,9 +67,6 @@ enable2ndByteCanID = false
    pageChunkWrite      = "@@TS_CHUNK_WRITE_COMMAND_char@@%2o%2c%v"
    crc32CheckCommand   = "@@TS_CRC_CHECK_COMMAND_char@@%2o%2c"
    retrieveConfigError = "e"
-
-   ; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
-   useLegacyFTempUnits = false
 
 ;communication settings
    pageActivationDelay = 500 ; Milliseconds delay after burn command. See https://sourceforge.net/p/rusefi/tickets/77/
