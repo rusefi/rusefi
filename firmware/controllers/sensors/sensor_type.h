@@ -69,6 +69,10 @@ typedef enum  __attribute__ ((__packed__)) {
 	Aux2,
 	Aux3,
 	Aux4,
+	Aux5,
+	Aux6,
+	Aux7,
+	Aux8,
 
 	VehicleSpeed,
 
