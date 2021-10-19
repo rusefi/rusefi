@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Sat Oct 16 17:24:03 EDT 2021
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum2string.jar tool on Tue Oct 19 23:51:48 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -21,6 +21,14 @@ case Aux3:
   return "Aux3";
 case Aux4:
   return "Aux4";
+case Aux5:
+  return "Aux5";
+case Aux6:
+  return "Aux6";
+case Aux7:
+  return "Aux7";
+case Aux8:
+  return "Aux8";
 case AuxTemp1:
   return "AuxTemp1";
 case AuxTemp2:
