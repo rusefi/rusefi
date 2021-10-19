@@ -105,6 +105,11 @@ ls -l $FULL_BUNDLE_FILE
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
  ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER . $FULL_BUNDLE_FILE
+ retVal=$?
+ if [ $retVal -ne 0 ]; then
+  echo "full bundle upload failed"
+  exit 1
+ fi
 fi
 
 cd ..
@@ -125,6 +130,11 @@ cd ..
 ls -l $UPDATE_BUNDLE_FILE
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
  ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
+ retVal=$?
+ if [ $retVal -ne 0 ]; then
+  echo "autoupdate upload failed"
+  exit 1
+ fi
 fi
 cd ..
 mv temp/$UPDATE_BUNDLE_FILE artifacts
