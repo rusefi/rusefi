@@ -27,3 +27,4 @@ jobs:
       - name: Upload plugin body
         working-directory: .
         run: java_console/upload_file.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} autoupdate java_tools/ts_plugin/build/jar/rusefi_plugin_body.jar
+
