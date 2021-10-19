@@ -129,7 +129,9 @@ zip -r ../$UPDATE_BUNDLE_FILE *
 cd ..
 ls -l $UPDATE_BUNDLE_FILE
 if [ -n "$RUSEFI_FTP_SERVER" ]; then
- ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
+ echo put $UPDATE_BUNDLE_FILE autoupdate > cmd
+ cat cmd
+ sshpass -p $RUSEFI_BUILD_FTP_PASS sftp -o StrictHostKeyChecking=no $RUSEFI_BUILD_FTP_USER@$RUSEFI_FTP_SERVER <<< `cat cmd`
  retVal=$?
  if [ $retVal -ne 0 ]; then
   echo "autoupdate upload failed"
