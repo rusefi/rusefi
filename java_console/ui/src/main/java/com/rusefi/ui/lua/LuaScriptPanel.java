@@ -6,6 +6,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.MessagesPanel;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.storage.Node;
+import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.AnyCommand;
 
 import javax.swing.*;
@@ -42,6 +43,7 @@ public class LuaScriptPanel {
         upperPanel.add(writeButton);
         upperPanel.add(resetButton);
         upperPanel.add(command.getContent());
+        upperPanel.add(new URLLabel("Lua Wiki", "https://github.com/rusefi/rusefi/wiki/Lua-Scripting"));
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
