@@ -27,6 +27,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+### Added
+ - Higher Data Rate with TS 3.1.06.14 
+
 ### Fixed
  - A/C control bugfix
 
