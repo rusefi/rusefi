@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Oct 17 03:05:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Oct 19 23:52:37 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3129,10 +3129,11 @@ struct engine_configuration_s {
 	 */
 	float mapAccelTaperMult[MAP_ACCEL_TAPER];
 	/**
-	 * todo: rename to fsioAnalogInputs
+	 * EGO value correction
+	value
 	 * offset 2200
 	 */
-	adc_channel_e fsioAdc[AUX_ANALOG_INPUT_COUNT];
+	float unusedAnotherOneOfThose;
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -3255,7 +3256,12 @@ struct engine_configuration_s {
 	units
 	 * offset 2323
 	 */
-	uint8_t unusedOldBiquad[9];
+	uint8_t unusedOldBiquad[1];
+	/**
+	 * todo: rename to fsioAnalogInputs
+	 * offset 2324
+	 */
+	adc_channel_e auxAnalogInputs[AUX_ANALOG_INPUT_COUNT];
 	/**
 	 * offset 2332
 	 */
@@ -4364,4 +4370,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Oct 17 03:05:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Oct 19 23:52:37 UTC 2021

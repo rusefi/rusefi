@@ -66,8 +66,16 @@
 #define antiLagRpmTreshold_offset 824
 #define applyNonlinearBelowPulse_offset 2508
 #define artificialTestMisfire_offset 76
-#define AUX_ANALOG_INPUT_COUNT 4
+#define AUX_ANALOG_INPUT_COUNT 8
 #define AUX_DIGITAL_VALVE_COUNT 2
+#define auxAnalogInputs1_offset 2332
+#define auxAnalogInputs2_offset 2333
+#define auxAnalogInputs3_offset 2334
+#define auxAnalogInputs4_offset 2335
+#define auxAnalogInputs5_offset 2336
+#define auxAnalogInputs6_offset 2337
+#define auxAnalogInputs7_offset 2338
+#define auxAnalogInputs8_offset 2339
 #define auxFastSensor1_adcChannel_offset 680
 #define auxPid1_dFactor_offset 2620
 #define auxPid1_iFactor_offset 2616
@@ -564,10 +572,6 @@
 #define fsio_setting5_offset 880
 #define fsio_setting6_offset 884
 #define FSIO_TABLE_8 8
-#define fsioAdc1_offset 2200
-#define fsioAdc2_offset 2201
-#define fsioAdc3_offset 2202
-#define fsioAdc4_offset 2203
 #define fsioCurve1_offset 2780
 #define fsioCurve1Bins_offset 2716
 #define fsioCurve2_offset 2908
@@ -1298,8 +1302,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD hellen_cypress
-#define SIGNATURE_DATE 2021.10.17
-#define SIGNATURE_HASH 865287007
+#define SIGNATURE_DATE 2021.10.20
+#define SIGNATURE_HASH 1508020450
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1661,7 +1665,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.17.hellen_cypress.865287007"
+#define TS_SIGNATURE "rusEFI 2021.10.20.hellen_cypress.1508020450"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1766,6 +1770,7 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
+#define unusedAnotherOneOfThose_offset 2200
 #define unusedAtOldBoardConfigurationEnd_offset 1340
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976

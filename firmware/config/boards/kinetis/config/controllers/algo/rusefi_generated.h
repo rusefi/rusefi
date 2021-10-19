@@ -65,8 +65,16 @@
 #define antiLagRpmTreshold_offset 824
 #define applyNonlinearBelowPulse_offset 2500
 #define artificialTestMisfire_offset 76
-#define AUX_ANALOG_INPUT_COUNT 4
+#define AUX_ANALOG_INPUT_COUNT 8
 #define AUX_DIGITAL_VALVE_COUNT 2
+#define auxAnalogInputs1_offset 2324
+#define auxAnalogInputs2_offset 2325
+#define auxAnalogInputs3_offset 2326
+#define auxAnalogInputs4_offset 2327
+#define auxAnalogInputs5_offset 2328
+#define auxAnalogInputs6_offset 2329
+#define auxAnalogInputs7_offset 2330
+#define auxAnalogInputs8_offset 2331
 #define auxFastSensor1_adcChannel_offset 680
 #define auxPid1_dFactor_offset 2612
 #define auxPid1_iFactor_offset 2608
@@ -545,10 +553,6 @@
 #define fsio_setting5_offset 880
 #define fsio_setting6_offset 884
 #define FSIO_TABLE_8 8
-#define fsioAdc1_offset 2200
-#define fsioAdc2_offset 2201
-#define fsioAdc3_offset 2202
-#define fsioAdc4_offset 2203
 #define fsioCurve1_offset 2752
 #define fsioCurve1Bins_offset 2688
 #define fsioCurve2_offset 2880
@@ -1279,8 +1283,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.10.17
-#define SIGNATURE_HASH 3426154403
+#define SIGNATURE_DATE 2021.10.20
+#define SIGNATURE_HASH 2789694494
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1642,7 +1646,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.17.kin.3426154403"
+#define TS_SIGNATURE "rusEFI 2021.10.20.kin.2789694494"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1747,6 +1751,7 @@
 #define unused_1484_bit_29_offset 1476
 #define unused_1484_bit_30_offset 1476
 #define unused_1484_bit_31_offset 1476
+#define unusedAnotherOneOfThose_offset 2200
 #define unusedAtOldBoardConfigurationEnd_offset 1340
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
