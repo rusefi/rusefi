@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# user=$1
+# pass=$2
+# host=$3
 
 if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
  echo "No Secrets"
