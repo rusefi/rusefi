@@ -16,21 +16,21 @@
  **************************************
  */
 typedef enum  __attribute__ ((__packed__)) {
-	Invalid,
-	Clt,
+	Invalid, // we need indeces for Lua consumers. At the moment we still do not expose constants into Lua :(
+	Clt, // 1
 	Iat,
 	Rpm,
 	Map,
 	Maf,
 
-	OilPressure,
+	OilPressure, // 6
 
 	FuelPressureLow, // in kPa
 	FuelPressureHigh, // in kPa
 	FuelPressureInjector,
 
 	// This is the "resolved" position, potentially composited out of the following two
-	Tps1,
+	Tps1, // 10
 	// This is the first sensor
 	Tps1Primary,
 	// This is the second sensor
