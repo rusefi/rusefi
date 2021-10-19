@@ -184,6 +184,8 @@ pins:
 
 info:
   title: Proteus
+  name: White35
+  id: white35
   image:
     file: white35.jpg
   pins:

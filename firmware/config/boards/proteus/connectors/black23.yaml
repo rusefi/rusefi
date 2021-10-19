@@ -120,6 +120,8 @@ pins:
 
 info:
   title: Proteus
+  name: Black23
+  id: black23
   image:
     file: black23.jpg
   pins:
