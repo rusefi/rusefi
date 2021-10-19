@@ -75,7 +75,7 @@ struct_no_prefix engine_configuration_s
 ! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 256
 
-#define AUX_ANALOG_INPUT_COUNT 4
+#define AUX_ANALOG_INPUT_COUNT 8
 #define FSIO_ANALOG_INPUT_COUNT 4
 
 #define LUA_PWM_COUNT 8
@@ -1380,7 +1380,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 float[MAP_ACCEL_TAPER] mapAccelTaperBins;;"counter", 1, 0, 0, 300, 0
 float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 
-	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] fsioAdc;todo: rename to fsioAnalogInputs
+	float unusedAnotherOneOfThose;EGO value correction;"value", 1, 0, -10, 10, 2
 	float fixedTiming;Fixed timing, useful for TDC testing;"deg", 1, 0, -720, 720, 2
 	float mapLowValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
 	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
@@ -1409,7 +1409,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
 	uint8_t fan2ExtraIdle;+Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
-	uint8_t[9] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	uint8_t[1] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;todo: rename to fsioAnalogInputs
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] trailingCoilPins;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C", 1, 0, -100, 250, 1

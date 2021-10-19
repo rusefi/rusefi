@@ -12,6 +12,10 @@ static FunctionalSensor auxSensors[] = {
 	{ SensorType::Aux2, MS2NT(50) },
 	{ SensorType::Aux3, MS2NT(50) },
 	{ SensorType::Aux4, MS2NT(50) },
+	{ SensorType::Aux5, MS2NT(50) },
+	{ SensorType::Aux6, MS2NT(50) },
+	{ SensorType::Aux7, MS2NT(50) },
+	{ SensorType::Aux8, MS2NT(50) },
 };
 
 static_assert(efi::size(auxSensors) == AUX_ANALOG_INPUT_COUNT);
