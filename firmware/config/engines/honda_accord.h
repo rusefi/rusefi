@@ -9,10 +9,14 @@
 #include "engine_configuration.h"
 
 void setHondaAccordConfigurationTwoWires(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHondaAccordConfigurationThreeWires(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setHondaAccordConfigurationDip(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHondaAccordConfiguration1_24(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHondaAccordConfiguration1_24_shifted(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHondaCivic4_0_both(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHondaCivic4_0_rise(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
+/**
+ * https://technet.ff-squad.com/wiring.obd1.htm
+ *
+ * as you move inward from the outside of the connector, tooth count decreases
+ * outermost CKP = 12/24
+ * middle = 4 total, 1/cyl
+ * inner CID cylinder ID  = 1 total, 1/cam
+ */
+void setHondaAccordConfiguration1_24(DECLARE_CONFIG_PARAMETER_SIGNATURE);

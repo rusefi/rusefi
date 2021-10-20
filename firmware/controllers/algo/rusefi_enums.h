@@ -44,7 +44,7 @@ typedef enum {
 	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
 
 	NISSAN_PRIMERA = ET_NISSAN_PRIMERA,
-	HONDA_ACCORD_CD = 6,
+	UNUSED_6 = 6,
 	FORD_INLINE_6_1995 = 7,
 	/**
 	 * one cylinder engine
@@ -138,19 +138,13 @@ typedef enum {
 	 */
 	MAZDA_MIATA_2003 = ET_FRANKENSO_MIATA_NB2,
 
-	HONDA_ACCORD_1_24_SHIFTED = 48,
+	UNUSED_48 = 48,
 
 	FRANKENSO_QA_ENGINE = 49,
 
-	/**
-	 * this is about unit-testing skipped wheel trigger
-	 */
-	TEST_CIVIC_4_0_BOTH = 50,
+	UNUSED_50 = 50,
 
-	/**
-	 * this is about unit-testing skipped wheel trigger
-	 */
-	TEST_CIVIC_4_0_RISE = 51,
+	UNUSED_51 = 51,
 
 
 	TEST_ISSUE_366_BOTH = 52,
@@ -281,7 +275,7 @@ typedef enum {
 	TT_TOOTHED_WHEEL_36_1 = TT_TT_TOOTHED_WHEEL_36_1,
 
 	// todo: remove this weird trigger?
-	TT_HONDA_4_24_1 = TT_TT_HONDA_4_24_1,
+	TT_UNUSED_10 = TT_TT_UNUSED_10,
 
 	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
