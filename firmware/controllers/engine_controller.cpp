@@ -311,8 +311,8 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("AuxT2", engineConfiguration->auxTempSensor2.adcChannel);
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	for (int i = 0; i < AUX_ANALOG_INPUT_COUNT ; i++) {
-		adc_channel_e ch = engineConfiguration->fsioAdc[i];
-		printAnalogChannelInfo("FSIO analog", ch);
+		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
+		printAnalogChannelInfo("Aux analog", ch);
 	}
 
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);

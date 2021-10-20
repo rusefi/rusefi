@@ -21,8 +21,8 @@ static FunctionalSensor auxSensors[] = {
 static_assert(efi::size(auxSensors) == AUX_ANALOG_INPUT_COUNT);
 
 void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	for (size_t i = 0; i < efi::size(CONFIG(fsioAdc)); i++) {
-		auto channel = CONFIG(fsioAdc)[i];
+	for (size_t i = 0; i < efi::size(CONFIG(auxAnalogInputs)); i++) {
+		auto channel = CONFIG(auxAnalogInputs)[i];
 
 		// Skip unconfigured channels
 		if (!isAdcChannelValid(channel)) {
