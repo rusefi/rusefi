@@ -163,12 +163,12 @@ static void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 static void setDefaultLambdaTable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	constexpr float mapBins[] = {
+	static constexpr float mapBins[] = {
 		30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 175, 200, 225, 250
 	};
 	copyArray(config->lambdaLoadBins, mapBins);
 
-	constexpr float rowValues[] = {
+	static constexpr float rowValues[] = {
 		1,		1,		1,		1,		// 30, 40, 50, 60 kpa
 		1,		0.95,	0.92,	0.90,	// 70, 80, 90, 100 kpa
 		0.89,	0.88,	0.86,	0.84,	// 110, 120, 130, 150 kpa
