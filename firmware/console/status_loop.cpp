@@ -199,7 +199,7 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	}
 	timeOfPreviousPrintVersion = nowSeconds;
 	int seconds = getTimeNowSeconds();
-	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType), FIRMWARE_ID);
+	printCurrentState(&logger, seconds, getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, CONFIG(triggerInputPins)[0]);
 	printOutPin(PROTOCOL_CRANK2, CONFIG(triggerInputPins)[1]);
