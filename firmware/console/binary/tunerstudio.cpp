@@ -658,11 +658,10 @@ static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incom
  */
 bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
 	// Bail fast if guaranteed not to be a plain command
-	if (command == 0)
-	{
+	if (command == 0) {
 		return false;
-	}
-	else if (command == TS_HELLO_COMMAND) {
+	} else if (command == TS_HELLO_COMMAND || command == 'Q') {
+		// We interpret 'Q' as TS_HELLO_COMMAND, since TS uses hardcoded 'Q' during ECU detection (scan all serial ports)
 		efiPrintf("Got naked Query command");
 		handleQueryCommand(tsChannel, TS_PLAIN);
 		return true;
