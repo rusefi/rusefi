@@ -1033,9 +1033,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_CD:
-		setHondaAccordConfigurationThreeWires(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MIATA_NA6_MAP:
 		setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1051,21 +1048,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MAZDA_MIATA_NA8:
 		setMazdaMiataNA8Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case TEST_CIVIC_4_0_BOTH:
-		setHondaCivic4_0_both(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case TEST_CIVIC_4_0_RISE:
-		setHondaCivic4_0_rise(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_1_24_SHIFTED:
-		setHondaAccordConfiguration1_24_shifted(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case HONDA_ACCORD_CD_DIP:
+/*
 		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+*/
 	case MITSU_4G93:
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
