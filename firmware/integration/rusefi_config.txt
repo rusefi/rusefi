@@ -2021,6 +2021,9 @@ end_struct
 #define TS_OUTPUT_COMMAND 'O'
 ! 0x53 queryCommand
 #define TS_HELLO_COMMAND 'S'
+! todo: replace all usages of TS_HELLO_COMMAND with TS_QUERY_COMMAND
+! TS auto-detect depends on well-known queryCommand value 'Q'
+#define TS_QUERY_COMMAND 'Q'
 ! 0x6B
 #define TS_CRC_CHECK_COMMAND 'k'
 ! 0x52
