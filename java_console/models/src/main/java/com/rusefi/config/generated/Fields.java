@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 20 00:08:12 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 20 17:08:21 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1562,7 +1562,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.20.all.3606866163";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.20.all.3393922073";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1582,7 +1582,6 @@ public class Fields {
 	public static final int TT_TT_GM_LS_24 = 27;
 	public static final int TT_TT_HONDA_1_24 = 21;
 	public static final int TT_TT_HONDA_1_4_24 = 13;
-	public static final int TT_TT_HONDA_4_24_1 = 10;
 	public static final int TT_TT_HONDA_CBR_600 = 28;
 	public static final int TT_TT_HONDA_K_12_1 = 46;
 	public static final int TT_TT_JEEP_18_2_2_2 = 37;
@@ -1613,6 +1612,7 @@ public class Fields {
 	public static final int TT_TT_TOOTHED_WHEEL_36_2 = 48;
 	public static final int TT_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int TT_TT_TRI_TACH = 53;
+	public static final int TT_TT_UNUSED_10 = 10;
 	public static final int TT_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int TT_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int TT_TT_VVT_JZ = 17;
