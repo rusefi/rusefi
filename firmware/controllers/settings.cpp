@@ -92,7 +92,7 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
  */
 void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
-	efiPrintf("Template %s/%d trigger %s/%s/%d", getConfigurationName(engineConfiguration->engineType),
+	efiPrintf("Template %s/%d trigger %s/%s/%d", getEngine_type_e(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
 			getEngine_load_mode_e(engineConfiguration->fuelAlgorithm), engineConfiguration->fuelAlgorithm);
 
@@ -1302,48 +1302,6 @@ void initSettings(void) {
 }
 
 #endif /* !EFI_UNIT_TEST */
-
-/**
- * These should be not very long because these are displayed on the LCD as is
- */
-const char* getConfigurationName(engine_type_e engineType) {
-	switch (engineType) {
-	case DEFAULT_FRANKENSO:
-		return "DEFAULT_FRANKENSO";
-	case DODGE_NEON_1995:
-		return "Neon95";
-	case FORD_ASPIRE_1996:
-		return "Aspire";
-	case NISSAN_PRIMERA:
-		return "Primera";
-	case HONDA_ACCORD_CD:
-		return "Accord3";
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		return "Accord2";
-	case HONDA_ACCORD_1_24_SHIFTED:
-		return "Accord24sh";
-	case HONDA_ACCORD_CD_DIP:
-		return "HondaD";
-	case FORD_INLINE_6_1995:
-		return "Fordi6";
-	case GY6_139QMB:
-		return "Gy6139";
-	case MAZDA_MIATA_NB1:
-		return "MiataNB1";
-	case FORD_ESCORT_GT:
-		return "EscrtGT";
-	case CITROEN_TU3JP:
-		return "TU3JP";
-	case MITSU_4G93:
-		return "Mi4G93";
-	case MIATA_1990:
-		return "MX590";
-	case MIATA_1996:
-		return "MX596";
-	default:
-		return getEngine_type_e(engineType);
-	}
-}
 
 void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	{
