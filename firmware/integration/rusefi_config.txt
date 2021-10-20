@@ -421,7 +421,7 @@ end_struct
 #define TT_TT_MAZDA_SOHC_4 7
 #define TT_TT_TOOTHED_WHEEL_60_2 8
 #define TT_TT_TOOTHED_WHEEL_36_1 9
-#define TT_TT_HONDA_4_24_1 10
+#define TT_TT_UNUSED_10 10
 #define TT_TT_HONDA_1_4_24 13
 #define TT_TT_MAZDA_DOHC_1_4 15
 #define TT_TT_VVT_JZ 17
