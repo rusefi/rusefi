@@ -32,7 +32,7 @@ public class BitParsingTest {
         };
         state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
 
-        System.out.printf("start[" + sw.toString() + "]end");
+        System.out.printf("start[" + sw + "]end");
 
         assertTrue(sw.toString().contains("\"false\", \"true\""));
         assertTrue(sw.toString().contains("\"nada\", \"si\""));

@@ -1,0 +1,18 @@
+
+struct_no_prefix idle_state_s
+custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
+    idle_state_e idleState
+custom percent_t 4 bits, F32, @OFFSET@, [0:2], "not important"
+    percent_t currentIdlePosition;that's current position with CLT and IAT corrections
+    percent_t baseIdlePosition;current position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
+    int throttlePedalUpState;true in IDLE throttle pedal state, false if driver is touching the pedal\ntodo: better name for this field?
+    percent_t etbIdleAddition;ETB position adjustment related to idle RPM control
+
+bit mightResetPid;The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.\nThe throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).\nWe set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.\nSee automaticIdleController().
+
+bit shouldResetPid;
+bit wasResetPid;This is needed to slowly turn on the PID back after it was reset.
+bit mustResetPid;This is used when the PID configuration is changed, to guarantee the reset
+
+! end of idle_state_s structure definition
+end_struct

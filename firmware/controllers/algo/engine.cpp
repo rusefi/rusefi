@@ -225,7 +225,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
-	bool acActive = updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool acActive = acState.updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
 	updateFans(acActive PASS_ENGINE_PARAMETER_SUFFIX);
 
 	updateGppwm();
@@ -323,7 +323,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->clutchUpState = CONFIG(clutchUpPinInverted) ^ efiReadPin(CONFIG(clutchUpPin));
 	}
 	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
-		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+		engine->idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
 	}
 
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {

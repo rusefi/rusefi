@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 16:17:23 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 20 17:08:21 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2882,22 +2882,22 @@ struct engine_configuration_s {
 	roc
 	 * offset 2060
 	 */
-	float engineLoadDecelEnleanmentThreshold;
+	float unusedEL1;
 	/**
 	coeff
 	 * offset 2064
 	 */
-	float engineLoadDecelEnleanmentMultiplier;
+	float unusedEL2;
 	/**
 	roc
 	 * offset 2068
 	 */
-	float engineLoadAccelEnrichmentThreshold;
+	float unusedEL3;
 	/**
 	coeff
 	 * offset 2072
 	 */
-	float engineLoadAccelEnrichmentMultiplier;
+	float unusedEL4;
 	/**
 	 * Band rate for primary TTL
 	BPs
@@ -2982,8 +2982,9 @@ struct engine_configuration_s {
 	offset 2116 bit 2 */
 	bool can2WriteEnabled : 1;
 	/**
+	 * Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	offset 2116 bit 3 */
-	bool unused1126 : 1;
+	bool stepperDcInvertedPins : 1;
 	/**
 	offset 2116 bit 4 */
 	bool unused1127 : 1;
@@ -3128,10 +3129,11 @@ struct engine_configuration_s {
 	 */
 	float mapAccelTaperMult[MAP_ACCEL_TAPER];
 	/**
-	 * todo: rename to fsioAnalogInputs
+	 * EGO value correction
+	value
 	 * offset 2200
 	 */
-	adc_channel_e fsioAdc[AUX_ANALOG_INPUT_COUNT];
+	float unusedAnotherOneOfThose;
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -3260,7 +3262,11 @@ struct engine_configuration_s {
 	units
 	 * offset 2331
 	 */
-	uint8_t unusedOldBiquad[9];
+	uint8_t unusedOldBiquad[1];
+	/**
+	 * offset 2332
+	 */
+	adc_channel_e auxAnalogInputs[AUX_ANALOG_INPUT_COUNT];
 	/**
 	 * offset 2340
 	 */
@@ -3367,10 +3373,27 @@ struct engine_configuration_s {
 	 */
 	pid_s etbWastegatePid;
 	/**
-	units
+	 * For micro-stepping, make sure that PWM frequency (etbFreq) is high enough
 	 * offset 2536
 	 */
-	uint8_t unused2536[4];
+	stepper_num_micro_steps_e stepperNumMicroSteps;
+	/**
+	 * Use to limit the current when the stepper motor is idle, not moving (100% = no limit)
+	%
+	 * offset 2537
+	 */
+	uint8_t stepperMinDutyCycle;
+	/**
+	 * Use to limit the max.current through the stepper motor (100% = no limit)
+	%
+	 * offset 2538
+	 */
+	uint8_t stepperMaxDutyCycle;
+	/**
+	units
+	 * offset 2539
+	 */
+	uint8_t unused2536;
 	/**
 	 * per-cylinder timing correction
 	deg
@@ -4352,4 +4375,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 06 16:17:23 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 20 17:08:21 UTC 2021

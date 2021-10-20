@@ -14,8 +14,8 @@ import java.util.*;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class EnumToString {
-    private final static StringBuilder cppFileContent = new StringBuilder();
-    private final static StringBuilder includesSection = new StringBuilder();
+    private final StringBuilder cppFileContent = new StringBuilder();
+    private final StringBuilder includesSection = new StringBuilder();
 
     private final static StringBuilder bothFilesHeader = new StringBuilder("// by enum2string.jar tool " +
             "on " + new Date() + "\n" +
@@ -26,59 +26,40 @@ public class EnumToString {
 
     private final static StringBuilder headerFileContent = new StringBuilder();
 
-    private final static String KEY_INPUT_PATH = "-enumInputPath";
     public final static String KEY_ENUM_INPUT_FILE = "-enumInputFile";
-    private final static String KEY_OUTPUT = "-outputPath";
-    private final static String KEY_OUTPUT_FILE = "-generatedFile";
-    private static String fileSuffix = "enums";
 
     public static void main(String[] args) throws IOException {
-        if (args.length < 4) {
-            SystemOut.println("Please specify at least\n\n" +
-                            KEY_ENUM_INPUT_FILE + "XXX\n" +
-                            KEY_OUTPUT + "XXX\n"
-            );
-            return;
-        }
+        InvokeReader invokeReader = new InvokeReader(args).invoke();
+        String outputPath = invokeReader.getOutputPath();
 
-        String inputPath = ".";
-        String outputPath = null;
         EnumsReader enumsReader = new EnumsReader();
-        for (int i = 0; i < args.length - 1; i += 2) {
-            String key = args[i];
-            if (key.equals(KEY_INPUT_PATH)) {
-                inputPath = Objects.requireNonNull(args[i + 1], KEY_INPUT_PATH);
-            } else if (key.equals(KEY_ENUM_INPUT_FILE)) {
-                String headerInputFile = args[i + 1];
-                consumeFile(enumsReader, inputPath, headerInputFile);
-            } else if (key.equals(KEY_OUTPUT_FILE)) {
-                fileSuffix = args[i + 1];
-            } else if (key.equals(KEY_OUTPUT)) {
-                outputPath = args[i + 1];
-            }
+        EnumToString state = new EnumToString();
+
+        for (String inputFile : invokeReader.getInputFiles()) {
+            state.consumeFile(enumsReader, invokeReader.getInputPath(), inputFile);
         }
 
         headerFileContent.append("#pragma once\n");
 
-        outputData(enumsReader);
+        state.outputData(enumsReader);
 
-        cppFileContent.insert(0, bothFilesHeader.toString());
+        state.cppFileContent.insert(0, bothFilesHeader.toString());
 
-        cppFileContent.insert(0, includesSection);
-        headerFileContent.insert(0, includesSection);
+        state.cppFileContent.insert(0, state.includesSection);
+        headerFileContent.insert(0, state.includesSection);
 
-        SystemOut.println("includesSection:\n" + includesSection + "end of includesSection\n");
+        SystemOut.println("includesSection:\n" + state.includesSection + "end of includesSection\n");
 
-        cppFileContent.insert(0, "#include \"global.h\"\n");
+        state.cppFileContent.insert(0, "#include \"global.h\"\n");
         headerFileContent.insert(0, bothFilesHeader.toString());
 
         new File(outputPath).mkdirs();
-        writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
-                fileSuffix);
+        state.writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
+                InvokeReader.fileSuffix);
         SystemOut.close();
     }
 
-    private static void writeCppAndHeaderFiles(String outFileName) throws IOException {
+    private void writeCppAndHeaderFiles(String outFileName) throws IOException {
         LazyFile bw = new LazyFile(outFileName + ".cpp");
         bw.write(cppFileContent.toString());
         bw.close();
@@ -88,19 +69,18 @@ public class EnumToString {
         bw.close();
     }
 
-    private static void consumeFile(EnumsReader enumsReader, String inputPath, String headerInputFileName) throws IOException {
+    public void consumeFile(EnumsReader enumsReader, String inputPath, String headerInputFileName) throws IOException {
         Objects.requireNonNull(inputPath, "inputPath");
         File f = new File(inputPath + File.separator + headerInputFileName);
         SystemOut.println("Reading enums from " + headerInputFileName);
-        String simpleFileName = f.getName();
 
-        bothFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + simpleFileName + " ");
+        bothFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + f.getName() + " ");
 
-        includesSection.append("#include \"" + simpleFileName + "\"\n");
-        enumsReader.process(new FileReader(f));
+        includesSection.append("#include \"" + f.getName() + "\"\n");
+        enumsReader.read(new FileReader(f));
     }
 
-    public static void outputData(EnumsReader enumsReader) {
+    public EnumToString outputData(EnumsReader enumsReader) {
         SystemOut.println("Preparing output for " + enumsReader.getEnums().size() + " enums\n");
 
         for (Map.Entry<String, Map<String, Value>> e : enumsReader.getEnums().entrySet()) {
@@ -109,10 +89,7 @@ public class EnumToString {
             headerFileContent.append(getMethodSignature(enumName) + ";\n");
         }
         SystemOut.println("EnumToString: " + headerFileContent.length() + " bytes of content\n");
-    }
-
-    public static void clear() {
-        cppFileContent.setLength(0);
+        return this;
     }
 
     private static String makeCode(String enumName, Collection<Value> values) {
@@ -141,7 +118,8 @@ public class EnumToString {
         return Character.toUpperCase(enumName.charAt(0)) + enumName.substring(1);
     }
 
-    public static String getCppFileContent() {
+    public String getCppFileContent() {
         return cppFileContent.toString();
     }
+
 }

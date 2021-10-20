@@ -1,0 +1,87 @@
+
+
+struct_no_prefix engine_state2_s
+
+struct_no_prefix speed_density_s
+
+bit isTChargeAirModel
+
+float airMassInOneCylinder;Speed-density logic: calculated air mass in one cylinder, in grams
+
+	float tCharge;speed density\nRate-of-change limiter is applied to degrees, so we store both Kelvin and degrees.;
+	float tChargeK
+
+float Tcharge_coff
+
+floatms_t airFlow
+
+
+! speed_density_s
+end_struct
+
+speed_density_s sd;
+
+
+	float targetAFR
+
+
+float engineCycleDurationMs;
+
+
+float minRpmKcurrentTPS
+
+int currentTpsAdc
+float tpsVoltageMCU
+float tpsVoltageBoard
+
+	float currentBaroCorrectedVE;
+	float injectorFlowCorrection;
+float baroCorrection;
+
+
+struct cranking_fuel_s
+
+floatms_t baseFuel;Duration of injection, in ms. During cranking we do not account for injector flow, so if you change injectors you would need to change settings.\nDeprecated. Please use '1'.\nTODO: maybe account for injector flow?
+float coolantTemperatureCoefficient;
+float tpsCoefficient
+float durationCoefficient
+floatms_t fuel;Actual injection duration based on all above coefficients.
+
+! end of cranking_s structure definition
+end_struct
+
+! actually define a member of 'cranking_s' type
+cranking_fuel_s cranking
+
+
+
+struct running_fuel_s
+float postCrankingFuelCorrection
+	float intakeTemperatureCoefficient
+	float coolantTemperatureCoefficient
+	float timeSinceCrankingInSecs
+	
+
+	floatms_t injectorLag;injectorLag(VBatt)\nthis value depends on a slow-changing VBatt value, so\nwe update it once in a while
+
+	floatms_t baseFuel;
+	floatms_t fuel;Actual injection duration with CLT, IAT and TPS acceleration corrections per cycle, as squirt duration.\nWithout injector lag.\n@see baseFuel\n@see actualLastInjection
+! end of running_fuel_s structure definition
+end_struct
+
+! actually define a member of 'running_fuel_s' type
+running_fuel_s running
+
+custom percent_t 4 bits, F32, @OFFSET@, [0:2], "not important"
+
+percent_t etbFeedForward;
+
+	percent_t targetFromTable
+
+	! spark-related
+	floatms_t sparkDwell;ignition dwell duration in ms\nSee also dwellAngle
+	angle_t dwellAngle;ignition dwell duration as crankshaft angle\nNAN if engine is stopped\nSee also sparkDwell
+	angle_t cltTimingCorrection
+
+! engine_state2_s
+end_struct

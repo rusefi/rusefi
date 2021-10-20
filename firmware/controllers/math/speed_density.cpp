@@ -48,42 +48,29 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	float coolantTemp = clt.Value;
 
-	DISPLAY_STATE(Engine)
-
-	if ((engine->engineState.sd.DISPLAY_IF(isTChargeAirModel) = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP))) {
+	if ((engine->engineState.sd.isTChargeAirModel = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP))) {
 		const floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;
 		// We're actually using an 'old' airMass calculated for the previous cycle, but it's ok, we're not having any self-excitaton issues
-		floatms_t airMassForEngine = engine->engineState.sd./***display*/airMassInOneCylinder * CONFIG(specs.cylindersCount);
+		floatms_t airMassForEngine = engine->engineState.sd.airMassInOneCylinder * CONFIG(specs.cylindersCount);
 		// airMass is in grams per 1 cycle for 1 cyl. Convert it to airFlow in kg/h for the engine.
 		// And if the engine is stopped (0 rpm), then airFlow is also zero (avoiding NaN division)
 		floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 		// just interpolate between user-specified min and max coefs, based on the max airFlow value
-		DISPLAY_TEXT(interpolate_Air_Flow)
-		engine->engineState.DISPLAY_FIELD(airFlow) = airFlow;
-		DISPLAY_TEXT(Between)
+		engine->engineState.airFlow = airFlow;
 		engine->engineState.sd.Tcharge_coff = interpolateClamped(0.0,
-				CONFIG(DISPLAY_CONFIG(tChargeAirCoefMin)),
-				CONFIG(DISPLAY_CONFIG(tChargeAirFlowMax)),
-				CONFIG(DISPLAY_CONFIG(tChargeAirCoefMax)), airFlow);
+				CONFIG(tChargeAirCoefMin),
+				CONFIG(tChargeAirFlowMax),
+				CONFIG(tChargeAirCoefMax), airFlow);
 		// save it for console output (instead of MAF massAirFlow)
-	} else/* DISPLAY_ELSE */ {
-		// TCHARGE_MODE_RPM_TPS
-		DISPLAY_TEXT(interpolate_3D)
-		DISPLAY_SENSOR(RPM)
-		DISPLAY_TEXT(and)
-		DISPLAY_SENSOR(TPS)
-		DISPLAY_TEXT(EOL)
-		DISPLAY_TEXT(Between)
+	} else {
 		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin,
-				CONFIG(DISPLAY_CONFIG(tChargeMinRpmMinTps)), tpMax,
-				CONFIG(DISPLAY_CONFIG(tChargeMinRpmMaxTps)), tps);
-		DISPLAY_TEXT(EOL)
+				CONFIG(tChargeMinRpmMinTps), tpMax,
+				CONFIG(tChargeMinRpmMaxTps), tps);
 		float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin,
-				CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMinTps)), tpMax,
-				CONFIG(DISPLAY_CONFIG(tChargeMaxRpmMaxTps)), tps);
+				CONFIG(tChargeMaxRpmMinTps), tpMax,
+				CONFIG(tChargeMaxRpmMaxTps), tps);
 
 		engine->engineState.sd.Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
-	/* DISPLAY_ENDIF */
 	}
 
 	if (cisnan(engine->engineState.sd.Tcharge_coff)) {

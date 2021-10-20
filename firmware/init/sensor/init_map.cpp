@@ -47,8 +47,10 @@ static FallbackSensor mapCombiner(SensorType::Map, SensorType::MapFast, SensorTy
 
 // helper struct for the local getMapCfg function
 struct MapCfg {
-	float v1, v2;
-	float map1, map2;
+	float v1;
+	float map1;
+	float v2;
+	float map2;
 };
 
 static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -56,12 +58,11 @@ static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	switch (sensorType) {
 	case MT_DENSO183:
 		return {0, -6.64, 5, 182.78};
-	case MT_MPX4250:
-		return {0, 8, 5, 260};
 	case MT_MPX4100:
-		return {0.3, 20, 4.9, 105};
+		return {0.306, 20, 4.897, 105};
+	case MT_MPX4250:
 	case MT_MPX4250A:
-		return {0.25, 20, 4.875, 250};
+		return {0.204, 20, 4.896, 250};
 	case MT_HONDA3BAR:
 		return {0.5, 91.422, 3.0, 0};
 	case MT_DODGE_NEON_2003:
@@ -79,9 +80,10 @@ static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	case MT_MAZDA_1_BAR:
 		return {0, 2.5, 5, 117};
 	case MT_BOSCH_2_5:
+	// kpa=54.11764705882353v−1.6470588235294201
 		return {0.4 , 20 , 4.65, 250};
 	case MT_MPXH6400:
-		return {1, 90, 3, 250};
+		return {0.2, 20, 4.8, 400};
 	default:
 		firmwareError(CUSTOM_ERR_MAP_TYPE, "Unknown MAP type: decoder %d", sensorType);
 		// falls through to custom

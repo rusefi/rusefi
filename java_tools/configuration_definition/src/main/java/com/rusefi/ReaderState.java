@@ -33,7 +33,6 @@ public class ReaderState {
 
     public EnumsReader enumsReader = new EnumsReader();
 
-
     private static void handleBitLine(ReaderState state, String line) {
         line = line.substring(BIT.length() + 1).trim();
 

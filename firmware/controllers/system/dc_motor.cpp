@@ -16,10 +16,11 @@ TwoPinDcMotor::TwoPinDcMotor(OutputPin& disablePin)
 	disable();
 }
 
-void TwoPinDcMotor::configure(IPwm& enable, IPwm& dir1, IPwm& dir2) {
+void TwoPinDcMotor::configure(IPwm& enable, IPwm& dir1, IPwm& dir2, bool isInverted) {
 	m_enable = &enable;
 	m_dir1 = &dir1;
 	m_dir2 = &dir2;
+	m_isInverted = isInverted;
 }
 
 void TwoPinDcMotor::enable() {
@@ -86,8 +87,14 @@ bool TwoPinDcMotor::set(float duty)
 	float dirDuty = m_type == ControlType::PwmDirectionPins ? duty : 1;
 
 	m_enable->setSimplePwmDutyCycle(enableDuty);
-	m_dir1->setSimplePwmDutyCycle(isPositive ? dirDuty : 0);
-	m_dir2->setSimplePwmDutyCycle(isPositive ? 0 : dirDuty);
+	float recipDuty = 0;
+	if (m_isInverted) {
+		dirDuty = 1.0f - dirDuty;
+		recipDuty = 1.0f;
+	}
+
+	m_dir1->setSimplePwmDutyCycle(isPositive ? dirDuty : recipDuty);
+	m_dir2->setSimplePwmDutyCycle(isPositive ? recipDuty : dirDuty);
 
 	// This motor has no fault detection, so always return false (indicate success).
 	return false;

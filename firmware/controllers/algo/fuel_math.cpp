@@ -42,14 +42,7 @@ static mapEstimate_Map3D_t mapEstimationTable;
 
 #if EFI_ENGINE_CONTROL
 
-DISPLAY_STATE(Engine)
-
-DISPLAY(DISPLAY_FIELD(sparkDwell))
-DISPLAY(DISPLAY_FIELD(dwellAngle))
-DISPLAY(DISPLAY_FIELD(cltTimingCorrection))
-DISPLAY_TEXT(eol);
-
-DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
+float getCrankingFuel3(
 	float baseFuel,
 		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// these magic constants are in Celsius
@@ -63,44 +56,35 @@ DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
 	/**
 	 * Cranking fuel changes over time
 	 */
-	DISPLAY_TEXT(Duration_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(durationCoefficient) = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
+	engine->engineState.cranking.durationCoefficient = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
 			config->crankingCycleCoef);
-	DISPLAY_TEXT(eol);
 
 	/**
 	 * Cranking fuel is different depending on engine coolant temperature
 	 * If the sensor is failed, use 20 deg C
 	 */
 	auto clt = Sensor::get(SensorType::Clt);
-	DISPLAY_TEXT(Coolant_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(coolantTemperatureCoefficient) =
+	engine->engineState.cranking.coolantTemperatureCoefficient =
 		interpolate2d(clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
-	DISPLAY_SENSOR(CLT);
-	DISPLAY_TEXT(eol);
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
-	DISPLAY_TEXT(TPS_coef);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) = tps.Valid ? 1 : interpolate2d(tps.Value, engineConfiguration->crankingTpsBins,
+	engine->engineState.cranking.tpsCoefficient = tps.Valid ? 1 : interpolate2d(tps.Value, engineConfiguration->crankingTpsBins,
 			engineConfiguration->crankingTpsCoef);
 
 
 	/*
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(tpsCoefficient) =
+	engine->engineState.cranking.tpsCoefficient =
 		tps.Valid 
 		? interpolate2d(tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
 		: 1; // in case of failed TPS, don't correct.*/
-	DISPLAY_SENSOR(TPS);
-	DISPLAY_TEXT(eol);
 
 	floatms_t crankingFuel = baseCrankingFuel
 			* engine->engineState.cranking.durationCoefficient
 			* engine->engineState.cranking.coolantTemperatureCoefficient
 			* engine->engineState.cranking.tpsCoefficient;
 
-	DISPLAY_TEXT(Cranking_fuel);
-	engine->engineState.DISPLAY_PREFIX(cranking).DISPLAY_FIELD(fuel) = crankingFuel * 1000;
+	engine->engineState.cranking.fuel = crankingFuel * 1000;
 
 	if (crankingFuel <= 0) {
 		warning(CUSTOM_ERR_ZERO_CRANKING_FUEL, "Cranking fuel value %f", crankingFuel);
@@ -108,29 +92,16 @@ DISPLAY(DISPLAY_IF(isCrankingState)) float getCrankingFuel3(
 	return crankingFuel;
 }
 
-/* DISPLAY_ELSE */
-
 floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetRunningFuel);
 
-	DISPLAY_TEXT(Base_fuel);
-	ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(baseFuel)) = baseFuel;
-	DISPLAY_TEXT(eol);
+	ENGINE(engineState.running.baseFuel) = baseFuel;
 
+	float iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
 
-	DISPLAY_TEXT(Intake_coef);
-	float iatCorrection = ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(intakeTemperatureCoefficient));
-	DISPLAY_SENSOR(IAT);
-	DISPLAY_TEXT(eol);
+	float cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
 
-	DISPLAY_TEXT(Coolant_coef);
-	float cltCorrection = ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(coolantTemperatureCoefficient));
-	DISPLAY_SENSOR(CLT);
-	DISPLAY_TEXT(eol);
-
-	DISPLAY_TEXT(Post_cranking_coef);
-	float postCrankingFuelCorrection = ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(postCrankingFuelCorrection));
-	DISPLAY_TEXT(eol);
+	float postCrankingFuelCorrection = ENGINE(engineState.running.postCrankingFuelCorrection);
 
 	float baroCorrection = ENGINE(engineState.baroCorrection);
 
@@ -140,15 +111,9 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	floatms_t runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
-	DISPLAY_TEXT(eol);
 
-	DISPLAY_TEXT(Running_fuel);
-	ENGINE(engineState.DISPLAY_PREFIX(running).DISPLAY_FIELD(fuel)) = runningFuel * 1000;
-	DISPLAY_TEXT(eol);
+	ENGINE(engineState.running.fuel) = runningFuel * 1000;
 
-	DISPLAY_TEXT(Injector_lag);
-	DISPLAY(DISPLAY_PREFIX(running).DISPLAY_FIELD(injectorLag));
-	DISPLAY_SENSOR(VBATT);
 	return runningFuel;
 }
 

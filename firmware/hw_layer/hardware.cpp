@@ -137,67 +137,43 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 }
 #endif
 
-#define TPS_IS_SLOW -1
+#if HAL_USE_ADC
 
-static int fastMapSampleIndex;
-static int hipSampleIndex;
-static int tpsSampleIndex;
+static FastAdcToken fastMapSampleIndex;
+static FastAdcToken hipSampleIndex;
 
 #if HAL_TRIGGER_USE_ADC
-static int triggerSampleIndex;
+static FastAdcToken triggerSampleIndex;
 #endif
 
-#if HAL_USE_ADC
 extern AdcDevice fastAdc;
 
-#if EFI_FASTER_UNIFORM_ADC
-static int adcCallbackCounter = 0;
-static volatile int averagedSamples[ADC_MAX_CHANNELS_COUNT];
-static adcsample_t avgBuf[ADC_MAX_CHANNELS_COUNT];
-
-void onFastAdcCompleteInternal(adcsample_t* samples);
-
-void onFastAdcComplete(adcsample_t* samples) {
-#if HAL_TRIGGER_USE_ADC
-	// we need to call this ASAP, because trigger processing is time-critical
-	if (triggerSampleIndex >= 0)
-		triggerAdcCallback(samples[triggerSampleIndex]);
-#endif /* HAL_TRIGGER_USE_ADC */
-
-	// store the values for averaging
-	for (int i = fastAdc.size() - 1; i >= 0; i--) {
-		averagedSamples[i] += samples[i];
-	}
-
-	// if it's time to process the data
-	if (++adcCallbackCounter >= ADC_BUF_NUM_AVG) {
-		// get an average
-		for (int i = fastAdc.size() - 1; i >= 0; i--) {
-			avgBuf[i] = (adcsample_t)(averagedSamples[i] / ADC_BUF_NUM_AVG);	// todo: rounding?
-		}
-
-		// call the real callback (see below)
-		onFastAdcCompleteInternal(samples);
-
-		// reset the avg buffer & counter
-		for (int i = fastAdc.size() - 1; i >= 0; i--) {
-			averagedSamples[i] = 0;
-		}
-		adcCallbackCounter = 0;
-	}
-}
-
-#endif /* EFI_FASTER_UNIFORM_ADC */
+#ifdef FAST_ADC_SKIP
+// No reason to enable if N = 1
+static_assert(FAST_ADC_SKIP > 1);
+static size_t fastAdcSkipCount = 0;
+#endif // FAST_ADC_SKIP
 
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
-#if EFI_FASTER_UNIFORM_ADC
-void onFastAdcCompleteInternal(adcsample_t* buffer) {
-#else
-void onFastAdcComplete(adcsample_t* buffer) {
-#endif
+void onFastAdcComplete(adcsample_t*) {
 	ScopePerf perf(PE::AdcCallbackFast);
+
+#if HAL_TRIGGER_USE_ADC
+	// we need to call this ASAP, because trigger processing is time-critical
+	triggerAdcCallback(getFastAdc(triggerSampleIndex));
+#endif /* HAL_TRIGGER_USE_ADC */
+
+#ifdef FAST_ADC_SKIP
+	// If we run the fast ADC _very_ fast for triggerAdcCallback's benefit, we may want to
+	// skip most of the samples for the rest of the callback.
+	if (fastAdcSkipCount++ == FAST_ADC_SKIP) {
+		fastAdcSkipCount = 0;
+	} else {
+		return;
+	}
+#endif
 
 	/**
 	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
@@ -212,32 +188,22 @@ void onFastAdcComplete(adcsample_t* buffer) {
 #endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
-	mapAveragingAdcCallback(buffer[fastMapSampleIndex]);
+	mapAveragingAdcCallback(getFastAdc(fastMapSampleIndex));
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
 	if (CONFIG(isHip9011Enabled)) {
-		hipAdcCallback(buffer[hipSampleIndex]);
+		hipAdcCallback(getFastAdc(hipSampleIndex));
 	}
 #endif /* EFI_HIP_9011 */
-//		if (tpsSampleIndex != TPS_IS_SLOW) {
-//			tpsFastAdc = buffer[tpsSampleIndex];
-//		}
 }
 #endif /* HAL_USE_ADC */
 
 static void calcFastAdcIndexes(void) {
-#if HAL_USE_ADC && EFI_USE_FAST_ADC
-	fastMapSampleIndex = fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->map.sensor.hwChannel];
-	hipSampleIndex =
-			isAdcChannelValid(engineConfiguration->hipOutputChannel) ?
-					fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->hipOutputChannel] : -1;
-	tpsSampleIndex =
-			isAdcChannelValid(engineConfiguration->tps1_1AdcChannel) ?
-					fastAdc.internalAdcIndexByHardwareIndex[engineConfiguration->tps1_1AdcChannel] : TPS_IS_SLOW;
+#if HAL_USE_ADC
+	fastMapSampleIndex = enableFastAdcChannel("Fast MAP", engineConfiguration->map.sensor.hwChannel);
+	hipSampleIndex = enableFastAdcChannel("HIP9011", engineConfiguration->hipOutputChannel);
 #if HAL_TRIGGER_USE_ADC
-	adc_channel_e triggerChannel = getAdcChannelForTrigger();
-	triggerSampleIndex = isAdcChannelValid(triggerChannel) ?
-		fastAdc.internalAdcIndexByHardwareIndex[triggerChannel] : -1;
+	triggerSampleIndex = enableFastAdcChannel("Trigger ADC", getAdcChannelForTrigger());
 #endif /* HAL_TRIGGER_USE_ADC */
 
 #endif/* HAL_USE_ADC */
@@ -250,13 +216,6 @@ static void adcConfigListener(Engine *engine) {
 }
 
 static void turnOnHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_FASTER_UNIFORM_ADC
-	for (int i = 0; i < ADC_MAX_CHANNELS_COUNT; i++) {
-		averagedSamples[i] = 0;
-	}
-	adcCallbackCounter = 0;
-#endif /* EFI_FASTER_UNIFORM_ADC */
-
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	turnOnTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */

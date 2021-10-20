@@ -547,7 +547,7 @@ void EtbController::update() {
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
-		tsOutputChannels.debugFloatField2 = engine->engineState.idle.etbIdleAddition;
+		tsOutputChannels.debugFloatField2 = engine->idle.etbIdleAddition;
 	}
 #endif
 
@@ -564,47 +564,6 @@ void EtbController::update() {
 		&& m_function == ETB_Throttle1;
 
 	ClosedLoopController::update();
-
-	DISPLAY_STATE(Engine)
-DISPLAY(DISPLAY_IF(1))
-	DISPLAY_TEXT(Electronic_Throttle);
-	DISPLAY_SENSOR(TPS)
-	DISPLAY_TEXT(eol);
-
-	DISPLAY_TEXT(Pedal);
-	DISPLAY_SENSOR(PPS);
-	DISPLAY(DISPLAY_CONFIG(throttlePedalPositionAdcChannel));
-	DISPLAY_TEXT(eol);
-
-	DISPLAY_TEXT(Feed_forward);
-	DISPLAY(DISPLAY_FIELD(etbFeedForward));
-	DISPLAY_TEXT(eol);
-
-	DISPLAY_STATE(ETB_pid)
-	DISPLAY_TEXT(input);
-	DISPLAY(DISPLAY_FIELD(input));
-	DISPLAY_TEXT(Output);
-	DISPLAY(DISPLAY_FIELD(output));
-	DISPLAY_TEXT(iTerm);
-	DISPLAY(DISPLAY_FIELD(iTerm));
-	DISPLAY_TEXT(eol);
-	DISPLAY(DISPLAY_FIELD(errorAmplificationCoef));
-	DISPLAY(DISPLAY_FIELD(previousError));
-	DISPLAY_TEXT(eol);
-
-	DISPLAY_TEXT(Settings);
-	DISPLAY(DISPLAY_CONFIG(ETB_PFACTOR));
-	DISPLAY(DISPLAY_CONFIG(ETB_IFACTOR));
-	DISPLAY(DISPLAY_CONFIG(ETB_DFACTOR));
-	DISPLAY_TEXT(eol);
-	DISPLAY(DISPLAY_CONFIG(ETB_OFFSET));
-	DISPLAY(DISPLAY_CONFIG(ETB_PERIODMS));
-	DISPLAY_TEXT(eol);
-	DISPLAY(DISPLAY_CONFIG(ETB_MINVALUE));
-	DISPLAY(DISPLAY_CONFIG(ETB_MAXVALUE));
-/* DISPLAY_ELSE */
-	DISPLAY_TEXT(No_Pedal_Sensor);
-/* DISPLAY_ENDIF */
 }
 
 void EtbController::autoCalibrateTps() {
@@ -845,6 +804,21 @@ static const float boschBiasValues[] = {
 	-15, -15, -10, 0, 19, 20, 26, 28
 };
 
+void setBoschVAGETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// set tps_min 890
+	engineConfiguration->tpsMin = 890; // convert 12to10 bit (ADC/4)
+	// set tps_max 70
+	engineConfiguration->tpsMax = 70; // convert 12to10 bit (ADC/4)
+
+	engineConfiguration->tps1SecondaryMin = 102;
+	engineConfiguration->tps1SecondaryMax = 891;
+
+	engineConfiguration->etb.pFactor = 5.12;
+	engineConfiguration->etb.iFactor = 47;
+	engineConfiguration->etb.dFactor = 0.088;
+	engineConfiguration->etb.offset = 0;
+}
+
 void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(CONFIG(etbBiasBins), boschBiasBins);
 	copyArray(CONFIG(etbBiasValues), boschBiasValues);
@@ -939,6 +913,12 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleAction("ethinfo", showEthInfo);
 	addConsoleAction("etbreset", etbReset);
 	addConsoleActionI("etb_freq", setEtbFrequency);
+
+	// this command is useful for real hardware test with known cheap hardware
+	addConsoleAction("etb_test_hw", [](){
+		set18919_AM810_pedal_position_sensor(PASS_CONFIG_PARAMETER_SIGNATURE);
+	});
+
 #endif /* EFI_PROD_CODE */
 
 	pedal2tpsMap.init(config->pedalToTpsTable, config->pedalToTpsPedalBins, config->pedalToTpsRpmBins);
@@ -1028,26 +1008,22 @@ void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-static void toyota89281_33010_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void set18919_AM810_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->throttlePedalUpVoltage = 0.1;
+	engineConfiguration->throttlePedalWOTVoltage = 4.5;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.1;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.2;
+}
+
+void setToyota89281_33010_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->throttlePedalUpVoltage = 0;
 	engineConfiguration->throttlePedalWOTVoltage = 4.1;
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.9;
 }
 
-void setProteusHitachiEtbDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	// EFI_ADC_12: "Analog Volt 3"
-	engineConfiguration->tps1_2AdcChannel = EFI_ADC_12;
-	// EFI_ADC_13: "Analog Volt 4"
-	engineConfiguration->tps2_1AdcChannel = EFI_ADC_13;
-	// EFI_ADC_0: "Analog Volt 5"
-	engineConfiguration->tps2_2AdcChannel = EFI_ADC_0;
-	// EFI_ADC_1: "Analog Volt 6"
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_1;
-	toyota89281_33010_pedal_position_sensor(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	// EFI_ADC_2: "Analog Volt 7"
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_2;
+void setHitachiEtbCalibration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setToyota89281_33010_pedal_position_sensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	setHitachiEtbBiasBins(PASS_CONFIG_PARAMETER_SIGNATURE);
 
@@ -1064,6 +1040,22 @@ void setProteusHitachiEtbDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(tpsMax) = CONFIG(tps2Max) = 846;
 	CONFIG(tps1SecondaryMin) = CONFIG(tps2SecondaryMin) = 897;
 	CONFIG(tps1SecondaryMax) = CONFIG(tps2SecondaryMax) = 161;
+}
+
+void setProteusHitachiEtbDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	setHitachiEtbCalibration(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// EFI_ADC_12: "Analog Volt 3"
+	engineConfiguration->tps1_2AdcChannel = EFI_ADC_12;
+	// EFI_ADC_13: "Analog Volt 4"
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_13;
+	// EFI_ADC_0: "Analog Volt 5"
+	engineConfiguration->tps2_2AdcChannel = EFI_ADC_0;
+	// EFI_ADC_1: "Analog Volt 6"
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_1;
+
+	// EFI_ADC_2: "Analog Volt 7"
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_2;
 }
 
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */

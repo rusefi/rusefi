@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.autoupdate.AutoupdateUtil;
-import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -12,13 +11,15 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
+ * A control which sends specific command defined by @link {@link #getCommand()} method
+ *
+ * @see com.rusefi.ui.widgets.AnyCommand for free type command control
  * Andrey Belomutskiy, (c) 2013-2020
  */
 abstract class CommandControl {
     public static final String TEST = "Test";
     public static final String SET = "Set";
     protected final JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-    final JButton test;
     private final UIContext uiContext;
 
     public CommandControl(UIContext uiContext, String labelText, String iconFileName, String buttonText, JComponent... components) {
@@ -28,8 +29,8 @@ abstract class CommandControl {
         rightVerticalPanel.add(new JLabel(labelText));
         for (JComponent component : components)
             rightVerticalPanel.add(component);
-        test = new JButton(buttonText);
-        rightVerticalPanel.add(test);
+        JButton button = new JButton(buttonText);
+        rightVerticalPanel.add(button);
 
         panel.add(new JLabel(icon));
         panel.add(rightVerticalPanel);
@@ -38,7 +39,7 @@ abstract class CommandControl {
 
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.black), BorderFactory.createEmptyBorder(GAP, GAP, GAP, GAP)));
 
-        test.addActionListener(createButtonListener());
+        button.addActionListener(createButtonListener());
     }
 
     @NotNull

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Oct 05 16:10:02 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Oct 20 17:07:42 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -430,8 +430,10 @@ case HELLEN_128_MERCEDES_8_CYL:
   return "HELLEN_128_MERCEDES_8_CYL";
 case HELLEN_134_BMW:
   return "HELLEN_134_BMW";
-case HELLEN_154_HYUNDAI:
-  return "HELLEN_154_HYUNDAI";
+case HELLEN_154_HYUNDAI_COUPE_BK1:
+  return "HELLEN_154_HYUNDAI_COUPE_BK1";
+case HELLEN_154_HYUNDAI_COUPE_BK2:
+  return "HELLEN_154_HYUNDAI_COUPE_BK2";
 case HELLEN_154_VAG:
   return "HELLEN_154_VAG";
 case HELLEN_55_BMW:
@@ -450,10 +452,6 @@ case HELLEN_NB2_36:
   return "HELLEN_NB2_36";
 case HONDA_600:
   return "HONDA_600";
-case HONDA_ACCORD_1_24_SHIFTED:
-  return "HONDA_ACCORD_1_24_SHIFTED";
-case HONDA_ACCORD_CD:
-  return "HONDA_ACCORD_CD";
 case HONDA_ACCORD_CD_DIP:
   return "HONDA_ACCORD_CD_DIP";
 case HONDA_ACCORD_CD_TWO_WIRES:
@@ -546,10 +544,6 @@ case TEST_110:
   return "TEST_110";
 case TEST_33816:
   return "TEST_33816";
-case TEST_CIVIC_4_0_BOTH:
-  return "TEST_CIVIC_4_0_BOTH";
-case TEST_CIVIC_4_0_RISE:
-  return "TEST_CIVIC_4_0_RISE";
 case TEST_ENGINE:
   return "TEST_ENGINE";
 case TEST_ENGINE_VVT:
@@ -568,6 +562,14 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
+case UNUSED_48:
+  return "UNUSED_48";
+case UNUSED_50:
+  return "UNUSED_50";
+case UNUSED_51:
+  return "UNUSED_51";
+case UNUSED_6:
+  return "UNUSED_6";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
 case VW_ABA:
@@ -869,6 +871,19 @@ case _5MHz:
   }
  return NULL;
 }
+const char *getStepper_num_micro_steps_e(stepper_num_micro_steps_e value){
+switch(value) {
+case STEPPER_EIGHTH:
+  return "STEPPER_EIGHTH";
+case STEPPER_FOURTH:
+  return "STEPPER_FOURTH";
+case STEPPER_FULL:
+  return "STEPPER_FULL";
+case STEPPER_HALF:
+  return "STEPPER_HALF";
+  }
+ return NULL;
+}
 const char *getTChargeMode_e(tChargeMode_e value){
 switch(value) {
 case Force_4bytes_size_tChargeMode_e:
@@ -975,8 +990,6 @@ case TT_HONDA_1_4_24:
   return "TT_HONDA_1_4_24";
 case TT_HONDA_4_24:
   return "TT_HONDA_4_24";
-case TT_HONDA_4_24_1:
-  return "TT_HONDA_4_24_1";
 case TT_HONDA_ACCORD_1_24_SHIFTED:
   return "TT_HONDA_ACCORD_1_24_SHIFTED";
 case TT_HONDA_CBR_600:
@@ -1051,6 +1064,8 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_UNUSED_10:
+  return "TT_UNUSED_10";
 case TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:

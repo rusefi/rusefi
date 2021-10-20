@@ -11,10 +11,14 @@ DDEFS += -DFIRMWARE_ID=\"atlas\" -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
 # DEFS += -DEFI_SOFTWARE_KNOCK=TRUE
 
 # disable hardware serial ports on H7
-DDEFS += -DTS_NO_PRIMARY -DTS_NO_SECONDARY
+# DDEFS += -DTS_NO_PRIMARY -DTS_NO_SECONDARY
 
-# We are running on Proteus hardware!
+# We are running on Atlas hardware!
 DDEFS += -DHW_ATLAS=1
+
+# Atlas needs networking library
+LWIP = yes
+DDEFS += -DEFI_ETHERNET=TRUE
 
 # Shared variables
 ALLCPPSRC += $(BOARDCPPSRC)

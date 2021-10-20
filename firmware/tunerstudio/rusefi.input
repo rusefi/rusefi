@@ -40,6 +40,18 @@ enable2ndByteCanID = false
    versionInfo    = "V"  ; firmwave version for title bar.
    signature    = @@TS_SIGNATURE@@ ; signature is expected to be 7 or more characters.
 
+   ; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
+   useLegacyFTempUnits = false
+
+   ; Optimize comms for fast rusefi ECUs
+   noCommReadDelay = true;
+   defaultRuntimeRecordPerSec = 100;
+   maxUnusedRuntimeRange = 1000;
+
+   ; Set default IP/port to our IP/port
+   defaultIpAddress = 192.168.10.1;
+   defaultIpPort = 29000;
+
 [Constants]
 ; new packet serial format with CRC
    messageEnvelopeFormat = msEnvelope_1.0
@@ -55,9 +67,6 @@ enable2ndByteCanID = false
    pageChunkWrite      = "@@TS_CHUNK_WRITE_COMMAND_char@@%2o%2c%v"
    crc32CheckCommand   = "@@TS_CRC_CHECK_COMMAND_char@@%2o%2c"
    retrieveConfigError = "e"
-
-   ; TS will try to use legacy temp units in some cases, showing "deg F" on a CLT gauge that's actually deg C
-   useLegacyFTempUnits = false
 
 ;communication settings
    pageActivationDelay = 500 ; Milliseconds delay after burn command. See https://sourceforge.net/p/rusefi/tickets/77/
@@ -265,9 +274,9 @@ enable2ndByteCanID = false
       wallFuelCorrection=scalar, S16,     74,       "ms",0.001,         0
 
 ; TPS/load AE
-      engineLoadDelta = scalar,  S16,     76,    "value",{1/@@PACK_MULT_PERCENT@@},         0
+      unusedLoadDelta = scalar,  S16,     76,    "value",{1/@@PACK_MULT_PERCENT@@},         0
       deltaTps        = scalar,  S16,     78,    "ratio",{1/@@PACK_MULT_PERCENT@@},         0
-      engineLoadAccelExtra=scalar,S16,    80,    "value",{1/@@PACK_MULT_PERCENT@@},         0
+      unusedLoadAccelExtra=scalar,S16,    80,    "value",{1/@@PACK_MULT_PERCENT@@},         0
       tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/@@PACK_MULT_MS@@},         0
 
 ; Ignition
@@ -522,10 +531,14 @@ enable2ndByteCanID = false
      requiresPowerCycle = fsioFrequency5
      requiresPowerCycle = fsioFrequency6
 
-     requiresPowerCycle = fsioAdc1
-     requiresPowerCycle = fsioAdc2
-     requiresPowerCycle = fsioAdc3
-     requiresPowerCycle = fsioAdc4
+     requiresPowerCycle = auxAnalogInputs1
+     requiresPowerCycle = auxAnalogInputs2
+     requiresPowerCycle = auxAnalogInputs3
+     requiresPowerCycle = auxAnalogInputs4
+     requiresPowerCycle = auxAnalogInputs5
+     requiresPowerCycle = auxAnalogInputs6
+     requiresPowerCycle = auxAnalogInputs7
+     requiresPowerCycle = auxAnalogInputs8
 
      readOnly = warning_message
 
@@ -1066,8 +1079,6 @@ gaugeCategory = Ignition
    ignitionLoadGauge = ignitionLoad, @@GAUGE_NAME_IGNITION_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
 
 gaugeCategory = Acceleration Enrichment
-   engineLoadDeltaGauge = engineLoadDelta,"AE: load change","value",      0,    120,      10,     10,     100,   100,   1,   1
-   engineLoadAccelExtraGauge = engineLoadAccelExtra,"AE: load extra","value",      0,    120,      10,     10,     100,   100,   1,   1
    deltaTpsGauge     = deltaTps,                "AE: TPS change",            "",        0,    120,      10,     10,     100,   100,   1,   1
    tpsAccelFuelGauge = tpsAccelFuel,"AE: TPS enrich",             "ms",        0,    120,      10,     10,     100,   100,   1,   1
    wallFuelAmountGauge = wallFuelAmount, "AE: wall amount", "ms",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1309,9 +1320,6 @@ gaugeCategory = DynoView
    entry = egt6,	        "EGT6",	float,"%.1f", { max31855_cs6 != 0}
    entry = egt7,	        "EGT7",	float,"%.1f", { max31855_cs7 != 0}
    entry = egt8,	        "EGT8",	float,"%.1f", { max31855_cs8 != 0}
-
-   entry = engineLoadAccelExtra, @@GAUGE_NAME_FUEL_EL_EXTRA@@,float,  "%.3f"
-   entry = engineLoadDelta, "fuel: load change",float,  "%.3f"
 
    entry = deltaTps,		@@GAUGE_NAME_FUEL_TPS_ROC@@,float,  "%.3f"
    entry = tpsAccelFuel,    @@GAUGE_NAME_FUEL_TPS_EXTRA@@,    float,  "%.3f"
@@ -1790,6 +1798,8 @@ cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@
 cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
 cmd_set_engine_type_hellen_128_merc_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_8_CYL_16_hex@@"
 
+cmd_set_engine_type_hellen_couple_bk1               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_154_HYUNDAI_COUPE_BK1_16_hex@@"
+cmd_set_engine_type_hellen_couple_bk2               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_154_HYUNDAI_COUPE_BK2_16_hex@@"
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NA6_16_hex@@"
@@ -1799,7 +1809,9 @@ cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00
 cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NB2_16_hex@@"
 
 cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_PROTEUS_BMW_M73_16_hex@@"
-cmd_set_engine_type_ET_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_PROTEUS_MIATA_NB2_16_hex@@"
+cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
+cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_PROTEUS_HONDA_OBD2A_16_hex@@"
+cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_PROTEUS_MIATA_NB2_16_hex@@"
 cmd_set_engine_type_Proteus_Miata_TCU 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MIATA_TCU_PROTEUS_16_hex@@"
 
 
@@ -2161,7 +2173,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TPS minimum valid value",	tpsErrorDetectionTooLow, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 		field = "TPS maximum valid value",	tpsErrorDetectionTooHigh, {tps1_1AdcChannel != @@ADC_CHANNEL_NONE@@}
 
-	dialog = tpsSensor, "TPS"
+	dialog = tpsSensorLeft, "TPS"
 		panel = tpsLimits
 		panel = tpsNum1
 		panel = tpsNum2
@@ -2179,9 +2191,19 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		gauge = rawPpsPrimaryGauge
 		gauge = rawPpsSecondaryGauge
 
+    dialog = tpsGauges
+		gauge = rawTps1PrimaryGauge
+		gauge = rawTps1SecondaryGauge
+		gauge = rawTps2PrimaryGauge
+		gauge = rawTps2SecondaryGauge
+
 	dialog = pedalSensor, "Accelerator pedal", border
 		panel = pedalSensorLeft, West
 		panel = pedalGauges, East
+
+	dialog = tpsSensor, "TPS", border
+		panel = tpsSensorLeft, West
+		panel = tpsGauges, East
 
 	dialog = wastegatePosConfig, "Wastegate position sensor"
 		field = "Input pin",							wastegatePositionSensor
@@ -2394,10 +2416,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = allPinsMC33
 
 	dialog = allPins1_3
-		field = "FSIO ADC #1",							fsioAdc1
-		field = "FSIO ADC #2",							fsioAdc2
-		field = "FSIO ADC #3",							fsioAdc3
-		field = "FSIO ADC #4",							fsioAdc4
+		field = "FSIO ADC #1",							auxAnalogInputs1
+		field = "FSIO ADC #2",							auxAnalogInputs2
+		field = "FSIO ADC #3",							auxAnalogInputs3
+		field = "FSIO ADC #4",							auxAnalogInputs4
+		field = "FSIO ADC #5",							auxAnalogInputs5
+		field = "FSIO ADC #6",							auxAnalogInputs6
+		field = "FSIO ADC #7",							auxAnalogInputs7
+		field = "FSIO ADC #8",							auxAnalogInputs8
 		field = "GPS RX", 								gps_rx_pin @@if_ts_show_gps
 		field = "GPS TX", 								gps_tx_pin @@if_ts_show_gps
 		field = "CAN RX pin",							canRxPin @@if_ts_show_can_pins
@@ -2472,6 +2498,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Input channel",						clt_adcChannel
 		field = "Bias resistor",						clt_bias_resistor, {clt_adcChannel != @@ADC_CHANNEL_NONE@@}
 
+		settingSelector = "Common CLT Sensors"
+			settingOption = "GM CLT", clt_tempC_1=0,clt_resistance_1=9240,clt_tempC_2=40,clt_resistance_2=1459,clt_tempC_3=100,clt_resistance_3=177,useLinearCltSensor=0
+			settingOption = "Miata NA", clt_tempC_1=-20,clt_resistance_1=16150,clt_tempC_2=40,clt_resistance_2=1150,clt_tempC_3=80,clt_resistance_3=330,useLinearCltSensor=0
+			settingOption = "Miata NB", clt_tempC_1=-10,clt_resistance_1=9000,clt_tempC_2=20,clt_resistance_2=2500,clt_tempC_3=80,clt_resistance_3=320,useLinearCltSensor=0
+			settingOption = "Bosch Various", clt_tempC_1=0,clt_resistance_1=5896,clt_tempC_2=50,clt_resistance_2=834,clt_tempC_3=100,clt_resistance_3=187,useLinearCltSensor=0
+
 		field = "#Input three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
 		field = ""
@@ -2498,6 +2530,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = iat_thermistor, "IAT sensor"
 		field = "Input channel",						iat_adcChannel
 		field = "Bias resistor",						iat_bias_resistor, {iat_adcChannel != @@ADC_CHANNEL_NONE@@}
+
+		settingSelector = "Common IAT Sensors", {iat_adcChannel != 0}
+			settingOption = "GM IAT", iat_tempC_1=8.9,iat_resistance_1=7000,iat_tempC_2=30.6,iat_resistance_2=1930,iat_tempC_3=63.3,iat_resistance_3=560,useLinearIatSensor=0
+			settingOption = "Miata NA/NB", iat_tempC_1=-20,iat_resistance_1=16150,iat_tempC_2=40,iat_resistance_2=1150,iat_tempC_3=80,iat_resistance_3=330,useLinearIatSensor=0
+			settingOption = "Bosch Various", iat_tempC_1=-10,iat_resistance_1=9397,iat_tempC_2=30,iat_resistance_2=1707,iat_tempC_3=70,iat_resistance_3=436,useLinearIatSensor=0
 
 		field = "#Input three pairs of thermistor temperature and resistance."
 		field = "#Typical temperatures are -40 deg C, 0 deg C and 100 deg C"
@@ -2635,7 +2672,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Second Idle Solenoid Pin",				secondSolenoidPin, { !useStepperIdle && isDoubleSolenoidIdle }
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 
-	dialog = hbridgeHardware, "H-Bridge Hardware"
+	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
 		field = "PWM Frequency",						etbFreq
 		field = "Two-wire mode",						etb_use_two_wires
 		field = "No1 Direction #1",						etbIo1_directionPin1
@@ -2647,25 +2684,49 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No2 Control",							etbIo2_controlPin
 		field = "No2 Disable",							etbIo2_disablePin
 
+	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
+		field = "Inverted driver pins",					stepperDcInvertedPins
+		field = "No1 Direction #1",						stepperDcIo1_directionPin1
+		field = "No1 Direction #2",						stepperDcIo1_directionPin2
+		field = "No1 Disable",							stepperDcIo1_disablePin
+		field = "No2 Direction #1",						stepperDcIo2_directionPin1
+		field = "No2 Direction #2",						stepperDcIo2_directionPin2
+		field = "No2 Disable",							stepperDcIo2_disablePin
+
 	dialog = idleStepperHw, "Stepper Hardware"
 		field = "Idle Stepper Step Pin",				idle_stepperStepPin
 		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin
+		field = "Idle Stepper Dir Pin Mode",			stepperDirectionPinMode
 		field = "Idle Stepper Enable Pin",				stepperEnablePin
 		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode
 
-	dialog = idleStepper, "Stepper"
+	dialog = idleStepperHwType, "", xAxis
+		panel = idleStepperHw,	East, { useStepperIdle && !useHbridgesToDriveIdleStepper }
+		panel = stepperHbridgeHardware,	West, { useStepperIdle && useHbridgesToDriveIdleStepper }
+
+	dialog = idleStepperGeneral, ""
 		field = "Drive stepper with dual H bridges",	useHbridgesToDriveIdleStepper, useStepperIdle
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
 		field = "Force parking every restart",			stepperForceParkingEveryRestart, useStepperIdle
-		panel = idleStepperHw, { useStepperIdle && !useHbridgesToDriveIdleStepper }
-        ; todo: reminder that enable condition has to match in both usages of hbridgeHardware due to TS defect?
-		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
-	dialog = idleHwType, "Idle Valve Hardware",	border
-		panel = idleSolenoid,				West
-		panel = idleStepper,				East
+	dialog = idleStepperMicro, "Micro-Stepping"
+		field = "Stepping Mode",						stepperNumMicroSteps, useHbridgesToDriveIdleStepper
+		field = "Min. Duty Cycle",						stepperMinDutyCycle, { useHbridgesToDriveIdleStepper && stepperNumMicroSteps > 1 }
+		field = "Max. Duty Cycle",						stepperMaxDutyCycle, { useHbridgesToDriveIdleStepper && stepperNumMicroSteps > 1 }
+
+	dialog = idleStepperSettings, "", xAxis
+		panel = idleStepperGeneral, East
+		panel = idleStepperMicro, West
+
+	dialog = idleStepper, "Stepper"
+		panel = idleStepperSettings
+		panel = idleStepperHwType
+
+	dialog = idleHwType, "Idle Valve Hardware", yAxis
+		panel = idleStepper
+		panel = idleSolenoid
 
 	dialog = idlehw, "", yAxis
 		field = "!ECU reboot needed to apply these settings"
@@ -3187,13 +3248,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = crankingIAC
 		panel = crankingAdv
 
-	dialog = EngineLoadAccelPanel, "Engine Load (alpha version)"
-		field = "Length",						engineLoadAccelLength
-		field = "Accel threshold", 				engineLoadAccelEnrichmentThreshold
-		field = "Accel multiplier",	 			engineLoadAccelEnrichmentMultiplier
-		field = "Decel threshold", 				engineLoadDecelEnleanmentThreshold
-		field = "Decel multiplier",	 			engineLoadDecelEnleanmentMultiplier
-
 	dialog = TpsAccelPanel, "TPS"
 		field = "Set 'Debug Mode' to see detailed 'TPS acceleration enrichment' diagnostics"
    		field = "Length",						tpsAccelLength
@@ -3213,7 +3267,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = AccelEnrich,	"Accel/Decel Enrichment"
 		panel = TpsAccelPanel
 		panel = WallWettingAccelPanel
-		panel = EngineLoadAccelPanel
 		field = "No accel after RPM hard limit",		noAccelAfterHardLimitPeriodSecs
 		
 		
@@ -3270,10 +3323,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "#6",									fsioFormulas6
 
 	dialog = auxInputsDialog, "Aux inputs"
-		field = "ADC #1",								fsioAdc1
-		field = "ADC #2",								fsioAdc2
-		field = "ADC #3",								fsioAdc3
-		field = "ADC #4",								fsioAdc4
+		field = "ADC #1",								auxAnalogInputs1
+		field = "ADC #2",								auxAnalogInputs2
+		field = "ADC #3",								auxAnalogInputs3
+		field = "ADC #4",								auxAnalogInputs4
+		field = "ADC #5",								auxAnalogInputs5
+		field = "ADC #6",								auxAnalogInputs6
+		field = "ADC #7",								auxAnalogInputs7
+		field = "ADC #8",								auxAnalogInputs8
 
 	dialog = luaOutputs, "Lua Outputs"
 		field = "#Call startPwm to initialize, then call"
@@ -3413,7 +3470,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
 		; another todo: split panel into two panels so that we can enable/disable h-bridge #1 separately from h-bridge #2
-		panel = hbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
+		panel = etbHbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
@@ -3508,7 +3565,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
-		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_ET_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
+		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
+		commandButton = "Proteus Honda K",		    cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003@@if_show_Proteus_presets
+		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets
 		
 		commandButton = "Hellen NA6",				cmd_set_engine_type_hellen_NA6@@if_show_HellenNA6_presets
 		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_HellenNA6_presets
@@ -3529,6 +3588,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Hellen 128 Merc 4 cyl",		cmd_set_engine_type_hellen_128_merc_4@@if_show_Hellen128merc_presets
 		commandButton = "Hellen 128 Merc 6 cyl",		cmd_set_engine_type_hellen_128_merc_6@@if_show_Hellen128merc_presets
 		commandButton = "Hellen 128 Merc v8",			cmd_set_engine_type_hellen_128_merc_8@@if_show_Hellen128merc_presets
+
+		commandButton = "Hellen Genesis Couple BK1",    cmd_set_engine_type_hellen_couple_bk1@@if_show_Hellen_hyundai_154
+		commandButton = "Hellen Genesis Couple BK2",    cmd_set_engine_type_hellen_couple_bk2@@if_show_Hellen_hyundai_154
 
 		commandButton = "ETB test bench", cmd_set_engine_type_etb_test@@if_show_test_presets
 		commandButton = "TLE8888 test bench", cmd_set_engine_type_8888_test@@if_show_test_presets
@@ -3745,3 +3807,4 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 #else
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
 #endif
+

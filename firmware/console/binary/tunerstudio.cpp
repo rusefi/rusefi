@@ -230,23 +230,25 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 	// is negligable comparing with the IO costs?
 }
 
-static const void * getStructAddr(int structId) {
+static const void * getStructAddr(live_data_e structId) {
 	switch (structId) {
-	case LDS_ENGINE_STATE_INDEX:
+	case LDS_ENGINE:
 		return static_cast<engine_state2_s*>(&engine->engineState);
-	case LDS_FUEL_TRIM_STATE_INDEX:
+	case LDS_FUEL_TRIM:
 		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
-	case LDS_TRIGGER_CENTRAL_STATE_INDEX:
+	case LDS_TRIGGER_CENTRAL:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
-	case LDS_TRIGGER_STATE_STATE_INDEX:
+	case LDS_TRIGGER_STATE:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
+	case LDS_AC_CONTROL:
+		return static_cast<ac_control_s*>(&engine->acState);
 #if EFI_ELECTRONIC_THROTTLE_BODY
-	case LDS_ETB_PID_STATE_INDEX:
+	case LDS_ETB_PID:
 		return engine->etbControllers[0]->getPidState();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 #ifndef EFI_IDLE_CONTROL
-	case LDS_IDLE_PID_STATE_INDEX:
+	case LDS_IDLE_PID:
 		return static_cast<pid_state_s*>(getIdlePid());
 #endif /* EFI_IDLE_CONTROL */
 
@@ -263,7 +265,7 @@ static const void * getStructAddr(int structId) {
 static void handleGetStructContent(TsChannelBase* tsChannel, int structId, int size) {
 	tsState.readPageCommandsCounter++;
 
-	const void *addr = getStructAddr(structId);
+	const void *addr = getStructAddr((live_data_e)structId);
 	if (addr == nullptr) {
 		// todo: add warning code - unexpected structId
 		return;

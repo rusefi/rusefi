@@ -6,7 +6,7 @@ BOARDINC = $(BOARDS_DIR)/hellen/hellen154hyundai
 
 # Set this if you want a default engine type other than normal hellen121nissan
 ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_154_HYUNDAI
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_154_HYUNDAI_COUPE_BK2
 endif
 
 # 144 package MCU

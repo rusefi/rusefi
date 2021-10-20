@@ -12,6 +12,7 @@
 
 #include "efifeatures.h"
 #include "obd_error_codes.h"
+#include "live_data_ids.h"
 #include "rusefi_generated.h"
 // we do not want to start the search for header from current folder so we use brackets here
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
@@ -43,7 +44,7 @@ typedef enum {
 	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
 
 	NISSAN_PRIMERA = ET_NISSAN_PRIMERA,
-	HONDA_ACCORD_CD = 6,
+	UNUSED_6 = 6,
 	FORD_INLINE_6_1995 = 7,
 	/**
 	 * one cylinder engine
@@ -137,19 +138,13 @@ typedef enum {
 	 */
 	MAZDA_MIATA_2003 = ET_FRANKENSO_MIATA_NB2,
 
-	HONDA_ACCORD_1_24_SHIFTED = 48,
+	UNUSED_48 = 48,
 
 	FRANKENSO_QA_ENGINE = 49,
 
-	/**
-	 * this is about unit-testing skipped wheel trigger
-	 */
-	TEST_CIVIC_4_0_BOTH = 50,
+	UNUSED_50 = 50,
 
-	/**
-	 * this is about unit-testing skipped wheel trigger
-	 */
-	TEST_CIVIC_4_0_RISE = 51,
+	UNUSED_51 = 51,
 
 
 	TEST_ISSUE_366_BOTH = 52,
@@ -208,7 +203,7 @@ typedef enum {
 	HELLEN_NA94 = ET_HELLEN_NA94,
 
     // 82
-	HELLEN_154_HYUNDAI = ET_HELLEN_154_HYUNDAI,
+	HELLEN_154_HYUNDAI_COUPE_BK1 = ET_HELLEN_154_HYUNDAI_COUPE_BK1,
 	HELLEN_NB1 = ET_HELLEN_NB1,
 	// 84
 	HELLEN_121_NISSAN_4_CYL = ET_HELLEN_121_NISSAN_4_CYL,
@@ -226,6 +221,8 @@ typedef enum {
 	PROTEUS_VAG_80_18T = ET_PROTEUS_VAG_80_18T,
 
 	PROTEUS_N73 = ET_PROTEUS_N73,
+
+	HELLEN_154_HYUNDAI_COUPE_BK2 = ET_HELLEN_154_HYUNDAI_COUPE_BK2,
 
 
 	/**
@@ -278,7 +275,7 @@ typedef enum {
 	TT_TOOTHED_WHEEL_36_1 = TT_TT_TOOTHED_WHEEL_36_1,
 
 	// todo: remove this weird trigger?
-	TT_HONDA_4_24_1 = TT_TT_HONDA_4_24_1,
+	TT_UNUSED_10 = TT_TT_UNUSED_10,
 
 	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
@@ -1117,6 +1114,13 @@ typedef enum __attribute__ ((__packed__)) {
 	ETB_Wastegate = 4,
 // todo: rename to dc_function_e? rename to hbrg_function_e?
 } etb_function_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	STEPPER_FULL = 0,
+	STEPPER_HALF = 2,
+	STEPPER_FOURTH = 4,
+	STEPPER_EIGHTH = 8,
+} stepper_num_micro_steps_e;
 
 typedef enum __attribute__ ((__packed__)) {
 	IPT_Low = 0,

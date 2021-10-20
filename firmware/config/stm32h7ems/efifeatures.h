@@ -2,9 +2,6 @@
 
 #pragma once
 
-#undef EFI_MAP_AVERAGING
-#define EFI_MAP_AVERAGING FALSE
-
 #undef EFI_USE_FAST_ADC
 // https://github.com/rusefi/rusefi/issues/3301 "H7 is currently actually using fast ADC exclusively - it just needs a bit of plumbing to make it work."
 #define EFI_USE_FAST_ADC FALSE
@@ -50,3 +47,8 @@
 
 #undef HAL_VSS_USE_PAL
 #define HAL_VSS_USE_PAL TRUE
+
+#undef LUA_USER_HEAP
+#define LUA_USER_HEAP 100000
+#undef LUA_SYSTEM_HEAP
+#define LUA_SYSTEM_HEAP 100000

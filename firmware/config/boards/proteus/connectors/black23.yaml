@@ -109,10 +109,10 @@ pins:
     type: gnd
 
   - pin: 21
-    function: Reserved For Future Use
+    function: CAN2 software not ready
 
   - pin: 22
-    function: Reserved For Future Use
+    function: CAN2 software not ready
 
   - pin: 23
     function: Power supply from main relay. Connect this pin to the output of the car's main relay that also powers injectors, coils, etc. Supplies power to electronic throttle drivers and high side outputs.
@@ -120,6 +120,8 @@ pins:
 
 info:
   title: Proteus
+  name: Black23
+  id: black23
   image:
     file: black23.jpg
   pins:

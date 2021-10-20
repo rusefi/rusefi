@@ -75,7 +75,7 @@ struct_no_prefix engine_configuration_s
 ! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 256
 
-#define AUX_ANALOG_INPUT_COUNT 4
+#define AUX_ANALOG_INPUT_COUNT 8
 #define FSIO_ANALOG_INPUT_COUNT 4
 
 #define LUA_PWM_COUNT 8
@@ -362,7 +362,7 @@ struct gppwm_channel
 	gppwm_table_t table;
 end_struct
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "MPXH6400"
 
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
@@ -421,7 +421,7 @@ end_struct
 #define TT_TT_MAZDA_SOHC_4 7
 #define TT_TT_TOOTHED_WHEEL_60_2 8
 #define TT_TT_TOOTHED_WHEEL_36_1 9
-#define TT_TT_HONDA_4_24_1 10
+#define TT_TT_UNUSED_10 10
 #define TT_TT_HONDA_1_4_24 13
 #define TT_TT_MAZDA_DOHC_1_4 15
 #define TT_TT_VVT_JZ 17
@@ -534,7 +534,7 @@ end_struct
 #define ET_HELLEN_NA94 80
 
 #define ET_HELLEN_121_VAG_8_CYL 81
-#define ET_HELLEN_154_HYUNDAI 82
+#define ET_HELLEN_154_HYUNDAI_COUPE_BK1 82
 #define ET_HELLEN_NB1 83
 #define ET_HELLEN_121_NISSAN_4_CYL 84
 #define ET_HELLEN_121_NISSAN_8_CYL 85
@@ -548,6 +548,7 @@ end_struct
 #define ET_PROTEUS_VAG_80_18T 92
 #define ET_PROTEUS_N73 93
 #define ET_HELLEN_NB1_36 94
+#define ET_HELLEN_154_HYUNDAI_COUPE_BK2 95
 
 #define ET_PROTEUS_ANALOG_PWM_TEST 106
 #define ET_TEST_ROTARY 107
@@ -1325,10 +1326,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	int engineLoadAccelLength;;"cycles", 1, 0, 1, 200, 0
 	
-	float engineLoadDecelEnleanmentThreshold;;"roc", 1, 0, 0, 200, 3
-	float engineLoadDecelEnleanmentMultiplier;;"coeff", 1, 0, 0, 200, 3
-	float engineLoadAccelEnrichmentThreshold;;"roc", 1, 0, 0, 200, 3
-	float engineLoadAccelEnrichmentMultiplier;;"coeff", 1, 0, 0, 200, 3
+	float unusedEL1;;"roc", 1, 0, 0, 200, 3
+	float unusedEL2;;"coeff", 1, 0, 0, 200, 3
+	float unusedEL3;;"roc", 1, 0, 0, 200, 3
+	float unusedEL4;;"coeff", 1, 0, 0, 200, 3
 
 
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
@@ -1360,7 +1361,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit enableVerboseCan2Tx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 	bit can2ReadEnabled;enable can_read/disable can_read
 	bit can2WriteEnabled;enable can_write/disable can_write
-	bit unused1126
+	bit stepperDcInvertedPins;+Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	bit unused1127
 	bit unused1128
 	bit unused1129
@@ -1383,7 +1384,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 float[MAP_ACCEL_TAPER] mapAccelTaperBins;;"counter", 1, 0, 0, 300, 0
 float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 
-	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] fsioAdc;todo: rename to fsioAnalogInputs
+	float unusedAnotherOneOfThose;EGO value correction;"value", 1, 0, -10, 10, 2
 	float fixedTiming;Fixed timing, useful for TDC testing;"deg", 1, 0, -720, 720, 2
 	float mapLowValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
 	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
@@ -1412,7 +1413,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
 	uint8_t fan2ExtraIdle;+Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
-	uint8_t[9] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	uint8_t[1] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] trailingCoilPins;
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C", 1, 0, -100, 250, 1
@@ -1441,7 +1443,13 @@ tle8888_mode_e tle8888mode;
 	int16_t knockSamplingDuration;;"Deg", 1, 0, 0, 720, 0
 	int16_t etbFreq;;"Hz", 1, 0, 0, @@ETB_HW_MAX_FREQUENCY@@, 0
 	pid_s etbWastegatePid;
-	uint8_t[4] unused2536;;"units", 1, 0, -20, 100, 0
+
+#define stepper_num_micro_steps_e_enum "Full-Step (Default)", "INVALID", "Half-Step", "INVALID", "1/4 Micro-Step", "INVALID", "INVALID", "INVALID", "1/8 Micro-Step"
+custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_micro_steps_e_enum@@
+	stepper_num_micro_steps_e stepperNumMicroSteps;+For micro-stepping, make sure that PWM frequency (etbFreq) is high enough;
+	uint8_t stepperMinDutyCycle;+Use to limit the current when the stepper motor is idle, not moving (100% = no limit);"%", 1, 0, 0, 100, 0
+	uint8_t stepperMaxDutyCycle;+Use to limit the max.current through the stepper motor (100% = no limit);"%", 1, 0, 0, 100, 0
+	uint8_t unused2536;;"units", 1, 0, -20, 100, 0
 
 	angle_t[MAX_CYLINDER_COUNT iterate] timing_offset_cylinder;per-cylinder timing correction;"deg", 1, 0, -720, 720, 1
 
@@ -1737,7 +1745,6 @@ fsio_table_8x8_u8t fsioTable4;
 float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	  1, 0, 0, 255, 0
 float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
-
 end_struct
 
 #define MOCK_MAP_COMMAND "mock_map_voltage"
@@ -1746,21 +1753,6 @@ end_struct
 ! Pedal Position Sensor
 #define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
 #define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"
-
-
-! Live Documentation Structure
-#define LDS_SPEED_DENSITY_STATE_INDEX 2
-#define LDS_ENGINE_STATE_INDEX 3
-#define LDS_FUEL_TRIM_STATE_INDEX 4
-#define LDS_TPS_TPS_ENEICHMENT_STATE_INDEX 5
-#define LDS_TRIGGER_CENTRAL_STATE_INDEX 6
-#define LDS_ETB_PID_STATE_INDEX 7
-#define LDS_IDLE_PID_STATE_INDEX 8
-#define LDS_ALTERNATOR_PID_STATE_INDEX 9
-#define LDS_CJ125_PID_STATE_INDEX 10
-#define LDS_TRIGGER_STATE_STATE_INDEX 11
-
-
 
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_UPTIME "Uptime"
@@ -1909,6 +1901,7 @@ end_struct
 #define ENGINE_MAKE_TOYOTA "Toyota"
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 #define ENGINE_MAKE_VAG "VAG"
+#define ENGINE_MAKE_Hyundai "Hyundai"
 
 #define CMD_SET "set"
 #define CMD_GET "get"
@@ -2115,5 +2108,6 @@ end_struct
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
+
 
 ! poke

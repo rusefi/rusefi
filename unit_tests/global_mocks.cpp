@@ -12,6 +12,10 @@ efitimeus_t getTimeNowUs(void) {
 	return timeNowUs;
 }
 
+efitimesec_t getTimeNowSeconds(void) {
+	return getTimeNowUs() / 1000 / 1000;
+}
+
 efitick_t getTimeNowNt(void) {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }

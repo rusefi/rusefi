@@ -1,6 +1,6 @@
 #
 # CONNECTOR MAPPING NEEDED
-# 
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
 #
 
 pins:
@@ -26,7 +26,7 @@ pins:
     function: Brake Switch
 
   - pin: 1E
-    id: GPIOG_9
+    id: GPIOG_4
     class: outputs
     ts_name: 1E - Check Engine Light
     function: Check Engine Light
@@ -43,8 +43,7 @@ pins:
     class: outputs
     ts_name: 1I AC Fan Relay
     function: AC Fan Relay
-    type: gnd
-
+    
   - pin: 1J    
     function: CAN -
     type: ls
@@ -72,11 +71,12 @@ pins:
   - pin: 1R
     id: GPIOD_12
     class: outputs
-    ts_name: 2B - ECF
+    ts_name: 1R - ECF
     function: Engine Radiator Fan   
     type: ls
     
   - pin: 1S
+    #H144_OUT_IO6
     id: GPIOG_11
     class: outputs
     ts_name: 1S - AC Relay
@@ -147,6 +147,7 @@ pins:
     function: Crankshaft Sensor
     
   - pin: 2K
+#  H144_OUT_PWM1
     id: GPIOD_13
     class: outputs
     ts_name: 2K - TACH
@@ -252,7 +253,7 @@ pins:
     type: inj
     
   - pin: 3V
-    id: GPIOA_9
+    id: GPIOG_13
     class: outputs
     ts_name: 3V - O2H2
     function: Rear O2 sensor heater

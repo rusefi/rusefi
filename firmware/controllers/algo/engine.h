@@ -20,6 +20,8 @@
 #include "gear_controller.h"
 #include "limp_manager.h"
 #include "pin_repository.h"
+#include "ac_control.h"
+#include "idle_state_generated.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -88,6 +90,7 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	Engine();
+	AcState acState;
 	bool enableOverdwellProtection = true;
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
@@ -247,7 +250,6 @@ public:
 	 */
 	angle_t engineCycle;
 
-	LoadAccelEnrichment engineLoadAccelEnrichment;
 	TpsAccelEnrichment tpsAccelEnrichment;
 
 	TriggerCentral triggerCentral;
@@ -320,6 +322,15 @@ public:
 	 */
 	void onTriggerSignalEvent();
 	EngineState engineState;
+	idle_state_s idle;
+	/**
+	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
+	 */
+	percent_t blipIdlePosition;
+	efitimeus_t timeToStopBlip = 0;
+	efitimeus_t timeToStopIdleTest = 0;
+
+
 	SensorsState sensors;
 	efitick_t mainRelayBenchStartNt = 0;
 

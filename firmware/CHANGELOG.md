@@ -28,10 +28,22 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## Month 202x Release - "Release Name"
 
 ### Added
+ - Higher Data Rate with TS 3.1.06.14 
+
+### Fixed
+ - A/C control bugfix
+
+## Removed
+ - Remove engine load acceleration enrichment #3357
+
+## October 2021 Release - "Pierogi Day"
+
+### Added
  - Ford PIP trigger decoder https://github.com/rusefi/rusefi/wiki/Images/triggers/trigger_65.png
  - Dwell battery voltage correction table
  - rusEFI firmware feature should be honest about it's Windows-only limitation
  - Bosch MM5.10 accelerometer integration
+ - CLT/IAT sensor calibration presets
 
 ### Fixed
  - Fix of 36/2/2/2 attributes to help rotary #3242

@@ -12,12 +12,13 @@
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-#ifndef RAM_UNUSED_SIZE
-#define LUA_USER_HEAP 12000
-#endif
-#ifndef CCM_UNUSED_SIZE
-#define LUA_SYSTEM_HEAP 15000
-#endif
+#ifndef LUA_USER_HEAP
+#define LUA_USER_HEAP 1
+#endif // LUA_USER_HEAP
+
+#ifndef LUA_SYSTEM_HEAP
+#define LUA_SYSTEM_HEAP 1
+#endif // LUA_SYSTEM_HEAP
 
 static char luaUserHeap[LUA_USER_HEAP];
 static char luaSystemHeap[LUA_SYSTEM_HEAP];
@@ -209,17 +210,8 @@ static LuaHandle systemLua;
 
 const char* getSystemLuaScript();
 
-static void printStats() {
-#if !EFI_UNIT_TEST
-	size_t freeRam;
-	chHeapStatus(&heaps[0].m_heap, &freeRam, nullptr);
-	efiPrintf("User free %d of %d", freeRam, sizeof(luaUserHeap));
-	chHeapStatus(&heaps[1].m_heap, &freeRam, nullptr);
-	efiPrintf("System free %d of %d", freeRam, sizeof(luaSystemHeap));
-#endif
-}
-
 void initSystemLua() {
+#if LUA_SYSTEM_HEAP > 1
 	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
 
 	Timer startTimer;
@@ -236,10 +228,10 @@ void initSystemLua() {
 	}
 
 	auto startTime = startTimer.getElapsedSeconds();
-	addConsoleAction("luastats", printStats);
 
 #if !EFI_UNIT_TEST
 	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
+#endif
 #endif
 }
 
@@ -369,9 +361,12 @@ void LuaThread::ThreadTask() {
 	}
 }
 
+#if LUA_USER_HEAP > 1
 static LuaThread luaThread;
+#endif
 
 void startLua() {
+#if LUA_USER_HEAP > 1
 	luaThread.Start();
 
 	addConsoleActionS("lua", [](const char* str){
@@ -397,6 +392,7 @@ void startLua() {
 			efiPrintf("Lua memory heap %d: %d / %d bytes = %.1f%%", i, memoryUsed, heapSize, pct);
 		}
 	});
+#endif
 }
 
 #else // not EFI_UNIT_TEST

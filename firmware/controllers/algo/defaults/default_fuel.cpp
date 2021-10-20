@@ -231,11 +231,6 @@ void setDefaultFuel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// Decel fuel cut
 	setDefaultFuelCutParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	// Accel Enrich
-	engineConfiguration->engineLoadAccelLength = 6;
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 0; // todo: improve implementation and re-enable by default
-
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 
