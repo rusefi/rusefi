@@ -5,14 +5,10 @@ import com.rusefi.enum_reader.Value;
 import com.rusefi.generated.RusefiConfigGrammarBaseListener;
 import com.rusefi.generated.RusefiConfigGrammarParser;
 import com.rusefi.newparse.parsing.*;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.StringType;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.jetbrains.annotations.Nullable;
 
-import java.io.PrintStream;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ParseState {
     private final Map<String, Definition> definitions = new HashMap<>();
@@ -51,7 +47,7 @@ public class ParseState {
     private String[] resolveEnumValues(String enumName) {
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
-        Map<String, Value> stringValueMap = this.enumsReader.getEnums().get(enumName);
+        EnumsReader.EnumState stringValueMap = this.enumsReader.getEnums().get(enumName);
         if (stringValueMap == null)
             return null;
         for (Value value : stringValueMap.values()) {
@@ -223,9 +219,9 @@ public class ParseState {
 
         if (values == null) {
             values = Arrays.stream(rhs.split(","))                    // Split on commas
-                        .map(s -> s.trim())                                 // trim whitespace
+                        .map(String::trim)                                  // trim whitespace
                         .map(s -> s.replaceAll("\"", ""))   // Remove quotes
-                        .toArray(n -> new String[n]);                       // Convert back to array
+                        .toArray(String[]::new);                            // Convert back to array
         }
 
         typedefs.put(typedefName, new EnumTypedef(typedefName, datatype, endBit, values));

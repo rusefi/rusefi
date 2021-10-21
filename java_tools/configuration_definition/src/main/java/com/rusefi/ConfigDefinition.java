@@ -476,7 +476,7 @@ public class ConfigDefinition {
             }
             PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
             String pinType = listPinType.getPinType();
-            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()) {
                 if (kv.getKey().equals(id)) {
                     int index = kv.getValue().getIntValue();
@@ -494,7 +494,7 @@ public class ConfigDefinition {
             String outputEnumName = namePinType.getOutputEnumName();
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
-            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < kv.getValue().size(); i++) {
                 if (sb.length() > 0)
