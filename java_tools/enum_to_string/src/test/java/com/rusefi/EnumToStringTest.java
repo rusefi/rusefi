@@ -43,7 +43,7 @@ public class EnumToStringTest {
         EnumsReader enumsReader = new EnumsReader().read(reader);
         EnumToString enumToString = process(enumsReader);
 
-        List<Value> values = new ArrayList<>(enumsReader.getEnums().get("brain_pin_e").values());
+        List<Value> values = new ArrayList<>(enumsReader.getEnums().get("brain_pin_e").values.values());
         assertEquals(3, values.size());
         Value first = values.get(0);
         assertEquals("GPIO_HEX", first.getName());
@@ -87,6 +87,26 @@ public class EnumToStringTest {
     }
 
     @Test
+    public void parsePackedFancyEnum() throws IOException {
+        final StringReader reader = new StringReader(
+                "enum class myEnum : uint8_t {\n" +
+                        "\tGPIO_UNASSIGNED = 0,\n" +
+                        "\tGPIO_INVALID = 1,\n" +
+                        "} brain_pin_e ;");
+        EnumsReader enumsReader = new EnumsReader().read(reader);
+        EnumToString enumToString = process(enumsReader);
+        assertEquals("const char *getMyEnum(myEnum value){\n" +
+                "switch(value) {\n" +
+                "case myEnum::GPIO_INVALID:\n" +
+                "  return \"GPIO_INVALID\";\n" +
+                "case myEnum::GPIO_UNASSIGNED:\n" +
+                "  return \"GPIO_UNASSIGNED\";\n" +
+                "  }\n" +
+                " return NULL;\n" +
+                "}\n", enumToString.getCppFileContent());
+    }
+
+    @Test
     public void parseEnumWithoutExplicitValues() throws IOException {
         final StringReader reader = new StringReader(
                 "typedef enum {\n" +
@@ -95,13 +115,13 @@ public class EnumToStringTest {
                         "\tGPIO_HEX,\n" +
                         "}brain_pin_e; // hello");
         EnumsReader enumsReader = new EnumsReader().read(reader);
-        Map<String, Value> brain_pin_e = enumsReader.getEnums().get("brain_pin_e");
-        assertEquals(2, brain_pin_e.get("GPIO_HEX").getIntValue());
+        EnumsReader.EnumState brain_pin_e = enumsReader.getEnums().get("brain_pin_e");
+        assertEquals(2, brain_pin_e.values.get("GPIO_HEX").getIntValue());
 
-        List<Value> listByOrdinal = EnumsReader.getSortedByOrder(brain_pin_e);
+        List<Value> listByOrdinal = EnumsReader.getSortedByOrder(brain_pin_e.values);
         assertEquals(0, listByOrdinal.get(0).getIntValue());
 
-        for (Map.Entry<String /*enum name*/, Map<String/*enum member*/, Value>> e : enumsReader.getEnums().entrySet()) {
+        for (Map.Entry<String /*enum name*/, EnumsReader.EnumState> e : enumsReader.getEnums().entrySet()) {
 
             String a = new ToJavaEnum().generate(e.getKey(), e.getValue());
 
@@ -116,5 +136,46 @@ public class EnumToStringTest {
                     "\tGPIO_HEX,\n" +
                     "}\n", a);
         }
+    }
+
+    @Test
+    public void testTwoEnums() throws IOException {
+        final StringReader reader = new StringReader(
+                "typedef enum {\n" +
+                        "  AUTOTUNER_OFF = 0,\n" +
+                        "  STEADY_STATE_AT_BASELINE = 1,\n" +
+                        "} PidAutoTune_AutoTunerState;\n" +
+                        "\n" +
+                        "typedef enum {\n" +
+                        "\tINIT = 0,\n" +
+                        "\tTPS_THRESHOLD = 1,\n" +
+                        "\t/**\n" +
+                        "\t * Live Docs reads 4 byte value so we want 4 byte enum\n" +
+                        "\t */\n" +
+                        "\tForce_4bytes_size_idle_state_e = ENUM_32_BITS,\n" +
+                        "} idle_state_e;\n");
+
+        EnumsReader enumsReader = new EnumsReader().read(reader);
+        EnumToString enumToString = process(enumsReader);
+        assertEquals("const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value){\n" +
+                "switch(value) {\n" +
+                "case AUTOTUNER_OFF:\n" +
+                "  return \"AUTOTUNER_OFF\";\n" +
+                "case STEADY_STATE_AT_BASELINE:\n" +
+                "  return \"STEADY_STATE_AT_BASELINE\";\n" +
+                "  }\n" +
+                " return NULL;\n" +
+                "}\n" +
+                "const char *getIdle_state_e(idle_state_e value){\n" +
+                "switch(value) {\n" +
+                "case Force_4bytes_size_idle_state_e:\n" +
+                "  return \"Force_4bytes_size_idle_state_e\";\n" +
+                "case INIT:\n" +
+                "  return \"INIT\";\n" +
+                "case TPS_THRESHOLD:\n" +
+                "  return \"TPS_THRESHOLD\";\n" +
+                "  }\n" +
+                " return NULL;\n" +
+                "}\n", enumToString.getCppFileContent());
     }
 }

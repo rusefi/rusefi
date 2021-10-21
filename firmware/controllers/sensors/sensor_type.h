@@ -15,7 +15,7 @@
  * SEE sensor.h ON HOW TO ADD NEW SENSOR TYPES
  **************************************
  */
-typedef enum  __attribute__ ((__packed__)) {
+enum class SensorType : unsigned char {
 	Invalid, // we need indeces for Lua consumers. At the moment we still do not expose constants into Lua :(
 	Clt, // 1
 	Iat,
@@ -85,4 +85,4 @@ typedef enum  __attribute__ ((__packed__)) {
 
 	// Leave me at the end!
 	PlaceholderLast,
-} SensorType;
+};
