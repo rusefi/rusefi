@@ -231,3 +231,18 @@ bool Sensor::Register() {
 		entry->showInfo(getSensorName(type));
 	}
 }
+
+/**
+ * this is definitely not the fastest implementation possible but good enough for now?
+ * todo: some sort of hashmap in the future?
+ */
+SensorType findSensorTypeByName(const char *name) {
+    for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
+    	SensorType type = (SensorType)i;
+    	const char *sensorName = getSensorType(type);
+    	if (strEqualCaseInsensitive(sensorName, name)) {
+    		return type;
+    	}
+    }
+    return SensorType::Invalid;
+}
