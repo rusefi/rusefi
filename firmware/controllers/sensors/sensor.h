@@ -193,3 +193,5 @@ private:
 	 */
 	static SensorRegistryEntry *getEntryForType(SensorType type);
 };
+
+SensorType findSensorTypeByName(const char *name);

@@ -107,3 +107,8 @@ TEST_F(SensorBasic, HasSensorMock) {
 	// Now we should!
 	ASSERT_TRUE(Sensor::hasSensor(SensorType::Clt));
 }
+
+
+TEST_F(SensorBasic, FindByName) {
+	ASSERT_EQ(SensorType::Clt, findSensorTypeByName("Clt"));
+}
