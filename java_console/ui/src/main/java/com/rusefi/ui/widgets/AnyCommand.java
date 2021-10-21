@@ -34,6 +34,7 @@ import java.util.function.Function;
 public class AnyCommand {
     private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("AnyCommand");
     public static final String KEY = "last_value";
+    // todo: kill while killing FSIO
     private static final String DECODE_RPN = "decode_rpn";
 
     private final UIContext uiContext;
@@ -58,7 +59,7 @@ public class AnyCommand {
         content.add(go);
 
         uiContext.getCommandQueue().addListener(command -> {
-            if (listenToCommands && !reentrant && RecentCommands.isBoringCommand(command))
+            if (listenToCommands && !reentrant && !RecentCommands.isBoringCommand(command))
                 text.setText(command);
         });
 
