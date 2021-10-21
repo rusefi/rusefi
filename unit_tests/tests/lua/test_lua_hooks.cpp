@@ -103,3 +103,27 @@ end
 TEST(LuaHooks, TestLuaTimer) {
 	EXPECT_EQ(testLuaReturnsNumber(timerTest), 0);
 }
+
+static const char* sensorTest = R"(
+function testFunc()
+	local sens = Sensor.new("CLT")
+	
+	-- Check valid sensor
+	sens:set(33)
+	if getSensor("CLT") ~= 33 then
+		return 1
+	end
+
+	-- Check invalidation
+	sens:invalidate()
+	if getSensor("CLT") then
+		return 2
+	end
+
+	return 0
+end
+)";
+
+TEST(LuaHooks, LuaSensor) {
+	EXPECT_EQ(testLuaReturnsNumber(sensorTest), 0);
+}
