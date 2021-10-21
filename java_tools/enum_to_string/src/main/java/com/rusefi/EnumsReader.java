@@ -118,5 +118,13 @@ public class EnumsReader {
             this.enumName = enumName;
             this.isEnumClass = isEnumClass;
         }
+
+        public Collection<Value> values() {
+            return values.values();
+        }
+
+        public Iterable<? extends Map.Entry<String, Value>> entrySet() {
+            return values.entrySet();
+        }
     }
 }

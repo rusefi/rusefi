@@ -40,7 +40,7 @@ public class VariableRegistry  {
     public TreeMap<Integer, String> resolveEnumValues(EnumsReader enumsReader, String enumName) {
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
 
-        Map<String, Value> stringValueMap = enumsReader.getEnums().get(enumName);
+        EnumsReader.EnumState stringValueMap = enumsReader.getEnums().get(enumName);
         if (stringValueMap == null)
             return null;
         for (Value value : stringValueMap.values()) {
