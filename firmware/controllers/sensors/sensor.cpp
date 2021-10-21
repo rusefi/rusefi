@@ -40,6 +40,10 @@ public:
 		}
 	}
 
+	void unregister() {
+		m_sensor = nullptr;
+	}
+
 	SensorResult get() const {
 		// Check if mock
 		if (m_useMock) {
@@ -116,6 +120,10 @@ static SensorRegistryEntry s_sensorRegistry[static_cast<size_t>(SensorType::Plac
 
 bool Sensor::Register() {
 	return s_sensorRegistry[getIndex()].Register(this);
+}
+
+Sensor::~Sensor() {
+	s_sensorRegistry[getIndex()].unregister();
 }
 
 /*static*/ void Sensor::resetRegistry() {

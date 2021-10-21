@@ -168,6 +168,8 @@ public:
 		return false;
 	}
 
+	virtual ~Sensor();
+
 protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
