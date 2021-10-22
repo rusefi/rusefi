@@ -104,9 +104,7 @@ ls -l $FULL_BUNDLE_FILE
 
 if [ -n "$RUSEFI_BUILD_FTP_USER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
- echo put $FULL_BUNDLE_FILE . > cmd
- cat cmd
- sshpass -p $RUSEFI_BUILD_FTP_PASS sftp -o StrictHostKeyChecking=no $RUSEFI_BUILD_FTP_USER@$RUSEFI_FTP_SERVER <<< `cat cmd`
+ tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS sftp -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "tar -xzf - -C build_server"
  retVal=$?
  if [ $retVal -ne 0 ]; then
   echo "full bundle upload failed"
@@ -133,9 +131,7 @@ zip -r ../$UPDATE_BUNDLE_FILE *
 cd ..
 ls -l $UPDATE_BUNDLE_FILE
 if [ -n "$RUSEFI_BUILD_FTP_USER" ]; then
- echo put $UPDATE_BUNDLE_FILE autoupdate > cmd
- cat cmd
- sshpass -p $RUSEFI_BUILD_FTP_PASS sftp -o StrictHostKeyChecking=no $RUSEFI_BUILD_FTP_USER@$RUSEFI_FTP_SERVER <<< `cat cmd`
+ tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS sftp -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "tar -xzf - -C build_server/autoupdate"
  retVal=$?
  if [ $retVal -ne 0 ]; then
   echo "autoupdate upload failed"
