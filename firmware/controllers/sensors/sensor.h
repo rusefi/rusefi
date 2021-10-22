@@ -168,6 +168,8 @@ public:
 		return false;
 	}
 
+	void unregister();
+
 protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
