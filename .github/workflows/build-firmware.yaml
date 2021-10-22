@@ -141,10 +141,10 @@ jobs:
       with:
         java-version: '8'
 
-    - name: Install multilib, mingw, ncftp and mtools
+    - name: Install multilib, mingw, sshpass and mtools
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
         sudo apt-get install zip
         sudo apt-get install dosfstools
 
@@ -274,10 +274,10 @@ jobs:
       with:
         java-version: '8'
 
-    - name: Install multilib, mingw, and ncftp
+    - name: Install multilib, mingw, and sshpass
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools zip dosfstools
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools zip dosfstools
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
