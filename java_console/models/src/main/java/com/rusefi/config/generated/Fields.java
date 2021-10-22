@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Oct 20 20:09:28 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 22 20:01:47 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1021,6 +1021,9 @@ public class Fields {
 	public static final int knockDetectionWindowStart_offset = 1500;
 	public static final int knockNoise_offset = 1820;
 	public static final int knockNoiseRpmBins_offset = 1852;
+	public static final int knockRetardAggression_offset = 612;
+	public static final int knockRetardMaximum_offset = 614;
+	public static final int knockRetardReapplyRate_offset = 613;
 	public static final int knockSamplingDuration_offset = 2512;
 	public static final int lambdaLoadBins_offset = 18848;
 	public static final int lambdaRpmBins_offset = 18912;
@@ -1252,6 +1255,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 955152485;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1563,7 +1567,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.20.all.3075283097";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.22.all.955152485";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1651,7 +1655,7 @@ public class Fields {
 	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;
 	public static final int unused552_offset = 552;
-	public static final int unused612_offset = 612;
+	public static final int unused615_offset = 615;
 	public static final int unused616_offset = 616;
 	public static final int unused6312_offset = 6312;
 	public static final int unused744b4_offset = 744;
@@ -1669,33 +1673,33 @@ public class Fields {
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1340;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_29_offset = 976;
-	public static final int unusedBit_299_30_offset = 976;
-	public static final int unusedBit_299_31_offset = 976;
+	public static final int unusedBit_302_30_offset = 976;
+	public static final int unusedBit_302_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
-	public static final int unusedBit_510_10_offset = 2116;
-	public static final int unusedBit_510_11_offset = 2116;
-	public static final int unusedBit_510_12_offset = 2116;
-	public static final int unusedBit_510_13_offset = 2116;
-	public static final int unusedBit_510_14_offset = 2116;
-	public static final int unusedBit_510_15_offset = 2116;
-	public static final int unusedBit_510_16_offset = 2116;
-	public static final int unusedBit_510_17_offset = 2116;
-	public static final int unusedBit_510_18_offset = 2116;
-	public static final int unusedBit_510_19_offset = 2116;
-	public static final int unusedBit_510_20_offset = 2116;
-	public static final int unusedBit_510_21_offset = 2116;
-	public static final int unusedBit_510_22_offset = 2116;
-	public static final int unusedBit_510_23_offset = 2116;
-	public static final int unusedBit_510_24_offset = 2116;
-	public static final int unusedBit_510_25_offset = 2116;
-	public static final int unusedBit_510_26_offset = 2116;
-	public static final int unusedBit_510_27_offset = 2116;
-	public static final int unusedBit_510_28_offset = 2116;
-	public static final int unusedBit_510_29_offset = 2116;
-	public static final int unusedBit_510_30_offset = 2116;
-	public static final int unusedBit_510_31_offset = 2116;
-	public static final int unusedBit_510_8_offset = 2116;
-	public static final int unusedBit_510_9_offset = 2116;
+	public static final int unusedBit_513_10_offset = 2116;
+	public static final int unusedBit_513_11_offset = 2116;
+	public static final int unusedBit_513_12_offset = 2116;
+	public static final int unusedBit_513_13_offset = 2116;
+	public static final int unusedBit_513_14_offset = 2116;
+	public static final int unusedBit_513_15_offset = 2116;
+	public static final int unusedBit_513_16_offset = 2116;
+	public static final int unusedBit_513_17_offset = 2116;
+	public static final int unusedBit_513_18_offset = 2116;
+	public static final int unusedBit_513_19_offset = 2116;
+	public static final int unusedBit_513_20_offset = 2116;
+	public static final int unusedBit_513_21_offset = 2116;
+	public static final int unusedBit_513_22_offset = 2116;
+	public static final int unusedBit_513_23_offset = 2116;
+	public static final int unusedBit_513_24_offset = 2116;
+	public static final int unusedBit_513_25_offset = 2116;
+	public static final int unusedBit_513_26_offset = 2116;
+	public static final int unusedBit_513_27_offset = 2116;
+	public static final int unusedBit_513_28_offset = 2116;
+	public static final int unusedBit_513_29_offset = 2116;
+	public static final int unusedBit_513_30_offset = 2116;
+	public static final int unusedBit_513_31_offset = 2116;
+	public static final int unusedBit_513_8_offset = 2116;
+	public static final int unusedBit_513_9_offset = 2116;
 	public static final int unusedBitHere1_offset = 1464;
 	public static final int unusedBitHere2_offset = 1464;
 	public static final int unusedBitHere3_offset = 1464;
@@ -1984,7 +1988,10 @@ public class Fields {
 	public static final Field IDLE_STEPPERSTEPPIN = Field.create("IDLE_STEPPERSTEPPIN", 606, FieldType.INT8, output_pin_e);
 	public static final Field IDLE_SOLENOIDPINMODE = Field.create("IDLE_SOLENOIDPINMODE", 607, FieldType.INT8, pin_output_mode_e);
 	public static final Field MANIDLEPOSITION = Field.create("MANIDLEPOSITION", 608, FieldType.FLOAT);
-	public static final Field UNUSED612 = Field.create("UNUSED612", 612, FieldType.FLOAT);
+	public static final Field KNOCKRETARDAGGRESSION = Field.create("KNOCKRETARDAGGRESSION", 612, FieldType.INT8);
+	public static final Field KNOCKRETARDREAPPLYRATE = Field.create("KNOCKRETARDREAPPLYRATE", 613, FieldType.INT8);
+	public static final Field KNOCKRETARDMAXIMUM = Field.create("KNOCKRETARDMAXIMUM", 614, FieldType.INT8);
+	public static final Field UNUSED615 = Field.create("UNUSED615", 615, FieldType.INT8);
 	public static final Field UNUSED616 = Field.create("UNUSED616", 616, FieldType.FLOAT);
 	public static final Field TRIGGERSIMULATORFREQUENCY = Field.create("TRIGGERSIMULATORFREQUENCY", 620, FieldType.INT);
 	public static final Field INJECTIONPINS1 = Field.create("INJECTIONPINS1", 624, FieldType.INT8, output_pin_e);
@@ -2240,8 +2247,8 @@ public class Fields {
 	public static final Field KNOCKBANKCYL12 = Field.create("KNOCKBANKCYL12", 976, FieldType.BIT, 27);
 	public static final Field TCUENABLED = Field.create("TCUENABLED", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_299_30 = Field.create("UNUSEDBIT_299_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_299_31 = Field.create("UNUSEDBIT_299_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_302_30 = Field.create("UNUSEDBIT_302_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_302_31 = Field.create("UNUSEDBIT_302_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN = Field.create("ETBIO1_CONTROLPIN", 982, FieldType.INT8, brain_pin_e);
@@ -2532,30 +2539,30 @@ public class Fields {
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 2116, FieldType.BIT, 5);
 	public static final Field UNUSED1129 = Field.create("UNUSED1129", 2116, FieldType.BIT, 6);
 	public static final Field UNUSED1130 = Field.create("UNUSED1130", 2116, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_510_8 = Field.create("UNUSEDBIT_510_8", 2116, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_510_9 = Field.create("UNUSEDBIT_510_9", 2116, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_510_10 = Field.create("UNUSEDBIT_510_10", 2116, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_510_11 = Field.create("UNUSEDBIT_510_11", 2116, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_510_12 = Field.create("UNUSEDBIT_510_12", 2116, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_510_13 = Field.create("UNUSEDBIT_510_13", 2116, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_510_14 = Field.create("UNUSEDBIT_510_14", 2116, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_510_15 = Field.create("UNUSEDBIT_510_15", 2116, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_510_16 = Field.create("UNUSEDBIT_510_16", 2116, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_510_17 = Field.create("UNUSEDBIT_510_17", 2116, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_510_18 = Field.create("UNUSEDBIT_510_18", 2116, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_510_19 = Field.create("UNUSEDBIT_510_19", 2116, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_510_20 = Field.create("UNUSEDBIT_510_20", 2116, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_510_21 = Field.create("UNUSEDBIT_510_21", 2116, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_510_22 = Field.create("UNUSEDBIT_510_22", 2116, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_510_23 = Field.create("UNUSEDBIT_510_23", 2116, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_510_24 = Field.create("UNUSEDBIT_510_24", 2116, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_510_25 = Field.create("UNUSEDBIT_510_25", 2116, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_510_26 = Field.create("UNUSEDBIT_510_26", 2116, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_510_27 = Field.create("UNUSEDBIT_510_27", 2116, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_510_28 = Field.create("UNUSEDBIT_510_28", 2116, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_510_29 = Field.create("UNUSEDBIT_510_29", 2116, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_510_30 = Field.create("UNUSEDBIT_510_30", 2116, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_510_31 = Field.create("UNUSEDBIT_510_31", 2116, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_513_8 = Field.create("UNUSEDBIT_513_8", 2116, FieldType.BIT, 8);
+	public static final Field UNUSEDBIT_513_9 = Field.create("UNUSEDBIT_513_9", 2116, FieldType.BIT, 9);
+	public static final Field UNUSEDBIT_513_10 = Field.create("UNUSEDBIT_513_10", 2116, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_513_11 = Field.create("UNUSEDBIT_513_11", 2116, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_513_12 = Field.create("UNUSEDBIT_513_12", 2116, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_513_13 = Field.create("UNUSEDBIT_513_13", 2116, FieldType.BIT, 13);
+	public static final Field UNUSEDBIT_513_14 = Field.create("UNUSEDBIT_513_14", 2116, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT_513_15 = Field.create("UNUSEDBIT_513_15", 2116, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_513_16 = Field.create("UNUSEDBIT_513_16", 2116, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_513_17 = Field.create("UNUSEDBIT_513_17", 2116, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_513_18 = Field.create("UNUSEDBIT_513_18", 2116, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_513_19 = Field.create("UNUSEDBIT_513_19", 2116, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_513_20 = Field.create("UNUSEDBIT_513_20", 2116, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_513_21 = Field.create("UNUSEDBIT_513_21", 2116, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_513_22 = Field.create("UNUSEDBIT_513_22", 2116, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_513_23 = Field.create("UNUSEDBIT_513_23", 2116, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_513_24 = Field.create("UNUSEDBIT_513_24", 2116, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_513_25 = Field.create("UNUSEDBIT_513_25", 2116, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_513_26 = Field.create("UNUSEDBIT_513_26", 2116, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_513_27 = Field.create("UNUSEDBIT_513_27", 2116, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_513_28 = Field.create("UNUSEDBIT_513_28", 2116, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_513_29 = Field.create("UNUSEDBIT_513_29", 2116, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_513_30 = Field.create("UNUSEDBIT_513_30", 2116, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_513_31 = Field.create("UNUSEDBIT_513_31", 2116, FieldType.BIT, 31);
 	public static final Field CAN2NBCTYPE = Field.create("CAN2NBCTYPE", 2120, FieldType.INT);
 	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 2124, FieldType.INT8, brain_pin_e);
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 2125, FieldType.INT8, brain_pin_e);
@@ -3088,7 +3095,10 @@ public class Fields {
 	IDLE_STEPPERSTEPPIN,
 	IDLE_SOLENOIDPINMODE,
 	MANIDLEPOSITION,
-	UNUSED612,
+	KNOCKRETARDAGGRESSION,
+	KNOCKRETARDREAPPLYRATE,
+	KNOCKRETARDMAXIMUM,
+	UNUSED615,
 	UNUSED616,
 	TRIGGERSIMULATORFREQUENCY,
 	INJECTIONPINS1,
@@ -3340,8 +3350,8 @@ public class Fields {
 	KNOCKBANKCYL12,
 	TCUENABLED,
 	UNUSEDBIT_251_29,
-	UNUSEDBIT_299_30,
-	UNUSEDBIT_299_31,
+	UNUSEDBIT_302_30,
+	UNUSEDBIT_302_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN,
@@ -3626,30 +3636,30 @@ public class Fields {
 	UNUSED1128,
 	UNUSED1129,
 	UNUSED1130,
-	UNUSEDBIT_510_8,
-	UNUSEDBIT_510_9,
-	UNUSEDBIT_510_10,
-	UNUSEDBIT_510_11,
-	UNUSEDBIT_510_12,
-	UNUSEDBIT_510_13,
-	UNUSEDBIT_510_14,
-	UNUSEDBIT_510_15,
-	UNUSEDBIT_510_16,
-	UNUSEDBIT_510_17,
-	UNUSEDBIT_510_18,
-	UNUSEDBIT_510_19,
-	UNUSEDBIT_510_20,
-	UNUSEDBIT_510_21,
-	UNUSEDBIT_510_22,
-	UNUSEDBIT_510_23,
-	UNUSEDBIT_510_24,
-	UNUSEDBIT_510_25,
-	UNUSEDBIT_510_26,
-	UNUSEDBIT_510_27,
-	UNUSEDBIT_510_28,
-	UNUSEDBIT_510_29,
-	UNUSEDBIT_510_30,
-	UNUSEDBIT_510_31,
+	UNUSEDBIT_513_8,
+	UNUSEDBIT_513_9,
+	UNUSEDBIT_513_10,
+	UNUSEDBIT_513_11,
+	UNUSEDBIT_513_12,
+	UNUSEDBIT_513_13,
+	UNUSEDBIT_513_14,
+	UNUSEDBIT_513_15,
+	UNUSEDBIT_513_16,
+	UNUSEDBIT_513_17,
+	UNUSEDBIT_513_18,
+	UNUSEDBIT_513_19,
+	UNUSEDBIT_513_20,
+	UNUSEDBIT_513_21,
+	UNUSEDBIT_513_22,
+	UNUSEDBIT_513_23,
+	UNUSEDBIT_513_24,
+	UNUSEDBIT_513_25,
+	UNUSEDBIT_513_26,
+	UNUSEDBIT_513_27,
+	UNUSEDBIT_513_28,
+	UNUSEDBIT_513_29,
+	UNUSEDBIT_513_30,
+	UNUSEDBIT_513_31,
 	CAN2NBCTYPE,
 	CAN2TXPIN,
 	CAN2RXPIN,

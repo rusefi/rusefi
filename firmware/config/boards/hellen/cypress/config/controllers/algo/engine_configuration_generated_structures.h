@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Oct 20 20:09:33 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Oct 22 20:01:53 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1212,9 +1212,27 @@ struct engine_configuration_s {
 	 */
 	float manIdlePosition;
 	/**
+	 * Ignition timing to remove when a knock event occurs.
+	%
 	 * offset 612
 	 */
-	float unused612;
+	uint8_t knockRetardAggression;
+	/**
+	 * After a knock event, reapply timing at this rate.
+	deg/s
+	 * offset 613
+	 */
+	uint8_t knockRetardReapplyRate;
+	/**
+	 * Maximum amount of knock retard.
+	deg
+	 * offset 614
+	 */
+	uint8_t knockRetardMaximum;
+	/**
+	 * offset 615
+	 */
+	uint8_t unused615;
 	/**
 	 * offset 616
 	 */
@@ -2032,10 +2050,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_299_30 : 1;
+	bool unusedBit_302_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_299_31 : 1;
+	bool unusedBit_302_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2999,76 +3017,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_510_8 : 1;
+	bool unusedBit_513_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_510_9 : 1;
+	bool unusedBit_513_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_510_10 : 1;
+	bool unusedBit_513_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_510_11 : 1;
+	bool unusedBit_513_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_510_12 : 1;
+	bool unusedBit_513_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_510_13 : 1;
+	bool unusedBit_513_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_510_14 : 1;
+	bool unusedBit_513_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_510_15 : 1;
+	bool unusedBit_513_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_510_16 : 1;
+	bool unusedBit_513_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_510_17 : 1;
+	bool unusedBit_513_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_510_18 : 1;
+	bool unusedBit_513_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_510_19 : 1;
+	bool unusedBit_513_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_510_20 : 1;
+	bool unusedBit_513_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_510_21 : 1;
+	bool unusedBit_513_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_510_22 : 1;
+	bool unusedBit_513_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_510_23 : 1;
+	bool unusedBit_513_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_510_24 : 1;
+	bool unusedBit_513_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_510_25 : 1;
+	bool unusedBit_513_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_510_26 : 1;
+	bool unusedBit_513_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_510_27 : 1;
+	bool unusedBit_513_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_510_28 : 1;
+	bool unusedBit_513_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_510_29 : 1;
+	bool unusedBit_513_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_510_30 : 1;
+	bool unusedBit_513_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_510_31 : 1;
+	bool unusedBit_513_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4375,4 +4393,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Oct 20 20:09:33 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Fri Oct 22 20:01:53 UTC 2021
