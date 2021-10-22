@@ -35,20 +35,29 @@
 #endif
 
 #include "defaults.h"
-#include "custom_engine.h"
-#include "engine_template.h"
-#include "bmw_m73.h"
 
+#include "bmw_m73.h"
+#include "bmw_n73.h"
+
+#include "citroenBerlingoTU3JP.h"
+#include "custom_engine.h"
 #include "dodge_neon.h"
 #include "dodge_ram.h"
+
+#include "engine_template.h"
 
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
 
+#include "honda_accord.h"
+#include "honda_k_dbc.h"
+#include "honda_600.h"
+#include "hyundai.h"
+
+#include "GY6_139QMB.h"
+
 #include "nissan_primera.h"
 #include "nissan_vq.h"
-#include "honda_accord.h"
-#include "GY6_139QMB.h"
 
 #include "mazda_miata.h"
 #include "mazda_miata_1_6.h"
@@ -57,20 +66,19 @@
 #include "mazda_miata_vvt.h"
 #include "mazda_626.h"
 #include "m111.h"
-
-#include "citroenBerlingoTU3JP.h"
+#include "mercedes.h"
 #include "mitsubishi.h"
+#include "me7pnp.h"
+
 #include "subaru.h"
 #include "test_engine.h"
 #include "sachs.h"
 #include "vw.h"
-#include "me7pnp.h"
 #include "vw_b6.h"
 #include "chevrolet_camaro_4.h"
 #include "toyota_jzs147.h"
 #include "ford_festiva.h"
 #include "lada_kalina.h"
-#include "honda_600.h"
 #include "boost_control.h"
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
@@ -345,7 +353,7 @@ static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, 110, 1100);
 }
 
-static void setDefaultStepperIdleParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultFrankensoStepperIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idle.stepperDirectionPin = GPIOE_10;
 	engineConfiguration->idle.stepperStepPin = GPIOE_12;
 	engineConfiguration->stepperEnablePin = GPIOE_14;
@@ -436,9 +444,6 @@ static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 
 	engineConfiguration->hip9011Gain = 1;
-	engineConfiguration->knockVThreshold = 4;
-	engineConfiguration->maxKnockSubDeg = 20;
-
 
 	if (!CONFIG(useTpicAdvancedMode)) {
 	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
@@ -597,8 +602,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->useStepperIdle = false;
 
-	setDefaultStepperIdleParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
-
 	setDefaultGppwmParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if !EFI_UNIT_TEST
@@ -726,7 +729,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief	Hardware board-specific default configuration (GPIO pins, ADC channels, SPI configs etc.)
  */
 void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-
+	setDefaultFrankensoStepperIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setCanFrankensoDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
@@ -858,7 +861,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case PROTEUS_DEFAULTS:
 	case PROMETHEUS_DEFAULTS:
-	case HELLEN_128_MERCEDES:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -927,6 +929,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MIATA_PROTEUS_TCU:
 		setMiataNB2_Proteus_TCU(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case PROTEUS_HONDA_ELEMENT_2003:
+		setProteusHondaElement2003(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_HONDA_OBD2A:
+		setProteusHondaOBD2A(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_VAG_80_18T:
+	case PROTEUS_N73:
 	case PROTEUS_MIATA_NB2:
 		setMiataNB2_ProteusEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -937,11 +947,23 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #endif // HARDWARE_CI
 #endif // HW_PROTEUS
 #if HW_HELLEN
+	case HELLEN_128_MERCEDES_4_CYL:
+		setHellenMercedes128_4_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_128_MERCEDES_6_CYL:
+		setHellenMercedes128_6_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_128_MERCEDES_8_CYL:
+		setHellenMercedes128_8_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case HELLEN_NB2:
 		setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HELLEN_NB2_36:
 		setMiataNB2_Hellen72_36(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_NB1:
+		setHellenNB1(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HELLEN72_ETB:
 		setHellen72etb(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -969,7 +991,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_88_BMW:
 	case HELLEN_134_BMW:
 	case HELLEN_154_VAG:
-	case HELLEN_154_HYUNDAI:
+		break;
+	case HELLEN_154_HYUNDAI_COUPE_BK1:
+		setGenesisCoupeBK1(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case HELLEN_154_HYUNDAI_COUPE_BK2:
+		setGenesisCoupeBK2(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HELLEN_NA6:
 		setHellenNA6(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1006,9 +1033,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_CD:
-		setHondaAccordConfigurationThreeWires(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MIATA_NA6_MAP:
 		setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1024,21 +1048,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MAZDA_MIATA_NA8:
 		setMazdaMiataNA8Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case TEST_CIVIC_4_0_BOTH:
-		setHondaCivic4_0_both(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case TEST_CIVIC_4_0_RISE:
-		setHondaCivic4_0_rise(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_1_24_SHIFTED:
-		setHondaAccordConfiguration1_24_shifted(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case HONDA_ACCORD_CD_DIP:
+/*
 		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+*/
 	case MITSU_4G93:
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1111,6 +1128,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TEST_33816:
 		setTest33816EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case TEST_108:
+		setVrThresholdTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case TEST_109:
+	case TEST_110:
 	case TEST_ROTARY:
 		setRotary(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;

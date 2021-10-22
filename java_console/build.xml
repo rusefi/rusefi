@@ -135,6 +135,10 @@
             <fileset dir="romraider/resources" includes="**/*.*"/>
         </copy>
 
+        <copy todir="build/classes/c_sources" flatten="true">
+            <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
+        </copy>
+
         <tstamp>
             <format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss"/>
         </tstamp>
@@ -156,6 +160,7 @@
             <zipfileset src="lib/httpcore.jar" includes="**/*.class"/>
             <zipfileset src="lib/httpmime.jar" includes="**/*.class"/>
             <zipfileset src="lib/jaxb-api.jar" includes="**/*.class"/>
+            <zipfileset src="../java_tools/configuration_definition/lib/antlr-4.5-complete.jar" includes="**/*.class"/>
             <zipfileset src="lib/jSerialComm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-aarch64.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>
             <zipfileset src="lib/dfu/libusb4java-1.3.0-linux-arm.jar" includes="**/*.class **/*.so **/*.dll **/*.jnilib"/>

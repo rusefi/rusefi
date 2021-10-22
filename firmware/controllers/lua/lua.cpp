@@ -11,10 +11,20 @@
 #define TAG "LUA "
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-static char luaUserHeap[10000];
-static char luaSystemHeap[10000];
+
+#ifndef LUA_USER_HEAP
+#define LUA_USER_HEAP 1
+#endif // LUA_USER_HEAP
+
+#ifndef LUA_SYSTEM_HEAP
+#define LUA_SYSTEM_HEAP 1
+#endif // LUA_SYSTEM_HEAP
+
+static char luaUserHeap[LUA_USER_HEAP];
+static char luaSystemHeap[LUA_SYSTEM_HEAP];
 
 class Heap {
+public:
 	memory_heap_t m_heap;
 
 	size_t m_memoryUsed = 0;
@@ -196,6 +206,35 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	return true;
 }
 
+static LuaHandle systemLua;
+
+const char* getSystemLuaScript();
+
+void initSystemLua() {
+#if LUA_SYSTEM_HEAP > 1
+	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
+
+	Timer startTimer;
+	startTimer.reset();
+
+	systemLua = setupLuaState(myAlloc<1>);
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
+
+	if (!loadScript(systemLua, getSystemLuaScript())) {
+		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
+		systemLua = nullptr;
+		return;
+	}
+
+	auto startTime = startTimer.getElapsedSeconds();
+
+#if !EFI_UNIT_TEST
+	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
+#endif
+#endif
+}
+
 #if !EFI_UNIT_TEST
 static bool interactivePending = false;
 static char interactiveCmd[100];
@@ -304,8 +343,13 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 }
 
 void LuaThread::ThreadTask() {
+	initSystemLua();
+
 	while (!chThdShouldTerminateX()) {
 		bool wasOk = runOneLua(myAlloc<0>, config->luaScript);
+
+		// Reset any lua adjustments the script made
+		ENGINE(engineState).luaAdjustments = {};
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin
@@ -317,34 +361,13 @@ void LuaThread::ThreadTask() {
 	}
 }
 
+#if LUA_USER_HEAP > 1
 static LuaThread luaThread;
-
-static LuaHandle systemLua;
-
-void initSystemLua() {
-	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
-
-	Timer startTimer;
-	startTimer.reset();
-
-	systemLua = setupLuaState(myAlloc<1>);
-
-	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
-
-	if (!loadScript(systemLua, "function x() end")) {
-		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
-		systemLua = nullptr;
-		return;
-	}
-
-	auto startTime = startTimer.getElapsedSeconds();
-	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
-}
+#endif
 
 void startLua() {
+#if LUA_USER_HEAP > 1
 	luaThread.Start();
-
-	initSystemLua();
 
 	addConsoleActionS("lua", [](const char* str){
 		if (interactivePending) {
@@ -369,12 +392,13 @@ void startLua() {
 			efiPrintf("Lua memory heap %d: %d / %d bytes = %.1f%%", i, memoryUsed, heapSize, pct);
 		}
 	});
+#endif
 }
 
 #else // not EFI_UNIT_TEST
 
 void startLua() {
-	// todo
+	initSystemLua();
 }
 
 #include <stdexcept>

@@ -1,6 +1,6 @@
 #
 # open issues: knock do we need to do anything?
-# todo: we've inhecrited dual mode on A/C etc from H72 needs to be addressed
+# todo: we've inherited dual mode on A/C etc from H72 needs to be addressed
 #
 
 pins:
@@ -135,7 +135,7 @@ pins:
     function: GND
   
   - pin: 2L
-    id: GPIOE_13
+    id: GPIOF_3
     class: event_inputs
     ts_name: 2L - Flex Fuel
     function: Flex Fuel Input

@@ -20,6 +20,8 @@
 #include "gear_controller.h"
 #include "limp_manager.h"
 #include "pin_repository.h"
+#include "ac_control.h"
+#include "idle_state_generated.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -88,6 +90,8 @@ public:
 	DECLARE_ENGINE_PTR;
 
 	Engine();
+	AcState acState;
+	bool enableOverdwellProtection = true;
 	bool isPwmEnabled = true;
 	int triggerActivitySecond = 0;
 
@@ -246,7 +250,6 @@ public:
 	 */
 	angle_t engineCycle;
 
-	LoadAccelEnrichment engineLoadAccelEnrichment;
 	TpsAccelEnrichment tpsAccelEnrichment;
 
 	TriggerCentral triggerCentral;
@@ -290,26 +293,6 @@ public:
 	FsioState fsioState;
 
 	/**
-	 * Are we experiencing knock right now?
-	 */
-	bool knockNow = false;
-	/**
-	 * Have we experienced knock since engine was started?
-	 */
-	bool knockEver = false;
-	/**
-     * KnockCount is directly proportional to the degrees of ignition
-     * advance removed
-     */
-    int knockCount = 0;
-
-    float knockVolts = 0;
-
-    bool knockDebug = false;
-
-	efitimeus_t timeOfLastKnockEvent = 0;
-
-	/**
 	 * are we running any kind of functional test? this affect
 	 * some areas
 	 */
@@ -339,6 +322,15 @@ public:
 	 */
 	void onTriggerSignalEvent();
 	EngineState engineState;
+	idle_state_s idle;
+	/**
+	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
+	 */
+	percent_t blipIdlePosition;
+	efitimeus_t timeToStopBlip = 0;
+	efitimeus_t timeToStopIdleTest = 0;
+
+
 	SensorsState sensors;
 	efitick_t mainRelayBenchStartNt = 0;
 
@@ -386,8 +378,10 @@ public:
 	 */
 	float getTimeIgnitionSeconds(void) const;
 
-	void knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void printKnockState(void);
+	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
+
+	// onKnockSenseCompleted is the callback from the knock sense driver to report a sensed knock level
+	bool onKnockSenseCompleted(uint8_t cylinderIndex, float levelDbv, efitick_t lastKnockTime);
 
 	AirmassModelBase* mockAirmassModel = nullptr;
 

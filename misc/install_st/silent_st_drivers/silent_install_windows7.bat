@@ -19,11 +19,13 @@ echo Let's install ST-Link driver silently
 cd ST-LINK_USB_V2_1_Driver
 
 @echo off
-if "%PROCESSOR_ARCHITEW6432%" == "AMD64" goto X64
-if "%PROCESSOR_ARCHITECTURE%" == "AMD64" goto X64
+if "%PROCESSOR_ARCHITEW6432%" == "AMD64" goto ST_X64
+if "%PROCESSOR_ARCHITECTURE%" == "AMD64" goto ST_X64
 start "" dpinst_x86.exe /sw
-goto END
-:X64
+goto ST_END
+:ST_X64
 start "" dpinst_amd64.exe /sw
-:END
+:ST_END
+
+
 exit

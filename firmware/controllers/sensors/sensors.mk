@@ -3,6 +3,7 @@ CONTROLLERS_SENSORS_SRC =
 																																				
 CONTROLLERS_SENSORS_SRC_CPP = 	$(PROJECT_DIR)/controllers/sensors/thermistors.cpp \
 	$(PROJECT_DIR)/controllers/sensors/allsensors.cpp \
+	$(PROJECT_DIR)/controllers/sensors/auto_generated_sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/map.cpp \
 	$(PROJECT_DIR)/controllers/sensors/maf.cpp \
 	$(PROJECT_DIR)/controllers/sensors/tps.cpp \
@@ -19,4 +20,5 @@ CONTROLLERS_SENSORS_SRC_CPP = 	$(PROJECT_DIR)/controllers/sensors/thermistors.cp
 	$(PROJECT_DIR)/controllers/sensors/converters/linear_func.cpp \
 	$(PROJECT_DIR)/controllers/sensors/converters/resistance_func.cpp \
 	$(PROJECT_DIR)/controllers/sensors/converters/thermistor_func.cpp \
+	$(PROJECT_DIR)/controllers/sensors/converters/identity_func.cpp \
 	$(PROJECT_DIR)/controllers/sensors/vr_pwm.cpp

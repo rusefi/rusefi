@@ -67,7 +67,7 @@ TEST(DcMotor, PwmEnablePinModePositive) {
 	EXPECT_CALL(dir1, setSimplePwmDutyCycle(1));
 	EXPECT_CALL(dir2, setSimplePwmDutyCycle(0));
 
-	dut.configure(enable, dir1, dir2);
+	dut.configure(enable, dir1, dir2, false);
 	dut.set(0.5f);
 }
 
@@ -85,7 +85,7 @@ TEST(DcMotor, PwmEnablePinModeNegative) {
 	EXPECT_CALL(dir1, setSimplePwmDutyCycle(0));
 	EXPECT_CALL(dir2, setSimplePwmDutyCycle(1));
 
-	dut.configure(enable, dir1, dir2);
+	dut.configure(enable, dir1, dir2, false);
 	dut.set(-0.5f);
 }
 
@@ -103,7 +103,7 @@ TEST(DcMotor, PwmDirectionPinsModePositive) {
 	EXPECT_CALL(dir1, setSimplePwmDutyCycle(0.5f));
 	EXPECT_CALL(dir2, setSimplePwmDutyCycle(0));
 
-	dut.configure(enable, dir1, dir2);
+	dut.configure(enable, dir1, dir2, false);
 	dut.set(0.5f);
 }
 
@@ -121,6 +121,6 @@ TEST(DcMotor, PwmDirectionPinsModeNegative) {
 	EXPECT_CALL(dir1, setSimplePwmDutyCycle(0));
 	EXPECT_CALL(dir2, setSimplePwmDutyCycle(0.5f));
 
-	dut.configure(enable, dir1, dir2);
+	dut.configure(enable, dir1, dir2, false);
 	dut.set(-0.5f);
 }

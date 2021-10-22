@@ -6,7 +6,7 @@ This folder is and should not be aware of engine.h or engine_configuration.h
 
 Step 1: add into rusefi_config.txt
 
-Step 2: add into rusefi_enums.h
+Step 2: add into rusefi_enums.h, update TT_UNUSED, invoke gen_enum script
 
 Step 3: get it working.
 

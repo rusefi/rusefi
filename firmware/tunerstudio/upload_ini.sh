@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# user=$1
+# pass=$2
+# host=$3
 
 if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
  echo "No Secrets"
@@ -15,7 +18,7 @@ for f in *.ini; do if [[ -f "$f" ]]; then
   sig=$(grep "^ *signature *=" $f | cut -f2 -d "=")
   if [ ! -z "$sig" -a "$sig" != " " ]; then
     echo "* found signature: $sig"
-    if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_]+)\.([0-9]+) ]]; then
+    if [[ "$sig" =~ rusEFI.*([0-9]{4})\.([0-9]{2})\.([0-9]{2})\.([a-zA-Z0-9_-]+)\.([0-9]+) ]]; then
       year=${BASH_REMATCH[1]}
       month=${BASH_REMATCH[2]}
       day=${BASH_REMATCH[3]}
@@ -41,6 +44,8 @@ for f in *.ini; do if [[ -f "$f" ]]; then
         exit 1
       fi
       echo "* upload done!"
+    else
+      echo "Unexpected $sig"
     fi
   fi
 fi; done

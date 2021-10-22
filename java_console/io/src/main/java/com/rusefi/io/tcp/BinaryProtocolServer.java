@@ -66,7 +66,7 @@ public class BinaryProtocolServer {
         try {
             start(linkManager, DEFAULT_PROXY_PORT, Listener.empty(), new Context());
         } catch (IOException e) {
-            log.error("Error starting local proxy", e);
+            log.warn("Error starting local proxy: " + e);
         }
     }
 

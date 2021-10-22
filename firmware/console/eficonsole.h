@@ -10,3 +10,4 @@
 
 void initializeConsole();
 void startUsbConsole();
+void startEthernetConsole();

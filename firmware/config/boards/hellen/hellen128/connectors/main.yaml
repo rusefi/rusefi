@@ -189,7 +189,11 @@ pins:
     function: NC K line
  
   - pin: C40
-    function: proto via
+    id: [GPIOF_10]
+    class: [switch_inputs]
+    ts_name: C40 start button
+    function: Start button
+    type: din
 
   - pin: D1
     function: NC
@@ -198,7 +202,11 @@ pins:
     function: proto via
 
   - pin: D3
-    function: proto via
+    id: GPIOI_0
+    class: outputs
+    ts_name: D3 - Starter Enable
+    function: low side relay control
+    type: ls
 
   - pin: D4
     function: NC
@@ -515,6 +523,8 @@ pins:
     type: ign
 
   - pin: F6
+# OUT_IGN3 Q5
+# used as Coil#2 on M104
     id: GPIOE_4
     class: outputs
     ts_name: F6 - IGN 3
@@ -552,6 +562,9 @@ pins:
     type: ign
 
   - pin: F13
+# OUT_IGN4 Q3
+# CLK230
+# used as Coil#1 on M104 https://github.com/rusefi/rusefi/wiki/1997-e320
     id: GPIOE_3
     class: outputs
     ts_name: F13 - IGN 4
@@ -589,6 +602,9 @@ pins:
     type: ign
     
   - pin: F20
+# OUT_IGN1 Q1
+# CLK230
+# Used as coil#3 on M104
     id: GPIOI_8
     class: outputs
     ts_name: F20 - IGN 1
@@ -596,6 +612,7 @@ pins:
     type: ign
 
   - pin: F21
+# For Supercharger Clutch Activation on M111 4 cylinder compression, REMOVE F17. Install R80
     function: igniter
     type: ign
 
@@ -610,6 +627,7 @@ pins:
     ts_name: P31_IN_O2S2
 
 info:
+  title: Hellen 128 Mercedes
   image:
     file: main.jpg
   pins:

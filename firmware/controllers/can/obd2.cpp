@@ -120,7 +120,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE) * ODB_TPS_BYTE_PERCENT);
 		break;
 	case PID_COOLANT_TEMP:
-		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Clt).value_or(0) + ODB_TEMP_EXTRA);
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Clt) + ODB_TEMP_EXTRA);
 		break;
 	case PID_STFT_BANK1:
 		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(stftCorrection)[0]);
@@ -129,13 +129,13 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(stftCorrection)[1]);
 		break;
 	case PID_INTAKE_MAP:
-		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Map).value_or(0));
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Map));
 		break;
 	case PID_RPM:
 		obdSendValue(_1_MODE, pid, 2, GET_RPM() * ODB_RPM_MULT);	//	rotation/min.	(A*256+B)/4
 		break;
 	case PID_SPEED:
-		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::VehicleSpeed).value_or(0));
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::VehicleSpeed));
 		break;
 	case PID_TIMING_ADVANCE: {
 		float timing = engine->engineState.timingAdvance;
@@ -144,16 +144,16 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		break;
 		}
 	case PID_INTAKE_TEMP:
-		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Iat).value_or(0) + ODB_TEMP_EXTRA);
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Iat) + ODB_TEMP_EXTRA);
 		break;
 	case PID_INTAKE_MAF:
-		obdSendValue(_1_MODE, pid, 2, Sensor::get(SensorType::Maf).value_or(0) * 100.0f);	// grams/sec	(A*256+B)/100
+		obdSendValue(_1_MODE, pid, 2, Sensor::getOrZero(SensorType::Maf) * 100.0f);	// grams/sec	(A*256+B)/100
 		break;
 	case PID_THROTTLE:
-		obdSendValue(_1_MODE, pid, 1, Sensor::get(SensorType::Tps1).value_or(0) * ODB_TPS_BYTE_PERCENT);	// (A*100/255)
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Tps1) * ODB_TPS_BYTE_PERCENT);	// (A*100/255)
 		break;
 	case PID_FUEL_AIR_RATIO_1: {
-		float lambda = Sensor::get(SensorType::Lambda1).value_or(0);
+		float lambda = Sensor::getOrZero(SensorType::Lambda1);
 		// phi = 1 / lambda
 		float phi = clampF(0, 1 / lambda, 1.99f);
 

@@ -72,11 +72,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->map.sensor.type = MT_SUBY_DENSO;
 
-	// http://s2.micp.ru/vJ9Sd.png
-	engineConfiguration->engineLoadAccelLength = 12;
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = 1;
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 0.25;
-
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 
@@ -89,8 +84,6 @@ void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	// backup main relay pin
 //	setFsio(0, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 //#endif
-
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_4;
 
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOA_5;

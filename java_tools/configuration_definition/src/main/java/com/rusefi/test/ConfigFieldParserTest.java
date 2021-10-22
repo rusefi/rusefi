@@ -32,6 +32,41 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testFloatMsAlias() throws IOException {
+        String test = "struct pid_s\n" +
+                "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        CharArrayWriter writer = new CharArrayWriter();
+        TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
+        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
+                "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
+                "; total TS size = 8\n", new String(writer.toCharArray()));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testSameFieldTwice() throws IOException {
+        String test = "struct pid_s\n" +
+                "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "int afr_type2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
+            @Override
+            public void endFile() {
+            }
+        };
+        state.readBufferedReader(reader, Arrays.asList(consumer));
+    }
+
+    @Test
     public void testCustomEnum() throws IOException {
         String test = "struct pid_s\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +

@@ -40,19 +40,6 @@
 #include "stepper.h"
 #endif
 
-// todo: move all static vars to engine->engineState.idle?
-
-static bool shouldResetPid = false;
-// The idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.
-// The throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).
-// We set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.
-// See automaticIdleController().
-static bool mightResetPid = false;
-
-// This is needed to slowly turn on the PID back after it was reset.
-static bool wasResetPid = false;
-// This is used when the PID configuration is changed, to guarantee the reset
-static bool mustResetPid = false;
 static efitimeus_t restoreAfterPidResetTimeUs = 0;
 
 static PidIndustrial industrialWithOverrideIdlePid;
@@ -71,9 +58,6 @@ Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return &industrialWithOverrideIdlePid;
 }
 
-static uint32_t lastCrankingCyclesCounter = 0;
-static float lastCrankingIacPosition;
-
 static iacPidMultiplier_t iacPidMultMap;
 
 #if ! EFI_UNIT_TEST
@@ -85,12 +69,12 @@ void idleDebug(const char *msg, percent_t value) {
 static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	efiPrintf("useStepperIdle=%s useHbridges=%s",
-			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridges)));
+			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridgesToDriveIdleStepper)));
 	efiPrintf("idleMode=%s position=%.2f",
 			idleModeStr, getIdlePosition());
 
 	if (CONFIG(useStepperIdle)) {
-		if (CONFIG(useHbridges)) {
+		if (CONFIG(useHbridgesToDriveIdleStepper)) {
 			efiPrintf("Coil A:");
 			efiPrintf(" pin1=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin1)));
 			efiPrintf(" pin2=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin2)));
@@ -129,7 +113,7 @@ void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 percent_t getIdlePosition() {
-	return engine->engineState.idle.currentIdlePosition;
+	return engine->idle.currentIdlePosition;
 }
 
 void setManualIdleValvePosition(int positionPercent) {
@@ -187,7 +171,7 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 
 	// If still in the cranking taper, disable closed loop idle
 	if (crankingTaperFraction < 1) {
-		return Phase::CrankToRunTaper;
+		return Phase::CrankToIdleTaper;
 	}
 
 	// No other conditions met, we are idling!
@@ -281,31 +265,26 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 }
 
 /**
- * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
- */
-static percent_t blipIdlePosition;
-static efitimeus_t timeToStopBlip = 0;
-efitimeus_t timeToStopIdleTest = 0;
-
-/**
  * I use this questionable feature to tune acceleration enrichment
  */
 static void blipIdle(int idlePosition, int durationMs) {
-	if (timeToStopBlip != 0) {
+#if ! EFI_UNIT_TEST
+	if (engine->timeToStopBlip != 0) {
 		return; // already in idle blip
 	}
-	blipIdlePosition = idlePosition;
-	timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
+	engine->blipIdlePosition = idlePosition;
+	engine->timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
+#endif // EFI_UNIT_TEST
 }
 
-static void finishIdleTestIfNeeded() {
-	if (timeToStopIdleTest != 0 && getTimeNowUs() > timeToStopIdleTest)
-		timeToStopIdleTest = 0;
+static void finishIdleTestIfNeeded(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engine->timeToStopIdleTest != 0 && getTimeNowUs() > engine->timeToStopIdleTest)
+		engine->timeToStopIdleTest = 0;
 }
 
-static void undoIdleBlipIfNeeded() {
-	if (timeToStopBlip != 0 && getTimeNowUs() > timeToStopBlip) {
-		timeToStopBlip = 0;
+static void undoIdleBlipIfNeeded(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (engine->timeToStopBlip != 0 && getTimeNowUs() > engine->timeToStopBlip) {
+		engine->timeToStopBlip = 0;
 	}
 }
 
@@ -315,15 +294,15 @@ static void undoIdleBlipIfNeeded() {
 float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
 	auto idlePid = getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (shouldResetPid) {
+	if (engine->idle.shouldResetPid) {
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-		if (idlePid->getIntegration() <= 0 || mustResetPid) {
+		if (idlePid->getIntegration() <= 0 || engine->idle.mustResetPid) {
 			idlePid->reset();
-			mustResetPid = false;
+			engine->idle.mustResetPid = false;
 		}
 //			alternatorPidResetCounter++;
-		shouldResetPid = false;
-		wasResetPid = true;
+		engine->idle.shouldResetPid = false;
+		engine->idle.wasResetPid = true;
 	}
 
 	// todo: move this to pid_s one day
@@ -335,12 +314,12 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	if (phase != IIdleController::Phase::Idling) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
-		if (mightResetPid) {
-			mightResetPid = false;
-			shouldResetPid = true;
+		if (engine->idle.mightResetPid) {
+			engine->idle.mightResetPid = false;
+			engine->idle.shouldResetPid = true;
 		}
 
-		engine->engineState.idle.idleState = TPS_THRESHOLD;
+		engine->idle.idleState = TPS_THRESHOLD;
 
 		// We aren't idling, so don't apply any correction.  A positive correction could inhibit a return to idle.
 		m_lastAutomaticPosition = 0;
@@ -351,7 +330,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	bool acToggleJustTouched = (nowUs - engine->acSwitchLastChangeTime) < MS2US(500);
 	// check if within the dead zone
 	if (!acToggleJustTouched && absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
-		engine->engineState.idle.idleState = RPM_DEAD_ZONE;
+		engine->idle.idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
 		return m_lastAutomaticPosition;
 	}
@@ -364,23 +343,23 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	}
 
 	// if PID was previously reset, we store the time when it turned on back (see errorAmpCoef correction below)
-	if (wasResetPid) {
+	if (engine->idle.wasResetPid) {
 		restoreAfterPidResetTimeUs = nowUs;
-		wasResetPid = false;
+		engine->idle.wasResetPid = false;
 	}
 	// increase the errorAmpCoef slowly to restore the process correctly after the PID reset
-	// todo: move restoreAfterPidResetTimeUs to engineState.idle?
-	efitimeus_t timeSincePidResetUs = nowUs - /*engine->engineState.idle.*/restoreAfterPidResetTimeUs;
+	// todo: move restoreAfterPidResetTimeUs to idle?
+	efitimeus_t timeSincePidResetUs = nowUs - /*engine->idle.*/restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
 	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	idlePid->setErrorAmplification(errorAmpCoef);
 
 	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
-	engine->engineState.idle.idleState = PID_VALUE;
+	engine->idle.idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
-	mightResetPid = true;
+	engine->idle.mightResetPid = true;
 
 	// Apply PID Multiplier if used
 	if (CONFIG(useIacPidMultTable)) {
@@ -418,7 +397,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 
 		// On failed sensor, use 0 deg C - should give a safe highish idle
-		float clt = Sensor::get(SensorType::Clt).value_or(0);
+		float clt = Sensor::getOrZero(SensorType::Clt);
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 		float rpm;
@@ -436,29 +415,29 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		float crankingTaper = getCrankingTaperFraction();
 
 		// Determine what operation phase we're in - idling or not
-		float vehicleSpeed = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+		float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
 		auto phase = determinePhase(rpm, targetRpm, tps, vehicleSpeed, crankingTaper);
 		m_lastPhase = phase;
 
-		engine->engineState.isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
+		bool isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
-		if (engineConfiguration->isVerboseIAC && engine->engineState.isAutomaticIdle) {
-			efiPrintf("Idle state %s", getIdle_state_e(engine->engineState.idle.idleState));
+		if (engineConfiguration->isVerboseIAC && isAutomaticIdle) {
+			efiPrintf("Idle state %s", getIdle_state_e(engine->idle.idleState));
 			getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->showPidStatus("idle");
 		}
 
-		finishIdleTestIfNeeded();
-		undoIdleBlipIfNeeded();
+		finishIdleTestIfNeeded(PASS_ENGINE_PARAMETER_SIGNATURE);
+		undoIdleBlipIfNeeded(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		percent_t iacPosition;
 
-		if (timeToStopBlip != 0) {
-			iacPosition = blipIdlePosition;
-			engine->engineState.idle.idleState = BLIP;
+		if (engine->timeToStopBlip != 0) {
+			iacPosition = engine->blipIdlePosition;
+			engine->idle.idleState = BLIP;
 		} else {
 			// Always apply closed loop correction
 			iacPosition = getOpenLoop(phase, clt, tps, crankingTaper);
-			engine->engineState.idle.baseIdlePosition = iacPosition;
+			engine->idle.baseIdlePosition = iacPosition;
 
 			// If TPS is working and automatic mode enabled, add any automatic correction
 			if (tps.Valid && engineConfiguration->idleMode == IM_AUTO) {
@@ -476,7 +455,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
 				getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->postState(&tsOutputChannels, 1000000);
-				tsOutputChannels.debugIntField4 = engine->engineState.idle.idleState;
+				tsOutputChannels.debugIntField4 = engine->idle.idleState;
 			} else {
 				tsOutputChannels.debugFloatField1 = iacPosition;
 				extern StepperMotor iacMotor;
@@ -485,7 +464,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		}
 #endif /* EFI_TUNER_STUDIO */
 
-		engine->engineState.idle.currentIdlePosition = iacPosition;
+		engine->idle.currentIdlePosition = iacPosition;
 
 		return iacPosition;
 }
@@ -506,8 +485,8 @@ float getIdleTimingAdjustment(int rpm) {
 	return idleControllerInstance.getIdleTimingAdjustment(rpm);
 }
 
-bool isIdling() {
-	return idleControllerInstance.isIdling();
+bool isIdlingOrTaper() {
+	return idleControllerInstance.isIdlingOrTaper();
 }
 
 static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -539,8 +518,8 @@ void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if ! EFI_UNIT_TEST
 
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
-	shouldResetPid = !getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->isSame(&previousConfiguration->idleRpmPid);
-	mustResetPid = shouldResetPid;
+	engine->idle.shouldResetPid = !getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->isSame(&previousConfiguration->idleRpmPid);
+	engine->idle.mustResetPid = engine->idle.shouldResetPid;
 }
 
 void setTargetIdleRpm(int value) {
@@ -576,7 +555,7 @@ void setIdleDFactor(float value) {
  * Idle test would activate the solenoid for three seconds
  */
 void startIdleBench(void) {
-	timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
+	engine->timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
 	efiPrintf("idle valve bench test");
 	showIdleInfo();
 }
@@ -598,46 +577,9 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_UNIT_TEST */
 
-	DISPLAY_STATE(Engine)
-	DISPLAY_TEXT(Idle_State);
-	engine->engineState.idle.DISPLAY_FIELD(idleState) = INIT;
-	DISPLAY_TEXT(EOL);
-	DISPLAY_TEXT(Base_Position);
-	engine->engineState.idle.DISPLAY_FIELD(baseIdlePosition) = -100.0f;
-	DISPLAY_TEXT(Position_with_Adjustments);
-	engine->engineState.idle.DISPLAY_FIELD(currentIdlePosition) = -100.0f;
-	DISPLAY_TEXT(EOL);
-	DISPLAY_TEXT(EOL);
-	DISPLAY_SENSOR(TPS);
-	DISPLAY_TEXT(EOL);
-	DISPLAY_TEXT(Throttle_Up_State);
-	DISPLAY(DISPLAY_FIELD(throttlePedalUpState));
-	DISPLAY(DISPLAY_CONFIG(throttlePedalUpPin));
-
-	DISPLAY_TEXT(eol);
-	DISPLAY(DISPLAY_IF(isAutomaticIdle))
-
-		DISPLAY_STATE(idle_pid)
-		DISPLAY_TEXT(Output);
-		DISPLAY(DISPLAY_FIELD(output));
-		DISPLAY_TEXT(iTerm);
-		DISPLAY(DISPLAY_FIELD(iTerm));
-		DISPLAY_TEXT(eol);
-
-		DISPLAY_TEXT(Settings);
-		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_PFACTOR));
-		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_IFACTOR));
-		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_DFACTOR));
-		DISPLAY(DISPLAY_CONFIG(IDLERPMPID_OFFSET));
-
-
-		DISPLAY_TEXT(eol);
-		DISPLAY_TEXT(ETB_Idle);
-		DISPLAY_STATE(Engine)
-		DISPLAY(DISPLAY_FIELD(etbIdleAddition));
-	/* DISPLAY_ELSE */
-			DISPLAY_TEXT(Manual_idle_control);
-	/* DISPLAY_ENDIF */
+	engine->idle.idleState = INIT;
+	engine->idle.baseIdlePosition = -100.0f;
+	engine->idle.currentIdlePosition = -100.0f;
 
 #if ! EFI_UNIT_TEST
 

@@ -25,8 +25,6 @@ StepperMotor iacMotor CCM_OPTIONAL;
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
 
-extern efitimeus_t timeToStopIdleTest;
-
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
@@ -44,7 +42,7 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* EFI_UNIT_TEST */
 	} else {
 		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
-		if (!engine->triggerCentral.engineMovedRecently() && timeToStopIdleTest == 0) {
+		if (!engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(0);
 			idleSolenoidClose.setSimplePwmDutyCycle(0);
 			return;
@@ -91,7 +89,7 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (CONFIG(useStepperIdle)) {
 		StepperHw* hw;
 
-		if (CONFIG(useHbridges)) {
+		if (CONFIG(useHbridgesToDriveIdleStepper)) {
 			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0], 2, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
 			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1], 3, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
 

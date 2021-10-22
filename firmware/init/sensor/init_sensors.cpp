@@ -33,7 +33,6 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 
 static void initOldAnalogInputs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	initIfValid("AFR", engineConfiguration->afr.hwChannel);
-	initIfValid("MAP", engineConfiguration->map.sensor.hwChannel);
 	initIfValid("Baro", engineConfiguration->baroSensor.hwChannel);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 	initIfValid("CJ125 UR", engineConfiguration->cj125ur);
@@ -42,7 +41,6 @@ static void initOldAnalogInputs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 static void deInitOldAnalogInputs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
-	deInitIfValid("MAP", activeConfiguration.map.sensor.hwChannel);
 	deInitIfValid("Baro", activeConfiguration.baroSensor.hwChannel);
 	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
 	deInitIfValid("CJ125 UR", activeConfiguration.cj125ur);
@@ -64,6 +62,7 @@ void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initBaro(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initAuxSensors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVehicleSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTurbochargerSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	#if !EFI_UNIT_TEST
 		initFuelLevel(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -80,20 +79,24 @@ void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	deInitOldAnalogInputs(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	deinitTps();
+	deinitOilPressure();
 	deinitVbatt();
 	deinitThermistors();
 	deInitFlexSensor();
 	deInitVehicleSpeedSensor();
+	deinitTurbochargerSpeedSensor();
+	deinitMap();
 }
 
 void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
-
+	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
 	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
 	initVehicleSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTurbochargerSpeedSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	initOldAnalogInputs(PASS_CONFIG_PARAMETER_SIGNATURE);
 }

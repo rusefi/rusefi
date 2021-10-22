@@ -27,6 +27,8 @@ public:
 	float x = 0; // G value
 	float y = 0;
 	float z = 0;
+	float yaw = 0;
+	float roll = 0;
 };
 
 class SensorsState {

@@ -36,8 +36,9 @@ typedef enum {
 
 class TsChannelBase {
 public:
+	TsChannelBase(const char *name);
 	// Virtual functions - implement these for your underlying transport
-	virtual void write(const uint8_t* buffer, size_t size) = 0;
+	virtual void write(const uint8_t* buffer, size_t size, bool isEndOfPacket = false) = 0;
 	virtual size_t readTimeout(uint8_t* buffer, size_t size, int timeout) = 0;
 
 	// These functions are optional to implement, not all channels need them
@@ -59,6 +60,7 @@ public:
 	 * See 'blockingFactor' in rusefi.ini
 	 */
 	char scratchBuffer[BLOCKING_FACTOR + 30];
+	const char *name;
 
 private:
 	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
@@ -68,6 +70,7 @@ private:
 // This class represents a channel for a physical async serial poart
 class SerialTsChannelBase : public TsChannelBase {
 public:
+	SerialTsChannelBase(const char *name) : TsChannelBase(name) {};
 	// Open the serial port with the specified baud rate
 	virtual void start(uint32_t baud) = 0;
 };
@@ -76,12 +79,12 @@ public:
 // This class implements a ChibiOS Serial Driver
 class SerialTsChannel : public SerialTsChannelBase {
 public:
-	SerialTsChannel(SerialDriver& driver) : m_driver(&driver) { }
+	SerialTsChannel(SerialDriver& driver) : SerialTsChannelBase("Serial"), m_driver(&driver) { }
 
 	void start(uint32_t baud) override;
 	void stop() override;
 
-	void write(const uint8_t* buffer, size_t size) override;
+	void write(const uint8_t* buffer, size_t size, bool isEndOfPacket) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 
 private:
@@ -93,12 +96,12 @@ private:
 // This class implements a ChibiOS UART Driver
 class UartTsChannel : public SerialTsChannelBase {
 public:
-	UartTsChannel(UARTDriver& driver) : m_driver(&driver) { }
+	UartTsChannel(UARTDriver& driver) : SerialTsChannelBase("UART"), m_driver(&driver) { }
 
 	void start(uint32_t baud) override;
 	void stop() override;
 
-	void write(const uint8_t* buffer, size_t size) override;
+	void write(const uint8_t* buffer, size_t size, bool isEndOfPacket) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 
 protected:

@@ -12,6 +12,9 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
+#include "electronic_throttle_impl.h"
+#include "../hellen_meta.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -22,11 +25,6 @@ static void setInjectorPins() {
 	engineConfiguration->injectionPins[1] = GPIOG_8;
 	engineConfiguration->injectionPins[2] = GPIOD_11; // 97 - INJ_3
 	engineConfiguration->injectionPins[3] = GPIOD_10;
-
-	//engineConfiguration->injectionPins[4] = GPIOD_9;
-	//engineConfiguration->injectionPins[5] = GPIOF_12;
-	//engineConfiguration->injectionPins[6] = GPIOF_13;
-	//engineConfiguration->injectionPins[7] = GPIOF_14;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -53,16 +51,6 @@ static void setIgnitionPins() {
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-}
-
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
 }
 
 static void setupVbatt() {
@@ -112,7 +100,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
@@ -150,6 +138,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
 	engineConfiguration->etbIo[0].controlPin = GPIOA_8; // ETB_EN out_io12
 	CONFIG(etb_use_two_wires) = true;
+
+	setBoschVAGETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 	engineConfiguration->isSdCardEnabled = true;
 
@@ -190,6 +180,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
+	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
 	hellenWbo();
 }
 

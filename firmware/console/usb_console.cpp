@@ -15,7 +15,7 @@ extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
 class UsbChannel : public TsChannelBase {
 public:
 	UsbChannel(SerialUSBDriver& driver)
-		: m_channel(reinterpret_cast<BaseChannel*>(&driver))
+		: TsChannelBase("USB"), m_channel(reinterpret_cast<BaseChannel*>(&driver))
 	{
 	}
 
@@ -23,7 +23,7 @@ public:
 		return is_usb_serial_ready();
 	}
 
-	void write(const uint8_t* buffer, size_t size) override {
+	void write(const uint8_t* buffer, size_t size, bool) override {
 		chnWriteTimeout(m_channel, buffer, size, BINARY_IO_TIMEOUT);
 	}
 

@@ -332,7 +332,7 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 15,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 
 
-	eth.clearQueue();
+	eth.executeActions();
 
 //	debugSignalExecutor = true;
 
@@ -485,8 +485,6 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
-	testTriggerDecoder2("Civic 4/0 both", TEST_CIVIC_4_0_BOTH, 0, 0.5000, 0.0);
-	testTriggerDecoder2("Civic 4/0 rise", TEST_CIVIC_4_0_RISE, 0, 0.5000, 0.0);
 
 	testTriggerDecoder2("test 2/1 both", TEST_ISSUE_366_BOTH, 0, 0.2500, 0.0);
 	testTriggerDecoder2("test 2/1 rise", TEST_ISSUE_366_RISE, 0, 0.0000, 0.0);
@@ -502,9 +500,7 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder2("test1+1", DEFAULT_FRANKENSO, 0, 0.7500, 0.2500);
 
 	testTriggerDecoder2("testCitroen", CITROEN_TU3JP, 0, 0.4833, 0);
-	testTriggerDecoder2("testAccordCd 3w", HONDA_ACCORD_CD, 12, 0.8146, 0.5000);
 	testTriggerDecoder2("testAccordCd 2w", HONDA_ACCORD_CD_TWO_WIRES, 2, 0.9167, 0.5);
-	testTriggerDecoder2("testAccordCdDip", HONDA_ACCORD_CD_DIP, 27, 0.5000, 0.5000);
 
 	testTriggerDecoder2("testMitsu", MITSU_4G93, 0, 0.3553, 0.3752);
 	{
@@ -916,8 +912,10 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 ////	assertInjectorDownEvent("8@8", 8, MS2US(45), 1);
 ////	assertInjectorDownEvent("8@9", 9, MS2US(55), 0);
 
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
+/*
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
+*/
 }
 
 void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -942,7 +940,7 @@ TEST(big, testTwoWireBatch) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
-	eth.clearQueue();
+	eth.executeActions();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -970,7 +968,7 @@ TEST(big, testSequential) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
-	eth.clearQueue();
+	eth.executeActions();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
@@ -1094,8 +1092,10 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
-	ASSERT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
+	/*
 	ASSERT_EQ(CUSTOM_OBD_SKIPPED_FUEL, unitTestWarningCodeState.recentWarnings.get(0));
+*/
 }
 
 TEST(big, testSparkReverseOrderBug319) {
@@ -1130,7 +1130,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	ASSERT_EQ( 3000,  GET_RPM()) << "testSparkReverseOrderBug319: RPM";
 
 
-	ASSERT_EQ( 7,  engine->executor.size()) << "testSparkReverseOrderBug319: queue size";
+	ASSERT_EQ( 8,  engine->executor.size()) << "testSparkReverseOrderBug319: queue size";
 	eth.executeActions();
 	printf("***************************************************\r\n");
 

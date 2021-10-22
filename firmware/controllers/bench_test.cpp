@@ -75,7 +75,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
 
 	if (onTimeUs > TOO_FAR_INTO_FUTURE_US) {
-		firmwareError(CUSTOM_ERR_6703, "onTime above limit %dus", TOO_FAR_INTO_FUTURE_US);
+		firmwareError(CUSTOM_ERR_BENCH_PARAM, "onTime above limit %dus", TOO_FAR_INTO_FUTURE_US);
 		return;
 	}
 

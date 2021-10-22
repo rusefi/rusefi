@@ -204,7 +204,7 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 }
 
 void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiPrintf("Emulating %s", getConfigurationName(engineConfiguration->engineType));
+	efiPrintf("Emulating %s", getEngine_type_e(engineConfiguration->engineType));
 
 	startTriggerEmulatorPins(PASS_ENGINE_PARAMETER_SIGNATURE);
 

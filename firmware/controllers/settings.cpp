@@ -92,7 +92,7 @@ static void printOutputs(const engine_configuration_s *engineConfiguration) {
  */
 void printConfiguration(const engine_configuration_s *engineConfiguration) {
 
-	efiPrintf("Template %s/%d trigger %s/%s/%d", getConfigurationName(engineConfiguration->engineType),
+	efiPrintf("Template %s/%d trigger %s/%s/%d", getEngine_type_e(engineConfiguration->engineType),
 			engineConfiguration->engineType, getTrigger_type_e(engineConfiguration->trigger.type),
 			getEngine_load_mode_e(engineConfiguration->fuelAlgorithm), engineConfiguration->fuelAlgorithm);
 
@@ -734,6 +734,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		CONFIG(useTLE8888_cranking_hack) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		CONFIG(verboseTLE8888) = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
+		CONFIG(artificialTestMisfire) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
 		CONFIG(displayLogicLevelsInEngineSniffer) = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
@@ -782,8 +784,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isVerboseAlternator = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "tpic_advanced_mode")) {
 		engineConfiguration->useTpicAdvancedMode = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "knockdebug")) {
-		engine->knockDebug = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "altcontrol")) {
 		engineConfiguration->isAlternatorControlEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "sd")) {
@@ -915,7 +915,6 @@ const plain_get_integer_s getI_plain[] = {
 		{"trigger_type", (int*)&engineConfiguration->trigger.type},
 //		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 //		{"tps_accel_len", setTpsAccelLen},
-//		{"engine_load_accel_len", setEngineLoadAccelLen},
 //		{"bor", setBor},
 //		{"can_mode", setCanType},
 //		{"idle_rpm", setTargetIdleRpm},
@@ -1025,11 +1024,9 @@ struct command_f_s {
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
 #if EFI_ENABLE_MOCK_ADC
-		{MOCK_IAT_COMMAND, setMockIatVoltage},
 		{MOCK_MAF_COMMAND, setMockMafVoltage},
 		{MOCK_AFR_COMMAND, setMockAfrVoltage},
 		{MOCK_MAP_COMMAND, setMockMapVoltage},
-		{MOCK_CLT_COMMAND, setMockCltVoltage},
 #endif // EFI_ENABLE_MOCK_ADC
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
@@ -1041,10 +1038,6 @@ const command_f_s commandsF[] = {
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
 		{"cranking_priming_pulse", setCrankingPrimingPulse},
-		{"engine_load_accel_threshold", setEngineLoadAccelThr},
-		{"engine_load_accel_multiplier", setEngineLoadAccelMult},
-		{"engine_decel_threshold", setDecelThr},
-		{"engine_decel_multiplier", setDecelMult},
 		{"flat_injector_lag", setFlatInjectorLag},
 #endif // EFI_ENGINE_CONTROL
 		{"fsio_curve_1_value", setFsioCurve1Value},
@@ -1106,7 +1099,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 		{"tps_accel_len", setTpsAccelLen},
-		{"engine_load_accel_len", setEngineLoadAccelLen},
 #endif // EFI_ENGINE_CONTROL
 #if EFI_PROD_CODE
 		{"bor", setBor},
@@ -1310,48 +1302,6 @@ void initSettings(void) {
 }
 
 #endif /* !EFI_UNIT_TEST */
-
-/**
- * These should be not very long because these are displayed on the LCD as is
- */
-const char* getConfigurationName(engine_type_e engineType) {
-	switch (engineType) {
-	case DEFAULT_FRANKENSO:
-		return "DEFAULT_FRANKENSO";
-	case DODGE_NEON_1995:
-		return "Neon95";
-	case FORD_ASPIRE_1996:
-		return "Aspire";
-	case NISSAN_PRIMERA:
-		return "Primera";
-	case HONDA_ACCORD_CD:
-		return "Accord3";
-	case HONDA_ACCORD_CD_TWO_WIRES:
-		return "Accord2";
-	case HONDA_ACCORD_1_24_SHIFTED:
-		return "Accord24sh";
-	case HONDA_ACCORD_CD_DIP:
-		return "HondaD";
-	case FORD_INLINE_6_1995:
-		return "Fordi6";
-	case GY6_139QMB:
-		return "Gy6139";
-	case MAZDA_MIATA_NB1:
-		return "MiataNB1";
-	case FORD_ESCORT_GT:
-		return "EscrtGT";
-	case CITROEN_TU3JP:
-		return "TU3JP";
-	case MITSU_4G93:
-		return "Mi4G93";
-	case MIATA_1990:
-		return "MX590";
-	case MIATA_1996:
-		return "MX596";
-	default:
-		return getEngine_type_e(engineType);
-	}
-}
 
 void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	{

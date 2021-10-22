@@ -43,7 +43,7 @@ public class LinkManager implements Closeable {
     public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue;
 
-    private LinkConnector connector;
+    private LinkConnector connector = LinkConnector.VOID;
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
@@ -53,8 +53,20 @@ public class LinkManager implements Closeable {
             System.out.println(source + ": " + message);
         }
     };
+    private Thread communicationThread;
 
     public LinkManager() {
+        Future<?> future = submit(() -> {
+            communicationThread = Thread.currentThread();
+            System.out.println("communicationThread lookup DONE");
+        });
+        try {
+            // let's wait for the above trivial task to finish
+            future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
             @Override
             public void beforeLine(String fullLine) {
@@ -162,32 +174,12 @@ public class LinkManager implements Closeable {
             COMMUNICATION_QUEUE,
             new NamedThreadFactory("communication executor"));
 
-    static {
-/*
-        Future future = submit(new Runnable() {
-            @Override
-            public void run() {
-            // WAT? this is hanging?!
-                COMMUNICATION_THREAD = Thread.currentThread();
-                System.out.println("Done");
-            }
-        });
-        try {
-            // let's wait for the above trivial task to finish
-            future.get();
-            System.out.println("Done2");
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IllegalStateException(e);
-        }
- */
+    public void assertCommunicationThread() {
+        if (Thread.currentThread() != communicationThread)
+            throw new IllegalStateException("Communication on wrong thread");
     }
 
-    public static void assertCommunicationThread() {
-//        if (Thread.currentThread() != COMMUNICATION_THREAD)
-//            throw new IllegalStateException("Communication on wrong thread");
-    }
-
-    private EngineState engineState;
+    private final EngineState engineState;
 
     public EngineState getEngineState() {
         return engineState;
@@ -205,6 +197,7 @@ public class LinkManager implements Closeable {
         connector.connectAndReadConfiguration(stateListener);
     }
 
+    @NotNull
     public LinkConnector getConnector() {
         return connector;
     }

@@ -51,14 +51,6 @@ static volatile int measurementsPerRevolutionCounter = 0;
 static volatile int measurementsPerRevolution = 0;
 
 /**
- * In this lock-free implementation 'readIndex' is always pointing
- * to the consistent copy of accumulator and counter pair
- */
-static int readIndex = 0;
-static float accumulators[2];
-static int counters[2];
-
-/**
  * Running MAP accumulator - sum of all measurements within averaging window
  */
 static volatile float mapAdcAccumulator = 0;
@@ -72,17 +64,12 @@ static volatile int mapMeasurementsCounter = 0;
  */
 static float v_averagedMapValue;
 
-// allow a bit more smoothing
-#define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT * 2)
+// allow smoothing up to number of cylinders
+#define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
 // in MAP units, not voltage!
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
-// we need this 'NO_VALUE_YET' to properly handle transition from engine not running to engine already running
-// but prior to first processed result
-#define NO_VALUE_YET -100
-// this is 'minimal averaged' MAP within avegaging window
-static float currentPressure = NO_VALUE_YET;
 
 /**
  * here we have averaging start and averaging end points for each cylinder
@@ -140,7 +127,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
 				== 0) {
 			float voltage = adcToVoltsDivided(adcValue);
-			float currentPressure = getMapByVoltage(voltage);
+			float currentPressure = convertMap(voltage).value_or(0);
 			scAddData(
 					getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX),
 					currentPressure);
@@ -148,18 +135,6 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	}
 #endif /* EFI_SENSOR_CHART */
 
-	/**
-	 * Local copy is now safe, but it's an overkill: we only
-	 * have one writing thread anyway
-	 */
-	int readIndexLocal = readIndex;
-	int writeIndex = readIndexLocal ^ 1;
-	accumulators[writeIndex] = accumulators[readIndexLocal] + adcValue;
-	counters[writeIndex] = counters[readIndexLocal] + 1;
-	// this would commit the new pair of values
-	readIndex = writeIndex;
-
-	// todo: migrate to the lock-free implementation
 	{
 		// with locking we will have a consistent state
 		chibios_rt::CriticalSectionLocker csl;
@@ -169,8 +144,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 }
 #endif
 
-static void endAveraging(void *arg) {
-	(void) arg;
+static void endAveraging(void*) {
 #if ! EFI_UNIT_TEST
 	chibios_rt::CriticalSectionLocker csl;
 #endif
@@ -179,17 +153,23 @@ static void endAveraging(void *arg) {
 #if HAL_USE_ADC
 	if (mapMeasurementsCounter > 0) {
 		v_averagedMapValue = adcToVoltsDivided(mapAdcAccumulator / mapMeasurementsCounter);
-		// todo: move out of locked context?
-		averagedMapRunningBuffer[averagedMapBufIdx] = getMapByVoltage(v_averagedMapValue);
-		// increment circular running buffer index
-		averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
-		// find min. value (only works for pressure values, not raw voltages!)
-		float minPressure = averagedMapRunningBuffer[0];
-		for (int i = 1; i < mapMinBufferLength; i++) {
-			if (averagedMapRunningBuffer[i] < minPressure)
-				minPressure = averagedMapRunningBuffer[i];
+
+		SensorResult mapValue = convertMap(v_averagedMapValue);
+
+		// Skip update if conversion invalid
+		if (mapValue) {
+			averagedMapRunningBuffer[averagedMapBufIdx] = mapValue.Value;
+			// increment circular running buffer index
+			averagedMapBufIdx = (averagedMapBufIdx + 1) % mapMinBufferLength;
+			// find min. value (only works for pressure values, not raw voltages!)
+			float minPressure = averagedMapRunningBuffer[0];
+			for (int i = 1; i < mapMinBufferLength; i++) {
+				if (averagedMapRunningBuffer[i] < minPressure)
+					minPressure = averagedMapRunningBuffer[i];
+			}
+
+			onMapAveraged(minPressure, getTimeNowNt());
 		}
-		currentPressure = minPressure;
 	} else {
 		warning(CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values");
 	}
@@ -212,7 +192,7 @@ static void applyMapMinBufferLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField1 = v_averagedMapValue;
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
-	tsOutputChannels->debugFloatField3 = currentPressure;
+	tsOutputChannels->debugFloatField3 = Sensor::getOrZero(SensorType::MapFast);
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
 }
 #endif /* EFI_TUNER_STUDIO */
@@ -317,30 +297,6 @@ static void showMapStats(void) {
 	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 
-#if EFI_PROD_CODE
-
-/**
- * Because of MAP window averaging, MAP is only available while engine is spinning
- * @return Manifold Absolute Pressure, in kPa
- */
-float getMap(void) {
-	if (!isAdcChannelValid(engineConfiguration->map.sensor.hwChannel))
-		return 0;
-
-	if (engineConfiguration->hasFrequencyReportingMapSensor) {
-		return getRawMap();
-	}
-
-#if EFI_ANALOG_SENSORS
-	if (!isValidRpm(GET_RPM()) || currentPressure == NO_VALUE_YET)
-		return validateMap(getRawMap()); // maybe return NaN in case of stopped engine?
-	return validateMap(currentPressure);
-#else
-	return 100;
-#endif
-}
-#endif /* EFI_PROD_CODE */
-
 void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if !EFI_UNIT_TEST
 	addConsoleAction("faststat", showMapStats);
@@ -348,18 +304,5 @@ void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
-
-#else
-
-#if EFI_PROD_CODE
-
-float getMap(void) {
-#if EFI_ANALOG_SENSORS
-	return getRawMap();
-#else
-	return NAN;
-#endif /* EFI_ANALOG_SENSORS */
-}
-#endif /* EFI_PROD_CODE */
 
 #endif /* EFI_MAP_AVERAGING */

@@ -1,7 +1,11 @@
 package com.rusefi;
 
+import com.fathzer.soft.javaluator.Parameters;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.rusefi.ConfigField.BOOLEAN_T;
 
@@ -30,6 +34,7 @@ public class ConfigStructure {
     public final BitState readingBitState = new BitState();
 
     private ConfigField cPrevField = ConfigField.VOID;
+    private final Set<String> names = new HashSet<>();
 
     public ConfigStructure(String name, String comment, boolean withPrefix, boolean withConstructor) {
         this.name = name;
@@ -82,9 +87,13 @@ public class ConfigStructure {
     }
 
     public void addC(ConfigField cf) {
-        // skip duplicate names
+        // skip duplicate names - that's the weird use-case of conditional project definition like lambdaTable
         if (cf.getName().equals(cPrevField.getName()))
             return;
+
+        boolean isNew = names.add(cf.getName());
+        if (!isNew)
+            throw new IllegalStateException(cf.getName() + " name already used");
 
         cFields.add(cf);
 

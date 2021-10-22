@@ -4,11 +4,13 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.generated.AcControl;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.enums.live_data_e;
+import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.ui.config.ConfigField;
-import com.rusefi.ui.livedocs.LiveDocPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +27,9 @@ import java.awt.image.BufferedImage;
 
 
 /**
+ * todo: it was a nice prototype of jlatexmath usage but it's time to remove it soon!
+ * Lua nad live_data_e seems much more promising at the moment
+ *
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class FormulasPane {
@@ -40,14 +45,13 @@ public class FormulasPane {
     private final UIContext uiContext;
     private boolean isPaused;
 
-    private JPanel liveDocs;
-
     public FormulasPane(UIContext uiContext) {
         this.uiContext = uiContext;
 
+        LiveDataParserPanel livePanel = LiveDataParserPanel.getLiveDataParserPanel(uiContext, live_data_e.LDS_AC_CONTROL, AcControl.VALUES, "ac_control.cpp");
+
         JPanel vertical = new JPanel(new VerticalFlowLayout());
-        liveDocs = LiveDocPanel.createLiveDocumentationPanel(uiContext);
-        vertical.add(liveDocs);
+        vertical.add(livePanel.getContent());
         vertical.add(formulaProxy);
 
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

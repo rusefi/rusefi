@@ -328,7 +328,17 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
 	// shall adjust vvt position as well
 	vvtPosition -= crankOffset;
-	tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition);
+	vvtPosition = wrapVvt(vvtPosition);
+	if (absF(vvtPosition - tdcPosition()) < 7) {
+		/**
+		 * we prefer not to have VVT sync right at trigger sync so that we do not have phase detection error if things happen a bit in
+		 * wrong order due to belt flex or else
+		 * https://github.com/rusefi/rusefi/issues/3269
+		 */
+		warning(CUSTOM_VVT_SYNC_POSITION, "VVT sync position too close to trigger sync");
+	}
+
+	tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
 }
 
 int triggerReentraint = 0;
@@ -657,7 +667,7 @@ void triggerInfo(void) {
 #endif /* HAL_TRIGGER_USE_PAL */
 
 	efiPrintf("Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%.2f",
-			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
+			getEngine_type_e(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
 			boolToString(engineConfiguration->trigger.useOnlyFirstChannel), TRIGGER_WAVEFORM(tdcPosition));

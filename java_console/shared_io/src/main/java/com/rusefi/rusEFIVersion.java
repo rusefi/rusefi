@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class rusEFIVersion {
-    public static final int CONSOLE_VERSION = 20210831;
+    public static final int CONSOLE_VERSION = 20211022;
     public static AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");
 
     public static long classBuildTimeMillis() {
@@ -29,7 +29,7 @@ public class rusEFIVersion {
         } else {
             throw new IllegalArgumentException("Unhandled url protocol: " +
                     resource.getProtocol() + " for class: " +
-                    clazz.getName() + " resource: " + resource.toString());
+                    clazz.getName() + " resource: " + resource);
         }
     }
 }

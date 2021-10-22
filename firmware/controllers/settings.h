@@ -18,9 +18,3 @@ void setCallFromPitStop(int durationMs);
 void printTPSInfo(void);
 void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void readPin(const char *pinName);
-
-/**
- * See also getEngine_type_e()
- */
-const char* getConfigurationName(engine_type_e engineType);
-

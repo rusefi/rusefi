@@ -98,7 +98,7 @@ TEST(idle_v2, testDeterminePhase) {
 	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, 1000, 0, 25, 10));
 
 	// Check that shortly after cranking, the cranking taper inhibits closed loop idle
-	EXPECT_EQ(ICP::CrankToRunTaper, dut.determinePhase(1000, 1000, 0, 0, 0.5f));
+	EXPECT_EQ(ICP::CrankToIdleTaper, dut.determinePhase(1000, 1000, 0, 0, 0.5f));
 
 	// Above TPS threshold should be outside the zone
 	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, 1000, 10, 0, 10));
@@ -246,19 +246,19 @@ TEST(idle_v2, openLoopRunningTaper) {
 
 	// 0 cycles - no taper yet, pure cranking value
 	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Running, 30, 0, 0));
-	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 0));
+	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::CrankToIdleTaper, 30, 0, 0));
 
 	// 1/2 taper - half way, 50% each value -> outputs 50
 	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::Running, 30, 0, 0.5f));
-	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 0.5f));
+	EXPECT_FLOAT_EQ(50, dut.getOpenLoop(ICP::CrankToIdleTaper, 30, 0, 0.5f));
 
 	// 1x taper - fully tapered, should be running value
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 30, 0, 1.0f));
-	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 1.0f));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 30, 0, 1.0f));
 
 	// 2x taper - still fully tapered, should be running value
 	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::Running, 30, 0, 2.0f));
-	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToRunTaper, 30, 0, 2.0f));
+	EXPECT_FLOAT_EQ(25, dut.getOpenLoop(ICP::CrankToIdleTaper, 30, 0, 2.0f));
 }
 
 TEST(idle_v2, getCrankingTaperFraction) {

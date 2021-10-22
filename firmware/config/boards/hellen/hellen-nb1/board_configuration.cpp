@@ -1,10 +1,10 @@
 /**
- * @file boards/hellen/hellen64_miataNA6_94/board_configuration.cpp
+ * @file boards/hellen/hellen-nb1/board_configuration.cpp
  *
  *
- * @brief Configuration defaults for the hellen64_miataNA6_94 board
+ * @brief Configuration defaults for the hellen-nb1 board
  *
- * See https://rusefi.com/s/hellenNA6
+ * See http://rusefi.com/s/hellenNB1
  *
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -12,17 +12,14 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
+#include "../hellen_meta.h"
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
-	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
-	engineConfiguration->injectionPins[3] = GPIOD_10;
-
-	//engineConfiguration->injectionPins[4] = GPIOD_9;
-	//engineConfiguration->injectionPins[5] = GPIOF_12;
-	//engineConfiguration->injectionPins[6] = GPIOF_13;
-	//engineConfiguration->injectionPins[7] = GPIOF_14;
+	engineConfiguration->injectionPins[0] = H144_LS_1;
+	engineConfiguration->injectionPins[1] = H144_LS_2;
+	engineConfiguration->injectionPins[2] = H144_LS_3;
+	engineConfiguration->injectionPins[3] = H144_LS_4;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -34,36 +31,21 @@ static void setInjectorPins() {
 	engineConfiguration->clutchDownPin = GPIOC_4; // Clutch switch input
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; //1E - Check Engine Light
+	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO8;
 }
 
 static void setIgnitionPins() {
-	engineConfiguration->ignitionPins[0] = GPIOI_8; // 3F - IGN_1 (1&4)
-	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED ; // GPIOE_4
-	engineConfiguration->ignitionPins[2] = GPIOE_5; // 3I - IGN_2 (2&3)
-	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED; // GPIOE_3
+	engineConfiguration->ignitionPins[0] = H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->ignitionPins[2] = H144_IGN_2;
+	engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
-	//engineConfiguration->ignitionPins[4] = GPIOE_2;
-	//engineConfiguration->ignitionPins[5] = GPIOI_5;
-	//engineConfiguration->ignitionPins[6] = GPIOI_6;
-	//engineConfiguration->ignitionPins[7] = GPIOI_7;
-	
 	// disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-}
-
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
 }
 
 static void setupVbatt() {
@@ -104,7 +86,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
@@ -142,11 +124,16 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->acRelayPin = GPIOH_15; // 1J - AC Relay
+	engineConfiguration->boostControlPin = H144_LS_6;
+	engineConfiguration->acSwitch = H144_IN_D_AUX3;
+	engineConfiguration->acRelayPin = H144_OUT_IO6;
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+    engineConfiguration->tachOutputPin = H144_OUT_PWM1;
+	engineConfiguration->alternatorControlPin = H144_OUT_PWM7;
+	engineConfiguration->fan2Pin = H144_OUT_IO2;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -163,6 +150,11 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
+
+	engineConfiguration->clutchDownPin = H144_IN_D_2;
+	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
+	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
+// ?	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; //1E - Check Engine Light
 }
 
 /**
@@ -170,16 +162,11 @@ void setBoardDefaultConfiguration(void) {
  * @todo    Add your board-specific code, if any.
  */
 void setSdCardConfigurationOverrides(void) {
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
-	engineConfiguration->spi3mosiPin = GPIOC_12;
-	engineConfiguration->spi3misoPin = GPIOC_11;
-	engineConfiguration->spi3sckPin = GPIOC_10;
-	engineConfiguration->sdCardCsPin = GPIOA_15;
-
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
+	engineConfiguration->spi2misoPin = H_SPI2_MISO;
+	engineConfiguration->spi2sckPin = H_SPI2_SCK;
+	engineConfiguration->sdCardCsPin = H_SPI2_CS;
+	CONFIG(is_enabled_spi_2) = true;
 }

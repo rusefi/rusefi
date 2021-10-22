@@ -47,8 +47,8 @@ public enum Sensor {
     Lambda(GAUGE_NAME_LAMBDA, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 34, 1.0 / PACK_MULT_LAMBDA, 0.65, 1.2, "lambda"),
 
     VBATT(GAUGE_NAME_VBAT, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 38, 1.0 / PACK_MULT_VOLTAGE, 4, 18, "Volts"),
-    oilPressure("Oil Pressure", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 40, 1.0 / PACK_MULT_PRESSURE, 0, 5, "X"),
-    vvtPosition("vvt position", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 42, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
+    oilPressure(GAUGE_NAME_OIL_PRESSURE, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 40, 1.0 / PACK_MULT_PRESSURE, 0, 5, "X"),
+    vvtPositionB1I(GAUGE_NAME_VVT_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 42, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
 
     // fuel math
     CHARGE_AIR_MASS("airmass", SensorCategory.OPERATIONS, FieldType.UINT16, 44, 0.001, 0, 3, "g/cyl"),
@@ -90,6 +90,7 @@ public enum Sensor {
     // Fuel system
 
     // Knock
+    knockLevel(GAUGE_NAME_KNOCK_LEVEL, SensorCategory.DEBUG, FieldType.FLOAT, 108, 0, 5),
 
     // Mode, firmware, protocol, run time
     TIME_SECONDS(GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, 112, 1, 0, 5, ""),
@@ -100,7 +101,7 @@ public enum Sensor {
     engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
     totalTriggerErrorCounter(GAUGE_NAME_TRG_ERR, SensorCategory.STATUS, FieldType.INT, 140, 0, 5),
-    lastErrorCode("last error", SensorCategory.STATUS, FieldType.INT, 150, 0, 5),
+    lastErrorCode(GAUGE_NAME_WARNING_LAST, SensorCategory.STATUS, FieldType.INT, 150, 0, 5),
 
     // Debug
     debugFloatField1(GAUGE_NAME_DEBUG_F1, SensorCategory.DEBUG, FieldType.FLOAT, 168, 0, 5),
@@ -115,12 +116,35 @@ public enum Sensor {
     debugIntField3(GAUGE_NAME_DEBUG_I3, SensorCategory.DEBUG, FieldType.INT, 204, 0, 5),
     debugIntField4("debug i4", SensorCategory.DEBUG, FieldType.INT16, 208, 0, 5),
     debugIntField5("debug i5", SensorCategory.DEBUG, FieldType.INT16, 210, 0, 5),
+    accelerationX(GAUGE_NAME_ACCEL_X, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 212, 1.0 / PACK_MULT_PERCENT, -3, 3, "G"),
+    accelerationY(GAUGE_NAME_ACCEL_Y, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 214, 1.0 / PACK_MULT_PERCENT, -3, 3, "G"),
 
     tuneCrc16("tune crc16", SensorCategory.STATUS, FieldType.UINT16, 244, 0, 5),
 
     // Raw sensors
     rawClt("raw CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 238, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
     rawIat("raw IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 240, 1.0 / PACK_MULT_VOLTAGE, 0, 5, "volts"),
+
+    tcuDesiredGear(GAUGE_NAME_DESIRED_GEAR, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 262, 1.0, 0, 100, "gear"),
+    flexPercent(GAUGE_NAME_FLEX, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 263, 1.0 / 2, 0, 100, "%"),
+
+    wastegatePosition(GAUGE_NAME_WG_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 268, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
+    idlePositionSensor(GAUGE_NAME_IDLE_POSITION, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 270, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
+
+    lowFuelPressure(GAUGE_NAME_FUEL_PRESSURE_LOW, SensorCategory.OPERATIONS, FieldType.INT16, 276, 1.0 / PACK_MULT_PRESSURE, 10, 20, "afr"),
+    highFuelPressure(GAUGE_NAME_FUEL_PRESSURE_HIGH, SensorCategory.OPERATIONS, FieldType.INT16, 278, 1.0 / PACK_MULT_HIGH_PRESSURE, 10, 20, "afr"),
+
+
+    airFuelRatio(GAUGE_NAME_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 282, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
+    airFuelRatio2(GAUGE_NAME_AFR2, SensorCategory.OPERATIONS, FieldType.INT16, 288, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
+
+    vvtPositionB1E(GAUGE_NAME_VVT_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 290, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
+    vvtPositionB2I(GAUGE_NAME_VVT_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 292, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
+    vvtPositionB2E(GAUGE_NAME_VVT_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 294, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
+
+    accelerationZ(GAUGE_NAME_ACCEL_Z, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 308, 1.0 / PACK_MULT_PERCENT, -3, 3, "G"),
+    accelerationRoll(GAUGE_NAME_ACCEL_ROLL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 310, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
+    accelerationYaw(GAUGE_NAME_ACCEL_YAW, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 312, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),

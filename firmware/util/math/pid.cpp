@@ -14,7 +14,7 @@
 #include "math.h"
 
 Pid::Pid() {
-	initPidClass(NULL);
+	initPidClass(nullptr);
 }
 
 Pid::Pid(pid_s *parameters) {

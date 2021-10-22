@@ -64,7 +64,6 @@ static MenuItem miAfr(&miSensors, LL_AFR);
 static MenuItem miBaro(&miSensors, LL_BARO);
 static MenuItem miMapV(&miSensors, LL_MAF_V);
 static MenuItem miMapKgHr(&miSensors, LL_MAF_KG_HR);
-static MenuItem miKnock(&miSensors, LL_KNOCK);
 
 static MenuItem miStopEngine(&miBench, "stop engine", scheduleStopEngine);
 static MenuItem miTestFan(&miBench, "test fan", fanBench);
@@ -140,7 +139,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("ver %s %d", VCS_VERSION, getRusEfiVersion());
 		return;
 	case LL_CONFIG:
-		lcdPrintf("config %s", getConfigurationName(engineConfiguration->engineType));
+		lcdPrintf("config %s", getEngine_type_e(engineConfiguration->engineType));
 		return;
 	case LL_RPM:
 	{
@@ -161,10 +160,10 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 #endif
 		return;
 	case LL_CLT_TEMPERATURE:
-		lcdPrintf("Coolant %.2f", Sensor::get(SensorType::Clt).value_or(0));
+		lcdPrintf("Coolant %.2f", Sensor::getOrZero(SensorType::Clt));
 		return;
 	case LL_IAT_TEMPERATURE:
-		lcdPrintf("Intake Air %.2f", Sensor::get(SensorType::Iat).value_or(0));
+		lcdPrintf("Intake Air %.2f", Sensor::getOrZero(SensorType::Iat));
 		return;
 	case LL_ALGORITHM:
 		lcdPrintf(getEngine_load_mode_e(engineConfiguration->fuelAlgorithm));
@@ -181,7 +180,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 	case LL_TPS:
 		getPinNameByAdcChannel("tps", engineConfiguration->tps1_1AdcChannel, buffer);
 
-		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::get(SensorType::Tps1).value_or(0));
+		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::getOrZero(SensorType::Tps1));
 		return;
 	case LL_FUEL_CLT_CORRECTION:
 		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
@@ -193,11 +192,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);
 		return;
 	case LL_VBATT:
-		lcdPrintf("Battery %.2fv", Sensor::get(SensorType::BatteryVoltage).value_or(0));
-		return;
-	case LL_KNOCK:
-		getPinNameByAdcChannel("hip", engineConfiguration->hipOutputChannel, buffer);
-		lcdPrintf("Knock %s %.2fv", buffer, engine->knockVolts);
+		lcdPrintf("Battery %.2fv", Sensor::getOrZero(SensorType::BatteryVoltage));
 		return;
 
 #if	EFI_ANALOG_SENSORS
@@ -211,14 +206,14 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 #endif
 	case LL_AFR:
 		if (Sensor::hasSensor(SensorType::Lambda1)) {
-			lcdPrintf("AFR: %.2f", Sensor::get(SensorType::Lambda1).value_or(0));
+			lcdPrintf("AFR: %.2f", Sensor::getOrZero(SensorType::Lambda1));
 		} else {
 			lcdPrintf("AFR: none");
 		}
 		return;
 	case LL_MAP:
-		if (hasMapSensor(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-			lcdPrintf("MAP %.2f", Sensor::get(SensorType::Map).value_or(0));
+		if (Sensor::hasSensor(SensorType::Map)) {
+			lcdPrintf("MAP %.2f", Sensor::getOrZero(SensorType::Map));
 		} else {
 			lcdPrintf("MAP: none");
 		}
@@ -232,7 +227,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		return;
 	case LL_MAF_KG_HR:
 		if (Sensor::hasSensor(SensorType::Maf)) {
-			lcdPrintf("MAF: %.2f kg/hr", Sensor::get(SensorType::Maf).value_or(0));
+			lcdPrintf("MAF: %.2f kg/hr", Sensor::getOrZero(SensorType::Maf));
 		} else {
 			lcdPrintf("MAF: none");
 		}

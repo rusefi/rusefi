@@ -38,6 +38,7 @@
 #include "trigger_central.h"
 #include "hip9011_logic.h"
 #include "hip9011.h"
+#include "knock_logic.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -242,6 +243,9 @@ static void endIntegration(HIP9011 *hip) {
 	 */
 	if (hip->state == IS_INTEGRATING) {
 		intHold.setLow();
+
+		hip->knockSampleTimestamp = getTimeNowNt();
+
 		if (instance.adv_mode) {
 			/* read value over SPI in thread mode */
 			hip->state = NOT_READY;
@@ -251,6 +255,19 @@ static void endIntegration(HIP9011 *hip) {
 			hip->state = WAITING_FOR_ADC_TO_SKIP;
 		}
 	}
+}
+
+void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds, uint8_t channelIdx) {
+	/* TODO: @dron0gus: not sure if we need the expectedCylinderNumber logic at all
+
+	Something like this might be right:
+
+	startIntegration(&instance);
+
+	efitick_t windowLength = USF2NT(1e6 * samplingTimeSeconds);
+
+	engine->executor.scheduleByTimestampNt("knock", &hardware.endTimer, getTimeNowNt() + windowLength, { endIntegration, &instance });
+	*/
 }
 
 /**
@@ -483,12 +500,8 @@ static msg_t hipThread(void *arg) {
 
 			/* Check for correct cylinder/input */
 			if (correctCylinder) {
-				/* report */
-				engine->knockLogic(knockVolts);
-
-				/* TunerStudio */
-				tsOutputChannels.knockLevels[instance.cylinderNumber] = knockVolts;
-				tsOutputChannels.knockLevel = knockVolts;
+				// TODO: convert knock level to dBv
+				engine->onKnockSenseCompleted(instance.cylinderNumber, knockVolts, instance.knockSampleTimestamp);
 
 				#if EFI_HIP_9011_DEBUG
 					/* debug */
@@ -603,11 +616,6 @@ static void showHipInfo(void) {
 	efiPrintf(" PaSDO=0x%x",
 		instance.prescaler);
 
-	efiPrintf(" knockVThreshold=%.2f knockCount=%d maxKnockSubDeg=%.2f",
-		engineConfiguration->knockVThreshold,
-		engine->knockCount,
-		engineConfiguration->maxKnockSubDeg);
-
 	efiPrintf(" IntHold %s (mode 0x%x)",
 		hwPortname(CONFIG(hip9011IntHoldPin)),
 		CONFIG(hip9011IntHoldPinMode));
@@ -646,18 +654,6 @@ static void showHipInfo(void) {
 			normalizedValueMax[i]);
 		normalizedValueMax[i] = 0.0;
 	}
-
-	engine->printKnockState();
-}
-
-static void setMaxKnockSubDeg(int value) {
-    engineConfiguration->maxKnockSubDeg = value;
-    showHipInfo();
-}
-
-static void setKnockThresh(float value) {
-    engineConfiguration->knockVThreshold = value;
-    showHipInfo();
 }
 
 static void setPrescalerAndSDO(int value) {
@@ -679,8 +675,6 @@ static void hip_addconsoleActions(void) {
 	addConsoleActionF("set_gain", setHipGain);
 	addConsoleActionF("set_band", setHipBand);
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
-    addConsoleActionF("set_knock_threshold", setKnockThresh);
-    addConsoleActionI("set_max_knock_sub_deg", setMaxKnockSubDeg);
 }
 
 #endif /* EFI_HIP_9011_DEBUG */

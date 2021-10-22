@@ -15,21 +15,16 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 
 	auto map = getMap(rpm);
 
-	engine->engineState.sd.manifoldAirPressureAccelerationAdjustment = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float ve = getVe(rpm, map);
 
-	float adjustedMap = engine->engineState.sd.adjustedManifoldAirPressure = map + engine->engineState.sd.manifoldAirPressureAccelerationAdjustment;
-	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(adjustedMap), "NaN adjustedMap", {});
-
-	float ve = getVe(rpm, adjustedMap);
-
-	float airMass = getAirmassImpl(ve, adjustedMap, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
+	float airMass = getAirmassImpl(ve, map, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
 	if (cisnan(airMass)) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
 		return {};
 	}
 #if EFI_PRINTF_FUEL_DETAILS
-	printf("getSpeedDensityAirmass map=%.2f adjustedMap=%.2f airMass=%.2f\t\n",
-			map, adjustedMap, engine->engineState.sd.adjustedManifoldAirPressure);
+	printf("getSpeedDensityAirmass map=%.2f\n",
+			map);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	return {
@@ -39,13 +34,17 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 }
 
 float SpeedDensityAirmass::getMap(int rpm) const {
-	float fallbackMap;
-	if (CONFIG(enableMapEstimationTableFallback)) {
-		// if the map estimation table is enabled, estimate map based on the TPS and RPM
-		fallbackMap = m_mapEstimationTable->getValue(rpm, TPS_2_BYTE_PACKING_MULT * Sensor::get(SensorType::Tps1).value_or(0));
+	SensorResult map = Sensor::get(SensorType::Map);
+	if (map) {
+		return map.Value;
 	} else {
-		fallbackMap = CONFIG(failedMapFallback);
-	}
+		float fallbackMap;
+		if (CONFIG(enableMapEstimationTableFallback)) {
+		// if the map estimation table is enabled, estimate map based on the TPS and RPM
+			fallbackMap = m_mapEstimationTable->getValue(rpm, TPS_2_BYTE_PACKING_MULT * Sensor::getOrZero(SensorType::Tps1));
+		} else {
+			fallbackMap = CONFIG(failedMapFallback);
+		}
 
 #if EFI_TUNER_STUDIO
 	if (CONFIG(debugMode) == DBG_MAP) {
@@ -53,5 +52,6 @@ float SpeedDensityAirmass::getMap(int rpm) const {
 	}
 #endif // EFI_TUNER_STUDIO
 
-	return Sensor::get(SensorType::Map).value_or(fallbackMap);
+		return fallbackMap;
+	}
 }

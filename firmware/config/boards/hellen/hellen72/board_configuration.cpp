@@ -12,6 +12,7 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "custom_engine.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -55,16 +56,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
-}
-
 static void setupVbatt() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
@@ -104,7 +95,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
@@ -153,6 +144,10 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->enableFan2WithAc = true;
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
 	engineConfiguration->auxPidPins[0] = GPIOI_0;    // 4R - VVT (O5)
+
+    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
+    engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)
+
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

@@ -188,6 +188,10 @@ void runRusEfi(void) {
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
 
+#if EFI_ETHERNET
+	startEthernetConsole();
+#endif
+
 #if EFI_USB_SERIAL
 	startUsbConsole();
 #endif

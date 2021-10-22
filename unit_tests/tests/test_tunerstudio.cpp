@@ -5,7 +5,9 @@ static uint8_t st5TestBuffer[16000];
 
 class MockTsChannel : public TsChannelBase {
 public:
-	void write(const uint8_t* buffer, size_t size) override {
+	MockTsChannel() : TsChannelBase("Test") { }
+
+	void write(const uint8_t* buffer, size_t size, bool /*isLastWriteInTransaction*/) override {
 		memcpy(&st5TestBuffer[writeIdx], buffer, size);
 		writeIdx += size;
 	}

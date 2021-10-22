@@ -8,7 +8,7 @@
 #pragma once
 
 #include "engine_configuration.h"
-
+void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setFrankenso_01_LCD(engine_configuration_s *engineConfiguration);
 void disableLCD(engine_configuration_s *engineConfiguration);
@@ -34,3 +34,7 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void setRotary(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+
+void setHellen144LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHellen176LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE);

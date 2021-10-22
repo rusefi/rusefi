@@ -334,7 +334,7 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 	efiAssertVoid(CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
 	efiAssertVoid(CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
 	if (frequency < 1) {
-		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f", frequency);
+		warning(CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
 	}
 

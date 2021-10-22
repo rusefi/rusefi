@@ -1,4 +1,4 @@
-#define MAIN_HELP_URL "https://rusefi.com/s/hellen121nissan"
+#define MAIN_HELP_URL "https://rusefi.com/s/hellen154hyuindai"
 
 #define ts_show_hip9011 false
 #define ts_show_cj125 false
@@ -24,3 +24,4 @@
 #define show_Frankenso_presets false
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
+#define show_Hellen_hyundai_154 true

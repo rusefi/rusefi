@@ -27,7 +27,9 @@ public enum Type {
     }
 
     public static Optional<Type> findByCtype(String cType) {
-        return Arrays.stream(Type.values()).filter(t -> t.cType.equals(cType)).findFirst();
+        // todo: better implementation of type aliases!
+        String cTypeWithAlas = "floatms_t".equals(cType) ? "float" : cType;
+        return Arrays.stream(Type.values()).filter(t -> t.cType.equals(cTypeWithAlas)).findFirst();
     }
 
     public static Type findByTsType(String tsType) {

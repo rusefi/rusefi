@@ -111,18 +111,6 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_ENGINE_CONTROL
 }
 
-#if EFI_ENABLE_MOCK_ADC
-
-static void initMockVoltage(void) {
-#if EFI_SIMULATOR
-	setMockCltVoltage(2);
-	setMockIatVoltage(2);
-#endif /* EFI_SIMULATOR */
-}
-
-#endif /* EFI_ENABLE_MOCK_ADC */
-
-
 #if !EFI_UNIT_TEST
 
 static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -195,7 +183,6 @@ efitimesec_t getTimeNowSeconds(void) {
 }
 
 static void resetAccel(void) {
-	engine->engineLoadAccelEnrichment.resetAE();
 	engine->tpsAccelEnrichment.resetAE();
 
 	for (size_t i = 0; i < efi::size(engine->injectionEvents.elements); i++)
@@ -324,14 +311,13 @@ static void printAnalogInfo(void) {
 	printAnalogChannelInfo("AuxT2", engineConfiguration->auxTempSensor2.adcChannel);
 	printAnalogChannelInfo("MAF", engineConfiguration->mafAdcChannel);
 	for (int i = 0; i < AUX_ANALOG_INPUT_COUNT ; i++) {
-		adc_channel_e ch = engineConfiguration->fsioAdc[i];
-		printAnalogChannelInfo("FSIO analog", ch);
+		adc_channel_e ch = engineConfiguration->auxAnalogInputs[i];
+		printAnalogChannelInfo("Aux analog", ch);
 	}
 
 	printAnalogChannelInfo("AFR", engineConfiguration->afr.hwChannel);
 	printAnalogChannelInfo("MAP", engineConfiguration->map.sensor.hwChannel);
 	printAnalogChannelInfo("BARO", engineConfiguration->baroSensor.hwChannel);
-	printAnalogChannelInfo("extKno", engineConfiguration->externalKnockSenseAdc);
 
 	printAnalogChannelInfo("OilP", engineConfiguration->oilPressure.hwChannel);
 
@@ -498,14 +484,6 @@ static void initConfigActions(void) {
 	addConsoleActionI("get_byte", getByte);
 	addConsoleActionII("get_bit", getBit);
 }
-
-// todo: move this logic somewhere else?
-static void getKnockInfo(void) {
-	adc_channel_e hwChannel = engineConfiguration->externalKnockSenseAdc;
-	efiPrintf("externalKnockSenseAdc on ADC", getPinNameByAdcChannel("knock", hwChannel, pinNameBuffer));
-
-	engine->printKnockState();
-}
 #endif /* EFI_UNIT_TEST */
 
 // this method is used by real firmware and simulator and unit test
@@ -527,11 +505,6 @@ void commonInitEngineController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 */
 	prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_PROD_CODE && EFI_ENGINE_CONTROL */
-
-
-#if EFI_ENABLE_MOCK_ADC
-	initMockVoltage();
-#endif /* EFI_ENABLE_MOCK_ADC */
 
 #if EFI_SENSOR_CHART
 	initSensorChart();
@@ -678,6 +651,15 @@ bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
 	}
 
+	for (size_t index = 0; index < efi::size(CONFIG(vrThreshold)); index++) {
+		auto& cfg = CONFIG(vrThreshold)[index];
+
+		if (cfg.pin == GPIO_UNASSIGNED) {
+			continue;
+		}
+		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
+		ensureArrayIsAscending("VR values", cfg.values);
+	}
 
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
@@ -688,10 +670,17 @@ bool validateConfig(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
 
 	// VVT
-	ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
-	ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
-	ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
-	ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+	if (CONFIG(camInputs[0]) != GPIO_UNASSIGNED) {
+		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
+		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
+	}
+
+#if CAM_INPUTS_COUNT != 1
+	if (CONFIG(camInputs[1]) != GPIO_UNASSIGNED) {
+		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
+		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
+	}
+#endif
 
 	return true;
 }
@@ -746,10 +735,6 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	initEgoAveraging(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	if (isAdcChannelValid(engineConfiguration->externalKnockSenseAdc)) {
-		addConsoleAction("knockinfo", getKnockInfo);
-	}
-
 #if EFI_PROD_CODE
 	addConsoleAction("reset_accel", resetAccel);
 #endif /* EFI_PROD_CODE */
@@ -769,7 +754,7 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 10000
+#define RAM_UNUSED_SIZE 3500
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 600

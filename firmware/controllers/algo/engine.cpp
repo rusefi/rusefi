@@ -185,7 +185,7 @@ static void cylinderCleanupControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	bool newValue;
 	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning() && Sensor::get(SensorType::DriverThrottleIntent).value_or(0) > CLEANUP_MODE_TPS;
+		newValue = !engine->rpmCalculator.isRunning() && Sensor::getOrZero(SensorType::DriverThrottleIntent) > CLEANUP_MODE_TPS;
 	} else {
 		newValue = false;
 	}
@@ -225,7 +225,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_FSIO */
 
-	bool acActive = updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool acActive = acState.updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
 	updateFans(acActive PASS_ENGINE_PARAMETER_SUFFIX);
 
 	updateGppwm();
@@ -323,7 +323,7 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		engine->clutchUpState = CONFIG(clutchUpPinInverted) ^ efiReadPin(CONFIG(clutchUpPin));
 	}
 	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
-		engine->engineState.idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+		engine->idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
 	}
 
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
@@ -477,38 +477,6 @@ void Engine::setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	injectEngineReferences();
 }
 
-void Engine::printKnockState(void) {
-	efiPrintf("knock now=%s/ever=%s", boolToString(knockNow), boolToString(knockEver));
-}
-
-void Engine::knockLogic(float knockVolts DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	this->knockVolts = knockVolts;
-    knockNow = knockVolts > engineConfiguration->knockVThreshold;
-    /**
-     * KnockCount is directly proportional to the degrees of ignition
-     * advance removed
-     * ex: degrees to subtract = knockCount;
-     */
-
-    /**
-     * TODO use knockLevel as a factor for amount of ignition advance
-     * to remove
-     * Perhaps allow the user to set a multiplier
-     * ex: degrees to subtract = knockCount + (knockLevel * X)
-     * X = user configurable multiplier
-     */
-    if (knockNow) {
-        knockEver = true;
-        timeOfLastKnockEvent = getTimeNowUs();
-        if (knockCount < engineConfiguration->maxKnockSubDeg)
-            knockCount++;
-    } else if (knockCount >= 1) {
-        knockCount--;
-	} else {
-        knockCount = 0;
-    }
-}
-
 void Engine::watchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
@@ -637,6 +605,7 @@ static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 			&& type != TT_ONE
 			&& type != TT_ONE_PLUS_ONE
 			&& type != TT_3_1_CAM
+			&& type != TT_36_2_2_2
 			&& type != TT_TOOTHED_WHEEL_60_2
 			&& type != TT_TOOTHED_WHEEL_36_1;
 }

@@ -65,7 +65,8 @@ static void sayHello(void) {
 		firmwareError(OBD_PCM_Processor_Fault, "rusEFI expected at least %dK of flash", MIN_FLASH_SIZE);
 	}
 
-	efiPrintf("MCU rev=%x size=%d", mcuRevision, flashSize);
+	// todo: bug, at the moment we report 1MB on dual-bank F7
+	efiPrintf("MCU rev=%x flashSize=%d", mcuRevision, flashSize);
 #endif
 
 
@@ -165,6 +166,10 @@ static void cmd_threads(void) {
 	while (tp) {
 		int freeBytes = CountFreeStackSpace(tp->wabase);
 		efiPrintf("%s\t%08x\t%lu\t%d", tp->name, tp->wabase, tp->time, freeBytes);
+
+		if (freeBytes < 100) {
+			firmwareError(OBD_PCM_Processor_Fault, "Ran out of stack on thread %s, %d bytes remain", tp->name, freeBytes);
+		}
 
 		tp = chRegNextThread(tp);
 	}

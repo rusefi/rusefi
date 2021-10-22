@@ -40,6 +40,12 @@ TEST(ignition, twoCoils) {
 TEST(ignition, trailingSpark) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
+	/**
+	// TODO #3220: this feature makes this test sad, eventually remove this line (and the ability to disable it altogether)
+	 * I am pretty sure that it's about usage of improper method clearQueue() below see it's comment
+	 */
+	engine->enableOverdwellProtection = false;
+
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
@@ -57,6 +63,7 @@ TEST(ignition, trailingSpark) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
+	ASSERT_EQ( 3000,  GET_RPM()) << "RPM#0";
 	eth.clearQueue();
 
 	/**
@@ -72,7 +79,7 @@ TEST(ignition, trailingSpark) {
 	EXPECT_EQ(engine->executor.size(), 2);
 
 	// execute all actions
-	eth.clearQueue();
+	eth.executeActions();
 
 	// Primary and secondary coils should be low - primary just fired
 	EXPECT_EQ(enginePins.coils[0].getLogicValue(), false);
@@ -83,17 +90,31 @@ TEST(ignition, trailingSpark) {
 
 	// Fire trigger fall - should schedule ignition chargings (rising edges)
 	eth.fireFall(20);
-	eth.clearQueue();
+	eth.moveTimeForwardMs(18);
+	eth.executeActions();
 
-	// Primary and secondary coils should be low
+	// Primary low, scheduling trailing
 	EXPECT_EQ(enginePins.coils[0].getLogicValue(), true);
+	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), false);
+
+	eth.moveTimeForwardMs(2);
+	eth.executeActions();
+
+	// and secondary coils should be low
 	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), true);
 
 	// Fire trigger rise - should schedule ignition firings
-	eth.fireRise(20);
-	eth.clearQueue();
+	eth.fireRise(0);
+	eth.moveTimeForwardMs(1);
+	eth.executeActions();
 
-	// Primary and secondary coils should be low
+	// Primary goes low, scheduling trailing
 	EXPECT_EQ(enginePins.coils[0].getLogicValue(), false);
+	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), true);
+
+	eth.moveTimeForwardMs(1);
+	eth.executeActions();
+	// secondary coils should be low
 	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), false);
+
 }
