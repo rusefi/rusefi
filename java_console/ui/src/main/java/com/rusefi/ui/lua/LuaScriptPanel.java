@@ -3,6 +3,7 @@ package com.rusefi.ui.lua;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.LinkManager;
 import com.rusefi.ui.MessagesPanel;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.storage.Node;
@@ -120,32 +121,36 @@ public class LuaScriptPanel {
     }
 
     void write() {
-        BinaryProtocol bp = this.context.getLinkManager().getCurrentStreamState();
-
         String script = scriptText.getText();
 
-        byte[] paddedScript = new byte[Fields.LUA_SCRIPT_SIZE];
-        byte[] scriptBytes = script.getBytes(StandardCharsets.US_ASCII);
-        System.arraycopy(scriptBytes, 0, paddedScript, 0, scriptBytes.length);
+        LinkManager linkManager = context.getLinkManager();
 
-        int idx = 0;
-        int remaining;
+        linkManager.submit(() -> {
+            BinaryProtocol bp = linkManager.getCurrentStreamState();
 
-        do {
-            remaining = paddedScript.length - idx;
-            int thisWrite = Math.min(remaining, Fields.BLOCKING_FACTOR);
+            byte[] paddedScript = new byte[Fields.LUA_SCRIPT_SIZE];
+            byte[] scriptBytes = script.getBytes(StandardCharsets.US_ASCII);
+            System.arraycopy(scriptBytes, 0, paddedScript, 0, scriptBytes.length);
 
-            bp.writeData(paddedScript, idx, Fields.luaScript_offset + idx, thisWrite);
+            int idx = 0;
+            int remaining;
 
-            idx += thisWrite;
+            do {
+                remaining = paddedScript.length - idx;
+                int thisWrite = Math.min(remaining, Fields.BLOCKING_FACTOR);
 
-            remaining -= thisWrite;
-        } while (remaining > 0);
+                bp.writeData(paddedScript, idx, Fields.luaScript_offset + idx, thisWrite);
 
-        bp.burn();
+                idx += thisWrite;
 
-        // Burning doesn't reload lua script, so we have to do it manually
-        resetLua();
+                remaining -= thisWrite;
+            } while (remaining > 0);
+
+            bp.burn();
+
+            // Burning doesn't reload lua script, so we have to do it manually
+            resetLua();
+        });
     }
 
     void resetLua() {
