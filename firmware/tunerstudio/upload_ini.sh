@@ -28,7 +28,7 @@ for f in *.ini; do if [[ -f "$f" ]]; then
       echo "* found path: $path"
       # we do not have ssh for this user
       # sftp does not support -p flag on mkdir :(
-      sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<'SSHCMD'
+      sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<SSHCMD
 cd rusefi
 mkdir $year
 mkdir $year/$month
