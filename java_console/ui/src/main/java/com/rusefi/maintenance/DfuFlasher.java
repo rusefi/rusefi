@@ -24,7 +24,7 @@ import static com.rusefi.StartupFrame.appendBundleName;
  * @see FirmwareFlasher
  */
 public class DfuFlasher {
-    private static final String DFU_BINARY_LOCATION = "STM32_Programmer_CLI/bin";
+    private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
