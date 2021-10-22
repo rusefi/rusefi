@@ -32,6 +32,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Fixed
  - A/C control bugfix
+ - Better Windows build-in DFU #3338
 
 ## Removed
  - Remove engine load acceleration enrichment #3357
