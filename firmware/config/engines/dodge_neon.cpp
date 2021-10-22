@@ -383,10 +383,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 //	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
-	engineConfiguration->engineLoadAccelLength = 12;
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 0;
-
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 

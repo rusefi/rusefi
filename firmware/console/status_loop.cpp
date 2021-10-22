@@ -199,7 +199,7 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	}
 	timeOfPreviousPrintVersion = nowSeconds;
 	int seconds = getTimeNowSeconds();
-	printCurrentState(&logger, seconds, getConfigurationName(engineConfiguration->engineType), FIRMWARE_ID);
+	printCurrentState(&logger, seconds, getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, CONFIG(triggerInputPins)[0]);
 	printOutPin(PROTOCOL_CRANK2, CONFIG(triggerInputPins)[1]);
@@ -752,10 +752,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 
-	tsOutputChannels->engineLoadAccelExtra = engine->engineLoadAccelEnrichment.getEngineLoadEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE) * 100 / Sensor::getOrZero(SensorType::Map);
-
-	tsOutputChannels->engineLoadDelta = engine->engineLoadAccelEnrichment.getMaxDelta();
-
 	tsOutputChannels->checkEngine = hasErrorCodes();
 
 #if EFI_MAX_31855
@@ -809,9 +805,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 // no one uses shaft so far		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugIntField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
+#endif /* EFI_PROD_CODE */
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.vvtEventRiseCounter;
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.vvtEventFallCounter;
-#endif /* EFI_PROD_CODE */
 
 		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
 		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);

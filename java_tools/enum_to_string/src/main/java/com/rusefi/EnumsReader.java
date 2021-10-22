@@ -9,9 +9,10 @@ import java.io.*;
 import java.util.*;
 
 public class EnumsReader {
+    public static final String ENUMCLASS_PREFIX = "enumclass";
     private final Map<String, Value> currentValues = new TreeMap<>();
 
-    private final Map<String, Map<String, Value>> enums = new TreeMap<>();
+    private final Map<String, EnumState> enums = new TreeMap<>();
 
     @NotNull
     static List<Value> getSortedByOrder(Map<String, Value> brain_pin_e) {
@@ -20,7 +21,7 @@ public class EnumsReader {
         return new ArrayList<>(byOrdinal);
     }
 
-    public Map<String /*enum name*/, Map<String/*enum member*/, Value>> getEnums() {
+    public Map<String /*enum name*/, EnumState> getEnums() {
         return enums;
     }
 
@@ -32,6 +33,8 @@ public class EnumsReader {
         boolean isInsideEnum = false;
         BufferedReader reader = new BufferedReader(in);
         String line;
+        String enumName = null;
+        boolean isEnumClass = false;
 
         boolean withAutoValue = false;
 
@@ -40,18 +43,31 @@ public class EnumsReader {
 
             line = line.replaceAll("//.+", "");
             if (line.startsWith("typedefenum{") || line.startsWith("typedefenum__attribute__")) {
-                SystemOut.println("  EnumsReader: Entering enum");
+                SystemOut.println("  EnumsReader: Entering legacy enum");
                 currentValues.clear();
                 withAutoValue = false;
                 isInsideEnum = true;
+                enumName = null;
+                isEnumClass = false;
+            } else if (line.startsWith(ENUMCLASS_PREFIX)) {
+                SystemOut.println("  EnumsReader: Entering fancy enum class");
+                currentValues.clear();
+                withAutoValue = false;
+                isInsideEnum = true;
+                isEnumClass = true;
+                int colonIndex = line.indexOf(":");
+                if (colonIndex == -1)
+                    throw new IllegalStateException("color and Type not located in " + line);
+                enumName = line.substring(ENUMCLASS_PREFIX.length(), colonIndex);
             } else if (line.startsWith("}") && line.endsWith(";")) {
                 isInsideEnum = false;
-                line = line.substring(1, line.length() - 1);
-                SystemOut.println("  EnumsReader: Ending enum " + line + " found " + currentValues.size() + " values");
+                if (enumName == null)
+                    enumName = line.substring(1, line.length() - 1);
+                SystemOut.println("  EnumsReader: Ending enum " + enumName + " found " + currentValues.size() + " values");
                 if (withAutoValue)
                     validateValues(currentValues);
 
-                enums.put(line, new TreeMap<>(currentValues));
+                enums.put(enumName, new EnumState(currentValues, enumName, isEnumClass));
             } else {
                 if (isInsideEnum) {
                     if (isKeyValueLine(line)) {
@@ -90,5 +106,25 @@ public class EnumsReader {
 
     static boolean isKeyValueLine(String line) {
         return removeSpaces(line).matches("[a-zA-Z_$][a-zA-Z\\d_$]*(=(0x[0-9a-fA-F]+|(-)?[0-9]+|([-a-zA-Z\\d_])*))*,?");
+    }
+
+    public static class EnumState {
+        public Map<String, Value> values;
+        public final String enumName;
+        public final boolean isEnumClass;
+
+        public EnumState(Map<String, Value> currentValues, String enumName, boolean isEnumClass) {
+            values = new TreeMap<>(currentValues);
+            this.enumName = enumName;
+            this.isEnumClass = isEnumClass;
+        }
+
+        public Collection<Value> values() {
+            return values.values();
+        }
+
+        public Iterable<? extends Map.Entry<String, Value>> entrySet() {
+            return values.entrySet();
+        }
     }
 }

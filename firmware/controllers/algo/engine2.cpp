@@ -92,8 +92,6 @@ EngineState::EngineState() {
 }
 
 void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// this feeds rusEfi console Live Data
-	engine->engineState.isCrankingState = ENGINE(rpmCalculator).isCranking();
 }
 
 void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

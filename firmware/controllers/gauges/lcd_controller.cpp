@@ -139,7 +139,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("ver %s %d", VCS_VERSION, getRusEfiVersion());
 		return;
 	case LL_CONFIG:
-		lcdPrintf("config %s", getConfigurationName(engineConfiguration->engineType));
+		lcdPrintf("config %s", getEngine_type_e(engineConfiguration->engineType));
 		return;
 	case LL_RPM:
 	{

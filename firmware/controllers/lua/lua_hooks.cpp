@@ -59,10 +59,17 @@ static int lua_getAuxAnalog(lua_State* l) {
 	return getSensor(l, type);
 }
 
-static int lua_getSensor(lua_State* l) {
+static int lua_getSensorByIndex(lua_State* l) {
 	auto sensorIndex = luaL_checkinteger(l, 1);
 
 	return getSensor(l, static_cast<SensorType>(sensorIndex));
+}
+
+static int lua_getSensorByName(lua_State* l) {
+	auto sensorName = luaL_checklstring(l, 1, nullptr);
+	SensorType type = findSensorTypeByName(sensorName);
+
+	return getSensor(l, type);
 }
 
 static int lua_getSensorRaw(lua_State* l) {
@@ -344,7 +351,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
-	lua_register(l, "getSensor", lua_getSensor);
+	lua_register(l, "getSensorByIndex", lua_getSensorByIndex);
+	lua_register(l, "getSensor", lua_getSensorByName);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
 	lua_register(l, "table3d", lua_table3d);

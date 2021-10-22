@@ -68,6 +68,22 @@
 			}
 		},
 		{
+			"label": "Build Firmware (Atlas H7)",
+			"type": "shell",
+			"command": "make -j16 PROJECT_BOARD=atlas PROJECT_CPU=ARCH_STM32H7",
+			"windows": {
+				"command": "wsl bash -lc 'make -j12 PROJECT_BOARD=atlas PROJECT_CPU=ARCH_STM32H7'"
+			},
+			"options": {
+				"cwd": "${workspaceRoot}/firmware"
+			},
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
 			"label": "Build Firmware (hellen72)",
 			"type": "shell",
 			"command": "make -j16 PROJECT_BOARD=hellen/hellen72",

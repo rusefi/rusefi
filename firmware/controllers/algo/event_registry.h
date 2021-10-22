@@ -13,6 +13,7 @@
 #include "fl_stack.h"
 #include "trigger_structure.h"
 #include "accel_enrichment.h"
+#include "wall_fuel.h"
 
 #define MAX_WIRES_COUNT 2
 

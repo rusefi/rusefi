@@ -60,4 +60,25 @@
 
 #define LWIP_COMPAT_SOCKETS 0
 
+#define LWIP_RAW 0
+#define LWIP_TCP 1
+#define LWIP_UDP 0
+#define LWIP_STATS 0
+
+// In theory we're only talking to a single PC, so we don't need a big ARP table
+#define ARP_TABLE_SIZE 4
+
+// ascii `rus`
+#define LWIP_ETHADDR_0 0x72
+#define LWIP_ETHADDR_1 0x75
+#define LWIP_ETHADDR_2 0x73
+#define LWIP_ETHADDR_3 0x12
+#define LWIP_ETHADDR_4 0x34
+#define LWIP_ETHADDR_5 0x56
+
+#include "rusefi_generated.h"
+
+// Ensure that one TCP segment can always fit an entire response to TS - we never need to split a TS packet across multiple frames.
+#define TCP_MSS (BLOCKING_FACTOR + 10)
+
 #endif /* LWIP_HDR_LWIPOPTS_H__ */

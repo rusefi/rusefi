@@ -12,6 +12,7 @@ import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.yaml.snakeyaml.Yaml;
 
@@ -252,18 +253,18 @@ public class ConfigDefinition {
 
         // Parse the input files
         {
-            ParseState listener = new ParseState(state.enumsReader);
+            ParseState parseState = new ParseState(state.enumsReader);
 
             // First process yaml files
             //processYamls(listener, yamlFiles);
 
             // Process firing order enum
-            handleFiringOrder(firingEnumFileName, listener);
+            handleFiringOrder(firingEnumFileName, parseState);
 
             // Load prepend files
             {
                 // Ignore duplicates of definitions made during prepend phase
-                listener.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
+                parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
                 //for (String prependFile : prependFiles) {
                     // TODO: fix signature define file parsing
@@ -274,8 +275,8 @@ public class ConfigDefinition {
             // Now load the main config file
             {
                 // don't allow duplicates in the main file
-                listener.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-                parseFile(listener, definitionInputFile);
+                parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+                parseFile(parseState.getListener(), definitionInputFile);
             }
 
             // Write C structs
@@ -475,7 +476,7 @@ public class ConfigDefinition {
             }
             PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
             String pinType = listPinType.getPinType();
-            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()) {
                 if (kv.getKey().equals(id)) {
                     int index = kv.getValue().getIntValue();
@@ -493,7 +494,7 @@ public class ConfigDefinition {
             String outputEnumName = namePinType.getOutputEnumName();
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
-            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < kv.getValue().size(); i++) {
                 if (sb.length() > 0)
@@ -635,7 +636,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static void parseFile(ParseState listener, String filePath) throws IOException {
+    private static void parseFile(ParseTreeListener listener, String filePath) throws IOException {
         SystemOut.println("Parsing file (Antlr) " + filePath);
 
         CharStream in = new ANTLRInputStream(new FileInputStream(filePath));

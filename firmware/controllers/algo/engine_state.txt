@@ -15,27 +15,12 @@ float Tcharge_coff
 
 floatms_t airFlow
 
-float manifoldAirPressureAccelerationAdjustment;
-float adjustedManifoldAirPressure;
-
 
 ! speed_density_s
 end_struct
 
 speed_density_s sd;
 
-
-struct_no_prefix idle_state_s
-	idle_state_e idleState
-	percent_t currentIdlePosition;that's current position with CLT and IAT corrections
-	percent_t baseIdlePosition;current position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)
-	int throttlePedalUpState;true in IDLE throttle pedal state, false if driver is touching the pedal\ntodo: better name for this field?
-	percent_t etbIdleAddition;ETB position adjustment related to idle RPM control
-! end of idle_state_s structure definition
-end_struct
-
-! actually define a member of 'idle_state_s' type
-idle_state_s idle;
 
 	float targetAFR
 
@@ -53,8 +38,6 @@ float tpsVoltageBoard
 	float injectorFlowCorrection;
 float baroCorrection;
 
-bit isCrankingState
-bit isAutomaticIdle
 
 struct cranking_fuel_s
 
@@ -88,6 +71,8 @@ end_struct
 
 ! actually define a member of 'running_fuel_s' type
 running_fuel_s running
+
+custom percent_t 4 bits, F32, @OFFSET@, [0:2], "not important"
 
 percent_t etbFeedForward;
 

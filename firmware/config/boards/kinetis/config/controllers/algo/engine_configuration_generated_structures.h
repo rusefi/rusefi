@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Oct 14 23:05:32 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Oct 20 20:09:30 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2882,22 +2882,22 @@ struct engine_configuration_s {
 	roc
 	 * offset 2060
 	 */
-	float engineLoadDecelEnleanmentThreshold;
+	float unusedEL1;
 	/**
 	coeff
 	 * offset 2064
 	 */
-	float engineLoadDecelEnleanmentMultiplier;
+	float unusedEL2;
 	/**
 	roc
 	 * offset 2068
 	 */
-	float engineLoadAccelEnrichmentThreshold;
+	float unusedEL3;
 	/**
 	coeff
 	 * offset 2072
 	 */
-	float engineLoadAccelEnrichmentMultiplier;
+	float unusedEL4;
 	/**
 	 * Band rate for primary TTL
 	BPs
@@ -3129,10 +3129,11 @@ struct engine_configuration_s {
 	 */
 	float mapAccelTaperMult[MAP_ACCEL_TAPER];
 	/**
-	 * todo: rename to fsioAnalogInputs
+	 * EGO value correction
+	value
 	 * offset 2200
 	 */
-	adc_channel_e fsioAdc[AUX_ANALOG_INPUT_COUNT];
+	float unusedAnotherOneOfThose;
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -3255,7 +3256,11 @@ struct engine_configuration_s {
 	units
 	 * offset 2323
 	 */
-	uint8_t unusedOldBiquad[9];
+	uint8_t unusedOldBiquad[1];
+	/**
+	 * offset 2324
+	 */
+	adc_channel_e auxAnalogInputs[AUX_ANALOG_INPUT_COUNT];
 	/**
 	 * offset 2332
 	 */
@@ -4364,4 +4369,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Oct 14 23:05:32 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Oct 20 20:09:30 UTC 2021

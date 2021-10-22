@@ -31,15 +31,6 @@ public:
 	int onUpdateInvocationCounter = 0;
 };
 
-class LoadAccelEnrichment : public AccelEnrichment {
-public:
-	/**
-	 * @return Extra engine load value for fuel logic calculation
-	 */
-	float getEngineLoadEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void onEngineCycle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-};
-
 class TpsAccelEnrichment : public AccelEnrichment {
 public:
 	/**
@@ -60,34 +51,11 @@ private:
 	int cycleCnt = 0;
 };
 
-/**
- * Wall wetting, also known as fuel film
- * See https://github.com/rusefi/rusefi/issues/151 for the theory
- */
-class WallFuel : public wall_fuel_state {
-public:
-	/**
-	 * @param target desired squirt duration
-	 * @return total adjusted fuel squirt duration once wall wetting is taken into effect
-	 */
-	floatms_t adjust(floatms_t target DECLARE_ENGINE_PARAMETER_SUFFIX);
-	floatms_t getWallFuel() const;
-	void resetWF();
-	int invocationCounter = 0;
-};
-
 void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-void setEngineLoadAccelLen(int len);
-void setEngineLoadAccelThr(float value);
-void setEngineLoadAccelMult(float value);
 
 void setTpsAccelThr(float value);
 void setTpsDecelThr(float value);
 void setTpsDecelMult(float value);
 void setTpsAccelLen(int length);
-
-void setDecelThr(float value);
-void setDecelMult(float value);
 
 void updateAccelParameters();

@@ -211,6 +211,7 @@ jobs:
     # Build the simulator
     - name: Build simulator
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     # Build the firmware!
@@ -314,6 +315,7 @@ jobs:
         fi
 
     - name: Build Primary Bundle
+      # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
 
     - name: Package Bundle

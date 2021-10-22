@@ -13,75 +13,76 @@
 /**
  **************************************
  * SEE sensor.h ON HOW TO ADD NEW SENSOR TYPES
- * While changing SensorType make sure to change s_sensorNames
- * TODO: SensorType to s_sensorNames mapping has to be done by code generation! We already have relevant tools
- * maybe we just need a better naming convention?
  **************************************
  */
 enum class SensorType : unsigned char {
-	Invalid = 0,
-	Clt = 1,
-	Iat = 2,
-	Rpm = 3,
-	Map = 4,
-	Maf = 5,
+	Invalid, // we need indeces for Lua consumers. At the moment we still do not expose constants into Lua :(
+	Clt, // 1
+	Iat,
+	Rpm,
+	Map,
+	Maf,
 
-	OilPressure = 6,
+	OilPressure, // 6
 
-	FuelPressureLow = 7, // in kPa
-	FuelPressureHigh = 8, // in kPa
-	FuelPressureInjector = 9,
+	FuelPressureLow, // in kPa
+	FuelPressureHigh, // in kPa
+	FuelPressureInjector,
 
 	// This is the "resolved" position, potentially composited out of the following two
-	Tps1 = 10,
+	Tps1, // 10
 	// This is the first sensor
-	Tps1Primary = 11,
+	Tps1Primary,
 	// This is the second sensor
-	Tps1Secondary = 12,
+	Tps1Secondary,
 
-	Tps2 = 13,
-	Tps2Primary = 14,
-	Tps2Secondary = 15,
+	Tps2,
+	Tps2Primary,
+	Tps2Secondary,
 
 	// Redundant and combined sensors for acc pedal
-	AcceleratorPedal = 16,
-	AcceleratorPedalPrimary = 17,
-	AcceleratorPedalSecondary = 18,
+	AcceleratorPedal,
+	AcceleratorPedalPrimary,
+	AcceleratorPedalSecondary,
 
 	// This maps to the pedal if we have one, and Tps1 if not.
-	DriverThrottleIntent = 19,
+	DriverThrottleIntent,
 
-	AuxTemp1 = 20,
-	AuxTemp2 = 21,
+	AuxTemp1,
+	AuxTemp2,
 
-	Lambda1 = 22,
-	Lambda2 = 23,
+	Lambda1,
+	Lambda2,
 
-	WastegatePosition = 24,
-	IdlePosition = 25,
+	WastegatePosition,
+	IdlePosition,
 
-	FuelEthanolPercent = 26,
+	FuelEthanolPercent,
 
-	BatteryVoltage = 27,
+	BatteryVoltage,
 
-	BarometricPressure = 28,
+	BarometricPressure,
 
-	FuelLevel = 29,
+	FuelLevel,
 
-	Aux1 = 30,
-	Aux2 = 31,
-	Aux3 = 32,
-	Aux4 = 33,
+	Aux1,
+	Aux2,
+	Aux3,
+	Aux4,
+	Aux5,
+	Aux6,
+	Aux7,
+	Aux8,
 
-	VehicleSpeed = 34,
+	VehicleSpeed,
 
-	TurbochargerSpeed = 35,
+	TurbochargerSpeed,
 
 	// Fast MAP is synchronous to crank angle - user selectable phase/window
-	MapFast = 36,
+	MapFast,
 	// Slow MAP is asynchronous - not synced to anything, normal analog sampling
-	MapSlow = 37,
+	MapSlow,
 
 	// Leave me at the end!
-	PlaceholderLast = 38,
+	PlaceholderLast,
 };

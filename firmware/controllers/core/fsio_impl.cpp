@@ -178,7 +178,7 @@ static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
 		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
-	engineConfiguration->fsioAdc[index] = (adc_channel_e) pin;
+	engineConfiguration->auxAnalogInputs[index] = (adc_channel_e) pin;
 	efiPrintf("FSIO analog input pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
