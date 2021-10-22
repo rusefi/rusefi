@@ -21,6 +21,4 @@ echo -e "\nUploading file: $5"
 
 # ncftpput -r 999 -m -R -v -u "$1" -p "$2" "$3" $4 $5
 
-echo put $5 $4 > cmd
-cat cmd
-sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<< `cat cmd`
+sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 "put $5 $4"
