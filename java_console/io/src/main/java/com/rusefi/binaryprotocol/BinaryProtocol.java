@@ -467,7 +467,7 @@ public class BinaryProtocol {
         if (isClosed)
             return null;
         try {
-            LinkManager.assertCommunicationThread();
+            linkManager.assertCommunicationThread();
             dropPending();
 
             sendPacket(packet);
