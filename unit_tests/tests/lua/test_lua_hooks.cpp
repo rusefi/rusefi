@@ -126,4 +126,7 @@ end
 
 TEST(LuaHooks, LuaSensor) {
 	EXPECT_EQ(testLuaReturnsNumber(sensorTest), 0);
+
+	// Ensure that the sensor got unregistered on teardown of the Lua interpreter
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::Clt));
 }
