@@ -6,6 +6,7 @@ import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,7 +29,7 @@ public class ExecHelper {
     private static void startStreamThread(final Process p, final InputStream stream, final StringBuffer buffer, final StatusConsumer wnd) {
         final Thread t = new Thread(() -> {
             try {
-                BufferedReader bis = new BufferedReader(new InputStreamReader(stream));
+                BufferedReader bis = new BufferedReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
                 /*
                  * Sometimes process has already finished but we still want to read output, so give it extra half a second
                  * TODO: are we supposed to just NOT check process status and just wait for 'null' from readLine?
