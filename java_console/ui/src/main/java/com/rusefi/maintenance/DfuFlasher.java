@@ -95,29 +95,11 @@ public class DfuFlasher {
     }
 
     private static void executeDFU(StatusWindow wnd) {
-        AtomicBoolean errorReported = new AtomicBoolean();
         StringBuffer stdout = new StringBuffer();
         String errorResponse = ExecHelper.executeCommand(DFU_BINARY_LOCATION,
                 getDfuCommand(),
-                DFU_BINARY, s -> {
-//                    if (s.contains("0x12340005") && errorReported.compareAndSet(false, true)) {
-//                        wnd.appendMsg("   ***************");
-//                        wnd.appendMsg("   ***************");
-//                        wnd.appendMsg("ERROR: Maybe DFU device not attached? Please check Device Manager.");
-//                        wnd.appendMsg("ERROR: Maybe ST DFU Driver is missing?");
-//                        wnd.appendMsg("ERROR: Maybe driver conflict with STM32Cube?");
-//                        wnd.appendMsg("ERROR: Reminder about 'Install Drivers' button on top of rusEFI splash screen");
-//                        wnd.appendMsg(System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch"));
-//                        wnd.appendMsg("   ***************");
-//                        wnd.appendMsg("   ***************");
-//                    }
-                    wnd.appendMsg(s);
-                }, stdout);
-        if (stdout.toString().contains("Matching not good")) {
-            // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
-            wnd.appendMsg("VERIFICATION ERROR maybe nDBANK issue?");
-            wnd.appendMsg("https://github.com/rusefi/rusefi/wiki/HOWTO-nDBANK");
-        } else if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
+                DFU_BINARY, wnd, stdout);
+        if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.appendMsg("SUCCESS!");
         } else {

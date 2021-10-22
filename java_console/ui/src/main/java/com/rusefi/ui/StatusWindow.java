@@ -53,8 +53,9 @@ public class StatusWindow implements StatusConsumer {
     }
 
     @Override
-    public void appendMsg(final String s) {
+    public void appendMsg(final String string) {
         SwingUtilities.invokeLater(() -> {
+            String s = string.replaceAll(Character.toString((char)219), "");
             FileLog.MAIN.logLine(s);
             logTextArea.append(s + "\r\n");
             UiUtils.trueLayout(logTextArea);
