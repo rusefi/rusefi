@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.util.TimeUtil;
 import com.rusefi.SimulatorExecHelper;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
@@ -28,12 +29,18 @@ public class ExecHelper {
         final Thread t = new Thread(() -> {
             try {
                 BufferedReader bis = new BufferedReader(new InputStreamReader(stream));
-                while (isRunning(p)) {
+                /*
+                 * Sometimes process has already finished but we still want to read output, so give it extra half a second
+                 * TODO: are we supposed to just NOT check process status and just wait for 'null' from readLine?
+                 */
+                long wasRunningTime = System.currentTimeMillis();
+                while (isRunning(p) || (System.currentTimeMillis() - wasRunningTime) < 0.5 * TimeUtil.SECOND) {
                     String line = bis.readLine();
                     if (line == null)
                         break;
                     wnd.appendMsg(line);
                     buffer.append(line);
+                    wasRunningTime = System.currentTimeMillis();
                 }
             } catch (IOException e) {
                 wnd.appendMsg("Stream " + e);
