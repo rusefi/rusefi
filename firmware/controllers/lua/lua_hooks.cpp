@@ -340,6 +340,30 @@ static int lua_setFuelMult(lua_State* l) {
 }
 #endif // EFI_UNIT_TEST
 
+struct LuaSensor : public StoredValueSensor {
+	LuaSensor() : LuaSensor("Invalid") { }
+
+	~LuaSensor() {
+		unregister();
+	}
+
+	LuaSensor(const char* name)
+		: StoredValueSensor(findSensorTypeByName(name), MS2NT(100))
+	{
+		Register();
+	}
+
+	void set(float value) {
+		setValidValue(value, getTimeNowNt());
+	}
+
+	void invalidate() {
+		StoredValueSensor::invalidate();
+	}
+
+	void showInfo(const char*) const {}
+};
+
 void configureRusefiLuaHooks(lua_State* l) {
 
 	LuaClass<Timer> luaTimer(l, "Timer");
@@ -347,6 +371,12 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.ctor()
 		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
 		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
+
+	LuaClass<LuaSensor> luaSensor(l, "Sensor");
+	luaSensor
+		.ctor<const char*>()
+		.fun("set", &LuaSensor::set)
+		.fun("invalidate", &LuaSensor::invalidate);
 
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "readPin", lua_readpin);
