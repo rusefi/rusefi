@@ -122,7 +122,7 @@ bool Sensor::Register() {
 	return s_sensorRegistry[getIndex()].Register(this);
 }
 
-Sensor::~Sensor() {
+void Sensor::unregister() {
 	s_sensorRegistry[getIndex()].unregister();
 }
 

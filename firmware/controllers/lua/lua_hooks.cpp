@@ -343,6 +343,10 @@ static int lua_setFuelMult(lua_State* l) {
 struct LuaSensor : public StoredValueSensor {
 	LuaSensor() : LuaSensor("Invalid") { }
 
+	~LuaSensor() {
+		unregister();
+	}
+
 	LuaSensor(const char* name)
 		: StoredValueSensor(findSensorTypeByName(name), MS2NT(100))
 	{

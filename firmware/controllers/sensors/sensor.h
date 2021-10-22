@@ -168,7 +168,7 @@ public:
 		return false;
 	}
 
-	virtual ~Sensor();
+	void unregister();
 
 protected:
 	// Protected constructor - only subclasses call this
