@@ -60,7 +60,7 @@ jobs:
 
     - name: Install Coverage Tools
       if: ${{ matrix.os != 'macos-latest' }}
-      run: sudo apt-get install ncftp lcov
+      run: sudo apt-get install sshpass lcov
 
     - name: Generate Code Coverage
       if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}

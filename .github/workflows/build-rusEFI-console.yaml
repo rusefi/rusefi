@@ -18,7 +18,7 @@ jobs:
         run: javac -version
 
       - name: Install Tools
-        run: sudo apt-get install ncftp
+        run: sudo apt-get install sshpass
 
       - name: Generate Java (Antlr)
         working-directory: ./java_tools/configuration_definition

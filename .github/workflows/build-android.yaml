@@ -43,7 +43,7 @@ jobs:
           path: ./android/app/build/outputs/bundle/debug/rusEFI-debug.aab
 
       - name: Install Tools
-        run: sudo apt-get install ncftp
+        run: sudo apt-get install sshpass
 
       - name: Upload rusEFI Android application
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
