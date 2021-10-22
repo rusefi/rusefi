@@ -26,18 +26,16 @@ for f in *.ini; do if [[ -f "$f" ]]; then
       hash=${BASH_REMATCH[5]}
       path="$year/$month/$day/$board/$hash.ini"
       echo "* found path: $path"
-      # unbeliveable, ncftpput does not work with special characters in password?!
-      # ncftpput -m -R -v -u "$1" -p "$2" "$3" $path $f
       # we do not have ssh for this user
       # sftp does not support -p flag on mkdir :(
-      echo cd rusefi > cmd
-      echo mkdir $year >> cmd
-      echo mkdir $year/$month >> cmd
-      echo mkdir $year/$month/$day >> cmd
-      echo mkdir $year/$month/$day/$board >> cmd
-      echo put $f $path >> cmd
-      cat cmd
-      sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<< `cat cmd`
+      sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 <<'SSHCMD'
+cd rusefi
+mkdir $year
+mkdir $year/$month
+mkdir $year/$month/$day
+mkdir $year/$month/$day/$board
+put $f $path
+SSHCMD
       retVal=$?
       if [ $retVal -ne 0 ]; then
         echo "Upload failed"
