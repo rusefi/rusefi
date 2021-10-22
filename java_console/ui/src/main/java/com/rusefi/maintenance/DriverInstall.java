@@ -11,13 +11,13 @@ import java.io.File;
 
 /**
  * This code automates drivers unpacking and installation
- * Both Virtual Comport and ST-Link drivers are installed
+ * new, DFU Virtual Comport and ST-Link drivers are installed
  * <p>
  * See https://github.com/rusefi/rusefi/tree/master/misc/install_st
  */
 public class DriverInstall {
     private static final String FOLDER = "../drivers";
-    private static final String ARCHIVE = "silent_st_drivers.exe";
+    private static final String ARCHIVE = "silent_st_drivers2.exe";
     private static final String YES = " -y";
     private static final String UNPACKED_FOLDER = FOLDER + File.separator + "silent_st_drivers";
     private static final String WINDOWS7_BATCH = "silent_install_windows7.bat";
@@ -34,7 +34,7 @@ public class DriverInstall {
                     return;
 
                 final StatusWindow wnd = new StatusWindow();
-                wnd.showFrame("Windows rusEfi ST Drivers");
+                wnd.showFrame("Windows rusEFI ST Drivers");
 
                 ExecHelper.submitAction(() -> installDrivers(wnd), getClass() + " thread");
 

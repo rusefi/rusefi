@@ -27,8 +27,8 @@ mkdir $CONSOLE_FOLDER
 mkdir $DRIVERS_FOLDER
 ls -l $FOLDER
 
-wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe -P $DRIVERS_FOLDER
-[ -e $DRIVERS_FOLDER/silent_st_drivers.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers.exe"; exit 1; }
+wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
+[ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
 
 if [ "$INI_FILE_OVERRIDE" = "no" ]; then
     INI_FILE_OVERRIDE="rusefi.ini"
