@@ -80,7 +80,10 @@ public class DfuFlasher {
                 wnd.appendMsg("rusEFI console can only program on Windows");
                 return;
             }
-            ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
+            ExecHelper.submitAction(() -> {
+                timeForDfuSwitch(wnd);
+                executeDFU(wnd);
+            }, DfuFlasher.class + " thread");
         } else {
             wnd.appendMsg("Please use manual DFU to change bundle type.");
         }
@@ -93,12 +96,6 @@ public class DfuFlasher {
     }
 
     private static void executeDFU(StatusWindow wnd) {
-        wnd.appendMsg("Giving time for USB enumeration...");
-        try {
-            Thread.sleep(3 * Timeouts.SECOND);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
         AtomicBoolean errorReported = new AtomicBoolean();
         StringBuffer stdout = new StringBuffer();
         String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
@@ -138,6 +135,15 @@ public class DfuFlasher {
             wnd.appendMsg("ERROR: does not look like DFU has worked!");
         }
         wnd.appendMsg("Please power cycle device to exit DFU mode");
+    }
+
+    private static void timeForDfuSwitch(StatusWindow wnd) {
+        wnd.appendMsg("Giving time for USB enumeration...");
+        try {
+            Thread.sleep(2 * Timeouts.SECOND);
+        } catch (InterruptedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private static String getDfuCommand() {
