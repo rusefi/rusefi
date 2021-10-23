@@ -21,8 +21,6 @@ java \
  -DSystemOut.name=gen_config_subaru_eg33 \
  $COMMON_GEN_CONFIG \
  -cache ${SHORT_BOARDNAME} \
- -cache_zip_file tunerstudio/generated/cache.zip \
- -ts_destination tunerstudio \
  -tool ${BOARD_DIR}/config/gen_config.sh \
  -with_c_defines false \
  -initialize_to_zero false \

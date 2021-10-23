@@ -21,8 +21,6 @@ java \
  -DSystemOut.name=gen_config_hellen_cypress \
  $COMMON_GEN_CONFIG \
  -cache hellen_cypress \
- -cache_zip_file tunerstudio/generated/cache.zip \
- -ts_destination tunerstudio \
  -tool hellen_cypress_gen_config.bat \
  -with_c_defines false \
  -initialize_to_zero false \

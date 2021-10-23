@@ -50,11 +50,9 @@ java -DSystemOut.name=gen_config_board \
  $COMMON_GEN_CONFIG \
   -romraider integration \
 	-tool gen_config.sh \
-	-ts_destination tunerstudio \
 	-board ${BOARDNAME} \
 	-ts_output_name generated/${INI} \
 	-cache ${SHORT_BOARDNAME} \
-	-cache_zip_file tunerstudio/generated/cache.zip \
   -with_c_defines $SOMETHINGSOMETHING \
   -initialize_to_zero $SOMETHINGSOMETHING \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \

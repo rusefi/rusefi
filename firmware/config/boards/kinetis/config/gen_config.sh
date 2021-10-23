@@ -21,8 +21,6 @@ java \
  -DSystemOut.name=gen_config_kinetis \
  $COMMON_GEN_CONFIG \
  -cache kinetis \
- -cache_zip_file tunerstudio/generated/cache.zip \
- -ts_destination tunerstudio \
  -tool kinetis_gen_config.bat \
  -with_c_defines false \
  -initialize_to_zero false \
