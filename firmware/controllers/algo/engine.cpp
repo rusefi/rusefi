@@ -462,6 +462,7 @@ void Engine::injectEngineReferences() {
 		INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration[camIndex]);
 	}
 	INJECT_ENGINE_REFERENCE(&limpManager);
+	INJECT_ENGINE_REFERENCE(&knockController);
 
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {

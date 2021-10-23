@@ -13,6 +13,8 @@ int getCylinderKnockBank(uint8_t cylinderIndex);
 
 class KnockController {
 public:
+	DECLARE_ENGINE_PTR;
+
 	// onKnockSenseCompleted is the callback from the knock sense driver to report a sensed knock level
 	bool onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime);
 	void periodicFastCallback();
