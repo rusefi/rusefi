@@ -171,9 +171,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	int camIndex = index % CAMS_PER_BANK;
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
-		tc->vvtEventRiseCounter++;
+		tc->vvtEventRiseCounter[index]++;
 	} else {
-		tc->vvtEventFallCounter++;
+		tc->vvtEventFallCounter[index]++;
 	}
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
@@ -706,12 +706,17 @@ void triggerInfo(void) {
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_PROD_CODE
-	if (HAVE_CAM_INPUT()) {
-		efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[0]),
-				getVvt_mode_e(engineConfiguration->vvtMode[0]));
-		efiPrintf("VVT event counters: %d/%d", engine->triggerCentral.vvtEventRiseCounter, engine->triggerCentral.vvtEventFallCounter);
-
+	for (int camInputIndex = 0; camInputIndex<CAM_INPUTS_COUNT;camInputIndex++) {
+		if (isBrainPinValid(engineConfiguration->camInputs[camInputIndex])) {
+			int camLogicalIndex = camInputIndex % CAMS_PER_BANK;
+			efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[camInputIndex]),
+					getVvt_mode_e(engineConfiguration->vvtMode[camLogicalIndex]));
+			efiPrintf("VVT %d event counters: %d/%d",
+					camInputIndex,
+					engine->triggerCentral.vvtEventRiseCounter[camInputIndex], engine->triggerCentral.vvtEventFallCounter[camInputIndex]);
+		}
 	}
+
 
 	efiPrintf("primary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[0]));
 	efiPrintf("primary trigger simulator: %s %s freq=%d",
