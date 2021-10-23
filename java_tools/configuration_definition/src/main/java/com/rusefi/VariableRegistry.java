@@ -36,6 +36,9 @@ public class VariableRegistry  {
     public VariableRegistry() {
     }
 
+    /**
+     * @return value>name map for specified enum name.
+     */
     @Nullable
     public TreeMap<Integer, String> resolveEnumValues(EnumsReader enumsReader, String enumName) {
         TreeMap<Integer, String> valueNameById = new TreeMap<>();
@@ -220,7 +223,7 @@ public class VariableRegistry  {
     }
 
     public String getJavaConstants() {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         for (String value : javaDefinitions.values())
             result.append(value);
         return result.toString();
