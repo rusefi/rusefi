@@ -631,6 +631,8 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
+	knockController.periodicFastCallback();
+
 	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
