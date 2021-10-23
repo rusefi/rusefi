@@ -14,15 +14,16 @@ pwd
 
 bash gen_signature.sh hellen_cypress
 
+source gen_config_common.sh
+echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
+
 java \
  -DSystemOut.name=gen_config_hellen_cypress \
- -jar ../java_tools/ConfigDefinition.jar \
- -definition integration/rusefi_config.txt \
+ $COMMON_GEN_CONFIG \
  -cache hellen_cypress \
  -cache_zip_file tunerstudio/generated/cache.zip \
  -ts_destination tunerstudio \
  -tool hellen_cypress_gen_config.bat \
- -firing_order controllers/algo/firing_order.h \
  -with_c_defines false \
  -initialize_to_zero false \
  -ts_output_name generated/rusefi_hellen_cypress.ini \
@@ -30,7 +31,6 @@ java \
  -c_destination config/boards/hellen/cypress/config/controllers/algo/engine_configuration_generated_structures.h \
  -signature tunerstudio/generated/signature_hellen_cypress.txt \
  -signature_destination controllers/generated/signature_hellen_cypress.h \
- -enumInputFile controllers/algo/rusefi_enums.h \
  -enumInputFile controllers/algo/rusefi_hw_enums.h \
  -board hellen_cypress \
  -prepend config/boards/hellen/cypress/config/tunerstudio/generated/hellen_cypress_prefix.txt
