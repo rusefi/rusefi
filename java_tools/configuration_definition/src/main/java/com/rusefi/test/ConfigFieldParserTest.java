@@ -111,7 +111,6 @@ public class ConfigFieldParserTest {
                 "#define ERROR_BUFFER_SIZE \"***\"\n" +
                 "end_struct\n" +
                 "";
-        VariableRegistry.INSTANCE.clear();
         BufferedReader reader = new BufferedReader(new StringReader(test));
         new ReaderState().readBufferedReader(reader, Collections.emptyList());
     }
@@ -122,7 +121,6 @@ public class ConfigFieldParserTest {
                 ReaderState.DEFINE + " show show_Hellen121vag_presets true\n" +
                 "end_struct\n" +
                 "";
-        VariableRegistry.INSTANCE.clear();
         BufferedReader reader = new BufferedReader(new StringReader(test));
         new ReaderState().readBufferedReader(reader, Collections.emptyList());
     }
@@ -137,13 +135,13 @@ public class ConfigFieldParserTest {
                 "end_struct\n" +
                 "";
 
-        VariableRegistry.INSTANCE.clear();
         BufferedReader reader = new BufferedReader(new StringReader(test));
-        new ReaderState().readBufferedReader(reader, Collections.emptyList());
+        ReaderState state = new ReaderState();
+        state.readBufferedReader(reader, Collections.emptyList());
 
         assertEquals("#define ERROR_BUFFER_COUNT 120\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
-                "#define RESULT 14400\n", VariableRegistry.INSTANCE.getDefinesSection());
+                "#define RESULT 14400\n", state.variableRegistry.getDefinesSection());
     }
     @Test
     public void expressionInMultiplier() throws IOException {
@@ -155,7 +153,6 @@ public class ConfigFieldParserTest {
                 "end_struct\n" +
                 "";
 
-        VariableRegistry.INSTANCE.clear();
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
         CharArrayWriter writer = new CharArrayWriter();
@@ -172,7 +169,6 @@ public class ConfigFieldParserTest {
 
     @Test
     public void useCustomType() throws IOException {
-        VariableRegistry.INSTANCE.clear();
         ReaderState state = new ReaderState();
         String test = "struct pid_s\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -193,7 +189,6 @@ public class ConfigFieldParserTest {
 
     @Test
     public void testDefineChar() throws IOException {
-        VariableRegistry.INSTANCE.clear();
         ReaderState state = new ReaderState();
         String test =
                 "#define SD_r 'r'\n" +
@@ -205,12 +200,11 @@ public class ConfigFieldParserTest {
 
         assertEquals("\tpublic static final char SD_r = 'r';\n" +
                         "",
-                VariableRegistry.INSTANCE.getJavaConstants());
+                state.variableRegistry.getJavaConstants());
     }
 
     @Test
     public void testDefine() throws IOException {
-        VariableRegistry.INSTANCE.clear();
         ReaderState state = new ReaderState();
         String test =
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -224,7 +218,7 @@ public class ConfigFieldParserTest {
         assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
                         "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
                         "",
-                VariableRegistry.INSTANCE.getJavaConstants());
+                state.variableRegistry.getJavaConstants());
     }
 
     @Test
@@ -345,7 +339,6 @@ public class ConfigFieldParserTest {
                 "int[ERROR_BUFFER_SIZE iterate] field\n" +
                 "end_struct\n" +
                 "";
-        VariableRegistry.INSTANCE.clear();
         BufferedReader reader = new BufferedReader(new StringReader(test));
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
             @Override
@@ -414,15 +407,14 @@ public class ConfigFieldParserTest {
 
     @Test
     public void testParseSize() {
-        assertEquals(4, ReaderState.parseSize("4", ""));
+        ReaderState state = new ReaderState();
+        assertEquals(4, state.parseSize("4", ""));
 
-        assertEquals(12, ReaderState.parseSize("4*3", ""));
+        assertEquals(12, state.parseSize("4*3", ""));
 
-        VariableRegistry.INSTANCE.clear();
+        state.variableRegistry.register("var", 256);
 
-        VariableRegistry.INSTANCE.register("var", 256);
-
-        assertEquals(512, ReaderState.parseSize("2*@@var@@", ""));
-        assertEquals(512, ReaderState.parseSize("2x@@var@@", ""));
+        assertEquals(512, state.parseSize("2*@@var@@", ""));
+        assertEquals(512, state.parseSize("2x@@var@@", ""));
     }
 }

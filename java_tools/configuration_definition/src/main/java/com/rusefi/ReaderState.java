@@ -26,12 +26,13 @@ public class ReaderState {
     private static final String STRUCT = "struct ";
     private static final String DEFINE_CONSTRUCTOR = "define_constructor";
     public static final char MULT_TOKEN = '*';
-    public Stack<ConfigStructure> stack = new Stack<>();
-    public Map<String, Integer> tsCustomSize = new HashMap<>();
-    public Map<String, String> tsCustomLine = new HashMap<>();
-    public Map<String, ConfigStructure> structures = new HashMap<>();
+    public final Stack<ConfigStructure> stack = new Stack<>();
+    public final Map<String, Integer> tsCustomSize = new HashMap<>();
+    public final Map<String, String> tsCustomLine = new HashMap<>();
+    public final Map<String, ConfigStructure> structures = new HashMap<>();
 
-    public EnumsReader enumsReader = new EnumsReader();
+    public final EnumsReader enumsReader = new EnumsReader();
+    public final VariableRegistry variableRegistry = new VariableRegistry();
 
     private static void handleBitLine(ReaderState state, String line) {
         line = line.substring(BIT.length() + 1).trim();
@@ -66,14 +67,14 @@ public class ReaderState {
         return line.length() == 0 || line.startsWith("!") || line.startsWith("//");
     }
 
-    private static void handleCustomLine(ReaderState state, String line) {
+    private void handleCustomLine(ReaderState state, String line) {
         line = line.substring(CUSTOM.length() + 1).trim();
         int index = line.indexOf(' ');
         String name = line.substring(0, index);
 
-        String autoEnumOptions = VariableRegistry.INSTANCE.getEnumOptionsForTunerStudio(state.enumsReader, name);
+        String autoEnumOptions = state.variableRegistry.getEnumOptionsForTunerStudio(state.enumsReader, name);
         if (autoEnumOptions != null) {
-            VariableRegistry.INSTANCE.register(name + "_auto_enum", autoEnumOptions);
+            state.variableRegistry.register(name + "_auto_enum", autoEnumOptions);
         }
         
         line = line.substring(index).trim();
@@ -81,7 +82,7 @@ public class ReaderState {
         String customSize = line.substring(0, index);
 
         String tunerStudioLine = line.substring(index).trim();
-        tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
+        tunerStudioLine = state.variableRegistry.applyVariables(tunerStudioLine);
         int size = parseSize(customSize, line);
         state.tsCustomSize.put(name, size);
 
@@ -105,10 +106,10 @@ public class ReaderState {
         state.tsCustomLine.put(name, tunerStudioLine);
     }
 
-    public static int parseSize(String customSize, String line) {
-        customSize = VariableRegistry.INSTANCE.applyVariables(customSize);
+    public int parseSize(String customSize, String line) {
+        customSize = variableRegistry.applyVariables(customSize);
         customSize = customSize.replaceAll("x", "*");
-        line = VariableRegistry.INSTANCE.applyVariables(line);
+        line = variableRegistry.applyVariables(line);
 
         int multPosition = customSize.indexOf(MULT_TOKEN);
         if (multPosition != -1) {
@@ -175,7 +176,7 @@ public class ReaderState {
                  * for example
                  * #define CLT_CURVE_SIZE 16
                  */
-                ConfigDefinition.processDefine(VariableRegistry.INSTANCE, line.substring(DEFINE.length()).trim());
+                ConfigDefinition.processDefine(variableRegistry, line.substring(DEFINE.length()).trim());
             } else {
                 if (stack.isEmpty())
                     throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);

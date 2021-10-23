@@ -229,12 +229,6 @@ public class VariableRegistry  {
         return result.toString();
     }
 
-    public void clear() {
-        data.clear();
-        cAllDefinitions.clear();
-        javaDefinitions.clear();
-    }
-
     public int size() {
         return data.size();
     }
