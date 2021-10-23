@@ -17,7 +17,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
     private final CharArrayWriter javaFieldsWriter = new CharArrayWriter();
     protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
-    private final ReaderState state;
+    protected final ReaderState state;
 
     public JavaFieldsConsumer(ReaderState state) {
         this.state = state;
@@ -74,7 +74,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             writeJavaFieldName(nameWithPrefix, tsPosition);
             javaFieldsWriter.write("FieldType.FLOAT);" + EOL);
         } else {
-            String enumOptions = VariableRegistry.INSTANCE.get(configField.getType() + ConfigField.ENUM_SUFFIX);
+            String enumOptions = state.variableRegistry.get(configField.getType() + ConfigField.ENUM_SUFFIX);
 
             if (enumOptions != null && !javaEnums.contains(configField.getType())) {
                 javaEnums.add(configField.getType());

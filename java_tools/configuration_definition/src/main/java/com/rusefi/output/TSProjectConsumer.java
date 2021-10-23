@@ -44,7 +44,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         if (configField.getComment() != null && configField.getComment().startsWith(ConfigField.TS_COMMENT_TAG + "")) {
             settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
         }
-        VariableRegistry.INSTANCE.register(nameWithPrefix + "_offset", tsPosition);
+        state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
 
         ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
@@ -186,7 +186,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
      * rusefi.input has all the content of the future .ini file with the exception of data page
      * TODO: start generating [outputs] section as well
      */
-    private static TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
+    private TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
         String fileName = getTsFileInputName(tsPath);
         BufferedReader r = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), CHARSET.name()));
 
@@ -208,20 +208,20 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
             if (line.contains(TS_CONDITION)) {
                 String token = getToken(line);
-                String strValue = VariableRegistry.INSTANCE.get(token);
+                String strValue = state.variableRegistry.get(token);
                 boolean value = Boolean.parseBoolean(strValue);
                 if (!value)
                     continue; // skipping this line
                 line = removeToken(line);
             }
 
-            line = VariableRegistry.INSTANCE.applyVariables(line);
+            line = state.variableRegistry.applyVariables(line);
 
             if (isBeforeStartTag)
                 prefix.append(line + ConfigDefinition.EOL);
 
             if (isAfterEndTag)
-                postfix.append(VariableRegistry.INSTANCE.applyVariables(line) + ConfigDefinition.EOL);
+                postfix.append(state.variableRegistry.applyVariables(line) + ConfigDefinition.EOL);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());
@@ -266,11 +266,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
-        VariableRegistry.INSTANCE.register(structure.name + "_size", structure.getTotalSize());
+        state.variableRegistry.register(structure.name + "_size", structure.getTotalSize());
         if (state.stack.isEmpty()) {
             totalTsSize = writeTunerStudio(structure, "", tsWriter, 0);
             tsWriter.write("; total TS size = " + totalTsSize + EOL);
-            VariableRegistry.INSTANCE.register("TOTAL_CONFIG_SIZE", totalTsSize);
+            state.variableRegistry.register("TOTAL_CONFIG_SIZE", totalTsSize);
         }
     }
 }

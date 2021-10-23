@@ -236,19 +236,19 @@ public class ConfigDefinition {
             SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
         }
 
-        long crc32 = signatureHash(tsPath, inputAllFiles);
+        long crc32 = signatureHash(state, tsPath, inputAllFiles);
 
-        handleFiringOrder(firingEnumFileName);
+        handleFiringOrder(firingEnumFileName, state.variableRegistry);
 
         MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading definition from " + definitionInputFile);
 
         for (String prependFile : prependFiles)
-            readPrependValues(VariableRegistry.INSTANCE, prependFile);
+            readPrependValues(state.variableRegistry, prependFile);
 
         if (yamlFiles != null) {
-            processYamls(VariableRegistry.INSTANCE, yamlFiles, state);
+            processYamls(state.variableRegistry, yamlFiles, state);
         }
 
         // Parse the input files
@@ -304,7 +304,7 @@ public class ConfigDefinition {
         }
         if (needToUpdateOtherFiles) {
             if (destCHeaderFileName != null) {
-                destinations.add(new CHeaderConsumer(destCHeaderFileName));
+                destinations.add(new CHeaderConsumer(state.variableRegistry, destCHeaderFileName));
             }
             if (javaDestinationFileName != null) {
                 destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
@@ -329,19 +329,19 @@ public class ConfigDefinition {
 
 
         if (destCDefinesFileName != null && needToUpdateOtherFiles)
-            VariableRegistry.INSTANCE.writeDefinesToFile(destCDefinesFileName);
+            state.variableRegistry.writeDefinesToFile(destCDefinesFileName);
 
         if (romRaiderDestination != null && romRaiderInputFile != null && needToUpdateOtherFiles) {
-            processTextTemplate(romRaiderInputFile, romRaiderDestination);
+            processTextTemplate(state, romRaiderInputFile, romRaiderDestination);
         }
 
         CachingStrategy.saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
     }
 
-    private static void handleFiringOrder(String firingEnumFileName) throws IOException {
+    private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry) throws IOException {
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
-            VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+            variableRegistry.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
         }
     }
 
@@ -352,7 +352,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static long signatureHash(String tsPath, List<String> inputAllFiles) throws IOException {
+    private static long signatureHash(ReaderState state, String tsPath, List<String> inputAllFiles) throws IOException {
         // get CRC32 of given input files
         long crc32 = 0;
         for (String iFile : inputAllFiles) {
@@ -363,7 +363,7 @@ public class ConfigDefinition {
         SystemOut.println("CRC32 from all input files = " + crc32);
         // store the CRC32 as a built-in variable
         if (tsPath != null) // nasty trick - do not insert signature into live data files
-            VariableRegistry.INSTANCE.register(SIGNATURE_HASH, "" + crc32);
+            state.variableRegistry.register(SIGNATURE_HASH, "" + crc32);
         return crc32;
     }
 
@@ -520,11 +520,11 @@ public class ConfigDefinition {
         }
     }
 
-    private static void processTextTemplate(String inputFileName, String outputFileName) throws IOException {
+    private static void processTextTemplate(ReaderState state, String inputFileName, String outputFileName) throws IOException {
         SystemOut.println("Reading from " + inputFileName);
         SystemOut.println("Writing to " + outputFileName);
 
-        VariableRegistry.INSTANCE.put("generator_message", ConfigDefinition.getGeneratedAutomaticallyTag() + new Date());
+        state.variableRegistry.put("generator_message", ConfigDefinition.getGeneratedAutomaticallyTag() + new Date());
 
         File inputFile = new File(inputFileName);
 
@@ -533,7 +533,7 @@ public class ConfigDefinition {
 
         String line;
         while ((line = fr.readLine()) != null) {
-            line = VariableRegistry.INSTANCE.applyVariables(line);
+            line = state.variableRegistry.applyVariables(line);
             fw.write(line + ConfigDefinition.EOL);
         }
         fw.close();
@@ -572,9 +572,9 @@ public class ConfigDefinition {
         return result;
     }
 
-    public static int getSize(String s) {
-        if (VariableRegistry.INSTANCE.intValues.containsKey(s)) {
-            return VariableRegistry.INSTANCE.intValues.get(s);
+    public static int getSize(VariableRegistry variableRegistry, String s) {
+        if (variableRegistry.intValues.containsKey(s)) {
+            return variableRegistry.intValues.get(s);
         }
         return Integer.parseInt(s);
     }

@@ -2,7 +2,6 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
-import com.rusefi.VariableRegistry;
 import com.rusefi.util.LazyFile;
 
 import java.io.File;
@@ -37,7 +36,7 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
 
     @Override
     public void endFile() throws IOException {
-        javaFields.write(VariableRegistry.INSTANCE.getJavaConstants());
+        javaFields.write(state.variableRegistry.getJavaConstants());
         javaFields.write(getJavaFieldsWriter());
 
         allFields.append("\t};" + EOL);

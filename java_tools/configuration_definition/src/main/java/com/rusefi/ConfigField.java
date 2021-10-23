@@ -77,7 +77,7 @@ public class ConfigField {
         this.type = type;
         this.arraySizeVariableName = arraySizeAsText;
         this.arraySize = arraySize;
-        this.tsInfo = VariableRegistry.INSTANCE.applyVariables(tsInfo);
+        this.tsInfo = tsInfo == null ? null : state.variableRegistry.applyVariables(tsInfo);
         this.isIterate = isIterate;
     }
 
@@ -144,7 +144,7 @@ public class ConfigField {
         String arraySizeAsText;
         if (matcher.group(3) != null) {
             arraySizeAsText = matcher.group(3);
-            arraySize = ConfigDefinition.getSize(arraySizeAsText);
+            arraySize = ConfigDefinition.getSize(state.variableRegistry, arraySizeAsText);
         } else {
             arraySize = 1;
             arraySizeAsText = null;
