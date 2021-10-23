@@ -9,7 +9,7 @@
 
 #if HW_PROTEUS & EFI_PROD_CODE
 #include "proteus_meta.h"
-#endif
+#endif // HW_PROTEUS
 
 /**
  * PROTEUS_HONDA_ELEMENT_2003
@@ -27,7 +27,19 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_2;
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4;
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = PROTEUS_DIGITAL_1;
-#endif
+
+	engineConfiguration->injectionPins[0] = PROTEUS_LS_8;
+	engineConfiguration->injectionPins[1] = PROTEUS_LS_7;
+	engineConfiguration->injectionPins[2] = PROTEUS_LS_6;
+	engineConfiguration->injectionPins[3] = PROTEUS_LS_5;
+
+	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
+
+	CONFIG(mainRelayPin) = PROTEUS_LS_9;
+	CONFIG(fuelPumpPin) = PROTEUS_LS_11;
+//	CONFIG(fanPin) = PROTEUS_LS_15;
+
+#endif // HW_PROTEUS
 }
 
 void setProteusHondaOBD2A(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
