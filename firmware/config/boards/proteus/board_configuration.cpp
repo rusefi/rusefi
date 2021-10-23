@@ -205,9 +205,11 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	CONFIG(mainRelayPin) = GPIOB_9;//  "Lowside 13"    # pin 10/black35
-	CONFIG(fanPin) = GPIOE_1;//  "Lowside 15"    # pin 12/black35
-	CONFIG(fuelPumpPin) = GPIOE_2;//  "Lowside 16"    # pin 23/black35
+#if HW_PROTEUS & EFI_PROD_CODE
+	CONFIG(mainRelayPin) = PROTEUS_LS_13;
+	CONFIG(fanPin) = PROTEUS_LS_15;
+	CONFIG(fuelPumpPin) = PROTEUS_LS_16;
+#endif // HW_PROTEUS
 
 	// If we're running as hardware CI, borrow a few extra pins for that
 #ifdef HARDWARE_CI

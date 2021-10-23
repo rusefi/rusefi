@@ -28,6 +28,14 @@
 #define PROTEUS_LS_11 GPIOB_7
 #define PROTEUS_LS_12 GPIOB_8
 
+// pin 10/black35
+#define PROTEUS_LS_13 GPIOB_9
+#define PROTEUS_LS_14 GPIOE_0
+// pin 12/black35
+#define PROTEUS_LS_15 GPIOE_1
+// pin 23/black35
+#define PROTEUS_LS_16 GPIOE_2
+
 // pin 2/black35
 #define PROTEUS_HS_1 GPIOD_4
 
