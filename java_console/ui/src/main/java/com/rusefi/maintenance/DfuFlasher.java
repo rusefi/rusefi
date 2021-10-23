@@ -102,11 +102,17 @@ public class DfuFlasher {
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.appendMsg("SUCCESS!");
+            wnd.appendMsg("Please power cycle device to exit DFU mode");
+        } else if (stdout.toString().contains("Target device not found")) {
+            wnd.appendMsg("ERROR: Device not connected or STM32 Bootloader driver not installed?");
+            wnd.appendMsg("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
+            wnd.appendMsg("ERROR: Alternatively please install drivers manually from 'drivers/silent_st_drivers/DFU_Driver' folder");
+            wnd.setErrorState(true);
         } else {
             wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
             wnd.appendMsg("ERROR: does not look like DFU has worked!");
+            wnd.setErrorState(true);
         }
-        wnd.appendMsg("Please power cycle device to exit DFU mode");
     }
 
     private static void timeForDfuSwitch(StatusWindow wnd) {
