@@ -4,6 +4,7 @@ package com.rusefi.f4discovery;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.waves.EngineChart;
 import org.junit.Test;
@@ -27,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class CommonFunctionalTest extends RusefiTestBase {
     @Test
     public void testChangingIgnitionMode() {
-        ecu.setEngineType(ET_FORD_ASPIRE);
+        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
         ecu.changeRpm(2000);
 
         // First is wasted spark
@@ -107,9 +108,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testRevLimiter() {
-        String msg = "rev limiter";
-
-        ecu.setEngineType(ET_FORD_ASPIRE);
+        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
         ecu.changeRpm(2000);
 
         // Alpha-N mode so that we actually inject some fuel (without mocking tons of sensors)
@@ -159,7 +158,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testCustomEngine() {
-        ecu.setEngineType(ET_DEFAULT_FRANKENSO);
+        ecu.setEngineType(engine_type_e.DEFAULT_FRANKENSO);
         ecu.sendCommand("set_toothed_wheel 4 0");
 //        sendCommand("enable trigger_only_front");
 //        changeRpm(100);
@@ -171,25 +170,25 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testAuxValveNissan() {
-        ecu.setEngineType(ET_NISSAN_PRIMERA);
+        ecu.setEngineType(engine_type_e.NISSAN_PRIMERA);
         ecu.changeRpm(1200);
     }
 
     @Test
     public void testMazdaMiata2003() {
-        ecu.setEngineType(ET_FRANKENSO_MIATA_NB2);
+        ecu.setEngineType(engine_type_e.MAZDA_MIATA_2003);
         ecu.sendCommand("get cranking_dwell"); // just test coverage
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }
 
     @Test
     public void testCamaro() {
-        ecu.setEngineType(ET_CAMARO);
+        ecu.setEngineType(engine_type_e.CAMARO_4);
     }
 
     @Test
     public void testSachs() {
-        ecu.setEngineType(ET_SACHS);
+        ecu.setEngineType(engine_type_e.SACHS);
 //        String msg = "BMW";
         ecu.changeRpm(1200);
         // todo: add more content
@@ -197,13 +196,13 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testCitroenBerlingo() {
-        ecu.setEngineType(ET_CITROEN_TU3JP);
+        ecu.setEngineType(engine_type_e.CITROEN_TU3JP);
         ecu.changeRpm(1200);
     }
 
     @Test
     public void test2003DodgeNeon() {
-        ecu.setEngineType(ET_DODGE_NEON_2003_CRANK);
+        ecu.setEngineType(engine_type_e.DODGE_NEON_2003_CRANK);
         ecu.sendCommand("set wwaeTau 0");
         ecu.sendCommand("set wwaeBeta 0");
         ecu.sendCommand("set_sensor_mock 4 69.12"); // MAP
@@ -270,7 +269,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testMazdaProtege() {
-        ecu.setEngineType(ET_FORD_ESCORT_GT);
+        ecu.setEngineType(engine_type_e.FORD_ESCORT_GT);
         EngineChart chart;
         ecu.sendCommand("set_sensor_mock 27 12");
 
@@ -300,7 +299,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void test1995DodgeNeon() {
-        ecu.setEngineType(ET_DODGE_NEON_1995);
+        ecu.setEngineType(engine_type_e.DODGE_NEON_1995);
         EngineChart chart;
         sendComplexCommand("set_whole_fuel_map 3");
         sendComplexCommand("set_individual_coils_ignition");
@@ -332,7 +331,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testFord6() {
-        ecu.setEngineType(ET_FORD_INLINE_6);
+        ecu.setEngineType(engine_type_e.FORD_INLINE_6_1995);
         EngineChart chart;
         ecu.changeRpm(2000);
         chart = nextChart();
@@ -349,7 +348,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testFordAspire() {
-        ecu.setEngineType(ET_FORD_ASPIRE);
+        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
         ecu.sendCommand("disable cylinder_cleanup");
         ecu.sendCommand("set_sensor_mock 4 69.12"); // MAP
         ecu.sendCommand("set_sensor_mock 27 12"); // vbatt
