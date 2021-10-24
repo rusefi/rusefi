@@ -7,6 +7,7 @@ import com.rusefi.util.SystemOut;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.*;
 
 import static com.rusefi.ConfigField.BOOLEAN_T;
@@ -67,14 +68,19 @@ public class ReaderState {
         return line.length() == 0 || line.startsWith("!") || line.startsWith("//");
     }
 
-    private void handleCustomLine(ReaderState state, String line) {
+    void read(Reader reader) throws IOException {
+        Map<String, EnumsReader.EnumState> newEnums = EnumsReader.readStatic(reader);
+        enumsReader.enums.putAll(newEnums);
+    }
+
+    private void handleCustomLine(String line) {
         line = line.substring(CUSTOM.length() + 1).trim();
         int index = line.indexOf(' ');
         String name = line.substring(0, index);
 
-        String autoEnumOptions = state.variableRegistry.getEnumOptionsForTunerStudio(state.enumsReader, name);
+        String autoEnumOptions = variableRegistry.getEnumOptionsForTunerStudio(enumsReader, name);
         if (autoEnumOptions != null) {
-            state.variableRegistry.register(name + "_auto_enum", autoEnumOptions);
+            variableRegistry.register(name + "_auto_enum", autoEnumOptions);
         }
         
         line = line.substring(index).trim();
@@ -82,9 +88,9 @@ public class ReaderState {
         String customSize = line.substring(0, index);
 
         String tunerStudioLine = line.substring(index).trim();
-        tunerStudioLine = state.variableRegistry.applyVariables(tunerStudioLine);
+        tunerStudioLine = variableRegistry.applyVariables(tunerStudioLine);
         int size = parseSize(customSize, line);
-        state.tsCustomSize.put(name, size);
+        tsCustomSize.put(name, size);
 
         RawIniFile.Line rawLine = new RawIniFile.Line(tunerStudioLine);
         if (rawLine.getTokens()[0].equals("bits")) {
@@ -103,7 +109,7 @@ public class ReaderState {
                 tunerStudioLine += ", \"INVALID\"";
         }
 
-        state.tsCustomLine.put(name, tunerStudioLine);
+        tsCustomLine.put(name, tunerStudioLine);
     }
 
     public int parseSize(String customSize, String line) {
@@ -169,7 +175,7 @@ public class ReaderState {
                 handleBitLine(this, line);
 
             } else if (ConfigDefinition.startsWithToken(line, CUSTOM)) {
-                handleCustomLine(this, line);
+                handleCustomLine(line);
 
             } else if (ConfigDefinition.startsWithToken(line, DEFINE)) {
                 /**
