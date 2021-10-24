@@ -17,7 +17,12 @@
 void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2.4;
-	engineConfiguration->trigger.type = TT_HONDA_K_12_1;
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+	engineConfiguration->trigger.customTotalToothCount = 12;
+	engineConfiguration->trigger.customSkippedToothCount = 0;
+
+	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
 
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_HONDA);
 	strcpy(CONFIG(engineCode), "K24");
