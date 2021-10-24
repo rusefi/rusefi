@@ -5,7 +5,6 @@
 
 #include "fuel_math.h"
 #include "airmass.h"
-#include "utlist.h"
 #include "lua_airmass.h"
 #include "can_msg_tx.h"
 #include "settings.h"
