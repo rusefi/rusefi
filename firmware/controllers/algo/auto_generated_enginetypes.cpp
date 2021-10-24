@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 19:26:39 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 17:07:42 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -409,6 +409,8 @@ case TT_HONDA_CBR_600:
   return "TT_HONDA_CBR_600";
 case TT_HONDA_K_12_1:
   return "TT_HONDA_K_12_1";
+case TT_HONDA_K_4_1:
+  return "TT_HONDA_K_4_1";
 case TT_JEEP_18_2_2_2:
   return "TT_JEEP_18_2_2_2";
 case TT_JEEP_4_CYL:

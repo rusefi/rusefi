@@ -71,6 +71,7 @@ public enum trigger_type_e {
 	TT_SUBARU_SVX_CAM_VVT,
 	TT_FORD_TFI_PIP,
 	TT_SUZUKI_G13B,
+	TT_HONDA_K_4_1,
 	TT_UNUSED,
 	Force_4_bytes_size_trigger_type,
 }

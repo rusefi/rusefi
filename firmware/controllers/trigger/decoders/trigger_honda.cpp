@@ -272,3 +272,31 @@ void configureHondaK_12_1(TriggerWaveform *s) {
 	}
 }
 
+/**
+ * Exhaust cam shaft, not variable on Honda K
+ * 2003 Honda Element
+ */
+void configureHondaK_4_1(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->setTriggerSynchronizationGap(1.61);
+	s->setSecondTriggerSynchronizationGap(0.38);
+
+	int start = 100;
+	int end = 150;
+	s->addEventAngle(start + 180 * 0, T_PRIMARY, TV_RISE);
+	s->addEventAngle(end + 180 * 0, T_PRIMARY, TV_FALL);
+
+	s->addEventAngle(start + 180 * 1, T_PRIMARY, TV_RISE);
+	s->addEventAngle(end + 180 * 1, T_PRIMARY, TV_FALL);
+
+	s->addEventAngle(start + 180 * 2, T_PRIMARY, TV_RISE);
+	s->addEventAngle(end + 180 * 2, T_PRIMARY, TV_FALL);
+
+	s->addEventAngle(start + 180 * 3, T_PRIMARY, TV_RISE);
+	s->addEventAngle(end + 180 * 3, T_PRIMARY, TV_FALL);
+
+	s->addEventAngle(709, T_PRIMARY, TV_RISE);
+	s->addEventAngle(720, T_PRIMARY, TV_FALL);
+
+}
