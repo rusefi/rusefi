@@ -46,8 +46,13 @@ public class ToJavaEnum {
 
         List<Value> sorted = EnumsReader.getSortedByOrder(registry, enumState.values);
 
+        int index = 0;
         for (Value value : sorted) {
+            int numericValue = value.getIntValueMaybeResolve(registry);
+            if (index != numericValue && !value.getName().startsWith("Force_4_bytes_size"))
+                throw new IllegalStateException(numericValue + " instead of  " + index + " in " + value);
             sb.append("\t" + value.getName() + ",\n");
+            index++;
         }
 
         sb.append("}\n");
