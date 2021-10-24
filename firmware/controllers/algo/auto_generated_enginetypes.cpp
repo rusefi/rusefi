@@ -128,7 +128,7 @@ case BMW_M73_MRE:
   return "BMW_M73_MRE";
 case BMW_M73_MRE_SLAVE:
   return "BMW_M73_MRE_SLAVE";
-case BMW_M73_PROTEUS:
+case PROTEUS_BMW_M73:
   return "BMW_M73_PROTEUS";
 case CAMARO_4:
   return "CAMARO_4";
