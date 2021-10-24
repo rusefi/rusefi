@@ -18,7 +18,7 @@ source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 java \
- -DSystemOut.name=gen_config_subaru_eg33 \
+ -DSystemOut.name=logs/gen_config_subaru_eg33 \
  $COMMON_GEN_CONFIG \
  -cache ${SHORT_BOARDNAME} \
  -tool ${BOARD_DIR}/config/gen_config.sh \

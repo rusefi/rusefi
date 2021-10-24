@@ -4,14 +4,14 @@ echo "This batch files reads rusefi_enums.h and produces auto_generated_enums.* 
 
 rm gen_enum_to_string.log
 
-java -DSystemOut.name=gen_java_enum -cp ../java_tools/enum2string.jar com.rusefi.ToJavaEnum -enumInputFile controllers/algo/live_data_ids.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
+java -DSystemOut.name=logs/gen_java_enum -cp ../java_tools/enum2string.jar com.rusefi.ToJavaEnum -enumInputFile controllers/algo/live_data_ids.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
 [ $? -eq 0 ] || { echo "ERROR generating live data ids"; exit 1; }
 
-java -DSystemOut.name=gen_java_enum -cp ../java_tools/enum2string.jar com.rusefi.ToJavaEnum -enumInputFile controllers/sensors/sensor_type.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
+java -DSystemOut.name=logs/gen_java_enum -cp ../java_tools/enum2string.jar com.rusefi.ToJavaEnum -enumInputFile controllers/sensors/sensor_type.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
 
-java -DSystemOut.name=gen_enum_to_string \
+java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/algo \
 	-generatedFile codes \
@@ -19,7 +19,7 @@ java -DSystemOut.name=gen_enum_to_string \
 
 [ $? -eq 0 ] || { echo "ERROR generating obd_error_codes"; exit 1; }
 
-java -DSystemOut.name=gen_enum_to_string \
+java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/algo \
 	-generatedFile commonenum \
@@ -29,14 +29,14 @@ java -DSystemOut.name=gen_enum_to_string \
 
 # TODO: rearrange enums so that we have WAY less duplicated generated code? at the moment too many enums are generated 4 times
 
-java -DSystemOut.name=gen_enum_to_string \
+java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/algo \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
 
 [ $? -eq 0 ] || { echo "ERROR generating hw_enums"; exit 1; }
 
-java -DSystemOut.name=gen_enum_to_string \
+java -DSystemOut.name=logs/gen_enum_to_string \
 	-jar ../java_tools/enum2string.jar \
 	-outputPath controllers/sensors \
 	-generatedFile sensor \
