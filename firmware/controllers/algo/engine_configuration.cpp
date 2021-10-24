@@ -888,8 +888,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_BOARD_OLD_TEST:
-		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MRE_BOARD_NEW_TEST:
 		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1025,18 +1023,16 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case LADA_KALINA:
-		setLadaKalina(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MIATA_NA6_MAP:
+	case FRANKENSO_MIATA_NA6_MAP:
 		setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MIATA_NA6_VAF:
+	case FRANKENSO_MIATA_NA6_VAF:
 		setMiataNA6_VAF_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ETB_BENCH_ENGINE:
@@ -1045,7 +1041,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MAZDA_MIATA_NA8:
+	case FRANKENSO_MAZDA_MIATA_NA8:
 		setMazdaMiataNA8Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_ACCORD_CD_TWO_WIRES:
