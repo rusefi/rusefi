@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 20:23:09 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 22:25:18 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1770,6 +1770,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1344413188;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2017,13 +2018,14 @@ public class Fields {
 	public static final int trigger_type_e_TT_HONDA_4_24 = 12;
 	public static final int trigger_type_e_TT_HONDA_ACCORD_1_24_SHIFTED = 34;
 	public static final int trigger_type_e_TT_HONDA_CBR_600 = 28;
+	public static final int trigger_type_e_TT_HONDA_K_4_1 = 67;
 	public static final int trigger_type_e_TT_MAZDA_MIATA_VVT_TEST = 35;
 	public static final int trigger_type_e_TT_MITSUBISHI = 11;
 	public static final int trigger_type_e_TT_NISSAN_SR20VE = 24;
 	public static final int trigger_type_e_TT_NISSAN_SR20VE_360 = 38;
 	public static final int trigger_type_e_TT_ONE_PLUS_ONE = 16;
 	public static final int trigger_type_e_TT_ROVER_K = 26;
-	public static final int trigger_type_e_TT_UNUSED = 67;
+	public static final int trigger_type_e_TT_UNUSED = 68;
 	public static final int trigger_type_offset = 524;
 	public static final int trigger_unusedBit_4_10_offset = 528;
 	public static final int trigger_unusedBit_4_11_offset = 528;
@@ -2133,7 +2135,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.2414017311";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.1344413188";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -2365,6 +2367,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
 	public static final int vvt_mode_e_VVT_FIRST_HALF = 4;
 	public static final int vvt_mode_e_VVT_FORD_ST170 = 7;
+	public static final int vvt_mode_e_VVT_INACTIVE = 0;
 	public static final int vvt_mode_e_VVT_MIATA_NB2 = 3;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SECOND_HALF = 1;
