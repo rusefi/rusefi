@@ -6,7 +6,6 @@ import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
@@ -36,7 +35,7 @@ public class PwmHardwareTest extends RusefiTestBase {
 
     @Test
     public void scheduleBurnDoesNotAffectTriggerIssue2839() {
-        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.setEngineType(ET_FORD_ASPIRE);
         ecu.sendCommand("set " + "trigger_type" + " " + TT_TT_TOOTHED_WHEEL_60_2);
         ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         ecu.sendCommand(getEnableCommand(CMD_EXTERNAL_STIMULATION));
@@ -57,7 +56,7 @@ public class PwmHardwareTest extends RusefiTestBase {
 
     @Test
     public void testIdlePin() {
-        ecu.setEngineType(engine_type_e.MAZDA_MIATA_2003);
+        ecu.setEngineType(ET_FRANKENSO_MIATA_NA6);
         ecu.changeRpm(1000);
 
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");

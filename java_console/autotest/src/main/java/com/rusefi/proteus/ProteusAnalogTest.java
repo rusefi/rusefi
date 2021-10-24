@@ -3,7 +3,6 @@ package com.rusefi.proteus;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.enums.engine_type_e;
 import org.junit.Test;
 
 import static com.rusefi.config.generated.Fields.*;
@@ -41,7 +40,7 @@ public class ProteusAnalogTest extends RusefiTestBase {
 
     @Test
     public void testTpsAnalogInput() {
-        ecu.setEngineType(engine_type_e.PROTEUS_ANALOG_PWM_TEST); // proteus analog input PWM tester
+        ecu.setEngineType(ET_PROTEUS_ANALOG_PWM_TEST); // proteus analog input PWM tester
         ecu.changeRpm(1000);
         // engine has to be spinning for idle valve to work
         ecu.sendCommand(getEnableCommand(CMD_SELF_STIMULATION));

@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.rusefi.autotest.ControllerConnectorState;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -26,12 +25,12 @@ public class EnduranceTestUtility {
             CommandQueue commandQueue = linkManager.getCommandQueue();
 
             for (int i = 0; i < count; i++) {
-                EcuTestHelper.currentEngineType = engine_type_e.FORD_ASPIRE_1996.ordinal();
+                EcuTestHelper.currentEngineType = Fields.ET_FORD_ASPIRE;
                 sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 3, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 sendCommand(getEnableCommand("self_stimulation"), commandQueue);
 //                IoUtil.changeRpm(1200);
-                EcuTestHelper.currentEngineType = engine_type_e.DEFAULT_FRANKENSO.ordinal();
+                EcuTestHelper.currentEngineType = Fields.ET_DEFAULT_FRANKENSO;
                 sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + 28, Timeouts.SET_ENGINE_TIMEOUT, commandQueue);
                 sleepSeconds(2);
                 FileLog.MAIN.logLine("++++++++++++++++++++++++++++++++++++  " + i + "   +++++++++++++++");

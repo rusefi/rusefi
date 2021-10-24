@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
-import com.rusefi.enums.engine_type_e;
 import com.rusefi.ui.UIContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +12,10 @@ import java.awt.event.ActionListener;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class PresetsPane {
+    // see rusefi_enums.h
+    private static final int TEST_V_12 = 49;
+    private static final int ETB_BENCH = 58;
+    private static final int MINIMAL_PINS = 99;
     private final UIContext uiContext;
 
     private final JPanel content = new JPanel(new GridLayout(4, 5));
@@ -29,10 +32,10 @@ public class PresetsPane {
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAF", "engines/miata_nb.png", Fields.ET_MRE_MIATA_NB2_MAF).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Proteus NB2 MAP", "engines/miata_nb.png", Fields.ET_PROTEUS_MIATA_NB2).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Hellen72 NB2 MAP", "engines/miata_nb.png", Fields.ET_HELLEN_NB2).getContent());
-        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata Defaults", "", engine_type_e.MICRO_RUS_EFI.ordinal()).getContent());
-        content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso V12", "/engines/v12", engine_type_e.BMW_M73_PROTEUS.ordinal()).getContent());
-        content.add(new SetEngineTypeCommandControl(uiContext, "ETB bench", "", engine_type_e.ETB_BENCH_ENGINE.ordinal()).getContent());
-        content.add(new SetEngineTypeCommandControl(uiContext, "Minimal", "", engine_type_e.MINIMAL_PINS.ordinal()).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata Defaults", "", Fields.ET_MRE_DEFAULTS).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso V12", "/engines/v12", TEST_V_12).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "ETB bench", "", ETB_BENCH).getContent());
+        content.add(new SetEngineTypeCommandControl(uiContext, "Minimal", "", MINIMAL_PINS).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE old test", "", Fields.ET_MRE_OLD_TEST_BOARD).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE new test", "", Fields.ET_MRE_NEW_TEST_BOARD).getContent());
     }

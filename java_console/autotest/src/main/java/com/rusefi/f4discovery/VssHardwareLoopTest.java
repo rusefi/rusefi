@@ -6,7 +6,6 @@ import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
@@ -28,7 +27,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
 
     @Test
     public void test() {
-        ecu.setEngineType(engine_type_e.MAZDA_MIATA_2003);
+        ecu.setEngineType(ET_FRANKENSO_MIATA_NA6);
         ecu.sendCommand(getEnableCommand(Fields.CMD_EXTERNAL_STIMULATION));
         ecu.changeRpm(1400);
 
