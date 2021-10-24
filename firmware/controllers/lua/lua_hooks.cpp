@@ -5,6 +5,7 @@
 
 #include "fuel_math.h"
 #include "airmass.h"
+#include "utlist.h"
 #include "lua_airmass.h"
 #include "can_msg_tx.h"
 #include "settings.h"
@@ -349,6 +350,10 @@ static LuaCanReciever *list;
 struct LuaCanReciever {
 
 	LuaCanReciever *next;
+
+#if EFI_PROD_CODE
+	cyclic_buffer<CANRxFrame> pending;
+#endif // EFI_PROD_CODE
 
 	~LuaCanReciever() {
 		LuaCanReciever *current, *tmp;
