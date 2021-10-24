@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Oct 23 23:59:56 EDT 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 09:12:05 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -122,8 +122,6 @@ case UNUSED23:
 }
 const char *getEngine_type_e(engine_type_e value){
 switch(value) {
-case BMW_M73_F:
-  return "BMW_M73_F";
 case BMW_M73_M:
   return "BMW_M73_M";
 case BMW_M73_MRE:
@@ -160,6 +158,16 @@ case FORD_ESCORT_GT:
   return "FORD_ESCORT_GT";
 case FORD_INLINE_6_1995:
   return "FORD_INLINE_6_1995";
+case FRANKENSO_BMW_M73_F:
+  return "FRANKENSO_BMW_M73_F";
+case FRANKENSO_MAZDA_MIATA_2003:
+  return "FRANKENSO_MAZDA_MIATA_2003";
+case FRANKENSO_MAZDA_MIATA_NA8:
+  return "FRANKENSO_MAZDA_MIATA_NA8";
+case FRANKENSO_MIATA_NA6_MAP:
+  return "FRANKENSO_MIATA_NA6_MAP";
+case FRANKENSO_MIATA_NA6_VAF:
+  return "FRANKENSO_MIATA_NA6_VAF";
 case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
 case Force_4_bytes_size_engine_type:
@@ -226,24 +234,16 @@ case LADA_KALINA:
   return "LADA_KALINA";
 case MAZDA_626:
   return "MAZDA_626";
-case MAZDA_MIATA_2003:
-  return "MAZDA_MIATA_2003";
 case MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case MAZDA_MIATA_2003_NA_RAIL:
   return "MAZDA_MIATA_2003_NA_RAIL";
-case MAZDA_MIATA_NA8:
-  return "MAZDA_MIATA_NA8";
 case MAZDA_MIATA_NB1:
   return "MAZDA_MIATA_NB1";
 case MIATA_1990:
   return "MIATA_1990";
 case MIATA_1996:
   return "MIATA_1996";
-case MIATA_NA6_MAP:
-  return "MIATA_NA6_MAP";
-case MIATA_NA6_VAF:
-  return "MIATA_NA6_VAF";
 case MIATA_PROTEUS_TCU:
   return "MIATA_PROTEUS_TCU";
 case MICRO_RUS_EFI:

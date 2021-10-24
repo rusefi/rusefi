@@ -117,10 +117,7 @@ public class EcuTestHelper {
     }
 
     public void setEngineType(engine_type_e engine_type_e) {
-        setEngineType(engine_type_e.ordinal());
-    }
-
-    public void setEngineType(int type) {
+        int type = engine_type_e.ordinal();
         log.info("AUTOTEST setEngineType " + type);
         currentEngineType = type;
 //        sendCommand(CMD_PINS);
