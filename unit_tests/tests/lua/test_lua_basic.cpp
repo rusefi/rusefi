@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "rusefi_lua.h"
 #include <gtest/gtest.h>
 
