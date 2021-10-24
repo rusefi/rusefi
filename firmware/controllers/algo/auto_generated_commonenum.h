@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Oct 23 23:39:23 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Oct 24 19:26:38 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -46,7 +46,6 @@ const char *getTChargeMode_e(tChargeMode_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getTle8888_mode_e(tle8888_mode_e value);
 const char *getTrigger_event_e(trigger_event_e value);
-const char *getTrigger_type_e(trigger_type_e value);
 const char *getTrigger_value_e(trigger_value_e value);
 const char *getTrigger_wheel_e(trigger_wheel_e value);
 const char *getUart_device_e(uart_device_e value);

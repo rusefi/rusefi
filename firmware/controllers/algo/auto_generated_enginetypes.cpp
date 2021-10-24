@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 17:16:22 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 19:26:39 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -183,7 +183,7 @@ case HELLEN_121_NISSAN_8_CYL:
 case HELLEN_121_NISSAN_ALMERA_N16:
   return "HELLEN_121_NISSAN_ALMERA_N16";
 case HELLEN_121_VAG_4_CYL:
-  return "HELLEN_121_VAG";
+  return "HELLEN_121_VAG_4_CYL";
 case HELLEN_121_VAG_5_CYL:
   return "HELLEN_121_VAG_5_CYL";
 case HELLEN_121_VAG_8_CYL:
@@ -346,6 +346,149 @@ case VW_ABA:
   return "VW_ABA";
 case VW_B6:
   return "VW_B6";
+  }
+ return NULL;
+}
+const char *getTrigger_type_e(trigger_type_e value){
+switch(value) {
+case Force_4_bytes_size_trigger_type:
+  return "Force_4_bytes_size_trigger_type";
+case TT_1_16:
+  return "TT_1_16";
+case TT_2JZ_1_12:
+  return "TT_2JZ_1_12";
+case TT_2JZ_3_34:
+  return "TT_2JZ_3_34";
+case TT_36_2_2_2:
+  return "TT_36_2_2_2";
+case TT_3_1_CAM:
+  return "TT_3_1_CAM";
+case TT_52:
+  return "TT_52";
+case TT_60_2_VW:
+  return "TT_60_2_VW";
+case TT_CHRYSLER_NGC_36_2_2:
+  return "TT_CHRYSLER_NGC_36_2_2";
+case TT_DAIHATSU:
+  return "TT_DAIHATSU";
+case TT_DODGE_NEON_1995:
+  return "TT_DODGE_NEON_1995";
+case TT_DODGE_NEON_1995_ONLY_CRANK:
+  return "TT_DODGE_NEON_1995_ONLY_CRANK";
+case TT_DODGE_NEON_2003_CAM:
+  return "TT_DODGE_NEON_2003_CAM";
+case TT_DODGE_NEON_2003_CRANK:
+  return "TT_DODGE_NEON_2003_CRANK";
+case TT_DODGE_RAM:
+  return "TT_DODGE_RAM";
+case TT_DODGE_STRATUS:
+  return "TT_DODGE_STRATUS";
+case TT_FIAT_IAW_P8:
+  return "TT_FIAT_IAW_P8";
+case TT_FORD_ASPIRE:
+  return "TT_FORD_ASPIRE";
+case TT_FORD_ST170:
+  return "TT_FORD_ST170";
+case TT_FORD_TFI_PIP:
+  return "TT_FORD_TFI_PIP";
+case TT_GM_60_2_2_2:
+  return "TT_GM_60_2_2_2";
+case TT_GM_7X:
+  return "TT_GM_7X";
+case TT_GM_LS_24:
+  return "TT_GM_LS_24";
+case TT_HONDA_1_24:
+  return "TT_HONDA_1_24";
+case TT_HONDA_1_4_24:
+  return "TT_HONDA_1_4_24";
+case TT_HONDA_4_24:
+  return "TT_HONDA_4_24";
+case TT_HONDA_ACCORD_1_24_SHIFTED:
+  return "TT_HONDA_ACCORD_1_24_SHIFTED";
+case TT_HONDA_CBR_600:
+  return "TT_HONDA_CBR_600";
+case TT_HONDA_K_12_1:
+  return "TT_HONDA_K_12_1";
+case TT_JEEP_18_2_2_2:
+  return "TT_JEEP_18_2_2_2";
+case TT_JEEP_4_CYL:
+  return "TT_JEEP_4_CYL";
+case TT_KAWA_KX450F:
+  return "TT_KAWA_KX450F";
+case TT_MAZDA_DOHC_1_4:
+  return "TT_MAZDA_DOHC_1_4";
+case TT_MAZDA_MIATA_NA:
+  return "TT_MAZDA_MIATA_NA";
+case TT_MAZDA_MIATA_NB1:
+  return "TT_MAZDA_MIATA_NB1";
+case TT_MAZDA_MIATA_VVT_TEST:
+  return "TT_MAZDA_MIATA_VVT_TEST";
+case TT_MAZDA_SOHC_4:
+  return "TT_MAZDA_SOHC_4";
+case TT_MIATA_VVT:
+  return "TT_MIATA_VVT";
+case TT_MITSUBISHI:
+  return "TT_MITSUBISHI";
+case TT_NISSAN_QR25:
+  return "TT_NISSAN_QR25";
+case TT_NISSAN_SR20VE:
+  return "TT_NISSAN_SR20VE";
+case TT_NISSAN_SR20VE_360:
+  return "TT_NISSAN_SR20VE_360";
+case TT_NISSAN_VQ30:
+  return "TT_NISSAN_VQ30";
+case TT_NISSAN_VQ35:
+  return "TT_NISSAN_VQ35";
+case TT_ONE:
+  return "TT_ONE";
+case TT_ONE_PLUS_ONE:
+  return "TT_ONE_PLUS_ONE";
+case TT_RENIX_44_2_2:
+  return "TT_RENIX_44_2_2";
+case TT_RENIX_66_2_2_2:
+  return "TT_RENIX_66_2_2_2";
+case TT_ROVER_K:
+  return "TT_ROVER_K";
+case TT_SKODA_FAVORIT:
+  return "TT_SKODA_FAVORIT";
+case TT_SUBARU_7_6:
+  return "TT_SUBARU_7_6";
+case TT_SUBARU_7_WITHOUT_6:
+  return "TT_SUBARU_7_WITHOUT_6";
+case TT_SUBARU_SVX:
+  return "TT_SUBARU_SVX";
+case TT_SUBARU_SVX_CAM_VVT:
+  return "TT_SUBARU_SVX_CAM_VVT";
+case TT_SUBARU_SVX_CRANK_1:
+  return "TT_SUBARU_SVX_CRANK_1";
+case TT_SUZUKI_G13B:
+  return "TT_SUZUKI_G13B";
+case TT_TEMP_62:
+  return "TT_TEMP_62";
+case TT_TOOTHED_WHEEL:
+  return "TT_TOOTHED_WHEEL";
+case TT_TOOTHED_WHEEL_36_1:
+  return "TT_TOOTHED_WHEEL_36_1";
+case TT_TOOTHED_WHEEL_36_2:
+  return "TT_TOOTHED_WHEEL_36_2";
+case TT_TOOTHED_WHEEL_60_2:
+  return "TT_TOOTHED_WHEEL_60_2";
+case TT_TRI_TACH:
+  return "TT_TRI_TACH";
+case TT_UNUSED:
+  return "TT_UNUSED";
+case TT_UNUSED_10:
+  return "TT_UNUSED_10";
+case TT_VVT_BARRA_3_PLUS_1:
+  return "TT_VVT_BARRA_3_PLUS_1";
+case TT_VVT_BOSCH_QUICK_START:
+  return "TT_VVT_BOSCH_QUICK_START";
+case TT_VVT_JZ:
+  return "TT_VVT_JZ";
+case TT_VVT_MIATA_NB2:
+  return "TT_VVT_MIATA_NB2";
+case TT_VVT_NISSAN_VQ35:
+  return "TT_VVT_NISSAN_VQ35";
   }
  return NULL;
 }
