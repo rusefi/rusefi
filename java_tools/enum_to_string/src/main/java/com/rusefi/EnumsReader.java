@@ -13,6 +13,9 @@ public class EnumsReader {
 
     protected final Map<String, EnumState> enums = new TreeMap<>();
 
+    /**
+     * core implementation sorts by name, we need special considerations to sort by value
+     */
     @NotNull
     static List<Value> getSortedByOrder(VariableRegistry registry, Map<String, Value> brain_pin_e) {
         Set<Value> byOrdinal = new TreeSet<>(Comparator.comparingInt(value -> value.getIntValueMaybeResolve(registry)));
