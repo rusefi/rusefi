@@ -1807,9 +1807,9 @@ cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00
 ; MAZDA_MIATA_2003 = 47
 cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_FRANKENSO_MIATA_NB2_16_hex@@"
 
-cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_PROTEUS_BMW_M73_16_hex@@"
-cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
-cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_PROTEUS_HONDA_OBD2A_16_hex@@"
+cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
+cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
+cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
 cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
 cmd_set_engine_type_Proteus_Miata_TCU 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
 
