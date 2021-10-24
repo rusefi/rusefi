@@ -15,7 +15,7 @@ TEST(cranking, realCrankingFromFile) {
 	int indeces[2] = {1, 0}; // this logic data file has first trigger channel in second column and second trigger channel in first column
 	reader.open("tests/trigger/resources/cranking_na_3.csv", indeces);
 
-	WITH_ENGINE_TEST_HELPER (MIATA_NA6_MAP);
+	WITH_ENGINE_TEST_HELPER (FRANKENSO_MIATA_NA6_MAP);
 
 	ssize_t read;
 
