@@ -1,11 +1,10 @@
 #include "pch.h"
 
-#include "lua.hpp"
+#include "rusefi_lua.h"
 #include "lua_hooks.h"
 
 #include "fuel_math.h"
 #include "airmass.h"
-#include "utlist.h"
 #include "lua_airmass.h"
 #include "can_msg_tx.h"
 #include "settings.h"
@@ -339,39 +338,17 @@ static int lua_setFuelMult(lua_State* l) {
 
 	return 0;
 }
+
 #endif // EFI_UNIT_TEST
 
+#if EFI_CAN_SUPPORT
+static int lua_canRxAdd(lua_State* l) {
+	auto eid = luaL_checkinteger(l, 1);
+	addLuaCanRxFilter(eid);
 
-struct LuaCanReciever;
-
-// linked list of all CAN receivers
-static LuaCanReciever *list;
-
-struct LuaCanReciever {
-
-	LuaCanReciever *next;
-
-#if EFI_PROD_CODE
-	cyclic_buffer<CANRxFrame> pending;
-#endif // EFI_PROD_CODE
-
-	~LuaCanReciever() {
-		LuaCanReciever *current, *tmp;
-		// find self in list and remove self
-		LL_FOREACH_SAFE(list, current, tmp)
-		{
-			if (current == this) {
-				LL_DELETE(list, current);
-			}
-		}
-	}
-
-	LuaCanReciever() {
-		LL_PREPEND(list, this);
-	}
-
-
-};
+	return 0;
+}
+#endif // EFI_CAN_SUPPORT
 
 struct LuaSensor : public StoredValueSensor {
 	LuaSensor() : LuaSensor("Invalid") { }
@@ -404,11 +381,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.ctor()
 		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
 		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
-
-	LuaClass<LuaCanReciever> luaCanReciever(l, "CanReciever");
-	luaCanReciever
-		.ctor()
-		;
 
 	LuaClass<LuaSensor> luaSensor(l, "Sensor");
 	luaSensor
@@ -444,5 +416,9 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "setFuelAdd", lua_setFuelAdd);
 	lua_register(l, "setFuelMult", lua_setFuelMult);
-#endif
+
+#if EFI_CAN_SUPPORT
+	lua_register(l, "canRxAdd", lua_canRxAdd);
+#endif // EFI_CAN_SUPPORT
+#endif // not EFI_UNIT_TEST
 }

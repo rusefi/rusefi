@@ -116,9 +116,9 @@ public class EcuTestHelper {
         IoUtil.changeRpm(commandQueue, rpm);
     }
 
-    public void setEngineType(engine_type_e engineTypeE) {
-        int type = engineTypeE.ordinal();
-        log.info("AUTOTEST setEngineType " + engineTypeE);
+    public void setEngineType(engine_type_e engine_type_e) {
+        int type = engine_type_e.ordinal();
+        log.info("AUTOTEST setEngineType " + type);
         currentEngineType = type;
 //        sendCommand(CMD_PINS);
         /*

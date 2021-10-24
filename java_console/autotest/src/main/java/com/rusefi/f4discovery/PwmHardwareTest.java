@@ -57,7 +57,7 @@ public class PwmHardwareTest extends RusefiTestBase {
 
     @Test
     public void testIdlePin() {
-        ecu.setEngineType(engine_type_e.MAZDA_MIATA_2003);
+        ecu.setEngineType(engine_type_e.FRANKENSO_MIATA_NA6_MAP);
         ecu.changeRpm(1000);
 
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");

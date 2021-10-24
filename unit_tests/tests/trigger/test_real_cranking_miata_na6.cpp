@@ -35,7 +35,7 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, trigger_wh
 }
 
 TEST(cranking, hardcodedRealCranking) {
-	WITH_ENGINE_TEST_HELPER(MIATA_NA6_VAF);
+	WITH_ENGINE_TEST_HELPER(FRANKENSO_MIATA_NA6_VAF);
 
 #define EVENT(timestamp, channel, value) { fireTriggerEvent(&eth, timestamp, channel, value); }
 
@@ -171,7 +171,7 @@ TEST(cranking, naCrankFromFile) {
 	int indeces[2] = {1, 0};
 	reader.open("tests/trigger/resources/cranking_na_4.csv", indeces);
 
-	WITH_ENGINE_TEST_HELPER(MIATA_NA6_VAF);
+	WITH_ENGINE_TEST_HELPER(FRANKENSO_MIATA_NA6_VAF);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);

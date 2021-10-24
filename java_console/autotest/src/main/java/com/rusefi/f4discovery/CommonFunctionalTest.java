@@ -108,8 +108,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testRevLimiter() {
-        String msg = "rev limiter";
-
         ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
         ecu.changeRpm(2000);
 
@@ -178,7 +176,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
     @Test
     public void testMazdaMiata2003() {
-        ecu.setEngineType(engine_type_e.MAZDA_MIATA_2003);
+        ecu.setEngineType(engine_type_e.FRANKENSO_MAZDA_MIATA_2003);
         ecu.sendCommand("get cranking_dwell"); // just test coverage
 //        sendCommand("get nosuchgettersdfsdfsdfsdf"); // just test coverage
     }

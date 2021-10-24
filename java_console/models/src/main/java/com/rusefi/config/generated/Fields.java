@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 05:21:27 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 14:15:37 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -757,6 +757,8 @@ public class Fields {
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
+	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_NA8 = 56;
+	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HELLEN72_ETB = 33;
@@ -770,7 +772,6 @@ public class Fields {
 	public static final int engine_type_e_MAZDA_626 = 28;
 	public static final int engine_type_e_MAZDA_MIATA_2003_BOARD_TEST = 55;
 	public static final int engine_type_e_MAZDA_MIATA_2003_NA_RAIL = 54;
-	public static final int engine_type_e_MAZDA_MIATA_NA8 = 56;
 	public static final int engine_type_e_MAZDA_MIATA_NB1 = 9;
 	public static final int engine_type_e_MIATA_1990 = 19;
 	public static final int engine_type_e_MIATA_1996 = 21;

@@ -28,7 +28,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
 
     @Test
     public void test() {
-        ecu.setEngineType(engine_type_e.MAZDA_MIATA_2003);
+        ecu.setEngineType(engine_type_e.FRANKENSO_MIATA_NA6_MAP);
         ecu.sendCommand(getEnableCommand(Fields.CMD_EXTERNAL_STIMULATION));
         ecu.changeRpm(1400);
 
