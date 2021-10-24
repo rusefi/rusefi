@@ -78,7 +78,6 @@
 #include "chevrolet_camaro_4.h"
 #include "toyota_jzs147.h"
 #include "ford_festiva.h"
-#include "lada_kalina.h"
 #include "boost_control.h"
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
@@ -1010,7 +1009,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case FRANKENSO_QA_ENGINE:
 		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case BMW_M73_F:
+	case FRANKENSO_BMW_M73_F:
 		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_M:
@@ -1094,7 +1093,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case VW_ABA:
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MAZDA_MIATA_2003:
+	case FRANKENSO_MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_NA_RAIL:
