@@ -122,7 +122,7 @@ TEST(trigger, testCamInput) {
 }
 
 TEST(trigger, testNB2CamInput) {
-	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+	WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
 	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);

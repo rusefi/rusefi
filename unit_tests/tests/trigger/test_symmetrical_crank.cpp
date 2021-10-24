@@ -15,7 +15,7 @@ static void postFourEvents(EngineTestHelper *eth, float mult) {
 }
 
 TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
-	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+	WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
 
 	TriggerFormDetails *triggerForm = &ENGINE(triggerCentral.triggerFormDetails);
 
@@ -44,7 +44,7 @@ TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
 
 TEST(engine, testSymmetricalCrank) {
 
-	WITH_ENGINE_TEST_HELPER(MAZDA_MIATA_2003);
+	WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
 
 	// this test is not about isFasterEngineSpinUpEnabled so let's disable it to simplify things
 	CONFIG(isFasterEngineSpinUpEnabled) = false;
