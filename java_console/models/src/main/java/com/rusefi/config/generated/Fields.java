@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 12:29:51 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 14:15:37 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -757,6 +757,8 @@ public class Fields {
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
+	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_NA8 = 56;
+	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HELLEN72_ETB = 33;
@@ -770,7 +772,6 @@ public class Fields {
 	public static final int engine_type_e_MAZDA_626 = 28;
 	public static final int engine_type_e_MAZDA_MIATA_2003_BOARD_TEST = 55;
 	public static final int engine_type_e_MAZDA_MIATA_2003_NA_RAIL = 54;
-	public static final int engine_type_e_MAZDA_MIATA_NA8 = 56;
 	public static final int engine_type_e_MAZDA_MIATA_NB1 = 9;
 	public static final int engine_type_e_MIATA_1990 = 19;
 	public static final int engine_type_e_MIATA_1996 = 21;
@@ -816,14 +817,11 @@ public class Fields {
 	public static final int ENUM_32_BITS = 2000000000;
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ET_BMW_M73_F = 40;
-	public static final int ET_CAMARO = 35;
 	public static final int ET_CITROEN_TU3JP = 65;
 	public static final int ET_DEFAULT_FRANKENSO = 0;
 	public static final int ET_DODGE_NEON_1995 = 2;
 	public static final int ET_DODGE_NEON_2003_CRANK = 46;
-	public static final int ET_FORD_ASPIRE = 3;
 	public static final int ET_FORD_ESCORT_GT = 14;
-	public static final int ET_FORD_INLINE_6 = 7;
 	public static final int ET_FRANKENSO_MIATA_NA6 = 41;
 	public static final int ET_FRANKENSO_MIATA_NA6_VAF = 57;
 	public static final int ET_FRANKENSO_MIATA_NB2 = 47;
@@ -865,7 +863,6 @@ public class Fields {
 	public static final int ET_MRE_NEW_TEST_BOARD = 31;
 	public static final int ET_MRE_OLD_TEST_BOARD = 30;
 	public static final int ET_MRE_SUBARU_EJ18 = 37;
-	public static final int ET_NISSAN_PRIMERA = 5;
 	public static final int ET_PROTEUS_ANALOG_PWM_TEST = 106;
 	public static final int ET_PROTEUS_BMW_M73 = 63;
 	public static final int ET_PROTEUS_HONDA_ELEMENT_2003 = 90;
@@ -876,7 +873,6 @@ public class Fields {
 	public static final int ET_PROTEUS_VAG_80_18T = 92;
 	public static final int ET_SACHS = 29;
 	public static final int ET_TEST_ROTARY = 107;
-	public static final int ET_VW_ABA = 32;
 	public static final int ET_VW_B6 = 62;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
@@ -1747,7 +1743,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 202807283;
+	public static final int SIGNATURE_HASH = 1116555577;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2111,7 +2107,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.202807283";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.1116555577";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
