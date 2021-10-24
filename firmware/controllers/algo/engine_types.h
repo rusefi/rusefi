@@ -25,6 +25,7 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
+	UNUSED5 = 4,
 
 	NISSAN_PRIMERA = ET_NISSAN_PRIMERA,
 	UNUSED_6 = 6,
@@ -38,6 +39,7 @@ typedef enum {
 
 	MIATA_PROTEUS_TCU = ET_MIATA_TCU_PROTEUS,
 	MAZDA_MIATA_NB1 = 9,
+	UNUSED10 = 10,
 	MRE_MIATA_NB2_MAP = ET_MRE_MIATA_NB2_MAP,
 	MRE_MIATA_NA6_VAF = ET_MRE_MIATA_NA6_VAF,
 	MRE_MIATA_NB2_ETB = 13,
@@ -72,6 +74,7 @@ typedef enum {
 	MRE_BODY_CONTROL = ET_MRE_BODY_CONTROL,
 	BMW_M73_M = 24,
 
+UNUSED25 = 25,
 	TEST_ENGINE = 26,
 
 	// used by unit test
@@ -191,7 +194,11 @@ typedef enum {
 	// 84
 	HELLEN_121_NISSAN_4_CYL = ET_HELLEN_121_NISSAN_4_CYL,
 
+    HELLEN_121_NISSAN_8_CYL = 85,
+
 	HELLEN_NB2_36 = ET_HELLEN_NB2_36,
+
+	HELLEN_121_NISSAN_ALMERA_N16  = 87,
 
 	HELLEN_128_MERCEDES_6_CYL = ET_HELLEN_128_MERCEDES_6_CYL,
 
@@ -205,8 +212,14 @@ typedef enum {
 
 	PROTEUS_N73 = ET_PROTEUS_N73,
 
+    HELLEN_NB1_36 = 94,
+
 	HELLEN_154_HYUNDAI_COUPE_BK2 = ET_HELLEN_154_HYUNDAI_COUPE_BK2,
 
+    UNUSED96 = 96,
+    UNUSED97 = 97,
+    UNUSED98 = 98,
+    UNUSED99 = 99,
 
 	/**
 	 * this configuration has as few pins configured as possible

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Oct 23 22:03:36 EDT 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Oct 23 22:57:34 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -49,6 +49,10 @@ case HELLEN_121_NISSAN_4_CYL:
   return "HELLEN_121_NISSAN_4_CYL";
 case HELLEN_121_NISSAN_6_CYL:
   return "HELLEN_121_NISSAN_6_CYL";
+case HELLEN_121_NISSAN_8_CYL:
+  return "HELLEN_121_NISSAN_8_CYL";
+case HELLEN_121_NISSAN_ALMERA_N16:
+  return "HELLEN_121_NISSAN_ALMERA_N16";
 case HELLEN_121_VAG:
   return "HELLEN_121_VAG";
 case HELLEN_121_VAG_5_CYL:
@@ -83,6 +87,8 @@ case HELLEN_NA94:
   return "HELLEN_NA94";
 case HELLEN_NB1:
   return "HELLEN_NB1";
+case HELLEN_NB1_36:
+  return "HELLEN_NB1_36";
 case HELLEN_NB2:
   return "HELLEN_NB2";
 case HELLEN_NB2_36:
@@ -199,6 +205,20 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
+case UNUSED10:
+  return "UNUSED10";
+case UNUSED25:
+  return "UNUSED25";
+case UNUSED5:
+  return "UNUSED5";
+case UNUSED96:
+  return "UNUSED96";
+case UNUSED97:
+  return "UNUSED97";
+case UNUSED98:
+  return "UNUSED98";
+case UNUSED99:
+  return "UNUSED99";
 case UNUSED_48:
   return "UNUSED_48";
 case UNUSED_50:

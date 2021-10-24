@@ -75,6 +75,11 @@ struct_no_prefix engine_configuration_s
 ! see 'blockingFactor' in rusefi.ini
 #define BLOCKING_FACTOR 256
 
+// Back in the day we wanted enums to be 32 bit integers.
+// as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
+#define ENUM_16_BITS 60000
+#define ENUM_32_BITS 2000000000
+
 #define AUX_ANALOG_INPUT_COUNT 8
 #define FSIO_ANALOG_INPUT_COUNT 4
 
