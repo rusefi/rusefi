@@ -41,8 +41,11 @@ trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s(),
+		vvtEventRiseCounter(),
+		vvtEventFallCounter(),
 		vvtPosition(),
-		vvtSyncTimeNt() {
+		vvtSyncTimeNt()
+{
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
