@@ -1941,10 +1941,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
-		field = "Cam sensor bank 1 intake",	        camInputs1, { vvtMode1 != @@VM_VVT_INACTIVE@@ }
-        field = "Cam sensor bank 1 exhaust",        camInputs2, { vvtMode2 != @@VM_VVT_INACTIVE@@ && camInputs1 != 0 }
-        field = "Cam sensor bank 2 intake",         camInputs3, { vvtMode1 != @@VM_VVT_INACTIVE@@ && camInputs1 != 0 }
-        field = "Cam sensor bank 2 exhaust",        camInputs4, { vvtMode2 != @@VM_VVT_INACTIVE@@ && camInputs2 != 0 }
+		field = "Cam sensor bank 1 intake",	        camInputs1, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
+        field = "Cam sensor bank 1 exhaust",        camInputs2, { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 }
+        field = "Cam sensor bank 2 intake",         camInputs3, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs1 != 0 }
+        field = "Cam sensor bank 2 exhaust",        camInputs4, { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ && camInputs2 != 0 }
 		field = "Invert cam inputs",                invertCamVVTSignal, { camInputs1 != 0 }
 		panel = triggerInputComparator @@if_ts_show_trigger_comparator
 
