@@ -52,7 +52,7 @@ int testLuaReturnsInteger(const char* script);
 void testLuaExecString(const char* script);
 #endif
 
-#if !EFI_UNIT_TEST
+#if !EFI_UNIT_TEST && EFI_CAN_SUPPORT
 // Lua CAN rx feature
 void initLuaCanRx();
 // Called when the user script is unloaded, resets any CAN rx filters
