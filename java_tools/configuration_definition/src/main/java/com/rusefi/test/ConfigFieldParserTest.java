@@ -118,7 +118,7 @@ public class ConfigFieldParserTest {
     @Test(expected = IllegalStateException.class)
     public void invalidDefine() throws IOException {
         String test = "struct pid_s\n" +
-                ReaderState.DEFINE + " show show_Hellen121vag_presets true\n" +
+                VariableRegistry.DEFINE + " show show_Hellen121vag_presets true\n" +
                 "end_struct\n" +
                 "";
         BufferedReader reader = new BufferedReader(new StringReader(test));

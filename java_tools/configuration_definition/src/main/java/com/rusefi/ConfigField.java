@@ -24,7 +24,6 @@ public class ConfigField {
     private static final Pattern DIRECTIVE = Pattern.compile("#(if\\s" + namePattern + "|else|elif\\s\" + namePattern + \"|endif)");
 
     public static final char TS_COMMENT_TAG = '+';
-    public static final String ENUM_SUFFIX = "_enum";
     public static final String VOID_NAME = "";
     public static final String BOOLEAN_T = "boolean";
     public static final String DIRECTIVE_T = "directive";

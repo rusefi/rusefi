@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ToolUtil.EOL;
 
 public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     // todo: why is this field 'static'?
@@ -74,7 +74,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             writeJavaFieldName(nameWithPrefix, tsPosition);
             javaFieldsWriter.write("FieldType.FLOAT);" + EOL);
         } else {
-            String enumOptions = state.variableRegistry.get(configField.getType() + ConfigField.ENUM_SUFFIX);
+            String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
 
             if (enumOptions != null && !javaEnums.contains(configField.getType())) {
                 javaEnums.add(configField.getType());

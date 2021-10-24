@@ -29,11 +29,9 @@ import java.util.zip.CRC32;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
-    public static final String EOL = "\n";
     private static final String SIGNATURE_HASH = "SIGNATURE_HASH";
     public static String MESSAGE;
 
-    public static String TOOL = "(unknown script)";
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     public static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
@@ -65,10 +63,6 @@ public class ConfigDefinition {
      */
     public static boolean needZeroInit = true;
     public static String definitionInputFile = null;
-
-    public static String getGeneratedAutomaticallyTag() {
-        return LazyFile.LAZY_FILE_TAG + "ConfigDefinition.jar based on " + TOOL + " ";
-    }
 
     public static void main(String[] args) {
         try {
@@ -127,7 +121,7 @@ public class ConfigDefinition {
             String key = args[i];
             switch (key) {
                 case "-tool":
-                    ConfigDefinition.TOOL = args[i + 1];
+                    ToolUtil.TOOL = args[i + 1];
                     break;
                 case KEY_DEFINITION:
                     definitionInputFile = args[i + 1];
@@ -240,12 +234,12 @@ public class ConfigDefinition {
 
         handleFiringOrder(firingEnumFileName, state.variableRegistry);
 
-        MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
+        MESSAGE = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading definition from " + definitionInputFile);
 
         for (String prependFile : prependFiles)
-            readPrependValues(state.variableRegistry, prependFile);
+            state.variableRegistry.readPrependValues(prependFile);
 
         if (yamlFiles != null) {
             processYamls(state.variableRegistry, yamlFiles, state);
@@ -267,8 +261,8 @@ public class ConfigDefinition {
                 parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
                 //for (String prependFile : prependFiles) {
-                    // TODO: fix signature define file parsing
-                    //parseFile(listener, prependFile);
+                // TODO: fix signature define file parsing
+                //parseFile(listener, prependFile);
                 //}
             }
 
@@ -299,7 +293,7 @@ public class ConfigDefinition {
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
             tmpRegistry.register(SIGNATURE_HASH, "" + crc32);
-            readPrependValues(tmpRegistry, signaturePrependFile);
+            tmpRegistry.readPrependValues(signaturePrependFile);
             destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
         if (needToUpdateOtherFiles) {
@@ -329,7 +323,7 @@ public class ConfigDefinition {
 
 
         if (destCDefinesFileName != null && needToUpdateOtherFiles)
-            state.variableRegistry.writeDefinesToFile(destCDefinesFileName);
+            writeDefinesToFile(state.variableRegistry, destCDefinesFileName);
 
         if (romRaiderDestination != null && romRaiderInputFile != null && needToUpdateOtherFiles) {
             processTextTemplate(state, romRaiderInputFile, romRaiderDestination);
@@ -374,22 +368,6 @@ public class ConfigDefinition {
             needToUpdateTsFiles = CachingStrategy.checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
         }
         return needToUpdateTsFiles;
-    }
-
-    public static void readPrependValues(VariableRegistry registry, String prependFile) throws IOException {
-        BufferedReader definitionReader = new BufferedReader(new FileReader(prependFile));
-        String line;
-        while ((line = definitionReader.readLine()) != null) {
-            line = trimLine(line);
-            /**
-             * we should ignore empty lines and comments
-             */
-            if (ReaderState.isEmptyDefinitionLine(line))
-                continue;
-            if (startsWithToken(line, ReaderState.DEFINE)) {
-                processDefine(registry, line.substring(ReaderState.DEFINE.length()).trim());
-            }
-        }
     }
 
     public static void processYamls(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {
@@ -524,7 +502,7 @@ public class ConfigDefinition {
         SystemOut.println("Reading from " + inputFileName);
         SystemOut.println("Writing to " + outputFileName);
 
-        state.variableRegistry.put("generator_message", ConfigDefinition.getGeneratedAutomaticallyTag() + new Date());
+        state.variableRegistry.put("generator_message", ToolUtil.getGeneratedAutomaticallyTag() + new Date());
 
         File inputFile = new File(inputFileName);
 
@@ -534,30 +512,19 @@ public class ConfigDefinition {
         String line;
         while ((line = fr.readLine()) != null) {
             line = state.variableRegistry.applyVariables(line);
-            fw.write(line + ConfigDefinition.EOL);
+            fw.write(line + ToolUtil.EOL);
         }
         fw.close();
     }
 
-    static String trimLine(String line) {
-        line = line.trim();
-        line = line.replaceAll("\\s+", " ");
-        return line;
-    }
-
-    static boolean startsWithToken(String line, String token) {
-        return line.startsWith(token + " ") || line.startsWith(token + "\t");
-    }
-
-
     public static String getComment(String comment, int currentOffset, String units) {
         String start = "\t/**";
         String packedComment = packComment(comment, "\t");
-        String unitsComment = units.isEmpty() ? "" : "\t" + units + EOL;
-        return start + EOL +
+        String unitsComment = units.isEmpty() ? "" : "\t" + units + ToolUtil.EOL;
+        return start + ToolUtil.EOL +
                 packedComment +
                 unitsComment +
-                "\t * offset " + currentOffset + EOL + "\t */" + EOL;
+                "\t * offset " + currentOffset + ToolUtil.EOL + "\t */" + ToolUtil.EOL;
     }
 
     public static String packComment(String comment, String linePrefix) {
@@ -567,7 +534,7 @@ public class ConfigDefinition {
             return "";
         String result = "";
         for (String line : comment.split("\\\\n")) {
-            result += linePrefix + " * " + line + EOL;
+            result += linePrefix + " * " + line + ToolUtil.EOL;
         }
         return result;
     }
@@ -577,28 +544,6 @@ public class ConfigDefinition {
             return variableRegistry.intValues.get(s);
         }
         return Integer.parseInt(s);
-    }
-
-    static void processDefine(VariableRegistry registry, String line) {
-        int index = line.indexOf(' ');
-        String name;
-        if (index == -1) {
-            name = line;
-            line = "";
-        } else {
-            name = line.substring(0, index);
-            line = line.substring(index).trim();
-        }
-        if (VariableRegistry.isNumeric(line)) {
-            int v = Integer.parseInt(line);
-            registry.register(name, v);
-        } else {
-            if (line.contains(" ") && !VariableRegistry.isQuoted(line, '\"') && !VariableRegistry.isQuoted(line, '\'')) {
-                throw new IllegalStateException("Unexpected space in unquoted " + line);
-            }
-
-            registry.register(name, line);
-        }
     }
 
     private static long getCrc32(String fileName) throws IOException {
@@ -612,6 +557,16 @@ public class ConfigDefinition {
         CRC32 c = new CRC32();
         c.update(fileContent, 0, fileContent.length);
         return c.getValue();
+    }
+
+    public static void writeDefinesToFile(VariableRegistry variableRegistry, String fileName) throws IOException {
+
+        SystemOut.println("Writing to " + fileName);
+        LazyFile cHeader = new LazyFile(fileName);
+
+        cHeader.write("//\n// " + ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + "\n//\n\n");
+        cHeader.write(variableRegistry.getDefinesSection());
+        cHeader.close();
     }
 
     public static class RusefiParseErrorStrategy extends DefaultErrorStrategy {

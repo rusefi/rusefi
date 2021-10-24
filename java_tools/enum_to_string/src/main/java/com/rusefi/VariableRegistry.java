@@ -1,17 +1,18 @@
 package com.rusefi;
 
 import com.rusefi.enum_reader.Value;
-import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.util.*;
+import java.io.Reader;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static com.rusefi.ConfigDefinition.EOL;
-import static com.rusefi.ReaderState.MULT_TOKEN;
 
 /**
  * 3/30/2015
@@ -20,9 +21,11 @@ public class VariableRegistry  {
     public static final String _16_HEX_SUFFIX = "_16_hex";
     public static final String _HEX_SUFFIX = "_hex";
     public static final String CHAR_SUFFIX = "_char";
+    public static final String ENUM_SUFFIX = "_enum";
+    public static final char MULT_TOKEN = '*';
+    public static final String DEFINE = "#define";
     private static final String HEX_PREFIX = "0x";
     private final TreeMap<String, String> data = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    public static final VariableRegistry INSTANCE = new VariableRegistry();
 
     // todo: smarter regex! See TsWriter.VAR which is a bit better but still not perfect
     // todo: https://github.com/rusefi/rusefi/issues/3053 ?
@@ -33,7 +36,46 @@ public class VariableRegistry  {
     private final Map<String, String> cAllDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, String> javaDefinitions = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    public VariableRegistry() {
+    public void readPrependValues(String prependFile) throws IOException {
+        readPrependValues(new FileReader(prependFile));
+    }
+
+    public void readPrependValues(Reader fileReader) throws IOException {
+        BufferedReader definitionReader = new BufferedReader(fileReader);
+        String line;
+        while ((line = definitionReader.readLine()) != null) {
+            line = ToolUtil.trimLine(line);
+            /**
+             * we should ignore empty lines and comments
+             */
+            if (ToolUtil.isEmptyDefinitionLine(line))
+                continue;
+            if (ToolUtil.startsWithToken(line, DEFINE)) {
+                processDefine(line.substring(DEFINE.length()).trim());
+            }
+        }
+    }
+
+    void processDefine(String line) {
+        int index = line.indexOf(' ');
+        String name;
+        if (index == -1) {
+            name = line;
+            line = "";
+        } else {
+            name = line.substring(0, index);
+            line = line.substring(index).trim();
+        }
+        if (isNumeric(line)) {
+            int v = Integer.parseInt(line);
+            register(name, v);
+        } else {
+            if (line.contains(" ") && !isQuoted(line, '\"') && !isQuoted(line, '\'')) {
+                throw new IllegalStateException("Unexpected space in unquoted " + line);
+            }
+
+            register(name, line);
+        }
     }
 
     /**
@@ -129,7 +171,7 @@ public class VariableRegistry  {
         if (!value.contains("\n")) {
             // multi-lines are not supported in C headers
             if (!var.endsWith(_16_HEX_SUFFIX) && !var.endsWith(_HEX_SUFFIX)) {
-                cAllDefinitions.put(var, "#define " + var + " " + value + EOL);
+                cAllDefinitions.put(var, "#define " + var + " " + value + ToolUtil.EOL);
             }
         }
         return value;
@@ -149,7 +191,7 @@ public class VariableRegistry  {
         if (value.trim().startsWith(HEX_PREFIX)) {
             int intValue = Integer.parseInt(value.trim().substring(HEX_PREFIX.length()), 16);
             intValues.put(var, intValue);
-            javaDefinitions.put(var, "\tpublic static final int " + var + " = " + value + ";" + EOL);
+            javaDefinitions.put(var, "\tpublic static final int " + var + " = " + value + ";" + ToolUtil.EOL);
             return;
         }
 
@@ -158,18 +200,18 @@ public class VariableRegistry  {
             SystemOut.println("key [" + var + "] value: " + intValue);
             intValues.put(var, intValue);
             if (!var.endsWith(_HEX_SUFFIX)) {
-                javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + EOL);
+                javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + ToolUtil.EOL);
             }
         } catch (NumberFormatException e) {
             SystemOut.println("Not an integer: " + value);
 
-            if (!var.trim().endsWith(ConfigField.ENUM_SUFFIX)) {
+            if (!var.trim().endsWith(ENUM_SUFFIX)) {
                 if (isQuoted(value, '"')) {
                     // quoted and not with enum suffix means plain string define statement
-                    javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + EOL);
+                    javaDefinitions.put(var, "\tpublic static final String " + var + " = " + value + ";" + ToolUtil.EOL);
                 } else if (isQuoted(value, '\'')) {
                     // quoted and not with enum suffix means plain string define statement
-                    javaDefinitions.put(var, "\tpublic static final char " + var + " = " + value + ";" + EOL);
+                    javaDefinitions.put(var, "\tpublic static final char " + var + " = " + value + ";" + ToolUtil.EOL);
                     char charValue = value.charAt(1);
                     registerHex(var + CHAR_SUFFIX, charValue);
                     doRegister(var + CHAR_SUFFIX, Character.toString(charValue));
@@ -203,16 +245,6 @@ public class VariableRegistry  {
         register(name + _HEX_SUFFIX, Integer.toString(value, 16));
         String _16_hex = String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF);
         register(name + _16_HEX_SUFFIX, _16_hex);
-    }
-
-    public void writeDefinesToFile(String fileName) throws IOException {
-
-        SystemOut.println("Writing to " + fileName);
-        LazyFile cHeader = new LazyFile(fileName);
-
-        cHeader.write("//\n// " + ConfigDefinition.getGeneratedAutomaticallyTag() + ConfigDefinition.definitionInputFile + "\n//\n\n");
-        cHeader.write(getDefinesSection());
-        cHeader.close();
     }
 
     public String getDefinesSection() {
