@@ -668,7 +668,7 @@ typedef enum {
 	 * in this mode we use as many coils as we have cylinders
 	 */
 	IM_INDIVIDUAL_COILS = 1,
-	IM_WASTED_SPARK = IM_IM_WASTED_SPARK,
+	IM_WASTED_SPARK = 2,
 
 	/**
 	 * some v12 engines line BMW M70 and M73 run two distributors, one for each bank of cylinders
