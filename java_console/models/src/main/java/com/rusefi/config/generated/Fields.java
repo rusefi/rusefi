@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 01:59:44 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 03:07:21 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -750,6 +750,9 @@ public class Fields {
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HELLEN72_ETB = 33;
+	public static final int engine_type_e_HELLEN_121_NISSAN_8_CYL = 85;
+	public static final int engine_type_e_HELLEN_121_NISSAN_ALMERA_N16 = 87;
+	public static final int engine_type_e_HELLEN_NB1_36 = 94;
 	public static final int engine_type_e_HONDA_600 = 43;
 	public static final int engine_type_e_HONDA_ACCORD_CD_DIP = 18;
 	public static final int engine_type_e_HONDA_ACCORD_CD_TWO_WIRES = 17;
@@ -783,6 +786,13 @@ public class Fields {
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
+	public static final int engine_type_e_UNUSED10 = 10;
+	public static final int engine_type_e_UNUSED25 = 25;
+	public static final int engine_type_e_UNUSED5 = 4;
+	public static final int engine_type_e_UNUSED96 = 96;
+	public static final int engine_type_e_UNUSED97 = 97;
+	public static final int engine_type_e_UNUSED98 = 98;
+	public static final int engine_type_e_UNUSED99 = 99;
 	public static final int engine_type_e_UNUSED_48 = 48;
 	public static final int engine_type_e_UNUSED_50 = 50;
 	public static final int engine_type_e_UNUSED_51 = 51;
@@ -795,6 +805,8 @@ public class Fields {
 	public static final int engineMake_offset = 1096;
 	public static final int engineSnifferRpmThreshold_offset = 4;
 	public static final int engineType_offset = 0;
+	public static final int ENUM_16_BITS = 60000;
+	public static final int ENUM_32_BITS = 2000000000;
 	public static final int ERROR_BUFFER_SIZE = 120;
 	public static final int ET_BMW_M73_F = 40;
 	public static final int ET_CAMARO = 35;
@@ -2091,7 +2103,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.3536072872";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.3208251651";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
