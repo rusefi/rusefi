@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Oct 23 23:39:23 EDT 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Oct 23 23:59:56 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -89,8 +89,14 @@ case DBG_TPS_ACCEL:
   return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
+case DBG_UNUSED12:
+  return "DBG_UNUSED12";
+case DBG_UNUSED41:
+  return "DBG_UNUSED41";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
+case DBG_UNUSED_6:
+  return "DBG_UNUSED_6";
 case DBG_VVT:
   return "DBG_VVT";
 case DBG_VVT_1_PID:
@@ -109,14 +115,8 @@ case MODE_52:
   return "MODE_52";
 case MODE_53:
   return "MODE_53";
-case UNUSED12:
-  return "UNUSED12";
 case UNUSED23:
   return "UNUSED23";
-case UNUSED41:
-  return "UNUSED41";
-case UNUSED_6:
-  return "UNUSED_6";
   }
  return NULL;
 }
@@ -146,6 +146,14 @@ case DODGE_RAM:
   return "DODGE_RAM";
 case ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
+case ET_UNUSED96:
+  return "ET_UNUSED96";
+case ET_UNUSED97:
+  return "ET_UNUSED97";
+case ET_UNUSED98:
+  return "ET_UNUSED98";
+case ET_UNUSED_6:
+  return "ET_UNUSED_6";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -326,20 +334,12 @@ case UNUSED25:
   return "UNUSED25";
 case UNUSED5:
   return "UNUSED5";
-case UNUSED96:
-  return "UNUSED96";
-case UNUSED97:
-  return "UNUSED97";
-case UNUSED98:
-  return "UNUSED98";
 case UNUSED_48:
   return "UNUSED_48";
 case UNUSED_50:
   return "UNUSED_50";
 case UNUSED_51:
   return "UNUSED_51";
-case UNUSED_6:
-  return "UNUSED_6";
 case VAG_18_TURBO:
   return "VAG_18_TURBO";
 case VW_ABA:
