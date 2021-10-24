@@ -18,7 +18,7 @@ source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 java \
- -DSystemOut.name=gen_config_hellen_cypress \
+ -DSystemOut.name=logs/gen_config_hellen_cypress \
  $COMMON_GEN_CONFIG \
  -cache hellen_cypress \
  -tool hellen_cypress_gen_config.bat \

@@ -46,7 +46,7 @@ source gen_config_common.sh
 echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 
 # work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
-java -DSystemOut.name=gen_config_board \
+java -DSystemOut.name=logs/gen_config_board \
  $COMMON_GEN_CONFIG \
   -romraider integration \
 	-tool gen_config.sh \

@@ -14,7 +14,7 @@ meta_file_name=${meta_name}.txt
 header_file="${meta_name}_generated.h"
 
 
-java -DSystemOut.name=gen_live_documentation \
+java -DSystemOut.name=logs/gen_live_documentation \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition $folder/$meta_file_name \
  -cache_zip_file tunerstudio/generated/cache.zip \
