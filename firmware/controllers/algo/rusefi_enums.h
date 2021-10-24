@@ -13,7 +13,7 @@
 #include "efifeatures.h"
 #include "obd_error_codes.h"
 #include "live_data_ids.h"
-#include "rusefi_generated.h"
+#include "engine_types.h"
 // we do not want to start the search for header from current folder so we use brackets here
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
@@ -26,226 +26,6 @@
 
 #define PERCENT_MULT 100.0f
 #define PERCENT_DIV 0.01f
-
-/**
- * http://rusefi.com/wiki/index.php?title=Manual:Engine_Type
- */
-typedef enum {
-	DEFAULT_FRANKENSO = ET_DEFAULT_FRANKENSO,
-	/**
-	 * 1995 Dodge Neon
-	 * http://rusefi.com/forum/viewtopic.php?t=360
-	 */
-	DODGE_NEON_1995 = ET_DODGE_NEON_1995,
-	/**
-	 * 1996 1.3 Ford Aspire
-	 * http://rusefi.com/forum/viewtopic.php?t=375
-	 */
-	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
-
-	NISSAN_PRIMERA = ET_NISSAN_PRIMERA,
-	UNUSED_6 = 6,
-	FORD_INLINE_6_1995 = 7,
-	/**
-	 * one cylinder engine
-	 * 139qmb 50-90cc
-	 * http://rusefi.com/forum/viewtopic.php?f=3&t=332
-	 */
-	GY6_139QMB = 8,
-
-	MIATA_PROTEUS_TCU = ET_MIATA_TCU_PROTEUS,
-	MAZDA_MIATA_NB1 = 9,
-	MRE_MIATA_NB2_MAP = ET_MRE_MIATA_NB2_MAP,
-	MRE_MIATA_NA6_VAF = ET_MRE_MIATA_NA6_VAF,
-	MRE_MIATA_NB2_ETB = 13,
-	MRE_MIATA_NA6_MAP = ET_MRE_MIATA_NA6_MAP,
-	MRE_MIATA_NB2_MAF = ET_MRE_MIATA_NB2_MAF,
-
-	// Frankenstein board
-	MIATA_1990 = 19,
-	// Frankenso board
-	MIATA_NA6_MAP = ET_FRANKENSO_MIATA_NA6,
-	MRE_MIATA_94_MAP = ET_MRE_MIATA_94_MAP,
-	MIATA_1996 = 21,
-
-	FORD_ESCORT_GT = ET_FORD_ESCORT_GT,
-
-
-	MITSU_4G93 = 16,
-
-	/**
-	 * a version of HONDA_ACCORD_CD which only uses two of three trigger input sensors
-	 */
-	HONDA_ACCORD_CD_TWO_WIRES = 17,
-
-	HONDA_ACCORD_CD_DIP = 18,
-
-
-	SUBARU_2003_WRX = 22,
-
-	/**
-	 * microRusEFI used as Body Control Module BCM BCU
-	 */
-	MRE_BODY_CONTROL = ET_MRE_BODY_CONTROL,
-	BMW_M73_M = 24,
-
-	TEST_ENGINE = 26,
-
-	// used by unit test
-	// see https://github.com/rusefi/rusefi/issues/898
-	// see TriggerWaveform::bothFrontsRequired
-	TEST_ISSUE_898 = 27,
-
-	MAZDA_626 = 28,
-
-	SACHS = ET_SACHS,
-
-	// LED physical order set for older test fixtures
-	MRE_BOARD_OLD_TEST = 30,
-
-	MRE_BOARD_NEW_TEST = 31,
-
-	VW_ABA = ET_VW_ABA,
-
-	HELLEN72_ETB = 33,
-
-	HELLEN_NA6 = ET_HELLEN_NA6,
-
-	CAMARO_4 = ET_CAMARO,
-
-	HELLEN_128_MERCEDES_4_CYL = ET_HELLEN_128_MERCEDES_4_CYL,
-
-	MRE_SUBARU_EJ18 = ET_MRE_SUBARU_EJ18,
-
-	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
-
-	LADA_KALINA = 39,
-
-	BMW_M73_F = ET_BMW_M73_F,
-
-	PROTEUS_QC_TEST_BOARD = ET_PROTEUS_QC_TEST_BOARD,
-
-	HONDA_600 = 43,
-
-	TOYOTA_2JZ_GTE_VVTi = 44,
-
-	TEST_ENGINE_VVT = 45,
-
-	DODGE_NEON_2003_CRANK = 46,
-
-	/**
-	 * proper NB2 setup, 2003 red test mule car
-	 */
-	MAZDA_MIATA_2003 = ET_FRANKENSO_MIATA_NB2,
-
-	UNUSED_48 = 48,
-
-	FRANKENSO_QA_ENGINE = 49,
-
-	UNUSED_50 = 50,
-
-	UNUSED_51 = 51,
-
-
-	TEST_ISSUE_366_BOTH = 52,
-	TEST_ISSUE_366_RISE = 53,
-
-	/**
-	 * green Hunchback race car - VVT engine on a NA body with NA return fuel lines which
-	 * means different fuel pressure situation
-	 */
-	MAZDA_MIATA_2003_NA_RAIL = 54,
-
-	MAZDA_MIATA_2003_BOARD_TEST = 55,
-
-	MAZDA_MIATA_NA8 = 56,
-
-	// see also	MIATA_NA6_MAP = 41
-	MIATA_NA6_VAF = ET_FRANKENSO_MIATA_NA6_VAF,
-
-	ETB_BENCH_ENGINE = 58,
-
-	TLE8888_BENCH_ENGINE = 59,
-
-	MICRO_RUS_EFI = ET_MRE_DEFAULTS,
-
-	PROTEUS_DEFAULTS = 61,
-
-	PROTEUS_ANALOG_PWM_TEST = ET_PROTEUS_ANALOG_PWM_TEST,
-
-	VW_B6 = ET_VW_B6,
-
-	BMW_M73_PROTEUS = ET_PROTEUS_BMW_M73,
-
-	DODGE_RAM = 64,
-	CITROEN_TU3JP = ET_CITROEN_TU3JP,
-
-	MRE_M111 = ET_MRE_M111,
-
-	PROTEUS_MIATA_NB2 = ET_PROTEUS_MIATA_NB2,
-
-	HELLEN_NB2 = ET_HELLEN_NB2,
-
-	SUBARUEG33_DEFAULTS = 70,
-
-	HELLEN_121_VAG = ET_HELLEN_121_VAG,
-	HELLEN_121_NISSAN_6_CYL = ET_HELLEN_121_NISSAN_6_CYL,
-	HELLEN_55_BMW = ET_HELLEN_55_BMW,
-	HELLEN_88_BMW = ET_HELLEN_88_BMW,
-	HELLEN_134_BMW = ET_HELLEN_134_BMW,
-	HELLEN_154_VAG = ET_HELLEN_154_VAG,
-
-	HELLEN_121_VAG_5_CYL = ET_HELLEN_121_VAG_5_CYL,
-	HELLEN_121_VAG_V6_CYL = ET_HELLEN_121_VAG_V6_CYL,
-	HELLEN_121_VAG_VR6_CYL = ET_HELLEN_121_VAG_VR6_CYL,
-	HELLEN_121_VAG_8_CYL = ET_HELLEN_121_VAG_8_CYL,
-
-	HELLEN_NA94 = ET_HELLEN_NA94,
-
-    // 82
-	HELLEN_154_HYUNDAI_COUPE_BK1 = ET_HELLEN_154_HYUNDAI_COUPE_BK1,
-	HELLEN_NB1 = ET_HELLEN_NB1,
-	// 84
-	HELLEN_121_NISSAN_4_CYL = ET_HELLEN_121_NISSAN_4_CYL,
-
-	HELLEN_NB2_36 = ET_HELLEN_NB2_36,
-
-	HELLEN_128_MERCEDES_6_CYL = ET_HELLEN_128_MERCEDES_6_CYL,
-
-	HELLEN_128_MERCEDES_8_CYL = ET_HELLEN_128_MERCEDES_8_CYL,
-
-	PROTEUS_HONDA_ELEMENT_2003 = ET_PROTEUS_HONDA_ELEMENT_2003,
-
-	PROTEUS_HONDA_OBD2A = ET_PROTEUS_HONDA_OBD2A,
-
-	PROTEUS_VAG_80_18T = ET_PROTEUS_VAG_80_18T,
-
-	PROTEUS_N73 = ET_PROTEUS_N73,
-
-	HELLEN_154_HYUNDAI_COUPE_BK2 = ET_HELLEN_154_HYUNDAI_COUPE_BK2,
-
-
-	/**
-	 * this configuration has as few pins configured as possible
-	 */
-	MINIMAL_PINS = 99,
-	PROMETHEUS_DEFAULTS = 100,
-	SUBARUEJ20G_DEFAULTS = 101,
-	VAG_18_TURBO = 102,
-
-	TEST_33816 = 103,
-
-	BMW_M73_MRE = 104,
-	BMW_M73_MRE_SLAVE = 105,
-
-	TEST_ROTARY = ET_TEST_ROTARY,
-
-	TEST_108 = 108,
-	TEST_109 = 109,
-	TEST_110 = 110,
-
-	Force_4_bytes_size_engine_type = ENUM_32_BITS,
-} engine_type_e;
 
 
 /**
@@ -696,11 +476,11 @@ typedef enum {
 	 * todo: we might want to implement one additional mode where each pair of injectors is floating twice per engine cycle.
 	 * todo: this could reduce phase offset from injection to stroke but would not work great for large injectors
 	 */
-	IM_BATCH = IM_IM_BATCH,
+	IM_BATCH = 2,
 	/**
 	 * only one injector located in throttle body
 	 */
-	IM_SINGLE_POINT = IM_IM_SINGLE_POINT,
+	IM_SINGLE_POINT = 3,
 
 
 	Force_4_bytes_size_injection_mode = ENUM_32_BITS,
@@ -1107,10 +887,10 @@ typedef enum __attribute__ ((__packed__)) {
 
 typedef enum __attribute__ ((__packed__)) {
 // todo: rename to HB_None?
-	ETB_None = ETB_FUNCTION_NONE,
+	ETB_None = 0,
 	ETB_Throttle1 = 1,
 	ETB_Throttle2 = 2,
-	ETB_IdleValve = DC_FUNCTION_IDLE,
+	ETB_IdleValve = 3,
 	ETB_Wastegate = 4,
 // todo: rename to dc_function_e? rename to hbrg_function_e?
 } etb_function_e;

@@ -215,8 +215,6 @@ struct_no_prefix engine_configuration_s
 #define TPS_TPS_ACCEL_TABLE 8
 #define MAP_ACCEL_TAPER 8
 #define ADC_CHANNEL_NONE 0
-#define ETB_FUNCTION_NONE 0
-#define DC_FUNCTION_IDLE 3
 
 #define BARO_CORR_SIZE 4
 
@@ -468,12 +466,6 @@ end_struct
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define DBG_DBG_LOGIC_ANALYZER 45
-
-#define ETB_ETB_None 0
-
-! todo https://github.com/rusefi/rusefi/issues/2102
-#define IM_IM_BATCH 2
-#define IM_IM_SINGLE_POINT 3
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
 #define ET_DEFAULT_FRANKENSO 0

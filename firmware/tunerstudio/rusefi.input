@@ -1849,7 +1849,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Enabled",						isInjectionEnabled
 		field = "Mode",							injectionMode, {isInjectionEnabled == 1}
 		field = "#Batch injection with individual wiring"
-		field = "Individually wired Batch Fuel",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == @@IM_IM_BATCH@@ }
+		field = "Individually wired Batch Fuel",				twoWireBatchInjection, {isInjectionEnabled == 1 && injectionMode == @@injection_mode_e_IM_BATCH@@ }
 		field = "Override VE table load axis",			veOverrideMode, { isInjectionEnabled }
 		field = "Override AFR table load axis",			afrOverrideMode, { isInjectionEnabled }
 
@@ -1982,10 +1982,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Use only first half of pins for batch mode"
 		field = "Injection Pin 1",						injectionPins1, {isInjectionEnabled == 1}
 		field = "Injection Pin 2",						injectionPins2, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 1}
-		field = "Injection Pin 3",						injectionPins3, {isInjectionEnabled == 1 && injectionMode != @@IM_IM_SINGLE_POINT@@ && cylindersCount > 2}
+		field = "Injection Pin 3",						injectionPins3, {isInjectionEnabled == 1 && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 2}
 		field = "Injection Pin 4",						injectionPins4, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 3}
-		field = "Injection Pin 5 ",						injectionPins5, {isInjectionEnabled == 1 && injectionMode != @@IM_IM_SINGLE_POINT@@ && cylindersCount > 4}
-		field = "Injection Pin 6 ",						injectionPins6, {isInjectionEnabled == 1 && injectionMode != @@IM_IM_SINGLE_POINT@@ && cylindersCount > 5}
+		field = "Injection Pin 5 ",						injectionPins5, {isInjectionEnabled == 1 && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 4}
+		field = "Injection Pin 6 ",						injectionPins6, {isInjectionEnabled == 1 && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 5}
 		field = "Injection Pin 7 ",						injectionPins7, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 6}
 		field = "Injection Pin 8 ",						injectionPins8, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 7}
 		field = "Injection Pin 9 ",						injectionPins9, {isInjectionEnabled == 1 && cylindersCount > 8}
@@ -1997,8 +1997,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = cylinderBankSelect, "Cylinder Banks", yAxis
 		field = "Cylinder 1",						cylinderBankSelect1, {isInjectionEnabled == 1}
-		field = "Cylinder 2",						cylinderBankSelect2, {isInjectionEnabled == 1 && injectionMode != @@IM_IM_SINGLE_POINT@@ && cylindersCount > 1}
-		field = "Cylinder 3",						cylinderBankSelect3, {isInjectionEnabled == 1 && injectionMode != @@IM_IM_SINGLE_POINT@@ && cylindersCount > 2}
+		field = "Cylinder 2",						cylinderBankSelect2, {isInjectionEnabled == 1 && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 1}
+		field = "Cylinder 3",						cylinderBankSelect3, {isInjectionEnabled == 1 && injectionMode != @@injection_mode_e_IM_SINGLE_POINT@@ && cylindersCount > 2}
 		field = "Cylinder 4",						cylinderBankSelect4, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 3}
 		field = "Cylinder 5 ",						cylinderBankSelect5, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 4}
 		field = "Cylinder 6 ",						cylinderBankSelect6, {isInjectionEnabled == 1 && injectionMode != 3 && cylindersCount > 5}
@@ -3471,7 +3471,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
 		; another todo: split panel into two panels so that we can enable/disable h-bridge #1 separately from h-bridge #2
-		panel = etbHbridgeHardware,						{ etbFunctions1 != @@ETB_FUNCTION_NONE@@ || etbFunctions2 != @@ETB_FUNCTION_NONE@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
+		panel = etbHbridgeHardware,						{ etbFunctions1 != @@etb_function_e_ETB_None@@ || etbFunctions2 != @@etb_function_e_ETB_None@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
@@ -3487,7 +3487,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = etbDialogRight
 		panel = etbIdleDialog, {  throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@  }
-		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) || (etbFunctions1 == @@DC_FUNCTION_IDLE@@) }
+		panel = etbPidDialog,  { (throttlePedalPositionAdcChannel != @@ADC_CHANNEL_NONE@@) || (etbFunctions1 == @@etb_function_e_ETB_IdleValve@@) }
 		panel = etbAutotune
 
 		; Neutral position handling not yet implemented!
