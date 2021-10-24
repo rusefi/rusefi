@@ -463,6 +463,10 @@ void TriggerWaveform::setTriggerSynchronizationGap(float syncRatio) {
 	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
+void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
+	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
+}
+
 void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
 	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatioFrom, syncRatioTo);
 }
@@ -470,11 +474,6 @@ void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, f
 void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 	setTriggerSynchronizationGap3(/*gapIndex*/2, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
-
-void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
-}
-
 
 /**
  * External logger is needed because at this point our logger is not yet initialized
@@ -648,6 +647,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_VVT_BARRA_3_PLUS_1:
 		configureBarra3plus1cam(this);
+		break;
+
+	case TT_HONDA_K_4_1:
+		configureHondaK_4_1(this);
 		break;
 
 	case TT_HONDA_K_12_1:
