@@ -72,7 +72,7 @@ public class PwmHardwareTest extends RusefiTestBase {
         ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
 
         /* DBG_LOGIC_ANALYZER */
-        ecu.sendCommand("set debug_mode " +  com.rusefi.enums.debug_mode_e.DBG_LOGIC_ANALYZER);
+        ecu.sendCommand("set debug_mode " +  com.rusefi.enums.debug_mode_e.DBG_LOGIC_ANALYZER.ordinal());
 
         /* 160 Hz */
         ecu.sendCommand("set idle_solenoid_freq " + FREQUENCY);
