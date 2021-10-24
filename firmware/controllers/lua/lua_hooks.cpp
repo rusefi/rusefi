@@ -340,6 +340,34 @@ static int lua_setFuelMult(lua_State* l) {
 }
 #endif // EFI_UNIT_TEST
 
+
+struct LuaCanReciever;
+
+// linked list of all CAN receivers
+static LuaCanReciever *list;
+
+struct LuaCanReciever {
+
+	LuaCanReciever *next;
+
+	~LuaCanReciever() {
+		LuaCanReciever *current, *tmp;
+		// find self in list and remove self
+		LL_FOREACH_SAFE(list, current, tmp)
+		{
+			if (current == this) {
+				LL_DELETE(list, current);
+			}
+		}
+	}
+
+	LuaCanReciever() {
+		LL_PREPEND(list, this);
+	}
+
+
+};
+
 struct LuaSensor : public StoredValueSensor {
 	LuaSensor() : LuaSensor("Invalid") { }
 
@@ -371,6 +399,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.ctor()
 		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
 		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
+
+	LuaClass<LuaCanReciever> luaCanReciever(l, "CanReciever");
+	luaCanReciever
+		.ctor()
+		;
 
 	LuaClass<LuaSensor> luaSensor(l, "Sensor");
 	luaSensor
