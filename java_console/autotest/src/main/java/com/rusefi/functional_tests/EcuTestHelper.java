@@ -8,6 +8,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.enums.engine_type_e;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.waves.EngineReport;
@@ -113,6 +114,10 @@ public class EcuTestHelper {
 
     public void changeRpm(final int rpm) {
         IoUtil.changeRpm(commandQueue, rpm);
+    }
+
+    public void setEngineType(engine_type_e engine_type_e) {
+        setEngineType(engine_type_e.ordinal());
     }
 
     public void setEngineType(int type) {
