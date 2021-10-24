@@ -241,7 +241,7 @@ public class VariableRegistry  {
         registerHex(name, value);
     }
 
-    private void registerHex(String name, int value) {
+    public void registerHex(String name, int value) {
         register(name + _HEX_SUFFIX, Integer.toString(value, 16));
         String _16_hex = String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF);
         register(name + _16_HEX_SUFFIX, _16_hex);

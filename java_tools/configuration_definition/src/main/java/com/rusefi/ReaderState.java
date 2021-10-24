@@ -69,6 +69,13 @@ public class ReaderState {
                 String key = enumFamily.getKey() + "_" + enumValue.getKey();
                 String value = enumValue.getValue().getValue();
                 variableRegistry.register(key, value);
+
+                try {
+                    int numericValue = enumValue.getValue().getIntValue();
+                    variableRegistry.registerHex(key, numericValue);
+                } catch (NumberFormatException ignore) {
+                    // ENUM_32_BITS would be an example of a non-numeric enum, let's just skip for now
+                }
             }
         }
 
