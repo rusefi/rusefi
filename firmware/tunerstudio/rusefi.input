@@ -2780,9 +2780,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		field = "! Solenoid idle control is disabled at zero RPM"
 
-		panel = idleGating
-		panel = idleOpenLoop
-		panel = idlePidSettings, { idleMode == 0}
+		panel = idleOpenLoop, { idleMode != @@idle_mode_e_IM_AUTO@@ }
+		panel = idleGating, { idleMode == @@idle_mode_e_IM_AUTO@@ }
+		panel = idlePidSettings, { idleMode == @@idle_mode_e_IM_AUTO@@ }
 		panel = idleExtra
 
 	dialog = idleTimingPidCorrDialog, "", yAxis
