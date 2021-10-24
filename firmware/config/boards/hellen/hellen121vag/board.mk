@@ -6,7 +6,7 @@ BOARDINC = $(BOARDS_DIR)/hellen/hellen121vag
 
 # Set this if you want a default engine type other than normal hellen121vag
 ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_121_VAG
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=HELLEN_121_VAG_4_CYL
 endif
 
 # 176 package MCU
