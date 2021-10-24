@@ -28,7 +28,7 @@ typedef enum {
 	UNUSED5 = 4,
 
 	NISSAN_PRIMERA = 5,
-	UNUSED_6 = 6,
+	ET_UNUSED_6 = 6,
 	FORD_INLINE_6_1995 = 7,
 	/**
 	 * one cylinder engine
@@ -216,9 +216,9 @@ UNUSED25 = 25,
 
 	HELLEN_154_HYUNDAI_COUPE_BK2 = ET_HELLEN_154_HYUNDAI_COUPE_BK2,
 
-    UNUSED96 = 96,
-    UNUSED97 = 97,
-    UNUSED98 = 98,
+    ET_UNUSED96 = 96,
+    ET_UNUSED97 = 97,
+    ET_UNUSED98 = 98,
 
 	/**
 	 * this configuration has as few pins configured as possible
@@ -252,7 +252,7 @@ typedef enum {
 	DBG_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,
 	DBG_TRIGGER_COUNTERS = 5,
-	UNUSED_6 = 6,
+	DBG_UNUSED_6 = 6,
 	DBG_VVT_1_PID = 7,
 	/**
 	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
@@ -261,7 +261,7 @@ typedef enum {
 	DBG_CRANKING_DETAILS = 9,
 	DBG_IGNITION_TIMING = 10,
 	DBG_FUEL_PID_CORRECTION = 11,
-	UNUSED12 = 12,
+	DBG_UNUSED12 = 12,
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
@@ -304,7 +304,7 @@ typedef enum {
 	DBG_LAUNCH = 38,
 	DBG_ETB_AUTOTUNE = 39,
 	DBG_COMPOSITE_LOG = 40,
-	UNUSED41 = 41,
+	DBG_UNUSED41 = 41,
 	DBG_UNUSED_42 = 42,
 	DBG_INJECTOR_COMPENSATION = 43,
 	DBG_DYNO_VIEW = 44,
