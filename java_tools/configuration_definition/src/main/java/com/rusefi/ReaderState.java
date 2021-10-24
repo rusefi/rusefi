@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.enum_reader.Value;
 import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.util.SystemOut;
 
@@ -68,8 +69,19 @@ public class ReaderState {
         return line.length() == 0 || line.startsWith("!") || line.startsWith("//");
     }
 
-    void read(Reader reader) throws IOException {
+    public void read(Reader reader) throws IOException {
         Map<String, EnumsReader.EnumState> newEnums = EnumsReader.readStatic(reader);
+
+        for (Map.Entry<String, EnumsReader.EnumState> enumFamily : newEnums.entrySet()) {
+
+            for (Map.Entry<String, Value> enumValue : enumFamily.getValue().entrySet()) {
+
+                String key = enumFamily.getKey() + "_" + enumValue.getKey();
+                String value = enumValue.getValue().getValue();
+                variableRegistry.register(key, value);
+            }
+        }
+
         enumsReader.enums.putAll(newEnums);
     }
 
@@ -82,7 +94,7 @@ public class ReaderState {
         if (autoEnumOptions != null) {
             variableRegistry.register(name + "_auto_enum", autoEnumOptions);
         }
-        
+
         line = line.substring(index).trim();
         index = line.indexOf(' ');
         String customSize = line.substring(0, index);
