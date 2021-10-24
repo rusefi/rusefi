@@ -35,7 +35,6 @@ ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/vw_b6.cpp \
 	$(PROJECT_DIR)/config/engines/chevrolet_camaro_4.cpp \
 	$(PROJECT_DIR)/config/engines/toyota_jzs147.cpp \
-	$(PROJECT_DIR)/config/engines/lada_kalina.cpp \
 	$(PROJECT_DIR)/config/engines/me7pnp.cpp \
 	$(PROJECT_DIR)/config/engines/ford_festiva.cpp \
 	
