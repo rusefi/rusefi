@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 01:36:40 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 01:59:44 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -621,7 +621,6 @@ public class Fields {
 	public static final int cylinderBore_offset = 408;
 	public static final int cylindersCount_offset = 400;
 	public static final int DBG_DBG_LOGIC_ANALYZER = 45;
-	public static final int DC_FUNCTION_IDLE = 3;
 	public static final int dc_io_size = 4;
 	public static final int DC_PER_STEPPER = 2;
 	public static final int debug_mode_e_DBG_34 = 34;
@@ -863,11 +862,11 @@ public class Fields {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;
-	public static final int ETB_ETB_None = 0;
+	public static final int etb_function_e_ETB_IdleValve = 3;
+	public static final int etb_function_e_ETB_None = 0;
 	public static final int etb_function_e_ETB_Throttle1 = 1;
 	public static final int etb_function_e_ETB_Throttle2 = 2;
 	public static final int etb_function_e_ETB_Wastegate = 4;
-	public static final int ETB_FUNCTION_NONE = 0;
 	public static final int ETB_HW_MAX_FREQUENCY = 10000;
 	public static final int etb_iFactor_offset = 1740;
 	public static final int etb_iTermMax_offset = 3958;
@@ -1346,8 +1345,6 @@ public class Fields {
 	public static final int ignitionRpmBins_offset = 17376;
 	public static final int ignitionTable_offset = 16288;
 	public static final int ignOverrideMode_offset = 2128;
-	public static final int IM_IM_BATCH = 2;
-	public static final int IM_IM_SINGLE_POINT = 3;
 	public static final int imu_type_e_IMU_MM5_10 = 2;
 	public static final int imu_type_e_IMU_NONE = 0;
 	public static final int imu_type_e_IMU_TYPE_3 = 3;
@@ -1358,8 +1355,10 @@ public class Fields {
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "brake: down";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "clutch: up";
+	public static final int injection_mode_e_IM_BATCH = 2;
 	public static final int injection_mode_e_IM_SEQUENTIAL = 1;
 	public static final int injection_mode_e_IM_SIMULTANEOUS = 0;
+	public static final int injection_mode_e_IM_SINGLE_POINT = 3;
 	public static final int injectionMode_offset = 428;
 	public static final int injectionPhase_offset = 13984;
 	public static final int injectionPinMode_offset = 648;
@@ -1729,7 +1728,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 445027312;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2093,7 +2091,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.445027312";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.3536072872";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
