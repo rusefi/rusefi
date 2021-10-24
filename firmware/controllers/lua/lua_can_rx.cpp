@@ -1,4 +1,7 @@
 #include "pch.h"
+
+#if EFI_CAN_SUPPORT
+
 #include "rusefi_lua.h"
 #include "can.h"
 
@@ -134,3 +137,5 @@ void addLuaCanRxFilter(int32_t eid) {
 	luaCanRxIds[filterCount] = eid;
 	filterCount++;
 }
+
+#endif // EFI_CAN_SUPPORT
