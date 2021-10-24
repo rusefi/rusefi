@@ -291,8 +291,10 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	}
 
 	while (!needsReset && !chThdShouldTerminateX()) {
+#if EFI_CAN_SUPPORT
 		// First, process any pending can RX messages
 		doLuaCanRx(ls);
+#endif // EFI_CAN_SUPPORT
 
 		// Next, check if there is a pending interactive command entered by the user
 		doInteractive(ls);
@@ -302,7 +304,9 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 		chThdSleepMilliseconds(luaTickPeriodMs);
 	}
 
+#if EFI_CAN_SUPPORT
 	resetLuaCanRx();
+#endif // EFI_CAN_SUPPORT
 
 	// De-init pins, they will reinit next start of the script.
 	luaDeInitPins();
@@ -335,7 +339,9 @@ static LuaThread luaThread;
 
 void startLua() {
 #if LUA_USER_HEAP > 1
+#if EFI_CAN_SUPPORT
 	initLuaCanRx();
+#endif // EFI_CAN_SUPPORT
 
 	luaThread.Start();
 
