@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 14:15:37 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 17:17:01 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -765,6 +765,8 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_121_NISSAN_8_CYL = 85;
 	public static final int engine_type_e_HELLEN_121_NISSAN_ALMERA_N16 = 87;
 	public static final int engine_type_e_HELLEN_NB1_36 = 94;
+	public static final int engine_type_e_HELLEN_NB2 = 69;
+	public static final int engine_type_e_HELLEN_NB2_36 = 86;
 	public static final int engine_type_e_HONDA_600 = 43;
 	public static final int engine_type_e_HONDA_ACCORD_CD_DIP = 18;
 	public static final int engine_type_e_HONDA_ACCORD_CD_TWO_WIRES = 17;
@@ -775,14 +777,20 @@ public class Fields {
 	public static final int engine_type_e_MAZDA_MIATA_NB1 = 9;
 	public static final int engine_type_e_MIATA_1990 = 19;
 	public static final int engine_type_e_MIATA_1996 = 21;
+	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
 	public static final int engine_type_e_MINIMAL_PINS = 99;
 	public static final int engine_type_e_MITSU_4G93 = 16;
 	public static final int engine_type_e_MRE_BOARD_NEW_TEST = 31;
 	public static final int engine_type_e_MRE_BOARD_OLD_TEST = 30;
+	public static final int engine_type_e_MRE_M111 = 68;
 	public static final int engine_type_e_MRE_MIATA_NB2_ETB = 13;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
 	public static final int engine_type_e_PROMETHEUS_DEFAULTS = 100;
+	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
 	public static final int engine_type_e_PROTEUS_DEFAULTS = 61;
+	public static final int engine_type_e_PROTEUS_HONDA_ELEMENT_2003 = 90;
+	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
+	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
 	public static final int engine_type_e_SUBARU_2003_WRX = 22;
 	public static final int engine_type_e_SUBARUEG33_DEFAULTS = 70;
 	public static final int engine_type_e_SUBARUEJ20G_DEFAULTS = 101;
@@ -848,13 +856,11 @@ public class Fields {
 	public static final int ET_HELLEN_NA6 = 34;
 	public static final int ET_HELLEN_NA94 = 80;
 	public static final int ET_HELLEN_NB1 = 83;
-	public static final int ET_HELLEN_NB1_36 = 94;
 	public static final int ET_HELLEN_NB2 = 69;
 	public static final int ET_HELLEN_NB2_36 = 86;
 	public static final int ET_MIATA_TCU_PROTEUS = 1;
 	public static final int ET_MRE_BODY_CONTROL = 23;
 	public static final int ET_MRE_DEFAULTS = 60;
-	public static final int ET_MRE_M111 = 68;
 	public static final int ET_MRE_MIATA_94_MAP = 20;
 	public static final int ET_MRE_MIATA_NA6_MAP = 66;
 	public static final int ET_MRE_MIATA_NA6_VAF = 12;
@@ -866,8 +872,6 @@ public class Fields {
 	public static final int ET_PROTEUS_ANALOG_PWM_TEST = 106;
 	public static final int ET_PROTEUS_BMW_M73 = 63;
 	public static final int ET_PROTEUS_HONDA_ELEMENT_2003 = 90;
-	public static final int ET_PROTEUS_HONDA_OBD2A = 91;
-	public static final int ET_PROTEUS_MIATA_NB2 = 67;
 	public static final int ET_PROTEUS_N73 = 93;
 	public static final int ET_PROTEUS_QC_TEST_BOARD = 42;
 	public static final int ET_PROTEUS_VAG_80_18T = 92;
@@ -1743,7 +1747,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1116555577;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2107,7 +2110,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.1116555577";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.3863329661";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
