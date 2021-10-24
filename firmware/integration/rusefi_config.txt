@@ -473,9 +473,6 @@ end_struct
 #define ET_DEFAULT_FRANKENSO 0
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_DODGE_NEON_1995 2
-#define ET_FORD_ASPIRE 3
-#define ET_NISSAN_PRIMERA 5
-#define ET_FORD_INLINE_6 7
 
 #define ET_MRE_MIATA_NB2_MAP 11
 #define ET_MRE_MIATA_NA6_VAF 12
@@ -487,9 +484,7 @@ end_struct
 
 #define ET_MRE_OLD_TEST_BOARD 30
 #define ET_MRE_NEW_TEST_BOARD 31
-#define ET_VW_ABA 32
 #define ET_HELLEN_NA6 34
-#define ET_CAMARO 35
 #define ET_HELLEN_128_MERCEDES_4_CYL 36
 #define ET_MRE_SUBARU_EJ18 37
 
