@@ -470,9 +470,6 @@ end_struct
 #define TT_TT_SUZUKI_G13B 66
 
 ! todo https://github.com/rusefi/rusefi/issues/2102
-#define DBG_DBG_LOGIC_ANALYZER 45
-
-! todo https://github.com/rusefi/rusefi/issues/2102
 #define ET_DEFAULT_FRANKENSO 0
 #define ET_MIATA_TCU_PROTEUS 1
 #define ET_DODGE_NEON_1995 2
