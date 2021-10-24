@@ -304,7 +304,7 @@ custom debug_mode_e 4 bits, U32, @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define VM_VVT_INACTIVE 0
 
-#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "vvt10", "vvt11"
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "vvt11", "vvt12", "vvt13"
 custom vvt_mode_e 1 bits, U08, @OFFSET@, [0:3], @@vvt_mode_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
@@ -700,7 +700,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "Nissan QR25", "trg62", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "trg67", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "Nissan QR25", "trg62", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "trg67", "trg68", "trg69"
 
 custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
 	trigger_type_e type;+https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
@@ -715,7 +715,7 @@ end_struct
 
 trigger_config_s trigger;
 
-custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "INVALID", "INVALID", "INVALID" 
+custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
 	spi_device_e hip9011SpiDevice;
 	uint8_t failedMapFallback;+This value is only used for speed density fueling calculations.;"kPa", 1, 0, 0, 100, 0
 	uint8_t boostControlSafeDutyCycle;+Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost.;"%", 1, 0, 0, 100, 0
@@ -817,7 +817,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	brain_pin_e mc33972_cs;
 	pin_output_mode_e mc33972_csPinMode;
 
-custom adc_channel_mode_e 4 bits, U32, @OFFSET@, [0:1], "Off", "Slow", "Fast", "INVALID" 
+custom adc_channel_mode_e 4 bits, U32, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 
 	adc_channel_e auxFastSensor1_adcChannel;Useful in Research&Development phase
 	adc_channel_e tps1_2AdcChannel;First throttle body, second sensor.
@@ -982,7 +982,7 @@ custom fsio_setting_t 4 scalar, F32, @OFFSET@, 		"Val",	   1,	   0, 0, 18000,	  
 	uart_device_e consoleUartDevice;
 
 
-#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
+#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
 custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
 sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode;
 
