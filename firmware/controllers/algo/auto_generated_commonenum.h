@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Oct 06 17:59:31 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Oct 24 01:58:48 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -22,7 +22,6 @@ const char *getDebug_mode_e(debug_mode_e value);
 const char *getDisplay_mode_e(display_mode_e value);
 const char *getEgo_sensor_e(ego_sensor_e value);
 const char *getEngine_load_mode_e(engine_load_mode_e value);
-const char *getEngine_type_e(engine_type_e value);
 const char *getEtb_function_e(etb_function_e value);
 const char *getGear_e(gear_e value);
 const char *getGppwm_channel_e(gppwm_channel_e value);
