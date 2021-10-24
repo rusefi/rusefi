@@ -219,7 +219,6 @@ UNUSED25 = 25,
     UNUSED96 = 96,
     UNUSED97 = 97,
     UNUSED98 = 98,
-    UNUSED99 = 99,
 
 	/**
 	 * this configuration has as few pins configured as possible
