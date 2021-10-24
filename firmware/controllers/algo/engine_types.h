@@ -19,15 +19,15 @@ typedef enum {
 	 * 1995 Dodge Neon
 	 * http://rusefi.com/forum/viewtopic.php?t=360
 	 */
-	DODGE_NEON_1995 = ET_DODGE_NEON_1995,
+	DODGE_NEON_1995 = 2,
 	/**
 	 * 1996 1.3 Ford Aspire
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
-	FORD_ASPIRE_1996 = ET_FORD_ASPIRE,
+	FORD_ASPIRE_1996 = 3,
 	UNUSED5 = 4,
 
-	NISSAN_PRIMERA = ET_NISSAN_PRIMERA,
+	NISSAN_PRIMERA = 5,
 	UNUSED_6 = 6,
 	FORD_INLINE_6_1995 = 7,
 	/**
@@ -91,13 +91,13 @@ UNUSED25 = 25,
 
 	MRE_BOARD_NEW_TEST = 31,
 
-	VW_ABA = ET_VW_ABA,
+	VW_ABA = 32,
 
 	HELLEN72_ETB = 33,
 
 	HELLEN_NA6 = ET_HELLEN_NA6,
 
-	CAMARO_4 = ET_CAMARO,
+	CAMARO_4 = 35,
 
 	HELLEN_128_MERCEDES_4_CYL = ET_HELLEN_128_MERCEDES_4_CYL,
 
@@ -241,3 +241,85 @@ UNUSED25 = 25,
 
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
+
+/**
+ * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
+ */
+typedef enum {
+	DBG_ALTERNATOR_PID = 0,
+	DBG_TPS_ACCEL = 1,
+	DBG_GPPWM = 2,
+	DBG_IDLE_CONTROL = 3,
+	DBG_EL_ACCEL = 4,
+	DBG_TRIGGER_COUNTERS = 5,
+	UNUSED_6 = 6,
+	DBG_VVT_1_PID = 7,
+	/**
+	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
+	 */
+	DBG_VVT = 8,
+	DBG_CRANKING_DETAILS = 9,
+	DBG_IGNITION_TIMING = 10,
+	DBG_FUEL_PID_CORRECTION = 11,
+	UNUSED12 = 12,
+	DBG_SD_CARD = 13,
+	DBG_SR5_PROTOCOL = 14,
+	DBG_KNOCK = 15,
+	DBG_WALL_WETTING = 16,
+	/**
+	 * See also DBG_ELECTRONIC_THROTTLE_EXTRA
+	 */
+	DBG_ELECTRONIC_THROTTLE_PID = 17,
+	DBG_EXECUTOR = 18,
+	/**
+	 * See tunerstudio.cpp
+	 */
+	DBG_BENCH_TEST = 19,
+	DBG_AUX_VALVES = 20,
+	/**
+	 * ADC
+	 * See also DBG_ANALOG_INPUTS2
+	 */
+	DBG_ANALOG_INPUTS = 21,
+
+	DBG_INSTANT_RPM = 22,
+	UNUSED23 = 23,
+	DBG_STATUS = 24,
+	DBG_CJ125 = 25,
+	DBG_CAN = 26,
+	DBG_MAP = 27,
+	DBG_METRICS = 28,
+	DBG_ELECTRONIC_THROTTLE_EXTRA = 29,
+	DBG_ION = 30,
+	DBG_TLE8888 = 31,
+	/**
+	 * See also DBG_ANALOG_INPUTS
+	 */
+	DBG_ANALOG_INPUTS2 = 32,
+	DBG_DWELL_METRIC = 33,
+	DBG_34 = 34,
+	DBG_ETB_LOGIC = 35,
+	DBG_BOOST = 36,
+	DBG_START_STOP = 37,
+	DBG_LAUNCH = 38,
+	DBG_ETB_AUTOTUNE = 39,
+	DBG_COMPOSITE_LOG = 40,
+	UNUSED41 = 41,
+	DBG_UNUSED_42 = 42,
+	DBG_INJECTOR_COMPENSATION = 43,
+	DBG_DYNO_VIEW = 44,
+	// todo: because of getEnumOptionsForTunerStudio 'getEnumOptionsForTunerStudio' would not work here
+	// todo: https://github.com/rusefi/rusefi/issues/2102
+	DBG_LOGIC_ANALYZER = 45,
+	DBG_RUSEFI_WIDEBAND = 46,
+	DBG_TCU = 47,
+	DBG_LUA = 48,
+	DBG_VVT_2_PID = 49,
+	DBG_VVT_3_PID = 50,
+	DBG_VVT_4_PID = 51,
+	MODE_52 = 52,
+	MODE_53 = 53,
+
+	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
+} debug_mode_e;
+

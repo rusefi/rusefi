@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Oct 24 01:58:48 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Oct 23 23:39:23 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -18,7 +18,6 @@ const char *getCan_nbc_e(can_nbc_e value);
 const char *getCan_vss_nbc_e(can_vss_nbc_e value);
 const char *getChamber_style_e(chamber_style_e value);
 const char *getCranking_ignition_mode_e(cranking_ignition_mode_e value);
-const char *getDebug_mode_e(debug_mode_e value);
 const char *getDisplay_mode_e(display_mode_e value);
 const char *getEgo_sensor_e(ego_sensor_e value);
 const char *getEngine_load_mode_e(engine_load_mode_e value);
