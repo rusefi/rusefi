@@ -72,6 +72,9 @@ void Engine::resetEngineSnifferIfInTestMode() {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
+/**
+ * VVT decoding delegates to universal trigger decoder. Here we map vvt_mode_e into corresponding trigger_type_e
+ */
 trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
 	case VVT_2JZ:
