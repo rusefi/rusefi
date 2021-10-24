@@ -64,7 +64,7 @@ typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * This mode is useful for troubleshooting and research - events are logged but no effects on phase synchronization
 	 */
-	VVT_INACTIVE = VM_VVT_INACTIVE,
+	VVT_INACTIVE = 0,
 
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in opposite 360 degree of 720 degree engine cycle
