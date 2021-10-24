@@ -1,6 +1,5 @@
 package com.rusefi.test;
 
-import com.rusefi.ConfigDefinition;
 import com.rusefi.EnumsReader;
 import com.rusefi.VariableRegistry;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class ConfigDefinitionTest {
 
         VariableRegistry variableRegistry = new VariableRegistry();
 
-        ConfigDefinition.readPrependValues(variableRegistry, FIRMWARE + File.separator + "integration/rusefi_config.txt");
+        variableRegistry.readPrependValues(FIRMWARE + File.separator + "integration/rusefi_config.txt");
 
 
         String sb = variableRegistry.getEnumOptionsForTunerStudio(enumsReader, "engine_type_e");

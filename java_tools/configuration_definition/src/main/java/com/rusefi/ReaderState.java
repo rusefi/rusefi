@@ -21,13 +21,11 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  */
 public class ReaderState {
     public static final String BIT = "bit";
-    public static final String DEFINE = "#define";
     private static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
     private static final String DEFINE_CONSTRUCTOR = "define_constructor";
-    public static final char MULT_TOKEN = '*';
     public final Stack<ConfigStructure> stack = new Stack<>();
     public final Map<String, Integer> tsCustomSize = new HashMap<>();
     public final Map<String, String> tsCustomLine = new HashMap<>();
@@ -59,14 +57,6 @@ public class ReaderState {
             throw new IllegalStateException("Parent structure expected");
         ConfigStructure structure = state.stack.peek();
         structure.addBitField(bitField);
-    }
-
-    static boolean isEmptyDefinitionLine(String line) {
-        /**
-         * historically somehow '!' was the start of comment line
-         * '//' is the later added alternative.
-         */
-        return line.length() == 0 || line.startsWith("!") || line.startsWith("//");
     }
 
     public void read(Reader reader) throws IOException {
@@ -129,7 +119,7 @@ public class ReaderState {
         customSize = customSize.replaceAll("x", "*");
         line = variableRegistry.applyVariables(line);
 
-        int multPosition = customSize.indexOf(MULT_TOKEN);
+        int multPosition = customSize.indexOf(VariableRegistry.MULT_TOKEN);
         if (multPosition != -1) {
             String firstPart = customSize.substring(0, multPosition).trim();
             int first;
@@ -169,11 +159,11 @@ public class ReaderState {
         String line;
         while ((line = definitionReader.readLine()) != null) {
             lineIndex++;
-            line = ConfigDefinition.trimLine(line);
+            line = ToolUtil.trimLine(line);
             /**
              * we should ignore empty lines and comments
              */
-            if (isEmptyDefinitionLine(line))
+            if (ToolUtil.isEmptyDefinitionLine(line))
                 continue;
 
             if (line.startsWith(STRUCT)) {
@@ -186,15 +176,15 @@ public class ReaderState {
             } else if (line.startsWith(BIT)) {
                 handleBitLine(this, line);
 
-            } else if (ConfigDefinition.startsWithToken(line, CUSTOM)) {
+            } else if (ToolUtil.startsWithToken(line, CUSTOM)) {
                 handleCustomLine(line);
 
-            } else if (ConfigDefinition.startsWithToken(line, DEFINE)) {
+            } else if (ToolUtil.startsWithToken(line, VariableRegistry.DEFINE)) {
                 /**
                  * for example
                  * #define CLT_CURVE_SIZE 16
                  */
-                ConfigDefinition.processDefine(variableRegistry, line.substring(DEFINE.length()).trim());
+                variableRegistry.processDefine(line.substring(VariableRegistry.DEFINE.length()).trim());
             } else {
                 if (stack.isEmpty())
                     throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);

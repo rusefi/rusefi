@@ -2,12 +2,13 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
+import com.rusefi.ToolUtil;
 import com.rusefi.util.LazyFile;
 
 import java.io.File;
 import java.io.IOException;
 
-import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ToolUtil.EOL;
 
 /**
  * This class generates java representation of rusEfi data structures used by rusEfi console
@@ -27,11 +28,11 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
 
     @Override
     public void startFile() {
-        javaFields.write("package " + JAVA_PACKAGE + ";" + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        javaFields.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + EOL);
+        javaFields.write("package " + JAVA_PACKAGE + ";" + ToolUtil.EOL + ToolUtil.EOL);
+        javaFields.write("// this file " + ConfigDefinition.MESSAGE + ToolUtil.EOL + EOL);
         javaFields.write("// by " + getClass() + EOL);
         javaFields.write("import com.rusefi.config.*;" + EOL + EOL);
-        javaFields.write("public class " + className + " {" + ConfigDefinition.EOL);
+        javaFields.write("public class " + className + " {" + ToolUtil.EOL);
     }
 
     @Override
@@ -42,7 +43,7 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
         allFields.append("\t};" + EOL);
         javaFields.write(allFields.toString());
 
-        javaFields.write("}" + ConfigDefinition.EOL);
+        javaFields.write("}" + ToolUtil.EOL);
         javaFields.close();
     }
 }

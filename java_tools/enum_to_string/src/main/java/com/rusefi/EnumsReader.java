@@ -14,8 +14,8 @@ public class EnumsReader {
     protected final Map<String, EnumState> enums = new TreeMap<>();
 
     @NotNull
-    static List<Value> getSortedByOrder(Map<String, Value> brain_pin_e) {
-        Set<Value> byOrdinal = new TreeSet<>(Comparator.comparingInt(Value::getIntValue));
+    static List<Value> getSortedByOrder(VariableRegistry registry, Map<String, Value> brain_pin_e) {
+        Set<Value> byOrdinal = new TreeSet<>(Comparator.comparingInt(value -> value.getIntValueMaybeResolve(registry)));
         byOrdinal.addAll(brain_pin_e.values());
         return new ArrayList<>(byOrdinal);
     }

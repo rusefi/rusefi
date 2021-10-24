@@ -9,7 +9,7 @@ import com.rusefi.util.SystemOut;
 import java.io.*;
 
 import static com.rusefi.util.IoUtils.CHARSET;
-import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ToolUtil.EOL;
 
 public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_FILE_INPUT_NAME = "rusefi.input";
@@ -167,17 +167,17 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     protected void writeContent(String fieldsSection, TsFileContent tsContent, Output tsHeader) throws IOException {
         tsHeader.write(tsContent.getPrefix());
 
-        tsHeader.write("; " + CONFIG_DEFINITION_START + ConfigDefinition.EOL);
-        tsHeader.write("; this section " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + ConfigDefinition.EOL);
-        tsHeader.write("pageSize            = " + totalTsSize + ConfigDefinition.EOL);
-        tsHeader.write("page = 1" + ConfigDefinition.EOL);
+        tsHeader.write("; " + CONFIG_DEFINITION_START + ToolUtil.EOL);
+        tsHeader.write("; this section " + ConfigDefinition.MESSAGE + ToolUtil.EOL + ToolUtil.EOL);
+        tsHeader.write("pageSize            = " + totalTsSize + ToolUtil.EOL);
+        tsHeader.write("page = 1" + ToolUtil.EOL);
         tsHeader.write(fieldsSection);
         if (settingContextHelp.length() > 0) {
-            tsHeader.write("[" + SETTING_CONTEXT_HELP + "]" + ConfigDefinition.EOL);
-            tsHeader.write(settingContextHelp.toString() + ConfigDefinition.EOL + ConfigDefinition.EOL);
-            tsHeader.write("; " + SETTING_CONTEXT_HELP_END + ConfigDefinition.EOL);
+            tsHeader.write("[" + SETTING_CONTEXT_HELP + "]" + ToolUtil.EOL);
+            tsHeader.write(settingContextHelp.toString() + ToolUtil.EOL + ToolUtil.EOL);
+            tsHeader.write("; " + SETTING_CONTEXT_HELP_END + ToolUtil.EOL);
         }
-        tsHeader.write("; " + CONFIG_DEFINITION_END + ConfigDefinition.EOL);
+        tsHeader.write("; " + CONFIG_DEFINITION_END + ToolUtil.EOL);
         tsHeader.write(tsContent.getPostfix());
         tsHeader.close();
     }
@@ -218,10 +218,10 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             line = state.variableRegistry.applyVariables(line);
 
             if (isBeforeStartTag)
-                prefix.append(line + ConfigDefinition.EOL);
+                prefix.append(line + ToolUtil.EOL);
 
             if (isAfterEndTag)
-                postfix.append(state.variableRegistry.applyVariables(line) + ConfigDefinition.EOL);
+                postfix.append(state.variableRegistry.applyVariables(line) + ToolUtil.EOL);
         }
         r.close();
         return new TsFileContent(prefix.toString(), postfix.toString());

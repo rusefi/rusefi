@@ -6,7 +6,7 @@ import com.rusefi.util.SystemOut;
 
 import java.io.IOException;
 
-import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ToolUtil.EOL;
 
 /**
  * Configuration consumer which writes C header file
