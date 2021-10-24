@@ -1,0 +1,218 @@
+#include "global.h"
+#include "engine_types.h"
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Oct 23 22:03:36 EDT 2021
+// see also gen_config_and_enums.bat
+
+
+
+const char *getEngine_type_e(engine_type_e value){
+switch(value) {
+case BMW_M73_F:
+  return "BMW_M73_F";
+case BMW_M73_M:
+  return "BMW_M73_M";
+case BMW_M73_MRE:
+  return "BMW_M73_MRE";
+case BMW_M73_MRE_SLAVE:
+  return "BMW_M73_MRE_SLAVE";
+case BMW_M73_PROTEUS:
+  return "BMW_M73_PROTEUS";
+case CAMARO_4:
+  return "CAMARO_4";
+case CITROEN_TU3JP:
+  return "CITROEN_TU3JP";
+case DEFAULT_FRANKENSO:
+  return "DEFAULT_FRANKENSO";
+case DODGE_NEON_1995:
+  return "DODGE_NEON_1995";
+case DODGE_NEON_2003_CRANK:
+  return "DODGE_NEON_2003_CRANK";
+case DODGE_RAM:
+  return "DODGE_RAM";
+case ETB_BENCH_ENGINE:
+  return "ETB_BENCH_ENGINE";
+case FORD_ASPIRE_1996:
+  return "FORD_ASPIRE_1996";
+case FORD_ESCORT_GT:
+  return "FORD_ESCORT_GT";
+case FORD_INLINE_6_1995:
+  return "FORD_INLINE_6_1995";
+case FRANKENSO_QA_ENGINE:
+  return "FRANKENSO_QA_ENGINE";
+case Force_4_bytes_size_engine_type:
+  return "Force_4_bytes_size_engine_type";
+case GY6_139QMB:
+  return "GY6_139QMB";
+case HELLEN72_ETB:
+  return "HELLEN72_ETB";
+case HELLEN_121_NISSAN_4_CYL:
+  return "HELLEN_121_NISSAN_4_CYL";
+case HELLEN_121_NISSAN_6_CYL:
+  return "HELLEN_121_NISSAN_6_CYL";
+case HELLEN_121_VAG:
+  return "HELLEN_121_VAG";
+case HELLEN_121_VAG_5_CYL:
+  return "HELLEN_121_VAG_5_CYL";
+case HELLEN_121_VAG_8_CYL:
+  return "HELLEN_121_VAG_8_CYL";
+case HELLEN_121_VAG_V6_CYL:
+  return "HELLEN_121_VAG_V6_CYL";
+case HELLEN_121_VAG_VR6_CYL:
+  return "HELLEN_121_VAG_VR6_CYL";
+case HELLEN_128_MERCEDES_4_CYL:
+  return "HELLEN_128_MERCEDES_4_CYL";
+case HELLEN_128_MERCEDES_6_CYL:
+  return "HELLEN_128_MERCEDES_6_CYL";
+case HELLEN_128_MERCEDES_8_CYL:
+  return "HELLEN_128_MERCEDES_8_CYL";
+case HELLEN_134_BMW:
+  return "HELLEN_134_BMW";
+case HELLEN_154_HYUNDAI_COUPE_BK1:
+  return "HELLEN_154_HYUNDAI_COUPE_BK1";
+case HELLEN_154_HYUNDAI_COUPE_BK2:
+  return "HELLEN_154_HYUNDAI_COUPE_BK2";
+case HELLEN_154_VAG:
+  return "HELLEN_154_VAG";
+case HELLEN_55_BMW:
+  return "HELLEN_55_BMW";
+case HELLEN_88_BMW:
+  return "HELLEN_88_BMW";
+case HELLEN_NA6:
+  return "HELLEN_NA6";
+case HELLEN_NA94:
+  return "HELLEN_NA94";
+case HELLEN_NB1:
+  return "HELLEN_NB1";
+case HELLEN_NB2:
+  return "HELLEN_NB2";
+case HELLEN_NB2_36:
+  return "HELLEN_NB2_36";
+case HONDA_600:
+  return "HONDA_600";
+case HONDA_ACCORD_CD_DIP:
+  return "HONDA_ACCORD_CD_DIP";
+case HONDA_ACCORD_CD_TWO_WIRES:
+  return "HONDA_ACCORD_CD_TWO_WIRES";
+case LADA_KALINA:
+  return "LADA_KALINA";
+case MAZDA_626:
+  return "MAZDA_626";
+case MAZDA_MIATA_2003:
+  return "MAZDA_MIATA_2003";
+case MAZDA_MIATA_2003_BOARD_TEST:
+  return "MAZDA_MIATA_2003_BOARD_TEST";
+case MAZDA_MIATA_2003_NA_RAIL:
+  return "MAZDA_MIATA_2003_NA_RAIL";
+case MAZDA_MIATA_NA8:
+  return "MAZDA_MIATA_NA8";
+case MAZDA_MIATA_NB1:
+  return "MAZDA_MIATA_NB1";
+case MIATA_1990:
+  return "MIATA_1990";
+case MIATA_1996:
+  return "MIATA_1996";
+case MIATA_NA6_MAP:
+  return "MIATA_NA6_MAP";
+case MIATA_NA6_VAF:
+  return "MIATA_NA6_VAF";
+case MIATA_PROTEUS_TCU:
+  return "MIATA_PROTEUS_TCU";
+case MICRO_RUS_EFI:
+  return "MICRO_RUS_EFI";
+case MINIMAL_PINS:
+  return "MINIMAL_PINS";
+case MITSU_4G93:
+  return "MITSU_4G93";
+case MRE_BOARD_NEW_TEST:
+  return "MRE_BOARD_NEW_TEST";
+case MRE_BOARD_OLD_TEST:
+  return "MRE_BOARD_OLD_TEST";
+case MRE_BODY_CONTROL:
+  return "MRE_BODY_CONTROL";
+case MRE_M111:
+  return "MRE_M111";
+case MRE_MIATA_94_MAP:
+  return "MRE_MIATA_94_MAP";
+case MRE_MIATA_NA6_MAP:
+  return "MRE_MIATA_NA6_MAP";
+case MRE_MIATA_NA6_VAF:
+  return "MRE_MIATA_NA6_VAF";
+case MRE_MIATA_NB2_ETB:
+  return "MRE_MIATA_NB2_ETB";
+case MRE_MIATA_NB2_MAF:
+  return "MRE_MIATA_NB2_MAF";
+case MRE_MIATA_NB2_MAP:
+  return "MRE_MIATA_NB2_MAP";
+case MRE_SUBARU_EJ18:
+  return "MRE_SUBARU_EJ18";
+case NISSAN_PRIMERA:
+  return "NISSAN_PRIMERA";
+case PROMETHEUS_DEFAULTS:
+  return "PROMETHEUS_DEFAULTS";
+case PROTEUS_ANALOG_PWM_TEST:
+  return "PROTEUS_ANALOG_PWM_TEST";
+case PROTEUS_DEFAULTS:
+  return "PROTEUS_DEFAULTS";
+case PROTEUS_HONDA_ELEMENT_2003:
+  return "PROTEUS_HONDA_ELEMENT_2003";
+case PROTEUS_HONDA_OBD2A:
+  return "PROTEUS_HONDA_OBD2A";
+case PROTEUS_MIATA_NB2:
+  return "PROTEUS_MIATA_NB2";
+case PROTEUS_N73:
+  return "PROTEUS_N73";
+case PROTEUS_QC_TEST_BOARD:
+  return "PROTEUS_QC_TEST_BOARD";
+case PROTEUS_VAG_80_18T:
+  return "PROTEUS_VAG_80_18T";
+case SACHS:
+  return "SACHS";
+case SUBARUEG33_DEFAULTS:
+  return "SUBARUEG33_DEFAULTS";
+case SUBARUEJ20G_DEFAULTS:
+  return "SUBARUEJ20G_DEFAULTS";
+case SUBARU_2003_WRX:
+  return "SUBARU_2003_WRX";
+case TEST_108:
+  return "TEST_108";
+case TEST_109:
+  return "TEST_109";
+case TEST_110:
+  return "TEST_110";
+case TEST_33816:
+  return "TEST_33816";
+case TEST_ENGINE:
+  return "TEST_ENGINE";
+case TEST_ENGINE_VVT:
+  return "TEST_ENGINE_VVT";
+case TEST_ISSUE_366_BOTH:
+  return "TEST_ISSUE_366_BOTH";
+case TEST_ISSUE_366_RISE:
+  return "TEST_ISSUE_366_RISE";
+case TEST_ISSUE_898:
+  return "TEST_ISSUE_898";
+case TEST_ROTARY:
+  return "TEST_ROTARY";
+case TLE8888_BENCH_ENGINE:
+  return "TLE8888_BENCH_ENGINE";
+case TOYOTA_2JZ_GTE_VVTi:
+  return "TOYOTA_2JZ_GTE_VVTi";
+case TOYOTA_JZS147:
+  return "TOYOTA_JZS147";
+case UNUSED_48:
+  return "UNUSED_48";
+case UNUSED_50:
+  return "UNUSED_50";
+case UNUSED_51:
+  return "UNUSED_51";
+case UNUSED_6:
+  return "UNUSED_6";
+case VAG_18_TURBO:
+  return "VAG_18_TURBO";
+case VW_ABA:
+  return "VW_ABA";
+case VW_B6:
+  return "VW_B6";
+  }
+ return NULL;
+}
