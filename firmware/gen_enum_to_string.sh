@@ -27,6 +27,14 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 
 [ $? -eq 0 ] || { echo "ERROR generating enums"; exit 1; }
 
+java -DSystemOut.name=logs/gen_enum_to_string \
+	-jar ../java_tools/enum2string.jar \
+	-outputPath controllers/algo \
+	-generatedFile enginetypes \
+	-enumInputFile controllers/algo/engine_types.h
+
+[ $? -eq 0 ] || { echo "ERROR generating enums"; exit 1; }
+
 # TODO: rearrange enums so that we have WAY less duplicated generated code? at the moment too many enums are generated 4 times
 
 java -DSystemOut.name=logs/gen_enum_to_string \
