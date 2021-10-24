@@ -340,14 +340,16 @@ static int lua_setFuelMult(lua_State* l) {
 	return 0;
 }
 
+#endif // EFI_UNIT_TEST
+
+#if EFI_CAN_SUPPORT
 static int lua_canRxAdd(lua_State* l) {
 	auto eid = luaL_checkinteger(l, 1);
 	addLuaCanRxFilter(eid);
 
 	return 0;
 }
-
-#endif // EFI_UNIT_TEST
+#endif // EFI_CAN_SUPPORT
 
 struct LuaSensor : public StoredValueSensor {
 	LuaSensor() : LuaSensor("Invalid") { }
@@ -416,6 +418,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "setFuelAdd", lua_setFuelAdd);
 	lua_register(l, "setFuelMult", lua_setFuelMult);
 
+#if EFI_CAN_SUPPORT
 	lua_register(l, "canRxAdd", lua_canRxAdd);
-#endif
+#endif // EFI_CAN_SUPPORT
+#endif // not EFI_UNIT_TEST
 }
