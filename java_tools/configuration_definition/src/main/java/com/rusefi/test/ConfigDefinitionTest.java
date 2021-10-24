@@ -16,7 +16,7 @@ public class ConfigDefinitionTest {
     @Test
     public void testEnumIntoType() throws IOException {
         EnumsReader enumsReader = new EnumsReader();
-        enumsReader.read(new FileReader(FIRMWARE + File.separator + "controllers/algo/rusefi_enums.h"));
+        enumsReader.read(new FileReader(FIRMWARE + File.separator + "controllers/algo/engine_types.h"));
 
         VariableRegistry variableRegistry = new VariableRegistry();
 
