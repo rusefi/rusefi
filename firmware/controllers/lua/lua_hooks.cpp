@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "lua.hpp"
+#include "rusefi_lua.h"
 #include "lua_hooks.h"
 
 #include "fuel_math.h"
@@ -339,39 +339,15 @@ static int lua_setFuelMult(lua_State* l) {
 
 	return 0;
 }
+
+static int lua_canRxAdd(lua_State* l) {
+	auto eid = luaL_checkinteger(l, 1);
+	addLuaCanRxFilter(eid);
+
+	return 0;
+}
+
 #endif // EFI_UNIT_TEST
-
-
-struct LuaCanReciever;
-
-// linked list of all CAN receivers
-static LuaCanReciever *list;
-
-struct LuaCanReciever {
-
-	LuaCanReciever *next;
-
-#if EFI_PROD_CODE
-	cyclic_buffer<CANRxFrame> pending;
-#endif // EFI_PROD_CODE
-
-	~LuaCanReciever() {
-		LuaCanReciever *current, *tmp;
-		// find self in list and remove self
-		LL_FOREACH_SAFE(list, current, tmp)
-		{
-			if (current == this) {
-				LL_DELETE(list, current);
-			}
-		}
-	}
-
-	LuaCanReciever() {
-		LL_PREPEND(list, this);
-	}
-
-
-};
 
 struct LuaSensor : public StoredValueSensor {
 	LuaSensor() : LuaSensor("Invalid") { }
@@ -404,11 +380,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.ctor()
 		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
 		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
-
-	LuaClass<LuaCanReciever> luaCanReciever(l, "CanReciever");
-	luaCanReciever
-		.ctor()
-		;
 
 	LuaClass<LuaSensor> luaSensor(l, "Sensor");
 	luaSensor
@@ -444,5 +415,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "setFuelAdd", lua_setFuelAdd);
 	lua_register(l, "setFuelMult", lua_setFuelMult);
+
+	lua_register(l, "canRxAdd", lua_canRxAdd);
 #endif
 }

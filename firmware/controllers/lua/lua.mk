@@ -4,6 +4,7 @@ LUA_EXT=$(PROJECT_DIR)/ext/lua
 ALLCPPSRC += $(LUA_DIR)/lua.cpp \
 			 $(LUA_DIR)/lua_hooks.cpp \
 			 $(LUA_DIR)/system_lua.cpp \
+			 $(LUA_DIR)/lua_can_rx.cpp \
 
 ALLINC += $(LUA_DIR) $(LUA_DIR)/luaaa $(LUA_EXT)
 ALLCSRC += \

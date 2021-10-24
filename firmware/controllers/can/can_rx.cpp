@@ -10,6 +10,8 @@
 
 #include "pch.h"
 
+#include "rusefi_lua.h"
+
 typedef float fsio_table_8x8_f32t_linear[FSIO_TABLE_8 * FSIO_TABLE_8];
 
 bool acceptCanRx(int sid DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -156,7 +158,6 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 			engine->sensors.accelerometer.z = accZ * MM5_10_ACC_QUANT;
 		}
 	}
-
 }
 
 void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
@@ -172,6 +173,8 @@ void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
 
 	// todo: convert to CanListener or not?
 	processCanRxImu(frame, nowNt);
+
+	processLuaCan(frame);
 
 #if EFI_CANBUS_SLAVE
 	if (CAN_EID(frame) == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {

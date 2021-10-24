@@ -116,43 +116,6 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 }
 #endif // EFI_PROD_CODE
 
-class LuaHandle final {
-public:
-	LuaHandle() : LuaHandle(nullptr) { }
-	LuaHandle(lua_State* ptr) : m_ptr(ptr) { }
-
-	// Don't allow copying!
-	LuaHandle(const LuaHandle&) = delete;
-	LuaHandle& operator=(const LuaHandle&) = delete;
-
-	// Allow moving!
-	LuaHandle(LuaHandle&& rhs) {
-		m_ptr = rhs.m_ptr;
-		rhs.m_ptr = nullptr;
-	}
-
-	// Move assignment operator
-	LuaHandle& operator=(LuaHandle&& rhs) {
-		m_ptr = rhs.m_ptr;
-		rhs.m_ptr = nullptr;
-
-		return *this;
-	}
-
-	// Destruction cleans up lua state
-	~LuaHandle() {
-		if (m_ptr) {
-			efiPrintf("LUA: Tearing down instance...");
-			lua_close(m_ptr);
-		}
-	}
-
-	operator lua_State*() const { return m_ptr; }
-
-private:
-	lua_State* m_ptr;
-};
-
 static int luaTickPeriodMs;
 
 static int lua_setTickRate(lua_State* l) {
@@ -328,13 +291,18 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	}
 
 	while (!needsReset && !chThdShouldTerminateX()) {
-		// First, check if there is a pending interactive command entered by the user
+		// First, process any pending can RX messages
+		doLuaCanRx(ls);
+
+		// Next, check if there is a pending interactive command entered by the user
 		doInteractive(ls);
 
 		invokeTick(ls);
 
 		chThdSleepMilliseconds(luaTickPeriodMs);
 	}
+
+	resetLuaCanRx();
 
 	// De-init pins, they will reinit next start of the script.
 	luaDeInitPins();
@@ -367,6 +335,8 @@ static LuaThread luaThread;
 
 void startLua() {
 #if LUA_USER_HEAP > 1
+	initLuaCanRx();
+
 	luaThread.Start();
 
 	addConsoleActionS("lua", [](const char* str){
