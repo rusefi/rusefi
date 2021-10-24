@@ -394,10 +394,9 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 /**
  * This configuration is used for MRE board Quality Assurance validation
- * set engine_type 30
- * MRE_BOARD_TEST
+ * todo: inline
  */
-void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->debugMode = DBG_TLE8888;
 
