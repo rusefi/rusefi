@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 09:12:05 EDT 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 17:16:22 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -128,8 +128,6 @@ case BMW_M73_MRE:
   return "BMW_M73_MRE";
 case BMW_M73_MRE_SLAVE:
   return "BMW_M73_MRE_SLAVE";
-case PROTEUS_BMW_M73:
-  return "BMW_M73_PROTEUS";
 case CAMARO_4:
   return "CAMARO_4";
 case CITROEN_TU3JP:
@@ -280,6 +278,8 @@ case PROMETHEUS_DEFAULTS:
   return "PROMETHEUS_DEFAULTS";
 case PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
+case PROTEUS_BMW_M73:
+  return "PROTEUS_BMW_M73";
 case PROTEUS_DEFAULTS:
   return "PROTEUS_DEFAULTS";
 case PROTEUS_HONDA_ELEMENT_2003:
