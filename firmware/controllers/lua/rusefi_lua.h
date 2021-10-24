@@ -52,7 +52,7 @@ int testLuaReturnsInteger(const char* script);
 void testLuaExecString(const char* script);
 #endif
 
-#if !EFI_UNIT_TEST && EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT
 // Lua CAN rx feature
 void initLuaCanRx();
 // Called when the user script is unloaded, resets any CAN rx filters
@@ -63,4 +63,4 @@ void addLuaCanRxFilter(int32_t eid);
 void doLuaCanRx(LuaHandle& ls);
 // Called from the CAN RX thread to queue a frame for Lua consumption
 void processLuaCan(const CANRxFrame& frame);
-#endif // not EFI_UNIT_TEST
+#endif // not EFI_CAN_SUPPORT
