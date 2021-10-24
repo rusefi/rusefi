@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 17:17:01 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 20:04:54 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -747,6 +747,7 @@ public class Fields {
 	public static final int engine_type_e_BMW_M73_MRE = 104;
 	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 105;
 	public static final int engine_type_e_CAMARO_4 = 35;
+	public static final int engine_type_e_DEFAULT_FRANKENSO = 0;
 	public static final int engine_type_e_DODGE_NEON_1995 = 2;
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
@@ -756,14 +757,27 @@ public class Fields {
 	public static final int engine_type_e_ET_UNUSED_6 = 6;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
+	public static final int engine_type_e_FORD_ESCORT_GT = 14;
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
 	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_NA8 = 56;
 	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HELLEN72_ETB = 33;
+	public static final int engine_type_e_HELLEN_121_NISSAN_6_CYL = 72;
 	public static final int engine_type_e_HELLEN_121_NISSAN_8_CYL = 85;
 	public static final int engine_type_e_HELLEN_121_NISSAN_ALMERA_N16 = 87;
+	public static final int engine_type_e_HELLEN_121_VAG_4_CYL = 71;
+	public static final int engine_type_e_HELLEN_121_VAG_5_CYL = 77;
+	public static final int engine_type_e_HELLEN_121_VAG_8_CYL = 81;
+	public static final int engine_type_e_HELLEN_121_VAG_V6_CYL = 78;
+	public static final int engine_type_e_HELLEN_121_VAG_VR6_CYL = 79;
+	public static final int engine_type_e_HELLEN_128_MERCEDES_4_CYL = 36;
+	public static final int engine_type_e_HELLEN_134_BMW = 75;
+	public static final int engine_type_e_HELLEN_154_VAG = 76;
+	public static final int engine_type_e_HELLEN_55_BMW = 73;
+	public static final int engine_type_e_HELLEN_88_BMW = 74;
+	public static final int engine_type_e_HELLEN_NA94 = 80;
 	public static final int engine_type_e_HELLEN_NB1_36 = 94;
 	public static final int engine_type_e_HELLEN_NB2 = 69;
 	public static final int engine_type_e_HELLEN_NB2_36 = 86;
@@ -782,8 +796,15 @@ public class Fields {
 	public static final int engine_type_e_MITSU_4G93 = 16;
 	public static final int engine_type_e_MRE_BOARD_NEW_TEST = 31;
 	public static final int engine_type_e_MRE_BOARD_OLD_TEST = 30;
+	public static final int engine_type_e_MRE_BODY_CONTROL = 23;
 	public static final int engine_type_e_MRE_M111 = 68;
+	public static final int engine_type_e_MRE_MIATA_94_MAP = 20;
+	public static final int engine_type_e_MRE_MIATA_NA6_MAP = 66;
+	public static final int engine_type_e_MRE_MIATA_NA6_VAF = 12;
 	public static final int engine_type_e_MRE_MIATA_NB2_ETB = 13;
+	public static final int engine_type_e_MRE_MIATA_NB2_MAF = 15;
+	public static final int engine_type_e_MRE_MIATA_NB2_MAP = 11;
+	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
 	public static final int engine_type_e_PROMETHEUS_DEFAULTS = 100;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
@@ -791,6 +812,7 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_HONDA_ELEMENT_2003 = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
 	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
+	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
 	public static final int engine_type_e_SUBARU_2003_WRX = 22;
 	public static final int engine_type_e_SUBARUEG33_DEFAULTS = 70;
 	public static final int engine_type_e_SUBARUEJ20G_DEFAULTS = 101;
@@ -814,6 +836,7 @@ public class Fields {
 	public static final int engine_type_e_UNUSED_51 = 51;
 	public static final int engine_type_e_VAG_18_TURBO = 102;
 	public static final int engine_type_e_VW_ABA = 32;
+	public static final int engine_type_e_VW_B6 = 62;
 	public static final int engineChartSize_offset = 1480;
 	public static final int engineCode_offset = 1128;
 	public static final int engineConfiguration_offset = 0;
@@ -1747,6 +1770,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 719174002;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2110,7 +2134,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.3863329661";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.719174002";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
