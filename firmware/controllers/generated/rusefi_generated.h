@@ -12,13 +12,41 @@
 #define acSwitch_offset 1469
 #define acSwitchMode_offset 4516
 #define adc_channel_e_auto_enum "EFI_ADC_NONE", "EFI_ADC_0", "EFI_ADC_1", "EFI_ADC_2", "EFI_ADC_3", "EFI_ADC_4", "EFI_ADC_5", "EFI_ADC_6", "EFI_ADC_7", "EFI_ADC_8", "EFI_ADC_9", "EFI_ADC_10", "EFI_ADC_11", "EFI_ADC_12", "EFI_ADC_13", "EFI_ADC_14", "EFI_ADC_15", "EFI_ADC_LAST_CHANNEL", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "EFI_ADC_ERROR"
+#define adc_channel_e_EFI_ADC_0 1
+#define adc_channel_e_EFI_ADC_1 2
+#define adc_channel_e_EFI_ADC_10 11
+#define adc_channel_e_EFI_ADC_11 12
+#define adc_channel_e_EFI_ADC_12 13
+#define adc_channel_e_EFI_ADC_13 14
+#define adc_channel_e_EFI_ADC_14 15
+#define adc_channel_e_EFI_ADC_15 16
+#define adc_channel_e_EFI_ADC_2 3
+#define adc_channel_e_EFI_ADC_3 4
+#define adc_channel_e_EFI_ADC_4 5
+#define adc_channel_e_EFI_ADC_5 6
+#define adc_channel_e_EFI_ADC_6 7
+#define adc_channel_e_EFI_ADC_7 8
+#define adc_channel_e_EFI_ADC_8 9
+#define adc_channel_e_EFI_ADC_9 10
+#define adc_channel_e_EFI_ADC_ERROR 50
+#define adc_channel_e_EFI_ADC_LAST_CHANNEL 17
+#define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
+#define adc_channel_mode_e_ADC_FAST 2
+#define adc_channel_mode_e_ADC_OFF 0
+#define adc_channel_mode_e_ADC_SLOW 1
 #define adc_channel_mode_e_auto_enum "ADC_OFF", "ADC_SLOW", "ADC_FAST"
+#define adc_channel_mode_e_Force_4_bytes_size_adc_channel_mode ENUM_32_BITS
 #define ADC_CHANNEL_NONE 0
 #define adcVcc_offset 548
 #define afr_alignmentFill_afr_offset 561
 #define afr_hwChannel_offset 560
 #define afr_offset 560
+#define afr_override_e_AFR_AccPedal 3
+#define afr_override_e_AFR_CylFilling 4
+#define afr_override_e_AFR_MAP 1
+#define afr_override_e_AFR_None 0
+#define afr_override_e_AFR_Tps 2
 #define afr_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
 #define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define afr_sensor_s_size 20
@@ -38,6 +66,22 @@
 #define afterstartHoldTime_offset 6152
 #define air_pressure_sensor_config_s_size 16
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR", "MT_GM_2_BAR", "MT_GM_1_BAR", "MT_MPXH6400"
+#define air_pressure_sensor_type_e_Force_4_bytes_size_cranking_map_type ENUM_32_BITS
+#define air_pressure_sensor_type_e_MT_BOSCH_2_5 10
+#define air_pressure_sensor_type_e_MT_CUSTOM 0
+#define air_pressure_sensor_type_e_MT_DENSO183 1
+#define air_pressure_sensor_type_e_MT_DODGE_NEON_2003 4
+#define air_pressure_sensor_type_e_MT_GM_1_BAR 13
+#define air_pressure_sensor_type_e_MT_GM_2_BAR 12
+#define air_pressure_sensor_type_e_MT_GM_3_BAR 6
+#define air_pressure_sensor_type_e_MT_HONDA3BAR 3
+#define air_pressure_sensor_type_e_MT_MAZDA_1_BAR 11
+#define air_pressure_sensor_type_e_MT_MPX4100 7
+#define air_pressure_sensor_type_e_MT_MPX4250 2
+#define air_pressure_sensor_type_e_MT_MPX4250A 9
+#define air_pressure_sensor_type_e_MT_MPXH6400 14
+#define air_pressure_sensor_type_e_MT_SUBY_DENSO 5
+#define air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 8
 #define alignEngineSnifferAtTDC_offset 744
 #define alignmentFill_at_2227_offset 2227
 #define alignmentFill_at_2253_offset 2253
@@ -59,8 +103,11 @@
 #define ambiguousOperationMode_offset 488
 #define analogInputDividerCoefficient_offset 460
 #define antiLagActivatePin_offset 990
+#define antiLagActivationMode_e_ALWAYS_ON_ANTILAG 1
 #define antiLagActivationMode_e_auto_enum "SWITCH_INPUT_ANTILAG", "ALWAYS_ON_ANTILAG"
 #define antiLagActivationMode_e_enum "Always Active", "Switch Input"
+#define antiLagActivationMode_e_Force_4bytes_size_antiLagActivationMode_e ENUM_32_BITS
+#define antiLagActivationMode_e_SWITCH_INPUT_ANTILAG 0
 #define antiLagActivationMode_offset 1024
 #define antiLagEnabled_offset 76
 #define antiLagRpmTreshold_offset 824
@@ -160,10 +207,216 @@
 #define boostTableOpenLoop_offset 6248
 #define boostTpsBins_offset 6392
 #define boostType_e_auto_enum "OPEN_LOOP", "CLOSED_LOOP"
+#define boostType_e_CLOSED_LOOP 1
+#define boostType_e_Force_4bytes_size_boostType_e ENUM_32_BITS
+#define boostType_e_OPEN_LOOP 0
 #define boostType_offset 1012
 #define brain_input_pin_e_enum "NONE", "INVALID", "INVALID", "PA1", "PA2", "PA3", "INVALID", "PA5", "PA6", "PA7", "PA8", "PA9", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PA15", "INVALID", "INVALID", "INVALID", "PB3", "PB4", "PB5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "PC7", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "PE6", "INVALID", "INVALID", "PE9", "INVALID", "PE11", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
+#define brain_pin_diag_e_PIN_INVALID 0x80
+#define brain_pin_diag_e_PIN_OK 0
+#define brain_pin_diag_e_PIN_OPEN 0x01
+#define brain_pin_diag_e_PIN_OVERLOAD 0x08
+#define brain_pin_diag_e_PIN_SHORT_TO_BAT 0x04
+#define brain_pin_diag_e_PIN_SHORT_TO_GND 0x02
 #define brain_pin_e_auto_enum "GPIO_UNASSIGNED", "GPIO_INVALID", "GPIOA_0", "GPIOA_1", "GPIOA_2", "GPIOA_3", "GPIOA_4", "GPIOA_5", "GPIOA_6", "GPIOA_7", "GPIOA_8", "GPIOA_9", "GPIOA_10", "GPIOA_11", "GPIOA_12", "GPIOA_13", "GPIOA_14", "GPIOA_15", "GPIOB_0", "GPIOB_1", "GPIOB_2", "GPIOB_3", "GPIOB_4", "GPIOB_5", "GPIOB_6", "GPIOB_7", "GPIOB_8", "GPIOB_9", "GPIOB_10", "GPIOB_11", "GPIOB_12", "GPIOB_13", "GPIOB_14", "GPIOB_15", "GPIOC_0", "GPIOC_1", "GPIOC_2", "GPIOC_3", "GPIOC_4", "GPIOC_5", "GPIOC_6", "GPIOC_7", "GPIOC_8", "GPIOC_9", "GPIOC_10", "GPIOC_11", "GPIOC_12", "GPIOC_13", "GPIOC_14", "GPIOC_15", "GPIOD_0", "GPIOD_1", "GPIOD_2", "GPIOD_3", "GPIOD_4", "GPIOD_5", "GPIOD_6", "GPIOD_7", "GPIOD_8", "GPIOD_9", "GPIOD_10", "GPIOD_11", "GPIOD_12", "GPIOD_13", "GPIOD_14", "GPIOD_15", "GPIOE_0", "GPIOE_1", "GPIOE_2", "GPIOE_3", "GPIOE_4", "GPIOE_5", "GPIOE_6", "GPIOE_7", "GPIOE_8", "GPIOE_9", "GPIOE_10", "GPIOE_11", "GPIOE_12", "GPIOE_13", "GPIOE_14", "GPIOE_15", "GPIOF_0", "GPIOF_1", "GPIOF_2", "GPIOF_3", "GPIOF_4", "GPIOF_5", "GPIOF_6", "GPIOF_7", "GPIOF_8", "GPIOF_9", "GPIOF_10", "GPIOF_11", "GPIOF_12", "GPIOF_13", "GPIOF_14", "GPIOF_15", "GPIOG_0", "GPIOG_1", "GPIOG_2", "GPIOG_3", "GPIOG_4", "GPIOG_5", "GPIOG_6", "GPIOG_7", "GPIOG_8", "GPIOG_9", "GPIOG_10", "GPIOG_11", "GPIOG_12", "GPIOG_13", "GPIOG_14", "GPIOG_15", "GPIOH_0", "GPIOH_1", "GPIOH_2", "GPIOH_3", "GPIOH_4", "GPIOH_5", "GPIOH_6", "GPIOH_7", "GPIOH_8", "GPIOH_9", "GPIOH_10", "GPIOH_11", "GPIOH_12", "GPIOH_13", "GPIOH_14", "GPIOH_15", "GPIOI_0", "GPIOI_1", "GPIOI_2", "GPIOI_3", "GPIOI_4", "GPIOI_5", "GPIOI_6", "GPIOI_7", "GPIOI_8", "GPIOI_9", "GPIOI_10", "GPIOI_11", "GPIOI_12", "GPIOI_13", "GPIOI_14", "GPIOI_15", "MC33972_PIN_1", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "MC33972_PIN_21", "MC33972_PIN_22", "TLE8888_PIN_1", "TLE8888_PIN_2", "TLE8888_PIN_3", "TLE8888_PIN_4", "TLE8888_PIN_5", "TLE8888_PIN_6", "TLE8888_PIN_7", "TLE8888_PIN_8", "TLE8888_PIN_9", "TLE8888_PIN_10", "TLE8888_PIN_11", "TLE8888_PIN_12", "TLE8888_PIN_13", "TLE8888_PIN_14", "TLE8888_PIN_15", "TLE8888_PIN_16", "TLE8888_PIN_17", "TLE8888_PIN_18", "TLE8888_PIN_19", "TLE8888_PIN_20", "TLE8888_PIN_21", "TLE8888_PIN_22", "TLE8888_PIN_23", "TLE8888_PIN_24", "TLE8888_PIN_25", "TLE8888_PIN_26", "TLE8888_PIN_27", "TLE8888_PIN_28", "TLE8888_PIN_MR", "TLE8888_PIN_KEY", "TLE8888_PIN_WAKE", "TLE6240_PIN_1", "TLE6240_PIN_2", "TLE6240_PIN_3", "TLE6240_PIN_4", "TLE6240_PIN_5", "TLE6240_PIN_6", "TLE6240_PIN_7", "TLE6240_PIN_8", "TLE6240_PIN_9", "TLE6240_PIN_10", "TLE6240_PIN_11", "TLE6240_PIN_12", "TLE6240_PIN_13", "TLE6240_PIN_14", "TLE6240_PIN_15", "TLE6240_PIN_16"
 #define brain_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define brain_pin_e_GPIO_INVALID 1
+#define brain_pin_e_GPIO_UNASSIGNED 0
+#define brain_pin_e_GPIOA_0 2
+#define brain_pin_e_GPIOA_1 3
+#define brain_pin_e_GPIOA_10 12
+#define brain_pin_e_GPIOA_11 13
+#define brain_pin_e_GPIOA_12 14
+#define brain_pin_e_GPIOA_13 15
+#define brain_pin_e_GPIOA_14 16
+#define brain_pin_e_GPIOA_15 17
+#define brain_pin_e_GPIOA_2 4
+#define brain_pin_e_GPIOA_3 5
+#define brain_pin_e_GPIOA_4 6
+#define brain_pin_e_GPIOA_5 7
+#define brain_pin_e_GPIOA_6 8
+#define brain_pin_e_GPIOA_7 9
+#define brain_pin_e_GPIOA_8 10
+#define brain_pin_e_GPIOA_9 11
+#define brain_pin_e_GPIOB_0 18
+#define brain_pin_e_GPIOB_1 19
+#define brain_pin_e_GPIOB_10 28
+#define brain_pin_e_GPIOB_11 29
+#define brain_pin_e_GPIOB_12 30
+#define brain_pin_e_GPIOB_13 31
+#define brain_pin_e_GPIOB_14 32
+#define brain_pin_e_GPIOB_15 33
+#define brain_pin_e_GPIOB_2 20
+#define brain_pin_e_GPIOB_3 21
+#define brain_pin_e_GPIOB_4 22
+#define brain_pin_e_GPIOB_5 23
+#define brain_pin_e_GPIOB_6 24
+#define brain_pin_e_GPIOB_7 25
+#define brain_pin_e_GPIOB_8 26
+#define brain_pin_e_GPIOB_9 27
+#define brain_pin_e_GPIOC_0 34
+#define brain_pin_e_GPIOC_1 35
+#define brain_pin_e_GPIOC_10 44
+#define brain_pin_e_GPIOC_11 45
+#define brain_pin_e_GPIOC_12 46
+#define brain_pin_e_GPIOC_13 47
+#define brain_pin_e_GPIOC_14 48
+#define brain_pin_e_GPIOC_15 49
+#define brain_pin_e_GPIOC_2 36
+#define brain_pin_e_GPIOC_3 37
+#define brain_pin_e_GPIOC_4 38
+#define brain_pin_e_GPIOC_5 39
+#define brain_pin_e_GPIOC_6 40
+#define brain_pin_e_GPIOC_7 41
+#define brain_pin_e_GPIOC_8 42
+#define brain_pin_e_GPIOC_9 43
+#define brain_pin_e_GPIOD_0 50
+#define brain_pin_e_GPIOD_1 51
+#define brain_pin_e_GPIOD_10 60
+#define brain_pin_e_GPIOD_11 61
+#define brain_pin_e_GPIOD_12 62
+#define brain_pin_e_GPIOD_13 63
+#define brain_pin_e_GPIOD_14 64
+#define brain_pin_e_GPIOD_15 65
+#define brain_pin_e_GPIOD_2 52
+#define brain_pin_e_GPIOD_3 53
+#define brain_pin_e_GPIOD_4 54
+#define brain_pin_e_GPIOD_5 55
+#define brain_pin_e_GPIOD_6 56
+#define brain_pin_e_GPIOD_7 57
+#define brain_pin_e_GPIOD_8 58
+#define brain_pin_e_GPIOD_9 59
+#define brain_pin_e_GPIOE_0 66
+#define brain_pin_e_GPIOE_1 67
+#define brain_pin_e_GPIOE_10 76
+#define brain_pin_e_GPIOE_11 77
+#define brain_pin_e_GPIOE_12 78
+#define brain_pin_e_GPIOE_13 79
+#define brain_pin_e_GPIOE_14 80
+#define brain_pin_e_GPIOE_15 81
+#define brain_pin_e_GPIOE_2 68
+#define brain_pin_e_GPIOE_3 69
+#define brain_pin_e_GPIOE_4 70
+#define brain_pin_e_GPIOE_5 71
+#define brain_pin_e_GPIOE_6 72
+#define brain_pin_e_GPIOE_7 73
+#define brain_pin_e_GPIOE_8 74
+#define brain_pin_e_GPIOE_9 75
+#define brain_pin_e_GPIOF_0 82
+#define brain_pin_e_GPIOF_1 83
+#define brain_pin_e_GPIOF_10 92
+#define brain_pin_e_GPIOF_11 93
+#define brain_pin_e_GPIOF_12 94
+#define brain_pin_e_GPIOF_13 95
+#define brain_pin_e_GPIOF_14 96
+#define brain_pin_e_GPIOF_15 97
+#define brain_pin_e_GPIOF_2 84
+#define brain_pin_e_GPIOF_3 85
+#define brain_pin_e_GPIOF_4 86
+#define brain_pin_e_GPIOF_5 87
+#define brain_pin_e_GPIOF_6 88
+#define brain_pin_e_GPIOF_7 89
+#define brain_pin_e_GPIOF_8 90
+#define brain_pin_e_GPIOF_9 91
+#define brain_pin_e_GPIOG_0 98
+#define brain_pin_e_GPIOG_1 99
+#define brain_pin_e_GPIOG_10 108
+#define brain_pin_e_GPIOG_11 109
+#define brain_pin_e_GPIOG_12 110
+#define brain_pin_e_GPIOG_13 111
+#define brain_pin_e_GPIOG_14 112
+#define brain_pin_e_GPIOG_15 113
+#define brain_pin_e_GPIOG_2 100
+#define brain_pin_e_GPIOG_3 101
+#define brain_pin_e_GPIOG_4 102
+#define brain_pin_e_GPIOG_5 103
+#define brain_pin_e_GPIOG_6 104
+#define brain_pin_e_GPIOG_7 105
+#define brain_pin_e_GPIOG_8 106
+#define brain_pin_e_GPIOG_9 107
+#define brain_pin_e_GPIOH_0 114
+#define brain_pin_e_GPIOH_1 115
+#define brain_pin_e_GPIOH_10 124
+#define brain_pin_e_GPIOH_11 125
+#define brain_pin_e_GPIOH_12 126
+#define brain_pin_e_GPIOH_13 127
+#define brain_pin_e_GPIOH_14 128
+#define brain_pin_e_GPIOH_15 129
+#define brain_pin_e_GPIOH_2 116
+#define brain_pin_e_GPIOH_3 117
+#define brain_pin_e_GPIOH_4 118
+#define brain_pin_e_GPIOH_5 119
+#define brain_pin_e_GPIOH_6 120
+#define brain_pin_e_GPIOH_7 121
+#define brain_pin_e_GPIOH_8 122
+#define brain_pin_e_GPIOH_9 123
+#define brain_pin_e_GPIOI_0 130
+#define brain_pin_e_GPIOI_1 131
+#define brain_pin_e_GPIOI_10 140
+#define brain_pin_e_GPIOI_11 141
+#define brain_pin_e_GPIOI_12 142
+#define brain_pin_e_GPIOI_13 143
+#define brain_pin_e_GPIOI_14 144
+#define brain_pin_e_GPIOI_15 145
+#define brain_pin_e_GPIOI_2 132
+#define brain_pin_e_GPIOI_3 133
+#define brain_pin_e_GPIOI_4 134
+#define brain_pin_e_GPIOI_5 135
+#define brain_pin_e_GPIOI_6 136
+#define brain_pin_e_GPIOI_7 137
+#define brain_pin_e_GPIOI_8 138
+#define brain_pin_e_GPIOI_9 139
+#define brain_pin_e_MC33972_PIN_1 146
+#define brain_pin_e_MC33972_PIN_21 166
+#define brain_pin_e_MC33972_PIN_22 167
+#define brain_pin_e_TLE6240_PIN_1 199
+#define brain_pin_e_TLE6240_PIN_10 208
+#define brain_pin_e_TLE6240_PIN_11 209
+#define brain_pin_e_TLE6240_PIN_12 210
+#define brain_pin_e_TLE6240_PIN_13 211
+#define brain_pin_e_TLE6240_PIN_14 212
+#define brain_pin_e_TLE6240_PIN_15 213
+#define brain_pin_e_TLE6240_PIN_16 214
+#define brain_pin_e_TLE6240_PIN_2 200
+#define brain_pin_e_TLE6240_PIN_3 201
+#define brain_pin_e_TLE6240_PIN_4 202
+#define brain_pin_e_TLE6240_PIN_5 203
+#define brain_pin_e_TLE6240_PIN_6 204
+#define brain_pin_e_TLE6240_PIN_7 205
+#define brain_pin_e_TLE6240_PIN_8 206
+#define brain_pin_e_TLE6240_PIN_9 207
+#define brain_pin_e_TLE8888_PIN_1 168
+#define brain_pin_e_TLE8888_PIN_10 177
+#define brain_pin_e_TLE8888_PIN_11 178
+#define brain_pin_e_TLE8888_PIN_12 179
+#define brain_pin_e_TLE8888_PIN_13 180
+#define brain_pin_e_TLE8888_PIN_14 181
+#define brain_pin_e_TLE8888_PIN_15 182
+#define brain_pin_e_TLE8888_PIN_16 183
+#define brain_pin_e_TLE8888_PIN_17 184
+#define brain_pin_e_TLE8888_PIN_18 185
+#define brain_pin_e_TLE8888_PIN_19 186
+#define brain_pin_e_TLE8888_PIN_2 169
+#define brain_pin_e_TLE8888_PIN_20 187
+#define brain_pin_e_TLE8888_PIN_21 188
+#define brain_pin_e_TLE8888_PIN_22 189
+#define brain_pin_e_TLE8888_PIN_23 190
+#define brain_pin_e_TLE8888_PIN_24 191
+#define brain_pin_e_TLE8888_PIN_25 192
+#define brain_pin_e_TLE8888_PIN_26 193
+#define brain_pin_e_TLE8888_PIN_27 194
+#define brain_pin_e_TLE8888_PIN_28 195
+#define brain_pin_e_TLE8888_PIN_3 170
+#define brain_pin_e_TLE8888_PIN_4 171
+#define brain_pin_e_TLE8888_PIN_5 172
+#define brain_pin_e_TLE8888_PIN_6 173
+#define brain_pin_e_TLE8888_PIN_7 174
+#define brain_pin_e_TLE8888_PIN_8 175
+#define brain_pin_e_TLE8888_PIN_9 176
+#define brain_pin_e_TLE8888_PIN_KEY 197
+#define brain_pin_e_TLE8888_PIN_MR 196
+#define brain_pin_e_TLE8888_PIN_WAKE 198
 #define brakePedalPin_offset 2608
 #define brakePedalPinMode_offset 2611
 #define byFirmwareVersion_offset 500
@@ -189,11 +442,31 @@
 #define can2TxPin_offset 2124
 #define can2WriteEnabled_offset 2116
 #define can_baudrate_e_auto_enum "B100KBPS", "B250KBPS", "B500KBPS", "B1MBPS"
+#define can_baudrate_e_B100KBPS 0
+#define can_baudrate_e_B1MBPS 3
+#define can_baudrate_e_B250KBPS 1
+#define can_baudrate_e_B500KBPS 2
 #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
 #define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ", "CAN_BUS_GENESIS_COUPE", "CAN_BUS_HONDA_K"
+#define can_nbc_e_CAN_BUS_BMW_E90 6
+#define can_nbc_e_CAN_BUS_GENESIS_COUPE 10
+#define can_nbc_e_CAN_BUS_Haltech 7
+#define can_nbc_e_CAN_BUS_HONDA_K 11
+#define can_nbc_e_CAN_BUS_MAZDA_RX8 3
+#define can_nbc_e_CAN_BUS_MQB 8
+#define can_nbc_e_CAN_BUS_NBC_BMW 4
+#define can_nbc_e_CAN_BUS_NBC_FIAT 1
+#define can_nbc_e_CAN_BUS_NBC_NONE 0
+#define can_nbc_e_CAN_BUS_NBC_VAG 2
+#define can_nbc_e_CAN_BUS_NISSAN_VQ 9
+#define can_nbc_e_CAN_BUS_W202_C180 5
+#define can_nbc_e_Internal_ForceMyEnumIntSize_can_nbc ENUM_32_BITS
 #define CAN_RX_PREFIX "CAN_rx"
 #define can_vss_nbc_e_auto_enum "BMW_e46", "W202"
+#define can_vss_nbc_e_BMW_e46 0
+#define can_vss_nbc_e_Force_4_bytes_size_can_vss_nbc_e ENUM_32_BITS
+#define can_vss_nbc_e_W202 1
 #define canBaudRate_offset 2108
 #define canNbcType_offset 480
 #define canReadEnabled_offset 1464
@@ -203,6 +476,10 @@
 #define canVssNbcType_offset 4140
 #define canWriteEnabled_offset 1464
 #define cdmInputPin_offset 937
+#define chamber_style_e_CS_CLOSED 1
+#define chamber_style_e_CS_OPEN 0
+#define chamber_style_e_CS_SWIRL_TUMBLE 2
+#define chamber_style_e_Internal_ForceMyEnumIntSize_chamber_stype ENUM_32_BITS
 #define cj125CsPin_offset 674
 #define cj125CsPinMode_offset 2225
 #define cj125isLsu49_offset 76
@@ -329,6 +606,9 @@
 #define cranking_baseFuel_offset 88
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CRANKING_CURVE_SIZE 8
+#define cranking_ignition_mode_e_CIM_DEFAULT 0
+#define cranking_ignition_mode_e_CIM_FIXED_ANGLE 1
+#define cranking_ignition_mode_e_Force_4_bytes_size_cranking_ignition_mode ENUM_32_BITS
 #define cranking_offset 88
 #define cranking_parameters_s_size 8
 #define cranking_rpm_offset 92
@@ -365,7 +645,58 @@
 #define dc_io_size 4
 #define DC_PER_STEPPER 2
 #define debug_mode_e_auto_enum "DBG_ALTERNATOR_PID", "DBG_TPS_ACCEL", "DBG_GPPWM", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "INVALID", "DBG_VVT_1_PID", "DBG_VVT", "DBG_CRANKING_DETAILS", "DBG_IGNITION_TIMING", "DBG_FUEL_PID_CORRECTION", "INVALID", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_WALL_WETTING", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_AUX_VALVES", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "INVALID", "DBG_STATUS", "DBG_CJ125", "DBG_CAN", "DBG_MAP", "DBG_METRICS", "DBG_ELECTRONIC_THROTTLE_EXTRA", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_ETB_LOGIC", "DBG_BOOST", "DBG_START_STOP", "DBG_LAUNCH", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "INVALID", "DBG_UNUSED_42", "DBG_INJECTOR_COMPENSATION", "DBG_DYNO_VIEW", "DBG_LOGIC_ANALYZER", "DBG_RUSEFI_WIDEBAND", "DBG_TCU", "DBG_LUA", "DBG_VVT_2_PID", "DBG_VVT_3_PID", "DBG_VVT_4_PID", "MODE_52", "MODE_53"
+#define debug_mode_e_DBG_34 34
+#define debug_mode_e_DBG_ALTERNATOR_PID 0
+#define debug_mode_e_DBG_ANALOG_INPUTS 21
+#define debug_mode_e_DBG_ANALOG_INPUTS2 32
+#define debug_mode_e_DBG_AUX_VALVES 20
+#define debug_mode_e_DBG_BENCH_TEST 19
+#define debug_mode_e_DBG_BOOST 36
+#define debug_mode_e_DBG_CAN 26
+#define debug_mode_e_DBG_CJ125 25
+#define debug_mode_e_DBG_COMPOSITE_LOG 40
+#define debug_mode_e_DBG_CRANKING_DETAILS 9
+#define debug_mode_e_DBG_DWELL_METRIC 33
+#define debug_mode_e_DBG_DYNO_VIEW 44
+#define debug_mode_e_DBG_EL_ACCEL 4
+#define debug_mode_e_DBG_ELECTRONIC_THROTTLE_EXTRA 29
+#define debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID 17
+#define debug_mode_e_DBG_ETB_AUTOTUNE 39
+#define debug_mode_e_DBG_ETB_LOGIC 35
+#define debug_mode_e_DBG_EXECUTOR 18
+#define debug_mode_e_DBG_FUEL_PID_CORRECTION 11
+#define debug_mode_e_DBG_GPPWM 2
+#define debug_mode_e_DBG_IDLE_CONTROL 3
+#define debug_mode_e_DBG_IGNITION_TIMING 10
+#define debug_mode_e_DBG_INJECTOR_COMPENSATION 43
+#define debug_mode_e_DBG_INSTANT_RPM 22
+#define debug_mode_e_DBG_ION 30
+#define debug_mode_e_DBG_KNOCK 15
+#define debug_mode_e_DBG_LAUNCH 38
+#define debug_mode_e_DBG_LOGIC_ANALYZER 45
+#define debug_mode_e_DBG_LUA 48
+#define debug_mode_e_DBG_MAP 27
+#define debug_mode_e_DBG_METRICS 28
+#define debug_mode_e_DBG_RUSEFI_WIDEBAND 46
+#define debug_mode_e_DBG_SD_CARD 13
+#define debug_mode_e_DBG_SR5_PROTOCOL 14
+#define debug_mode_e_DBG_START_STOP 37
+#define debug_mode_e_DBG_STATUS 24
+#define debug_mode_e_DBG_TCU 47
+#define debug_mode_e_DBG_TLE8888 31
+#define debug_mode_e_DBG_TPS_ACCEL 1
+#define debug_mode_e_DBG_TRIGGER_COUNTERS 5
+#define debug_mode_e_DBG_UNUSED_42 42
+#define debug_mode_e_DBG_VVT 8
+#define debug_mode_e_DBG_VVT_1_PID 7
+#define debug_mode_e_DBG_VVT_2_PID 49
+#define debug_mode_e_DBG_VVT_3_PID 50
+#define debug_mode_e_DBG_VVT_4_PID 51
+#define debug_mode_e_DBG_WALL_WETTING 16
 #define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "INVALID", "VVT1 PID", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "INVALID", "SD card", "sr5", "Knock", "Wall Wetting", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_Force_4_bytes_size_debug_mode_e ENUM_32_BITS
+#define debug_mode_e_MODE_52 52
+#define debug_mode_e_MODE_53 53
 #define debugMapAveraging_offset 807
 #define debugMode_offset 2092
 #define debugTriggerSync_offset 676
@@ -380,6 +711,10 @@
 #define disableFan2WhenStopped_offset 76
 #define displacement_offset 396
 #define display_mode_e_auto_enum "DM_NONE", "DM_HD44780", "DM_HD44780_OVER_PCF8574"
+#define display_mode_e_DM_HD44780 1
+#define display_mode_e_DM_HD44780_OVER_PCF8574 2
+#define display_mode_e_DM_NONE 0
+#define display_mode_e_Force_4_bytes_size_display_mode ENUM_32_BITS
 #define displayLogicLevelsInEngineSniffer_offset 76
 #define displayMode_offset 492
 #define drv8860_cs_offset 1201
@@ -391,6 +726,14 @@
 #define dwellVoltageCorrVoltBins_offset 770
 #define ego_sensor_e_auto_enum "ES_BPSX_D1", "ES_Innovate_MTX_L", "ES_14Point7_Free", "ES_NarrowBand", "ES_PLX", "ES_Custom", "ES_AEM"
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
+#define ego_sensor_e_ES_14Point7_Free 2
+#define ego_sensor_e_ES_AEM 6
+#define ego_sensor_e_ES_BPSX_D1 0
+#define ego_sensor_e_ES_Custom 5
+#define ego_sensor_e_ES_Innovate_MTX_L 1
+#define ego_sensor_e_ES_NarrowBand 3
+#define ego_sensor_e_ES_PLX 4
+#define ego_sensor_e_Force_4_bytes_size_ego_sensor ENUM_32_BITS
 #define egoValueShift_offset 2216
 #define EGT_CHANNEL_COUNT 8
 #define electronicThrottlePin1Mode_offset 672
@@ -410,6 +753,12 @@
 #define engine_configuration_s_size 6000
 #define engine_load_mode_e_auto_enum "INVALID", "INVALID", "INVALID", "LM_SPEED_DENSITY", "LM_REAL_MAF", "LM_ALPHA_N", "LM_LUA", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "LM_MOCK"
 #define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
+#define engine_load_mode_e_Force_4_bytes_size_engine_load_mode ENUM_32_BITS
+#define engine_load_mode_e_LM_ALPHA_N 5
+#define engine_load_mode_e_LM_LUA 6
+#define engine_load_mode_e_LM_MOCK 100
+#define engine_load_mode_e_LM_REAL_MAF 4
+#define engine_load_mode_e_LM_SPEED_DENSITY 3
 #define ENGINE_MAKE_BMW "BMW"
 #define ENGINE_MAKE_GM "GM"
 #define ENGINE_MAKE_HONDA "Honda"
@@ -424,6 +773,109 @@
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define ENGINE_SNIFFER_UNIT_US 10
 #define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "INVALID", "NISSAN_PRIMERA", "UNUSED_6", "FORD_INLINE_6_1995", "GY6_139QMB", "MAZDA_MIATA_NB1", "INVALID", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "HONDA_ACCORD_CD_DIP", "MIATA_1990", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "INVALID", "TEST_ENGINE", "TEST_ISSUE_898", "MAZDA_626", "SACHS", "MRE_BOARD_OLD_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "LADA_KALINA", "BMW_M73_F", "MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "UNUSED_50", "UNUSED_51", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "MAZDA_MIATA_NA8", "MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "MICRO_RUS_EFI", "PROTEUS_DEFAULTS", "VW_B6", "BMW_M73_PROTEUS", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "INVALID", "HELLEN_NB2_36", "INVALID", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "INVALID", "HELLEN_154_HYUNDAI_COUPE_BK2", "INVALID", "INVALID", "INVALID", "MINIMAL_PINS", "PROMETHEUS_DEFAULTS", "SUBARUEJ20G_DEFAULTS", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "PROTEUS_ANALOG_PWM_TEST", "TEST_ROTARY", "TEST_108", "TEST_109", "TEST_110"
+#define engine_type_e_BMW_M73_F ET_BMW_M73_F
+#define engine_type_e_BMW_M73_M 24
+#define engine_type_e_BMW_M73_MRE 104
+#define engine_type_e_BMW_M73_MRE_SLAVE 105
+#define engine_type_e_BMW_M73_PROTEUS ET_PROTEUS_BMW_M73
+#define engine_type_e_CAMARO_4 ET_CAMARO
+#define engine_type_e_CITROEN_TU3JP ET_CITROEN_TU3JP
+#define engine_type_e_DEFAULT_FRANKENSO ET_DEFAULT_FRANKENSO
+#define engine_type_e_DODGE_NEON_1995 ET_DODGE_NEON_1995
+#define engine_type_e_DODGE_NEON_2003_CRANK 46
+#define engine_type_e_DODGE_RAM 64
+#define engine_type_e_ETB_BENCH_ENGINE 58
+#define engine_type_e_Force_4_bytes_size_engine_type ENUM_32_BITS
+#define engine_type_e_FORD_ASPIRE_1996 ET_FORD_ASPIRE
+#define engine_type_e_FORD_ESCORT_GT ET_FORD_ESCORT_GT
+#define engine_type_e_FORD_INLINE_6_1995 7
+#define engine_type_e_FRANKENSO_QA_ENGINE 49
+#define engine_type_e_GY6_139QMB 8
+#define engine_type_e_HELLEN72_ETB 33
+#define engine_type_e_HELLEN_121_NISSAN_4_CYL ET_HELLEN_121_NISSAN_4_CYL
+#define engine_type_e_HELLEN_121_NISSAN_6_CYL ET_HELLEN_121_NISSAN_6_CYL
+#define engine_type_e_HELLEN_121_VAG ET_HELLEN_121_VAG
+#define engine_type_e_HELLEN_121_VAG_5_CYL ET_HELLEN_121_VAG_5_CYL
+#define engine_type_e_HELLEN_121_VAG_8_CYL ET_HELLEN_121_VAG_8_CYL
+#define engine_type_e_HELLEN_121_VAG_V6_CYL ET_HELLEN_121_VAG_V6_CYL
+#define engine_type_e_HELLEN_121_VAG_VR6_CYL ET_HELLEN_121_VAG_VR6_CYL
+#define engine_type_e_HELLEN_128_MERCEDES_4_CYL ET_HELLEN_128_MERCEDES_4_CYL
+#define engine_type_e_HELLEN_128_MERCEDES_6_CYL ET_HELLEN_128_MERCEDES_6_CYL
+#define engine_type_e_HELLEN_128_MERCEDES_8_CYL ET_HELLEN_128_MERCEDES_8_CYL
+#define engine_type_e_HELLEN_134_BMW ET_HELLEN_134_BMW
+#define engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1 ET_HELLEN_154_HYUNDAI_COUPE_BK1
+#define engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2 ET_HELLEN_154_HYUNDAI_COUPE_BK2
+#define engine_type_e_HELLEN_154_VAG ET_HELLEN_154_VAG
+#define engine_type_e_HELLEN_55_BMW ET_HELLEN_55_BMW
+#define engine_type_e_HELLEN_88_BMW ET_HELLEN_88_BMW
+#define engine_type_e_HELLEN_NA6 ET_HELLEN_NA6
+#define engine_type_e_HELLEN_NA94 ET_HELLEN_NA94
+#define engine_type_e_HELLEN_NB1 ET_HELLEN_NB1
+#define engine_type_e_HELLEN_NB2 ET_HELLEN_NB2
+#define engine_type_e_HELLEN_NB2_36 ET_HELLEN_NB2_36
+#define engine_type_e_HONDA_600 43
+#define engine_type_e_HONDA_ACCORD_CD_DIP 18
+#define engine_type_e_HONDA_ACCORD_CD_TWO_WIRES 17
+#define engine_type_e_LADA_KALINA 39
+#define engine_type_e_MAZDA_626 28
+#define engine_type_e_MAZDA_MIATA_2003 ET_FRANKENSO_MIATA_NB2
+#define engine_type_e_MAZDA_MIATA_2003_BOARD_TEST 55
+#define engine_type_e_MAZDA_MIATA_2003_NA_RAIL 54
+#define engine_type_e_MAZDA_MIATA_NA8 56
+#define engine_type_e_MAZDA_MIATA_NB1 9
+#define engine_type_e_MIATA_1990 19
+#define engine_type_e_MIATA_1996 21
+#define engine_type_e_MIATA_NA6_MAP ET_FRANKENSO_MIATA_NA6
+#define engine_type_e_MIATA_NA6_VAF ET_FRANKENSO_MIATA_NA6_VAF
+#define engine_type_e_MIATA_PROTEUS_TCU ET_MIATA_TCU_PROTEUS
+#define engine_type_e_MICRO_RUS_EFI ET_MRE_DEFAULTS
+#define engine_type_e_MINIMAL_PINS 99
+#define engine_type_e_MITSU_4G93 16
+#define engine_type_e_MRE_BOARD_NEW_TEST 31
+#define engine_type_e_MRE_BOARD_OLD_TEST 30
+#define engine_type_e_MRE_BODY_CONTROL ET_MRE_BODY_CONTROL
+#define engine_type_e_MRE_M111 ET_MRE_M111
+#define engine_type_e_MRE_MIATA_94_MAP ET_MRE_MIATA_94_MAP
+#define engine_type_e_MRE_MIATA_NA6_MAP ET_MRE_MIATA_NA6_MAP
+#define engine_type_e_MRE_MIATA_NA6_VAF ET_MRE_MIATA_NA6_VAF
+#define engine_type_e_MRE_MIATA_NB2_ETB 13
+#define engine_type_e_MRE_MIATA_NB2_MAF ET_MRE_MIATA_NB2_MAF
+#define engine_type_e_MRE_MIATA_NB2_MAP ET_MRE_MIATA_NB2_MAP
+#define engine_type_e_MRE_SUBARU_EJ18 ET_MRE_SUBARU_EJ18
+#define engine_type_e_NISSAN_PRIMERA ET_NISSAN_PRIMERA
+#define engine_type_e_PROMETHEUS_DEFAULTS 100
+#define engine_type_e_PROTEUS_ANALOG_PWM_TEST ET_PROTEUS_ANALOG_PWM_TEST
+#define engine_type_e_PROTEUS_DEFAULTS 61
+#define engine_type_e_PROTEUS_HONDA_ELEMENT_2003 ET_PROTEUS_HONDA_ELEMENT_2003
+#define engine_type_e_PROTEUS_HONDA_OBD2A ET_PROTEUS_HONDA_OBD2A
+#define engine_type_e_PROTEUS_MIATA_NB2 ET_PROTEUS_MIATA_NB2
+#define engine_type_e_PROTEUS_N73 ET_PROTEUS_N73
+#define engine_type_e_PROTEUS_QC_TEST_BOARD ET_PROTEUS_QC_TEST_BOARD
+#define engine_type_e_PROTEUS_VAG_80_18T ET_PROTEUS_VAG_80_18T
+#define engine_type_e_SACHS ET_SACHS
+#define engine_type_e_SUBARU_2003_WRX 22
+#define engine_type_e_SUBARUEG33_DEFAULTS 70
+#define engine_type_e_SUBARUEJ20G_DEFAULTS 101
+#define engine_type_e_TEST_108 108
+#define engine_type_e_TEST_109 109
+#define engine_type_e_TEST_110 110
+#define engine_type_e_TEST_33816 103
+#define engine_type_e_TEST_ENGINE 26
+#define engine_type_e_TEST_ENGINE_VVT 45
+#define engine_type_e_TEST_ISSUE_366_BOTH 52
+#define engine_type_e_TEST_ISSUE_366_RISE 53
+#define engine_type_e_TEST_ISSUE_898 27
+#define engine_type_e_TEST_ROTARY ET_TEST_ROTARY
+#define engine_type_e_TLE8888_BENCH_ENGINE 59
+#define engine_type_e_TOYOTA_2JZ_GTE_VVTi 44
+#define engine_type_e_TOYOTA_JZS147 38
+#define engine_type_e_UNUSED_48 48
+#define engine_type_e_UNUSED_50 50
+#define engine_type_e_UNUSED_51 51
+#define engine_type_e_UNUSED_6 6
+#define engine_type_e_VAG_18_TURBO 102
+#define engine_type_e_VW_ABA ET_VW_ABA
+#define engine_type_e_VW_B6 ET_VW_B6
 #define engineChartSize_offset 1480
 #define engineCode_offset 1128
 #define engineConfiguration_offset 0
@@ -500,6 +952,11 @@
 #define etb_dFactor_offset 1744
 #define ETB_ETB_None 0
 #define etb_function_e_auto_enum "ETB_None", "ETB_Throttle1", "ETB_Throttle2", "ETB_IdleValve", "ETB_Wastegate"
+#define etb_function_e_ETB_IdleValve DC_FUNCTION_IDLE
+#define etb_function_e_ETB_None ETB_FUNCTION_NONE
+#define etb_function_e_ETB_Throttle1 1
+#define etb_function_e_ETB_Throttle2 2
+#define etb_function_e_ETB_Wastegate 4
 #define ETB_FUNCTION_NONE 0
 #define ETB_HW_MAX_FREQUENCY 10000
 #define etb_iFactor_offset 1740
@@ -760,6 +1217,12 @@
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
+#define gear_e_GEAR_1 1
+#define gear_e_GEAR_2 2
+#define gear_e_GEAR_3 3
+#define gear_e_GEAR_4 4
+#define gear_e_NEUTRAL 0
+#define gear_e_REVERSE -1
 #define globalFuelCorrection_offset 544
 #define globalTriggerAngleOffset_offset 456
 #define gpioPinModes1_offset 764
@@ -814,8 +1277,21 @@
 #define gppwm4_table_offset 4432
 #define gppwm_channel_e_auto_enum "GPPWM_Tps", "GPPWM_Map", "GPPWM_Clt", "GPPWM_Iat", "GPPWM_FuelLoad", "GPPWM_IgnLoad", "GPPWM_AuxTemp1", "GPPWM_AuxTemp2", "GPPWM_Zero", "GPPWM_AccelPedal", "GPPWM_Vbatt"
 #define gppwm_channel_e_enum "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"
+#define gppwm_channel_e_GPPWM_AccelPedal 9
+#define gppwm_channel_e_GPPWM_AuxTemp1 6
+#define gppwm_channel_e_GPPWM_AuxTemp2 7
+#define gppwm_channel_e_GPPWM_Clt 2
+#define gppwm_channel_e_GPPWM_FuelLoad 4
+#define gppwm_channel_e_GPPWM_Iat 3
+#define gppwm_channel_e_GPPWM_IgnLoad 5
+#define gppwm_channel_e_GPPWM_Map 1
+#define gppwm_channel_e_GPPWM_Tps 0
+#define gppwm_channel_e_GPPWM_Vbatt 10
+#define gppwm_channel_e_GPPWM_Zero 8
 #define gppwm_channel_size 88
 #define GPPWM_CHANNELS 4
+#define gppwm_compare_mode_e_GPPWM_GreaterThan 0
+#define gppwm_compare_mode_e_GPPWM_LessThan 1
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_NOTE_SIZE 16
 #define GPPWM_RPM_COUNT 8
@@ -878,10 +1354,20 @@
 #define idle_derivativeFilterLoss_offset 516
 #define idle_hardware_s_size 8
 #define idle_mode_e_auto_enum "IM_AUTO", "IM_MANUAL"
+#define idle_mode_e_Force_4_bytes_size_idle_mode ENUM_32_BITS
+#define idle_mode_e_IM_AUTO 0
+#define idle_mode_e_IM_MANUAL 1
 #define idle_offset 600
 #define idle_solenoidFrequency_offset 600
 #define idle_solenoidPin_offset 604
 #define idle_solenoidPinMode_offset 607
+#define idle_state_e_BLIP 64
+#define idle_state_e_Force_4bytes_size_idle_state_e ENUM_32_BITS
+#define idle_state_e_INIT 0
+#define idle_state_e_PID_UPPER 16
+#define idle_state_e_PID_VALUE 4
+#define idle_state_e_RPM_DEAD_ZONE 2
+#define idle_state_e_TPS_THRESHOLD 1
 #define idle_stepperDirectionPin_offset 605
 #define idle_stepperStepPin_offset 606
 #define IDLE_VE_CURVE_SIZE 8
@@ -930,6 +1416,11 @@
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
 #define ignition_mode_e_auto_enum "IM_ONE_COIL", "IM_INDIVIDUAL_COILS", "IM_WASTED_SPARK", "IM_TWO_COILS"
+#define ignition_mode_e_Force_4_bytes_size_ignition_mode ENUM_32_BITS
+#define ignition_mode_e_IM_INDIVIDUAL_COILS 1
+#define ignition_mode_e_IM_ONE_COIL 0
+#define ignition_mode_e_IM_TWO_COILS 3
+#define ignition_mode_e_IM_WASTED_SPARK 2
 #define ignitionDwellForCrankingMs_offset 100
 #define ignitionIatCorrLoadBins_offset 13856
 #define ignitionIatCorrRpmBins_offset 13920
@@ -954,14 +1445,23 @@
 #define ignOverrideMode_offset 2128
 #define IM_IM_BATCH 2
 #define IM_IM_SINGLE_POINT 3
-#define IM_IM_WASTED_SPARK 2
 #define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_MM5_10", "IMU_TYPE_3", "IMU_TYPE_4"
+#define imu_type_e_IMU_MM5_10 2
+#define imu_type_e_IMU_NONE 0
+#define imu_type_e_IMU_TYPE_3 3
+#define imu_type_e_IMU_TYPE_4 4
+#define imu_type_e_IMU_VAG 1
 #define imuType_offset 778
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
 #define INDICATOR_NAME_BRAKE_DOWN "brake: down"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
 #define INDICATOR_NAME_CLUTCH_UP "clutch: up"
 #define injection_mode_e_auto_enum "IM_SIMULTANEOUS", "IM_SEQUENTIAL", "IM_BATCH", "IM_SINGLE_POINT"
+#define injection_mode_e_Force_4_bytes_size_injection_mode ENUM_32_BITS
+#define injection_mode_e_IM_BATCH IM_IM_BATCH
+#define injection_mode_e_IM_SEQUENTIAL 1
+#define injection_mode_e_IM_SIMULTANEOUS 0
+#define injection_mode_e_IM_SINGLE_POINT IM_IM_SINGLE_POINT
 #define injectionMode_offset 428
 #define injectionPhase_offset 13984
 #define injectionPinMode_offset 648
@@ -980,9 +1480,14 @@
 #define injector_battLagCorr_offset 44
 #define injector_battLagCorrBins_offset 12
 #define injector_compensation_mode_e_auto_enum "ICM_None", "ICM_FixedRailPressure", "ICM_SensedRailPressure"
+#define injector_compensation_mode_e_ICM_FixedRailPressure 1
+#define injector_compensation_mode_e_ICM_None 0
+#define injector_compensation_mode_e_ICM_SensedRailPressure 2
 #define injector_flow_offset 8
 #define injector_offset 8
 #define injector_pressure_type_e_auto_enum "IPT_Low", "IPT_High"
+#define injector_pressure_type_e_IPT_High 1
+#define injector_pressure_type_e_IPT_Low 0
 #define injector_s_size 68
 #define injectorCompensationMode_offset 2418
 #define injectorCorrectionPolynomial1_offset 2652
@@ -994,6 +1499,8 @@
 #define injectorCorrectionPolynomial7_offset 2676
 #define injectorCorrectionPolynomial8_offset 2680
 #define InjectorNonlinearMode_auto_enum "INJ_None", "INJ_PolynomialAdder"
+#define InjectorNonlinearMode_INJ_None 0
+#define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define injectorNonlinearMode_offset 2510
 #define injectorPressureType_offset 2129
 #define injPhaseLoadBins_offset 15008
@@ -1060,8 +1567,12 @@
 #define lambdaTable_offset 18592
 #define launchActivateDelay_offset 1060
 #define launchActivatePin_offset 991
+#define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
 #define launchActivationMode_e_auto_enum "SWITCH_INPUT_LAUNCH", "CLUTCH_INPUT_LAUNCH", "ALWAYS_ACTIVE_LAUNCH"
+#define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
 #define launchActivationMode_e_enum "Switch Input", "Clutch Input", "Always Active(Disabled By Speed)", "INVALID"
+#define launchActivationMode_e_Force_4bytes_size_launchActivationMode_e ENUM_32_BITS
+#define launchActivationMode_e_SWITCH_INPUT_LAUNCH 0
 #define launchActivationMode_offset 1020
 #define launchAdvanceRpmRange_offset 1052
 #define launchBoostDuty_offset 1044
@@ -1083,6 +1594,9 @@
 #define LIS302DLCsPinMode_offset 2417
 #define LOAD_1_BYTE_PACKING_MULT 2
 #define log_format_e_auto_enum "LF_NATIVE", "LM_MLV"
+#define log_format_e_Force_4_bytes_size_log_format ENUM_32_BITS
+#define log_format_e_LF_NATIVE 0
+#define log_format_e_LM_MLV 1
 #define logFormat_offset 496
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define logicAnalyzerPins1_offset 748
@@ -1112,7 +1626,12 @@
 #define luaScript_offset 7872
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
+#define maf_sensor_type_e_Bosch0280218004 2
+#define maf_sensor_type_e_Bosch0280218037 1
+#define maf_sensor_type_e_CUSTOM 0
+#define maf_sensor_type_e_DensoTODO 3
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
+#define maf_sensor_type_e_Internal_ForceMyEnumIntSize_maf_sensor ENUM_32_BITS
 #define mafAdcChannel_offset 543
 #define mafDecoding_offset 10784
 #define mafDecodingBins_offset 11808
@@ -1213,6 +1732,13 @@
 #define oilPressure_value2_offset 2708
 #define onOffAlternatorLogic_offset 744
 #define operation_mode_e_auto_enum "OM_NONE", "FOUR_STROKE_CRANK_SENSOR", "FOUR_STROKE_CAM_SENSOR", "TWO_STROKE", "FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR", "FOUR_STROKE_THREE_TIMES_CRANK_SENSOR"
+#define operation_mode_e_Force_4_bytes_size_operation_mode_e ENUM_32_BITS
+#define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
+#define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
+#define operation_mode_e_FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR 4
+#define operation_mode_e_FOUR_STROKE_THREE_TIMES_CRANK_SENSOR 5
+#define operation_mode_e_OM_NONE 0
+#define operation_mode_e_TWO_STROKE 3
 #define output_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
 #define overrideCrankingIacSetting_offset 1476
 #define overrideTriggerGaps_offset 76
@@ -1241,13 +1767,34 @@
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 #define persistent_config_s_size 20000
 #define pid_s_size 20
+#define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
+#define PidAutoTune_AutoTunerState_CONVERGED 16
+#define PidAutoTune_AutoTunerState_FAILED 128
+#define PidAutoTune_AutoTunerState_RELAY_STEP_DOWN 8
+#define PidAutoTune_AutoTunerState_RELAY_STEP_UP 4
+#define PidAutoTune_AutoTunerState_STEADY_STATE_AFTER_STEP_UP 2
+#define PidAutoTune_AutoTunerState_STEADY_STATE_AT_BASELINE 1
+#define PidAutoTune_Peak_MAXIMUM 1
+#define PidAutoTune_Peak_MINIMUM -1
+#define PidAutoTune_Peak_NOT_A_PEAK 0
 #define pidExtraForLowRpm_offset 3156
 #define pin_input_mode_e_auto_enum "PI_DEFAULT", "PI_PULLUP", "PI_PULLDOWN"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
+#define pin_input_mode_e_PI_DEFAULT 0
+#define pin_input_mode_e_PI_PULLDOWN 2
+#define pin_input_mode_e_PI_PULLUP 1
 #define pin_mode_e_auto_enum "PO_DEFAULT", "INVALID", "INVALID", "INVALID", "PO_OPENDRAIN", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PO_PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PO_PULLDOWN"
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
+#define pin_mode_e_PO_DEFAULT 0
+#define pin_mode_e_PO_OPENDRAIN 4
+#define pin_mode_e_PO_PULLDOWN 64
+#define pin_mode_e_PO_PULLUP 32
 #define pin_output_mode_e_auto_enum "OM_DEFAULT", "OM_INVERTED", "OM_OPENDRAIN", "OM_OPENDRAIN_INVERTED"
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
+#define pin_output_mode_e_OM_DEFAULT 0
+#define pin_output_mode_e_OM_INVERTED 1
+#define pin_output_mode_e_OM_OPENDRAIN 2
+#define pin_output_mode_e_OM_OPENDRAIN_INVERTED 3
 #define postCrankingDurationSec_offset 2440
 #define postCrankingFactor_offset 2436
 #define primeInjFalloffTemperature_offset 1486
@@ -1289,6 +1836,13 @@
 #define secondSolenoidPin_offset 810
 #define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "SC_MAP", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
 #define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1", "INVALID", "INVALID"
+#define sensor_chart_e_Internal_ForceMyEnumIntSize_sensor_chart ENUM_32_BITS
+#define sensor_chart_e_SC_AUX_FAST1 5
+#define sensor_chart_e_SC_DETAILED_RPM 4
+#define sensor_chart_e_SC_MAP 2
+#define sensor_chart_e_SC_OFF 0
+#define sensor_chart_e_SC_RPM_ACCEL 3
+#define sensor_chart_e_SC_TRIGGER 1
 #define sensorChartMode_offset 944
 #define sensorSnifferRpmThreshold_offset 412
 #define SERVO_COUNT 8
@@ -1305,8 +1859,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.10.22
-#define SIGNATURE_HASH 955152485
+#define SIGNATURE_DATE 2021.10.24
+#define SIGNATURE_HASH 445027312
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1332,7 +1886,16 @@
 #define spi3SckMode_offset 2602
 #define spi3sckPin_offset 936
 #define spi_device_e_auto_enum "SPI_NONE", "SPI_DEVICE_1", "SPI_DEVICE_2", "SPI_DEVICE_3", "SPI_DEVICE_4"
+#define spi_device_e_SPI_DEVICE_1 1
+#define spi_device_e_SPI_DEVICE_2 2
+#define spi_device_e_SPI_DEVICE_3 3
+#define spi_device_e_SPI_DEVICE_4 4
+#define spi_device_e_SPI_NONE 0
 #define spi_pins_size 4
+#define spi_speed_e__150KHz 3
+#define spi_speed_e__1_25MHz 2
+#define spi_speed_e__2_5MHz 1
+#define spi_speed_e__5MHz 0
 #define startCrankingDuration_offset 826
 #define starterControlPin_offset 1772
 #define starterControlPinMode_offset 2126
@@ -1344,6 +1907,10 @@
 #define startUpFuelPumpDuration_offset 1892
 #define stepper_num_micro_steps_e_auto_enum "STEPPER_FULL", "INVALID", "STEPPER_HALF", "INVALID", "STEPPER_FOURTH", "INVALID", "INVALID", "INVALID", "STEPPER_EIGHTH"
 #define stepper_num_micro_steps_e_enum "Full-Step (Default)", "INVALID", "Half-Step", "INVALID", "1/4 Micro-Step", "INVALID", "INVALID", "INVALID", "1/8 Micro-Step"
+#define stepper_num_micro_steps_e_STEPPER_EIGHTH 8
+#define stepper_num_micro_steps_e_STEPPER_FOURTH 4
+#define stepper_num_micro_steps_e_STEPPER_FULL 0
+#define stepper_num_micro_steps_e_STEPPER_HALF 2
 #define stepperDcInvertedPins_offset 2116
 #define stepperDcIo1_controlPin_offset 1090
 #define stepperDcIo1_directionPin1_offset 1088
@@ -1413,6 +1980,9 @@
 #define tChargeMinRpmMinTps_offset 2232
 #define tChargeMode_e_auto_enum "TCHARGE_MODE_RPM_TPS", "TCHARGE_MODE_AIR_INTERP"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
+#define tChargeMode_e_Force_4bytes_size_tChargeMode_e ENUM_32_BITS
+#define tChargeMode_e_TCHARGE_MODE_AIR_INTERP 1
+#define tChargeMode_e_TCHARGE_MODE_RPM_TPS 0
 #define tChargeMode_offset 3884
 #define TCU_GEAR_COUNT 10
 #define tcu_solenoid1_offset 1192
@@ -1448,6 +2018,9 @@
 #define throttlePedalUpVoltage_offset 1884
 #define throttlePedalWOTVoltage_offset 1888
 #define timing_mode_e_auto_enum "TM_DYNAMIC", "TM_FIXED"
+#define timing_mode_e_Internal_ForceMyEnumIntSize_timing_mode ENUM_32_BITS
+#define timing_mode_e_TM_DYNAMIC 0
+#define timing_mode_e_TM_FIXED 1
 #define timing_offset_cylinder10_offset 2576
 #define timing_offset_cylinder11_offset 2580
 #define timing_offset_cylinder12_offset 2584
@@ -1469,6 +2042,10 @@
 #define tle8888_cs_offset 3105
 #define tle8888_csPinMode_offset 3106
 #define tle8888_mode_e_auto_enum "TL_AUTO", "TL_SEMI_AUTO", "TL_MANUAL", "TL_HALL"
+#define tle8888_mode_e_TL_AUTO 0
+#define tle8888_mode_e_TL_HALL 3
+#define tle8888_mode_e_TL_MANUAL 2
+#define tle8888_mode_e_TL_SEMI_AUTO 1
 #define tle8888mode_offset 2416
 #define tle8888spiDevice_offset 4000
 #define TOOTH_DATA_LENGTH 2000
@@ -1518,6 +2095,12 @@
 #define trigger_config_s_size 16
 #define trigger_customSkippedToothCount_offset 536
 #define trigger_customTotalToothCount_offset 532
+#define trigger_event_e_SHAFT_3RD_FALLING 4
+#define trigger_event_e_SHAFT_3RD_RISING 5
+#define trigger_event_e_SHAFT_PRIMARY_FALLING 0
+#define trigger_event_e_SHAFT_PRIMARY_RISING 1
+#define trigger_event_e_SHAFT_SECONDARY_FALLING 2
+#define trigger_event_e_SHAFT_SECONDARY_RISING 3
 #define TRIGGER_INPUT_PIN_COUNT 3
 #define trigger_offset 524
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
@@ -1525,6 +2108,75 @@
 #define trigger_todoRemoveMeOneDay1_offset 528
 #define trigger_type_e_auto_enum "TT_TOOTHED_WHEEL", "TT_FORD_ASPIRE", "TT_DODGE_NEON_1995", "TT_MAZDA_MIATA_NA", "TT_MAZDA_MIATA_NB1", "TT_GM_7X", "TT_DAIHATSU", "TT_MAZDA_SOHC_4", "TT_TOOTHED_WHEEL_60_2", "TT_TOOTHED_WHEEL_36_1", "TT_UNUSED_10", "TT_MITSUBISHI", "TT_HONDA_4_24", "TT_HONDA_1_4_24", "TT_DODGE_NEON_2003_CAM", "TT_MAZDA_DOHC_1_4", "TT_ONE_PLUS_ONE", "TT_VVT_JZ", "TT_ONE", "TT_DODGE_RAM", "TT_60_2_VW", "TT_HONDA_1_24", "TT_DODGE_STRATUS", "TT_36_2_2_2", "TT_NISSAN_SR20VE", "TT_2JZ_3_34", "TT_ROVER_K", "TT_GM_LS_24", "TT_HONDA_CBR_600", "TT_2JZ_1_12", "TT_CHRYSLER_NGC_36_2_2", "TT_3_1_CAM", "TT_DODGE_NEON_2003_CRANK", "TT_MIATA_VVT", "TT_HONDA_ACCORD_1_24_SHIFTED", "TT_MAZDA_MIATA_VVT_TEST", "TT_SUBARU_7_6", "TT_JEEP_18_2_2_2", "TT_NISSAN_SR20VE_360", "TT_DODGE_NEON_1995_ONLY_CRANK", "TT_JEEP_4_CYL", "TT_FIAT_IAW_P8", "TT_FORD_ST170", "TT_VVT_MIATA_NB2", "TT_RENIX_44_2_2", "TT_RENIX_66_2_2_2", "TT_HONDA_K_12_1", "TT_VVT_BOSCH_QUICK_START", "TT_TOOTHED_WHEEL_36_2", "TT_SUBARU_SVX", "TT_1_16", "TT_SUBARU_7_WITHOUT_6", "TT_52", "TT_TRI_TACH", "TT_GM_60_2_2_2", "TT_SKODA_FAVORIT", "TT_VVT_BARRA_3_PLUS_1", "TT_KAWA_KX450F", "TT_NISSAN_VQ35", "TT_VVT_NISSAN_VQ35", "TT_NISSAN_VQ30", "TT_NISSAN_QR25", "TT_TEMP_62", "TT_SUBARU_SVX_CRANK_1", "TT_SUBARU_SVX_CAM_VVT", "TT_FORD_TFI_PIP", "TT_SUZUKI_G13B", "TT_UNUSED"
 #define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "Nissan QR25", "trg62", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "trg67", "INVALID"
+#define trigger_type_e_Force_4_bytes_size_trigger_type ENUM_32_BITS
+#define trigger_type_e_TT_1_16 50
+#define trigger_type_e_TT_2JZ_1_12 TT_TT_2JZ_1_12
+#define trigger_type_e_TT_2JZ_3_34 TT_TT_2JZ_3_34
+#define trigger_type_e_TT_36_2_2_2 TT_TT_36_2_2_2
+#define trigger_type_e_TT_3_1_CAM 31
+#define trigger_type_e_TT_52 TT_TT_52
+#define trigger_type_e_TT_60_2_VW TT_TT_60_2_VW
+#define trigger_type_e_TT_CHRYSLER_NGC_36_2_2 TT_TT_CHRYSLER_NGC_36_2_2
+#define trigger_type_e_TT_DAIHATSU TT_TT_DAIHATSU
+#define trigger_type_e_TT_DODGE_NEON_1995 2
+#define trigger_type_e_TT_DODGE_NEON_1995_ONLY_CRANK 39
+#define trigger_type_e_TT_DODGE_NEON_2003_CAM 14
+#define trigger_type_e_TT_DODGE_NEON_2003_CRANK 32
+#define trigger_type_e_TT_DODGE_RAM 19
+#define trigger_type_e_TT_DODGE_STRATUS 22
+#define trigger_type_e_TT_FIAT_IAW_P8 41
+#define trigger_type_e_TT_FORD_ASPIRE TT_TT_FORD_ASPIRE
+#define trigger_type_e_TT_FORD_ST170 TT_TT_FORD_ST170
+#define trigger_type_e_TT_FORD_TFI_PIP TT_TT_FORD_TFI_PIP
+#define trigger_type_e_TT_GM_60_2_2_2 TT_TT_GM_60_2_2_2
+#define trigger_type_e_TT_GM_7X TT_TT_GM_7X
+#define trigger_type_e_TT_GM_LS_24 TT_TT_GM_LS_24
+#define trigger_type_e_TT_HONDA_1_24 TT_TT_HONDA_1_24
+#define trigger_type_e_TT_HONDA_1_4_24 TT_TT_HONDA_1_4_24
+#define trigger_type_e_TT_HONDA_4_24 12
+#define trigger_type_e_TT_HONDA_ACCORD_1_24_SHIFTED 34
+#define trigger_type_e_TT_HONDA_CBR_600 28
+#define trigger_type_e_TT_HONDA_K_12_1 TT_TT_HONDA_K_12_1
+#define trigger_type_e_TT_JEEP_18_2_2_2 TT_TT_JEEP_18_2_2_2
+#define trigger_type_e_TT_JEEP_4_CYL TT_TT_JEEP_4_CYL
+#define trigger_type_e_TT_KAWA_KX450F TT_TT_KAWA_KX450F
+#define trigger_type_e_TT_MAZDA_DOHC_1_4 TT_TT_MAZDA_DOHC_1_4
+#define trigger_type_e_TT_MAZDA_MIATA_NA TT_TT_MAZDA_MIATA_NA
+#define trigger_type_e_TT_MAZDA_MIATA_NB1 TT_TT_MAZDA_MIATA_NB1
+#define trigger_type_e_TT_MAZDA_MIATA_VVT_TEST 35
+#define trigger_type_e_TT_MAZDA_SOHC_4 TT_TT_MAZDA_SOHC_4
+#define trigger_type_e_TT_MIATA_VVT TT_TT_MIATA_VVT
+#define trigger_type_e_TT_MITSUBISHI 11
+#define trigger_type_e_TT_NISSAN_QR25 TT_TT_NISSAN_QR25
+#define trigger_type_e_TT_NISSAN_SR20VE 24
+#define trigger_type_e_TT_NISSAN_SR20VE_360 38
+#define trigger_type_e_TT_NISSAN_VQ30 TT_TT_NISSAN_VQ30
+#define trigger_type_e_TT_NISSAN_VQ35 TT_TT_NISSAN_VQ35
+#define trigger_type_e_TT_ONE TT_TT_ONE
+#define trigger_type_e_TT_ONE_PLUS_ONE 16
+#define trigger_type_e_TT_RENIX_44_2_2 TT_TT_RENIX_44_2_2
+#define trigger_type_e_TT_RENIX_66_2_2_2 TT_TT_RENIX_66_2_2_2
+#define trigger_type_e_TT_ROVER_K 26
+#define trigger_type_e_TT_SKODA_FAVORIT TT_TT_SKODA_FAVORIT
+#define trigger_type_e_TT_SUBARU_7_6 TT_TT_SUBARU_7_6
+#define trigger_type_e_TT_SUBARU_7_WITHOUT_6 TT_TT_SUBARU_7_WITHOUT_6
+#define trigger_type_e_TT_SUBARU_SVX TT_TT_SUBARU_SVX
+#define trigger_type_e_TT_SUBARU_SVX_CAM_VVT TT_TT_SUBARU_SVX_CAM_VVT
+#define trigger_type_e_TT_SUBARU_SVX_CRANK_1 TT_TT_SUBARU_SVX_CRANK_1
+#define trigger_type_e_TT_SUZUKI_G13B TT_TT_SUZUKI_G13B
+#define trigger_type_e_TT_TEMP_62 TT_TT_TEMP_62
+#define trigger_type_e_TT_TOOTHED_WHEEL TT_TT_TOOTHED_WHEEL
+#define trigger_type_e_TT_TOOTHED_WHEEL_36_1 TT_TT_TOOTHED_WHEEL_36_1
+#define trigger_type_e_TT_TOOTHED_WHEEL_36_2 TT_TT_TOOTHED_WHEEL_36_2
+#define trigger_type_e_TT_TOOTHED_WHEEL_60_2 TT_TT_TOOTHED_WHEEL_60_2
+#define trigger_type_e_TT_TRI_TACH TT_TT_TRI_TACH
+#define trigger_type_e_TT_UNUSED 67
+#define trigger_type_e_TT_UNUSED_10 TT_TT_UNUSED_10
+#define trigger_type_e_TT_VVT_BARRA_3_PLUS_1 TT_TT_VVT_BARRA_3_PLUS_1
+#define trigger_type_e_TT_VVT_BOSCH_QUICK_START TT_TT_VVT_BOSCH_QUICK_START
+#define trigger_type_e_TT_VVT_JZ TT_TT_VVT_JZ
+#define trigger_type_e_TT_VVT_MIATA_NB2 TT_TT_VVT_MIATA_NB2
+#define trigger_type_e_TT_VVT_NISSAN_VQ35 TT_TT_VVT_NISSAN_VQ35
 #define trigger_type_offset 524
 #define trigger_unusedBit_4_10_offset 528
 #define trigger_unusedBit_4_11_offset 528
@@ -1556,6 +2208,12 @@
 #define trigger_unusedBit_4_8_offset 528
 #define trigger_unusedBit_4_9_offset 528
 #define trigger_useOnlyFirstChannel_offset 528
+#define trigger_value_e_TV_FALL 0
+#define trigger_value_e_TV_RISE 1
+#define trigger_wheel_e_T_CHANNEL_3 2
+#define trigger_wheel_e_T_NONE 15
+#define trigger_wheel_e_T_PRIMARY 0
+#define trigger_wheel_e_T_SECONDARY 1
 #define triggerCompCenterVolt_offset 4036
 #define triggerCompHystMax_offset 4038
 #define triggerCompHystMin_offset 4037
@@ -1670,7 +2328,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.22.all.955152485"
+#define TS_SIGNATURE "rusEFI 2021.10.24.all.445027312"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1734,6 +2392,11 @@
 #define twoWireBatchIgnition_offset 1476
 #define twoWireBatchInjection_offset 1476
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
+#define uart_device_e_UART_DEVICE_1 1
+#define uart_device_e_UART_DEVICE_2 2
+#define uart_device_e_UART_DEVICE_3 3
+#define uart_device_e_UART_DEVICE_4 4
+#define uart_device_e_UART_NONE 0
 #define uartConsoleSerialSpeed_offset 2076
 #define unused1059_offset 3964
 #define unused1127_offset 2116
@@ -1864,6 +2527,9 @@
 #define vbattDividerCoeff_offset 464
 #define ve_override_e_auto_enum "VE_None", "VE_MAP", "VE_TPS"
 #define ve_override_e_enum "None", "MAP", "TPS"
+#define ve_override_e_VE_MAP 1
+#define ve_override_e_VE_None 0
+#define ve_override_e_VE_TPS 2
 #define VEHICLE_INFO_SIZE 32
 #define vehicleName_offset 1160
 #define vehicleSpeedCoef_offset 476
@@ -1896,6 +2562,16 @@
 #define vssFilterReciprocal_offset 15196
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "vvt10", "vvt11"
+#define vvt_mode_e_VVT_2JZ 2
+#define vvt_mode_e_VVT_4_1 6
+#define vvt_mode_e_VVT_BARRA_3_PLUS_1 8
+#define vvt_mode_e_VVT_BOSCH_QUICK_START 5
+#define vvt_mode_e_VVT_FIRST_HALF 4
+#define vvt_mode_e_VVT_FORD_ST170 7
+#define vvt_mode_e_VVT_INACTIVE VM_VVT_INACTIVE
+#define vvt_mode_e_VVT_MIATA_NB2 3
+#define vvt_mode_e_VVT_NISSAN_VQ 9
+#define vvt_mode_e_VVT_SECOND_HALF 1
 #define vvtCamSensorUseRise_offset 744
 #define vvtMode1_offset 2328
 #define vvtMode2_offset 2329
