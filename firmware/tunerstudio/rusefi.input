@@ -1755,24 +1755,24 @@ cmd_dfu         			 = "@@TS_IO_TEST_COMMAND_char@@\x00\xba\x00\x00"
 
 
 ; MRE_MIATA_NB2_MAP = 11
-cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NB2_MAP_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NB2_MAP		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NB2_MAP_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_VW_B6_16_hex@@"
-cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_BODY_CONTROL_16_hex@@"
+cmd_set_engine_type_microRusEFI_VW_B6		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_VW_B6_16_hex@@"
+cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_BODY_CONTROL_16_hex@@"
 
 
 ; MRE_MIATA_NA6 12
-cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NA6_VAF_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NA6_VAF_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NA6_MAP_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NA6_MAP_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_94_MAP_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_94_MAP_16_hex@@"
 
 
 ; MRE_MIATA_NB2_MAF = 15
-cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_MIATA_NB2_MAF_16_hex@@"
+cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NB2_MAF_16_hex@@"
 
-cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_SUBARU_EJ18_16_hex@@"
+cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
 
 cmd_set_engine_type_microRusEFI_Defaults			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_MRE_DEFAULTS_16_hex@@"
 cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_M111_16_hex@@"
@@ -1787,11 +1787,11 @@ cmd_set_engine_type_hellen_nissan_121_4		    	= "@@TS_IO_TEST_COMMAND_char@@\x00
 cmd_set_engine_type_hellen_nissan_121_6		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_NISSAN_6_CYL_16_hex@@"
 cmd_set_engine_type_hellen_nissan_121_8		    	= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_NISSAN_8_CYL_16_hex@@"
 
-cmd_set_engine_type_hellen_121_vag_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_5				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_5_CYL_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_v6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_V6_CYL_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_vr6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_VR6_CYL_16_hex@@"
-cmd_set_engine_type_hellen_121_vag_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_121_VAG_8_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_4_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_5				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_5_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_v6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_V6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_vr6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_VR6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_121_vag_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_8_CYL_16_hex@@"
 
 cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_4_CYL_16_hex@@"
 cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@ET_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
