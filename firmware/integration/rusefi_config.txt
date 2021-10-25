@@ -415,61 +415,6 @@ struct ThermistorConf @brief Thermistor curve parameters
 	adc_channel_e adcChannel;
 end_struct
 
-! todo https://github.com/rusefi/rusefi/issues/2102
-#define TT_TT_TOOTHED_WHEEL 0
-#define TT_TT_FORD_ASPIRE 1
-#define TT_TT_MAZDA_MIATA_NA 3
-#define TT_TT_MAZDA_MIATA_NB1 4
-#define TT_TT_GM_7X 5
-#define TT_TT_DAIHATSU 6
-#define TT_TT_MAZDA_SOHC_4 7
-#define TT_TT_TOOTHED_WHEEL_60_2 8
-#define TT_TT_TOOTHED_WHEEL_36_1 9
-#define TT_TT_UNUSED_10 10
-#define TT_TT_HONDA_1_4_24 13
-#define TT_TT_MAZDA_DOHC_1_4 15
-#define TT_TT_VVT_JZ 17
-#define TT_TT_ONE 18
-#define TT_TT_60_2_VW 20
-#define TT_TT_HONDA_1_24 21
-#define TT_TT_36_2_2_2 23
-#define TT_TT_2JZ_3_34 25
-#define TT_TT_ROVER_K 26
-#define TT_TT_GM_LS_24 27
-#define TT_TT_HONDA_CBR_600 28
-#define TT_TT_2JZ_1_12 29
-#define TT_TT_CHRYSLER_NGC_36_2_2 30
-#define TT_TT_3_1_CAM 31
-#define TT_TT_MIATA_VVT 33
-#define TT_TT_SUBARU_7_6 36
-#define TT_TT_JEEP_18_2_2_2 37
-#define TT_TT_JEEP_4_CYL 40
-#define TT_TT_FORD_ST170 42
-#define TT_TT_VVT_MIATA_NB2 43
-#define TT_TT_RENIX_44_2_2 44
-#define TT_TT_RENIX_66_2_2_2 45
-#define TT_TT_HONDA_K_12_1 46
-#define TT_TT_VVT_BOSCH_QUICK_START 47
-#define TT_TT_TOOTHED_WHEEL_36_2 48
-#define TT_TT_SUBARU_SVX 49
-#define TT_TT_1_16 50
-#define TT_TT_SUBARU_7_WITHOUT_6 51
-#define TT_TT_52 52
-#define TT_TT_TRI_TACH 53
-#define TT_TT_GM_60_2_2_2 54
-#define TT_TT_SKODA_FAVORIT 55
-#define TT_TT_VVT_BARRA_3_PLUS_1 56
-#define TT_TT_KAWA_KX450F 57
-#define TT_TT_NISSAN_VQ35 58
-#define TT_TT_VVT_NISSAN_VQ35 59
-#define TT_TT_NISSAN_VQ30 60
-#define TT_TT_NISSAN_QR25 61
-#define TT_TT_TEMP_62 62
-#define TT_TT_SUBARU_SVX_CRANK_1 63
-#define TT_TT_SUBARU_SVX_CAM_VVT 64
-#define TT_TT_FORD_TFI_PIP 65
-#define TT_TT_SUZUKI_G13B 66
-
 custom engine_type_e 4 bits, S32, @OFFSET@, [0:6], @@engine_type_e_auto_enum@@
 engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset engine_type X
 
