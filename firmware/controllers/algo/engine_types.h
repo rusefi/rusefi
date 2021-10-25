@@ -452,7 +452,7 @@ typedef enum {
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1440
 	TT_FIAT_IAW_P8 = 41,
 
-	TT_FORD_ST170 = 42
+	TT_FORD_ST170 = 42,
 
 	/**
 	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
