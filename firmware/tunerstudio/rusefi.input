@@ -1805,7 +1805,7 @@ cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00
 ; MIATA_NA6_VAF = 57
 cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MIATA_NA6_VAF_16_hex@@"
 ; MAZDA_MIATA_2003 = 47
-cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MIATA_NB2_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MAZDA_MIATA_2003_16_hex@@"
 
 cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
