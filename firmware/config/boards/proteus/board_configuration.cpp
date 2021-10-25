@@ -119,17 +119,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 
-	// CLT = Analog Temp 3 = PB0
-	engineConfiguration->clt.adcChannel = EFI_ADC_8;
 
-	// IAT = Analog Temp 2 = PC5
-	engineConfiguration->iat.adcChannel = EFI_ADC_15;
-
-	// TPS = Analog volt 2 = PC1
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_11;
-
-	// MAP = Analog volt 1 = PC0
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+	engineConfiguration->clt.adcChannel = PROTEUS_IN_CLT;
+	engineConfiguration->iat.adcChannel = PROTEUS_IN_IAT;
+	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_TPS;
+	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
 
 	// pin #28 WBO AFR "Analog Volt 10"
 	engineConfiguration->afr.hwChannel = EFI_ADC_5;
