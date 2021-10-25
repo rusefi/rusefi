@@ -341,7 +341,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
 
         assertWaveNull(msg, chart, EngineChart.TRIGGER_2);
-        sendComplexCommand("set " + "trigger_type" + " " + TT_TT_FORD_ASPIRE);
+        sendComplexCommand("set " + "trigger_type" + " " + com.rusefi.enums.trigger_type_e.TT_FORD_ASPIRE.ordinal());
         chart = nextChart();
         assertTrue(chart.get(EngineChart.TRIGGER_2) != null);
     }
