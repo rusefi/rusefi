@@ -326,29 +326,29 @@ typedef enum {
  */
 typedef enum {
 
-	TT_TOOTHED_WHEEL = TT_TT_TOOTHED_WHEEL,
-	TT_FORD_ASPIRE = TT_TT_FORD_ASPIRE,
+	TT_TOOTHED_WHEEL = 0,
+	TT_FORD_ASPIRE = 1,
 	TT_DODGE_NEON_1995 = 2,
 	/**
 	 * https://rusefi.com/wiki/index.php?title=Manual:Software:Trigger#Mazda_Miata_NA
 	 */
-	TT_MAZDA_MIATA_NA = TT_TT_MAZDA_MIATA_NA,
+	TT_MAZDA_MIATA_NA = 3,
 	/**
 	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
 	 */
-	TT_MAZDA_MIATA_NB1 = TT_TT_MAZDA_MIATA_NB1,
-	TT_GM_7X = TT_TT_GM_7X,
-	TT_MAZDA_SOHC_4 = TT_TT_MAZDA_SOHC_4,
-	TT_DAIHATSU = TT_TT_DAIHATSU,
+	TT_MAZDA_MIATA_NB1 = 4,
+	TT_GM_7X = 5,
+	TT_MAZDA_SOHC_4 = 6,
+	TT_DAIHATSU = 7,
 	/**
 	 * "60/2"
 	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
 	 */
-	TT_TOOTHED_WHEEL_60_2 = TT_TT_TOOTHED_WHEEL_60_2,
-	TT_TOOTHED_WHEEL_36_1 = TT_TT_TOOTHED_WHEEL_36_1,
+	TT_TOOTHED_WHEEL_60_2 = 8,
+	TT_TOOTHED_WHEEL_36_1 = 9,
 
 	// todo: remove this weird trigger?
-	TT_UNUSED_10 = TT_TT_UNUSED_10,
+	TT_UNUSED_10 = 10,
 
 	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
@@ -356,12 +356,12 @@ typedef enum {
 	// this makes sense because mechanical spark distribution does not require synchronization
 	TT_HONDA_4_24 = 12,
 
-	TT_HONDA_1_4_24 = TT_TT_HONDA_1_4_24,
+	TT_HONDA_1_4_24 = 13,
 
 	// cam-based
 	TT_DODGE_NEON_2003_CAM = 14,
 
-	TT_MAZDA_DOHC_1_4 = TT_TT_MAZDA_DOHC_1_4,
+	TT_MAZDA_DOHC_1_4 = 15,
 
 	/**
 	 * "1+1" - one tooth on primary channel, one tooth on secondary channel
@@ -370,17 +370,17 @@ typedef enum {
 	 */
 	TT_ONE_PLUS_ONE = 16,
 	// VVT for 2JZ
-	TT_VVT_JZ = TT_TT_VVT_JZ,
+	TT_VVT_JZ = 17,
 	// just one channel with just one tooth
-	TT_ONE = TT_TT_ONE,
+	TT_ONE = 18,
 
 	TT_DODGE_RAM = 19,
 	/**
 	 * It looks like this is the VR shape if you have your wires flipped
 	 */
-	TT_60_2_VW = TT_TT_60_2_VW,
+	TT_60_2_VW = 20,
 
-	TT_HONDA_1_24 = TT_TT_HONDA_1_24,
+	TT_HONDA_1_24 = 21,
 
 	TT_DODGE_STRATUS = 22,
 
@@ -388,7 +388,7 @@ typedef enum {
      * Subaru but also Mazda RX-8
      * We suspect that it's VR
      */
-	TT_36_2_2_2 = TT_TT_36_2_2_2,
+	TT_36_2_2_2 = 23,
 
 	/**
 	 * only the 4 tooth signal, without the 360 signal
@@ -397,17 +397,17 @@ typedef enum {
 	 */
 	TT_NISSAN_SR20VE = 24,
 
-	TT_2JZ_3_34 = TT_TT_2JZ_3_34,
+	TT_2JZ_3_34 = 25,
 
 	TT_ROVER_K = 26,
 
-	TT_GM_LS_24 = TT_TT_GM_LS_24,
+	TT_GM_LS_24 = 27,
 
 	TT_HONDA_CBR_600 = 28,
 
-	TT_2JZ_1_12 = TT_TT_2JZ_1_12,
+	TT_2JZ_1_12 = 29,
 
-	TT_CHRYSLER_NGC_36_2_2 = TT_TT_CHRYSLER_NGC_36_2_2,
+	TT_CHRYSLER_NGC_36_2_2 = 30,
 
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,
@@ -420,7 +420,7 @@ typedef enum {
 	 * for VVT simulated trigger signal we have https://github.com/rusefi/rusefi/issues/566 gap
 	 * See also TT_MAZDA_MIATA_VVT_TEST
 	 */
-	TT_MIATA_VVT = TT_TT_MIATA_VVT,
+	TT_MIATA_VVT = 33,
 
 	/**
 	 * This is a different version of TT_HONDA_ACCORD_1_24
@@ -433,10 +433,10 @@ typedef enum {
 	 */
 	TT_MAZDA_MIATA_VVT_TEST = 35,
 
-	TT_SUBARU_7_6 = TT_TT_SUBARU_7_6,
+	TT_SUBARU_7_6 = 36,
 
 	// this one is 6 cylinder, see TT_JEEP_4_cyl for 4 cylinders
-	TT_JEEP_18_2_2_2 = TT_TT_JEEP_18_2_2_2,
+	TT_JEEP_18_2_2_2 = 37,
 
 	/*
 	 * See also TT_NISSAN_SR20VE
@@ -446,73 +446,73 @@ typedef enum {
 	TT_DODGE_NEON_1995_ONLY_CRANK = 39,
 
 	// Jeep XJ 2500cc 4 cylinder. See also TT_JEEP_18_2_2_2 for 6 cylinders
-	TT_JEEP_4_CYL = TT_TT_JEEP_4_CYL,
+	TT_JEEP_4_CYL = 40,
 
 	// magneti marelli Fiat/Lancia IAW P8 from the 90', 2.0 16 v turbo engine - Lancia Coupe
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1440
 	TT_FIAT_IAW_P8 = 41,
 
-	TT_FORD_ST170 = TT_TT_FORD_ST170,
+	TT_FORD_ST170 = 42
 
 	/**
 	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
 	 */
-	TT_VVT_MIATA_NB2 = TT_TT_VVT_MIATA_NB2,
+	TT_VVT_MIATA_NB2 = 43,
 
-	TT_RENIX_44_2_2 = TT_TT_RENIX_44_2_2,
+	TT_RENIX_44_2_2 = 44,
 
 	/**
 	 * Same as TT_RENIX_44_2_2 but repeated three times, not two.
 	 */
-	TT_RENIX_66_2_2_2 = TT_TT_RENIX_66_2_2_2,
+	TT_RENIX_66_2_2_2 = 45,
 
-	TT_HONDA_K_12_1 = TT_TT_HONDA_K_12_1,
+	TT_HONDA_K_12_1 = 46,
 
-	TT_VVT_BOSCH_QUICK_START = TT_TT_VVT_BOSCH_QUICK_START,
+	TT_VVT_BOSCH_QUICK_START = 47,
 
-	TT_TOOTHED_WHEEL_36_2 = TT_TT_TOOTHED_WHEEL_36_2,
+	TT_TOOTHED_WHEEL_36_2 = 48,
 
-	TT_SUBARU_SVX = TT_TT_SUBARU_SVX,
+	TT_SUBARU_SVX = 49,
 
 	TT_1_16 = 50,
 
 	// todo: remove this trigger once we have https://github.com/rusefi/rusefi/issues/2073
-	TT_SUBARU_7_WITHOUT_6 = TT_TT_SUBARU_7_WITHOUT_6,
+	TT_SUBARU_7_WITHOUT_6 = 51,
 
-	TT_52 = TT_TT_52,
+	TT_52 = 52,
 
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
-	TT_TRI_TACH = TT_TT_TRI_TACH,
+	TT_TRI_TACH = 53,
 
-	TT_GM_60_2_2_2 = TT_TT_GM_60_2_2_2,
+	TT_GM_60_2_2_2 = 54,
 
 	/**
 	 * https://rusefi.com/forum/viewtopic.php?f=5&t=1937
 	 * HALL sensor, and can be used on all Skoda's engines (from 1000MB to 130, Favorit, Felicia)
 	 */
-	TT_SKODA_FAVORIT = TT_TT_SKODA_FAVORIT,
+	TT_SKODA_FAVORIT = 55,
 
-	TT_VVT_BARRA_3_PLUS_1 = TT_TT_VVT_BARRA_3_PLUS_1,
+	TT_VVT_BARRA_3_PLUS_1 = 56,
 
-	TT_KAWA_KX450F = TT_TT_KAWA_KX450F,
+	TT_KAWA_KX450F = 57,
 
-	TT_NISSAN_VQ35 = TT_TT_NISSAN_VQ35,
+	TT_NISSAN_VQ35 = 58,
 
-	TT_VVT_NISSAN_VQ35 = TT_TT_VVT_NISSAN_VQ35,
+	TT_VVT_NISSAN_VQ35 = 59,
 
-	TT_NISSAN_VQ30 = TT_TT_NISSAN_VQ30,
+	TT_NISSAN_VQ30 = 60,
 
-	TT_NISSAN_QR25 = TT_TT_NISSAN_QR25,
+	TT_NISSAN_QR25 = 61,
 
-	TT_TEMP_62 = TT_TT_TEMP_62,
+	TT_TEMP_62 = 62,
 
-	TT_SUBARU_SVX_CRANK_1 = TT_TT_SUBARU_SVX_CRANK_1,
+	TT_SUBARU_SVX_CRANK_1 = 63,
 
-	TT_SUBARU_SVX_CAM_VVT = TT_TT_SUBARU_SVX_CAM_VVT,
+	TT_SUBARU_SVX_CAM_VVT = 64,
 
-	TT_FORD_TFI_PIP = TT_TT_FORD_TFI_PIP,
+	TT_FORD_TFI_PIP = 65,
 
-	TT_SUZUKI_G13B = TT_TT_SUZUKI_G13B,
+	TT_SUZUKI_G13B = 66,
 
 	TT_HONDA_K_4_1 = 67,
 
