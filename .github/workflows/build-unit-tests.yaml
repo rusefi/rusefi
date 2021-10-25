@@ -60,12 +60,12 @@ jobs:
 
     - name: Install Coverage Tools
       if: ${{ matrix.os != 'macos-latest' }}
-      run: sudo apt-get install ncftp lcov
+      run: sudo apt-get install sshpass lcov
 
     - name: Generate Code Coverage
       if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       working-directory: ./unit_tests/
-      run: ./ci_gcov.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+      run: ./ci_gcov.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }}
 
     - name: Run Tests (sharded)
       working-directory: ./unit_tests/
