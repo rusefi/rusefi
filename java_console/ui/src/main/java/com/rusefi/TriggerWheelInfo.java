@@ -1,6 +1,6 @@
 package com.rusefi;
 
-import com.rusefi.config.generated.Fields;
+import com.rusefi.enums.trigger_type_e;
 import com.rusefi.trigger.WaveState;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,18 +10,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 class TriggerWheelInfo {
-    final int id;
+    final trigger_type_e id;
     final double tdcPosition;
     final String triggerName;
     final List<WaveState> waves;
     final List<TriggerSignal> signals;
 
     public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<WaveState> waves, List<TriggerSignal> signals) {
-        this.id = id;
+        this.id = findByOrdinal(id);
         this.tdcPosition = tdcPosition;
         this.triggerName = triggerName;
         this.waves = waves;
         this.signals = signals;
+    }
+
+    public static trigger_type_e findByOrdinal(int id) {
+        for (trigger_type_e type : trigger_type_e.values()) {
+            if (type.ordinal() == id)
+                return type;
+        }
+        throw new IllegalArgumentException("No type for " + id);
     }
 
     static TriggerWheelInfo readTriggerWheelInfo(String line, BufferedReader reader) throws IOException {
@@ -95,27 +103,27 @@ class TriggerWheelInfo {
     // todo: open question if current firmware even has info to provide this info or not?
     // todo: https://github.com/rusefi/rusefi/issues/2077
     private boolean isFirstCrankBased() {
-        return id == Fields.TT_TT_GM_LS_24 ||
-                id == Fields.TT_TT_HONDA_K_12_1 ||
-                id == Fields.TT_TT_RENIX_44_2_2 ||
-                id == Fields.TT_TT_RENIX_66_2_2_2 ||
-                id == Fields.TT_TT_MIATA_VVT ||
-                id == Fields.TT_TT_TRI_TACH ||
-                id == Fields.TT_TT_60_2_VW ||
-                id == Fields.TT_TT_SKODA_FAVORIT ||
-                id == Fields.TT_TT_KAWA_KX450F ||
-                id == Fields.TT_TT_NISSAN_VQ35 ||
-                id == Fields.TT_TT_NISSAN_QR25 ||
-                id == Fields.TT_TT_GM_7X;
+        return id == trigger_type_e.TT_GM_LS_24 ||
+                id == trigger_type_e.TT_HONDA_K_12_1 ||
+                id == trigger_type_e.TT_RENIX_44_2_2 ||
+                id == trigger_type_e.TT_RENIX_66_2_2_2 ||
+                id == trigger_type_e.TT_MIATA_VVT ||
+                id == trigger_type_e.TT_TRI_TACH ||
+                id == trigger_type_e.TT_60_2_VW ||
+                id == trigger_type_e.TT_SKODA_FAVORIT ||
+                id == trigger_type_e.TT_KAWA_KX450F ||
+                id == trigger_type_e.TT_NISSAN_VQ35 ||
+                id == trigger_type_e.TT_NISSAN_QR25 ||
+                id == trigger_type_e.TT_GM_7X;
     }
 
     // todo: this 'isFirstCrankBased' should be taken from triggers.txt not hard-coded here!
     // todo: open question if current firmware even has info to provide this info or not?
     // todo: https://github.com/rusefi/rusefi/issues/2077
     private boolean isSecondCamBased() {
-        return id == Fields.TT_TT_MAZDA_MIATA_NA ||
-                id == Fields.TT_TT_MAZDA_DOHC_1_4 ||
-                id == Fields.TT_TT_GM_60_2_2_2 ||
-                id == Fields.TT_TT_FORD_ASPIRE;
+        return id == trigger_type_e.TT_MAZDA_MIATA_NA ||
+                id == trigger_type_e.TT_MAZDA_DOHC_1_4 ||
+                id == trigger_type_e.TT_GM_60_2_2_2 ||
+                id == trigger_type_e.TT_FORD_ASPIRE;
     }
 }
