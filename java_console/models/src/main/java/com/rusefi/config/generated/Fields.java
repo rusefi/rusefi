@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 25 16:26:13 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 25 19:46:47 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -872,7 +872,7 @@ public class Fields {
 	public static final int etb_function_e_ETB_Throttle1 = 1;
 	public static final int etb_function_e_ETB_Throttle2 = 2;
 	public static final int etb_function_e_ETB_Wastegate = 4;
-	public static final int ETB_HW_MAX_FREQUENCY = 10000;
+	public static final int ETB_HW_MAX_FREQUENCY = 3000;
 	public static final int etb_iFactor_offset = 1740;
 	public static final int etb_iTermMax_offset = 3958;
 	public static final int etb_iTermMin_offset = 3956;
@@ -1733,6 +1733,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 2075277480;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2146,7 +2147,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.25.all.2569917083";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.25.all.2075277480";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
