@@ -1892,8 +1892,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = triggerConfiguration_settings,	"Trigger Pattern"
 		field = "!https://rusefi.com/s/trigger"
 		field = "Trigger type",							trigger_type
-		field = "Total tooth count",					trigger_customTotalToothCount, {trigger_type == @@TT_TT_TOOTHED_WHEEL@@}, {trigger_type == @@TT_TT_TOOTHED_WHEEL@@}
-		field = "Missing/skipped tooth count",					trigger_customSkippedToothCount, {trigger_type == @@TT_TT_TOOTHED_WHEEL@@}, {trigger_type == @@TT_TT_TOOTHED_WHEEL@@}
+		field = "Total tooth count",					trigger_customTotalToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
+		field = "Missing/skipped tooth count",					trigger_customSkippedToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
 
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
 		field = "Operation mode / speed",				ambiguousOperationMode
@@ -1929,7 +1929,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "Print verbose VVT sync details to console",verboseVVTDecoding
 	    field = "Print verbose trigger sync to console",   verboseTriggerSynchDetails
 	    field = "Do not print messages in case of sync error",  silentTriggerError
-	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@TT_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@TT_TT_TOOTHED_WHEEL_36_1@@}
+	    field = "Enable noise filtering",				useNoiselessTriggerDecoder, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ || trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@}
 
 	dialog = triggerInputs,					"Trigger Inputs"
 		field = "#Cam is primary if you have cam sensor as part of trigger shape"
@@ -1937,8 +1937,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Crank Sensor (Primary channel)", 		triggerInputPins1, 1, { ambiguousOperationMode != @@operation_mode_e_FOUR_STROKE_CAM_SENSOR@@ }
 		field = "Primary channel", 						triggerInputPins1
 		field = "Invert Primary",						invertPrimaryTriggerSignal
-		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
-		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && trigger_type != @@TT_TT_TOOTHED_WHEEL@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@TT_TT_ONE@@ && trigger_type != @@TT_TT_60_2_VW@@ && trigger_type != @@TT_TT_TOOTHED_WHEEL_36_2@@}
+		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@trigger_type_e_TT_ONE@@ && trigger_type != @@trigger_type_e_TT_60_2_VW@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_2@@}
+		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@trigger_type_e_TT_ONE@@ && trigger_type != @@trigger_type_e_TT_60_2_VW@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_2@@}
 		field = "#VVT or Cam for 60/2 goes below"
 		field = "#If your engine has no exhaust cam sensor, use intake cam inputs"
 		field = "Cam sensor bank 1 intake",	        camInputs1, { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
