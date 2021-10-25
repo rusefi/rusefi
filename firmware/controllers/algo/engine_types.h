@@ -338,8 +338,8 @@ typedef enum {
 	 */
 	TT_MAZDA_MIATA_NB1 = 4,
 	TT_GM_7X = 5,
-	TT_MAZDA_SOHC_4 = 6,
-	TT_DAIHATSU = 7,
+	TT_DAIHATSU = 6,
+	TT_MAZDA_SOHC_4 = 7,
 	/**
 	 * "60/2"
 	 * See also TT_ONE_PLUS_TOOTHED_WHEEL_60_2
