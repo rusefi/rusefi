@@ -415,6 +415,7 @@ struct ThermistorConf @brief Thermistor curve parameters
 	adc_channel_e adcChannel;
 end_struct
 
+! todo https://github.com/rusefi/rusefi/issues/2102
 #define TT_TT_TOOTHED_WHEEL 0
 #define TT_TT_FORD_ASPIRE 1
 #define TT_TT_MAZDA_MIATA_NA 3
@@ -468,60 +469,6 @@ end_struct
 #define TT_TT_SUBARU_SVX_CAM_VVT 64
 #define TT_TT_FORD_TFI_PIP 65
 #define TT_TT_SUZUKI_G13B 66
-
-! todo https://github.com/rusefi/rusefi/issues/2102
-#define ET_DEFAULT_FRANKENSO 0
-#define ET_MIATA_TCU_PROTEUS 1
-#define ET_DODGE_NEON_1995 2
-
-#define ET_MRE_MIATA_NB2_MAP 11
-#define ET_MRE_MIATA_NA6_VAF 12
-#define ET_FORD_ESCORT_GT 14
-#define ET_MRE_MIATA_NB2_MAF 15
-#define ET_MRE_MIATA_94_MAP 20
-#define ET_MRE_BODY_CONTROL 23
-#define ET_SACHS 29
-
-#define ET_MRE_DEFAULTS 60
-#define ET_VW_B6 62
-#define ET_PROTEUS_BMW_M73 63
-#define ET_CITROEN_TU3JP 65
-#define ET_MRE_MIATA_NA6_MAP 66
-#define ET_HELLEN_NB2 69
-
-#define ET_HELLEN_121_VAG 71
-#define ET_HELLEN_121_VAG_4_CYL 71
-#define ET_HELLEN_121_NISSAN_6_CYL 72
-#define ET_HELLEN_55_BMW 73
-#define ET_HELLEN_88_BMW 74
-#define ET_HELLEN_134_BMW 75
-#define ET_HELLEN_154_VAG 76
-
-#define ET_HELLEN_121_VAG_5_CYL 77
-#define ET_HELLEN_121_VAG_6_CYL 78
-! v6 and vr6 are different firing orders
-#define ET_HELLEN_121_VAG_V6_CYL 78
-#define ET_HELLEN_121_VAG_VR6_CYL 79
-#define ET_HELLEN_NA94 80
-
-#define ET_HELLEN_121_VAG_8_CYL 81
-#define ET_HELLEN_154_HYUNDAI_COUPE_BK1 82
-#define ET_HELLEN_NB1 83
-#define ET_HELLEN_121_NISSAN_4_CYL 84
-#define ET_HELLEN_121_NISSAN_8_CYL 85
-#define ET_HELLEN_NB2_36 86
-#define ET_HELLEN_121_NISSAN_ALMERA_N16 87
-#define ET_HELLEN_128_MERCEDES_6_CYL 88
-#define ET_HELLEN_128_MERCEDES_8_CYL 89
-
-#define ET_PROTEUS_HONDA_ELEMENT_2003 90
-#define ET_PROTEUS_VAG_80_18T 92
-#define ET_PROTEUS_N73 93
-#define ET_HELLEN_154_HYUNDAI_COUPE_BK2 95
-
-#define ET_PROTEUS_ANALOG_PWM_TEST 106
-#define ET_TEST_ROTARY 107
-
 
 custom engine_type_e 4 bits, S32, @OFFSET@, [0:6], @@engine_type_e_auto_enum@@
 engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Type\nset engine_type X
