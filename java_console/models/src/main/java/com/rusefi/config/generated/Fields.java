@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Oct 24 22:25:18 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 25 03:26:39 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -747,6 +747,7 @@ public class Fields {
 	public static final int engine_type_e_BMW_M73_MRE = 104;
 	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 105;
 	public static final int engine_type_e_CAMARO_4 = 35;
+	public static final int engine_type_e_CITROEN_TU3JP = 65;
 	public static final int engine_type_e_DEFAULT_FRANKENSO = 0;
 	public static final int engine_type_e_DODGE_NEON_1995 = 2;
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
@@ -759,11 +760,15 @@ public class Fields {
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
 	public static final int engine_type_e_FORD_ESCORT_GT = 14;
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
+	public static final int engine_type_e_FRANKENSO_BMW_M73_F = 40;
+	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_2003 = 47;
 	public static final int engine_type_e_FRANKENSO_MAZDA_MIATA_NA8 = 56;
 	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
+	public static final int engine_type_e_FRANKENSO_MIATA_NA6_VAF = 57;
 	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HELLEN72_ETB = 33;
+	public static final int engine_type_e_HELLEN_121_NISSAN_4_CYL = 84;
 	public static final int engine_type_e_HELLEN_121_NISSAN_6_CYL = 72;
 	public static final int engine_type_e_HELLEN_121_NISSAN_8_CYL = 85;
 	public static final int engine_type_e_HELLEN_121_NISSAN_ALMERA_N16 = 87;
@@ -773,11 +778,17 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_121_VAG_V6_CYL = 78;
 	public static final int engine_type_e_HELLEN_121_VAG_VR6_CYL = 79;
 	public static final int engine_type_e_HELLEN_128_MERCEDES_4_CYL = 36;
+	public static final int engine_type_e_HELLEN_128_MERCEDES_6_CYL = 88;
+	public static final int engine_type_e_HELLEN_128_MERCEDES_8_CYL = 89;
 	public static final int engine_type_e_HELLEN_134_BMW = 75;
+	public static final int engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1 = 82;
+	public static final int engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2 = 95;
 	public static final int engine_type_e_HELLEN_154_VAG = 76;
 	public static final int engine_type_e_HELLEN_55_BMW = 73;
 	public static final int engine_type_e_HELLEN_88_BMW = 74;
+	public static final int engine_type_e_HELLEN_NA6 = 34;
 	public static final int engine_type_e_HELLEN_NA94 = 80;
+	public static final int engine_type_e_HELLEN_NB1 = 83;
 	public static final int engine_type_e_HELLEN_NB1_36 = 94;
 	public static final int engine_type_e_HELLEN_NB2 = 69;
 	public static final int engine_type_e_HELLEN_NB2_36 = 86;
@@ -792,6 +803,7 @@ public class Fields {
 	public static final int engine_type_e_MIATA_1990 = 19;
 	public static final int engine_type_e_MIATA_1996 = 21;
 	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
+	public static final int engine_type_e_MICRO_RUS_EFI = 60;
 	public static final int engine_type_e_MINIMAL_PINS = 99;
 	public static final int engine_type_e_MITSU_4G93 = 16;
 	public static final int engine_type_e_MRE_BOARD_NEW_TEST = 31;
@@ -807,12 +819,16 @@ public class Fields {
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
 	public static final int engine_type_e_PROMETHEUS_DEFAULTS = 100;
+	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 106;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
 	public static final int engine_type_e_PROTEUS_DEFAULTS = 61;
 	public static final int engine_type_e_PROTEUS_HONDA_ELEMENT_2003 = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
 	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
+	public static final int engine_type_e_PROTEUS_N73 = 93;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
+	public static final int engine_type_e_PROTEUS_VAG_80_18T = 92;
+	public static final int engine_type_e_SACHS = 29;
 	public static final int engine_type_e_SUBARU_2003_WRX = 22;
 	public static final int engine_type_e_SUBARUEG33_DEFAULTS = 70;
 	public static final int engine_type_e_SUBARUEJ20G_DEFAULTS = 101;
@@ -825,6 +841,7 @@ public class Fields {
 	public static final int engine_type_e_TEST_ISSUE_366_BOTH = 52;
 	public static final int engine_type_e_TEST_ISSUE_366_RISE = 53;
 	public static final int engine_type_e_TEST_ISSUE_898 = 27;
+	public static final int engine_type_e_TEST_ROTARY = 107;
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
@@ -847,15 +864,10 @@ public class Fields {
 	public static final int ENUM_16_BITS = 60000;
 	public static final int ENUM_32_BITS = 2000000000;
 	public static final int ERROR_BUFFER_SIZE = 120;
-	public static final int ET_BMW_M73_F = 40;
 	public static final int ET_CITROEN_TU3JP = 65;
 	public static final int ET_DEFAULT_FRANKENSO = 0;
 	public static final int ET_DODGE_NEON_1995 = 2;
-	public static final int ET_DODGE_NEON_2003_CRANK = 46;
 	public static final int ET_FORD_ESCORT_GT = 14;
-	public static final int ET_FRANKENSO_MIATA_NA6 = 41;
-	public static final int ET_FRANKENSO_MIATA_NA6_VAF = 57;
-	public static final int ET_FRANKENSO_MIATA_NB2 = 47;
 	public static final int ET_HELLEN_121_NISSAN_4_CYL = 84;
 	public static final int ET_HELLEN_121_NISSAN_6_CYL = 72;
 	public static final int ET_HELLEN_121_NISSAN_8_CYL = 85;
@@ -867,7 +879,6 @@ public class Fields {
 	public static final int ET_HELLEN_121_VAG_8_CYL = 81;
 	public static final int ET_HELLEN_121_VAG_V6_CYL = 78;
 	public static final int ET_HELLEN_121_VAG_VR6_CYL = 79;
-	public static final int ET_HELLEN_128_MERCEDES_4_CYL = 36;
 	public static final int ET_HELLEN_128_MERCEDES_6_CYL = 88;
 	public static final int ET_HELLEN_128_MERCEDES_8_CYL = 89;
 	public static final int ET_HELLEN_134_BMW = 75;
@@ -876,7 +887,6 @@ public class Fields {
 	public static final int ET_HELLEN_154_VAG = 76;
 	public static final int ET_HELLEN_55_BMW = 73;
 	public static final int ET_HELLEN_88_BMW = 74;
-	public static final int ET_HELLEN_NA6 = 34;
 	public static final int ET_HELLEN_NA94 = 80;
 	public static final int ET_HELLEN_NB1 = 83;
 	public static final int ET_HELLEN_NB2 = 69;
@@ -889,14 +899,10 @@ public class Fields {
 	public static final int ET_MRE_MIATA_NA6_VAF = 12;
 	public static final int ET_MRE_MIATA_NB2_MAF = 15;
 	public static final int ET_MRE_MIATA_NB2_MAP = 11;
-	public static final int ET_MRE_NEW_TEST_BOARD = 31;
-	public static final int ET_MRE_OLD_TEST_BOARD = 30;
-	public static final int ET_MRE_SUBARU_EJ18 = 37;
 	public static final int ET_PROTEUS_ANALOG_PWM_TEST = 106;
 	public static final int ET_PROTEUS_BMW_M73 = 63;
 	public static final int ET_PROTEUS_HONDA_ELEMENT_2003 = 90;
 	public static final int ET_PROTEUS_N73 = 93;
-	public static final int ET_PROTEUS_QC_TEST_BOARD = 42;
 	public static final int ET_PROTEUS_VAG_80_18T = 92;
 	public static final int ET_SACHS = 29;
 	public static final int ET_TEST_ROTARY = 107;
@@ -1770,7 +1776,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1344413188;
+	public static final int SIGNATURE_HASH = 816689387;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2135,7 +2141,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.24.all.1344413188";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.25.all.816689387";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
