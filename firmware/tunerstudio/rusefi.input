@@ -1793,19 +1793,19 @@ cmd_set_engine_type_hellen_121_vag_v6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@
 cmd_set_engine_type_hellen_121_vag_vr6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_VR6_CYL_16_hex@@"
 cmd_set_engine_type_hellen_121_vag_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_121_VAG_8_CYL_16_hex@@"
 
-cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_HELLEN_128_MERCEDES_4_CYL_16_hex@@"
-cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
-cmd_set_engine_type_hellen_128_merc_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_HELLEN_128_MERCEDES_8_CYL_16_hex@@"
+cmd_set_engine_type_hellen_128_merc_4				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_128_MERCEDES_4_CYL_16_hex@@"
+cmd_set_engine_type_hellen_128_merc_6				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_128_MERCEDES_6_CYL_16_hex@@"
+cmd_set_engine_type_hellen_128_merc_8				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_128_MERCEDES_8_CYL_16_hex@@"
 
-cmd_set_engine_type_hellen_couple_bk1               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_HELLEN_154_HYUNDAI_COUPE_BK1_16_hex@@"
-cmd_set_engine_type_hellen_couple_bk2               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_HELLEN_154_HYUNDAI_COUPE_BK2_16_hex@@"
+cmd_set_engine_type_hellen_couple_bk1               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK1_16_hex@@"
+cmd_set_engine_type_hellen_couple_bk2               = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_154_HYUNDAI_COUPE_BK2_16_hex@@"
 
 ; MIATA_NA6_MAP = 41
 cmd_set_engine_type_Frankenso_Miata_NA6_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MIATA_NA6_MAP_16_hex@@"
 ; MIATA_NA6_VAF = 57
-cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_FRANKENSO_MIATA_NA6_VAF_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NA6_VAF			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MIATA_NA6_VAF_16_hex@@"
 ; MAZDA_MIATA_2003 = 47
-cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_FRANKENSO_MIATA_NB2_16_hex@@"
+cmd_set_engine_type_Frankenso_Miata_NB2 			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_FRANKENSO_MIATA_NB2_16_hex@@"
 
 cmd_set_engine_type_Proteus_M73   					= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_BMW_M73_16_hex@@"
 cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_ELEMENT_2003_16_hex@@"
@@ -2780,8 +2780,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		field = "! Solenoid idle control is disabled at zero RPM"
 
-		panel = idleOpenLoop, { idleMode != @@idle_mode_e_IM_AUTO@@ }
-		panel = idleGating, { idleMode == @@idle_mode_e_IM_AUTO@@ }
+; gating applies both to open loop and closed loop!
+		panel = idleGating
+; closed loop mode is an addition on top of open loop, so idleOpenLoop stays open even when closed loop is selected
+		panel = idleOpenLoop
 		panel = idlePidSettings, { idleMode == @@idle_mode_e_IM_AUTO@@ }
 		panel = idleExtra
 
