@@ -614,7 +614,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureMazdaProtegeSOHC(this);
 		break;
 
-	case TT_TT_DAIHATSU:
+	case TT_DAIHATSU:
 		configureDaihatsu4(this);
 		break;
 
