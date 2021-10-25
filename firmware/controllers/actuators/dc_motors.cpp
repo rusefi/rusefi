@@ -64,6 +64,11 @@ public:
 		// Clamp to >100hz
 		int clampedFrequency = maxI(100, frequency);
 
+		if (clampedFrequency > ETB_HW_MAX_FREQUENCY) {
+			firmwareError("Electronic throttle frequency too high, maximum %d hz", ETB_HW_MAX_FREQUENCY);
+			return;
+		}
+
 		if (useTwoWires) {
 			m_pinEnable.initPin("ETB Enable", pinEnable);
 

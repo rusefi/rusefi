@@ -135,7 +135,7 @@ struct_no_prefix engine_configuration_s
 #define TCU_GEAR_COUNT 10
 
 ! Matt says: The problem is the driver chip. Tle9201 can't do 20k. The drivers are too slow. On purpose to reduce EMI
-#define ETB_HW_MAX_FREQUENCY 10000
+#define ETB_HW_MAX_FREQUENCY 3000
 #define ETB_COUNT 2
 #define DC_PER_STEPPER 2
 
