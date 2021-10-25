@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 25 03:26:39 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Oct 25 03:53:49 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -864,49 +864,6 @@ public class Fields {
 	public static final int ENUM_16_BITS = 60000;
 	public static final int ENUM_32_BITS = 2000000000;
 	public static final int ERROR_BUFFER_SIZE = 120;
-	public static final int ET_CITROEN_TU3JP = 65;
-	public static final int ET_DEFAULT_FRANKENSO = 0;
-	public static final int ET_DODGE_NEON_1995 = 2;
-	public static final int ET_FORD_ESCORT_GT = 14;
-	public static final int ET_HELLEN_121_NISSAN_4_CYL = 84;
-	public static final int ET_HELLEN_121_NISSAN_6_CYL = 72;
-	public static final int ET_HELLEN_121_NISSAN_8_CYL = 85;
-	public static final int ET_HELLEN_121_NISSAN_ALMERA_N16 = 87;
-	public static final int ET_HELLEN_121_VAG = 71;
-	public static final int ET_HELLEN_121_VAG_4_CYL = 71;
-	public static final int ET_HELLEN_121_VAG_5_CYL = 77;
-	public static final int ET_HELLEN_121_VAG_6_CYL = 78;
-	public static final int ET_HELLEN_121_VAG_8_CYL = 81;
-	public static final int ET_HELLEN_121_VAG_V6_CYL = 78;
-	public static final int ET_HELLEN_121_VAG_VR6_CYL = 79;
-	public static final int ET_HELLEN_128_MERCEDES_6_CYL = 88;
-	public static final int ET_HELLEN_128_MERCEDES_8_CYL = 89;
-	public static final int ET_HELLEN_134_BMW = 75;
-	public static final int ET_HELLEN_154_HYUNDAI_COUPE_BK1 = 82;
-	public static final int ET_HELLEN_154_HYUNDAI_COUPE_BK2 = 95;
-	public static final int ET_HELLEN_154_VAG = 76;
-	public static final int ET_HELLEN_55_BMW = 73;
-	public static final int ET_HELLEN_88_BMW = 74;
-	public static final int ET_HELLEN_NA94 = 80;
-	public static final int ET_HELLEN_NB1 = 83;
-	public static final int ET_HELLEN_NB2 = 69;
-	public static final int ET_HELLEN_NB2_36 = 86;
-	public static final int ET_MIATA_TCU_PROTEUS = 1;
-	public static final int ET_MRE_BODY_CONTROL = 23;
-	public static final int ET_MRE_DEFAULTS = 60;
-	public static final int ET_MRE_MIATA_94_MAP = 20;
-	public static final int ET_MRE_MIATA_NA6_MAP = 66;
-	public static final int ET_MRE_MIATA_NA6_VAF = 12;
-	public static final int ET_MRE_MIATA_NB2_MAF = 15;
-	public static final int ET_MRE_MIATA_NB2_MAP = 11;
-	public static final int ET_PROTEUS_ANALOG_PWM_TEST = 106;
-	public static final int ET_PROTEUS_BMW_M73 = 63;
-	public static final int ET_PROTEUS_HONDA_ELEMENT_2003 = 90;
-	public static final int ET_PROTEUS_N73 = 93;
-	public static final int ET_PROTEUS_VAG_80_18T = 92;
-	public static final int ET_SACHS = 29;
-	public static final int ET_TEST_ROTARY = 107;
-	public static final int ET_VW_B6 = 62;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int etb_dFactor_offset = 1744;
@@ -1776,7 +1733,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 816689387;
+	public static final int SIGNATURE_HASH = 2112642852;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2141,7 +2098,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.25.all.816689387";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.25.all.2112642852";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
