@@ -20,6 +20,7 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "mre_meta.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = TLE8888_PIN_1;
@@ -133,22 +134,18 @@ static void setupDefaultSensorInputs() {
 	// open question if it's great to have TPS in default TPS - the down-side is for
 	// vehicles without TPS or for first start without TPS one would have to turn in off
 	// to avoid cranking corrections based on wrong TPS data
-	// tps = "20 - AN volt 5" PC3
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+	engineConfiguration->tps1_1AdcChannel = MRE_IN_TPS;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 
-	// EFI_ADC_10: "27 - AN volt 1"
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+	engineConfiguration->map.sensor.hwChannel = MRE_IN_MAP;
 
 	// EFI_ADC_14: "32 - AN volt 6"
 	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
-	// clt = "18 - AN temp 1"
-	engineConfiguration->clt.adcChannel = EFI_ADC_0;
+	engineConfiguration->clt.adcChannel = MRE_IN_CLT;
 
-	// iat = "23 - AN temp 2"
-	engineConfiguration->iat.adcChannel = EFI_ADC_1;
+	engineConfiguration->iat.adcChannel = MRE_IN_IAT;
 
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor1, 2700);
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor2, 2700);

@@ -204,6 +204,7 @@ INCDIR = . \
           $(PROJECT_DIR)/init \
           $(CONSOLE_INC) \
           $(PROJECT_DIR)/config/engines \
+		  $(PROJECT_DIR)/config/boards/ \
           $(PROJECT_DIR)/ext_algo \
           $(HW_LAYER_DRIVERS_INC) \
           $(HW_LAYER_INC) \
