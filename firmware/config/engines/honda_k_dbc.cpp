@@ -12,6 +12,7 @@
 #endif // HW_PROTEUS
 
 /**
+ * K24A4 engine
  * PROTEUS_HONDA_ELEMENT_2003
  */
 void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
@@ -25,6 +26,9 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
+
+	engineConfiguration->map.sensor.type = MT_DENSO183;
+	engineConfiguration->injector.flow = 270;
 
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_HONDA);
 	strcpy(CONFIG(engineCode), "K24");
