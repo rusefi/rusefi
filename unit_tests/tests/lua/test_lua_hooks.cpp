@@ -130,3 +130,34 @@ TEST(LuaHooks, LuaSensor) {
 	// Ensure that the sensor got unregistered on teardown of the Lua interpreter
 	EXPECT_FALSE(Sensor::hasSensor(SensorType::Clt));
 }
+
+static const char* pidTest = R"(
+function testFunc()
+	local pid = Pid.new(0.5, 0, 0, -10, 10)
+
+	-- delta is -4, output -2
+	if pid:get(3, 7) ~= -2 then
+		return 1
+	end
+
+	-- delta is 6, output 3
+	if pid:get(4, -2) ~= 3 then
+		return 2
+	end
+
+	-- test clamping
+	if pid:get(0, 100) ~= -10 then
+		return 3
+	end
+
+	if pid:get(0, -100) ~= 10 then
+		return 4
+	end
+
+	return 0
+end
+)";
+
+TEST(LuaHooks, LuaPid) {
+	EXPECT_EQ(testLuaReturnsNumber(pidTest), 0);
+}

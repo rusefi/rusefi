@@ -374,6 +374,40 @@ struct LuaSensor : public StoredValueSensor {
 	void showInfo(const char*) const {}
 };
 
+struct LuaPid {
+	LuaPid() { }
+
+	LuaPid(float kp, float ki, float kd, float min, float max)
+		: m_pid(&m_params)
+	{
+		m_params.pFactor = kp;
+		m_params.iFactor = ki;
+		m_params.dFactor = kd;
+
+		m_params.offset = 0;
+		m_params.periodMs = 0;
+		m_params.minValue = min;
+		m_params.maxValue = max;
+
+		m_lastUpdate.reset();
+	}
+
+	float get(float target, float input) {
+		float dt = m_lastUpdate.getElapsedSecondsAndReset(getTimeNowNt());
+
+		return m_pid.getOutput(target, input, dt);
+	}
+
+	void reset() {
+		m_pid.reset();
+	}
+
+private:
+	Pid m_pid;
+	Timer m_lastUpdate;
+	pid_s m_params;
+};
+
 void configureRusefiLuaHooks(lua_State* l) {
 
 	LuaClass<Timer> luaTimer(l, "Timer");
@@ -387,6 +421,12 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.ctor<const char*>()
 		.fun("set", &LuaSensor::set)
 		.fun("invalidate", &LuaSensor::invalidate);
+
+	LuaClass<LuaPid> luaPid(l, "Pid");
+	luaPid
+		.ctor<float, float, float, float, float>()
+		.fun("get", &LuaPid::get)
+		.fun("reset", &LuaPid::reset);
 
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "readPin", lua_readpin);
