@@ -28,6 +28,10 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	strcpy(CONFIG(engineCode), "K24");
 	strcpy(CONFIG(vehicleName), "test");
 
+	engineConfiguration->tpsMin = 100;
+	engineConfiguration->tpsMax = 830;
+
+
 #if HW_PROTEUS & EFI_PROD_CODE
 	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_2;
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4;
@@ -39,6 +43,12 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[3] = PROTEUS_LS_5;
 
 	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
+
+	engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_1;
+	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;
+	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_ANALOG_VOLT_3;
+	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_6;
+
 
 	CONFIG(mainRelayPin) = PROTEUS_LS_9;
 	CONFIG(fuelPumpPin) = PROTEUS_LS_11;
