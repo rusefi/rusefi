@@ -69,7 +69,8 @@ static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
 
 	auto dlc = frame->DLC;
 
-	// Push ID and DLC
+	// Push bus, ID and DLC
+	lua_pushinteger(ls, 1);	// TODO: support multiple busses!
 	lua_pushinteger(ls, CAN_EID(*frame));
 	lua_pushinteger(ls, dlc);
 
@@ -81,7 +82,7 @@ static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
 	}
 
 	// Perform the actual function call
-	int status = lua_pcall(ls, 3, 0, 0);
+	int status = lua_pcall(ls, 4, 0, 0);
 
 	if (0 != status) {
 		// error calling CAN rx hook function
