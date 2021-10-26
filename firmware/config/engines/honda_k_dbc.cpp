@@ -17,6 +17,7 @@
  */
 void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->specs.displacement = 2.4;
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 //	engineConfiguration->trigger.customTotalToothCount = 12;
@@ -29,6 +30,8 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->injector.flow = 270;
+	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
+	engineConfiguration->fuelReferencePressure = 350; // TODO: what is real value?!
 
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_HONDA);
 	strcpy(CONFIG(engineCode), "K24");
