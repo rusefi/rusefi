@@ -55,7 +55,7 @@
 #include "hip9011_logic.h"
 
 
-#if HW_PROTEUS & EFI_PROD_CODE
+#if HW_PROTEUS
 #include "proteus_meta.h"
 #endif
 
@@ -776,9 +776,9 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     CONFIG(enableSoftwareKnock) = true;
 
     engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
-#endif // EFI_PROD_CODE
 
-    engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+    engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
+
 
     engineConfiguration->afr.hwChannel = EFI_ADC_11;
 
@@ -788,17 +788,18 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-    engineConfiguration->clt.adcChannel =  EFI_ADC_14;
-    engineConfiguration->iat.adcChannel = EFI_ADC_8;
+    engineConfiguration->clt.adcChannel =  PROTEUS_IN_ANALOG_TEMP_1;
+    engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_3;
 
-    engineConfiguration->fuelPumpPin = GPIOG_13;// "Lowside 6"     # pin 6/black35
+    engineConfiguration->fuelPumpPin = PROTEUS_LS_6;
 
-    engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
+    engineConfiguration->idle.solenoidPin = PROTEUS_LS_7;
 
 
     engineConfiguration->fanPin = GPIOB_7;
 
-	CONFIG(mainRelayPin) = GPIOG_12;// "Lowside 5"     # pin 5/black35
+	CONFIG(mainRelayPin) = GPIOG_12;
+#endif // EFI_PROD_CODE
 
 
 }

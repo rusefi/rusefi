@@ -80,6 +80,10 @@
 #include "electronic_throttle.h"
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
+#if HW_PROTEUS
+#include "proteus_meta.h"
+#endif
+
 void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
@@ -275,7 +279,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
 	// set_analog_input_pin pps pa4
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_4;
+	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
 
 	strcpy(CONFIG(vehicleName), "Using Proteus");
 
@@ -293,8 +297,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	// no idea why https://github.com/rusefi/rusefi/wiki/HOWTO-M73-v12-on-Proteus uses non default CLT pin
-	// AT3, Proteus pin #31
-	engineConfiguration->clt.adcChannel = EFI_ADC_9;
+	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_4;
 
 
 	// GPIOE_0:  "Lowside 14"
