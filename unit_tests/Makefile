@@ -69,6 +69,7 @@ INCDIR += \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
 	$(PROJECT_DIR)/config/boards/proteus \
+	$(PROJECT_DIR)/config/boards/microrusefi \
 	$(CONTROLLERS_INC) \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
