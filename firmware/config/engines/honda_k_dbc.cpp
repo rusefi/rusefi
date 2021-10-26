@@ -17,9 +17,11 @@
 void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2.4;
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
-	engineConfiguration->trigger.customTotalToothCount = 12;
-	engineConfiguration->trigger.customSkippedToothCount = 0;
+//	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
+//	engineConfiguration->trigger.customTotalToothCount = 12;
+//	engineConfiguration->trigger.customSkippedToothCount = 0;
+
+	engineConfiguration->trigger.type = TT_HONDA_K_4_1;
 
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
@@ -31,11 +33,15 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 830;
 
+	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
+
 
 #if HW_PROTEUS & EFI_PROD_CODE
-	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_2;
-	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4;
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = PROTEUS_DIGITAL_1;
+//	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_2; // crank
+//	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4; // intake
+//	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = PROTEUS_DIGITAL_1; // exhaust
+
+	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1; // exhaust
 
 	engineConfiguration->injectionPins[0] = PROTEUS_LS_8;
 	engineConfiguration->injectionPins[1] = PROTEUS_LS_7;
