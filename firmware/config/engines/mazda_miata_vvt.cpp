@@ -59,6 +59,8 @@
 #include "proteus_meta.h"
 #endif
 
+#include "mre_meta.h"
+
 static const float injectorLagBins[VBAT_INJECTOR_CURVE_SIZE] = {
         6.0,         8.0,        10.0,        11.0,
         12.0,        13.0,  14.0,        15.0
