@@ -73,15 +73,14 @@ static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
 	lua_pushinteger(ls, CAN_EID(*frame));
 	lua_pushinteger(ls, dlc);
 
-	// TODO: build data table
+	// Build table for data
 	lua_newtable(ls);
-
-	for (size_t i = 0; i < dlc; i++)
-	{
+	for (size_t i = 0; i < dlc; i++) {
 		lua_pushinteger(ls, frame->data8[i]);
 		lua_rawseti(ls, -2, i);
 	}
 
+	// Perform the actual function call
 	int status = lua_pcall(ls, 3, 0, 0);
 
 	if (0 != status) {
