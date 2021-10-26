@@ -2727,8 +2727,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = idleStepperHwType
 
 	dialog = idleHwType, "Idle Valve Hardware", yAxis
-		panel = idleStepper
 		panel = idleSolenoid
+		panel = idleStepper
 
 	dialog = idlehw, "", yAxis
 		field = "!ECU reboot needed to apply these settings"
