@@ -2675,7 +2675,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Idle Solenoid Frequency",   			idle_solenoidFrequency, !useStepperIdle
 
 	dialog = etbHbridgeHardware, "ETB H-Bridge Hardware"
-		field = "PWM Frequency",						etbFreq
 		field = "Two-wire mode",						etb_use_two_wires
 		field = "No1 Direction #1",						etbIo1_directionPin1
 		field = "No1 Direction #2",						etbIo1_directionPin2
@@ -3470,11 +3469,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Disable ETB Motor",					pauseEtbControl
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2
+		field = "PWM Frequency",						etbFreq
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
 		; another todo: split panel into two panels so that we can enable/disable h-bridge #1 separately from h-bridge #2
-		panel = etbHbridgeHardware,						{ etbFunctions1 != @@etb_function_e_ETB_None@@ || etbFunctions2 != @@etb_function_e_ETB_None@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) }
+		panel = etbHbridgeHardware,		{ etbFunctions1 != @@etb_function_e_ETB_None@@ || etbFunctions2 != @@etb_function_e_ETB_None@@ || (useStepperIdle && useHbridgesToDriveIdleStepper) } @@if_ts_show_etb_pins
 
 	dialog = etbAutotune, "PID Autotune"
 		field = "First step: calibrate TPS and hit 'Burn'"
