@@ -228,8 +228,6 @@ case HONDA_ACCORD_CD_DIP:
   return "HONDA_ACCORD_CD_DIP";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
-case LADA_KALINA:
-  return "LADA_KALINA";
 case MAZDA_626:
   return "MAZDA_626";
 case MAZDA_MIATA_2003_BOARD_TEST:
@@ -252,8 +250,6 @@ case MITSU_4G93:
   return "MITSU_4G93";
 case MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";
-case MRE_BOARD_OLD_TEST:
-  return "MRE_BOARD_OLD_TEST";
 case MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
 case MRE_M111:
@@ -300,8 +296,6 @@ case SACHS:
   return "SACHS";
 case SUBARUEG33_DEFAULTS:
   return "SUBARUEG33_DEFAULTS";
-case SUBARUEJ20G_DEFAULTS:
-  return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
 case TEST_108:
@@ -332,8 +326,14 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case UNUSED10:
   return "UNUSED10";
+case UNUSED101:
+  return "UNUSED101";
 case UNUSED25:
   return "UNUSED25";
+case UNUSED30:
+  return "UNUSED30";
+case UNUSED39:
+  return "UNUSED39";
 case UNUSED_48:
   return "UNUSED_48";
 case UNUSED_50:
