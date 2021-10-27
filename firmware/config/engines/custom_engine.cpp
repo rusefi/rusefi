@@ -15,6 +15,7 @@
 
 #include "custom_engine.h"
 #include "fsio_impl.h"
+#include "mre_meta.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -603,6 +604,30 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fsioOutputPins[8] = TLE8888_PIN_23; // "33 - GP Out 3"
 	engineConfiguration->fsioOutputPins[9] = TLE8888_PIN_24; // "43 - GP Out 4"
 #endif /* BOARD_TLE8888_COUNT */
+
+}
+
+void mreSecondaryCan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+
+
+	engineConfiguration->auxAnalogInputs[0] = MRE_IN_TPS;
+	engineConfiguration->auxAnalogInputs[1] = MRE_IN_MAP;
+	engineConfiguration->auxAnalogInputs[2] = MRE_IN_CLT;
+	engineConfiguration->auxAnalogInputs[3] = MRE_IN_IAT;
+	// engineConfiguration->auxAnalogInputs[0] =
+
+
+	// EFI_ADC_14: "32 - AN volt 6"
+//	engineConfiguration->afr.hwChannel = EFI_ADC_14;
+
+
+	strncpy(config->luaScript, "function onTick()\n"
+			"end", efi::size(config->luaScript));
 
 }
 
