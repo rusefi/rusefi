@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 17:07:42 EDT 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Oct 27 01:16:02 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -270,6 +270,8 @@ case MRE_MIATA_NB2_MAF:
   return "MRE_MIATA_NB2_MAF";
 case MRE_MIATA_NB2_MAP:
   return "MRE_MIATA_NB2_MAP";
+case MRE_SECONDARY_CAN:
+  return "MRE_SECONDARY_CAN";
 case MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
 case NISSAN_PRIMERA:
@@ -332,8 +334,6 @@ case UNUSED10:
   return "UNUSED10";
 case UNUSED25:
   return "UNUSED25";
-case UNUSED5:
-  return "UNUSED5";
 case UNUSED_48:
   return "UNUSED_48";
 case UNUSED_50:
