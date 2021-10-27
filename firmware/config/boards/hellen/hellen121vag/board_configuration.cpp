@@ -76,7 +76,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = GPIOA_6; // 86 - CAM1
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS; // 92 - TPS 1
-	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1
+	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
 
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
