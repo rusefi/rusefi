@@ -883,6 +883,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MRE_SECONDARY_CAN:
+		mreSecondaryCan(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case UNUSED101:
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
