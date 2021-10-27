@@ -28,7 +28,7 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = 3,
-	UNUSED5 = 4,
+	MRE_SECONDARY_CAN = 4,
 
 	NISSAN_PRIMERA = 5,
 	ET_UNUSED_6 = 6,
