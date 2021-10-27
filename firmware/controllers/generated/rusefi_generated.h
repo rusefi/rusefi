@@ -31,7 +31,7 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 17
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
+#define adc_channel_e_enum "NONE","2C - O2S","TPS1","intMAP","PPS1","3E - TPS","1B - Battery Sense","2H - CAM","3S - EGR BOOST IN","2A - Pressure Input","2J - CRANK","2L - MAF","3D - MAP","2E - Coolant","2B - IAT","4C - IN TEMP/PPS2","1P - AC Switch"
 #define adc_channel_mode_e_ADC_FAST 2
 #define adc_channel_mode_e_ADC_OFF 0
 #define adc_channel_mode_e_ADC_SLOW 1
@@ -211,7 +211,7 @@
 #define boostType_e_Force_4bytes_size_boostType_e ENUM_32_BITS
 #define boostType_e_OPEN_LOOP 0
 #define boostType_offset 1012
-#define brain_input_pin_e_enum "NONE", "INVALID", "INVALID", "PA1", "PA2", "PA3", "INVALID", "PA5", "PA6", "PA7", "PA8", "PA9", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PA15", "INVALID", "INVALID", "INVALID", "PB3", "PB4", "PB5", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PC6", "PC7", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PE5", "PE6", "INVALID", "INVALID", "PE9", "INVALID", "PE11", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define brain_input_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","2H - CAM","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","2J - CRANK","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4B - KNOCK","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","2D - VSS"
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_INVALID 0x80
 #define brain_pin_diag_e_PIN_OK 0
@@ -774,7 +774,7 @@
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define ENGINE_SNIFFER_UNIT_US 10
-#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "UNUSED5", "NISSAN_PRIMERA", "ET_UNUSED_6", "FORD_INLINE_6_1995", "GY6_139QMB", "MAZDA_MIATA_NB1", "UNUSED10", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "HONDA_ACCORD_CD_DIP", "MIATA_1990", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "UNUSED25", "TEST_ENGINE", "TEST_ISSUE_898", "MAZDA_626", "SACHS", "MRE_BOARD_OLD_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "LADA_KALINA", "FRANKENSO_BMW_M73_F", "FRANKENSO_MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "FRANKENSO_MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "UNUSED_50", "UNUSED_51", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "FRANKENSO_MAZDA_MIATA_NA8", "FRANKENSO_MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "MICRO_RUS_EFI", "PROTEUS_DEFAULTS", "VW_B6", "PROTEUS_BMW_M73", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG_4_CYL", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "HELLEN_121_NISSAN_8_CYL", "HELLEN_NB2_36", "HELLEN_121_NISSAN_ALMERA_N16", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "HELLEN_NB1_36", "HELLEN_154_HYUNDAI_COUPE_BK2", "ET_UNUSED96", "ET_UNUSED97", "ET_UNUSED98", "MINIMAL_PINS", "PROMETHEUS_DEFAULTS", "SUBARUEJ20G_DEFAULTS", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "PROTEUS_ANALOG_PWM_TEST", "TEST_ROTARY", "TEST_108", "TEST_109", "TEST_110"
+#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "MRE_SECONDARY_CAN", "NISSAN_PRIMERA", "ET_UNUSED_6", "FORD_INLINE_6_1995", "GY6_139QMB", "MAZDA_MIATA_NB1", "UNUSED10", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "HONDA_ACCORD_CD_DIP", "MIATA_1990", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "UNUSED25", "TEST_ENGINE", "TEST_ISSUE_898", "MAZDA_626", "SACHS", "UNUSED30", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "UNUSED39", "FRANKENSO_BMW_M73_F", "FRANKENSO_MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "FRANKENSO_MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "UNUSED_50", "UNUSED_51", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "FRANKENSO_MAZDA_MIATA_NA8", "FRANKENSO_MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "MICRO_RUS_EFI", "PROTEUS_DEFAULTS", "VW_B6", "PROTEUS_BMW_M73", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG_4_CYL", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "HELLEN_121_NISSAN_8_CYL", "HELLEN_NB2_36", "HELLEN_121_NISSAN_ALMERA_N16", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "HELLEN_NB1_36", "HELLEN_154_HYUNDAI_COUPE_BK2", "ET_UNUSED96", "ET_UNUSED97", "ET_UNUSED98", "MINIMAL_PINS", "PROMETHEUS_DEFAULTS", "UNUSED101", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "PROTEUS_ANALOG_PWM_TEST", "TEST_ROTARY", "TEST_108", "TEST_109", "TEST_110"
 #define engine_type_e_BMW_M73_M 24
 #define engine_type_e_BMW_M73_MRE 104
 #define engine_type_e_BMW_M73_MRE_SLAVE 105
@@ -828,7 +828,6 @@
 #define engine_type_e_HONDA_600 43
 #define engine_type_e_HONDA_ACCORD_CD_DIP 18
 #define engine_type_e_HONDA_ACCORD_CD_TWO_WIRES 17
-#define engine_type_e_LADA_KALINA 39
 #define engine_type_e_MAZDA_626 28
 #define engine_type_e_MAZDA_MIATA_2003_BOARD_TEST 55
 #define engine_type_e_MAZDA_MIATA_2003_NA_RAIL 54
@@ -840,7 +839,6 @@
 #define engine_type_e_MINIMAL_PINS 99
 #define engine_type_e_MITSU_4G93 16
 #define engine_type_e_MRE_BOARD_NEW_TEST 31
-#define engine_type_e_MRE_BOARD_OLD_TEST 30
 #define engine_type_e_MRE_BODY_CONTROL 23
 #define engine_type_e_MRE_M111 68
 #define engine_type_e_MRE_MIATA_94_MAP 20
@@ -849,6 +847,7 @@
 #define engine_type_e_MRE_MIATA_NB2_ETB 13
 #define engine_type_e_MRE_MIATA_NB2_MAF 15
 #define engine_type_e_MRE_MIATA_NB2_MAP 11
+#define engine_type_e_MRE_SECONDARY_CAN 4
 #define engine_type_e_MRE_SUBARU_EJ18 37
 #define engine_type_e_NISSAN_PRIMERA 5
 #define engine_type_e_PROMETHEUS_DEFAULTS 100
@@ -864,7 +863,6 @@
 #define engine_type_e_SACHS 29
 #define engine_type_e_SUBARU_2003_WRX 22
 #define engine_type_e_SUBARUEG33_DEFAULTS 70
-#define engine_type_e_SUBARUEJ20G_DEFAULTS 101
 #define engine_type_e_TEST_108 108
 #define engine_type_e_TEST_109 109
 #define engine_type_e_TEST_110 110
@@ -879,8 +877,10 @@
 #define engine_type_e_TOYOTA_2JZ_GTE_VVTi 44
 #define engine_type_e_TOYOTA_JZS147 38
 #define engine_type_e_UNUSED10 10
+#define engine_type_e_UNUSED101 101
 #define engine_type_e_UNUSED25 25
-#define engine_type_e_UNUSED5 4
+#define engine_type_e_UNUSED30 30
+#define engine_type_e_UNUSED39 39
 #define engine_type_e_UNUSED_48 48
 #define engine_type_e_UNUSED_50 50
 #define engine_type_e_UNUSED_51 51
@@ -1582,7 +1582,7 @@
 #define mafDecoding_offset 10784
 #define mafDecodingBins_offset 11808
 #define mafSensorType_offset 948
-#define MAIN_HELP_URL "http://www.rusefi.com/"
+#define MAIN_HELP_URL "https://rusefi.com/s/hellenNB1"
 #define mainRelayPin_offset 706
 #define mainRelayPinMode_offset 752
 #define mainUnusedEnd_offset 4624
@@ -1685,7 +1685,7 @@
 #define operation_mode_e_FOUR_STROKE_THREE_TIMES_CRANK_SENSOR 5
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
-#define output_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","1I AC Fan Relay","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3D - MAP","INVALID","INVALID","INVALID","INVALID","ETB +","ETB +","ETB +","INVALID","INVALID","INVALID","INVALID","3G - IGN_1 (1&4)","INVALID","INVALID","INVALID","INVALID","INVALID","1U - O2H","INVALID","INVALID","INVALID","INVALID","INVALID","4E - VVT","3Z - INJ_4","3Y - INJ_3","1R - ECF","2K - TACH","2Q - IDLE","1O - ALTERN","INVALID","INVALID","INVALID","INVALID","INVALID","3H - IGN_2 (2&3)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3T/4D - BOOST OUT","INVALID","3Q - VICS","INVALID","INVALID","INVALID","2M US / 2P EUROPE - FPUMP","INVALID","1E - Check Engine Light","INVALID","INVALID","3W - INJ_1","3X - INJ_2","INVALID","INVALID","1S - AC Relay","1Q - Aternator Warning Lamp","3V - O2H2"
 #define overrideCrankingIacSetting_offset 1476
 #define overrideTriggerGaps_offset 76
 #define PACK_ADD_TEMPERATURE 40
@@ -1800,13 +1800,17 @@
 #define servoOutputPins6_offset 3145
 #define servoOutputPins7_offset 3146
 #define servoOutputPins8_offset 3147
-#define show_Frankenso_presets true
-#define show_test_presets true
+#define show_Frankenso_presets false
+#define show_Hellen_presets true
+#define show_HellenNB1_presets true
+#define show_microRusEFI_presets false
+#define show_Proteus_presets false
+#define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.10.26
-#define SIGNATURE_HASH 2061153814
+#define SIGNATURE_BOARD hellen-nb1
+#define SIGNATURE_DATE 2021.10.27
+#define SIGNATURE_HASH 494743615
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1908,7 +1912,7 @@
 #define stftIgnoreErrorMagnitude_offset 976
 #define stoichRatioPrimary_offset 4005
 #define stoichRatioSecondary_offset 4009
-#define switch_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"
+#define switch_input_pin_e_enum "NONE","INVALID","INVALID","TPS1","INVALID","PPS1","INVALID","INVALID","INVALID","3S - EGR BOOST IN","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","2A - Pressure Input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4C - IN TEMP/PPS2","1P - AC Switch","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3I - Clutch","1V - Neutral","INVALID","INVALID","INVALID","INVALID","3J - O2S2","INVALID","INVALID","INVALID","INVALID","INVALID","1F - Brake/RES1","1G - Steering/RES2"
 #define tachOutputPin_offset 704
 #define tachOutputPinMode_offset 705
 #define tachPulseDuractionMs_offset 1704
@@ -2254,28 +2258,28 @@
 #define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
 #define TS_SET_LOGGER_SWITCH 'l'
 #define TS_SET_LOGGER_SWITCH_char l
-#define ts_show_analog_divider true
+#define ts_show_analog_divider false
 #define ts_show_auxserial_pins true
-#define ts_show_can2 true
-#define ts_show_can_pins true
-#define ts_show_cj125 true
-#define ts_show_egt true
+#define ts_show_can2 false
+#define ts_show_can_pins false
+#define ts_show_cj125 false
+#define ts_show_egt false
 #define ts_show_etb true
-#define ts_show_etb_pins true
+#define ts_show_etb_pins false
 #define ts_show_full_pinout true
-#define ts_show_gps true
-#define ts_show_hardware_simulator true
-#define ts_show_hip9011 true
-#define ts_show_joystick true
-#define ts_show_lcd true
+#define ts_show_gps false
+#define ts_show_hardware_simulator false
+#define ts_show_hip9011 false
+#define ts_show_joystick false
+#define ts_show_lcd false
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_sd_card true
-#define ts_show_software_knock false
+#define ts_show_software_knock true
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
-#define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.26.all.2061153814"
+#define ts_show_tunerstudio_port false
+#define TS_SIGNATURE "rusEFI 2021.10.27.hellen-nb1.494743615"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
