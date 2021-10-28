@@ -107,6 +107,8 @@ public class LiveDataParserPanel {
 
     public static String getContent(Class<?> clazz, String fileName) throws IOException, URISyntaxException {
         InputStream cpp = clazz.getResourceAsStream("/c_sources/" + fileName);
+        if (cpp == null)
+            return fileName + " getResourceAsStream not found";
         String line;
 
         StringBuilder result = new StringBuilder();
