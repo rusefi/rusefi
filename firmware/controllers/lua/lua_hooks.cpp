@@ -123,7 +123,7 @@ static int lua_txCan(lua_State* l) {
 	uint8_t dlc = 0;
 
 	while (true) {
-		lua_pushnumber(l, dlc);
+		lua_pushnumber(l, dlc + 1);
 		auto elementType = lua_gettable(l, 4);
 		auto val = lua_tonumber(l, -1);
 		lua_pop(l, 1);
