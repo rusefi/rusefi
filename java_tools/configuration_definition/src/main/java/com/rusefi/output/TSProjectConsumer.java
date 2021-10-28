@@ -32,6 +32,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         this.state = state;
     }
 
+    // also known as TS tooltips
+    public StringBuilder getSettingContextHelp() {
+        return settingContextHelp;
+    }
+
     private int writeTunerStudio(ConfigField configField, String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
         String nameWithPrefix = prefix + configField.getName();
 
