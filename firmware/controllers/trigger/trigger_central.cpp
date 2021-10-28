@@ -345,6 +345,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	vvtPosition -= crankOffset;
 	vvtPosition = wrapVvt(vvtPosition);
 
+	// this could be just an 'if' but let's have it expandable for future use :)
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_HONDA_K:
 		doFixAngle(vvtPosition, 180);
