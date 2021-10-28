@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 28 16:15:36 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 28 16:43:25 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -518,8 +518,6 @@ case TS_COMMAND_5:
   return "TS_COMMAND_5";
 case TS_COMMAND_9:
   return "TS_COMMAND_9";
-case TS_COMMAND_IGNITION_CATEGORY:
-  return "TS_COMMAND_IGNITION_CATEGORY";
 case TS_DEBUG_MODE:
   return "TS_DEBUG_MODE";
 case TS_GRAB_PEDAL_UP:
@@ -530,6 +528,8 @@ case TS_GRAB_TPS_CLOSED:
   return "TS_GRAB_TPS_CLOSED";
 case TS_GRAB_TPS_WOT:
   return "TS_GRAB_TPS_WOT";
+case TS_IGNITION_CATEGORY:
+  return "TS_IGNITION_CATEGORY";
 case TS_INJECTOR_CATEGORY:
   return "TS_INJECTOR_CATEGORY";
 case TS_RESET_TLE8888:
