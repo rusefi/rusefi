@@ -41,7 +41,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             return tsPosition;
         }
 
-        if (configField.getComment() != null && configField.getComment().startsWith(ConfigField.TS_COMMENT_TAG + "")) {
+        if (configField.getComment() != null && configField.getComment().trim().length() > 0) {
             settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
         }
         state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
