@@ -157,13 +157,13 @@ static angle_t adjustCrankPhase(int camIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-static angle_t wrapVvt(angle_t vvtPosition) {
+static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	// Wrap VVT position in to the range [-360, 360)
-	while (vvtPosition < -360) {
-		vvtPosition += 720;
+	while (vvtPosition < -period / 2) {
+		vvtPosition += period;
 	}
-	while (vvtPosition >= 360) {
-		vvtPosition -= 720;
+	while (vvtPosition >= period / 2) {
+		vvtPosition -= period;
 	}
 	return vvtPosition;
 }
@@ -332,7 +332,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	if (index != 0) {
 		// todo: only assign initial position of not first cam once cam was synchronized
-		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition);
+		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition, 720);
 		// at the moment we use only primary VVT to sync crank phase
 		return;
 	}
@@ -341,12 +341,13 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
 	// shall adjust vvt position as well
 	vvtPosition -= crankOffset;
-	vvtPosition = wrapVvt(vvtPosition);
+	vvtPosition = wrapVvt(vvtPosition, 720);
 
 	// this could be just an 'if' but let's have it expandable for future use :)
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_HONDA_K:
-		doFixAngle(vvtPosition, 180);
+		// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
+		vvtPosition = wrapVvt(vvtPosition, 180);
 		break;
 	default:
 		// else, do nothing
