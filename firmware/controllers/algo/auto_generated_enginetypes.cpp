@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Oct 27 01:16:02 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 28 12:11:41 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -491,6 +491,51 @@ case TT_VVT_MIATA_NB2:
   return "TT_VVT_MIATA_NB2";
 case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
+  }
+ return NULL;
+}
+const char *getTs_command_e(ts_command_e value){
+switch(value) {
+case TS_COMMAND_1:
+  return "TS_COMMAND_1";
+case TS_COMMAND_11:
+  return "TS_COMMAND_11";
+case TS_COMMAND_12:
+  return "TS_COMMAND_12";
+case TS_COMMAND_13:
+  return "TS_COMMAND_13";
+case TS_COMMAND_14:
+  return "TS_COMMAND_14";
+case TS_COMMAND_15:
+  return "TS_COMMAND_15";
+case TS_COMMAND_16:
+  return "TS_COMMAND_16";
+case TS_COMMAND_17:
+  return "TS_COMMAND_17";
+case TS_COMMAND_4:
+  return "TS_COMMAND_4";
+case TS_COMMAND_5:
+  return "TS_COMMAND_5";
+case TS_COMMAND_9:
+  return "TS_COMMAND_9";
+case TS_COMMAND_GNITION_CATEGORY:
+  return "TS_COMMAND_GNITION_CATEGORY";
+case TS_DEBUG_MODE:
+  return "TS_DEBUG_MODE";
+case TS_GRAB_PEDAL_UP:
+  return "TS_GRAB_PEDAL_UP";
+case TS_GRAB_PEDAL_WOT:
+  return "TS_GRAB_PEDAL_WOT";
+case TS_GRAB_TPS_CLOSED:
+  return "TS_GRAB_TPS_CLOSED";
+case TS_GRAB_TPS_WOT:
+  return "TS_GRAB_TPS_WOT";
+case TS_INJECTOR_CATEGORY:
+  return "TS_INJECTOR_CATEGORY";
+case TS_RESET_TLE8888:
+  return "TS_RESET_TLE8888";
+case TS_WRITE_FLASH:
+  return "TS_WRITE_FLASH";
   }
  return NULL;
 }

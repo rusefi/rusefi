@@ -526,3 +526,27 @@ typedef enum {
 	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
+
+
+typedef enum {
+	TS_DEBUG_MODE = 0,
+	TS_COMMAND_1 = 1,
+	TS_GRAB_TPS_CLOSED = 2,
+	TS_GRAB_TPS_WOT = 3,
+	TS_COMMAND_4 = 4,
+	TS_COMMAND_5 = 5,
+	TS_GRAB_PEDAL_UP = 6,
+	TS_GRAB_PEDAL_WOT = 7,
+	TS_RESET_TLE8888 = 8,
+	TS_COMMAND_9 = 9,
+	TS_WRITE_FLASH = 10,
+	TS_COMMAND_11 = 11,
+	TS_COMMAND_12 = 12,
+	TS_COMMAND_13 = 13,
+	TS_COMMAND_14 = 14,
+	TS_COMMAND_15 = 15,
+	TS_COMMAND_16 = 16,
+	TS_COMMAND_17 = 17,
+	TS_COMMAND_IGNITION_CATEGORY = 18,
+	TS_INJECTOR_CATEGORY = 19,
+} ts_command_e;
