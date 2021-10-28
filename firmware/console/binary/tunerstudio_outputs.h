@@ -286,7 +286,10 @@ struct TunerStudioOutputChannels {
 	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationZ; // 308
 	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationRoll; // 310
 	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationYaw; // 312
-	uint8_t unusedAtTheEnd[24]; // we have some unused bytes to allow compatible TS changes
+
+	scaled_channel<int8_t> vvtTargets[4]; // 314
+
+	uint8_t unusedAtTheEnd[20]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

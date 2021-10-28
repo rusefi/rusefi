@@ -52,7 +52,13 @@ expected<angle_t> VvtController::observePlant() const {
 expected<angle_t> VvtController::getSetpoint() const {
 	int rpm = GET_RPM();
 	float load = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	return m_targetMap->getValue(rpm, load);
+	float target = m_targetMap->getValue(rpm, load);
+
+#if EFI_TUNER_STUDIO
+	tsOutputChannels.vvtTargets[index] = target;
+#endif
+
+	return target;
 }
 
 expected<percent_t> VvtController::getOpenLoop(angle_t target) const {

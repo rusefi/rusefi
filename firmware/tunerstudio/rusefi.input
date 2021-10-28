@@ -415,6 +415,11 @@ enable2ndByteCanID = false
 	vvtPositionB2I=scalar,S16,  292,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 	vvtPositionB2E=scalar,S16,  294,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 
+	vvtTargetB1I = scalar, S08, 314, "deg", 1, 0
+	vvtTargetB1E = scalar, S08, 315, "deg", 1, 0
+	vvtTargetB2I = scalar, S08, 316, "deg", 1, 0
+	vvtTargetB2E = scalar, S08, 317, "deg", 1, 0
+
 	rawTps1Secondary  = scalar,	 U16,    300, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Primary    = scalar,	 U16,    302, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Secondary  = scalar,	 U16,    304, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
@@ -1058,10 +1063,6 @@ gaugeCategory = Sensors - Extra 1
    accelerationRollGauge=accelerationRoll,   @@GAUGE_NAME_ACCEL_ROLL@@,   "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationYawGauge=accelerationYaw,     @@GAUGE_NAME_ACCEL_YAW@@,    "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    atmPresCGauge     = baroPressure,          @@GAUGE_NAME_BARO_PRESSURE@@,       "kPa",        0,   1024,       0,      0,       0,     0,   0,   0
-   vvtPositionB1IGauge = vvtPositionB1I, @@GAUGE_NAME_VVT_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
-   vvtPositionB1EGauge = vvtPositionB1E, @@GAUGE_NAME_VVT_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
-   vvtPositionB2IGauge = vvtPositionB2I, @@GAUGE_NAME_VVT_B2I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
-   vvtPositionB2EGauge = vvtPositionB2E, @@GAUGE_NAME_VVT_B2E@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   @@GAUGE_NAME_OIL_PRESSURE@@,       @@GAUGE_NAME_OIL_PRESSURE_UNITS@@,        0,    750,      35,     75,     550,   700,   0,   0	
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
@@ -1070,6 +1071,16 @@ gaugeCategory = Sensors - Extra 1
    lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
    highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
    flexPercentGauge = flexPercent, @@GAUGE_NAME_FLEX@@, "%", 0, 100, 0, 0, 100, 100, 0, 0
+
+gaugeCategory = VVT
+	vvtPositionB1IGauge = vvtPositionB1I, @@GAUGE_NAME_VVT_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
+	vvtPositionB1EGauge = vvtPositionB1E, @@GAUGE_NAME_VVT_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
+	vvtPositionB2IGauge = vvtPositionB2I, @@GAUGE_NAME_VVT_B2I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
+	vvtPositionB2EGauge = vvtPositionB2E, @@GAUGE_NAME_VVT_B2E@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
+	vvtTargetB1IGauge = vvtTargetB1I, @@GAUGE_NAME_VVT_TARGET_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtTargetB1EGauge = vvtTargetB1E, @@GAUGE_NAME_VVT_TARGET_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtTargetB2IGauge = vvtTargetB2I, @@GAUGE_NAME_VVT_TARGET_B2I@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtTargetB2EGauge = vvtTargetB2E, @@GAUGE_NAME_VVT_TARGET_B2E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
 
 gaugeCategory = Ignition
    ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
@@ -1336,6 +1347,10 @@ gaugeCategory = DynoView
    entry = vvtPositionB1E, @@GAUGE_NAME_VVT_B1E@@, float, "%.1f"
    entry = vvtPositionB2I, @@GAUGE_NAME_VVT_B2I@@, float, "%.1f"
    entry = vvtPositionB2E, @@GAUGE_NAME_VVT_B2E@@, float, "%.1f"
+   entry = vvtTargetB1I, @@GAUGE_NAME_VVT_TARGET_B1I@@, int, "%d"
+   entry = vvtTargetB1E, @@GAUGE_NAME_VVT_TARGET_B1E@@, int, "%d"
+   entry = vvtTargetB2I, @@GAUGE_NAME_VVT_TARGET_B2I@@, int, "%d"
+   entry = vvtTargetB2E, @@GAUGE_NAME_VVT_TARGET_B2E@@, int, "%d"
    entry = injectionOffset, "injOffset"  , float, "%.2F"
 
 ; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
