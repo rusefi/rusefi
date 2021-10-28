@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Oct 26 21:07:08 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Oct 28 18:23:34 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -106,12 +106,12 @@ struct pid_s {
 	 */
 	int16_t periodMs;
 	/**
-	 * Output min value
+	 * Output Min Duty Cycle
 	 * offset 16
 	 */
 	int16_t minValue;
 	/**
-	 * Output max value
+	 * Output Max Duty Cycle
 	 * offset 18
 	 */
 	int16_t maxValue;
@@ -4395,4 +4395,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Oct 26 21:07:08 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Oct 28 18:23:34 UTC 2021
