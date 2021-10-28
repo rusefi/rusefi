@@ -627,6 +627,25 @@ void mreSecondaryCan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	strncpy(config->luaScript, "function onTick()\n"
+			"txPayload = {}\n"
+			"function onTick()\n"
+"  auxV = getAuxAnalog(0)\n"
+"  print('Hello analog ' .. auxV )\n"
+"  -- first byte: integer part, would be autoboxed to int\n"
+"  txPayload[0] = auxV\n"
+"  -- second byte: fractional part, would be autoboxed to int, overflow would be ignored\n"
+"  txPayload[1] = auxV * 256;\n"
+"  auxV = getAuxAnalog(1)\n"
+"  print('Hello analog ' .. auxV )\n"
+"  txPayload[2] = auxV\n"
+"  txPayload[3] = auxV * 256;\n"
+"  auxV = getAuxAnalog(2)\n"
+"  print('Hello analog ' .. auxV )\n"
+"  txPayload[4] = auxV\n"
+"  txPayload[5] = auxV * 256;\n"
+"  txCan(1, 0x600, 1, txPayload)\n"
+"end"
+
 			"end", efi::size(config->luaScript));
 
 }
