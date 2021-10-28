@@ -1658,9 +1658,9 @@ menuDialog = main
 ; see TS_IO_TEST_COMMAND in firmware code
 ;
 
-cmd_test_spk1  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x01"
-cmd_test_spk2  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x02"
-cmd_test_spk3  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x03"
+cmd_test_spk1  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY@@\x00\x01"
+cmd_test_spk2  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY@@\x00\x02"
+cmd_test_spk3  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY@@\x00\x03"
 cmd_test_spk4  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x04"
 cmd_test_spk5  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x05"
 cmd_test_spk6  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x06"
@@ -1688,10 +1688,12 @@ cmd_test_fsio14 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x0
 cmd_test_fsio15 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0f"
 cmd_test_fsio16 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x10"
 
-		
+cmd_test_debug_mode_vvt  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_VVT_1_PID_16_hex@@"
+cmd_test_debug_mode_can  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_CAN_16_hex@@"
+
 cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY_16_hex@@\x00\x01"
 cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY_16_hex@@\x00\x02"
-cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x03"
+cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY@@\x00\x03"
 cmd_test_inj4  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x04"
 cmd_test_inj5  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x05"
 cmd_test_inj6  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x06"
@@ -2998,6 +3000,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = stftPartitionSettingsOverrun, {fuelClosedLoopCorrectionEnabled == 1}
 
 	dialog = vvtPidDialog0, "Configuration"
+		commandButton = "Enable VVT#1 debug mode",      cmd_test_debug_mode_vvt
 		field = "VVT solenoid bank 1 intake",					auxPidPins1
         field = "VVT solenoid bank 1 exhaust",                  auxPidPins2
         field = "VVT solenoid bank 2 intake",                   auxPidPins3
