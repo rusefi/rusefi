@@ -287,8 +287,8 @@ struct pid_s
 	float dFactor;;"", 1, 0, -10000, 10000, 4
 	int16_t fsio_visible offset;Linear addition to PID logic;"", 1, 0, -1000, 1000, 0
 	int16_t periodMs;PID dTime;"ms", 1, 0, 0, 3000, 0
-	int16_t fsio_visible minValue;Output min value;"", 1, 0, -30000, 30000, 0
-	int16_t maxValue;Output max value;"", 1, 0, -30000, 30000, 0
+	int16_t fsio_visible minValue;Output Min Duty Cycle;"", 1, 0, -30000, 30000, 0
+	int16_t maxValue;Output Max Duty Cycle;"", 1, 0, -30000, 30000, 0
 end_struct
 
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
