@@ -302,8 +302,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
-		if ((currentPosition < engineConfiguration->fsio_setting[14]       || currentPosition > engineConfiguration->fsio_setting[15]) &&
-		    (currentPosition < engineConfiguration->fsio_setting[14] + 360 || currentPosition > engineConfiguration->fsio_setting[15] + 360)) {
+		if ((currentPosition < engineConfiguration->fsio_setting[4]       || currentPosition > engineConfiguration->fsio_setting[5]) &&
+		    (currentPosition < engineConfiguration->fsio_setting[4] + 360 || currentPosition > engineConfiguration->fsio_setting[5] + 360)) {
 			// outside of the expected range
 			return;
 		}
@@ -323,7 +323,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #endif /* EFI_TUNER_STUDIO */
 		}
 	}
-	case VVT_HONDA_K:
 	default:
 		// else, do nothing
 		break;
@@ -345,6 +344,16 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	// shall adjust vvt position as well
 	vvtPosition -= crankOffset;
 	vvtPosition = wrapVvt(vvtPosition);
+
+	switch(engineConfiguration->vvtMode[camIndex]) {
+	case VVT_HONDA_K:
+		doFixAngle(vvtPosition, 180);
+		break;
+	default:
+		// else, do nothing
+		break;
+    }
+
 	if (absF(vvtPosition - tdcPosition()) < 7) {
 		/**
 		 * we prefer not to have VVT sync right at trigger sync so that we do not have phase detection error if things happen a bit in
