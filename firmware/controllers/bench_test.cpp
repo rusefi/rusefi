@@ -323,21 +323,21 @@ static void handleBenchCategory(uint16_t index) {
 
 static void handleCommandX14(uint16_t index) {
 	switch (index) {
-	case 2:
+	case TS_GRAB_TPS_CLOSED:
 		grabTPSIsClosed();
 		return;
-	case 3:
+	case TS_GRAB_TPS_WOT:
 		grabTPSIsWideOpen();
 		return;
 	// case 4: tps2_closed
 	// case 5: tps2_wot
-	case 6:
+	case TS_GRAB_PEDAL_UP:
 		grabPedalIsUp();
 		return;
-	case 7:
+	case TS_GRAB_PEDAL_WOT:
 		grabPedalIsWideOpen();
 		return;
-	case 8:
+	case TS_RESET_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)
 		tle8888_req_init();
 #endif
@@ -420,17 +420,21 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	bool running = !ENGINE(rpmCalculator).isStopped();
 
 	switch (subsystem) {
-	case 0x11:
+	case TS_CLEAR_WARNINGS:
 		clearWarnings();
 		break;
 
-	case CMD_TS_IGNITION_CATEGORY:
+	case TS_DEBUG_MODE:
+		engineConfiguration->debugMode = (debug_mode_e)index;
+		break;
+
+	case TS_IGNITION_CATEGORY:
 		if (!running) {
 			doRunSpark(index, "300", "4", "400", "3");
 		}
 		break;
 
-	case CMD_TS_INJECTOR_CATEGORY:
+	case TS_INJECTOR_CATEGORY:
 		if (!running) {
 			doRunFuel(index, "300", "4", "400", "3");
 		}
@@ -448,7 +452,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		}
 		break;
 
-	case CMD_TS_X14:
+	case TS_X14:
 		handleCommandX14(index);
 		break;
 #ifdef EFI_WIDEBAND_FIRMWARE_UPDATE
