@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 28 16:43:25 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 28 13:21:58 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -496,6 +496,8 @@ case TT_VVT_NISSAN_VQ35:
 }
 const char *getTs_command_e(ts_command_e value){
 switch(value) {
+case TS_CLEAR_WARNINGS:
+  return "TS_CLEAR_WARNINGS";
 case TS_COMMAND_1:
   return "TS_COMMAND_1";
 case TS_COMMAND_11:
@@ -510,8 +512,6 @@ case TS_COMMAND_15:
   return "TS_COMMAND_15";
 case TS_COMMAND_16:
   return "TS_COMMAND_16";
-case TS_COMMAND_17:
-  return "TS_COMMAND_17";
 case TS_COMMAND_4:
   return "TS_COMMAND_4";
 case TS_COMMAND_5:
@@ -536,6 +536,8 @@ case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
 case TS_WRITE_FLASH:
   return "TS_WRITE_FLASH";
+case TS_X14:
+  return "TS_X14";
   }
  return NULL;
 }
