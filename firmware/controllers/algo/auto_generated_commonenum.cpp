@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Oct 24 19:26:38 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Oct 28 10:22:55 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -680,6 +680,8 @@ case VVT_FIRST_HALF:
   return "VVT_FIRST_HALF";
 case VVT_FORD_ST170:
   return "VVT_FORD_ST170";
+case VVT_HONDA_K:
+  return "VVT_HONDA_K";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MIATA_NB2:
