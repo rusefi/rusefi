@@ -56,6 +56,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[3] = PROTEUS_LS_5;
 
 	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
+	engineConfiguration->idle.solenoidPin = PROTEUS_LS_15;
 
 	engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_1;
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;
