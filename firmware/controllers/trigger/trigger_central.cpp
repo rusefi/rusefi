@@ -732,17 +732,6 @@ void triggerInfo(void) {
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_PROD_CODE
-	for (int camInputIndex = 0; camInputIndex<CAM_INPUTS_COUNT;camInputIndex++) {
-		if (isBrainPinValid(engineConfiguration->camInputs[camInputIndex])) {
-			int camLogicalIndex = camInputIndex % CAMS_PER_BANK;
-			efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[camInputIndex]),
-					getVvt_mode_e(engineConfiguration->vvtMode[camLogicalIndex]));
-			efiPrintf("VVT %d event counters: %d/%d",
-					camInputIndex,
-					engine->triggerCentral.vvtEventRiseCounter[camInputIndex], engine->triggerCentral.vvtEventFallCounter[camInputIndex]);
-		}
-	}
-
 
 	efiPrintf("primary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[0]));
 	efiPrintf("primary trigger simulator: %s %s freq=%d",
@@ -758,6 +747,20 @@ void triggerInfo(void) {
 				getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
+
+
+	for (int camInputIndex = 0; camInputIndex<CAM_INPUTS_COUNT;camInputIndex++) {
+		if (isBrainPinValid(engineConfiguration->camInputs[camInputIndex])) {
+			int camLogicalIndex = camInputIndex % CAMS_PER_BANK;
+			efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[camInputIndex]),
+					getVvt_mode_e(engineConfiguration->vvtMode[camLogicalIndex]));
+			efiPrintf("VVT %d event counters: %d/%d",
+					camInputIndex,
+					engine->triggerCentral.vvtEventRiseCounter[camInputIndex], engine->triggerCentral.vvtEventFallCounter[camInputIndex]);
+		}
+	}
+
+
 //	efiPrintf("3rd trigger simulator: %s %s", hwPortname(CONFIG(triggerSimulatorPins)[2]),
 //			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[2]));
 
