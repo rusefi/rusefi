@@ -437,7 +437,7 @@ public class ConfigFieldParserTest {
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "; total TS size = 8\n", new String(writer.toCharArray()));
-        assertEquals("\tpid = \"comment\"\n" +
+        assertEquals(
                 "\tpid_afr_type = \"PID dTime\"\n" +
                 "\tpid_afr_typet = \"PID dTime\"\n", tsProjectConsumer.getSettingContextHelp().toString());
     }
