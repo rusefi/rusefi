@@ -169,6 +169,39 @@ static angle_t wrapVvt(angle_t vvtPosition) {
 	return vvtPosition;
 }
 
+static void logFront(bool isImportantFront, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	extern const char *vvtNames[];
+	const char *vvtName = vvtNames[index];
+
+	if (isImportantFront && CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
+#if EFI_PROD_CODE
+		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
+#endif /* EFI_PROD_CODE */
+		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+	}
+
+	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
+		if (CONFIG(vvtCamSensorUseRise)) {
+			// todo: unify TS composite logger code with console Engine Sniffer
+			// todo: better API to reduce copy/paste?
+#if EFI_TOOTH_LOGGER
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_TOOTH_LOGGER */
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
+		} else {
+#if EFI_TOOTH_LOGGER
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_TOOTH_LOGGER */
+
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
+		}
+	}
+}
+
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
@@ -223,33 +256,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	if (isImportantFront && CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
-#if EFI_PROD_CODE
-		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
-#endif /* EFI_PROD_CODE */
-		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
-	}
+	logFront(isImportantFront, nowNt, index PASS_ENGINE_PARAMETER_SUFFIX);
 
-	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
-		if (CONFIG(vvtCamSensorUseRise)) {
-			// todo: unify TS composite logger code with console Engine Sniffer
-			// todo: better API to reduce copy/paste?
-#if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_TOOTH_LOGGER */
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
-		} else {
-#if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_TOOTH_LOGGER */
-
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
-		}
-	}
 
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 	if (cisnan(oneDegreeUs)) {
