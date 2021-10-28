@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 28 12:11:41 EDT 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 28 16:15:36 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -518,8 +518,8 @@ case TS_COMMAND_5:
   return "TS_COMMAND_5";
 case TS_COMMAND_9:
   return "TS_COMMAND_9";
-case TS_COMMAND_GNITION_CATEGORY:
-  return "TS_COMMAND_GNITION_CATEGORY";
+case TS_COMMAND_IGNITION_CATEGORY:
+  return "TS_COMMAND_IGNITION_CATEGORY";
 case TS_DEBUG_MODE:
   return "TS_DEBUG_MODE";
 case TS_GRAB_PEDAL_UP:
