@@ -125,7 +125,7 @@ static int lua_txCan(lua_State* l) {
 	while (true) {
 		lua_pushnumber(l, dlc + 1);
 		auto elementType = lua_gettable(l, 4);
-		auto val = lua_tointeger(l, -1);
+		auto val = lua_tonumber(l, -1);
 		lua_pop(l, 1);
 
 		if (elementType == LUA_TNIL) {
