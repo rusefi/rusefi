@@ -841,12 +841,12 @@ enable2ndByteCanID = false
       yBins       = boostTpsBins,  TPSValue
       zBins       = boostTableClosedLoop
 
-   table = vvtTable1Tbl,  vvtTable1Map,  "vvt Table Intake",   1
+   table = vvtTable1Tbl,  vvtTable1Map,  "Intake VVT closed loop Target",   1
       xBins       = vvtTable1RpmBins,  RPMValue
       yBins       = vvtTable1LoadBins,  fuelingLoad
       zBins       = vvtTable1
 
-   table = vvtTable2Tbl,  vvtTable2Map,  "vvt Table Exhaust",   1
+   table = vvtTable2Tbl,  vvtTable2Map,  "Exhaust VVT closed loop Target",   1
       xBins       = vvtTable2RpmBins,  RPMValue
       yBins       = vvtTable2LoadBins,  fuelingLoad
       zBins       = vvtTable2
@@ -1527,9 +1527,9 @@ menuDialog = main
 		subMenu = pedalToTpsTbl,			"ETB pedal target" @@if_ts_show_etb
 
 		subMenu = std_separator
-		subMenu = vvtPidDialog,				"VVT outputs and PID"
-        subMenu = vvtTable1Tbl,             "VVT intake target"
-        subMenu = vvtTable2Tbl,             "VVT exhaust target"
+		subMenu = vvtPidDialog,				"VVT outputs and PID", { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
+        subMenu = vvtTable1Tbl,             "VVT intake target", { vvtMode1 != @@vvt_mode_e_VVT_INACTIVE@@ }
+        subMenu = vvtTable2Tbl,             "VVT exhaust target", { vvtMode2 != @@vvt_mode_e_VVT_INACTIVE@@ }
 
 		subMenu = std_separator
 		subMenu = auxInputsDialog,        	"Aux inputs"
