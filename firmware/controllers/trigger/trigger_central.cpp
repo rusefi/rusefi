@@ -103,6 +103,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	// todo: why does VVT_2JZ not use real decoder?
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
+			&& vvtMode != VVT_HONDA_K
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
 }
@@ -251,7 +252,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 
 	bool isImportantFront = (CONFIG(vvtCamSensorUseRise) ^ (front == TV_FALL));
-	if (!vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]) && !isImportantFront) {
+	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
+	if (!isVvtWithRealDecoder && !isImportantFront) {
 		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
@@ -269,12 +271,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
+	if (isVvtWithRealDecoder) {
+		tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
 			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+	}
 
 
 	tc->vvtCamCounter++;
@@ -319,6 +323,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 #endif /* EFI_TUNER_STUDIO */
 		}
 	}
+	case VVT_HONDA_K:
 	default:
 		// else, do nothing
 		break;
