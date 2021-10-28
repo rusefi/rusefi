@@ -78,7 +78,9 @@ static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
 	lua_newtable(ls);
 	for (size_t i = 0; i < dlc; i++) {
 		lua_pushinteger(ls, frame->data8[i]);
-		lua_rawseti(ls, -2, i);
+
+		// index is i+1 because Lua "arrays" (tables) are 1-indexed
+		lua_rawseti(ls, -2, i + 1);
 	}
 
 	// Perform the actual function call
