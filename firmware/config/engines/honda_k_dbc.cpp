@@ -62,6 +62,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;
 	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_ANALOG_VOLT_3;
 	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_6;
+	CONFIG(fanPin) = GPIO_UNASSIGNED;
 
 
 	CONFIG(mainRelayPin) = PROTEUS_LS_9;
