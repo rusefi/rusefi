@@ -43,9 +43,14 @@
 
 
 // pin 2/black35
+#define PROTEUS_HS_1 GPIOA_9
 
 // pin 1/black35
+#define PROTEUS_HS_2 GPIOA_8
 
+#define PROTEUS_HS_3 GPIOD_15
+
+#define PROTEUS_HS_4 GPIOD_14
 
 // pin 35/black35
 #define PROTEUS_IGN_1 GPIOD_4
