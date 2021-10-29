@@ -33,7 +33,7 @@ void VvtController::init(int index, int bankIndex, int camIndex, const ValueProv
 }
 
 int VvtController::getPeriodMs() {
-	return isBrainPinValid(engineConfiguration->auxPidPins[index]) ?
+	return isBrainPinValid(engineConfiguration->vvtPins[index]) ?
 		GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]) : NO_PIN_PERIOD;
 }
 
@@ -102,16 +102,16 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 static VvtController instances[CAM_INPUTS_COUNT] CCM_OPTIONAL;
 
 static void turnAuxPidOn(int index) {
-	if (!isBrainPinValid(engineConfiguration->auxPidPins[index])) {
+	if (!isBrainPinValid(engineConfiguration->vvtPins[index])) {
 		return;
 	}
 
 	startSimplePwmExt(&instances[index].m_pwm, "Aux PID",
 			&engine->executor,
-			engineConfiguration->auxPidPins[index],
+			engineConfiguration->vvtPins[index],
 			&instances[index].m_pin,
 			// todo: do we need two separate frequencies?
-			engineConfiguration->auxPidFrequency[0], 0.1);
+			engineConfiguration->vvtOutputFrequency[0], 0.1);
 }
 
 void startVvtControlPins() {
