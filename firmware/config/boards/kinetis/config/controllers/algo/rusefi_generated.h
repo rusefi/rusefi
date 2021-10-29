@@ -131,8 +131,6 @@
 #define auxPid1_offset_offset 2616
 #define auxPid1_periodMs_offset 2618
 #define auxPid1_pFactor_offset 2604
-#define auxPidFrequency1_offset 2244
-#define auxPidPins1_offset 2220
 #define auxSerialRxPin_offset 2042
 #define auxSerialSpeed_offset 2096
 #define auxSerialTxPin_offset 2040
@@ -1786,8 +1784,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.10.28
-#define SIGNATURE_HASH 693582838
+#define SIGNATURE_DATE 2021.10.29
+#define SIGNATURE_HASH 3563768584
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2277,7 +2275,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.28.kin.693582838"
+#define TS_SIGNATURE "rusEFI 2021.10.29.kin.3563768584"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2456,10 +2454,9 @@
 #define vrThreshold2_rpmBins_offset 1264
 #define vrThreshold2_values_offset 1270
 #define vssFilterReciprocal_offset 15168
-#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K"
+#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "vvt11", "vvt12", "vvt13"
 #define vvt_mode_e_VVT_2JZ 2
-#define vvt_mode_e_VVT_4_1 6
 #define vvt_mode_e_VVT_BARRA_3_PLUS_1 8
 #define vvt_mode_e_VVT_BOSCH_QUICK_START 5
 #define vvt_mode_e_VVT_FIRST_HALF 4
@@ -2469,11 +2466,14 @@
 #define vvt_mode_e_VVT_MIATA_NB2 3
 #define vvt_mode_e_VVT_NISSAN_VQ 9
 #define vvt_mode_e_VVT_SECOND_HALF 1
+#define vvt_mode_e_VVT_TOYOTA_4_1 6
 #define vvtCamSensorUseRise_offset 744
 #define vvtMode1_offset 2320
 #define vvtModePadding_offset 2321
 #define vvtOffsets1_offset 1228
 #define vvtOffsetsPadding_offset 1232
+#define vvtOutputFrequency1_offset 2244
+#define vvtPins1_offset 2220
 #define vvtTable1_offset 15748
 #define vvtTable1LoadBins_offset 15812
 #define vvtTable1RpmBins_offset 15844

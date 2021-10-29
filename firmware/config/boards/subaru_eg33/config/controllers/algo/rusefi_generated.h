@@ -148,12 +148,6 @@
 #define auxPid2_offset_offset 2644
 #define auxPid2_periodMs_offset 2646
 #define auxPid2_pFactor_offset 2632
-#define auxPidFrequency1_offset 2248
-#define auxPidFrequency2_offset 2250
-#define auxPidPins1_offset 2220
-#define auxPidPins2_offset 2221
-#define auxPidPins3_offset 2222
-#define auxPidPins4_offset 2223
 #define auxSerialRxPin_offset 2042
 #define auxSerialSpeed_offset 2096
 #define auxSerialTxPin_offset 2040
@@ -1818,8 +1812,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
-#define SIGNATURE_DATE 2021.10.28
-#define SIGNATURE_HASH 17090489
+#define SIGNATURE_DATE 2021.10.29
+#define SIGNATURE_HASH 4231608135
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2309,7 +2303,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.10.28.subaru_eg33_f7.17090489"
+#define TS_SIGNATURE "rusEFI 2021.10.29.subaru_eg33_f7.4231608135"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2488,10 +2482,9 @@
 #define vrThreshold2_rpmBins_offset 1264
 #define vrThreshold2_values_offset 1270
 #define vssFilterReciprocal_offset 15196
-#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K"
+#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "vvt11", "vvt12", "vvt13"
 #define vvt_mode_e_VVT_2JZ 2
-#define vvt_mode_e_VVT_4_1 6
 #define vvt_mode_e_VVT_BARRA_3_PLUS_1 8
 #define vvt_mode_e_VVT_BOSCH_QUICK_START 5
 #define vvt_mode_e_VVT_FIRST_HALF 4
@@ -2501,6 +2494,7 @@
 #define vvt_mode_e_VVT_MIATA_NB2 3
 #define vvt_mode_e_VVT_NISSAN_VQ 9
 #define vvt_mode_e_VVT_SECOND_HALF 1
+#define vvt_mode_e_VVT_TOYOTA_4_1 6
 #define vvtCamSensorUseRise_offset 744
 #define vvtMode1_offset 2328
 #define vvtMode2_offset 2329
@@ -2510,6 +2504,12 @@
 #define vvtOffsets3_offset 1236
 #define vvtOffsets4_offset 1240
 #define vvtOffsetsPadding_offset 1244
+#define vvtOutputFrequency1_offset 2248
+#define vvtOutputFrequency2_offset 2250
+#define vvtPins1_offset 2220
+#define vvtPins2_offset 2221
+#define vvtPins3_offset 2222
+#define vvtPins4_offset 2223
 #define vvtTable1_offset 15776
 #define vvtTable1LoadBins_offset 15840
 #define vvtTable1RpmBins_offset 15872

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Oct 28 18:23:29 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 29 04:18:50 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3181,7 +3181,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2220
 	 */
-	output_pin_e auxPidPins[CAM_INPUTS_COUNT];
+	output_pin_e vvtPins[CAM_INPUTS_COUNT];
 	/**
 	 * offset 2221
 	 */
@@ -3223,7 +3223,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2244
 	 */
-	fsio_pwm_freq_t auxPidFrequency[CAMS_PER_BANK];
+	fsio_pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
 	/**
 	 * Additional idle % when fan #1 is active
 	%
@@ -4389,4 +4389,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Oct 28 18:23:29 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 29 04:18:50 UTC 2021
