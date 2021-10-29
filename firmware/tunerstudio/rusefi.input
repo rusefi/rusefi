@@ -1512,7 +1512,8 @@ menuDialog = main
 
 	menu = "&Advanced"
         subMenu = boostDialog,          "Boost Control"
-		subMenu = boostPidDialog,        "Closed Loop Boost",    { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostOpenLoopDialog,	"Open Loop", { isBoostControlEnabled }
+		subMenu = boostPidDialog,        "Closed Loop",    { isBoostControlEnabled && boostType == 1 }
 		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { isBoostControlEnabled }
 
 		subMenu = std_separator
@@ -3382,17 +3383,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 ;Boost Open Loop
 
-        dialog = boost_left, ""
-                field = "Enable",                           isBoostControlEnabled
-                field = "Control Mode",                     boostType, { isBoostControlEnabled }
+    dialog = boostDialog, ""
+		field = "Enable",                           isBoostControlEnabled
+		field = "Control Mode",                     boostType, { isBoostControlEnabled }
 		field = "Output",							boostControlPin, { isBoostControlEnabled }
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
-
 		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
-         dialog = boostDialog, "", border
-                panel = boost_left, West
-                panel = boostTableTbl, Center
+
+	dialog = boostOpenLoopDialog, "", border
+		panel = boostTableTbl, Center
 
 ;Boost Closed Loop
 
