@@ -101,6 +101,10 @@ ifeq ($(USE_BOOTLOADER),)
   USE_BOOTLOADER = no
 endif
 
+ifeq ($(USE_OPENBLT),)
+  USE_OPENBLT = no
+endif
+
 ifeq ($(USE_FATFS),)
   USE_FATFS = yes
 endif
@@ -202,6 +206,11 @@ endif
 
 ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
+endif
+
+ifeq ($(USE_OPENBLT),yes)
+  # Reserve start of flash for OpenBLT
+  USE_OPT += -Wl,--defsym=BOOTLOADER=1
 endif
 
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
