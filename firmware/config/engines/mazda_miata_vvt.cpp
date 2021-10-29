@@ -759,9 +759,9 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
     #if EFI_PROD_CODE
-    engineConfiguration->ignitionPins[0] = PROTEUS_HS_1;
+    engineConfiguration->ignitionPins[0] = PROTEUS_IGN_1;
     engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-    engineConfiguration->ignitionPins[2] = PROTEUS_HS_3;
+    engineConfiguration->ignitionPins[2] = PROTEUS_IGN_3;
     engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
