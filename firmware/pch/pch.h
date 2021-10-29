@@ -35,4 +35,5 @@
 #include <gmock/gmock.h>
 #include "mocks.h"
 #include "engine_test_helper.h"
+#include "mock/mock_sensor.h"
 #endif
