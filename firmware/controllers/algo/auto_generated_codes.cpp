@@ -1,6 +1,6 @@
 #include "global.h"
 #include "obd_error_codes.h"
-// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Sun Oct 03 01:41:19 EDT 2021
+// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Fri Oct 29 15:39:44 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -615,8 +615,6 @@ case CUSTOM_OBD_95:
   return "CUSTOM_OBD_95";
 case CUSTOM_OBD_96:
   return "CUSTOM_OBD_96";
-case CUSTOM_OBD_97:
-  return "CUSTOM_OBD_97";
 case CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED:
   return "CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED";
 case CUSTOM_OBD_ANGLE_CONSTRAINT_VIOLATION:
@@ -673,6 +671,8 @@ case CUSTOM_OUT_OF_ORDER_COIL:
   return "CUSTOM_OUT_OF_ORDER_COIL";
 case CUSTOM_PARAM_RANGE:
   return "CUSTOM_PARAM_RANGE";
+case CUSTOM_PID_DTERM:
+  return "CUSTOM_PID_DTERM";
 case CUSTOM_PWM_CYCLE_START:
   return "CUSTOM_PWM_CYCLE_START";
 case CUSTOM_PWM_DUTY_TOO_HIGH:
