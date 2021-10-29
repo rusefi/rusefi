@@ -80,9 +80,7 @@ static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
 		lua_pushinteger(ls, frame->data8[i]);
 
 		// index is i+1 because Lua "arrays" (tables) are 1-indexed
-//		lua_rawseti(ls, -2, i + 1);
-        // one step back
-		lua_rawseti(ls, -2, i);
+		lua_rawseti(ls, -2, i + 1);
 	}
 
 	// Perform the actual function call
