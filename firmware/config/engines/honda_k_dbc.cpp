@@ -25,7 +25,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->trigger.type = TT_HONDA_K_4_1;
 
-	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
+	engineConfiguration->vvtMode[0] = VVT_HONDA_K;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
@@ -54,6 +54,8 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[1] = PROTEUS_LS_7;
 	engineConfiguration->injectionPins[2] = PROTEUS_LS_6;
 	engineConfiguration->injectionPins[3] = PROTEUS_LS_5;
+
+	engineConfiguration->auxPidPins[0] = PROTEUS_HS_2;
 
 	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
 	engineConfiguration->idle.solenoidPin = PROTEUS_LS_15;
