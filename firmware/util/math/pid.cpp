@@ -54,6 +54,9 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 	float error = (target - input) * errorAmplificationCoef;
 	this->target = target;
 	this->input = input;
+	if (dTime == 0) {
+		firmwareError(OBD_PCM_Processor_Fault, "zero dTime");
+	}
 
 	float pTerm = parameters->pFactor * error;
 	updateITerm(parameters->iFactor * dTime * error);
