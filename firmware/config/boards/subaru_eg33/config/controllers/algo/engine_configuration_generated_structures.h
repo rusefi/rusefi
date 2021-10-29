@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Oct 25 19:46:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri Oct 29 04:18:55 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -106,12 +106,12 @@ struct pid_s {
 	 */
 	int16_t periodMs;
 	/**
-	 * Output min value
+	 * Output Min Duty Cycle
 	 * offset 16
 	 */
 	int16_t minValue;
 	/**
-	 * Output max value
+	 * Output Max Duty Cycle
 	 * offset 18
 	 */
 	int16_t maxValue;
@@ -3181,7 +3181,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2220
 	 */
-	output_pin_e auxPidPins[CAM_INPUTS_COUNT];
+	output_pin_e vvtPins[CAM_INPUTS_COUNT];
 	/**
 	 * offset 2224
 	 */
@@ -3229,7 +3229,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2248
 	 */
-	fsio_pwm_freq_t auxPidFrequency[CAMS_PER_BANK];
+	fsio_pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
 	/**
 	 * Additional idle % when fan #1 is active
 	%
@@ -4395,4 +4395,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Oct 25 19:46:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Fri Oct 29 04:18:55 UTC 2021

@@ -17,6 +17,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.TreeSet;
 import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -117,10 +118,11 @@ public class LinkManager implements Closeable {
 
     public static String[] getCommPorts() {
         SerialPort[] ports = SerialPort.getCommPorts();
-        String[] result = new String[ports.length];
-        for (int i = 0; i < ports.length; i++)
-            result[i] = ports[i].getSystemPortName();
-        return result;
+        // wow sometimes driver returns same port name more than once?!
+        TreeSet<String> names = new TreeSet<>();
+        for (SerialPort port : ports)
+            names.add(port.getSystemPortName());
+        return names.toArray(new String[0]);
     }
 
     public BinaryProtocol getCurrentStreamState() {

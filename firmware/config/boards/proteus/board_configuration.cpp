@@ -26,18 +26,18 @@ static const brain_pin_e injPins[] = {
 };
 
 static const brain_pin_e ignPins[] = {
-	PROTEUS_HS_1,
-	PROTEUS_HS_2,
-	PROTEUS_HS_3,
-	PROTEUS_HS_4,
-	PROTEUS_HS_5,
-	PROTEUS_HS_6,
-	PROTEUS_HS_7,
-	PROTEUS_HS_8,
-	PROTEUS_HS_9,
-	PROTEUS_HS_10,
-	PROTEUS_HS_11,
-	PROTEUS_HS_12,
+	PROTEUS_IGN_1,
+	PROTEUS_IGN_2,
+	PROTEUS_IGN_3,
+	PROTEUS_IGN_4,
+	PROTEUS_IGN_5,
+	PROTEUS_IGN_6,
+	PROTEUS_IGN_7,
+	PROTEUS_IGN_8,
+	PROTEUS_IGN_9,
+	PROTEUS_IGN_10,
+	PROTEUS_IGN_11,
+	PROTEUS_IGN_12,
 };
 
 static void setInjectorPins() {

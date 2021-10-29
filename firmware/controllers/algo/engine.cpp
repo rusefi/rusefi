@@ -83,11 +83,10 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_MIATA_NB2;
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
+	case VVT_HONDA_K:
+	case VVT_TOYOTA_4_1:
 	case VVT_FIRST_HALF:
-		return TT_ONE;
 	case VVT_SECOND_HALF:
-		return TT_ONE;
-	case VVT_4_1:
 		return TT_ONE;
 	case VVT_FORD_ST170:
 		return TT_FORD_ST170;

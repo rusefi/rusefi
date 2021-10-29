@@ -279,8 +279,8 @@ void configureHondaK_12_1(TriggerWaveform *s) {
 void configureHondaK_4_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->setTriggerSynchronizationGap(1.61);
-	s->setSecondTriggerSynchronizationGap(0.38);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.11, 2.38);
+	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.28, 0.474);
 
 	int start = 100;
 	int end = 150;

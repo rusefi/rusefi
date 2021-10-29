@@ -130,7 +130,7 @@ void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fsio_setting[14] = 175 - 45;
 	engineConfiguration->fsio_setting[15] = 175 + 45;
 
-	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+	engineConfiguration->vvtPins[0] = GPIOE_3; // VVT solenoid control
 
 	// Mazda VVT settings have nothing to do wit Toyota 2JZ settings but those are a good starting point for settings
 	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);

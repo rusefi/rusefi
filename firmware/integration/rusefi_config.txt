@@ -287,8 +287,8 @@ struct pid_s
 	float dFactor;;"", 1, 0, -10000, 10000, 4
 	int16_t fsio_visible offset;Linear addition to PID logic;"", 1, 0, -1000, 1000, 0
 	int16_t periodMs;PID dTime;"ms", 1, 0, 0, 3000, 0
-	int16_t fsio_visible minValue;Output min value;"", 1, 0, -30000, 30000, 0
-	int16_t maxValue;Output max value;"", 1, 0, -30000, 30000, 0
+	int16_t fsio_visible minValue;Output Min Duty Cycle;"", 1, 0, -30000, 30000, 0
+	int16_t maxValue;Output Max Duty Cycle;"", 1, 0, -30000, 30000, 0
 end_struct
 
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"
@@ -578,7 +578,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "Nissan QR25", "trg62", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "trg67", "trg68", "trg69"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Honda 4+24+1", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "trg43", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "trg47", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "trg52", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "trg59", "Nissan VQ30", "Nissan QR25", "trg62", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "trg68", "trg69"
 
 custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
 	trigger_type_e type;+https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
@@ -1039,7 +1039,7 @@ bit unusedBitHere4
 	uint8_t etbNeutralPosition;+Expected neutral position;"%", 1, 0, 0, 100, 0
 
 ! todo: convert this into a bit setting no need for 4 bytes and we do not expect a third option any day soon
-custom idle_mode_e 4 bits, U32, @OFFSET@, [0:0], "Closed Loop", "Open Loop"
+custom idle_mode_e 4 bits, U32, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Open Loop"
 	idle_mode_e idleMode;See also idleRpmPid;
 
 	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
@@ -1252,7 +1252,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
 	float egoValueShift;EGO value correction;"value", 1, 0, -10, 10, 2 
 
-	output_pin_e[CAM_INPUTS_COUNT iterate] auxPidPins;
+	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;
 
 	spi_device_e cj125SpiDevice;
 	pin_output_mode_e cj125CsPinMode;
@@ -1264,7 +1264,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 	float tChargeMaxRpmMinTps;;"mult", 1, 0, 0, 3, 4
 	float tChargeMaxRpmMaxTps;;"mult", 1, 0, 0, 3, 4   
 
-	fsio_pwm_freq_t[CAMS_PER_BANK iterate] auxPidFrequency;
+	fsio_pwm_freq_t[CAMS_PER_BANK iterate] vvtOutputFrequency;
 	uint8_t fan1ExtraIdle;+Additional idle % when fan #1 is active;"%", 1, 0, 0, 100, 0
 	int alternatorPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 	int unused2260;;"units", 1, 0, -20, 100, 0

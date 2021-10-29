@@ -46,6 +46,7 @@ public class FirmwareFlasher {
         if (dialogResult != JOptionPane.YES_OPTION)
             return;
 
+        wnd.getFrame().setLocationRelativeTo(component);
         wnd.showFrame(TITLE);
 
         ExecHelper.submitAction(() -> doFlashFirmware(wnd, fileName), FirmwareFlasher.class + " extProcessThread");

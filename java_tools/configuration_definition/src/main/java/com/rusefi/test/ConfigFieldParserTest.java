@@ -41,8 +41,8 @@ public class ConfigFieldParserTest {
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
         CharArrayWriter writer = new CharArrayWriter();
-        TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
+        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "; total TS size = 8\n", new String(writer.toCharArray()));
@@ -63,7 +63,7 @@ public class ConfigFieldParserTest {
             public void endFile() {
             }
         };
-        state.readBufferedReader(reader, Arrays.asList(consumer));
+        state.readBufferedReader(reader, Collections.singletonList(consumer));
     }
 
     @Test
@@ -77,8 +77,8 @@ public class ConfigFieldParserTest {
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
         CharArrayWriter writer = new CharArrayWriter();
-        TestTSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
+        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
         assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
@@ -96,7 +96,7 @@ public class ConfigFieldParserTest {
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
 
@@ -157,9 +157,9 @@ public class ConfigFieldParserTest {
 
         CharArrayWriter writer = new CharArrayWriter();
         ReaderState state = new ReaderState();
-        TSProjectConsumer javaFieldsConsumer = new TestTSProjectConsumer(writer, "", state);
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
 
-        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
 
         assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
                 "periodMs2 = scalar, S16, 2, \"ms\", 1, 0, 0, 3000, 0\n" +
@@ -180,7 +180,7 @@ public class ConfigFieldParserTest {
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING);\n" +
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n",
@@ -196,7 +196,7 @@ public class ConfigFieldParserTest {
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final char SD_r = 'r';\n" +
                         "",
@@ -213,7 +213,7 @@ public class ConfigFieldParserTest {
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
                         "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
@@ -259,7 +259,8 @@ public class ConfigFieldParserTest {
                 }
             };
 
-            state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer, fsioSettingsConsumer));
+            state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer,
+                    fsioSettingsConsumer));
 
 
             assertEquals("\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16);\n" +
@@ -416,5 +417,28 @@ public class ConfigFieldParserTest {
 
         assertEquals(512, state.parseSize("2*@@var@@", ""));
         assertEquals(512, state.parseSize("2x@@var@@", ""));
+    }
+
+    @Test
+    public void testStructTooltips() throws IOException {
+        String test = "struct total\n" +
+                "struct pid_s\n" +
+                "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "end_struct\n" +
+                "pid_s pid;comment\n" +
+        "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        CharArrayWriter writer = new CharArrayWriter();
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
+        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
+                "pid_afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
+                "; total TS size = 8\n", new String(writer.toCharArray()));
+        assertEquals(
+                "\tpid_afr_type = \"PID dTime\"\n" +
+                "\tpid_afr_typet = \"PID dTime\"\n", tsProjectConsumer.getSettingContextHelp().toString());
     }
 }

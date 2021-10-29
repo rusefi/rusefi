@@ -882,11 +882,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MRE_M111:
 		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case SUBARUEJ20G_DEFAULTS:
+	case MRE_SECONDARY_CAN:
+		mreSecondaryCan(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case UNUSED101:
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_BOARD_OLD_TEST:
+	case UNUSED30:
 	case MRE_BOARD_NEW_TEST:
 		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1021,7 +1024,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case LADA_KALINA:
+	case UNUSED39:
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;

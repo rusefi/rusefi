@@ -67,10 +67,24 @@ static void handleCanFrame(LuaHandle& ls, CANRxFrame* frame) {
 		return;
 	}
 
-	// TODO: push arguments to function!
-	UNUSED(frame);
+	auto dlc = frame->DLC;
 
-	int status = lua_pcall(ls, 0, 0, 0);
+	// Push bus, ID and DLC
+	lua_pushinteger(ls, 1);	// TODO: support multiple busses!
+	lua_pushinteger(ls, CAN_EID(*frame));
+	lua_pushinteger(ls, dlc);
+
+	// Build table for data
+	lua_newtable(ls);
+	for (size_t i = 0; i < dlc; i++) {
+		lua_pushinteger(ls, frame->data8[i]);
+
+		// index is i+1 because Lua "arrays" (tables) are 1-indexed
+		lua_rawseti(ls, -2, i + 1);
+	}
+
+	// Perform the actual function call
+	int status = lua_pcall(ls, 4, 0, 0);
 
 	if (0 != status) {
 		// error calling CAN rx hook function

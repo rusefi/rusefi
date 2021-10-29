@@ -32,6 +32,11 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         this.state = state;
     }
 
+    // also known as TS tooltips
+    public StringBuilder getSettingContextHelp() {
+        return settingContextHelp;
+    }
+
     private int writeTunerStudio(ConfigField configField, String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
         String nameWithPrefix = prefix + configField.getName();
 
@@ -41,12 +46,12 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             return tsPosition;
         }
 
-        if (configField.getComment() != null && configField.getComment().startsWith(ConfigField.TS_COMMENT_TAG + "")) {
+        ConfigStructure cs = configField.getState().structures.get(configField.getType());
+        if (configField.getComment() != null && configField.getComment().trim().length() > 0 && cs == null) {
             settingContextHelp.append("\t" + nameWithPrefix + " = \"" + configField.getCommentContent() + "\"" + EOL);
         }
         state.variableRegistry.register(nameWithPrefix + "_offset", tsPosition);
 
-        ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
             return writeTunerStudio(cs, prefix + extraPrefix, tsHeader, tsPosition);

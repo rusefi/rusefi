@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Oct 24 17:07:42 EDT 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Oct 28 13:21:58 EDT 2021
 // see also gen_config_and_enums.bat
 
 
@@ -228,8 +228,6 @@ case HONDA_ACCORD_CD_DIP:
   return "HONDA_ACCORD_CD_DIP";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
-case LADA_KALINA:
-  return "LADA_KALINA";
 case MAZDA_626:
   return "MAZDA_626";
 case MAZDA_MIATA_2003_BOARD_TEST:
@@ -252,8 +250,6 @@ case MITSU_4G93:
   return "MITSU_4G93";
 case MRE_BOARD_NEW_TEST:
   return "MRE_BOARD_NEW_TEST";
-case MRE_BOARD_OLD_TEST:
-  return "MRE_BOARD_OLD_TEST";
 case MRE_BODY_CONTROL:
   return "MRE_BODY_CONTROL";
 case MRE_M111:
@@ -270,6 +266,8 @@ case MRE_MIATA_NB2_MAF:
   return "MRE_MIATA_NB2_MAF";
 case MRE_MIATA_NB2_MAP:
   return "MRE_MIATA_NB2_MAP";
+case MRE_SECONDARY_CAN:
+  return "MRE_SECONDARY_CAN";
 case MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
 case NISSAN_PRIMERA:
@@ -298,8 +296,6 @@ case SACHS:
   return "SACHS";
 case SUBARUEG33_DEFAULTS:
   return "SUBARUEG33_DEFAULTS";
-case SUBARUEJ20G_DEFAULTS:
-  return "SUBARUEJ20G_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
 case TEST_108:
@@ -330,10 +326,14 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case UNUSED10:
   return "UNUSED10";
+case UNUSED101:
+  return "UNUSED101";
 case UNUSED25:
   return "UNUSED25";
-case UNUSED5:
-  return "UNUSED5";
+case UNUSED30:
+  return "UNUSED30";
+case UNUSED39:
+  return "UNUSED39";
 case UNUSED_48:
   return "UNUSED_48";
 case UNUSED_50:
@@ -491,6 +491,53 @@ case TT_VVT_MIATA_NB2:
   return "TT_VVT_MIATA_NB2";
 case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
+  }
+ return NULL;
+}
+const char *getTs_command_e(ts_command_e value){
+switch(value) {
+case TS_CLEAR_WARNINGS:
+  return "TS_CLEAR_WARNINGS";
+case TS_COMMAND_1:
+  return "TS_COMMAND_1";
+case TS_COMMAND_11:
+  return "TS_COMMAND_11";
+case TS_COMMAND_12:
+  return "TS_COMMAND_12";
+case TS_COMMAND_13:
+  return "TS_COMMAND_13";
+case TS_COMMAND_14:
+  return "TS_COMMAND_14";
+case TS_COMMAND_15:
+  return "TS_COMMAND_15";
+case TS_COMMAND_16:
+  return "TS_COMMAND_16";
+case TS_COMMAND_4:
+  return "TS_COMMAND_4";
+case TS_COMMAND_5:
+  return "TS_COMMAND_5";
+case TS_COMMAND_9:
+  return "TS_COMMAND_9";
+case TS_DEBUG_MODE:
+  return "TS_DEBUG_MODE";
+case TS_GRAB_PEDAL_UP:
+  return "TS_GRAB_PEDAL_UP";
+case TS_GRAB_PEDAL_WOT:
+  return "TS_GRAB_PEDAL_WOT";
+case TS_GRAB_TPS_CLOSED:
+  return "TS_GRAB_TPS_CLOSED";
+case TS_GRAB_TPS_WOT:
+  return "TS_GRAB_TPS_WOT";
+case TS_IGNITION_CATEGORY:
+  return "TS_IGNITION_CATEGORY";
+case TS_INJECTOR_CATEGORY:
+  return "TS_INJECTOR_CATEGORY";
+case TS_RESET_TLE8888:
+  return "TS_RESET_TLE8888";
+case TS_WRITE_FLASH:
+  return "TS_WRITE_FLASH";
+case TS_X14:
+  return "TS_X14";
   }
  return NULL;
 }

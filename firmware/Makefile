@@ -290,6 +290,7 @@ INCDIR = \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFDIR) \
 	config/engines \
+	config/boards \
 	config \
 	ext \
 	ext_algo \

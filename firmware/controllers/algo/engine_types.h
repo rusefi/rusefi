@@ -28,7 +28,7 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = 3,
-	UNUSED5 = 4,
+	MRE_SECONDARY_CAN = 4,
 
 	NISSAN_PRIMERA = 5,
 	ET_UNUSED_6 = 6,
@@ -88,8 +88,7 @@ UNUSED25 = 25,
 
 	SACHS = 29,
 
-	// LED physical order set for older test fixtures
-	MRE_BOARD_OLD_TEST = 30,
+	UNUSED30 = 30,
 
 	MRE_BOARD_NEW_TEST = 31,
 
@@ -107,7 +106,7 @@ UNUSED25 = 25,
 
 	TOYOTA_JZS147 = 38, // 2JZ-GTE NON VVTi
 
-	LADA_KALINA = 39,
+	UNUSED39 = 39,
 
 	FRANKENSO_BMW_M73_F = 40,
 
@@ -225,7 +224,7 @@ UNUSED25 = 25,
 	 */
 	MINIMAL_PINS = 99,
 	PROMETHEUS_DEFAULTS = 100,
-	SUBARUEJ20G_DEFAULTS = 101,
+	UNUSED101 = 101,
 	VAG_18_TURBO = 102,
 
 	TEST_33816 = 103,
@@ -527,3 +526,28 @@ typedef enum {
 	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
+
+
+typedef enum {
+	TS_DEBUG_MODE = 0,
+	TS_COMMAND_1 = 1,
+	TS_GRAB_TPS_CLOSED = 2,
+	TS_GRAB_TPS_WOT = 3,
+	TS_COMMAND_4 = 4,
+	TS_COMMAND_5 = 5,
+	TS_GRAB_PEDAL_UP = 6,
+	TS_GRAB_PEDAL_WOT = 7,
+	TS_RESET_TLE8888 = 8,
+	TS_COMMAND_9 = 9,
+	TS_WRITE_FLASH = 10,
+	TS_COMMAND_11 = 11,
+	TS_COMMAND_12 = 12,
+	TS_COMMAND_13 = 13,
+	TS_COMMAND_14 = 14,
+	TS_COMMAND_15 = 15,
+	TS_COMMAND_16 = 16,
+	TS_CLEAR_WARNINGS = 17,
+	TS_IGNITION_CATEGORY = 18,
+	TS_INJECTOR_CATEGORY = 19,
+	TS_X14 = 20,
+} ts_command_e;
