@@ -33,3 +33,6 @@
 	path = firmware/controllers/lua/luaaa
 	url = https://github.com/rusefi/luaaa
 	branch = rusefi_prod_2019
+[submodule "firmware/ext/openblt"]
+	path = firmware/ext/openblt
+	url = git@github.com:rusefi/openblt.git
