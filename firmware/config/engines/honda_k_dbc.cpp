@@ -24,6 +24,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 	engineConfiguration->trigger.type = TT_HONDA_K_4_1;
+	engineConfiguration->globalTriggerAngleOffset = 570;
 
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
@@ -42,6 +43,9 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
+	// set cranking_fuel 15
+	engineConfiguration->cranking.baseFuel = 70;
+
 
 #if HW_PROTEUS & EFI_PROD_CODE
 //	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_2; // crank
@@ -49,6 +53,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = PROTEUS_DIGITAL_1; // exhaust
 
 	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1; // exhaust
+	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4; // intake
 
 	engineConfiguration->injectionPins[0] = PROTEUS_LS_8;
 	engineConfiguration->injectionPins[1] = PROTEUS_LS_7;
