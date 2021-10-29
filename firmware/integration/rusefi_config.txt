@@ -264,7 +264,7 @@ custom gppwm_table_t	@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@ array, U08, @OFFSE
 struct stft_cell_cfg_s
 	int8_t maxAdd;;"%", 1, 0, 0, 25, 0
 	int8_t maxRemove;;"%", 1, 0, -25, 0, 0
-	uint16_t timeConstant;;"sec", 0.1, 0, 0.1, 100, 2
+	uint16_t timeConstant;+Time constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.;"sec", 0.1, 0, 0.1, 100, 2
 end_struct
 
 struct stft_s
