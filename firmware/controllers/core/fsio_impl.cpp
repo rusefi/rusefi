@@ -211,7 +211,7 @@ static void setFsioPidOutputPin(const char *indexStr, const char *pinName) {
 		efiPrintf("invalid pin name [%s]", pinName);
 		return;
 	}
-	engineConfiguration->auxPidPins[index] = pin;
+	engineConfiguration->vvtPins[index] = pin;
 	efiPrintf("VVT pid pin #%d [%s]", (index + 1), hwPortname(pin));
 }
 
@@ -510,7 +510,7 @@ static void showFsioInfo(void) {
 	showFsio("fuel", fuelPumpLogic);
 
 	for (int i = 0; i < CAM_INPUTS_COUNT ; i++) {
-		brain_pin_e pin = engineConfiguration->auxPidPins[i];
+		brain_pin_e pin = engineConfiguration->vvtPins[i];
 		if (isBrainPinValid(pin)) {
 			efiPrintf("VVT pid #%d [%s]", (i + 1),
 					hwPortname(pin));
