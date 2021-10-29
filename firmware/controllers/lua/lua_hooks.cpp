@@ -353,7 +353,7 @@ static int lua_canRxAdd(lua_State* l) {
 }
 #endif // EFI_CAN_SUPPORT
 
-struct LuaSensor : public StoredValueSensor {
+struct LuaSensor final : public StoredValueSensor {
 	LuaSensor() : LuaSensor("Invalid") { }
 
 	~LuaSensor() {
@@ -377,7 +377,7 @@ struct LuaSensor : public StoredValueSensor {
 	void showInfo(const char*) const {}
 };
 
-struct LuaPid {
+struct LuaPid final {
 	LuaPid() { }
 
 	LuaPid(float kp, float ki, float kd, float min, float max)
