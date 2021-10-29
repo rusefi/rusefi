@@ -24,6 +24,7 @@ fi
 # rusEFI console does not use .hex files but for Cypress that's the primary binary format
 cp build/rusefi.hex deliver/
 cp build/rusefi.bin deliver/
+cp build/rusefi.srec deliver/
 
 echo "$SCRIPT_NAME: build folder content:"
 ls -l build
