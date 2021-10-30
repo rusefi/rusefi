@@ -9,7 +9,7 @@
 ! The only difference here is that engine_configuration_s area does not support hot modification while tuning tables could
 ! be modified without burning changes
 !
-! See also ../tunerstudio/readme.txt
+! See also ../tunerstudio/readme.md
 !
 ! Q: How to add new fields?
 ! A: Find an 'unused' bit or unused int (usually the huge unusedEnd[] array at the end
