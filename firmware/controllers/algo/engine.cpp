@@ -150,8 +150,9 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(overrideTriggerGaps)) {
 		int gapIndex = 0;
 		for (;gapIndex<=CONFIG(overrideTriggerGaps);gapIndex++) {
-			float gapOverride = CONFIG(triggerGapOverride[gapIndex]);
-			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverride * TRIGGER_GAP_DEVIATION_LOW, gapOverride * TRIGGER_GAP_DEVIATION_HIGH));
+			float gapOverrideFrom = CONFIG(triggerGapOverrideFrom[gapIndex]);
+			float gapOverrideTo = CONFIG(triggerGapOverrideTo[gapIndex]);
+			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
 		}
 		for (;gapIndex<GAP_TRACKING_LENGTH;gapIndex++) {
 			ENGINE(triggerCentral.triggerShape).syncronizationRatioFrom[gapIndex] = NAN;
