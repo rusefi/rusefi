@@ -27,8 +27,8 @@
 MEMORY
 {
     bl          : org = 0x08000000, len = 16k       /* bootloader section */
-    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? 736k : 768k  /* change address & length if bootloader */
-    flash1 (rx) : org = 0x00200000, len = 2M        /* Flash as ITCM */ /* TODO: do we need BOOTLOADER logic here? */
+    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? (768k - 32k) : 768k  /* change address & length if bootloader */
+    flash1 (rx) : org = DEFINED(BOOTLOADER) ? 0x00208000 : 0x00200000, len = DEFINED(BOOTLOADER) ? (2k - 32k) : 2m /* Flash as ITCM */
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
     flash4 (rx) : org = 0x00000000, len = 0

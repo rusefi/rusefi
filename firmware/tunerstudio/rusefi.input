@@ -1512,8 +1512,10 @@ menuDialog = main
 
 	menu = "&Advanced"
         subMenu = boostDialog,          "Boost Control"
-		subMenu = boostPidDialog,        "Closed Loop Boost",    { isBoostControlEnabled && boostType == 1 }
-		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { isBoostControlEnabled }
+		subMenu = boostOpenLoopDialog,	"Boost Control Open Loop",          { isBoostControlEnabled && boostType == 0 }
+		subMenu = boostPidDialog,       "Boost Control Closed Loop PID",    { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostTargetDialog,	"Boost Control Closed Loop Target", { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@etb_function_e_ETB_Wastegate@@ || etbFunctions2 == @@etb_function_e_ETB_Wastegate@@ }
 
 		subMenu = std_separator
 		subMenu = gppwm1, "General Purpose PWM 1"
@@ -1688,6 +1690,9 @@ cmd_test_fsio14 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x0
 cmd_test_fsio15 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0f"
 cmd_test_fsio16 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x10"
 
+cmd_test_debug_mode_tps_accel = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_TPS_ACCEL_16_hex@@"
+cmd_test_debug_mode_wall = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_WALL_WETTING_16_hex@@"
+cmd_test_debug_mode_trigger = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_TRIGGER_COUNTERS_16_hex@@"
 cmd_test_debug_mode_vvt  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_VVT_1_PID_16_hex@@"
 cmd_test_debug_mode_can  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_CAN_16_hex@@"
 
@@ -1911,11 +1916,22 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = triggerConfiguration_gap, "Trigger Gap Override"
 		field = "!This is a pretty advanced feature for when you are debugging trigger synchronization"
+		commandButton = "Enable Trigger debug mode",    cmd_test_debug_mode_trigger
 		field = "Override well known trigger gaps",    overrideTriggerGaps
 		field = gapTrackingLengthOverride,				gapTrackingLengthOverride, { overrideTriggerGaps == 1 }
-		field = "First gap",							triggerGapOverride1, { overrideTriggerGaps == 1 }
-		field = "Second gap",							triggerGapOverride2, { overrideTriggerGaps == 1 }
-		field = "Third gap",							triggerGapOverride3, { overrideTriggerGaps == 1 }
+		field = "First gap from",						triggerGapOverrideFrom1, { overrideTriggerGaps == 1 }
+		field = "First gap to",		    				triggerGapOverrideTo1  , { overrideTriggerGaps == 1 }
+
+		field = "Second gap from",						triggerGapOverrideFrom2, { overrideTriggerGaps == 1 }
+		field = "Second gap to",						triggerGapOverrideTo2,   { overrideTriggerGaps == 1 }
+
+		field = "Third gap from",						triggerGapOverrideFrom3, { overrideTriggerGaps == 1 }
+		field = "Third gap to",	        				triggerGapOverrideTo3,   { overrideTriggerGaps == 1 }
+
+		field = "Gap #4 from",	   						triggerGapOverrideFrom4, { overrideTriggerGaps == 1 }
+		field = "Gap #4 to",	   						triggerGapOverrideTo4,   { overrideTriggerGaps == 1 }
+		field = "Gap #5 from",	   						triggerGapOverrideFrom5, { overrideTriggerGaps == 1 }
+		field = "Gap #5 to",	   						triggerGapOverrideTo5,   { overrideTriggerGaps == 1 }
 
 	dialog = triggerConfiguration_IO,	"Advanced Trigger"
 	    field = "!https://rusefi.com/s/vvt"
@@ -3257,6 +3273,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = TpsAccelPanel, "TPS"
 		field = "Set 'Debug Mode' to see detailed 'TPS acceleration enrichment' diagnostics"
+		commandButton = "Enable TPS2TPS debug mode",      cmd_test_debug_mode_tps_accel
    		field = "Length",						tpsAccelLength
 		field = "Accel Threshold", 				tpsAccelEnrichmentThreshold
 		field = "Decel Threshold", 				tpsDecelEnleanmentThreshold
@@ -3266,6 +3283,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fraction Divisor",				tpsAccelFractionDivisor
 		
 	dialog = WallWettingAccelPanel, "Wall Wetting (alpha version)"
+		commandButton = "Enable Wall Wetting debug mode",      cmd_test_debug_mode_wall
 		field = "evaporation time constant / tau",          wwaeTau
 		field = "added to wall coef / beta",                   wwaeBeta
 	
@@ -3382,21 +3400,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 ;Boost Open Loop
 
-        dialog = boost_left, ""
-                field = "Enable",                           isBoostControlEnabled
-                field = "Control Mode",                     boostType, { isBoostControlEnabled }
+    dialog = boostDialog, ""
+		field = "Enable",                           isBoostControlEnabled
+		field = "Control Mode",                     boostType, { isBoostControlEnabled }
 		field = "Output",							boostControlPin, { isBoostControlEnabled }
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
-
 		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
-         dialog = boostDialog, "", border
-                panel = boost_left, West
-                panel = boostTableTbl, Center
+
+	dialog = boostOpenLoopDialog, "", border
+		panel = boostTableTbl, Center
 
 ;Boost Closed Loop
 
-         dialog = boostPidleft, ""
+         dialog = boostPidDialog, ""
 		 	field = "Enable closed loop above",			minimumBoostClosedLoopMap, { isBoostControlEnabled && boostType == 1 }
             field = "P Gain", 	                         boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
 	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }
@@ -3404,14 +3421,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	        field = "Min adjustment",                 boostPid_minValue, { isBoostControlEnabled && boostType == 1 }
 	        field = "Max adjustment",                 boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }
 
-         dialog = boostTableDialog, "", card
+         dialog = boostTargetDialog, "", card
                 panel = boostTable2Tbl
 
-	dialog = boostPidDialog, "", border
-                panel = boostPidleft, West
-                panel = boostTableDialog, Center
-
 	dialog = boostEtbPid, ""
+	    field = "This PID is controlling how DC motor reaches desired position"
+	    field = ""
 		field = "!This section is for advanced users only!"
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2

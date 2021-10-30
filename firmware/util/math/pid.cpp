@@ -61,6 +61,11 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 
 	previousError = error;
 
+	if (dTime <=0) {
+		warning(CUSTOM_PID_DTERM, "PID: unexpected dTime");
+		return pTerm + getOffset();
+	}
+
 	return pTerm + iTerm + dTerm + getOffset();
 }
 

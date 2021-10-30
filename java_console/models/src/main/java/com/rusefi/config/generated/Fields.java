@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 29 04:18:47 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Oct 30 20:49:21 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1524,7 +1524,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4624;
+	public static final int mainUnusedEnd_offset = 4696;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
 	public static final int manIdlePosition_offset = 608;
@@ -1727,7 +1727,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1773394980;
+	public static final int SIGNATURE_HASH = 1144460033;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2075,24 +2075,42 @@ public class Fields {
 	public static final int triggerCompSensorSatRpm_offset = 4039;
 	public static final int triggerErrorPin_offset = 828;
 	public static final int triggerErrorPinMode_offset = 829;
-	public static final int triggerGapOverride10_offset = 4576;
-	public static final int triggerGapOverride11_offset = 4580;
-	public static final int triggerGapOverride12_offset = 4584;
-	public static final int triggerGapOverride13_offset = 4588;
-	public static final int triggerGapOverride14_offset = 4592;
-	public static final int triggerGapOverride15_offset = 4596;
-	public static final int triggerGapOverride16_offset = 4600;
-	public static final int triggerGapOverride17_offset = 4604;
-	public static final int triggerGapOverride18_offset = 4608;
-	public static final int triggerGapOverride1_offset = 4540;
-	public static final int triggerGapOverride2_offset = 4544;
-	public static final int triggerGapOverride3_offset = 4548;
-	public static final int triggerGapOverride4_offset = 4552;
-	public static final int triggerGapOverride5_offset = 4556;
-	public static final int triggerGapOverride6_offset = 4560;
-	public static final int triggerGapOverride7_offset = 4564;
-	public static final int triggerGapOverride8_offset = 4568;
-	public static final int triggerGapOverride9_offset = 4572;
+	public static final int triggerGapOverrideFrom10_offset = 4576;
+	public static final int triggerGapOverrideFrom11_offset = 4580;
+	public static final int triggerGapOverrideFrom12_offset = 4584;
+	public static final int triggerGapOverrideFrom13_offset = 4588;
+	public static final int triggerGapOverrideFrom14_offset = 4592;
+	public static final int triggerGapOverrideFrom15_offset = 4596;
+	public static final int triggerGapOverrideFrom16_offset = 4600;
+	public static final int triggerGapOverrideFrom17_offset = 4604;
+	public static final int triggerGapOverrideFrom18_offset = 4608;
+	public static final int triggerGapOverrideFrom1_offset = 4540;
+	public static final int triggerGapOverrideFrom2_offset = 4544;
+	public static final int triggerGapOverrideFrom3_offset = 4548;
+	public static final int triggerGapOverrideFrom4_offset = 4552;
+	public static final int triggerGapOverrideFrom5_offset = 4556;
+	public static final int triggerGapOverrideFrom6_offset = 4560;
+	public static final int triggerGapOverrideFrom7_offset = 4564;
+	public static final int triggerGapOverrideFrom8_offset = 4568;
+	public static final int triggerGapOverrideFrom9_offset = 4572;
+	public static final int triggerGapOverrideTo10_offset = 4660;
+	public static final int triggerGapOverrideTo11_offset = 4664;
+	public static final int triggerGapOverrideTo12_offset = 4668;
+	public static final int triggerGapOverrideTo13_offset = 4672;
+	public static final int triggerGapOverrideTo14_offset = 4676;
+	public static final int triggerGapOverrideTo15_offset = 4680;
+	public static final int triggerGapOverrideTo16_offset = 4684;
+	public static final int triggerGapOverrideTo17_offset = 4688;
+	public static final int triggerGapOverrideTo18_offset = 4692;
+	public static final int triggerGapOverrideTo1_offset = 4624;
+	public static final int triggerGapOverrideTo2_offset = 4628;
+	public static final int triggerGapOverrideTo3_offset = 4632;
+	public static final int triggerGapOverrideTo4_offset = 4636;
+	public static final int triggerGapOverrideTo5_offset = 4640;
+	public static final int triggerGapOverrideTo6_offset = 4644;
+	public static final int triggerGapOverrideTo7_offset = 4648;
+	public static final int triggerGapOverrideTo8_offset = 4652;
+	public static final int triggerGapOverrideTo9_offset = 4656;
 	public static final int triggerInputDebugPins1_offset = 1756;
 	public static final int triggerInputDebugPins2_offset = 1757;
 	public static final int triggerInputDebugPins3_offset = 1758;
@@ -2162,7 +2180,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.10.29.all.1773394980";
+	public static final String TS_SIGNATURE = "rusEFI 2021.10.30.all.1144460033";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -3432,24 +3450,24 @@ public class Fields {
 	public static final Field TCU_SOLENOID_MODE5 = Field.create("TCU_SOLENOID_MODE5", 4521, FieldType.INT8, pin_output_mode_e);
 	public static final Field TCU_SOLENOID_MODE6 = Field.create("TCU_SOLENOID_MODE6", 4522, FieldType.INT8, pin_output_mode_e);
 	public static final Field ALIGNMENTFILL_AT_4539 = Field.create("ALIGNMENTFILL_AT_4539", 4539, FieldType.INT8);
-	public static final Field TRIGGERGAPOVERRIDE1 = Field.create("TRIGGERGAPOVERRIDE1", 4540, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE2 = Field.create("TRIGGERGAPOVERRIDE2", 4544, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE3 = Field.create("TRIGGERGAPOVERRIDE3", 4548, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE4 = Field.create("TRIGGERGAPOVERRIDE4", 4552, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE5 = Field.create("TRIGGERGAPOVERRIDE5", 4556, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE6 = Field.create("TRIGGERGAPOVERRIDE6", 4560, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE7 = Field.create("TRIGGERGAPOVERRIDE7", 4564, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE8 = Field.create("TRIGGERGAPOVERRIDE8", 4568, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE9 = Field.create("TRIGGERGAPOVERRIDE9", 4572, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE10 = Field.create("TRIGGERGAPOVERRIDE10", 4576, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE11 = Field.create("TRIGGERGAPOVERRIDE11", 4580, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE12 = Field.create("TRIGGERGAPOVERRIDE12", 4584, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE13 = Field.create("TRIGGERGAPOVERRIDE13", 4588, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE14 = Field.create("TRIGGERGAPOVERRIDE14", 4592, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE15 = Field.create("TRIGGERGAPOVERRIDE15", 4596, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE16 = Field.create("TRIGGERGAPOVERRIDE16", 4600, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE17 = Field.create("TRIGGERGAPOVERRIDE17", 4604, FieldType.FLOAT);
-	public static final Field TRIGGERGAPOVERRIDE18 = Field.create("TRIGGERGAPOVERRIDE18", 4608, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM1 = Field.create("TRIGGERGAPOVERRIDEFROM1", 4540, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM2 = Field.create("TRIGGERGAPOVERRIDEFROM2", 4544, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM3 = Field.create("TRIGGERGAPOVERRIDEFROM3", 4548, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM4 = Field.create("TRIGGERGAPOVERRIDEFROM4", 4552, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM5 = Field.create("TRIGGERGAPOVERRIDEFROM5", 4556, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM6 = Field.create("TRIGGERGAPOVERRIDEFROM6", 4560, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM7 = Field.create("TRIGGERGAPOVERRIDEFROM7", 4564, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM8 = Field.create("TRIGGERGAPOVERRIDEFROM8", 4568, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM9 = Field.create("TRIGGERGAPOVERRIDEFROM9", 4572, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM10 = Field.create("TRIGGERGAPOVERRIDEFROM10", 4576, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM11 = Field.create("TRIGGERGAPOVERRIDEFROM11", 4580, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM12 = Field.create("TRIGGERGAPOVERRIDEFROM12", 4584, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM13 = Field.create("TRIGGERGAPOVERRIDEFROM13", 4588, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM14 = Field.create("TRIGGERGAPOVERRIDEFROM14", 4592, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM15 = Field.create("TRIGGERGAPOVERRIDEFROM15", 4596, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM16 = Field.create("TRIGGERGAPOVERRIDEFROM16", 4600, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM17 = Field.create("TRIGGERGAPOVERRIDEFROM17", 4604, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDEFROM18 = Field.create("TRIGGERGAPOVERRIDEFROM18", 4608, FieldType.FLOAT);
 	public static final Field FUELTRIM1 = Field.create("FUELTRIM1", 4612, FieldType.INT8);
 	public static final Field FUELTRIM2 = Field.create("FUELTRIM2", 4613, FieldType.INT8);
 	public static final Field FUELTRIM3 = Field.create("FUELTRIM3", 4614, FieldType.INT8);
@@ -3462,6 +3480,24 @@ public class Fields {
 	public static final Field FUELTRIM10 = Field.create("FUELTRIM10", 4621, FieldType.INT8);
 	public static final Field FUELTRIM11 = Field.create("FUELTRIM11", 4622, FieldType.INT8);
 	public static final Field FUELTRIM12 = Field.create("FUELTRIM12", 4623, FieldType.INT8);
+	public static final Field TRIGGERGAPOVERRIDETO1 = Field.create("TRIGGERGAPOVERRIDETO1", 4624, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO2 = Field.create("TRIGGERGAPOVERRIDETO2", 4628, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO3 = Field.create("TRIGGERGAPOVERRIDETO3", 4632, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO4 = Field.create("TRIGGERGAPOVERRIDETO4", 4636, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO5 = Field.create("TRIGGERGAPOVERRIDETO5", 4640, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO6 = Field.create("TRIGGERGAPOVERRIDETO6", 4644, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO7 = Field.create("TRIGGERGAPOVERRIDETO7", 4648, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO8 = Field.create("TRIGGERGAPOVERRIDETO8", 4652, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO9 = Field.create("TRIGGERGAPOVERRIDETO9", 4656, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO10 = Field.create("TRIGGERGAPOVERRIDETO10", 4660, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO11 = Field.create("TRIGGERGAPOVERRIDETO11", 4664, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO12 = Field.create("TRIGGERGAPOVERRIDETO12", 4668, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO13 = Field.create("TRIGGERGAPOVERRIDETO13", 4672, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO14 = Field.create("TRIGGERGAPOVERRIDETO14", 4676, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO15 = Field.create("TRIGGERGAPOVERRIDETO15", 4680, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO16 = Field.create("TRIGGERGAPOVERRIDETO16", 4684, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO17 = Field.create("TRIGGERGAPOVERRIDETO17", 4688, FieldType.FLOAT);
+	public static final Field TRIGGERGAPOVERRIDETO18 = Field.create("TRIGGERGAPOVERRIDETO18", 4692, FieldType.FLOAT);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, 120, FieldType.STRING);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
@@ -4524,24 +4560,24 @@ public class Fields {
 	TCU_SOLENOID_MODE5,
 	TCU_SOLENOID_MODE6,
 	ALIGNMENTFILL_AT_4539,
-	TRIGGERGAPOVERRIDE1,
-	TRIGGERGAPOVERRIDE2,
-	TRIGGERGAPOVERRIDE3,
-	TRIGGERGAPOVERRIDE4,
-	TRIGGERGAPOVERRIDE5,
-	TRIGGERGAPOVERRIDE6,
-	TRIGGERGAPOVERRIDE7,
-	TRIGGERGAPOVERRIDE8,
-	TRIGGERGAPOVERRIDE9,
-	TRIGGERGAPOVERRIDE10,
-	TRIGGERGAPOVERRIDE11,
-	TRIGGERGAPOVERRIDE12,
-	TRIGGERGAPOVERRIDE13,
-	TRIGGERGAPOVERRIDE14,
-	TRIGGERGAPOVERRIDE15,
-	TRIGGERGAPOVERRIDE16,
-	TRIGGERGAPOVERRIDE17,
-	TRIGGERGAPOVERRIDE18,
+	TRIGGERGAPOVERRIDEFROM1,
+	TRIGGERGAPOVERRIDEFROM2,
+	TRIGGERGAPOVERRIDEFROM3,
+	TRIGGERGAPOVERRIDEFROM4,
+	TRIGGERGAPOVERRIDEFROM5,
+	TRIGGERGAPOVERRIDEFROM6,
+	TRIGGERGAPOVERRIDEFROM7,
+	TRIGGERGAPOVERRIDEFROM8,
+	TRIGGERGAPOVERRIDEFROM9,
+	TRIGGERGAPOVERRIDEFROM10,
+	TRIGGERGAPOVERRIDEFROM11,
+	TRIGGERGAPOVERRIDEFROM12,
+	TRIGGERGAPOVERRIDEFROM13,
+	TRIGGERGAPOVERRIDEFROM14,
+	TRIGGERGAPOVERRIDEFROM15,
+	TRIGGERGAPOVERRIDEFROM16,
+	TRIGGERGAPOVERRIDEFROM17,
+	TRIGGERGAPOVERRIDEFROM18,
 	FUELTRIM1,
 	FUELTRIM2,
 	FUELTRIM3,
@@ -4554,6 +4590,24 @@ public class Fields {
 	FUELTRIM10,
 	FUELTRIM11,
 	FUELTRIM12,
+	TRIGGERGAPOVERRIDETO1,
+	TRIGGERGAPOVERRIDETO2,
+	TRIGGERGAPOVERRIDETO3,
+	TRIGGERGAPOVERRIDETO4,
+	TRIGGERGAPOVERRIDETO5,
+	TRIGGERGAPOVERRIDETO6,
+	TRIGGERGAPOVERRIDETO7,
+	TRIGGERGAPOVERRIDETO8,
+	TRIGGERGAPOVERRIDETO9,
+	TRIGGERGAPOVERRIDETO10,
+	TRIGGERGAPOVERRIDETO11,
+	TRIGGERGAPOVERRIDETO12,
+	TRIGGERGAPOVERRIDETO13,
+	TRIGGERGAPOVERRIDETO14,
+	TRIGGERGAPOVERRIDETO15,
+	TRIGGERGAPOVERRIDETO16,
+	TRIGGERGAPOVERRIDETO17,
+	TRIGGERGAPOVERRIDETO18,
 	WARNING_MESSAGE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTTABLECLOSEDLOOP,

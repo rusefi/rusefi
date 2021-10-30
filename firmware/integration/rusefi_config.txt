@@ -9,7 +9,7 @@
 ! The only difference here is that engine_configuration_s area does not support hot modification while tuning tables could
 ! be modified without burning changes
 !
-! See also ../tunerstudio/readme.txt
+! See also ../tunerstudio/readme.md
 !
 ! Q: How to add new fields?
 ! A: Find an 'unused' bit or unused int (usually the huge unusedEnd[] array at the end
@@ -264,7 +264,7 @@ custom gppwm_table_t	@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@ array, U08, @OFFSE
 struct stft_cell_cfg_s
 	int8_t maxAdd;;"%", 1, 0, 0, 25, 0
 	int8_t maxRemove;;"%", 1, 0, -25, 0, 0
-	uint16_t timeConstant;;"sec", 0.1, 0, 0.1, 100, 2
+	uint16_t timeConstant;+Time constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.;"sec", 0.1, 0, 0.1, 100, 2
 end_struct
 
 struct stft_s
@@ -1476,11 +1476,12 @@ tChargeMode_e tChargeMode;
 
 	int8_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1, 0, -30, 0, 2
 
-	float[GAP_TRACKING_LENGTH iterate] triggerGapOverride;;"ratio", 1, 0, 0, 20, 2
+	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideFrom;;"from", 1, 0, 0, 20, 2
 
 int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACKING_DIV@@, 0, -25, 25, 2
 
-	int[344] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideTo;;"to", 1, 0, 0, 20, 2
+	int[326] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct

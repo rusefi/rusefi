@@ -791,8 +791,9 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		changed |= isConfigurationChanged(vvtOffsets[camIndex]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
-		changed |= isConfigurationChanged(triggerGapOverride[i]);
+	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverrideFrom)); i++) {
+		changed |= isConfigurationChanged(triggerGapOverrideFrom[i]);
+		changed |= isConfigurationChanged(triggerGapOverrideTo[i]);
 	}
 
 	for (size_t i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {
