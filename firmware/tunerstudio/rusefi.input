@@ -1512,10 +1512,10 @@ menuDialog = main
 
 	menu = "&Advanced"
         subMenu = boostDialog,          "Boost Control"
-		subMenu = boostOpenLoopDialog,	"Open Loop", { isBoostControlEnabled }
-		subMenu = boostPidDialog,        "Closed Loop",    { isBoostControlEnabled && boostType == 1 }
-		subMenu = boostTargetDialog,	"Boost Target", { isBoostControlEnabled }
-		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { isBoostControlEnabled }
+		subMenu = boostOpenLoopDialog,	"Boost Control Open Loop",          { isBoostControlEnabled && boostType == 0 }
+		subMenu = boostPidDialog,       "Boost Control Closed Loop PID",    { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostTargetDialog,	"Boost Control Closed Loop Target", { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@etb_function_e_ETB_Wastegate@@ || etbFunctions2 == @@etb_function_e_ETB_Wastegate@@ }
 
 		subMenu = std_separator
 		subMenu = gppwm1, "General Purpose PWM 1"
@@ -3414,6 +3414,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
                 panel = boostTable2Tbl
 
 	dialog = boostEtbPid, ""
+	    field = "This PID is controlling how DC motor reaches desired position"
+	    field = ""
 		field = "!This section is for advanced users only!"
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2
