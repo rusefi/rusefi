@@ -3,6 +3,8 @@
 # see setup_linux_environment.sh but Windows is also totally fine
 #
 
+.PHONY: openblt
+
 CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
@@ -397,6 +399,12 @@ ULIBS = -lm --specs=nano.specs
 ##############################################################################
 
 include $(RULESFILE)
+
+openblt:
+	make -C $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/openblt/
+
+openblt_clean:
+	make -C $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/openblt/ clean
 
 # Enable precompiled header
 include rusefi_pch.mk
