@@ -35,4 +35,4 @@
 	branch = rusefi_prod_2019
 [submodule "firmware/ext/openblt"]
 	path = firmware/ext/openblt
-	url = git@github.com:rusefi/openblt.git
+	url = https://github.com/rusefi/openblt
