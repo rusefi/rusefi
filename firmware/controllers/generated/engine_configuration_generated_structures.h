@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 29 19:50:48 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Oct 30 14:49:13 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3988,20 +3988,25 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_4539[1];
 	/**
-	ratio
+	from
 	 * offset 4540
 	 */
-	float triggerGapOverride[GAP_TRACKING_LENGTH];
+	float triggerGapOverrideFrom[GAP_TRACKING_LENGTH];
 	/**
 	Percent
 	 * offset 4612
 	 */
 	int8_t fuelTrim[MAX_CYLINDER_COUNT];
 	/**
-	units
+	to
 	 * offset 4624
 	 */
-	int mainUnusedEnd[344];
+	float triggerGapOverrideTo[GAP_TRACKING_LENGTH];
+	/**
+	units
+	 * offset 4696
+	 */
+	int mainUnusedEnd[326];
 	/** total size 6000*/
 };
 
@@ -4396,4 +4401,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Oct 29 19:50:48 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Oct 30 14:49:13 UTC 2021
