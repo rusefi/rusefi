@@ -135,7 +135,9 @@
 /** \brief Configure the size of the default memory device (typically flash EEPROM). */
 #define BOOT_NVM_SIZE_KB                (2048)
 /** \brief Enable/disable hooks functions to override the user program checksum handling. */
-#define BOOT_NVM_CHECKSUM_HOOKS_ENABLE  (0)
+/* WARNING: until NvmVerifyChecksumHook is not implemented in hooks.c this will fully
+ * disable user FW check before jumping to it. This can (and will) cause problems */
+#define BOOT_NVM_CHECKSUM_HOOKS_ENABLE  (1)
 
 
 /****************************************************************************************
