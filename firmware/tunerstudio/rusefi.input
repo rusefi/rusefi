@@ -1512,8 +1512,10 @@ menuDialog = main
 
 	menu = "&Advanced"
         subMenu = boostDialog,          "Boost Control"
-		subMenu = boostPidDialog,        "Closed Loop Boost",    { isBoostControlEnabled && boostType == 1 }
-		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { isBoostControlEnabled }
+		subMenu = boostOpenLoopDialog,	"Boost Control Open Loop",          { isBoostControlEnabled && boostType == 0 }
+		subMenu = boostPidDialog,       "Boost Control Closed Loop PID",    { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostTargetDialog,	"Boost Control Closed Loop Target", { isBoostControlEnabled && boostType == 1 }
+		subMenu = boostEtbPid,			"ETB-style Wastegate Actuator", { etbFunctions1 == @@etb_function_e_ETB_Wastegate@@ || etbFunctions2 == @@etb_function_e_ETB_Wastegate@@ }
 
 		subMenu = std_separator
 		subMenu = gppwm1, "General Purpose PWM 1"
@@ -1916,6 +1918,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "First gap",							triggerGapOverride1, { overrideTriggerGaps == 1 }
 		field = "Second gap",							triggerGapOverride2, { overrideTriggerGaps == 1 }
 		field = "Third gap",							triggerGapOverride3, { overrideTriggerGaps == 1 }
+		field = "Gap #4",	    						triggerGapOverride4, { overrideTriggerGaps == 1 }
+		field = "Gap #5",	    						triggerGapOverride5, { overrideTriggerGaps == 1 }
+		field = "Gap #6",	    						triggerGapOverride6, { overrideTriggerGaps == 1 }
+		field = "Gap #7",	    						triggerGapOverride7, { overrideTriggerGaps == 1 }
+		field = "Gap #8",	    						triggerGapOverride8, { overrideTriggerGaps == 1 }
 
 	dialog = triggerConfiguration_IO,	"Advanced Trigger"
 	    field = "!https://rusefi.com/s/vvt"
@@ -3382,21 +3389,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 ;Boost Open Loop
 
-        dialog = boost_left, ""
-                field = "Enable",                           isBoostControlEnabled
-                field = "Control Mode",                     boostType, { isBoostControlEnabled }
+    dialog = boostDialog, ""
+		field = "Enable",                           isBoostControlEnabled
+		field = "Control Mode",                     boostType, { isBoostControlEnabled }
 		field = "Output",							boostControlPin, { isBoostControlEnabled }
 		field = "Output Mode",                      boostControlPinMode, { isBoostControlEnabled }
 		field = "Frequency",						boostPwmFrequency, { isBoostControlEnabled }
-
 		field = "Safe duty cycle",					boostControlSafeDutyCycle, { isBoostControlEnabled }
-         dialog = boostDialog, "", border
-                panel = boost_left, West
-                panel = boostTableTbl, Center
+
+	dialog = boostOpenLoopDialog, "", border
+		panel = boostTableTbl, Center
 
 ;Boost Closed Loop
 
-         dialog = boostPidleft, ""
+         dialog = boostPidDialog, ""
 		 	field = "Enable closed loop above",			minimumBoostClosedLoopMap, { isBoostControlEnabled && boostType == 1 }
             field = "P Gain", 	                         boostPid_pFactor, { isBoostControlEnabled && boostType == 1 }
 	        field = "I Gain",                            boostPid_iFactor, { isBoostControlEnabled && boostType == 1 }
@@ -3404,14 +3410,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	        field = "Min adjustment",                 boostPid_minValue, { isBoostControlEnabled && boostType == 1 }
 	        field = "Max adjustment",                 boostPid_maxValue, { isBoostControlEnabled && boostType == 1 }
 
-         dialog = boostTableDialog, "", card
+         dialog = boostTargetDialog, "", card
                 panel = boostTable2Tbl
 
-	dialog = boostPidDialog, "", border
-                panel = boostPidleft, West
-                panel = boostTableDialog, Center
-
 	dialog = boostEtbPid, ""
+	    field = "This PID is controlling how DC motor reaches desired position"
+	    field = ""
 		field = "!This section is for advanced users only!"
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2

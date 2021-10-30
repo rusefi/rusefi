@@ -476,6 +476,19 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultIgnition(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setDefaultCranking(PASS_CONFIG_PARAMETER_SIGNATURE);
 
+	// VVT closed loop, totally random values!
+	engineConfiguration->auxPid[0].pFactor = 2;
+	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 33;
+	engineConfiguration->auxPid[0].minValue = 10;
+	engineConfiguration->auxPid[0].maxValue = 90;
+
+
+	engineConfiguration->auxPid[1].minValue = 10;
+	engineConfiguration->auxPid[2].maxValue = 90;
+
+
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
 #endif /* EFI_IDLE_CONTROL */
