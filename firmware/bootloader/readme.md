@@ -29,6 +29,11 @@ Use this code on your own risk!
 
 *** Developers Section ***
 
+Problem statement:
+ - UART + bluetooth bootloader for Prometheus board which does not have USB
+ - future plan: firmware from SD card
+ - future plan: some sort of settings reset mechanism
+
 How it works, in two words:
 - The bootloader requires a separate makefile because it's a separate binary executable with its own project settings and fileset.
 - Start firmware/bootloader/compile_bootloader.bat to compile the bootloader code. Use it only if bootloader modification is required.
