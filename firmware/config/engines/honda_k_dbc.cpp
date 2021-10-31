@@ -28,6 +28,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
+	engineConfiguration->vvtOffsets[0] = -41;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->injector.flow = 270;
