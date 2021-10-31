@@ -153,7 +153,8 @@ void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	accumulatedValue += maxExtraPerPeriod;
 
 	// update the accumulated value every 'Period' engine cycles
-	if (--cycleCnt <= 0) {
+	isTimeToResetAccumulator = --cycleCnt <= 0;
+	if (isTimeToResetAccumulator) {
 		maxExtraPerPeriod = 0;
 
 		// we've injected this portion during the cycle, so we set what's left for the next cycle
@@ -163,8 +164,10 @@ void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// it's an infinitely convergent series, so we set a limit at some point
 		// (also make sure that accumulatedValue is positive, for safety)
 		static const floatms_t smallEpsilon = 0.001f;
-		if (accumulatedValue < smallEpsilon)
+		belowEpsilon = accumulatedValue < smallEpsilon
+		if (belowEpsilon) {
 			accumulatedValue = 0;
+		}
 
 		// reset the counter
 		cycleCnt = CONFIG(tpsAccelFractionPeriod);
