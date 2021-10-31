@@ -239,8 +239,6 @@ void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->vvtTable1LoadBins, vvt18fsioLoadBins);
 	copyTable(config->vvtTable1, fsio_table_vvt_target);
 
-	engineConfiguration->vvtOutputFrequency[0] = 300; // VVT solenoid control
-
 	// VVT closed loop
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
