@@ -4,12 +4,11 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.AcControl;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
-import com.rusefi.enums.live_data_e;
 import com.rusefi.livedata.LiveDataParserPanel;
+import com.rusefi.livedata.LiveDataView;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
@@ -48,10 +47,9 @@ public class FormulasPane {
     public FormulasPane(UIContext uiContext) {
         this.uiContext = uiContext;
 
-        LiveDataParserPanel livePanel = LiveDataParserPanel.getLiveDataParserPanel(uiContext, live_data_e.LDS_AC_CONTROL, AcControl.VALUES, "ac_control.cpp");
-
         JPanel vertical = new JPanel(new VerticalFlowLayout());
-        vertical.add(livePanel.getContent());
+        for (LiveDataView view : LiveDataView.values())
+            vertical.add(LiveDataParserPanel.createLiveDataParserContent(uiContext, view));
         vertical.add(formulaProxy);
 
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
