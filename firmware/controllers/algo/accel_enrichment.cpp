@@ -164,7 +164,7 @@ void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// it's an infinitely convergent series, so we set a limit at some point
 		// (also make sure that accumulatedValue is positive, for safety)
 		static const floatms_t smallEpsilon = 0.001f;
-		belowEpsilon = accumulatedValue < smallEpsilon
+		belowEpsilon = accumulatedValue < smallEpsilon;
 		if (belowEpsilon) {
 			accumulatedValue = 0;
 		}
