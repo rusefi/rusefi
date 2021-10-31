@@ -32,4 +32,4 @@
 [submodule "firmware/controllers/lua/luaaa"]
 	path = firmware/controllers/lua/luaaa
 	url = https://github.com/rusefi/luaaa
-	branch = rusefi_prod_2019
+	branch = lua-2021-10-28
