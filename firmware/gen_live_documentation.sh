@@ -11,6 +11,9 @@ bash gen_live_documentation_one_file.sh pid_state PidState.java util/math
 bash gen_live_documentation_one_file.sh engine_state EngineState.java controllers/algo
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 
+bash gen_live_documentation_one_file.sh tps_accel_state TpsAccelState.java controllers/algo
+[ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
+
 bash gen_live_documentation_one_file.sh trigger_central TriggerCentral.java controllers/trigger
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 
