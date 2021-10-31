@@ -2,12 +2,12 @@
  * @file boards/skeleton/board_configuration.cpp
  *
  *
- * @brief Example configuration defaults for a RusEFI board
+ * @brief Example configuration defaults for a rusEFI board
  *
  * @author Donald Becker November 2019
  * @author Hugo Becker November 2019
  *
- * This file is an example of board-specific firmware for RusEFI.
+ * This file is an example of board-specific firmware for rusEFI.
  * It contains the unique code need for the setup of a specific board.
  * 
  * This file must contain the configuration for the hard-wired aspects
