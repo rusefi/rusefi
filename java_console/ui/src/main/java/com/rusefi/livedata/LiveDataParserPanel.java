@@ -7,7 +7,6 @@ import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.live_data_e;
-import com.rusefi.io.LinkConnector;
 import com.rusefi.livedata.generated.CPP14Lexer;
 import com.rusefi.livedata.generated.CPP14Parser;
 import com.rusefi.livedata.generated.CPP14ParserBaseListener;
@@ -24,14 +23,12 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -232,8 +229,14 @@ public class LiveDataParserPanel {
         }, tree);
     }
 
-    @Nullable
-    public static LiveDataParserPanel getLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
+    @NotNull
+    public static JPanel createLiveDataParserContent(UIContext uiContext, LiveDataView view) {
+        LiveDataParserPanel panel = createLiveDataParserPanel(uiContext, view.getLiveDataE(), view.getValues(), view.getFileName());
+        return panel.getContent();
+    }
+
+    @NotNull
+    public static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
         AtomicReference<byte[]> reference = new AtomicReference<>();
 
         LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, new VariableValueSource() {

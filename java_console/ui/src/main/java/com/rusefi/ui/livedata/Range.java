@@ -8,8 +8,14 @@ public class Range {
     private final int stop;
 
     public Range(int start, int stop) {
+        if (start < 0)
+            throw new IllegalArgumentException("Negative start " + start);
+        if (stop < 0)
+            throw new IllegalArgumentException("Negative stop " + stop);
         this.start = start;
         this.stop = stop;
+        if (getLength() < 0)
+            throw new IllegalArgumentException("Negative length " + start + "/" + stop);
     }
 
     public Range(Token start, Token stop) {
@@ -31,5 +37,13 @@ public class Range {
 
     public int getLength() {
         return stop - start;
+    }
+
+    @Override
+    public String toString() {
+        return "Range{" +
+                "start=" + start +
+                ", stop=" + stop +
+                '}';
     }
 }
