@@ -143,9 +143,6 @@ public class StartupFrame {
             ProgramSelector selector = new ProgramSelector(comboPorts);
             realHardwarePanel.add(selector.getControl(), "right, wrap");
 
-
-//            realHardwarePanel.add(new DfuFlasher(comboPorts).getAutoButton());
-//            realHardwarePanel.add(new DfuFlasher(comboPorts).getManualButton());
             // for F7 builds we just build one file at the moment
 //            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
             if (new File(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE).exists()) {
@@ -153,7 +150,12 @@ public class StartupFrame {
                 FirmwareFlasher firmwareFlasher = new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "ST-LINK Program Firmware/NoAsserts", "Please only use this version if you know that you need this version");
                 realHardwarePanel.add(firmwareFlasher.getButton(), "right, wrap");
             }
-            realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
+            JComponent updateHelp = ProgramSelector.createHelpButton();
+
+            realHardwarePanel.add(updateHelp, "right, wrap");
+
+            // st-link is pretty advanced use-case, real humans do not have st-link as of 2021
+            //realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
         }
 
         SerialPortScanner.INSTANCE.listeners.add(() -> SwingUtilities.invokeLater(this::applyKnownPorts));
