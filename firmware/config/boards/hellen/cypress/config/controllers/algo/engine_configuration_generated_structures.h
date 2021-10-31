@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Oct 30 20:49:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Oct 31 02:07:09 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2926,11 +2926,13 @@ struct engine_configuration_s {
 	 */
 	uint32_t uartConsoleSerialSpeed;
 	/**
+	 * For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 	roc
 	 * offset 2080
 	 */
 	float tpsDecelEnleanmentThreshold;
 	/**
+	 * Magic multiplier, we multiply delta of TPS and get fuel squirt duration
 	coeff
 	 * offset 2084
 	 */
@@ -4401,4 +4403,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sat Oct 30 20:49:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Oct 31 02:07:09 UTC 2021
