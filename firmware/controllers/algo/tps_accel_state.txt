@@ -1,23 +1,29 @@
 struct_no_prefix tps_accel_state_s
+
+custom percent_t 4 bits, F32, @OFFSET@, [0:2], "not important"
+
 percent_t tpsFrom;
 percent_t tpsTo;
 percent_t deltaTps;
 
 	floatms_t extraFuel;
-	float valueFromTable = 0;
+	float valueFromTable;
 
 bit isAboveAccelThreshold;
 bit isBelowDecelThreshold;
+bit isTimeToResetAccumulator
+bit isFractionalEnrichment
 
+float fractionalInjFuel
 
 !	/**
 !	 * Used for Fractional TPS enrichment. 
 !	 */
-	floatms_t accumulatedValue;
-	floatms_t maxExtraPerCycle;
-	floatms_t maxExtraPerPeriod;
-	floatms_t maxInjectedPerPeriod;
-	cycleCnt = 0;
+	floatms_t accumulatedValue
+	floatms_t maxExtraPerCycle
+	floatms_t maxExtraPerPeriod
+	floatms_t maxInjectedPerPeriod
+	int cycleCnt
 
 
 end_struct
