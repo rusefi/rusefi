@@ -183,6 +183,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
 	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
 	hellenWbo();
 }
 
