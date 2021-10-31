@@ -40,7 +40,12 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
  * this panel shows a live view of rusEFI firmware C/C++ code
  */
 public class LiveDataParserPanel {
+    private static final String CONFIG_MAGIC_PREFIX = "CONFIG";
     private static final Logging log = getLogging(LiveDataParserPanel.class);
+
+    {
+//        log.configureDebugEnabled(true);
+    }
 
     private final JPanel content = new JPanel(new BorderLayout());
     private ParseResult parseResult = ParseResult.VOID;
@@ -181,7 +186,7 @@ public class LiveDataParserPanel {
 
         for (int i = 0; i < allTerminals.size() - 3; i++) {
 
-            if (allTerminals.get(i).getText().equals("CONFIG") &&
+            if (allTerminals.get(i).getText().equals(CONFIG_MAGIC_PREFIX) &&
                     allTerminals.get(i + 1).getText().equals("(") &&
                     allTerminals.get(i + 3).getText().equals(")")
             ) {
@@ -236,7 +241,7 @@ public class LiveDataParserPanel {
     }
 
     @NotNull
-    public static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
+    private static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
         AtomicReference<byte[]> reference = new AtomicReference<>();
 
         LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, new VariableValueSource() {
@@ -245,9 +250,15 @@ public class LiveDataParserPanel {
                 byte[] bytes = reference.get();
                 if (bytes == null)
                     return null;
-                Field f = Field.findField(values, "", name);
+                Field f = Field.findFieldOrNull(values, "", name);
+                if (f == null) {
+                    log.error("BAD condition, should be variable: " + name);
+                    return null;
+                }
                 int number = f.getValue(new ConfigurationImage(bytes)).intValue();
-//                System.out.println("getValue " + f);
+                if (log.debugEnabled()) {
+                    log.debug("getValue(" + name + "): " + number);
+                }
                 // convert Number to Boolean
                 return number != 0;
             }
@@ -256,6 +267,8 @@ public class LiveDataParserPanel {
         refreshActionsMap.put(live_data_e, new RefreshActions() {
             @Override
             public void refresh(BinaryProtocol bp, byte[] response) {
+                if (log.debugEnabled())
+                    log.debug("Got data " + response.length + " bytes");
                 reference.set(response);
                 livePanel.refresh();
             }
