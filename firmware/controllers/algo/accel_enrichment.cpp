@@ -26,35 +26,6 @@
 
 static tps_tps_Map3D_t tpsTpsMap;
 
-int AccelEnrichment::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-
-	int len = minI(cb.getSize(), cb.getCount());
-	if (len < 2)
-		return 0;
-	int ci = cb.currentIndex - 1;
-	float maxValue = cb.get(ci) - cb.get(ci - 1);
-	int resultIndex = ci;
-
-	// todo: 'get' method is maybe a bit heavy because of the branching
-	// todo: this could be optimized with some careful magic
-
-	for (int i = 1; i<len - 1;i++) {
-		float v = cb.get(ci - i) - cb.get(ci - i - 1);
-		if (v > maxValue) {
-			maxValue = v;
-			resultIndex = ci - i;
-		}
-	}
-
-	return resultIndex;
-}
-
-float AccelEnrichment::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	return (cb.get(index) - (cb.get(index - 1)));
-}
-
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
 floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::GetTpsEnrichment);
@@ -116,31 +87,6 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATUR
 	return extraFuel;
 }
 
-void AccelEnrichment::resetAE() {
-	cb.clear();
-}
-
-void TpsAccelEnrichment::resetAE() {
-	AccelEnrichment::resetAE();
-	resetFractionValues();
-}
-
-void TpsAccelEnrichment::resetFractionValues() {
-	accumulatedValue = 0;
-	maxExtraPerCycle = 0;
-	maxExtraPerPeriod = 0;
-	maxInjectedPerPeriod = 0;
-	cycleCnt = 0;
-}
-
-void AccelEnrichment::setLength(int length) {
-	cb.setSize(length);
-}
-
-void AccelEnrichment::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	cb.add(currentValue);
-}
-
 void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// we update values in handleFuel() directly by calling onNewValue()
 
@@ -172,6 +118,60 @@ void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// reset the counter
 		cycleCnt = CONFIG(tpsAccelFractionPeriod);
 	}
+}
+
+int AccelEnrichment::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+
+	int len = minI(cb.getSize(), cb.getCount());
+	if (len < 2)
+		return 0;
+	int ci = cb.currentIndex - 1;
+	float maxValue = cb.get(ci) - cb.get(ci - 1);
+	int resultIndex = ci;
+
+	// todo: 'get' method is maybe a bit heavy because of the branching
+	// todo: this could be optimized with some careful magic
+
+	for (int i = 1; i<len - 1;i++) {
+		float v = cb.get(ci - i) - cb.get(ci - i - 1);
+		if (v > maxValue) {
+			maxValue = v;
+			resultIndex = ci - i;
+		}
+	}
+
+	return resultIndex;
+}
+
+float AccelEnrichment::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	return (cb.get(index) - (cb.get(index - 1)));
+}
+
+void AccelEnrichment::resetAE() {
+	cb.clear();
+}
+
+void TpsAccelEnrichment::resetAE() {
+	AccelEnrichment::resetAE();
+	resetFractionValues();
+}
+
+void TpsAccelEnrichment::resetFractionValues() {
+	accumulatedValue = 0;
+	maxExtraPerCycle = 0;
+	maxExtraPerPeriod = 0;
+	maxInjectedPerPeriod = 0;
+	cycleCnt = 0;
+}
+
+void AccelEnrichment::setLength(int length) {
+	cb.setSize(length);
+}
+
+void AccelEnrichment::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	cb.add(currentValue);
 }
 
 AccelEnrichment::AccelEnrichment() {
