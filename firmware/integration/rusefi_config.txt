@@ -1195,8 +1195,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
-	float tpsDecelEnleanmentThreshold;;"roc", 1, 0, 0, 200, 3
-	float tpsDecelEnleanmentMultiplier;;"coeff", 1, 0, 0, 200, 3
+	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 3
+	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 3
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff", 1, 0, 0, 200, 3
 	debug_mode_e debugMode;+See http://rusefi.com/s/debugmode\n\nset debug_mode X
 
