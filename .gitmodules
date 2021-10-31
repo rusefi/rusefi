@@ -36,3 +36,4 @@
 [submodule "firmware/ext/openblt"]
 	path = firmware/ext/openblt
 	url = https://github.com/rusefi/openblt
+	branch = rusefi_prod
