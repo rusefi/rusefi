@@ -18,7 +18,7 @@ public:
 	// pause between steps
 	void pause(int divisor = 1) const;
 	// pause and enter the idle mode (less current consumption)
-	virtual void sleep(void);
+	virtual void sleep();
 
 protected:
 	void setReactionTime(float ms);
@@ -51,7 +51,7 @@ public:
 
     bool step(bool positive) override;
 
-	void sleep(void) override;
+	void sleep() override;
 
 protected:
 	bool update(float dutyMult);

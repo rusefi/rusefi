@@ -101,7 +101,7 @@ bool DualHBridgeStepper::update(float dutyMult) {
 	return true;
 }
 
-void DualHBridgeStepper::sleep(void) {
+void DualHBridgeStepper::sleep() {
 	float sleepingCoef = minI(CONFIG(stepperMinDutyCycle), CONFIG(stepperMaxDutyCycle)) * phaseDutyCycleDivisor;
 	update(sleepingCoef);
 	pause();

@@ -1,9 +1,7 @@
+#include "pch.h"
+
 #include "redundant_sensor.h"
 #include "redundant_ford_tps.h"
-
-#include <gtest/gtest.h>
-
-#include "mock/mock_sensor.h"
 
 class SensorRedundant : public ::testing::Test
 {
