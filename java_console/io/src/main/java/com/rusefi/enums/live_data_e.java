@@ -15,4 +15,6 @@ public enum live_data_e {
 	LDS_CJ125_PID,
 	LDS_TRIGGER_STATE,
 	LDS_AC_CONTROL,
+	LDS_IDLE,
+	LDS_TPS_ACCEL,
 }
