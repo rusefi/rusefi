@@ -1,6 +1,5 @@
 #include "pch.h"
 
-#include "mock/mock_sensor.h"
 #include "stored_value_sensor.h"
 
 class SensorBasic : public ::testing::Test {

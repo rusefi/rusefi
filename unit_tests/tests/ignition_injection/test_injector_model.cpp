@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "injector_model.h"
-#include "mock/mock_sensor.h"
 
 using ::testing::_;
 using ::testing::StrictMock;
