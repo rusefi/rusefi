@@ -41,7 +41,7 @@ public class ProgramSelector {
             mode.setSelectedItem(persistedMode);
 
         JButton updateFirmware = new JButton("Update Firmware",
-                AutoupdateUtil.loadIcon("upload48.jpg"));
+                AutoupdateUtil.loadIcon("upload48.png"));
         controls.add(updateFirmware);
 
         updateFirmware.addActionListener(new ActionListener() {
