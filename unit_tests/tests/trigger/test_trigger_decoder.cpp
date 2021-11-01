@@ -298,7 +298,7 @@ TEST(misc, testRpmCalculator) {
 	ENGINE(tdcMarkEnabled) = false;
 
 	// These tests were written when the default target AFR was 14.0, so replicate that
-	engineConfiguration->stoichRatioPrimary = 140;
+	engineConfiguration->stoichRatioPrimary = 14;
 
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
