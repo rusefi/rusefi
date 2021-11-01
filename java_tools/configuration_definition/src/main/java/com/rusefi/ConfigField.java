@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.util.SystemOut;
 import com.rusefi.test.ConfigFieldParserTest;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -13,10 +14,10 @@ import java.util.regex.Pattern;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false, false, null, -1, null, null);
+    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false, false, null,null, -1, null, null);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\s([\\w\\d]+))?\\])?";
-    private static final String namePattern = "[[\\w\\d\\s_]]+";
+    private static final String namePattern = "[[\\w\\d\\s<>_]]+";
     private static final String commentPattern = ";([^;]*)";
 
     private static final Pattern FIELD = Pattern.compile(typePattern + "\\s(" + namePattern + ")(" + commentPattern + ")?(;(.*))?");
@@ -40,6 +41,7 @@ public class ConfigField {
     private final boolean isIterate;
     private final ReaderState state;
     private boolean fsioVisible;
+    private final String autoscaleSpec;
     private final String individualName;
     private final int indexWithinArray;
     private final String trueName;
@@ -57,9 +59,11 @@ public class ConfigField {
                        String tsInfo,
                        boolean isIterate,
                        boolean fsioVisible,
+                       String autoscaleSpec,
                        String individualName,
                        int indexWithinArray, String trueName, String falseName) {
         this.fsioVisible = fsioVisible;
+        this.autoscaleSpec = autoscaleSpec;
         this.individualName = individualName;
         this.indexWithinArray = indexWithinArray;
         this.trueName = trueName == null ? "true" : trueName;
@@ -136,8 +140,17 @@ public class ConfigField {
         String[] nameTokens = nameString.split("\\s");
         String name = nameTokens[nameTokens.length - 1];
 
-        boolean isFsioVisible = nameTokens[0].equalsIgnoreCase("fsio_visible");
+        boolean isFsioVisible = Arrays.stream(nameTokens).anyMatch(s -> s.equalsIgnoreCase("fsio_visible"));
 
+        String autoscaleSpec = null;
+        for (String autoscaler : nameTokens) {
+            if (!autoscaler.startsWith("autoscale")) {
+                continue;
+            }
+
+            autoscaleSpec = autoscaler.split("[<>]")[1];
+            break;
+        }
 
         String comment = matcher.group(8);
         String type = matcher.group(1);
@@ -156,7 +169,7 @@ public class ConfigField {
 
 
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySize,
-                tsInfo, isIterate, isFsioVisible, null, -1, null, null);
+                tsInfo, isIterate, isFsioVisible, autoscaleSpec, null, -1, null, null);
         SystemOut.println("type " + type);
         SystemOut.println("name " + name);
         SystemOut.println("comment " + comment);
@@ -236,6 +249,8 @@ public class ConfigField {
     public boolean isFsioVisible() {
         return fsioVisible;
     }
+
+    public String autoscaleSpec() { return this.autoscaleSpec; }
 
     public String getUnits() {
         if (tsInfo == null)

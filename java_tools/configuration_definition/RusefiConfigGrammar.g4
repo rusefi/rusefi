@@ -94,8 +94,10 @@ fieldOptionsList
 
 arrayLengthSpec: numexpr (ArrayDimensionSeparator numexpr)?;
 
-scalarField: identifier Autoscale? FsioVisible? identifier (fieldOptionsList)?;
-arrayField: identifier '[' arrayLengthSpec Iterate? ']' Autoscale? identifier SemicolonedString? (fieldOptionsList)?;
+autoscale: Autoscale '<' numexpr '>';
+
+scalarField: identifier autoscale? FsioVisible? identifier (fieldOptionsList)?;
+arrayField: identifier '[' arrayLengthSpec Iterate? ']' autoscale? identifier SemicolonedString? (fieldOptionsList)?;
 bitField: Bit identifier (',' QuotedString ',' QuotedString)? ('(' 'comment' ':' QuotedString ')')? SemicolonedSuffix?;
 
 unionField: 'union' ENDL+ fields 'end_union';

@@ -325,7 +325,11 @@ public class ParseState {
     public void exitScalarField(RusefiConfigGrammarParser.ScalarFieldContext ctx) {
         String type = ctx.identifier(0).getText();
         String name = ctx.identifier(1).getText();
-        boolean autoscale = ctx.Autoscale() != null;
+        boolean autoscale = ctx.autoscale() != null;
+
+        if (autoscale) {
+            evalResults.remove();
+        }
 
         // First check if this is an instance of a struct
         if (structs.containsKey(type)) {
@@ -428,7 +432,11 @@ public class ParseState {
         int[] length = this.arrayDim;
         // check if the iterate token is present
         boolean iterate = ctx.Iterate() != null;
-        boolean autoscale = ctx.Autoscale() != null;
+        boolean autoscale = ctx.autoscale() != null;
+
+        if (autoscale) {
+            evalResults.remove();
+        }
 
         // First check if this is an array of structs
         if (structs.containsKey(type)) {
