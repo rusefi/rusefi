@@ -78,7 +78,6 @@
 #include "chevrolet_camaro_4.h"
 #include "toyota_jzs147.h"
 #include "ford_festiva.h"
-#include "lada_kalina.h"
 #include "boost_control.h"
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
@@ -476,6 +475,20 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setDefaultFuel(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setDefaultIgnition(PASS_CONFIG_PARAMETER_SIGNATURE);
 	setDefaultCranking(PASS_CONFIG_PARAMETER_SIGNATURE);
+
+	// VVT closed loop, totally random values!
+	engineConfiguration->auxPid[0].pFactor = 2;
+	engineConfiguration->auxPid[0].iFactor = 0.005;
+	engineConfiguration->auxPid[0].dFactor = 0;
+	engineConfiguration->auxPid[0].offset = 33;
+	engineConfiguration->auxPid[0].minValue = 10;
+	engineConfiguration->auxPid[0].maxValue = 90;
+
+	engineConfiguration->vvtOutputFrequency[0] = 300; // VVT solenoid control
+
+	engineConfiguration->auxPid[1].minValue = 10;
+	engineConfiguration->auxPid[2].maxValue = 90;
+
 
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -883,13 +896,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MRE_M111:
 		setM111EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case SUBARUEJ20G_DEFAULTS:
+	case MRE_SECONDARY_CAN:
+		mreSecondaryCan(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case UNUSED101:
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MRE_BOARD_OLD_TEST:
-		mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
+	case UNUSED30:
 	case MRE_BOARD_NEW_TEST:
 		mreBoardNewTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -923,7 +937,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case PROTEUS_QC_TEST_BOARD:
 		proteusBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case BMW_M73_PROTEUS:
+	case PROTEUS_BMW_M73:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_PROTEUS_TCU:
@@ -986,7 +1000,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_121_VAG_8_CYL:
 	    setHellen121Vag_8_cyl(PASS_CONFIG_PARAMETER_SIGNATURE);
         break;
-	case HELLEN_121_VAG:
+	case HELLEN_121_VAG_4_CYL:
 	case HELLEN_55_BMW:
 	case HELLEN_88_BMW:
 	case HELLEN_134_BMW:
@@ -1012,7 +1026,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case FRANKENSO_QA_ENGINE:
 		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case BMW_M73_F:
+	case FRANKENSO_BMW_M73_F:
 		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_M:
@@ -1024,22 +1038,17 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case DODGE_NEON_2003_CRANK:
 		setDodgeNeonNGCEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case LADA_KALINA:
-		setLadaKalina(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
+	case UNUSED39:
 	case FORD_ASPIRE_1996:
 		setFordAspireEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case NISSAN_PRIMERA:
 		setNissanPrimeraEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_CD:
-		setHondaAccordConfigurationThreeWires(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MIATA_NA6_MAP:
+	case FRANKENSO_MIATA_NA6_MAP:
 		setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MIATA_NA6_VAF:
+	case FRANKENSO_MIATA_NA6_VAF:
 		setMiataNA6_VAF_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case ETB_BENCH_ENGINE:
@@ -1048,24 +1057,17 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MAZDA_MIATA_NA8:
+	case FRANKENSO_MAZDA_MIATA_NA8:
 		setMazdaMiataNA8Configuration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case TEST_CIVIC_4_0_BOTH:
-		setHondaCivic4_0_both(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case TEST_CIVIC_4_0_RISE:
-		setHondaCivic4_0_rise(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_1_24_SHIFTED:
-		setHondaAccordConfiguration1_24_shifted(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case HONDA_ACCORD_CD_DIP:
+/*
 		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+*/
 	case MITSU_4G93:
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1108,7 +1110,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case VW_ABA:
 		setVwAba(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MAZDA_MIATA_2003:
+	case FRANKENSO_MAZDA_MIATA_2003:
 		setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MAZDA_MIATA_2003_NA_RAIL:

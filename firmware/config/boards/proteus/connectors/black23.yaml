@@ -14,7 +14,7 @@ pins:
     type: din
 
   - pin: 3
-    id: [GPIOE_13, GPIOE_13]
+    id: [GPIOE_14, GPIOE_14]
     class: [event_inputs, switch_inputs]
     function: Digital trigger/switch input
     ts_name: Digital 4
@@ -49,7 +49,7 @@ pins:
     type: etb
 
   - pin: 9
-    id: [GPIOE_14, GPIOE_14]
+    id: [GPIOE_13, GPIOE_13]
     class: [event_inputs, switch_inputs]
     function: Digital trigger/switch input
     ts_name: Digital 5
@@ -120,6 +120,8 @@ pins:
 
 info:
   title: Proteus
+  name: Black23
+  id: black23
   image:
     file: black23.jpg
   pins:

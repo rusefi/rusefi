@@ -55,9 +55,11 @@
 #include "hip9011_logic.h"
 
 
-#if HW_PROTEUS & EFI_PROD_CODE
+#if HW_PROTEUS
 #include "proteus_meta.h"
 #endif
+
+#include "mre_meta.h"
 
 static const float injectorLagBins[VBAT_INJECTOR_CURVE_SIZE] = {
         6.0,         8.0,        10.0,        11.0,
@@ -237,8 +239,6 @@ void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->vvtTable1LoadBins, vvt18fsioLoadBins);
 	copyTable(config->vvtTable1, fsio_table_vvt_target);
 
-	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
-
 	// VVT closed loop
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
@@ -392,7 +392,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
-	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+	engineConfiguration->vvtPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
 	//	 * set_fsio_setting 1 0.55
 	//	 */
@@ -594,7 +594,7 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
 	// TLE8888_PIN_6:  "7 - Lowside 1"
-	engineConfiguration->auxPidPins[0] = TLE8888_PIN_6; // VVT solenoid control
+	engineConfiguration->vvtPins[0] = TLE8888_PIN_6; // VVT solenoid control
 
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
@@ -748,7 +748,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->alternatorControlPin = GPIOA_8;  // "Highside 2"    # pin 1/black35
 
-    engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control # pin 8/black35
+    engineConfiguration->vvtPins[0] = GPIOB_5; // VVT solenoid control # pin 8/black35
 
     // high-side driver with +12v VP jumper
     engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
@@ -757,9 +757,9 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
     #if EFI_PROD_CODE
-    engineConfiguration->ignitionPins[0] = PROTEUS_HS_1;
+    engineConfiguration->ignitionPins[0] = PROTEUS_IGN_1;
     engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-    engineConfiguration->ignitionPins[2] = PROTEUS_HS_3;
+    engineConfiguration->ignitionPins[2] = PROTEUS_IGN_3;
     engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -776,9 +776,9 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     CONFIG(enableSoftwareKnock) = true;
 
     engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
-#endif // EFI_PROD_CODE
 
-    engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+    engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
+
 
     engineConfiguration->afr.hwChannel = EFI_ADC_11;
 
@@ -788,17 +788,18 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
-    engineConfiguration->clt.adcChannel =  EFI_ADC_14;
-    engineConfiguration->iat.adcChannel = EFI_ADC_8;
+    engineConfiguration->clt.adcChannel =  PROTEUS_IN_ANALOG_TEMP_1;
+    engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_3;
 
-    engineConfiguration->fuelPumpPin = GPIOG_13;// "Lowside 6"     # pin 6/black35
+    engineConfiguration->fuelPumpPin = PROTEUS_LS_6;
 
-    engineConfiguration->idle.solenoidPin = GPIOG_14;  // "Lowside 7"     # pin 7/black35
+    engineConfiguration->idle.solenoidPin = PROTEUS_LS_7;
 
 
     engineConfiguration->fanPin = GPIOB_7;
 
-	CONFIG(mainRelayPin) = GPIOG_12;// "Lowside 5"     # pin 5/black35
+	CONFIG(mainRelayPin) = GPIOG_12;
+#endif // EFI_PROD_CODE
 
 
 }

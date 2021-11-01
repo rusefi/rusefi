@@ -17,11 +17,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-// Back in the day we wanted enums to be 32 bit integers.
-// as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
-#define ENUM_16_BITS 60000
-#define ENUM_32_BITS 2000000000
-
 typedef enum {
 //P0001 Fuel Volume Regulator Control Circuit/Open
 //P0002 Fuel Volume Regulator Control Circuit Range/Performance
@@ -1786,7 +1781,7 @@ typedef enum {
 	CUSTOM_OBD_94 = 6094,
 	CUSTOM_OBD_95 = 6095,
 	CUSTOM_OBD_96 = 6096,
-	CUSTOM_OBD_97 = 6097,
+	CUSTOM_PID_DTERM = 6097,
 	CUSTOM_DWELL = 6098,
 	CUSTOM_TS_OVERFLOW = 6099,
 
@@ -2127,8 +2122,10 @@ typedef enum {
 
 
 
+// Back in the day we wanted enums to be 32 bit integers.
+// as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
 	// this is needed for proper enum size, this matters for malfunction_central
-	Internal_ForceMyEnumIntSize_cranking_obd_code = ENUM_32_BITS,
+	Internal_ForceMyEnumIntSize_cranking_obd_code = 2000000000,
 } obd_code_e;
 
 #ifdef __cplusplus

@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.ui.util.URLLabel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,9 +43,6 @@ public class ProgramSelector {
         JButton updateFirmware = new JButton("Update Firmware",
                 AutoupdateUtil.loadIcon("upload48.jpg"));
         controls.add(updateFirmware);
-        JButton updateHelp = new JButton("?");
-        updateHelp.addActionListener(e -> URLLabel.open(HELP));
-        controls.add(updateHelp);
 
         updateFirmware.addActionListener(new ActionListener() {
             @Override
@@ -67,6 +65,11 @@ public class ProgramSelector {
             }
         });
 
+    }
+
+    @NotNull
+    public static JComponent createHelpButton() {
+        return new URLLabel("HOWTO Update Firmware", HELP);
     }
 
     public JPanel getControl() {

@@ -120,9 +120,9 @@ constexpr size_t lineBufferCount = 24;
 static LogLineBuffer lineBuffers[lineBufferCount];
 
 // freeBuffers contains a queue of buffers that are not in use
-chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> freeBuffers;
+static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> freeBuffers;
 // filledBuffers contains a queue of buffers currently waiting to be written to the output buffer
-chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> filledBuffers;
+static chibios_rt::Mailbox<LogLineBuffer*, lineBufferCount> filledBuffers;
 
 class LoggingBufferFlusher : public ThreadController<256> {
 public:

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Oct 14 23:05:32 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Oct 31 02:07:07 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -16,6 +16,7 @@ struct stft_cell_cfg_s {
 	 */
 	int8_t maxRemove;
 	/**
+	 * Time constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.
 	sec
 	 * offset 2
 	 */
@@ -106,12 +107,12 @@ struct pid_s {
 	 */
 	int16_t periodMs;
 	/**
-	 * Output min value
+	 * Output Min Duty Cycle
 	 * offset 16
 	 */
 	int16_t minValue;
 	/**
-	 * Output max value
+	 * Output Max Duty Cycle
 	 * offset 18
 	 */
 	int16_t maxValue;
@@ -780,6 +781,8 @@ struct engine_configuration_s {
 	bool useRunningMathForCranking : 1;
 	/**
 	 * Shall we display real life signal or just the part consumed by trigger decoder.
+	 * Applies to both trigger and cam/vvt input.
+	 * 
 	 * enable logic_level_trigger
 	offset 76 bit 24 */
 	bool displayLogicLevelsInEngineSniffer : 1;
@@ -1212,9 +1215,27 @@ struct engine_configuration_s {
 	 */
 	float manIdlePosition;
 	/**
+	 * Ignition timing to remove when a knock event occurs.
+	%
 	 * offset 612
 	 */
-	float unused612;
+	uint8_t knockRetardAggression;
+	/**
+	 * After a knock event, reapply timing at this rate.
+	deg/s
+	 * offset 613
+	 */
+	uint8_t knockRetardReapplyRate;
+	/**
+	 * Maximum amount of knock retard.
+	deg
+	 * offset 614
+	 */
+	uint8_t knockRetardMaximum;
+	/**
+	 * offset 615
+	 */
+	uint8_t unused615;
 	/**
 	 * offset 616
 	 */
@@ -2032,10 +2053,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_299_30 : 1;
+	bool unusedBit_302_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_299_31 : 1;
+	bool unusedBit_302_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2882,22 +2903,22 @@ struct engine_configuration_s {
 	roc
 	 * offset 2060
 	 */
-	float engineLoadDecelEnleanmentThreshold;
+	float unusedEL1;
 	/**
 	coeff
 	 * offset 2064
 	 */
-	float engineLoadDecelEnleanmentMultiplier;
+	float unusedEL2;
 	/**
 	roc
 	 * offset 2068
 	 */
-	float engineLoadAccelEnrichmentThreshold;
+	float unusedEL3;
 	/**
 	coeff
 	 * offset 2072
 	 */
-	float engineLoadAccelEnrichmentMultiplier;
+	float unusedEL4;
 	/**
 	 * Band rate for primary TTL
 	BPs
@@ -2905,11 +2926,13 @@ struct engine_configuration_s {
 	 */
 	uint32_t uartConsoleSerialSpeed;
 	/**
+	 * For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 	roc
 	 * offset 2080
 	 */
 	float tpsDecelEnleanmentThreshold;
 	/**
+	 * Magic multiplier, we multiply delta of TPS and get fuel squirt duration
 	coeff
 	 * offset 2084
 	 */
@@ -2999,76 +3022,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_510_8 : 1;
+	bool unusedBit_513_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_510_9 : 1;
+	bool unusedBit_513_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_510_10 : 1;
+	bool unusedBit_513_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_510_11 : 1;
+	bool unusedBit_513_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_510_12 : 1;
+	bool unusedBit_513_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_510_13 : 1;
+	bool unusedBit_513_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_510_14 : 1;
+	bool unusedBit_513_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_510_15 : 1;
+	bool unusedBit_513_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_510_16 : 1;
+	bool unusedBit_513_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_510_17 : 1;
+	bool unusedBit_513_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_510_18 : 1;
+	bool unusedBit_513_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_510_19 : 1;
+	bool unusedBit_513_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_510_20 : 1;
+	bool unusedBit_513_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_510_21 : 1;
+	bool unusedBit_513_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_510_22 : 1;
+	bool unusedBit_513_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_510_23 : 1;
+	bool unusedBit_513_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_510_24 : 1;
+	bool unusedBit_513_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_510_25 : 1;
+	bool unusedBit_513_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_510_26 : 1;
+	bool unusedBit_513_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_510_27 : 1;
+	bool unusedBit_513_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_510_28 : 1;
+	bool unusedBit_513_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_510_29 : 1;
+	bool unusedBit_513_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_510_30 : 1;
+	bool unusedBit_513_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_510_31 : 1;
+	bool unusedBit_513_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3129,10 +3152,11 @@ struct engine_configuration_s {
 	 */
 	float mapAccelTaperMult[MAP_ACCEL_TAPER];
 	/**
-	 * todo: rename to fsioAnalogInputs
+	 * EGO value correction
+	value
 	 * offset 2200
 	 */
-	adc_channel_e fsioAdc[AUX_ANALOG_INPUT_COUNT];
+	float unusedAnotherOneOfThose;
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -3160,7 +3184,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2220
 	 */
-	output_pin_e auxPidPins[CAM_INPUTS_COUNT];
+	output_pin_e vvtPins[CAM_INPUTS_COUNT];
 	/**
 	 * offset 2221
 	 */
@@ -3202,7 +3226,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2244
 	 */
-	fsio_pwm_freq_t auxPidFrequency[CAMS_PER_BANK];
+	fsio_pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
 	/**
 	 * Additional idle % when fan #1 is active
 	%
@@ -3255,7 +3279,11 @@ struct engine_configuration_s {
 	units
 	 * offset 2323
 	 */
-	uint8_t unusedOldBiquad[9];
+	uint8_t unusedOldBiquad[1];
+	/**
+	 * offset 2324
+	 */
+	adc_channel_e auxAnalogInputs[AUX_ANALOG_INPUT_COUNT];
 	/**
 	 * offset 2332
 	 */
@@ -3956,20 +3984,25 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_4511[1];
 	/**
-	ratio
+	from
 	 * offset 4512
 	 */
-	float triggerGapOverride[GAP_TRACKING_LENGTH];
+	float triggerGapOverrideFrom[GAP_TRACKING_LENGTH];
 	/**
 	Percent
 	 * offset 4584
 	 */
 	int8_t fuelTrim[MAX_CYLINDER_COUNT];
 	/**
-	units
+	to
 	 * offset 4596
 	 */
-	int mainUnusedEnd[344];
+	float triggerGapOverrideTo[GAP_TRACKING_LENGTH];
+	/**
+	units
+	 * offset 4668
+	 */
+	int mainUnusedEnd[326];
 	/** total size 5972*/
 };
 
@@ -4364,4 +4397,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Oct 14 23:05:32 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Oct 31 02:07:07 UTC 2021

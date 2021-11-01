@@ -141,10 +141,10 @@ jobs:
       with:
         java-version: '8'
 
-    - name: Install multilib, mingw, ncftp and mtools
+    - name: Install multilib, mingw, sshpass and mtools
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
         sudo apt-get install zip
         sudo apt-get install dosfstools
 
@@ -193,14 +193,14 @@ jobs:
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
 
-    - name: Configs Set FTP variables
+    - name: Configs Set SSH variables
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
-          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
-          echo "::set-env name=RUSEFI_BUILD_FTP_USER::${{secrets.RUSEFI_BUILD_FTP_USER}}";
-          echo "::set-env name=RUSEFI_BUILD_FTP_PASS::${{secrets.RUSEFI_BUILD_FTP_PASS}}";
+          echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+          echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+          echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
         fi
 
     # Build rusEFI console
@@ -211,6 +211,7 @@ jobs:
     # Build the simulator
     - name: Build simulator
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     # Build the firmware!
@@ -273,10 +274,10 @@ jobs:
       with:
         java-version: '8'
 
-    - name: Install multilib, mingw, and ncftp
+    - name: Install multilib, mingw, and sshpass
       run: |
         sudo apt-get update
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 ncftp mtools zip dosfstools
+        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools zip dosfstools
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
@@ -303,17 +304,18 @@ jobs:
     - name: Test Compiler
       run: arm-none-eabi-gcc -v
 
-    - name: primary Set FTP variables
+    - name: primary Set SSH variables
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         if [ "${{github.event_name}}" = "push" ] && [ "${{github.ref}}" = "refs/heads/master" ]; then
-          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
-          echo "::set-env name=RUSEFI_BUILD_FTP_USER::${{secrets.RUSEFI_BUILD_FTP_USER}}";
-          echo "::set-env name=RUSEFI_BUILD_FTP_PASS::${{secrets.RUSEFI_BUILD_FTP_PASS}}";
+          echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+          echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+          echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
         fi
 
     - name: Build Primary Bundle
+      # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/functional_test_and_build_bundle/build_current_bundle.sh
 
     - name: Package Bundle

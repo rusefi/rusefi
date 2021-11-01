@@ -2,22 +2,40 @@
 
 #include "rusefi_lua.h"
 
-static const char* getSensorTest = R"(
+static const char* getSensorTestByIndex = R"(
 
 function testFunc()
-	return getSensor(10)
+	return getSensorByIndex(10)
 end
 
 )";
 
-TEST(LuaHooks, TestGetSensor) {
+TEST(LuaHooks, TestGetSensorByIndex) {
 	// Test failed sensor, returns nil
 	Sensor::resetMockValue(static_cast<SensorType>(10));
-	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTest), unexpected);
+	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByIndex), unexpected);
 
 	// Now test with a value, returns value
 	Sensor::setMockValue(10, 33);
-	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTest).value_or(0), 33);
+	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByIndex).value_or(0), 33);
+}
+
+static const char* getSensorTestByName = R"(
+
+function testFunc()
+	return getSensor("CLT")
+end
+
+)";
+
+TEST(LuaHooks, TestGetSensorByName) {
+	// Test failed sensor, returns nil
+	Sensor::resetMockValue(SensorType::Clt);
+	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByName), unexpected);
+
+	// Now test with a value, returns value
+	Sensor::setMockValue((int)SensorType::Clt, 33);
+	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByName).value_or(0), 33);
 }
 
 static const char* tableTest = R"(
@@ -84,4 +102,31 @@ end
 
 TEST(LuaHooks, TestLuaTimer) {
 	EXPECT_EQ(testLuaReturnsNumber(timerTest), 0);
+}
+
+static const char* sensorTest = R"(
+function testFunc()
+	local sens = Sensor.new("CLT")
+	
+	-- Check valid sensor
+	sens:set(33)
+	if getSensor("CLT") ~= 33 then
+		return 1
+	end
+
+	-- Check invalidation
+	sens:invalidate()
+	if getSensor("CLT") then
+		return 2
+	end
+
+	return 0
+end
+)";
+
+TEST(LuaHooks, LuaSensor) {
+	EXPECT_EQ(testLuaReturnsNumber(sensorTest), 0);
+
+	// Ensure that the sensor got unregistered on teardown of the Lua interpreter
+	EXPECT_FALSE(Sensor::hasSensor(SensorType::Clt));
 }

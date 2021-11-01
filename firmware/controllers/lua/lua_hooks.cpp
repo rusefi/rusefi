@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#include "lua.hpp"
+#include "rusefi_lua.h"
 #include "lua_hooks.h"
 
 #include "fuel_math.h"
@@ -59,10 +59,17 @@ static int lua_getAuxAnalog(lua_State* l) {
 	return getSensor(l, type);
 }
 
-static int lua_getSensor(lua_State* l) {
+static int lua_getSensorByIndex(lua_State* l) {
 	auto sensorIndex = luaL_checkinteger(l, 1);
 
 	return getSensor(l, static_cast<SensorType>(sensorIndex));
+}
+
+static int lua_getSensorByName(lua_State* l) {
+	auto sensorName = luaL_checklstring(l, 1, nullptr);
+	SensorType type = findSensorTypeByName(sensorName);
+
+	return getSensor(l, type);
 }
 
 static int lua_getSensorRaw(lua_State* l) {
@@ -118,7 +125,7 @@ static int lua_txCan(lua_State* l) {
 	while (true) {
 		lua_pushnumber(l, dlc + 1);
 		auto elementType = lua_gettable(l, 4);
-		auto val = lua_tointeger(l, -1);
+		auto val = lua_tonumber(l, -1);
 		lua_pop(l, 1);
 
 		if (elementType == LUA_TNIL) {
@@ -331,7 +338,41 @@ static int lua_setFuelMult(lua_State* l) {
 
 	return 0;
 }
+
 #endif // EFI_UNIT_TEST
+
+#if EFI_CAN_SUPPORT
+static int lua_canRxAdd(lua_State* l) {
+	auto eid = luaL_checkinteger(l, 1);
+	addLuaCanRxFilter(eid);
+
+	return 0;
+}
+#endif // EFI_CAN_SUPPORT
+
+struct LuaSensor : public StoredValueSensor {
+	LuaSensor() : LuaSensor("Invalid") { }
+
+	~LuaSensor() {
+		unregister();
+	}
+
+	LuaSensor(const char* name)
+		: StoredValueSensor(findSensorTypeByName(name), MS2NT(100))
+	{
+		Register();
+	}
+
+	void set(float value) {
+		setValidValue(value, getTimeNowNt());
+	}
+
+	void invalidate() {
+		StoredValueSensor::invalidate();
+	}
+
+	void showInfo(const char*) const {}
+};
 
 void configureRusefiLuaHooks(lua_State* l) {
 
@@ -341,10 +382,17 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.fun("reset",             static_cast<void (Timer::*)()     >(&Timer::reset            ))
 		.fun("getElapsedSeconds", static_cast<float(Timer::*)()const>(&Timer::getElapsedSeconds));
 
+	LuaClass<LuaSensor> luaSensor(l, "Sensor");
+	luaSensor
+		.ctor<const char*>()
+		.fun("set", &LuaSensor::set)
+		.fun("invalidate", &LuaSensor::invalidate);
+
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
-	lua_register(l, "getSensor", lua_getSensor);
+	lua_register(l, "getSensorByIndex", lua_getSensorByIndex);
+	lua_register(l, "getSensor", lua_getSensorByName);
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
 	lua_register(l, "table3d", lua_table3d);
@@ -368,5 +416,9 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "setFuelAdd", lua_setFuelAdd);
 	lua_register(l, "setFuelMult", lua_setFuelMult);
-#endif
+
+#if EFI_CAN_SUPPORT
+	lua_register(l, "canRxAdd", lua_canRxAdd);
+#endif // EFI_CAN_SUPPORT
+#endif // not EFI_UNIT_TEST
 }

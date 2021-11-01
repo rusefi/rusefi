@@ -6,7 +6,7 @@ import com.rusefi.util.SystemOut;
 
 import java.io.IOException;
 
-import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ToolUtil.EOL;
 
 /**
  * Configuration consumer which writes C header file
@@ -18,8 +18,10 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
      */
     public static boolean withC_Defines;
     private final LazyFile cHeader;
+    private final VariableRegistry variableRegistry;
 
-    public CHeaderConsumer(String destCHeader) {
+    public CHeaderConsumer(VariableRegistry variableRegistry, String destCHeader) {
+        this.variableRegistry = variableRegistry;
         SystemOut.println("Writing C header to " + destCHeader);
         cHeader = new LazyFile(destCHeader);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);
@@ -32,7 +34,7 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
     @Override
     public void endFile() throws IOException {
         if (withC_Defines)
-            cHeader.write(VariableRegistry.INSTANCE.getDefinesSection());
+            cHeader.write(variableRegistry.getDefinesSection());
         cHeader.write(getContent().toString());
         cHeader.write("// end" + EOL);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);

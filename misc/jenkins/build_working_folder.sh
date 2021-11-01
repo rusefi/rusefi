@@ -27,8 +27,8 @@ mkdir $CONSOLE_FOLDER
 mkdir $DRIVERS_FOLDER
 ls -l $FOLDER
 
-wget https://rusefi.com/build_server/st_files/silent_st_drivers.exe -P $DRIVERS_FOLDER
-[ -e $DRIVERS_FOLDER/silent_st_drivers.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers.exe"; exit 1; }
+wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $DRIVERS_FOLDER
+[ -e $DRIVERS_FOLDER/silent_st_drivers2.exe ] || { echo "$SCRIPT_NAME: ERROR DOWNLOADING silent_st_drivers2.exe"; exit 1; }
 
 if [ "$INI_FILE_OVERRIDE" = "no" ]; then
     INI_FILE_OVERRIDE="rusefi.ini"
@@ -102,9 +102,16 @@ ls -l $FULL_BUNDLE_FILE
 
 [ -e $FULL_BUNDLE_FILE ] || { echo "$SCRIPT_NAME: ERROR not found $FULL_BUNDLE_FILE"; exit 1; }
 
-if [ -n "$RUSEFI_FTP_SERVER" ]; then
+if [ -n "$RUSEFI_SSH_USER" ]; then
  echo "$SCRIPT_NAME: Uploading full bundle"
- ncftpput -u $RUSEFI_BUILD_FTP_USER -p $RUSEFI_BUILD_FTP_PASS $RUSEFI_FTP_SERVER . $FULL_BUNDLE_FILE
+ tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "tar -xzf - -C build_server"
+ retVal=$?
+ if [ $retVal -ne 0 ]; then
+  echo "full bundle upload failed"
+  exit 1
+ fi
+else
+  echo "Upload not configured"
 fi
 
 cd ..
@@ -123,8 +130,15 @@ cd $FOLDER
 zip -r ../$UPDATE_BUNDLE_FILE *
 cd ..
 ls -l $UPDATE_BUNDLE_FILE
-if [ -n "$RUSEFI_FTP_SERVER" ]; then
- ncftpput -u "$RUSEFI_BUILD_FTP_USER" -p "$RUSEFI_BUILD_FTP_PASS" "$RUSEFI_FTP_SERVER" autoupdate "$UPDATE_BUNDLE_FILE"
+if [ -n "$RUSEFI_SSH_USER" ]; then
+ tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $RUSEFI_SSH_PASS ssh -o StrictHostKeyChecking=no $RUSEFI_SSH_USER@$RUSEFI_SSH_SERVER "tar -xzf - -C build_server/autoupdate"
+ retVal=$?
+ if [ $retVal -ne 0 ]; then
+  echo "autoupdate upload failed"
+  exit 1
+ fi
+else
+  echo "Upload not configured"
 fi
 cd ..
 mv temp/$UPDATE_BUNDLE_FILE artifacts

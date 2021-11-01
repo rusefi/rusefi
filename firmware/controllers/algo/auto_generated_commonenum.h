@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Oct 06 17:59:31 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Oct 24 19:26:38 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -18,11 +18,9 @@ const char *getCan_nbc_e(can_nbc_e value);
 const char *getCan_vss_nbc_e(can_vss_nbc_e value);
 const char *getChamber_style_e(chamber_style_e value);
 const char *getCranking_ignition_mode_e(cranking_ignition_mode_e value);
-const char *getDebug_mode_e(debug_mode_e value);
 const char *getDisplay_mode_e(display_mode_e value);
 const char *getEgo_sensor_e(ego_sensor_e value);
 const char *getEngine_load_mode_e(engine_load_mode_e value);
-const char *getEngine_type_e(engine_type_e value);
 const char *getEtb_function_e(etb_function_e value);
 const char *getGear_e(gear_e value);
 const char *getGppwm_channel_e(gppwm_channel_e value);
@@ -48,7 +46,6 @@ const char *getTChargeMode_e(tChargeMode_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getTle8888_mode_e(tle8888_mode_e value);
 const char *getTrigger_event_e(trigger_event_e value);
-const char *getTrigger_type_e(trigger_type_e value);
 const char *getTrigger_value_e(trigger_value_e value);
 const char *getTrigger_wheel_e(trigger_wheel_e value);
 const char *getUart_device_e(uart_device_e value);

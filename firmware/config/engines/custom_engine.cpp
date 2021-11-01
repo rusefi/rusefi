@@ -15,6 +15,7 @@
 
 #include "custom_engine.h"
 #include "fsio_impl.h"
+#include "mre_meta.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -394,10 +395,9 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 /**
  * This configuration is used for MRE board Quality Assurance validation
- * set engine_type 30
- * MRE_BOARD_TEST
+ * todo: inline
  */
-void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->debugMode = DBG_TLE8888;
 
@@ -544,19 +544,19 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 
-	engineConfiguration->ignitionPins[0] = PROTEUS_HS_1;
-	engineConfiguration->ignitionPins[1] = PROTEUS_HS_2;
-	engineConfiguration->ignitionPins[2] = PROTEUS_HS_4;
-	engineConfiguration->ignitionPins[3] = PROTEUS_HS_5;
-	engineConfiguration->ignitionPins[4] = PROTEUS_HS_6;
-	engineConfiguration->ignitionPins[5] = PROTEUS_HS_7;
+	engineConfiguration->ignitionPins[0] = PROTEUS_IGN_1;
+	engineConfiguration->ignitionPins[1] = PROTEUS_IGN_2;
+	engineConfiguration->ignitionPins[2] = PROTEUS_IGN_4;
+	engineConfiguration->ignitionPins[3] = PROTEUS_IGN_5;
+	engineConfiguration->ignitionPins[4] = PROTEUS_IGN_6;
+	engineConfiguration->ignitionPins[5] = PROTEUS_IGN_7;
 
 	engineConfiguration->ignitionPins[6] = GPIOD_15;// "Highside 3"    # pin 13/black35
-	engineConfiguration->ignitionPins[7] = PROTEUS_HS_3;
-	engineConfiguration->ignitionPins[8] = PROTEUS_HS_9;
-	engineConfiguration->ignitionPins[9] = PROTEUS_HS_8;
-	engineConfiguration->ignitionPins[10] = PROTEUS_HS_1;
-	engineConfiguration->ignitionPins[11] = PROTEUS_HS_12;
+	engineConfiguration->ignitionPins[7] = PROTEUS_IGN_3;
+	engineConfiguration->ignitionPins[8] = PROTEUS_IGN_9;
+	engineConfiguration->ignitionPins[9] = PROTEUS_IGN_8;
+	engineConfiguration->ignitionPins[10] = PROTEUS_IGN_1;
+	engineConfiguration->ignitionPins[11] = PROTEUS_IGN_12;
 
 	engineConfiguration->fsioOutputPins[0] = GPIOE_2;//  "Lowside 16"    # pin 23/black35
 	engineConfiguration->fsioOutputPins[1] = GPIOG_14;// "Lowside 7"
@@ -604,6 +604,49 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fsioOutputPins[8] = TLE8888_PIN_23; // "33 - GP Out 3"
 	engineConfiguration->fsioOutputPins[9] = TLE8888_PIN_24; // "43 - GP Out 4"
 #endif /* BOARD_TLE8888_COUNT */
+
+}
+
+void mreSecondaryCan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
+	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
+
+
+	engineConfiguration->auxAnalogInputs[0] = MRE_IN_TPS;
+	engineConfiguration->auxAnalogInputs[1] = MRE_IN_MAP;
+	engineConfiguration->auxAnalogInputs[2] = MRE_IN_CLT;
+	engineConfiguration->auxAnalogInputs[3] = MRE_IN_IAT;
+	// engineConfiguration->auxAnalogInputs[0] =
+
+
+	// EFI_ADC_14: "32 - AN volt 6"
+//	engineConfiguration->afr.hwChannel = EFI_ADC_14;
+
+
+	strncpy(config->luaScript, "function onTick()\n"
+			"txPayload = {}\n"
+			"function onTick()\n"
+"  auxV = getAuxAnalog(0)\n"
+"  print('Hello analog ' .. auxV )\n"
+"  -- first byte: integer part, would be autoboxed to int\n"
+"  txPayload[1] = auxV\n"
+"  -- second byte: fractional part, would be autoboxed to int, overflow would be ignored\n"
+"  txPayload[2] = auxV * 256;\n"
+"  auxV = getAuxAnalog(1)\n"
+"  print('Hello analog ' .. auxV )\n"
+"  txPayload[3] = auxV\n"
+"  txPayload[4] = auxV * 256;\n"
+"  auxV = getAuxAnalog(2)\n"
+"  print('Hello analog ' .. auxV )\n"
+"  txPayload[5] = auxV\n"
+"  txPayload[6] = auxV * 256;\n"
+"  txCan(1, 0x600, 1, txPayload)\n"
+"end"
+
+			"end", efi::size(config->luaScript));
 
 }
 

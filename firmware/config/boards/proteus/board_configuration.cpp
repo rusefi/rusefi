@@ -26,18 +26,18 @@ static const brain_pin_e injPins[] = {
 };
 
 static const brain_pin_e ignPins[] = {
-	PROTEUS_HS_1,
-	PROTEUS_HS_2,
-	PROTEUS_HS_3,
-	PROTEUS_HS_4,
-	PROTEUS_HS_5,
-	PROTEUS_HS_6,
-	PROTEUS_HS_7,
-	PROTEUS_HS_8,
-	PROTEUS_HS_9,
-	PROTEUS_HS_10,
-	PROTEUS_HS_11,
-	PROTEUS_HS_12,
+	PROTEUS_IGN_1,
+	PROTEUS_IGN_2,
+	PROTEUS_IGN_3,
+	PROTEUS_IGN_4,
+	PROTEUS_IGN_5,
+	PROTEUS_IGN_6,
+	PROTEUS_IGN_7,
+	PROTEUS_IGN_8,
+	PROTEUS_IGN_9,
+	PROTEUS_IGN_10,
+	PROTEUS_IGN_11,
+	PROTEUS_IGN_12,
 };
 
 static void setInjectorPins() {
@@ -119,17 +119,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 
-	// CLT = Analog Temp 3 = PB0
-	engineConfiguration->clt.adcChannel = EFI_ADC_8;
 
-	// IAT = Analog Temp 2 = PC5
-	engineConfiguration->iat.adcChannel = EFI_ADC_15;
-
-	// TPS = Analog volt 2 = PC1
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_11;
-
-	// MAP = Analog volt 1 = PC0
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+	engineConfiguration->clt.adcChannel = PROTEUS_IN_CLT;
+	engineConfiguration->iat.adcChannel = PROTEUS_IN_IAT;
+	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_TPS;
+	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
 
 	// pin #28 WBO AFR "Analog Volt 10"
 	engineConfiguration->afr.hwChannel = EFI_ADC_5;
@@ -205,9 +199,11 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	CONFIG(mainRelayPin) = GPIOB_9;//  "Lowside 13"    # pin 10/black35
-	CONFIG(fanPin) = GPIOE_1;//  "Lowside 15"    # pin 12/black35
-	CONFIG(fuelPumpPin) = GPIOE_2;//  "Lowside 16"    # pin 23/black35
+#if HW_PROTEUS & EFI_PROD_CODE
+	CONFIG(mainRelayPin) = PROTEUS_LS_13;
+	CONFIG(fanPin) = PROTEUS_LS_15;
+	CONFIG(fuelPumpPin) = PROTEUS_LS_16;
+#endif // HW_PROTEUS
 
 	// If we're running as hardware CI, borrow a few extra pins for that
 #ifdef HARDWARE_CI

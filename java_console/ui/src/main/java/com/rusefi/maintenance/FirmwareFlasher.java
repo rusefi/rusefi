@@ -24,7 +24,7 @@ public class FirmwareFlasher {
      */
     private static final String OPENOCD_EXE = Launcher.TOOLS_PATH + File.separator + "openocd/openocd.exe";
     // todo: combine this with Launcher#TOOLS_PATH?
-    static final String BINARY_LOCATION = ".";
+    private static final String OPENOCD_BINARY_LOCATION = ".";
     private static final String SUCCESS_MESSAGE_TAG = "shutdown command invoked";
     private static final String FAILED_MESSAGE_TAG = "failed";
     private static final String NO_DRIVER_MESSAGE_TAG = "failed with LIBUSB_ERROR_NOT_SUPPORTED";
@@ -46,6 +46,7 @@ public class FirmwareFlasher {
         if (dialogResult != JOptionPane.YES_OPTION)
             return;
 
+        wnd.getFrame().setLocationRelativeTo(component);
         wnd.showFrame(TITLE);
 
         ExecHelper.submitAction(() -> doFlashFirmware(wnd, fileName), FirmwareFlasher.class + " extProcessThread");
@@ -57,8 +58,8 @@ public class FirmwareFlasher {
     }
 
     protected static String executeOpenOCDCommand(String command, StatusWindow wnd) {
-        return ExecHelper.executeCommand(BINARY_LOCATION,
-                BINARY_LOCATION + File.separator + command,
+        return ExecHelper.executeCommand(OPENOCD_BINARY_LOCATION,
+                OPENOCD_BINARY_LOCATION + File.separator + command,
                 OPENOCD_EXE, wnd);
     }
 

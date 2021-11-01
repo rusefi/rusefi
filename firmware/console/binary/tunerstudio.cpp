@@ -251,9 +251,13 @@ static const void * getStructAddr(live_data_e structId) {
 	case LDS_IDLE_PID:
 		return static_cast<pid_state_s*>(getIdlePid());
 #endif /* EFI_IDLE_CONTROL */
+	case LDS_IDLE:
+		return static_cast<idle_state_s*>(&engine->idle);
+	case LDS_TPS_ACCEL:
+		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
 
 	default:
-		return NULL;
+		return nullptr;
 	}
 }
 
@@ -658,11 +662,10 @@ static void handleExecuteCommand(TsChannelBase* tsChannel, char *data, int incom
  */
 bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
 	// Bail fast if guaranteed not to be a plain command
-	if (command == 0)
-	{
+	if (command == 0) {
 		return false;
-	}
-	else if (command == TS_HELLO_COMMAND) {
+	} else if (command == TS_HELLO_COMMAND || command == TS_QUERY_COMMAND) {
+		// We interpret 'Q' as TS_HELLO_COMMAND, since TS uses hardcoded 'Q' during ECU detection (scan all serial ports)
 		efiPrintf("Got naked Query command");
 		handleQueryCommand(tsChannel, TS_PLAIN);
 		return true;

@@ -168,6 +168,8 @@ public:
 		return false;
 	}
 
+	void unregister();
+
 protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
@@ -193,3 +195,5 @@ private:
 	 */
 	static SensorRegistryEntry *getEntryForType(SensorType type);
 };
+
+SensorType findSensorTypeByName(const char *name);

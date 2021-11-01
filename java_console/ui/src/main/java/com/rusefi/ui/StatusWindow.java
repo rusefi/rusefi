@@ -13,6 +13,8 @@ import java.awt.*;
  * 3/7/2015
  */
 public class StatusWindow implements StatusConsumer {
+    private static final Color LIGHT_RED = new Color(255, 102, 102);
+    private static final Color LIGHT_GREEN = new Color(102, 255 ,102);
     // todo: extract driver from console bundle? find a separate driver bundle?
     private final JTextArea logTextArea = new JTextArea();
     private final JPanel content = new JPanel(new BorderLayout());
@@ -41,6 +43,14 @@ public class StatusWindow implements StatusConsumer {
         return content;
     }
 
+    public void setErrorState(boolean isErrorState) {
+        if (isErrorState) {
+            logTextArea.setBackground(LIGHT_RED);
+        } else {
+            logTextArea.setBackground(LIGHT_GREEN);
+        }
+    }
+
     public JFrame getFrame() {
         return frameHelper.getFrame();
     }
@@ -53,8 +63,9 @@ public class StatusWindow implements StatusConsumer {
     }
 
     @Override
-    public void appendMsg(final String s) {
+    public void appendMsg(final String string) {
         SwingUtilities.invokeLater(() -> {
+            String s = string.replaceAll(Character.toString((char) 219), "");
             FileLog.MAIN.logLine(s);
             logTextArea.append(s + "\r\n");
             UiUtils.trueLayout(logTextArea);

@@ -41,8 +41,11 @@ trigger_central_s::trigger_central_s() : hwEventCounters() {
 }
 
 TriggerCentral::TriggerCentral() : trigger_central_s(),
+		vvtEventRiseCounter(),
+		vvtEventFallCounter(),
 		vvtPosition(),
-		vvtSyncTimeNt() {
+		vvtSyncTimeNt()
+{
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
@@ -94,12 +97,11 @@ static int getCrankDivider(operation_mode_e operationMode) {
 	}
 }
 
-#define miataNbIndex (0)
-
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	// todo: why does VVT_2JZ not use real decoder?
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
+			&& vvtMode != VVT_HONDA_K
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
 }
@@ -145,7 +147,7 @@ static angle_t adjustCrankPhase(int camIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		return syncAndReport(tc, getCrankDivider(operationMode), miataNbIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	case VVT_NISSAN_VQ:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
 	default:
@@ -155,15 +157,48 @@ static angle_t adjustCrankPhase(int camIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-static angle_t wrapVvt(angle_t vvtPosition) {
+static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	// Wrap VVT position in to the range [-360, 360)
-	while (vvtPosition < -360) {
-		vvtPosition += 720;
+	while (vvtPosition < -period / 2) {
+		vvtPosition += period;
 	}
-	while (vvtPosition >= 360) {
-		vvtPosition -= 720;
+	while (vvtPosition >= period / 2) {
+		vvtPosition -= period;
 	}
 	return vvtPosition;
+}
+
+static void logFront(bool isImportantFront, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	extern const char *vvtNames[];
+	const char *vvtName = vvtNames[index];
+
+	if (isImportantFront && CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
+#if EFI_PROD_CODE
+		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
+#endif /* EFI_PROD_CODE */
+		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+	}
+
+	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
+		if (CONFIG(vvtCamSensorUseRise)) {
+			// todo: unify TS composite logger code with console Engine Sniffer
+			// todo: better API to reduce copy/paste?
+#if EFI_TOOTH_LOGGER
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_TOOTH_LOGGER */
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
+		} else {
+#if EFI_TOOTH_LOGGER
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+#endif /* EFI_TOOTH_LOGGER */
+
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
+			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
+		}
+	}
 }
 
 void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -171,9 +206,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	int camIndex = index % CAMS_PER_BANK;
 	TriggerCentral *tc = &engine->triggerCentral;
 	if (front == TV_RISE) {
-		tc->vvtEventRiseCounter++;
+		tc->vvtEventRiseCounter[index]++;
 	} else {
-		tc->vvtEventFallCounter++;
+		tc->vvtEventFallCounter[index]++;
 	}
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
@@ -215,38 +250,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 
 	bool isImportantFront = (CONFIG(vvtCamSensorUseRise) ^ (front == TV_FALL));
-	if (!vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]) && !isImportantFront) {
+	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
+	if (!isVvtWithRealDecoder && !isImportantFront) {
 		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
 
-	if (isImportantFront && CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
-#if EFI_PROD_CODE
-		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
-#endif /* EFI_PROD_CODE */
-		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
-	}
+	logFront(isImportantFront, nowNt, index PASS_ENGINE_PARAMETER_SUFFIX);
 
-	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
-		if (CONFIG(vvtCamSensorUseRise)) {
-			// todo: unify TS composite logger code with console Engine Sniffer
-			// todo: better API to reduce copy/paste?
-#if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_TOOTH_LOGGER */
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
-		} else {
-#if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-#endif /* EFI_TOOTH_LOGGER */
-
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
-			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
-		}
-	}
 
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 	if (cisnan(oneDegreeUs)) {
@@ -258,12 +269,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
+	if (isVvtWithRealDecoder) {
+		tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
 			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+	}
 
 
 	tc->vvtCamCounter++;
@@ -287,8 +300,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
-		if ((currentPosition < engineConfiguration->fsio_setting[14]       || currentPosition > engineConfiguration->fsio_setting[15]) &&
-		    (currentPosition < engineConfiguration->fsio_setting[14] + 360 || currentPosition > engineConfiguration->fsio_setting[15] + 360)) {
+		if ((currentPosition < engineConfiguration->fsio_setting[4]       || currentPosition > engineConfiguration->fsio_setting[5]) &&
+		    (currentPosition < engineConfiguration->fsio_setting[4] + 360 || currentPosition > engineConfiguration->fsio_setting[5] + 360)) {
 			// outside of the expected range
 			return;
 		}
@@ -319,7 +332,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	if (index != 0) {
 		// todo: only assign initial position of not first cam once cam was synchronized
-		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition);
+		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition, 720);
 		// at the moment we use only primary VVT to sync crank phase
 		return;
 	}
@@ -328,7 +341,19 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
 	// shall adjust vvt position as well
 	vvtPosition -= crankOffset;
-	vvtPosition = wrapVvt(vvtPosition);
+	vvtPosition = wrapVvt(vvtPosition, 720);
+
+	// this could be just an 'if' but let's have it expandable for future use :)
+	switch(engineConfiguration->vvtMode[camIndex]) {
+	case VVT_HONDA_K:
+		// honda K has four tooth in VVT intake trigger, so we just wrap each of those to 720 / 4
+		vvtPosition = wrapVvt(vvtPosition, 180);
+		break;
+	default:
+		// else, do nothing
+		break;
+    }
+
 	if (absF(vvtPosition - tdcPosition()) < 7) {
 		/**
 		 * we prefer not to have VVT sync right at trigger sync so that we do not have phase detection error if things happen a bit in
@@ -667,7 +692,7 @@ void triggerInfo(void) {
 #endif /* HAL_TRIGGER_USE_PAL */
 
 	efiPrintf("Template %s (%d) trigger %s (%d) useRiseEdge=%s onlyFront=%s useOnlyFirstChannel=%s tdcOffset=%.2f",
-			getConfigurationName(engineConfiguration->engineType), engineConfiguration->engineType,
+			getEngine_type_e(engineConfiguration->engineType), engineConfiguration->engineType,
 			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(useRiseEdge)), boolToString(engineConfiguration->useOnlyRisingEdgeForTrigger),
 			boolToString(engineConfiguration->trigger.useOnlyFirstChannel), TRIGGER_WAVEFORM(tdcPosition));
@@ -706,12 +731,6 @@ void triggerInfo(void) {
 #endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 #if EFI_PROD_CODE
-	if (HAVE_CAM_INPUT()) {
-		efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[0]),
-				getVvt_mode_e(engineConfiguration->vvtMode[0]));
-		efiPrintf("VVT event counters: %d/%d", engine->triggerCentral.vvtEventRiseCounter, engine->triggerCentral.vvtEventFallCounter);
-
-	}
 
 	efiPrintf("primary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[0]));
 	efiPrintf("primary trigger simulator: %s %s freq=%d",
@@ -727,6 +746,20 @@ void triggerInfo(void) {
 				getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
+
+
+	for (int camInputIndex = 0; camInputIndex<CAM_INPUTS_COUNT;camInputIndex++) {
+		if (isBrainPinValid(engineConfiguration->camInputs[camInputIndex])) {
+			int camLogicalIndex = camInputIndex % CAMS_PER_BANK;
+			efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[camInputIndex]),
+					getVvt_mode_e(engineConfiguration->vvtMode[camLogicalIndex]));
+			efiPrintf("VVT %d event counters: %d/%d",
+					camInputIndex,
+					engine->triggerCentral.vvtEventRiseCounter[camInputIndex], engine->triggerCentral.vvtEventFallCounter[camInputIndex]);
+		}
+	}
+
+
 //	efiPrintf("3rd trigger simulator: %s %s", hwPortname(CONFIG(triggerSimulatorPins)[2]),
 //			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[2]));
 
@@ -758,8 +791,9 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		changed |= isConfigurationChanged(vvtOffsets[camIndex]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
-		changed |= isConfigurationChanged(triggerGapOverride[i]);
+	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverrideFrom)); i++) {
+		changed |= isConfigurationChanged(triggerGapOverrideFrom[i]);
+		changed |= isConfigurationChanged(triggerGapOverrideTo[i]);
 	}
 
 	for (size_t i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {

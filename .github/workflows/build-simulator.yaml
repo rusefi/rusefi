@@ -11,6 +11,9 @@ jobs:
     - uses: actions/checkout@v1
       with:
         submodules: recursive
+    - uses: actions/setup-java@v1
+      with:
+        java-version: '8'
 
     - name: Install multilib
       run: |
@@ -31,8 +34,16 @@ jobs:
       working-directory: ./simulator/
       run: bash compile.sh
 
+    - name: Run Simulator (10 seconds)
+      working-directory: ./simulator/
+      run: ./build/rusefi_simulator 10
+
     - name: Upload built simulator
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_simulator_linux
         path: ./simulator/build/rusefi_simulator
+
+    - name: Configuration Definition CI, without pushing new .jar
+      working-directory: ./java_tools/configuration_definition
+      run: ant

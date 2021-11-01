@@ -7,7 +7,6 @@
 
 #pragma once
 
-float getVehicleCanSpeed(void);
 void initCanVssSupport();
 void setCanVss(int type);
 

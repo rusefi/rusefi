@@ -177,10 +177,8 @@ public:
 
 		// If we have too few usable bits, we run out of resolution, so don't allow that either.
 		// 200 counts = 0.5% resolution
-		if (m_period < _2_MHZ / ETB_HW_MAX_FREQUENCY) {
-			firmwareError(CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %d limit %d hz on pin \"%s\"", frequency,
-					ETB_HW_MAX_FREQUENCY,
-					msg);
+		if (m_period < 200) {
+			firmwareError(CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %d hz on pin \"%s\"", frequency, msg);
 			return;
 		}
 

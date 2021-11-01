@@ -18,7 +18,7 @@ jobs:
         run: javac -version
 
       - name: Install Tools
-        run: sudo apt-get install ncftp
+        run: sudo apt-get install sshpass
 
       - name: Generate Java (Antlr)
         working-directory: ./java_tools/configuration_definition
@@ -37,4 +37,4 @@ jobs:
 
       - name: Upload rusEFI server
         working-directory: .
-        run: java_console/upload_file.sh ${{ secrets.RUSEFI_BUILD_FTP_USER }} ${{ secrets.RUSEFI_BUILD_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }} autoupdate java_console_binary/rusefi_server.jar
+        run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} autoupdate java_console_binary/rusefi_server.jar

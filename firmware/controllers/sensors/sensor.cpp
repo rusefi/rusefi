@@ -1,62 +1,5 @@
 #include "pch.h"
-
-static const char* const s_sensorNames[] = {
-	"Invalid",
-	"CLT",
-	"IAT",
-	"RPM",
-	"MAP",
-	"MAF",
-
-	"Oil Pressure",
-
-	"Fuel Pressure (LP)",
-	"Fuel Pressure (HP)",
-	"Fuel Pressure (injector)",
-
-	"TPS 1",
-	"TPS 1 Primary",
-	"TPS 1 Secondary",
-
-	"TPS 2",
-	"TPS 2 Primary",
-	"TPS 2 Secondary",
-
-	"Acc Pedal",
-	"Acc Pedal Primary",
-	"Acc Pedal Secondary",
-
-	"Driver Acc Intent",
-
-	"Aux Temp 1",
-	"Aux Temp 2",
-
-	"Lambda 1",
-	"Lambda 2",
-
-	"Wastegate Position",
-	"Idle Valve Position",
-
-	"Flex Fuel",
-
-	"Battery Voltage",
-
-	"Barometric Pressure",
-
-	"Fuel Level %",
-
-	"Aux 1",
-	"Aux 2",
-	"Aux 3",
-	"Aux 4",
-
-	"Vehicle speed",
-
-	"Turbo speed",
-
-	"MAP (fast)",
-	"MAP (slow)",
-};
+#include "auto_generated_sensor.h"
 
 // This struct represents one sensor in the registry.
 // It stores whether the sensor should use a mock value,
@@ -95,6 +38,10 @@ public:
 			m_sensor = sensor;
 			return true;
 		}
+	}
+
+	void unregister() {
+		m_sensor = nullptr;
 	}
 
 	SensorResult get() const {
@@ -171,10 +118,12 @@ private:
 
 static SensorRegistryEntry s_sensorRegistry[static_cast<size_t>(SensorType::PlaceholderLast)] = {};
 
-static_assert(efi::size(s_sensorNames) == efi::size(s_sensorRegistry));
-
 bool Sensor::Register() {
 	return s_sensorRegistry[getIndex()].Register(this);
+}
+
+void Sensor::unregister() {
+	s_sensorRegistry[getIndex()].unregister();
 }
 
 /*static*/ void Sensor::resetRegistry() {
@@ -263,7 +212,7 @@ bool Sensor::Register() {
 }
 
 /*static*/ const char* Sensor::getSensorName(SensorType type) {
-	return s_sensorNames[static_cast<size_t>(type)];
+	return getSensorType(type);
 }
 
 /*static*/ bool Sensor::s_inhibitSensorTimeouts = false;
@@ -276,7 +225,7 @@ bool Sensor::Register() {
 /*static*/ void Sensor::showAllSensorInfo() {
 	for (size_t i = 1; i < efi::size(s_sensorRegistry); i++) {
 		auto& entry = s_sensorRegistry[i];
-		const char* name = s_sensorNames[i];
+		const char* name = getSensorType((SensorType)i);
 
 		entry.showInfo(name);
 	}
@@ -289,4 +238,19 @@ bool Sensor::Register() {
 	if (entry) {
 		entry->showInfo(getSensorName(type));
 	}
+}
+
+/**
+ * this is definitely not the fastest implementation possible but good enough for now?
+ * todo: some sort of hashmap in the future?
+ */
+SensorType findSensorTypeByName(const char *name) {
+    for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
+    	SensorType type = (SensorType)i;
+    	const char *sensorName = getSensorType(type);
+    	if (strEqualCaseInsensitive(sensorName, name)) {
+    		return type;
+    	}
+    }
+    return SensorType::Invalid;
 }

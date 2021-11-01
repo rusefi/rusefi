@@ -141,9 +141,9 @@ struct TunerStudioOutputChannels {
 	scaled_channel<int16_t, 1000> wallFuelCorrection; // 74
 	
 	// TPS/load AE
-	scaled_percent engineLoadDelta; // 76
+	scaled_percent unused76; // 76
 	scaled_percent deltaTps; // 78
-	scaled_percent engineLoadAccelExtra; // 80
+	scaled_percent unused80; // 80
 	scaled_ms tpsAccelFuel; // 82
 
 	// Ignition

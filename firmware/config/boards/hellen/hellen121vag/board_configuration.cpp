@@ -75,11 +75,13 @@ static void setupDefaultSensorInputs() {
 	// Direct hall-only cam input
 	engineConfiguration->camInputs[0] = GPIOA_6; // 86 - CAM1
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4; // 92 - TPS 1
+	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS; // 92 - TPS 1
+	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
+
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_3; // 34 In PPS1
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14; // 35 In PPS2
+	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS; // 34 In PPS1
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX2; // 35 In PPS2
 
 	CONFIG(throttlePedalUpVoltage) = 0.4;
 	CONFIG(throttlePedalWOTVoltage) = 2;
@@ -181,6 +183,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
 	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
 	hellenWbo();
 }
 

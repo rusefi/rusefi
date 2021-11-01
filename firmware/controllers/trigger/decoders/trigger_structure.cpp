@@ -463,6 +463,10 @@ void TriggerWaveform::setTriggerSynchronizationGap(float syncRatio) {
 	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
+void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
+	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
+}
+
 void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
 	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatioFrom, syncRatioTo);
 }
@@ -470,11 +474,6 @@ void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, f
 void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 	setTriggerSynchronizationGap3(/*gapIndex*/2, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
-
-void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
-}
-
 
 /**
  * External logger is needed because at this point our logger is not yet initialized
@@ -615,7 +614,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureMazdaProtegeSOHC(this);
 		break;
 
-	case TT_TT_DAIHATSU:
+	case TT_DAIHATSU:
 		configureDaihatsu4(this);
 		break;
 
@@ -650,15 +649,15 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureBarra3plus1cam(this);
 		break;
 
+	case TT_HONDA_K_4_1:
+		configureHondaK_4_1(this);
+		break;
+
 	case TT_HONDA_K_12_1:
 		configureHondaK_12_1(this);
 		break;
 
-	case TT_HONDA_4_24_1:
-		configureHonda_1_4_24(this, true, true, T_CHANNEL_3, T_PRIMARY, 0);
-		shapeWithoutTdc = true;
-		break;
-
+	case TT_UNUSED_10:
 	case TT_HONDA_4_24:
 		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
 		shapeWithoutTdc = true;

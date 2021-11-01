@@ -2,11 +2,13 @@ package com.rusefi;
 
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.enum_reader.Value;
 import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.util.SystemOut;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.*;
 
 import static com.rusefi.ConfigField.BOOLEAN_T;
@@ -19,20 +21,18 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  */
 public class ReaderState {
     public static final String BIT = "bit";
-    public static final String DEFINE = "#define";
     private static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
     private static final String DEFINE_CONSTRUCTOR = "define_constructor";
-    public static final char MULT_TOKEN = '*';
-    public Stack<ConfigStructure> stack = new Stack<>();
-    public Map<String, Integer> tsCustomSize = new HashMap<>();
-    public Map<String, String> tsCustomLine = new HashMap<>();
-    public Map<String, ConfigStructure> structures = new HashMap<>();
+    public final Stack<ConfigStructure> stack = new Stack<>();
+    public final Map<String, Integer> tsCustomSize = new HashMap<>();
+    public final Map<String, String> tsCustomLine = new HashMap<>();
+    public final Map<String, ConfigStructure> structures = new HashMap<>();
 
-    public EnumsReader enumsReader = new EnumsReader();
-
+    public final EnumsReader enumsReader = new EnumsReader();
+    public final VariableRegistry variableRegistry = new VariableRegistry();
 
     private static void handleBitLine(ReaderState state, String line) {
         line = line.substring(BIT.length() + 1).trim();
@@ -59,32 +59,47 @@ public class ReaderState {
         structure.addBitField(bitField);
     }
 
-    static boolean isEmptyDefinitionLine(String line) {
-        /**
-         * historically somehow '!' was the start of comment line
-         * '//' is the later added alternative.
-         */
-        return line.length() == 0 || line.startsWith("!") || line.startsWith("//");
+    public void read(Reader reader) throws IOException {
+        Map<String, EnumsReader.EnumState> newEnums = EnumsReader.readStatic(reader);
+
+        for (Map.Entry<String, EnumsReader.EnumState> enumFamily : newEnums.entrySet()) {
+
+            for (Map.Entry<String, Value> enumValue : enumFamily.getValue().entrySet()) {
+
+                String key = enumFamily.getKey() + "_" + enumValue.getKey();
+                String value = enumValue.getValue().getValue();
+                variableRegistry.register(key, value);
+
+                try {
+                    int numericValue = enumValue.getValue().getIntValue();
+                    variableRegistry.registerHex(key, numericValue);
+                } catch (NumberFormatException ignore) {
+                    // ENUM_32_BITS would be an example of a non-numeric enum, let's just skip for now
+                }
+            }
+        }
+
+        enumsReader.enums.putAll(newEnums);
     }
 
-    private static void handleCustomLine(ReaderState state, String line) {
+    private void handleCustomLine(String line) {
         line = line.substring(CUSTOM.length() + 1).trim();
         int index = line.indexOf(' ');
         String name = line.substring(0, index);
 
-        String autoEnumOptions = VariableRegistry.INSTANCE.getEnumOptionsForTunerStudio(state.enumsReader, name);
+        String autoEnumOptions = variableRegistry.getEnumOptionsForTunerStudio(enumsReader, name);
         if (autoEnumOptions != null) {
-            VariableRegistry.INSTANCE.register(name + "_auto_enum", autoEnumOptions);
+            variableRegistry.register(name + "_auto_enum", autoEnumOptions);
         }
-        
+
         line = line.substring(index).trim();
         index = line.indexOf(' ');
         String customSize = line.substring(0, index);
 
         String tunerStudioLine = line.substring(index).trim();
-        tunerStudioLine = VariableRegistry.INSTANCE.applyVariables(tunerStudioLine);
+        tunerStudioLine = variableRegistry.applyVariables(tunerStudioLine);
         int size = parseSize(customSize, line);
-        state.tsCustomSize.put(name, size);
+        tsCustomSize.put(name, size);
 
         RawIniFile.Line rawLine = new RawIniFile.Line(tunerStudioLine);
         if (rawLine.getTokens()[0].equals("bits")) {
@@ -103,15 +118,15 @@ public class ReaderState {
                 tunerStudioLine += ", \"INVALID\"";
         }
 
-        state.tsCustomLine.put(name, tunerStudioLine);
+        tsCustomLine.put(name, tunerStudioLine);
     }
 
-    public static int parseSize(String customSize, String line) {
-        customSize = VariableRegistry.INSTANCE.applyVariables(customSize);
+    public int parseSize(String customSize, String line) {
+        customSize = variableRegistry.applyVariables(customSize);
         customSize = customSize.replaceAll("x", "*");
-        line = VariableRegistry.INSTANCE.applyVariables(line);
+        line = variableRegistry.applyVariables(line);
 
-        int multPosition = customSize.indexOf(MULT_TOKEN);
+        int multPosition = customSize.indexOf(VariableRegistry.MULT_TOKEN);
         if (multPosition != -1) {
             String firstPart = customSize.substring(0, multPosition).trim();
             int first;
@@ -151,11 +166,11 @@ public class ReaderState {
         String line;
         while ((line = definitionReader.readLine()) != null) {
             lineIndex++;
-            line = ConfigDefinition.trimLine(line);
+            line = ToolUtil.trimLine(line);
             /**
              * we should ignore empty lines and comments
              */
-            if (isEmptyDefinitionLine(line))
+            if (ToolUtil.isEmptyDefinitionLine(line))
                 continue;
 
             if (line.startsWith(STRUCT)) {
@@ -168,15 +183,15 @@ public class ReaderState {
             } else if (line.startsWith(BIT)) {
                 handleBitLine(this, line);
 
-            } else if (ConfigDefinition.startsWithToken(line, CUSTOM)) {
-                handleCustomLine(this, line);
+            } else if (ToolUtil.startsWithToken(line, CUSTOM)) {
+                handleCustomLine(line);
 
-            } else if (ConfigDefinition.startsWithToken(line, DEFINE)) {
+            } else if (ToolUtil.startsWithToken(line, VariableRegistry.DEFINE)) {
                 /**
                  * for example
                  * #define CLT_CURVE_SIZE 16
                  */
-                ConfigDefinition.processDefine(VariableRegistry.INSTANCE, line.substring(DEFINE.length()).trim());
+                variableRegistry.processDefine(line.substring(VariableRegistry.DEFINE.length()).trim());
             } else {
                 if (stack.isEmpty())
                     throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);

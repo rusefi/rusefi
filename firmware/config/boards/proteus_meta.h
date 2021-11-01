@@ -1,0 +1,130 @@
+/*
+ * proteus_meta.h
+ *
+ * @date Oct 2, 2021
+ * @author Andrey Belomutskiy, (c) 2012-2021
+ */
+
+#pragma once
+
+#define PROTEUS_LS_1 GPIOD_7
+// pin 15/black35
+#define PROTEUS_LS_2 GPIOG_9
+
+// pin 4/black35
+#define PROTEUS_LS_3 GPIOG_10
+
+// pin 16/black35
+#define PROTEUS_LS_4 GPIOG_11
+
+// pin 5/black35
+#define PROTEUS_LS_5 GPIOG_12
+
+// pin 6/black35
+#define PROTEUS_LS_6 GPIOG_13
+
+// pin 7/black35
+#define PROTEUS_LS_7 GPIOG_14
+#define PROTEUS_LS_8 GPIOB_4
+#define PROTEUS_LS_9 GPIOB_5
+
+// pin 20/black35
+#define PROTEUS_LS_10 GPIOB_6
+#define PROTEUS_LS_11 GPIOB_7
+#define PROTEUS_LS_12 GPIOB_8
+
+// pin 10/black35
+#define PROTEUS_LS_13 GPIOB_9
+#define PROTEUS_LS_14 GPIOE_0
+// pin 12/black35
+#define PROTEUS_LS_15 GPIOE_1
+// pin 23/black35
+#define PROTEUS_LS_16 GPIOE_2
+
+
+// pin 2/black35
+#define PROTEUS_HS_1 GPIOA_9
+
+// pin 1/black35
+#define PROTEUS_HS_2 GPIOA_8
+
+#define PROTEUS_HS_3 GPIOD_15
+
+#define PROTEUS_HS_4 GPIOD_14
+
+// pin 35/black35
+#define PROTEUS_IGN_1 GPIOD_4
+
+// pin 34/black35
+#define PROTEUS_IGN_2 GPIOD_3
+
+// pin 22/black35
+#define PROTEUS_IGN_3 GPIOC_9
+#define PROTEUS_IGN_4 GPIOC_8
+#define PROTEUS_IGN_5 GPIOC_7
+#define PROTEUS_IGN_6 GPIOG_8
+#define PROTEUS_IGN_7 GPIOG_7
+#define PROTEUS_IGN_8 GPIOG_6
+#define PROTEUS_IGN_9 GPIOG_5
+#define PROTEUS_IGN_10 GPIOG_4
+#define PROTEUS_IGN_11 GPIOG_3
+#define PROTEUS_IGN_12 GPIOG_2
+
+// Analog Temp 1 = PC4
+#define PROTEUS_IN_ANALOG_TEMP_1 EFI_ADC_14
+
+// IAT = Analog Temp 2 = PC5
+#define PROTEUS_IN_ANALOG_TEMP_2 EFI_ADC_15
+#define PROTEUS_IN_IAT PROTEUS_IN_ANALOG_TEMP_2
+
+// CLT = Analog Temp 3 = PB0
+#define PROTEUS_IN_ANALOG_TEMP_3 EFI_ADC_8
+#define PROTEUS_IN_CLT PROTEUS_IN_ANALOG_TEMP_3
+
+// Analog Temp 4 = PB1
+#define PROTEUS_IN_ANALOG_TEMP_4 EFI_ADC_9
+
+// MAP = Analog volt 1 = PC0
+#define PROTEUS_IN_ANALOG_VOLT_1 EFI_ADC_10
+#define PROTEUS_IN_MAP PROTEUS_IN_ANALOG_VOLT_1
+
+// TPS = Analog volt 2 = PC1
+#define PROTEUS_IN_ANALOG_VOLT_2 EFI_ADC_11
+#define PROTEUS_IN_TPS PROTEUS_IN_ANALOG_VOLT_2
+
+// PC2
+#define PROTEUS_IN_ANALOG_VOLT_3 EFI_ADC_12
+
+// PC3
+#define PROTEUS_IN_ANALOG_VOLT_4 EFI_ADC_13
+
+// PA0
+#define PROTEUS_IN_ANALOG_VOLT_5 EFI_ADC_0
+
+// PA1
+#define PROTEUS_IN_ANALOG_VOLT_6 EFI_ADC_1
+
+// PA2
+#define PROTEUS_IN_ANALOG_VOLT_7 EFI_ADC_2
+
+// PA3
+#define PROTEUS_IN_ANALOG_VOLT_8 EFI_ADC_3
+
+// PA4
+#define PROTEUS_IN_ANALOG_VOLT_9 EFI_ADC_4
+
+// PA5
+#define PROTEUS_IN_ANALOG_VOLT_10 EFI_ADC_5
+
+// PA6
+#define PROTEUS_IN_ANALOG_VOLT_11 EFI_ADC_6
+
+#define PROTEUS_VR_1 GPIOE_7
+#define PROTEUS_VR_2 GPIOE_8
+
+#define PROTEUS_DIGITAL_1 GPIOC_6
+#define PROTEUS_DIGITAL_2 GPIOE_11
+#define PROTEUS_DIGITAL_3 GPIOE_12
+#define PROTEUS_DIGITAL_4 GPIOE_14
+#define PROTEUS_DIGITAL_5 GPIOE_13
+#define PROTEUS_DIGITAL_6 GPIOE_15

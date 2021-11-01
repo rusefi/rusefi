@@ -6,6 +6,7 @@ import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
@@ -35,8 +36,8 @@ public class PwmHardwareTest extends RusefiTestBase {
 
     @Test
     public void scheduleBurnDoesNotAffectTriggerIssue2839() {
-        ecu.setEngineType(ET_FORD_ASPIRE);
-        ecu.sendCommand("set " + "trigger_type" + " " + TT_TT_TOOTHED_WHEEL_60_2);
+        ecu.setEngineType(engine_type_e.FORD_ASPIRE_1996);
+        ecu.sendCommand("set " + "trigger_type" + " " + com.rusefi.enums.trigger_type_e.TT_TOOTHED_WHEEL_60_2.ordinal());
         ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
         ecu.sendCommand(getEnableCommand(CMD_EXTERNAL_STIMULATION));
         ecu.changeRpm(1200);
@@ -56,7 +57,7 @@ public class PwmHardwareTest extends RusefiTestBase {
 
     @Test
     public void testIdlePin() {
-        ecu.setEngineType(ET_FRANKENSO_MIATA_NA6);
+        ecu.setEngineType(engine_type_e.FRANKENSO_MIATA_NA6_MAP);
         ecu.changeRpm(1000);
 
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");
@@ -71,7 +72,7 @@ public class PwmHardwareTest extends RusefiTestBase {
         ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
 
         /* DBG_LOGIC_ANALYZER */
-        ecu.sendCommand("set debug_mode " + DBG_DBG_LOGIC_ANALYZER);
+        ecu.sendCommand("set debug_mode " +  com.rusefi.enums.debug_mode_e.DBG_LOGIC_ANALYZER.ordinal());
 
         /* 160 Hz */
         ecu.sendCommand("set idle_solenoid_freq " + FREQUENCY);

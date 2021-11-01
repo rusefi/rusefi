@@ -59,6 +59,8 @@
 // IN_TPS AIN17 PA4
 #define H144_IN_TPS EFI_ADC_4
 
+#define H144_IN_PPS EFI_ADC_3
+
 // IN_MAP1 AIN9 PC0
 #define H144_IN_MAP1 EFI_ADC_10
 
@@ -71,6 +73,7 @@
 #define H144_IN_D_2 GPIOE_13
 // A22
 #define H144_IN_D_AUX3 GPIOC_5
+// A20 AIN20
 #define H144_IN_D_AUX4 GPIOA_7
 
 #define H176_LS_1 GPIOG_7
@@ -94,3 +97,10 @@
 #define H176_CAN_TX GPIOD_1
 
 #define H176_IN_A16 GPIOF_10
+
+
+// looks like same pins 144 and 176
+#define H_SPI2_MOSI GPIOB_15
+#define H_SPI2_MISO GPIOB_14
+#define H_SPI2_SCK GPIOB_13
+#define H_SPI2_CS GPIOB_12

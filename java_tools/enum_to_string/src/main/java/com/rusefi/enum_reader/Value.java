@@ -1,5 +1,9 @@
 package com.rusefi.enum_reader;
 
+import com.rusefi.VariableRegistry;
+
+import java.util.Objects;
+
 public class Value implements Comparable<Value> {
     private final String name;
     private final String value;
@@ -32,5 +36,15 @@ public class Value implements Comparable<Value> {
                 "name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 '}';
+    }
+
+    public int getIntValueMaybeResolve(VariableRegistry registry) {
+        try {
+            return getIntValue();
+        } catch (NumberFormatException e) {
+            String resolvedValue = registry.get(value);
+            Objects.requireNonNull(resolvedValue, value);
+            return Integer.parseInt(resolvedValue);
+        }
     }
 }

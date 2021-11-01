@@ -193,14 +193,9 @@ void setBoardDefaultConfiguration(void) {
 void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
-//	engineConfiguration->spi3mosiPin = GPIOC_12;
-//	engineConfiguration->spi3misoPin = GPIOC_11;
-//	engineConfiguration->spi3sckPin = GPIOC_10;
-//	engineConfiguration->sdCardCsPin = GPIOA_15;
-
-	engineConfiguration->spi2mosiPin = GPIOB_15;
-	engineConfiguration->spi2misoPin = GPIOB_14;
-	engineConfiguration->spi2sckPin = GPIOB_13;
-	engineConfiguration->sdCardCsPin = GPIOB_12;
+	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
+	engineConfiguration->spi2misoPin = H_SPI2_MISO;
+	engineConfiguration->spi2sckPin = H_SPI2_SCK;
+	engineConfiguration->sdCardCsPin = H_SPI2_CS;
 	CONFIG(is_enabled_spi_2) = true;
 }

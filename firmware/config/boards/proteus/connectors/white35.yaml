@@ -51,7 +51,7 @@ pins:
     id: [GPIOC_0, EFI_ADC_10]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 1
-    function: "Analog Voltage Input #1"
+    function: "Analog Voltage Input #1 MAP"
     type: av
 
   - pin: 14
@@ -100,7 +100,7 @@ pins:
     id: [GPIOB_0, EFI_ADC_8]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 3
-    function: "Analog Thermistor Input #3"
+    function: "Analog Thermistor Input #3 (CLT)"
     type: at
 
   - pin: 21
@@ -119,7 +119,7 @@ pins:
     id: [GPIOC_1, EFI_ADC_11]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Volt 2
-    function: "Analog Voltage Input #2"
+    function: "Analog Voltage Input #2 TPS"
     type: av
 
   - pin: 25
@@ -158,7 +158,7 @@ pins:
     id: [GPIOC_5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: Analog Temp 2
-    function: Intake air temperature
+    function: Intake air temperature IAT
     type: at
 
   - pin: 31
@@ -184,6 +184,8 @@ pins:
 
 info:
   title: Proteus
+  name: White35
+  id: white35
   image:
     file: white35.jpg
   pins:

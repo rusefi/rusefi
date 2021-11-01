@@ -26,9 +26,9 @@ jobs:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         if [ "${{github.ref}}" = "refs/heads/master" ]; then
-          echo "::set-env name=RUSEFI_FTP_SERVER::${{secrets.RUSEFI_FTP_SERVER}}";
-          echo "::set-env name=RUSEFI_DOXYGEN_FTP_USER::${{secrets.RUSEFI_DOXYGEN_FTP_USER}}";
-          echo "::set-env name=RUSEFI_DOXYGEN_FTP_PASS::${{secrets.RUSEFI_DOXYGEN_FTP_PASS}}";
+          echo "::set-env name=RUSEFI_SSH_SERVER::${{secrets.RUSEFI_SSH_SERVER}}";
+          echo "::set-env name=RUSEFI_SSH_USER::${{secrets.RUSEFI_SSH_USER}}";
+          echo "::set-env name=RUSEFI_SSH_PASS::${{secrets.RUSEFI_SSH_PASS}}";
         fi
 
     - name: Generate documentation

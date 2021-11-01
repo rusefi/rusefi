@@ -267,9 +267,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
 
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5.0;
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 1;
-
 	engineConfiguration->isSdCardEnabled = true;
 
 //	engineConfiguration->useFSIO16ForTimingAdjustment = true;

@@ -126,3 +126,14 @@ public:
 private:
 	float limitOutput(float v) const;
 };
+
+
+// todo: composition instead of inheritance? :(
+class PidWithParameters : public Pid {
+public:
+	pid_s parametersStorage;
+
+	PidWithParameters() {
+		initPidClass(&parametersStorage);
+	}
+};

@@ -6,7 +6,7 @@
 #
 
 if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
- echo "No FTP Secrets, not even generating coverage"
+ echo "No SSH Secrets, not even generating coverage"
  exit 0
 fi
 
@@ -37,5 +37,5 @@ genhtml coverage.info --output-directory gcov
 echo -e "\nGenerating rusEFI unit test HTML"
 
 echo -e "\nUploading HTML"
-ncftpput -m -R -v -u "$1" -p "$2" "$3" /unit_tests_coverage gcov/*
+tar -czf - gcov/* | sshpass -p "$RUSEFI_SSH_PASS" ssh -o StrictHostKeyChecking=no "$RUSEFI_SSH_USER"@"$RUSEFI_SSH_SERVER" "tar -xzf - -C docs/unit_tests_coverage"
 echo -e "\nHappy End."

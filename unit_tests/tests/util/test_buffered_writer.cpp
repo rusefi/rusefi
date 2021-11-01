@@ -1,6 +1,6 @@
+#include "pch.h"
+
 #include "buffered_writer.h"
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
 
 using ::testing::_;
 using ::testing::Return;

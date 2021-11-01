@@ -83,23 +83,29 @@ public class EnumToString {
     public EnumToString outputData(EnumsReader enumsReader) {
         SystemOut.println("Preparing output for " + enumsReader.getEnums().size() + " enums\n");
 
-        for (Map.Entry<String, Map<String, Value>> e : enumsReader.getEnums().entrySet()) {
+        for (Map.Entry<String, EnumsReader.EnumState> e : enumsReader.getEnums().entrySet()) {
             String enumName = e.getKey();
-            cppFileContent.append(makeCode(enumName, e.getValue().values()));
+            EnumsReader.EnumState enumState = e.getValue();
+            cppFileContent.append(makeCode(enumName, enumState));
             headerFileContent.append(getMethodSignature(enumName) + ";\n");
         }
         SystemOut.println("EnumToString: " + headerFileContent.length() + " bytes of content\n");
         return this;
     }
 
-    private static String makeCode(String enumName, Collection<Value> values) {
+    private static String makeCode(String enumName, EnumsReader.EnumState enumState) {
         StringBuilder sb = new StringBuilder();
+        Collection<Value> values = enumState.values.values();
         sb.append(getMethodSignature(enumName) + "{\n");
 
         sb.append("switch(value) {\n");
 
         for (Value e : values) {
-            sb.append("case " + e.getName() + ":\n");
+            sb.append("case ");
+            if (enumState.isEnumClass) {
+                sb.append(enumState.enumName).append("::");
+            }
+            sb.append(e.getName() + ":\n");
             sb.append("  return \"" + e.getName() + "\";\n");
         }
 

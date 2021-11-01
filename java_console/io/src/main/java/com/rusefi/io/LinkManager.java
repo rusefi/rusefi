@@ -17,6 +17,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.TreeSet;
 import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -53,8 +54,20 @@ public class LinkManager implements Closeable {
             System.out.println(source + ": " + message);
         }
     };
+    private Thread communicationThread;
 
     public LinkManager() {
+        Future<?> future = submit(() -> {
+            communicationThread = Thread.currentThread();
+            System.out.println("communicationThread lookup DONE");
+        });
+        try {
+            // let's wait for the above trivial task to finish
+            future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+
         engineState = new EngineState(new EngineState.EngineStateListenerImpl() {
             @Override
             public void beforeLine(String fullLine) {
@@ -105,10 +118,11 @@ public class LinkManager implements Closeable {
 
     public static String[] getCommPorts() {
         SerialPort[] ports = SerialPort.getCommPorts();
-        String[] result = new String[ports.length];
-        for (int i = 0; i < ports.length; i++)
-            result[i] = ports[i].getSystemPortName();
-        return result;
+        // wow sometimes driver returns same port name more than once?!
+        TreeSet<String> names = new TreeSet<>();
+        for (SerialPort port : ports)
+            names.add(port.getSystemPortName());
+        return names.toArray(new String[0]);
     }
 
     public BinaryProtocol getCurrentStreamState() {
@@ -162,32 +176,12 @@ public class LinkManager implements Closeable {
             COMMUNICATION_QUEUE,
             new NamedThreadFactory("communication executor"));
 
-    static {
-/*
-        Future future = submit(new Runnable() {
-            @Override
-            public void run() {
-            // WAT? this is hanging?!
-                COMMUNICATION_THREAD = Thread.currentThread();
-                System.out.println("Done");
-            }
-        });
-        try {
-            // let's wait for the above trivial task to finish
-            future.get();
-            System.out.println("Done2");
-        } catch (InterruptedException | ExecutionException e) {
-            throw new IllegalStateException(e);
-        }
- */
+    public void assertCommunicationThread() {
+        if (Thread.currentThread() != communicationThread)
+            throw new IllegalStateException("Communication on wrong thread");
     }
 
-    public static void assertCommunicationThread() {
-//        if (Thread.currentThread() != COMMUNICATION_THREAD)
-//            throw new IllegalStateException("Communication on wrong thread");
-    }
-
-    private EngineState engineState;
+    private final EngineState engineState;
 
     public EngineState getEngineState() {
         return engineState;

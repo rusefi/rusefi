@@ -5,11 +5,10 @@ cd firmware
 
 doxygen || { echo "doxygen run FAILED"; exit 1; }
 
-# http://www.ncftp.com/download/
 # actually Cygwin http://rusefi.com/wiki/index.php?title=Internal:Software:Build_Server
 cd ../doxygen
-if [ -n "$RUSEFI_FTP_SERVER" ]; then
+if [ -n "$RUSEFI_SSH_SERVER" ]; then
   echo "Uploading Doxygen"
-  ncftpput -R -z -m -V -u "$RUSEFI_DOXYGEN_FTP_USER" -p "$RUSEFI_DOXYGEN_FTP_PASS" "$RUSEFI_FTP_SERVER" / html
+  tar -czf - html | sshpass -p "$RUSEFI_SSH_PASS" ssh -o StrictHostKeyChecking=no "$RUSEFI_SSH_USER"@"$RUSEFI_SSH_SERVER" "tar -xzf - -C docs"
 fi
 [ $? -eq 0 ] || { echo "upload FAILED"; exit 1; }

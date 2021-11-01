@@ -1,0 +1,10 @@
+#define HW_EVENT_TYPES 6
+
+struct_no_prefix define_constructor trigger_central_s
+
+	int[HW_EVENT_TYPES iterate] hwEventCounters;Counter of hardware events since ECU start
+
+int vvtCamCounter
+
+end_struct
+

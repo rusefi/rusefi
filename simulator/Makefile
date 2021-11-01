@@ -35,7 +35,7 @@ CONFDIR = .
 ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
 #  USE_OPT = -Wall     -ggdb    -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
-#  USE_OPT = -Wall -O0 -ggdb -g -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
+#  USE_OPT = -Wall -O0 -ggdb -g -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
 # 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
 # see https://github.com/rusefi/rusefi/issues/517
@@ -204,6 +204,7 @@ INCDIR = . \
           $(PROJECT_DIR)/init \
           $(CONSOLE_INC) \
           $(PROJECT_DIR)/config/engines \
+		  $(PROJECT_DIR)/config/boards/ \
           $(PROJECT_DIR)/ext_algo \
           $(HW_LAYER_DRIVERS_INC) \
           $(HW_LAYER_INC) \
