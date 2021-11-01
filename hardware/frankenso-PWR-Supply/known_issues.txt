@@ -1,6 +1,0 @@
-Note these issues are synced with Frankenso board, this is because this is a small proto of that board. 
-  1) RESOLVED IN R0.2 D1001 footprint is wrong
-136) RESOLVED IN R0.2 D1003 & D1006 one of pads needs larger drill, same as other
-137) RESOLVED IN R0.2 D1001 needs polarity silkscreen
-138) RESOLVED IN R0.2 Verified diode polarities, new KICAD libs flipped pin 1
-139) RESOLVED IN R0.2 Change D1004 from VS-50WQ04FNPBF to VS-50WQ04FN-M3

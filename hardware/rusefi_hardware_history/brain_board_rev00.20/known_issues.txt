@@ -1,9 +1,0 @@
-1) RESOLVED IN R0.2 PA9 <> USB VBUS trace is needed to get USB functional
-2) RESOLVED IN R0.2 add vertical USB connector option (same as on Frankenso)
-3) RESOLVED IN R0.2 use stlink 5x2 header
-4) RESOLVED IN R0.2 renamed sm32f407_Board to STM32F407_Brain_Board
-5)                  change LED to use SM0806_Jumpers
-6) RESOLVED IN R0.2 Change Fuse to match frankenso
-7) RESOLVED IN R0.2 set solder mask to 0.003 inches, per OSHPark suggestion. 
-
-
