@@ -1626,6 +1626,11 @@ end_struct
 #define GAUGE_NAME_VVT_B2I "VVT: bank 2 intake"
 #define GAUGE_NAME_VVT_B2E "VVT: bank 2 exhaust"
 
+#define GAUGE_NAME_VVT_TARGET_B1I "VVT: bank 1 intake target"
+#define GAUGE_NAME_VVT_TARGET_B1E "VVT: bank 1 exhaust target"
+#define GAUGE_NAME_VVT_TARGET_B2I "VVT: bank 2 intake target"
+#define GAUGE_NAME_VVT_TARGET_B2E "VVT: bank 2 exhaust target"
+
 #define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
 #define GAUGE_NAME_CURRENT_GEAR "Current Gear"
 
