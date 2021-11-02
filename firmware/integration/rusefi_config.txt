@@ -1553,7 +1553,7 @@ tcubinary_table_t tcuSolenoidTable;
 float vssFilterReciprocal;+Good example: number of tooth on wheel, For Can 10 is a good number.;"Hz", 1, 0, 2, 20, 2
 
 map_estimate_table_t mapEstimateTable;
-uint16_t[FUEL_LOAD_COUNT] mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
+uint16_t[FUEL_LOAD_COUNT] autoscale<TPS_2_BYTE_PACKING_MULT> mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 fsio_table_8x8_u8t vvtTable1;
