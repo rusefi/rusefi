@@ -50,7 +50,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
 	// set cranking_fuel 15
-	engineConfiguration->cranking.baseFuel = 70;
+	engineConfiguration->cranking.baseFuel = 75;
 
 
 #if HW_PROTEUS & EFI_PROD_CODE
@@ -60,6 +60,9 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1; // exhaust
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4; // intake
+// inverted
+	// offset -41
+
 
 	engineConfiguration->injectionPins[0] = PROTEUS_LS_8;
 	engineConfiguration->injectionPins[1] = PROTEUS_LS_7;
@@ -71,6 +74,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
 	engineConfiguration->idle.solenoidPin = PROTEUS_LS_15;
+	engineConfiguration->fanPin = PROTEUS_LS_1;
 
 	engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_1;
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;
