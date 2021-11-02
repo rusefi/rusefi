@@ -1155,6 +1155,10 @@
 #define GAUGE_NAME_VVT_B1I "VVT: bank 1 intake"
 #define GAUGE_NAME_VVT_B2E "VVT: bank 2 exhaust"
 #define GAUGE_NAME_VVT_B2I "VVT: bank 2 intake"
+#define GAUGE_NAME_VVT_TARGET_B1E "VVT: bank 1 exhaust target"
+#define GAUGE_NAME_VVT_TARGET_B1I "VVT: bank 1 intake target"
+#define GAUGE_NAME_VVT_TARGET_B2E "VVT: bank 2 exhaust target"
+#define GAUGE_NAME_VVT_TARGET_B2I "VVT: bank 2 intake target"
 #define GAUGE_NAME_WARNING_COUNT "Warning count"
 #define GAUGE_NAME_WARNING_COUNTER "warning: counter"
 #define GAUGE_NAME_WARNING_LAST "warning: last"
@@ -1799,8 +1803,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.10.31
-#define SIGNATURE_HASH 428776341
+#define SIGNATURE_DATE 2021.11.02
+#define SIGNATURE_HASH 1764504064
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2308,7 +2312,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.10.31.all.428776341"
+#define TS_SIGNATURE "rusEFI 2021.11.02.all.1764504064"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
