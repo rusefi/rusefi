@@ -301,6 +301,7 @@ enable2ndByteCanID = false
 ; Knock
       knockLevel      = scalar,  F32,    108,  "Volts",      1,         0
 	  knockCount      = scalar,  U16,    306,  "count",      1,         0
+	  knockRetard     = scalar,  U08,    36,   "deg",      0.1,         0
 
 ; Mode, firmware, protocol, run time
 ; TS requires 'seconds' name since it has special internal meaning
@@ -1145,6 +1146,7 @@ gaugeCategory = Knock
    knock10Gauge = knock10, "Knock Cyl 10", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock11Gauge = knock11, "Knock Cyl 11", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
    knock12Gauge = knock12, "Knock Cyl 12", "dBv", -60, 10, -60, -60, 10, 10, 0, 0
+   knockRetardGauge = knockRetard, "Knock Retard", "deg", 0, 10, 0, 0, 10, 10, 0, 1, 0
 
 gaugeCategory = DynoView
 	accelGauge = VssAcceleration, "Vehicle acceleration",    "m/s2",       -10,   10,      -6,     -4,      4,    6,   2,   2

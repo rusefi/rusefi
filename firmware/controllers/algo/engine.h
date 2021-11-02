@@ -21,6 +21,7 @@
 #include "limp_manager.h"
 #include "pin_repository.h"
 #include "ac_control.h"
+#include "knock_logic.h"
 #include "idle_state_generated.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
@@ -380,8 +381,7 @@ public:
 
 	void onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt);
 
-	// onKnockSenseCompleted is the callback from the knock sense driver to report a sensed knock level
-	bool onKnockSenseCompleted(uint8_t cylinderIndex, float levelDbv, efitick_t lastKnockTime);
+	KnockController knockController;
 
 	AirmassModelBase* mockAirmassModel = nullptr;
 

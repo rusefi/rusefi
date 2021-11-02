@@ -8,7 +8,6 @@
 #include "pch.h"
 #include "knock_logic.h"
 #include "os_access.h"
-#include "peak_detect.h"
 
 #include "hip9011.h"
 
@@ -46,11 +45,7 @@ int getCylinderKnockBank(uint8_t cylinderIndex) {
 	}
 }
 
-using PD = PeakDetect<float, MS2NT(100)>;
-static PD peakDetectors[12];
-static PD allCylinderPeakDetector;
-
-bool Engine::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
+bool KnockController::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
 	bool isKnock = dbv > ENGINE(engineState).knockThreshold;
 
 #if EFI_TUNER_STUDIO
@@ -68,8 +63,47 @@ bool Engine::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t l
 #endif // EFI_TUNER_STUDIO
 
 	// TODO: retard timing, then put it back!
+	if (isKnock) {
+		auto baseTiming = ENGINE(engineState).timingAdvance;
+
+		// TODO: 20 configurable? Better explanation why 20?
+		auto distToMinimum = baseTiming - (-20);
+
+		// 0.1% per unit -> multiply by 0.001
+		auto retardFraction = CONFIG(knockRetardAggression) * 0.001f;
+		auto retardAmount = distToMinimum * retardFraction;
+
+		{
+			// Adjust knock retard under lock
+			chibios_rt::CriticalSectionLocker csl;
+			auto newRetard = m_knockRetard + retardAmount;
+			m_knockRetard = clampF(0, newRetard, CONFIG(knockRetardMaximum));
+		}
+	}
 
 	return isKnock;
+}
+
+float KnockController::getKnockRetard() const {
+	return m_knockRetard;
+}
+
+void KnockController::periodicFastCallback() {
+	constexpr auto callbackPeriodSeconds = FAST_CALLBACK_PERIOD_MS / 1000.0f;
+
+	// stored in units of 0.1 deg/sec
+	auto applyRate = CONFIG(knockRetardReapplyRate) * 0.1f;
+	auto applyAmount = applyRate * callbackPeriodSeconds;
+
+	{
+		// Adjust knock retard under lock
+		chibios_rt::CriticalSectionLocker csl;
+
+		float newRetard = m_knockRetard - applyAmount;
+
+		// don't allow retard to go negative
+		m_knockRetard = maxF(0, newRetard);
+	}
 }
 
 // This callback is to be implemented by the knock sense driver

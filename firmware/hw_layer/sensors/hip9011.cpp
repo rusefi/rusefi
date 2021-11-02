@@ -501,7 +501,7 @@ static msg_t hipThread(void *arg) {
 			/* Check for correct cylinder/input */
 			if (correctCylinder) {
 				// TODO: convert knock level to dBv
-				engine->onKnockSenseCompleted(instance.cylinderNumber, knockVolts, instance.knockSampleTimestamp);
+				engine->knockController.onKnockSenseCompleted(instance.cylinderNumber, knockVolts, instance.knockSampleTimestamp);
 
 				#if EFI_HIP_9011_DEBUG
 					/* debug */

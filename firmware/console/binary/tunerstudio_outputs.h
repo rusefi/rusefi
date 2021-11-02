@@ -107,7 +107,8 @@ struct TunerStudioOutputChannels {
 	scaled_pressure baroPressure; // 32
 
 	scaled_lambda lambda; // 34
-	uint16_t unused36; // 36
+	scaled_channel<uint8_t, 10> knockRetard; // 36
+	uint8_t unused37;
 
 	// misc sensors
 	scaled_voltage vBatt; // 38

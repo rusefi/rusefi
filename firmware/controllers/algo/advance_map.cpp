@@ -101,9 +101,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	return iatCorrection
 		+ engine->engineState.cltTimingCorrection
-		+ pidTimingCorrection
-		// todo: uncomment once we get usable knock   - engine->knockCount
-		;
+		+ pidTimingCorrection;
 }
 
 /**
