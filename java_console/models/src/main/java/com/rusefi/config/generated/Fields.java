@@ -1121,6 +1121,10 @@ public class Fields {
 	public static final String GAUGE_NAME_VVT_B1I = "VVT: bank 1 intake";
 	public static final String GAUGE_NAME_VVT_B2E = "VVT: bank 2 exhaust";
 	public static final String GAUGE_NAME_VVT_B2I = "VVT: bank 2 intake";
+	public static final String GAUGE_NAME_VVT_TARGET_B1E = "VVT: bank 1 exhaust target";
+	public static final String GAUGE_NAME_VVT_TARGET_B1I = "VVT: bank 1 intake target";
+	public static final String GAUGE_NAME_VVT_TARGET_B2E = "VVT: bank 2 exhaust target";
+	public static final String GAUGE_NAME_VVT_TARGET_B2I = "VVT: bank 2 intake target";
 	public static final String GAUGE_NAME_WARNING_COUNT = "Warning count";
 	public static final String GAUGE_NAME_WARNING_COUNTER = "warning: counter";
 	public static final String GAUGE_NAME_WARNING_LAST = "warning: last";
