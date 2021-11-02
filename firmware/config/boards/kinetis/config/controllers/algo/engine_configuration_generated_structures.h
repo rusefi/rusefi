@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 02 19:08:00 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 02 23:03:18 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3823,7 +3823,7 @@ struct engine_configuration_s {
 	:1
 	 * offset 3977
 	 */
-	uint8_t stoichRatioPrimary;
+	scaled_channel<uint8_t, PACK_MULT_AFR_CFG> stoichRatioPrimary;
 	/**
 	 * iTerm max value
 	 * offset 3978
@@ -3838,7 +3838,7 @@ struct engine_configuration_s {
 	:1
 	 * offset 3981
 	 */
-	uint8_t stoichRatioSecondary;
+	scaled_channel<uint8_t, PACK_MULT_AFR_CFG> stoichRatioSecondary;
 	/**
 	units
 	 * offset 3982
@@ -4397,4 +4397,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 02 19:08:00 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 02 23:03:18 UTC 2021
