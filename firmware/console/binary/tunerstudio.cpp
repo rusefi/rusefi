@@ -251,9 +251,13 @@ static const void * getStructAddr(live_data_e structId) {
 	case LDS_IDLE_PID:
 		return static_cast<pid_state_s*>(getIdlePid());
 #endif /* EFI_IDLE_CONTROL */
+	case LDS_IDLE:
+		return static_cast<idle_state_s*>(&engine->idle);
+	case LDS_TPS_ACCEL:
+		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
 
 	default:
-		return NULL;
+		return nullptr;
 	}
 }
 

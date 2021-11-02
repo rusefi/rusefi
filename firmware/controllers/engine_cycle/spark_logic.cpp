@@ -85,7 +85,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	assertAngleRange(ignitionPositionWithinEngineCycle, "aPWEC", CUSTOM_ERR_6566);
 	// this correction is usually zero (not used)
 	float perCylinderCorrection = CONFIG(timing_offset_cylinder[event->cylinderIndex]);
-	const angle_t sparkAngle = -ENGINE(engineState.timingAdvance) + ignitionPositionWithinEngineCycle + perCylinderCorrection;
+	const angle_t sparkAngle = -ENGINE(engineState.timingAdvance) + ENGINE(knockController).getKnockRetard() + ignitionPositionWithinEngineCycle + perCylinderCorrection;
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");

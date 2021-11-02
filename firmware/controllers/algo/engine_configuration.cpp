@@ -484,6 +484,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].minValue = 10;
 	engineConfiguration->auxPid[0].maxValue = 90;
 
+	engineConfiguration->vvtOutputFrequency[0] = 300; // VVT solenoid control
 
 	engineConfiguration->auxPid[1].minValue = 10;
 	engineConfiguration->auxPid[2].maxValue = 90;

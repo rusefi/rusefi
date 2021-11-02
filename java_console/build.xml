@@ -3,7 +3,7 @@
     <property name="hw_tests" value="build_hw"/>
     <property name="jar_file" value="${jar_file_folder}/rusefi_console.jar"/>
     <property name="server_jar_file" value="${jar_file_folder}/rusefi_server.jar"/>
-    <property name="lib_list" value="lib/mockito-all-1.10.19.jar:../java_tools/configuration_definition/lib/snakeyaml.jar:lib/log4j-api-2.13.3.jar:lib/log4j-core-2.13.3.jar:lib/jsr305-2.0.1.jar:lib/dfu/dfu_java.jar:lib/dfu/IntelHexParser.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/jlatexmath-1.0.6.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar:../java_tools/configuration_definition/lib/antlr-4.5-complete.jar"/>
+    <property name="lib_list" value="lib/mockito-all-1.10.19.jar:../java_tools/configuration_definition/lib/snakeyaml.jar:lib/log4j-api-2.13.3.jar:lib/log4j-core-2.13.3.jar:lib/jsr305-2.0.1.jar:lib/dfu/dfu_java.jar:lib/dfu/IntelHexParser.jar:lib/json-simple-1.1.1.jar:lib/server/javax.json.jar:lib/server/cactoos.jar:lib/server/takes.jar:lib/json-simple-1.1.1.jar:lib/jaxb-api.jar:lib/httpclient.jar:lib/httpmime.jar:lib/httpcore.jar:lib/jSerialComm.jar:lib/jcip-annotations-1.0.jar:lib/swing-layout-1.0.jar:lib/jep.jar:lib/log4j.jar:lib/junit.jar:lib/SteelSeries-3.9.30.jar:lib/annotations.jar:lib/miglayout-4.0.jar:lib/surfaceplotter-2.0.1.jar:../java_tools/configuration_definition/lib/antlr-4.5-complete.jar"/>
 
     <target name="clean">
         <delete dir="build"/>
@@ -176,7 +176,6 @@
             <zipfileset src="lib/batik/batik-svggen.jar" includes="**/*.class"/>
             <zipfileset src="lib/batik/batik-awt-util.jar" includes="**/*.class"/>
             <zipfileset src="lib/batik/batik-util.jar" includes="**/*.class"/>
-            <zipfileset src="lib/jlatexmath-1.0.6.jar" includes="**/*.class **/*.xml **/*.ttf"/>
             <zipfileset src="lib/json-simple-1.1.1.jar" includes="**/*.class"/>
             <zipfileset src="lib/junit.jar" includes="**/*.class"/>
         </jar>

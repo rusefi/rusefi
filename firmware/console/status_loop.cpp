@@ -634,6 +634,8 @@ static void updateIgnition(int rpm) {
 	tsOutputChannels.sparkDwell = ENGINE(engineState.sparkDwell);
 
 	tsOutputChannels.coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+
+	tsOutputChannels.knockRetard = ENGINE(knockController).getKnockRetard();
 }
 
 static void updateFlags() {

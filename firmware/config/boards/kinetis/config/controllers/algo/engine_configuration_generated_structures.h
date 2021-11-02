@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 29 19:50:50 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Oct 31 02:07:07 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2926,11 +2926,13 @@ struct engine_configuration_s {
 	 */
 	uint32_t uartConsoleSerialSpeed;
 	/**
+	 * For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 	roc
 	 * offset 2080
 	 */
 	float tpsDecelEnleanmentThreshold;
 	/**
+	 * Magic multiplier, we multiply delta of TPS and get fuel squirt duration
 	coeff
 	 * offset 2084
 	 */
@@ -3982,20 +3984,25 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_4511[1];
 	/**
-	ratio
+	from
 	 * offset 4512
 	 */
-	float triggerGapOverride[GAP_TRACKING_LENGTH];
+	float triggerGapOverrideFrom[GAP_TRACKING_LENGTH];
 	/**
 	Percent
 	 * offset 4584
 	 */
 	int8_t fuelTrim[MAX_CYLINDER_COUNT];
 	/**
-	units
+	to
 	 * offset 4596
 	 */
-	int mainUnusedEnd[344];
+	float triggerGapOverrideTo[GAP_TRACKING_LENGTH];
+	/**
+	units
+	 * offset 4668
+	 */
+	int mainUnusedEnd[326];
 	/** total size 5972*/
 };
 
@@ -4390,4 +4397,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Oct 29 19:50:50 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Oct 31 02:07:07 UTC 2021

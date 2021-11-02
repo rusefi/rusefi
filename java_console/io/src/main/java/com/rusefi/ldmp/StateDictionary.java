@@ -5,8 +5,7 @@ import com.rusefi.config.generated.*;
 import com.rusefi.enums.live_data_e;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public enum StateDictionary {
     INSTANCE;
@@ -21,10 +20,17 @@ public enum StateDictionary {
         register(live_data_e.LDS_TRIGGER_CENTRAL, TriggerCentral.VALUES);
         register(live_data_e.LDS_ETB_PID, PidState.VALUES); // 7
         register(live_data_e.LDS_IDLE_PID, PidState.VALUES);
-        // LDS_ALTERNATOR_PID
+        //register(live_data_e.LDS_ALTERNATOR_PID,
         // LDS_CJ125_PID
+        register(live_data_e.LDS_IDLE, IdleState.VALUES);
         register(live_data_e.LDS_TRIGGER_STATE, TriggerState.VALUES); // 11
         register(live_data_e.LDS_AC_CONTROL, AcControl.VALUES); // 12
+        register(live_data_e.LDS_TPS_ACCEL, TpsAccelState.VALUES);
+        if (map.size() != live_data_e.values().length) {
+            Set<live_data_e> missing = new HashSet<live_data_e>(Arrays.asList(live_data_e.values()));
+            missing.removeAll(map.keySet());
+            throw new IllegalStateException("Some live_data_e does not have values: " + missing);
+        }
     }
 
     private void register(live_data_e ldsIndex, Field[] values) {

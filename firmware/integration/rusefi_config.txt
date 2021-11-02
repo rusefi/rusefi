@@ -14,7 +14,7 @@
 ! The only difference here is that engine_configuration_s area does not support hot modification while tuning tables could
 ! be modified without burning changes
 !
-! See also ../tunerstudio/readme.txt
+! See also ../tunerstudio/readme.md
 !
 ! Q: How to add new fields?
 ! A: Find an 'unused' bit or unused int (usually the huge unusedEnd[] array at the end
@@ -1200,9 +1200,9 @@ int16_t tps2Max;+Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!
 	float unusedEL4;;"coeff", 1, 0, 0, 200, 3
 
 
-	uint32_t uartConsoleSerialSpeed;+Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
-	float tpsDecelEnleanmentThreshold;;"roc", 1, 0, 0, 200, 3
-	float tpsDecelEnleanmentMultiplier;;"coeff", 1, 0, 0, 200, 3
+	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
+	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 3
+	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 3
 	float slowAdcAlpha;+ExpAverage alpha coefficient;"coeff", 1, 0, 0, 200, 3
 	debug_mode_e debugMode;+See http://rusefi.com/s/debugmode\n\nset debug_mode X
 
@@ -1482,11 +1482,12 @@ tChargeMode_e tChargeMode;
 
 	int8_t[IGN_RPM_COUNT] knockBaseNoise;;"dB", 1, 0, -30, 0, 2
 
-	float[GAP_TRACKING_LENGTH iterate] triggerGapOverride;;"ratio", 1, 0, 0, 20, 2
+	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideFrom;;"from", 1, 0, 0, 20, 2
 
 int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACKING_DIV@@, 0, -25, 25, 2
 
-	int[344] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideTo;;"to", 1, 0, 0, 20, 2
+	int[326] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
