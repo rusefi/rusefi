@@ -112,6 +112,7 @@ static void initVvtShape(int camIndex, TriggerState &initState DECLARE_ENGINE_PA
 
 	if (vvtMode != VVT_INACTIVE) {
 		trigger_config_s config;
+		// todo: should 'vvtWithRealDecoder' be used here?
 		ENGINE(triggerCentral).vvtTriggerType[camIndex] = config.type = getVvtTriggerType(vvtMode);
 
 		shape->initializeTriggerWaveform(
