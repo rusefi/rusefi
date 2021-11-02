@@ -192,10 +192,10 @@ void setDefaultFuel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
 	 */
 	engineConfiguration->injector.flow = 200;
-	engineConfiguration->stoichRatioPrimary = STOICH_RATIO * PACK_MULT_AFR_CFG;
+	engineConfiguration->stoichRatioPrimary = STOICH_RATIO;
 
 	// 9.0 = E100 pure ethanol
-	engineConfiguration->stoichRatioSecondary = 9.0f * PACK_MULT_AFR_CFG;
+	engineConfiguration->stoichRatioSecondary = 9.0f;
 
 	// Injector deadtime
 	setBosch02880155868(PASS_CONFIG_PARAMETER_SIGNATURE);

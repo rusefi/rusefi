@@ -48,8 +48,8 @@ TEST(FuelComputer, FlexFuel) {
 	INJECT_ENGINE_REFERENCE(&dut);
 
 	// easier values for testing
-	engineConfiguration->stoichRatioPrimary = 150;
-	engineConfiguration->stoichRatioSecondary = 100;
+	engineConfiguration->stoichRatioPrimary = 15;
+	engineConfiguration->stoichRatioSecondary = 10;
 
 	// No sensor -> returns primary
 	Sensor::resetMockValue(SensorType::FuelEthanolPercent);

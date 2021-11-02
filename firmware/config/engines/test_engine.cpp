@@ -35,7 +35,7 @@ void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setWholeIatCorrTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
 
 	// Many tests were written when the default target AFR was 14.0, so use that for tests by default.
-	engineConfiguration->stoichRatioPrimary = 140;
+	engineConfiguration->stoichRatioPrimary = 14.0f;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	setConstantDwell(3 PASS_CONFIG_PARAMETER_SUFFIX); // 50% duty cycle @ 5000 rpm
