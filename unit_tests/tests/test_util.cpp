@@ -20,7 +20,6 @@
 #include "lcd_menu_tree.h"
 #include "crc.h"
 #include "fl_stack.h"
-#include "peak_detect.h"
 
 TEST(util, negativeZero) {
 	ASSERT_TRUE(IS_NEGATIVE_ZERO(-0.0));

@@ -41,23 +41,34 @@
 // pin 23/black35
 #define PROTEUS_LS_16 GPIOE_2
 
+
 // pin 2/black35
-#define PROTEUS_HS_1 GPIOD_4
+#define PROTEUS_HS_1 GPIOA_9
 
 // pin 1/black35
-#define PROTEUS_HS_2 GPIOD_3
+#define PROTEUS_HS_2 GPIOA_8
+
+#define PROTEUS_HS_3 GPIOD_15
+
+#define PROTEUS_HS_4 GPIOD_14
+
+// pin 35/black35
+#define PROTEUS_IGN_1 GPIOD_4
+
+// pin 34/black35
+#define PROTEUS_IGN_2 GPIOD_3
 
 // pin 22/black35
-#define PROTEUS_HS_3 GPIOC_9
-#define PROTEUS_HS_4 GPIOC_8
-#define PROTEUS_HS_5 GPIOC_7
-#define PROTEUS_HS_6 GPIOG_8
-#define PROTEUS_HS_7 GPIOG_7
-#define PROTEUS_HS_8 GPIOG_6
-#define PROTEUS_HS_9 GPIOG_5
-#define PROTEUS_HS_10 GPIOG_4
-#define PROTEUS_HS_11 GPIOG_3
-#define PROTEUS_HS_12 GPIOG_2
+#define PROTEUS_IGN_3 GPIOC_9
+#define PROTEUS_IGN_4 GPIOC_8
+#define PROTEUS_IGN_5 GPIOC_7
+#define PROTEUS_IGN_6 GPIOG_8
+#define PROTEUS_IGN_7 GPIOG_7
+#define PROTEUS_IGN_8 GPIOG_6
+#define PROTEUS_IGN_9 GPIOG_5
+#define PROTEUS_IGN_10 GPIOG_4
+#define PROTEUS_IGN_11 GPIOG_3
+#define PROTEUS_IGN_12 GPIOG_2
 
 // Analog Temp 1 = PC4
 #define PROTEUS_IN_ANALOG_TEMP_1 EFI_ADC_14

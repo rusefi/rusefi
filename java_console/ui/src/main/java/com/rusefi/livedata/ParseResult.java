@@ -8,7 +8,7 @@ import java.util.List;
 public class ParseResult {
     static ParseResult VOID = new ParseResult(Collections.emptyList());
 
-    private List<Token> configTokens;
+    private final List<Token> configTokens;
 
     public ParseResult(List<Token> configTokens) {
         this.configTokens = configTokens;

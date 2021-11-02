@@ -26,14 +26,6 @@
 #define assertAngleRange(angle, msg, code) {}
 #endif
 
-#define doFixAngle(angle, limit)                                            \
-		while (angle < 0)                       							\
-			angle += limit;   						                        \
-			/* todo: would 'if' work as good as 'while'? */                 \
-		while (angle >= limit)					                            \
-			angle -= limit;
-
-
 /**
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
@@ -48,7 +40,11 @@
 		float engineCycleDurationLocalCopy = engineCycle;	                \
 		/* todo: split this method into 'fixAngleUp' and 'fixAngleDown'*/   \
 		/*       as a performance optimization?*/                           \
-		doFixAngle(angle, engineCycleDurationLocalCopy);                    \
+		while (angle < 0)                       							\
+			angle += engineCycleDurationLocalCopy;   						\
+			/* todo: would 'if' work as good as 'while'? */                 \
+		while (angle >= engineCycleDurationLocalCopy)						\
+			angle -= engineCycleDurationLocalCopy;   						\
 	}
 
 /**

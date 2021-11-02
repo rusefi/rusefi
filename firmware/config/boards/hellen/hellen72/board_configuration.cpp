@@ -143,7 +143,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->fan2Pin = GPIOD_9;
 	engineConfiguration->enableFan2WithAc = true;
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
-	engineConfiguration->auxPidPins[0] = GPIOI_0;    // 4R - VVT (O5)
+	engineConfiguration->vvtPins[0] = GPIOI_0;    // 4R - VVT (O5)
 
     engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
     engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)

@@ -547,7 +547,6 @@ void EtbController::update() {
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
-		tsOutputChannels.debugFloatField2 = engine->idle.etbIdleAddition;
 	}
 #endif
 

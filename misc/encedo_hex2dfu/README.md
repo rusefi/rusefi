@@ -1,4 +1,7 @@
 (this tool would not compile as is so my changes are at https://github.com/rusefi/hex2dfu)
+(use
+gcc hex2dfu.c -o hex2dfu.exe
+to compile)
 (this comes from https://github.com/encedo/hex2dfu)
 
 

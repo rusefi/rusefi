@@ -239,8 +239,6 @@ void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->vvtTable1LoadBins, vvt18fsioLoadBins);
 	copyTable(config->vvtTable1, fsio_table_vvt_target);
 
-	engineConfiguration->auxPidFrequency[0] = 300; // VVT solenoid control
-
 	// VVT closed loop
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
@@ -394,7 +392,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
-	engineConfiguration->auxPidPins[0] = GPIOE_3; // VVT solenoid control
+	engineConfiguration->vvtPins[0] = GPIOE_3; // VVT solenoid control
 	//	/**
 	//	 * set_fsio_setting 1 0.55
 	//	 */
@@ -596,7 +594,7 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	//   # TLE8888 high current low side: VVT1 IN10 / OUT6
 	// TLE8888_PIN_6:  "7 - Lowside 1"
-	engineConfiguration->auxPidPins[0] = TLE8888_PIN_6; // VVT solenoid control
+	engineConfiguration->vvtPins[0] = TLE8888_PIN_6; // VVT solenoid control
 
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
@@ -750,7 +748,7 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 
     engineConfiguration->alternatorControlPin = GPIOA_8;  // "Highside 2"    # pin 1/black35
 
-    engineConfiguration->auxPidPins[0] = GPIOB_5; // VVT solenoid control # pin 8/black35
+    engineConfiguration->vvtPins[0] = GPIOB_5; // VVT solenoid control # pin 8/black35
 
     // high-side driver with +12v VP jumper
     engineConfiguration->tachOutputPin = GPIOA_9; // tachometer
@@ -759,9 +757,9 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
     engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
     #if EFI_PROD_CODE
-    engineConfiguration->ignitionPins[0] = PROTEUS_HS_1;
+    engineConfiguration->ignitionPins[0] = PROTEUS_IGN_1;
     engineConfiguration->ignitionPins[1] = GPIO_UNASSIGNED;
-    engineConfiguration->ignitionPins[2] = PROTEUS_HS_3;
+    engineConfiguration->ignitionPins[2] = PROTEUS_IGN_3;
     engineConfiguration->ignitionPins[3] = GPIO_UNASSIGNED;
 
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

@@ -102,7 +102,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelPumpPin = TLE8888_PIN_22;
 	engineConfiguration->tachOutputPin = TLE8888_PIN_16;
 	engineConfiguration->alternatorControlPin = TLE8888_PIN_17;
-	engineConfiguration->auxPidPins[0] = TLE8888_PIN_6; // VVT solenoid control
+	engineConfiguration->vvtPins[0] = TLE8888_PIN_6; // VVT solenoid control
 #endif /* BOARD_TLE8888_COUNT */
 
 	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
@@ -136,7 +136,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* STM32_HAS_GPIOF */
 	setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
-	// is this needed? engineConfiguration->auxPidFrequency[3] = 25;
+	// is this needed? engineConfiguration->vvtOutputFrequency[3] = 25;
 	CONFIG(etb_use_two_wires) = true;
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
@@ -161,7 +161,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// VVT Settings
 
-	engineConfiguration->auxPidFrequency[0] = 300;
+	engineConfiguration->vvtOutputFrequency[0] = 300;
 	engineConfiguration->fsio_setting[0] = 0.0;
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
@@ -169,7 +169,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].offset = 33;
 	engineConfiguration->auxPid[0].minValue = 24;
 	engineConfiguration->auxPid[0].maxValue = 44;
-	engineConfiguration->auxPidFrequency[0] = 300;
+	engineConfiguration->vvtOutputFrequency[0] = 300;
 	engineConfiguration->fsio_setting[0] = 0.0;
 
 

@@ -188,7 +188,7 @@ bool StepDirectionStepper::pulse() {
 	return true;
 }
 
-void StepperHw::sleep(void) {
+void StepperHw::sleep() {
 	pause();
 }
 
@@ -236,3 +236,7 @@ void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e direction
 }
 
 #endif
+
+#if EFI_UNIT_TEST
+void StepperHw::sleep() { }
+#endif // EFI_UNIT_TEST

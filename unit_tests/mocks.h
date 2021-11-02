@@ -12,6 +12,9 @@
 
 class MockEtb : public IEtbController {
 public:
+	MockEtb();
+	virtual ~MockEtb();
+
 	// IEtbController mocks
 	MOCK_METHOD(void, reset, (), (override));
 	MOCK_METHOD(void, update, (), (override));
@@ -31,6 +34,9 @@ public:
 
 class MockMotor : public DcMotor {
 public:
+	MockMotor();
+	virtual ~MockMotor();
+
 	MOCK_METHOD(bool, set, (float duty), (override));
 	MOCK_METHOD(float, get, (), (const, override));
 	MOCK_METHOD(void, enable, (), (override));
@@ -40,21 +46,33 @@ public:
 
 class MockVp3d : public ValueProvider3D {
 public:
+	MockVp3d();
+	virtual ~MockVp3d();
+
 	MOCK_METHOD(float, getValue, (float xColumn, float yRow), (const, override));
 };
 
 class MockPwm : public IPwm {
 public:
+	MockPwm();
+	virtual ~MockPwm();
+
 	MOCK_METHOD(void, setSimplePwmDutyCycle, (float dutyCycle), (override));
 };
 
 class MockOutputPin : public OutputPin {
 public:
+	MockOutputPin();
+	virtual ~MockOutputPin();
+
 	MOCK_METHOD(void, setValue, (int value), (override));
 };
 
 class MockExecutor : public TestExecutor {
 public:
+	MockExecutor();
+	virtual ~MockExecutor();
+
 	MOCK_METHOD(void, scheduleByTimestamp, (const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action), (override));
 	MOCK_METHOD(void, scheduleByTimestampNt, (const char *msg, scheduling_s *scheduling, efitime_t timeUs, action_s action), (override));
 	MOCK_METHOD(void, scheduleForLater, (scheduling_s *scheduling, int delayUs, action_s action), (override));
@@ -63,7 +81,8 @@ public:
 
 class MockAirmass : public AirmassVeModelBase {
 public:
-	MockAirmass() : AirmassVeModelBase(veTable) {}
+	MockAirmass();
+	virtual ~MockAirmass();
 
 	MockVp3d veTable;
 
@@ -72,6 +91,9 @@ public:
 
 class MockInjectorModel2 : public IInjectorModel {
 public:
+	MockInjectorModel2();
+	virtual ~MockInjectorModel2();
+
 	MOCK_METHOD(void, prepare, (), (override));
 	MOCK_METHOD(floatms_t, getInjectionDuration, (float fuelMassGram), (const, override));
 	MOCK_METHOD(float, getFuelMassForDuration, (floatms_t duration), (const, override));
@@ -79,5 +101,8 @@ public:
 
 class MockStepperHardware : public StepperHw {
 public:
+	MockStepperHardware();
+	virtual ~MockStepperHardware();
+
 	MOCK_METHOD(bool, step, (bool positive), (override));
 };

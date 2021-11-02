@@ -83,11 +83,10 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_MIATA_NB2;
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
+	case VVT_HONDA_K:
+	case VVT_TOYOTA_4_1:
 	case VVT_FIRST_HALF:
-		return TT_ONE;
 	case VVT_SECOND_HALF:
-		return TT_ONE;
-	case VVT_4_1:
 		return TT_ONE;
 	case VVT_FORD_ST170:
 		return TT_FORD_ST170;
@@ -151,8 +150,9 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(overrideTriggerGaps)) {
 		int gapIndex = 0;
 		for (;gapIndex<=CONFIG(overrideTriggerGaps);gapIndex++) {
-			float gapOverride = CONFIG(triggerGapOverride[gapIndex]);
-			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverride * TRIGGER_GAP_DEVIATION_LOW, gapOverride * TRIGGER_GAP_DEVIATION_HIGH));
+			float gapOverrideFrom = CONFIG(triggerGapOverrideFrom[gapIndex]);
+			float gapOverrideTo = CONFIG(triggerGapOverrideTo[gapIndex]);
+			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
 		}
 		for (;gapIndex<GAP_TRACKING_LENGTH;gapIndex++) {
 			ENGINE(triggerCentral.triggerShape).syncronizationRatioFrom[gapIndex] = NAN;
@@ -465,6 +465,7 @@ void Engine::injectEngineReferences() {
 		INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration[camIndex]);
 	}
 	INJECT_ENGINE_REFERENCE(&limpManager);
+	INJECT_ENGINE_REFERENCE(&knockController);
 
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
@@ -633,6 +634,8 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	knockController.periodicFastCallback();
 
 	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
