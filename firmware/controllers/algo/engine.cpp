@@ -465,6 +465,7 @@ void Engine::injectEngineReferences() {
 		INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration[camIndex]);
 	}
 	INJECT_ENGINE_REFERENCE(&limpManager);
+	INJECT_ENGINE_REFERENCE(&knockController);
 
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
@@ -633,6 +634,8 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	knockController.periodicFastCallback();
 
 	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
