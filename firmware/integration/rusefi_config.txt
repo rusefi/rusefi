@@ -1427,11 +1427,11 @@ tChargeMode_e tChargeMode;
 	int16_t idlerpmpid_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 
 	spi_device_e tle6240spiDevice;
-	uint8_t stoichRatioPrimary;+Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.\nE0 = 14.7\nE10 = 14.1\nE85 = 9.9\nE100 = 9.0;":1", {1/@@PACK_MULT_AFR_CFG@@}, 0, 5, 25, 1
+	uint8_t autoscale<PACK_MULT_AFR_CFG> stoichRatioPrimary;+Stoichiometric ratio for your primary fuel. When Flex Fuel is enabled, this value is used when the Flex Fuel sensor indicates E0.\nE0 = 14.7\nE10 = 14.1\nE85 = 9.9\nE100 = 9.0;":1", {1/@@PACK_MULT_AFR_CFG@@}, 0, 5, 25, 1
 	int16_t idlerpmpid_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 
 	spi_device_e mc33972spiDevice;
-	uint8_t stoichRatioSecondary;+Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0;":1", {1/@@PACK_MULT_AFR_CFG@@}, 0, 5, 25, 1
+	uint8_t autoscale<PACK_MULT_AFR_CFG> stoichRatioSecondary;+Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0;":1", {1/@@PACK_MULT_AFR_CFG@@}, 0, 5, 25, 1
 	uint8_t[2] unusedSpiPadding8;;"units", 1, 0, -20, 100, 0
 
 

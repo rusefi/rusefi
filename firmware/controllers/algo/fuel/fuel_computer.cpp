@@ -20,7 +20,7 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const
 FuelComputer::FuelComputer(const ValueProvider3D& lambdaTable) : m_lambdaTable(&lambdaTable) {}
 
 float FuelComputer::getStoichiometricRatio() const {
-	float primary = (float)CONFIG(stoichRatioPrimary) / PACK_MULT_AFR_CFG;
+	float primary = CONFIG(stoichRatioPrimary);
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (primary < 5) {
@@ -33,7 +33,7 @@ float FuelComputer::getStoichiometricRatio() const {
 		return primary;
 	}
 
-	float secondary = (float)CONFIG(stoichRatioSecondary) / PACK_MULT_AFR_CFG;
+	float secondary = CONFIG(stoichRatioSecondary);
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (secondary < 5) {
