@@ -92,7 +92,7 @@ float getCrankingFuel3(
 	return crankingFuel;
 }
 
-floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getRunningFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetRunningFuel);
 
 	ENGINE(engineState.running.baseFuel) = baseFuel;
@@ -109,7 +109,7 @@ floatms_t getRunningFuel(floatms_t baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
-	floatms_t runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
+	float runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 
 	ENGINE(engineState.running.fuel) = runningFuel * 1000;
@@ -258,10 +258,10 @@ static float getCycleFuelMass(bool isCranking, float baseFuelMass DECLARE_ENGINE
 }
 
 /**
- * @returns	Length of each individual fuel injection, in milliseconds
+ * @returns	Mass of each individual fuel injection, in "thingy-grams"??? TODO FIX
  *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
  */
-floatms_t getInjectionMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getInjectionMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	ScopePerf perf(PE::GetInjectionDuration);
 
 #if EFI_SHAFT_POSITION_INPUT

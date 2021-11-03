@@ -117,6 +117,9 @@ typedef uint8_t boost_table_t[BOOST_LOAD_COUNT][BOOST_RPM_COUNT];
 typedef uint8_t boost_target_table_t[BOOST_LOAD_COUNT][BOOST_RPM_COUNT];
 typedef uint8_t gppwm_table_t[GPPWM_LOAD_COUNT][GPPWM_RPM_COUNT]; 
 
+typedef uint16_t hpfp_target_t[HPFP_TARGET_SIZE][HPFP_TARGET_SIZE];
+typedef uint8_t hpfp_compensation_t[HPFP_COMPENSATION_SIZE][HPFP_COMPENSATION_SIZE];
+
 
 // this is different type simply to have different hi/low range in rusefi.ini
 typedef ignition_table_t angle_table_t;

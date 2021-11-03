@@ -732,8 +732,7 @@ pin_input_mode_e throttlePedalUpPinMode;
 	uint16_t idlePositionMax;+Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 
 
-	uint16_t tempHpfpStart;;"units", 1, 0, -20, 100, 0
-	uint16_t tempHpfpDuration;;"units", 1, 0, -20, 100, 0
+        uint16_t[2] unusedExHpfp;;"", 1, 0, -20, 100, 0
 
 	uint32_t tunerStudioSerialSpeed;+Secondary TTL channel baud rate;"BPs", 1, 0, 0, 1000000, 0
 
@@ -1486,7 +1485,40 @@ tChargeMode_e tChargeMode;
 int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACKING_DIV@@, 0, -25, 25, 2
 
 	float[GAP_TRACKING_LENGTH iterate] triggerGapOverrideTo;;"to", 1, 0, 0, 20, 2
-	int[326] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+
+! Someday there will be a 6th option for BMW S55 that uses a separate shaft just for HPFP
+#define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
+#define HPFP_LOBE_PROFILE_SIZE 16
+#define HPFP_DEADTIME_SIZE 8
+#define HPFP_TARGET_SIZE 10
+#define HPFP_COMPENSATION_SIZE 10
+
+        custom hpfp_cam_e 1 bits, U08, @OFFSET@, [0:2], @@hpfp_cam_e_enum@@
+        custom hpfp_target_t 2*@@HPFP_TARGET_SIZE@@x@@HPFP_TARGET_SIZE@@ array, U16, @OFFSET@, [@@HPFP_TARGET_SIZE@@x@@HPFP_TARGET_SIZE@@], "kPa", 1, 0, 0, 65000, 0
+        custom hpfp_compensation_t @@HPFP_COMPENSATION_SIZE@@x@@HPFP_COMPENSATION_SIZE@@ array, U08, @OFFSET@, [@@HPFP_COMPENSATION_SIZE@@x@@HPFP_COMPENSATION_SIZE@@], "%", 0.5, 0, 0, 100, 1
+
+        uint8_t hpfpCamLobes;;"lobes/cam", 1, 0, 1, 255, 0
+        hpfp_cam_e hpfpCam;
+        uint8_t hpfpPeakPos;+Crank angle ATDC of first lobe peak;"deg", 1, 0, 0, 255, 0
+        uint8_t hpfpMinAngle;+If the requested activation time is below this angle, don't bother running the pump;"deg", 1, 0, 0, 255, 0
+        uint16_t hpfpPumpVolume;+Size of the pump chamber in cc.  Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.;"cc", 0.001, 0, 0, 65, 3
+        uint8_t hpfpActivationAngle;+How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own);"deg", 1, 0, 0, 255, 0
+        uint8_t unusedFiller;;"", 1, 0, 0, 255, 0
+        uint16_t hpfpPidP;;"%/kPa", 0.001, 0, 0, 65, 3
+        uint16_t hpfpPidI;;"%/kPa/lobe", 0.00001, 0, 0, 0.65, 5
+        uint16_t hpfpTargetDecay;+The fastest rate the target pressure can be reduced by.  This is because HPFP have no way to bleed off pressure other than injecting fuel.;"kPa/s", 1, 0, 0, 65000, 0
+        uint8_t[HPFP_LOBE_PROFILE_SIZE] hpfpLobeProfileQuantityBins;;"%", 0.4, 0, 0, 100, 1
+        uint8_t[HPFP_LOBE_PROFILE_SIZE] hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
+        uint8_t[HPFP_DEADTIME_SIZE] hpfpDeadtimeVoltsBins;;"volts", 1, 0, 0, 255, 0
+        uint16_t[HPFP_DEADTIME_SIZE] hpfpDeadtimeMS;;"ms", 0.001, 0, 0, 65, 0
+        hpfp_target_t hpfpTarget;
+        uint16_t[HPFP_TARGET_SIZE] hpfpTargetLoadBins;;"load", 0.1, 0, 0, 6500, 1
+        uint16_t[HPFP_TARGET_SIZE] hpfpTargetRpmBins;;"RPM", 1, 0, 0, 65000, 0
+        hpfp_compensation_t hpfpCompensation;
+        uint16_t[HPFP_COMPENSATION_SIZE] hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
+        uint16_t[HPFP_COMPENSATION_SIZE] hpfpCompensationRpmBins;;"RPM", 1, 0, 0, 65000, 0
+
+	int[236] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
