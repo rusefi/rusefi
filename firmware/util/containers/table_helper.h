@@ -30,6 +30,8 @@ class Map3D : public ValueProvider3D {
 public:
 	template <typename TValueInit, typename TRowInit, typename TColumnInit>
 	void init(TValueInit table[TRowNum][TColNum], const TRowInit rowBins[TRowNum], const TColumnInit columnBins[TColNum]) {
+		// This splits out here so that we don't need one overload of init per possible combination of table/rows/columns types/dimensions
+		// Overload resolution figures out the correct versions of the functions below to call, some of which have assertions about what's allowed
 		initValues(table);
 		initRows(rowBins);
 		initCols(columnBins);
