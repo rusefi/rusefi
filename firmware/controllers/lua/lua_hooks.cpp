@@ -10,18 +10,11 @@
 #include "settings.h"
 #include <new>
 #include "luaaa.hpp"
+#include "lua_hooks_util.h"
 using namespace luaaa;
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
-
-static int lua_efi_print(lua_State* l) {
-	auto msg = luaL_checkstring(l, 1);
-
-	efiPrintf("LUA: %s", msg);
-
-	return 0;
-}
 
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
@@ -388,7 +381,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.fun("set", &LuaSensor::set)
 		.fun("invalidate", &LuaSensor::invalidate);
 
-	lua_register(l, "print", lua_efi_print);
+	configureRusefiLuaUtilHooks(l);
+
 	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
 	lua_register(l, "getSensorByIndex", lua_getSensorByIndex);
