@@ -527,7 +527,7 @@ angle_t crankingTimingAngle;+Ignition advance angle used during engine cranking,
 custom ignition_mode_e 4 bits, U32, @OFFSET@, [0:1], "Single Coil", "Individual Coils", "Wasted Spark", "Two Distributors"
 ignition_mode_e ignitionMode;+Single coil = distributor\nIndividual coils = one coil per cylinder (COP, coil-near-plug), requires sequential mode\nWasted spark = Fires pairs of cylinders together, either one coil per pair of cylinders or one coil per cylinder\nTwo distributors = A pair of distributors, found on some BMW, Toyota and other engines\nset ignition_mode X
 
-int8_t gapTrackingLengthOverride;;"count", 1, 0, 0, @@GAP_TRACKING_LENGTH@@, 0
+int8_t gapTrackingLengthOverride;How many consecutive gap rations have to match expected ranges for sync to happen;"count", 1, 0, 0, @@GAP_TRACKING_LENGTH@@, 0
  uint8_t maxIdleVss;+Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).;"kph", 1, 0, 0, 100, 0
  uint16_t minOilPressureAfterStart;+Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.;"kPa", 1, 0, 0, 1000, 0
 
