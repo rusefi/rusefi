@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 02 23:03:18 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Nov 03 21:09:26 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -269,7 +269,7 @@ struct MAP_sensor_config_s {
 	 */
 	float samplingAngleBins[MAP_ANGLE_SIZE];
 	/**
-	 * @brief MAP averaging sampling start angle, by RPM
+	 * MAP averaging sampling start crank degree angle
 	deg
 	 * offset 32
 	 */
@@ -279,7 +279,7 @@ struct MAP_sensor_config_s {
 	 */
 	float samplingWindowBins[MAP_WINDOW_SIZE];
 	/**
-	 * @brief MAP averaging angle duration, by RPM
+	 * MAP averaging angle crank degree duration
 	deg
 	 * offset 96
 	 */
@@ -428,13 +428,14 @@ struct injector_s {
 // start of specs_s
 struct specs_s {
 	/**
-	 * Engine displacement, in litres
+	 * Engine volume/capacity, in litres
 	 * see also cylindersCount
 	L
 	 * offset 0
 	 */
 	float displacement;
 	/**
+	 * Number of cylinder the engine has.
 	 * offset 4
 	 */
 	uint32_t cylindersCount;
@@ -692,6 +693,7 @@ struct engine_configuration_s {
 	 */
 	injector_s injector;
 	/**
+	 * Does the vehicle have a turbo or supercharger?
 	offset 76 bit 0 */
 	bool isForcedInduction : 1;
 	/**
@@ -800,6 +802,8 @@ struct engine_configuration_s {
 	offset 76 bit 28 */
 	bool issue_294_29 : 1;
 	/**
+	 * Experimental setting that will cause a misfire
+	 * DO NOT ENABLE.;
 	offset 76 bit 29 */
 	bool artificialTestMisfire : 1;
 	/**
@@ -921,7 +925,7 @@ struct engine_configuration_s {
 	 */
 	specs_s specs;
 	/**
-	 * Cylinder diameter, in mm.
+	 * Cylinder diameter in mm.
 	mm
 	 * offset 408
 	 */
@@ -940,8 +944,9 @@ struct engine_configuration_s {
 	int rpmHardLimit;
 	/**
 	 * This setting controls which fuel quantity control algorithm is used.
-	 * Alpha-N means drive by TPS
-	 * Speed Density requires MAP sensor
+	 * Alpha-N means drive by TPS commonly only used for NA engines
+	 * Speed Density requires MAP sensor and is the default choice for may installs
+	 * MAF air charge is a cylinder filling based method that uses a mass air flow sensor.
 	 * offset 420
 	 */
 	engine_load_mode_e fuelAlgorithm;
@@ -983,6 +988,7 @@ struct engine_configuration_s {
 	 */
 	ignition_mode_e ignitionMode;
 	/**
+	 * How many consecutive gap rations have to match expected ranges for sync to happen
 	count
 	 * offset 444
 	 */
@@ -1056,7 +1062,7 @@ struct engine_configuration_s {
 	 */
 	can_nbc_e canNbcType;
 	/**
-	 * CANbus thread period, ms
+	 * CANbus thread period in ms
 	ms
 	 * offset 484
 	 */
@@ -1133,6 +1139,7 @@ struct engine_configuration_s {
 	 */
 	spi_device_e hip9011SpiDevice;
 	/**
+	 * Single value to be used in event of a failed MAP sensor 
 	 * This value is only used for speed density fueling calculations.
 	kPa
 	 * offset 541
@@ -1209,7 +1216,7 @@ struct engine_configuration_s {
 	 */
 	idle_hardware_s idle;
 	/**
-	 * value between 0 and 100 used in Manual mode
+	 * Value between 0 and 100 used in Manual mode
 	%
 	 * offset 608
 	 */
@@ -4397,4 +4404,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 02 23:03:18 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Nov 03 21:09:26 UTC 2021
