@@ -14,7 +14,7 @@
 #include "wall_fuel_state_generated.h"
 #include "tps_accel_state_generated.h"
 
-typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float> tps_tps_Map3D_t;
+typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float, float> tps_tps_Map3D_t;
 
 /**
  * this object is used for MAP rate-of-change and TPS rate-of-change corrections
