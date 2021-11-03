@@ -92,6 +92,16 @@ TEST(LuaHooks, CanTxDataLength) {
 	EXPECT_ANY_THROW(testLuaExecString("txCan(1, 0, 0, 26)"));
 }
 
+static const char* interpolationTest = R"(
+function testFunc()
+	return interpolate(1, 10, 5, 50, 3)
+end
+)";
+
+TEST(LuaHooks, LuaInterpolate) {
+	EXPECT_EQ(testLuaReturnsNumber(interpolationTest), 30);
+}
+
 static const char* timerTest = R"(
 function testFunc()
 	local a = Timer.new()
