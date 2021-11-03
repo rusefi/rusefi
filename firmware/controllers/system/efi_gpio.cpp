@@ -554,9 +554,6 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 	setDefaultPinState(outputMode);
 
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
-	// Prevent another thread trying to set this pin while we initialize it
-	chibios_rt::CriticalSectionLocker csl;
-
 	efiSetPadMode(msg, brainPin, mode);
 
 	if (brain_pin_is_onchip(brainPin)) {
