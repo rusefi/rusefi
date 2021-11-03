@@ -16,12 +16,12 @@ TEST(TableFuncTest, basic) {
 }
 
 TEST(TableFuncTest, scaled) {
-	uint16_t in[] = { 0, 1000, 2000 };
+	scaled_channel<uint16_t, 1000> in[] = { 0, 1, 2 };
 	uint8_t out[] = { 70, 60, 50 };
 
-	TableFunc<uint16_t, uint8_t, 3, 
-		// Input units are 1/1000
-		efi::ratio<1, 1000>,
+	using BinType = std::remove_extent_t<decltype(in)>;
+
+	TableFunc<BinType, uint8_t, 3,
 		// output units are 1/100
 		efi::ratio<1, 100>>
 			dut(in, out);
