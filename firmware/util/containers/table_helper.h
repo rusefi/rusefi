@@ -28,22 +28,11 @@ public:
 template<int TColNum, int TRowNum, typename TValue, typename TColumn, typename TRow, typename TValueMultiplier = efi::ratio<1>>
 class Map3D : public ValueProvider3D {
 public:
-	template<int mult>
-	void init(scaled_channel<TValue, mult> table[TRowNum][TColNum], const TRow rowBins[TRowNum], const TColumn columnBins[TColNum]) {
-		static_assert(TValueMultiplier::den == mult);
-		static_assert(TValueMultiplier::num == 1);
-
-		m_values = reinterpret_cast<TValue*>(&table[0][0]);
-
-		m_rowBins = rowBins;
-		m_columnBins = columnBins;
-	}
-
-	void init(TValue table[TRowNum][TColNum], const TRow rowBins[TRowNum], const TColumn columnBins[TColNum]) {
-		m_values = &table[0][0];
-
-		m_rowBins = rowBins;
-		m_columnBins = columnBins;
+	template <typename TValueInit, typename TRowInit, typename TColumnInit>
+	void init(TValueInit table[TRowNum][TColNum], const TRowInit rowBins[TRowNum], const TColumnInit columnBins[TColNum]) {
+		initValues(table);
+		initRows(rowBins);
+		initCols(columnBins);
 	}
 
 	float getValue(float xColumn, float yRow) const override {
@@ -52,8 +41,8 @@ public:
 			return 0;
 		}
 		
-		auto row = priv::getBinPtr<TRow, TRowNum>(yRow, m_rowBins);
-		auto col = priv::getBinPtr<TColumn, TColNum>(xColumn, m_columnBins);
+		auto row = priv::getBinPtr<TRow, TRowNum>(yRow * m_rowMult, m_rowBins);
+		auto col = priv::getBinPtr<TColumn, TColNum>(xColumn * m_colMult, m_columnBins);
 
 		// Orient the table such that (0, 0) is the bottom left corner,
 		// then the following variable names will make sense
@@ -82,6 +71,40 @@ public:
 	}
 
 private:
+	template <int TMult>
+	void initValues(scaled_channel<TValue, TMult> table[TRowNum][TColNum]) {
+		static_assert(TValueMultiplier::den == TMult);
+		static_assert(TValueMultiplier::num == 1);
+
+		m_values = reinterpret_cast<TValue*>(&table[0][0]);
+	}
+
+	void initValues(TValue table[TRowNum][TColNum]) {
+		m_values = &table[0][0];
+	}
+
+	template <int TRowMult>
+	void initRows(const scaled_channel<TRow, TRowMult> rowBins[TRowNum]) {
+		m_rowBins = reinterpret_cast<const TRow*>(&rowBins[0]);
+		m_rowMult = TRowMult;
+	}
+
+	void initRows(const TRow rowBins[TRowNum]) {
+		m_rowBins = &rowBins[0];
+		m_rowMult = 1;
+	}
+
+	template <int TColMult>
+	void initCols(const scaled_channel<TColumn, TColMult> columnBins[TColNum]) {
+		m_columnBins = reinterpret_cast<const TColumn*>(&columnBins[0]);
+		m_colMult = TColMult;
+	}
+
+	void initCols(const TColumn columnBins[TColNum]) {
+		m_columnBins = &columnBins[0];
+		m_colMult = 1;
+	}
+
 	static size_t getIndexForCoordinates(size_t row, size_t column) {
 		// Index 0 is bottom left corner
 		// Index TColNum - 1 is bottom right corner
@@ -99,6 +122,9 @@ private:
 
 	const TRow *m_rowBins = nullptr;
 	const TColumn *m_columnBins = nullptr;
+
+	float m_rowMult = 1;
+	float m_colMult = 1;
 };
 
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, float, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;

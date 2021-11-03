@@ -972,7 +972,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	pin_output_mode_e drv8860_csPinMode;
 	brain_pin_e       drv8860_miso;
 
-	uint16_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	uint16_t[FUEL_LEVEL_TABLE_COUNT] autoscale<PACK_MULT_VOLTAGE> fuelLevelBins;;"volt", {1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	output_pin_e[LUA_PWM_COUNT iterate] luaOutputPins
 
