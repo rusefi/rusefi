@@ -2,6 +2,11 @@
 ! this file is processed by ../java_tools/config_definition.jar tool
 ! comments start with '!'
 !
+! The format is unique to rusEFI but there is a guide to the format available in java_tools/config_definition/RusefiConfigGrammar.g4
+!
+! This file is used in combination with rusefi.input to generate the .ini files used by turner TunerStudio.
+! The easiest way to find a specific variable within this config is to search within rusefi.input for the on screen text from tuner studio
+! this should provide the actual variable name, for example searching for "Number of Cylinders" will provide the variable "cylindersCount".
 !
 ! rusEfi configuration consists of two parts:
 ! First part is engine_configuration_s area, followed by a few tuning tables
@@ -25,7 +30,7 @@
 !
 !
 ! Q: What is "@OFFSET@"?
-! A: That's a templace placeholder for field offset within the resuting data structure.
+! A: That's a template placeholder for field offset within the resulting data structure.
 !
 ! Q: What is "[0:2]"?
 ! A: That part of the bit declaration specified usage of three bits - from bit 0 to bit 2  
@@ -384,9 +389,9 @@ end_struct
 
 struct MAP_sensor_config_s @brief MAP averaging configuration
 float[MAP_ANGLE_SIZE] samplingAngleBins;;"", 1, 0, 0, 18000, 2
-float[MAP_ANGLE_SIZE] samplingAngle;@brief MAP averaging sampling start angle, by RPM;"deg", 1, 0, -720, 720, 2
+float[MAP_ANGLE_SIZE] samplingAngle;MAP averaging sampling start crank degree angle;"deg", 1, 0, -720, 720, 2
 float[MAP_WINDOW_SIZE] samplingWindowBins;;"", 1, 0, 0, 18000, 2
-float[MAP_WINDOW_SIZE] samplingWindow;@brief MAP averaging angle duration, by RPM;"deg", 1, 0, -720, 720, 2
+float[MAP_WINDOW_SIZE] samplingWindow;MAP averaging angle crank degree duration;"deg", 1, 0, -720, 720, 2
 air_pressure_sensor_config_s sensor
 end_struct
 
@@ -430,7 +435,7 @@ end_struct
 
 injector_s injector
 
-bit isForcedInduction
+bit isForcedInduction;Does the vehicle have a turbo or supercharger?
 bit useFordRedundantTps;+On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 bit isVerboseAuxPid1
 bit overrideTriggerGaps
@@ -459,7 +464,7 @@ bit useTLE8888_stepper
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit useFSIOTableForCanSniffingFiltering
 bit issue_294_29
-bit artificialTestMisfire,"Danger Mode","No thank you"
+bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.;
 bit issue_294_31,"si_example","nada_example"
 
 
@@ -492,9 +497,9 @@ float[DWELL_CURVE_SIZE] sparkDwellRpmBins;On Single Coil or Wasted Spark setups 
 	float[DWELL_CURVE_SIZE] sparkDwellValues;;"ms", 1, 0, 0, 30, 2
 
 struct_no_prefix specs_s
-float displacement;Engine displacement, in litres\nsee also cylindersCount;"L", 1, 0, 0, 1000, 2
+float displacement;Engine volume/capacity, in litres\nsee also cylindersCount;"L", 1, 0, 0, 1000, 2
 
-uint32_t cylindersCount;;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
+uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CYLINDER_COUNT@@, 0
 
 ! see firing_order.h
 ! FO_1 = 0
@@ -507,7 +512,7 @@ firing_order_e firingOrder;
 end_struct
 
     specs_s specs
-	float cylinderBore;+Cylinder diameter, in mm.;"mm", 1, 0, 0, 20000, 2
+	float cylinderBore;Cylinder diameter in mm.;"mm", 1, 0, 0, 20000, 2
 int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM", 1, 0, 0, 30000, 0
 	int rpmHardLimit;set rpm_hard_limit X;"rpm", 1, 0, 0, 20000, 2
 
@@ -515,7 +520,7 @@ int sensorSnifferRpmThreshold;+Disable sensor sniffer above this rpm;"RPM", 1, 0
 
 
 custom engine_load_mode_e 4 bits, U32, @OFFSET@, [0:2], @@engine_load_mode_e_enum@@
-engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nAlpha-N means drive by TPS\nSpeed Density requires MAP sensor;
+engine_load_mode_e fuelAlgorithm;+This setting controls which fuel quantity control algorithm is used.\nAlpha-N means drive by TPS commonly only used for NA engines\nSpeed Density requires MAP sensor and is the default choice for may installs\nMAF air charge is a cylinder filling based method that uses a mass air flow sensor.;
 
 
 custom injection_mode_e 4 bits, U32, @OFFSET@, [0:1], "Simultaneous", "Sequential", "Batch", "Single Point"
@@ -552,7 +557,7 @@ float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequenc
 custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "type 12", "type 13", "type 14", "INVALID"
 can_nbc_e canNbcType;set can_mode X
 
-int canSleepPeriodMs;CANbus thread period, ms;"ms", 1, 0, 0, 1000, 2
+int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
 
 
 custom operation_mode_e 4 bits, U32, @OFFSET@, [0:2], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke", "4 stroke with symmetrical crank (requires VVT input)", "INVALID", "INVALID", "INVALID"
@@ -595,7 +600,7 @@ trigger_config_s trigger;
 
 custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4" 
 	spi_device_e hip9011SpiDevice;
-	uint8_t failedMapFallback;+This value is only used for speed density fueling calculations.;"kPa", 1, 0, 0, 100, 0
+	uint8_t failedMapFallback;Single value to be used in event of a failed MAP sensor \nThis value is only used for speed density fueling calculations.;"kPa", 1, 0, 0, 100, 0
 	uint8_t boostControlSafeDutyCycle;+Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost.;"%", 1, 0, 0, 100, 0
 	adc_channel_e mafAdcChannel 
 
@@ -644,7 +649,7 @@ end_struct
 	
 	idle_hardware_s idle;
 
-	float manIdlePosition;value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
+	float manIdlePosition;+Value between 0 and 100 used in Manual mode;"%", 1, 0, 0, 100, 0
 
 uint8_t knockRetardAggression;+Ignition timing to remove when a knock event occurs.;"%", 0.1, 0, 0, 20, 1
 uint8_t knockRetardReapplyRate;+After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
@@ -1248,9 +1253,9 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 
 	float unusedAnotherOneOfThose;EGO value correction;"value", 1, 0, -10, 10, 2
 	float fixedTiming;Fixed timing, useful for TDC testing;"deg", 1, 0, -720, 720, 2
-	float mapLowValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
-	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2 
-	float egoValueShift;EGO value correction;"value", 1, 0, -10, 10, 2 
+	float mapLowValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2
+	float mapHighValueVoltage;MAP voltage for low point;"v", 1, 0, 0, 10, 2
+	float egoValueShift;EGO value correction;"value", 1, 0, -10, 10, 2
 
 	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;
 
