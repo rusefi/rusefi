@@ -94,9 +94,21 @@ BinResult getBinPtr(float value, const TBin* bins) {
 	return { idx, fraction };
 }
 
+template<class TBin, int TSize, int TMult>
+BinResult getBinPtr(float value, const scaled_channel<TBin, TMult>* bins) {
+	// Strip off the scaled_channel, and perform the scaling before searching the array
+	auto binPtrRaw = reinterpret_cast<const TBin*>(bins);
+	return getBinPtr<TBin, TSize>(value * TMult, binPtrRaw);
+}
+
 template<class TBin, int TSize>
 BinResult getBin(float value, const TBin (&bins)[TSize]) {
 	return getBinPtr<TBin, TSize>(value, &bins[0]);
+}
+
+template<class TBin, int TSize, int TMult>
+BinResult getBin(float value, const scaled_channel<TBin, TMult> (&bins)[TSize]) {
+	return getBinPtr<TBin, TSize, TMult>(value, &bins[0]);
 }
 
 static float linterp(float low, float high, float frac)
@@ -108,7 +120,7 @@ static float linterp(float low, float high, float frac)
 template <class TBin, class TValue, int TSize>
 float interpolate2d(const float value, const TBin (&bin)[TSize], const TValue (&values)[TSize]) {
 	// Enforce numeric only (int, float, uintx_t, etc)
-	static_assert(std::is_arithmetic_v<TBin>, "Table values must be an arithmetic type");
+	static_assert(std::is_arithmetic_v<TBin> || is_scaled_channel<TBin>, "Table values must be an arithmetic type or scaled channel");
 
 	auto b = priv::getBin(value, bin);
 
