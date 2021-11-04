@@ -29,7 +29,8 @@ template<int TColNum, int TRowNum, typename TValue, typename TColumn, typename T
 class Map3D : public ValueProvider3D {
 public:
 	template <typename TValueInit, typename TRowInit, typename TColumnInit>
-	void init(TValueInit table[TRowNum][TColNum], const TRowInit rowBins[TRowNum], const TColumnInit columnBins[TColNum]) {
+	void init(TValueInit (&table)[TRowNum][TColNum],
+                  const TRowInit (&rowBins)[TRowNum], const TColumnInit (&columnBins)[TColNum]) {
 		// This splits out here so that we don't need one overload of init per possible combination of table/rows/columns types/dimensions
 		// Overload resolution figures out the correct versions of the functions below to call, some of which have assertions about what's allowed
 		initValues(table);
@@ -37,73 +38,60 @@ public:
 		initCols(columnBins);
 	}
 
-	float getValue(float xColumn, float yRow) const override {
+	float getValue(float xColumn, float yRow) const final {
 		if (!m_values) {
 			// not initialized, return 0
 			return 0;
 		}
-		
-		auto row = priv::getBinPtr<TRow, TRowNum>(yRow * m_rowMult, m_rowBins);
-		auto col = priv::getBinPtr<TColumn, TColNum>(xColumn * m_colMult, m_columnBins);
 
-		// Orient the table such that (0, 0) is the bottom left corner,
-		// then the following variable names will make sense
-		float lowerLeft = getValueAtPosition(row.Idx, col.Idx);
-		float upperLeft = getValueAtPosition(row.Idx + 1, col.Idx);
-		float lowerRight = getValueAtPosition(row.Idx, col.Idx + 1);
-		float upperRight = getValueAtPosition(row.Idx + 1, col.Idx + 1);
-
-		// Interpolate each side by itself
-		float left = priv::linterp(lowerLeft, upperLeft, row.Frac);
-		float right = priv::linterp(lowerRight, upperRight, row.Frac);
-
-		// Then interpolate between those
-		float tableValue = priv::linterp(left, right, col.Frac);
-
-		// Correct by the ratio of table units to "world" units
-		return tableValue * TValueMultiplier::asFloat();
+                return interpolate3d(*m_values,
+                                     *m_rowBins, yRow * m_rowMult,
+                                     *m_columnBins, xColumn * m_colMult) *
+                    TValueMultiplier::asFloat();
 	}
 
 	void setAll(TValue value) {
 		efiAssertVoid(CUSTOM_ERR_6573, m_values, "map not initialized");
 
-		for (size_t i = 0; i < TRowNum * TColNum; i++) {
-			m_values[i] = value / TValueMultiplier::asFloat();
+                for (size_t r = 0; r < TRowNum; r++) {
+                    for (size_t c = 0; c < TColNum; c++) {
+			(*m_values)[r][c] = value / TValueMultiplier::asFloat();
+                    }
 		}
 	}
 
 private:
 	template <int TMult>
-	void initValues(scaled_channel<TValue, TMult> table[TRowNum][TColNum]) {
+	void initValues(scaled_channel<TValue, TMult> (&table)[TRowNum][TColNum]) {
 		static_assert(TValueMultiplier::den == TMult);
 		static_assert(TValueMultiplier::num == 1);
 
-		m_values = reinterpret_cast<TValue*>(&table[0][0]);
+		m_values = reinterpret_cast<TValue (*)[TRowNum][TColNum]>(&table);
 	}
 
-	void initValues(TValue table[TRowNum][TColNum]) {
-		m_values = &table[0][0];
+    void initValues(TValue (&table)[TRowNum][TColNum]) {
+        m_values = &table;
 	}
 
 	template <int TRowMult>
-	void initRows(const scaled_channel<TRow, TRowMult> rowBins[TRowNum]) {
-		m_rowBins = reinterpret_cast<const TRow*>(&rowBins[0]);
+	void initRows(const scaled_channel<TRow, TRowMult> (&rowBins)[TRowNum]) {
+            m_rowBins = reinterpret_cast<const TRow (*)[TRowNum]>(&rowBins);
 		m_rowMult = TRowMult;
 	}
 
-	void initRows(const TRow rowBins[TRowNum]) {
-		m_rowBins = &rowBins[0];
+    void initRows(const TRow (&rowBins)[TRowNum]) {
+		m_rowBins = &rowBins;
 		m_rowMult = 1;
 	}
 
 	template <int TColMult>
-	void initCols(const scaled_channel<TColumn, TColMult> columnBins[TColNum]) {
-		m_columnBins = reinterpret_cast<const TColumn*>(&columnBins[0]);
+	void initCols(const scaled_channel<TColumn, TColMult> (&columnBins)[TColNum]) {
+            m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
 		m_colMult = TColMult;
 	}
 
-	void initCols(const TColumn columnBins[TColNum]) {
-		m_columnBins = &columnBins[0];
+    void initCols(const TColumn (&columnBins)[TColNum]) {
+		m_columnBins = &columnBins;
 		m_colMult = 1;
 	}
 
@@ -120,10 +108,10 @@ private:
 	}
 
 	// TODO: should be const
-	/*const*/ TValue* m_values = nullptr;
+    /*const*/ TValue (*m_values)[TRowNum][TColNum] = nullptr;
 
-	const TRow *m_rowBins = nullptr;
-	const TColumn *m_columnBins = nullptr;
+    const TRow (*m_rowBins)[TRowNum] = nullptr;
+    const TColumn (*m_columnBins)[TColNum] = nullptr;
 
 	float m_rowMult = 1;
 	float m_colMult = 1;
