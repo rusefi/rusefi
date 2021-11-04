@@ -489,6 +489,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[1].minValue = 10;
 	engineConfiguration->auxPid[2].maxValue = 90;
 
+	engineConfiguration->turboSpeedSensorMultiplier = 1;
 
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
