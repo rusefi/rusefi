@@ -140,12 +140,4 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	* WBO Innovate LC-1
 	*/
 	engineConfiguration->afr.hwChannel = EFI_ADC_12;
-	/**
-	* Speed Sensor
-	*/
-	//engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
-	/**
-	* Other
-	*/
-//	engineConfiguration->mafAdcChannel = GPIO_UNASSIGNED;
 }
