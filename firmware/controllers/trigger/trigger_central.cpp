@@ -78,6 +78,16 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
 
+expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
+	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
+
+	if (cisnan(oneDegreeUs)) {
+		return unexpected;
+	}
+
+	return m_virtualZeroTimer.getElapsedUs(nowNt) / oneDegreeUs;
+}
+
 /**
  * todo: why is this method NOT reciprocal to getRpmMultiplier?!
  */
@@ -259,8 +269,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	logFront(isImportantFront, nowNt, index PASS_ENGINE_PARAMETER_SUFFIX);
 
 
-	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
-	if (cisnan(oneDegreeUs)) {
+	auto currentPhase = tc->getCurrentEnginePhase(nowNt);
+	if (!currentPhase) {
 		// todo: this code branch is slowing NB2 cranking since we require RPM sync for VVT sync!
 		// todo: smarter code
 		//
@@ -278,11 +288,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 	}
 
-
 	tc->vvtCamCounter++;
 
-	float offsetUs = tc->virtualZeroTimer.getElapsedUs(nowNt);
-	angle_t currentPosition = offsetUs / oneDegreeUs;
+	angle_t currentPosition = currentPhase.Value;
 	// convert engine cycle angle into trigger cycle angle
 	currentPosition -= tdcPosition();
 	// https://github.com/rusefi/rusefi/issues/1713 currentPosition could be negative that's expected
@@ -619,7 +627,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	if (triggerIndexForListeners == 0) {
-		virtualZeroTimer.reset(timestamp);
+		m_virtualZeroTimer.reset(timestamp);
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
