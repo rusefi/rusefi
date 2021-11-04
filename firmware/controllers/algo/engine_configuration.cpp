@@ -1090,10 +1090,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case MIATA_1990:
-		setMiata1990(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
 	case MIATA_1996:
-		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setFrankensteinMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
