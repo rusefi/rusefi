@@ -142,41 +142,9 @@ void common079721_2351(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 /**
- * Frankenstein board
- */
-void setMiata1990(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common079721_2351(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	commonMiataNa(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	// Frankenstein: low side - out #1: PC14
-	// Frankenstein: low side - out #2: PC15
-	// Frankenstein: low side - out #3: PE6
-	// Frankenstein: low side - out #4: PC13
-	// Frankenstein: low side - out #5: PE4
-	// Frankenstein: low side - out #6: PE5
-	// Frankenstein: low side - out #7: PE2
-	// Frankenstein: low side - out #8: PE3
-	// Frankenstein: low side - out #9: PE0
-	// Frankenstein: low side - out #10: PE1
-	// Frankenstein: low side - out #11: PB8
-	// Frankenstein: low side - out #12: PB9
-
-	engineConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	engineConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
-
-// todo: idleValvePin
-}
-
-/**
  * Tom tomiata, Frankenstein board
  */
-void setMiata1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setFrankensteinMiata1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	commonMiataNa(PASS_CONFIG_PARAMETER_SIGNATURE);
 	engineConfiguration->specs.displacement = 1.839;
 
