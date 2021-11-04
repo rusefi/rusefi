@@ -38,12 +38,16 @@ public:
  */
 class TriggerCentral final : public trigger_central_s {
 public:
+	DECLARE_ENGINE_PTR;
+
 	TriggerCentral();
 	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
+
+	expected<float> getCurrentEnginePhase(efitick_t nowNt) const;
 
 	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
@@ -72,8 +76,6 @@ public:
 	// synchronization event position
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
-	Timer virtualZeroTimer;
-
 	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
 
 	TriggerStateWithRunningStatistics triggerState;
@@ -84,8 +86,12 @@ public:
 
 	TriggerFormDetails triggerFormDetails;
 
+private:
 	// Keep track of the last time we got a valid trigger event
 	Timer m_lastEventTimer;
+
+	// Keep track of the last time we saw the sync tooth go by (trigger index 0)
+	Timer m_virtualZeroTimer;
 };
 
 void triggerInfo(void);

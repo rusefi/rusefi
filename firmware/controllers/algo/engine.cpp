@@ -461,6 +461,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 #endif
 
 void Engine::injectEngineReferences() {
+	INJECT_ENGINE_REFERENCE(&triggerCentral);
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration[camIndex]);
