@@ -38,6 +38,8 @@ public:
  */
 class TriggerCentral final : public trigger_central_s {
 public:
+	DECLARE_ENGINE_PTR;
+
 	TriggerCentral();
 	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
