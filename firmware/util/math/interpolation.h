@@ -45,13 +45,13 @@ struct BinResult
 
 /**
  * @brief Finds the location of a value in the bin array.
- * 
+ *
  * @param value The value to find in the bins.
  * @return A result containing the index to the left of the value,
  * and how far from (idx) to (idx + 1) the value is located.
  */
 template<class TBin, int TSize>
-BinResult getBinPtr(float value, const TBin* bins) {
+BinResult getBin(float value, const TBin (&bins)[TSize]) {
 	// Enforce numeric only (int, float, uintx_t, etc)
 	static_assert(std::is_arithmetic_v<TBin>, "Table bins must be an arithmetic type");
 
@@ -90,25 +90,13 @@ BinResult getBinPtr(float value, const TBin* bins) {
 	// Compute how far along the bin we are
 	// (0.0f = left side, 1.0f = right side)
 	float fraction = (value - low) / (high - low);
-	
+
 	return { idx, fraction };
 }
 
 template<class TBin, int TSize, int TMult>
-BinResult getBinPtr(float value, const scaled_channel<TBin, TMult>* bins) {
-	// Strip off the scaled_channel, and perform the scaling before searching the array
-	auto binPtrRaw = reinterpret_cast<const TBin*>(bins);
-	return getBinPtr<TBin, TSize>(value * TMult, binPtrRaw);
-}
-
-template<class TBin, int TSize>
-BinResult getBin(float value, const TBin (&bins)[TSize]) {
-	return getBinPtr<TBin, TSize>(value, &bins[0]);
-}
-
-template<class TBin, int TSize, int TMult>
 BinResult getBin(float value, const scaled_channel<TBin, TMult> (&bins)[TSize]) {
-	return getBinPtr<TBin, TSize, TMult>(value, &bins[0]);
+    return getBin(value * TMult, *reinterpret_cast<const TBin (*)[TSize]>(&bins));
 }
 
 static float linterp(float low, float high, float frac)
@@ -130,6 +118,29 @@ float interpolate2d(const float value, const TBin (&bin)[TSize], const TValue (&
 	float frac = b.Frac;
 
 	return priv::linterp(low, high, frac);
+}
+
+template<typename VType, unsigned RNum, typename RType, unsigned CNum, typename CType>
+float interpolate3d(const VType (&table)[RNum][CNum],
+                    const RType (&rowBins)[RNum], float rowValue,
+                    const CType (&colBins)[CNum], float colValue)
+{
+    auto row = priv::getBin(rowValue, rowBins);
+    auto col = priv::getBin(colValue, colBins);
+
+    // Orient the table such that (0, 0) is the bottom left corner,
+    // then the following variable names will make sense
+    float lowerLeft  = table[row.Idx    ][col.Idx    ];
+    float upperLeft  = table[row.Idx + 1][col.Idx    ];
+    float lowerRight = table[row.Idx    ][col.Idx + 1];
+    float upperRight = table[row.Idx + 1][col.Idx + 1];
+
+    // Interpolate each side by itself
+    float left  = priv::linterp(lowerLeft, upperLeft, row.Frac);
+    float right = priv::linterp(lowerRight, upperRight, row.Frac);
+
+    // Then interpolate between those
+    return priv::linterp(left, right, col.Frac);
 }
 
 /** @brief	Binary search
