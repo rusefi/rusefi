@@ -741,6 +741,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
 
+	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
+
 #if HW_CHECK_MODE
 	tsOutputChannels->hasCriticalError = 1;
 #else

@@ -421,6 +421,8 @@ enable2ndByteCanID = false
 	vvtTargetB2I = scalar, S08, 316, "deg", 1, 0
 	vvtTargetB2E = scalar, S08, 317, "deg", 1, 0
 
+	turboSpeed = scalar, U16, 318, "hz", 1, 0
+
 	rawTps1Secondary  = scalar,	 U16,    300, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Primary    = scalar,	 U16,    302, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Secondary  = scalar,	 U16,    304, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
@@ -1057,7 +1059,8 @@ gaugeCategory = Sensors - Basic
 
 
 gaugeCategory = Sensors - Extra 1
-   VSSGauge          = vehicleSpeedKph,     "Vehicle speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
+   VSSGauge          = vehicleSpeedKph,      @@GAUGE_NAME_VVS@@,         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
+   turboSpeedGauge   = turboSpeed,           @@GAUGE_NAME_TURBO_SPEED@@, "hz",         0,    200,       0,      1,       3,     4,   1,   1
    accelerationXGauge = accelerationX,       @@GAUGE_NAME_ACCEL_X@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationZGauge = accelerationZ,       @@GAUGE_NAME_ACCEL_Z@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
@@ -1292,6 +1295,7 @@ gaugeCategory = DynoView
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
    entry = knockLevel,	    @@GAUGE_NAME_KNOCK_LEVEL@@, 	   float,  "%.2f"
    entry = vehicleSpeedKph,	@@GAUGE_NAME_VVS@@,	   float,  "%.2f"
+   entry = turboSpeed,      @@GAUGE_NAME_TURBO_SPEED@@        int,  "%d"
    entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
    entry = rpmAcceleration, "dRPM",        int,  "%d"
    entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"

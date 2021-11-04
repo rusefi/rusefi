@@ -1641,6 +1641,7 @@ end_struct
 
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_VVS "Vehicle Speed"
+#define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
 #define GAUGE_NAME_VBAT "VBatt"
 #define GAUGE_NAME_TIME "Time"
 #define GAUGE_NAME_RPM "RPM"
