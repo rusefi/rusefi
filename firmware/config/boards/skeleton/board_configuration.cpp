@@ -136,7 +136,6 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->communicationLedPin = GPIOE_2;
 	engineConfiguration->runningLedPin = GPIOE_4;
 	engineConfiguration->warningLedPin = GPIOE_5;
-	engineConfiguration->checkEngineLedPin = GPIOE_6;
 	engineConfiguration->errorLedPin = GPIOE_7;
 
 	// Set injector pins and the pin output mode

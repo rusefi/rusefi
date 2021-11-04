@@ -136,7 +136,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
 	engineConfiguration->tachOutputPin = GPIOI_0;
-	engineConfiguration->checkEngineLedPin = GPIOG_9;
+	engineConfiguration->malfunctionIndicatorPin = GPIOG_9;
 
 	engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 

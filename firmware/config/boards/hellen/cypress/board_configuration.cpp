@@ -72,12 +72,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->runningLedPin = GPIO_UNASSIGNED;
 	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
 	engineConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
-	
-	//engineConfiguration->checkEngineLedPin = GPIO_UNASSIGNED;
-	//engineConfiguration->errorLedPin = GPIOJ_15;
-	//engineConfiguration->fatalErrorPin = GPIOJ_15;
 
-	//!!!!!!!!!
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13;
 	engineConfiguration->clt.adcChannel = EFI_ADC_26;
 	engineConfiguration->iat.adcChannel = EFI_ADC_27;
