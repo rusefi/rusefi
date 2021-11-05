@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 04 23:47:19 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 03:01:44 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1708,6 +1708,17 @@ public class Fields {
 	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1813;
+	public static final int SCRIPT_CURVE_COUNT = 6;
+	public static final int scriptCurve5_offset = 3468;
+	public static final int scriptCurve5Bins_offset = 3436;
+	public static final int scriptCurve6_offset = 3532;
+	public static final int scriptCurve6Bins_offset = 3500;
+	public static final int scriptCurveName1_offset = 3340;
+	public static final int scriptCurveName2_offset = 3356;
+	public static final int scriptCurveName3_offset = 3372;
+	public static final int scriptCurveName4_offset = 3388;
+	public static final int scriptCurveName5_offset = 3404;
+	public static final int scriptCurveName6_offset = 3420;
 	public static final int sdCardCsPin_offset = 707;
 	public static final int sdCardCsPinMode_offset = 2226;
 	public static final int sdCardPeriodMs_offset = 804;
@@ -2184,7 +2195,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.04.all.3646529552";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.05.all.3795240820";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2219,7 +2230,7 @@ public class Fields {
 	public static final int unused2508_offset = 2511;
 	public static final int unused2536_offset = 2539;
 	public static final int unused3103_offset = 3103;
-	public static final int unused3328_offset = 3340;
+	public static final int unused3328_offset = 3564;
 	public static final int unused3942_offset = 3992;
 	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;
@@ -3347,6 +3358,12 @@ public class Fields {
 	public static final Field LOWPRESSUREFUEL_VALUE1 = Field.create("LOWPRESSUREFUEL_VALUE1", 3316, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_V2 = Field.create("LOWPRESSUREFUEL_V2", 3320, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_VALUE2 = Field.create("LOWPRESSUREFUEL_VALUE2", 3324, FieldType.FLOAT);
+	public static final Field SCRIPTCURVENAME1 = Field.create("SCRIPTCURVENAME1", 3340, 16, FieldType.STRING);
+	public static final Field SCRIPTCURVENAME2 = Field.create("SCRIPTCURVENAME2", 3356, 16, FieldType.STRING);
+	public static final Field SCRIPTCURVENAME3 = Field.create("SCRIPTCURVENAME3", 3372, 16, FieldType.STRING);
+	public static final Field SCRIPTCURVENAME4 = Field.create("SCRIPTCURVENAME4", 3388, 16, FieldType.STRING);
+	public static final Field SCRIPTCURVENAME5 = Field.create("SCRIPTCURVENAME5", 3404, 16, FieldType.STRING);
+	public static final Field SCRIPTCURVENAME6 = Field.create("SCRIPTCURVENAME6", 3420, 16, FieldType.STRING);
 	public static final Field TCHARGEAIRCOEFMIN = Field.create("TCHARGEAIRCOEFMIN", 3864, FieldType.FLOAT);
 	public static final Field TCHARGEAIRCOEFMAX = Field.create("TCHARGEAIRCOEFMAX", 3868, FieldType.FLOAT);
 	public static final Field TCHARGEAIRFLOWMAX = Field.create("TCHARGEAIRFLOWMAX", 3872, FieldType.FLOAT);
@@ -4459,6 +4476,12 @@ public class Fields {
 	LOWPRESSUREFUEL_VALUE1,
 	LOWPRESSUREFUEL_V2,
 	LOWPRESSUREFUEL_VALUE2,
+	SCRIPTCURVENAME1,
+	SCRIPTCURVENAME2,
+	SCRIPTCURVENAME3,
+	SCRIPTCURVENAME4,
+	SCRIPTCURVENAME5,
+	SCRIPTCURVENAME6,
 	TCHARGEAIRCOEFMIN,
 	TCHARGEAIRCOEFMAX,
 	TCHARGEAIRFLOWMAX,

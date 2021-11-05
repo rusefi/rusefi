@@ -1759,6 +1759,17 @@
 #define RPM_1_BYTE_PACKING_MULT 50
 #define rpmHardLimit_offset 416
 #define runningLedPin_offset 1813
+#define SCRIPT_CURVE_COUNT 6
+#define scriptCurve5_offset 3440
+#define scriptCurve5Bins_offset 3408
+#define scriptCurve6_offset 3504
+#define scriptCurve6Bins_offset 3472
+#define scriptCurveName1_offset 3312
+#define scriptCurveName2_offset 3328
+#define scriptCurveName3_offset 3344
+#define scriptCurveName4_offset 3360
+#define scriptCurveName5_offset 3376
+#define scriptCurveName6_offset 3392
 #define sdCardCsPin_offset 707
 #define sdCardCsPinMode_offset 2223
 #define sdCardPeriodMs_offset 804
@@ -1789,8 +1800,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
-#define SIGNATURE_DATE 2021.11.04
-#define SIGNATURE_HASH 1686157116
+#define SIGNATURE_DATE 2021.11.05
+#define SIGNATURE_HASH 1609551960
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2298,7 +2309,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.04.kin.1686157116"
+#define TS_SIGNATURE "rusEFI 2021.11.05.kin.1609551960"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2336,7 +2347,7 @@
 #define unused2508_offset 2503
 #define unused2536_offset 2531
 #define unused3103_offset 3075
-#define unused3328_offset 3312
+#define unused3328_offset 3536
 #define unused3942_offset 3964
 #define unused3988_offset 3960
 #define unused4028_offset 4000
