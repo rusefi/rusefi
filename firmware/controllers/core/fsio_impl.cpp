@@ -604,6 +604,16 @@ ValueProvider3D *getFSIOTable(int index) {
 	}
 }
 
+float getCurveValue(int index, float key) {
+	// not great code at all :(
+	switch (index) {
+	default:
+		return interpolate2d(key, engineConfiguration->scriptCurve1Bins, engineConfiguration->scriptCurve1);
+	case 5:
+		return interpolate2d(key, engineConfiguration->scriptCurve5Bins, engineConfiguration->scriptCurve5);
+	}
+}
+
 void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_UNIT_TEST
 	// only unit test needs this
