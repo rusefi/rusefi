@@ -14,6 +14,7 @@ void initializeNissanSR20VE_4_360(TriggerWaveform *s);
 
 void initializeNissanVQvvt(TriggerWaveform *s);
 void initializeNissanVQ35crank(TriggerWaveform *s);
+void initializeNissanMR18crank(TriggerWaveform *s);
 void initializeNissanQR25crank(TriggerWaveform *s);
 
 void initializeNissanVQ30cam(TriggerWaveform *s);
