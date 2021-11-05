@@ -566,7 +566,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_NISSAN_QR25:
-	case TT_TEMP_62:
 		initializeNissanQR25crank(this);
 		break;
 
@@ -752,7 +751,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_SUBARU_7_WITHOUT_6:
-	case TT_52:
 		initializeSubaruOnly7(this);
 		break;
 
