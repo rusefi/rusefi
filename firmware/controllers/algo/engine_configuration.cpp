@@ -541,14 +541,14 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.minValue = 10;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setLinearCurve(engineConfiguration->fsioCurve1Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve1, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve1Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve1, 0, 100, 1);
 
-	setLinearCurve(engineConfiguration->fsioCurve2Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve2, 30, 170, 1);
+	setLinearCurve(engineConfiguration->scriptCurve2Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve2, 30, 170, 1);
 
-	setLinearCurve(engineConfiguration->fsioCurve3Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve4Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve3Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve4Bins, 0, 100, 1);
 
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
