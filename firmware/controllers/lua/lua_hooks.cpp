@@ -16,6 +16,8 @@ using namespace luaaa;
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
+#define HUMAN_OFFSET 1
+
 #if EFI_UNIT_TEST
 Engine *engineForLuaUnitTests;
 #endif
@@ -96,6 +98,7 @@ static int lua_table3d(lua_State* l) {
 }
 
 static int lua_curve2d(lua_State* l) {
+	// index starting from 1
 	auto curveIdx = luaL_checkinteger(l, 1);
 	auto x = luaL_checknumber(l, 2);
 
@@ -104,9 +107,25 @@ static int lua_curve2d(lua_State* l) {
 	EXPAND_Engine;
 #endif
 
-	auto result = getCurveValue(curveIdx, x PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveValue(curveIdx - HUMAN_OFFSET, x PASS_ENGINE_PARAMETER_SUFFIX);
 
 	lua_pushnumber(l, result);
+	return 1;
+}
+
+static int lua_findCurveIndex(lua_State* l) {
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+	auto name = luaL_checklstring(l, 1, nullptr);
+	auto result = getCurveIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+	if (result == EFI_ERROR_CODE) {
+		lua_pushnil(l);
+	} else {
+		// TS counts curve from 1 so convert indexing here
+		lua_pushnumber(l, result + HUMAN_OFFSET);
+	}
 	return 1;
 }
 
@@ -410,6 +429,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "hasSensor", lua_hasSensor);
 	lua_register(l, "table3d", lua_table3d);
 	lua_register(l, "curve", lua_curve2d);
+	lua_register(l, "findCurveIndex", lua_findCurveIndex);
 	lua_register(l, "txCan", lua_txCan);
 
 #if !EFI_UNIT_TEST
