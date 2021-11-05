@@ -16,6 +16,10 @@ using namespace luaaa;
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
+#if EFI_UNIT_TEST
+Engine *engineForLuaUnitTests;
+#endif
+
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
@@ -86,6 +90,21 @@ static int lua_table3d(lua_State* l) {
 
 	// index table, compute table lookup
 	auto result = getFSIOTable(tableIdx)->getValue(x, y);
+
+	lua_pushnumber(l, result);
+	return 1;
+}
+
+static int lua_curve2d(lua_State* l) {
+	auto curveIdx = luaL_checkinteger(l, 1);
+	auto x = luaL_checknumber(l, 2);
+
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+
+	auto result = getCurveValue(curveIdx, x PASS_ENGINE_PARAMETER_SUFFIX);
 
 	lua_pushnumber(l, result);
 	return 1;
@@ -390,6 +409,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
 	lua_register(l, "table3d", lua_table3d);
+	lua_register(l, "curve", lua_curve2d);
 	lua_register(l, "txCan", lua_txCan);
 
 #if !EFI_UNIT_TEST
