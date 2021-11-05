@@ -11,7 +11,7 @@ make -j$(nproc) -r
 [ -e build/rusefi.hex ] || { echo "FAILED to compile by $SCRIPT_NAME with $PROJECT_BOARD $DEBUG_LEVEL_OPT and $EXTRA_PARAMS"; exit 1; }
 if [ $USE_OPENBLT = "yes" ]; then
   make openblt
-  [ -e build/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpneBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
+  [ -e build-openblt/openblt_$PROJECT_BOARD.hex ] || { echo "FAILED to compile OpneBLT by $SCRIPT_NAME with $PROJECT_BOARD"; exit 1; }
 fi
 
 if uname | grep "NT"; then
@@ -36,15 +36,15 @@ cp build/rusefi.srec deliver/
 if [ $USE_OPENBLT = "yes" ]; then
   rm -f deliver/openblt_$PROJECT_BOARD.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
-  $HEX2DFU -i build/openblt_$PROJECT_BOARD.hex -o deliver/openblt_$PROJECT_BOARD.dfu
+  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -o deliver/openblt_$PROJECT_BOARD.dfu
 
-  cp build/openblt_$PROJECT_BOARD.hex deliver/
-  cp build/openblt_$PROJECT_BOARD.bin deliver/
-  cp build/openblt_$PROJECT_BOARD.srec deliver/
+  cp build-openblt/openblt_$PROJECT_BOARD.hex deliver/
+  cp build-openblt/openblt_$PROJECT_BOARD.bin deliver/
+  cp build-openblt/openblt_$PROJECT_BOARD.srec deliver/
 
   rm -f deliver/rusefi_openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for composite RusEFI+OpenBLT image"
-  $HEX2DFU -i build/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -o deliver/rusefi_openblt.dfu
+  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -o deliver/rusefi_openblt.dfu
 fi
 
 echo "$SCRIPT_NAME: build folder content:"

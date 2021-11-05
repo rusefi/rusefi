@@ -30,7 +30,6 @@ SHELL = sh
 #|--------------------------------------------------------------------------------------|
 PROJ_NAME=openblt_$(PROJECT_BOARD)
 
-
 #|--------------------------------------------------------------------------------------|
 #| Configure tool path                                                                  |
 #|--------------------------------------------------------------------------------------|
@@ -41,10 +40,16 @@ PROJ_NAME=openblt_$(PROJECT_BOARD)
 # format, open the directory in the Windows command prompt and run the following command:
 #  cmd /c for %A in ("%cd%") do @echo %~sA 
 TOOL_PATH=$(TRGT)
-OPENBLT_TRGT_DIR=../../../../ext/openblt/Target
 
 #|--------------------------------------------------------------------------------------|
-#| Collect project files                                                                |
+#| Configure sources paths                                                              |
+#|--------------------------------------------------------------------------------------|
+PROJECT_DIR=.
+OPENBLT_TRGT_DIR=$(PROJECT_DIR)/ext/openblt/Target
+OPENBLT_BOARD_DIR=$(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/openblt
+
+#|--------------------------------------------------------------------------------------|
+#| Collect helpers                                                                      |
 #|--------------------------------------------------------------------------------------|
 # Recursive wildcard function implementation. Example usages:
 #   $(call rwildcard, , *.c *.h)   
@@ -53,23 +58,16 @@ OPENBLT_TRGT_DIR=../../../../ext/openblt/Target
 #     --> Returns all *.c files in the /lib directory and below
 rwildcard = $(strip $(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2) $(filter $(subst *,%,$2),$d)))
 
-# Collect all application files in the current directory and its subdirectories, but 
-# exclude flash-layout.c as this one is directly included in a source file, when used.
-PROJ_FILES  = $(filter-out flash_layout.c, $(call rwildcard, , *.c *.h *.s))
-# reuse ST32F7xx HAL and CMSIS from one of OpenBLT exaples to avoid having copy in RusEFI git
-PROJ_FILES += $(filter-out uip, $(call rwildcard, $(OPENBLT_TRGT_DIR)/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/CMSIS/, *.c *.h *.s))
-PROJ_FILES += $(filter-out uip, $(call rwildcard, $(OPENBLT_TRGT_DIR)/Demo/ARMCM4_STM32F4_Nucleo_F429ZI_GCC/Boot/lib/STM32F4xx_HAL_Driver/, *.c *.h *.s))
-#PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Demo/ARMCM7_STM32F7_Nucleo_F746ZG_GCC/Boot/lib/STM32F7xx_HAL_Driver/Src/stm32f7xx_hal_can.c)
-#PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Demo/ARMCM7_STM32F7_Nucleo_F746ZG_GCC/Boot/lib/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_can.h)
-# Collect bootloader core files
+#|--------------------------------------------------------------------------------------|
+#| Include board files                                                                  |
+#|--------------------------------------------------------------------------------------|
+include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/openblt/board.mk
+
+#|--------------------------------------------------------------------------------------|
+#| Collect bootloader core files                                                        |
+#|--------------------------------------------------------------------------------------|
 PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/*.c)
 PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/*.h)
-# Collect bootloader port files
-PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM4_STM32F4/*.c)
-PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM4_STM32F4/*.h)
-# Collect bootloader port compiler specific files
-PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM4_STM32F4/GCC/*.c)
-PROJ_FILES += $(wildcard $(OPENBLT_TRGT_DIR)/Source/ARMCM4_STM32F4/GCC/*.h)
 
 #|--------------------------------------------------------------------------------------|
 #| Toolchain binaries                                                                   |
@@ -82,7 +80,6 @@ OD = $(TOOL_PATH)arm-none-eabi-objdump
 AS = $(TOOL_PATH)arm-none-eabi-gcc
 SZ = $(TOOL_PATH)arm-none-eabi-size
 
-
 #|--------------------------------------------------------------------------------------|
 #| Filter project files
 #|--------------------------------------------------------------------------------------|
@@ -90,43 +87,14 @@ PROJ_ASRCS  = $(filter %.s,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
 PROJ_CSRCS  = $(filter %.c,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
 PROJ_CHDRS  = $(filter %.h,$(foreach file,$(PROJ_FILES),$(notdir $(file))))
 
-
 #|--------------------------------------------------------------------------------------|
 #| Set important path variables                                                         |
 #|--------------------------------------------------------------------------------------|
 VPATH    = $(foreach path,$(sort $(foreach file,$(PROJ_FILES),$(dir $(file)))) $(subst \,/,$(OBJ_PATH)),$(path) :)
-OBJ_PATH = obj
-#RusEFI out directory
-BIN_PATH = ../../../../build
+OBJ_PATH = $(PROJECT_DIR)/build-openblt/obj
+BIN_PATH = $(PROJECT_DIR)/build-openblt
 INC_PATH = $(patsubst %/,%,$(patsubst %,-I%,$(sort $(foreach file,$(filter %.h,$(PROJ_FILES)),$(dir $(file))))))
 LIB_PATH  = 
-
-
-#|--------------------------------------------------------------------------------------|
-#| Options for toolchain binaries                                                       |
-#|--------------------------------------------------------------------------------------|
-STDFLAGS    = -mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fno-strict-aliasing
-STDFLAGS   += -fdata-sections -ffunction-sections -Wall -g3
-OPTFLAGS    = -Os
-CFLAGS      = $(STDFLAGS) $(OPTFLAGS)
-CFLAGS     += -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -DSTM32F429xx
-CFLAGS     += -D__weak="__attribute__((weak))" -D__packed="__attribute__((__packed__))"
-CFLAGS     += $(INC_PATH)
-AFLAGS      = $(CFLAGS)
-LFLAGS      = $(STDFLAGS) $(OPTFLAGS)
-LFLAGS     += -Wl,-script="STM32F429ZITx_FLASH.ld" -Wl,-Map=$(BIN_PATH)/$(PROJ_NAME).map
-LFLAGS     += -specs=nano.specs -Wl,--gc-sections $(LIB_PATH)
-OFLAGS      = -O srec
-ODFLAGS     = -x
-SZFLAGS     = -B -d
-RMFLAGS     = -f
-
-
-#|--------------------------------------------------------------------------------------|
-#| Specify library files                                                                |
-#|--------------------------------------------------------------------------------------|
-LIBS = 
-
 
 #|--------------------------------------------------------------------------------------|
 #| Define targets                                                                       |
@@ -134,13 +102,11 @@ LIBS =
 AOBJS = $(patsubst %.s,%.o,$(PROJ_ASRCS))
 COBJS = $(patsubst %.c,%.o,$(PROJ_CSRCS))
 
-
 #|--------------------------------------------------------------------------------------|
 #| Make ALL                                                                             |
 #|--------------------------------------------------------------------------------------|
 .PHONY: all
 all: $(BIN_PATH)/$(PROJ_NAME).srec $(BIN_PATH)/$(PROJ_NAME).hex $(BIN_PATH)/$(PROJ_NAME).bin
-
 
 $(BIN_PATH)/$(PROJ_NAME).srec : $(BIN_PATH)/$(PROJ_NAME).elf
 	@mkdir -p $(@D)
@@ -193,4 +159,6 @@ clean:
 	@$(RM) $(RMFLAGS) $(patsubst %.o,%.lst,$(foreach file,$(COBJS),$(OBJ_PATH)/$(file)))
 	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).elf $(BIN_PATH)/$(PROJ_NAME).map
 	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).srec
+	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).bin
+	@$(RM) $(RMFLAGS) $(BIN_PATH)/$(PROJ_NAME).hex
 	@echo +++ Clean complete
