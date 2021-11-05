@@ -664,7 +664,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureHondaK_12_1(this);
 		break;
 
-	case TT_UNUSED_10:
 	case TT_HONDA_4_24:
 		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
 		shapeWithoutTdc = true;
