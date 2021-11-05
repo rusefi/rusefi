@@ -588,33 +588,53 @@ enable2ndByteCanID = false
       gauge       = afr1Gauge
 #endif
 
-   curve = fsioCurve1, "FSIO Curve #1"
+   curve = fsioCurve1, "Script Curve #1"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -155,  150, 10
       xBins       = fsioCurve1Bins
       yBins       = fsioCurve1
-      
-   curve = fsioCurve2, "FSIO Curve #2"
+      showTextValues = true
+
+   curve = fsioCurve2, "Script Curve #2"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -150,  150, 10
       xBins       = fsioCurve2Bins
       yBins       = fsioCurve2
+      showTextValues = true
 
-   curve = fsioCurve3, "FSIO Curve #3"
+   curve = fsioCurve3, "Script Curve #3"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -5,  5, 10
       xBins       = fsioCurve3Bins
       yBins       = fsioCurve3
+      showTextValues = true
 
-   curve = fsioCurve4, "FSIO Curve #4"
+   curve = fsioCurve4, "Script Curve #4"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -5,  5, 10
       xBins       = fsioCurve4Bins
       yBins       = fsioCurve4
+      showTextValues = true
+
+   curve = scriptCurve5, "Script Curve #5"
+      columnLabel = "X", "Y"
+      xAxis       =  0, 128, 10
+      yAxis       = -5,  5, 10
+      xBins       = scriptCurve5Bins
+      yBins       = scriptCurve5
+      showTextValues = true
+
+   curve = scriptCurve6, "Script Curve #6"
+      columnLabel = "X", "Y"
+      xAxis       =  0, 128, 10
+      yAxis       = -5,  5, 10
+      xBins       = scriptCurve6Bins
+      yBins       = scriptCurve6
+      showTextValues = true
 
    curve = mapAccelTaper, "Engine Load Acceleration Enrichment Taper"
       columnLabel = "Distance", "Multiplier"
@@ -1560,14 +1580,16 @@ menuDialog = main
 		subMenu = fsioFormulas,				"FSIO Formulas"
 
 		subMenu = std_separator
-		subMenu = fsioTable1Tbl,			"FSIO Table #1"
-		subMenu = fsioTable2Tbl,			"FSIO Table #2"
-		subMenu = fsioTable3Tbl,			"FSIO Table #3"
-		subMenu = fsioTable4Tbl,			"FSIO Table #4"
-		subMenu = fsioCurve1,			    "FSIO Curve #1"
-		subMenu = fsioCurve2,			    "FSIO Curve #2"
-		subMenu = fsioCurve3,			    "FSIO Curve #3"
-		subMenu = fsioCurve4,			    "FSIO Curve #4"
+		subMenu = fsioTable1Tbl,			"Script Table #1"
+		subMenu = fsioTable2Tbl,			"Script Table #2"
+		subMenu = fsioTable3Tbl,			"Script Table #3"
+		subMenu = fsioTable4Tbl,			"Script Table #4"
+		subMenu = scriptCurve1Settings,	    "Script Curve #1"
+		subMenu = scriptCurve2Settings,			    "Script Curve #2"
+		subMenu = scriptCurve3Settings,			    "Script Curve #3"
+		subMenu = scriptCurve4Settings,			    "Script Curve #4"
+		subMenu = scriptCurve5Settings,			    "Script Curve #5"
+		subMenu = scriptCurve6Settings,			    "Script Curve #6"
 
 		subMenu = std_separator
 		subMenu = luaOutputs,			    "Lua PWM Outputs"
@@ -1850,6 +1872,30 @@ cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3B"
 cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 [UserDefined]
+	dialog = scriptCurve1Settings, "", yAxis
+	    field = "Name", scriptCurveName4
+		panel = fsioCurve1
+
+	dialog = scriptCurve2Settings, "", yAxis
+	    field = "Name", scriptCurveName4
+		panel = fsioCurve2
+
+	dialog = scriptCurve3Settings, "", yAxis
+	    field = "Name", scriptCurveName4
+		panel = fsioCurve3
+
+	dialog = scriptCurve4Settings, "", yAxis
+	    field = "Name", scriptCurveName4
+		panel = fsioCurve4
+
+	dialog = scriptCurve5Settings, "", yAxis
+	    field = "Name", scriptCurveName5
+		panel = scriptCurve5
+
+	dialog = scriptCurve6Settings, "", yAxis
+	    field = "Name", scriptCurveName6
+		panel = scriptCurve6
+
 	dialog = tChargeRpmTpsSettings, "RPM+TPS Mode Settings"
 	    field = "We use these coefficients to approximate air/fuel charge temperate"
 	    field = "based on CLT and IAT, depending on RPM and TPM"
