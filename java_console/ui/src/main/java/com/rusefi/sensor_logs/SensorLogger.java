@@ -71,6 +71,7 @@ public class SensorLogger {
 
             Sensor.VSS,
             Sensor.SPEED2RPM,
+            Sensor.turboSpeed,
 
             Sensor.accelerationX,
             Sensor.accelerationY,
