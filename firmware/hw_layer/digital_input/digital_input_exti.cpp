@@ -18,15 +18,30 @@
  * because pin '0' would be used on two different ports
  */
 
-static ioportmask_t ext_used = 0;
-static const char *EXT_USED[16];
-
 void efiExtiInit() {
-	memset(EXT_USED, 0, sizeof(EXT_USED));
+	// TODO: enable interrupt, or does NVIC->STIR bypass the IE bit?
+	//nvicEnableVector(STM32_I2C1_EVENT_NUMBER, STM32_I2C_I2C1_IRQ_PRIORITY);
+	NVIC->STIR = I2C1_EV_IRQn;
 }
+
+struct ExtiChannel
+{
+	const char* Name;
+
+	palcallback_t Callback;
+	void* CallbackData;
+
+	efitick_t Timestamp = 0;
+
+	bool Overflow = 0;
+};
+
+static ExtiChannel channels[16];
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
 void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palcallback_t cb, void *cb_data) {
+
+return 0;
 
 	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
@@ -47,13 +62,15 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 
 	int index = getHwPin(msg, brainPin);
 
+	auto& channel = channels[index];
+
 	/* is this index already used? */
-	if (ext_used & PAL_PORT_BIT(index)) {
+	if (channel.Callback) {
 		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %s/index %d: exti index already used by %s",
 		msg,
 		hwPortname(brainPin),
 		index,
-		EXT_USED[index]);
+		channel.Name);
 		return;
 	}
 
@@ -61,9 +78,9 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 	palEnableLineEvent(line, mode);
 	palSetLineCallback(line, cb, cb_data);
 
-	/* mark used */
-	ext_used |= PAL_PORT_BIT(index);
-	EXT_USED[index] = msg;
+	channel.Name = msg;
+	channel.Callback = cb;
+	channel.CallbackData = cb_data;
 }
 
 void efiExtiDisablePin(brain_pin_e brainPin)
@@ -80,8 +97,10 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 
 	int index = getHwPin("exti", brainPin);
 
+	auto& channel = channels[index];
+
 	/* is this index was used? */
-	if (!(ext_used & PAL_PORT_BIT(index))) {
+	if (!channel.Callback) {
 		return;
 	}
 
@@ -89,8 +108,9 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	palDisableLineEvent(line);
 
 	/* mark unused */
-	ext_used &= ~PAL_PORT_BIT(index);
-	EXT_USED[index] = nullptr;
+	channel.Name = nullptr;
+	channel.Callback = nullptr;
+	channel.CallbackData = nullptr;
 }
 
 digital_input_s* startDigitalCaptureExti(const char *msg, brain_pin_e brainPin) {
@@ -103,9 +123,74 @@ digital_input_s* startDigitalCapture(const char *msg, brain_pin_e brainPin) {
 }
 #endif // EFI_ICU_INPUTS
 
+static inline void triggerInterrupt() {
+	// Manually fire the I2C1_EV interrupt, it will be queued after this interrupt returns
+	NVIC->STIR = I2C1_EV_IRQn;
+}
+
+CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
+	OSAL_IRQ_PROLOGUE();
+
+	for (size_t i = 0; i < 16; i++) {
+		auto& channel = channels[i];
+
+		if (channel.Timestamp != 0 && channel.Callback) {
+			channel.Timestamp = 0;
+			channel.Callback(channel.CallbackData);
+		}
+	}
+
+	OSAL_IRQ_EPILOGUE();
+}
+
+void handleExtiIsr(uint8_t index) {
+	// No need to lock anything, we're already the highest-pri interrupt!
+
+	uint32_t pr;
+	extiGetAndClearGroup1(1U << index, pr);
+
+	if (pr & (1 << index)) {
+		channels[index].Timestamp = getTimeNowNt();
+
+		triggerInterrupt();
+	}
+}
+
+CH_FAST_IRQ_HANDLER(Vector58) {
+	handleExtiIsr(0);
+}
+
+CH_FAST_IRQ_HANDLER(Vector5C) {
+	handleExtiIsr(1);
+}
+
+CH_FAST_IRQ_HANDLER(Vector60) {
+	handleExtiIsr(2);
+}
+
+CH_FAST_IRQ_HANDLER(Vector64) {
+	handleExtiIsr(3);
+}
+
+CH_FAST_IRQ_HANDLER(Vector68) {
+	handleExtiIsr(4);
+}
+
+CH_FAST_IRQ_HANDLER(Vector9C) {
+	handleExtiIsr(5);
+	handleExtiIsr(6);
+	handleExtiIsr(7);
+	handleExtiIsr(8);
+	handleExtiIsr(9);
+}
+
+CH_FAST_IRQ_HANDLER(VectorE0) {
+	handleExtiIsr(10);
+	handleExtiIsr(11);
+	handleExtiIsr(12);
+	handleExtiIsr(13);
+	handleExtiIsr(14);
+	handleExtiIsr(15);
+}
+
 #endif /* HAL_USE_PAL && EFI_PROD_CODE */
-
-
-
-
-
