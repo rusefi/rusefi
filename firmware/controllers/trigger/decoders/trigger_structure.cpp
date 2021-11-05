@@ -579,7 +579,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_NISSAN_MR18_CRANK:
-		initializeNissanMR18Crank(this);
+		initializeNissanMR18crank(this);
 		break;
 
 	case TT_KAWA_KX450F:
