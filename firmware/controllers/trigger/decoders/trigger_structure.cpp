@@ -582,6 +582,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		initializeNissanMR18crank(this);
 		break;
 
+	case TT_NISSAN_MR18_CAM_VVT:
+		initializeNissanMRvvt(this);
+		break;
+
 	case TT_KAWA_KX450F:
 		configureKawaKX450F(this);
 		break;
