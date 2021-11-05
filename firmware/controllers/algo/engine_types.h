@@ -523,6 +523,7 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
+	// todo: before increasing from 69 to 70 we shall use the half dozen of unused IDs
 	TT_UNUSED = 69, // this is used if we want to iterate over all trigger types
 
 	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
