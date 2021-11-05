@@ -604,13 +604,21 @@ ValueProvider3D *getFSIOTable(int index) {
 	}
 }
 
-float getCurveValue(int index, float key) {
+float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// not great code at all :(
 	switch (index) {
 	default:
 		return interpolate2d(key, engineConfiguration->scriptCurve1Bins, engineConfiguration->scriptCurve1);
-	case 5:
+	case 1:
+		return interpolate2d(key, engineConfiguration->scriptCurve2Bins, engineConfiguration->scriptCurve2);
+	case 2:
+		return interpolate2d(key, engineConfiguration->scriptCurve3Bins, engineConfiguration->scriptCurve3);
+	case 3:
+		return interpolate2d(key, engineConfiguration->scriptCurve4Bins, engineConfiguration->scriptCurve4);
+	case 4:
 		return interpolate2d(key, engineConfiguration->scriptCurve5Bins, engineConfiguration->scriptCurve5);
+	case 5:
+		return interpolate2d(key, engineConfiguration->scriptCurve6Bins, engineConfiguration->scriptCurve6);
 	}
 }
 

@@ -549,6 +549,8 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	setLinearCurve(engineConfiguration->scriptCurve3Bins, 0, 100, 1);
 	setLinearCurve(engineConfiguration->scriptCurve4Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve5Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve6Bins, 0, 100, 1);
 
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
