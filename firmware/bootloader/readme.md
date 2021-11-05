@@ -1,5 +1,7 @@
 # Bootloader
 
+### BIG OPEN QUESTION: do we need to merge this custom BL into OpenBLT? See https://github.com/rusefi/rusefi/wiki/Firmware-update-via-CAN
+
 *** User Manual ***
 
 To start the bootloader updater:
