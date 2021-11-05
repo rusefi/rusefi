@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 11:18:29 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 18:39:03 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1743,7 +1743,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 37212184;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2197,7 +2196,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.05.all.37212184";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.05.all.2817133922";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2741,7 +2740,6 @@ public class Fields {
 	public static final Field GPIOPINMODES5 = Field.create("GPIOPINMODES5", 768, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES6 = Field.create("GPIOPINMODES6", 769, FieldType.INT8, pin_output_mode_e);
 	public static final Field IMUTYPE = Field.create("IMUTYPE", 778, FieldType.INT8);
-	public static final Field UNUSEDPINMODESWHEREHERE = Field.create("UNUSEDPINMODESWHEREHERE", 779, FieldType.INT8);
 	public static final Field FSIOOUTPUTPINS1 = Field.create("FSIOOUTPUTPINS1", 780, FieldType.INT8, output_pin_e);
 	public static final Field FSIOOUTPUTPINS2 = Field.create("FSIOOUTPUTPINS2", 781, FieldType.INT8, output_pin_e);
 	public static final Field FSIOOUTPUTPINS3 = Field.create("FSIOOUTPUTPINS3", 782, FieldType.INT8, output_pin_e);
@@ -3202,7 +3200,6 @@ public class Fields {
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 2328, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 2329, FieldType.INT8, vvt_mode_e);
 	public static final Field FAN2EXTRAIDLE = Field.create("FAN2EXTRAIDLE", 2330, FieldType.INT8);
-	public static final Field UNUSEDOLDBIQUAD = Field.create("UNUSEDOLDBIQUAD", 2331, FieldType.INT8);
 	public static final Field AUXANALOGINPUTS1 = Field.create("AUXANALOGINPUTS1", 2332, FieldType.INT8, adc_channel_e);
 	public static final Field AUXANALOGINPUTS2 = Field.create("AUXANALOGINPUTS2", 2333, FieldType.INT8, adc_channel_e);
 	public static final Field AUXANALOGINPUTS3 = Field.create("AUXANALOGINPUTS3", 2334, FieldType.INT8, adc_channel_e);
@@ -3870,7 +3867,6 @@ public class Fields {
 	GPIOPINMODES5,
 	GPIOPINMODES6,
 	IMUTYPE,
-	UNUSEDPINMODESWHEREHERE,
 	FSIOOUTPUTPINS1,
 	FSIOOUTPUTPINS2,
 	FSIOOUTPUTPINS3,
@@ -4322,7 +4318,6 @@ public class Fields {
 	VVTMODE1,
 	VVTMODE2,
 	FAN2EXTRAIDLE,
-	UNUSEDOLDBIQUAD,
 	AUXANALOGINPUTS1,
 	AUXANALOGINPUTS2,
 	AUXANALOGINPUTS3,
