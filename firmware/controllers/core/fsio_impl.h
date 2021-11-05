@@ -39,5 +39,6 @@ void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfigura
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX);
+int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX);
 ValueProvider3D *getFSIOTable(int index);
 
