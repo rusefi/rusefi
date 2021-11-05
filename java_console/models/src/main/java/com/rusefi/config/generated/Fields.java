@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 19:40:36 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 22:20:02 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -879,7 +879,6 @@ public class Fields {
 	public static final int etb_use_two_wires_offset = 76;
 	public static final int etbBiasBins_offset = 3888;
 	public static final int etbBiasValues_offset = 3920;
-	public static final int etbDeadband_offset = 3960;
 	public static final int etbFreq_offset = 2514;
 	public static final int etbFunctions1_offset = 1198;
 	public static final int etbFunctions2_offset = 1199;
@@ -894,6 +893,7 @@ public class Fields {
 	public static final int etbIo2_directionPin2_offset = 985;
 	public static final int etbIo2_disablePin_offset = 987;
 	public static final int etbIo2_offset = 984;
+	public static final int etbMaximumPosition_offset = 3960;
 	public static final int etbNeutralPosition_offset = 1471;
 	public static final int etbRevLimitRange_offset = 106;
 	public static final int etbRevLimitStart_offset = 104;
@@ -1743,7 +1743,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 868765903;
+	public static final int SIGNATURE_HASH = 1089428985;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2197,7 +2197,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.05.all.868765903";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.05.all.1089428985";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2211,7 +2211,7 @@ public class Fields {
 	public static final int uart_device_e_UART_DEVICE_4 = 4;
 	public static final int uart_device_e_UART_NONE = 0;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
-	public static final int unused1059_offset = 3964;
+	public static final int unused1059_offset = 3961;
 	public static final int unused1127_offset = 2116;
 	public static final int unused1128_offset = 2116;
 	public static final int unused1129_offset = 2116;
@@ -3375,7 +3375,7 @@ public class Fields {
 	public static final Field HIP9011GAIN = Field.create("HIP9011GAIN", 3952, FieldType.FLOAT);
 	public static final Field ETB_ITERMMIN = Field.create("ETB_ITERMMIN", 3956, FieldType.INT16);
 	public static final Field ETB_ITERMMAX = Field.create("ETB_ITERMMAX", 3958, FieldType.INT16);
-	public static final Field ETBDEADBAND = Field.create("ETBDEADBAND", 3960, FieldType.FLOAT);
+	public static final Field ETBMAXIMUMPOSITION = Field.create("ETBMAXIMUMPOSITION", 3960, FieldType.INT8);
 	public static final Field IDLETIMINGPID_PFACTOR = Field.create("IDLETIMINGPID_PFACTOR", 3968, FieldType.FLOAT);
 	public static final Field IDLETIMINGPID_IFACTOR = Field.create("IDLETIMINGPID_IFACTOR", 3972, FieldType.FLOAT);
 	public static final Field IDLETIMINGPID_DFACTOR = Field.create("IDLETIMINGPID_DFACTOR", 3976, FieldType.FLOAT);
@@ -4490,7 +4490,7 @@ public class Fields {
 	HIP9011GAIN,
 	ETB_ITERMMIN,
 	ETB_ITERMMAX,
-	ETBDEADBAND,
+	ETBMAXIMUMPOSITION,
 	IDLETIMINGPID_PFACTOR,
 	IDLETIMINGPID_IFACTOR,
 	IDLETIMINGPID_DFACTOR,

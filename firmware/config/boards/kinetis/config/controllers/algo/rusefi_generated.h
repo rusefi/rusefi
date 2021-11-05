@@ -898,7 +898,6 @@
 #define etb_use_two_wires_offset 76
 #define etbBiasBins_offset 3860
 #define etbBiasValues_offset 3892
-#define etbDeadband_offset 3932
 #define etbFreq_offset 2506
 #define etbFunctions1_offset 1198
 #define etbFunctions2_offset 1199
@@ -913,6 +912,7 @@
 #define etbIo2_directionPin2_offset 985
 #define etbIo2_disablePin_offset 987
 #define etbIo2_offset 984
+#define etbMaximumPosition_offset 3932
 #define etbNeutralPosition_offset 1471
 #define etbRevLimitRange_offset 106
 #define etbRevLimitStart_offset 104
@@ -1801,7 +1801,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.11.05
-#define SIGNATURE_HASH 2172789924
+#define SIGNATURE_HASH 4070910354
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2310,7 +2310,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.05.kin.2172789924"
+#define TS_SIGNATURE "rusEFI 2021.11.05.kin.4070910354"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2327,7 +2327,7 @@
 #define uart_device_e_UART_DEVICE_4 4
 #define uart_device_e_UART_NONE 0
 #define uartConsoleSerialSpeed_offset 2076
-#define unused1059_offset 3936
+#define unused1059_offset 3933
 #define unused1127_offset 2116
 #define unused1128_offset 2116
 #define unused1129_offset 2116

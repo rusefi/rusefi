@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 05 19:40:39 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 05 22:20:04 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3787,14 +3787,16 @@ struct engine_configuration_s {
 	 */
 	int16_t etb_iTermMax;
 	/**
+	 * Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.
+	%
 	 * offset 3932
 	 */
-	float etbDeadband;
+	uint8_t etbMaximumPosition;
 	/**
 	units
-	 * offset 3936
+	 * offset 3933
 	 */
-	uint8_t unused1059[4];
+	uint8_t unused1059[7];
 	/**
 	 * See useIdleTimingPidControl
 	 * offset 3940
@@ -4428,4 +4430,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 05 19:40:39 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 05 22:20:04 UTC 2021
