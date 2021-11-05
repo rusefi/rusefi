@@ -329,7 +329,17 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	}
 #endif // EFI_TUNER_STUDIO
 
-	return targetPosition;
+	// Keep the throttle just barely off the lower stop, and less than the user-configured maximum
+	float maxPosition = CONFIG(etbMaximumPosition);
+
+	if (maxPosition < 70) {
+		maxPosition = 100;
+	} else {
+		// Don't allow max position over 100
+		maxPosition = minF(maxPosition, 100);
+	}
+
+	return clampF(1, targetPosition, maxPosition);
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) const {

@@ -1422,8 +1422,8 @@ tChargeMode_e tChargeMode;
 	float hip9011Gain;;"", 1, 0, 0, 100, 2
 	int16_t etb_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t etb_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
-	float etbDeadband;;"", 1, 0, 0, 100, 2
-	uint8_t[4] unused1059;;"units", 1, 0, -20, 100, 0
+	uint8_t etbMaximumPosition;Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.;"%", 1, 0, 70, 100, 0
+	uint8_t[7] unused1059;;"units", 1, 0, -20, 100, 0
 
 	pid_s idleTimingPid;See useIdleTimingPidControl
 	uint8_t[2] unused3988;;"units", 1, 0, -20, 100, 0

@@ -3556,6 +3556,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2
 		field = "PWM Frequency",						etbFreq
+		field = "Maximum ETB position",					etbMaximumPosition
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?

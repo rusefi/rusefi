@@ -282,7 +282,7 @@ TEST(etb, testSetpointOnlyPedal) {
 
 	// Check endpoints and midpoint
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 100.0f, true);
@@ -296,20 +296,32 @@ TEST(etb, testSetpointOnlyPedal) {
 
 	// Valid but out of range - should clamp to [0, 100]
 	Sensor::setMockValue(SensorType::AcceleratorPedal, -5, true);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 105, true);
 	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
 
 	// Check that ETB idle does NOT work - it's disabled
 	etb.setIdlePosition(50);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 20, true);
 	EXPECT_EQ(20, etb.getSetpoint().value_or(-1));
 
 	// Test invalid pedal position - should give 0 position
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
+
+	// Check that adjustable clamping works correctly
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
+
+	CONFIG(etbMaximumPosition) = 90;
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 85, true);
+	EXPECT_EQ(85, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 90, true);
+	EXPECT_EQ(90, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 95, true);
+	EXPECT_EQ(90, etb.getSetpoint().value_or(-1));
 }
 
 TEST(etb, setpointIdle) {
@@ -337,7 +349,7 @@ TEST(etb, setpointIdle) {
 
 	// No idle range, should just pass pedal
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
 
@@ -407,11 +419,11 @@ TEST(etb, setpointRevLimit) {
 
 	// At limit+range, should return 0
 	ENGINE(rpmCalculator.mockRpm) = 5750;
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 
 	// Above limit+range, should return 0
 	ENGINE(rpmCalculator.mockRpm) = 6000;
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 }
 
 TEST(etb, setpointNoPedalMap) {
