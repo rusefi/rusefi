@@ -135,9 +135,7 @@
 /** \brief Configure the size of the default memory device (typically flash EEPROM). */
 #define BOOT_NVM_SIZE_KB                (2048)
 /** \brief Enable/disable hooks functions to override the user program checksum handling. */
-/* WARNING: until NvmVerifyChecksumHook is not implemented in hooks.c this will fully
- * disable user FW check before jumping to it. This can (and will) cause problems */
-#define BOOT_NVM_CHECKSUM_HOOKS_ENABLE  (1)
+#define BOOT_NVM_CHECKSUM_HOOKS_ENABLE  (0)
 
 
 /****************************************************************************************
@@ -149,12 +147,9 @@
  *         RusEFI uses dual bank mode.
  */
 #define BOOT_FLASH_CUSTOM_LAYOUT_ENABLE (1)
-/** \brief This microcontroller has a larger vector table then the default STM32F7xx
- *         project as assumed in the bootloader's core. This means the user program has
- *         a different checksum location, because this one is added at the end of the
- *         user program's vector table.
+/** \brief Use one of 'reserved' IRQ vectors at the beginig on vector table.
  */
-#define BOOT_FLASH_VECTOR_TABLE_CS_OFFSET (0x1AC)
+#define BOOT_FLASH_VECTOR_TABLE_CS_OFFSET (0x1C)
 
 
 /****************************************************************************************
