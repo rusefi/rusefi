@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Nov 05 11:17:43 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Nov 05 19:39:49 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -363,8 +363,6 @@ case TT_36_2_2_2:
   return "TT_36_2_2_2";
 case TT_3_1_CAM:
   return "TT_3_1_CAM";
-case TT_52:
-  return "TT_52";
 case TT_60_2_VW:
   return "TT_60_2_VW";
 case TT_CHRYSLER_NGC_36_2_2:
@@ -431,6 +429,8 @@ case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MITSUBISHI:
   return "TT_MITSUBISHI";
+case TT_NISSAN_MR18_CAM_VVT:
+  return "TT_NISSAN_MR18_CAM_VVT";
 case TT_NISSAN_MR18_CRANK:
   return "TT_NISSAN_MR18_CRANK";
 case TT_NISSAN_QR25:
@@ -467,8 +467,6 @@ case TT_SUBARU_SVX_CRANK_1:
   return "TT_SUBARU_SVX_CRANK_1";
 case TT_SUZUKI_G13B:
   return "TT_SUZUKI_G13B";
-case TT_TEMP_62:
-  return "TT_TEMP_62";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_TOOTHED_WHEEL_36_1:
@@ -483,6 +481,8 @@ case TT_UNUSED:
   return "TT_UNUSED";
 case TT_UNUSED_10:
   return "TT_UNUSED_10";
+case TT_UNUSED_62:
+  return "TT_UNUSED_62";
 case TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:
