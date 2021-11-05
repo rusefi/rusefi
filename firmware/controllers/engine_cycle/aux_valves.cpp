@@ -5,7 +5,7 @@
  * Here we have two auxilary digital on/off outputs which would open once per each 360 degrees of engine crank revolution.
  * The second valve is 180 degrees after the first one.
  *
- * Valve open and close angles are taken from fsioCurve1 and fsioCurve2 tables respectively, the position depend on TPS input.
+ * Valve open and close angles are taken from scriptCurve1 and scriptCurve2 tables respectively, the position depend on TPS input.
  *
  * https://github.com/rusefi/rusefi/issues/490
  *
@@ -102,12 +102,12 @@ void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	engine->engineState.auxValveStart = interpolate2d(tps,
-			engineConfiguration->fsioCurve1Bins,
-			engineConfiguration->fsioCurve1);
+			engineConfiguration->scriptCurve1Bins,
+			engineConfiguration->scriptCurve1);
 
 	engine->engineState.auxValveEnd = interpolate2d(tps,
-			engineConfiguration->fsioCurve2Bins,
-			engineConfiguration->fsioCurve2);
+			engineConfiguration->scriptCurve2Bins,
+			engineConfiguration->scriptCurve2);
 
 	if (engine->engineState.auxValveStart >= engine->engineState.auxValveEnd) {
 		// this is a fatal error to make this really visible
