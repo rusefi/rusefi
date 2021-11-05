@@ -478,7 +478,7 @@ typedef enum {
 	// todo: remove this trigger once we have https://github.com/rusefi/rusefi/issues/2073
 	TT_SUBARU_7_WITHOUT_6 = 51,
 
-	TT_52 = 52,
+	TT_NISSAN_MR18_CAM_VVT = 52,
 
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
 	TT_TRI_TACH = 53,
@@ -503,7 +503,7 @@ typedef enum {
 
 	TT_NISSAN_QR25 = 61,
 
-	TT_TEMP_62 = 62,
+	TT_UNUSED_62 = 62,
 
 	TT_SUBARU_SVX_CRANK_1 = 63,
 

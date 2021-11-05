@@ -221,3 +221,36 @@ void initializeNissanVQ30cam(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.38 * TRIGGER_GAP_DEVIATION_LOW, 0.38 * TRIGGER_GAP_DEVIATION_HIGH);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.67 * TRIGGER_GAP_DEVIATION_LOW, 2.67 * TRIGGER_GAP_DEVIATION_HIGH);
 }
+
+void initializeNissanMRvvt(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->tdcPosition = 0;
+
+	int x = 74;
+
+	// All "groups" start every 90 degrees of cam rotation
+	// The groups have 1, 3, 4, 2 teeth each (which is the firing order?)
+
+	// Teeth within a group are spaced 16 cam degrees apart
+	int toothSpacing = 16;
+
+	// "1"
+	addvq30tooth(s, x + 0);
+
+	// "3"
+	addvq30tooth(s, x + 90 + 0 * toothSpacing);
+	addvq30tooth(s, x + 90 + 1 * toothSpacing);
+	addvq30tooth(s, x + 90 + 2 * toothSpacing);
+
+	// "4"
+	addvq30tooth(s, x + 180 + 0 * toothSpacing);
+	addvq30tooth(s, x + 180 + 1 * toothSpacing);
+	addvq30tooth(s, x + 180 + 2 * toothSpacing);
+	addvq30tooth(s, x + 180 + 3 * toothSpacing);
+
+	// "2"
+	addvq30tooth(s, x + 270 + 0 * toothSpacing);
+	addvq30tooth(s, x + 270 + 1 * toothSpacing);
+
+	s->setTriggerSynchronizationGap(5.4);
+}

@@ -566,7 +566,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_NISSAN_QR25:
-	case TT_TEMP_62:
 		initializeNissanQR25crank(this);
 		break;
 
@@ -580,6 +579,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_NISSAN_MR18_CRANK:
 		initializeNissanMR18crank(this);
+		break;
+
+	case TT_NISSAN_MR18_CAM_VVT:
+		initializeNissanMRvvt(this);
 		break;
 
 	case TT_KAWA_KX450F:
@@ -661,7 +664,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureHondaK_12_1(this);
 		break;
 
-	case TT_UNUSED_10:
 	case TT_HONDA_4_24:
 		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
 		shapeWithoutTdc = true;
@@ -748,7 +750,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_SUBARU_7_WITHOUT_6:
-	case TT_52:
 		initializeSubaruOnly7(this);
 		break;
 
