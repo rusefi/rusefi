@@ -29,6 +29,7 @@ extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
+extern Engine *engineForLuaUnitTests;
 
 EngineTestHelperBase::EngineTestHelperBase() { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
@@ -57,6 +58,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	Engine *engine = &this->engine;
 	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
 	EXPAND_Engine;
+
+	engineForLuaUnitTests = engine;
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
