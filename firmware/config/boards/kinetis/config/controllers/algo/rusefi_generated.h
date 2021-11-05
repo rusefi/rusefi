@@ -956,14 +956,6 @@
 #define fsio_setting5_offset 880
 #define fsio_setting6_offset 884
 #define FSIO_TABLE_8 8
-#define fsioCurve1_offset 2752
-#define fsioCurve1Bins_offset 2688
-#define fsioCurve2_offset 2880
-#define fsioCurve2Bins_offset 2816
-#define fsioCurve3_offset 2976
-#define fsioCurve3Bins_offset 2944
-#define fsioCurve4_offset 3040
-#define fsioCurve4Bins_offset 3008
 #define fsioDigitalInputs1_offset 952
 #define fsioDigitalInputs2_offset 953
 #define fsioDigitalInputs3_offset 954
@@ -1760,6 +1752,14 @@
 #define rpmHardLimit_offset 416
 #define runningLedPin_offset 1813
 #define SCRIPT_CURVE_COUNT 6
+#define scriptCurve1_offset 2752
+#define scriptCurve1Bins_offset 2688
+#define scriptCurve2_offset 2880
+#define scriptCurve2Bins_offset 2816
+#define scriptCurve3_offset 2976
+#define scriptCurve3Bins_offset 2944
+#define scriptCurve4_offset 3040
+#define scriptCurve4Bins_offset 3008
 #define scriptCurve5_offset 3440
 #define scriptCurve5Bins_offset 3408
 #define scriptCurve6_offset 3504
@@ -1801,7 +1801,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD kin
 #define SIGNATURE_DATE 2021.11.05
-#define SIGNATURE_HASH 1609551960
+#define SIGNATURE_HASH 3706674023
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2309,7 +2309,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.05.kin.1609551960"
+#define TS_SIGNATURE "rusEFI 2021.11.05.kin.3706674023"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

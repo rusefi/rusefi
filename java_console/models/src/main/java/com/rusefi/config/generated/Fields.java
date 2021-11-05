@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 03:01:44 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 03:36:10 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -937,14 +937,6 @@ public class Fields {
 	public static final int fsio_setting5_offset = 880;
 	public static final int fsio_setting6_offset = 884;
 	public static final int FSIO_TABLE_8 = 8;
-	public static final int fsioCurve1_offset = 2780;
-	public static final int fsioCurve1Bins_offset = 2716;
-	public static final int fsioCurve2_offset = 2908;
-	public static final int fsioCurve2Bins_offset = 2844;
-	public static final int fsioCurve3_offset = 3004;
-	public static final int fsioCurve3Bins_offset = 2972;
-	public static final int fsioCurve4_offset = 3068;
-	public static final int fsioCurve4Bins_offset = 3036;
 	public static final int fsioDigitalInputs1_offset = 952;
 	public static final int fsioDigitalInputs2_offset = 953;
 	public static final int fsioDigitalInputs3_offset = 954;
@@ -1709,6 +1701,14 @@ public class Fields {
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1813;
 	public static final int SCRIPT_CURVE_COUNT = 6;
+	public static final int scriptCurve1_offset = 2780;
+	public static final int scriptCurve1Bins_offset = 2716;
+	public static final int scriptCurve2_offset = 2908;
+	public static final int scriptCurve2Bins_offset = 2844;
+	public static final int scriptCurve3_offset = 3004;
+	public static final int scriptCurve3Bins_offset = 2972;
+	public static final int scriptCurve4_offset = 3068;
+	public static final int scriptCurve4Bins_offset = 3036;
 	public static final int scriptCurve5_offset = 3468;
 	public static final int scriptCurve5Bins_offset = 3436;
 	public static final int scriptCurve6_offset = 3532;
@@ -1743,6 +1743,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1856319244;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2195,7 +2196,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.05.all.3795240820";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.05.all.1856319244";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;

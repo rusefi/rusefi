@@ -983,14 +983,6 @@
 #define fsio_setting5_offset 880
 #define fsio_setting6_offset 884
 #define FSIO_TABLE_8 8
-#define fsioCurve1_offset 2780
-#define fsioCurve1Bins_offset 2716
-#define fsioCurve2_offset 2908
-#define fsioCurve2Bins_offset 2844
-#define fsioCurve3_offset 3004
-#define fsioCurve3Bins_offset 2972
-#define fsioCurve4_offset 3068
-#define fsioCurve4Bins_offset 3036
 #define fsioDigitalInputs1_offset 952
 #define fsioDigitalInputs2_offset 953
 #define fsioDigitalInputs3_offset 954
@@ -1787,6 +1779,14 @@
 #define rpmHardLimit_offset 416
 #define runningLedPin_offset 1813
 #define SCRIPT_CURVE_COUNT 6
+#define scriptCurve1_offset 2780
+#define scriptCurve1Bins_offset 2716
+#define scriptCurve2_offset 2908
+#define scriptCurve2Bins_offset 2844
+#define scriptCurve3_offset 3004
+#define scriptCurve3Bins_offset 2972
+#define scriptCurve4_offset 3068
+#define scriptCurve4Bins_offset 3036
 #define scriptCurve5_offset 3468
 #define scriptCurve5Bins_offset 3436
 #define scriptCurve6_offset 3532
@@ -1829,7 +1829,7 @@
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD subaru_eg33_f7
 #define SIGNATURE_DATE 2021.11.05
-#define SIGNATURE_HASH 2008820759
+#define SIGNATURE_HASH 4106004264
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2337,7 +2337,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.05.subaru_eg33_f7.2008820759"
+#define TS_SIGNATURE "rusEFI 2021.11.05.subaru_eg33_f7.4106004264"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

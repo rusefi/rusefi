@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 03:01:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 03:36:10 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3554,42 +3554,42 @@ struct engine_configuration_s {
 	x
 	 * offset 2716
 	 */
-	float fsioCurve1Bins[FSIO_CURVE_16];
+	float scriptCurve1Bins[FSIO_CURVE_16];
 	/**
 	y
 	 * offset 2780
 	 */
-	float fsioCurve1[FSIO_CURVE_16];
+	float scriptCurve1[FSIO_CURVE_16];
 	/**
 	x
 	 * offset 2844
 	 */
-	float fsioCurve2Bins[FSIO_CURVE_16];
+	float scriptCurve2Bins[FSIO_CURVE_16];
 	/**
 	y
 	 * offset 2908
 	 */
-	float fsioCurve2[FSIO_CURVE_16];
+	float scriptCurve2[FSIO_CURVE_16];
 	/**
 	x
 	 * offset 2972
 	 */
-	float fsioCurve3Bins[FSIO_CURVE_8];
+	float scriptCurve3Bins[FSIO_CURVE_8];
 	/**
 	y
 	 * offset 3004
 	 */
-	float fsioCurve3[FSIO_CURVE_8];
+	float scriptCurve3[FSIO_CURVE_8];
 	/**
 	x
 	 * offset 3036
 	 */
-	float fsioCurve4Bins[FSIO_CURVE_8];
+	float scriptCurve4Bins[FSIO_CURVE_8];
 	/**
 	y
 	 * offset 3068
 	 */
-	float fsioCurve4[FSIO_CURVE_8];
+	float scriptCurve4[FSIO_CURVE_8];
 	/**
 	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3100
@@ -4434,4 +4434,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 03:01:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 03:36:10 UTC 2021
