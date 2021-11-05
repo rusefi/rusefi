@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 05 22:20:04 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 05 23:50:36 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2212,7 +2212,7 @@ struct engine_configuration_s {
 	volt
 	 * offset 1204
 	 */
-	scaled_channel<uint16_t, PACK_MULT_VOLTAGE> fuelLevelBins[FUEL_LEVEL_TABLE_COUNT];
+	scaled_channel<uint16_t, 1000, 1> fuelLevelBins[FUEL_LEVEL_TABLE_COUNT];
 	/**
 	 * offset 1220
 	 */
@@ -3856,7 +3856,7 @@ struct engine_configuration_s {
 	:1
 	 * offset 3977
 	 */
-	scaled_channel<uint8_t, PACK_MULT_AFR_CFG> stoichRatioPrimary;
+	scaled_channel<uint8_t, 10, 1> stoichRatioPrimary;
 	/**
 	 * iTerm max value
 	 * offset 3978
@@ -3871,7 +3871,7 @@ struct engine_configuration_s {
 	:1
 	 * offset 3981
 	 */
-	scaled_channel<uint8_t, PACK_MULT_AFR_CFG> stoichRatioSecondary;
+	scaled_channel<uint8_t, 10, 1> stoichRatioSecondary;
 	/**
 	units
 	 * offset 3982
@@ -4269,7 +4269,7 @@ struct persistent_config_s {
 	% TPS
 	 * offset 15684
 	 */
-	scaled_channel<uint16_t, TPS_2_BYTE_PACKING_MULT> mapEstimateTpsBins[FUEL_LOAD_COUNT];
+	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
 	 * offset 15716
@@ -4430,4 +4430,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 05 22:20:04 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 05 23:50:36 UTC 2021
