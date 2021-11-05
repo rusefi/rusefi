@@ -149,6 +149,7 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 
 	s->tdcPosition = 675;
 
+	// 6 cylinder = 36 tooth wheel, missing 2 teeth in 3 spots
 	makeNissanPattern(s, 3, 36, 2);
 }
 
@@ -158,6 +159,7 @@ void initializeNissanMR18Crank(TriggerWaveform *s) {
 
 	s->tdcPosition = 640;
 
+	// 4 cylinder = 36 tooth wheel, missing 2 teeth in 2 spots
 	makeNissanPattern(s, 2, 36, 2);
 }
 
