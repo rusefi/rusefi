@@ -129,18 +129,38 @@ void initializeNissanVQvvt(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(5);
 }
 
-void initializeNissanVQ35crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t totalWheel, size_t missing) {
 	s->setTriggerSynchronizationGap(0.33);
 
-	s->tdcPosition = 675;
+	auto toothAngle = 360.0f / totalWheel;
 
-	float currentAngle = 20;
-	for (int i = 0;i < 10;i++) {
-		currentAngle += 10;
+	auto patternTeeth = totalWheel / halfCylinderCount;
+	auto toothCount = patternTeeth - missing;
+	
+	float currentAngle = missing * toothAngle;
+	for (int i = 0; i < toothCount; i++) {
+		currentAngle += toothAngle;
 		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
 		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
 	}
+}
+
+void initializeNissanVQ35crank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+
+	s->tdcPosition = 675;
+
+	// 6 cylinder = 36 tooth wheel, missing 2 teeth in 3 spots
+	makeNissanPattern(s, 3, 36, 2);
+}
+
+void initializeNissanMR18crank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+
+	s->tdcPosition = 640;
+
+	// 4 cylinder = 36 tooth wheel, missing 2 teeth in 2 spots
+	makeNissanPattern(s, 2, 36, 2);
 }
 
 void initializeNissanQR25crank(TriggerWaveform *s) {
