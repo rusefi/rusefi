@@ -14,9 +14,10 @@ import java.util.regex.Pattern;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, 1, null, false, false, null,null, -1, null, null);
+    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, new int[0], null, false, false, null,null, -1, null, null);
 
-    private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\s([\\w\\d]+))?\\])?";
+    private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
+
     private static final String namePattern = "[[\\w\\d\\s<>_]]+";
     private static final String commentPattern = ";([^;]*)";
 
@@ -35,7 +36,7 @@ public class ConfigField {
     private final String comment;
     public final String arraySizeVariableName;
     private final String type;
-    private final int arraySize;
+    private final int[] arraySizes;
 
     private final String tsInfo;
     private final boolean isIterate;
@@ -55,7 +56,7 @@ public class ConfigField {
                        String comment,
                        String arraySizeAsText,
                        String type,
-                       int arraySize,
+                       int[] arraySizes,
                        String tsInfo,
                        boolean isIterate,
                        boolean fsioVisible,
@@ -81,13 +82,13 @@ public class ConfigField {
             Objects.requireNonNull(type);
         this.type = type;
         this.arraySizeVariableName = arraySizeAsText;
-        this.arraySize = arraySize;
+        this.arraySizes = arraySizes;
         this.tsInfo = tsInfo == null ? null : state.variableRegistry.applyVariables(tsInfo);
         this.isIterate = isIterate;
     }
 
     public boolean isArray() {
-        return arraySizeVariableName != null || arraySize != 1;
+        return arraySizeVariableName != null || arraySizes.length != 0;
     }
 
     public String getTrueName() {
@@ -136,7 +137,7 @@ public class ConfigField {
         if (!matcher.matches())
             return null;
 
-        String nameString = matcher.group(6).trim();
+        String nameString = matcher.group(8).trim();
         String[] nameTokens = nameString.split("\\s");
         String name = nameTokens[nameTokens.length - 1];
 
@@ -152,23 +153,29 @@ public class ConfigField {
             break;
         }
 
-        String comment = matcher.group(8);
+        String comment = matcher.group(10);
         String type = matcher.group(1);
-        int arraySize;
+        int[] arraySizes;
         String arraySizeAsText;
-        if (matcher.group(3) != null) {
+        if (matcher.group(5) != null) {
+            arraySizeAsText = matcher.group(3) + "][" + matcher.group(5);
+	    arraySizes = new int[2];
+	    arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(3));
+	    arraySizes[1] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(5));
+	} else if (matcher.group(3) != null) {
             arraySizeAsText = matcher.group(3);
-            arraySize = ConfigDefinition.getSize(state.variableRegistry, arraySizeAsText);
+            arraySizes = new int[1];
+	    arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, arraySizeAsText);
         } else {
-            arraySize = 1;
+            arraySizes = new int[0];
             arraySizeAsText = null;
         }
-        String tsInfo = matcher.group(10);
+        String tsInfo = matcher.group(12);
 
-        boolean isIterate = "iterate".equalsIgnoreCase(matcher.group(5));
+        boolean isIterate = "iterate".equalsIgnoreCase(matcher.group(7));
 
 
-        ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySize,
+        ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySizes,
                 tsInfo, isIterate, isFsioVisible, autoscaleSpec, null, -1, null, null);
         SystemOut.println("type " + type);
         SystemOut.println("name " + name);
@@ -187,7 +194,11 @@ public class ConfigField {
             return 0;
         if (isBit())
             return 4;
-        return getElementSize() * arraySize;
+	int size = getElementSize();
+	for (int s : arraySizes) {
+	    size *= s;
+	}
+        return size;
     }
 
     @Override
@@ -195,7 +206,7 @@ public class ConfigField {
         return "ConfigField{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
-                ", arraySize=" + arraySize +
+                ", arraySizes=" + arraySizes +
                 '}';
     }
 
@@ -206,8 +217,8 @@ public class ConfigField {
         return comment.charAt(0) == TS_COMMENT_TAG ? comment.substring(1) : comment;
     }
 
-    public int getArraySize() {
-        return arraySize;
+    public int[] getArraySizes() {
+        return arraySizes;
     }
 
     public String getComment() {
