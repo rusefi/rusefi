@@ -660,7 +660,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
 
+#if EFI_TUNER_STUDIO
 		updateCurrentEnginePhase(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 	}
 }
 
