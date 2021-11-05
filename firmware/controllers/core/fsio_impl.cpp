@@ -604,6 +604,18 @@ ValueProvider3D *getFSIOTable(int index) {
 	}
 }
 
+/**
+ * @return zero-based index of curve with given name
+ */
+int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0;i<SCRIPT_CURVE_COUNT;i++) {
+		if (strEqualCaseInsensitive(name, engineConfiguration->scriptCurveName[i])) {
+			return i;
+		}
+	}
+	return EFI_ERROR_CODE;
+}
+
 float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// not great code at all :(
 	switch (index) {
