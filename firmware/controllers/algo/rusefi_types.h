@@ -96,7 +96,7 @@ typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
 
 #if __cplusplus
 #include "scaled_channel.h"
-using ve_table_t = scaled_channel<float, 1>[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
+using ve_table_t = float[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 using lambda_table_t = scaled_channel<uint8_t, PACK_MULT_LAMBDA_CFG>[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
 #endif
 
