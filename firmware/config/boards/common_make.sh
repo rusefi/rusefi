@@ -25,7 +25,7 @@ mkdir -p deliver
 
 rm -f deliver/rusefi.dfu
 echo "$SCRIPT_NAME: invoking hex2dfu for RusEFI"
-$HEX2DFU -i build/rusefi.hex -o deliver/rusefi.dfu
+$HEX2DFU -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu
 
 # rusEFI console does not use .hex files but for Cypress that's the primary binary format
 cp build/rusefi.hex deliver/
@@ -44,7 +44,7 @@ if [ $USE_OPENBLT = "yes" ]; then
 
   rm -f deliver/rusefi_openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for composite RusEFI+OpenBLT image"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -o deliver/rusefi_openblt.dfu
+  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi_openblt.dfu
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
