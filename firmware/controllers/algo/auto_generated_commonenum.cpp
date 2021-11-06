@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Fri Nov 05 19:39:49 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Nov 06 03:26:11 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -326,6 +326,21 @@ case GPPWM_GreaterThan:
   return "GPPWM_GreaterThan";
 case GPPWM_LessThan:
   return "GPPWM_LessThan";
+  }
+ return NULL;
+}
+const char *getHpfp_cam_e(hpfp_cam_e value){
+switch(value) {
+case HPFP_CAM_EX1:
+  return "HPFP_CAM_EX1";
+case HPFP_CAM_EX2:
+  return "HPFP_CAM_EX2";
+case HPFP_CAM_IN1:
+  return "HPFP_CAM_IN1";
+case HPFP_CAM_IN2:
+  return "HPFP_CAM_IN2";
+case HPFP_CAM_NONE:
+  return "HPFP_CAM_NONE";
   }
  return NULL;
 }
