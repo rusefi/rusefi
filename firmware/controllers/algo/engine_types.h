@@ -43,7 +43,7 @@ typedef enum {
 	 */
 	GY6_139QMB = 8,
 
-	MAZDA_MIATA_NB1 = 9,
+	UNUSED9 = 9,
 	UNUSED10 = 10,
 	MRE_MIATA_NB2_MAP = 11,
 	MRE_MIATA_NA6_VAF = 12,
@@ -51,8 +51,7 @@ typedef enum {
 	MRE_MIATA_NA6_MAP = 66,
 	MRE_MIATA_NB2_MAF = 15,
 
-	// Frankenstein board
-	MIATA_1990 = 19,
+	UNUSED_19 = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
 	MRE_MIATA_94_MAP = 20,
