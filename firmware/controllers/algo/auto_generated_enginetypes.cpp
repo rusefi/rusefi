@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Nov 06 22:35:58 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Nov 06 23:14:13 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -234,10 +234,6 @@ case MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case MAZDA_MIATA_2003_NA_RAIL:
   return "MAZDA_MIATA_2003_NA_RAIL";
-case UNUSED9:
-  return "MAZDA_MIATA_NB1";
-case UNUSED_19:
-  return "MIATA_1990";
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_PROTEUS_TCU:
@@ -334,6 +330,10 @@ case UNUSED30:
   return "UNUSED30";
 case UNUSED39:
   return "UNUSED39";
+case UNUSED9:
+  return "UNUSED9";
+case UNUSED_19:
+  return "UNUSED_19";
 case UNUSED_48:
   return "UNUSED_48";
 case UNUSED_50:
