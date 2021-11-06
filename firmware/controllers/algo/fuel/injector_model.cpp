@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "injector_model.h"
+#include "fuel_computer.h"
 
 void InjectorModelBase::prepare() {
 	m_massFlowRate = getInjectorMassFlowRate();
@@ -11,8 +12,7 @@ void InjectorModelBase::prepare() {
 }
 
 constexpr float convertToGramsPerSecond(float ccPerMinute) {
-	float ccPerSecond = ccPerMinute / 60;
-	return ccPerSecond * 0.72f;	// 0.72g/cc fuel density
+	return ccPerMinute * (fuelDensity / 60.f);
 }
 
 expected<float> InjectorModel::getAbsoluteRailPressure() const {
