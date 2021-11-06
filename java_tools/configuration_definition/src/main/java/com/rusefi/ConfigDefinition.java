@@ -250,7 +250,7 @@ public class ConfigDefinition {
             ParseState parseState = new ParseState(state.enumsReader);
 
             // First process yaml files
-            //processYamls(listener, yamlFiles);
+            //processYamls(parseState, yamlFiles);
 
             // Process firing order enum
             handleFiringOrder(firingEnumFileName, parseState);
@@ -262,7 +262,7 @@ public class ConfigDefinition {
 
                 //for (String prependFile : prependFiles) {
                 // TODO: fix signature define file parsing
-                //parseFile(listener, prependFile);
+                //parseFile(parseState, prependFile);
                 //}
             }
 
@@ -275,11 +275,11 @@ public class ConfigDefinition {
 
             // Write C structs
             // CStructWriter cStructs = new CStructWriter();
-            // cStructs.writeCStructs(listener, destCHeaderFileName + ".test");
+            // cStructs.writeCStructs(parseState, destCHeaderFileName + ".test");
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(listener, "TODO", tsPath + "/test.ini");
+            // writer.writeTunerstudio(parseState, "TODO", tsPath + "/test.ini");
 
         }
 
