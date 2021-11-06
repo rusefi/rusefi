@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 03:26:58 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 13:24:41 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -804,7 +804,7 @@ struct engine_configuration_s {
 	bool issue_294_29 : 1;
 	/**
 	 * Experimental setting that will cause a misfire
-	 * DO NOT ENABLE.;
+	 * DO NOT ENABLE.
 	offset 76 bit 29 */
 	bool artificialTestMisfire : 1;
 	/**
@@ -4557,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 03:26:58 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 13:24:41 UTC 2021
