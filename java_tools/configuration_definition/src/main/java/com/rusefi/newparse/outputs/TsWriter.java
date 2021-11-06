@@ -18,9 +18,6 @@ public class TsWriter {
         BufferedReader is = new BufferedReader(new FileReader(inputFile));
         PrintStream ps = new PrintStream(new FileOutputStream(outputFile));
 
-        // TODO: handle signature
-        parser.addDefinition("TS_SIGNATURE", "sig", Definition.OverwritePolicy.NotAllowed);
-
         while (is.ready()) {
             String line = is.readLine();
 
@@ -55,7 +52,15 @@ public class TsWriter {
 
                 String varName = match.group(1);
                 Definition def = parser.findDefinition(varName);
-                line = line.replaceAll(match.group(0), def != null ? def.toString() : "MISSING DEFINITION");
+
+                String replacement = def != null ? def.toString() : "MISSING DEFINITION";
+
+                // Strip off any quotes from the resolved string - we may be trying to concatenate inside a string literal where quotes aren't allowed
+                while (replacement.startsWith("\"") && replacement.endsWith("\"")) {
+                    replacement = replacement.substring(1, replacement.length() - 1);
+                }
+
+                line = line.replaceAll(match.group(0), replacement);
             }
 
             // TODO: remove extra whitespace from the line
