@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 01:59:33 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 03:26:58 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1506,15 +1506,9 @@ struct engine_configuration_s {
 	 */
 	uint16_t idlePositionMax;
 	/**
-	units
 	 * offset 724
 	 */
-	uint16_t tempHpfpStart;
-	/**
-	units
-	 * offset 726
-	 */
-	uint16_t tempHpfpDuration;
+	uint16_t unusedExHpfp[2];
 	/**
 	 * Secondary TTL channel baud rate
 	BPs
@@ -2061,10 +2055,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_302_30 : 1;
+	bool unusedBit_301_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_302_31 : 1;
+	bool unusedBit_301_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -3031,76 +3025,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_513_8 : 1;
+	bool unusedBit_512_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_513_9 : 1;
+	bool unusedBit_512_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_513_10 : 1;
+	bool unusedBit_512_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_513_11 : 1;
+	bool unusedBit_512_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_513_12 : 1;
+	bool unusedBit_512_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_513_13 : 1;
+	bool unusedBit_512_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_513_14 : 1;
+	bool unusedBit_512_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_513_15 : 1;
+	bool unusedBit_512_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_513_16 : 1;
+	bool unusedBit_512_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_513_17 : 1;
+	bool unusedBit_512_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_513_18 : 1;
+	bool unusedBit_512_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_513_19 : 1;
+	bool unusedBit_512_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_513_20 : 1;
+	bool unusedBit_512_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_513_21 : 1;
+	bool unusedBit_512_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_513_22 : 1;
+	bool unusedBit_512_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_513_23 : 1;
+	bool unusedBit_512_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_513_24 : 1;
+	bool unusedBit_512_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_513_25 : 1;
+	bool unusedBit_512_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_513_26 : 1;
+	bool unusedBit_512_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_513_27 : 1;
+	bool unusedBit_512_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_513_28 : 1;
+	bool unusedBit_512_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_513_29 : 1;
+	bool unusedBit_512_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_513_30 : 1;
+	bool unusedBit_512_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_513_31 : 1;
+	bool unusedBit_512_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4041,10 +4035,119 @@ struct engine_configuration_s {
 	 */
 	float triggerGapOverrideTo[GAP_TRACKING_LENGTH];
 	/**
-	units
+	lobes/cam
 	 * offset 4696
 	 */
-	int mainUnusedEnd[326];
+	uint8_t hpfpCamLobes;
+	/**
+	 * offset 4697
+	 */
+	hpfp_cam_e hpfpCam;
+	/**
+	 * Crank angle ATDC of first lobe peak
+	deg
+	 * offset 4698
+	 */
+	uint8_t hpfpPeakPos;
+	/**
+	 * If the requested activation time is below this angle, don't bother running the pump
+	deg
+	 * offset 4699
+	 */
+	uint8_t hpfpMinAngle;
+	/**
+	 * Size of the pump chamber in cc. Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.
+	cc
+	 * offset 4700
+	 */
+	scaled_channel<uint16_t, 1000, 1> hpfpPumpVolume;
+	/**
+	 * How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own)
+	deg
+	 * offset 4702
+	 */
+	uint8_t hpfpActivationAngle;
+	/**
+	 * offset 4703
+	 */
+	uint8_t unusedFiller_4703;
+	/**
+	%/kPa
+	 * offset 4704
+	 */
+	scaled_channel<uint16_t, 1000, 1> hpfpPidP;
+	/**
+	%/kPa/lobe
+	 * offset 4706
+	 */
+	scaled_channel<uint16_t, 100000, 1> hpfpPidI;
+	/**
+	 * The fastest rate the target pressure can be reduced by. This is because HPFP have no way to bleed off pressure other than injecting fuel.
+	kPa/s
+	 * offset 4708
+	 */
+	uint16_t hpfpTargetDecay;
+	/**
+	%
+	 * offset 4710
+	 */
+	scaled_channel<uint8_t, 2, 1> hpfpLobeProfileQuantityBins[HPFP_LOBE_PROFILE_SIZE];
+	/**
+	deg
+	 * offset 4726
+	 */
+	scaled_channel<uint8_t, 2, 1> hpfpLobeProfileAngle[HPFP_LOBE_PROFILE_SIZE];
+	/**
+	volts
+	 * offset 4742
+	 */
+	uint8_t hpfpDeadtimeVoltsBins[HPFP_DEADTIME_SIZE];
+	/**
+	ms
+	 * offset 4750
+	 */
+	scaled_channel<uint16_t, 1000, 1> hpfpDeadtimeMS[HPFP_DEADTIME_SIZE];
+	/**
+	kPa
+	 * offset 4766
+	 */
+	uint16_t hpfpTarget[HPFP_TARGET_SIZE][HPFP_TARGET_SIZE];
+	/**
+	load
+	 * offset 4966
+	 */
+	scaled_channel<uint16_t, 10, 1> hpfpTargetLoadBins[HPFP_TARGET_SIZE];
+	/**
+	RPM
+	 * offset 4986
+	 */
+	scaled_channel<uint8_t, 1, 50> hpfpTargetRpmBins[HPFP_TARGET_SIZE];
+	/**
+	%
+	 * offset 4996
+	 */
+	int8_t hpfpCompensation[HPFP_COMPENSATION_SIZE][HPFP_COMPENSATION_SIZE];
+	/**
+	cc/lobe
+	 * offset 5096
+	 */
+	scaled_channel<uint16_t, 1000, 1> hpfpCompensationLoadBins[HPFP_COMPENSATION_SIZE];
+	/**
+	RPM
+	 * offset 5116
+	 */
+	scaled_channel<uint8_t, 1, 50> hpfpCompensationRpmBins[HPFP_COMPENSATION_SIZE];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 5126
+	 */
+	uint8_t alignmentFill_at_5126[2];
+	/**
+	units
+	 * offset 5128
+	 */
+	int mainUnusedEnd[218];
 	/** total size 6000*/
 };
 
@@ -4454,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 01:59:33 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 03:26:58 UTC 2021

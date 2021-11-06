@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 01:59:33 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 03:26:58 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -82,6 +82,7 @@ public class Fields {
 	public static final int alignmentFill_at_2227_offset = 2227;
 	public static final int alignmentFill_at_2253_offset = 2253;
 	public static final int alignmentFill_at_4539_offset = 4539;
+	public static final int alignmentFill_at_5126_offset = 5126;
 	public static final int alternator_antiwindupFreq_offset = 1764;
 	public static final int alternator_derivativeFilterLoss_offset = 1760;
 	public static final int alternatorControl_dFactor_offset = 1724;
@@ -1228,6 +1229,34 @@ public class Fields {
 	public static final int hip9011PrescalerAndSDO_offset = 324;
 	public static final int hip9011SpiDevice_offset = 540;
 	public static final int hipOutputChannel_offset = 1468;
+	public static final int hpfp_cam_e_HPFP_CAM_EX1 = 2;
+	public static final int hpfp_cam_e_HPFP_CAM_EX2 = 4;
+	public static final int hpfp_cam_e_HPFP_CAM_IN1 = 1;
+	public static final int hpfp_cam_e_HPFP_CAM_IN2 = 3;
+	public static final int hpfp_cam_e_HPFP_CAM_NONE = 0;
+	public static final int HPFP_COMPENSATION_SIZE = 10;
+	public static final int HPFP_DEADTIME_SIZE = 8;
+	public static final int HPFP_LOBE_PROFILE_SIZE = 16;
+	public static final int HPFP_TARGET_SIZE = 10;
+	public static final int hpfpActivationAngle_offset = 4702;
+	public static final int hpfpCam_offset = 4697;
+	public static final int hpfpCamLobes_offset = 4696;
+	public static final int hpfpCompensation_offset = 4996;
+	public static final int hpfpCompensationLoadBins_offset = 5096;
+	public static final int hpfpCompensationRpmBins_offset = 5116;
+	public static final int hpfpDeadtimeMS_offset = 4750;
+	public static final int hpfpDeadtimeVoltsBins_offset = 4742;
+	public static final int hpfpLobeProfileAngle_offset = 4726;
+	public static final int hpfpLobeProfileQuantityBins_offset = 4710;
+	public static final int hpfpMinAngle_offset = 4699;
+	public static final int hpfpPeakPos_offset = 4698;
+	public static final int hpfpPidI_offset = 4706;
+	public static final int hpfpPidP_offset = 4704;
+	public static final int hpfpPumpVolume_offset = 4700;
+	public static final int hpfpTarget_offset = 4766;
+	public static final int hpfpTargetDecay_offset = 4708;
+	public static final int hpfpTargetLoadBins_offset = 4966;
+	public static final int hpfpTargetRpmBins_offset = 4986;
 	public static final int hpfpValvePin_offset = 2130;
 	public static final int hpfpValvePinMode_offset = 2131;
 	public static final int HW_MAX_ADC_INDEX = 17;
@@ -1521,7 +1550,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 706;
 	public static final int mainRelayPinMode_offset = 752;
-	public static final int mainUnusedEnd_offset = 4696;
+	public static final int mainUnusedEnd_offset = 5128;
 	public static final int malfunctionIndicatorPin_offset = 660;
 	public static final int malfunctionIndicatorPinMode_offset = 661;
 	public static final int manIdlePosition_offset = 608;
@@ -1743,7 +1772,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1998226013;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1880,8 +1908,6 @@ public class Fields {
 	public static final int tcuSolenoidTable_offset = 15136;
 	public static final int tcuUpshiftButtonPin_offset = 1818;
 	public static final int tcuUpshiftButtonPinMode_offset = 4514;
-	public static final int tempHpfpDuration_offset = 726;
-	public static final int tempHpfpStart_offset = 724;
 	public static final int test557pin_offset = 3101;
 	public static final int thermistor_conf_s_size = 28;
 	public static final int ThermistorConf_size = 32;
@@ -2197,7 +2223,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.06.all.1998226013";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.06.all.2406907274";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2255,33 +2281,33 @@ public class Fields {
 	public static final int unusedAtOldBoardConfigurationEnd_offset = 1340;
 	public static final int unusedBit4_1476_offset = 1476;
 	public static final int unusedBit_251_29_offset = 976;
-	public static final int unusedBit_302_30_offset = 976;
-	public static final int unusedBit_302_31_offset = 976;
+	public static final int unusedBit_301_30_offset = 976;
+	public static final int unusedBit_301_31_offset = 976;
 	public static final int unusedBit_34_31_offset = 76;
-	public static final int unusedBit_513_10_offset = 2116;
-	public static final int unusedBit_513_11_offset = 2116;
-	public static final int unusedBit_513_12_offset = 2116;
-	public static final int unusedBit_513_13_offset = 2116;
-	public static final int unusedBit_513_14_offset = 2116;
-	public static final int unusedBit_513_15_offset = 2116;
-	public static final int unusedBit_513_16_offset = 2116;
-	public static final int unusedBit_513_17_offset = 2116;
-	public static final int unusedBit_513_18_offset = 2116;
-	public static final int unusedBit_513_19_offset = 2116;
-	public static final int unusedBit_513_20_offset = 2116;
-	public static final int unusedBit_513_21_offset = 2116;
-	public static final int unusedBit_513_22_offset = 2116;
-	public static final int unusedBit_513_23_offset = 2116;
-	public static final int unusedBit_513_24_offset = 2116;
-	public static final int unusedBit_513_25_offset = 2116;
-	public static final int unusedBit_513_26_offset = 2116;
-	public static final int unusedBit_513_27_offset = 2116;
-	public static final int unusedBit_513_28_offset = 2116;
-	public static final int unusedBit_513_29_offset = 2116;
-	public static final int unusedBit_513_30_offset = 2116;
-	public static final int unusedBit_513_31_offset = 2116;
-	public static final int unusedBit_513_8_offset = 2116;
-	public static final int unusedBit_513_9_offset = 2116;
+	public static final int unusedBit_512_10_offset = 2116;
+	public static final int unusedBit_512_11_offset = 2116;
+	public static final int unusedBit_512_12_offset = 2116;
+	public static final int unusedBit_512_13_offset = 2116;
+	public static final int unusedBit_512_14_offset = 2116;
+	public static final int unusedBit_512_15_offset = 2116;
+	public static final int unusedBit_512_16_offset = 2116;
+	public static final int unusedBit_512_17_offset = 2116;
+	public static final int unusedBit_512_18_offset = 2116;
+	public static final int unusedBit_512_19_offset = 2116;
+	public static final int unusedBit_512_20_offset = 2116;
+	public static final int unusedBit_512_21_offset = 2116;
+	public static final int unusedBit_512_22_offset = 2116;
+	public static final int unusedBit_512_23_offset = 2116;
+	public static final int unusedBit_512_24_offset = 2116;
+	public static final int unusedBit_512_25_offset = 2116;
+	public static final int unusedBit_512_26_offset = 2116;
+	public static final int unusedBit_512_27_offset = 2116;
+	public static final int unusedBit_512_28_offset = 2116;
+	public static final int unusedBit_512_29_offset = 2116;
+	public static final int unusedBit_512_30_offset = 2116;
+	public static final int unusedBit_512_31_offset = 2116;
+	public static final int unusedBit_512_8_offset = 2116;
+	public static final int unusedBit_512_9_offset = 2116;
 	public static final int unusedBitHere1_offset = 1464;
 	public static final int unusedBitHere2_offset = 1464;
 	public static final int unusedBitHere3_offset = 1464;
@@ -2297,6 +2323,8 @@ public class Fields {
 	public static final int unusedEL2_offset = 2064;
 	public static final int unusedEL3_offset = 2068;
 	public static final int unusedEL4_offset = 2072;
+	public static final int unusedExHpfp_offset = 724;
+	public static final int unusedFiller_4703_offset = 4703;
 	public static final int unusedFsioInputs_offset = 1522;
 	public static final int unusedLuaWasHere_offset = 16032;
 	public static final int unusedOldBiquad_offset = 2331;
@@ -2694,8 +2722,7 @@ public class Fields {
 	public static final Field WASTEGATEPOSITIONMAX = Field.create("WASTEGATEPOSITIONMAX", 718, FieldType.INT16);
 	public static final Field IDLEPOSITIONMIN = Field.create("IDLEPOSITIONMIN", 720, FieldType.INT16);
 	public static final Field IDLEPOSITIONMAX = Field.create("IDLEPOSITIONMAX", 722, FieldType.INT16);
-	public static final Field TEMPHPFPSTART = Field.create("TEMPHPFPSTART", 724, FieldType.INT16);
-	public static final Field TEMPHPFPDURATION = Field.create("TEMPHPFPDURATION", 726, FieldType.INT16);
+	public static final Field UNUSEDEXHPFP = Field.create("UNUSEDEXHPFP", 724, FieldType.INT16);
 	public static final Field TUNERSTUDIOSERIALSPEED = Field.create("TUNERSTUDIOSERIALSPEED", 728, FieldType.INT);
 	public static final Field COMPRESSIONRATIO = Field.create("COMPRESSIONRATIO", 732, FieldType.FLOAT);
 	public static final Field TRIGGERSIMULATORPINS1 = Field.create("TRIGGERSIMULATORPINS1", 736, FieldType.INT8, brain_pin_e);
@@ -2872,8 +2899,8 @@ public class Fields {
 	public static final Field KNOCKBANKCYL12 = Field.create("KNOCKBANKCYL12", 976, FieldType.BIT, 27);
 	public static final Field TCUENABLED = Field.create("TCUENABLED", 976, FieldType.BIT, 28);
 	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 976, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_302_30 = Field.create("UNUSEDBIT_302_30", 976, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_302_31 = Field.create("UNUSEDBIT_302_31", 976, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_301_30 = Field.create("UNUSEDBIT_301_30", 976, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_301_31 = Field.create("UNUSEDBIT_301_31", 976, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 980, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 981, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN = Field.create("ETBIO1_CONTROLPIN", 982, FieldType.INT8, brain_pin_e);
@@ -3183,30 +3210,30 @@ public class Fields {
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 2116, FieldType.BIT, 5);
 	public static final Field UNUSED1129 = Field.create("UNUSED1129", 2116, FieldType.BIT, 6);
 	public static final Field UNUSED1130 = Field.create("UNUSED1130", 2116, FieldType.BIT, 7);
-	public static final Field UNUSEDBIT_513_8 = Field.create("UNUSEDBIT_513_8", 2116, FieldType.BIT, 8);
-	public static final Field UNUSEDBIT_513_9 = Field.create("UNUSEDBIT_513_9", 2116, FieldType.BIT, 9);
-	public static final Field UNUSEDBIT_513_10 = Field.create("UNUSEDBIT_513_10", 2116, FieldType.BIT, 10);
-	public static final Field UNUSEDBIT_513_11 = Field.create("UNUSEDBIT_513_11", 2116, FieldType.BIT, 11);
-	public static final Field UNUSEDBIT_513_12 = Field.create("UNUSEDBIT_513_12", 2116, FieldType.BIT, 12);
-	public static final Field UNUSEDBIT_513_13 = Field.create("UNUSEDBIT_513_13", 2116, FieldType.BIT, 13);
-	public static final Field UNUSEDBIT_513_14 = Field.create("UNUSEDBIT_513_14", 2116, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_513_15 = Field.create("UNUSEDBIT_513_15", 2116, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_513_16 = Field.create("UNUSEDBIT_513_16", 2116, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_513_17 = Field.create("UNUSEDBIT_513_17", 2116, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_513_18 = Field.create("UNUSEDBIT_513_18", 2116, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_513_19 = Field.create("UNUSEDBIT_513_19", 2116, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_513_20 = Field.create("UNUSEDBIT_513_20", 2116, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_513_21 = Field.create("UNUSEDBIT_513_21", 2116, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_513_22 = Field.create("UNUSEDBIT_513_22", 2116, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_513_23 = Field.create("UNUSEDBIT_513_23", 2116, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_513_24 = Field.create("UNUSEDBIT_513_24", 2116, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_513_25 = Field.create("UNUSEDBIT_513_25", 2116, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_513_26 = Field.create("UNUSEDBIT_513_26", 2116, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_513_27 = Field.create("UNUSEDBIT_513_27", 2116, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_513_28 = Field.create("UNUSEDBIT_513_28", 2116, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_513_29 = Field.create("UNUSEDBIT_513_29", 2116, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_513_30 = Field.create("UNUSEDBIT_513_30", 2116, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_513_31 = Field.create("UNUSEDBIT_513_31", 2116, FieldType.BIT, 31);
+	public static final Field UNUSEDBIT_512_8 = Field.create("UNUSEDBIT_512_8", 2116, FieldType.BIT, 8);
+	public static final Field UNUSEDBIT_512_9 = Field.create("UNUSEDBIT_512_9", 2116, FieldType.BIT, 9);
+	public static final Field UNUSEDBIT_512_10 = Field.create("UNUSEDBIT_512_10", 2116, FieldType.BIT, 10);
+	public static final Field UNUSEDBIT_512_11 = Field.create("UNUSEDBIT_512_11", 2116, FieldType.BIT, 11);
+	public static final Field UNUSEDBIT_512_12 = Field.create("UNUSEDBIT_512_12", 2116, FieldType.BIT, 12);
+	public static final Field UNUSEDBIT_512_13 = Field.create("UNUSEDBIT_512_13", 2116, FieldType.BIT, 13);
+	public static final Field UNUSEDBIT_512_14 = Field.create("UNUSEDBIT_512_14", 2116, FieldType.BIT, 14);
+	public static final Field UNUSEDBIT_512_15 = Field.create("UNUSEDBIT_512_15", 2116, FieldType.BIT, 15);
+	public static final Field UNUSEDBIT_512_16 = Field.create("UNUSEDBIT_512_16", 2116, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_512_17 = Field.create("UNUSEDBIT_512_17", 2116, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_512_18 = Field.create("UNUSEDBIT_512_18", 2116, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_512_19 = Field.create("UNUSEDBIT_512_19", 2116, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_512_20 = Field.create("UNUSEDBIT_512_20", 2116, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_512_21 = Field.create("UNUSEDBIT_512_21", 2116, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_512_22 = Field.create("UNUSEDBIT_512_22", 2116, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_512_23 = Field.create("UNUSEDBIT_512_23", 2116, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_512_24 = Field.create("UNUSEDBIT_512_24", 2116, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_512_25 = Field.create("UNUSEDBIT_512_25", 2116, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_512_26 = Field.create("UNUSEDBIT_512_26", 2116, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_512_27 = Field.create("UNUSEDBIT_512_27", 2116, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_512_28 = Field.create("UNUSEDBIT_512_28", 2116, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_512_29 = Field.create("UNUSEDBIT_512_29", 2116, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_512_30 = Field.create("UNUSEDBIT_512_30", 2116, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_512_31 = Field.create("UNUSEDBIT_512_31", 2116, FieldType.BIT, 31);
 	public static final Field CAN2NBCTYPE = Field.create("CAN2NBCTYPE", 2120, FieldType.INT);
 	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 2124, FieldType.INT8, brain_pin_e);
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 2125, FieldType.INT8, brain_pin_e);
@@ -3615,7 +3642,29 @@ public class Fields {
 	public static final Field TRIGGERGAPOVERRIDETO16 = Field.create("TRIGGERGAPOVERRIDETO16", 4684, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO17 = Field.create("TRIGGERGAPOVERRIDETO17", 4688, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO18 = Field.create("TRIGGERGAPOVERRIDETO18", 4692, FieldType.FLOAT);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4696, FieldType.INT);
+	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 4696, FieldType.INT8);
+	public static final String[] hpfp_cam_e = {"NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"};
+	public static final Field HPFPCAM = Field.create("HPFPCAM", 4697, FieldType.INT8, hpfp_cam_e);
+	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 4698, FieldType.INT8);
+	public static final Field HPFPMINANGLE = Field.create("HPFPMINANGLE", 4699, FieldType.INT8);
+	public static final Field HPFPPUMPVOLUME = Field.create("HPFPPUMPVOLUME", 4700, FieldType.INT16);
+	public static final Field HPFPACTIVATIONANGLE = Field.create("HPFPACTIVATIONANGLE", 4702, FieldType.INT8);
+	public static final Field UNUSEDFILLER_4703 = Field.create("UNUSEDFILLER_4703", 4703, FieldType.INT8);
+	public static final Field HPFPPIDP = Field.create("HPFPPIDP", 4704, FieldType.INT16);
+	public static final Field HPFPPIDI = Field.create("HPFPPIDI", 4706, FieldType.INT16);
+	public static final Field HPFPTARGETDECAY = Field.create("HPFPTARGETDECAY", 4708, FieldType.INT16);
+	public static final Field HPFPLOBEPROFILEQUANTITYBINS = Field.create("HPFPLOBEPROFILEQUANTITYBINS", 4710, FieldType.INT8);
+	public static final Field HPFPLOBEPROFILEANGLE = Field.create("HPFPLOBEPROFILEANGLE", 4726, FieldType.INT8);
+	public static final Field HPFPDEADTIMEVOLTSBINS = Field.create("HPFPDEADTIMEVOLTSBINS", 4742, FieldType.INT8);
+	public static final Field HPFPDEADTIMEMS = Field.create("HPFPDEADTIMEMS", 4750, FieldType.INT16);
+	public static final Field HPFPTARGET = Field.create("HPFPTARGET", 4766, FieldType.INT16);
+	public static final Field HPFPTARGETLOADBINS = Field.create("HPFPTARGETLOADBINS", 4966, FieldType.INT16);
+	public static final Field HPFPTARGETRPMBINS = Field.create("HPFPTARGETRPMBINS", 4986, FieldType.INT8);
+	public static final Field HPFPCOMPENSATION = Field.create("HPFPCOMPENSATION", 4996, FieldType.INT8);
+	public static final Field HPFPCOMPENSATIONLOADBINS = Field.create("HPFPCOMPENSATIONLOADBINS", 5096, FieldType.INT16);
+	public static final Field HPFPCOMPENSATIONRPMBINS = Field.create("HPFPCOMPENSATIONRPMBINS", 5116, FieldType.INT8);
+	public static final Field ALIGNMENTFILL_AT_5126 = Field.create("ALIGNMENTFILL_AT_5126", 5126, FieldType.INT8);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 5128, FieldType.INT);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, 120, FieldType.STRING);
 	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 6120, FieldType.FLOAT);
 	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 6152, FieldType.FLOAT);
@@ -3971,8 +4020,7 @@ public class Fields {
 	WASTEGATEPOSITIONMAX,
 	IDLEPOSITIONMIN,
 	IDLEPOSITIONMAX,
-	TEMPHPFPSTART,
-	TEMPHPFPDURATION,
+	UNUSEDEXHPFP,
 	TUNERSTUDIOSERIALSPEED,
 	COMPRESSIONRATIO,
 	TRIGGERSIMULATORPINS1,
@@ -4147,8 +4195,8 @@ public class Fields {
 	KNOCKBANKCYL12,
 	TCUENABLED,
 	UNUSEDBIT_251_29,
-	UNUSEDBIT_302_30,
-	UNUSEDBIT_302_31,
+	UNUSEDBIT_301_30,
+	UNUSEDBIT_301_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN,
@@ -4452,30 +4500,30 @@ public class Fields {
 	UNUSED1128,
 	UNUSED1129,
 	UNUSED1130,
-	UNUSEDBIT_513_8,
-	UNUSEDBIT_513_9,
-	UNUSEDBIT_513_10,
-	UNUSEDBIT_513_11,
-	UNUSEDBIT_513_12,
-	UNUSEDBIT_513_13,
-	UNUSEDBIT_513_14,
-	UNUSEDBIT_513_15,
-	UNUSEDBIT_513_16,
-	UNUSEDBIT_513_17,
-	UNUSEDBIT_513_18,
-	UNUSEDBIT_513_19,
-	UNUSEDBIT_513_20,
-	UNUSEDBIT_513_21,
-	UNUSEDBIT_513_22,
-	UNUSEDBIT_513_23,
-	UNUSEDBIT_513_24,
-	UNUSEDBIT_513_25,
-	UNUSEDBIT_513_26,
-	UNUSEDBIT_513_27,
-	UNUSEDBIT_513_28,
-	UNUSEDBIT_513_29,
-	UNUSEDBIT_513_30,
-	UNUSEDBIT_513_31,
+	UNUSEDBIT_512_8,
+	UNUSEDBIT_512_9,
+	UNUSEDBIT_512_10,
+	UNUSEDBIT_512_11,
+	UNUSEDBIT_512_12,
+	UNUSEDBIT_512_13,
+	UNUSEDBIT_512_14,
+	UNUSEDBIT_512_15,
+	UNUSEDBIT_512_16,
+	UNUSEDBIT_512_17,
+	UNUSEDBIT_512_18,
+	UNUSEDBIT_512_19,
+	UNUSEDBIT_512_20,
+	UNUSEDBIT_512_21,
+	UNUSEDBIT_512_22,
+	UNUSEDBIT_512_23,
+	UNUSEDBIT_512_24,
+	UNUSEDBIT_512_25,
+	UNUSEDBIT_512_26,
+	UNUSEDBIT_512_27,
+	UNUSEDBIT_512_28,
+	UNUSEDBIT_512_29,
+	UNUSEDBIT_512_30,
+	UNUSEDBIT_512_31,
 	CAN2NBCTYPE,
 	CAN2TXPIN,
 	CAN2RXPIN,
@@ -4879,6 +4927,27 @@ public class Fields {
 	TRIGGERGAPOVERRIDETO16,
 	TRIGGERGAPOVERRIDETO17,
 	TRIGGERGAPOVERRIDETO18,
+	HPFPCAMLOBES,
+	HPFPCAM,
+	HPFPPEAKPOS,
+	HPFPMINANGLE,
+	HPFPPUMPVOLUME,
+	HPFPACTIVATIONANGLE,
+	UNUSEDFILLER_4703,
+	HPFPPIDP,
+	HPFPPIDI,
+	HPFPTARGETDECAY,
+	HPFPLOBEPROFILEQUANTITYBINS,
+	HPFPLOBEPROFILEANGLE,
+	HPFPDEADTIMEVOLTSBINS,
+	HPFPDEADTIMEMS,
+	HPFPTARGET,
+	HPFPTARGETLOADBINS,
+	HPFPTARGETRPMBINS,
+	HPFPCOMPENSATION,
+	HPFPCOMPENSATIONLOADBINS,
+	HPFPCOMPENSATIONRPMBINS,
+	ALIGNMENTFILL_AT_5126,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,
