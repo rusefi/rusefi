@@ -28,6 +28,9 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = 3,
+	/**
+	 * See also PROTEUS_LUA_DEMO
+	 */
 	MRE_SECONDARY_CAN = 4,
 
 	NISSAN_PRIMERA = 5,
@@ -57,7 +60,6 @@ typedef enum {
 
 	FORD_ESCORT_GT = 14,
 
-
 	MITSU_4G93 = 16,
 
 	/**
@@ -76,7 +78,11 @@ typedef enum {
 	MRE_BODY_CONTROL = 23,
 	BMW_M73_M = 24,
 
-UNUSED25 = 25,
+	/**
+	 * See also MRE_SECONDARY_CAN
+	 */
+	PROTEUS_LUA_DEMO = 25,
+
 	TEST_ENGINE = 26,
 
 	// used by unit test
