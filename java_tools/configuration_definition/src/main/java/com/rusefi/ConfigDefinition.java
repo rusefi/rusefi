@@ -232,7 +232,7 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        signatureHash(state, parseState, tsPath, inputAllFiles);
+        long crc32 = signatureHash(state, parseState, tsPath, inputAllFiles);
 
         handleFiringOrder(firingEnumFileName, state.variableRegistry);
 
@@ -345,7 +345,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static void signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputAllFiles) throws IOException {
+    private static long signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputAllFiles) throws IOException {
         // get CRC32 of given input files
         long crc32 = 0;
         for (String iFile : inputAllFiles) {
@@ -361,6 +361,8 @@ public class ConfigDefinition {
             state.variableRegistry.register(SIGNATURE_HASH, "" + crc32);
             parseState.addDefinition(SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
         }
+
+        return crc32;
     }
 
     private static boolean isNeedToUpdateTsFiles(String tsPath, String cachePath, String cacheZipFile, List<String> inputAllFiles) {
