@@ -426,6 +426,8 @@ enable2ndByteCanID = false
 	rawTps1Secondary  = scalar,	 U16,    300, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Primary    = scalar,	 U16,    302, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Secondary  = scalar,	 U16,    304, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+
+	currentEnginePhase = scalar, U16, 70, "deg", 1, 0
 ;
 ; see TunerStudioOutputChannels struct
 ;
@@ -1031,6 +1033,7 @@ gaugeCategory = Sensors - Extra 2
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
+   currentEnginePhaseGauge = currentEnginePhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1439,6 +1442,7 @@ gaugeCategory = DynoView
    entry = VssAcceleration, "Vss Accel", float, "%.3f"
 
    entry = flexPercent, @@GAUGE_NAME_FLEX@@, int, "%d"
+   entry = currentEnginePhase, "Engine Phase", int, "%d"
 
 [Menu]
 

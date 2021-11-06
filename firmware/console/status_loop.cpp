@@ -884,6 +884,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	}
 }
 
+void updateCurrentEnginePhase(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (auto phase = engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt())) {
+		tsOutputChannels.currentEnginePhase = phase.Value - tdcPosition();
+	} else {
+		tsOutputChannels.currentEnginePhase = 0;
+	}
+}
+
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio
 	updateTunerStudioState(&tsOutputChannels PASS_ENGINE_PARAMETER_SUFFIX);

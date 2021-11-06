@@ -135,7 +135,7 @@ struct TunerStudioOutputChannels {
 	scaled_percent iatCorrection; // 64
 	scaled_percent cltCorrection; // 66
 	scaled_percent baroCorrection; // 68
-	uint16_t unused70; // 70
+	uint16_t currentEnginePhase; // 70
 
 	// Wall model AE
 	scaled_ms wallFuelAmount; // 72
