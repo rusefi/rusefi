@@ -228,16 +228,6 @@ public class ParseState {
     }
 
     @Override
-    public void exitArrayTypedefSuffix(RusefiConfigGrammarParser.ArrayTypedefSuffixContext ctx) {
-        Type datatype = Type.findByTsType(ctx.Datatype().getText());
-
-        FieldOptions options = new FieldOptions();
-        handleFieldOptionsList(options, ctx.fieldOptionsList());
-
-        typedefs.put(typedefName, new ArrayTypedef(ParseState.this.typedefName, this.arrayDim, datatype, options));
-    }
-
-    @Override
     public void exitStringTypedefSuffix(RusefiConfigGrammarParser.StringTypedefSuffixContext ctx) {
         Double stringLength = ParseState.this.evalResults.remove();
 
@@ -344,17 +334,6 @@ public class ParseState {
                 options = scTypedef.options.copy();
                 // Switch to the "real" type, that is the typedef's type
                 type = scTypedef.type.cType;
-            } else if (typedef instanceof ArrayTypedef) {
-                ArrayTypedef arTypedef = (ArrayTypedef) typedef;
-                // Copy the typedef's options list - we don't want to edit it
-                options = arTypedef.options.copy();
-
-                // Merge the read-in options list with the default from the typedef (if exists)
-                handleFieldOptionsList(options, ctx.fieldOptionsList());
-
-                ScalarField prototype = new ScalarField(arTypedef.type, name, options, autoscale);
-                scope.structFields.add(new ArrayField<>(prototype, arTypedef.length, false));
-                return;
             } else if (typedef instanceof EnumTypedef) {
                 EnumTypedef bTypedef = (EnumTypedef) typedef;
 
