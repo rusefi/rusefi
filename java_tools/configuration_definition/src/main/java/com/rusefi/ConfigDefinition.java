@@ -230,7 +230,9 @@ public class ConfigDefinition {
             SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
         }
 
-        long crc32 = signatureHash(state, tsPath, inputAllFiles);
+        ParseState parseState = new ParseState(state.enumsReader);
+        // Add the variable for the config signature
+        signatureHash(state, parseState, tsPath, inputAllFiles);
 
         handleFiringOrder(firingEnumFileName, state.variableRegistry);
 
@@ -247,8 +249,6 @@ public class ConfigDefinition {
 
         // Parse the input files
         {
-            ParseState parseState = new ParseState(state.enumsReader);
-
             // First process yaml files
             //processYamls(parseState, yamlFiles);
 
@@ -279,8 +279,7 @@ public class ConfigDefinition {
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/test.ini");
-
+            // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
         }
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
@@ -346,7 +345,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static long signatureHash(ReaderState state, String tsPath, List<String> inputAllFiles) throws IOException {
+    private static void signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputAllFiles) throws IOException {
         // get CRC32 of given input files
         long crc32 = 0;
         for (String iFile : inputAllFiles) {
@@ -356,9 +355,12 @@ public class ConfigDefinition {
         }
         SystemOut.println("CRC32 from all input files = " + crc32);
         // store the CRC32 as a built-in variable
-        if (tsPath != null) // nasty trick - do not insert signature into live data files
+
+        // nasty trick - do not insert signature into live data files
+        if (tsPath != null) {
             state.variableRegistry.register(SIGNATURE_HASH, "" + crc32);
-        return crc32;
+            parseState.addDefinition(SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
+        }
     }
 
     private static boolean isNeedToUpdateTsFiles(String tsPath, String cachePath, String cacheZipFile, List<String> inputAllFiles) {
