@@ -235,36 +235,18 @@ struct_no_prefix engine_configuration_s
 
 #define PACK_MULT_MAP_ESTIMATE 100
 
-custom map_estimate_table_t	2*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array, U16, @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@], "kPa", {1/@@PACK_MULT_MAP_ESTIMATE@@}, 0, 0, 100, 2
-custom ve_table_t 4*@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array, F32, @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@], "%", 1, 0, 0, 999, 2
-custom lambda_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array, U08, @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@], "deg", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
-custom afr_table_t @@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@ array, U08, @OFFSET@, [@@FUEL_RPM_COUNT@@x@@FUEL_LOAD_COUNT@@], "deg", {1/@@PACK_MULT_AFR_CFG@@}, 0, 0, 25, 1
-
-custom tcubinary_table_t @@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@ array, U08, @OFFSET@, [@@TCU_SOLENOID_COUNT@@x@@TCU_GEAR_COUNT@@], "onoff", 1, 0, 0, 1, 0
-
-custom fsio_table_8x8_u8t	@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array, U08, @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@], "value", 1, 0, 0, 255, 0
-custom fsio_table_8x8_f32t	4*@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@ array, F32, @OFFSET@, [@@FSIO_TABLE_8@@x@@FSIO_TABLE_8@@], "value", 1, 0, 0, 30000, 2
-custom tps_tps_table_t	4*@@TPS_TPS_ACCEL_TABLE@@x@@TPS_TPS_ACCEL_TABLE@@ array, F32, @OFFSET@, [@@TPS_TPS_ACCEL_TABLE@@x@@TPS_TPS_ACCEL_TABLE@@], "value", 1, 0, 0, 30000, 2
 
 
-custom baro_corr_table_t 4*@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@ array, F32, @OFFSET@, [@@BARO_CORR_SIZE@@x@@BARO_CORR_SIZE@@], "ratio", 1, 0, 0, 2, 2
 
 
-custom ignition_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array, F32, @OFFSET@, [@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@], "deg", 1, 0, -20, 90, 2
 
-custom angle_table_t	4*@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@ array, F32, @OFFSET@, [@@IGN_RPM_COUNT@@x@@IGN_LOAD_COUNT@@], "deg", 1, 0, -720, 720, 2
-custom pedal_to_tps_t	@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@ array, U08, @OFFSET@, [@@PEDAL_TO_TPS_SIZE@@x@@PEDAL_TO_TPS_SIZE@@], "%", 1, 0, 0, 100, 0
 
-custom iac_pid_mult_t	@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@ array, U08, @OFFSET@, [@@IAC_PID_MULT_SIZE@@x@@IAC_PID_MULT_SIZE@@], "%", 1, 0, 0, 999, 2
-custom boost_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array, U08, @OFFSET@, [@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@], "", @@LOAD_1_BYTE_PACKING_MULT@@, 0 , 0, 100, 0
-custom boost_target_table_t	@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@ array, U08, @OFFSET@, [@@BOOST_RPM_COUNT@@x@@BOOST_LOAD_COUNT@@], "", @@LOAD_1_BYTE_PACKING_MULT@@, 0 , 0, 3000, 0
 
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
 #define GPPWM_CHANNELS 4
 #define GPPWM_NOTE_SIZE 16
 
-custom gppwm_table_t	@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@ array, U08, @OFFSET@, [@@GPPWM_RPM_COUNT@@x@@GPPWM_LOAD_COUNT@@], "duty", 1, 0, 0, 100, 0
 
 struct stft_cell_cfg_s
 	int8_t maxAdd;;"%", 1, 0, 0, 25, 0
@@ -367,7 +349,7 @@ struct gppwm_channel
 
 	uint8_t[GPPWM_LOAD_COUNT] loadBins;;"load", 1, 0, 0, 250, 0
 	uint8_t[GPPWM_RPM_COUNT] rpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
-	gppwm_table_t table;
+	uint8_t[GPPWM_RPM_COUNT x GPPWM_LOAD_COUNT] table;;"duty", 1, 0, 0, 100, 0
 end_struct
 
 custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "MPXH6400"
@@ -1113,7 +1095,7 @@ int mapAveragingSchedulingAtIndex;+At what trigger index should some MAP-related
 float[BARO_CORR_SIZE] baroCorrPressureBins;;"kPa", 1, 0, 0, 200, 2
 float[BARO_CORR_SIZE] baroCorrRpmBins;;"RPM", 1, 0, 0, 18000, 2
 
-baro_corr_table_t baroCorrTable;
+float[BARO_CORR_SIZE x BARO_CORR_SIZE] baroCorrTable;;"ratio", 1, 0, 0, 2, 2
 	
 	#define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
 custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
@@ -1459,7 +1441,7 @@ tChargeMode_e tChargeMode;
 
 	pid_s idleRpmPid2
 
-	iac_pid_mult_t iacPidMultTable;
+	uint8_t[IAC_PID_MULT_SIZE x IAC_PID_MULT_SIZE] iacPidMultTable;;"%", 1, 0, 0, 999, 2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load", 1, 0, 0, 500, 2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0	
 
@@ -1506,14 +1488,16 @@ float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds", 1, 0, 0, 100, 1
 float[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%", 1, 0, 0, 600, 1
 float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds", 1, 0, 0, 100, 1
 
-boost_table_t boostTableOpenLoop;
+! TODO: use autoscale
+uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] boostTableOpenLoop;;"", @@LOAD_1_BYTE_PACKING_MULT@@, 0 , 0, 100, 0
 uint8_t[8] unused6312;;"units", 1, 0, -20, 100, 0
 uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0 
 
-boost_target_table_t boostTableClosedLoop;
+! TODO: use autoscale
+uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] boostTableClosedLoop;;"", @@LOAD_1_BYTE_PACKING_MULT@@, 0 , 0, 3000, 0
 uint8_t[BOOST_LOAD_COUNT] boostTpsBins;;"%", @@TPS_1_BYTE_PACKING_MULT@@, 0, 0, 100, 2
 
-pedal_to_tps_t pedalToTpsTable;
+uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
 ! it's not serious to use one byte for RPM but let me try that just to try it
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
@@ -1551,44 +1535,44 @@ float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for sim
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
-angle_table_t ignitionIatCorrTable;
+float[IGN_RPM_COUNT x IGN_LOAD_COUNT] ignitionIatCorrTable;;"deg", 1, 0, -720, 720, 2
 float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 2
 float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 2
 
-angle_table_t injectionPhase;
+float[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 2
 float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 500, 2
 float[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 2
 
-tcubinary_table_t tcuSolenoidTable;
+uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
 
 float vssFilterReciprocal;+Good example: number of tooth on wheel, For Can 10 is a good number.;"Hz", 1, 0, 2, 20, 2
 
-map_estimate_table_t mapEstimateTable;
+uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] mapEstimateTable;;"kPa", {1/@@PACK_MULT_MAP_ESTIMATE@@}, 0, 0, 100, 2
 uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
-fsio_table_8x8_u8t vvtTable1;
+uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] vvtTable1;;"value", 1, 0, 0, 255, 0
 float[FSIO_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
 float[FSIO_TABLE_8] vvtTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
 
-fsio_table_8x8_u8t vvtTable2;
+uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] vvtTable2;;"value", 1, 0, 0, 255, 0
 float[FSIO_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
 float[FSIO_TABLE_8] vvtTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
 
 float[64] unusedLuaWasHere;;"L", 1, 0, 0, 255, 0
 
-ignition_table_t ignitionTable;
+float[IGN_RPM_COUNT x IGN_LOAD_COUNT] ignitionTable;;"deg", 1, 0, -20, 90, 2
 float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 2
 float[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 2
 
-ve_table_t veTable;
+float[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] veTable;;"%", 1, 0, 0, 999, 2
 float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 400, 2
 float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 2
 
 #if LAMBDA
-lambda_table_t lambdaTable;
+uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale lambdaTable;;"lambda", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
 #else
-afr_table_t lambdaTable;
+uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] lambdaTable;;"afr", {1/@@PACK_MULT_AFR_CFG@@}, 0, 0, 25, 1
 #endif
 
 ! union
@@ -1599,23 +1583,23 @@ afr_table_t lambdaTable;
 float[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 500, 2
 float[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 2
 
-tps_tps_table_t tpsTpsAccelTable;
+float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"to",	  1, 0, 0, 25500, 2
 
-fsio_table_8x8_f32t fsioTable1;
+float[FSIO_TABLE_8 x FSIO_TABLE_8] fsioTable1;;"value", 1, 0, 0, 30000, 2
 float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	  1, 0, 0, 30000, 2
 float[FSIO_TABLE_8] fsioTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
-fsio_table_8x8_u8t fsioTable2;
+uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] fsioTable2;;"value", 1, 0, 0, 255, 0
 float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	  1, 0, 0, 255, 0
 float[FSIO_TABLE_8] fsioTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
-fsio_table_8x8_u8t fsioTable3;
+uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] fsioTable3;;"value", 1, 0, 0, 255, 0
 float[FSIO_TABLE_8] fsioTable3LoadBins;;"L",	  1, 0, 0, 255, 0
 float[FSIO_TABLE_8] fsioTable3RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
-fsio_table_8x8_u8t fsioTable4;
+uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] fsioTable4;;"value", 1, 0, 0, 255, 0
 float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	  1, 0, 0, 255, 0
 float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
