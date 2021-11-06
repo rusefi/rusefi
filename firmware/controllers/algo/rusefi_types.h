@@ -23,6 +23,10 @@ typedef unsigned int time_t;
 #include "rusefi_enums.h"
 #include "firing_order.h"
 
+#if __cplusplus
+#include "scaled_channel.h"
+#endif
+
 #define DEFAULT_FUEL_LOAD_COUNT 16
 #define DEFAULT_IGN_LOAD_COUNT 16
 
@@ -94,32 +98,6 @@ typedef char le_formula_t[LE_COMMAND_LENGTH];
 
 typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
 
-#if __cplusplus
-#include "scaled_channel.h"
-using ve_table_t = float[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
-using lambda_table_t = scaled_channel<uint8_t, PACK_MULT_LAMBDA_CFG>[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
-#endif
-
-typedef uint16_t map_estimate_table_t[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
-typedef float ignition_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
-typedef int16_t ignition_tps_table_t[IGN_LOAD_COUNT][IGN_RPM_COUNT];
-typedef uint8_t pedal_to_tps_t[PEDAL_TO_TPS_SIZE][PEDAL_TO_TPS_SIZE];
-typedef uint8_t iac_pid_mult_t[IAC_PID_MULT_SIZE][IAC_PID_MULT_SIZE];
-
-typedef float baro_corr_table_t[BARO_CORR_SIZE][BARO_CORR_SIZE];
-
-typedef bool tcubinary_table_t[TCU_GEAR_COUNT][TCU_SOLENOID_COUNT];
-
-typedef float fsio_table_8x8_f32t[FSIO_TABLE_8][FSIO_TABLE_8];
-typedef float tps_tps_table_t[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
-typedef uint8_t fsio_table_8x8_u8t[FSIO_TABLE_8][FSIO_TABLE_8];
-typedef uint8_t boost_table_t[BOOST_LOAD_COUNT][BOOST_RPM_COUNT];
-typedef uint8_t boost_target_table_t[BOOST_LOAD_COUNT][BOOST_RPM_COUNT];
-typedef uint8_t gppwm_table_t[GPPWM_LOAD_COUNT][GPPWM_RPM_COUNT]; 
-
-
-// this is different type simply to have different hi/low range in rusefi.ini
-typedef ignition_table_t angle_table_t;
 
 typedef int16_t fsio_pwm_freq_t;
 
