@@ -24,6 +24,7 @@
 #include "tooth_logger.h"
 #include "map_averaging.h"
 #include "main_trigger_callback.h"
+#include "status_loop.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -658,6 +659,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif
 
 		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_TUNER_STUDIO
+		updateCurrentEnginePhase(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 	}
 }
 
