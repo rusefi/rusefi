@@ -22,29 +22,42 @@ fi
 chmod u+x $HEX2DFU
 
 mkdir -p deliver
+rm -f deliver/*
 
-rm -f deliver/rusefi.dfu
 echo "$SCRIPT_NAME: invoking hex2dfu for RusEFI"
-$HEX2DFU -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu
+$HEX2DFU -i build/rusefi.hex -C 0x1C -o build/rusefi.dfu
 
-# rusEFI console does not use .hex files but for Cypress that's the primary binary format
-cp build/rusefi.hex deliver/
-cp build/rusefi.bin deliver/
-cp build/rusefi.srec deliver/
-
-# bootloader
 if [ $USE_OPENBLT = "yes" ]; then
-  rm -f deliver/openblt_$PROJECT_BOARD.dfu
-  echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -o deliver/openblt_$PROJECT_BOARD.dfu
+  # this image is suitable for update through bootloader only
+  # do not deliver update images in any format that can confuse users
+  #cp build/rusefi.bin  deliver/rusefi_update.bin
+  #cp build/rusefi.dfu  deliver/rusefi_update.dfu
+  #cp build/rusefi.hex  deliver/rusefi_update.hex
+  # srec is the only format used by OpenBLT host tools
+  cp build/rusefi.srec deliver/rusefi_update.srec
+else
+  # standalone images (for use with no bootloader)
+  cp build/rusefi.bin  deliver/
+  cp build/rusefi.dfu  deliver/
+  # rusEFI console does not use .hex files but for Cypress that's the primary binary format
+  cp build/rusefi.hex  deliver/
+fi
 
-  cp build-openblt/openblt_$PROJECT_BOARD.hex deliver/
-  cp build-openblt/openblt_$PROJECT_BOARD.bin deliver/
-  cp build-openblt/openblt_$PROJECT_BOARD.srec deliver/
+# bootloader and composite image
+if [ $USE_OPENBLT = "yes" ]; then
+  rm -f deliver/openblt.dfu
+  echo "$SCRIPT_NAME: invoking hex2dfu for OpenBLT"
+  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -o build-openblt/openblt_$PROJECT_BOARD.dfu
+
+  # do we need all these formats?
+  cp build-openblt/openblt_$PROJECT_BOARD.bin  deliver/openblt.bin
+  cp build-openblt/openblt_$PROJECT_BOARD.dfu  deliver/openblt.dfu
+  #cp build-openblt/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
 
   rm -f deliver/rusefi_openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for composite RusEFI+OpenBLT image"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi_openblt.dfu
+  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu
+  #todo: how to create 'signed' bin, hex and srec?
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
