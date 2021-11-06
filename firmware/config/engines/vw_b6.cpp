@@ -126,14 +126,12 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
-	engineConfiguration->hpfpValvePin = TLE8888_PIN_6;
+	// engineConfiguration->hpfpValvePin = TLE8888_PIN_6; // Disable for now
 
 	setBoschVAGETB(PASS_CONFIG_PARAMETER_SIGNATURE);
 
 
 	engineConfiguration->injector.flow = 300;
-	engineConfiguration->tempHpfpStart = 120;
-	engineConfiguration->tempHpfpDuration = 30;
 
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
