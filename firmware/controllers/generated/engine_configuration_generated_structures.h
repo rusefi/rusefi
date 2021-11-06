@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 23:50:33 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 01:59:33 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -222,9 +222,10 @@ struct gppwm_channel {
 	 */
 	uint8_t rpmBins[GPPWM_RPM_COUNT];
 	/**
+	duty
 	 * offset 24
 	 */
-	gppwm_table_t table;
+	uint8_t table[GPPWM_RPM_COUNT][GPPWM_LOAD_COUNT];
 	/** total size 88*/
 };
 
@@ -2615,9 +2616,10 @@ struct engine_configuration_s {
 	 */
 	float baroCorrRpmBins[BARO_CORR_SIZE];
 	/**
+	ratio
 	 * offset 1576
 	 */
-	baro_corr_table_t baroCorrTable;
+	float baroCorrTable[BARO_CORR_SIZE][BARO_CORR_SIZE];
 	/**
 	 * Cranking fuel correction coefficient based on TPS
 	Ratio
@@ -3928,9 +3930,10 @@ struct engine_configuration_s {
 	 */
 	pid_s idleRpmPid2;
 	/**
+	%
 	 * offset 4060
 	 */
-	iac_pid_mult_t iacPidMultTable;
+	uint8_t iacPidMultTable[IAC_PID_MULT_SIZE][IAC_PID_MULT_SIZE];
 	/**
 	Load
 	 * offset 4124
@@ -4078,7 +4081,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6248
 	 */
-	boost_table_t boostTableOpenLoop;
+	uint8_t boostTableOpenLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	units
 	 * offset 6312
@@ -4092,16 +4095,17 @@ struct persistent_config_s {
 	/**
 	 * offset 6328
 	 */
-	boost_target_table_t boostTableClosedLoop;
+	uint8_t boostTableClosedLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	%
 	 * offset 6392
 	 */
 	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
 	/**
+	%
 	 * offset 6400
 	 */
-	pedal_to_tps_t pedalToTpsTable;
+	uint8_t pedalToTpsTable[PEDAL_TO_TPS_SIZE][PEDAL_TO_TPS_SIZE];
 	/**
 	%
 	 * offset 6464
@@ -4230,9 +4234,10 @@ struct persistent_config_s {
 	 */
 	float mafDecodingBins[MAF_DECODING_COUNT];
 	/**
+	deg
 	 * offset 12832
 	 */
-	angle_table_t ignitionIatCorrTable;
+	float ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Temperature
 	 * offset 13856
@@ -4244,9 +4249,10 @@ struct persistent_config_s {
 	 */
 	float ignitionIatCorrRpmBins[IGN_RPM_COUNT];
 	/**
+	deg
 	 * offset 13984
 	 */
-	angle_table_t injectionPhase;
+	float injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
 	 * offset 15008
@@ -4258,9 +4264,10 @@ struct persistent_config_s {
 	 */
 	float injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
+	onoff
 	 * offset 15136
 	 */
-	tcubinary_table_t tcuSolenoidTable;
+	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 	/**
 	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	Hz
@@ -4268,9 +4275,10 @@ struct persistent_config_s {
 	 */
 	float vssFilterReciprocal;
 	/**
+	kPa
 	 * offset 15200
 	 */
-	map_estimate_table_t mapEstimateTable;
+	uint16_t mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	% TPS
 	 * offset 15712
@@ -4282,9 +4290,10 @@ struct persistent_config_s {
 	 */
 	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
 	/**
+	value
 	 * offset 15776
 	 */
-	fsio_table_8x8_u8t vvtTable1;
+	uint8_t vvtTable1[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 15840
@@ -4297,9 +4306,10 @@ struct persistent_config_s {
 	 */
 	float vvtTable1RpmBins[FSIO_TABLE_8];
 	/**
+	value
 	 * offset 15904
 	 */
-	fsio_table_8x8_u8t vvtTable2;
+	uint8_t vvtTable2[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 15968
@@ -4317,9 +4327,10 @@ struct persistent_config_s {
 	 */
 	float unusedLuaWasHere[64];
 	/**
+	deg
 	 * offset 16288
 	 */
-	ignition_table_t ignitionTable;
+	float ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
 	 * offset 17312
@@ -4331,9 +4342,10 @@ struct persistent_config_s {
 	 */
 	float ignitionRpmBins[IGN_RPM_COUNT];
 	/**
+	%
 	 * offset 17440
 	 */
-	ve_table_t veTable;
+	float veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	kPa
 	 * offset 18464
@@ -4345,9 +4357,10 @@ struct persistent_config_s {
 	 */
 	float veRpmBins[FUEL_RPM_COUNT];
 	/**
+	lambda
 	 * offset 18592
 	 */
-	lambda_table_t lambdaTable;
+	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	 * offset 18848
 	 */
@@ -4358,9 +4371,10 @@ struct persistent_config_s {
 	 */
 	float lambdaRpmBins[FUEL_RPM_COUNT];
 	/**
+	value
 	 * offset 18976
 	 */
-	tps_tps_table_t tpsTpsAccelTable;
+	float tpsTpsAccelTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 	/**
 	from
 	 * offset 19232
@@ -4373,9 +4387,10 @@ struct persistent_config_s {
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
+	value
 	 * offset 19296
 	 */
-	fsio_table_8x8_f32t fsioTable1;
+	float fsioTable1[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 19552
@@ -4388,9 +4403,10 @@ struct persistent_config_s {
 	 */
 	float fsioTable1RpmBins[FSIO_TABLE_8];
 	/**
+	value
 	 * offset 19616
 	 */
-	fsio_table_8x8_u8t fsioTable2;
+	uint8_t fsioTable2[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 19680
@@ -4403,9 +4419,10 @@ struct persistent_config_s {
 	 */
 	float fsioTable2RpmBins[FSIO_TABLE_8];
 	/**
+	value
 	 * offset 19744
 	 */
-	fsio_table_8x8_u8t fsioTable3;
+	uint8_t fsioTable3[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 19808
@@ -4418,9 +4435,10 @@ struct persistent_config_s {
 	 */
 	float fsioTable3RpmBins[FSIO_TABLE_8];
 	/**
+	value
 	 * offset 19872
 	 */
-	fsio_table_8x8_u8t fsioTable4;
+	uint8_t fsioTable4[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 19936
@@ -4436,4 +4454,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 23:50:33 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 01:59:33 UTC 2021

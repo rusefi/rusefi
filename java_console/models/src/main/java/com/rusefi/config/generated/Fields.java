@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 05 23:50:33 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 01:59:33 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1743,6 +1743,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1998226013;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2196,7 +2197,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.05.all.3338361886";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.06.all.1998226013";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2414,6 +2415,8 @@ public class Fields {
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
 	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 4, FieldType.INT);
 	public static final Field INJECTOR_FLOW = Field.create("INJECTOR_FLOW", 8, FieldType.FLOAT);
+	public static final Field INJECTOR_BATTLAGCORRBINS = Field.create("INJECTOR_BATTLAGCORRBINS", 12, FieldType.FLOAT);
+	public static final Field INJECTOR_BATTLAGCORR = Field.create("INJECTOR_BATTLAGCORR", 44, FieldType.FLOAT);
 	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 76, FieldType.BIT, 0);
 	public static final Field USEFORDREDUNDANTTPS = Field.create("USEFORDREDUNDANTTPS", 76, FieldType.BIT, 1);
 	public static final Field ISVERBOSEAUXPID1 = Field.create("ISVERBOSEAUXPID1", 76, FieldType.BIT, 2);
@@ -2452,15 +2455,21 @@ public class Fields {
 	public static final Field TPSERRORDETECTIONTOOHIGH = Field.create("TPSERRORDETECTIONTOOHIGH", 86, FieldType.INT16);
 	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 88, FieldType.FLOAT);
 	public static final Field CRANKING_RPM = Field.create("CRANKING_RPM", 92, FieldType.INT16);
+	public static final Field CRANKING_ALIGNMENTFILL_AT_6 = Field.create("CRANKING_ALIGNMENTFILL_AT_6", 94, FieldType.INT8);
 	public static final Field PRIMINGSQUIRTDURATIONMS = Field.create("PRIMINGSQUIRTDURATIONMS", 96, FieldType.FLOAT);
 	public static final Field IGNITIONDWELLFORCRANKINGMS = Field.create("IGNITIONDWELLFORCRANKINGMS", 100, FieldType.FLOAT);
 	public static final Field ETBREVLIMITSTART = Field.create("ETBREVLIMITSTART", 104, FieldType.INT16);
 	public static final Field ETBREVLIMITRANGE = Field.create("ETBREVLIMITRANGE", 106, FieldType.INT16);
+	public static final Field MAP_SAMPLINGANGLEBINS = Field.create("MAP_SAMPLINGANGLEBINS", 108, FieldType.FLOAT);
+	public static final Field MAP_SAMPLINGANGLE = Field.create("MAP_SAMPLINGANGLE", 140, FieldType.FLOAT);
+	public static final Field MAP_SAMPLINGWINDOWBINS = Field.create("MAP_SAMPLINGWINDOWBINS", 172, FieldType.FLOAT);
+	public static final Field MAP_SAMPLINGWINDOW = Field.create("MAP_SAMPLINGWINDOW", 204, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_LOWVALUE = Field.create("MAP_SENSOR_LOWVALUE", 236, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_HIGHVALUE = Field.create("MAP_SENSOR_HIGHVALUE", 240, FieldType.FLOAT);
 	public static final Field MAP_SENSOR_TYPE = Field.create("MAP_SENSOR_TYPE", 244, FieldType.INT);
 	public static final String[] adc_channel_e = {"Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"};
 	public static final Field MAP_SENSOR_HWCHANNEL = Field.create("MAP_SENSOR_HWCHANNEL", 248, FieldType.INT8, adc_channel_e);
+	public static final Field MAP_SENSOR_ALIGNMENTFILL = Field.create("MAP_SENSOR_ALIGNMENTFILL", 249, FieldType.INT8);
 	public static final Field CLT_TEMPC_1 = Field.create("CLT_TEMPC_1", 252, FieldType.FLOAT);
 	public static final Field CLT_TEMPC_2 = Field.create("CLT_TEMPC_2", 256, FieldType.FLOAT);
 	public static final Field CLT_TEMPC_3 = Field.create("CLT_TEMPC_3", 260, FieldType.FLOAT);
@@ -2469,6 +2478,7 @@ public class Fields {
 	public static final Field CLT_RESISTANCE_3 = Field.create("CLT_RESISTANCE_3", 272, FieldType.FLOAT);
 	public static final Field CLT_BIAS_RESISTOR = Field.create("CLT_BIAS_RESISTOR", 276, FieldType.FLOAT);
 	public static final Field CLT_ADCCHANNEL = Field.create("CLT_ADCCHANNEL", 280, FieldType.INT8, adc_channel_e);
+	public static final Field CLT_ALIGNMENTFILL_AT_29 = Field.create("CLT_ALIGNMENTFILL_AT_29", 281, FieldType.INT8);
 	public static final Field IAT_TEMPC_1 = Field.create("IAT_TEMPC_1", 284, FieldType.FLOAT);
 	public static final Field IAT_TEMPC_2 = Field.create("IAT_TEMPC_2", 288, FieldType.FLOAT);
 	public static final Field IAT_TEMPC_3 = Field.create("IAT_TEMPC_3", 292, FieldType.FLOAT);
@@ -2477,10 +2487,13 @@ public class Fields {
 	public static final Field IAT_RESISTANCE_3 = Field.create("IAT_RESISTANCE_3", 304, FieldType.FLOAT);
 	public static final Field IAT_BIAS_RESISTOR = Field.create("IAT_BIAS_RESISTOR", 308, FieldType.FLOAT);
 	public static final Field IAT_ADCCHANNEL = Field.create("IAT_ADCCHANNEL", 312, FieldType.INT8, adc_channel_e);
+	public static final Field IAT_ALIGNMENTFILL_AT_29 = Field.create("IAT_ALIGNMENTFILL_AT_29", 313, FieldType.INT8);
 	public static final Field LAUNCHRPM = Field.create("LAUNCHRPM", 316, FieldType.INT);
 	public static final Field LAUNCHTIMINGRETARD = Field.create("LAUNCHTIMINGRETARD", 320, FieldType.INT);
 	public static final Field HIP9011PRESCALERANDSDO = Field.create("HIP9011PRESCALERANDSDO", 324, FieldType.INT);
 	public static final Field KNOCKBANDCUSTOM = Field.create("KNOCKBANDCUSTOM", 328, FieldType.FLOAT);
+	public static final Field SPARKDWELLRPMBINS = Field.create("SPARKDWELLRPMBINS", 332, FieldType.FLOAT);
+	public static final Field SPARKDWELLVALUES = Field.create("SPARKDWELLVALUES", 364, FieldType.FLOAT);
 	public static final Field DISPLACEMENT = Field.create("DISPLACEMENT", 396, FieldType.FLOAT);
 	public static final Field CYLINDERSCOUNT = Field.create("CYLINDERSCOUNT", 400, FieldType.INT);
 	public static final Field FIRINGORDER = Field.create("FIRINGORDER", 404, FieldType.INT);
@@ -2567,7 +2580,9 @@ public class Fields {
 	public static final Field CAMINPUTS2 = Field.create("CAMINPUTS2", 557, FieldType.INT8, brain_input_pin_e);
 	public static final Field CAMINPUTS3 = Field.create("CAMINPUTS3", 558, FieldType.INT8, brain_input_pin_e);
 	public static final Field CAMINPUTS4 = Field.create("CAMINPUTS4", 559, FieldType.INT8, brain_input_pin_e);
+	public static final Field CAMINPUTSPADDING = Field.create("CAMINPUTSPADDING", 560, FieldType.INT8);
 	public static final Field AFR_HWCHANNEL = Field.create("AFR_HWCHANNEL", 560, FieldType.INT8, adc_channel_e);
+	public static final Field AFR_ALIGNMENTFILL_AFR = Field.create("AFR_ALIGNMENTFILL_AFR", 561, FieldType.INT8);
 	public static final Field AFR_V1 = Field.create("AFR_V1", 564, FieldType.FLOAT);
 	public static final Field AFR_VALUE1 = Field.create("AFR_VALUE1", 568, FieldType.FLOAT);
 	public static final Field AFR_V2 = Field.create("AFR_V2", 572, FieldType.FLOAT);
@@ -2583,6 +2598,7 @@ public class Fields {
 	public static final Field BAROSENSOR_HIGHVALUE = Field.create("BAROSENSOR_HIGHVALUE", 588, FieldType.FLOAT);
 	public static final Field BAROSENSOR_TYPE = Field.create("BAROSENSOR_TYPE", 592, FieldType.INT);
 	public static final Field BAROSENSOR_HWCHANNEL = Field.create("BAROSENSOR_HWCHANNEL", 596, FieldType.INT8, adc_channel_e);
+	public static final Field BAROSENSOR_ALIGNMENTFILL = Field.create("BAROSENSOR_ALIGNMENTFILL", 597, FieldType.INT8);
 	public static final Field IDLE_SOLENOIDFREQUENCY = Field.create("IDLE_SOLENOIDFREQUENCY", 600, FieldType.INT);
 	public static final String[] output_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID"};
 	public static final Field IDLE_SOLENOIDPIN = Field.create("IDLE_SOLENOIDPIN", 604, FieldType.INT8, output_pin_e);
@@ -2657,6 +2673,7 @@ public class Fields {
 	public static final Field TPS1_2ADCCHANNEL = Field.create("TPS1_2ADCCHANNEL", 681, FieldType.INT8, adc_channel_e);
 	public static final Field TPS2_2ADCCHANNEL = Field.create("TPS2_2ADCCHANNEL", 682, FieldType.INT8, adc_channel_e);
 	public static final Field THROTTLEPEDALPOSITIONSECONDADCCHANNEL = Field.create("THROTTLEPEDALPOSITIONSECONDADCCHANNEL", 683, FieldType.INT8, adc_channel_e);
+	public static final Field FUELLEVELVALUES = Field.create("FUELLEVELVALUES", 684, FieldType.INT8);
 	public static final String[] ego_sensor_e = {"BPSX", "Innovate", "14Point7", "Narrow", "PLX", "Custom", "INVALID", "INVALID"};
 	public static final Field AFR_TYPE = Field.create("AFR_TYPE", 692, FieldType.INT, ego_sensor_e);
 	public static final Field IDLE_ANTIWINDUPFREQ = Field.create("IDLE_ANTIWINDUPFREQ", 696, FieldType.FLOAT);
@@ -2740,13 +2757,17 @@ public class Fields {
 	public static final Field GPIOPINMODES4 = Field.create("GPIOPINMODES4", 767, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES5 = Field.create("GPIOPINMODES5", 768, FieldType.INT8, pin_output_mode_e);
 	public static final Field GPIOPINMODES6 = Field.create("GPIOPINMODES6", 769, FieldType.INT8, pin_output_mode_e);
+	public static final Field DWELLVOLTAGECORRVOLTBINS = Field.create("DWELLVOLTAGECORRVOLTBINS", 770, FieldType.INT8);
 	public static final Field IMUTYPE = Field.create("IMUTYPE", 778, FieldType.INT8);
+	public static final Field UNUSEDPINMODESWHEREHERE = Field.create("UNUSEDPINMODESWHEREHERE", 779, FieldType.INT8);
 	public static final Field FSIOOUTPUTPINS1 = Field.create("FSIOOUTPUTPINS1", 780, FieldType.INT8, output_pin_e);
 	public static final Field FSIOOUTPUTPINS2 = Field.create("FSIOOUTPUTPINS2", 781, FieldType.INT8, output_pin_e);
 	public static final Field FSIOOUTPUTPINS3 = Field.create("FSIOOUTPUTPINS3", 782, FieldType.INT8, output_pin_e);
 	public static final Field FSIOOUTPUTPINS4 = Field.create("FSIOOUTPUTPINS4", 783, FieldType.INT8, output_pin_e);
 	public static final Field FSIOOUTPUTPINS5 = Field.create("FSIOOUTPUTPINS5", 784, FieldType.INT8, output_pin_e);
 	public static final Field FSIOOUTPUTPINS6 = Field.create("FSIOOUTPUTPINS6", 785, FieldType.INT8, output_pin_e);
+	public static final Field DWELLVOLTAGECORRVALUES = Field.create("DWELLVOLTAGECORRVALUES", 786, FieldType.INT8);
+	public static final Field UNUSEDOUTPUTWHEREHERE = Field.create("UNUSEDOUTPUTWHEREHERE", 794, FieldType.INT8);
 	public static final Field MAX31855_CS1 = Field.create("MAX31855_CS1", 796, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS2 = Field.create("MAX31855_CS2", 797, FieldType.INT8, brain_pin_e);
 	public static final Field MAX31855_CS3 = Field.create("MAX31855_CS3", 798, FieldType.INT8, brain_pin_e);
@@ -2779,12 +2800,14 @@ public class Fields {
 	public static final Field FSIOFREQUENCY4 = Field.create("FSIOFREQUENCY4", 838, FieldType.INT16);
 	public static final Field FSIOFREQUENCY5 = Field.create("FSIOFREQUENCY5", 840, FieldType.INT16);
 	public static final Field FSIOFREQUENCY6 = Field.create("FSIOFREQUENCY6", 842, FieldType.INT16);
+	public static final Field UNUSEDOUTPUTFREQWHEREHERE = Field.create("UNUSEDOUTPUTFREQWHEREHERE", 844, FieldType.INT16);
 	public static final Field FSIO_SETTING1 = Field.create("FSIO_SETTING1", 864, FieldType.INT);
 	public static final Field FSIO_SETTING2 = Field.create("FSIO_SETTING2", 868, FieldType.INT);
 	public static final Field FSIO_SETTING3 = Field.create("FSIO_SETTING3", 872, FieldType.INT);
 	public static final Field FSIO_SETTING4 = Field.create("FSIO_SETTING4", 876, FieldType.INT);
 	public static final Field FSIO_SETTING5 = Field.create("FSIO_SETTING5", 880, FieldType.INT);
 	public static final Field FSIO_SETTING6 = Field.create("FSIO_SETTING6", 884, FieldType.INT);
+	public static final Field UNUSEDSETTINGS = Field.create("UNUSEDSETTINGS", 888, FieldType.INT);
 	public static final Field SPI1MOSIPIN = Field.create("SPI1MOSIPIN", 928, FieldType.INT8, brain_pin_e);
 	public static final Field SPI1MISOPIN = Field.create("SPI1MISOPIN", 929, FieldType.INT8, brain_pin_e);
 	public static final Field SPI1SCKPIN = Field.create("SPI1SCKPIN", 930, FieldType.INT8, brain_pin_e);
@@ -2811,6 +2834,7 @@ public class Fields {
 	public static final Field FSIODIGITALINPUTS4 = Field.create("FSIODIGITALINPUTS4", 955, FieldType.INT8, brain_pin_e);
 	public static final Field FSIODIGITALINPUTS5 = Field.create("FSIODIGITALINPUTS5", 956, FieldType.INT8, brain_pin_e);
 	public static final Field FSIODIGITALINPUTS6 = Field.create("FSIODIGITALINPUTS6", 957, FieldType.INT8, brain_pin_e);
+	public static final Field UNUSEDDIGITAL = Field.create("UNUSEDDIGITAL", 958, FieldType.INT8);
 	public static final Field VEHICLESPEEDSENSORINPUTPIN = Field.create("VEHICLESPEEDSENSORINPUTPIN", 968, FieldType.INT8, brain_input_pin_e);
 	public static final Field CLUTCHUPPIN = Field.create("CLUTCHUPPIN", 969, FieldType.INT8, switch_input_pin_e);
 	public static final Field UNUSED970 = Field.create("UNUSED970", 970, FieldType.INT8);
@@ -2927,6 +2951,7 @@ public class Fields {
 	public static final Field DRV8860_CS = Field.create("DRV8860_CS", 1201, FieldType.INT8, brain_pin_e);
 	public static final Field DRV8860_CSPINMODE = Field.create("DRV8860_CSPINMODE", 1202, FieldType.INT8, pin_output_mode_e);
 	public static final Field DRV8860_MISO = Field.create("DRV8860_MISO", 1203, FieldType.INT8, brain_pin_e);
+	public static final Field FUELLEVELBINS = Field.create("FUELLEVELBINS", 1204, FieldType.INT16);
 	public static final Field LUAOUTPUTPINS1 = Field.create("LUAOUTPUTPINS1", 1220, FieldType.INT8, output_pin_e);
 	public static final Field LUAOUTPUTPINS2 = Field.create("LUAOUTPUTPINS2", 1221, FieldType.INT8, output_pin_e);
 	public static final Field LUAOUTPUTPINS3 = Field.create("LUAOUTPUTPINS3", 1222, FieldType.INT8, output_pin_e);
@@ -2939,12 +2964,20 @@ public class Fields {
 	public static final Field VVTOFFSETS2 = Field.create("VVTOFFSETS2", 1232, FieldType.FLOAT);
 	public static final Field VVTOFFSETS3 = Field.create("VVTOFFSETS3", 1236, FieldType.FLOAT);
 	public static final Field VVTOFFSETS4 = Field.create("VVTOFFSETS4", 1240, FieldType.FLOAT);
+	public static final Field VVTOFFSETSPADDING = Field.create("VVTOFFSETSPADDING", 1244, FieldType.FLOAT);
 	public static final Field VRTHRESHOLD1_PIN = Field.create("VRTHRESHOLD1_PIN", 1244, FieldType.INT8, brain_pin_e);
+	public static final Field VRTHRESHOLD1_PAD = Field.create("VRTHRESHOLD1_PAD", 1245, FieldType.INT8);
+	public static final Field VRTHRESHOLD1_RPMBINS = Field.create("VRTHRESHOLD1_RPMBINS", 1248, FieldType.INT8);
+	public static final Field VRTHRESHOLD1_VALUES = Field.create("VRTHRESHOLD1_VALUES", 1254, FieldType.INT8);
 	public static final Field VRTHRESHOLD2_PIN = Field.create("VRTHRESHOLD2_PIN", 1260, FieldType.INT8, brain_pin_e);
+	public static final Field VRTHRESHOLD2_PAD = Field.create("VRTHRESHOLD2_PAD", 1261, FieldType.INT8);
+	public static final Field VRTHRESHOLD2_RPMBINS = Field.create("VRTHRESHOLD2_RPMBINS", 1264, FieldType.INT8);
+	public static final Field VRTHRESHOLD2_VALUES = Field.create("VRTHRESHOLD2_VALUES", 1270, FieldType.INT8);
 	public static final Field GPPWMNOTE1 = Field.create("GPPWMNOTE1", 1276, 16, FieldType.STRING);
 	public static final Field GPPWMNOTE2 = Field.create("GPPWMNOTE2", 1292, 16, FieldType.STRING);
 	public static final Field GPPWMNOTE3 = Field.create("GPPWMNOTE3", 1308, 16, FieldType.STRING);
 	public static final Field GPPWMNOTE4 = Field.create("GPPWMNOTE4", 1324, 16, FieldType.STRING);
+	public static final Field UNUSEDATOLDBOARDCONFIGURATIONEND = Field.create("UNUSEDATOLDBOARDCONFIGURATIONEND", 1340, FieldType.INT);
 	public static final Field VEHICLEWEIGHT = Field.create("VEHICLEWEIGHT", 1456, FieldType.INT16);
 	public static final Field LPS25BAROSENSORSCL = Field.create("LPS25BAROSENSORSCL", 1458, FieldType.INT8, brain_pin_e);
 	public static final Field LPS25BAROSENSORSDA = Field.create("LPS25BAROSENSORSDA", 1459, FieldType.INT8, brain_pin_e);
@@ -3027,6 +3060,7 @@ public class Fields {
 	public static final Field CAMINPUTSDEBUG2 = Field.create("CAMINPUTSDEBUG2", 1493, FieldType.INT8, brain_pin_e);
 	public static final Field CAMINPUTSDEBUG3 = Field.create("CAMINPUTSDEBUG3", 1494, FieldType.INT8, brain_pin_e);
 	public static final Field CAMINPUTSDEBUG4 = Field.create("CAMINPUTSDEBUG4", 1495, FieldType.INT8, brain_pin_e);
+	public static final Field CAMINPUTSDEBUGPADDING = Field.create("CAMINPUTSDEBUGPADDING", 1496, FieldType.INT8);
 	public static final Field ACIDLERPMBUMP = Field.create("ACIDLERPMBUMP", 1496, FieldType.INT16);
 	public static final Field WARNINGPERIOD = Field.create("WARNINGPERIOD", 1498, FieldType.INT16);
 	public static final Field KNOCKDETECTIONWINDOWSTART = Field.create("KNOCKDETECTIONWINDOWSTART", 1500, FieldType.FLOAT);
@@ -3039,10 +3073,15 @@ public class Fields {
 	public static final Field FSIOINPUTMODES4 = Field.create("FSIOINPUTMODES4", 1519, FieldType.INT8, pin_input_mode_e);
 	public static final Field FSIOINPUTMODES5 = Field.create("FSIOINPUTMODES5", 1520, FieldType.INT8, pin_input_mode_e);
 	public static final Field FSIOINPUTMODES6 = Field.create("FSIOINPUTMODES6", 1521, FieldType.INT8, pin_input_mode_e);
+	public static final Field UNUSEDFSIOINPUTS = Field.create("UNUSEDFSIOINPUTS", 1522, FieldType.INT8);
 	public static final Field IDLESTEPPERTOTALSTEPS = Field.create("IDLESTEPPERTOTALSTEPS", 1532, FieldType.INT);
 	public static final Field NOACCELAFTERHARDLIMITPERIODSECS = Field.create("NOACCELAFTERHARDLIMITPERIODSECS", 1536, FieldType.FLOAT);
 	public static final Field MAPAVERAGINGSCHEDULINGATINDEX = Field.create("MAPAVERAGINGSCHEDULINGATINDEX", 1540, FieldType.INT);
-	public static final Field BAROCORRTABLE = Field.create("BAROCORRTABLE", 1576, FieldType.INT);
+	public static final Field BAROCORRPRESSUREBINS = Field.create("BAROCORRPRESSUREBINS", 1544, FieldType.FLOAT);
+	public static final Field BAROCORRRPMBINS = Field.create("BAROCORRRPMBINS", 1560, FieldType.FLOAT);
+	public static final Field BAROCORRTABLE = Field.create("BAROCORRTABLE", 1576, FieldType.FLOAT);
+	public static final Field CRANKINGTPSCOEF = Field.create("CRANKINGTPSCOEF", 1640, FieldType.FLOAT);
+	public static final Field CRANKINGTPSBINS = Field.create("CRANKINGTPSBINS", 1672, FieldType.FLOAT);
 	public static final Field TACHPULSEDURACTIONMS = Field.create("TACHPULSEDURACTIONMS", 1704, FieldType.FLOAT);
 	public static final Field MAXACRPM = Field.create("MAXACRPM", 1708, FieldType.INT16);
 	public static final Field MAXACTPS = Field.create("MAXACTPS", 1710, FieldType.INT8);
@@ -3094,10 +3133,14 @@ public class Fields {
 	public static final Field AUXVALVES2 = Field.create("AUXVALVES2", 1817, FieldType.INT8, brain_pin_e);
 	public static final Field TCUUPSHIFTBUTTONPIN = Field.create("TCUUPSHIFTBUTTONPIN", 1818, FieldType.INT8, switch_input_pin_e);
 	public static final Field TCUDOWNSHIFTBUTTONPIN = Field.create("TCUDOWNSHIFTBUTTONPIN", 1819, FieldType.INT8, switch_input_pin_e);
+	public static final Field KNOCKNOISE = Field.create("KNOCKNOISE", 1820, FieldType.FLOAT);
+	public static final Field KNOCKNOISERPMBINS = Field.create("KNOCKNOISERPMBINS", 1852, FieldType.FLOAT);
 	public static final Field THROTTLEPEDALUPVOLTAGE = Field.create("THROTTLEPEDALUPVOLTAGE", 1884, FieldType.FLOAT);
 	public static final Field THROTTLEPEDALWOTVOLTAGE = Field.create("THROTTLEPEDALWOTVOLTAGE", 1888, FieldType.FLOAT);
 	public static final Field STARTUPFUELPUMPDURATION = Field.create("STARTUPFUELPUMPDURATION", 1892, FieldType.INT16);
 	public static final Field IDLEPIDRPMDEADZONE = Field.create("IDLEPIDRPMDEADZONE", 1894, FieldType.INT16);
+	public static final Field CLTIDLERPMBINS = Field.create("CLTIDLERPMBINS", 1896, FieldType.FLOAT);
+	public static final Field CLTIDLERPM = Field.create("CLTIDLERPM", 1960, FieldType.FLOAT);
 	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 2024, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = Field.create("ALTERNATOROFFABOVETPS", 2028, FieldType.FLOAT);
 	public static final Field STARTOFCRANKINGPRIMINGPULSE = Field.create("STARTOFCRANKINGPRIMINGPULSE", 2032, FieldType.FLOAT);
@@ -3174,6 +3217,8 @@ public class Fields {
 	public static final Field HPFPVALVEPIN = Field.create("HPFPVALVEPIN", 2130, FieldType.INT8, output_pin_e);
 	public static final Field HPFPVALVEPINMODE = Field.create("HPFPVALVEPINMODE", 2131, FieldType.INT8, pin_output_mode_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 2132, FieldType.FLOAT);
+	public static final Field MAPACCELTAPERBINS = Field.create("MAPACCELTAPERBINS", 2136, FieldType.FLOAT);
+	public static final Field MAPACCELTAPERMULT = Field.create("MAPACCELTAPERMULT", 2168, FieldType.FLOAT);
 	public static final Field UNUSEDANOTHERONEOFTHOSE = Field.create("UNUSEDANOTHERONEOFTHOSE", 2200, FieldType.FLOAT);
 	public static final Field FIXEDTIMING = Field.create("FIXEDTIMING", 2204, FieldType.FLOAT);
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 2208, FieldType.FLOAT);
@@ -3195,12 +3240,17 @@ public class Fields {
 	public static final Field VVTOUTPUTFREQUENCY1 = Field.create("VVTOUTPUTFREQUENCY1", 2248, FieldType.INT16);
 	public static final Field VVTOUTPUTFREQUENCY2 = Field.create("VVTOUTPUTFREQUENCY2", 2250, FieldType.INT16);
 	public static final Field FAN1EXTRAIDLE = Field.create("FAN1EXTRAIDLE", 2252, FieldType.INT8);
+	public static final Field ALIGNMENTFILL_AT_2253 = Field.create("ALIGNMENTFILL_AT_2253", 2253, FieldType.INT8);
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 2256, FieldType.INT);
 	public static final Field UNUSED2260 = Field.create("UNUSED2260", 2260, FieldType.INT);
+	public static final Field NARROWTOWIDEOXYGENBINS = Field.create("NARROWTOWIDEOXYGENBINS", 2264, FieldType.FLOAT);
+	public static final Field NARROWTOWIDEOXYGEN = Field.create("NARROWTOWIDEOXYGEN", 2296, FieldType.FLOAT);
 	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "vvt12", "vvt13"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 2328, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 2329, FieldType.INT8, vvt_mode_e);
+	public static final Field VVTMODEPADDING = Field.create("VVTMODEPADDING", 2330, FieldType.INT8);
 	public static final Field FAN2EXTRAIDLE = Field.create("FAN2EXTRAIDLE", 2330, FieldType.INT8);
+	public static final Field UNUSEDOLDBIQUAD = Field.create("UNUSEDOLDBIQUAD", 2331, FieldType.INT8);
 	public static final Field AUXANALOGINPUTS1 = Field.create("AUXANALOGINPUTS1", 2332, FieldType.INT8, adc_channel_e);
 	public static final Field AUXANALOGINPUTS2 = Field.create("AUXANALOGINPUTS2", 2333, FieldType.INT8, adc_channel_e);
 	public static final Field AUXANALOGINPUTS3 = Field.create("AUXANALOGINPUTS3", 2334, FieldType.INT8, adc_channel_e);
@@ -3221,6 +3271,8 @@ public class Fields {
 	public static final Field TRAILINGCOILPINS10 = Field.create("TRAILINGCOILPINS10", 2349, FieldType.INT8, output_pin_e);
 	public static final Field TRAILINGCOILPINS11 = Field.create("TRAILINGCOILPINS11", 2350, FieldType.INT8, output_pin_e);
 	public static final Field TRAILINGCOILPINS12 = Field.create("TRAILINGCOILPINS12", 2351, FieldType.INT8, output_pin_e);
+	public static final Field CLTTIMINGBINS = Field.create("CLTTIMINGBINS", 2352, FieldType.FLOAT);
+	public static final Field CLTTIMINGEXTRA = Field.create("CLTTIMINGEXTRA", 2384, FieldType.FLOAT);
 	public static final Field TLE8888MODE = Field.create("TLE8888MODE", 2416, FieldType.INT8);
 	public static final Field LIS302DLCSPINMODE = Field.create("LIS302DLCSPINMODE", 2417, FieldType.INT8, pin_output_mode_e);
 	public static final Field INJECTORCOMPENSATIONMODE = Field.create("INJECTORCOMPENSATIONMODE", 2418, FieldType.INT8);
@@ -3239,6 +3291,7 @@ public class Fields {
 	public static final Field AUXTEMPSENSOR1_RESISTANCE_3 = Field.create("AUXTEMPSENSOR1_RESISTANCE_3", 2464, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR1_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR1_BIAS_RESISTOR", 2468, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR1_ADCCHANNEL = Field.create("AUXTEMPSENSOR1_ADCCHANNEL", 2472, FieldType.INT8, adc_channel_e);
+	public static final Field AUXTEMPSENSOR1_ALIGNMENTFILL_AT_29 = Field.create("AUXTEMPSENSOR1_ALIGNMENTFILL_AT_29", 2473, FieldType.INT8);
 	public static final Field AUXTEMPSENSOR2_TEMPC_1 = Field.create("AUXTEMPSENSOR2_TEMPC_1", 2476, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_TEMPC_2 = Field.create("AUXTEMPSENSOR2_TEMPC_2", 2480, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_TEMPC_3 = Field.create("AUXTEMPSENSOR2_TEMPC_3", 2484, FieldType.FLOAT);
@@ -3247,6 +3300,7 @@ public class Fields {
 	public static final Field AUXTEMPSENSOR2_RESISTANCE_3 = Field.create("AUXTEMPSENSOR2_RESISTANCE_3", 2496, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_BIAS_RESISTOR = Field.create("AUXTEMPSENSOR2_BIAS_RESISTOR", 2500, FieldType.FLOAT);
 	public static final Field AUXTEMPSENSOR2_ADCCHANNEL = Field.create("AUXTEMPSENSOR2_ADCCHANNEL", 2504, FieldType.INT8, adc_channel_e);
+	public static final Field AUXTEMPSENSOR2_ALIGNMENTFILL_AT_29 = Field.create("AUXTEMPSENSOR2_ALIGNMENTFILL_AT_29", 2505, FieldType.INT8);
 	public static final Field APPLYNONLINEARBELOWPULSE = Field.create("APPLYNONLINEARBELOWPULSE", 2508, FieldType.INT16);
 	public static final Field INJECTORNONLINEARMODE = Field.create("INJECTORNONLINEARMODE", 2510, FieldType.INT8);
 	public static final Field UNUSED2508 = Field.create("UNUSED2508", 2511, FieldType.INT8);
@@ -3278,6 +3332,7 @@ public class Fields {
 	public static final Field TIMING_OFFSET_CYLINDER12 = Field.create("TIMING_OFFSET_CYLINDER12", 2584, FieldType.FLOAT);
 	public static final Field IDLEPIDACTIVATIONTIME = Field.create("IDLEPIDACTIVATIONTIME", 2588, FieldType.FLOAT);
 	public static final Field SDCARDSPIDEVICE = Field.create("SDCARDSPIDEVICE", 2592, FieldType.INT8);
+	public static final Field UNUSEDSPIPADDING4 = Field.create("UNUSEDSPIPADDING4", 2593, FieldType.INT8);
 	public static final String[] pin_mode_e = {"default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"};
 	public static final Field SPI1SCKMODE = Field.create("SPI1SCKMODE", 2596, FieldType.INT8, pin_mode_e);
 	public static final Field SPI1MOSIMODE = Field.create("SPI1MOSIMODE", 2597, FieldType.INT8, pin_mode_e);
@@ -3317,7 +3372,9 @@ public class Fields {
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL6 = Field.create("INJECTORCORRECTIONPOLYNOMIAL6", 2672, FieldType.FLOAT);
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL7 = Field.create("INJECTORCORRECTIONPOLYNOMIAL7", 2676, FieldType.FLOAT);
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL8 = Field.create("INJECTORCORRECTIONPOLYNOMIAL8", 2680, FieldType.FLOAT);
+	public static final Field UNUSED1366 = Field.create("UNUSED1366", 2684, FieldType.INT8);
 	public static final Field OILPRESSURE_HWCHANNEL = Field.create("OILPRESSURE_HWCHANNEL", 2692, FieldType.INT8, adc_channel_e);
+	public static final Field OILPRESSURE_ALIGNMENTFILL = Field.create("OILPRESSURE_ALIGNMENTFILL", 2693, FieldType.INT8);
 	public static final Field OILPRESSURE_V1 = Field.create("OILPRESSURE_V1", 2696, FieldType.FLOAT);
 	public static final Field OILPRESSURE_VALUE1 = Field.create("OILPRESSURE_VALUE1", 2700, FieldType.FLOAT);
 	public static final Field OILPRESSURE_V2 = Field.create("OILPRESSURE_V2", 2704, FieldType.FLOAT);
@@ -3326,6 +3383,14 @@ public class Fields {
 	public static final Field FAN2PIN = Field.create("FAN2PIN", 2713, FieldType.INT8, output_pin_e);
 	public static final Field FAN2ONTEMPERATURE = Field.create("FAN2ONTEMPERATURE", 2714, FieldType.INT8);
 	public static final Field FAN2OFFTEMPERATURE = Field.create("FAN2OFFTEMPERATURE", 2715, FieldType.INT8);
+	public static final Field SCRIPTCURVE1BINS = Field.create("SCRIPTCURVE1BINS", 2716, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE1 = Field.create("SCRIPTCURVE1", 2780, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE2BINS = Field.create("SCRIPTCURVE2BINS", 2844, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE2 = Field.create("SCRIPTCURVE2", 2908, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE3BINS = Field.create("SCRIPTCURVE3BINS", 2972, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE3 = Field.create("SCRIPTCURVE3", 3004, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE4BINS = Field.create("SCRIPTCURVE4BINS", 3036, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE4 = Field.create("SCRIPTCURVE4", 3068, FieldType.FLOAT);
 	public static final Field FLEXSENSORPIN = Field.create("FLEXSENSORPIN", 3100, FieldType.INT8, brain_input_pin_e);
 	public static final Field TEST557PIN = Field.create("TEST557PIN", 3101, FieldType.INT8, brain_pin_e);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 3102, FieldType.INT8, pin_output_mode_e);
@@ -3334,6 +3399,8 @@ public class Fields {
 	public static final Field TLE8888_CS = Field.create("TLE8888_CS", 3105, FieldType.INT8, brain_pin_e);
 	public static final Field TLE8888_CSPINMODE = Field.create("TLE8888_CSPINMODE", 3106, FieldType.INT8, pin_output_mode_e);
 	public static final Field MC33816_CS = Field.create("MC33816_CS", 3107, FieldType.INT8, brain_pin_e);
+	public static final Field CRANKINGADVANCEBINS = Field.create("CRANKINGADVANCEBINS", 3108, FieldType.FLOAT);
+	public static final Field CRANKINGADVANCE = Field.create("CRANKINGADVANCE", 3124, FieldType.FLOAT);
 	public static final Field SERVOOUTPUTPINS1 = Field.create("SERVOOUTPUTPINS1", 3140, FieldType.INT8, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS2 = Field.create("SERVOOUTPUTPINS2", 3141, FieldType.INT8, brain_pin_e);
 	public static final Field SERVOOUTPUTPINS3 = Field.create("SERVOOUTPUTPINS3", 3142, FieldType.INT8, brain_pin_e);
@@ -3348,22 +3415,33 @@ public class Fields {
 	public static final Field COASTINGFUELCUTCLT = Field.create("COASTINGFUELCUTCLT", 3154, FieldType.INT16);
 	public static final Field PIDEXTRAFORLOWRPM = Field.create("PIDEXTRAFORLOWRPM", 3156, FieldType.INT16);
 	public static final Field COASTINGFUELCUTMAP = Field.create("COASTINGFUELCUTMAP", 3158, FieldType.INT16);
+	public static final Field IACCOASTINGBINS = Field.create("IACCOASTINGBINS", 3160, FieldType.FLOAT);
+	public static final Field IACCOASTING = Field.create("IACCOASTING", 3224, FieldType.FLOAT);
 	public static final Field HIGHPRESSUREFUEL_HWCHANNEL = Field.create("HIGHPRESSUREFUEL_HWCHANNEL", 3288, FieldType.INT8, adc_channel_e);
+	public static final Field HIGHPRESSUREFUEL_ALIGNMENTFILL = Field.create("HIGHPRESSUREFUEL_ALIGNMENTFILL", 3289, FieldType.INT8);
 	public static final Field HIGHPRESSUREFUEL_V1 = Field.create("HIGHPRESSUREFUEL_V1", 3292, FieldType.FLOAT);
 	public static final Field HIGHPRESSUREFUEL_VALUE1 = Field.create("HIGHPRESSUREFUEL_VALUE1", 3296, FieldType.FLOAT);
 	public static final Field HIGHPRESSUREFUEL_V2 = Field.create("HIGHPRESSUREFUEL_V2", 3300, FieldType.FLOAT);
 	public static final Field HIGHPRESSUREFUEL_VALUE2 = Field.create("HIGHPRESSUREFUEL_VALUE2", 3304, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_HWCHANNEL = Field.create("LOWPRESSUREFUEL_HWCHANNEL", 3308, FieldType.INT8, adc_channel_e);
+	public static final Field LOWPRESSUREFUEL_ALIGNMENTFILL = Field.create("LOWPRESSUREFUEL_ALIGNMENTFILL", 3309, FieldType.INT8);
 	public static final Field LOWPRESSUREFUEL_V1 = Field.create("LOWPRESSUREFUEL_V1", 3312, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_VALUE1 = Field.create("LOWPRESSUREFUEL_VALUE1", 3316, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_V2 = Field.create("LOWPRESSUREFUEL_V2", 3320, FieldType.FLOAT);
 	public static final Field LOWPRESSUREFUEL_VALUE2 = Field.create("LOWPRESSUREFUEL_VALUE2", 3324, FieldType.FLOAT);
+	public static final Field CLTREVLIMITRPMBINS = Field.create("CLTREVLIMITRPMBINS", 3328, FieldType.INT8);
+	public static final Field CLTREVLIMITRPM = Field.create("CLTREVLIMITRPM", 3332, FieldType.INT16);
 	public static final Field SCRIPTCURVENAME1 = Field.create("SCRIPTCURVENAME1", 3340, 16, FieldType.STRING);
 	public static final Field SCRIPTCURVENAME2 = Field.create("SCRIPTCURVENAME2", 3356, 16, FieldType.STRING);
 	public static final Field SCRIPTCURVENAME3 = Field.create("SCRIPTCURVENAME3", 3372, 16, FieldType.STRING);
 	public static final Field SCRIPTCURVENAME4 = Field.create("SCRIPTCURVENAME4", 3388, 16, FieldType.STRING);
 	public static final Field SCRIPTCURVENAME5 = Field.create("SCRIPTCURVENAME5", 3404, 16, FieldType.STRING);
 	public static final Field SCRIPTCURVENAME6 = Field.create("SCRIPTCURVENAME6", 3420, 16, FieldType.STRING);
+	public static final Field SCRIPTCURVE5BINS = Field.create("SCRIPTCURVE5BINS", 3436, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE5 = Field.create("SCRIPTCURVE5", 3468, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE6BINS = Field.create("SCRIPTCURVE6BINS", 3500, FieldType.FLOAT);
+	public static final Field SCRIPTCURVE6 = Field.create("SCRIPTCURVE6", 3532, FieldType.FLOAT);
+	public static final Field UNUSED3328 = Field.create("UNUSED3328", 3564, FieldType.INT8);
 	public static final Field TCHARGEAIRCOEFMIN = Field.create("TCHARGEAIRCOEFMIN", 3864, FieldType.FLOAT);
 	public static final Field TCHARGEAIRCOEFMAX = Field.create("TCHARGEAIRCOEFMAX", 3868, FieldType.FLOAT);
 	public static final Field TCHARGEAIRFLOWMAX = Field.create("TCHARGEAIRFLOWMAX", 3872, FieldType.FLOAT);
@@ -3371,10 +3449,13 @@ public class Fields {
 	public static final Field TCHARGEAIRDECRLIMIT = Field.create("TCHARGEAIRDECRLIMIT", 3880, FieldType.FLOAT);
 	public static final String[] tChargeMode_e = {"RPM+TPS (Default)", "Air Mass Interpolation"};
 	public static final Field TCHARGEMODE = Field.create("TCHARGEMODE", 3884, FieldType.INT, tChargeMode_e);
+	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 3888, FieldType.FLOAT);
+	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 3920, FieldType.FLOAT);
 	public static final Field HIP9011GAIN = Field.create("HIP9011GAIN", 3952, FieldType.FLOAT);
 	public static final Field ETB_ITERMMIN = Field.create("ETB_ITERMMIN", 3956, FieldType.INT16);
 	public static final Field ETB_ITERMMAX = Field.create("ETB_ITERMMAX", 3958, FieldType.INT16);
 	public static final Field ETBMAXIMUMPOSITION = Field.create("ETBMAXIMUMPOSITION", 3960, FieldType.INT8);
+	public static final Field UNUSED1059 = Field.create("UNUSED1059", 3961, FieldType.INT8);
 	public static final Field IDLETIMINGPID_PFACTOR = Field.create("IDLETIMINGPID_PFACTOR", 3968, FieldType.FLOAT);
 	public static final Field IDLETIMINGPID_IFACTOR = Field.create("IDLETIMINGPID_IFACTOR", 3972, FieldType.FLOAT);
 	public static final Field IDLETIMINGPID_DFACTOR = Field.create("IDLETIMINGPID_DFACTOR", 3976, FieldType.FLOAT);
@@ -3382,7 +3463,9 @@ public class Fields {
 	public static final Field IDLETIMINGPID_PERIODMS = Field.create("IDLETIMINGPID_PERIODMS", 3982, FieldType.INT16);
 	public static final Field IDLETIMINGPID_MINVALUE = Field.create("IDLETIMINGPID_MINVALUE", 3984, FieldType.INT16);
 	public static final Field IDLETIMINGPID_MAXVALUE = Field.create("IDLETIMINGPID_MAXVALUE", 3986, FieldType.INT16);
+	public static final Field UNUSED3988 = Field.create("UNUSED3988", 3988, FieldType.INT8);
 	public static final Field IDLETIMINGPIDDEADZONE = Field.create("IDLETIMINGPIDDEADZONE", 3990, FieldType.INT16);
+	public static final Field UNUSED3942 = Field.create("UNUSED3942", 3992, FieldType.INT8);
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 3994, FieldType.INT16);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 3996, FieldType.FLOAT);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 4000, FieldType.INT8);
@@ -3393,6 +3476,7 @@ public class Fields {
 	public static final Field IDLERPMPID_ITERMMAX = Field.create("IDLERPMPID_ITERMMAX", 4006, FieldType.INT16);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 4008, FieldType.INT8);
 	public static final Field STOICHRATIOSECONDARY = Field.create("STOICHRATIOSECONDARY", 4009, FieldType.INT8);
+	public static final Field UNUSEDSPIPADDING8 = Field.create("UNUSEDSPIPADDING8", 4010, FieldType.INT8);
 	public static final Field ETBIDLETHROTTLERANGE = Field.create("ETBIDLETHROTTLERANGE", 4012, FieldType.FLOAT);
 	public static final Field CYLINDERBANKSELECT1 = Field.create("CYLINDERBANKSELECT1", 4016, FieldType.INT8);
 	public static final Field CYLINDERBANKSELECT2 = Field.create("CYLINDERBANKSELECT2", 4017, FieldType.INT8);
@@ -3406,6 +3490,7 @@ public class Fields {
 	public static final Field CYLINDERBANKSELECT10 = Field.create("CYLINDERBANKSELECT10", 4025, FieldType.INT8);
 	public static final Field CYLINDERBANKSELECT11 = Field.create("CYLINDERBANKSELECT11", 4026, FieldType.INT8);
 	public static final Field CYLINDERBANKSELECT12 = Field.create("CYLINDERBANKSELECT12", 4027, FieldType.INT8);
+	public static final Field UNUSED4028 = Field.create("UNUSED4028", 4028, FieldType.INT);
 	public static final Field TRIGGERCOMPCENTERVOLT = Field.create("TRIGGERCOMPCENTERVOLT", 4036, FieldType.INT8);
 	public static final Field TRIGGERCOMPHYSTMIN = Field.create("TRIGGERCOMPHYSTMIN", 4037, FieldType.INT8);
 	public static final Field TRIGGERCOMPHYSTMAX = Field.create("TRIGGERCOMPHYSTMAX", 4038, FieldType.INT8);
@@ -3417,7 +3502,9 @@ public class Fields {
 	public static final Field IDLERPMPID2_PERIODMS = Field.create("IDLERPMPID2_PERIODMS", 4054, FieldType.INT16);
 	public static final Field IDLERPMPID2_MINVALUE = Field.create("IDLERPMPID2_MINVALUE", 4056, FieldType.INT16);
 	public static final Field IDLERPMPID2_MAXVALUE = Field.create("IDLERPMPID2_MAXVALUE", 4058, FieldType.INT16);
-	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4060, FieldType.INT);
+	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4060, FieldType.INT8);
+	public static final Field IACPIDMULTLOADBINS = Field.create("IACPIDMULTLOADBINS", 4124, FieldType.INT8);
+	public static final Field IACPIDMULTRPMBINS = Field.create("IACPIDMULTRPMBINS", 4132, FieldType.INT8);
 	public static final Field CANVSSNBCTYPE = Field.create("CANVSSNBCTYPE", 4140, FieldType.INT);
 	public static final Field GPPWM1_PIN = Field.create("GPPWM1_PIN", 4144, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM1_DUTYIFERROR = Field.create("GPPWM1_DUTYIFERROR", 4145, FieldType.INT8);
@@ -3427,7 +3514,9 @@ public class Fields {
 	public static final String[] gppwm_channel_e = {"TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Zero", "Accel Pedal", "Battery Voltage"};
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 4150, FieldType.INT8, gppwm_channel_e);
 	public static final Field GPPWM1_ALIGNMENTFILL_MAP = Field.create("GPPWM1_ALIGNMENTFILL_MAP", 4151, FieldType.INT8);
-	public static final Field GPPWM1_TABLE = Field.create("GPPWM1_TABLE", 4168, FieldType.INT);
+	public static final Field GPPWM1_LOADBINS = Field.create("GPPWM1_LOADBINS", 4152, FieldType.INT8);
+	public static final Field GPPWM1_RPMBINS = Field.create("GPPWM1_RPMBINS", 4160, FieldType.INT8);
+	public static final Field GPPWM1_TABLE = Field.create("GPPWM1_TABLE", 4168, FieldType.INT8);
 	public static final Field GPPWM2_PIN = Field.create("GPPWM2_PIN", 4232, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM2_DUTYIFERROR = Field.create("GPPWM2_DUTYIFERROR", 4233, FieldType.INT8);
 	public static final Field GPPWM2_PWMFREQUENCY = Field.create("GPPWM2_PWMFREQUENCY", 4234, FieldType.INT16);
@@ -3435,7 +3524,9 @@ public class Fields {
 	public static final Field GPPWM2_OFFBELOWDUTY = Field.create("GPPWM2_OFFBELOWDUTY", 4237, FieldType.INT8);
 	public static final Field GPPWM2_LOADAXIS = Field.create("GPPWM2_LOADAXIS", 4238, FieldType.INT8, gppwm_channel_e);
 	public static final Field GPPWM2_ALIGNMENTFILL_MAP = Field.create("GPPWM2_ALIGNMENTFILL_MAP", 4239, FieldType.INT8);
-	public static final Field GPPWM2_TABLE = Field.create("GPPWM2_TABLE", 4256, FieldType.INT);
+	public static final Field GPPWM2_LOADBINS = Field.create("GPPWM2_LOADBINS", 4240, FieldType.INT8);
+	public static final Field GPPWM2_RPMBINS = Field.create("GPPWM2_RPMBINS", 4248, FieldType.INT8);
+	public static final Field GPPWM2_TABLE = Field.create("GPPWM2_TABLE", 4256, FieldType.INT8);
 	public static final Field GPPWM3_PIN = Field.create("GPPWM3_PIN", 4320, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM3_DUTYIFERROR = Field.create("GPPWM3_DUTYIFERROR", 4321, FieldType.INT8);
 	public static final Field GPPWM3_PWMFREQUENCY = Field.create("GPPWM3_PWMFREQUENCY", 4322, FieldType.INT16);
@@ -3443,7 +3534,9 @@ public class Fields {
 	public static final Field GPPWM3_OFFBELOWDUTY = Field.create("GPPWM3_OFFBELOWDUTY", 4325, FieldType.INT8);
 	public static final Field GPPWM3_LOADAXIS = Field.create("GPPWM3_LOADAXIS", 4326, FieldType.INT8, gppwm_channel_e);
 	public static final Field GPPWM3_ALIGNMENTFILL_MAP = Field.create("GPPWM3_ALIGNMENTFILL_MAP", 4327, FieldType.INT8);
-	public static final Field GPPWM3_TABLE = Field.create("GPPWM3_TABLE", 4344, FieldType.INT);
+	public static final Field GPPWM3_LOADBINS = Field.create("GPPWM3_LOADBINS", 4328, FieldType.INT8);
+	public static final Field GPPWM3_RPMBINS = Field.create("GPPWM3_RPMBINS", 4336, FieldType.INT8);
+	public static final Field GPPWM3_TABLE = Field.create("GPPWM3_TABLE", 4344, FieldType.INT8);
 	public static final Field GPPWM4_PIN = Field.create("GPPWM4_PIN", 4408, FieldType.INT8, output_pin_e);
 	public static final Field GPPWM4_DUTYIFERROR = Field.create("GPPWM4_DUTYIFERROR", 4409, FieldType.INT8);
 	public static final Field GPPWM4_PWMFREQUENCY = Field.create("GPPWM4_PWMFREQUENCY", 4410, FieldType.INT16);
@@ -3451,7 +3544,9 @@ public class Fields {
 	public static final Field GPPWM4_OFFBELOWDUTY = Field.create("GPPWM4_OFFBELOWDUTY", 4413, FieldType.INT8);
 	public static final Field GPPWM4_LOADAXIS = Field.create("GPPWM4_LOADAXIS", 4414, FieldType.INT8, gppwm_channel_e);
 	public static final Field GPPWM4_ALIGNMENTFILL_MAP = Field.create("GPPWM4_ALIGNMENTFILL_MAP", 4415, FieldType.INT8);
-	public static final Field GPPWM4_TABLE = Field.create("GPPWM4_TABLE", 4432, FieldType.INT);
+	public static final Field GPPWM4_LOADBINS = Field.create("GPPWM4_LOADBINS", 4416, FieldType.INT8);
+	public static final Field GPPWM4_RPMBINS = Field.create("GPPWM4_RPMBINS", 4424, FieldType.INT8);
+	public static final Field GPPWM4_TABLE = Field.create("GPPWM4_TABLE", 4432, FieldType.INT8);
 	public static final Field MC33_I_BOOST = Field.create("MC33_I_BOOST", 4496, FieldType.INT16);
 	public static final Field MC33_I_PEAK = Field.create("MC33_I_PEAK", 4498, FieldType.INT16);
 	public static final Field MC33_I_HOLD = Field.create("MC33_I_HOLD", 4500, FieldType.INT16);
@@ -3470,6 +3565,7 @@ public class Fields {
 	public static final Field TCU_SOLENOID_MODE4 = Field.create("TCU_SOLENOID_MODE4", 4520, FieldType.INT8, pin_output_mode_e);
 	public static final Field TCU_SOLENOID_MODE5 = Field.create("TCU_SOLENOID_MODE5", 4521, FieldType.INT8, pin_output_mode_e);
 	public static final Field TCU_SOLENOID_MODE6 = Field.create("TCU_SOLENOID_MODE6", 4522, FieldType.INT8, pin_output_mode_e);
+	public static final Field KNOCKBASENOISE = Field.create("KNOCKBASENOISE", 4523, FieldType.INT8);
 	public static final Field ALIGNMENTFILL_AT_4539 = Field.create("ALIGNMENTFILL_AT_4539", 4539, FieldType.INT8);
 	public static final Field TRIGGERGAPOVERRIDEFROM1 = Field.create("TRIGGERGAPOVERRIDEFROM1", 4540, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDEFROM2 = Field.create("TRIGGERGAPOVERRIDEFROM2", 4544, FieldType.FLOAT);
@@ -3519,10 +3615,26 @@ public class Fields {
 	public static final Field TRIGGERGAPOVERRIDETO16 = Field.create("TRIGGERGAPOVERRIDETO16", 4684, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO17 = Field.create("TRIGGERGAPOVERRIDETO17", 4688, FieldType.FLOAT);
 	public static final Field TRIGGERGAPOVERRIDETO18 = Field.create("TRIGGERGAPOVERRIDETO18", 4692, FieldType.FLOAT);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4696, FieldType.INT);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6000, 120, FieldType.STRING);
-	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT);
-	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT);
-	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT);
+	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 6120, FieldType.FLOAT);
+	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 6152, FieldType.FLOAT);
+	public static final Field AFTERSTARTENRICH = Field.create("AFTERSTARTENRICH", 6184, FieldType.FLOAT);
+	public static final Field AFTERSTARTDECAYTIME = Field.create("AFTERSTARTDECAYTIME", 6216, FieldType.FLOAT);
+	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 6248, FieldType.INT8);
+	public static final Field UNUSED6312 = Field.create("UNUSED6312", 6312, FieldType.INT8);
+	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 6320, FieldType.INT8);
+	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 6328, FieldType.INT8);
+	public static final Field BOOSTTPSBINS = Field.create("BOOSTTPSBINS", 6392, FieldType.INT8);
+	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 6400, FieldType.INT8);
+	public static final Field PEDALTOTPSPEDALBINS = Field.create("PEDALTOTPSPEDALBINS", 6464, FieldType.INT8);
+	public static final Field PEDALTOTPSRPMBINS = Field.create("PEDALTOTPSRPMBINS", 6472, FieldType.INT8);
+	public static final Field CLTCRANKINGCORRBINS = Field.create("CLTCRANKINGCORRBINS", 6480, FieldType.FLOAT);
+	public static final Field CLTCRANKINGCORR = Field.create("CLTCRANKINGCORR", 6512, FieldType.FLOAT);
+	public static final Field IDLEADVANCEBINS = Field.create("IDLEADVANCEBINS", 6544, FieldType.FLOAT);
+	public static final Field IDLEADVANCE = Field.create("IDLEADVANCE", 6576, FieldType.FLOAT);
+	public static final Field IDLEVEBINS = Field.create("IDLEVEBINS", 6608, FieldType.FLOAT);
+	public static final Field IDLEVE = Field.create("IDLEVE", 6640, FieldType.FLOAT);
 	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, 200, FieldType.STRING);
 	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, 200, FieldType.STRING);
 	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, 200, FieldType.STRING);
@@ -3532,25 +3644,66 @@ public class Fields {
 	public static final Field LUASCRIPT = Field.create("LUASCRIPT", 7872, 2000, FieldType.STRING);
 	public static final Field TIMINGMULTIPLIER = Field.create("TIMINGMULTIPLIER", 9872, 200, FieldType.STRING);
 	public static final Field TIMINGADDITIVE = Field.create("TIMINGADDITIVE", 10072, 200, FieldType.STRING);
-	public static final Field IGNITIONIATCORRTABLE = Field.create("IGNITIONIATCORRTABLE", 12832, FieldType.INT);
-	public static final Field INJECTIONPHASE = Field.create("INJECTIONPHASE", 13984, FieldType.INT);
-	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 15136, FieldType.INT);
+	public static final Field CLTFUELCORRBINS = Field.create("CLTFUELCORRBINS", 10272, FieldType.FLOAT);
+	public static final Field CLTFUELCORR = Field.create("CLTFUELCORR", 10336, FieldType.FLOAT);
+	public static final Field IATFUELCORRBINS = Field.create("IATFUELCORRBINS", 10400, FieldType.FLOAT);
+	public static final Field IATFUELCORR = Field.create("IATFUELCORR", 10464, FieldType.FLOAT);
+	public static final Field CRANKINGFUELCOEF = Field.create("CRANKINGFUELCOEF", 10528, FieldType.FLOAT);
+	public static final Field CRANKINGFUELBINS = Field.create("CRANKINGFUELBINS", 10560, FieldType.FLOAT);
+	public static final Field CRANKINGCYCLECOEF = Field.create("CRANKINGCYCLECOEF", 10592, FieldType.FLOAT);
+	public static final Field CRANKINGCYCLEBINS = Field.create("CRANKINGCYCLEBINS", 10624, FieldType.FLOAT);
+	public static final Field CLTIDLECORRBINS = Field.create("CLTIDLECORRBINS", 10656, FieldType.FLOAT);
+	public static final Field CLTIDLECORR = Field.create("CLTIDLECORR", 10720, FieldType.FLOAT);
+	public static final Field MAFDECODING = Field.create("MAFDECODING", 10784, FieldType.FLOAT);
+	public static final Field MAFDECODINGBINS = Field.create("MAFDECODINGBINS", 11808, FieldType.FLOAT);
+	public static final Field IGNITIONIATCORRTABLE = Field.create("IGNITIONIATCORRTABLE", 12832, FieldType.FLOAT);
+	public static final Field IGNITIONIATCORRLOADBINS = Field.create("IGNITIONIATCORRLOADBINS", 13856, FieldType.FLOAT);
+	public static final Field IGNITIONIATCORRRPMBINS = Field.create("IGNITIONIATCORRRPMBINS", 13920, FieldType.FLOAT);
+	public static final Field INJECTIONPHASE = Field.create("INJECTIONPHASE", 13984, FieldType.FLOAT);
+	public static final Field INJPHASELOADBINS = Field.create("INJPHASELOADBINS", 15008, FieldType.FLOAT);
+	public static final Field INJPHASERPMBINS = Field.create("INJPHASERPMBINS", 15072, FieldType.FLOAT);
+	public static final Field TCUSOLENOIDTABLE = Field.create("TCUSOLENOIDTABLE", 15136, FieldType.INT8);
 	public static final Field VSSFILTERRECIPROCAL = Field.create("VSSFILTERRECIPROCAL", 15196, FieldType.FLOAT);
-	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 15200, FieldType.INT);
-	public static final Field VVTTABLE1 = Field.create("VVTTABLE1", 15776, FieldType.INT);
-	public static final Field VVTTABLE2 = Field.create("VVTTABLE2", 15904, FieldType.INT);
-	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 16288, FieldType.INT);
-	public static final Field VETABLE = Field.create("VETABLE", 17440, FieldType.INT);
-	public static final Field LAMBDATABLE = Field.create("LAMBDATABLE", 18592, FieldType.INT);
-	public static final Field TPSTPSACCELTABLE = Field.create("TPSTPSACCELTABLE", 18976, FieldType.INT);
-	public static final Field FSIOTABLE1 = Field.create("FSIOTABLE1", 19296, FieldType.INT);
-	public static final Field FSIOTABLE2 = Field.create("FSIOTABLE2", 19616, FieldType.INT);
-	public static final Field FSIOTABLE3 = Field.create("FSIOTABLE3", 19744, FieldType.INT);
-	public static final Field FSIOTABLE4 = Field.create("FSIOTABLE4", 19872, FieldType.INT);
+	public static final Field MAPESTIMATETABLE = Field.create("MAPESTIMATETABLE", 15200, FieldType.INT16);
+	public static final Field MAPESTIMATETPSBINS = Field.create("MAPESTIMATETPSBINS", 15712, FieldType.INT16);
+	public static final Field MAPESTIMATERPMBINS = Field.create("MAPESTIMATERPMBINS", 15744, FieldType.INT16);
+	public static final Field VVTTABLE1 = Field.create("VVTTABLE1", 15776, FieldType.INT8);
+	public static final Field VVTTABLE1LOADBINS = Field.create("VVTTABLE1LOADBINS", 15840, FieldType.FLOAT);
+	public static final Field VVTTABLE1RPMBINS = Field.create("VVTTABLE1RPMBINS", 15872, FieldType.FLOAT);
+	public static final Field VVTTABLE2 = Field.create("VVTTABLE2", 15904, FieldType.INT8);
+	public static final Field VVTTABLE2LOADBINS = Field.create("VVTTABLE2LOADBINS", 15968, FieldType.FLOAT);
+	public static final Field VVTTABLE2RPMBINS = Field.create("VVTTABLE2RPMBINS", 16000, FieldType.FLOAT);
+	public static final Field UNUSEDLUAWASHERE = Field.create("UNUSEDLUAWASHERE", 16032, FieldType.FLOAT);
+	public static final Field IGNITIONTABLE = Field.create("IGNITIONTABLE", 16288, FieldType.FLOAT);
+	public static final Field IGNITIONLOADBINS = Field.create("IGNITIONLOADBINS", 17312, FieldType.FLOAT);
+	public static final Field IGNITIONRPMBINS = Field.create("IGNITIONRPMBINS", 17376, FieldType.FLOAT);
+	public static final Field VETABLE = Field.create("VETABLE", 17440, FieldType.FLOAT);
+	public static final Field VELOADBINS = Field.create("VELOADBINS", 18464, FieldType.FLOAT);
+	public static final Field VERPMBINS = Field.create("VERPMBINS", 18528, FieldType.FLOAT);
+	public static final Field LAMBDATABLE = Field.create("LAMBDATABLE", 18592, FieldType.INT8);
+	public static final Field LAMBDALOADBINS = Field.create("LAMBDALOADBINS", 18848, FieldType.FLOAT);
+	public static final Field LAMBDARPMBINS = Field.create("LAMBDARPMBINS", 18912, FieldType.FLOAT);
+	public static final Field TPSTPSACCELTABLE = Field.create("TPSTPSACCELTABLE", 18976, FieldType.FLOAT);
+	public static final Field TPSTPSACCELFROMRPMBINS = Field.create("TPSTPSACCELFROMRPMBINS", 19232, FieldType.FLOAT);
+	public static final Field TPSTPSACCELTORPMBINS = Field.create("TPSTPSACCELTORPMBINS", 19264, FieldType.FLOAT);
+	public static final Field FSIOTABLE1 = Field.create("FSIOTABLE1", 19296, FieldType.FLOAT);
+	public static final Field FSIOTABLE1LOADBINS = Field.create("FSIOTABLE1LOADBINS", 19552, FieldType.FLOAT);
+	public static final Field FSIOTABLE1RPMBINS = Field.create("FSIOTABLE1RPMBINS", 19584, FieldType.FLOAT);
+	public static final Field FSIOTABLE2 = Field.create("FSIOTABLE2", 19616, FieldType.INT8);
+	public static final Field FSIOTABLE2LOADBINS = Field.create("FSIOTABLE2LOADBINS", 19680, FieldType.FLOAT);
+	public static final Field FSIOTABLE2RPMBINS = Field.create("FSIOTABLE2RPMBINS", 19712, FieldType.FLOAT);
+	public static final Field FSIOTABLE3 = Field.create("FSIOTABLE3", 19744, FieldType.INT8);
+	public static final Field FSIOTABLE3LOADBINS = Field.create("FSIOTABLE3LOADBINS", 19808, FieldType.FLOAT);
+	public static final Field FSIOTABLE3RPMBINS = Field.create("FSIOTABLE3RPMBINS", 19840, FieldType.FLOAT);
+	public static final Field FSIOTABLE4 = Field.create("FSIOTABLE4", 19872, FieldType.INT8);
+	public static final Field FSIOTABLE4LOADBINS = Field.create("FSIOTABLE4LOADBINS", 19936, FieldType.FLOAT);
+	public static final Field FSIOTABLE4RPMBINS = Field.create("FSIOTABLE4RPMBINS", 19968, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	ENGINESNIFFERRPMTHRESHOLD,
 	INJECTOR_FLOW,
+	INJECTOR_BATTLAGCORRBINS,
+	INJECTOR_BATTLAGCORR,
 	ISFORCEDINDUCTION,
 	USEFORDREDUNDANTTPS,
 	ISVERBOSEAUXPID1,
@@ -3589,14 +3742,20 @@ public class Fields {
 	TPSERRORDETECTIONTOOHIGH,
 	CRANKING_BASEFUEL,
 	CRANKING_RPM,
+	CRANKING_ALIGNMENTFILL_AT_6,
 	PRIMINGSQUIRTDURATIONMS,
 	IGNITIONDWELLFORCRANKINGMS,
 	ETBREVLIMITSTART,
 	ETBREVLIMITRANGE,
+	MAP_SAMPLINGANGLEBINS,
+	MAP_SAMPLINGANGLE,
+	MAP_SAMPLINGWINDOWBINS,
+	MAP_SAMPLINGWINDOW,
 	MAP_SENSOR_LOWVALUE,
 	MAP_SENSOR_HIGHVALUE,
 	MAP_SENSOR_TYPE,
 	MAP_SENSOR_HWCHANNEL,
+	MAP_SENSOR_ALIGNMENTFILL,
 	CLT_TEMPC_1,
 	CLT_TEMPC_2,
 	CLT_TEMPC_3,
@@ -3605,6 +3764,7 @@ public class Fields {
 	CLT_RESISTANCE_3,
 	CLT_BIAS_RESISTOR,
 	CLT_ADCCHANNEL,
+	CLT_ALIGNMENTFILL_AT_29,
 	IAT_TEMPC_1,
 	IAT_TEMPC_2,
 	IAT_TEMPC_3,
@@ -3613,10 +3773,13 @@ public class Fields {
 	IAT_RESISTANCE_3,
 	IAT_BIAS_RESISTOR,
 	IAT_ADCCHANNEL,
+	IAT_ALIGNMENTFILL_AT_29,
 	LAUNCHRPM,
 	LAUNCHTIMINGRETARD,
 	HIP9011PRESCALERANDSDO,
 	KNOCKBANDCUSTOM,
+	SPARKDWELLRPMBINS,
+	SPARKDWELLVALUES,
 	DISPLACEMENT,
 	CYLINDERSCOUNT,
 	FIRINGORDER,
@@ -3700,7 +3863,9 @@ public class Fields {
 	CAMINPUTS2,
 	CAMINPUTS3,
 	CAMINPUTS4,
+	CAMINPUTSPADDING,
 	AFR_HWCHANNEL,
+	AFR_ALIGNMENTFILL_AFR,
 	AFR_V1,
 	AFR_VALUE1,
 	AFR_V2,
@@ -3713,6 +3878,7 @@ public class Fields {
 	BAROSENSOR_HIGHVALUE,
 	BAROSENSOR_TYPE,
 	BAROSENSOR_HWCHANNEL,
+	BAROSENSOR_ALIGNMENTFILL,
 	IDLE_SOLENOIDFREQUENCY,
 	IDLE_SOLENOIDPIN,
 	IDLE_STEPPERDIRECTIONPIN,
@@ -3785,6 +3951,7 @@ public class Fields {
 	TPS1_2ADCCHANNEL,
 	TPS2_2ADCCHANNEL,
 	THROTTLEPEDALPOSITIONSECONDADCCHANNEL,
+	FUELLEVELVALUES,
 	AFR_TYPE,
 	IDLE_ANTIWINDUPFREQ,
 	TRIGGERINPUTPINS1,
@@ -3867,13 +4034,17 @@ public class Fields {
 	GPIOPINMODES4,
 	GPIOPINMODES5,
 	GPIOPINMODES6,
+	DWELLVOLTAGECORRVOLTBINS,
 	IMUTYPE,
+	UNUSEDPINMODESWHEREHERE,
 	FSIOOUTPUTPINS1,
 	FSIOOUTPUTPINS2,
 	FSIOOUTPUTPINS3,
 	FSIOOUTPUTPINS4,
 	FSIOOUTPUTPINS5,
 	FSIOOUTPUTPINS6,
+	DWELLVOLTAGECORRVALUES,
+	UNUSEDOUTPUTWHEREHERE,
 	MAX31855_CS1,
 	MAX31855_CS2,
 	MAX31855_CS3,
@@ -3906,12 +4077,14 @@ public class Fields {
 	FSIOFREQUENCY4,
 	FSIOFREQUENCY5,
 	FSIOFREQUENCY6,
+	UNUSEDOUTPUTFREQWHEREHERE,
 	FSIO_SETTING1,
 	FSIO_SETTING2,
 	FSIO_SETTING3,
 	FSIO_SETTING4,
 	FSIO_SETTING5,
 	FSIO_SETTING6,
+	UNUSEDSETTINGS,
 	SPI1MOSIPIN,
 	SPI1MISOPIN,
 	SPI1SCKPIN,
@@ -3936,6 +4109,7 @@ public class Fields {
 	FSIODIGITALINPUTS4,
 	FSIODIGITALINPUTS5,
 	FSIODIGITALINPUTS6,
+	UNUSEDDIGITAL,
 	VEHICLESPEEDSENSORINPUTPIN,
 	CLUTCHUPPIN,
 	UNUSED970,
@@ -4050,6 +4224,7 @@ public class Fields {
 	DRV8860_CS,
 	DRV8860_CSPINMODE,
 	DRV8860_MISO,
+	FUELLEVELBINS,
 	LUAOUTPUTPINS1,
 	LUAOUTPUTPINS2,
 	LUAOUTPUTPINS3,
@@ -4062,12 +4237,20 @@ public class Fields {
 	VVTOFFSETS2,
 	VVTOFFSETS3,
 	VVTOFFSETS4,
+	VVTOFFSETSPADDING,
 	VRTHRESHOLD1_PIN,
+	VRTHRESHOLD1_PAD,
+	VRTHRESHOLD1_RPMBINS,
+	VRTHRESHOLD1_VALUES,
 	VRTHRESHOLD2_PIN,
+	VRTHRESHOLD2_PAD,
+	VRTHRESHOLD2_RPMBINS,
+	VRTHRESHOLD2_VALUES,
 	GPPWMNOTE1,
 	GPPWMNOTE2,
 	GPPWMNOTE3,
 	GPPWMNOTE4,
+	UNUSEDATOLDBOARDCONFIGURATIONEND,
 	VEHICLEWEIGHT,
 	LPS25BAROSENSORSCL,
 	LPS25BAROSENSORSDA,
@@ -4150,6 +4333,7 @@ public class Fields {
 	CAMINPUTSDEBUG2,
 	CAMINPUTSDEBUG3,
 	CAMINPUTSDEBUG4,
+	CAMINPUTSDEBUGPADDING,
 	ACIDLERPMBUMP,
 	WARNINGPERIOD,
 	KNOCKDETECTIONWINDOWSTART,
@@ -4162,10 +4346,15 @@ public class Fields {
 	FSIOINPUTMODES4,
 	FSIOINPUTMODES5,
 	FSIOINPUTMODES6,
+	UNUSEDFSIOINPUTS,
 	IDLESTEPPERTOTALSTEPS,
 	NOACCELAFTERHARDLIMITPERIODSECS,
 	MAPAVERAGINGSCHEDULINGATINDEX,
+	BAROCORRPRESSUREBINS,
+	BAROCORRRPMBINS,
 	BAROCORRTABLE,
+	CRANKINGTPSCOEF,
+	CRANKINGTPSBINS,
 	TACHPULSEDURACTIONMS,
 	MAXACRPM,
 	MAXACTPS,
@@ -4217,10 +4406,14 @@ public class Fields {
 	AUXVALVES2,
 	TCUUPSHIFTBUTTONPIN,
 	TCUDOWNSHIFTBUTTONPIN,
+	KNOCKNOISE,
+	KNOCKNOISERPMBINS,
 	THROTTLEPEDALUPVOLTAGE,
 	THROTTLEPEDALWOTVOLTAGE,
 	STARTUPFUELPUMPDURATION,
 	IDLEPIDRPMDEADZONE,
+	CLTIDLERPMBINS,
+	CLTIDLERPM,
 	TARGETVBATT,
 	ALTERNATOROFFABOVETPS,
 	STARTOFCRANKINGPRIMINGPULSE,
@@ -4293,6 +4486,8 @@ public class Fields {
 	HPFPVALVEPIN,
 	HPFPVALVEPINMODE,
 	BOOSTCUTPRESSURE,
+	MAPACCELTAPERBINS,
+	MAPACCELTAPERMULT,
 	UNUSEDANOTHERONEOFTHOSE,
 	FIXEDTIMING,
 	MAPLOWVALUEVOLTAGE,
@@ -4314,11 +4509,16 @@ public class Fields {
 	VVTOUTPUTFREQUENCY1,
 	VVTOUTPUTFREQUENCY2,
 	FAN1EXTRAIDLE,
+	ALIGNMENTFILL_AT_2253,
 	ALTERNATORPWMFREQUENCY,
 	UNUSED2260,
+	NARROWTOWIDEOXYGENBINS,
+	NARROWTOWIDEOXYGEN,
 	VVTMODE1,
 	VVTMODE2,
+	VVTMODEPADDING,
 	FAN2EXTRAIDLE,
+	UNUSEDOLDBIQUAD,
 	AUXANALOGINPUTS1,
 	AUXANALOGINPUTS2,
 	AUXANALOGINPUTS3,
@@ -4339,6 +4539,8 @@ public class Fields {
 	TRAILINGCOILPINS10,
 	TRAILINGCOILPINS11,
 	TRAILINGCOILPINS12,
+	CLTTIMINGBINS,
+	CLTTIMINGEXTRA,
 	TLE8888MODE,
 	LIS302DLCSPINMODE,
 	INJECTORCOMPENSATIONMODE,
@@ -4357,6 +4559,7 @@ public class Fields {
 	AUXTEMPSENSOR1_RESISTANCE_3,
 	AUXTEMPSENSOR1_BIAS_RESISTOR,
 	AUXTEMPSENSOR1_ADCCHANNEL,
+	AUXTEMPSENSOR1_ALIGNMENTFILL_AT_29,
 	AUXTEMPSENSOR2_TEMPC_1,
 	AUXTEMPSENSOR2_TEMPC_2,
 	AUXTEMPSENSOR2_TEMPC_3,
@@ -4365,6 +4568,7 @@ public class Fields {
 	AUXTEMPSENSOR2_RESISTANCE_3,
 	AUXTEMPSENSOR2_BIAS_RESISTOR,
 	AUXTEMPSENSOR2_ADCCHANNEL,
+	AUXTEMPSENSOR2_ALIGNMENTFILL_AT_29,
 	APPLYNONLINEARBELOWPULSE,
 	INJECTORNONLINEARMODE,
 	UNUSED2508,
@@ -4395,6 +4599,7 @@ public class Fields {
 	TIMING_OFFSET_CYLINDER12,
 	IDLEPIDACTIVATIONTIME,
 	SDCARDSPIDEVICE,
+	UNUSEDSPIPADDING4,
 	SPI1SCKMODE,
 	SPI1MOSIMODE,
 	SPI1MISOMODE,
@@ -4433,7 +4638,9 @@ public class Fields {
 	INJECTORCORRECTIONPOLYNOMIAL6,
 	INJECTORCORRECTIONPOLYNOMIAL7,
 	INJECTORCORRECTIONPOLYNOMIAL8,
+	UNUSED1366,
 	OILPRESSURE_HWCHANNEL,
+	OILPRESSURE_ALIGNMENTFILL,
 	OILPRESSURE_V1,
 	OILPRESSURE_VALUE1,
 	OILPRESSURE_V2,
@@ -4442,6 +4649,14 @@ public class Fields {
 	FAN2PIN,
 	FAN2ONTEMPERATURE,
 	FAN2OFFTEMPERATURE,
+	SCRIPTCURVE1BINS,
+	SCRIPTCURVE1,
+	SCRIPTCURVE2BINS,
+	SCRIPTCURVE2,
+	SCRIPTCURVE3BINS,
+	SCRIPTCURVE3,
+	SCRIPTCURVE4BINS,
+	SCRIPTCURVE4,
 	FLEXSENSORPIN,
 	TEST557PIN,
 	STEPPERDIRECTIONPINMODE,
@@ -4450,6 +4665,8 @@ public class Fields {
 	TLE8888_CS,
 	TLE8888_CSPINMODE,
 	MC33816_CS,
+	CRANKINGADVANCEBINS,
+	CRANKINGADVANCE,
 	SERVOOUTPUTPINS1,
 	SERVOOUTPUTPINS2,
 	SERVOOUTPUTPINS3,
@@ -4464,32 +4681,46 @@ public class Fields {
 	COASTINGFUELCUTCLT,
 	PIDEXTRAFORLOWRPM,
 	COASTINGFUELCUTMAP,
+	IACCOASTINGBINS,
+	IACCOASTING,
 	HIGHPRESSUREFUEL_HWCHANNEL,
+	HIGHPRESSUREFUEL_ALIGNMENTFILL,
 	HIGHPRESSUREFUEL_V1,
 	HIGHPRESSUREFUEL_VALUE1,
 	HIGHPRESSUREFUEL_V2,
 	HIGHPRESSUREFUEL_VALUE2,
 	LOWPRESSUREFUEL_HWCHANNEL,
+	LOWPRESSUREFUEL_ALIGNMENTFILL,
 	LOWPRESSUREFUEL_V1,
 	LOWPRESSUREFUEL_VALUE1,
 	LOWPRESSUREFUEL_V2,
 	LOWPRESSUREFUEL_VALUE2,
+	CLTREVLIMITRPMBINS,
+	CLTREVLIMITRPM,
 	SCRIPTCURVENAME1,
 	SCRIPTCURVENAME2,
 	SCRIPTCURVENAME3,
 	SCRIPTCURVENAME4,
 	SCRIPTCURVENAME5,
 	SCRIPTCURVENAME6,
+	SCRIPTCURVE5BINS,
+	SCRIPTCURVE5,
+	SCRIPTCURVE6BINS,
+	SCRIPTCURVE6,
+	UNUSED3328,
 	TCHARGEAIRCOEFMIN,
 	TCHARGEAIRCOEFMAX,
 	TCHARGEAIRFLOWMAX,
 	TCHARGEAIRINCRLIMIT,
 	TCHARGEAIRDECRLIMIT,
 	TCHARGEMODE,
+	ETBBIASBINS,
+	ETBBIASVALUES,
 	HIP9011GAIN,
 	ETB_ITERMMIN,
 	ETB_ITERMMAX,
 	ETBMAXIMUMPOSITION,
+	UNUSED1059,
 	IDLETIMINGPID_PFACTOR,
 	IDLETIMINGPID_IFACTOR,
 	IDLETIMINGPID_DFACTOR,
@@ -4497,7 +4728,9 @@ public class Fields {
 	IDLETIMINGPID_PERIODMS,
 	IDLETIMINGPID_MINVALUE,
 	IDLETIMINGPID_MAXVALUE,
+	UNUSED3988,
 	IDLETIMINGPIDDEADZONE,
+	UNUSED3942,
 	TPSACCELFRACTIONPERIOD,
 	TPSACCELFRACTIONDIVISOR,
 	TLE8888SPIDEVICE,
@@ -4508,6 +4741,7 @@ public class Fields {
 	IDLERPMPID_ITERMMAX,
 	MC33972SPIDEVICE,
 	STOICHRATIOSECONDARY,
+	UNUSEDSPIPADDING8,
 	ETBIDLETHROTTLERANGE,
 	CYLINDERBANKSELECT1,
 	CYLINDERBANKSELECT2,
@@ -4521,6 +4755,7 @@ public class Fields {
 	CYLINDERBANKSELECT10,
 	CYLINDERBANKSELECT11,
 	CYLINDERBANKSELECT12,
+	UNUSED4028,
 	TRIGGERCOMPCENTERVOLT,
 	TRIGGERCOMPHYSTMIN,
 	TRIGGERCOMPHYSTMAX,
@@ -4533,6 +4768,8 @@ public class Fields {
 	IDLERPMPID2_MINVALUE,
 	IDLERPMPID2_MAXVALUE,
 	IACPIDMULTTABLE,
+	IACPIDMULTLOADBINS,
+	IACPIDMULTRPMBINS,
 	CANVSSNBCTYPE,
 	GPPWM1_PIN,
 	GPPWM1_DUTYIFERROR,
@@ -4541,6 +4778,8 @@ public class Fields {
 	GPPWM1_OFFBELOWDUTY,
 	GPPWM1_LOADAXIS,
 	GPPWM1_ALIGNMENTFILL_MAP,
+	GPPWM1_LOADBINS,
+	GPPWM1_RPMBINS,
 	GPPWM1_TABLE,
 	GPPWM2_PIN,
 	GPPWM2_DUTYIFERROR,
@@ -4549,6 +4788,8 @@ public class Fields {
 	GPPWM2_OFFBELOWDUTY,
 	GPPWM2_LOADAXIS,
 	GPPWM2_ALIGNMENTFILL_MAP,
+	GPPWM2_LOADBINS,
+	GPPWM2_RPMBINS,
 	GPPWM2_TABLE,
 	GPPWM3_PIN,
 	GPPWM3_DUTYIFERROR,
@@ -4557,6 +4798,8 @@ public class Fields {
 	GPPWM3_OFFBELOWDUTY,
 	GPPWM3_LOADAXIS,
 	GPPWM3_ALIGNMENTFILL_MAP,
+	GPPWM3_LOADBINS,
+	GPPWM3_RPMBINS,
 	GPPWM3_TABLE,
 	GPPWM4_PIN,
 	GPPWM4_DUTYIFERROR,
@@ -4565,6 +4808,8 @@ public class Fields {
 	GPPWM4_OFFBELOWDUTY,
 	GPPWM4_LOADAXIS,
 	GPPWM4_ALIGNMENTFILL_MAP,
+	GPPWM4_LOADBINS,
+	GPPWM4_RPMBINS,
 	GPPWM4_TABLE,
 	MC33_I_BOOST,
 	MC33_I_PEAK,
@@ -4584,6 +4829,7 @@ public class Fields {
 	TCU_SOLENOID_MODE4,
 	TCU_SOLENOID_MODE5,
 	TCU_SOLENOID_MODE6,
+	KNOCKBASENOISE,
 	ALIGNMENTFILL_AT_4539,
 	TRIGGERGAPOVERRIDEFROM1,
 	TRIGGERGAPOVERRIDEFROM2,
@@ -4633,10 +4879,26 @@ public class Fields {
 	TRIGGERGAPOVERRIDETO16,
 	TRIGGERGAPOVERRIDETO17,
 	TRIGGERGAPOVERRIDETO18,
+	MAINUNUSEDEND,
 	WARNING_MESSAGE,
+	AFTERSTARTCOOLANTBINS,
+	AFTERSTARTHOLDTIME,
+	AFTERSTARTENRICH,
+	AFTERSTARTDECAYTIME,
 	BOOSTTABLEOPENLOOP,
+	UNUSED6312,
+	BOOSTRPMBINS,
 	BOOSTTABLECLOSEDLOOP,
+	BOOSTTPSBINS,
 	PEDALTOTPSTABLE,
+	PEDALTOTPSPEDALBINS,
+	PEDALTOTPSRPMBINS,
+	CLTCRANKINGCORRBINS,
+	CLTCRANKINGCORR,
+	IDLEADVANCEBINS,
+	IDLEADVANCE,
+	IDLEVEBINS,
+	IDLEVE,
 	FSIOFORMULAS1,
 	FSIOFORMULAS2,
 	FSIOFORMULAS3,
@@ -4646,20 +4908,59 @@ public class Fields {
 	LUASCRIPT,
 	TIMINGMULTIPLIER,
 	TIMINGADDITIVE,
+	CLTFUELCORRBINS,
+	CLTFUELCORR,
+	IATFUELCORRBINS,
+	IATFUELCORR,
+	CRANKINGFUELCOEF,
+	CRANKINGFUELBINS,
+	CRANKINGCYCLECOEF,
+	CRANKINGCYCLEBINS,
+	CLTIDLECORRBINS,
+	CLTIDLECORR,
+	MAFDECODING,
+	MAFDECODINGBINS,
 	IGNITIONIATCORRTABLE,
+	IGNITIONIATCORRLOADBINS,
+	IGNITIONIATCORRRPMBINS,
 	INJECTIONPHASE,
+	INJPHASELOADBINS,
+	INJPHASERPMBINS,
 	TCUSOLENOIDTABLE,
 	VSSFILTERRECIPROCAL,
 	MAPESTIMATETABLE,
+	MAPESTIMATETPSBINS,
+	MAPESTIMATERPMBINS,
 	VVTTABLE1,
+	VVTTABLE1LOADBINS,
+	VVTTABLE1RPMBINS,
 	VVTTABLE2,
+	VVTTABLE2LOADBINS,
+	VVTTABLE2RPMBINS,
+	UNUSEDLUAWASHERE,
 	IGNITIONTABLE,
+	IGNITIONLOADBINS,
+	IGNITIONRPMBINS,
 	VETABLE,
+	VELOADBINS,
+	VERPMBINS,
 	LAMBDATABLE,
+	LAMBDALOADBINS,
+	LAMBDARPMBINS,
 	TPSTPSACCELTABLE,
+	TPSTPSACCELFROMRPMBINS,
+	TPSTPSACCELTORPMBINS,
 	FSIOTABLE1,
+	FSIOTABLE1LOADBINS,
+	FSIOTABLE1RPMBINS,
 	FSIOTABLE2,
+	FSIOTABLE2LOADBINS,
+	FSIOTABLE2RPMBINS,
 	FSIOTABLE3,
+	FSIOTABLE3LOADBINS,
+	FSIOTABLE3RPMBINS,
 	FSIOTABLE4,
+	FSIOTABLE4LOADBINS,
+	FSIOTABLE4RPMBINS,
 	};
 }
