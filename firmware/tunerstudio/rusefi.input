@@ -851,6 +851,20 @@ enable2ndByteCanID = false
       lineLabel   = "Warmup Correction"
       lineLabel   = "Recommended WUE"
 
+    curve = hpfpLobeProfileCurve, "HPFP Lobe Profile"
+        columnLabel = "% pump volume", "angle"
+        xAxis       = 0, 100, 11
+        yAxis       = 0, 240, 13
+        xBins       = hpfpLobeProfileQuantityBins
+        yBins       = hpfpLobeProfileAngle
+
+    curve = hpfpDeadtimeCurve, "HPFP Valve Deadtime"
+        columnLabel = "volts", "ms"
+        xAxis       = 5, 15, 11
+        yAxis       = 0, 5, 6
+        xBins       = hpfpDeadtimeVoltsBins
+        yBins       = hpfpDeadtimeMS
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -1014,6 +1028,17 @@ enable2ndByteCanID = false
 		yBins		= gearCountArray, tcuCurrentGear
 		zBins		= tcuSolenoidTable
 		xyLabels	= "Solenoid", "Gear"
+
+    table = hpfpTargetTable, hpfpTargetTableId, "HPFP Target Fuel Pressure", 1
+        xBins     = hpfpTargetRpmBins, RPMValue
+        yBins     = hpfpTargetLoadBins, veTableYAxis
+        zBins     = hpfpTarget
+
+    table = hpfpCompensationTable, hpfpCompensationTableId, "HPFP Pump Compensation Factor", 1
+        xBins     = hpfpCompensationRpmBins, RPMValue
+        yBins     = hpfpCompensationLoadBins, fuelRunning
+        zBins     = hpfpCompensation
+
 
 [GaugeConfigurations]
 
@@ -1671,9 +1696,14 @@ menuDialog = main
 
 
 		# EXPERIMENTAL FEATURES
+                submenu = mc33Dialog,                           "GDI Dreams"
+		subMenu = hpfpCamDialog,			"HPFP Cam Configuration"
+		subMenu = hpfpPumpDialog,			"HPFP Pump Configuration", {hpfpCamLobes != 0}
+                subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
+                subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
+                subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = rotaryDialog, 			"Rotary"
-		subMenu = mc33Dialog,			"GDI Dreams"
 		subMenu = vrThreshold,				"VR Sensor Threshold"
 		subMenu = std_separator
 		
@@ -2326,10 +2356,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
 		field = "MC33816 SPI Device",					mc33972spiDevice
-		field = "HPFP Valve Pin",						hpfpValvePin
-		field = "HPFP Valve Pin Mode",					hpfpValvePinMode
-		field = tempHpfpStart, tempHpfpStart 
-		field = tempHpfpDuration, tempHpfpDuration 
 
 		field = "Boost voltage",						mc33_hvolt
 
@@ -3896,6 +3922,23 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = gppwm4left
 		panel = gppwm4Tbl, {gppwm4_pin != 0}
 
+    dialog = hpfpCamDialog, "HPFP Cam Configuration"
+        field = "Number of lobes", hpfpCamLobes
+        field = "If using VVT, which cam the pump is driven from", hpfpCam, {hpfpCamLobes != 0}
+        field = "Angle of first lobe", hpfpPeakPos, {hpfpCamLobes != 0}
+        panel = hpfpLobeProfileCurve, {hpfpCamLobes != 0}
+
+    dialog = hpfpPumpDialog, "HPFP Pump Configuration"
+        field = "Valve Pin", hpfpValvePin, {hpfpCamLobes != 0}
+        field = "Valve Pin Mode", hpfpValvePinMode, {hpfpCamLobes != 0}
+        field = "Pump volume", hpfpPumpVolume, {hpfpCamLobes != 0}
+        field = "Minimum angle", hpfpMinAngle, {hpfpCamLobes != 0}
+        field = "Activation angle", hpfpActivationAngle, {hpfpCamLobes != 0}
+        field = "Target decay rate", hpfpTargetDecay, {hpfpCamLobes != 0}
+        field = "Proportional gain", hpfpPidP, {hpfpCamLobes != 0}
+        field = "Integral gain", hpfpPidI, {hpfpCamLobes != 0}
+        panel = hpfpDeadtimeCurve, {hpfpCamLobes != 0}
+
 [Tools]
  ;addTool = toolName, PanelName
  addTool = veTableGenerator, "VE Table Generator", veTableTbl
@@ -3903,5 +3946,3 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 #else
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
 #endif
-
-

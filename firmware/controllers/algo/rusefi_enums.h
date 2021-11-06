@@ -642,3 +642,11 @@ typedef enum __attribute__ ((__packed__)) {
 	INJ_None = 0,
 	INJ_PolynomialAdder = 1,
 } InjectorNonlinearMode;
+
+typedef enum __attribute__ ((__packed__)) {
+    HPFP_CAM_NONE = 0,
+    HPFP_CAM_IN1 = 1,
+    HPFP_CAM_EX1 = 2,
+    HPFP_CAM_IN2 = 3,
+    HPFP_CAM_EX2 = 4,
+} hpfp_cam_e;
