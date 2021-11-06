@@ -212,7 +212,7 @@ public class ConfigField {
     public String getCommentContent() {
         if (comment == null || comment.isEmpty())
             return comment;
-        return comment.charAt(0) == TS_COMMENT_TAG ? comment.substring(1) : comment;
+        return (comment.charAt(0) == TS_COMMENT_TAG ? comment.substring(1) : comment).trim();
     }
 
     public int[] getArraySizes() {

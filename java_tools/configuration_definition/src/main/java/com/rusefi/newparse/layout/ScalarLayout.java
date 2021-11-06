@@ -85,6 +85,28 @@ public class ScalarLayout extends Layout {
         printAfterArrayLength(ps);
     }
 
+    private String makeScaleString() {
+        float scale = this.options.scale;
+
+        int mul, div;
+
+        if (scale < 1) {
+            mul = Math.round(1 / scale);
+            div = 1;
+        } else {
+            mul = 1;
+            div = Math.round(scale);
+        }
+
+        float actualScale = (float)mul / div;
+
+        if (mul < 1 || div < 1 || (Math.abs(scale - actualScale) < 0.0001f)) {
+            throw new RuntimeException("assertion failure: scale string generation failure for " + this.name);
+        }
+
+        return mul + ", " + div;
+    }
+
     @Override
     public void writeCLayout(PrintStream ps) {
         this.writeCOffsetHeader(ps, this.options.comment, this.options.units);
@@ -92,7 +114,7 @@ public class ScalarLayout extends Layout {
         String cTypeName = this.type.cType.replaceAll("^int32_t$", "int");
 
         if (this.autoscale) {
-            cTypeName = "scaled_channel<" + cTypeName + ", " + Math.round(1 / this.options.scale) + ">";
+            cTypeName = "scaled_channel<" + cTypeName + ", " + makeScaleString() + ">";
         }
 
         ps.print("\t" + cTypeName + " " + this.name);
@@ -120,7 +142,7 @@ public class ScalarLayout extends Layout {
         String cTypeName = this.type.cType.replaceAll("^int32_t$", "int");
 
         if (this.autoscale) {
-            cTypeName = "scaled_channel<" + cTypeName + ", " + Math.round(1 / this.options.scale) + ">";
+            cTypeName = "scaled_channel<" + cTypeName + ", " + makeScaleString() + ">";
         }
 
         ps.println("\t" + cTypeName + " " + this.name + "[" + al + "];");
