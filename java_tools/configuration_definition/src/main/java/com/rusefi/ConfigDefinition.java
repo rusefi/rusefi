@@ -279,7 +279,7 @@ public class ConfigDefinition {
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(parseState, "TODO", tsPath + "/test.ini");
+            // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/test.ini");
 
         }
 
