@@ -303,7 +303,7 @@ private:
 	operation_mode_e operationMode;
 };
 
-#ifndef
+#ifndef MAX
 #define MAX(a,b) (((a)>(b))?(a):(b))
 #endif
 
