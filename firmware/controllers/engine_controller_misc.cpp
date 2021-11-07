@@ -68,7 +68,7 @@ volatile uint32_t upperTimeNt = 0;
 
 efitick_t getTimeNowNt() {
 	// TODO: lock free so we don't have to disable interrupts!
-	chSysDisable();
+	__disable_irq();
 
 	uint32_t stamp = getTimeNowLowerNt();
 
@@ -82,7 +82,7 @@ efitick_t getTimeNowNt() {
 	efitick_t result = ((int64_t)upperTimeNt << 32) | stamp;
 
 	// TODO: lock free so we don't have to disable interrupts!
-	chSysEnable();
+	__enable_irq();
 
 	return result;
 }
