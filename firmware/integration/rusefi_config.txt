@@ -1340,6 +1340,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	uint8_t fan2OnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 	uint8_t fan2OffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 #define SCRIPT_CURVE_COUNT 6
+#define SCRIPT_TABLE_COUNT 4
 	float[FSIO_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -999, 1000, 3
 	float[FSIO_CURVE_16] scriptCurve1;;"y", 1, 0, -999, 1000, 3
 	float[FSIO_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -999, 1000, 3
@@ -1385,7 +1386,8 @@ gppwm_note_t[SCRIPT_CURVE_COUNT iterate] scriptCurveName;
 	float[FSIO_CURVE_8] scriptCurve5;;"y", 1, 0, -999, 1000, 3
 	float[FSIO_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -999, 1000, 3
 	float[FSIO_CURVE_8] scriptCurve6;;"y", 1, 0, -999, 1000, 3
-uint8_t[300] unused3328;;"units", 1, 0, -20, 100, 0
+gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
+uint8_t[236] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.", 1, 0, 0, 1, 4
 float tChargeAirCoefMax;;"Max tCharge Coeff.", 1, 0, 0, 1, 4

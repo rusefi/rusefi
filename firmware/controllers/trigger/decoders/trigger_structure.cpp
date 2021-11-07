@@ -85,8 +85,6 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	useRiseEdge = true;
 	gapBothDirections = false;
 
-	invertOnAdd = false;
-
 	this->operationMode = operationMode;
 	privateTriggerDefinitionSize = 0;
 	triggerShapeSynchPointIndex = 0;
@@ -221,7 +219,7 @@ void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channel
 	addEvent(angle / getCycleDuration(), channelIndex, state);
 }
 
-void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const stateParam) {
+void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
 	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode != OM_NONE, "operationMode not set");
 
 	if (channelIndex == T_SECONDARY) {
@@ -230,28 +228,21 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("addEvent2 %.2f i=%d r/f=%d\r\n", angle, channelIndex, stateParam);
+		printf("addEvent2 %.2f i=%d r/f=%d\r\n", angle, channelIndex, state);
 	}
 #endif
-
-	trigger_value_e state;
-	if (invertOnAdd) {
-		state = (stateParam == TV_FALL) ? TV_RISE : TV_FALL;
-	} else {
-		state = stateParam;
-	}
 
 #if EFI_UNIT_TEST
 	assertIsInBounds(privateTriggerDefinitionSize, triggerSignalIndeces, "trigger shape overflow");
 	triggerSignalIndeces[privateTriggerDefinitionSize] = channelIndex;
-	triggerSignalStates[privateTriggerDefinitionSize] = stateParam;
+	triggerSignalStates[privateTriggerDefinitionSize] = state;
 #endif // EFI_UNIT_TEST
 
 
 	// todo: the whole 'useOnlyRisingEdgeForTrigger' parameter and logic should not be here
 	// todo: see calculateExpectedEventCounts
 	// related calculation should be done once trigger is initialized outside of trigger shape scope
-	if (!useOnlyRisingEdgeForTriggerTemp || stateParam == TV_RISE) {
+	if (!useOnlyRisingEdgeForTriggerTemp || state == TV_RISE) {
 		expectedEventCount[channelIndex]++;
 	}
 
@@ -282,7 +273,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 			wave->setState(/* switchIndex */ 0, /* value */ initialState[i]);
 		}
 
-		isRiseEvent[0] = TV_RISE == stateParam;
+		isRiseEvent[0] = TV_RISE == state;
 		wave.setSwitchTime(0, angle);
 		wave.channels[channelIndex].setState(/* channelIndex */ 0, /* value */ state);
 		return;
@@ -310,7 +301,7 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
 */
-	isRiseEvent[index] = TV_RISE == stateParam;
+	isRiseEvent[index] = TV_RISE == state;
 
 	if ((unsigned)index != privateTriggerDefinitionSize) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
