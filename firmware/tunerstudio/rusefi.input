@@ -1609,10 +1609,10 @@ menuDialog = main
 		subMenu = fsioFormulas,				"FSIO Formulas"
 
 		subMenu = std_separator
-		subMenu = fsioTable1Tbl,			"Script Table #1"
-		subMenu = fsioTable2Tbl,			"Script Table #2"
-		subMenu = fsioTable3Tbl,			"Script Table #3"
-		subMenu = fsioTable4Tbl,			"Script Table #4"
+		subMenu = fsioTable1TblSettings,			"Script Table #1"
+		subMenu = fsioTable2TblSettings,			"Script Table #2"
+		subMenu = fsioTable3TblSettings,			"Script Table #3"
+		subMenu = fsioTable4TblSettings,			"Script Table #4"
 		subMenu = scriptCurve1Settings,	    "Script Curve #1"
 		subMenu = scriptCurve2Settings,			    "Script Curve #2"
 		subMenu = scriptCurve3Settings,			    "Script Curve #3"
@@ -1905,6 +1905,22 @@ cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3B"
 cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 [UserDefined]
+	dialog = fsioTable1TblSettings, "", yAxis
+	    field = "Name", tableCurveName1
+		panel = fsioTable1Tbl
+
+	dialog = fsioTable2TblSettings, "", yAxis
+	    field = "Name", tableCurveName2
+		panel = fsioTable1Tb2
+
+	dialog = fsioTable3TblSettings, "", yAxis
+	    field = "Name", tableCurveName3
+		panel = fsioTable3Tbl
+
+	dialog = fsioTable4TblSettings, "", yAxis
+	    field = "Name", tableCurveName4
+		panel = fsioTable4Tbl
+
 	dialog = scriptCurve1Settings, "", yAxis
 	    field = "Name", scriptCurveName4
 		panel = scriptCurve1
