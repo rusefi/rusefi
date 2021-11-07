@@ -40,9 +40,6 @@ static ExtiChannel channels[16];
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
 void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palcallback_t cb, void *cb_data) {
-
-return 0;
-
 	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin)) {
