@@ -224,7 +224,7 @@ public:
 	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
 	/**
-	 * this method helps us use real world 350 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
+	 * this method helps us use real world 360 degrees shape for FOUR_STROKE_CAM_SENSOR and FOUR_STROKE_CRANK_SENSOR
 	 */
 	void addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
