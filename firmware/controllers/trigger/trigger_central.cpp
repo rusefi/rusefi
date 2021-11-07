@@ -341,7 +341,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	if (index != 0) {
 		// todo: only assign initial position of not first cam once cam was synchronized
-		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition, 720);
+		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
 		// at the moment we use only primary VVT to sync crank phase
 		return;
 	}
@@ -350,7 +350,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
 	// shall adjust vvt position as well
 	vvtPosition -= crankOffset;
-	vvtPosition = wrapVvt(vvtPosition, 720);
+	vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
 
 	// this could be just an 'if' but let's have it expandable for future use :)
 	switch(engineConfiguration->vvtMode[camIndex]) {

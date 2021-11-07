@@ -629,7 +629,8 @@ static void updateFuelInfo() {
 
 static void updateIgnition(int rpm) {
 	float timing = engine->engineState.timingAdvance;
-	tsOutputChannels.ignitionAdvance = timing > 360 ? timing - 720 : timing;
+	// that's weird logic. also seems broken for two stroke?
+	tsOutputChannels.ignitionAdvance = timing > FOUR_STROKE_CYCLE_DURATION / 2 ? timing - FOUR_STROKE_CYCLE_DURATION : timing;
 	// 60
 	tsOutputChannels.sparkDwell = ENGINE(engineState.sparkDwell);
 
