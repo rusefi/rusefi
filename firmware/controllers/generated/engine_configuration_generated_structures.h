@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 07 03:31:57 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 07 15:29:27 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3728,10 +3728,14 @@ struct engine_configuration_s {
 	 */
 	float scriptCurve6[FSIO_CURVE_8];
 	/**
-	units
 	 * offset 3564
 	 */
-	uint8_t unused3328[300];
+	gppwm_note_t scriptTableName[SCRIPT_TABLE_COUNT];
+	/**
+	units
+	 * offset 3628
+	 */
+	uint8_t unused3328[236];
 	/**
 	Min tCharge Coeff.
 	 * offset 3864
@@ -4557,4 +4561,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 07 03:31:57 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 07 15:29:27 UTC 2021
