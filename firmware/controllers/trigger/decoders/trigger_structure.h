@@ -202,10 +202,6 @@ public:
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
 
 	/**
-	 * This is a pretty questionable option which is considered by 'addEvent' method
-	 */
-	bool invertOnAdd;
-	/**
 	 * Total count of shaft events per CAM or CRANK shaft revolution.
 	 * TODO this should be migrated to CRANKshaft revolution, this would go together
 	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
