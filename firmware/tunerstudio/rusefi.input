@@ -1859,7 +1859,6 @@ cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x0
 
 cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_Defaults			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MICRO_RUS_EFI_16_hex@@"
 cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_M111_16_hex@@"
 
 cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_NA6_16_hex@@"
@@ -3674,7 +3673,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",     cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
-		commandButton = "microRusEFI Defaults",		   cmd_set_engine_type_microRusEFI_Defaults@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NA6 VAF",   cmd_set_engine_type_microRusEFI_Miata_NA6_VAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NA6 MAP",   cmd_set_engine_type_microRusEFI_Miata_NA6_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata 94/95 MAP", cmd_set_engine_type_microRusEFI_Miata_94_MAP@@if_show_microRusEFI_presets
