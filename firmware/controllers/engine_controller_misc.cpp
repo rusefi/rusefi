@@ -67,7 +67,8 @@ volatile uint32_t lastLowerNt = 0;
 volatile uint32_t upperTimeNt = 0;
 
 efitick_t getTimeNowNt() {
-	chibios_rt::CriticalSectionLocker csl;
+	// TODO: lock free so we don't have to disable interrupts!
+	chSysDisable();
 
 	uint32_t stamp = getTimeNowLowerNt();
 
@@ -78,7 +79,12 @@ efitick_t getTimeNowNt() {
 
 	lastLowerNt = stamp;
 
-	return ((int64_t)upperTimeNt << 32) | stamp;
+	efitick_t result = ((int64_t)upperTimeNt << 32) | stamp;
+
+	// TODO: lock free so we don't have to disable interrupts!
+	chSysEnable();
+
+	return result;
 }
 
 /*	//Alternative lock free implementation (probably actually slower!)
