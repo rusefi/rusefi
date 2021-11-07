@@ -183,7 +183,10 @@ ULIBDIR =
 
 # List all user libraries here
 ULIBS = -lm
-ULIBS += --coverage
+
+ifeq ($(COVERAGE),yes)
+	ULIBS += --coverage
+endif
 
 ifneq ($(OS),Windows_NT)
 	ULIBS += -fsanitize=address
