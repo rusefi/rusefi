@@ -29,7 +29,6 @@ public class PresetsPane {
         content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata NB2 MAF", "engines/miata_nb.png", engine_type_e.MRE_MIATA_NB2_MAF).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Proteus NB2 MAP", "engines/miata_nb.png", engine_type_e.PROTEUS_MIATA_NB2).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Hellen72 NB2 MAP", "engines/miata_nb.png", engine_type_e.HELLEN_NB2).getContent());
-        content.add(new SetEngineTypeCommandControl(uiContext, "MRE Miata Defaults", "", engine_type_e.MICRO_RUS_EFI).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Frankenso V12", "/engines/v12", engine_type_e.PROTEUS_BMW_M73).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "ETB bench", "", engine_type_e.ETB_BENCH_ENGINE).getContent());
         content.add(new SetEngineTypeCommandControl(uiContext, "Minimal", "", engine_type_e.MINIMAL_PINS).getContent());

@@ -421,9 +421,13 @@ enable2ndByteCanID = false
 	vvtTargetB2I = scalar, S08, 316, "deg", 1, 0
 	vvtTargetB2E = scalar, S08, 317, "deg", 1, 0
 
+	turboSpeed = scalar, U16, 318, "hz", 1, 0
+
 	rawTps1Secondary  = scalar,	 U16,    300, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Primary    = scalar,	 U16,    302, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Secondary  = scalar,	 U16,    304, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
+
+	currentEnginePhase = scalar, U16, 70, "deg", 1, 0
 ;
 ; see TunerStudioOutputChannels struct
 ;
@@ -586,33 +590,53 @@ enable2ndByteCanID = false
       gauge       = afr1Gauge
 #endif
 
-   curve = fsioCurve1, "FSIO Curve #1"
+   curve = scriptCurve1, "Script Curve #1"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -155,  150, 10
-      xBins       = fsioCurve1Bins
-      yBins       = fsioCurve1
-      
-   curve = fsioCurve2, "FSIO Curve #2"
+      xBins       = scriptCurve1Bins
+      yBins       = scriptCurve1
+      showTextValues = true
+
+   curve = scriptCurve2, "Script Curve #2"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -150,  150, 10
-      xBins       = fsioCurve2Bins
-      yBins       = fsioCurve2
+      xBins       = scriptCurve2Bins
+      yBins       = scriptCurve2
+      showTextValues = true
 
-   curve = fsioCurve3, "FSIO Curve #3"
+   curve = scriptCurve3, "Script Curve #3"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -5,  5, 10
-      xBins       = fsioCurve3Bins
-      yBins       = fsioCurve3
+      xBins       = scriptCurve3Bins
+      yBins       = scriptCurve3
+      showTextValues = true
 
-   curve = fsioCurve4, "FSIO Curve #4"
+   curve = scriptCurve4, "Script Curve #4"
       columnLabel = "X", "Y"
       xAxis       =  0, 128, 10
       yAxis       = -5,  5, 10
-      xBins       = fsioCurve4Bins
-      yBins       = fsioCurve4
+      xBins       = scriptCurve4Bins
+      yBins       = scriptCurve4
+      showTextValues = true
+
+   curve = scriptCurve5, "Script Curve #5"
+      columnLabel = "X", "Y"
+      xAxis       =  0, 128, 10
+      yAxis       = -5,  5, 10
+      xBins       = scriptCurve5Bins
+      yBins       = scriptCurve5
+      showTextValues = true
+
+   curve = scriptCurve6, "Script Curve #6"
+      columnLabel = "X", "Y"
+      xAxis       =  0, 128, 10
+      yAxis       = -5,  5, 10
+      xBins       = scriptCurve6Bins
+      yBins       = scriptCurve6
+      showTextValues = true
 
    curve = mapAccelTaper, "Engine Load Acceleration Enrichment Taper"
       columnLabel = "Distance", "Multiplier"
@@ -827,6 +851,20 @@ enable2ndByteCanID = false
       lineLabel   = "Warmup Correction"
       lineLabel   = "Recommended WUE"
 
+    curve = hpfpLobeProfileCurve, "HPFP Lobe Profile"
+        columnLabel = "% pump volume", "angle"
+        xAxis       = 0, 100, 11
+        yAxis       = 0, 240, 13
+        xBins       = hpfpLobeProfileQuantityBins
+        yBins       = hpfpLobeProfileAngle
+
+    curve = hpfpDeadtimeCurve, "HPFP Valve Deadtime"
+        columnLabel = "volts", "ms"
+        xAxis       = 5, 15, 11
+        yAxis       = 0, 5, 6
+        xBins       = hpfpDeadtimeVoltsBins
+        yBins       = hpfpDeadtimeMS
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -991,6 +1029,17 @@ enable2ndByteCanID = false
 		zBins		= tcuSolenoidTable
 		xyLabels	= "Solenoid", "Gear"
 
+    table = hpfpTargetTable, hpfpTargetTableId, "HPFP Target Fuel Pressure", 1
+        xBins     = hpfpTargetRpmBins, RPMValue
+        yBins     = hpfpTargetLoadBins, veTableYAxis
+        zBins     = hpfpTarget
+
+    table = hpfpCompensationTable, hpfpCompensationTableId, "HPFP Pump Compensation Factor", 1
+        xBins     = hpfpCompensationRpmBins, RPMValue
+        yBins     = hpfpCompensationLoadBins, fuelRunning
+        zBins     = hpfpCompensation
+
+
 [GaugeConfigurations]
 
 gaugeCategory = Sensors - Extra 2
@@ -1009,6 +1058,7 @@ gaugeCategory = Sensors - Extra 2
    speedToRpmRatioGauge = speedToRpmRatio, "speed2rpm", "",     0,   100,     0,    0,    100,  100,   4,   4
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
+   currentEnginePhaseGauge = currentEnginePhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
 
 gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
@@ -1057,7 +1107,8 @@ gaugeCategory = Sensors - Basic
 
 
 gaugeCategory = Sensors - Extra 1
-   VSSGauge          = vehicleSpeedKph,     "Vehicle speed",         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
+   VSSGauge          = vehicleSpeedKph,      @@GAUGE_NAME_VVS@@,         "kmh",        0,    200,       0,      1,       3,     4,   1,   1
+   turboSpeedGauge   = turboSpeed,           @@GAUGE_NAME_TURBO_SPEED@@, "hz",         0,    200,       0,      1,       3,     4,   1,   1
    accelerationXGauge = accelerationX,       @@GAUGE_NAME_ACCEL_X@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationYGauge = accelerationY,       @@GAUGE_NAME_ACCEL_Y@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
    accelerationZGauge = accelerationZ,       @@GAUGE_NAME_ACCEL_Z@@,      "acc",        -11,   11,     1.0,    1.2,      100,    100,   3, 1
@@ -1292,6 +1343,7 @@ gaugeCategory = DynoView
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
    entry = knockLevel,	    @@GAUGE_NAME_KNOCK_LEVEL@@, 	   float,  "%.2f"
    entry = vehicleSpeedKph,	@@GAUGE_NAME_VVS@@,	   float,  "%.2f"
+   entry = turboSpeed,      @@GAUGE_NAME_TURBO_SPEED@@        int,  "%d"
    entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
    entry = rpmAcceleration, "dRPM",        int,  "%d"
    entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"
@@ -1415,6 +1467,7 @@ gaugeCategory = DynoView
    entry = VssAcceleration, "Vss Accel", float, "%.3f"
 
    entry = flexPercent, @@GAUGE_NAME_FLEX@@, int, "%d"
+   entry = currentEnginePhase, "Engine Phase", int, "%d"
 
 [Menu]
 
@@ -1556,14 +1609,16 @@ menuDialog = main
 		subMenu = fsioFormulas,				"FSIO Formulas"
 
 		subMenu = std_separator
-		subMenu = fsioTable1Tbl,			"FSIO Table #1"
-		subMenu = fsioTable2Tbl,			"FSIO Table #2"
-		subMenu = fsioTable3Tbl,			"FSIO Table #3"
-		subMenu = fsioTable4Tbl,			"FSIO Table #4"
-		subMenu = fsioCurve1,			    "FSIO Curve #1"
-		subMenu = fsioCurve2,			    "FSIO Curve #2"
-		subMenu = fsioCurve3,			    "FSIO Curve #3"
-		subMenu = fsioCurve4,			    "FSIO Curve #4"
+		subMenu = fsioTable1Tbl,			"Script Table #1"
+		subMenu = fsioTable2Tbl,			"Script Table #2"
+		subMenu = fsioTable3Tbl,			"Script Table #3"
+		subMenu = fsioTable4Tbl,			"Script Table #4"
+		subMenu = scriptCurve1Settings,	    "Script Curve #1"
+		subMenu = scriptCurve2Settings,			    "Script Curve #2"
+		subMenu = scriptCurve3Settings,			    "Script Curve #3"
+		subMenu = scriptCurve4Settings,			    "Script Curve #4"
+		subMenu = scriptCurve5Settings,			    "Script Curve #5"
+		subMenu = scriptCurve6Settings,			    "Script Curve #6"
 
 		subMenu = std_separator
 		subMenu = luaOutputs,			    "Lua PWM Outputs"
@@ -1641,9 +1696,14 @@ menuDialog = main
 
 
 		# EXPERIMENTAL FEATURES
+                subMenu = mc33Dialog,                           "GDI Dreams"
+		subMenu = hpfpCamDialog,			"HPFP Cam Configuration"
+		subMenu = hpfpPumpDialog,			"HPFP Pump Configuration", {hpfpCamLobes != 0}
+                subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
+                subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
+                subMenu = std_separator
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = rotaryDialog, 			"Rotary"
-		subMenu = mc33Dialog,			"GDI Dreams"
 		subMenu = vrThreshold,				"VR Sensor Threshold"
 		subMenu = std_separator
 		
@@ -1677,18 +1737,18 @@ menuDialog = main
 ; see TS_IO_TEST_COMMAND in firmware code
 ;
 
-cmd_test_spk1  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY@@\x00\x01"
-cmd_test_spk2  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY@@\x00\x02"
-cmd_test_spk3  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY@@\x00\x03"
-cmd_test_spk4  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x04"
-cmd_test_spk5  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x05"
-cmd_test_spk6  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x06"
-cmd_test_spk7  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x07"
-cmd_test_spk8  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x08"
-cmd_test_spk9  = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x09"
-cmd_test_spk10 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0a"
-cmd_test_spk11 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0b"
-cmd_test_spk12 = "@@TS_IO_TEST_COMMAND_char@@\x00\x12\x00\x0c"
+cmd_test_spk1  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x01"
+cmd_test_spk2  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x02"
+cmd_test_spk3  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x03"
+cmd_test_spk4  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x04"
+cmd_test_spk5  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x05"
+cmd_test_spk6  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x06"
+cmd_test_spk7  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x07"
+cmd_test_spk8  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x08"
+cmd_test_spk9  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x09"
+cmd_test_spk10 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x0a"
+cmd_test_spk11 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x0b"
+cmd_test_spk12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@\x00\x0c"
 
 cmd_test_fsio1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x01"
 cmd_test_fsio2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x02"
@@ -1713,18 +1773,18 @@ cmd_test_debug_mode_trigger = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBU
 cmd_test_debug_mode_vvt  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_VVT_1_PID_16_hex@@"
 cmd_test_debug_mode_can  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_CAN_16_hex@@"
 
-cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY_16_hex@@\x00\x01"
-cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_INJECTOR_CATEGORY_16_hex@@\x00\x02"
-cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY@@\x00\x03"
-cmd_test_inj4  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x04"
-cmd_test_inj5  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x05"
-cmd_test_inj6  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x06"
-cmd_test_inj7  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x07"
-cmd_test_inj8  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x08"
-cmd_test_inj9  = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x09"
-cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0a"
-cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0b"
-cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@\x00\x13\x00\x0c"
+cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x01"
+cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x02"
+cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x03"
+cmd_test_inj4  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x04"
+cmd_test_inj5  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x05"
+cmd_test_inj6  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x06"
+cmd_test_inj7  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x07"
+cmd_test_inj8  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x08"
+cmd_test_inj9  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x09"
+cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x0a"
+cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x0b"
+cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x0c"
 
 cmd_test_sol1 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_SOLENOID_CATEGORY_16_hex@@\x00\x01"
 cmd_test_sol2 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_SOLENOID_CATEGORY_16_hex@@\x00\x02"
@@ -1758,8 +1818,8 @@ cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@
 cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x0F"
 cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x10"
 cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x11"
-cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x12"
-cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x13"
+cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@"
+cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@ts_command_e_TS_INJECTOR_CATEGORY"
 cmd_nDBANK                   = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x14"@@if_ts_show_f7_presets
 cmd_burn_without_flash       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x15"
 
@@ -1799,7 +1859,6 @@ cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x0
 
 cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
 
-cmd_set_engine_type_microRusEFI_Defaults			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MICRO_RUS_EFI_16_hex@@"
 cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_M111_16_hex@@"
 
 cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_NA6_16_hex@@"
@@ -1846,6 +1905,30 @@ cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3B"
 cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 [UserDefined]
+	dialog = scriptCurve1Settings, "", yAxis
+	    field = "Name", scriptCurveName4
+		panel = scriptCurve1
+
+	dialog = scriptCurve2Settings, "", yAxis
+	    field = "Name", scriptCurveName4
+		panel = scriptCurve2
+
+	dialog = scriptCurve3Settings, "", yAxis
+	    field = "Name", scriptCurveName4
+		panel = scriptCurve3
+
+	dialog = scriptCurve4Settings, "", yAxis
+	    field = "Name", scriptCurveName4
+		panel = scriptCurve4
+
+	dialog = scriptCurve5Settings, "", yAxis
+	    field = "Name", scriptCurveName5
+		panel = scriptCurve5
+
+	dialog = scriptCurve6Settings, "", yAxis
+	    field = "Name", scriptCurveName6
+		panel = scriptCurve6
+
 	dialog = tChargeRpmTpsSettings, "RPM+TPS Mode Settings"
 	    field = "We use these coefficients to approximate air/fuel charge temperate"
 	    field = "based on CLT and IAT, depending on RPM and TPM"
@@ -2272,10 +2355,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
 		field = "MC33816 SPI Device",					mc33972spiDevice
-		field = "HPFP Valve Pin",						hpfpValvePin
-		field = "HPFP Valve Pin Mode",					hpfpValvePinMode
-		field = tempHpfpStart, tempHpfpStart 
-		field = tempHpfpDuration, tempHpfpDuration 
 
 		field = "Boost voltage",						mc33_hvolt
 
@@ -3506,6 +3585,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "H-Bridge #1 function",					etbFunctions1
 		field = "H-Bridge #2 function",					etbFunctions2
 		field = "PWM Frequency",						etbFreq
+		field = "Maximum ETB position",					etbMaximumPosition
 		; we need the term about stepper idle in here, because there's a bug in TS that you can't have different visibility
 		; criteria for the same panel when used in multiple places
 		; todo: report bug to TS?
@@ -3593,7 +3673,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Frankenso Miata NA6 Stage 1", cmd_set_engine_type_Frankenso_Miata_NA6_MAP@@if_show_Frankenso_presets
 		commandButton = "Frankenso Miata NB2 MAP",     cmd_set_engine_type_Frankenso_Miata_NB2@@if_show_Frankenso_presets
 
-		commandButton = "microRusEFI Defaults",		   cmd_set_engine_type_microRusEFI_Defaults@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NA6 VAF",   cmd_set_engine_type_microRusEFI_Miata_NA6_VAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata NA6 MAP",   cmd_set_engine_type_microRusEFI_Miata_NA6_MAP@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Miata 94/95 MAP", cmd_set_engine_type_microRusEFI_Miata_94_MAP@@if_show_microRusEFI_presets
@@ -3841,6 +3920,23 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = gppwm4left
 		panel = gppwm4Tbl, {gppwm4_pin != 0}
 
+    dialog = hpfpCamDialog, "HPFP Cam Configuration"
+        field = "Number of lobes", hpfpCamLobes
+        field = "If using VVT, which cam the pump is driven from", hpfpCam, {hpfpCamLobes != 0}
+        field = "Angle of first lobe", hpfpPeakPos, {hpfpCamLobes != 0}
+        panel = hpfpLobeProfileCurve, {hpfpCamLobes != 0}
+
+    dialog = hpfpPumpDialog, "HPFP Pump Configuration"
+        field = "Valve Pin", hpfpValvePin, {hpfpCamLobes != 0}
+        field = "Valve Pin Mode", hpfpValvePinMode, {hpfpCamLobes != 0}
+        field = "Pump volume", hpfpPumpVolume, {hpfpCamLobes != 0}
+        field = "Minimum angle", hpfpMinAngle, {hpfpCamLobes != 0}
+        field = "Activation angle", hpfpActivationAngle, {hpfpCamLobes != 0}
+        field = "Target decay rate", hpfpTargetDecay, {hpfpCamLobes != 0}
+        field = "Proportional gain", hpfpPidP, {hpfpCamLobes != 0}
+        field = "Integral gain", hpfpPidI, {hpfpCamLobes != 0}
+        panel = hpfpDeadtimeCurve, {hpfpCamLobes != 0}
+
 [Tools]
  ;addTool = toolName, PanelName
  addTool = veTableGenerator, "VE Table Generator", veTableTbl
@@ -3848,5 +3944,3 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 #else
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
 #endif
-
-

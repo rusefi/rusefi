@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Nov 03 23:57:23 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 07 03:32:03 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -222,9 +222,10 @@ struct gppwm_channel {
 	 */
 	uint8_t rpmBins[GPPWM_RPM_COUNT];
 	/**
+	duty
 	 * offset 24
 	 */
-	gppwm_table_t table;
+	uint8_t table[GPPWM_RPM_COUNT][GPPWM_LOAD_COUNT];
 	/** total size 88*/
 };
 
@@ -803,7 +804,7 @@ struct engine_configuration_s {
 	bool issue_294_29 : 1;
 	/**
 	 * Experimental setting that will cause a misfire
-	 * DO NOT ENABLE.;
+	 * DO NOT ENABLE.
 	offset 76 bit 29 */
 	bool artificialTestMisfire : 1;
 	/**
@@ -1505,15 +1506,9 @@ struct engine_configuration_s {
 	 */
 	uint16_t idlePositionMax;
 	/**
-	units
 	 * offset 724
 	 */
-	uint16_t tempHpfpStart;
-	/**
-	units
-	 * offset 726
-	 */
-	uint16_t tempHpfpDuration;
+	uint16_t unusedExHpfp[2];
 	/**
 	 * Secondary TTL channel baud rate
 	BPs
@@ -2060,10 +2055,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_302_30 : 1;
+	bool unusedBit_301_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_302_31 : 1;
+	bool unusedBit_301_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2212,7 +2207,7 @@ struct engine_configuration_s {
 	volt
 	 * offset 1204
 	 */
-	scaled_channel<uint16_t, PACK_MULT_VOLTAGE> fuelLevelBins[FUEL_LEVEL_TABLE_COUNT];
+	scaled_channel<uint16_t, 1000, 1> fuelLevelBins[FUEL_LEVEL_TABLE_COUNT];
 	/**
 	 * offset 1220
 	 */
@@ -2615,9 +2610,10 @@ struct engine_configuration_s {
 	 */
 	float baroCorrRpmBins[BARO_CORR_SIZE];
 	/**
+	ratio
 	 * offset 1576
 	 */
-	baro_corr_table_t baroCorrTable;
+	float baroCorrTable[BARO_CORR_SIZE][BARO_CORR_SIZE];
 	/**
 	 * Cranking fuel correction coefficient based on TPS
 	Ratio
@@ -2653,7 +2649,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t maxAcClt;
 	/**
-	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration. 
+	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration.
 	Seconds
 	 * offset 1712
 	 */
@@ -2748,7 +2744,7 @@ struct engine_configuration_s {
 	 */
 	pid_s idleRpmPid;
 	/**
-	 * 0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. 
+	 * 0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment.
 	Fraction
 	 * offset 1808
 	 */
@@ -2885,7 +2881,7 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e LIS302DLCsPin;
 	/**
-	 * This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. 
+	 * This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles.
 	cycles
 	 * offset 2044
 	 */
@@ -2974,7 +2970,7 @@ struct engine_configuration_s {
 	 */
 	float throttlePedalSecondaryWOTVoltage;
 	/**
-	 *  set can_baudrate
+	 * set can_baudrate
 	 * offset 2108
 	 */
 	can_baudrate_e canBaudRate;
@@ -3029,76 +3025,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_513_8 : 1;
+	bool unusedBit_512_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_513_9 : 1;
+	bool unusedBit_512_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_513_10 : 1;
+	bool unusedBit_512_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_513_11 : 1;
+	bool unusedBit_512_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_513_12 : 1;
+	bool unusedBit_512_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_513_13 : 1;
+	bool unusedBit_512_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_513_14 : 1;
+	bool unusedBit_512_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_513_15 : 1;
+	bool unusedBit_512_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_513_16 : 1;
+	bool unusedBit_512_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_513_17 : 1;
+	bool unusedBit_512_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_513_18 : 1;
+	bool unusedBit_512_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_513_19 : 1;
+	bool unusedBit_512_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_513_20 : 1;
+	bool unusedBit_512_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_513_21 : 1;
+	bool unusedBit_512_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_513_22 : 1;
+	bool unusedBit_512_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_513_23 : 1;
+	bool unusedBit_512_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_513_24 : 1;
+	bool unusedBit_512_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_513_25 : 1;
+	bool unusedBit_512_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_513_26 : 1;
+	bool unusedBit_512_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_513_27 : 1;
+	bool unusedBit_512_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_513_28 : 1;
+	bool unusedBit_512_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_513_29 : 1;
+	bool unusedBit_512_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_513_30 : 1;
+	bool unusedBit_512_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_513_31 : 1;
+	bool unusedBit_512_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3554,42 +3550,42 @@ struct engine_configuration_s {
 	x
 	 * offset 2716
 	 */
-	float fsioCurve1Bins[FSIO_CURVE_16];
+	float scriptCurve1Bins[FSIO_CURVE_16];
 	/**
 	y
 	 * offset 2780
 	 */
-	float fsioCurve1[FSIO_CURVE_16];
+	float scriptCurve1[FSIO_CURVE_16];
 	/**
 	x
 	 * offset 2844
 	 */
-	float fsioCurve2Bins[FSIO_CURVE_16];
+	float scriptCurve2Bins[FSIO_CURVE_16];
 	/**
 	y
 	 * offset 2908
 	 */
-	float fsioCurve2[FSIO_CURVE_16];
+	float scriptCurve2[FSIO_CURVE_16];
 	/**
 	x
 	 * offset 2972
 	 */
-	float fsioCurve3Bins[FSIO_CURVE_8];
+	float scriptCurve3Bins[FSIO_CURVE_8];
 	/**
 	y
 	 * offset 3004
 	 */
-	float fsioCurve3[FSIO_CURVE_8];
+	float scriptCurve3[FSIO_CURVE_8];
 	/**
 	x
 	 * offset 3036
 	 */
-	float fsioCurve4Bins[FSIO_CURVE_8];
+	float scriptCurve4Bins[FSIO_CURVE_8];
 	/**
 	y
 	 * offset 3068
 	 */
-	float fsioCurve4[FSIO_CURVE_8];
+	float scriptCurve4[FSIO_CURVE_8];
 	/**
 	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3100
@@ -3683,7 +3679,7 @@ struct engine_configuration_s {
 	 */
 	float iacCoastingBins[CLT_CURVE_SIZE];
 	/**
-	 *  CLT-based idle position for coasting (used in Auto-PID Idle mode)
+	 * CLT-based idle position for coasting (used in Auto-PID Idle mode)
 	%
 	 * offset 3224
 	 */
@@ -3708,10 +3704,34 @@ struct engine_configuration_s {
 	 */
 	uint16_t cltRevLimitRpm[CLT_LIMITER_CURVE_SIZE];
 	/**
-	units
 	 * offset 3340
 	 */
-	uint8_t unused3328[524];
+	gppwm_note_t scriptCurveName[SCRIPT_CURVE_COUNT];
+	/**
+	x
+	 * offset 3436
+	 */
+	float scriptCurve5Bins[FSIO_CURVE_8];
+	/**
+	y
+	 * offset 3468
+	 */
+	float scriptCurve5[FSIO_CURVE_8];
+	/**
+	x
+	 * offset 3500
+	 */
+	float scriptCurve6Bins[FSIO_CURVE_8];
+	/**
+	y
+	 * offset 3532
+	 */
+	float scriptCurve6[FSIO_CURVE_8];
+	/**
+	units
+	 * offset 3564
+	 */
+	uint8_t unused3328[300];
 	/**
 	Min tCharge Coeff.
 	 * offset 3864
@@ -3769,14 +3789,16 @@ struct engine_configuration_s {
 	 */
 	int16_t etb_iTermMax;
 	/**
+	 * Maximum allowed ETB position. Some throttles go past fully open, so this allows you to limit it to fully open.
+	%
 	 * offset 3960
 	 */
-	float etbDeadband;
+	uint8_t etbMaximumPosition;
 	/**
 	units
-	 * offset 3964
+	 * offset 3961
 	 */
-	uint8_t unused1059[4];
+	uint8_t unused1059[7];
 	/**
 	 * See useIdleTimingPidControl
 	 * offset 3968
@@ -3836,7 +3858,7 @@ struct engine_configuration_s {
 	:1
 	 * offset 4005
 	 */
-	scaled_channel<uint8_t, PACK_MULT_AFR_CFG> stoichRatioPrimary;
+	scaled_channel<uint8_t, 10, 1> stoichRatioPrimary;
 	/**
 	 * iTerm max value
 	 * offset 4006
@@ -3851,7 +3873,7 @@ struct engine_configuration_s {
 	:1
 	 * offset 4009
 	 */
-	scaled_channel<uint8_t, PACK_MULT_AFR_CFG> stoichRatioSecondary;
+	scaled_channel<uint8_t, 10, 1> stoichRatioSecondary;
 	/**
 	units
 	 * offset 4010
@@ -3902,9 +3924,10 @@ struct engine_configuration_s {
 	 */
 	pid_s idleRpmPid2;
 	/**
+	%
 	 * offset 4060
 	 */
-	iac_pid_mult_t iacPidMultTable;
+	uint8_t iacPidMultTable[IAC_PID_MULT_SIZE][IAC_PID_MULT_SIZE];
 	/**
 	Load
 	 * offset 4124
@@ -4012,10 +4035,119 @@ struct engine_configuration_s {
 	 */
 	float triggerGapOverrideTo[GAP_TRACKING_LENGTH];
 	/**
-	units
+	lobes/cam
 	 * offset 4696
 	 */
-	int mainUnusedEnd[326];
+	uint8_t hpfpCamLobes;
+	/**
+	 * offset 4697
+	 */
+	hpfp_cam_e hpfpCam;
+	/**
+	 * Crank angle ATDC of first lobe peak
+	deg
+	 * offset 4698
+	 */
+	uint8_t hpfpPeakPos;
+	/**
+	 * If the requested activation time is below this angle, don't bother running the pump
+	deg
+	 * offset 4699
+	 */
+	uint8_t hpfpMinAngle;
+	/**
+	 * Size of the pump chamber in cc. Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.
+	cc
+	 * offset 4700
+	 */
+	scaled_channel<uint16_t, 1000, 1> hpfpPumpVolume;
+	/**
+	 * How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own)
+	deg
+	 * offset 4702
+	 */
+	uint8_t hpfpActivationAngle;
+	/**
+	 * offset 4703
+	 */
+	uint8_t unusedFiller_4703;
+	/**
+	%/kPa
+	 * offset 4704
+	 */
+	scaled_channel<uint16_t, 1000, 1> hpfpPidP;
+	/**
+	%/kPa/lobe
+	 * offset 4706
+	 */
+	scaled_channel<uint16_t, 100000, 1> hpfpPidI;
+	/**
+	 * The fastest rate the target pressure can be reduced by. This is because HPFP have no way to bleed off pressure other than injecting fuel.
+	kPa/s
+	 * offset 4708
+	 */
+	uint16_t hpfpTargetDecay;
+	/**
+	%
+	 * offset 4710
+	 */
+	scaled_channel<uint8_t, 2, 1> hpfpLobeProfileQuantityBins[HPFP_LOBE_PROFILE_SIZE];
+	/**
+	deg
+	 * offset 4726
+	 */
+	scaled_channel<uint8_t, 2, 1> hpfpLobeProfileAngle[HPFP_LOBE_PROFILE_SIZE];
+	/**
+	volts
+	 * offset 4742
+	 */
+	uint8_t hpfpDeadtimeVoltsBins[HPFP_DEADTIME_SIZE];
+	/**
+	ms
+	 * offset 4750
+	 */
+	scaled_channel<uint16_t, 1000, 1> hpfpDeadtimeMS[HPFP_DEADTIME_SIZE];
+	/**
+	kPa
+	 * offset 4766
+	 */
+	uint16_t hpfpTarget[HPFP_TARGET_SIZE][HPFP_TARGET_SIZE];
+	/**
+	load
+	 * offset 4966
+	 */
+	scaled_channel<uint16_t, 10, 1> hpfpTargetLoadBins[HPFP_TARGET_SIZE];
+	/**
+	RPM
+	 * offset 4986
+	 */
+	scaled_channel<uint8_t, 1, 50> hpfpTargetRpmBins[HPFP_TARGET_SIZE];
+	/**
+	%
+	 * offset 4996
+	 */
+	int8_t hpfpCompensation[HPFP_COMPENSATION_SIZE][HPFP_COMPENSATION_SIZE];
+	/**
+	cc/lobe
+	 * offset 5096
+	 */
+	scaled_channel<uint16_t, 1000, 1> hpfpCompensationLoadBins[HPFP_COMPENSATION_SIZE];
+	/**
+	RPM
+	 * offset 5116
+	 */
+	scaled_channel<uint8_t, 1, 50> hpfpCompensationRpmBins[HPFP_COMPENSATION_SIZE];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 5126
+	 */
+	uint8_t alignmentFill_at_5126[2];
+	/**
+	units
+	 * offset 5128
+	 */
+	int mainUnusedEnd[218];
 	/** total size 6000*/
 };
 
@@ -4052,7 +4184,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6248
 	 */
-	boost_table_t boostTableOpenLoop;
+	uint8_t boostTableOpenLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	units
 	 * offset 6312
@@ -4066,16 +4198,17 @@ struct persistent_config_s {
 	/**
 	 * offset 6328
 	 */
-	boost_target_table_t boostTableClosedLoop;
+	uint8_t boostTableClosedLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	%
 	 * offset 6392
 	 */
 	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
 	/**
+	%
 	 * offset 6400
 	 */
-	pedal_to_tps_t pedalToTpsTable;
+	uint8_t pedalToTpsTable[PEDAL_TO_TPS_SIZE][PEDAL_TO_TPS_SIZE];
 	/**
 	%
 	 * offset 6464
@@ -4117,7 +4250,7 @@ struct persistent_config_s {
 	 */
 	float idleVeBins[IDLE_VE_CURVE_SIZE];
 	/**
-	 *  Optional VE table for Idle (see useSeparateVEForIdle)
+	 * Optional VE table for Idle (see useSeparateVEForIdle)
 	%
 	 * offset 6640
 	 */
@@ -4185,7 +4318,7 @@ struct persistent_config_s {
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
-	 *  CLT-based idle position multiplier for simple manual idle controller
+	 * CLT-based idle position multiplier for simple manual idle controller
 	ratio
 	 * offset 10720
 	 */
@@ -4204,9 +4337,10 @@ struct persistent_config_s {
 	 */
 	float mafDecodingBins[MAF_DECODING_COUNT];
 	/**
+	deg
 	 * offset 12832
 	 */
-	angle_table_t ignitionIatCorrTable;
+	float ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Temperature
 	 * offset 13856
@@ -4218,9 +4352,10 @@ struct persistent_config_s {
 	 */
 	float ignitionIatCorrRpmBins[IGN_RPM_COUNT];
 	/**
+	deg
 	 * offset 13984
 	 */
-	angle_table_t injectionPhase;
+	float injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
 	 * offset 15008
@@ -4232,9 +4367,10 @@ struct persistent_config_s {
 	 */
 	float injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
+	onoff
 	 * offset 15136
 	 */
-	tcubinary_table_t tcuSolenoidTable;
+	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 	/**
 	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	Hz
@@ -4242,23 +4378,25 @@ struct persistent_config_s {
 	 */
 	float vssFilterReciprocal;
 	/**
+	kPa
 	 * offset 15200
 	 */
-	map_estimate_table_t mapEstimateTable;
+	uint16_t mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	% TPS
 	 * offset 15712
 	 */
-	scaled_channel<uint16_t, TPS_2_BYTE_PACKING_MULT> mapEstimateTpsBins[FUEL_LOAD_COUNT];
+	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
 	 * offset 15744
 	 */
 	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
 	/**
+	value
 	 * offset 15776
 	 */
-	fsio_table_8x8_u8t vvtTable1;
+	uint8_t vvtTable1[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 15840
@@ -4271,9 +4409,10 @@ struct persistent_config_s {
 	 */
 	float vvtTable1RpmBins[FSIO_TABLE_8];
 	/**
+	value
 	 * offset 15904
 	 */
-	fsio_table_8x8_u8t vvtTable2;
+	uint8_t vvtTable2[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 15968
@@ -4291,9 +4430,10 @@ struct persistent_config_s {
 	 */
 	float unusedLuaWasHere[64];
 	/**
+	deg
 	 * offset 16288
 	 */
-	ignition_table_t ignitionTable;
+	float ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
 	 * offset 17312
@@ -4305,9 +4445,10 @@ struct persistent_config_s {
 	 */
 	float ignitionRpmBins[IGN_RPM_COUNT];
 	/**
+	%
 	 * offset 17440
 	 */
-	ve_table_t veTable;
+	float veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	kPa
 	 * offset 18464
@@ -4319,9 +4460,10 @@ struct persistent_config_s {
 	 */
 	float veRpmBins[FUEL_RPM_COUNT];
 	/**
+	lambda
 	 * offset 18592
 	 */
-	lambda_table_t lambdaTable;
+	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	 * offset 18848
 	 */
@@ -4332,9 +4474,10 @@ struct persistent_config_s {
 	 */
 	float lambdaRpmBins[FUEL_RPM_COUNT];
 	/**
+	value
 	 * offset 18976
 	 */
-	tps_tps_table_t tpsTpsAccelTable;
+	float tpsTpsAccelTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 	/**
 	from
 	 * offset 19232
@@ -4347,9 +4490,10 @@ struct persistent_config_s {
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
+	value
 	 * offset 19296
 	 */
-	fsio_table_8x8_f32t fsioTable1;
+	float fsioTable1[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 19552
@@ -4362,9 +4506,10 @@ struct persistent_config_s {
 	 */
 	float fsioTable1RpmBins[FSIO_TABLE_8];
 	/**
+	value
 	 * offset 19616
 	 */
-	fsio_table_8x8_u8t fsioTable2;
+	uint8_t fsioTable2[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 19680
@@ -4377,9 +4522,10 @@ struct persistent_config_s {
 	 */
 	float fsioTable2RpmBins[FSIO_TABLE_8];
 	/**
+	value
 	 * offset 19744
 	 */
-	fsio_table_8x8_u8t fsioTable3;
+	uint8_t fsioTable3[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 19808
@@ -4392,9 +4538,10 @@ struct persistent_config_s {
 	 */
 	float fsioTable3RpmBins[FSIO_TABLE_8];
 	/**
+	value
 	 * offset 19872
 	 */
-	fsio_table_8x8_u8t fsioTable4;
+	uint8_t fsioTable4[FSIO_TABLE_8][FSIO_TABLE_8];
 	/**
 	L
 	 * offset 19936
@@ -4410,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Nov 03 23:57:23 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 07 03:32:03 UTC 2021

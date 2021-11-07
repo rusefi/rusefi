@@ -94,10 +94,8 @@ fieldOptionsList
 
 arrayLengthSpec: numexpr (ArrayDimensionSeparator numexpr)?;
 
-autoscale: Autoscale '<' numexpr '>';
-
-scalarField: identifier autoscale? FsioVisible? identifier (fieldOptionsList)?;
-arrayField: identifier '[' arrayLengthSpec Iterate? ']' autoscale? identifier SemicolonedString? (fieldOptionsList)?;
+scalarField: identifier Autoscale? FsioVisible? identifier (fieldOptionsList)?;
+arrayField: identifier '[' arrayLengthSpec Iterate? ']' Autoscale? identifier SemicolonedString? (fieldOptionsList)?;
 bitField: Bit identifier (',' QuotedString ',' QuotedString)? ('(' 'comment' ':' QuotedString ')')? SemicolonedSuffix?;
 
 unionField: 'union' ENDL+ fields 'end_union';
@@ -125,10 +123,9 @@ enumRhs
 
 enumTypedefSuffix: /*ignored*/integer Bits ',' Datatype ',' '@OFFSET@' ',' '[' integer ':' integer ']' ',' enumRhs ;
 scalarTypedefSuffix: /*ignored*/integer Scalar ',' Datatype ',' '@OFFSET@' fieldOptionsList ;
-arrayTypedefSuffix: /*ignored*/arrayLengthSpec Array ',' Datatype ',' '@OFFSET@' ',' '[' arrayLengthSpec ']' fieldOptionsList;
 stringTypedefSuffix: /*ignored*/replacementIdent 'string' ',' 'ASCII' ',' '@OFFSET@' ',' numexpr;
 
-typedef: Custom identifier (enumTypedefSuffix | scalarTypedefSuffix | arrayTypedefSuffix | stringTypedefSuffix);
+typedef: Custom identifier (enumTypedefSuffix | scalarTypedefSuffix | stringTypedefSuffix);
 
 // Root statement is allowed to appear in the root of the file
 rootStatement

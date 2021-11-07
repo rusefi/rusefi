@@ -25,8 +25,23 @@ public class ConfigFieldParserTest {
         {
             ConfigField cf = ConfigField.parse(state, "uint8_t[8] field");
             assertEquals(cf.getType(), "uint8_t");
-            assertEquals(cf.getArraySize(), 8);
+            assertEquals(cf.getArraySizes().length, 1);
+            assertEquals(cf.getArraySizes()[0], 8);
             assertEquals(cf.getSize(null), 8);
+            assertFalse("isIterate", cf.isIterate());
+        }
+    }
+
+    @Test
+    public void testByte3dArray() {
+        ReaderState state = new ReaderState();
+        {
+            ConfigField cf = ConfigField.parse(state, "uint8_t[8 x 16] field");
+            assertEquals(cf.getType(), "uint8_t");
+            assertEquals(cf.getArraySizes().length, 2);
+            assertEquals(cf.getArraySizes()[0], 8);
+            assertEquals(cf.getArraySizes()[1], 16);
+            assertEquals(cf.getSize(null), 128);
             assertFalse("isIterate", cf.isIterate());
         }
     }
@@ -183,7 +198,8 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING);\n" +
-                        "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n",
+                     "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n" +
+                     "\tpublic static final Field ALIGNMENTFILL_AT_122 = Field.create(\"ALIGNMENTFILL_AT_122\", 122, FieldType.INT8);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
     }
 
@@ -264,17 +280,21 @@ public class ConfigFieldParserTest {
 
 
             assertEquals("\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16);\n" +
-                            "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 2, FieldType.INT16);\n" +
-                            "\tpublic static final Field MINVALUE = Field.create(\"MINVALUE\", 4, FieldType.INT16);\n" +
-                            "\tpublic static final Field ALTERNATORCONTROL_OFFSET = Field.create(\"ALTERNATORCONTROL_OFFSET\", 0, FieldType.INT16);\n" +
-                            "\tpublic static final Field ALTERNATORCONTROL_PERIODMS = Field.create(\"ALTERNATORCONTROL_PERIODMS\", 2, FieldType.INT16);\n" +
-                            "\tpublic static final Field ALTERNATORCONTROL_MINVALUE = Field.create(\"ALTERNATORCONTROL_MINVALUE\", 4, FieldType.INT16);\n" +
-                            "\tpublic static final Field ETB1_OFFSET = Field.create(\"ETB1_OFFSET\", 8, FieldType.INT16);\n" +
-                            "\tpublic static final Field ETB1_PERIODMS = Field.create(\"ETB1_PERIODMS\", 10, FieldType.INT16);\n" +
-                            "\tpublic static final Field ETB1_MINVALUE = Field.create(\"ETB1_MINVALUE\", 12, FieldType.INT16);\n" +
-                            "\tpublic static final Field ETB2_OFFSET = Field.create(\"ETB2_OFFSET\", 16, FieldType.INT16);\n" +
-                            "\tpublic static final Field ETB2_PERIODMS = Field.create(\"ETB2_PERIODMS\", 18, FieldType.INT16);\n" +
-                            "\tpublic static final Field ETB2_MINVALUE = Field.create(\"ETB2_MINVALUE\", 20, FieldType.INT16);\n",
+                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 2, FieldType.INT16);\n" +
+                         "\tpublic static final Field MINVALUE = Field.create(\"MINVALUE\", 4, FieldType.INT16);\n" +
+                         "\tpublic static final Field ALIGNMENTFILL_AT_6 = Field.create(\"ALIGNMENTFILL_AT_6\", 6, FieldType.INT8);\n" +
+                         "\tpublic static final Field ALTERNATORCONTROL_OFFSET = Field.create(\"ALTERNATORCONTROL_OFFSET\", 0, FieldType.INT16);\n" +
+                         "\tpublic static final Field ALTERNATORCONTROL_PERIODMS = Field.create(\"ALTERNATORCONTROL_PERIODMS\", 2, FieldType.INT16);\n" +
+                         "\tpublic static final Field ALTERNATORCONTROL_MINVALUE = Field.create(\"ALTERNATORCONTROL_MINVALUE\", 4, FieldType.INT16);\n" +
+                         "\tpublic static final Field ALTERNATORCONTROL_ALIGNMENTFILL_AT_6 = Field.create(\"ALTERNATORCONTROL_ALIGNMENTFILL_AT_6\", 6, FieldType.INT8);\n" +
+                         "\tpublic static final Field ETB1_OFFSET = Field.create(\"ETB1_OFFSET\", 8, FieldType.INT16);\n" +
+                         "\tpublic static final Field ETB1_PERIODMS = Field.create(\"ETB1_PERIODMS\", 10, FieldType.INT16);\n" +
+                         "\tpublic static final Field ETB1_MINVALUE = Field.create(\"ETB1_MINVALUE\", 12, FieldType.INT16);\n" +
+                         "\tpublic static final Field ETB1_ALIGNMENTFILL_AT_6 = Field.create(\"ETB1_ALIGNMENTFILL_AT_6\", 14, FieldType.INT8);\n" +
+                         "\tpublic static final Field ETB2_OFFSET = Field.create(\"ETB2_OFFSET\", 16, FieldType.INT16);\n" +
+                         "\tpublic static final Field ETB2_PERIODMS = Field.create(\"ETB2_PERIODMS\", 18, FieldType.INT16);\n" +
+                         "\tpublic static final Field ETB2_MINVALUE = Field.create(\"ETB2_MINVALUE\", 20, FieldType.INT16);\n" +
+                         "\tpublic static final Field ETB2_ALIGNMENTFILL_AT_6 = Field.create(\"ETB2_ALIGNMENTFILL_AT_6\", 22, FieldType.INT8);\n",
                     javaFieldsConsumer.getJavaFieldsWriter());
 
             assertEquals("\tcase FSIO_SETTING_OFFSET:\n" +
@@ -382,25 +402,26 @@ public class ConfigFieldParserTest {
         {
             ConfigField cf = ConfigField.parse(state, "int[3 iterate] field");
             assertEquals(cf.getType(), "int");
-            assertEquals(cf.getArraySize(), 3);
+            assertEquals(cf.getArraySizes().length, 1);
+            assertEquals(cf.getArraySizes()[0], 3);
             assertTrue("isIterate", cf.isIterate());
         }
         {
             ConfigField cf = ConfigField.parse(state, "int16_t crankingRpm;This,. value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')\\nAnything above 'crankingRpm' would be 'running'");
             assertEquals(cf.getName(), "crankingRpm");
-            assertEquals(cf.getArraySize(), 1);
+            assertEquals(cf.getArraySizes().length, 0);
             assertEquals(cf.getType(), "int16_t");
         }
         {
             ConfigField cf = ConfigField.parse(state, "MAP_sensor_config_s map");
             assertEquals(cf.getName(), "map");
-            assertEquals(cf.getArraySize(), 1);
+            assertEquals(cf.getArraySizes().length, 0);
             assertEquals(cf.getType(), "MAP_sensor_config_s");
         }
         {
             ConfigField cf = ConfigField.parse(state, "MAP_sensor_config_s map;@see hasMapSensor\\n@see isMapAveragingEnabled");
             assertEquals(cf.getName(), "map");
-            assertEquals(cf.getArraySize(), 1);
+            assertEquals(cf.getArraySizes().length, 0);
             assertEquals(cf.getType(), "MAP_sensor_config_s");
             assertEquals(cf.getComment(), "@see hasMapSensor\\n@see isMapAveragingEnabled");
         }

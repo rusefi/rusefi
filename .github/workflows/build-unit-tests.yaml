@@ -52,7 +52,7 @@ jobs:
 
     - name: Build Tests
       working-directory: ./unit_tests/
-      run: make -j4
+      run: make -j4 COVERAGE=yes
       
     - name: Run Tests
       working-directory: ./unit_tests/

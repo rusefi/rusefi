@@ -1003,12 +1003,12 @@ static void getValue(const char *paramStr) {
 	}
 }
 
-static void setFsioCurve1Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve1, value, value, 1);
+static void setScriptCurve1Value(float value) {
+	setLinearCurve(engineConfiguration->scriptCurve1, value, value, 1);
 }
 
-static void setFsioCurve2Value(float value) {
-	setLinearCurve(engineConfiguration->fsioCurve2, value, value, 1);
+static void setScriptCurve2Value(float value) {
+	setLinearCurve(engineConfiguration->scriptCurve2, value, value, 1);
 }
 
 struct command_i_s {
@@ -1040,8 +1040,8 @@ const command_f_s commandsF[] = {
 		{"cranking_priming_pulse", setCrankingPrimingPulse},
 		{"flat_injector_lag", setFlatInjectorLag},
 #endif // EFI_ENGINE_CONTROL
-		{"fsio_curve_1_value", setFsioCurve1Value},
-		{"fsio_curve_2_value", setFsioCurve2Value},
+		{"script_curve_1_value", setScriptCurve1Value},
+		{"script_curve_2_value", setScriptCurve2Value},
 #if EFI_PROD_CODE
 #if EFI_IDLE_CONTROL
 		{"idle_offset", setIdleOffset},
@@ -1196,10 +1196,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
 		engineConfiguration->wwaeBeta = valueF;
-	} else if (strEqualCaseInsensitive(paramStr, "tempHpfpStart")) {
-		engineConfiguration->tempHpfpStart = valueF;
-	} else if (strEqualCaseInsensitive(paramStr, "tempHpfpDuration")) {
-		engineConfiguration->tempHpfpDuration = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 #if EFI_PROD_CODE

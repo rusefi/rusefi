@@ -24,9 +24,11 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/lua/test_lua_basic.cpp \
+	tests/lua/test_lua_with_engine.cpp \
 	tests/lua/test_lua_hooks.cpp \
 	tests/sensor/test_cj125.cpp \
 	tests/test_change_engine_type.cpp \
+	tests/util/test_scaled_channel.cpp \
 	tests/util/test_timer.cpp \
 	tests/system/test_periodic_thread_controller.cpp \
 	tests/test_util.cpp \
@@ -88,6 +90,3 @@ TESTS_SRC_CPP = \
 	tests/sensor/test_frequency_sensor.cpp \
 	tests/sensor/test_turbocharger_speed_converter.cpp \
 	tests/sensor/test_vehicle_speed_converter.cpp
-
-	
-

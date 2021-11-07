@@ -17,8 +17,6 @@
 void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 
-	engineConfiguration->engineType = MITSU_4G93;
-
 	engineConfiguration->trigger.type = TT_MITSUBISHI; // same trigger as 4G63?
 
 	engineConfiguration->specs.cylindersCount = 4;

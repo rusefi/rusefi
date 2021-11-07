@@ -303,6 +303,10 @@ private:
 	operation_mode_e operationMode;
 };
 
+#ifndef MAX
+#define MAX(a,b) (((a)>(b))?(a):(b))
+#endif
+
 /**
  * Misc values calculated from TriggerWaveform
  */
@@ -318,7 +322,7 @@ public:
 	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
 	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
 	 */
-	uint16_t triggerIndexByAngle[720];
+	uint16_t triggerIndexByAngle[MAX(TWO_STROKE_CYCLE_DURATION, FOUR_STROKE_CYCLE_DURATION)];
 };
 
 void findTriggerPosition(

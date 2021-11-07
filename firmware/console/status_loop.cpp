@@ -629,7 +629,8 @@ static void updateFuelInfo() {
 
 static void updateIgnition(int rpm) {
 	float timing = engine->engineState.timingAdvance;
-	tsOutputChannels.ignitionAdvance = timing > 360 ? timing - 720 : timing;
+	// that's weird logic. also seems broken for two stroke?
+	tsOutputChannels.ignitionAdvance = timing > FOUR_STROKE_CYCLE_DURATION / 2 ? timing - FOUR_STROKE_CYCLE_DURATION : timing;
 	// 60
 	tsOutputChannels.sparkDwell = ENGINE(engineState.sparkDwell);
 
@@ -740,6 +741,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 #if EFI_DYNO_VIEW
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif
+
+	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
 
 #if HW_CHECK_MODE
 	tsOutputChannels->hasCriticalError = 1;
@@ -879,6 +882,14 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 	default:
 		;
+	}
+}
+
+void updateCurrentEnginePhase(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	if (auto phase = engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt())) {
+		tsOutputChannels.currentEnginePhase = phase.Value - tdcPosition();
+	} else {
+		tsOutputChannels.currentEnginePhase = 0;
 	}
 }
 

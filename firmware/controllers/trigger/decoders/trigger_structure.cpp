@@ -118,14 +118,14 @@ int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
 angle_t TriggerWaveform::getCycleDuration() const {
 	switch (operationMode) {
 	case FOUR_STROKE_THREE_TIMES_CRANK_SENSOR:
-		return 720 / SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
+		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR:
-		return 720 / SYMMETRICAL_CRANK_SENSOR_DIVIDER;
+		return FOUR_STROKE_CYCLE_DURATION / SYMMETRICAL_CRANK_SENSOR_DIVIDER;
 	case FOUR_STROKE_CRANK_SENSOR:
 	case TWO_STROKE:
-		return 360;
+		return TWO_STROKE_CYCLE_DURATION;
 	default:
-		return 720;
+		return FOUR_STROKE_CYCLE_DURATION;
 	}
 }
 
@@ -566,7 +566,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_NISSAN_QR25:
-	case TT_TEMP_62:
 		initializeNissanQR25crank(this);
 		break;
 
@@ -576,6 +575,14 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_NISSAN_VQ35:
 		initializeNissanVQ35crank(this);
+		break;
+
+	case TT_NISSAN_MR18_CRANK:
+		initializeNissanMR18crank(this);
+		break;
+
+	case TT_NISSAN_MR18_CAM_VVT:
+		initializeNissanMRvvt(this);
 		break;
 
 	case TT_KAWA_KX450F:
@@ -606,6 +613,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configure3_1_cam(this);
 		break;
 
+	case TT_UNUSED_10:
+	case TT_UNUSED_62:
 	case TT_ONE:
 		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);
 		break;
@@ -657,7 +666,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureHondaK_12_1(this);
 		break;
 
-	case TT_UNUSED_10:
 	case TT_HONDA_4_24:
 		configureHonda_1_4_24(this, false, true, T_NONE, T_PRIMARY, 0);
 		shapeWithoutTdc = true;
@@ -744,7 +752,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_SUBARU_7_WITHOUT_6:
-	case TT_52:
 		initializeSubaruOnly7(this);
 		break;
 

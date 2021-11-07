@@ -604,6 +604,36 @@ ValueProvider3D *getFSIOTable(int index) {
 	}
 }
 
+/**
+ * @return zero-based index of curve with given name
+ */
+int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0;i<SCRIPT_CURVE_COUNT;i++) {
+		if (strEqualCaseInsensitive(name, engineConfiguration->scriptCurveName[i])) {
+			return i;
+		}
+	}
+	return EFI_ERROR_CODE;
+}
+
+float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	// not great code at all :(
+	switch (index) {
+	default:
+		return interpolate2d(key, engineConfiguration->scriptCurve1Bins, engineConfiguration->scriptCurve1);
+	case 1:
+		return interpolate2d(key, engineConfiguration->scriptCurve2Bins, engineConfiguration->scriptCurve2);
+	case 2:
+		return interpolate2d(key, engineConfiguration->scriptCurve3Bins, engineConfiguration->scriptCurve3);
+	case 3:
+		return interpolate2d(key, engineConfiguration->scriptCurve4Bins, engineConfiguration->scriptCurve4);
+	case 4:
+		return interpolate2d(key, engineConfiguration->scriptCurve5Bins, engineConfiguration->scriptCurve5);
+	case 5:
+		return interpolate2d(key, engineConfiguration->scriptCurve6Bins, engineConfiguration->scriptCurve6);
+	}
+}
+
 void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_UNIT_TEST
 	// only unit test needs this

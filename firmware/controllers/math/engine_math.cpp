@@ -424,8 +424,8 @@ ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ENGINE(engineCycle) = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
 
-	angle_t maxTimingCorrMap = -720.0f;
-	angle_t maxTimingMap = -720.0f;
+	angle_t maxTimingCorrMap = -FOUR_STROKE_CYCLE_DURATION;
+	angle_t maxTimingMap = -FOUR_STROKE_CYCLE_DURATION;
 	for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
 		for (int l = 0;l<IGN_LOAD_COUNT;l++) {
 			maxTimingCorrMap = maxF(maxTimingCorrMap, config->ignitionIatCorrTable[l][rpmIndex]);
