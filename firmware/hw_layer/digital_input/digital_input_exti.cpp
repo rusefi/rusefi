@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-#if HAL_USE_PAL && EFI_PROD_CODE
+#if (STM32F4XX || STM32F7XX || STM32H7XX) &&  HAL_USE_PAL && EFI_PROD_CODE
 #include "digital_input_exti.h"
 
 /**
