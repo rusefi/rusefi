@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-#if (STM32F4XX || STM32F7XX || STM32H7XX) &&  HAL_USE_PAL && EFI_PROD_CODE
+#if HAL_USE_PAL && EFI_PROD_CODE
 #include "digital_input_exti.h"
 
 /**
@@ -18,6 +18,7 @@
  * because pin '0' would be used on two different ports
  */
 
+#ifdef STM32_I2C_I2C1_IRQ_PRIORITY
 void efiExtiInit() {
 	nvicEnableVector(I2C1_EV_IRQn, STM32_I2C_I2C1_IRQ_PRIORITY);
 }
@@ -188,5 +189,15 @@ CH_FAST_IRQ_HANDLER(VectorE0) {
 	handleExtiIsr(14);
 	handleExtiIsr(15);
 }
+
+#else // not STM32
+
+// TODO: non-stm32 exti
+void efiExtiInit() { }
+
+void efiExtiEnablePin(const char *, brain_pin_e, uint32_t, ExtiCallback, void *) { }
+void efiExtiDisablePin(brain_pin_e) { }
+
+#endif
 
 #endif /* HAL_USE_PAL && EFI_PROD_CODE */
