@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Nov 06 23:14:13 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Nov 07 01:03:57 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -224,8 +224,6 @@ case HELLEN_NB2_36:
   return "HELLEN_NB2_36";
 case HONDA_600:
   return "HONDA_600";
-case UNUSED18:
-  return "HONDA_ACCORD_CD_DIP";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
 case MAZDA_626:
@@ -326,6 +324,8 @@ case UNUSED10:
   return "UNUSED10";
 case UNUSED101:
   return "UNUSED101";
+case UNUSED18:
+  return "UNUSED18";
 case UNUSED30:
   return "UNUSED30";
 case UNUSED39:
