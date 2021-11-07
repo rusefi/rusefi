@@ -339,6 +339,7 @@ typedef enum {
 	TT_MAZDA_MIATA_NA = 3,
 	/**
 	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
+	 * TODO: remove it? Remove Miata MX5 NB1 trigger #3488
 	 */
 	TT_MAZDA_MIATA_NB1 = 4,
 	TT_GM_7X = 5,
