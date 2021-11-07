@@ -66,7 +66,7 @@ typedef enum {
 	 */
 	HONDA_ACCORD_CD_TWO_WIRES = 17,
 
-	HONDA_ACCORD_CD_DIP = 18,
+	UNUSED18 = 18,
 
 
 	SUBARU_2003_WRX = 22,

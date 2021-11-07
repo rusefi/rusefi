@@ -1066,11 +1066,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_CD_DIP:
-/*
-		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-*/
+	case UNUSED18:
 	case MITSU_4G93:
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
