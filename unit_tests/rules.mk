@@ -65,8 +65,8 @@ endif
 
 ifeq ($(IS_MAC),yes)
 	ODFLAGS	  = -x --syms
-	ASFLAGS   = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.s=.lst)) $(ADEFS)
-	ASXFLAGS  = $(MCFLAGS) -Wa,-amhls=$(LSTDIR)/$(notdir $(<:.S=.lst)) $(ADEFS)
+	ASFLAGS   = $(MCFLAGS) -Wa $(ADEFS)
+	ASXFLAGS  = $(MCFLAGS) -Wa $(ADEFS)
 	CFLAGS    = $(MCFLAGS) $(OPT) $(COPT)   $(CWARN)   $(DEFS)
 	CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) $(DEFS)
 	LDFLAGS = $(MCFLAGS) $(LLIBDIR)
