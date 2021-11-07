@@ -56,8 +56,8 @@ if [ $USE_OPENBLT = "yes" ]; then
 
   rm -f deliver/rusefi_openblt.dfu
   echo "$SCRIPT_NAME: invoking hex2dfu for composite RusEFI+OpenBLT image"
-  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu
-  #todo: how to create 'signed' bin, hex and srec?
+  $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu -b deliver/rusefi.bin
+  #todo: how to create 'signed' hex and srec? Do we need?
 fi
 
 echo "$SCRIPT_NAME: build folder content:"
