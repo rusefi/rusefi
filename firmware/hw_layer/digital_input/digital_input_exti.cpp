@@ -26,7 +26,7 @@ struct ExtiChannel
 {
 	const char* Name;
 
-	palcallback_t Callback;
+	ExtiCallback Callback;
 	void* CallbackData;
 
 	efitick_t Timestamp = 0;
@@ -37,7 +37,7 @@ struct ExtiChannel
 static ExtiChannel channels[16];
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
-void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palcallback_t cb, void *cb_data) {
+void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiCallback cb, void *cb_data) {
 	/* paranoid check, in case of GPIO_UNASSIGNED getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin)) {
@@ -71,7 +71,6 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, palc
 
 	ioline_t line = PAL_LINE(port, index);
 	palEnableLineEvent(line, mode);
-	palSetLineCallback(line, cb, cb_data);
 
 	channel.Name = msg;
 	channel.Callback = cb;
@@ -130,8 +129,8 @@ CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 		auto& channel = channels[i];
 
 		if (channel.Timestamp != 0 && channel.Callback) {
+			channel.Callback(channel.CallbackData, channel.Timestamp);
 			channel.Timestamp = 0;
-			channel.Callback(channel.CallbackData);
 		}
 	}
 
@@ -145,7 +144,11 @@ void handleExtiIsr(uint8_t index) {
 	extiGetAndClearGroup1(1U << index, pr);
 
 	if (pr & (1 << index)) {
-		channels[index].Timestamp = getTimeNowNt();
+		const auto& timestamp = channels[index].Timestamp;
+
+		if (timestamp == 0) {
+			channels[index].Timestamp = getTimeNowNt();
+		}
 
 		triggerInterrupt();
 	}
