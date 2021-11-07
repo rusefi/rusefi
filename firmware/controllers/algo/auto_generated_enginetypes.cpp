@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Nov 07 01:03:57 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Nov 07 03:58:12 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -226,8 +226,6 @@ case HONDA_600:
   return "HONDA_600";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
-case UNUSED28:
-  return "MAZDA_626";
 case MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case MAZDA_MIATA_2003_NA_RAIL:
@@ -236,8 +234,6 @@ case MIATA_1996:
   return "MIATA_1996";
 case MIATA_PROTEUS_TCU:
   return "MIATA_PROTEUS_TCU";
-case UNUSED60:
-  return "MICRO_RUS_EFI";
 case MINIMAL_PINS:
   return "MINIMAL_PINS";
 case MITSU_4G93:
@@ -266,14 +262,10 @@ case MRE_SUBARU_EJ18:
   return "MRE_SUBARU_EJ18";
 case NISSAN_PRIMERA:
   return "NISSAN_PRIMERA";
-case UNUSED100:
-  return "PROMETHEUS_DEFAULTS";
 case PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case PROTEUS_BMW_M73:
   return "PROTEUS_BMW_M73";
-case UNUSED61:
-  return "PROTEUS_DEFAULTS";
 case PROTEUS_HONDA_ELEMENT_2003:
   return "PROTEUS_HONDA_ELEMENT_2003";
 case PROTEUS_HONDA_OBD2A:
@@ -322,14 +314,22 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case UNUSED10:
   return "UNUSED10";
+case UNUSED100:
+  return "UNUSED100";
 case UNUSED101:
   return "UNUSED101";
 case UNUSED18:
   return "UNUSED18";
+case UNUSED28:
+  return "UNUSED28";
 case UNUSED30:
   return "UNUSED30";
 case UNUSED39:
   return "UNUSED39";
+case UNUSED60:
+  return "UNUSED60";
+case UNUSED61:
+  return "UNUSED61";
 case UNUSED9:
   return "UNUSED9";
 case UNUSED_19:
