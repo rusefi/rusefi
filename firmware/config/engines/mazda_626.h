@@ -9,6 +9,3 @@
 
 #pragma once
 #include "engine_configuration.h"
-
-void setMazda626EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-

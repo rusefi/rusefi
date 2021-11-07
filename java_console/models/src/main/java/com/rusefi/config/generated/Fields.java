@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 22:14:02 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 07 03:31:57 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -553,8 +553,6 @@ public class Fields {
 	public static final int CMD_TS_BENCH_STARTER_DISABLE_RELAY = 3;
 	public static final int CMD_TS_BENCH_STARTER_ENABLE_RELAY = 2;
 	public static final int CMD_TS_FSIO_CATEGORY = 33;
-	public static final int CMD_TS_IGNITION_CATEGORY = 18;
-	public static final int CMD_TS_INJECTOR_CATEGORY = 19;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
 	public static final int CMD_TS_X14 = 20;
 	public static final int CMD_TS_X17 = 23;
@@ -788,13 +786,10 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_NB2 = 69;
 	public static final int engine_type_e_HELLEN_NB2_36 = 86;
 	public static final int engine_type_e_HONDA_600 = 43;
-	public static final int engine_type_e_HONDA_ACCORD_CD_DIP = 18;
 	public static final int engine_type_e_HONDA_ACCORD_CD_TWO_WIRES = 17;
 	public static final int engine_type_e_MAZDA_626 = 28;
 	public static final int engine_type_e_MAZDA_MIATA_2003_BOARD_TEST = 55;
 	public static final int engine_type_e_MAZDA_MIATA_2003_NA_RAIL = 54;
-	public static final int engine_type_e_MAZDA_MIATA_NB1 = 9;
-	public static final int engine_type_e_MIATA_1990 = 19;
 	public static final int engine_type_e_MIATA_1996 = 21;
 	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
 	public static final int engine_type_e_MICRO_RUS_EFI = 60;
@@ -818,6 +813,7 @@ public class Fields {
 	public static final int engine_type_e_PROTEUS_DEFAULTS = 61;
 	public static final int engine_type_e_PROTEUS_HONDA_ELEMENT_2003 = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
+	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
 	public static final int engine_type_e_PROTEUS_MIATA_NB2 = 67;
 	public static final int engine_type_e_PROTEUS_N73 = 93;
 	public static final int engine_type_e_PROTEUS_QC_TEST_BOARD = 42;
@@ -840,9 +836,11 @@ public class Fields {
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
 	public static final int engine_type_e_UNUSED10 = 10;
 	public static final int engine_type_e_UNUSED101 = 101;
-	public static final int engine_type_e_UNUSED25 = 25;
+	public static final int engine_type_e_UNUSED18 = 18;
 	public static final int engine_type_e_UNUSED30 = 30;
 	public static final int engine_type_e_UNUSED39 = 39;
+	public static final int engine_type_e_UNUSED9 = 9;
+	public static final int engine_type_e_UNUSED_19 = 19;
 	public static final int engine_type_e_UNUSED_48 = 48;
 	public static final int engine_type_e_UNUSED_50 = 50;
 	public static final int engine_type_e_UNUSED_51 = 51;
@@ -1772,6 +1770,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 483694278;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2223,7 +2222,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.06.all.4244939444";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.07.all.483694278";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;

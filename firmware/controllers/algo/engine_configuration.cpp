@@ -873,10 +873,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case MICRO_RUS_EFI:
+	case UNUSED60:
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
-	case PROTEUS_DEFAULTS:
-	case PROMETHEUS_DEFAULTS:
+	case UNUSED61:
+	case UNUSED100:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -1030,7 +1030,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FRANKENSO_BMW_M73_F:
-		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setBMW_M73_TwoCoilUnitTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_M:
 		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1080,9 +1080,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setHonda600(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case UNUSED9:
-	case MAZDA_626:
-		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
+	case UNUSED28:
 	case FORD_ESCORT_GT:
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;

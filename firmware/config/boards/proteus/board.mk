@@ -10,7 +10,7 @@ endif
 
 # Set this if you want a default engine type other than normal Proteus
 ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=PROTEUS_DEFAULTS
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
 endif
 
 DDEFS += -DEFI_USE_OSC=TRUE
