@@ -159,16 +159,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	engineConfiguration->idle.solenoidFrequency = 500;
 }
 
-/*
-void setHondaAccordConfigurationDip(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->engineType = HONDA_ACCORD_CD_DIP;
-	engineConfiguration->trigger.type = TT_HONDA_1_4_24;
-	setHondaAccordConfigurationCommon(PASS_CONFIG_PARAMETER_SIGNATURE);
-}
-*/
-
 void setHondaAccordConfiguration1_24(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->engineType = HONDA_ACCORD_CD_DIP;
 	engineConfiguration->trigger.type = TT_HONDA_1_24;
 	setHondaAccordConfigurationCommon(PASS_CONFIG_PARAMETER_SIGNATURE);
 }
