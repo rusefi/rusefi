@@ -19,9 +19,7 @@
  */
 
 void efiExtiInit() {
-	// TODO: enable interrupt, or does NVIC->STIR bypass the IE bit?
-	//nvicEnableVector(STM32_I2C1_EVENT_NUMBER, STM32_I2C_I2C1_IRQ_PRIORITY);
-	NVIC->STIR = I2C1_EV_IRQn;
+	nvicEnableVector(I2C1_EV_IRQn, STM32_I2C_I2C1_IRQ_PRIORITY);
 }
 
 struct ExtiChannel
