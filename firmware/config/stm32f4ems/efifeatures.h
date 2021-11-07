@@ -82,10 +82,6 @@
 #define HAL_TRIGGER_USE_ADC FALSE
 #endif /* HAL_TRIGGER_USE_ADC */
 
-#ifndef HAL_VSS_USE_PAL
-#define HAL_VSS_USE_PAL FALSE
-#endif /* HAL_VSS_USE_PAL */
-
 /**
  * TunerStudio support.
  */
