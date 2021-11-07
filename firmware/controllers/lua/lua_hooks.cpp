@@ -484,10 +484,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.fun("set", &LuaSensor::set)
 		.fun("invalidate", &LuaSensor::invalidate);
 
+// not enough Lua memory even to initialize Lua :(
+#if defined(STM32F7) || defined(STM32H7) || EFI_UNIT_TEST
 	LuaClass<LuaPid> luaPid(l, "Pid");
 	luaPid
 		.ctor()
-/*
 		.fun("get", &LuaPid::get)
 		.fun("setTarget", &LuaPid::setTarget)
 		.fun("setP", &LuaPid::setP)
@@ -496,8 +497,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.fun("setMinValue", &LuaPid::setMinValue)
 		.fun("setMaxValue", &LuaPid::setMaxValue)
 		.fun("reset", &LuaPid::reset)
-*/
 		;
+#endif
 
 	configureRusefiLuaUtilHooks(l);
 
