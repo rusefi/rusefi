@@ -30,6 +30,9 @@ typedef unsigned int time_t;
 #define DEFAULT_FUEL_LOAD_COUNT 16
 #define DEFAULT_IGN_LOAD_COUNT 16
 
+#define TWO_STROKE_CYCLE_DURATION 360
+#define FOUR_STROKE_CYCLE_DURATION 720
+
 // gasoline E0
 #define STOICH_RATIO				14.7f
 
