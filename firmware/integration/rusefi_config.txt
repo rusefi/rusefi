@@ -1828,8 +1828,7 @@ end_struct
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
 
-#define CMD_TS_IGNITION_CATEGORY 18
-#define CMD_TS_INJECTOR_CATEGORY 19
+! todo: replace with ts_command_e_ usages
 #define CMD_TS_X14 20
 ! 0x16
 #define CMD_TS_BENCH_CATEGORY 22
