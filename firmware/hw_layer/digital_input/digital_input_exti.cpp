@@ -30,8 +30,6 @@ struct ExtiChannel
 	void* CallbackData;
 
 	efitick_t Timestamp = 0;
-
-	bool Overflow = 0;
 };
 
 static ExtiChannel channels[16];
