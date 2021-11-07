@@ -405,6 +405,71 @@ struct LuaSensor : public StoredValueSensor {
 	void showInfo(const char*) const {}
 };
 
+struct LuaPid {
+	LuaPid
+	()
+// todo	(float kp, float ki, float kd, float min, float max)
+		: m_pid(&m_params)
+	{
+		m_params.pFactor = 0;
+		m_params.iFactor = 0;
+		m_params.dFactor = 0;
+
+		m_params.offset = 0;
+		m_params.periodMs = 0;
+		m_params.minValue = 0;
+		m_params.maxValue = 0;
+
+		m_lastUpdate.reset();
+	}
+
+	float get(float input) {
+#if EFI_UNIT_TEST
+		extern int timeNowUs;
+		// this is how we avoid zero dt
+		timeNowUs += 1000;
+#endif
+		float dt = m_lastUpdate.getElapsedSecondsAndReset(getTimeNowNt());
+
+		return m_pid.getOutput(target, input, dt);
+	}
+
+	void setTarget(float value) {
+		target = value;
+	}
+
+	void setP(float value) {
+		m_params.pFactor = value;
+	}
+
+	void setI(float value) {
+		m_params.iFactor = value;
+	}
+
+	void setD(float value) {
+		m_params.dFactor = value;
+	}
+
+	void setMinValue(float value) {
+		m_params.minValue = value;
+	}
+
+	void setMaxValue(float value) {
+		m_params.maxValue = value;
+	}
+
+	void reset() {
+		m_pid.reset();
+	}
+
+private:
+	Pid m_pid;
+	Timer m_lastUpdate;
+	pid_s m_params;
+	// ugly as hell, a way to move forward while we wait for https://github.com/gengyong/luaaa/issues/7
+	float target;
+};
+
 void configureRusefiLuaHooks(lua_State* l) {
 
 	LuaClass<Timer> luaTimer(l, "Timer");
@@ -418,6 +483,21 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.ctor<const char*>()
 		.fun("set", &LuaSensor::set)
 		.fun("invalidate", &LuaSensor::invalidate);
+
+	LuaClass<LuaPid> luaPid(l, "Pid");
+	luaPid
+		.ctor()
+/*
+		.fun("get", &LuaPid::get)
+		.fun("setTarget", &LuaPid::setTarget)
+		.fun("setP", &LuaPid::setP)
+		.fun("setI", &LuaPid::setI)
+		.fun("setD", &LuaPid::setD)
+		.fun("setMinValue", &LuaPid::setMinValue)
+		.fun("setMaxValue", &LuaPid::setMaxValue)
+		.fun("reset", &LuaPid::reset)
+*/
+		;
 
 	configureRusefiLuaUtilHooks(l);
 
