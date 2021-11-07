@@ -89,7 +89,7 @@ typedef enum {
 	// see TriggerWaveform::bothFrontsRequired
 	TEST_ISSUE_898 = 27,
 
-	MAZDA_626 = 28,
+	UNUSED28 = 28,
 
 	SACHS = 29,
 
@@ -158,9 +158,9 @@ typedef enum {
 
 	TLE8888_BENCH_ENGINE = 59,
 
-	MICRO_RUS_EFI = 60,
+	UNUSED60 = 60,
 
-	PROTEUS_DEFAULTS = 61,
+	UNUSED61 = 61,
 
 	PROTEUS_ANALOG_PWM_TEST = 106,
 
@@ -228,7 +228,7 @@ typedef enum {
 	 * this configuration has as few pins configured as possible
 	 */
 	MINIMAL_PINS = 99,
-	PROMETHEUS_DEFAULTS = 100,
+	UNUSED100 = 100,
 	UNUSED101 = 101,
 	VAG_18_TURBO = 102,
 
