@@ -417,9 +417,13 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
 	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
-	int triggerEventIndex = details->triggerIndexByAngle[(int)angle];
+	constexpr float buffer_us = 4; // We don't want to schedule any work within this many microseconds after a trigger edge -- TODO SHOULD SCALE INVERSELY WITH MCU CLOCK SPEED
+	const float buffer_angle = 6000 /*rpm*/ * (6e-6 * buffer_us); // TODO: GET REAL RPM, though we could just hardcode high RPM; if the actual RPM is low then jitter is less important as 1usec means fewer degrees
+	// for 6000 RPM and buffer_us=4, buffer_angle=0.144 degrees
+	
+	int triggerEventIndex = details->triggerIndexByAngle[(int)((angle < buffer_angle ? angle + 720 : angle) - buffer_angle)]; // TODO: This math could be a lot faster if triggerIndexByAngle started with angle -1, then the array would have to have 721 elements where [0] == [720]
 	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];
-	angle_t offsetFromTriggerEvent = angle - triggerEventAngle;
+	angle_t offsetFromTriggerEvent = angle - triggerEventAngle; // TODO: need to handle <0 case here which can happen if angle<buffer_angle
 
 	// Guarantee that we aren't going to try and schedule an event prior to the tooth
 	if (offsetFromTriggerEvent < 0) {
