@@ -18,8 +18,11 @@ ifeq ($(USE_OPT),)
 # -O2 is needed for mingw, without it there is a linking issue to isnanf?!?!
   #USE_OPT = $(RFLAGS) -O2 -fgnu89-inline -ggdb -fomit-frame-pointer -falign-functions=16 -std=gnu99 -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers
   USE_OPT = -c -Wall -O0 -ggdb -g
-  USE_OPT += -fprofile-arcs -ftest-coverage
   USE_OPT += -Werror=missing-field-initializers
+endif
+
+ifeq ($(COVERAGE),yes)
+	USE_OPT += -fprofile-arcs -ftest-coverage
 endif
 
 
@@ -180,7 +183,10 @@ ULIBDIR =
 
 # List all user libraries here
 ULIBS = -lm
-ULIBS += --coverage
+
+ifeq ($(COVERAGE),yes)
+	ULIBS += --coverage
+endif
 
 ifneq ($(OS),Windows_NT)
 	ULIBS += -fsanitize=address
