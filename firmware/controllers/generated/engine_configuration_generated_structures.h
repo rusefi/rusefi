@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 22:14:02 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 07 02:12:48 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2649,7 +2649,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t maxAcClt;
 	/**
-	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration. 
+	 * Length of time the deposited wall fuel takes to dissipate after the start of acceleration.
 	Seconds
 	 * offset 1712
 	 */
@@ -2744,7 +2744,7 @@ struct engine_configuration_s {
 	 */
 	pid_s idleRpmPid;
 	/**
-	 * 0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. 
+	 * 0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment.
 	Fraction
 	 * offset 1808
 	 */
@@ -2881,7 +2881,7 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e LIS302DLCsPin;
 	/**
-	 * This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. 
+	 * This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles.
 	cycles
 	 * offset 2044
 	 */
@@ -2970,7 +2970,7 @@ struct engine_configuration_s {
 	 */
 	float throttlePedalSecondaryWOTVoltage;
 	/**
-	 *  set can_baudrate
+	 * set can_baudrate
 	 * offset 2108
 	 */
 	can_baudrate_e canBaudRate;
@@ -3679,7 +3679,7 @@ struct engine_configuration_s {
 	 */
 	float iacCoastingBins[CLT_CURVE_SIZE];
 	/**
-	 *  CLT-based idle position for coasting (used in Auto-PID Idle mode)
+	 * CLT-based idle position for coasting (used in Auto-PID Idle mode)
 	%
 	 * offset 3224
 	 */
@@ -4250,7 +4250,7 @@ struct persistent_config_s {
 	 */
 	float idleVeBins[IDLE_VE_CURVE_SIZE];
 	/**
-	 *  Optional VE table for Idle (see useSeparateVEForIdle)
+	 * Optional VE table for Idle (see useSeparateVEForIdle)
 	%
 	 * offset 6640
 	 */
@@ -4318,7 +4318,7 @@ struct persistent_config_s {
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
-	 *  CLT-based idle position multiplier for simple manual idle controller
+	 * CLT-based idle position multiplier for simple manual idle controller
 	ratio
 	 * offset 10720
 	 */
@@ -4557,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 06 22:14:02 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 07 02:12:48 UTC 2021
