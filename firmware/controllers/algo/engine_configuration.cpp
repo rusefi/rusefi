@@ -1066,11 +1066,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_CD_DIP:
-/*
-		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-*/
+	case UNUSED18:
 	case MITSU_4G93:
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1083,16 +1079,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_600:
 		setHonda600(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MAZDA_MIATA_NB1:
-		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
+	case UNUSED9:
 	case MAZDA_626:
 		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MIATA_1990:
+	case UNUSED_19:
 	case MIATA_1996:
 		setFrankensteinMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;

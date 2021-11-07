@@ -482,7 +482,7 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
 
-	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
+	testTriggerDecoder2("Miata NB2", HELLEN_NB2, 3, 0.3888888955, 0);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
 
@@ -512,7 +512,7 @@ TEST(misc, testTriggerDecoder) {
 		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	}
-	testTriggerDecoder2("miata 1990", MIATA_1990, 4, 1 - 0.7015, 1 - 0.3890);
+	testTriggerDecoder2("miata 1990", MRE_MIATA_NA6_VAF, 4, 1 - 0.7015, 1 - 0.3890);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);

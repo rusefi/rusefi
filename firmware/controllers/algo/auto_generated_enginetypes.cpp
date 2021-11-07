@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Nov 05 19:39:49 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Nov 07 01:03:57 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -224,8 +224,6 @@ case HELLEN_NB2_36:
   return "HELLEN_NB2_36";
 case HONDA_600:
   return "HONDA_600";
-case HONDA_ACCORD_CD_DIP:
-  return "HONDA_ACCORD_CD_DIP";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
 case MAZDA_626:
@@ -234,10 +232,6 @@ case MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case MAZDA_MIATA_2003_NA_RAIL:
   return "MAZDA_MIATA_2003_NA_RAIL";
-case MAZDA_MIATA_NB1:
-  return "MAZDA_MIATA_NB1";
-case MIATA_1990:
-  return "MIATA_1990";
 case MIATA_1996:
   return "MIATA_1996";
 case MIATA_PROTEUS_TCU:
@@ -284,6 +278,8 @@ case PROTEUS_HONDA_ELEMENT_2003:
   return "PROTEUS_HONDA_ELEMENT_2003";
 case PROTEUS_HONDA_OBD2A:
   return "PROTEUS_HONDA_OBD2A";
+case PROTEUS_LUA_DEMO:
+  return "PROTEUS_LUA_DEMO";
 case PROTEUS_MIATA_NB2:
   return "PROTEUS_MIATA_NB2";
 case PROTEUS_N73:
@@ -328,12 +324,16 @@ case UNUSED10:
   return "UNUSED10";
 case UNUSED101:
   return "UNUSED101";
-case UNUSED25:
-  return "UNUSED25";
+case UNUSED18:
+  return "UNUSED18";
 case UNUSED30:
   return "UNUSED30";
 case UNUSED39:
   return "UNUSED39";
+case UNUSED9:
+  return "UNUSED9";
+case UNUSED_19:
+  return "UNUSED_19";
 case UNUSED_48:
   return "UNUSED_48";
 case UNUSED_50:

@@ -28,6 +28,9 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = 3,
+	/**
+	 * See also PROTEUS_LUA_DEMO
+	 */
 	MRE_SECONDARY_CAN = 4,
 
 	NISSAN_PRIMERA = 5,
@@ -40,7 +43,7 @@ typedef enum {
 	 */
 	GY6_139QMB = 8,
 
-	MAZDA_MIATA_NB1 = 9,
+	UNUSED9 = 9,
 	UNUSED10 = 10,
 	MRE_MIATA_NB2_MAP = 11,
 	MRE_MIATA_NA6_VAF = 12,
@@ -48,15 +51,13 @@ typedef enum {
 	MRE_MIATA_NA6_MAP = 66,
 	MRE_MIATA_NB2_MAF = 15,
 
-	// Frankenstein board
-	MIATA_1990 = 19,
+	UNUSED_19 = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
 	MRE_MIATA_94_MAP = 20,
 	MIATA_1996 = 21,
 
 	FORD_ESCORT_GT = 14,
-
 
 	MITSU_4G93 = 16,
 
@@ -65,7 +66,7 @@ typedef enum {
 	 */
 	HONDA_ACCORD_CD_TWO_WIRES = 17,
 
-	HONDA_ACCORD_CD_DIP = 18,
+	UNUSED18 = 18,
 
 
 	SUBARU_2003_WRX = 22,
@@ -76,7 +77,11 @@ typedef enum {
 	MRE_BODY_CONTROL = 23,
 	BMW_M73_M = 24,
 
-UNUSED25 = 25,
+	/**
+	 * See also MRE_SECONDARY_CAN
+	 */
+	PROTEUS_LUA_DEMO = 25,
+
 	TEST_ENGINE = 26,
 
 	// used by unit test
@@ -334,6 +339,7 @@ typedef enum {
 	TT_MAZDA_MIATA_NA = 3,
 	/**
 	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
+	 * TODO: remove it? Remove Miata MX5 NB1 trigger #3488
 	 */
 	TT_MAZDA_MIATA_NB1 = 4,
 	TT_GM_7X = 5,

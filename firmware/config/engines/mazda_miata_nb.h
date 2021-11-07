@@ -9,5 +9,3 @@
 
 #include "engine_configuration.h"
 
-void setMazdaMiataNb1EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-

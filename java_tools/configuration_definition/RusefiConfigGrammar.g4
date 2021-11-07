@@ -123,10 +123,9 @@ enumRhs
 
 enumTypedefSuffix: /*ignored*/integer Bits ',' Datatype ',' '@OFFSET@' ',' '[' integer ':' integer ']' ',' enumRhs ;
 scalarTypedefSuffix: /*ignored*/integer Scalar ',' Datatype ',' '@OFFSET@' fieldOptionsList ;
-arrayTypedefSuffix: /*ignored*/arrayLengthSpec Array ',' Datatype ',' '@OFFSET@' ',' '[' arrayLengthSpec ']' fieldOptionsList;
 stringTypedefSuffix: /*ignored*/replacementIdent 'string' ',' 'ASCII' ',' '@OFFSET@' ',' numexpr;
 
-typedef: Custom identifier (enumTypedefSuffix | scalarTypedefSuffix | arrayTypedefSuffix | stringTypedefSuffix);
+typedef: Custom identifier (enumTypedefSuffix | scalarTypedefSuffix | stringTypedefSuffix);
 
 // Root statement is allowed to appear in the root of the file
 rootStatement
