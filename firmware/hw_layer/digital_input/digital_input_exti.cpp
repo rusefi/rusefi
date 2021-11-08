@@ -152,7 +152,7 @@ void handleExtiIsr(uint8_t index) {
 		const auto& timestamp = channels[index].Timestamp;
 
 		if (timestamp == 0) {
-			channels[index].Timestamp = getTimeNowNt();
+			timestamp = getTimeNowNt();
 		}
 
 		triggerInterrupt();
