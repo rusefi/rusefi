@@ -127,9 +127,15 @@ CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 	for (size_t i = 0; i < 16; i++) {
 		auto& channel = channels[i];
 
-		if (channel.Timestamp != 0 && channel.Callback) {
-			channel.Callback(channel.CallbackData, channel.Timestamp);
-			channel.Timestamp = 0;
+		// get the timestamp out under lock
+		// todo: lock freeeeee!
+		__disable_irq();
+		auto timestamp = channel.Timestamp;
+		channel.Timestamp = 0;
+		__enable_irq();
+
+		if (timestamp != 0) {
+			channel.Callback(channel.CallbackData, timestamp);
 		}
 	}
 
@@ -193,7 +199,9 @@ CH_FAST_IRQ_HANDLER(VectorE0) {
 #else // not STM32
 
 // TODO: non-stm32 exti
-void efiExtiInit() { }
+void efiExtiInit() {
+	firmwareError(OBD_PCM_Processor_Fault, "exti not supported");
+}
 
 void efiExtiEnablePin(const char *, brain_pin_e, uint32_t, ExtiCallback, void *) { }
 void efiExtiDisablePin(brain_pin_e) { }
