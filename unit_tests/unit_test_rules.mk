@@ -10,6 +10,7 @@ INCDIR += 	$(UNIT_TESTS_DIR)/googletest/googlemock/include \
 
 PCH_DIR = ../firmware/pch
 PCHSRC = $(PCH_DIR)/pch.h
+PCHSUB = unit_tests
 
 include $(PROJECT_DIR)/rusefi_rules.mk
 
@@ -55,7 +56,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=gnu++17 -fno-rtti -fpermissive -fno-use-cxa-atexit -Winvalid-pch
+  USE_CPPOPT = -std=gnu++17 -fno-rtti -fpermissive -fno-use-cxa-atexit
 endif
 
 # Enable this if you want the linker to remove unused code and data
