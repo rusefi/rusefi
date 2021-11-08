@@ -54,7 +54,7 @@ void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 #endif /* EFI_ENABLE_MOCK_ADC */
 
-#if EFI_PROD_CODE
+#if !EFI_UNIT_TEST
 /**
  * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
  */
@@ -63,56 +63,26 @@ efitimeus_t getTimeNowUs(void) {
 	return NT2US(getTimeNowNt());
 }
 
-volatile uint32_t lastLowerNt = 0;
-volatile uint32_t upperTimeNt = 0;
+
+// this is bits 30-61, not 32-63.  We only support 62-bit time.  You can fire me in 36,533 years
+// (1,461 on the simulator).
+static volatile uint32_t upperTimeNt = 0;
 
 efitick_t getTimeNowNt() {
-	chibios_rt::CriticalSectionLocker csl;
-
+	// Shift cannot be 31, as we wouldn't be able to tell if time is moving forward or backward
+	// relative to upperTimeNt.  We do need to handle both directions as our "thread" can be
+	// racing with other "threads" in sampling stamp and updating upperTimeNt.
+	constexpr unsigned shift = 30;
+	
 	uint32_t stamp = getTimeNowLowerNt();
+	uint32_t upper = upperTimeNt;
+	uint32_t relative_unsigned = stamp - (upper << shift);
+	efitick_t time64 = (efitick_t(upper) << shift) + (int32_t)relative_unsigned;
+	upperTimeNt = time64 >> shift;
 
-	// Lower 32 bits of the timer has wrapped - time to step upper bits
-	if (stamp < lastLowerNt) {
-		upperTimeNt++;
-	}
-
-	lastLowerNt = stamp;
-
-	return ((int64_t)upperTimeNt << 32) | stamp;
+	return time64;
 }
-
-/*	//Alternative lock free implementation (probably actually slower!)
-	// this method is lock-free and thread-safe, that's because the 'update' method
-	// is atomic with a critical zone requirement.
-	//
-	// http://stackoverflow.com/questions/5162673/how-to-read-two-32bit-counters-as-a-64bit-integer-without-race-condition
-
-etitick_t getTimeNowNt() {
-	efitime_t localH;
-	efitime_t localH2;
-	uint32_t localLow;
-	int counter = 0;
-	do {
-		localH = halTime.state.highBits;
-		localLow = halTime.state.lowBits;
-		localH2 = halTime.state.highBits;
-		if (counter++ == 10000)
-			chDbgPanic("lock-free frozen");
-	} while (localH != localH2);
-
-	// We need to take current counter after making a local 64 bit snapshot
-	uint32_t value = getTimeNowLowerNt();
-
-	if (value < localLow) {
-		// new value less than previous value means there was an overflow in that 32 bit counter
-		localH += 0x100000000LL;
-	}
-
-	return localH + value;
-}
-*/
-
-#endif /* EFI_PROD_CODE */
+#endif /* !EFI_UNIT_TEST */
 
 static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->startStopStateToggleCounter++;
