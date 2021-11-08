@@ -18,6 +18,7 @@ PROJECT_DIR = .
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
+PCHSUB = firmware
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
@@ -61,7 +62,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Winvalid-pch
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
 endif
 
 # Hellen is one of the boards which cares
