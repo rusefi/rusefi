@@ -940,6 +940,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case PROTEUS_QC_TEST_BOARD:
 		proteusBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
+	case PROTEUS_LUA_DEMO:
+		proteusLuaDemo(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
 	case PROTEUS_BMW_M73:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
