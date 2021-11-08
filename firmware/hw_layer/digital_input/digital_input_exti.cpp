@@ -149,7 +149,7 @@ void handleExtiIsr(uint8_t index) {
 	extiGetAndClearGroup1(1U << index, pr);
 
 	if (pr & (1 << index)) {
-		const auto& timestamp = channels[index].Timestamp;
+		auto& timestamp = channels[index].Timestamp;
 
 		if (timestamp == 0) {
 			timestamp = getTimeNowNt();
