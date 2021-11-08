@@ -137,14 +137,14 @@ TEST(etb, initializationDualThrottle) {
 TEST(etb, initializationWastegate) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	WITH_ENGINE_TEST_HELPER_BOARD_CALLBACK(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+		engineConfiguration->etbFunctions[0] = ETB_Wastegate;
+		engineConfiguration->etbFunctions[1] = ETB_None;
+	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
 	}
-
-	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
-	engineConfiguration->etbFunctions[1] = ETB_None;
 
 	// Expect mock0 to be init as throttle 1, and PID wastegate params
 	EXPECT_CALL(mocks[0], init(ETB_Wastegate, _, &engineConfiguration->etbWastegatePid, Ne(nullptr), false)).WillOnce(Return(true));
