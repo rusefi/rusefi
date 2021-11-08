@@ -308,17 +308,11 @@ private:
  */
 class TriggerFormDetails {
 public:
-	TriggerFormDetails();
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
 	 */
 	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
-	/**
-	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
-	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
-	 */
-	uint16_t triggerIndexByAngle[MAX(TWO_STROKE_CYCLE_DURATION, FOUR_STROKE_CYCLE_DURATION)];
 };
 
 void findTriggerPosition(

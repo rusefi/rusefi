@@ -242,7 +242,10 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 	memcpy(timeOfLastEvent + firstDst, spinningEvents + firstSrc, eventsToCopy * sizeof(timeOfLastEvent[0]));
 }
 
-float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails *triggerFormDetails, uint32_t current_index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float TriggerStateWithRunningStatistics::calculateInstantRpm(
+	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
+	uint32_t current_index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
 	assertIsInBoundsWithResult((int)current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 
 	// Record the time of this event so we can calculate RPM from it later
@@ -257,7 +260,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(TriggerFormDetails 
 	// Hunt for a tooth ~90 degrees ago to compare to the current time
 	angle_t previousAngle = currentAngle - 90;
 	fixAngle(previousAngle, "prevAngle", CUSTOM_ERR_TRIGGER_ANGLE_RANGE);
-	int prevIndex = triggerFormDetails->triggerIndexByAngle[(int)previousAngle];
+	int prevIndex = triggerShape.findAngleIndex(triggerFormDetails, previousAngle);
 
 	// now let's get precise angle for that event
 	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
@@ -307,8 +310,12 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t 
 	spinningEvents[spinningEventIndex++] = nowNt;
 }
 
-void TriggerStateWithRunningStatistics::updateInstantRpm(TriggerFormDetails *triggerFormDetails, uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	m_instantRpm = calculateInstantRpm(triggerFormDetails, index, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+void TriggerStateWithRunningStatistics::updateInstantRpm(
+	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
+	uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+
+	m_instantRpm = calculateInstantRpm(triggerShape, triggerFormDetails, index,
+					   nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 
 #if EFI_SENSOR_CHART
