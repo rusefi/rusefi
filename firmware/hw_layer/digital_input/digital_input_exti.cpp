@@ -25,12 +25,12 @@ void efiExtiInit() {
 
 struct ExtiChannel
 {
-	const char* Name;
-
-	ExtiCallback Callback;
+	ExtiCallback Callback = nullptr;
 	void* CallbackData;
 
 	efitick_t Timestamp = 0;
+
+	const char* Name = nullptr;
 };
 
 static ExtiChannel channels[16];
