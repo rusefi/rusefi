@@ -1818,8 +1818,8 @@ cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@
 cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x0F"
 cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x10"
 cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x11"
-cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@"
-cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@ts_command_e_TS_INJECTOR_CATEGORY"
+cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x12"
+cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x13"
 cmd_nDBANK                   = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x14"@@if_ts_show_f7_presets
 cmd_burn_without_flash       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x15"
 
