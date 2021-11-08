@@ -64,23 +64,10 @@ efitimeus_t getTimeNowUs(void) {
 }
 
 
-// this is bits 30-61, not 32-63.  We only support 62-bit time.  You can fire me in 36,533 years
-// (1,461 on the simulator).
-static volatile uint32_t upperTimeNt = 0;
+static WrapAround62 timeNt;
 
 efitick_t getTimeNowNt() {
-	// Shift cannot be 31, as we wouldn't be able to tell if time is moving forward or backward
-	// relative to upperTimeNt.  We do need to handle both directions as our "thread" can be
-	// racing with other "threads" in sampling stamp and updating upperTimeNt.
-	constexpr unsigned shift = 30;
-	
-	uint32_t stamp = getTimeNowLowerNt();
-	uint32_t upper = upperTimeNt;
-	uint32_t relative_unsigned = stamp - (upper << shift);
-	efitick_t time64 = (efitick_t(upper) << shift) + (int32_t)relative_unsigned;
-	upperTimeNt = time64 >> shift;
-
-	return time64;
+	return timeNt.update(getTimeNowLowerNt());
 }
 #endif /* !EFI_UNIT_TEST */
 
