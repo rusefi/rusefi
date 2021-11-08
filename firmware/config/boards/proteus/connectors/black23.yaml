@@ -118,6 +118,36 @@ pins:
     function: Power supply from main relay. Connect this pin to the output of the car's main relay that also powers injectors, coils, etc. Supplies power to electronic throttle drivers and high side outputs.
     type: 12v
 
+  - pin: PD8
+    id: GPIOD_8
+    class: outputs
+    ts_name: STM32 PD8
+
+  - pin: PD9
+    id: GPIOD_9
+    class: outputs
+    ts_name: STM32 PD9
+
+  - pin: PD10
+    id: GPIOD_10
+    class: outputs
+    ts_name: STM32 PD10
+
+  - pin: PD11
+    id: GPIOD_11
+    class: outputs
+    ts_name: STM32 PD11
+
+  - pin: PD12
+    id: GPIOD_12
+    class: outputs
+    ts_name: STM32 PD12
+
+  - pin: PD13
+    id: GPIOD_13
+    class: outputs
+    ts_name: STM32 PD13
+
 info:
   title: Proteus
   name: Black23
