@@ -510,9 +510,9 @@ TEST(util, WrapAround62) {
 		// Test random progression, positive and negative.
 		uint32_t seed = time(NULL);
 		printf("Testing with seed 0x%08x\n", seed);
-		srandom(seed);
+		srand(seed);
 		for (unsigned i = 0; i < 10000; i++) {
-			int32_t delta = random();
+			int32_t delta = rand();
 			if (delta < 0) {
 				delta = ~delta;
 			}
