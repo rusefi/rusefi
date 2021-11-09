@@ -28,6 +28,13 @@ pins:
     ts_name: 5 - INJ_4
     type: inj
 
+  - pin: 7
+    id: GPIOF_13
+    function: Injector 7/VVT Output
+    class: outputs
+    ts_name: 7 - INJ_7/VVT
+    type: inj
+
   - pin: 8
     ts_name: CEL
 
@@ -71,6 +78,12 @@ pins:
     function: Main relay control
     type: ls
 
+  - pin: 29
+# H144_OUT_PWM5
+    id: GPIOC_9
+    class: outputs
+    ts_name: 29 - Idle
+
   - pin: 31
     id: GPIOD_11
     function: Injector 3 Output
@@ -92,11 +105,24 @@ pins:
     ts_name: 33 - INJ_1
     type: inj
 
+  - pin: 35
+    id: GPIOF_14
+    function: Injector 8 Output
+    class: outputs
+    ts_name: 35 - INJ_8
+    type: inj
+
   - pin: 41
     id: EFI_ADC_10
     class: analog_inputs
     ts_name: 41 - MAF
     function: MAF sensor
+
+  - pin: 47
+# H144_OUT_PWM7
+    id: GPIOD_15
+    class: outputs
+    ts_name: 47 - Tach
 
   - pin: 50
     id: GPIOC_13
@@ -137,6 +163,17 @@ pins:
     ts_name: 78 - CLT
     function: CLT sensor
 
+  - pin: Aux MAP
+# H144_IN_MAP2
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: Aux MAP
+
+  - pin: Aux BARO
+# H144_IN_AUX4
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Aux BARO
 
 info:
   title: Hellen 88 BMW
