@@ -92,6 +92,12 @@ pins:
     ts_name: 33 - INJ_1
     type: inj
 
+  - pin: 41
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 41 - MAF
+    function: MAF sensor
+
   - pin: 50
     id: GPIOC_13
     class: outputs
@@ -115,7 +121,6 @@ pins:
     type: ign
 
   - pin: 73
-#
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 73 - TPS
