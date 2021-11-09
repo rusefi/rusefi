@@ -65,10 +65,10 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		warning(CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", name, dutyCycle);
 		return;
 	} else if (dutyCycle < 0) {
-		warning(CUSTOM_DUTY_TOO_LOW, "%s dutyCycle %.2f", name, dutyCycle);
+		warning(CUSTOM_DUTY_TOO_LOW, "%s dutyCycle too low %.2f", name, dutyCycle);
 		dutyCycle = 0;
 	} else if (dutyCycle > 1) {
-		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty %.2f", name, dutyCycle);
+		warning(CUSTOM_PWM_DUTY_TOO_HIGH, "%s duty too high %.2f", name, dutyCycle);
 		dutyCycle = 1;
 	}
 
