@@ -214,7 +214,7 @@ static P luaL_checkPwmIndex(lua_State* l, int pos) {
 static int lua_startPwm(lua_State* l) {
 	auto p = luaL_checkPwmIndex(l, 1);
 	auto freq = luaL_checknumber(l, 2);
-	auto duty = luaL_checknumber(l, 2);
+	auto duty = luaL_checknumber(l, 3);
 
 	// clamp to 1..1000 hz
 	freq = clampF(1, freq, 1000);
