@@ -193,6 +193,13 @@ public:
 	int triggerSignalStates[PWM_PHASE_MAX_COUNT];
 #endif
 
+	/**
+	 * waveCount member is total count of shaft events per CAM or CRANK shaft revolution.
+	 * TODO this should be migrated to CRANKshaft revolution, this would go together
+	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
+	 * but name is supposed to hint at the fact that decoders should not be assigning to it
+	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
+	 */
 	MultiChannelStateSequence wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
@@ -200,15 +207,6 @@ public:
 	pin_state_t initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
-
-	/**
-	 * Total count of shaft events per CAM or CRANK shaft revolution.
-	 * TODO this should be migrated to CRANKshaft revolution, this would go together
-	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
-	 * but name is supposed to hint at the fact that decoders should not be assigning to it
-	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
-	 */
-	unsigned int privateTriggerDefinitionSize;
 
 	bool useOnlyRisingEdgeForTriggerTemp;
 
@@ -325,4 +323,4 @@ void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, op
 
 #define TRIGGER_WAVEFORM(x) ENGINE(triggerCentral.triggerShape).x
 
-#define getTriggerSize() TRIGGER_WAVEFORM(privateTriggerDefinitionSize)
+#define getTriggerSize() TRIGGER_WAVEFORM(wave.waveCount)

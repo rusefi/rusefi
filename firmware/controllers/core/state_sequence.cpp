@@ -53,7 +53,7 @@ float MultiChannelStateSequence::getSwitchTime(const int index) const {
 	return switchTimes[index];
 }
 
-void MultiChannelStateSequence::checkSwitchTimes(const int size, const float scale) {
+void MultiChannelStateSequence::checkSwitchTimes(const int size, const float scale) const {
 	if (switchTimes[size - 1] != 1) {
 		firmwareError(CUSTOM_ERR_WAVE_1, "last switch time has to be 1/%f not %.2f/%f", scale,
 				switchTimes[size - 1], scale * switchTimes[size - 1]);
