@@ -133,9 +133,10 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->canRxPin = GPIOD_0;
 
 	engineConfiguration->fuelPumpPin = GPIOD_12;	// OUT_IO9 // 113 Fuel Pump Relay
-	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.solenoidPin = H144_OUT_PWM5;
 //	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
+	engineConfiguration->tachOutputPin = H144_OUT_PWM7;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
