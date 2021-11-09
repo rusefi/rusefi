@@ -73,6 +73,3 @@ public:
 };
 
 void initLoggingExt(Logging *logging, const char *name, char *buffer, int bufferSize);
-
-void appendMsgPrefix(Logging *logging);
-void appendMsgPostfix(Logging *logging);

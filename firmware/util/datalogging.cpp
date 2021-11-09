@@ -134,14 +134,6 @@ void Logging::appendFloat(float value, int precision) {
 	}
 }
 
-void appendMsgPrefix(Logging *logging) {
-	logging->append(PROTOCOL_MSG DELIMETER);
-}
-
-void appendMsgPostfix(Logging *logging) {
-	logging->append(DELIMETER);
-}
-
 void Logging::reset() {
 	linePointer = buffer;
 	*linePointer = 0;
