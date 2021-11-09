@@ -31,7 +31,7 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_LAST_CHANNEL 17
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","73 - TPS","INVALID","17 - CAM","INVALID","INVALID","16 - CRANK","INVALID","INVALID","78 - CLT","77 - IAT"
+#define adc_channel_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","73 - TPS","INVALID","17 - CAM","INVALID","INVALID","16 - CRANK","41 - MAF","INVALID","78 - CLT","77 - IAT"
 #define adc_channel_mode_e_ADC_FAST 2
 #define adc_channel_mode_e_ADC_OFF 0
 #define adc_channel_mode_e_ADC_SLOW 1
@@ -1851,7 +1851,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 101172073
+#define SIGNATURE_HASH 427883027
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2358,7 +2358,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.09.hellen88bmw.101172073"
+#define TS_SIGNATURE "rusEFI 2021.11.09.hellen88bmw.427883027"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
