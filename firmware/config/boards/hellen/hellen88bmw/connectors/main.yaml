@@ -114,7 +114,23 @@ pins:
     function: Coil 3
     type: ign
 
+  - pin: 73
+#
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 73 - TPS
 
+  - pin: 77
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 77 - IAT
+    function: IAT sensor
+
+  - pin: 78
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 78 - CLT
+    function: CLT sensor
 
 
 info:
