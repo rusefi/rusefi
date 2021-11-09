@@ -61,17 +61,12 @@ TriggerWaveform::TriggerWaveform() :
 	wave.channels = h.channels;
 }
 
-TriggerFormDetails::TriggerFormDetails() {
-	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
-}
-
 void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	isSynchronizationNeeded = true; // that's default value
 	bothFrontsRequired = false;
 	needSecondTriggerInput = false;
 	shapeWithoutTdc = false;
 	memset(expectedDutyCycle, 0, sizeof(expectedDutyCycle));
-//	memset(triggerIndexByAngle, 0, sizeof(triggerIndexByAngle));
 
 	setTriggerSynchronizationGap(2);
 	for (int gapIndex = 1; gapIndex < GAP_TRACKING_LENGTH ; gapIndex++) {
@@ -355,13 +350,11 @@ void TriggerWaveform::setTriggerSynchronizationGap3(int gapIndex, float syncRati
 
 }
 
-/**
- * this method is only used on initialization
- */
 uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t targetAngle) const {
 	size_t engineCycleEventCount = getLength();
 
-	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount != 0 && engineCycleEventCount <= 0xFFFF, "engineCycleEventCount", 0);
+	efiAssert(CUSTOM_ERR_ASSERT, engineCycleEventCount != 0 && engineCycleEventCount <= 0xFFFF,
+		  "engineCycleEventCount", 0);
 
 	uint32_t left = 0;
 	uint32_t right = engineCycleEventCount - 1;
@@ -370,20 +363,20 @@ uint16_t TriggerWaveform::findAngleIndex(TriggerFormDetails *details, angle_t ta
 	 * Let's find the last trigger angle which is less or equal to the desired angle
 	 * todo: extract binary search as template method?
 	 */
-    while (left <= right) {
-        int middle = (left + right) / 2;
-		angle_t eventAngle = details->eventAngles[middle];
+	do {
+		uint32_t middle = (left + right) / 2;
 
-        if (eventAngle < targetAngle) {
-            left = middle + 1;
-        } else if (eventAngle > targetAngle) {
-            right = middle - 1;
-        } else {
-            // Values are equal
-            return middle;             // Key found
-        }
-    }
-    return left - 1;
+		if (details->eventAngles[middle] <= targetAngle) {
+			left = middle + 1;
+		} else {
+			right = middle - 1;
+		}
+	} while (left <= right);
+	left -= 1;
+	if (useOnlyRisingEdgeForTriggerTemp) {
+		left &= ~1U;
+	}
+	return left;
 }
 
 void TriggerWaveform::setShapeDefinitionError(bool value) {
@@ -408,7 +401,7 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
 	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
-	int triggerEventIndex = details->triggerIndexByAngle[(int)angle];
+	int triggerEventIndex = triggerShape->findAngleIndex(details, angle);
 	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];
 	angle_t offsetFromTriggerEvent = angle - triggerEventAngle;
 
@@ -435,18 +428,6 @@ void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PA
 	}
 
 	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
-
-	int engineCycleInt = (int) getEngineCycle(operationMode);
-	for (int angle = 0; angle < engineCycleInt; angle++) {
-		uint16_t triggerShapeIndex = findAngleIndex(details, angle);
-
-		if (useOnlyRisingEdgeForTriggerTemp) {
-			// we need even index for front_only mode - so if odd indexes are rounded down by clearing the low bit
-			triggerShapeIndex &= 0xFFFE;
-		}
-
-		details->triggerIndexByAngle[angle] = triggerShapeIndex;
-	}
 #endif
 }
 

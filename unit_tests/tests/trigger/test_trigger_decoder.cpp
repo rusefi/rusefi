@@ -323,8 +323,8 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
-	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
-	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 240));
+	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 241));
 
 	eth.fireTriggerEvents(/* count */ 48);
 
@@ -389,8 +389,8 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
-	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
-	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 240));
+	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 241));
 
 
 	eth.fireFall(5);
