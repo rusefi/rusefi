@@ -851,6 +851,8 @@ void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	};
 
 	engineConfiguration->luaOutputPins[0] = GPIOD_12;
+	engineConfiguration->luaOutputPins[1] = GPIOD_10;
+	engineConfiguration->luaOutputPins[2] = GPIOD_11;
 
 	copyArray(CONFIG(scriptCurve3Bins), defaultBiasBins);
 	copyArray(CONFIG(scriptCurve3), defaultBiasValues);
@@ -861,9 +863,14 @@ void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// ETB disable PD11
 
 	auto script = R"(
-						function testFunc()
-							return 5.5
-						end
+startPwm(0, 800, 0.3)
+-- direction
+startPwm(1, 80, 1.0)
+-- disable
+startPwm(2, 80, 0.0)
+
+function onTick()
+end
 				)";
 #endif
 }
