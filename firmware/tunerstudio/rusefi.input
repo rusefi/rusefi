@@ -1896,6 +1896,7 @@ cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char
 cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
 cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
 cmd_set_engine_type_Proteus_Miata_TCU 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
+cmd_set_engine_type_PROTEUS_LUA_DEMO 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"
 
 
 ; ETB_BENCH_ENGINE = 58
@@ -3701,6 +3702,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
+		commandButton = "Proteus Lua Demo",		    cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
 		commandButton = "Proteus Honda K",		    cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003@@if_show_Proteus_presets
 		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets
