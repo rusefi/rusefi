@@ -96,15 +96,6 @@
 
 extern persistent_config_container_s persistentState;
 
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
-/**
- * this is a local copy of the configuration. Any changes to this copy
- * have no effect until this copy is explicitly propagated to the main working copy
- */
-persistent_config_s configWorkingCopy;
-
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
-
 static efitimems_t previousWriteReportMs = 0;
 
 static void resetTs(void) {
@@ -167,12 +158,8 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
-char *getWorkingPageAddr() {
-#ifndef EFI_NO_CONFIG_WORKING_COPY
-	return (char*) &configWorkingCopy.engineConfiguration;
-#else
-	return (char*) engineConfiguration;
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
+static uint8_t *getWorkingPageAddr() {
+	return (uint8_t *) engineConfiguration;
 }
 
 static constexpr size_t getTunerStudioPageSize() {
@@ -209,20 +196,15 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
  * On the contrary, 'hard parameters' are waiting for the Burn button to be clicked and configuration version
  * would be increased and much more complicated logic would be executed.
  */
-static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
-	if (offset >= sizeof(engine_configuration_s)) {
-		int maxSize = sizeof(persistent_config_s) - offset;
-		if (count > maxSize) {
-			warning(CUSTOM_TS_OVERFLOW, "TS overflow %d %d", offset, count);
-			return;
-		}
-		efiPrintf("applying soft change from %d length %d", offset, count);
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
-		memcpy(((char*) &persistentState.persistentConfiguration) + offset, ((char*) &configWorkingCopy) + offset,
-				count);
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
-
+static void onlineApplyWorkingCopyBytes(uint32_t offset, int count, uint8_t const * data) {
+	int maxSize = sizeof(persistent_config_s) - offset;
+	if (count > maxSize) {
+		warning(CUSTOM_TS_OVERFLOW, "TS overflow %d %d", offset, count);
+		return;
 	}
+	efiPrintf("applying soft change from %d length %d", offset, count);
+	memcpy(getWorkingPageAddr() + offset, data, count);
+
 	// todo: ECU does not burn while engine is running yet tune CRC
 	// tune CRC is calculated based on the latest online part (FSIO formulas are in online region of the tune)
 	// open question what's the best strategy to balance coding efforts, performance matters and tune crc functionality
@@ -311,9 +293,7 @@ static void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format
 
 	// Skip the write if a preset was just loaded - we don't want to overwrite it
 	if (!rebootForPresetPending) {
-		uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
-		memcpy(addr, content, count);
-		onlineApplyWorkingCopyBytes(offset, count);
+		onlineApplyWorkingCopyBytes(offset, count, (uint8_t const *)content);
 	}
 
 	sendOkResponse(tsChannel, mode);
@@ -327,7 +307,7 @@ static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode
 		return;
 	}
 
-	const char* start = getWorkingPageAddr() + offset;
+	const uint8_t * start = getWorkingPageAddr() + offset;
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(mode, (const uint8_t *) &crc, 4);
@@ -357,9 +337,7 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 
 	// Skip the write if a preset was just loaded - we don't want to overwrite it
 	if (!rebootForPresetPending) {
-		getWorkingPageAddr()[offset] = value;
-
-		onlineApplyWorkingCopyBytes(offset, 1);
+		onlineApplyWorkingCopyBytes(offset, 1, &value);
 	}
 }
 
@@ -379,7 +357,7 @@ static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e
 		return;
 	}
 
-	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr() + offset);
+	const uint8_t *addr = getWorkingPageAddr() + offset;
 	tsChannel->sendResponse(mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	efiPrintf("Sending %d done", count);
@@ -411,9 +389,6 @@ static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mod
 
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
 	if (!rebootForPresetPending) {
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
-		memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
 
 		requestBurn();
 	}
@@ -562,9 +537,6 @@ void TunerstudioThread::ThreadTask() {
  * Copy real configuration into the communications layer working copy
  */
 void syncTunerStudioCopy(void) {
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
-	memcpy(&configWorkingCopy, &persistentState.persistentConfiguration, sizeof(persistent_config_s));
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
 }
 
 tunerstudio_counters_s tsState;

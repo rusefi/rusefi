@@ -22,10 +22,6 @@ bool hasFirmwareErrorFlag = false;
 const char *dbg_panic_file;
 int dbg_panic_line;
 
-#if EFI_TUNER_STUDIO && !defined(EFI_NO_CONFIG_WORKING_COPY)
-extern persistent_config_s configWorkingCopy;
-#endif
-
 const char* getFirmwareError(void) {
 	return criticalErrorMessageBuffer;
 }
@@ -120,11 +116,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 
 	if (CONFIG(showHumanReadableWarning)) {
 #if EFI_TUNER_STUDIO
- #if defined(EFI_NO_CONFIG_WORKING_COPY)
-  memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
- #else /* defined(EFI_NO_CONFIG_WORKING_COPY) */
-  memcpy(configWorkingCopy.warning_message, warningBuffer, sizeof(warningBuffer));
- #endif /* defined(EFI_NO_CONFIG_WORKING_COPY) */
+		memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
 #endif /* EFI_TUNER_STUDIO */
 	}
 

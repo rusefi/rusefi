@@ -42,8 +42,6 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
  */
 void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
-char *getWorkingPageAddr();
-
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
 void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 

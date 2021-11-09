@@ -61,8 +61,6 @@
  */
 #define EFI_TUNER_STUDIO TRUE
 
-#undef EFI_NO_CONFIG_WORKING_COPY
-
 /**
  * Bluetooth UART setup support.
  */
