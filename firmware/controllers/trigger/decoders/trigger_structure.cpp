@@ -87,6 +87,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	memset(switchTimesBuffer, 0, sizeof(switchTimesBuffer));
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave.reset();
+	wave.waveCount = TRIGGER_CHANNEL_COUNT;
 	previousAngle = 0;
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
 #if EFI_UNIT_TEST
