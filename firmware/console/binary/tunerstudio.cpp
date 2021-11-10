@@ -89,13 +89,6 @@
 #include "rusEfiFunctionalTest.h"
 #endif /* EFI_SIMULATOR */
 
-#if EFI_TUNER_STUDIO
-
-/* 1S */
-#define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
-
-extern persistent_config_container_s persistentState;
-
 #if !defined(EFI_NO_CONFIG_WORKING_COPY)
 /**
  * this is a local copy of the configuration. Any changes to this copy
@@ -105,18 +98,18 @@ persistent_config_s configWorkingCopy;
 
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 
+
+#if EFI_TUNER_STUDIO
+
+/* 1S */
+#define TS_COMMUNICATION_TIMEOUT	TIME_MS2I(1000)
+
+extern persistent_config_container_s persistentState;
+
 static efitimems_t previousWriteReportMs = 0;
 
 static void resetTs(void) {
 	memset(&tsState, 0, sizeof(tsState));
-}
-
-static void printErrorCounters(void) {
-	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
-			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
-	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
-			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
 }
 
 void printTsStats(void) {
@@ -160,6 +153,16 @@ static void bluetoothSPP(const char *baudRate, const char *name, const char *pin
 	bluetoothStart(getBluetoothChannel(), BLUETOOTH_SPP, baudRate, name, pinCode);
 }
 #endif  /* EFI_BLUETOOTH_SETUP */
+
+#endif // EFI_TUNER_STUDIO
+
+static void printErrorCounters(void) {
+	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
+			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
+	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
+			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
+}
 
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
@@ -209,7 +212,7 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
  * On the contrary, 'hard parameters' are waiting for the Burn button to be clicked and configuration version
  * would be increased and much more complicated logic would be executed.
  */
-static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
+static void onlineApplyWorkingCopyBytes(uint32_t offset, int count DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (offset >= sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {
@@ -218,7 +221,7 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 		}
 		efiPrintf("applying soft change from %d length %d", offset, count);
 #if !defined(EFI_NO_CONFIG_WORKING_COPY)
-		memcpy(((char*) &persistentState.persistentConfiguration) + offset, ((char*) &configWorkingCopy) + offset,
+		memcpy(((char*)config) + offset, ((char*) &configWorkingCopy) + offset,
 				count);
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 
@@ -229,6 +232,8 @@ static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 	// open question what is the runtime cost of wiping 2K of bytes on each IO communication, could be that 2K of byte memset
 	// is negligable comparing with the IO costs?
 }
+
+#if EFI_TUNER_STUDIO
 
 static const void * getStructAddr(live_data_e structId) {
 	switch (structId) {
@@ -277,6 +282,8 @@ static void handleGetStructContent(TsChannelBase* tsChannel, int structId, int s
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *)addr, size);
 }
 
+#endif // EFI_TUNER_STUDIO
+
 // Validate whether the specified offset and count would cause an overrun in the tune.
 // Returns true if an overrun would occur.
 static bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) {
@@ -299,8 +306,8 @@ bool rebootForPresetPending = false;
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-static void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
-		void *content) {
+void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
+		uint8_t *content DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	tsState.writeChunkCommandCounter++;
 
 	efiPrintf("WRITE CHUNK mode=%d o=%d s=%d", mode, offset, count);
@@ -313,11 +320,13 @@ static void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format
 	if (!rebootForPresetPending) {
 		uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 		memcpy(addr, content, count);
-		onlineApplyWorkingCopyBytes(offset, count);
+		onlineApplyWorkingCopyBytes(offset, count PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 
 	sendOkResponse(tsChannel, mode);
 }
+
+#if EFI_TUNER_STUDIO
 
 static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
 	tsState.crc32CheckCommandCounter++;
@@ -386,12 +395,16 @@ static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e
 #endif
 }
 
+#endif // EFI_TUNER_STUDIO
+
 void requestBurn(void) {
+#if !EFI_UNIT_TEST
 	onBurnRequest(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if EFI_INTERNAL_FLASH
 	setNeedToWriteConfiguration();
 #endif
+#endif // !EFI_UNIT_TEST
 }
 
 static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel, const uint8_t responseCode) {
@@ -403,7 +416,7 @@ static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel
 /**
  * 'Burn' command is a command to commit the changes
  */
-static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
+void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitimems_t nowMs = currentTimeMillis();
 	tsState.burnCommandCounter++;
 
@@ -412,7 +425,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mod
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
 	if (!rebootForPresetPending) {
 #if !defined(EFI_NO_CONFIG_WORKING_COPY)
-		memcpy(&persistentState.persistentConfiguration, &configWorkingCopy, sizeof(persistent_config_s));
+		memcpy(config, &configWorkingCopy, sizeof(persistent_config_s));
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 
 		requestBurn();
@@ -421,6 +434,8 @@ static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mod
 	sendResponseCode(mode, tsChannel, TS_RESPONSE_BURN_OK);
 	efiPrintf("BURN in %dms", currentTimeMillis() - nowMs);
 }
+
+#if EFI_TUNER_STUDIO
 
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
@@ -567,6 +582,8 @@ void syncTunerStudioCopy(void) {
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 }
 
+#endif // EFI_TUNER_STUDIO
+
 tunerstudio_counters_s tsState;
 TunerStudioOutputChannels tsOutputChannels;
 
@@ -575,6 +592,8 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 	printErrorCounters();
 	tsState.errorCounter++;
 }
+
+#if EFI_TUNER_STUDIO
 
 /**
  * Query with CRC takes place while re-establishing connection

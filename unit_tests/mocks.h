@@ -7,6 +7,7 @@
 #include "airmass.h"
 #include "injector_model.h"
 #include "stepper.h"
+#include "tunerstudio_io.h"
 
 #include "gmock/gmock.h"
 
@@ -105,4 +106,13 @@ public:
 	virtual ~MockStepperHardware();
 
 	MOCK_METHOD(bool, step, (bool positive), (override));
+};
+
+class MockTsChannel : public TsChannelBase {
+public:
+	MockTsChannel();
+	virtual ~MockTsChannel();
+
+	MOCK_METHOD(void, write, (const uint8_t* buffer, size_t size, bool isEndOfPacket = false), (override));
+	MOCK_METHOD(size_t, readTimeout, (uint8_t* buffer, size_t size, int timeout), (override));
 };

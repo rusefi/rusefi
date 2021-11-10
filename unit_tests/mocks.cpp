@@ -32,3 +32,6 @@ MockInjectorModel2::~MockInjectorModel2() { }
 
 MockStepperHardware::MockStepperHardware() { }
 MockStepperHardware::~MockStepperHardware() { }
+
+MockTsChannel::MockTsChannel() : TsChannelBase("mock") { }
+MockTsChannel::~MockTsChannel() { }
