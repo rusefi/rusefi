@@ -86,5 +86,5 @@ public:
 
 #endif /* EFI_TUNER_STUDIO */
 
-void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, uint8_t *content DECLARE_ENGINE_PARAMETER_SUFFIX);
+void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, void *content DECLARE_ENGINE_PARAMETER_SUFFIX);
 void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);

@@ -98,6 +98,13 @@ persistent_config_s configWorkingCopy;
 
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 
+static void printErrorCounters(void) {
+	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
+			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
+	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
+			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
+}
 
 #if EFI_TUNER_STUDIO
 
@@ -155,14 +162,6 @@ static void bluetoothSPP(const char *baudRate, const char *name, const char *pin
 #endif  /* EFI_BLUETOOTH_SETUP */
 
 #endif // EFI_TUNER_STUDIO
-
-static void printErrorCounters(void) {
-	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
-			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
-	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
-			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
-}
 
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #if EFI_TUNER_STUDIO_VERBOSE
@@ -307,7 +306,7 @@ bool rebootForPresetPending = false;
  * @note See also handleWriteValueCommand
  */
 void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
-		uint8_t *content DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		void *content DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	tsState.writeChunkCommandCounter++;
 
 	efiPrintf("WRITE CHUNK mode=%d o=%d s=%d", mode, offset, count);
