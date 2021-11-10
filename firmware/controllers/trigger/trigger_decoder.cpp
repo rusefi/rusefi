@@ -168,7 +168,7 @@ void prepareEventAngles(TriggerWaveform *shape,
 	memset(details->eventAngles, 0, sizeof(details->eventAngles));
 
 	// this may be <length for some triggers like symmetrical crank Miata NB
-	int triggerShapeLength = shape->getSize();
+	int triggerShapeLength = shape->privateTriggerDefinitionSize;
 
 	assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", CUSTOM_TRIGGER_SYNC_ANGLE2);
 	efiAssertVoid(CUSTOM_TRIGGER_CYCLE, engine->engineCycleEventCount != 0, "zero engineCycleEventCount");
