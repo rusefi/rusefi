@@ -113,6 +113,6 @@ public:
 	MockTsChannel();
 	virtual ~MockTsChannel();
 
-	MOCK_METHOD(void, write, (const uint8_t* buffer, size_t size, bool isEndOfPacket = false), (override));
+	MOCK_METHOD(void, write, (const uint8_t* buffer, size_t size, bool isEndOfPacket), (override));
 	MOCK_METHOD(size_t, readTimeout, (uint8_t* buffer, size_t size, int timeout), (override));
 };
