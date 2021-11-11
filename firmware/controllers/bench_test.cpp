@@ -290,30 +290,30 @@ static BenchController instance;
 
 static void handleBenchCategory(uint16_t index) {
 	switch(index) {
-	case CMD_TS_BENCH_MAIN_RELAY:
+	case BENCH_MAIN_RELAY:
 		mainRelayBench();
 		return;
-	case CMD_TS_BENCH_HPFP_VALVE:
+	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
 		return;
-	case CMD_TS_BENCH_FUEL_PUMP:
+	case BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump
 		fuelPumpBench();
 		return;
-	case CMD_TS_BENCH_STARTER_ENABLE_RELAY:
+	case BENCH_STARTER_ENABLE_RELAY:
 		starterRelayBench();
 		return;
-	case CMD_TS_BENCH_CHECK_ENGINE_LIGHT:
+	case BENCH_CHECK_ENGINE_LIGHT:
 		// cmd_test_check_engine_light
 		milBench();
 		return;
-	case CMD_TS_BENCH_AC_COMPRESSOR_RELAY:
+	case BENCH_AC_COMPRESSOR_RELAY:
 		acRelayBench();
 		return;
-	case CMD_TS_BENCH_FAN_RELAY:
+	case BENCH_FAN_RELAY:
 		fanBench();
 		return;
-	case CMD_TS_BENCH_FAN_RELAY_2:
+	case BENCH_FAN_RELAY_2:
 		fan2Bench();
 		return;
 	default:

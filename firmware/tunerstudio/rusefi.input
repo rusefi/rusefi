@@ -1609,10 +1609,10 @@ menuDialog = main
 		subMenu = fsioFormulas,				"FSIO Formulas"
 
 		subMenu = std_separator
-		subMenu = fsioTable1Tbl,			"Script Table #1"
-		subMenu = fsioTable2Tbl,			"Script Table #2"
-		subMenu = fsioTable3Tbl,			"Script Table #3"
-		subMenu = fsioTable4Tbl,			"Script Table #4"
+		subMenu = fsioTable1TblSettings,			"Script Table #1"
+		subMenu = fsioTable2TblSettings,			"Script Table #2"
+		subMenu = fsioTable3TblSettings,			"Script Table #3"
+		subMenu = fsioTable4TblSettings,			"Script Table #4"
 		subMenu = scriptCurve1Settings,	    "Script Curve #1"
 		subMenu = scriptCurve2Settings,			    "Script Curve #2"
 		subMenu = scriptCurve3Settings,			    "Script Curve #3"
@@ -1793,16 +1793,17 @@ cmd_test_sol4 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_SOLENOID_CATEGORY_16_hex@@\
 cmd_test_sol5 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_SOLENOID_CATEGORY_16_hex@@\x00\x05"
 cmd_test_sol6 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_SOLENOID_CATEGORY_16_hex@@\x00\x06"
 
-cmd_test_main_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_MAIN_RELAY_16_hex@@"
-cmd_test_fuel_pump           	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FUEL_PUMP_16_hex@@"
-cmd_test_starter_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_STARTER_ENABLE_RELAY_16_hex@@"
-cmd_test_starter_disable_relay 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_STARTER_DISABLE_RELAY_16_hex@@"
-cmd_test_ac_relay     		 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_AC_COMPRESSOR_RELAY_16_hex@@"
-cmd_test_fan_1					= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FAN_RELAY_16_hex@@"
-cmd_test_fan_2					= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_FAN_RELAY_2_16_hex@@"
-cmd_test_check_engine_light  	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_CHECK_ENGINE_LIGHT_16_hex@@"
-cmd_test_idle_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_IDLE_VALVE_16_hex@@"
-cmd_test_hpfp_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@CMD_TS_BENCH_HPFP_VALVE_16_hex@@"
+cmd_test_main_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_MAIN_RELAY_16_hex@@"
+cmd_test_fuel_pump           	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_FUEL_PUMP_16_hex@@"
+cmd_test_starter_relay     	 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_STARTER_ENABLE_RELAY_16_hex@@"
+cmd_test_starter_disable_relay 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_STARTER_DISABLE_RELAY_16_hex@@"
+cmd_test_ac_relay     		 	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_AC_COMPRESSOR_RELAY_16_hex@@"
+cmd_test_fan_1					= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_FAN_RELAY_16_hex@@"
+cmd_test_fan_2					= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_FAN_RELAY_2_16_hex@@"
+cmd_test_check_engine_light  	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_CHECK_ENGINE_LIGHT_16_hex@@"
+cmd_test_idle_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_IDLE_VALVE_16_hex@@"
+cmd_test_second_idle_valve      = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_SECOND_IDLE_VALVE_16_hex@@"
+cmd_test_hpfp_valve          	= "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_BENCH_CATEGORY_16_hex@@@@bench_mode_e_BENCH_HPFP_VALVE_16_hex@@"
 
 cmd_calibrate_tps_1_closed   = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x02"
 cmd_calibrate_tps_1_wot      = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x03"
@@ -1818,8 +1819,8 @@ cmb_etb_auto_calibrate       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@
 cmd_disable_self_stim        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x0F"
 cmd_etb_autotune_stop        = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x10"
 cmb_etb_auto_calibrate_2     = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x11"
-cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@@@ts_command_e_TS_IGNITION_CATEGORY_16_hex@@"
-cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@ts_command_e_TS_INJECTOR_CATEGORY"
+cmd_wideband_firmare_update  = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x12"
+cmd_enable_ext_stim          = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x13"
 cmd_nDBANK                   = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x14"@@if_ts_show_f7_presets
 cmd_burn_without_flash       = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_X14_16_hex@@\x00\x15"
 
@@ -1896,6 +1897,7 @@ cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003      = "@@TS_IO_TEST_COMMAND_char
 cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HONDA_OBD2A_16_hex@@"
 cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
 cmd_set_engine_type_Proteus_Miata_TCU 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
+cmd_set_engine_type_PROTEUS_LUA_DEMO 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"
 
 
 ; ETB_BENCH_ENGINE = 58
@@ -1905,6 +1907,22 @@ cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3B"
 cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 [UserDefined]
+	dialog = fsioTable1TblSettings, "", yAxis
+	    field = "Name", scriptTableName1
+		panel = fsioTable1Tbl
+
+	dialog = fsioTable2TblSettings, "", yAxis
+	    field = "Name", scriptTableName2
+		panel = fsioTable2Tbl
+
+	dialog = fsioTable3TblSettings, "", yAxis
+	    field = "Name", scriptTableName3
+		panel = fsioTable3Tbl
+
+	dialog = fsioTable4TblSettings, "", yAxis
+	    field = "Name", scriptTableName4
+		panel = fsioTable4Tbl
+
 	dialog = scriptCurve1Settings, "", yAxis
 	    field = "Name", scriptCurveName4
 		panel = scriptCurve1
@@ -3641,6 +3659,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "A/C Relay", cmd_test_ac_relay
 		commandButton = "Check Engine", cmd_test_check_engine_light
 		commandButton = "Idle Air Valve", cmd_test_idle_valve
+		commandButton = "Idle Second Air Valve", cmd_test_second_idle_valve
 		commandButton = "HPFP Valve", cmd_test_hpfp_valve
 		commandButton = "Starter Relay", cmd_test_starter_relay
 		commandButton = "Stop Engine", cmd_stop_engine
@@ -3685,6 +3704,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
+		commandButton = "Proteus Lua Demo",		    cmd_set_engine_type_PROTEUS_LUA_DEMO@@if_show_Proteus_presets
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
 		commandButton = "Proteus Honda K",		    cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003@@if_show_Proteus_presets
 		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets

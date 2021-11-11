@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 07 03:31:57 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 11 01:45:15 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -172,6 +172,21 @@ public class Fields {
 	public static final int baroSensor_lowValue_offset = 584;
 	public static final int baroSensor_offset = 584;
 	public static final int baroSensor_type_offset = 592;
+	public static final int bench_mode_e_BENCH_AC_COMPRESSOR_RELAY = 6;
+	public static final int bench_mode_e_BENCH_CHECK_ENGINE_LIGHT = 7;
+	public static final int bench_mode_e_BENCH_FAN_RELAY = 4;
+	public static final int bench_mode_e_BENCH_FAN_RELAY_2 = 5;
+	public static final int bench_mode_e_BENCH_FUEL_PUMP = 1;
+	public static final int bench_mode_e_BENCH_GPPWM1_VALVE = 10;
+	public static final int bench_mode_e_BENCH_GPPWM2_VALVE = 11;
+	public static final int bench_mode_e_BENCH_GPPWM3_VALVE = 12;
+	public static final int bench_mode_e_BENCH_GPPWM4_VALVE = 13;
+	public static final int bench_mode_e_BENCH_HPFP_VALVE = 9;
+	public static final int bench_mode_e_BENCH_IDLE_VALVE = 8;
+	public static final int bench_mode_e_BENCH_MAIN_RELAY = 0;
+	public static final int bench_mode_e_BENCH_SECOND_IDLE_VALVE = 14;
+	public static final int bench_mode_e_BENCH_STARTER_DISABLE_RELAY = 3;
+	public static final int bench_mode_e_BENCH_STARTER_ENABLE_RELAY = 2;
 	public static final int binarySerialRxPin_offset = 1815;
 	public static final int binarySerialTxPin_offset = 1814;
 	public static final int BLOCKING_FACTOR = 256;
@@ -537,21 +552,7 @@ public class Fields {
 	public static final String CMD_TRIGGER_PIN = "set_trigger_input_pin";
 	public static final String CMD_TRIGGER_SIMULATOR_PIN = "set_trigger_simulator_pin";
 	public static final String CMD_TRIGGERINFO = "triggerinfo";
-	public static final int CMD_TS_BENCH_AC_COMPRESSOR_RELAY = 6;
 	public static final int CMD_TS_BENCH_CATEGORY = 22;
-	public static final int CMD_TS_BENCH_CHECK_ENGINE_LIGHT = 7;
-	public static final int CMD_TS_BENCH_FAN_RELAY = 4;
-	public static final int CMD_TS_BENCH_FAN_RELAY_2 = 5;
-	public static final int CMD_TS_BENCH_FUEL_PUMP = 1;
-	public static final int CMD_TS_BENCH_GPPWM1_VALVE = 10;
-	public static final int CMD_TS_BENCH_GPPWM2_VALVE = 11;
-	public static final int CMD_TS_BENCH_GPPWM3_VALVE = 12;
-	public static final int CMD_TS_BENCH_GPPWM4_VALVE = 13;
-	public static final int CMD_TS_BENCH_HPFP_VALVE = 9;
-	public static final int CMD_TS_BENCH_IDLE_VALVE = 8;
-	public static final int CMD_TS_BENCH_MAIN_RELAY = 0;
-	public static final int CMD_TS_BENCH_STARTER_DISABLE_RELAY = 3;
-	public static final int CMD_TS_BENCH_STARTER_ENABLE_RELAY = 2;
 	public static final int CMD_TS_FSIO_CATEGORY = 33;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
 	public static final int CMD_TS_X14 = 20;
@@ -787,12 +788,10 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_NB2_36 = 86;
 	public static final int engine_type_e_HONDA_600 = 43;
 	public static final int engine_type_e_HONDA_ACCORD_CD_TWO_WIRES = 17;
-	public static final int engine_type_e_MAZDA_626 = 28;
 	public static final int engine_type_e_MAZDA_MIATA_2003_BOARD_TEST = 55;
 	public static final int engine_type_e_MAZDA_MIATA_2003_NA_RAIL = 54;
 	public static final int engine_type_e_MIATA_1996 = 21;
 	public static final int engine_type_e_MIATA_PROTEUS_TCU = 1;
-	public static final int engine_type_e_MICRO_RUS_EFI = 60;
 	public static final int engine_type_e_MINIMAL_PINS = 99;
 	public static final int engine_type_e_MITSU_4G93 = 16;
 	public static final int engine_type_e_MRE_BOARD_NEW_TEST = 31;
@@ -807,10 +806,8 @@ public class Fields {
 	public static final int engine_type_e_MRE_SECONDARY_CAN = 4;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
-	public static final int engine_type_e_PROMETHEUS_DEFAULTS = 100;
 	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 106;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
-	public static final int engine_type_e_PROTEUS_DEFAULTS = 61;
 	public static final int engine_type_e_PROTEUS_HONDA_ELEMENT_2003 = 90;
 	public static final int engine_type_e_PROTEUS_HONDA_OBD2A = 91;
 	public static final int engine_type_e_PROTEUS_LUA_DEMO = 25;
@@ -835,10 +832,14 @@ public class Fields {
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
 	public static final int engine_type_e_UNUSED10 = 10;
+	public static final int engine_type_e_UNUSED100 = 100;
 	public static final int engine_type_e_UNUSED101 = 101;
 	public static final int engine_type_e_UNUSED18 = 18;
+	public static final int engine_type_e_UNUSED28 = 28;
 	public static final int engine_type_e_UNUSED30 = 30;
 	public static final int engine_type_e_UNUSED39 = 39;
+	public static final int engine_type_e_UNUSED60 = 60;
+	public static final int engine_type_e_UNUSED61 = 61;
 	public static final int engine_type_e_UNUSED9 = 9;
 	public static final int engine_type_e_UNUSED_19 = 19;
 	public static final int engine_type_e_UNUSED_48 = 48;
@@ -1728,6 +1729,7 @@ public class Fields {
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1813;
 	public static final int SCRIPT_CURVE_COUNT = 6;
+	public static final int SCRIPT_TABLE_COUNT = 4;
 	public static final int scriptCurve1_offset = 2780;
 	public static final int scriptCurve1Bins_offset = 2716;
 	public static final int scriptCurve2_offset = 2908;
@@ -1746,6 +1748,10 @@ public class Fields {
 	public static final int scriptCurveName4_offset = 3388;
 	public static final int scriptCurveName5_offset = 3404;
 	public static final int scriptCurveName6_offset = 3420;
+	public static final int scriptTableName1_offset = 3564;
+	public static final int scriptTableName2_offset = 3580;
+	public static final int scriptTableName3_offset = 3596;
+	public static final int scriptTableName4_offset = 3612;
 	public static final int sdCardCsPin_offset = 707;
 	public static final int sdCardCsPinMode_offset = 2226;
 	public static final int sdCardPeriodMs_offset = 804;
@@ -1770,7 +1776,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 483694278;
+	public static final int SIGNATURE_HASH = 1616213464;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2222,7 +2228,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.07.all.483694278";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.11.all.1616213464";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2257,7 +2263,7 @@ public class Fields {
 	public static final int unused2508_offset = 2511;
 	public static final int unused2536_offset = 2539;
 	public static final int unused3103_offset = 3103;
-	public static final int unused3328_offset = 3564;
+	public static final int unused3328_offset = 3628;
 	public static final int unused3942_offset = 3992;
 	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;
@@ -3467,7 +3473,11 @@ public class Fields {
 	public static final Field SCRIPTCURVE5 = Field.create("SCRIPTCURVE5", 3468, FieldType.FLOAT);
 	public static final Field SCRIPTCURVE6BINS = Field.create("SCRIPTCURVE6BINS", 3500, FieldType.FLOAT);
 	public static final Field SCRIPTCURVE6 = Field.create("SCRIPTCURVE6", 3532, FieldType.FLOAT);
-	public static final Field UNUSED3328 = Field.create("UNUSED3328", 3564, FieldType.INT8);
+	public static final Field SCRIPTTABLENAME1 = Field.create("SCRIPTTABLENAME1", 3564, 16, FieldType.STRING);
+	public static final Field SCRIPTTABLENAME2 = Field.create("SCRIPTTABLENAME2", 3580, 16, FieldType.STRING);
+	public static final Field SCRIPTTABLENAME3 = Field.create("SCRIPTTABLENAME3", 3596, 16, FieldType.STRING);
+	public static final Field SCRIPTTABLENAME4 = Field.create("SCRIPTTABLENAME4", 3612, 16, FieldType.STRING);
+	public static final Field UNUSED3328 = Field.create("UNUSED3328", 3628, FieldType.INT8);
 	public static final Field TCHARGEAIRCOEFMIN = Field.create("TCHARGEAIRCOEFMIN", 3864, FieldType.FLOAT);
 	public static final Field TCHARGEAIRCOEFMAX = Field.create("TCHARGEAIRCOEFMAX", 3868, FieldType.FLOAT);
 	public static final Field TCHARGEAIRFLOWMAX = Field.create("TCHARGEAIRFLOWMAX", 3872, FieldType.FLOAT);
@@ -4754,6 +4764,10 @@ public class Fields {
 	SCRIPTCURVE5,
 	SCRIPTCURVE6BINS,
 	SCRIPTCURVE6,
+	SCRIPTTABLENAME1,
+	SCRIPTTABLENAME2,
+	SCRIPTTABLENAME3,
+	SCRIPTTABLENAME4,
 	UNUSED3328,
 	TCHARGEAIRCOEFMIN,
 	TCHARGEAIRCOEFMAX,

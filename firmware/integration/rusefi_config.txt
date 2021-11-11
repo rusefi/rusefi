@@ -1340,6 +1340,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	uint8_t fan2OnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 	uint8_t fan2OffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 #define SCRIPT_CURVE_COUNT 6
+#define SCRIPT_TABLE_COUNT 4
 	float[FSIO_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -999, 1000, 3
 	float[FSIO_CURVE_16] scriptCurve1;;"y", 1, 0, -999, 1000, 3
 	float[FSIO_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -999, 1000, 3
@@ -1385,7 +1386,8 @@ gppwm_note_t[SCRIPT_CURVE_COUNT iterate] scriptCurveName;
 	float[FSIO_CURVE_8] scriptCurve5;;"y", 1, 0, -999, 1000, 3
 	float[FSIO_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -999, 1000, 3
 	float[FSIO_CURVE_8] scriptCurve6;;"y", 1, 0, -999, 1000, 3
-uint8_t[300] unused3328;;"units", 1, 0, -20, 100, 0
+gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
+uint8_t[236] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.", 1, 0, 0, 1, 4
 float tChargeAirCoefMax;;"Max tCharge Coeff.", 1, 0, 0, 1, 4
@@ -1837,23 +1839,6 @@ end_struct
 #define CMD_TS_FSIO_CATEGORY 33
 #define CMD_TS_X31 49
 #define CMD_TS_SOLENOID_CATEGORY 41
-
-
-#define CMD_TS_BENCH_MAIN_RELAY 0
-#define CMD_TS_BENCH_FUEL_PUMP 1
-#define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
-#define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
-#define CMD_TS_BENCH_FAN_RELAY 4
-#define CMD_TS_BENCH_FAN_RELAY_2 5
-#define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
-#define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
-#define CMD_TS_BENCH_IDLE_VALVE 8
-#define CMD_TS_BENCH_HPFP_VALVE 9
-#define CMD_TS_BENCH_GPPWM1_VALVE 10
-#define CMD_TS_BENCH_GPPWM2_VALVE 11
-#define CMD_TS_BENCH_GPPWM3_VALVE 12
-#define CMD_TS_BENCH_GPPWM4_VALVE 13
-
 
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"

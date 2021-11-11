@@ -77,6 +77,10 @@ void chDbgAssert(int c, char *msg, void *arg);
 	EngineTestHelper eth(x, std::unordered_map<SensorType, float>{}); \
 	EXPAND_EngineTestHelper;
 
+#define WITH_ENGINE_TEST_HELPER_BOARD_CALLBACK(x, callback) \
+	EngineTestHelper eth(x, callback, std::unordered_map<SensorType, float>{}); \
+	EXPAND_EngineTestHelper;
+
 #define CONFIG_PARAM(x) (x)
 
 #ifdef __cplusplus

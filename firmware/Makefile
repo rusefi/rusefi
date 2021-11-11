@@ -18,6 +18,7 @@ PROJECT_DIR = .
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
+PCHSUB = firmware
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
@@ -61,7 +62,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Winvalid-pch
+  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
 endif
 
 # Hellen is one of the boards which cares
@@ -408,3 +409,7 @@ openblt_clean:
 
 # Enable precompiled header
 include rusefi_pch.mk
+
+POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf
+	@java -jar ../java_tools/gcc_map_reader.jar $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
+	@$(TRGT)objdump -h $(BUILDDIR)/$(PROJECT).elf | grep -w ram4
