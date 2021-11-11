@@ -7,6 +7,12 @@ pins:
     function: Fuel Pump Relay Output (low)
     ts_name: 1 - OUT_PUMP
 
+  - pin: 2
+    # H144_OUT_PWM8
+    id: GPIOD_12
+    class: outputs
+    ts_name: 2 - IdleC
+
   - pin: 3
     id: GPIOD_9
     function: Injector 5 Output
