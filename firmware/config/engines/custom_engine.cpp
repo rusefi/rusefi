@@ -16,6 +16,7 @@
 #include "custom_engine.h"
 #include "fsio_impl.h"
 #include "mre_meta.h"
+#include "proteus_meta.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -837,6 +838,8 @@ void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps1SecondaryMin = 105;
 	engineConfiguration->tps1SecondaryMax = 933;
 
+	strcpy(engineConfiguration->scriptCurveName[2 - 1], "rateofchange");
+
 	strcpy(engineConfiguration->scriptCurveName[3 - 1], "bias");
 
 	/**
@@ -854,9 +857,14 @@ void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->luaOutputPins[1] = GPIOD_10;
 	engineConfiguration->luaOutputPins[2] = GPIOD_11;
 
+	setLinearCurve(CONFIG(scriptCurve2Bins), 0, 8000, 1);
+	setLinearCurve(CONFIG(scriptCurve2), 0, 100, 1);
+
 	copyArray(CONFIG(scriptCurve3Bins), defaultBiasBins);
 	copyArray(CONFIG(scriptCurve3), defaultBiasValues);
 
+	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_10;
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 
 	// ETB direction #1 PD10
 	// ETB control PD12
@@ -870,6 +878,9 @@ startPwm(1, 80, 1.0)
 startPwm(2, 80, 0.0)
 
 function onTick()
+  analog1 = getAuxAnalog(0)
+  
+  position = interpolate(1, 0, 4, 100, analog1)
 end
 				)";
 #endif
