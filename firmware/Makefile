@@ -409,3 +409,7 @@ openblt_clean:
 
 # Enable precompiled header
 include rusefi_pch.mk
+
+POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf
+	@java -jar ../java_tools/gcc_map_reader.jar $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
+	@$(TRGT)objdump -h $(BUILDDIR)/$(PROJECT).elf | grep -w ram4
