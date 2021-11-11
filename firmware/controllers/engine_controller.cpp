@@ -171,9 +171,12 @@ efitimems_t currentTimeMillis(void) {
 	return US2MS(getTimeNowUs());
 }
 
-// todo: this overflows pretty fast!
+/**
+ * Integer number of seconds since ECU boot.
+ * 31,710 years - would not overflow during our life span.
+ */
 efitimesec_t getTimeNowSeconds(void) {
-	return currentTimeMillis() / 1000;
+	return getTimeNowUs() / US_PER_SECOND;
 }
 
 static void resetAccel(void) {
