@@ -187,6 +187,21 @@
 #define baroSensor_lowValue_offset 584
 #define baroSensor_offset 584
 #define baroSensor_type_offset 592
+#define bench_mode_e_BENCH_AC_COMPRESSOR_RELAY 6
+#define bench_mode_e_BENCH_CHECK_ENGINE_LIGHT 7
+#define bench_mode_e_BENCH_FAN_RELAY 4
+#define bench_mode_e_BENCH_FAN_RELAY_2 5
+#define bench_mode_e_BENCH_FUEL_PUMP 1
+#define bench_mode_e_BENCH_GPPWM1_VALVE 10
+#define bench_mode_e_BENCH_GPPWM2_VALVE 11
+#define bench_mode_e_BENCH_GPPWM3_VALVE 12
+#define bench_mode_e_BENCH_GPPWM4_VALVE 13
+#define bench_mode_e_BENCH_HPFP_VALVE 9
+#define bench_mode_e_BENCH_IDLE_VALVE 8
+#define bench_mode_e_BENCH_MAIN_RELAY 0
+#define bench_mode_e_BENCH_SECOND_IDLE_VALVE 14
+#define bench_mode_e_BENCH_STARTER_DISABLE_RELAY 3
+#define bench_mode_e_BENCH_STARTER_ENABLE_RELAY 2
 #define binarySerialRxPin_offset 1815
 #define binarySerialTxPin_offset 1814
 #define BLOCKING_FACTOR 256
@@ -568,21 +583,7 @@
 #define CMD_TRIGGER_PIN "set_trigger_input_pin"
 #define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
 #define CMD_TRIGGERINFO "triggerinfo"
-#define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
 #define CMD_TS_BENCH_CATEGORY 22
-#define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
-#define CMD_TS_BENCH_FAN_RELAY 4
-#define CMD_TS_BENCH_FAN_RELAY_2 5
-#define CMD_TS_BENCH_FUEL_PUMP 1
-#define CMD_TS_BENCH_GPPWM1_VALVE 10
-#define CMD_TS_BENCH_GPPWM2_VALVE 11
-#define CMD_TS_BENCH_GPPWM3_VALVE 12
-#define CMD_TS_BENCH_GPPWM4_VALVE 13
-#define CMD_TS_BENCH_HPFP_VALVE 9
-#define CMD_TS_BENCH_IDLE_VALVE 8
-#define CMD_TS_BENCH_MAIN_RELAY 0
-#define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
-#define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
 #define CMD_TS_FSIO_CATEGORY 33
 #define CMD_TS_SOLENOID_CATEGORY 41
 #define CMD_TS_X14 20
@@ -1861,7 +1862,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1031680704
+#define SIGNATURE_HASH 4199349756
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2368,7 +2369,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.07.subaru_eg33_f7.1031680704"
+#define TS_SIGNATURE "rusEFI 2021.11.11.subaru_eg33_f7.4199349756"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
