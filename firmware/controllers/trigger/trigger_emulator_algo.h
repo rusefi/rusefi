@@ -24,11 +24,11 @@ void disableTriggerStimulator();
 class TriggerEmulatorHelper {
 public:
     TriggerEmulatorHelper();
-	void handleEmulatorCallback(const int size, const MultiChannelStateSequence& mcss, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void handleEmulatorCallback(const MultiChannelStateSequence& mcss, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
 };
 
 void initTriggerEmulatorLogic(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 int getPreviousIndex(const int currentIndex, const int size);
-bool needEvent(const int currentIndex, const int size, const MultiChannelStateSequence& mcss, int channelIndex);
+bool needEvent(const int currentIndex, const MultiChannelStateSequence& mcss, int channelIndex);
 
