@@ -1,10 +1,45 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Nov 07 03:58:12 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Nov 10 20:00:37 EST 2021
 // see also gen_config_and_enums.bat
 
 
 
+const char *getBench_mode_e(bench_mode_e value){
+switch(value) {
+case BENCH_AC_COMPRESSOR_RELAY:
+  return "BENCH_AC_COMPRESSOR_RELAY";
+case BENCH_CHECK_ENGINE_LIGHT:
+  return "BENCH_CHECK_ENGINE_LIGHT";
+case BENCH_FAN_RELAY:
+  return "BENCH_FAN_RELAY";
+case BENCH_FAN_RELAY_2:
+  return "BENCH_FAN_RELAY_2";
+case BENCH_FUEL_PUMP:
+  return "BENCH_FUEL_PUMP";
+case BENCH_GPPWM1_VALVE:
+  return "BENCH_GPPWM1_VALVE";
+case BENCH_GPPWM2_VALVE:
+  return "BENCH_GPPWM2_VALVE";
+case BENCH_GPPWM3_VALVE:
+  return "BENCH_GPPWM3_VALVE";
+case BENCH_GPPWM4_VALVE:
+  return "BENCH_GPPWM4_VALVE";
+case BENCH_HPFP_VALVE:
+  return "BENCH_HPFP_VALVE";
+case BENCH_IDLE_VALVE:
+  return "BENCH_IDLE_VALVE";
+case BENCH_MAIN_RELAY:
+  return "BENCH_MAIN_RELAY";
+case BENCH_SECOND_IDLE_VALVE:
+  return "BENCH_SECOND_IDLE_VALVE";
+case BENCH_STARTER_DISABLE_RELAY:
+  return "BENCH_STARTER_DISABLE_RELAY";
+case BENCH_STARTER_ENABLE_RELAY:
+  return "BENCH_STARTER_ENABLE_RELAY";
+  }
+ return NULL;
+}
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_34:
