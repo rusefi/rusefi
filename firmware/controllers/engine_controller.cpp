@@ -168,7 +168,7 @@ static EngineStateBlinkingTask engineStateBlinkingTask;
 
 // todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
-	return US2MS(getTimeNowUs();
+	return US2MS(getTimeNowUs());
 }
 
 // todo: this overflows pretty fast!
