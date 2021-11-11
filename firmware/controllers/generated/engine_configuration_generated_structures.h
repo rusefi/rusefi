@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 09 20:42:22 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 11 01:07:56 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1706,7 +1706,7 @@
 #define operation_mode_e_FOUR_STROKE_THREE_TIMES_CRANK_SENSOR 5
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
-#define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","24 - Coil 6","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","29 - Idle","INVALID","INVALID","INVALID","50 - Coil 1","INVALID","INVALID","INVALID","INVALID","INVALID","27 - MAIN","INVALID","INVALID","INVALID","INVALID","INVALID","3 - INJ_5","5 - INJ_4","31 - INJ_3","INVALID","INVALID","INVALID","47 - Tach","INVALID","INVALID","25 - Coil 5","23 - Coil 4","52 - Coil 3","51 - Coil 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4 - INJ_6","7 - INJ_7/VVT","35 - INJ_8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","33 - INJ_1","32 - INJ_2","INVALID","INVALID","INVALID","INVALID","INVALID","1 - OUT_PUMP"
+#define output_pin_e_enum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","24 - Coil 6","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","29 - Idle","INVALID","INVALID","INVALID","50 - Coil 1","INVALID","INVALID","INVALID","INVALID","INVALID","27 - MAIN","INVALID","INVALID","INVALID","INVALID","INVALID","3 - INJ_5","5 - INJ_4","31 - INJ_3","2 - IdleC","INVALID","INVALID","47 - Tach","INVALID","INVALID","25 - Coil 5","23 - Coil 4","52 - Coil 3","51 - Coil 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","4 - INJ_6","7 - INJ_7/VVT","35 - INJ_8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","33 - INJ_1","32 - INJ_2","INVALID","INVALID","INVALID","INVALID","INVALID","1 - OUT_PUMP"
 #define overrideCrankingIacSetting_offset 1476
 #define overrideTriggerGaps_offset 76
 #define PACK_ADD_TEMPERATURE 40
@@ -1852,7 +1852,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 3371722389
+#define SIGNATURE_HASH 2332299474
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2359,7 +2359,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.09.hellen88bmw.3371722389"
+#define TS_SIGNATURE "rusEFI 2021.11.11.hellen88bmw.2332299474"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -7142,4 +7142,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 09 20:42:22 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 11 01:07:56 UTC 2021
