@@ -102,31 +102,31 @@ static void confgiureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->addEvent720(657.03, T_SECONDARY, TV_FALL);
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
 
-	ASSERT_FLOAT_EQ(53.747 / 720, s->wave.getSwitchTime(0));
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 0)) << "@0";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 0)) << "@0";
+	ASSERT_FLOAT_EQ(53.747 / 720, s->wave->getSwitchTime(0));
+	ASSERT_EQ( 1,  s->wave->getChannelState(1, 0)) << "@0";
+	ASSERT_EQ( 1,  s->wave->getChannelState(1, 0)) << "@0";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 1)) << "@1";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 1)) << "@1";
+	ASSERT_EQ( 0,  s->wave->getChannelState(0, 1)) << "@1";
+	ASSERT_EQ( 0,  s->wave->getChannelState(1, 1)) << "@1";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 2)) << "@2";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 2)) << "@2";
+	ASSERT_EQ( 0,  s->wave->getChannelState(0, 2)) << "@2";
+	ASSERT_EQ( 1,  s->wave->getChannelState(1, 2)) << "@2";
 
-	ASSERT_EQ( 0,  s->wave.getChannelState(0, 3)) << "@3";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 3)) << "@3";
+	ASSERT_EQ( 0,  s->wave->getChannelState(0, 3)) << "@3";
+	ASSERT_EQ( 0,  s->wave->getChannelState(1, 3)) << "@3";
 
-	ASSERT_EQ( 1,  s->wave.getChannelState(0, 4)) << "@4";
-	ASSERT_EQ( 1,  s->wave.getChannelState(1, 5)) << "@5";
-	ASSERT_EQ( 0,  s->wave.getChannelState(1, 8)) << "@8";
-	ASSERT_FLOAT_EQ(121.90 / 720, s->wave.getSwitchTime(1));
-	ASSERT_FLOAT_EQ(657.03 / 720, s->wave.getSwitchTime(8));
+	ASSERT_EQ( 1,  s->wave->getChannelState(0, 4)) << "@4";
+	ASSERT_EQ( 1,  s->wave->getChannelState(1, 5)) << "@5";
+	ASSERT_EQ( 0,  s->wave->getChannelState(1, 8)) << "@8";
+	ASSERT_FLOAT_EQ(121.90 / 720, s->wave->getSwitchTime(1));
+	ASSERT_FLOAT_EQ(657.03 / 720, s->wave->getSwitchTime(8));
 
-	ASSERT_EQ( 0,  s->wave.findAngleMatch(53.747 / 720.0)) << "expecting 0";
-	assertEqualsM("expecting not found", -1, s->wave.findAngleMatch(53 / 720.0));
-	ASSERT_EQ(7, s->wave.findAngleMatch(588.045 / 720.0));
+	ASSERT_EQ( 0,  s->wave->findAngleMatch(53.747 / 720.0)) << "expecting 0";
+	assertEqualsM("expecting not found", -1, s->wave->findAngleMatch(53 / 720.0));
+	ASSERT_EQ(7, s->wave->findAngleMatch(588.045 / 720.0));
 
-	ASSERT_EQ( 0,  s->wave.findInsertionAngle(23.747 / 720.0)) << "expecting 0";
-	ASSERT_EQ( 1,  s->wave.findInsertionAngle(63.747 / 720.0)) << "expecting 1";
+	ASSERT_EQ( 0,  s->wave->findInsertionAngle(23.747 / 720.0)) << "expecting 0";
+	ASSERT_EQ( 1,  s->wave->findInsertionAngle(63.747 / 720.0)) << "expecting 1";
 }
 
 TEST(misc, testAngleResolver) {
@@ -141,9 +141,9 @@ TEST(misc, testAngleResolver) {
 	engine->initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	assertEqualsM("index 2", 52.76, triggerFormDetails->eventAngles[3]); // this angle is relation to synch point
-	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
+	assertEqualsM("time 2", 0.3233, ts->wave->getSwitchTime(2));
 	assertEqualsM("index 5", 412.76, triggerFormDetails->eventAngles[6]);
-	assertEqualsM("time 5", 0.5733, ts->wave.getSwitchTime(5));
+	assertEqualsM("time 5", 0.5733, ts->wave->getSwitchTime(5));
 
 	ASSERT_EQ(4, ts->getTriggerWaveformSynchPointIndex());
 

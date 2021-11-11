@@ -21,7 +21,7 @@ TEST(miata, miata_na_tdc) {
 		eth.setTimeAndInvokeEventsUs(time);
 
 		emulatorHelper.handleEmulatorCallback(
-				shape.wave,
+				*shape.wave,
 				i  % shape.getSize() PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 

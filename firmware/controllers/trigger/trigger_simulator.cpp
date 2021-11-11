@@ -33,7 +33,7 @@ int getSimulatedEventTime(const TriggerWaveform& shape, int i) {
 	int stateIndex = i % shape.getSize();
 	int loopIndex = i / shape.getSize();
 
-	return (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave.getSwitchTime(stateIndex)));
+	return (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave->getSwitchTime(stateIndex)));
 }
 
 void TriggerStimulatorHelper::feedSimulatedEvent(
@@ -48,7 +48,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 	int time = getSimulatedEventTime(shape, i);
 
-	const MultiChannelStateSequence& multiChannelStateSequence = shape.wave;
+	const MultiChannelStateSequence& multiChannelStateSequence = *shape.wave;
 
 #if EFI_UNIT_TEST
 	int prevIndex = getPreviousIndex(stateIndex, shape.getSize());
