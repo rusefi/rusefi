@@ -75,6 +75,7 @@ public:
 	void setSwitchTime(const int phaseIndex, const float value);
 	void checkSwitchTimes(const float scale) const;
 	pin_state_t getChannelState(const int channelIndex, const int phaseIndex) const;
+	void setChannelState(const int channelIndex, const int phaseIndex, pin_state_t state);
 
 	int findAngleMatch(const float angle) const;
 	int findInsertionAngle(const float angle) const;

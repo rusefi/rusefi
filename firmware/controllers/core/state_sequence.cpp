@@ -74,6 +74,15 @@ pin_state_t MultiChannelStateSequence::getChannelState(const int channelIndex, c
 	return channels[channelIndex].pinStates[phaseIndex];
 }
 
+void MultiChannelStateSequence::setChannelState(const int channelIndex, const int phaseIndex,
+						pin_state_t state) {
+	if (channelIndex >= waveCount) {
+		// todo: would be nice to get this asserting working
+		//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
+	}
+	channels[channelIndex].pinStates[phaseIndex] = state;
+}
+
 /**
  * returns the index at which given value would need to be inserted into sorted array
  */
