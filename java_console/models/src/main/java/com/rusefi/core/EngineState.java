@@ -20,7 +20,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class EngineState {
     private static final Logging log = getLogging(EngineState.class);
 
-    public static final String SEPARATOR = ",";
+    public static final String SEPARATOR = "$";
     public static final String PACKING_DELIMITER = ":";
     public static final Class<EngineState> ENGINE_STATE_CLASS = EngineState.class;
     private final Object lock = new Object();

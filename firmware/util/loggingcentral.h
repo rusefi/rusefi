@@ -9,7 +9,7 @@
 #include <cstddef>
 #include "rusefi_generated.h"
 
-#define DELIMETER	","
+#define DELIMETER	"$"
 
 class Logging;
 
