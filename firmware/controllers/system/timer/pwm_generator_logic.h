@@ -57,7 +57,7 @@ public:
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
-			const int phaseCount, MultiChannelStateSequence const * seq,
+			MultiChannelStateSequence const * seq,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
@@ -88,10 +88,6 @@ public:
 	scheduling_s scheduling;
 
 	pwm_config_safe_state_s safe;
-	/**
-	 * Number of events in the cycle
-	 */
-	int phaseCount;
 
 	/**
 	 * this callback is invoked before each wave generation cycle
@@ -163,5 +159,5 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle);
 
-void copyPwmParameters(PwmConfig *state, int phaseCount, MultiChannelStateSequence const * seq);
+void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq);
 

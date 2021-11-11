@@ -20,8 +20,8 @@ int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
 }
 
-bool needEvent(const int currentIndex, const int size, const MultiChannelStateSequence& mcss, int channelIndex) {
-	int prevIndex = getPreviousIndex(currentIndex, size);
+bool needEvent(const int currentIndex, const MultiChannelStateSequence& mcss, int channelIndex) {
+	int prevIndex = getPreviousIndex(currentIndex, mcss.phaseCount);
 	pin_state_t previousValue = mcss.getChannelState(channelIndex, /*phaseIndex*/prevIndex);
 	pin_state_t currentValue = mcss.getChannelState(channelIndex, /*phaseIndex*/currentIndex);
 
@@ -39,13 +39,13 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 
 static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-void TriggerEmulatorHelper::handleEmulatorCallback(const int size, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		if (needEvent(stateIndex, size, multiChannelStateSequence, i)) {
+		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 
 			handleShaftSignal(i, currentValue, stamp PASS_ENGINE_PARAMETER_SUFFIX);
@@ -106,7 +106,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state DECLARE_ENGINE_PARAME
 
 
 		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
-		copyPwmParameters(state, s->getSize(), &s->wave);
+		copyPwmParameters(state, &s->wave);
 		state->safe.periodNt = -1; // this would cause loop re-initialization
 	}
 }
@@ -123,7 +123,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
-		helper.handleEmulatorCallback(state->phaseCount,
+		helper.handleEmulatorCallback(
 				*state->multiChannelStateSequence,
 				stateIndex);
 	}
@@ -144,10 +144,9 @@ static void initTriggerPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
-	int phaseCount = s->getSize();
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
-			phaseCount, &s->wave,
+			&s->wave,
 			updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	hasInitTriggerEmulator = true;
