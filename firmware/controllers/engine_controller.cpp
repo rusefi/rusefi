@@ -166,15 +166,9 @@ private:
 
 static EngineStateBlinkingTask engineStateBlinkingTask;
 
-/**
- * number of SysClock ticks in one ms
- */
-#define TICKS_IN_MS  (CH_CFG_ST_FREQUENCY / 1000)
-
 // todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
-	// todo: migrate to getTimeNowUs? or not?
-	return chVTGetSystemTimeX() / TICKS_IN_MS;
+	return US2MS(getTimeNowUs();
 }
 
 // todo: this overflows pretty fast!
