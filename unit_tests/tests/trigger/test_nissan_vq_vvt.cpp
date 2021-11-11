@@ -24,7 +24,7 @@ static void func(TriggerCallback *callback) {
 	Engine *engine = callback->engine;
 	EXPAND_Engine;
 
-	int value = callback->form->wave.getChannelState(0, formIndex);
+	int value = callback->form->wave->getChannelState(0, formIndex);
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		trigger_value_e v = value ? TV_RISE : TV_FALL;

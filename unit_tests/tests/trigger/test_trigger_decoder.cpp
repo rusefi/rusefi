@@ -467,10 +467,10 @@ TEST(misc, testTriggerDecoder) {
 
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
-	ASSERT_EQ(s->wave.getSwitchTime(0), 0.25);
-	ASSERT_EQ(s->wave.getSwitchTime(1), 0.5);
-	ASSERT_EQ(s->wave.getSwitchTime(2), 0.75);
-	ASSERT_EQ(s->wave.getSwitchTime(3), 1);
+	ASSERT_EQ(s->wave->getSwitchTime(0), 0.25);
+	ASSERT_EQ(s->wave->getSwitchTime(1), 0.5);
+	ASSERT_EQ(s->wave->getSwitchTime(2), 0.75);
+	ASSERT_EQ(s->wave->getSwitchTime(3), 1);
 
 	}
 
