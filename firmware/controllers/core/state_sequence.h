@@ -8,6 +8,7 @@
 #pragma once
 
 #include "rusefi_enums.h"
+#include <stdint.h>
 
 /**
  * This layer has two primary usages:
@@ -72,16 +73,17 @@ public:
 	void reset(void);
 	float getSwitchTime(const int phaseIndex) const;
 	void setSwitchTime(const int phaseIndex, const float value);
-	void checkSwitchTimes(const int size, const float scale) const;
+	void checkSwitchTimes(const float scale) const;
 	pin_state_t getChannelState(const int channelIndex, const int phaseIndex) const;
 
-	int findAngleMatch(const float angle, const int size) const;
-	int findInsertionAngle(const float angle, const int size) const;
+	int findAngleMatch(const float angle) const;
+	int findInsertionAngle(const float angle) const;
 
 	/**
 	 * Number of signal channels
 	 */
-	int waveCount;
+	uint16_t phaseCount;
+	uint16_t waveCount;
 	SingleChannelStateSequence *channels = nullptr;
 //private:
 	/**

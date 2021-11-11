@@ -23,6 +23,7 @@ SimplePwm::SimplePwm()
 	, seq(_switchTimes, &sr)
 {
 	seq.waveCount = 1;
+	seq.phaseCount = 2;
 }
 
 SimplePwm::SimplePwm(const char *name) : SimplePwm()  {
@@ -36,7 +37,6 @@ PwmConfig::PwmConfig() {
 	periodNt = NAN;
 	mode = PM_NORMAL;
 	memset(&outputPins, 0, sizeof(outputPins));
-	phaseCount = 0;
 	pwmCycleCallback = nullptr;
 	stateChangeCallback = nullptr;
 	executor = nullptr;
@@ -198,7 +198,7 @@ efitick_t PwmConfig::togglePwmState() {
 	int cbStateIndex;
 	if (mode == PM_NORMAL) {
 		// callback state index is offset by one. todo: why? can we simplify this?
-		cbStateIndex = safe.phaseIndex == 0 ? phaseCount - 1 : safe.phaseIndex - 1;
+		cbStateIndex = safe.phaseIndex == 0 ? multiChannelStateSequence->phaseCount - 1 : safe.phaseIndex - 1;
 	} else if (mode == PM_ZERO) {
 		cbStateIndex = 0;
 	} else {
@@ -220,7 +220,7 @@ efitick_t PwmConfig::togglePwmState() {
 	bool isVeryBehindSchedule = nextSwitchTimeNt < getTimeNowNt() - MS2NT(10);
 
 	safe.phaseIndex++;
-	if (isVeryBehindSchedule || safe.phaseIndex == phaseCount || mode != PM_NORMAL) {
+	if (isVeryBehindSchedule || safe.phaseIndex == multiChannelStateSequence->phaseCount || mode != PM_NORMAL) {
 		safe.phaseIndex = 0; // restart
 		safe.iteration++;
 
@@ -265,11 +265,10 @@ static void timerCallback(PwmConfig *state) {
  * Incoming parameters are potentially just values on current stack, so we have to copy
  * into our own permanent storage, right?
  */
-void copyPwmParameters(PwmConfig *state, int phaseCount, MultiChannelStateSequence const * seq) {
-	state->phaseCount = phaseCount;
+void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq) {
 	state->multiChannelStateSequence = seq;
 	if (state->mode == PM_NORMAL) {
-		state->multiChannelStateSequence->checkSwitchTimes(phaseCount, 1);
+		state->multiChannelStateSequence->checkSwitchTimes(1);
 	}
 }
 
@@ -278,7 +277,6 @@ void copyPwmParameters(PwmConfig *state, int phaseCount, MultiChannelStateSequen
  * See also startSimplePwm
  */
 void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
-		const int phaseCount,
 		MultiChannelStateSequence const * seq,
 		pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 	UNUSED(msg);
@@ -286,11 +284,11 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 	isStopRequested = false;
 
 	efiAssertVoid(CUSTOM_ERR_6582, periodNt != 0, "period is not initialized");
-	if (phaseCount == 0) {
+	if (seq->phaseCount == 0) {
 		firmwareError(CUSTOM_ERR_PWM_1, "signal length cannot be zero");
 		return;
 	}
-	if (phaseCount > PWM_PHASE_MAX_COUNT) {
+	if (seq->phaseCount > PWM_PHASE_MAX_COUNT) {
 		firmwareError(CUSTOM_ERR_PWM_2, "too many phases in PWM");
 		return;
 	}
@@ -299,7 +297,7 @@ void PwmConfig::weComplexInit(const char *msg, ExecutorInterface *executor,
 	this->pwmCycleCallback = pwmCycleCallback;
 	this->stateChangeCallback = stateChangeCallback;
 
-	copyPwmParameters(this, phaseCount, seq);
+	copyPwmParameters(this, seq);
 
 	safe.phaseIndex = 0;
 	safe.periodNt = -1;
@@ -327,7 +325,7 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 
 	state->setFrequency(frequency);
 	state->setSimplePwmDutyCycle(dutyCycle); // TODO: DUP ABOVE?
-	state->weComplexInit(msg, executor, 2, &state->seq, NULL, (pwm_gen_callback*)applyPinState);
+	state->weComplexInit(msg, executor, &state->seq, NULL, (pwm_gen_callback*)applyPinState);
 }
 
 void startSimplePwmExt(SimplePwm *state, const char *msg,
