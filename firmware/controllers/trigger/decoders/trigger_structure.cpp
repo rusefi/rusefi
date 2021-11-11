@@ -259,19 +259,19 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	if (wave.phaseCount == 0) {
 		wave.phaseCount = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			SingleChannelStateSequence *wave = &this->wave.channels[i];
+			SingleChannelStateSequence *swave = &wave.channels[i];
 
-			if (wave->pinStates == nullptr) {
+			if (swave->pinStates == nullptr) {
 				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
 				setShapeDefinitionError(true);
 				return;
 			}
-			wave->setState(/* switchIndex */ 0, /* value */ initialState[i]);
+			wave.setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i]);
 		}
 
 		isRiseEvent[0] = TV_RISE == state;
 		wave.setSwitchTime(0, angle);
-		wave.channels[channelIndex].setState(/* channelIndex */ 0, /* value */ state);
+		wave.setChannelState(channelIndex, /* channelIndex */ 0, /* value */ state);
 		return;
 	}
 
@@ -307,10 +307,10 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		pin_state_t value = wave.getChannelState(/* channelIndex */i, index - 1);
-		wave.channels[i].setState(index, value);
+		wave.setChannelState(i, index, value);
 	}
 	wave.setSwitchTime(index, angle);
-	wave.channels[channelIndex].setState(index, state);
+	wave.setChannelState(channelIndex, index, state);
 }
 
 angle_t TriggerWaveform::getSwitchAngle(int index) const {
