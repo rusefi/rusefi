@@ -22,7 +22,7 @@ public class LuaScriptPanel {
     private final UIContext context;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
-    private final JTextArea scriptText = new JTextArea();
+    private final TextEditor scriptText = new TextEditor();
     private boolean isFirstRender = true;
 
     public LuaScriptPanel(UIContext context, Node config) {
@@ -48,8 +48,7 @@ public class LuaScriptPanel {
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
-        scriptText.setTabSize(2);
-        scriptPanel.add(scriptText, BorderLayout.CENTER);
+        scriptPanel.add(scriptText.getControl(), BorderLayout.CENTER);
 
         //centerPanel.add(, BorderLayout.WEST);
         JPanel messagesPanel = new JPanel(new BorderLayout());
@@ -72,12 +71,7 @@ public class LuaScriptPanel {
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         trueLayout(mainPanel);
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                centerPanel.setDividerLocation(centerPanel.getSize().width / 2);
-            }
-        });
+        SwingUtilities.invokeLater(() -> centerPanel.setDividerLocation(centerPanel.getSize().width / 2));
     }
 
     public JPanel getPanel() {
