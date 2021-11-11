@@ -1162,9 +1162,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	int16_t iacByTpsTaper;+Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent", 1, 0, 0, 500, 0
 
-	brain_pin_e auxSerialTxPin;set_aux_tx_pin X;	
+	brain_pin_e auxSerialTxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial\nset_aux_tx_pin X;
 	brain_pin_e warningLedPin;
-	brain_pin_e auxSerialRxPin;set_aux_rx_pin X;
+	brain_pin_e auxSerialRxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial\nset_aux_rx_pin X;
 	brain_pin_e LIS302DLCsPin;
 
 

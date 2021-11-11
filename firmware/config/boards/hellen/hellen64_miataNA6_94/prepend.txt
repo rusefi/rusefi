@@ -15,7 +15,7 @@
 #define ts_show_spi true
 #define ts_show_sd_card true
 #define ts_show_can_pins false
-#define ts_show_tunerstudio_port false
+#define ts_show_tunerstudio_port true
 #define ts_show_can2 false
 #define ts_show_software_knock true
 #define ts_show_hardware_simulator false
