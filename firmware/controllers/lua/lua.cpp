@@ -128,6 +128,19 @@ static int lua_setTickRate(lua_State* l) {
 	return 0;
 }
 
+static void loadLibraries(LuaHandle& ls) {
+	constexpr luaL_Reg libs[] = {
+		// TODO: do we even need the base lib?
+		//{ LUA_GNAME, luaopen_base },
+		{ LUA_MATHLIBNAME, luaopen_math },
+	};
+
+	for (size_t i = 0; i < efi::size(libs); i++) {
+		luaL_requiref(ls, libs[i].name, libs[i].func, 1);
+		lua_pop(ls, 1);
+	}
+}
+
 static LuaHandle setupLuaState(lua_Alloc alloc) {
 	LuaHandle ls = lua_newstate(alloc, NULL);
 
@@ -137,9 +150,8 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 		return nullptr;
 	}
 
-	// load libraries
-	luaopen_base(ls);
-	luaopen_math(ls);
+	// Load Lua's own libraries
+	loadLibraries(ls);
 
 	// Load rusEFI hooks
 	lua_register(ls, "setTickRate", lua_setTickRate);

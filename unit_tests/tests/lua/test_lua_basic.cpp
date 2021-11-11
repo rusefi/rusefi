@@ -13,18 +13,16 @@ TEST(LuaBasic, ReturnsNumber) {
 	EXPECT_FLOAT_EQ(result, 5.5f);
 }
 
-TEST(LuaBasic, MathMin) {
-/*
+TEST(LuaBasic, MathLib) {
 	auto script = R"(
-						function testFunc()
-							return min(1, 2)
-						end
-				)";
+		function testFunc()
+			return math.min(3, 1, 2)
+		end
+	)";
 
 	float result = testLuaReturnsNumber(script);
 
 	EXPECT_FLOAT_EQ(result, 1.0f);
-*/
 }
 
 TEST(LuaBasic, ReturnsInteger) {
