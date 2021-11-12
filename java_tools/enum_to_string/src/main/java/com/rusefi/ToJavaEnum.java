@@ -50,7 +50,7 @@ public class ToJavaEnum {
         for (Value value : sorted) {
             int numericValue = value.getIntValueMaybeResolve(registry);
             if (index != numericValue && !value.getName().startsWith("Force_4_bytes_size"))
-                throw new IllegalStateException(numericValue + " instead of  " + index + " in " + value);
+                throw new IllegalStateException("Got explicit ordinal " + numericValue + " instead of ordinal " + index + " in " + value);
             sb.append("\t" + value.getName() + ",\n");
             index++;
         }
