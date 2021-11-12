@@ -1928,15 +1928,15 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = fsioTable4Tbl
 
 	dialog = scriptCurve1Settings, "", yAxis
-	    field = "Name", scriptCurveName4
+	    field = "Name", scriptCurveName1
 		panel = scriptCurve1
 
 	dialog = scriptCurve2Settings, "", yAxis
-	    field = "Name", scriptCurveName4
+	    field = "Name", scriptCurveName2
 		panel = scriptCurve2
 
 	dialog = scriptCurve3Settings, "", yAxis
-	    field = "Name", scriptCurveName4
+	    field = "Name", scriptCurveName3
 		panel = scriptCurve3
 
 	dialog = scriptCurve4Settings, "", yAxis
