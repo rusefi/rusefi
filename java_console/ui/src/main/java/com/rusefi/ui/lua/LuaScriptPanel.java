@@ -36,8 +36,14 @@ public class LuaScriptPanel {
         JButton writeButton = new JButton("Write to ECU");
         JButton resetButton = new JButton("Reset/Reload Lua");
 
+        MessagesPanel mp = new MessagesPanel(null, config);
+
         readButton.addActionListener(e -> readFromECU());
-        writeButton.addActionListener(e -> write());
+        writeButton.addActionListener(e -> {
+            write();
+            // resume messages on 'write new script to ECU'
+            mp.setPaused(false);
+        });
         resetButton.addActionListener(e -> resetLua());
 
         upperPanel.add(readButton);
@@ -52,7 +58,6 @@ public class LuaScriptPanel {
 
         //centerPanel.add(, BorderLayout.WEST);
         JPanel messagesPanel = new JPanel(new BorderLayout());
-        MessagesPanel mp = new MessagesPanel(null, config);
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
