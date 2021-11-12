@@ -94,7 +94,7 @@ public:
 	AcState acState;
 	bool enableOverdwellProtection = true;
 	bool isPwmEnabled = true;
-	int triggerActivitySecond = 0;
+	int triggerActivitySecond = -99;
 
 	const char *prevOutputName = nullptr;
 
