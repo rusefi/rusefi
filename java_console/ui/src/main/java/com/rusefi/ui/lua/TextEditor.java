@@ -1,10 +1,16 @@
 package com.rusefi.ui.lua;
 
+import com.rusefi.config.generated.Fields;
+
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.AbstractDocument;
 import javax.swing.text.Document;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -15,12 +21,42 @@ import java.awt.event.KeyEvent;
  * todo: Find text feature?
  */
 public class TextEditor {
+    private final JPanel area = new JPanel(new BorderLayout());
     private final JTextArea textArea = new JTextArea();
+    private final JLabel sizeLabel = new JLabel();
 
     public TextEditor() {
         textArea.setTabSize(2);
 
+        AbstractDocument pDoc = (AbstractDocument) textArea.getDocument();
+        pDoc.setDocumentFilter(new DocumentSizeFilter(Fields.LUA_SCRIPT_SIZE));
+        pDoc.addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                updateSize();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                updateSize();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                updateSize();
+            }
+        });
+
+        area.add(textArea, BorderLayout.CENTER);
+        JPanel bottomArea = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        area.add(bottomArea, BorderLayout.SOUTH);
+        bottomArea.add(sizeLabel);
+
         installUndoRedoKeystrokes();
+    }
+
+    private void updateSize() {
+        sizeLabel.setText(textArea.getText().length() + "/" + Fields.LUA_SCRIPT_SIZE);
     }
 
     private void installUndoRedoKeystrokes() {
@@ -62,8 +98,8 @@ public class TextEditor {
         });
     }
 
-    public JTextArea getControl() {
-        return textArea;
+    public JComponent getControl() {
+        return area;
     }
 
     public void setText(String text) {
