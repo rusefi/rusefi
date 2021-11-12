@@ -533,8 +533,7 @@ float vbattDividerCoeff;+This is the ratio of the resistors for the battery volt
 float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 
-
-float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef", 1, 0, 0.01, 2000, 2
+float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
 
 custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "type 12", "type 13", "type 14", "INVALID"
 can_nbc_e canNbcType;set can_mode X
@@ -589,7 +588,9 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
 
 	float adcVcc;;"volts", 1, 0, 0, 6, 3
-	float unused552;;"Deg", 1, 0, 0, 100, 0
+	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssToothCount;Number of teeth on your vehicle speed sensor.;"count", 1, 0, 1, 100, 0
+	uint8_t unusedNearVss;;"", 1, 0, 0, 1, 0
 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	uint8_t[CAM_INPUTS_COUNT_padding] camInputsPadding;;
 	

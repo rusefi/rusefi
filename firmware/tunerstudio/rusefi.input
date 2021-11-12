@@ -3199,7 +3199,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = speedSensorAnalog
 		field = "Input pin",					vehicleSpeedSensorInputPin
-		field = "revolution to speed mult",				vehicleSpeedCoef
+		field = "Wheel revolutions per kilometer",		driveWheelRevPerKm
+		field = "Speed sensor gear ratio",				vssGearRatio
+		field = "Speed sensor tooth count",				vssToothCount
 
 	dialog = speedSensorCan
 		field = "Vss Car Type",						canVssNbcType, { enableCanVss }
