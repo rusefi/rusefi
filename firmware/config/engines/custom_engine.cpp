@@ -874,9 +874,30 @@ void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// ETB disable PD11
 	engineConfiguration->etbIo[0].disablePin = GPIO_UNASSIGNED;
 
-	auto script = R"(
+/**
 controlIndex = 0
 directionIndex = 1
+
+  print('pid output ' .. output)
+  print('')
+
+
+
+  local duty = (bias + output) / 100
+
+--  isPositive = duty > 0;
+--  pwmValue = isPositive and duty or -duty
+--  setPwmDuty(controlIndex, pwmValue)
+
+--  dirValue = isPositive and 1 or 0;
+--  setPwmDuty(directionIndex, dirValue)
+
+--  print('pwm ' .. pwmValue .. ' dir ' .. dirValue)
+
+ *
+ */
+
+	auto script = R"(
 
 startPwm(0, 800, 0.1)
 -- direction
@@ -914,17 +935,6 @@ function onTick()
   print('pid output ' .. output)
   print('')
   
-
-  local duty = (bias + output) / 100
-
---  isPositive = duty > 0;
---  pwmValue = isPositive and duty or -duty
---  setPwmDuty(controlIndex, pwmValue)
-
---  dirValue = isPositive and 1 or 0;
---  setPwmDuty(directionIndex, dirValue)
-
---  print('pwm ' .. pwmValue .. ' dir ' .. dirValue)
 end
 				)";
 	strncpy(config->luaScript, script, efi::size(config->luaScript));
