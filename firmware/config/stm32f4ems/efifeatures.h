@@ -379,9 +379,11 @@
 #define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
 #endif
 // todo: this should be detected automatically based on pin selection
+// https://github.com/rusefi/rusefi/issues/3536
 #define EFI_CONSOLE_AF 7
 
 // todo: this should be detected automatically based on pin selection
+// https://github.com/rusefi/rusefi/issues/3536
 #define TS_SERIAL_AF 7
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
