@@ -560,8 +560,6 @@
 #define CMD_TS_FSIO_CATEGORY 33
 #define CMD_TS_SOLENOID_CATEGORY 41
 #define CMD_TS_X14 20
-#define CMD_TS_X17 23
-#define CMD_TS_X18 24
 #define CMD_TS_X31 49
 #define CMD_VSS_PIN "vss_pin"
 #define CMD_WRITECONFIG "writeconfig"
@@ -1834,7 +1832,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1659188757
+#define SIGNATURE_HASH 4084564981
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2248,6 +2246,7 @@
 #define TS_BURN_COMMAND_char B
 #define TS_CHUNK_WRITE_COMMAND 'C'
 #define TS_CHUNK_WRITE_COMMAND_char C
+#define ts_command_e_TS_BENCH_CATEGORY 22
 #define ts_command_e_TS_CLEAR_WARNINGS 17
 #define ts_command_e_TS_COMMAND_1 1
 #define ts_command_e_TS_COMMAND_11 11
@@ -2259,6 +2258,7 @@
 #define ts_command_e_TS_COMMAND_4 4
 #define ts_command_e_TS_COMMAND_5 5
 #define ts_command_e_TS_COMMAND_9 9
+#define ts_command_e_TS_CRAZY 32
 #define ts_command_e_TS_DEBUG_MODE 0
 #define ts_command_e_TS_GRAB_PEDAL_UP 6
 #define ts_command_e_TS_GRAB_PEDAL_WOT 7
@@ -2267,6 +2267,16 @@
 #define ts_command_e_TS_IGNITION_CATEGORY 18
 #define ts_command_e_TS_INJECTOR_CATEGORY 19
 #define ts_command_e_TS_RESET_TLE8888 8
+#define ts_command_e_TS_UNUSED_23 23
+#define ts_command_e_TS_UNUSED_25 25
+#define ts_command_e_TS_UNUSED_26 26
+#define ts_command_e_TS_UNUSED_27 27
+#define ts_command_e_TS_UNUSED_28 28
+#define ts_command_e_TS_UNUSED_29 29
+#define ts_command_e_TS_UNUSED_30 30
+#define ts_command_e_TS_UNUSED_31 31
+#define ts_command_e_TS_UNUSED_CJ125_CALIB 24
+#define ts_command_e_TS_WIDEBAND 21
 #define ts_command_e_TS_WRITE_FLASH 10
 #define ts_command_e_TS_X14 20
 #define TS_COMMAND_F 'F'
@@ -2341,7 +2351,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.11.kin.1659188757"
+#define TS_SIGNATURE "rusEFI 2021.11.12.kin.4084564981"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

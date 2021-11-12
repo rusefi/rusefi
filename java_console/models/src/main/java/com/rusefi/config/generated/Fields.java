@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 11 23:36:17 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 12 01:53:19 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -556,8 +556,6 @@ public class Fields {
 	public static final int CMD_TS_FSIO_CATEGORY = 33;
 	public static final int CMD_TS_SOLENOID_CATEGORY = 41;
 	public static final int CMD_TS_X14 = 20;
-	public static final int CMD_TS_X17 = 23;
-	public static final int CMD_TS_X18 = 24;
 	public static final int CMD_TS_X31 = 49;
 	public static final String CMD_VSS_PIN = "vss_pin";
 	public static final String CMD_WRITECONFIG = "writeconfig";
@@ -1776,6 +1774,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1094711198;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2174,6 +2173,7 @@ public class Fields {
 	public static final int triggerSimulatorPins3_offset = 738;
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
+	public static final int ts_command_e_TS_BENCH_CATEGORY = 22;
 	public static final int ts_command_e_TS_CLEAR_WARNINGS = 17;
 	public static final int ts_command_e_TS_COMMAND_1 = 1;
 	public static final int ts_command_e_TS_COMMAND_11 = 11;
@@ -2185,6 +2185,7 @@ public class Fields {
 	public static final int ts_command_e_TS_COMMAND_4 = 4;
 	public static final int ts_command_e_TS_COMMAND_5 = 5;
 	public static final int ts_command_e_TS_COMMAND_9 = 9;
+	public static final int ts_command_e_TS_CRAZY = 32;
 	public static final int ts_command_e_TS_DEBUG_MODE = 0;
 	public static final int ts_command_e_TS_GRAB_PEDAL_UP = 6;
 	public static final int ts_command_e_TS_GRAB_PEDAL_WOT = 7;
@@ -2193,6 +2194,16 @@ public class Fields {
 	public static final int ts_command_e_TS_IGNITION_CATEGORY = 18;
 	public static final int ts_command_e_TS_INJECTOR_CATEGORY = 19;
 	public static final int ts_command_e_TS_RESET_TLE8888 = 8;
+	public static final int ts_command_e_TS_UNUSED_23 = 23;
+	public static final int ts_command_e_TS_UNUSED_25 = 25;
+	public static final int ts_command_e_TS_UNUSED_26 = 26;
+	public static final int ts_command_e_TS_UNUSED_27 = 27;
+	public static final int ts_command_e_TS_UNUSED_28 = 28;
+	public static final int ts_command_e_TS_UNUSED_29 = 29;
+	public static final int ts_command_e_TS_UNUSED_30 = 30;
+	public static final int ts_command_e_TS_UNUSED_31 = 31;
+	public static final int ts_command_e_TS_UNUSED_CJ125_CALIB = 24;
+	public static final int ts_command_e_TS_WIDEBAND = 21;
 	public static final int ts_command_e_TS_WRITE_FLASH = 10;
 	public static final int ts_command_e_TS_X14 = 20;
 	public static final char TS_COMMAND_F = 'F';
@@ -2227,7 +2238,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.11.all.3501146750";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.12.all.1094711198";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
