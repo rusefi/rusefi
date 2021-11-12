@@ -67,7 +67,7 @@ public class LuaScriptPanel {
                 super.paint(g);
                 if (isFirstRender) {
                     readFromECU();
-                    isFirstRender = true;
+                    isFirstRender = false;
                 }
             }
         };
