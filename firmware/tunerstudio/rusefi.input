@@ -510,6 +510,10 @@ enable2ndByteCanID = false
      requiresPowerCycle = runningLedPin
      requiresPowerCycle = binarySerialTxPin
      requiresPowerCycle = binarySerialRxPin
+     requiresPowerCycle = useSerialPort
+     requiresPowerCycle = tunerStudioSerialSpeed
+     requiresPowerCycle = auxSerialRxPin
+     requiresPowerCycle = auxSerialTxPin
 
      requiresPowerCycle = etb_use_two_wires
      requiresPowerCycle = etbFreq
