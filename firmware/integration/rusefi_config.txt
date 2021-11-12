@@ -1834,8 +1834,6 @@ end_struct
 #define CMD_TS_X14 20
 ! 0x16
 #define CMD_TS_BENCH_CATEGORY 22
-#define CMD_TS_X17 23
-#define CMD_TS_X18 24
 #define CMD_TS_FSIO_CATEGORY 33
 #define CMD_TS_X31 49
 #define CMD_TS_SOLENOID_CATEGORY 41
