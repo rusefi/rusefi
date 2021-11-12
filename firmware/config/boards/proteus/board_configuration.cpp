@@ -142,7 +142,6 @@ static void setupSdCard() {
 
 void setBoardConfigOverrides(void) {
 	setupSdCard();
-	setupEtb();
 	setLedPins();
 	setupVbatt();
 
@@ -178,6 +177,7 @@ void setSerialConfigurationOverrides(void) {
 void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
+	setupEtb();
 
 	engineConfiguration->isSdCardEnabled = true;
 
