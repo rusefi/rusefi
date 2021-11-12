@@ -866,11 +866,18 @@ void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_10;
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 
+
 	// ETB direction #1 PD10
+	engineConfiguration->etbIo[0].directionPin1 = GPIO_UNASSIGNED;
 	// ETB control PD12
+	engineConfiguration->etbIo[0].controlPin = GPIO_UNASSIGNED;
 	// ETB disable PD11
+	engineConfiguration->etbIo[0].disablePin = GPIO_UNASSIGNED;
 
 	auto script = R"(
+controlIndex = 0
+directionIndex = 1
+
 startPwm(0, 800, 0.1)
 -- direction
 startPwm(1, 80, 1.0)
@@ -879,8 +886,10 @@ startPwm(2, 80, 0.0)
 
 pid = Pid.new()
 pid:setP(2)
-pid:setMinValue(0)
+pid:setMinValue(-100)
 pid:setMaxValue(100)
+
+biasCurveIndex = findCurveIndex("bias")
 
 function onTick()
   targetVoltage = getAuxAnalog(0)
@@ -890,7 +899,6 @@ function onTick()
   target = math.max(0, target)
   target = math.min(100, target)
 
-  print('Target voltage: ' .. targetVoltage)
   print('Decoded target: ' .. target)
 
   tps = getSensor("TPS1")
@@ -900,9 +908,23 @@ function onTick()
   pid:setTarget(target)
   output = pid:get(tps)
 
+  bias = curve(biasCurveIndex, target)
+  print('bias ' .. bias)
+
   print('pid output ' .. output)
   print('')
   
+
+  duty = (bias + output) / 100
+
+--  isPositive = duty > 0;
+--  pwmValue = isPositive and duty or -duty
+--  setPwmDuty(controlIndex, pwmValue)
+
+--  dirValue = isPositive and 1 or 0;
+--  setPwmDuty(directionIndex, dirValue)
+
+--  print('pwm ' .. pwmValue .. ' dir ' .. dirValue)
 end
 				)";
 	strncpy(config->luaScript, script, efi::size(config->luaScript));
