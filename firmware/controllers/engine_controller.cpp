@@ -166,7 +166,9 @@ private:
 
 static EngineStateBlinkingTask engineStateBlinkingTask;
 
-// todo: this overflows pretty fast!
+/**
+ * 32 bit return type overflows in 23 days. I think we do not expect rusEFI to run for 23 days straight days any time soon?
+ */
 efitimems_t currentTimeMillis(void) {
 	return US2MS(getTimeNowUs());
 }
