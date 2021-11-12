@@ -871,18 +871,41 @@ void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// ETB disable PD11
 
 	auto script = R"(
-startPwm(0, 800, 0.3)
+startPwm(0, 800, 0.1)
 -- direction
 startPwm(1, 80, 1.0)
 -- disable
 startPwm(2, 80, 0.0)
 
+pid = Pid.new()
+pid:setP(2)
+pid:setMinValue(0)
+pid:setMaxValue(100)
+
 function onTick()
-  analog1 = getAuxAnalog(0)
+  targetVoltage = getAuxAnalog(0)
   
-  position = interpolate(1, 0, 4, 100, analog1)
+  target = interpolate(1, 0, 3.5, 100, targetVoltage)
+-- clamp 0 to 100
+  target = math.max(0, target)
+  target = math.min(100, target)
+
+  print('Target voltage: ' .. targetVoltage)
+  print('Decoded target: ' .. target)
+
+  tps = getSensor("TPS1")
+  tps = (tps == nil and 'invalid TPS' or tps)
+  print('Tps ' .. tps)
+
+  pid:setTarget(target)
+  output = pid:get(tps)
+
+  print('pid output ' .. output)
+  print('')
+  
 end
 				)";
+	strncpy(config->luaScript, script, efi::size(config->luaScript));
 #endif
 }
 
