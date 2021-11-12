@@ -167,19 +167,18 @@ private:
 static EngineStateBlinkingTask engineStateBlinkingTask;
 
 /**
- * number of SysClock ticks in one ms
+ * 32 bit return type overflows in 23 days. I think we do not expect rusEFI to run for 23 days straight days any time soon?
  */
-#define TICKS_IN_MS  (CH_CFG_ST_FREQUENCY / 1000)
-
-// todo: this overflows pretty fast!
 efitimems_t currentTimeMillis(void) {
-	// todo: migrate to getTimeNowUs? or not?
-	return chVTGetSystemTimeX() / TICKS_IN_MS;
+	return US2MS(getTimeNowUs());
 }
 
-// todo: this overflows pretty fast!
+/**
+ * Integer number of seconds since ECU boot.
+ * 31,710 years - would not overflow during our life span.
+ */
 efitimesec_t getTimeNowSeconds(void) {
-	return currentTimeMillis() / 1000;
+	return getTimeNowUs() / US_PER_SECOND;
 }
 
 static void resetAccel(void) {
@@ -754,10 +753,10 @@ void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 3500
+#define RAM_UNUSED_SIZE 4800
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 600
+#define CCM_UNUSED_SIZE 2400
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;

@@ -72,11 +72,15 @@ void initAuxSerial(void) {
 		return;
 
 	// Validate pins 
-	if (isSerialTXEnabled && !isValidSerialTxPin(CONFIG(auxSerialTxPin)))
+	if (isSerialTXEnabled && !isValidSerialTxPin(CONFIG(auxSerialTxPin))) {
+		firmwareError(OBD_PCM_Processor_Fault, "unexpected aux TX pin");
 		return;
+	}
 
-	if (isSerialRXEnabled && !isValidSerialRxPin(CONFIG(auxSerialRxPin)))
+	if (isSerialRXEnabled && !isValidSerialRxPin(CONFIG(auxSerialRxPin))) {
+		firmwareError(OBD_PCM_Processor_Fault, "unexpected aux RX pin");
 		return;
+	}
 
 	startAuxSerialPins();
 

@@ -1,11 +1,12 @@
 #include "pch.h"
+#include "tunerstudio.h"
 #include "tunerstudio_io.h"
 
 static uint8_t st5TestBuffer[16000];
 
-class MockTsChannel : public TsChannelBase {
+class BufferTsChannel : public TsChannelBase {
 public:
-	MockTsChannel() : TsChannelBase("Test") { }
+	BufferTsChannel() : TsChannelBase("Test") { }
 
 	void write(const uint8_t* buffer, size_t size, bool /*isLastWriteInTransaction*/) override {
 		memcpy(&st5TestBuffer[writeIdx], buffer, size);
@@ -28,7 +29,7 @@ public:
 #define PAYLOAD "123"
 #define SIZE strlen(PAYLOAD)
 
-static void assertCrcPacket(MockTsChannel& dut) {
+static void assertCrcPacket(BufferTsChannel& dut) {
 	ASSERT_EQ(dut.writeIdx, SIZE + 7);
 
 	// todo: proper uint16 comparison
@@ -48,7 +49,7 @@ static void assertCrcPacket(MockTsChannel& dut) {
 }
 
 TEST(binary, testWriteCrc) {
-	MockTsChannel test;
+	BufferTsChannel test;
 
 	// Let it pick which impl (small vs large) to use
 	test.reset();
@@ -64,4 +65,45 @@ TEST(binary, testWriteCrc) {
 	test.reset();
 	test.writeCrcPacket(CODE, (const uint8_t*)PAYLOAD, SIZE);
 	assertCrcPacket(test);
+}
+
+TEST(TunerstudioCommands, writeChunkEngineConfig) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	MockTsChannel channel;
+
+	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);
+
+	// Contains zero before the write
+	configBytes[100] = 0;
+	EXPECT_EQ(configBytes[100], 0);
+
+	// two step - writes to the engineConfiguration section require a burn
+	uint8_t val = 50;
+	handleWriteChunkCommand(&channel, TS_CRC, 100, 1, &val PASS_ENGINE_PARAMETER_SUFFIX);
+
+	// hasn't changed yet
+	EXPECT_EQ(configBytes[100], 0);
+
+	handleBurnCommand(&channel, TS_CRC PASS_ENGINE_PARAMETER_SUFFIX);
+
+	EXPECT_EQ(configBytes[100], 50);
+}
+
+TEST(TunerstudioCommands, writeChunkOutsideEngineConfig) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	MockTsChannel channel;
+
+	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);
+
+	size_t offset = sizeof(engine_configuration_s) + 100;
+
+	// Contains zero before the write
+	configBytes[offset] = 0;
+	EXPECT_EQ(configBytes[offset], 0);
+
+	// one step - writes past engineConfiguration don't need a burn
+	uint8_t val = 50;
+	handleWriteChunkCommand(&channel, TS_CRC, offset, 1, &val PASS_ENGINE_PARAMETER_SUFFIX);
+
+	EXPECT_EQ(configBytes[offset], 50);
 }

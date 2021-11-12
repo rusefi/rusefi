@@ -720,7 +720,9 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 	// see FUEL_PUMP_LOGIC
 	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
-		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < engine->triggerActivitySecond + engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
+		int triggerActivityOrEcuStartSecond = maxI(0, engine->triggerActivityMs / 1000);
+
+		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < triggerActivityOrEcuStartSecond + engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
 	}
 	
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());

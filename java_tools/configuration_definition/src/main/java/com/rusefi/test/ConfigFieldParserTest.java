@@ -446,6 +446,8 @@ public class ConfigFieldParserTest {
                 "struct pid_s\n" +
                 "floatms_t afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+"bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
+                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n" +
                 "pid_s pid;comment\n" +
         "end_struct\n";
@@ -457,9 +459,43 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
-                "; total TS size = 8\n", new String(writer.toCharArray()));
+                "pid_isForcedInduction = bits, U32, 8, [0:0], \"false\", \"true\"\n" +
+                "pid_enableFan1WithAc = bits, U32, 8, [1:1], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_2 = bits, U32, 8, [2:2], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_3 = bits, U32, 8, [3:3], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_4 = bits, U32, 8, [4:4], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_5 = bits, U32, 8, [5:5], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_6 = bits, U32, 8, [6:6], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_7 = bits, U32, 8, [7:7], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_8 = bits, U32, 8, [8:8], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_9 = bits, U32, 8, [9:9], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_10 = bits, U32, 8, [10:10], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_11 = bits, U32, 8, [11:11], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_12 = bits, U32, 8, [12:12], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_13 = bits, U32, 8, [13:13], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_14 = bits, U32, 8, [14:14], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_15 = bits, U32, 8, [15:15], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_16 = bits, U32, 8, [16:16], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_17 = bits, U32, 8, [17:17], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_18 = bits, U32, 8, [18:18], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_19 = bits, U32, 8, [19:19], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_20 = bits, U32, 8, [20:20], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_21 = bits, U32, 8, [21:21], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_22 = bits, U32, 8, [22:22], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_23 = bits, U32, 8, [23:23], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_24 = bits, U32, 8, [24:24], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_25 = bits, U32, 8, [25:25], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_26 = bits, U32, 8, [26:26], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_27 = bits, U32, 8, [27:27], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_28 = bits, U32, 8, [28:28], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_29 = bits, U32, 8, [29:29], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_30 = bits, U32, 8, [30:30], \"false\", \"true\"\n" +
+                "pid_unusedBit_4_31 = bits, U32, 8, [31:31], \"false\", \"true\"\n" +
+                "; total TS size = 12\n", new String(writer.toCharArray()));
         assertEquals(
                 "\tpid_afr_type = \"PID dTime\"\n" +
-                "\tpid_afr_typet = \"PID dTime\"\n", tsProjectConsumer.getSettingContextHelp().toString());
+                "\tpid_afr_typet = \"PID dTime\"\n" +
+                "\tpid_isForcedInduction = \"Does the vehicle have a turbo or supercharger?\"\n" +
+                        "\tpid_enableFan1WithAc = \"Turn on this fan when AC is on.\"\n", tsProjectConsumer.getSettingContextHelp().toString());
     }
 }

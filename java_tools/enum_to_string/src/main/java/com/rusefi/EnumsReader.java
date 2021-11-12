@@ -17,9 +17,16 @@ public class EnumsReader {
      * core implementation sorts by name, we need special considerations to sort by value
      */
     @NotNull
-    static List<Value> getSortedByOrder(VariableRegistry registry, Map<String, Value> brain_pin_e) {
+    static List<Value> getSortedByOrder(VariableRegistry registry, Map<String, Value> enumValues) {
+        Set<Integer> ids = new TreeSet<>();
+        for (Value value : enumValues.values()) {
+            boolean isUniqueId = ids.add(value.getIntValueMaybeResolve(registry));
+            if (!isUniqueId)
+                throw new IllegalArgumentException("Ordinal duplication? " + value);
+        }
+
         Set<Value> byOrdinal = new TreeSet<>(Comparator.comparingInt(value -> value.getIntValueMaybeResolve(registry)));
-        byOrdinal.addAll(brain_pin_e.values());
+        byOrdinal.addAll(enumValues.values());
         return new ArrayList<>(byOrdinal);
     }
 

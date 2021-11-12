@@ -403,7 +403,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 		 */
 		enginePins.fuelPumpRelay.setValue(true); // quickly set pin right from the callback here! todo: would it work OK for smart SPI pin?!
 #if EFI_PROD_CODE
-		engine->triggerActivitySecond = getTimeNowSeconds();
+		engine->triggerActivityMs = currentTimeMillis();
 #endif
 		// todo: check for 'trigger->is_synchnonized?'
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
@@ -534,10 +534,7 @@ void initMainEventListener(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_PROD_CODE
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
-
-	efiPrintf("initMainLoop: %d", currentTimeMillis());
 #endif
-
 
     // We start prime injection pulse at the early init stage - don't wait for the engine to start spinning!
     if (CONFIG(startOfCrankingPrimingPulse) > 0)

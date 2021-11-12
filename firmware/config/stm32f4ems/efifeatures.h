@@ -270,7 +270,7 @@
 	// small memory F40x can't fit perf trace
 	#define ENABLE_PERF_TRACE FALSE
 
-	#define LUA_USER_HEAP 12000
+	#define LUA_USER_HEAP 13000
 	#define LUA_SYSTEM_HEAP 12000
 #endif
 
@@ -379,9 +379,11 @@
 #define EFI_CONSOLE_RX_BRAIN_PIN GPIOC_11
 #endif
 // todo: this should be detected automatically based on pin selection
+// https://github.com/rusefi/rusefi/issues/3536
 #define EFI_CONSOLE_AF 7
 
 // todo: this should be detected automatically based on pin selection
+// https://github.com/rusefi/rusefi/issues/3536
 #define TS_SERIAL_AF 7
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN

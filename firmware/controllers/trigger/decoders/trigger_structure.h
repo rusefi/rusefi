@@ -193,22 +193,21 @@ public:
 	int triggerSignalStates[PWM_PHASE_MAX_COUNT];
 #endif
 
-	MultiChannelStateSequence wave;
+	/**
+	 * wave.phaseCount is total count of shaft events per CAM or CRANK shaft revolution.
+	 * TODO this should be migrated to CRANKshaft revolution, this would go together
+	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
+	 * but name is supposed to hint at the fact that decoders should not be assigning to it
+	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
+	 */
+	MultiChannelStateSequence waveStorage; // DON'T USE - WILL BE REMOVED LATER
+	MultiChannelStateSequence * const wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// todo: maybe even automate this flag calculation?
 	pin_state_t initialState[PWM_PHASE_MAX_WAVE_PER_PWM];
 
 	bool isRiseEvent[PWM_PHASE_MAX_COUNT];
-
-	/**
-	 * Total count of shaft events per CAM or CRANK shaft revolution.
-	 * TODO this should be migrated to CRANKshaft revolution, this would go together
-	 * this variable is public for performance reasons (I want to avoid costs of method if it's not inlined)
-	 * but name is supposed to hint at the fact that decoders should not be assigning to it
-	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
-	 */
-	unsigned int privateTriggerDefinitionSize;
 
 	bool useOnlyRisingEdgeForTriggerTemp;
 
@@ -308,17 +307,11 @@ private:
  */
 class TriggerFormDetails {
 public:
-	TriggerFormDetails();
 	/**
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
 	 */
 	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
-	/**
-	 * this cache allows us to find a close-enough (with one degree precision) trigger wheel index by
-	 * given angle with fast constant speed. That's a performance optimization for event scheduling.
-	 */
-	uint16_t triggerIndexByAngle[MAX(TWO_STROKE_CYCLE_DURATION, FOUR_STROKE_CYCLE_DURATION)];
 };
 
 void findTriggerPosition(
@@ -331,4 +324,4 @@ void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, op
 
 #define TRIGGER_WAVEFORM(x) ENGINE(triggerCentral.triggerShape).x
 
-#define getTriggerSize() TRIGGER_WAVEFORM(privateTriggerDefinitionSize)
+#define getTriggerSize() TRIGGER_WAVEFORM(wave->phaseCount)

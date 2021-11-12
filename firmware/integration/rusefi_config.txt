@@ -1162,9 +1162,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	int16_t iacByTpsTaper;+Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent", 1, 0, 0, 500, 0
 
-	brain_pin_e auxSerialTxPin;set_aux_tx_pin X;	
+	brain_pin_e auxSerialTxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial\nset_aux_tx_pin X;
 	brain_pin_e warningLedPin;
-	brain_pin_e auxSerialRxPin;set_aux_rx_pin X;
+	brain_pin_e auxSerialRxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial\nset_aux_rx_pin X;
 	brain_pin_e LIS302DLCsPin;
 
 
@@ -1834,28 +1834,9 @@ end_struct
 #define CMD_TS_X14 20
 ! 0x16
 #define CMD_TS_BENCH_CATEGORY 22
-#define CMD_TS_X17 23
-#define CMD_TS_X18 24
 #define CMD_TS_FSIO_CATEGORY 33
 #define CMD_TS_X31 49
 #define CMD_TS_SOLENOID_CATEGORY 41
-
-
-#define CMD_TS_BENCH_MAIN_RELAY 0
-#define CMD_TS_BENCH_FUEL_PUMP 1
-#define CMD_TS_BENCH_STARTER_ENABLE_RELAY 2
-#define CMD_TS_BENCH_STARTER_DISABLE_RELAY 3
-#define CMD_TS_BENCH_FAN_RELAY 4
-#define CMD_TS_BENCH_FAN_RELAY_2 5
-#define CMD_TS_BENCH_AC_COMPRESSOR_RELAY 6
-#define CMD_TS_BENCH_CHECK_ENGINE_LIGHT 7
-#define CMD_TS_BENCH_IDLE_VALVE 8
-#define CMD_TS_BENCH_HPFP_VALVE 9
-#define CMD_TS_BENCH_GPPWM1_VALVE 10
-#define CMD_TS_BENCH_GPPWM2_VALVE 11
-#define CMD_TS_BENCH_GPPWM3_VALVE 12
-#define CMD_TS_BENCH_GPPWM4_VALVE 13
-
 
 #define CMD_ENGINE_TYPE "engine_type"
 #define CMD_INJECTION "injection"
@@ -2006,5 +1987,3 @@ end_struct
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
-
-! poke

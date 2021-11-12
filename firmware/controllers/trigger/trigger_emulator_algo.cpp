@@ -20,8 +20,8 @@ int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
 }
 
-bool needEvent(const int currentIndex, const int size, const MultiChannelStateSequence& mcss, int channelIndex) {
-	int prevIndex = getPreviousIndex(currentIndex, size);
+bool needEvent(const int currentIndex, const MultiChannelStateSequence& mcss, int channelIndex) {
+	int prevIndex = getPreviousIndex(currentIndex, mcss.phaseCount);
 	pin_state_t previousValue = mcss.getChannelState(channelIndex, /*phaseIndex*/prevIndex);
 	pin_state_t currentValue = mcss.getChannelState(channelIndex, /*phaseIndex*/currentIndex);
 
@@ -39,13 +39,13 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 
 static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-void TriggerEmulatorHelper::handleEmulatorCallback(const int size, const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
 
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		if (needEvent(stateIndex, size, multiChannelStateSequence, i)) {
+		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 
 			handleShaftSignal(i, currentValue, stamp PASS_ENGINE_PARAMETER_SUFFIX);
@@ -53,20 +53,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const int size, const MultiCh
 	}
 }
 
-/*
- * todo: should we simply re-use instances used by trigger_decoder?
- * todo: since we are emulating same shape we are decoding
- */
-static pin_state_t pinStates1[PWM_PHASE_MAX_COUNT];
-static pin_state_t pinStates2[PWM_PHASE_MAX_COUNT];
-static pin_state_t pinStates3[PWM_PHASE_MAX_COUNT];
-static SingleChannelStateSequence waves[PWM_PHASE_MAX_WAVE_PER_PWM] = { SingleChannelStateSequence(pinStates1), SingleChannelStateSequence(pinStates2),
-		SingleChannelStateSequence(pinStates3) };
-static SingleChannelStateSequence sr[PWM_PHASE_MAX_WAVE_PER_PWM] = { waves[0], waves[1], waves[2] };
-
-static float pwmSwitchTimesBuffer[PWM_PHASE_MAX_COUNT];
-
-PwmConfig triggerSignal(pwmSwitchTimesBuffer, sr);
+PwmConfig triggerSignal;
 
 static int atTriggerVersion = 0;
 
@@ -119,11 +106,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state DECLARE_ENGINE_PARAME
 
 
 		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
-		pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {
-				s->wave.channels[0].pinStates,
-				s->wave.channels[1].pinStates,
-				s->wave.channels[2].pinStates };
-		copyPwmParameters(state, s->getSize(), s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM, pinStates);
+		copyPwmParameters(state, s->wave);
 		state->safe.periodNt = -1; // this would cause loop re-initialization
 	}
 }
@@ -140,8 +123,8 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
-		helper.handleEmulatorCallback(state->phaseCount,
-				state->multiChannelStateSequence,
+		helper.handleEmulatorCallback(
+				*state->multiChannelStateSequence,
 				stateIndex);
 	}
 
@@ -161,16 +144,10 @@ static void initTriggerPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
-	pin_state_t *pinStates[PWM_PHASE_MAX_WAVE_PER_PWM] = {
-			s->wave.channels[0].pinStates,
-			s->wave.channels[1].pinStates,
-			s->wave.channels[2].pinStates };
-	int phaseCount = s->getSize();
-	assertIsInBounds(phaseCount - 1, pwmSwitchTimesBuffer, "pwmSwitchTimesBuffer");
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
-			phaseCount, s->wave.switchTimes, PWM_PHASE_MAX_WAVE_PER_PWM,
-			pinStates, updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
+			s->wave,
+			updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	hasInitTriggerEmulator = true;
 }

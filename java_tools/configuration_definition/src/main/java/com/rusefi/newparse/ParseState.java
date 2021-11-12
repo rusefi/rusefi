@@ -29,6 +29,27 @@ public class ParseState {
 
     public ParseState(EnumsReader enumsReader) {
         this.enumsReader = enumsReader;
+
+        for (Map.Entry<String, EnumsReader.EnumState> enumType : this.enumsReader.getEnums().entrySet()) {
+            String name = enumType.getKey();
+
+            for (Value enumValue : enumType.getValue().values()) {
+                try {
+                    int value = enumValue.getIntValue();
+
+                    this.handleIntDefinition(name + "_" + enumValue.getName(), value);
+                } catch (Exception exc) {
+                    // ignore parse failures
+                }
+            }
+        }
+    }
+
+    private void handleIntDefinition(String name, int value) {
+        addDefinition(name, value);
+
+        // Also add ints as 16b hex
+        addDefinition(name + "_16_hex", String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
     }
 
     private static boolean isNumeric(String str) {
@@ -110,7 +131,7 @@ public class ParseState {
     public ParseTreeListener getListener() {
         return new RusefiConfigGrammarBaseListener() {
 
-        @Override
+    @Override
     public void exitContent(RusefiConfigGrammarParser.ContentContext ctx) {
         if (!scopes.empty())
             throw new IllegalStateException();
@@ -124,13 +145,6 @@ public class ParseState {
             throw new IllegalStateException();
         if (!evalStack.empty())
             throw new IllegalStateException();
-    }
-
-    private void handleIntDefinition(String name, int value) {
-        addDefinition(name, value);
-
-        // Also add ints as 16b hex
-        addDefinition(name + "_16_hex", String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
     }
 
     @Override

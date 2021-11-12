@@ -9,10 +9,6 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 
-#if EFI_TUNER_STUDIO
-#include "thread_controller.h"
-#include "thread_priority.h"
-
 typedef struct {
 	int queryCommandCounter;
 	int outputChannelsCommandCounter;
@@ -30,6 +26,16 @@ typedef struct {
 
 extern tunerstudio_counters_s tsState;
 
+void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
+void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
+
+char *getWorkingPageAddr();
+
+#if EFI_TUNER_STUDIO
+#include "thread_controller.h"
+#include "thread_priority.h"
+
+
 #define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
 
 /**
@@ -41,11 +47,6 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
  * this command is part of protocol initialization
  */
 void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
-
-char *getWorkingPageAddr();
-
-void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
-void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 
 void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX);
 void printTsStats(void);
@@ -84,3 +85,6 @@ public:
 };
 
 #endif /* EFI_TUNER_STUDIO */
+
+void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, void *content DECLARE_ENGINE_PARAMETER_SUFFIX);
+void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);

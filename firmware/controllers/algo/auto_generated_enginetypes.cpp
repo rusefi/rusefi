@@ -1,10 +1,45 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Nov 07 03:58:12 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Nov 12 01:52:09 UTC 2021
 // see also gen_config_and_enums.bat
 
 
 
+const char *getBench_mode_e(bench_mode_e value){
+switch(value) {
+case BENCH_AC_COMPRESSOR_RELAY:
+  return "BENCH_AC_COMPRESSOR_RELAY";
+case BENCH_CHECK_ENGINE_LIGHT:
+  return "BENCH_CHECK_ENGINE_LIGHT";
+case BENCH_FAN_RELAY:
+  return "BENCH_FAN_RELAY";
+case BENCH_FAN_RELAY_2:
+  return "BENCH_FAN_RELAY_2";
+case BENCH_FUEL_PUMP:
+  return "BENCH_FUEL_PUMP";
+case BENCH_GPPWM1_VALVE:
+  return "BENCH_GPPWM1_VALVE";
+case BENCH_GPPWM2_VALVE:
+  return "BENCH_GPPWM2_VALVE";
+case BENCH_GPPWM3_VALVE:
+  return "BENCH_GPPWM3_VALVE";
+case BENCH_GPPWM4_VALVE:
+  return "BENCH_GPPWM4_VALVE";
+case BENCH_HPFP_VALVE:
+  return "BENCH_HPFP_VALVE";
+case BENCH_IDLE_VALVE:
+  return "BENCH_IDLE_VALVE";
+case BENCH_MAIN_RELAY:
+  return "BENCH_MAIN_RELAY";
+case BENCH_SECOND_IDLE_VALVE:
+  return "BENCH_SECOND_IDLE_VALVE";
+case BENCH_STARTER_DISABLE_RELAY:
+  return "BENCH_STARTER_DISABLE_RELAY";
+case BENCH_STARTER_ENABLE_RELAY:
+  return "BENCH_STARTER_ENABLE_RELAY";
+  }
+ return NULL;
+}
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_34:
@@ -498,6 +533,8 @@ case TT_VVT_NISSAN_VQ35:
 }
 const char *getTs_command_e(ts_command_e value){
 switch(value) {
+case TS_BENCH_CATEGORY:
+  return "TS_BENCH_CATEGORY";
 case TS_CLEAR_WARNINGS:
   return "TS_CLEAR_WARNINGS";
 case TS_COMMAND_1:
@@ -520,6 +557,8 @@ case TS_COMMAND_5:
   return "TS_COMMAND_5";
 case TS_COMMAND_9:
   return "TS_COMMAND_9";
+case TS_CRAZY:
+  return "TS_CRAZY";
 case TS_DEBUG_MODE:
   return "TS_DEBUG_MODE";
 case TS_GRAB_PEDAL_UP:
@@ -536,6 +575,26 @@ case TS_INJECTOR_CATEGORY:
   return "TS_INJECTOR_CATEGORY";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_UNUSED_23:
+  return "TS_UNUSED_23";
+case TS_UNUSED_25:
+  return "TS_UNUSED_25";
+case TS_UNUSED_26:
+  return "TS_UNUSED_26";
+case TS_UNUSED_27:
+  return "TS_UNUSED_27";
+case TS_UNUSED_28:
+  return "TS_UNUSED_28";
+case TS_UNUSED_29:
+  return "TS_UNUSED_29";
+case TS_UNUSED_30:
+  return "TS_UNUSED_30";
+case TS_UNUSED_31:
+  return "TS_UNUSED_31";
+case TS_UNUSED_CJ125_CALIB:
+  return "TS_UNUSED_CJ125_CALIB";
+case TS_WIDEBAND:
+  return "TS_WIDEBAND";
 case TS_WRITE_FLASH:
   return "TS_WRITE_FLASH";
 case TS_X14:

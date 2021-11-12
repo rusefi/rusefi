@@ -51,6 +51,7 @@ static int getSensor(lua_State* l, SensorType type) {
 }
 
 static int lua_getAuxAnalog(lua_State* l) {
+	// todo: shall we use HUMAN_INDEX since UI goes from 1 and Lua loves going from 1?
 	auto sensorIndex = luaL_checkinteger(l, 1);
 
 	auto type = static_cast<SensorType>(sensorIndex + static_cast<int>(SensorType::Aux1));
@@ -214,7 +215,7 @@ static P luaL_checkPwmIndex(lua_State* l, int pos) {
 static int lua_startPwm(lua_State* l) {
 	auto p = luaL_checkPwmIndex(l, 1);
 	auto freq = luaL_checknumber(l, 2);
-	auto duty = luaL_checknumber(l, 2);
+	auto duty = luaL_checknumber(l, 3);
 
 	// clamp to 1..1000 hz
 	freq = clampF(1, freq, 1000);
@@ -531,6 +532,16 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "setFuelAdd", lua_setFuelAdd);
 	lua_register(l, "setFuelMult", lua_setFuelMult);
+
+	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+		int result = currentTimeMillis() - engine->triggerActivityMs;
+		lua_pushnumber(l, result);
+		return 1;
+	});
 
 #if EFI_CAN_SUPPORT
 	lua_register(l, "canRxAdd", lua_canRxAdd);

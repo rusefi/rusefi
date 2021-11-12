@@ -33,7 +33,7 @@ int getSimulatedEventTime(const TriggerWaveform& shape, int i) {
 	int stateIndex = i % shape.getSize();
 	int loopIndex = i / shape.getSize();
 
-	return (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave.getSwitchTime(stateIndex)));
+	return (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave->getSwitchTime(stateIndex)));
 }
 
 void TriggerStimulatorHelper::feedSimulatedEvent(
@@ -45,11 +45,10 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 		) {
 	efiAssertVoid(CUSTOM_ERR_6593, shape.getSize() > 0, "size not zero");
 	int stateIndex = i % shape.getSize();
-	int size = shape.getSize();
 
 	int time = getSimulatedEventTime(shape, i);
 
-	const MultiChannelStateSequence& multiChannelStateSequence = shape.wave;
+	const MultiChannelStateSequence& multiChannelStateSequence = *shape.wave;
 
 #if EFI_UNIT_TEST
 	int prevIndex = getPreviousIndex(stateIndex, shape.getSize());
@@ -77,7 +76,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 
 	for (size_t i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		if (needEvent(stateIndex, size, multiChannelStateSequence, i)) {
+		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
 			if (isUsefulSignal(event, triggerConfiguration)) {
