@@ -892,30 +892,30 @@ pid:setMaxValue(100)
 biasCurveIndex = findCurveIndex("bias")
 
 function onTick()
-  targetVoltage = getAuxAnalog(0)
+  local targetVoltage = getAuxAnalog(0)
   
-  target = interpolate(1, 0, 3.5, 100, targetVoltage)
+  local target = interpolate(1, 0, 3.5, 100, targetVoltage)
 -- clamp 0 to 100
   target = math.max(0, target)
   target = math.min(100, target)
 
   print('Decoded target: ' .. target)
 
-  tps = getSensor("TPS1")
+  local tps = getSensor("TPS1")
   tps = (tps == nil and 'invalid TPS' or tps)
   print('Tps ' .. tps)
 
   pid:setTarget(target)
-  output = pid:get(tps)
+  local output = pid:get(tps)
 
-  bias = curve(biasCurveIndex, target)
+  local bias = curve(biasCurveIndex, target)
   print('bias ' .. bias)
 
   print('pid output ' .. output)
   print('')
   
 
-  duty = (bias + output) / 100
+  local duty = (bias + output) / 100
 
 --  isPositive = duty > 0;
 --  pwmValue = isPositive and duty or -duty
