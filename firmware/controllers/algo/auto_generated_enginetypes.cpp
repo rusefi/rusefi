@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Nov 10 20:00:37 EST 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Nov 12 01:52:09 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -533,6 +533,8 @@ case TT_VVT_NISSAN_VQ35:
 }
 const char *getTs_command_e(ts_command_e value){
 switch(value) {
+case TS_BENCH_CATEGORY:
+  return "TS_BENCH_CATEGORY";
 case TS_CLEAR_WARNINGS:
   return "TS_CLEAR_WARNINGS";
 case TS_COMMAND_1:
@@ -555,6 +557,8 @@ case TS_COMMAND_5:
   return "TS_COMMAND_5";
 case TS_COMMAND_9:
   return "TS_COMMAND_9";
+case TS_CRAZY:
+  return "TS_CRAZY";
 case TS_DEBUG_MODE:
   return "TS_DEBUG_MODE";
 case TS_GRAB_PEDAL_UP:
@@ -571,6 +575,26 @@ case TS_INJECTOR_CATEGORY:
   return "TS_INJECTOR_CATEGORY";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_UNUSED_23:
+  return "TS_UNUSED_23";
+case TS_UNUSED_25:
+  return "TS_UNUSED_25";
+case TS_UNUSED_26:
+  return "TS_UNUSED_26";
+case TS_UNUSED_27:
+  return "TS_UNUSED_27";
+case TS_UNUSED_28:
+  return "TS_UNUSED_28";
+case TS_UNUSED_29:
+  return "TS_UNUSED_29";
+case TS_UNUSED_30:
+  return "TS_UNUSED_30";
+case TS_UNUSED_31:
+  return "TS_UNUSED_31";
+case TS_UNUSED_CJ125_CALIB:
+  return "TS_UNUSED_CJ125_CALIB";
+case TS_WIDEBAND:
+  return "TS_WIDEBAND";
 case TS_WRITE_FLASH:
   return "TS_WRITE_FLASH";
 case TS_X14:
