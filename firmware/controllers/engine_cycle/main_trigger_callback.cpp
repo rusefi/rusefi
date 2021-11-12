@@ -403,7 +403,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 		 */
 		enginePins.fuelPumpRelay.setValue(true); // quickly set pin right from the callback here! todo: would it work OK for smart SPI pin?!
 #if EFI_PROD_CODE
-		engine->triggerActivitySecond = getTimeNowSeconds();
+		engine->triggerActivityMs = currentTimeMillis();
 #endif
 		// todo: check for 'trigger->is_synchnonized?'
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
