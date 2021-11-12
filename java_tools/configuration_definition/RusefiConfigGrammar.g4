@@ -138,7 +138,7 @@ rootStatement
     ;
 
 rootStatements
-    : (rootStatement ENDL+)*
+    : (rootStatement ENDL+)* rootStatement
     ;
 
 // Statements are allowed to appear inside a struct
