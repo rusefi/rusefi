@@ -83,6 +83,14 @@ public class ConsoleTools {
         registerTool("local_proxy", ConsoleTools::localProxy, "Detect rusEFI ECU and proxy serial <> TCP");
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
+        registerTool("send_command", new ConsoleTool() {
+            @Override
+            public void runTool(String[] args) throws Exception {
+                String command = args[1];
+                System.out.println("Sending command " + command);
+                sendCommand(command);
+            }
+        }, "Sends command specified as second argument");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Fields.CMD_REBOOT_DFU, args -> {
             sendCommand(Fields.CMD_REBOOT_DFU);
