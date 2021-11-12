@@ -534,10 +534,7 @@ void initMainEventListener(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_PROD_CODE
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
-
-	efiPrintf("initMainLoop: %d", currentTimeMillis());
 #endif
-
 
     // We start prime injection pulse at the early init stage - don't wait for the engine to start spinning!
     if (CONFIG(startOfCrankingPrimingPulse) > 0)
