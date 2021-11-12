@@ -567,9 +567,9 @@ typedef enum {
 	TS_UNUSED_26 = 26,
 	TS_UNUSED_27 = 27,
 	TS_UNUSED_28 = 28,
-	TS_UNUSED_29 = 28,
-	TS_UNUSED_30 = 29,
-	TS_UNUSED_31 = 30,
+	TS_UNUSED_29 = 29,
+	TS_UNUSED_30 = 30,
+	TS_UNUSED_31 = 31,
 	TS_CRAZY = 32,
 } ts_command_e;
 
