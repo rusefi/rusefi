@@ -533,6 +533,16 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "setFuelAdd", lua_setFuelAdd);
 	lua_register(l, "setFuelMult", lua_setFuelMult);
 
+	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+		int result = currentTimeMillis() - engine->triggerActivityMs;
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
 #if EFI_CAN_SUPPORT
 	lua_register(l, "canRxAdd", lua_canRxAdd);
 #endif // EFI_CAN_SUPPORT
