@@ -24,6 +24,7 @@ public class MessagesPanel {
     private final MessagesView messagesView;
 
     private final JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
+    private final JButton pauseButton = UiUtils.createPauseButton();
 
     public MessagesPanel(JComponent extraButton, Node config) {
         JPanel middlePanel = new JPanel(new BorderLayout());
@@ -31,13 +32,12 @@ public class MessagesPanel {
         middlePanel.add(messagesView.messagesScroll, BorderLayout.CENTER);
 //        buttonPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
 
-        final JButton pauseButton = UiUtils.createPauseButton();
-        pauseButton.addActionListener(event -> setPaused(pauseButton, !messagesView.isPaused()));
+        pauseButton.addActionListener(event -> setPaused(!messagesView.isPaused()));
 
         JButton clearButton = UiUtils.createClearButton();
         clearButton.addActionListener(event -> {
             messagesView.clear();
-            setPaused(pauseButton, false);
+            setPaused(false);
         });
 
         buttonPanel.add(clearButton);
@@ -46,7 +46,7 @@ public class MessagesPanel {
             buttonPanel.add(extraButton);
     }
 
-    private void setPaused(JButton pauseButton, boolean isPaused) {
+    public void setPaused(boolean isPaused) {
         messagesView.setPaused(isPaused);
         UiUtils.setPauseButtonText(pauseButton, messagesView.isPaused());
     }
