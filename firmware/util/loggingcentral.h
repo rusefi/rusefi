@@ -9,6 +9,9 @@
 #include <cstddef>
 #include "rusefi_generated.h"
 
+// for compatibility, many files still use old non-generated define
+#define DELIMETER LOG_DELIMITER
+
 class Logging;
 
 void startLoggingProcessor();
@@ -23,7 +26,7 @@ namespace priv
 
 // "normal" logging messages need a header and footer, so put them in
 // the format string at compile time
-#define efiPrintf(fmt, ...) priv::efiPrintfInternal(PROTOCOL_MSG LOG_DELIMETER fmt DELIMETER, ##__VA_ARGS__)
+#define efiPrintf(fmt, ...) priv::efiPrintfInternal(PROTOCOL_MSG LOG_DELIMETER fmt LOG_DELIMITER, ##__VA_ARGS__)
 
 /**
  * This is the legacy function to copy the contents of a local Logging object in to the output buffer
