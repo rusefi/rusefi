@@ -928,6 +928,10 @@ pid = Pid.new(2, 0, 0, -100, 100)
 
 biasCurveIndex = findCurveIndex("bias")
 
+function onCanRx(id, dlc, data)
+  print(id .. ' ' .. dlc .. data) 
+end
+
 function onTick()
   local targetVoltage = getAuxAnalog(0)
   
