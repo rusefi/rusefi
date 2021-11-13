@@ -696,12 +696,12 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// "VR 1"
 	engineConfiguration->triggerInputPins[0] = GPIOE_7;
 
-	engineConfiguration->vehicleSpeedCoef = 1;
 	// "VR 2"
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIOE_8;
 
-
-
+	engineConfiguration->driveWheelRevPerKm = 875;	// 205/50R15
+	engineConfiguration->vssGearRatio = 4.3;
+	engineConfiguration->vssToothCount = 22;
 
 	// "Highside 2"
 	engineConfiguration->tcu_solenoid[0] = GPIOA_8;
