@@ -1,75 +1,54 @@
 #include "pch.h"
 #include "vehicle_speed_converter.h"
 
-static constexpr engine_type_e ENGINE_TEST_HELPER = TEST_ENGINE;
+#define EXPECT_NEAR_M3(x, y) EXPECT_NEAR((x), (y), 1e-3)
 
-class VehicleSpeedConverterTest : public ::testing::Test {
+float GetVssFor(float revPerKm, float axle, float teeth, float hz) {
+	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-public:
 	VehicleSpeedConverter dut;
+	INJECT_ENGINE_REFERENCE(&dut);
 
-	VehicleSpeedConverterTest(){
-		
-	}
+	CONFIG(driveWheelRevPerKm) = revPerKm;
+	CONFIG(vssGearRatio) = axle;
+	CONFIG(vssToothCount) = teeth;
 
-	void SetUp() override {
-		WITH_ENGINE_TEST_HELPER(ENGINE_TEST_HELPER);
-		INJECT_ENGINE_REFERENCE(&dut);
-	}
-
-	void SetCoef(float new_coef) {
-		dut.engineConfiguration->vehicleSpeedCoef = new_coef;
-	}
-
-	float GetFrequencyBySpeedAndCoef(float speed, float coef) {
-		return (speed / coef);
-	}
-
-	void TestForSpeedWithCoef(float expectedSpeed, float coef)
-	{
-		SetCoef(coef);
-		auto inputFreq = GetFrequencyBySpeedAndCoef(expectedSpeed, coef);
-		auto result = dut.convert(inputFreq);
-		ASSERT_TRUE(result.Valid);
-		ASSERT_NEAR(expectedSpeed, result.Value, 0.01f);
-	}
-};
-
-/*
- *  Converter must return valid and expected result for setted coef
- */
-TEST_F(VehicleSpeedConverterTest, returnExpectedResultForSettedCoef) {
-	
-	TestForSpeedWithCoef(0.0f, 0.5f);
-	TestForSpeedWithCoef(0.5f, 0.5f);
-	TestForSpeedWithCoef(10.0f, 0.5f);
-	TestForSpeedWithCoef(0.0f, 10.0f);
-	TestForSpeedWithCoef(0.5f, 10.0f);
-	TestForSpeedWithCoef(10.0f, 10.0f);
+	return dut.convert(hz).value_or(-1);
 }
 
-/*
- *  Converter must always return strong float zero if coef == 0.0f
- */
-TEST_F(VehicleSpeedConverterTest, zeroCoefReturnsZeroSpeedOnAnyInput) {
-	
-	SetCoef(0.0f);
+TEST(VehicleSpeed, FakeCases) {
+	// 0hz -> 0kph
+	EXPECT_NEAR_M3(0, GetVssFor(500, 5, 10, 0));
 
-	{
-		auto result = dut.convert(0.0f);
-		ASSERT_TRUE(result.Valid);
-		ASSERT_FLOAT_EQ(0.0f, result.Value);
-	}
+	// 1000hz -> 144 kph
+	EXPECT_NEAR_M3(144, GetVssFor(500, 5, 10, 1000));
 
-	{
-		auto result = dut.convert(0.5f);
-		ASSERT_TRUE(result.Valid);
-		ASSERT_FLOAT_EQ(0.0f, result.Value);
-	}
+	// Half size tires -> half speed
+	EXPECT_NEAR_M3(72, GetVssFor(1000, 5, 10, 1000));
 
-	{
-		auto result = dut.convert(10.0f);
-		ASSERT_TRUE(result.Valid);
-		ASSERT_FLOAT_EQ(0.0f, result.Value);
-	}
+	// Double the axle ratio -> half the speed
+	EXPECT_NEAR_M3(72, GetVssFor(500, 10, 10, 1000));
+
+	// Twice as many teeth -> half speed
+	EXPECT_NEAR_M3(72, GetVssFor(500, 5, 20, 1000));
+}
+
+TEST(VehicleSpeed, RealCases) {
+	// V8 Volvo
+	// 205/50R16 tire -> 521 rev/km
+	// 3.73 axle ratio
+	// 17 tooth speedo gear
+	EXPECT_NEAR_M3(108.970f, GetVssFor(521, 3.73, 17, 1000));
+
+	// NB miata
+	// 205/50R15 tire -> 544 rev/km
+	// 4.3 axle ratio
+	// 21 tooth speedo gear
+	EXPECT_NEAR_M3(73.285f, GetVssFor(544, 4.3, 21, 1000));
+
+	// Some truck with ABS sensors
+	// 265/65R18 tire -> 391 rev/km
+	// 1.0 ratio because ABS sensors are hub mounted
+	// 48 tooth abs sensor
+	EXPECT_NEAR_M3(191.816f, GetVssFor(391, 1, 48, 1000));
 }

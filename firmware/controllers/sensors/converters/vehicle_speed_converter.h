@@ -20,6 +20,6 @@ public:
 		//     1 pulse       3600 sec      1 km       km
 		//    ---------  *  ---------- * --------- = -----
 		//       sec           1 hr       1 pulse     sec
-		return frequency *     3600    * pulsePerKm;
+		return frequency *     3600    * kmPerPulse;
 	}
 };
