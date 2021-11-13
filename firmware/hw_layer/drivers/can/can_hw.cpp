@@ -168,7 +168,7 @@ static void canInfo(void) {
 		return;
 	}
 
-	efiPrintf("CAN TX %s", hwPortname(CONFIG(canTxPin)));
+	efiPrintf("CAN TX %s speed %d", hwPortname(CONFIG(canTxPin)), CONFIG(canBaudRate));
 	efiPrintf("CAN RX %s", hwPortname(CONFIG(canRxPin)));
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
