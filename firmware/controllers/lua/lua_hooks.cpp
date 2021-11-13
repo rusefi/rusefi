@@ -410,7 +410,7 @@ struct LuaSensor final : public StoredValueSensor {
 };
 
 struct LuaPid final {
-	LuaPid() { }
+	LuaPid() = default;
 
 	LuaPid(float kp, float ki, float kd, float min, float max)
 		: m_pid(&m_params)
