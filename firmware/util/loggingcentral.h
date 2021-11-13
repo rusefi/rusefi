@@ -26,7 +26,7 @@ namespace priv
 
 // "normal" logging messages need a header and footer, so put them in
 // the format string at compile time
-#define efiPrintf(fmt, ...) priv::efiPrintfInternal(PROTOCOL_MSG LOG_DELIMETER fmt LOG_DELIMITER, ##__VA_ARGS__)
+#define efiPrintf(fmt, ...) priv::efiPrintfInternal(PROTOCOL_MSG LOG_DELIMITER fmt LOG_DELIMITER, ##__VA_ARGS__)
 
 /**
  * This is the legacy function to copy the contents of a local Logging object in to the output buffer
