@@ -380,11 +380,15 @@
 #endif
 // todo: this should be detected automatically based on pin selection
 // https://github.com/rusefi/rusefi/issues/3536
+#ifndef EFI_CONSOLE_AF
 #define EFI_CONSOLE_AF 7
+#endif
 
 // todo: this should be detected automatically based on pin selection
 // https://github.com/rusefi/rusefi/issues/3536
+#ifndef TS_SERIAL_AF
 #define TS_SERIAL_AF 7
+#endif
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
 #define LED_CRITICAL_ERROR_BRAIN_PIN GPIOD_14

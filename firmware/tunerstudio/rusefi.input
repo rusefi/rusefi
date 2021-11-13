@@ -1862,10 +1862,9 @@ cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x0
 ; MRE_MIATA_NB2_MAF = 15
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NB2_MAF_16_hex@@"
 
-cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
-cmd_set_engine_type_ET_MRE_SECONDARY_CAN			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SECONDARY_CAN_16_hex@@"
+cmd_set_engine_type_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
 
-cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_M111_16_hex@@"
+cmd_set_engine_type_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_M111_16_hex@@"
 
 cmd_set_engine_type_hellen_NA6						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_NA6_16_hex@@"
 cmd_set_engine_type_hellen_NA94						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_HELLEN_NA94_16_hex@@"
@@ -3244,6 +3243,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
 
 	dialog = canBus, "CAN Bus"
+	    commandButton = "CAN Debug Mode",               cmd_test_debug_mode_can
 		field = "CAN read enabled",						canReadEnabled
 		field = "CAN write enabled",					canWriteEnabled
 		field = "CAN bitrate",							canBaudRate
@@ -3707,9 +3707,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "microRusEFI Miata NB2 MAF",   cmd_set_engine_type_microRusEFI_Miata_NB2_MAF@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI GDI VAG B6 test", cmd_set_engine_type_microRusEFI_VW_B6@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
-		commandButton = "microRusEFI IO extention",     cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
-		commandButton = "microRusEFI Subaru EJ18", 		cmd_set_engine_type_ET_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
-		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_ET_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI Subaru EJ18", 		cmd_set_engine_type_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets

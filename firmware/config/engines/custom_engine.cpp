@@ -830,6 +830,25 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
+void proteusHarley(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_16;
+#if HW_PROTEUS
+	strncpy(config->luaScript, R"(
+startPwm(0, 100, 0)
+function onTick()
+	rpm = getSensor("RPM")
+-- handle nil RPM, todo: change firmware to avoid nil RPM
+	rpm = (rpm == nil and 0 or rpm)
+    print('Rpm ' .. rpm)
+	print('getTimeSinceTriggerEventMs ' .. getTimeSinceTriggerEventMs())
+
+	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() < 5000 and rpm < 300
+	setPwmDuty(0, enableCompressionReleaseSolenoid and 100 or 0)
+end
+)", efi::size(config->luaScript));
+#endif
+}
+
 void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if HW_PROTEUS
 	engineConfiguration->tpsMin = 889;
@@ -905,12 +924,15 @@ startPwm(1, 80, 1.0)
 -- disable
 startPwm(2, 80, 0.0)
 
-pid = Pid.new()
-pid:setP(2)
-pid:setMinValue(-100)
-pid:setMaxValue(100)
+pid = Pid.new(2, 0, 0, -100, 100)
 
 biasCurveIndex = findCurveIndex("bias")
+
+canRxAdd(0x600)
+
+function onCanRx(id, dlc, data)
+  print(id .. ' ' .. dlc .. data)
+end
 
 function onTick()
   local targetVoltage = getAuxAnalog(0)
@@ -926,15 +948,21 @@ function onTick()
   tps = (tps == nil and 'invalid TPS' or tps)
   print('Tps ' .. tps)
 
-  pid:setTarget(target)
-  local output = pid:get(tps)
+  local output = pid:get(target, tps)
 
   local bias = curve(biasCurveIndex, target)
   print('bias ' .. bias)
 
-  print('pid output ' .. output)
+  local duty = (bias + output) / 100
+  isPositive = duty > 0;
+  pwmValue = isPositive and duty or -duty
+  setPwmDuty(0, pwmValue)
+
+  dirValue = isPositive and 1 or 0;
+  setPwmDuty(1, dirValue)
+
+  print('pwm ' .. pwmValue .. ' dir ' .. dirValue)
   print('')
-  
 end
 				)";
 	strncpy(config->luaScript, script, efi::size(config->luaScript));
