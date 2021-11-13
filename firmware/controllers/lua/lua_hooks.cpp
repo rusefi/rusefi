@@ -385,7 +385,7 @@ static int lua_canRxAdd(lua_State* l) {
 }
 #endif // EFI_CAN_SUPPORT
 
-struct LuaSensor : public StoredValueSensor {
+struct LuaSensor final : public StoredValueSensor {
 	LuaSensor() : LuaSensor("Invalid") { }
 
 	~LuaSensor() {
@@ -409,57 +409,34 @@ struct LuaSensor : public StoredValueSensor {
 	void showInfo(const char*) const {}
 };
 
-struct LuaPid {
-	LuaPid
-	()
-// todo	(float kp, float ki, float kd, float min, float max)
+struct LuaPid final {
+	LuaPid() = default;
+
+	LuaPid(float kp, float ki, float kd, float min, float max)
 		: m_pid(&m_params)
 	{
-		m_params.pFactor = 0;
-		m_params.iFactor = 0;
-		m_params.dFactor = 0;
+		m_params.pFactor = kp;
+		m_params.iFactor = ki;
+		m_params.dFactor = kd;
 
 		m_params.offset = 0;
 		m_params.periodMs = 0;
-		m_params.minValue = 0;
-		m_params.maxValue = 0;
+		m_params.minValue = min;
+		m_params.maxValue = max;
 
 		m_lastUpdate.reset();
 	}
 
-	float get(float input) {
+	float get(float target, float input) {
 #if EFI_UNIT_TEST
 		extern int timeNowUs;
 		// this is how we avoid zero dt
 		timeNowUs += 1000;
 #endif
+
 		float dt = m_lastUpdate.getElapsedSecondsAndReset(getTimeNowNt());
 
 		return m_pid.getOutput(target, input, dt);
-	}
-
-	void setTarget(float value) {
-		target = value;
-	}
-
-	void setP(float value) {
-		m_params.pFactor = value;
-	}
-
-	void setI(float value) {
-		m_params.iFactor = value;
-	}
-
-	void setD(float value) {
-		m_params.dFactor = value;
-	}
-
-	void setMinValue(float value) {
-		m_params.minValue = value;
-	}
-
-	void setMaxValue(float value) {
-		m_params.maxValue = value;
 	}
 
 	void reset() {
@@ -470,12 +447,9 @@ private:
 	Pid m_pid;
 	Timer m_lastUpdate;
 	pid_s m_params;
-	// ugly as hell, a way to move forward while we wait for https://github.com/gengyong/luaaa/issues/7
-	float target;
 };
 
 void configureRusefiLuaHooks(lua_State* l) {
-
 	LuaClass<Timer> luaTimer(l, "Timer");
 	luaTimer
 		.ctor()
@@ -488,21 +462,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.fun("set", &LuaSensor::set)
 		.fun("invalidate", &LuaSensor::invalidate);
 
-// not enough Lua memory even to initialize Lua :(
-#if defined(STM32F7) || defined(STM32H7) || EFI_UNIT_TEST
 	LuaClass<LuaPid> luaPid(l, "Pid");
 	luaPid
-		.ctor()
+		.ctor<float, float, float, float, float>()
 		.fun("get", &LuaPid::get)
-		.fun("setTarget", &LuaPid::setTarget)
-		.fun("setP", &LuaPid::setP)
-		.fun("setI", &LuaPid::setI)
-		.fun("setD", &LuaPid::setD)
-		.fun("setMinValue", &LuaPid::setMinValue)
-		.fun("setMaxValue", &LuaPid::setMaxValue)
-		.fun("reset", &LuaPid::reset)
-		;
-#endif
+		.fun("reset", &LuaPid::reset);
 
 	configureRusefiLuaUtilHooks(l);
 
