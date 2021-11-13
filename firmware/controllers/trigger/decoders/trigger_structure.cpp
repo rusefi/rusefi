@@ -590,6 +590,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_MERCEDES_2_SEGMENT:
 		setMercedesTwoSegment(this);
+		break;
 
 	case TT_UNUSED_62:
 	case TT_ONE:
