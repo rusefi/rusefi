@@ -473,6 +473,24 @@ void configureRusefiLuaHooks(lua_State* l) {
 	// used by unit tests
 	lua_register(l, "txCan", lua_txCan);
 
+	lua_register(l, "findTableIndex",
+			[](lua_State* l) {
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+			auto name = luaL_checklstring(l, 1, nullptr);
+			auto result = getTableIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			if (result == EFI_ERROR_CODE) {
+				lua_pushnil(l);
+			} else {
+				// TS counts curve from 1 so convert indexing here
+				lua_pushnumber(l, result + HUMAN_OFFSET);
+			}
+			return 1;
+	});
+
+
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);
 	lua_register(l, "setPwmDuty", lua_setPwmDuty);

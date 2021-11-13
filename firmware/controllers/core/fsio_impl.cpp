@@ -616,6 +616,15 @@ int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return EFI_ERROR_CODE;
 }
 
+int getTableIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0;i<SCRIPT_TABLE_COUNT;i++) {
+		if (strEqualCaseInsensitive(name, engineConfiguration->scriptTableName[i])) {
+			return i;
+		}
+	}
+	return EFI_ERROR_CODE;
+}
+
 float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// not great code at all :(
 	switch (index) {
