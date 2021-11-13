@@ -830,6 +830,25 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
+void proteusHarley(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_16;
+#if HW_PROTEUS
+	strncpy(config->luaScript, R"(
+startPwm(0, 100, 0)
+function onTick()
+	rpm = getSensor("RPM")
+-- handle nil RPM, todo: change firmware to avoid nil RPM
+	rpm = (rpm == nil and 0 or rpm)
+    print('Rpm ' .. rpm)
+	print('getTimeSinceTriggerEventMs ' .. getTimeSinceTriggerEventMs())
+
+	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() < 5000 and rpm < 300
+	setPwmDuty(0, enableCompressionReleaseSolenoid and 100 or 0)
+end
+)", efi::size(config->luaScript));
+#endif
+}
+
 void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if HW_PROTEUS
 	engineConfiguration->tpsMin = 889;
