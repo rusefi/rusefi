@@ -212,14 +212,14 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		 * printf is a heavy method, append is used here as a performance optimization
 		 */
 		logging.appendFast(name);
-		logging.appendChar(CHART_LOG_DELIMITER);
+		logging.appendChar(CHART_DELIMETER);
 		logging.appendFast(msg);
-		logging.appendChar(CHART_LOG_DELIMITER);
+		logging.appendChar(CHART_DELIMETER);
 //		time100 -= startTime100;
 
 		itoa10(timeBuffer, time100);
 		logging.appendFast(timeBuffer);
-		logging.appendChar(CHART_LOG_DELIMITER);
+		logging.appendChar(CHART_DELIMETER);
 		logging.terminate();
 	}
 #endif /* EFI_TEXT_LOGGING */

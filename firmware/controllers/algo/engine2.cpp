@@ -241,12 +241,11 @@ void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId) {
 	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
-	logging->appendPrintf("%s%s%d@%s %s %s %d%s", PROTOCOL_VERSION_TAG, DELIMETER,
+	logging->appendPrintf(PROTOCOL_VERSION_TAG LOG_DELIMITER "%d@%s %s %s %d" LOG_DELIMITER,
 			getRusEfiVersion(), VCS_VERSION,
 			firmwareBuildId,
 			engineTypeName,
-			seconds,
-			DELIMETER);
+			seconds);
 }
 
 void TriggerConfiguration::update() {

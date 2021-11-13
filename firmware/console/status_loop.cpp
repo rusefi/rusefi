@@ -176,7 +176,7 @@ static systime_t timeOfPreviousPrintVersion = 0;
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 	if (isBrainPinValid(hwPin)) {
-		logger.appendPrintf("%s%s%s@%s%s", PROTOCOL_OUTPIN, DELIMETER, pinName, hwPortname(hwPin), DELIMETER);
+		logger.appendPrintf(PROTOCOL_OUTPIN LOG_DELIMITER "%s@%s" LOG_DELIMITER, pinName, hwPortname(hwPin));
 	}
 }
 #endif /* EFI_PROD_CODE */
