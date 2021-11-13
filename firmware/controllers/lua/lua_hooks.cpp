@@ -468,8 +468,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.fun("get", &LuaPid::get)
 		.fun("reset", &LuaPid::reset);
 
-	lua_register(l, "print", lua_efi_print);
-
 	configureRusefiLuaUtilHooks(l);
 
 	lua_register(l, "readPin", lua_readpin);
