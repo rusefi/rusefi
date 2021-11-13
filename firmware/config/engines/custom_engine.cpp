@@ -929,7 +929,7 @@ pid = Pid.new(2, 0, 0, -100, 100)
 biasCurveIndex = findCurveIndex("bias")
 
 function onCanRx(id, dlc, data)
-  print(id .. ' ' .. dlc .. data) 
+  print(id .. ' ' .. dlc .. data)
 end
 
 function onTick()
@@ -951,9 +951,16 @@ function onTick()
   local bias = curve(biasCurveIndex, target)
   print('bias ' .. bias)
 
-  print('pid output ' .. output)
+  local duty = (bias + output) / 100
+  isPositive = duty > 0;
+  pwmValue = isPositive and duty or -duty
+  setPwmDuty(0, pwmValue)
+
+  dirValue = isPositive and 1 or 0;
+  setPwmDuty(1, dirValue)
+
+  print('pwm ' .. pwmValue .. ' dir ' .. dirValue)
   print('')
-  
 end
 				)";
 	strncpy(config->luaScript, script, efi::size(config->luaScript));
