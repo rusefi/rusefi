@@ -905,10 +905,7 @@ startPwm(1, 80, 1.0)
 -- disable
 startPwm(2, 80, 0.0)
 
-pid = Pid.new()
-pid:setP(2)
-pid:setMinValue(-100)
-pid:setMaxValue(100)
+pid = Pid.new(2, 0, 0, -100, 100)
 
 biasCurveIndex = findCurveIndex("bias")
 
@@ -926,8 +923,7 @@ function onTick()
   tps = (tps == nil and 'invalid TPS' or tps)
   print('Tps ' .. tps)
 
-  pid:setTarget(target)
-  local output = pid:get(tps)
+  local output = pid:get(target, tps)
 
   local bias = curve(biasCurveIndex, target)
   print('bias ' .. bias)
