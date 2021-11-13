@@ -9,6 +9,9 @@
 #include "can_msg_tx.h"
 #include "settings.h"
 #include <new>
+
+// We don't want to try and use the STL on a microcontroller
+#define LUAAA_WITHOUT_CPP_STDLIB
 #include "luaaa.hpp"
 #include "lua_hooks_util.h"
 using namespace luaaa;
