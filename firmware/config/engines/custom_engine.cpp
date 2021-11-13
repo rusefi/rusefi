@@ -928,6 +928,8 @@ pid = Pid.new(2, 0, 0, -100, 100)
 
 biasCurveIndex = findCurveIndex("bias")
 
+canRxAdd(0x600)
+
 function onCanRx(id, dlc, data)
   print(id .. ' ' .. dlc .. data)
 end
