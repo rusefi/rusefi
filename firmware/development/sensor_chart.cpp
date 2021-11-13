@@ -52,7 +52,7 @@ void scAddData(float angle, float value) {
 
 			// Reset logging and append header
 			scLogging.reset();
-			scLogging.appendPrintf( "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
+			scLogging.appendPrintf(PROTOCOL_ANALOG_CHART LOG_DELIMITER);
 		}
 	} else if (state == ScState::Logging) {
 		// If running and the revolution idx changes, terminate logging and wait for flush
@@ -86,7 +86,7 @@ void publishSensorChartIfFull() {
 		return;
 	}
 
-	scLogging.appendPrintf(DELIMETER);
+	scLogging.appendPrintf(LOG_DELIMITER);
 	scheduleLogging(&scLogging);
 
 	state = ScState::Armed;

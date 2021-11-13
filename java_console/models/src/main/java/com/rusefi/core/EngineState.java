@@ -37,7 +37,7 @@ public class EngineState {
 
         public StringActionPair(String key, ValueCallback<String> second) {
             super(key, second);
-            prefix = key.toLowerCase() + Fields.LOG_DELIMETER;
+            prefix = key.toLowerCase() + Fields.LOG_DELIMITER;
         }
 
         @Override
@@ -136,13 +136,13 @@ public class EngineState {
         }
         if (originalResponse.length() == response.length()) {
             log.info("EngineState.unknown: " + response);
-            int keyEnd = response.indexOf(Fields.LOG_DELIMETER);
+            int keyEnd = response.indexOf(Fields.LOG_DELIMITER);
             if (keyEnd == -1) {
                 // discarding invalid line
                 return "";
             }
             String unknownKey = response.substring(0, keyEnd);
-            int valueEnd = response.indexOf(Fields.LOG_DELIMETER, keyEnd + 1);
+            int valueEnd = response.indexOf(Fields.LOG_DELIMITER, keyEnd + 1);
             if (valueEnd == -1) {
                 // discarding invalid line
                 return "";
@@ -150,25 +150,25 @@ public class EngineState {
             String value = response.substring(keyEnd, valueEnd);
             log.info("Invalid key [" + unknownKey + "] value [" + value + "]");
             // trying to process the rest of the line
-            response = response.substring(valueEnd + Fields.LOG_DELIMETER.length());
+            response = response.substring(valueEnd + Fields.LOG_DELIMITER.length());
         }
         return response;
     }
 
     public static String skipToken(String string) {
-        int keyEnd = string.indexOf(Fields.LOG_DELIMETER);
+        int keyEnd = string.indexOf(Fields.LOG_DELIMITER);
         if (keyEnd == -1) {
             // discarding invalid line
             return "";
         }
-        return string.substring(keyEnd + Fields.LOG_DELIMETER.length());
+        return string.substring(keyEnd + Fields.LOG_DELIMITER.length());
     }
 
     public static String handleStringActionPair(String response, StringActionPair pair, EngineStateListener listener) {
         if (startWithIgnoreCase(response, pair.prefix)) {
             String key = pair.first;
             int beginIndex = key.length() + 1;
-            int endIndex = response.indexOf(Fields.LOG_DELIMETER, beginIndex);
+            int endIndex = response.indexOf(Fields.LOG_DELIMITER, beginIndex);
             if (endIndex == -1)
                 endIndex = response.length();
 
@@ -179,7 +179,7 @@ public class EngineState {
 
             response = response.substring(endIndex);
             if (!response.isEmpty())
-                response = response.substring(1); // skipping the Fields.LOG_DELIMETER
+                response = response.substring(1); // skipping the Fields.LOG_DELIMITER
             return response;
         }
         return response;

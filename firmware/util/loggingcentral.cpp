@@ -208,7 +208,7 @@ void efiPrintfInternal(const char *format, ...) {
 	va_end(ap);
 
 	// Ensure that the string is comma-terminated in case it overflowed
-	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = LOG_DELIMETER[0];
+	lineBuffer->buffer[sizeof(lineBuffer->buffer) - 1] = LOG_DELIMITER[0];
 
 	{
 		// Push the buffer in to the written list so it can be written back

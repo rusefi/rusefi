@@ -82,7 +82,7 @@ void WaveChart::reset() {
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
-	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
+	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, LOG_DELIMITER);
 }
 
 void WaveChart::startDataCollection() {
@@ -139,7 +139,7 @@ void WaveChart::publishIfFull() {
 }
 
 void WaveChart::publish() {
-	logging.appendPrintf( DELIMETER);
+	logging.appendPrintf( LOG_DELIMITER);
 	waveChartUsedSize = logging.loggingSize();
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
@@ -212,14 +212,14 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		 * printf is a heavy method, append is used here as a performance optimization
 		 */
 		logging.appendFast(name);
-		logging.appendChar(CHART_DELIMETER);
+		logging.appendChar(CHART_LOG_DELIMITER);
 		logging.appendFast(msg);
-		logging.appendChar(CHART_DELIMETER);
+		logging.appendChar(CHART_LOG_DELIMITER);
 //		time100 -= startTime100;
 
 		itoa10(timeBuffer, time100);
 		logging.appendFast(timeBuffer);
-		logging.appendChar(CHART_DELIMETER);
+		logging.appendChar(CHART_LOG_DELIMITER);
 		logging.terminate();
 	}
 #endif /* EFI_TEXT_LOGGING */

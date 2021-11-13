@@ -9,9 +9,6 @@
 #include <cstddef>
 #include "rusefi_generated.h"
 
-// for compatibility, many files still use old non-generated define
-#define DELIMETER LOG_DELIMITER
-
 class Logging;
 
 void startLoggingProcessor();
