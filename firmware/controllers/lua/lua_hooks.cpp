@@ -500,8 +500,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
-#if EFI_CAN_SUPPORT
 	lua_register(l, "txCan", lua_txCan);
+#if EFI_CAN_SUPPORT
 	lua_register(l, "canRxAdd", [](lua_State* l) {
 		auto eid = luaL_checkinteger(l, 1);
 		addLuaCanRxFilter(eid);
