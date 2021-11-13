@@ -18,8 +18,8 @@ public:
 		auto kmPerPulse = 1 / pulsePerKm;
 
 		//     1 pulse       3600 sec      1 km       km
-		//    ---------  *  ---------- * --------- = -----
-		//       sec           1 hr       1 pulse     sec
+		//    ---------  *  ---------- * --------- = ----
+		//       sec           1 hr       1 pulse     hr
 		return frequency *     3600    * kmPerPulse;
 	}
 };
