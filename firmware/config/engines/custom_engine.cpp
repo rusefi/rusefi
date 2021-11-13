@@ -930,14 +930,19 @@ biasCurveIndex = findCurveIndex("bias")
 
 canRxAdd(0x600)
 
-function onCanRx(id, dlc, data)
-  print(id .. ' ' .. dlc .. data)
+voltageFromCan = nil
+canRxAdd(0x600)
+
+function onCanRx(bus, id, dlc, data)
+  print('got CAN id=' .. id .. ' dlc='  .. dlc)
+  voltageFromCan =   data[2] / 256.0 + data[1]
 end
 
 function onTick()
   local targetVoltage = getAuxAnalog(0)
   
-  local target = interpolate(1, 0, 3.5, 100, targetVoltage)
+--  local target = interpolate(1, 0, 3.5, 100, targetVoltage)
+  local target = interpolate(1, 0, 3.5, 100, voltageFromCan)
 -- clamp 0 to 100
   target = math.max(0, target)
   target = math.min(100, target)
