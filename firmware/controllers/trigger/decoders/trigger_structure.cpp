@@ -37,6 +37,7 @@
 #include "trigger_honda.h"
 #include "trigger_vw.h"
 #include "trigger_universal.h"
+#include "trigger_mercedes.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -587,7 +588,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configure3_1_cam(this);
 		break;
 
-	case TT_UNUSED_10:
+	case TT_MERCEDES_2_SEGMENT:
+		setMercedesTwoSegment(this);
+
 	case TT_UNUSED_62:
 	case TT_ONE:
 		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);

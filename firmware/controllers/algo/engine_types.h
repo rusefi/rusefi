@@ -352,8 +352,7 @@ typedef enum {
 	TT_TOOTHED_WHEEL_60_2 = 8,
 	TT_TOOTHED_WHEEL_36_1 = 9,
 
-	// todo: remove this weird trigger?
-	TT_UNUSED_10 = 10,
+	TT_MERCEDES_2_SEGMENT = 10,
 
 	// todo: this really looks to be same as Miata_NA shall we remove?
 	TT_MITSUBISHI = 11,
