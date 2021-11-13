@@ -210,11 +210,19 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	// Validate pins
 	if (!isValidCanTxPin(CONFIG(canTxPin))) {
+		if (CONFIG(canTxPin) == GPIO_UNASSIGNED) {
+			// todo: smarter online change of settings, kill isCanEnabled with fire
+			return;
+		}
 		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
 		return;
 	}
 
 	if (!isValidCanRxPin(CONFIG(canRxPin))) {
+		if (CONFIG(canRxPin) == GPIO_UNASSIGNED) {
+			// todo: smarter online change of settings, kill isCanEnabled with fire
+			return;
+		}
 		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
 		return;
 	}

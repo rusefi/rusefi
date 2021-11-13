@@ -1,6 +1,26 @@
 # https://docs.google.com/spreadsheets/d/1x9pB8oRpY1ISkrGYIsa5j2MrnQVA644REb9Ebl41tcw
 
 pins:
+  - pin: P19
+    # LOW11 IO9
+    id: GPIOI_1
+    class: outputs
+    ts_name: Aux P19
+    type: ls
+
+  - pin: P34
+# LOW8 IO6
+    id: GPIOH_15
+    class: outputs
+    ts_name: Aux P34
+
+  - pin: P35
+# LOW12 IO10
+    id: GPIOI_0
+    class: outputs
+    ts_name: Aux P35
+    type: ls
+
   - pin: A1
     function: NC
     type:

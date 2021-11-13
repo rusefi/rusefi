@@ -120,6 +120,7 @@ PROJECT_DIR = ..
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
+PCHSUB = bootloader
 
 # Imported source files and paths
 CHIBIOS = $(PROJECT_DIR)/ChibiOS

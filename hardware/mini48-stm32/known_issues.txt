@@ -1,2 +1,0 @@
-		PA13 mention SWDIO in schematics, PA14 mention SWCLK
-		pins PB14 & PB15: wrong silkscreen

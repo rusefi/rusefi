@@ -53,13 +53,11 @@ typedef enum {
 class PwmConfig {
 public:
 	PwmConfig();
-	PwmConfig(float *switchTimes, SingleChannelStateSequence *waves);
-	void init(float *switchTimes, SingleChannelStateSequence *waves);
 	void *arg = nullptr;
 
 	void weComplexInit(const char *msg,
 			ExecutorInterface *executor,
-			const int phaseCount, float const *switchTimes, const int waveCount, pin_state_t *const*pinStates,
+			MultiChannelStateSequence const * seq,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
@@ -81,7 +79,7 @@ public:
 
 	// todo: 'outputPins' should be extracted away from here since technically one can want PWM scheduler without actual pin output
 	OutputPin *outputPins[PWM_PHASE_MAX_WAVE_PER_PWM];
-	MultiChannelStateSequence multiChannelStateSequence;
+	MultiChannelStateSequence const * multiChannelStateSequence = nullptr;
 	efitick_t togglePwmState();
 	void stop();
 
@@ -90,10 +88,6 @@ public:
 	scheduling_s scheduling;
 
 	pwm_config_safe_state_s safe;
-	/**
-	 * Number of events in the cycle
-	 */
-	int phaseCount;
 
 	/**
 	 * this callback is invoked before each wave generation cycle
@@ -127,12 +121,10 @@ public:
 	explicit SimplePwm(const char *name);
 	void setSimplePwmDutyCycle(float dutyCycle) override;
 	pin_state_t pinStates[2];
-	SingleChannelStateSequence sr[1];
+	SingleChannelStateSequence sr;
 	float _switchTimes[2];
+	MultiChannelStateSequence seq;
 	hardware_pwm* hardPwm = nullptr;
-
-private:
-	SingleChannelStateSequence waveInstance;
 };
 
 /**
@@ -167,6 +159,5 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle);
 
-void copyPwmParameters(PwmConfig *state, int phaseCount, float const *switchTimes,
-		int waveCount, pin_state_t *const *pinStates);
+void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq);
 

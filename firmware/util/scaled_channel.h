@@ -11,39 +11,52 @@
 
 #pragma once
 
+#include <cmath>
 #include <cstdint>
 #include <type_traits>
 
 #include "rusefi_generated.h"
+
+struct scaled_channel_base { };
+
+template <typename TTest>
+static constexpr bool is_scaled_channel = std::is_base_of_v<scaled_channel_base, TTest>;
 
 // This class lets us transparently store something at a ratio inside an integer type
 // Just use it like a float - you can read and write to it, like this:
 // scaled_channel<uint8_t, 10> myVar;
 // myVar = 2.4f;	// converts to an int, stores 24
 // float x = myVar; // converts back to float, returns 2.4f
-template <typename T, int mult = 1>
-class scaled_channel {
-	using TSelf = scaled_channel<T, mult>;
+template <typename T, int mul = 1, int div = 1>
+class scaled_channel : scaled_channel_base {
+	using TSelf = scaled_channel<T, mul, div>;
 
 public:
 	constexpr scaled_channel() : m_value(static_cast<T>(0)) { }
 	constexpr scaled_channel(float val)
-		: m_value(val * mult)
 	{
+		val *= float(mul) / div;
+		if (std::is_integral_v<T>) {
+			m_value = std::roundf(val);
+		} else {
+			m_value = val;
+		}
 	}
 
 	// Allow reading back out as a float (note: this may be lossy!)
 	constexpr operator float() const {
-		return m_value / (float)mult;
+		return m_value * (float(div) / mul);
 	}
 
-    // Postfix increment operator
+	// Postfix increment operator
 	// only enable if:
 	//  - base type T is an integral type (integer)
 	//  - multiplier is equal to 1
 	void operator++(int) {
-		static_assert(mult == 1, "Increment operator only supported for non-scaled integer types");
+		static_assert(mul == 1 && div == 1,
+			      "Increment operator only supported for non-scaled integer types");
 		static_assert(std::is_integral_v<T>, "Increment operator only supported for non-scaled integer types");
+	
 
 		m_value++;
 	}
@@ -78,3 +91,7 @@ using scaled_voltage = scaled_channel<uint16_t, PACK_MULT_VOLTAGE>;		// 0-65v at
 using scaled_afr = scaled_channel<uint16_t, PACK_MULT_AFR>;			// 0-65afr at 0.001 resolution
 using scaled_lambda = scaled_channel<uint16_t, PACK_MULT_LAMBDA>;	// 0-6.5 lambda at 0.0001 resolution
 using scaled_fuel_mass_mg = scaled_channel<uint16_t, PACK_MULT_FUEL_MASS>;	// 0 - 655.35 milligrams, 0.01mg resolution
+
+// make sure the scaled channel detector works
+static_assert(!is_scaled_channel<int>);
+static_assert(is_scaled_channel<scaled_channel<int, 5>>);

@@ -14,8 +14,6 @@ using ValueType = std::remove_extent_t<decltype(CONFIG(fuelLevelValues))>;
 
 static TableFunc
 	<BinType, ValueType, FUEL_LEVEL_TABLE_COUNT,
-		// Bins are stored in millivolts
-		efi::ratio<1, PACK_MULT_VOLTAGE>,
 		// Values are stored in percent
 		efi::ratio<1>>
 			fuelCurve(CONFIG(fuelLevelBins), CONFIG(fuelLevelValues));

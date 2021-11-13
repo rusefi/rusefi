@@ -290,30 +290,36 @@ static BenchController instance;
 
 static void handleBenchCategory(uint16_t index) {
 	switch(index) {
-	case CMD_TS_BENCH_MAIN_RELAY:
+	case BENCH_MAIN_RELAY:
 		mainRelayBench();
 		return;
-	case CMD_TS_BENCH_HPFP_VALVE:
+	case BENCH_HPFP_VALVE:
 		hpfpValveBench();
 		return;
-	case CMD_TS_BENCH_FUEL_PUMP:
+	case BENCH_FUEL_PUMP:
 		// cmd_test_fuel_pump
 		fuelPumpBench();
 		return;
-	case CMD_TS_BENCH_STARTER_ENABLE_RELAY:
+	case BENCH_STARTER_ENABLE_RELAY:
 		starterRelayBench();
 		return;
-	case CMD_TS_BENCH_CHECK_ENGINE_LIGHT:
+	case BENCH_CHECK_ENGINE_LIGHT:
 		// cmd_test_check_engine_light
 		milBench();
 		return;
-	case CMD_TS_BENCH_AC_COMPRESSOR_RELAY:
+	case BENCH_AC_COMPRESSOR_RELAY:
 		acRelayBench();
 		return;
-	case CMD_TS_BENCH_FAN_RELAY:
+	case BENCH_FAN_RELAY:
 		fanBench();
 		return;
-	case CMD_TS_BENCH_FAN_RELAY_2:
+	case BENCH_IDLE_VALVE:
+		// cmd_test_idle_valve
+#if EFI_IDLE_CONTROL
+		startIdleBench();
+#endif /* EFI_IDLE_CONTROL */
+		return;
+	case BENCH_FAN_RELAY_2:
 		fan2Bench();
 		return;
 	default:
@@ -464,20 +470,13 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		handleBenchCategory(index);
 		break;
 
-	case CMD_TS_X17:
-		// cmd_test_idle_valve
-#if EFI_IDLE_CONTROL
-		startIdleBench();
-#endif /* EFI_IDLE_CONTROL */
-		break;
-
-	case 0x18:
+	case TS_UNUSED_CJ125_CALIB:
 #if EFI_CJ125 && HAL_USE_SPI
 		cjStartCalibration();
 #endif /* EFI_CJ125 */
 		break;
 
-	case 0x20:
+	case TS_CRAZY:
 		if (index == 0x3456) {
 			// call to pit
 			setCallFromPitStop(30000);

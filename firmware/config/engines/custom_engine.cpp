@@ -16,6 +16,7 @@
 #include "custom_engine.h"
 #include "fsio_impl.h"
 #include "mre_meta.h"
+#include "proteus_meta.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -626,27 +627,26 @@ void mreSecondaryCan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
 
-	strncpy(config->luaScript, "function onTick()\n"
-			"txPayload = {}\n"
-			"function onTick()\n"
-"  auxV = getAuxAnalog(0)\n"
-"  print('Hello analog ' .. auxV )\n"
-"  -- first byte: integer part, would be autoboxed to int\n"
-"  txPayload[1] = auxV\n"
-"  -- second byte: fractional part, would be autoboxed to int, overflow would be ignored\n"
-"  txPayload[2] = auxV * 256;\n"
-"  auxV = getAuxAnalog(1)\n"
-"  print('Hello analog ' .. auxV )\n"
-"  txPayload[3] = auxV\n"
-"  txPayload[4] = auxV * 256;\n"
-"  auxV = getAuxAnalog(2)\n"
-"  print('Hello analog ' .. auxV )\n"
-"  txPayload[5] = auxV\n"
-"  txPayload[6] = auxV * 256;\n"
-"  txCan(1, 0x600, 1, txPayload)\n"
-"end"
-
-			"end", efi::size(config->luaScript));
+	strncpy(config->luaScript, R"(
+txPayload = {}
+function onTick()
+  auxV = getAuxAnalog(0)
+  print('Hello analog ' .. auxV )
+  -- first byte: integer part, would be autoboxed to int
+  txPayload[1] = auxV
+  -- second byte: fractional part, would be autoboxed to int, overflow would be ignored
+  txPayload[2] = auxV * 256;
+  auxV = getAuxAnalog(1)
+  print('Hello analog ' .. auxV )
+  txPayload[3] = auxV
+  txPayload[4] = auxV * 256;
+  auxV = getAuxAnalog(2)
+  print('Hello analog ' .. auxV )
+  txPayload[5] = auxV
+  txPayload[6] = auxV * 256;
+  txCan(1, 0x600, 1, txPayload)
+end
+)", efi::size(config->luaScript));
 
 }
 
@@ -828,6 +828,117 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600 / RPM_1_BYTE_PACKING_MULT, 7000 / RPM_1_BYTE_PACKING_MULT, 100 / RPM_1_BYTE_PACKING_MULT);
 		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
 	}
+}
+
+void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+#if HW_PROTEUS
+	engineConfiguration->tpsMin = 889;
+	engineConfiguration->tpsMax = 67;
+
+	engineConfiguration->tps1SecondaryMin = 105;
+	engineConfiguration->tps1SecondaryMax = 933;
+
+	strcpy(engineConfiguration->scriptCurveName[2 - 1], "rateofchange");
+
+	strcpy(engineConfiguration->scriptCurveName[3 - 1], "bias");
+
+	/**
+	 * for this demo I use ETB just a sample object to control with PID. No reasonable person should consider actually using
+	 * Lua for actual intake ETB control while driving around the racing track - hard-coded ETB control is way smarter!
+	 */
+	static const float defaultBiasBins[] = {
+		0, 1, 2, 4, 7, 98, 99, 100
+	};
+	static const float defaultBiasValues[] = {
+		-20, -18, -17, 0, 20, 21, 22, 25
+	};
+
+	engineConfiguration->luaOutputPins[0] = GPIOD_12;
+	engineConfiguration->luaOutputPins[1] = GPIOD_10;
+	engineConfiguration->luaOutputPins[2] = GPIOD_11;
+
+	setLinearCurve(CONFIG(scriptCurve2Bins), 0, 8000, 1);
+	setLinearCurve(CONFIG(scriptCurve2), 0, 100, 1);
+
+	copyArray(CONFIG(scriptCurve3Bins), defaultBiasBins);
+	copyArray(CONFIG(scriptCurve3), defaultBiasValues);
+
+	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_10;
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
+
+
+	// ETB direction #1 PD10
+	engineConfiguration->etbIo[0].directionPin1 = GPIO_UNASSIGNED;
+	// ETB control PD12
+	engineConfiguration->etbIo[0].controlPin = GPIO_UNASSIGNED;
+	// ETB disable PD11
+	engineConfiguration->etbIo[0].disablePin = GPIO_UNASSIGNED;
+
+/**
+controlIndex = 0
+directionIndex = 1
+
+  print('pid output ' .. output)
+  print('')
+
+
+
+  local duty = (bias + output) / 100
+
+--  isPositive = duty > 0;
+--  pwmValue = isPositive and duty or -duty
+--  setPwmDuty(controlIndex, pwmValue)
+
+--  dirValue = isPositive and 1 or 0;
+--  setPwmDuty(directionIndex, dirValue)
+
+--  print('pwm ' .. pwmValue .. ' dir ' .. dirValue)
+
+ *
+ */
+
+	auto script = R"(
+
+startPwm(0, 800, 0.1)
+-- direction
+startPwm(1, 80, 1.0)
+-- disable
+startPwm(2, 80, 0.0)
+
+pid = Pid.new()
+pid:setP(2)
+pid:setMinValue(-100)
+pid:setMaxValue(100)
+
+biasCurveIndex = findCurveIndex("bias")
+
+function onTick()
+  local targetVoltage = getAuxAnalog(0)
+  
+  local target = interpolate(1, 0, 3.5, 100, targetVoltage)
+-- clamp 0 to 100
+  target = math.max(0, target)
+  target = math.min(100, target)
+
+  print('Decoded target: ' .. target)
+
+  local tps = getSensor("TPS1")
+  tps = (tps == nil and 'invalid TPS' or tps)
+  print('Tps ' .. tps)
+
+  pid:setTarget(target)
+  local output = pid:get(tps)
+
+  local bias = curve(biasCurveIndex, target)
+  print('bias ' .. bias)
+
+  print('pid output ' .. output)
+  print('')
+  
+end
+				)";
+	strncpy(config->luaScript, script, efi::size(config->luaScript));
+#endif
 }
 
 #if HW_HELLEN

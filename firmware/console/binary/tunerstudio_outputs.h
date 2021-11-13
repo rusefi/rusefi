@@ -107,7 +107,8 @@ struct TunerStudioOutputChannels {
 	scaled_pressure baroPressure; // 32
 
 	scaled_lambda lambda; // 34
-	uint16_t unused36; // 36
+	scaled_channel<uint8_t, 10> knockRetard; // 36
+	uint8_t unused37;
 
 	// misc sensors
 	scaled_voltage vBatt; // 38
@@ -134,7 +135,7 @@ struct TunerStudioOutputChannels {
 	scaled_percent iatCorrection; // 64
 	scaled_percent cltCorrection; // 66
 	scaled_percent baroCorrection; // 68
-	uint16_t unused70; // 70
+	uint16_t currentEnginePhase; // 70
 
 	// Wall model AE
 	scaled_ms wallFuelAmount; // 72
@@ -286,7 +287,11 @@ struct TunerStudioOutputChannels {
 	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationZ; // 308
 	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationRoll; // 310
 	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationYaw; // 312
-	uint8_t unusedAtTheEnd[24]; // we have some unused bytes to allow compatible TS changes
+
+	scaled_channel<int8_t> vvtTargets[4]; // 314
+	scaled_channel<uint16_t> turboSpeed; // 318
+
+	uint8_t unusedAtTheEnd[18]; // we have some unused bytes to allow compatible TS changes
 
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {

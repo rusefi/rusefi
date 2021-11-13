@@ -68,9 +68,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             return tsPosition;
         }
 
-        if (configField.getArraySize() != 1) {
-            // todo: array support
-        } else if (TypesHelper.isFloat(configField.getType())) {
+        if (TypesHelper.isFloat(configField.getType())) {
             writeJavaFieldName(nameWithPrefix, tsPosition);
             javaFieldsWriter.write("FieldType.FLOAT);" + EOL);
         } else {
@@ -101,7 +99,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             javaFieldsWriter.write(");" + EOL);
         }
 
-        tsPosition += configField.getArraySize() * configField.getElementSize();
+        tsPosition += configField.getSize(next);
 
         return tsPosition;
     }

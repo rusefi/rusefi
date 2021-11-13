@@ -80,23 +80,32 @@ public class TSProjectConsumer implements ConfigurationConsumer {
             tsPosition += configField.getState().tsCustomSize.get(configField.getType());
         } else if (configField.getTsInfo() == null) {
             throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at "+ prefix);
-        } else if (configField.getArraySize() == 0) {
-            // write nothing for empty array
-            // TS does not like those
-        } else if (configField.getArraySize() != 1) {
-            tsHeader.write(nameWithPrefix + " = array, ");
-            tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
-            tsHeader.write(" " + tsPosition + ",");
-            tsHeader.write(" [" + configField.getArraySize() + "],");
-            tsHeader.write(" " + handleTsInfo(configField.getTsInfo(), 1));
-
-            tsPosition += configField.getArraySize() * configField.getElementSize();
-        } else {
+        } else if (configField.getArraySizes().length == 0) {
             tsHeader.write(nameWithPrefix + " = scalar, ");
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
             tsHeader.write(" " + tsPosition + ",");
             tsHeader.write(" " + handleTsInfo(configField.getTsInfo(), 1));
-            tsPosition += configField.getArraySize() * configField.getElementSize();
+            tsPosition += configField.getSize(next);
+	} else if (configField.getSize(next) == 0) {
+            // write nothing for empty array
+            // TS does not like those
+        } else {
+            tsHeader.write(nameWithPrefix + " = array, ");
+            tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
+            tsHeader.write(" " + tsPosition + ",");
+            tsHeader.write(" [");
+	    boolean first = true;
+	    for (int size : configField.getArraySizes()) {
+		if (first) {
+		    first = false;
+		} else {
+		    tsHeader.write("x");
+		}
+		tsHeader.write(Integer.toString(size));
+	    }
+            tsHeader.write("], " + handleTsInfo(configField.getTsInfo(), 1));
+
+            tsPosition += configField.getSize(next);
         }
         tsHeader.write(EOL);
         return tsPosition;

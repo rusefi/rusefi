@@ -153,12 +153,12 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
-	engineConfiguration->fuelPumpPin = GPIOH_14;	// 65 - Fuel Pump
+	engineConfiguration->fuelPumpPin = H144_OUT_IO3;
 	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; // 47 - CEL
-	engineConfiguration->tachOutputPin = GPIOD_13; // 37 - TACH
+	engineConfiguration->tachOutputPin = H144_OUT_PWM7;
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// 21 - Main Relay
+	engineConfiguration->mainRelayPin = H144_OUT_IO1;
 
 //	engineConfiguration->injectorCompensationMode
 	engineConfiguration->fuelReferencePressure = 300;
@@ -183,6 +183,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
 	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
 	hellenWbo();
 }
 

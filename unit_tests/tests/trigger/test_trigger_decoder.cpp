@@ -298,7 +298,7 @@ TEST(misc, testRpmCalculator) {
 	ENGINE(tdcMarkEnabled) = false;
 
 	// These tests were written when the default target AFR was 14.0, so replicate that
-	engineConfiguration->stoichRatioPrimary = 140;
+	engineConfiguration->stoichRatioPrimary = 14;
 
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
@@ -323,8 +323,8 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ(0, GET_RPM());
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
-	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
-	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 240));
+	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 241));
 
 	eth.fireTriggerEvents(/* count */ 48);
 
@@ -389,8 +389,8 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("3/3", start + 14777, engine->executor.getForUnitTest(2)->momentX);
 	engine->executor.clear();
 
-	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[240]);
-	ASSERT_EQ(5, engine->triggerCentral.triggerFormDetails.triggerIndexByAngle[241]);
+	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 240));
+	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 241));
 
 
 	eth.fireFall(5);
@@ -467,10 +467,10 @@ TEST(misc, testTriggerDecoder) {
 
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
-	ASSERT_EQ(s->wave.switchTimes[0], 0.25);
-	ASSERT_EQ(s->wave.switchTimes[1], 0.5);
-	ASSERT_EQ(s->wave.switchTimes[2], 0.75);
-	ASSERT_EQ(s->wave.switchTimes[3], 1);
+	ASSERT_EQ(s->wave->getSwitchTime(0), 0.25);
+	ASSERT_EQ(s->wave->getSwitchTime(1), 0.5);
+	ASSERT_EQ(s->wave->getSwitchTime(2), 0.75);
+	ASSERT_EQ(s->wave->getSwitchTime(3), 1);
 
 	}
 
@@ -482,7 +482,7 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("dodge ram", DODGE_RAM, 16, 0.5000, 0.06);
 
-	testTriggerDecoder2("Miata NB", MAZDA_MIATA_NB1, 12, 0.0833, 0.0444);
+	testTriggerDecoder2("Miata NB2", HELLEN_NB2, 3, 0.3888888955, 0);
 
 	printf("====================================================================================== testTriggerDecoder part 3\r\n");
 
@@ -512,7 +512,7 @@ TEST(misc, testTriggerDecoder) {
 		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	}
-	testTriggerDecoder2("miata 1990", MIATA_1990, 4, 1 - 0.7015, 1 - 0.3890);
+	testTriggerDecoder2("miata 1990", MRE_MIATA_NA6_VAF, 4, 1 - 0.7015, 1 - 0.3890);
 	testTriggerDecoder3("citroen", CITROEN_TU3JP, 0, 0.4833, 0.0, 2.9994);
 
 	testTriggerDecoder2("CAMARO_4", CAMARO_4, 40, 0.5, 0);

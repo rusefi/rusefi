@@ -29,10 +29,12 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Added
  - Higher Data Rate with TS 3.1.06.14 
+ - turbo speed sensor #2935
 
 ### Fixed
  - A/C control bugfix
  - Better Windows build-in DFU #3338
+ - Proteus now waits for VBatt to enable main relay output
 
 ## Removed
  - Remove engine load acceleration enrichment #3357

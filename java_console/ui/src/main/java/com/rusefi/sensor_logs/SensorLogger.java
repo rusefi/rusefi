@@ -63,8 +63,15 @@ public class SensorLogger {
             Sensor.vvtPositionB1E,
             Sensor.vvtPositionB2I,
             Sensor.vvtPositionB2E,
+
+            Sensor.vvtTargetB1I,
+            Sensor.vvtTargetB1E,
+            Sensor.vvtTargetB2I,
+            Sensor.vvtTargetB2E,
+
             Sensor.VSS,
             Sensor.SPEED2RPM,
+            Sensor.turboSpeed,
 
             Sensor.accelerationX,
             Sensor.accelerationY,

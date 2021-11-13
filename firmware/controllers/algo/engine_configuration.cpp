@@ -484,10 +484,12 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].minValue = 10;
 	engineConfiguration->auxPid[0].maxValue = 90;
 
+	engineConfiguration->vvtOutputFrequency[0] = 300; // VVT solenoid control
 
 	engineConfiguration->auxPid[1].minValue = 10;
 	engineConfiguration->auxPid[2].maxValue = 90;
 
+	engineConfiguration->turboSpeedSensorMultiplier = 1;
 
 #if EFI_IDLE_CONTROL
 	setDefaultIdleParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -539,14 +541,16 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.minValue = 10;
 	engineConfiguration->alternatorControl.maxValue = 90;
 
-	setLinearCurve(engineConfiguration->fsioCurve1Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve1, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve1Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve1, 0, 100, 1);
 
-	setLinearCurve(engineConfiguration->fsioCurve2Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve2, 30, 170, 1);
+	setLinearCurve(engineConfiguration->scriptCurve2Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve2, 30, 170, 1);
 
-	setLinearCurve(engineConfiguration->fsioCurve3Bins, 0, 100, 1);
-	setLinearCurve(engineConfiguration->fsioCurve4Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve3Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve4Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve5Bins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve6Bins, 0, 100, 1);
 
 #if EFI_ENGINE_CONTROL
 	setDefaultWarmupIdleCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -869,10 +873,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case MICRO_RUS_EFI:
+	case UNUSED60:
 // todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
-	case PROTEUS_DEFAULTS:
-	case PROMETHEUS_DEFAULTS:
+	case UNUSED61:
+	case UNUSED100:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -935,6 +939,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 #if HW_PROTEUS
 	case PROTEUS_QC_TEST_BOARD:
 		proteusBoardTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_LUA_DEMO:
+		proteusLuaDemo(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROTEUS_BMW_M73:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1026,7 +1033,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setFrankensoBoardTestConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case FRANKENSO_BMW_M73_F:
-		setEngineBMW_M73_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setBMW_M73_TwoCoilUnitTest(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case BMW_M73_M:
 		setEngineBMW_M73_Manhattan(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1062,11 +1069,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case HONDA_ACCORD_CD_DIP:
-/*
-		setHondaAccordConfigurationDip(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-*/
+	case UNUSED18:
 	case MITSU_4G93:
 		setMitsubishiConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
@@ -1079,20 +1082,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_600:
 		setHonda600(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MAZDA_MIATA_NB1:
-		setMazdaMiataNb1EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
-	case MAZDA_626:
-		setMazda626EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
+	case UNUSED9:
+	case UNUSED28:
 	case FORD_ESCORT_GT:
 		setFordEscortGt(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
-	case MIATA_1990:
-		setMiata1990(PASS_CONFIG_PARAMETER_SIGNATURE);
-		break;
+	case UNUSED_19:
 	case MIATA_1996:
-		setMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
+		setFrankensteinMiata1996(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case CITROEN_TU3JP:
 		setCitroenBerlingoTU3JPConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);

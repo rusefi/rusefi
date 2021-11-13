@@ -30,9 +30,6 @@ pins:
     function: Check Engine Light
     type: ls
 
-  - pin: 1F
-    function: Tachometer
-    
   - pin: 1G
     id: GPIOI_8
     class: outputs

@@ -227,12 +227,14 @@ public class ConfigDefinition {
                 state.read(new FileReader(ef));
             }
 
-            SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
+            SystemOut.println(state.enumsReader.getEnums().size() + " total enumsReader");
         }
 
-        long crc32 = signatureHash(state, tsPath, inputAllFiles);
+        ParseState parseState = new ParseState(state.enumsReader);
+        // Add the variable for the config signature
+        long crc32 = signatureHash(state, parseState, tsPath, inputAllFiles);
 
-        handleFiringOrder(firingEnumFileName, state.variableRegistry);
+        handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
         MESSAGE = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
@@ -247,23 +249,17 @@ public class ConfigDefinition {
 
         // Parse the input files
         {
-            ParseState parseState = new ParseState(state.enumsReader);
-
             // First process yaml files
-            //processYamls(listener, yamlFiles);
-
-            // Process firing order enum
-            handleFiringOrder(firingEnumFileName, parseState);
+            //processYamls(parseState, yamlFiles);
 
             // Load prepend files
             {
                 // Ignore duplicates of definitions made during prepend phase
                 parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
-                //for (String prependFile : prependFiles) {
-                // TODO: fix signature define file parsing
-                //parseFile(listener, prependFile);
-                //}
+                for (String prependFile : prependFiles) {
+                    parseFile(parseState.getListener(), prependFile);
+                }
             }
 
             // Now load the main config file
@@ -275,12 +271,11 @@ public class ConfigDefinition {
 
             // Write C structs
             // CStructWriter cStructs = new CStructWriter();
-            // cStructs.writeCStructs(listener, destCHeaderFileName + ".test");
+            // cStructs.writeCStructs(parseState, destCHeaderFileName + ".test");
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(listener, "TODO", tsPath + "/test.ini");
-
+            // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
         }
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
@@ -332,21 +327,16 @@ public class ConfigDefinition {
         CachingStrategy.saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
     }
 
-    private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry) throws IOException {
+    private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, ParseState parseState) throws IOException {
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
-            variableRegistry.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+            String result = FiringOrderTSLogic.invoke(firingEnumFileName);
+            variableRegistry.register("FIRINGORDER", result);
+            parseState.addDefinition("FIRINGORDER", result, Definition.OverwritePolicy.NotAllowed);
         }
     }
 
-    private static void handleFiringOrder(String firingEnumFileName, ParseState parser) throws IOException {
-        if (firingEnumFileName != null) {
-            SystemOut.println("Reading firing from " + firingEnumFileName);
-            parser.addDefinition("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName), Definition.OverwritePolicy.NotAllowed);
-        }
-    }
-
-    private static long signatureHash(ReaderState state, String tsPath, List<String> inputAllFiles) throws IOException {
+    private static long signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputAllFiles) throws IOException {
         // get CRC32 of given input files
         long crc32 = 0;
         for (String iFile : inputAllFiles) {
@@ -356,8 +346,13 @@ public class ConfigDefinition {
         }
         SystemOut.println("CRC32 from all input files = " + crc32);
         // store the CRC32 as a built-in variable
-        if (tsPath != null) // nasty trick - do not insert signature into live data files
+
+        // nasty trick - do not insert signature into live data files
+        if (tsPath != null) {
             state.variableRegistry.register(SIGNATURE_HASH, "" + crc32);
+            parseState.addDefinition(SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
+        }
+
         return crc32;
     }
 

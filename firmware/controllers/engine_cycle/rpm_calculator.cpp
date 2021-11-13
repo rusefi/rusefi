@@ -85,6 +85,7 @@ RpmCalculator::RpmCalculator() :
 #endif /* EFI_PROD_CODE */
 	// todo: reuse assignRpmValue() method which needs PASS_ENGINE_PARAMETER_SUFFIX
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
+	setValidValue(0, 0);	// 0 for current time since RPM sensor never times out
 }
 
 /**
@@ -127,7 +128,7 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
-		invalidate();
+		setValidValue(0, 0);	// 0 for current time since RPM sensor never times out
 	} else {
 		setValidValue(floatRpmValue, 0);	// 0 for current time since RPM sensor never times out
 
@@ -287,7 +288,9 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #endif /* EFI_SENSOR_CHART */
 
 	// Always update instant RPM even when not spinning up
-	engine->triggerCentral.triggerState.updateInstantRpm(&engine->triggerCentral.triggerFormDetails, index, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.triggerState.updateInstantRpm(
+		engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,
+		index, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
 
 	if (rpmState->isSpinningUp()) {
 		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();

@@ -29,6 +29,27 @@ public class ParseState {
 
     public ParseState(EnumsReader enumsReader) {
         this.enumsReader = enumsReader;
+
+        for (Map.Entry<String, EnumsReader.EnumState> enumType : this.enumsReader.getEnums().entrySet()) {
+            String name = enumType.getKey();
+
+            for (Value enumValue : enumType.getValue().values()) {
+                try {
+                    int value = enumValue.getIntValue();
+
+                    this.handleIntDefinition(name + "_" + enumValue.getName(), value);
+                } catch (Exception exc) {
+                    // ignore parse failures
+                }
+            }
+        }
+    }
+
+    private void handleIntDefinition(String name, int value) {
+        addDefinition(name, value);
+
+        // Also add ints as 16b hex
+        addDefinition(name + "_16_hex", String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
     }
 
     private static boolean isNumeric(String str) {
@@ -110,7 +131,7 @@ public class ParseState {
     public ParseTreeListener getListener() {
         return new RusefiConfigGrammarBaseListener() {
 
-        @Override
+    @Override
     public void exitContent(RusefiConfigGrammarParser.ContentContext ctx) {
         if (!scopes.empty())
             throw new IllegalStateException();
@@ -124,13 +145,6 @@ public class ParseState {
             throw new IllegalStateException();
         if (!evalStack.empty())
             throw new IllegalStateException();
-    }
-
-    private void handleIntDefinition(String name, int value) {
-        addDefinition(name, value);
-
-        // Also add ints as 16b hex
-        addDefinition(name + "_16_hex", String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF));
     }
 
     @Override
@@ -228,16 +242,6 @@ public class ParseState {
     }
 
     @Override
-    public void exitArrayTypedefSuffix(RusefiConfigGrammarParser.ArrayTypedefSuffixContext ctx) {
-        Type datatype = Type.findByTsType(ctx.Datatype().getText());
-
-        FieldOptions options = new FieldOptions();
-        handleFieldOptionsList(options, ctx.fieldOptionsList());
-
-        typedefs.put(typedefName, new ArrayTypedef(ParseState.this.typedefName, this.arrayDim, datatype, options));
-    }
-
-    @Override
     public void exitStringTypedefSuffix(RusefiConfigGrammarParser.StringTypedefSuffixContext ctx) {
         Double stringLength = ParseState.this.evalResults.remove();
 
@@ -325,6 +329,7 @@ public class ParseState {
     public void exitScalarField(RusefiConfigGrammarParser.ScalarFieldContext ctx) {
         String type = ctx.identifier(0).getText();
         String name = ctx.identifier(1).getText();
+        boolean autoscale = ctx.Autoscale() != null;
 
         // First check if this is an instance of a struct
         if (structs.containsKey(type)) {
@@ -343,17 +348,6 @@ public class ParseState {
                 options = scTypedef.options.copy();
                 // Switch to the "real" type, that is the typedef's type
                 type = scTypedef.type.cType;
-            } else if (typedef instanceof ArrayTypedef) {
-                ArrayTypedef arTypedef = (ArrayTypedef) typedef;
-                // Copy the typedef's options list - we don't want to edit it
-                options = arTypedef.options.copy();
-
-                // Merge the read-in options list with the default from the typedef (if exists)
-                handleFieldOptionsList(options, ctx.fieldOptionsList());
-
-                ScalarField prototype = new ScalarField(arTypedef.type, name, options);
-                scope.structFields.add(new ArrayField<>(prototype, arTypedef.length, false));
-                return;
             } else if (typedef instanceof EnumTypedef) {
                 EnumTypedef bTypedef = (EnumTypedef) typedef;
 
@@ -384,7 +378,7 @@ public class ParseState {
         // Merge the read-in options list with the default from the typedef (if exists)
         handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-        scope.structFields.add(new ScalarField(Type.findByCtype(type).get(), name, options));
+        scope.structFields.add(new ScalarField(Type.findByCtype(type).get(), name, options, autoscale));
     }
 
     @Override
@@ -427,6 +421,7 @@ public class ParseState {
         int[] length = this.arrayDim;
         // check if the iterate token is present
         boolean iterate = ctx.Iterate() != null;
+        boolean autoscale = ctx.Autoscale() != null;
 
         // First check if this is an array of structs
         if (structs.containsKey(type)) {
@@ -483,7 +478,7 @@ public class ParseState {
         // Merge the read-in options list with the default from the typedef (if exists)
         handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-        ScalarField prototype = new ScalarField(Type.findByCtype(type).get(), name, options);
+        ScalarField prototype = new ScalarField(Type.findByCtype(type).get(), name, options, autoscale);
 
         scope.structFields.add(new ArrayField<>(prototype, length, iterate));
     }

@@ -142,6 +142,12 @@ public enum Sensor {
     vvtPositionB2I(GAUGE_NAME_VVT_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 292, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
     vvtPositionB2E(GAUGE_NAME_VVT_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 294, 1.0 / PACK_MULT_ANGLE, 0, 5, "deg"),
 
+    vvtTargetB1I(GAUGE_NAME_VVT_TARGET_B1I, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 314, 1, -50, 50, "deg"),
+    vvtTargetB1E(GAUGE_NAME_VVT_TARGET_B1E, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 315, 1, -50, 50, "deg"),
+    vvtTargetB2I(GAUGE_NAME_VVT_TARGET_B2I, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 316, 1, -50, 50, "deg"),
+    vvtTargetB2E(GAUGE_NAME_VVT_TARGET_B2E, SensorCategory.SENSOR_INPUTS, FieldType.INT8, 317, 1, -50, 50, "deg"),
+    turboSpeed(GAUGE_NAME_TURBO_SPEED, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 318, 1, -50, 50, "hz"),
+
     accelerationZ(GAUGE_NAME_ACCEL_Z, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 308, 1.0 / PACK_MULT_PERCENT, -3, 3, "G"),
     accelerationRoll(GAUGE_NAME_ACCEL_ROLL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 310, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
     accelerationYaw(GAUGE_NAME_ACCEL_YAW, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 312, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),

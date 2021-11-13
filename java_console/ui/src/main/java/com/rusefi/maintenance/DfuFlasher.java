@@ -106,7 +106,7 @@ public class DfuFlasher {
         } else if (stdout.toString().contains("Target device not found")) {
             wnd.appendMsg("ERROR: Device not connected or STM32 Bootloader driver not installed?");
             wnd.appendMsg("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
-            wnd.appendMsg("ERROR: Alternatively please install drivers manually from 'drivers/silent_st_drivers/DFU_Driver' folder");
+            wnd.appendMsg("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             wnd.setErrorState(true);
         } else {
             wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
@@ -118,7 +118,8 @@ public class DfuFlasher {
     private static void timeForDfuSwitch(StatusWindow wnd) {
         wnd.appendMsg("Giving time for USB enumeration...");
         try {
-            Thread.sleep(2 * Timeouts.SECOND);
+            // two seconds not enough on my Windows 10
+            Thread.sleep(3 * Timeouts.SECOND);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }

@@ -116,40 +116,9 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 // BMW_M73_F
-void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setBMW_M73_TwoCoilUnitTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	// twoCoil configuration without unit tests ETB setup drama
 	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIOC_6;
-
-	CONFIG(idle).solenoidPin = GPIO_UNASSIGNED;
-	CONFIG(mainRelayPin) = GPIO_UNASSIGNED;
-	CONFIG(fanPin) = GPIO_UNASSIGNED;
-	CONFIG(fuelPumpPin) = GPIO_UNASSIGNED;
-
-
-	engineConfiguration->ignitionPins[ID2INDEX(1)] = GPIOE_14; // Frankenso high side - pin 1G - GREEN wire
-	engineConfiguration->ignitionPins[ID2INDEX(2)] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[ID2INDEX(3)] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[ID2INDEX(4)] = GPIO_UNASSIGNED;
-	engineConfiguration->ignitionPins[ID2INDEX(7)] = GPIOC_7; // Frankenso high side - pin 1H - ORANGE wire
-
-
-	engineConfiguration->injectionPins[0] = GPIOB_8; // BLU
-	engineConfiguration->injectionPins[1] = GPIOB_7; // BLK
-	engineConfiguration->injectionPins[2] = GPIOB_9; // GRN
-	engineConfiguration->injectionPins[3] = GPIOD_5; // WHT
-	engineConfiguration->injectionPins[4] = GPIOD_3; // RED
-	engineConfiguration->injectionPins[5] = GPIOE_2; // ORG
-
-	engineConfiguration->injectionPins[6] = GPIOE_3; // BLU
-	engineConfiguration->injectionPins[7] = GPIOE_4; // BLK
-	engineConfiguration->injectionPins[8] = GPIOE_5; // GRN
-	engineConfiguration->injectionPins[9] = GPIOE_6; // WHT
-	engineConfiguration->injectionPins[10] = GPIOC_13;//RED
-	engineConfiguration->injectionPins[11] = GPIOD_7;// ORG
 }
 
 // BMW_M73_M

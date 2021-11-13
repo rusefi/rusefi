@@ -15,7 +15,9 @@
 #define ts_show_can2 false
 #define ts_show_software_knock true
 #define ts_show_hardware_simulator false
-#define ts_show_etb_pins false
+
+! in case of direct Lua control we need UI to undo defaults
+#define ts_show_etb_pins true
 
 #define show_test_presets false
 #define show_Frankenso_presets false

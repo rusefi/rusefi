@@ -90,6 +90,7 @@ float FastInterpolation::getValue(float x) const {
  * @param	X key to be interpolated
  *
  * @note	For example, "interpolateMsg("", engineConfiguration.tpsMin, 0, engineConfiguration.tpsMax, 100, adc);"
+ * @see interpolateClamped
  */
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x) {
 	if (cisnan(x1) || cisnan(x2) || cisnan(y1) || cisnan(y2)) {
@@ -126,6 +127,9 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 	return result;
 }
 
+/**
+ * @see interpolateMsg
+ */
 float interpolateClamped(float x1, float y1, float x2, float y2, float x) {
 	if (x <= x1)
 		return y1;

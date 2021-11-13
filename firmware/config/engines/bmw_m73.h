@@ -11,7 +11,7 @@
 
 void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-void setEngineBMW_M73_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setBMW_M73_TwoCoilUnitTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 // set engine_type 24
 void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 // set engine_type 63

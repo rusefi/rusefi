@@ -129,18 +129,38 @@ void initializeNissanVQvvt(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(5);
 }
 
-void initializeNissanVQ35crank(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t totalWheel, size_t missing) {
 	s->setTriggerSynchronizationGap(0.33);
 
-	s->tdcPosition = 675;
+	auto toothAngle = 360.0f / totalWheel;
 
-	float currentAngle = 20;
-	for (int i = 0;i < 10;i++) {
-		currentAngle += 10;
+	auto patternTeeth = totalWheel / halfCylinderCount;
+	auto toothCount = patternTeeth - missing;
+	
+	float currentAngle = missing * toothAngle;
+	for (int i = 0; i < toothCount; i++) {
+		currentAngle += toothAngle;
 		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
 		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
 	}
+}
+
+void initializeNissanVQ35crank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR);
+
+	s->tdcPosition = 675;
+
+	// 6 cylinder = 36 tooth wheel, missing 2 teeth in 3 spots
+	makeNissanPattern(s, 3, 36, 2);
+}
+
+void initializeNissanMR18crank(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
+
+	s->tdcPosition = 640;
+
+	// 4 cylinder = 36 tooth wheel, missing 2 teeth in 2 spots
+	makeNissanPattern(s, 2, 36, 2);
 }
 
 void initializeNissanQR25crank(TriggerWaveform *s) {
@@ -200,4 +220,37 @@ void initializeNissanVQ30cam(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 5.78 * TRIGGER_GAP_DEVIATION_LOW, 5.78 * TRIGGER_GAP_DEVIATION_HIGH);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.38 * TRIGGER_GAP_DEVIATION_LOW, 0.38 * TRIGGER_GAP_DEVIATION_HIGH);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.67 * TRIGGER_GAP_DEVIATION_LOW, 2.67 * TRIGGER_GAP_DEVIATION_HIGH);
+}
+
+void initializeNissanMRvvt(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->tdcPosition = 0;
+
+	int x = 74;
+
+	// All "groups" start every 90 degrees of cam rotation
+	// The groups have 1, 3, 4, 2 teeth each (which is the firing order?)
+
+	// Teeth within a group are spaced 16 cam degrees apart
+	int toothSpacing = 16;
+
+	// "1"
+	addvq30tooth(s, x + 0);
+
+	// "3"
+	addvq30tooth(s, x + 90 + 0 * toothSpacing);
+	addvq30tooth(s, x + 90 + 1 * toothSpacing);
+	addvq30tooth(s, x + 90 + 2 * toothSpacing);
+
+	// "4"
+	addvq30tooth(s, x + 180 + 0 * toothSpacing);
+	addvq30tooth(s, x + 180 + 1 * toothSpacing);
+	addvq30tooth(s, x + 180 + 2 * toothSpacing);
+	addvq30tooth(s, x + 180 + 3 * toothSpacing);
+
+	// "2"
+	addvq30tooth(s, x + 270 + 0 * toothSpacing);
+	addvq30tooth(s, x + 270 + 1 * toothSpacing);
+
+	s->setTriggerSynchronizationGap(5.4);
 }

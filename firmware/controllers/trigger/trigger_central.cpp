@@ -24,6 +24,7 @@
 #include "tooth_logger.h"
 #include "map_averaging.h"
 #include "main_trigger_callback.h"
+#include "status_loop.h"
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -76,6 +77,16 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 		return NAN;
 	}
 	return vvtPosition[bankIndex][camIndex];
+}
+
+expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
+	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
+
+	if (cisnan(oneDegreeUs)) {
+		return unexpected;
+	}
+
+	return m_virtualZeroTimer.getElapsedUs(nowNt) / oneDegreeUs;
 }
 
 /**
@@ -259,8 +270,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	logFront(isImportantFront, nowNt, index PASS_ENGINE_PARAMETER_SUFFIX);
 
 
-	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
-	if (cisnan(oneDegreeUs)) {
+	auto currentPhase = tc->getCurrentEnginePhase(nowNt);
+	if (!currentPhase) {
 		// todo: this code branch is slowing NB2 cranking since we require RPM sync for VVT sync!
 		// todo: smarter code
 		//
@@ -278,11 +289,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 	}
 
-
 	tc->vvtCamCounter++;
 
-	float offsetUs = tc->virtualZeroTimer.getElapsedUs(nowNt);
-	angle_t currentPosition = offsetUs / oneDegreeUs;
+	angle_t currentPosition = currentPhase.Value;
 	// convert engine cycle angle into trigger cycle angle
 	currentPosition -= tdcPosition();
 	// https://github.com/rusefi/rusefi/issues/1713 currentPosition could be negative that's expected
@@ -332,7 +341,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 
 	if (index != 0) {
 		// todo: only assign initial position of not first cam once cam was synchronized
-		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition, 720);
+		tc->vvtPosition[bankIndex][camIndex] = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
 		// at the moment we use only primary VVT to sync crank phase
 		return;
 	}
@@ -341,7 +350,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
 	// shall adjust vvt position as well
 	vvtPosition -= crankOffset;
-	vvtPosition = wrapVvt(vvtPosition, 720);
+	vvtPosition = wrapVvt(vvtPosition, FOUR_STROKE_CYCLE_DURATION);
 
 	// this could be just an 'if' but let's have it expandable for future use :)
 	switch(engineConfiguration->vvtMode[camIndex]) {
@@ -619,7 +628,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	if (triggerIndexForListeners == 0) {
-		virtualZeroTimer.reset(timestamp);
+		m_virtualZeroTimer.reset(timestamp);
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
 
@@ -650,6 +659,10 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif
 
 		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+
+#if EFI_TUNER_STUDIO
+		updateCurrentEnginePhase(PASS_ENGINE_PARAMETER_SIGNATURE);
+#endif
 	}
 }
 
@@ -791,8 +804,9 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		changed |= isConfigurationChanged(vvtOffsets[camIndex]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverride)); i++) {
-		changed |= isConfigurationChanged(triggerGapOverride[i]);
+	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverrideFrom)); i++) {
+		changed |= isConfigurationChanged(triggerGapOverrideFrom[i]);
+		changed |= isConfigurationChanged(triggerGapOverrideTo[i]);
 	}
 
 	for (size_t i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {

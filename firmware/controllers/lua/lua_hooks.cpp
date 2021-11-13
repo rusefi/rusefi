@@ -13,18 +13,17 @@
 // We don't want to try and use the STL on a microcontroller
 #define LUAAA_WITHOUT_CPP_STDLIB
 #include "luaaa.hpp"
+#include "lua_hooks_util.h"
 using namespace luaaa;
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
-static int lua_efi_print(lua_State* l) {
-	auto msg = luaL_checkstring(l, 1);
+#define HUMAN_OFFSET 1
 
-	efiPrintf("LUA: %s", msg);
-
-	return 0;
-}
+#if EFI_UNIT_TEST
+Engine *engineForLuaUnitTests;
+#endif
 
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
@@ -55,6 +54,7 @@ static int getSensor(lua_State* l, SensorType type) {
 }
 
 static int lua_getAuxAnalog(lua_State* l) {
+	// todo: shall we use HUMAN_INDEX since UI goes from 1 and Lua loves going from 1?
 	auto sensorIndex = luaL_checkinteger(l, 1);
 
 	auto type = static_cast<SensorType>(sensorIndex + static_cast<int>(SensorType::Aux1));
@@ -98,6 +98,38 @@ static int lua_table3d(lua_State* l) {
 	auto result = getFSIOTable(tableIdx)->getValue(x, y);
 
 	lua_pushnumber(l, result);
+	return 1;
+}
+
+static int lua_curve2d(lua_State* l) {
+	// index starting from 1
+	auto curveIdx = luaL_checkinteger(l, 1);
+	auto x = luaL_checknumber(l, 2);
+
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+
+	auto result = getCurveValue(curveIdx - HUMAN_OFFSET, x PASS_ENGINE_PARAMETER_SUFFIX);
+
+	lua_pushnumber(l, result);
+	return 1;
+}
+
+static int lua_findCurveIndex(lua_State* l) {
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+	auto name = luaL_checklstring(l, 1, nullptr);
+	auto result = getCurveIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+	if (result == EFI_ERROR_CODE) {
+		lua_pushnil(l);
+	} else {
+		// TS counts curve from 1 so convert indexing here
+		lua_pushnumber(l, result + HUMAN_OFFSET);
+	}
 	return 1;
 }
 
@@ -186,7 +218,7 @@ static P luaL_checkPwmIndex(lua_State* l, int pos) {
 static int lua_startPwm(lua_State* l) {
 	auto p = luaL_checkPwmIndex(l, 1);
 	auto freq = luaL_checknumber(l, 2);
-	auto duty = luaL_checknumber(l, 2);
+	auto duty = luaL_checknumber(l, 3);
 
 	// clamp to 1..1000 hz
 	freq = clampF(1, freq, 1000);
@@ -396,6 +428,12 @@ struct LuaPid final {
 	}
 
 	float get(float target, float input) {
+#if EFI_UNIT_TEST
+		extern int timeNowUs;
+		// this is how we avoid zero dt
+		timeNowUs += 1000;
+#endif
+
 		float dt = m_lastUpdate.getElapsedSecondsAndReset(getTimeNowNt());
 
 		return m_pid.getOutput(target, input, dt);
@@ -412,7 +450,6 @@ private:
 };
 
 void configureRusefiLuaHooks(lua_State* l) {
-
 	LuaClass<Timer> luaTimer(l, "Timer");
 	luaTimer
 		.ctor()
@@ -432,6 +469,9 @@ void configureRusefiLuaHooks(lua_State* l) {
 		.fun("reset", &LuaPid::reset);
 
 	lua_register(l, "print", lua_efi_print);
+
+	configureRusefiLuaUtilHooks(l);
+
 	lua_register(l, "readPin", lua_readpin);
 	lua_register(l, "getAuxAnalog", lua_getAuxAnalog);
 	lua_register(l, "getSensorByIndex", lua_getSensorByIndex);
@@ -439,6 +479,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getSensorRaw", lua_getSensorRaw);
 	lua_register(l, "hasSensor", lua_hasSensor);
 	lua_register(l, "table3d", lua_table3d);
+	lua_register(l, "curve", lua_curve2d);
+	lua_register(l, "findCurveIndex", lua_findCurveIndex);
 	lua_register(l, "txCan", lua_txCan);
 
 #if !EFI_UNIT_TEST
@@ -459,6 +501,16 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "setFuelAdd", lua_setFuelAdd);
 	lua_register(l, "setFuelMult", lua_setFuelMult);
+
+	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+		int result = currentTimeMillis() - engine->triggerActivityMs;
+		lua_pushnumber(l, result);
+		return 1;
+	});
 
 #if EFI_CAN_SUPPORT
 	lua_register(l, "canRxAdd", lua_canRxAdd);

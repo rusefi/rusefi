@@ -28,6 +28,9 @@ typedef enum {
 	 * http://rusefi.com/forum/viewtopic.php?t=375
 	 */
 	FORD_ASPIRE_1996 = 3,
+	/**
+	 * See also PROTEUS_LUA_DEMO
+	 */
 	MRE_SECONDARY_CAN = 4,
 
 	NISSAN_PRIMERA = 5,
@@ -40,7 +43,7 @@ typedef enum {
 	 */
 	GY6_139QMB = 8,
 
-	MAZDA_MIATA_NB1 = 9,
+	UNUSED9 = 9,
 	UNUSED10 = 10,
 	MRE_MIATA_NB2_MAP = 11,
 	MRE_MIATA_NA6_VAF = 12,
@@ -48,15 +51,13 @@ typedef enum {
 	MRE_MIATA_NA6_MAP = 66,
 	MRE_MIATA_NB2_MAF = 15,
 
-	// Frankenstein board
-	MIATA_1990 = 19,
+	UNUSED_19 = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
 	MRE_MIATA_94_MAP = 20,
 	MIATA_1996 = 21,
 
 	FORD_ESCORT_GT = 14,
-
 
 	MITSU_4G93 = 16,
 
@@ -65,7 +66,7 @@ typedef enum {
 	 */
 	HONDA_ACCORD_CD_TWO_WIRES = 17,
 
-	HONDA_ACCORD_CD_DIP = 18,
+	UNUSED18 = 18,
 
 
 	SUBARU_2003_WRX = 22,
@@ -76,7 +77,11 @@ typedef enum {
 	MRE_BODY_CONTROL = 23,
 	BMW_M73_M = 24,
 
-UNUSED25 = 25,
+	/**
+	 * See also MRE_SECONDARY_CAN
+	 */
+	PROTEUS_LUA_DEMO = 25,
+
 	TEST_ENGINE = 26,
 
 	// used by unit test
@@ -84,7 +89,7 @@ UNUSED25 = 25,
 	// see TriggerWaveform::bothFrontsRequired
 	TEST_ISSUE_898 = 27,
 
-	MAZDA_626 = 28,
+	UNUSED28 = 28,
 
 	SACHS = 29,
 
@@ -153,9 +158,9 @@ UNUSED25 = 25,
 
 	TLE8888_BENCH_ENGINE = 59,
 
-	MICRO_RUS_EFI = 60,
+	UNUSED60 = 60,
 
-	PROTEUS_DEFAULTS = 61,
+	UNUSED61 = 61,
 
 	PROTEUS_ANALOG_PWM_TEST = 106,
 
@@ -223,7 +228,7 @@ UNUSED25 = 25,
 	 * this configuration has as few pins configured as possible
 	 */
 	MINIMAL_PINS = 99,
-	PROMETHEUS_DEFAULTS = 100,
+	UNUSED100 = 100,
 	UNUSED101 = 101,
 	VAG_18_TURBO = 102,
 
@@ -334,6 +339,7 @@ typedef enum {
 	TT_MAZDA_MIATA_NA = 3,
 	/**
 	 * NB1 means non-VVT NB, 99 and 00 1.8 engine
+	 * TODO: remove it? Remove Miata MX5 NB1 trigger #3488
 	 */
 	TT_MAZDA_MIATA_NB1 = 4,
 	TT_GM_7X = 5,
@@ -478,7 +484,7 @@ typedef enum {
 	// todo: remove this trigger once we have https://github.com/rusefi/rusefi/issues/2073
 	TT_SUBARU_7_WITHOUT_6 = 51,
 
-	TT_52 = 52,
+	TT_NISSAN_MR18_CAM_VVT = 52,
 
 	// https://rusefi.com/forum/viewtopic.php?f=5&t=1912
 	TT_TRI_TACH = 53,
@@ -503,7 +509,7 @@ typedef enum {
 
 	TT_NISSAN_QR25 = 61,
 
-	TT_TEMP_62 = 62,
+	TT_UNUSED_62 = 62,
 
 	TT_SUBARU_SVX_CRANK_1 = 63,
 
@@ -515,13 +521,16 @@ typedef enum {
 
 	TT_HONDA_K_4_1 = 67,
 
+	TT_NISSAN_MR18_CRANK = 68,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 68, // this is used if we want to iterate over all trigger types
+	// todo: before increasing from 69 to 70 we shall use the half dozen of unused IDs
+	TT_UNUSED = 69, // this is used if we want to iterate over all trigger types
 
 	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
@@ -550,4 +559,34 @@ typedef enum {
 	TS_IGNITION_CATEGORY = 18,
 	TS_INJECTOR_CATEGORY = 19,
 	TS_X14 = 20,
+	TS_WIDEBAND = 21,
+	TS_BENCH_CATEGORY = 22,
+	TS_UNUSED_23 = 23,
+	TS_UNUSED_CJ125_CALIB = 24,
+	TS_UNUSED_25 = 25,
+	TS_UNUSED_26 = 26,
+	TS_UNUSED_27 = 27,
+	TS_UNUSED_28 = 28,
+	TS_UNUSED_29 = 29,
+	TS_UNUSED_30 = 30,
+	TS_UNUSED_31 = 31,
+	TS_CRAZY = 32,
 } ts_command_e;
+
+typedef enum {
+	BENCH_MAIN_RELAY, // 0
+	BENCH_FUEL_PUMP,
+	BENCH_STARTER_ENABLE_RELAY,
+	BENCH_STARTER_DISABLE_RELAY,
+	BENCH_FAN_RELAY,
+	BENCH_FAN_RELAY_2, // 5
+	BENCH_AC_COMPRESSOR_RELAY,
+	BENCH_CHECK_ENGINE_LIGHT,
+	BENCH_IDLE_VALVE, // 8
+	BENCH_HPFP_VALVE,
+	BENCH_GPPWM1_VALVE,
+	BENCH_GPPWM2_VALVE,
+	BENCH_GPPWM3_VALVE,
+	BENCH_GPPWM4_VALVE,
+	BENCH_SECOND_IDLE_VALVE,
+} bench_mode_e;

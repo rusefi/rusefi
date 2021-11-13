@@ -94,6 +94,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_BARRA_3_PLUS_1;
 	case VVT_NISSAN_VQ:
 		return TT_VVT_NISSAN_VQ35;
+	case VVT_NISSAN_MR:
+		return TT_NISSAN_MR18_CAM_VVT;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return TT_ONE; // we have to return something for the sake of -Werror=return-type
@@ -112,6 +114,7 @@ static void initVvtShape(int camIndex, TriggerState &initState DECLARE_ENGINE_PA
 
 	if (vvtMode != VVT_INACTIVE) {
 		trigger_config_s config;
+		// todo: should 'vvtWithRealDecoder' be used here?
 		ENGINE(triggerCentral).vvtTriggerType[camIndex] = config.type = getVvtTriggerType(vvtMode);
 
 		shape->initializeTriggerWaveform(
@@ -150,8 +153,9 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (CONFIG(overrideTriggerGaps)) {
 		int gapIndex = 0;
 		for (;gapIndex<=CONFIG(overrideTriggerGaps);gapIndex++) {
-			float gapOverride = CONFIG(triggerGapOverride[gapIndex]);
-			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverride * TRIGGER_GAP_DEVIATION_LOW, gapOverride * TRIGGER_GAP_DEVIATION_HIGH));
+			float gapOverrideFrom = CONFIG(triggerGapOverrideFrom[gapIndex]);
+			float gapOverrideTo = CONFIG(triggerGapOverrideTo[gapIndex]);
+			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
 		}
 		for (;gapIndex<GAP_TRACKING_LENGTH;gapIndex++) {
 			ENGINE(triggerCentral.triggerShape).syncronizationRatioFrom[gapIndex] = NAN;
@@ -459,11 +463,13 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 #endif
 
 void Engine::injectEngineReferences() {
+	INJECT_ENGINE_REFERENCE(&triggerCentral);
 	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration[camIndex]);
 	}
 	INJECT_ENGINE_REFERENCE(&limpManager);
+	INJECT_ENGINE_REFERENCE(&knockController);
 
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
@@ -632,6 +638,8 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 
 	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	knockController.periodicFastCallback();
 
 	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 }

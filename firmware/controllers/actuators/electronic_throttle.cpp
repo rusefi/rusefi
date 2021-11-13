@@ -329,7 +329,17 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	}
 #endif // EFI_TUNER_STUDIO
 
-	return targetPosition;
+	// Keep the throttle just barely off the lower stop, and less than the user-configured maximum
+	float maxPosition = CONFIG(etbMaximumPosition);
+
+	if (maxPosition < 70) {
+		maxPosition = 100;
+	} else {
+		// Don't allow max position over 100
+		maxPosition = minF(maxPosition, 100);
+	}
+
+	return clampF(1, targetPosition, maxPosition);
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
@@ -547,7 +557,6 @@ void EtbController::update() {
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
-		tsOutputChannels.debugFloatField2 = engine->idle.etbIdleAddition;
 	}
 #endif
 
@@ -926,7 +935,14 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	bool shouldInitThrottles = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 	bool anyEtbConfigured = false;
 
+	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
+	// todo: rename etbFunctions to something-without-etb for same reason?
 	for (int i = 0 ; i < ETB_COUNT; i++) {
+		auto func = CONFIG(etbFunctions[i]);
+		if (func == ETB_None) {
+			// do not touch HW pins if function not selected, this way Lua can use DC motor hardware pins directly
+			continue;
+		}
 		auto motor = initDcMotor(engineConfiguration->etbIo[i], i, CONFIG(etb_use_two_wires) PASS_ENGINE_PARAMETER_SUFFIX);
 
 		// If this motor is actually set up, init the etb
@@ -937,7 +953,6 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 				continue;
 			}
 
-			auto func = CONFIG(etbFunctions[i]);
 			auto pid = getEtbPidForFunction(func PASS_ENGINE_PARAMETER_SUFFIX);
 
 			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);

@@ -12,13 +12,14 @@
 #include "cyclic_buffer.h"
 #include "table_helper.h"
 #include "wall_fuel_state_generated.h"
+#include "tps_accel_state_generated.h"
 
-typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float> tps_tps_Map3D_t;
+typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float, float> tps_tps_Map3D_t;
 
 /**
  * this object is used for MAP rate-of-change and TPS rate-of-change corrections
  */
-class AccelEnrichment {
+class AccelEnrichment : public tps_accel_state_s {
 public:
 	AccelEnrichment();
 	int getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -40,15 +41,6 @@ public:
 	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void resetFractionValues();
 	void resetAE();
-private:
-	/**
-	 * Used for Fractional TPS enrichment. 
-	 */
-	floatms_t accumulatedValue = 0;
-	floatms_t maxExtraPerCycle = 0;
-	floatms_t maxExtraPerPeriod = 0;
-	floatms_t maxInjectedPerPeriod = 0;
-	int cycleCnt = 0;
 };
 
 void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);

@@ -14,6 +14,8 @@
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
 float mafBins[4] = { 1, 2, 3, 4 };
 
+scaled_channel<int, 10> mafBins2[4] = { 1, 2, 3, 4 };
+
 float map[4][5] = {
 	{ 1, 2, 3, 4, 4},
 	{ 2, 3, 4, 200, 200 },
@@ -21,14 +23,26 @@ float map[4][5] = {
 	{ 4, 5, 300, 600, 600 },
 };
 
-static float getValue(float rpm, float maf) {
-	Map3D<5, 4, float, float> x;
-	x.init(map, mafBins, rpmBins);
-
-	return x.getValue(rpm, maf);
-}
-
 #define EXPECT_NEAR_M4(a, b) EXPECT_NEAR(a, b, 1e-4)
+
+static float getValue(float rpm, float maf) {
+	float result1, result2;
+
+	Map3D<5, 4, float, float, float> x1;
+	x1.init(map, mafBins, rpmBins);
+
+	result1 = x1.getValue(rpm, maf);
+
+
+	Map3D<5, 4, float, float, int> x2;
+	x2.init(map, mafBins2, rpmBins);
+
+	result2 = x2.getValue(rpm, maf);
+
+	EXPECT_NEAR_M4(result1, result2);
+
+	return result1;
+}
 
 static void newTestToComfirmInterpolation() {
 // here's how the table loos like:

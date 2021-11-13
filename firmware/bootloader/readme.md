@@ -1,5 +1,7 @@
 # Bootloader
 
+### BIG OPEN QUESTION: do we need to merge this custom BL into OpenBLT? See https://github.com/rusefi/rusefi/wiki/Firmware-update-via-CAN
+
 *** User Manual ***
 
 To start the bootloader updater:
@@ -28,6 +30,11 @@ Use this code on your own risk!
 
 
 *** Developers Section ***
+
+Problem statement:
+ - UART + bluetooth bootloader for Prometheus board which does not have USB
+ - future plan: firmware from SD card
+ - future plan: some sort of settings reset mechanism
 
 How it works, in two words:
 - The bootloader requires a separate makefile because it's a separate binary executable with its own project settings and fileset.

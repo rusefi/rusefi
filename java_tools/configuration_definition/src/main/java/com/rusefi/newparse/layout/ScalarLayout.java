@@ -12,11 +12,13 @@ public class ScalarLayout extends Layout {
     private String name;
     private Type type;
     private FieldOptions options;
+    private boolean autoscale;
 
     public ScalarLayout(ScalarField field) {
         this.name = field.name;
         this.options = field.options;
         this.type = field.type;
+        this.autoscale = field.autoscale;
     }
 
     @Override
@@ -83,10 +85,39 @@ public class ScalarLayout extends Layout {
         printAfterArrayLength(ps);
     }
 
+    private String makeScaleString() {
+        float scale = this.options.scale;
+
+        int mul, div;
+
+        if (scale < 1) {
+            mul = Math.round(1 / scale);
+            div = 1;
+        } else {
+            mul = 1;
+            div = Math.round(scale);
+        }
+
+        float actualScale = (float)mul / div;
+
+        if (mul < 1 || div < 1 || (Math.abs(scale - actualScale) < 0.0001f)) {
+            throw new RuntimeException("assertion failure: scale string generation failure for " + this.name);
+        }
+
+        return mul + ", " + div;
+    }
+
     @Override
     public void writeCLayout(PrintStream ps) {
         this.writeCOffsetHeader(ps, this.options.comment, this.options.units);
-        ps.print("\t" + this.type.cType.replaceAll("^int32_t$", "int") + " " + this.name);
+
+        String cTypeName = this.type.cType.replaceAll("^int32_t$", "int");
+
+        if (this.autoscale) {
+            cTypeName = "scaled_channel<" + cTypeName + ", " + makeScaleString() + ">";
+        }
+
+        ps.print("\t" + cTypeName + " " + this.name);
 
         if (ConfigDefinition.needZeroInit) {
             ps.print(" = (" + this.type.cType.replaceAll("^int32_t$", "int") + ")0");
@@ -108,6 +139,12 @@ public class ScalarLayout extends Layout {
             al.append(arrayLength[i]);
         }
 
-        ps.println("\t" + this.type.cType.replaceAll("^int32_t$", "int") + " " + this.name + "[" + al + "];");
+        String cTypeName = this.type.cType.replaceAll("^int32_t$", "int");
+
+        if (this.autoscale) {
+            cTypeName = "scaled_channel<" + cTypeName + ", " + makeScaleString() + ">";
+        }
+
+        ps.println("\t" + cTypeName + " " + this.name + "[" + al + "];");
     }
 }

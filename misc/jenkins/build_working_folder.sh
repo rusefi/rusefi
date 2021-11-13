@@ -82,6 +82,12 @@ cp firmware/deliver/rusefi.dfu $FOLDER
 # just for now - DFU work in progress
 cp firmware/deliver/rusefi.hex $FOLDER
 
+# bootloader
+[ -e firmware/deliver/openblt.bin ] && { cp firmware/deliver/openblt.bin $FOLDER ; }
+[ -e firmware/deliver/openblt.dfu ] && { cp firmware/deliver/openblt.dfu $FOLDER ; }
+# update srec
+[ -e firmware/deliver/rusefi_update.srec ] && { cp firmware/deliver/rusefi_update.srec $FOLDER ; }
+
 if [ -n "$BUNDLE_NAME" ]; then
     mv $FOLDER/rusefi.dfu $FOLDER/rusefi_$BUNDLE_NAME.dfu
 fi

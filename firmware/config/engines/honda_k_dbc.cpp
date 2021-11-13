@@ -28,6 +28,7 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->vvtMode[0] = VVT_HONDA_K;
 	engineConfiguration->vvtMode[1] = VVT_FIRST_HALF;
+	engineConfiguration->vvtOffsets[0] = -41;
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 	engineConfiguration->injector.flow = 270;
@@ -38,13 +39,18 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	strcpy(CONFIG(engineCode), "K24");
 	strcpy(CONFIG(vehicleName), "test");
 
+	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
+	vtsControl->pwmFrequency = 0;
+
+	strcpy(CONFIG(gpPwmNote[0]), "VTS");
+
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 830;
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
 	// set cranking_fuel 15
-	engineConfiguration->cranking.baseFuel = 70;
+	engineConfiguration->cranking.baseFuel = 75;
 
 
 #if HW_PROTEUS & EFI_PROD_CODE
@@ -54,16 +60,21 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1; // exhaust
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_4; // intake
+// inverted
+	// offset -41
+
 
 	engineConfiguration->injectionPins[0] = PROTEUS_LS_8;
 	engineConfiguration->injectionPins[1] = PROTEUS_LS_7;
 	engineConfiguration->injectionPins[2] = PROTEUS_LS_6;
 	engineConfiguration->injectionPins[3] = PROTEUS_LS_5;
 
+	vtsControl->pin = PROTEUS_HS_1;
 	engineConfiguration->vvtPins[0] = PROTEUS_HS_2;
 
 	engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
 	engineConfiguration->idle.solenoidPin = PROTEUS_LS_15;
+	engineConfiguration->fanPin = PROTEUS_LS_1;
 
 	engineConfiguration->iat.adcChannel = PROTEUS_IN_ANALOG_TEMP_1;
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;

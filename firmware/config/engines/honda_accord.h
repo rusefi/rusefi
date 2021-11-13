@@ -9,7 +9,6 @@
 #include "engine_configuration.h"
 
 void setHondaAccordConfigurationTwoWires(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHondaAccordConfigurationDip(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 /**
  * https://technet.ff-squad.com/wiring.obd1.htm

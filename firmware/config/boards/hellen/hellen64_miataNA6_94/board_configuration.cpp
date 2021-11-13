@@ -129,11 +129,16 @@ void setBoardDefaultConfiguration(void) {
 
 	CONFIG(enableSoftwareKnock) = true;
 
+	// these stm32 pins do not match hellen_meta, is that because hellenNA6 is not using latest MCU version?
 	engineConfiguration->acRelayPin = GPIOH_15; // 1J - AC Relay
 	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->tachOutputPin = GPIOI_0;
+	engineConfiguration->malfunctionIndicatorPin = GPIOG_9;
+
+	engineConfiguration->vehicleSpeedSensorInputPin = H144_IN_VSS;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

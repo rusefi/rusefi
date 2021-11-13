@@ -16,16 +16,23 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
 
         String cEntry = ConfigDefinition.getComment(configField.getCommentContent(), currentOffset, configField.getUnits());
 
+        String typeName = configField.getType();
+
+        String autoscaleSpec = configField.autoscaleSpec();
+        if (autoscaleSpec != null) {
+            typeName = "scaled_channel<" + typeName + ", " + autoscaleSpec + ">";
+        }
+
         if (!configField.isArray()) {
             // not an array
-            cEntry += "\t" + configField.getType() + " " + configField.getName();
+            cEntry += "\t" + typeName + " " + configField.getName();
             if (ConfigDefinition.needZeroInit && TypesHelper.isPrimitive(configField.getType())) {
                 // we need this cast in case of enums
                 cEntry += " = (" + configField.getType() + ")0";
             }
             cEntry += ";" + EOL;
         } else {
-            cEntry += "\t" + configField.getType() + " " + configField.getName() + "[" + configField.arraySizeVariableName + "];" + EOL;
+            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.arraySizeVariableName + "];" + EOL;
         }
         return cEntry;
     }
