@@ -376,15 +376,6 @@ static int lua_setFuelMult(lua_State* l) {
 
 #endif // EFI_UNIT_TEST
 
-#if EFI_CAN_SUPPORT
-static int lua_canRxAdd(lua_State* l) {
-	auto eid = luaL_checkinteger(l, 1);
-	addLuaCanRxFilter(eid);
-
-	return 0;
-}
-#endif // EFI_CAN_SUPPORT
-
 struct LuaSensor final : public StoredValueSensor {
 	LuaSensor() : LuaSensor("Invalid") { }
 
@@ -479,7 +470,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "table3d", lua_table3d);
 	lua_register(l, "curve", lua_curve2d);
 	lua_register(l, "findCurveIndex", lua_findCurveIndex);
-	lua_register(l, "txCan", lua_txCan);
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);
@@ -511,7 +501,13 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 
 #if EFI_CAN_SUPPORT
-	lua_register(l, "canRxAdd", lua_canRxAdd);
+	lua_register(l, "txCan", lua_txCan);
+	lua_register(l, "canRxAdd", [](lua_State* l) {
+		auto eid = luaL_checkinteger(l, 1);
+		addLuaCanRxFilter(eid);
+
+		return 0;
+	});
 #endif // EFI_CAN_SUPPORT
 #endif // not EFI_UNIT_TEST
 }
