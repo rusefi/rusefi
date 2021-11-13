@@ -183,7 +183,7 @@ case ET_UNUSED97:
   return "ET_UNUSED97";
 case ET_UNUSED98:
   return "ET_UNUSED98";
-case ET_UNUSED_6:
+case PROTEUS_HARLEY:
   return "ET_UNUSED_6";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";

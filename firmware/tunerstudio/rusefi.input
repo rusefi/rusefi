@@ -1863,6 +1863,7 @@ cmd_set_engine_type_microRusEFI_Miata_94_MAP			= "@@TS_IO_TEST_COMMAND_char@@\x0
 cmd_set_engine_type_microRusEFI_Miata_NB2_MAF		= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_MIATA_NB2_MAF_16_hex@@"
 
 cmd_set_engine_type_ET_MRE_SUBARU_EJ18				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SUBARU_EJ18_16_hex@@"
+cmd_set_engine_type_ET_MRE_SECONDARY_CAN			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_SECONDARY_CAN_16_hex@@"
 
 cmd_set_engine_type_ET_MRE_M111						= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MRE_M111_16_hex@@"
 
@@ -1902,6 +1903,7 @@ cmd_set_engine_type_PROTEUS_HONDA_OBD2A             = "@@TS_IO_TEST_COMMAND_char
 cmd_set_engine_type_PROTEUS_MIATA_NB2   			= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_MIATA_NB2_16_hex@@"
 cmd_set_engine_type_Proteus_Miata_TCU 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_MIATA_PROTEUS_TCU_16_hex@@"
 cmd_set_engine_type_PROTEUS_LUA_DEMO 				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_LUA_DEMO_16_hex@@"
+cmd_set_engine_type_PROTEUS_HARLEY	                = "@@TS_IO_TEST_COMMAND_char@@\x00\x30@@engine_type_e_PROTEUS_HARLEY_16_hex@@"
 
 
 ; ETB_BENCH_ENGINE = 58
@@ -3705,6 +3707,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "microRusEFI BCM",				cmd_set_engine_type_microRusEFI_MRE_BODY_CONTROL@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI IO extention",     cmd_set_engine_type_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 		commandButton = "microRusEFI Subaru EJ18", 		cmd_set_engine_type_ET_MRE_SUBARU_EJ18@@if_show_microRusEFI_presets
+		commandButton = "microRusEFI CAN Extender",		cmd_set_engine_type_ET_MRE_SECONDARY_CAN@@if_show_microRusEFI_presets
 
 		commandButton = "Proteus M73 v12",     		cmd_set_engine_type_Proteus_M73@@if_show_Proteus_presets
 		commandButton = "Proteus Miata TCU",		cmd_set_engine_type_Proteus_Miata_TCU@@if_show_Proteus_presets
@@ -3712,6 +3715,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Proteus Miata NB2",		cmd_set_engine_type_PROTEUS_MIATA_NB2@@if_show_Proteus_presets
 		commandButton = "Proteus Honda K",		    cmd_set_engine_type_PROTEUS_HONDA_ELEMENT_2003@@if_show_Proteus_presets
 		commandButton = "Proteus Honda OBD2A",		cmd_set_engine_type_PROTEUS_HONDA_OBD2A@@if_show_Proteus_presets
+		commandButton = "Proteus Harley",           cmd_set_engine_type_PROTEUS_HARLEY@@if_show_Proteus_presets
 		
 		commandButton = "Hellen NA6",				cmd_set_engine_type_hellen_NA6@@if_show_HellenNA6_presets
 		commandButton = "Hellen NA8 94-95",			cmd_set_engine_type_hellen_NA94@@if_show_HellenNA6_presets
