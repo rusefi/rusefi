@@ -799,6 +799,12 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void proteusHarley(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	strcpy(engineConfiguration->scriptSettingName[0], "compReleaseRpm");
+	engineConfiguration->scriptSetting[0] = 300;
+	strcpy(engineConfiguration->scriptSettingName[1], "compReleaseDur");
+	engineConfiguration->scriptSetting[1] = 5000;
+
+
 	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
 #if HW_PROTEUS
 	strncpy(config->luaScript, R"(

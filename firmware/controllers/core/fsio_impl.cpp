@@ -280,6 +280,7 @@ ValueProvider3D *getscriptTable(int index) {
 	}
 }
 
+// todo: template this copy-pasta
 /**
  * @return zero-based index of curve with given name
  */
@@ -295,6 +296,15 @@ int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 int getTableIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	for (int i = 0;i<SCRIPT_TABLE_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptTableName[i])) {
+			return i;
+		}
+	}
+	return EFI_ERROR_CODE;
+}
+
+int getSettingIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	for (int i = 0;i<SCRIPT_SETTING_COUNT;i++) {
+		if (strEqualCaseInsensitive(name, engineConfiguration->scriptSettingName[i])) {
 			return i;
 		}
 	}

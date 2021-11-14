@@ -480,16 +480,32 @@ void configureRusefiLuaHooks(lua_State* l) {
 	EXPAND_Engine;
 #endif
 			auto name = luaL_checklstring(l, 1, nullptr);
-			auto result = getTableIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
-			if (result == EFI_ERROR_CODE) {
+			auto index = getTableIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			if (index == EFI_ERROR_CODE) {
 				lua_pushnil(l);
 			} else {
 				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, result + HUMAN_OFFSET);
+				lua_pushnumber(l, index + HUMAN_OFFSET);
 			}
 			return 1;
 	});
 
+	lua_register(l, "findSetting",
+			[](lua_State* l) {
+#if EFI_UNIT_TEST
+	Engine *engine = engineForLuaUnitTests;
+	EXPAND_Engine;
+#endif
+			auto name = luaL_checklstring(l, 1, nullptr);
+			auto index = getSettingIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			if (index == EFI_ERROR_CODE) {
+				lua_pushnil(l);
+			} else {
+				// TS counts curve from 1 so convert indexing here
+				lua_pushnumber(l, engineConfiguration->scriptSetting[index]);
+			}
+			return 1;
+	});
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);
