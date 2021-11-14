@@ -396,7 +396,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//	/**
 	//	 * set_fsio_setting 1 0.55
 	//	 */
-	engineConfiguration->fsio_setting[0] = 0.0;
+	engineConfiguration->scriptSetting[0] = 0.0;
 //	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_CONFIG_PARAMETER_SUFFIX);
 
 
