@@ -31,5 +31,6 @@ void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX);
 int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX);
 int getTableIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX);
+int getSettingIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX);
 ValueProvider3D *getscriptTable(int index);
 
