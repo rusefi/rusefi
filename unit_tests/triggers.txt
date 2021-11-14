@@ -333,16 +333,16 @@ TRIGGERTYPE 10 12 TT_MERCEDES_2_SEGMENT 0.00
 # duty 0.92 0.00
 event 0 0 1 0.00
 event 1 0 0 10.00
-event 2 0 1 223.00
-event 3 0 0 233.00
-event 4 0 1 316.00
-event 5 0 0 326.00
+event 2 0 1 47.00
+event 3 0 0 57.00
+event 4 0 1 180.00
+event 5 0 0 190.00
 event 6 0 1 360.00
 event 7 0 0 370.00
-event 8 0 1 583.00
-event 9 0 0 593.00
-event 10 0 1 676.00
-event 11 0 0 686.00
+event 8 0 1 407.00
+event 9 0 0 417.00
+event 10 0 1 540.00
+event 11 0 0 550.00
 TRIGGERTYPE 11 12 TT_MITSUBISHI 0.00
 # duty 0.36 0.38
 event 0 0 0 0.00
