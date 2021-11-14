@@ -19,8 +19,6 @@ using namespace luaaa;
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
-#define HUMAN_OFFSET 1
-
 #if EFI_UNIT_TEST
 Engine *engineForLuaUnitTests;
 #endif
@@ -55,17 +53,17 @@ static int getSensor(lua_State* l, SensorType type) {
 
 static int lua_getAuxAnalog(lua_State* l) {
 	// todo: shall we use HUMAN_INDEX since UI goes from 1 and Lua loves going from 1?
-	auto sensorIndex = luaL_checkinteger(l, 1);
+	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	auto type = static_cast<SensorType>(sensorIndex + static_cast<int>(SensorType::Aux1));
+	auto type = static_cast<SensorType>(zeroBasedSensorIndex + static_cast<int>(SensorType::Aux1));
 
 	return getSensor(l, type);
 }
 
 static int lua_getSensorByIndex(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
+	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	return getSensor(l, static_cast<SensorType>(sensorIndex));
+	return getSensor(l, static_cast<SensorType>(zeroBasedSensorIndex));
 }
 
 static int lua_getSensorByName(lua_State* l) {
@@ -76,26 +74,26 @@ static int lua_getSensorByName(lua_State* l) {
 }
 
 static int lua_getSensorRaw(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
+	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	lua_pushnumber(l, Sensor::getRaw(static_cast<SensorType>(sensorIndex)));
+	lua_pushnumber(l, Sensor::getRaw(static_cast<SensorType>(zeroBasedSensorIndex)));
 	return 1;
 }
 
 static int lua_hasSensor(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
+	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	lua_pushboolean(l, Sensor::hasSensor(static_cast<SensorType>(sensorIndex)));
+	lua_pushboolean(l, Sensor::hasSensor(static_cast<SensorType>(zeroBasedSensorIndex)));
 	return 1;
 }
 
 static int lua_table3d(lua_State* l) {
-	auto tableIdx = luaL_checkinteger(l, 1);
+	auto humanTableIdx = luaL_checkinteger(l, 1);
 	auto x = luaL_checknumber(l, 2);
 	auto y = luaL_checknumber(l, 3);
 
 	// index table, compute table lookup
-	auto result = getscriptTable(tableIdx)->getValue(x, y);
+	auto result = getscriptTable(humanTableIdx - HUMAN_OFFSET)->getValue(x, y);
 
 	lua_pushnumber(l, result);
 	return 1;
@@ -103,7 +101,7 @@ static int lua_table3d(lua_State* l) {
 
 static int lua_curve2d(lua_State* l) {
 	// index starting from 1
-	auto curveIdx = luaL_checkinteger(l, 1);
+	auto humanCurveIdx = luaL_checkinteger(l, 1);
 	auto x = luaL_checknumber(l, 2);
 
 #if EFI_UNIT_TEST
@@ -111,7 +109,7 @@ static int lua_curve2d(lua_State* l) {
 	EXPAND_Engine;
 #endif
 
-	auto result = getCurveValue(curveIdx - HUMAN_OFFSET, x PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x PASS_ENGINE_PARAMETER_SUFFIX);
 
 	lua_pushnumber(l, result);
 	return 1;
