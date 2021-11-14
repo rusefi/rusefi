@@ -61,9 +61,6 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 		warning(CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
 		output->outOfOrder = true;
 	}
-#if HW_CHECK_SPARK_FSIO
-	enginePins.fsioOutputs[event->cylinderIndex].setValue(0);
-#endif // HW_CHECK_SPARK_FSIO
 	output->setLow();
 }
 
@@ -269,9 +266,6 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 		}
 	}
 
-#if HW_CHECK_SPARK_FSIO
-	enginePins.fsioOutputs[event->cylinderIndex].setValue(1);
-#endif // HW_CHECK_SPARK_FSIO
     INJECT_ENGINE_REFERENCE(output);
 	output->setHigh();
 }

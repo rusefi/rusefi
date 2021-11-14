@@ -204,7 +204,6 @@ public:
 
 	RegisteredNamedOutputPin tachOut;
 
-	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	RegisteredOutputPin triggerDecoderErrorPin;
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;

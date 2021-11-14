@@ -79,17 +79,6 @@ CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
 static LEElement userElements[UD_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
 
-class FsioPointers {
-public:
-	FsioPointers();
-	LEElement * fsioLogics[FSIO_COMMAND_COUNT];
-};
-
-FsioPointers::FsioPointers() : fsioLogics() {
-}
-
-static FsioPointers state;
-
 static LEElement * fuelPumpLogic;
 static LEElement * starterRelayDisableLogic;
 
@@ -220,24 +209,6 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 }
 
 /**
- * @param out param! current and new value as long as element is not NULL
- * @return 'true' if value has changed
- */
-static bool updateValueOrWarning(int humanIndex, const char *msg, float *value DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	int fsioIndex = humanIndex - 1;
-	LEElement * element = state.fsioLogics[fsioIndex];
-	if (element == NULL) {
-		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
-		return false;
-	} else {
-		float beforeValue = *value;
-		*value = calc.evaluate(msg, beforeValue, element PASS_ENGINE_PARAMETER_SUFFIX);
-		// floating '==' comparison without EPS seems fine here
-		return (beforeValue != *value);
-	}
-}
-
-/**
  * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
  */
 void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -268,21 +239,6 @@ void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * open question if heater should be ON during cranking
 	 */
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
-
-#if EFI_ENABLE_ENGINE_WARNING
-	if (engineConfiguration->useFSIO4ForSeriousEngineWarning) {
-		updateValueOrWarning(MAGIC_OFFSET_FOR_ENGINE_WARNING, "eng warning", &ENGINE(fsioState.isEngineWarning) PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-#endif /* EFI_ENABLE_ENGINE_WARNING */
-
-#if EFI_ENABLE_CRITICAL_ENGINE_STOP
-	if (engineConfiguration->useFSIO5ForCriticalIssueEngineStop) {
-		bool changed = updateValueOrWarning(MAGIC_OFFSET_FOR_CRITICAL_ENGINE, "eng critical", &ENGINE(fsioState.isCriticalEngineCondition) PASS_ENGINE_PARAMETER_SUFFIX);
-		if (changed && float2bool(ENGINE(fsioState.isCriticalEngineCondition))) {
-			doScheduleStopEngine(PASS_ENGINE_PARAMETER_SIGNATURE);
-		}
-	}
-#endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
 }
 
 

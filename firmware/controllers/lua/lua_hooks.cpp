@@ -208,7 +208,7 @@ static P luaL_checkPwmIndex(lua_State* l, int pos) {
 	auto channel = luaL_checkinteger(l, pos);
 
 	// Ensure channel is valid
-	if (channel < 0 || channel >= FSIO_COMMAND_COUNT) {
+	if (channel < 0 || channel >= LUA_PWM_COUNT) {
 		luaL_error(l, "setPwmDuty invalid channel %d", channel);
 	}
 

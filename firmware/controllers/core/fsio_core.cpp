@@ -204,13 +204,7 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		return vCond != 0 ? vTrue : vFalse;
 	}
 	case LE_METHOD_FSIO_SETTING: {
-		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
-		int index = (int) humanIndex - 1;
-		if (index >= 0 && index < FSIO_COMMAND_COUNT) {
-			return CONFIG(scriptSetting)[index];
-		} else {
-			return unexpected;
-		}
+		return unexpected;
 	}
 	case LE_METHOD_SCRIPT_TABLE_: {
 		float i = pop(LE_METHOD_SCRIPT_TABLE_);
