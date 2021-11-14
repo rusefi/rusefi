@@ -207,7 +207,7 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
 		int index = (int) humanIndex - 1;
 		if (index >= 0 && index < FSIO_COMMAND_COUNT) {
-			return CONFIG(fsio_setting)[index];
+			return CONFIG(scriptSetting)[index];
 		} else {
 			return unexpected;
 		}

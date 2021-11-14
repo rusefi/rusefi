@@ -538,7 +538,7 @@ static void showFsioInfo(void) {
 		}
 	}
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		float v = CONFIG(fsio_setting)[i];
+		float v = CONFIG(scriptSetting)[i];
 		if (!cisnan(v)) {
 			efiPrintf("user property #%d: %.2f", i + 1, v);
 		}
@@ -562,7 +562,7 @@ static void setFsioSetting(float humanIndexF, float value) {
 		efiPrintf("invalid FSIO index: %d", (int)humanIndexF);
 		return;
 	}
-	engineConfiguration->fsio_setting[index] = value;
+	engineConfiguration->scriptSetting[index] = value;
 	showFsioInfo();
 #endif
 }
