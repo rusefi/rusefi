@@ -722,22 +722,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL
-#if EFI_FSIO
-	/**
-	 * to test:
-	 * set_fsio_setting 1 5000
-	 * set_fsio_output_pin 1 PE3
-	 * set debug_mode 23
-	 * writeconfig
-	 * <reboot ECU>
-	 * fsioinfo
-	 */
-	engineConfiguration->scriptSetting[0] = 5000;
-	// simple warning light as default configuration
-	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
 	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
 }
 

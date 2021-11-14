@@ -393,13 +393,6 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 	engineConfiguration->vvtPins[0] = GPIOE_3; // VVT solenoid control
-	//	/**
-	//	 * set_fsio_setting 1 0.55
-	//	 */
-	engineConfiguration->scriptSetting[0] = 0.0;
-//	setFsioExt(0, GPIOE_3, "0 fsio_setting", 400 PASS_CONFIG_PARAMETER_SUFFIX);
-
-
 
 	// high-side driver with +12v VP jumper
 	engineConfiguration->tachOutputPin = GPIOE_8; // tachometer
@@ -639,7 +632,7 @@ void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if EFI_FSIO
 	// enable ETB
 	// set_rpn_expression 8 "0"
-	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua ETB setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 
 	//set idle_offset 0

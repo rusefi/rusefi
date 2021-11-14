@@ -285,40 +285,6 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	 */
 //	engineConfiguration->fsioAdc[0] = EFI_ADC_NONE;
 
-
-	// warning light
-	/**
-	 * to test
-	 * set_fsio_setting 1 1800
-	 * set_fsio_setting 2 95
-	 * set_fsio_setting 4 14
-	 *
-	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
-	 * rpn_eval "rpm 1 fsio_setting > coolant 2 fsio_setting > | vbatt 4 fsio_setting < |"
-	 */
-	/*
-//WARNING:	these indeces are off
-	engineConfiguration->fsio_setting[0] = 6400; // RPM threshold
-	engineConfiguration->fsio_setting[1] = 100; // CLT threshold, fsio_setting #2
-	engineConfiguration->scriptSetting[2] = 13.0; // voltage threshold, fsio_setting #3
-
-	//	set_fsio_setting 4 3000
-	engineConfiguration->scriptSetting[3] = 3000; // oil pressure RPM, fsio_setting #4
-	// set_fsio_setting 5 0.52
-	engineConfiguration->scriptSetting[4] = 0.52; // oil pressure threshold, fsio_setting #5
-*/
-
-//	 * set_rpn_expression 1 "rpm 3 fsio_setting >"
-	// rpn_eval "rpm 1 fsio_setting >"
-	// rpn_eval "fsio_analog_input"
-
-	// set_fsio_expression 0 "((rpm > fsio_setting(4) & (fsio_analog_input < fsio_setting(5)) | rpm > fsio_setting(1) | (coolant > fsio_setting(2)  > | (vbatt < fsio_setting(3)"
-
-#if EFI_FSIO
-	// todo: convert
-	setFsio(0, GPIOC_13, COMBINED_WARNING_LIGHT PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
 	engineConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
 	engineConfiguration->injectionPins[1] = GPIOE_2; // #2&4 pin 3V
 	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
