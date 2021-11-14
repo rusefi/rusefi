@@ -531,7 +531,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	Engine *engine = engineForLuaUnitTests;
 	EXPAND_Engine;
 #endif
-		int result = currentTimeMillis() - engine->triggerActivityMs;
+		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
 		lua_pushnumber(l, result);
 		return 1;
 	});
