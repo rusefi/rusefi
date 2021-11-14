@@ -27,9 +27,13 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+## November 2021 Release - "Loosen Up Lighten Up Day"
+
 ### Added
  - Higher Data Rate with TS 3.1.06.14 
  - turbo speed sensor #2935
+ - A TON of Lua progress
+ - Overall performance
 
 ### Fixed
  - A/C control bugfix
