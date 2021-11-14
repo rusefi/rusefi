@@ -1,23 +1,3 @@
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 14:38:54 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 15:51:37 UTC 2021
 
 // by class com.rusefi.output.FileFsioSettingsConsumer
-static LENameOrdinalPair leacIdleExtraOffset(FSIO_SETTING_ACIDLEEXTRAOFFSET, "cfg_acIdleExtraOffset");
-static LENameOrdinalPair leboostPid_offset(FSIO_SETTING_BOOSTPID_OFFSET, "cfg_boostPid_offset");
-static LENameOrdinalPair leboostPid_minValue(FSIO_SETTING_BOOSTPID_MINVALUE, "cfg_boostPid_minValue");
-static LENameOrdinalPair lealternatorControl_offset(FSIO_SETTING_ALTERNATORCONTROL_OFFSET, "cfg_alternatorControl_offset");
-static LENameOrdinalPair lealternatorControl_minValue(FSIO_SETTING_ALTERNATORCONTROL_MINVALUE, "cfg_alternatorControl_minValue");
-static LENameOrdinalPair leetb_offset(FSIO_SETTING_ETB_OFFSET, "cfg_etb_offset");
-static LENameOrdinalPair leetb_minValue(FSIO_SETTING_ETB_MINVALUE, "cfg_etb_minValue");
-static LENameOrdinalPair leidleRpmPid_offset(FSIO_SETTING_IDLERPMPID_OFFSET, "cfg_idleRpmPid_offset");
-static LENameOrdinalPair leidleRpmPid_minValue(FSIO_SETTING_IDLERPMPID_MINVALUE, "cfg_idleRpmPid_minValue");
-static LENameOrdinalPair lestartUpFuelPumpDuration(FSIO_SETTING_STARTUPFUELPUMPDURATION, "cfg_startUpFuelPumpDuration");
-static LENameOrdinalPair leetbWastegatePid_offset(FSIO_SETTING_ETBWASTEGATEPID_OFFSET, "cfg_etbWastegatePid_offset");
-static LENameOrdinalPair leetbWastegatePid_minValue(FSIO_SETTING_ETBWASTEGATEPID_MINVALUE, "cfg_etbWastegatePid_minValue");
-static LENameOrdinalPair leauxPid1_offset(FSIO_SETTING_AUXPID1_OFFSET, "cfg_auxPid1_offset");
-static LENameOrdinalPair leauxPid1_minValue(FSIO_SETTING_AUXPID1_MINVALUE, "cfg_auxPid1_minValue");
-static LENameOrdinalPair leauxPid2_offset(FSIO_SETTING_AUXPID2_OFFSET, "cfg_auxPid2_offset");
-static LENameOrdinalPair leauxPid2_minValue(FSIO_SETTING_AUXPID2_MINVALUE, "cfg_auxPid2_minValue");
-static LENameOrdinalPair leidleTimingPid_offset(FSIO_SETTING_IDLETIMINGPID_OFFSET, "cfg_idleTimingPid_offset");
-static LENameOrdinalPair leidleTimingPid_minValue(FSIO_SETTING_IDLETIMINGPID_MINVALUE, "cfg_idleTimingPid_minValue");
-static LENameOrdinalPair leidleRpmPid2_offset(FSIO_SETTING_IDLERPMPID2_OFFSET, "cfg_idleRpmPid2_offset");
-static LENameOrdinalPair leidleRpmPid2_minValue(FSIO_SETTING_IDLERPMPID2_MINVALUE, "cfg_idleRpmPid2_minValue");
