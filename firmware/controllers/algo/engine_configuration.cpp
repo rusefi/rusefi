@@ -150,10 +150,6 @@ static void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
-
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		wipeString(config->fsioFormulas[i], sizeof(le_formula_t));
-	}
 }
 
 void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -517,10 +513,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->verboseCanBaseAddress = CAN_DEFAULT_BASE;
 
 	engineConfiguration->sdCardPeriodMs = 50;
-
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		config->fsioFormulas[i][0] = 0;
-	}
 
 	CONFIG(mapMinBufferLength) = 1;
 	
