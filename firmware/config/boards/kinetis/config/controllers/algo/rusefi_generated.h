@@ -1758,6 +1758,14 @@
 #define scriptSetting6_offset 884
 #define scriptSetting7_offset 888
 #define scriptSetting8_offset 892
+#define scriptSettingName1_offset 3600
+#define scriptSettingName2_offset 3616
+#define scriptSettingName3_offset 3632
+#define scriptSettingName4_offset 3648
+#define scriptSettingName5_offset 3664
+#define scriptSettingName6_offset 3680
+#define scriptSettingName7_offset 3696
+#define scriptSettingName8_offset 3712
 #define scriptTable1_offset 19268
 #define scriptTable1LoadBins_offset 19524
 #define scriptTable1RpmBins_offset 19556
@@ -1803,7 +1811,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1973032765
+#define SIGNATURE_HASH 2722816397
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2322,7 +2330,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.14.kin.1973032765"
+#define TS_SIGNATURE "rusEFI 2021.11.14.kin.2722816397"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2361,7 +2369,7 @@
 #define unused2508_offset 2503
 #define unused2536_offset 2531
 #define unused3103_offset 3075
-#define unused3328_offset 3600
+#define unused3328_offset 3728
 #define unused3942_offset 3964
 #define unused3988_offset 3960
 #define unused4028_offset 4000

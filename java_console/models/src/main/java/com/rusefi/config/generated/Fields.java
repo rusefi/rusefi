@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 15:51:37 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 16:49:35 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1705,6 +1705,14 @@ public class Fields {
 	public static final int scriptSetting6_offset = 884;
 	public static final int scriptSetting7_offset = 888;
 	public static final int scriptSetting8_offset = 892;
+	public static final int scriptSettingName1_offset = 3628;
+	public static final int scriptSettingName2_offset = 3644;
+	public static final int scriptSettingName3_offset = 3660;
+	public static final int scriptSettingName4_offset = 3676;
+	public static final int scriptSettingName5_offset = 3692;
+	public static final int scriptSettingName6_offset = 3708;
+	public static final int scriptSettingName7_offset = 3724;
+	public static final int scriptSettingName8_offset = 3740;
 	public static final int scriptTable1_offset = 19296;
 	public static final int scriptTable1LoadBins_offset = 19552;
 	public static final int scriptTable1RpmBins_offset = 19584;
@@ -1745,6 +1753,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1729809101;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2208,7 +2217,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.14.all.2966043773";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.14.all.1729809101";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2244,7 +2253,7 @@ public class Fields {
 	public static final int unused2508_offset = 2511;
 	public static final int unused2536_offset = 2539;
 	public static final int unused3103_offset = 3103;
-	public static final int unused3328_offset = 3628;
+	public static final int unused3328_offset = 3756;
 	public static final int unused3942_offset = 3992;
 	public static final int unused3988_offset = 3988;
 	public static final int unused4028_offset = 4028;
@@ -3429,7 +3438,15 @@ public class Fields {
 	public static final Field SCRIPTTABLENAME2 = Field.create("SCRIPTTABLENAME2", 3580, 16, FieldType.STRING);
 	public static final Field SCRIPTTABLENAME3 = Field.create("SCRIPTTABLENAME3", 3596, 16, FieldType.STRING);
 	public static final Field SCRIPTTABLENAME4 = Field.create("SCRIPTTABLENAME4", 3612, 16, FieldType.STRING);
-	public static final Field UNUSED3328 = Field.create("UNUSED3328", 3628, FieldType.INT8);
+	public static final Field SCRIPTSETTINGNAME1 = Field.create("SCRIPTSETTINGNAME1", 3628, 16, FieldType.STRING);
+	public static final Field SCRIPTSETTINGNAME2 = Field.create("SCRIPTSETTINGNAME2", 3644, 16, FieldType.STRING);
+	public static final Field SCRIPTSETTINGNAME3 = Field.create("SCRIPTSETTINGNAME3", 3660, 16, FieldType.STRING);
+	public static final Field SCRIPTSETTINGNAME4 = Field.create("SCRIPTSETTINGNAME4", 3676, 16, FieldType.STRING);
+	public static final Field SCRIPTSETTINGNAME5 = Field.create("SCRIPTSETTINGNAME5", 3692, 16, FieldType.STRING);
+	public static final Field SCRIPTSETTINGNAME6 = Field.create("SCRIPTSETTINGNAME6", 3708, 16, FieldType.STRING);
+	public static final Field SCRIPTSETTINGNAME7 = Field.create("SCRIPTSETTINGNAME7", 3724, 16, FieldType.STRING);
+	public static final Field SCRIPTSETTINGNAME8 = Field.create("SCRIPTSETTINGNAME8", 3740, 16, FieldType.STRING);
+	public static final Field UNUSED3328 = Field.create("UNUSED3328", 3756, FieldType.INT8);
 	public static final Field TCHARGEAIRCOEFMIN = Field.create("TCHARGEAIRCOEFMIN", 3864, FieldType.FLOAT);
 	public static final Field TCHARGEAIRCOEFMAX = Field.create("TCHARGEAIRCOEFMAX", 3868, FieldType.FLOAT);
 	public static final Field TCHARGEAIRFLOWMAX = Field.create("TCHARGEAIRFLOWMAX", 3872, FieldType.FLOAT);
@@ -4692,6 +4709,14 @@ public class Fields {
 	SCRIPTTABLENAME2,
 	SCRIPTTABLENAME3,
 	SCRIPTTABLENAME4,
+	SCRIPTSETTINGNAME1,
+	SCRIPTSETTINGNAME2,
+	SCRIPTSETTINGNAME3,
+	SCRIPTSETTINGNAME4,
+	SCRIPTSETTINGNAME5,
+	SCRIPTSETTINGNAME6,
+	SCRIPTSETTINGNAME7,
+	SCRIPTSETTINGNAME8,
 	UNUSED3328,
 	TCHARGEAIRCOEFMIN,
 	TCHARGEAIRCOEFMAX,

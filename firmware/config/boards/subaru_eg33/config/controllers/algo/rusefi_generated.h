@@ -1785,6 +1785,14 @@
 #define scriptSetting6_offset 884
 #define scriptSetting7_offset 888
 #define scriptSetting8_offset 892
+#define scriptSettingName1_offset 3628
+#define scriptSettingName2_offset 3644
+#define scriptSettingName3_offset 3660
+#define scriptSettingName4_offset 3676
+#define scriptSettingName5_offset 3692
+#define scriptSettingName6_offset 3708
+#define scriptSettingName7_offset 3724
+#define scriptSettingName8_offset 3740
 #define scriptTable1_offset 19296
 #define scriptTable1LoadBins_offset 19552
 #define scriptTable1RpmBins_offset 19584
@@ -1831,7 +1839,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1936730669
+#define SIGNATURE_HASH 2762005661
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2350,7 +2358,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.14.subaru_eg33_f7.1936730669"
+#define TS_SIGNATURE "rusEFI 2021.11.14.subaru_eg33_f7.2762005661"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2389,7 +2397,7 @@
 #define unused2508_offset 2511
 #define unused2536_offset 2539
 #define unused3103_offset 3103
-#define unused3328_offset 3628
+#define unused3328_offset 3756
 #define unused3942_offset 3992
 #define unused3988_offset 3988
 #define unused4028_offset 4028

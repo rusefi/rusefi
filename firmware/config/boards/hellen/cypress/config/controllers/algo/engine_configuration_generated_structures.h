@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 14 15:51:42 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 14 16:49:41 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3712,10 +3712,14 @@ struct engine_configuration_s {
 	 */
 	gppwm_note_t scriptTableName[SCRIPT_TABLE_COUNT];
 	/**
-	units
 	 * offset 3628
 	 */
-	uint8_t unused3328[236];
+	gppwm_note_t scriptSettingName[SCRIPT_SETTING_COUNT];
+	/**
+	units
+	 * offset 3756
+	 */
+	uint8_t unused3328[108];
 	/**
 	Min tCharge Coeff.
 	 * offset 3864
@@ -4541,4 +4545,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 14 15:51:42 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 14 16:49:41 UTC 2021
