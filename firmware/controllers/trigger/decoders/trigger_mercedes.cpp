@@ -13,7 +13,7 @@ void setMercedesTwoSegment(TriggerWaveform* s) {
 	s->addEvent360(360 - 10, T_PRIMARY, TV_RISE);
 	s->addEvent360(360, T_PRIMARY, TV_FALL);
 
-	s->setTriggerSynchronizationGap(0.24);
-	s->setSecondTriggerSynchronizationGap(1.32);
-	s->setThirdTriggerSynchronizationGap(3.17);
+	s->setTriggerSynchronizationGap(0.47);
+	s->setSecondTriggerSynchronizationGap(0.42);
+	s->setThirdTriggerSynchronizationGap(5.07);
 }
