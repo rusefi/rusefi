@@ -974,12 +974,6 @@
 #define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
 #define FSIO_METHOD_FSIO_SETTING "fsio_setting"
 #define FSIO_METHOD_FSIO_TABLE "fsio_table"
-#define fsio_setting1_offset 864
-#define fsio_setting2_offset 868
-#define fsio_setting3_offset 872
-#define fsio_setting4_offset 876
-#define fsio_setting5_offset 880
-#define fsio_setting6_offset 884
 #define FSIO_TABLE_8 8
 #define fsioDigitalInputs1_offset 952
 #define fsioDigitalInputs2_offset 953
@@ -1807,6 +1801,7 @@
 #define rpmHardLimit_offset 416
 #define runningLedPin_offset 1813
 #define SCRIPT_CURVE_COUNT 6
+#define SCRIPT_SETTING_COUNT 8
 #define SCRIPT_TABLE_COUNT 4
 #define scriptCurve1_offset 2780
 #define scriptCurve1Bins_offset 2716
@@ -1826,6 +1821,14 @@
 #define scriptCurveName4_offset 3388
 #define scriptCurveName5_offset 3404
 #define scriptCurveName6_offset 3420
+#define scriptSetting1_offset 864
+#define scriptSetting2_offset 868
+#define scriptSetting3_offset 872
+#define scriptSetting4_offset 876
+#define scriptSetting5_offset 880
+#define scriptSetting6_offset 884
+#define scriptSetting7_offset 888
+#define scriptSetting8_offset 892
 #define scriptTableName1_offset 3564
 #define scriptTableName2_offset 3580
 #define scriptTableName3_offset 3596
@@ -1860,7 +1863,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 2213707599
+#define SIGNATURE_HASH 1559471049
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2379,7 +2382,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.14.subaru_eg33_f7.2213707599"
+#define TS_SIGNATURE "rusEFI 2021.11.14.subaru_eg33_f7.1559471049"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2490,7 +2493,7 @@
 #define unusedOutputFreqWhereHere_offset 844
 #define unusedOutputWhereHere_offset 794
 #define unusedpinModesWhereHere_offset 779
-#define unusedSettings_offset 888
+#define unusedSettings_offset 896
 #define unusedSpiPadding4_offset 2593
 #define unusedSpiPadding8_offset 4010
 #define unusedVvtOffsetWasHere_offset 2052

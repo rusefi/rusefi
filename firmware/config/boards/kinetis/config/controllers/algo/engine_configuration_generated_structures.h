@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 14 03:00:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 14 03:53:01 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1831,11 +1831,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 864
 	 */
-	fsio_setting_t fsio_setting[FSIO_COMMAND_COUNT];
+	fsio_setting_t scriptSetting[SCRIPT_SETTING_COUNT];
 	/**
-	 * offset 888
+	 * offset 896
 	 */
-	int unusedSettings[10];
+	int unusedSettings[8];
 	/**
 	 * offset 928
 	 */
@@ -4557,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 14 03:00:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 14 03:53:01 UTC 2021

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 03:00:42 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 03:52:58 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -928,12 +928,6 @@ public class Fields {
 	public static final String FSIO_METHOD_FSIO_DIGITAL_INPUT = "fsio_digital_input";
 	public static final String FSIO_METHOD_FSIO_SETTING = "fsio_setting";
 	public static final String FSIO_METHOD_FSIO_TABLE = "fsio_table";
-	public static final int fsio_setting1_offset = 864;
-	public static final int fsio_setting2_offset = 868;
-	public static final int fsio_setting3_offset = 872;
-	public static final int fsio_setting4_offset = 876;
-	public static final int fsio_setting5_offset = 880;
-	public static final int fsio_setting6_offset = 884;
 	public static final int FSIO_TABLE_8 = 8;
 	public static final int fsioDigitalInputs1_offset = 952;
 	public static final int fsioDigitalInputs2_offset = 953;
@@ -1727,6 +1721,7 @@ public class Fields {
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1813;
 	public static final int SCRIPT_CURVE_COUNT = 6;
+	public static final int SCRIPT_SETTING_COUNT = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
 	public static final int scriptCurve1_offset = 2780;
 	public static final int scriptCurve1Bins_offset = 2716;
@@ -1746,6 +1741,14 @@ public class Fields {
 	public static final int scriptCurveName4_offset = 3388;
 	public static final int scriptCurveName5_offset = 3404;
 	public static final int scriptCurveName6_offset = 3420;
+	public static final int scriptSetting1_offset = 864;
+	public static final int scriptSetting2_offset = 868;
+	public static final int scriptSetting3_offset = 872;
+	public static final int scriptSetting4_offset = 876;
+	public static final int scriptSetting5_offset = 880;
+	public static final int scriptSetting6_offset = 884;
+	public static final int scriptSetting7_offset = 888;
+	public static final int scriptSetting8_offset = 892;
 	public static final int scriptTableName1_offset = 3564;
 	public static final int scriptTableName2_offset = 3580;
 	public static final int scriptTableName3_offset = 3596;
@@ -1774,7 +1777,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 928134708;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2238,7 +2240,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.14.all.928134708";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.14.all.3897813682";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2346,7 +2348,7 @@ public class Fields {
 	public static final int unusedOutputFreqWhereHere_offset = 844;
 	public static final int unusedOutputWhereHere_offset = 794;
 	public static final int unusedpinModesWhereHere_offset = 779;
-	public static final int unusedSettings_offset = 888;
+	public static final int unusedSettings_offset = 896;
 	public static final int unusedSpiPadding4_offset = 2593;
 	public static final int unusedSpiPadding8_offset = 4010;
 	public static final int unusedVvtOffsetWasHere_offset = 2052;
@@ -2843,13 +2845,15 @@ public class Fields {
 	public static final Field FSIOFREQUENCY5 = Field.create("FSIOFREQUENCY5", 840, FieldType.INT16);
 	public static final Field FSIOFREQUENCY6 = Field.create("FSIOFREQUENCY6", 842, FieldType.INT16);
 	public static final Field UNUSEDOUTPUTFREQWHEREHERE = Field.create("UNUSEDOUTPUTFREQWHEREHERE", 844, FieldType.INT16);
-	public static final Field FSIO_SETTING1 = Field.create("FSIO_SETTING1", 864, FieldType.INT);
-	public static final Field FSIO_SETTING2 = Field.create("FSIO_SETTING2", 868, FieldType.INT);
-	public static final Field FSIO_SETTING3 = Field.create("FSIO_SETTING3", 872, FieldType.INT);
-	public static final Field FSIO_SETTING4 = Field.create("FSIO_SETTING4", 876, FieldType.INT);
-	public static final Field FSIO_SETTING5 = Field.create("FSIO_SETTING5", 880, FieldType.INT);
-	public static final Field FSIO_SETTING6 = Field.create("FSIO_SETTING6", 884, FieldType.INT);
-	public static final Field UNUSEDSETTINGS = Field.create("UNUSEDSETTINGS", 888, FieldType.INT);
+	public static final Field SCRIPTSETTING1 = Field.create("SCRIPTSETTING1", 864, FieldType.INT);
+	public static final Field SCRIPTSETTING2 = Field.create("SCRIPTSETTING2", 868, FieldType.INT);
+	public static final Field SCRIPTSETTING3 = Field.create("SCRIPTSETTING3", 872, FieldType.INT);
+	public static final Field SCRIPTSETTING4 = Field.create("SCRIPTSETTING4", 876, FieldType.INT);
+	public static final Field SCRIPTSETTING5 = Field.create("SCRIPTSETTING5", 880, FieldType.INT);
+	public static final Field SCRIPTSETTING6 = Field.create("SCRIPTSETTING6", 884, FieldType.INT);
+	public static final Field SCRIPTSETTING7 = Field.create("SCRIPTSETTING7", 888, FieldType.INT);
+	public static final Field SCRIPTSETTING8 = Field.create("SCRIPTSETTING8", 892, FieldType.INT);
+	public static final Field UNUSEDSETTINGS = Field.create("UNUSEDSETTINGS", 896, FieldType.INT);
 	public static final Field SPI1MOSIPIN = Field.create("SPI1MOSIPIN", 928, FieldType.INT8, brain_pin_e);
 	public static final Field SPI1MISOPIN = Field.create("SPI1MISOPIN", 929, FieldType.INT8, brain_pin_e);
 	public static final Field SPI1SCKPIN = Field.create("SPI1SCKPIN", 930, FieldType.INT8, brain_pin_e);
@@ -4145,12 +4149,14 @@ public class Fields {
 	FSIOFREQUENCY5,
 	FSIOFREQUENCY6,
 	UNUSEDOUTPUTFREQWHEREHERE,
-	FSIO_SETTING1,
-	FSIO_SETTING2,
-	FSIO_SETTING3,
-	FSIO_SETTING4,
-	FSIO_SETTING5,
-	FSIO_SETTING6,
+	SCRIPTSETTING1,
+	SCRIPTSETTING2,
+	SCRIPTSETTING3,
+	SCRIPTSETTING4,
+	SCRIPTSETTING5,
+	SCRIPTSETTING6,
+	SCRIPTSETTING7,
+	SCRIPTSETTING8,
 	UNUSEDSETTINGS,
 	SPI1MOSIPIN,
 	SPI1MISOPIN,
