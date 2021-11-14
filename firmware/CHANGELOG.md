@@ -30,7 +30,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ## November 2021 Release - "Loosen Up Lighten Up Day"
 
 ### Added
- - Higher Data Rate with TS 3.1.06.14 
+ - Higher Data Rate with TS 3.1.06.14 Beta or newer 
  - turbo speed sensor #2935
  - A TON of Lua progress
  - Overall performance
