@@ -155,9 +155,6 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->malfunctionIndicatorPin = TLE6240_PIN_7;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	/* Starter input signal connected through MC33972 - SG11 */
-	//setFsio(0, (GPIOB_1), STARTER_RELAY_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
-
 	/* not used */
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;

@@ -84,7 +84,7 @@ void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// enable ETB
 	// set_rpn_expression 8 "0"
-	setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+	// TODO LUA setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 	CONFIG(debugMode) = DBG_ELECTRONIC_THROTTLE_PID;
