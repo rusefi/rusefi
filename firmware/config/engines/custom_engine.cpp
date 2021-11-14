@@ -347,7 +347,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// SF  PF11
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 #if EFI_FSIO
-	setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
 	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
@@ -363,7 +363,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// IN2 PE4
 	// SF  PE3
 #if EFI_FSIO
-	setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etbIo[0].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[0].directionPin2) = GPIOE_4;
@@ -584,13 +584,6 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->consumeObdSensors = true;
 
 
-	engineConfiguration->scriptSetting[0] = 1500;
-	// simple warning light as default configuration
-	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
-
-	engineConfiguration->scriptSetting[2] = 1500;
-	setFsio(2, GPIO_UNASSIGNED, RPM_BELOW_USER_SETTING_3 PASS_CONFIG_PARAMETER_SUFFIX);
 
 
 #if (BOARD_TLE8888_COUNT > 0)

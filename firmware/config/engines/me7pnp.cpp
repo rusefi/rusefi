@@ -144,7 +144,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isHip9011Enabled = false;
 
 #if EFI_FSIO
-	setFsio (15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio (15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etbIo[1].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[1].directionPin2) = GPIOE_4;
