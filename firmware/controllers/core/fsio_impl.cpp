@@ -298,20 +298,15 @@ static void showFsio(const char *msg, LEElement *element) {
 #endif
 }
 
+// todo: move somewhere else
 static void showFsioInfo(void) {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	showFsio("fuel", fuelPumpLogic);
 
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
+	for (int i = 0; i < SCRIPT_SETTING_COUNT; i++) {
 		float v = CONFIG(scriptSetting)[i];
 		if (!cisnan(v)) {
 			efiPrintf("user property #%d: %.2f", i + 1, v);
-		}
-	}
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
-		if (isBrainPinValid(inputPin)) {
-			efiPrintf("FSIO digital input #%d: %s", i, hwPortname(inputPin));
 		}
 	}
 #endif
