@@ -798,6 +798,9 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
+/**
+ * set engine_type 6
+ */
 void proteusHarley(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	strcpy(engineConfiguration->scriptSettingName[0], "compReleaseRpm");
 	engineConfiguration->scriptSetting[0] = 300;
@@ -808,7 +811,12 @@ void proteusHarley(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
 #if HW_PROTEUS
 	strncpy(config->luaScript, R"(
-startPwm(0, 100, 0)
+outputIndex = 0
+startPwm(outputIndex, 100, 0)
+
+rpmLimitSetting = findSetting("compReleaseRpm", 300)
+compReleaseDulationLimit = findSetting("compReleaseDur", 6000)
+
 function onTick()
 	rpm = getSensor("RPM")
 -- handle nil RPM, todo: change firmware to avoid nil RPM
@@ -816,8 +824,10 @@ function onTick()
     print('Rpm ' .. rpm)
 	print('getTimeSinceTriggerEventMs ' .. getTimeSinceTriggerEventMs())
 
-	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() < 5000 and rpm < 300
-	setPwmDuty(0, enableCompressionReleaseSolenoid and 100 or 0)
+	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() < compReleaseDulationLimit and rpm < rpmLimitSetting
+    duty = enableCompressionReleaseSolenoid and 100 or 0
+    print("Compression release solenoid " .. duty)
+	setPwmDuty(outputIndex, duty)
 end
 )", efi::size(config->luaScript));
 #endif
