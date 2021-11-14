@@ -497,9 +497,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 	EXPAND_Engine;
 #endif
 			auto name = luaL_checklstring(l, 1, nullptr);
+			auto defaultValue = luaL_checknumber(l, 2);
+
 			auto index = getSettingIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
 			if (index == EFI_ERROR_CODE) {
-				lua_pushnil(l);
+				lua_pushnumber(l, defaultValue);
 			} else {
 				// TS counts curve from 1 so convert indexing here
 				lua_pushnumber(l, engineConfiguration->scriptSetting[index]);
