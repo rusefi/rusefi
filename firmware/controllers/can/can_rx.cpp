@@ -12,17 +12,17 @@
 
 #include "rusefi_lua.h"
 
-typedef float fsio_table_8x8_f32t_linear[FSIO_TABLE_8 * FSIO_TABLE_8];
+typedef float SCRIPT_TABLE__8x8_f32t_linear[SCRIPT_TABLE__8 * SCRIPT_TABLE__8];
 
 bool acceptCanRx(int sid DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (!CONFIG(useFSIOTableForCanSniffingFiltering)) {
+	if (!CONFIG(usescriptTableForCanSniffingFiltering)) {
 		// accept anything if filtering is not enabled
 		return true;
 	}
 /*
 	// the whole table reuse and 2D table cast to 1D array is a major hack, but it's OK for prototyping
-	fsio_table_8x8_f32t_linear *array =
-			(fsio_table_8x8_f32t_linear*) (void*) &config->fsioTable1;
+	SCRIPT_TABLE__8x8_f32t_linear *array =
+			(SCRIPT_TABLE__8x8_f32t_linear*) (void*) &config->scriptTable1;
 
 	int arraySize = efi::size(*array);
 

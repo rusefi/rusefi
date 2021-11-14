@@ -102,7 +102,7 @@ typedef char le_formula_t[LE_COMMAND_LENGTH];
 typedef brain_pin_e egt_cs_array_t[EGT_CHANNEL_COUNT];
 
 
-typedef int16_t fsio_pwm_freq_t;
+typedef int16_t pwm_freq_t;
 
 typedef float fsio_setting_t;
 

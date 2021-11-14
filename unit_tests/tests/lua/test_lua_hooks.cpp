@@ -47,10 +47,10 @@ end
 TEST(LuaHooks, Table3d) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	setTable(config->fsioTable2, (uint8_t)33);
+	setTable(config->scriptTable2, (uint8_t)33);
 	EXPECT_EQ(testLuaReturnsNumber(tableTest), 33);
 
-	setTable(config->fsioTable2, (uint8_t)14);
+	setTable(config->scriptTable2, (uint8_t)14);
 	EXPECT_EQ(testLuaReturnsNumber(tableTest), 14);
 }
 

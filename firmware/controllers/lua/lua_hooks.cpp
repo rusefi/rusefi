@@ -95,7 +95,7 @@ static int lua_table3d(lua_State* l) {
 	auto y = luaL_checknumber(l, 3);
 
 	// index table, compute table lookup
-	auto result = getFSIOTable(tableIdx)->getValue(x, y);
+	auto result = getscriptTable(tableIdx)->getValue(x, y);
 
 	lua_pushnumber(l, result);
 	return 1;
