@@ -40,7 +40,7 @@ TEST(LuaHooks, TestGetSensorByName) {
 
 static const char* tableTest = R"(
 function testFunc()
-	return table3d(1, 1000, 40)
+	return table3d(2, 1000, 40)
 end
 )";
 
