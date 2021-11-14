@@ -553,17 +553,17 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable1RpmBins, SCRIPT_TABLE__8);
+	setRpmTableBin(config->vvtTable1RpmBins, SCRIPT_TABLE_8);
 	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable2RpmBins, SCRIPT_TABLE__8);
+	setRpmTableBin(config->vvtTable2RpmBins, SCRIPT_TABLE_8);
 	setLinearCurve(config->scriptTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable1RpmBins, SCRIPT_TABLE__8);
+	setRpmTableBin(config->scriptTable1RpmBins, SCRIPT_TABLE_8);
 	setLinearCurve(config->scriptTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable2RpmBins, SCRIPT_TABLE__8);
+	setRpmTableBin(config->scriptTable2RpmBins, SCRIPT_TABLE_8);
 	setLinearCurve(config->scriptTable3LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable3RpmBins, SCRIPT_TABLE__8);
+	setRpmTableBin(config->scriptTable3RpmBins, SCRIPT_TABLE_8);
 	setLinearCurve(config->scriptTable4LoadBins, 20, 120, 10);
-	setRpmTableBin(config->scriptTable4RpmBins, SCRIPT_TABLE__8);
+	setRpmTableBin(config->scriptTable4RpmBins, SCRIPT_TABLE_8);
 
 	setDefaultEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
