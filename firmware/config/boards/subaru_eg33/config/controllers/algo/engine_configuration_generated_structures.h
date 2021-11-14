@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Nov 14 16:49:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Nov 14 19:40:53 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1823,7 +1823,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 864
 	 */
-	fsio_setting_t scriptSetting[SCRIPT_SETTING_COUNT];
+	script_setting_t scriptSetting[SCRIPT_SETTING_COUNT];
 	/**
 	 * offset 896
 	 */
@@ -4545,4 +4545,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Nov 14 16:49:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sun Nov 14 19:40:53 UTC 2021
