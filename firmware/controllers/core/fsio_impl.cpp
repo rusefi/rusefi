@@ -238,23 +238,6 @@ static void setFsioOutputPin(const char *indexStr, const char *pinName) {
 
 #endif
 
-/**
- * index is between zero and LE_COMMAND_LENGTH-1
- */
-void setFsioExt(int index, brain_pin_e pin, const char * formula, int pwmFrequency DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	CONFIG(fsioOutputPins)[index] = pin;
-	int len = strlen(formula);
-	if (len >= LE_COMMAND_LENGTH) {
-		return;
-	}
-	strcpy(config->fsioFormulas[index], formula);
-	CONFIG(fsioFrequency)[index] = pwmFrequency;
-}
-
-void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_CONFIG_PARAMETER_SUFFIX) {
-	setFsioExt(index, pin, exp, NO_PWM PASS_CONFIG_PARAMETER_SUFFIX);
-}
-
 void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	userPool.reset();
 	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
@@ -659,44 +642,6 @@ void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_MAIN_RELAY_CONTROL */
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
 		starterRelayDisableLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
-
-#if EFI_PROD_CODE
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e brainPin = CONFIG(fsioOutputPins)[i];
-
-		if (isBrainPinValid(brainPin)) {
-			int frequency = CONFIG(fsioFrequency)[i];
-			if (frequency == 0) {
-				enginePins.fsioOutputs[i].initPin(getGpioPinName(i), CONFIG(fsioOutputPins)[i]);
-			} else {
-				startSimplePwmExt(&fsioPwm[i], "FSIOpwm",
-						&engine->executor,
-						brainPin, &enginePins.fsioOutputs[i], frequency, 0.5f);
-			}
-		}
-	}
-
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		brain_pin_e inputPin = CONFIG(fsioDigitalInputs)[i];
-
-		if (isBrainPinValid(inputPin)) {
-			efiSetPadMode("FSIO input", inputPin, getInputMode(engineConfiguration->fsioInputModes[i]));
-		}
-	}
-
-	addConsoleActionSS("set_fsio_pid_output_pin", (VoidCharPtrCharPtr) setFsioPidOutputPin);
-	addConsoleActionSS("set_fsio_output_pin", (VoidCharPtrCharPtr) setFsioOutputPin);
-	addConsoleActionII("set_fsio_output_frequency", (VoidIntInt) setFsioFrequency);
-	addConsoleActionSS("set_fsio_digital_input_pin", (VoidCharPtrCharPtr) setFsioDigitalInputPin);
-	addConsoleActionSS("set_fsio_analog_input_pin", (VoidCharPtrCharPtr) setFsioAnalogInputPin);
-
-#endif /* EFI_PROD_CODE */
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	addConsoleActionSS("set_rpn_expression", applyFsioExpression);
-	addConsoleActionFF("set_fsio_setting", setFsioSetting);
-	addConsoleAction("fsioinfo", showFsioInfo);
-#endif /* EFI_PROD_CODE || EFI_SIMULATOR */
 
 	fsioTable1.init(config->fsioTable1, config->fsioTable1LoadBins,
 			config->fsioTable1RpmBins);

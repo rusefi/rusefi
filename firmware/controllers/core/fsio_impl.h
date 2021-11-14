@@ -22,13 +22,6 @@ typedef Map3D<FSIO_TABLE_8, FSIO_TABLE_8, uint8_t, float, float> fsio8_Map3D_u8t
 
 expected<float> getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX);
 
-/**
- * set_fsio_output_pin 7 PE3
- * set_rpn_expression 1 "rpm 0 fsio_setting <"
- */
-void setFsio(int index, brain_pin_e pin, const char * exp DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setFsioExt(int index, brain_pin_e pin, const char * exp, int pwmFrequency DECLARE_CONFIG_PARAMETER_SUFFIX);
-
 void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_CONFIG_PARAMETER_SUFFIX);
