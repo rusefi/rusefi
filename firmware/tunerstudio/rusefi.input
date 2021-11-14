@@ -886,25 +886,25 @@ enable2ndByteCanID = false
       zBins       = vvtTable2
 
       
-   table = fsioTable1Tbl,  fsioTable1Map,  "FSIO Table #1",   1
-      xBins       = fsioTable1RpmBins,  RPMValue
-      yBins       = fsioTable1LoadBins,  fuelingLoad
-      zBins       = fsioTable1
+   table = scriptTable1Tbl,  scriptTable1Map,  "FSIO Table #1",   1
+      xBins       = scriptTable1RpmBins,  RPMValue
+      yBins       = scriptTable1LoadBins,  fuelingLoad
+      zBins       = scriptTable1
 
-   table = fsioTable2Tbl,  fsioTable2Map,  "FSIO Table #2",   1
-      xBins       = fsioTable2RpmBins,  RPMValue
-      yBins       = fsioTable2LoadBins,  fuelingLoad
-      zBins       = fsioTable2
+   table = scriptTable2Tbl,  scriptTable2Map,  "FSIO Table #2",   1
+      xBins       = scriptTable2RpmBins,  RPMValue
+      yBins       = scriptTable2LoadBins,  fuelingLoad
+      zBins       = scriptTable2
 
-   table = fsioTable3Tbl,  fsioTable3Map,  "FSIO Table #3",   1
-      xBins       = fsioTable3RpmBins,  RPMValue
-      yBins       = fsioTable3LoadBins,  fuelingLoad
-      zBins       = fsioTable3
+   table = scriptTable3Tbl,  scriptTable3Map,  "FSIO Table #3",   1
+      xBins       = scriptTable3RpmBins,  RPMValue
+      yBins       = scriptTable3LoadBins,  fuelingLoad
+      zBins       = scriptTable3
 
-   table = fsioTable4Tbl,  fsioTable4Map,  "FSIO Table #4",   1
-      xBins       = fsioTable4RpmBins,  RPMValue
-      yBins       = fsioTable4LoadBins,  fuelingLoad
-      zBins       = fsioTable4
+   table = scriptTable4Tbl,  scriptTable4Map,  "FSIO Table #4",   1
+      xBins       = scriptTable4RpmBins,  RPMValue
+      yBins       = scriptTable4LoadBins,  fuelingLoad
+      zBins       = scriptTable4
 
    table = baroCorrTbl,  baroCorrMap,  "Baro Correction",   1
       ;       constant, variable
@@ -1599,10 +1599,10 @@ menuDialog = main
 		subMenu = scriptSetting,        "Lua Script Settings"
 
 		subMenu = std_separator
-		subMenu = fsioTable1TblSettings,			"Script Table #1"
-		subMenu = fsioTable2TblSettings,			"Script Table #2"
-		subMenu = fsioTable3TblSettings,			"Script Table #3"
-		subMenu = fsioTable4TblSettings,			"Script Table #4"
+		subMenu = scriptTable1TblSettings,			"Script Table #1"
+		subMenu = scriptTable2TblSettings,			"Script Table #2"
+		subMenu = scriptTable3TblSettings,			"Script Table #3"
+		subMenu = scriptTable4TblSettings,			"Script Table #4"
 		subMenu = scriptCurve1Settings,	            "Script Curve #1"
 		subMenu = scriptCurve2Settings,			    "Script Curve #2"
 		subMenu = scriptCurve3Settings,			    "Script Curve #3"
@@ -1895,21 +1895,21 @@ cmd_set_engine_type_8888_test				= "@@TS_IO_TEST_COMMAND_char@@\x00\x30\x00\x3B"
 cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		
 [UserDefined]
-	dialog = fsioTable1TblSettings, "", yAxis
+	dialog = scriptTable1TblSettings, "", yAxis
 	    field = "Name", scriptTableName1
-		panel = fsioTable1Tbl
+		panel = scriptTable1Tbl
 
-	dialog = fsioTable2TblSettings, "", yAxis
+	dialog = scriptTable2TblSettings, "", yAxis
 	    field = "Name", scriptTableName2
-		panel = fsioTable2Tbl
+		panel = scriptTable2Tbl
 
-	dialog = fsioTable3TblSettings, "", yAxis
+	dialog = scriptTable3TblSettings, "", yAxis
 	    field = "Name", scriptTableName3
-		panel = fsioTable3Tbl
+		panel = scriptTable3Tbl
 
-	dialog = fsioTable4TblSettings, "", yAxis
+	dialog = scriptTable4TblSettings, "", yAxis
 	    field = "Name", scriptTableName4
-		panel = fsioTable4Tbl
+		panel = scriptTable4Tbl
 
 	dialog = scriptCurve1Settings, "", yAxis
 	    field = "Name", scriptCurveName1
@@ -3804,7 +3804,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Warning Message",                      warning_message
 		field = "Ford redundant TPS mode",				useFordRedundantTps
 		field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
-		field = "use FSIO Table CAN Sniffing Filtering",useFSIOTableForCanSniffingFiltering
+		field = "use FSIO Table CAN Sniffing Filtering",usescriptTableForCanSniffingFiltering
 		field = "turbo speed sensor",                   turboSpeedSensorInputPin
 		field = "turbo speed multiplier",               turboSpeedSensorMultiplier
 		field = "Artificial Misfire",                   artificialTestMisfire
