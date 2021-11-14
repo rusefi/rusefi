@@ -214,7 +214,7 @@ public:
 	/* (0..1] angle range */
 	void addEvent(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 	/* (0..720] angle range
-	 * Deprecated!
+	 * Deprecated! many usages should be replaced by addEvent360
 	 */
 	void addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
