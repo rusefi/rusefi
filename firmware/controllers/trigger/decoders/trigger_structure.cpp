@@ -205,12 +205,16 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 
 }
 
+/**
+ * Deprecated! many usages should be replaced by addEvent360
+ */
 void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
-	addEvent(angle / 720, channelIndex, state);
+	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
 void TriggerWaveform::addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
-	addEvent(CRANK_MODE_MULTIPLIER * angle / 720, channelIndex, state);
+	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
+	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
 void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
