@@ -24,10 +24,7 @@ expected<float> getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFI
 
 void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setFsioExpression(const char *indexStr, const char *quotedLine DECLARE_CONFIG_PARAMETER_SUFFIX);
-void applyFsioExpression(const char *indexStr, const char *quotedLine DECLARE_ENGINE_PARAMETER_SUFFIX);
-float getFsioOutputValue(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
-void applyFsioConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
 void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX);
 void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

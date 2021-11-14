@@ -1181,10 +1181,6 @@ void applyNonPersistentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
 #endif // EFI_ENGINE_CONTROL
-
-#if EFI_FSIO
-	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif // EFI_FSIO
 }
 
 #if EFI_ENGINE_CONTROL

@@ -38,6 +38,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Removed
  - Remove engine load acceleration enrichment #3357
+ - FSIO removed from user interface #2928
 
 ## October 2021 Release - "Pierogi Day"
 
