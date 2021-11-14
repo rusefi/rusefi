@@ -147,7 +147,6 @@ GPIOA_6
 	 */
 
 
-	CONFIG(fsioOutputPins)[7] = GPIO_UNASSIGNED;
 	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;

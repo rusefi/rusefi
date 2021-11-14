@@ -408,11 +408,6 @@ void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// TLE8888_PIN_23: "33 - GP Out 3"
 	engineConfiguration->malfunctionIndicatorPin = TLE8888_PIN_23;
 
-	// GPIOA_15: "AUX J2 PA15"
-	engineConfiguration->fsioOutputPins[0] = GPIOA_15;
-	// TLE8888_PIN_24: "43 - GP Out 4"
-	engineConfiguration->fsioOutputPins[1] = TLE8888_PIN_24;
-
 #endif /* BOARD_TLE8888_COUNT */
 }
 

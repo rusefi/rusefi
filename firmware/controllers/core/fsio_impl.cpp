@@ -161,28 +161,6 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-
-#if EFI_PROD_CODE
-
-static void setFsioAnalogInputPin(const char *indexStr, const char *pinName) {
-// todo: reduce code duplication between all "set pin methods"
-	int index = atoi(indexStr) - 1;
-	if (index < 0 || index >= AUX_ANALOG_INPUT_COUNT) {
-		efiPrintf("invalid FSIO index: %d", index);
-		return;
-	}
-	brain_pin_e pin = parseBrainPin(pinName);
-	// todo: extract method - code duplication with other 'set_xxx_pin' methods?
-	if (pin == GPIO_INVALID) {
-		efiPrintf("invalid pin name [%s]", pinName);
-		return;
-	}
-	engineConfiguration->auxAnalogInputs[index] = (adc_channel_e) pin;
-	efiPrintf("FSIO analog input pin #%d [%s]", (index + 1), hwPortname(pin));
-}
-
-#endif /* EFI_PROD_CODE */
-
 #endif
 
 void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -336,21 +314,6 @@ static void showFsioInfo(void) {
 			efiPrintf("FSIO digital input #%d: %s", i, hwPortname(inputPin));
 		}
 	}
-#endif
-}
-
-/**
- * set_fsio_setting 1 0.11
- */
-static void setFsioSetting(float humanIndexF, float value) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	int index = (int)humanIndexF - 1;
-	if (index < 0 || index >= FSIO_COMMAND_COUNT) {
-		efiPrintf("invalid FSIO index: %d", (int)humanIndexF);
-		return;
-	}
-	engineConfiguration->scriptSetting[index] = value;
-	showFsioInfo();
 #endif
 }
 
