@@ -2061,7 +2061,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "#Cam is primary if you have cam sensor as part of trigger shape"
 		field = "Cam Sensor (Primary channel)", 		triggerInputPins1, 1, { ambiguousOperationMode == @@operation_mode_e_FOUR_STROKE_CAM_SENSOR@@ }
 		field = "Crank Sensor (Primary channel)", 		triggerInputPins1, 1, { ambiguousOperationMode != @@operation_mode_e_FOUR_STROKE_CAM_SENSOR@@ }
-		field = "Primary channel", 						triggerInputPins1
 		field = "Invert Primary",						invertPrimaryTriggerSignal
 		field = "Secondary channel", 					triggerInputPins2,            { triggerInputPins1 != 0 &&                           trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@trigger_type_e_TT_ONE@@ && trigger_type != @@trigger_type_e_TT_60_2_VW@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_2@@}
 		field = "Invert Secondary",				    	invertSecondaryTriggerSignal, {                           triggerInputPins2 != 0 && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_60_2@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_1@@ && trigger_type != @@trigger_type_e_TT_ONE@@ && trigger_type != @@trigger_type_e_TT_60_2_VW@@ && trigger_type != @@trigger_type_e_TT_TOOTHED_WHEEL_36_2@@}
