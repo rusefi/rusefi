@@ -300,12 +300,12 @@ void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //WARNING:	these indeces are off
 	engineConfiguration->fsio_setting[0] = 6400; // RPM threshold
 	engineConfiguration->fsio_setting[1] = 100; // CLT threshold, fsio_setting #2
-	engineConfiguration->fsio_setting[2] = 13.0; // voltage threshold, fsio_setting #3
+	engineConfiguration->scriptSetting[2] = 13.0; // voltage threshold, fsio_setting #3
 
 	//	set_fsio_setting 4 3000
-	engineConfiguration->fsio_setting[3] = 3000; // oil pressure RPM, fsio_setting #4
+	engineConfiguration->scriptSetting[3] = 3000; // oil pressure RPM, fsio_setting #4
 	// set_fsio_setting 5 0.52
-	engineConfiguration->fsio_setting[4] = 0.52; // oil pressure threshold, fsio_setting #5
+	engineConfiguration->scriptSetting[4] = 0.52; // oil pressure threshold, fsio_setting #5
 */
 
 //	 * set_rpn_expression 1 "rpm 3 fsio_setting >"

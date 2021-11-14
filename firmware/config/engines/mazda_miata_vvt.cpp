@@ -459,9 +459,9 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * set_fsio_setting 3 65
 	 * set_fsio_setting 4 15
 	 */
-	engineConfiguration->fsio_setting[1] = 6500; // #2 RPM threshold
-	engineConfiguration->fsio_setting[2] = 105; // #3 CLT threshold
-	engineConfiguration->fsio_setting[3] = 12.0; // #4 voltage threshold
+	engineConfiguration->scriptSetting[1] = 6500; // #2 RPM threshold
+	engineConfiguration->scriptSetting[2] = 105; // #3 CLT threshold
+	engineConfiguration->scriptSetting[3] = 12.0; // #4 voltage threshold
 
 //	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_CONFIG_PARAMETER_SUFFIX);
 

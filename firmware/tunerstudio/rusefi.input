@@ -3437,20 +3437,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = ""
 		field = ""
 	
-	dialog = fsioSetting, "Setting"
+	dialog = scriptSetting, "Setting"
 		field = "Set number is not associated with the output number."
 		field = "Set number, only the cell number with some numbers."
-		field = "set #1",								fsio_setting1
-		field = "set #2",								fsio_setting2
-		field = "set #3",								fsio_setting3
-		field = "set #4",								fsio_setting4
-		field = "set #5",								fsio_setting5
-		field = "set #6",								fsio_setting6
+		field = "set #1",								scriptSetting1
+		field = "set #2",								scriptSetting2
+		field = "set #3",								scriptSetting3
+		field = "set #4",								scriptSetting4
+		field = "set #5",								scriptSetting5
+		field = "set #6",								scriptSetting6
 
 	dialog = fsioOutputsDialog, "FSIO outputs", border
 		panel = fsioIO,			West
 		panel = fsioFrequency,	Center
-		panel = fsioSetting,	East
+		panel = scriptSetting,	East
 		
 	dialog = fsioFormulas, "FSIO Formulas"
 		field = "!FSIO uses Reverse Polish Notation. Please read http://rusefi.com/s/fsio"

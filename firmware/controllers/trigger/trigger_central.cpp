@@ -309,8 +309,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
-		if ((currentPosition < engineConfiguration->fsio_setting[4]       || currentPosition > engineConfiguration->fsio_setting[5]) &&
-		    (currentPosition < engineConfiguration->fsio_setting[4] + 360 || currentPosition > engineConfiguration->fsio_setting[5] + 360)) {
+		if ((currentPosition < engineConfiguration->scriptSetting[4]       || currentPosition > engineConfiguration->scriptSetting[5]) &&
+		    (currentPosition < engineConfiguration->scriptSetting[4] + 360 || currentPosition > engineConfiguration->scriptSetting[5] + 360)) {
 			// outside of the expected range
 			return;
 		}
