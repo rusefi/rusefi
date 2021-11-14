@@ -2515,12 +2515,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Ignition Pin 10",                      ignitionPins10
 		field = "Ignition Pin 11",                      ignitionPins11
 		field = "Ignition Pin 12",                      ignitionPins12
-		field = "output #1", 							fsioOutputPins1
-		field = "output #2", 							fsioOutputPins2
-		field = "output #3", 							fsioOutputPins3
-		field = "output #4", 							fsioOutputPins4
-		field = "output #5", 							fsioOutputPins5
-		field = "output #6", 							fsioOutputPins6
 
 	dialog = allPins2_3
 		field = "LCD E pin", 							HD44780_e
@@ -3392,28 +3386,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No accel after RPM hard limit",		noAccelAfterHardLimitPeriodSecs
 		
 		
-;			Flex Logic
-	dialog = fsioIO, "Outputs"
-		field = "output #1", 							fsioOutputPins1
-		field = "output #2", 							fsioOutputPins2
-		field = "output #3", 							fsioOutputPins3
-		field = "output #4", 							fsioOutputPins4
-		field = "output #5", 							fsioOutputPins5
-		field = "output #6", 							fsioOutputPins6
-
+	dialog = auxValvesIO, "Outputs"
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
-		
-	dialog = fsioFrequency, "Frequency"
-		field = "freq #1", 								fsioFrequency1
-		field = "freq #2", 								fsioFrequency2
-		field = "freq #3", 								fsioFrequency3
-		field = "freq #4", 								fsioFrequency4
-		field = "freq #5", 								fsioFrequency5
-		field = "freq #6", 								fsioFrequency6
-		field = ""
-		field = ""
-	
+
 	dialog = scriptSetting, "Setting"
 	    field = "!Use rusEFI console for Lua script editing"
 		field = "Set number is not associated with the output number."
