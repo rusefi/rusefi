@@ -778,14 +778,13 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e acFanPinMode;
 
 
-	uint8_t[6] unused11;
+	uint8_t[6] unused11;;"volts", 0.1, 0, 0, 20, 1
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 2", "type 2"
 	imu_type_e imuType
 
-	uint8_t[1] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
-	uint8_t[6] unusedOutPins;
+	uint8_t[7] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
 
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
@@ -816,8 +815,7 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	output_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
-	int16_t[6] unusedFsioFrequency;
-	int16_t[10] unusedOutputFreqWhereHere;;"", 1, 0, 0, 255, 0
+	int16_t[16] unusedOutputFreqWhereHere;;"", 1, 0, 0, 255, 0
 
 
 custom fsio_setting_t 4 scalar, F32, @OFFSET@, 		"Val",	   1,	   0, 0, 18000,	  2
@@ -1249,6 +1247,7 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 	float tChargeMaxRpmMinTps;;"mult", 1, 0, 0, 3, 4
 	float tChargeMaxRpmMaxTps;;"mult", 1, 0, 0, 3, 4   
 
+custom fsio_pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	fsio_pwm_freq_t[CAMS_PER_BANK iterate] vvtOutputFrequency;
 	uint8_t fan1ExtraIdle;+Additional idle % when fan #1 is active;"%", 1, 0, 0, 100, 0
 	int alternatorPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
