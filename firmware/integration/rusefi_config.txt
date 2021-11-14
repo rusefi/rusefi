@@ -165,6 +165,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_INPUT_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define FSIO_COMMAND_COUNT 6
+#define SCRIPT_SETTING_COUNT 8
 
 #define VEHICLE_INFO_SIZE 32
 
@@ -821,8 +822,8 @@ custom fsio_pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 
 
 custom fsio_setting_t 4 scalar, F32, @OFFSET@, 		"Val",	   1,	   0, 0, 18000,	  2
-	fsio_setting_t[FSIO_COMMAND_COUNT iterate] fsio_setting;
-    int[10] unusedSettings;;"", 1, 0, 0, 255, 0
+	fsio_setting_t[SCRIPT_SETTING_COUNT iterate] scriptSetting;
+    int[8] unusedSettings;;"", 1, 0, 0, 255, 0
 
 ! todo: migrate to spi_pins & combine with spi pin modes
 	brain_pin_e spi1mosiPin;

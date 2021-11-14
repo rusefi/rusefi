@@ -584,12 +584,12 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->consumeObdSensors = true;
 
 
-	engineConfiguration->fsio_setting[0] = 1500;
+	engineConfiguration->scriptSetting[0] = 1500;
 	// simple warning light as default configuration
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
 
-	engineConfiguration->fsio_setting[2] = 1500;
+	engineConfiguration->scriptSetting[2] = 1500;
 	setFsio(2, GPIO_UNASSIGNED, RPM_BELOW_USER_SETTING_3 PASS_CONFIG_PARAMETER_SUFFIX);
 
 

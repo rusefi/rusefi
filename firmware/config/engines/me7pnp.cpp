@@ -162,7 +162,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// VVT Settings
 
 	engineConfiguration->vvtOutputFrequency[0] = 300;
-	engineConfiguration->fsio_setting[0] = 0.0;
+
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
 	engineConfiguration->auxPid[0].dFactor = 0;
@@ -170,7 +170,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].minValue = 24;
 	engineConfiguration->auxPid[0].maxValue = 44;
 	engineConfiguration->vvtOutputFrequency[0] = 300;
-	engineConfiguration->fsio_setting[0] = 0.0;
+
 
 
 	//AC Settings

@@ -732,7 +732,7 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 * <reboot ECU>
 	 * fsioinfo
 	 */
-	engineConfiguration->fsio_setting[0] = 5000;
+	engineConfiguration->scriptSetting[0] = 5000;
 	// simple warning light as default configuration
 	// set_fsio_expression 1 "rpm > fsio_setting(1)"
 	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
