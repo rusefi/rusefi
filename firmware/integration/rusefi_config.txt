@@ -816,8 +816,8 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	int16_t[16] unusedOutputFreqWhereHere;;"", 1, 0, 0, 255, 0
 
 
-custom fsio_setting_t 4 scalar, F32, @OFFSET@, 		"Val",	   1,	   0, 0, 18000,	  2
-	fsio_setting_t[SCRIPT_SETTING_COUNT iterate] scriptSetting;
+custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
+	script_setting_t[SCRIPT_SETTING_COUNT iterate] scriptSetting;
     int[8] unusedSettings;;"", 1, 0, 0, 255, 0
 
 ! todo: migrate to spi_pins & combine with spi pin modes
