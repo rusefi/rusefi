@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 14:38:54 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 15:51:37 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -920,33 +920,16 @@ public class Fields {
 	public static final int fixedTiming_offset = 2204;
 	public static final int FLASH_DATA_VERSION = 10003;
 	public static final int flexSensorPin_offset = 3100;
-	public static final int FSIO_ANALOG_INPUT_COUNT = 4;
-	public static final int FSIO_COMMAND_COUNT = 6;
-	public static final int FSIO_CURVE_16 = 16;
-	public static final int FSIO_CURVE_8 = 8;
 	public static final String FSIO_METHOD_FSIO_ANALOG_INPUT = "fsio_analog_input";
 	public static final String FSIO_METHOD_FSIO_DIGITAL_INPUT = "fsio_digital_input";
 	public static final String FSIO_METHOD_FSIO_SETTING = "fsio_setting";
 	public static final String FSIO_METHOD_FSIO_TABLE = "fsio_table";
-	public static final int FSIO_TABLE_8 = 8;
 	public static final int fsioFormulas1_offset = 6672;
 	public static final int fsioFormulas2_offset = 6872;
 	public static final int fsioFormulas3_offset = 7072;
 	public static final int fsioFormulas4_offset = 7272;
 	public static final int fsioFormulas5_offset = 7472;
 	public static final int fsioFormulas6_offset = 7672;
-	public static final int fsioTable1_offset = 19296;
-	public static final int fsioTable1LoadBins_offset = 19552;
-	public static final int fsioTable1RpmBins_offset = 19584;
-	public static final int fsioTable2_offset = 19616;
-	public static final int fsioTable2LoadBins_offset = 19680;
-	public static final int fsioTable2RpmBins_offset = 19712;
-	public static final int fsioTable3_offset = 19744;
-	public static final int fsioTable3LoadBins_offset = 19808;
-	public static final int fsioTable3RpmBins_offset = 19840;
-	public static final int fsioTable4_offset = 19872;
-	public static final int fsioTable4LoadBins_offset = 19936;
-	public static final int fsioTable4RpmBins_offset = 19968;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -1690,8 +1673,11 @@ public class Fields {
 	public static final int RPM_1_BYTE_PACKING_MULT = 50;
 	public static final int rpmHardLimit_offset = 416;
 	public static final int runningLedPin_offset = 1813;
+	public static final int SCRIPT_CURVE_16 = 16;
+	public static final int SCRIPT_CURVE_8 = 8;
 	public static final int SCRIPT_CURVE_COUNT = 6;
 	public static final int SCRIPT_SETTING_COUNT = 8;
+	public static final int SCRIPT_TABLE_8 = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
 	public static final int scriptCurve1_offset = 2780;
 	public static final int scriptCurve1Bins_offset = 2716;
@@ -1719,6 +1705,18 @@ public class Fields {
 	public static final int scriptSetting6_offset = 884;
 	public static final int scriptSetting7_offset = 888;
 	public static final int scriptSetting8_offset = 892;
+	public static final int scriptTable1_offset = 19296;
+	public static final int scriptTable1LoadBins_offset = 19552;
+	public static final int scriptTable1RpmBins_offset = 19584;
+	public static final int scriptTable2_offset = 19616;
+	public static final int scriptTable2LoadBins_offset = 19680;
+	public static final int scriptTable2RpmBins_offset = 19712;
+	public static final int scriptTable3_offset = 19744;
+	public static final int scriptTable3LoadBins_offset = 19808;
+	public static final int scriptTable3RpmBins_offset = 19840;
+	public static final int scriptTable4_offset = 19872;
+	public static final int scriptTable4LoadBins_offset = 19936;
+	public static final int scriptTable4RpmBins_offset = 19968;
 	public static final int scriptTableName1_offset = 3564;
 	public static final int scriptTableName2_offset = 3580;
 	public static final int scriptTableName3_offset = 3596;
@@ -2210,7 +2208,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.14.all.2812226491";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.14.all.2966043773";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2238,6 +2236,7 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
+	public static final int unused20Inputs_offset = 1512;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2432_offset = 2432;
 	public static final int unused244_2_offset = 2424;
@@ -2312,7 +2311,6 @@ public class Fields {
 	public static final int unusedEL4_offset = 2072;
 	public static final int unusedExHpfp_offset = 724;
 	public static final int unusedFiller_4703_offset = 4703;
-	public static final int unusedFsioInputs_offset = 1512;
 	public static final int unusedLuaWasHere_offset = 16032;
 	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedOutputFreqWhereHere_offset = 832;
@@ -2329,7 +2327,6 @@ public class Fields {
 	public static final int useFordRedundantTps_offset = 76;
 	public static final int useFSIO4ForSeriousEngineWarning_offset = 1464;
 	public static final int useFSIO5ForCriticalIssueEngineStop_offset = 1464;
-	public static final int useFSIOTableForCanSniffingFiltering_offset = 76;
 	public static final int useHbridgesToDriveIdleStepper_offset = 976;
 	public static final int useIacPidMultTable_offset = 1476;
 	public static final int useIacTableForCoasting_offset = 744;
@@ -2341,6 +2338,7 @@ public class Fields {
 	public static final int useNoiselessTriggerDecoder_offset = 744;
 	public static final int useOnlyRisingEdgeForTrigger_offset = 1476;
 	public static final int useRunningMathForCranking_offset = 76;
+	public static final int usescriptTableForCanSniffingFiltering_offset = 76;
 	public static final int useSeparateAdvanceForCranking_offset = 1476;
 	public static final int useSeparateAdvanceForIdle_offset = 1476;
 	public static final int useSeparateIdleTablesForCrankingTaper_offset = 76;
@@ -2459,7 +2457,7 @@ public class Fields {
 	public static final Field DISPLAYLOGICLEVELSINENGINESNIFFER = Field.create("DISPLAYLOGICLEVELSINENGINESNIFFER", 76, FieldType.BIT, 24);
 	public static final Field USETLE8888_STEPPER = Field.create("USETLE8888_STEPPER", 76, FieldType.BIT, 25);
 	public static final Field ENABLEMAPESTIMATIONTABLEFALLBACK = Field.create("ENABLEMAPESTIMATIONTABLEFALLBACK", 76, FieldType.BIT, 26);
-	public static final Field USEFSIOTABLEFORCANSNIFFINGFILTERING = Field.create("USEFSIOTABLEFORCANSNIFFINGFILTERING", 76, FieldType.BIT, 27);
+	public static final Field USESCRIPTTABLEFORCANSNIFFINGFILTERING = Field.create("USESCRIPTTABLEFORCANSNIFFINGFILTERING", 76, FieldType.BIT, 27);
 	public static final Field ISSUE_294_29 = Field.create("ISSUE_294_29", 76, FieldType.BIT, 28);
 	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 76, FieldType.BIT, 29);
 	public static final Field ISSUE_294_31 = Field.create("ISSUE_294_31", 76, FieldType.BIT, 30);
@@ -3059,7 +3057,7 @@ public class Fields {
 	public static final Field KNOCKDETECTIONWINDOWSTART = Field.create("KNOCKDETECTIONWINDOWSTART", 1500, FieldType.FLOAT);
 	public static final Field KNOCKDETECTIONWINDOWEND = Field.create("KNOCKDETECTIONWINDOWEND", 1504, FieldType.FLOAT);
 	public static final Field IDLESTEPPERREACTIONTIME = Field.create("IDLESTEPPERREACTIONTIME", 1508, FieldType.FLOAT);
-	public static final Field UNUSEDFSIOINPUTS = Field.create("UNUSEDFSIOINPUTS", 1512, FieldType.INT8);
+	public static final Field UNUSED20INPUTS = Field.create("UNUSED20INPUTS", 1512, FieldType.INT8);
 	public static final Field IDLESTEPPERTOTALSTEPS = Field.create("IDLESTEPPERTOTALSTEPS", 1532, FieldType.INT);
 	public static final Field NOACCELAFTERHARDLIMITPERIODSECS = Field.create("NOACCELAFTERHARDLIMITPERIODSECS", 1536, FieldType.FLOAT);
 	public static final Field MAPAVERAGINGSCHEDULINGATINDEX = Field.create("MAPAVERAGINGSCHEDULINGATINDEX", 1540, FieldType.INT);
@@ -3698,18 +3696,18 @@ public class Fields {
 	public static final Field TPSTPSACCELTABLE = Field.create("TPSTPSACCELTABLE", 18976, FieldType.FLOAT);
 	public static final Field TPSTPSACCELFROMRPMBINS = Field.create("TPSTPSACCELFROMRPMBINS", 19232, FieldType.FLOAT);
 	public static final Field TPSTPSACCELTORPMBINS = Field.create("TPSTPSACCELTORPMBINS", 19264, FieldType.FLOAT);
-	public static final Field FSIOTABLE1 = Field.create("FSIOTABLE1", 19296, FieldType.FLOAT);
-	public static final Field FSIOTABLE1LOADBINS = Field.create("FSIOTABLE1LOADBINS", 19552, FieldType.FLOAT);
-	public static final Field FSIOTABLE1RPMBINS = Field.create("FSIOTABLE1RPMBINS", 19584, FieldType.FLOAT);
-	public static final Field FSIOTABLE2 = Field.create("FSIOTABLE2", 19616, FieldType.INT8);
-	public static final Field FSIOTABLE2LOADBINS = Field.create("FSIOTABLE2LOADBINS", 19680, FieldType.FLOAT);
-	public static final Field FSIOTABLE2RPMBINS = Field.create("FSIOTABLE2RPMBINS", 19712, FieldType.FLOAT);
-	public static final Field FSIOTABLE3 = Field.create("FSIOTABLE3", 19744, FieldType.INT8);
-	public static final Field FSIOTABLE3LOADBINS = Field.create("FSIOTABLE3LOADBINS", 19808, FieldType.FLOAT);
-	public static final Field FSIOTABLE3RPMBINS = Field.create("FSIOTABLE3RPMBINS", 19840, FieldType.FLOAT);
-	public static final Field FSIOTABLE4 = Field.create("FSIOTABLE4", 19872, FieldType.INT8);
-	public static final Field FSIOTABLE4LOADBINS = Field.create("FSIOTABLE4LOADBINS", 19936, FieldType.FLOAT);
-	public static final Field FSIOTABLE4RPMBINS = Field.create("FSIOTABLE4RPMBINS", 19968, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE1 = Field.create("SCRIPTTABLE1", 19296, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE1LOADBINS = Field.create("SCRIPTTABLE1LOADBINS", 19552, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE1RPMBINS = Field.create("SCRIPTTABLE1RPMBINS", 19584, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE2 = Field.create("SCRIPTTABLE2", 19616, FieldType.INT8);
+	public static final Field SCRIPTTABLE2LOADBINS = Field.create("SCRIPTTABLE2LOADBINS", 19680, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE2RPMBINS = Field.create("SCRIPTTABLE2RPMBINS", 19712, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE3 = Field.create("SCRIPTTABLE3", 19744, FieldType.INT8);
+	public static final Field SCRIPTTABLE3LOADBINS = Field.create("SCRIPTTABLE3LOADBINS", 19808, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE3RPMBINS = Field.create("SCRIPTTABLE3RPMBINS", 19840, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE4 = Field.create("SCRIPTTABLE4", 19872, FieldType.INT8);
+	public static final Field SCRIPTTABLE4LOADBINS = Field.create("SCRIPTTABLE4LOADBINS", 19936, FieldType.FLOAT);
+	public static final Field SCRIPTTABLE4RPMBINS = Field.create("SCRIPTTABLE4RPMBINS", 19968, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	ENGINESNIFFERRPMTHRESHOLD,
@@ -3743,7 +3741,7 @@ public class Fields {
 	DISPLAYLOGICLEVELSINENGINESNIFFER,
 	USETLE8888_STEPPER,
 	ENABLEMAPESTIMATIONTABLEFALLBACK,
-	USEFSIOTABLEFORCANSNIFFINGFILTERING,
+	USESCRIPTTABLEFORCANSNIFFINGFILTERING,
 	ISSUE_294_29,
 	ARTIFICIALTESTMISFIRE,
 	ISSUE_294_31,
@@ -4329,7 +4327,7 @@ public class Fields {
 	KNOCKDETECTIONWINDOWSTART,
 	KNOCKDETECTIONWINDOWEND,
 	IDLESTEPPERREACTIONTIME,
-	UNUSEDFSIOINPUTS,
+	UNUSED20INPUTS,
 	IDLESTEPPERTOTALSTEPS,
 	NOACCELAFTERHARDLIMITPERIODSECS,
 	MAPAVERAGINGSCHEDULINGATINDEX,
@@ -4958,17 +4956,17 @@ public class Fields {
 	TPSTPSACCELTABLE,
 	TPSTPSACCELFROMRPMBINS,
 	TPSTPSACCELTORPMBINS,
-	FSIOTABLE1,
-	FSIOTABLE1LOADBINS,
-	FSIOTABLE1RPMBINS,
-	FSIOTABLE2,
-	FSIOTABLE2LOADBINS,
-	FSIOTABLE2RPMBINS,
-	FSIOTABLE3,
-	FSIOTABLE3LOADBINS,
-	FSIOTABLE3RPMBINS,
-	FSIOTABLE4,
-	FSIOTABLE4LOADBINS,
-	FSIOTABLE4RPMBINS,
+	SCRIPTTABLE1,
+	SCRIPTTABLE1LOADBINS,
+	SCRIPTTABLE1RPMBINS,
+	SCRIPTTABLE2,
+	SCRIPTTABLE2LOADBINS,
+	SCRIPTTABLE2RPMBINS,
+	SCRIPTTABLE3,
+	SCRIPTTABLE3LOADBINS,
+	SCRIPTTABLE3RPMBINS,
+	SCRIPTTABLE4,
+	SCRIPTTABLE4LOADBINS,
+	SCRIPTTABLE4RPMBINS,
 	};
 }

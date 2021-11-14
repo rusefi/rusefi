@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 14 14:38:57 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 14 15:51:40 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2559,7 +2559,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1512
 	 */
-	uint8_t unusedFsioInputs[20];
+	uint8_t unused20Inputs[20];
 	/**
 	count
 	 * offset 1532
@@ -3209,7 +3209,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2244
 	 */
-	fsio_pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
+	pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
 	/**
 	 * Additional idle % when fan #1 is active
 	%
@@ -4236,7 +4236,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6644
 	 */
-	le_formula_t fsioFormulas[FSIO_COMMAND_COUNT];
+	le_formula_t fsioFormulas[6];
 	/**
 	 * offset 7844
 	 */
@@ -4374,34 +4374,34 @@ struct persistent_config_s {
 	value
 	 * offset 15748
 	 */
-	uint8_t vvtTable1[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 15812
 	 */
-	float vvtTable1LoadBins[SCRIPT_TABLE__8];
+	float vvtTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 15844
 	 */
-	float vvtTable1RpmBins[SCRIPT_TABLE__8];
+	float vvtTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 15876
 	 */
-	uint8_t vvtTable2[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 15940
 	 */
-	float vvtTable2LoadBins[SCRIPT_TABLE__8];
+	float vvtTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 15972
 	 */
-	float vvtTable2RpmBins[SCRIPT_TABLE__8];
+	float vvtTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 16004
@@ -4471,68 +4471,68 @@ struct persistent_config_s {
 	value
 	 * offset 19268
 	 */
-	float scriptTable1[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	float scriptTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19524
 	 */
-	float scriptTable1LoadBins[SCRIPT_TABLE__8];
+	float scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19556
 	 */
-	float scriptTable1RpmBins[SCRIPT_TABLE__8];
+	float scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19588
 	 */
-	uint8_t scriptTable2[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t scriptTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19652
 	 */
-	float scriptTable2LoadBins[SCRIPT_TABLE__8];
+	float scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19684
 	 */
-	float scriptTable2RpmBins[SCRIPT_TABLE__8];
+	float scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19716
 	 */
-	uint8_t scriptTable3[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19780
 	 */
-	float scriptTable3LoadBins[SCRIPT_TABLE__8];
+	float scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19812
 	 */
-	float scriptTable3RpmBins[SCRIPT_TABLE__8];
+	float scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19844
 	 */
-	uint8_t scriptTable4[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t scriptTable4[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19908
 	 */
-	float scriptTable4LoadBins[SCRIPT_TABLE__8];
+	float scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19940
 	 */
-	float scriptTable4RpmBins[SCRIPT_TABLE__8];
+	float scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/** total size 19972*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 14 14:38:57 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 14 15:51:40 UTC 2021

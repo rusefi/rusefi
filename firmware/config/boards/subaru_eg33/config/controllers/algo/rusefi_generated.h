@@ -966,33 +966,16 @@
 #define fixedTiming_offset 2204
 #define FLASH_DATA_VERSION 10003
 #define flexSensorPin_offset 3100
-#define FSIO_ANALOG_INPUT_COUNT 4
-#define FSIO_COMMAND_COUNT 6
-#define SCRIPT_CURVE_16 16
-#define SCRIPT_CURVE_8 8
 #define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
 #define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
 #define FSIO_METHOD_FSIO_SETTING "fsio_setting"
-#define FSIO_METHOD_SCRIPT_TABLE_ "SCRIPT_TABLE_"
-#define SCRIPT_TABLE__8 8
+#define FSIO_METHOD_FSIO_TABLE "fsio_table"
 #define fsioFormulas1_offset 6672
 #define fsioFormulas2_offset 6872
 #define fsioFormulas3_offset 7072
 #define fsioFormulas4_offset 7272
 #define fsioFormulas5_offset 7472
 #define fsioFormulas6_offset 7672
-#define scriptTable1_offset 19296
-#define scriptTable1LoadBins_offset 19552
-#define scriptTable1RpmBins_offset 19584
-#define scriptTable2_offset 19616
-#define scriptTable2LoadBins_offset 19680
-#define scriptTable2RpmBins_offset 19712
-#define scriptTable3_offset 19744
-#define scriptTable3LoadBins_offset 19808
-#define scriptTable3RpmBins_offset 19840
-#define scriptTable4_offset 19872
-#define scriptTable4LoadBins_offset 19936
-#define scriptTable4RpmBins_offset 19968
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -1770,8 +1753,11 @@
 #define RPM_1_BYTE_PACKING_MULT 50
 #define rpmHardLimit_offset 416
 #define runningLedPin_offset 1813
+#define SCRIPT_CURVE_16 16
+#define SCRIPT_CURVE_8 8
 #define SCRIPT_CURVE_COUNT 6
 #define SCRIPT_SETTING_COUNT 8
+#define SCRIPT_TABLE_8 8
 #define SCRIPT_TABLE_COUNT 4
 #define scriptCurve1_offset 2780
 #define scriptCurve1Bins_offset 2716
@@ -1799,6 +1785,18 @@
 #define scriptSetting6_offset 884
 #define scriptSetting7_offset 888
 #define scriptSetting8_offset 892
+#define scriptTable1_offset 19296
+#define scriptTable1LoadBins_offset 19552
+#define scriptTable1RpmBins_offset 19584
+#define scriptTable2_offset 19616
+#define scriptTable2LoadBins_offset 19680
+#define scriptTable2RpmBins_offset 19712
+#define scriptTable3_offset 19744
+#define scriptTable3LoadBins_offset 19808
+#define scriptTable3RpmBins_offset 19840
+#define scriptTable4_offset 19872
+#define scriptTable4LoadBins_offset 19936
+#define scriptTable4RpmBins_offset 19968
 #define scriptTableName1_offset 3564
 #define scriptTableName2_offset 3580
 #define scriptTableName3_offset 3596
@@ -1833,7 +1831,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 322921152
+#define SIGNATURE_HASH 1936730669
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2352,7 +2350,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.14.subaru_eg33_f7.322921152"
+#define TS_SIGNATURE "rusEFI 2021.11.14.subaru_eg33_f7.1936730669"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2383,6 +2381,7 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
+#define unused20Inputs_offset 1512
 #define unused2260_offset 2260
 #define unused2432_offset 2432
 #define unused244_2_offset 2424
@@ -2457,7 +2456,6 @@
 #define unusedEL4_offset 2072
 #define unusedExHpfp_offset 724
 #define unusedFiller_4703_offset 4703
-#define unusedFsioInputs_offset 1512
 #define unusedLuaWasHere_offset 16032
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832
@@ -2474,7 +2472,6 @@
 #define useFordRedundantTps_offset 76
 #define useFSIO4ForSeriousEngineWarning_offset 1464
 #define useFSIO5ForCriticalIssueEngineStop_offset 1464
-#define usescriptTableForCanSniffingFiltering_offset 76
 #define useHbridgesToDriveIdleStepper_offset 976
 #define useIacPidMultTable_offset 1476
 #define useIacTableForCoasting_offset 744
@@ -2486,6 +2483,7 @@
 #define useNoiselessTriggerDecoder_offset 744
 #define useOnlyRisingEdgeForTrigger_offset 1476
 #define useRunningMathForCranking_offset 76
+#define usescriptTableForCanSniffingFiltering_offset 76
 #define useSeparateAdvanceForCranking_offset 1476
 #define useSeparateAdvanceForIdle_offset 1476
 #define useSeparateIdleTablesForCrankingTaper_offset 76

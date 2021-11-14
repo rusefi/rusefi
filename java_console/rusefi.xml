@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Sun Nov 14 14:38:56 UTC 2021 -->
+<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Sun Nov 14 15:51:39 UTC 2021 -->
 
     <rom>
         <romid>
@@ -64,8 +64,8 @@
             </table>
         </table>
 
-        <table type="3D" name="FSIO Table #1" 
-        category="FSIO"
+        <table type="3D" name="SCRIPT Table #1" 
+        category="SCRIPT"
         storageaddress="4b60" sizex="8"
                sizey="8" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
@@ -81,8 +81,8 @@
             </table>
         </table>
 
-        <table type="3D" name="FSIO Table #2" 
-        category="FSIO"
+        <table type="3D" name="SCRIPT Table #2" 
+        category="SCRIPT"
         storageaddress="4ca0" sizex="8"
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
@@ -98,8 +98,8 @@
             </table>
         </table>
 
-        <table type="3D" name="FSIO Table #3" 
-        category="FSIO"
+        <table type="3D" name="SCRIPT Table #3" 
+        category="SCRIPT"
         storageaddress="4d20" sizex="8"
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
@@ -115,8 +115,8 @@
             </table>
         </table>
 
-        <table type="3D" name="FSIO Table #4" 
-        category="FSIO"
+        <table type="3D" name="SCRIPT Table #4" 
+        category="SCRIPT"
         storageaddress="4da0" sizex="8"
                sizey="8" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
@@ -171,8 +171,8 @@
             </table>
         </table>
 
-        <table type="2D" name="FSIO Curve #1" storageaddress="adc"
-        category="FSIO"
+        <table type="2D" name="SCRIPT Curve #1" storageaddress="adc"
+        category="SCRIPT"
                sizex="16" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
@@ -181,8 +181,8 @@
             </table>
         </table>
 
-        <table type="2D" name="FSIO Curve #2" storageaddress="b5c"
-        category="FSIO"
+        <table type="2D" name="SCRIPT Curve #2" storageaddress="b5c"
+        category="SCRIPT"
                sizex="16" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>

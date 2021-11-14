@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 14:38:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 15:51:37 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2559,7 +2559,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1512
 	 */
-	uint8_t unusedFsioInputs[20];
+	uint8_t unused20Inputs[20];
 	/**
 	count
 	 * offset 1532
@@ -4242,7 +4242,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6672
 	 */
-	le_formula_t fsioFormulas[FSIO_COMMAND_COUNT];
+	le_formula_t fsioFormulas[6];
 	/**
 	 * offset 7872
 	 */
@@ -4380,34 +4380,34 @@ struct persistent_config_s {
 	value
 	 * offset 15776
 	 */
-	uint8_t vvtTable1[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 15840
 	 */
-	float vvtTable1LoadBins[SCRIPT_TABLE__8];
+	float vvtTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 15872
 	 */
-	float vvtTable1RpmBins[SCRIPT_TABLE__8];
+	float vvtTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 15904
 	 */
-	uint8_t vvtTable2[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 15968
 	 */
-	float vvtTable2LoadBins[SCRIPT_TABLE__8];
+	float vvtTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 16000
 	 */
-	float vvtTable2RpmBins[SCRIPT_TABLE__8];
+	float vvtTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 16032
@@ -4477,68 +4477,68 @@ struct persistent_config_s {
 	value
 	 * offset 19296
 	 */
-	float scriptTable1[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	float scriptTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19552
 	 */
-	float scriptTable1LoadBins[SCRIPT_TABLE__8];
+	float scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19584
 	 */
-	float scriptTable1RpmBins[SCRIPT_TABLE__8];
+	float scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19616
 	 */
-	uint8_t scriptTable2[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t scriptTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19680
 	 */
-	float scriptTable2LoadBins[SCRIPT_TABLE__8];
+	float scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19712
 	 */
-	float scriptTable2RpmBins[SCRIPT_TABLE__8];
+	float scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19744
 	 */
-	uint8_t scriptTable3[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19808
 	 */
-	float scriptTable3LoadBins[SCRIPT_TABLE__8];
+	float scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19840
 	 */
-	float scriptTable3RpmBins[SCRIPT_TABLE__8];
+	float scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19872
 	 */
-	uint8_t scriptTable4[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
+	uint8_t scriptTable4[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19936
 	 */
-	float scriptTable4LoadBins[SCRIPT_TABLE__8];
+	float scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19968
 	 */
-	float scriptTable4RpmBins[SCRIPT_TABLE__8];
+	float scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/** total size 20000*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 14:38:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 15:51:37 UTC 2021
