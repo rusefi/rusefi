@@ -31,6 +31,9 @@ DDEFS += -DEFI_ICU_INPUTS=FALSE -DHAL_TRIGGER_USE_PAL=TRUE
 # todo: is it broken?
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 
+# Enable serial pins on expansion header
+DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOD_6 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOD_5 -DTS_PRIMARY_UART=UARTD2
+
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
 
