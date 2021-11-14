@@ -798,7 +798,7 @@ struct engine_configuration_s {
 	bool enableMapEstimationTableFallback : 1;
 	/**
 	offset 76 bit 27 */
-	bool useFSIOTableForCanSniffingFiltering : 1;
+	bool usescriptTableForCanSniffingFiltering : 1;
 	/**
 	offset 76 bit 28 */
 	bool issue_294_29 : 1;
@@ -3215,7 +3215,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2248
 	 */
-	fsio_pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
+	pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
 	/**
 	 * Additional idle % when fan #1 is active
 	%
@@ -3530,42 +3530,42 @@ struct engine_configuration_s {
 	x
 	 * offset 2716
 	 */
-	float scriptCurve1Bins[FSIO_CURVE_16];
+	float scriptCurve1Bins[SCRIPT_CURVE_16];
 	/**
 	y
 	 * offset 2780
 	 */
-	float scriptCurve1[FSIO_CURVE_16];
+	float scriptCurve1[SCRIPT_CURVE_16];
 	/**
 	x
 	 * offset 2844
 	 */
-	float scriptCurve2Bins[FSIO_CURVE_16];
+	float scriptCurve2Bins[SCRIPT_CURVE_16];
 	/**
 	y
 	 * offset 2908
 	 */
-	float scriptCurve2[FSIO_CURVE_16];
+	float scriptCurve2[SCRIPT_CURVE_16];
 	/**
 	x
 	 * offset 2972
 	 */
-	float scriptCurve3Bins[FSIO_CURVE_8];
+	float scriptCurve3Bins[SCRIPT_CURVE_8];
 	/**
 	y
 	 * offset 3004
 	 */
-	float scriptCurve3[FSIO_CURVE_8];
+	float scriptCurve3[SCRIPT_CURVE_8];
 	/**
 	x
 	 * offset 3036
 	 */
-	float scriptCurve4Bins[FSIO_CURVE_8];
+	float scriptCurve4Bins[SCRIPT_CURVE_8];
 	/**
 	y
 	 * offset 3068
 	 */
-	float scriptCurve4[FSIO_CURVE_8];
+	float scriptCurve4[SCRIPT_CURVE_8];
 	/**
 	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3100
@@ -3691,22 +3691,22 @@ struct engine_configuration_s {
 	x
 	 * offset 3436
 	 */
-	float scriptCurve5Bins[FSIO_CURVE_8];
+	float scriptCurve5Bins[SCRIPT_CURVE_8];
 	/**
 	y
 	 * offset 3468
 	 */
-	float scriptCurve5[FSIO_CURVE_8];
+	float scriptCurve5[SCRIPT_CURVE_8];
 	/**
 	x
 	 * offset 3500
 	 */
-	float scriptCurve6Bins[FSIO_CURVE_8];
+	float scriptCurve6Bins[SCRIPT_CURVE_8];
 	/**
 	y
 	 * offset 3532
 	 */
-	float scriptCurve6[FSIO_CURVE_8];
+	float scriptCurve6[SCRIPT_CURVE_8];
 	/**
 	 * offset 3564
 	 */
@@ -4380,34 +4380,34 @@ struct persistent_config_s {
 	value
 	 * offset 15776
 	 */
-	uint8_t vvtTable1[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t vvtTable1[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
 	/**
 	L
 	 * offset 15840
 	 */
-	float vvtTable1LoadBins[FSIO_TABLE_8];
+	float vvtTable1LoadBins[SCRIPT_TABLE__8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 15872
 	 */
-	float vvtTable1RpmBins[FSIO_TABLE_8];
+	float vvtTable1RpmBins[SCRIPT_TABLE__8];
 	/**
 	value
 	 * offset 15904
 	 */
-	uint8_t vvtTable2[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t vvtTable2[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
 	/**
 	L
 	 * offset 15968
 	 */
-	float vvtTable2LoadBins[FSIO_TABLE_8];
+	float vvtTable2LoadBins[SCRIPT_TABLE__8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 16000
 	 */
-	float vvtTable2RpmBins[FSIO_TABLE_8];
+	float vvtTable2RpmBins[SCRIPT_TABLE__8];
 	/**
 	L
 	 * offset 16032
@@ -4477,66 +4477,66 @@ struct persistent_config_s {
 	value
 	 * offset 19296
 	 */
-	float fsioTable1[FSIO_TABLE_8][FSIO_TABLE_8];
+	float scriptTable1[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
 	/**
 	L
 	 * offset 19552
 	 */
-	float fsioTable1LoadBins[FSIO_TABLE_8];
+	float scriptTable1LoadBins[SCRIPT_TABLE__8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19584
 	 */
-	float fsioTable1RpmBins[FSIO_TABLE_8];
+	float scriptTable1RpmBins[SCRIPT_TABLE__8];
 	/**
 	value
 	 * offset 19616
 	 */
-	uint8_t fsioTable2[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t scriptTable2[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
 	/**
 	L
 	 * offset 19680
 	 */
-	float fsioTable2LoadBins[FSIO_TABLE_8];
+	float scriptTable2LoadBins[SCRIPT_TABLE__8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19712
 	 */
-	float fsioTable2RpmBins[FSIO_TABLE_8];
+	float scriptTable2RpmBins[SCRIPT_TABLE__8];
 	/**
 	value
 	 * offset 19744
 	 */
-	uint8_t fsioTable3[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t scriptTable3[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
 	/**
 	L
 	 * offset 19808
 	 */
-	float fsioTable3LoadBins[FSIO_TABLE_8];
+	float scriptTable3LoadBins[SCRIPT_TABLE__8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19840
 	 */
-	float fsioTable3RpmBins[FSIO_TABLE_8];
+	float scriptTable3RpmBins[SCRIPT_TABLE__8];
 	/**
 	value
 	 * offset 19872
 	 */
-	uint8_t fsioTable4[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t scriptTable4[SCRIPT_TABLE__8][SCRIPT_TABLE__8];
 	/**
 	L
 	 * offset 19936
 	 */
-	float fsioTable4LoadBins[FSIO_TABLE_8];
+	float scriptTable4LoadBins[SCRIPT_TABLE__8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19968
 	 */
-	float fsioTable4RpmBins[FSIO_TABLE_8];
+	float scriptTable4RpmBins[SCRIPT_TABLE__8];
 	/** total size 20000*/
 };
 

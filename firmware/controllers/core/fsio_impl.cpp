@@ -31,10 +31,10 @@
  */
 #define NO_PWM 0
 
-static fsio8_Map3D_f32t fsioTable1;
-static fsio8_Map3D_u8t fsioTable2;
-static fsio8_Map3D_u8t fsioTable3;
-static fsio8_Map3D_u8t fsioTable4;
+static fsio8_Map3D_f32t scriptTable1;
+static fsio8_Map3D_u8t scriptTable2;
+static fsio8_Map3D_u8t scriptTable3;
+static fsio8_Map3D_u8t scriptTable4;
 
 /**
  * Here we define all rusEfi-specific methods
@@ -57,7 +57,7 @@ static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
 static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, FSIO_METHOD_FSIO_SETTING);
-static LENameOrdinalPair leFsioTable(LE_METHOD_FSIO_TABLE, FSIO_METHOD_FSIO_TABLE);
+static LENameOrdinalPair lescriptTable(LE_METHOD_SCRIPT_TABLE_, FSIO_METHOD_SCRIPT_TABLE_);
 static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, FSIO_METHOD_FSIO_ANALOG_INPUT);
 static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_METHOD_FSIO_DIGITAL_INPUT);
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
@@ -312,16 +312,16 @@ static void showFsioInfo(void) {
 #endif
 }
 
-ValueProvider3D *getFSIOTable(int index) {
+ValueProvider3D *getscriptTable(int index) {
 	switch (index) {
 	default:
-		return &fsioTable1;
+		return &scriptTable1;
 	case 1:
-		return &fsioTable2;
+		return &scriptTable2;
 	case 2:
-		return &fsioTable3;
+		return &scriptTable3;
 	case 3:
-		return &fsioTable4;
+		return &scriptTable4;
 	}
 }
 
@@ -381,14 +381,14 @@ void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
 		starterRelayDisableLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
 
-	fsioTable1.init(config->fsioTable1, config->fsioTable1LoadBins,
-			config->fsioTable1RpmBins);
-	fsioTable2.init(config->fsioTable2, config->fsioTable2LoadBins,
-			config->fsioTable2RpmBins);
-	fsioTable3.init(config->fsioTable3, config->fsioTable3LoadBins,
-			config->fsioTable3RpmBins);
-	fsioTable4.init(config->fsioTable4, config->fsioTable4LoadBins,
-			config->fsioTable4RpmBins);
+	scriptTable1.init(config->scriptTable1, config->scriptTable1LoadBins,
+			config->scriptTable1RpmBins);
+	scriptTable2.init(config->scriptTable2, config->scriptTable2LoadBins,
+			config->scriptTable2RpmBins);
+	scriptTable3.init(config->scriptTable3, config->scriptTable3LoadBins,
+			config->scriptTable3RpmBins);
+	scriptTable4.init(config->scriptTable4, config->scriptTable4LoadBins,
+			config->scriptTable4RpmBins);
 
 }
 
