@@ -206,17 +206,8 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 	case LE_METHOD_FSIO_SETTING: {
 		return unexpected;
 	}
-	case LE_METHOD_SCRIPT_TABLE_: {
-		float i = pop(LE_METHOD_SCRIPT_TABLE_);
-		float yValue = pop(LE_METHOD_SCRIPT_TABLE_);
-		float xValue = pop(LE_METHOD_SCRIPT_TABLE_);
-		int index = (int) i;
-		if (index < 1 || index > MAX_TABLE_INDEX) {
-			return unexpected;
-		} else {
-			// index parameter is 1-based, getscriptTable is 0-based
-			return getscriptTable(index - 1)->getValue(xValue, yValue);
-		}
+	case LE_METHOD_SCRIPT_TABLE: {
+		return unexpected;
 	}
 	case LE_METHOD_FSIO_DIGITAL_INPUT:
 		// todo: implement code for digital input!!!
