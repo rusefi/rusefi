@@ -1077,9 +1077,8 @@ bit unused_1484_bit_31
 
 
 float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
-	float unused1512;;"", 1, 0, 1, 5, 2
 
-	uint8_t[16] unusedFsioInputs;;"", 1, 0, 0, 255, 0
+	uint8_t[20] unusedFsioInputs;;"", 1, 0, 0, 255, 0
 
 	int idleStepperTotalSteps;;"count", 1, 0, 5, 3000, 0
 
