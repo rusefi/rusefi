@@ -1381,7 +1381,7 @@ gppwm_note_t[SCRIPT_CURVE_COUNT iterate] scriptCurveName;
 	float[SCRIPT_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -999, 1000, 3
 	float[SCRIPT_CURVE_8] scriptCurve6;;"y", 1, 0, -999, 1000, 3
 gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
-gppwm_note_tSCRIPT_SETTING_COUNT iterate] scriptSettingName;
+gppwm_note_t[SCRIPT_SETTING_COUNT iterate] scriptSettingName;
 uint8_t[108] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.", 1, 0, 0, 1, 4
