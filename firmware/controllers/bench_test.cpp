@@ -151,8 +151,9 @@ static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * o
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.fsioOutputs[humanIndex - 1], b);
+// todo: convert in lua bench test
+//	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
+//	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.fsioOutputs[humanIndex - 1], b);
 }
 
 /**

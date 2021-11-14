@@ -559,15 +559,6 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[10] = PROTEUS_IGN_1;
 	engineConfiguration->ignitionPins[11] = PROTEUS_IGN_12;
 
-	engineConfiguration->fsioOutputPins[0] = GPIOE_2;//  "Lowside 16"    # pin 23/black35
-	engineConfiguration->fsioOutputPins[1] = GPIOG_14;// "Lowside 7"
-	engineConfiguration->fsioOutputPins[2] = GPIOE_0;//  "Lowside 14"    # pin 11/black35
-	engineConfiguration->fsioOutputPins[3] = GPIOE_1;//  "Lowside 15"    # pin 12/black35
-
-	engineConfiguration->fsioOutputPins[4] = GPIOG_3;//  "Ign 11"
-	engineConfiguration->fsioOutputPins[5] = GPIOA_8;//  "Highside 2"    # pin 1/black35
-	engineConfiguration->fsioOutputPins[6] = GPIOD_14;// "Highside 4"    # pin 14/black35
-	engineConfiguration->fsioOutputPins[7] = GPIOG_4;//  "Ign 10"
 
 #endif // EFI_PROD_CODE
 
@@ -582,22 +573,6 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 	engineConfiguration->consumeObdSensors = true;
-
-
-
-
-#if (BOARD_TLE8888_COUNT > 0)
-	engineConfiguration->fsioOutputPins[0] = TLE8888_PIN_1; // "37 - Injector 1"
-	engineConfiguration->fsioOutputPins[1] = TLE8888_PIN_2; // "38 - Injector 2"
-	engineConfiguration->fsioOutputPins[2] = TLE8888_PIN_3; // "41 - Injector 3"
-	engineConfiguration->fsioOutputPins[3] = TLE8888_PIN_4; // "42 - Injector 4"
-// 	engineConfiguration->fsioOutputPins[4] = TLE8888_PIN_5;
-// 	engineConfiguration->fsioOutputPins[5] = TLE8888_PIN_6;
-//	engineConfiguration->fsioOutputPins[6] = TLE8888_PIN_21;
-	engineConfiguration->fsioOutputPins[7] = TLE8888_PIN_22; // "34 - GP Out 2"
-	engineConfiguration->fsioOutputPins[8] = TLE8888_PIN_23; // "33 - GP Out 3"
-	engineConfiguration->fsioOutputPins[9] = TLE8888_PIN_24; // "43 - GP Out 4"
-#endif /* BOARD_TLE8888_COUNT */
 
 }
 
