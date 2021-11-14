@@ -799,7 +799,7 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void proteusHarley(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_16;
+	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
 #if HW_PROTEUS
 	strncpy(config->luaScript, R"(
 startPwm(0, 100, 0)
