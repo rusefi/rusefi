@@ -17,9 +17,7 @@
 
 static bool isInit = false;
 
-static LaunchControlBase launchInstance;
-
-static int retardThresholdRpm;
+LaunchControlBase launchInstance;
 
 /**
  * We can have active condition from switch or from clutch.
@@ -174,7 +172,7 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void LaunchControlBase::applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (( engine->isLaunchCondition ) && ( retardThresholdRpm < GET_RPM() )) {
 		*limitedSpark = engineConfiguration->launchSparkCutEnable;
 		*limitedFuel = engineConfiguration->launchFuelCutEnable;

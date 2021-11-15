@@ -12,7 +12,7 @@
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
+
 void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 class LaunchControlBase : public EnginePtr {
@@ -25,6 +25,8 @@ public:
 	bool isInsideSwitchCondition() const;
 	bool isInsideRPMCondition(int rpm) const;
 	bool isLaunchConditionMet(int rpm) const;
+	int retardThresholdRpm;
+	void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 private:
 	Timer m_launchTimer;
