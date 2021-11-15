@@ -245,7 +245,7 @@ void printTPSInfo(void) {
 	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
 }
 
-static void printTemperatureInfo(void) {
+static void printTemperatureInfo() {
 #if EFI_ANALOG_SENSORS
 	Sensor::showAllSensorInfo();
 
@@ -338,15 +338,15 @@ static void setIgnitionMode(int value) {
 	doPrintConfiguration();
 }
 
-static void setOneCoilIgnition(void) {
+static void setOneCoilIgnition() {
 	setIgnitionMode((int)IM_ONE_COIL);
 }
 
-static void setWastedIgnition(void) {
+static void setWastedIgnition() {
 	setIgnitionMode((int)IM_WASTED_SPARK);
 }
 
-static void setIndividualCoilsIgnition(void) {
+static void setIndividualCoilsIgnition() {
 	setIgnitionMode((int)IM_INDIVIDUAL_COILS);
 }
 
@@ -861,7 +861,7 @@ void scheduleStopEngine(void) {
 	doScheduleStopEngine(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
-static void printAllInfo(void) {
+static void printAllInfo() {
 	printTemperatureInfo();
 	printTPSInfo();
 #if EFI_ENGINE_SNIFFER

@@ -27,7 +27,7 @@ static percent_t currentAltDuty;
 static bool currentPlainOnOffState = false;
 static bool shouldResetPid = false;
 
-static void pidReset(void) {
+static void pidReset() {
 	alternatorPid.reset();
 }
 

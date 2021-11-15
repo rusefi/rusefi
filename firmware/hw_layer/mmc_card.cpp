@@ -89,7 +89,7 @@ static NO_CACHE FATFS MMC_FS;
 
 static int fatFsErrors = 0;
 
-static void mmcUnMount(void);
+static void mmcUnMount();
 
 static void setSdCardReady(bool value) {
 	fs_ready = value;
@@ -112,7 +112,7 @@ static FIL FDLogFile NO_CACHE;
 static int logFileIndex = MIN_FILE_INDEX;
 static char logName[_MAX_FILLER + 20];
 
-static void printMmcPinout(void) {
+static void printMmcPinout() {
 	efiPrintf("MMC CS %s", hwPortname(CONFIG(sdCardCsPin)));
 	// todo: we need to figure out the right SPI pinout, not just SPI2
 //	efiPrintf("MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
@@ -120,7 +120,7 @@ static void printMmcPinout(void) {
 //	efiPrintf("MMC MOSI %s:%d", portname(EFI_SPI2_MOSI_PORT), EFI_SPI2_MOSI_PIN);
 }
 
-static void sdStatistics(void) {
+static void sdStatistics() {
 	printMmcPinout();
 	efiPrintf("SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
 			sdStatus);
@@ -130,7 +130,7 @@ static void sdStatistics(void) {
 	}
 }
 
-static void incLogFileName(void) {
+static void incLogFileName() {
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
 	FRESULT err = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
 
@@ -164,7 +164,7 @@ static void incLogFileName(void) {
 	efiPrintf("Done %d", logFileIndex);
 }
 
-static void prepareLogFileName(void) {
+static void prepareLogFileName() {
 	strcpy(logName, RUSEFI_LOG_PREFIX);
 	char *ptr;
 
@@ -190,7 +190,7 @@ static void prepareLogFileName(void) {
  * This function saves the name of the file in a global variable
  * so that we can later append to that file
  */
-static void createLogFile(void) {
+static void createLogFile() {
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
 	prepareLogFileName();
 
@@ -282,7 +282,7 @@ static void listDirectory(const char *path) {
 /*
  * MMC card un-mount.
  */
-static void mmcUnMount(void) {
+static void mmcUnMount() {
 	if (!isSdCardAlive()) {
 		efiPrintf("Error: No File system is mounted. \"mountsd\" first");
 		return;

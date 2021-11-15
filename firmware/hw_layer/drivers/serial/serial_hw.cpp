@@ -22,7 +22,7 @@ static bool isSerialRXEnabled = false;
 static SerialConfig uartCfg;
 static SerialRead serialRead;
 
-static void auxInfo(void) {
+static void auxInfo() {
 	if (!isSerialEnabled) {
 		efiPrintf("AUX Serial is not enabled, please enable & restart");
 		return;

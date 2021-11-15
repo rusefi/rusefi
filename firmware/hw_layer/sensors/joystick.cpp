@@ -73,7 +73,7 @@ static void extCallback(ioportmask_t channel) {
 #endif
 }
 
-static void joystickInfo(void) {
+static void joystickInfo() {
 	efiPrintf("total %d center=%d@%s", joyTotal, joyCenter,
 			hwPortname(CONFIG(joystickCenterPin)));
 	efiPrintf("a=%d@%s", joyA, hwPortname(CONFIG(joystickAPin)));

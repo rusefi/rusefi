@@ -311,7 +311,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 }
 
 #if EFI_ENGINE_CONTROL
-static void showFuelInfo(void) {
+static void showFuelInfo() {
 	showFuelInfo2((float) GET_RPM(), getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE));
 }
 #endif
@@ -319,7 +319,7 @@ static void showFuelInfo(void) {
 static OutputPin *leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
 		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
-static void initStatusLeds(void) {
+static void initStatusLeds() {
 	enginePins.communicationLedPin.initPin("led: comm status", engineConfiguration->communicationLedPin, &LED_COMMUNICATION_BRAIN_PIN_MODE, true);
 	// checkEnginePin is already initialized by the time we get here
 

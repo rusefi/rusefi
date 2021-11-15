@@ -243,7 +243,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 	}
 }
 
-static void fillWithSpaces(void) {
+static void fillWithSpaces() {
 	int column = getCurrentHD44780column();
 	for (int r = column; r < 20; r++) {
 		lcd_HD44780_print_char(' ');

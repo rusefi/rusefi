@@ -331,7 +331,7 @@ static const struct mc33810_config mc33810_even = {
 	.en = {.port = nullptr, .pad = 0}
 };
 
-static void board_init_ext_gpios(void)
+static void board_init_ext_gpios()
 {
 	int ret;
 

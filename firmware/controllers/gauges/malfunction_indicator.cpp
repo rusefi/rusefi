@@ -106,7 +106,7 @@ private:
 static MILController instance CCM_OPTIONAL;
 
 #if TEST_MIL_CODE
-static void testMil(void) {
+static void testMil() {
 	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 	addError(OBD_Intake_Air_Temperature_Circuit_Malfunction);
 }
