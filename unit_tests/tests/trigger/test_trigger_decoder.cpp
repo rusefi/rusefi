@@ -55,7 +55,7 @@ TEST(misc, testSkipped2_0) {
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
 }
 
-static void testDodgeNeonDecoder(void) {
+static void testDodgeNeonDecoder() {
 	printf("*************************************************** testDodgeNeonDecoder95\r\n");
 
 	ASSERT_EQ( 8,  getTriggerZeroEventIndex(DODGE_NEON_1995)) << "DODGE_NEON_1995: trigger zero index";

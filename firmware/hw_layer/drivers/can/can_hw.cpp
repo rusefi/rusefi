@@ -162,7 +162,7 @@ private:
 static CanRead canRead CCM_OPTIONAL;
 static CanWrite canWrite CCM_OPTIONAL;
 
-static void canInfo(void) {
+static void canInfo() {
 	if (!isCanEnabled) {
 		efiPrintf("CAN is not enabled, please enable & restart");
 		return;

@@ -678,7 +678,7 @@ static EtbThread etbThread CCM_OPTIONAL;
 
 #endif
 
-static void showEthInfo(void) {
+static void showEthInfo() {
 #if EFI_PROD_CODE
 	efiPrintf("etbAutoTune=%d",
 			engine->etbAutoTune);

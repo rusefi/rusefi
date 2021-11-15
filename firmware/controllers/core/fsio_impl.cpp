@@ -252,7 +252,7 @@ static void showFsio(const char *msg, LEElement *element) {
 }
 
 // todo: move somewhere else
-static void showFsioInfo(void) {
+static void showFsioInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	showFsio("fuel", fuelPumpLogic);
 

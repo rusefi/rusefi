@@ -120,7 +120,7 @@ static brain_pin_e index_to_brainPin(unsigned int i)
 	return GPIO_INVALID;
 }
 
-static void reportPins(void) {
+static void reportPins() {
 	for (unsigned int i = 0; i < getBrainPinOnchipNum(); i++) {
 		const char *pin_user = getBrainUsedPin(i);
 

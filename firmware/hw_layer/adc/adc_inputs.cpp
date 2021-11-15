@@ -432,7 +432,7 @@ void removeChannel(const char *name, adc_channel_e setting) {
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void setAdcChannelOverrides() { }
 
-static void configureInputs(void) {
+static void configureInputs() {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
 
 	/**

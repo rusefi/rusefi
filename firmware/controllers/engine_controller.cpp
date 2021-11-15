@@ -181,7 +181,7 @@ efitimesec_t getTimeNowSeconds(void) {
 	return getTimeNowUs() / US_PER_SECOND;
 }
 
-static void resetAccel(void) {
+static void resetAccel() {
 	engine->tpsAccelEnrichment.resetAE();
 
 	for (size_t i = 0; i < efi::size(engine->injectionEvents.elements); i++)
@@ -291,7 +291,7 @@ static void printAnalogChannelInfo(const char *name, adc_channel_e hwChannel) {
 #endif /* HAL_USE_ADC */
 }
 
-static void printAnalogInfo(void) {
+static void printAnalogInfo() {
 	efiPrintf("analogInputDividerCoefficient: %.2f", engineConfiguration->analogInputDividerCoefficient);
 
 	printAnalogChannelInfo("hip9011", engineConfiguration->hipOutputChannel);
@@ -470,7 +470,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	onConfigurationChanged();
 }
 
-static void initConfigActions(void) {
+static void initConfigActions() {
 	addConsoleActionSS("set_float", (VoidCharPtrCharPtr) setFloat);
 	addConsoleActionII("set_int", (VoidIntInt) setInt);
 	addConsoleActionII("set_short", (VoidIntInt) setShort);
