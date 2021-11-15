@@ -98,7 +98,7 @@ persistent_config_s configWorkingCopy;
 
 #endif /* EFI_NO_CONFIG_WORKING_COPY */
 
-static void printErrorCounters(void) {
+static void printErrorCounters() {
 	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
 			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
@@ -115,7 +115,7 @@ extern persistent_config_container_s persistentState;
 
 static efitimems_t previousWriteReportMs = 0;
 
-static void resetTs(void) {
+static void resetTs() {
 	memset(&tsState, 0, sizeof(tsState));
 }
 

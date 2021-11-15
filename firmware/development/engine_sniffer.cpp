@@ -60,7 +60,7 @@ static uint32_t skipUntilEngineCycle = 0;
 
 #if ! EFI_UNIT_TEST
 extern WaveChart waveChart;
-static void resetNow(void) {
+static void resetNow() {
 	skipUntilEngineCycle = getRevolutionCounter() + 3;
 	waveChart.reset();
 }
@@ -109,7 +109,7 @@ int WaveChart::getSize() {
 }
 
 #if ! EFI_UNIT_TEST
-static void printStatus(void) {
+static void printStatus() {
 	efiPrintf("engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
 	efiPrintf("engine chart size=%d", engineConfiguration->engineChartSize);
 }

@@ -666,7 +666,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 }
 
-static void triggerShapeInfo(void) {
+static void triggerShapeInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;

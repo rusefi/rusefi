@@ -20,7 +20,7 @@ static bool wasLoaded = false;
 static const int backupStateOffset = 0, backupDataOffset = 1;
 const size_t backupSize = (BACKUP_RAM_NUM + 1) * sizeof(uint32_t);
 
-static void backupInit(void) {
+static void backupInit() {
 	static_assert(backupSize <= BACKUP_FLASH_SIZE, "Backup flash overflow");
 
 	// first, load the whole buffer into the memory

@@ -293,7 +293,7 @@ void mapAveragingTriggerCallback(
 #endif
 }
 
-static void showMapStats(void) {
+static void showMapStats() {
 	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 

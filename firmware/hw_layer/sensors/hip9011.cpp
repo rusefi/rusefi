@@ -114,7 +114,7 @@ static SPIConfig hipSpiCfg = {
 /*==========================================================================*/
 
 #if EFI_HIP_9011_DEBUG
-	static void hip_addconsoleActions(void);
+	static void hip_addconsoleActions();
 #endif
 
 /*==========================================================================*/
@@ -203,7 +203,7 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	return ret;
 }
 
-static int hip_wake_driver(void)
+static int hip_wake_driver()
 {
     /* Entering a reentrant critical zone.*/
     syssts_t sts = chSysGetStatusAndLockX();
@@ -328,7 +328,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 	}
 }
 
-static int hip_testAdvMode(void) {
+static int hip_testAdvMode() {
 	int ret;
 	uint8_t ret0, ret1, ret2;
 
@@ -362,7 +362,7 @@ static int hip_testAdvMode(void) {
 	return -1;
 }
 
-static int hip_init(void) {
+static int hip_init() {
 	int ret;
 
 	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.prescaler), NULL);
@@ -582,7 +582,7 @@ static const char *hip_state_names[] =
 	"Waiting for second ADC sample"
 };
 
-static void showHipInfo(void) {
+static void showHipInfo() {
 	if (!CONFIG(isHip9011Enabled)) {
 		efiPrintf("hip9011 driver not active");
 		return;
@@ -670,7 +670,7 @@ static void setHipGain(float value) {
 	showHipInfo();
 }
 
-static void hip_addconsoleActions(void) {
+static void hip_addconsoleActions() {
 	addConsoleAction("hipinfo", showHipInfo);
 	addConsoleActionF("set_gain", setHipGain);
 	addConsoleActionF("set_band", setHipBand);

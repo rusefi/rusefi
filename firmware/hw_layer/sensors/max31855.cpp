@@ -29,7 +29,7 @@ static SPIDriver *driver;
 
 static SPIConfig spiConfig[EGT_CHANNEL_COUNT];
 
-static void showEgtInfo(void) {
+static void showEgtInfo() {
 #if EFI_PROD_CODE
 	printSpiState(engineConfiguration);
 
@@ -111,7 +111,7 @@ uint16_t getEgtValue(int egtChannel) {
 	}
 }
 
-static void egtRead(void) {
+static void egtRead() {
 
 	if (driver == NULL) {
 		efiPrintf("No SPI selected for EGT");
