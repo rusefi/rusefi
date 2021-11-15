@@ -138,7 +138,7 @@ static char panicMessage[200];
 static virtual_timer_t resetTimer;
 
 // todo: move this into a hw-specific file
-static void rebootNow() {
+void rebootNow() {
 	NVIC_SystemReset();
 }
 
@@ -162,7 +162,7 @@ void onAssertionFailure() {
 void runRusEfiWithConfig();
 void runMainLoop();
 
-void runRusEfi(void) {
+void runRusEfi() {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
 	assertEngineReference();
 	engine->setConfig();
