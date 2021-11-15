@@ -131,10 +131,8 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//ETB Settings
 
 #if EFI_FSIO
-#if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
-	setFsio (14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* STM32_HAS_GPIOF */
-	setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio (14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	// is this needed? engineConfiguration->vvtOutputFrequency[3] = 25;
 	CONFIG(etb_use_two_wires) = true;
@@ -146,7 +144,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isHip9011Enabled = false;
 
 #if EFI_FSIO
-	setFsio (15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio (15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etbIo[1].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[1].directionPin2) = GPIOE_4;
@@ -162,7 +160,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// VVT Settings
 
 	engineConfiguration->vvtOutputFrequency[0] = 300;
-	engineConfiguration->fsio_setting[0] = 0.0;
+
 	engineConfiguration->auxPid[0].pFactor = 2;
 	engineConfiguration->auxPid[0].iFactor = 0.005;
 	engineConfiguration->auxPid[0].dFactor = 0;
@@ -170,7 +168,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->auxPid[0].minValue = 24;
 	engineConfiguration->auxPid[0].maxValue = 44;
 	engineConfiguration->vvtOutputFrequency[0] = 300;
-	engineConfiguration->fsio_setting[0] = 0.0;
+
 
 
 	//AC Settings

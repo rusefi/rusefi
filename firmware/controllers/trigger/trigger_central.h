@@ -86,10 +86,10 @@ public:
 
 	TriggerFormDetails triggerFormDetails;
 
-private:
 	// Keep track of the last time we got a valid trigger event
 	Timer m_lastEventTimer;
 
+private:
 	// Keep track of the last time we saw the sync tooth go by (trigger index 0)
 	Timer m_virtualZeroTimer;
 };

@@ -75,7 +75,6 @@ public:
 class FsioState {
 public:
 	FsioState();
-	float fsioLastValue[FSIO_COMMAND_COUNT];
 
 #if EFI_UNIT_TEST
 	float mockFan = 0;

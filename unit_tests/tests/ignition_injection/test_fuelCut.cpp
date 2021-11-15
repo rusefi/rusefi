@@ -98,34 +98,3 @@ TEST(fuelCut, coasting) {
 	assertEqualsM("inj dur#7 cut", 0.0f, ENGINE(injectionDuration));
 }
 
-
-TEST(fuelCut, criticalEngineTemperature) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-
-	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-
-	engineConfiguration->useFSIO5ForCriticalIssueEngineStop = true;
-	setFsio(MAGIC_OFFSET_FOR_CRITICAL_ENGINE - 1, GPIOD_7, TOO_HOT_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
-	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	// we need some non-zero time as getTimeNow() which would become stopEngineRequestTimeNt
-	eth.moveTimeForwardUs(1000);
-
-	engine->rpmCalculator.mockRpm = 2000;
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ(engine->stopEngineRequestTimeNt, 0);
-
-	ASSERT_FALSE(engine->stopEngineRequestTimeNt > 0);
-
-	Sensor::setMockValue(SensorType::Clt, 200);
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	eth.engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	ASSERT_TRUE(engine->stopEngineRequestTimeNt > 0);
-}
-
-TEST(fuel, injectorFlowCorrection) {
-
-
-}

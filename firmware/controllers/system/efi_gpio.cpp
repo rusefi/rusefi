@@ -185,10 +185,6 @@ void EnginePins::unregisterPins() {
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
 
-	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
-		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
-	}
-
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
 		pin->unregister();

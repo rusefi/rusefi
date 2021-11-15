@@ -94,6 +94,7 @@ public:
 	AcState acState;
 	bool enableOverdwellProtection = true;
 	bool isPwmEnabled = true;
+	// todo: remove this once all usages are using 'm_lastEventTimer'
 	int triggerActivityMs = -99 * 1000;
 
 	const char *prevOutputName = nullptr;

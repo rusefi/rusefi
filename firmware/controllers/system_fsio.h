@@ -72,8 +72,8 @@
 // Human-readable: rpm < cranking_rpm
 #define STARTER_RELAY_LOGIC "rpm cranking_rpm <"
 
-// Human-readable: fsio_table (3, rpm, map) / 100
-#define BOOST_CONTROLLER "3 rpm map fsio_table 100 /"
+// Human-readable: SCRIPT_TABLE_ (3, rpm, map) / 100
+#define BOOST_CONTROLLER "3 rpm map SCRIPT_TABLE_ 100 /"
 
 // Human-readable: if(fsio_analog_input (0) > 20, 0, 10)
 #define ANALOG_CONDITION "0 fsio_analog_input 20 > 0 10 if"

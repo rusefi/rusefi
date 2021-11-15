@@ -147,12 +147,13 @@ static void doTestSolenoid(int humanIndex, const char *delayStr, const char * on
 
 static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
-	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
-		efiPrintf("Invalid index: %d", humanIndex);
-		return;
-	}
-	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.fsioOutputs[humanIndex - 1], b);
+//	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
+//		efiPrintf("Invalid index: %d", humanIndex);
+//		return;
+//	}
+// todo: convert in lua bench test
+//	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
+//	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.fsioOutputs[humanIndex - 1], b);
 }
 
 /**

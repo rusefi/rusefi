@@ -211,34 +211,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 	// VICS solenoid
-#if EFI_FSIO
-	/**
-	 * to test
-	 * set_fsio_setting 1 5000
-	 */
-	engineConfiguration->fsio_setting[0] = 5000;
-	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsioExt(0, GPIOE_3, RPM_ABOVE_USER_SETTING_1, 150 PASS_CONFIG_PARAMETER_SUFFIX);
-
-	// warning light
-	/**
-	 * to test
-	 * set_fsio_setting 2 1800
-	 * set_fsio_setting 3 95
-	 * set_fsio_setting 4 14
-	 *
-	 * set_fsio_expression 2 "rpm > fsio_setting(2)"
-	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
-	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
-	 */
-	engineConfiguration->fsio_setting[1] = 6200; // RPM threshold
-	engineConfiguration->fsio_setting[2] = 90; // CLT threshold
-	engineConfiguration->fsio_setting[3] = 13.5; // voltage threshold
-
-//	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_CONFIG_PARAMETER_SUFFIX);
-	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
 	static const float ignitionRpmBins[] =
 	{
 		800,

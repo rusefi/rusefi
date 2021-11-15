@@ -347,7 +347,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// SF  PF11
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 #if EFI_FSIO
-	setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
 	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
@@ -363,7 +363,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// IN2 PE4
 	// SF  PE3
 #if EFI_FSIO
-	setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
 #endif
 	CONFIG(etbIo[0].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[0].directionPin2) = GPIOE_4;
@@ -559,15 +559,6 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[10] = PROTEUS_IGN_1;
 	engineConfiguration->ignitionPins[11] = PROTEUS_IGN_12;
 
-	engineConfiguration->fsioOutputPins[0] = GPIOE_2;//  "Lowside 16"    # pin 23/black35
-	engineConfiguration->fsioOutputPins[1] = GPIOG_14;// "Lowside 7"
-	engineConfiguration->fsioOutputPins[2] = GPIOE_0;//  "Lowside 14"    # pin 11/black35
-	engineConfiguration->fsioOutputPins[3] = GPIOE_1;//  "Lowside 15"    # pin 12/black35
-
-	engineConfiguration->fsioOutputPins[4] = GPIOG_3;//  "Ign 11"
-	engineConfiguration->fsioOutputPins[5] = GPIOA_8;//  "Highside 2"    # pin 1/black35
-	engineConfiguration->fsioOutputPins[6] = GPIOD_14;// "Highside 4"    # pin 14/black35
-	engineConfiguration->fsioOutputPins[7] = GPIOG_4;//  "Ign 10"
 
 #endif // EFI_PROD_CODE
 
@@ -582,29 +573,6 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 	engineConfiguration->consumeObdSensors = true;
-
-
-	engineConfiguration->fsio_setting[0] = 1500;
-	// simple warning light as default configuration
-	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
-
-	engineConfiguration->fsio_setting[2] = 1500;
-	setFsio(2, GPIO_UNASSIGNED, RPM_BELOW_USER_SETTING_3 PASS_CONFIG_PARAMETER_SUFFIX);
-
-
-#if (BOARD_TLE8888_COUNT > 0)
-	engineConfiguration->fsioOutputPins[0] = TLE8888_PIN_1; // "37 - Injector 1"
-	engineConfiguration->fsioOutputPins[1] = TLE8888_PIN_2; // "38 - Injector 2"
-	engineConfiguration->fsioOutputPins[2] = TLE8888_PIN_3; // "41 - Injector 3"
-	engineConfiguration->fsioOutputPins[3] = TLE8888_PIN_4; // "42 - Injector 4"
-// 	engineConfiguration->fsioOutputPins[4] = TLE8888_PIN_5;
-// 	engineConfiguration->fsioOutputPins[5] = TLE8888_PIN_6;
-//	engineConfiguration->fsioOutputPins[6] = TLE8888_PIN_21;
-	engineConfiguration->fsioOutputPins[7] = TLE8888_PIN_22; // "34 - GP Out 2"
-	engineConfiguration->fsioOutputPins[8] = TLE8888_PIN_23; // "33 - GP Out 3"
-	engineConfiguration->fsioOutputPins[9] = TLE8888_PIN_24; // "43 - GP Out 4"
-#endif /* BOARD_TLE8888_COUNT */
 
 }
 
@@ -830,6 +798,41 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
+/**
+ * set engine_type 6
+ */
+void proteusHarley(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	strcpy(engineConfiguration->scriptSettingName[0], "compReleaseRpm");
+	engineConfiguration->scriptSetting[0] = 300;
+	strcpy(engineConfiguration->scriptSettingName[1], "compReleaseDur");
+	engineConfiguration->scriptSetting[1] = 5000;
+
+
+	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
+#if HW_PROTEUS
+	strncpy(config->luaScript, R"(
+outputIndex = 0
+startPwm(outputIndex, 100, 0)
+
+rpmLimitSetting = findSetting("compReleaseRpm", 300)
+compReleaseDulationLimit = findSetting("compReleaseDur", 6000)
+
+function onTick()
+	rpm = getSensor("RPM")
+-- handle nil RPM, todo: change firmware to avoid nil RPM
+	rpm = (rpm == nil and 0 or rpm)
+    print('Rpm ' .. rpm)
+	print('getTimeSinceTriggerEventMs ' .. getTimeSinceTriggerEventMs())
+
+	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() < compReleaseDulationLimit and rpm < rpmLimitSetting
+    duty = enableCompressionReleaseSolenoid and 100 or 0
+    print("Compression release solenoid " .. duty)
+	setPwmDuty(outputIndex, duty)
+end
+)", efi::size(config->luaScript));
+#endif
+}
+
 void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #if HW_PROTEUS
 	engineConfiguration->tpsMin = 889;
@@ -905,17 +908,25 @@ startPwm(1, 80, 1.0)
 -- disable
 startPwm(2, 80, 0.0)
 
-pid = Pid.new()
-pid:setP(2)
-pid:setMinValue(-100)
-pid:setMaxValue(100)
+pid = Pid.new(2, 0, 0, -100, 100)
 
 biasCurveIndex = findCurveIndex("bias")
+
+canRxAdd(0x600)
+
+voltageFromCan = nil
+canRxAdd(0x600)
+
+function onCanRx(bus, id, dlc, data)
+  print('got CAN id=' .. id .. ' dlc='  .. dlc)
+  voltageFromCan =   data[2] / 256.0 + data[1]
+end
 
 function onTick()
   local targetVoltage = getAuxAnalog(0)
   
-  local target = interpolate(1, 0, 3.5, 100, targetVoltage)
+--  local target = interpolate(1, 0, 3.5, 100, targetVoltage)
+  local target = interpolate(1, 0, 3.5, 100, voltageFromCan)
 -- clamp 0 to 100
   target = math.max(0, target)
   target = math.min(100, target)
@@ -926,15 +937,21 @@ function onTick()
   tps = (tps == nil and 'invalid TPS' or tps)
   print('Tps ' .. tps)
 
-  pid:setTarget(target)
-  local output = pid:get(tps)
+  local output = pid:get(target, tps)
 
   local bias = curve(biasCurveIndex, target)
   print('bias ' .. bias)
 
-  print('pid output ' .. output)
+  local duty = (bias + output) / 100
+  isPositive = duty > 0;
+  pwmValue = isPositive and duty or -duty
+  setPwmDuty(0, pwmValue)
+
+  dirValue = isPositive and 1 or 0;
+  setPwmDuty(1, dirValue)
+
+  print('pwm ' .. pwmValue .. ' dir ' .. dirValue)
   print('')
-  
 end
 				)";
 	strncpy(config->luaScript, script, efi::size(config->luaScript));

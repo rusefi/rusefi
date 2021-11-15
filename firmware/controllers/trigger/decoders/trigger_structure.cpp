@@ -37,6 +37,7 @@
 #include "trigger_honda.h"
 #include "trigger_vw.h"
 #include "trigger_universal.h"
+#include "trigger_mercedes.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -204,12 +205,16 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 
 }
 
+/**
+ * Deprecated! many usages should be replaced by addEvent360
+ */
 void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
-	addEvent(angle / 720, channelIndex, state);
+	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
 void TriggerWaveform::addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
-	addEvent(CRANK_MODE_MULTIPLIER * angle / 720, channelIndex, state);
+	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
+	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
 void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
@@ -587,7 +592,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configure3_1_cam(this);
 		break;
 
-	case TT_UNUSED_10:
+	case TT_MERCEDES_2_SEGMENT:
+		setMercedesTwoSegment(this);
+		break;
+
 	case TT_UNUSED_62:
 	case TT_ONE:
 		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);

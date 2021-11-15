@@ -40,17 +40,17 @@ TEST(LuaHooks, TestGetSensorByName) {
 
 static const char* tableTest = R"(
 function testFunc()
-	return table3d(1, 1000, 40)
+	return table3d(2, 1000, 40)
 end
 )";
 
 TEST(LuaHooks, Table3d) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	setTable(config->fsioTable2, (uint8_t)33);
+	setTable(config->scriptTable2, (uint8_t)33);
 	EXPECT_EQ(testLuaReturnsNumber(tableTest), 33);
 
-	setTable(config->fsioTable2, (uint8_t)14);
+	setTable(config->scriptTable2, (uint8_t)14);
 	EXPECT_EQ(testLuaReturnsNumber(tableTest), 14);
 }
 
@@ -143,31 +143,24 @@ TEST(LuaHooks, LuaSensor) {
 
 static const char* pidTest = R"(
 function testFunc()
-	local pid = Pid.new()
-	pid:setP(0.5)
-	pid:setMinValue(-10)
-    pid:setMaxValue(10)
-
-	pid:setTarget(3)
+	local pid = Pid.new(0.5, 0, 0, -10, 10)
 
 	-- delta is -4, output -2
-	if pid:get(7) ~= -2 then
+	if pid:get(3, 7) ~= -2 then
 		return 1
 	end
 
-	pid:setTarget(4)
 	-- delta is 6, output 3
-	if pid:get(-2) ~= 3 then
+	if pid:get(4, -2) ~= 3 then
 		return 2
 	end
 
-	pid:setTarget(0)
 	-- test clamping
-	if pid:get(100) ~= -10 then
+	if pid:get(0, 100) ~= -10 then
 		return 3
 	end
 
-	if pid:get(-100) ~= 10 then
+	if pid:get(0, -100) ~= 10 then
 		return 4
 	end
 

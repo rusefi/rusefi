@@ -150,10 +150,6 @@ static void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
-
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		wipeString(config->fsioFormulas[i], sizeof(le_formula_t));
-	}
 }
 
 void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -518,10 +514,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->sdCardPeriodMs = 50;
 
-	for (int i = 0; i < FSIO_COMMAND_COUNT; i++) {
-		config->fsioFormulas[i][0] = 0;
-	}
-
 	CONFIG(mapMinBufferLength) = 1;
 	
 	CONFIG(startCrankingDuration) = 3;
@@ -561,17 +553,17 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable1RpmBins, FSIO_TABLE_8);
+	setRpmTableBin(config->vvtTable1RpmBins, SCRIPT_TABLE_8);
 	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable2RpmBins, FSIO_TABLE_8);
-	setLinearCurve(config->fsioTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->fsioTable1RpmBins, FSIO_TABLE_8);
-	setLinearCurve(config->fsioTable2LoadBins, 20, 120, 10);
-	setRpmTableBin(config->fsioTable2RpmBins, FSIO_TABLE_8);
-	setLinearCurve(config->fsioTable3LoadBins, 20, 120, 10);
-	setRpmTableBin(config->fsioTable3RpmBins, FSIO_TABLE_8);
-	setLinearCurve(config->fsioTable4LoadBins, 20, 120, 10);
-	setRpmTableBin(config->fsioTable4RpmBins, FSIO_TABLE_8);
+	setRpmTableBin(config->vvtTable2RpmBins, SCRIPT_TABLE_8);
+	setLinearCurve(config->scriptTable1LoadBins, 20, 120, 10);
+	setRpmTableBin(config->scriptTable1RpmBins, SCRIPT_TABLE_8);
+	setLinearCurve(config->scriptTable2LoadBins, 20, 120, 10);
+	setRpmTableBin(config->scriptTable2RpmBins, SCRIPT_TABLE_8);
+	setLinearCurve(config->scriptTable3LoadBins, 20, 120, 10);
+	setRpmTableBin(config->scriptTable3RpmBins, SCRIPT_TABLE_8);
+	setLinearCurve(config->scriptTable4LoadBins, 20, 120, 10);
+	setRpmTableBin(config->scriptTable4RpmBins, SCRIPT_TABLE_8);
 
 	setDefaultEngineNoiseTable(PASS_ENGINE_PARAMETER_SIGNATURE);
 
@@ -722,22 +714,6 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->isEngineControlEnabled = true;
 #endif // EFI_ENGINE_CONTROL
-#if EFI_FSIO
-	/**
-	 * to test:
-	 * set_fsio_setting 1 5000
-	 * set_fsio_output_pin 1 PE3
-	 * set debug_mode 23
-	 * writeconfig
-	 * <reboot ECU>
-	 * fsioinfo
-	 */
-	engineConfiguration->fsio_setting[0] = 5000;
-	// simple warning light as default configuration
-	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsio(0, GPIO_UNASSIGNED, RPM_ABOVE_USER_SETTING_1 PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
 	strncpy(config->luaScript, "function onTick()\nend", efi::size(config->luaScript));
 }
 
@@ -942,6 +918,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case PROTEUS_LUA_DEMO:
 		proteusLuaDemo(PASS_CONFIG_PARAMETER_SIGNATURE);
+		break;
+	case PROTEUS_HARLEY:
+		proteusHarley(PASS_CONFIG_PARAMETER_SIGNATURE);
 		break;
 	case PROTEUS_BMW_M73:
 		setEngineBMW_M73_Proteus(PASS_CONFIG_PARAMETER_SIGNATURE);
@@ -1194,10 +1173,6 @@ void applyNonPersistentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_ENGINE_CONTROL
 	ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
 #endif // EFI_ENGINE_CONTROL
-
-#if EFI_FSIO
-	applyFsioConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-#endif // EFI_FSIO
 }
 
 #if EFI_ENGINE_CONTROL

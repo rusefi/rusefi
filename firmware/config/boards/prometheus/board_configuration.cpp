@@ -184,8 +184,6 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->malfunctionIndicatorPin = GPIOC_1;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	// starter block
-	setFsio(0, (is469 ? GPIOB_10 : GPIOB_1), STARTER_RELAY_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
 
 	
 	// debug pad

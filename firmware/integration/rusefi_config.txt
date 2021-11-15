@@ -86,7 +86,6 @@ struct_no_prefix engine_configuration_s
 #define ENUM_32_BITS 2000000000
 
 #define AUX_ANALOG_INPUT_COUNT 8
-#define FSIO_ANALOG_INPUT_COUNT 4
 
 #define LUA_PWM_COUNT 8
 #define LUA_ANALOG_INPUT_COUNT 8
@@ -164,7 +163,7 @@ struct_no_prefix engine_configuration_s
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
 #define TRIGGER_INPUT_PIN_COUNT 3
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
-#define FSIO_COMMAND_COUNT 6
+#define SCRIPT_SETTING_COUNT 8
 
 #define VEHICLE_INFO_SIZE 32
 
@@ -212,10 +211,10 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_FUEL_MASS 100
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PACK_MULT_FUEL_FLOW 200
-#define FSIO_TABLE_8 8
+#define SCRIPT_TABLE_8 8
 
-#define FSIO_CURVE_8 8
-#define FSIO_CURVE_16 16
+#define SCRIPT_CURVE_8 8
+#define SCRIPT_CURVE_16 16
 
 #define FSIO_METHOD_FSIO_SETTING "fsio_setting"
 #define FSIO_METHOD_FSIO_TABLE "fsio_table"
@@ -272,9 +271,9 @@ struct pid_s
 	float pFactor;;"", 1, 0, -10000, 10000, 4
 	float iFactor;;"", 1, 0, -10000, 10000, 4
 	float dFactor;;"", 1, 0, -10000, 10000, 4
-	int16_t fsio_visible offset;Linear addition to PID logic;"", 1, 0, -1000, 1000, 0
+	int16_t offset;Linear addition to PID logic;"", 1, 0, -1000, 1000, 0
 	int16_t periodMs;PID dTime;"ms", 1, 0, 0, 3000, 0
-	int16_t fsio_visible minValue;Output Min Duty Cycle;"", 1, 0, -30000, 30000, 0
+	int16_t minValue;Output Min Duty Cycle;"", 1, 0, -30000, 30000, 0
 	int16_t maxValue;Output Max Duty Cycle;"", 1, 0, -30000, 30000, 0
 end_struct
 
@@ -444,7 +443,7 @@ bit useRunningMathForCranking,"Fuel Map","Fixed";+For cranking either use the sp
 bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.\n\nenable logic_level_trigger
 bit useTLE8888_stepper
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
-bit useFSIOTableForCanSniffingFiltering
+bit usescriptTableForCanSniffingFiltering
 bit issue_294_29
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
 bit issue_294_31,"si_example","nada_example"
@@ -565,7 +564,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "INVALID", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "INVALID"
 
 custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
 	trigger_type_e type;+https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
@@ -705,7 +704,7 @@ custom adc_channel_mode_e 4 bits, U32, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 	brain_pin_e canRxPin;set_can_rx_pin X
 
 pin_input_mode_e throttlePedalUpPinMode;
-	uint8_t fsio_visible acIdleExtraOffset;+Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
+	uint8_t acIdleExtraOffset;+Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
 
 	int can2SleepPeriodMs;+CANbus thread period, ms;"ms", 1, 0, 0, 1000, 2
 	uint16_t wastegatePositionMin;+Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
@@ -777,14 +776,13 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e acFanPinMode;
 
 
-	pin_output_mode_e[FSIO_COMMAND_COUNT iterate] gpioPinModes;
+	uint8_t[6] unused11;;"volts", 0.1, 0, 0, 20, 1
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 2", "type 2"
 	imu_type_e imuType
 
-	uint8_t[1] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
-	output_pin_e[FSIO_COMMAND_COUNT iterate] fsioOutputPins;todo: more comments
+	uint8_t[7] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
 
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
@@ -815,14 +813,12 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	output_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
-custom fsio_pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
-	fsio_pwm_freq_t[FSIO_COMMAND_COUNT iterate] fsioFrequency;
-	int16_t[10] unusedOutputFreqWhereHere;;"", 1, 0, 0, 255, 0
+	int16_t[16] unusedOutputFreqWhereHere;;"", 1, 0, 0, 255, 0
 
 
-custom fsio_setting_t 4 scalar, F32, @OFFSET@, 		"Val",	   1,	   0, 0, 18000,	  2
-	fsio_setting_t[FSIO_COMMAND_COUNT iterate] fsio_setting;
-    int[10] unusedSettings;;"", 1, 0, 0, 255, 0
+custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
+	script_setting_t[SCRIPT_SETTING_COUNT iterate] scriptSetting;
+    int[8] unusedSettings;;"", 1, 0, 0, 255, 0
 
 ! todo: migrate to spi_pins & combine with spi pin modes
 	brain_pin_e spi1mosiPin;
@@ -868,8 +864,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
 	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
-	brain_pin_e[FSIO_COMMAND_COUNT iterate] fsioDigitalInputs;todo:not finished\nThese input pins allow us to pull toggle buttons state;
-    uint8_t[10] unusedDigital;;"", 1, 0, 0, 255, 0
+    uint8_t[16] unusedDigital;;"", 1, 0, 0, 255, 0
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;+Some vehicles have a switch to indicate that clutch pedal is all the way up
@@ -1080,10 +1075,8 @@ bit unused_1484_bit_31
 
 
 float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
-	float unused1512;;"", 1, 0, 1, 5, 2
 
-	pin_input_mode_e[FSIO_COMMAND_COUNT iterate] fsioInputModes;
-	uint8_t[10] unusedFsioInputs;;"", 1, 0, 0, 255, 0
+	uint8_t[20] unused20Inputs;;"", 1, 0, 0, 255, 0
 
 	int idleStepperTotalSteps;;"count", 1, 0, 5, 3000, 0
 
@@ -1148,7 +1141,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float throttlePedalUpVoltage;;"voltage", 1, 0, -6, 6, 2
 	float throttlePedalWOTVoltage;+Pedal in the floor;"voltage", 1, 0, -6, 6, 2
 	
-	int16_t fsio_visible startUpFuelPumpDuration;+on ECU start turn fuel pump on to build fuel pressure;"seconds", 1, 0, 0, 6000, 0
+	int16_t startUpFuelPumpDuration;+on ECU start turn fuel pump on to build fuel pressure;"seconds", 1, 0, 0, 6000, 0
 	int16_t idlePidRpmDeadZone;+If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 200, 0
 	
 	
@@ -1250,7 +1243,8 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 	float tChargeMaxRpmMinTps;;"mult", 1, 0, 0, 3, 4
 	float tChargeMaxRpmMaxTps;;"mult", 1, 0, 0, 3, 4   
 
-	fsio_pwm_freq_t[CAMS_PER_BANK iterate] vvtOutputFrequency;
+custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
+	pwm_freq_t[CAMS_PER_BANK iterate] vvtOutputFrequency;
 	uint8_t fan1ExtraIdle;+Additional idle % when fan #1 is active;"%", 1, 0, 0, 100, 0
 	int alternatorPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 	int unused2260;;"units", 1, 0, -20, 100, 0
@@ -1341,14 +1335,14 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	uint8_t fan2OffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 #define SCRIPT_CURVE_COUNT 6
 #define SCRIPT_TABLE_COUNT 4
-	float[FSIO_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_16] scriptCurve1;;"y", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_16] scriptCurve2;;"y", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_8] scriptCurve3Bins;;"x", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_8] scriptCurve3;;"y", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_8] scriptCurve4Bins;;"x", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_8] scriptCurve4;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_16] scriptCurve1Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_16] scriptCurve1;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_16] scriptCurve2Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_16] scriptCurve2;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve3Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve3;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve4Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve4;;"y", 1, 0, -999, 1000, 3
 
 	brain_input_pin_e flexSensorPin;+Continental/GM flex fuel sensor, 50-150hz type;
 	brain_pin_e test557pin
@@ -1382,12 +1376,13 @@ int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;CLT-based target RPM for hard 
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;See idleRpmPid;"", 1, 0, 0, 8000, 0
 
 gppwm_note_t[SCRIPT_CURVE_COUNT iterate] scriptCurveName;
-	float[FSIO_CURVE_8] scriptCurve5Bins;;"x", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_8] scriptCurve5;;"y", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -999, 1000, 3
-	float[FSIO_CURVE_8] scriptCurve6;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve5Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve5;;"y", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve6Bins;;"x", 1, 0, -999, 1000, 3
+	float[SCRIPT_CURVE_8] scriptCurve6;;"y", 1, 0, -999, 1000, 3
 gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
-uint8_t[236] unused3328;;"units", 1, 0, -20, 100, 0
+gppwm_note_t[SCRIPT_SETTING_COUNT iterate] scriptSettingName;
+uint8_t[108] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;;"Min tCharge Coeff.", 1, 0, 0, 1, 4
 float tChargeAirCoefMax;;"Max tCharge Coeff.", 1, 0, 0, 1, 4
@@ -1542,7 +1537,7 @@ float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for
 float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", 1, 0, 0, 18000, 2
 float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 2
 
-le_formula_t[FSIO_COMMAND_COUNT iterate] fsioFormulas;
+le_formula_t[6 iterate] fsioFormulas;
 #define LUA_SCRIPT_SIZE 2000
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
 lua_script_t luaScript;
@@ -1583,13 +1578,13 @@ uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] mapEstimateTable;;"kPa", {1/@@PACK_MU
 uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
-uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] vvtTable1;;"value", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] vvtTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
+uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable1;;"value", 1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] vvtTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
 
-uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] vvtTable2;;"value", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] vvtTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
+uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable2;;"value", 1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] vvtTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
 
 float[64] unusedLuaWasHere;;"L", 1, 0, 0, 255, 0
 
@@ -1619,21 +1614,21 @@ float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"to",	  1, 0, 0, 25500, 2
 
-float[FSIO_TABLE_8 x FSIO_TABLE_8] fsioTable1;;"value", 1, 0, 0, 30000, 2
-float[FSIO_TABLE_8] fsioTable1LoadBins;;"L",	  1, 0, 0, 30000, 2
-float[FSIO_TABLE_8] fsioTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+float[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable1;;"value", 1, 0, 0, 30000, 2
+float[SCRIPT_TABLE_8] scriptTable1LoadBins;;"L",	  1, 0, 0, 30000, 2
+float[SCRIPT_TABLE_8] scriptTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
-uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] fsioTable2;;"value", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable2LoadBins;;"L",	  1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable2;;"value", 1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] scriptTable2LoadBins;;"L",	  1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] scriptTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
-uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] fsioTable3;;"value", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable3LoadBins;;"L",	  1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable3RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable3;;"value", 1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] scriptTable3LoadBins;;"L",	  1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] scriptTable3RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
-uint8_t[FSIO_TABLE_8 x FSIO_TABLE_8] fsioTable4;;"value", 1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable4LoadBins;;"L",	  1, 0, 0, 255, 0
-float[FSIO_TABLE_8] fsioTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable4;;"value", 1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] scriptTable4LoadBins;;"L",	  1, 0, 0, 255, 0
+float[SCRIPT_TABLE_8] scriptTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
 
 end_struct
 

@@ -204,25 +204,10 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		return vCond != 0 ? vTrue : vFalse;
 	}
 	case LE_METHOD_FSIO_SETTING: {
-		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
-		int index = (int) humanIndex - 1;
-		if (index >= 0 && index < FSIO_COMMAND_COUNT) {
-			return CONFIG(fsio_setting)[index];
-		} else {
-			return unexpected;
-		}
+		return unexpected;
 	}
-	case LE_METHOD_FSIO_TABLE: {
-		float i = pop(LE_METHOD_FSIO_TABLE);
-		float yValue = pop(LE_METHOD_FSIO_TABLE);
-		float xValue = pop(LE_METHOD_FSIO_TABLE);
-		int index = (int) i;
-		if (index < 1 || index > MAX_TABLE_INDEX) {
-			return unexpected;
-		} else {
-			// index parameter is 1-based, getFSIOTable is 0-based
-			return getFSIOTable(index - 1)->getValue(xValue, yValue);
-		}
+	case LE_METHOD_SCRIPT_TABLE: {
+		return unexpected;
 	}
 	case LE_METHOD_FSIO_DIGITAL_INPUT:
 		// todo: implement code for digital input!!!

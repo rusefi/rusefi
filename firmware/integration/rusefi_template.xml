@@ -64,69 +64,69 @@
             </table>
         </table>
 
-        <table type="3D" name="FSIO Table #1" 
-        category="FSIO"
-        storageaddress="@@fsioTable1_offset_hex@@" sizex="@@FSIO_TABLE_8@@"
-               sizey="@@FSIO_TABLE_8@@" storagetype="float" endian="big">
+        <table type="3D" name="SCRIPT Table #1" 
+        category="SCRIPT"
+        storageaddress="@@scriptTable1_offset_hex@@" sizex="@@SCRIPT_TABLE_8@@"
+               sizey="@@SCRIPT_TABLE_8@@" storagetype="float" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@fsioTable1RpmBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="@@scriptTable1RpmBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="@@fsioTable1LoadBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="@@scriptTable1LoadBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
-        <table type="3D" name="FSIO Table #2" 
-        category="FSIO"
-        storageaddress="@@fsioTable2_offset_hex@@" sizex="@@FSIO_TABLE_8@@"
-               sizey="@@FSIO_TABLE_8@@" storagetype="uint8" endian="big">
+        <table type="3D" name="SCRIPT Table #2" 
+        category="SCRIPT"
+        storageaddress="@@scriptTable2_offset_hex@@" sizex="@@SCRIPT_TABLE_8@@"
+               sizey="@@SCRIPT_TABLE_8@@" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@fsioTable2RpmBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="@@scriptTable2RpmBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="@@fsioTable2LoadBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="@@scriptTable2LoadBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
-        <table type="3D" name="FSIO Table #3" 
-        category="FSIO"
-        storageaddress="@@fsioTable3_offset_hex@@" sizex="@@FSIO_TABLE_8@@"
-               sizey="@@FSIO_TABLE_8@@" storagetype="uint8" endian="big">
+        <table type="3D" name="SCRIPT Table #3" 
+        category="SCRIPT"
+        storageaddress="@@scriptTable3_offset_hex@@" sizex="@@SCRIPT_TABLE_8@@"
+               sizey="@@SCRIPT_TABLE_8@@" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@fsioTable3RpmBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="@@scriptTable3RpmBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="@@fsioTable3LoadBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="@@scriptTable3LoadBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="rpm">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
         </table>
 
-        <table type="3D" name="FSIO Table #4" 
-        category="FSIO"
-        storageaddress="@@fsioTable4_offset_hex@@" sizex="@@FSIO_TABLE_8@@"
-               sizey="@@FSIO_TABLE_8@@" storagetype="uint8" endian="big">
+        <table type="3D" name="SCRIPT Table #4" 
+        category="SCRIPT"
+        storageaddress="@@scriptTable4_offset_hex@@" sizex="@@SCRIPT_TABLE_8@@"
+               sizey="@@SCRIPT_TABLE_8@@" storagetype="uint8" endian="big">
             <scaling units="Engine Load" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                      coarseincrement="1"/>
-            <table type="X Axis" storageaddress="@@fsioTable4RpmBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="X Axis" storageaddress="@@scriptTable4RpmBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="RPM" expression="x" to_byte="x" format="0.00" fineincrement=".1"
                          coarseincrement="1"/>
             </table>
-            <table type="Y Axis" storageaddress="@@fsioTable4LoadBins_offset_hex@@" storagetype="float" endian="big"
+            <table type="Y Axis" storageaddress="@@scriptTable4LoadBins_offset_hex@@" storagetype="float" endian="big"
                    logparam="engine_load">
                 <scaling units="engine_load" expression="x" to_byte="x" format="0.00" fineincrement=".1" coarseincrement="1"/>
             </table>
@@ -171,9 +171,9 @@
             </table>
         </table>
 
-        <table type="2D" name="FSIO Curve #1" storageaddress="@@scriptCurve1_offset_hex@@"
-        category="FSIO"
-               sizex="@@FSIO_CURVE_16@@" storagetype="float" endian="big">
+        <table type="2D" name="SCRIPT Curve #1" storageaddress="@@scriptCurve1_offset_hex@@"
+        category="SCRIPT"
+               sizex="@@SCRIPT_CURVE_16@@" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
             <table type="X Axis" storageaddress="@@scriptCurve1Bins_offset_hex@@" storagetype="float" endian="big">
@@ -181,9 +181,9 @@
             </table>
         </table>
 
-        <table type="2D" name="FSIO Curve #2" storageaddress="@@scriptCurve2_offset_hex@@"
-        category="FSIO"
-               sizex="@@FSIO_CURVE_16@@" storagetype="float" endian="big">
+        <table type="2D" name="SCRIPT Curve #2" storageaddress="@@scriptCurve2_offset_hex@@"
+        category="SCRIPT"
+               sizex="@@SCRIPT_CURVE_16@@" storagetype="float" endian="big">
             <scaling units="Compensation (%)" expression="x" to_byte="x" format="0.00"
                      fineincrement=".01" coarseincrement="0.1"/>
             <table type="X Axis" storageaddress="@@scriptCurve2Bins_offset_hex@@" storagetype="float" endian="big">
