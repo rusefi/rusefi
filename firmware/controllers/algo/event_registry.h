@@ -19,7 +19,7 @@
 
 class Engine;
 
-class InjectionEvent, public EnginePtr {
+class InjectionEvent : public EnginePtr {
 public:
 	InjectionEvent();
 
