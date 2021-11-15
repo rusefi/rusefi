@@ -16,10 +16,8 @@
 /**
  * @brief	rusEfi console sniffer data buffer
  */
-class WaveChart {
+class WaveChart : public EnginePtr {
 public:
-	DECLARE_ENGINE_PTR;
-
 	WaveChart();
 	void init();
 	void addEvent3(const char *name, const char *msg);

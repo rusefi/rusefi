@@ -19,7 +19,7 @@
 
 class Engine;
 
-class InjectionEvent {
+class InjectionEvent, public EnginePtr {
 public:
 	InjectionEvent();
 
@@ -34,7 +34,6 @@ public:
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;
-	DECLARE_ENGINE_PTR;
 	event_trigger_position_s injectionStart;
 
 	scheduling_s signalTimerUp;
@@ -93,7 +92,7 @@ public:
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
 
-class IgnitionEvent {
+class IgnitionEvent : public EnginePtr {
 public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
@@ -128,7 +127,6 @@ public:
 	int cylinderIndex = 0;
 	int8_t cylinderNumber = 0;
 	char *name = nullptr;
-	DECLARE_ENGINE_PTR;
 	IgnitionOutputPin *getOutputForLoggins();
 };
 
@@ -141,7 +139,7 @@ public:
 	bool isReady = false;
 };
 
-class AuxActor {
+class AuxActor : public EnginePtr {
 public:
 	int phaseIndex;
 	int valveIndex;
@@ -149,5 +147,4 @@ public:
 
 	AngleBasedEvent open;
 	AngleBasedEvent close;
-	DECLARE_ENGINE_PTR;
 };

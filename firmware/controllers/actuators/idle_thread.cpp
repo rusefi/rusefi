@@ -563,9 +563,9 @@ void startIdleBench(void) {
 #endif /* EFI_UNIT_TEST */
 
 void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&idleControllerInstance);
+	idleControllerInstance.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	idleControllerInstance.init(&CONFIG(idleTimingPid));
-	INJECT_ENGINE_REFERENCE(&industrialWithOverrideIdlePid);
+	industrialWithOverrideIdlePid.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	ENGINE(idleController) = &idleControllerInstance;
 

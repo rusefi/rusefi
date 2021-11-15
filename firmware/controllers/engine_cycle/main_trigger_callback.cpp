@@ -109,7 +109,7 @@ void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_TOOTH_LOGGER
 	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
-		INJECT_ENGINE_REFERENCE(this);
+		this->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 		setHigh();
 	}
 }
@@ -178,11 +178,6 @@ void turnInjectionPinLow(InjectionEvent *event) {
 }
 
 void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t nowNt) {
-	// note that here we take 'engineConfiguration' from DECLARE_ENGINE_PTR.
-	// set engine_type seems to be resetting those references (todo: where exactly? why exactly?) so an event during
-	// engine_type would not end well
-	efiAssertVoid(CUSTOM_ERR_ASSERT, engineConfiguration != nullptr, "assert#1");
-
 	uint32_t eventIndex = injectionStart.triggerEventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
 //		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
@@ -463,7 +458,7 @@ static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * See testStartOfCrankingPrimingPulse()
  */
 void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&engine->primeInjEvent);
+	engine->primeInjEvent.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
 	// So we check and update the ignition switch counter in non-volatile backup-RAM

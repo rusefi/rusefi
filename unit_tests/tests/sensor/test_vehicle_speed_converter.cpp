@@ -14,7 +14,7 @@ public:
 
 	void SetUp() override {
 		WITH_ENGINE_TEST_HELPER(ENGINE_TEST_HELPER);
-		INJECT_ENGINE_REFERENCE(&dut);
+		dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 	void SetCoef(float new_coef) {

@@ -6,7 +6,7 @@ TEST(LaunchControl, TpsCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->launchTpsTreshold = 10;
 
@@ -28,7 +28,7 @@ TEST(LaunchControl, VSSCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Test Speed trashold
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -46,7 +46,7 @@ TEST(LaunchControl, RPMCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->launchRpm = 3000;
 
@@ -59,7 +59,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	//activation based on VSS
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -102,7 +102,7 @@ TEST(LaunchControl, CombinedCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	//check VSS normal usage
 	engineConfiguration->launchActivationMode=ALWAYS_ACTIVE_LAUNCH;

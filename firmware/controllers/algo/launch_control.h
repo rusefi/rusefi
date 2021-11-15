@@ -15,10 +15,8 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-class LaunchControlBase {
+class LaunchControlBase, public EnginePtr {
 public:
-	DECLARE_ENGINE_PTR;
-
 	// Update the state of the launch control system
 	void update();
 

@@ -86,10 +86,8 @@ protected:
 
 #define DEFAULT_MOCK_SPEED -1
 
-class Engine final : public TriggerStateListener {
+class Engine final : public TriggerStateListener, public EnginePtr {
 public:
-	DECLARE_ENGINE_PTR;
-
 	Engine();
 	AcState acState;
 	bool enableOverdwellProtection = true;

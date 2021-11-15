@@ -25,15 +25,17 @@ struct persistent_config_s;
 #if EFI_UNIT_TEST
 
 #ifdef __cplusplus
-	#define DECLARE_ENGINE_PTR                                 \
-		Engine *engine = nullptr;                              \
-		engine_configuration_s *engineConfiguration = nullptr; \
-		persistent_config_s *config = nullptr;
+	struct EnginePtr {
+		Engine* engine = nullptr;
+		engine_configuration_s* engineConfiguration = nullptr;
+		persistent_config_s* config = nullptr;
 
-	#define INJECT_ENGINE_REFERENCE(x)                  \
-		(x)->engine = engine;                           \
-		(x)->engineConfiguration = engineConfiguration; \
-		(x)->config = config;
+		void inject(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+			this->engine = engine;
+			this->engineConfiguration = engineConfiguration;
+			this->config = config;
+		}
+	};
 
 	#define DECLARE_CONFIG_PARAMETER_SIGNATURE engine_configuration_s *engineConfiguration, persistent_config_s *config
 	#define DECLARE_CONFIG_PARAMETER_SUFFIX , DECLARE_CONFIG_PARAMETER_SIGNATURE
@@ -68,9 +70,9 @@ struct persistent_config_s;
 	// These are the non-unit-test (AKA real firmware) noop versions
 
 #ifdef __cplusplus
-	#define DECLARE_ENGINE_PTR
-
-	#define INJECT_ENGINE_REFERENCE(x) {}
+	struct EnginePtr {
+		void inject(DECLARE_ENGINE_PARAMETER_SIGNATURE) { }
+	};
 
 	// these macro are used when we should not have visibility to 'engine'
 	#define DECLARE_CONFIG_PARAMETER_SIGNATURE void

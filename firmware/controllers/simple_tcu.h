@@ -2,10 +2,8 @@
 
 #include "tcu.h"
 
-class SimpleTransmissionController: public TransmissionControllerBase {
+class SimpleTransmissionController: public TransmissionControllerBase, public EnginePtr  {
 public:
-    DECLARE_ENGINE_PTR;
-
     void update(gear_e);
     void init();
 };
