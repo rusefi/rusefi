@@ -56,7 +56,7 @@ jobs:
       
     - name: Run Tests
       working-directory: ./unit_tests/
-      run: build/rusefi_test
+      run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
 
     - name: Install Coverage Tools
       if: ${{ matrix.os != 'macos-latest' }}
