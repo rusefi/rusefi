@@ -50,7 +50,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }
 
 static void setLedPins() {
@@ -140,7 +140,7 @@ static void setupSdCard() {
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setupSdCard();
 	setLedPins();
 	setupVbatt();
@@ -155,10 +155,10 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
 }
 
-void setPinConfigurationOverrides(void) {
+void setPinConfigurationOverrides() {
 }
 
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
@@ -174,7 +174,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setupEtb();

@@ -60,8 +60,8 @@ void resetConfigurationExt(engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUF
 void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 #endif /* __cplusplus */
 
-void setBoardDefaultConfiguration(void);
-void setBoardConfigOverrides(void);
+void setBoardDefaultConfiguration();
+void setBoardConfigOverrides();
 
 #if !EFI_UNIT_TEST
 extern engine_configuration_s *engineConfiguration;

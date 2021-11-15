@@ -17,10 +17,10 @@
 extern "C" {
 #endif
   void boardInit(void);
-  void setPinConfigurationOverrides(void);
-  void setSerialConfigurationOverrides(void);
-  void setSdCardConfigurationOverrides(void);
-  void setAdcChannelOverrides(void);
+  void setPinConfigurationOverrides();
+  void setSerialConfigurationOverrides();
+  void setSdCardConfigurationOverrides();
+  void setAdcChannelOverrides();
 
 /**
  * @brief 	Initialize board specific settings.
