@@ -680,8 +680,8 @@ TEST(etb, closedLoopPid) {
 
 	// Disable autotune for now
 	Engine e;
+	EngineTestHelperBase base(&e, nullptr, nullptr);
 	e.etbAutoTune = false;
-	etb.engine = &e;
 
 	// Setpoint greater than actual, should be positive output
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 40).value_or(-1), 50);

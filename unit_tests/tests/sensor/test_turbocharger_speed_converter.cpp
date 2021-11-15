@@ -6,19 +6,19 @@ static constexpr engine_type_e ENGINE_TEST_HELPER = TEST_ENGINE;
 class TurbochargerSpeedConverterTest : public ::testing::Test {
 
 public:
+	EngineTestHelper eth;
 	TurbochargerSpeedConverter dut;
 
-	TurbochargerSpeedConverterTest(){
+	TurbochargerSpeedConverterTest() : eth(ENGINE_TEST_HELPER) {
 		
 	}
 
 	void SetUp() override {
-		WITH_ENGINE_TEST_HELPER(ENGINE_TEST_HELPER);
 		dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 	void SetCoef(float new_coef) {
-		dut.engineConfiguration->turboSpeedSensorMultiplier = new_coef;
+		engineConfiguration->turboSpeedSensorMultiplier = new_coef;
 	}
 
 	float GetFrequencyBySpeedAndCoef(float speed, float coef) {

@@ -54,8 +54,7 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	persistent_config_s pc;
 	Engine e;
 	Engine* engine = &e;
-	engine->setConfig(engine, &pc.engineConfiguration, &pc);
-	EXPAND_Engine;
+	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
 
 	engineConfiguration->trigger.type = tt;
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;

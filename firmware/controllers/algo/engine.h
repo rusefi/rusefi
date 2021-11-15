@@ -413,5 +413,5 @@ void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 // These externs aren't needed for unit tests - everything is injected instead
 #if !EFI_UNIT_TEST
 extern Engine ___engine;
-extern Engine *engine;
 #endif // EFI_UNIT_TEST
+extern Engine *engine;

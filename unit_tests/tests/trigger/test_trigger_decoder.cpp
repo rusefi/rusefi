@@ -161,17 +161,17 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
 			&ENGINE(triggerCentral.triggerFormDetails),
-			&position, 0, engineConfiguration->globalTriggerAngleOffset);
+			&position, 0);
 	assertTriggerPosition(&position, 0, 0);
 
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
 			&ENGINE(triggerCentral.triggerFormDetails),
-			&position, 200, engineConfiguration->globalTriggerAngleOffset);
+			&position, 200);
 	assertTriggerPosition(&position, 3, 20);
 
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
 			&ENGINE(triggerCentral.triggerFormDetails),
-			&position, 360, engineConfiguration->globalTriggerAngleOffset);
+			&position, 360);
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerWaveform();
@@ -460,9 +460,7 @@ TEST(misc, testTriggerDecoder) {
 	{
 	persistent_config_s c;
 	Engine e;
-	e.setConfig(&e, &c.engineConfiguration, &c);
-	Engine* engine = &e;
-	EXPAND_Engine;
+	EngineTestHelperBase base(&e, &c.engineConfiguration, &c);
 	TriggerWaveform * s = &e.triggerCentral.triggerShape;
 
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);

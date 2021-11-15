@@ -77,10 +77,6 @@ static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
 }
 
 void endSimultaniousInjection(InjectionEvent *event) {
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif
 	event->isScheduled = false;
 	endSimultaniousInjectionOnlyTogglePins(engine);
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
@@ -115,10 +111,6 @@ void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void turnInjectionPinHigh(InjectionEvent *event) {
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif // EFI_UNIT_TEST
 	efitick_t nowNt = getTimeNowNt();
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
@@ -158,11 +150,6 @@ void InjectorOutputPin::close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
-
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif
 
 	engine->mostRecentTimeBetweenIgnitionEvents = nowNt - engine->mostRecentIgnitionEvent;
 	engine->mostRecentIgnitionEvent = nowNt;

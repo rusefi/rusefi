@@ -38,4 +38,9 @@ persistent_config_s *config = &persistentState.persistentConfiguration;
  */
 engine_configuration_s *engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
 
+#else // EFI_UNIT_TEST
+
+persistent_config_s * config;
+engine_configuration_s * engineConfiguration;
+
 #endif /* EFI_UNIT_TEST */
