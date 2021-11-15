@@ -13,8 +13,6 @@
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
-void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
 class LaunchControlBase : public EnginePtr {
 public:
 	// Update the state of the launch control system

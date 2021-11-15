@@ -17,8 +17,6 @@
 
 static bool isInit = false;
 
-LaunchControlBase launchInstance;
-
 /**
  * We can have active condition from switch or from clutch.
  * In case we are dependent on VSS we just return true.
@@ -96,10 +94,6 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
 #endif /* EFI_TUNER_STUDIO */
 
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
-}
-
-void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	launchInstance.update();
 }
 
 void LaunchControlBase::update() {
@@ -180,7 +174,7 @@ void LaunchControlBase::applyLaunchControlLimiting(bool *limitedSpark, bool *lim
 }
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	launchInstance.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	isInit = true;
 }

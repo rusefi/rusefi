@@ -49,8 +49,6 @@
 
 #include "backup_ram.h"
 
-extern LaunchControlBase launchInstance;
-
 // todo: figure out if this even helps?
 //#if defined __GNUC__
 //#define RAM_METHOD_PREFIX __attribute__((section(".ram")))
@@ -418,7 +416,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 #if EFI_LAUNCH_CONTROL
 	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
-		launchInstance.applyLaunchControlLimiting(&limitedSpark, &limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->launchController.applyLaunchControlLimiting(&limitedSpark, &limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif
 	if (trgEventIndex == 0) {
