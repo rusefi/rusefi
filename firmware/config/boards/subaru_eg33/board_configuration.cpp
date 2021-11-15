@@ -12,11 +12,11 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
-void setPinConfigurationOverrides() {
+void setPinConfigurationOverrides(void) {
 
 }
 
-void setSerialConfigurationOverrides() {
+void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIOE_1;
 	engineConfiguration->binarySerialRxPin = GPIOE_0;
@@ -27,7 +27,7 @@ void setSerialConfigurationOverrides() {
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setSdCardConfigurationOverrides() {
+void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->is_enabled_spi_1 = false;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->sdCardCsPin = GPIOA_2;
@@ -38,7 +38,7 @@ void setSdCardConfigurationOverrides() {
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration() {
+void setBoardDefaultConfiguration(void) {
 	setSerialConfigurationOverrides();
 
 	/* Battery voltage */

@@ -94,7 +94,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides() {
+void setBoardConfigOverrides(void) {
 	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
@@ -103,10 +103,10 @@ void setBoardConfigOverrides() {
 	engineConfiguration->iat.config.bias_resistor = 4700;
 }
 
-void setPinConfigurationOverrides() {
+void setPinConfigurationOverrides(void) {
 }
 
-void setSerialConfigurationOverrides() {
+void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
@@ -122,7 +122,7 @@ void setSerialConfigurationOverrides() {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration() {
+void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -185,7 +185,7 @@ void setBoardDefaultConfiguration() {
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
-void setSdCardConfigurationOverrides() {
+void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
 	engineConfiguration->spi3mosiPin = GPIOC_12;

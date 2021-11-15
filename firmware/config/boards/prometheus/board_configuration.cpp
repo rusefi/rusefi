@@ -62,7 +62,7 @@ static void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 }
 
-void setPinConfigurationOverrides() {
+void setPinConfigurationOverrides(void) {
 #if 0
 	engineConfiguration->injectionPins[0] = is469 ? GPIOD_9  : GPIOB_14; // #1
 	engineConfiguration->injectionPins[1] = is469 ? GPIOD_15 : GPIOC_7;  // #2
@@ -103,7 +103,7 @@ void setPinConfigurationOverrides() {
 #endif
 }
 
-void setSerialConfigurationOverrides() {
+void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOA_0;
 	engineConfiguration->binarySerialRxPin = GPIOA_1;
@@ -113,7 +113,7 @@ void setSerialConfigurationOverrides() {
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setSdCardConfigurationOverrides() {
+void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->sdCardCsPin = GPIOA_2;
@@ -124,7 +124,7 @@ void setSdCardConfigurationOverrides() {
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration() {
+void setBoardDefaultConfiguration(void) {
 	// give a chance to trigger SWD programmer... Wait for 2 secs (=2000 ms).
 	// TODO: remove it when the bootloader is ready
 	chThdSleepMilliseconds(2000);

@@ -10,7 +10,7 @@
 #include "pch.h"
 #include "trigger_input.h"
 
-void setBoardDefaultConfiguration() {
+void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -123,10 +123,10 @@ void setBoardDefaultConfiguration() {
 	//engineConfiguration->isFastAdcEnabled = false;
 }
 
-void setPinConfigurationOverrides() {
+void setPinConfigurationOverrides(void) {
 }
 
-void setSerialConfigurationOverrides() {
+void setSerialConfigurationOverrides(void) {
 #if 0
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_7;
@@ -138,9 +138,9 @@ void setSerialConfigurationOverrides() {
 #endif
 }
 
-void setSdCardConfigurationOverrides() {
+void setSdCardConfigurationOverrides(void) {
 }
 
-void setAdcChannelOverrides() {
+void setAdcChannelOverrides(void) {
 	addAdcChannelForTrigger();
 }

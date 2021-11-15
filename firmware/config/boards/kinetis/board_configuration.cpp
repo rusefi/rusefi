@@ -14,7 +14,7 @@ char __debugBuffer[80];
 int __debugEnabled = 0;
 #endif
 
-void setBoardDefaultConfiguration() {
+void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -91,10 +91,10 @@ void setBoardDefaultConfiguration() {
 	setSerialConfigurationOverrides();
 }
 
-void setPinConfigurationOverrides() {
+void setPinConfigurationOverrides(void) {
 }
 
-void setSerialConfigurationOverrides() {
+void setSerialConfigurationOverrides(void) {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_7;
 	engineConfiguration->binarySerialRxPin = GPIOC_6;
@@ -104,10 +104,10 @@ void setSerialConfigurationOverrides() {
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setSdCardConfigurationOverrides() {
+void setSdCardConfigurationOverrides(void) {
 }
 
-void setAdcChannelOverrides() {
+void setAdcChannelOverrides(void) {
 	// on Kinetis, ADC_FAST & SLOW are not really "fast" or "slow", 
 	// they are just different ADC numbers with different sets of channels
 	removeChannel("VBatt", engineConfiguration->vbattAdcChannel);
