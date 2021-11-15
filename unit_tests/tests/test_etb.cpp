@@ -261,7 +261,7 @@ TEST(etb, testSetpointOnlyPedal) {
 	engineConfiguration->useETBforIdleControl = false;
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Mock pedal map that's just passthru pedal -> target
 	StrictMock<MockVp3d> pedalMap;
@@ -337,7 +337,7 @@ TEST(etb, setpointIdle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Mock pedal map that's just passthru pedal -> target
 	StrictMock<MockVp3d> pedalMap;
@@ -395,7 +395,7 @@ TEST(etb, setpointRevLimit) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Mock pedal map to just return 80%
 	StrictMock<MockVp3d> pedalMap;
@@ -527,7 +527,7 @@ TEST(etb, setOutputInvalid) {
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be disabled in case of unexpected
@@ -546,7 +546,7 @@ TEST(etb, setOutputValid) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -567,7 +567,7 @@ TEST(etb, setOutputValid2) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -588,7 +588,7 @@ TEST(etb, setOutputOutOfRangeHigh) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -609,7 +609,7 @@ TEST(etb, setOutputOutOfRangeLow) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -630,7 +630,7 @@ TEST(etb, setOutputPauseControl) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Pause control - should get no output
@@ -652,7 +652,7 @@ TEST(etb, setOutputLimpHome) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be disabled when in ETB limp mode
@@ -702,7 +702,7 @@ TEST(etb, openLoopThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	// Map [0, 100] -> [-50, 50]
@@ -725,7 +725,7 @@ TEST(etb, openLoopNonThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
+	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
 
 	// Map [0, 100] -> [-50, 50]

@@ -27,11 +27,8 @@ struct pid_s;
 /**
  * default basic implementation also known as PidParallelController
  */
-class Pid : public pid_state_s {
-
+class Pid : public pid_state_s, public EnginePtr {
 public:
-	DECLARE_ENGINE_PTR;
-
 	Pid();
 	explicit Pid(pid_s *parameters);
 	void initPidClass(pid_s *parameters);

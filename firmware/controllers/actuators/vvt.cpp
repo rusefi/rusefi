@@ -140,7 +140,7 @@ void initAuxPid() {
 			config->vvtTable2RpmBins);
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		INJECT_ENGINE_REFERENCE(&instances[i]);
+		instances[i].inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		int camIndex = i % CAMS_PER_BANK;
 		int bankIndex = i / CAMS_PER_BANK;

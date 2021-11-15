@@ -9,7 +9,7 @@ static TurbochargerSpeedConverter turbochargerSpeedConverter;
 
 
 void initTurbochargerSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&turbochargerSpeedConverter);
+	turbochargerSpeedConverter.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	auto pin = CONFIG(turboSpeedSensorInputPin);
 

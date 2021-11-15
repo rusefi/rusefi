@@ -130,7 +130,7 @@ static void initVvtShape(int camIndex, TriggerState &initState DECLARE_ENGINE_PA
 
 void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	static TriggerState initState;
-	INJECT_ENGINE_REFERENCE(&initState);
+	initState.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -463,13 +463,13 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 #endif
 
 void Engine::injectEngineReferences() {
-	INJECT_ENGINE_REFERENCE(&triggerCentral);
-	INJECT_ENGINE_REFERENCE(&primaryTriggerConfiguration);
+	triggerCentral.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	primaryTriggerConfiguration.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		INJECT_ENGINE_REFERENCE(&vvtTriggerConfiguration[camIndex]);
+		vvtTriggerConfiguration[camIndex].inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
-	INJECT_ENGINE_REFERENCE(&limpManager);
-	INJECT_ENGINE_REFERENCE(&knockController);
+	limpManager.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	knockController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
@@ -479,7 +479,7 @@ void Engine::injectEngineReferences() {
 }
 
 void Engine::setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(this);
+	inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	efi::clear(config);
 
 	injectEngineReferences();

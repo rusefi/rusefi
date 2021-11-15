@@ -19,10 +19,8 @@ void initAuxPid();
 void startVvtControlPins();
 void stopVvtControlPins();
 
-class VvtController : public PeriodicTimerController, public ClosedLoopController<angle_t, percent_t> {
+class VvtController : public PeriodicTimerController, public ClosedLoopController<angle_t, percent_t>, public EnginePtr {
 public:
-	DECLARE_ENGINE_PTR;
-
 	void init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap);
 
 	// PeriodicTimerController implementation

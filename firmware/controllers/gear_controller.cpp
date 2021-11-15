@@ -3,7 +3,7 @@
 #include "gear_controller.h"
 
 void GearControllerBase::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    INJECT_ENGINE_REFERENCE(&transmissionController);
+    transmissionController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
     transmissionController.init();
 }
 

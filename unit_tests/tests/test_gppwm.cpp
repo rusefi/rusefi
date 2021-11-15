@@ -76,7 +76,7 @@ TEST(GpPwm, OutputOnOff) {
 TEST(GpPwm, GetOutput) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	GppwmChannel ch;
-	INJECT_ENGINE_REFERENCE(&ch);
+	ch.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	gppwm_channel cfg;
 	cfg.loadAxis = GPPWM_Tps;
