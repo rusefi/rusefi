@@ -13,7 +13,7 @@ TEST(Knock, Retards) {
 	CONFIG(knockRetardMaximum) = 8;
 
 	KnockController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// No retard unless we knock
 	ASSERT_FLOAT_EQ(dut.getKnockRetard(), 0);
@@ -43,7 +43,7 @@ TEST(Knock, Reapply) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	KnockController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Knock threshold of 20dBv
 	ENGINE(engineState).knockThreshold = 20;

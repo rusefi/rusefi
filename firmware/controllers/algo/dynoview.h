@@ -19,10 +19,8 @@ typedef enum{
     CAN,
 }vssSrc;
 
-class DynoView {
+class DynoView : public EnginePtr {
 public:
-	DECLARE_ENGINE_PTR;
-
 	// Update the state of the launch control system
 	void update(vssSrc src);
     void updateAcceleration(efitick_t deltaTime, float deltaSpeed);

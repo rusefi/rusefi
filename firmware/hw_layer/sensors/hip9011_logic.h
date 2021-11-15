@@ -80,10 +80,8 @@ public:
 #define DEFINE_PARAM_SUFFIX(x) , x
 #endif
 
-class HIP9011 {
+class HIP9011 : public EnginePtr {
 public:
-	DECLARE_ENGINE_PTR;
-
 	explicit HIP9011(Hip9011HardwareInterface *hardware);
 	int sendCommand(uint8_t cmd);
 	int sendCommandGetReply(uint8_t cmd, uint8_t *reply);

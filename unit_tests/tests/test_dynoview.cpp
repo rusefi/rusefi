@@ -20,7 +20,7 @@ TEST(DynoView, VSS_T1) {
     WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
     DynoView dut;
-    INJECT_ENGINE_REFERENCE(&dut);
+    dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
     // Test Speed trashold
     engineConfiguration->vehicleWeight = 900; 
@@ -40,7 +40,7 @@ TEST(DynoView, algo) {
     WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
     DynoView dut;
-    INJECT_ENGINE_REFERENCE(&dut);
+    dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
     // Test Speed trashold
     engineConfiguration->vehicleWeight = 900; 
@@ -65,7 +65,7 @@ TEST(DynoView, VSS_fast) {
     WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
     DynoView dut;
-    INJECT_ENGINE_REFERENCE(&dut);
+    dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
     // Test Speed trashold
     engineConfiguration->vehicleWeight = 900; //kg
@@ -89,7 +89,7 @@ TEST(DynoView, VSS_Torque) {
     WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
     DynoView dut;
-    INJECT_ENGINE_REFERENCE(&dut);
+    dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
     // Test Speed trashold
     engineConfiguration->vehicleWeight = 900; //kg

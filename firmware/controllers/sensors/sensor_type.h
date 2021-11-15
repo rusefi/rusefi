@@ -20,6 +20,10 @@ enum class SensorType : unsigned char {
 	Clt, // 1
 	Iat,
 	Rpm,
+	/**
+	 * This value is result of averaging within user-defined window
+	 * See also MapFast, MapSlow
+	 */
 	Map,
 	Maf,
 
@@ -81,6 +85,7 @@ enum class SensorType : unsigned char {
 	// Fast MAP is synchronous to crank angle - user selectable phase/window
 	MapFast,
 	// Slow MAP is asynchronous - not synced to anything, normal analog sampling
+	// MAP decoding happens only that often thus this is NOT raw MAP as flows from ADC
 	MapSlow,
 
 	// Leave me at the end!

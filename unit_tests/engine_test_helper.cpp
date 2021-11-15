@@ -72,11 +72,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
-	INJECT_ENGINE_REFERENCE(&enginePins);
+	enginePins.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	enginePins.reset();
 	enginePins.unregisterPins();
 
-	INJECT_ENGINE_REFERENCE(&waveChart);
+	waveChart.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	waveChart.init();
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);

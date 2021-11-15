@@ -134,12 +134,12 @@ uintptr_t getFlashAddrSecondCopy() {
 #define FLASH_OPTKEY1                         (0x08192A3B)
 #define FLASH_OPTKEY2                         (0x4C5D6E7F)
 
-static void flash_wait_complete(void)
+static void flash_wait_complete()
 {
 	do { __DSB(); } while (FLASH->SR & FLASH_SR_BSY);
 }
 
-static void stm32f7_flash_mass_erase_dual_block(void)
+static void stm32f7_flash_mass_erase_dual_block()
 {
     FLASH_CR |= FLASH_CR_MER1 | FLASH_CR_MER2;
     FLASH_CR |= FLASH_CR_STRT;

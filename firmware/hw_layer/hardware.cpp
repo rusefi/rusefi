@@ -198,7 +198,7 @@ void onFastAdcComplete(adcsample_t*) {
 }
 #endif /* HAL_USE_ADC */
 
-static void calcFastAdcIndexes(void) {
+static void calcFastAdcIndexes() {
 #if HAL_USE_ADC
 	fastMapSampleIndex = enableFastAdcChannel("Fast MAP", engineConfiguration->map.sensor.hwChannel);
 	hipSampleIndex = enableFastAdcChannel("HIP9011", engineConfiguration->hipOutputChannel);

@@ -52,10 +52,10 @@ TriggerCentral::TriggerCentral() : trigger_central_s(),
 }
 
 void TriggerCentral::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&triggerState);
+	triggerState.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
 		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
-			INJECT_ENGINE_REFERENCE(&vvtState[bankIndex][camIndex]);
+			vvtState[bankIndex][camIndex].inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 		}
 	}
 }
@@ -666,7 +666,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 }
 
-static void triggerShapeInfo(void) {
+static void triggerShapeInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;

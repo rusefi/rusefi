@@ -7,10 +7,8 @@
 #include "globalaccess.h"
 #include "simple_tcu.h"
 
-class GearControllerBase {
+class GearControllerBase : public EnginePtr {
 public:
-    DECLARE_ENGINE_PTR;
-
     virtual void update();
     gear_e getDesiredGear() const;
     virtual void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);

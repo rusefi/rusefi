@@ -169,7 +169,7 @@ static void applyConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 extern int mapMinBufferLength;
 
-static void printMAPInfo(void) {
+static void printMAPInfo() {
 #if EFI_ANALOG_SENSORS
 	efiPrintf("instant value=%.2fkPa", Sensor::getOrZero(SensorType::Map));
 

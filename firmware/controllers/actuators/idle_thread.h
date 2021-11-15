@@ -32,10 +32,8 @@ struct IIdleController {
 	virtual float getCrankingTaperFraction() const = 0;
 };
 
-class IdleController : public IIdleController, public EngineModule {
+class IdleController : public IIdleController, public EnginePtr, public EngineModule {
 public:
-	DECLARE_ENGINE_PTR;
-
 	typedef IIdleController interface_t;
 
 	void init(pid_s* idlePidConfig);

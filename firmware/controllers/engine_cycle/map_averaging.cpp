@@ -280,9 +280,9 @@ void mapAveragingTriggerCallback(
 
 		scheduling_s *starTimer = &startTimers[i][structIndex];
 		scheduling_s *endTimer = &endTimers[i][structIndex];
-		INJECT_ENGINE_REFERENCE(&mapAveragingPin);
-		INJECT_ENGINE_REFERENCE(starTimer);
-		INJECT_ENGINE_REFERENCE(endTimer);
+		mapAveragingPin.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+		starTimer->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+		endTimer->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
@@ -293,7 +293,7 @@ void mapAveragingTriggerCallback(
 #endif
 }
 
-static void showMapStats(void) {
+static void showMapStats() {
 	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 

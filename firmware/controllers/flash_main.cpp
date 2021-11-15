@@ -211,7 +211,7 @@ static bool isValidCrc(persistent_config_container_s *state) {
 	return isValidCrc_b;
 }
 
-static void doResetConfiguration(void) {
+static void doResetConfiguration() {
 	resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
@@ -325,7 +325,7 @@ void readFromFlash() {
 	}
 }
 
-static void rewriteConfig(void) {
+static void rewriteConfig() {
 	doResetConfiguration();
 	writeToFlashNow();
 }

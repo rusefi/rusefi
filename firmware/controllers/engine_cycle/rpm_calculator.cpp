@@ -366,7 +366,7 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&ENGINE(rpmCalculator));
+	ENGINE(rpmCalculator).inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {

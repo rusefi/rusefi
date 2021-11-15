@@ -43,10 +43,8 @@ struct pid_s;
 class ValueProvider3D;
 struct pid_state_s;
 
-class IEtbController : public ClosedLoopController<percent_t, percent_t> {
+class IEtbController : public ClosedLoopController<percent_t, percent_t>, public EnginePtr  {
 public:
-	DECLARE_ENGINE_PTR;
-
 	// Initialize the throttle.
 	// returns true if the throttle was initialized, false otherwise.
 	virtual bool init(etb_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool initializeThrottles = true) = 0;

@@ -501,7 +501,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #if ! EFI_UNIT_TEST
 
-static msg_t cjThread(void)
+static msg_t cjThread()
 {
 	chRegSetThreadName("cj125");
 
@@ -516,7 +516,7 @@ static msg_t cjThread(void)
 	return -1;
 }
 
-static bool cjCheckConfig(void) {
+static bool cjCheckConfig() {
 	if (!CONFIG(isCJ125Enabled)) {
 		efiPrintf("cj125 is disabled. Failed!");
 		return false;

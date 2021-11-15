@@ -36,10 +36,8 @@ public:
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
  * also composition probably better than inheritance here
  */
-class TriggerCentral final : public trigger_central_s {
+class TriggerCentral final : public trigger_central_s, public EnginePtr {
 public:
-	DECLARE_ENGINE_PTR;
-
 	TriggerCentral();
 	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
