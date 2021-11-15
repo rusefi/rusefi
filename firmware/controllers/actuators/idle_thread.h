@@ -36,6 +36,8 @@ class IdleController : public IIdleController, public EngineModule {
 public:
 	DECLARE_ENGINE_PTR;
 
+	typedef IIdleController interface_t;
+
 	void init(pid_s* idlePidConfig);
 
 	float getIdlePosition();

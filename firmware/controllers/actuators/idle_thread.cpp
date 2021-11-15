@@ -550,8 +550,8 @@ void startIdleBench(void) {
 #endif /* EFI_UNIT_TEST */
 
 void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&ENGINE(engineModules).get<IdleController>());
-	ENGINE(engineModules).get<IdleController>().init(&CONFIG(idleTimingPid));
+	INJECT_ENGINE_REFERENCE(&ENGINE(engineModules).unmock<IdleController>());
+	ENGINE(engineModules).unmock<IdleController>().init(&CONFIG(idleTimingPid));
 	INJECT_ENGINE_REFERENCE(&industrialWithOverrideIdlePid);
 
 	getIdlePid(PASS_ENGINE_PARAMETER_SIGNATURE)->initPidClass(&engineConfiguration->idleRpmPid);
