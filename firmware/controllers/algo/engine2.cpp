@@ -169,7 +169,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
 
 #if EFI_LAUNCH_CONTROL
-	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
 #endif //EFI_LAUNCH_CONTROL
 
 	engine->limpManager.updateState(rpm, nowNt);

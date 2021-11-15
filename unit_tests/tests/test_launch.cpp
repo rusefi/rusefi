@@ -130,7 +130,6 @@ TEST(LaunchControl, CompleteRun) {
 	bool spark, fuel;
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	extern LaunchControlBase launchInstance;
 	initLaunchControl(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	//load default config
@@ -149,46 +148,47 @@ TEST(LaunchControl, CompleteRun) {
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
 	engine->rpmCalculator.mockRpm = 1200;
 
-	//update condition check
-    updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
+
 
 	//check if we have some sort of cut? we should not have at this point
 	spark = false;
 	fuel = false;
-	launchInstance.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->launchController.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 	EXPECT_FALSE(spark);
 	EXPECT_FALSE(fuel);
 
 
 	engine->rpmCalculator.mockRpm = 3510;
 	//update condition check
-    updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
 
 
 	//we have a 3 seconds delay to actually enable it!
 	eth.moveTimeForwardAndInvokeEventsSec(1);
-	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
+
 	spark = false;
 	fuel = false;
-	launchInstance.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->launchController.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 	
 	EXPECT_FALSE(spark);
 	EXPECT_FALSE(fuel);
 
 	eth.moveTimeForwardAndInvokeEventsSec(3);
-	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
 	spark = false;
 	fuel = false;
-	launchInstance.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->launchController.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 
 	EXPECT_TRUE(spark);
 	EXPECT_FALSE(fuel);
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
-	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
 	spark = false;
 	fuel = false;
-	launchInstance.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->launchController.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 	EXPECT_FALSE(spark);
 	EXPECT_FALSE(fuel);
 

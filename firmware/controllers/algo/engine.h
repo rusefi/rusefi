@@ -23,6 +23,7 @@
 #include "ac_control.h"
 #include "knock_logic.h"
 #include "idle_state_generated.h"
+#include "launch_control.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -109,6 +110,7 @@ public:
 	cyclic_buffer<int> triggerErrorDetection;
 
 	GearControllerBase *gearController;
+	LaunchControlBase launchController;
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
