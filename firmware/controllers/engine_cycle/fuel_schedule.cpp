@@ -96,7 +96,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
 	InjectionEvent *ev = &elements[i];
-	INJECT_ENGINE_REFERENCE(ev);
+	ev->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	ev->ownIndex = i;
 	ev->outputs[0] = output;

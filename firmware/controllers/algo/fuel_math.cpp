@@ -305,12 +305,12 @@ static InjectorModel injectorModel;
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&sdAirmass);
-	INJECT_ENGINE_REFERENCE(&mafAirmass);
-	INJECT_ENGINE_REFERENCE(&alphaNAirmass);
+	sdAirmass.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	mafAirmass.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	alphaNAirmass.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	INJECT_ENGINE_REFERENCE(&fuelComputer);
-	INJECT_ENGINE_REFERENCE(&injectorModel);
+	fuelComputer.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	injectorModel.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	ENGINE(fuelComputer) = &fuelComputer;
 	ENGINE(injectorModel) = &injectorModel;

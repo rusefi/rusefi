@@ -16,7 +16,7 @@ TEST(BoostControl, Setpoint) {
 	engineConfiguration->boostType = CLOSED_LOOP;
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
+	bc.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Should return unexpected without a pedal map cfg'd
 	EXPECT_EQ(bc.getSetpoint(), unexpected);
@@ -36,7 +36,7 @@ TEST(BoostControl, ObservePlant) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
+	bc.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	Sensor::resetMockValue(SensorType::Map);
 	// Check that invalid MAP returns unexpected
@@ -58,7 +58,7 @@ TEST(BoostControl, OpenLoop) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
+	bc.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Without table set, should return unexpected
 	EXPECT_EQ(bc.getOpenLoop(0), unexpected);
@@ -74,7 +74,7 @@ TEST(BoostControl, ClosedLoop) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
+	bc.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	pid_s pidCfg = {
 		1, 0, 0,	 // P controller, easier to test
@@ -116,7 +116,7 @@ TEST(BoostControl, SetOutput) {
 	StrictMock<MockPwm> pwm;
 	StrictMock<MockEtb> etb;
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
+	bc.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// ETB wastegate position & PWM should both be set
 	EXPECT_CALL(etb, setWastegatePosition(25.0f));

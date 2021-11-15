@@ -182,7 +182,7 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 }
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&launchInstance);
+	launchInstance.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	isInit = true;
 }

@@ -15,7 +15,7 @@ TEST(injectionScheduling, NormalDutyCycle) {
 	efitick_t nowNt = 1000000;
 
 	InjectionEvent event;
-	INJECT_ENGINE_REFERENCE(&event);
+	event.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	InjectorOutputPin pin;
 	pin.injectorIndex = 0;
 	event.outputs[0] = &pin;

@@ -47,7 +47,7 @@ TEST(AirmassModes, AlphaNNormal) {
 		.WillOnce(Return(35.0f));
 
 	AlphaNAirmass dut(veTable);
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	Sensor::setMockValue(SensorType::Tps1, 0.71f);
 
@@ -66,7 +66,7 @@ TEST(AirmassModes, AlphaNFailedTps) {
 	StrictMock<MockVp3d> veTable;
 
 	AlphaNAirmass dut(veTable);
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// explicitly reset the sensor
 	Sensor::resetMockValue(SensorType::Tps1);
@@ -88,7 +88,7 @@ TEST(AirmassModes, MafNormal) {
 		.WillOnce(Return(75.0f));
 
 	MafAirmass dut(veTable);
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	auto airmass = dut.getAirmassImpl(200, 6000);
 
@@ -122,7 +122,7 @@ TEST(AirmassModes, VeOverride) {
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	DummyAirmassModel dut(veTable);
-	INJECT_ENGINE_REFERENCE(&dut);
+	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Use default mode - will call with 10
 	dut.getAirmass(0);

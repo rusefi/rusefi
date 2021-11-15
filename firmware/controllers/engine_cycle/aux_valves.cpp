@@ -84,7 +84,7 @@ void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			actor->valveIndex = valveIndex;
 			actor->extra = phaseIndex * 360 + valveIndex * 180;
 
-			INJECT_ENGINE_REFERENCE(actor);
+			actor->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 			scheduleOpen(actor);
 		}
 	}
