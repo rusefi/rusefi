@@ -236,7 +236,7 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	updateGppwm();
 
-	updateIdleControl();
+	ENGINE(engineModules).apply_all([](auto & m) { m.onSlowCallback(); });
 
 #if EFI_BOOST_CONTROL
 	updateBoostControl();
@@ -642,6 +642,8 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	knockController.periodicFastCallback();
 
 	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+
+	ENGINE(engineModules).apply_all([](auto & m) { m.onFastCallback(); });
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

@@ -23,6 +23,8 @@
 #include "ac_control.h"
 #include "knock_logic.h"
 #include "idle_state_generated.h"
+#include "idle_thread.h"
+#include "type_list.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -106,7 +108,13 @@ public:
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 	IInjectorModel *injectorModel = nullptr;
-	IIdleController* idleController = nullptr;
+
+	type_list<
+#if EFI_IDLE_CONTROL
+		IdleController,
+#endif
+		EngineModule // dummy placeholder so the previous entries can all have commas
+		> engineModules;
 
 	cyclic_buffer<int> triggerErrorDetection;
 

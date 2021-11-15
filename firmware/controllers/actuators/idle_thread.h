@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include "engine_module.h"
 #include "engine_ptr.h"
 #include "rusefi_types.h"
 #include "periodic_task.h"
@@ -31,14 +32,13 @@ struct IIdleController {
 	virtual float getCrankingTaperFraction() const = 0;
 };
 
-class IdleController : public IIdleController {
+class IdleController : public IIdleController, public EngineModule {
 public:
 	DECLARE_ENGINE_PTR;
 
 	void init(pid_s* idlePidConfig);
 
 	float getIdlePosition();
-	void update();
 
 	// TARGET DETERMINATION
 	int getTargetRpm(float clt) const override;
@@ -58,6 +58,9 @@ public:
 	// CLOSED LOOP CORRECTION
 	float getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) override;
 
+	void onConfigurationChange(engine_configuration_s const * previousConfig) final;
+	void onSlowCallback() final;
+
 	// Allow querying state from outside
 	bool isIdlingOrTaper() {
 		return m_lastPhase == Phase::Idling || (CONFIG(useSeparateIdleTablesForCrankingTaper) && m_lastPhase == Phase::CrankToIdleTaper);
@@ -74,12 +77,7 @@ private:
 	Pid m_timingPid;
 };
 
-void updateIdleControl();
 percent_t getIdlePosition();
-
-float getIdleTimingAdjustment(int rpm);
-
-bool isIdlingOrTaper();
 
 void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);
@@ -93,7 +91,6 @@ void setIdleIFactor(float value);
 void setIdleDFactor(float value);
 void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setTargetIdleRpm(int value);
-void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration);
 Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);

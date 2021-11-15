@@ -188,10 +188,6 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-#if EFI_IDLE_CONTROL && ! EFI_UNIT_TEST
-	onConfigurationChangeIdleCallback(&activeConfiguration);
-#endif /* EFI_IDLE_CONTROL */
-
 #if EFI_SHAFT_POSITION_INPUT
 	onConfigurationChangeTriggerCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -202,6 +198,10 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_FSIO
 	onConfigurationChangeFsioCallback(&activeConfiguration PASS_ENGINE_PARAMETER_SUFFIX);
 #endif /* EFI_FSIO */
+
+	ENGINE(engineModules).apply_all([](auto & m) {
+			m.onConfigurationChange(&activeConfiguration);
+		});
 	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
 }
 
