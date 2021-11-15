@@ -12,10 +12,6 @@ struct air_pressure_sensor_config_s;
 
 void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-/**
- * @return Raw MAP sensor value right now
- */
-float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
