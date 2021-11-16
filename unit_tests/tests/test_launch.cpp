@@ -30,7 +30,7 @@ TEST(LaunchControl, VSSCondition) {
 	LaunchControlBase dut;
 	dut.inject();
 
-	// Test Speed trashold
+	// Test Speed threshold
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
     engineConfiguration->launchSpeedThreshold = 30;
 
