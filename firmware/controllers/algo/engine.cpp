@@ -462,14 +462,10 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 #endif
 
 void Engine::injectEngineReferences() {
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-	}
-
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		vvtTriggerConfiguration[camIndex].update();
 	}
-	triggerCentral.init();
 }
 
 void Engine::setConfig() {
