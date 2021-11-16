@@ -15,8 +15,6 @@
 #include "engine_state.h"
 #include "advance_map.h"
 
-static bool isInit = false;
-
 /**
  * We can have active condition from switch or from clutch.
  * In case we are dependent on VSS we just return true.
@@ -97,16 +95,9 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
 }
 
 void LaunchControlBase::update() {
-
 	if (!CONFIG(launchControlEnabled)) {
 		return;
 	}
-
-#if ! EFI_UNIT_TEST
-	if(!isInit) {
-		return;
-	}
-#endif
 
 	int rpm = GET_RPM();
 	bool combinedConditions = isLaunchConditionMet(rpm);
@@ -175,8 +166,6 @@ void LaunchControlBase::applyLaunchControlLimiting(bool *limitedSpark, bool *lim
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engine->launchController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
-
-	isInit = true;
 }
 
 #endif /* EFI_LAUNCH_CONTROL */
