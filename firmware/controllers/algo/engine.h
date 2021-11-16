@@ -24,6 +24,7 @@
 #include "knock_logic.h"
 #include "idle_state_generated.h"
 #include "idle_thread.h"
+#include "launch_control.h"
 #include "type_list.h"
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
@@ -117,6 +118,7 @@ public:
 	cyclic_buffer<int> triggerErrorDetection;
 
 	GearControllerBase *gearController;
+	LaunchControlBase launchController;
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;

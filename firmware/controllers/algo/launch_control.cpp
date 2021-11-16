@@ -17,10 +17,6 @@
 
 static bool isInit = false;
 
-static LaunchControlBase launchInstance;
-
-static int retardThresholdRpm;
-
 /**
  * We can have active condition from switch or from clutch.
  * In case we are dependent on VSS we just return true.
@@ -100,10 +96,6 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 }
 
-void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	launchInstance.update();
-}
-
 void LaunchControlBase::update() {
 
 	if (!CONFIG(launchControlEnabled)) {
@@ -174,7 +166,7 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void LaunchControlBase::applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (( engine->isLaunchCondition ) && ( retardThresholdRpm < GET_RPM() )) {
 		*limitedSpark = engineConfiguration->launchSparkCutEnable;
 		*limitedFuel = engineConfiguration->launchFuelCutEnable;
@@ -182,7 +174,7 @@ void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_EN
 }
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	launchInstance.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	isInit = true;
 }

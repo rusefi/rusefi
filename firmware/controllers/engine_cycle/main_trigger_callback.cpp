@@ -416,7 +416,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 #if EFI_LAUNCH_CONTROL
 	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
-		applyLaunchControlLimiting(&limitedSpark, &limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->launchController.applyLaunchControlLimiting(&limitedSpark, &limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 #endif
 	if (trgEventIndex == 0) {
