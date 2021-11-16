@@ -11,7 +11,7 @@ void WallFuel::resetWF() {
 	wallFuel = 0;
 }
 
-floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 	invocationCounter++;
 	if (cisnan(desiredFuel)) {
 		return desiredFuel;

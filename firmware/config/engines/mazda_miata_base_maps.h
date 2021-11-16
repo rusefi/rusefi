@@ -9,9 +9,9 @@
 
 #include "global.h"
 
-void miataNA_setCrankingCycleBins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void miataNA_setCrankingFuelBins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void miataNA_setIacCoastingBins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void miataNA_setCltIdleCorrBins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void miataNA_setCltIdleRpmBins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void miataNA_setIgnitionTable(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void miataNA_setCrankingCycleBins();
+void miataNA_setCrankingFuelBins();
+void miataNA_setIacCoastingBins();
+void miataNA_setCltIdleCorrBins();
+void miataNA_setCltIdleRpmBins();
+void miataNA_setIgnitionTable();

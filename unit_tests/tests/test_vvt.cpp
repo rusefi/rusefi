@@ -18,7 +18,7 @@ TEST(Vvt, setpoint) {
 	engine->rpmCalculator.mockRpm = 4321;
 
 	VvtController dut;
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 	dut.init(0, 0, 0, &targetMap);
 
 	// Test dut
@@ -31,7 +31,7 @@ TEST(Vvt, observePlant) {
 	engine->triggerCentral.vvtPosition[0][0] = 23;
 
 	VvtController dut;
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 	dut.init(0, 0, 0, nullptr);
 
 	EXPECT_EQ(23, dut.observePlant().value_or(0));

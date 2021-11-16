@@ -7,4 +7,4 @@
 
 #pragma once
 
-void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initHPFP();

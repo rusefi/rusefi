@@ -21,17 +21,17 @@
 
 #define efiSetPadModeIfConfigurationChanged(msg, pin, mode)                      \
 	if (isConfigurationChanged(pin)) {                                           \
-		efiSetPadMode(msg, CONFIG(pin), mode PASS_ENGINE_PARAMETER_SUFFIX);      \
+		efiSetPadMode(msg, CONFIG(pin), mode);      \
 	}
 
 #define efiSetPadUnusedIfConfigurationChanged(pin)                               \
 	if (isConfigurationChanged(pin)) {                                           \
-		efiSetPadUnused(activeConfiguration.pin PASS_ENGINE_PARAMETER_SUFFIX);   \
+		efiSetPadUnused(activeConfiguration.pin);   \
 	}
 
-EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode DECLARE_ENGINE_PARAMETER_SUFFIX);
+EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
 EXTERNC void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode);
-EXTERNC void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX);
+EXTERNC void efiSetPadUnused(brain_pin_e brainPin);
 
 #if EFI_GPIO_HARDWARE
 EXTERNC bool efiReadPin(brain_pin_e pin);

@@ -2,7 +2,7 @@
 
 #include "defaults.h"
 
-static void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorOffAboveTps = 120;
 
 	engineConfiguration->targetVBatt = 14;
@@ -12,7 +12,7 @@ static void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.periodMs = 100;
 }
 
-void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2;
@@ -46,7 +46,7 @@ void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
 
 #if EFI_ALTERNATOR_CONTROL
-	setDefaultAlternatorParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultAlternatorParameters();
 #endif /* EFI_ALTERNATOR_CONTROL */
 
 	// Fuel pump

@@ -190,19 +190,19 @@ void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif /* EFI_TUNER_STUDIO */
 
-void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void enableFrankensoCan() {
 	CONFIG(canTxPin) = GPIOB_6;
 	CONFIG(canRxPin) = GPIOB_12;
 	engineConfiguration->canReadEnabled = false;
 }
 
-void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void stopCanPins() {
 	efiSetPadUnusedIfConfigurationChanged(canTxPin);
 	efiSetPadUnusedIfConfigurationChanged(canRxPin);
 }
 
 // at the moment we support only very limited runtime configuration change, still not supporting online CAN toggle
-void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startCanPins() {
 	// nothing to do if we aren't enabled...
 	if (!isCanEnabled) {
 		return;

@@ -130,7 +130,7 @@ void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousCon
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
-void initAlternatorCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initAlternatorCtrl() {
 	addConsoleAction("altinfo", showAltInfo);
 	if (!isBrainPinValid(CONFIG(alternatorControlPin)))
 		return;

@@ -28,7 +28,7 @@ float getTachDuty() {
 
 static bool tachHasInit = false;
 
-void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void tachSignalCallback() {
 	// Only do anything if tach enabled
 	if (!tachHasInit) {
 		return;
@@ -64,7 +64,7 @@ void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tachControl.setFrequency(tachFreq);
 }
 
-void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTachometer() {
 	tachHasInit = false;
 	if (!isBrainPinValid(CONFIG(tachOutputPin))) {
 		return;

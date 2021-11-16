@@ -14,10 +14,10 @@
 
 // VW_ABA
 // set engine_type 32
-void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setVwAba() {
+	setFrankensoConfiguration();
 
-	setWholeTimingTable_d(20 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(20);
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
 
@@ -39,7 +39,7 @@ void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.displacement = 2.0;
 	engineConfiguration->injector.flow = 320; // 30lb/h
 	// set algorithm 3
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
@@ -55,27 +55,27 @@ void setVwAba(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	float mapRange = 110;
 
-	setEgoSensor(ES_PLX PASS_CONFIG_PARAMETER_SUFFIX);
-	setFuelTablesLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
-	setTimingLoadBin(20, mapRange PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_PLX);
+	setFuelTablesLoadBin(20, mapRange);
+	setTimingLoadBin(20, mapRange);
 
 	CONFIG(isSdCardEnabled) = false;
 	engineConfiguration->tpsMin = 740;
 	engineConfiguration->tpsMax = 135;
 }
 
-void setHellen121Vag_5_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen121Vag_5_cyl() {
 	engineConfiguration->specs.cylindersCount = 5;
 	engineConfiguration->specs.displacement = 2.5;
 	engineConfiguration->specs.firingOrder = FO_1_2_4_5_3;
 }
 
-void setHellen121Vag_vr6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen121Vag_vr6_cyl() {
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
 }
 
-void setHellen121Vag_v6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen121Vag_v6_cyl() {
 	engineConfiguration->specs.cylindersCount = 6;
 	engineConfiguration->specs.displacement = 2.7;
 
@@ -84,7 +84,7 @@ void setHellen121Vag_v6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->specs.firingOrder = FO_1_4_3_6_2_5;
 }
 
-void setHellen121Vag_8_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen121Vag_8_cyl() {
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.displacement = 4.2;
 	engineConfiguration->specs.firingOrder = FO_1_5_4_8_6_3_7_2;

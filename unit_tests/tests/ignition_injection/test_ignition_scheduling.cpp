@@ -24,7 +24,7 @@ TEST(ignition, twoCoils) {
 
 	// let's recalculate with zero timing so that we can focus on relation advance between cylinders
 	engine->engineState.timingAdvance = 0;
-	initializeIgnitionActions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initializeIgnitionActions();
 
 	ASSERT_EQ(engine->ignitionEvents.elements[0].sparkAngle, 0);
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[0].outputs[0], (void*)&enginePins.coils[0]);

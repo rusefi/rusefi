@@ -9,6 +9,6 @@
 
 #include "engine_configuration.h"
 
-void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setToyota_jzs147EngineConfiguration();
+void setToyota_2jz_vics();
 

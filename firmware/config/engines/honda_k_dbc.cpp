@@ -15,7 +15,7 @@
  * K24A4 engine
  * PROTEUS_HONDA_ELEMENT_2003
  */
-void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setProteusHondaElement2003() {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->specs.displacement = 2.4;
@@ -90,6 +90,6 @@ void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif // HW_PROTEUS
 }
 
-void setProteusHondaOBD2A(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setProteusHondaOBD2A() {
 
 }

@@ -44,7 +44,7 @@ static const int maxAvgSize = (EGO_AVG_BUF_SIZE - 1);	// the whole buffer
 static float lastAfr = stoichAfr;
 #endif
 
-void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initEgoAveraging() {
 	// Our averaging is intended for use only with Narrow EGOs.
 	if (CONFIG(afr_type) == ES_NarrowBand) {
 		totalEgoCnt = prevEgoCnt = 0;
@@ -87,18 +87,18 @@ static float updateEgoAverage(float afr) {
 	return egoAfrSum / float(totalEgoCnt - startAvgCnt);
 }
 #else
-void initEgoAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initEgoAveraging() {
 }
 #endif
 
-bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool hasAfrSensor() {
 	if (CONFIG(enableAemXSeries) || CONFIG(enableInnovateLC2)) {
 		return true;
 	}
 
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
-		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return cjHasAfrSensor();
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	return isAdcChannelValid(engineConfiguration->afr.hwChannel);
@@ -106,7 +106,7 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 extern float InnovateLC2AFR;
 
-float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getAfr() {
 #if EFI_AUX_SERIAL
 	if (CONFIG(enableInnovateLC2))
 		return InnovateLC2AFR;
@@ -114,7 +114,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
-		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return cjGetAfr();
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	afr_sensor_s * sensor = &CONFIG(afr);
@@ -123,7 +123,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return 0;
 	}
 
-	float volts = getVoltageDivided("ego", sensor->hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
+	float volts = getVoltageDivided("ego", sensor->hwChannel);
 
 	if (CONFIG(afr_type) == ES_NarrowBand) {
 		float afr = interpolate2d(volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen);
@@ -184,7 +184,7 @@ static void initEgoSensor(afr_sensor_s *sensor, ego_sensor_e type) {
 	}
 }
 
-void setEgoSensor(ego_sensor_e type DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void setEgoSensor(ego_sensor_e type) {
 	CONFIG(afr_type) = type;
 	initEgoSensor(&engineConfiguration->afr, type);
 }

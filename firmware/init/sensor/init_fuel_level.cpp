@@ -18,7 +18,7 @@ static TableFunc
 		efi::ratio<1>>
 			fuelCurve(CONFIG(fuelLevelBins), CONFIG(fuelLevelValues));
 
-void initFuelLevel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void initFuelLevel() {
 	adc_channel_e channel = CONFIG(fuelLevelSensor);
 
 	if (!isAdcChannelValid(channel)) {

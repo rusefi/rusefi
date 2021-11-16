@@ -23,7 +23,7 @@ static void fireEvent(EngineTestHelper *eth, bool isRise) {
 	// but for noise filtering, both edges should be processed, so we fire falling events too
 	if (isRise)
 		eth->firePrimaryTriggerRise();
-	else if (eth->engine.engineConfiguration->useNoiselessTriggerDecoder)
+	else if (engineConfiguration->useNoiselessTriggerDecoder)
 		eth->firePrimaryTriggerFall();
 }
 
@@ -84,7 +84,7 @@ static void resetTrigger(EngineTestHelper &eth) {
 	eth.engine.triggerCentral.triggerState.totalTriggerErrorCounter = 0;
 }
 
-static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorToleranceCnt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorToleranceCnt) {
 	printf("*** (bc->useNoiselessTriggerDecoder = %s)\r\n",
 			CONFIG(useNoiselessTriggerDecoder) ? "true" : "false");
 
@@ -168,7 +168,7 @@ TEST(big, testNoiselessDecoder) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	// we'll test on 60-2 wheel
-	eth.setTriggerType(TT_TOOTHED_WHEEL_60_2 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_TOOTHED_WHEEL_60_2);
 
 	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoiselessDecoder RPM";
@@ -179,13 +179,13 @@ TEST(big, testNoiselessDecoder) {
 	// try normal trigger mode, no noise filtering
 	CONFIG(useNoiselessTriggerDecoder) = false;
 	// for test validation, it should be 1 trigger error
-	testNoiselessDecoderProcedure(eth, 1 PASS_ENGINE_PARAMETER_SUFFIX);
+	testNoiselessDecoderProcedure(eth, 1);
 #endif
 
 	// now enable our noise filtering algo
 	CONFIG(useNoiselessTriggerDecoder) = true;
 	// should be 0 errors!
-	testNoiselessDecoderProcedure(eth, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	testNoiselessDecoderProcedure(eth, 0);
 
 	//printTriggerDebug = false;
 }

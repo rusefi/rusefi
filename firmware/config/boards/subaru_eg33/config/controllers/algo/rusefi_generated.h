@@ -749,7 +749,6 @@
 #define enableFan1WithAc_offset 76
 #define enableFan2WithAc_offset 76
 #define enableInnovateLC2_offset 976
-#define enableLaunchBoost_offset 976
 #define enableLaunchRetard_offset 976
 #define enableMapEstimationTableFallback_offset 76
 #define enableSoftwareKnock_offset 976
@@ -1501,14 +1500,12 @@
 #define launchAdvanceRpmRange_offset 1052
 #define launchBoostDuty_offset 1044
 #define launchControlEnabled_offset 76
-#define launchDisableBySpeed_offset 976
 #define launchFuelAdded_offset 1040
 #define launchFuelCutEnable_offset 1464
 #define launchRpm_offset 316
-#define launchRpmTreshold_offset 1032
 #define launchSmoothRetard_offset 1476
 #define launchSparkCutEnable_offset 1464
-#define launchSpeedTreshold_offset 1028
+#define launchSpeedThreshold_offset 1028
 #define launchTimingRetard_offset 320
 #define launchTimingRpmRange_offset 1036
 #define launchTpsTreshold_offset 1056
@@ -1839,7 +1836,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 3647413428
+#define SIGNATURE_HASH 1563325343
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2358,7 +2355,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.14.subaru_eg33_f7.3647413428"
+#define TS_SIGNATURE "rusEFI 2021.11.16.subaru_eg33_f7.1563325343"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2375,6 +2372,8 @@
 #define uart_device_e_UART_DEVICE_4 4
 #define uart_device_e_UART_NONE 0
 #define uartConsoleSerialSpeed_offset 2076
+#define unfinishedenableLaunchBoost_offset 976
+#define unfinishedlaunchDisableBySpeed_offset 976
 #define unused1059_offset 3961
 #define unused1127_offset 2116
 #define unused1128_offset 2116
@@ -2464,6 +2463,7 @@
 #define unusedEL4_offset 2072
 #define unusedExHpfp_offset 724
 #define unusedFiller_4703_offset 4703
+#define unusedLaunchRpmThreshold_offset 1032
 #define unusedLuaWasHere_offset 16032
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832
@@ -2539,7 +2539,7 @@
 #define vrThreshold2_rpmBins_offset 1264
 #define vrThreshold2_values_offset 1270
 #define vssFilterReciprocal_offset 15196
-#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR"
+#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR", "VVT_MAP_V_TWIN"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "vvt12", "vvt13"
 #define vvt_mode_e_VVT_2JZ 2
 #define vvt_mode_e_VVT_BARRA_3_PLUS_1 8
@@ -2548,6 +2548,7 @@
 #define vvt_mode_e_VVT_FORD_ST170 7
 #define vvt_mode_e_VVT_HONDA_K 10
 #define vvt_mode_e_VVT_INACTIVE 0
+#define vvt_mode_e_VVT_MAP_V_TWIN 12
 #define vvt_mode_e_VVT_MIATA_NB2 3
 #define vvt_mode_e_VVT_NISSAN_MR 11
 #define vvt_mode_e_VVT_NISSAN_VQ 9

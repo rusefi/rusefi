@@ -19,10 +19,6 @@ using namespace luaaa;
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
-#if EFI_UNIT_TEST
-Engine *engineForLuaUnitTests;
-#endif
-
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
@@ -104,24 +100,15 @@ static int lua_curve2d(lua_State* l) {
 	auto humanCurveIdx = luaL_checkinteger(l, 1);
 	auto x = luaL_checknumber(l, 2);
 
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
-
-	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x);
 
 	lua_pushnumber(l, result);
 	return 1;
 }
 
 static int lua_findCurveIndex(lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 	auto name = luaL_checklstring(l, 1, nullptr);
-	auto result = getCurveIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveIndexByName(name);
 	if (result == EFI_ERROR_CODE) {
 		lua_pushnil(l);
 	} else {
@@ -473,12 +460,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "findTableIndex",
 			[](lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 			auto name = luaL_checklstring(l, 1, nullptr);
-			auto index = getTableIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			auto index = getTableIndexByName(name);
 			if (index == EFI_ERROR_CODE) {
 				lua_pushnil(l);
 			} else {
@@ -490,14 +473,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "findSetting",
 			[](lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 			auto name = luaL_checklstring(l, 1, nullptr);
 			auto defaultValue = luaL_checknumber(l, 2);
 
-			auto index = getSettingIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			auto index = getSettingIndexByName(name);
 			if (index == EFI_ERROR_CODE) {
 				lua_pushnumber(l, defaultValue);
 			} else {
@@ -527,10 +506,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "setFuelMult", lua_setFuelMult);
 
 	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
 		lua_pushnumber(l, result);
 		return 1;

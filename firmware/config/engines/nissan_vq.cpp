@@ -7,7 +7,7 @@
 
 #include "nissan_vq.h"
 
-void setHellen121nissanQR(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen121nissanQR() {
 	engineConfiguration->trigger.type = TT_NISSAN_QR25;
 
 	engineConfiguration->specs.cylindersCount = 4;
@@ -26,7 +26,7 @@ void setHellen121nissanQR(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void setHellen121nissanVQ(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen121nissanVQ() {
 	engineConfiguration->trigger.type = TT_NISSAN_VQ35;
 
 	engineConfiguration->specs.cylindersCount = 6;
@@ -43,10 +43,10 @@ void setHellen121nissanVQ(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtOffsets[1 * CAMS_PER_BANK] = NISSAN_VQ_VVT_OFFSET - NISSAN_VQ_CAM_OFFSET;
 }
 
-void setHellen121nissanAltimaN16(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen121nissanAltimaN16() {
 	// https://en.wikipedia.org/wiki/Nissan_QG_engine
 	// https://en.wikipedia.org/wiki/N-VCT
-	setHellen121nissanQR(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setHellen121nissanQR();
 	engineConfiguration->specs.displacement = 1.8;
 	strcpy(CONFIG(engineCode), "N16");
 

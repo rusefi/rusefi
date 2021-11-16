@@ -8,5 +8,5 @@
 #pragma once
 
 #include "engine_ptr.h"
-void initEngineEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initEngineEmulator();
 

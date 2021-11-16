@@ -164,7 +164,7 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;

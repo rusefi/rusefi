@@ -24,7 +24,7 @@ TEST(testCJ125, testInitialState) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
-	cj.StartHeaterControl(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cj.StartHeaterControl();
 	ASSERT_EQ(cj.heaterDuty, CJ125_HEATER_IDLE_RATE);
 
 	TestSpi mock;
@@ -35,7 +35,7 @@ TEST(testCJ125, testInitialState) {
 	EXPECT_CALL(mock, ReadRegister(INIT_REG2_RD)).Times(1).WillOnce(Return(CJ125_INIT2_DIAG));
 	EXPECT_CALL(mock, ReadRegister(DIAG_REG_RD)).Times(1);
 
-	cj.cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cj.cjIdentify();
 	// validate that error state was not set
 	ASSERT_EQ(cj.state, CJ125_INIT);
 }
@@ -51,7 +51,7 @@ TEST(testCJ125, testFailedIdentify) {
 
 	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
 
-	cj.cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cj.cjIdentify();
 	ASSERT_EQ(cj.errorCode, CJ125_ERROR_WRONG_IDENT);
 	ASSERT_EQ(cj.state, CJ125_ERROR);
 }

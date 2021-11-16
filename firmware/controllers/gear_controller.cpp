@@ -2,8 +2,8 @@
 
 #include "gear_controller.h"
 
-void GearControllerBase::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    transmissionController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+void GearControllerBase::init() {
+    transmissionController.inject();
     transmissionController.init();
 }
 

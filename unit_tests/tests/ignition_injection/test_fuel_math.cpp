@@ -15,24 +15,24 @@ TEST(FuelMath, getStandardAirCharge) {
 	CONFIG(specs.displacement) = 1.839f;
 	CONFIG(specs.cylindersCount) = 4;
 
-	EXPECT_FLOAT_EQ(0.5535934f, getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_FLOAT_EQ(0.5535934f, getStandardAirCharge());
 
 	// LS 5.3 liter v8
 	CONFIG(specs.displacement) = 5.327f;
 	CONFIG(specs.cylindersCount) = 8;
 
-	EXPECT_FLOAT_EQ(0.80179232f, getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_FLOAT_EQ(0.80179232f, getStandardAirCharge());
 
 	// Chainsaw - single cylinder 32cc
 	CONFIG(specs.displacement) = 0.032f;
 	CONFIG(specs.cylindersCount) = 1;
-	EXPECT_FLOAT_EQ(0.038531788f, getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_FLOAT_EQ(0.038531788f, getStandardAirCharge());
 
 	// Leopard 1 47.666 liter v12
 	CONFIG(specs.displacement) = 47.666f;
 	CONFIG(specs.cylindersCount) = 12;
 
-	EXPECT_FLOAT_EQ(4.782959f, getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_FLOAT_EQ(4.782959f, getStandardAirCharge());
 }
 
 TEST(AirmassModes, AlphaNNormal) {
@@ -47,7 +47,7 @@ TEST(AirmassModes, AlphaNNormal) {
 		.WillOnce(Return(35.0f));
 
 	AlphaNAirmass dut(veTable);
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	Sensor::setMockValue(SensorType::Tps1, 0.71f);
 
@@ -66,7 +66,7 @@ TEST(AirmassModes, AlphaNFailedTps) {
 	StrictMock<MockVp3d> veTable;
 
 	AlphaNAirmass dut(veTable);
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	// explicitly reset the sensor
 	Sensor::resetMockValue(SensorType::Tps1);
@@ -88,7 +88,7 @@ TEST(AirmassModes, MafNormal) {
 		.WillOnce(Return(75.0f));
 
 	MafAirmass dut(veTable);
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	auto airmass = dut.getAirmassImpl(200, 6000);
 
@@ -122,7 +122,7 @@ TEST(AirmassModes, VeOverride) {
 
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 	DummyAirmassModel dut(veTable);
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	// Use default mode - will call with 10
 	dut.getAirmass(0);
@@ -135,7 +135,7 @@ TEST(AirmassModes, VeOverride) {
 	EXPECT_FLOAT_EQ(ENGINE(engineState.currentVeLoad), 30.0f);
 }
 
-void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setInjectionMode(int value);
 
 TEST(FuelMath, testDifferentInjectionModes) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
@@ -144,20 +144,20 @@ TEST(FuelMath, testDifferentInjectionModes) {
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
-	setInjectionMode((int)IM_BATCH PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setInjectionMode((int)IM_BATCH);
+	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration) << "injection while batch";
 
-	setInjectionMode((int)IM_SIMULTANEOUS PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setInjectionMode((int)IM_SIMULTANEOUS);
+	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 10,  engine->injectionDuration) << "injection while simultaneous";
 
-	setInjectionMode((int)IM_SEQUENTIAL PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setInjectionMode((int)IM_SEQUENTIAL);
+	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SEQUENTIAL";
 
-	setInjectionMode((int)IM_SINGLE_POINT PASS_ENGINE_PARAMETER_SUFFIX);
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setInjectionMode((int)IM_SINGLE_POINT);
+	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 40,  engine->injectionDuration) << "injection while IM_SINGLE_POINT";
 	EXPECT_EQ( 0, eth.recentWarnings()->getCount()) << "warningCounter#testDifferentInjectionModes";
 }
@@ -171,13 +171,13 @@ TEST(FuelMath, deadtime) {
 		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
 	// First test with no deadtime
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 20,  engine->injectionDuration);
 
 	// Now add some deadtime
 	setArrayValues(engineConfiguration->injector.battLagCorr, 2.0f);
 
 	// Should have deadtime now!
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 20 + 2,  engine->injectionDuration);
 }

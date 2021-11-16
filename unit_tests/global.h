@@ -66,8 +66,6 @@ void chDbgAssert(int c, char *msg, void *arg);
  * this macro provides references to engine from EngineTestHelper
  */
 #define EXPAND_EngineTestHelper \
-	    Engine *engine = &eth.engine; \
-		EXPAND_Engine
 
 #define WITH_ENGINE_TEST_HELPER_SENS(x, sensorvals) \
 	EngineTestHelper eth(x, sensorvals); \
@@ -80,8 +78,6 @@ void chDbgAssert(int c, char *msg, void *arg);
 #define WITH_ENGINE_TEST_HELPER_BOARD_CALLBACK(x, callback) \
 	EngineTestHelper eth(x, callback, std::unordered_map<SensorType, float>{}); \
 	EXPAND_EngineTestHelper;
-
-#define CONFIG_PARAM(x) (x)
 
 #ifdef __cplusplus
 namespace chibios_rt {

@@ -24,7 +24,7 @@ TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
 	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
 
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback();
 	assertEqualsM("testIgnitionPlanning_AFR", 13.5, eth.engine.engineState.targetAFR);
 
 	ASSERT_EQ(IM_BATCH, engineConfiguration->injectionMode);
@@ -42,14 +42,14 @@ TEST(misc, testEngineMath) {
 
 	Sensor::setMockValue(SensorType::Clt, 300);
 	Sensor::setMockValue(SensorType::Iat, 350);
-	ASSERT_FLOAT_EQ(312.5, getTCharge(1000, 0 PASS_ENGINE_PARAMETER_SUFFIX));
-	ASSERT_FLOAT_EQ(313.5833, getTCharge(1000, 50 PASS_ENGINE_PARAMETER_SUFFIX));
-	ASSERT_FLOAT_EQ(314.6667, getTCharge(1000, 100 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(312.5, getTCharge(1000, 0));
+	ASSERT_FLOAT_EQ(313.5833, getTCharge(1000, 50));
+	ASSERT_FLOAT_EQ(314.6667, getTCharge(1000, 100));
 
 
-	ASSERT_FLOAT_EQ(312.5, getTCharge(4000, 0 PASS_ENGINE_PARAMETER_SUFFIX));
-	ASSERT_FLOAT_EQ(320.0833, getTCharge(4000, 50 PASS_ENGINE_PARAMETER_SUFFIX));
-	ASSERT_FLOAT_EQ(327.6667, getTCharge(4000, 100 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(312.5, getTCharge(4000, 0));
+	ASSERT_FLOAT_EQ(320.0833, getTCharge(4000, 50));
+	ASSERT_FLOAT_EQ(327.6667, getTCharge(4000, 100));
 
 	// test Air Interpolation mode
 	engineConfiguration->tChargeMode = TCHARGE_MODE_AIR_INTERP;
@@ -57,13 +57,13 @@ TEST(misc, testEngineMath) {
 	engineConfiguration->tChargeAirCoefMax = 0.902f;
 	engineConfiguration->tChargeAirFlowMax = 153.6f;
 	// calc. some airMass given the engine displacement=1.839 and 4 cylinders (FORD_ESCORT_GT)
-	engine->engineState.sd.airMassInOneCylinder = SpeedDensityBase::getAirmassImpl(/*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->engineState.sd.airMassInOneCylinder = SpeedDensityBase::getAirmassImpl(/*VE*/1.0f, /*MAP*/100.0f, /*tChargeK*/273.15f + 20.0f);
 	ASSERT_NEAR(0.5464f, engine->engineState.sd.airMassInOneCylinder, EPS4D);
 
 	Sensor::setMockValue(SensorType::Clt, 90);
 	Sensor::setMockValue(SensorType::Iat, 20);
 	// calc. airFlow using airMass, and find tCharge
-	ASSERT_FLOAT_EQ(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0 PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_FLOAT_EQ(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0));
 	ASSERT_FLOAT_EQ(65.5625f/*kg/h*/, engine->engineState.airFlow);
 }
 
@@ -92,8 +92,4 @@ TEST(misc, testIgnitionMapGenerator) {
     assertEqualsM2("2400", 34.2, getInitialAdvance(2400, 40, 36), 0.1);
     assertEqualsM2("4400", 41.9, getInitialAdvance(4400, 40, 36), 0.1);
     assertEqualsM2("20@800", 14.2, getInitialAdvance(800, 20, 36), 0.2);
-}
-
-float getMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->mockMapValue;
 }

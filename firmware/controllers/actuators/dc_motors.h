@@ -11,7 +11,7 @@
 
 class DcMotor;
 
-DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX);
+DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires);
 
 // Manual control of motors for use by console commands
 void setDcMotorFrequency(size_t index, int hz);

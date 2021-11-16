@@ -84,7 +84,7 @@
 #include "proteus_meta.h"
 #endif
 
-void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void m73engine() {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
@@ -116,15 +116,15 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 // BMW_M73_F
-void setBMW_M73_TwoCoilUnitTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setBMW_M73_TwoCoilUnitTest() {
 	// twoCoil configuration without unit tests ETB setup drama
-	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+	m73engine();
 }
 
 // BMW_M73_M
 // set engine_type 24
-void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_Manhattan() {
+	m73engine();
 
 	/**
 Nucleo boards - first step is to confirm that I can blink via each pin
@@ -242,8 +242,8 @@ GPIOA_6
  *
  */
 #if HW_PROTEUS
-void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_Proteus() {
+	m73engine();
 
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
 	// set_analog_input_pin pps pa4
@@ -274,7 +274,7 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(startStopButtonPin) = GPIOE_12;
 	CONFIG(startStopButtonMode) = PI_PULLUP;
 
-	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setProteusHitachiEtbDefaults();
 
 	CONFIG(useETBforIdleControl) = true;
 }

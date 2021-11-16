@@ -81,7 +81,7 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 #endif // EFI_PROD_CODE
 }
 
-void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void RegisteredOutputPin::init() {
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
     pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
 
@@ -209,7 +209,7 @@ void EnginePins::startPins() {
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		pin->init(PASS_ENGINE_PARAMETER_SIGNATURE);
+		pin->init();
 		pin = pin->next;
 	}
 }
@@ -339,6 +339,7 @@ void NamedOutputPin::setLow() {
 }
 
 InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
+	overlappingCounter = 1; // Force update in reset
 	reset();
 	injectorIndex = -1;
 }
@@ -463,7 +464,7 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
-void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initOutputPins() {
 #if EFI_GPIO_HARDWARE
 
 #if HAL_USE_SPI

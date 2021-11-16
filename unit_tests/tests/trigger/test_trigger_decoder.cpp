@@ -37,7 +37,7 @@ void sendOutConfirmation(char *value, int i) {
 static int getTriggerZeroEventIndex(engine_type_e engineType) {
 	WITH_ENGINE_TEST_HELPER(engineType);
 
-	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initDataStructures();
 
 	const auto& triggerConfiguration = engine->primaryTriggerConfiguration;
 
@@ -51,7 +51,7 @@ TEST(misc, testSkipped2_0) {
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 2;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
-	eth.setTriggerType(TT_TOOTHED_WHEEL PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_TOOTHED_WHEEL);
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
 }
 
@@ -161,25 +161,25 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  engineConfiguration->globalTriggerAngleOffset) << "globalTriggerAngleOffset";
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
 			&ENGINE(triggerCentral.triggerFormDetails),
-			&position, 0, engineConfiguration->globalTriggerAngleOffset);
+			&position, 0);
 	assertTriggerPosition(&position, 0, 0);
 
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
 			&ENGINE(triggerCentral.triggerFormDetails),
-			&position, 200, engineConfiguration->globalTriggerAngleOffset);
+			&position, 200);
 	assertTriggerPosition(&position, 3, 20);
 
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
 			&ENGINE(triggerCentral.triggerFormDetails),
-			&position, 360, engineConfiguration->globalTriggerAngleOffset);
+			&position, 360);
 	assertTriggerPosition(&position, 6, 0);
 
 	eth.applyTriggerWaveform();
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 	eth.fireTriggerEvents(48);
 	eth.assertRpm(2000, "rpm");
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 	eth.fireTriggerEvents(48);
 
 	IgnitionEventList *ecl = &engine->ignitionEvents;
@@ -191,7 +191,7 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_NEAR(7.9579, ecl->elements[5].dwellPosition.angleOffsetFromTriggerEvent, EPS4D) << "angle offset#2";
 
 
-	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000 PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
+	ASSERT_FLOAT_EQ(0.5, getSparkDwell(2000)) << "running dwell";
 }
 
 TEST(misc, testGetCoilDutyCycleIssue977) {
@@ -199,9 +199,9 @@ TEST(misc, testGetCoilDutyCycleIssue977) {
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
-	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
+	ASSERT_EQ( 4,  getSparkDwell(rpm)) << "running dwell";
 
-	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX), 0.0001);
+	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm), 0.0001);
 }
 
 TEST(misc, testFordAspire) {
@@ -217,10 +217,10 @@ TEST(misc, testFordAspire) {
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
-	ASSERT_EQ( 4,  getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX)) << "running dwell";
+	ASSERT_EQ( 4,  getSparkDwell(rpm)) << "running dwell";
 
 	engine->rpmCalculator.setRpmValue(6000);
-	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000 PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("higher rpm dwell", 3.25, getSparkDwell(6000));
 
 }
 
@@ -254,31 +254,31 @@ TEST(misc, testStartupFuelPumping) {
 	engine->rpmCalculator.mockRpm = 0;
 
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 60);
-	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
+	sf.update();
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#1";
 
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
-	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
+	sf.update();
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pumpsCounter#2";
 
-	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
+	sf.update();
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#3";
 
 	engine->rpmCalculator.mockRpm = 10;
-	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
+	sf.update();
 	ASSERT_EQ( 0,  sf.pumpsCounter) << "pc#4";
 
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
 	engine->rpmCalculator.mockRpm = 0;
-	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
+	sf.update();
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#5";
 
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
-	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
+	sf.update();
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#6";
 
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
-	sf.update(PASS_ENGINE_PARAMETER_SIGNATURE);
+	sf.update();
 	ASSERT_EQ( 2,  sf.pumpsCounter) << "pc#7";
 }
 
@@ -316,9 +316,9 @@ TEST(misc, testRpmCalculator) {
 	engineConfiguration->globalFuelCorrection = 3;
 	eth.applyTriggerWaveform();
 
-	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFlatInjectorLag(0);
 
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->updateSlowSensors();
 
 	ASSERT_EQ(0, GET_RPM());
 
@@ -343,7 +343,7 @@ TEST(misc, testRpmCalculator) {
 	int start = eth.getTimeNowUs();
 	ASSERT_EQ( 485000,  start) << "start value";
 
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback();
 
 	ASSERT_NEAR(engine->engineState.timingAdvance, 707, 0.1f);
 
@@ -460,11 +460,10 @@ TEST(misc, testTriggerDecoder) {
 	{
 	persistent_config_s c;
 	Engine e;
-	e.setConfig(&e, &c.engineConfiguration, &c);
-	Engine* engine = &e;
-	EXPAND_Engine;
+	EngineTestHelperBase base(&e, &c.engineConfiguration, &c);
 	TriggerWaveform * s = &e.triggerCentral.triggerShape;
 
+	s->useOnlyRisingEdgeForTriggerTemp = false;
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
 	ASSERT_EQ(s->wave->getSwitchTime(0), 0.25);
@@ -509,7 +508,7 @@ TEST(misc, testTriggerDecoder) {
 
 		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
 		eth.persistentConfig.engineConfiguration.sensorChartMode = SC_DETAILED_RPM;
-		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		applyNonPersistentConfiguration();
 
 	}
 	testTriggerDecoder2("miata 1990", MRE_MIATA_NA6_VAF, 4, 1 - 0.7015, 1 - 0.3890);
@@ -525,8 +524,8 @@ TEST(misc, testTriggerDecoder) {
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
-		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
-		prepareShapes(PASS_ENGINE_PARAMETER_SIGNATURE);
+		applyNonPersistentConfiguration();
+		prepareShapes();
 	}
 
 	testTriggerDecoder2("sachs", SACHS, 0, 0.4800, 0.000);
@@ -666,7 +665,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 	ASSERT_EQ( 3000,  GET_RPM()) << "setTestBug299: RPM";
 
 	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
-	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(GET_RPM()));
 }
 
 static void assertInjectors(const char *msg, int value0, int value1) {
@@ -692,7 +691,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 
 	assertInjectors("#0_inj", 0, 0);
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 
 	engine->injectionDuration = 12.5f;
 	// Injection duration of 12.5ms
@@ -700,7 +699,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(12.5f));
 	engine->injectorModel = &im;
 
-	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM()));
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#1";
 	eth.moveTimeForwardUs(MS2US(20));
@@ -861,7 +860,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	engine->injectorModel = &im2;
 
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
-	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM()));
 
 
 	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315);
@@ -918,9 +917,9 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 */
 }
 
-void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setInjectionMode(int value) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 TEST(big, testFuelSchedulerBug299smallAndMedium) {
@@ -989,7 +988,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 
 	engine->injectionDuration = 17.5f;
 	// Injection duration of 17.5ms
@@ -997,7 +996,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
 	engine->injectorModel = &im;
 
-	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM()));
 
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#1";
@@ -1056,7 +1055,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.executeActions();
 	ASSERT_EQ( 0,  engine->executor.size()) << "Lqs#04";
 
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 
 	// Injection duration of 2ms
 	engine->injectionDuration = 2.0f;
@@ -1064,7 +1063,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(2.0f));
 	engine->injectorModel = &im2;
 
-	ASSERT_EQ( 10,  getInjectorDutyCycle(GET_RPM() PASS_ENGINE_PARAMETER_SUFFIX)) << "Lduty for maf=3";
+	ASSERT_EQ( 10,  getInjectorDutyCycle(GET_RPM())) << "Lduty for maf=3";
 
 
 	eth.firePrimaryTriggerRise();
@@ -1109,13 +1108,13 @@ TEST(big, testSparkReverseOrderBug319) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	setConstantDwell(45 PASS_CONFIG_PARAMETER_SUFFIX);
+	setConstantDwell(45);
 
 	// this is needed to update injectorLag
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->updateSlowSensors();
 
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.setTriggerType(TT_ONE);
+	eth.engine.periodicFastCallback();
 
 	setWholeTimingTable(0);
 
@@ -1246,7 +1245,7 @@ TEST(big, testMissedSpark299) {
 	ASSERT_EQ(3000, eth.engine.rpmCalculator.getRpm());
 
 	setWholeTimingTable(3);
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback();
 
 
 
@@ -1263,7 +1262,7 @@ TEST(big, testMissedSpark299) {
 	eth.executeActions();
 
 	setWholeTimingTable(-5);
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback();
 
 
 	eth.fireRise(20);

@@ -38,7 +38,7 @@ TEST(fuelControl, transitionIssue1592) {
 	// This is easiest to trip on a wheel that requires sync
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-	eth.setTriggerType(TT_TOOTHED_WHEEL PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_TOOTHED_WHEEL);
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 

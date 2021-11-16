@@ -12,24 +12,24 @@
 /**
  * set engine_type 57
  */
-void setMiataNA6_VAF_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNA6_VAF_Frankenso();
 /**
  * set engine_type 41
  */
-void setMiataNA6_MAP_Frankenso(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNA6_MAP_Frankenso();
 
-void setMiataNA6_VAF_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setMiataNA6_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNA6_VAF_MRE();
+void setMiataNA6_MAP_MRE();
 
 /**
  * set engine_type 20
  */
-void setMiata94_MAP_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMiata94_MAP_MRE();
 
 
 /**
  * set engine_type 34
  */
-void setHellenNA6(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHellenNA6();
 
-void setHellenNA94(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHellenNA94();

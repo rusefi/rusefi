@@ -141,7 +141,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->etbIo[0].controlPin = GPIOA_8; // ETB_EN out_io12
 	CONFIG(etb_use_two_wires) = true;
 
-	setBoschVAGETB(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setBoschVAGETB();
 
 	engineConfiguration->isSdCardEnabled = true;
 
@@ -170,7 +170,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	strcpy(CONFIG(engineMake), ENGINE_MAKE_VAG);
 	strcpy(CONFIG(engineCode), "base");
@@ -182,7 +182,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;//IM_BATCH;// IM_SEQUENTIAL;
 
-	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setHellenDefaultVrThresholds();
 	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
 	hellenWbo();
 }

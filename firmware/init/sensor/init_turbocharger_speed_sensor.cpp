@@ -8,8 +8,8 @@ static FrequencySensor turbochargerSpeedSensor(SensorType::TurbochargerSpeed, MS
 static TurbochargerSpeedConverter turbochargerSpeedConverter;
 
 
-void initTurbochargerSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	turbochargerSpeedConverter.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+void initTurbochargerSpeedSensor() {
+	turbochargerSpeedConverter.inject();
 
 	auto pin = CONFIG(turboSpeedSensorInputPin);
 

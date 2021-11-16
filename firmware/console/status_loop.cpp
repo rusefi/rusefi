@@ -135,13 +135,13 @@ static uint64_t binaryLogCount = 0;
  * This is useful if we are changing engine mode dynamically
  * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
  */
-static int packEngineMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static int packEngineMode() {
 	return (engineConfiguration->fuelAlgorithm << 4) +
 			(engineConfiguration->injectionMode << 2) +
 			engineConfiguration->ignitionMode;
 }
 
-static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static float getAirFlowGauge() {
 	return Sensor::get(SensorType::Maf).value_or(engine->engineState.airFlow);
 }
 
@@ -312,7 +312,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL
 static void showFuelInfo() {
-	showFuelInfo2((float) GET_RPM(), getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE));
+	showFuelInfo2((float) GET_RPM(), getFuelingLoad());
 }
 #endif
 
@@ -332,7 +332,7 @@ static void initStatusLeds() {
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	bool justHadError = (getTimeNowNt() - engine->triggerCentral.triggerState.lastDecodingErrorTime) < MS2NT(200);
-	return justHadError || isTriggerDecoderError();
+	return justHadError || engine->triggerCentral.isTriggerDecoderError();
 #else
 	return false;
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
@@ -592,8 +592,8 @@ static void updateFuelCorrections() {
 }
 
 static void updateFuelLoads() {
-	tsOutputChannels.fuelingLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	tsOutputChannels.ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels.fuelingLoad = getFuelingLoad();
+	tsOutputChannels.ignitionLoad = getIgnitionLoad();
 	tsOutputChannels.veTableYAxis = ENGINE(engineState.currentVeLoad);
 	tsOutputChannels.afrTableYAxis = ENGINE(engineState.currentAfrLoad);
 }
@@ -634,7 +634,7 @@ static void updateIgnition(int rpm) {
 	// 60
 	tsOutputChannels.sparkDwell = ENGINE(engineState.sparkDwell);
 
-	tsOutputChannels.coilDutyCycle = getCoilDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	tsOutputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
 
 	tsOutputChannels.knockRetard = ENGINE(knockController).getKnockRetard();
 }
@@ -649,7 +649,7 @@ static void updateFlags() {
 	tsOutputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_LAUNCH_CONTROL
-	tsOutputChannels.launchTriggered = engine->isLaunchCondition;
+	tsOutputChannels.launchTriggered = engine->launchController.isLaunchCondition;
 #endif
 
 	tsOutputChannels.clutchUpState = engine->clutchUpState;
@@ -681,7 +681,7 @@ static void updateTpsDebug() {
 	tsOutputChannels.debugFloatField5 = 100 * Sensor::getOrZero(SensorType::Tps1Primary) / Sensor::getOrZero(SensorType::Tps1Secondary);
 }
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 #if EFI_SHAFT_POSITION_INPUT
 	int rpm = Sensor::get(SensorType::Rpm).Value;
 #else /* EFI_SHAFT_POSITION_INPUT */
@@ -707,7 +707,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	// offset 108
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
-	tsOutputChannels->massAirFlow = getAirFlowGauge(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->massAirFlow = getAirFlowGauge();
 	// offset 116
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
@@ -718,7 +718,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	// 68
 	// 140
 #if EFI_ENGINE_CONTROL
-	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	tsOutputChannels->injectorDutyCycle = getInjectorDutyCycle(rpm);
 #endif
 
 	// 224
@@ -726,7 +726,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->timeSeconds = timeSeconds;
 
 	// 252
-	tsOutputChannels->engineMode = packEngineMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->engineMode = packEngineMode();
 	// 120
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
 
@@ -739,7 +739,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	tsOutputChannels->accelerationYaw = engine->sensors.accelerometer.yaw;
 
 #if EFI_DYNO_VIEW
-	tsOutputChannels->VssAcceleration = getDynoviewAcceleration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tsOutputChannels->VssAcceleration = getDynoviewAcceleration();
 #endif
 
 	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
@@ -849,8 +849,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 		break;
 #endif /* EFI_CAN_SUPPORT */
 	case DBG_ANALOG_INPUTS:
-		tsOutputChannels->debugFloatField4 = isAdcChannelValid(engineConfiguration->map.sensor.hwChannel) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
-		tsOutputChannels->debugFloatField7 = isAdcChannelValid(engineConfiguration->afr.hwChannel) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel PASS_ENGINE_PARAMETER_SUFFIX) : 0.0f;
+		tsOutputChannels->debugFloatField4 = isAdcChannelValid(engineConfiguration->map.sensor.hwChannel) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel) : 0.0f;
+		tsOutputChannels->debugFloatField7 = isAdcChannelValid(engineConfiguration->afr.hwChannel) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel) : 0.0f;
 		break;
 	case DBG_ANALOG_INPUTS2:
 		updateTpsDebug();
@@ -885,7 +885,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	}
 }
 
-void updateCurrentEnginePhase(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updateCurrentEnginePhase() {
 	if (auto phase = engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt())) {
 		tsOutputChannels.currentEnginePhase = phase.Value - tdcPosition();
 	} else {
@@ -895,7 +895,7 @@ void updateCurrentEnginePhase(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio
-	updateTunerStudioState(&tsOutputChannels PASS_ENGINE_PARAMETER_SUFFIX);
+	updateTunerStudioState(&tsOutputChannels);
 }
 
 #endif /* EFI_TUNER_STUDIO */

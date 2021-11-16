@@ -3726,8 +3726,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Clutch Input", 						clutchDownPin,      {launchActivationMode == 1 && launchControlEnabled == 1}
 		field = "Clutch Input inverted",				clutchDownPinMode,  {launchActivationMode == 1 && launchControlEnabled == 1}
 		field = ""
-		field = "Rpm Treshold",                         launchRpmTreshold,  {launchControlEnabled == 1}
-		field = "Speed Treshold",                       launchSpeedTreshold,  {launchControlEnabled == 1}
+; dead code		field = "Rpm Threshold",                         launchRpmThreshold,  {launchControlEnabled == 1}
+		field = "Speed Threshold",                       launchSpeedThreshold,  {launchControlEnabled == 1}
         field = ""
 		field = "Launch RPM",            	    		launchRpm,  {launchControlEnabled == 1}
 		;field = "Extra Fuel",           				launchFuelAdded,  {launchControlEnabled == 1}
