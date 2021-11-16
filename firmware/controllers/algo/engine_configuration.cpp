@@ -131,7 +131,7 @@ engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 
 extern engine_configuration_s *engineConfiguration;
 
-void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void rememberCurrentConfiguration() {
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
 #else
@@ -146,13 +146,13 @@ static void wipeString(char *string, int size) {
 	}
 }
 
-static void wipeStrings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void wipeStrings() {
 	wipeString(engineConfiguration->engineMake, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->engineCode, sizeof(vehicle_info_t));
 	wipeString(engineConfiguration->vehicleName, sizeof(vehicle_info_t));
 }
 
-void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void onBurnRequest() {
 	wipeStrings();
 
 	incrementGlobalConfigurationVersion();
@@ -165,7 +165,7 @@ void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * this method is NOT currently invoked on ECU start - actual user input has to happen!
  * See preCalculate which is invoked BOTH on start and configuration change
  */
-void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void incrementGlobalConfigurationVersion() {
 	ENGINE(globalConfigurationVersion++);
 #if EFI_DEFAILED_LOGGING
 	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);
@@ -209,31 +209,31 @@ void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @brief Sets the same dwell time across the whole getRpm() range
  * set dwell X
  */
-void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void setConstantDwell(floatms_t dwellMs) {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = 1000 * i;
 	}
 	setArrayValues(engineConfiguration->sparkDwellValues, dwellMs);
 }
 
-void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void setWholeIgnitionIatCorr(float value) {
 	setTable(config->ignitionIatCorrTable, value);
 }
 
-void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void setFuelTablesLoadBin(float minValue, float maxValue) {
 	setLinearCurve(config->injPhaseLoadBins, minValue, maxValue, 1);
 	setLinearCurve(config->veLoadBins, minValue, maxValue, 1);
 	setLinearCurve(config->lambdaLoadBins, minValue, maxValue, 1);
 }
 
-void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void setWholeIatCorrTimingTable(float value) {
 	setTable(config->ignitionIatCorrTable, value);
 }
 
 /**
  * See also crankingTimingAngle
  */
-void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void setWholeTimingTable_d(angle_t value) {
 	setTable(config->ignitionTable, value);
 }
 
@@ -328,7 +328,7 @@ static void setDefaultWarmupIdleCorrection() {
 /**
  * see also setTargetRpmCurve()
  */
-static void setDefaultIdleSpeedTarget(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultIdleSpeedTarget() {
 	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
 
 	setCurveValue(engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm, CLT_CURVE_SIZE, -30, 1350);
@@ -364,12 +364,12 @@ static void setCanFrankensoDefaults() {
 /**
  * see also setDefaultIdleSpeedTarget()
  */
-void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void setTargetRpmCurve(int rpm) {
 	setLinearCurve(engineConfiguration->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
 	setLinearCurve(engineConfiguration->cltIdleRpm, rpm, rpm, 10);
 }
 
-void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setDefaultGppwmParameters() {
 	// Same config for all channels
 	for (size_t i = 0; i < efi::size(CONFIG(gppwm)); i++) {
 		auto& cfg = CONFIG(gppwm)[i];
@@ -397,7 +397,7 @@ void setDefaultGppwmParameters(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-static void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultEngineNoiseTable() {
 	setRpmTableBin(engineConfiguration->knockNoiseRpmBins, ENGINE_NOISE_CURVE_SIZE);
 
 	engineConfiguration->knockSamplingDuration = 45;
@@ -412,7 +412,7 @@ static void setDefaultEngineNoiseTable(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	engineConfiguration->knockNoise[7] = 2; // 7000
 }
 
-static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setHip9011FrankensoPinout() {
 	/**
 	 * SPI on PB13/14/15
 	 */
@@ -461,7 +461,7 @@ static void setHip9011FrankensoPinout(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  *
  * This method should NOT be setting any default pinout
  */
-static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setDefaultEngineConfiguration() {
 #if (! EFI_UNIT_TEST)
 	efi::clear(persistentState.persistentConfiguration);
 #endif
@@ -792,7 +792,7 @@ void setDefaultFrankensoConfiguration() {
 #define IGNORE_FLASH_CONFIGURATION false
 #endif
 
-void loadConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void loadConfiguration() {
 #ifdef CONFIG_RESET_SWITCH_PORT
 	// initialize the reset pin if necessary
 	palSetPadMode(CONFIG_RESET_SWITCH_PORT, CONFIG_RESET_SWITCH_PIN, PAL_MODE_INPUT_PULLUP);
@@ -823,7 +823,7 @@ void loadConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	setBoardConfigOverrides();
 }
 
-void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType) {
 	enginePins.reset(); // that's mostly important for functional tests
 	/**
 	 * Let's apply global defaults first
@@ -1143,11 +1143,11 @@ void emptyCallbackWithConfiguration(engine_configuration_s * engineConfiguration
 	UNUSED(engineConfiguration);
 }
 
-void resetConfigurationExt(engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void resetConfigurationExt(engine_type_e engineType) {
 	resetConfigurationExt(&emptyCallbackWithConfiguration, engineType);
 }
 
-void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void validateConfiguration() {
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
 		engineConfiguration->adcVcc = 3.0f;
 	}
@@ -1162,7 +1162,7 @@ void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void applyNonPersistentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void applyNonPersistentConfiguration() {
 #if EFI_PROD_CODE
 	efiAssertVoid(CUSTOM_APPLY_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "apply c");
 	efiPrintf("applyNonPersistentConfiguration()");
@@ -1177,7 +1177,7 @@ void applyNonPersistentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_ENGINE_CONTROL
 
-void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void prepareShapes() {
 	prepareOutputSignals();
 
 	engine->injectionEvents.addFuelEvents();

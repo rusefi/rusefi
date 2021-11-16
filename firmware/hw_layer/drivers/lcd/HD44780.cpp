@@ -173,7 +173,7 @@ void lcd_HD44780_print_string(const char* string) {
 }
 
 //getHwPin(CONFIG(HD44780_db7))
-static void lcdInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void lcdInfo() {
 	efiPrintf("HD44780 RS=%s", hwPortname(CONFIG(HD44780_rs)));
 	efiPrintf("HD44780 E=%s", hwPortname(CONFIG(HD44780_e)));
 	efiPrintf("HD44780 D4=%s", hwPortname(CONFIG(HD44780_db4)));

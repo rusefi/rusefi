@@ -19,7 +19,7 @@ static gppwm_Map3D_t* tables[] = {
 	&table4,
 };
 
-void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initGpPwm() {
 	for (size_t i = 0; i < efi::size(channels); i++) {
 		auto& cfg = CONFIG(gppwm)[i];
 

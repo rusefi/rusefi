@@ -156,7 +156,7 @@ static FsioResult doBinaryNumeric(le_action_e action, float v1, float v2) {
 /**
  * @return true in case of error, false otherwise
  */
-FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult LECalculator::processElement(const LEElement *element) {
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", unexpected);
 #endif
@@ -226,7 +226,7 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 	}
 }
 
-float LECalculator::evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float LECalculator::evaluate(const char * msg, float selfValue, const LEElement* element) {
 	if (!element) {
 		warning(CUSTOM_NO_FSIO, "%s no FSIO code", msg);
 		return NAN;

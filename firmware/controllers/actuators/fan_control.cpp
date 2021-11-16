@@ -4,7 +4,7 @@
 
 #include "bench_test.h"
 
-static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped) {
 	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking();
@@ -32,7 +32,7 @@ static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t f
 	}
 }
 
-void updateFans(bool acActive DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void updateFans(bool acActive) {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing

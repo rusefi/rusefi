@@ -7,10 +7,10 @@
 
 #pragma once
 
-angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX);
-void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+angle_t getAdvance(int rpm, float engineLoad);
+void initTimingMap();
 float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore);
 float getInitialAdvance(int rpm, float map, float advanceMax);
-void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX);
-angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+void buildTimingMap(float advanceMax);
+angle_t getAdvanceCorrections(int rpm);
+size_t getMultiSparkCount(int rpm);

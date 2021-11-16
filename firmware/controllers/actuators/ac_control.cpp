@@ -8,7 +8,7 @@ static Deadband<200> maxRpmDeadband;
 static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
 
-bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool AcState::getAcState() {
 	latest_usage_ac_control = getTimeNowSeconds();
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
@@ -51,7 +51,7 @@ bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return acButtonState;
 }
 
-bool AcState::updateAc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool AcState::updateAc() {
 	bool isEnabled = getAcState();
 
 	enginePins.acRelay.setValue(isEnabled);

@@ -35,7 +35,6 @@ bool CsvReader::haveMore() {
 
 void CsvReader::processLine(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
-	EXPAND_Engine
 
 	const char s[2] = ",";
 	char *line = buffer;

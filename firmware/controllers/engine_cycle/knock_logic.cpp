@@ -118,8 +118,6 @@ static uint8_t cylinderIndexCopy;
 // Called when its time to start listening for knock
 // Does some math, then hands off to the driver to start any sampling hardware
 static void startKnockSampling(Engine* engine) {
-	EXPAND_Engine;
-
 	if (!engine->rpmCalculator.isRunning()) {
 		return;
 	}

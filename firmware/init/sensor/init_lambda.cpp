@@ -23,7 +23,7 @@ static AemXSeriesWideband aem1(0, SensorType::Lambda1);
 static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
-void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initLambda() {
 	afrWrapper.inject();
 
 #if EFI_CAN_SUPPORT

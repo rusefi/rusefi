@@ -49,7 +49,7 @@ static PidIndustrial industrialWithOverrideIdlePid;
 static PidCic idleCicPid;
 #endif //EFI_IDLE_PID_CIC
 
-Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+Pid * getIdlePid() {
 #if EFI_IDLE_PID_CIC
 	if (CONFIG(useCicPidForIdle)) {
 		return &idleCicPid;
@@ -66,7 +66,7 @@ void idleDebug(const char *msg, percent_t value) {
 	efiPrintf("idle debug: %s%.2f", msg, value);
 }
 
-static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void showIdleInfo() {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	efiPrintf("useStepperIdle=%s useHbridges=%s",
 			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridgesToDriveIdleStepper)));
@@ -107,7 +107,7 @@ static void showIdleInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setIdleMode(idle_mode_e value) {
 	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
 	showIdleInfo();
 }
@@ -280,12 +280,12 @@ static void blipIdle(int idlePosition, int durationMs) {
 #endif // EFI_UNIT_TEST
 }
 
-static void finishIdleTestIfNeeded(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void finishIdleTestIfNeeded() {
 	if (engine->timeToStopIdleTest != 0 && getTimeNowUs() > engine->timeToStopIdleTest)
 		engine->timeToStopIdleTest = 0;
 }
 
-static void undoIdleBlipIfNeeded(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void undoIdleBlipIfNeeded() {
 	if (engine->timeToStopBlip != 0 && getTimeNowUs() > engine->timeToStopBlip) {
 		engine->timeToStopBlip = 0;
 	}
@@ -492,7 +492,7 @@ bool isIdlingOrTaper() {
 	return idleControllerInstance.isIdlingOrTaper();
 }
 
-static void applyPidSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void applyPidSettings() {
 	getIdlePid()->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 	iacPidMultMap.init(CONFIG(iacPidMultTable), CONFIG(iacPidMultLoadBins), CONFIG(iacPidMultRpmBins));
 }
@@ -565,7 +565,7 @@ void startIdleBench(void) {
 
 #endif /* EFI_UNIT_TEST */
 
-void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startIdleThread() {
 	idleControllerInstance.inject();
 	idleControllerInstance.init(&CONFIG(idleTimingPid));
 	industrialWithOverrideIdlePid.inject();
@@ -600,7 +600,7 @@ void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #endif /* EFI_IDLE_CONTROL */
 
-void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startPedalPins() {
 #if EFI_PROD_CODE
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
@@ -626,7 +626,7 @@ void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
-void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void stopPedalPins() {
 	brain_pin_markUnused(activeConfiguration.clutchUpPin);
 	brain_pin_markUnused(activeConfiguration.clutchDownPin);
 	brain_pin_markUnused(activeConfiguration.throttlePedalUpPin);

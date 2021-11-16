@@ -172,7 +172,7 @@ static void endAveraging(void*) {
 	mapAveragingPin.setLow();
 }
 
-static void applyMapMinBufferLength(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void applyMapMinBufferLength() {
 	// check range
 	mapMinBufferLength = maxI(minI(CONFIG(mapMinBufferLength), MAX_MAP_BUFFER_LENGTH), 1);
 	// reset index
@@ -192,7 +192,7 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif /* EFI_TUNER_STUDIO */
 
-void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void refreshMapAveragingPreCalc() {
 	int rpm = GET_RPM();
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
@@ -226,7 +226,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
 void mapAveragingTriggerCallback(
-		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index, efitick_t edgeTimestamp) {
 #if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
 	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
@@ -292,7 +292,7 @@ static void showMapStats() {
 	efiPrintf("per revolution %d", measurementsPerRevolution);
 }
 
-void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initMapAveraging() {
 #if !EFI_UNIT_TEST
 	addConsoleAction("faststat", showMapStats);
 #endif /* EFI_UNIT_TEST */

@@ -79,8 +79,6 @@ void chDbgAssert(int c, char *msg, void *arg);
 	EngineTestHelper eth(x, callback, std::unordered_map<SensorType, float>{}); \
 	EXPAND_EngineTestHelper;
 
-#define CONFIG_PARAM(x) CONFIG(x)
-
 #ifdef __cplusplus
 namespace chibios_rt {
 	// Noop for unit tests - this does real lock in FW/sim

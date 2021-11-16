@@ -135,13 +135,13 @@ static uint64_t binaryLogCount = 0;
  * This is useful if we are changing engine mode dynamically
  * For example http://rusefi.com/forum/viewtopic.php?f=5&t=1085
  */
-static int packEngineMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static int packEngineMode() {
 	return (engineConfiguration->fuelAlgorithm << 4) +
 			(engineConfiguration->injectionMode << 2) +
 			engineConfiguration->ignitionMode;
 }
 
-static float getAirFlowGauge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static float getAirFlowGauge() {
 	return Sensor::get(SensorType::Maf).value_or(engine->engineState.airFlow);
 }
 
@@ -681,7 +681,7 @@ static void updateTpsDebug() {
 	tsOutputChannels.debugFloatField5 = 100 * Sensor::getOrZero(SensorType::Tps1Primary) / Sensor::getOrZero(SensorType::Tps1Secondary);
 }
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 #if EFI_SHAFT_POSITION_INPUT
 	int rpm = Sensor::get(SensorType::Rpm).Value;
 #else /* EFI_SHAFT_POSITION_INPUT */
@@ -885,7 +885,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_
 	}
 }
 
-void updateCurrentEnginePhase(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updateCurrentEnginePhase() {
 	if (auto phase = engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt())) {
 		tsOutputChannels.currentEnginePhase = phase.Value - tdcPosition();
 	} else {

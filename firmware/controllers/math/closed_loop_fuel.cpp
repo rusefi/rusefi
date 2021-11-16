@@ -45,7 +45,7 @@ size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 	return 3;
 }
 
-static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static bool shouldCorrect() {
 	const auto& cfg = CONFIG(stft);
 
 	// User disable bit
@@ -73,7 +73,7 @@ static bool shouldCorrect(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return true;
 }
 
-bool shouldUpdateCorrection(SensorType sensor DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool shouldUpdateCorrection(SensorType sensor) {
 	const auto& cfg = CONFIG(stft);
 
 	// Pause (but don't reset) correction if the AFR is off scale.
@@ -86,7 +86,7 @@ bool shouldUpdateCorrection(SensorType sensor DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return true;
 }
 
-ClosedLoopFuelResult fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+ClosedLoopFuelResult fuelClosedLoopCorrection() {
 	if (!shouldCorrect()) {
 		return {};
 	}

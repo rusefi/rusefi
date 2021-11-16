@@ -75,7 +75,7 @@ static FastInterpolation bosch2_5(0.4 /* volts */, 20 /* kPa */, 4.65 /* volts *
 
 static FastInterpolation *getDecoder(air_pressure_sensor_type_e type);
 
-float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig) {
 	switch (mapConfig->type) {
 	case MT_CUSTOM:
 		// todo: migrate to 'FastInterpolation customMap'
@@ -106,7 +106,7 @@ float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DEC
  * This function checks if Baro/MAP sensor value is inside of expected range
  * @return unchanged mapKPa parameter or NaN
  */
-static float validateBaroMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float validateBaroMap(float mapKPa) {
 	const float atmoPressure = 100.0f;
 	const float atmoPressureRange = 15.0f;	// 85..115
 	if (cisnan(mapKPa) || absF(mapKPa - atmoPressure) > atmoPressureRange) {
@@ -116,7 +116,7 @@ static float validateBaroMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return mapKPa;
 }
 
-float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getBaroPressure() {
 	// Override the real Baro sensor with the stored initial MAP value, if the option is set.
 	if (CONFIG(useFixedBaroCorrFromMap))
 		return storedInitialBaroPressure;
@@ -160,7 +160,7 @@ static FastInterpolation *getDecoder(air_pressure_sensor_type_e type) {
 	}
 }
 
-static void applyConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void applyConfiguration() {
 	air_pressure_sensor_config_s * apConfig = &engineConfiguration->map.sensor;
 	customMap.init(0, apConfig->lowValue, 5, apConfig->highValue);
 }
@@ -208,7 +208,7 @@ static void printMAPInfo() {
 #endif /* EFI_PROD_CODE */
 
 
-void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initMapDecoder() {
 	applyConfiguration();
 
 	if (CONFIG(useFixedBaroCorrFromMap)) {
@@ -231,7 +231,7 @@ void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #else /* EFI_ANALOG_SENSORS */
 
-void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initMapDecoder() {
 }
 
 #endif /* EFI_ANALOG_SENSORS */

@@ -188,7 +188,6 @@ void EngineTestHelper::smartFireFall(float delayMs) {
 void EngineTestHelper::firePrimaryTriggerRise() {
 	efitick_t nowNt = getTimeNowNt();
 	Engine *engine = &this->engine;
-	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt);
 	handleShaftSignal(0, true, nowNt);
 }
@@ -196,7 +195,6 @@ void EngineTestHelper::firePrimaryTriggerRise() {
 void EngineTestHelper::firePrimaryTriggerFall() {
 	efitick_t nowNt = getTimeNowNt();
 	Engine *engine = &this->engine;
-	EXPAND_Engine;
 	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt);
 	handleShaftSignal(0, false, nowNt);
 }
@@ -355,7 +353,6 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 
 void EngineTestHelper::applyTriggerWaveform() {
 	Engine *engine = &this->engine;
-	EXPAND_Engine
 
 	ENGINE(initializeTriggerWaveform());
 
@@ -365,14 +362,13 @@ void EngineTestHelper::applyTriggerWaveform() {
 // todo: open question if this is worth a helper method or should be inlined?
 void EngineTestHelper::assertRpm(int expectedRpm, const char *msg) {
 	Engine *engine = &this->engine;
-	EXPAND_Engine
+
 	EXPECT_EQ(expectedRpm, GET_RPM()) << msg;
 }
 
 void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode,
 		trigger_type_e trigger) {
 	Engine *engine = &eth->engine;
-	EXPAND_Engine
 
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
 	engineConfiguration->specs.cylindersCount = 4;
@@ -390,7 +386,7 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	eth->setTriggerType(trigger);
 }
 
-void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void EngineTestHelper::setTriggerType(trigger_type_e trigger) {
 	engineConfiguration->trigger.type = trigger;
 	incrementGlobalConfigurationVersion();
 	ASSERT_EQ( 1, engine.triggerCentral.isTriggerConfigChanged()) << "trigger #2";

@@ -16,7 +16,7 @@
 #if EFI_HPFP
 
 
-void initHPFP(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initHPFP() {
 	// Deleted to make new code diff easier
 }
 

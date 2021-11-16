@@ -169,7 +169,7 @@ void turnOnTriggerInputPins() {
 }
 
 #if 0
-static int getDacValue(uint8_t voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static int getDacValue(uint8_t voltage) {
 	constexpr float maxDacValue = 255.0f;	// 8-bit DAC
 	return (int)efiRound(maxDacValue * (float)voltage * VOLTAGE_1_BYTE_PACKING_DIV / CONFIG(adcVcc), 1.0f);
 }

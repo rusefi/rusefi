@@ -41,8 +41,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 		bool isVvt,
 		int vvtBankIndex,
 		int vvtOffset,
-		std::vector<std::shared_ptr<TriggerCallback>>& ptrs
-		DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		std::vector<std::shared_ptr<TriggerCallback>>& ptrs) {
 	int totalIndex = 0;
 
 	/**

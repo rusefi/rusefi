@@ -107,7 +107,7 @@ Engine * engine;
 #endif /* EFI_UNIT_TEST */
 
 
-void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initDataStructures() {
 #if EFI_ENGINE_CONTROL
 	initFuelMap();
 	initTimingMap();
@@ -117,7 +117,7 @@ void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if !EFI_UNIT_TEST
 
-static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+static void doPeriodicSlowCallback();
 
 class PeriodicFastController : public PeriodicTimerController {
 	void PeriodicTask() override {
@@ -194,7 +194,7 @@ static void resetAccel() {
 	}
 }
 
-static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void doPeriodicSlowCallback() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 
@@ -250,7 +250,7 @@ static void doPeriodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initPeriodicEvents() {
 	slowController.Start();
 	fastController.Start();
 }
@@ -490,7 +490,7 @@ static void initConfigActions() {
 #endif /* EFI_UNIT_TEST */
 
 // this method is used by real firmware and simulator and unit test
-void commonInitEngineController(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void commonInitEngineController() {
 	initInterpolation();
 
 #if EFI_SIMULATOR
@@ -690,7 +690,7 @@ bool validateConfig() {
 
 #if !EFI_UNIT_TEST
 
-void initEngineContoller(DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initEngineContoller() {
 	addConsoleAction("analoginfo", printAnalogInfo);
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL

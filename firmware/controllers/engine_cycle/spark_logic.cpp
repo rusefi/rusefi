@@ -67,7 +67,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 		} \
 }
 
-static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_t sparkDwell, IgnitionEvent *event DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_t sparkDwell, IgnitionEvent *event) {
 	// todo: clean up this implementation? does not look too nice as is.
 
 	// let's save planned duration so that we can later compare it with reality
@@ -296,8 +296,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
 		efitick_t edgeTimestamp,
 		angle_t angle,
-		action_s action
-		DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		action_s action) {
 	event->position.setAngle(angle);
 
 	/**
@@ -339,7 +338,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 }
 
 static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
-		int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		int rpm, efitick_t edgeTimestamp) {
 
 	angle_t sparkAngle = event->sparkAngle;
 	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
@@ -423,7 +422,7 @@ static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Ignition
 #endif
 }
 
-void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initializeIgnitionActions() {
 	IgnitionEventList *list = &engine->ignitionEvents;
 	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
 	floatms_t sparkDwell = ENGINE(engineState.sparkDwell);
@@ -442,7 +441,7 @@ void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	list->isReady = true;
 }
 
-static void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void prepareIgnitionSchedule() {
 	ScopePerf perf(PE::PrepareIgnitionSchedule);
 	
 	/**
@@ -471,7 +470,7 @@ static void prepareIgnitionSchedule(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initializeIgnitionActions();
 }
 
-static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	AngleBasedEvent *current, *tmp;
 
 	LL_FOREACH_SAFE2(ENGINE(angleBasedEventsHead), current, tmp, nextToothEvent)
@@ -501,7 +500,7 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, 
 }
 
 void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp
-		 DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		) {
 
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
@@ -546,7 +545,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
  * Number of sparks per physical coil
  * @see getNumberOfInjections
  */
-int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+int getNumberOfSparks(ignition_mode_e mode) {
 	switch (mode) {
 	case IM_ONE_COIL:
 		return engineConfiguration->specs.cylindersCount;
@@ -565,7 +564,7 @@ int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * @see getInjectorDutyCycle
  */
-percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+percent_t getCoilDutyCycle(int rpm) {
 	floatms_t totalPerCycle = ENGINE(engineState.sparkDwell) * getNumberOfSparks(getCurrentIgnitionMode());
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;

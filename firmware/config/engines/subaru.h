@@ -10,4 +10,4 @@
 void setSubaru2003Wrx();
 void setSubaruEJ20GDefaults();
 void setSubaruEJ18_MRE();
-void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void setSubaruEG33Defaults();

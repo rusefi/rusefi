@@ -9,10 +9,10 @@
 
 #include "engine_ptr.h"
 
-void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void updateDynoView();
+void updateDynoViewCan();
+float getDynoviewAcceleration();
+int getDynoviewPower();
 
 typedef enum{
     ICU = 0,

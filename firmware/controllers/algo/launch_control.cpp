@@ -137,7 +137,7 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
-void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initLaunchControl() {
 	engine->launchController.inject();
 }
 

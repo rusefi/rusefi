@@ -7,7 +7,7 @@
 #include "engine_ptr.h"
 
 // Call this once at startup to initialize, configure, and subscribe sensors
-void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initNewSensors();
 
 void stopSensors();
 
@@ -15,24 +15,24 @@ void stopSensors();
 // can be reconfigured with the new settings.
 // Note: this may not be necessarily possible for all sensors, so some may
 // do nothing when this is called.
-void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void reconfigureSensors();
 
 // Internal init functions for individual systems
 // Sensor init/config
 void initVbatt();
 void initMaf();
-void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initMap();
 void initTps();
 void initOilPressure();
 void initThermistors();
 void initCanSensors();
-void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initLambda();
 void initFlexSensor();
 void initFuelLevel();
 void initBaro();
 void initAuxSensors();
-void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initTurbochargerSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initVehicleSpeedSensor();
+void initTurbochargerSpeedSensor();
 
 // Sensor reconfiguration
 void deinitVbatt();

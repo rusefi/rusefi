@@ -151,7 +151,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 #endif /* EFI_PROD_CODE */
 }
 
-static void doPrintConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void doPrintConfiguration() {
 	printConfiguration(engineConfiguration);
 }
 
@@ -366,7 +366,7 @@ static void setInjectorLag(float voltage, float value) {
 	setCurveValue(INJECTOR_LAG_CURVE, voltage, value);
 }
 
-static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void setToothedWheel(int total, int skipped) {
 	if (total < 1 || skipped >= total) {
 		efiPrintf("invalid parameters %d %d", total, skipped);
 		return;
@@ -1299,7 +1299,7 @@ void initSettings(void) {
 
 #endif /* !EFI_UNIT_TEST */
 
-void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setEngineType(int value) {
 	{
 #if EFI_PROD_CODE
 		chibios_rt::CriticalSectionLocker csl;

@@ -17,7 +17,7 @@
 #include "console_io.h"
 #endif /* EFI_PROD_CODE */
 
-void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void efiSetPadUnused(brain_pin_e brainPin) {
 #if EFI_PROD_CODE
 	/* input with pull up, is it safe? */
 	iomode_t mode = PAL_STM32_MODE_INPUT | PAL_STM32_PUPDR_PULLUP;
@@ -45,7 +45,7 @@ void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * This method would set an error condition if pin is already used
  */
-void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
 	if (!isBrainPinValid(brainPin)) {
 		// No pin configured, nothing to do here.
 		return;

@@ -24,21 +24,21 @@
 void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
-void setTargetRpmCurve(int rpm DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setTargetRpmCurve(int rpm);
+void setWholeIgnitionIatCorr(float value);
+void setFuelTablesLoadBin(float minValue, float maxValue);
+void setWholeIatCorrTimingTable(float value);
+void setWholeTimingTable_d(angle_t value);
 #define setWholeTimingTable(x) setWholeTimingTable_d(x);
-void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setConstantDwell(floatms_t dwellMs);
 
 // needed by bootloader
 void setDefaultBasePins();
 
 void setDefaultSdCardParameters();
 
-void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void onBurnRequest();
+void incrementGlobalConfigurationVersion();
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
@@ -50,14 +50,14 @@ typedef void (*configuration_callback_t)(engine_configuration_s*);
 
 #ifdef __cplusplus
 // because of 'Logging' class parameter these functions are visible only to C++ code but C code
-void loadConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void loadConfiguration();
 /**
  * boardCallback is invoked after configuration reset but before specific engineType configuration
  */
-void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
-void resetConfigurationExt(engine_type_e engineType DECLARE_ENGINE_PARAMETER_SUFFIX);
+void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e engineType);
+void resetConfigurationExt(engine_type_e engineType);
 
-void rememberCurrentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void rememberCurrentConfiguration();
 #endif /* __cplusplus */
 
 void setBoardDefaultConfiguration(void);

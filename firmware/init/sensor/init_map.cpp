@@ -110,7 +110,7 @@ void configureMapFunction() {
 	);
 }
 
-void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initMap() {
 	baroWrapper.inject();
 
 	auto mapChannel = engineConfiguration->map.sensor.hwChannel;

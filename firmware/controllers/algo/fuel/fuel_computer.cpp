@@ -59,7 +59,7 @@ float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
 	return getLoadOverride(defaultLoad, CONFIG(afrOverrideMode));
 }
 
-float getLoadOverride(float defaultLoad, afr_override_e overrideMode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getLoadOverride(float defaultLoad, afr_override_e overrideMode) {
 	switch(overrideMode) {
 		case AFR_None: return defaultLoad;
 		// MAP default to 200kpa - failed MAP goes rich

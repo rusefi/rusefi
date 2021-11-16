@@ -20,7 +20,7 @@ ButtonShiftController::ButtonShiftController() :
 
 }
 
-void ButtonShiftController::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void ButtonShiftController::init() {
 	// 500 millisecond is maybe a little long?
 	debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
 	debounceDown.init(500, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
@@ -82,7 +82,7 @@ void ButtonShiftController::update() {
 }
 
 
-void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initButtonShift() {
     buttonShiftController.init();
     engine->gearController = &buttonShiftController;
     buttonShiftController.inject();

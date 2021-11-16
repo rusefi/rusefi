@@ -239,7 +239,7 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
-		uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index, efitick_t nowNt) {
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
@@ -312,14 +312,13 @@ static char rpmBuffer[_MAX_FILLER];
  * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the rusEfi console
  * digital sniffer.
  */
-static void onTdcCallback(Engine *engine) {
-	UNUSED(engine);
+static void onTdcCallback(void *) {
 #if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
 		return;
 	}
 #endif /* EFI_UNIT_TEST */
-	EXPAND_Engine;
+
 	itoa10(rpmBuffer, GET_RPM());
 #if EFI_ENGINE_SNIFFER
 	waveChart.startDataCollection();
@@ -334,7 +333,7 @@ static void onTdcCallback(Engine *engine) {
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 void tdcMarkCallback(
-		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index0, efitick_t edgeTimestamp) {
 	bool isTriggerSynchronizationPoint = index0 == 0;
 	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled) && ENGINE(tdcMarkEnabled)) {
 		// two instances of scheduling_s are needed to properly handle event overlap
@@ -345,8 +344,7 @@ void tdcMarkCallback(
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
 			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
-			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
-					{ onTdcCallback, engine });
+			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition, onTdcCallback);
 		}
 	}
 }
@@ -355,7 +353,7 @@ void tdcMarkCallback(
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
-float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getCrankshaftAngleNt(efitick_t timeNt) {
 	float timeSinceZeroAngle = engine->rpmCalculator.lastTdcTimer.getElapsedSeconds(timeNt);
 
 	int rpm = GET_RPM();
@@ -365,7 +363,7 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return rpm == 0 ? NAN : timeSinceZeroAngle / oneDegreeSeconds;
 }
 
-void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initRpmCalculator() {
 	ENGINE(rpmCalculator).inject();
 
 #if ! HW_CHECK_MODE
@@ -387,7 +385,7 @@ void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * it takes the crankshaft to rotate to the specified angle.
  */
 efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
-		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		action_s action) {
 	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
 
     // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons

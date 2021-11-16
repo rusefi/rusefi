@@ -10,7 +10,7 @@
 #include "engine_ptr.h"
 #include "timer.h"
 
-void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initLaunchControl();
 
 class LaunchControlBase : public EnginePtr {
 public:

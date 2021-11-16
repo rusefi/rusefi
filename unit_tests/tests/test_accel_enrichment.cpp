@@ -73,7 +73,7 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	ASSERT_EQ(expectedInvocationCounter, ENGINE(tpsAccelEnrichment).onUpdateInvocationCounter);
 }
 
-static void doFractionalTpsIteration(int period, int divisor, int numCycles, std::vector<floatms_t> &tpsEnrich DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void doFractionalTpsIteration(int period, int divisor, int numCycles, std::vector<floatms_t> &tpsEnrich) {
 	// every cycle
 	engineConfiguration->tpsAccelFractionPeriod = period;
 	// split into 2 portions

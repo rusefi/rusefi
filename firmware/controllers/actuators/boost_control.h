@@ -42,7 +42,7 @@ private:
 };
 
 void startBoostPin();
-void initBoostCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initBoostCtrl();
 void setDefaultBoostParameters();
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);
 

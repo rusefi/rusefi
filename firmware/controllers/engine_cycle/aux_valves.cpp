@@ -53,7 +53,7 @@ void auxPlainPinTurnOn(AuxActor *current) {
 			);
 	}
 
-void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initAuxValves() {
 	if (!isBrainPinValid(engineConfiguration->auxValves[0])) {
 		return;
 	}
@@ -79,7 +79,7 @@ void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void recalculateAuxValveTiming() {
 	if (!isBrainPinValid(engineConfiguration->auxValves[0])) {
 		return;
 	}

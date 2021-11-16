@@ -10,21 +10,21 @@
 
 bool validateConfig();
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
-void initPeriodicEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initEngineContoller(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void commonInitEngineController(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initStartStopButton(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initPeriodicEvents();
+void initEngineContoller();
+void commonInitEngineController();
+void initStartStopButton();
 
-void initDataStructures(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initDataStructures();
 
-void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void slowStartStopButtonCallback();
 
 #if EFI_ENABLE_MOCK_ADC
-void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockVoltage(int hwChannel, float voltage);
 #endif
 
-void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setMockMapVoltage(float voltage);
+void setMockAfrVoltage(float voltage);
+void setMockMafVoltage(float voltage);
 
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);

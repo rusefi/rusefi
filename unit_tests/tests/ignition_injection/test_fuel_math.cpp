@@ -135,7 +135,7 @@ TEST(AirmassModes, VeOverride) {
 	EXPECT_FLOAT_EQ(ENGINE(engineState.currentVeLoad), 30.0f);
 }
 
-void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setInjectionMode(int value);
 
 TEST(FuelMath, testDifferentInjectionModes) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);

@@ -25,7 +25,7 @@ StepperMotor iacMotor CCM_OPTIONAL;
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
 
-void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void applyIACposition(percent_t position) {
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
@@ -77,7 +77,7 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(secondSolenoidPin);
 }
 
-bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool isIdleMotorBusy() {
 	if (!CONFIG(useStepperIdle)) {
 		// todo: check other motor types?
 		return false;
@@ -85,7 +85,7 @@ bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return iacMotor.isBusy();
 }
 
-void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initIdleHardware() {
 	if (CONFIG(useStepperIdle)) {
 		StepperHw* hw;
 

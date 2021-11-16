@@ -81,7 +81,7 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 #endif // EFI_PROD_CODE
 }
 
-void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void RegisteredOutputPin::init() {
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
     pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
 
@@ -464,7 +464,7 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
-void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initOutputPins() {
 #if EFI_GPIO_HARDWARE
 
 #if HAL_USE_SPI

@@ -195,23 +195,23 @@ public:
 	 * Stores last non-zero instant RPM value to fix early instability
 	 */
 	float prevInstantRpmValue = 0;
-	void movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void movePreSynchTimestamps();
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	void updateInstantRpm(
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
-		uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+		uint32_t index, efitick_t nowNt);
 #endif
 	/**
 	 * Update timeOfLastEvent[] on every trigger event - even without synchronization
 	 * Needed for early spin-up RPM detection.
 	 */
-	void setLastEventTimeForInstantRpm(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setLastEventTimeForInstantRpm(efitick_t nowNt);
 
 private:
 	float calculateInstantRpm(
 		TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
-		uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+		uint32_t index, efitick_t nowNt);
 
 	float m_instantRpm = 0;
 	float m_instantRpmRatio = 0;
@@ -224,7 +224,6 @@ class Engine;
 
 void calculateTriggerSynchPoint(
 	TriggerWaveform& shape,
-	TriggerState& state
-	DECLARE_ENGINE_PARAMETER_SUFFIX);
+	TriggerState& state);
 
-void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX);
+void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details);

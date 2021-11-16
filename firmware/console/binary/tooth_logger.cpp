@@ -76,7 +76,7 @@ static void setToothLogReady(bool value) {
 #endif // EFI_TUNER_STUDIO
 }
 
-static void SetNextCompositeEntry(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void SetNextCompositeEntry(efitick_t timestamp) {
 	uint32_t nowUs = NT2US(timestamp);
 	
 	// TS uses big endian, grumble
@@ -106,7 +106,7 @@ static void SetNextCompositeEntry(efitick_t timestamp DECLARE_ENGINE_PARAMETER_S
 
 }
 
-void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
 		return;
@@ -164,7 +164,7 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 	SetNextCompositeEntry(timestamp);
 }
 
-void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void LogTriggerTopDeadCenter(efitick_t timestamp) {
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
 		return;
@@ -175,7 +175,7 @@ void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX
 	SetNextCompositeEntry(timestamp + 10);
 }
 
-void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void LogTriggerCoilState(efitick_t timestamp, bool state) {
 	if (!ToothLoggerEnabled) {
 		return;
 	}
@@ -184,7 +184,7 @@ void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETE
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
-void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void LogTriggerInjectorState(efitick_t timestamp, bool state) {
 	if (!ToothLoggerEnabled) {
 		return;
 	}

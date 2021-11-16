@@ -102,10 +102,10 @@
 void cjPostState(TunerStudioOutputChannels *tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */
 
-void initCJ125(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initCJ125();
 
 void cjRestart(void);
 void cjStartCalibration(void);
-float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float cjGetAfr();
 bool cjHasAfrSensor();
 void cj125defaultPinout();

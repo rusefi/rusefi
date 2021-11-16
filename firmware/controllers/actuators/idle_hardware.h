@@ -9,6 +9,6 @@
 
 #pragma once
 
-void initIdleHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initIdleHardware();
 bool isIdleHardwareRestartNeeded();
-bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool isIdleMotorBusy();

@@ -703,7 +703,7 @@ static void showEthInfo() {
 #endif /* EFI_PROD_CODE */
 }
 
-static void etbPidReset(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		if (auto controller = engine->etbControllers[i]) {
 			controller->reset();
@@ -909,14 +909,14 @@ void unregisterEtbPins() {
 	// todo: we probably need an implementation here?!
 }
 
-static pid_s* getEtbPidForFunction(etb_function_e function DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static pid_s* getEtbPidForFunction(etb_function_e function) {
 	switch (function) {
 		case ETB_Wastegate: return &CONFIG(etbWastegatePid);
 		default: return &CONFIG(etb);
 	}
 }
 
-void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void doInitElectronicThrottle() {
 	efiAssertVoid(OBD_PCM_Processor_Fault, engine->etbControllers != NULL, "etbControllers NULL");
 #if EFI_PROD_CODE
 	addConsoleAction("ethinfo", showEthInfo);
@@ -988,7 +988,7 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initElectronicThrottle() {
 	if (hasFirmwareError()) {
 		return;
 	}
@@ -1002,7 +1002,7 @@ void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	doInitElectronicThrottle();
 }
 
-void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setEtbIdlePosition(percent_t pos) {
 	if (!Sensor::hasSensor(SensorType::AcceleratorPedal)) {
 		firmwareError(CUSTOM_NO_ETB_FOR_IDLE, "ETB idle does not work with unhappy accelerator pedal.");
 		return;
@@ -1015,7 +1015,7 @@ void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setEtbWastegatePosition(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
 			etb->setWastegatePosition(pos);

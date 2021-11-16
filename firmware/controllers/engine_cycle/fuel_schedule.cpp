@@ -29,7 +29,7 @@ void FuelSchedule::resetOverlapping() {
 /**
  * @returns false in case of error, true if success
  */
-bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine is NULL", false);
 
 	floatus_t oneDegreeUs = ENGINE(rpmCalculator.oneDegreeUs); // local copy
@@ -128,7 +128,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	return true;
 }
 
-void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void FuelSchedule::addFuelEvents() {
 	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
@@ -143,7 +143,7 @@ void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	isReady = true;
 }
 
-void FuelSchedule::onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void FuelSchedule::onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt) {
 	// Wait for schedule to be built - this happens the first time we get RPM
 	if (!isReady) {
 		return;

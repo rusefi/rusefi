@@ -47,7 +47,7 @@ void WarningCodeState::addWarningCode(obd_code_e code) {
 /**
  * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
  */
-bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) const {
+bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator) const {
 	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
 	return absI(now - timeOfPreviousWarning) < period;
 }
@@ -57,7 +57,7 @@ MockAdcState::MockAdcState() {
 }
 
 #if EFI_ENABLE_MOCK_ADC
-void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
 	efiPrintf("fake voltage: channel %d value %.2f", hwChannel, voltage);
 
@@ -91,10 +91,10 @@ EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
 }
 
-void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EngineState::updateSlowSensors() {
 }
 
-void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EngineState::periodicFastCallback() {
 	ScopePerf perf(PE::EngineStatePeriodicFastCallback);
 
 #if EFI_ENGINE_CONTROL
@@ -177,7 +177,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_ENGINE_CONTROL
 }
 
-void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void EngineState::updateTChargeK(int rpm, float tps) {
 #if EFI_ENGINE_CONTROL
 	float newTCharge = getTCharge(rpm, tps);
 	// convert to microsecs and then to seconds
@@ -218,7 +218,7 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 	}
 }
 
-void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void StartupFuelPumping::update() {
 	if (GET_RPM() == 0) {
 		bool isTpsAbove50 = Sensor::getOrZero(SensorType::DriverThrottleIntent) >= 50;
 

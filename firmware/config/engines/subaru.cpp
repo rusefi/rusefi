@@ -65,7 +65,7 @@ void setSubaruEJ18_MRE() {
  * Subaru SVX (Alcyone SVX)
  */
 
-void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setSubaruEG33Defaults() {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 
 	engineConfiguration->trigger.type = TT_SUBARU_SVX;

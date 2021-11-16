@@ -14,7 +14,7 @@
 
 #define TEST_POOL_SIZE 256
 
-FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult getEngineValue(le_action_e action) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;

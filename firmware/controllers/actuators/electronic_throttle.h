@@ -11,11 +11,11 @@
 #include "closed_loop_controller.h"
 #include "rusefi_types.h"
 
-void initElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initElectronicThrottle();
+void doInitElectronicThrottle();
 
-void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setEtbIdlePosition(percent_t pos);
+void setEtbWastegatePosition(percent_t pos);
 void setHitachiEtbCalibration();
 
 // these two sensors use same plug but have different calibrations and even rotate in different directions

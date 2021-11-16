@@ -14,7 +14,7 @@ CJ125::CJ125() : wboHeaterControl("wbo"),
 		heaterPid(&heaterPidConfig) {
 }
 
-void CJ125::SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void CJ125::SetHeater(float value) {
 	// limit duty cycle for sensor safety
 	// todo: would be much nicer to have continuous function (vBatt)
 	float maxDuty = (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > CJ125_HEATER_LIMITING_VOLTAGE) ? CJ125_HEATER_LIMITING_RATE : 1.0f;
@@ -29,7 +29,7 @@ void CJ125::SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	wboHeaterControl.setSimplePwmDutyCycle(heaterDuty);
 }
 
-void CJ125::SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void CJ125::SetIdleHeater() {
 	// small preheat for faster start & moisture anti-shock therapy for the sensor
 	SetHeater(CJ125_HEATER_IDLE_RATE);
 }
@@ -38,7 +38,7 @@ bool CJ125::isWorkingState(void) const {
 	return state != CJ125_ERROR && state != CJ125_INIT && state != CJ125_IDLE;
 }
 
-void CJ125::StartHeaterControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void CJ125::StartHeaterControl() {
 	// todo: use custom pin state method, turn pin off while not running
 	startSimplePwmExt(&wboHeaterControl, "wboHeaterPin",
 			&engine->executor,
@@ -83,7 +83,7 @@ void CJ125::printDiag() {
  * @return true in case of positive SPI identification
  *         false in case of unexpected SPI response
  */
-bool CJ125::cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool CJ125::cjIdentify() {
 	efiAssert(OBD_PCM_Processor_Fault, spi!= NULL, "No SPI pointer", false);
 	// read Ident register
 	int ident = spi->ReadRegister(IDENT_REG_RD) & CJ125_IDENT_MASK;
@@ -146,7 +146,7 @@ bool CJ125::isValidState() const {
 	return true;
 }
 
-void CJ125::cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void CJ125::cjInitPid() {
 	if (engineConfiguration->cj125isLsu49) {
 		heaterPidConfig.pFactor = CJ125_PID_LSU49_P;
 		heaterPidConfig.iFactor = CJ125_PID_LSU49_I;

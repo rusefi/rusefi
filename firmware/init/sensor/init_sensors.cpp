@@ -47,7 +47,7 @@ static void deInitOldAnalogInputs() {
 	deInitIfValid("CJ125 UA", activeConfiguration.cj125ua);
 }
 
-void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initNewSensors() {
 #if EFI_CAN_SUPPORT
 	initCanSensors();
 #endif
@@ -88,7 +88,7 @@ void stopSensors() {
 	deinitMap();
 }
 
-void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void reconfigureSensors() {
 	initMap();
 	initTps();
 	initOilPressure();

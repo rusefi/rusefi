@@ -13,6 +13,6 @@
 #define gramm_second_to_cc_minute(gs) ((gs) / 0.0119997981)
 #define cc_minute_to_gramm_second(ccm) ((ccm) * 0.0119997981)
 
-temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX);
+temperature_t getTCharge(int rpm, float tps);
 
-void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initSpeedDensity();

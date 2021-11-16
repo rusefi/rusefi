@@ -56,20 +56,14 @@
 //#define RAM_METHOD_PREFIX
 //#endif
 
-void startSimultaniousInjection(Engine *engine) {
-#if EFI_UNIT_TEST
-	EXPAND_Engine;
-#endif // EFI_UNIT_TEST
+void startSimultaniousInjection(void*) {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		enginePins.injectors[i].open(nowNt);
 	}
 }
 
-static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
-#if EFI_UNIT_TEST
-	EXPAND_Engine;
-#endif
+static void endSimultaniousInjectionOnlyTogglePins(void*) {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
 		enginePins.injectors[i].close(nowNt);
@@ -82,7 +76,7 @@ void endSimultaniousInjection(InjectionEvent *event) {
 	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
 }
 
-void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void InjectorOutputPin::open(efitick_t nowNt) {
 	overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
@@ -121,7 +115,7 @@ void turnInjectionPinHigh(InjectionEvent *event) {
 	}
 }
 
-void InjectorOutputPin::close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void InjectorOutputPin::close(efitick_t nowNt) {
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
 		printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
@@ -262,7 +256,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	action_s startAction, endAction;
 	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
 	if (isSimultanious) {
-		startAction = { &startSimultaniousInjection, engine };
+		startAction = startSimultaniousInjection;
 		endAction = { &endSimultaniousInjection, this };
 	} else {
 		// sequential or batch
@@ -287,7 +281,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt) {
 	ScopePerf perf(PE::HandleFuel);
 	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
@@ -341,7 +335,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	if (CONFIG(vvtMode[0]) == VVT_MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
@@ -436,7 +430,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 }
 
 // Check if the engine is not stopped or cylinder cleanup is activated
-static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static bool isPrimeInjectionPulseSkipped() {
 	if (!engine->rpmCalculator.isStopped())
 		return true;
 	return CONFIG(isCylinderCleanupEnabled) && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
@@ -446,7 +440,7 @@ static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
  * See testStartOfCrankingPrimingPulse()
  */
-void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startPrimeInjectionPulse() {
 	engine->primeInjEvent.inject();
 
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
@@ -487,7 +481,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
-void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updatePrimeInjectionPulseState() {
 #if EFI_PROD_CODE
 	static bool counterWasReset = false;
 	if (counterWasReset)
@@ -513,7 +507,7 @@ static void showMainInfo(Engine *engine) {
 #endif /* EFI_PROD_CODE */
 }
 
-void initMainEventListener(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initMainEventListener() {
 	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
 
 #if EFI_PROD_CODE

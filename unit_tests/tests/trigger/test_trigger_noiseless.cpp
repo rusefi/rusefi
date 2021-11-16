@@ -84,7 +84,7 @@ static void resetTrigger(EngineTestHelper &eth) {
 	eth.engine.triggerCentral.triggerState.totalTriggerErrorCounter = 0;
 }
 
-static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorToleranceCnt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorToleranceCnt) {
 	printf("*** (bc->useNoiselessTriggerDecoder = %s)\r\n",
 			CONFIG(useNoiselessTriggerDecoder) ? "true" : "false");
 

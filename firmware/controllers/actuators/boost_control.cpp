@@ -210,7 +210,7 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 	boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
 
-void initBoostCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initBoostCtrl() {
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initAuxPid' is an example of a subsystem without explicit enable
 	if (!CONFIG(isBoostControlEnabled)) {

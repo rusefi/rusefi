@@ -215,7 +215,7 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
-static void turnOnHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void turnOnHardware() {
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	turnOnTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -238,7 +238,7 @@ void stopSpi(spi_device_e device) {
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
 
-void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void applyNewHardwareSettings() {
     /**
      * All 'stop' methods need to go before we begin starting pins.
      *
@@ -386,7 +386,7 @@ void showBor(void) {
 #endif /* EFI_PROD_CODE */
 
 // This function initializes hardware that can do so before configuration is loaded
-void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initHardwareNoConfig() {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
@@ -430,7 +430,7 @@ void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_FILE_LOGGING
 }
 
-void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void stopHardware() {
 	stopPedalPins();
 
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
@@ -453,7 +453,7 @@ void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * This method is invoked both on ECU start and configuration change
  */
-void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startHardware() {
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	startJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
@@ -469,7 +469,7 @@ void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_CAN_SUPPORT */
 }
 
-void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initHardware() {
 #if HAL_USE_PAL && EFI_PROD_CODE
 	efiExtiInit();
 #endif // HAL_USE_PAL

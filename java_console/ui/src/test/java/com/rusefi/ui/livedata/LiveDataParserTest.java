@@ -22,7 +22,7 @@ public class LiveDataParserTest {
 
         VariableValueSource valueSource = values::get;
 
-        String sourceCode = "bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {\n" +
+        String sourceCode = "bool AcState::getAcState() {\n" +
                 "\tauto rpm = Sensor::getOrZero(SensorType::Rpm);\n" +
                 "\n" +
                 "\tengineTooSlow = rpm < 500;\n" +

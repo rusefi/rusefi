@@ -15,7 +15,7 @@ unsigned int getBrainPinTotalNum(void) {
 	return BRAIN_PIN_TOTAL_PINS;
 }
 
-const char* & getBrainUsedPin(unsigned int idx DECLARE_ENGINE_PARAMETER_SUFFIX) {
+const char* & getBrainUsedPin(unsigned int idx) {
 	/*if (idx >= getBrainPinTotalNum())
 		return NULL;*/
 	return ENGINE(pinRepository).PIN_USED[idx];
@@ -53,7 +53,7 @@ int brainPin_to_index(brain_pin_e brainPin) {
  * @return true if this pin was already used, false otherwise
  */
 
-bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 #if ! EFI_BOOTLOADER
 	efiPrintf("%s on %s", msg, hwPortname(brainPin));
 #endif
@@ -81,7 +81,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PAR
  * See also brain_pin_markUsed()
  */
 
-void brain_pin_markUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void brain_pin_markUnused(brain_pin_e brainPin) {
 	int index = brainPin_to_index(brainPin);
 	if (index < 0)
 		return;

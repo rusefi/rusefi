@@ -39,7 +39,7 @@ TriggerEmulatorHelper::TriggerEmulatorHelper() {
 
 static OutputPin emulatorOutputs[PWM_PHASE_MAX_WAVE_PER_PWM];
 
-void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequence& multiChannelStateSequence, int stateIndex) {
 	efitick_t stamp = getTimeNowNt();
 	
 	// todo: code duplication with TriggerStimulatorHelper::feedSimulatedEvent?
@@ -80,7 +80,7 @@ static float getRpmMultiplier(operation_mode_e mode) {
 	return 1;
 }
 
-void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setTriggerEmulatorRPM(int rpm) {
 	engineConfiguration->triggerSimulatorFrequency = rpm;
 	/**
 	 * All we need to do here is to change the periodMs
@@ -98,7 +98,7 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	efiPrintf("Emulating position sensor(s). RPM=%d", rpm);
 }
 
-static void updateTriggerWaveformIfNeeded(PwmConfig *state DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 	if (atTriggerVersion < engine->triggerCentral.triggerShape.version) {
 		atTriggerVersion = engine->triggerCentral.triggerShape.version;
 		efiPrintf("Stimulator: updating trigger shape: %d/%d %d", atTriggerVersion,
@@ -136,7 +136,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 #endif /* EFI_PROD_CODE */
 }
 
-static void initTriggerPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void initTriggerPwm() {
 	// No need to start more than once
 	if (hasInitTriggerEmulator) {
 		return;
@@ -168,7 +168,7 @@ void disableTriggerStimulator() {
 	hasInitTriggerEmulator = false;
 }
 
-void initTriggerEmulatorLogic(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTriggerEmulatorLogic() {
 	addConsoleActionI(CMD_RPM, setTriggerEmulatorRPM);
 }
 
@@ -180,7 +180,7 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 }
 
-void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTriggerEmulator() {
 	efiPrintf("Emulating %s", getEngine_type_e(engineConfiguration->engineType));
 
 	startTriggerEmulatorPins();
@@ -190,7 +190,7 @@ void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #endif /* EFI_UNIT_TEST */
 
-void startTriggerEmulatorPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startTriggerEmulatorPins() {
 	hasStimPins = false;
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
 		triggerSignal.outputPins[i] = &emulatorOutputs[i];

@@ -273,7 +273,7 @@ static void cjUpdateAnalogValues() {
 #endif /* EFI_PROD_CODE */
 }
 
-void CJ125::calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void CJ125::calibrate() {
 	cjIdentify();
 
 	efiPrintf("cj125: Starting calibration...");
@@ -332,7 +332,7 @@ void CJ125::calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	state = CJ125_IDLE;
 }
 
-static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void cjStart() {
 	if (!CONFIG(isCJ125Enabled)) {
 		efiPrintf("cj125 is disabled.");
 		return;
@@ -369,7 +369,7 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif
 }
 
-void CJ125::setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void CJ125::setError(cj125_error_e errCode) {
 	errorCode = errCode;
 	state = CJ125_ERROR;
 	cjPrintErrorCode(errorCode);
@@ -380,7 +380,7 @@ void CJ125::setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_RESET);
 }
 
-static bool cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static bool cjStartSpi() {
 #if HAL_USE_SPI
 	globalInstance.cj125Cs.initPin("cj125 CS", CONFIG(cj125CsPin),
 			&engineConfiguration->cj125CsPinMode);
@@ -405,7 +405,7 @@ static bool cjStartSpi(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @return true if currently in IDLE or ERROR state
  */
-static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static bool cj125periodic(CJ125 *instance) {
 	{
 	efitick_t nowNt = getTimeNowNt();
 		bool isStopped = engine->rpmCalculator.isStopped();
@@ -560,7 +560,7 @@ static void cjSetInit2(int v) {
 }
 #endif /* CJ125_DEBUG */
 
-float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float cjGetAfr() {
 	// See CJ125 datasheet, page 6
 	float pumpCurrent = (globalInstance.vUa - globalInstance.vUaCal) * globalInstance.amplCoeff * (CJ125_PUMP_CURRENT_FACTOR / CJ125_PUMP_SHUNT_RESISTOR);
 	
@@ -595,7 +595,7 @@ void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif /* EFI_TUNER_STUDIO */
 
-void initCJ125(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initCJ125() {
 	globalInstance.spi = &spi;
 
 	if (!CONFIG(isCJ125Enabled)) {

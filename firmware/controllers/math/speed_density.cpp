@@ -26,7 +26,7 @@ baroCorr_Map3D_t baroCorrMap;
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
 /***panel:Charge Temperature*/
-temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
+temperature_t getTCharge(int rpm, float tps) {
 	const auto clt = Sensor::get(SensorType::Clt);
 	const auto iat = Sensor::get(SensorType::Iat);
 
@@ -90,7 +90,7 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return Tcharge;
 }
 
-void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initSpeedDensity() {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	lambdaMap.init(config->lambdaTable, config->lambdaLoadBins, config->lambdaRpmBins);

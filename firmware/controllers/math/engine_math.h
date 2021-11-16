@@ -9,11 +9,11 @@
 
 #include "trigger_structure.h"
 
-void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setAlgorithm(engine_load_mode_e algo);
 
 #define assertEngineReference() efiAssertVoid(CUSTOM_ENGINE_REF, engine != NULL, "engine is NULL")
 
-void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setFlatInjectorLag(float value);
 
 #define fixAngle(angle, msg, code) fixAngle2(angle, msg, code, ENGINE(engineCycle))
 
@@ -31,26 +31,26 @@ void setFlatInjectorLag(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 #define getOneDegreeTimeUs(rpm) (1000000.0f * 60 / 360 / (rpm))
 
 floatms_t getCrankshaftRevolutionTimeMs(int rpm);
-floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+floatms_t getEngineCycleDuration(int rpm);
 
-float getFuelingLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getFuelingLoad();
+float getIgnitionLoad();
 
-floatms_t getSparkDwell(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
+floatms_t getSparkDwell(int rpm);
 
-ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+ignition_mode_e getCurrentIgnitionMode();
 
 /**
  * This lightweight method is invoked in case of a configuration change or initialization.
  * But also it's used for "Spinning-up to Cranking" transition.
  */
-void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAMETER_SUFFIX);
+void prepareIgnitionPinIndices(ignition_mode_e ignitionMode);
 
-int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX);
-int getNextFiringCylinderId(int prevCylinderId DECLARE_ENGINE_PARAMETER_SUFFIX);
+int getCylinderId(int index);
+int getNextFiringCylinderId(int prevCylinderId);
 
-void setTimingRpmBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
-void setTimingLoadBin(float from, float to DECLARE_CONFIG_PARAMETER_SUFFIX);
+void setTimingRpmBin(float from, float to);
+void setTimingLoadBin(float from, float to);
 
 void setSingleCoilDwell();
 

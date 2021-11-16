@@ -51,7 +51,7 @@ TriggerCentral::TriggerCentral() : trigger_central_s(),
 	noiseFilter.resetAccumSignalData();
 }
 
-void TriggerCentral::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void TriggerCentral::init() {
 	triggerState.inject();
 	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
 		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
@@ -117,7 +117,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			&& vvtMode != VVT_FIRST_HALF;
 }
 
-static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(engine->getOperationMode());
 
 	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
@@ -145,7 +145,7 @@ static void turnOffAllDebugFields(void *arg) {
 #endif /* EFI_PROD_CODE */
 }
 
-static angle_t adjustCrankPhase(int camIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static angle_t adjustCrankPhase(int camIndex) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	operation_mode_e operationMode = engine->getOperationMode();
 
@@ -179,7 +179,7 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	return vvtPosition;
 }
 
-static void logFront(bool isImportantFront, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
 
@@ -212,7 +212,7 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index DECLARE_E
 	}
 }
 
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
 	TriggerCentral *tc = &engine->triggerCentral;
@@ -385,7 +385,7 @@ uint32_t triggerMaxDuration = 0;
  *  - Hardware triggers
  *  - Trigger replay from CSV (unit tests)
  */
-void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal);
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
@@ -410,7 +410,7 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DEC
 }
 
 // Handle all shaft signals - hardware or emulated both
-void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	bool isPrimary = signalIndex == 0;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
@@ -497,7 +497,7 @@ static char shaft_signal_msg_index[15];
 static const bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { PROTOCOL_CRANK1, PROTOCOL_CRANK1, PROTOCOL_CRANK2, PROTOCOL_CRANK2, PROTOCOL_CRANK3, PROTOCOL_CRANK3 };
 
-static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
 	if (!ENGINE(isEngineChartEnabled)) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
 		return; // engineSnifferRpmThreshold is accounted for inside ENGINE(isEngineChartEnabled)
 	}
@@ -524,7 +524,7 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECL
  */
 bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 		TriggerState * triggerState,
-		trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		trigger_event_e signal) {
 	// todo: find a better place for these defs
 	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
 			SHAFT_3RD_RISING, SHAFT_3RD_FALLING };
@@ -582,7 +582,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 /**
  * This method is NOT invoked for VR falls.
  */
-void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
 		warning(CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
@@ -796,7 +796,7 @@ static void resetRunningTriggerCounters() {
 #endif
 }
 
-void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void onConfigurationChangeTriggerCallback() {
 	bool changed = false;
 	// todo: how do we static_assert here?
 	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(CONFIG(camInputs)) == efi::size(CONFIG(vvtOffsets)), "sizes");
@@ -847,17 +847,17 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @returns true if configuration just changed, and if that change has affected trigger
  */
-bool TriggerCentral::checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool TriggerCentral::checkIfTriggerConfigChanged() {
 	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && triggerConfigChanged;
 	triggerConfigChanged = false; // whoever has called the method is supposed to react to changes
 	return result;
 }
 
-bool TriggerCentral::isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool TriggerCentral::isTriggerConfigChanged() {
 	return triggerConfigChanged;
 }
 
-void validateTriggerInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void validateTriggerInputs() {
 	if (CONFIG(triggerInputPins[0]) == GPIO_UNASSIGNED && CONFIG(triggerInputPins[1]) != GPIO_UNASSIGNED) {
 		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
 	}
@@ -889,7 +889,7 @@ void initTriggerCentral() {
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
-bool TriggerCentral::isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool TriggerCentral::isTriggerDecoderError() {
 	return engine->triggerErrorDetection.sum(6) > 4;
 }
 

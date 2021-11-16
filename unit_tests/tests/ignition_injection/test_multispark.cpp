@@ -21,7 +21,7 @@ TEST(Multispark, DefaultConfiguration) {
 	EXPECT_EQ(0, getMultiSparkCount(50000 ));
 }
 
-static void multisparkCfg(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void multisparkCfg() {
 	// Turn it on!
 	CONFIG(multisparkEnable) = true;
 

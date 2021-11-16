@@ -917,7 +917,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 */
 }
 
-void setInjectionMode(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void setInjectionMode(int value) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
 	incrementGlobalConfigurationVersion();
 }

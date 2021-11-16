@@ -85,7 +85,7 @@ static LEElement * mainRelayLogic;
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult getEngineValue(le_action_e action) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", unexpected);
 	switch (action) {
 	case LE_METHOD_FAN:
@@ -149,7 +149,7 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #endif
 
-void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration) {
 	(void)previousConfiguration;
 }
 
@@ -182,7 +182,7 @@ static const char * action2String(le_action_e action) {
 	return buffer;
 }
 
-static void setPinState(const char * msg, OutputPin *pin, LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing
@@ -208,7 +208,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 /**
  * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
  */
-void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void runFsio() {
 #if EFI_FUEL_PUMP
 	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
 		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic);
@@ -282,7 +282,7 @@ ValueProvider3D *getscriptTable(int index) {
 /**
  * @return zero-based index of curve with given name
  */
-int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+int getCurveIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_CURVE_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptCurveName[i])) {
 			return i;
@@ -291,7 +291,7 @@ int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return EFI_ERROR_CODE;
 }
 
-int getTableIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+int getTableIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_TABLE_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptTableName[i])) {
 			return i;
@@ -300,7 +300,7 @@ int getTableIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return EFI_ERROR_CODE;
 }
 
-int getSettingIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+int getSettingIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_SETTING_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptSettingName[i])) {
 			return i;
@@ -309,7 +309,7 @@ int getSettingIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return EFI_ERROR_CODE;
 }
 
-float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getCurveValue(int index, float key) {
 	// not great code at all :(
 	switch (index) {
 	default:
@@ -327,7 +327,7 @@ float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initFsioImpl() {
 #if EFI_UNIT_TEST
 	// only unit test needs this
 	sysPool.reset();
@@ -358,7 +358,7 @@ void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #else /* !EFI_FSIO */
 
 // "Limp-mode" implementation for some RAM-limited configs without FSIO
-void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void runHardcodedFsio() {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing
