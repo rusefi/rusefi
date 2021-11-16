@@ -44,8 +44,8 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 }
 
 /**
- * Returns True in case Vehicle speed is less then trashold. 
- * This condiiion would only return true based on speed if DisablebySpeed is true
+ * Returns True in case Vehicle speed is less then threshold.
+ * This condition would only return true based on speed if DisablebySpeed is true
  * The condition logic is written in that way, that if we do not use disable by speed
  * then we have to return true, and trust that we would disable by other condition!
  */ 
@@ -56,7 +56,7 @@ bool LaunchControlBase::isInsideSpeedCondition() const {
 }
 
 /**
- * Returns false if TPS is invalid or TPS > preset trashold
+ * Returns false if TPS is invalid or TPS > preset threshold
  */
 bool LaunchControlBase::isInsideTpsCondition() const {
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);

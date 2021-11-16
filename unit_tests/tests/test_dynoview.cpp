@@ -22,7 +22,7 @@ TEST(DynoView, VSS_T1) {
     DynoView dut;
     dut.inject();
 
-    // Test Speed trashold
+    // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; 
     eth.moveTimeForwardMs(50);
 	
@@ -42,7 +42,7 @@ TEST(DynoView, algo) {
     DynoView dut;
     dut.inject();
 
-    // Test Speed trashold
+    // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; 
 
     //to capture vss
@@ -67,7 +67,7 @@ TEST(DynoView, VSS_fast) {
     DynoView dut;
     dut.inject();
 
-    // Test Speed trashold
+    // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; //kg
     engine->rpmCalculator.mockRpm = 2200;
     eth.moveTimeForwardMs(50);
@@ -91,7 +91,7 @@ TEST(DynoView, VSS_Torque) {
     DynoView dut;
     dut.inject();
 
-    // Test Speed trashold
+    // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; //kg
     engine->rpmCalculator.mockRpm = 2200;
     eth.moveTimeForwardMs(50);
