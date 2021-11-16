@@ -339,6 +339,7 @@ void NamedOutputPin::setLow() {
 }
 
 InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
+	overlappingCounter = 1; // Force update in reset
 	reset();
 	injectorIndex = -1;
 }
