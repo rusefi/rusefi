@@ -66,6 +66,7 @@ jobs:
       run: bash ./run_sharded_tests.sh
 
     - name: Rebuild Tests For Valgrind
+      # Valgrind isn't compatible with address sanitizer, so we have to rebuild the code
       if: ${{ matrix.os != 'macos-latest' }}
       working-directory: ./unit_tests/
       run: |
@@ -73,5 +74,6 @@ jobs:
         make -j4 SANITIZE=no
 
     - name: Run Tests (Valgrind)
+      if: ${{ matrix.os != 'macos-latest' }}
       working-directory: ./unit_tests/
       run: valgrind --error-exitcode=1 --leak-check=no build/rusefi_test
