@@ -7,5 +7,5 @@
 
 #pragma once
 
-void initTachometer(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void tachSignalCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initTachometer();
+void tachSignalCallback();

@@ -44,7 +44,7 @@ static const SPIConfig accelerometerCfg = {
 };
 #endif /* EFI_MEMS */
 
-void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void configureAccelerometerPins() {
 //	engineConfiguration->LIS302DLCsPin = GPIOE_3; // we have a conflict with VVT output on Miata
 // 	CONFIG(is_enabled_spi_1) = true; // we have a conflict with PA5 input pin
 
@@ -74,7 +74,7 @@ private:
 
 static BenchController instance;
 
-void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initAccelerometer() {
 	if (!isBrainPinValid(engineConfiguration->LIS302DLCsPin))
 		return; // not used
 
@@ -108,10 +108,10 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_MEMS */
 
 
-float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getLongitudinalAcceleration() {
 	return engine->sensors.accelerometer.x;
 }
 
-float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getTransverseAcceleration() {
 	return engine->sensors.accelerometer.y;
 }

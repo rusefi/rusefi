@@ -16,5 +16,5 @@ void printConfiguration(const engine_configuration_s *engineConfiguration);
 void scheduleStopEngine(void);
 void setCallFromPitStop(int durationMs);
 void printTPSInfo(void);
-void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setEngineType(int value);
 void readPin(const char *pinName);

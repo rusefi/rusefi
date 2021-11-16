@@ -35,7 +35,7 @@ int minCrankingRpm = 0;
 /**
  * @return ignition timing angle advance before TDC
  */
-static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	if (CONFIG(timingMode) == TM_FIXED) {
 		return engineConfiguration->fixedTiming;
 	}
@@ -77,7 +77,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	return advanceAngle;
 }
 
-angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+angle_t getAdvanceCorrections(int rpm) {
 	float iatCorrection;
 
 	const auto [iatValid, iat] = Sensor::get(SensorType::Iat);
@@ -107,14 +107,14 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * @return ignition timing angle advance before TDC for Cranking
  */
-static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static angle_t getCrankingAdvance(int rpm, float engineLoad) {
 	// get advance from the separate table for Cranking
 	if (CONFIG(useSeparateAdvanceForCranking)) {
 		return interpolate2d(rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
-	angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad);
 	// interpolate not from zero, but starting from min. possible rpm detected
 	if (rpm < minCrankingRpm || minCrankingRpm == 0)
 		minCrankingRpm = rpm;
@@ -122,7 +122,7 @@ static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAM
 }
 
 
-angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+angle_t getAdvance(int rpm, float engineLoad) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (cisnan(engineLoad)) {
 		return 0; // any error should already be reported
@@ -132,11 +132,11 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking();
 	if (isCranking) {
-		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		angle = getCrankingAdvance(rpm, engineLoad);
 		assertAngleRange(angle, "crAngle", CUSTOM_ERR_ANGLE_CR);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
 	} else {
-		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		angle = getRunningAdvance(rpm, engineLoad);
 
 		if (cisnan(angle)) {
 			warning(CUSTOM_ERR_6610, "NaN angle from table");
@@ -150,7 +150,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		&& (!isCranking || CONFIG(useAdvanceCorrectionsForCranking));
 
 	if (allowCorrections) {
-		angle_t correction = getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		angle_t correction = getAdvanceCorrections(rpm);
 		if (!cisnan(correction)) { // correction could be NaN during settings update
 			angle += correction;
 		}
@@ -164,7 +164,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif
 }
 
-size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+size_t getMultiSparkCount(int rpm) {
 	// Compute multispark (if enabled)
 	if (CONFIG(multisparkEnable)
 		&& rpm <= CONFIG(multisparkMaxRpm)
@@ -202,7 +202,7 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTimingMap() {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);
@@ -272,7 +272,7 @@ float getInitialAdvance(int rpm, float map, float advanceMax) {
 /**
  * this method builds a good-enough base timing advance map bases on a number of heuristics
  */
-void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void buildTimingMap(float advanceMax) {
 	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
 		warning(CUSTOM_WRONG_ALGORITHM, "wrong algorithm for MAP-based timing");
 		return;

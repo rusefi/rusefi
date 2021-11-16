@@ -22,7 +22,7 @@ TEST(miata, miata_na_tdc) {
 
 		emulatorHelper.handleEmulatorCallback(
 				*shape.wave,
-				i  % shape.getSize() PASS_ENGINE_PARAMETER_SUFFIX);
+				i  % shape.getSize());
 	}
 
 	ASSERT_EQ(167,  GET_RPM()) << "miata_na_tdc RPM";

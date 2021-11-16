@@ -23,7 +23,7 @@ float idealGasLaw(float volume, float pressure, float temperature) {
 	return volume * pressure / (AIR_R * temperature);
 }
 
-/*static*/ float SpeedDensityBase::getAirmassImpl(float ve, float manifoldPressure, float temperature DECLARE_ENGINE_PARAMETER_SUFFIX) {
+/*static*/ float SpeedDensityBase::getAirmassImpl(float ve, float manifoldPressure, float temperature) {
 	float cycleAir = ve * idealGasLaw(CONFIG(specs.displacement), manifoldPressure, temperature);
 	return cycleAir / CONFIG(specs.cylindersCount);
 }

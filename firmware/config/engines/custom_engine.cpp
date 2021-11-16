@@ -83,8 +83,8 @@ void disableLCD(engine_configuration_s *engineConfiguration) {
 }
 
 // todo: should this be part of more default configurations?
-void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setFrankensoConfiguration() {
+	setDefaultFrankensoConfiguration();
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
 	setFrankenso_01_LCD(engineConfiguration);
@@ -149,7 +149,7 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injectionPins[3] = EFI_INJECTOR_PIN3; // #4
 #endif /* EFI_INJECTOR_PIN3 */
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 #if EFI_PWM_TESTER
 	engineConfiguration->injectionPins[4] = GPIOC_8; // #5
@@ -195,8 +195,8 @@ void setFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * set engine_type 49
  */
-void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setFrankensoBoardTestConfiguration() {
+	setFrankensoConfiguration();
 
 	engineConfiguration->triggerSimulatorFrequency = 300;
 	engineConfiguration->cranking.rpm = 100;
@@ -244,8 +244,8 @@ void setFrankensoBoardTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 // ETB_BENCH_ENGINE
 // set engine_type 58
-void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setEtbTestConfiguration() {
+	setDefaultFrankensoConfiguration();
 	// VAG test ETB
 	// set tps_min 54
 	engineConfiguration->tpsMin = 54;
@@ -272,8 +272,8 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(etbIo[0].controlPin) = GPIOE_14;
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
-	setBoschVNH2SP30Curve(PASS_CONFIG_PARAMETER_SIGNATURE);
-//	setDefaultEtbParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setBoschVNH2SP30Curve();
+//	setDefaultEtbParameters();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2; // PA2
@@ -299,7 +299,7 @@ void setEtbTestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 #if EFI_UNIT_TEST
-void setIssue898(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setIssue898() {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 }
 #endif /* EFI_UNIT_TEST */
@@ -307,7 +307,7 @@ void setIssue898(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 // TLE8888_BENCH_ENGINE
 // todo: remove this? this was used to play with "secret" red boards prior to MRE reality
 // set engine_type 59
-void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setTle8888TestConfiguration() {
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -347,7 +347,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// SF  PF11
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
 #if EFI_FSIO
-	// todo lua setFsio(14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio(14, GPIOF_13, "1");
 #endif /* EFI_FSIO */
 	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
 	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
@@ -363,7 +363,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// IN2 PE4
 	// SF  PE3
 #if EFI_FSIO
-	// todo lua setFsio(15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio(15, GPIOE_6, "1");
 #endif
 	CONFIG(etbIo[0].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[0].directionPin2) = GPIOE_4;
@@ -398,7 +398,7 @@ void setTle8888TestConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * This configuration is used for MRE board Quality Assurance validation
  * todo: inline
  */
-static void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void mreBoardOldTest() {
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->debugMode = DBG_TLE8888;
 
@@ -515,7 +515,7 @@ static void mreBoardOldTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * PROTEUS_QC_TEST_BOARD
  * set engine_type 42
  */
-void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void proteusBoardTest() {
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
 	engineConfiguration->triggerSimulatorFrequency = 600;
@@ -562,11 +562,11 @@ void proteusBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 #endif // EFI_PROD_CODE
 
-	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setProteusHitachiEtbDefaults();
 }
 #endif // HW_PROTEUS
 
-void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void mreBCM() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
 		engineConfiguration->ignitionPins[i] = GPIO_UNASSIGNED;
 		engineConfiguration->injectionPins[i] = GPIO_UNASSIGNED;
@@ -576,7 +576,7 @@ void mreBCM(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void mreSecondaryCan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void mreSecondaryCan() {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
@@ -622,8 +622,8 @@ end
  * MRE_BOARD_NEW_TEST
  * set engine_type 31
  */
-void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	mreBoardOldTest(PASS_CONFIG_PARAMETER_SIGNATURE);
+void mreBoardNewTest() {
+	mreBoardOldTest();
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.firingOrder = FO_1_2_3_4_5_6_7_8_9_10_11_12;
@@ -689,7 +689,7 @@ void mreBoardNewTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setBoschHDEV_5_injectors() {
 	// This is the configuration for bosch HDEV 5 injectors
 	// all times in microseconds/us
 	CONFIG(mc33_hvolt) = 65;
@@ -707,10 +707,10 @@ void setBoschHDEV_5_injectors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * set engine_type 108
  */
-void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setVrThresholdTest() {
 	engineConfiguration->trigger.type = TT_HONDA_1_24;
 
-	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setHellenDefaultVrThresholds();
 	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_5;
@@ -720,7 +720,7 @@ void setVrThresholdTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * set engine_type 107
  */
-void setRotary(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setRotary() {
 	engineConfiguration->specs.cylindersCount = 2;
 	engineConfiguration->specs.firingOrder = FO_1_2;
 
@@ -743,7 +743,7 @@ void setRotary(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * set engine_type 103
  */
-void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setTest33816EngineConfiguration() {
 
 	// grey
 	// default spi3mosiPin PB5
@@ -782,16 +782,16 @@ void setTest33816EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(isSdCardEnabled) = false;
 
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
-	setBoschHDEV_5_injectors(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setBoschHDEV_5_injectors();
 }
 
-void setHellen72etb(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen72etb() {
 	CONFIG(etbIo[0].directionPin1) = GPIOC_6;
 	CONFIG(etbIo[0].directionPin2) = GPIOC_7;
 	engineConfiguration->etb_use_two_wires = true;
 }
 
-void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellenDefaultVrThresholds() {
 	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
 		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600 / RPM_1_BYTE_PACKING_MULT, 7000 / RPM_1_BYTE_PACKING_MULT, 100 / RPM_1_BYTE_PACKING_MULT);
 		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
@@ -801,7 +801,7 @@ void setHellenDefaultVrThresholds(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * set engine_type 6
  */
-void proteusHarley(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void proteusHarley() {
 	strcpy(engineConfiguration->scriptSettingName[0], "compReleaseRpm");
 	engineConfiguration->scriptSetting[0] = 300;
 	strcpy(engineConfiguration->scriptSettingName[1], "compReleaseDur");
@@ -833,7 +833,7 @@ end
 #endif
 }
 
-void proteusLuaDemo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void proteusLuaDemo() {
 #if HW_PROTEUS
 	engineConfiguration->tpsMin = 889;
 	engineConfiguration->tpsMax = 67;
@@ -959,7 +959,7 @@ end
 }
 
 #if HW_HELLEN
-void setHellen144LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen144LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
@@ -969,7 +969,7 @@ void setHellen144LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->warningLedPin = GPIOE_8;
 }
 
-void setHellen176LedPins(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHellen176LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else

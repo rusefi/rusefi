@@ -86,18 +86,18 @@ void rusEfiFunctionalTest(void) {
 	initializeConsole();
 
 	initStatusLoop();
-	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initDataStructures();
 
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(MINIMAL_PINS PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(MINIMAL_PINS);
 	enableTriggerStimulator();
 
 	commonInitEngineController();
 
 	initTriggerCentral();
-	initTriggerEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTriggerEmulator();
 
 	startStatusThreads();
 
@@ -105,9 +105,9 @@ void rusEfiFunctionalTest(void) {
 
 	runChprintfTest();
 
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initPeriodicEvents();
 
-	setTriggerEmulatorRPM(DEFAULT_SIM_RPM PASS_ENGINE_PARAMETER_SUFFIX);
+	setTriggerEmulatorRPM(DEFAULT_SIM_RPM);
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
 
 	startSerialChannels();

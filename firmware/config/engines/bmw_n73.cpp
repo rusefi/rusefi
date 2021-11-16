@@ -7,7 +7,7 @@
 
 #include "bmw_n73.h"
 
-void setEngineProteusBMW_N73_GDI(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setEngineProteusBMW_N73_GDI() {
 
 }
 

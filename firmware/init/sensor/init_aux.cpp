@@ -20,7 +20,7 @@ static FunctionalSensor auxSensors[] = {
 
 static_assert(efi::size(auxSensors) == AUX_ANALOG_INPUT_COUNT);
 
-void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void initAuxSensors() {
 	for (size_t i = 0; i < efi::size(CONFIG(auxAnalogInputs)); i++) {
 		auto channel = CONFIG(auxAnalogInputs)[i];
 

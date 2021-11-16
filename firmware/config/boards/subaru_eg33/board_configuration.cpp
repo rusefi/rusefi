@@ -254,9 +254,9 @@ void setBoardDefaultConfiguration(void) {
 	//engineConfiguration->isEngineChartEnabled = false;
 
 	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
-		setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+		setAlgorithm(LM_SPEED_DENSITY);
 	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)
-		setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
+		setAlgorithm(LM_ALPHA_N);
 }
 
 /* Schematic RefDef DA3 */

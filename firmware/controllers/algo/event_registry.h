@@ -62,13 +62,13 @@ public:
 	void invalidate();
 
 	// Call this every trigger tooth.  It will schedule all required injector events.
-	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt);
 
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
-	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void addFuelEvents();
+	bool addFuelEventsForCylinder(int cylinderIndex);
 
 	void resetOverlapping();
 

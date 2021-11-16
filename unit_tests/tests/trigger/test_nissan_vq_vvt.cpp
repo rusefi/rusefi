@@ -28,9 +28,9 @@ static void func(TriggerCallback *callback) {
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		trigger_value_e v = value ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
 	} else {
-		handleShaftSignal(0, value, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		handleShaftSignal(0, value, nowNt);
 	}
 }
 
@@ -41,8 +41,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 		bool isVvt,
 		int vvtBankIndex,
 		int vvtOffset,
-		std::vector<std::shared_ptr<TriggerCallback>>& ptrs
-		DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		std::vector<std::shared_ptr<TriggerCallback>>& ptrs) {
 	int totalIndex = 0;
 
 	/**
@@ -85,7 +84,7 @@ TEST(nissan, vq_vvt) {
 
 		scheduleTriggerEvents(&crank,
 				/* timeScale */ 1,
-				cyclesCount, false, -1, 0, ptrs PASS_ENGINE_PARAMETER_SUFFIX);
+				cyclesCount, false, -1, 0, ptrs);
 	}
 	float vvtTimeScale = 1;
 
@@ -100,8 +99,7 @@ TEST(nissan, vq_vvt) {
 				cyclesCount / 6, true,
 				/* vvtBankIndex */ 0,
 				/* vvtOffset */ testVvtOffset,
-				ptrs
-				PASS_ENGINE_PARAMETER_SUFFIX);
+				ptrs);
 	}
 
 	{
@@ -113,8 +111,7 @@ TEST(nissan, vq_vvt) {
 				cyclesCount / 6, true,
 				/* vvtBankIndex */1,
 				/* vvtOffset */ testVvtOffset + NISSAN_VQ_CAM_OFFSET,
-				ptrs
-				PASS_ENGINE_PARAMETER_SUFFIX);
+				ptrs);
 	}
 
 	eth.executeUntil(1473000);

@@ -17,7 +17,7 @@
  * VW_B6
  * has to be microRusEFI 0.5.2
  */
-void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setVwPassatB6() {
 #if (BOARD_TLE8888_COUNT > 0)
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
@@ -68,7 +68,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	CONFIG(isSdCardEnabled) = false;
 
 	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
-	setBoschHDEV_5_injectors(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setBoschHDEV_5_injectors();
 	// RED
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 	// YELLOW
@@ -128,7 +128,7 @@ void setVwPassatB6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// "7 - Lowside 1"
 	// engineConfiguration->hpfpValvePin = TLE8888_PIN_6; // Disable for now
 
-	setBoschVAGETB(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setBoschVAGETB();
 
 
 	engineConfiguration->injector.flow = 300;

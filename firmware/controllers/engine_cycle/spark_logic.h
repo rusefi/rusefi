@@ -7,12 +7,12 @@
 
 #pragma once
 
-void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm, efitick_t edgeTimestamp);
 void turnSparkPinHigh(IgnitionEvent *event);
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event);
-int getNumberOfSparks(ignition_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
-percent_t getCoilDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX);
-void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+int getNumberOfSparks(ignition_mode_e mode);
+percent_t getCoilDutyCycle(int rpm);
+void initializeIgnitionActions();
 
 int isIgnitionTimingError(void);
 
@@ -21,5 +21,4 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 		uint32_t trgEventIndex,
 		efitick_t edgeTimestamp,
 		angle_t angle,
-		action_s action
-		DECLARE_ENGINE_PARAMETER_SUFFIX);
+		action_s action);

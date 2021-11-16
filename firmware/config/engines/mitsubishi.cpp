@@ -14,8 +14,8 @@
 #include "fsio_impl.h"
 #include "mitsubishi.h"
 
-void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMitsubishiConfiguration() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->trigger.type = TT_MITSUBISHI; // same trigger as 4G63?
 
@@ -73,7 +73,7 @@ void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L);
 
 }
 

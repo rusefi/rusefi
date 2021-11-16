@@ -13,7 +13,7 @@ public:
 	}
 
 	void SetUp() override {
-		dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+		dut.inject();
 	}
 
 	void SetCoef(float new_coef) {

@@ -43,10 +43,10 @@
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
 
-void event_trigger_position_s::setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void event_trigger_position_s::setAngle(angle_t angle) {
 	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
 			&ENGINE(triggerCentral.triggerFormDetails),
-			this, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset));
+			this, angle);
 }
 
 trigger_shape_helper::trigger_shape_helper() {
@@ -393,18 +393,18 @@ void TriggerWaveform::setShapeDefinitionError(bool value) {
 void findTriggerPosition(TriggerWaveform *triggerShape,
 		TriggerFormDetails *details,
 		event_trigger_position_s *position,
-		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset)) {
+		angle_t angle) {
 	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angle), "findAngle#1");
 	assertAngleRange(angle, "findAngle#a1", CUSTOM_ERR_6545);
 
 	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(triggerShape->tdcPosition), "tdcPos#1")
 	assertAngleRange(triggerShape->tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
 
-	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG_PARAM(globalTriggerAngleOffset)), "tdcPos#2")
-	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
+	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG(globalTriggerAngleOffset)), "tdcPos#2")
+	assertAngleRange(CONFIG(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
 
 	// convert engine cycle angle into trigger cycle angle
-	angle += triggerShape->tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
+	angle += triggerShape->tdcPosition + CONFIG(globalTriggerAngleOffset);
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
 	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
@@ -427,14 +427,14 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	}
 }
 
-void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerWaveform::prepareShape(TriggerFormDetails *details) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (shapeDefinitionError) {
 		// Nothing to do here if there's a problem with the trigger shape
 		return;
 	}
 
-	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareEventAngles(this, details);
 #endif
 }
 

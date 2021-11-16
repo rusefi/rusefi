@@ -95,17 +95,17 @@ public:
 	// Last Error code
 	volatile cj125_error_e errorCode = CJ125_NO_ERROR;
 
-	void setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setError(cj125_error_e errCode);
 	bool isWorkingState(void) const;
-	void SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void StartHeaterControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	bool cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void SetHeater(float value);
+	void SetIdleHeater();
+	void StartHeaterControl();
+	bool cjIdentify();
 	void printDiag();
-	void calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void calibrate();
 	void cjSetMode(cj125_mode_e m);
 	bool isValidState() const;
-	void cjInitPid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void cjInitPid();
 };
 
 // Heater params for Idle(cold), Preheating and Control stages

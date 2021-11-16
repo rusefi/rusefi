@@ -17,12 +17,12 @@ TEST(start, startStop) {
 
 	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 
-	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowStartStopButtonCallback();
 	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 
 	// startup 'timeout' duration of time is a special case so let's sleep a bit
 	eth.moveTimeForwardAndInvokeEventsSec(10);
-	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowStartStopButtonCallback();
 	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 
 
@@ -30,17 +30,17 @@ TEST(start, startStop) {
 	eth.moveTimeForwardAndInvokeEventsSec(10);
 	// hit 'start' button! inverted since pull-up
 	setMockState(engineConfiguration->startStopButtonPin, false);
-	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowStartStopButtonCallback();
 	ASSERT_TRUE(efiReadPin(engineConfiguration->starterControlPin));
 
 	eth.moveTimeForwardAndInvokeEventsSec(5);
-	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowStartStopButtonCallback();
 
 	eth.moveTimeForwardAndInvokeEventsSec(5);
-	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowStartStopButtonCallback();
 
 	eth.moveTimeForwardAndInvokeEventsSec(5);
-	slowStartStopButtonCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	slowStartStopButtonCallback();
 	// starter is now OFF due to timeout
 	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 }

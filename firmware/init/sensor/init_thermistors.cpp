@@ -83,7 +83,7 @@ static void configureTempSensor(const char *msg,
 	sensor.Register();
 }
 
-void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void initThermistors() {
 	if (!CONFIG(consumeObdSensors)) {
 		configureTempSensor("clt",
 						clt,

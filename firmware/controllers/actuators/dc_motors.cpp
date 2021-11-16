@@ -114,7 +114,7 @@ public:
 
 static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
 
-DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
+DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
 	auto& hw = dcHardware[index];
 
 	hw.start(

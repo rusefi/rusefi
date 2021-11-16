@@ -4,10 +4,10 @@
 
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
 
-void ClosedLoopFuelCellBase::update(float lambdaDeadband, bool ignoreErrorMagnitude DECLARE_ENGINE_PARAMETER_SUFFIX)
+void ClosedLoopFuelCellBase::update(float lambdaDeadband, bool ignoreErrorMagnitude)
 {
 	// Compute how far off target we are
-	float lambdaError = getLambdaError(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float lambdaError = getLambdaError();
 
 	// If we're within the deadband, make no adjustment.
 	if (absF(lambdaError) < lambdaDeadband) {
@@ -45,7 +45,7 @@ float ClosedLoopFuelCellBase::getAdjustment() const {
 	return 1.0f + m_adjustment;
 }
 
-float ClosedLoopFuelCellImpl::getLambdaError(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
+float ClosedLoopFuelCellImpl::getLambdaError() const {
 	auto lambda = Sensor::get(m_lambdaSensor);
 
 	// Failed sensor -> no error

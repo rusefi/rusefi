@@ -20,10 +20,10 @@ TEST(sensors, mapDecoding) {
 	air_pressure_sensor_config_s s;
 	s.type = MT_DENSO183;
 
-	assertEqualsM("denso 0 volts", -6.64, decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX));
-	ASSERT_FLOAT_EQ(31.244, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
+	assertEqualsM("denso 0 volts", -6.64, decodePressure(0, &s));
+	ASSERT_FLOAT_EQ(31.244, decodePressure(1, &s));
 
 	s.type = MT_MPX4250;
-	ASSERT_EQ( 8,  decodePressure(0, &s PASS_ENGINE_PARAMETER_SUFFIX)) << "MPX_4250 0 volts";
-	ASSERT_FLOAT_EQ(58.4, decodePressure(1, &s PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_EQ( 8,  decodePressure(0, &s)) << "MPX_4250 0 volts";
+	ASSERT_FLOAT_EQ(58.4, decodePressure(1, &s));
 }

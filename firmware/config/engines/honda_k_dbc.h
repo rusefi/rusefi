@@ -9,5 +9,5 @@
 
 #include "engine_configuration.h"
 
-void setProteusHondaElement2003(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setProteusHondaOBD2A(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setProteusHondaElement2003();
+void setProteusHondaOBD2A();

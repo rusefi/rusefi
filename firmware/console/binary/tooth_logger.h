@@ -25,13 +25,13 @@ void EnableToothLogger();
 void DisableToothLogger();
 
 // A new tooth has arrived! Log to the buffer if enabled.
-void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp);
 
-void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void LogTriggerTopDeadCenter(efitick_t timestamp);
 
-void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
+void LogTriggerCoilState(efitick_t timestamp, bool state);
 
-void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX);
+void LogTriggerInjectorState(efitick_t timestamp, bool state);
 
 struct ToothLoggerBuffer
 {

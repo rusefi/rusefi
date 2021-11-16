@@ -183,7 +183,7 @@ void runRusEfi() {
 	/**
 	 * we need to initialize table objects before default configuration can set values
 	 */
-	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initDataStructures();
 
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
@@ -206,7 +206,7 @@ void runRusEfi() {
 	initializeConsole();
 
 	// Read configuration from flash memory
-	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	loadConfiguration();
 
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();
@@ -218,7 +218,7 @@ void runRusEfi() {
 	runRusEfiWithConfig();
 
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initPeriodicEvents();
 
 	runMainLoop();
 }
@@ -255,20 +255,20 @@ void runRusEfiWithConfig() {
 #endif // EFI_LUA
 
 	// Config could be completely bogus - don't start anything else!
-	if (validateConfig(PASS_CONFIG_PARAMETER_SIGNATURE)) {
+	if (validateConfig()) {
 		initStatusLoop();
 		/**
 		 * Now let's initialize actual engine control logic
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
-		initEngineContoller(PASS_ENGINE_PARAMETER_SIGNATURE);
+		initEngineContoller();
 
 	#if EFI_ENGINE_EMULATOR
-		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+		initEngineEmulator();
 	#endif
 
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
-		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		rememberCurrentConfiguration();
 
 	#if EFI_PERF_METRICS
 		initTimePerfActions();

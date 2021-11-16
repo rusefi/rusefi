@@ -32,7 +32,7 @@ static void auxInfo() {
 	efiPrintf("AUX Serial RX %s", hwPortname(CONFIG(auxSerialRxPin)));
 }
 
-void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void enableAuxSerial() {
 	engineConfiguration->auxSerialTxPin = CONFIG(auxSerialTxPin);
 	engineConfiguration->auxSerialRxPin = CONFIG(auxSerialRxPin);
 	engineConfiguration->auxSerialSpeed = CONFIG(auxSerialSpeed);
@@ -43,12 +43,12 @@ void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiPrintf("AUX Serial started");
 }
 
-void stopAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void stopAuxSerialPins() {
 	efiSetPadUnused(activeConfiguration.auxSerialTxPin);
 	efiSetPadUnused(activeConfiguration.auxSerialRxPin);
 }
 
-void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startAuxSerialPins() {
 	if (CONFIG(auxSerialTxPin))
 		efiSetPadMode("AuxSerial TX", CONFIG(auxSerialTxPin), PAL_MODE_ALTERNATE(8));
 	if (CONFIG(auxSerialRxPin))

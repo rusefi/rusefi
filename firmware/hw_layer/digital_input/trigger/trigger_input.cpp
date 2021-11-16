@@ -131,7 +131,7 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 /* Exported functions.														*/
 /*==========================================================================*/
 
-void stopTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void stopTriggerInputPins() {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
 			turnOffTriggerInputPin(i, true);
@@ -146,7 +146,7 @@ void stopTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 static const char* const camNames[] = { "cam1", "cam2", "cam3", "cam4"};
 
-void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startTriggerInputPins() {
 	for (int i = 0; i < TRIGGER_SUPPORTED_CHANNELS; i++) {
 		if (isConfigurationChanged(triggerInputPins[i])) {
 			const char * msg = (i == 0 ? "Trigger #1" : (i == 1 ? "Trigger #2" : "Trigger #3"));
@@ -161,18 +161,18 @@ void startTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void turnOnTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void turnOnTriggerInputPins() {
 	/* init all trigger HW available */
 	icuTriggerTurnOnInputPins();
 	extiTriggerTurnOnInputPins();
 
-	applyNewTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	applyNewTriggerInputPins();
 }
 
 #endif /* (HAL_USE_ICU == TRUE) || (HAL_TRIGGER_USE_PAL == TRUE) */
 
 
-void stopTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void stopTriggerDebugPins() {
 	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
 		efiSetPadUnusedIfConfigurationChanged(triggerInputDebugPins[i]);
 	}
@@ -181,7 +181,7 @@ void stopTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void startTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startTriggerDebugPins() {
 	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
 		efiSetPadModeIfConfigurationChanged("trigger debug", triggerInputDebugPins[i], PAL_MODE_OUTPUT_PUSHPULL);
 	}
@@ -190,12 +190,12 @@ void startTriggerDebugPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 }
 
-void applyNewTriggerInputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void applyNewTriggerInputPins() {
 #if EFI_PROD_CODE
 	// first we will turn off all the changed pins
-	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	stopTriggerInputPins();
 	// then we will enable all the changed pins
-	startTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startTriggerInputPins();
 #endif /* EFI_PROD_CODE */
 }
 
