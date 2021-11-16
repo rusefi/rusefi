@@ -20,14 +20,16 @@ public:
 
 	bool isInsideSpeedCondition() const;
 	bool isInsideTpsCondition() const;
-	bool isInsideSwitchCondition() const;
+	bool isInsideSwitchCondition();
 	bool isInsideRPMCondition(int rpm) const;
-	bool isLaunchConditionMet(int rpm) const;
+	bool isLaunchConditionMet(int rpm);
 
 	bool isLaunchSparkRpmRetardCondition() const;
 	bool isLaunchFuelRpmRetardCondition() const;
 
 	int retardThresholdRpm;
+	bool launchActivatePinState = false;
+	bool isLaunchCondition = false;
 
 private:
 	bool isLaunchRpmRetardCondition() const;

@@ -19,14 +19,14 @@
  * We can have active condition from switch or from clutch.
  * In case we are dependent on VSS we just return true.
  */
-bool LaunchControlBase::isInsideSwitchCondition() const {
+bool LaunchControlBase::isInsideSwitchCondition() {
 	switch (CONFIG(launchActivationMode)) {
 	case SWITCH_INPUT_LAUNCH:
 		if (isBrainPinValid(CONFIG(launchActivatePin))) {
 			//todo: we should take into consideration if this sw is pulled high or low!
-			engine->launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
+			launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
 		}
-		return engine->launchActivatePinState;
+		return launchActivatePinState;
 
 	case CLUTCH_INPUT_LAUNCH:
 		if (isBrainPinValid(CONFIG(clutchDownPin))) {
@@ -75,7 +75,7 @@ bool LaunchControlBase::isInsideRPMCondition(int rpm) const {
 	return (launchRpm < rpm);
 }
 
-bool LaunchControlBase::isLaunchConditionMet(int rpm) const {
+bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 
 	bool activateSwitchCondition = isInsideSwitchCondition();
 	bool rpmCondition = isInsideRPMCondition(rpm);
@@ -109,17 +109,17 @@ void LaunchControlBase::update() {
 	if (!combinedConditions) {
 		// conditions not met, reset timer
 		m_launchTimer.reset();
-		engine->isLaunchCondition = false;
+		isLaunchCondition = false;
 	} else {
 		// If conditions are met...
-		engine->isLaunchCondition = m_launchTimer.hasElapsedSec(CONFIG(launchActivateDelay));
+		isLaunchCondition = m_launchTimer.hasElapsedSec(CONFIG(launchActivateDelay));
 	}
 
 #if EFI_TUNER_STUDIO
 	if (CONFIG(debugMode) == DBG_LAUNCH) {
 		tsOutputChannels.debugIntField5 = engine->clutchDownState;
-		tsOutputChannels.debugFloatField1 = engine->launchActivatePinState;
-		tsOutputChannels.debugFloatField2 = engine->isLaunchCondition;
+		tsOutputChannels.debugFloatField1 = launchActivatePinState;
+		tsOutputChannels.debugFloatField2 = isLaunchCondition;
 		tsOutputChannels.debugFloatField3 = combinedConditions;
 	}
 #endif /* EFI_TUNER_STUDIO */
@@ -144,7 +144,7 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
-	return engine->isLaunchCondition && (retardThresholdRpm < GET_RPM());
+	return isLaunchCondition && (retardThresholdRpm < GET_RPM());
 }
 
 bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {
