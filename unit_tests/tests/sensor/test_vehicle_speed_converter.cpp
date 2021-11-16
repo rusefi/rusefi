@@ -9,17 +9,15 @@ public:
 	EngineTestHelper eth;
 	VehicleSpeedConverter dut;
 
-	VehicleSpeedConverterTest()
-		: eth(ENGINE_TEST_HELPER, std::unordered_map<SensorType, float>{}) {
+	VehicleSpeedConverterTest() : eth(ENGINE_TEST_HELPER) {
 	}
 
 	void SetUp() override {
-		EXPAND_EngineTestHelper;
 		dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
 	void SetCoef(float new_coef) {
-		dut.engineConfiguration->vehicleSpeedCoef = new_coef;
+		engineConfiguration->vehicleSpeedCoef = new_coef;
 	}
 
 	float GetFrequencyBySpeedAndCoef(float speed, float coef) {

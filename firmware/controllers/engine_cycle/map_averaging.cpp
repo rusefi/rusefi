@@ -96,11 +96,6 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 		isAveraging = true;
 	}
 
-#if EFI_UNIT_TEST
-	Engine *engine = endAveragingScheduling->engine;
-	EXPAND_Engine;
-#endif
-
 	mapAveragingPin.setHigh();
 
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), ENGINE(engineState.mapAveragingDuration),

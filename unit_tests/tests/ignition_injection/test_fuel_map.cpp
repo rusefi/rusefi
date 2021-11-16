@@ -35,15 +35,15 @@ TEST(misc, testFuelMap) {
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
-		eth.engine.config->iatFuelCorrBins[i] = i * 10;
-		eth.engine.config->iatFuelCorr[i] = 2 * i;
+		config->iatFuelCorrBins[i] = i * 10;
+		config->iatFuelCorr[i] = 2 * i;
 	}
-	eth.engine.config->iatFuelCorr[0] = 2;
+	config->iatFuelCorr[0] = 2;
 
 	printf("*************************************************** setting CLT table\r\n");
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
-		eth.engine.config->cltFuelCorrBins[i] = i * 10;
-		eth.engine.config->cltFuelCorr[i] = i;
+		config->cltFuelCorrBins[i] = i * 10;
+		config->cltFuelCorr[i] = i;
 	}
 
 	Sensor::setMockValue(SensorType::Clt, 70.0f);
@@ -153,32 +153,32 @@ TEST(misc, testAngleResolver) {
 	event_trigger_position_s injectionStart;
 
 	printf("*************************************************** testAngleResolver 0\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -122);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_NEAR(0.24, injectionStart.angleOffsetFromTriggerEvent, EPS5D);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -80);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_FLOAT_EQ(42.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -54);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_FLOAT_EQ(68.2400, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -53);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(69.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, 0);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(122.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, 56);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffsetFromTriggerEvent);
 

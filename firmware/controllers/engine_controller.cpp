@@ -100,6 +100,10 @@
 Engine ___engine CCM_OPTIONAL;
 Engine * engine = &___engine;
 
+#else // EFI_UNIT_TEST
+
+Engine * engine;
+
 #endif /* EFI_UNIT_TEST */
 
 

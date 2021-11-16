@@ -25,12 +25,6 @@ static void plainPinTurnOff(NamedOutputPin *output) {
 
 
 static void scheduleOpen(AuxActor *current) {
-
-#if EFI_UNIT_TEST
-	Engine *engine = current->engine;
-	EXPAND_Engine;
-#endif /* EFI_UNIT_TEST */
-
 	scheduleOrQueue(&current->open,
 			TRIGGER_EVENT_UNDEFINED,
 			getTimeNowNt(),
@@ -43,11 +37,6 @@ static void scheduleOpen(AuxActor *current) {
 void auxPlainPinTurnOn(AuxActor *current) {
 	NamedOutputPin *output = &enginePins.auxValve[current->valveIndex];
 	output->setHigh();
-
-#if EFI_UNIT_TEST
-	Engine *engine = current->engine;
-	EXPAND_Engine;
-#endif /* EFI_UNIT_TEST */
 
 	scheduleOpen(current);
 

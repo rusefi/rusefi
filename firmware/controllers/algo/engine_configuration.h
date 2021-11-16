@@ -64,10 +64,10 @@ void setBoardDefaultConfiguration(void);
 void setBoardConfigOverrides(void);
 
 #if !EFI_UNIT_TEST
-extern engine_configuration_s *engineConfiguration;
 extern persistent_config_container_s persistentState;
-extern persistent_config_s *config;
 #endif // EFI_UNIT_TEST
+extern engine_configuration_s *engineConfiguration;
+extern persistent_config_s *config;
 
 /**
  * & is reference in C++ (not C)
