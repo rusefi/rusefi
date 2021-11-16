@@ -374,14 +374,14 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	// this is needed to update injectorLag
 	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
 
-	ASSERT_EQ( 0,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
+	ASSERT_EQ( 0,  engine->triggerCentral.isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
 	eth->setTriggerType(trigger PASS_ENGINE_PARAMETER_SUFFIX);
 }
 
 void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->trigger.type = trigger;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 1,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
+	ASSERT_EQ( 1,  engine->triggerCentral.isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
 	applyTriggerWaveform();
 }
 

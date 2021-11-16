@@ -426,7 +426,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 			engine->triggerCentral.validateCamVvtCounters();
 		}
 
-		if (checkIfTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		if (engine->triggerCentral.checkIfTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
 			engine->injectionEvents.isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
