@@ -101,7 +101,6 @@ void LaunchControlBase::update() {
 
 	int rpm = GET_RPM();
 	bool combinedConditions = isLaunchConditionMet(rpm);
-	float timeDelay = CONFIG(launchActivateDelay);
 
 	//recalculate in periodic task, this way we save time in applyLaunchControlLimiting
 	//and still recalculat in case user changed the values
@@ -112,21 +111,9 @@ void LaunchControlBase::update() {
 		// conditions not met, reset timer
 		m_launchTimer.reset();
 		engine->isLaunchCondition = false;
-		engine->setLaunchBoostDuty = false;
-		engine->applyLaunchControlRetard = false;
-		engine->applyLaunchExtraFuel = false;
 	} else {
 		// If conditions are met...
-		if (m_launchTimer.hasElapsedMs(timeDelay*1000) && combinedConditions) {
-			engine->isLaunchCondition = true;           // ...enable launch!
-			engine->applyLaunchExtraFuel = true;
-		}
-		if (CONFIG(enableLaunchBoost)) {
-			engine->setLaunchBoostDuty = true;           // ...enable boost!
-		}
-		if (CONFIG(enableLaunchRetard)) {
-			engine->applyLaunchControlRetard = true;    // ...enable retard!
-		}
+		engine->isLaunchCondition = m_launchTimer.hasElapsedSec(CONFIG(launchActivateDelay));
 	}
 
 #if EFI_TUNER_STUDIO
@@ -158,7 +145,7 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 void LaunchControlBase::applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (( engine->isLaunchCondition ) && ( retardThresholdRpm < GET_RPM() )) {
+	if (engine->isLaunchCondition && ( retardThresholdRpm < GET_RPM() )) {
 		*limitedSpark = engineConfiguration->launchSparkCutEnable;
 		*limitedFuel = engineConfiguration->launchFuelCutEnable;
 	} 

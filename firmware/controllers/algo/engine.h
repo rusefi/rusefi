@@ -151,9 +151,6 @@ public:
 #if EFI_LAUNCH_CONTROL
 	bool launchActivatePinState = false;
 	bool isLaunchCondition = false;
-	bool applyLaunchExtraFuel = false;
-	bool setLaunchBoostDuty = false;
-	bool applyLaunchControlRetard = false;
 #endif /* EFI_LAUNCH_CONTROL */
 
 	/**
