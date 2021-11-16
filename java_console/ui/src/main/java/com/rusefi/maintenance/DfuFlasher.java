@@ -125,8 +125,14 @@ public class DfuFlasher {
     }
 
     private static void appendDeviceReport(StatusWindow wnd) {
-        for (String line : getDevicesReport())
+        for (String line : getDevicesReport()) {
+            if (line.contains("STM Device in DFU Mode")) {
+                wnd.appendMsg(" ******************************************************************");
+                wnd.appendMsg(" ************* YOU NEED TO REMOVE LEGACY DFU DRIVER ***************");
+                wnd.appendMsg(" ******************************************************************");
+            }
             wnd.appendMsg("Devices: " + line);
+        }
     }
 
     private static void timeForDfuSwitch(StatusWindow wnd) {
