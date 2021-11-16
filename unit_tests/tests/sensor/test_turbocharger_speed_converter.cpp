@@ -10,7 +10,6 @@ public:
 	TurbochargerSpeedConverter dut;
 
 	TurbochargerSpeedConverterTest() : eth(ENGINE_TEST_HELPER) {
-		
 	}
 
 	void SetUp() override {

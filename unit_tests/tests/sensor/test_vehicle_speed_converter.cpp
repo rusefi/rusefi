@@ -10,7 +10,6 @@ public:
 	VehicleSpeedConverter dut;
 
 	VehicleSpeedConverterTest() : eth(ENGINE_TEST_HELPER) {
-		
 	}
 
 	void SetUp() override {

@@ -23,9 +23,14 @@ public:
 	bool isInsideSwitchCondition() const;
 	bool isInsideRPMCondition(int rpm) const;
 	bool isLaunchConditionMet(int rpm) const;
+
+	bool isLaunchSparkRpmRetardCondition() const;
+	bool isLaunchFuelRpmRetardCondition() const;
+
 	int retardThresholdRpm;
-	void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
 
 private:
+	bool isLaunchRpmRetardCondition() const;
+
 	Timer m_launchTimer;
 };
