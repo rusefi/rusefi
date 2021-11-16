@@ -35,7 +35,7 @@ void sendOutConfirmation(char *value, int i) {
 }
 
 static int getTriggerZeroEventIndex(engine_type_e engineType) {
-	WITH_ENGINE_TEST_HELPER(engineType);
+	EngineTestHelper eth(engineType);
 
 	initDataStructures();
 
@@ -47,7 +47,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 }
 
 TEST(misc, testSkipped2_0) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 2;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
@@ -60,7 +60,7 @@ static void testDodgeNeonDecoder() {
 
 	ASSERT_EQ( 8,  getTriggerZeroEventIndex(DODGE_NEON_1995)) << "DODGE_NEON_1995: trigger zero index";
 
-	WITH_ENGINE_TEST_HELPER(DODGE_NEON_1995);
+	EngineTestHelper eth(DODGE_NEON_1995);
 
 	TriggerWaveform * shape = &eth.engine.triggerCentral.triggerShape;
 	ASSERT_EQ(8, shape->getTriggerWaveformSynchPointIndex());
@@ -110,7 +110,7 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 }
 
 TEST(misc, testSomethingWeird) {
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EngineTestHelper eth(FORD_INLINE_6_1995);
 
 	TriggerState state_;
 	TriggerState *sta = &state_;
@@ -148,7 +148,7 @@ TEST(misc, testSomethingWeird) {
 TEST(misc, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
 
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EngineTestHelper eth(FORD_INLINE_6_1995);
 	setWholeTimingTable(-13);
 
 	Sensor::setMockValue(SensorType::Iat, 49.579071f);
@@ -195,7 +195,7 @@ TEST(misc, test1995FordInline6TriggerDecoder) {
 }
 
 TEST(misc, testGetCoilDutyCycleIssue977) {
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
@@ -209,7 +209,7 @@ TEST(misc, testFordAspire) {
 
 	ASSERT_EQ( 4,  getTriggerZeroEventIndex(FORD_ASPIRE_1996)) << "getTriggerZeroEventIndex";
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	ASSERT_EQ( 4,  TRIGGER_WAVEFORM(getTriggerWaveformSynchPointIndex())) << "getTriggerWaveformSynchPointIndex";
 
@@ -229,7 +229,7 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 
 	// Some configs use aux valves, which requires this sensor
 	std::unordered_map<SensorType, float> sensorVals = {{SensorType::DriverThrottleIntent, 0}};
-	WITH_ENGINE_TEST_HELPER_SENS(type, sensorVals);
+	EngineTestHelper eth(type, sensorVals);
 
 	TriggerWaveform *t = &ENGINE(triggerCentral.triggerShape);
 
@@ -247,7 +247,7 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 }
 
 TEST(misc, testStartupFuelPumping) {
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EngineTestHelper eth(FORD_INLINE_6_1995);
 
 	StartupFuelPumping sf;
 
@@ -293,7 +293,7 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 extern bool_t debugSignalExecutor;
 
 TEST(misc, testRpmCalculator) {
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EngineTestHelper eth(FORD_INLINE_6_1995);
 
 	ENGINE(tdcMarkEnabled) = false;
 
@@ -503,7 +503,7 @@ TEST(misc, testTriggerDecoder) {
 
 	testTriggerDecoder2("testMitsu", MITSU_4G93, 0, 0.3553, 0.3752);
 	{
-		WITH_ENGINE_TEST_HELPER(MITSU_4G93);
+		EngineTestHelper eth(MITSU_4G93);
 
 
 		eth.persistentConfig.engineConfiguration.useOnlyRisingEdgeForTrigger = false;
@@ -519,7 +519,7 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder3("neon NGC4", DODGE_NEON_2003_CRANK, 6, 0.5000, 0.0, CHRYSLER_NGC4_GAP);
 
 	{
-		WITH_ENGINE_TEST_HELPER(DODGE_NEON_2003_CRANK);
+		EngineTestHelper eth(DODGE_NEON_2003_CRANK);
 
 		printf("!!!!!!!!!!!!!!!!!! Now trying with only rising edges !!!!!!!!!!!!!!!!!\r\n");
 		engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -562,7 +562,7 @@ static void setTestBug299(EngineTestHelper *eth) {
 		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
 
 	Engine *engine = &eth->engine;
-	EXPAND_Engine
+	
 
 
 	eth->assertRpm(0, "RPM=0");
@@ -682,7 +682,7 @@ static void setArray(float* p, size_t count, float value) {
 void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	ENGINE(tdcMarkEnabled) = false;
 	eth.moveTimeForwardMs(startUpDelayMs); // nice to know that same test works the same with different anount of idle time on start
 	setTestBug299(&eth);
@@ -928,7 +928,7 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 }
 
 TEST(big, testTwoWireBatch) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
@@ -956,7 +956,7 @@ TEST(big, testTwoWireBatch) {
 
 
 TEST(big, testSequential) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
@@ -983,7 +983,7 @@ TEST(big, testSequential) {
 }
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	ENGINE(tdcMarkEnabled) = false;
 	setTestBug299(&eth);
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#0";
@@ -1100,7 +1100,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	ENGINE(tdcMarkEnabled) = false;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
@@ -1201,7 +1201,7 @@ TEST(big, testSparkReverseOrderBug319) {
 TEST(big, testMissedSpark299) {
 	printf("*************************************************** testMissedSpark299\r\n");
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);

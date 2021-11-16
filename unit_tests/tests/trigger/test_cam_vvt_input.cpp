@@ -13,7 +13,7 @@ extern WarningCodeState unitTestWarningCodeState;
 extern WaveChart waveChart;
 
 TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
 	eth.setTriggerType(TT_ONE);
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
@@ -24,7 +24,7 @@ TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 }
 
 TEST(trigger, testNoStartUpWarnings) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 3;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
@@ -59,7 +59,7 @@ TEST(trigger, testNoStartUpWarnings) {
 }
 
 TEST(trigger, testNoisyInput) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoisyInput RPM";
 
@@ -81,7 +81,7 @@ TEST(trigger, testNoisyInput) {
 
 TEST(trigger, testCamInput) {
 	// setting some weird engine
-	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
+	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -122,7 +122,7 @@ TEST(trigger, testCamInput) {
 }
 
 TEST(trigger, testNB2CamInput) {
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
+	EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
 	eth.setTriggerType(TT_ONE);

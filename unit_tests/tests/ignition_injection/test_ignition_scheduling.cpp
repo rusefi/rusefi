@@ -11,7 +11,7 @@
 using ::testing::_;
 
 TEST(ignition, twoCoils) {
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_BMW_M73_F);
+	EngineTestHelper eth(FRANKENSO_BMW_M73_F);
 
 	// first one to fire uses first coil
 	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(1)]), 0);
@@ -38,7 +38,7 @@ TEST(ignition, twoCoils) {
 }
 
 TEST(ignition, trailingSpark) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	/**
 	// TODO #3220: this feature makes this test sad, eventually remove this line (and the ability to disable it altogether)

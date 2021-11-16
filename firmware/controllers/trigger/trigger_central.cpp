@@ -51,15 +51,6 @@ TriggerCentral::TriggerCentral() : trigger_central_s(),
 	noiseFilter.resetAccumSignalData();
 }
 
-void TriggerCentral::init() {
-	triggerState.inject();
-	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
-		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
-			vvtState[bankIndex][camIndex].inject();
-		}
-	}
-}
-
 void TriggerNoiseFilter::resetAccumSignalData() {
 	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
 	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));

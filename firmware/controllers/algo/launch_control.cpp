@@ -22,10 +22,12 @@
 bool LaunchControlBase::isInsideSwitchCondition() {
 	switch (CONFIG(launchActivationMode)) {
 	case SWITCH_INPUT_LAUNCH:
+#if !EFI_SIMULATOR
 		if (isBrainPinValid(CONFIG(launchActivatePin))) {
 			//todo: we should take into consideration if this sw is pulled high or low!
 			launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
 		}
+#endif // EFI_PROD_CODE
 		return launchActivatePinState;
 
 	case CLUTCH_INPUT_LAUNCH:
@@ -42,8 +44,8 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 }
 
 /**
- * Returns True in case Vehicle speed is less then trashold. 
- * This condiiion would only return true based on speed if DisablebySpeed is true
+ * Returns True in case Vehicle speed is less then threshold.
+ * This condition would only return true based on speed if DisablebySpeed is true
  * The condition logic is written in that way, that if we do not use disable by speed
  * then we have to return true, and trust that we would disable by other condition!
  */ 
@@ -54,7 +56,7 @@ bool LaunchControlBase::isInsideSpeedCondition() const {
 }
 
 /**
- * Returns false if TPS is invalid or TPS > preset trashold
+ * Returns false if TPS is invalid or TPS > preset threshold
  */
 bool LaunchControlBase::isInsideTpsCondition() const {
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
@@ -137,8 +139,22 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
+void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
+	this->targetSkipRatio = targetSkipRatio;
+}
+
+bool SoftSparkLimiter::shouldSkip()  {
+	if (targetSkipRatio == 0 || wasJustSkipped) {
+		wasJustSkipped = false;
+		return false;
+	}
+
+	float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	wasJustSkipped = r < 2 * targetSkipRatio;
+	return wasJustSkipped;
+}
+
 void initLaunchControl() {
-	engine->launchController.inject();
 }
 
 #endif /* EFI_LAUNCH_CONTROL */

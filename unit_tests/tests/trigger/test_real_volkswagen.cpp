@@ -14,7 +14,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 	int indeces[1] = {0};
 
 	reader.open("tests/trigger/resources/nick_1.csv", indeces);
-	WITH_ENGINE_TEST_HELPER (VW_ABA);
+	EngineTestHelper eth (VW_ABA);
 	eth.setTriggerType(TT_60_2_VW);
 
 	while (reader.haveMore()) {
@@ -26,7 +26,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 }
 
 TEST(crankingVW, crankingTwiceWithGap) {
-	WITH_ENGINE_TEST_HELPER (VW_ABA);
+	EngineTestHelper eth (VW_ABA);
 	eth.setTriggerType(TT_60_2_VW);
 
 	{

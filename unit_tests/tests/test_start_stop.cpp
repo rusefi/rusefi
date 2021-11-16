@@ -9,7 +9,7 @@
 
 TEST(start, startStop) {
 	std::unordered_map<SensorType, float> sensorVals = {{ SensorType::AcceleratorPedal, 0 }};
-	WITH_ENGINE_TEST_HELPER_SENS(PROTEUS_BMW_M73, sensorVals);
+	EngineTestHelper eth(PROTEUS_BMW_M73, sensorVals);
 	eth.moveTimeForwardAndInvokeEventsSec(1); // '0' time has special meaning for implementation so let's move forward
 
 	// this is a pull-up, so 'true' on start-up

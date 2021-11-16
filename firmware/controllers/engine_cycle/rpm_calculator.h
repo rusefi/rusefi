@@ -42,7 +42,7 @@ typedef enum {
 	RUNNING,
 } spinning_state_e;
 
-class RpmCalculator : public StoredValueSensor, public EnginePtr {
+class RpmCalculator : public StoredValueSensor {
 public:
 #if !EFI_PROD_CODE
 	int mockRpm;

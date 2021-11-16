@@ -130,7 +130,6 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 
 void Engine::initializeTriggerWaveform() {
 	static TriggerState initState;
-	initState.inject();
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -463,23 +462,13 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 #endif
 
 void Engine::injectEngineReferences() {
-	triggerCentral.inject();
-	primaryTriggerConfiguration.inject();
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].inject();
-	}
-	limpManager.inject();
-	knockController.inject();
-
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		vvtTriggerConfiguration[camIndex].update();
 	}
-	triggerCentral.init();
 }
 
 void Engine::setConfig() {
-	inject();
 	efi::clear(config);
 
 	injectEngineReferences();

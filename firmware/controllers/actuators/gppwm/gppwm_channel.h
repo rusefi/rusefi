@@ -9,7 +9,7 @@ class OutputPin;
 struct IPwm;
 class ValueProvider3D;
 
-class GppwmChannel : public EnginePtr {
+class GppwmChannel {
 public:
 	void init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
 	float update();

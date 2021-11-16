@@ -305,12 +305,7 @@ static InjectorModel injectorModel;
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void initFuelMap() {
-	sdAirmass.inject();
-	mafAirmass.inject();
-	alphaNAirmass.inject();
 
-	fuelComputer.inject();
-	injectorModel.inject();
 
 	ENGINE(fuelComputer) = &fuelComputer;
 	ENGINE(injectorModel) = &injectorModel;

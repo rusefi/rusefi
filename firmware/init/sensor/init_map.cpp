@@ -7,7 +7,7 @@
 #include "function_pointer_sensor.h"
 #include "identity_func.h"
 
-struct GetBaroWrapper : public EnginePtr {
+struct GetBaroWrapper {
 	float getBaro() {
 		return ::getBaroPressure();
 	}
@@ -111,7 +111,6 @@ void configureMapFunction() {
 }
 
 void initMap() {
-	baroWrapper.inject();
 
 	auto mapChannel = engineConfiguration->map.sensor.hwChannel;
 

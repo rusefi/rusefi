@@ -22,7 +22,7 @@ TEST(misc, structSize) {
 
 TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
-	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
+	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	eth.engine.periodicFastCallback();
 	assertEqualsM("testIgnitionPlanning_AFR", 13.5, eth.engine.engineState.targetAFR);
@@ -33,7 +33,7 @@ TEST(misc, testIgnitionPlanning) {
 TEST(misc, testEngineMath) {
 	printf("*************************************************** testEngineMath\r\n");
 
-	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
+	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 

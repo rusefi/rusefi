@@ -32,7 +32,7 @@ struct IIdleController {
 	virtual float getCrankingTaperFraction() const = 0;
 };
 
-class IdleController : public IIdleController, public EnginePtr, public EngineModule {
+class IdleController : public IIdleController, public EngineModule {
 public:
 	typedef IIdleController interface_t;
 

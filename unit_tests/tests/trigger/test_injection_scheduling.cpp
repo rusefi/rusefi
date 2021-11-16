@@ -9,13 +9,12 @@ using ::testing::InSequence;
 TEST(injectionScheduling, NormalDutyCycle) {
 	StrictMock<MockExecutor> mockExec;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engine->executor.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
 
 	InjectionEvent event;
-	event.inject();
 	InjectorOutputPin pin;
 	pin.injectorIndex = 0;
 	event.outputs[0] = &pin;

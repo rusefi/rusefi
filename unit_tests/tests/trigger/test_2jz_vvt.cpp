@@ -9,7 +9,7 @@
 
 TEST(sensors, test2jz) {
 
-	WITH_ENGINE_TEST_HELPER(TOYOTA_2JZ_GTE_VVTi);
+	EngineTestHelper eth(TOYOTA_2JZ_GTE_VVTi);
 
 
 	// this crank trigger would be easier to test, crank shape is less important for this test

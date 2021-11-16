@@ -9,7 +9,7 @@
 
 TEST(scheduler, dwellIssue796) {
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
 	eth.fireTriggerEvents2(4 /* count */ , 600 /* ms */);

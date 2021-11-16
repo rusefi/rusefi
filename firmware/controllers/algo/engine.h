@@ -89,7 +89,7 @@ protected:
 
 #define DEFAULT_MOCK_SPEED -1
 
-class Engine final : public TriggerStateListener, public EnginePtr {
+class Engine final : public TriggerStateListener {
 public:
 	Engine();
 	AcState acState;
@@ -123,6 +123,7 @@ public:
 
 	GearControllerBase *gearController;
 	LaunchControlBase launchController;
+	SoftSparkLimiter softSparkLimiter;
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
