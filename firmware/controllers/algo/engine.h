@@ -91,8 +91,12 @@ class Engine final : public TriggerStateListener, public EnginePtr {
 public:
 	Engine();
 	AcState acState;
+	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
+
+	// used by HW CI
 	bool isPwmEnabled = true;
+
 	// todo: remove this once all usages are using 'm_lastEventTimer'
 	int triggerActivityMs = -99 * 1000;
 
