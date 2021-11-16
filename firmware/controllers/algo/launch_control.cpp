@@ -102,7 +102,6 @@ void LaunchControlBase::update() {
 	int rpm = GET_RPM();
 	bool combinedConditions = isLaunchConditionMet(rpm);
 
-	//recalculate in periodic task, this way we save time in applyLaunchControlLimiting
 	//and still recalculat in case user changed the values
 	retardThresholdRpm = CONFIG(launchRpm) + (CONFIG(enableLaunchRetard) ? 
 	                     CONFIG(launchAdvanceRpmRange) : 0) + CONFIG(hardCutRpmRange);
@@ -144,11 +143,16 @@ void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void LaunchControlBase::applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (engine->isLaunchCondition && ( retardThresholdRpm < GET_RPM() )) {
-		*limitedSpark = engineConfiguration->launchSparkCutEnable;
-		*limitedFuel = engineConfiguration->launchFuelCutEnable;
-	} 
+bool LaunchControlBase::isLaunchRpmRetardCondition() const {
+	return engine->isLaunchCondition && (retardThresholdRpm < GET_RPM());
+}
+
+bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {
+	return isLaunchRpmRetardCondition() && engineConfiguration->launchSparkCutEnable;
+}
+
+bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
+	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
