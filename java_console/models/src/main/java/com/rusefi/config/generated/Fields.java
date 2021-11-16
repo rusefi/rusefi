@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 14 19:40:43 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 16 02:51:43 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -709,7 +709,6 @@ public class Fields {
 	public static final int enableFan1WithAc_offset = 76;
 	public static final int enableFan2WithAc_offset = 76;
 	public static final int enableInnovateLC2_offset = 976;
-	public static final int enableLaunchBoost_offset = 976;
 	public static final int enableLaunchRetard_offset = 976;
 	public static final int enableMapEstimationTableFallback_offset = 76;
 	public static final int enableSoftwareKnock_offset = 976;
@@ -1437,14 +1436,12 @@ public class Fields {
 	public static final int launchAdvanceRpmRange_offset = 1052;
 	public static final int launchBoostDuty_offset = 1044;
 	public static final int launchControlEnabled_offset = 76;
-	public static final int launchDisableBySpeed_offset = 976;
 	public static final int launchFuelAdded_offset = 1040;
 	public static final int launchFuelCutEnable_offset = 1464;
 	public static final int launchRpm_offset = 316;
-	public static final int launchRpmTreshold_offset = 1032;
 	public static final int launchSmoothRetard_offset = 1476;
 	public static final int launchSparkCutEnable_offset = 1464;
-	public static final int launchSpeedTreshold_offset = 1028;
+	public static final int launchSpeedThreshold_offset = 1028;
 	public static final int launchTimingRetard_offset = 320;
 	public static final int launchTimingRpmRange_offset = 1036;
 	public static final int launchTpsTreshold_offset = 1056;
@@ -1753,7 +1750,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 450693860;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2217,7 +2213,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.14.all.450693860";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.16.all.2660525519";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2231,6 +2227,8 @@ public class Fields {
 	public static final int uart_device_e_UART_DEVICE_4 = 4;
 	public static final int uart_device_e_UART_NONE = 0;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
+	public static final int unfinishedenableLaunchBoost_offset = 976;
+	public static final int unfinishedlaunchDisableBySpeed_offset = 976;
 	public static final int unused1059_offset = 3961;
 	public static final int unused1127_offset = 2116;
 	public static final int unused1128_offset = 2116;
@@ -2320,6 +2318,7 @@ public class Fields {
 	public static final int unusedEL4_offset = 2072;
 	public static final int unusedExHpfp_offset = 724;
 	public static final int unusedFiller_4703_offset = 4703;
+	public static final int unusedLaunchRpmThreshold_offset = 1032;
 	public static final int unusedLuaWasHere_offset = 16032;
 	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedOutputFreqWhereHere_offset = 832;
@@ -2399,6 +2398,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_FORD_ST170 = 7;
 	public static final int vvt_mode_e_VVT_HONDA_K = 10;
 	public static final int vvt_mode_e_VVT_INACTIVE = 0;
+	public static final int vvt_mode_e_VVT_MAP_V_TWIN = 12;
 	public static final int vvt_mode_e_VVT_MIATA_NB2 = 3;
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
@@ -2847,8 +2847,8 @@ public class Fields {
 	public static final Field USEHBRIDGESTODRIVEIDLESTEPPER = Field.create("USEHBRIDGESTODRIVEIDLESTEPPER", 976, FieldType.BIT, 2);
 	public static final Field MULTISPARKENABLE = Field.create("MULTISPARKENABLE", 976, FieldType.BIT, 3);
 	public static final Field ENABLELAUNCHRETARD = Field.create("ENABLELAUNCHRETARD", 976, FieldType.BIT, 4);
-	public static final Field ENABLELAUNCHBOOST = Field.create("ENABLELAUNCHBOOST", 976, FieldType.BIT, 5);
-	public static final Field LAUNCHDISABLEBYSPEED = Field.create("LAUNCHDISABLEBYSPEED", 976, FieldType.BIT, 6);
+	public static final Field UNFINISHEDENABLELAUNCHBOOST = Field.create("UNFINISHEDENABLELAUNCHBOOST", 976, FieldType.BIT, 5);
+	public static final Field UNFINISHEDLAUNCHDISABLEBYSPEED = Field.create("UNFINISHEDLAUNCHDISABLEBYSPEED", 976, FieldType.BIT, 6);
 	public static final Field ENABLECANVSS = Field.create("ENABLECANVSS", 976, FieldType.BIT, 7);
 	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 976, FieldType.BIT, 8);
 	public static final Field SHOWHUMANREADABLEWARNING = Field.create("SHOWHUMANREADABLEWARNING", 976, FieldType.BIT, 9);
@@ -2899,8 +2899,8 @@ public class Fields {
 	public static final Field LAUNCHACTIVATIONMODE = Field.create("LAUNCHACTIVATIONMODE", 1020, FieldType.INT, launchActivationMode_e);
 	public static final String[] antiLagActivationMode_e = {"Always Active", "Switch Input"};
 	public static final Field ANTILAGACTIVATIONMODE = Field.create("ANTILAGACTIVATIONMODE", 1024, FieldType.INT, antiLagActivationMode_e);
-	public static final Field LAUNCHSPEEDTRESHOLD = Field.create("LAUNCHSPEEDTRESHOLD", 1028, FieldType.INT);
-	public static final Field LAUNCHRPMTRESHOLD = Field.create("LAUNCHRPMTRESHOLD", 1032, FieldType.INT);
+	public static final Field LAUNCHSPEEDTHRESHOLD = Field.create("LAUNCHSPEEDTHRESHOLD", 1028, FieldType.INT);
+	public static final Field UNUSEDLAUNCHRPMTHRESHOLD = Field.create("UNUSEDLAUNCHRPMTHRESHOLD", 1032, FieldType.INT);
 	public static final Field LAUNCHTIMINGRPMRANGE = Field.create("LAUNCHTIMINGRPMRANGE", 1036, FieldType.INT);
 	public static final Field LAUNCHFUELADDED = Field.create("LAUNCHFUELADDED", 1040, FieldType.INT);
 	public static final Field LAUNCHBOOSTDUTY = Field.create("LAUNCHBOOSTDUTY", 1044, FieldType.INT);
@@ -4127,8 +4127,8 @@ public class Fields {
 	USEHBRIDGESTODRIVEIDLESTEPPER,
 	MULTISPARKENABLE,
 	ENABLELAUNCHRETARD,
-	ENABLELAUNCHBOOST,
-	LAUNCHDISABLEBYSPEED,
+	UNFINISHEDENABLELAUNCHBOOST,
+	UNFINISHEDLAUNCHDISABLEBYSPEED,
 	ENABLECANVSS,
 	ENABLEINNOVATELC2,
 	SHOWHUMANREADABLEWARNING,
@@ -4177,8 +4177,8 @@ public class Fields {
 	BOOSTPWMFREQUENCY,
 	LAUNCHACTIVATIONMODE,
 	ANTILAGACTIVATIONMODE,
-	LAUNCHSPEEDTRESHOLD,
-	LAUNCHRPMTRESHOLD,
+	LAUNCHSPEEDTHRESHOLD,
+	UNUSEDLAUNCHRPMTHRESHOLD,
 	LAUNCHTIMINGRPMRANGE,
 	LAUNCHFUELADDED,
 	LAUNCHBOOSTDUTY,

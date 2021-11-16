@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+RewriteRule docs/wiki$  /docs/wiki/Home [R]
+RewriteRule docs/wiki/$ /docs/wiki/Home [R]
+
+RewriteCond %{HTTPS} !=on
+RewriteRule .* https://rusefi.com%{REQUEST_URI} [R,L]
+</IfModule>
