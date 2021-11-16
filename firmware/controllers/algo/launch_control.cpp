@@ -22,10 +22,12 @@
 bool LaunchControlBase::isInsideSwitchCondition() {
 	switch (CONFIG(launchActivationMode)) {
 	case SWITCH_INPUT_LAUNCH:
+#if EFI_PROD_CODE
 		if (isBrainPinValid(CONFIG(launchActivatePin))) {
 			//todo: we should take into consideration if this sw is pulled high or low!
 			launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
 		}
+#endif // EFI_PROD_CODE
 		return launchActivatePinState;
 
 	case CLUTCH_INPUT_LAUNCH:
