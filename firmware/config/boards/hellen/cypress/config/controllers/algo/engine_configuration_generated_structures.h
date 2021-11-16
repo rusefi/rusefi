@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 14 19:40:50 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Nov 16 02:51:49 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1960,10 +1960,10 @@ struct engine_configuration_s {
 	bool enableLaunchRetard : 1;
 	/**
 	offset 976 bit 5 */
-	bool enableLaunchBoost : 1;
+	bool unfinishedenableLaunchBoost : 1;
 	/**
 	offset 976 bit 6 */
-	bool launchDisableBySpeed : 1;
+	bool unfinishedlaunchDisableBySpeed : 1;
 	/**
 	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	offset 976 bit 7 */
@@ -2092,13 +2092,13 @@ struct engine_configuration_s {
 	Kph
 	 * offset 1028
 	 */
-	int launchSpeedTreshold;
+	int launchSpeedThreshold;
 	/**
 	 * Disabled below this rpm
 	RPM
 	 * offset 1032
 	 */
-	int launchRpmTreshold;
+	int unusedLaunchRpmThreshold;
 	/**
 	 * Range from Launch Rpm for Timing Retard to activate
 	RPM
@@ -4545,4 +4545,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 14 19:40:50 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Tue Nov 16 02:51:49 UTC 2021
