@@ -733,8 +733,10 @@ void triggerInfo(void) {
 
 	efiPrintf("synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
-			boolToString(isTriggerDecoderError()), engine->triggerCentral.triggerState.totalTriggerErrorCounter,
-			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
+			boolToString(engine->triggerCentral.isTriggerDecoderError()),
+			engine->triggerCentral.triggerState.totalTriggerErrorCounter,
+			engine->triggerCentral.triggerState.orderingErrorCounter,
+			engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engine->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {
@@ -835,24 +837,24 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING
-	efiPrintf("isTriggerConfigChanged=%d", engine->isTriggerConfigChanged);
+	efiPrintf("isTriggerConfigChanged=%d", triggerConfigChanged);
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// we do not want to miss two updates in a row
-	engine->isTriggerConfigChanged = engine->isTriggerConfigChanged || changed;
+	engine->triggerCentral.triggerConfigChanged = engine->triggerCentral.triggerConfigChanged || changed;
 }
 
 /**
  * @returns true if configuration just changed, and if that change has affected trigger
  */
-bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool result = engine->triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && engine->isTriggerConfigChanged;
-	engine->isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
+bool TriggerCentral::checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && triggerConfigChanged;
+	triggerConfigChanged = false; // whoever has called the method is supposed to react to changes
 	return result;
 }
 
-bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->isTriggerConfigChanged;
+bool TriggerCentral::isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+	return triggerConfigChanged;
 }
 
 void validateTriggerInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
@@ -887,7 +889,7 @@ void initTriggerCentral() {
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
-bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool TriggerCentral::isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return engine->triggerErrorDetection.sum(6) > 4;
 }
 
