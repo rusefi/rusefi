@@ -100,7 +100,7 @@ static int lua_curve2d(lua_State* l) {
 	auto humanCurveIdx = luaL_checkinteger(l, 1);
 	auto x = luaL_checknumber(l, 2);
 
-	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x);
 
 	lua_pushnumber(l, result);
 	return 1;
@@ -108,7 +108,7 @@ static int lua_curve2d(lua_State* l) {
 
 static int lua_findCurveIndex(lua_State* l) {
 	auto name = luaL_checklstring(l, 1, nullptr);
-	auto result = getCurveIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveIndexByName(name);
 	if (result == EFI_ERROR_CODE) {
 		lua_pushnil(l);
 	} else {
@@ -461,7 +461,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "findTableIndex",
 			[](lua_State* l) {
 			auto name = luaL_checklstring(l, 1, nullptr);
-			auto index = getTableIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			auto index = getTableIndexByName(name);
 			if (index == EFI_ERROR_CODE) {
 				lua_pushnil(l);
 			} else {
@@ -476,7 +476,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 			auto name = luaL_checklstring(l, 1, nullptr);
 			auto defaultValue = luaL_checknumber(l, 2);
 
-			auto index = getSettingIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			auto index = getSettingIndexByName(name);
 			if (index == EFI_ERROR_CODE) {
 				lua_pushnumber(l, defaultValue);
 			} else {

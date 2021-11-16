@@ -25,7 +25,7 @@ void updateVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	auto rpm = GET_RPM();
 
 	for (size_t i = 0; i < efi::size(CONFIG(vrThreshold)); i++) {
-		updateVrPwm(rpm, i PASS_ENGINE_PARAMETER_SUFFIX);
+		updateVrPwm(rpm, i);
 	}
 }
 

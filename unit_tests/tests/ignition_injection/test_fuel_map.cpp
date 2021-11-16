@@ -23,15 +23,15 @@ TEST(misc, testFuelMap) {
 		CONFIG(injector.battLagCorr[i]) = 0.5 + 2 * i;
 	}
 
-	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.updateSlowSensors();
 
 	Sensor::setMockValue(SensorType::Clt, 36.605f);
 	Sensor::setMockValue(SensorType::Iat, 30.0f);
 
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_NEAR(5.3679, getRunningFuel(5 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << "base fuel";
+	eth.engine.periodicFastCallback();
+	ASSERT_NEAR(5.3679, getRunningFuel(5), EPS4D) << "base fuel";
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
@@ -49,41 +49,41 @@ TEST(misc, testFuelMap) {
 	Sensor::setMockValue(SensorType::Clt, 70.0f);
 	Sensor::setMockValue(SensorType::Iat, 30.0f);
 
-	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFlatInjectorLag(0);
 
-	float iatCorrection = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float iatCorrection = getIatFuelCorrection();
 	ASSERT_EQ( 6,  iatCorrection) << "IAT";
-	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float cltCorrection = getCltFuelCorrection();
 	ASSERT_EQ( 7,  cltCorrection) << "CLT";
 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5);
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback();
 
 	// Check that runningFuel corrects appropriately
-	EXPECT_EQ( 42,  getRunningFuel(1 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
-	EXPECT_EQ( 84,  getRunningFuel(2 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
+	EXPECT_EQ( 42,  getRunningFuel(1)) << "v1";
+	EXPECT_EQ( 84,  getRunningFuel(2)) << "v1";
 
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0);
 
 	engineConfiguration->cranking.baseFuel = 4000;
 
 	// Should use 20 degree correction in case of failed sensor
 	Sensor::resetMockValue(SensorType::Clt);
-	EXPECT_NEAR(12.4, getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(12.4, getCrankingFuel3(2, 0), EPS4D);
 
 	Sensor::setMockValue(SensorType::Clt, 0);
-	EXPECT_NEAR(7.7333, getCrankingFuel3(2, 4 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(7.7333, getCrankingFuel3(2, 4), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 8);
-	EXPECT_NEAR(7, getCrankingFuel3(2, 15 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(7, getCrankingFuel3(2, 15), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(8, getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(8, getCrankingFuel3(2, 0), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(4, getCrankingFuel3(2, 50 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(4, getCrankingFuel3(2, 50), EPS4D);
 }
 
 
@@ -139,7 +139,7 @@ TEST(misc, testAngleResolver) {
 
 	TriggerWaveform * ts = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->initializeTriggerWaveform();
 
 	assertEqualsM("index 2", 52.76, triggerFormDetails->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave->getSwitchTime(2));

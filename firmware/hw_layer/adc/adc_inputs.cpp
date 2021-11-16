@@ -41,7 +41,7 @@ static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
 // Board voltage, with divider coefficient accounted for
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getVoltage(msg, hwChannel PASS_ENGINE_PARAMETER_SUFFIX) * engineConfiguration->analogInputDividerCoefficient;
+	return getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
 }
 
 // voltage in MCU universe, from zero to VDD

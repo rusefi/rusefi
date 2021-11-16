@@ -52,7 +52,7 @@ bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 bool AcState::updateAc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool isEnabled = getAcState(PASS_ENGINE_PARAMETER_SIGNATURE);
+	bool isEnabled = getAcState();
 
 	enginePins.acRelay.setValue(isEnabled);
 

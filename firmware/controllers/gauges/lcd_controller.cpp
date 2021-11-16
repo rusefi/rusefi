@@ -183,10 +183,10 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::getOrZero(SensorType::Tps1));
 		return;
 	case LL_FUEL_CLT_CORRECTION:
-		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("CLT corr %.2f", getCltFuelCorrection());
 		return;
 	case LL_FUEL_IAT_CORRECTION:
-		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("IAT corr %.2f", getIatFuelCorrection());
 		return;
 	case LL_FUEL_INJECTOR_LAG:
 		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);

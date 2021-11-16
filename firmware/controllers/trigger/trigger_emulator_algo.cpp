@@ -48,7 +48,7 @@ void TriggerEmulatorHelper::handleEmulatorCallback(const MultiChannelStateSequen
 		if (needEvent(stateIndex, multiChannelStateSequence, i)) {
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 
-			handleShaftSignal(i, currentValue, stamp PASS_ENGINE_PARAMETER_SUFFIX);
+			handleShaftSignal(i, currentValue, stamp);
 		}
 	}
 }
@@ -89,7 +89,7 @@ void setTriggerEmulatorRPM(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	if (rpm == 0) {
 		triggerSignal.setFrequency(NAN);
 	} else {
-		float rpmM = getRpmMultiplier(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+		float rpmM = getRpmMultiplier(engine->getOperationMode());
 		float rPerSecond = rpm * rpmM / 60.0; // per minute converted to per second
 		triggerSignal.setFrequency(rPerSecond);
 	}
@@ -143,7 +143,7 @@ static void initTriggerPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	TriggerWaveform *s = &engine->triggerCentral.triggerShape;
-	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency PASS_ENGINE_PARAMETER_SUFFIX);
+	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
 			s->wave,
@@ -183,9 +183,9 @@ void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousCo
 void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiPrintf("Emulating %s", getEngine_type_e(engineConfiguration->engineType));
 
-	startTriggerEmulatorPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startTriggerEmulatorPins();
 
-	initTriggerEmulatorLogic(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTriggerEmulatorLogic();
 }
 
 #endif /* EFI_UNIT_TEST */

@@ -51,7 +51,7 @@ expected<angle_t> VvtController::observePlant() const {
 
 expected<angle_t> VvtController::getSetpoint() const {
 	int rpm = GET_RPM();
-	float load = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
 
 #if EFI_TUNER_STUDIO
@@ -140,7 +140,7 @@ void initAuxPid() {
 			config->vvtTable2RpmBins);
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		instances[i].inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+		instances[i].inject();
 
 		int camIndex = i % CAMS_PER_BANK;
 		int bankIndex = i / CAMS_PER_BANK;

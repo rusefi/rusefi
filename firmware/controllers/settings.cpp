@@ -100,7 +100,7 @@ void printConfiguration(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("configurationVersion=%d", engine->getGlobalConfigurationVersion());
 
 	efiPrintf("rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
-			engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+			engine->getOperationMode());
 
 	efiPrintf("globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 
@@ -158,18 +158,18 @@ static void doPrintConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void setFixedModeTiming(int value) {
 	engineConfiguration->fixedModeTiming = value;
 	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 static void setTimingMode(int value) {
 	engineConfiguration->timingMode = (timing_mode_e) value;
 	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 static void setIdleSolenoidFrequency(int value) {
 	engineConfiguration->idle.solenoidFrequency = value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 static void setInjectionPinMode(int value) {
@@ -190,7 +190,7 @@ static void setIdlePinMode(int value) {
 static void setInjectionOffset(float value) {
 	engineConfiguration->extraInjectionOffset = value;
 	doPrintConfiguration();
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 static void setFuelPumpPinMode(int value) {
@@ -304,37 +304,37 @@ static void setGlobalTriggerAngleOffset(float value) {
 		return;
 	}
 	engineConfiguration->globalTriggerAngleOffset = value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 }
 
 static void setCrankingPrimingPulse(float value) {
 	engineConfiguration->startOfCrankingPrimingPulse = value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 static void setCrankingTimingAngle(float value) {
 	engineConfiguration->crankingTimingAngle = value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 }
 
 static void setCrankingInjectionMode(int value) {
 	engineConfiguration->crankingInjectionMode = (injection_mode_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 }
 
 static void setInjectionMode(int value) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 }
 
 static void setIgnitionMode(int value) {
 	engineConfiguration->ignitionMode = (ignition_mode_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
+	prepareOutputSignals();
 	doPrintConfiguration();
 }
 
@@ -352,7 +352,7 @@ static void setIndividualCoilsIgnition() {
 
 static void setTriggerType(int value) {
 	engineConfiguration->trigger.type = (trigger_type_e) value;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 	efiPrintf("Do you need to also invoke set operation_mode X?");
 	engine->resetEngineSnifferIfInTestMode();
@@ -377,7 +377,7 @@ static void setToothedWheel(int total, int skipped DECLARE_ENGINE_PARAMETER_SUFF
 
 	efiPrintf("toothed: total=%d/skipped=%d", total, skipped);
 	setToothedWheelConfiguration(&engine->triggerCentral.triggerShape, total, skipped, engineConfiguration->ambiguousOperationMode);
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 }
 
@@ -461,7 +461,7 @@ static void setIgnitionPin(const char *indexStr, const char *pinName) {
 	}
 	efiPrintf("setting ignition pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->ignitionPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 // this method is useful for desperate time debugging
@@ -501,7 +501,7 @@ static void setIndividualPin(const char *pinName, brain_pin_e *targetPin, const 
 	}
 	efiPrintf("setting %s pin to %s please save&restart", name, hwPortname(pin));
 	*targetPin = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 // set vss_pin
@@ -572,7 +572,7 @@ static void setInjectionPin(const char *indexStr, const char *pinName) {
 	}
 	efiPrintf("setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->injectionPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 /**
@@ -591,7 +591,7 @@ static void setTriggerInputPin(const char *indexStr, const char *pinName) {
 	}
 	efiPrintf("setting trigger pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->triggerInputPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 static void setTriggerSimulatorMode(const char *indexStr, const char *modeCode) {
@@ -616,7 +616,7 @@ static void setEgtCSPin(const char *indexStr, const char *pinName) {
 	}
 	efiPrintf("setting EGT CS pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->max31855_cs[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
@@ -629,7 +629,7 @@ static void setTriggerSimulatorPin(const char *indexStr, const char *pinName) {
 	}
 	efiPrintf("setting trigger simulator pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->triggerSimulatorPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 #if HAL_USE_ADC
@@ -667,7 +667,7 @@ static void setAnalogInputPin(const char *sensorStr, const char *pinName) {
 		engineConfiguration->tps2_1AdcChannel = channel;
 		efiPrintf("setting TPS2 to %s/%d", pinName, channel);
 	}
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 #endif
 
@@ -682,7 +682,7 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	}
 	efiPrintf("setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->logicAnalyzerPins[index] = pin;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 static void showPinFunction(const char *pinName) {
@@ -762,16 +762,16 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->useStepperIdle = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "trigger_only_front")) {
 		engineConfiguration->useOnlyRisingEdgeForTrigger = isEnabled;
-		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "use_only_first_channel")) {
 		engineConfiguration->trigger.useOnlyFirstChannel = isEnabled;
-		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
 		engineConfiguration->twoWireBatchInjection = isEnabled;
-		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
-		incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		engineConfiguration->isHip9011Enabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_etb")) {
@@ -858,7 +858,7 @@ static void disableSpi(int index) {
  * weird: we stop pins from here? we probably should stop engine from the code which is actually stopping engine?
  */
 void scheduleStopEngine(void) {
-	doScheduleStopEngine(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doScheduleStopEngine();
 }
 
 static void printAllInfo() {
@@ -1168,7 +1168,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "warning_period")) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
-		setConstantDwell(valueF PASS_CONFIG_PARAMETER_SUFFIX);
+		setConstantDwell(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_ENGINESNIFFERRPMTHRESHOLD)) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
 // migrate to new laucnh fields?
@@ -1306,14 +1306,14 @@ void setEngineType(int value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* EFI_PROD_CODE */
 
 		engineConfiguration->engineType = (engine_type_e)value;
-		resetConfigurationExt((engine_type_e)value PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt((engine_type_e)value);
 		engine->resetEngineSnifferIfInTestMode();
 
 	#if EFI_INTERNAL_FLASH
 		writeToFlashNow();
 	#endif /* EFI_INTERNAL_FLASH */
 	}
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 #if ! EFI_UNIT_TEST
 	doPrintConfiguration();
 #endif /* EFI_UNIT_TEST */

@@ -21,12 +21,12 @@
 
 #define efiSetPadModeIfConfigurationChanged(msg, pin, mode)                      \
 	if (isConfigurationChanged(pin)) {                                           \
-		efiSetPadMode(msg, CONFIG(pin), mode PASS_ENGINE_PARAMETER_SUFFIX);      \
+		efiSetPadMode(msg, CONFIG(pin), mode);      \
 	}
 
 #define efiSetPadUnusedIfConfigurationChanged(pin)                               \
 	if (isConfigurationChanged(pin)) {                                           \
-		efiSetPadUnused(activeConfiguration.pin PASS_ENGINE_PARAMETER_SUFFIX);   \
+		efiSetPadUnused(activeConfiguration.pin);   \
 	}
 
 EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode DECLARE_ENGINE_PARAMETER_SUFFIX);

@@ -108,19 +108,19 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
-	recalculateAuxValveTiming(PASS_ENGINE_PARAMETER_SIGNATURE);
+	recalculateAuxValveTiming();
 
 	int rpm = ENGINE(rpmCalculator).getRpm();
-	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	sparkDwell = getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	running.intakeTemperatureCoefficient = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	running.intakeTemperatureCoefficient = getIatFuelCorrection();
 	// todo: move this into slow callback, no reason for CLT corr to be here
-	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	running.coolantTemperatureCoefficient = getCltFuelCorrection();
 
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm);
 
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
@@ -134,18 +134,18 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		running.postCrankingFuelCorrection = 1.0f;
 	}
 
-	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cltTimingCorrection = getCltTimingCorrection();
 
 	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise);
 
-	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	baroCorrection = getBaroCorrection();
 
 	auto tps = Sensor::get(SensorType::Tps1);
-	updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
+	updateTChargeK(rpm, tps.value_or(0));
 
-	float injectionMass = getInjectionMass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	auto clResult = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float injectionMass = getInjectionMass(rpm);
+	auto clResult = fuelClosedLoopCorrection();
 
 	// compute per-bank fueling
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
@@ -157,16 +157,16 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
 	ENGINE(injectionDuration) = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
 
-	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	injectionOffset = getInjectionOffset(rpm, fuelLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	float fuelLoad = getFuelingLoad();
+	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 
-	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+	float ignitionLoad = getIgnitionLoad();
+	timingAdvance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
 
 	// TODO: calculate me from a table!
 	trailingSparkAngle = CONFIG(trailingSparkAngle);
 
-	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	multispark.count = getMultiSparkCount(rpm);
 
 #if EFI_LAUNCH_CONTROL
 	engine->launchController.update();
@@ -179,7 +179,7 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #if EFI_ENGINE_CONTROL
-	float newTCharge = getTCharge(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
+	float newTCharge = getTCharge(rpm, tps);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / US_PER_SECOND_F;

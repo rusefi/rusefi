@@ -141,7 +141,7 @@ void Engine::onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
 
 #if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
 	scheduleByAngle(&startSampling, nowNt,
-			/*angle*/CONFIG(knockDetectionWindowStart), { startKnockSampling, engine } PASS_ENGINE_PARAMETER_SUFFIX);
+			/*angle*/CONFIG(knockDetectionWindowStart), { startKnockSampling, engine });
 #endif
 
 #if EFI_HIP_9011

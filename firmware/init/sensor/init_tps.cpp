@@ -95,7 +95,7 @@ static void initTpsFuncAndRedund(RedundantSensor& redund, RedundantFordTps* ford
 	}
 }
 
-void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void initTps() {
 	percent_t min = CONFIG(tpsErrorDetectionTooLow);
 	percent_t max = CONFIG(tpsErrorDetectionTooHigh);
 

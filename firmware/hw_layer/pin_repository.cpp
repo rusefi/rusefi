@@ -62,17 +62,17 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg DECLARE_ENGINE_PAR
 	if (index < 0)
 		return true;
 
-	if (getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) != NULL) {
+	if (getBrainUsedPin(index) != NULL) {
 		/* TODO: get readable name of brainPin... */
 		firmwareError(CUSTOM_ERR_PIN_ALREADY_USED_1, "Pin \"%s\" required by \"%s\" but is used by \"%s\" %s",
 				hwPortname(brainPin),
 				msg,
-				getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX),
+				getBrainUsedPin(index),
 				getEngine_type_e(engineConfiguration->engineType));
 		return true;
 	}
 
-	getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) = msg;
+	getBrainUsedPin(index) = msg;
 	ENGINE(pinRepository).totalPinsUsed++;
 	return false;
 }
@@ -86,9 +86,9 @@ void brain_pin_markUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) 
 	if (index < 0)
 		return;
 
-	if (getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) != nullptr)
+	if (getBrainUsedPin(index) != nullptr)
 		ENGINE(pinRepository).totalPinsUsed--;
-	getBrainUsedPin(index PASS_ENGINE_PARAMETER_SUFFIX) = nullptr;
+	getBrainUsedPin(index) = nullptr;
 }
 
 #if EFI_PROD_CODE

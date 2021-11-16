@@ -4,7 +4,7 @@
 static Lps25 device;
 static Lps25Sensor sensor(device);
 
-void initBaro(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void initBaro() {
 	// If there's already an external (analog) baro sensor configured,
 	// don't configure the internal one.
 	if (Sensor::hasSensor(SensorType::BarometricPressure)) {

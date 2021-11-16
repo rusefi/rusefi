@@ -12,8 +12,8 @@
 
 #include "sachs.h"
 
-void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setSachs() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->specs.displacement = 0.1; // 100cc
 	engineConfiguration->specs.cylindersCount = 1;
@@ -25,7 +25,7 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 // set injection_offset 0
 	engineConfiguration->extraInjectionOffset = 0;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L);
 
 	/**
 	 * 50/2 trigger
@@ -81,7 +81,7 @@ void setSachs(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->fuelPumpPin = GPIOE_6;
 
 	// todo: extract a method? figure out something smarter
-	setTimingRpmBin(800, 15000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingRpmBin(800, 15000);
 	setLinearCurve(config->veRpmBins, 7000, 15000, 1);
 	setLinearCurve(config->lambdaRpmBins, 500, 7000, 1);
 }

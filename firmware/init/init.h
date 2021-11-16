@@ -9,7 +9,7 @@
 // Call this once at startup to initialize, configure, and subscribe sensors
 void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
-void stopSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void stopSensors();
 
 // Call this whenever the configuration may have changed, so any sensors
 // can be reconfigured with the new settings.
@@ -19,18 +19,18 @@ void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 // Internal init functions for individual systems
 // Sensor init/config
-void initVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void initMaf(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initVbatt();
+void initMaf();
 void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void initThermistors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initTps();
+void initOilPressure();
+void initThermistors();
 void initCanSensors();
 void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void initFuelLevel(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void initBaro(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void initAuxSensors(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initFlexSensor();
+void initFuelLevel();
+void initBaro();
+void initAuxSensors();
 void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void initTurbochargerSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 

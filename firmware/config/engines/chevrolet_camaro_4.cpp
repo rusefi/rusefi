@@ -13,11 +13,11 @@
 #include "chevrolet_camaro_4.h"
 #include "custom_engine.h"
 
-void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setCamaro4() {
+	setFrankensoConfiguration();
 
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.displacement = 5.7;
 	engineConfiguration->specs.cylindersCount = 8;

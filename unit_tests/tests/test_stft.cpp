@@ -83,11 +83,11 @@ TEST(ClosedLoopFuel, afrLimits) {
 	engineConfiguration->stft.maxAfr = 180;  // 18.0 AFR
 
 	Sensor::setMockValue(SensorType::Lambda1, 0.1f);
-	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1 PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1));
 
 	Sensor::setMockValue(SensorType::Lambda1, 1.0f);
-	EXPECT_TRUE(shouldUpdateCorrection(SensorType::Lambda1 PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_TRUE(shouldUpdateCorrection(SensorType::Lambda1));
 
 	Sensor::setMockValue(SensorType::Lambda1, 2.0f);
-	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1 PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_FALSE(shouldUpdateCorrection(SensorType::Lambda1));
 }

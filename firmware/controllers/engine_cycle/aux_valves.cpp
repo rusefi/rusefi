@@ -63,7 +63,7 @@ void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	recalculateAuxValveTiming(PASS_ENGINE_PARAMETER_SIGNATURE);
+	recalculateAuxValveTiming();
 
 	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
 
@@ -73,7 +73,7 @@ void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			actor->valveIndex = valveIndex;
 			actor->extra = phaseIndex * 360 + valveIndex * 180;
 
-			actor->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+			actor->inject();
 			scheduleOpen(actor);
 		}
 	}

@@ -30,7 +30,7 @@ extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
 floatms_t getEngineCycleDuration(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE) == TWO_STROKE ? 1 : 2);
+	return getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode() == TWO_STROKE ? 1 : 2);
 }
 
 /**
@@ -54,7 +54,7 @@ float getIgnitionLoad(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * see also setConstantDwell
  */
-void setSingleCoilDwell(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setSingleCoilDwell() {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
 		engineConfiguration->sparkDwellRpmBins[i] = i + 1;
 		engineConfiguration->sparkDwellValues[i] = 4;
@@ -325,7 +325,7 @@ static const int *getFiringOrderTable(DECLARE_ENGINE_PARAMETER_SIGNATURE)
  */
 int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
-	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
+	const int firingOrderLength = getFiringOrderLength();
 
 	if (firingOrderLength < 1 || firingOrderLength > MAX_CYLINDER_COUNT) {
 		firmwareError(CUSTOM_FIRING_LENGTH, "fol %d", firingOrderLength);
@@ -343,7 +343,7 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		return 1;
 	}
 
-	const int *firingOrderTable = getFiringOrderTable(PASS_ENGINE_PARAMETER_SIGNATURE);
+	const int *firingOrderTable = getFiringOrderTable();
 	if (firingOrderTable)
 		return firingOrderTable[index];
 	/* else
@@ -357,8 +357,8 @@ int getCylinderId(int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
  * @return cylinderId from one to cylindersCount
  */
 int getNextFiringCylinderId(int prevCylinderId DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	const int firingOrderLength = getFiringOrderLength(PASS_ENGINE_PARAMETER_SIGNATURE);
-	const int *firingOrderTable = getFiringOrderTable(PASS_ENGINE_PARAMETER_SIGNATURE);
+	const int firingOrderLength = getFiringOrderLength();
+	const int *firingOrderTable = getFiringOrderTable();
 
 	if (firingOrderTable) {
 		for (size_t i = 0; i < firingOrderLength; i++)
@@ -372,7 +372,7 @@ int getNextFiringCylinderId(int prevCylinderId DECLARE_ENGINE_PARAMETER_SUFFIX) 
  * @param cylinderIndex from 0 to cylinderCount, not cylinder number
  */
 static int getIgnitionPinForIndex(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	switch (getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	switch (getCurrentIgnitionMode()) {
 	case IM_ONE_COIL:
 		return 0;
 	case IM_WASTED_SPARK: {
@@ -397,7 +397,7 @@ void prepareIgnitionPinIndices(ignition_mode_e ignitionMode DECLARE_ENGINE_PARAM
 	(void)ignitionMode;
 #if EFI_ENGINE_CONTROL
 	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
-		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex);
 	}
 #endif /* EFI_ENGINE_CONTROL */
 }
@@ -422,7 +422,7 @@ ignition_mode_e getCurrentIgnitionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * This heavy method is only invoked in case of a configuration change or initialization.
  */
 void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	ENGINE(engineCycle) = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ENGINE(engineCycle) = getEngineCycle(engine->getOperationMode());
 
 	angle_t maxTimingCorrMap = -FOUR_STROKE_CYCLE_DURATION;
 	angle_t maxTimingMap = -FOUR_STROKE_CYCLE_DURATION;
@@ -444,9 +444,9 @@ void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		ENGINE(ignitionPositionWithinEngineCycle[i]) = ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
 	}
 
-	prepareIgnitionPinIndices(CONFIG(ignitionMode) PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareIgnitionPinIndices(CONFIG(ignitionMode));
 
-	TRIGGER_WAVEFORM(prepareShape(&ENGINE(triggerCentral.triggerFormDetails) PASS_ENGINE_PARAMETER_SUFFIX));
+	TRIGGER_WAVEFORM(prepareShape(&ENGINE(triggerCentral.triggerFormDetails)));
 
 	// Fuel schedule may now be completely wrong, force a reset
 	ENGINE(injectionEvents).invalidate();
@@ -467,7 +467,7 @@ void setAlgorithm(engine_load_mode_e algo DECLARE_CONFIG_PARAMETER_SUFFIX) {
 	engineConfiguration->fuelAlgorithm = algo;
 	if (algo == LM_SPEED_DENSITY) {
 		setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
-		buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
+		buildTimingMap(35);
 	}
 }
 

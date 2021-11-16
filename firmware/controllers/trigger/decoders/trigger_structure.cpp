@@ -434,7 +434,7 @@ void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PA
 		return;
 	}
 
-	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareEventAngles(this, details);
 #endif
 }
 

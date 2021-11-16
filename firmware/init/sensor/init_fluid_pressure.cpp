@@ -45,7 +45,7 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 	sensor.Register();
 }
 
-void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void initOilPressure() {
 	initFluidPressure(oilpSensorFunc, oilpSensor, CONFIG(oilPressure), 10);
 	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, CONFIG(lowPressureFuel), 10);
 	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, CONFIG(highPressureFuel), 100);

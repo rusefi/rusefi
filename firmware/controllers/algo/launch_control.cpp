@@ -138,7 +138,7 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 }
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	engine->launchController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.inject();
 }
 
 #endif /* EFI_LAUNCH_CONTROL */

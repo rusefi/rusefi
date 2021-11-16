@@ -209,7 +209,7 @@ void EnginePins::startPins() {
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		pin->init(PASS_ENGINE_PARAMETER_SIGNATURE);
+		pin->init();
 		pin = pin->next;
 	}
 }

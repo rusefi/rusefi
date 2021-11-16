@@ -29,7 +29,7 @@ TEST(SensorInit, Tps) {
 	CONFIG(tpsMin) = 200;	// 1 volt
 	CONFIG(tpsMax) = 800;	// 4 volts
 
-	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initTps();
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Tps1Primary));
@@ -55,25 +55,25 @@ TEST(SensorInit, TpsValuesTooClose) {
 	// Should fail, 0.49 volts apart
 	CONFIG(tpsMin) = 200;	// 1.00 volt
 	CONFIG(tpsMax) = 298;	// 1.49 volts
-	EXPECT_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	EXPECT_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// Should fail, -0.49 volts apart
 	CONFIG(tpsMin) = 298;	// 1.49 volt
 	CONFIG(tpsMax) = 200;	// 1.00 volts
-	EXPECT_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	EXPECT_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// Should succeed, 0.51 volts apart
 	CONFIG(tpsMin) = 200;	// 1.00 volt
 	CONFIG(tpsMax) = 302;	// 1.51 volts
-	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// Should succeed, -0.51 volts apart
 	CONFIG(tpsMin) = 302;	// 1.51 volt
 	CONFIG(tpsMax) = 200;	// 1.00 volts
-	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// With no pin, it should be ok that they are the same
@@ -81,19 +81,19 @@ TEST(SensorInit, TpsValuesTooClose) {
 	CONFIG(tps1_1AdcChannel) = EFI_ADC_NONE;
 	CONFIG(tpsMin) = 200;	// 1.00 volt
 	CONFIG(tpsMax) = 200;	// 1.00 volts
-	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// Test a random bogus pin index, shouldn't fail
 	CONFIG(tps1_1AdcChannel) = static_cast<adc_channel_e>(175);
 	CONFIG(tpsMin) = 200;	// 1.00 volt
 	CONFIG(tpsMax) = 200;	// 1.00 volt
-	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// de-init and re-init should also work without error
 	EXPECT_NO_FATAL_ERROR(deinitTps());
-	EXPECT_NO_FATAL_ERROR(initTps(PASS_CONFIG_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(initTps());
 }
 
 TEST(SensorInit, Pedal) {
@@ -103,7 +103,7 @@ TEST(SensorInit, Pedal) {
 	CONFIG(throttlePedalUpVoltage) = 1;
 	CONFIG(throttlePedalWOTVoltage) = 4;
 
-	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initTps();
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::AcceleratorPedalPrimary));
@@ -129,7 +129,7 @@ TEST(SensorInit, DriverIntentNoPedal) {
 	// We have no pedal - so we should get the TPS
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_NONE;
 
-	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initTps();
 
 	// Ensure a sensor got set
 	ASSERT_TRUE(Sensor::hasSensor(SensorType::DriverThrottleIntent));
@@ -149,7 +149,7 @@ TEST(SensorInit, DriverIntentWithPedal) {
 	// We have a pedal, so we should get it
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_0;
 
-	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initTps();
 
 	// Ensure a sensor got set
 	ASSERT_TRUE(Sensor::hasSensor(SensorType::DriverThrottleIntent));
@@ -171,7 +171,7 @@ TEST(SensorInit, OilPressure) {
 	CONFIG(oilPressure.value1) = 0;
 	CONFIG(oilPressure.value2) = 1000;
 
-	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initOilPressure();
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::OilPressure));
@@ -193,7 +193,7 @@ TEST(SensorInit, Clt) {
 	// 2003 neon sensor
 	CONFIG(clt.config) = {0, 30, 100, 32500, 7550, 700, 2700};
 
-	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initThermistors();
 
 	// Ensure the sensors were registered
 	auto s = const_cast<Sensor*>(Sensor::getSensorOfType(SensorType::Clt));
@@ -212,7 +212,7 @@ TEST(SensorInit, Clt) {
 TEST(SensorInit, Lambda) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initLambda();
 
 	auto s = Sensor::getSensorOfType(SensorType::Lambda1);
 	ASSERT_NE(nullptr, s);
@@ -221,7 +221,7 @@ TEST(SensorInit, Lambda) {
 TEST(SensorInit, Map) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initMap();
 
 	auto s = Sensor::getSensorOfType(SensorType::Map);
 	ASSERT_NE(nullptr, s);

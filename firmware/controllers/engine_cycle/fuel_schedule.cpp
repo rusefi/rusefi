@@ -60,7 +60,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle", false);
 	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
 
-	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+	injection_mode_e mode = engine->getCurrentInjectionMode();
 
 	int injectorIndex;
 	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
@@ -68,7 +68,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		injectorIndex = 0;
 	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && CONFIG(twoWireBatchInjection))) {
 		// Map order index -> cylinder index (firing order)
-		injectorIndex = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+		injectorIndex = getCylinderId(i) - 1;
 	} else if (mode == IM_BATCH) {
 		// Loop over the first half of the firing order twice
 		injectorIndex = i % (engineConfiguration->specs.cylindersCount / 2);
@@ -86,7 +86,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		// Each injector gets fired as a primary (the same as sequential), but also
 		// fires the injector 360 degrees later in the firing order.
 		int secondOrder = (i + (CONFIG(specs.cylindersCount) / 2)) % CONFIG(specs.cylindersCount);
-		int secondIndex = getCylinderId(secondOrder PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+		int secondIndex = getCylinderId(secondOrder) - 1;
 		secondOutput = &enginePins.injectors[secondIndex];
 	} else {
 		secondOutput = nullptr;
@@ -96,7 +96,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
 	InjectionEvent *ev = &elements[i];
-	ev->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ev->inject();
 
 	ev->ownIndex = i;
 	ev->outputs[0] = output;
@@ -121,7 +121,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
 	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
-	ev->injectionStart.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
+	ev->injectionStart.setAngle(angle);
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.triggerEventIndex, injectorIndex);
 #endif
@@ -132,7 +132,7 @@ void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
-		bool result = addFuelEventsForCylinder(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		bool result = addFuelEventsForCylinder(cylinderIndex);
 		if (!result) {
 			invalidate();
 			return;

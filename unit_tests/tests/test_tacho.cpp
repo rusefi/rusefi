@@ -33,7 +33,7 @@ TEST(tachometer, testPulsePerRev) {
     ASSERT_EQ(engine->triggerCentral.triggerState.getShaftSynchronized(), true);
 
 	// Poke the fast callback to update the tach
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 
     ASSERT_EQ(100, getTachFreq());
     ASSERT_EQ(0.5, getTachDuty());

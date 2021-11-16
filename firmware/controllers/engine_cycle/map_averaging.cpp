@@ -99,7 +99,7 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 	mapAveragingPin.setHigh();
 
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), ENGINE(engineState.mapAveragingDuration),
-		endAveraging PASS_ENGINE_PARAMETER_SUFFIX);
+		endAveraging);
 }
 
 #if HAL_USE_ADC
@@ -124,7 +124,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 			float voltage = adcToVoltsDivided(adcValue);
 			float currentPressure = convertMap(voltage).value_or(0);
 			scAddData(
-					getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX),
+					getCrankshaftAngleNt(getTimeNowNt()),
 					currentPressure);
 		}
 	}
@@ -203,7 +203,7 @@ void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-			angle_t cylinderOffset = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) * i / engineConfiguration->specs.cylindersCount;
+			angle_t cylinderOffset = getEngineCycle(engine->getOperationMode()) * i / engineConfiguration->specs.cylindersCount;
 			efiAssertVoid(CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
 			// move the loop into start-up calculation and not have this loop as part of periodic calculation
@@ -240,7 +240,7 @@ void mapAveragingTriggerCallback(
 	ScopePerf perf(PE::MapAveragingTriggerCallback);
 
 	if (CONFIG(mapMinBufferLength) != mapMinBufferLength) {
-		applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
+		applyMapMinBufferLength();
 	}
 
 	measurementsPerRevolution = measurementsPerRevolutionCounter;
@@ -275,15 +275,15 @@ void mapAveragingTriggerCallback(
 
 		scheduling_s *starTimer = &startTimers[i][structIndex];
 		scheduling_s *endTimer = &endTimers[i][structIndex];
-		mapAveragingPin.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
-		starTimer->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
-		endTimer->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+		mapAveragingPin.inject();
+		starTimer->inject();
+		endTimer->inject();
 
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
 		scheduleByAngle(starTimer, edgeTimestamp, samplingStart,
-				{ startAveraging, endTimer } PASS_ENGINE_PARAMETER_SUFFIX);
+				{ startAveraging, endTimer });
 	}
 #endif
 }
@@ -297,7 +297,7 @@ void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	addConsoleAction("faststat", showMapStats);
 #endif /* EFI_UNIT_TEST */
 
-	applyMapMinBufferLength(PASS_ENGINE_PARAMETER_SIGNATURE);
+	applyMapMinBufferLength();
 }
 
 #endif /* EFI_MAP_AVERAGING */

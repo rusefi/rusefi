@@ -14,14 +14,14 @@
 /**
  * set engine_type 102
  */
-void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void vag_18_Turbo() {
 
 	//Base Engine Settings
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_60_2_VW;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -89,7 +89,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->is_enabled_spi_3 = false;
 
 #if EFI_CJ125
-	cj125defaultPinout(PASS_CONFIG_PARAMETER_SIGNATURE);
+	cj125defaultPinout();
 	engineConfiguration->cj125ur = EFI_ADC_11; // PC3
 	engineConfiguration->cj125CsPin = GPIOB_11;
 #endif
@@ -131,8 +131,8 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	//ETB Settings
 
 #if EFI_FSIO
-	// todo lua setFsio (14, GPIOF_13, "1" PASS_CONFIG_PARAMETER_SUFFIX);
-	// todo lua setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25 PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio (14, GPIOF_13, "1");
+	// todo lua setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25);
 #endif
 	// is this needed? engineConfiguration->vvtOutputFrequency[3] = 25;
 	CONFIG(etb_use_two_wires) = true;
@@ -144,7 +144,7 @@ void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->isHip9011Enabled = false;
 
 #if EFI_FSIO
-	// todo lua setFsio (15, GPIOE_6, "1" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua setFsio (15, GPIOE_6, "1");
 #endif
 	CONFIG(etbIo[1].directionPin1) = GPIOE_2;
 	CONFIG(etbIo[1].directionPin2) = GPIOE_4;

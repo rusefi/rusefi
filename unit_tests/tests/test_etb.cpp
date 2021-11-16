@@ -30,7 +30,7 @@ TEST(etb, initializationNoPedal) {
 	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, _, _, false)).WillOnce(Return(false));
 
 	// This shouldn't throw, since no throttles are configured, but no pedal is configured either
-	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle());
 }
 
 TEST(etb, initializationMissingThrottle) {
@@ -53,7 +53,7 @@ TEST(etb, initializationMissingThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	// This should throw: a pedal is configured but no throttles
-	EXPECT_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_FATAL_ERROR(doInitElectronicThrottle());
 }
 
 TEST(etb, initializationSingleThrottle) {
@@ -78,7 +78,7 @@ TEST(etb, initializationSingleThrottle) {
 	// Expect mock1 to be init as none
 	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, true)).Times(0);
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doInitElectronicThrottle();
 }
 
 TEST(etb, initializationSingleThrottleInSecondSlot) {
@@ -103,7 +103,7 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	// Expect mock1 to be init as throttle 1, and PID params
 	EXPECT_CALL(mocks[1], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doInitElectronicThrottle();
 }
 
 TEST(etb, initializationDualThrottle) {
@@ -131,7 +131,7 @@ TEST(etb, initializationDualThrottle) {
 	// Expect mock1 to be init as throttle 2, and PID params
 	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doInitElectronicThrottle();
 }
 
 TEST(etb, initializationWastegate) {
@@ -152,7 +152,7 @@ TEST(etb, initializationWastegate) {
 	// Expect mock1 to be init as none
 	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, false)).Times(0);
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doInitElectronicThrottle();
 }
 
 TEST(etb, initializationNoFunction) {
@@ -234,7 +234,7 @@ TEST(etb, initializationNoThrottles) {
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
 
-	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle());
 }
 
 TEST(etb, idlePlumbing) {
@@ -251,7 +251,7 @@ TEST(etb, idlePlumbing) {
 		EXPECT_CALL(mocks[i], setIdlePosition(33.0f));
 	}
 
-	applyIACposition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
+	applyIACposition(33.0f);
 }
 
 TEST(etb, testSetpointOnlyPedal) {
@@ -261,7 +261,7 @@ TEST(etb, testSetpointOnlyPedal) {
 	engineConfiguration->useETBforIdleControl = false;
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 
 	// Mock pedal map that's just passthru pedal -> target
 	StrictMock<MockVp3d> pedalMap;
@@ -337,7 +337,7 @@ TEST(etb, setpointIdle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 
 	// Mock pedal map that's just passthru pedal -> target
 	StrictMock<MockVp3d> pedalMap;
@@ -395,7 +395,7 @@ TEST(etb, setpointRevLimit) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 
 	// Mock pedal map to just return 80%
 	StrictMock<MockVp3d> pedalMap;
@@ -527,7 +527,7 @@ TEST(etb, setOutputInvalid) {
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be disabled in case of unexpected
@@ -546,7 +546,7 @@ TEST(etb, setOutputValid) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -567,7 +567,7 @@ TEST(etb, setOutputValid2) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -588,7 +588,7 @@ TEST(etb, setOutputOutOfRangeHigh) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -609,7 +609,7 @@ TEST(etb, setOutputOutOfRangeLow) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -630,7 +630,7 @@ TEST(etb, setOutputPauseControl) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Pause control - should get no output
@@ -652,7 +652,7 @@ TEST(etb, setOutputLimpHome) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be disabled when in ETB limp mode
@@ -702,7 +702,7 @@ TEST(etb, openLoopThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	// Map [0, 100] -> [-50, 50]
@@ -725,7 +725,7 @@ TEST(etb, openLoopNonThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	EtbController etb;
-	etb.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	etb.inject();
 	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
 
 	// Map [0, 100] -> [-50, 50]

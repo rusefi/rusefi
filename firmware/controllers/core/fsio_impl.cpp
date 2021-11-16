@@ -93,7 +93,7 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_TIME_SINCE_AC_TOGGLE:
 		return (getTimeNowUs() - engine->acSwitchLastChangeTime) / US_PER_SECOND_F;
 	case LE_METHOD_AC_TOGGLE:
-		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getAcToggle();
 	case LE_METHOD_COOLANT:
 		return Sensor::getOrZero(SensorType::Clt);
 	case LE_METHOD_IS_COOLANT_BROKEN:
@@ -192,7 +192,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 	if (!element) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
-		int value = (int)calc.evaluate(msg, pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
+		int value = (int)calc.evaluate(msg, pin->getLogicValue(), element);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 
 			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
@@ -211,24 +211,24 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if EFI_FUEL_PUMP
 	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
-		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic PASS_ENGINE_PARAMETER_SUFFIX);
+		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic);
 	}
 #endif /* EFI_FUEL_PUMP */
 
 #if EFI_MAIN_RELAY_CONTROL
 	if (isBrainPinValid(CONFIG(mainRelayPin)))
 		// the MAIN_RELAY_LOGIC calls engine->isInShutdownMode()
-		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
+		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic);
 #else /* EFI_MAIN_RELAY_CONTROL */
 	/**
 	 * main relay is always on if ECU is on, that's a good enough initial implementation
 	 */
 	if (isBrainPinValid(CONFIG(mainRelayPin)))
-		enginePins.mainRelay.setValue(!engine->isInMainRelayBench(PASS_ENGINE_PARAMETER_SIGNATURE));
+		enginePins.mainRelay.setValue(!engine->isInMainRelayBench());
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
 	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
-		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic PASS_ENGINE_PARAMETER_SUFFIX);
+		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic);
 
 	/**
 	 * o2 heater is off during cranking

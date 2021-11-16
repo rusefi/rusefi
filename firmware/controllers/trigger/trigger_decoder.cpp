@@ -315,7 +315,7 @@ void TriggerStateWithRunningStatistics::updateInstantRpm(
 	uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	m_instantRpm = calculateInstantRpm(triggerShape, triggerFormDetails, index,
-					   nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+					   nowNt);
 
 
 #if EFI_SENSOR_CHART
@@ -572,7 +572,7 @@ void TriggerState::decodeTriggerEvent(
 			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError && !silentTriggerError)) {
 
 				int rpm = GET_RPM();
-				floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 				if (!engineConfiguration->useOnlyRisingEdgeForTrigger) {
 					int time = currentCycle.totalTimeNt[0];
 					efiPrintf("%s duty %f %d",

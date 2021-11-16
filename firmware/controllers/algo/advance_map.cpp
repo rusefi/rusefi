@@ -114,7 +114,7 @@ static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAM
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
-	angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad);
 	// interpolate not from zero, but starting from min. possible rpm detected
 	if (rpm < minCrankingRpm || minCrankingRpm == 0)
 		minCrankingRpm = rpm;
@@ -132,11 +132,11 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking();
 	if (isCranking) {
-		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		angle = getCrankingAdvance(rpm, engineLoad);
 		assertAngleRange(angle, "crAngle", CUSTOM_ERR_ANGLE_CR);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
 	} else {
-		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		angle = getRunningAdvance(rpm, engineLoad);
 
 		if (cisnan(angle)) {
 			warning(CUSTOM_ERR_6610, "NaN angle from table");
@@ -150,7 +150,7 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		&& (!isCranking || CONFIG(useAdvanceCorrectionsForCranking));
 
 	if (allowCorrections) {
-		angle_t correction = getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		angle_t correction = getAdvanceCorrections(rpm);
 		if (!cisnan(correction)) { // correction could be NaN during settings update
 			angle += correction;
 		}

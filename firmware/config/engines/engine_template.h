@@ -9,4 +9,4 @@
 
 #include "engine_configuration.h"
 
-void setEngineTemplateConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setEngineTemplateConfiguration();

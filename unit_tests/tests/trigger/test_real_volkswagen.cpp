@@ -15,7 +15,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 
 	reader.open("tests/trigger/resources/nick_1.csv", indeces);
 	WITH_ENGINE_TEST_HELPER (VW_ABA);
-	eth.setTriggerType(TT_60_2_VW PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_60_2_VW);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
@@ -27,7 +27,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 
 TEST(crankingVW, crankingTwiceWithGap) {
 	WITH_ENGINE_TEST_HELPER (VW_ABA);
-	eth.setTriggerType(TT_60_2_VW PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_60_2_VW);
 
 	{
 		CsvReader reader(1, /* vvtCount */ 0);

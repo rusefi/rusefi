@@ -25,7 +25,7 @@ void ButtonShiftController::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	debounceUp.init(500, CONFIG(tcuUpshiftButtonPin), CONFIG(tcuUpshiftButtonPinMode));
 	debounceDown.init(500, CONFIG(tcuDownshiftButtonPin), CONFIG(tcuDownshiftButtonPinMode));
 
-	GearControllerBase::init(PASS_ENGINE_PARAMETER_SIGNATURE);
+	GearControllerBase::init();
 }
 
 void ButtonShiftController::update() {
@@ -83,7 +83,7 @@ void ButtonShiftController::update() {
 
 
 void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    buttonShiftController.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+    buttonShiftController.init();
     engine->gearController = &buttonShiftController;
-    buttonShiftController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+    buttonShiftController.inject();
 }

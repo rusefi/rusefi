@@ -83,7 +83,7 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setManualIdleValvePosition(int positionPercent);
 
 void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setDefaultIdleParameters();
 void startIdleBench(void);
 void setIdleOffset(float value);
 void setIdlePFactor(float value);

@@ -319,7 +319,7 @@ void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode
 	if (!rebootForPresetPending) {
 		uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 		memcpy(addr, content, count);
-		onlineApplyWorkingCopyBytes(offset, count PASS_ENGINE_PARAMETER_SUFFIX);
+		onlineApplyWorkingCopyBytes(offset, count);
 	}
 
 	sendOkResponse(tsChannel, mode);
@@ -398,7 +398,7 @@ static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e
 
 void requestBurn(void) {
 #if !EFI_UNIT_TEST
-	onBurnRequest(PASS_ENGINE_PARAMETER_SIGNATURE);
+	onBurnRequest();
 
 #if EFI_INTERNAL_FLASH
 	setNeedToWriteConfiguration();

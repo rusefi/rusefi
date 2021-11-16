@@ -87,11 +87,11 @@ bool shouldUpdateCorrection(SensorType sensor DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 ClosedLoopFuelResult fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!shouldCorrect(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+	if (!shouldCorrect()) {
 		return {};
 	}
 
-	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE), CONFIG(stft));
+	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), CONFIG(stft));
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
@@ -109,8 +109,8 @@ ClosedLoopFuelResult fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE
 		// todo: push configuration at startup
 		cell.configure(&CONFIG(stft.cellCfgs[binIdx]), sensor);
 
-		if (shouldUpdateCorrection(sensor PASS_ENGINE_PARAMETER_SUFFIX)) {
-			cell.update(CONFIG(stft.deadband) * 0.001f, CONFIG(stftIgnoreErrorMagnitude) PASS_ENGINE_PARAMETER_SUFFIX);
+		if (shouldUpdateCorrection(sensor)) {
+			cell.update(CONFIG(stft.deadband) * 0.001f, CONFIG(stftIgnoreErrorMagnitude));
 		}
 
 		result.banks[i] = cell.getAdjustment();

@@ -161,7 +161,7 @@ void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp DECLARE_ENGINE_P
 		break;
 	}
 
-	SetNextCompositeEntry(timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	SetNextCompositeEntry(timestamp);
 }
 
 void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -170,9 +170,9 @@ void LogTriggerTopDeadCenter(efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX
 		return;
 	}
 	currentTdc = true;
-	SetNextCompositeEntry(timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	SetNextCompositeEntry(timestamp);
 	currentTdc = false;
-	SetNextCompositeEntry(timestamp + 10 PASS_ENGINE_PARAMETER_SUFFIX);
+	SetNextCompositeEntry(timestamp + 10);
 }
 
 void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -181,7 +181,7 @@ void LogTriggerCoilState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETE
 	}
 	currentCoilState = state;
 	UNUSED(timestamp);
-	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger PASS_ENGINE_PARAMETER_SUFFIX);
+	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
 void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARAMETER_SUFFIX) {
@@ -190,7 +190,7 @@ void LogTriggerInjectorState(efitick_t timestamp, bool state DECLARE_ENGINE_PARA
 	}
 	currentInjectorState = state;
 	UNUSED(timestamp);
-	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger PASS_ENGINE_PARAMETER_SUFFIX);
+	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
 void EnableToothLogger() {

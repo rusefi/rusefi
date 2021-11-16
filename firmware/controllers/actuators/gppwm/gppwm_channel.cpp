@@ -17,9 +17,9 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 	case GPPWM_Iat:
 		return Sensor::get(SensorType::Iat);
 	case GPPWM_FuelLoad:
-		return getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getFuelingLoad();
 	case GPPWM_IgnLoad:
-		return getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getIgnitionLoad();
 	case GPPWM_AuxTemp1:
 		return Sensor::get(SensorType::AuxTemp1);
 	case GPPWM_AuxTemp2:
@@ -71,7 +71,7 @@ void GppwmChannel::init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const Valu
 }
 
 percent_t GppwmChannel::getOutput() const {
-	expected<float> loadAxisValue = readGppwmChannel(m_config->loadAxis PASS_ENGINE_PARAMETER_SUFFIX);
+	expected<float> loadAxisValue = readGppwmChannel(m_config->loadAxis);
 
 	// If we couldn't get load axis value, fall back on error value
 	if (!loadAxisValue) {

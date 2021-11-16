@@ -39,7 +39,7 @@ void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	#endif
 #endif /* EFI_PROD_CODE */
 
-	brain_pin_markUnused(brainPin PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_markUnused(brainPin);
 }
 
 /**
@@ -51,7 +51,7 @@ void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode DECLARE_
 		return;
 	}
 
-	bool wasUsed = brain_pin_markUsed(brainPin, msg PASS_ENGINE_PARAMETER_SUFFIX);
+	bool wasUsed = brain_pin_markUsed(brainPin, msg);
 
 	if (!wasUsed) {
 		efiSetPadModeWithoutOwnershipAcquisition(msg, brainPin, mode);

@@ -54,7 +54,7 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		floatms_t airMassForEngine = engine->engineState.sd.airMassInOneCylinder * CONFIG(specs.cylindersCount);
 		// airMass is in grams per 1 cycle for 1 cyl. Convert it to airFlow in kg/h for the engine.
 		// And if the engine is stopped (0 rpm), then airFlow is also zero (avoiding NaN division)
-		floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm);
 		// just interpolate between user-specified min and max coefs, based on the max airFlow value
 		engine->engineState.airFlow = airFlow;
 		engine->engineState.sd.Tcharge_coff = interpolateClamped(0.0,

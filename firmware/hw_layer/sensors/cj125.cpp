@@ -118,10 +118,10 @@ static float getUr() {
 #if EFI_PROD_CODE
 	if (!engineConfiguration->cj125isUrDivided) {
 		// in case of directly connected Ur signal from CJ125 to the ADC pin of MCU
-		return getVoltage("cj125ur", CONFIG(cj125ur) PASS_ENGINE_PARAMETER_SUFFIX);
+		return getVoltage("cj125ur", CONFIG(cj125ur));
 	} else {
 		// if a standard voltage division scheme with OpAmp is used
-		return getVoltageDivided("cj125ur", CONFIG(cj125ur) PASS_ENGINE_PARAMETER_SUFFIX);
+		return getVoltageDivided("cj125ur", CONFIG(cj125ur));
 	}
 #endif /* EFI_PROD_CODE */
 	}
@@ -136,7 +136,7 @@ static float getUa() {
 	if (isAdcChannelValid(CONFIG(cj125ua))) {
 #if EFI_PROD_CODE
 		if (engineConfiguration->cj125isUaDivided) {
-			return getVoltageDivided("cj125ua", CONFIG(cj125ua) PASS_ENGINE_PARAMETER_SUFFIX);
+			return getVoltageDivided("cj125ua", CONFIG(cj125ua));
 		} else {
 			return getVoltage("cj125ua", CONFIG(cj125ua));
 		}
@@ -274,7 +274,7 @@ static void cjUpdateAnalogValues() {
 }
 
 void CJ125::calibrate(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cjIdentify();
 
 	efiPrintf("cj125: Starting calibration...");
 	cjSetMode(CJ125_MODE_CALIBRATION);
@@ -338,7 +338,7 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 	
-	globalInstance.cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
+	globalInstance.cjIdentify();
 
 	// Load calibration values
 #if EFI_PROD_CODE
@@ -353,7 +353,7 @@ static void cjStart(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		/**
 		 * open question if we need special considerations for calibration. Some controllers insist on open air calibration
 		 */
-		globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
+		globalInstance.calibrate();
 	} else {
 		efiPrintf("cj125: Loading stored calibration data (%d %d)", storedLambda, storedHeater);
 		globalInstance.vUaCal = getVoltageFrom16bit(storedLambda);
@@ -375,7 +375,7 @@ void CJ125::setError(cj125_error_e errCode DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	cjPrintErrorCode(errorCode);
 	// This is for safety:
 	efiPrintf("cj125: Controller Shutdown!");
-	SetHeater(0 PASS_ENGINE_PARAMETER_SUFFIX);
+	SetHeater(0);
 	// Software-reset of CJ125
 	cjWriteRegister(INIT_REG2_WR, CJ125_INIT2_RESET);
 }
@@ -418,7 +418,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		}
 
 		if (instance->state == CJ125_CALIBRATION) {
-			globalInstance.calibrate(PASS_ENGINE_PARAMETER_SIGNATURE);
+			globalInstance.calibrate();
 			// Start normal operation
 			instance->state = CJ125_INIT;
 			globalInstance.cjSetMode(CJ125_MODE_NORMAL_17);
@@ -446,7 +446,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 		if (isStopped && instance->isWorkingState()) {
 			instance->state = CJ125_INIT;
-			instance->SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
+			instance->SetIdleHeater();
 		}
 
 #if 0
@@ -461,10 +461,10 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				float periodSecs = (float)(nowNt - instance->prevNt) / NT_PER_SECOND;
 				// maintain speed at ~0.4V/sec
 				float preheatDuty = instance->heaterDuty + periodSecs * CJ125_HEATER_PREHEAT_RATE;
-				instance->SetHeater(preheatDuty PASS_ENGINE_PARAMETER_SUFFIX);
+				instance->SetHeater(preheatDuty);
 				// If we are heating too long, and there's still no result, then something is wrong...
 				if (nowNt - instance->startHeatingNt > NT_PER_SECOND * CJ125_PREHEAT_TIMEOUT) {
-					instance->setError(CJ125_ERROR_HEATER_MALFUNCTION PASS_ENGINE_PARAMETER_SUFFIX);
+					instance->setError(CJ125_ERROR_HEATER_MALFUNCTION);
 				}
 				cjPrintData();
 				instance->prevNt = nowNt;
@@ -479,7 +479,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 				 * So the simple trick is to inverse the error by swapping the target and input values.
 				 */
 				float duty = globalInstance.heaterPid.getOutput(globalInstance.vUr, globalInstance.vUrCal, MS2SEC(CJ125_TICK_DELAY));
-				instance->SetHeater(duty PASS_ENGINE_PARAMETER_SUFFIX);
+				instance->SetHeater(duty);
 				if (engineConfiguration->isCJ125Verbose) {
 					globalInstance.heaterPid.showPidStatus("cj heater");
 					cjPrintData();
@@ -489,7 +489,7 @@ static bool cj125periodic(CJ125 *instance DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			break;
 		case CJ125_OVERHEAT:
 			if (nowNt - instance->prevNt >= CJ125_HEATER_OVERHEAT_PERIOD) {
-				instance->setError(CJ125_ERROR_OVERHEAT PASS_ENGINE_PARAMETER_SUFFIX);
+				instance->setError(CJ125_ERROR_OVERHEAT);
 				instance->prevNt = nowNt;
 			}
 		default:
@@ -510,7 +510,7 @@ static msg_t cjThread()
 	globalInstance.startHeatingNt = 0;
 	globalInstance.prevNt = getTimeNowNt();
 	while (1) {
-		bool needIdleSleep = cj125periodic(&globalInstance PASS_ENGINE_PARAMETER_SUFFIX);
+		bool needIdleSleep = cj125periodic(&globalInstance);
 		chThdSleepMilliseconds(needIdleSleep ? CJ125_IDLE_TICK_DELAY : CJ125_TICK_DELAY);
 	}
 	return -1;
@@ -541,7 +541,7 @@ void cjRestart(void) {
 	globalInstance.state = CJ125_INIT;
 	globalInstance.errorCode = CJ125_NO_ERROR;
 	cjInfo();
-	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cjStart();
 }
 #endif /* EFI_UNIT_TEST */
 
@@ -574,7 +574,7 @@ float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return globalInstance.lambda * CJ125_STOICH_RATIO;
 }
 
-bool cjHasAfrSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+bool cjHasAfrSensor() {
 	if (!CONFIG(isCJ125Enabled))
 		return false;
 	return globalInstance.isValidState();
@@ -617,12 +617,12 @@ void initCJ125(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	globalInstance.cjInitPid(PASS_ENGINE_PARAMETER_SIGNATURE);
-	if (!cjStartSpi(PASS_ENGINE_PARAMETER_SIGNATURE))
+	globalInstance.cjInitPid();
+	if (!cjStartSpi())
 		return;
 	efiPrintf("cj125: Starting heater control");
-	globalInstance.StartHeaterControl(PASS_ENGINE_PARAMETER_SIGNATURE);
-	cjStart(PASS_ENGINE_PARAMETER_SIGNATURE);
+	globalInstance.StartHeaterControl();
+	cjStart();
 	
 #ifdef CJ125_DEBUG
 //	addConsoleActionF("cj125_heater", cjConsoleSetHeater);
@@ -650,7 +650,7 @@ void initCJ125(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	CONFIG(cj125CsPin) = GPIOA_15;
 //	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
 
-void cj125defaultPinout(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void cj125defaultPinout() {
 	engineConfiguration->cj125ua = EFI_ADC_13; // PC3
 	engineConfiguration->cj125ur = EFI_ADC_4; // PA4
 	CONFIG(wboHeaterPin) = GPIOC_13;

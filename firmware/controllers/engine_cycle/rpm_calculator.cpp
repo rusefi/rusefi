@@ -83,7 +83,7 @@ RpmCalculator::RpmCalculator() :
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
-	// todo: reuse assignRpmValue() method which needs PASS_ENGINE_PARAMETER_SUFFIX
+	// todo: reuse assignRpmValue() method which needs
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
 	setValidValue(0, 0);	// 0 for current time since RPM sensor never times out
 }
@@ -139,7 +139,7 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 			 * this would make sure that we have good numbers for first cranking revolution
 			 * #275 cranking could be improved
 			 */
-			ENGINE(periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE));
+			ENGINE(periodicFastCallback());
 		}
 	}
 }
@@ -175,7 +175,7 @@ void RpmCalculator::setRpmValue(float value) {
 		engine->injectionEvents.resetOverlapping();
 
 		// reschedule all injection events now that we've reset them
-		engine->injectionEvents.addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+		engine->injectionEvents.addFuelEvents();
 	}
 #endif
 }
@@ -223,12 +223,12 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
 	}
 	// update variables needed by early instant RPM calc.
 	if (isSpinningUp()) {
-		engine->triggerCentral.triggerState.setLastEventTimeForInstantRpm(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->triggerCentral.triggerState.setLastEventTimeForInstantRpm(nowNt);
 	}
 	/**
 	 * Update ignition pin indices if needed. Here we potentially switch to wasted spark temporarily.
 	 */
-	prepareIgnitionPinIndices(getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareIgnitionPinIndices(getCurrentIgnitionMode());
 }
 
 /**
@@ -260,7 +260,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 				rpmState->setRpmValue(NOISY_RPM);
 				rpmState->rpmRate = 0;
 			} else {
-				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
+				int mult = (int)getEngineCycle(engine->getOperationMode()) / 360;
 				float rpm = 60 * mult / periodSeconds;
 
 				auto rpmDelta = rpm - rpmState->previousRpmValue;
@@ -271,7 +271,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		} else {
 			// we are here only once trigger is synchronized for the first time
 			// while transitioning  from 'spinning' to 'running'
-			engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
+			engine->triggerCentral.triggerState.movePreSynchTimestamps();
 		}
 
 		rpmState->onNewEngineCycle();
@@ -281,7 +281,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	// this 'index==0' case is here so that it happens after cycle callback so
 	// it goes into sniffer report into the first position
 	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
-		angle_t crankAngle = getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		angle_t crankAngle = getCrankshaftAngleNt(nowNt);
 		int signal = 1000 * ckpSignalType + index;
 		scAddData(crankAngle, signal);
 	}
@@ -290,7 +290,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	// Always update instant RPM even when not spinning up
 	engine->triggerCentral.triggerState.updateInstantRpm(
 		engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,
-		index, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		index, nowNt);
 
 	if (rpmState->isSpinningUp()) {
 		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
@@ -326,7 +326,7 @@ static void onTdcCallback(Engine *engine) {
 #endif
 	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 #if EFI_TOOTH_LOGGER
-	LogTriggerTopDeadCenter(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	LogTriggerTopDeadCenter(getTimeNowNt());
 #endif /* EFI_TOOTH_LOGGER */
 }
 
@@ -346,7 +346,7 @@ void tdcMarkCallback(
 			// we need a positive angle offset here
 			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
 			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
-					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
+					{ onTdcCallback, engine });
 		}
 	}
 }
@@ -366,7 +366,7 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 }
 
 void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	ENGINE(rpmCalculator).inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	ENGINE(rpmCalculator).inject();
 
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {

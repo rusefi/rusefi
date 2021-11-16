@@ -222,7 +222,7 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		warning(CUSTOM_UNKNOWN_FSIO, "FSIO undefined action");
 		return unexpected;
 	default:
-		return getEngineValue(element->action PASS_ENGINE_PARAMETER_SUFFIX);
+		return getEngineValue(element->action);
 	}
 }
 
@@ -243,7 +243,7 @@ float LECalculator::evaluate(const char * msg, float selfValue, const LEElement*
 		if (element->action == LE_METHOD_SELF) {
 			push(element->action, selfValue);
 		} else {
-			FsioResult result = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
+			FsioResult result = processElement(element);
 
 			if (!result) {
 				// error already reported

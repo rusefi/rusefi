@@ -31,7 +31,7 @@ void CJ125::SetHeater(float value DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 void CJ125::SetIdleHeater(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	// small preheat for faster start & moisture anti-shock therapy for the sensor
-	SetHeater(CJ125_HEATER_IDLE_RATE PASS_ENGINE_PARAMETER_SUFFIX);
+	SetHeater(CJ125_HEATER_IDLE_RATE);
 }
 
 bool CJ125::isWorkingState(void) const {
@@ -44,7 +44,7 @@ void CJ125::StartHeaterControl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			&engine->executor,
 			CONFIG(wboHeaterPin),
 			&wboHeaterPin, CJ125_HEATER_PWM_FREQ, 0.0f);
-	SetIdleHeater(PASS_ENGINE_PARAMETER_SIGNATURE);
+	SetIdleHeater();
 }
 
 static void printDiagCode(const char *msg, int code, const char *code1message) {
@@ -99,12 +99,12 @@ bool CJ125::cjIdentify(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	efiPrintf("cj125: Check ident=0x%x diag=0x%x init1=0x%x init2=0x%x", ident, diag, init1, init2);
 	if (ident != CJ125_IDENT) {
 		efiPrintf("cj125: Error! Wrong ident! Cannot communicate with CJ125!");
-		setError(CJ125_ERROR_WRONG_IDENT PASS_ENGINE_PARAMETER_SUFFIX);
+		setError(CJ125_ERROR_WRONG_IDENT);
 		return false;
 	}
 	if (init1 != CJ125_INIT1_NORMAL_17 || init2 != CJ125_INIT2_DIAG) {
 		efiPrintf("cj125: Error! Cannot set init registers! Cannot communicate with CJ125!");
-		setError(CJ125_ERROR_WRONG_IDENT PASS_ENGINE_PARAMETER_SUFFIX);
+		setError(CJ125_ERROR_WRONG_IDENT);
 		return false;
 	}
 	printDiag();

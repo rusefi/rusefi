@@ -130,7 +130,7 @@ static void initVvtShape(int camIndex, TriggerState &initState DECLARE_ENGINE_PA
 
 void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	static TriggerState initState;
-	initState.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initState.inject();
 
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
@@ -169,7 +169,7 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
 		calculateTriggerSynchPoint(ENGINE(triggerCentral.triggerShape),
-				initState PASS_ENGINE_PARAMETER_SUFFIX);
+				initState);
 
 		ENGINE(triggerCentral.triggerState).name = "TRG";
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
@@ -177,12 +177,12 @@ void Engine::initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		initVvtShape(camIndex, initState PASS_ENGINE_PARAMETER_SUFFIX);
+		initVvtShape(camIndex, initState);
 	}
 
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
-		prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE);
+		prepareOutputSignals();
 	}
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
@@ -220,19 +220,19 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	}
 
 	watchdog();
-	updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
-	checkShutdown(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateSlowSensors();
+	checkShutdown();
 
-	updateVrPwm(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateVrPwm();
 
 #if EFI_FSIO
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	runFsio();
 #else
-	runHardcodedFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	runHardcodedFsio();
 #endif /* EFI_FSIO */
 
-	bool acActive = acState.updateAc(PASS_ENGINE_PARAMETER_SIGNATURE);
-	updateFans(acActive PASS_ENGINE_PARAMETER_SUFFIX);
+	bool acActive = acState.updateAc();
+	updateFans(acActive);
 
 	updateGppwm();
 
@@ -242,16 +242,16 @@ void Engine::periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	updateBoostControl();
 #endif // EFI_BOOST_CONTROL
 
-	cylinderCleanupControl(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cylinderCleanupControl();
 
-	standardAirCharge = getStandardAirCharge(PASS_ENGINE_PARAMETER_SIGNATURE);
+	standardAirCharge = getStandardAirCharge();
 
 #if (BOARD_TLE8888_COUNT > 0)
 	tle8888startup();
 #endif
 
 #if EFI_DYNO_VIEW
-	updateDynoView(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateDynoView();
 #endif
 
 	slowCallBackWasInvoked = true;
@@ -291,14 +291,14 @@ extern float vBattForTle8888;
  * See also periodicFastCallback
  */
 void Engine::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	updateSwitchInputs();
 
 #if EFI_ENGINE_CONTROL
 	int rpm = GET_RPM();
 	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
 	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? CONFIG(sensorChartMode) : SC_OFF;
 
-	engineState.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engineState.updateSlowSensors();
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// nasty value injection into C driver which would not be able to access Engine class
@@ -317,8 +317,8 @@ void Engine::updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	if (isBrainPinValid(CONFIG(clutchDownPin))) {
 		engine->clutchDownState = CONFIG(clutchDownPinInverted) ^ efiReadPin(CONFIG(clutchDownPin));
 	}
-	if (hasAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE)) {
-		bool result = getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	if (hasAcToggle()) {
+		bool result = getAcToggle();
 		if (engine->acSwitchState != result) {
 			engine->acSwitchState = result;
 			engine->acSwitchLastChangeTime = getTimeNowUs();
@@ -448,7 +448,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 
 		engine->triggerErrorDetection.add(isDecodingError);
 
-		if (triggerCentral.isTriggerDecoderError(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		if (triggerCentral.isTriggerDecoderError()) {
 			warning(CUSTOM_OBD_TRG_DECODING, "trigger decoding issue. expected %d/%d/%d got %d/%d/%d",
 					TRIGGER_WAVEFORM(getExpectedEventCount(0)),
 					TRIGGER_WAVEFORM(getExpectedEventCount(1)),
@@ -463,23 +463,23 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized) {
 #endif
 
 void Engine::injectEngineReferences() {
-	triggerCentral.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
-	primaryTriggerConfiguration.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	triggerCentral.inject();
+	primaryTriggerConfiguration.inject();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+		vvtTriggerConfiguration[camIndex].inject();
 	}
-	limpManager.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
-	knockController.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	limpManager.inject();
+	knockController.inject();
 
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		vvtTriggerConfiguration[camIndex].update();
 	}
-	triggerCentral.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+	triggerCentral.init();
 }
 
 void Engine::setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	inject();
 	efi::clear(config);
 
 	injectEngineReferences();
@@ -533,7 +533,7 @@ void Engine::checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
 		const float vBattThresholdOn = 8.0f;
-		if ((Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > vBattThresholdOn) && !isInShutdownMode(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		if ((Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > vBattThresholdOn) && !isInShutdownMode()) {
 			ignitionOnTimeNt = getTimeNowNt();
 			stopEngineRequestTimeNt = 0;
 			efiPrintf("Ignition voltage detected! Cancel the engine shutdown!");
@@ -579,7 +579,7 @@ bool Engine::isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const {
 	// The idle motor valve is still moving! Give it some time to park (but wait no more than 10 secs)
 	// Usually it can move to the initial 'cranking' position or zero 'parking' position.
 	const efitick_t idleMotorWaitTimeoutNt = 10 * NT_PER_SECOND;
-	if (isIdleMotorBusy(PASS_ENGINE_PARAMETER_SIGNATURE) && (getTimeNowNt() - stopEngineRequestTimeNt) < idleMotorWaitTimeoutNt)
+	if (isIdleMotorBusy() && (getTimeNowNt() - stopEngineRequestTimeNt) < idleMotorWaitTimeoutNt)
 		return true;
 #endif /* EFI_MAIN_RELAY_CONTROL */
 	return false;
@@ -634,14 +634,14 @@ void Engine::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf pc(PE::EnginePeriodicFastCallback);
 
 #if EFI_MAP_AVERAGING
-	refreshMapAveragingPreCalc(PASS_ENGINE_PARAMETER_SIGNATURE);
+	refreshMapAveragingPreCalc();
 #endif
 
-	engineState.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engineState.periodicFastCallback();
 
 	knockController.periodicFastCallback();
 
-	tachSignalCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	tachSignalCallback();
 }
 
 void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE) {

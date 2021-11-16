@@ -13,7 +13,7 @@
 #include "subaru.h"
 #include "custom_engine.h"
 
-void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setSubaru2003Wrx() {
 	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
@@ -37,7 +37,7 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * MRE_SUBARU_EJ18
  * set engine_type 37
  */
-void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setSubaruEJ18_MRE() {
 	engineConfiguration->trigger.type = TT_SUBARU_7_WITHOUT_6;
 
 

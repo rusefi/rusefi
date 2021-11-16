@@ -8,7 +8,7 @@ static FrequencySensor vehicleSpeedSensor(SensorType::VehicleSpeed, MS2NT(500));
 static VehicleSpeedConverter vehicleSpeedConverter;
 
 void initVehicleSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	vehicleSpeedConverter.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	vehicleSpeedConverter.inject();
 
 	auto pin = CONFIG(vehicleSpeedSensorInputPin);
 

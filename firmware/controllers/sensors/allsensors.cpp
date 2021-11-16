@@ -12,7 +12,7 @@
 ButtonDebounce acDebounce("ac_switch");
 
 void initSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	initMapDecoder(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initMapDecoder();
 	acDebounce.init(15, CONFIG(acSwitch), CONFIG(acSwitchMode));
 }
 

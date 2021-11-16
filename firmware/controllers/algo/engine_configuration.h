@@ -29,13 +29,13 @@ void setWholeIgnitionIatCorr(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setFuelTablesLoadBin(float minValue, float maxValue DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeIatCorrTimingTable(float value DECLARE_CONFIG_PARAMETER_SUFFIX);
 void setWholeTimingTable_d(angle_t value DECLARE_CONFIG_PARAMETER_SUFFIX);
-#define setWholeTimingTable(x) setWholeTimingTable_d(x PASS_CONFIG_PARAMETER_SUFFIX);
+#define setWholeTimingTable(x) setWholeTimingTable_d(x);
 void setConstantDwell(floatms_t dwellMs DECLARE_CONFIG_PARAMETER_SUFFIX);
 
 // needed by bootloader
-void setDefaultBasePins(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setDefaultBasePins();
 
-void setDefaultSdCardParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setDefaultSdCardParameters();
 
 void onBurnRequest(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void incrementGlobalConfigurationVersion(DECLARE_ENGINE_PARAMETER_SIGNATURE);
@@ -44,7 +44,7 @@ void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration);
 void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration);
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engine);
-void setDefaultFrankensoConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setDefaultFrankensoConfiguration();
 
 typedef void (*configuration_callback_t)(engine_configuration_s*);
 

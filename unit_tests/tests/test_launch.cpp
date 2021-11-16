@@ -6,7 +6,7 @@ TEST(LaunchControl, TpsCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	engineConfiguration->launchTpsTreshold = 10;
 
@@ -28,7 +28,7 @@ TEST(LaunchControl, VSSCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	// Test Speed trashold
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -46,7 +46,7 @@ TEST(LaunchControl, RPMCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	engineConfiguration->launchRpm = 3000;
 
@@ -59,7 +59,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	//activation based on VSS
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -79,21 +79,21 @@ TEST(LaunchControl, SwitchInputCondition) {
 	engineConfiguration->clutchDownPin = GPIOG_2;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 	setMockState(engineConfiguration->clutchDownPin, true);
-	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->updateSwitchInputs();
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	setMockState(engineConfiguration->clutchDownPin, false);
-	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->updateSwitchInputs();
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->clutchDownPinInverted = true;
 	setMockState(engineConfiguration->clutchDownPin, false);
-	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->updateSwitchInputs();
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
 
 	setMockState(engineConfiguration->clutchDownPin, true);
-	engine->updateSwitchInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->updateSwitchInputs();
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
 }
@@ -102,7 +102,7 @@ TEST(LaunchControl, CombinedCondition) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	//check VSS normal usage
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -125,7 +125,7 @@ TEST(LaunchControl, CombinedCondition) {
 
 }
 
-static void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setDefaultLaunchParameters() {
 	engineConfiguration->launchRpm = 4000;    // Rpm to trigger Launch condition
 //	engineConfiguration->launchTimingRetard = 10; // retard in absolute degrees ATDC
 	engineConfiguration->launchTimingRpmRange = 500; // Rpm above Launch triggered for full retard
@@ -145,10 +145,10 @@ static void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 TEST(LaunchControl, CompleteRun) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
-	initLaunchControl(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initLaunchControl();
 
 	//load default config
-	setDefaultLaunchParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultLaunchParameters();
 
 	//check VSS normal usage
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;

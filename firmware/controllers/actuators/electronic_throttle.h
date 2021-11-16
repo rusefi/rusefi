@@ -16,17 +16,17 @@ void doInitElectronicThrottle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 void setEtbIdlePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
 void setEtbWastegatePosition(percent_t pos DECLARE_ENGINE_PARAMETER_SUFFIX);
-void setHitachiEtbCalibration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHitachiEtbCalibration();
 
 // these two sensors use same plug but have different calibrations and even rotate in different directions
-void set18919_AM810_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setToyota89281_33010_pedal_position_sensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void set18919_AM810_pedal_position_sensor();
+void setToyota89281_33010_pedal_position_sensor();
 
-void setBoschVAGETB(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setBoschVAGETB();
 
-void setDefaultEtbBiasCurve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setDefaultEtbParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setBoschVNH2SP30Curve(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setDefaultEtbBiasCurve();
+void setDefaultEtbParameters();
+void setBoschVNH2SP30Curve();
 void setEtbPFactor(float value);
 void setEtbIFactor(float value);
 void setEtbDFactor(float value);
@@ -34,7 +34,7 @@ void setEtbOffset(int value);
 void setThrottleDutyCycle(percent_t level);
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
-void setProteusHitachiEtbDefaults(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setProteusHitachiEtbDefaults();
 
 void etbAutocal(size_t throttleIndex);
 

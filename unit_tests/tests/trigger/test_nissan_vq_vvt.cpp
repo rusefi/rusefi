@@ -28,9 +28,9 @@ static void func(TriggerCallback *callback) {
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		trigger_value_e v = value ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
 	} else {
-		handleShaftSignal(0, value, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		handleShaftSignal(0, value, nowNt);
 	}
 }
 
@@ -85,7 +85,7 @@ TEST(nissan, vq_vvt) {
 
 		scheduleTriggerEvents(&crank,
 				/* timeScale */ 1,
-				cyclesCount, false, -1, 0, ptrs PASS_ENGINE_PARAMETER_SUFFIX);
+				cyclesCount, false, -1, 0, ptrs);
 	}
 	float vvtTimeScale = 1;
 

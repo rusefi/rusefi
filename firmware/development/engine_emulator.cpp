@@ -19,8 +19,8 @@ void initEngineEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 
 #if EFI_POTENTIOMETER && HAL_USE_SPI
-	initPotentiometers(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initPotentiometers();
 #endif /* EFI_POTENTIOMETER && HAL_USE_SPI*/
 
-	initTriggerEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTriggerEmulator();
 }

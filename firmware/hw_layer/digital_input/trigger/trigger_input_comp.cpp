@@ -107,10 +107,10 @@ void startTriggerInputPins(void) {
 		return;
 	}
 
-	centeredDacValue = getDacValue(CONFIG(triggerCompCenterVolt) PASS_ENGINE_PARAMETER_SUFFIX);	// usually 2.5V resistor divider
+	centeredDacValue = getDacValue(CONFIG(triggerCompCenterVolt));	// usually 2.5V resistor divider
 	
-	dacHysteresisMin = getDacValue(CONFIG(triggerCompHystMin) PASS_ENGINE_PARAMETER_SUFFIX);	// usually ~20mV
-	dacHysteresisMax = getDacValue(CONFIG(triggerCompHystMax) PASS_ENGINE_PARAMETER_SUFFIX);	// usually ~300mV
+	dacHysteresisMin = getDacValue(CONFIG(triggerCompHystMin));	// usually ~20mV
+	dacHysteresisMax = getDacValue(CONFIG(triggerCompHystMax));	// usually ~300mV
 	dacHysteresisDelta = dacHysteresisMin;
 	
 	// 20 rpm (60_2) = 1000*60/((2*60)*20) = 25 ms for 1 tooth event

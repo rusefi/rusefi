@@ -107,5 +107,5 @@ void initCJ125(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void cjRestart(void);
 void cjStartCalibration(void);
 float cjGetAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool cjHasAfrSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void cj125defaultPinout(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+bool cjHasAfrSensor();
+void cj125defaultPinout();

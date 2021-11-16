@@ -3,7 +3,7 @@
 #include "defaults.h"
 #include "table_helper.h"
 
-void setDefaultCranking(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setDefaultCranking() {
 	engineConfiguration->cranking.rpm = 550;
 
 	// Fuel

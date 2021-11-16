@@ -6,7 +6,7 @@
 
 struct GetAfrWrapper : public EnginePtr {
 	float getLambda() {
-		return getAfr(PASS_ENGINE_PARAMETER_SIGNATURE) / 14.7f;
+		return getAfr() / 14.7f;
 	}
 };
 
@@ -24,7 +24,7 @@ static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
 void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	afrWrapper.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	afrWrapper.inject();
 
 #if EFI_CAN_SUPPORT
 	if (CONFIG(enableAemXSeries)) {

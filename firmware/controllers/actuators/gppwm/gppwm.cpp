@@ -42,7 +42,7 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		tables[i]->init(cfg.table, cfg.loadBins, cfg.rpmBins);
 
 		// Finally configure the channel
-		channels[i].inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+		channels[i].inject();
 		channels[i].init(usePwm, &outputs[i], &pins[i], tables[i], &cfg);
 	}
 }

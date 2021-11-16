@@ -98,7 +98,7 @@ bool hasAfrSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
-		return cjHasAfrSensor(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return cjHasAfrSensor();
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	return isAdcChannelValid(engineConfiguration->afr.hwChannel);
@@ -114,7 +114,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_CJ125 && HAL_USE_SPI
 	if (CONFIG(isCJ125Enabled)) {
-		return cjGetAfr(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return cjGetAfr();
 	}
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 	afr_sensor_s * sensor = &CONFIG(afr);
@@ -123,7 +123,7 @@ float getAfr(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return 0;
 	}
 
-	float volts = getVoltageDivided("ego", sensor->hwChannel PASS_ENGINE_PARAMETER_SUFFIX);
+	float volts = getVoltageDivided("ego", sensor->hwChannel);
 
 	if (CONFIG(afr_type) == ES_NarrowBand) {
 		float afr = interpolate2d(volts, engineConfiguration->narrowToWideOxygenBins, engineConfiguration->narrowToWideOxygen);

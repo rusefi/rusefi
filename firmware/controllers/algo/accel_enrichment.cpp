@@ -30,7 +30,7 @@ static tps_tps_Map3D_t tpsTpsMap;
 floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
-	int maxDeltaIndex = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int maxDeltaIndex = getMaxDeltaIndex();
 
 //	FuelSchedule *fs = engineConfiguration->injectionEvents;
 	percent_t tpsTo = cb.get(maxDeltaIndex);
@@ -144,7 +144,7 @@ int AccelEnrichment::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 }
 
 float AccelEnrichment::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int index = getMaxDeltaIndex();
 
 	return (cb.get(index) - (cb.get(index - 1)));
 }
