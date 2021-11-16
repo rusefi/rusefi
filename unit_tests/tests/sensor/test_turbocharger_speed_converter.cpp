@@ -6,14 +6,15 @@ static constexpr engine_type_e ENGINE_TEST_HELPER = TEST_ENGINE;
 class TurbochargerSpeedConverterTest : public ::testing::Test {
 
 public:
+	EngineTestHelper eth;
 	TurbochargerSpeedConverter dut;
 
-	TurbochargerSpeedConverterTest(){
-		
+	TurbochargerSpeedConverterTest()
+		: eth(ENGINE_TEST_HELPER, std::unordered_map<SensorType, float>{}) {
 	}
 
 	void SetUp() override {
-		WITH_ENGINE_TEST_HELPER(ENGINE_TEST_HELPER);
+		EXPAND_EngineTestHelper;
 		dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 	}
 
