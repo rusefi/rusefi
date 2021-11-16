@@ -45,7 +45,7 @@ end
 )";
 
 TEST(LuaHooks, Table3d) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	setTable(config->scriptTable2, (uint8_t)33);
 	EXPECT_EQ(testLuaReturnsNumber(tableTest), 33);

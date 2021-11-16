@@ -23,7 +23,7 @@ private:
 	bool m_value = true;
 };
 
-class LimpManager : public EnginePtr {
+class LimpManager {
 public:
 	// This is called from periodicFastCallback to update internal state
 	void updateState(int rpm, efitick_t nowNt);

@@ -19,9 +19,8 @@ using ::testing::_;
 using ICP = IIdleController::Phase;
 
 TEST(idle_v2, timingPid) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	engineConfiguration->useIdleTimingPidControl = true;
 
@@ -55,9 +54,8 @@ TEST(idle_v2, timingPid) {
 }
 
 TEST(idle_v2, testTargetRpm) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->cltIdleRpmBins); i++) {
 		CONFIG(cltIdleRpmBins)[i] = i * 10;
@@ -69,9 +67,8 @@ TEST(idle_v2, testTargetRpm) {
 }
 
 TEST(idle_v2, testDeterminePhase) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	// TPS threshold 5% for easy test
 	CONFIG(idlePidDeactivationTpsThreshold) = 5;
@@ -115,9 +112,8 @@ TEST(idle_v2, testDeterminePhase) {
 }
 
 TEST(idle_v2, crankingOpenLoop) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	engineConfiguration->crankingIACposition = 50;
 
@@ -141,9 +137,8 @@ TEST(idle_v2, crankingOpenLoop) {
 }
 
 TEST(idle_v2, runningOpenLoopBasic) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	engineConfiguration->manIdlePosition = 50;
 
@@ -157,9 +152,8 @@ TEST(idle_v2, runningOpenLoopBasic) {
 }
 
 TEST(idle_v2, runningFanAcBump) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	engineConfiguration->manIdlePosition = 50;
 	engineConfiguration->acIdleExtraOffset = 9;
@@ -196,9 +190,8 @@ TEST(idle_v2, runningFanAcBump) {
 }
 
 TEST(idle_v2, runningOpenLoopTpsTaper) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	// Zero out base tempco table
 	setArrayValues(config->cltIdleCorr, 0.0f);
@@ -224,9 +217,8 @@ struct MockOpenLoopIdler : public IdleController {
 };
 
 TEST(idle_v2, testOpenLoopCranking) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
-	dut.inject();
 
 	CONFIG(overrideCrankingIacSetting) = true;
 
@@ -237,9 +229,8 @@ TEST(idle_v2, testOpenLoopCranking) {
 }
 
 TEST(idle_v2, openLoopRunningTaper) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
-	dut.inject();
 
 	EXPECT_CALL(dut, getRunningOpenLoop(30, SensorResult(0))).WillRepeatedly(Return(25));
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillRepeatedly(Return(75));
@@ -262,9 +253,8 @@ TEST(idle_v2, openLoopRunningTaper) {
 }
 
 TEST(idle_v2, getCrankingTaperFraction) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
-	dut.inject();
 
 	CONFIG(afterCrankingIACtaperDuration) = 500;
 
@@ -291,9 +281,8 @@ TEST(idle_v2, getCrankingTaperFraction) {
 }
 
 TEST(idle_v2, openLoopCoastingTable) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	// enable & configure feature
 	CONFIG(useIacTableForCoasting) = true;
@@ -309,9 +298,8 @@ TEST(idle_v2, openLoopCoastingTable) {
 extern int timeNowUs;
 
 TEST(idle_v2, closedLoopBasic) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	// Not testing PID here, so we can set very simple PID gains
 	CONFIG(idleRpmPid).pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
@@ -337,9 +325,8 @@ TEST(idle_v2, closedLoopBasic) {
 }
 
 TEST(idle_v2, closedLoopDeadzone) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	dut.inject();
 
 	// Not testing PID here, so we can set very simple PID gains
 	CONFIG(idleRpmPid).pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
@@ -373,9 +360,8 @@ struct IntegrationIdleMock : public IdleController {
 };
 
 TEST(idle_v2, IntegrationManual) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<IntegrationIdleMock> dut;
-	dut.inject();
 
 	SensorResult expectedTps = 1;
 	float expectedClt = 37;
@@ -406,9 +392,8 @@ TEST(idle_v2, IntegrationManual) {
 }
 
 TEST(idle_v2, IntegrationAutomatic) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<IntegrationIdleMock> dut;
-	dut.inject();
 
 	CONFIG(idleMode) = IM_AUTO;
 
@@ -444,9 +429,8 @@ TEST(idle_v2, IntegrationAutomatic) {
 }
 
 TEST(idle_v2, IntegrationClamping) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<IntegrationIdleMock> dut;
-	dut.inject();
 
 	CONFIG(idleMode) = IM_AUTO;
 

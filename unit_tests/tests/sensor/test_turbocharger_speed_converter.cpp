@@ -13,7 +13,6 @@ public:
 	}
 
 	void SetUp() override {
-		dut.inject();
 	}
 
 	void SetCoef(float new_coef) {

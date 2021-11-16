@@ -12,7 +12,7 @@
 
 void initLaunchControl();
 
-class LaunchControlBase : public EnginePtr {
+class LaunchControlBase {
 public:
 	// Update the state of the launch control system
 	void update();

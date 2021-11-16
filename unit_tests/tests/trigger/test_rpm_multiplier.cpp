@@ -10,7 +10,7 @@
 #include "pch.h"
 
 static void runRpmTest(operation_mode_e mode, int expected) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->ambiguousOperationMode = mode;
 	eth.setTriggerType(TT_ONE);
 

@@ -364,7 +364,6 @@ float getCrankshaftAngleNt(efitick_t timeNt) {
 }
 
 void initRpmCalculator() {
-	ENGINE(rpmCalculator).inject();
 
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {

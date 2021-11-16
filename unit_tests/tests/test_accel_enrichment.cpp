@@ -15,7 +15,7 @@
 TEST(fuel, testTpsAccelEnrichmentMath) {
 	printf("====================================================================================== testAccelEnrichment\r\n");
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	engine->rpmCalculator.setRpmValue(600);
 	engine->periodicFastCallback();
@@ -40,7 +40,7 @@ TEST(fuel, testTpsAccelEnrichmentMath) {
 }
 
 TEST(fuel, testTpsAccelEnrichmentScheduling) {
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -91,7 +91,7 @@ static void doFractionalTpsIteration(int period, int divisor, int numCycles, std
 TEST(fuel, testAccelEnrichmentFractionalTps) {
 	printf("====================================================================================== testAccelEnrichmentFractionalTps\r\n");
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	// setup
 	engineConfiguration->tpsAccelEnrichmentThreshold = 5;

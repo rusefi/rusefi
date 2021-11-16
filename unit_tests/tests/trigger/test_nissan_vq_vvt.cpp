@@ -22,7 +22,7 @@ public:
 static void func(TriggerCallback *callback) {
 	int formIndex = callback->toothIndex % callback->form->getSize();
 	Engine *engine = callback->engine;
-	EXPAND_Engine;
+	
 
 	int value = callback->form->wave->getChannelState(0, formIndex);
 	efitick_t nowNt = getTimeNowNt();
@@ -72,7 +72,7 @@ TEST(nissan, vq_vvt) {
 	// hold a reference to the heap allocated scheduling events until the test is done
 	std::vector<std::shared_ptr<TriggerCallback>> ptrs;
 
-	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN_6_CYL);
+	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 

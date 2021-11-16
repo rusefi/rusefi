@@ -251,7 +251,6 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 		}
 	}
 
-	output->inject();
 	output->setHigh();
 }
 
@@ -273,7 +272,6 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 
 	if (CONFIG(enableTrailingSparks)) {
 		IgnitionOutputPin *output = &enginePins.trailingCoils[event->cylinderNumber];
-		output->inject();
 		// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 		scheduleByAngle(
 			&event->trailingSparkCharge, nowNt, ENGINE(engineState.trailingSparkAngle),

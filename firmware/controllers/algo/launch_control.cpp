@@ -155,7 +155,6 @@ bool SoftSparkLimiter::shouldSkip()  {
 }
 
 void initLaunchControl() {
-	engine->launchController.inject();
 }
 
 #endif /* EFI_LAUNCH_CONTROL */

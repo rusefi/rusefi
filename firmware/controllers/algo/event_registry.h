@@ -19,7 +19,7 @@
 
 class Engine;
 
-class InjectionEvent : public EnginePtr {
+class InjectionEvent {
 public:
 	InjectionEvent();
 
@@ -92,7 +92,7 @@ public:
 
 #define MAX_OUTPUTS_FOR_IGNITION 2
 
-class IgnitionEvent : public EnginePtr {
+class IgnitionEvent {
 public:
 	IgnitionEvent();
 	IgnitionOutputPin *outputs[MAX_OUTPUTS_FOR_IGNITION];
@@ -139,7 +139,7 @@ public:
 	bool isReady = false;
 };
 
-class AuxActor : public EnginePtr {
+class AuxActor {
 public:
 	int phaseIndex;
 	int valveIndex;

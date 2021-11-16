@@ -85,5 +85,4 @@ void ButtonShiftController::update() {
 void initButtonShift() {
     buttonShiftController.init();
     engine->gearController = &buttonShiftController;
-    buttonShiftController.inject();
 }
