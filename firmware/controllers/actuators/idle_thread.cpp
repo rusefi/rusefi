@@ -130,6 +130,9 @@ void setManualIdleValvePosition(int positionPercent) {
 #endif /* EFI_UNIT_TEST */
 
 void IdleController::init(pid_s* idlePidConfig) {
+	engine->idle.shouldResetPid = false;
+	engine->idle.mightResetPid = false;
+	engine->idle.wasResetPid = false;
 	m_timingPid.initPidClass(idlePidConfig);
 }
 
