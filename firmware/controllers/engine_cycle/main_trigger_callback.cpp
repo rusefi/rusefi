@@ -470,7 +470,7 @@ void startPrimeInjectionPulse() {
 		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
 			CONFIG(primeInjFalloffTemperature), 0.0f, Sensor::get(SensorType::Clt).value_or(70));
 		if (pulseLength > 0) {
-			startSimultaniousInjection(engine);
+			startSimultaniousInjection();
 			int turnOffDelayUs = efiRound(MS2US(pulseLength), 1.0f);
 			engine->executor.scheduleForLater(sDown, turnOffDelayUs, { &endSimultaniousInjectionOnlyTogglePins, engine });
 		}
