@@ -11,7 +11,7 @@ class GearControllerBase : public EnginePtr {
 public:
     virtual void update();
     gear_e getDesiredGear() const;
-    virtual void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+    virtual void init();
 private:
     gear_e desiredGear = NEUTRAL;
 protected:

@@ -40,7 +40,7 @@ float getCurrentSpeed(void) {
 	return GPSdata.speed;
 }
 
-static void printGpsInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void printGpsInfo() {
 	efiPrintf("GPS RX %s", hwPortname(CONFIG(gps_rx_pin)));
 	efiPrintf("GPS TX %s", hwPortname(CONFIG(gps_tx_pin)));
 

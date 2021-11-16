@@ -79,20 +79,20 @@ float getIdleTimingAdjustment(int rpm);
 
 bool isIdlingOrTaper();
 
-void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX);
+void applyIACposition(percent_t position);
 void setManualIdleValvePosition(int positionPercent);
 
-void startIdleThread(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setDefaultIdleParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void startIdleThread();
+void setDefaultIdleParameters();
 void startIdleBench(void);
 void setIdleOffset(float value);
 void setIdlePFactor(float value);
 void setIdleIFactor(float value);
 void setIdleDFactor(float value);
-void setIdleMode(idle_mode_e value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setIdleMode(idle_mode_e value);
 void setTargetIdleRpm(int value);
 void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration);
-Pid * getIdlePid(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void startPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void stopPedalPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+Pid * getIdlePid();
+void startPedalPins();
+void stopPedalPins();
 

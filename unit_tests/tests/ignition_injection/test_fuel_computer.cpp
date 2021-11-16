@@ -17,7 +17,7 @@ TEST(FuelComputer, getCycleFuel) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	MockFuelComputer dut;
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	EXPECT_CALL(dut, getTargetLambdaLoadAxis(FloatEq(0.8f)))
 		.WillOnce(Return(0.8f));
@@ -45,7 +45,7 @@ TEST(FuelComputer, FlexFuel) {
 
 	MockVp3d lambdaTable;
 	FuelComputer dut(lambdaTable);
-	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	dut.inject();
 
 	// easier values for testing
 	engineConfiguration->stoichRatioPrimary = 15;

@@ -5,9 +5,6 @@
  *
  * Simulator and unit tests have their own version of this header
  *
- * While this header contains 'EXTERN_ENGINE' and 'DECLARE_ENGINE_PARAMETER_SIGNATURE' magic,
- * this header is not allowed to actually include higher-level engine related headers
- *
  * @date May 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */

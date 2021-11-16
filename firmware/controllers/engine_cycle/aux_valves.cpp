@@ -30,7 +30,6 @@ static void scheduleOpen(AuxActor *current) {
 			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveStart,
 			{ auxPlainPinTurnOn, current }
-			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 }
 
@@ -49,11 +48,10 @@ void auxPlainPinTurnOn(AuxActor *current) {
 			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveEnd,
 			{ plainPinTurnOff, output }
-			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 	}
 
-void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initAuxValves() {
 	if (!isBrainPinValid(engineConfiguration->auxValves[0])) {
 		return;
 	}
@@ -63,7 +61,7 @@ void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		return;
 	}
 
-	recalculateAuxValveTiming(PASS_ENGINE_PARAMETER_SIGNATURE);
+	recalculateAuxValveTiming();
 
 	for (int valveIndex = 0; valveIndex < AUX_DIGITAL_VALVE_COUNT; valveIndex++) {
 
@@ -73,13 +71,13 @@ void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 			actor->valveIndex = valveIndex;
 			actor->extra = phaseIndex * 360 + valveIndex * 180;
 
-			actor->inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+			actor->inject();
 			scheduleOpen(actor);
 		}
 	}
 }
 
-void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void recalculateAuxValveTiming() {
 	if (!isBrainPinValid(engineConfiguration->auxValves[0])) {
 		return;
 	}

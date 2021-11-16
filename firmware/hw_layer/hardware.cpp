@@ -183,7 +183,7 @@ void onFastAdcComplete(adcsample_t*) {
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
 	if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
 		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
-		scAddData(getCrankshaftAngleNt(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX), voltage);
+		scAddData(getCrankshaftAngleNt(getTimeNowNt()), voltage);
 	}
 #endif /* EFI_SENSOR_CHART */
 
@@ -215,9 +215,9 @@ static void adcConfigListener(Engine *engine) {
 	calcFastAdcIndexes();
 }
 
-static void turnOnHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void turnOnHardware() {
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-	turnOnTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	turnOnTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 }
 
@@ -238,7 +238,7 @@ void stopSpi(spi_device_e device) {
  * todo: maybe start invoking this method on ECU start so that peripheral start-up initialization and restart are unified?
  */
 
-void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void applyNewHardwareSettings() {
     /**
      * All 'stop' methods need to go before we begin starting pins.
      *
@@ -254,7 +254,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_PROD_CODE
 
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-	stopTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	stopTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 
@@ -274,7 +274,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	stopHip9001_pins();
 #endif /* EFI_HIP_9011 */
 
-	stopHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	stopHardware();
 
 	if (isConfigurationChanged(is_enabled_spi_1)) {
 		stopSpi(SPI_DEVICE_1);
@@ -298,15 +298,15 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	if (isPinOrModeChanged(clutchUpPin, clutchUpPinMode)) {
 		// bug? duplication with stopPedalPins?
-		efiSetPadUnused(activeConfiguration.clutchUpPin PASS_ENGINE_PARAMETER_SUFFIX);
+		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
-	stopTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	stopTriggerDebugPins();
 
 	enginePins.unregisterPins();
 
 #if EFI_PROD_CODE
-	reconfigureSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	reconfigureSensors();
 #endif /* EFI_PROD_CODE */
 
 	ButtonDebounce::startConfigurationList();
@@ -316,10 +316,10 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	 ******************************************/
 
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
-	startTriggerInputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-	startHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startHardware();
 
 #if EFI_HD44780_LCD
 	startHD44780_pins();
@@ -353,7 +353,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	if (isIdleHardwareRestartNeeded()) {
-		 initIdleHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+		 initIdleHardware();
 	}
 #endif
 
@@ -361,7 +361,7 @@ void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	startBoostPin();
 #endif
 #if EFI_EMULATE_POSITION_SENSORS
-	startTriggerEmulatorPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startTriggerEmulatorPins();
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 #if EFI_LOGIC_ANALYZER
 	startLogicAnalyzerPins();
@@ -386,7 +386,7 @@ void showBor(void) {
 #endif /* EFI_PROD_CODE */
 
 // This function initializes hardware that can do so before configuration is loaded
-void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initHardwareNoConfig() {
 	efiAssertVoid(CUSTOM_IH_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "init h");
 	efiAssertVoid(CUSTOM_EC_NULL, engineConfiguration!=NULL, "engineConfiguration");
 	
@@ -411,7 +411,7 @@ void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_PROD_CODE
 	// it's important to initialize this pretty early in the game before any scheduling usages
-	initSingleTimerExecutorHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initSingleTimerExecutorHardware();
 
 	initRtc();
 #endif /* EFI_PROD_CODE */
@@ -430,8 +430,8 @@ void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_FILE_LOGGING
 }
 
-void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	stopPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+void stopHardware() {
+	stopPedalPins();
 
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	stopSmartCsPins();
@@ -453,23 +453,23 @@ void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * This method is invoked both on ECU start and configuration change
  */
-void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void startHardware() {
 #if (HAL_USE_PAL && EFI_JOYSTICK)
 	startJoystickPins();
 #endif /* HAL_USE_PAL && EFI_JOYSTICK */
 
-	validateTriggerInputs(PASS_ENGINE_PARAMETER_SIGNATURE);
+	validateTriggerInputs();
 
-	startTriggerDebugPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startTriggerDebugPins();
 
-	startPedalPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startPedalPins();
 
 #if EFI_CAN_SUPPORT
 	startCanPins();
 #endif /* EFI_CAN_SUPPORT */
 }
 
-void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initHardware() {
 #if HAL_USE_PAL && EFI_PROD_CODE
 	efiExtiInit();
 #endif // HAL_USE_PAL
@@ -504,11 +504,11 @@ void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 #if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	// initSmartGpio depends on 'initSpiModules'
-	initSmartGpio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initSmartGpio();
 #endif
 
 	// output pins potentially depend on 'initSmartGpio'
-	initOutputPins(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initOutputPins();
 
 #if EFI_ENGINE_CONTROL
 	enginePins.startPins();
@@ -529,14 +529,14 @@ void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 //	init_adc_mcp3208(&adcState, &SPID2);
 //	requestAdcValue(&adcState, 0);
 
-	turnOnHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	turnOnHardware();
 
 #if EFI_HIP_9011
 	initHip9011();
 #endif /* EFI_HIP_9011 */
 
 #if EFI_MEMS
-	initAccelerometer(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initAccelerometer();
 #endif
 
 #if EFI_BOSCH_YAW
@@ -569,7 +569,7 @@ void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	calcFastAdcIndexes();
 
-	startHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startHardware();
 
 	efiPrintf("initHardware() OK!");
 }

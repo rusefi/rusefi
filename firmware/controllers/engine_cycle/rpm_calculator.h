@@ -164,17 +164,17 @@ private:
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp);
 
 void tdcMarkCallback(
-		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+		uint32_t index0, efitick_t edgeTimestamp);
 
 /**
  * @brief   Initialize RPM calculator
  */
-void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initRpmCalculator();
 
-float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getCrankshaftAngleNt(efitick_t timeNt);
 
 #define getRevolutionCounter() ENGINE(rpmCalculator.getRevolutionCounterM())
 
@@ -184,5 +184,5 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle, action_s action DECLARE_ENGINE_PARAMETER_SUFFIX);
+efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle, action_s action);
 

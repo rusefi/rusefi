@@ -40,7 +40,7 @@ public:
 	int getWarningCounter();
 
 	void applyTriggerWaveform();
-	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setTriggerType(trigger_type_e trigger);
 	/**
 	 * DEPRECATED these methods do not execute events on the queue
 	 */

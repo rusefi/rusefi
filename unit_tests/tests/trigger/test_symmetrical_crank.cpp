@@ -50,7 +50,7 @@ TEST(engine, testSymmetricalCrank) {
 	CONFIG(isFasterEngineSpinUpEnabled) = false;
 
 
-	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, engine->getOperationMode());
 
 	float mult = 0.02;
 

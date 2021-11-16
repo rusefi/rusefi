@@ -211,7 +211,7 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
  * On the contrary, 'hard parameters' are waiting for the Burn button to be clicked and configuration version
  * would be increased and much more complicated logic would be executed.
  */
-static void onlineApplyWorkingCopyBytes(uint32_t offset, int count DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
 	if (offset >= sizeof(engine_configuration_s)) {
 		int maxSize = sizeof(persistent_config_s) - offset;
 		if (count > maxSize) {
@@ -306,7 +306,7 @@ bool rebootForPresetPending = false;
  * @note See also handleWriteValueCommand
  */
 void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
-		void *content DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		void *content) {
 	tsState.writeChunkCommandCounter++;
 
 	efiPrintf("WRITE CHUNK mode=%d o=%d s=%d", mode, offset, count);
@@ -319,7 +319,7 @@ void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode
 	if (!rebootForPresetPending) {
 		uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 		memcpy(addr, content, count);
-		onlineApplyWorkingCopyBytes(offset, count PASS_ENGINE_PARAMETER_SUFFIX);
+		onlineApplyWorkingCopyBytes(offset, count);
 	}
 
 	sendOkResponse(tsChannel, mode);
@@ -398,7 +398,7 @@ static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e
 
 void requestBurn(void) {
 #if !EFI_UNIT_TEST
-	onBurnRequest(PASS_ENGINE_PARAMETER_SIGNATURE);
+	onBurnRequest();
 
 #if EFI_INTERNAL_FLASH
 	setNeedToWriteConfiguration();
@@ -415,7 +415,7 @@ static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel
 /**
  * 'Burn' command is a command to commit the changes
  */
-void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	efitimems_t nowMs = currentTimeMillis();
 	tsState.burnCommandCounter++;
 

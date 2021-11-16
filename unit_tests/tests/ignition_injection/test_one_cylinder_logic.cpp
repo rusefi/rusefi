@@ -15,7 +15,7 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_ONE);
 
 	ASSERT_EQ( 0,  engine->executor.size()) << "start";
 

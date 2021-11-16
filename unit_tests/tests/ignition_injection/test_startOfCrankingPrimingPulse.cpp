@@ -43,7 +43,7 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 	Sensor::setMockValue(SensorType::Clt, -10);
 
 	// prod code invokes this on ECU start, here we have to mimic this behavior
-	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startPrimeInjectionPulse();
 
 
 	ASSERT_EQ( 1,  engine->executor.size()) << "prime fuel";

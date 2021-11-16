@@ -18,5 +18,5 @@ protected:
 	explicit SpeedDensityBase(const ValueProvider3D& veTable) : AirmassVeModelBase(veTable) {}
 
 public:
-	static float getAirmassImpl(float ve, float manifoldPressure, float temperature DECLARE_ENGINE_PARAMETER_SUFFIX);
+	static float getAirmassImpl(float ve, float manifoldPressure, float temperature);
 };

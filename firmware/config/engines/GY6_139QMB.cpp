@@ -16,19 +16,19 @@
 #include "GY6_139QMB.h"
 #include "advance_map.h"
 
-static void setDefault139qmbMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setTimingRpmBin(1000, 11000 PASS_CONFIG_PARAMETER_SUFFIX);
+static void setDefault139qmbMaps() {
+	setTimingLoadBin(1.2, 4.4);
+	setTimingRpmBin(1000, 11000);
 }
 
-void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefault139qmbMaps(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setGy6139qmbDefaultEngineConfiguration() {
+	setDefault139qmbMaps();
 //        engineConfiguration->map.sensor.type = MT_3V_SENSOR;
-	setEgoSensor(ES_NarrowBand PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_NarrowBand);
 
 	engineConfiguration->rpmHardLimit = 9000;
 	engineConfiguration->cranking.rpm = 1100;
-	setTargetRpmCurve(2000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTargetRpmCurve(2000);
 	engineConfiguration->analogInputDividerCoefficient = 1;
 	engineConfiguration->globalTriggerAngleOffset = 45;
 	engineConfiguration->sensorChartMode = SC_MAP;

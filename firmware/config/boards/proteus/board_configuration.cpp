@@ -188,7 +188,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;

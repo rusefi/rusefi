@@ -33,7 +33,7 @@
 #include "advance_map.h"
 #include "custom_engine.h"
 
-static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setHondaAccordConfigurationCommon() {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 
 	// set ignition_mode 0
@@ -51,9 +51,9 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	// Keihin 06164-P0A-A00
 	engineConfiguration->injector.flow = 248;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
-	buildTimingMap(35 PASS_CONFIG_PARAMETER_SUFFIX);
+	buildTimingMap(35);
 
 	/**
 	 * 18K Ohm @ -20C
@@ -159,7 +159,7 @@ static void setHondaAccordConfigurationCommon(DECLARE_CONFIG_PARAMETER_SIGNATURE
 	engineConfiguration->idle.solenoidFrequency = 500;
 }
 
-void setHondaAccordConfiguration1_24(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setHondaAccordConfiguration1_24() {
 	engineConfiguration->trigger.type = TT_HONDA_1_24;
-	setHondaAccordConfigurationCommon(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setHondaAccordConfigurationCommon();
 }

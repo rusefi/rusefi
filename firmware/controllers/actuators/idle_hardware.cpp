@@ -25,7 +25,7 @@ StepperMotor iacMotor CCM_OPTIONAL;
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
 
-void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void applyIACposition(percent_t position) {
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
@@ -34,7 +34,7 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	if (CONFIG(useETBforIdleControl)) {
 #if EFI_ELECTRONIC_THROTTLE_BODY
-		setEtbIdlePosition(position PASS_ENGINE_PARAMETER_SUFFIX);
+		setEtbIdlePosition(position);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 #if ! EFI_UNIT_TEST
 	} else if (CONFIG(useStepperIdle)) {
@@ -77,7 +77,7 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(secondSolenoidPin);
 }
 
-bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool isIdleMotorBusy() {
 	if (!CONFIG(useStepperIdle)) {
 		// todo: check other motor types?
 		return false;
@@ -85,13 +85,13 @@ bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return iacMotor.isBusy();
 }
 
-void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void initIdleHardware() {
 	if (CONFIG(useStepperIdle)) {
 		StepperHw* hw;
 
 		if (CONFIG(useHbridgesToDriveIdleStepper)) {
-			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0], 2, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
-			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1], 3, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
+			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0], 2, /*useTwoWires*/ true);
+			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1], 3, /*useTwoWires*/ true);
 
 			if (motorA && motorB) {
 				iacHbridgeHw.initialize(

@@ -14,7 +14,7 @@
 
 typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
 
-bool acceptCanRx(int sid DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool acceptCanRx(int sid) {
 	if (!CONFIG(usescriptTableForCanSniffingFiltering)) {
 		// accept anything if filtering is not enabled
 		return true;

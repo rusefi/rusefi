@@ -83,7 +83,7 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 		canSpeed.setValidValue(speed.Value, nowNt);
 
 #if EFI_DYNO_VIEW
-		updateDynoViewCan(PASS_ENGINE_PARAMETER_SIGNATURE);
+		updateDynoViewCan();
 #endif
 	}
 }

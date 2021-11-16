@@ -8,7 +8,7 @@
 static LinearFunc vbattFunc;
 static FunctionalSensor vbattSensor(SensorType::BatteryVoltage, /* timeout = */ MS2NT(100));
 
-void initVbatt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void initVbatt() {
 	vbattFunc.configure(0, 0, 1, engineConfiguration->vbattDividerCoeff, 0, 50);
 	vbattSensor.setFunction(vbattFunc);
 

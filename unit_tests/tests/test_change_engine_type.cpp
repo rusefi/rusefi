@@ -20,17 +20,17 @@ TEST(misc, changeEngineType) {
 	ASSERT_TRUE(activeConfiguration.triggerInputDebugPins[0] != GPIO_UNASSIGNED);
 
 	int pinIndex = brainPin_to_index(brainPin);
-	ASSERT_TRUE(nullptr != getBrainUsedPin(pinIndex PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_TRUE(nullptr != getBrainUsedPin(pinIndex));
 
 	// above we have asserted that triggerInputDebugPins is in fact used
 	// now let's change into engine type without triggerInputDebugPins and assert shut down
 
-	setEngineType((int)CITROEN_TU3JP PASS_ENGINE_PARAMETER_SUFFIX);
+	setEngineType((int)CITROEN_TU3JP);
 	ASSERT_TRUE(activeConfiguration.triggerInputDebugPins[0] == GPIO_UNASSIGNED);
 
 	ASSERT_TRUE(engineConfiguration->triggerInputDebugPins[0] == GPIO_UNASSIGNED);
 	ASSERT_TRUE(engineConfiguration->triggerInputDebugPins[0] == GPIO_UNASSIGNED);
 
-	ASSERT_TRUE(nullptr == getBrainUsedPin(pinIndex PASS_ENGINE_PARAMETER_SUFFIX));
+	ASSERT_TRUE(nullptr == getBrainUsedPin(pinIndex));
 }
 

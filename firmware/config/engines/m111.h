@@ -12,4 +12,4 @@
 /**
  * set engine_type 68
  */
-void setM111EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setM111EngineConfiguration();

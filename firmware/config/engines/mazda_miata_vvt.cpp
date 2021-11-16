@@ -220,7 +220,7 @@ static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
 };
 
 
-static void setMAFTransferFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setMAFTransferFunction() {
 	memcpy(config->mafDecoding, mafTransferKgH, sizeof(mafTransferKgH));
 	memcpy(config->mafDecodingBins, mafTransferVolts, sizeof(mafTransferVolts));
 	for (int i = MAF_TRANSFER_SIZE;i<MAF_DECODING_COUNT;i++) {
@@ -229,12 +229,12 @@ static void setMAFTransferFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
-void setMazdaMiataNbInjectorLag(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setMazdaMiataNbInjectorLag() {
 	copyArray(engineConfiguration->injector.battLagCorr, injectorLagCorrection);
 	copyArray(engineConfiguration->injector.battLagCorrBins, injectorLagBins);
 }
 
-void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setMazdaNB2VVTSettings() {
 	copyArray(config->vvtTable1RpmBins, vvt18fsioRpmBins);
 	copyArray(config->vvtTable1LoadBins, vvt18fsioLoadBins);
 	copyTable(config->vvtTable1, SCRIPT_TABLE_vvt_target);
@@ -251,7 +251,7 @@ void setMazdaNB2VVTSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * stuff common between NA1 and NB2
  */
-static void setCommonMazdaNB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setCommonMazdaNB() {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->trigger.type = TT_MIATA_VVT;
@@ -279,7 +279,7 @@ static void setCommonMazdaNB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	// enable cylinder_cleanup
 	engineConfiguration->isCylinderCleanupEnabled = true;
 	// set_whole_ve_map 80
-	setMazdaMiataNbInjectorLag(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMazdaMiataNbInjectorLag();
 
 	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->tachPulsePerRev = 2;
@@ -291,7 +291,7 @@ static void setCommonMazdaNB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
-	setMAFTransferFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMAFTransferFunction();
 
     // second harmonic (aka double) is usually quieter background noise
     // 13.8
@@ -318,21 +318,21 @@ static void setCommonMazdaNB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->idleRpmPid.dFactor = 5;
 	engineConfiguration->idleRpmPid.periodMs = 10;
 
-	miataNA_setCltIdleCorrBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	miataNA_setCltIdleRpmBins(PASS_CONFIG_PARAMETER_SIGNATURE);
-	miataNA_setIacCoastingBins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	miataNA_setCltIdleCorrBins();
+	miataNA_setCltIdleRpmBins();
+	miataNA_setIacCoastingBins();
 }
 
-static void setMazdaMiataEngineNB1Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setCommonMazdaNB(PASS_CONFIG_PARAMETER_SIGNATURE);
+static void setMazdaMiataEngineNB1Defaults() {
+	setCommonMazdaNB();
 	strcpy(CONFIG(engineCode), "NB1");
 }
 
-static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setMazdaMiataEngineNB2Defaults() {
 	strcpy(CONFIG(engineCode), "NB2");
 
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L);
 
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
@@ -358,9 +358,9 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vvtMode[0] = VVT_MIATA_NB2;
 	engineConfiguration->vvtOffsets[0] = 98; // 2003 red car value
 
-	setCommonMazdaNB(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setCommonMazdaNB();
 
-	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMazdaNB2VVTSettings();
 
 
 
@@ -373,10 +373,10 @@ static void setMazdaMiataEngineNB2Defaults(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 } // end of setMazdaMiataEngineNB2Defaults
 
 // MAZDA_MIATA_2003
-void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMazdaMiata2003EngineConfiguration() {
+	setFrankensoConfiguration();
 
-	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMazdaMiataEngineNB2Defaults();
 
 //	engineConfiguration->triggerInputPins[0] = GPIOA_8; // custom Frankenso wiring in order to use SPI1 for accelerometer
 	engineConfiguration->triggerInputPins[0] = GPIOA_5; // board still not modified
@@ -456,7 +456,7 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->scriptSetting[2] = 105; // #3 CLT threshold
 	engineConfiguration->scriptSetting[3] = 12.0; // #4 voltage threshold
 
-//	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT PASS_CONFIG_PARAMETER_SUFFIX);
+//	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT);
 
 	// enable auto_idle
 	// enable verbose_idle
@@ -537,8 +537,8 @@ void setMazdaMiata2003EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * board #70 - closer to default miata NA6 harness
  *
  */
-void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMazdaMiata2003EngineConfigurationBoardTest() {
+	setMazdaMiata2003EngineConfiguration();
 
 	engineConfiguration->ignitionPins[2] = GPIOC_7;
 
@@ -548,9 +548,9 @@ void setMazdaMiata2003EngineConfigurationBoardTest(DECLARE_CONFIG_PARAMETER_SIGN
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4 - W47 top <>W47
 }
 
-static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setMiataNB2_MRE_common() {
 #if (BOARD_TLE8888_COUNT > 0)
-	setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMazdaMiataEngineNB2Defaults();
 
 	// MRE has a special main relay control low side pin - rusEfi firmware is totally not involved with main relay control
 	//
@@ -624,15 +624,15 @@ static void setMiataNB2_MRE_common(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * Pretty much OEM 2003 Miata with ETB
  * set engine_type 13
  */
-void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNB2_MRE_ETB() {
+	setMiataNB2_MRE_common();
 
 	CONFIG(useETBforIdleControl) = true;
 
 #if EFI_FSIO
 	// enable ETB
 	// set_rpn_expression 8 "0"
-	// todo lua ETB setFsio(7, GPIOC_8, "0" PASS_CONFIG_PARAMETER_SUFFIX);
+	// todo lua ETB setFsio(7, GPIOC_8, "0");
 #endif /* EFI_FSIO */
 
 	//set idle_offset 0
@@ -657,8 +657,8 @@ void setMiataNB2_MRE_ETB(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * Normal mechanical throttle body
  * set engine_type 11
  */
-void setMiataNB2_MRE_MAP(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiataNB2_MRE_common(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNB2_MRE_MAP() {
+	setMiataNB2_MRE_common();
 
 	// somehow MRE72 adapter 0.2 has TPS routed to pin 26?
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6; // PA6
@@ -668,8 +668,8 @@ void setMiataNB2_MRE_MAP(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->mafAdcChannel = EFI_ADC_13; // J30 AV5
 }
 
-void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiataNB2_MRE_MAP(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNB2_MRE_MAF() {
+	setMiataNB2_MRE_MAP();
 
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 }
@@ -678,7 +678,7 @@ void setMiataNB2_MRE_MAF(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * https://github.com/rusefi/rusefi/wiki/HOWTO-TCU-A42DE-on-Proteus
  */
 #if HW_PROTEUS
-void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setMiataNB2_Proteus_TCU() {
 	engineConfiguration->tcuEnabled = true;
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
@@ -732,8 +732,8 @@ void setMiataNB2_Proteus_TCU(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * https://github.com/rusefi/rusefi/wiki/HOWTO-Miata-NB2-on-Proteus
  */
-void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-    setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNB2_ProteusEngineConfiguration() {
+    setMazdaMiataEngineNB2Defaults();
 
     engineConfiguration->triggerInputPins[0] = GPIOC_6;                     // pin 10/black23
     engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
@@ -799,14 +799,14 @@ void setMiataNB2_ProteusEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) 
 #endif // HW_PROTEUS
 
 #if HW_HELLEN
-void setHellenNB1(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMazdaMiataEngineNB1Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setHellenNB1() {
+	setMazdaMiataEngineNB1Defaults();
 
 	engineConfiguration->injector.flow = 256;
 }
 
-void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-    setMazdaMiataEngineNB2Defaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNB2_Hellen72() {
+    setMazdaMiataEngineNB2Defaults();
 	strcpy(CONFIG(vehicleName), "H72 test");
 
 
@@ -815,8 +815,8 @@ void setMiataNB2_Hellen72(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void setMiataNB2_Hellen72_36(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiataNB2_Hellen72(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMiataNB2_Hellen72_36() {
+	setMiataNB2_Hellen72();
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_1;
 	engineConfiguration->globalTriggerAngleOffset = 76;

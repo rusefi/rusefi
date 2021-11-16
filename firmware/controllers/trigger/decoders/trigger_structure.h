@@ -56,7 +56,7 @@ public:
 
 	angle_t angleOffsetFromTriggerEvent = 0;
 
-	void setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setAngle(angle_t angle);
 };
 
 #define TRIGGER_CHANNEL_COUNT 3
@@ -249,7 +249,7 @@ public:
 	size_t getSize() const;
 
 	int getTriggerWaveformSynchPointIndex() const;
-	void prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void prepareShape(TriggerFormDetails *details);
 
 	/**
 	 * This private method should only be used to prepare the array of pre-calculated values
@@ -318,7 +318,7 @@ void findTriggerPosition(
 		TriggerWaveform *shape,
 		TriggerFormDetails *details,
 		event_trigger_position_s *position,
-		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset));
+		angle_t angle);
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, operation_mode_e operationMode);
 

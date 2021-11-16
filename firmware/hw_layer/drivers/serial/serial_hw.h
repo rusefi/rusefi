@@ -10,7 +10,7 @@
 
 void initAuxSerial(void);
 #if EFI_AUX_SERIAL
-void stopAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void stopAuxSerialPins();
+void startAuxSerialPins();
+void enableAuxSerial();
 #endif //EFI_AUX_SERIAL

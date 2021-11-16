@@ -82,8 +82,8 @@ static const uint8_t veDodgeNeon2003Table[16][16] = {
 };
 
 
-void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setDodgeNeon1995EngineConfiguration() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
@@ -113,7 +113,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * that's 1995 config
 	 */
 
-	setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(12);
 
 	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -180,8 +180,8 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
 }
 
-void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setDodgeNeonNGCEngineConfiguration() {
+	setDefaultFrankensoConfiguration();
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
 	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
@@ -206,7 +206,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * fuel 2.8
 	 *
 	 */
-	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
+	//setWholeTimingTable_d(12);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTable(config->ignitionTable, fromODB);
 #endif
@@ -226,9 +226,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setLinearCurve(config->ignitionLoadBins, 20, 120, 1);
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
-	setFuelTablesLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(20, 120);
 
 	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
@@ -359,7 +359,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	engineConfiguration->tunerStudioSerialSpeed = 9600;
 	engineConfiguration->tunerStudioSerialSpeed = 19200;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 //temp	engineConfiguration->alternatorControlPin = GPIOD_5;
 	engineConfiguration->targetVBatt = 14.0;

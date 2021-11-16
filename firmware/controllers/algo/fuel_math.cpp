@@ -44,7 +44,7 @@ static mapEstimate_Map3D_t mapEstimationTable;
 
 float getCrankingFuel3(
 	float baseFuel,
-		uint32_t revolutionCounterSinceStart DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t revolutionCounterSinceStart) {
 	// these magic constants are in Celsius
 	float baseCrankingFuel;
 	if (engineConfiguration->useRunningMathForCranking) {
@@ -92,7 +92,7 @@ float getCrankingFuel3(
 	return crankingFuel;
 }
 
-float getRunningFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getRunningFuel(float baseFuel) {
 	ScopePerf perf(PE::GetRunningFuel);
 
 	ENGINE(engineState.running.baseFuel) = baseFuel;
@@ -123,7 +123,7 @@ static SpeedDensityAirmass sdAirmass(veMap, mapEstimationTable);
 static MafAirmass mafAirmass(veMap);
 static AlphaNAirmass alphaNAirmass(veMap);
 
-AirmassModelBase* getAirmassModel(engine_load_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+AirmassModelBase* getAirmassModel(engine_load_mode_e mode) {
 	switch (mode) {
 		case LM_SPEED_DENSITY: return &sdAirmass;
 		case LM_REAL_MAF: return &mafAirmass;
@@ -145,11 +145,11 @@ AirmassModelBase* getAirmassModel(engine_load_mode_e mode DECLARE_ENGINE_PARAMET
 }
 
 // Per-cylinder base fuel mass
-static float getBaseFuelMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float getBaseFuelMass(int rpm) {
 	ScopePerf perf(PE::GetBaseFuel);
 
 	// airmass modes - get airmass first, then convert to fuel
-	auto model = getAirmassModel(CONFIG(fuelAlgorithm) PASS_ENGINE_PARAMETER_SUFFIX);
+	auto model = getAirmassModel(CONFIG(fuelAlgorithm));
 	efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
 
 	auto airmass = model->getAirmass(rpm);
@@ -157,7 +157,7 @@ static float getBaseFuelMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	// Plop some state for others to read
 	ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
 	ENGINE(engineState.fuelingLoad) = airmass.EngineLoadPercent;
-	ENGINE(engineState.ignitionLoad) = getLoadOverride(airmass.EngineLoadPercent, CONFIG(ignOverrideMode) PASS_ENGINE_PARAMETER_SUFFIX);
+	ENGINE(engineState.ignitionLoad) = getLoadOverride(airmass.EngineLoadPercent, CONFIG(ignOverrideMode));
 
 	float baseFuelMass = ENGINE(fuelComputer)->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 
@@ -173,7 +173,7 @@ static float getBaseFuelMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return baseFuelMass;
 }
 
-angle_t getInjectionOffset(float rpm, float load DECLARE_ENGINE_PARAMETER_SUFFIX) {
+angle_t getInjectionOffset(float rpm, float load) {
 	if (cisnan(rpm)) {
 		return 0; // error already reported
 	}
@@ -199,7 +199,7 @@ angle_t getInjectionOffset(float rpm, float load DECLARE_ENGINE_PARAMETER_SUFFIX
  * Number of injections using each injector per engine cycle
  * @see getNumberOfSparks
  */
-int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+int getNumberOfInjections(injection_mode_e mode) {
 	switch (mode) {
 	case IM_SIMULTANEOUS:
 	case IM_SINGLE_POINT:
@@ -214,8 +214,8 @@ int getNumberOfInjections(injection_mode_e mode DECLARE_ENGINE_PARAMETER_SUFFIX)
 	}
 }
 
-float getInjectionModeDurationMultiplier(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	injection_mode_e mode = ENGINE(getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+float getInjectionModeDurationMultiplier() {
+	injection_mode_e mode = ENGINE(getCurrentInjectionMode());
 
 	switch (mode) {
 	case IM_SIMULTANEOUS: {
@@ -243,17 +243,17 @@ float getInjectionModeDurationMultiplier(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * This is more like MOSFET duty cycle since durations include injector lag
  * @see getCoilDutyCycle
  */
-percent_t getInjectorDutyCycle(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	floatms_t totalInjectiorAmountPerCycle = ENGINE(injectionDuration) * getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
-	floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+percent_t getInjectorDutyCycle(int rpm) {
+	floatms_t totalInjectiorAmountPerCycle = ENGINE(injectionDuration) * getNumberOfInjections(engineConfiguration->injectionMode);
+	floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
 
-static float getCycleFuelMass(bool isCranking, float baseFuelMass DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static float getCycleFuelMass(bool isCranking, float baseFuelMass) {
 	if (isCranking) {
-		return getCrankingFuel(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX);
+		return getCrankingFuel(baseFuelMass);
 	} else {
-		return getRunningFuel(baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX);
+		return getRunningFuel(baseFuelMass);
 	}
 }
 
@@ -261,27 +261,27 @@ static float getCycleFuelMass(bool isCranking, float baseFuelMass DECLARE_ENGINE
  * @returns	Mass of each individual fuel injection, in grams
  *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
  */
-float getInjectionMass(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getInjectionMass(int rpm) {
 	ScopePerf perf(PE::GetInjectionDuration);
 
 #if EFI_SHAFT_POSITION_INPUT
 	// Always update base fuel - some cranking modes use it
-	float baseFuelMass = getBaseFuelMass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	float baseFuelMass = getBaseFuelMass(rpm);
 
 	bool isCranking = ENGINE(rpmCalculator).isCranking();
-	float cycleFuelMass = getCycleFuelMass(isCranking, baseFuelMass PASS_ENGINE_PARAMETER_SUFFIX);
+	float cycleFuelMass = getCycleFuelMass(isCranking, baseFuelMass);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cycleFuelMass), "NaN cycleFuelMass", 0);
 
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
 	cycleFuelMass *= ENGINE(engineState.fuelCutoffCorrection);
 
-	float durationMultiplier = getInjectionModeDurationMultiplier(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float durationMultiplier = getInjectionModeDurationMultiplier();
 	float injectionFuelMass = cycleFuelMass * durationMultiplier;
 
 	// Prepare injector flow rate & deadtime
 	ENGINE(injectorModel)->prepare();
 
-	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment(PASS_ENGINE_PARAMETER_SIGNATURE));
+	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment());
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
 
@@ -304,13 +304,13 @@ static InjectorModel injectorModel;
  * @note this method has nothing to do with fuel map VALUES - it's job
  * is to prepare the fuel map data structure for 3d interpolation
  */
-void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	sdAirmass.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
-	mafAirmass.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
-	alphaNAirmass.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+void initFuelMap() {
+	sdAirmass.inject();
+	mafAirmass.inject();
+	alphaNAirmass.inject();
 
-	fuelComputer.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
-	injectorModel.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+	fuelComputer.inject();
+	injectorModel.inject();
 
 	ENGINE(fuelComputer) = &fuelComputer;
 	ENGINE(injectorModel) = &injectorModel;
@@ -325,7 +325,7 @@ void initFuelMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @brief Engine warm-up fuel correction.
  */
-float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getCltFuelCorrection() {
 	const auto [valid, clt] = Sensor::get(SensorType::Clt);
 	
 	if (!valid)
@@ -334,7 +334,7 @@ float getCltFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return interpolate2d(clt, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
-angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+angle_t getCltTimingCorrection() {
 	const auto [valid, clt] = Sensor::get(SensorType::Clt);
 
 	if (!valid)
@@ -343,7 +343,7 @@ angle_t getCltTimingCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return interpolate2d(clt, engineConfiguration->cltTimingBins, engineConfiguration->cltTimingExtra);
 }
 
-float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getIatFuelCorrection() {
 	const auto [valid, iat] = Sensor::get(SensorType::Iat);
 
 	if (!valid)
@@ -357,7 +357,7 @@ float getIatFuelCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * @note The returned value is float, not boolean - to implement taper (smoothed correction).
  * @return	Fuel duration correction for fuel cut-off control (ex. if coasting). No correction if 1.0
  */
-float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getFuelCutOffCorrection(efitick_t nowNt, int rpm) {
 	// no corrections by default
 	float fuelCorr = 1.0f;
 
@@ -403,7 +403,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm DECLARE_ENGINE_PARAMETER_
 	return fuelCorr;
 }
 
-float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getBaroCorrection() {
 	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 		// Default to 1atm if failed
 		float pressure = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
@@ -424,11 +424,11 @@ float getBaroCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 /**
  * @return Duration of fuel injection while craning
  */
-float getCrankingFuel(float baseFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getCrankingFuel3(baseFuel, engine->rpmCalculator.getRevolutionCounterSinceStart() PASS_ENGINE_PARAMETER_SUFFIX);
+float getCrankingFuel(float baseFuel) {
+	return getCrankingFuel3(baseFuel, engine->rpmCalculator.getRevolutionCounterSinceStart());
 }
 
-float getStandardAirCharge(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getStandardAirCharge() {
 	float totalDisplacement = CONFIG(specs.displacement);
 	float cylDisplacement = totalDisplacement / CONFIG(specs.cylindersCount);
 

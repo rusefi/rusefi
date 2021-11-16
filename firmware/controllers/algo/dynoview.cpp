@@ -131,11 +131,11 @@ int DynoView::getEngineTorque() {
 }
 
 
-float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getDynoviewAcceleration() {
     return dynoInstance.getAcceleration();
 }
 
-int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int getDynoviewPower() {
     return dynoInstance.getEnginePower();
 }
 
@@ -143,10 +143,10 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Periodic update function called from SlowCallback.
  * Only updates if we have Vss from input pin.
  */
-void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updateDynoView() {
 	if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
 		(!CONFIG(enableCanVss))) {
-		dynoInstance.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
+		dynoInstance.inject();
 		dynoInstance.update(ICU);
 	}
 }
@@ -155,7 +155,7 @@ void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * This function is called after every CAN msg received, we process it
  * as soon as we can to be more acurate.
  */ 
-void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updateDynoViewCan() {
     if (!CONFIG(enableCanVss)) {
         return;
     }

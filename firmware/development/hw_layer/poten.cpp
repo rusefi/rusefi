@@ -87,7 +87,7 @@ static void setPotValue1(int value) {
 
 #endif /* EFI_POTENTIOMETER */
 
-void initPotentiometers(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initPotentiometers() {
 #if EFI_POTENTIOMETER
 	if (CONFIG(digitalPotentiometerSpiDevice) == SPI_NONE) {
 		efiPrintf("digiPot spi disabled");

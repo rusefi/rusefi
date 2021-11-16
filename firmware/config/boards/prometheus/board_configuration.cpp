@@ -17,11 +17,11 @@ static bool is469 = false;
 #endif
 
 
-static void setPrometheusDefaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void setPrometheusDefaults() {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR/*FOUR_STROKE_CAM_SENSOR*/);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	//engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	CONFIG(useCicPidForIdle) = true;
 
@@ -250,7 +250,7 @@ void setBoardDefaultConfiguration(void) {
 	
 	//!!!!!!!!!!!!!!!
 #if 1
-	setPrometheusDefaults(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setPrometheusDefaults();
 #endif
 
 	//!!!!!!!!!!!!!!!!!!!

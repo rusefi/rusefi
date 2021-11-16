@@ -143,7 +143,7 @@ void BoostController::setOutput(expected<float> output) {
 		m_pwm->setSimplePwmDutyCycle(duty);
 	}
 
-	setEtbWastegatePosition(percent PASS_ENGINE_PARAMETER_SUFFIX);
+	setEtbWastegatePosition(percent);
 }
 
 void BoostController::update() {
@@ -162,7 +162,7 @@ void updateBoostControl() {
 	}
 }
 
-void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setDefaultBoostParameters() {
 	engineConfiguration->boostPwmFrequency = 33;
 	engineConfiguration->boostPid.offset = 0;
 	engineConfiguration->boostPid.pFactor = 0.5;
@@ -210,7 +210,7 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 	boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
 
-void initBoostCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initBoostCtrl() {
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initAuxPid' is an example of a subsystem without explicit enable
 	if (!CONFIG(isBoostControlEnabled)) {

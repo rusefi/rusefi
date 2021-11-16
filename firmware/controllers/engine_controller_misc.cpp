@@ -37,20 +37,20 @@ void contextSwitchHook() {}
 #endif /* ENABLE_PERF_TRACE */
 
 #if EFI_ENABLE_MOCK_ADC
-void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+void setMockVoltage(int hwChannel, float voltage) {
+	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
 }
 
-void setMockMafVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->mafAdcChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+void setMockMafVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
 }
 
-void setMockAfrVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->afr.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+void setMockAfrVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
 }
 
-void setMockMapVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage PASS_ENGINE_PARAMETER_SUFFIX);
+void setMockMapVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
 }
 #endif /* EFI_ENABLE_MOCK_ADC */
 
@@ -71,7 +71,7 @@ efitick_t getTimeNowNt() {
 }
 #endif /* !EFI_UNIT_TEST */
 
-static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void onStartStopButtonToggle() {
 	engine->startStopStateToggleCounter++;
 
 	if (engine->rpmCalculator.isStopped()) {
@@ -84,17 +84,17 @@ static void onStartStopButtonToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 	} else if (engine->rpmCalculator.isRunning()) {
 		efiPrintf("Let's stop this engine!");
-		doScheduleStopEngine(PASS_ENGINE_PARAMETER_SIGNATURE);
+		doScheduleStopEngine();
 	}
 }
 
 
-void slowStartStopButtonCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void slowStartStopButtonCallback() {
 	bool startStopState = startStopButtonDebounce.readPinEvent();
 
 	if (startStopState && !engine->startStopState) {
 		// we are here on transition from 0 to 1
-		onStartStopButtonToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		onStartStopButtonToggle();
 	}
 	engine->startStopState = startStopState;
 

@@ -126,7 +126,7 @@ WaveReader::WaveReader() {
 	hw = nullptr;
 }
 
-void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp) {
 	(void)ckpSignalType;
 	if (index != 0) {
 		return;
