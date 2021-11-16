@@ -5,7 +5,7 @@ extern float getTachDuty(void);
 
 TEST(tachometer, testPulsePerRev) {
     // This engine has a tach pin set - we need that
-    WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
+    EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
     // We don't actually care about ign/inj at all, just tach
     engineConfiguration->isInjectionEnabled = false;

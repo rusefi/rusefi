@@ -71,7 +71,6 @@ void initAuxValves() {
 			actor->valveIndex = valveIndex;
 			actor->extra = phaseIndex * 360 + valveIndex * 180;
 
-			actor->inject();
 			scheduleOpen(actor);
 		}
 	}

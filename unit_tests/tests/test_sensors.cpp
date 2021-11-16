@@ -8,14 +8,14 @@
 #include "pch.h"
 
 TEST(sensors, vrThreshold) {
-	WITH_ENGINE_TEST_HELPER(HELLEN_128_MERCEDES_4_CYL);
+	EngineTestHelper eth(HELLEN_128_MERCEDES_4_CYL);
 
 	auto& cfg = CONFIG(vrThreshold)[0];
 	ASSERT_FLOAT_EQ(0.8 * PACK_PERCENT_BYTE_MULT, cfg.values[2]);
 }
 
 TEST(sensors, mapDecoding) {
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EngineTestHelper eth(FORD_INLINE_6_1995);
 
 	air_pressure_sensor_config_s s;
 	s.type = MT_DENSO183;

@@ -24,7 +24,7 @@ static void postToFuncSensor(Sensor* s, float value) {
 	}
 
 TEST(SensorInit, Tps) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	CONFIG(tpsMin) = 200;	// 1 volt
 	CONFIG(tpsMax) = 800;	// 4 volts
@@ -50,7 +50,7 @@ TEST(SensorInit, Tps) {
 }
 
 TEST(SensorInit, TpsValuesTooClose) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Should fail, 0.49 volts apart
 	CONFIG(tpsMin) = 200;	// 1.00 volt
@@ -97,7 +97,7 @@ TEST(SensorInit, TpsValuesTooClose) {
 }
 
 TEST(SensorInit, Pedal) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_0;
 	CONFIG(throttlePedalUpVoltage) = 1;
@@ -124,7 +124,7 @@ TEST(SensorInit, Pedal) {
 }
 
 TEST(SensorInit, DriverIntentNoPedal) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// We have no pedal - so we should get the TPS
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_NONE;
@@ -144,7 +144,7 @@ TEST(SensorInit, DriverIntentNoPedal) {
 
 
 TEST(SensorInit, DriverIntentWithPedal) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// We have a pedal, so we should get it
 	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_0;
@@ -163,7 +163,7 @@ TEST(SensorInit, DriverIntentWithPedal) {
 }
 
 TEST(SensorInit, OilPressure) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	CONFIG(oilPressure.hwChannel) = EFI_ADC_0;
 	CONFIG(oilPressure.v1) = 1;
@@ -188,7 +188,7 @@ TEST(SensorInit, OilPressure) {
 }
 
 TEST(SensorInit, Clt) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// 2003 neon sensor
 	CONFIG(clt.config) = {0, 30, 100, 32500, 7550, 700, 2700};
@@ -210,7 +210,7 @@ TEST(SensorInit, Clt) {
 }
 
 TEST(SensorInit, Lambda) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	initLambda();
 
@@ -219,7 +219,7 @@ TEST(SensorInit, Lambda) {
 }
 
 TEST(SensorInit, Map) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	initMap();
 

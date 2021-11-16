@@ -7,7 +7,7 @@
 #include "globalaccess.h"
 #include "simple_tcu.h"
 
-class GearControllerBase : public EnginePtr {
+class GearControllerBase {
 public:
     virtual void update();
     gear_e getDesiredGear() const;

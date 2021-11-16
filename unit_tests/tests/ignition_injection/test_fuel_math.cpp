@@ -9,7 +9,7 @@ using ::testing::InSequence;
 using ::testing::_;
 
 TEST(FuelMath, getStandardAirCharge) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Miata 1839cc 4cyl
 	CONFIG(specs.displacement) = 1.839f;
@@ -36,7 +36,7 @@ TEST(FuelMath, getStandardAirCharge) {
 }
 
 TEST(AirmassModes, AlphaNNormal) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	// 4 cylinder 4 liter = easy math
 	engineConfiguration->specs.displacement = 4.0f;
 	engineConfiguration->specs.cylindersCount = 4;
@@ -47,7 +47,6 @@ TEST(AirmassModes, AlphaNNormal) {
 		.WillOnce(Return(35.0f));
 
 	AlphaNAirmass dut(veTable);
-	dut.inject();
 
 	Sensor::setMockValue(SensorType::Tps1, 0.71f);
 
@@ -60,13 +59,12 @@ TEST(AirmassModes, AlphaNNormal) {
 }
 
 TEST(AirmassModes, AlphaNFailedTps) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Shouldn't get called
 	StrictMock<MockVp3d> veTable;
 
 	AlphaNAirmass dut(veTable);
-	dut.inject();
 
 	// explicitly reset the sensor
 	Sensor::resetMockValue(SensorType::Tps1);
@@ -78,7 +76,7 @@ TEST(AirmassModes, AlphaNFailedTps) {
 }
 
 TEST(AirmassModes, MafNormal) {
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 	engineConfiguration->fuelAlgorithm = LM_REAL_MAF;
 	engineConfiguration->injector.flow = 200;
 
@@ -88,7 +86,6 @@ TEST(AirmassModes, MafNormal) {
 		.WillOnce(Return(75.0f));
 
 	MafAirmass dut(veTable);
-	dut.inject();
 
 	auto airmass = dut.getAirmassImpl(200, 6000);
 
@@ -120,9 +117,8 @@ TEST(AirmassModes, VeOverride) {
 		}
 	};
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	DummyAirmassModel dut(veTable);
-	dut.inject();
 
 	// Use default mode - will call with 10
 	dut.getAirmass(0);
@@ -138,7 +134,7 @@ TEST(AirmassModes, VeOverride) {
 void setInjectionMode(int value);
 
 TEST(FuelMath, testDifferentInjectionModes) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
 	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
@@ -163,7 +159,7 @@ TEST(FuelMath, testDifferentInjectionModes) {
 }
 
 TEST(FuelMath, deadtime) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 

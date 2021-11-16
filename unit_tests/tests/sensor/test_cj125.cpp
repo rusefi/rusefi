@@ -22,7 +22,7 @@ TEST(testCJ125, testInitialState) {
 	ASSERT_FALSE(cj.isWorkingState());
 	ASSERT_EQ(cj.heaterDuty, 0);
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	cj.StartHeaterControl();
 	ASSERT_EQ(cj.heaterDuty, CJ125_HEATER_IDLE_RATE);
@@ -49,7 +49,7 @@ TEST(testCJ125, testFailedIdentify) {
 	TestSpi mock;
 	cj.spi = &mock;
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	cj.cjIdentify();
 	ASSERT_EQ(cj.errorCode, CJ125_ERROR_WRONG_IDENT);

@@ -146,7 +146,6 @@ int getDynoviewPower() {
 void updateDynoView() {
 	if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
 		(!CONFIG(enableCanVss))) {
-		dynoInstance.inject();
 		dynoInstance.update(ICU);
 	}
 }

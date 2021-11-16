@@ -13,7 +13,7 @@ TEST(misc, changeEngineType) {
 	/**
 	 * this configuration has triggerInputDebugPins defined
 	 */
-	WITH_ENGINE_TEST_HELPER (FORD_ASPIRE_1996);
+	EngineTestHelper eth (FORD_ASPIRE_1996);
 
 	brain_pin_e brainPin = engineConfiguration->triggerInputDebugPins[0];
 	ASSERT_TRUE(brainPin != GPIO_UNASSIGNED);

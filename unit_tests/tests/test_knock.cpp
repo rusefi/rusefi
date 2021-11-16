@@ -3,7 +3,7 @@
 #include "knock_logic.h"
 
 TEST(Knock, Retards) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Knock threshold of 20dBv
 	ENGINE(engineState).knockThreshold = 20;
@@ -13,7 +13,6 @@ TEST(Knock, Retards) {
 	CONFIG(knockRetardMaximum) = 8;
 
 	KnockController dut;
-	dut.inject();
 
 	// No retard unless we knock
 	ASSERT_FLOAT_EQ(dut.getKnockRetard(), 0);
@@ -40,10 +39,9 @@ TEST(Knock, Retards) {
 }
 
 TEST(Knock, Reapply) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	KnockController dut;
-	dut.inject();
 
 	// Knock threshold of 20dBv
 	ENGINE(engineState).knockThreshold = 20;

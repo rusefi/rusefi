@@ -16,7 +16,7 @@
 /**
  * @brief	rusEfi console sniffer data buffer
  */
-class WaveChart : public EnginePtr {
+class WaveChart {
 public:
 	WaveChart();
 	void init();

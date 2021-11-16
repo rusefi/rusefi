@@ -68,7 +68,7 @@ TEST(binary, testWriteCrc) {
 }
 
 TEST(TunerstudioCommands, writeChunkEngineConfig) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	MockTsChannel channel;
 
 	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);
@@ -90,7 +90,7 @@ TEST(TunerstudioCommands, writeChunkEngineConfig) {
 }
 
 TEST(TunerstudioCommands, writeChunkOutsideEngineConfig) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	MockTsChannel channel;
 
 	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);

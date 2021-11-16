@@ -3,7 +3,6 @@
 #include "gear_controller.h"
 
 void GearControllerBase::init() {
-    transmissionController.inject();
     transmissionController.init();
 }
 

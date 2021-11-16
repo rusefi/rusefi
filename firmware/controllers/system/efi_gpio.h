@@ -89,7 +89,7 @@ private:
 /**
  * OutputPin which is reported on Engine Sniffer
  */
-class NamedOutputPin : public virtual OutputPin, public EnginePtr {
+class NamedOutputPin : public virtual OutputPin {
 public:
 	NamedOutputPin();
 	explicit NamedOutputPin(const char *name);
@@ -155,7 +155,7 @@ public:
 		RegisteredNamedOutputPin(const char *name, short pinOffset, short pinModeOffset);
 };
 
-class EnginePins : public EnginePtr {
+class EnginePins {
 public:
 	EnginePins();
 	void startPins();
