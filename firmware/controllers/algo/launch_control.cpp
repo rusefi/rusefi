@@ -50,7 +50,7 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 bool LaunchControlBase::isInsideSpeedCondition() const {
 	int speed = Sensor::getOrZero(SensorType::VehicleSpeed);
 	
-	return (CONFIG(launchSpeedTreshold) > speed) || (!(CONFIG(launchActivationMode) ==  ALWAYS_ACTIVE_LAUNCH));
+	return (CONFIG(launchSpeedThreshold) > speed) || (!(CONFIG(launchActivationMode) ==  ALWAYS_ACTIVE_LAUNCH));
 }
 
 /**
@@ -123,24 +123,6 @@ void LaunchControlBase::update() {
 		tsOutputChannels.debugFloatField3 = combinedConditions;
 	}
 #endif /* EFI_TUNER_STUDIO */
-}
-
-void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	engineConfiguration->launchRpm = 4000;    // Rpm to trigger Launch condition
-	engineConfiguration->launchTimingRetard = 10; // retard in absolute degrees ATDC
-	engineConfiguration->launchTimingRpmRange = 500; // Rpm above Launch triggered for full retard
-	engineConfiguration->launchSparkCutEnable = true;
-	engineConfiguration->launchFuelCutEnable = false;
-	engineConfiguration->hardCutRpmRange = 500; //Rpm above Launch triggered +(if retard enabled) launchTimingRpmRange to hard cut
-	engineConfiguration->launchSpeedTreshold = 10; //maximum speed allowed before disable launch
-	engineConfiguration->launchFuelAdded = 10; // Extra fuel in % when launch are triggered
-	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
-	engineConfiguration->launchActivateDelay = 3; // Delay in seconds for launch to kick in
-	engineConfiguration->enableLaunchRetard = true;
-	engineConfiguration->enableLaunchBoost = true;
-	engineConfiguration->launchSmoothRetard = true; //interpolates the advance linear from launchrpm to fully retarded at launchtimingrpmrange
-	engineConfiguration->antiLagRpmTreshold = 3000;
-
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
