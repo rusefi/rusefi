@@ -649,7 +649,7 @@ static void updateFlags() {
 	tsOutputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_LAUNCH_CONTROL
-	tsOutputChannels.launchTriggered = engine->isLaunchCondition;
+	tsOutputChannels.launchTriggered = engine->launchController.isLaunchCondition;
 #endif
 
 	tsOutputChannels.clutchUpState = engine->clutchUpState;

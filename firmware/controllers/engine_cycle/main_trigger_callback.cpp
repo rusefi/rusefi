@@ -414,7 +414,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 	bool limitedFuel = !ENGINE(limpManager).allowInjection();
 
 #if EFI_LAUNCH_CONTROL
-	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
+	if (engine->launchController.isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
 
 		limitedSpark &= engine->launchController.isLaunchSparkRpmRetardCondition();

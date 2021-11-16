@@ -147,12 +147,6 @@ public:
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
 
-
-#if EFI_LAUNCH_CONTROL
-	bool launchActivatePinState = false;
-	bool isLaunchCondition = false;
-#endif /* EFI_LAUNCH_CONTROL */
-
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 */
@@ -161,11 +155,6 @@ public:
 	// this is useful at least for real hardware integration testing - maybe a proper solution would be to simply
 	// GND input pins instead of leaving them floating
 	bool hwTriggerInputEnabled = true;
-
-
-#if !EFI_PROD_CODE
-	float mockMapValue = 0;
-#endif
 
 	int getGlobalConfigurationVersion(void) const;
 	/**

@@ -61,7 +61,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	}
 
 #if EFI_LAUNCH_CONTROL
-	if (engine->isLaunchCondition && CONFIG(enableLaunchRetard)) {
+	if (engine->launchController.isLaunchCondition && CONFIG(enableLaunchRetard)) {
         if (CONFIG(launchSmoothRetard)) {
        	    float launchAngle = CONFIG(launchTimingRetard);
 	        int launchAdvanceRpmRange = CONFIG(launchTimingRpmRange);
