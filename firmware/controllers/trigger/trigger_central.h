@@ -13,6 +13,7 @@
 #include "trigger_central_generated.h"
 #include "timer.h"
 #include "pin_repository.h"
+#include "local_version_holder.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
@@ -44,6 +45,18 @@ public:
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
+
+	/**
+	 * true if a recent configuration change has changed any of the trigger settings which
+	 * we have not adjusted for yet
+	 */
+	bool triggerConfigChanged = false;
+	LocalVersionHolder triggerVersion;
+
+	bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+
+	bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 	expected<float> getCurrentEnginePhase(efitick_t nowNt) const;
 
@@ -104,10 +117,6 @@ void initTriggerCentral();
 int isSignalDecoderError(void);
 
 void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-
-bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 
 #define SYMMETRICAL_CRANK_SENSOR_DIVIDER 4
 #define SYMMETRICAL_THREE_TIMES_CRANK_SENSOR_DIVIDER 6

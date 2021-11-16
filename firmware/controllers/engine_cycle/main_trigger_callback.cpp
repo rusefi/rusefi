@@ -401,7 +401,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 	bool limitedFuel = !ENGINE(limpManager).allowInjection();
 
 #if EFI_LAUNCH_CONTROL
-	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
+	if (engine->launchController.isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
 
 		limitedSpark &= engine->launchController.isLaunchSparkRpmRetardCondition();
@@ -413,7 +413,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 			engine->triggerCentral.validateCamVvtCounters();
 		}
 
-		if (checkIfTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		if (engine->triggerCentral.checkIfTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
 			engine->injectionEvents.isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)

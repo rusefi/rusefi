@@ -572,11 +572,11 @@ static void setDefaultEngineConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 // todo: this value is way off! I am pretty sure temp coeffs are off also
 	engineConfiguration->iat.config = {32, 75, 120, 9500, 2100, 1000, 2700};
 
+	// wow unit tests have much cooler setDefaultLaunchParameters method
 	engineConfiguration->launchRpm = 3000;
- 	engineConfiguration->launchTimingRetard = 10;
+// 	engineConfiguration->launchTimingRetard = 10;
 	engineConfiguration->launchTimingRpmRange = 500;
-	engineConfiguration->launchSparkCutEnable = false;
-	engineConfiguration->launchFuelCutEnable = false;
+    engineConfiguration->launchSpeedThreshold = 30;
 	engineConfiguration->hardCutRpmRange = 500;
 
 	engineConfiguration->slowAdcAlpha = 0.33333;

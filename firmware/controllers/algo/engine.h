@@ -91,8 +91,12 @@ class Engine final : public TriggerStateListener, public EnginePtr {
 public:
 	Engine();
 	AcState acState;
+	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
+
+	// used by HW CI
 	bool isPwmEnabled = true;
+
 	// todo: remove this once all usages are using 'm_lastEventTimer'
 	int triggerActivityMs = -99 * 1000;
 
@@ -147,12 +151,6 @@ public:
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
 
-
-#if EFI_LAUNCH_CONTROL
-	bool launchActivatePinState = false;
-	bool isLaunchCondition = false;
-#endif /* EFI_LAUNCH_CONTROL */
-
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
 	 */
@@ -162,18 +160,8 @@ public:
 	// GND input pins instead of leaving them floating
 	bool hwTriggerInputEnabled = true;
 
-
-#if !EFI_PROD_CODE
-	float mockMapValue = 0;
-#endif
-
 	int getGlobalConfigurationVersion(void) const;
-	/**
-	 * true if a recent configuration change has changed any of the trigger settings which
-	 * we have not adjusted for yet
-	 */
-	bool isTriggerConfigChanged = false;
-	LocalVersionHolder triggerVersion;
+
 
 	// a pointer with interface type would make this code nicer but would carry extra runtime
 	// cost to resolve pointer, we use instances as a micro optimization

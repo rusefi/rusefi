@@ -878,8 +878,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit useHbridgesToDriveIdleStepper;+If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
-	bit enableLaunchBoost
-	bit launchDisableBySpeed
+	bit unfinishedenableLaunchBoost
+	bit unfinishedlaunchDisableBySpeed
 	bit enableCanVss;+Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
@@ -925,8 +925,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
     custom antiLagActivationMode_e  4 bits, S32, @OFFSET@, [0:0], @@antiLagActivationMode_e_enum@@
     antiLagActivationMode_e antiLagActivationMode;
 
-    int launchSpeedTreshold;+Disabled above this speed;"Kph", 1, 0, 0, 300, 0
-    int launchRpmTreshold;+Disabled below this rpm;"RPM", 1, 0, 0, 8000, 0
+    int launchSpeedThreshold;+Disabled above this speed;"Kph", 1, 0, 0, 300, 0
+    int unusedLaunchRpmThreshold;+Disabled below this rpm;"RPM", 1, 0, 0, 8000, 0
     int launchTimingRpmRange;+Range from Launch Rpm for Timing Retard to activate;"RPM", 1, 0, 0, 8000, 0
     int launchFuelAdded;+Extra Fuel Added;"%", 1, 0, 0, 100, 0
     int launchBoostDuty;+Duty Cycle for the Boost Solenoid;"%", 1, 0, 0, 100, 0

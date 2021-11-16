@@ -11,7 +11,6 @@
 #include "timer.h"
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 class LaunchControlBase : public EnginePtr {
 public:
@@ -20,14 +19,16 @@ public:
 
 	bool isInsideSpeedCondition() const;
 	bool isInsideTpsCondition() const;
-	bool isInsideSwitchCondition() const;
+	bool isInsideSwitchCondition();
 	bool isInsideRPMCondition(int rpm) const;
-	bool isLaunchConditionMet(int rpm) const;
+	bool isLaunchConditionMet(int rpm);
 
 	bool isLaunchSparkRpmRetardCondition() const;
 	bool isLaunchFuelRpmRetardCondition() const;
 
 	int retardThresholdRpm;
+	bool launchActivatePinState = false;
+	bool isLaunchCondition = false;
 
 private:
 	bool isLaunchRpmRetardCondition() const;

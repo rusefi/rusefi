@@ -32,8 +32,8 @@ TEST(LaunchControl, VSSCondition) {
 
 	// Test Speed trashold
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
-    engineConfiguration->launchSpeedTreshold = 30; 
-	engineConfiguration->launchDisableBySpeed = 1;
+    engineConfiguration->launchSpeedThreshold = 30;
+
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
     EXPECT_TRUE(dut.isInsideSpeedCondition());
 
@@ -105,9 +105,8 @@ TEST(LaunchControl, CombinedCondition) {
 	dut.inject(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	//check VSS normal usage
-	engineConfiguration->launchActivationMode=ALWAYS_ACTIVE_LAUNCH;
-    engineConfiguration->launchSpeedTreshold = 30; 
-	engineConfiguration->launchDisableBySpeed = 1;
+	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
+
 	engineConfiguration->launchRpm = 3000;
 	engineConfiguration->launchTpsTreshold = 10;
 	//valid TPS
@@ -126,6 +125,23 @@ TEST(LaunchControl, CombinedCondition) {
 
 }
 
+static void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+	engineConfiguration->launchRpm = 4000;    // Rpm to trigger Launch condition
+//	engineConfiguration->launchTimingRetard = 10; // retard in absolute degrees ATDC
+	engineConfiguration->launchTimingRpmRange = 500; // Rpm above Launch triggered for full retard
+	engineConfiguration->launchSparkCutEnable = true;
+	engineConfiguration->launchFuelCutEnable = false;
+	engineConfiguration->hardCutRpmRange = 500; //Rpm above Launch triggered +(if retard enabled) launchTimingRpmRange to hard cut
+	engineConfiguration->launchSpeedThreshold = 10; //maximum speed allowed before disable launch
+	engineConfiguration->launchFuelAdded = 10; // Extra fuel in % when launch are triggered
+	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
+	engineConfiguration->launchActivateDelay = 3; // Delay in seconds for launch to kick in
+//	engineConfiguration->enableLaunchRetard = true;
+// dead code todo	engineConfiguration->enableLaunchBoost = true;
+	engineConfiguration->launchSmoothRetard = true; //interpolates the advance linear from launchrpm to fully retarded at launchtimingrpmrange
+	// dead code todo	engineConfiguration->antiLagRpmTreshold = 3000;
+}
+
 TEST(LaunchControl, CompleteRun) {
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
@@ -136,11 +152,11 @@ TEST(LaunchControl, CompleteRun) {
 
 	//check VSS normal usage
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
-    engineConfiguration->launchSpeedTreshold = 30; 
-	engineConfiguration->launchDisableBySpeed = 1;
+    engineConfiguration->launchSpeedThreshold = 30;
+
 	engineConfiguration->launchRpm = 3000;
 	engineConfiguration->launchTpsTreshold = 10;
-	engineConfiguration->launchControlEnabled = 1; 
+	engineConfiguration->launchControlEnabled = true;
 	//valid TPS
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
