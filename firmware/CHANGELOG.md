@@ -34,6 +34,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - turbo speed sensor #2935
  - A TON of Lua progress
  - Overall performance
+ - Knock retard #3396
 
 ### Fixed
  - A/C control bugfix
