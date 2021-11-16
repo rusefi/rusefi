@@ -127,7 +127,6 @@ TEST(LaunchControl, CombinedCondition) {
 }
 
 TEST(LaunchControl, CompleteRun) {
-	bool spark, fuel;
 	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
 
 	initLaunchControl(PASS_ENGINE_PARAMETER_SIGNATURE);
@@ -152,11 +151,8 @@ TEST(LaunchControl, CompleteRun) {
 
 
 	//check if we have some sort of cut? we should not have at this point
-	spark = false;
-	fuel = false;
-	engine->launchController.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
-	EXPECT_FALSE(spark);
-	EXPECT_FALSE(fuel);
+	EXPECT_FALSE(engine->launchController.isLaunchSparkRpmRetardCondition());
+	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 
 	engine->rpmCalculator.mockRpm = 3510;
@@ -167,29 +163,22 @@ TEST(LaunchControl, CompleteRun) {
 	//we have a 3 seconds delay to actually enable it!
 	eth.moveTimeForwardAndInvokeEventsSec(1);
 	engine->launchController.update();
-
-	spark = false;
-	fuel = false;
-	engine->launchController.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 	
-	EXPECT_FALSE(spark);
-	EXPECT_FALSE(fuel);
+	EXPECT_FALSE(engine->launchController.isLaunchSparkRpmRetardCondition());
+	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 	eth.moveTimeForwardAndInvokeEventsSec(3);
 	engine->launchController.update();
-	spark = false;
-	fuel = false;
-	engine->launchController.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
 
-	EXPECT_TRUE(spark);
-	EXPECT_FALSE(fuel);
+
+	EXPECT_TRUE(engine->launchController.isLaunchSparkRpmRetardCondition());
+	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
 	engine->launchController.update();
-	spark = false;
-	fuel = false;
-	engine->launchController.applyLaunchControlLimiting(&spark, &fuel PASS_ENGINE_PARAMETER_SUFFIX);
-	EXPECT_FALSE(spark);
-	EXPECT_FALSE(fuel);
+
+
+	EXPECT_FALSE(engine->launchController.isLaunchSparkRpmRetardCondition());
+	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 }
