@@ -99,8 +99,7 @@ TEST(nissan, vq_vvt) {
 				cyclesCount / 6, true,
 				/* vvtBankIndex */ 0,
 				/* vvtOffset */ testVvtOffset,
-				ptrs
-				PASS_ENGINE_PARAMETER_SUFFIX);
+				ptrs);
 	}
 
 	{
@@ -112,8 +111,7 @@ TEST(nissan, vq_vvt) {
 				cyclesCount / 6, true,
 				/* vvtBankIndex */1,
 				/* vvtOffset */ testVvtOffset + NISSAN_VQ_CAM_OFFSET,
-				ptrs
-				PASS_ENGINE_PARAMETER_SUFFIX);
+				ptrs);
 	}
 
 	eth.executeUntil(1473000);

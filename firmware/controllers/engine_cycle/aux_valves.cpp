@@ -30,7 +30,6 @@ static void scheduleOpen(AuxActor *current) {
 			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveStart,
 			{ auxPlainPinTurnOn, current }
-			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 }
 
@@ -49,7 +48,6 @@ void auxPlainPinTurnOn(AuxActor *current) {
 			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveEnd,
 			{ plainPinTurnOff, output }
-			PASS_ENGINE_PARAMETER_SUFFIX
 			);
 	}
 

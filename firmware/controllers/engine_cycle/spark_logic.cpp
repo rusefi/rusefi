@@ -214,7 +214,6 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 			scheduleByAngle(
 				&event->trailingSparkFire, nowNt, ENGINE(engineState.trailingSparkAngle),
 				{ &fireTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
-				PASS_ENGINE_PARAMETER_SUFFIX
 			);
 		}
 
@@ -279,7 +278,6 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 		scheduleByAngle(
 			&event->trailingSparkCharge, nowNt, ENGINE(engineState.trailingSparkAngle),
 			{ &chargeTrailingSpark, output }
-			PASS_ENGINE_PARAMETER_SUFFIX
 		);
 	}
 }
@@ -316,7 +314,6 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 			edgeTimestamp,
 			event->position.angleOffsetFromTriggerEvent,
 			action
-			PASS_ENGINE_PARAMETER_SUFFIX
 		);
 
 		return true;
@@ -493,7 +490,6 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, 
 				edgeTimestamp,
 				current->position.angleOffsetFromTriggerEvent,
 				current->action
-				PASS_ENGINE_PARAMETER_SUFFIX
 			);
 		}
 	}
