@@ -87,8 +87,9 @@ TEST(misc, testFuelMap) {
 }
 
 
-static void confgiureFordAspireTriggerWaveform(TriggerWaveform * s) {
+static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->useOnlyRisingEdgeForTriggerTemp = false;
 
 	s->addEvent720(53.747, T_SECONDARY, TV_RISE);
 	s->addEvent720(121.90, T_SECONDARY, TV_FALL);
@@ -182,7 +183,7 @@ TEST(misc, testAngleResolver) {
 	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	TriggerWaveform t;
-	confgiureFordAspireTriggerWaveform(&t);
+	configureFordAspireTriggerWaveform(&t);
 }
 
 TEST(misc, testPinHelper) {
