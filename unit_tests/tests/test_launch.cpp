@@ -3,10 +3,9 @@
 #include "launch_control.h"
 
 TEST(LaunchControl, TpsCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject();
 
 	engineConfiguration->launchTpsTreshold = 10;
 
@@ -25,10 +24,9 @@ TEST(LaunchControl, TpsCondition) {
 
 
 TEST(LaunchControl, VSSCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject();
 
 	// Test Speed trashold
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -43,10 +41,9 @@ TEST(LaunchControl, VSSCondition) {
 }
 
 TEST(LaunchControl, RPMCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject();
 
 	engineConfiguration->launchRpm = 3000;
 
@@ -56,10 +53,9 @@ TEST(LaunchControl, RPMCondition) {
 }
 
 TEST(LaunchControl, SwitchInputCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject();
 
 	//activation based on VSS
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -99,10 +95,9 @@ TEST(LaunchControl, SwitchInputCondition) {
 }
 
 TEST(LaunchControl, CombinedCondition) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	LaunchControlBase dut;
-	dut.inject();
 
 	//check VSS normal usage
 	engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH;
@@ -143,7 +138,7 @@ static void setDefaultLaunchParameters() {
 }
 
 TEST(LaunchControl, CompleteRun) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	initLaunchControl();
 

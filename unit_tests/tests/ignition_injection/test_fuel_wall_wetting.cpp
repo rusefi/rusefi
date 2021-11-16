@@ -10,7 +10,7 @@
 #include "pch.h"
 
 TEST(fuel, testWallWettingEnrichmentMath) {
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	engineConfiguration->wwaeTau = 1.0f;
 	engineConfiguration->wwaeBeta = 0.40f;
@@ -26,7 +26,7 @@ TEST(fuel, testWallWettingEnrichmentMath) {
 
 TEST(fuel, testWallWettingEnrichmentScheduling) {
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

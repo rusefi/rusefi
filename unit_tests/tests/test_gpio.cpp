@@ -1,7 +1,7 @@
 #include "pch.h"
 
 TEST(gpio, testPinInitNonInverted) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	OutputPin dut;
 
@@ -17,7 +17,7 @@ TEST(gpio, testPinInitNonInverted) {
 }
 
 TEST(gpio, testPinInitInverted) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	OutputPin dut;
 

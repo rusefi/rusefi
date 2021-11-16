@@ -17,10 +17,9 @@ void printResults(DynoView *dut) {
 
 
 TEST(DynoView, VSS_T1) {
-    WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+    EngineTestHelper eth(TEST_ENGINE);
 
     DynoView dut;
-    dut.inject();
 
     // Test Speed trashold
     engineConfiguration->vehicleWeight = 900; 
@@ -37,10 +36,9 @@ TEST(DynoView, VSS_T1) {
 }
 
 TEST(DynoView, algo) {
-    WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+    EngineTestHelper eth(TEST_ENGINE);
 
     DynoView dut;
-    dut.inject();
 
     // Test Speed trashold
     engineConfiguration->vehicleWeight = 900; 
@@ -62,10 +60,9 @@ TEST(DynoView, algo) {
 }
 
 TEST(DynoView, VSS_fast) {
-    WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+    EngineTestHelper eth(TEST_ENGINE);
 
     DynoView dut;
-    dut.inject();
 
     // Test Speed trashold
     engineConfiguration->vehicleWeight = 900; //kg
@@ -86,10 +83,9 @@ TEST(DynoView, VSS_fast) {
 
 
 TEST(DynoView, VSS_Torque) {
-    WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+    EngineTestHelper eth(TEST_ENGINE);
 
     DynoView dut;
-    dut.inject();
 
     // Test Speed trashold
     engineConfiguration->vehicleWeight = 900; //kg

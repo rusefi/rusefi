@@ -8,7 +8,7 @@
 #include "pch.h"
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	ENGINE(tdcMarkEnabled) = false;
 	engineConfiguration->cranking.baseFuel = 12;
@@ -33,7 +33,7 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 
 
 TEST(engine, testStartOfCrankingPrimingPulse) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	engineConfiguration->startOfCrankingPrimingPulse = 4;
 

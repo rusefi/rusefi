@@ -43,7 +43,7 @@ struct pid_s;
 class ValueProvider3D;
 struct pid_state_s;
 
-class IEtbController : public ClosedLoopController<percent_t, percent_t>, public EnginePtr  {
+class IEtbController : public ClosedLoopController<percent_t, percent_t>  {
 public:
 	// Initialize the throttle.
 	// returns true if the throttle was initialized, false otherwise.

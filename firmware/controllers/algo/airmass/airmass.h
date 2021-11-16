@@ -11,7 +11,7 @@ struct AirmassModelBase {
 	virtual AirmassResult getAirmass(int rpm) = 0;
 };
 
-class AirmassVeModelBase : public AirmassModelBase, public EnginePtr {
+class AirmassVeModelBase : public AirmassModelBase {
 public:
 	explicit AirmassVeModelBase(const ValueProvider3D& veTable);
 

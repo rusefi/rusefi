@@ -99,7 +99,6 @@ void InjectorOutputPin::open(efitick_t nowNt) {
 #if EFI_TOOTH_LOGGER
 	LogTriggerInjectorState(nowNt, true);
 #endif // EFI_TOOTH_LOGGER
-		this->inject();
 		setHigh();
 	}
 }
@@ -441,7 +440,6 @@ static bool isPrimeInjectionPulseSkipped() {
  * See testStartOfCrankingPrimingPulse()
  */
 void startPrimeInjectionPulse() {
-	engine->primeInjEvent.inject();
 
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
 	// So we check and update the ignition switch counter in non-volatile backup-RAM

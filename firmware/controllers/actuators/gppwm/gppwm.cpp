@@ -42,7 +42,6 @@ void initGpPwm() {
 		tables[i]->init(cfg.table, cfg.loadBins, cfg.rpmBins);
 
 		// Finally configure the channel
-		channels[i].inject();
 		channels[i].init(usePwm, &outputs[i], &pins[i], tables[i], &cfg);
 	}
 }

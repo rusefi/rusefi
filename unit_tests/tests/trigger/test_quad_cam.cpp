@@ -7,7 +7,7 @@
 
 TEST(trigger, testQuadCam) {
 	// setting some weird engine
-	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
+	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 

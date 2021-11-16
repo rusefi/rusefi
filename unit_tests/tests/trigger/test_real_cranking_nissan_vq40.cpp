@@ -13,7 +13,7 @@ TEST(realCrankingVQ40, normalCranking) {
 	int indeces[] = {0};
 
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", indeces);
-	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN_6_CYL);
+	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
 
 	bool hasSeenFirstVvt = false;
 

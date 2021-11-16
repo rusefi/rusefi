@@ -4,7 +4,7 @@
 #include "adc_subscription.h"
 #include "function_pointer_sensor.h"
 
-struct GetAfrWrapper : public EnginePtr {
+struct GetAfrWrapper {
 	float getLambda() {
 		return getAfr() / 14.7f;
 	}
@@ -24,7 +24,6 @@ static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
 void initLambda() {
-	afrWrapper.inject();
 
 #if EFI_CAN_SUPPORT
 	if (CONFIG(enableAemXSeries)) {

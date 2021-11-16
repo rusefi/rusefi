@@ -956,7 +956,6 @@ void doInitElectronicThrottle() {
 			auto pid = getEtbPidForFunction(func);
 
 			anyEtbConfigured |= controller->init(func, motor, pid, &pedal2tpsMap, shouldInitThrottles);
-			engine->etbControllers[i]->inject();
 		}
 	}
 

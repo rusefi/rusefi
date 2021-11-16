@@ -87,7 +87,7 @@ protected:
 
 #define DEFAULT_MOCK_SPEED -1
 
-class Engine final : public TriggerStateListener, public EnginePtr {
+class Engine final : public TriggerStateListener {
 public:
 	Engine();
 	AcState acState;

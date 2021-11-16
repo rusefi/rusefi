@@ -24,7 +24,7 @@ struct TriggerStateListener {
 #endif // EFI_SHAFT_POSITION_INPUT
 };
 
-class TriggerConfiguration : public EnginePtr {
+class TriggerConfiguration {
 public:
 	explicit TriggerConfiguration(const char* printPrefix) : PrintPrefix(printPrefix) {}
 	void update();
@@ -74,7 +74,7 @@ typedef struct {
 /**
  * @see TriggerWaveform for trigger wheel shape definition
  */
-class TriggerState : public trigger_state_s, public EnginePtr {
+class TriggerState : public trigger_state_s {
 public:
 	TriggerState();
 	/**

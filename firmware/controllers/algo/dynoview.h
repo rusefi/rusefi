@@ -19,7 +19,7 @@ typedef enum{
     CAN,
 }vssSrc;
 
-class DynoView : public EnginePtr {
+class DynoView {
 public:
 	// Update the state of the launch control system
 	void update(vssSrc src);

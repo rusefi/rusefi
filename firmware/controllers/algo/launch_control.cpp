@@ -138,7 +138,6 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 }
 
 void initLaunchControl() {
-	engine->launchController.inject();
 }
 
 #endif /* EFI_LAUNCH_CONTROL */

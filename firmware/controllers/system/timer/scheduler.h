@@ -39,7 +39,7 @@ private:
  * This structure holds information about an event scheduled in the future: when to execute what callback with what parameters
  */
 #pragma pack(push, 4)
-struct scheduling_s : public EnginePtr {
+struct scheduling_s {
 #if EFI_SIGNAL_EXECUTOR_SLEEP
 	virtual_timer_t timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */

@@ -13,7 +13,7 @@ TEST(realCrankingNB2, normalCranking) {
 	int indeces[] = {0};
 
 	reader.open("tests/trigger/resources/nb2-cranking-good.csv", indeces);
-	WITH_ENGINE_TEST_HELPER (HELLEN_NB2);
+	EngineTestHelper eth (HELLEN_NB2);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
@@ -33,7 +33,7 @@ TEST(realCrankingNB2, crankingMissingInjector) {
 	int indeces[] = {0};
 
 	reader.open("tests/trigger/resources/nb2-cranking-good-missing-injector-1.csv", indeces);
-	WITH_ENGINE_TEST_HELPER (HELLEN_NB2);
+	EngineTestHelper eth (HELLEN_NB2);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);

@@ -1,7 +1,7 @@
 #include "pch.h"
 
 TEST(hardware, reinit) {
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_MIATA_NA6_MAP);
+	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
 
 	ButtonDebounce::stopConfigurationList();
 	ButtonDebounce::startConfigurationList();

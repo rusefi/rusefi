@@ -28,14 +28,14 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, trigger_wh
 	}
 
 	Engine *engine = &eth->engine;
-	EXPAND_Engine;
+	
 	timeNowUs = 1'000'000 * timestampS;
 	printf("MIATANA: posting time=%d event=%d\n", timeNowUs, event);
 	hwHandleShaftSignal((int)channel, !isFall, getTimeNowNt());
 }
 
 TEST(cranking, hardcodedRealCranking) {
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_MIATA_NA6_VAF);
+	EngineTestHelper eth(FRANKENSO_MIATA_NA6_VAF);
 
 #define EVENT(timestamp, channel, value) { fireTriggerEvent(&eth, timestamp, channel, value); }
 
@@ -171,7 +171,7 @@ TEST(cranking, naCrankFromFile) {
 	int indeces[2] = {1, 0};
 	reader.open("tests/trigger/resources/cranking_na_4.csv", indeces);
 
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_MIATA_NA6_VAF);
+	EngineTestHelper eth(FRANKENSO_MIATA_NA6_VAF);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);

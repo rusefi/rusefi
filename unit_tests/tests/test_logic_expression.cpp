@@ -114,13 +114,13 @@ static void testExpression2(float selfValue, const char *line, float expected, E
 	ASSERT_TRUE(element != NULL) << "Not NULL expected";
 	LECalculator c;
 
-	EXPAND_Engine;
+	
 
 	ASSERT_NEAR(expected, c.evaluate("test", selfValue, element), EPS4D) << line;
 }
 
 static void testExpression2(float selfValue, const char *line, float expected, const std::unordered_map<SensorType, float>& sensorVals = {}) {
-	WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+	EngineTestHelper eth(FORD_INLINE_6_1995, sensorVals);
 	testExpression2(selfValue, line, expected, engine);
 }
 
@@ -129,7 +129,7 @@ static void testExpression(const char *line, float expectedValue, const std::uno
 }
 
 TEST(fsio, testHysteresisSelf) {
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EngineTestHelper eth(FORD_INLINE_6_1995);
 
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
@@ -234,7 +234,7 @@ TEST(fsio, testLogicExpressions) {
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1, sensorVals);
 
 	{
-		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+		EngineTestHelper eth(FORD_INLINE_6_1995, sensorVals);
 		LEElement thepool[TEST_POOL_SIZE];
 		LEElementPool pool(thepool, TEST_POOL_SIZE);
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
@@ -248,7 +248,7 @@ TEST(fsio, testLogicExpressions) {
 	}
 
 	{
-		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+		EngineTestHelper eth(FORD_INLINE_6_1995, sensorVals);
 		engine->fsioState.mockRpm = 900;
 		engine->fsioState.mockCrankingRpm = 200;
 		testExpression2(0, "rpm", 900, engine);
@@ -260,7 +260,7 @@ TEST(fsio, testLogicExpressions) {
 
 TEST(fsio, fuelPump) {
 	// this will init fuel pump fsio logic
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Mock a fuel pump pin
 	CONFIG(fuelPumpPin) = GPIOA_0;

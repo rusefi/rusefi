@@ -27,7 +27,7 @@ private:
 	float m_massFlowRate = 0;
 };
 
-class InjectorModel : public InjectorModelBase, public EnginePtr {
+class InjectorModel : public InjectorModelBase {
 public:
 	void postState(float deadtime) const override;
 	floatms_t getDeadtime() const override;
