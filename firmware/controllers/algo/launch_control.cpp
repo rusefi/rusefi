@@ -137,6 +137,21 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
+void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
+	this->targetSkipRatio = targetSkipRatio;
+}
+
+bool SoftSparkLimiter::shouldSkip()  {
+	if (targetSkipRatio == 0 || wasJustSkipped) {
+		wasJustSkipped = false;
+		return false;
+	}
+
+	float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	wasJustSkipped = r < 2 * targetSkipRatio;
+	return wasJustSkipped;
+}
+
 void initLaunchControl() {
 	engine->launchController.inject();
 }

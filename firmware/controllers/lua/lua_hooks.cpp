@@ -486,6 +486,12 @@ void configureRusefiLuaHooks(lua_State* l) {
 			return 1;
 	});
 
+	lua_register(l, "setSparkSkipRatio", [](lua_State* l) {
+		auto targetSkipRatio = luaL_checknumber(l, 1);
+		engine->softSparkLimiter.setTargetSkipRatio(targetSkipRatio);
+		return 1;
+	});
+
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);
 	lua_register(l, "setPwmDuty", lua_setPwmDuty);

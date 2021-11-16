@@ -35,3 +35,17 @@ private:
 
 	Timer m_launchTimer;
 };
+
+
+class SoftSparkLimiter {
+public:
+	/**
+	 * targetSkipRatio of '0' means 'do not skip', would always return false
+	 */
+	void setTargetSkipRatio(float targetSkipRatio);
+
+	bool shouldSkip();
+private:
+	bool wasJustSkipped = false;
+	float targetSkipRatio = 0;
+};
