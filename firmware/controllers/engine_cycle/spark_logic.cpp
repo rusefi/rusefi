@@ -35,10 +35,6 @@ int isIgnitionTimingError(void) {
 }
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-#endif /* EFI_UNIT_TEST */
-
 	efitick_t nowNt = getTimeNowNt();
 	engine->mostRecentTimeBetweenSparkEvents = nowNt - engine->mostRecentSparkEvent;
 	engine->mostRecentSparkEvent = nowNt;
@@ -154,11 +150,6 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 
 	efitick_t nowNt = getTimeNowNt();
 
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif // EFI_UNIT_TEST
-
 #if EFI_TOOTH_LOGGER
 	LogTriggerCoilState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
@@ -235,11 +226,6 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 }
 
 static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif /* EFI_UNIT_TEST */
-
 	// todo: no reason for this to be disabled in unit_test mode?!
 #if ! EFI_UNIT_TEST
 
@@ -276,10 +262,6 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_TOOTH_LOGGER
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif // EFI_UNIT_TEST
 	LogTriggerCoilState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
 #endif // EFI_TOOTH_LOGGER
 
@@ -455,9 +437,6 @@ void initializeIgnitionActions(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
-#if EFI_UNIT_TEST
-		list->elements[cylinderIndex].engine = engine;
-#endif /* EFI_UNIT_TEST */
 		prepareCylinderIgnitionSchedule(dwellAngle, sparkDwell, &list->elements[cylinderIndex] PASS_ENGINE_PARAMETER_SUFFIX);
 	}
 	list->isReady = true;

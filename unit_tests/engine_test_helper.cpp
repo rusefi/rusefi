@@ -29,13 +29,29 @@ extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
-extern Engine *engineForLuaUnitTests;
 
-EngineTestHelperBase::EngineTestHelperBase() { 
+EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
 	minCrankingRpm = 0;
 	EnableToothLogger();
+	if (engine || engineConfiguration || config) {
+		firmwareError(OBD_PCM_Processor_Fault,
+			      "Engine configuration not cleaned up by previous test");
+	}
+	engine = eng;
+	engineConfiguration = econfig;
+	config = pers;
+}
+
+EngineTestHelperBase::~EngineTestHelperBase() {
+	engine = nullptr;
+	engineConfiguration = nullptr;
+	config = nullptr;
+}
+
+EngineTestHelper::EngineTestHelper(engine_type_e engineType)
+	: EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback)
@@ -54,12 +70,10 @@ int EngineTestHelper::getWarningCounter() {
 	return unitTestWarningCodeState.warningCounter;
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
-	Engine *engine = &this->engine;
-	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
-	EXPAND_Engine;
-
-	engineForLuaUnitTests = engine;
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
+	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
+{
+	memset(&persistentConfig, 0, sizeof(persistentConfig));
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
@@ -103,15 +117,15 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	commonInitEngineController(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine.engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
 
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
-	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine.periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	// Setup running in mock airmass mode
 	engineConfiguration->fuelAlgorithm = LM_MOCK;
-	engine->mockAirmassModel = &mockAirmass;
+	engine.mockAirmassModel = &mockAirmass;
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 
@@ -120,8 +134,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 }
 
 EngineTestHelper::~EngineTestHelper() {
-	Engine *engine = &this->engine;
-	EXPAND_Engine;
 	// Write history to file
 	std::stringstream filePath;
 	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
@@ -381,7 +393,7 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	engineConfiguration->trigger.type = trigger;
 	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 1,  engine->triggerCentral.isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
+	ASSERT_EQ( 1, engine.triggerCentral.isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
 	applyTriggerWaveform();
 }
 
