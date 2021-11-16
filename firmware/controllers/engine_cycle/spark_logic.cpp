@@ -334,7 +334,7 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 	}
 }
 
-static void handleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
+static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, IgnitionEvent *event,
 		int rpm, efitick_t edgeTimestamp) {
 
 	angle_t sparkAngle = event->sparkAngle;
@@ -532,7 +532,7 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 				continue;
 			}
 
-			handleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp);
+			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp);
 		}
 	}
 }
