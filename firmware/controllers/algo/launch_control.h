@@ -11,7 +11,6 @@
 #include "timer.h"
 
 void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
 
 class LaunchControlBase : public EnginePtr {
 public:
