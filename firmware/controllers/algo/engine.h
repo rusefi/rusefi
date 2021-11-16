@@ -115,6 +115,7 @@ public:
 
 	GearControllerBase *gearController;
 	LaunchControlBase launchController;
+	SoftSparkLimiter softSparkLimiter;
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
