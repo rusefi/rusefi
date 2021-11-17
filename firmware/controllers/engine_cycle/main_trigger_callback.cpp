@@ -58,14 +58,14 @@
 
 void startSimultaniousInjection(void*) {
 	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].open(nowNt);
 	}
 }
 
 static void endSimultaniousInjectionOnlyTogglePins(void*) {
 	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].close(nowNt);
 	}
 }
@@ -167,23 +167,23 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	// Select fuel mass from the correct bank
 	uint8_t bankIndex = CONFIG(cylinderBankSelect[this->cylinderNumber]);
-	float injectionMassGrams = ENGINE(injectionMass)[bankIndex];
+	float injectionMassGrams = engine->injectionMass[bankIndex];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
 	injectionMassGrams = wallFuel.adjust(injectionMassGrams);
-	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMassGrams);
+	const floatms_t injectionDuration = engine->injectorModel->getInjectionDuration(injectionMassGrams);
 
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
 		  eventIndex,
-		  ENGINE(injectionDuration),
+		  engine->injectionDuration,
 		  injectionDuration);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking();
+	bool isCranking = engine->rpmCalculator.isCranking();
 	/**
 	 * todo: pre-calculate 'numberOfInjections'
 	 * see also injectorDutyCycle
@@ -193,9 +193,9 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %.2fms", injectionDuration);
 	}
 
-	ENGINE(engineState.fuelConsumption).consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
+	engine->engineState.fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
-	ENGINE(actualLastInjection)[bankIndex] = injectionDuration;
+	engine->actualLastInjection[bankIndex] = injectionDuration;
 
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
@@ -294,7 +294,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	if (limitedFuel) {
 		return;
 	}
-	if (ENGINE(isCylinderCleanupMode)) {
+	if (engine->isCylinderCleanupMode) {
 		return;
 	}
 
@@ -309,7 +309,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	 * Injection events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
-	FuelSchedule *fs = &ENGINE(injectionEvents);
+	FuelSchedule *fs = &engine->injectionEvents;
 	if (!fs->isReady) {
 		fs->addFuelEvents();
 	}
@@ -337,7 +337,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (CONFIG(vvtMode[0]) == VVT_MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
+	if (engineConfiguration->vvtMode[0] == VVT_MIATA_NB2 && engine->triggerCentral.vvtSyncTimeNt == 0) {
 		// this is a bit spaghetti code for sure
 		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
 		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
@@ -355,13 +355,13 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 #endif // HW_CHECK_MODE
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && isBrainPinValid(CONFIG(cdmInputPin))) {
+	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 		engine->knockLogic(cdmKnockValue);
 	}
 #endif /* EFI_CDM_INTEGRATION */
 
-	if (trgEventIndex >= ENGINE(engineCycleEventCount)) {
+	if (trgEventIndex >= engine->engineCycleEventCount) {
 		/**
 		 * this could happen in case of a trigger error, just exit silently since the trigger error is supposed to be handled already
 		 * todo: should this check be somewhere higher so that no trigger listeners are invoked with noise?
@@ -390,8 +390,8 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 		return;
 	}
 
-	bool limitedSpark = !ENGINE(limpManager).allowIgnition();
-	bool limitedFuel = !ENGINE(limpManager).allowInjection();
+	bool limitedSpark = !engine->limpManager.allowIgnition();
+	bool limitedFuel = !engine->limpManager.allowInjection();
 
 #if EFI_LAUNCH_CONTROL
 	if (engine->launchController.isLaunchCondition && !limitedSpark && !limitedFuel) {
@@ -432,7 +432,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 static bool isPrimeInjectionPulseSkipped() {
 	if (!engine->rpmCalculator.isStopped())
 		return true;
-	return CONFIG(isCylinderCleanupEnabled) && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
+	return engineConfiguration->isCylinderCleanupEnabled && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
 }
 
 /**
@@ -461,12 +461,12 @@ void startPrimeInjectionPulse() {
 		engine->primeInjEvent.ownIndex = 0;
 		engine->primeInjEvent.isSimultanious = true;
 
-		scheduling_s *sDown = &ENGINE(injectionEvents.elements[0]).endOfInjectionEvent;
+		scheduling_s *sDown = &engine->injectionEvents.elements[0].endOfInjectionEvent;
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
-		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
-			CONFIG(primeInjFalloffTemperature), 0.0f, Sensor::get(SensorType::Clt).value_or(70));
+		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, engineConfiguration->startOfCrankingPrimingPulse,
+			engineConfiguration->primeInjFalloffTemperature, 0.0f, Sensor::get(SensorType::Clt).value_or(70));
 		if (pulseLength > 0) {
 			startSimultaniousInjection();
 			int turnOffDelayUs = efiRound(MS2US(pulseLength), 1.0f);
@@ -501,7 +501,7 @@ static void showMainInfo(Engine *engine) {
 	int rpm = GET_RPM();
 	float el = getFuelingLoad();
 	efiPrintf("rpm %d engine_load %.2f", rpm, el);
-	efiPrintf("fuel %.2fms timing %.2f", ENGINE(injectionDuration), engine->engineState.timingAdvance);
+	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance);
 #endif /* EFI_PROD_CODE */
 }
 
@@ -513,7 +513,7 @@ void initMainEventListener() {
 #endif
 
     // We start prime injection pulse at the early init stage - don't wait for the engine to start spinning!
-    if (CONFIG(startOfCrankingPrimingPulse) > 0)
+    if (engineConfiguration->startOfCrankingPrimingPulse > 0)
     	startPrimeInjectionPulse();
 
 }

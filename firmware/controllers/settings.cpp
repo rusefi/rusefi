@@ -50,8 +50,6 @@ void printSpiState(const engine_configuration_s *engineConfiguration) {
 		boolToString(engineConfiguration->is_enabled_spi_4));
 }
 
-extern engine_configuration_s *engineConfiguration;
-
 static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
@@ -731,15 +729,15 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
 		engine->hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
-		CONFIG(useTLE8888_cranking_hack) = isEnabled;
+		engineConfiguration->useTLE8888_cranking_hack = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
-		CONFIG(verboseTLE8888) = isEnabled;
+		engineConfiguration->verboseTLE8888 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
-		CONFIG(artificialTestMisfire) = isEnabled;
+		engineConfiguration->artificialTestMisfire = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
-		CONFIG(displayLogicLevelsInEngineSniffer) = isEnabled;
+		engineConfiguration->displayLogicLevelsInEngineSniffer = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
-		CONFIG(enableVerboseCanTx) = isEnabled;
+		engineConfiguration->enableVerboseCanTx = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {
@@ -1220,7 +1218,7 @@ void initSettings(void) {
 
 	// todo: start saving values into flash right away?
 
-	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);
+	addConsoleAction("showconfig", doPrintConfiguration);
 	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);

@@ -21,7 +21,7 @@ static gppwm_Map3D_t* tables[] = {
 
 void initGpPwm() {
 	for (size_t i = 0; i < efi::size(channels); i++) {
-		auto& cfg = CONFIG(gppwm)[i];
+		auto& cfg = engineConfiguration->gppwm[i];
 
 		// If no pin, don't enable this channel.
 		if (!isBrainPinValid(cfg.pin)) {
@@ -54,7 +54,7 @@ void updateGppwm() {
 		float result = channels[i].update();
 
 #ifdef EFI_TUNER_STUDIO
-		if (CONFIG(debugMode) == DBG_GPPWM) {
+		if (engineConfiguration->debugMode == DBG_GPPWM) {
 			scaled_channel<float>* debugFloats = &tsOutputChannels.debugFloatField1;
 			debugFloats[i] = result;
 		}

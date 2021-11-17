@@ -63,7 +63,7 @@ public:
 
 	// Allow querying state from outside
 	bool isIdlingOrTaper() {
-		return m_lastPhase == Phase::Idling || (CONFIG(useSeparateIdleTablesForCrankingTaper) && m_lastPhase == Phase::CrankToIdleTaper);
+		return m_lastPhase == Phase::Idling || (engineConfiguration->useSeparateIdleTablesForCrankingTaper && m_lastPhase == Phase::CrankToIdleTaper);
 	}
 
 private:

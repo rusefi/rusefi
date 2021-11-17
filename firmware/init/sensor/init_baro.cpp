@@ -11,7 +11,7 @@ void initBaro() {
 		return;
 	}
 
-	if (device.init(CONFIG(lps25BaroSensorScl), CONFIG(lps25BaroSensorSda))) {
+	if (device.init(engineConfiguration->lps25BaroSensorScl, engineConfiguration->lps25BaroSensorSda)) {
 		sensor.Register();
 	}
 }

@@ -708,7 +708,7 @@ int Tle8888::chip_init()
 			palSetPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
 	}
 
-	if (CONFIG(verboseTLE8888)) {
+	if (engineConfiguration->verboseTLE8888) {
 		tle8888_dump_regs();
 	}
 

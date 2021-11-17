@@ -118,7 +118,7 @@ bool warning(obd_code_e code, const char *fmt, ...) {
 	chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
 	va_end(ap);
 
-	if (CONFIG(showHumanReadableWarning)) {
+	if (engineConfiguration->showHumanReadableWarning) {
 #if EFI_TUNER_STUDIO
  #if defined(EFI_NO_CONFIG_WORKING_COPY)
   memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));

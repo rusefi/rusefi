@@ -15,7 +15,7 @@ void setAlgorithm(engine_load_mode_e algo);
 
 void setFlatInjectorLag(float value);
 
-#define fixAngle(angle, msg, code) fixAngle2(angle, msg, code, ENGINE(engineCycle))
+#define fixAngle(angle, msg, code) fixAngle2(angle, msg, code, engine->engineCycle)
 
 
 /**
@@ -54,8 +54,8 @@ void setTimingLoadBin(float from, float to);
 
 void setSingleCoilDwell();
 
-// we combine trigger-defined triggerShape.tdcPosition with user-defined CONFIG(globalTriggerAngleOffset)
-// expectation is that for well-known triggers CONFIG(globalTriggerAngleOffset) would usually be zero
+// we combine trigger-defined triggerShape.tdcPosition with user-defined engineConfiguration->globalTriggerAngleOffset
+// expectation is that for well-known triggers engineConfiguration->globalTriggerAngleOffset would usually be zero
 // while for toothed wheels user would have to provide a value
 #define tdcPosition() \
-		(TRIGGER_WAVEFORM(tdcPosition) + CONFIG(globalTriggerAngleOffset))
+		(TRIGGER_WAVEFORM(tdcPosition) + engineConfiguration->globalTriggerAngleOffset)

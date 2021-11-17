@@ -258,7 +258,7 @@ static void setCommonMazdaNB() {
 
 	engineConfiguration->idle.solenoidFrequency = 300;
 
-	CONFIG(isAlternatorControlEnabled) = true;
+	engineConfiguration->isAlternatorControlEnabled = true;
 	// enable altdebug
 	engineConfiguration->targetVBatt = 13.8;
 	engineConfiguration->alternatorControl.offset = 40;
@@ -287,7 +287,7 @@ static void setCommonMazdaNB() {
 	setOperationMode(engineConfiguration, FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 	engineConfiguration->specs.displacement = 1.839;
 	engineConfiguration->cylinderBore = 83;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
@@ -325,11 +325,11 @@ static void setCommonMazdaNB() {
 
 static void setMazdaMiataEngineNB1Defaults() {
 	setCommonMazdaNB();
-	strcpy(CONFIG(engineCode), "NB1");
+	strcpy(engineConfiguration->engineCode, "NB1");
 }
 
 static void setMazdaMiataEngineNB2Defaults() {
-	strcpy(CONFIG(engineCode), "NB2");
+	strcpy(engineConfiguration->engineCode, "NB2");
 
 	engineConfiguration->map.sensor.type = MT_GM_3_BAR;
 	setEgoSensor(ES_Innovate_MTX_L);
@@ -364,7 +364,7 @@ static void setMazdaMiataEngineNB2Defaults() {
 
 
 
-//	CONFIG(debugTriggerSync) = GPIOD_3;
+//	engineConfiguration->debugTriggerSync = GPIOD_3;
 
 //	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
@@ -480,7 +480,7 @@ void setMazdaMiata2003EngineConfiguration() {
 
 	// TLE7209 two-wire ETB control
 	// PWM
-	CONFIG(etb_use_two_wires) = true;
+	engineConfiguration->etb_use_two_wires = true;
 
 	engineConfiguration->etbIo[0].controlPin = GPIO_UNASSIGNED;
 
@@ -576,9 +576,9 @@ static void setMiataNB2_MRE_common() {
 	engineConfiguration->alternatorControlPin = GPIOD_6;
 	// GPIOD_7: "14 - GP Out 5" - selected to +12v
 	engineConfiguration->tachOutputPin = GPIOD_7; // tachometer
-	CONFIG(tachPulsePerRev) = 2;
+	engineConfiguration->tachPulsePerRev = 2;
 
-	CONFIG(isSdCardEnabled) = true;
+	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->ignitionDwellForCrankingMs = 8;
 
@@ -627,7 +627,7 @@ static void setMiataNB2_MRE_common() {
 void setMiataNB2_MRE_ETB() {
 	setMiataNB2_MRE_common();
 
-	CONFIG(useETBforIdleControl) = true;
+	engineConfiguration->useETBforIdleControl = true;
 
 #if EFI_FSIO
 	// enable ETB
@@ -642,7 +642,7 @@ void setMiataNB2_MRE_ETB() {
 	engineConfiguration->idleRpmPid.dFactor = 5;
 	engineConfiguration->idleRpmPid.periodMs = 10;
 
-	CONFIG(useETBforIdleControl) = true;
+	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->throttlePedalUpVoltage = 1;
 	// WAT? that's an interesting value, how come it's above 5v?
 	engineConfiguration->throttlePedalWOTVoltage = 5.47;
@@ -703,10 +703,10 @@ void setMiataNB2_Proteus_TCU() {
 
 	// "Digital 1" green
 	engineConfiguration->tcuUpshiftButtonPin = GPIOC_6;
-	CONFIG(tcuUpshiftButtonPinMode) = PI_PULLUP;
+	engineConfiguration->tcuUpshiftButtonPinMode = PI_PULLUP;
 	// "Digital 6" white
 	engineConfiguration->tcuDownshiftButtonPin = GPIOE_15;
-	CONFIG(tcuDownshiftButtonPinMode) = PI_PULLUP;
+	engineConfiguration->tcuDownshiftButtonPinMode = PI_PULLUP;
 
 	// R
 	config->tcuSolenoidTable[0][0] = 1;
@@ -766,7 +766,7 @@ void setMiataNB2_ProteusEngineConfiguration() {
     engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 
-    CONFIG(enableSoftwareKnock) = true;
+    engineConfiguration->enableSoftwareKnock = true;
 
     engineConfiguration->malfunctionIndicatorPin = PROTEUS_LS_10;
 
@@ -791,7 +791,7 @@ void setMiataNB2_ProteusEngineConfiguration() {
 
     engineConfiguration->fanPin = GPIOB_7;
 
-	CONFIG(mainRelayPin) = GPIOG_12;
+	engineConfiguration->mainRelayPin = GPIOG_12;
 #endif // EFI_PROD_CODE
 
 
@@ -807,7 +807,7 @@ void setHellenNB1() {
 
 void setMiataNB2_Hellen72() {
     setMazdaMiataEngineNB2Defaults();
-	strcpy(CONFIG(vehicleName), "H72 test");
+	strcpy(engineConfiguration->vehicleName, "H72 test");
 
 
 	// set tps_min 90

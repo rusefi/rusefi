@@ -133,7 +133,7 @@ void calculateTriggerSynchPoint(
 	engine->triggerErrorDetection.clear();
 	shape.initializeSyncPoint(state,
 			engine->primaryTriggerConfiguration,
-			CONFIG(trigger));
+			engineConfiguration->trigger);
 
 	int length = shape.getLength();
 	engine->engineCycleEventCount = length;
@@ -318,9 +318,9 @@ void TriggerStateWithRunningStatistics::updateInstantRpm(
 
 
 #if EFI_SENSOR_CHART
-	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
+	if (engine->sensorChartMode == SC_RPM_ACCEL || engine->sensorChartMode == SC_DETAILED_RPM) {
 		angle_t currentAngle = triggerFormDetails->eventAngles[currentCycle.current_index];
-		if (CONFIG(sensorChartMode) == SC_DETAILED_RPM) {
+		if (engineConfiguration->sensorChartMode == SC_DETAILED_RPM) {
 			scAddData(currentAngle, m_instantRpm);
 		} else {
 			scAddData(currentAngle, m_instantRpmRatio);
@@ -536,7 +536,7 @@ void TriggerState::decodeTriggerEvent(
 		if (triggerShape.isSynchronizationNeeded) {
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 
-			if (CONFIG(debugMode) == DBG_TRIGGER_COUNTERS) {
+			if (engineConfiguration->debugMode == DBG_TRIGGER_COUNTERS) {
 #if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField6 = currentGap;
 				tsOutputChannels.debugIntField3 = currentCycle.current_index;
@@ -561,7 +561,7 @@ void TriggerState::decodeTriggerEvent(
 			 * todo: figure out exact threshold as a function of RPM and tooth count?
 			 * Open question what is 'triggerShape.getSize()' for 60/2 is it 58 or 58*2 or 58*4?
 			 */
-			bool silentTriggerError = triggerShape.getSize() > 40 && CONFIG(silentTriggerError);
+			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
 
 #if EFI_UNIT_TEST
 			actualSynchGap = 1.0 * toothDurations[0] / toothDurations[1];

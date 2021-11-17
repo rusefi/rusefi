@@ -74,7 +74,7 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
-	CONFIG(useETBforIdleControl) = true;
+	engineConfiguration->useETBforIdleControl = true;
 
 	engineConfiguration->throttlePedalUpVoltage = 0.73;
 	engineConfiguration->throttlePedalWOTVoltage = 4.0;
@@ -131,8 +131,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
 
-	CONFIG(enableSoftwareKnock) = true;
-	CONFIG(canNbcType) = CAN_BUS_GENESIS_COUPE;
+	engineConfiguration->enableSoftwareKnock = true;
+	engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
 
 	engineConfiguration->canTxPin = H176_CAN_TX;
 	engineConfiguration->canRxPin = H176_CAN_RX;
@@ -150,14 +150,14 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_PWM3;
 	engineConfiguration->etbIo[0].directionPin2 = H144_OUT_PWM2;
 	engineConfiguration->etbIo[0].controlPin = H144_OUT_IO12;
-	CONFIG(etb_use_two_wires) = true;
+	engineConfiguration->etb_use_two_wires = true;
 
 	// wastegate DC motor
 	engineConfiguration->etbIo[1].directionPin1 = H144_OUT_PWM4;
 	engineConfiguration->etbIo[1].directionPin2 = H144_OUT_PWM5;
 	engineConfiguration->etbIo[1].controlPin = H144_OUT_IO13;
-	CONFIG(etb_use_two_wires) = true;
-	CONFIG(etbFunctions)[1] = ETB_Wastegate;
+	engineConfiguration->etb_use_two_wires = true;
+	engineConfiguration->etbFunctions[1] = ETB_Wastegate;
 
 	// Some sensible defaults for other options
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -172,8 +172,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 	engineConfiguration->specs.displacement = 1.998;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_Hyundai);
-	strcpy(CONFIG(engineCode), "Theta II");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_Hyundai);
+	strcpy(engineConfiguration->engineCode, "Theta II");
 	engineConfiguration->globalTriggerAngleOffset = 90;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
@@ -199,5 +199,5 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi2misoPin = H_SPI2_MISO;
 	engineConfiguration->spi2sckPin = H_SPI2_SCK;
 	engineConfiguration->sdCardCsPin = H_SPI2_CS;
-	CONFIG(is_enabled_spi_2) = true;
+	engineConfiguration->is_enabled_spi_2 = true;
 }

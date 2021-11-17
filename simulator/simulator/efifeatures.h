@@ -149,3 +149,4 @@
 #define EFI_JOYSTICK FALSE
 
 #define EFI_LUA TRUE
+#define LUA_USER_HEAP 100000

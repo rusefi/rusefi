@@ -98,7 +98,7 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 
 	mapAveragingPin.setHigh();
 
-	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), ENGINE(engineState.mapAveragingDuration),
+	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), engine->engineState.mapAveragingDuration,
 		endAveraging);
 }
 
@@ -109,7 +109,7 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
  * as fast as possible
  */
 void mapAveragingAdcCallback(adcsample_t adcValue) {
-	if (!isAveraging && ENGINE(sensorChartMode) != SC_MAP) {
+	if (!isAveraging && engine->sensorChartMode != SC_MAP) {
 		return;
 	}
 
@@ -118,7 +118,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
 #if EFI_SENSOR_CHART && EFI_ANALOG_SENSORS
-	if (ENGINE(sensorChartMode) == SC_MAP) {
+	if (engine->sensorChartMode == SC_MAP) {
 		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
 				== 0) {
 			float voltage = adcToVoltsDivided(adcValue);
@@ -174,7 +174,7 @@ static void endAveraging(void*) {
 
 static void applyMapMinBufferLength() {
 	// check range
-	mapMinBufferLength = maxI(minI(CONFIG(mapMinBufferLength), MAX_MAP_BUFFER_LENGTH), 1);
+	mapMinBufferLength = maxI(minI(engineConfiguration->mapMinBufferLength, MAX_MAP_BUFFER_LENGTH), 1);
 	// reset index
 	averagedMapBufIdx = 0;
 	// fill with maximum values
@@ -199,7 +199,7 @@ void refreshMapAveragingPreCalc() {
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
 		efiAssertVoid(CUSTOM_ERR_MAP_START_ASSERT, !cisnan(start), "start");
 
-		angle_t offsetAngle = ENGINE(triggerCentral.triggerFormDetails).eventAngles[CONFIG(mapAveragingSchedulingAtIndex)];
+		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[engineConfiguration->mapAveragingSchedulingAtIndex];
 		efiAssertVoid(CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
@@ -229,7 +229,7 @@ void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp) {
 #if EFI_ENGINE_CONTROL
 	// this callback is invoked on interrupt thread
-	if (index != (uint32_t)CONFIG(mapAveragingSchedulingAtIndex))
+	if (index != (uint32_t)engineConfiguration->mapAveragingSchedulingAtIndex)
 		return;
 
 	int rpm = GET_RPM();
@@ -239,7 +239,7 @@ void mapAveragingTriggerCallback(
 
 	ScopePerf perf(PE::MapAveragingTriggerCallback);
 
-	if (CONFIG(mapMinBufferLength) != mapMinBufferLength) {
+	if (engineConfiguration->mapMinBufferLength != mapMinBufferLength) {
 		applyMapMinBufferLength();
 	}
 
@@ -247,12 +247,12 @@ void mapAveragingTriggerCallback(
 	measurementsPerRevolutionCounter = 0;
 
 	// todo: this could be pre-calculated
-	int samplingCount = CONFIG(measureMapOnlyInOneCylinder) ? 1 : engineConfiguration->specs.cylindersCount;
+	int samplingCount = engineConfiguration->measureMapOnlyInOneCylinder ? 1 : engineConfiguration->specs.cylindersCount;
 
 	for (int i = 0; i < samplingCount; i++) {
-		angle_t samplingStart = ENGINE(engineState.mapAveragingStart[i]);
+		angle_t samplingStart = engine->engineState.mapAveragingStart[i];
 
-		angle_t samplingDuration = ENGINE(engineState.mapAveragingDuration);
+		angle_t samplingDuration = engine->engineState.mapAveragingDuration;
 		// todo: this assertion could be moved out of trigger handler
 		assertAngleRange(samplingDuration, "samplingDuration", CUSTOM_ERR_6563);
 		if (samplingDuration <= 0) {

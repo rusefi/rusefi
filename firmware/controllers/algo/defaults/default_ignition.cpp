@@ -51,7 +51,7 @@ static void setDefaultIatTimingCorrection() {
 
 void setDefaultIgnition() {
 	// Ignition base settings
-	CONFIG(isIgnitionEnabled) = true;
+	engineConfiguration->isIgnitionEnabled = true;
 
 	engineConfiguration->timingMode = TM_DYNAMIC;
 	engineConfiguration->fixedModeTiming = 50;

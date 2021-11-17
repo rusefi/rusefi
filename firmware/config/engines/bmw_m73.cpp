@@ -90,11 +90,11 @@ void m73engine() {
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_BMW);
-	strcpy(CONFIG(engineCode), "M73");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
+	strcpy(engineConfiguration->engineCode, "M73");
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
-	CONFIG(isFasterEngineSpinUpEnabled) = true;
-	CONFIG(fuelAlgorithm) = LM_ALPHA_N;
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 
@@ -176,7 +176,7 @@ GPIOA_6
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOC_8;
 	engineConfiguration->etbIo[0].directionPin2 = GPIOC_9;
-	CONFIG(etb_use_two_wires) = true;
+	engineConfiguration->etb_use_two_wires = true;
 
 	// PWM pin
 	engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
@@ -184,8 +184,8 @@ GPIOA_6
 	engineConfiguration->etbIo[1].directionPin1 = GPIOB_9;
 	engineConfiguration->etbIo[1].directionPin2 = GPIOB_8;
 
-	CONFIG(tps2Min) = CONFIG(tpsMin);
-	CONFIG(tps2Max) = CONFIG(tpsMax);
+	engineConfiguration->tps2Min = engineConfiguration->tpsMin;
+	engineConfiguration->tps2Max = engineConfiguration->tpsMax;
 
 
 	engineConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
@@ -249,7 +249,7 @@ void setEngineBMW_M73_Proteus() {
 	// set_analog_input_pin pps pa4
 	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
 
-	strcpy(CONFIG(vehicleName), "Using Proteus");
+	strcpy(engineConfiguration->vehicleName, "Using Proteus");
 
 	// set_trigger_input_pin 0 PE7
 	// GPIOE_7:  "VR 1"
@@ -269,13 +269,13 @@ void setEngineBMW_M73_Proteus() {
 
 
 	// GPIOE_0:  "Lowside 14"
-	CONFIG(starterControlPin) = GPIOE_0;
+	engineConfiguration->starterControlPin = GPIOE_0;
 	// GPIOE_12: "Digital 3"
-	CONFIG(startStopButtonPin) = GPIOE_12;
-	CONFIG(startStopButtonMode) = PI_PULLUP;
+	engineConfiguration->startStopButtonPin = GPIOE_12;
+	engineConfiguration->startStopButtonMode = PI_PULLUP;
 
 	setProteusHitachiEtbDefaults();
 
-	CONFIG(useETBforIdleControl) = true;
+	engineConfiguration->useETBforIdleControl = true;
 }
 #endif // HW_PROTEUS

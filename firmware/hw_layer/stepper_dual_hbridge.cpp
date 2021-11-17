@@ -41,7 +41,7 @@ void DualHBridgeStepper::initialize(DcMotor* motorPhaseA, DcMotor* motorPhaseB, 
     m_motorPhaseA = motorPhaseA;
     m_motorPhaseB = motorPhaseB;
 
-    efiAssertVoid(CUSTOM_ERR_ASSERT, CONFIG(stepperNumMicroSteps) <= maxNumSteps, "stepperNumMicroSteps");
+    efiAssertVoid(CUSTOM_ERR_ASSERT, engineConfiguration->stepperNumMicroSteps <= maxNumSteps, "stepperNumMicroSteps");
 }
 
 bool DualHBridgeStepper::step(bool positive) {
@@ -50,16 +50,16 @@ bool DualHBridgeStepper::step(bool positive) {
 		return false;
 	}
 
-	if (CONFIG(stepperNumMicroSteps) > 1) {
-		float dutyMult = CONFIG(stepperMaxDutyCycle) * phaseDutyCycleDivisor;
-		int numStepIncr = maxNumSteps / CONFIG(stepperNumMicroSteps);
+	if (engineConfiguration->stepperNumMicroSteps > 1) {
+		float dutyMult = engineConfiguration->stepperMaxDutyCycle * phaseDutyCycleDivisor;
+		int numStepIncr = maxNumSteps / engineConfiguration->stepperNumMicroSteps;
 		if (!positive)
 			numStepIncr = -numStepIncr;
-		for (int i = CONFIG(stepperNumMicroSteps); i > 0; i--) {
+		for (int i = engineConfiguration->stepperNumMicroSteps; i > 0; i--) {
 			m_phase = (m_phase + numStepIncr) & tableSizeMask;
 			update(dutyMult);
 			// sleep 1/Nth of the pause time
-			pause(CONFIG(stepperNumMicroSteps));
+			pause(engineConfiguration->stepperNumMicroSteps);
 		}
 		return true;
 	}
@@ -86,9 +86,9 @@ bool DualHBridgeStepper::update(float dutyMult) {
 		return false;
 	}
 
-	if (CONFIG(stepperNumMicroSteps) > 1) {
+	if (engineConfiguration->stepperNumMicroSteps > 1) {
 	    // phase B is 90 degrees shifted
-	    uint8_t m_phaseB = (m_phase + CONFIG(stepperNumMicroSteps)) & tableSizeMask;
+	    uint8_t m_phaseB = (m_phase + engineConfiguration->stepperNumMicroSteps) & tableSizeMask;
 	    
 	    // Set phases according to the table
 	    m_motorPhaseA->set(dutyMult * microPhases[m_phase]);
@@ -102,7 +102,7 @@ bool DualHBridgeStepper::update(float dutyMult) {
 }
 
 void DualHBridgeStepper::sleep() {
-	float sleepingCoef = minI(CONFIG(stepperMinDutyCycle), CONFIG(stepperMaxDutyCycle)) * phaseDutyCycleDivisor;
+	float sleepingCoef = minI(engineConfiguration->stepperMinDutyCycle, engineConfiguration->stepperMaxDutyCycle) * phaseDutyCycleDivisor;
 	update(sleepingCoef);
 	pause();
 }

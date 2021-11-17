@@ -131,7 +131,7 @@ void printTsStats(void) {
 		efiPrintf("TS RX on %s", hwPortname(engineConfiguration->binarySerialRxPin));
 
 		efiPrintf("TS TX on %s @%d", hwPortname(engineConfiguration->binarySerialTxPin),
-				CONFIG(tunerStudioSerialSpeed));
+				engineConfiguration->tunerStudioSerialSpeed);
 	}
 #endif /* EFI_PROD_CODE */
 
@@ -139,7 +139,7 @@ void printTsStats(void) {
 }
 
 static void setTsSpeed(int value) {
-	CONFIG(tunerStudioSerialSpeed) = value;
+	engineConfiguration->tunerStudioSerialSpeed = value;
 	printTsStats();
 }
 

@@ -129,8 +129,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
 
-	CONFIG(enableSoftwareKnock) = true;
-	CONFIG(canNbcType) = CAN_BUS_NISSAN_VQ;
+	engineConfiguration->enableSoftwareKnock = true;
+	engineConfiguration->canNbcType = CAN_BUS_NISSAN_VQ;
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
@@ -146,7 +146,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->etbIo[0].directionPin1 = GPIOD_15; // out_pwm7
 	engineConfiguration->etbIo[0].directionPin2 = GPIOD_14; // out_pwm6
 	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
-	CONFIG(etb_use_two_wires) = true;
+	engineConfiguration->etb_use_two_wires = true;
 
 	// Some sensible defaults for other options
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -159,7 +159,7 @@ void setBoardDefaultConfiguration(void) {
 	// Bosch VQ40 VR56 VK56 0280158007
 	engineConfiguration->injector.flow = 296.2;
 
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_NISSAN);
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_NISSAN);
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -197,5 +197,5 @@ void setSdCardConfigurationOverrides(void) {
 //	engineConfiguration->spi2misoPin = GPIOB_14;
 //	engineConfiguration->spi2sckPin = GPIOB_13;
 //	engineConfiguration->sdCardCsPin = GPIOB_12;
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 }

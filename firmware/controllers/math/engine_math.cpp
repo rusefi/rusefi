@@ -44,11 +44,11 @@ floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
 }
 
 float getFuelingLoad() {
-	return ENGINE(engineState.fuelingLoad);
+	return engine->engineState.fuelingLoad;
 }
 
 float getIgnitionLoad() {
-	return ENGINE(engineState.ignitionLoad);
+	return engine->engineState.ignitionLoad;
 }
 
 /**
@@ -76,8 +76,8 @@ void setSingleCoilDwell() {
 floatms_t getSparkDwell(int rpm) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	float dwellMs;
-	if (ENGINE(rpmCalculator).isCranking()) {
-		dwellMs = CONFIG(ignitionDwellForCrankingMs);
+	if (engine->rpmCalculator.isCranking()) {
+		dwellMs = engineConfiguration->ignitionDwellForCrankingMs;
 	} else {
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
 
@@ -160,7 +160,7 @@ static const int order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10[] = {1, 14, 9, 4, 
 
 static int getFiringOrderLength() {
 
-	switch (CONFIG(specs.firingOrder)) {
+	switch (engineConfiguration->specs.firingOrder) {
 	case FO_1:
 		return 1;
 // 2 cylinder
@@ -221,14 +221,14 @@ static int getFiringOrderLength() {
 		return 16;
 
 	default:
-		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", CONFIG(specs.firingOrder));
+		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->specs.firingOrder);
 	}
 	return 1;
 }
 
 static const int *getFiringOrderTable()
 {
-	switch (CONFIG(specs.firingOrder)) {
+	switch (engineConfiguration->specs.firingOrder) {
 	case FO_1:
 		return order_1;
 // 2 cylinder
@@ -313,7 +313,7 @@ static const int *getFiringOrderTable()
 		return order_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10;
 
 	default:
-		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", CONFIG(specs.firingOrder));
+		firmwareError(CUSTOM_OBD_UNKNOWN_FIRING_ORDER, "Invalid firing order: %d", engineConfiguration->specs.firingOrder);
 	}
 
 	return NULL;
@@ -376,11 +376,11 @@ static int getIgnitionPinForIndex(int cylinderIndex) {
 	case IM_ONE_COIL:
 		return 0;
 	case IM_WASTED_SPARK: {
-		if (CONFIG(specs.cylindersCount) == 1) {
+		if (engineConfiguration->specs.cylindersCount == 1) {
 			// we do not want to divide by zero
 			return 0;
 		}
-		return cylinderIndex % (CONFIG(specs.cylindersCount) / 2);
+		return cylinderIndex % (engineConfiguration->specs.cylindersCount / 2);
 	}
 	case IM_INDIVIDUAL_COILS:
 		return cylinderIndex;
@@ -396,18 +396,18 @@ static int getIgnitionPinForIndex(int cylinderIndex) {
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode) {
 	(void)ignitionMode;
 #if EFI_ENGINE_CONTROL
-	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
-		ENGINE(ignitionPin[cylinderIndex]) = getIgnitionPinForIndex(cylinderIndex);
+	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
+		engine->ignitionPin[cylinderIndex] = getIgnitionPinForIndex(cylinderIndex);
 	}
 #endif /* EFI_ENGINE_CONTROL */
 }
 
 /**
  * @return IM_WASTED_SPARK if in SPINNING mode and IM_INDIVIDUAL_COILS setting
- * @return CONFIG(ignitionMode) otherwise
+ * @return engineConfiguration->ignitionMode otherwise
  */
 ignition_mode_e getCurrentIgnitionMode() {
-	ignition_mode_e ignitionMode = CONFIG(ignitionMode);
+	ignition_mode_e ignitionMode = engineConfiguration->ignitionMode;
 #if EFI_SHAFT_POSITION_INPUT
 	// In spin-up cranking mode we don't have full phase sync. info yet, so wasted spark mode is better
 	if (ignitionMode == IM_INDIVIDUAL_COILS && ENGINE(rpmCalculator.isSpinningUp()))
@@ -422,7 +422,7 @@ ignition_mode_e getCurrentIgnitionMode() {
  * This heavy method is only invoked in case of a configuration change or initialization.
  */
 void prepareOutputSignals() {
-	ENGINE(engineCycle) = getEngineCycle(engine->getOperationMode());
+	engine->engineCycle = getEngineCycle(engine->getOperationMode());
 
 	angle_t maxTimingCorrMap = -FOUR_STROKE_CYCLE_DURATION;
 	angle_t maxTimingMap = -FOUR_STROKE_CYCLE_DURATION;
@@ -440,16 +440,16 @@ void prepareOutputSignals() {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		ENGINE(ignitionPositionWithinEngineCycle[i]) = ENGINE(engineCycle) * i / CONFIG(specs.cylindersCount);
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		engine->ignitionPositionWithinEngineCycle[i] = engine->engineCycle * i / engineConfiguration->specs.cylindersCount;
 	}
 
-	prepareIgnitionPinIndices(CONFIG(ignitionMode));
+	prepareIgnitionPinIndices(engineConfiguration->ignitionMode);
 
-	TRIGGER_WAVEFORM(prepareShape(&ENGINE(triggerCentral.triggerFormDetails)));
+	TRIGGER_WAVEFORM(prepareShape(&engine->triggerCentral.triggerFormDetails));
 
 	// Fuel schedule may now be completely wrong, force a reset
-	ENGINE(injectionEvents).invalidate();
+	engine->injectionEvents.invalidate();
 }
 
 void setTimingRpmBin(float from, float to) {

@@ -107,13 +107,13 @@ static void setDefaultFuelCutParameters() {
 }
 
 static void setDefaultStftSettings() {
-	auto& cfg = CONFIG(stft);
+	auto& cfg = engineConfiguration->stft;
 
 	// Default to disabled
-	CONFIG(fuelClosedLoopCorrectionEnabled) = false;
+	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
 
 	// Default to proportional mode (for wideband sensors)
-	CONFIG(stftIgnoreErrorMagnitude) = false;
+	engineConfiguration->stftIgnoreErrorMagnitude = false;
 
 	// 60 second startup delay - some O2 sensors are slow to warm up.
 	cfg.startupDelay = 60;

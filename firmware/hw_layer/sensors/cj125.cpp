@@ -114,14 +114,14 @@ static void cjWriteRegister(uint8_t regAddr, uint8_t regValue) {
 
 static float getUr() {
 #if ! EFI_UNIT_TEST
-	if (isAdcChannelValid(CONFIG(cj125ur))) {
+	if (isAdcChannelValid(engineConfiguration->cj125ur)) {
 #if EFI_PROD_CODE
 	if (!engineConfiguration->cj125isUrDivided) {
 		// in case of directly connected Ur signal from CJ125 to the ADC pin of MCU
-		return getVoltage("cj125ur", CONFIG(cj125ur));
+		return getVoltage("cj125ur", engineConfiguration->cj125ur);
 	} else {
 		// if a standard voltage division scheme with OpAmp is used
-		return getVoltageDivided("cj125ur", CONFIG(cj125ur));
+		return getVoltageDivided("cj125ur", engineConfiguration->cj125ur);
 	}
 #endif /* EFI_PROD_CODE */
 	}
@@ -133,12 +133,12 @@ static float getUr() {
 
 static float getUa() {
 #if ! EFI_UNIT_TEST
-	if (isAdcChannelValid(CONFIG(cj125ua))) {
+	if (isAdcChannelValid(engineConfiguration->cj125ua)) {
 #if EFI_PROD_CODE
 		if (engineConfiguration->cj125isUaDivided) {
-			return getVoltageDivided("cj125ua", CONFIG(cj125ua));
+			return getVoltageDivided("cj125ua", engineConfiguration->cj125ua);
 		} else {
-			return getVoltage("cj125ua", CONFIG(cj125ua));
+			return getVoltage("cj125ua", engineConfiguration->cj125ua);
 		}
 #endif /* EFI_PROD_CODE */
 	}
@@ -234,7 +234,7 @@ static void cjSetI(float value) {
 static void cjInfo() {
 	cjPrintState();
 #if HAL_USE_SPI
-	printSpiConfig("cj125", CONFIG(cj125SpiDevice));
+	printSpiConfig("cj125", engineConfiguration->cj125SpiDevice);
 #endif /* HAL_USE_SPI */
 }
 
@@ -333,7 +333,7 @@ void CJ125::calibrate() {
 }
 
 static void cjStart() {
-	if (!CONFIG(isCJ125Enabled)) {
+	if (!engineConfiguration->isCJ125Enabled) {
 		efiPrintf("cj125 is disabled.");
 		return;
 	}
@@ -382,15 +382,15 @@ void CJ125::setError(cj125_error_e errCode) {
 
 static bool cjStartSpi() {
 #if HAL_USE_SPI
-	globalInstance.cj125Cs.initPin("cj125 CS", CONFIG(cj125CsPin),
+	globalInstance.cj125Cs.initPin("cj125 CS", engineConfiguration->cj125CsPin,
 			&engineConfiguration->cj125CsPinMode);
 	// Idle CS pin - SPI CS is high when idle
 	globalInstance.cj125Cs.setValue(true);
 
-	cj125spicfg.cr1 += getSpiPrescaler(_150KHz, CONFIG(cj125SpiDevice));
+	cj125spicfg.cr1 += getSpiPrescaler(_150KHz, engineConfiguration->cj125SpiDevice);
 
-	cj125spicfg.ssport = getHwPort("cj125", CONFIG(cj125CsPin));
-	cj125spicfg.sspad = getHwPin("cj125", CONFIG(cj125CsPin));
+	cj125spicfg.ssport = getHwPort("cj125", engineConfiguration->cj125CsPin);
+	cj125spicfg.sspad = getHwPin("cj125", engineConfiguration->cj125CsPin);
 	driver = getSpiDevice(engineConfiguration->cj125SpiDevice);
 	if (driver == NULL) {
 		// error already reported
@@ -517,7 +517,7 @@ static msg_t cjThread()
 }
 
 static bool cjCheckConfig() {
-	if (!CONFIG(isCJ125Enabled)) {
+	if (!engineConfiguration->isCJ125Enabled) {
 		efiPrintf("cj125 is disabled. Failed!");
 		return false;
 	}
@@ -575,7 +575,7 @@ float cjGetAfr() {
 }
 
 bool cjHasAfrSensor() {
-	if (!CONFIG(isCJ125Enabled))
+	if (!engineConfiguration->isCJ125Enabled)
 		return false;
 	return globalInstance.isValidState();
 }
@@ -598,19 +598,19 @@ void cjPostState(TunerStudioOutputChannels *tsOutputChannels) {
 void initCJ125() {
 	globalInstance.spi = &spi;
 
-	if (!CONFIG(isCJ125Enabled)) {
+	if (!engineConfiguration->isCJ125Enabled) {
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;
 		return;
 	}
 
-	if (!isAdcChannelValid(CONFIG(cj125ur)) || !isAdcChannelValid(CONFIG(cj125ua))) {
+	if (!isAdcChannelValid(engineConfiguration->cj125ur) || !isAdcChannelValid(engineConfiguration->cj125ua)) {
 		efiPrintf("cj125 init error! cj125ur and cj125ua are required.");
 		warning(CUSTOM_CJ125_0, "cj ur ua");
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;
 		return;
 	}
 
-	if (!isBrainPinValid(CONFIG(wboHeaterPin))) {
+	if (!isBrainPinValid(engineConfiguration->wboHeaterPin)) {
 		efiPrintf("cj125 init error! wboHeaterPin is required.");
 		warning(CUSTOM_CJ125_1, "cj heater");
 		globalInstance.errorCode = CJ125_ERROR_DISABLED;
@@ -647,21 +647,21 @@ void initCJ125() {
 //	engineConfiguration->spi2SckMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MosiMode = PAL_STM32_OTYPE_OPENDRAIN; // 4
 //	engineConfiguration->spi2MisoMode = PAL_STM32_PUDR_PULLUP; // 32
-//	CONFIG(cj125CsPin) = GPIOA_15;
+//	engineConfiguration->cj125CsPin = GPIOA_15;
 //	engineConfiguration->cj125CsPinMode = OM_OPENDRAIN;
 
 void cj125defaultPinout() {
 	engineConfiguration->cj125ua = EFI_ADC_13; // PC3
 	engineConfiguration->cj125ur = EFI_ADC_4; // PA4
-	CONFIG(wboHeaterPin) = GPIOC_13;
+	engineConfiguration->wboHeaterPin = GPIOC_13;
 
-	CONFIG(spi2mosiPin) = GPIOB_15;
-	CONFIG(spi2misoPin) = GPIOB_14;
-	CONFIG(spi2sckPin) = GPIOB_13;
+	engineConfiguration->spi2mosiPin = GPIOB_15;
+	engineConfiguration->spi2misoPin = GPIOB_14;
+	engineConfiguration->spi2sckPin = GPIOB_13;
 
-	CONFIG(cj125CsPin) = GPIOB_0;
-	CONFIG(isCJ125Enabled) = true;
-	CONFIG(is_enabled_spi_2) = true;
-	CONFIG(cj125SpiDevice) = SPI_DEVICE_2;
+	engineConfiguration->cj125CsPin = GPIOB_0;
+	engineConfiguration->isCJ125Enabled = true;
+	engineConfiguration->is_enabled_spi_2 = true;
+	engineConfiguration->cj125SpiDevice = SPI_DEVICE_2;
 }
 #endif /* EFI_CJ125 */

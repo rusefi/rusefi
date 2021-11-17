@@ -12,25 +12,25 @@ TEST(FuelMath, getStandardAirCharge) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Miata 1839cc 4cyl
-	CONFIG(specs.displacement) = 1.839f;
-	CONFIG(specs.cylindersCount) = 4;
+	engineConfiguration->specs.displacement = 1.839f;
+	engineConfiguration->specs.cylindersCount = 4;
 
 	EXPECT_FLOAT_EQ(0.5535934f, getStandardAirCharge());
 
 	// LS 5.3 liter v8
-	CONFIG(specs.displacement) = 5.327f;
-	CONFIG(specs.cylindersCount) = 8;
+	engineConfiguration->specs.displacement = 5.327f;
+	engineConfiguration->specs.cylindersCount = 8;
 
 	EXPECT_FLOAT_EQ(0.80179232f, getStandardAirCharge());
 
 	// Chainsaw - single cylinder 32cc
-	CONFIG(specs.displacement) = 0.032f;
-	CONFIG(specs.cylindersCount) = 1;
+	engineConfiguration->specs.displacement = 0.032f;
+	engineConfiguration->specs.cylindersCount = 1;
 	EXPECT_FLOAT_EQ(0.038531788f, getStandardAirCharge());
 
 	// Leopard 1 47.666 liter v12
-	CONFIG(specs.displacement) = 47.666f;
-	CONFIG(specs.cylindersCount) = 12;
+	engineConfiguration->specs.displacement = 47.666f;
+	engineConfiguration->specs.cylindersCount = 12;
 
 	EXPECT_FLOAT_EQ(4.782959f, getStandardAirCharge());
 }
@@ -122,13 +122,13 @@ TEST(AirmassModes, VeOverride) {
 
 	// Use default mode - will call with 10
 	dut.getAirmass(0);
-	EXPECT_FLOAT_EQ(ENGINE(engineState.currentVeLoad), 10.0f);
+	EXPECT_FLOAT_EQ(engine->engineState.currentVeLoad, 10.0f);
 
 	// Override to TPS
-	CONFIG(veOverrideMode) = VE_TPS;
+	engineConfiguration->veOverrideMode = VE_TPS;
 	Sensor::setMockValue(SensorType::Tps1, 30.0f);
 	dut.getAirmass(0);
-	EXPECT_FLOAT_EQ(ENGINE(engineState.currentVeLoad), 30.0f);
+	EXPECT_FLOAT_EQ(engine->engineState.currentVeLoad, 30.0f);
 }
 
 void setInjectionMode(int value);

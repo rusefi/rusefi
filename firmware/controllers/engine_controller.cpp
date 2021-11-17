@@ -98,7 +98,6 @@
  * Would love to pass reference to configuration object into constructor but C++ does allow attributes after parenthesized initializer
  */
 Engine ___engine CCM_OPTIONAL;
-Engine * engine = &___engine;
 
 #else // EFI_UNIT_TEST
 
@@ -151,7 +150,7 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 	void PeriodicTask() override {
 		counter++;
 #if EFI_SHAFT_POSITION_INPUT
-		bool is_running = ENGINE(rpmCalculator).isRunning();
+		bool is_running = engine->rpmCalculator.isRunning();
 #else
 		bool is_running = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
@@ -160,7 +159,7 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 			// blink in running mode
 			enginePins.runningLedPin.setValue(counter % 2);
 		} else {
-			int is_cranking = ENGINE(rpmCalculator).isCranking();
+			int is_cranking = engine->rpmCalculator.isCranking();
 			enginePins.runningLedPin.setValue(is_cranking);
 		}
 	}
@@ -220,7 +219,7 @@ static void doPeriodicSlowCallback() {
 		engine->rpmCalculator.setStopSpinning();
 	}
 
-	if (ENGINE(directSelfStimulation) || engine->rpmCalculator.isStopped()) {
+	if (engine->directSelfStimulation || engine->rpmCalculator.isStopped()) {
 		/**
 		 * rusEfi usually runs on hardware which halts execution while writing to internal flash, so we
 		 * postpone writes to until engine is stopped. Writes in case of self-stimulation are fine.
@@ -245,7 +244,7 @@ static void doPeriodicSlowCallback() {
 	engine->periodicSlowCallback();
 #endif /* if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 
-	if (CONFIG(tcuEnabled)) {
+	if (engineConfiguration->tcuEnabled) {
 		engine->gearController->update();
 	}
 }
@@ -573,7 +572,7 @@ void commonInitEngineController() {
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
-	if (CONFIG(isEngineControlEnabled)) {
+	if (engineConfiguration->isEngineControlEnabled) {
 		initAuxValves();
 		/**
 		 * This method adds trigger listener which actually schedules ignition
@@ -590,8 +589,8 @@ void commonInitEngineController() {
 
 // Returns false if there's an obvious problem with the loaded configuration
 bool validateConfig() {
-	if (CONFIG(specs.cylindersCount) > MAX_CYLINDER_COUNT) {
-		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
+	if (engineConfiguration->specs.cylindersCount > MAX_CYLINDER_COUNT) {
+		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", engineConfiguration->specs.cylindersCount);
 		return false;
 	}
 
@@ -654,8 +653,8 @@ bool validateConfig() {
 		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
 	}
 
-	for (size_t index = 0; index < efi::size(CONFIG(vrThreshold)); index++) {
-		auto& cfg = CONFIG(vrThreshold)[index];
+	for (size_t index = 0; index < efi::size(engineConfiguration->vrThreshold); index++) {
+		auto& cfg = engineConfiguration->vrThreshold[index];
 
 		if (cfg.pin == GPIO_UNASSIGNED) {
 			continue;
@@ -673,13 +672,13 @@ bool validateConfig() {
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
 
 	// VVT
-	if (CONFIG(camInputs[0]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] != GPIO_UNASSIGNED) {
 		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
 		ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
 	}
 
 #if CAM_INPUTS_COUNT != 1
-	if (CONFIG(camInputs[1]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[1] != GPIO_UNASSIGNED) {
 		ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
 		ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
 	}

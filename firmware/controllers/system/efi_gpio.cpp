@@ -262,12 +262,12 @@ void EnginePins::startIgnitionPins() {
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *trailingOutput = &enginePins.trailingCoils[i];
 		if (isPinOrModeChanged(trailingCoilPins[i], ignitionPinMode)) {
-			trailingOutput->initPin(trailingOutput->name, CONFIG(trailingCoilPins)[i], &CONFIG(ignitionPinMode));
+			trailingOutput->initPin(trailingOutput->name, engineConfiguration->trailingCoilPins[i], &engineConfiguration->ignitionPinMode);
 		}
 
 		NamedOutputPin *output = &enginePins.coils[i];
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
-			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
+			output->initPin(output->name, engineConfiguration->ignitionPins[i], &engineConfiguration->ignitionPinMode);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -279,8 +279,8 @@ void EnginePins::startInjectionPins() {
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
-			output->initPin(output->name, CONFIG(injectionPins)[i],
-					&CONFIG(injectionPinMode));
+			output->initPin(output->name, engineConfiguration->injectionPins[i],
+					&engineConfiguration->injectionPinMode);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -468,15 +468,15 @@ void initOutputPins() {
 #if EFI_GPIO_HARDWARE
 
 #if HAL_USE_SPI
-	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
+	enginePins.sdCsPin.initPin("SD CS", engineConfiguration->sdCardCsPin);
 #endif /* HAL_USE_SPI */
 
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: migrate remaining OutputPin to RegisteredOutputPin in order to get consistent dynamic pin init/deinit
-	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
+	enginePins.debugTriggerSync.initPin("debug: sync", engineConfiguration->debugTriggerSync);
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
+	enginePins.o2heater.initPin("O2 heater", engineConfiguration->o2heaterPin);
 
 #endif /* EFI_GPIO_HARDWARE */
 }
@@ -565,7 +565,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
-				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
+				firmwareError(OBD_PCM_Processor_Fault, "HARDWARE VALIDATEION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
 				OutputPin::deInit();
 			}
 		}

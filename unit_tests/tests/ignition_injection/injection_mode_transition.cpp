@@ -29,7 +29,7 @@ static void doRevolution(EngineTestHelper& eth, int periodMs) {
 // https://github.com/rusefi/rusefi/issues/1592
 TEST(fuelControl, transitionIssue1592) {
 	EngineTestHelper eth(TEST_ENGINE);
-	ENGINE(tdcMarkEnabled) = false;
+	engine->tdcMarkEnabled = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
 	EXPECT_CALL(eth.mockAirmass, getAirmass(500))

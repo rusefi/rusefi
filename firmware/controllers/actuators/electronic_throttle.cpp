@@ -304,10 +304,10 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 
 	percent_t etbIdlePosition = clampF(
 									0,
-									CONFIG(useETBforIdleControl) ? m_idlePosition : 0,
+									engineConfiguration->useETBforIdleControl ? m_idlePosition : 0,
 									100
 								);
-	percent_t etbIdleAddition = 0.01f * CONFIG(etbIdleThrottleRange) * etbIdlePosition;
+	percent_t etbIdleAddition = 0.01f * engineConfiguration->etbIdleThrottleRange * etbIdlePosition;
 
 	// Interpolate so that the idle adder just "compresses" the throttle's range upward.
 	// [0, 100] -> [idle, 100]
@@ -316,9 +316,9 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	percent_t targetPosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
 	// Lastly, apply ETB rev limiter
-	auto etbRpmLimit = CONFIG(etbRevLimitStart);
+	auto etbRpmLimit = engineConfiguration->etbRevLimitStart;
 	if (etbRpmLimit != 0) {
-		auto fullyLimitedRpm = etbRpmLimit + CONFIG(etbRevLimitRange);
+		auto fullyLimitedRpm = etbRpmLimit + engineConfiguration->etbRevLimitRange;
 		// Linearly taper throttle to closed from the limit across the range
 		targetPosition = interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
 	}
@@ -330,7 +330,7 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 #endif // EFI_TUNER_STUDIO
 
 	// Keep the throttle just barely off the lower stop, and less than the user-configured maximum
-	float maxPosition = CONFIG(etbMaximumPosition);
+	float maxPosition = engineConfiguration->etbMaximumPosition;
 
 	if (maxPosition < 70) {
 		maxPosition = 100;
@@ -482,7 +482,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		float errorIntegral = m_errorAccumulator.accumulate(target - observation);
 
 #if EFI_TUNER_STUDIO
-		if (m_function == ETB_Throttle1 && CONFIG(debugMode) == DBG_ETB_LOGIC) {
+		if (m_function == ETB_Throttle1 && engineConfiguration->debugMode == DBG_ETB_LOGIC) {
 			tsOutputChannels.debugFloatField3 = errorIntegral;
 		}
 #endif // EFI_TUNER_STUDIO
@@ -490,7 +490,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		// Allow up to 10 percent-seconds of error
 		if (errorIntegral > 10.0f) {
 			// TODO: figure out how to handle uncalibrated ETB 
-			//ENGINE(limpManager).etbProblem();
+			//engine->limpManager.etbProblem();
 		}
 
 		// Normal case - use PID to compute closed loop part
@@ -509,7 +509,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 	if (!m_motor) return;
 
 	// If ETB is allowed, output is valid, and we aren't paused, output to motor.
-	if (ENGINE(limpManager).allowElectronicThrottle()
+	if (engine->limpManager.allowElectronicThrottle()
 		&& outputValue
 		&& !engineConfiguration->pauseEtbControl) {
 		m_motor->enable();
@@ -545,7 +545,7 @@ void EtbController::update() {
 		return;
 	}
 
-	if (CONFIG(disableEtbWhenEngineStopped)) {
+	if (engineConfiguration->disableEtbWhenEngineStopped) {
 		if (engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) > 1) {
 			// If engine is stopped and so configured, skip the ETB update entirely
 			// This is quieter and pulls less power than leaving it on all the time
@@ -687,16 +687,16 @@ static void showEthInfo() {
 
 
 	efiPrintf("etbControlPin=%s duty=%.2f freq=%d",
-			hwPortname(CONFIG(etbIo[0].controlPin)),
+			hwPortname(engineConfiguration->etbIo[0].controlPin),
 			currentEtbDuty,
 			engineConfiguration->etbFreq);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		efiPrintf("ETB%d", i);
-		efiPrintf(" dir1=%s", hwPortname(CONFIG(etbIo[i].directionPin1)));
-		efiPrintf(" dir2=%s", hwPortname(CONFIG(etbIo[i].directionPin2)));
-		efiPrintf(" control=%s", hwPortname(CONFIG(etbIo[i].controlPin)));
-		efiPrintf(" disable=%s", hwPortname(CONFIG(etbIo[i].disablePin)));
+		efiPrintf(" dir1=%s", hwPortname(engineConfiguration->etbIo[i].directionPin1));
+		efiPrintf(" dir2=%s", hwPortname(engineConfiguration->etbIo[i].directionPin2));
+		efiPrintf(" control=%s", hwPortname(engineConfiguration->etbIo[i].controlPin));
+		efiPrintf(" disable=%s", hwPortname(engineConfiguration->etbIo[i].disablePin));
 		showDcMotorInfo(i);
 	}
 
@@ -829,12 +829,12 @@ void setBoschVAGETB() {
 }
 
 void setBoschVNH2SP30Curve() {
-	copyArray(CONFIG(etbBiasBins), boschBiasBins);
-	copyArray(CONFIG(etbBiasValues), boschBiasValues);
+	copyArray(engineConfiguration->etbBiasBins, boschBiasBins);
+	copyArray(engineConfiguration->etbBiasValues, boschBiasValues);
 }
 
 void setDefaultEtbParameters() {
-	CONFIG(etbIdleThrottleRange) = 5;
+	engineConfiguration->etbIdleThrottleRange = 5;
 
 	setLinearCurve(config->pedalToTpsPedalBins, /*from*/0, /*to*/100, 1);
 	setLinearCurve(config->pedalToTpsRpmBins, /*from*/0, /*to*/8000 / RPM_1_BYTE_PACKING_MULT, 1);
@@ -901,8 +901,8 @@ static const float defaultBiasValues[] = {
 };
 
 void setDefaultEtbBiasCurve() {
-	copyArray(CONFIG(etbBiasBins), defaultBiasBins);
-	copyArray(CONFIG(etbBiasValues), defaultBiasValues);
+	copyArray(engineConfiguration->etbBiasBins, defaultBiasBins);
+	copyArray(engineConfiguration->etbBiasValues, defaultBiasValues);
 }
 
 void unregisterEtbPins() {
@@ -911,8 +911,8 @@ void unregisterEtbPins() {
 
 static pid_s* getEtbPidForFunction(etb_function_e function) {
 	switch (function) {
-		case ETB_Wastegate: return &CONFIG(etbWastegatePid);
-		default: return &CONFIG(etb);
+		case ETB_Wastegate: return &engineConfiguration->etbWastegatePid;
+		default: return &engineConfiguration->etb;
 	}
 }
 
@@ -938,12 +938,12 @@ void doInitElectronicThrottle() {
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
 	// todo: rename etbFunctions to something-without-etb for same reason?
 	for (int i = 0 ; i < ETB_COUNT; i++) {
-		auto func = CONFIG(etbFunctions[i]);
+		auto func = engineConfiguration->etbFunctions[i];
 		if (func == ETB_None) {
 			// do not touch HW pins if function not selected, this way Lua can use DC motor hardware pins directly
 			continue;
 		}
-		auto motor = initDcMotor(engineConfiguration->etbIo[i], i, CONFIG(etb_use_two_wires));
+		auto motor = initDcMotor(engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);
 
 		// If this motor is actually set up, init the etb
 		if (motor)
@@ -1050,10 +1050,10 @@ void setHitachiEtbCalibration() {
 	engineConfiguration->etb.maxValue = 100.0;
 
 	// Nissan 60mm throttle
-	CONFIG(tpsMin) = CONFIG(tps2Min) = 113;
-	CONFIG(tpsMax) = CONFIG(tps2Max) = 846;
-	CONFIG(tps1SecondaryMin) = CONFIG(tps2SecondaryMin) = 897;
-	CONFIG(tps1SecondaryMax) = CONFIG(tps2SecondaryMax) = 161;
+	engineConfiguration->tpsMin = engineConfiguration->tps2Min = 113;
+	engineConfiguration->tpsMax = engineConfiguration->tps2Max = 846;
+	engineConfiguration->tps1SecondaryMin = engineConfiguration->tps2SecondaryMin = 897;
+	engineConfiguration->tps1SecondaryMax = engineConfiguration->tps2SecondaryMax = 161;
 }
 
 void setProteusHitachiEtbDefaults() {

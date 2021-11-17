@@ -8,7 +8,7 @@
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	EngineTestHelper eth(TEST_ENGINE);
-	ENGINE(tdcMarkEnabled) = false;
+	engine->tdcMarkEnabled = false;
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->cranking.baseFuel = 12;

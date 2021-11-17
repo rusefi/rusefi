@@ -78,7 +78,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	assertAngleRange(ignitionPositionWithinEngineCycle, "aPWEC", CUSTOM_ERR_6566);
 	// this correction is usually zero (not used)
 	float perCylinderCorrection = CONFIG(timing_offset_cylinder[event->cylinderIndex]);
-	const angle_t sparkAngle = -ENGINE(engineState.timingAdvance) + ENGINE(knockController).getKnockRetard() + ignitionPositionWithinEngineCycle + perCylinderCorrection;
+	const angle_t sparkAngle = -engine->engineState.timingAdvance + engine->knockController.getKnockRetard() + ignitionPositionWithinEngineCycle + perCylinderCorrection;
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
@@ -87,8 +87,8 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	IgnitionOutputPin *output = &enginePins.coils[coilIndex];
 
 	IgnitionOutputPin *secondOutput;
-	if (getCurrentIgnitionMode() == IM_WASTED_SPARK && CONFIG(twoWireBatchIgnition)) {
-		int secondIndex = index + CONFIG(specs.cylindersCount) / 2;
+	if (getCurrentIgnitionMode() == IM_WASTED_SPARK && engineConfiguration->twoWireBatchIgnition) {
+		int secondIndex = index + engineConfiguration->specs.cylindersCount / 2;
 		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex));
 		secondOutput = &enginePins.coils[secondCoilIndex];
 		assertPinAssigned(secondOutput);
@@ -184,8 +184,8 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #endif /* EFI_UNIT_TEST */
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
-	angle_t dwellAngleDuration = ENGINE(engineState.dwellAngle);
-	floatms_t sparkDwell = ENGINE(engineState.sparkDwell);
+	angle_t dwellAngleDuration = engine->engineState.dwellAngle;
+	floatms_t sparkDwell = engine->engineState.sparkDwell;
 	if (cisnan(dwellAngleDuration) || cisnan(sparkDwell)) {
 		// we are here if engine has just stopped
 		return;
@@ -205,14 +205,14 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		engine->executor.scheduleByTimestampNt("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
 		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
-		if (CONFIG(enableTrailingSparks)) {
+		if (engineConfiguration->enableTrailingSparks) {
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("scheduleByAngle TrailingSparks");
 #endif /* SPARK_EXTREME_LOGGING */
 
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 			scheduleByAngle(
-				&event->trailingSparkFire, nowNt, ENGINE(engineState.trailingSparkAngle),
+				&event->trailingSparkFire, nowNt, engine->engineState.trailingSparkAngle,
 				{ &fireTrailingSpark, &enginePins.trailingCoils[event->cylinderNumber] }
 			);
 		}
@@ -270,11 +270,11 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 		}
 	}
 
-	if (CONFIG(enableTrailingSparks)) {
+	if (engineConfiguration->enableTrailingSparks) {
 		IgnitionOutputPin *output = &enginePins.trailingCoils[event->cylinderNumber];
 		// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 		scheduleByAngle(
-			&event->trailingSparkCharge, nowNt, ENGINE(engineState.trailingSparkAngle),
+			&event->trailingSparkCharge, nowNt, engine->engineState.trailingSparkAngle,
 			{ &chargeTrailingSpark, output }
 		);
 	}
@@ -320,13 +320,13 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
-		bool isPending = assertNotInIgnitionList(ENGINE(angleBasedEventsHead), event);
+		bool isPending = assertNotInIgnitionList(engine->angleBasedEventsHead, event);
 		if (isPending) {
 #if SPARK_EXTREME_LOGGING
 			efiPrintf("isPending thus not adding to queue index=%d rev=%d now=%d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* SPARK_EXTREME_LOGGING */
 		} else {
-			LL_APPEND2(ENGINE(angleBasedEventsHead), event, nextToothEvent);
+			LL_APPEND2(engine->angleBasedEventsHead, event, nextToothEvent);
 		}
 		return false;
 	}
@@ -336,7 +336,7 @@ static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Igniti
 		int rpm, efitick_t edgeTimestamp) {
 
 	angle_t sparkAngle = event->sparkAngle;
-	const floatms_t dwellMs = ENGINE(engineState.sparkDwell);
+	const floatms_t dwellMs = engine->engineState.sparkDwell;
 	if (cisnan(dwellMs) || dwellMs <= 0) {
 		warning(CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
 		return;
@@ -377,7 +377,7 @@ static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Igniti
 		 */
 		chargeTime = scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, { &turnSparkPinHigh, event });
 
-		event->sparksRemaining = ENGINE(engineState.multispark.count);
+		event->sparksRemaining = engine->engineState.multispark.count;
 	} else {
 		// don't fire multispark if spark is cut completely!
 		event->sparksRemaining = 0;
@@ -419,9 +419,9 @@ static void scheduleSparkEvent(bool limitedSpark, uint32_t trgEventIndex, Igniti
 
 void initializeIgnitionActions() {
 	IgnitionEventList *list = &engine->ignitionEvents;
-	angle_t dwellAngle = ENGINE(engineState.dwellAngle);
-	floatms_t sparkDwell = ENGINE(engineState.sparkDwell);
-	if (cisnan(ENGINE(engineState.timingAdvance)) || cisnan(dwellAngle)) {
+	angle_t dwellAngle = engine->engineState.dwellAngle;
+	floatms_t sparkDwell = engine->engineState.sparkDwell;
+	if (cisnan(engine->engineState.timingAdvance) || cisnan(dwellAngle)) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
 		list->isReady = false;
@@ -429,7 +429,7 @@ void initializeIgnitionActions() {
 	}
 	efiAssertVoid(CUSTOM_ERR_6592, engineConfiguration->specs.cylindersCount > 0, "cylindersCount");
 
-	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
 		list->elements[cylinderIndex].cylinderIndex = cylinderIndex;
 		prepareCylinderIgnitionSchedule(dwellAngle, sparkDwell, &list->elements[cylinderIndex]);
 	}
@@ -468,11 +468,11 @@ static void prepareIgnitionSchedule() {
 static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	AngleBasedEvent *current, *tmp;
 
-	LL_FOREACH_SAFE2(ENGINE(angleBasedEventsHead), current, tmp, nextToothEvent)
+	LL_FOREACH_SAFE2(engine->angleBasedEventsHead, current, tmp, nextToothEvent)
 	{
 		if (current->position.triggerEventIndex == trgEventIndex) {
 			// time to fire a spark which was scheduled previously
-			LL_DELETE2(ENGINE(angleBasedEventsHead), current, nextToothEvent);
+			LL_DELETE2(engine->angleBasedEventsHead, current, nextToothEvent);
 
 			scheduling_s * sDown = &current->scheduling;
 
@@ -498,12 +498,12 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
-	if (!isValidRpm(rpm) || !CONFIG(isIgnitionEnabled)) {
+	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
 
-	if (!ENGINE(ignitionEvents.isReady)) {
+	if (!engine->ignitionEvents.isReady) {
 		prepareIgnitionSchedule();
 	}
 
@@ -516,19 +516,24 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 
 
 //	scheduleSimpleMsg(&logger, "eventId spark ", eventIndex);
-	if (ENGINE(ignitionEvents.isReady)) {
-		for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
-			IgnitionEvent *event = &ENGINE(ignitionEvents.elements[i]);
+	if (engine->ignitionEvents.isReady) {
+		for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+			IgnitionEvent *event = &engine->ignitionEvents.elements[i];
 			if (event->dwellPosition.triggerEventIndex != trgEventIndex)
 				continue;
 
-			if (i == 0 && CONFIG(artificialTestMisfire) && (getRevolutionCounter() % ((int)engineConfiguration->scriptSetting[5]) == 0)) {
+			if (i == 0 && engineConfiguration->artificialTestMisfire && (getRevolutionCounter() % ((int)engineConfiguration->scriptSetting[5]) == 0)) {
 				// artificial misfire on cylinder #1 for testing purposes
 				// enable artificialMisfire
 				// set_fsio_setting 6 20
 				warning(CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->globalSparkIdCounter);
 				continue;
 			}
+#if EFI_LAUNCH_CONTROL
+			if (engine->softSparkLimiter.shouldSkip()) {
+				continue;
+			}
+#endif // EFI_LAUNCH_CONTROL
 
 			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp);
 		}
@@ -559,7 +564,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
  * @see getInjectorDutyCycle
  */
 percent_t getCoilDutyCycle(int rpm) {
-	floatms_t totalPerCycle = ENGINE(engineState.sparkDwell) * getNumberOfSparks(getCurrentIgnitionMode());
+	floatms_t totalPerCycle = engine->engineState.sparkDwell * getNumberOfSparks(getCurrentIgnitionMode());
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (engine->getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }
