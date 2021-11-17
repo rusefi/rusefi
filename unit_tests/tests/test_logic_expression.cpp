@@ -263,7 +263,7 @@ TEST(fsio, fuelPump) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Mock a fuel pump pin
-	CONFIG(fuelPumpPin) = GPIOA_0;
+	engineConfiguration->fuelPumpPin = GPIOA_0;
 	// Re-init so it picks up the new config
 	enginePins.fuelPumpRelay.init();
 

@@ -60,15 +60,15 @@ static void showStats() {
 	// x9D is product code or something, and 43 is the revision?
 	efiPrintf("MC 0x%x %s", mcChipId, validateChipId() ? "hooray!" : "not hooray :(");
 
-    if (isBrainPinValid(CONFIG(mc33816_flag0))) {
+    if (isBrainPinValid(engineConfiguration->mc33816_flag0)) {
     	efiPrintf("flag0 before %d after %d", flag0before, flag0after);
 
-    	efiPrintf("flag0 right now %d", efiReadPin(CONFIG(mc33816_flag0)));
+    	efiPrintf("flag0 right now %d", efiReadPin(engineConfiguration->mc33816_flag0));
 
     } else {
     	efiPrintf("No flag0 pin selected");
     }
-    efiPrintf("MC voltage %d", CONFIG(mc33_hvolt));
+    efiPrintf("MC voltage %d", engineConfiguration->mc33_hvolt);
     efiPrintf("MC driver status 0x%x", mcDriverStatus);
 }
 
@@ -160,18 +160,18 @@ static short dacEquation(unsigned short current) {
 static void setTimings() {
 
 	// Convert mA to DAC values
-	mcUpdateDram(MC33816Mem::Iboost, dacEquation(CONFIG(mc33_i_boost)));
-	mcUpdateDram(MC33816Mem::Ipeak, dacEquation(CONFIG(mc33_i_peak)));
-	mcUpdateDram(MC33816Mem::Ihold, dacEquation(CONFIG(mc33_i_hold)));
+	mcUpdateDram(MC33816Mem::Iboost, dacEquation(engineConfiguration->mc33_i_boost));
+	mcUpdateDram(MC33816Mem::Ipeak, dacEquation(engineConfiguration->mc33_i_peak));
+	mcUpdateDram(MC33816Mem::Ihold, dacEquation(engineConfiguration->mc33_i_hold));
 
 	// uint16_t mc33_t_max_boost; // not yet implemented in microcode
 
 	// in micro seconds to clock cycles
-	mcUpdateDram(MC33816Mem::Tpeak_off, (MC_CK * CONFIG(mc33_t_peak_off)));
-	mcUpdateDram(MC33816Mem::Tpeak_tot, (MC_CK * CONFIG(mc33_t_peak_tot)));
-	mcUpdateDram(MC33816Mem::Tbypass, (MC_CK * CONFIG(mc33_t_bypass)));
-	mcUpdateDram(MC33816Mem::Thold_off, (MC_CK * CONFIG(mc33_t_hold_off)));
-	mcUpdateDram(MC33816Mem::Thold_tot, (MC_CK * CONFIG(mc33_t_hold_tot)));
+	mcUpdateDram(MC33816Mem::Tpeak_off, (MC_CK * engineConfiguration->mc33_t_peak_off));
+	mcUpdateDram(MC33816Mem::Tpeak_tot, (MC_CK * engineConfiguration->mc33_t_peak_tot));
+	mcUpdateDram(MC33816Mem::Tbypass, (MC_CK * engineConfiguration->mc33_t_bypass));
+	mcUpdateDram(MC33816Mem::Thold_off, (MC_CK * engineConfiguration->mc33_t_hold_off));
+	mcUpdateDram(MC33816Mem::Thold_tot, (MC_CK * engineConfiguration->mc33_t_hold_tot));
 }
 
 void setBoostVoltage(float volts)
@@ -412,13 +412,13 @@ void initMc33816() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
 	// Pins
-	if (!isBrainPinValid(CONFIG(mc33816_cs)) ||
-		!isBrainPinValid(CONFIG(mc33816_rstb)) ||
-		!isBrainPinValid(CONFIG(mc33816_driven))) {
+	if (!isBrainPinValid(engineConfiguration->mc33816_cs) ||
+		!isBrainPinValid(engineConfiguration->mc33816_rstb) ||
+		!isBrainPinValid(engineConfiguration->mc33816_driven)) {
 		return;
 	}
-	if (isBrainPinValid(CONFIG(mc33816_flag0))) {
-		efiSetPadMode("mc33816 flag0", CONFIG(mc33816_flag0), getInputMode(PI_DEFAULT));
+	if (isBrainPinValid(engineConfiguration->mc33816_flag0)) {
+		efiSetPadMode("mc33816 flag0", engineConfiguration->mc33816_flag0, getInputMode(PI_DEFAULT));
 	}
 
 	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
@@ -429,8 +429,8 @@ void initMc33816() {
 	driven.initPin("mc33 DRIVEN", engineConfiguration->mc33816_driven);
 
 
-	spiCfg.ssport = getHwPort("hip", CONFIG(mc33816_cs));
-	spiCfg.sspad = getHwPin("hip", CONFIG(mc33816_cs));
+	spiCfg.ssport = getHwPort("hip", engineConfiguration->mc33816_cs);
+	spiCfg.sspad = getHwPin("hip", engineConfiguration->mc33816_cs);
 
 	// hard-coded for now, just resolve the conflict with SD card!
 	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
@@ -478,8 +478,8 @@ static void mcRestart() {
 	chThdSleepMilliseconds(10);
 	resetB.setValue(1);
 	chThdSleepMilliseconds(10);
-    if (isBrainPinValid(CONFIG(mc33816_flag0))) {
-   		flag0before = efiReadPin(CONFIG(mc33816_flag0));
+    if (isBrainPinValid(engineConfiguration->mc33816_flag0)) {
+   		flag0before = efiReadPin(engineConfiguration->mc33816_flag0);
     }
 
 
@@ -507,8 +507,8 @@ static void mcRestart() {
      * current configuration of REG_MAIN would toggle flag0 from LOW to HIGH
      */
     download_register(REG_MAIN);    // download main register configurations
-    if (isBrainPinValid(CONFIG(mc33816_flag0))) {
-   		flag0after = efiReadPin(CONFIG(mc33816_flag0));
+    if (isBrainPinValid(engineConfiguration->mc33816_flag0)) {
+   		flag0after = efiReadPin(engineConfiguration->mc33816_flag0);
    		if (flag0before || !flag0after) {
    			firmwareError(OBD_PCM_Processor_Fault, "MC33 flag0 transition no buena");
    			mcShutdown();
@@ -539,7 +539,7 @@ static void mcRestart() {
     }
 
     // Drive High Voltage if possible
-    setBoostVoltage(CONFIG(mc33_hvolt));
+    setBoostVoltage(engineConfiguration->mc33_hvolt);
     driven.setValue(1); // driven = HV
     chThdSleepMilliseconds(10); // Give it a moment
     mcDriverStatus = readDriverStatus();

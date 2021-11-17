@@ -112,7 +112,7 @@ void canDashboardGenesisCoupe(CanCycle cycle);
 void updateDash(CanCycle cycle) {
 
 	// Transmit dash data, if enabled
-	switch (CONFIG(canNbcType)) {
+	switch (engineConfiguration->canNbcType) {
 	case CAN_BUS_NBC_BMW:
 		canDashboardBMW(cycle);
 		break;

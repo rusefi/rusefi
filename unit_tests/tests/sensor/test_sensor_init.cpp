@@ -26,8 +26,8 @@ static void postToFuncSensor(Sensor* s, float value) {
 TEST(SensorInit, Tps) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	CONFIG(tpsMin) = 200;	// 1 volt
-	CONFIG(tpsMax) = 800;	// 4 volts
+	engineConfiguration->tpsMin = 200;	// 1 volt
+	engineConfiguration->tpsMax = 800;	// 4 volts
 
 	initTps();
 
@@ -53,41 +53,41 @@ TEST(SensorInit, TpsValuesTooClose) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Should fail, 0.49 volts apart
-	CONFIG(tpsMin) = 200;	// 1.00 volt
-	CONFIG(tpsMax) = 298;	// 1.49 volts
+	engineConfiguration->tpsMin = 200;	// 1.00 volt
+	engineConfiguration->tpsMax = 298;	// 1.49 volts
 	EXPECT_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// Should fail, -0.49 volts apart
-	CONFIG(tpsMin) = 298;	// 1.49 volt
-	CONFIG(tpsMax) = 200;	// 1.00 volts
+	engineConfiguration->tpsMin = 298;	// 1.49 volt
+	engineConfiguration->tpsMax = 200;	// 1.00 volts
 	EXPECT_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// Should succeed, 0.51 volts apart
-	CONFIG(tpsMin) = 200;	// 1.00 volt
-	CONFIG(tpsMax) = 302;	// 1.51 volts
+	engineConfiguration->tpsMin = 200;	// 1.00 volt
+	engineConfiguration->tpsMax = 302;	// 1.51 volts
 	EXPECT_NO_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// Should succeed, -0.51 volts apart
-	CONFIG(tpsMin) = 302;	// 1.51 volt
-	CONFIG(tpsMax) = 200;	// 1.00 volts
+	engineConfiguration->tpsMin = 302;	// 1.51 volt
+	engineConfiguration->tpsMax = 200;	// 1.00 volts
 	EXPECT_NO_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// With no pin, it should be ok that they are the same
 	// Should succeed, -0.51 volts apart
-	CONFIG(tps1_1AdcChannel) = EFI_ADC_NONE;
-	CONFIG(tpsMin) = 200;	// 1.00 volt
-	CONFIG(tpsMax) = 200;	// 1.00 volts
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
+	engineConfiguration->tpsMin = 200;	// 1.00 volt
+	engineConfiguration->tpsMax = 200;	// 1.00 volts
 	EXPECT_NO_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
 	// Test a random bogus pin index, shouldn't fail
-	CONFIG(tps1_1AdcChannel) = static_cast<adc_channel_e>(175);
-	CONFIG(tpsMin) = 200;	// 1.00 volt
-	CONFIG(tpsMax) = 200;	// 1.00 volt
+	engineConfiguration->tps1_1AdcChannel = static_cast<adc_channel_e>(175);
+	engineConfiguration->tpsMin = 200;	// 1.00 volt
+	engineConfiguration->tpsMax = 200;	// 1.00 volt
 	EXPECT_NO_FATAL_ERROR(initTps());
 	Sensor::resetRegistry();
 
@@ -99,9 +99,9 @@ TEST(SensorInit, TpsValuesTooClose) {
 TEST(SensorInit, Pedal) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_0;
-	CONFIG(throttlePedalUpVoltage) = 1;
-	CONFIG(throttlePedalWOTVoltage) = 4;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_0;
+	engineConfiguration->throttlePedalUpVoltage = 1;
+	engineConfiguration->throttlePedalWOTVoltage = 4;
 
 	initTps();
 
@@ -127,7 +127,7 @@ TEST(SensorInit, DriverIntentNoPedal) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// We have no pedal - so we should get the TPS
-	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_NONE;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_NONE;
 
 	initTps();
 
@@ -147,7 +147,7 @@ TEST(SensorInit, DriverIntentWithPedal) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// We have a pedal, so we should get it
-	CONFIG(throttlePedalPositionAdcChannel) = EFI_ADC_0;
+	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_0;
 
 	initTps();
 
@@ -165,11 +165,11 @@ TEST(SensorInit, DriverIntentWithPedal) {
 TEST(SensorInit, OilPressure) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	CONFIG(oilPressure.hwChannel) = EFI_ADC_0;
-	CONFIG(oilPressure.v1) = 1;
-	CONFIG(oilPressure.v2) = 4;
-	CONFIG(oilPressure.value1) = 0;
-	CONFIG(oilPressure.value2) = 1000;
+	engineConfiguration->oilPressure.hwChannel = EFI_ADC_0;
+	engineConfiguration->oilPressure.v1 = 1;
+	engineConfiguration->oilPressure.v2 = 4;
+	engineConfiguration->oilPressure.value1 = 0;
+	engineConfiguration->oilPressure.value2 = 1000;
 
 	initOilPressure();
 
@@ -191,7 +191,7 @@ TEST(SensorInit, Clt) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// 2003 neon sensor
-	CONFIG(clt.config) = {0, 30, 100, 32500, 7550, 700, 2700};
+	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
 
 	initThermistors();
 

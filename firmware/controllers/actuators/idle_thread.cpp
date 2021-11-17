@@ -51,7 +51,7 @@ static PidCic idleCicPid;
 
 Pid * getIdlePid() {
 #if EFI_IDLE_PID_CIC
-	if (CONFIG(useCicPidForIdle)) {
+	if (engineConfiguration->useCicPidForIdle) {
 		return &idleCicPid;
 	}
 #endif /* EFI_IDLE_PID_CIC */
@@ -69,36 +69,36 @@ void idleDebug(const char *msg, percent_t value) {
 static void showIdleInfo() {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
 	efiPrintf("useStepperIdle=%s useHbridges=%s",
-			boolToString(CONFIG(useStepperIdle)), boolToString(CONFIG(useHbridgesToDriveIdleStepper)));
+			boolToString(engineConfiguration->useStepperIdle), boolToString(engineConfiguration->useHbridgesToDriveIdleStepper));
 	efiPrintf("idleMode=%s position=%.2f",
 			idleModeStr, getIdlePosition());
 
-	if (CONFIG(useStepperIdle)) {
-		if (CONFIG(useHbridgesToDriveIdleStepper)) {
+	if (engineConfiguration->useStepperIdle) {
+		if (engineConfiguration->useHbridgesToDriveIdleStepper) {
 			efiPrintf("Coil A:");
-			efiPrintf(" pin1=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin1)));
-			efiPrintf(" pin2=%s", hwPortname(CONFIG(stepperDcIo[0].directionPin2)));
+			efiPrintf(" pin1=%s", hwPortname(engineConfiguration->stepperDcIo[0].directionPin1));
+			efiPrintf(" pin2=%s", hwPortname(engineConfiguration->stepperDcIo[0].directionPin2));
 			showDcMotorInfo(2);
 			efiPrintf("Coil B:");
-			efiPrintf(" pin1=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin1)));
-			efiPrintf(" pin2=%s", hwPortname(CONFIG(stepperDcIo[1].directionPin2)));
+			efiPrintf(" pin1=%s", hwPortname(engineConfiguration->stepperDcIo[1].directionPin1));
+			efiPrintf(" pin2=%s", hwPortname(engineConfiguration->stepperDcIo[1].directionPin2));
 			showDcMotorInfo(3);
 		} else {
-			efiPrintf("directionPin=%s reactionTime=%.2f", hwPortname(CONFIG(idle).stepperDirectionPin),
+			efiPrintf("directionPin=%s reactionTime=%.2f", hwPortname(engineConfiguration->idle.stepperDirectionPin),
 					engineConfiguration->idleStepperReactionTime);
-			efiPrintf("stepPin=%s steps=%d", hwPortname(CONFIG(idle).stepperStepPin),
+			efiPrintf("stepPin=%s steps=%d", hwPortname(engineConfiguration->idle.stepperStepPin),
 					engineConfiguration->idleStepperTotalSteps);
 			efiPrintf("enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
 					engineConfiguration->stepperEnablePinMode);
 		}
 	} else {
-		if (!CONFIG(isDoubleSolenoidIdle)) {
-			efiPrintf("idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
-					hwPortname(CONFIG(idle).solenoidPin));
+		if (!engineConfiguration->isDoubleSolenoidIdle) {
+			efiPrintf("idle valve freq=%d on %s", engineConfiguration->idle.solenoidFrequency,
+					hwPortname(engineConfiguration->idle.solenoidPin));
 		} else {
-			efiPrintf("idle valve freq=%d on %s", CONFIG(idle).solenoidFrequency,
-					hwPortname(CONFIG(idle).solenoidPin));
-			efiPrintf(" and %s", hwPortname(CONFIG(secondSolenoidPin)));
+			efiPrintf("idle valve freq=%d on %s", engineConfiguration->idle.solenoidFrequency,
+					hwPortname(engineConfiguration->idle.solenoidPin));
+			efiPrintf(" and %s", hwPortname(engineConfiguration->secondSolenoidPin));
 		}
 	}
 
@@ -124,7 +124,7 @@ void setManualIdleValvePosition(int positionPercent) {
 	showIdleInfo();
 #endif /* EFI_UNIT_TEST */
 	// todo: this is not great that we have to write into configuration here
-	CONFIG(manIdlePosition) = positionPercent;
+	engineConfiguration->manIdlePosition = positionPercent;
 }
 
 #endif /* EFI_UNIT_TEST */
@@ -137,10 +137,10 @@ void IdleController::init(pid_s* idlePidConfig) {
 }
 
 int IdleController::getTargetRpm(float clt) const {
-	auto target = interpolate2d(clt, CONFIG(cltIdleRpmBins), CONFIG(cltIdleRpm));
+	auto target = interpolate2d(clt, engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm);
 
 	// Bump for AC
-	target += engine->acSwitchState ? CONFIG(acIdleRpmBump) : 0;
+	target += engine->acSwitchState ? engineConfiguration->acIdleRpmBump : 0;
 
 	return target;
 }
@@ -156,18 +156,18 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 	}
 
 	// if throttle pressed, we're out of the idle corner
-	if (tps.Value > CONFIG(idlePidDeactivationTpsThreshold)) {
+	if (tps.Value > engineConfiguration->idlePidDeactivationTpsThreshold) {
 		return Phase::Running;
 	}
 
 	// If rpm too high (but throttle not pressed), we're coasting
-	int maximumIdleRpm = targetRpm + CONFIG(idlePidRpmUpperLimit);
+	int maximumIdleRpm = targetRpm + engineConfiguration->idlePidRpmUpperLimit;
 	if (rpm > maximumIdleRpm) {
 		return Phase::Coasting;
 	}
 
 	// If the vehicle is moving too quickly, disable CL idle
-	auto maxVss = CONFIG(maxIdleVss);
+	auto maxVss = engineConfiguration->maxIdleVss;
 	if (maxVss != 0 && vss > maxVss) {
 		return Phase::Running;
 	}
@@ -182,35 +182,35 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 }
 
 float IdleController::getCrankingTaperFraction() const {
-	return (float)engine->rpmCalculator.getRevolutionCounterSinceStart() / CONFIG(afterCrankingIACtaperDuration);
+	return (float)engine->rpmCalculator.getRevolutionCounterSinceStart() / engineConfiguration->afterCrankingIACtaperDuration;
 }
 
 float IdleController::getCrankingOpenLoop(float clt) const {
 	float mult =
-		CONFIG(overrideCrankingIacSetting)
+		engineConfiguration->overrideCrankingIacSetting
 		// Override to separate table
 	 	? interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr)
 		// Otherwise use plain running table
 		: interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
 
-	return CONFIG(crankingIACposition) * mult;
+	return engineConfiguration->crankingIACposition * mult;
 }
 
 float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 	float running =
-		CONFIG(manIdlePosition)		// Base idle position (slider)
+		engineConfiguration->manIdlePosition		// Base idle position (slider)
 		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
 
 	// Now we bump it by the AC/fan amount if necessary
-	running += engine->acSwitchState ? CONFIG(acIdleExtraOffset) : 0;
-	running += enginePins.fanRelay.getLogicValue() ? CONFIG(fan1ExtraIdle) : 0;
-	running += enginePins.fanRelay2.getLogicValue() ? CONFIG(fan2ExtraIdle) : 0;
+	running += engine->acSwitchState ? engineConfiguration->acIdleExtraOffset : 0;
+	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
+	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
 
 	// Now bump it by the specified amount when the throttle is opened (if configured)
 	// nb: invalid tps will make no change, no explicit check required
 	running += interpolateClamped(
 		0, 0,
-		CONFIG(idlePidDeactivationTpsThreshold), CONFIG(iacByTpsTaper),
+		engineConfiguration->idlePidDeactivationTpsThreshold, engineConfiguration->iacByTpsTaper,
 		tps.value_or(0));
 
 	return clampF(0, running, 100);
@@ -226,8 +226,8 @@ float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, floa
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
 	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
-	if (CONFIG(useIacTableForCoasting) && phase == Phase::Coasting) {
-		return interpolate2d(clt, CONFIG(iacCoastingBins), CONFIG(iacCoasting));
+	if (engineConfiguration->useIacTableForCoasting && phase == Phase::Coasting) {
+		return interpolate2d(clt, engineConfiguration->iacCoastingBins, engineConfiguration->iacCoasting);
 	}
 
 	float running = getRunningOpenLoop(clt, tps);
@@ -243,7 +243,7 @@ float IdleController::getIdleTimingAdjustment(int rpm) {
 
 float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase) {
 	// if not enabled, do nothing
-	if (!CONFIG(useIdleTimingPidControl)) {
+	if (!engineConfiguration->useIdleTimingPidControl) {
 		return 0;
 	}
 
@@ -253,12 +253,12 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 		return 0;
 	}
 
-	if (CONFIG(useInstantRpmForIdle)) {
+	if (engineConfiguration->useInstantRpmForIdle) {
 		rpm = engine->triggerCentral.triggerState.getInstantRpm();
 	}
 
 	// If inside the deadzone, do nothing
-	if (absI(rpm - targetRpm) < CONFIG(idleTimingPidDeadZone)) {
+	if (absI(rpm - targetRpm) < engineConfiguration->idleTimingPidDeadZone) {
 		m_timingPid.reset();
 		return 0;
 	}
@@ -332,7 +332,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// #1553 we need to give FSIO variable offset or minValue a chance
 	bool acToggleJustTouched = (nowUs - engine->acSwitchLastChangeTime) < MS2US(500);
 	// check if within the dead zone
-	if (!acToggleJustTouched && absI(rpm - targetRpm) <= CONFIG(idlePidRpmDeadZone)) {
+	if (!acToggleJustTouched && absI(rpm - targetRpm) <= engineConfiguration->idlePidRpmDeadZone) {
 		engine->idle.idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
 		return m_lastAutomaticPosition;
@@ -342,7 +342,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// So PID reaction should be increased by adding extra percent to PID-error:
 	percent_t errorAmpCoef = 1.0f;
 	if (rpm < targetRpm) {
-		errorAmpCoef += (float)CONFIG(pidExtraForLowRpm) / PERCENT_MULT;
+		errorAmpCoef += (float)engineConfiguration->pidExtraForLowRpm / PERCENT_MULT;
 	}
 
 	// if PID was previously reset, we store the time when it turned on back (see errorAmpCoef correction below)
@@ -354,7 +354,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// todo: move restoreAfterPidResetTimeUs to idle?
 	efitimeus_t timeSincePidResetUs = nowUs - /*engine->idle.*/restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
-	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*CONFIG(pidAfterResetDampingPeriodMs)*/1000), errorAmpCoef, timeSincePidResetUs);
+	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*engineConfiguration->pidAfterResetDampingPeriodMs*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	idlePid->setErrorAmplification(errorAmpCoef);
 
@@ -365,7 +365,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	engine->idle.mightResetPid = true;
 
 	// Apply PID Multiplier if used
-	if (CONFIG(useIacPidMultTable)) {
+	if (engineConfiguration->useIacPidMultTable) {
 		float engineLoad = getFuelingLoad();
 		float multCoef = iacPidMultMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, engineLoad);
 		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
@@ -376,7 +376,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// if tps==0 then PID just works as usual, or we completely disable it if tps>=threshold
 	// TODO: should we just remove this? It reduces the gain if your zero throttle stop isn't perfect,
 	// which could give unstable results.
-	newValue = interpolateClamped(0, newValue, CONFIG(idlePidDeactivationTpsThreshold), 0, tpsPos);
+	newValue = interpolateClamped(0, newValue, engineConfiguration->idlePidDeactivationTpsThreshold, 0, tpsPos);
 
 	m_lastAutomaticPosition = newValue;
 	return newValue;
@@ -386,7 +386,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
 		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
 		#ifdef HARDWARE_CI
-			return CONFIG(manIdlePosition);
+			return engineConfiguration->manIdlePosition;
 		#endif
 
 	/*
@@ -404,7 +404,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
 		float rpm;
-		if (CONFIG(useInstantRpmForIdle)) {
+		if (engineConfiguration->useInstantRpmForIdle) {
 			rpm = engine->triggerCentral.triggerState.getInstantRpm();
 		} else {
 			rpm = GET_RPM();
@@ -494,7 +494,7 @@ bool isIdlingOrTaper() {
 
 static void applyPidSettings() {
 	getIdlePid()->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
-	iacPidMultMap.init(CONFIG(iacPidMultTable), CONFIG(iacPidMultLoadBins), CONFIG(iacPidMultRpmBins));
+	iacPidMultMap.init(engineConfiguration->iacPidMultTable, engineConfiguration->iacPidMultLoadBins, engineConfiguration->iacPidMultRpmBins);
 }
 
 void setDefaultIdleParameters() {
@@ -506,16 +506,16 @@ void setDefaultIdleParameters() {
 	engineConfiguration->idlerpmpid_iTermMax =  20;
 
 	// Good starting point is 10 degrees per 100 rpm, aka 0.1 deg/rpm
-	CONFIG(idleTimingPid).pFactor = 0.1f;
-	CONFIG(idleTimingPid).iFactor = 0;
-	CONFIG(idleTimingPid).dFactor = 0;
+	engineConfiguration->idleTimingPid.pFactor = 0.1f;
+	engineConfiguration->idleTimingPid.iFactor = 0;
+	engineConfiguration->idleTimingPid.dFactor = 0;
 
 	// Allow +- 10 degrees adjustment
-	CONFIG(idleTimingPid).minValue = -10;
-	CONFIG(idleTimingPid).minValue = 10;
+	engineConfiguration->idleTimingPid.minValue = -10;
+	engineConfiguration->idleTimingPid.minValue = 10;
 
 	// Idle region is target + 100 RPM
-	CONFIG(idlePidRpmUpperLimit) = 100;
+	engineConfiguration->idlePidRpmUpperLimit = 100;
 }
 
 #if ! EFI_UNIT_TEST
@@ -566,9 +566,9 @@ void startIdleBench(void) {
 #endif /* EFI_UNIT_TEST */
 
 void startIdleThread() {
-	idleControllerInstance.init(&CONFIG(idleTimingPid));
+	idleControllerInstance.init(&engineConfiguration->idleTimingPid);
 
-	ENGINE(idleController) = &idleControllerInstance;
+	engine->idleController = &idleControllerInstance;
 
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
 
@@ -602,19 +602,19 @@ void startPedalPins() {
 #if EFI_PROD_CODE
 	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
 	// this switch is not used yet
-	if (isBrainPinValid(CONFIG(clutchDownPin))) {
-		efiSetPadMode("clutch down switch", CONFIG(clutchDownPin),
-				getInputMode(CONFIG(clutchDownPinMode)));
+	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
+		efiSetPadMode("clutch down switch", engineConfiguration->clutchDownPin,
+				getInputMode(engineConfiguration->clutchDownPinMode));
 	}
 
-	if (isBrainPinValid(CONFIG(clutchUpPin))) {
-		efiSetPadMode("clutch up switch", CONFIG(clutchUpPin),
-				getInputMode(CONFIG(clutchUpPinMode)));
+	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
+		efiSetPadMode("clutch up switch", engineConfiguration->clutchUpPin,
+				getInputMode(engineConfiguration->clutchUpPinMode));
 	}
 
-	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
-		efiSetPadMode("throttle pedal up switch", CONFIG(throttlePedalUpPin),
-				getInputMode(CONFIG(throttlePedalUpPinMode)));
+	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
+		efiSetPadMode("throttle pedal up switch", engineConfiguration->throttlePedalUpPin,
+				getInputMode(engineConfiguration->throttlePedalUpPinMode));
 	}
 
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {

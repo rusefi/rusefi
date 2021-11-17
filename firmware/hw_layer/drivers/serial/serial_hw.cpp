@@ -28,14 +28,14 @@ static void auxInfo() {
 		return;
 	}
 
-	efiPrintf("AUX Serial TX %s", hwPortname(CONFIG(auxSerialTxPin)));
-	efiPrintf("AUX Serial RX %s", hwPortname(CONFIG(auxSerialRxPin)));
+	efiPrintf("AUX Serial TX %s", hwPortname(engineConfiguration->auxSerialTxPin));
+	efiPrintf("AUX Serial RX %s", hwPortname(engineConfiguration->auxSerialRxPin));
 }
 
 void enableAuxSerial() {
-	engineConfiguration->auxSerialTxPin = CONFIG(auxSerialTxPin);
-	engineConfiguration->auxSerialRxPin = CONFIG(auxSerialRxPin);
-	engineConfiguration->auxSerialSpeed = CONFIG(auxSerialSpeed);
+	engineConfiguration->auxSerialTxPin = engineConfiguration->auxSerialTxPin;
+	engineConfiguration->auxSerialRxPin = engineConfiguration->auxSerialRxPin;
+	engineConfiguration->auxSerialSpeed = engineConfiguration->auxSerialSpeed;
 	
 	uartCfg.speed = engineConfiguration->auxSerialSpeed;
 	sdStart(AUX_SERIAL_DEVICE, &uartCfg);
@@ -49,10 +49,10 @@ void stopAuxSerialPins() {
 }
 
 void startAuxSerialPins() {
-	if (CONFIG(auxSerialTxPin))
-		efiSetPadMode("AuxSerial TX", CONFIG(auxSerialTxPin), PAL_MODE_ALTERNATE(8));
-	if (CONFIG(auxSerialRxPin))
-		efiSetPadMode("AuxSerial RX", CONFIG(auxSerialRxPin), PAL_MODE_ALTERNATE(8));
+	if (engineConfiguration->auxSerialTxPin)
+		efiSetPadMode("AuxSerial TX", engineConfiguration->auxSerialTxPin, PAL_MODE_ALTERNATE(8));
+	if (engineConfiguration->auxSerialRxPin)
+		efiSetPadMode("AuxSerial RX", engineConfiguration->auxSerialRxPin, PAL_MODE_ALTERNATE(8));
 
 	enableAuxSerial();
 }
@@ -61,23 +61,23 @@ void initAuxSerial(void) {
 	addConsoleAction("auxinfo", auxInfo);
 
 	isSerialEnabled =
-		(CONFIG(auxSerialTxPin)) || // we need at least one pin set
-		(CONFIG(auxSerialRxPin));
+		(engineConfiguration->auxSerialTxPin) || // we need at least one pin set
+		(engineConfiguration->auxSerialRxPin);
 
-	isSerialRXEnabled = CONFIG(auxSerialRxPin);
-	isSerialTXEnabled = CONFIG(auxSerialTxPin);
+	isSerialRXEnabled = engineConfiguration->auxSerialRxPin;
+	isSerialTXEnabled = engineConfiguration->auxSerialTxPin;
 
 	// exit if no pin is configured
 	if (!isSerialEnabled)
 		return;
 
 	// Validate pins 
-	if (isSerialTXEnabled && !isValidSerialTxPin(CONFIG(auxSerialTxPin))) {
+	if (isSerialTXEnabled && !isValidSerialTxPin(engineConfiguration->auxSerialTxPin)) {
 		firmwareError(OBD_PCM_Processor_Fault, "unexpected aux TX pin");
 		return;
 	}
 
-	if (isSerialRXEnabled && !isValidSerialRxPin(CONFIG(auxSerialRxPin))) {
+	if (isSerialRXEnabled && !isValidSerialRxPin(engineConfiguration->auxSerialRxPin)) {
 		firmwareError(OBD_PCM_Processor_Fault, "unexpected aux RX pin");
 		return;
 	}

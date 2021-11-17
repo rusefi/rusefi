@@ -32,7 +32,7 @@ void FuelSchedule::resetOverlapping() {
 bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine is NULL", false);
 
-	floatus_t oneDegreeUs = ENGINE(rpmCalculator.oneDegreeUs); // local copy
+	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs; // local copy
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
 		// wonder if this line slows engine startup?
@@ -46,12 +46,12 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	 * todo: since this method is not invoked within trigger event handler and
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
-	floatms_t fuelMs = ENGINE(injectionDuration);
+	floatms_t fuelMs = engine->injectionDuration;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
 	angle_t injectionDurationAngle = MS2US(fuelMs) / oneDegreeUs;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDurationAngle), "NaN injectionDurationAngle", false);
 	assertAngleRange(injectionDurationAngle, "injectionDuration_r", CUSTOM_INJ_DURATION);
-	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
+	floatus_t injectionOffset = engine->engineState.injectionOffset;
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
 		return false;
@@ -66,7 +66,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
 		// These modes only have one injector
 		injectorIndex = 0;
-	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && CONFIG(twoWireBatchInjection))) {
+	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && engineConfiguration->twoWireBatchInjection)) {
 		// Map order index -> cylinder index (firing order)
 		injectorIndex = getCylinderId(i) - 1;
 	} else if (mode == IM_BATCH) {
@@ -78,14 +78,14 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	}
 
 	InjectorOutputPin *secondOutput;
-	if (mode == IM_BATCH && CONFIG(twoWireBatchInjection)) {
+	if (mode == IM_BATCH && engineConfiguration->twoWireBatchInjection) {
 		/**
 		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 		 */
 		// Compute the position of this cylinder's twin in the firing order
 		// Each injector gets fired as a primary (the same as sequential), but also
 		// fires the injector 360 degrees later in the firing order.
-		int secondOrder = (i + (CONFIG(specs.cylindersCount) / 2)) % CONFIG(specs.cylindersCount);
+		int secondOrder = (i + (engineConfiguration->specs.cylindersCount / 2)) % engineConfiguration->specs.cylindersCount;
 		int secondIndex = getCylinderId(secondOrder) - 1;
 		secondOutput = &enginePins.injectors[secondIndex];
 	} else {
@@ -109,7 +109,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}
 
-	angle_t ignitionPositionWithinEngineCycle = ENGINE(ignitionPositionWithinEngineCycle[i]);
+	angle_t ignitionPositionWithinEngineCycle = engine->ignitionPositionWithinEngineCycle[i];
 
 	float angle = baseAngle + ignitionPositionWithinEngineCycle;
 
@@ -128,7 +128,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 }
 
 void FuelSchedule::addFuelEvents() {
-	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
 		bool result = addFuelEventsForCylinder(cylinderIndex);
@@ -148,7 +148,7 @@ void FuelSchedule::onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt) {
 		return;
 	}
 
-	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		elements[i].onTriggerTooth(toothIndex, rpm, nowNt);
 	}
 }

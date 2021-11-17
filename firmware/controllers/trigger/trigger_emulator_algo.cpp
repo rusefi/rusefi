@@ -195,7 +195,7 @@ void startTriggerEmulatorPins() {
 	for (size_t i = 0; i < efi::size(emulatorOutputs); i++) {
 		triggerSignal.outputPins[i] = &emulatorOutputs[i];
 
-		brain_pin_e pin = CONFIG(triggerSimulatorPins)[i];
+		brain_pin_e pin = engineConfiguration->triggerSimulatorPins[i];
 
 		// Only bother trying to set output pins if they're configured
 		if (isBrainPinValid(pin)) {
@@ -205,7 +205,7 @@ void startTriggerEmulatorPins() {
 #if EFI_PROD_CODE
 		if (isConfigurationChanged(triggerSimulatorPins[i])) {
 			triggerSignal.outputPins[i]->initPin("Trigger emulator", pin,
-					&CONFIG(triggerSimulatorPinModes)[i]);
+					&engineConfiguration->triggerSimulatorPinModes[i]);
 		}
 #endif // EFI_PROD_CODE
 	}

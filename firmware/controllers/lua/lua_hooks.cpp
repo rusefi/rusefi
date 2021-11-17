@@ -210,7 +210,7 @@ static int lua_startPwm(lua_State* l) {
 
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
-		CONFIG(luaOutputPins[p.idx]), &pins[p.idx],
+		engineConfiguration->luaOutputPins[p.idx], &pins[p.idx],
 		freq, duty
 	);
 
@@ -275,7 +275,7 @@ static int lua_getDigital(lua_State* l) {
 
 static int lua_setDebug(lua_State* l) {
 	// wrong debug mode, ignore
-	if (CONFIG(debugMode) != DBG_LUA) {
+	if (engineConfiguration->debugMode != DBG_LUA) {
 		return 0;
 	}
 
@@ -296,7 +296,7 @@ static int lua_setDebug(lua_State* l) {
 static auto lua_getAirmassResolveMode(lua_State* l) {
 	if (lua_gettop(l) == 0) {
 		// zero args, return configured mode
-		return CONFIG(fuelAlgorithm);
+		return engineConfiguration->fuelAlgorithm;
 	} else {
 		return static_cast<engine_load_mode_e>(luaL_checkinteger(l, 1));
 	}
@@ -336,25 +336,25 @@ static int lua_stopEngine(lua_State*) {
 }
 
 static int lua_setTimingAdd(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setTimingMult(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setFuelAdd(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setFuelMult(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.fuelMult = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
 
 	return 0;
 }

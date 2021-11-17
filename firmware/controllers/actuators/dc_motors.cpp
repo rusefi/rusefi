@@ -123,9 +123,9 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
 		io.directionPin1,
 		io.directionPin2,
 		io.disablePin,
-		CONFIG(stepperDcInvertedPins),
-		&ENGINE(executor),
-		CONFIG(etbFreq)
+		engineConfiguration->stepperDcInvertedPins,
+		&engine->executor,
+		engineConfiguration->etbFreq
 	);
 
 	return &hw.dcMotor;

@@ -18,7 +18,7 @@ unsigned int getBrainPinTotalNum(void) {
 const char* & getBrainUsedPin(unsigned int idx) {
 	/*if (idx >= getBrainPinTotalNum())
 		return NULL;*/
-	return ENGINE(pinRepository).PIN_USED[idx];
+	return engine->pinRepository.PIN_USED[idx];
 }
 
 /* Common for firmware and unit tests */
@@ -73,7 +73,7 @@ bool brain_pin_markUsed(brain_pin_e brainPin, const char *msg) {
 	}
 
 	getBrainUsedPin(index) = msg;
-	ENGINE(pinRepository).totalPinsUsed++;
+	engine->pinRepository.totalPinsUsed++;
 	return false;
 }
 
@@ -87,7 +87,7 @@ void brain_pin_markUnused(brain_pin_e brainPin) {
 		return;
 
 	if (getBrainUsedPin(index) != nullptr)
-		ENGINE(pinRepository).totalPinsUsed--;
+		engine->pinRepository.totalPinsUsed--;
 	getBrainUsedPin(index) = nullptr;
 }
 
@@ -176,7 +176,7 @@ static void reportPins() {
 		}
 	#endif
 
-	efiPrintf("Total pins count: %d", ENGINE(pinRepository).totalPinsUsed);
+	efiPrintf("Total pins count: %d", engine->pinRepository.totalPinsUsed);
 }
 
 void printSpiConfig(const char *msg, spi_device_e device) {
@@ -283,7 +283,7 @@ void gpio_pin_markUnused(ioportid_t port, ioportmask_t pin) {
 	int index = getPortPinIndex(port, pin);
 
 	if (getBrainUsedPin(index) != NULL)
-		ENGINE(pinRepository).totalPinsUsed--;
+		engine->pinRepository.totalPinsUsed--;
 	getBrainUsedPin(index) = nullptr;
 }
 

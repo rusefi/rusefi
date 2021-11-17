@@ -73,11 +73,11 @@ static void extIonCallback(void *arg) {
 }
 
 void cdmIonInit(void) {
-	if (!isBrainPinValid(CONFIG(cdmInputPin))) {
+	if (!isBrainPinValid(engineConfiguration->cdmInputPin)) {
 		return;
 	}
 
-	efiExtiEnablePin("ion", CONFIG(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
+	efiExtiEnablePin("ion", engineConfiguration->cdmInputPin, PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
 }
 
 #endif /* EFI_CDM_INTEGRATION */

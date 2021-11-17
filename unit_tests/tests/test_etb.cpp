@@ -314,7 +314,7 @@ TEST(etb, testSetpointOnlyPedal) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 
-	CONFIG(etbMaximumPosition) = 90;
+	engineConfiguration->etbMaximumPosition = 90;
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 85, true);
 	EXPECT_EQ(85, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 90, true);
@@ -403,23 +403,23 @@ TEST(etb, setpointRevLimit) {
 	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
 
 	// Below threshold, should return unadjusted throttle
-	ENGINE(rpmCalculator.mockRpm) = 1000;
+	engine->rpmCalculator.mockRpm = 1000;
 	EXPECT_EQ(80, etb.getSetpoint().value_or(-1));
 
 	// At threshold, should return unadjusted throttle
-	ENGINE(rpmCalculator.mockRpm) = 5000;
+	engine->rpmCalculator.mockRpm = 5000;
 	EXPECT_EQ(80, etb.getSetpoint().value_or(-1));
 
 	// Middle of range, should return half of unadjusted
-	ENGINE(rpmCalculator.mockRpm) = 5375;
+	engine->rpmCalculator.mockRpm = 5375;
 	EXPECT_EQ(40, etb.getSetpoint().value_or(-1));
 
 	// At limit+range, should return 0
-	ENGINE(rpmCalculator.mockRpm) = 5750;
+	engine->rpmCalculator.mockRpm = 5750;
 	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 
 	// Above limit+range, should return 0
-	ENGINE(rpmCalculator.mockRpm) = 6000;
+	engine->rpmCalculator.mockRpm = 6000;
 	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 }
 
@@ -649,7 +649,7 @@ TEST(etb, setOutputLimpHome) {
 	EXPECT_CALL(motor, disable());
 
 	// Trip a fatal error
-	ENGINE(limpManager).fatalError();
+	engine->limpManager.fatalError();
 
 	etb.setOutput(25.0f);
 }

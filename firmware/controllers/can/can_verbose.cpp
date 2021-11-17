@@ -36,7 +36,7 @@ static void populateFrame(Status& msg) {
 	msg.warningCounter = engine->engineState.warnings.warningCounter;
 	msg.lastErrorCode = engine->engineState.warnings.lastErrorCode;
 
-	msg.revLimit = GET_RPM() > CONFIG(rpmHardLimit);
+	msg.revLimit = GET_RPM() > engineConfiguration->rpmHardLimit;
 	msg.mainRelay = enginePins.mainRelay.getLogicValue();
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
@@ -140,12 +140,12 @@ static void populateFrame(Fueling2& msg) {
 	msg.fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 
 	for (size_t i = 0; i < 2; i++) {
-		msg.fuelTrim[i] = 100.0f * (ENGINE(stftCorrection)[i] - 1.0f);
+		msg.fuelTrim[i] = 100.0f * (engine->stftCorrection[i] - 1.0f);
 	}
 }
 
 void sendCanVerbose() {
-	auto base = CONFIG(verboseCanBaseAddress);
+	auto base = engineConfiguration->verboseCanBaseAddress;
 
 	transmitStruct<Status>	  (base + 0);
 	transmitStruct<Speeds>	  (base + 1);

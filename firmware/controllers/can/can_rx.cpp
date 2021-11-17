@@ -15,7 +15,7 @@
 typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
 
 bool acceptCanRx(int sid) {
-	if (!CONFIG(usescriptTableForCanSniffingFiltering)) {
+	if (!engineConfiguration->usescriptTableForCanSniffingFiltering) {
 		// accept anything if filtering is not enabled
 		return true;
 	}
@@ -123,7 +123,7 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 		efiPrintf("CAN_rx 130 %f %f", a, b);
 	}
 
-	if (CONFIG(imuType) == IMU_VAG) {
+	if (engineConfiguration->imuType == IMU_VAG) {
 		if (CAN_SID(frame) == VAG_YAW_RATE_G_LAT) {
 			efiPrintf("CAN_rx VAG_YAW_RATE_G_LAT");
 		} else if (CAN_SID(frame) == VAG_YAW_ACCEL_G_LONG) {
@@ -134,7 +134,7 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 
 
 
-	if (CONFIG(imuType) == IMU_MM5_10) {
+	if (engineConfiguration->imuType == IMU_MM5_10) {
 #define MM5_10_RATE_QUANT 0.005
 #define MM5_10_ACC_QUANT 0.0001274
 
@@ -161,7 +161,7 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 }
 
 void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
-	if (CONFIG(debugMode) == DBG_CAN) {
+	if (engineConfiguration->debugMode == DBG_CAN) {
 		printPacket(frame);
 	}
 
@@ -177,7 +177,7 @@ void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
 	processLuaCan(frame);
 
 #if EFI_CANBUS_SLAVE
-	if (CAN_EID(frame) == CONFIG(verboseCanBaseAddress) + CAN_SENSOR_1_OFFSET) {
+	if (CAN_EID(frame) == engineConfiguration->verboseCanBaseAddress + CAN_SENSOR_1_OFFSET) {
 		int16_t mapScaled = *reinterpret_cast<const int16_t*>(&frame.data8[0]);
 		canMap = mapScaled / (1.0 * PACK_MULT_PRESSURE);
 	} else

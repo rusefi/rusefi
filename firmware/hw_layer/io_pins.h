@@ -21,7 +21,7 @@
 
 #define efiSetPadModeIfConfigurationChanged(msg, pin, mode)                      \
 	if (isConfigurationChanged(pin)) {                                           \
-		efiSetPadMode(msg, CONFIG(pin), mode);      \
+		efiSetPadMode(msg, engineConfiguration->pin, mode);      \
 	}
 
 #define efiSetPadUnusedIfConfigurationChanged(pin)                               \

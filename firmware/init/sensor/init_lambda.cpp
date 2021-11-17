@@ -26,8 +26,8 @@ static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 void initLambda() {
 
 #if EFI_CAN_SUPPORT
-	if (CONFIG(enableAemXSeries)) {
-		if (!CONFIG(canWriteEnabled) || !CONFIG(canReadEnabled)) {
+	if (engineConfiguration->enableAemXSeries) {
+		if (!engineConfiguration->canWriteEnabled || !engineConfiguration->canReadEnabled) {
 			firmwareError(OBD_PCM_Processor_Fault, "CAN read and write are required to use CAN wideband.");
 			return;
 		}

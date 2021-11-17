@@ -150,7 +150,7 @@ void RpmCalculator::setRpmValue(float value) {
 	// Change state
 	if (rpmValue == 0) {
 		state = STOPPED;
-	} else if (rpmValue >= CONFIG(cranking.rpm)) {
+	} else if (rpmValue >= engineConfiguration->cranking.rpm) {
 		if (state != RUNNING) {
 			// Store the time the engine started
 			engineStartTimer.reset();
@@ -167,7 +167,7 @@ void RpmCalculator::setRpmValue(float value) {
 #if EFI_ENGINE_CONTROL
 	// This presumably fixes injection mode change for cranking-to-running transition.
 	// 'isSimultanious' flag should be updated for events if injection modes differ for cranking and running.
-	if (state != oldState && CONFIG(crankingInjectionMode) != CONFIG(injectionMode)) {
+	if (state != oldState && engineConfiguration->crankingInjectionMode != engineConfiguration->injectionMode) {
 		// Reset the state of all injectors: when we change fueling modes, we could
 		// immediately reschedule an injection that's currently underway.  That will cause
 		// the injector's overlappingCounter to get out of sync with reality.  As the fix,
@@ -213,7 +213,7 @@ void RpmCalculator::setStopSpinning() {
 }
 
 void RpmCalculator::setSpinningUp(efitick_t nowNt) {
-	if (!CONFIG(isFasterEngineSpinUpEnabled))
+	if (!engineConfiguration->isFasterEngineSpinUpEnabled)
 		return;
 	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
 	if (isStopped() && !isSpinning) {
@@ -280,7 +280,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #if EFI_SENSOR_CHART
 	// this 'index==0' case is here so that it happens after cycle callback so
 	// it goes into sniffer report into the first position
-	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
+	if (engine->sensorChartMode == SC_TRIGGER) {
 		angle_t crankAngle = getCrankshaftAngleNt(nowNt);
 		int signal = 1000 * ckpSignalType + index;
 		scAddData(crankAngle, signal);
@@ -335,7 +335,7 @@ static void onTdcCallback(void *) {
 void tdcMarkCallback(
 		uint32_t index0, efitick_t edgeTimestamp) {
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled) && ENGINE(tdcMarkEnabled)) {
+	if (isTriggerSynchronizationPoint && engine->isEngineChartEnabled && engine->tdcMarkEnabled) {
 		// two instances of scheduling_s are needed to properly handle event overlap
 		int revIndex2 = getRevolutionCounter() % 2;
 		int rpm = GET_RPM();
@@ -372,8 +372,8 @@ void initRpmCalculator() {
 #endif // HW_CHECK_MODE
 
 	// Only register if not configured to read RPM over OBD2
-	if (!CONFIG(consumeObdSensors)) {
-		ENGINE(rpmCalculator).Register();
+	if (!engineConfiguration->consumeObdSensors) {
+		engine->rpmCalculator.Register();
 	}
 
 }
@@ -385,7 +385,7 @@ void initRpmCalculator() {
  */
 efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
 		action_s action) {
-	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
+	float delayUs = engine->rpmCalculator.oneDegreeUs * angle;
 
     // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	int32_t delayNt = USF2NT(delayUs);

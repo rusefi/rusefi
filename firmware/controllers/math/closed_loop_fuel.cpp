@@ -46,20 +46,20 @@ size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 }
 
 static bool shouldCorrect() {
-	const auto& cfg = CONFIG(stft);
+	const auto& cfg = engineConfiguration->stft;
 
 	// User disable bit
-	if (!CONFIG(fuelClosedLoopCorrectionEnabled)) {
+	if (!engineConfiguration->fuelClosedLoopCorrectionEnabled) {
 		return false;
 	}
 
 	// Don't correct if not running
-	if (!ENGINE(rpmCalculator).isRunning()) {
+	if (!engine->rpmCalculator.isRunning()) {
 		return false;
 	}
 
 	// Startup delay - allow O2 sensor to warm up, etc
-	if (cfg.startupDelay > ENGINE(engineState.running.timeSinceCrankingInSecs)) {
+	if (cfg.startupDelay > engine->engineState.running.timeSinceCrankingInSecs) {
 		return false;
 	}
 
@@ -74,7 +74,7 @@ static bool shouldCorrect() {
 }
 
 bool shouldUpdateCorrection(SensorType sensor) {
-	const auto& cfg = CONFIG(stft);
+	const auto& cfg = engineConfiguration->stft;
 
 	// Pause (but don't reset) correction if the AFR is off scale.
 	// It's probably a transient and poorly tuned transient correction
@@ -91,7 +91,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 		return {};
 	}
 
-	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), CONFIG(stft));
+	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), engineConfiguration->stft);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_FUEL_PID_CORRECTION) {
@@ -107,10 +107,10 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 		SensorType sensor = getSensorForBankIndex(i);
 
 		// todo: push configuration at startup
-		cell.configure(&CONFIG(stft.cellCfgs[binIdx]), sensor);
+		cell.configure(&engineConfiguration->stft.cellCfgs[binIdx], sensor);
 
 		if (shouldUpdateCorrection(sensor)) {
-			cell.update(CONFIG(stft.deadband) * 0.001f, CONFIG(stftIgnoreErrorMagnitude));
+			cell.update(engineConfiguration->stft.deadband * 0.001f, engineConfiguration->stftIgnoreErrorMagnitude);
 		}
 
 		result.banks[i] = cell.getAdjustment();

@@ -113,7 +113,7 @@ static int logFileIndex = MIN_FILE_INDEX;
 static char logName[_MAX_FILLER + 20];
 
 static void printMmcPinout() {
-	efiPrintf("MMC CS %s", hwPortname(CONFIG(sdCardCsPin)));
+	efiPrintf("MMC CS %s", hwPortname(engineConfiguration->sdCardCsPin));
 	// todo: we need to figure out the right SPI pinout, not just SPI2
 //	efiPrintf("MMC SCK %s:%d", portname(EFI_SPI2_SCK_PORT), EFI_SPI2_SCK_PIN);
 //	efiPrintf("MMC MISO %s:%d", portname(EFI_SPI2_MISO_PORT), EFI_SPI2_MISO_PIN);
@@ -122,7 +122,7 @@ static void printMmcPinout() {
 
 static void sdStatistics() {
 	printMmcPinout();
-	efiPrintf("SD enabled=%s status=%s", boolToString(CONFIG(isSdCardEnabled)),
+	efiPrintf("SD enabled=%s status=%s", boolToString(engineConfiguration->isSdCardEnabled),
 			sdStatus);
 	printSpiConfig("SD", mmcSpiDevice);
 	if (isSdCardAlive()) {
@@ -326,18 +326,18 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		return nullptr;
 	}
 	
-	if (!CONFIG(isSdCardEnabled)) {
+	if (!engineConfiguration->isSdCardEnabled) {
 		return nullptr;
 	}
 
 	// Configures and activates the MMC peripheral.
-	mmcSpiDevice = CONFIG(sdCardSpiDevice);
+	mmcSpiDevice = engineConfiguration->sdCardSpiDevice;
 
 	efiAssert(OBD_PCM_Processor_Fault, mmcSpiDevice != SPI_NONE, "SD card enabled, but no SPI device configured!", nullptr);
 
 	// todo: reuse initSpiCs method?
-	mmc_hs_spicfg.ssport = mmc_ls_spicfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
-	mmc_hs_spicfg.sspad = mmc_ls_spicfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
+	mmc_hs_spicfg.ssport = mmc_ls_spicfg.ssport = getHwPort("mmc", engineConfiguration->sdCardCsPin);
+	mmc_hs_spicfg.sspad = mmc_ls_spicfg.sspad = getHwPin("mmc", engineConfiguration->sdCardCsPin);
 	mmccfg.spip = getSpiDevice(mmcSpiDevice);
 
 	// Invalid SPI device, abort.
@@ -370,7 +370,7 @@ static const SDCConfig sdcConfig = {
 };
 
 static BaseBlockDevice* initializeMmcBlockDevice() {
-	if (!CONFIG(isSdCardEnabled)) {
+	if (!engineConfiguration->isSdCardEnabled) {
 		return nullptr;
 	}
 
@@ -485,11 +485,11 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	while (true) {
 		// if the SPI device got un-picked somehow, cancel SD card
-		if (CONFIG(sdCardSpiDevice) == SPI_NONE) {
+		if (engineConfiguration->sdCardSpiDevice == SPI_NONE) {
 			return;
 		}
 
-		if (CONFIG(debugMode) == DBG_SD_CARD) {
+		if (engineConfiguration->debugMode == DBG_SD_CARD) {
 			tsOutputChannels.debugIntField1 = totalLoggedBytes;
 			tsOutputChannels.debugIntField2 = totalWritesCounter;
 			tsOutputChannels.debugIntField3 = totalSyncCounter;
@@ -503,7 +503,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			return;
 		}
 
-		auto period = CONFIG(sdCardPeriodMs);
+		auto period = engineConfiguration->sdCardPeriodMs;
 		if (period > 0) {
 			chThdSleepMilliseconds(period);
 		}

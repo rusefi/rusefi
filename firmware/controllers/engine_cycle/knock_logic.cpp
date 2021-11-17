@@ -16,29 +16,29 @@ int getCylinderKnockBank(uint8_t cylinderIndex) {
 	switch (cylinderIndex) {
 #if EFI_PROD_CODE
 		case 0:
-			return CONFIG(knockBankCyl1);
+			return engineConfiguration->knockBankCyl1;
 		case 1:
-			return CONFIG(knockBankCyl2);
+			return engineConfiguration->knockBankCyl2;
 		case 2:
-			return CONFIG(knockBankCyl3);
+			return engineConfiguration->knockBankCyl3;
 		case 3:
-			return CONFIG(knockBankCyl4);
+			return engineConfiguration->knockBankCyl4;
 		case 4:
-			return CONFIG(knockBankCyl5);
+			return engineConfiguration->knockBankCyl5;
 		case 5:
-			return CONFIG(knockBankCyl6);
+			return engineConfiguration->knockBankCyl6;
 		case 6:
-			return CONFIG(knockBankCyl7);
+			return engineConfiguration->knockBankCyl7;
 		case 7:
-			return CONFIG(knockBankCyl8);
+			return engineConfiguration->knockBankCyl8;
 		case 8:
-			return CONFIG(knockBankCyl9);
+			return engineConfiguration->knockBankCyl9;
 		case 9:
-			return CONFIG(knockBankCyl10);
+			return engineConfiguration->knockBankCyl10;
 		case 10:
-			return CONFIG(knockBankCyl11);
+			return engineConfiguration->knockBankCyl11;
 		case 11:
-			return CONFIG(knockBankCyl12);
+			return engineConfiguration->knockBankCyl12;
 #endif
 		default:
 			return 0;
@@ -46,7 +46,7 @@ int getCylinderKnockBank(uint8_t cylinderIndex) {
 }
 
 bool KnockController::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
-	bool isKnock = dbv > ENGINE(engineState).knockThreshold;
+	bool isKnock = dbv > engine->engineState.knockThreshold;
 
 #if EFI_TUNER_STUDIO
 	// Pass through per-cylinder peak detector
@@ -64,20 +64,20 @@ bool KnockController::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, ef
 
 	// TODO: retard timing, then put it back!
 	if (isKnock) {
-		auto baseTiming = ENGINE(engineState).timingAdvance;
+		auto baseTiming = engine->engineState.timingAdvance;
 
 		// TODO: 20 configurable? Better explanation why 20?
 		auto distToMinimum = baseTiming - (-20);
 
 		// 0.1% per unit -> multiply by 0.001
-		auto retardFraction = CONFIG(knockRetardAggression) * 0.001f;
+		auto retardFraction = engineConfiguration->knockRetardAggression * 0.001f;
 		auto retardAmount = distToMinimum * retardFraction;
 
 		{
 			// Adjust knock retard under lock
 			chibios_rt::CriticalSectionLocker csl;
 			auto newRetard = m_knockRetard + retardAmount;
-			m_knockRetard = clampF(0, newRetard, CONFIG(knockRetardMaximum));
+			m_knockRetard = clampF(0, newRetard, engineConfiguration->knockRetardMaximum);
 		}
 	}
 
@@ -92,7 +92,7 @@ void KnockController::periodicFastCallback() {
 	constexpr auto callbackPeriodSeconds = FAST_CALLBACK_PERIOD_MS / 1000.0f;
 
 	// stored in units of 0.1 deg/sec
-	auto applyRate = CONFIG(knockRetardReapplyRate) * 0.1f;
+	auto applyRate = engineConfiguration->knockRetardReapplyRate * 0.1f;
 	auto applyAmount = applyRate * callbackPeriodSeconds;
 
 	{
@@ -123,7 +123,7 @@ static void startKnockSampling(Engine* engine) {
 	}
 
 	// Convert sampling angle to time
-	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * CONFIG(knockSamplingDuration) / US_PER_SECOND_F;
+	float samplingSeconds = engine->rpmCalculator.oneDegreeUs * engineConfiguration->knockSamplingDuration / US_PER_SECOND_F;
 
 	// Look up which channel this cylinder uses
 	auto channel = getCylinderKnockBank(cylinderIndexCopy);
@@ -139,7 +139,7 @@ void Engine::onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
 
 #if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
 	scheduleByAngle(&startSampling, nowNt,
-			/*angle*/CONFIG(knockDetectionWindowStart), { startKnockSampling, engine });
+			/*angle*/engineConfiguration->knockDetectionWindowStart, { startKnockSampling, engine });
 #endif
 
 #if EFI_HIP_9011

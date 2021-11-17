@@ -23,17 +23,17 @@ TEST(Multispark, DefaultConfiguration) {
 
 static void multisparkCfg() {
 	// Turn it on!
-	CONFIG(multisparkEnable) = true;
+	engineConfiguration->multisparkEnable = true;
 
 	// Fire up to 45 degrees worth of sparks...
-	CONFIG(multisparkMaxSparkingAngle) = 45;
+	engineConfiguration->multisparkMaxSparkingAngle = 45;
 
 	// ...but limit to 10 additional sparks
-	CONFIG(multisparkMaxExtraSparkCount) = 10;
+	engineConfiguration->multisparkMaxExtraSparkCount = 10;
 
 	// 3ms period (spark + dwell)
-	CONFIG(multisparkDwell) = 2000;
-	CONFIG(multisparkSparkDuration) = 1000;
+	engineConfiguration->multisparkDwell = 2000;
+	engineConfiguration->multisparkSparkDuration = 1000;
 }
 
 TEST(Multispark, EnabledNoMaxRpm) {
@@ -42,7 +42,7 @@ TEST(Multispark, EnabledNoMaxRpm) {
 	multisparkCfg();
 
 	// Practically no RPM limit
-	CONFIG(multisparkMaxRpm) = 65000;
+	engineConfiguration->multisparkMaxRpm = 65000;
 
 	EXPECT_EQ(0,  getMultiSparkCount(0    ));
 	EXPECT_EQ(10, getMultiSparkCount(150  ));
@@ -67,7 +67,7 @@ TEST(Multispark, RpmLimit) {
 	multisparkCfg();
 
 	// Disable at 800 rpm
-	CONFIG(multisparkMaxRpm) = 800;
+	engineConfiguration->multisparkMaxRpm = 800;
 
 	EXPECT_EQ(3, getMultiSparkCount(795));
 	EXPECT_EQ(0, getMultiSparkCount(805));

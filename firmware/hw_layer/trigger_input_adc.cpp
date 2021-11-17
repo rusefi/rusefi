@@ -171,7 +171,7 @@ void turnOnTriggerInputPins() {
 #if 0
 static int getDacValue(uint8_t voltage) {
 	constexpr float maxDacValue = 255.0f;	// 8-bit DAC
-	return (int)efiRound(maxDacValue * (float)voltage * VOLTAGE_1_BYTE_PACKING_DIV / CONFIG(adcVcc), 1.0f);
+	return (int)efiRound(maxDacValue * (float)voltage * VOLTAGE_1_BYTE_PACKING_DIV / engineConfiguration->adcVcc, 1.0f);
 }
 #endif
 
@@ -208,20 +208,20 @@ static void resetTriggerDetector() {
 
 static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
 	brain_pin_e brainPin = isTriggerShaft ?
-		CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
+		engineConfiguration->triggerInputPins[index] : engineConfiguration->camInputs[index];
 
 	if (!isBrainPinValid(brainPin))
 		return 0;
 #if 0
-	centeredDacValue = getDacValue(CONFIG(triggerCompCenterVolt));	// usually 2.5V resistor divider
+	centeredDacValue = getDacValue(engineConfiguration->triggerCompCenterVolt);	// usually 2.5V resistor divider
 	
-	dacHysteresisMin = getDacValue(CONFIG(triggerCompHystMin));	// usually ~20mV
-	dacHysteresisMax = getDacValue(CONFIG(triggerCompHystMax));	// usually ~300mV
+	dacHysteresisMin = getDacValue(engineConfiguration->triggerCompHystMin);	// usually ~20mV
+	dacHysteresisMax = getDacValue(engineConfiguration->triggerCompHystMax);	// usually ~300mV
 	dacHysteresisDelta = dacHysteresisMin;
 	
 	// 20 rpm (60_2) = 1000*60/((2*60)*20) = 25 ms for 1 tooth event
-	float satRpm = CONFIG(triggerCompSensorSatRpm) * RPM_1_BYTE_PACKING_MULT;
-	hystUpdatePeriodNumEvents = ENGINE(triggerCentral.triggerShape).getSize();	// = 116 for "60-2" trigger wheel
+	float satRpm = engineConfiguration->triggerCompSensorSatRpm * RPM_1_BYTE_PACKING_MULT;
+	hystUpdatePeriodNumEvents = engine->triggerCentral.triggerShape.getSize();	// = 116 for "60-2" trigger wheel
 	float saturatedToothDurationUs = 60.0f * US_PER_SECOND_F / satRpm / hystUpdatePeriodNumEvents;
 	saturatedVrFreqNt = 1.0f / US2NT(saturatedToothDurationUs);
 	
@@ -272,7 +272,7 @@ void stopTriggerInputPins(void) {
 
 adc_channel_e getAdcChannelForTrigger(void) {
 	// todo: add other trigger or cam channels?
-	brain_pin_e brainPin = CONFIG(triggerInputPins)[0];
+	brain_pin_e brainPin = engineConfiguration->triggerInputPins[0];
 	if (!isBrainPinValid(brainPin))
 		return EFI_ADC_NONE;
 	return getAdcChannel(brainPin);

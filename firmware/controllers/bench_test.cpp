@@ -131,7 +131,7 @@ static void doRunFuel(size_t humanIndex, const char *delayStr, const char * onTi
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = CONFIG(injectionPins)[humanIndex - 1];
+	brain_pin_e b = engineConfiguration->injectionPins[humanIndex - 1];
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
 }
 
@@ -141,7 +141,7 @@ static void doTestSolenoid(int humanIndex, const char *delayStr, const char * on
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = CONFIG(tcu_solenoid)[humanIndex - 1];
+	brain_pin_e b = engineConfiguration->tcu_solenoid[humanIndex - 1];
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.tcuSolenoids[humanIndex - 1], b);
 }
 
@@ -152,7 +152,7 @@ static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * o
 //		return;
 //	}
 // todo: convert in lua bench test
-//	brain_pin_e b = CONFIG(fsioOutputPins)[humanIndex - 1];
+//	brain_pin_e b = engineConfiguration->fsioOutputPins[humanIndex - 1];
 //	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.fsioOutputs[humanIndex - 1], b);
 }
 
@@ -187,7 +187,7 @@ static void fsioBench2(const char *delayStr, const char *indexStr, const char * 
 }
 
 static void fanBenchExt(const char *durationMs) {
-	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, CONFIG(fanPin));
+	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, engineConfiguration->fanPin);
 }
 
 void fanBench(void) {
@@ -195,26 +195,26 @@ void fanBench(void) {
 }
 
 void fan2Bench(void) {
-	pinbench("0", "3000", "100", "1", &enginePins.fanRelay2, CONFIG(fan2Pin));
+	pinbench("0", "3000", "100", "1", &enginePins.fanRelay2, engineConfiguration->fan2Pin);
 }
 
 /**
  * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
  */
 void milBench(void) {
-	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, CONFIG(malfunctionIndicatorPin));
+	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, engineConfiguration->malfunctionIndicatorPin);
 }
 
 void starterRelayBench(void) {
-	pinbench("0", "6000", "100", "1", &enginePins.starterControl, CONFIG(starterControlPin));
+	pinbench("0", "6000", "100", "1", &enginePins.starterControl, engineConfiguration->starterControlPin);
 }
 
 void fuelPumpBenchExt(const char *durationMs) {
-	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, CONFIG(fuelPumpPin));
+	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, engineConfiguration->fuelPumpPin);
 }
 
 void acRelayBench(void) {
-	pinbench("0", "1000", "100", "1", &enginePins.acRelay, CONFIG(acRelayPin));
+	pinbench("0", "1000", "100", "1", &enginePins.acRelay, engineConfiguration->acRelayPin);
 }
 
 void mainRelayBench(void) {
@@ -223,7 +223,7 @@ void mainRelayBench(void) {
 }
 
 void hpfpValveBench(void) {
-	pinbench(/*delay*/"1000", /* onTime */"20", /*oftime*/"500", "3", &enginePins.hpfpValve, CONFIG(hpfpValvePin));
+	pinbench(/*delay*/"1000", /* onTime */"20", /*oftime*/"500", "3", &enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
 }
 
 void fuelPumpBench(void) {
@@ -241,7 +241,7 @@ static void doRunSpark(size_t humanIndex, const char *delayStr, const char * onT
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = CONFIG(ignitionPins)[humanIndex - 1];
+	brain_pin_e b = engineConfiguration->ignitionPins[humanIndex - 1];
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.coils[humanIndex - 1], b);
 }
 
@@ -424,7 +424,7 @@ static void fatalErrorForPresetApply() {
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);
 
-	bool running = !ENGINE(rpmCalculator).isStopped();
+	bool running = !engine->rpmCalculator.isStopped();
 
 	switch (subsystem) {
 	case TS_CLEAR_WARNINGS:

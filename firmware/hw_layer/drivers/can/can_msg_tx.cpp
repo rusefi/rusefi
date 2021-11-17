@@ -53,7 +53,7 @@ CanTxMessage::~CanTxMessage() {
 		return;
 	}
 
-	if (CONFIG(debugMode) == DBG_CAN) {
+	if (engineConfiguration->debugMode == DBG_CAN) {
 		efiPrintf("Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", CAN_SID(m_frame), m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
 				m_frame.data8[2], m_frame.data8[3],

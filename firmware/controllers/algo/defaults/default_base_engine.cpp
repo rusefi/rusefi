@@ -18,7 +18,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->specs.displacement = 2;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	CONFIG(compressionRatio) = 9;
+	engineConfiguration->compressionRatio = 9;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
@@ -60,9 +60,9 @@ void setDefaultBaseEngine() {
 
 	// Tachometer
 	// 50% duty cycle is the default for tach signal
-	CONFIG(tachPulseDurationAsDutyCycle) = true;
-	CONFIG(tachPulseDuractionMs) = 0.5;
-	CONFIG(tachPulsePerRev) = 1;
+	engineConfiguration->tachPulseDurationAsDutyCycle = true;
+	engineConfiguration->tachPulseDuractionMs = 0.5;
+	engineConfiguration->tachPulsePerRev = 1;
 
 	// Check engine light
 #if EFI_PROD_CODE

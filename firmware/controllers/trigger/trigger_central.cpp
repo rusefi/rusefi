@@ -124,13 +124,13 @@ static void turnOffAllDebugFields(void *arg) {
 	(void)arg;
 #if EFI_PROD_CODE
 	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
-		if (CONFIG(triggerInputDebugPins[index]) != GPIO_UNASSIGNED) {
-			writePad("trigger debug", CONFIG(triggerInputDebugPins[index]), 0);
+		if (engineConfiguration->triggerInputDebugPins[index] != GPIO_UNASSIGNED) {
+			writePad("trigger debug", engineConfiguration->triggerInputDebugPins[index], 0);
 		}
 	}
 	for (int index = 0;index<CAM_INPUTS_COUNT;index++) {
-		if (CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
-			writePad("cam debug", CONFIG(camInputsDebug[index]), 0);
+		if (engineConfiguration->camInputsDebug[index] != GPIO_UNASSIGNED) {
+			writePad("cam debug", engineConfiguration->camInputsDebug[index], 0);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -174,15 +174,15 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
 
-	if (isImportantFront && CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
+	if (isImportantFront && engineConfiguration->camInputsDebug[index] != GPIO_UNASSIGNED) {
 #if EFI_PROD_CODE
-		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
+		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
 #endif /* EFI_PROD_CODE */
 		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
-	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
-		if (CONFIG(vvtCamSensorUseRise)) {
+	if (engineConfiguration->displayLogicLevelsInEngineSniffer && isImportantFront) {
+		if (engineConfiguration->vvtCamSensorUseRise) {
 			// todo: unify TS composite logger code with console Engine Sniffer
 			// todo: better API to reduce copy/paste?
 #if EFI_TOOTH_LOGGER
@@ -214,7 +214,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	}
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
-	if (CONFIG(vvtMode[camIndex]) == VVT_INACTIVE) {
+	if (engineConfiguration->vvtMode[camIndex] == VVT_INACTIVE) {
 		warning(CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
 	}
 
@@ -233,7 +233,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+	if (!engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		addEngineSnifferEvent(vvtName, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 #if EFI_TOOTH_LOGGER
@@ -251,7 +251,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	}
 
 
-	bool isImportantFront = (CONFIG(vvtCamSensorUseRise) ^ (front == TV_FALL));
+	bool isImportantFront = (engineConfiguration->vvtCamSensorUseRise ^ (front == TV_FALL));
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
 	if (!isVvtWithRealDecoder && !isImportantFront) {
 		// todo: there should be a way to always use real trigger code for this logic?
@@ -429,7 +429,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = CONFIG(displayLogicLevelsInEngineSniffer) && CONFIG(useOnlyRisingEdgeForTrigger);
+	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && engineConfiguration->useOnlyRisingEdgeForTrigger;
 
 	if (!logLogicState) {
 		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
@@ -440,8 +440,8 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
-	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal, ENGINE(primaryTriggerConfiguration))) {
+	if (!engineConfiguration->useNoiselessTriggerDecoder) {
+		if (!isUsefulSignal(signal, engine->primaryTriggerConfiguration)) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -449,9 +449,9 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 		}
 	}
 
-	if (CONFIG(triggerInputDebugPins[signalIndex]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->triggerInputDebugPins[signalIndex] != GPIO_UNASSIGNED) {
 #if EFI_PROD_CODE
-		writePad("trigger debug", CONFIG(triggerInputDebugPins[signalIndex]), 1);
+		writePad("trigger debug", engineConfiguration->triggerInputDebugPins[signalIndex], 1);
 #endif /* EFI_PROD_CODE */
 		engine->executor.scheduleByTimestampNt("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
@@ -472,7 +472,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 
-	ENGINE(triggerCentral).handleShaftSignal(signal, timestamp);
+	engine->triggerCentral.handleShaftSignal(signal, timestamp);
 
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
@@ -489,8 +489,8 @@ static const bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { PROTOCOL_CRANK1, PROTOCOL_CRANK1, PROTOCOL_CRANK2, PROTOCOL_CRANK2, PROTOCOL_CRANK3, PROTOCOL_CRANK3 };
 
 static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
-	if (!ENGINE(isEngineChartEnabled)) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
-		return; // engineSnifferRpmThreshold is accounted for inside ENGINE(isEngineChartEnabled)
+	if (!engine->isEngineChartEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
+		return; // engineSnifferRpmThreshold is accounted for inside engine->isEngineChartEnabled
 	}
 
 
@@ -583,11 +583,11 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
-	if (CONFIG(useNoiselessTriggerDecoder)) {
+	if (engineConfiguration->useNoiselessTriggerDecoder) {
 		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal)) {
 			return;
 		}
-		if (!isUsefulSignal(signal, ENGINE(primaryTriggerConfiguration))) {
+		if (!isUsefulSignal(signal, engine->primaryTriggerConfiguration)) {
 			return;
 		}
 	}
@@ -628,7 +628,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		return;
 	}
 
-	if (triggerState.isValidIndex(ENGINE(triggerCentral.triggerShape))) {
+	if (triggerState.isValidIndex(engine->triggerCentral.triggerShape)) {
 		ScopePerf perf(PE::ShaftPositionListeners);
 
 #if TRIGGER_EXTREME_LOGGING
@@ -738,18 +738,18 @@ void triggerInfo(void) {
 
 #if EFI_PROD_CODE
 
-	efiPrintf("primary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[0]));
+	efiPrintf("primary trigger input: %s", hwPortname(engineConfiguration->triggerInputPins[0]));
 	efiPrintf("primary trigger simulator: %s %s freq=%d",
-			hwPortname(CONFIG(triggerSimulatorPins)[0]),
-			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[0]),
-			CONFIG(triggerSimulatorFrequency));
+			hwPortname(engineConfiguration->triggerSimulatorPins[0]),
+			getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[0]),
+			engineConfiguration->triggerSimulatorFrequency);
 
 	if (ts->needSecondTriggerInput) {
-		efiPrintf("secondary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[1]));
+		efiPrintf("secondary trigger input: %s", hwPortname(engineConfiguration->triggerInputPins[1]));
 #if EFI_EMULATE_POSITION_SENSORS
 		efiPrintf("secondary trigger simulator: %s %s phase=%d",
-				hwPortname(CONFIG(triggerSimulatorPins)[1]),
-				getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
+				hwPortname(engineConfiguration->triggerSimulatorPins[1]),
+				getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
 
@@ -766,13 +766,13 @@ void triggerInfo(void) {
 	}
 
 
-//	efiPrintf("3rd trigger simulator: %s %s", hwPortname(CONFIG(triggerSimulatorPins)[2]),
-//			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[2]));
+//	efiPrintf("3rd trigger simulator: %s %s", hwPortname(engineConfiguration->triggerSimulatorPins[2]),
+//			getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[2]));
 
-	efiPrintf("trigger error extra LED: %s %s", hwPortname(CONFIG(triggerErrorPin)),
-			getPin_output_mode_e(CONFIG(triggerErrorPinMode)));
-	efiPrintf("primary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[0]));
-	efiPrintf("secondary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[1]));
+	efiPrintf("trigger error extra LED: %s %s", hwPortname(engineConfiguration->triggerErrorPin),
+			getPin_output_mode_e(engineConfiguration->triggerErrorPinMode));
+	efiPrintf("primary logic input: %s", hwPortname(engineConfiguration->logicAnalyzerPins[0]));
+	efiPrintf("secondary logic input: %s", hwPortname(engineConfiguration->logicAnalyzerPins[1]));
 
 
 	efiPrintf("totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
@@ -790,23 +790,23 @@ static void resetRunningTriggerCounters() {
 void onConfigurationChangeTriggerCallback() {
 	bool changed = false;
 	// todo: how do we static_assert here?
-	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(CONFIG(camInputs)) == efi::size(CONFIG(vvtOffsets)), "sizes");
+	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(engineConfiguration->camInputs) == efi::size(engineConfiguration->vvtOffsets), "sizes");
 
-	for (size_t camIndex = 0; camIndex < efi::size(CONFIG(camInputs)); camIndex++) {
+	for (size_t camIndex = 0; camIndex < efi::size(engineConfiguration->camInputs); camIndex++) {
 		changed |= isConfigurationChanged(camInputs[camIndex]);
 		changed |= isConfigurationChanged(vvtOffsets[camIndex]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverrideFrom)); i++) {
+	for (size_t i = 0; i < efi::size(engineConfiguration->triggerGapOverrideFrom); i++) {
 		changed |= isConfigurationChanged(triggerGapOverrideFrom[i]);
 		changed |= isConfigurationChanged(triggerGapOverrideTo[i]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {
+	for (size_t i = 0; i < efi::size(engineConfiguration->triggerInputPins); i++) {
 		changed |= isConfigurationChanged(triggerInputPins[i]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(vvtMode)); i++) {
+	for (size_t i = 0; i < efi::size(engineConfiguration->vvtMode); i++) {
 		changed |= isConfigurationChanged(vvtMode[i]);
 	}
 
@@ -849,15 +849,15 @@ bool TriggerCentral::isTriggerConfigChanged() {
 }
 
 void validateTriggerInputs() {
-	if (CONFIG(triggerInputPins[0]) == GPIO_UNASSIGNED && CONFIG(triggerInputPins[1]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->triggerInputPins[0] == GPIO_UNASSIGNED && engineConfiguration->triggerInputPins[1] != GPIO_UNASSIGNED) {
 		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
 	}
 
-	if (CONFIG(camInputs[0]) == GPIO_UNASSIGNED && CONFIG(camInputs[1]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] == GPIO_UNASSIGNED && engineConfiguration->camInputs[1] != GPIO_UNASSIGNED) {
 		firmwareError(OBD_PCM_Processor_Fault, "If you only have cam on exhaust please pretend that it's on intake in configuration");
 	}
 
-	if (CONFIG(camInputs[0]) == GPIO_UNASSIGNED && CONFIG(camInputs[2]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] == GPIO_UNASSIGNED && engineConfiguration->camInputs[2] != GPIO_UNASSIGNED) {
 		firmwareError(OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
 	}
 }

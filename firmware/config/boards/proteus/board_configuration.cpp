@@ -55,9 +55,9 @@ void setSdCardConfigurationOverrides(void) {
 
 static void setLedPins() {
 	// PE3 is error LED, configured in board.mk
-	CONFIG(communicationLedPin) = GPIOE_4;
-	CONFIG(runningLedPin) = GPIOE_5;
-	CONFIG(warningLedPin) = GPIOE_6;
+	engineConfiguration->communicationLedPin = GPIOE_4;
+	engineConfiguration->runningLedPin = GPIOE_5;
+	engineConfiguration->warningLedPin = GPIOE_6;
 }
 
 static void setupVbatt() {
@@ -193,16 +193,16 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 
-	CONFIG(enableSoftwareKnock) = true;
+	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
 #if HW_PROTEUS & EFI_PROD_CODE
-	CONFIG(mainRelayPin) = PROTEUS_LS_13;
-	CONFIG(fanPin) = PROTEUS_LS_15;
-	CONFIG(fuelPumpPin) = PROTEUS_LS_16;
+	engineConfiguration->mainRelayPin = PROTEUS_LS_13;
+	engineConfiguration->fanPin = PROTEUS_LS_15;
+	engineConfiguration->fuelPumpPin = PROTEUS_LS_16;
 #endif // HW_PROTEUS
 
 	// If we're running as hardware CI, borrow a few extra pins for that
