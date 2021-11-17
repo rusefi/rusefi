@@ -65,9 +65,13 @@ void setBoardConfigOverrides(void);
 
 #if !EFI_UNIT_TEST
 extern persistent_config_container_s persistentState;
-#endif // EFI_UNIT_TEST
+static engine_configuration_s * const engineConfiguration =
+	&persistentState.persistentConfiguration.engineConfiguration;
+static persistent_config_s * const config = &persistentState.persistentConfiguration;
+#else // EFI_UNIT_TEST
 extern engine_configuration_s *engineConfiguration;
 extern persistent_config_s *config;
+#endif // EFI_UNIT_TEST
 
 /**
  * & is reference in C++ (not C)

@@ -29,10 +29,6 @@
 
 static bool needToWriteConfiguration = false;
 
-extern persistent_config_container_s persistentState;
-
-extern engine_configuration_s *engineConfiguration;
-
 /* if we store settings externally */
 #if EFI_STORAGE_EXT_SNOR == TRUE
 
