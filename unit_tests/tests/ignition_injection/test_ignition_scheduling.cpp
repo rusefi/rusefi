@@ -14,13 +14,13 @@ TEST(ignition, twoCoils) {
 	EngineTestHelper eth(FRANKENSO_BMW_M73_F);
 
 	// first one to fire uses first coil
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(1)]), 0);
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(2)]), 1);
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(3)]), 0);
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(4)]), 1);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(1)], 0);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(2)], 1);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(3)], 0);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(4)], 1);
 
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(11)]), 0);
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(12)]), 1);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(11)], 0);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(12)], 1);
 
 	// let's recalculate with zero timing so that we can focus on relation advance between cylinders
 	engine->engineState.timingAdvance = 0;

@@ -823,7 +823,7 @@ void onConfigurationChangeTriggerCallback() {
 		assertEngineReference();
 
 	#if EFI_ENGINE_CONTROL
-		ENGINE(initializeTriggerWaveform());
+		engine->initializeTriggerWaveform();
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}

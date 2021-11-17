@@ -11,7 +11,6 @@
 
 #pragma once
 
-#include "engine_ptr.h"
 
 void setBosch0280218037(persistent_config_s *engineConfiguration);
 void setBosch0280218004(persistent_config_s *engineConfiguration);

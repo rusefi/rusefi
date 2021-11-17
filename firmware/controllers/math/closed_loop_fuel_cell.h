@@ -1,6 +1,5 @@
 #pragma once
 
-#include "engine_ptr.h"
 #include "sensor.h"
 
 class ClosedLoopFuelCellBase {

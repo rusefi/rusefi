@@ -8,4 +8,3 @@
 #pragma once
 
 #include "global.h"
-#include "engine_ptr.h"

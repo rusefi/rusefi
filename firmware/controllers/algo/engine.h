@@ -28,6 +28,18 @@
 #include "launch_control.h"
 #include "type_list.h"
 
+#ifndef EFI_UNIT_TEST
+#error EFI_UNIT_TEST must be defined!
+#endif
+
+#ifndef EFI_SIMULATOR
+#error EFI_SIMULATOR must be defined!
+#endif
+
+#ifndef EFI_PROD_CODE
+#error EFI_PROD_CODE must be defined!
+#endif
+
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
 #include "single_timer_executor.h"

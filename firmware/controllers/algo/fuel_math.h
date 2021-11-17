@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "engine_ptr.h"
 #include "rusefi_types.h"
 
 void initFuelMap();

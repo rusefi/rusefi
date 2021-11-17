@@ -164,7 +164,7 @@ void onBurnRequest() {
  * See preCalculate which is invoked BOTH on start and configuration change
  */
 void incrementGlobalConfigurationVersion() {
-	ENGINE(globalConfigurationVersion++);
+	engine->globalConfigurationVersion++;
 #if EFI_DEFAILED_LOGGING
 	efiPrintf("set globalConfigurationVersion=%d", globalConfigurationVersion);
 #endif /* EFI_DEFAILED_LOGGING */
@@ -197,7 +197,7 @@ void incrementGlobalConfigurationVersion() {
 	onConfigurationChangeFsioCallback(&activeConfiguration);
 #endif /* EFI_FSIO */
 
-	ENGINE(engineModules).apply_all([](auto & m) {
+	engine->engineModules.apply_all([](auto & m) {
 			m.onConfigurationChange(&activeConfiguration);
 		});
 	rememberCurrentConfiguration();
@@ -1169,7 +1169,7 @@ void applyNonPersistentConfiguration() {
 	assertEngineReference();
 
 #if EFI_ENGINE_CONTROL
-	ENGINE(initializeTriggerWaveform());
+	engine->initializeTriggerWaveform();
 #endif // EFI_ENGINE_CONTROL
 }
 

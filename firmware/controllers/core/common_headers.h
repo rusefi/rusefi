@@ -28,7 +28,6 @@
 #include "efitime.h"
 
 #ifdef __cplusplus
-#include "engine_ptr.h"
 #include "datalogging.h"
 #include "cli_registry.h"
 #endif /* __cplusplus */

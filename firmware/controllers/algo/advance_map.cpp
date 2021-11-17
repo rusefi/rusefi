@@ -89,7 +89,7 @@ angle_t getAdvanceCorrections(int rpm) {
 		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
 	}
 
-	float pidTimingCorrection = ENGINE(engineModules).unmock<IdleController>().getIdleTimingAdjustment(rpm);
+	float pidTimingCorrection = engine->engineModules.unmock<IdleController>().getIdleTimingAdjustment(rpm);
 
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if EFI_TUNER_STUDIO
