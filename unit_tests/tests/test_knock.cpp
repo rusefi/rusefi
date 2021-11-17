@@ -6,11 +6,11 @@ TEST(Knock, Retards) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Knock threshold of 20dBv
-	ENGINE(engineState).knockThreshold = 20;
+	engine->engineState.knockThreshold = 20;
 	// Aggression of 10%
-	CONFIG(knockRetardAggression) = 100;
+	engineConfiguration->knockRetardAggression = 100;
 	// Maximum 8 degrees retarded
-	CONFIG(knockRetardMaximum) = 8;
+	engineConfiguration->knockRetardMaximum = 8;
 
 	KnockController dut;
 
@@ -44,13 +44,13 @@ TEST(Knock, Reapply) {
 	KnockController dut;
 
 	// Knock threshold of 20dBv
-	ENGINE(engineState).knockThreshold = 20;
+	engine->engineState.knockThreshold = 20;
 	// Aggression of 10%
-	CONFIG(knockRetardAggression) = 100;
+	engineConfiguration->knockRetardAggression = 100;
 	// Maximum 8 degrees retarded
-	CONFIG(knockRetardMaximum) = 8;
+	engineConfiguration->knockRetardMaximum = 8;
 	// Apply 1 degree/second
-	CONFIG(knockRetardReapplyRate) = 10;
+	engineConfiguration->knockRetardReapplyRate = 10;
 
 	// Send a strong knock!
 	dut.onKnockSenseCompleted(0, 30, 0);

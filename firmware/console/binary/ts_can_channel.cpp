@@ -22,8 +22,8 @@ class CanTsChannel : public TsChannelBase {
 static CANConfig tsCanConfig = { CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP, CAN_BTR_500 };
 
 void CanTsChannel::start() {
-	efiSetPadMode("ts can rx", GPIOG_13/*CONFIG(canRxPin)*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_RX2_0
-	efiSetPadMode("ts can tx", GPIOG_14/*CONFIG(canTxPin)*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_TX2_0
+	efiSetPadMode("ts can rx", GPIOG_13/*engineConfiguration->canRxPin*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_RX2_0
+	efiSetPadMode("ts can tx", GPIOG_14/*engineConfiguration->canTxPin*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_TX2_0
 
 	canStart(&TS_CAN_DEVICE, &tsCanConfig);
 	canInit(&TS_CAN_DEVICE);

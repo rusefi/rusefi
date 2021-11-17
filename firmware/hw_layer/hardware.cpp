@@ -91,16 +91,16 @@ void unlockSpi(spi_device_e device) {
 
 static void initSpiModules(engine_configuration_s *engineConfiguration) {
 	UNUSED(engineConfiguration);
-	if (CONFIG(is_enabled_spi_1)) {
+	if (engineConfiguration->is_enabled_spi_1) {
 		 turnOnSpi(SPI_DEVICE_1);
 	}
-	if (CONFIG(is_enabled_spi_2)) {
+	if (engineConfiguration->is_enabled_spi_2) {
 		turnOnSpi(SPI_DEVICE_2);
 	}
-	if (CONFIG(is_enabled_spi_3)) {
+	if (engineConfiguration->is_enabled_spi_3) {
 		turnOnSpi(SPI_DEVICE_3);
 	}
-	if (CONFIG(is_enabled_spi_4)) {
+	if (engineConfiguration->is_enabled_spi_4) {
 		turnOnSpi(SPI_DEVICE_4);
 	}
 }
@@ -181,7 +181,7 @@ void onFastAdcComplete(adcsample_t*) {
 	efiAssertVoid(CUSTOM_STACK_ADC, getCurrentRemainingStack() > 128, "lowstck#9b");
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
-	if (ENGINE(sensorChartMode) == SC_AUX_FAST1) {
+	if (engine->sensorChartMode == SC_AUX_FAST1) {
 		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
 		scAddData(getCrankshaftAngleNt(getTimeNowNt()), voltage);
 	}
@@ -191,7 +191,7 @@ void onFastAdcComplete(adcsample_t*) {
 	mapAveragingAdcCallback(getFastAdc(fastMapSampleIndex));
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
-	if (CONFIG(isHip9011Enabled)) {
+	if (engineConfiguration->isHip9011Enabled) {
 		hipAdcCallback(getFastAdc(hipSampleIndex));
 	}
 #endif /* EFI_HIP_9011 */
@@ -519,7 +519,7 @@ void initHardware() {
 #endif /* EFI_MC33816 */
 
 #if EFI_MAX_31855
-	initMax31855(CONFIG(max31855spiDevice), CONFIG(max31855_cs));
+	initMax31855(engineConfiguration->max31855spiDevice, engineConfiguration->max31855_cs);
 #endif /* EFI_MAX_31855 */
 
 #if EFI_CAN_SUPPORT

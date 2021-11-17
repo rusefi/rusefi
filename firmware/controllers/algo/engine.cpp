@@ -104,22 +104,22 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 
 static void initVvtShape(int camIndex, TriggerState &initState) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
-	TriggerWaveform *shape = &ENGINE(triggerCentral).vvtShape[camIndex];
+	TriggerWaveform *shape = &engine->triggerCentral.vvtShape[camIndex];
 
 	// not ideas but good for now code
-	ENGINE(triggerCentral).vvtState[0][0].name = "vvt00";
-	ENGINE(triggerCentral).vvtState[0][1].name = "vvt01";
-	ENGINE(triggerCentral).vvtState[1][0].name = "vvt10";
-	ENGINE(triggerCentral).vvtState[1][1].name = "vvt11";
+	engine->triggerCentral.vvtState[0][0].name = "vvt00";
+	engine->triggerCentral.vvtState[0][1].name = "vvt01";
+	engine->triggerCentral.vvtState[1][0].name = "vvt10";
+	engine->triggerCentral.vvtState[1][1].name = "vvt11";
 
 	if (vvtMode != VVT_INACTIVE) {
 		trigger_config_s config;
 		// todo: should 'vvtWithRealDecoder' be used here?
-		ENGINE(triggerCentral).vvtTriggerType[camIndex] = config.type = getVvtTriggerType(vvtMode);
+		engine->triggerCentral.vvtTriggerType[camIndex] = config.type = getVvtTriggerType(vvtMode);
 
 		shape->initializeTriggerWaveform(
 				engineConfiguration->ambiguousOperationMode,
-				CONFIG(vvtCamSensorUseRise), &config);
+				engineConfiguration->vvtCamSensorUseRise, &config);
 
 		shape->initializeSyncPoint(initState,
 				engine->vvtTriggerConfiguration[camIndex],
@@ -149,16 +149,16 @@ void Engine::initializeTriggerWaveform() {
 	 * this is only useful while troubleshooting a new trigger shape in the field
 	 * in very VERY rare circumstances
 	 */
-	if (CONFIG(overrideTriggerGaps)) {
+	if (engineConfiguration->overrideTriggerGaps) {
 		int gapIndex = 0;
-		for (;gapIndex<=CONFIG(overrideTriggerGaps);gapIndex++) {
-			float gapOverrideFrom = CONFIG(triggerGapOverrideFrom[gapIndex]);
-			float gapOverrideTo = CONFIG(triggerGapOverrideTo[gapIndex]);
+		for (;gapIndex<=engineConfiguration->overrideTriggerGaps;gapIndex++) {
+			float gapOverrideFrom = engineConfiguration->triggerGapOverrideFrom[gapIndex];
+			float gapOverrideTo = engineConfiguration->triggerGapOverrideTo[gapIndex];
 			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
 		}
 		for (;gapIndex<GAP_TRACKING_LENGTH;gapIndex++) {
-			ENGINE(triggerCentral.triggerShape).syncronizationRatioFrom[gapIndex] = NAN;
-			ENGINE(triggerCentral.triggerShape).syncronizationRatioTo[gapIndex] = NAN;
+			engine->triggerCentral.triggerShape.syncronizationRatioFrom[gapIndex] = NAN;
+			engine->triggerCentral.triggerShape.syncronizationRatioTo[gapIndex] = NAN;
 		}
 	}
 
@@ -167,10 +167,10 @@ void Engine::initializeTriggerWaveform() {
 	 	 * 'initState' instance of TriggerState is used only to initialize 'this' TriggerWaveform instance
 	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
 	 	 */
-		calculateTriggerSynchPoint(ENGINE(triggerCentral.triggerShape),
+		calculateTriggerSynchPoint(engine->triggerCentral.triggerShape,
 				initState);
 
-		ENGINE(triggerCentral.triggerState).name = "TRG";
+		engine->triggerCentral.triggerState.name = "TRG";
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
 
@@ -261,7 +261,7 @@ void Engine::periodicSlowCallback() {
 #endif // EFI_PROD_CODE
 
 #if ANALOG_HW_CHECK_MODE
-	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(CONFIG(clt).adcChannel), "No CLT setting");
+	efiAssertVoid(OBD_PCM_Processor_Fault, isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowSeconds();
 	if (secondsNow > 2 && secondsNow < 180) {
 		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, HW_CHECK_RPM);
@@ -294,8 +294,8 @@ void Engine::updateSlowSensors() {
 
 #if EFI_ENGINE_CONTROL
 	int rpm = GET_RPM();
-	isEngineChartEnabled = CONFIG(isEngineChartEnabled) && rpm < CONFIG(engineSnifferRpmThreshold);
-	sensorChartMode = rpm < CONFIG(sensorSnifferRpmThreshold) ? CONFIG(sensorChartMode) : SC_OFF;
+	isEngineChartEnabled = engineConfiguration->isEngineChartEnabled && rpm < engineConfiguration->engineSnifferRpmThreshold;
+	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
 	engineState.updateSlowSensors();
 
@@ -313,8 +313,8 @@ void Engine::updateSlowSensors() {
 void Engine::updateSwitchInputs() {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
-	if (isBrainPinValid(CONFIG(clutchDownPin))) {
-		engine->clutchDownState = CONFIG(clutchDownPinInverted) ^ efiReadPin(CONFIG(clutchDownPin));
+	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
+		engine->clutchDownState = engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
 	}
 	if (hasAcToggle()) {
 		bool result = getAcToggle();
@@ -324,11 +324,11 @@ void Engine::updateSwitchInputs() {
 		}
 		engine->acSwitchState = result;
 	}
-	if (isBrainPinValid(CONFIG(clutchUpPin))) {
-		engine->clutchUpState = CONFIG(clutchUpPinInverted) ^ efiReadPin(CONFIG(clutchUpPin));
+	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
+		engine->clutchUpState = engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
 	}
-	if (isBrainPinValid(CONFIG(throttlePedalUpPin))) {
-		engine->idle.throttlePedalUpState = efiReadPin(CONFIG(throttlePedalUpPin));
+	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
+		engine->idle.throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
@@ -396,7 +396,7 @@ void Engine::OnTriggerStateDecodingError() {
 
 
 	triggerCentral.triggerState.totalTriggerErrorCounter++;
-	if (CONFIG(verboseTriggerSynchDetails) || (triggerCentral.triggerState.someSortOfTriggerError && !CONFIG(silentTriggerError))) {
+	if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError && !engineConfiguration->silentTriggerError)) {
 #if EFI_PROD_CODE
 		efiPrintf("error: synchronizationPoint @ index %d expected %d/%d/%d got %d/%d/%d",
 				triggerCentral.triggerState.currentCycle.current_index,
@@ -593,7 +593,7 @@ float Engine::getTimeIgnitionSeconds(void) const {
 }
 
 injection_mode_e Engine::getCurrentInjectionMode() {
-	return rpmCalculator.isCranking() ? CONFIG(crankingInjectionMode) : CONFIG(injectionMode);
+	return rpmCalculator.isCranking() ? engineConfiguration->crankingInjectionMode : engineConfiguration->injectionMode;
 }
 
 // see also in TunerStudio project '[doesTriggerImplyOperationMode] tag

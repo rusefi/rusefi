@@ -17,7 +17,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 		return desiredFuel;
 	}
 	// disable this correction for cranking
-	if (ENGINE(rpmCalculator).isCranking()) {
+	if (engine->rpmCalculator.isCranking()) {
 		return desiredFuel;
 	}
 
@@ -59,7 +59,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 
 	// if tau is really small, we get div/0.
 	// you probably meant to disable wwae.
-	float tau = CONFIG(wwaeTau);
+	float tau = engineConfiguration->wwaeTau;
 	if (tau < 0.01f) {
 		return desiredFuel;
 	}
@@ -71,7 +71,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 	}
 
 	float alpha = expf_taylor(-120 / (rpm * tau));
-	float beta = CONFIG(wwaeBeta);
+	float beta = engineConfiguration->wwaeBeta;
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {

@@ -82,27 +82,27 @@ TEST(BoostControl, ClosedLoop) {
 	bc.init(nullptr, nullptr, nullptr, &pidCfg);
 
 	// Enable closed loop
-	CONFIG(boostType) = CLOSED_LOOP;
+	engineConfiguration->boostType = CLOSED_LOOP;
 	// Minimum 75kpa
-	CONFIG(minimumBoostClosedLoopMap) = 75;
+	engineConfiguration->minimumBoostClosedLoopMap = 75;
 
 	// At 0 RPM, closed loop is disabled
-	ENGINE(rpmCalculator.mockRpm) = 0;
+	engine->rpmCalculator.mockRpm = 0;
 	EXPECT_EQ(0, bc.getClosedLoop(150, 100).value_or(-1000));
 
 	// too low MAP, disable closed loop
-	ENGINE(rpmCalculator.mockRpm) = 0;
+	engine->rpmCalculator.mockRpm = 0;
 	EXPECT_EQ(0, bc.getClosedLoop(150, 50).value_or(-1000));
 
 	// With RPM, we should get an output
-	ENGINE(rpmCalculator.mockRpm) = 1000;
+	engine->rpmCalculator.mockRpm = 1000;
 	// Actual is below target -> positive output
 	EXPECT_FLOAT_EQ(50, bc.getClosedLoop(150, 100).value_or(-1000));
 	// Actual is above target -> negative output
 	EXPECT_FLOAT_EQ(-25.0f, bc.getClosedLoop(150, 175).value_or(-1000));
 
 	// Disabling closed loop should return 0
-	CONFIG(boostType) = OPEN_LOOP;
+	engineConfiguration->boostType = OPEN_LOOP;
 	EXPECT_FLOAT_EQ(0, bc.getClosedLoop(150, 175).value_or(-1000));
 }
 

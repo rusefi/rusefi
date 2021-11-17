@@ -16,10 +16,10 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 }
 
 expected<float> InjectorModel::getAbsoluteRailPressure() const {
-	switch (CONFIG(injectorCompensationMode)) {
+	switch (engineConfiguration->injectorCompensationMode) {
 		case ICM_FixedRailPressure:
 			// Add barometric pressure, as "fixed" really means "fixed pressure above atmosphere"
-			return CONFIG(fuelReferencePressure) + Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
+			return engineConfiguration->fuelReferencePressure + Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
 		case ICM_SensedRailPressure:
 			if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
 				firmwareError(OBD_PCM_Processor_Fault, "Fuel pressure compensation is set to use a pressure sensor, but none is configured.");
@@ -34,11 +34,11 @@ expected<float> InjectorModel::getAbsoluteRailPressure() const {
 
 float InjectorModel::getInjectorFlowRatio() const {
 	// Compensation disabled, use reference flow.
-	if (CONFIG(injectorCompensationMode) == ICM_None) {
+	if (engineConfiguration->injectorCompensationMode == ICM_None) {
 		return 1.0f;
 	}
 
-	float referencePressure = CONFIG(fuelReferencePressure);
+	float referencePressure = engineConfiguration->fuelReferencePressure;
 	expected<float> absRailPressure = getAbsoluteRailPressure();
 
 	// If sensor failed, best we can do is disable correction
@@ -64,7 +64,7 @@ float InjectorModel::getInjectorFlowRatio() const {
 	float flowRatio = sqrtf(pressureRatio);
 
 #if EFI_TUNER_STUDIO
-	if (CONFIG(debugMode) == DBG_INJECTOR_COMPENSATION) {
+	if (engineConfiguration->debugMode == DBG_INJECTOR_COMPENSATION) {
 		tsOutputChannels.debugFloatField1 = pressureDelta;
 		tsOutputChannels.debugFloatField2 = pressureRatio;
 		tsOutputChannels.debugFloatField3 = flowRatio;
@@ -77,7 +77,7 @@ float InjectorModel::getInjectorFlowRatio() const {
 
 float InjectorModel::getInjectorMassFlowRate() const {
 	// TODO: injector flow dependent upon temperature/ethanol content?
-	auto injectorVolumeFlow = CONFIG(injector.flow);
+	auto injectorVolumeFlow = engineConfiguration->injector.flow;
 
 	float flowRatio = getInjectorFlowRatio();
 
@@ -118,7 +118,7 @@ float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
 }
 
 float InjectorModel::correctShortPulse(float baseDuration) const {
-	switch (CONFIG(injectorNonlinearMode)) {
+	switch (engineConfiguration->injectorNonlinearMode) {
 	case INJ_PolynomialAdder:
 		return correctInjectionPolynomial(baseDuration);
 	case INJ_None:
@@ -128,12 +128,12 @@ float InjectorModel::correctShortPulse(float baseDuration) const {
 }
 
 float InjectorModel::correctInjectionPolynomial(float baseDuration) const {
-	if (baseDuration > USF2MS(CONFIG(applyNonlinearBelowPulse))) {
+	if (baseDuration > USF2MS(engineConfiguration->applyNonlinearBelowPulse)) {
 		// Large pulse, skip correction.
 		return baseDuration;
 	}
 
-	auto& is = CONFIG(injectorCorrectionPolynomial);
+	auto& is = engineConfiguration->injectorCorrectionPolynomial;
 	float xi = 1;
 
 	float adder = 0;

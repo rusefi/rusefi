@@ -18,7 +18,7 @@ bool AcState::getAcState() {
 		return false;
 	}
 
-	auto maxRpm = CONFIG(maxAcRpm);
+	auto maxRpm = engineConfiguration->maxAcRpm;
 	engineTooFast = maxRpm != 0 && maxRpmDeadband.gt(rpm, maxRpm);
 	if (engineTooFast) {
 		return false;
@@ -33,20 +33,20 @@ bool AcState::getAcState() {
 	}
 
 	// Engine too hot, disable
-	auto maxClt = CONFIG(maxAcClt);
+	auto maxClt = engineConfiguration->maxAcClt;
 	engineTooHot = (maxClt != 0) && maxCltDeadband.gt(clt.Value, maxClt);
 	if (engineTooHot) {
 		return false;
 	}
 
 	// TPS too high, disable
-	auto maxTps = CONFIG(maxAcTps);
+	auto maxTps = engineConfiguration->maxAcTps;
 	tpsTooHigh = maxTps != 0 && maxTpsDeadband.gt(Sensor::getOrZero(SensorType::Tps1), maxTps);
 	if (tpsTooHigh) {
 			return false;
 	}
 
-	acButtonState = ENGINE(acSwitchState);
+	acButtonState = engine->acSwitchState;
 	// All conditions allow AC, simply pass thru switch
 	return acButtonState;
 }

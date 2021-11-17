@@ -102,7 +102,7 @@ void EngineState::periodicFastCallback() {
 		warning(CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
 	efitick_t nowNt = getTimeNowNt();
-	if (ENGINE(rpmCalculator).isCranking()) {
+	if (engine->rpmCalculator.isCranking()) {
 		crankingTime = nowNt;
 		timeSinceCranking = 0.0f;
 	} else {
@@ -110,7 +110,7 @@ void EngineState::periodicFastCallback() {
 	}
 	recalculateAuxValveTiming();
 
-	int rpm = ENGINE(rpmCalculator).getRpm();
+	int rpm = engine->rpmCalculator.getRpm();
 	sparkDwell = getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
@@ -150,12 +150,12 @@ void EngineState::periodicFastCallback() {
 	// compute per-bank fueling
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
 		float corr = clResult.banks[i];
-		ENGINE(injectionMass)[i] = injectionMass * corr;
-		ENGINE(stftCorrection)[i] = corr;
+		engine->injectionMass[i] = injectionMass * corr;
+		engine->stftCorrection[i] = corr;
 	}
 
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
-	ENGINE(injectionDuration) = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
+	engine->injectionDuration = engine->injectorModel->getInjectionDuration(injectionMass);
 
 	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
@@ -164,7 +164,7 @@ void EngineState::periodicFastCallback() {
 	timingAdvance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
 
 	// TODO: calculate me from a table!
-	trailingSparkAngle = CONFIG(trailingSparkAngle);
+	trailingSparkAngle = engineConfiguration->trailingSparkAngle;
 
 	multispark.count = getMultiSparkCount(rpm);
 
@@ -185,7 +185,7 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / US_PER_SECOND_F;
 	if (!cisnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
-		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);
+		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, engineConfiguration->tChargeAirIncrLimit, engineConfiguration->tChargeAirDecrLimit, secsPassed);
 		sd.tChargeK = convertCelsiusToKelvin(sd.tCharge);
 		timeSinceLastTChargeK = curTime;
 	}
@@ -256,19 +256,19 @@ void TriggerConfiguration::update() {
 }
 
 bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return CONFIG(useOnlyRisingEdgeForTrigger);
+	return engineConfiguration->useOnlyRisingEdgeForTrigger;
 }
 
 trigger_type_e PrimaryTriggerConfiguration::getType() const {
-	return CONFIG(trigger.type);
+	return engineConfiguration->trigger.type;
 }
 
 bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return CONFIG(verboseTriggerSynchDetails);
+	return engineConfiguration->verboseTriggerSynchDetails;
 }
 
 bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return CONFIG(vvtCamSensorUseRise);
+	return engineConfiguration->vvtCamSensorUseRise;
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
@@ -276,5 +276,5 @@ trigger_type_e VvtTriggerConfiguration::getType() const {
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return CONFIG(verboseVVTDecoding);
+	return engineConfiguration->verboseVVTDecoding;
 }

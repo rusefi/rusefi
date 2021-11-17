@@ -118,7 +118,7 @@ static float validateBaroMap(float mapKPa) {
 
 float getBaroPressure() {
 	// Override the real Baro sensor with the stored initial MAP value, if the option is set.
-	if (CONFIG(useFixedBaroCorrFromMap))
+	if (engineConfiguration->useFixedBaroCorrFromMap)
 		return storedInitialBaroPressure;
 	float voltage = getVoltageDivided("baro", engineConfiguration->baroSensor.hwChannel);
 	return decodePressure(voltage, &engineConfiguration->baroSensor);
@@ -211,7 +211,7 @@ static void printMAPInfo() {
 void initMapDecoder() {
 	applyConfiguration();
 
-	if (CONFIG(useFixedBaroCorrFromMap)) {
+	if (engineConfiguration->useFixedBaroCorrFromMap) {
 		// Read initial MAP sensor value and store it for Baro correction.
 		storedInitialBaroPressure = Sensor::get(SensorType::MapSlow).value_or(101.325);
 		efiPrintf("Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);

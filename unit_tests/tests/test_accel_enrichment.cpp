@@ -52,7 +52,7 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	eth.fireTriggerEvents2(/* count */ 5, 25 /* ms */);
 	ASSERT_EQ( 1200,  GET_RPM()) << "RPM";
 	int expectedInvocationCounter = 1;
-	ASSERT_EQ(expectedInvocationCounter, ENGINE(tpsAccelEnrichment).onUpdateInvocationCounter);
+	ASSERT_EQ(expectedInvocationCounter, engine->tpsAccelEnrichment.onUpdateInvocationCounter);
 
 	Sensor::setMockValue(SensorType::Tps1, 70);
 	eth.fireTriggerEvents2(/* count */ 1, 25 /* ms */);
@@ -64,13 +64,13 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	}
 
 	expectedInvocationCounter++;
-	ASSERT_EQ(expectedInvocationCounter, ENGINE(tpsAccelEnrichment).onUpdateInvocationCounter);
+	ASSERT_EQ(expectedInvocationCounter, engine->tpsAccelEnrichment.onUpdateInvocationCounter);
 
 	eth.engine.periodicFastCallback();
 	eth.engine.periodicFastCallback();
 	eth.engine.periodicFastCallback();
 
-	ASSERT_EQ(expectedInvocationCounter, ENGINE(tpsAccelEnrichment).onUpdateInvocationCounter);
+	ASSERT_EQ(expectedInvocationCounter, engine->tpsAccelEnrichment.onUpdateInvocationCounter);
 }
 
 static void doFractionalTpsIteration(int period, int divisor, int numCycles, std::vector<floatms_t> &tpsEnrich) {

@@ -49,17 +49,17 @@ TEST(FanControl, fan1) {
 	EXPECT_EQ(true, enginePins.fanRelay.getLogicValue());
 
 	// Engine starts cranking, fan should turn off
-	ENGINE(rpmCalculator).setRpmValue(100);
+	engine->rpmCalculator.setRpmValue(100);
 	updateFans(false);
 	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
 
 	// Engine running, fan should turn back on
-	ENGINE(rpmCalculator).setRpmValue(1000);
+	engine->rpmCalculator.setRpmValue(1000);
 	updateFans(false);
 	EXPECT_EQ(true, enginePins.fanRelay.getLogicValue());
 
 	// Stop the engine, fan should stay on
-	ENGINE(rpmCalculator).setRpmValue(0);
+	engine->rpmCalculator.setRpmValue(0);
 	updateFans(false);
 	EXPECT_EQ(true, enginePins.fanRelay.getLogicValue());
 

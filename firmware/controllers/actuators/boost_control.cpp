@@ -106,7 +106,7 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 		return 0;
 	}
 
-	if (manifoldPressure < CONFIG(minimumBoostClosedLoopMap)) {
+	if (manifoldPressure < engineConfiguration->minimumBoostClosedLoopMap) {
 		// We're below the CL threshold, inhibit CL for now
 		m_pid.reset();
 		return 0;
@@ -129,7 +129,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 }
 
 void BoostController::setOutput(expected<float> output) {
-	percent_t percent = output.value_or(CONFIG(boostControlSafeDutyCycle));
+	percent_t percent = output.value_or(engineConfiguration->boostControlSafeDutyCycle);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
@@ -183,15 +183,15 @@ void setDefaultBoostParameters() {
 	}
 
 	// Defaults for ETB-style wastegate actuator
-	CONFIG(etbWastegatePid).pFactor = 1;
-	CONFIG(etbWastegatePid).minValue = -60;
-	CONFIG(etbWastegatePid).maxValue = 60;
+	engineConfiguration->etbWastegatePid.pFactor = 1;
+	engineConfiguration->etbWastegatePid.minValue = -60;
+	engineConfiguration->etbWastegatePid.maxValue = 60;
 }
 
 void startBoostPin() {
 #if !EFI_UNIT_TEST
 	// Only init if a pin is set, no need to start PWM without a pin
-	if (!isBrainPinValid(CONFIG(boostControlPin))) {
+	if (!isBrainPinValid(engineConfiguration->boostControlPin)) {
 		return;
 	}
 
@@ -213,18 +213,18 @@ void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfigur
 void initBoostCtrl() {
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initAuxPid' is an example of a subsystem without explicit enable
-	if (!CONFIG(isBoostControlEnabled)) {
+	if (!engineConfiguration->isBoostControlEnabled) {
 		return;
 	}
 
 	bool hasAnyEtbWastegate = false;
 
-	for (size_t i = 0; i < efi::size(CONFIG(etbFunctions)); i++) {
-		hasAnyEtbWastegate |= CONFIG(etbFunctions)[i] == ETB_Wastegate;
+	for (size_t i = 0; i < efi::size(engineConfiguration->etbFunctions); i++) {
+		hasAnyEtbWastegate |= engineConfiguration->etbFunctions[i] == ETB_Wastegate;
 	}
 
 	// If we have neither a boost PWM pin nor ETB wastegate, nothing more to do
-	if (!isBrainPinValid(CONFIG(boostControlPin)) && !hasAnyEtbWastegate) {
+	if (!isBrainPinValid(engineConfiguration->boostControlPin) && !hasAnyEtbWastegate) {
 		return;
 	}
 

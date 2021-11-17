@@ -36,7 +36,7 @@ int minCrankingRpm = 0;
  * @return ignition timing angle advance before TDC
  */
 static angle_t getRunningAdvance(int rpm, float engineLoad) {
-	if (CONFIG(timingMode) == TM_FIXED) {
+	if (engineConfiguration->timingMode == TM_FIXED) {
 		return engineConfiguration->fixedTiming;
 	}
 
@@ -50,22 +50,22 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 
 	// get advance from the separate table for Idle
-	if (CONFIG(useSeparateAdvanceForIdle) && isIdlingOrTaper()) {
+	if (engineConfiguration->useSeparateAdvanceForIdle && isIdlingOrTaper()) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
 		if (valid) {
 			// interpolate between idle table and normal (running) table using TPS threshold
-			advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
+			advanceAngle = interpolateClamped(0.0f, idleAdvance, engineConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
 		}
 	}
 
 #if EFI_LAUNCH_CONTROL
-	if (engine->launchController.isLaunchCondition && CONFIG(enableLaunchRetard)) {
-        if (CONFIG(launchSmoothRetard)) {
-       	    float launchAngle = CONFIG(launchTimingRetard);
-	        int launchAdvanceRpmRange = CONFIG(launchTimingRpmRange);
-	        int launchRpm = CONFIG(launchRpm);
+	if (engine->launchController.isLaunchCondition && engineConfiguration->enableLaunchRetard) {
+        if (engineConfiguration->launchSmoothRetard) {
+       	    float launchAngle = engineConfiguration->launchTimingRetard;
+	        int launchAdvanceRpmRange = engineConfiguration->launchTimingRpmRange;
+	        int launchRpm = engineConfiguration->launchRpm;
 			 // interpolate timing from rpm at launch triggered to full retard at launch launchRpm + launchTimingRpmRange
 			return interpolateClamped(launchRpm, advanceAngle, (launchRpm + launchAdvanceRpmRange), launchAngle, rpm);
 		} else {
@@ -109,16 +109,16 @@ angle_t getAdvanceCorrections(int rpm) {
  */
 static angle_t getCrankingAdvance(int rpm, float engineLoad) {
 	// get advance from the separate table for Cranking
-	if (CONFIG(useSeparateAdvanceForCranking)) {
-		return interpolate2d(rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
+	if (engineConfiguration->useSeparateAdvanceForCranking) {
+		return interpolate2d(rpm, engineConfiguration->crankingAdvanceBins, engineConfiguration->crankingAdvance);
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
-	angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad);
+	angle_t crankingToRunningTransitionAngle = getRunningAdvance(engineConfiguration->cranking.rpm, engineLoad);
 	// interpolate not from zero, but starting from min. possible rpm detected
 	if (rpm < minCrankingRpm || minCrankingRpm == 0)
 		minCrankingRpm = rpm;
-	return interpolateClamped(minCrankingRpm, CONFIG(crankingTimingAngle), CONFIG(cranking.rpm), crankingToRunningTransitionAngle, rpm);
+	return interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, engineConfiguration->cranking.rpm, crankingToRunningTransitionAngle, rpm);
 }
 
 
@@ -130,7 +130,7 @@ angle_t getAdvance(int rpm, float engineLoad) {
 
 	angle_t angle;
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking();
+	bool isCranking = engine->rpmCalculator.isCranking();
 	if (isCranking) {
 		angle = getCrankingAdvance(rpm, engineLoad);
 		assertAngleRange(angle, "crAngle", CUSTOM_ERR_ANGLE_CR);
@@ -146,8 +146,8 @@ angle_t getAdvance(int rpm, float engineLoad) {
 
 	// Allow correction only if set to dynamic
 	// AND we're either not cranking OR allowed to correct in cranking
-	bool allowCorrections = CONFIG(timingMode) == TM_DYNAMIC
-		&& (!isCranking || CONFIG(useAdvanceCorrectionsForCranking));
+	bool allowCorrections = engineConfiguration->timingMode == TM_DYNAMIC
+		&& (!isCranking || engineConfiguration->useAdvanceCorrectionsForCranking);
 
 	if (allowCorrections) {
 		angle_t correction = getAdvanceCorrections(rpm);
@@ -166,26 +166,26 @@ angle_t getAdvance(int rpm, float engineLoad) {
 
 size_t getMultiSparkCount(int rpm) {
 	// Compute multispark (if enabled)
-	if (CONFIG(multisparkEnable)
-		&& rpm <= CONFIG(multisparkMaxRpm)
-		&& CONFIG(multisparkMaxExtraSparkCount) > 0) {
+	if (engineConfiguration->multisparkEnable
+		&& rpm <= engineConfiguration->multisparkMaxRpm
+		&& engineConfiguration->multisparkMaxExtraSparkCount > 0) {
 		// For zero RPM, disable multispark.  We don't yet know the engine speed, so multispark may not be safe.
 		if (rpm == 0) {
 			return 0;
 		}
 
-		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
-		floatus_t multiDwell = CONFIG(multisparkDwell);
+		floatus_t multiDelay = engineConfiguration->multisparkSparkDuration;
+		floatus_t multiDwell = engineConfiguration->multisparkDwell;
 
         // dwell times are below 10 seconds here so we use 32 bit type for performance reasons
-		ENGINE(engineState.multispark.delay) = (uint32_t)USF2NT(multiDelay);
-		ENGINE(engineState.multispark.dwell) = (uint32_t)USF2NT(multiDwell);
+		engine->engineState.multispark.delay = (uint32_t)USF2NT(multiDelay);
+		engine->engineState.multispark.dwell = (uint32_t)USF2NT(multiDwell);
 
 		constexpr float usPerDegreeAt1Rpm = 60e6 / 360;
 		floatus_t usPerDegree = usPerDegreeAt1Rpm / rpm;
 
 		// How long is there for sparks? The user configured an angle, convert to time.
-		floatus_t additionalSparksUs = usPerDegree * CONFIG(multisparkMaxSparkingAngle);
+		floatus_t additionalSparksUs = usPerDegree * engineConfiguration->multisparkMaxSparkingAngle;
 		// How long does one spark take?
 		floatus_t oneSparkTime = multiDelay + multiDwell;
 
@@ -196,7 +196,7 @@ size_t getMultiSparkCount(int rpm) {
 		uint32_t floored = sparksFitInTime;
 
 		// Allow no more than the maximum number of extra sparks
-		return minI(floored, CONFIG(multisparkMaxExtraSparkCount));
+		return minI(floored, engineConfiguration->multisparkMaxExtraSparkCount);
 	} else {
 		return 0;
 	}

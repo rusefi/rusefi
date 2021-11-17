@@ -201,24 +201,24 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	int seconds = getTimeNowSeconds();
 	printCurrentState(&logger, seconds, getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
 #if EFI_PROD_CODE
-	printOutPin(PROTOCOL_CRANK1, CONFIG(triggerInputPins)[0]);
-	printOutPin(PROTOCOL_CRANK2, CONFIG(triggerInputPins)[1]);
+	printOutPin(PROTOCOL_CRANK1, engineConfiguration->triggerInputPins[0]);
+	printOutPin(PROTOCOL_CRANK2, engineConfiguration->triggerInputPins[1]);
 	for (int i = 0;i<CAM_INPUTS_COUNT;i++) {
 		extern const char *vvtNames[];
 		printOutPin(vvtNames[i], engineConfiguration->camInputs[i]);
 	}
-	printOutPin(PROTOCOL_HIP_NAME, CONFIG(hip9011IntHoldPin));
-	printOutPin(PROTOCOL_TACH_NAME, CONFIG(tachOutputPin));
+	printOutPin(PROTOCOL_HIP_NAME, engineConfiguration->hip9011IntHoldPin);
+	printOutPin(PROTOCOL_TACH_NAME, engineConfiguration->tachOutputPin);
 #if EFI_LOGIC_ANALYZER
-	printOutPin(PROTOCOL_WA_CHANNEL_1, CONFIG(logicAnalyzerPins)[0]);
-	printOutPin(PROTOCOL_WA_CHANNEL_2, CONFIG(logicAnalyzerPins)[1]);
+	printOutPin(PROTOCOL_WA_CHANNEL_1, engineConfiguration->logicAnalyzerPins[0]);
+	printOutPin(PROTOCOL_WA_CHANNEL_2, engineConfiguration->logicAnalyzerPins[1]);
 #endif /* EFI_LOGIC_ANALYZER */
 
-	int cylCount = minI(CONFIG(specs.cylindersCount), MAX_CYLINDER_COUNT);
+	int cylCount = minI(engineConfiguration->specs.cylindersCount, MAX_CYLINDER_COUNT);
 	for (int i = 0; i < cylCount; i++) {
-		printOutPin(enginePins.coils[i].getShortName(), CONFIG(ignitionPins)[i]);
-		printOutPin(enginePins.trailingCoils[i].getShortName(), CONFIG(trailingCoilPins)[i]);
-		printOutPin(enginePins.injectors[i].getShortName(), CONFIG(injectionPins)[i]);
+		printOutPin(enginePins.coils[i].getShortName(), engineConfiguration->ignitionPins[i]);
+		printOutPin(enginePins.trailingCoils[i].getShortName(), engineConfiguration->trailingCoilPins[i]);
+		printOutPin(enginePins.injectors[i].getShortName(), engineConfiguration->injectionPins[i]);
 	}
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		printOutPin(enginePins.auxValve[i].getShortName(), engineConfiguration->auxValves[i]);
@@ -296,7 +296,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL
 	efiPrintf("base cranking fuel %.2f", engineConfiguration->cranking.baseFuel);
-	efiPrintf("cranking fuel: %.2f", ENGINE(engineState.cranking.fuel));
+	efiPrintf("cranking fuel: %.2f", engine->engineState.cranking.fuel);
 
 	if (!engine->rpmCalculator.isStopped()) {
 		float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
@@ -495,11 +495,11 @@ static void updateThrottles() {
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	tsOutputChannels.lambda = lambdaValue;
-	tsOutputChannels.airFuelRatio = lambdaValue * ENGINE(engineState.stoichiometricRatio);
+	tsOutputChannels.airFuelRatio = lambdaValue * engine->engineState.stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
 	tsOutputChannels.lambda2 = lambda2Value;
-	tsOutputChannels.airFuelRatio2 = lambda2Value * ENGINE(engineState.stoichiometricRatio);
+	tsOutputChannels.airFuelRatio2 = lambda2Value * engine->engineState.stoichiometricRatio;
 }
 
 static void updateFuelSensors() {
@@ -565,7 +565,7 @@ static void updateMiscSensors() {
 #endif /* HAL_USE_ADC */
 
 	// tCharge depends on the previous state, so we should use the stored value.
-	tsOutputChannels.tCharge = ENGINE(engineState.sd.tCharge);
+	tsOutputChannels.tCharge = engine->engineState.sd.tCharge;
 }
 
 static void updateSensors(int rpm) {
@@ -582,28 +582,28 @@ static void updateSensors(int rpm) {
 
 static void updateFuelCorrections() {
 	tsOutputChannels.baroCorrection = engine->engineState.baroCorrection;
-	tsOutputChannels.iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
-	tsOutputChannels.cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
+	tsOutputChannels.iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
+	tsOutputChannels.cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 
-	tsOutputChannels.fuelTrim[0] = 100.0f * (ENGINE(stftCorrection)[0] - 1.0f);
-	tsOutputChannels.fuelTrim[1] = 100.0f * (ENGINE(stftCorrection)[1] - 1.0f);
+	tsOutputChannels.fuelTrim[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
+	tsOutputChannels.fuelTrim[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
 
-	tsOutputChannels.injectorLagMs = ENGINE(engineState.running.injectorLag);
+	tsOutputChannels.injectorLagMs = engine->engineState.running.injectorLag;
 }
 
 static void updateFuelLoads() {
 	tsOutputChannels.fuelingLoad = getFuelingLoad();
 	tsOutputChannels.ignitionLoad = getIgnitionLoad();
-	tsOutputChannels.veTableYAxis = ENGINE(engineState.currentVeLoad);
-	tsOutputChannels.afrTableYAxis = ENGINE(engineState.currentAfrLoad);
+	tsOutputChannels.veTableYAxis = engine->engineState.currentVeLoad;
+	tsOutputChannels.afrTableYAxis = engine->engineState.currentAfrLoad;
 }
 
 static void updateFuelResults() {
 	tsOutputChannels.chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 
 	tsOutputChannels.fuelBase = engine->engineState.baseFuel * 1000;	// Convert grams to mg
-	tsOutputChannels.fuelRunning = ENGINE(engineState.running.fuel);
-	tsOutputChannels.actualLastInjection = ENGINE(actualLastInjection)[0];
+	tsOutputChannels.fuelRunning = engine->engineState.running.fuel;
+	tsOutputChannels.actualLastInjection = engine->actualLastInjection[0];
 
 	tsOutputChannels.fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 	tsOutputChannels.totalFuelConsumption = engine->engineState.fuelConsumption.getConsumedGrams();
@@ -614,17 +614,17 @@ static void updateFuelInfo() {
 	updateFuelLoads();
 	updateFuelResults();
 
-	const auto& wallFuel = ENGINE(injectionEvents.elements[0].wallFuel);
+	const auto& wallFuel = engine->injectionEvents.elements[0].wallFuel;
 	tsOutputChannels.wallFuelAmount = wallFuel.getWallFuel();
 	tsOutputChannels.wallFuelCorrection = wallFuel.wallFuelCorrection;
 
 	tsOutputChannels.injectionOffset = engine->engineState.injectionOffset;
 
 	tsOutputChannels.veValue = engine->engineState.currentVe;
-	tsOutputChannels.currentTargetAfr = ENGINE(engineState.targetAFR);
-	tsOutputChannels.targetLambda = ENGINE(engineState.targetLambda);
+	tsOutputChannels.currentTargetAfr = engine->engineState.targetAFR;
+	tsOutputChannels.targetLambda = engine->engineState.targetLambda;
 
-	tsOutputChannels.crankingFuelMass = ENGINE(engineState.cranking.fuel);
+	tsOutputChannels.crankingFuelMass = engine->engineState.cranking.fuel;
 }
 
 static void updateIgnition(int rpm) {
@@ -632,11 +632,11 @@ static void updateIgnition(int rpm) {
 	// that's weird logic. also seems broken for two stroke?
 	tsOutputChannels.ignitionAdvance = timing > FOUR_STROKE_CYCLE_DURATION / 2 ? timing - FOUR_STROKE_CYCLE_DURATION : timing;
 	// 60
-	tsOutputChannels.sparkDwell = ENGINE(engineState.sparkDwell);
+	tsOutputChannels.sparkDwell = engine->engineState.sparkDwell;
 
 	tsOutputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
 
-	tsOutputChannels.knockRetard = ENGINE(knockController).getKnockRetard();
+	tsOutputChannels.knockRetard = engine->knockController.getKnockRetard();
 }
 
 static void updateFlags() {
@@ -644,8 +644,8 @@ static void updateFlags() {
 	tsOutputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
 	tsOutputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
 	tsOutputChannels.isO2HeaterOn = enginePins.o2heater.getLogicValue();
-	tsOutputChannels.isIgnitionEnabledIndicator = ENGINE(limpManager).allowIgnition();
-	tsOutputChannels.isInjectionEnabledIndicator = ENGINE(limpManager).allowInjection();
+	tsOutputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition();
+	tsOutputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection();
 	tsOutputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_LAUNCH_CONTROL

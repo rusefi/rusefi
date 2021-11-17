@@ -135,20 +135,20 @@ void vag_18_Turbo() {
 	// todo lua setFsioExt (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25);
 #endif
 	// is this needed? engineConfiguration->vvtOutputFrequency[3] = 25;
-	CONFIG(etb_use_two_wires) = true;
+	engineConfiguration->etb_use_two_wires = true;
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
-	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
-	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
-	CONFIG(etbIo[0].disablePin) = GPIOF_12;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOF_15;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOF_14;
+	engineConfiguration->etbIo[0].disablePin = GPIOF_12;
 #endif /* STM32_HAS_GPIOF */
 	engineConfiguration->isHip9011Enabled = false;
 
 #if EFI_FSIO
 	// todo lua setFsio (15, GPIOE_6, "1");
 #endif
-	CONFIG(etbIo[1].directionPin1) = GPIOE_2;
-	CONFIG(etbIo[1].directionPin2) = GPIOE_4;
-	CONFIG(etbIo[1].disablePin) = GPIOE_5;
+	engineConfiguration->etbIo[1].directionPin1 = GPIOE_2;
+	engineConfiguration->etbIo[1].directionPin2 = GPIOE_4;
+	engineConfiguration->etbIo[1].disablePin = GPIOE_5;
 
 	engineConfiguration->etb.pFactor = 1.07;
 	engineConfiguration->etb.iFactor = 0.18;

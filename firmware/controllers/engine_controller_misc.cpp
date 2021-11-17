@@ -79,8 +79,8 @@ static void onStartStopButtonToggle() {
 		if (!wasStarterEngaged) {
 		    engine->startStopStateLastPushTime = getTimeNowNt();
 		    efiPrintf("Let's crank this engine for up to %d seconds via %s!",
-		    		CONFIG(startCrankingDuration),
-					hwPortname(CONFIG(starterControlPin)));
+		    		engineConfiguration->startCrankingDuration,
+					hwPortname(engineConfiguration->starterControlPin));
 		}
 	} else if (engine->rpmCalculator.isRunning()) {
 		efiPrintf("Let's stop this engine!");
@@ -113,10 +113,10 @@ void slowStartStopButtonCallback() {
 		}
 	}
 
-	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * CONFIG(startCrankingDuration)) {
+	if (getTimeNowNt() - engine->startStopStateLastPushTime > NT_PER_SECOND * engineConfiguration->startCrankingDuration) {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(0);
 		if (wasStarterEngaged) {
-			efiPrintf("Cranking timeout %d seconds", CONFIG(startCrankingDuration));
+			efiPrintf("Cranking timeout %d seconds", engineConfiguration->startCrankingDuration);
 			engine->startStopStateLastPushTime = 0;
 		}
 	}

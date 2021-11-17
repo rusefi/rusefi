@@ -165,7 +165,7 @@ static void miataNAcommonEngineSettings() {
 	engineConfiguration->enableFan1WithAc = true;
 	engineConfiguration->enableFan2WithAc = true;
 
-	CONFIG(tachPulsePerRev) = 2;
+	engineConfiguration->tachPulsePerRev = 2;
 
 	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
 
@@ -236,8 +236,8 @@ static void miataNAcommonEngineSettings() {
 	config->crankingFuelBins[7] = 90;
 
 	engineConfiguration->specs.displacement = 1.6;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
-	strcpy(CONFIG(engineCode), "NA6");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
+	strcpy(engineConfiguration->engineCode, "NA6");
 
 	// my car was originally a manual so proper TPS
 	engineConfiguration->tpsMin = 93; // convert 12to10 bit (ADC/4)
@@ -421,8 +421,8 @@ void setMiata94_MAP_MRE() {
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->specs.displacement = 1.8;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
-	strcpy(CONFIG(engineCode), "94");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
+	strcpy(engineConfiguration->engineCode, "94");
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
@@ -430,7 +430,7 @@ void setMiata94_MAP_MRE() {
 
 void setHellenNA94() {
 	miataNAcommonEngineSettings();
-	strcpy(CONFIG(engineCode), "94");
+	strcpy(engineConfiguration->engineCode, "94");
 	/**
 	 * http://miataturbo.wikidot.com/fuel-injectors
 	 * 94-97 Tan - #195500-2180

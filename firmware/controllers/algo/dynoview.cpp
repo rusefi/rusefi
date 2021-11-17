@@ -45,7 +45,7 @@ void DynoView::update(vssSrc src) {
         //updating here would display acceleration = 0 at constant speed
         updateAcceleration(deltaTime, deltaSpeed);
 #if EFI_TUNER_STUDIO
-	    if (CONFIG(debugMode) == DBG_LOGIC_ANALYZER) {
+	    if (engineConfiguration->debugMode == DBG_LOGIC_ANALYZER) {
 		    tsOutputChannels.debugIntField1 = deltaTime;
 		    tsOutputChannels.debugFloatField1 = vss;
 		    tsOutputChannels.debugFloatField2 = speed;
@@ -92,7 +92,7 @@ void DynoView::updateHP() {
     //these are actually at the wheel
     //we would need final drive to calcualte the correct torque at the wheel
     if (acceleration != 0) {
-        engineForce = CONFIG(vehicleWeight) * acceleration;
+        engineForce = engineConfiguration->vehicleWeight * acceleration;
         enginePower = engineForce * (vss / 3.6);
         engineHP = enginePower / 746;
         if (isValidRpm(GET_RPM())) { 
@@ -144,8 +144,8 @@ int getDynoviewPower() {
  * Only updates if we have Vss from input pin.
  */
 void updateDynoView() {
-	if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
-		(!CONFIG(enableCanVss))) {
+	if (isBrainPinValid(engineConfiguration->vehicleSpeedSensorInputPin) &&
+		(!engineConfiguration->enableCanVss)) {
 		dynoInstance.update(ICU);
 	}
 }
@@ -155,7 +155,7 @@ void updateDynoView() {
  * as soon as we can to be more acurate.
  */ 
 void updateDynoViewCan() {
-    if (!CONFIG(enableCanVss)) {
+    if (!engineConfiguration->enableCanVss) {
         return;
     }
     

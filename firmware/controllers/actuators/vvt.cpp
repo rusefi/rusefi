@@ -27,7 +27,7 @@ void VvtController::init(int index, int bankIndex, int camIndex, const ValueProv
 	m_cam = camIndex;
 
 	// Use the same settings for the Nth cam in every bank (ie, all exhaust cams use the same PID)
-	m_pid.initPidClass(&CONFIG(auxPid[camIndex]));
+	m_pid.initPidClass(&engineConfiguration->auxPid[camIndex]);
 
 	m_targetMap = targetMap;
 }

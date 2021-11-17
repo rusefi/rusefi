@@ -35,14 +35,14 @@ void setProteusHondaElement2003() {
 	engineConfiguration->injectorCompensationMode = ICM_FixedRailPressure;
 	engineConfiguration->fuelReferencePressure = 350; // TODO: what is real value?!
 
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_HONDA);
-	strcpy(CONFIG(engineCode), "K24");
-	strcpy(CONFIG(vehicleName), "test");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_HONDA);
+	strcpy(engineConfiguration->engineCode, "K24");
+	strcpy(engineConfiguration->vehicleName, "test");
 
 	gppwm_channel *vtsControl = &engineConfiguration->gppwm[0];
 	vtsControl->pwmFrequency = 0;
 
-	strcpy(CONFIG(gpPwmNote[0]), "VTS");
+	strcpy(engineConfiguration->gpPwmNote[0], "VTS");
 
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 830;
@@ -80,12 +80,12 @@ void setProteusHondaElement2003() {
 	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_2;
 	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_ANALOG_VOLT_3;
 	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_ANALOG_VOLT_6;
-	CONFIG(fanPin) = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 
-	CONFIG(mainRelayPin) = PROTEUS_LS_9;
-	CONFIG(fuelPumpPin) = PROTEUS_LS_11;
-//	CONFIG(fanPin) = PROTEUS_LS_15;
+	engineConfiguration->mainRelayPin = PROTEUS_LS_9;
+	engineConfiguration->fuelPumpPin = PROTEUS_LS_11;
+//	engineConfiguration->fanPin = PROTEUS_LS_15;
 
 #endif // HW_PROTEUS
 }

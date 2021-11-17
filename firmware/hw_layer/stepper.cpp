@@ -82,7 +82,7 @@ void StepperMotorBase::setInitialPosition(void) {
 	// now check if stepper motor re-initialization is requested - if the throttle pedal is pressed at startup
 	auto tpsPos = Sensor::getOrZero(SensorType::DriverThrottleIntent);
 	bool forceStepperParking = !isRunning && tpsPos > STEPPER_PARKING_TPS;
-	if (CONFIG(stepperForceParkingEveryRestart))
+	if (engineConfiguration->stepperForceParkingEveryRestart)
 		forceStepperParking = true;
 	efiPrintf("Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), tpsPos);
 
@@ -99,7 +99,7 @@ void StepperMotorBase::setInitialPosition(void) {
 		 *
 		 * Add extra steps to compensate step skipping by some old motors.
 		 */
-		int numParkingSteps = (int)efiRound((1.0f + (float)CONFIG(stepperParkingExtraSteps) / PERCENT_MULT) * m_totalSteps, 1.0f);
+		int numParkingSteps = (int)efiRound((1.0f + (float)engineConfiguration->stepperParkingExtraSteps / PERCENT_MULT) * m_totalSteps, 1.0f);
 		for (int i = 0; i < numParkingSteps; i++) {
 			if (!m_hw->step(false)) {
 				initialPositionSet = false;

@@ -731,15 +731,15 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	if (strEqualCaseInsensitive(param, CMD_TRIGGER_HW_INPUT)) {
 		engine->hwTriggerInputEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "useTLE8888_cranking_hack")) {
-		CONFIG(useTLE8888_cranking_hack) = isEnabled;
+		engineConfiguration->useTLE8888_cranking_hack = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
-		CONFIG(verboseTLE8888) = isEnabled;
+		engineConfiguration->verboseTLE8888 = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
-		CONFIG(artificialTestMisfire) = isEnabled;
+		engineConfiguration->artificialTestMisfire = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
-		CONFIG(displayLogicLevelsInEngineSniffer) = isEnabled;
+		engineConfiguration->displayLogicLevelsInEngineSniffer = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
-		CONFIG(enableVerboseCanTx) = isEnabled;
+		engineConfiguration->enableVerboseCanTx = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
 		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cj125")) {

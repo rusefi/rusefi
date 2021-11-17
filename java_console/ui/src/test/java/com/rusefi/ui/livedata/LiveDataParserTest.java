@@ -30,9 +30,9 @@ public class LiveDataParserTest {
                 "\tif (engineTooSlow) {\n" +
                 "\t\treturn true;\n" +
                 "\t} else {\n  " +
-                "auto ff2 = CONFIG(Alternatorcontrolpin);\n" +
+                "auto ff2 = engineConfiguration->Alternatorcontrolpin;\n" +
                 "\t}\n  " +
-                "auto ff = CONFIG(tpsMax);\n" +
+                "auto ff = engineConfiguration->tpsMax;\n" +
                 "\tif (engineTooFast) {\n" +
                 "\t\treturn false;\n" +
                 "\t} \n  " +

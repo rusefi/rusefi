@@ -85,7 +85,7 @@ TEST(limp, oilPressureFailureCase) {
 	Sensor::setMockValue(SensorType::OilPressure, 50);
 
 	// Start the engine
-	ENGINE(rpmCalculator).setRpmValue(1000);
+	engine->rpmCalculator.setRpmValue(1000);
 
 	// update & check: injection should be allowed
 	dut.updateState(1000, getTimeNowNt());
@@ -118,7 +118,7 @@ TEST(limp, oilPressureSuccessCase) {
 	Sensor::setMockValue(SensorType::OilPressure, 50);
 
 	// Start the engine
-	ENGINE(rpmCalculator).setRpmValue(1000);
+	engine->rpmCalculator.setRpmValue(1000);
 
 	// update & check: injection should be allowed
 	dut.updateState(1000, getTimeNowNt());

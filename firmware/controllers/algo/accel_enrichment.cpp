@@ -50,11 +50,11 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 
 	// Fractional enrichment (fuel portions are accumulated and split between several engine cycles.
 	// This is a crude imitation of carburetor's acceleration pump.
-	isFractionalEnrichment = CONFIG(tpsAccelFractionPeriod) > 1 || CONFIG(tpsAccelFractionDivisor) > 1.0f;
+	isFractionalEnrichment = engineConfiguration->tpsAccelFractionPeriod > 1 || engineConfiguration->tpsAccelFractionDivisor > 1.0f;
 	if (isFractionalEnrichment) {
 		// make sure both values are non-zero
-		float periodF = (float)maxI(CONFIG(tpsAccelFractionPeriod), 1);
-		float divisor = maxF(CONFIG(tpsAccelFractionDivisor), 1.0f);
+		float periodF = (float)maxI(engineConfiguration->tpsAccelFractionPeriod, 1);
+		float divisor = maxF(engineConfiguration->tpsAccelFractionDivisor, 1.0f);
 
 		// if current extra fuel portion is not "strong" enough, then we keep up the "pump pressure" with the accumulated portion
 		floatms_t maxExtraFuel = maxF(extraFuel, accumulatedValue);
@@ -116,7 +116,7 @@ void TpsAccelEnrichment::onEngineCycleTps() {
 		}
 
 		// reset the counter
-		cycleCnt = CONFIG(tpsAccelFractionPeriod);
+		cycleCnt = engineConfiguration->tpsAccelFractionPeriod;
 	}
 }
 
