@@ -50,7 +50,8 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 
 	// get advance from the separate table for Idle
-	if (engineConfiguration->useSeparateAdvanceForIdle && isIdlingOrTaper()) {
+	if (engineConfiguration->useSeparateAdvanceForIdle &&
+	    engine->engineModules.unmock<IdleController>().isIdlingOrTaper()) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
@@ -88,7 +89,7 @@ angle_t getAdvanceCorrections(int rpm) {
 		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
 	}
 
-	float pidTimingCorrection = getIdleTimingAdjustment(rpm);
+	float pidTimingCorrection = ENGINE(engineModules).unmock<IdleController>().getIdleTimingAdjustment(rpm);
 
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if EFI_TUNER_STUDIO
