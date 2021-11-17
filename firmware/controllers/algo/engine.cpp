@@ -235,7 +235,7 @@ void Engine::periodicSlowCallback() {
 
 	updateGppwm();
 
-	ENGINE(engineModules).apply_all([](auto & m) { m.onSlowCallback(); });
+	engine->engineModules.apply_all([](auto & m) { m.onSlowCallback(); });
 
 #if EFI_BOOST_CONTROL
 	updateBoostControl();
@@ -632,7 +632,7 @@ void Engine::periodicFastCallback() {
 
 	tachSignalCallback();
 
-	ENGINE(engineModules).apply_all([](auto & m) { m.onFastCallback(); });
+	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
 }
 
 void doScheduleStopEngine() {

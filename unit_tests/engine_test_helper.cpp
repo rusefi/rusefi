@@ -350,9 +350,7 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 
 
 void EngineTestHelper::applyTriggerWaveform() {
-	Engine *engine = &this->engine;
-
-	ENGINE(initializeTriggerWaveform());
+	engine.initializeTriggerWaveform();
 
 	incrementGlobalConfigurationVersion();
 }

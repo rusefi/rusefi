@@ -160,7 +160,7 @@ private:
 };
 
 // Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
-#define GET_RPM() ( ENGINE(rpmCalculator.getRpm()) )
+#define GET_RPM() ( engine->rpmCalculator.getRpm() )
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
@@ -176,7 +176,7 @@ void initRpmCalculator();
 
 float getCrankshaftAngleNt(efitick_t timeNt);
 
-#define getRevolutionCounter() ENGINE(rpmCalculator.getRevolutionCounterM())
+#define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 
 #if EFI_ENGINE_SNIFFER
 #define addEngineSnifferEvent(name, msg) { efiAssertVoid(OBD_PCM_Processor_Fault, engine!=NULL, "engine ptr missing");  if (engine->isEngineChartEnabled) { waveChart.addEvent3((name), (msg)); } }

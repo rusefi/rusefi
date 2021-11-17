@@ -410,7 +410,7 @@ ignition_mode_e getCurrentIgnitionMode() {
 	ignition_mode_e ignitionMode = engineConfiguration->ignitionMode;
 #if EFI_SHAFT_POSITION_INPUT
 	// In spin-up cranking mode we don't have full phase sync. info yet, so wasted spark mode is better
-	if (ignitionMode == IM_INDIVIDUAL_COILS && ENGINE(rpmCalculator.isSpinningUp()))
+	if (ignitionMode == IM_INDIVIDUAL_COILS && engine->rpmCalculator.isSpinningUp())
 		ignitionMode = IM_WASTED_SPARK;
 #endif /* EFI_SHAFT_POSITION_INPUT */
 	return ignitionMode;
