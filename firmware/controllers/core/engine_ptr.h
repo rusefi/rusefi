@@ -23,31 +23,12 @@ struct engine_configuration_s;
 struct persistent_config_s;
 
 #if EFI_UNIT_TEST
+        #define CONFIG(x) engineConfiguration->x
+        #define ENGINE(x) engine->x
 
-#ifdef __cplusplus
-	#define EXTERN_ENGINE extern engine_configuration_s & activeConfiguration
-
-	struct EnginePtr {
-		void inject() {
-		}
-	};
-#endif // def __cplusplus
-
-	#define EXPAND_Engine 
-
-	#define CONFIG(x) engineConfiguration->x
-	#define ENGINE(x) engine->x
 #else // EFI_UNIT_TEST
 
-	// These are the non-unit-test (AKA real firmware) noop versions
-
-#ifdef __cplusplus
 	#define ENGINE(x) ___engine.x
-
-	struct EnginePtr {
-		void inject() { }
-	};
-#endif // def __cplusplus
 
 	/**
 	 * this macro allows the compiled to figure out the complete static address, that's a performance
@@ -58,6 +39,4 @@ struct persistent_config_s;
 	 * access in unit tests
 	 */
 	#define CONFIG(x) persistentState.persistentConfiguration.engineConfiguration.x
-
-	#define EXPAND_Engine
 #endif // EFI_UNIT_TEST
