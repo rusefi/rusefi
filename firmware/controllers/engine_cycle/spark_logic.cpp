@@ -529,6 +529,11 @@ void onTriggerEventSparkLogic(bool limitedSpark, uint32_t trgEventIndex, int rpm
 				warning(CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->globalSparkIdCounter);
 				continue;
 			}
+#if EFI_LAUNCH_CONTROL
+			if (engine->softSparkLimiter.shouldSkip()) {
+				continue;
+			}
+#endif // EFI_LAUNCH_CONTROL
 
 			scheduleSparkEvent(limitedSpark, trgEventIndex, event, rpm, edgeTimestamp);
 		}
