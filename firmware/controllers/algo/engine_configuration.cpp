@@ -129,8 +129,6 @@ static engine_configuration_s activeConfigurationLocalStorage;
 engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
 #endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
-extern engine_configuration_s *engineConfiguration;
-
 void rememberCurrentConfiguration() {
 #if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
