@@ -50,8 +50,6 @@ void printSpiState(const engine_configuration_s *engineConfiguration) {
 		boolToString(engineConfiguration->is_enabled_spi_4));
 }
 
-extern engine_configuration_s *engineConfiguration;
-
 static void printOutputs(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
@@ -1220,7 +1218,7 @@ void initSettings(void) {
 
 	// todo: start saving values into flash right away?
 
-	addConsoleActionP("showconfig", (VoidPtr) doPrintConfiguration, &engine);
+	addConsoleAction("showconfig", doPrintConfiguration);
 	addConsoleAction("tempinfo", printTemperatureInfo);
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);

@@ -98,7 +98,6 @@
  * Would love to pass reference to configuration object into constructor but C++ does allow attributes after parenthesized initializer
  */
 Engine ___engine CCM_OPTIONAL;
-Engine * engine = &___engine;
 
 #else // EFI_UNIT_TEST
 
