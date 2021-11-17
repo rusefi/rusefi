@@ -24,6 +24,7 @@
 #include "knock_logic.h"
 #include "idle_state_generated.h"
 #include "idle_thread.h"
+#include "injector_model.h"
 #include "launch_control.h"
 #include "type_list.h"
 
@@ -61,7 +62,6 @@ struct AirmassModelBase;
 
 class IEtbController;
 struct IFuelComputer;
-struct IInjectorModel;
 struct IIdleController;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
@@ -110,9 +110,9 @@ public:
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
-	IInjectorModel *injectorModel = nullptr;
 
 	type_list<
+		Mockable<InjectorModel>,
 #if EFI_IDLE_CONTROL
 		IdleController,
 #endif

@@ -697,7 +697,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	// Injection duration of 12.5ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(12.5f));
-	engine->injectorModel = &im;
+	engine->engineModules.set<InjectorModel>(&im);
 
 	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM()));
 
@@ -857,7 +857,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	// Injection duration of 17.5ms
 	MockInjectorModel2 im2;
 	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
-	engine->injectorModel = &im2;
+	engine->engineModules.set<InjectorModel>(&im2);
 
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
 	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM()));
@@ -994,7 +994,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	// Injection duration of 17.5ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
-	engine->injectorModel = &im;
+	engine->engineModules.set<InjectorModel>(&im);
 
 	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM()));
 
@@ -1061,7 +1061,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	engine->injectionDuration = 2.0f;
 	MockInjectorModel2 im2;
 	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(2.0f));
-	engine->injectorModel = &im2;
+	engine->engineModules.set<InjectorModel>(&im2);
 
 	ASSERT_EQ( 10,  getInjectorDutyCycle(GET_RPM())) << "Lduty for maf=3";
 

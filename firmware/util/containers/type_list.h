@@ -183,7 +183,11 @@ public:
 
 	template<typename set_t, typename param_t>
 	auto set(param_t ptr) -> std::enable_if_t<has<set_t>()> {
-		cur = ptr ? ptr : &me;
+		if (ptr) {
+			cur = ptr;
+		} else {
+			cur = &me;
+		}
 	}
 };
 
