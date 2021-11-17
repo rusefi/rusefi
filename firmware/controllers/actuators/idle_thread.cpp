@@ -472,24 +472,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		return iacPosition;
 }
 
-void IdleController::update() {
+void IdleController::onSlowCallback() {
 	float position = getIdlePosition();
 	applyIACposition(position);
-}
-
-IdleController idleControllerInstance;
-
-void updateIdleControl()
-{
-	idleControllerInstance.update();
-}
-
-float getIdleTimingAdjustment(int rpm) {
-	return idleControllerInstance.getIdleTimingAdjustment(rpm);
-}
-
-bool isIdlingOrTaper() {
-	return idleControllerInstance.isIdlingOrTaper();
 }
 
 static void applyPidSettings() {
@@ -518,12 +503,14 @@ void setDefaultIdleParameters() {
 	engineConfiguration->idlePidRpmUpperLimit = 100;
 }
 
+void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 #if ! EFI_UNIT_TEST
-
-void onConfigurationChangeIdleCallback(engine_configuration_s *previousConfiguration) {
 	engine->idle.shouldResetPid = !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
 	engine->idle.mustResetPid = engine->idle.shouldResetPid;
+#endif
 }
+
+#if ! EFI_UNIT_TEST
 
 void setTargetIdleRpm(int value) {
 	setTargetRpmCurve(value);
@@ -566,9 +553,7 @@ void startIdleBench(void) {
 #endif /* EFI_UNIT_TEST */
 
 void startIdleThread() {
-	idleControllerInstance.init(&engineConfiguration->idleTimingPid);
-
-	engine->idleController = &idleControllerInstance;
+	engine->engineModules.unmock<IdleController>().init(&engineConfiguration->idleTimingPid);
 
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
 

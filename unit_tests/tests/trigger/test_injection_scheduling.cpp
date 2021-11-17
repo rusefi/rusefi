@@ -22,7 +22,7 @@ TEST(injectionScheduling, NormalDutyCycle) {
 	// Injection duration of 20ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillOnce(Return(20.0f));
-	engine->injectorModel = &im;
+	engine->engineModules.set<InjectorModel>(&im);
 
 	{
 		InSequence is;
