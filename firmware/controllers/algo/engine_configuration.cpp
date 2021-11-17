@@ -369,8 +369,8 @@ void setTargetRpmCurve(int rpm) {
 
 void setDefaultGppwmParameters() {
 	// Same config for all channels
-	for (size_t i = 0; i < efi::size(CONFIG(gppwm)); i++) {
-		auto& cfg = CONFIG(gppwm)[i];
+	for (size_t i = 0; i < efi::size(engineConfiguration->gppwm); i++) {
+		auto& cfg = engineConfiguration->gppwm[i];
 
 		cfg.pin = GPIO_UNASSIGNED;
 		cfg.dutyIfError = 0;
@@ -414,22 +414,22 @@ static void setHip9011FrankensoPinout() {
 	/**
 	 * SPI on PB13/14/15
 	 */
-	//	CONFIG(hip9011CsPin) = GPIOD_0; // rev 0.1
+	//	engineConfiguration->hip9011CsPin = GPIOD_0; // rev 0.1
 
-	CONFIG(isHip9011Enabled) = true;
+	engineConfiguration->isHip9011Enabled = true;
 	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
-	CONFIG(is_enabled_spi_2) = true;
+	engineConfiguration->is_enabled_spi_2 = true;
 	// todo: convert this to rusEfi, hardware-independent enum
 #if EFI_PROD_CODE
 #ifdef EFI_HIP_CS_PIN
-	CONFIG(hip9011CsPin) = EFI_HIP_CS_PIN;
+	engineConfiguration->hip9011CsPin = EFI_HIP_CS_PIN;
 #else
-	CONFIG(hip9011CsPin) = GPIOB_0; // rev 0.4
+	engineConfiguration->hip9011CsPin = GPIOB_0; // rev 0.4
 #endif
-	CONFIG(hip9011CsPinMode) = OM_OPENDRAIN;
+	engineConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
 
-	CONFIG(hip9011IntHoldPin) = GPIOB_11;
-	CONFIG(hip9011IntHoldPinMode) = OM_OPENDRAIN;
+	engineConfiguration->hip9011IntHoldPin = GPIOB_11;
+	engineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
 
 	engineConfiguration->spi2SckMode = PO_OPENDRAIN; // 4
 	engineConfiguration->spi2MosiMode = PO_OPENDRAIN; // 4
@@ -438,7 +438,7 @@ static void setHip9011FrankensoPinout() {
 
 	engineConfiguration->hip9011Gain = 1;
 
-	if (!CONFIG(useTpicAdvancedMode)) {
+	if (!engineConfiguration->useTpicAdvancedMode) {
 	    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
 	}
 }
@@ -498,9 +498,9 @@ static void setDefaultEngineConfiguration() {
 #endif
 
     // OBD-II default rate is 500kbps
-    CONFIG(canBaudRate) = B500KBPS;
+    engineConfiguration->canBaudRate = B500KBPS;
 
-	CONFIG(mafSensorType) = Bosch0280218037;
+	engineConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);
 
 	engineConfiguration->canSleepPeriodMs = 50;
@@ -512,9 +512,9 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->sdCardPeriodMs = 50;
 
-	CONFIG(mapMinBufferLength) = 1;
+	engineConfiguration->mapMinBufferLength = 1;
 	
-	CONFIG(startCrankingDuration) = 3;
+	engineConfiguration->startCrankingDuration = 3;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
 	engineConfiguration->startOfCrankingPrimingPulse = 0;

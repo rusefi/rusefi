@@ -10,12 +10,12 @@
 TEST(subaru, overrideGap) {
 	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
 
-	CONFIG(overrideTriggerGaps) = true;
-	CONFIG(gapTrackingLengthOverride) = 2;
-	CONFIG(triggerGapOverrideFrom[0]) = 0.75 * 11.3;
-	CONFIG(triggerGapOverrideTo[0]) = 1.75 * 11.3;
-	CONFIG(triggerGapOverrideFrom[1]) = 0.75;
-	CONFIG(triggerGapOverrideTo[1]) = 1.25;
+	engineConfiguration->overrideTriggerGaps = true;
+	engineConfiguration->gapTrackingLengthOverride = 2;
+	engineConfiguration->triggerGapOverrideFrom[0] = 0.75 * 11.3;
+	engineConfiguration->triggerGapOverrideTo[0] = 1.75 * 11.3;
+	engineConfiguration->triggerGapOverrideFrom[1] = 0.75;
+	engineConfiguration->triggerGapOverrideTo[1] = 1.25;
 
 	eth.setTriggerType(TT_SUBARU_7_WITHOUT_6);
 

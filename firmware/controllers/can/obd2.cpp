@@ -123,10 +123,10 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Clt) + ODB_TEMP_EXTRA);
 		break;
 	case PID_STFT_BANK1:
-		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(stftCorrection)[0]);
+		obdSendValue(_1_MODE, pid, 1, 128 * engine->stftCorrection[0]);
 		break;
 	case PID_STFT_BANK2:
-		obdSendValue(_1_MODE, pid, 1, 128 * ENGINE(stftCorrection)[1]);
+		obdSendValue(_1_MODE, pid, 1, 128 * engine->stftCorrection[1]);
 		break;
 	case PID_INTAKE_MAP:
 		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Map));

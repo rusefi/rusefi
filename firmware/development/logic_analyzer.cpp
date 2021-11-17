@@ -93,7 +93,7 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 }
 
 static void initWave(const char *name, int index) {
-	brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
+	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");

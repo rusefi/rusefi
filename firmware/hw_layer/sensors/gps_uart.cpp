@@ -41,8 +41,8 @@ float getCurrentSpeed(void) {
 }
 
 static void printGpsInfo() {
-	efiPrintf("GPS RX %s", hwPortname(CONFIG(gps_rx_pin)));
-	efiPrintf("GPS TX %s", hwPortname(CONFIG(gps_tx_pin)));
+	efiPrintf("GPS RX %s", hwPortname(engineConfiguration->gps_rx_pin));
+	efiPrintf("GPS TX %s", hwPortname(engineConfiguration->gps_tx_pin));
 
 	efiPrintf("m=%d,e=%d: vehicle speed = %.2f", gpsMesagesCount, uartErrors, getCurrentSpeed());
 
@@ -96,8 +96,8 @@ static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 }
 
 static bool isGpsEnabled() {
-	return (isBrainPinValid(CONFIG(gps_rx_pin)) &&
-			isBrainPinValid(CONFIG(gps_tx_pin)));
+	return (isBrainPinValid(engineConfiguration->gps_rx_pin) &&
+			isBrainPinValid(engineConfiguration->gps_tx_pin));
 }
 
 void initGps(void) {
@@ -107,8 +107,8 @@ void initGps(void) {
 
 	sdStart(GPS_SERIAL_DEVICE, &GPSserialConfig);
 //  GPS we have USART1: PB7 -> USART1_RX and PB6 -> USART1_TX
-	efiSetPadMode("GPS tx", CONFIG(gps_tx_pin), PAL_MODE_ALTERNATE(7));
-	efiSetPadMode("GPS rx", CONFIG(gps_rx_pin), PAL_MODE_ALTERNATE(7));
+	efiSetPadMode("GPS tx", engineConfiguration->gps_tx_pin, PAL_MODE_ALTERNATE(7));
+	efiSetPadMode("GPS rx", engineConfiguration->gps_rx_pin, PAL_MODE_ALTERNATE(7));
 
 // todo: add a thread which would save location. If the GPS 5Hz - we should save the location each 200 ms
 	chThdCreateStatic(gpsThreadStack, sizeof(gpsThreadStack), LOWPRIO, (tfunc_t)(void*) GpsThreadEntryPoint, NULL);

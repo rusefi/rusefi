@@ -89,19 +89,19 @@ static void setPotValue1(int value) {
 
 void initPotentiometers() {
 #if EFI_POTENTIOMETER
-	if (CONFIG(digitalPotentiometerSpiDevice) == SPI_NONE) {
+	if (engineConfiguration->digitalPotentiometerSpiDevice == SPI_NONE) {
 		efiPrintf("digiPot spi disabled");
 		return;
 	}
-	turnOnSpi(CONFIG(digitalPotentiometerSpiDevice));
+	turnOnSpi(engineConfiguration->digitalPotentiometerSpiDevice);
 
 	for (int i = 0; i < DIGIPOT_COUNT; i++) {
-		brain_pin_e csPin = CONFIG(digitalPotentiometerChipSelect)[i];
+		brain_pin_e csPin = engineConfiguration->digitalPotentiometerChipSelect[i];
 		if (!isBrainPinValid(csPin)) {
 			continue;
                 }
 
-		SPIDriver *driver = getSpiDevice(CONFIG(digitalPotentiometerSpiDevice));
+		SPIDriver *driver = getSpiDevice(engineConfiguration->digitalPotentiometerSpiDevice);
 		if (driver == NULL) {
 			// error already reported
 			return;

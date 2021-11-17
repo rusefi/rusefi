@@ -7,8 +7,8 @@
 static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped) {
 	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking();
-	bool isRunning = ENGINE(rpmCalculator).isRunning();
+	bool isCranking = engine->rpmCalculator.isCranking();
+	bool isRunning = engine->rpmCalculator.isRunning();
 
 	if (isCranking) {
 		// Inhibit while cranking
@@ -39,6 +39,6 @@ void updateFans(bool acActive) {
 	}
 #endif
 
-	fanControl(acActive, enginePins.fanRelay, CONFIG(fanOnTemperature), CONFIG(fanOffTemperature), CONFIG(enableFan1WithAc), CONFIG(disableFan1WhenStopped));
-	fanControl(acActive, enginePins.fanRelay2, CONFIG(fan2OnTemperature), CONFIG(fan2OffTemperature), CONFIG(enableFan2WithAc), CONFIG(disableFan2WhenStopped));
+	fanControl(acActive, enginePins.fanRelay, engineConfiguration->fanOnTemperature, engineConfiguration->fanOffTemperature, engineConfiguration->enableFan1WithAc, engineConfiguration->disableFan1WhenStopped);
+	fanControl(acActive, enginePins.fanRelay2, engineConfiguration->fan2OnTemperature, engineConfiguration->fan2OffTemperature, engineConfiguration->enableFan2WithAc, engineConfiguration->disableFan2WhenStopped);
 }

@@ -9,10 +9,10 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const
 	float lambda = getTargetLambda(rpm, load);
 	float afr = stoich * lambda;
 
-	ENGINE(engineState.currentAfrLoad) = load;
-	ENGINE(engineState.targetLambda) = lambda;
-	ENGINE(engineState.targetAFR) = afr;
-	ENGINE(engineState.stoichiometricRatio) = stoich;
+	engine->engineState.currentAfrLoad = load;
+	engine->engineState.targetLambda = lambda;
+	engine->engineState.targetAFR = afr;
+	engine->engineState.stoichiometricRatio = stoich;
 
 	return airmass / afr;
 }
@@ -20,7 +20,7 @@ mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) const
 FuelComputer::FuelComputer(const ValueProvider3D& lambdaTable) : m_lambdaTable(&lambdaTable) {}
 
 float FuelComputer::getStoichiometricRatio() const {
-	float primary = CONFIG(stoichRatioPrimary);
+	float primary = engineConfiguration->stoichRatioPrimary;
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (primary < 5) {
@@ -33,7 +33,7 @@ float FuelComputer::getStoichiometricRatio() const {
 		return primary;
 	}
 
-	float secondary = CONFIG(stoichRatioSecondary);
+	float secondary = engineConfiguration->stoichRatioSecondary;
 
 	// Config compatibility: this field may be zero on ECUs with old defaults
 	if (secondary < 5) {
@@ -56,7 +56,7 @@ float FuelComputer::getTargetLambda(int rpm, float load) const {
 }
 
 float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
-	return getLoadOverride(defaultLoad, CONFIG(afrOverrideMode));
+	return getLoadOverride(defaultLoad, engineConfiguration->afrOverrideMode);
 }
 
 float getLoadOverride(float defaultLoad, afr_override_e overrideMode) {
@@ -67,7 +67,7 @@ float getLoadOverride(float defaultLoad, afr_override_e overrideMode) {
 		// TPS/pedal default to 100% - failed TPS goes rich
 		case AFR_Tps: return Sensor::get(SensorType::Tps1).value_or(100);
 		case AFR_AccPedal: return Sensor::get(SensorType::AcceleratorPedal).value_or(100);
-		case AFR_CylFilling: return 100 * ENGINE(engineState.sd.airMassInOneCylinder) / ENGINE(standardAirCharge);
+		case AFR_CylFilling: return 100 * engine->engineState.sd.airMassInOneCylinder / engine->standardAirCharge;
 		default: return 0;
 	}
 }

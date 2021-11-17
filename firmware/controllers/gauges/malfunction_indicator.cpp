@@ -113,7 +113,7 @@ static void testMil() {
 #endif /* TEST_MIL_CODE */
 
 bool isMilEnabled() {
-	return isBrainPinValid(CONFIG(malfunctionIndicatorPin));
+	return isBrainPinValid(engineConfiguration->malfunctionIndicatorPin);
 }
 
 void initMalfunctionIndicator(void) {

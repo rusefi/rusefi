@@ -32,7 +32,7 @@ static void vvtRisingCallback(void *arg) {
 	int index = (int)arg;
 
 #if EFI_TOOTH_LOGGER
-	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+	if (!engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		// real physical fronts go into engine sniffer
 		LogTriggerTooth(SHAFT_SECONDARY_RISING, now);
 	}
@@ -48,7 +48,7 @@ static void vvtFallingCallback(void * arg) {
 #endif
 	int index = (int)arg;
 #if EFI_TOOTH_LOGGER
-	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+	if (!engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		LogTriggerTooth(SHAFT_SECONDARY_FALLING, now);
 	}
 #endif /* EFI_TOOTH_LOGGER */
@@ -91,7 +91,7 @@ static void shaftFallingCallback(bool isPrimary) {
 
 int icuTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	(void)msg;
-	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
+	brain_pin_e brainPin = isTriggerShaft ? engineConfiguration->triggerInputPins[index] : engineConfiguration->camInputs[index];
 	if (!isBrainPinValid(brainPin)) {
 		return -1;
 	}

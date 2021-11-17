@@ -80,7 +80,7 @@ TEST(trigger, testQuadCam) {
 	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank);
 
 	// All four cams should have different positions, each retarded by 1ms from the last
-	float oneMsDegrees = 1000 / ENGINE(rpmCalculator).oneDegreeUs;
+	float oneMsDegrees = 1000 / engine->rpmCalculator.oneDegreeUs;
 	EXPECT_NEAR(basePos - oneMsDegrees * 1, engine->triggerCentral.getVVTPosition(firstBank, firstCam), EPS3D);
 	EXPECT_NEAR(basePos - oneMsDegrees * 2, engine->triggerCentral.getVVTPosition(firstBank, secondCam), EPS3D);
 	EXPECT_NEAR(basePos - oneMsDegrees * 3, engine->triggerCentral.getVVTPosition(secondBank, firstCam), EPS3D);

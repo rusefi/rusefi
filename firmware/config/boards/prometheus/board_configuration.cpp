@@ -23,7 +23,7 @@ static void setPrometheusDefaults() {
 	//engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	CONFIG(useCicPidForIdle) = true;
+	engineConfiguration->useCicPidForIdle = true;
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -211,7 +211,7 @@ void setBoardDefaultConfiguration(void) {
 	
 	engineConfiguration->is_enabled_spi_1 = true;
 	engineConfiguration->is_enabled_spi_2 = false;
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 	
 	engineConfiguration->spi1mosiPin = GPIOB_5;
 	engineConfiguration->spi1MosiMode = PO_DEFAULT;	// PAL_STM32_OTYPE_PUSHPULL

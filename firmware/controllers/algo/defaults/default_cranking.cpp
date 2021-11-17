@@ -7,12 +7,12 @@ void setDefaultCranking() {
 	engineConfiguration->cranking.rpm = 550;
 
 	// Fuel
-	CONFIG(crankingInjectionMode) = IM_SIMULTANEOUS;
+	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->cranking.baseFuel = 27;
 
 	// Ignition
 	engineConfiguration->ignitionDwellForCrankingMs = 6;
-	CONFIG(crankingTimingAngle) = 6;
+	engineConfiguration->crankingTimingAngle = 6;
 
 	// IAC
 	engineConfiguration->crankingIACposition = 50;
@@ -77,5 +77,5 @@ void setDefaultCranking() {
 	static const float advanceBins[] = { 0, 200, 400, 1000 };
 	copyArray(engineConfiguration->crankingAdvanceBins, advanceBins);
 
-	CONFIG(useTLE8888_cranking_hack) = true;
+	engineConfiguration->useTLE8888_cranking_hack = true;
 }

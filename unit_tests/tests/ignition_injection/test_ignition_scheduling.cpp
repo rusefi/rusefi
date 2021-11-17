@@ -50,13 +50,13 @@ TEST(ignition, trailingSpark) {
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	CONFIG(specs.cylindersCount) = 1;
-	CONFIG(specs.firingOrder) = FO_1;
-	CONFIG(isInjectionEnabled) = false;
-	CONFIG(isIgnitionEnabled) = true;
+	engineConfiguration->specs.cylindersCount = 1;
+	engineConfiguration->specs.firingOrder = FO_1;
+	engineConfiguration->isInjectionEnabled = false;
+	engineConfiguration->isIgnitionEnabled = true;
 
 	// Fire trailing spark 10 degrees after main spark
-	ENGINE(engineState.trailingSparkAngle) = 10;
+	engine->engineState.trailingSparkAngle = 10;
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
@@ -86,7 +86,7 @@ TEST(ignition, trailingSpark) {
 	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), false);
 
 	// Now enable trailing sparks
-	CONFIG(enableTrailingSparks) = true;
+	engineConfiguration->enableTrailingSparks = true;
 
 	// Fire trigger fall - should schedule ignition chargings (rising edges)
 	eth.fireFall(20);

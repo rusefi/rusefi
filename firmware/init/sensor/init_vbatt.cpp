@@ -17,7 +17,7 @@ void initVbatt() {
 	}
 
 	// adcVoltsPerVolt is set to 1.0 because vbatt doesn't go thru the analog input divider
-	AdcSubscription::SubscribeSensor(vbattSensor, CONFIG(vbattAdcChannel), /* filter HZ = */ 20, /* adcVoltsPerVolt = */ 1.0f);
+	AdcSubscription::SubscribeSensor(vbattSensor, engineConfiguration->vbattAdcChannel, /* filter HZ = */ 20, /* adcVoltsPerVolt = */ 1.0f);
 
 	vbattSensor.Register();
 }

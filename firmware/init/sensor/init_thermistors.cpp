@@ -84,30 +84,30 @@ static void configureTempSensor(const char *msg,
 }
 
 void initThermistors() {
-	if (!CONFIG(consumeObdSensors)) {
+	if (!engineConfiguration->consumeObdSensors) {
 		configureTempSensor("clt",
 						clt,
 						fclt,
-						CONFIG(clt),
-						CONFIG(useLinearCltSensor));
+						engineConfiguration->clt,
+						engineConfiguration->useLinearCltSensor);
 
 		configureTempSensor("iat",
 						iat,
 						fiat,
-						CONFIG(iat),
-						CONFIG(useLinearIatSensor));
+						engineConfiguration->iat,
+						engineConfiguration->useLinearIatSensor);
 	}
 
 	configureTempSensor("aux1",
 						aux1,
 						faux1,
-						CONFIG(auxTempSensor1),
+						engineConfiguration->auxTempSensor1,
 						false);
 
 	configureTempSensor("aux2",
 						aux2,
 						faux2,
-						CONFIG(auxTempSensor2),
+						engineConfiguration->auxTempSensor2,
 						false);
 }
 

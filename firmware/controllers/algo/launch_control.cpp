@@ -20,18 +20,18 @@
  * In case we are dependent on VSS we just return true.
  */
 bool LaunchControlBase::isInsideSwitchCondition() {
-	switch (CONFIG(launchActivationMode)) {
+	switch (engineConfiguration->launchActivationMode) {
 	case SWITCH_INPUT_LAUNCH:
 #if !EFI_SIMULATOR
-		if (isBrainPinValid(CONFIG(launchActivatePin))) {
+		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {
 			//todo: we should take into consideration if this sw is pulled high or low!
-			launchActivatePinState = efiReadPin(CONFIG(launchActivatePin));
+			launchActivatePinState = efiReadPin(engineConfiguration->launchActivatePin);
 		}
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
 
 	case CLUTCH_INPUT_LAUNCH:
-		if (isBrainPinValid(CONFIG(clutchDownPin))) {
+		if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
 			return engine->clutchDownState;
 		} else {
 			return false;
@@ -52,7 +52,7 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 bool LaunchControlBase::isInsideSpeedCondition() const {
 	int speed = Sensor::getOrZero(SensorType::VehicleSpeed);
 	
-	return (CONFIG(launchSpeedThreshold) > speed) || (!(CONFIG(launchActivationMode) ==  ALWAYS_ACTIVE_LAUNCH));
+	return (engineConfiguration->launchSpeedThreshold > speed) || (!(engineConfiguration->launchActivationMode ==  ALWAYS_ACTIVE_LAUNCH));
 }
 
 /**
@@ -66,14 +66,14 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 		return false;
 	}
 
-	return CONFIG(launchTpsTreshold) < tps.Value;
+	return engineConfiguration->launchTpsTreshold < tps.Value;
 }
 
 /**
  * Condition is true as soon as we are above LaunchRpm
  */
 bool LaunchControlBase::isInsideRPMCondition(int rpm) const {
-	int launchRpm = CONFIG(launchRpm);
+	int launchRpm = engineConfiguration->launchRpm;
 	return (launchRpm < rpm);
 }
 
@@ -97,7 +97,7 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 }
 
 void LaunchControlBase::update() {
-	if (!CONFIG(launchControlEnabled)) {
+	if (!engineConfiguration->launchControlEnabled) {
 		return;
 	}
 
@@ -105,8 +105,8 @@ void LaunchControlBase::update() {
 	bool combinedConditions = isLaunchConditionMet(rpm);
 
 	//and still recalculat in case user changed the values
-	retardThresholdRpm = CONFIG(launchRpm) + (CONFIG(enableLaunchRetard) ? 
-	                     CONFIG(launchAdvanceRpmRange) : 0) + CONFIG(hardCutRpmRange);
+	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ? 
+	                     engineConfiguration->launchAdvanceRpmRange : 0) + engineConfiguration->hardCutRpmRange;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
@@ -114,11 +114,11 @@ void LaunchControlBase::update() {
 		isLaunchCondition = false;
 	} else {
 		// If conditions are met...
-		isLaunchCondition = m_launchTimer.hasElapsedSec(CONFIG(launchActivateDelay));
+		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
 	}
 
 #if EFI_TUNER_STUDIO
-	if (CONFIG(debugMode) == DBG_LAUNCH) {
+	if (engineConfiguration->debugMode == DBG_LAUNCH) {
 		tsOutputChannels.debugIntField5 = engine->clutchDownState;
 		tsOutputChannels.debugFloatField1 = launchActivatePinState;
 		tsOutputChannels.debugFloatField2 = isLaunchCondition;

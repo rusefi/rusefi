@@ -210,24 +210,24 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
  */
 void runFsio() {
 #if EFI_FUEL_PUMP
-	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
+	if (isBrainPinValid(engineConfiguration->fuelPumpPin)) {
 		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic);
 	}
 #endif /* EFI_FUEL_PUMP */
 
 #if EFI_MAIN_RELAY_CONTROL
-	if (isBrainPinValid(CONFIG(mainRelayPin)))
+	if (isBrainPinValid(engineConfiguration->mainRelayPin))
 		// the MAIN_RELAY_LOGIC calls engine->isInShutdownMode()
 		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic);
 #else /* EFI_MAIN_RELAY_CONTROL */
 	/**
 	 * main relay is always on if ECU is on, that's a good enough initial implementation
 	 */
-	if (isBrainPinValid(CONFIG(mainRelayPin)))
+	if (isBrainPinValid(engineConfiguration->mainRelayPin))
 		enginePins.mainRelay.setValue(!engine->isInMainRelayBench());
 #endif /* EFI_MAIN_RELAY_CONTROL */
 
-	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
+	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
 		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic);
 
 	/**
@@ -257,7 +257,7 @@ static void showFsioInfo() {
 	showFsio("fuel", fuelPumpLogic);
 
 	for (int i = 0; i < SCRIPT_SETTING_COUNT; i++) {
-		float v = CONFIG(scriptSetting)[i];
+		float v = engineConfiguration->scriptSetting[i];
 		if (!cisnan(v)) {
 			efiPrintf("user property #%d: %.2f", i + 1, v);
 		}
@@ -338,10 +338,10 @@ void initFsioImpl() {
 #endif /* EFI_FUEL_PUMP */
 
 #if EFI_MAIN_RELAY_CONTROL
-	if (isBrainPinValid(CONFIG(mainRelayPin)))
+	if (isBrainPinValid(engineConfiguration->mainRelayPin))
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
 #endif /* EFI_MAIN_RELAY_CONTROL */
-	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
+	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
 		starterRelayDisableLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
 
 	scriptTable1.init(config->scriptTable1, config->scriptTable1LoadBins,
@@ -366,15 +366,15 @@ void runHardcodedFsio() {
 #endif /* EFI_PROD_CODE */
 
 	// see MAIN_RELAY_LOGIC
-	if (isBrainPinValid(CONFIG(mainRelayPin))) {
+	if (isBrainPinValid(engineConfiguration->mainRelayPin)) {
 		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (Sensor::getOrZero(SensorType::BatteryVoltage) > LOW_VBATT) || engine->isInShutdownMode());
 	}
 	// see STARTER_RELAY_LOGIC
-	if (isBrainPinValid(CONFIG(starterRelayDisablePin))) {
+	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin)) {
 		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
 	}
 	// see FUEL_PUMP_LOGIC
-	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
+	if (isBrainPinValid(engineConfiguration->fuelPumpPin)) {
 		int triggerActivityOrEcuStartSecond = maxI(0, engine->triggerActivityMs / 1000);
 
 		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < triggerActivityOrEcuStartSecond + engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));

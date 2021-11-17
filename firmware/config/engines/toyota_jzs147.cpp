@@ -119,9 +119,9 @@ void setToyota_2jz_vics() {
 	engineConfiguration->twoWireBatchIgnition = true;
 	engineConfiguration->twoWireBatchInjection = true;
 
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_TOYOTA);
-	strcpy(CONFIG(engineCode), "2JZ");
-	strcpy(CONFIG(vehicleName), "VVT example");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_TOYOTA);
+	strcpy(engineConfiguration->engineCode, "2JZ");
+	strcpy(engineConfiguration->vehicleName, "VVT example");
 
 
 	engineConfiguration->debugMode = DBG_VVT;

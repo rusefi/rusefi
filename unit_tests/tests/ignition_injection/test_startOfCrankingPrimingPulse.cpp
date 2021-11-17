@@ -10,7 +10,7 @@
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	ENGINE(tdcMarkEnabled) = false;
+	engine->tdcMarkEnabled = false;
 	engineConfiguration->cranking.baseFuel = 12;
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);

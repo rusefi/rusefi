@@ -62,10 +62,10 @@ TEST(InjectorModel, nonlinearPolynomial) {
 	EngineTestHelper eth(TEST_ENGINE);
 	InjectorModel dut;
 
-	CONFIG(applyNonlinearBelowPulse) = MS2US(10);
+	engineConfiguration->applyNonlinearBelowPulse = MS2US(10);
 
 	for (int i = 0; i < 8; i++) {
-		CONFIG(injectorCorrectionPolynomial)[i] = i + 1;
+		engineConfiguration->injectorCorrectionPolynomial[i] = i + 1;
 	}
 
 	// expect return of the original value, plus polynomial f(x)
@@ -83,8 +83,8 @@ TEST(InjectorModel, Deadtime) {
 
 	// Some test data in the injector correction table
 	for (size_t i = 0; i < efi::size(engineConfiguration->injector.battLagCorr); i++) {
-		CONFIG(injector.battLagCorr)[i] = 2 * i;
-		CONFIG(injector.battLagCorrBins)[i] = i;
+		engineConfiguration->injector.battLagCorr[i] = 2 * i;
+		engineConfiguration->injector.battLagCorrBins[i] = i;
 	}
 
 	InjectorModel dut;

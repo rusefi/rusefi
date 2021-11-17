@@ -9,7 +9,7 @@ static VehicleSpeedConverter vehicleSpeedConverter;
 
 void initVehicleSpeedSensor() {
 
-	auto pin = CONFIG(vehicleSpeedSensorInputPin);
+	auto pin = engineConfiguration->vehicleSpeedSensorInputPin;
 
 	// Nothing to do if no sensor configured
 	if (!isBrainPinValid(pin)) {

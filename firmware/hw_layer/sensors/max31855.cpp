@@ -33,11 +33,11 @@ static void showEgtInfo() {
 #if EFI_PROD_CODE
 	printSpiState(engineConfiguration);
 
-	efiPrintf("EGT spi: %d", CONFIG(max31855spiDevice));
+	efiPrintf("EGT spi: %d", engineConfiguration->max31855spiDevice);
 
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-		if (isBrainPinValid(CONFIG(max31855_cs)[i])) {
-			efiPrintf("%d ETG @ %s", i, hwPortname(CONFIG(max31855_cs)[i]));
+		if (isBrainPinValid(engineConfiguration->max31855_cs[i])) {
+			efiPrintf("%d ETG @ %s", i, hwPortname(engineConfiguration->max31855_cs[i]));
 		}
 	}
 #endif

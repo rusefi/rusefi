@@ -44,8 +44,8 @@
 #endif /* EFI_SENSOR_CHART */
 
 void event_trigger_position_s::setAngle(angle_t angle) {
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
-			&ENGINE(triggerCentral.triggerFormDetails),
+	findTriggerPosition(&engine->triggerCentral.triggerShape,
+			&engine->triggerCentral.triggerFormDetails,
 			this, angle);
 }
 
@@ -400,11 +400,11 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(triggerShape->tdcPosition), "tdcPos#1")
 	assertAngleRange(triggerShape->tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
 
-	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG(globalTriggerAngleOffset)), "tdcPos#2")
-	assertAngleRange(CONFIG(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
+	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(engineConfiguration->globalTriggerAngleOffset), "tdcPos#2")
+	assertAngleRange(engineConfiguration->globalTriggerAngleOffset, "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
 
 	// convert engine cycle angle into trigger cycle angle
-	angle += triggerShape->tdcPosition + CONFIG(globalTriggerAngleOffset);
+	angle += triggerShape->tdcPosition + engineConfiguration->globalTriggerAngleOffset;
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
 	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 

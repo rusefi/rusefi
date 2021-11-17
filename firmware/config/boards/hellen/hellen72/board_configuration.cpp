@@ -131,7 +131,7 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->isSdCardEnabled = true;
 
-	CONFIG(enableSoftwareKnock) = true;
+	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->acRelayPin = GPIOH_15;
 	engineConfiguration->acSwitch = GPIOB_0;
@@ -184,5 +184,5 @@ void setSdCardConfigurationOverrides(void) {
 //	engineConfiguration->spi2misoPin = GPIOB_14;
 //	engineConfiguration->spi2sckPin = GPIOB_13;
 //	engineConfiguration->sdCardCsPin = GPIOB_12;
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 }

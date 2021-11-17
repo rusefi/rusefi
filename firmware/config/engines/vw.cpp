@@ -59,7 +59,7 @@ void setVwAba() {
 	setFuelTablesLoadBin(20, mapRange);
 	setTimingLoadBin(20, mapRange);
 
-	CONFIG(isSdCardEnabled) = false;
+	engineConfiguration->isSdCardEnabled = false;
 	engineConfiguration->tpsMin = 740;
 	engineConfiguration->tpsMax = 135;
 }

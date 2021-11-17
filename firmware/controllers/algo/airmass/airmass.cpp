@@ -6,7 +6,7 @@
 AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
 
 float AirmassVeModelBase::getVeLoadAxis(float passedLoad) const {
-	switch(CONFIG(veOverrideMode)) {
+	switch(engineConfiguration->veOverrideMode) {
 		case VE_None: return passedLoad;
 		case VE_MAP: return Sensor::getOrZero(SensorType::Map);
 		case VE_TPS: return Sensor::getOrZero(SensorType::Tps1);
@@ -24,13 +24,13 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 
 	auto tps = Sensor::get(SensorType::Tps1);
 	// get VE from the separate table for Idle if idling
-	if (isIdlingOrTaper() && tps && CONFIG(useSeparateVeForIdle)) {
+	if (isIdlingOrTaper() && tps && engineConfiguration->useSeparateVeForIdle) {
 		float idleVe = interpolate2d(rpm, config->idleVeBins, config->idleVe);
 		// interpolate between idle table and normal (running) table using TPS threshold
-		ve = interpolateClamped(0.0f, idleVe, CONFIG(idlePidDeactivationTpsThreshold), ve, tps.Value);
+		ve = interpolateClamped(0.0f, idleVe, engineConfiguration->idlePidDeactivationTpsThreshold, ve, tps.Value);
 	}
 
-	ENGINE(engineState.currentVe) = ve;
-	ENGINE(engineState.currentVeLoad) = load;
+	engine->engineState.currentVe = ve;
+	engine->engineState.currentVeLoad = load;
 	return ve * 0.01f;
 }

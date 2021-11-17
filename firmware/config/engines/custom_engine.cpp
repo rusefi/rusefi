@@ -267,9 +267,9 @@ void setEtbTestConfiguration() {
 	/**
 	 * remember that some H-bridges require 5v control lines, not just 3v logic outputs we have on stm32
 	 */
-	CONFIG(etbIo[0].directionPin1) = GPIOC_7; // Frankenso high-side in order to get 5v control
-	CONFIG(etbIo[0].directionPin2) = GPIOC_9;
-	CONFIG(etbIo[0].controlPin) = GPIOE_14;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_7; // Frankenso high-side in order to get 5v control
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_9;
+	engineConfiguration->etbIo[0].controlPin = GPIOE_14;
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	setBoschVNH2SP30Curve();
@@ -284,8 +284,8 @@ void setEtbTestConfiguration() {
 	// turning off other PWMs to simplify debugging
 	engineConfiguration->triggerSimulatorFrequency = 0;
 	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
-	CONFIG(idle).stepperStepPin = GPIO_UNASSIGNED;
-	CONFIG(idle).stepperDirectionPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.stepperStepPin = GPIO_UNASSIGNED;
+	engineConfiguration->idle.stepperDirectionPin = GPIO_UNASSIGNED;
 	engineConfiguration->useStepperIdle = true;
 
 	// no analog dividers - all sensors with 3v supply, naked discovery bench setup
@@ -349,11 +349,11 @@ void setTle8888TestConfiguration() {
 #if EFI_FSIO
 	// todo lua setFsio(14, GPIOF_13, "1");
 #endif /* EFI_FSIO */
-	CONFIG(etbIo[0].directionPin1) = GPIOF_15;
-	CONFIG(etbIo[0].directionPin2) = GPIOF_14;
-	CONFIG(etbIo[0].disablePin) = GPIOF_12;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOF_15;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOF_14;
+	engineConfiguration->etbIo[0].disablePin = GPIOF_12;
 #endif /* STM32_HAS_GPIOF */
-	CONFIG(etb_use_two_wires) = true;
+	engineConfiguration->etb_use_two_wires = true;
 	engineConfiguration->isHip9011Enabled = false;
 
 	// ETB #2
@@ -365,9 +365,9 @@ void setTle8888TestConfiguration() {
 #if EFI_FSIO
 	// todo lua setFsio(15, GPIOE_6, "1");
 #endif
-	CONFIG(etbIo[0].directionPin1) = GPIOE_2;
-	CONFIG(etbIo[0].directionPin2) = GPIOE_4;
-	CONFIG(etbIo[0].disablePin) = GPIOE_5;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOE_2;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOE_4;
+	engineConfiguration->etbIo[0].disablePin = GPIOE_5;
 
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3; // PA3
@@ -525,8 +525,8 @@ void proteusBoardTest() {
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
 	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
-	CONFIG(fanPin) = GPIO_UNASSIGNED;
-	CONFIG(fuelPumpPin) = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 
 #if EFI_PROD_CODE
 	engineConfiguration->injectionPins[0] = PROTEUS_LS_1;
@@ -692,16 +692,16 @@ void mreBoardNewTest() {
 void setBoschHDEV_5_injectors() {
 	// This is the configuration for bosch HDEV 5 injectors
 	// all times in microseconds/us
-	CONFIG(mc33_hvolt) = 65;
-	CONFIG(mc33_i_boost) = 13000;
-	CONFIG(mc33_i_peak) = 9400;
-	CONFIG(mc33_i_hold) = 3700;
-	CONFIG(mc33_t_max_boost) = 470;
-	CONFIG(mc33_t_peak_off) = 10;
-	CONFIG(mc33_t_peak_tot) = 700;
-	CONFIG(mc33_t_bypass) = 15;
-	CONFIG(mc33_t_hold_off) = 60;
-	CONFIG(mc33_t_hold_tot) = 10000;
+	engineConfiguration->mc33_hvolt = 65;
+	engineConfiguration->mc33_i_boost = 13000;
+	engineConfiguration->mc33_i_peak = 9400;
+	engineConfiguration->mc33_i_hold = 3700;
+	engineConfiguration->mc33_t_max_boost = 470;
+	engineConfiguration->mc33_t_peak_off = 10;
+	engineConfiguration->mc33_t_peak_tot = 700;
+	engineConfiguration->mc33_t_bypass = 15;
+	engineConfiguration->mc33_t_hold_off = 60;
+	engineConfiguration->mc33_t_hold_tot = 10000;
 }
 
 /**
@@ -727,9 +727,9 @@ void setRotary() {
 	engineConfiguration->trigger.type = TT_36_2_2_2;
 	setOperationMode(engineConfiguration, TWO_STROKE);
 
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
-	strcpy(CONFIG(engineCode), "13B");
-	strcpy(CONFIG(vehicleName), "test");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
+	strcpy(engineConfiguration->engineCode, "13B");
+	strcpy(engineConfiguration->vehicleName, "test");
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED; // injector in default pinout
@@ -753,9 +753,9 @@ void setTest33816EngineConfiguration() {
 	// default spi3sckPin  PB3
 
 
-	CONFIG(triggerSimulatorPins[0]) = GPIO_UNASSIGNED;
-	CONFIG(triggerSimulatorPins[1]) = GPIO_UNASSIGNED;
-	CONFIG(triggerSimulatorPins[2]) = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[0] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerSimulatorPins[2] = GPIO_UNASSIGNED;
 
 	engineConfiguration->injectionPins[0] = GPIOB_9; // #1
 	engineConfiguration->injectionPins[1] = GPIOE_2; // #2
@@ -764,30 +764,30 @@ void setTest33816EngineConfiguration() {
 
 
 	// blue
-	CONFIG(mc33816_cs) = GPIOD_7;
+	engineConfiguration->mc33816_cs = GPIOD_7;
 	// green
-	CONFIG(mc33816_rstb) = GPIOD_4;
+	engineConfiguration->mc33816_rstb = GPIOD_4;
 	// yellow
-	CONFIG(mc33816_driven) = GPIOD_6;
+	engineConfiguration->mc33816_driven = GPIOD_6;
 
-	CONFIG(mc33816_flag0) = GPIOD_3;
+	engineConfiguration->mc33816_flag0 = GPIOD_3;
 
 	// enable_spi 3
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 	// Wire up spi3
 	engineConfiguration->spi3mosiPin = GPIOB_5;
 	engineConfiguration->spi3misoPin = GPIOB_4;
 	engineConfiguration->spi3sckPin = GPIOB_3;
 
-	CONFIG(isSdCardEnabled) = false;
+	engineConfiguration->isSdCardEnabled = false;
 
-	CONFIG(mc33816spiDevice) = SPI_DEVICE_3;
+	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
 	setBoschHDEV_5_injectors();
 }
 
 void setHellen72etb() {
-	CONFIG(etbIo[0].directionPin1) = GPIOC_6;
-	CONFIG(etbIo[0].directionPin2) = GPIOC_7;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6;
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7;
 	engineConfiguration->etb_use_two_wires = true;
 }
 
@@ -860,11 +860,11 @@ void proteusLuaDemo() {
 	engineConfiguration->luaOutputPins[1] = GPIOD_10;
 	engineConfiguration->luaOutputPins[2] = GPIOD_11;
 
-	setLinearCurve(CONFIG(scriptCurve2Bins), 0, 8000, 1);
-	setLinearCurve(CONFIG(scriptCurve2), 0, 100, 1);
+	setLinearCurve(engineConfiguration->scriptCurve2Bins, 0, 8000, 1);
+	setLinearCurve(engineConfiguration->scriptCurve2, 0, 100, 1);
 
-	copyArray(CONFIG(scriptCurve3Bins), defaultBiasBins);
-	copyArray(CONFIG(scriptCurve3), defaultBiasValues);
+	copyArray(engineConfiguration->scriptCurve3Bins, defaultBiasBins);
+	copyArray(engineConfiguration->scriptCurve3, defaultBiasValues);
 
 	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_10;
 	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;

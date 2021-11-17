@@ -95,15 +95,15 @@ float getCrankingFuel3(
 float getRunningFuel(float baseFuel) {
 	ScopePerf perf(PE::GetRunningFuel);
 
-	ENGINE(engineState.running.baseFuel) = baseFuel;
+	engine->engineState.running.baseFuel = baseFuel;
 
-	float iatCorrection = ENGINE(engineState.running.intakeTemperatureCoefficient);
+	float iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
 
-	float cltCorrection = ENGINE(engineState.running.coolantTemperatureCoefficient);
+	float cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 
-	float postCrankingFuelCorrection = ENGINE(engineState.running.postCrankingFuelCorrection);
+	float postCrankingFuelCorrection = engine->engineState.running.postCrankingFuelCorrection;
 
-	float baroCorrection = ENGINE(engineState.baroCorrection);
+	float baroCorrection = engine->engineState.baroCorrection;
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
@@ -112,7 +112,7 @@ float getRunningFuel(float baseFuel) {
 	float runningFuel = baseFuel * baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
 
-	ENGINE(engineState.running.fuel) = runningFuel * 1000;
+	engine->engineState.running.fuel = runningFuel * 1000;
 
 	return runningFuel;
 }
@@ -136,7 +136,7 @@ AirmassModelBase* getAirmassModel(engine_load_mode_e mode) {
 #endif
 		default:
 			// this is a bad work-around for https://github.com/rusefi/rusefi/issues/1690 issue
-			warning(CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", CONFIG(fuelAlgorithm));
+			warning(CUSTOM_ERR_ASSERT, "Invalid airmass mode %d", engineConfiguration->fuelAlgorithm);
 			return &sdAirmass;
 /* todo: this should be the implementation
 			return nullptr;
@@ -149,20 +149,20 @@ static float getBaseFuelMass(int rpm) {
 	ScopePerf perf(PE::GetBaseFuel);
 
 	// airmass modes - get airmass first, then convert to fuel
-	auto model = getAirmassModel(CONFIG(fuelAlgorithm));
+	auto model = getAirmassModel(engineConfiguration->fuelAlgorithm);
 	efiAssert(CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
 
 	auto airmass = model->getAirmass(rpm);
 
 	// Plop some state for others to read
-	ENGINE(engineState.sd.airMassInOneCylinder) = airmass.CylinderAirmass;
-	ENGINE(engineState.fuelingLoad) = airmass.EngineLoadPercent;
-	ENGINE(engineState.ignitionLoad) = getLoadOverride(airmass.EngineLoadPercent, CONFIG(ignOverrideMode));
+	engine->engineState.sd.airMassInOneCylinder = airmass.CylinderAirmass;
+	engine->engineState.fuelingLoad = airmass.EngineLoadPercent;
+	engine->engineState.ignitionLoad = getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
 
-	float baseFuelMass = ENGINE(fuelComputer)->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
+	float baseFuelMass = engine->fuelComputer->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 
 	// Fudge it by the global correction factor
-	baseFuelMass *= CONFIG(globalFuelCorrection);
+	baseFuelMass *= engineConfiguration->globalFuelCorrection;
 	engine->engineState.baseFuel = baseFuelMass;
 
 	if (cisnan(baseFuelMass)) {
@@ -190,7 +190,7 @@ angle_t getInjectionOffset(float rpm, float load) {
 		return 0;
 	}
 
-	angle_t result = value + CONFIG(extraInjectionOffset);
+	angle_t result = value + engineConfiguration->extraInjectionOffset;
 	fixAngle(result, "inj offset#2", CUSTOM_ERR_6553);
 	return result;
 }
@@ -244,7 +244,7 @@ float getInjectionModeDurationMultiplier() {
  * @see getCoilDutyCycle
  */
 percent_t getInjectorDutyCycle(int rpm) {
-	floatms_t totalInjectiorAmountPerCycle = ENGINE(injectionDuration) * getNumberOfInjections(engineConfiguration->injectionMode);
+	floatms_t totalInjectiorAmountPerCycle = engine->injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode);
 	floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
@@ -268,27 +268,27 @@ float getInjectionMass(int rpm) {
 	// Always update base fuel - some cranking modes use it
 	float baseFuelMass = getBaseFuelMass(rpm);
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking();
+	bool isCranking = engine->rpmCalculator.isCranking();
 	float cycleFuelMass = getCycleFuelMass(isCranking, baseFuelMass);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cycleFuelMass), "NaN cycleFuelMass", 0);
 
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	cycleFuelMass *= ENGINE(engineState.fuelCutoffCorrection);
+	cycleFuelMass *= engine->engineState.fuelCutoffCorrection;
 
 	float durationMultiplier = getInjectionModeDurationMultiplier();
 	float injectionFuelMass = cycleFuelMass * durationMultiplier;
 
 	// Prepare injector flow rate & deadtime
-	ENGINE(injectorModel)->prepare();
+	engine->injectorModel->prepare();
 
 	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment());
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
-	ENGINE(engineState.tpsAccelEnrich) = tpsAccelEnrich;
+	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
 
 	// For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
 	float tpsAccelPerInjection = durationMultiplier * tpsAccelEnrich;
 
-	float tpsFuelMass = ENGINE(injectorModel)->getFuelMassForDuration(tpsAccelPerInjection);
+	float tpsFuelMass = engine->injectorModel->getFuelMassForDuration(tpsAccelPerInjection);
 
 	return injectionFuelMass + tpsFuelMass;
 #else
@@ -307,8 +307,8 @@ static InjectorModel injectorModel;
 void initFuelMap() {
 
 
-	ENGINE(fuelComputer) = &fuelComputer;
-	ENGINE(injectorModel) = &injectorModel;
+	engine->fuelComputer = &fuelComputer;
+	engine->injectorModel = &injectorModel;
 
 	mapEstimationTable.init(config->mapEstimateTable, config->mapEstimateTpsBins, config->mapEstimateRpmBins);
 
@@ -357,7 +357,7 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm) {
 	float fuelCorr = 1.0f;
 
 	// coasting fuel cut-off correction
-	if (CONFIG(coastingFuelCutEnabled)) {
+	if (engineConfiguration->coastingFuelCutEnabled) {
 		auto [tpsValid, tpsPos] = Sensor::get(SensorType::Tps1);
 		if (!tpsValid) {
 			return 1.0f;
@@ -374,21 +374,21 @@ float getFuelCutOffCorrection(efitick_t nowNt, int rpm) {
 		}
 
 		// gather events
-		bool mapDeactivate = (map >= CONFIG(coastingFuelCutMap));
-		bool tpsDeactivate = (tpsPos >= CONFIG(coastingFuelCutTps));
+		bool mapDeactivate = (map >= engineConfiguration->coastingFuelCutMap);
+		bool tpsDeactivate = (tpsPos >= engineConfiguration->coastingFuelCutTps);
 		// If no CLT sensor (or broken), don't allow DFCO
-		bool cltDeactivate = clt < (float)CONFIG(coastingFuelCutClt);
-		bool rpmDeactivate = (rpm < CONFIG(coastingFuelCutRpmLow));
-		bool rpmActivate = (rpm > CONFIG(coastingFuelCutRpmHigh));
+		bool cltDeactivate = clt < (float)engineConfiguration->coastingFuelCutClt;
+		bool rpmDeactivate = (rpm < engineConfiguration->coastingFuelCutRpmLow);
+		bool rpmActivate = (rpm > engineConfiguration->coastingFuelCutRpmHigh);
 		
 		// state machine (coastingFuelCutStartTime is also used as a flag)
 		if (!mapDeactivate && !tpsDeactivate && !cltDeactivate && rpmActivate) {
-			ENGINE(engineState.coastingFuelCutStartTime) = nowNt;
+			engine->engineState.coastingFuelCutStartTime = nowNt;
 		} else if (mapDeactivate || tpsDeactivate || rpmDeactivate || cltDeactivate) {
-			ENGINE(engineState.coastingFuelCutStartTime) = 0;
+			engine->engineState.coastingFuelCutStartTime = 0;
 		}
 		// enable fuelcut?
-		if (ENGINE(engineState.coastingFuelCutStartTime) != 0) {
+		if (engine->engineState.coastingFuelCutStartTime != 0) {
 			// todo: add taper - interpolate using (nowNt - coastingFuelCutStartTime)?
 			fuelCorr = 0.0f;
 		}
@@ -424,8 +424,8 @@ float getCrankingFuel(float baseFuel) {
 }
 
 float getStandardAirCharge() {
-	float totalDisplacement = CONFIG(specs.displacement);
-	float cylDisplacement = totalDisplacement / CONFIG(specs.cylindersCount);
+	float totalDisplacement = engineConfiguration->specs.displacement;
+	float cylDisplacement = totalDisplacement / engineConfiguration->specs.cylindersCount;
 
 	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L
 	// 101.325kpa, 20C

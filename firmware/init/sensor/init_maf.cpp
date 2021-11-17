@@ -16,7 +16,7 @@ using ValueType = std::remove_extent_t<decltype(config->mafDecoding)>;
 static TableFunc mafCurve(config->mafDecodingBins, config->mafDecoding);
 
 void initMaf() {
-	adc_channel_e channel = CONFIG(mafAdcChannel);
+	adc_channel_e channel = engineConfiguration->mafAdcChannel;
 
 	if (!isAdcChannelValid(channel)) {
 		return;
