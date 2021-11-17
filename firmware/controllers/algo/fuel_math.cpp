@@ -215,7 +215,7 @@ int getNumberOfInjections(injection_mode_e mode) {
 }
 
 float getInjectionModeDurationMultiplier() {
-	injection_mode_e mode = ENGINE(getCurrentInjectionMode());
+	injection_mode_e mode = engine->getCurrentInjectionMode();
 
 	switch (mode) {
 	case IM_SIMULTANEOUS: {
@@ -281,7 +281,7 @@ float getInjectionMass(int rpm) {
 	// Prepare injector flow rate & deadtime
 	engine->engineModules.get<InjectorModel>().prepare();
 
-	floatms_t tpsAccelEnrich = ENGINE(tpsAccelEnrichment.getTpsEnrichment());
+	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
 

@@ -10,7 +10,6 @@
 
 #pragma once
 
-#include "engine_ptr.h"
 #include "state_sequence.h"
 #include "engine_configuration_generated_structures.h"
 

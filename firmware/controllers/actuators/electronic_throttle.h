@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "engine_ptr.h"
 #include "closed_loop_controller.h"
 #include "rusefi_types.h"
 

@@ -9,7 +9,6 @@
 #pragma once
 
 #include "global.h"
-#include "engine_ptr.h"
 
 #define INITIAL_PIN_STATE -1
 #define GPIO_NULL NULL

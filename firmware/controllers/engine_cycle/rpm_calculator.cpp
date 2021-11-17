@@ -139,7 +139,7 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 			 * this would make sure that we have good numbers for first cranking revolution
 			 * #275 cranking could be improved
 			 */
-			ENGINE(periodicFastCallback());
+			engine->periodicFastCallback();
 		}
 	}
 }
@@ -391,7 +391,7 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 	int32_t delayNt = USF2NT(delayUs);
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
-	ENGINE(executor.scheduleByTimestampNt("angle", timer, delayedTime, action));
+	engine->executor.scheduleByTimestampNt("angle", timer, delayedTime, action);
 
 	return delayedTime;
 }

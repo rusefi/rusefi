@@ -9,7 +9,6 @@
 #pragma once
 
 #include "engine_module.h"
-#include "engine_ptr.h"
 #include "rusefi_types.h"
 #include "periodic_task.h"
 #include "pid.h"

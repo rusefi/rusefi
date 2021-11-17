@@ -154,19 +154,19 @@ void turnInjectionPinLow(InjectionEvent *event) {
 			output->close(nowNt);
 		}
 	}
-	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex));
+	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
 }
 
 void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t nowNt) {
 	uint32_t eventIndex = injectionStart.triggerEventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
-//		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
+//		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < engine->triggerShape.getLength(), "handleFuel/event sch index");
 	if (eventIndex != trgEventIndex) {
 		return;
 	}
 
 	// Select fuel mass from the correct bank
-	uint8_t bankIndex = CONFIG(cylinderBankSelect[this->cylinderNumber]);
+	uint8_t bankIndex = engineConfiguration->cylinderBankSelect[this->cylinderNumber];
 	float injectionMassGrams = engine->injectionMass[bankIndex];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
@@ -286,9 +286,9 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1)));
+	engine->tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
 	if (trgEventIndex == 0) {
-		ENGINE(tpsAccelEnrichment.onEngineCycleTps());
+		engine->tpsAccelEnrichment.onEngineCycleTps();
 	}
 
 	if (limitedFuel) {
