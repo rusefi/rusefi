@@ -26,6 +26,7 @@
 #include "idle_thread.h"
 #include "injector_model.h"
 #include "launch_control.h"
+#include "trigger_scheduler.h"
 #include "type_list.h"
 
 #ifndef EFI_UNIT_TEST
@@ -128,6 +129,7 @@ public:
 #if EFI_IDLE_CONTROL
 		IdleController,
 #endif
+		TriggerScheduler,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -213,12 +215,6 @@ public:
 
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
-	/**
-	 * That's the linked list of pending events scheduled in relation to trigger
-	 * At the moment we iterate over the whole list while looking for events for specific trigger index
-	 * We can make it an array of lists per trigger index, but that would take some RAM and probably not needed yet.
-	 */
-	AngleBasedEvent *angleBasedEventsHead = nullptr;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */
