@@ -320,14 +320,24 @@ bool scheduleOrQueue(AngleBasedEvent *event,
 		/**
 		 * Spark should be scheduled in relation to some future trigger event, this way we get better firing precision
 		 */
-		bool isPending = assertNotInIgnitionList(engine->angleBasedEventsHead, event);
-		if (isPending) {
-#if SPARK_EXTREME_LOGGING
-			efiPrintf("isPending thus not adding to queue index=%d rev=%d now=%d", trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
-#endif /* SPARK_EXTREME_LOGGING */
-		} else {
-			LL_APPEND2(engine->angleBasedEventsHead, event, nextToothEvent);
+		{
+			chibios_rt::CriticalSectionLocker csl;
+
+			// TODO: This is O(n), consider some other way of detecting if in a list,
+			// and consider doubly linked or other list tricks.
+
+			if (!assertNotInIgnitionList(engine->angleBasedEventsHead, event)) {
+				// Use Append to retain some semblance of event ordering in case of
+				// time skew.  Thus on events are always followed by off events.
+				LL_APPEND2(engine->angleBasedEventsHead, event, nextToothEvent);
+
+				return false;
+			}
 		}
+#if SPARK_EXTREME_LOGGING
+		efiPrintf("isPending thus not adding to queue index=%d rev=%d now=%d",
+			  trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
+#endif /* SPARK_EXTREME_LOGGING */
 		return false;
 	}
 }
@@ -466,13 +476,29 @@ static void prepareIgnitionSchedule() {
 }
 
 static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
-	AngleBasedEvent *current, *tmp;
+	AngleBasedEvent *current, *tmp, *keephead;
+	AngleBasedEvent *keeptail = nullptr;
 
-	LL_FOREACH_SAFE2(engine->angleBasedEventsHead, current, tmp, nextToothEvent)
+	{
+		chibios_rt::CriticalSectionLocker csl;
+
+		keephead = engine->angleBasedEventsHead;
+		engine->angleBasedEventsHead = nullptr;
+	}
+
+	LL_FOREACH_SAFE2(keephead, current, tmp, nextToothEvent)
 	{
 		if (current->position.triggerEventIndex == trgEventIndex) {
 			// time to fire a spark which was scheduled previously
-			LL_DELETE2(engine->angleBasedEventsHead, current, nextToothEvent);
+
+			// Yes this looks like O(n^2), but that's only over the entire engine
+			// cycle.  It's really O(mn + nn) where m = # of teeth and n = # events
+			// fired per cycle.  The number of teeth outweigh the number of events, at
+			// least for 60-2....  So odds are we're only firing an event or two per
+			// tooth, which means the outer loop is really only O(n).  And if we are
+			// firing many events per teeth, then it's likely the events before this
+			// one also fired and thus the call to LL_DELETE2 is closer to O(1).
+			LL_DELETE2(keephead, current, nextToothEvent);
 
 			scheduling_s * sDown = &current->scheduling;
 
@@ -489,7 +515,17 @@ static void scheduleAllSparkEventsUntilNextTriggerTooth(uint32_t trgEventIndex, 
 				current->position.angleOffsetFromTriggerEvent,
 				current->action
 			);
+		} else {
+			keeptail = current; // Used for fast list concatenation
 		}
+	}
+
+	if (keephead) {
+		chibios_rt::CriticalSectionLocker csl;
+
+		// Put any new entries onto the end of the keep list
+		keeptail->nextToothEvent = engine->angleBasedEventsHead;
+		engine->angleBasedEventsHead = keephead;
 	}
 }
 
