@@ -1,0 +1,3 @@
+struct_no_prefix ts_outputs_s
+
+end_struct
