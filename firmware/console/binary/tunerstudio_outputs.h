@@ -14,11 +14,6 @@
 #include "scaled_channel.h"
 #include "tunerstudio_debug_struct.h"
 
-struct egt_values_s {
-	uint16_t values[EGT_CHANNEL_COUNT];
-};
-
-
 enum class TsCalMode : uint8_t {
 	None = 0,
 	Tps1Max = 1,
@@ -222,11 +217,11 @@ struct TunerStudioOutputChannels {
 	scaled_channel<uint16_t> debugIntField5; // 210
 
 	// accelerometer
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationX; // 212
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationY; // 214
+	scaled_percent accelerationX; // 212
+	scaled_percent accelerationY; // 214
 
 	// EGT
-	egt_values_s egtValues; // 216
+	uint16_t egtValues[EGT_CHANNEL_COUNT] ; // 216
 
 	scaled_percent throttle2Position;    // 232
 
@@ -284,9 +279,9 @@ struct TunerStudioOutputChannels {
 
 	scaled_channel<uint16_t> knockCount;// 306
 
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationZ; // 308
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationRoll; // 310
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationYaw; // 312
+	scaled_percent accelerationZ; // 308
+	scaled_percent accelerationRoll; // 310
+	scaled_percent accelerationYaw; // 312
 
 	scaled_channel<int8_t> vvtTargets[4]; // 314
 	scaled_channel<uint16_t> turboSpeed; // 318
