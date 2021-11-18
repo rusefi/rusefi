@@ -188,14 +188,17 @@ enable2ndByteCanID = false
 	  sd_present      = bits,    U32,      0,    [0:0], "true", "false";
 	  isIgnitionEnabledIndicator=bits,U32, 0,    [1:1], "true", "false";
 	  isInjectionEnabledIndicator=bits,U32,0,    [2:2], "true", "false";
+	  sd_logging_internal = bits U32  ,    0,    [3:3], "true", "false"
 	  isCylinderCleanupActivated=bits,U32, 0,    [4:4], "true", "false";
 	  ind_fuel_pump   = bits,    U32,      0,    [5:5], "true", "false";
 	  ind_fan         = bits,    U32,      0,    [6:6], "true", "false";
 	  ind_o2_heater   = bits,    U32,      0,    [7:7], "true", "false";
       ind_check_engine= bits,    U32,      0,    [8:8], "true", "false";
       needBurn        = bits,    U32,      0,    [9:9], "true", "false";
+	  sd_msd          = bits,    U32,      0,  [10:10], "true", "false"
       clutchUpState    =bits,    U32,      0,  [11:11], "true", "false";
       clutchDownState  =bits,    U32,      0,  [12:12], "true", "false";
+	  ind_fan_2        = bits,   U32,      0,  [13:13], "true", "false"
       brakePedalIndicator=bits,  U32,      0,  [15:15], "true", "false";
       toothLogReady      =bits,  U32,      0,  [16:16], "true", "false";
       acSwitchState     =bits,   U32,      0,  [17:17], "true", "false";
@@ -376,9 +379,6 @@ enable2ndByteCanID = false
 
 	; we use this to match logs to tunes
 	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
-	sd_logging_internal = bits,  U08,    246, [0:0], "true", "false"
-	sd_msd              = bits,  U08,    246, [1:1], "true", "false"
-	ind_fan_2           = bits,  U08,    246, [2:2], "true", "false"
 
 ; Transmission
       tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0

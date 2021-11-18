@@ -30,12 +30,12 @@ enum class TsCalMode : uint8_t {
 };
 
 /**
- * At the moment rusEfi does NOT have any code generation around TS output channels, three locations have to be changed manually
+ * todo https://github.com/rusefi/rusefi/issues/197
+ * At the moment rusEFI does NOT have any code generation around TS output channels, three locations have to be changed manually
  * 1) this TunerStudioOutputChannels firmware version of the structure
  * 2) '[OutputChannels]' block in rusefi.input
- * 3) com.rusefi.core.Sensor enum in rusEfi console source code
+ * 3) com.rusefi.core.Sensor enum in rusEFI console source code
  *
- * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
  */
 struct TunerStudioOutputChannels {
 	/* see also [OutputChannels] in rusefi.input */
@@ -47,17 +47,17 @@ struct TunerStudioOutputChannels {
 	unsigned int sd_present : 1; // bit 0, 72
 	unsigned int isIgnitionEnabledIndicator : 1; // bit 1
 	unsigned int isInjectionEnabledIndicator : 1; // bit 2
-	unsigned int unusedb3 : 1; // bit 3
+	unsigned int sd_logging_internal : 1;	// bit 3
 	unsigned int isCylinderCleanupActivated : 1; // bit 4
 	unsigned int isFuelPumpOn : 1; // bit 5
 	unsigned int isFanOn : 1; // bit 6
 	unsigned int isO2HeaterOn : 1; // bit 7
 	unsigned int checkEngine : 1; // bit 8
 	unsigned int needBurn : 1; // bit 9
-	unsigned int unusedBit10 : 1; // bit 10
+	unsigned int sd_msd : 1;					// bit 10
 	unsigned int clutchUpState : 1; // bit 11
 	unsigned int clutchDownState : 1; // bit 12
-	unsigned int unusedb13 : 1; // bit 13
+	unsigned int isFan2On : 1;				// bit 13
 	unsigned int unusedb14 : 1; // bit 14
 	unsigned int brakePedalState : 1; // bit 15. 0 - not pressed, 1 = pressed
 	unsigned int toothLogReady : 1; // bit 16
@@ -233,10 +233,7 @@ struct TunerStudioOutputChannels {
 
 	scaled_channel<uint16_t> tuneCrc16; // 244
 
-	// Offset 246: bits
-	uint8_t sd_logging_internal : 1;	// bit 0
-	uint8_t sd_msd : 1;					// bit 1
-	uint8_t isFan2On : 1;				// bit 2
+	scaled_channel<uint8_t> unusedAt246;
 
 	scaled_channel<uint8_t> tcuCurrentGear; // 247
 
