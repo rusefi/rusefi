@@ -35,7 +35,9 @@ private:
 	Timer m_launchTimer;
 };
 
-
+/**
+ * See also SoftLimiterSandbox.java
+ */
 class SoftSparkLimiter {
 public:
 	/**
