@@ -24,7 +24,7 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 
 	auto tps = Sensor::get(SensorType::Tps1);
 	// get VE from the separate table for Idle if idling
-	if (engine->engineModules.unmock<IdleController>().isIdlingOrTaper() &&
+	if (engine->module<IdleController>().unmock().isIdlingOrTaper() &&
 	    tps && engineConfiguration->useSeparateVeForIdle) {
 		float idleVe = interpolate2d(rpm, config->idleVeBins, config->idleVe);
 		// interpolate between idle table and normal (running) table using TPS threshold

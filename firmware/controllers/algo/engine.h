@@ -131,6 +131,14 @@ public:
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
+	/**
+	 * Slightly shorter helper function to keep the code looking clean.
+	 */
+	template<typename get_t>
+	auto & module() {
+		return engineModules.get<get_t>();
+	}
+
 	cyclic_buffer<int> triggerErrorDetection;
 
 	GearControllerBase *gearController;
