@@ -6,4 +6,4 @@ java -DSystemOut.name=logs/gen_output_channels \
  -definition integration/output_channels.txt \
  -cache_zip_file tunerstudio/generated/cache.zip \
  -cache . \
- -c_destination console/binary/ts_outputs.h
+ -c_destination console/binary/ts_outputs_generated.h
