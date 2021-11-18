@@ -25,7 +25,7 @@ static void plainPinTurnOff(NamedOutputPin *output) {
 
 
 static void scheduleOpen(AuxActor *current) {
-	scheduleOrQueue(&current->open,
+	engine->module<TriggerScheduler>()->scheduleOrQueue(&current->open,
 			TRIGGER_EVENT_UNDEFINED,
 			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveStart,
@@ -43,7 +43,7 @@ void auxPlainPinTurnOn(AuxActor *current) {
 
 	fixAngle(duration, "duration", CUSTOM_ERR_6557);
 
-	scheduleOrQueue(&current->close,
+	engine->module<TriggerScheduler>()->scheduleOrQueue(&current->close,
 			TRIGGER_EVENT_UNDEFINED,
 			getTimeNowNt(),
 			current->extra + engine->engineState.auxValveEnd,

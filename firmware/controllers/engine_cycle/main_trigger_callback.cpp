@@ -422,6 +422,10 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	 * specified duration of time
 	 */
 	handleFuel(limitedFuel, trgEventIndex, rpm, edgeTimestamp);
+
+	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
+		rpm, trgEventIndex, edgeTimestamp);
+
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
