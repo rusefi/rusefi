@@ -553,7 +553,7 @@ void startIdleBench(void) {
 #endif /* EFI_UNIT_TEST */
 
 void startIdleThread() {
-	engine->engineModules.unmock<IdleController>().init(&engineConfiguration->idleTimingPid);
+	engine->module<IdleController>().unmock().init(&engineConfiguration->idleTimingPid);
 
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
 

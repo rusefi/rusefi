@@ -279,7 +279,7 @@ float getInjectionMass(int rpm) {
 	float injectionFuelMass = cycleFuelMass * durationMultiplier;
 
 	// Prepare injector flow rate & deadtime
-	engine->engineModules.get<InjectorModel>().prepare();
+	engine->module<InjectorModel>()->prepare();
 
 	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
@@ -288,7 +288,7 @@ float getInjectionMass(int rpm) {
 	// For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
 	float tpsAccelPerInjection = durationMultiplier * tpsAccelEnrich;
 
-	float tpsFuelMass = engine->engineModules.get<InjectorModel>().getFuelMassForDuration(tpsAccelPerInjection);
+	float tpsFuelMass = engine->module<InjectorModel>()->getFuelMassForDuration(tpsAccelPerInjection);
 
 	return injectionFuelMass + tpsFuelMass;
 #else
