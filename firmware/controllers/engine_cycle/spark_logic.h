@@ -15,10 +15,3 @@ percent_t getCoilDutyCycle(int rpm);
 void initializeIgnitionActions();
 
 int isIgnitionTimingError(void);
-
-#define TRIGGER_EVENT_UNDEFINED INT32_MAX
-bool scheduleOrQueue(AngleBasedEvent *event,
-		uint32_t trgEventIndex,
-		efitick_t edgeTimestamp,
-		angle_t angle,
-		action_s action);
