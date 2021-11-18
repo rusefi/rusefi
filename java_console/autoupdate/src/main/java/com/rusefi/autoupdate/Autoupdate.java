@@ -4,6 +4,7 @@ import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.FrameHelper;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -188,6 +189,7 @@ public class Autoupdate {
         return doUpdate.get();
     }
 
+    @Nullable
     public static String readBundleFullName() {
         try {
             BufferedReader r = new BufferedReader(new FileReader(BUNDLE_NAME_FILE));

@@ -12,6 +12,7 @@ import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -37,7 +38,8 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  * @see FirmwareFlasher
  */
 public class StartupFrame {
-    private static final String LOGO = "/com/rusefi/logo.png";
+    public static final String LOGO_PATH = "/com/rusefi/";
+    private static final String LOGO = LOGO_PATH + "logo.png";
     public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
@@ -221,13 +223,13 @@ public class StartupFrame {
     }
 
     public static void setFrameIcon(Frame frame) {
-        ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
+        ImageIcon icon = getBundleIcon();
         if (icon != null)
             frame.setIconImage(icon.getImage());
     }
 
     public static JLabel createLogoLabel() {
-        ImageIcon logoIcon = AutoupdateUtil.loadIcon(LOGO);
+        ImageIcon logoIcon = getBundleIcon();
         if (logoIcon == null)
             return null;
         JLabel logo = new JLabel(logoIcon);
@@ -235,6 +237,21 @@ public class StartupFrame {
         URLLabel.addUrlAction(logo, URLLabel.createUri(URI));
         logo.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return logo;
+    }
+
+    @Nullable
+    private static ImageIcon getBundleIcon() {
+        String bundle = Autoupdate.readBundleFullName();
+        bundle = bundle == null ? "" : bundle;
+        String logoName;
+        if (bundle.contains("proteus")) {
+            logoName = LOGO_PATH + "logo_proteus.png";
+        } else if (bundle.contains("_mre")) {
+            logoName = LOGO_PATH + "logo_mre.png";
+        } else {
+            logoName = LOGO;
+        }
+        return AutoupdateUtil.loadIcon(logoName);
     }
 
     private void connectButtonAction(JComboBox<String> comboSpeeds) {
