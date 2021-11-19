@@ -68,7 +68,7 @@
 ! when this happens.
 #define FLASH_DATA_VERSION 10003
 
-#define LOG_DELIMITER "$"
+#define LOG_DELIMITER "`"
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
