@@ -26,8 +26,6 @@ FsioResult getEngineValue(le_action_e action) {
 		return engine->fsioState.mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return engine->fsioState.mockTimeSinceBoot;
-	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
-		return 2.0f;
 	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
 		return engine->fsioState.mockTimeSinceTrigger;
 	case LE_METHOD_VBATT:

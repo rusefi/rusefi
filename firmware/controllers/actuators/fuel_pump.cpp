@@ -6,7 +6,7 @@
 bool FuelPumpController::getPumpState() {
 	auto uptime = getTimeNowSeconds();
 
-	isPrime = uptime >= 0 && uptime < CONFIG(startUpFuelPumpDuration);
+	isPrime = uptime >= 0 && uptime < engineConfiguration->startUpFuelPumpDuration;
 	engineTurnedRecently = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) < 1;
 
 	isPumpOn = isPrime || engineTurnedRecently;
