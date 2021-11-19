@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Thu Nov 18 19:32:24 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Thu Nov 18 19:45:52 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -120,7 +120,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 11
 	 */
-	uint8_t internalMcuTemperature = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
 	/**
 	 * offset 12
 	 */
@@ -133,4 +133,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Thu Nov 18 19:32:24 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Thu Nov 18 19:45:52 EST 2021
