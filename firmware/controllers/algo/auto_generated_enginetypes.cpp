@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Nov 10 20:00:37 EST 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Nov 14 02:59:53 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -183,8 +183,6 @@ case ET_UNUSED97:
   return "ET_UNUSED97";
 case ET_UNUSED98:
   return "ET_UNUSED98";
-case ET_UNUSED_6:
-  return "ET_UNUSED_6";
 case FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case FORD_ESCORT_GT:
@@ -301,6 +299,8 @@ case PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case PROTEUS_BMW_M73:
   return "PROTEUS_BMW_M73";
+case PROTEUS_HARLEY:
+  return "PROTEUS_HARLEY";
 case PROTEUS_HONDA_ELEMENT_2003:
   return "PROTEUS_HONDA_ELEMENT_2003";
 case PROTEUS_HONDA_OBD2A:
@@ -460,6 +460,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
+case TT_MERCEDES_2_SEGMENT:
+  return "TT_MERCEDES_2_SEGMENT";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MITSUBISHI:
@@ -514,8 +516,6 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
-case TT_UNUSED_10:
-  return "TT_UNUSED_10";
 case TT_UNUSED_62:
   return "TT_UNUSED_62";
 case TT_VVT_BARRA_3_PLUS_1:
@@ -533,6 +533,8 @@ case TT_VVT_NISSAN_VQ35:
 }
 const char *getTs_command_e(ts_command_e value){
 switch(value) {
+case TS_BENCH_CATEGORY:
+  return "TS_BENCH_CATEGORY";
 case TS_CLEAR_WARNINGS:
   return "TS_CLEAR_WARNINGS";
 case TS_COMMAND_1:
@@ -555,6 +557,8 @@ case TS_COMMAND_5:
   return "TS_COMMAND_5";
 case TS_COMMAND_9:
   return "TS_COMMAND_9";
+case TS_CRAZY:
+  return "TS_CRAZY";
 case TS_DEBUG_MODE:
   return "TS_DEBUG_MODE";
 case TS_GRAB_PEDAL_UP:
@@ -571,6 +575,26 @@ case TS_INJECTOR_CATEGORY:
   return "TS_INJECTOR_CATEGORY";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_UNUSED_23:
+  return "TS_UNUSED_23";
+case TS_UNUSED_25:
+  return "TS_UNUSED_25";
+case TS_UNUSED_26:
+  return "TS_UNUSED_26";
+case TS_UNUSED_27:
+  return "TS_UNUSED_27";
+case TS_UNUSED_28:
+  return "TS_UNUSED_28";
+case TS_UNUSED_29:
+  return "TS_UNUSED_29";
+case TS_UNUSED_30:
+  return "TS_UNUSED_30";
+case TS_UNUSED_31:
+  return "TS_UNUSED_31";
+case TS_UNUSED_CJ125_CALIB:
+  return "TS_UNUSED_CJ125_CALIB";
+case TS_WIDEBAND:
+  return "TS_WIDEBAND";
 case TS_WRITE_FLASH:
   return "TS_WRITE_FLASH";
 case TS_X14:

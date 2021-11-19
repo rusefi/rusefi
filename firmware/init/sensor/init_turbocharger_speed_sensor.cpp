@@ -8,10 +8,9 @@ static FrequencySensor turbochargerSpeedSensor(SensorType::TurbochargerSpeed, MS
 static TurbochargerSpeedConverter turbochargerSpeedConverter;
 
 
-void initTurbochargerSpeedSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&turbochargerSpeedConverter);
+void initTurbochargerSpeedSensor() {
 
-	auto pin = CONFIG(turboSpeedSensorInputPin);
+	auto pin = engineConfiguration->turboSpeedSensorInputPin;
 
 	// Nothing to do if no sensor configured
 	if (!isBrainPinValid(pin)) {

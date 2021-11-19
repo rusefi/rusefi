@@ -26,7 +26,7 @@ baroCorr_Map3D_t baroCorrMap;
 #define tpMax 100
 //  http://rusefi.com/math/t_charge.html
 /***panel:Charge Temperature*/
-temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
+temperature_t getTCharge(int rpm, float tps) {
 	const auto clt = Sensor::get(SensorType::Clt);
 	const auto iat = Sensor::get(SensorType::Iat);
 
@@ -48,27 +48,27 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	float coolantTemp = clt.Value;
 
-	if ((engine->engineState.sd.isTChargeAirModel = (CONFIG(tChargeMode) == TCHARGE_MODE_AIR_INTERP))) {
+	if ((engine->engineState.sd.isTChargeAirModel = (engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP))) {
 		const floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;
 		// We're actually using an 'old' airMass calculated for the previous cycle, but it's ok, we're not having any self-excitaton issues
-		floatms_t airMassForEngine = engine->engineState.sd.airMassInOneCylinder * CONFIG(specs.cylindersCount);
+		floatms_t airMassForEngine = engine->engineState.sd.airMassInOneCylinder * engineConfiguration->specs.cylindersCount;
 		// airMass is in grams per 1 cycle for 1 cyl. Convert it to airFlow in kg/h for the engine.
 		// And if the engine is stopped (0 rpm), then airFlow is also zero (avoiding NaN division)
-		floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm);
 		// just interpolate between user-specified min and max coefs, based on the max airFlow value
 		engine->engineState.airFlow = airFlow;
 		engine->engineState.sd.Tcharge_coff = interpolateClamped(0.0,
-				CONFIG(tChargeAirCoefMin),
-				CONFIG(tChargeAirFlowMax),
-				CONFIG(tChargeAirCoefMax), airFlow);
+				engineConfiguration->tChargeAirCoefMin,
+				engineConfiguration->tChargeAirFlowMax,
+				engineConfiguration->tChargeAirCoefMax, airFlow);
 		// save it for console output (instead of MAF massAirFlow)
 	} else {
 		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin,
-				CONFIG(tChargeMinRpmMinTps), tpMax,
-				CONFIG(tChargeMinRpmMaxTps), tps);
+				engineConfiguration->tChargeMinRpmMinTps, tpMax,
+				engineConfiguration->tChargeMinRpmMaxTps, tps);
 		float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin,
-				CONFIG(tChargeMaxRpmMinTps), tpMax,
-				CONFIG(tChargeMaxRpmMaxTps), tps);
+				engineConfiguration->tChargeMaxRpmMinTps, tpMax,
+				engineConfiguration->tChargeMaxRpmMaxTps, tps);
 
 		engine->engineState.sd.Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
 	}
@@ -90,7 +90,7 @@ temperature_t getTCharge(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return Tcharge;
 }
 
-void initSpeedDensity(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initSpeedDensity() {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	lambdaMap.init(config->lambdaTable, config->lambdaLoadBins, config->lambdaRpmBins);

@@ -21,12 +21,11 @@ TEST(limp, testFatalError) {
 }
 
 TEST(limp, revLimit) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	engineConfiguration->rpmHardLimit = 2500;
 
 	LimpManager dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Under rev limit, inj/ign allowed
 	dut.updateState(2000, 0);
@@ -45,13 +44,12 @@ TEST(limp, revLimit) {
 }
 
 TEST(limp, boostCut) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Cut above 100kPa
 	engineConfiguration->boostCutPressure = 100;
 
 	LimpManager dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Below threshold, injection allowed
 	Sensor::setMockValue(SensorType::Map, 80);
@@ -78,17 +76,16 @@ TEST(limp, boostCut) {
 extern int timeNowUs;
 
 TEST(limp, oilPressureFailureCase) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 200;
 
 	LimpManager dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Low oil pressure!
 	Sensor::setMockValue(SensorType::OilPressure, 50);
 
 	// Start the engine
-	ENGINE(rpmCalculator).setRpmValue(1000);
+	engine->rpmCalculator.setRpmValue(1000);
 
 	// update & check: injection should be allowed
 	dut.updateState(1000, getTimeNowNt());
@@ -112,17 +109,16 @@ TEST(limp, oilPressureFailureCase) {
 }
 
 TEST(limp, oilPressureSuccessCase) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 200;
 
 	LimpManager dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Low oil pressure!
 	Sensor::setMockValue(SensorType::OilPressure, 50);
 
 	// Start the engine
-	ENGINE(rpmCalculator).setRpmValue(1000);
+	engine->rpmCalculator.setRpmValue(1000);
 
 	// update & check: injection should be allowed
 	dut.updateState(1000, getTimeNowNt());

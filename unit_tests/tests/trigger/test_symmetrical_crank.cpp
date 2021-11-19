@@ -15,11 +15,11 @@ static void postFourEvents(EngineTestHelper *eth, float mult) {
 }
 
 TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
+	EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
-	TriggerFormDetails *triggerForm = &ENGINE(triggerCentral.triggerFormDetails);
+	TriggerFormDetails *triggerForm = &engine->triggerCentral.triggerFormDetails;
 
-	TriggerWaveform * form = &ENGINE(triggerCentral.triggerShape);
+	TriggerWaveform * form = &engine->triggerCentral.triggerShape;
 
 	#define EXPECT_FINDANGLE(angle, idx) EXPECT_EQ(form->findAngleIndex(triggerForm, angle) & 0xFFFF'FFFE, idx);
 
@@ -44,13 +44,13 @@ TEST(engine, testAngleLogicInSymmetricalCrankIssue2980) {
 
 TEST(engine, testSymmetricalCrank) {
 
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
+	EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
 	// this test is not about isFasterEngineSpinUpEnabled so let's disable it to simplify things
-	CONFIG(isFasterEngineSpinUpEnabled) = false;
+	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 
-	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR, engine->getOperationMode());
 
 	float mult = 0.02;
 

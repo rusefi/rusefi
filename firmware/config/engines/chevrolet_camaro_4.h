@@ -8,5 +8,5 @@
 #pragma once
 #include "engine_configuration.h"
 
-void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setCamaro4();
 

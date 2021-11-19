@@ -83,7 +83,7 @@ RpmCalculator::RpmCalculator() :
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
-	// todo: reuse assignRpmValue() method which needs PASS_ENGINE_PARAMETER_SUFFIX
+	// todo: reuse assignRpmValue() method which needs
 	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
 	setValidValue(0, 0);	// 0 for current time since RPM sensor never times out
 }
@@ -139,7 +139,7 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 			 * this would make sure that we have good numbers for first cranking revolution
 			 * #275 cranking could be improved
 			 */
-			ENGINE(periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE));
+			engine->periodicFastCallback();
 		}
 	}
 }
@@ -150,7 +150,7 @@ void RpmCalculator::setRpmValue(float value) {
 	// Change state
 	if (rpmValue == 0) {
 		state = STOPPED;
-	} else if (rpmValue >= CONFIG(cranking.rpm)) {
+	} else if (rpmValue >= engineConfiguration->cranking.rpm) {
 		if (state != RUNNING) {
 			// Store the time the engine started
 			engineStartTimer.reset();
@@ -167,7 +167,7 @@ void RpmCalculator::setRpmValue(float value) {
 #if EFI_ENGINE_CONTROL
 	// This presumably fixes injection mode change for cranking-to-running transition.
 	// 'isSimultanious' flag should be updated for events if injection modes differ for cranking and running.
-	if (state != oldState && CONFIG(crankingInjectionMode) != CONFIG(injectionMode)) {
+	if (state != oldState && engineConfiguration->crankingInjectionMode != engineConfiguration->injectionMode) {
 		// Reset the state of all injectors: when we change fueling modes, we could
 		// immediately reschedule an injection that's currently underway.  That will cause
 		// the injector's overlappingCounter to get out of sync with reality.  As the fix,
@@ -175,7 +175,7 @@ void RpmCalculator::setRpmValue(float value) {
 		engine->injectionEvents.resetOverlapping();
 
 		// reschedule all injection events now that we've reset them
-		engine->injectionEvents.addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+		engine->injectionEvents.addFuelEvents();
 	}
 #endif
 }
@@ -213,7 +213,7 @@ void RpmCalculator::setStopSpinning() {
 }
 
 void RpmCalculator::setSpinningUp(efitick_t nowNt) {
-	if (!CONFIG(isFasterEngineSpinUpEnabled))
+	if (!engineConfiguration->isFasterEngineSpinUpEnabled)
 		return;
 	// Only a completely stopped and non-spinning engine can enter the spinning-up state.
 	if (isStopped() && !isSpinning) {
@@ -223,12 +223,12 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
 	}
 	// update variables needed by early instant RPM calc.
 	if (isSpinningUp()) {
-		engine->triggerCentral.triggerState.setLastEventTimeForInstantRpm(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		engine->triggerCentral.triggerState.setLastEventTimeForInstantRpm(nowNt);
 	}
 	/**
 	 * Update ignition pin indices if needed. Here we potentially switch to wasted spark temporarily.
 	 */
-	prepareIgnitionPinIndices(getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE) PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareIgnitionPinIndices(getCurrentIgnitionMode());
 }
 
 /**
@@ -239,7 +239,7 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
  * This callback is invoked on interrupt thread.
  */
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
-		uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index, efitick_t nowNt) {
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
@@ -260,7 +260,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 				rpmState->setRpmValue(NOISY_RPM);
 				rpmState->rpmRate = 0;
 			} else {
-				int mult = (int)getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE)) / 360;
+				int mult = (int)getEngineCycle(engine->getOperationMode()) / 360;
 				float rpm = 60 * mult / periodSeconds;
 
 				auto rpmDelta = rpm - rpmState->previousRpmValue;
@@ -271,7 +271,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		} else {
 			// we are here only once trigger is synchronized for the first time
 			// while transitioning  from 'spinning' to 'running'
-			engine->triggerCentral.triggerState.movePreSynchTimestamps(PASS_ENGINE_PARAMETER_SIGNATURE);
+			engine->triggerCentral.triggerState.movePreSynchTimestamps();
 		}
 
 		rpmState->onNewEngineCycle();
@@ -280,8 +280,8 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 #if EFI_SENSOR_CHART
 	// this 'index==0' case is here so that it happens after cycle callback so
 	// it goes into sniffer report into the first position
-	if (ENGINE(sensorChartMode) == SC_TRIGGER) {
-		angle_t crankAngle = getCrankshaftAngleNt(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	if (engine->sensorChartMode == SC_TRIGGER) {
+		angle_t crankAngle = getCrankshaftAngleNt(nowNt);
 		int signal = 1000 * ckpSignalType + index;
 		scAddData(crankAngle, signal);
 	}
@@ -290,7 +290,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	// Always update instant RPM even when not spinning up
 	engine->triggerCentral.triggerState.updateInstantRpm(
 		engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,
-		index, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		index, nowNt);
 
 	if (rpmState->isSpinningUp()) {
 		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
@@ -312,21 +312,20 @@ static char rpmBuffer[_MAX_FILLER];
  * This callback has nothing to do with actual engine control, it just sends a Top Dead Center mark to the rusEfi console
  * digital sniffer.
  */
-static void onTdcCallback(Engine *engine) {
-	UNUSED(engine);
+static void onTdcCallback(void *) {
 #if EFI_UNIT_TEST
 	if (!engine->needTdcCallback) {
 		return;
 	}
 #endif /* EFI_UNIT_TEST */
-	EXPAND_Engine;
+
 	itoa10(rpmBuffer, GET_RPM());
 #if EFI_ENGINE_SNIFFER
 	waveChart.startDataCollection();
 #endif
 	addEngineSnifferEvent(TOP_DEAD_CENTER_MESSAGE, (char* ) rpmBuffer);
 #if EFI_TOOTH_LOGGER
-	LogTriggerTopDeadCenter(getTimeNowNt() PASS_ENGINE_PARAMETER_SUFFIX);
+	LogTriggerTopDeadCenter(getTimeNowNt());
 #endif /* EFI_TOOTH_LOGGER */
 }
 
@@ -334,9 +333,9 @@ static void onTdcCallback(Engine *engine) {
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 void tdcMarkCallback(
-		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		uint32_t index0, efitick_t edgeTimestamp) {
 	bool isTriggerSynchronizationPoint = index0 == 0;
-	if (isTriggerSynchronizationPoint && ENGINE(isEngineChartEnabled) && ENGINE(tdcMarkEnabled)) {
+	if (isTriggerSynchronizationPoint && engine->isEngineChartEnabled && engine->tdcMarkEnabled) {
 		// two instances of scheduling_s are needed to properly handle event overlap
 		int revIndex2 = getRevolutionCounter() % 2;
 		int rpm = GET_RPM();
@@ -345,8 +344,7 @@ void tdcMarkCallback(
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
 			fixAngle(tdcPosition, "tdcPosition", CUSTOM_ERR_6553);
-			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition,
-					{ onTdcCallback, engine } PASS_ENGINE_PARAMETER_SUFFIX);
+			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition, onTdcCallback);
 		}
 	}
 }
@@ -355,7 +353,7 @@ void tdcMarkCallback(
 /**
  * @return Current crankshaft angle, 0 to 720 for four-stroke
  */
-float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getCrankshaftAngleNt(efitick_t timeNt) {
 	float timeSinceZeroAngle = engine->rpmCalculator.lastTdcTimer.getElapsedSeconds(timeNt);
 
 	int rpm = GET_RPM();
@@ -365,8 +363,7 @@ float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return rpm == 0 ? NAN : timeSinceZeroAngle / oneDegreeSeconds;
 }
 
-void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&ENGINE(rpmCalculator));
+void initRpmCalculator() {
 
 #if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
@@ -375,8 +372,8 @@ void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // HW_CHECK_MODE
 
 	// Only register if not configured to read RPM over OBD2
-	if (!CONFIG(consumeObdSensors)) {
-		ENGINE(rpmCalculator).Register();
+	if (!engineConfiguration->consumeObdSensors) {
+		engine->rpmCalculator.Register();
 	}
 
 }
@@ -387,14 +384,14 @@ void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * it takes the crankshaft to rotate to the specified angle.
  */
 efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
-		action_s action DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	float delayUs = ENGINE(rpmCalculator.oneDegreeUs) * angle;
+		action_s action) {
+	float delayUs = engine->rpmCalculator.oneDegreeUs * angle;
 
     // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	int32_t delayNt = USF2NT(delayUs);
 	efitime_t delayedTime = edgeTimestamp + delayNt;
 
-	ENGINE(executor.scheduleByTimestampNt("angle", timer, delayedTime, action));
+	engine->executor.scheduleByTimestampNt("angle", timer, delayedTime, action);
 
 	return delayedTime;
 }

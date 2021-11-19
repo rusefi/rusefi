@@ -7,15 +7,15 @@
 #include "spark_logic.h"
 
 TEST(issues, issueOneCylinderSpecialCase968) {
-	WITH_ENGINE_TEST_HELPER(GY6_139QMB);
-	ENGINE(tdcMarkEnabled) = false;
+	EngineTestHelper eth(GY6_139QMB);
+	engine->tdcMarkEnabled = false;
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_ONE);
 
 	ASSERT_EQ( 0,  engine->executor.size()) << "start";
 

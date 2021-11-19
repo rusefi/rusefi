@@ -45,13 +45,13 @@ static void initFluidPressure(LinearFunc& func, FunctionalSensor& sensor, const 
 	sensor.Register();
 }
 
-void initOilPressure(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	initFluidPressure(oilpSensorFunc, oilpSensor, CONFIG(oilPressure), 10);
-	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, CONFIG(lowPressureFuel), 10);
-	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, CONFIG(highPressureFuel), 100);
+void initOilPressure() {
+	initFluidPressure(oilpSensorFunc, oilpSensor, engineConfiguration->oilPressure, 10);
+	initFluidPressure(fuelPressureFuncLow, fuelPressureSensorLow, engineConfiguration->lowPressureFuel, 10);
+	initFluidPressure(fuelPressureFuncHigh, fuelPressureSensorHigh, engineConfiguration->highPressureFuel, 100);
 
 	injectorPressure.setProxiedSensor(
-		CONFIG(injectorPressureType) == IPT_High
+		engineConfiguration->injectorPressureType == IPT_High
 		? SensorType::FuelPressureHigh
 		: SensorType::FuelPressureLow
 	);

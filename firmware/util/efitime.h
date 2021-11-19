@@ -18,6 +18,7 @@
 #define NT_PER_SECOND (US2NT(US_PER_SECOND_LL))
 
 #define MS2US(MS_TIME) ((MS_TIME) * 1000)
+#define US2MS(US_TIME) ((US_TIME) / 1000)
 
 // microseconds to ticks
 // since only about 20 seconds of ticks fit in 32 bits this macro is casting parameter into 64 bits 'efitime_t' type

@@ -21,8 +21,8 @@
 
 #define LOW_VBATT 7
 
-void initSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initSensors();
 
-bool hasAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool getAcToggle(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool hasAcToggle();
+bool getAcToggle();
 

@@ -29,10 +29,10 @@ void FuelSchedule::resetOverlapping() {
 /**
  * @returns false in case of error, true if success
  */
-bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFFIX) {
+bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine is NULL", false);
 
-	floatus_t oneDegreeUs = ENGINE(rpmCalculator.oneDegreeUs); // local copy
+	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs; // local copy
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
 		// wonder if this line slows engine startup?
@@ -46,12 +46,12 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	 * todo: since this method is not invoked within trigger event handler and
 	 * engineState.injectionOffset is calculated from the same utility timer should we more that logic here?
 	 */
-	floatms_t fuelMs = ENGINE(injectionDuration);
+	floatms_t fuelMs = engine->injectionDuration;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
 	angle_t injectionDurationAngle = MS2US(fuelMs) / oneDegreeUs;
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(injectionDurationAngle), "NaN injectionDurationAngle", false);
 	assertAngleRange(injectionDurationAngle, "injectionDuration_r", CUSTOM_INJ_DURATION);
-	floatus_t injectionOffset = ENGINE(engineState.injectionOffset);
+	floatus_t injectionOffset = engine->engineState.injectionOffset;
 	if (cisnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
 		return false;
@@ -60,15 +60,15 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(baseAngle), "NaN baseAngle", false);
 	assertAngleRange(baseAngle, "baseAngle_r", CUSTOM_ERR_6554);
 
-	injection_mode_e mode = engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+	injection_mode_e mode = engine->getCurrentInjectionMode();
 
 	int injectorIndex;
 	if (mode == IM_SIMULTANEOUS || mode == IM_SINGLE_POINT) {
 		// These modes only have one injector
 		injectorIndex = 0;
-	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && CONFIG(twoWireBatchInjection))) {
+	} else if (mode == IM_SEQUENTIAL || (mode == IM_BATCH && engineConfiguration->twoWireBatchInjection)) {
 		// Map order index -> cylinder index (firing order)
-		injectorIndex = getCylinderId(i PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+		injectorIndex = getCylinderId(i) - 1;
 	} else if (mode == IM_BATCH) {
 		// Loop over the first half of the firing order twice
 		injectorIndex = i % (engineConfiguration->specs.cylindersCount / 2);
@@ -78,15 +78,15 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	}
 
 	InjectorOutputPin *secondOutput;
-	if (mode == IM_BATCH && CONFIG(twoWireBatchInjection)) {
+	if (mode == IM_BATCH && engineConfiguration->twoWireBatchInjection) {
 		/**
 		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
 		 */
 		// Compute the position of this cylinder's twin in the firing order
 		// Each injector gets fired as a primary (the same as sequential), but also
 		// fires the injector 360 degrees later in the firing order.
-		int secondOrder = (i + (CONFIG(specs.cylindersCount) / 2)) % CONFIG(specs.cylindersCount);
-		int secondIndex = getCylinderId(secondOrder PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+		int secondOrder = (i + (engineConfiguration->specs.cylindersCount / 2)) % engineConfiguration->specs.cylindersCount;
+		int secondIndex = getCylinderId(secondOrder) - 1;
 		secondOutput = &enginePins.injectors[secondIndex];
 	} else {
 		secondOutput = nullptr;
@@ -96,7 +96,6 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 	bool isSimultanious = mode == IM_SIMULTANEOUS;
 
 	InjectionEvent *ev = &elements[i];
-	INJECT_ENGINE_REFERENCE(ev);
 
 	ev->ownIndex = i;
 	ev->outputs[0] = output;
@@ -110,7 +109,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}
 
-	angle_t ignitionPositionWithinEngineCycle = ENGINE(ignitionPositionWithinEngineCycle[i]);
+	angle_t ignitionPositionWithinEngineCycle = engine->ignitionPositionWithinEngineCycle[i];
 
 	float angle = baseAngle + ignitionPositionWithinEngineCycle;
 
@@ -121,18 +120,18 @@ bool FuelSchedule::addFuelEventsForCylinder(int i  DECLARE_ENGINE_PARAMETER_SUFF
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "findAngle#3", false);
 	assertAngleRange(angle, "findAngle#a33", CUSTOM_ERR_6544);
-	ev->injectionStart.setAngle(angle PASS_ENGINE_PARAMETER_SUFFIX);
+	ev->injectionStart.setAngle(angle);
 #if EFI_UNIT_TEST
 	printf("registerInjectionEvent angle=%.2f trgIndex=%d inj %d\r\n", angle, ev->injectionStart.triggerEventIndex, injectorIndex);
 #endif
 	return true;
 }
 
-void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (size_t cylinderIndex = 0; cylinderIndex < CONFIG(specs.cylindersCount); cylinderIndex++) {
+void FuelSchedule::addFuelEvents() {
+	for (size_t cylinderIndex = 0; cylinderIndex < engineConfiguration->specs.cylindersCount; cylinderIndex++) {
 		InjectionEvent *ev = &elements[cylinderIndex];
 		ev->ownIndex = cylinderIndex;  // todo: is this assignment needed here? we now initialize in constructor
-		bool result = addFuelEventsForCylinder(cylinderIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		bool result = addFuelEventsForCylinder(cylinderIndex);
 		if (!result) {
 			invalidate();
 			return;
@@ -143,13 +142,13 @@ void FuelSchedule::addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	isReady = true;
 }
 
-void FuelSchedule::onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void FuelSchedule::onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt) {
 	// Wait for schedule to be built - this happens the first time we get RPM
 	if (!isReady) {
 		return;
 	}
 
-	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		elements[i].onTriggerTooth(toothIndex, rpm, nowNt);
 	}
 }

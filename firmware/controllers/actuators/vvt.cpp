@@ -27,7 +27,7 @@ void VvtController::init(int index, int bankIndex, int camIndex, const ValueProv
 	m_cam = camIndex;
 
 	// Use the same settings for the Nth cam in every bank (ie, all exhaust cams use the same PID)
-	m_pid.initPidClass(&CONFIG(auxPid[camIndex]));
+	m_pid.initPidClass(&engineConfiguration->auxPid[camIndex]);
 
 	m_targetMap = targetMap;
 }
@@ -51,7 +51,7 @@ expected<angle_t> VvtController::observePlant() const {
 
 expected<angle_t> VvtController::getSetpoint() const {
 	int rpm = GET_RPM();
-	float load = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
 
 #if EFI_TUNER_STUDIO
@@ -140,7 +140,6 @@ void initAuxPid() {
 			config->vvtTable2RpmBins);
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		INJECT_ENGINE_REFERENCE(&instances[i]);
 
 		int camIndex = i % CAMS_PER_BANK;
 		int bankIndex = i / CAMS_PER_BANK;

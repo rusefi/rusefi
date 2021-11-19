@@ -16,79 +16,80 @@ using ::testing::FloatNear;
 
 TEST(misc, testFuelMap) {
 	printf("Setting up FORD_ASPIRE_1996\r\n");
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
-		CONFIG(injector.battLagCorrBins[i]) = i;
-		CONFIG(injector.battLagCorr[i]) = 0.5 + 2 * i;
+		engineConfiguration->injector.battLagCorrBins[i] = i;
+		engineConfiguration->injector.battLagCorr[i] = 0.5 + 2 * i;
 	}
 
-	eth.engine.updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.updateSlowSensors();
 
 	Sensor::setMockValue(SensorType::Clt, 36.605f);
 	Sensor::setMockValue(SensorType::Iat, 30.0f);
 
 	// because all the correction tables are zero
 	printf("*************************************************** getRunningFuel 1\r\n");
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_NEAR(5.3679, getRunningFuel(5 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << "base fuel";
+	eth.engine.periodicFastCallback();
+	ASSERT_NEAR(5.3679, getRunningFuel(5), EPS4D) << "base fuel";
 
 	printf("*************************************************** setting IAT table\r\n");
 	for (int i = 0; i < IAT_CURVE_SIZE; i++) {
-		eth.engine.config->iatFuelCorrBins[i] = i * 10;
-		eth.engine.config->iatFuelCorr[i] = 2 * i;
+		config->iatFuelCorrBins[i] = i * 10;
+		config->iatFuelCorr[i] = 2 * i;
 	}
-	eth.engine.config->iatFuelCorr[0] = 2;
+	config->iatFuelCorr[0] = 2;
 
 	printf("*************************************************** setting CLT table\r\n");
 	for (int i = 0; i < CLT_CURVE_SIZE; i++) {
-		eth.engine.config->cltFuelCorrBins[i] = i * 10;
-		eth.engine.config->cltFuelCorr[i] = i;
+		config->cltFuelCorrBins[i] = i * 10;
+		config->cltFuelCorr[i] = i;
 	}
 
 	Sensor::setMockValue(SensorType::Clt, 70.0f);
 	Sensor::setMockValue(SensorType::Iat, 30.0f);
 
-	setFlatInjectorLag(0 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFlatInjectorLag(0);
 
-	float iatCorrection = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float iatCorrection = getIatFuelCorrection();
 	ASSERT_EQ( 6,  iatCorrection) << "IAT";
-	float cltCorrection = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float cltCorrection = getCltFuelCorrection();
 	ASSERT_EQ( 7,  cltCorrection) << "CLT";
 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5);
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
-	eth.engine.periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	eth.engine.periodicFastCallback();
 
 	// Check that runningFuel corrects appropriately
-	EXPECT_EQ( 42,  getRunningFuel(1 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
-	EXPECT_EQ( 84,  getRunningFuel(2 PASS_ENGINE_PARAMETER_SUFFIX)) << "v1";
+	EXPECT_EQ( 42,  getRunningFuel(1)) << "v1";
+	EXPECT_EQ( 84,  getRunningFuel(2)) << "v1";
 
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0);
 
 	engineConfiguration->cranking.baseFuel = 4000;
 
 	// Should use 20 degree correction in case of failed sensor
 	Sensor::resetMockValue(SensorType::Clt);
-	EXPECT_NEAR(12.4, getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(12.4, getCrankingFuel3(2, 0), EPS4D);
 
 	Sensor::setMockValue(SensorType::Clt, 0);
-	EXPECT_NEAR(7.7333, getCrankingFuel3(2, 4 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(7.7333, getCrankingFuel3(2, 4), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 8);
-	EXPECT_NEAR(7, getCrankingFuel3(2, 15 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(7, getCrankingFuel3(2, 15), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(8, getCrankingFuel3(2, 0 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(8, getCrankingFuel3(2, 0), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(4, getCrankingFuel3(2, 50 PASS_ENGINE_PARAMETER_SUFFIX), EPS4D);
+	EXPECT_NEAR(4, getCrankingFuel3(2, 50), EPS4D);
 }
 
 
-static void confgiureFordAspireTriggerWaveform(TriggerWaveform * s) {
+static void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->useOnlyRisingEdgeForTriggerTemp = false;
 
 	s->addEvent720(53.747, T_SECONDARY, TV_RISE);
 	s->addEvent720(121.90, T_SECONDARY, TV_FALL);
@@ -132,13 +133,13 @@ static void confgiureFordAspireTriggerWaveform(TriggerWaveform * s) {
 TEST(misc, testAngleResolver) {
 	printf("*************************************************** testAngleResolver\r\n");
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
 	engineConfiguration->globalTriggerAngleOffset = 175;
 
 	TriggerWaveform * ts = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->initializeTriggerWaveform();
 
 	assertEqualsM("index 2", 52.76, triggerFormDetails->eventAngles[3]); // this angle is relation to synch point
 	assertEqualsM("time 2", 0.3233, ts->wave->getSwitchTime(2));
@@ -152,37 +153,37 @@ TEST(misc, testAngleResolver) {
 	event_trigger_position_s injectionStart;
 
 	printf("*************************************************** testAngleResolver 0\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -122, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,&injectionStart, -122);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_NEAR(0.24, injectionStart.angleOffsetFromTriggerEvent, EPS5D);
 
 	printf("*************************************************** testAngleResolver 0.1\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -80, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,&injectionStart, -80);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_FLOAT_EQ(42.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.2\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -54, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,&injectionStart, -54);
 	ASSERT_EQ( 2,  injectionStart.triggerEventIndex) << "eventIndex@0";
 	ASSERT_FLOAT_EQ(68.2400, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 0.3\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, -53, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,&injectionStart, -53);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(69.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 1\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, 0, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,&injectionStart, 0);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(122.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	printf("*************************************************** testAngleResolver 2\r\n");
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape), &ENGINE(triggerCentral.triggerFormDetails),&injectionStart, 56, engineConfiguration->globalTriggerAngleOffset);
+	findTriggerPosition(&engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,&injectionStart, 56);
 	ASSERT_EQ(2, injectionStart.triggerEventIndex);
 	ASSERT_FLOAT_EQ(178.24, injectionStart.angleOffsetFromTriggerEvent);
 
 	TriggerWaveform t;
-	confgiureFordAspireTriggerWaveform(&t);
+	configureFordAspireTriggerWaveform(&t);
 }
 
 TEST(misc, testPinHelper) {

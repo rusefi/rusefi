@@ -11,13 +11,13 @@ void WallFuel::resetWF() {
 	wallFuel = 0;
 }
 
-floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 	invocationCounter++;
 	if (cisnan(desiredFuel)) {
 		return desiredFuel;
 	}
 	// disable this correction for cranking
-	if (ENGINE(rpmCalculator).isCranking()) {
+	if (engine->rpmCalculator.isCranking()) {
 		return desiredFuel;
 	}
 
@@ -59,7 +59,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 
 	// if tau is really small, we get div/0.
 	// you probably meant to disable wwae.
-	float tau = CONFIG(wwaeTau);
+	float tau = engineConfiguration->wwaeTau;
 	if (tau < 0.01f) {
 		return desiredFuel;
 	}
@@ -71,7 +71,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel DECLARE_ENGINE_PARAMETER_SUFFIX
 	}
 
 	float alpha = expf_taylor(-120 / (rpm * tau));
-	float beta = CONFIG(wwaeBeta);
+	float beta = engineConfiguration->wwaeBeta;
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {

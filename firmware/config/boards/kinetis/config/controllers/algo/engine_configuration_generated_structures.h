@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Nov 11 01:45:18 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 16 02:51:46 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -798,7 +798,7 @@ struct engine_configuration_s {
 	bool enableMapEstimationTableFallback : 1;
 	/**
 	offset 76 bit 27 */
-	bool useFSIOTableForCanSniffingFiltering : 1;
+	bool usescriptTableForCanSniffingFiltering : 1;
 	/**
 	offset 76 bit 28 */
 	bool issue_294_29 : 1;
@@ -1698,9 +1698,10 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e acFanPinMode;
 	/**
+	volts
 	 * offset 764
 	 */
-	pin_output_mode_e gpioPinModes[FSIO_COMMAND_COUNT];
+	uint8_t unused11[6];
 	/**
 	volts
 	 * offset 770
@@ -1713,12 +1714,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 779
 	 */
-	uint8_t unusedpinModesWhereHere[1];
-	/**
-	 * todo: more comments
-	 * offset 780
-	 */
-	output_pin_e fsioOutputPins[FSIO_COMMAND_COUNT];
+	uint8_t unusedpinModesWhereHere[7];
 	/**
 	multiplier
 	 * offset 786
@@ -1823,19 +1819,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 832
 	 */
-	fsio_pwm_freq_t fsioFrequency[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 844
-	 */
-	int16_t unusedOutputFreqWhereHere[10];
+	int16_t unusedOutputFreqWhereHere[16];
 	/**
 	 * offset 864
 	 */
-	fsio_setting_t fsio_setting[FSIO_COMMAND_COUNT];
+	script_setting_t scriptSetting[SCRIPT_SETTING_COUNT];
 	/**
-	 * offset 888
+	 * offset 896
 	 */
-	int unusedSettings[10];
+	int unusedSettings[8];
 	/**
 	 * offset 928
 	 */
@@ -1912,15 +1904,9 @@ struct engine_configuration_s {
 	 */
 	maf_sensor_type_e mafSensorType;
 	/**
-	 * todo:not finished
-	 * These input pins allow us to pull toggle buttons state
 	 * offset 952
 	 */
-	brain_pin_e fsioDigitalInputs[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 958
-	 */
-	uint8_t unusedDigital[10];
+	uint8_t unusedDigital[16];
 	/**
 	 * offset 968
 	 */
@@ -1974,10 +1960,10 @@ struct engine_configuration_s {
 	bool enableLaunchRetard : 1;
 	/**
 	offset 976 bit 5 */
-	bool enableLaunchBoost : 1;
+	bool unfinishedenableLaunchBoost : 1;
 	/**
 	offset 976 bit 6 */
-	bool launchDisableBySpeed : 1;
+	bool unfinishedlaunchDisableBySpeed : 1;
 	/**
 	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	offset 976 bit 7 */
@@ -2055,10 +2041,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1;
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_301_30 : 1;
+	bool unusedBit_298_30 : 1;
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_301_31 : 1;
+	bool unusedBit_298_31 : 1;
 	/**
 	 * offset 980
 	 */
@@ -2106,13 +2092,13 @@ struct engine_configuration_s {
 	Kph
 	 * offset 1028
 	 */
-	int launchSpeedTreshold;
+	int launchSpeedThreshold;
 	/**
 	 * Disabled below this rpm
 	RPM
 	 * offset 1032
 	 */
-	int launchRpmTreshold;
+	int unusedLaunchRpmThreshold;
 	/**
 	 * Range from Launch Rpm for Timing Retard to activate
 	RPM
@@ -2573,15 +2559,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 1512
 	 */
-	float unused1512;
-	/**
-	 * offset 1516
-	 */
-	pin_input_mode_e fsioInputModes[FSIO_COMMAND_COUNT];
-	/**
-	 * offset 1522
-	 */
-	uint8_t unusedFsioInputs[10];
+	uint8_t unused20Inputs[20];
 	/**
 	count
 	 * offset 1532
@@ -2863,6 +2841,7 @@ struct engine_configuration_s {
 	 */
 	int16_t iacByTpsTaper;
 	/**
+	 * Auxiliary sensor serial, not to be confused with secondary calibration serial
 	 * set_aux_tx_pin X
 	 * offset 2040
 	 */
@@ -2872,6 +2851,7 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e warningLedPin;
 	/**
+	 * Auxiliary sensor serial, not to be confused with secondary calibration serial
 	 * set_aux_rx_pin X
 	 * offset 2042
 	 */
@@ -3025,76 +3005,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1;
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_512_8 : 1;
+	bool unusedBit_507_8 : 1;
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_512_9 : 1;
+	bool unusedBit_507_9 : 1;
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_512_10 : 1;
+	bool unusedBit_507_10 : 1;
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_512_11 : 1;
+	bool unusedBit_507_11 : 1;
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_512_12 : 1;
+	bool unusedBit_507_12 : 1;
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_512_13 : 1;
+	bool unusedBit_507_13 : 1;
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_512_14 : 1;
+	bool unusedBit_507_14 : 1;
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_512_15 : 1;
+	bool unusedBit_507_15 : 1;
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_512_16 : 1;
+	bool unusedBit_507_16 : 1;
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_512_17 : 1;
+	bool unusedBit_507_17 : 1;
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_512_18 : 1;
+	bool unusedBit_507_18 : 1;
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_512_19 : 1;
+	bool unusedBit_507_19 : 1;
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_512_20 : 1;
+	bool unusedBit_507_20 : 1;
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_512_21 : 1;
+	bool unusedBit_507_21 : 1;
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_512_22 : 1;
+	bool unusedBit_507_22 : 1;
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_512_23 : 1;
+	bool unusedBit_507_23 : 1;
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_512_24 : 1;
+	bool unusedBit_507_24 : 1;
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_512_25 : 1;
+	bool unusedBit_507_25 : 1;
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_512_26 : 1;
+	bool unusedBit_507_26 : 1;
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_512_27 : 1;
+	bool unusedBit_507_27 : 1;
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_512_28 : 1;
+	bool unusedBit_507_28 : 1;
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_512_29 : 1;
+	bool unusedBit_507_29 : 1;
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_512_30 : 1;
+	bool unusedBit_507_30 : 1;
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_512_31 : 1;
+	bool unusedBit_507_31 : 1;
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -3229,7 +3209,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2244
 	 */
-	fsio_pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
+	pwm_freq_t vvtOutputFrequency[CAMS_PER_BANK];
 	/**
 	 * Additional idle % when fan #1 is active
 	%
@@ -3544,42 +3524,42 @@ struct engine_configuration_s {
 	x
 	 * offset 2688
 	 */
-	float scriptCurve1Bins[FSIO_CURVE_16];
+	float scriptCurve1Bins[SCRIPT_CURVE_16];
 	/**
 	y
 	 * offset 2752
 	 */
-	float scriptCurve1[FSIO_CURVE_16];
+	float scriptCurve1[SCRIPT_CURVE_16];
 	/**
 	x
 	 * offset 2816
 	 */
-	float scriptCurve2Bins[FSIO_CURVE_16];
+	float scriptCurve2Bins[SCRIPT_CURVE_16];
 	/**
 	y
 	 * offset 2880
 	 */
-	float scriptCurve2[FSIO_CURVE_16];
+	float scriptCurve2[SCRIPT_CURVE_16];
 	/**
 	x
 	 * offset 2944
 	 */
-	float scriptCurve3Bins[FSIO_CURVE_8];
+	float scriptCurve3Bins[SCRIPT_CURVE_8];
 	/**
 	y
 	 * offset 2976
 	 */
-	float scriptCurve3[FSIO_CURVE_8];
+	float scriptCurve3[SCRIPT_CURVE_8];
 	/**
 	x
 	 * offset 3008
 	 */
-	float scriptCurve4Bins[FSIO_CURVE_8];
+	float scriptCurve4Bins[SCRIPT_CURVE_8];
 	/**
 	y
 	 * offset 3040
 	 */
-	float scriptCurve4[FSIO_CURVE_8];
+	float scriptCurve4[SCRIPT_CURVE_8];
 	/**
 	 * Continental/GM flex fuel sensor, 50-150hz type
 	 * offset 3072
@@ -3705,31 +3685,35 @@ struct engine_configuration_s {
 	x
 	 * offset 3408
 	 */
-	float scriptCurve5Bins[FSIO_CURVE_8];
+	float scriptCurve5Bins[SCRIPT_CURVE_8];
 	/**
 	y
 	 * offset 3440
 	 */
-	float scriptCurve5[FSIO_CURVE_8];
+	float scriptCurve5[SCRIPT_CURVE_8];
 	/**
 	x
 	 * offset 3472
 	 */
-	float scriptCurve6Bins[FSIO_CURVE_8];
+	float scriptCurve6Bins[SCRIPT_CURVE_8];
 	/**
 	y
 	 * offset 3504
 	 */
-	float scriptCurve6[FSIO_CURVE_8];
+	float scriptCurve6[SCRIPT_CURVE_8];
 	/**
 	 * offset 3536
 	 */
 	gppwm_note_t scriptTableName[SCRIPT_TABLE_COUNT];
 	/**
-	units
 	 * offset 3600
 	 */
-	uint8_t unused3328[236];
+	gppwm_note_t scriptSettingName[SCRIPT_SETTING_COUNT];
+	/**
+	units
+	 * offset 3728
+	 */
+	uint8_t unused3328[108];
 	/**
 	Min tCharge Coeff.
 	 * offset 3836
@@ -4256,7 +4240,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6644
 	 */
-	le_formula_t fsioFormulas[FSIO_COMMAND_COUNT];
+	le_formula_t fsioFormulas[6];
 	/**
 	 * offset 7844
 	 */
@@ -4394,34 +4378,34 @@ struct persistent_config_s {
 	value
 	 * offset 15748
 	 */
-	uint8_t vvtTable1[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 15812
 	 */
-	float vvtTable1LoadBins[FSIO_TABLE_8];
+	float vvtTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 15844
 	 */
-	float vvtTable1RpmBins[FSIO_TABLE_8];
+	float vvtTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 15876
 	 */
-	uint8_t vvtTable2[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 15940
 	 */
-	float vvtTable2LoadBins[FSIO_TABLE_8];
+	float vvtTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 15972
 	 */
-	float vvtTable2RpmBins[FSIO_TABLE_8];
+	float vvtTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 16004
@@ -4491,68 +4475,68 @@ struct persistent_config_s {
 	value
 	 * offset 19268
 	 */
-	float fsioTable1[FSIO_TABLE_8][FSIO_TABLE_8];
+	float scriptTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19524
 	 */
-	float fsioTable1LoadBins[FSIO_TABLE_8];
+	float scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19556
 	 */
-	float fsioTable1RpmBins[FSIO_TABLE_8];
+	float scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19588
 	 */
-	uint8_t fsioTable2[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t scriptTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19652
 	 */
-	float fsioTable2LoadBins[FSIO_TABLE_8];
+	float scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19684
 	 */
-	float fsioTable2RpmBins[FSIO_TABLE_8];
+	float scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19716
 	 */
-	uint8_t fsioTable3[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19780
 	 */
-	float fsioTable3LoadBins[FSIO_TABLE_8];
+	float scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19812
 	 */
-	float fsioTable3RpmBins[FSIO_TABLE_8];
+	float scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
 	 * offset 19844
 	 */
-	uint8_t fsioTable4[FSIO_TABLE_8][FSIO_TABLE_8];
+	uint8_t scriptTable4[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
 	 * offset 19908
 	 */
-	float fsioTable4LoadBins[FSIO_TABLE_8];
+	float scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
 	 * offset 19940
 	 */
-	float fsioTable4RpmBins[FSIO_TABLE_8];
+	float scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/** total size 19972*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Nov 11 01:45:18 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 16 02:51:46 UTC 2021

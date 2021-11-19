@@ -106,14 +106,14 @@ private:
 static MILController instance CCM_OPTIONAL;
 
 #if TEST_MIL_CODE
-static void testMil(void) {
+static void testMil() {
 	addError(OBD_Engine_Coolant_Temperature_Circuit_Malfunction);
 	addError(OBD_Intake_Air_Temperature_Circuit_Malfunction);
 }
 #endif /* TEST_MIL_CODE */
 
 bool isMilEnabled() {
-	return isBrainPinValid(CONFIG(malfunctionIndicatorPin));
+	return isBrainPinValid(engineConfiguration->malfunctionIndicatorPin);
 }
 
 void initMalfunctionIndicator(void) {

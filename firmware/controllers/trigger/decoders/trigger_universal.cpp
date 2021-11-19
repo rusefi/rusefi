@@ -56,11 +56,11 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 void configureOnePlusOne(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->addEvent720(180, T_PRIMARY, TV_RISE);
-	s->addEvent720(360, T_PRIMARY, TV_FALL);
+	s->addEvent360( 90, T_PRIMARY, TV_RISE);
+	s->addEvent360(180, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(540, T_SECONDARY, TV_RISE);
-	s->addEvent720(720, T_SECONDARY, TV_FALL);
+	s->addEvent360(270, T_SECONDARY, TV_RISE);
+	s->addEvent360(360, T_SECONDARY, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;

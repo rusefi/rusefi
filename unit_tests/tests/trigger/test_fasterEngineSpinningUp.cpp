@@ -7,8 +7,8 @@
 #include "pch.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	ENGINE(tdcMarkEnabled) = false;
+	EngineTestHelper eth(TEST_ENGINE);
+	engine->tdcMarkEnabled = false;
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->cranking.baseFuel = 12;
@@ -20,13 +20,13 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// set sequential injection mode to test auto-change to simultaneous when spinning-up
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
-	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode());
 
 	eth.fireRise(1000 /*ms*/);
 
 	// check if it's true
-	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
-	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode());
+	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 	// check if the engine has the right state
 	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
 	// check RPM
@@ -46,9 +46,9 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// two simultaneous injections
 	ASSERT_EQ(4, engine->executor.size()) << "plain#2";
 	// test if they are simultaneous
-	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode());
 	// test if ignition mode is temporary changed to wasted spark, if set to individual coils
-	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 	// check real events
 	eth.assertEvent5("inj start#1", 0, (void*)startSimultaniousInjection, 97500);
 	eth.assertEvent5("inj end#1", 1, (void*)endSimultaniousInjection, 100000);
@@ -66,9 +66,9 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check RPM
 	ASSERT_EQ( 200,  GET_RPM()) << "RPM#2";
 	// test if they are simultaneous in cranking mode too
-	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_SIMULTANEOUS, engine->getCurrentInjectionMode());
 	// test if ignition mode is restored to ind.coils
-	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_INDIVIDUAL_COILS, getCurrentIgnitionMode());
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 	// check real events
@@ -86,7 +86,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check RPM
 	ASSERT_EQ( 1000,  GET_RPM()) << "RPM#3";
 	// check if the injection mode is back to sequential now
-	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+	ASSERT_EQ(IM_SEQUENTIAL, engine->getCurrentInjectionMode());
 	// 4 sequential injections for the full cycle
 	ASSERT_EQ( 8,  engine->executor.size()) << "plain#3";
 
@@ -97,7 +97,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 

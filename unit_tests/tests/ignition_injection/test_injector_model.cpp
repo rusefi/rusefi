@@ -59,14 +59,13 @@ TEST(InjectorModel, getInjectionDurationNonlinear) {
 }
 
 TEST(InjectorModel, nonlinearPolynomial) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	InjectorModel dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(applyNonlinearBelowPulse) = MS2US(10);
+	engineConfiguration->applyNonlinearBelowPulse = MS2US(10);
 
 	for (int i = 0; i < 8; i++) {
-		CONFIG(injectorCorrectionPolynomial)[i] = i + 1;
+		engineConfiguration->injectorCorrectionPolynomial[i] = i + 1;
 	}
 
 	// expect return of the original value, plus polynomial f(x)
@@ -80,16 +79,15 @@ TEST(InjectorModel, nonlinearPolynomial) {
 }
 
 TEST(InjectorModel, Deadtime) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Some test data in the injector correction table
 	for (size_t i = 0; i < efi::size(engineConfiguration->injector.battLagCorr); i++) {
-		CONFIG(injector.battLagCorr)[i] = 2 * i;
-		CONFIG(injector.battLagCorrBins)[i] = i;
+		engineConfiguration->injector.battLagCorr[i] = 2 * i;
+		engineConfiguration->injector.battLagCorrBins[i] = i;
 	}
 
 	InjectorModel dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	Sensor::setMockValue(SensorType::BatteryVoltage, 3);
 	EXPECT_EQ(dut.getDeadtime(), 6);
@@ -121,8 +119,7 @@ TEST_P(FlowRateFixture, FlowRateRatio) {
 	StrictMock<TesterGetFlowRate> dut;
 	EXPECT_CALL(dut, getInjectorFlowRatio()).WillOnce(Return(flowRatio));
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	INJECT_ENGINE_REFERENCE(&dut);
+	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->injector.flow = 500;
 
 	// 500 cc/min = 6g/s
@@ -141,8 +138,7 @@ TEST_P(FlowRateFixture, PressureRatio) {
 	StrictMock<TesterGetRailPressure> dut;
 	EXPECT_CALL(dut, getAbsoluteRailPressure()).WillOnce(Return(400 * pressureRatio + fakeMap));
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	INJECT_ENGINE_REFERENCE(&dut);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Use injector compensation
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -160,8 +156,7 @@ TEST_P(FlowRateFixture, PressureRatio) {
 TEST(InjectorModel, NegativePressureDelta) {
 	StrictMock<TesterGetRailPressure> dut;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	INJECT_ENGINE_REFERENCE(&dut);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Use injector compensation
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -180,8 +175,7 @@ TEST(InjectorModel, NegativePressureDelta) {
 TEST(InjectorModel, VariableInjectorFlowModeNone) {
 	StrictMock<TesterGetRailPressure> dut;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	INJECT_ENGINE_REFERENCE(&dut);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	engineConfiguration->injectorCompensationMode = ICM_None;
 
@@ -192,8 +186,7 @@ TEST(InjectorModel, VariableInjectorFlowModeNone) {
 TEST(InjectorModel, RailPressureFixed) {
 	InjectorModel dut;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	INJECT_ENGINE_REFERENCE(&dut);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->fuelReferencePressure = 350;
@@ -206,8 +199,7 @@ TEST(InjectorModel, RailPressureFixed) {
 TEST(InjectorModel, RailPressureSensed) {
 	InjectorModel dut;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	INJECT_ENGINE_REFERENCE(&dut);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -224,8 +216,7 @@ TEST(InjectorModel, RailPressureSensed) {
 TEST(InjectorModel, FailedPressureSensor) {
 	InjectorModel dut;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	INJECT_ENGINE_REFERENCE(&dut);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;
@@ -243,8 +234,7 @@ TEST(InjectorModel, FailedPressureSensor) {
 TEST(InjectorModel, MissingPressureSensor) {
 	InjectorModel dut;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	INJECT_ENGINE_REFERENCE(&dut);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Reference pressure is 350kpa
 	engineConfiguration->injectorCompensationMode = ICM_SensedRailPressure;

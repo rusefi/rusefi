@@ -9,17 +9,17 @@ static FunctionalSensor fuelSensor(SensorType::FuelLevel, /* timeout = */ MS2NT(
 
 #if !EFI_UNIT_TEST
 // extract the type of the elements in the bin/value arrays
-using BinType = std::remove_extent_t<decltype(CONFIG(fuelLevelBins))>;
-using ValueType = std::remove_extent_t<decltype(CONFIG(fuelLevelValues))>;
+using BinType = std::remove_extent_t<decltype(engineConfiguration->fuelLevelBins)>;
+using ValueType = std::remove_extent_t<decltype(engineConfiguration->fuelLevelValues)>;
 
 static TableFunc
 	<BinType, ValueType, FUEL_LEVEL_TABLE_COUNT,
 		// Values are stored in percent
 		efi::ratio<1>>
-			fuelCurve(CONFIG(fuelLevelBins), CONFIG(fuelLevelValues));
+			fuelCurve(engineConfiguration->fuelLevelBins, engineConfiguration->fuelLevelValues);
 
-void initFuelLevel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	adc_channel_e channel = CONFIG(fuelLevelSensor);
+void initFuelLevel() {
+	adc_channel_e channel = engineConfiguration->fuelLevelSensor;
 
 	if (!isAdcChannelValid(channel)) {
 		return;

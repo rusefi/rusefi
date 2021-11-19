@@ -62,27 +62,6 @@ void chDbgAssert(int c, char *msg, void *arg);
 
 #define CCM_OPTIONAL
 
-/**
- * this macro provides references to engine from EngineTestHelper
- */
-#define EXPAND_EngineTestHelper \
-	    Engine *engine = &eth.engine; \
-		EXPAND_Engine
-
-#define WITH_ENGINE_TEST_HELPER_SENS(x, sensorvals) \
-	EngineTestHelper eth(x, sensorvals); \
-	EXPAND_EngineTestHelper;
-
-#define WITH_ENGINE_TEST_HELPER(x) \
-	EngineTestHelper eth(x, std::unordered_map<SensorType, float>{}); \
-	EXPAND_EngineTestHelper;
-
-#define WITH_ENGINE_TEST_HELPER_BOARD_CALLBACK(x, callback) \
-	EngineTestHelper eth(x, callback, std::unordered_map<SensorType, float>{}); \
-	EXPAND_EngineTestHelper;
-
-#define CONFIG_PARAM(x) (x)
-
 #ifdef __cplusplus
 namespace chibios_rt {
 	// Noop for unit tests - this does real lock in FW/sim

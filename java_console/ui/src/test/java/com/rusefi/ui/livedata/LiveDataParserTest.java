@@ -22,7 +22,7 @@ public class LiveDataParserTest {
 
         VariableValueSource valueSource = values::get;
 
-        String sourceCode = "bool AcState::getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {\n" +
+        String sourceCode = "bool AcState::getAcState() {\n" +
                 "\tauto rpm = Sensor::getOrZero(SensorType::Rpm);\n" +
                 "\n" +
                 "\tengineTooSlow = rpm < 500;\n" +
@@ -30,9 +30,9 @@ public class LiveDataParserTest {
                 "\tif (engineTooSlow) {\n" +
                 "\t\treturn true;\n" +
                 "\t} else {\n  " +
-                "auto ff2 = CONFIG(Alternatorcontrolpin);\n" +
+                "auto ff2 = engineConfiguration->Alternatorcontrolpin;\n" +
                 "\t}\n  " +
-                "auto ff = CONFIG(tpsMax);\n" +
+                "auto ff = engineConfiguration->tpsMax;\n" +
                 "\tif (engineTooFast) {\n" +
                 "\t\treturn false;\n" +
                 "\t} \n  " +

@@ -47,7 +47,7 @@ void WarningCodeState::addWarningCode(obd_code_e code) {
 /**
  * @param forIndicator if we want to retrieving value for TS indicator, this case a minimal period is applued
  */
-bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) const {
+bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator) const {
 	int period = forIndicator ? maxI(3, engineConfiguration->warningPeriod) : engineConfiguration->warningPeriod;
 	return absI(now - timeOfPreviousWarning) < period;
 }
@@ -57,7 +57,7 @@ MockAdcState::MockAdcState() {
 }
 
 #if EFI_ENABLE_MOCK_ADC
-void MockAdcState::setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
 	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
 	efiPrintf("fake voltage: channel %d value %.2f", hwChannel, voltage);
 
@@ -91,10 +91,10 @@ EngineState::EngineState() {
 	timeSinceLastTChargeK = getTimeNowNt();
 }
 
-void EngineState::updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EngineState::updateSlowSensors() {
 }
 
-void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void EngineState::periodicFastCallback() {
 	ScopePerf perf(PE::EngineStatePeriodicFastCallback);
 
 #if EFI_ENGINE_CONTROL
@@ -102,25 +102,25 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		warning(CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
 	efitick_t nowNt = getTimeNowNt();
-	if (ENGINE(rpmCalculator).isCranking()) {
+	if (engine->rpmCalculator.isCranking()) {
 		crankingTime = nowNt;
 		timeSinceCranking = 0.0f;
 	} else {
 		timeSinceCranking = nowNt - crankingTime;
 	}
-	recalculateAuxValveTiming(PASS_ENGINE_PARAMETER_SIGNATURE);
+	recalculateAuxValveTiming();
 
-	int rpm = ENGINE(rpmCalculator).getRpm();
-	sparkDwell = getSparkDwell(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	int rpm = engine->rpmCalculator.getRpm();
+	sparkDwell = getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
-	running.intakeTemperatureCoefficient = getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	running.intakeTemperatureCoefficient = getIatFuelCorrection();
 	// todo: move this into slow callback, no reason for CLT corr to be here
-	running.coolantTemperatureCoefficient = getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	running.coolantTemperatureCoefficient = getCltFuelCorrection();
 
 	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm);
 
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
@@ -134,42 +134,42 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		running.postCrankingFuelCorrection = 1.0f;
 	}
 
-	cltTimingCorrection = getCltTimingCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cltTimingCorrection = getCltTimingCorrection();
 
 	knockThreshold = interpolate2d(rpm, engineConfiguration->knockNoiseRpmBins,
 					engineConfiguration->knockNoise);
 
-	baroCorrection = getBaroCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	baroCorrection = getBaroCorrection();
 
 	auto tps = Sensor::get(SensorType::Tps1);
-	updateTChargeK(rpm, tps.value_or(0) PASS_ENGINE_PARAMETER_SUFFIX);
+	updateTChargeK(rpm, tps.value_or(0));
 
-	float injectionMass = getInjectionMass(rpm PASS_ENGINE_PARAMETER_SUFFIX);
-	auto clResult = fuelClosedLoopCorrection(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float injectionMass = getInjectionMass(rpm);
+	auto clResult = fuelClosedLoopCorrection();
 
 	// compute per-bank fueling
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
 		float corr = clResult.banks[i];
-		ENGINE(injectionMass)[i] = injectionMass * corr;
-		ENGINE(stftCorrection)[i] = corr;
+		engine->injectionMass[i] = injectionMass * corr;
+		engine->stftCorrection[i] = corr;
 	}
 
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
-	ENGINE(injectionDuration) = ENGINE(injectorModel)->getInjectionDuration(injectionMass);
+	engine->injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
 
-	float fuelLoad = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	injectionOffset = getInjectionOffset(rpm, fuelLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	float fuelLoad = getFuelingLoad();
+	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 
-	float ignitionLoad = getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	timingAdvance = getAdvance(rpm, ignitionLoad PASS_ENGINE_PARAMETER_SUFFIX) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+	float ignitionLoad = getIgnitionLoad();
+	timingAdvance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
 
 	// TODO: calculate me from a table!
-	trailingSparkAngle = CONFIG(trailingSparkAngle);
+	trailingSparkAngle = engineConfiguration->trailingSparkAngle;
 
-	multispark.count = getMultiSparkCount(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+	multispark.count = getMultiSparkCount(rpm);
 
 #if EFI_LAUNCH_CONTROL
-	updateLaunchConditions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->launchController.update();
 #endif //EFI_LAUNCH_CONTROL
 
 	engine->limpManager.updateState(rpm, nowNt);
@@ -177,15 +177,15 @@ void EngineState::periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif // EFI_ENGINE_CONTROL
 }
 
-void EngineState::updateTChargeK(int rpm, float tps DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void EngineState::updateTChargeK(int rpm, float tps) {
 #if EFI_ENGINE_CONTROL
-	float newTCharge = getTCharge(rpm, tps PASS_ENGINE_PARAMETER_SUFFIX);
+	float newTCharge = getTCharge(rpm, tps);
 	// convert to microsecs and then to seconds
 	efitick_t curTime = getTimeNowNt();
 	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / US_PER_SECOND_F;
 	if (!cisnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
-		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, CONFIG(tChargeAirIncrLimit), CONFIG(tChargeAirDecrLimit), secsPassed);
+		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, engineConfiguration->tChargeAirIncrLimit, engineConfiguration->tChargeAirDecrLimit, secsPassed);
 		sd.tChargeK = convertCelsiusToKelvin(sd.tCharge);
 		timeSinceLastTChargeK = curTime;
 	}
@@ -218,7 +218,7 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 	}
 }
 
-void StartupFuelPumping::update(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void StartupFuelPumping::update() {
 	if (GET_RPM() == 0) {
 		bool isTpsAbove50 = Sensor::getOrZero(SensorType::DriverThrottleIntent) >= 50;
 
@@ -255,19 +255,19 @@ void TriggerConfiguration::update() {
 }
 
 bool PrimaryTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return CONFIG(useOnlyRisingEdgeForTrigger);
+	return engineConfiguration->useOnlyRisingEdgeForTrigger;
 }
 
 trigger_type_e PrimaryTriggerConfiguration::getType() const {
-	return CONFIG(trigger.type);
+	return engineConfiguration->trigger.type;
 }
 
 bool PrimaryTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return CONFIG(verboseTriggerSynchDetails);
+	return engineConfiguration->verboseTriggerSynchDetails;
 }
 
 bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
-	return CONFIG(vvtCamSensorUseRise);
+	return engineConfiguration->vvtCamSensorUseRise;
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
@@ -275,5 +275,5 @@ trigger_type_e VvtTriggerConfiguration::getType() const {
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {
-	return CONFIG(verboseVVTDecoding);
+	return engineConfiguration->verboseVVTDecoding;
 }

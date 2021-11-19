@@ -7,7 +7,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 	/**
 	 * most of the values are pre-calculated for performance reasons
 	 */
-	float tChargeK = ENGINE(engineState.sd.tChargeK);
+	float tChargeK = engine->engineState.sd.tChargeK;
 	if (cisnan(tChargeK)) {
 		warning(CUSTOM_ERR_TCHARGE_NOT_READY2, "tChargeK not ready"); // this would happen before we have CLT reading for example
 		return {};
@@ -17,7 +17,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 
 	float ve = getVe(rpm, map);
 
-	float airMass = getAirmassImpl(ve, map, tChargeK PASS_ENGINE_PARAMETER_SUFFIX);
+	float airMass = getAirmassImpl(ve, map, tChargeK);
 	if (cisnan(airMass)) {
 		warning(CUSTOM_ERR_6685, "NaN airMass");
 		return {};
@@ -39,15 +39,15 @@ float SpeedDensityAirmass::getMap(int rpm) const {
 		return map.Value;
 	} else {
 		float fallbackMap;
-		if (CONFIG(enableMapEstimationTableFallback)) {
+		if (engineConfiguration->enableMapEstimationTableFallback) {
 		// if the map estimation table is enabled, estimate map based on the TPS and RPM
 			fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
 		} else {
-			fallbackMap = CONFIG(failedMapFallback);
+			fallbackMap = engineConfiguration->failedMapFallback;
 		}
 
 #if EFI_TUNER_STUDIO
-	if (CONFIG(debugMode) == DBG_MAP) {
+	if (engineConfiguration->debugMode == DBG_MAP) {
 		tsOutputChannels.debugFloatField4 = fallbackMap;
 	}
 #endif // EFI_TUNER_STUDIO

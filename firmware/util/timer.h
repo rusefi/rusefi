@@ -22,6 +22,8 @@ public:
 	// then a time period representing 2^32 counts will be returned.
 	float getElapsedSeconds() const;
 	float getElapsedSeconds(efitick_t nowNt) const;
+	float getElapsedUs() const;
+	// WOW yes returns US while parameter is NT
 	float getElapsedUs(efitick_t nowNt) const;
 
 	// Perform an atomic update event based on the passed timestamp,

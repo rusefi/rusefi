@@ -3,17 +3,16 @@
 #include "knock_logic.h"
 
 TEST(Knock, Retards) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Knock threshold of 20dBv
-	ENGINE(engineState).knockThreshold = 20;
+	engine->engineState.knockThreshold = 20;
 	// Aggression of 10%
-	CONFIG(knockRetardAggression) = 100;
+	engineConfiguration->knockRetardAggression = 100;
 	// Maximum 8 degrees retarded
-	CONFIG(knockRetardMaximum) = 8;
+	engineConfiguration->knockRetardMaximum = 8;
 
 	KnockController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// No retard unless we knock
 	ASSERT_FLOAT_EQ(dut.getKnockRetard(), 0);
@@ -40,19 +39,18 @@ TEST(Knock, Retards) {
 }
 
 TEST(Knock, Reapply) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	KnockController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Knock threshold of 20dBv
-	ENGINE(engineState).knockThreshold = 20;
+	engine->engineState.knockThreshold = 20;
 	// Aggression of 10%
-	CONFIG(knockRetardAggression) = 100;
+	engineConfiguration->knockRetardAggression = 100;
 	// Maximum 8 degrees retarded
-	CONFIG(knockRetardMaximum) = 8;
+	engineConfiguration->knockRetardMaximum = 8;
 	// Apply 1 degree/second
-	CONFIG(knockRetardReapplyRate) = 10;
+	engineConfiguration->knockRetardReapplyRate = 10;
 
 	// Send a strong knock!
 	dut.onKnockSenseCompleted(0, 30, 0);

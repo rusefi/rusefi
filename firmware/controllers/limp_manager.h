@@ -1,6 +1,5 @@
 #pragma once
 
-#include "engine_ptr.h"
 #include "rusefi_types.h"
 
 #include <cstdint>
@@ -25,8 +24,6 @@ private:
 
 class LimpManager {
 public:
-	DECLARE_ENGINE_PTR;
-
 	// This is called from periodicFastCallback to update internal state
 	void updateState(int rpm, efitick_t nowNt);
 

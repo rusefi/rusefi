@@ -2,7 +2,7 @@
 
 #include "defaults.h"
 
-static void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setDefaultAlternatorParameters() {
 	engineConfiguration->alternatorOffAboveTps = 120;
 
 	engineConfiguration->targetVBatt = 14;
@@ -12,13 +12,13 @@ static void setDefaultAlternatorParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->alternatorControl.periodMs = 100;
 }
 
-void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.displacement = 2;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
 
-	CONFIG(compressionRatio) = 9;
+	engineConfiguration->compressionRatio = 9;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
@@ -46,7 +46,7 @@ void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vbattDividerCoeff = ((float) (15 + 65)) / 15;
 
 #if EFI_ALTERNATOR_CONTROL
-	setDefaultAlternatorParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultAlternatorParameters();
 #endif /* EFI_ALTERNATOR_CONTROL */
 
 	// Fuel pump
@@ -60,9 +60,9 @@ void setDefaultBaseEngine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	// Tachometer
 	// 50% duty cycle is the default for tach signal
-	CONFIG(tachPulseDurationAsDutyCycle) = true;
-	CONFIG(tachPulseDuractionMs) = 0.5;
-	CONFIG(tachPulsePerRev) = 1;
+	engineConfiguration->tachPulseDurationAsDutyCycle = true;
+	engineConfiguration->tachPulseDuractionMs = 0.5;
+	engineConfiguration->tachPulsePerRev = 1;
 
 	// Check engine light
 #if EFI_PROD_CODE

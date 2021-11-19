@@ -10,9 +10,9 @@
 #include "pch.h"
 
 static void runRpmTest(operation_mode_e mode, int expected) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->ambiguousOperationMode = mode;
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_ONE);
 
 	eth.smartFireTriggerEvents2(/*count*/200, /*delay*/ 40);
 	ASSERT_EQ(expected, GET_RPM());

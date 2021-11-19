@@ -84,17 +84,17 @@
 #include "proteus_meta.h"
 #endif
 
-void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void m73engine() {
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
 
 	engineConfiguration->specs.cylindersCount = 12;
 	engineConfiguration->specs.displacement = 5.4;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_BMW);
-	strcpy(CONFIG(engineCode), "M73");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_BMW);
+	strcpy(engineConfiguration->engineCode, "M73");
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
-	CONFIG(isFasterEngineSpinUpEnabled) = true;
-	CONFIG(fuelAlgorithm) = LM_ALPHA_N;
+	engineConfiguration->isFasterEngineSpinUpEnabled = true;
+	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 
@@ -116,15 +116,15 @@ void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 // BMW_M73_F
-void setBMW_M73_TwoCoilUnitTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setBMW_M73_TwoCoilUnitTest() {
 	// twoCoil configuration without unit tests ETB setup drama
-	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+	m73engine();
 }
 
 // BMW_M73_M
 // set engine_type 24
-void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_Manhattan() {
+	m73engine();
 
 	/**
 Nucleo boards - first step is to confirm that I can blink via each pin
@@ -147,7 +147,6 @@ GPIOA_6
 	 */
 
 
-	CONFIG(fsioOutputPins)[7] = GPIO_UNASSIGNED;
 	engineConfiguration->fuelPumpPin = GPIO_UNASSIGNED;
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
@@ -177,7 +176,7 @@ GPIOA_6
 	// DIR pin
 	engineConfiguration->etbIo[0].directionPin1 = GPIOC_8;
 	engineConfiguration->etbIo[0].directionPin2 = GPIOC_9;
-	CONFIG(etb_use_two_wires) = true;
+	engineConfiguration->etb_use_two_wires = true;
 
 	// PWM pin
 	engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
@@ -185,8 +184,8 @@ GPIOA_6
 	engineConfiguration->etbIo[1].directionPin1 = GPIOB_9;
 	engineConfiguration->etbIo[1].directionPin2 = GPIOB_8;
 
-	CONFIG(tps2Min) = CONFIG(tpsMin);
-	CONFIG(tps2Max) = CONFIG(tpsMax);
+	engineConfiguration->tps2Min = engineConfiguration->tpsMin;
+	engineConfiguration->tps2Max = engineConfiguration->tpsMax;
 
 
 	engineConfiguration->injectionPins[0] = GPIO_UNASSIGNED;
@@ -243,14 +242,14 @@ GPIOA_6
  *
  */
 #if HW_PROTEUS
-void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	m73engine(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_Proteus() {
+	m73engine();
 
 	// 12 injectors defined in boards/proteus/board_configuration.cpp
 	// set_analog_input_pin pps pa4
 	engineConfiguration->throttlePedalPositionAdcChannel = PROTEUS_IN_ANALOG_VOLT_9;
 
-	strcpy(CONFIG(vehicleName), "Using Proteus");
+	strcpy(engineConfiguration->vehicleName, "Using Proteus");
 
 	// set_trigger_input_pin 0 PE7
 	// GPIOE_7:  "VR 1"
@@ -270,13 +269,13 @@ void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 
 	// GPIOE_0:  "Lowside 14"
-	CONFIG(starterControlPin) = GPIOE_0;
+	engineConfiguration->starterControlPin = GPIOE_0;
 	// GPIOE_12: "Digital 3"
-	CONFIG(startStopButtonPin) = GPIOE_12;
-	CONFIG(startStopButtonMode) = PI_PULLUP;
+	engineConfiguration->startStopButtonPin = GPIOE_12;
+	engineConfiguration->startStopButtonMode = PI_PULLUP;
 
-	setProteusHitachiEtbDefaults(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setProteusHitachiEtbDefaults();
 
-	CONFIG(useETBforIdleControl) = true;
+	engineConfiguration->useETBforIdleControl = true;
 }
 #endif // HW_PROTEUS

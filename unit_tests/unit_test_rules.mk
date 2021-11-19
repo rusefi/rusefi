@@ -1,18 +1,25 @@
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
 CPPSRC += 	gtest-all.cpp \
-          	gmock-all.cpp \
+		gmock-all.cpp \
 
 
 INCDIR += 	$(UNIT_TESTS_DIR)/googletest/googlemock/include \
-          	$(UNIT_TESTS_DIR)/googletest/googletest \
-          	$(UNIT_TESTS_DIR)/googletest/googletest/include \
+		$(UNIT_TESTS_DIR)/googletest/googletest \
+		$(UNIT_TESTS_DIR)/googletest/googletest/include \
 
 PCH_DIR = ../firmware/pch
 PCHSRC = $(PCH_DIR)/pch.h
 PCHSUB = unit_tests
 
 include $(PROJECT_DIR)/rusefi_rules.mk
+
+ifneq ($(OS),Windows_NT)
+	SANITIZE = yes
+else
+	SANITIZE = no
+endif
+
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -35,7 +42,7 @@ endif
 USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
 
 # Enable address sanitizer, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
-ifneq ($(OS),Windows_NT)
+ifeq ($(SANITIZE),yes)
 	USE_OPT += -fsanitize=address
 endif
 
@@ -189,7 +196,7 @@ ifeq ($(COVERAGE),yes)
 	ULIBS += --coverage
 endif
 
-ifneq ($(OS),Windows_NT)
+ifeq ($(SANITIZE),yes)
 	ULIBS += -fsanitize=address
 endif
 

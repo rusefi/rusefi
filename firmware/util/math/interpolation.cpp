@@ -22,7 +22,7 @@
 
 float array16[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
 
-static void testBinary(void) {
+static void testBinary() {
 	const int size16 = 16;
 
 	uint32_t totalOld = 0;

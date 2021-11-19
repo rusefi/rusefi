@@ -124,8 +124,7 @@ void TriggerWaveform::initializeSyncPoint(TriggerState& state,
  */
 void calculateTriggerSynchPoint(
 		TriggerWaveform& shape,
-		TriggerState& state
-		DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		TriggerState& state) {
 	state.resetTriggerState();
 
 #if EFI_PROD_CODE
@@ -134,7 +133,7 @@ void calculateTriggerSynchPoint(
 	engine->triggerErrorDetection.clear();
 	shape.initializeSyncPoint(state,
 			engine->primaryTriggerConfiguration,
-			CONFIG(trigger));
+			engineConfiguration->trigger);
 
 	int length = shape.getLength();
 	engine->engineCycleEventCount = length;
@@ -153,7 +152,7 @@ void calculateTriggerSynchPoint(
 }
 
 void prepareEventAngles(TriggerWaveform *shape,
-		TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		TriggerFormDetails *details) {
 	int triggerShapeSynchPointIndex = shape->triggerShapeSynchPointIndex;
 	if (triggerShapeSynchPointIndex == EFI_ERROR_CODE) {
 		return;
@@ -219,7 +218,7 @@ int TriggerState::getTotalRevolutionCounter() const {
 	return totalRevolutionCounter;
 }
 
-void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void TriggerStateWithRunningStatistics::movePreSynchTimestamps() {
 	// here we take timestamps of events which happened prior to synchronization and place them
 	// at appropriate locations
 	auto triggerSize = getTriggerSize();
@@ -244,7 +243,7 @@ void TriggerStateWithRunningStatistics::movePreSynchTimestamps(DECLARE_ENGINE_PA
 
 float TriggerStateWithRunningStatistics::calculateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
-	uint32_t current_index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	uint32_t current_index, efitick_t nowNt) {
 
 	assertIsInBoundsWithResult((int)current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 
@@ -296,7 +295,7 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(
 	return instantRpm;
 }
 
-void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 	if (getShaftSynchronized()) {
 		return;
 	}
@@ -312,16 +311,16 @@ void TriggerStateWithRunningStatistics::setLastEventTimeForInstantRpm(efitick_t 
 
 void TriggerStateWithRunningStatistics::updateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
-	uint32_t index, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+	uint32_t index, efitick_t nowNt) {
 
 	m_instantRpm = calculateInstantRpm(triggerShape, triggerFormDetails, index,
-					   nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+					   nowNt);
 
 
 #if EFI_SENSOR_CHART
-	if (ENGINE(sensorChartMode) == SC_RPM_ACCEL || ENGINE(sensorChartMode) == SC_DETAILED_RPM) {
+	if (engine->sensorChartMode == SC_RPM_ACCEL || engine->sensorChartMode == SC_DETAILED_RPM) {
 		angle_t currentAngle = triggerFormDetails->eventAngles[currentCycle.current_index];
-		if (CONFIG(sensorChartMode) == SC_DETAILED_RPM) {
+		if (engineConfiguration->sensorChartMode == SC_DETAILED_RPM) {
 			scAddData(currentAngle, m_instantRpm);
 		} else {
 			scAddData(currentAngle, m_instantRpmRatio);
@@ -537,7 +536,7 @@ void TriggerState::decodeTriggerEvent(
 		if (triggerShape.isSynchronizationNeeded) {
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 
-			if (CONFIG(debugMode) == DBG_TRIGGER_COUNTERS) {
+			if (engineConfiguration->debugMode == DBG_TRIGGER_COUNTERS) {
 #if EFI_TUNER_STUDIO
 				tsOutputChannels.debugFloatField6 = currentGap;
 				tsOutputChannels.debugIntField3 = currentCycle.current_index;
@@ -562,7 +561,7 @@ void TriggerState::decodeTriggerEvent(
 			 * todo: figure out exact threshold as a function of RPM and tooth count?
 			 * Open question what is 'triggerShape.getSize()' for 60/2 is it 58 or 58*2 or 58*4?
 			 */
-			bool silentTriggerError = triggerShape.getSize() > 40 && CONFIG(silentTriggerError);
+			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
 
 #if EFI_UNIT_TEST
 			actualSynchGap = 1.0 * toothDurations[0] / toothDurations[1];
@@ -572,7 +571,7 @@ void TriggerState::decodeTriggerEvent(
 			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError && !silentTriggerError)) {
 
 				int rpm = GET_RPM();
-				floatms_t engineCycleDuration = getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 				if (!engineConfiguration->useOnlyRisingEdgeForTrigger) {
 					int time = currentCycle.totalTimeNt[0];
 					efiPrintf("%s duty %f %d",

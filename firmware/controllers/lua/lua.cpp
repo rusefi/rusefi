@@ -90,7 +90,7 @@ template <int HeapIdx>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 	static_assert(HeapIdx < efi::size(heaps));
 
-	if (CONFIG(debugMode) == DBG_LUA) {
+	if (engineConfiguration->debugMode == DBG_LUA) {
 		switch (HeapIdx) {
 			case 0: tsOutputChannels.debugIntField1 = heaps[HeapIdx].used(); break;
 			case 1: tsOutputChannels.debugIntField2 = heaps[HeapIdx].used(); break;
@@ -327,13 +327,13 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 }
 
 void LuaThread::ThreadTask() {
-	initSystemLua();
+	//initSystemLua();
 
 	while (!chThdShouldTerminateX()) {
 		bool wasOk = runOneLua(myAlloc<0>, config->luaScript);
 
 		// Reset any lua adjustments the script made
-		ENGINE(engineState).luaAdjustments = {};
+		engine->engineState.luaAdjustments = {};
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin

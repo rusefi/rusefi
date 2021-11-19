@@ -84,7 +84,7 @@ static void setupTle8888() {
 	// on microRusEFI SPI3 is exposed on PC10/PC11 and there is interest to use SD card there
 	// PB3/PB4 could be either SPI1 or SP3, let's use not SPI3 to address the contention
 	// Enable spi1
-	CONFIG(is_enabled_spi_1) = true;
+	engineConfiguration->is_enabled_spi_1 = true;
 
 	// Wire up spi1
 	engineConfiguration->spi1mosiPin = GPIOB_5;
@@ -169,7 +169,7 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canRxPin = GPIOB_12;
 
 	// SPI for SD card
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	engineConfiguration->sdCardCsPin = GPIOB_9;
 
@@ -226,7 +226,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;

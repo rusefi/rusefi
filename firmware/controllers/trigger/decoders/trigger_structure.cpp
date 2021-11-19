@@ -37,15 +37,16 @@
 #include "trigger_honda.h"
 #include "trigger_vw.h"
 #include "trigger_universal.h"
+#include "trigger_mercedes.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
 
-void event_trigger_position_s::setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
-			&ENGINE(triggerCentral.triggerFormDetails),
-			this, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset));
+void event_trigger_position_s::setAngle(angle_t angle) {
+	findTriggerPosition(&engine->triggerCentral.triggerShape,
+			&engine->triggerCentral.triggerFormDetails,
+			this, angle);
 }
 
 trigger_shape_helper::trigger_shape_helper() {
@@ -204,12 +205,16 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 
 }
 
+/**
+ * Deprecated! many usages should be replaced by addEvent360
+ */
 void TriggerWaveform::addEvent720(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
-	addEvent(angle / 720, channelIndex, state);
+	addEvent(angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
 void TriggerWaveform::addEvent360(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
-	addEvent(CRANK_MODE_MULTIPLIER * angle / 720, channelIndex, state);
+	efiAssertVoid(CUSTOM_OMODE_UNDEF, operationMode == FOUR_STROKE_CAM_SENSOR || operationMode == FOUR_STROKE_CRANK_SENSOR, "Not a mode for 360");
+	addEvent(CRANK_MODE_MULTIPLIER * angle / FOUR_STROKE_CYCLE_DURATION, channelIndex, state);
 }
 
 void TriggerWaveform::addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state) {
@@ -388,18 +393,18 @@ void TriggerWaveform::setShapeDefinitionError(bool value) {
 void findTriggerPosition(TriggerWaveform *triggerShape,
 		TriggerFormDetails *details,
 		event_trigger_position_s *position,
-		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset)) {
+		angle_t angle) {
 	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angle), "findAngle#1");
 	assertAngleRange(angle, "findAngle#a1", CUSTOM_ERR_6545);
 
 	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(triggerShape->tdcPosition), "tdcPos#1")
 	assertAngleRange(triggerShape->tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
 
-	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG_PARAM(globalTriggerAngleOffset)), "tdcPos#2")
-	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
+	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(engineConfiguration->globalTriggerAngleOffset), "tdcPos#2")
+	assertAngleRange(engineConfiguration->globalTriggerAngleOffset, "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
 
 	// convert engine cycle angle into trigger cycle angle
-	angle += triggerShape->tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
+	angle += triggerShape->tdcPosition + engineConfiguration->globalTriggerAngleOffset;
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
 	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
@@ -422,14 +427,14 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	}
 }
 
-void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerWaveform::prepareShape(TriggerFormDetails *details) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (shapeDefinitionError) {
 		// Nothing to do here if there's a problem with the trigger shape
 		return;
 	}
 
-	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareEventAngles(this, details);
 #endif
 }
 
@@ -587,7 +592,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configure3_1_cam(this);
 		break;
 
-	case TT_UNUSED_10:
+	case TT_MERCEDES_2_SEGMENT:
+		setMercedesTwoSegment(this);
+		break;
+
 	case TT_UNUSED_62:
 	case TT_ONE:
 		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);

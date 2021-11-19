@@ -44,8 +44,6 @@ struct scheduling_s {
 	virtual_timer_t timer;
 #endif /* EFI_SIGNAL_EXECUTOR_SLEEP */
 
-	DECLARE_ENGINE_PTR;
-
 	/**
 	 * timestamp represented as 64-bit value of ticks since MCU start
 	 */

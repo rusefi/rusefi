@@ -34,7 +34,6 @@ public:
 	InjectorOutputPin *outputs[MAX_WIRES_COUNT];
 	uint8_t ownIndex = 0;
 	uint8_t cylinderNumber = 0;
-	DECLARE_ENGINE_PTR;
 	event_trigger_position_s injectionStart;
 
 	scheduling_s signalTimerUp;
@@ -63,13 +62,13 @@ public:
 	void invalidate();
 
 	// Call this every trigger tooth.  It will schedule all required injector events.
-	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void onTriggerTooth(size_t toothIndex, int rpm, efitick_t nowNt);
 
 	/**
 	 * this method schedules all fuel events for an engine cycle
 	 */
-	void addFuelEvents(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	bool addFuelEventsForCylinder(int cylinderIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void addFuelEvents();
+	bool addFuelEventsForCylinder(int cylinderIndex);
 
 	void resetOverlapping();
 
@@ -128,7 +127,6 @@ public:
 	int cylinderIndex = 0;
 	int8_t cylinderNumber = 0;
 	char *name = nullptr;
-	DECLARE_ENGINE_PTR;
 	IgnitionOutputPin *getOutputForLoggins();
 };
 
@@ -149,5 +147,4 @@ public:
 
 	AngleBasedEvent open;
 	AngleBasedEvent close;
-	DECLARE_ENGINE_PTR;
 };

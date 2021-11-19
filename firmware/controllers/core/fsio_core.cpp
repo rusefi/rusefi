@@ -156,7 +156,7 @@ static FsioResult doBinaryNumeric(le_action_e action, float v1, float v2) {
 /**
  * @return true in case of error, false otherwise
  */
-FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult LECalculator::processElement(const LEElement *element) {
 #if EFI_PROD_CODE
 	efiAssert(CUSTOM_ERR_ASSERT, getCurrentRemainingStack() > 64, "FSIO logic", unexpected);
 #endif
@@ -204,25 +204,10 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		return vCond != 0 ? vTrue : vFalse;
 	}
 	case LE_METHOD_FSIO_SETTING: {
-		float humanIndex = pop(LE_METHOD_FSIO_SETTING);
-		int index = (int) humanIndex - 1;
-		if (index >= 0 && index < FSIO_COMMAND_COUNT) {
-			return CONFIG(fsio_setting)[index];
-		} else {
-			return unexpected;
-		}
+		return unexpected;
 	}
-	case LE_METHOD_FSIO_TABLE: {
-		float i = pop(LE_METHOD_FSIO_TABLE);
-		float yValue = pop(LE_METHOD_FSIO_TABLE);
-		float xValue = pop(LE_METHOD_FSIO_TABLE);
-		int index = (int) i;
-		if (index < 1 || index > MAX_TABLE_INDEX) {
-			return unexpected;
-		} else {
-			// index parameter is 1-based, getFSIOTable is 0-based
-			return getFSIOTable(index - 1)->getValue(xValue, yValue);
-		}
+	case LE_METHOD_SCRIPT_TABLE: {
+		return unexpected;
 	}
 	case LE_METHOD_FSIO_DIGITAL_INPUT:
 		// todo: implement code for digital input!!!
@@ -237,11 +222,11 @@ FsioResult LECalculator::processElement(const LEElement *element DECLARE_ENGINE_
 		warning(CUSTOM_UNKNOWN_FSIO, "FSIO undefined action");
 		return unexpected;
 	default:
-		return getEngineValue(element->action PASS_ENGINE_PARAMETER_SUFFIX);
+		return getEngineValue(element->action);
 	}
 }
 
-float LECalculator::evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float LECalculator::evaluate(const char * msg, float selfValue, const LEElement* element) {
 	if (!element) {
 		warning(CUSTOM_NO_FSIO, "%s no FSIO code", msg);
 		return NAN;
@@ -258,7 +243,7 @@ float LECalculator::evaluate(const char * msg, float selfValue, const LEElement*
 		if (element->action == LE_METHOD_SELF) {
 			push(element->action, selfValue);
 		} else {
-			FsioResult result = processElement(element PASS_ENGINE_PARAMETER_SUFFIX);
+			FsioResult result = processElement(element);
 
 			if (!result) {
 				// error already reported

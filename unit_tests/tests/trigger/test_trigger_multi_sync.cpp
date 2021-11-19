@@ -10,8 +10,9 @@
 
 TEST(trigger, miataNA) {
 	TriggerWaveform naShape;
+	naShape.useOnlyRisingEdgeForTriggerTemp = false;
 	initializeMazdaMiataNaShape(&naShape);
 
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_MIATA_NA6_MAP);
+	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
 	// todo: https://github.com/rusefi/rusefi/issues/679
 }

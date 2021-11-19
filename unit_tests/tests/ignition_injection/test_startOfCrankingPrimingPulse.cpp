@@ -8,9 +8,9 @@
 #include "pch.h"
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
-	ENGINE(tdcMarkEnabled) = false;
+	engine->tdcMarkEnabled = false;
 	engineConfiguration->cranking.baseFuel = 12;
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
@@ -33,7 +33,7 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 
 
 TEST(engine, testStartOfCrankingPrimingPulse) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	engineConfiguration->startOfCrankingPrimingPulse = 4;
 
@@ -43,7 +43,7 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 	Sensor::setMockValue(SensorType::Clt, -10);
 
 	// prod code invokes this on ECU start, here we have to mimic this behavior
-	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);
+	startPrimeInjectionPulse();
 
 
 	ASSERT_EQ( 1,  engine->executor.size()) << "prime fuel";

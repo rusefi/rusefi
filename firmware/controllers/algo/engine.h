@@ -23,6 +23,23 @@
 #include "ac_control.h"
 #include "knock_logic.h"
 #include "idle_state_generated.h"
+#include "idle_thread.h"
+#include "injector_model.h"
+#include "launch_control.h"
+#include "trigger_scheduler.h"
+#include "type_list.h"
+
+#ifndef EFI_UNIT_TEST
+#error EFI_UNIT_TEST must be defined!
+#endif
+
+#ifndef EFI_SIMULATOR
+#error EFI_SIMULATOR must be defined!
+#endif
+
+#ifndef EFI_PROD_CODE
+#error EFI_PROD_CODE must be defined!
+#endif
 
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
 // PROD real firmware uses this implementation
@@ -58,7 +75,6 @@ struct AirmassModelBase;
 
 class IEtbController;
 struct IFuelComputer;
-struct IInjectorModel;
 struct IIdleController;
 
 class PrimaryTriggerConfiguration final : public TriggerConfiguration {
@@ -88,13 +104,16 @@ protected:
 
 class Engine final : public TriggerStateListener {
 public:
-	DECLARE_ENGINE_PTR;
-
 	Engine();
 	AcState acState;
+	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
+
+	// used by HW CI
 	bool isPwmEnabled = true;
-	int triggerActivitySecond = 0;
+
+	// todo: remove this once all usages are using 'm_lastEventTimer'
+	int triggerActivityMs = -99 * 1000;
 
 	const char *prevOutputName = nullptr;
 
@@ -104,12 +123,29 @@ public:
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
-	IInjectorModel *injectorModel = nullptr;
-	IIdleController* idleController = nullptr;
+
+	type_list<
+		Mockable<InjectorModel>,
+#if EFI_IDLE_CONTROL
+		IdleController,
+#endif
+		TriggerScheduler,
+		EngineModule // dummy placeholder so the previous entries can all have commas
+		> engineModules;
+
+	/**
+	 * Slightly shorter helper function to keep the code looking clean.
+	 */
+	template<typename get_t>
+	auto & module() {
+		return engineModules.get<get_t>();
+	}
 
 	cyclic_buffer<int> triggerErrorDetection;
 
 	GearControllerBase *gearController;
+	LaunchControlBase launchController;
+	SoftSparkLimiter softSparkLimiter;
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
@@ -133,27 +169,18 @@ public:
 	void OnTriggerSynchronizationLost() override;
 #endif
 
-	void setConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	injection_mode_e getCurrentInjectionMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void setConfig();
+	injection_mode_e getCurrentInjectionMode();
 
 	LocalVersionHolder versionForConfigurationListeners;
 	LocalVersionHolder auxParametersVersion;
-	operation_mode_e getOperationMode(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	operation_mode_e getOperationMode();
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
 #if EFI_UNIT_TEST
 	bool needTdcCallback = true;
 #endif /* EFI_UNIT_TEST */
-
-
-#if EFI_LAUNCH_CONTROL
-	bool launchActivatePinState = false;
-	bool isLaunchCondition = false;
-	bool applyLaunchExtraFuel = false;
-	bool setLaunchBoostDuty = false;
-	bool applyLaunchControlRetard = false;
-#endif /* EFI_LAUNCH_CONTROL */
 
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
@@ -164,18 +191,8 @@ public:
 	// GND input pins instead of leaving them floating
 	bool hwTriggerInputEnabled = true;
 
-
-#if !EFI_PROD_CODE
-	float mockMapValue = 0;
-#endif
-
 	int getGlobalConfigurationVersion(void) const;
-	/**
-	 * true if a recent configuration change has changed any of the trigger settings which
-	 * we have not adjusted for yet
-	 */
-	bool isTriggerConfigChanged = false;
-	LocalVersionHolder triggerVersion;
+
 
 	// a pointer with interface type would make this code nicer but would carry extra runtime
 	// cost to resolve pointer, we use instances as a micro optimization
@@ -198,12 +215,6 @@ public:
 
 	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
-	/**
-	 * That's the linked list of pending events scheduled in relation to trigger
-	 * At the moment we iterate over the whole list while looking for events for specific trigger index
-	 * We can make it an array of lists per trigger index, but that would take some RAM and probably not needed yet.
-	 */
-	AngleBasedEvent *angleBasedEventsHead = nullptr;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
 	 */
@@ -275,11 +286,11 @@ public:
 	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
 	float standardAirCharge = 0;
 
-	void periodicFastCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void periodicSlowCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void updateSlowSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void updateSwitchInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void initializeTriggerWaveform(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void periodicFastCallback();
+	void periodicSlowCallback();
+	void updateSlowSensors();
+	void updateSwitchInputs();
+	void initializeTriggerWaveform();
 
 	bool clutchUpState = false;
 	bool clutchDownState = false;
@@ -347,7 +358,7 @@ public:
 	 */
 	uint32_t engineCycleEventCount = 0;
 
-	void preCalculate(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void preCalculate();
 
 	void watchdog();
 
@@ -355,22 +366,22 @@ public:
 	 * Needed by EFI_MAIN_RELAY_CONTROL to shut down the engine correctly.
 	 * This method cancels shutdown if the ignition voltage is detected.
 	 */
-	void checkShutdown(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void checkShutdown();
 
 	/**
 	 * Allows to finish some long-term shutdown procedures (stepper motor parking etc.)
 	   Called when the ignition switch is turned off (vBatt is too low).
 	   Returns true if some operations are in progress on background.
 	 */
-	bool isInShutdownMode(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isInShutdownMode() const;
 
-	bool isInMainRelayBench(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	bool isInMainRelayBench();
 
 	/**
 	 * The stepper does not work if the main relay is turned off (it requires +12V).
 	 * Needed by the stepper motor code to detect if it works.
 	 */
-	bool isMainRelayEnabled(DECLARE_ENGINE_PARAMETER_SIGNATURE) const;
+	bool isMainRelayEnabled() const;
 
 	/**
 	 * Needed by EFI_MAIN_RELAY_CONTROL to handle fuel pump and shutdown timings correctly.
@@ -400,17 +411,19 @@ private:
 	void injectEngineReferences();
 };
 
-void prepareShapes(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void applyNonPersistentConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void prepareOutputSignals(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void prepareShapes();
+void applyNonPersistentConfiguration();
+void prepareOutputSignals();
 
-void validateConfiguration(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void doScheduleStopEngine(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void validateConfiguration();
+void doScheduleStopEngine();
 
 #define HW_CHECK_RPM 200
 
 // These externs aren't needed for unit tests - everything is injected instead
 #if !EFI_UNIT_TEST
 extern Engine ___engine;
+static Engine * const engine = &___engine;
+#else // EFI_UNIT_TEST
 extern Engine *engine;
 #endif // EFI_UNIT_TEST

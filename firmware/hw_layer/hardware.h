@@ -7,8 +7,8 @@
 
 #pragma once
 
-void startHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void stopHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startHardware();
+void stopHardware();
 
 #if HAL_USE_SPI
 
@@ -45,13 +45,13 @@ brain_pin_e getSckPin(spi_device_e device);
 
 #ifdef __cplusplus
 
-void applyNewHardwareSettings(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void applyNewHardwareSettings();
 
 // Initialize hardware that doesn't require configuration to be loaded
-void initHardwareNoConfig(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initHardwareNoConfig();
 
 // Initialize hardware with configuration loaded
-void initHardware(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initHardware();
 
 #if EFI_PROD_CODE
 #include "debounce.h"

@@ -7,7 +7,7 @@
 
 TEST(trigger, testQuadCam) {
 	// setting some weird engine
-	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
+	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
@@ -19,7 +19,7 @@ TEST(trigger, testQuadCam) {
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_ONE);
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
@@ -56,10 +56,10 @@ TEST(trigger, testQuadCam) {
 	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(secondBank, firstCam));
 	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(secondBank, secondCam));
 
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCam PASS_ENGINE_PARAMETER_SUFFIX);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCam PASS_ENGINE_PARAMETER_SUFFIX);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCam);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCam);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCamSecondBank);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank);
 
 	float basePos = -80.2f;
 
@@ -71,16 +71,16 @@ TEST(trigger, testQuadCam) {
 
 	// Now fire cam events again, but with time gaps between each
 	eth.moveTimeForwardMs(1);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCam PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCam);
 	eth.moveTimeForwardMs(1);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCam PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCam);
 	eth.moveTimeForwardMs(1);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), firstCamSecondBank);
 	eth.moveTimeForwardMs(1);
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), secondCamSecondBank);
 
 	// All four cams should have different positions, each retarded by 1ms from the last
-	float oneMsDegrees = 1000 / ENGINE(rpmCalculator).oneDegreeUs;
+	float oneMsDegrees = 1000 / engine->rpmCalculator.oneDegreeUs;
 	EXPECT_NEAR(basePos - oneMsDegrees * 1, engine->triggerCentral.getVVTPosition(firstBank, firstCam), EPS3D);
 	EXPECT_NEAR(basePos - oneMsDegrees * 2, engine->triggerCentral.getVVTPosition(firstBank, secondCam), EPS3D);
 	EXPECT_NEAR(basePos - oneMsDegrees * 3, engine->triggerCentral.getVVTPosition(secondBank, firstCam), EPS3D);

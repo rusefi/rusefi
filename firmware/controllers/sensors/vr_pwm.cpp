@@ -5,8 +5,8 @@
 static OutputPin pins[VR_THRESHOLD_COUNT];
 static SimplePwm pwms[VR_THRESHOLD_COUNT];
 
-static void updateVrPwm(int rpm, size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	auto& cfg = CONFIG(vrThreshold)[index];
+static void updateVrPwm(int rpm, size_t index) {
+	auto& cfg = engineConfiguration->vrThreshold[index];
 
 	if (cfg.pin == GPIO_UNASSIGNED) {
 		return;
@@ -21,17 +21,17 @@ static void updateVrPwm(int rpm, size_t index DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	pwms[index].setSimplePwmDutyCycle(duty);
 }
 
-void updateVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updateVrPwm() {
 	auto rpm = GET_RPM();
 
-	for (size_t i = 0; i < efi::size(CONFIG(vrThreshold)); i++) {
-		updateVrPwm(rpm, i PASS_ENGINE_PARAMETER_SUFFIX);
+	for (size_t i = 0; i < efi::size(engineConfiguration->vrThreshold); i++) {
+		updateVrPwm(rpm, i);
 	}
 }
 
-void initVrPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	for (size_t i = 0; i < efi::size(CONFIG(vrThreshold)); i++) {
-		auto& cfg = CONFIG(vrThreshold)[i];
+void initVrPwm() {
+	for (size_t i = 0; i < efi::size(engineConfiguration->vrThreshold); i++) {
+		auto& cfg = engineConfiguration->vrThreshold[i];
 
 		if (cfg.pin == GPIO_UNASSIGNED) {
 			continue;

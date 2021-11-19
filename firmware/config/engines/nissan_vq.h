@@ -12,6 +12,6 @@
 #define NISSAN_VQ_VVT_OFFSET -610
 #define NISSAN_VQ_CAM_OFFSET -360
 
-void setHellen121nissanVQ(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHellen121nissanQR(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHellen121nissanAltimaN16(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHellen121nissanVQ();
+void setHellen121nissanQR();
+void setHellen121nissanAltimaN16();

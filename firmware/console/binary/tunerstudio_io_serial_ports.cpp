@@ -31,7 +31,7 @@
 			efiSetPadMode("Primary Channel TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
 #endif /* EFI_PROD_CODE */
 
-			primaryChannel.start(CONFIG(uartConsoleSerialSpeed));
+			primaryChannel.start(engineConfiguration->uartConsoleSerialSpeed);
 
 			return &primaryChannel;
 		}
@@ -60,7 +60,7 @@
 			efiSetPadMode("Secondary Channel TX", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
 #endif /* EFI_PROD_CODE */
 
-			secondaryChannel.start(CONFIG(uartConsoleSerialSpeed));
+			secondaryChannel.start(engineConfiguration->uartConsoleSerialSpeed);
 
 			return &secondaryChannel;
 		}

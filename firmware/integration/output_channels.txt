@@ -1,0 +1,48 @@
+struct_no_prefix ts_outputs_s
+
+bit sd_present
+bit isIgnitionEnabledIndicator;
+bit isInjectionEnabledIndicator;
+bit sd_logging_internal
+bit isCylinderCleanupActivated;
+bit isFuelPumpOn;
+bit isFanOn;
+bit isO2HeaterOn;
+bit checkEngine;
+bit needBurn;
+
+bit sd_msd
+bit clutchUpState;
+bit clutchDownState;
+bit isFan2On
+bit unusedb14;
+bit brakePedalState;
+bit toothLogReady;
+bit acSwitchState;
+bit isTpsError;
+bit isCltError;
+bit isMapError;
+bit isIatError;
+bit acState;
+bit isTriggerError;
+bit hasCriticalError;
+bit isWarnNow;
+bit isPedalError;
+bit isKnockChipOk;
+bit launchTriggered;
+bit isTps2Error;
+bit isIdleClosedLoop;
+bit isIdleCoasting;
+
+uint16_t autoscale rpm;;"",1, 0, 0, 0, 0
+
+uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
+
+	uint16_t speedToRpmRatio;;"",{@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint8_t autoscale vehicleSpeedKph;;"",1, 0, 0, 0, 0
+	uint8_t autoscale internalMcuTemperature;;"",1, 0, 0, 0, 0
+
+	uint16_t autoscale coolantTemperature;;"",@@PACK_MULT_TEMPERATURE@@, 0, 0, 0, 0
+	uint16_t autoscale intakeAirTemperature;;"",@@PACK_MULT_TEMPERATURE@@, 0, 0, 0, 0
+
+end_struct

@@ -25,19 +25,19 @@ StepperMotor iacMotor CCM_OPTIONAL;
 static SimplePwm idleSolenoidOpen("idle open");
 static SimplePwm idleSolenoidClose("idle close");
 
-void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void applyIACposition(percent_t position) {
 	/**
 	 * currently idle level is an percent value (0-100 range), and PWM takes a float in the 0..1 range
 	 * todo: unify?
 	 */
 	float duty = PERCENT_TO_DUTY(position);
 
-	if (CONFIG(useETBforIdleControl)) {
+	if (engineConfiguration->useETBforIdleControl) {
 #if EFI_ELECTRONIC_THROTTLE_BODY
-		setEtbIdlePosition(position PASS_ENGINE_PARAMETER_SUFFIX);
+		setEtbIdlePosition(position);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 #if ! EFI_UNIT_TEST
-	} else if (CONFIG(useStepperIdle)) {
+	} else if (engineConfiguration->useStepperIdle) {
 		iacMotor.setTargetPosition(duty * engineConfiguration->idleStepperTotalSteps);
 #endif /* EFI_UNIT_TEST */
 	} else {
@@ -48,7 +48,7 @@ void applyIACposition(percent_t position DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			return;
 		}
 
-		if (!CONFIG(isDoubleSolenoidIdle)) {
+		if (!engineConfiguration->isDoubleSolenoidIdle) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(duty);
 		} else {
 			/* use 0.01..0.99 range */
@@ -77,46 +77,46 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(secondSolenoidPin);
 }
 
-bool isIdleMotorBusy(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (!CONFIG(useStepperIdle)) {
+bool isIdleMotorBusy() {
+	if (!engineConfiguration->useStepperIdle) {
 		// todo: check other motor types?
 		return false;
 	}
 	return iacMotor.isBusy();
 }
 
-void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (CONFIG(useStepperIdle)) {
+void initIdleHardware() {
+	if (engineConfiguration->useStepperIdle) {
 		StepperHw* hw;
 
-		if (CONFIG(useHbridgesToDriveIdleStepper)) {
-			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0], 2, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
-			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1], 3, /*useTwoWires*/ true PASS_ENGINE_PARAMETER_SUFFIX);
+		if (engineConfiguration->useHbridgesToDriveIdleStepper) {
+			auto motorA = initDcMotor(engineConfiguration->stepperDcIo[0], 2, /*useTwoWires*/ true);
+			auto motorB = initDcMotor(engineConfiguration->stepperDcIo[1], 3, /*useTwoWires*/ true);
 
 			if (motorA && motorB) {
 				iacHbridgeHw.initialize(
 					motorA,
 					motorB,
-					CONFIG(idleStepperReactionTime)
+					engineConfiguration->idleStepperReactionTime
 				);
 			}
 
 			hw = &iacHbridgeHw;
 		} else {
 			iacStepperHw.initialize(
-				CONFIG(idle).stepperStepPin,
-				CONFIG(idle).stepperDirectionPin,
-				CONFIG(stepperDirectionPinMode),
-				CONFIG(idleStepperReactionTime),
-				CONFIG(stepperEnablePin),
-				CONFIG(stepperEnablePinMode)
+				engineConfiguration->idle.stepperStepPin,
+				engineConfiguration->idle.stepperDirectionPin,
+				engineConfiguration->stepperDirectionPinMode,
+				engineConfiguration->idleStepperReactionTime,
+				engineConfiguration->stepperEnablePin,
+				engineConfiguration->stepperEnablePinMode
 			);
 
 			hw = &iacStepperHw;
 		}
 
-		iacMotor.initialize(hw, CONFIG(idleStepperTotalSteps));
-	} else if (engineConfiguration->useETBforIdleControl || !isBrainPinValid(CONFIG(idle).solenoidPin)) {
+		iacMotor.initialize(hw, engineConfiguration->idleStepperTotalSteps);
+	} else if (engineConfiguration->useETBforIdleControl || !isBrainPinValid(engineConfiguration->idle.solenoidPin)) {
 		// here we do nothing for ETB idle and for no idle
 	} else {
 		// we are here for single or double solenoid idle
@@ -128,10 +128,10 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		startSimplePwm(&idleSolenoidOpen, "Idle Valve Open",
 			&engine->executor,
 			&enginePins.idleSolenoidPin,
-			CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)));
+			engineConfiguration->idle.solenoidFrequency, PERCENT_TO_DUTY(engineConfiguration->manIdlePosition));
 
-		if (CONFIG(isDoubleSolenoidIdle)) {
-			if (!isBrainPinValid(CONFIG(secondSolenoidPin))) {
+		if (engineConfiguration->isDoubleSolenoidIdle) {
+			if (!isBrainPinValid(engineConfiguration->secondSolenoidPin)) {
 				firmwareError(OBD_PCM_Processor_Fault, "Second idle pin should be configured for double solenoid mode.");
 				return;
 			}
@@ -139,7 +139,7 @@ void initIdleHardware(DECLARE_ENGINE_PARAMETER_SUFFIX) {
 			startSimplePwm(&idleSolenoidClose, "Idle Valve Close",
 				&engine->executor,
 				&enginePins.secondIdleSolenoidPin,
-				CONFIG(idle).solenoidFrequency, PERCENT_TO_DUTY(CONFIG(manIdlePosition)));
+				engineConfiguration->idle.solenoidFrequency, PERCENT_TO_DUTY(engineConfiguration->manIdlePosition));
 		}
 	}
 }

@@ -7,27 +7,46 @@
 
 #pragma once
 
-#include "engine_ptr.h"
 #include "timer.h"
 
-void initLaunchControl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setDefaultLaunchParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void applyLaunchControlLimiting(bool *limitedSpark, bool *limitedFuel DECLARE_ENGINE_PARAMETER_SUFFIX);
-void updateLaunchConditions(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initLaunchControl();
 
 class LaunchControlBase {
 public:
-	DECLARE_ENGINE_PTR;
-
 	// Update the state of the launch control system
 	void update();
 
 	bool isInsideSpeedCondition() const;
 	bool isInsideTpsCondition() const;
-	bool isInsideSwitchCondition() const;
+	bool isInsideSwitchCondition();
 	bool isInsideRPMCondition(int rpm) const;
-	bool isLaunchConditionMet(int rpm) const;
+	bool isLaunchConditionMet(int rpm);
+
+	bool isLaunchSparkRpmRetardCondition() const;
+	bool isLaunchFuelRpmRetardCondition() const;
+
+	int retardThresholdRpm;
+	bool launchActivatePinState = false;
+	bool isLaunchCondition = false;
 
 private:
+	bool isLaunchRpmRetardCondition() const;
+
 	Timer m_launchTimer;
+};
+
+/**
+ * See also SoftLimiterSandbox.java
+ */
+class SoftSparkLimiter {
+public:
+	/**
+	 * targetSkipRatio of '0' means 'do not skip', would always return false
+	 */
+	void setTargetSkipRatio(float targetSkipRatio);
+
+	bool shouldSkip();
+private:
+	bool wasJustSkipped = false;
+	float targetSkipRatio = 0;
 };

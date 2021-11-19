@@ -262,7 +262,7 @@ static int rtcStartTime;
 
 #include "chrtclib.h"
 
-static void timeInfo(void) {
+static void timeInfo() {
 	efiPrintf("chTimeNow as seconds = %d", getTimeNowSeconds());
 	efiPrintf("hal seconds = %d", halTime.get() / (long)CORE_CLOCK);
 
@@ -272,7 +272,7 @@ static void timeInfo(void) {
 #endif
 }
 
-static void runChibioTest(void) {
+static void runChibioTest() {
 	print("EFI_SHAFT_POSITION_INPUT=%d\r\n", EFI_SHAFT_POSITION_INPUT);
 	print("EFI_EMULATE_POSITION_SENSORS=%d\r\n", EFI_EMULATE_POSITION_SENSORS);
 	print("EFI_ANALOG_SENSORS=%d\r\n", EFI_ANALOG_SENSORS);

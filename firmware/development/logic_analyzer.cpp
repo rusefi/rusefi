@@ -93,7 +93,7 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 }
 
 static void initWave(const char *name, int index) {
-	brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
+	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
@@ -126,7 +126,7 @@ WaveReader::WaveReader() {
 	hw = nullptr;
 }
 
-void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp) {
 	(void)ckpSignalType;
 	if (index != 0) {
 		return;

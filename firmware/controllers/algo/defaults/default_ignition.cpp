@@ -3,7 +3,7 @@
 #include "defaults.h"
 #include "table_helper.h"
 
-static void setDefaultMultisparkParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setDefaultMultisparkParameters() {
 	// 1ms spark + 2ms dwell
 	engineConfiguration->multisparkSparkDuration = 1000;
 	engineConfiguration->multisparkDwell = 2000;
@@ -16,7 +16,7 @@ static void setDefaultMultisparkParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 static constexpr float iatTimingRpmBins[] = { 880, 1260, 1640, 2020, 2400, 2780, 3000, 3380, 3760, 4140, 4520, 5000, 5700, 6500, 7200, 8000 };
 
-static void setDefaultIatTimingCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setDefaultIatTimingCorrection() {
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/CLT_CURVE_RANGE_FROM, 110, 1);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyArray(config->ignitionIatCorrRpmBins, iatTimingRpmBins);
@@ -49,23 +49,23 @@ static void setDefaultIatTimingCorrection(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT */
 }
 
-void setDefaultIgnition(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setDefaultIgnition() {
 	// Ignition base settings
-	CONFIG(isIgnitionEnabled) = true;
+	engineConfiguration->isIgnitionEnabled = true;
 
 	engineConfiguration->timingMode = TM_DYNAMIC;
 	engineConfiguration->fixedModeTiming = 50;
 
 	// Dwell table
-	setConstantDwell(4 PASS_CONFIG_PARAMETER_SUFFIX);
+	setConstantDwell(4);
 
 	// Multispark
-	setDefaultMultisparkParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultMultisparkParameters();
 
 	// Ignition advance table
 	// TODO: populate some values that aren't all 0?
-	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setTimingLoadBin(1.2, 4.4);
+	setTimingRpmBin(800, 7000);
 
 	engineConfiguration->trailingSparkAngle = 10;
 
@@ -74,5 +74,5 @@ void setDefaultIgnition(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setArrayValues(engineConfiguration->cltTimingExtra, 0.0f);
 
 	// IAT correction
-	setDefaultIatTimingCorrection(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultIatTimingCorrection();
 }

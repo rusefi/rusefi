@@ -13,11 +13,7 @@
 #include "rusefi_types.h"
 #include "scaled_channel.h"
 #include "tunerstudio_debug_struct.h"
-
-struct egt_values_s {
-	uint16_t values[EGT_CHANNEL_COUNT];
-};
-
+#include "ts_outputs_generated.h"
 
 enum class TsCalMode : uint8_t {
 	None = 0,
@@ -35,56 +31,19 @@ enum class TsCalMode : uint8_t {
 };
 
 /**
- * At the moment rusEfi does NOT have any code generation around TS output channels, three locations have to be changed manually
+ * todo https://github.com/rusefi/rusefi/issues/197
+ * At the moment rusEFI does NOT have any code generation around TS output channels, three locations have to be changed manually
  * 1) this TunerStudioOutputChannels firmware version of the structure
  * 2) '[OutputChannels]' block in rusefi.input
- * 3) com.rusefi.core.Sensor enum in rusEfi console source code
+ * 3) com.rusefi.core.Sensor enum in rusEFI console source code
  *
- * please be aware that 'float' (F32) type requires TunerStudio version 2.6 and later
+ * status update: there is progress, a portion of this struct is now generated! we inherit from generated
+ * ts_outputs_s and eventually the whole thing would be generated
+ *
  */
-struct TunerStudioOutputChannels {
+struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	/**
-	 * Yes, I do not really enjoy packing bits into integers but we simply have too many boolean flags and I cannot
-	 * water 4 bytes per traffic - I want gauges to work as fast as possible
-	 */
-	unsigned int sd_present : 1; // bit 0, 72
-	unsigned int isIgnitionEnabledIndicator : 1; // bit 1
-	unsigned int isInjectionEnabledIndicator : 1; // bit 2
-	unsigned int unusedb3 : 1; // bit 3
-	unsigned int isCylinderCleanupActivated : 1; // bit 4
-	unsigned int isFuelPumpOn : 1; // bit 5
-	unsigned int isFanOn : 1; // bit 6
-	unsigned int isO2HeaterOn : 1; // bit 7
-	unsigned int checkEngine : 1; // bit 8
-	unsigned int needBurn : 1; // bit 9
-	unsigned int unusedBit10 : 1; // bit 10
-	unsigned int clutchUpState : 1; // bit 11
-	unsigned int clutchDownState : 1; // bit 12
-	unsigned int unusedb13 : 1; // bit 13
-	unsigned int unusedb14 : 1; // bit 14
-	unsigned int brakePedalState : 1; // bit 15. 0 - not pressed, 1 = pressed
-	unsigned int toothLogReady : 1; // bit 16
-	unsigned int acSwitchState : 1; // bit 17. 0 - not pressed, 1 = pressed
-	unsigned int isTpsError : 1; // bit 18
-	unsigned int isCltError : 1; // bit 19
-	unsigned int isMapError : 1; // bit 20
-	unsigned int isIatError : 1; // bit 21
-	unsigned int acState : 1; // bit 22 - 1 if AC is engaged, 0 otherwise
-	unsigned int isTriggerError : 1; // bit 23
-	unsigned int hasCriticalError : 1; // bit 24
-	unsigned int isWarnNow : 1; // bit 25
-	unsigned int isPedalError : 1; // bit 26
-	unsigned int isKnockChipOk : 1; // bit 27
-	unsigned int launchTriggered : 1; // bit 28
-	unsigned int isTps2Error : 1; // bit 29
-	unsigned int isIdleClosedLoop : 1; // bit 30
-	unsigned int isIdleCoasting : 1; // bit 31
-
-	// RPM, vss
-	scaled_channel<uint16_t> rpm;   // 4
-	int16_t rpmAcceleration; // 6
 	scaled_percent speedToRpmRatio; // 8
 	scaled_channel<uint8_t> vehicleSpeedKph; // 10
 	
@@ -222,11 +181,11 @@ struct TunerStudioOutputChannels {
 	scaled_channel<uint16_t> debugIntField5; // 210
 
 	// accelerometer
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationX; // 212
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationY; // 214
+	scaled_percent accelerationX; // 212
+	scaled_percent accelerationY; // 214
 
 	// EGT
-	egt_values_s egtValues; // 216
+	uint16_t egtValues[EGT_CHANNEL_COUNT] ; // 216
 
 	scaled_percent throttle2Position;    // 232
 
@@ -238,10 +197,7 @@ struct TunerStudioOutputChannels {
 
 	scaled_channel<uint16_t> tuneCrc16; // 244
 
-	// Offset 246: bits
-	uint8_t sd_logging_internal : 1;	// bit 0
-	uint8_t sd_msd : 1;					// bit 1
-	uint8_t isFan2On : 1;				// bit 2
+	scaled_channel<uint8_t> unusedAt246;
 
 	scaled_channel<uint8_t> tcuCurrentGear; // 247
 
@@ -284,9 +240,9 @@ struct TunerStudioOutputChannels {
 
 	scaled_channel<uint16_t> knockCount;// 306
 
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationZ; // 308
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationRoll; // 310
-	scaled_channel<int16_t, PACK_MULT_PERCENT> accelerationYaw; // 312
+	scaled_percent accelerationZ; // 308
+	scaled_percent accelerationRoll; // 310
+	scaled_percent accelerationYaw; // 312
 
 	scaled_channel<int8_t> vvtTargets[4]; // 314
 	scaled_channel<uint16_t> turboSpeed; // 318

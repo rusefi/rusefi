@@ -33,6 +33,14 @@ static int lua_interpolate(lua_State* l) {
 void configureRusefiLuaUtilHooks(lua_State* l) {
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "interpolate", lua_interpolate);
+/*
+ * todo: shall we? same for milliseconds?
+	lua_register(l, "getNowSeconds", [](lua_State* l) -> int {
+		int result = getTimeNowSeconds();
+		lua_pushnumber(l, result);
+		return 1;
+	});
+*/
 }
 
 

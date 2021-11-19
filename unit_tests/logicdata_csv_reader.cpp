@@ -35,7 +35,6 @@ bool CsvReader::haveMore() {
 
 void CsvReader::processLine(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
-	EXPAND_Engine
 
 	const char s[2] = ",";
 	char *line = buffer;
@@ -72,7 +71,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 
 		efitick_t nowNt = getTimeNowNt();
 		// todo: we invert VVT but we do not invert trigger input!!!
-		hwHandleShaftSignal(index, newState[index], nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleShaftSignal(index, newState[index], nowNt);
 
 		currentState[index] = newState[index];
 	}
@@ -87,7 +86,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		// todo: configurable selection of vvt mode - dual bank or dual cam single bank
 		int bankIndex = vvtIndex;
 		int camIndex = 0;
-		hwHandleVvtCamSignal(event, nowNt, bankIndex *2 + camIndex PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(event, nowNt, bankIndex *2 + camIndex);
 
 		currentVvtState[vvtIndex] = newVvtState[vvtIndex];
 

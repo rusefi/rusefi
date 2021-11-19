@@ -44,8 +44,6 @@ typedef enum {
 
 class RpmCalculator : public StoredValueSensor {
 public:
-	DECLARE_ENGINE_PTR;
-
 #if !EFI_PROD_CODE
 	int mockRpm;
 #endif /* EFI_PROD_CODE */
@@ -162,29 +160,29 @@ private:
 };
 
 // Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
-#define GET_RPM() ( ENGINE(rpmCalculator.getRpm()) )
+#define GET_RPM() ( engine->rpmCalculator.getRpm() )
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
-void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp);
 
 void tdcMarkCallback(
-		uint32_t index0, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+		uint32_t index0, efitick_t edgeTimestamp);
 
 /**
  * @brief   Initialize RPM calculator
  */
-void initRpmCalculator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initRpmCalculator();
 
-float getCrankshaftAngleNt(efitick_t timeNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getCrankshaftAngleNt(efitick_t timeNt);
 
-#define getRevolutionCounter() ENGINE(rpmCalculator.getRevolutionCounterM())
+#define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 
 #if EFI_ENGINE_SNIFFER
-#define addEngineSnifferEvent(name, msg) { efiAssertVoid(OBD_PCM_Processor_Fault, engine!=NULL, "engine ptr missing");  if (ENGINE(isEngineChartEnabled)) { waveChart.addEvent3((name), (msg)); } }
+#define addEngineSnifferEvent(name, msg) { efiAssertVoid(OBD_PCM_Processor_Fault, engine!=NULL, "engine ptr missing");  if (engine->isEngineChartEnabled) { waveChart.addEvent3((name), (msg)); } }
  #else
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */
 
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle, action_s action DECLARE_ENGINE_PARAMETER_SUFFIX);
+efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle, action_s action);
 

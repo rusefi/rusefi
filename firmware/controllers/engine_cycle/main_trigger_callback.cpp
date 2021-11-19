@@ -56,37 +56,27 @@
 //#define RAM_METHOD_PREFIX
 //#endif
 
-void startSimultaniousInjection(Engine *engine) {
-#if EFI_UNIT_TEST
-	EXPAND_Engine;
-#endif // EFI_UNIT_TEST
+void startSimultaniousInjection(void*) {
 	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		enginePins.injectors[i].open(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		enginePins.injectors[i].open(nowNt);
 	}
 }
 
-static void endSimultaniousInjectionOnlyTogglePins(Engine *engine) {
-#if EFI_UNIT_TEST
-	EXPAND_Engine;
-#endif
+static void endSimultaniousInjectionOnlyTogglePins(void*) {
 	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < CONFIG(specs.cylindersCount); i++) {
-		enginePins.injectors[i].close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		enginePins.injectors[i].close(nowNt);
 	}
 }
 
 void endSimultaniousInjection(InjectionEvent *event) {
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif
 	event->isScheduled = false;
 	endSimultaniousInjectionOnlyTogglePins(engine);
-	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
 }
 
-void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void InjectorOutputPin::open(efitick_t nowNt) {
 	overlappingCounter++;
 
 #if FUEL_MATH_EXTREME_LOGGING
@@ -107,29 +97,24 @@ void InjectorOutputPin::open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 #if EFI_TOOTH_LOGGER
-	LogTriggerInjectorState(nowNt, true PASS_ENGINE_PARAMETER_SUFFIX);
+	LogTriggerInjectorState(nowNt, true);
 #endif // EFI_TOOTH_LOGGER
-		INJECT_ENGINE_REFERENCE(this);
 		setHigh();
 	}
 }
 
 void turnInjectionPinHigh(InjectionEvent *event) {
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif // EFI_UNIT_TEST
 	efitick_t nowNt = getTimeNowNt();
 	for (int i = 0;i < MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 
 		if (output) {
-			output->open(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			output->open(nowNt);
 		}
 	}
 }
 
-void InjectorOutputPin::close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void InjectorOutputPin::close(efitick_t nowNt) {
 #if FUEL_MATH_EXTREME_LOGGING
 	if (printFuelDebug) {
 		printf("InjectorOutputPin::close %s %d %d\r\n", name, overlappingCounter, (int)getTimeNowUs());
@@ -145,7 +130,7 @@ void InjectorOutputPin::close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 #if EFI_TOOTH_LOGGER
-	LogTriggerInjectorState(nowNt, false PASS_ENGINE_PARAMETER_SUFFIX);
+	LogTriggerInjectorState(nowNt, false);
 #endif // EFI_TOOTH_LOGGER
 		setLow();
 	}
@@ -159,11 +144,6 @@ void InjectorOutputPin::close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
 void turnInjectionPinLow(InjectionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
-#if EFI_UNIT_TEST
-	Engine *engine = event->engine;
-	EXPAND_Engine;
-#endif
-
 	engine->mostRecentTimeBetweenIgnitionEvents = nowNt - engine->mostRecentIgnitionEvent;
 	engine->mostRecentIgnitionEvent = nowNt;
 
@@ -171,56 +151,51 @@ void turnInjectionPinLow(InjectionEvent *event) {
 	for (int i = 0;i<MAX_WIRES_COUNT;i++) {
 		InjectorOutputPin *output = event->outputs[i];
 		if (output) {
-			output->close(nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			output->close(nowNt);
 		}
 	}
-	ENGINE(injectionEvents.addFuelEventsForCylinder(event->ownIndex PASS_ENGINE_PARAMETER_SUFFIX));
+	engine->injectionEvents.addFuelEventsForCylinder(event->ownIndex);
 }
 
 void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t nowNt) {
-	// note that here we take 'engineConfiguration' from DECLARE_ENGINE_PTR.
-	// set engine_type seems to be resetting those references (todo: where exactly? why exactly?) so an event during
-	// engine_type would not end well
-	efiAssertVoid(CUSTOM_ERR_ASSERT, engineConfiguration != nullptr, "assert#1");
-
 	uint32_t eventIndex = injectionStart.triggerEventIndex;
 // right after trigger change we are still using old & invalid fuel schedule. good news is we do not change trigger on the fly in real life
-//		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < ENGINE(triggerShape.getLength()), "handleFuel/event sch index");
+//		efiAssertVoid(CUSTOM_ERR_ASSERT_VOID, eventIndex < engine->triggerShape.getLength(), "handleFuel/event sch index");
 	if (eventIndex != trgEventIndex) {
 		return;
 	}
 
 	// Select fuel mass from the correct bank
-	uint8_t bankIndex = CONFIG(cylinderBankSelect[this->cylinderNumber]);
-	float injectionMassGrams = ENGINE(injectionMass)[bankIndex];
+	uint8_t bankIndex = engineConfiguration->cylinderBankSelect[this->cylinderNumber];
+	float injectionMassGrams = engine->injectionMass[bankIndex];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
-	injectionMassGrams = wallFuel.adjust(injectionMassGrams PASS_ENGINE_PARAMETER_SUFFIX);
-	const floatms_t injectionDuration = ENGINE(injectorModel)->getInjectionDuration(injectionMassGrams);
+	injectionMassGrams = wallFuel.adjust(injectionMassGrams);
+	const floatms_t injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMassGrams);
 
 #if EFI_PRINTF_FUEL_DETAILS
 	if (printFuelDebug) {
 		printf("fuel index=%d injectionDuration=%.2fms adjusted=%.2fms\n",
 		  eventIndex,
-		  ENGINE(injectionDuration),
+		  engine->injectionDuration,
 		  injectionDuration);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking();
+	bool isCranking = engine->rpmCalculator.isCranking();
 	/**
 	 * todo: pre-calculate 'numberOfInjections'
 	 * see also injectorDutyCycle
 	 */
-	int numberOfInjections = isCranking ? getNumberOfInjections(engineConfiguration->crankingInjectionMode PASS_ENGINE_PARAMETER_SUFFIX) : getNumberOfInjections(engineConfiguration->injectionMode PASS_ENGINE_PARAMETER_SUFFIX);
-	if (injectionDuration * numberOfInjections > getEngineCycleDuration(rpm PASS_ENGINE_PARAMETER_SUFFIX)) {
+	int numberOfInjections = isCranking ? getNumberOfInjections(engineConfiguration->crankingInjectionMode) : getNumberOfInjections(engineConfiguration->injectionMode);
+	if (injectionDuration * numberOfInjections > getEngineCycleDuration(rpm)) {
 		warning(CUSTOM_TOO_LONG_FUEL_INJECTION, "Too long fuel injection %.2fms", injectionDuration);
 	}
 
-	ENGINE(engineState.fuelConsumption).consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
+	engine->engineState.fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
-	ENGINE(actualLastInjection)[bankIndex] = injectionDuration;
+	engine->actualLastInjection[bankIndex] = injectionDuration;
 
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
@@ -280,7 +255,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	action_s startAction, endAction;
 	// We use different callbacks based on whether we're running sequential mode or not - everything else is the same
 	if (isSimultanious) {
-		startAction = { &startSimultaniousInjection, engine };
+		startAction = startSimultaniousInjection;
 		endAction = { &endSimultaniousInjection, this };
 	} else {
 		// sequential or batch
@@ -288,7 +263,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		endAction = { &turnInjectionPinLow, this };
 	}
 
-	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, injectionStart.angleOffsetFromTriggerEvent, startAction PASS_ENGINE_PARAMETER_SUFFIX);
+	efitick_t startTime = scheduleByAngle(&signalTimerUp, nowNt, injectionStart.angleOffsetFromTriggerEvent, startAction);
 	efitick_t turnOffTime = startTime + US2NT((int)durationUs);
 	engine->executor.scheduleByTimestampNt("inj", &endOfInjectionEvent, turnOffTime, endAction);
 
@@ -305,27 +280,27 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 #endif /* EFI_DEFAILED_LOGGING */
 }
 
-static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, efitick_t nowNt) {
 	ScopePerf perf(PE::HandleFuel);
 	
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	ENGINE(tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1) PASS_ENGINE_PARAMETER_SUFFIX));
+	engine->tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
 	if (trgEventIndex == 0) {
-		ENGINE(tpsAccelEnrichment.onEngineCycleTps(PASS_ENGINE_PARAMETER_SIGNATURE));
+		engine->tpsAccelEnrichment.onEngineCycleTps();
 	}
 
 	if (limitedFuel) {
 		return;
 	}
-	if (ENGINE(isCylinderCleanupMode)) {
+	if (engine->isCylinderCleanupMode) {
 		return;
 	}
 
 	// If duty cycle is high, impose a fuel cut rev limiter.
 	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
-	if (getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX) > 96.0f) {
+	if (getInjectorDutyCycle(rpm) > 96.0f) {
 		warning(CUSTOM_OBD_63, "Injector Duty cycle cut");
 		return;
 	}
@@ -334,9 +309,9 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	 * Injection events are defined by addFuelEvents() according to selected
 	 * fueling strategy
 	 */
-	FuelSchedule *fs = &ENGINE(injectionEvents);
+	FuelSchedule *fs = &engine->injectionEvents;
 	if (!fs->isReady) {
-		fs->addFuelEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+		fs->addFuelEvents();
 	}
 
 #if FUEL_MATH_EXTREME_LOGGING
@@ -345,7 +320,7 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	}
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 
-	fs->onTriggerTooth(trgEventIndex, rpm, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	fs->onTriggerTooth(trgEventIndex, rpm, nowNt);
 }
 
 #if EFI_PROD_CODE
@@ -359,10 +334,10 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
  */
-void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (CONFIG(vvtMode[0]) == VVT_MIATA_NB2 && ENGINE(triggerCentral.vvtSyncTimeNt) == 0) {
+	if (engineConfiguration->vvtMode[0] == VVT_MIATA_NB2 && engine->triggerCentral.vvtSyncTimeNt == 0) {
 		// this is a bit spaghetti code for sure
 		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
 		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
@@ -380,13 +355,13 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 #endif // HW_CHECK_MODE
 
 #if EFI_CDM_INTEGRATION
-	if (trgEventIndex == 0 && isBrainPinValid(CONFIG(cdmInputPin))) {
+	if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
 		int cdmKnockValue = getCurrentCdmValue(engine->triggerCentral.triggerState.getTotalRevolutionCounter());
 		engine->knockLogic(cdmKnockValue);
 	}
 #endif /* EFI_CDM_INTEGRATION */
 
-	if (trgEventIndex >= ENGINE(engineCycleEventCount)) {
+	if (trgEventIndex >= engine->engineCycleEventCount) {
 		/**
 		 * this could happen in case of a trigger error, just exit silently since the trigger error is supposed to be handled already
 		 * todo: should this check be somewhere higher so that no trigger listeners are invoked with noise?
@@ -403,7 +378,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 		 */
 		enginePins.fuelPumpRelay.setValue(true); // quickly set pin right from the callback here! todo: would it work OK for smart SPI pin?!
 #if EFI_PROD_CODE
-		engine->triggerActivitySecond = getTimeNowSeconds();
+		engine->triggerActivityMs = currentTimeMillis();
 #endif
 		// todo: check for 'trigger->is_synchnonized?'
 		// TODO: add 'pin shutdown' invocation somewhere - coils might be still open here!
@@ -415,13 +390,15 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 		return;
 	}
 
-	bool limitedSpark = !ENGINE(limpManager).allowIgnition();
-	bool limitedFuel = !ENGINE(limpManager).allowInjection();
+	bool limitedSpark = !engine->limpManager.allowIgnition();
+	bool limitedFuel = !engine->limpManager.allowInjection();
 
 #if EFI_LAUNCH_CONTROL
-	if (engine->isLaunchCondition && !limitedSpark && !limitedFuel) {
+	if (engine->launchController.isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
-		applyLaunchControlLimiting(&limitedSpark, &limitedFuel PASS_ENGINE_PARAMETER_SUFFIX);
+
+		limitedSpark &= engine->launchController.isLaunchSparkRpmRetardCondition();
+		limitedFuel &= engine->launchController.isLaunchFuelRpmRetardCondition();
 	}
 #endif
 	if (trgEventIndex == 0) {
@@ -429,14 +406,14 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 			engine->triggerCentral.validateCamVvtCounters();
 		}
 
-		if (checkIfTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) {
+		if (engine->triggerCentral.checkIfTriggerConfigChanged()) {
 			engine->ignitionEvents.isReady = false; // we need to rebuild complete ignition schedule
 			engine->injectionEvents.isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
-			// see initializeTriggerWaveform() -> prepareOutputSignals(PASS_ENGINE_PARAMETER_SIGNATURE)
+			// see initializeTriggerWaveform() -> prepareOutputSignals()
 
 			// we need this to apply new 'triggerIndexByAngle' values
-			engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+			engine->periodicFastCallback();
 		}
 	}
 
@@ -444,26 +421,29 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
-	handleFuel(limitedFuel, trgEventIndex, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	handleFuel(limitedFuel, trgEventIndex, rpm, edgeTimestamp);
+
+	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
+		rpm, trgEventIndex, edgeTimestamp);
+
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
 	 */
-	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm, edgeTimestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	onTriggerEventSparkLogic(limitedSpark, trgEventIndex, rpm, edgeTimestamp);
 }
 
 // Check if the engine is not stopped or cylinder cleanup is activated
-static bool isPrimeInjectionPulseSkipped(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static bool isPrimeInjectionPulseSkipped() {
 	if (!engine->rpmCalculator.isStopped())
 		return true;
-	return CONFIG(isCylinderCleanupEnabled) && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
+	return engineConfiguration->isCylinderCleanupEnabled && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
 }
 
 /**
  * Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
  * See testStartOfCrankingPrimingPulse()
  */
-void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&engine->primeInjEvent);
+void startPrimeInjectionPulse() {
 
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
 	// So we check and update the ignition switch counter in non-volatile backup-RAM
@@ -478,21 +458,21 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		ignSwitchCounter = 0;
 	// If we're going to skip this pulse, then save the counter as 0.
 	// That's because we'll definitely need the prime pulse next time (either due to the cylinder cleanup or the engine spinning)
-	if (isPrimeInjectionPulseSkipped(PASS_ENGINE_PARAMETER_SIGNATURE))
+	if (isPrimeInjectionPulseSkipped())
 		ignSwitchCounter = -1;
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
 		engine->primeInjEvent.ownIndex = 0;
 		engine->primeInjEvent.isSimultanious = true;
 
-		scheduling_s *sDown = &ENGINE(injectionEvents.elements[0]).endOfInjectionEvent;
+		scheduling_s *sDown = &engine->injectionEvents.elements[0].endOfInjectionEvent;
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
-		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, CONFIG(startOfCrankingPrimingPulse),
-			CONFIG(primeInjFalloffTemperature), 0.0f, Sensor::get(SensorType::Clt).value_or(70));
+		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, engineConfiguration->startOfCrankingPrimingPulse,
+			engineConfiguration->primeInjFalloffTemperature, 0.0f, Sensor::get(SensorType::Clt).value_or(70));
 		if (pulseLength > 0) {
-			startSimultaniousInjection(engine);
+			startSimultaniousInjection();
 			int turnOffDelayUs = efiRound(MS2US(pulseLength), 1.0f);
 			engine->executor.scheduleForLater(sDown, turnOffDelayUs, { &endSimultaniousInjectionOnlyTogglePins, engine });
 		}
@@ -503,7 +483,7 @@ void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_PROD_CODE */
 }
 
-void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void updatePrimeInjectionPulseState() {
 #if EFI_PROD_CODE
 	static bool counterWasReset = false;
 	if (counterWasReset)
@@ -523,25 +503,22 @@ void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
 	int rpm = GET_RPM();
-	float el = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+	float el = getFuelingLoad();
 	efiPrintf("rpm %d engine_load %.2f", rpm, el);
-	efiPrintf("fuel %.2fms timing %.2f", ENGINE(injectionDuration), engine->engineState.timingAdvance);
+	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance);
 #endif /* EFI_PROD_CODE */
 }
 
-void initMainEventListener(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initMainEventListener() {
 	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
 
 #if EFI_PROD_CODE
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
-
-	efiPrintf("initMainLoop: %d", currentTimeMillis());
 #endif
 
-
     // We start prime injection pulse at the early init stage - don't wait for the engine to start spinning!
-    if (CONFIG(startOfCrankingPrimingPulse) > 0)
-    	startPrimeInjectionPulse(PASS_ENGINE_PARAMETER_SIGNATURE);
+    if (engineConfiguration->startOfCrankingPrimingPulse > 0)
+    	startPrimeInjectionPulse();
 
 }
 

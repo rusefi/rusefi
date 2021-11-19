@@ -95,31 +95,31 @@ static void initTpsFuncAndRedund(RedundantSensor& redund, RedundantFordTps* ford
 	}
 }
 
-void initTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	percent_t min = CONFIG(tpsErrorDetectionTooLow);
-	percent_t max = CONFIG(tpsErrorDetectionTooHigh);
+void initTps() {
+	percent_t min = engineConfiguration->tpsErrorDetectionTooLow;
+	percent_t max = engineConfiguration->tpsErrorDetectionTooHigh;
 
-	if (!CONFIG(consumeObdSensors)) {
+	if (!engineConfiguration->consumeObdSensors) {
 		// primary TPS sensors
-		initTpsFunc(tpsFunc1p, tpsSens1p, CONFIG(tps1_1AdcChannel), CONFIG(tpsMin), CONFIG(tpsMax), min, max);
-		initTpsFunc(tpsFunc2p, tpsSens2p, CONFIG(tps2_1AdcChannel), CONFIG(tps2Min), CONFIG(tps2Max), min, max);
+		initTpsFunc(tpsFunc1p, tpsSens1p, engineConfiguration->tps1_1AdcChannel, engineConfiguration->tpsMin, engineConfiguration->tpsMax, min, max);
+		initTpsFunc(tpsFunc2p, tpsSens2p, engineConfiguration->tps2_1AdcChannel, engineConfiguration->tps2Min, engineConfiguration->tps2Max, min, max);
 
 		// Secondary TPS sensors (and redundant combining)
-		bool isFordTps = CONFIG(useFordRedundantTps);
-		initTpsFuncAndRedund(tps1, &fordTps1, isFordTps, tpsFunc1s, tpsSens1s, CONFIG(tps1_2AdcChannel), CONFIG(tps1SecondaryMin), CONFIG(tps1SecondaryMax), min, max);
-		initTpsFuncAndRedund(tps2, &fordTps2, isFordTps, tpsFunc2s, tpsSens2s, CONFIG(tps2_2AdcChannel), CONFIG(tps2SecondaryMin), CONFIG(tps2SecondaryMax), min, max);
+		bool isFordTps = engineConfiguration->useFordRedundantTps;
+		initTpsFuncAndRedund(tps1, &fordTps1, isFordTps, tpsFunc1s, tpsSens1s, engineConfiguration->tps1_2AdcChannel, engineConfiguration->tps1SecondaryMin, engineConfiguration->tps1SecondaryMax, min, max);
+		initTpsFuncAndRedund(tps2, &fordTps2, isFordTps, tpsFunc2s, tpsSens2s, engineConfiguration->tps2_2AdcChannel, engineConfiguration->tps2SecondaryMin, engineConfiguration->tps2SecondaryMax, min, max);
 
 		// Pedal sensors
-		initTpsFunc(pedalFuncPrimary, pedalSensorPrimary, CONFIG(throttlePedalPositionAdcChannel), CONFIG(throttlePedalUpVoltage), CONFIG(throttlePedalWOTVoltage), min, max);
-		initTpsFuncAndRedund(pedal, nullptr, false, pedalFuncSecondary, pedalSensorSecondary, CONFIG(throttlePedalPositionSecondAdcChannel), CONFIG(throttlePedalSecondaryUpVoltage), CONFIG(throttlePedalSecondaryWOTVoltage), min, max);
+		initTpsFunc(pedalFuncPrimary, pedalSensorPrimary, engineConfiguration->throttlePedalPositionAdcChannel, engineConfiguration->throttlePedalUpVoltage, engineConfiguration->throttlePedalWOTVoltage, min, max);
+		initTpsFuncAndRedund(pedal, nullptr, false, pedalFuncSecondary, pedalSensorSecondary, engineConfiguration->throttlePedalPositionSecondAdcChannel, engineConfiguration->throttlePedalSecondaryUpVoltage, engineConfiguration->throttlePedalSecondaryWOTVoltage, min, max);
 
 		// TPS-like stuff that isn't actually a TPS
-		initTpsFunc(wastegateFunc, wastegateSens, CONFIG(wastegatePositionSensor), CONFIG(wastegatePositionMin), CONFIG(wastegatePositionMax), min, max);
-		initTpsFunc(idlePosFunc, idlePosSens, CONFIG(idlePositionSensor), CONFIG(idlePositionMin), CONFIG(idlePositionMax), min, max);
+		initTpsFunc(wastegateFunc, wastegateSens, engineConfiguration->wastegatePositionSensor, engineConfiguration->wastegatePositionMin, engineConfiguration->wastegatePositionMax, min, max);
+		initTpsFunc(idlePosFunc, idlePosSens, engineConfiguration->idlePositionSensor, engineConfiguration->idlePositionMin, engineConfiguration->idlePositionMax, min, max);
 	}
 
 	// Route the pedal or TPS to driverIntent as appropriate
-	if (isAdcChannelValid(CONFIG(throttlePedalPositionAdcChannel))) {
+	if (isAdcChannelValid(engineConfiguration->throttlePedalPositionAdcChannel)) {
 		driverIntent.setProxiedSensor(SensorType::AcceleratorPedal);
 	} else {
 		driverIntent.setProxiedSensor(SensorType::Tps1);

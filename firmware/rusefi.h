@@ -7,6 +7,5 @@
 
 #pragma once
 
-void runRusEfi(void);
-void rebootNow(void);
-
+void runRusEfi();
+void rebootNow();

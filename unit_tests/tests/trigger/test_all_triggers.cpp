@@ -52,17 +52,17 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	printf("Exporting %s\r\n", getTrigger_type_e(tt));
 
 	persistent_config_s pc;
+	memset(&pc, 0, sizeof(pc));
 	Engine e;
 	Engine* engine = &e;
-	engine->setConfig(engine, &pc.engineConfiguration, &pc);
-	EXPAND_Engine;
+	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
 
 	engineConfiguration->trigger.type = tt;
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->initializeTriggerWaveform();
 
 	ASSERT_FALSE(shape->shapeDefinitionError) << "Trigger shapeDefinitionError";
 

@@ -6,19 +6,17 @@ static constexpr engine_type_e ENGINE_TEST_HELPER = TEST_ENGINE;
 class VehicleSpeedConverterTest : public ::testing::Test {
 
 public:
+	EngineTestHelper eth;
 	VehicleSpeedConverter dut;
 
-	VehicleSpeedConverterTest(){
-		
+	VehicleSpeedConverterTest() : eth(ENGINE_TEST_HELPER) {
 	}
 
 	void SetUp() override {
-		WITH_ENGINE_TEST_HELPER(ENGINE_TEST_HELPER);
-		INJECT_ENGINE_REFERENCE(&dut);
 	}
 
 	void SetCoef(float new_coef) {
-		dut.engineConfiguration->vehicleSpeedCoef = new_coef;
+		engineConfiguration->vehicleSpeedCoef = new_coef;
 	}
 
 	float GetFrequencyBySpeedAndCoef(float speed, float coef) {

@@ -4,11 +4,11 @@
 
 #include "bench_test.h"
 
-static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped) {
 	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking();
-	bool isRunning = ENGINE(rpmCalculator).isRunning();
+	bool isCranking = engine->rpmCalculator.isCranking();
+	bool isRunning = engine->rpmCalculator.isRunning();
 
 	if (isCranking) {
 		// Inhibit while cranking
@@ -32,13 +32,13 @@ static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t f
 	}
 }
 
-void updateFans(bool acActive DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void updateFans(bool acActive) {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing
 	}
 #endif
 
-	fanControl(acActive, enginePins.fanRelay, CONFIG(fanOnTemperature), CONFIG(fanOffTemperature), CONFIG(enableFan1WithAc), CONFIG(disableFan1WhenStopped) PASS_ENGINE_PARAMETER_SUFFIX);
-	fanControl(acActive, enginePins.fanRelay2, CONFIG(fan2OnTemperature), CONFIG(fan2OffTemperature), CONFIG(enableFan2WithAc), CONFIG(disableFan2WhenStopped) PASS_ENGINE_PARAMETER_SUFFIX);
+	fanControl(acActive, enginePins.fanRelay, engineConfiguration->fanOnTemperature, engineConfiguration->fanOffTemperature, engineConfiguration->enableFan1WithAc, engineConfiguration->disableFan1WhenStopped);
+	fanControl(acActive, enginePins.fanRelay2, engineConfiguration->fan2OnTemperature, engineConfiguration->fan2OffTemperature, engineConfiguration->enableFan2WithAc, engineConfiguration->disableFan2WhenStopped);
 }

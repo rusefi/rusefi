@@ -13,9 +13,9 @@ extern WarningCodeState unitTestWarningCodeState;
 extern WaveChart waveChart;
 
 TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_ONE);
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
 
 	eth.fireTriggerEvents2(/*count*/10, /*duration*/50);
@@ -24,11 +24,11 @@ TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 }
 
 TEST(trigger, testNoStartUpWarnings) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 3;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-	eth.setTriggerType(TT_TOOTHED_WHEEL PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_TOOTHED_WHEEL);
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
 
 	for (int i = 0;i < 10;i++) {
@@ -59,7 +59,7 @@ TEST(trigger, testNoStartUpWarnings) {
 }
 
 TEST(trigger, testNoisyInput) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testNoisyInput RPM";
 
@@ -81,14 +81,14 @@ TEST(trigger, testNoisyInput) {
 
 TEST(trigger, testCamInput) {
 	// setting some weird engine
-	WITH_ENGINE_TEST_HELPER(FORD_ESCORT_GT);
+	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 	engineConfiguration->vvtOffsets[0] = 360;
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_ONE);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
 	ASSERT_EQ( 0,  GET_RPM()) << "testCamInput RPM";
@@ -111,7 +111,7 @@ TEST(trigger, testCamInput) {
 
 	for (int i = 0; i < 600;i++) {
 		eth.moveTimeForwardUs(MS2US(10));
-		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
 		eth.moveTimeForwardUs(MS2US(40));
 		eth.firePrimaryTriggerRise();
 	}
@@ -122,10 +122,10 @@ TEST(trigger, testCamInput) {
 }
 
 TEST(trigger, testNB2CamInput) {
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
+	EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
 	// this crank trigger would be easier to test, crank shape is less important for this test
-	eth.setTriggerType(TT_ONE PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_ONE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -148,21 +148,21 @@ TEST(trigger, testNB2CamInput) {
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
 
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
 
 	// first gap - long
 
 	eth.moveTimeForwardUs(MS2US(130));
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
 	eth.moveTimeForwardUs(MS2US( 30));
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
 
 	// second gap - short
 
 	eth.moveTimeForwardUs(MS2US(10));
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
 	eth.moveTimeForwardUs(MS2US(10));
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
 
 	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition(0, 0));
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getTotalRevolutionCounter());
@@ -170,9 +170,9 @@ TEST(trigger, testNB2CamInput) {
 	// Third gap - long
 
 	eth.moveTimeForwardUs(MS2US(130));
-	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_FALL, getTimeNowNt(), 0);
 	eth.moveTimeForwardUs(MS2US( 30));
-	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	hwHandleVvtCamSignal(TV_RISE, getTimeNowNt(), 0);
 
 	EXPECT_NEAR(-211.59f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
 	// actually position based on VVT!

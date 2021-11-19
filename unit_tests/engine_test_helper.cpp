@@ -29,13 +29,29 @@ extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
-extern Engine *engineForLuaUnitTests;
 
-EngineTestHelperBase::EngineTestHelperBase() { 
+EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) { 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
 	minCrankingRpm = 0;
 	EnableToothLogger();
+	if (engine || engineConfiguration || config) {
+		firmwareError(OBD_PCM_Processor_Fault,
+			      "Engine configuration not cleaned up by previous test");
+	}
+	engine = eng;
+	engineConfiguration = econfig;
+	config = pers;
+}
+
+EngineTestHelperBase::~EngineTestHelperBase() {
+	engine = nullptr;
+	engineConfiguration = nullptr;
+	config = nullptr;
+}
+
+EngineTestHelper::EngineTestHelper(engine_type_e engineType)
+	: EngineTestHelper(engineType, &emptyCallbackWithConfiguration) {
 }
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback)
@@ -54,12 +70,10 @@ int EngineTestHelper::getWarningCounter() {
 	return unitTestWarningCodeState.warningCounter;
 }
 
-EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) {
-	Engine *engine = &this->engine;
-	engine->setConfig(engine, &persistentConfig.engineConfiguration, &persistentConfig);
-	EXPAND_Engine;
-
-	engineForLuaUnitTests = engine;
+EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
+	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
+{
+	memset(&persistentConfig, 0, sizeof(persistentConfig));
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
@@ -72,11 +86,9 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
-	INJECT_ENGINE_REFERENCE(&enginePins);
 	enginePins.reset();
 	enginePins.unregisterPins();
 
-	INJECT_ENGINE_REFERENCE(&waveChart);
 	waveChart.init();
 
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, -40, 1.5);
@@ -92,36 +104,34 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 60, 1.03);
 	setCurveValue(config->cltFuelCorrBins, config->cltFuelCorr, CLT_CURVE_SIZE, 70, 1.01);
 
-	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initDataStructures();
 
-	resetConfigurationExt(configurationCallback, engineType PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(configurationCallback, engineType);
 
-	validateConfig(PASS_CONFIG_PARAMETER_SIGNATURE);
+	validateConfig();
 
 	enginePins.startPins();
 
-	commonInitEngineController(PASS_ENGINE_PARAMETER_SIGNATURE);
+	commonInitEngineController();
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+	engine.engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0);
 
 	// this is needed to have valid CLT and IAT.
-//todo: reuse 	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE) method
-	engine->periodicSlowCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+//todo: reuse 	initPeriodicEvents() method
+	engine.periodicSlowCallback();
 
 	// Setup running in mock airmass mode
 	engineConfiguration->fuelAlgorithm = LM_MOCK;
-	engine->mockAirmassModel = &mockAirmass;
+	engine.mockAirmassModel = &mockAirmass;
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 
-	initHardware(PASS_ENGINE_PARAMETER_SIGNATURE);
-	rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initHardware();
+	rememberCurrentConfiguration();
 }
 
 EngineTestHelper::~EngineTestHelper() {
-	Engine *engine = &this->engine;
-	EXPAND_Engine;
 	// Write history to file
 	std::stringstream filePath;
 	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
@@ -176,17 +186,15 @@ void EngineTestHelper::smartFireFall(float delayMs) {
 void EngineTestHelper::firePrimaryTriggerRise() {
 	efitick_t nowNt = getTimeNowNt();
 	Engine *engine = &this->engine;
-	EXPAND_Engine;
-	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	handleShaftSignal(0, true, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	LogTriggerTooth(SHAFT_PRIMARY_RISING, nowNt);
+	handleShaftSignal(0, true, nowNt);
 }
 
 void EngineTestHelper::firePrimaryTriggerFall() {
 	efitick_t nowNt = getTimeNowNt();
 	Engine *engine = &this->engine;
-	EXPAND_Engine;
-	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-	handleShaftSignal(0, false, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+	LogTriggerTooth(SHAFT_PRIMARY_FALLING, nowNt);
+	handleShaftSignal(0, false, nowNt);
 }
 
 void EngineTestHelper::fireTriggerEventsWithDuration(float durationMs) {
@@ -297,27 +305,12 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	return event;
 }
 
-// todo: reduce code duplication with another 'getElementAtIndexForUnitText'
-static AngleBasedEvent * getElementAtIndexForUnitText(int index, Engine *engine) {
-	AngleBasedEvent * current;
-
-	LL_FOREACH2(engine->angleBasedEventsHead, current, nextToothEvent)
-	{
-		if (index == 0)
-			return current;
-		index--;
-	}
-#if EFI_UNIT_TEST
-	firmwareError(OBD_PCM_Processor_Fault, "getElementAtIndexForUnitText: null");
-#endif /* EFI_UNIT_TEST */
-	return nullptr;
-}
-
 AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,
 		int index, AngleBasedEvent *expected,
 		void *callback,
 		int triggerEventIndex, angle_t angleOffsetFromTriggerEvent) {
-	AngleBasedEvent * event = getElementAtIndexForUnitText(index, &engine);
+	AngleBasedEvent * event =
+		engine.module<TriggerScheduler>()->getElementAtIndexForUnitTest(index);
 
 	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
 
@@ -342,25 +335,21 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 
 
 void EngineTestHelper::applyTriggerWaveform() {
-	Engine *engine = &this->engine;
-	EXPAND_Engine
+	engine.initializeTriggerWaveform();
 
-	ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
-
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
+	incrementGlobalConfigurationVersion();
 }
 
 // todo: open question if this is worth a helper method or should be inlined?
 void EngineTestHelper::assertRpm(int expectedRpm, const char *msg) {
 	Engine *engine = &this->engine;
-	EXPAND_Engine
+
 	EXPECT_EQ(expectedRpm, GET_RPM()) << msg;
 }
 
 void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode,
 		trigger_type_e trigger) {
 	Engine *engine = &eth->engine;
-	EXPAND_Engine
 
 	engineConfiguration->isIgnitionEnabled = false; // let's focus on injection
 	engineConfiguration->specs.cylindersCount = 4;
@@ -372,16 +361,16 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	setArrayValues(config->cltFuelCorrBins, 1.0f);
 	setArrayValues(engineConfiguration->injector.battLagCorr, 0.0f);
 	// this is needed to update injectorLag
-	engine->updateSlowSensors(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->updateSlowSensors();
 
-	ASSERT_EQ( 0,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #1";
-	eth->setTriggerType(trigger PASS_ENGINE_PARAMETER_SUFFIX);
+	ASSERT_EQ( 0,  engine->triggerCentral.isTriggerConfigChanged()) << "trigger #1";
+	eth->setTriggerType(trigger);
 }
 
-void EngineTestHelper::setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void EngineTestHelper::setTriggerType(trigger_type_e trigger) {
 	engineConfiguration->trigger.type = trigger;
-	incrementGlobalConfigurationVersion(PASS_ENGINE_PARAMETER_SIGNATURE);
-	ASSERT_EQ( 1,  isTriggerConfigChanged(PASS_ENGINE_PARAMETER_SIGNATURE)) << "trigger #2";
+	incrementGlobalConfigurationVersion();
+	ASSERT_EQ( 1, engine.triggerCentral.isTriggerConfigChanged()) << "trigger #2";
 	applyTriggerWaveform();
 }
 

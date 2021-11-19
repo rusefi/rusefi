@@ -66,7 +66,7 @@ static void cam_callback(void *arg) {
 /*==========================================================================*/
 
 int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
-	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
+	brain_pin_e brainPin = isTriggerShaft ? engineConfiguration->triggerInputPins[index] : engineConfiguration->camInputs[index];
 
 	efiPrintf("extiTriggerTurnOnInputPin %s %s", msg, hwPortname(brainPin));
 
