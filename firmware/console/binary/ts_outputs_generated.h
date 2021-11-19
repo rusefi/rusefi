@@ -116,19 +116,19 @@ struct ts_outputs_s {
 	/**
 	 * offset 10
 	 */
-	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
+	scaled_channel<uint8_t, 1> vehicleSpeedKph = (uint8_t)0;
 	/**
 	 * offset 11
 	 */
-	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
+	scaled_channel<uint8_t, 1> internalMcuTemperature = (uint8_t)0;
 	/**
 	 * offset 12
 	 */
-	scaled_channel<uint16_t, 1, 100> coolantTemperature = (uint16_t)0;
+	scaled_channel<uint16_t, 100> coolantTemperature = (uint16_t)0;
 	/**
 	 * offset 14
 	 */
-	scaled_channel<uint16_t, 1, 100> intakeAirTemperature = (uint16_t)0;
+	scaled_channel<uint16_t, 100> intakeAirTemperature = (uint16_t)0;
 	/** total size 16*/
 };
 
