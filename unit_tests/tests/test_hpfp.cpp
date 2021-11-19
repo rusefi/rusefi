@@ -233,10 +233,11 @@ TEST(HPFP, Schedule) {
 
 	StrictMock<MockExecutor> mockExec;
 	engine->executor.setMockExecutor(&mockExec);
+	engineConfiguration->hpfpActivationAngle = 30;
 
 	constexpr angle_t angle0 = 90;
 	constexpr angle_t angle1 = 270 - 37.6923065;
-	constexpr angle_t angle2 = angle1 + 0;
+	constexpr angle_t angle2 = angle1 + 30;
 
 	constexpr float tick_per_deg = USF2NT(1000000.)*60/360/1000;
 
@@ -288,7 +289,7 @@ TEST(HPFP, Schedule) {
 
 	// Since we have a mock scheduler, lets insert the correct timestamp in the scheduling
 	// struct.
-	hpfp.m_event.scheduling.momentX = nt2;
+	hpfp.m_event.scheduling.momentX = nt1;
 
 	HpfpController::pinTurnOn(&hpfp);
 
