@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Thu Nov 18 00:04:44 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Thu Nov 18 19:32:24 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -109,8 +109,28 @@ struct ts_outputs_s {
 	 * offset 6
 	 */
 	uint16_t rpmAcceleration = (uint16_t)0;
-	/** total size 8*/
+	/**
+	 * offset 8
+	 */
+	uint16_t speedToRpmRatio = (uint16_t)0;
+	/**
+	 * offset 10
+	 */
+	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
+	/**
+	 * offset 11
+	 */
+	uint8_t internalMcuTemperature = (uint8_t)0;
+	/**
+	 * offset 12
+	 */
+	scaled_channel<uint16_t, 1, 100> coolantTemperature = (uint16_t)0;
+	/**
+	 * offset 14
+	 */
+	scaled_channel<uint16_t, 1, 100> intakeAirTemperature = (uint16_t)0;
+	/** total size 16*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Thu Nov 18 00:04:44 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Thu Nov 18 19:32:24 EST 2021
