@@ -1,8 +1,7 @@
 package com.rusefi.livedata;
 
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.AcControl;
-import com.rusefi.config.generated.TpsAccelState;
+import com.rusefi.config.generated.*;
 import com.rusefi.enums.live_data_e;
 
 public enum LiveDataView {
