@@ -169,38 +169,38 @@ static void reportWave(Logging *logging, int index) {
 		float dwellMs = getSignalOnTime(index);
 		float periodMs = getSignalPeriodMs(index);
 
-		logging->appendPrintf("duty%d%s", index, DELIMETER);
+		logging->appendPrintf("duty%d%s", index, LOG_DELIMITER);
 		logging->appendFloat(100.0f * dwellMs / periodMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 
 		/**
 		 * that's the ON time of the LAST signal
 		 */
-		logging->appendPrintf("dwell%d%s", index, DELIMETER);
+		logging->appendPrintf("dwell%d%s", index, LOG_DELIMITER);
 		logging->appendFloat(dwellMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 
 		/**
 		 * that's the total ON time during the previous engine cycle
 		 */
-		logging->appendPrintf("total_dwell%d%s", index, DELIMETER);
+		logging->appendPrintf("total_dwell%d%s", index, LOG_DELIMITER);
 		logging->appendFloat(readers[index].prevTotalOnTimeUs / 1000.0f, 2);
-		logging->appendPrintf("%s", DELIMETER);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 
-		logging->appendPrintf("period%d%s", index, DELIMETER);
+		logging->appendPrintf("period%d%s", index, LOG_DELIMITER);
 		logging->appendFloat(periodMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 
 		uint32_t offsetUs = getWaveOffset(index);
 		int rpm = GET_RPM();
 		if (rpm != 0) {
 			float oneDegreeUs = getOneDegreeTimeUs(rpm);
 
-			logging->appendPrintf("advance%d%s", index, DELIMETER);
+			logging->appendPrintf("advance%d%s", index, LOG_DELIMITER);
 			float angle = (offsetUs / oneDegreeUs) - tdcPosition();
 			fixAngle(angle, "waveAn", CUSTOM_ERR_6564);
 			logging->appendFloat(angle, 3);
-			logging->appendPrintf("%s", DELIMETER);
+			logging->appendPrintf("%s", LOG_DELIMITER);
 		}
 	}
 }

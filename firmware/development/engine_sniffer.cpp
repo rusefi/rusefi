@@ -82,7 +82,7 @@ void WaveChart::reset() {
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
-	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
+	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, LOG_DELIMITER);
 }
 
 void WaveChart::startDataCollection() {
@@ -139,7 +139,7 @@ void WaveChart::publishIfFull() {
 }
 
 void WaveChart::publish() {
-	logging.appendPrintf( DELIMETER);
+	logging.appendPrintf( LOG_DELIMITER);
 	waveChartUsedSize = logging.loggingSize();
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;

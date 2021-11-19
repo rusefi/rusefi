@@ -1450,6 +1450,7 @@ public class Fields {
 	public static final int LIS302DLCsPin_offset = 2043;
 	public static final int LIS302DLCsPinMode_offset = 2417;
 	public static final int LOAD_1_BYTE_PACKING_MULT = 2;
+	public static final String LOG_DELIMITER = "$";
 	public static final int log_format_e_LF_NATIVE = 0;
 	public static final int log_format_e_LM_MLV = 1;
 	public static final int logFormat_offset = 496;
