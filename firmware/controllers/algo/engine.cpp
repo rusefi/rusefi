@@ -633,6 +633,10 @@ void Engine::periodicFastCallback() {
 	tachSignalCallback();
 
 	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
+
+#if EFI_HPFP
+	hpfpControl.onFastCallback();
+#endif
 }
 
 void doScheduleStopEngine() {

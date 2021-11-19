@@ -63,6 +63,40 @@ public:
 	 * model parameters are not accurate.  The sum of this and calc_fuel_percent will be 0-100.
 	 */
 	float calcPI(int rpm, float calc_fuel_percent);
+
+	/**
+	 * Reset internal state due to a stopped engine.
+	 */
+	void reset() {
+		m_I_sum_percent = 0;
+		m_pressureTarget_kPa = 0;
+	}
 };
 
-void initHPFP();
+class HpfpController {
+public:
+	void onFastCallback();
+
+private:
+	AngleBasedEvent m_open;
+	AngleBasedEvent m_close;
+
+	HpfpLobe     m_lobe;
+	HpfpQuantity m_quantity;
+
+	volatile angle_t m_requested_pump = 0; ///< Computed requested pump duration in degrees (not including deadtime)
+	volatile angle_t m_deadtime = 0; ///< Computed solenoid deadtime in degrees
+	volatile bool m_running = false; ///< Whether events are being scheduled or not
+
+	void scheduleNextCycle();
+
+	static void hpfpPinTurnOn(HpfpController *) {
+		enginePins.hpfpValve.setHigh();
+	}
+
+	static void hpfpPinTurnOff(HpfpController *self) {
+		enginePins.hpfpValve.setLow();
+
+		self->scheduleNextCycle();
+	}
+};

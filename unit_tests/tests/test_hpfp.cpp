@@ -143,10 +143,10 @@ TEST(HPFP, PI) {
 	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2040);
 	engineConfiguration->hpfpTargetDecay = 1000;
 	math.calcPI(1000, 0);
-	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2025);
+	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2035); // 5ms of decay
 
 	// Proportional gain
-	math.m_I_sum_percent = 0; // Reset for ease of testing
+	math.reset(); // Reset for ease of testing
 	EXPECT_FLOAT_EQ(math.calcPI(1000, 0), 0); // Validate reset
 	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2010);
 	engineConfiguration->hpfpPidP = 0.01;
@@ -156,8 +156,8 @@ TEST(HPFP, PI) {
 
 	// Integral gain
 	engineConfiguration->hpfpPidI = 0.001;
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 0), 21.21);
-	EXPECT_FLOAT_EQ(math.m_I_sum_percent, 1.01);
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 0), 20.368334);
+	EXPECT_FLOAT_EQ(math.m_I_sum_percent, 0.168333333);
 }
 
 TEST(HPFP, Angle) {

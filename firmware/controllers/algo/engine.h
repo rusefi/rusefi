@@ -18,6 +18,7 @@
 #include "local_version_holder.h"
 #include "buttonshift.h"
 #include "gear_controller.h"
+#include "high_pressure_fuel_pump.h"
 #include "limp_manager.h"
 #include "pin_repository.h"
 #include "ac_control.h"
@@ -211,6 +212,9 @@ public:
 	IgnitionEventList ignitionEvents;
 	scheduling_s tdcScheduler[2];
 
+#if EFI_HPFP
+	HpfpController hpfpControl;
+#endif
 #endif /* EFI_ENGINE_CONTROL */
 
 	bool needToStopEngine(efitick_t nowNt) const;

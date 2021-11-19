@@ -29,47 +29,23 @@
 
 #if EFI_HPFP
 
-class HpfpActor {
-public:
-	void start() {
-		scheduleNextCycle();
-	}
-
-private:
-	AngleBasedEvent m_open;
-	AngleBasedEvent m_close;
-
-	HpfpLobe     m_lobe;
-	HpfpQuantity m_quantity;
-
-	void scheduleNextCycle();
-
-	static void hpfpPinTurnOn(HpfpActor *) {
-		enginePins.hpfpValve.setHigh();
-	}
-
-	static void hpfpPinTurnOff(HpfpActor *self) {
-		enginePins.hpfpValve.setLow();
-
-		self->scheduleNextCycle();
-	}
-};
-
-static HpfpActor actor; // TODO: Instantiate one per bank? Need more sensors....
-
-
 angle_t HpfpLobe::findNextLobe() {
 	// TODO: Ideally we figure out where we are in the engine cycle and pick the next lobe
 	// based on that.  At least we should do that when cranking, so we can start that much
 	// sooner.
+
+	auto lobes = engineConfiguration->hpfpCamLobes;
+	if (!lobes) {
+		return 0;
+	}
 
 	// Which lobe are we on?
 	int next_index = m_lobe_index + 1;
 	// Note, this will be insufficient if the # of cam lobes is
 	// dynamically changed rapidly by more than 2x, but it will
 	// correct itself rather quickly.
-	if (next_index >= engineConfiguration->hpfpCamLobes) {
-		next_index -= engineConfiguration->hpfpCamLobes;
+	if (next_index >= lobes) {
+		next_index -= lobes;
 	}
 	m_lobe_index = next_index;
 
@@ -82,14 +58,13 @@ angle_t HpfpLobe::findNextLobe() {
 			(engineConfiguration->hpfpCam - 1) & 1);    // Cam
 	}
 
-	return engineConfiguration->hpfpPeakPos + vvt +
-		next_index * 720 / engineConfiguration->hpfpCamLobes;
+	return engineConfiguration->hpfpPeakPos + vvt + next_index * 720 / lobes;
 }
 
 // As a percent of the full pump stroke
 float HpfpQuantity::calcFuelPercent(int rpm) {
 	float fuel_requested_cc_per_cycle =
-		engine->injectionMass[0] * (1.f / fuelDensity) * engineConfiguration->specs.cylindersCount; // TODO: handle multiple banks?
+		engine->injectionMass[0] * (1.f / fuelDensity) * engineConfiguration->specs.cylindersCount;
 	float fuel_requested_cc_per_lobe = fuel_requested_cc_per_cycle / engineConfiguration->hpfpCamLobes;
 	return 100.f *
 		fuel_requested_cc_per_lobe / engineConfiguration->hpfpPumpVolume +
@@ -100,8 +75,8 @@ float HpfpQuantity::calcFuelPercent(int rpm) {
 
 float HpfpQuantity::calcPI(int rpm, float calc_fuel_percent) {
 	m_pressureTarget_kPa = std::max<float>(
-		m_pressureTarget_kPa - (engineConfiguration->hpfpTargetDecay * 60. /
-					(rpm * engineConfiguration->hpfpCamLobes)),
+		m_pressureTarget_kPa - (engineConfiguration->hpfpTargetDecay *
+					(FAST_CALLBACK_PERIOD_MS / 1000.)),
 		interpolate3d(engineConfiguration->hpfpTarget,
 			      engineConfiguration->hpfpTargetLoadBins, Sensor::get(SensorType::Map).Value, // TODO: allow other load axis, like we claim to
 			      engineConfiguration->hpfpTargetRpmBins, rpm));
@@ -110,8 +85,17 @@ float HpfpQuantity::calcPI(int rpm, float calc_fuel_percent) {
 		m_pressureTarget_kPa - Sensor::get(SensorType::FuelPressureHigh).Value;
 
 	float p_control_percent = pressureError_kPa * engineConfiguration->hpfpPidP;
-	float i_control_percent =
-		m_I_sum_percent + pressureError_kPa * engineConfiguration->hpfpPidI;
+	float i_factor_divisor =
+		1000. * // ms/sec
+		60. *   // sec/min -> ms/min
+		2.;     // rev/cycle -> (rev * ms) / (min * cycle)
+	float i_factor =
+		engineConfiguration->hpfpPidI * // % / (kPa * lobe)
+		rpm * // (% * revs) / (kPa * lobe * min)
+		engineConfiguration->hpfpCamLobes * // lobes/cycle -> (% * revs) / (kPa * min * cycles)
+		(FAST_CALLBACK_PERIOD_MS / // (% * revs * ms) / (kPa * min * cycles)
+		 i_factor_divisor); // % / kPa
+	float i_control_percent = m_I_sum_percent + pressureError_kPa * i_factor;
 	calc_fuel_percent += p_control_percent;
 	i_control_percent = clampF(-calc_fuel_percent, i_control_percent,
 				   100.f - calc_fuel_percent);
@@ -132,55 +116,59 @@ angle_t HpfpQuantity::pumpAngleFuel(int rpm) {
 			     engineConfiguration->hpfpLobeProfileAngle);
 }
 
-void HpfpActor::scheduleNextCycle() {
-	// TODO: All this math should be moved to a slower task/thread/callback/etc
-
+void HpfpController::onFastCallback() {
 	// Pressure current/target calculation
 	int rpm = engine->rpmCalculator.getRpm();
 
 	// What conditions can we not handle?
 	if (rpm < 60 ||
 	    engineConfiguration->hpfpCamLobes == 0 ||
-	    engineConfiguration->hpfpPumpVolume == 0) {
-		// Lets wait for a reasonable RPM before trying to do anything.  Plus lets avoid
-		// divide by 0 throughout the code.
-		engine->module<TriggerScheduler>()->scheduleOrQueue(
-			&m_close, TRIGGER_EVENT_UNDEFINED, getTimeNowNt(),
-			0, { hpfpPinTurnOff, this });
-		return;
-	}
-
-	angle_t lobe = m_lobe.findNextLobe();
-	angle_t angle_requested = m_quantity.pumpAngleFuel(rpm);
-
-	if (angle_requested > engineConfiguration->hpfpMinAngle) {
+	    engineConfiguration->hpfpPumpVolume == 0 ||
+	    !enginePins.hpfpValve.isInitialized()) {
+		m_quantity.reset();
+		m_requested_pump = 0;
+		m_deadtime = 0;
+	} else {
 		// Convert deadtime from ms to degrees based on current RPM
 		float deadtime_ms = interpolate2d(
 			Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
 			engineConfiguration->hpfpDeadtimeVoltsBins,
 			engineConfiguration->hpfpDeadtimeMS);
-		angle_t deadtime_angle = deadtime_ms * rpm * (360.f / 60.f / 1000.f);
+		m_deadtime = deadtime_ms * rpm * (360.f / 60.f / 1000.f);
 
+		// We set deadtime first, then pump, in case pump used to be 0.  Pump is what
+		// determines whether we do anything or not.
+		m_requested_pump = m_quantity.pumpAngleFuel(rpm);
+
+		if (!m_running) {
+			m_running = true;
+			scheduleNextCycle();
+		}
+	}
+}
+
+void HpfpController::scheduleNextCycle() {
+	if (!enginePins.hpfpValve.isInitialized()) {
+		m_running = false;
+		return;
+	}
+
+	angle_t lobe = m_lobe.findNextLobe();
+	angle_t angle_requested = m_requested_pump;
+
+	if (angle_requested > engineConfiguration->hpfpMinAngle) {
 		engine->module<TriggerScheduler>()->scheduleOrQueue(
-			&m_open, TRIGGER_EVENT_UNDEFINED, getTimeNowNt(),
-			lobe - angle_requested - deadtime_angle, // TODO: handle 0 underflow?
+			&m_open, TRIGGER_EVENT_UNDEFINED, 0,
+			lobe - angle_requested - m_deadtime,
 			{ hpfpPinTurnOn, this });
 	}
 
 	// Always schedule this, even if we aren't opening the valve this
 	// time, since this will schedule the next lobe.
 	engine->module<TriggerScheduler>()->scheduleOrQueue(
-		&m_close, TRIGGER_EVENT_UNDEFINED, getTimeNowNt(),
-		lobe - angle_requested + engineConfiguration->hpfpActivationAngle, // TODO: handle 0 underflow
+		&m_close, TRIGGER_EVENT_UNDEFINED, 0,
+		lobe - angle_requested + engineConfiguration->hpfpActivationAngle,
 		{ hpfpPinTurnOff, this });
-}
-
-void initHPFP() {
-	if (!isBrainPinValid(engineConfiguration->hpfpValvePin)) {
-		return;
-	}
-
-	actor.start();
 }
 
 #endif // EFI_HPFP
