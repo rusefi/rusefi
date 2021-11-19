@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 16 02:51:43 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 19 09:14:35 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1450,7 +1450,7 @@ public class Fields {
 	public static final int LIS302DLCsPin_offset = 2043;
 	public static final int LIS302DLCsPinMode_offset = 2417;
 	public static final int LOAD_1_BYTE_PACKING_MULT = 2;
-	public static final String LOG_DELIMITER = "$";
+	public static final String LOG_DELIMITER = "`";
 	public static final int log_format_e_LF_NATIVE = 0;
 	public static final int log_format_e_LM_MLV = 1;
 	public static final int logFormat_offset = 496;
@@ -2214,7 +2214,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.16.all.2660525519";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.19.all.3994728887";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;

@@ -1487,6 +1487,7 @@
 #define LIS302DLCsPin_offset 2043
 #define LIS302DLCsPinMode_offset 2409
 #define LOAD_1_BYTE_PACKING_MULT 2
+#define LOG_DELIMITER "`"
 #define log_format_e_auto_enum "LF_NATIVE", "LM_MLV"
 #define log_format_e_Force_4_bytes_size_log_format ENUM_32_BITS
 #define log_format_e_LF_NATIVE 0
@@ -1808,7 +1809,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1539591823
+#define SIGNATURE_HASH 726307575
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2327,7 +2328,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.16.kin.1539591823"
+#define TS_SIGNATURE "rusEFI 2021.11.19.kin.726307575"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
