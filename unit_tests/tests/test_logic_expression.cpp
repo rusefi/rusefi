@@ -26,8 +26,6 @@ FsioResult getEngineValue(le_action_e action) {
 		return engine->fsioState.mockCrankingRpm;
 	case LE_METHOD_TIME_SINCE_BOOT:
 		return engine->fsioState.mockTimeSinceBoot;
-	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
-		return engine->fsioState.mockTimeSinceTrigger;
 	case LE_METHOD_VBATT:
 		return 12;
 	case LE_METHOD_AC_TOGGLE:
@@ -256,6 +254,8 @@ TEST(fsio, testLogicExpressions) {
 	}
 }
 
+extern int timeNowUs;
+
 TEST(fsio, fuelPump) {
 	// this will init fuel pump fsio logic
 	EngineTestHelper eth(TEST_ENGINE);
@@ -266,29 +266,27 @@ TEST(fsio, fuelPump) {
 	enginePins.fuelPumpRelay.init();
 
 	// ECU just started, haven't seen trigger yet
-	engine->fsioState.mockTimeSinceBoot = 0.5f;
-	engine->fsioState.mockTimeSinceTrigger = 100;
+	timeNowUs = 0.5e6;
 	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
 	// Long time since ecu start, haven't seen trigger yet
-	engine->fsioState.mockTimeSinceBoot = 60;
-	engine->fsioState.mockTimeSinceTrigger = 100;
+	timeNowUs = 60e6;
 	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be off!
 	EXPECT_FALSE(efiReadPin(GPIOA_0));
 
 	// Long time since ecu start, just saw a trigger!
-	engine->fsioState.mockTimeSinceBoot = 60;
-	engine->fsioState.mockTimeSinceTrigger = 0.1f;
+	timeNowUs = 60e6;
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
 	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
 	// ECU just started, and we just saw a trigger!
-	engine->fsioState.mockTimeSinceBoot = 0.5f;
-	engine->fsioState.mockTimeSinceTrigger = 0.1f;
+	timeNowUs = 60e6;
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
 	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
