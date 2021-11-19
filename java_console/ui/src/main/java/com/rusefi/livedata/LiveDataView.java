@@ -7,7 +7,7 @@ import com.rusefi.enums.live_data_e;
 
 public enum LiveDataView {
     AC_CONTROL(live_data_e.LDS_AC_CONTROL, AcControl.VALUES, "ac_control.cpp"),
-    AC_CONTROL(live_data_e.LDS_FUEL_PUMP, FuelPump.VALUES, "fuel_pump.cpp"),
+    FUEL_PUMP(live_data_e.LDS_FUEL_PUMP, FuelPump.VALUES, "fuel_pump.cpp"),
     TPS_ACCEL(live_data_e.LDS_TPS_ACCEL, TpsAccelState.VALUES, "accel_enrichment.cpp"),
     ;
 
