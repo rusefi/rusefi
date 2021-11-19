@@ -278,14 +278,14 @@ TEST(fsio, fuelPump) {
 	EXPECT_FALSE(efiReadPin(GPIOA_0));
 
 	// Long time since ecu start, just saw a trigger!
-	timeNowUs = 60e6;
+	timeNowUs = 10e6;
 	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
 	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
 	// ECU just started, and we just saw a trigger!
-	timeNowUs = 60e6;
+	timeNowUs = 10e6;
 	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
 	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be on!
