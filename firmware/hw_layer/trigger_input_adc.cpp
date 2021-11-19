@@ -115,13 +115,12 @@ static void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 }
 
 
-static void shaft_callback(void *arg) {
+static void shaft_callback(void *arg, efitick_t stamp) {
 	if (curAdcMode != TRIGGER_EXTI) {
 		return;
 	}
 	
 	// do the time sensitive things as early as possible!
-	efitick_t stamp = getTimeNowNt();
 	ioline_t pal_line = (ioline_t)arg;
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
@@ -148,7 +147,7 @@ static void shaft_callback(void *arg) {
 	prevStamp = stamp;
 }
 
-static void cam_callback(void *) {
+static void cam_callback(void *, efitick_t) {
 }
 
 // todo: add cam support?
