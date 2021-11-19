@@ -11,16 +11,29 @@
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"
 
+// These may not be defined due to the HAL, but they're necessary for the compiler to do it's magic
+class UARTDriver;
+class UartDmaTsChannel;
+class UartTsChannel;
+class SerialTsChannel;
+
 #if HAS_PRIMARY
-	#ifdef TS_PRIMARY_UART
-		#if EFI_USE_UART_DMA
-			UartDmaTsChannel primaryChannel(TS_PRIMARY_UART);
-		#else
-			UartTsChannel primaryChannel(TS_PRIMARY_UART);
-		#endif
-	#elif defined(TS_PRIMARY_SERIAL)
-		SerialTsChannel primaryChannel(TS_PRIMARY_SERIAL);
-	#endif
+#ifdef TS_PRIMARY_PORT
+
+// We want to instantiate the correct channel type depending on what type of serial port we're
+// using.  ChibiOS supports two - UART and Serial.  We compare the type of the port we're given
+// against UartDriver and decide whether to instantiate a UART TS Channel or a Serial version.  The
+// UART is further subdivided into two depending whether we support DMA or not.  We use the right
+// combination of std::conditional, std::is_same, and #if to get what we want.
+	std::conditional_t<
+		std::is_same_v<decltype(TS_PRIMARY_PORT), UARTDriver>,
+#if EFI_USE_UART_DMA
+		UartDmaTsChannel,
+#else // EFI_USE_UART_DMA
+		UartTsChannel,
+#endif // EFI_USE_UART_DMA
+		SerialTsChannel> primaryChannel(TS_PRIMARY_PORT);
+#endif // TS_PRIMARY_PORT
 
 	struct PrimaryChannelThread : public TunerstudioThread {
 		PrimaryChannelThread() : TunerstudioThread("Primary TS Channel") { }
@@ -41,15 +54,17 @@
 #endif // HAS_PRIMARY
 
 #if HAS_SECONDARY
-	#ifdef TS_SECONDARY_UART
-		#if EFI_USE_UART_DMA
-			UartDmaTsChannel secondaryChannel(TS_SECONDARY_UART);
-		#else
-			UartTsChannel secondaryChannel(TS_SECONDARY_UART);
-		#endif
-	#elif defined(TS_SECONDARY_SERIAL)
-		SerialTsChannel secondaryChannel(TS_SECONDARY_SERIAL);
-	#endif
+#ifdef TS_SECONDARY_PORT
+	std::conditional_t<
+		std::is_same_v<decltype(TS_SECONDARY_PORT), UARTDriver>,
+#if EFI_USE_UART_DMA
+		UartDmaTsChannel,
+#else // EFI_USE_UART_DMA
+		UartTsChannel,
+#endif // EFI_USE_UART_DMA
+		SerialTsChannel> secondaryChannel(TS_SECONDARY_PORT);
+#endif // TS_SECONDARY_PORT
+
 
 	struct SecondaryChannelThread : public TunerstudioThread {
 		SecondaryChannelThread() : TunerstudioThread("Secondary TS Channel") { }

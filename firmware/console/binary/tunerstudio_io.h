@@ -9,13 +9,13 @@
 #pragma once
 #include "global.h"
 
-#if (!defined(TS_NO_PRIMARY) && (defined(TS_PRIMARY_UART) || defined(TS_PRIMARY_SERIAL)))
+#if (!TS_NO_PRIMARY && defined(TS_PRIMARY_PORT))
 	#define HAS_PRIMARY true
 #else
 	#define HAS_PRIMARY false
 #endif
 
-#if (!defined(TS_NO_SECONDARY) && (defined(TS_SECONDARY_UART) || defined(TS_SECONDARY_SERIAL)))
+#if (!TS_NO_SECONDARY && defined(TS_SECONDARY_PORT))
 	#define HAS_SECONDARY true
 #else
 	#define HAS_SECONDARY false
