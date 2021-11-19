@@ -73,6 +73,4 @@
 
 #define EFI_MAP_AVERAGING TRUE
 
-#define EFI_FUEL_PUMP TRUE
-
 #define EFI_LUA TRUE

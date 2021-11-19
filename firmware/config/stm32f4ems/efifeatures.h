@@ -230,8 +230,6 @@
 #define EFI_VEHICLE_SPEED TRUE
 #endif
 
-#define EFI_FUEL_PUMP TRUE
-
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR TRUE
 #endif
