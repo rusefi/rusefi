@@ -5,5 +5,4 @@
 
 struct FuelPumpController : public EngineModule, public fuel_pump_control_s {
 	void onSlowCallback() override;
-	bool getPumpState();
 };
