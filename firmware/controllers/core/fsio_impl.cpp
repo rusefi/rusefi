@@ -64,7 +64,6 @@ static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 static LENameOrdinalPair leInMrBench(LE_METHOD_IN_MR_BENCH, "in_mr_bench");
-static LENameOrdinalPair leTimeSinceTrigger(LE_METHOD_TIME_SINCE_TRIGGER_EVENT, "time_since_trigger");
 static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 
 #include "fsio_names.def"
@@ -110,8 +109,6 @@ FsioResult getEngineValue(le_action_e action) {
 	case LE_METHOD_EXHAUST_VVT:
 		return engine->triggerCentral.getVVTPosition(0, 1);
 #endif
-	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
-		return engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
 	case LE_METHOD_TIME_SINCE_BOOT:
 #if EFI_MAIN_RELAY_CONTROL
 		// in main relay control mode, we return the number of seconds since the ignition is turned on
