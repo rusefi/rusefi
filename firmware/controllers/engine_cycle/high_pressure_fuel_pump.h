@@ -73,30 +73,24 @@ public:
 	}
 };
 
-class HpfpController {
+class HpfpController : public EngineModule {
 public:
-	void onFastCallback();
+	void onFastCallback() final;
 
+#if !EFI_UNIT_TEST
 private:
-	AngleBasedEvent m_open;
-	AngleBasedEvent m_close;
+#endif // EFI_UNIT_TEST
+	AngleBasedEvent m_event;
 
-	HpfpLobe     m_lobe;
 	HpfpQuantity m_quantity;
+	HpfpLobe     m_lobe;
 
+	volatile bool m_running = false; ///< Whether events are being scheduled or not
 	volatile angle_t m_requested_pump = 0; ///< Computed requested pump duration in degrees (not including deadtime)
 	volatile angle_t m_deadtime = 0; ///< Computed solenoid deadtime in degrees
-	volatile bool m_running = false; ///< Whether events are being scheduled or not
 
 	void scheduleNextCycle();
 
-	static void hpfpPinTurnOn(HpfpController *) {
-		enginePins.hpfpValve.setHigh();
-	}
-
-	static void hpfpPinTurnOff(HpfpController *self) {
-		enginePins.hpfpValve.setLow();
-
-		self->scheduleNextCycle();
-	}
+	static void pinTurnOn(HpfpController *self);
+	static void pinTurnOff(HpfpController *self);
 };

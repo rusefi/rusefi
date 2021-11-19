@@ -29,6 +29,9 @@
 
 #if EFI_HPFP
 
+// A constant we use; doesn't seem important to hoist into engineConfiguration.
+static constexpr int rpm_spinning_cutoff = 60; // Below this RPM, we don't run the logic
+
 angle_t HpfpLobe::findNextLobe() {
 	// TODO: Ideally we figure out where we are in the engine cycle and pick the next lobe
 	// based on that.  At least we should do that when cranking, so we can start that much
@@ -121,7 +124,7 @@ void HpfpController::onFastCallback() {
 	int rpm = engine->rpmCalculator.getRpm();
 
 	// What conditions can we not handle?
-	if (rpm < 60 ||
+	if (rpm < rpm_spinning_cutoff ||
 	    engineConfiguration->hpfpCamLobes == 0 ||
 	    engineConfiguration->hpfpPumpVolume == 0 ||
 	    !enginePins.hpfpValve.isInitialized()) {
@@ -147,6 +150,23 @@ void HpfpController::onFastCallback() {
 	}
 }
 
+void HpfpController::pinTurnOn(HpfpController *self) {
+	enginePins.hpfpValve.setHigh();
+
+	// By scheduling the close after we already open, we don't have to worry if the engine
+	// stops, the valve will be turned off in a certain amount of time regardless.
+	scheduleByAngle(&self->m_event.scheduling,
+			self->m_event.scheduling.momentX,
+			self->m_deadtime + engineConfiguration->hpfpActivationAngle,
+			{ pinTurnOff, self });
+}
+
+void HpfpController::pinTurnOff(HpfpController *self) {
+	enginePins.hpfpValve.setLow();
+
+	self->scheduleNextCycle();
+}
+
 void HpfpController::scheduleNextCycle() {
 	if (!enginePins.hpfpValve.isInitialized()) {
 		m_running = false;
@@ -158,17 +178,18 @@ void HpfpController::scheduleNextCycle() {
 
 	if (angle_requested > engineConfiguration->hpfpMinAngle) {
 		engine->module<TriggerScheduler>()->scheduleOrQueue(
-			&m_open, TRIGGER_EVENT_UNDEFINED, 0,
+			&m_event, TRIGGER_EVENT_UNDEFINED, 0,
 			lobe - angle_requested - m_deadtime,
-			{ hpfpPinTurnOn, this });
-	}
+			{ pinTurnOn, this });
 
-	// Always schedule this, even if we aren't opening the valve this
-	// time, since this will schedule the next lobe.
-	engine->module<TriggerScheduler>()->scheduleOrQueue(
-		&m_close, TRIGGER_EVENT_UNDEFINED, 0,
-		lobe - angle_requested + engineConfiguration->hpfpActivationAngle,
-		{ hpfpPinTurnOff, this });
+		// Off will be scheduled after turning the valve on
+	} else {
+		// Schedule this, even if we aren't opening the valve this time, since this
+		// will schedule the next lobe.
+		engine->module<TriggerScheduler>()->scheduleOrQueue(
+			&m_event, TRIGGER_EVENT_UNDEFINED, 0, lobe,
+			{ pinTurnOff, this });
+	}
 }
 
 #endif // EFI_HPFP
