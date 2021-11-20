@@ -225,6 +225,9 @@ public:
 	/**
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
 	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 *
+	 * TODO: one day kill all usages with FOUR_STROKE_CAM_SENSOR 720 cycle and add runtime prohibition
+	 * TODO: for FOUR_STROKE_CAM_SENSOR addEvent360 is the way to go
 	 */
 	void addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
