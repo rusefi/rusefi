@@ -211,13 +211,7 @@ static void doPeriodicSlowCallback() {
 		}
 	}
 
-	/**
-	 * Update engine RPM state if needed (check timeouts).
-	 */
-	bool isSpinning = engine->rpmCalculator.checkIfSpinning(nowNt);
-	if (!isSpinning) {
-		engine->rpmCalculator.setStopSpinning();
-	}
+	engine->rpmCalculator.onSlowCallback();
 
 	if (engine->directSelfStimulation || engine->rpmCalculator.isStopped()) {
 		/**

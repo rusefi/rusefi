@@ -48,6 +48,9 @@ public:
 	int mockRpm;
 #endif /* EFI_PROD_CODE */
 	RpmCalculator();
+
+	void onSlowCallback();
+
 	/**
 	 * Returns true if the engine is not spinning (RPM==0)
 	 */
@@ -173,8 +176,6 @@ void tdcMarkCallback(
  * @brief   Initialize RPM calculator
  */
 void initRpmCalculator();
-
-float getCrankshaftAngleNt(efitick_t timeNt);
 
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 
