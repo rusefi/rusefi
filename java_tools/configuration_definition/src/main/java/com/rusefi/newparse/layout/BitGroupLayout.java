@@ -84,11 +84,11 @@ public class BitGroupLayout extends Layout {
                 }
 
                 ps.println("offset " + this.offsetWithinStruct + " bit " + i + " */");
-                ps.println("\tbool " + bit.name + " : 1;");
+                ps.println("\tbool " + bit.name + " : 1 {};");
             } else {
                 // Force pad out all bit groups to a full 32b/4B
                 ps.println("offset " + this.offsetWithinStruct + " bit " + i + " */");
-                ps.println("\tbool unusedBit_" + this.offsetWithinStruct + "_" + i + " : 1;");
+                ps.println("\tbool unusedBit_" + this.offsetWithinStruct + "_" + i + " : 1 {};");
             }
         }
     }
