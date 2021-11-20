@@ -57,7 +57,6 @@ public:
 
 	bool isTriggerDecoderError();
 
-	float getTimeSinceSyncPoint(efitick_t nowNt) const;
 	expected<float> getCurrentEnginePhase(efitick_t nowNt) const;
 
 	float getTimeSinceTriggerEvent(efitick_t nowNt) const {

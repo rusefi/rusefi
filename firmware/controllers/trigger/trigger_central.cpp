@@ -70,10 +70,6 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
 
-float TriggerCentral::getTimeSinceSyncPoint(efitick_t nowNt) const {
-	return m_virtualZeroTimer.getElapsedSeconds(nowNt);
-}
-
 expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 
