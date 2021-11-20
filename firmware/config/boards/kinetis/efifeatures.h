@@ -170,8 +170,6 @@
 #define EFI_VEHICLE_SPEED FALSE
 #endif
 
-#define EFI_FUEL_PUMP FALSE
-
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR FALSE
 #endif
