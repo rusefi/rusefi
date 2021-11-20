@@ -278,12 +278,12 @@ public:
 private:
 	trigger_shape_helper h;
 
-
 	/**
 	 * Working buffer for 'wave' instance
 	 * Values are in the 0..1 range
 	 */
 	float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
+
 	/**
 	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
 	 */
@@ -313,7 +313,7 @@ public:
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
 	 */
-	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
+	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
 
 void findTriggerPosition(

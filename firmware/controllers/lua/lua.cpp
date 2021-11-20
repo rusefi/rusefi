@@ -84,7 +84,11 @@ public:
 	}
 };
 
-static Heap heaps[] = { luaUserHeap, luaSystemHeap };
+static Heap heaps[] = { luaUserHeap,
+#if LUA_SYSTEM_HEAP > 1
+luaSystemHeap
+#endif
+};
 
 template <int HeapIdx>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
