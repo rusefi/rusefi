@@ -13,6 +13,7 @@ public enum live_data_e {
 	LDS_IDLE_PID,
 	LDS_TRIGGER_STATE,
 	LDS_AC_CONTROL,
+	LDS_FUEL_PUMP,
 	LDS_IDLE,
 	LDS_TPS_ACCEL,
 }

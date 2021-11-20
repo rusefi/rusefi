@@ -81,9 +81,6 @@
 #undef EFI_USB_SERIAL
 #define EFI_USB_SERIAL				TRUE
 
-#undef EFI_FUEL_PUMP
-#define EFI_FUEL_PUMP				TRUE
-
 #define EFI_SDC_DEVICE				SDCD2
 
 #define ADC_CHANNEL_VREF			ADC_CHANNEL_IN14
