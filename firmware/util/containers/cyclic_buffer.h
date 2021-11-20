@@ -13,12 +13,12 @@
 #ifndef CYCLIC_BUFFER_H
 #define CYCLIC_BUFFER_H
 
+#include <limits>
 #include <string.h>
+#include <stdint.h>
 #include "rusefi_true.h"
 
 static const short CB_MAX_SIZE = 128;
-
-#define BUFFER_MAX_VALUE 200123
 
 template<typename T, size_t maxSize = CB_MAX_SIZE>
 class cyclic_buffer
@@ -39,42 +39,37 @@ class cyclic_buffer
     int getCount() const;
     void clear();
     volatile T elements[maxSize];
-    volatile int currentIndex;
+    volatile uint16_t currentIndex;
 
   protected:
-    void baseC(int size);
+    uint16_t size;
     /**
      * number of elements added into this buffer, would be eventually bigger then size
      */
-    volatile int count;
-    int size;
+    volatile unsigned count;
 };
 
 template<typename T, size_t maxSize>
-cyclic_buffer<T, maxSize>::cyclic_buffer() {
-  baseC(maxSize);
+cyclic_buffer<T, maxSize>::cyclic_buffer() : cyclic_buffer(maxSize) {
 }
 
 template<typename T, size_t maxSize>
 cyclic_buffer<T, maxSize>::cyclic_buffer(int size) {
-  baseC(size);
-}
-
-template<typename T, size_t maxSize>
-void cyclic_buffer<T, maxSize>::baseC(int size) {
-	currentIndex = 0;
-	memset((void*)&elements, 0, sizeof(elements));
 	setSize(size);
 }
 
 template<typename T, size_t maxSize>
 void cyclic_buffer<T, maxSize>::add(T value) {
-	elements[currentIndex] = value;
+	// Too lazy to make this thread safe, but at the very least let's never let currentIndex
+	// become invalid.  And yes I did see a crash due to an overrun here.
+	uint16_t idx = currentIndex;
 
-	++currentIndex;
-	if (currentIndex == size) {
-		currentIndex = 0;
+	elements[idx] = value;
+
+	if (++idx == size) {
+		idx = 0;
 	}
+	currentIndex = idx;
 
 	++count;
 }
@@ -123,7 +118,7 @@ T cyclic_buffer<T, maxSize>::maxValue(int length) const {
 		length = count;
 	}
 	int ci = currentIndex; // local copy to increase thread-safety
-	T result = -BUFFER_MAX_VALUE; // todo: better min value?
+	T result = std::numeric_limits<T>::min();
 	for (int i = 0; i < length; ++i) {
 		int index = ci - i - 1;
 		while (index < 0) {
@@ -143,7 +138,7 @@ T cyclic_buffer<T, maxSize>::minValue(int length) const {
 		length = count;
 	}
 	int ci = currentIndex; // local copy to increase thread-safety
-	T result = +BUFFER_MAX_VALUE; // todo: better max value?
+	T result = std::numeric_limits<T>::max();
 	for (int i = 0; i < length; ++i) {
 		int index = ci - i - 1;
 		while (index < 0) {
