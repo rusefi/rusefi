@@ -9,6 +9,7 @@
 
 #include "pch.h"
 
+#include "os_access.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "advance_map.h"
@@ -40,6 +41,9 @@ void WarningCodeState::addWarningCode(obd_code_e code) {
 	warningCounter++;
 	lastErrorCode = code;
 	if (!recentWarnings.contains(code)) {
+		chibios_rt::CriticalSectionLocker csl;
+
+		// We don't bother double checking
 		recentWarnings.add((int)code);
 	}
 }
