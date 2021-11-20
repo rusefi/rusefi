@@ -481,7 +481,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->vvtOutputFrequency[0] = 300; // VVT solenoid control
 
 	engineConfiguration->auxPid[1].minValue = 10;
-	engineConfiguration->auxPid[2].maxValue = 90;
+	engineConfiguration->auxPid[1].maxValue = 90;
 
 	engineConfiguration->turboSpeedSensorMultiplier = 1;
 
