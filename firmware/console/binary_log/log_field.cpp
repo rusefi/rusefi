@@ -34,7 +34,7 @@ void LogField::writeHeader(Writer& outBuffer) const {
 	buffer[45] = 0;
 
 	// Offset 46, length 4 = Scale
-	copyFloat(buffer + 46, 1.0f / m_multiplier);
+	copyFloat(buffer + 46, m_multiplier);
 
 	// Offset 50, length 4 = shift before scaling (always 0)
 	copyFloat(buffer + 50, 0);

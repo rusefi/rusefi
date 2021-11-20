@@ -63,7 +63,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=gnu++17 -fno-rtti -fpermissive -fno-use-cxa-atexit
+  USE_CPPOPT = -std=gnu++2a -fno-rtti -fpermissive -fno-use-cxa-atexit
 endif
 
 # Enable this if you want the linker to remove unused code and data
