@@ -107,7 +107,7 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 	 */
 	bool noTriggerEventsForTooLong = engine->triggerCentral.getTimeSinceTriggerEvent(nowNt) >= 1;
 
-	if (noSyncPointForTooLong || noTriggerEventsForTooLong) {
+	if (noRpmEventsForTooLong || noTriggerEventsForTooLong) {
 		return false;
 	}
 
