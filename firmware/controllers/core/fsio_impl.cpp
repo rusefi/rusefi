@@ -55,7 +55,6 @@ static LENameOrdinalPair leOilPressure(LE_METHOD_OIL_PRESSURE, "oilp");
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 // @returns float number of seconds since last A/C toggle
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
-static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, FSIO_METHOD_FSIO_SETTING);
 static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, FSIO_METHOD_FSIO_ANALOG_INPUT);
 static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_METHOD_FSIO_DIGITAL_INPUT);
@@ -104,14 +103,6 @@ FsioResult getEngineValue(le_action_e action) {
 	case LE_METHOD_EXHAUST_VVT:
 		return engine->triggerCentral.getVVTPosition(0, 1);
 #endif
-	case LE_METHOD_TIME_SINCE_BOOT:
-#if EFI_MAIN_RELAY_CONTROL
-		// in main relay control mode, we return the number of seconds since the ignition is turned on
-		// (or negative if the ignition key is switched off)
-		return engine->getTimeIgnitionSeconds();
-#else
-		return getTimeNowSeconds();
-#endif /* EFI_MAIN_RELAY_CONTROL */
 	case LE_METHOD_CRANKING_RPM:
 		return engineConfiguration->cranking.rpm;
 	case LE_METHOD_IN_SHUTDOWN:
@@ -294,10 +285,6 @@ void initFsioImpl() {
 	sysPool.reset();
 #endif
 
-#if EFI_MAIN_RELAY_CONTROL
-	if (isBrainPinValid(engineConfiguration->mainRelayPin))
-		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
-#endif /* EFI_MAIN_RELAY_CONTROL */
 	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
 		starterRelayDisableLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
 
