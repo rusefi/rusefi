@@ -212,7 +212,7 @@ bool EventQueue::executeOne(efitime_t now) {
 	current->action = {};
 
 #if EFI_UNIT_TEST
-	printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)action.getArgument());
+	printf("QUEUE: execute current=%d param=%d\r\n", (uintptr_t)current, (uintptr_t)action.getArgument());
 #endif
 
 	// Execute the current element
