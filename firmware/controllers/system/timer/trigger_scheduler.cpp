@@ -8,6 +8,12 @@ bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *e
 }
 
 /**
+ * Schedules 'action' to occur at engine cycle angle 'angle'.
+ *
+ * If you know when a recent trigger occured, you can pass it in as 'trgEventIndex' and
+ * 'edgeTimestamp'.  Otherwise pass in TRIGGER_EVENT_UNDEFINED and the work will be scheduled on
+ * the next trigger edge.
+ *
  * @return true if event corresponds to current tooth and was time-based scheduler
  *         false if event was put into queue for scheduling at a later tooth
  */
