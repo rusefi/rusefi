@@ -261,7 +261,8 @@ static const void * getStructAddr(live_data_e structId) {
 		return static_cast<idle_state_s*>(&engine->idle);
 	case LDS_TPS_ACCEL:
 		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
-
+	case LDS_MAIN_RELAY:
+		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
 	default:
 		return nullptr;
 	}
