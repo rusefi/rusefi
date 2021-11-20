@@ -329,7 +329,7 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 
 	InjectionEvent *actualEvent = (InjectionEvent *)event->action.getArgument();
 
-	assertEqualsLM(msg, (long)expectedEvent->outputs[0], (long)actualEvent->outputs[0]);
+	assertEqualsLM(msg, (uintptr_t)expectedEvent->outputs[0], (uintptr_t)actualEvent->outputs[0]);
 // but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
 }
 
