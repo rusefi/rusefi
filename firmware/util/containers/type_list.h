@@ -115,7 +115,7 @@ public:
 	}
 };
 
-#if !EFI_UNIT_TEST
+#if EFI_PROD_CODE
 
 /*
  * Production specialization of type_list for a single Mockable<base_t>.
@@ -126,7 +126,9 @@ template<typename base_t>
 struct type_list<Mockable<base_t>> : public type_list<base_t> {
 };
 
-#else // if EFI_UNIT_TEST:
+#else // if not EFI_PROD_CODE:
+
+#include <memory>
 
 /*
  * Unit test specialization of type_list for a single Mockable<base_t>.
@@ -134,13 +136,13 @@ struct type_list<Mockable<base_t>> : public type_list<base_t> {
 template<typename base_t>
 struct type_list<Mockable<base_t>> {
 private:
-	base_t me;
-	typename base_t::interface_t * cur = &me;
+	std::unique_ptr<base_t> me = std::make_unique<base_t>();
+	typename base_t::interface_t * cur = me.get();
 
 public:
 	template<typename func_t>
 	void apply_all(func_t const & f) {
-		f(me);
+		f(*me);
 	}
 
 	template<typename has_t>
@@ -154,14 +156,14 @@ public:
 	}
 
 	auto & unmock() {
-		return me;
+		return *me;
 	}
 
 	void set(typename base_t::interface_t * ptr) {
 		if (ptr) {
 			cur = ptr;
 		} else {
-			cur = &me;
+			cur = me.get();
 		}
 	}
 
