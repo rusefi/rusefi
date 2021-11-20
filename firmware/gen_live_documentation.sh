@@ -8,6 +8,9 @@ bash gen_live_documentation_one_file.sh ac_control AcControl.java controllers/ac
 bash gen_live_documentation_one_file.sh fuel_pump FuelPump.java controllers/actuators
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 
+bash gen_live_documentation_one_file.sh main_relay MainRelay.java controllers/actuators
+[ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
+
 bash gen_live_documentation_one_file.sh pid_state PidState.java util/math
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 
