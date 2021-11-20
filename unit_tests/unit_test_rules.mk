@@ -20,6 +20,13 @@ else
 	SANITIZE = no
 endif
 
+IS_MAC = no
+ifneq ($(OS),Windows_NT)
+	UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Darwin)
+        IS_MAC = yes
+    endif
+endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -63,7 +70,11 @@ endif
 
 # Enable address sanitizer for C++ files, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
 ifeq ($(SANITIZE),yes)
-	USE_CPPOPT += -fsanitize=address -fsanitize=bounds-strict -fno-sanitize-recover=all
+	ifeq ($(IS_MAC),yes)
+		USE_CPPOPT += -fsanitize=address
+	else
+		USE_CPPOPT += -fsanitize=address -fsanitize=bounds-strict -fno-sanitize-recover=all
+	endif
 endif
 
 # Enable this if you want the linker to remove unused code and data
