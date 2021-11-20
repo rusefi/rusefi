@@ -420,6 +420,7 @@ bool TriggerState::validateEventCounters(const TriggerWaveform& triggerShape) co
 
 void TriggerState::onShaftSynchronization(
 		const TriggerStateCallback triggerCycleCallback,
+		bool wasSynchronized,
 		const efitick_t nowNt,
 		const TriggerWaveform& triggerShape) {
 
@@ -662,7 +663,7 @@ void TriggerState::decodeTriggerEvent(
 			nextTriggerEvent()
 			;
 
-			onShaftSynchronization(triggerCycleCallback, nowNt, triggerShape);
+			onShaftSynchronization(triggerCycleCallback, wasSynchronized, nowNt, triggerShape);
 
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
@@ -721,8 +722,6 @@ uint32_t TriggerState::findTriggerZeroEventIndex(
 		return 0;
 	}
 
-
-	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
 	uint32_t syncIndex = helper.findTriggerSyncPoint(shape,
