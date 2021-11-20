@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 13:19:55 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 14:26:35 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -112,8 +112,11 @@ struct ts_outputs_s {
 	/**
 	 * offset 8
 	 */
-	scaled_percent speedToRpmRatio; // 8
-	scaled_channel<uint8_t> vehicleSpeedKph; // 10
+	scaled_channel<uint16_t, 100, 1> speedToRpmRatio = (uint16_t)0;
+	/**
+	 * offset 10
+	 */
+	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
 	/**
 	 * offset 11
 	 */
@@ -130,4 +133,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 13:19:55 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 14:26:35 EST 2021

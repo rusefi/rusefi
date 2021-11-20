@@ -38,7 +38,7 @@ uint16_t autoscale rpm;;"",1, 0, 0, 0, 0
 
 uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 
-	uint16_t speedToRpmRatio;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale speedToRpmRatio;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint8_t autoscale vehicleSpeedKph;;"",1, 0, 0, 0, 0
 	uint8_t autoscale internalMcuTemperature;;"",1, 0, 0, 0, 0
 
