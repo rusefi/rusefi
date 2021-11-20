@@ -282,21 +282,21 @@ void configureHondaK_4_1(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.11, 2.38);
 	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.28, 0.474);
 
-	int start = 111;
-	int end = 141;
-	s->addEventAngle(start + 180 * 0, T_PRIMARY, TV_RISE);
-	s->addEventAngle(end + 180 * 0, T_PRIMARY, TV_FALL);
+	angle_t start = 55.5;
+	angle_t end = 70.5;
+	s->addEvent360(start + 90 * 0, T_PRIMARY, TV_RISE);
+	s->addEvent360(end + 90 * 0, T_PRIMARY, TV_FALL);
 
-	s->addEventAngle(start + 180 * 1, T_PRIMARY, TV_RISE);
-	s->addEventAngle(end + 180 * 1, T_PRIMARY, TV_FALL);
+	s->addEvent360(start + 90 * 1, T_PRIMARY, TV_RISE);
+	s->addEvent360(end + 90 * 1, T_PRIMARY, TV_FALL);
 
-	s->addEventAngle(start + 180 * 2, T_PRIMARY, TV_RISE);
-	s->addEventAngle(end + 180 * 2, T_PRIMARY, TV_FALL);
+	s->addEvent360(start + 90 * 2, T_PRIMARY, TV_RISE);
+	s->addEvent360(end + 90 * 2, T_PRIMARY, TV_FALL);
 
-	s->addEventAngle(start + 180 * 3, T_PRIMARY, TV_RISE);
-	s->addEventAngle(end + 180 * 3, T_PRIMARY, TV_FALL);
+	s->addEvent360(start + 90 * 3, T_PRIMARY, TV_RISE);
+	s->addEvent360(end + 90 * 3, T_PRIMARY, TV_FALL);
 
-	s->addEventAngle(706, T_PRIMARY, TV_RISE);
-	s->addEventAngle(720, T_PRIMARY, TV_FALL);
+	s->addEvent360(353, T_PRIMARY, TV_RISE);
+	s->addEvent360(360, T_PRIMARY, TV_FALL);
 
 }
