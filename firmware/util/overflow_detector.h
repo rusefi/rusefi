@@ -25,4 +25,4 @@ public:
 	}
 };
 
-#endif
+#endif // EFI_PROD_CODE
