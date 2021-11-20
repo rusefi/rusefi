@@ -310,7 +310,7 @@ public:
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
 	 */
-	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
+	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
 
 void findTriggerPosition(
