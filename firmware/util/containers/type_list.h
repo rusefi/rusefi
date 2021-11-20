@@ -131,11 +131,12 @@ struct type_list<Mockable<base_t>> : public type_list<base_t> {
 #include <memory>
 
 /*
- * Unit test specialization of type_list for a single Mockable<base_t>.
+ * Unit test/simulator specialization of type_list for a single Mockable<base_t>.
  */
 template<typename base_t>
 struct type_list<Mockable<base_t>> {
 private:
+	// Dynamically allocate so that ASAN can detect overflows for us
 	std::unique_ptr<base_t> me = std::make_unique<base_t>();
 	typename base_t::interface_t * cur = me.get();
 
