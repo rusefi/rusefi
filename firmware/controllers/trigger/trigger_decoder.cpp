@@ -431,7 +431,14 @@ void TriggerState::onShaftSynchronization(
 
 	startOfCycleNt = nowNt;
 	resetCurrentCycleState();
-	incrementTotalEventCounter();
+
+	if (wasSynchronized) {
+		incrementTotalEventCounter();
+	} else {
+		// We have just synchronized, this is the zeroth revolution
+		totalRevolutionCounter = 0;
+	}
+
 	totalEventCountBase += triggerShape.getSize();
 
 #if EFI_UNIT_TEST
@@ -730,7 +737,9 @@ uint32_t TriggerState::findTriggerZeroEventIndex(
 	if (syncIndex == EFI_ERROR_CODE) {
 		return syncIndex;
 	}
-	efiAssert(CUSTOM_ERR_ASSERT, getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
+
+	// Assert that we found the sync point on the very first revolution
+	efiAssert(CUSTOM_ERR_ASSERT, getTotalRevolutionCounter() == 0, "findZero_revCounter", EFI_ERROR_CODE);
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
