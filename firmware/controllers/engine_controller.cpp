@@ -578,9 +578,6 @@ void commonInitEngineController() {
 		 * This method adds trigger listener which actually schedules ignition
 		 */
 		initMainEventListener();
-#if EFI_HPFP
-		initHPFP();
-#endif // EFI_HPFP
 	}
 #endif /* EFI_ENGINE_CONTROL */
 

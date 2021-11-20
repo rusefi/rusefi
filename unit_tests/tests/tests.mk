@@ -80,6 +80,7 @@ TESTS_SRC_CPP = \
 	tests/test_stft.cpp \
 	tests/test_boost.cpp \
 	tests/test_gppwm.cpp \
+	tests/test_hpfp.cpp \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
 	tests/test_dynoview.cpp \
