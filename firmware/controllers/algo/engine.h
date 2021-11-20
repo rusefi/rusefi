@@ -29,6 +29,7 @@
 #include "injector_model.h"
 #include "launch_control.h"
 #include "trigger_scheduler.h"
+#include "fuel_pump.h"
 #include "type_list.h"
 
 #ifndef EFI_UNIT_TEST
@@ -114,9 +115,6 @@ public:
 	// used by HW CI
 	bool isPwmEnabled = true;
 
-	// todo: remove this once all usages are using 'm_lastEventTimer'
-	int triggerActivityMs = -99 * 1000;
-
 	const char *prevOutputName = nullptr;
 
 	PinRepository pinRepository;
@@ -135,6 +133,8 @@ public:
 #if EFI_HPFP && EFI_ENGINE_CONTROL
 		HpfpController,
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
+
+		FuelPumpController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

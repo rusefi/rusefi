@@ -15,9 +15,6 @@
 // different way to have the same result would be using "self"
 // (self and (coolant > fan_off_setting)) | (coolant > fan_on_setting) | is_clt_broken
 
-// Human-readable: ((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_duration)) | (time_since_trigger < 1)
-#define FUEL_PUMP_LOGIC "time_since_boot 0 >= time_since_boot startup_fuel_pump_duration < & time_since_trigger 1 < |"
-
 // Human-readable: coolant > 120
 #define TOO_HOT_LOGIC "coolant 120 >"
 

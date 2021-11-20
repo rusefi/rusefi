@@ -62,10 +62,8 @@ static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_M
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
-static LENameOrdinalPair leStartupFuelPumpDuration(LE_METHOD_STARTUP_FUEL_PUMP_DURATION, "startup_fuel_pump_duration");
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 static LENameOrdinalPair leInMrBench(LE_METHOD_IN_MR_BENCH, "in_mr_bench");
-static LENameOrdinalPair leTimeSinceTrigger(LE_METHOD_TIME_SINCE_TRIGGER_EVENT, "time_since_trigger");
 static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 
 #include "fsio_names.def"
@@ -76,7 +74,6 @@ static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 static LEElement sysElements[SYS_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
 CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
-static LEElement * fuelPumpLogic;
 static LEElement * starterRelayDisableLogic;
 
 #if EFI_MAIN_RELAY_CONTROL
@@ -112,8 +109,6 @@ FsioResult getEngineValue(le_action_e action) {
 	case LE_METHOD_EXHAUST_VVT:
 		return engine->triggerCentral.getVVTPosition(0, 1);
 #endif
-	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
-		return engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
 	case LE_METHOD_TIME_SINCE_BOOT:
 #if EFI_MAIN_RELAY_CONTROL
 		// in main relay control mode, we return the number of seconds since the ignition is turned on
@@ -122,9 +117,6 @@ FsioResult getEngineValue(le_action_e action) {
 #else
 		return getTimeNowSeconds();
 #endif /* EFI_MAIN_RELAY_CONTROL */
-	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
-		return engineConfiguration->startUpFuelPumpDuration;
-
 	case LE_METHOD_CRANKING_RPM:
 		return engineConfiguration->cranking.rpm;
 	case LE_METHOD_IN_SHUTDOWN:
@@ -166,8 +158,6 @@ static const char * action2String(le_action_e action) {
 			return "CLT";
 		case LE_METHOD_FAN:
 			return "fan";
-		case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
-			return leStartupFuelPumpDuration.name;
 		case LE_METHOD_IN_SHUTDOWN:
 			return leInShutdown.name;
 		case LE_METHOD_IN_MR_BENCH:
@@ -209,12 +199,6 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
  * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
  */
 void runFsio() {
-#if EFI_FUEL_PUMP
-	if (isBrainPinValid(engineConfiguration->fuelPumpPin)) {
-		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic);
-	}
-#endif /* EFI_FUEL_PUMP */
-
 #if EFI_MAIN_RELAY_CONTROL
 	if (isBrainPinValid(engineConfiguration->mainRelayPin))
 		// the MAIN_RELAY_LOGIC calls engine->isInShutdownMode()
@@ -254,8 +238,6 @@ static void showFsio(const char *msg, LEElement *element) {
 // todo: move somewhere else
 static void showFsioInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	showFsio("fuel", fuelPumpLogic);
-
 	for (int i = 0; i < SCRIPT_SETTING_COUNT; i++) {
 		float v = engineConfiguration->scriptSetting[i];
 		if (!cisnan(v)) {
@@ -333,10 +315,6 @@ void initFsioImpl() {
 	sysPool.reset();
 #endif
 
-#if EFI_FUEL_PUMP
-	fuelPumpLogic = sysPool.parseExpression(FUEL_PUMP_LOGIC);
-#endif /* EFI_FUEL_PUMP */
-
 #if EFI_MAIN_RELAY_CONTROL
 	if (isBrainPinValid(engineConfiguration->mainRelayPin))
 		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
@@ -373,13 +351,7 @@ void runHardcodedFsio() {
 	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin)) {
 		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
 	}
-	// see FUEL_PUMP_LOGIC
-	if (isBrainPinValid(engineConfiguration->fuelPumpPin)) {
-		int triggerActivityOrEcuStartSecond = maxI(0, engine->triggerActivityMs / 1000);
 
-		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < triggerActivityOrEcuStartSecond + engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
-	}
-	
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 }
 
