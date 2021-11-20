@@ -49,7 +49,7 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 
 	Sensor::setMockValue(SensorType::Tps1, 7);
 
-	eth.fireTriggerEvents2(/* count */ 5, 25 /* ms */);
+	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);
 	ASSERT_EQ( 1200,  GET_RPM()) << "RPM";
 	int expectedInvocationCounter = 1;
 	ASSERT_EQ(expectedInvocationCounter, engine->tpsAccelEnrichment.onUpdateInvocationCounter);
