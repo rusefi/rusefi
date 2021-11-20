@@ -275,12 +275,6 @@ public:
 private:
 	trigger_shape_helper h;
 
-
-	/**
-	 * Working buffer for 'wave' instance
-	 * Values are in the 0..1 range
-	 */
-	float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
 	/**
 	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
 	 */
@@ -295,6 +289,12 @@ private:
 	 * this is part of performance optimization
 	 */
 	operation_mode_e operationMode;
+
+	/**
+	 * Working buffer for 'wave' instance
+	 * Values are in the 0..1 range
+	 */
+	float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
 };
 
 #ifndef MAX

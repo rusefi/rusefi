@@ -14,6 +14,7 @@
 #include "timer.h"
 #include "pin_repository.h"
 #include "local_version_holder.h"
+#include "overflow_detector.h"
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp);
@@ -88,13 +89,13 @@ public:
 
 	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
 
-	TriggerStateWithRunningStatistics triggerState;
-	TriggerWaveform triggerShape;
+	overflow_detect<TriggerStateWithRunningStatistics> triggerState;
+	overflow_detect<TriggerWaveform> triggerShape;
 
-	TriggerState vvtState[BANKS_COUNT][CAMS_PER_BANK];
-	TriggerWaveform vvtShape[CAMS_PER_BANK];
+	overflow_detect<TriggerState> vvtState[BANKS_COUNT][CAMS_PER_BANK];
+	overflow_detect<TriggerWaveform> vvtShape[CAMS_PER_BANK];
 
-	TriggerFormDetails triggerFormDetails;
+	overflow_detect<TriggerFormDetails> triggerFormDetails;
 
 	// Keep track of the last time we got a valid trigger event
 	Timer m_lastEventTimer;
