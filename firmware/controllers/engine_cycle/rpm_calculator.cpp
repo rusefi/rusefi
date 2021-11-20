@@ -100,7 +100,7 @@ bool RpmCalculator::isRunning() const {
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 	// Anything below 60 rpm is not running
-	bool noSyncPointForTooLong = engine->triggerCentral.getTimeSinceSyncPoint(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
+	bool noRpmEventsForTooLong = lastTdcTimer.getElapsedSeconds(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
 
 	/**
 	 * Also check if there were no trigger events
