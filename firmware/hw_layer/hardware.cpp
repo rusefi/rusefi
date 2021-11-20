@@ -183,7 +183,7 @@ void onFastAdcComplete(adcsample_t*) {
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
 	if (engine->sensorChartMode == SC_AUX_FAST1) {
 		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
-		scAddData(engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0);, voltage);
+		scAddData(engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0), voltage);
 	}
 #endif /* EFI_SENSOR_CHART */
 
