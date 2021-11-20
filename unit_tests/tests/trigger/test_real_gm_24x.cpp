@@ -12,15 +12,12 @@ TEST(crankingGm24x, gmRealCrankingFromFile) {
 
 	eth.setTriggerType(TT_GM_LS_24);
 
-	// extern bool verboseMode;
-	// verboseMode = true;
-
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
 		engine->rpmCalculator.onSlowCallback();
 	}
 
-	//ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-	//ASSERT_EQ( 1687, GET_RPM())<< reader.lineIndex();
+	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
+	ASSERT_EQ( 139, GET_RPM())<< reader.lineIndex();
 }
