@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 14:26:35 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 14:37:54 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -129,8 +129,32 @@ struct ts_outputs_s {
 	 * offset 14
 	 */
 	scaled_channel<uint16_t, 100, 1> intakeAirTemperature = (uint16_t)0;
-	/** total size 16*/
+	/**
+	 * offset 16
+	 */
+	scaled_channel<uint16_t, 100, 1> auxTemp1 = (uint16_t)0;
+	/**
+	 * offset 18
+	 */
+	scaled_channel<uint16_t, 100, 1> auxTemp2 = (uint16_t)0;
+	/**
+	 * offset 20
+	 */
+	scaled_channel<uint16_t, 100, 1> throttlePosition = (uint16_t)0;
+	/**
+	 * offset 22
+	 */
+	scaled_channel<uint16_t, 100, 1> pedalPosition = (uint16_t)0;
+	/**
+	 * offset 24
+	 */
+	uint16_t tpsADC = (uint16_t)0;
+	/**
+	 * offset 26
+	 */
+	scaled_channel<uint16_t, 1000, 1> massAirFlowVoltage = (uint16_t)0;
+	/** total size 28*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 14:26:35 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 14:37:54 EST 2021

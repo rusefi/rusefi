@@ -44,16 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	scaled_temperature auxTemp1;             // offset 16
-	scaled_temperature auxTemp2;             // offset 18
-
-	// throttle, pedal
-	scaled_percent throttlePosition;    // 20
-	scaled_percent pedalPosition;       // 22
-	uint16_t tpsADC;                    // 24
-
-	// air flow/mass measurment
-	scaled_voltage massAirFlowVoltage; // 26
 	scaled_channel<uint16_t, PACK_MULT_MASS_FLOW> massAirFlow; // 28
 	scaled_pressure manifoldAirPressure; // 30
 	scaled_pressure baroPressure; // 32

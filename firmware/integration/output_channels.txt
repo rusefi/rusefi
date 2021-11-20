@@ -45,4 +45,13 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	uint16_t autoscale coolantTemperature;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 	uint16_t autoscale intakeAirTemperature;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 
+	uint16_t autoscale auxTemp1;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale auxTemp2;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale throttlePosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale pedalPosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t tpsADC;;"", 1, 0, 0, 0, 0
+	uint16_t autoscale massAirFlowVoltage;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
 end_struct
