@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 19 12:06:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 20 04:15:13 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -461,101 +461,101 @@ struct trigger_config_s {
 	trigger_type_e type;
 	/**
 	offset 4 bit 0 */
-	bool todoRemoveMeOneDay0 : 1;
+	bool todoRemoveMeOneDay0 : 1 {};
 	/**
 	offset 4 bit 1 */
-	bool todoRemoveMeOneDay1 : 1;
+	bool todoRemoveMeOneDay1 : 1 {};
 	/**
 	 * This option could be used if your second trigger channel is broken
 	offset 4 bit 2 */
-	bool useOnlyFirstChannel : 1;
+	bool useOnlyFirstChannel : 1 {};
 	/**
 	offset 4 bit 3 */
-	bool unusedBit_4_3 : 1;
+	bool unusedBit_4_3 : 1 {};
 	/**
 	offset 4 bit 4 */
-	bool unusedBit_4_4 : 1;
+	bool unusedBit_4_4 : 1 {};
 	/**
 	offset 4 bit 5 */
-	bool unusedBit_4_5 : 1;
+	bool unusedBit_4_5 : 1 {};
 	/**
 	offset 4 bit 6 */
-	bool unusedBit_4_6 : 1;
+	bool unusedBit_4_6 : 1 {};
 	/**
 	offset 4 bit 7 */
-	bool unusedBit_4_7 : 1;
+	bool unusedBit_4_7 : 1 {};
 	/**
 	offset 4 bit 8 */
-	bool unusedBit_4_8 : 1;
+	bool unusedBit_4_8 : 1 {};
 	/**
 	offset 4 bit 9 */
-	bool unusedBit_4_9 : 1;
+	bool unusedBit_4_9 : 1 {};
 	/**
 	offset 4 bit 10 */
-	bool unusedBit_4_10 : 1;
+	bool unusedBit_4_10 : 1 {};
 	/**
 	offset 4 bit 11 */
-	bool unusedBit_4_11 : 1;
+	bool unusedBit_4_11 : 1 {};
 	/**
 	offset 4 bit 12 */
-	bool unusedBit_4_12 : 1;
+	bool unusedBit_4_12 : 1 {};
 	/**
 	offset 4 bit 13 */
-	bool unusedBit_4_13 : 1;
+	bool unusedBit_4_13 : 1 {};
 	/**
 	offset 4 bit 14 */
-	bool unusedBit_4_14 : 1;
+	bool unusedBit_4_14 : 1 {};
 	/**
 	offset 4 bit 15 */
-	bool unusedBit_4_15 : 1;
+	bool unusedBit_4_15 : 1 {};
 	/**
 	offset 4 bit 16 */
-	bool unusedBit_4_16 : 1;
+	bool unusedBit_4_16 : 1 {};
 	/**
 	offset 4 bit 17 */
-	bool unusedBit_4_17 : 1;
+	bool unusedBit_4_17 : 1 {};
 	/**
 	offset 4 bit 18 */
-	bool unusedBit_4_18 : 1;
+	bool unusedBit_4_18 : 1 {};
 	/**
 	offset 4 bit 19 */
-	bool unusedBit_4_19 : 1;
+	bool unusedBit_4_19 : 1 {};
 	/**
 	offset 4 bit 20 */
-	bool unusedBit_4_20 : 1;
+	bool unusedBit_4_20 : 1 {};
 	/**
 	offset 4 bit 21 */
-	bool unusedBit_4_21 : 1;
+	bool unusedBit_4_21 : 1 {};
 	/**
 	offset 4 bit 22 */
-	bool unusedBit_4_22 : 1;
+	bool unusedBit_4_22 : 1 {};
 	/**
 	offset 4 bit 23 */
-	bool unusedBit_4_23 : 1;
+	bool unusedBit_4_23 : 1 {};
 	/**
 	offset 4 bit 24 */
-	bool unusedBit_4_24 : 1;
+	bool unusedBit_4_24 : 1 {};
 	/**
 	offset 4 bit 25 */
-	bool unusedBit_4_25 : 1;
+	bool unusedBit_4_25 : 1 {};
 	/**
 	offset 4 bit 26 */
-	bool unusedBit_4_26 : 1;
+	bool unusedBit_4_26 : 1 {};
 	/**
 	offset 4 bit 27 */
-	bool unusedBit_4_27 : 1;
+	bool unusedBit_4_27 : 1 {};
 	/**
 	offset 4 bit 28 */
-	bool unusedBit_4_28 : 1;
+	bool unusedBit_4_28 : 1 {};
 	/**
 	offset 4 bit 29 */
-	bool unusedBit_4_29 : 1;
+	bool unusedBit_4_29 : 1 {};
 	/**
 	offset 4 bit 30 */
-	bool unusedBit_4_30 : 1;
+	bool unusedBit_4_30 : 1 {};
 	/**
 	offset 4 bit 31 */
-	bool unusedBit_4_31 : 1;
+	bool unusedBit_4_31 : 1 {};
 	/**
 	number
 	 * offset 8
@@ -696,123 +696,123 @@ struct engine_configuration_s {
 	/**
 	 * Does the vehicle have a turbo or supercharger?
 	offset 76 bit 0 */
-	bool isForcedInduction : 1;
+	bool isForcedInduction : 1 {};
 	/**
 	 * On Ford vehicles one of the sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
 	offset 76 bit 1 */
-	bool useFordRedundantTps : 1;
+	bool useFordRedundantTps : 1 {};
 	/**
 	offset 76 bit 2 */
-	bool isVerboseAuxPid1 : 1;
+	bool isVerboseAuxPid1 : 1 {};
 	/**
 	offset 76 bit 3 */
-	bool overrideTriggerGaps : 1;
+	bool overrideTriggerGaps : 1 {};
 	/**
 	 * Turn on this fan when AC is on.
 	offset 76 bit 4 */
-	bool enableFan1WithAc : 1;
+	bool enableFan1WithAc : 1 {};
 	/**
 	 * Turn on this fan when AC is on.
 	offset 76 bit 5 */
-	bool enableFan2WithAc : 1;
+	bool enableFan2WithAc : 1 {};
 	/**
 	 * Inhibit operation of this fan while the engine is not running.
 	offset 76 bit 6 */
-	bool disableFan1WhenStopped : 1;
+	bool disableFan1WhenStopped : 1 {};
 	/**
 	 * Inhibit operation of this fan while the engine is not running.
 	offset 76 bit 7 */
-	bool disableFan2WhenStopped : 1;
+	bool disableFan2WhenStopped : 1 {};
 	/**
 	 * Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 	offset 76 bit 8 */
-	bool enableTrailingSparks : 1;
+	bool enableTrailingSparks : 1 {};
 	/**
 	 * enable cj125verbose/disable cj125verbose
 	offset 76 bit 9 */
-	bool isCJ125Verbose : 1;
+	bool isCJ125Verbose : 1 {};
 	/**
 	 * Is your UA CJ125 output wired to MCU via resistor divider? Ua can go over 3.3v but only at lambda >3, i.e very lean AFR above 44.1
 	 * When exposed to free air and 17x gain, Ua will be 4.17 volt
 	offset 76 bit 10 */
-	bool cj125isUaDivided : 1;
+	bool cj125isUaDivided : 1 {};
 	/**
 	offset 76 bit 11 */
-	bool cj125isLsu49 : 1;
+	bool cj125isLsu49 : 1 {};
 	/**
 	 * TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 	offset 76 bit 12 */
-	bool etb_use_two_wires : 1;
+	bool etb_use_two_wires : 1 {};
 	/**
 	 * Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 	offset 76 bit 13 */
-	bool isDoubleSolenoidIdle : 1;
+	bool isDoubleSolenoidIdle : 1 {};
 	/**
 	offset 76 bit 14 */
-	bool showSdCardWarning : 1;
+	bool showSdCardWarning : 1 {};
 	/**
 	 * Is your UR CJ125 output wired to MCU via resistor divider?
 	 * Looks like 3v range should be enough, divider generally not needed.
 	offset 76 bit 15 */
-	bool cj125isUrDivided : 1;
+	bool cj125isUrDivided : 1 {};
 	/**
 	 * Switch between Industrial and Cic PID implementation
 	offset 76 bit 16 */
-	bool useCicPidForIdle : 1;
+	bool useCicPidForIdle : 1 {};
 	/**
 	offset 76 bit 17 */
-	bool useTLE8888_cranking_hack : 1;
+	bool useTLE8888_cranking_hack : 1 {};
 	/**
 	offset 76 bit 18 */
-	bool useInstantRpmForIdle : 1;
+	bool useInstantRpmForIdle : 1 {};
 	/**
 	 * This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
 	offset 76 bit 19 */
-	bool useSeparateIdleTablesForCrankingTaper : 1;
+	bool useSeparateIdleTablesForCrankingTaper : 1 {};
 	/**
 	offset 76 bit 20 */
-	bool launchControlEnabled : 1;
+	bool launchControlEnabled : 1 {};
 	/**
 	offset 76 bit 21 */
-	bool rollingLaunchEnabled : 1;
+	bool rollingLaunchEnabled : 1 {};
 	/**
 	offset 76 bit 22 */
-	bool antiLagEnabled : 1;
+	bool antiLagEnabled : 1 {};
 	/**
 	 * For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 	offset 76 bit 23 */
-	bool useRunningMathForCranking : 1;
+	bool useRunningMathForCranking : 1 {};
 	/**
 	 * Shall we display real life signal or just the part consumed by trigger decoder.
 	 * Applies to both trigger and cam/vvt input.
 	 * 
 	 * enable logic_level_trigger
 	offset 76 bit 24 */
-	bool displayLogicLevelsInEngineSniffer : 1;
+	bool displayLogicLevelsInEngineSniffer : 1 {};
 	/**
 	offset 76 bit 25 */
-	bool useTLE8888_stepper : 1;
+	bool useTLE8888_stepper : 1 {};
 	/**
 	 * If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 	offset 76 bit 26 */
-	bool enableMapEstimationTableFallback : 1;
+	bool enableMapEstimationTableFallback : 1 {};
 	/**
 	offset 76 bit 27 */
-	bool usescriptTableForCanSniffingFiltering : 1;
+	bool usescriptTableForCanSniffingFiltering : 1 {};
 	/**
 	offset 76 bit 28 */
-	bool issue_294_29 : 1;
+	bool issue_294_29 : 1 {};
 	/**
 	 * Experimental setting that will cause a misfire
 	 * DO NOT ENABLE.
 	offset 76 bit 29 */
-	bool artificialTestMisfire : 1;
+	bool artificialTestMisfire : 1 {};
 	/**
 	offset 76 bit 30 */
-	bool issue_294_31 : 1;
+	bool issue_294_31 : 1 {};
 	/**
 	offset 76 bit 31 */
-	bool unusedBit_34_31 : 1;
+	bool unusedBit_34_31 : 1 {};
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
@@ -1542,117 +1542,117 @@ struct engine_configuration_s {
 	pin_output_mode_e o2heaterPinModeTodO;
 	/**
 	offset 744 bit 0 */
-	bool is_enabled_spi_1 : 1;
+	bool is_enabled_spi_1 : 1 {};
 	/**
 	offset 744 bit 1 */
-	bool is_enabled_spi_2 : 1;
+	bool is_enabled_spi_2 : 1 {};
 	/**
 	offset 744 bit 2 */
-	bool is_enabled_spi_3 : 1;
+	bool is_enabled_spi_3 : 1 {};
 	/**
 	 * enable sd/disable sd
 	offset 744 bit 3 */
-	bool isSdCardEnabled : 1;
+	bool isSdCardEnabled : 1 {};
 	/**
 	offset 744 bit 4 */
-	bool unused744b4 : 1;
+	bool unused744b4 : 1 {};
 	/**
 	offset 744 bit 5 */
-	bool isEngineControlEnabled : 1;
+	bool isEngineControlEnabled : 1 {};
 	/**
 	offset 744 bit 6 */
-	bool isHip9011Enabled : 1;
+	bool isHip9011Enabled : 1 {};
 	/**
 	offset 744 bit 7 */
-	bool isVerboseAlternator : 1;
+	bool isVerboseAlternator : 1 {};
 	/**
 	offset 744 bit 8 */
-	bool useSerialPort : 1;
+	bool useSerialPort : 1 {};
 	/**
 	 * This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	offset 744 bit 9 */
-	bool useStepperIdle : 1;
+	bool useStepperIdle : 1 {};
 	/**
 	offset 744 bit 10 */
-	bool enabledStep1Limiter : 1;
+	bool enabledStep1Limiter : 1 {};
 	/**
 	offset 744 bit 11 */
-	bool useTpicAdvancedMode : 1;
+	bool useTpicAdvancedMode : 1 {};
 	/**
 	offset 744 bit 12 */
-	bool useLcdScreen : 1;
+	bool useLcdScreen : 1 {};
 	/**
 	offset 744 bit 13 */
-	bool verboseTLE8888 : 1;
+	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
 	 * enable can_broadcast/disable can_broadcast
 	offset 744 bit 14 */
-	bool enableVerboseCanTx : 1;
+	bool enableVerboseCanTx : 1 {};
 	/**
 	 * This will cause the alternator to be operated in a basic on or off mode, this is the simplest alternator control.
 	offset 744 bit 15 */
-	bool onOffAlternatorLogic : 1;
+	bool onOffAlternatorLogic : 1 {};
 	/**
 	 * enable cj125/disable cj125
 	offset 744 bit 16 */
-	bool isCJ125Enabled : 1;
+	bool isCJ125Enabled : 1 {};
 	/**
 	 * Use rise or fall signal front
 	 * get vvtCamSensorUseRise
 	offset 744 bit 17 */
-	bool vvtCamSensorUseRise : 1;
+	bool vvtCamSensorUseRise : 1 {};
 	/**
 	 * Useful for individual intakes
 	offset 744 bit 18 */
-	bool measureMapOnlyInOneCylinder : 1;
+	bool measureMapOnlyInOneCylinder : 1 {};
 	/**
 	offset 744 bit 19 */
-	bool stepperForceParkingEveryRestart : 1;
+	bool stepperForceParkingEveryRestart : 1 {};
 	/**
 	 * If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	offset 744 bit 20 */
-	bool isFasterEngineSpinUpEnabled : 1;
+	bool isFasterEngineSpinUpEnabled : 1 {};
 	/**
 	 * This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
 	offset 744 bit 21 */
-	bool coastingFuelCutEnabled : 1;
+	bool coastingFuelCutEnabled : 1 {};
 	/**
 	 * This setting allows the ECU to open the IAC during overrun conditions to help reduce engine breaking, this can be helpful for large engines in light weight cars. Used in Auto-PID Idle mode.
 	offset 744 bit 22 */
-	bool useIacTableForCoasting : 1;
+	bool useIacTableForCoasting : 1 {};
 	/**
 	offset 744 bit 23 */
-	bool useNoiselessTriggerDecoder : 1;
+	bool useNoiselessTriggerDecoder : 1 {};
 	/**
 	offset 744 bit 24 */
-	bool useIdleTimingPidControl : 1;
+	bool useIdleTimingPidControl : 1 {};
 	/**
 	 * Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	offset 744 bit 25 */
-	bool disableEtbWhenEngineStopped : 1;
+	bool disableEtbWhenEngineStopped : 1 {};
 	/**
 	offset 744 bit 26 */
-	bool is_enabled_spi_4 : 1;
+	bool is_enabled_spi_4 : 1 {};
 	/**
 	 * Disable the electronic throttle motor and DC idle motor for testing.
 	 * This mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	offset 744 bit 27 */
-	bool pauseEtbControl : 1;
+	bool pauseEtbControl : 1 {};
 	/**
 	offset 744 bit 28 */
-	bool alignEngineSnifferAtTDC : 1;
+	bool alignEngineSnifferAtTDC : 1 {};
 	/**
 	 * This setting allows the ETB to act as the idle air control valve and move to regulate the airflow at idle.
 	offset 744 bit 29 */
-	bool useETBforIdleControl : 1;
+	bool useETBforIdleControl : 1 {};
 	/**
 	offset 744 bit 30 */
-	bool idleIncrementalPidCic : 1;
+	bool idleIncrementalPidCic : 1 {};
 	/**
 	 * AEM X-Series or rusEFI Wideband
 	offset 744 bit 31 */
-	bool enableAemXSeries : 1;
+	bool enableAemXSeries : 1 {};
 	/**
 	 * offset 748
 	 */
@@ -1944,107 +1944,107 @@ struct engine_configuration_s {
 	uint8_t multisparkMaxExtraSparkCount;
 	/**
 	offset 976 bit 0 */
-	bool clutchUpPinInverted : 1;
+	bool clutchUpPinInverted : 1 {};
 	/**
 	offset 976 bit 1 */
-	bool clutchDownPinInverted : 1;
+	bool clutchDownPinInverted : 1 {};
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 976 bit 2 */
-	bool useHbridgesToDriveIdleStepper : 1;
+	bool useHbridgesToDriveIdleStepper : 1 {};
 	/**
 	offset 976 bit 3 */
-	bool multisparkEnable : 1;
+	bool multisparkEnable : 1 {};
 	/**
 	offset 976 bit 4 */
-	bool enableLaunchRetard : 1;
+	bool enableLaunchRetard : 1 {};
 	/**
 	offset 976 bit 5 */
-	bool unfinishedenableLaunchBoost : 1;
+	bool unfinishedenableLaunchBoost : 1 {};
 	/**
 	offset 976 bit 6 */
-	bool unfinishedlaunchDisableBySpeed : 1;
+	bool unfinishedlaunchDisableBySpeed : 1 {};
 	/**
 	 * Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 	offset 976 bit 7 */
-	bool enableCanVss : 1;
+	bool enableCanVss : 1 {};
 	/**
 	offset 976 bit 8 */
-	bool enableInnovateLC2 : 1;
+	bool enableInnovateLC2 : 1 {};
 	/**
 	offset 976 bit 9 */
-	bool showHumanReadableWarning : 1;
+	bool showHumanReadableWarning : 1 {};
 	/**
 	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
 	offset 976 bit 10 */
-	bool stftIgnoreErrorMagnitude : 1;
+	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
 	offset 976 bit 11 */
-	bool unused976b11 : 1;
+	bool unused976b11 : 1 {};
 	/**
 	offset 976 bit 12 */
-	bool enableSoftwareKnock : 1;
+	bool enableSoftwareKnock : 1 {};
 	/**
 	 * enable vvt_details
 	offset 976 bit 13 */
-	bool verboseVVTDecoding : 1;
+	bool verboseVVTDecoding : 1 {};
 	/**
 	 * get invertCamVVTSignal
 	offset 976 bit 14 */
-	bool invertCamVVTSignal : 1;
+	bool invertCamVVTSignal : 1 {};
 	/**
 	 * This property is useful if using rusEFI as TCM or BCM only
 	 * enable consumeObdSensors
 	offset 976 bit 15 */
-	bool consumeObdSensors : 1;
+	bool consumeObdSensors : 1 {};
 	/**
 	offset 976 bit 16 */
-	bool knockBankCyl1 : 1;
+	bool knockBankCyl1 : 1 {};
 	/**
 	offset 976 bit 17 */
-	bool knockBankCyl2 : 1;
+	bool knockBankCyl2 : 1 {};
 	/**
 	offset 976 bit 18 */
-	bool knockBankCyl3 : 1;
+	bool knockBankCyl3 : 1 {};
 	/**
 	offset 976 bit 19 */
-	bool knockBankCyl4 : 1;
+	bool knockBankCyl4 : 1 {};
 	/**
 	offset 976 bit 20 */
-	bool knockBankCyl5 : 1;
+	bool knockBankCyl5 : 1 {};
 	/**
 	offset 976 bit 21 */
-	bool knockBankCyl6 : 1;
+	bool knockBankCyl6 : 1 {};
 	/**
 	offset 976 bit 22 */
-	bool knockBankCyl7 : 1;
+	bool knockBankCyl7 : 1 {};
 	/**
 	offset 976 bit 23 */
-	bool knockBankCyl8 : 1;
+	bool knockBankCyl8 : 1 {};
 	/**
 	offset 976 bit 24 */
-	bool knockBankCyl9 : 1;
+	bool knockBankCyl9 : 1 {};
 	/**
 	offset 976 bit 25 */
-	bool knockBankCyl10 : 1;
+	bool knockBankCyl10 : 1 {};
 	/**
 	offset 976 bit 26 */
-	bool knockBankCyl11 : 1;
+	bool knockBankCyl11 : 1 {};
 	/**
 	offset 976 bit 27 */
-	bool knockBankCyl12 : 1;
+	bool knockBankCyl12 : 1 {};
 	/**
 	offset 976 bit 28 */
-	bool tcuEnabled : 1;
+	bool tcuEnabled : 1 {};
 	/**
 	offset 976 bit 29 */
-	bool unusedBit_251_29 : 1;
+	bool unusedBit_251_29 : 1 {};
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_298_30 : 1;
+	bool unusedBit_298_30 : 1 {};
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_298_31 : 1;
+	bool unusedBit_298_31 : 1 {};
 	/**
 	 * offset 980
 	 */
@@ -2247,115 +2247,115 @@ struct engine_configuration_s {
 	uint16_t tps2SecondaryMax;
 	/**
 	offset 1464 bit 0 */
-	bool unused1464b0 : 1;
+	bool unused1464b0 : 1 {};
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1464 bit 1 */
-	bool fuelClosedLoopCorrectionEnabled : 1;
+	bool fuelClosedLoopCorrectionEnabled : 1 {};
 	/**
 	 * Print details into rusEfi console
 	 * enable verbose_idle
 	offset 1464 bit 2 */
-	bool isVerboseIAC : 1;
+	bool isVerboseIAC : 1 {};
 	/**
 	 * Prints ETB details to rusEFI console
 	offset 1464 bit 3 */
-	bool isVerboseETB : 1;
+	bool isVerboseETB : 1 {};
 	/**
 	offset 1464 bit 4 */
-	bool unused1464b4 : 1;
+	bool unused1464b4 : 1 {};
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1464 bit 5 */
-	bool isEngineChartEnabled : 1;
+	bool isEngineChartEnabled : 1 {};
 	/**
 	 * Sometimes we have a performance issue while printing error
 	offset 1464 bit 6 */
-	bool silentTriggerError : 1;
+	bool silentTriggerError : 1 {};
 	/**
 	offset 1464 bit 7 */
-	bool useLinearCltSensor : 1;
+	bool useLinearCltSensor : 1 {};
 	/**
 	 * enable can_read/disable can_read
 	offset 1464 bit 8 */
-	bool canReadEnabled : 1;
+	bool canReadEnabled : 1 {};
 	/**
 	 * enable can_write/disable can_write
 	offset 1464 bit 9 */
-	bool canWriteEnabled : 1;
+	bool canWriteEnabled : 1 {};
 	/**
 	offset 1464 bit 10 */
-	bool useLinearIatSensor : 1;
+	bool useLinearIatSensor : 1 {};
 	/**
 	offset 1464 bit 11 */
-	bool unusedBitWasHere16 : 1;
+	bool unusedBitWasHere16 : 1 {};
 	/**
 	 * Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	offset 1464 bit 12 */
-	bool tachPulseDurationAsDutyCycle : 1;
+	bool tachPulseDurationAsDutyCycle : 1 {};
 	/**
 	 * This enables smart alternator control and activates the extra alternator settings.
 	offset 1464 bit 13 */
-	bool isAlternatorControlEnabled : 1;
+	bool isAlternatorControlEnabled : 1 {};
 	/**
 	 * This setting flips the signal from the primary engine speed sensor.
 	offset 1464 bit 14 */
-	bool invertPrimaryTriggerSignal : 1;
+	bool invertPrimaryTriggerSignal : 1 {};
 	/**
 	 * This setting flips the signal from the secondary engine speed sensor.
 	offset 1464 bit 15 */
-	bool invertSecondaryTriggerSignal : 1;
+	bool invertSecondaryTriggerSignal : 1 {};
 	/**
 	offset 1464 bit 16 */
-	bool cutFuelOnHardLimit : 1;
+	bool cutFuelOnHardLimit : 1 {};
 	/**
 	offset 1464 bit 17 */
-	bool cutSparkOnHardLimit : 1;
+	bool cutSparkOnHardLimit : 1 {};
 	/**
 	offset 1464 bit 18 */
-	bool launchFuelCutEnable : 1;
+	bool launchFuelCutEnable : 1 {};
 	/**
 	 * This is the Cut Mode normally used
 	offset 1464 bit 19 */
-	bool launchSparkCutEnable : 1;
+	bool launchSparkCutEnable : 1 {};
 	/**
 	offset 1464 bit 20 */
-	bool unused1464b20 : 1;
+	bool unused1464b20 : 1 {};
 	/**
 	offset 1464 bit 21 */
-	bool unusedBitWasHere1 : 1;
+	bool unusedBitWasHere1 : 1 {};
 	/**
 	offset 1464 bit 22 */
-	bool unusedBitWasHere2 : 1;
+	bool unusedBitWasHere2 : 1 {};
 	/**
 	offset 1464 bit 23 */
-	bool unusedBitWasHere3 : 1;
+	bool unusedBitWasHere3 : 1 {};
 	/**
 	offset 1464 bit 24 */
-	bool unusedBitWasHere4 : 1;
+	bool unusedBitWasHere4 : 1 {};
 	/**
 	offset 1464 bit 25 */
-	bool unusedBitWasHere5 : 1;
+	bool unusedBitWasHere5 : 1 {};
 	/**
 	offset 1464 bit 26 */
-	bool unusedBitHere1 : 1;
+	bool unusedBitHere1 : 1 {};
 	/**
 	 * Sometimes we just have to shut the engine down. Use carefully!
 	offset 1464 bit 27 */
-	bool useFSIO5ForCriticalIssueEngineStop : 1;
+	bool useFSIO5ForCriticalIssueEngineStop : 1 {};
 	/**
 	 * Sometimes we have to miss injection on purpose to attract driver's attention
 	offset 1464 bit 28 */
-	bool useFSIO4ForSeriousEngineWarning : 1;
+	bool useFSIO4ForSeriousEngineWarning : 1 {};
 	/**
 	offset 1464 bit 29 */
-	bool unusedBitHere2 : 1;
+	bool unusedBitHere2 : 1 {};
 	/**
 	offset 1464 bit 30 */
-	bool unusedBitHere3 : 1;
+	bool unusedBitHere3 : 1 {};
 	/**
 	offset 1464 bit 31 */
-	bool unusedBitHere4 : 1;
+	bool unusedBitHere4 : 1 {};
 	/**
 	 * offset 1468
 	 */
@@ -2383,121 +2383,121 @@ struct engine_configuration_s {
 	/**
 	 * Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	offset 1476 bit 0 */
-	bool isInjectionEnabled : 1;
+	bool isInjectionEnabled : 1 {};
 	/**
 	 * Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
 	offset 1476 bit 1 */
-	bool isIgnitionEnabled : 1;
+	bool isIgnitionEnabled : 1 {};
 	/**
 	 * When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
 	offset 1476 bit 2 */
-	bool isCylinderCleanupEnabled : 1;
+	bool isCylinderCleanupEnabled : 1 {};
 	/**
 	offset 1476 bit 3 */
-	bool unused1476b3 : 1;
+	bool unused1476b3 : 1 {};
 	/**
 	offset 1476 bit 4 */
-	bool unusedBit4_1476 : 1;
+	bool unusedBit4_1476 : 1 {};
 	/**
 	offset 1476 bit 5 */
-	bool isMapAveragingEnabled : 1;
+	bool isMapAveragingEnabled : 1 {};
 	/**
 	 * If enabled, use separate temperature multiplier table for cranking idle position.
 	 * If disabled, use normal running multiplier table applied to the cranking base position.
 	offset 1476 bit 6 */
-	bool overrideCrankingIacSetting : 1;
+	bool overrideCrankingIacSetting : 1 {};
 	/**
 	 * This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
 	offset 1476 bit 7 */
-	bool useSeparateAdvanceForIdle : 1;
+	bool useSeparateAdvanceForIdle : 1 {};
 	/**
 	offset 1476 bit 8 */
-	bool unused1476b8 : 1;
+	bool unused1476b8 : 1 {};
 	/**
 	offset 1476 bit 9 */
-	bool isWaveAnalyzerEnabled : 1;
+	bool isWaveAnalyzerEnabled : 1 {};
 	/**
 	 * This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
 	offset 1476 bit 10 */
-	bool useSeparateVeForIdle : 1;
+	bool useSeparateVeForIdle : 1 {};
 	/**
 	 * enable trigger_details
 	offset 1476 bit 11 */
-	bool verboseTriggerSynchDetails : 1;
+	bool verboseTriggerSynchDetails : 1 {};
 	/**
 	 * Usually if we have no trigger events that means engine is stopped
 	 * Unless we are troubleshooting and spinning the engine by hand - this case a longer
 	 * delay is needed
 	offset 1476 bit 12 */
-	bool isManualSpinningMode : 1;
+	bool isManualSpinningMode : 1 {};
 	/**
 	 * This is needed if your coils are individually wired and you wish to use batch injection.
 	 * enable two_wire_batch_injection
 	offset 1476 bit 13 */
-	bool twoWireBatchInjection : 1;
+	bool twoWireBatchInjection : 1 {};
 	/**
 	 * VR sensors are only precise on rising front
 	 * enable trigger_only_front
 	offset 1476 bit 14 */
-	bool useOnlyRisingEdgeForTrigger : 1;
+	bool useOnlyRisingEdgeForTrigger : 1 {};
 	/**
 	 * This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 	offset 1476 bit 15 */
-	bool twoWireBatchIgnition : 1;
+	bool twoWireBatchIgnition : 1 {};
 	/**
 	offset 1476 bit 16 */
-	bool useFixedBaroCorrFromMap : 1;
+	bool useFixedBaroCorrFromMap : 1 {};
 	/**
 	 * In Constant mode, timing is automatically tapered to running as RPM increases.
 	 * In Table mode, the "Cranking ignition advance" table is used directly.
 	offset 1476 bit 17 */
-	bool useSeparateAdvanceForCranking : 1;
+	bool useSeparateAdvanceForCranking : 1 {};
 	/**
 	 * This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
 	 * You probably don't need this.
 	offset 1476 bit 18 */
-	bool useAdvanceCorrectionsForCranking : 1;
+	bool useAdvanceCorrectionsForCranking : 1 {};
 	/**
 	offset 1476 bit 19 */
-	bool unused1476b19 : 1;
+	bool unused1476b19 : 1 {};
 	/**
 	offset 1476 bit 20 */
-	bool unused1476b20 : 1;
+	bool unused1476b20 : 1 {};
 	/**
 	 * This flag allows to use a special 'PID Multiplier' table (0.0-1.0) to compensate for nonlinear nature of IAC-RPM controller
 	offset 1476 bit 21 */
-	bool useIacPidMultTable : 1;
+	bool useIacPidMultTable : 1 {};
 	/**
 	offset 1476 bit 22 */
-	bool isBoostControlEnabled : 1;
+	bool isBoostControlEnabled : 1 {};
 	/**
 	 * Interpolates the Ignition Retard from 0 to 100% within the RPM Range
 	offset 1476 bit 23 */
-	bool launchSmoothRetard : 1;
+	bool launchSmoothRetard : 1 {};
 	/**
 	offset 1476 bit 24 */
-	bool unused_1484_bit_24 : 1;
+	bool unused_1484_bit_24 : 1 {};
 	/**
 	offset 1476 bit 25 */
-	bool unused_1484_bit_25 : 1;
+	bool unused_1484_bit_25 : 1 {};
 	/**
 	offset 1476 bit 26 */
-	bool unused_1484_bit_26 : 1;
+	bool unused_1484_bit_26 : 1 {};
 	/**
 	offset 1476 bit 27 */
-	bool unused_1484_bit_27 : 1;
+	bool unused_1484_bit_27 : 1 {};
 	/**
 	offset 1476 bit 28 */
-	bool unused_1484_bit_28 : 1;
+	bool unused_1484_bit_28 : 1 {};
 	/**
 	offset 1476 bit 29 */
-	bool unused_1484_bit_29 : 1;
+	bool unused_1484_bit_29 : 1 {};
 	/**
 	offset 1476 bit 30 */
-	bool unused_1484_bit_30 : 1;
+	bool unused_1484_bit_30 : 1 {};
 	/**
 	offset 1476 bit 31 */
-	bool unused_1484_bit_31 : 1;
+	bool unused_1484_bit_31 : 1 {};
 	/**
 	count
 	 * offset 1480
@@ -2978,103 +2978,103 @@ struct engine_configuration_s {
 	 * CAN broadcast using custom rusEFI protocol
 	 * enable can_broadcast/disable can_broadcast
 	offset 2116 bit 0 */
-	bool enableVerboseCan2Tx : 1;
+	bool enableVerboseCan2Tx : 1 {};
 	/**
 	 * enable can_read/disable can_read
 	offset 2116 bit 1 */
-	bool can2ReadEnabled : 1;
+	bool can2ReadEnabled : 1 {};
 	/**
 	 * enable can_write/disable can_write
 	offset 2116 bit 2 */
-	bool can2WriteEnabled : 1;
+	bool can2WriteEnabled : 1 {};
 	/**
 	 * Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	offset 2116 bit 3 */
-	bool stepperDcInvertedPins : 1;
+	bool stepperDcInvertedPins : 1 {};
 	/**
 	offset 2116 bit 4 */
-	bool unused1127 : 1;
+	bool unused1127 : 1 {};
 	/**
 	offset 2116 bit 5 */
-	bool unused1128 : 1;
+	bool unused1128 : 1 {};
 	/**
 	offset 2116 bit 6 */
-	bool unused1129 : 1;
+	bool unused1129 : 1 {};
 	/**
 	offset 2116 bit 7 */
-	bool unused1130 : 1;
+	bool unused1130 : 1 {};
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_507_8 : 1;
+	bool unusedBit_507_8 : 1 {};
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_507_9 : 1;
+	bool unusedBit_507_9 : 1 {};
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_507_10 : 1;
+	bool unusedBit_507_10 : 1 {};
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_507_11 : 1;
+	bool unusedBit_507_11 : 1 {};
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_507_12 : 1;
+	bool unusedBit_507_12 : 1 {};
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_507_13 : 1;
+	bool unusedBit_507_13 : 1 {};
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_507_14 : 1;
+	bool unusedBit_507_14 : 1 {};
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_507_15 : 1;
+	bool unusedBit_507_15 : 1 {};
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_507_16 : 1;
+	bool unusedBit_507_16 : 1 {};
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_507_17 : 1;
+	bool unusedBit_507_17 : 1 {};
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_507_18 : 1;
+	bool unusedBit_507_18 : 1 {};
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_507_19 : 1;
+	bool unusedBit_507_19 : 1 {};
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_507_20 : 1;
+	bool unusedBit_507_20 : 1 {};
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_507_21 : 1;
+	bool unusedBit_507_21 : 1 {};
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_507_22 : 1;
+	bool unusedBit_507_22 : 1 {};
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_507_23 : 1;
+	bool unusedBit_507_23 : 1 {};
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_507_24 : 1;
+	bool unusedBit_507_24 : 1 {};
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_507_25 : 1;
+	bool unusedBit_507_25 : 1 {};
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_507_26 : 1;
+	bool unusedBit_507_26 : 1 {};
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_507_27 : 1;
+	bool unusedBit_507_27 : 1 {};
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_507_28 : 1;
+	bool unusedBit_507_28 : 1 {};
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_507_29 : 1;
+	bool unusedBit_507_29 : 1 {};
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_507_30 : 1;
+	bool unusedBit_507_30 : 1 {};
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_507_31 : 1;
+	bool unusedBit_507_31 : 1 {};
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4545,4 +4545,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 19 12:06:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 20 04:15:13 UTC 2021
