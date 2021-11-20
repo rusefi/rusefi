@@ -112,11 +112,8 @@ struct ts_outputs_s {
 	/**
 	 * offset 8
 	 */
-	uint16_t speedToRpmRatio = (uint16_t)0;
-	/**
-	 * offset 10
-	 */
-	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
+	scaled_percent speedToRpmRatio; // 8
+	scaled_channel<uint8_t> vehicleSpeedKph; // 10
 	/**
 	 * offset 11
 	 */
