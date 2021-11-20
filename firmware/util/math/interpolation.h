@@ -94,9 +94,9 @@ BinResult getBin(float value, const TBin (&bins)[TSize]) {
 	return { idx, fraction };
 }
 
-template<class TBin, int TSize, int TMult>
-BinResult getBin(float value, const scaled_channel<TBin, TMult> (&bins)[TSize]) {
-    return getBin(value * TMult, *reinterpret_cast<const TBin (*)[TSize]>(&bins));
+template<class TBin, int TSize, int TMult, int TDiv>
+BinResult getBin(float value, const scaled_channel<TBin, TMult, TDiv> (&bins)[TSize]) {
+	return getBin(value * (float(TMult) / TDiv), *reinterpret_cast<const TBin (*)[TSize]>(&bins));
 }
 
 static float linterp(float low, float high, float frac)
