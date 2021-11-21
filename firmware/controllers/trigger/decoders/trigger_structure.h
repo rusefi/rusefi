@@ -308,4 +308,4 @@ void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, op
 
 #define TRIGGER_WAVEFORM(x) engine->triggerCentral.triggerShape.x
 
-#define getTriggerSize() TRIGGER_WAVEFORM(wave->phaseCount)
+#define getTriggerSize() TRIGGER_WAVEFORM(wave.phaseCount)

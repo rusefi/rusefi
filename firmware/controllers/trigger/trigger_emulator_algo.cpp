@@ -106,7 +106,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 
 
 		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
-		copyPwmParameters(state, &*s->wave);
+		copyPwmParameters(state, &s->wave);
 		state->safe.periodNt = -1; // this would cause loop re-initialization
 	}
 }
@@ -146,7 +146,7 @@ static void initTriggerPwm() {
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
-			&*s->wave,
+			&s->wave,
 			updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	hasInitTriggerEmulator = true;

@@ -8,8 +8,6 @@
 #pragma once
 
 #include "rusefi_enums.h"
-#include <new>
-#include <utility>
 #include <stdint.h>
 
 /**
@@ -28,100 +26,72 @@
 #endif /* PWM_PHASE_MAX_COUNT */
 #define PWM_PHASE_MAX_WAVE_PER_PWM 3
 
-/**
- * int8_t is probably less efficient then int32_t but we need
- * to reduce memory footprint
- *
- * todo: migrate to bit-array to save memory?
- * this would cost some CPU cycles. see std::vector<bool>
- */
 typedef trigger_value_e pin_state_t;
-
-template<typename base_t, unsigned n_elem, typename... tail_t>
-class StaticAllocWrapper {
-public:
-	template<typename... Args>
-	StaticAllocWrapper(Args&&... args)
-	{
-		// Placement new, don't worry - no dynamic memory allocated here
-		// Always pass # elements to child, hopefully it can do something with it
-		new (&m_base) base_t(n_elem, std::forward<Args>(args)...);
-	}
-
-	base_t * operator->() {
-		return reinterpret_cast<base_t *>(m_data);
-	}
-
-	base_t & operator*() {
-		return *reinterpret_cast<base_t *>(m_data);
-	}
-
-	base_t const * operator->() const {
-		return reinterpret_cast<base_t const *>(m_data);
-	}
-
-	base_t const & operator*() const {
-		return *reinterpret_cast<base_t const *>(m_data);
-	}
-
-private:
-	template<typename type_t, typename more_t, typename... rest_t>
-	static constexpr unsigned get_size(unsigned base_size) {
-		return get_size<more_t, rest_t...>(get_size<type_t>(base_size));
-	}
-
-	template<typename type_t>
-	static constexpr unsigned get_size(unsigned base_size) {
-		// realign
-		base_size = (base_size + alignof(type_t) - 1U) & ~(alignof(type_t) - 1U);
-		return base_size + n_elem * sizeof(type_t);
-	}
-
-	union {
-		uint8_t m_data[get_size<tail_t...>(sizeof(base_t))];
-		base_t m_base;
-	};
-};
 
 /**
  * This class represents multi-channel logical signals with shared time axis
  *
+ * This is a semi-abstract interface so that implementations can exist for either regularized
+ * patterns (60-2, etc) or completely arbitrary patterns stored in arrays.
  */
 class MultiChannelStateSequence {
-protected:
-	explicit MultiChannelStateSequence(unsigned maxWaveCount);
-
-	template<typename, unsigned, typename...>
-	friend class StaticAllocWrapper;
-
 public:
-	void reset();
-	float getSwitchTime(const int phaseIndex) const;
-	void setSwitchTime(const int phaseIndex, const float value);
-	void checkSwitchTimes(const float scale) const;
-	pin_state_t getChannelState(const int channelIndex, const int phaseIndex) const;
-	void setChannelState(const int channelIndex, const int phaseIndex, pin_state_t state);
-
-	int findAngleMatch(const float angle) const;
-	int findInsertionAngle(const float angle) const;
-
 	/**
-	 * Number of signal channels
+	 * values in the (0..1] range which refer to points within the period at at which pin state
+	 * should be changed So, in the simplest case we turn pin off at 0.3 and turn it on at 1 -
+	 * that would give us a 70% duty cycle PWM
 	 */
-	uint8_t * const wavePtr;
-	uint16_t phaseCount;
-	uint16_t waveCount;
-private:
-	/**
-	 * values in the (0..1] range which refer to points within the period at at which pin state should be changed
-	 * So, in the simplest case we turn pin off at 0.3 and turn it on at 1 - that would give us a 70% duty cycle PWM
-	 */
-	float switchTimes[0];
-	// uint8_t wave[] comes after
+	virtual float getSwitchTime(int phaseIndex) const = 0;
+	virtual pin_state_t getChannelState(int channelIndex, int phaseIndex) const = 0;
+
+	// Make sure the switch times are in order and end at the very end.
+	void checkSwitchTimes(float scale) const;
+
+	// Find the exact angle, or EFI_ERROR_CODE if it doesn't exist
+	int findAngleMatch(float angle) const;
+
+	// returns the index at which given value would need to be inserted into sorted array
+	int findInsertionAngle(float angle) const;
+
+	uint16_t phaseCount = 0; // Number of timestamps
+	uint16_t waveCount = 0; // Number of waveforms
 };
 
 template<unsigned max_phase>
-class MultiChannelStateSequenceWithData
-	: public StaticAllocWrapper<MultiChannelStateSequence, max_phase, float, uint8_t> {
+class MultiChannelStateSequenceWithData : public MultiChannelStateSequence {
+public:
+	float getSwitchTime(int phaseIndex) const override {
+		return switchTimes[phaseIndex];
+	}
+
+	pin_state_t getChannelState(int channelIndex, int phaseIndex) const override {
+		if (channelIndex >= waveCount) {
+			// todo: would be nice to get this asserting working
+			//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
+		}
+		return ((waveForm[phaseIndex] >> channelIndex) & 1) ? TV_RISE : TV_FALL;
+	}
+
+	void reset() {
+		waveCount = 0;
+	}
+
+	void setSwitchTime(const int phaseIndex, const float value) {
+		efiAssertVoid(CUSTOM_ERR_PWM_SWITCH_ASSERT, switchTimes != nullptr, "switchTimes");
+		switchTimes[phaseIndex] = value;
+	}
+
+	void setChannelState(const int channelIndex, const int phaseIndex, pin_state_t state) {
+		if (channelIndex >= waveCount) {
+			// todo: would be nice to get this asserting working
+			//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
+		}
+		uint8_t & ref = waveForm[phaseIndex];
+		ref = (ref & ~(1U << channelIndex)) | ((state == TV_RISE ? 1 : 0) << channelIndex);
+	}
+
+private:
+	float switchTimes[max_phase];
+	uint8_t waveForm[max_phase];
 };
 
