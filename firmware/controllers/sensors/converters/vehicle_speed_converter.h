@@ -4,9 +4,9 @@
 class VehicleSpeedConverter : public SensorConverter {
 public:
 	SensorResult convert(float frequency) const override {
-		auto vssRevPerKm = CONFIG(driveWheelRevPerKm) * CONFIG(vssGearRatio);
+		auto vssRevPerKm = engineConfiguration->driveWheelRevPerKm * engineConfiguration->vssGearRatio;
 
-		auto pulsePerKm = (vssRevPerKm * CONFIG(vssToothCount));
+		auto pulsePerKm = (vssRevPerKm * engineConfiguration->vssToothCount);
 
 		if (pulsePerKm == 0) {
 			// avoid div by 0
