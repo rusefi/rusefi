@@ -60,15 +60,6 @@ public:
 
 #define TRIGGER_CHANNEL_COUNT 3
 
-class trigger_shape_helper {
-public:
-	trigger_shape_helper();
-
-	SingleChannelStateSequence channels[TRIGGER_CHANNEL_COUNT];
-private:
-	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
-};
-
 class Engine;
 class TriggerState;
 class TriggerFormDetails;
@@ -199,8 +190,7 @@ public:
 	 * but name is supposed to hint at the fact that decoders should not be assigning to it
 	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
 	 */
-	MultiChannelStateSequence waveStorage; // DON'T USE - WILL BE REMOVED LATER
-	MultiChannelStateSequence * const wave;
+	MultiChannelStateSequenceWithData<PWM_PHASE_MAX_COUNT> wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// todo: maybe even automate this flag calculation?
@@ -276,14 +266,6 @@ public:
 	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
 
 private:
-	trigger_shape_helper h;
-
-	/**
-	 * Working buffer for 'wave' instance
-	 * Values are in the 0..1 range
-	 */
-	float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
-
 	/**
 	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
 	 */
@@ -326,4 +308,4 @@ void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, op
 
 #define TRIGGER_WAVEFORM(x) engine->triggerCentral.triggerShape.x
 
-#define getTriggerSize() TRIGGER_WAVEFORM(wave->phaseCount)
+#define getTriggerSize() TRIGGER_WAVEFORM(wave.phaseCount)
