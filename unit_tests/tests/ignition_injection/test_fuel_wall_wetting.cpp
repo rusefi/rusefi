@@ -34,7 +34,7 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 	eth.setTriggerType(TT_ONE);
 
 
-	eth.fireTriggerEvents2(/* count */ 5, 25 /* ms */);
+	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);
 	ASSERT_EQ( 1200,  GET_RPM()) << "RPM";
 
 	int expectedInvocationCounter = 1;
