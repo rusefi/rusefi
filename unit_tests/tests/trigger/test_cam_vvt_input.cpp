@@ -131,7 +131,7 @@ TEST(trigger, testNB2CamInput) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	ASSERT_EQ( 0,  GET_RPM());
-	for (int i = 0; i < 7;i++) {
+	for (int i = 0; i < 4;i++) {
 		eth.fireRise(25);
 		ASSERT_EQ( 0,  GET_RPM());
 	}
@@ -139,7 +139,7 @@ TEST(trigger, testNB2CamInput) {
 	// first time we have RPM
 	ASSERT_EQ(1200,  GET_RPM());
 
-	int totalRevolutionCountBeforeVvtSync = 10;
+	int totalRevolutionCountBeforeVvtSync = 6;
 	// need to be out of VVT sync to see VVT sync in action
 	eth.fireRise(25);
 	eth.fireRise(25);
@@ -182,5 +182,5 @@ TEST(trigger, testNB2CamInput) {
 	EXPECT_FLOAT_EQ(27'000'000, dutyCycleNt);
 	EXPECT_FLOAT_EQ(0.056944445f, engine->triggerCentral.vvtShape[0].expectedDutyCycle[0]);
 
-	EXPECT_EQ(28, waveChart.getSize());
+	EXPECT_EQ(22, waveChart.getSize());
 }

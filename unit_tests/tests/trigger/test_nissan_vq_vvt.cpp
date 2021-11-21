@@ -115,7 +115,7 @@ TEST(nissan, vq_vvt) {
 	}
 
 	eth.executeUntil(1473000);
-	ASSERT_EQ(0, GET_RPM());
+	ASSERT_EQ(167, GET_RPM());
 
 	eth.executeUntil(1475000);
 	ASSERT_EQ(167, GET_RPM());

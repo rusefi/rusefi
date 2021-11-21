@@ -70,7 +70,7 @@ TEST(engine, testSymmetricalCrank) {
 
 
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 3; i++) {
 		postFourEvents(&eth, mult);
 		ASSERT_EQ( 0,  GET_RPM()) << "RPM#0";
 	}

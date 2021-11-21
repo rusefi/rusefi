@@ -25,7 +25,7 @@ TEST(trigger, testQuadCam) {
 	engineConfiguration->vvtCamSensorUseRise = true;
 
 	ASSERT_EQ(0, GET_RPM());
-	for (int i = 0; i < 3;i++) {
+	for (int i = 0; i < 2;i++) {
 		eth.fireRise(25);
 		ASSERT_EQ( 0,  GET_RPM());
 	}

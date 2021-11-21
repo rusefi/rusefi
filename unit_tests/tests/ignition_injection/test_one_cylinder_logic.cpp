@@ -19,7 +19,7 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 
 	ASSERT_EQ( 0,  engine->executor.size()) << "start";
 
-	eth.fireTriggerEvents2(/* count */ 3, 50 /* ms */);
+	eth.fireTriggerEvents2(/* count */ 2, 50 /* ms */);
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM";
 	ASSERT_EQ( 0,  engine->executor.size()) << "first revolution(s)";
 
