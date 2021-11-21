@@ -45,7 +45,7 @@ void DynoView::update(vssSrc src) {
         //updating here would display acceleration = 0 at constant speed
         updateAcceleration(deltaTime, deltaSpeed);
 #if EFI_TUNER_STUDIO
-	    if (CONFIG(debugMode) == DBG_LOGIC_ANALYZER) {
+	    if (engineConfiguration->debugMode == DBG_LOGIC_ANALYZER) {
 		    tsOutputChannels.debugIntField1 = deltaTime;
 		    tsOutputChannels.debugFloatField1 = vss;
 		    tsOutputChannels.debugFloatField2 = speed;
@@ -92,7 +92,7 @@ void DynoView::updateHP() {
     //these are actually at the wheel
     //we would need final drive to calcualte the correct torque at the wheel
     if (acceleration != 0) {
-        engineForce = CONFIG(vehicleWeight) * acceleration;
+        engineForce = engineConfiguration->vehicleWeight * acceleration;
         enginePower = engineForce * (vss / 3.6);
         engineHP = enginePower / 746;
         if (isValidRpm(GET_RPM())) { 
@@ -131,11 +131,11 @@ int DynoView::getEngineTorque() {
 }
 
 
-float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getDynoviewAcceleration() {
     return dynoInstance.getAcceleration();
 }
 
-int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int getDynoviewPower() {
     return dynoInstance.getEnginePower();
 }
 
@@ -143,10 +143,9 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Periodic update function called from SlowCallback.
  * Only updates if we have Vss from input pin.
  */
-void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
-		(!CONFIG(enableCanVss))) {
-		INJECT_ENGINE_REFERENCE(&dynoInstance);
+void updateDynoView() {
+	if (isBrainPinValid(engineConfiguration->vehicleSpeedSensorInputPin) &&
+		(!engineConfiguration->enableCanVss)) {
 		dynoInstance.update(ICU);
 	}
 }
@@ -155,8 +154,8 @@ void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * This function is called after every CAN msg received, we process it
  * as soon as we can to be more acurate.
  */ 
-void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if (!CONFIG(enableCanVss)) {
+void updateDynoViewCan() {
+    if (!engineConfiguration->enableCanVss) {
         return;
     }
     

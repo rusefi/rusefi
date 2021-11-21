@@ -12,7 +12,7 @@
 TEST(misc, testAuxValves) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 
-	WITH_ENGINE_TEST_HELPER(NISSAN_PRIMERA);
+	EngineTestHelper eth(NISSAN_PRIMERA);
 
 	engine->needTdcCallback = false;
 

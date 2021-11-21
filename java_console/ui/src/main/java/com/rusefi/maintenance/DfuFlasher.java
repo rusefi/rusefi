@@ -10,9 +10,16 @@ import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.ui.StatusWindow;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
@@ -107,11 +114,24 @@ public class DfuFlasher {
             wnd.appendMsg("ERROR: Device not connected or STM32 Bootloader driver not installed?");
             wnd.appendMsg("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
             wnd.appendMsg("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
+            appendDeviceReport(wnd);
             wnd.setErrorState(true);
         } else {
             wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
             wnd.appendMsg("ERROR: does not look like DFU has worked!");
+            appendDeviceReport(wnd);
             wnd.setErrorState(true);
+        }
+    }
+
+    private static void appendDeviceReport(StatusWindow wnd) {
+        for (String line : getDevicesReport()) {
+            if (line.contains("STM Device in DFU Mode")) {
+                wnd.appendMsg(" ******************************************************************");
+                wnd.appendMsg(" ************* YOU NEED TO REMOVE LEGACY DFU DRIVER ***************");
+                wnd.appendMsg(" ******************************************************************");
+            }
+            wnd.appendMsg("Devices: " + line);
         }
     }
 
@@ -132,5 +152,30 @@ public class DfuFlasher {
         String absolutePath = new File(fileName).getAbsolutePath();
 
         return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + absolutePath + " -v -s";
+    }
+
+    @NotNull
+    static List<String> getDevicesReport() {
+        // todo: assert windows 10, explicit message if not
+        List<String> report = new ArrayList<>();
+
+        try {
+            Process powerShellProcess = Runtime.getRuntime().exec("powershell \"Get-PnpDevice -PresentOnly\"");
+            // Getting the results
+            powerShellProcess.getOutputStream().close();
+
+            String line;
+            BufferedReader stdout = new BufferedReader(new InputStreamReader(powerShellProcess.getInputStream()));
+            while ((line = stdout.readLine()) != null) {
+                String lowerCase = line.toLowerCase();
+                if (!lowerCase.contains("stm32") && !lowerCase.contains("dfu") && !lowerCase.contains("rusefi"))
+                    continue;
+                report.add(line);
+            }
+            stdout.close();
+            return report;
+        } catch (IOException e) {
+            return Collections.emptyList();
+        }
     }
 }

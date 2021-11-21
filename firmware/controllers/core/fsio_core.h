@@ -40,7 +40,7 @@ typedef enum {
 	LE_METHOD_VBATT = 109,
 	LE_METHOD_AC_TOGGLE = 110,
 	LE_METHOD_TIME_SINCE_AC_TOGGLE = 111,
-	LE_METHOD_FSIO_TABLE = 113,
+	LE_METHOD_SCRIPT_TABLE = 113,
 	LE_METHOD_SELF = 114,
 	LE_METHOD_MAP = 115,
 	LE_METHOD_FSIO_ANALOG_INPUT = 116,
@@ -48,12 +48,10 @@ typedef enum {
 	LE_METHOD_EXHAUST_VVT = 118,
 	LE_METHOD_IS_COOLANT_BROKEN = 119,
 	LE_METHOD_CRANKING_RPM = 120,
-	LE_METHOD_STARTUP_FUEL_PUMP_DURATION = 121,
 	LE_METHOD_IN_SHUTDOWN = 122,
 	LE_METHOD_FSIO_DIGITAL_INPUT = 123,
 	LE_METHOD_FSIO_SETTING = 124,
 	LE_METHOD_PPS = 125,
-	LE_METHOD_TIME_SINCE_TRIGGER_EVENT = 127,
 	LE_METHOD_IN_MR_BENCH = 128,
 	LE_METHOD_FUEL_FLOW_RATE = 131,
 	LE_METHOD_OIL_PRESSURE = 132,
@@ -128,7 +126,7 @@ typedef FLStack<float, MAX_STACK_DEPTH> calc_stack_t;
 class LECalculator {
 public:
 	LECalculator();
-	float evaluate(const char * msg, float selfValue, const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	float evaluate(const char * msg, float selfValue, const LEElement* element);
 	void reset();
 
 	// Log history of calculation actions for debugging
@@ -138,7 +136,7 @@ public:
 
 private:
 	void push(le_action_e action, float value);
-	FsioResult processElement(const LEElement* element DECLARE_ENGINE_PARAMETER_SUFFIX);
+	FsioResult processElement(const LEElement* element);
 	float pop(le_action_e action);
 
 	calc_stack_t stack;

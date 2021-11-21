@@ -15,8 +15,8 @@
 #include "test_engine.h"
 
 // TEST_ENGINE
-void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setTestEngineConfiguration() {
+	setDefaultFrankensoConfiguration();
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
@@ -32,13 +32,13 @@ void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
 
-	setWholeIatCorrTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeIatCorrTimingTable(0);
 
 	// Many tests were written when the default target AFR was 14.0, so use that for tests by default.
 	engineConfiguration->stoichRatioPrimary = 14.0f;
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
-	setConstantDwell(3 PASS_CONFIG_PARAMETER_SUFFIX); // 50% duty cycle @ 5000 rpm
+	setConstantDwell(3); // 50% duty cycle @ 5000 rpm
 
 	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
@@ -50,8 +50,8 @@ void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->ignitionPins[5] = GPIO_UNASSIGNED; // #6
 }
 
-void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setTestVVTEngineConfiguration() {
+	setDefaultFrankensoConfiguration();
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
@@ -59,7 +59,7 @@ void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 
 	// set algorithm 3
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIOA_5;
@@ -72,8 +72,8 @@ void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 #if EFI_UNIT_TEST
-void setTestEngineIssue366both(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setTestEngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setTestEngineIssue366both() {
+	setTestEngineConfiguration();
 
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;
@@ -84,8 +84,8 @@ void setTestEngineIssue366both(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void setTestEngineIssue366rise(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setTestEngineIssue366both(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setTestEngineIssue366rise() {
+	setTestEngineIssue366both();
 
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
@@ -93,7 +93,7 @@ void setTestEngineIssue366rise(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif /* EFI_UNIT_TEST */
 
 #ifdef HARDWARE_CI
-void setProteusAnalogPwmTest(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setProteusAnalogPwmTest() {
 	// lowest cpu trigger possible
 	engineConfiguration->trigger.type = TT_ONE;
 

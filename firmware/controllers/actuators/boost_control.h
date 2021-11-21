@@ -12,10 +12,8 @@
 
 struct IPwm;
 
-class BoostController : public ClosedLoopController<float, percent_t> {
+class BoostController : public ClosedLoopController<float, percent_t>  {
 public:
-	DECLARE_ENGINE_PTR;
-
 	void init(IPwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
 	void update();
 
@@ -44,8 +42,8 @@ private:
 };
 
 void startBoostPin();
-void initBoostCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void initBoostCtrl();
+void setDefaultBoostParameters();
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration);
 
 void updateBoostControl();

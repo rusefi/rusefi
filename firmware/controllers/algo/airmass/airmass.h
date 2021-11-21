@@ -13,8 +13,6 @@ struct AirmassModelBase {
 
 class AirmassVeModelBase : public AirmassModelBase {
 public:
-	DECLARE_ENGINE_PTR;
-
 	explicit AirmassVeModelBase(const ValueProvider3D& veTable);
 
 protected:

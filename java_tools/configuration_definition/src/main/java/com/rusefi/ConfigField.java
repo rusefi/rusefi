@@ -263,13 +263,20 @@ public class ConfigField {
         if (!hasAutoscale) {
             return null;
         }
+        if (tsInfo == null)
+            throw new IllegalArgumentException("tsInfo expected with autoscale");
         String[] tokens = tsInfo.split("\\,");
+        if (tokens.length < 2)
+            throw new IllegalArgumentException("Second comma-separated token expected in [" + tsInfo + "] for " + name);
+
         String scale = tokens[1].trim();
         double factor;
         if (scale.startsWith("{") && scale.endsWith("}")) {
             // Handle just basic division, not a full fledged eval loop
             scale = scale.substring(1, scale.length() - 1);
             String[] parts = scale.split("/");
+            if (parts.length != 2)
+                throw new IllegalArgumentException("Two parts of division expected in " + scale);
             factor = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
         } else {
             factor = Double.parseDouble(scale);
@@ -289,7 +296,7 @@ public class ConfigField {
             // Don't want to deal with exception propogation; this should adequately not compile
             return "$*@#$* Cannot accurately represent autoscale for " + tokens[1];
         }
-        
+
         return mul + ", " + div;
     }
 

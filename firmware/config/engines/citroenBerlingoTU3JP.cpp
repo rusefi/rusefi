@@ -14,8 +14,8 @@
 #include "citroenBerlingoTU3JP.h"
 #include "custom_engine.h"
 
-void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setCitroenBerlingoTU3JPConfiguration() {
+	setDefaultFrankensoConfiguration();
 
 	/**
 	 * Base engine setting
@@ -37,8 +37,8 @@ void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/**
 	 * Algorithm Alpha-N setting
 	 */
-	setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
-	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_ALPHA_N);
+	setTimingRpmBin(800, 7000);
 
 	/**
 	 * Outputs

@@ -29,10 +29,6 @@
 
 static bool needToWriteConfiguration = false;
 
-extern persistent_config_container_s persistentState;
-
-extern engine_configuration_s *engineConfiguration;
-
 /* if we store settings externally */
 #if EFI_STORAGE_EXT_SNOR == TRUE
 
@@ -211,8 +207,8 @@ static bool isValidCrc(persistent_config_container_s *state) {
 	return isValidCrc_b;
 }
 
-static void doResetConfiguration(void) {
-	resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+static void doResetConfiguration() {
+	resetConfigurationExt(engineConfiguration->engineType);
 }
 
 typedef enum {
@@ -293,7 +289,7 @@ void readFromFlash() {
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
-	resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 #else
 	result = readConfiguration();
 #endif
@@ -301,20 +297,20 @@ void readFromFlash() {
 	if (result == CRC_FAILED) {
 	    // we are here on first boot on brand new chip
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
-		resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 	} else if (result == INCOMPATIBLE_VERSION) {
-		resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(engineConfiguration->engineType);
 	} else {
 		/**
 		 * At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
 		 */
-		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		applyNonPersistentConfiguration();
 	}
 
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
 	memset(persistentState.persistentConfiguration.warning_message , 0, ERROR_BUFFER_SIZE);
-	validateConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	validateConfiguration();
 
 	if (result == CRC_FAILED) {
 		efiPrintf("Need to reset flash to default due to CRC");
@@ -325,7 +321,7 @@ void readFromFlash() {
 	}
 }
 
-static void rewriteConfig(void) {
+static void rewriteConfig() {
 	doResetConfiguration();
 	writeToFlashNow();
 }

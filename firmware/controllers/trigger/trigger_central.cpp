@@ -51,15 +51,6 @@ TriggerCentral::TriggerCentral() : trigger_central_s(),
 	noiseFilter.resetAccumSignalData();
 }
 
-void TriggerCentral::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&triggerState);
-	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
-		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
-			INJECT_ENGINE_REFERENCE(&vvtState[bankIndex][camIndex]);
-		}
-	}
-}
-
 void TriggerNoiseFilter::resetAccumSignalData() {
 	memset(lastSignalTimes, 0xff, sizeof(lastSignalTimes));	// = -1
 	memset(accumSignalPeriods, 0, sizeof(accumSignalPeriods));
@@ -117,8 +108,8 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			&& vvtMode != VVT_FIRST_HALF;
 }
 
-static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	angle_t engineCycle = getEngineCycle(engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE));
+static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
+	angle_t engineCycle = getEngineCycle(engine->getOperationMode());
 
 	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
 	if (offset > 0 && engineConfiguration->debugMode == DBG_VVT) {
@@ -133,34 +124,34 @@ static void turnOffAllDebugFields(void *arg) {
 	(void)arg;
 #if EFI_PROD_CODE
 	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
-		if (CONFIG(triggerInputDebugPins[index]) != GPIO_UNASSIGNED) {
-			writePad("trigger debug", CONFIG(triggerInputDebugPins[index]), 0);
+		if (engineConfiguration->triggerInputDebugPins[index] != GPIO_UNASSIGNED) {
+			writePad("trigger debug", engineConfiguration->triggerInputDebugPins[index], 0);
 		}
 	}
 	for (int index = 0;index<CAM_INPUTS_COUNT;index++) {
-		if (CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
-			writePad("cam debug", CONFIG(camInputsDebug[index]), 0);
+		if (engineConfiguration->camInputsDebug[index] != GPIO_UNASSIGNED) {
+			writePad("cam debug", engineConfiguration->camInputsDebug[index], 0);
 		}
 	}
 #endif /* EFI_PROD_CODE */
 }
 
-static angle_t adjustCrankPhase(int camIndex DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static angle_t adjustCrankPhase(int camIndex) {
 	TriggerCentral *tc = &engine->triggerCentral;
-	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+	operation_mode_e operationMode = engine->getOperationMode();
 
 	switch (engineConfiguration->vvtMode[camIndex]) {
 	case VVT_FIRST_HALF:
-		return syncAndReport(tc, getCrankDivider(operationMode), 1 PASS_ENGINE_PARAMETER_SUFFIX);
+		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
-		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		return syncAndReport(tc, getCrankDivider(operationMode), 0);
 	case VVT_MIATA_NB2:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
-		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		return syncAndReport(tc, getCrankDivider(operationMode), 0);
 	case VVT_NISSAN_VQ:
-		return syncAndReport(tc, getCrankDivider(operationMode), 0 PASS_ENGINE_PARAMETER_SUFFIX);
+		return syncAndReport(tc, getCrankDivider(operationMode), 0);
 	default:
 	case VVT_INACTIVE:
 		// do nothing
@@ -179,31 +170,31 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	return vvtPosition;
 }
 
-static void logFront(bool isImportantFront, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void logFront(bool isImportantFront, efitick_t nowNt, int index) {
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
 
-	if (isImportantFront && CONFIG(camInputsDebug[index]) != GPIO_UNASSIGNED) {
+	if (isImportantFront && engineConfiguration->camInputsDebug[index] != GPIO_UNASSIGNED) {
 #if EFI_PROD_CODE
-		writePad("cam debug", CONFIG(camInputsDebug[index]), 1);
+		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
 #endif /* EFI_PROD_CODE */
 		engine->executor.scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
-	if (CONFIG(displayLogicLevelsInEngineSniffer) && isImportantFront) {
-		if (CONFIG(vvtCamSensorUseRise)) {
+	if (engineConfiguration->displayLogicLevelsInEngineSniffer && isImportantFront) {
+		if (engineConfiguration->vvtCamSensorUseRise) {
 			// todo: unify TS composite logger code with console Engine Sniffer
 			// todo: better API to reduce copy/paste?
 #if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
 			addEngineSnifferEvent(vvtName, PROTOCOL_ES_UP);
 			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
 		} else {
 #if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
+			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
 
 			addEngineSnifferEvent(vvtName, PROTOCOL_ES_DOWN);
@@ -212,7 +203,7 @@ static void logFront(bool isImportantFront, efitick_t nowNt, int index DECLARE_E
 	}
 }
 
-void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
 	TriggerCentral *tc = &engine->triggerCentral;
@@ -223,7 +214,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	}
 	extern const char *vvtNames[];
 	const char *vvtName = vvtNames[index];
-	if (CONFIG(vvtMode[camIndex]) == VVT_INACTIVE) {
+	if (engineConfiguration->vvtMode[camIndex] == VVT_INACTIVE) {
 		warning(CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
 	}
 
@@ -242,7 +233,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	if (!CONFIG(displayLogicLevelsInEngineSniffer)) {
+	if (!engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		addEngineSnifferEvent(vvtName, front == TV_RISE ? PROTOCOL_ES_UP : PROTOCOL_ES_DOWN);
 
 #if EFI_TOOTH_LOGGER
@@ -255,19 +246,19 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 			tooth = front == TV_RISE ? SHAFT_3RD_RISING : SHAFT_3RD_FALLING;
 		}
 
-		LogTriggerTooth(tooth, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		LogTriggerTooth(tooth, nowNt);
 #endif /* EFI_TOOTH_LOGGER */
 	}
 
 
-	bool isImportantFront = (CONFIG(vvtCamSensorUseRise) ^ (front == TV_FALL));
+	bool isImportantFront = (engineConfiguration->vvtCamSensorUseRise ^ (front == TV_FALL));
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
 	if (!isVvtWithRealDecoder && !isImportantFront) {
 		// todo: there should be a way to always use real trigger code for this logic?
 		return;
 	}
 
-	logFront(isImportantFront, nowNt, index PASS_ENGINE_PARAMETER_SUFFIX);
+	logFront(isImportantFront, nowNt, index);
 
 
 	auto currentPhase = tc->getCurrentEnginePhase(nowNt);
@@ -309,8 +300,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
-		if ((currentPosition < engineConfiguration->fsio_setting[4]       || currentPosition > engineConfiguration->fsio_setting[5]) &&
-		    (currentPosition < engineConfiguration->fsio_setting[4] + 360 || currentPosition > engineConfiguration->fsio_setting[5] + 360)) {
+		if ((currentPosition < engineConfiguration->scriptSetting[4]       || currentPosition > engineConfiguration->scriptSetting[5]) &&
+		    (currentPosition < engineConfiguration->scriptSetting[4] + 360 || currentPosition > engineConfiguration->scriptSetting[5] + 360)) {
 			// outside of the expected range
 			return;
 		}
@@ -346,7 +337,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index DECL
 		return;
 	}
 
-	angle_t crankOffset = adjustCrankPhase(camIndex PASS_ENGINE_PARAMETER_SUFFIX);
+	angle_t crankOffset = adjustCrankPhase(camIndex);
 	// vvtPosition was calculated against wrong crank zero position. Now that we have adjusted crank position we
 	// shall adjust vvt position as well
 	vvtPosition -= crankOffset;
@@ -385,7 +376,7 @@ uint32_t triggerMaxDuration = 0;
  *  - Hardware triggers
  *  - Trigger replay from CSV (unit tests)
  */
-void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	ScopePerf perf(PE::HandleShaftSignal);
 #if VR_HW_CHECK_MODE
 	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
@@ -406,11 +397,11 @@ void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DEC
 	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
 #endif // VR_HW_CHECK_MODE
 
-	handleShaftSignal(signalIndex, isRising, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	handleShaftSignal(signalIndex, isRising, timestamp);
 }
 
 // Handle all shaft signals - hardware or emulated both
-void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	bool isPrimary = signalIndex == 0;
 	if (!isPrimary && !TRIGGER_WAVEFORM(needSecondTriggerInput)) {
 		return;
@@ -438,19 +429,19 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLA
 	// We want to do this before anything else as we
 	// actually want to capture any noise/jitter that may be occurring
 
-	bool logLogicState = CONFIG(displayLogicLevelsInEngineSniffer) && CONFIG(useOnlyRisingEdgeForTrigger);
+	bool logLogicState = engineConfiguration->displayLogicLevelsInEngineSniffer && engineConfiguration->useOnlyRisingEdgeForTrigger;
 
 	if (!logLogicState) {
 		// we log physical state even if displayLogicLevelsInEngineSniffer if both fronts are used by decoder
-		LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		LogTriggerTooth(signal, timestamp);
 	}
 
 #endif /* EFI_TOOTH_LOGGER */
 
 	// for effective noise filtering, we need both signal edges, 
 	// so we pass them to handleShaftSignal() and defer this test
-	if (!CONFIG(useNoiselessTriggerDecoder)) {
-		if (!isUsefulSignal(signal, ENGINE(primaryTriggerConfiguration))) {
+	if (!engineConfiguration->useNoiselessTriggerDecoder) {
+		if (!isUsefulSignal(signal, engine->primaryTriggerConfiguration)) {
 			/**
 			 * no need to process VR falls further
 			 */
@@ -458,20 +449,20 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLA
 		}
 	}
 
-	if (CONFIG(triggerInputDebugPins[signalIndex]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->triggerInputDebugPins[signalIndex] != GPIO_UNASSIGNED) {
 #if EFI_PROD_CODE
-		writePad("trigger debug", CONFIG(triggerInputDebugPins[signalIndex]), 1);
+		writePad("trigger debug", engineConfiguration->triggerInputDebugPins[signalIndex], 1);
 #endif /* EFI_PROD_CODE */
 		engine->executor.scheduleByTimestampNt("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 #if EFI_TOOTH_LOGGER
 	if (logLogicState) {
-		LogTriggerTooth(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		LogTriggerTooth(signal, timestamp);
 		if (signal == SHAFT_PRIMARY_RISING) {
-			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp);
 		} else {
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+			LogTriggerTooth(SHAFT_SECONDARY_FALLING, timestamp);
 		}
 	}
 #endif /* EFI_TOOTH_LOGGER */
@@ -481,7 +472,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp DECLA
 		maxTriggerReentraint = triggerReentraint;
 	triggerReentraint++;
 
-	ENGINE(triggerCentral).handleShaftSignal(signal, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+	engine->triggerCentral.handleShaftSignal(signal, timestamp);
 
 	triggerReentraint--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
@@ -497,9 +488,9 @@ static char shaft_signal_msg_index[15];
 static const bool isUpEvent[6] = { false, true, false, true, false, true };
 static const char *eventId[6] = { PROTOCOL_CRANK1, PROTOCOL_CRANK1, PROTOCOL_CRANK2, PROTOCOL_CRANK2, PROTOCOL_CRANK3, PROTOCOL_CRANK3 };
 
-static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (!ENGINE(isEngineChartEnabled)) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
-		return; // engineSnifferRpmThreshold is accounted for inside ENGINE(isEngineChartEnabled)
+static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index) {
+	if (!engine->isEngineChartEnabled) { // this is here just as a shortcut so that we avoid engine sniffer as soon as possible
+		return; // engineSnifferRpmThreshold is accounted for inside engine->isEngineChartEnabled
 	}
 
 
@@ -524,7 +515,7 @@ static void reportEventToWaveChart(trigger_event_e ckpSignalType, int index DECL
  */
 bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 		TriggerState * triggerState,
-		trigger_event_e signal DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		trigger_event_e signal) {
 	// todo: find a better place for these defs
 	static const trigger_event_e opposite[6] = { SHAFT_PRIMARY_RISING, SHAFT_PRIMARY_FALLING, SHAFT_SECONDARY_RISING, SHAFT_SECONDARY_FALLING, 
 			SHAFT_3RD_RISING, SHAFT_3RD_FALLING };
@@ -582,7 +573,7 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 /**
  * This method is NOT invoked for VR falls.
  */
-void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timestamp) {
 	if (triggerShape.shapeDefinitionError) {
 		// trigger is broken, we cannot do anything here
 		warning(CUSTOM_ERR_UNEXPECTED_SHAFT_EVENT, "Shaft event while trigger is mis-configured");
@@ -592,11 +583,11 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	}
 
 	// This code gathers some statistics on signals and compares accumulated periods to filter interference
-	if (CONFIG(useNoiselessTriggerDecoder)) {
-		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal PASS_ENGINE_PARAMETER_SUFFIX)) {
+	if (engineConfiguration->useNoiselessTriggerDecoder) {
+		if (!noiseFilter.noiseFilter(timestamp, &triggerState, signal)) {
 			return;
 		}
-		if (!isUsefulSignal(signal, ENGINE(primaryTriggerConfiguration))) {
+		if (!isUsefulSignal(signal, engine->primaryTriggerConfiguration)) {
 			return;
 		}
 	}
@@ -623,50 +614,50 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
 	 * cycle into a four stroke, 720 degrees cycle.
 	 */
-	operation_mode_e operationMode = engine->getOperationMode(PASS_ENGINE_PARAMETER_SIGNATURE);
+	operation_mode_e operationMode = engine->getOperationMode();
 	int crankDivider = getCrankDivider(operationMode);
 	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	if (triggerIndexForListeners == 0) {
 		m_virtualZeroTimer.reset(timestamp);
 	}
-	reportEventToWaveChart(signal, triggerIndexForListeners PASS_ENGINE_PARAMETER_SUFFIX);
+	reportEventToWaveChart(signal, triggerIndexForListeners);
 
 	if (!triggerState.getShaftSynchronized()) {
 		// we should not propagate event if we do not know where we are
 		return;
 	}
 
-	if (triggerState.isValidIndex(ENGINE(triggerCentral.triggerShape))) {
+	if (triggerState.isValidIndex(engine->triggerCentral.triggerShape)) {
 		ScopePerf perf(PE::ShaftPositionListeners);
 
 #if TRIGGER_EXTREME_LOGGING
 	efiPrintf("trigger %d %d %d", triggerIndexForListeners, getRevolutionCounter(), (int)getTimeNowUs());
 #endif /* TRIGGER_EXTREME_LOGGING */
 
-		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		rpmShaftPositionCallback(signal, triggerIndexForListeners, timestamp);
 
-		tdcMarkCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		tdcMarkCallback(triggerIndexForListeners, timestamp);
 
 #if !EFI_UNIT_TEST
 #if EFI_MAP_AVERAGING
-		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp);
 #endif /* EFI_MAP_AVERAGING */
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_LOGIC_ANALYZER
-		waTriggerEventListener(signal, triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		waTriggerEventListener(signal, triggerIndexForListeners, timestamp);
 #endif
 
-		mainTriggerCallback(triggerIndexForListeners, timestamp PASS_ENGINE_PARAMETER_SUFFIX);
+		mainTriggerCallback(triggerIndexForListeners, timestamp);
 
 #if EFI_TUNER_STUDIO
-		updateCurrentEnginePhase(PASS_ENGINE_PARAMETER_SIGNATURE);
+		updateCurrentEnginePhase();
 #endif
 	}
 }
 
-static void triggerShapeInfo(void) {
+static void triggerShapeInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
@@ -733,8 +724,10 @@ void triggerInfo(void) {
 
 	efiPrintf("synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
-			boolToString(isTriggerDecoderError()), engine->triggerCentral.triggerState.totalTriggerErrorCounter,
-			engine->triggerCentral.triggerState.orderingErrorCounter, engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
+			boolToString(engine->triggerCentral.isTriggerDecoderError()),
+			engine->triggerCentral.triggerState.totalTriggerErrorCounter,
+			engine->triggerCentral.triggerState.orderingErrorCounter,
+			engine->triggerCentral.triggerState.getTotalRevolutionCounter(),
 			boolToString(engine->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {
@@ -745,18 +738,18 @@ void triggerInfo(void) {
 
 #if EFI_PROD_CODE
 
-	efiPrintf("primary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[0]));
+	efiPrintf("primary trigger input: %s", hwPortname(engineConfiguration->triggerInputPins[0]));
 	efiPrintf("primary trigger simulator: %s %s freq=%d",
-			hwPortname(CONFIG(triggerSimulatorPins)[0]),
-			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[0]),
-			CONFIG(triggerSimulatorFrequency));
+			hwPortname(engineConfiguration->triggerSimulatorPins[0]),
+			getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[0]),
+			engineConfiguration->triggerSimulatorFrequency);
 
 	if (ts->needSecondTriggerInput) {
-		efiPrintf("secondary trigger input: %s", hwPortname(CONFIG(triggerInputPins)[1]));
+		efiPrintf("secondary trigger input: %s", hwPortname(engineConfiguration->triggerInputPins[1]));
 #if EFI_EMULATE_POSITION_SENSORS
 		efiPrintf("secondary trigger simulator: %s %s phase=%d",
-				hwPortname(CONFIG(triggerSimulatorPins)[1]),
-				getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[1]), triggerSignal.safe.phaseIndex);
+				hwPortname(engineConfiguration->triggerSimulatorPins[1]),
+				getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[1]), triggerSignal.safe.phaseIndex);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 	}
 
@@ -773,13 +766,13 @@ void triggerInfo(void) {
 	}
 
 
-//	efiPrintf("3rd trigger simulator: %s %s", hwPortname(CONFIG(triggerSimulatorPins)[2]),
-//			getPin_output_mode_e(CONFIG(triggerSimulatorPinModes)[2]));
+//	efiPrintf("3rd trigger simulator: %s %s", hwPortname(engineConfiguration->triggerSimulatorPins[2]),
+//			getPin_output_mode_e(engineConfiguration->triggerSimulatorPinModes[2]));
 
-	efiPrintf("trigger error extra LED: %s %s", hwPortname(CONFIG(triggerErrorPin)),
-			getPin_output_mode_e(CONFIG(triggerErrorPinMode)));
-	efiPrintf("primary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[0]));
-	efiPrintf("secondary logic input: %s", hwPortname(CONFIG(logicAnalyzerPins)[1]));
+	efiPrintf("trigger error extra LED: %s %s", hwPortname(engineConfiguration->triggerErrorPin),
+			getPin_output_mode_e(engineConfiguration->triggerErrorPinMode));
+	efiPrintf("primary logic input: %s", hwPortname(engineConfiguration->logicAnalyzerPins[0]));
+	efiPrintf("secondary logic input: %s", hwPortname(engineConfiguration->logicAnalyzerPins[1]));
 
 
 	efiPrintf("totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
@@ -794,26 +787,26 @@ static void resetRunningTriggerCounters() {
 #endif
 }
 
-void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void onConfigurationChangeTriggerCallback() {
 	bool changed = false;
 	// todo: how do we static_assert here?
-	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(CONFIG(camInputs)) == efi::size(CONFIG(vvtOffsets)), "sizes");
+	efiAssertVoid(OBD_PCM_Processor_Fault, efi::size(engineConfiguration->camInputs) == efi::size(engineConfiguration->vvtOffsets), "sizes");
 
-	for (size_t camIndex = 0; camIndex < efi::size(CONFIG(camInputs)); camIndex++) {
+	for (size_t camIndex = 0; camIndex < efi::size(engineConfiguration->camInputs); camIndex++) {
 		changed |= isConfigurationChanged(camInputs[camIndex]);
 		changed |= isConfigurationChanged(vvtOffsets[camIndex]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(triggerGapOverrideFrom)); i++) {
+	for (size_t i = 0; i < efi::size(engineConfiguration->triggerGapOverrideFrom); i++) {
 		changed |= isConfigurationChanged(triggerGapOverrideFrom[i]);
 		changed |= isConfigurationChanged(triggerGapOverrideTo[i]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(triggerInputPins)); i++) {
+	for (size_t i = 0; i < efi::size(engineConfiguration->triggerInputPins); i++) {
 		changed |= isConfigurationChanged(triggerInputPins[i]);
 	}
 
-	for (size_t i = 0; i < efi::size(CONFIG(vvtMode)); i++) {
+	for (size_t i = 0; i < efi::size(engineConfiguration->vvtMode); i++) {
 		changed |= isConfigurationChanged(vvtMode[i]);
 	}
 
@@ -830,41 +823,41 @@ void onConfigurationChangeTriggerCallback(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		assertEngineReference();
 
 	#if EFI_ENGINE_CONTROL
-		ENGINE(initializeTriggerWaveform(PASS_ENGINE_PARAMETER_SIGNATURE));
+		engine->initializeTriggerWaveform();
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}
 #if EFI_DEFAILED_LOGGING
-	efiPrintf("isTriggerConfigChanged=%d", engine->isTriggerConfigChanged);
+	efiPrintf("isTriggerConfigChanged=%d", triggerConfigChanged);
 #endif /* EFI_DEFAILED_LOGGING */
 
 	// we do not want to miss two updates in a row
-	engine->isTriggerConfigChanged = engine->isTriggerConfigChanged || changed;
+	engine->triggerCentral.triggerConfigChanged = engine->triggerCentral.triggerConfigChanged || changed;
 }
 
 /**
  * @returns true if configuration just changed, and if that change has affected trigger
  */
-bool checkIfTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool result = engine->triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && engine->isTriggerConfigChanged;
-	engine->isTriggerConfigChanged = false; // whoever has called the method is supposed to react to changes
+bool TriggerCentral::checkIfTriggerConfigChanged() {
+	bool result = triggerVersion.isOld(engine->getGlobalConfigurationVersion()) && triggerConfigChanged;
+	triggerConfigChanged = false; // whoever has called the method is supposed to react to changes
 	return result;
 }
 
-bool isTriggerConfigChanged(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	return engine->isTriggerConfigChanged;
+bool TriggerCentral::isTriggerConfigChanged() {
+	return triggerConfigChanged;
 }
 
-void validateTriggerInputs(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (CONFIG(triggerInputPins[0]) == GPIO_UNASSIGNED && CONFIG(triggerInputPins[1]) != GPIO_UNASSIGNED) {
+void validateTriggerInputs() {
+	if (engineConfiguration->triggerInputPins[0] == GPIO_UNASSIGNED && engineConfiguration->triggerInputPins[1] != GPIO_UNASSIGNED) {
 		firmwareError(OBD_PCM_Processor_Fault, "First trigger channel is missing");
 	}
 
-	if (CONFIG(camInputs[0]) == GPIO_UNASSIGNED && CONFIG(camInputs[1]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] == GPIO_UNASSIGNED && engineConfiguration->camInputs[1] != GPIO_UNASSIGNED) {
 		firmwareError(OBD_PCM_Processor_Fault, "If you only have cam on exhaust please pretend that it's on intake in configuration");
 	}
 
-	if (CONFIG(camInputs[0]) == GPIO_UNASSIGNED && CONFIG(camInputs[2]) != GPIO_UNASSIGNED) {
+	if (engineConfiguration->camInputs[0] == GPIO_UNASSIGNED && engineConfiguration->camInputs[2] != GPIO_UNASSIGNED) {
 		firmwareError(OBD_PCM_Processor_Fault, "First bank cam input is required if second bank specified");
 	}
 }
@@ -887,7 +880,7 @@ void initTriggerCentral() {
 /**
  * @return TRUE is something is wrong with trigger decoding
  */
-bool isTriggerDecoderError(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+bool TriggerCentral::isTriggerDecoderError() {
 	return engine->triggerErrorDetection.sum(6) > 4;
 }
 

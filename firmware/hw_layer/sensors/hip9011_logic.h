@@ -49,17 +49,17 @@ public:
 #if EFI_PROD_CODE || EFI_SIMULATOR
 #define PASS_HIP_PARAMS
 #define DEFINE_HIP_PARAMS
-#define GET_CONFIG_VALUE(x) CONFIG(x)
+#define GET_CONFIG_VALUE(x) engineConfiguration->x
 #define FORWARD_HIP_PARAMS
 #define DEFINE_PARAM_SUFFIX(x)
 #else
 
-#define PASS_HIP_PARAMS CONFIG(knockBandCustom), \
-		CONFIG(cylinderBore), \
-		CONFIG(hip9011Gain), \
-		CONFIG(hip9011PrescalerAndSDO), \
-		CONFIG(knockDetectionWindowStart), \
-		CONFIG(knockDetectionWindowEnd)
+#define PASS_HIP_PARAMS engineConfiguration->knockBandCustom, \
+		engineConfiguration->cylinderBore, \
+		engineConfiguration->hip9011Gain, \
+		engineConfiguration->hip9011PrescalerAndSDO, \
+		engineConfiguration->knockDetectionWindowStart, \
+		engineConfiguration->knockDetectionWindowEnd
 
 #define FORWARD_HIP_PARAMS knockBandCustom, \
 		cylinderBore, \
@@ -82,8 +82,6 @@ public:
 
 class HIP9011 {
 public:
-	DECLARE_ENGINE_PTR;
-
 	explicit HIP9011(Hip9011HardwareInterface *hardware);
 	int sendCommand(uint8_t cmd);
 	int sendCommandGetReply(uint8_t cmd, uint8_t *reply);

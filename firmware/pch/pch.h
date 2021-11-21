@@ -12,7 +12,6 @@
 #include "efifeatures.h"
 #include "rusefi_generated.h"
 #include "loggingcentral.h"
-#include "engine_ptr.h"
 #include "error_handling.h"
 #include "global.h"
 #include "efi_gpio.h"

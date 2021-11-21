@@ -149,7 +149,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 #if EFI_FILE_LOGGING
 		{
 			char sdState;
-			if (CONFIG(isSdCardEnabled)) {
+			if (engineConfiguration->isSdCardEnabled) {
 				sdState = isSdCardAlive() ? 'L' : 'n';
 			} else {
 				sdState = 'D';
@@ -183,10 +183,10 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 		lcdPrintf("Throttle %s %.2f%%", buffer, Sensor::getOrZero(SensorType::Tps1));
 		return;
 	case LL_FUEL_CLT_CORRECTION:
-		lcdPrintf("CLT corr %.2f", getCltFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("CLT corr %.2f", getCltFuelCorrection());
 		return;
 	case LL_FUEL_IAT_CORRECTION:
-		lcdPrintf("IAT corr %.2f", getIatFuelCorrection(PASS_ENGINE_PARAMETER_SIGNATURE));
+		lcdPrintf("IAT corr %.2f", getIatFuelCorrection());
 		return;
 	case LL_FUEL_INJECTOR_LAG:
 		lcdPrintf("ING LAG %.2f", engine->engineState.running.injectorLag);
@@ -243,7 +243,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 	}
 }
 
-static void fillWithSpaces(void) {
+static void fillWithSpaces() {
 	int column = getCurrentHD44780column();
 	for (int r = column; r < 20; r++) {
 		lcd_HD44780_print_char(' ');

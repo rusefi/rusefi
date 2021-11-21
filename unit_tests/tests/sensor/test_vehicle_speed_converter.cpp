@@ -4,14 +4,13 @@
 #define EXPECT_NEAR_M3(x, y) EXPECT_NEAR((x), (y), 1e-3)
 
 float GetVssFor(float revPerKm, float axle, float teeth, float hz) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	VehicleSpeedConverter dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(driveWheelRevPerKm) = revPerKm;
-	CONFIG(vssGearRatio) = axle;
-	CONFIG(vssToothCount) = teeth;
+	engineConfiguration->driveWheelRevPerKm = revPerKm;
+	engineConfiguration->vssGearRatio = axle;
+	engineConfiguration->vssToothCount = teeth;
 
 	return dut.convert(hz).value_or(-1);
 }

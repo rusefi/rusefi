@@ -87,7 +87,7 @@ float getMcuTemperature() {
 	}
 
 	float volts = (float)sum / (4096 * oversample);
-	volts *= CONFIG(adcVcc);
+	volts *= engineConfiguration->adcVcc;
 
 	volts -= 0.760f; // Subtract the reference voltage at 25 deg C
 	float degrees = volts / 0.0025f; // Divide by slope 2.5mV

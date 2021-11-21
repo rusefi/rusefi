@@ -23,8 +23,8 @@
 #include "custom_engine.h"
 #include "mazda_miata_vvt.h"
 
-static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE); // default pinout
+static void common2jz() {
+	setFrankensoConfiguration(); // default pinout
 
 	engineConfiguration->specs.displacement = 3.0;
 	engineConfiguration->specs.cylindersCount = 6;
@@ -67,8 +67,8 @@ static void common2jz(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setToyota_jzs147EngineConfiguration() {
+	common2jz();
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_2JZ_1_12;
@@ -99,8 +99,8 @@ void setToyota_jzs147EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * TOYOTA_2JZ_GTE_VVTi
  * set engine_type 44
  */
-void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common2jz(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setToyota_2jz_vics() {
+	common2jz();
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_2;
@@ -119,21 +119,21 @@ void setToyota_2jz_vics(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->twoWireBatchIgnition = true;
 	engineConfiguration->twoWireBatchInjection = true;
 
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_TOYOTA);
-	strcpy(CONFIG(engineCode), "2JZ");
-	strcpy(CONFIG(vehicleName), "VVT example");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_TOYOTA);
+	strcpy(engineConfiguration->engineCode, "2JZ");
+	strcpy(engineConfiguration->vehicleName, "VVT example");
 
 
 	engineConfiguration->debugMode = DBG_VVT;
 
 	// todo: these magic values would be hardcoded once we find out proper magic values
-	engineConfiguration->fsio_setting[14] = 175 - 45;
-	engineConfiguration->fsio_setting[15] = 175 + 45;
+//	engineConfiguration->fsio_setting[14] = 175 - 45;
+//	engineConfiguration->fsio_setting[15] = 175 + 45;
 
 	engineConfiguration->vvtPins[0] = GPIOE_3; // VVT solenoid control
 
 	// Mazda VVT settings have nothing to do wit Toyota 2JZ settings but those are a good starting point for settings
-	setMazdaNB2VVTSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMazdaNB2VVTSettings();
 }
 
 

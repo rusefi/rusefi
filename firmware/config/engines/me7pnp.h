@@ -9,5 +9,5 @@
 
 #include "engine_configuration.h"
 
-void vag_18_Turbo(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void vag_18_Turbo();
 

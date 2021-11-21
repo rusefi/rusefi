@@ -28,15 +28,15 @@
 #include "console_io.h"
 #include "svnversion.h"
 
-static void testCritical(void) {
+static void testCritical() {
 	chDbgCheck(0);
 }
 
-static void myerror(void) {
+static void myerror() {
 	firmwareError(CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
 }
 
-static void sayHello(void) {
+static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2021. All rights reserved.");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
@@ -156,7 +156,7 @@ int CountFreeStackSpace(const void* wabase) {
 /**
  * This methods prints all threads, their stack usage, and their total times
  */
-static void cmd_threads(void) {
+static void cmd_threads() {
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 
 	thread_t* tp = chRegFirstThread();

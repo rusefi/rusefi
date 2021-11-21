@@ -11,8 +11,6 @@ struct IFuelComputer {
 // This contains the math of the fuel model, but doesn't actually read any configuration
 class FuelComputerBase : public IFuelComputer {
 public:
-	DECLARE_ENGINE_PTR;
-
 	mass_t getCycleFuel(mass_t airmass, int rpm, float load) const override;
 
 protected:
@@ -35,5 +33,5 @@ private:
 	const ValueProvider3D* const m_lambdaTable;
 };
 
-float getLoadOverride(float defaultLoad, afr_override_e overrideMode DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getLoadOverride(float defaultLoad, afr_override_e overrideMode);
 constexpr float fuelDensity = 0.72; // g/cc

@@ -35,8 +35,8 @@ int minCrankingRpm = 0;
 /**
  * @return ignition timing angle advance before TDC
  */
-static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	if (CONFIG(timingMode) == TM_FIXED) {
+static angle_t getRunningAdvance(int rpm, float engineLoad) {
+	if (engineConfiguration->timingMode == TM_FIXED) {
 		return engineConfiguration->fixedTiming;
 	}
 
@@ -50,22 +50,23 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
 
 	// get advance from the separate table for Idle
-	if (CONFIG(useSeparateAdvanceForIdle) && isIdlingOrTaper()) {
+	if (engineConfiguration->useSeparateAdvanceForIdle &&
+	    engine->module<IdleController>().unmock().isIdlingOrTaper()) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto [valid, tps] = Sensor::get(SensorType::DriverThrottleIntent);
 		if (valid) {
 			// interpolate between idle table and normal (running) table using TPS threshold
-			advanceAngle = interpolateClamped(0.0f, idleAdvance, CONFIG(idlePidDeactivationTpsThreshold), advanceAngle, tps);
+			advanceAngle = interpolateClamped(0.0f, idleAdvance, engineConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps);
 		}
 	}
 
 #if EFI_LAUNCH_CONTROL
-	if (engine->isLaunchCondition && CONFIG(enableLaunchRetard)) {
-        if (CONFIG(launchSmoothRetard)) {
-       	    float launchAngle = CONFIG(launchTimingRetard);
-	        int launchAdvanceRpmRange = CONFIG(launchTimingRpmRange);
-	        int launchRpm = CONFIG(launchRpm);
+	if (engine->launchController.isLaunchCondition && engineConfiguration->enableLaunchRetard) {
+        if (engineConfiguration->launchSmoothRetard) {
+       	    float launchAngle = engineConfiguration->launchTimingRetard;
+	        int launchAdvanceRpmRange = engineConfiguration->launchTimingRpmRange;
+	        int launchRpm = engineConfiguration->launchRpm;
 			 // interpolate timing from rpm at launch triggered to full retard at launch launchRpm + launchTimingRpmRange
 			return interpolateClamped(launchRpm, advanceAngle, (launchRpm + launchAdvanceRpmRange), launchAngle, rpm);
 		} else {
@@ -77,7 +78,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAME
 	return advanceAngle;
 }
 
-angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+angle_t getAdvanceCorrections(int rpm) {
 	float iatCorrection;
 
 	const auto [iatValid, iat] = Sensor::get(SensorType::Iat);
@@ -88,7 +89,7 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
 	}
 
-	float pidTimingCorrection = getIdleTimingAdjustment(rpm);
+	float pidTimingCorrection = engine->module<IdleController>().unmock().getIdleTimingAdjustment(rpm);
 
 	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if EFI_TUNER_STUDIO
@@ -107,22 +108,22 @@ angle_t getAdvanceCorrections(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 /**
  * @return ignition timing angle advance before TDC for Cranking
  */
-static angle_t getCrankingAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static angle_t getCrankingAdvance(int rpm, float engineLoad) {
 	// get advance from the separate table for Cranking
-	if (CONFIG(useSeparateAdvanceForCranking)) {
-		return interpolate2d(rpm, CONFIG(crankingAdvanceBins), CONFIG(crankingAdvance));
+	if (engineConfiguration->useSeparateAdvanceForCranking) {
+		return interpolate2d(rpm, engineConfiguration->crankingAdvanceBins, engineConfiguration->crankingAdvance);
 	}
 
 	// Interpolate the cranking timing angle to the earlier running angle for faster engine start
-	angle_t crankingToRunningTransitionAngle = getRunningAdvance(CONFIG(cranking.rpm), engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+	angle_t crankingToRunningTransitionAngle = getRunningAdvance(engineConfiguration->cranking.rpm, engineLoad);
 	// interpolate not from zero, but starting from min. possible rpm detected
 	if (rpm < minCrankingRpm || minCrankingRpm == 0)
 		minCrankingRpm = rpm;
-	return interpolateClamped(minCrankingRpm, CONFIG(crankingTimingAngle), CONFIG(cranking.rpm), crankingToRunningTransitionAngle, rpm);
+	return interpolateClamped(minCrankingRpm, engineConfiguration->crankingTimingAngle, engineConfiguration->cranking.rpm, crankingToRunningTransitionAngle, rpm);
 }
 
 
-angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
+angle_t getAdvance(int rpm, float engineLoad) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (cisnan(engineLoad)) {
 		return 0; // any error should already be reported
@@ -130,13 +131,13 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	angle_t angle;
 
-	bool isCranking = ENGINE(rpmCalculator).isCranking();
+	bool isCranking = engine->rpmCalculator.isCranking();
 	if (isCranking) {
-		angle = getCrankingAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		angle = getCrankingAdvance(rpm, engineLoad);
 		assertAngleRange(angle, "crAngle", CUSTOM_ERR_ANGLE_CR);
 		efiAssert(CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
 	} else {
-		angle = getRunningAdvance(rpm, engineLoad PASS_ENGINE_PARAMETER_SUFFIX);
+		angle = getRunningAdvance(rpm, engineLoad);
 
 		if (cisnan(angle)) {
 			warning(CUSTOM_ERR_6610, "NaN angle from table");
@@ -146,11 +147,11 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 	// Allow correction only if set to dynamic
 	// AND we're either not cranking OR allowed to correct in cranking
-	bool allowCorrections = CONFIG(timingMode) == TM_DYNAMIC
-		&& (!isCranking || CONFIG(useAdvanceCorrectionsForCranking));
+	bool allowCorrections = engineConfiguration->timingMode == TM_DYNAMIC
+		&& (!isCranking || engineConfiguration->useAdvanceCorrectionsForCranking);
 
 	if (allowCorrections) {
-		angle_t correction = getAdvanceCorrections(rpm PASS_ENGINE_PARAMETER_SUFFIX);
+		angle_t correction = getAdvanceCorrections(rpm);
 		if (!cisnan(correction)) { // correction could be NaN during settings update
 			angle += correction;
 		}
@@ -164,28 +165,28 @@ angle_t getAdvance(int rpm, float engineLoad DECLARE_ENGINE_PARAMETER_SUFFIX) {
 #endif
 }
 
-size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
+size_t getMultiSparkCount(int rpm) {
 	// Compute multispark (if enabled)
-	if (CONFIG(multisparkEnable)
-		&& rpm <= CONFIG(multisparkMaxRpm)
-		&& CONFIG(multisparkMaxExtraSparkCount) > 0) {
+	if (engineConfiguration->multisparkEnable
+		&& rpm <= engineConfiguration->multisparkMaxRpm
+		&& engineConfiguration->multisparkMaxExtraSparkCount > 0) {
 		// For zero RPM, disable multispark.  We don't yet know the engine speed, so multispark may not be safe.
 		if (rpm == 0) {
 			return 0;
 		}
 
-		floatus_t multiDelay = CONFIG(multisparkSparkDuration);
-		floatus_t multiDwell = CONFIG(multisparkDwell);
+		floatus_t multiDelay = engineConfiguration->multisparkSparkDuration;
+		floatus_t multiDwell = engineConfiguration->multisparkDwell;
 
         // dwell times are below 10 seconds here so we use 32 bit type for performance reasons
-		ENGINE(engineState.multispark.delay) = (uint32_t)USF2NT(multiDelay);
-		ENGINE(engineState.multispark.dwell) = (uint32_t)USF2NT(multiDwell);
+		engine->engineState.multispark.delay = (uint32_t)USF2NT(multiDelay);
+		engine->engineState.multispark.dwell = (uint32_t)USF2NT(multiDwell);
 
 		constexpr float usPerDegreeAt1Rpm = 60e6 / 360;
 		floatus_t usPerDegree = usPerDegreeAt1Rpm / rpm;
 
 		// How long is there for sparks? The user configured an angle, convert to time.
-		floatus_t additionalSparksUs = usPerDegree * CONFIG(multisparkMaxSparkingAngle);
+		floatus_t additionalSparksUs = usPerDegree * engineConfiguration->multisparkMaxSparkingAngle;
 		// How long does one spark take?
 		floatus_t oneSparkTime = multiDelay + multiDwell;
 
@@ -196,13 +197,13 @@ size_t getMultiSparkCount(int rpm DECLARE_ENGINE_PARAMETER_SUFFIX) {
 		uint32_t floored = sparksFitInTime;
 
 		// Allow no more than the maximum number of extra sparks
-		return minI(floored, CONFIG(multisparkMaxExtraSparkCount));
+		return minI(floored, engineConfiguration->multisparkMaxExtraSparkCount);
 	} else {
 		return 0;
 	}
 }
 
-void initTimingMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initTimingMap() {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);
@@ -272,7 +273,7 @@ float getInitialAdvance(int rpm, float map, float advanceMax) {
 /**
  * this method builds a good-enough base timing advance map bases on a number of heuristics
  */
-void buildTimingMap(float advanceMax DECLARE_CONFIG_PARAMETER_SUFFIX) {
+void buildTimingMap(float advanceMax) {
 	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
 		warning(CUSTOM_WRONG_ALGORITHM, "wrong algorithm for MAP-based timing");
 		return;

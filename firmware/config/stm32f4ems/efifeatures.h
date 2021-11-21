@@ -230,8 +230,6 @@
 #define EFI_VEHICLE_SPEED TRUE
 #endif
 
-#define EFI_FUEL_PUMP TRUE
-
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR TRUE
 #endif
@@ -362,11 +360,11 @@
 #define EFI_USE_UART_DMA TRUE
 #endif
 
-#ifndef TS_PRIMARY_UART
-#define TS_PRIMARY_UART UARTD3
+#ifndef TS_PRIMARY_PORT
+#define TS_PRIMARY_PORT UARTD3
 #endif
 
-#undef TS_SECONDARY_UART
+#undef TS_SECONDARY_PORT
 
 #define AUX_SERIAL_DEVICE (&SD6)
 

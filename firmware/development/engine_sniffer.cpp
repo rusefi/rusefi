@@ -60,7 +60,7 @@ static uint32_t skipUntilEngineCycle = 0;
 
 #if ! EFI_UNIT_TEST
 extern WaveChart waveChart;
-static void resetNow(void) {
+static void resetNow() {
 	skipUntilEngineCycle = getRevolutionCounter() + 3;
 	waveChart.reset();
 }
@@ -82,7 +82,7 @@ void WaveChart::reset() {
 	counter = 0;
 	startTimeNt = 0;
 	collectingData = false;
-	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, DELIMETER);
+	logging.appendPrintf( "%s%s", PROTOCOL_ENGINE_SNIFFER, LOG_DELIMITER);
 }
 
 void WaveChart::startDataCollection() {
@@ -101,7 +101,7 @@ bool WaveChart::isStartedTooLongAgo() const {
 }
 
 bool WaveChart::isFull() const {
-	return counter >= CONFIG(engineChartSize);
+	return counter >= engineConfiguration->engineChartSize;
 }
 
 int WaveChart::getSize() {
@@ -109,7 +109,7 @@ int WaveChart::getSize() {
 }
 
 #if ! EFI_UNIT_TEST
-static void printStatus(void) {
+static void printStatus() {
 	efiPrintf("engine chart: %s", boolToString(engineConfiguration->isEngineChartEnabled));
 	efiPrintf("engine chart size=%d", engineConfiguration->engineChartSize);
 }
@@ -139,13 +139,13 @@ void WaveChart::publishIfFull() {
 }
 
 void WaveChart::publish() {
-	logging.appendPrintf( DELIMETER);
+	logging.appendPrintf( LOG_DELIMITER);
 	waveChartUsedSize = logging.loggingSize();
 #if DEBUG_WAVE
 	Logging *l = &chart->logging;
 	efiPrintf("IT'S TIME", strlen(l->buffer));
 #endif
-	if (ENGINE(isEngineChartEnabled)) {
+	if (engine->isEngineChartEnabled) {
 		scheduleLogging(&logging);
 	}
 }
@@ -161,14 +161,14 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 		return;
 	}
 #if EFI_TEXT_LOGGING
-	if (!ENGINE(isEngineChartEnabled)) {
+	if (!engine->isEngineChartEnabled) {
 		return;
 	}
 	if (skipUntilEngineCycle != 0 && getRevolutionCounter() < skipUntilEngineCycle)
 		return;
 #if EFI_SIMULATOR
 	// todo: add UI control to enable this for firmware if desired
-	// CONFIG(alignEngineSnifferAtTDC) &&
+	// engineConfiguration->alignEngineSnifferAtTDC &&
 	if (!collectingData) {
 		return;
 	}

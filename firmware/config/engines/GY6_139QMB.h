@@ -9,5 +9,5 @@
 #pragma once
 #include "engine_configuration.h"
 
-void setGy6139qmbDefaultEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setGy6139qmbDefaultEngineConfiguration();
 

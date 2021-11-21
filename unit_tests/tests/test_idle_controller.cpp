@@ -19,9 +19,8 @@ using ::testing::_;
 using ICP = IIdleController::Phase;
 
 TEST(idle_v2, timingPid) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	engineConfiguration->useIdleTimingPidControl = true;
 
@@ -55,13 +54,12 @@ TEST(idle_v2, timingPid) {
 }
 
 TEST(idle_v2, testTargetRpm) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->cltIdleRpmBins); i++) {
-		CONFIG(cltIdleRpmBins)[i] = i * 10;
-		CONFIG(cltIdleRpm)[i] = i * 100;
+		engineConfiguration->cltIdleRpmBins[i] = i * 10;
+		engineConfiguration->cltIdleRpm[i] = i * 100;
 	}
 
 	EXPECT_FLOAT_EQ(100, dut.getTargetRpm(10));
@@ -69,16 +67,15 @@ TEST(idle_v2, testTargetRpm) {
 }
 
 TEST(idle_v2, testDeterminePhase) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// TPS threshold 5% for easy test
-	CONFIG(idlePidDeactivationTpsThreshold) = 5;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 5;
 	// RPM window is 100 RPM above target
-	CONFIG(idlePidRpmUpperLimit) = 100;
+	engineConfiguration->idlePidRpmUpperLimit = 100;
 	// Max VSS for idle is 10kph
-	CONFIG(maxIdleVss) = 10;
+	engineConfiguration->maxIdleVss = 10;
 
 	// First test stopped engine
 	engine->rpmCalculator.setRpmValue(0);
@@ -115,9 +112,8 @@ TEST(idle_v2, testDeterminePhase) {
 }
 
 TEST(idle_v2, crankingOpenLoop) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	engineConfiguration->crankingIACposition = 50;
 
@@ -141,9 +137,8 @@ TEST(idle_v2, crankingOpenLoop) {
 }
 
 TEST(idle_v2, runningOpenLoopBasic) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	engineConfiguration->manIdlePosition = 50;
 
@@ -157,9 +152,8 @@ TEST(idle_v2, runningOpenLoopBasic) {
 }
 
 TEST(idle_v2, runningFanAcBump) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	engineConfiguration->manIdlePosition = 50;
 	engineConfiguration->acIdleExtraOffset = 9;
@@ -196,17 +190,16 @@ TEST(idle_v2, runningFanAcBump) {
 }
 
 TEST(idle_v2, runningOpenLoopTpsTaper) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Zero out base tempco table
 	setArrayValues(config->cltIdleCorr, 0.0f);
 
 	// Add 50% idle position
-	CONFIG(iacByTpsTaper) = 50;
+	engineConfiguration->iacByTpsTaper = 50;
 	// At 10% TPS
-	CONFIG(idlePidDeactivationTpsThreshold) = 10;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
 
 	// Check in-bounds points
 	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(0, 0));
@@ -224,11 +217,10 @@ struct MockOpenLoopIdler : public IdleController {
 };
 
 TEST(idle_v2, testOpenLoopCranking) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(overrideCrankingIacSetting) = true;
+	engineConfiguration->overrideCrankingIacSetting = true;
 
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillOnce(Return(44));
 
@@ -237,9 +229,8 @@ TEST(idle_v2, testOpenLoopCranking) {
 }
 
 TEST(idle_v2, openLoopRunningTaper) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	EXPECT_CALL(dut, getRunningOpenLoop(30, SensorResult(0))).WillRepeatedly(Return(25));
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillRepeatedly(Return(75));
@@ -262,11 +253,10 @@ TEST(idle_v2, openLoopRunningTaper) {
 }
 
 TEST(idle_v2, getCrankingTaperFraction) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(afterCrankingIACtaperDuration) = 500;
+	engineConfiguration->afterCrankingIACtaperDuration = 500;
 
 	// 0 cycles - no taper yet, pure cranking value
 	EXPECT_FLOAT_EQ(0, dut.getCrankingTaperFraction());
@@ -291,15 +281,14 @@ TEST(idle_v2, getCrankingTaperFraction) {
 }
 
 TEST(idle_v2, openLoopCoastingTable) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// enable & configure feature
-	CONFIG(useIacTableForCoasting) = true;
+	engineConfiguration->useIacTableForCoasting = true;
 	for (size_t i = 0; i < CLT_CURVE_SIZE; i++) {
-		CONFIG(iacCoastingBins)[i] = 10 * i;
-		CONFIG(iacCoasting)[i] = 5 * i;
+		engineConfiguration->iacCoastingBins[i] = 10 * i;
+		engineConfiguration->iacCoasting[i] = 5 * i;
 	}
 
 	EXPECT_FLOAT_EQ(10, dut.getOpenLoop(ICP::Coasting, 20, 0, 2));
@@ -309,21 +298,20 @@ TEST(idle_v2, openLoopCoastingTable) {
 extern int timeNowUs;
 
 TEST(idle_v2, closedLoopBasic) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Not testing PID here, so we can set very simple PID gains
-	CONFIG(idleRpmPid).pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
-	CONFIG(idleRpmPid).iFactor = 0;
-	CONFIG(idleRpmPid).dFactor = 0;
-	CONFIG(idleRpmPid).offset = 0;
-	CONFIG(idleRpmPid).iFactor = 0;
-	CONFIG(idleRpmPid).periodMs = 0;
-	CONFIG(idleRpmPid).minValue = -50;
-	CONFIG(idleRpmPid).maxValue = 50;
+	engineConfiguration->idleRpmPid.pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
+	engineConfiguration->idleRpmPid.iFactor = 0;
+	engineConfiguration->idleRpmPid.dFactor = 0;
+	engineConfiguration->idleRpmPid.offset = 0;
+	engineConfiguration->idleRpmPid.iFactor = 0;
+	engineConfiguration->idleRpmPid.periodMs = 0;
+	engineConfiguration->idleRpmPid.minValue = -50;
+	engineConfiguration->idleRpmPid.maxValue = 50;
 
-	CONFIG(idlePidRpmDeadZone) = 0;
+	engineConfiguration->idlePidRpmDeadZone = 0;
 
 	// burn one update then advance time 5 seconds to avoid difficulty from wasResetPid
 	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
@@ -337,21 +325,20 @@ TEST(idle_v2, closedLoopBasic) {
 }
 
 TEST(idle_v2, closedLoopDeadzone) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// Not testing PID here, so we can set very simple PID gains
-	CONFIG(idleRpmPid).pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
-	CONFIG(idleRpmPid).iFactor = 0;
-	CONFIG(idleRpmPid).dFactor = 0;
-	CONFIG(idleRpmPid).offset = 0;
-	CONFIG(idleRpmPid).iFactor = 0;
-	CONFIG(idleRpmPid).periodMs = 0;
-	CONFIG(idleRpmPid).minValue = -50;
-	CONFIG(idleRpmPid).maxValue = 50;
+	engineConfiguration->idleRpmPid.pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
+	engineConfiguration->idleRpmPid.iFactor = 0;
+	engineConfiguration->idleRpmPid.dFactor = 0;
+	engineConfiguration->idleRpmPid.offset = 0;
+	engineConfiguration->idleRpmPid.iFactor = 0;
+	engineConfiguration->idleRpmPid.periodMs = 0;
+	engineConfiguration->idleRpmPid.minValue = -50;
+	engineConfiguration->idleRpmPid.maxValue = 50;
 
-	CONFIG(idlePidRpmDeadZone) = 25;
+	engineConfiguration->idlePidRpmDeadZone = 25;
 
 	// burn one then advance time 5 seconds to avoid difficulty from wasResetPid
 	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
@@ -373,16 +360,15 @@ struct IntegrationIdleMock : public IdleController {
 };
 
 TEST(idle_v2, IntegrationManual) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<IntegrationIdleMock> dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	SensorResult expectedTps = 1;
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	ENGINE(rpmCalculator.mockRpm) = 950;
+	engine->rpmCalculator.mockRpm = 950;
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -406,18 +392,17 @@ TEST(idle_v2, IntegrationManual) {
 }
 
 TEST(idle_v2, IntegrationAutomatic) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<IntegrationIdleMock> dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(idleMode) = IM_AUTO;
+	engineConfiguration->idleMode = IM_AUTO;
 
 	SensorResult expectedTps = 1;
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	ENGINE(rpmCalculator.mockRpm) = 950;
+	engine->rpmCalculator.mockRpm = 950;
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -444,18 +429,17 @@ TEST(idle_v2, IntegrationAutomatic) {
 }
 
 TEST(idle_v2, IntegrationClamping) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<IntegrationIdleMock> dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
-	CONFIG(idleMode) = IM_AUTO;
+	engineConfiguration->idleMode = IM_AUTO;
 
 	SensorResult expectedTps = 1;
 	float expectedClt = 37;
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	ENGINE(rpmCalculator.mockRpm) = 950;
+	engine->rpmCalculator.mockRpm = 950;
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))

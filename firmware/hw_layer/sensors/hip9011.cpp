@@ -114,7 +114,7 @@ static SPIConfig hipSpiCfg = {
 /*==========================================================================*/
 
 #if EFI_HIP_9011_DEBUG
-	static void hip_addconsoleActions(void);
+	static void hip_addconsoleActions();
 #endif
 
 /*==========================================================================*/
@@ -203,7 +203,7 @@ int Hip9011Hardware::sendSyncCommand(uint8_t tx, uint8_t *rx_ptr) {
 	return ret;
 }
 
-static int hip_wake_driver(void)
+static int hip_wake_driver()
 {
     /* Entering a reentrant critical zone.*/
     syssts_t sts = chSysGetStatusAndLockX();
@@ -274,7 +274,7 @@ void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds, uint
  * Ignition callback used to start HIP integration and schedule finish
  */
 void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt) {
-	if (!CONFIG(isHip9011Enabled))
+	if (!engineConfiguration->isHip9011Enabled)
 		return;
 
 	/* We are not checking here for READY_TO_INTEGRATE state as
@@ -328,7 +328,7 @@ void hipAdcCallback(adcsample_t adcValue) {
 	}
 }
 
-static int hip_testAdvMode(void) {
+static int hip_testAdvMode() {
 	int ret;
 	uint8_t ret0, ret1, ret2;
 
@@ -362,19 +362,19 @@ static int hip_testAdvMode(void) {
 	return -1;
 }
 
-static int hip_init(void) {
+static int hip_init() {
 	int ret;
 
 	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.prescaler), NULL);
 	if (ret) {
 		/* NOTE: hip9011/tpic8101 can be in default or advansed mode at this point
 		 * If we supposed not to support advanced mode this is definitely error */
-		if (!CONFIG(useTpicAdvancedMode))
+		if (!engineConfiguration->useTpicAdvancedMode)
 			return ret;
 	}
 
 	/* ...othervice or when no error is reported lets try to switch to advanced mode */
-	if (CONFIG(useTpicAdvancedMode)) {
+	if (engineConfiguration->useTpicAdvancedMode) {
 		/* enable advanced mode */
 		ret = instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
 		if (ret) {
@@ -493,7 +493,7 @@ static msg_t hipThread(void *arg) {
 			} else {
 				rawValue = instance.rawValue[idx];
 				/* first calculate ouput volts */
-				knockVolts = adcToVolts(rawValue) * CONFIG(analogInputDividerCoefficient);
+				knockVolts = adcToVolts(rawValue) * engineConfiguration->analogInputDividerCoefficient;
 				/* and then normalize */
 				knockNormalized = knockVolts / HIP9011_DESIRED_OUTPUT_VALUE;
 			}
@@ -532,29 +532,29 @@ void stopHip9001_pins() {
 }
 
 void startHip9001_pins() {
-	intHold.initPin("hip int/hold", CONFIG(hip9011IntHoldPin), &CONFIG(hip9011IntHoldPinMode));
-	Cs.initPin("hip CS", CONFIG(hip9011CsPin), &CONFIG(hip9011CsPinMode));
+	intHold.initPin("hip int/hold", engineConfiguration->hip9011IntHoldPin, &engineConfiguration->hip9011IntHoldPinMode);
+	Cs.initPin("hip CS", engineConfiguration->hip9011CsPin, &engineConfiguration->hip9011CsPinMode);
 }
 
 void initHip9011() {
-	if (!CONFIG(isHip9011Enabled))
+	if (!engineConfiguration->isHip9011Enabled)
 		return;
 
 #if EFI_PROD_CODE
-	spi = getSpiDevice(CONFIG(hip9011SpiDevice));
+	spi = getSpiDevice(engineConfiguration->hip9011SpiDevice);
 	if (spi == NULL) {
 		// error already reported
 		return;
 	}
 
-	hipSpiCfg.ssport = getHwPort("hip", CONFIG(hip9011CsPin));
-	hipSpiCfg.sspad = getHwPin("hip", CONFIG(hip9011CsPin));
+	hipSpiCfg.ssport = getHwPort("hip", engineConfiguration->hip9011CsPin);
+	hipSpiCfg.sspad = getHwPin("hip", engineConfiguration->hip9011CsPin);
 #endif /* EFI_PROD_CODE */
 
 	startHip9001_pins();
 
 	/* load settings */
-	instance.prescaler = CONFIG(hip9011PrescalerAndSDO);
+	instance.prescaler = engineConfiguration->hip9011PrescalerAndSDO;
 
 	efiPrintf("Starting HIP9011/TPIC8101 driver");
 
@@ -582,18 +582,18 @@ static const char *hip_state_names[] =
 	"Waiting for second ADC sample"
 };
 
-static void showHipInfo(void) {
-	if (!CONFIG(isHip9011Enabled)) {
+static void showHipInfo() {
+	if (!engineConfiguration->isHip9011Enabled) {
 		efiPrintf("hip9011 driver not active");
 		return;
 	}
 
 	efiPrintf("HIP9011: enabled %s state %s",
-		boolToString(CONFIG(isHip9011Enabled)),
+		boolToString(engineConfiguration->isHip9011Enabled),
 		hip_state_names[instance.state]);
 
 	efiPrintf(" Advanced mode: enabled %d used %d",
-		CONFIG(useTpicAdvancedMode),
+		engineConfiguration->useTpicAdvancedMode,
 		instance.adv_mode);
 
 	efiPrintf(" Input Ch %d (cylinder %d next %d)",
@@ -617,16 +617,16 @@ static void showHipInfo(void) {
 		instance.prescaler);
 
 	efiPrintf(" IntHold %s (mode 0x%x)",
-		hwPortname(CONFIG(hip9011IntHoldPin)),
-		CONFIG(hip9011IntHoldPinMode));
+		hwPortname(engineConfiguration->hip9011IntHoldPin),
+		engineConfiguration->hip9011IntHoldPinMode);
 
 	efiPrintf(" Spi %s CS %s (mode 0x%x)",
 		getSpi_device_e(engineConfiguration->hip9011SpiDevice),
-		hwPortname(CONFIG(hip9011CsPin)),
-		CONFIG(hip9011CsPinMode));
+		hwPortname(engineConfiguration->hip9011CsPin),
+		engineConfiguration->hip9011CsPinMode);
 
 #if EFI_PROD_CODE
-	printSpiConfig("hip9011", CONFIG(hip9011SpiDevice));
+	printSpiConfig("hip9011", engineConfiguration->hip9011SpiDevice);
 #endif /* EFI_PROD_CODE */
 
 	efiPrintf(" SPI: good response %d incorrect response %d",
@@ -670,7 +670,7 @@ static void setHipGain(float value) {
 	showHipInfo();
 }
 
-static void hip_addconsoleActions(void) {
+static void hip_addconsoleActions() {
 	addConsoleAction("hipinfo", showHipInfo);
 	addConsoleActionF("set_gain", setHipGain);
 	addConsoleActionF("set_band", setHipBand);

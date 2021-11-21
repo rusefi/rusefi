@@ -1,18 +1,32 @@
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
 CPPSRC += 	gtest-all.cpp \
-          	gmock-all.cpp \
+		gmock-all.cpp \
 
 
 INCDIR += 	$(UNIT_TESTS_DIR)/googletest/googlemock/include \
-          	$(UNIT_TESTS_DIR)/googletest/googletest \
-          	$(UNIT_TESTS_DIR)/googletest/googletest/include \
+		$(UNIT_TESTS_DIR)/googletest/googletest \
+		$(UNIT_TESTS_DIR)/googletest/googletest/include \
 
 PCH_DIR = ../firmware/pch
 PCHSRC = $(PCH_DIR)/pch.h
 PCHSUB = unit_tests
 
 include $(PROJECT_DIR)/rusefi_rules.mk
+
+ifneq ($(OS),Windows_NT)
+	SANITIZE = yes
+else
+	SANITIZE = no
+endif
+
+IS_MAC = no
+ifneq ($(OS),Windows_NT)
+	UNAME_S := $(shell uname -s)
+    ifeq ($(UNAME_S),Darwin)
+        IS_MAC = yes
+    endif
+endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
@@ -34,11 +48,6 @@ endif
 # See explanation in main firmware Makefile for these three defines
 USE_OPT += -DEFI_UNIT_TEST=1 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=0
 
-# Enable address sanitizer, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
-ifneq ($(OS),Windows_NT)
-	USE_OPT += -fsanitize=address
-endif
-
 # Pretend we are all different hardware so that all canned engine configs are included
 USE_OPT += -DHW_MICRO_RUSEFI=1 -DHW_PROTEUS=1 -DHW_FRANKENSO=1 -DHW_HELLEN=1
 
@@ -56,7 +65,17 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=gnu++17 -fno-rtti -fpermissive -fno-use-cxa-atexit
+  USE_CPPOPT = -std=gnu++2a -fno-rtti -fno-use-cxa-atexit
+endif
+
+# Enable address sanitizer for C++ files, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
+# only c++ because lua does some things asan doesn't like, but don't actually cause overruns.
+ifeq ($(SANITIZE),yes)
+	ifeq ($(IS_MAC),yes)
+		USE_CPPOPT += -fsanitize=address
+	else
+		USE_CPPOPT += -fsanitize=address -fsanitize=bounds-strict -fno-sanitize-recover=all
+	endif
 endif
 
 # Enable this if you want the linker to remove unused code and data
@@ -189,8 +208,8 @@ ifeq ($(COVERAGE),yes)
 	ULIBS += --coverage
 endif
 
-ifneq ($(OS),Windows_NT)
-	ULIBS += -fsanitize=address
+ifeq ($(SANITIZE),yes)
+	ULIBS += -fsanitize=address -fsanitize=undefined
 endif
 
 #

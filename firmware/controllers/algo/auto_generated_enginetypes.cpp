@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Nov 13 02:59:23 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Nov 19 06:54:18 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -110,6 +110,8 @@ case DBG_RUSEFI_WIDEBAND:
   return "DBG_RUSEFI_WIDEBAND";
 case DBG_SD_CARD:
   return "DBG_SD_CARD";
+case DBG_SOFT_SPARK_CUT:
+  return "DBG_SOFT_SPARK_CUT";
 case DBG_SR5_PROTOCOL:
   return "DBG_SR5_PROTOCOL";
 case DBG_START_STOP:
@@ -130,8 +132,6 @@ case DBG_UNUSED41:
   return "DBG_UNUSED41";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
-case DBG_UNUSED_6:
-  return "DBG_UNUSED_6";
 case DBG_VVT:
   return "DBG_VVT";
 case DBG_VVT_1_PID:
@@ -460,6 +460,8 @@ case TT_MAZDA_MIATA_VVT_TEST:
   return "TT_MAZDA_MIATA_VVT_TEST";
 case TT_MAZDA_SOHC_4:
   return "TT_MAZDA_SOHC_4";
+case TT_MERCEDES_2_SEGMENT:
+  return "TT_MERCEDES_2_SEGMENT";
 case TT_MIATA_VVT:
   return "TT_MIATA_VVT";
 case TT_MITSUBISHI:
@@ -514,8 +516,6 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
-case TT_UNUSED_10:
-  return "TT_UNUSED_10";
 case TT_UNUSED_62:
   return "TT_UNUSED_62";
 case TT_VVT_BARRA_3_PLUS_1:

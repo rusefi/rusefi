@@ -12,8 +12,8 @@
 #include "dodge_ram.h"
 #include "custom_engine.h"
 
-void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setDodgeRam1996() {
+	setFrankensoConfiguration();
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_DODGE_RAM;

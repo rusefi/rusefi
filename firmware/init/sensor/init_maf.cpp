@@ -15,8 +15,8 @@ using ValueType = std::remove_extent_t<decltype(config->mafDecoding)>;
 // This function converts volts -> kg/h
 static TableFunc mafCurve(config->mafDecodingBins, config->mafDecoding);
 
-void initMaf(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	adc_channel_e channel = CONFIG(mafAdcChannel);
+void initMaf() {
+	adc_channel_e channel = engineConfiguration->mafAdcChannel;
 
 	if (!isAdcChannelValid(channel)) {
 		return;

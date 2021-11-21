@@ -15,9 +15,6 @@
 // different way to have the same result would be using "self"
 // (self and (coolant > fan_off_setting)) | (coolant > fan_on_setting) | is_clt_broken
 
-// Human-readable: ((time_since_boot >= 0) & (time_since_boot < startup_fuel_pump_duration)) | (time_since_trigger < 1)
-#define FUEL_PUMP_LOGIC "time_since_boot 0 >= time_since_boot startup_fuel_pump_duration < & time_since_trigger 1 < |"
-
 // Human-readable: coolant > 120
 #define TOO_HOT_LOGIC "coolant 120 >"
 
@@ -72,8 +69,8 @@
 // Human-readable: rpm < cranking_rpm
 #define STARTER_RELAY_LOGIC "rpm cranking_rpm <"
 
-// Human-readable: fsio_table (3, rpm, map) / 100
-#define BOOST_CONTROLLER "3 rpm map fsio_table 100 /"
+// Human-readable: SCRIPT_TABLE_ (3, rpm, map) / 100
+#define BOOST_CONTROLLER "3 rpm map SCRIPT_TABLE_ 100 /"
 
 // Human-readable: if(fsio_analog_input (0) > 20, 0, 10)
 #define ANALOG_CONDITION "0 fsio_analog_input 20 > 0 10 if"

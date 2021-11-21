@@ -8,7 +8,7 @@
 #include "hyundai.h"
 #include "map.h"
 
-void setGenesisCoupeBK1(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setGenesisCoupeBK1() {
 	// 2010-2012 315cc at 43.5psi
 	// fuel system is fixed pressure 55psi
 	engineConfiguration->injector.flow = 354.19; // https://www.google.com/search?q=315*sqrt%2855%2F43.5%29
@@ -16,7 +16,7 @@ void setGenesisCoupeBK1(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 }
 
-void setGenesisCoupeBK2(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setGenesisCoupeBK2() {
 	// 2013+ 450cc at 43.5
 	// fuel system is fixed pressure 85psi
 	// flow rate P2 = flow rate P1 * sqrt(P2/P1)

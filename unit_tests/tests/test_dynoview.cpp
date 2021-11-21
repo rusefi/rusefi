@@ -17,12 +17,11 @@ void printResults(DynoView *dut) {
 
 
 TEST(DynoView, VSS_T1) {
-    WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+    EngineTestHelper eth(TEST_ENGINE);
 
     DynoView dut;
-    INJECT_ENGINE_REFERENCE(&dut);
 
-    // Test Speed trashold
+    // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; 
     eth.moveTimeForwardMs(50);
 	
@@ -37,12 +36,11 @@ TEST(DynoView, VSS_T1) {
 }
 
 TEST(DynoView, algo) {
-    WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+    EngineTestHelper eth(TEST_ENGINE);
 
     DynoView dut;
-    INJECT_ENGINE_REFERENCE(&dut);
 
-    // Test Speed trashold
+    // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; 
 
     //to capture vss
@@ -62,12 +60,11 @@ TEST(DynoView, algo) {
 }
 
 TEST(DynoView, VSS_fast) {
-    WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+    EngineTestHelper eth(TEST_ENGINE);
 
     DynoView dut;
-    INJECT_ENGINE_REFERENCE(&dut);
 
-    // Test Speed trashold
+    // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; //kg
     engine->rpmCalculator.mockRpm = 2200;
     eth.moveTimeForwardMs(50);
@@ -86,12 +83,11 @@ TEST(DynoView, VSS_fast) {
 
 
 TEST(DynoView, VSS_Torque) {
-    WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+    EngineTestHelper eth(TEST_ENGINE);
 
     DynoView dut;
-    INJECT_ENGINE_REFERENCE(&dut);
 
-    // Test Speed trashold
+    // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; //kg
     engine->rpmCalculator.mockRpm = 2200;
     eth.moveTimeForwardMs(50);

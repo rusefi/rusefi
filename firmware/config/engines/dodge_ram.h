@@ -9,5 +9,5 @@
 
 #include "engine_configuration.h"
 
-void setDodgeRam1996(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setDodgeRam1996();
 

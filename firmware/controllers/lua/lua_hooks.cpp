@@ -19,12 +19,6 @@ using namespace luaaa;
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
 
-#define HUMAN_OFFSET 1
-
-#if EFI_UNIT_TEST
-Engine *engineForLuaUnitTests;
-#endif
-
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
 #if EFI_PROD_CODE
@@ -55,17 +49,17 @@ static int getSensor(lua_State* l, SensorType type) {
 
 static int lua_getAuxAnalog(lua_State* l) {
 	// todo: shall we use HUMAN_INDEX since UI goes from 1 and Lua loves going from 1?
-	auto sensorIndex = luaL_checkinteger(l, 1);
+	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	auto type = static_cast<SensorType>(sensorIndex + static_cast<int>(SensorType::Aux1));
+	auto type = static_cast<SensorType>(zeroBasedSensorIndex + static_cast<int>(SensorType::Aux1));
 
 	return getSensor(l, type);
 }
 
 static int lua_getSensorByIndex(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
+	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	return getSensor(l, static_cast<SensorType>(sensorIndex));
+	return getSensor(l, static_cast<SensorType>(zeroBasedSensorIndex));
 }
 
 static int lua_getSensorByName(lua_State* l) {
@@ -76,26 +70,26 @@ static int lua_getSensorByName(lua_State* l) {
 }
 
 static int lua_getSensorRaw(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
+	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	lua_pushnumber(l, Sensor::getRaw(static_cast<SensorType>(sensorIndex)));
+	lua_pushnumber(l, Sensor::getRaw(static_cast<SensorType>(zeroBasedSensorIndex)));
 	return 1;
 }
 
 static int lua_hasSensor(lua_State* l) {
-	auto sensorIndex = luaL_checkinteger(l, 1);
+	auto zeroBasedSensorIndex = luaL_checkinteger(l, 1);
 
-	lua_pushboolean(l, Sensor::hasSensor(static_cast<SensorType>(sensorIndex)));
+	lua_pushboolean(l, Sensor::hasSensor(static_cast<SensorType>(zeroBasedSensorIndex)));
 	return 1;
 }
 
 static int lua_table3d(lua_State* l) {
-	auto tableIdx = luaL_checkinteger(l, 1);
+	auto humanTableIdx = luaL_checkinteger(l, 1);
 	auto x = luaL_checknumber(l, 2);
 	auto y = luaL_checknumber(l, 3);
 
 	// index table, compute table lookup
-	auto result = getFSIOTable(tableIdx)->getValue(x, y);
+	auto result = getscriptTable(humanTableIdx - HUMAN_OFFSET)->getValue(x, y);
 
 	lua_pushnumber(l, result);
 	return 1;
@@ -103,27 +97,18 @@ static int lua_table3d(lua_State* l) {
 
 static int lua_curve2d(lua_State* l) {
 	// index starting from 1
-	auto curveIdx = luaL_checkinteger(l, 1);
+	auto humanCurveIdx = luaL_checkinteger(l, 1);
 	auto x = luaL_checknumber(l, 2);
 
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
-
-	auto result = getCurveValue(curveIdx - HUMAN_OFFSET, x PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x);
 
 	lua_pushnumber(l, result);
 	return 1;
 }
 
 static int lua_findCurveIndex(lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 	auto name = luaL_checklstring(l, 1, nullptr);
-	auto result = getCurveIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveIndexByName(name);
 	if (result == EFI_ERROR_CODE) {
 		lua_pushnil(l);
 	} else {
@@ -208,7 +193,7 @@ static P luaL_checkPwmIndex(lua_State* l, int pos) {
 	auto channel = luaL_checkinteger(l, pos);
 
 	// Ensure channel is valid
-	if (channel < 0 || channel >= FSIO_COMMAND_COUNT) {
+	if (channel < 0 || channel >= LUA_PWM_COUNT) {
 		luaL_error(l, "setPwmDuty invalid channel %d", channel);
 	}
 
@@ -225,7 +210,7 @@ static int lua_startPwm(lua_State* l) {
 
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
-		CONFIG(luaOutputPins[p.idx]), &pins[p.idx],
+		engineConfiguration->luaOutputPins[p.idx], &pins[p.idx],
 		freq, duty
 	);
 
@@ -290,7 +275,7 @@ static int lua_getDigital(lua_State* l) {
 
 static int lua_setDebug(lua_State* l) {
 	// wrong debug mode, ignore
-	if (CONFIG(debugMode) != DBG_LUA) {
+	if (engineConfiguration->debugMode != DBG_LUA) {
 		return 0;
 	}
 
@@ -311,7 +296,7 @@ static int lua_setDebug(lua_State* l) {
 static auto lua_getAirmassResolveMode(lua_State* l) {
 	if (lua_gettop(l) == 0) {
 		// zero args, return configured mode
-		return CONFIG(fuelAlgorithm);
+		return engineConfiguration->fuelAlgorithm;
 	} else {
 		return static_cast<engine_load_mode_e>(luaL_checkinteger(l, 1));
 	}
@@ -351,25 +336,25 @@ static int lua_stopEngine(lua_State*) {
 }
 
 static int lua_setTimingAdd(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setTimingMult(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setFuelAdd(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setFuelMult(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.fuelMult = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
 
 	return 0;
 }
@@ -475,21 +460,37 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "findTableIndex",
 			[](lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 			auto name = luaL_checklstring(l, 1, nullptr);
-			auto result = getTableIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
-			if (result == EFI_ERROR_CODE) {
+			auto index = getTableIndexByName(name);
+			if (index == EFI_ERROR_CODE) {
 				lua_pushnil(l);
 			} else {
 				// TS counts curve from 1 so convert indexing here
-				lua_pushnumber(l, result + HUMAN_OFFSET);
+				lua_pushnumber(l, index + HUMAN_OFFSET);
 			}
 			return 1;
 	});
 
+	lua_register(l, "findSetting",
+			[](lua_State* l) {
+			auto name = luaL_checklstring(l, 1, nullptr);
+			auto defaultValue = luaL_checknumber(l, 2);
+
+			auto index = getSettingIndexByName(name);
+			if (index == EFI_ERROR_CODE) {
+				lua_pushnumber(l, defaultValue);
+			} else {
+				// TS counts curve from 1 so convert indexing here
+				lua_pushnumber(l, engineConfiguration->scriptSetting[index]);
+			}
+			return 1;
+	});
+
+	lua_register(l, "setSparkSkipRatio", [](lua_State* l) {
+		auto targetSkipRatio = luaL_checknumber(l, 1);
+		engine->softSparkLimiter.setTargetSkipRatio(targetSkipRatio);
+		return 1;
+	});
 
 #if !EFI_UNIT_TEST
 	lua_register(l, "startPwm", lua_startPwm);
@@ -511,11 +512,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "setFuelMult", lua_setFuelMult);
 
 	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
-		int result = currentTimeMillis() - engine->triggerActivityMs;
+		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
 		lua_pushnumber(l, result);
 		return 1;
 	});

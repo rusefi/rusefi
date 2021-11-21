@@ -112,7 +112,7 @@ void canDashboardGenesisCoupe(CanCycle cycle);
 void updateDash(CanCycle cycle) {
 
 	// Transmit dash data, if enabled
-	switch (CONFIG(canNbcType)) {
+	switch (engineConfiguration->canNbcType) {
 	case CAN_BUS_NBC_BMW:
 		canDashboardBMW(cycle);
 		break;
@@ -593,7 +593,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			CanTxMessage msg(0x362, 6);
 			/* Injection Stage 1 Duty Cycle - y = x/10 */
 			uint16_t rpm = GET_RPM();
-			tmp = (uint16_t)( getInjectorDutyCycle(rpm PASS_ENGINE_PARAMETER_SUFFIX) * 10) ;
+			tmp = (uint16_t)( getInjectorDutyCycle(rpm) * 10) ;
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Injcetion Stage 2 Duty Cycle */
@@ -970,7 +970,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[4] = 0x00;
 			msg[5] = 0x00;
 			/* Barometric pressure */
-			tmp = (uint16_t)(getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE)*10);
+			tmp = (uint16_t)(getBaroPressure()*10);
 			msg[6] = (tmp >> 8);
 			msg[7] = (tmp & 0x00ff);
 		}

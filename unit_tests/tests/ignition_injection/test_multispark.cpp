@@ -9,66 +9,66 @@
 #include "advance_map.h"
 
 TEST(Multispark, DefaultConfiguration) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
-	EXPECT_EQ(0, getMultiSparkCount(0     PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0, getMultiSparkCount(100   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0, getMultiSparkCount(200   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0, getMultiSparkCount(500   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0, getMultiSparkCount(1000   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0, getMultiSparkCount(2000   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0, getMultiSparkCount(5000   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0, getMultiSparkCount(50000  PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_EQ(0, getMultiSparkCount(0    ));
+	EXPECT_EQ(0, getMultiSparkCount(100  ));
+	EXPECT_EQ(0, getMultiSparkCount(200  ));
+	EXPECT_EQ(0, getMultiSparkCount(500  ));
+	EXPECT_EQ(0, getMultiSparkCount(1000  ));
+	EXPECT_EQ(0, getMultiSparkCount(2000  ));
+	EXPECT_EQ(0, getMultiSparkCount(5000  ));
+	EXPECT_EQ(0, getMultiSparkCount(50000 ));
 }
 
-static void multisparkCfg(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+static void multisparkCfg() {
 	// Turn it on!
-	CONFIG(multisparkEnable) = true;
+	engineConfiguration->multisparkEnable = true;
 
 	// Fire up to 45 degrees worth of sparks...
-	CONFIG(multisparkMaxSparkingAngle) = 45;
+	engineConfiguration->multisparkMaxSparkingAngle = 45;
 
 	// ...but limit to 10 additional sparks
-	CONFIG(multisparkMaxExtraSparkCount) = 10;
+	engineConfiguration->multisparkMaxExtraSparkCount = 10;
 
 	// 3ms period (spark + dwell)
-	CONFIG(multisparkDwell) = 2000;
-	CONFIG(multisparkSparkDuration) = 1000;
+	engineConfiguration->multisparkDwell = 2000;
+	engineConfiguration->multisparkSparkDuration = 1000;
 }
 
 TEST(Multispark, EnabledNoMaxRpm) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
-	multisparkCfg(PASS_ENGINE_PARAMETER_SIGNATURE);
+	multisparkCfg();
 
 	// Practically no RPM limit
-	CONFIG(multisparkMaxRpm) = 65000;
+	engineConfiguration->multisparkMaxRpm = 65000;
 
-	EXPECT_EQ(0,  getMultiSparkCount(0     PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(10, getMultiSparkCount(150   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(10, getMultiSparkCount(250   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(4,  getMultiSparkCount(550   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(3,  getMultiSparkCount(800   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(2,  getMultiSparkCount(900   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(1,  getMultiSparkCount(1500   PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_EQ(0,  getMultiSparkCount(0    ));
+	EXPECT_EQ(10, getMultiSparkCount(150  ));
+	EXPECT_EQ(10, getMultiSparkCount(250  ));
+	EXPECT_EQ(4,  getMultiSparkCount(550  ));
+	EXPECT_EQ(3,  getMultiSparkCount(800  ));
+	EXPECT_EQ(2,  getMultiSparkCount(900  ));
+	EXPECT_EQ(1,  getMultiSparkCount(1500  ));
 
 	// 2500 is the threshold where we should get zero
-	EXPECT_EQ(1,  getMultiSparkCount(2499   PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0,  getMultiSparkCount(2501   PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_EQ(1,  getMultiSparkCount(2499  ));
+	EXPECT_EQ(0,  getMultiSparkCount(2501  ));
 
-	EXPECT_EQ(0,  getMultiSparkCount(5000   PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_EQ(0,  getMultiSparkCount(5000  ));
 
-	EXPECT_EQ(0,  getMultiSparkCount(50000  PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_EQ(0,  getMultiSparkCount(50000 ));
 }
 
 TEST(Multispark, RpmLimit) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
-	multisparkCfg(PASS_ENGINE_PARAMETER_SIGNATURE);
+	multisparkCfg();
 
 	// Disable at 800 rpm
-	CONFIG(multisparkMaxRpm) = 800;
+	engineConfiguration->multisparkMaxRpm = 800;
 
-	EXPECT_EQ(3, getMultiSparkCount(795 PASS_ENGINE_PARAMETER_SUFFIX));
-	EXPECT_EQ(0, getMultiSparkCount(805 PASS_ENGINE_PARAMETER_SUFFIX));
+	EXPECT_EQ(3, getMultiSparkCount(795));
+	EXPECT_EQ(0, getMultiSparkCount(805));
 }

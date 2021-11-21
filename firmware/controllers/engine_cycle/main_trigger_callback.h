@@ -11,20 +11,20 @@
 
 #include "event_registry.h"
 
-void initMainEventListener(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initMainEventListener();
 
-void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
-void startPrimeInjectionPulse(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void startPrimeInjectionPulse();
 
-void startSimultaniousInjection(Engine *engine);
+void startSimultaniousInjection(void* = nullptr);
 void endSimultaniousInjection(InjectionEvent *event);
 void turnInjectionPinHigh(InjectionEvent *event);
 void turnInjectionPinLow(InjectionEvent *event);
 
 // reset injection switch counter if the engine started spinning
-void updatePrimeInjectionPulseState(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void updatePrimeInjectionPulseState();
 
 // Internal use only - exposed for tests
 void handleFuelInjectionEvent(int injEventIndex, InjectionEvent *event,
-		int rpm, efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+		int rpm, efitick_t nowNt);

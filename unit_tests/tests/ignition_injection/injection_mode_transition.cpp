@@ -28,8 +28,8 @@ static void doRevolution(EngineTestHelper& eth, int periodMs) {
 
 // https://github.com/rusefi/rusefi/issues/1592
 TEST(fuelControl, transitionIssue1592) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
-	ENGINE(tdcMarkEnabled) = false;
+	EngineTestHelper eth(TEST_ENGINE);
+	engine->tdcMarkEnabled = false;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth, IM_SEQUENTIAL);
 
 	EXPECT_CALL(eth.mockAirmass, getAirmass(500))
@@ -38,7 +38,7 @@ TEST(fuelControl, transitionIssue1592) {
 	// This is easiest to trip on a wheel that requires sync
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-	eth.setTriggerType(TT_TOOTHED_WHEEL PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_TOOTHED_WHEEL);
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
