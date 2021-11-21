@@ -22,9 +22,9 @@ public:
 static void func(TriggerCallback *callback) {
 	int formIndex = callback->toothIndex % callback->form->getSize();
 	Engine *engine = callback->engine;
-	
 
-	int value = callback->form->wave->getChannelState(0, formIndex);
+
+	int value = callback->form->wave.getChannelState(0, formIndex);
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		trigger_value_e v = value ? TV_RISE : TV_FALL;

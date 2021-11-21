@@ -120,10 +120,7 @@ public:
 	SimplePwm();
 	explicit SimplePwm(const char *name);
 	void setSimplePwmDutyCycle(float dutyCycle) override;
-	pin_state_t pinStates[2];
-	SingleChannelStateSequence sr;
-	float _switchTimes[2];
-	MultiChannelStateSequence seq;
+	MultiChannelStateSequenceWithData<2> seq;
 	hardware_pwm* hardPwm = nullptr;
 };
 
