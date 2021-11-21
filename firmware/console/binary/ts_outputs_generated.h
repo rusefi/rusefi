@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 14:37:54 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sun Nov 21 09:35:08 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -153,8 +153,36 @@ struct ts_outputs_s {
 	 * offset 26
 	 */
 	scaled_channel<uint16_t, 1000, 1> massAirFlowVoltage = (uint16_t)0;
-	/** total size 28*/
+	/**
+	 * offset 28
+	 */
+	scaled_channel<uint16_t, 10, 1> massAirFlow = (uint16_t)0;
+	/**
+	 * offset 30
+	 */
+	scaled_channel<uint16_t, 30, 1> manifoldAirPressure = (uint16_t)0;
+	/**
+	 * offset 32
+	 */
+	scaled_channel<uint16_t, 30, 1> baroPressure = (uint16_t)0;
+	/**
+	 * offset 34
+	 */
+	scaled_channel<uint16_t, 10000, 1> lambda = (uint16_t)0;
+	/**
+	 * offset 36
+	 */
+	scaled_channel<uint8_t, 10, 1> knockRetard = (uint8_t)0;
+	/**
+	 * offset 37
+	 */
+	uint8_t unused37 = (uint8_t)0;
+	/**
+	 * offset 38
+	 */
+	scaled_channel<uint16_t, 1000, 1> vBatt = (uint16_t)0;
+	/** total size 40*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sat Nov 20 14:37:54 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sun Nov 21 09:35:08 EST 2021

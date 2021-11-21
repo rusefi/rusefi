@@ -54,4 +54,15 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	uint16_t tpsADC;;"", 1, 0, 0, 0, 0
 	uint16_t autoscale massAirFlowVoltage;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
+	uint16_t autoscale massAirFlow;;"",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale manifoldAirPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale baroPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale lambda;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint8_t autoscale knockRetard;;"",{1/10}, 0, 0, 0, 0
+	uint8_t unused37;;"",1, 0, 0, 0, 0
+
+	uint16_t autoscale vBatt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+
 end_struct
