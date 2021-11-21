@@ -9,6 +9,7 @@
 
 #include "rusefi_enums.h"
 #include <new>
+#include <utility>
 #include <stdint.h>
 
 /**
@@ -44,7 +45,7 @@ public:
 	{
 		// Placement new, don't worry - no dynamic memory allocated here
 		// Always pass # elements to child, hopefully it can do something with it
-		new (m_data) base_t(n_elem, std::forward<Args>(args)...);
+		new (&m_base) base_t(n_elem, std::forward<Args>(args)...);
 	}
 
 	base_t * operator->() {
@@ -76,7 +77,10 @@ private:
 		return base_size + n_elem * sizeof(type_t);
 	}
 
-	uint8_t m_data[get_size<tail_t...>(sizeof(base_t))];
+	union {
+		uint8_t m_data[get_size<tail_t...>(sizeof(base_t))];
+		base_t m_base;
+	};
 };
 
 /**
@@ -112,7 +116,7 @@ private:
 	 * values in the (0..1] range which refer to points within the period at at which pin state should be changed
 	 * So, in the simplest case we turn pin off at 0.3 and turn it on at 1 - that would give us a 70% duty cycle PWM
 	 */
-	float switchTimes[];
+	float switchTimes[0];
 	// uint8_t wave[] comes after
 };
 
