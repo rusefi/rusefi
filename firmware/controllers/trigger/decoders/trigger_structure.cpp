@@ -49,18 +49,8 @@ void event_trigger_position_s::setAngle(angle_t angle) {
 			this, angle);
 }
 
-trigger_shape_helper::trigger_shape_helper() {
-	memset(&pinStates, 0, sizeof(pinStates));
-	for (int channelIndex = 0; channelIndex < TRIGGER_CHANNEL_COUNT; channelIndex++) {
-		channels[channelIndex].init(pinStates[channelIndex]);
-	}
-}
-
-TriggerWaveform::TriggerWaveform()
-		: waveStorage(switchTimesBuffer, NULL)
-		, wave(&waveStorage) {
+TriggerWaveform::TriggerWaveform() {
 	initialize(OM_NONE);
-	wave->channels = h.channels;
 }
 
 void TriggerWaveform::initialize(operation_mode_e operationMode) {
@@ -85,7 +75,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	this->operationMode = operationMode;
 	triggerShapeSynchPointIndex = 0;
 	memset(initialState, 0, sizeof(initialState));
-	memset(switchTimesBuffer, 0, sizeof(switchTimesBuffer));
+	memset((void *)(&*wave + 1), 0, sizeof(float) * PWM_PHASE_MAX_WAVE_PER_PWM); // Really want to remove this...
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
 	wave->reset();
 	wave->waveCount = TRIGGER_CHANNEL_COUNT;
@@ -265,13 +255,6 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	if (wave->phaseCount == 0) {
 		wave->phaseCount = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			SingleChannelStateSequence *swave = &wave->channels[i];
-
-			if (swave->pinStates == nullptr) {
-				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
-				setShapeDefinitionError(true);
-				return;
-			}
 			wave->setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i]);
 		}
 

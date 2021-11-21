@@ -20,7 +20,7 @@ int getPreviousIndex(const int currentIndex, const int size) {
 	return (currentIndex + size - 1) % size;
 }
 
-bool needEvent(const int currentIndex, const MultiChannelStateSequence& mcss, int channelIndex) {
+bool needEvent(const int currentIndex, const MultiChannelStateSequence & mcss, int channelIndex) {
 	int prevIndex = getPreviousIndex(currentIndex, mcss.phaseCount);
 	pin_state_t previousValue = mcss.getChannelState(channelIndex, /*phaseIndex*/prevIndex);
 	pin_state_t currentValue = mcss.getChannelState(channelIndex, /*phaseIndex*/currentIndex);
@@ -106,7 +106,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 
 
 		TriggerWaveform *s = &engine->triggerCentral.triggerShape;
-		copyPwmParameters(state, s->wave);
+		copyPwmParameters(state, &*s->wave);
 		state->safe.periodNt = -1; // this would cause loop re-initialization
 	}
 }
@@ -146,7 +146,7 @@ static void initTriggerPwm() {
 	setTriggerEmulatorRPM(engineConfiguration->triggerSimulatorFrequency);
 	triggerSignal.weComplexInit("position sensor",
 			&engine->executor,
-			s->wave,
+			&*s->wave,
 			updateTriggerWaveformIfNeeded, (pwm_gen_callback*)emulatorApplyPinState);
 
 	hasInitTriggerEmulator = true;

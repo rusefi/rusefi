@@ -48,7 +48,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 	int time = getSimulatedEventTime(shape, i);
 
-	const MultiChannelStateSequence& multiChannelStateSequence = *shape.wave;
+	const auto & multiChannelStateSequence = *shape.wave;
 
 #if EFI_UNIT_TEST
 	int prevIndex = getPreviousIndex(stateIndex, shape.getSize());

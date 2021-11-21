@@ -9,40 +9,9 @@
 #include "state_sequence.h"
 #include "trigger_structure.h"
 
-SingleChannelStateSequence::SingleChannelStateSequence() {
-	init(NULL);
-}
-
-SingleChannelStateSequence::SingleChannelStateSequence(pin_state_t *ps) {
-	init(ps);
-}
-
-void SingleChannelStateSequence::init(pin_state_t *pinStates) {
-	this->pinStates = pinStates;
-}
-
-pin_state_t SingleChannelStateSequence::getState(int switchIndex) const {
-	pin_state_t state = pinStates[switchIndex];
-	efiAssert(OBD_PCM_Processor_Fault, state == 0 || state == 1, "wave state get", TV_FALL);
-	return state;
-}
-
-void SingleChannelStateSequence::setState(int switchIndex, pin_state_t state) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, state == 0 || state == 1, "wave state set");
-	pinStates[switchIndex] = state;
-}
-
-MultiChannelStateSequence::MultiChannelStateSequence() {
+MultiChannelStateSequence::MultiChannelStateSequence(unsigned maxWaveCount)
+	: wavePtr(reinterpret_cast<uint8_t *>(&switchTimes[maxWaveCount])) {
 	reset();
-}
-
-MultiChannelStateSequence::MultiChannelStateSequence(float *switchTimes, SingleChannelStateSequence *waves) : MultiChannelStateSequence() {
-	init(switchTimes, waves);
-}
-
-void MultiChannelStateSequence::init(float *switchTimes, SingleChannelStateSequence *channels) {
-	this->switchTimes = switchTimes;
-	this->channels = channels;
 }
 
 void MultiChannelStateSequence::reset(void) {
@@ -71,7 +40,7 @@ pin_state_t MultiChannelStateSequence::getChannelState(const int channelIndex, c
 		// todo: would be nice to get this asserting working
 		//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
 	}
-	return channels[channelIndex].pinStates[phaseIndex];
+	return ((wavePtr[phaseIndex] >> channelIndex) & 1) ? TV_RISE : TV_FALL;
 }
 
 void MultiChannelStateSequence::setChannelState(const int channelIndex, const int phaseIndex,
@@ -80,7 +49,8 @@ void MultiChannelStateSequence::setChannelState(const int channelIndex, const in
 		// todo: would be nice to get this asserting working
 		//firmwareError(OBD_PCM_Processor_Fault, "channel index %d/%d", channelIndex, waveCount);
 	}
-	channels[channelIndex].pinStates[phaseIndex] = state;
+	uint8_t & ref = wavePtr[phaseIndex];
+	ref = (ref & ~(1U << channelIndex)) | ((state == TV_RISE ? 1 : 0) << channelIndex);
 }
 
 /**

@@ -8,6 +8,7 @@
 #pragma once
 
 #include "rusefi_enums.h"
+#include <new>
 #include <stdint.h>
 
 /**
@@ -35,30 +36,47 @@
  */
 typedef trigger_value_e pin_state_t;
 
-/**
- * This class represents one channel of a digital signal state sequence
- * Each element represents either a HIGH or LOW state - while at the moment this
- * is not implemented using a bit array, it could absolutely be a bit array
- *
- * This sequence does not know anything about signal lengths - only signal state at a given index
- * This sequence can have consecutive zeros and ones since these sequences work as a group within MultiChannelStateSequence
- *
- * @brief   PWM configuration for the specific output pin
- */
-class SingleChannelStateSequence {
+template<typename base_t, unsigned n_elem, typename... tail_t>
+class StaticAllocWrapper {
 public:
-	SingleChannelStateSequence();
-	explicit SingleChannelStateSequence(pin_state_t *pinStates);
-	void init(pin_state_t *pinStates);
-	/**
-	 * todo: confirm that we only deal with two states here, no magic '-1'?
-	 * @return HIGH or LOW state at given index
-	 */
-	pin_state_t getState(int switchIndex) const;
-	void setState(int switchIndex, pin_state_t state);
+	template<typename... Args>
+	StaticAllocWrapper(Args&&... args)
+	{
+		// Placement new, don't worry - no dynamic memory allocated here
+		// Always pass # elements to child, hopefully it can do something with it
+		new (m_data) base_t(n_elem, std::forward<Args>(args)...);
+	}
 
-	// todo: make this private by using 'getState' and 'setState' methods
-	pin_state_t *pinStates;
+	base_t * operator->() {
+		return reinterpret_cast<base_t *>(m_data);
+	}
+
+	base_t & operator*() {
+		return *reinterpret_cast<base_t *>(m_data);
+	}
+
+	base_t const * operator->() const {
+		return reinterpret_cast<base_t const *>(m_data);
+	}
+
+	base_t const & operator*() const {
+		return *reinterpret_cast<base_t const *>(m_data);
+	}
+
+private:
+	template<typename type_t, typename more_t, typename... rest_t>
+	static constexpr unsigned get_size(unsigned base_size) {
+		return get_size<more_t, rest_t...>(get_size<type_t>(base_size));
+	}
+
+	template<typename type_t>
+	static constexpr unsigned get_size(unsigned base_size) {
+		// realign
+		base_size = (base_size + alignof(type_t) - 1U) & ~(alignof(type_t) - 1U);
+		return base_size + n_elem * sizeof(type_t);
+	}
+
+	uint8_t m_data[get_size<tail_t...>(sizeof(base_t))];
 };
 
 /**
@@ -66,11 +84,14 @@ public:
  *
  */
 class MultiChannelStateSequence {
+protected:
+	explicit MultiChannelStateSequence(unsigned maxWaveCount);
+
+	template<typename, unsigned, typename...>
+	friend class StaticAllocWrapper;
+
 public:
-	MultiChannelStateSequence();
-	MultiChannelStateSequence(float *switchTimes, SingleChannelStateSequence *waves);
-	void init(float *switchTimes, SingleChannelStateSequence *waves);
-	void reset(void);
+	void reset();
 	float getSwitchTime(const int phaseIndex) const;
 	void setSwitchTime(const int phaseIndex, const float value);
 	void checkSwitchTimes(const float scale) const;
@@ -83,15 +104,20 @@ public:
 	/**
 	 * Number of signal channels
 	 */
+	uint8_t * const wavePtr;
 	uint16_t phaseCount;
 	uint16_t waveCount;
-	SingleChannelStateSequence *channels = nullptr;
-//private:
+private:
 	/**
 	 * values in the (0..1] range which refer to points within the period at at which pin state should be changed
 	 * So, in the simplest case we turn pin off at 0.3 and turn it on at 1 - that would give us a 70% duty cycle PWM
 	 */
-	float *switchTimes = nullptr;
+	float switchTimes[];
+	// uint8_t wave[] comes after
 };
 
+template<unsigned max_phase>
+class MultiChannelStateSequenceWithData
+	: public StaticAllocWrapper<MultiChannelStateSequence, max_phase, float, uint8_t> {
+};
 
