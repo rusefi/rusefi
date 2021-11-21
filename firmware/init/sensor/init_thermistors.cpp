@@ -19,7 +19,7 @@ struct FuncPair {
 static CCM_OPTIONAL FunctionalSensor clt(SensorType::Clt, MS2NT(10));
 static CCM_OPTIONAL FunctionalSensor iat(SensorType::Iat, MS2NT(10));
 static CCM_OPTIONAL FunctionalSensor aux1(SensorType::AuxTemp1, MS2NT(10));
-static CCM_OPTIONAL FunctionalSensor aux2(SensorType::AuxTemp2, MS2NT(10));
+static FunctionalSensor aux2(SensorType::AuxTemp2, MS2NT(10));
 
 static FuncPair fclt, fiat, faux1, faux2;
 

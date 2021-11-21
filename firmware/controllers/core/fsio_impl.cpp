@@ -71,7 +71,7 @@ static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 #define SYS_ELEMENT_POOL_SIZE 24
 #define UD_ELEMENT_POOL_SIZE 64
 
-static LEElement sysElements[SYS_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
+static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
 CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
 static LEElement * starterRelayDisableLogic;
