@@ -838,6 +838,13 @@ counter543 = 0;
 function onTick()
     txCan(1, 0x542, 1, packet542)
 
+    counter543 = (counter543 + 1) % 64
+    packet543[7] = 64 + counter543
+    packet543[8] = crc8_j1850(packet543, 7)
+
+print('at 7 ' ..     packet543[7])
+print('at 8 ' ..     packet543[8])
+
     txCan(1, 0x543, 1, packet543)
 
     if every200msTimer:getElapsedSeconds() > 1 then
