@@ -16,7 +16,6 @@
 #include <limits>
 #include <string.h>
 #include <stdint.h>
-#include "rusefi_true.h"
 
 static const short CB_MAX_SIZE = 128;
 
@@ -78,10 +77,10 @@ template<typename T, size_t maxSize>
 bool cyclic_buffer<T, maxSize>::contains(T value) const {
 	for (int i = 0; i < currentIndex ; i++) {
 		if (elements[i] == value) {
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 template<typename T, size_t maxSize>

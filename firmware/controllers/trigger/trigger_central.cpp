@@ -820,8 +820,6 @@ void onConfigurationChangeTriggerCallback() {
 	changed |= isConfigurationChanged(overrideTriggerGaps);
 
 	if (changed) {
-		assertEngineReference();
-
 	#if EFI_ENGINE_CONTROL
 		engine->initializeTriggerWaveform();
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();

@@ -9,6 +9,14 @@
  * this file.
  */
 
+#ifndef FALSE
+#define FALSE (0)
+#endif /* FALSE */
+
+#ifndef TRUE
+#define TRUE (!(FALSE))
+#endif /* TRUE */
+
 #include "efifeatures.h"
 #include "rusefi_generated.h"
 #include "loggingcentral.h"
