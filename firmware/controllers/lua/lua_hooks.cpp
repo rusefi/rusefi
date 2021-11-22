@@ -7,6 +7,7 @@
 #include "airmass.h"
 #include "lua_airmass.h"
 #include "can_msg_tx.h"
+#include "crc.h"
 #include "settings.h"
 #include <new>
 
@@ -118,6 +119,39 @@ static int lua_findCurveIndex(lua_State* l) {
 	return 1;
 }
 
+static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size) {
+	uint32_t result = 0;
+
+	luaL_checktype(l, paramIndex, LUA_TTABLE);
+	while (true) {
+		lua_pushnumber(l, result + 1);
+		auto elementType = lua_gettable(l, paramIndex);
+		auto val = lua_tonumber(l, -1);
+		lua_pop(l, 1);
+
+		if (elementType == LUA_TNIL) {
+			// we're done, this is the end of the array.
+			break;
+		}
+
+		if (elementType != LUA_TNUMBER) {
+			// We're not at the end, but this isn't a number!
+			luaL_error(l, "Unexpected data at position %d: %s", result, lua_tostring(l, -1));
+		}
+
+		// This element is valid, increment DLC
+		result++;
+
+		if (result > size) {
+			luaL_error(l, "Input array longer than buffer");
+		}
+
+		data[result - 1] = val;
+	}
+	return result;
+}
+
+
 static int lua_txCan(lua_State* l) {
 	auto channel = luaL_checkinteger(l, 1);
 	// TODO: support multiple channels
@@ -133,8 +167,6 @@ static int lua_txCan(lua_State* l) {
 		luaL_argcheck(l, id <= 0x1FFF'FFFF, 2, "ID specified is greater than max ext ID");
 	}
 
-	luaL_checktype(l, 4, LUA_TTABLE);
-
 	// conform ext parameter to true/false
 	CanTxMessage msg(id, 8, ext == 0 ? false : true);
 
@@ -142,6 +174,8 @@ static int lua_txCan(lua_State* l) {
 	// so we have to just iterate until we run out of numbers
 	uint8_t dlc = 0;
 
+	// todo: reduce code duplication with getArray
+	luaL_checktype(l, 4, LUA_TTABLE);
 	while (true) {
 		lua_pushnumber(l, dlc + 1);
 		auto elementType = lua_gettable(l, 4);
@@ -489,6 +523,16 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "setSparkSkipRatio", [](lua_State* l) {
 		auto targetSkipRatio = luaL_checknumber(l, 1);
 		engine->softSparkLimiter.setTargetSkipRatio(targetSkipRatio);
+		return 1;
+	});
+
+	lua_register(l, "crc8_j1850", [](lua_State* l) {
+		uint8_t data[8];
+		uint32_t length = getArray(l, 1, data, sizeof(data));
+		auto trimLength = luaL_checkinteger(l, 2);
+		int crc = crc8(data, minI(length, trimLength));
+
+		lua_pushnumber(l, crc);
 		return 1;
 	});
 

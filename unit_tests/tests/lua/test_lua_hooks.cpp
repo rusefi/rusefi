@@ -2,6 +2,19 @@
 
 #include "rusefi_lua.h"
 
+
+TEST(LuaHooks, TestCrc8) {
+	// Test failed sensor, returns nil
+	char* crc8scripts = R"(
+
+	function testFunc()
+		return crc8_j1850({0x31,0x32,0x32 }, 2)
+	end
+
+	)";
+	EXPECT_EQ(testLuaReturnsNumberOrNil(crc8scripts).value_or(0), 0x43);
+}
+
 static const char* getSensorTestByIndex = R"(
 
 function testFunc()
