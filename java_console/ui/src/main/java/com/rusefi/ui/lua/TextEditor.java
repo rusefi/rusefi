@@ -47,7 +47,8 @@ public class TextEditor {
             }
         });
 
-        area.add(textArea, BorderLayout.CENTER);
+        JScrollPane textAreaScroll = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        area.add(textAreaScroll, BorderLayout.CENTER);
         JPanel bottomArea = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         area.add(bottomArea, BorderLayout.SOUTH);
         bottomArea.add(sizeLabel);
