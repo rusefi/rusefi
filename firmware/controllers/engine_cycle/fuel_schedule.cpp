@@ -30,8 +30,6 @@ void FuelSchedule::resetOverlapping() {
  * @returns false in case of error, true if success
  */
 bool FuelSchedule::addFuelEventsForCylinder(int i ) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "engine is NULL", false);
-
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs; // local copy
 	if (cisnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM

@@ -193,7 +193,6 @@ void writeToFlashNow(void) {
 	} else {
 		efiPrintf("Flashing failed");
 	}
-	assertEngineReference();
 
 	resetMaxValues();
 

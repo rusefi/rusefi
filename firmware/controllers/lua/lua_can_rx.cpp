@@ -117,7 +117,7 @@ bool doOneLuaCanRx(LuaHandle& ls) {
 
 	// We're done, return this frame to the free list
 	msg = freeBuffers.post(frame, TIME_IMMEDIATE);
-	efiAssertVoid(OBD_PCM_Processor_Fault, msg == MSG_OK, "lua can post to free buffer fail");
+	efiAssert(OBD_PCM_Processor_Fault, msg == MSG_OK, "lua can post to free buffer fail", false);
 
 	// We processed a frame so we should check again
 	return true;

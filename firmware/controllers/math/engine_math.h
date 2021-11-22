@@ -11,8 +11,6 @@
 
 void setAlgorithm(engine_load_mode_e algo);
 
-#define assertEngineReference() efiAssertVoid(CUSTOM_ENGINE_REF, engine != NULL, "engine is NULL")
-
 void setFlatInjectorLag(float value);
 
 #define fixAngle(angle, msg, code) fixAngle2(angle, msg, code, engine->engineCycle)
