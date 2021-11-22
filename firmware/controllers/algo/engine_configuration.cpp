@@ -644,8 +644,6 @@ static void setDefaultEngineConfiguration() {
 	// todo: start using this for custom MAP
 	engineConfiguration->mapHighValueVoltage = 5;
 
-	engineConfiguration->logFormat = LF_NATIVE;
-
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
 

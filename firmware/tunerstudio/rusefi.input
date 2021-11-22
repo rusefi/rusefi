@@ -3248,7 +3248,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "showSdCardWarning",					showSdCardWarning
 		field = "CS Pin",								sdCardCsPin
 		field = "SPI",									sdCardSpiDevice
-		field = "log format",							logFormat
 		field = "Write Period",							sdCardPeriodMs
 	
 	dialog = gpsReceiver, "GPS Receiver" 
