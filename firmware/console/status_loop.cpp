@@ -126,7 +126,7 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[220];
+static NO_CACHE char sdLogBuffer[150];
 static uint64_t binaryLogCount = 0;
 
 void writeLogLine(Writer& buffer) {
