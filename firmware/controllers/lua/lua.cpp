@@ -350,7 +350,7 @@ void LuaThread::ThreadTask() {
 }
 
 #if LUA_USER_HEAP > 1
-static LuaThread luaThread;
+static LuaThread luaThread CCM_OPTIONAL;
 #endif
 
 void startLua() {
