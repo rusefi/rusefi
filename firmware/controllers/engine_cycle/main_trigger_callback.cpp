@@ -503,8 +503,6 @@ static void showMainInfo(Engine *engine) {
 }
 
 void initMainEventListener() {
-	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
-
 #if EFI_PROD_CODE
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 #endif

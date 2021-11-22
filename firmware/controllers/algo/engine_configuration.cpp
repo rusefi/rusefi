@@ -1164,8 +1164,6 @@ void applyNonPersistentConfiguration() {
 	efiPrintf("applyNonPersistentConfiguration()");
 #endif
 
-	assertEngineReference();
-
 #if EFI_ENGINE_CONTROL
 	engine->initializeTriggerWaveform();
 #endif // EFI_ENGINE_CONTROL

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "rusefi_true.h"
-
 // see SIM_SD1_PORT and SIM_SD2_PORT
 #define TS_PRIMARY_SERIAL SD1
 #define TS_SECONDARY_SERIAL SD2
