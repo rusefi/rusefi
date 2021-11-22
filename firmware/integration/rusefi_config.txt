@@ -550,7 +550,7 @@ custom display_mode_e 4 bits, U32, @OFFSET@, [0:1], "none", "hd44780", "hd44780 
 display_mode_e displayMode;
 
 custom log_format_e 4 bits, U32, @OFFSET@, [0:0], "native", "Mega Log Viewer"
-log_format_e logFormat;
+log_format_e unusedLogFormat;
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 	int HD44780width;;"index", 1, 0, 0, 300, 0
 	int HD44780height;;"index", 1, 0, 0, 300, 0
