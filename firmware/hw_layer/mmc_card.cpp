@@ -16,14 +16,23 @@
 
 #if EFI_FILE_LOGGING
 
-#include "ch.hpp"
+#include "buffered_writer.h"
+#include "status_loop.h"
+
+static bool fs_ready = false;
+
+int totalLoggedBytes = 0;
+static int fileCreatedCounter = 0;
+static int writeCounter = 0;
+static int totalWritesCounter = 0;
+static int totalSyncCounter = 0;
+
+#if EFI_PROD_CODE
+
 #include <stdio.h>
 #include <string.h>
 #include "mmc_card.h"
 #include "ff.h"
-#include "hardware.h"
-#include "status_loop.h"
-#include "buffered_writer.h"
 #include "mass_storage_init.h"
 
 #include "rtc_helper.h"
@@ -40,16 +49,9 @@
 
 // todo: shall we migrate to enum with enum2string for consistency? maybe not until we start reading sdStatus?
 static const char *sdStatus = SD_STATE_INIT;
-static bool fs_ready = false;
 
 // at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
 #define F_SYNC_FREQUENCY 10
-
-int totalLoggedBytes = 0;
-static int fileCreatedCounter = 0;
-static int writeCounter = 0;
-static int totalWritesCounter = 0;
-static int totalSyncCounter = 0;
 
 /**
  * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
@@ -65,8 +67,6 @@ spi_device_e mmcSpiDevice = SPI_NONE;
 
 #define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
-
-static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 
 #if HAL_USE_MMC_SPI
 /**
@@ -468,8 +468,41 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 	}
 };
 
+#else // not EFI_PROD_CODE (simulator)
+
+#include <fstream>
+
+bool mountMmc() {
+	// Stub so the loop thinks the MMC mounted OK
+	return true;
+}
+
+class SdLogBufferWriter final : public BufferedWriter<512> {
+public:
+	bool failed = false;
+
+	SdLogBufferWriter()
+		: m_stream("rusefi_simulator_log.mlg", std::ios::binary)
+	{
+		fs_ready = true;
+	}
+
+	size_t writeInternal(const char* buffer, size_t count) override {
+		m_stream.write(buffer, count);
+		m_stream.flush();
+		return count;
+	}
+
+private:
+	std::ofstream m_stream;
+};
+
+#endif // EFI_PROD_CODE
+
 static NO_CACHE SdLogBufferWriter logBuffer;
 
+
+static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
 	chRegSetThreadName("MMC Card Logger");
@@ -485,9 +518,11 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	while (true) {
 		// if the SPI device got un-picked somehow, cancel SD card
+#if EFI_PROD_CODE
 		if (engineConfiguration->sdCardSpiDevice == SPI_NONE) {
 			return;
 		}
+#endif
 
 		if (engineConfiguration->debugMode == DBG_SD_CARD) {
 			tsOutputChannels.debugIntField1 = totalLoggedBytes;
@@ -516,12 +551,14 @@ bool isSdCardAlive(void) {
 
 // Pre-config load init
 void initEarlyMmcCard() {
+#if EFI_PROD_CODE
 	logName[0] = 0;
 
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("ls", listDirectory);
 	addConsoleActionS("del", removeFile);
 	addConsoleAction("incfilename", incLogFileName);
+#endif // EFI_PROD_CODE
 }
 
 void initMmcCard() {
