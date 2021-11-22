@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Nov 20 04:15:16 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Nov 22 18:40:59 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1082,7 +1082,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 496
 	 */
-	log_format_e logFormat;
+	log_format_e unusedLogFormat;
 	/**
 	index
 	 * offset 500
@@ -4539,4 +4539,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Nov 20 04:15:16 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Nov 22 18:40:59 UTC 2021

@@ -1507,7 +1507,6 @@
 #define log_format_e_Force_4_bytes_size_log_format ENUM_32_BITS
 #define log_format_e_LF_NATIVE 0
 #define log_format_e_LM_MLV 1
-#define logFormat_offset 496
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define logicAnalyzerPins1_offset 748
 #define logicAnalyzerPins2_offset 749
@@ -1824,7 +1823,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 136196955
+#define SIGNATURE_HASH 174954054
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2343,7 +2342,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.20.hellen_cypress.136196955"
+#define TS_SIGNATURE "rusEFI 2021.11.22.hellen_cypress.174954054"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2452,6 +2451,7 @@
 #define unusedExHpfp_offset 724
 #define unusedFiller_4703_offset 4703
 #define unusedLaunchRpmThreshold_offset 1032
+#define unusedLogFormat_offset 496
 #define unusedLuaWasHere_offset 16032
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832
