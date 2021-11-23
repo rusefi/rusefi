@@ -52,13 +52,17 @@ public class DfuFlasher {
                 wnd.appendMsg("rusEFI console can only program on Windows");
                 return;
             }
-            ExecHelper.submitAction(() -> {
+            submitAction(() -> {
                 timeForDfuSwitch(wnd);
                 executeDFU(wnd);
-            }, DfuFlasher.class + " thread");
+            });
         } else {
             wnd.appendMsg("Please use manual DFU to change bundle type.");
         }
+    }
+
+    private static void submitAction(Runnable r) {
+        ExecHelper.submitAction(r, DfuFlasher.class + " thread");
     }
 
     @Nullable
@@ -108,15 +112,22 @@ public class DfuFlasher {
         return wnd;
     }
 
+    public static void runDfuErase() {
+        StatusWindow wnd = createStatusWindow();
+        submitAction(() -> ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                getDfuEraseCommand(),
+                DFU_BINARY, wnd, new StringBuffer()));
+    }
+
     public static void runDfuProgramming() {
         StatusWindow wnd = createStatusWindow();
-        ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
+        submitAction(() -> executeDFU(wnd));
     }
 
     private static void executeDFU(StatusWindow wnd) {
         StringBuffer stdout = new StringBuffer();
         String errorResponse = ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-                getDfuCommand(),
+                getDfuWriteCommand(),
                 DFU_BINARY, wnd, stdout);
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
@@ -157,13 +168,17 @@ public class DfuFlasher {
         }
     }
 
-    private static String getDfuCommand() {
-        String fileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, "rusefi", ".hex");
-        if (fileName == null)
+    private static String getDfuWriteCommand() {
+        String hexFileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, "rusefi", ".hex");
+        if (hexFileName == null)
             return "File not found";
-        String absolutePath = new File(fileName).getAbsolutePath();
+        String hexAbsolutePath = new File(hexFileName).getAbsolutePath();
 
-        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + absolutePath + " -v -s";
+        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " -v -s";
+    }
+
+    private static String getDfuEraseCommand() {
+        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -e all";
     }
 
     @NotNull

@@ -70,6 +70,8 @@ public class ProgramSelector {
                     Object selected = comboPorts.getSelectedItem();
                     String port = selected == null ? PortDetector.AUTO : selected.toString();
                     DfuFlasher.rebootToDfu(comboPorts, port, wnd);
+                } else if (selectedMode.equals(DFU_ERASE)) {
+                    DfuFlasher.runDfuErase();
                 } else {
                     throw new IllegalArgumentException("How did you " + selectedMode);
                 }
