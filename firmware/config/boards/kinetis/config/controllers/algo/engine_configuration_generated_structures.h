@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Nov 22 18:40:59 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 23 21:46:44 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4240,19 +4240,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6644
 	 */
-	le_formula_t fsioFormulas[6];
-	/**
-	 * offset 7844
-	 */
 	lua_script_t luaScript;
-	/**
-	 * offset 9844
-	 */
-	le_formula_t timingMultiplier;
-	/**
-	 * offset 10044
-	 */
-	le_formula_t timingAdditive;
 	/**
 	C
 	 * offset 10244
@@ -4539,4 +4527,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Nov 22 18:40:59 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Nov 23 21:46:44 UTC 2021

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Nov 22 18:41:04 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Nov 23 21:46:49 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4246,19 +4246,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6672
 	 */
-	le_formula_t fsioFormulas[6];
-	/**
-	 * offset 7872
-	 */
 	lua_script_t luaScript;
-	/**
-	 * offset 9872
-	 */
-	le_formula_t timingMultiplier;
-	/**
-	 * offset 10072
-	 */
-	le_formula_t timingAdditive;
 	/**
 	C
 	 * offset 10272
@@ -4545,4 +4533,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Nov 22 18:41:04 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Nov 23 21:46:49 UTC 2021
