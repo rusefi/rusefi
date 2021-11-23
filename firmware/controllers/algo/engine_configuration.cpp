@@ -691,9 +691,6 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->alternatorPwmFrequency = 300;
 
-	strcpy(config->timingMultiplier, "1");
-	strcpy(config->timingAdditive, "0");
-
 	engineConfiguration->cj125isUaDivided = true;
 
 	engineConfiguration->isAlternatorControlEnabled = false;
