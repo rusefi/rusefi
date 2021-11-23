@@ -11,6 +11,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -40,46 +41,11 @@ public class DfuFlasher {
             return;
         }
         String port = selectedItem.toString();
-        StringBuilder messages = new StringBuilder();
 
-        AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
-        if (!PortDetector.isAutoPort(port)) {
-            messages.append("Using selected " + port + "\n");
-            IoStream stream = SerialIoStreamJSerialComm.openPort(port);
-            AtomicReference<String> signature = new AtomicReference<>();
-            new SerialAutoChecker(port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
-                @Override
-                public Void apply(SerialAutoChecker.CallbackContext callbackContext) {
-                    signature.set(callbackContext.getSignature());
-                    return null;
-                }
-            });
-            if (signature.get() == null) {
-                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI has not responded on selected " + port + "\n" +
-                        "Maybe try automatic serial port detection?");
-                return;
-            }
-            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, messages);
-            isSignatureValidated.set(isSignatureValidatedLocal);
-        } else {
-            messages.append("Auto-detecting port...\n");
-            // instead of opening the just-detected port we execute the command using the same stream we used to discover port
-            // it's more reliable this way
-            port = PortDetector.autoDetectSerial(callbackContext -> {
-                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), messages);
-                isSignatureValidated.set(isSignatureValidatedLocal);
-                return null;
-            }).getSerialPort();
-            if (port == null) {
-                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI serial port not detected");
-                return;
-            } else {
-                messages.append("Detected rusEFI on " + port + "\n");
-            }
-        }
-        StatusWindow wnd = new StatusWindow();
-        wnd.showFrame(appendBundleName("DFU status " + Launcher.CONSOLE_VERSION));
-        wnd.appendMsg(messages.toString());
+        StatusWindow wnd = createStatusWindow();
+
+        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, wnd);
+        if (isSignatureValidated == null) return;
         if (isSignatureValidated.get()) {
             if (!ProgramSelector.IS_WIN) {
                 wnd.appendMsg("Switched to DFU mode!");
@@ -95,9 +61,55 @@ public class DfuFlasher {
         }
     }
 
-    public static void runDfuProgramming() {
+    @Nullable
+    public static AtomicBoolean rebootToDfu(JComponent parent, String port, StatusWindow wnd) {
+        AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
+        if (!PortDetector.isAutoPort(port)) {
+            wnd.append("Using selected " + port + "\n");
+            IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+            AtomicReference<String> signature = new AtomicReference<>();
+            new SerialAutoChecker(port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
+                @Override
+                public Void apply(SerialAutoChecker.CallbackContext callbackContext) {
+                    signature.set(callbackContext.getSignature());
+                    return null;
+                }
+            });
+            if (signature.get() == null) {
+                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI has not responded on selected " + port + "\n" +
+                        "Maybe try automatic serial port detection?");
+                return null;
+            }
+            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, wnd);
+            isSignatureValidated.set(isSignatureValidatedLocal);
+        } else {
+            wnd.append("Auto-detecting port...\n");
+            // instead of opening the just-detected port we execute the command using the same stream we used to discover port
+            // it's more reliable this way
+            port = PortDetector.autoDetectSerial(callbackContext -> {
+                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), wnd);
+                isSignatureValidated.set(isSignatureValidatedLocal);
+                return null;
+            }).getSerialPort();
+            if (port == null) {
+                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI serial port not detected");
+                return null;
+            } else {
+                wnd.append("Detected rusEFI on " + port + "\n");
+            }
+        }
+        return isSignatureValidated;
+    }
+
+    @NotNull
+    protected static StatusWindow createStatusWindow() {
         StatusWindow wnd = new StatusWindow();
         wnd.showFrame(appendBundleName("DFU status " + Launcher.CONSOLE_VERSION));
+        return wnd;
+    }
+
+    public static void runDfuProgramming() {
+        StatusWindow wnd = createStatusWindow();
         ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
     }
 

@@ -6,6 +6,7 @@ import com.rusefi.SignatureHelper;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.ui.StatusConsumer;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -16,7 +17,7 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 public class DfuHelper {
     private static final String PREFIX = "rusefi_bundle";
 
-    public static void sendDfuRebootCommand(IoStream stream, StringBuilder messages) {
+    public static void sendDfuRebootCommand(IoStream stream, StatusConsumer messages) {
         byte[] command = BinaryProtocol.getTextCommandBytes(Fields.CMD_REBOOT_DFU);
         try {
             stream.sendPacket(command);
@@ -27,7 +28,7 @@ public class DfuHelper {
         }
     }
 
-    public static boolean sendDfuRebootCommand(JComponent parent, String signature, IoStream stream, StringBuilder messages) {
+    public static boolean sendDfuRebootCommand(JComponent parent, String signature, IoStream stream, StatusConsumer messages) {
         RusEfiSignature s = SignatureHelper.parse(signature);
         String bundleName = Autoupdate.readBundleFullName();
         if (bundleName != null && s != null) {
