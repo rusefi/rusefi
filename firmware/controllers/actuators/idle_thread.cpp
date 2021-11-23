@@ -216,7 +216,7 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 	return clampF(0, running, 100);
 }
 
-float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) const {
+float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) {
 	float cranking = getCrankingOpenLoop(clt);
 
 	// if we're cranking, nothing more to do.

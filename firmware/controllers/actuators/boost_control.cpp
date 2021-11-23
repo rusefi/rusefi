@@ -40,18 +40,20 @@ expected<float> BoostController::observePlant() const {
 	return Sensor::get(SensorType::Map);
 }
 
-expected<float> BoostController::getSetpoint() const {
+expected<float> BoostController::getSetpoint() {
 	// If we're in open loop only mode, disregard any target computation.
 	// Open loop needs to work even in case of invalid closed loop config
 	if (engineConfiguration->boostType != CLOSED_LOOP) {
-		return 0;
+		closedLoopPart = 0;
+		return closedLoopPart;
 	}
 
 	float rpm = GET_RPM();
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+	isTpsValid = tps.Valid;
 
-	if (!tps) {
+	if (!isTpsValid) {
 		return unexpected;
 	}
 
@@ -62,14 +64,16 @@ expected<float> BoostController::getSetpoint() const {
 	return m_closedLoopTargetMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps.Value / TPS_1_BYTE_PACKING_MULT);
 }
 
-expected<percent_t> BoostController::getOpenLoop(float target) const {
+expected<percent_t> BoostController::getOpenLoop(float target) {
 	// Boost control open loop doesn't care about target - only TPS/RPM
 	UNUSED(target);
 
 	float rpm = GET_RPM();
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
-	if (!tps) {
+	isTpsValid = tps.Valid;
+
+	if (!isTpsValid) {
 		return unexpected;
 	}
 
@@ -106,13 +110,16 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 		return 0;
 	}
 
-	if (manifoldPressure < engineConfiguration->minimumBoostClosedLoopMap) {
+	isBelowClosedLoopThreshold = manifoldPressure < engineConfiguration->minimumBoostClosedLoopMap;
+	if (isBelowClosedLoopThreshold) {
 		// We're below the CL threshold, inhibit CL for now
 		m_pid.reset();
-		return 0;
+		closedLoopPart = 0;
+		return closedLoopPart;
 	}
 
-	return m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	closedLoopPart = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	return closedLoopPart;
 }
 
 expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
