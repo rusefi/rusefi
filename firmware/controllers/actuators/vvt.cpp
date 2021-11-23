@@ -49,7 +49,7 @@ expected<angle_t> VvtController::observePlant() const {
 	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
 }
 
-expected<angle_t> VvtController::getSetpoint() const {
+expected<angle_t> VvtController::getSetpoint() {
 	int rpm = GET_RPM();
 	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
@@ -61,7 +61,7 @@ expected<angle_t> VvtController::getSetpoint() const {
 	return target;
 }
 
-expected<percent_t> VvtController::getOpenLoop(angle_t target) const {
+expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 	// TODO: could we do VVT open loop?
 	UNUSED(target);
 	return 0;
