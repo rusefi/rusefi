@@ -1,6 +1,8 @@
 package com.rusefi.ui.lua;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.ui.util.UiUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -54,6 +56,14 @@ public class TextEditor {
         bottomArea.add(sizeLabel);
 
         installUndoRedoKeystrokes();
+        UiUtils.installPopupMenu(createPopupMenu(), textArea);
+    }
+
+    @NotNull
+    private JPopupMenu createPopupMenu() {
+        JPopupMenu menu = new JPopupMenu();
+        menu.add(UiUtils.createCopyMenu(textArea));
+        return menu;
     }
 
     private void updateSize() {
