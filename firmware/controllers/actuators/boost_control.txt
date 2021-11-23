@@ -2,6 +2,7 @@ struct_no_prefix boost_control_s
 
 bit isTpsValid
 bit m_shouldResetPid
+bit isBelowClosedLoopThreshold;
 
 float openLoopPart;
 float closedLoopPart;
