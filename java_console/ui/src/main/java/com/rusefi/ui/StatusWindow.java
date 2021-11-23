@@ -72,6 +72,11 @@ public class StatusWindow implements StatusConsumer {
         });
     }
 
+    @Override
+    public void append(String s) {
+        appendMsg(s);
+    }
+
     public void setStatus(String status) {
         bottomStatusLabel.setText(status);
     }

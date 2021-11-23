@@ -22,6 +22,7 @@ public class PortDetector {
     private final static Logging log = Logging.getLogging(PortDetector.class);
 
     private static final NamedThreadFactory AUTO_DETECT_PORT = new NamedThreadFactory("AutoDetectPort");
+    public static final String AUTO = "auto";
 
     /**
      * Connect to all serial ports and find out which one respond first
@@ -111,6 +112,6 @@ public class PortDetector {
     }
 
     public static boolean isAutoPort(String port) {
-        return port.toLowerCase().startsWith("auto");
+        return port.toLowerCase().startsWith(AUTO);
     }
 }
