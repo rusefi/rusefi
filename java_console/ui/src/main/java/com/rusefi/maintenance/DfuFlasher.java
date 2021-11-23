@@ -48,8 +48,8 @@ public class DfuFlasher {
         if (isSignatureValidated == null) return;
         if (isSignatureValidated.get()) {
             if (!ProgramSelector.IS_WIN) {
-                wnd.appendMsg("Switched to DFU mode!");
-                wnd.appendMsg("rusEFI console can only program on Windows");
+                wnd.append("Switched to DFU mode!");
+                wnd.append("rusEFI console can only program on Windows");
                 return;
             }
             submitAction(() -> {
@@ -57,7 +57,7 @@ public class DfuFlasher {
                 executeDFU(wnd);
             });
         } else {
-            wnd.appendMsg("Please use manual DFU to change bundle type.");
+            wnd.append("Please use manual DFU to change bundle type.");
         }
     }
 
@@ -131,17 +131,17 @@ public class DfuFlasher {
                 DFU_BINARY, wnd, stdout);
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
-            wnd.appendMsg("SUCCESS!");
-            wnd.appendMsg("Please power cycle device to exit DFU mode");
+            wnd.append("SUCCESS!");
+            wnd.append("Please power cycle device to exit DFU mode");
         } else if (stdout.toString().contains("Target device not found")) {
-            wnd.appendMsg("ERROR: Device not connected or STM32 Bootloader driver not installed?");
-            wnd.appendMsg("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
-            wnd.appendMsg("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
+            wnd.append("ERROR: Device not connected or STM32 Bootloader driver not installed?");
+            wnd.append("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
+            wnd.append("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         } else {
-            wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
-            wnd.appendMsg("ERROR: does not look like DFU has worked!");
+            wnd.append(stdout.length() + " / " + errorResponse.length());
+            wnd.append("ERROR: does not look like DFU has worked!");
             appendDeviceReport(wnd);
             wnd.setErrorState(true);
         }
@@ -150,16 +150,16 @@ public class DfuFlasher {
     private static void appendDeviceReport(StatusWindow wnd) {
         for (String line : getDevicesReport()) {
             if (line.contains("STM Device in DFU Mode")) {
-                wnd.appendMsg(" ******************************************************************");
-                wnd.appendMsg(" ************* YOU NEED TO REMOVE LEGACY DFU DRIVER ***************");
-                wnd.appendMsg(" ******************************************************************");
+                wnd.append(" ******************************************************************");
+                wnd.append(" ************* YOU NEED TO REMOVE LEGACY DFU DRIVER ***************");
+                wnd.append(" ******************************************************************");
             }
-            wnd.appendMsg("Devices: " + line);
+            wnd.append("Devices: " + line);
         }
     }
 
     private static void timeForDfuSwitch(StatusWindow wnd) {
-        wnd.appendMsg("Giving time for USB enumeration...");
+        wnd.append("Giving time for USB enumeration...");
         try {
             // two seconds not enough on my Windows 10
             Thread.sleep(3 * Timeouts.SECOND);

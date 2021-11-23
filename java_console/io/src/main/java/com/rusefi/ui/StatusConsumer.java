@@ -1,7 +1,8 @@
 package com.rusefi.ui;
 
 public interface StatusConsumer {
-    void appendMsg(String s);
+    StatusConsumer VOID = s -> {
+    };
 
     void append(String s);
 }
