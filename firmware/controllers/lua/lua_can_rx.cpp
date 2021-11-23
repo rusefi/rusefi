@@ -12,7 +12,8 @@ int32_t luaCanRxIds[maxFilterCount] = {0};
 
 static bool shouldRxCanFrame(const CANRxFrame& frame) {
 	for (size_t i = 0; i < filterCount; i++) {
-		if (CAN_EID(frame) == luaCanRxIds[i]) {
+		int32_t id = luaCanRxIds[i];
+		if (CAN_SID(frame) == id || CAN_EID(frame) == id) {
 			return true;
 		}
 	}
