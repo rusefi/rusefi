@@ -1,0 +1,10 @@
+struct_no_prefix boost_control_s
+
+bit isTpsValid
+bit m_shouldResetPid
+
+float openLoopPart;
+float closedLoopPart;
+
+
+end_struct
