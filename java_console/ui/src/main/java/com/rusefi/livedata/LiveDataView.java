@@ -9,6 +9,7 @@ public enum LiveDataView {
     FUEL_PUMP(live_data_e.LDS_FUEL_PUMP, FuelPump.VALUES, "fuel_pump.cpp"),
     MAIN_RELAY(live_data_e.LDS_MAIN_RELAY, MainRelay.VALUES, "main_relay.cpp"),
     TPS_ACCEL(live_data_e.LDS_TPS_ACCEL, TpsAccelState.VALUES, "accel_enrichment.cpp"),
+    BOOST_CONTROL(live_data_e.LDS_BOOST_CONTROL, BoostControl.VALUES, "boost_control.cpp"),
     ;
 
     private final live_data_e liveDataE;

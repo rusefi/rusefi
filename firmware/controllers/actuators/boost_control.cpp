@@ -43,7 +43,8 @@ expected<float> BoostController::observePlant() const {
 expected<float> BoostController::getSetpoint() {
 	// If we're in open loop only mode, disregard any target computation.
 	// Open loop needs to work even in case of invalid closed loop config
-	if (engineConfiguration->boostType != CLOSED_LOOP) {
+	isNotClosedLoop = engineConfiguration->boostType != CLOSED_LOOP;
+	if (isNotClosedLoop) {
 		closedLoopPart = 0;
 		return closedLoopPart;
 	}
@@ -94,7 +95,8 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressure) {
 	// If we're in open loop only mode, make no closed loop correction.
-	if (engineConfiguration->boostType != CLOSED_LOOP) {
+	isNotClosedLoop = engineConfiguration->boostType != CLOSED_LOOP;
+	if (isNotClosedLoop) {
 		return 0;
 	}
 
