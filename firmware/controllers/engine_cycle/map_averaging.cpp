@@ -111,10 +111,6 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
-	if (!isAveraging && engine->sensorChartMode != SC_MAP) {
-		return;
-	}
-
 #if EFI_SENSOR_CHART && EFI_ANALOG_SENSORS
 	if (engine->sensorChartMode == SC_MAP) {
 		measurementsPerRevolutionCounter++;
