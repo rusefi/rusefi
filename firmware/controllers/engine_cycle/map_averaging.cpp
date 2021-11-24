@@ -70,6 +70,7 @@ static float v_averagedMapValue;
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
+static adcsample_t fastestRawAdc;
 
 /**
  * here we have averaging start and averaging end points for each cylinder
@@ -109,18 +110,17 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
  * as fast as possible
  */
 void mapAveragingAdcCallback(adcsample_t adcValue) {
+	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
+
+	fastestRawAdc = adcValue;
 	if (!isAveraging && engine->sensorChartMode != SC_MAP) {
 		return;
 	}
 
-	/* Calculates the average values from the ADC samples.*/
-	measurementsPerRevolutionCounter++;
-	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
-
 #if EFI_SENSOR_CHART && EFI_ANALOG_SENSORS
 	if (engine->sensorChartMode == SC_MAP) {
-		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
-				== 0) {
+		measurementsPerRevolutionCounter++;
+		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0) {
 			float voltage = adcToVoltsDivided(adcValue);
 			float currentPressure = convertMap(voltage).value_or(0);
 			scAddData(
@@ -130,7 +130,8 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	}
 #endif /* EFI_SENSOR_CHART */
 
-	{
+	/* Calculates the average values from the ADC samples.*/
+	if (isAveraging) {
 		// with locking we will have a consistent state
 		chibios_rt::CriticalSectionLocker csl;
 		mapAdcAccumulator += adcValue;
@@ -189,6 +190,7 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
 	tsOutputChannels->debugFloatField3 = Sensor::getOrZero(SensorType::MapFast);
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
+	tsOutputChannels->debugIntField1 = fastestRawAdc;
 }
 #endif /* EFI_TUNER_STUDIO */
 

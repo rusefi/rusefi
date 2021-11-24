@@ -835,7 +835,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 		break;
 #endif /* EFI_CJ125 && HAL_USE_SPI */
 #if EFI_MAP_AVERAGING
-		case DBG_MAP:
+	case DBG_MAP:
 		postMapState(tsOutputChannels);
 		break;
 #endif /* EFI_MAP_AVERAGING */
