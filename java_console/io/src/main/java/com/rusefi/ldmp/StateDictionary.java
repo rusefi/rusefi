@@ -27,6 +27,8 @@ public enum StateDictionary {
         register(live_data_e.LDS_AC_CONTROL, AcControl.VALUES); // 12
         register(live_data_e.LDS_FUEL_PUMP, FuelPump.VALUES);
         register(live_data_e.LDS_TPS_ACCEL, TpsAccelState.VALUES);
+        register(live_data_e.LDS_MAIN_RELAY, MainRelay.VALUES);
+        register(live_data_e.LDS_BOOST_CONTROL, BoostControl.VALUES);
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<live_data_e>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());
