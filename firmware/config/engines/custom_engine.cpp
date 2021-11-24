@@ -955,8 +955,6 @@ pid = Pid.new(2, 0, 0, -100, 100)
 
 biasCurveIndex = findCurveIndex("bias")
 
-canRxAdd(0x600)
-
 voltageFromCan = nil
 canRxAdd(0x600)
 
