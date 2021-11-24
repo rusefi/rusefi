@@ -134,7 +134,7 @@ public class LiveDataParserPanel {
         return parser.translationUnit();
     }
 
-    public static ParseResult applyVariables(VariableValueSource valueSource, String s, SourceCodePainter painter, ParseTree tree) {
+    public static ParseResult applyVariables(VariableValueSource valueSource, String sourceCode, SourceCodePainter painter, ParseTree tree) {
         Stack<Boolean> currentState = new Stack<>();
         currentState.add(Boolean.TRUE);
 
@@ -143,7 +143,7 @@ public class LiveDataParserPanel {
         new ParseTreeWalker().walk(new CPP14ParserBaseListener() {
             @Override
             public void enterStatement(CPP14Parser.StatementContext ctx) {
-                String origin = getOrigin(ctx, s);
+                String origin = getOrigin(ctx, sourceCode);
 //                System.out.println("enter statement [" + origin + "]");
             }
 
