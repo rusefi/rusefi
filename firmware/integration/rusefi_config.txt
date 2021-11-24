@@ -1508,6 +1508,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
 ! end of engine_configuration_s
 end_struct
 
+! note that this magic field name is used by LiveDataParserPanel
 engine_configuration_s engineConfiguration;
 
 error_message_t warning_message;
