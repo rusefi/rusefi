@@ -128,7 +128,7 @@ void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfigura
 	(void)previousConfiguration;
 }
 
-static LECalculator calc;
+static LECalculator calc CCM_OPTIONAL;
 
 static const char * action2String(le_action_e action) {
 	static char buffer[_MAX_FILLER];
