@@ -11,29 +11,30 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class ProgramSelector {
 
-    private static final String AUTO_DFU = "Auto DFU";
-    private static final String MANUAL_DFU = "Manual DFU";
-    private static final String DFU_SWITCH = "Switch to DFU";
-    private static final String DFU_ERASE = "Full Erase";
-    private static final String ST_LINK = "ST-LINK";
+    private static final String AUTO_DFU = "Auto Update";
+    private static final String MANUAL_DFU = "Manual DFU Update";
+    private static final String DFU_SWITCH = "Switch to DFU Mode";
+    private static final String DFU_ERASE = "Full Chip Erase";
+    private static final String ST_LINK = "ST-LINK Update";
     public static final boolean IS_WIN = System.getProperty("os.name").toLowerCase().contains("win");
 
     private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware";
 
     private final JPanel controls = new JPanel(new FlowLayout());
-    private final JComboBox mode = new JComboBox();
+    private final JComboBox<String> mode = new JComboBox<>();
 
     public ProgramSelector(JComboBox<String> comboPorts) {
-        /**
+        /*
          * todo: add FULL AUTO mode which would fire up DFU and ST-LINK in parallel hoping that one of those would work?
          */
-        mode.addItem(AUTO_DFU);
         if (IS_WIN) {
+            mode.addItem(AUTO_DFU);
             mode.addItem(MANUAL_DFU);
             mode.addItem(DFU_ERASE);
             mode.addItem(ST_LINK);
@@ -57,23 +58,29 @@ public class ProgramSelector {
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
 
-
-                if (selectedMode.equals(AUTO_DFU)) {
-                    DfuFlasher.doAutoDfu(comboPorts.getSelectedItem(), comboPorts);
-                } else if (selectedMode.equals(MANUAL_DFU)) {
-                    DfuFlasher.runDfuProgramming();
-                } else if (selectedMode.equals(ST_LINK)) {
-                    // todo: add ST-LINK no-assert mode? or not?
-                    FirmwareFlasher.doUpdateFirmware(FirmwareFlasher.IMAGE_FILE, updateFirmware);
-                } else if (selectedMode.equals(DFU_SWITCH)) {
-                    StatusWindow wnd = DfuFlasher.createStatusWindow();
-                    Object selected = comboPorts.getSelectedItem();
-                    String port = selected == null ? PortDetector.AUTO : selected.toString();
-                    DfuFlasher.rebootToDfu(comboPorts, port, wnd);
-                } else if (selectedMode.equals(DFU_ERASE)) {
-                    DfuFlasher.runDfuErase();
-                } else {
-                    throw new IllegalArgumentException("How did you " + selectedMode);
+                Objects.requireNonNull(selectedMode);
+                switch (selectedMode) {
+                    case AUTO_DFU:
+                        DfuFlasher.doAutoDfu(comboPorts.getSelectedItem(), comboPorts);
+                        break;
+                    case MANUAL_DFU:
+                        DfuFlasher.runDfuProgramming();
+                        break;
+                    case ST_LINK:
+                        // todo: add ST-LINK no-assert mode? or not?
+                        FirmwareFlasher.doUpdateFirmware(FirmwareFlasher.IMAGE_FILE, updateFirmware);
+                        break;
+                    case DFU_SWITCH:
+                        StatusWindow wnd = DfuFlasher.createStatusWindow();
+                        Object selected = comboPorts.getSelectedItem();
+                        String port = selected == null ? PortDetector.AUTO : selected.toString();
+                        DfuFlasher.rebootToDfu(comboPorts, port, wnd);
+                        break;
+                    case DFU_ERASE:
+                        DfuFlasher.runDfuErase();
+                        break;
+                    default:
+                        throw new IllegalArgumentException("How did you " + selectedMode);
                 }
             }
         });
