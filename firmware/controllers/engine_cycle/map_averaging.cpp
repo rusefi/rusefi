@@ -131,10 +131,6 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	}
 #endif // EFI_TUNER_STUDIO
 
-	if (!isAveraging && engine->sensorChartMode != SC_MAP) {
-		return;
-	}
-
 	/* Calculates the average values from the ADC samples.*/
 	if (isAveraging) {
 		// with locking we will have a consistent state
