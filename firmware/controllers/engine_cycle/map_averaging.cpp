@@ -70,7 +70,6 @@ static float v_averagedMapValue;
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
-static adcsample_t fastestRawAdc;
 
 /**
  * here we have averaging start and averaging end points for each cylinder
@@ -112,7 +111,6 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
-	fastestRawAdc = adcValue;
 	if (!isAveraging && engine->sensorChartMode != SC_MAP) {
 		return;
 	}
@@ -129,6 +127,13 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 		}
 	}
 #endif /* EFI_SENSOR_CHART */
+
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_MAP) {
+		float voltage = adcToVoltsDivided(adcValue);
+		tsOutputChannels.debugFloatField5 = convertMap(voltage).value_or(0);
+	}
+#endif // EFI_TUNER_STUDIO
 
 	/* Calculates the average values from the ADC samples.*/
 	if (isAveraging) {
@@ -190,7 +195,6 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
 	tsOutputChannels->debugFloatField3 = Sensor::getOrZero(SensorType::MapFast);
 	tsOutputChannels->debugIntField1 = mapMeasurementsCounter;
-	tsOutputChannels->debugIntField1 = fastestRawAdc;
 }
 #endif /* EFI_TUNER_STUDIO */
 
