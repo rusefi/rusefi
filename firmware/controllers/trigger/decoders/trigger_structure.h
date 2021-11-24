@@ -60,15 +60,6 @@ public:
 
 #define TRIGGER_CHANNEL_COUNT 3
 
-class trigger_shape_helper {
-public:
-	trigger_shape_helper();
-
-	SingleChannelStateSequence channels[TRIGGER_CHANNEL_COUNT];
-private:
-	pin_state_t pinStates[TRIGGER_CHANNEL_COUNT][PWM_PHASE_MAX_COUNT];
-};
-
 class Engine;
 class TriggerState;
 class TriggerFormDetails;
@@ -199,8 +190,7 @@ public:
 	 * but name is supposed to hint at the fact that decoders should not be assigning to it
 	 * Please use "getTriggerSize()" macro or "getSize()" method to read this value
 	 */
-	MultiChannelStateSequence waveStorage; // DON'T USE - WILL BE REMOVED LATER
-	MultiChannelStateSequence * const wave;
+	MultiChannelStateSequenceWithData<PWM_PHASE_MAX_COUNT> wave;
 
 	// todo: add a runtime validation which would verify that this field was set properly
 	// todo: maybe even automate this flag calculation?
@@ -225,6 +215,9 @@ public:
 	/**
 	 * This version of 'addEvent...' family considers the angle duration of operationMode in this trigger
 	 * For example, (0..180] for FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR
+	 *
+	 * TODO: one day kill all usages with FOUR_STROKE_CAM_SENSOR 720 cycle and add runtime prohibition
+	 * TODO: for FOUR_STROKE_CAM_SENSOR addEvent360 is the way to go
 	 */
 	void addEventAngle(angle_t angle, trigger_wheel_e const channelIndex, trigger_value_e const state);
 
@@ -273,14 +266,6 @@ public:
 	uint16_t findAngleIndex(TriggerFormDetails *details, angle_t angle) const;
 
 private:
-	trigger_shape_helper h;
-
-
-	/**
-	 * Working buffer for 'wave' instance
-	 * Values are in the 0..1 range
-	 */
-	float switchTimesBuffer[PWM_PHASE_MAX_COUNT];
 	/**
 	 * These angles are in trigger DESCRIPTION coordinates - i.e. the way you add events while declaring trigger shape
 	 */
@@ -310,7 +295,7 @@ public:
 	 * These angles are in event coordinates - with synchronization point located at angle zero.
 	 * These values are pre-calculated for performance reasons.
 	 */
-	angle_t eventAngles[PWM_PHASE_MAX_COUNT];
+	angle_t eventAngles[2 * PWM_PHASE_MAX_COUNT];
 };
 
 void findTriggerPosition(
@@ -323,4 +308,4 @@ void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped, op
 
 #define TRIGGER_WAVEFORM(x) engine->triggerCentral.triggerShape.x
 
-#define getTriggerSize() TRIGGER_WAVEFORM(wave->phaseCount)
+#define getTriggerSize() TRIGGER_WAVEFORM(wave.phaseCount)

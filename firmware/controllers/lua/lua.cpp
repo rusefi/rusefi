@@ -84,7 +84,11 @@ public:
 	}
 };
 
-static Heap heaps[] = { luaUserHeap, luaSystemHeap };
+static Heap heaps[] = { luaUserHeap,
+#if LUA_SYSTEM_HEAP > 1
+luaSystemHeap
+#endif
+};
 
 template <int HeapIdx>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
@@ -346,7 +350,7 @@ void LuaThread::ThreadTask() {
 }
 
 #if LUA_USER_HEAP > 1
-static LuaThread luaThread;
+static LuaThread luaThread CCM_OPTIONAL;
 #endif
 
 void startLua() {

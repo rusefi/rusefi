@@ -101,6 +101,7 @@ public:
 	bool validateEventCounters(const TriggerWaveform& triggerShape) const;
 	void onShaftSynchronization(
 			const TriggerStateCallback triggerCycleCallback,
+			bool wasSynchronized,
 			const efitick_t nowNt,
 			const TriggerWaveform& triggerShape);
 

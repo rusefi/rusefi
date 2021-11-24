@@ -99,11 +99,6 @@ bool RpmCalculator::isRunning() const {
  * @return true if engine is spinning (cranking or running)
  */
 bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
-	/**
-	 * note that the result of this subtraction could be negative, that would happen if
-	 * we have a trigger event between the time we've invoked 'getTimeNow' and here
-	 */
-
 	// Anything below 60 rpm is not running
 	bool noRpmEventsForTooLong = lastTdcTimer.getElapsedSeconds(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
 
@@ -191,6 +186,15 @@ void RpmCalculator::onNewEngineCycle() {
 
 uint32_t RpmCalculator::getRevolutionCounterM(void) const {
 	return revolutionCounterSinceBoot;
+}
+
+void RpmCalculator::onSlowCallback() {
+	/**
+	 * Update engine RPM state if needed (check timeouts).
+	 */
+	if (!checkIfSpinning(getTimeNowNt())) {
+		engine->rpmCalculator.setStopSpinning();
+	}
 }
 
 void RpmCalculator::setStopped() {
@@ -281,7 +285,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 	// this 'index==0' case is here so that it happens after cycle callback so
 	// it goes into sniffer report into the first position
 	if (engine->sensorChartMode == SC_TRIGGER) {
-		angle_t crankAngle = getCrankshaftAngleNt(nowNt);
+		angle_t crankAngle = engine->triggerCentral.getCurrentEnginePhase(nowNt).value_or(0);
 		int signal = 1000 * ckpSignalType + index;
 		scAddData(crankAngle, signal);
 	}
@@ -347,20 +351,6 @@ void tdcMarkCallback(
 			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition, onTdcCallback);
 		}
 	}
-}
-
-
-/**
- * @return Current crankshaft angle, 0 to 720 for four-stroke
- */
-float getCrankshaftAngleNt(efitick_t timeNt) {
-	float timeSinceZeroAngle = engine->rpmCalculator.lastTdcTimer.getElapsedSeconds(timeNt);
-
-	int rpm = GET_RPM();
-
-	float oneDegreeSeconds = (60.0f / 360) / rpm;
-
-	return rpm == 0 ? NAN : timeSinceZeroAngle / oneDegreeSeconds;
 }
 
 void initRpmCalculator() {

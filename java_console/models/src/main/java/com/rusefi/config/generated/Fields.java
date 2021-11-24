@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Nov 19 12:06:54 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Nov 23 21:46:41 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -923,12 +923,6 @@ public class Fields {
 	public static final String FSIO_METHOD_FSIO_DIGITAL_INPUT = "fsio_digital_input";
 	public static final String FSIO_METHOD_FSIO_SETTING = "fsio_setting";
 	public static final String FSIO_METHOD_FSIO_TABLE = "fsio_table";
-	public static final int fsioFormulas1_offset = 6672;
-	public static final int fsioFormulas2_offset = 6872;
-	public static final int fsioFormulas3_offset = 7072;
-	public static final int fsioFormulas4_offset = 7272;
-	public static final int fsioFormulas5_offset = 7472;
-	public static final int fsioFormulas6_offset = 7672;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -1453,7 +1447,6 @@ public class Fields {
 	public static final String LOG_DELIMITER = "`";
 	public static final int log_format_e_LF_NATIVE = 0;
 	public static final int log_format_e_LM_MLV = 1;
-	public static final int logFormat_offset = 496;
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int logicAnalyzerPins1_offset = 748;
 	public static final int logicAnalyzerPins2_offset = 749;
@@ -1470,7 +1463,7 @@ public class Fields {
 	public static final int lps25BaroSensorSda_offset = 1459;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
 	public static final int LUA_PWM_COUNT = 8;
-	public static final int LUA_SCRIPT_SIZE = 2000;
+	public static final int LUA_SCRIPT_SIZE = 3600;
 	public static final int luaOutputPins1_offset = 1220;
 	public static final int luaOutputPins2_offset = 1221;
 	public static final int luaOutputPins3_offset = 1222;
@@ -1479,7 +1472,7 @@ public class Fields {
 	public static final int luaOutputPins6_offset = 1225;
 	public static final int luaOutputPins7_offset = 1226;
 	public static final int luaOutputPins8_offset = 1227;
-	public static final int luaScript_offset = 7872;
+	public static final int luaScript_offset = 6672;
 	public static final int MAF_DECODING_COUNT = 256;
 	public static final int maf_sensor_type_e_Bosch0280218004 = 2;
 	public static final int maf_sensor_type_e_Bosch0280218037 = 1;
@@ -1751,7 +1744,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 1403664100;
+	public static final int SIGNATURE_HASH = 97759068;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1913,9 +1906,7 @@ public class Fields {
 	public static final int timing_offset_cylinder7_offset = 2564;
 	public static final int timing_offset_cylinder8_offset = 2568;
 	public static final int timing_offset_cylinder9_offset = 2572;
-	public static final int timingAdditive_offset = 10072;
 	public static final int timingMode_offset = 448;
-	public static final int timingMultiplier_offset = 9872;
 	public static final int tle6240_cs_offset = 581;
 	public static final int tle6240_csPinMode_offset = 582;
 	public static final int tle6240spiDevice_offset = 4004;
@@ -2215,7 +2206,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.19.all.1403664100";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.23.all.97759068";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2321,6 +2312,7 @@ public class Fields {
 	public static final int unusedExHpfp_offset = 724;
 	public static final int unusedFiller_4703_offset = 4703;
 	public static final int unusedLaunchRpmThreshold_offset = 1032;
+	public static final int unusedLogFormat_offset = 496;
 	public static final int unusedLuaWasHere_offset = 16032;
 	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedOutputFreqWhereHere_offset = 832;
@@ -2546,7 +2538,7 @@ public class Fields {
 	public static final Field CANSLEEPPERIODMS = Field.create("CANSLEEPPERIODMS", 484, FieldType.INT);
 	public static final Field AMBIGUOUSOPERATIONMODE = Field.create("AMBIGUOUSOPERATIONMODE", 488, FieldType.INT);
 	public static final Field DISPLAYMODE = Field.create("DISPLAYMODE", 492, FieldType.INT);
-	public static final Field LOGFORMAT = Field.create("LOGFORMAT", 496, FieldType.INT);
+	public static final Field UNUSEDLOGFORMAT = Field.create("UNUSEDLOGFORMAT", 496, FieldType.INT);
 	public static final Field BYFIRMWAREVERSION = Field.create("BYFIRMWAREVERSION", 500, FieldType.INT);
 	public static final Field HD44780WIDTH = Field.create("HD44780WIDTH", 504, FieldType.INT);
 	public static final Field HD44780HEIGHT = Field.create("HD44780HEIGHT", 508, FieldType.INT);
@@ -3664,15 +3656,7 @@ public class Fields {
 	public static final Field IDLEADVANCE = Field.create("IDLEADVANCE", 6576, FieldType.FLOAT);
 	public static final Field IDLEVEBINS = Field.create("IDLEVEBINS", 6608, FieldType.FLOAT);
 	public static final Field IDLEVE = Field.create("IDLEVE", 6640, FieldType.FLOAT);
-	public static final Field FSIOFORMULAS1 = Field.create("FSIOFORMULAS1", 6672, 200, FieldType.STRING);
-	public static final Field FSIOFORMULAS2 = Field.create("FSIOFORMULAS2", 6872, 200, FieldType.STRING);
-	public static final Field FSIOFORMULAS3 = Field.create("FSIOFORMULAS3", 7072, 200, FieldType.STRING);
-	public static final Field FSIOFORMULAS4 = Field.create("FSIOFORMULAS4", 7272, 200, FieldType.STRING);
-	public static final Field FSIOFORMULAS5 = Field.create("FSIOFORMULAS5", 7472, 200, FieldType.STRING);
-	public static final Field FSIOFORMULAS6 = Field.create("FSIOFORMULAS6", 7672, 200, FieldType.STRING);
-	public static final Field LUASCRIPT = Field.create("LUASCRIPT", 7872, 2000, FieldType.STRING);
-	public static final Field TIMINGMULTIPLIER = Field.create("TIMINGMULTIPLIER", 9872, 200, FieldType.STRING);
-	public static final Field TIMINGADDITIVE = Field.create("TIMINGADDITIVE", 10072, 200, FieldType.STRING);
+	public static final Field LUASCRIPT = Field.create("LUASCRIPT", 6672, 3600, FieldType.STRING);
 	public static final Field CLTFUELCORRBINS = Field.create("CLTFUELCORRBINS", 10272, FieldType.FLOAT);
 	public static final Field CLTFUELCORR = Field.create("CLTFUELCORR", 10336, FieldType.FLOAT);
 	public static final Field IATFUELCORRBINS = Field.create("IATFUELCORRBINS", 10400, FieldType.FLOAT);
@@ -3836,7 +3820,7 @@ public class Fields {
 	CANSLEEPPERIODMS,
 	AMBIGUOUSOPERATIONMODE,
 	DISPLAYMODE,
-	LOGFORMAT,
+	UNUSEDLOGFORMAT,
 	BYFIRMWAREVERSION,
 	HD44780WIDTH,
 	HD44780HEIGHT,
@@ -4932,15 +4916,7 @@ public class Fields {
 	IDLEADVANCE,
 	IDLEVEBINS,
 	IDLEVE,
-	FSIOFORMULAS1,
-	FSIOFORMULAS2,
-	FSIOFORMULAS3,
-	FSIOFORMULAS4,
-	FSIOFORMULAS5,
-	FSIOFORMULAS6,
 	LUASCRIPT,
-	TIMINGMULTIPLIER,
-	TIMINGADDITIVE,
 	CLTFUELCORRBINS,
 	CLTFUELCORR,
 	IATFUELCORRBINS,

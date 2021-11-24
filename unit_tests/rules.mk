@@ -55,14 +55,6 @@ ADEFS 	  = $(DADEFS) $(UADEFS)
 LIBS      = $(DLIBS) $(ULIBS)
 
 # Various settings
-IS_MAC = no
-ifneq ($(OS),Windows_NT)
-	UNAME_S := $(shell uname -s)
-    ifeq ($(UNAME_S),Darwin)
-        IS_MAC = yes
-    endif
-endif
-
 ifeq ($(IS_MAC),yes)
 	ODFLAGS	  = -x --syms
 	ASFLAGS   = $(MCFLAGS) -Wa $(ADEFS)

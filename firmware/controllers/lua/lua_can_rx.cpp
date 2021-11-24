@@ -12,7 +12,8 @@ int32_t luaCanRxIds[maxFilterCount] = {0};
 
 static bool shouldRxCanFrame(const CANRxFrame& frame) {
 	for (size_t i = 0; i < filterCount; i++) {
-		if (CAN_EID(frame) == luaCanRxIds[i]) {
+		int32_t id = luaCanRxIds[i];
+		if (CAN_SID(frame) == id || CAN_EID(frame) == id) {
 			return true;
 		}
 	}
@@ -117,7 +118,7 @@ bool doOneLuaCanRx(LuaHandle& ls) {
 
 	// We're done, return this frame to the free list
 	msg = freeBuffers.post(frame, TIME_IMMEDIATE);
-	efiAssertVoid(OBD_PCM_Processor_Fault, msg == MSG_OK, "lua can post to free buffer fail");
+	efiAssert(OBD_PCM_Processor_Fault, msg == MSG_OK, "lua can post to free buffer fail", false);
 
 	// We processed a frame so we should check again
 	return true;

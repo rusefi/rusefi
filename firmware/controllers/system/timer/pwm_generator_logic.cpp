@@ -19,8 +19,6 @@
 #define ZERO_PWM_THRESHOLD 0.01
 
 SimplePwm::SimplePwm()
-	: sr(pinStates)
-	, seq(_switchTimes, &sr)
 {
 	seq.waveCount = 1;
 	seq.phaseCount = 2;
@@ -87,7 +85,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		mode = PM_FULL;
 	} else {
 		mode = PM_NORMAL;
-		_switchTimes[0] = dutyCycle;
+		seq.setSwitchTime(0, dutyCycle);
 	}
 }
 
@@ -316,15 +314,15 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 		return;
 	}
 
-	state->_switchTimes[0] = dutyCycle;
-	state->_switchTimes[1] = 1;
-	state->pinStates[0] = TV_FALL;
-	state->pinStates[1] = TV_RISE;
+	state->seq.setSwitchTime(0, dutyCycle);
+	state->seq.setSwitchTime(1, 1);
+	state->seq.setChannelState(0, 0, TV_FALL);
+	state->seq.setChannelState(0, 1, TV_RISE);
 
 	state->outputPins[0] = output;
 
 	state->setFrequency(frequency);
-	state->setSimplePwmDutyCycle(dutyCycle); // TODO: DUP ABOVE?
+	state->setSimplePwmDutyCycle(dutyCycle);
 	state->weComplexInit(msg, executor, &state->seq, NULL, (pwm_gen_callback*)applyPinState);
 }
 

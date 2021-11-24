@@ -26,9 +26,9 @@ public:
 	MOCK_METHOD(const pid_state_s*, getPidState, (), (const, override));
 
 	// ClosedLoopController mocks
-	MOCK_METHOD(expected<percent_t>, getSetpoint, (), (const, override));
+	MOCK_METHOD(expected<percent_t>, getSetpoint, (), (override));
 	MOCK_METHOD(expected<percent_t>, observePlant, (), (const, override));
-	MOCK_METHOD(expected<percent_t>, getOpenLoop, (percent_t setpoint), (const, override));
+	MOCK_METHOD(expected<percent_t>, getOpenLoop, (percent_t setpoint), (override));
 	MOCK_METHOD(expected<percent_t>, getClosedLoop, (percent_t setpoint, percent_t observation), (override));
 	MOCK_METHOD(void, setOutput, (expected<percent_t> outputValue), (override));
 };

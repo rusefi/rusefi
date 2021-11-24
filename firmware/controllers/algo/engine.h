@@ -8,6 +8,7 @@
 #pragma once
 
 #include "globalaccess.h"
+#include "engine_module.h"
 #include "engine_state.h"
 #include "rpm_calculator.h"
 #include "event_registry.h"
@@ -18,6 +19,7 @@
 #include "local_version_holder.h"
 #include "buttonshift.h"
 #include "gear_controller.h"
+#include "high_pressure_fuel_pump.h"
 #include "limp_manager.h"
 #include "pin_repository.h"
 #include "ac_control.h"
@@ -127,8 +129,12 @@ public:
 		Mockable<InjectorModel>,
 #if EFI_IDLE_CONTROL
 		IdleController,
-#endif
+#endif // EFI_IDLE_CONTROL
 		TriggerScheduler,
+#if EFI_HPFP && EFI_ENGINE_CONTROL
+		HpfpController,
+#endif // EFI_HPFP && EFI_ENGINE_CONTROL
+
 		FuelPumpController,
 		MainRelayController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
@@ -211,7 +217,6 @@ public:
 	FuelSchedule injectionEvents;
 	IgnitionEventList ignitionEvents;
 	scheduling_s tdcScheduler[2];
-
 #endif /* EFI_ENGINE_CONTROL */
 
 	bool needToStopEngine(efitick_t nowNt) const;

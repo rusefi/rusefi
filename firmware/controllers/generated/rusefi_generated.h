@@ -957,12 +957,6 @@
 #define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
 #define FSIO_METHOD_FSIO_SETTING "fsio_setting"
 #define FSIO_METHOD_FSIO_TABLE "fsio_table"
-#define fsioFormulas1_offset 6672
-#define fsioFormulas2_offset 6872
-#define fsioFormulas3_offset 7072
-#define fsioFormulas4_offset 7272
-#define fsioFormulas5_offset 7472
-#define fsioFormulas6_offset 7672
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -1507,7 +1501,6 @@
 #define log_format_e_Force_4_bytes_size_log_format ENUM_32_BITS
 #define log_format_e_LF_NATIVE 0
 #define log_format_e_LM_MLV 1
-#define logFormat_offset 496
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define logicAnalyzerPins1_offset 748
 #define logicAnalyzerPins2_offset 749
@@ -1524,7 +1517,7 @@
 #define lps25BaroSensorSda_offset 1459
 #define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_PWM_COUNT 8
-#define LUA_SCRIPT_SIZE 2000
+#define LUA_SCRIPT_SIZE 3600
 #define luaOutputPins1_offset 1220
 #define luaOutputPins2_offset 1221
 #define luaOutputPins3_offset 1222
@@ -1533,7 +1526,7 @@
 #define luaOutputPins6_offset 1225
 #define luaOutputPins7_offset 1226
 #define luaOutputPins8_offset 1227
-#define luaScript_offset 7872
+#define luaScript_offset 6672
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
 #define maf_sensor_type_e_Bosch0280218004 2
@@ -1824,7 +1817,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1403664100
+#define SIGNATURE_HASH 97759068
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1995,9 +1988,7 @@
 #define timing_offset_cylinder7_offset 2564
 #define timing_offset_cylinder8_offset 2568
 #define timing_offset_cylinder9_offset 2572
-#define timingAdditive_offset 10072
 #define timingMode_offset 448
-#define timingMultiplier_offset 9872
 #define tle6240_cs_offset 581
 #define tle6240_csPinMode_offset 582
 #define tle6240spiDevice_offset 4004
@@ -2343,7 +2334,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.19.all.1403664100"
+#define TS_SIGNATURE "rusEFI 2021.11.23.all.97759068"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2452,6 +2443,7 @@
 #define unusedExHpfp_offset 724
 #define unusedFiller_4703_offset 4703
 #define unusedLaunchRpmThreshold_offset 1032
+#define unusedLogFormat_offset 496
 #define unusedLuaWasHere_offset 16032
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832

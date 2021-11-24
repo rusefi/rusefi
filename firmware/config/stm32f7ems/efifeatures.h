@@ -37,8 +37,10 @@
 #define EFI_USE_UART_DMA FALSE
 
 // UART driver not implemented on F7
-#define TS_NO_PRIMARY
-#define TS_NO_SECONDARY
+#ifndef TS_NO_PRIMARY
+#define TS_NO_PRIMARY 1
+#endif
+#define TS_NO_SECONDARY 1
 
 #define AUX_SERIAL_DEVICE (&SD6)
 

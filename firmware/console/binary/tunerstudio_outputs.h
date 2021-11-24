@@ -44,33 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	scaled_percent speedToRpmRatio; // 8
-	scaled_channel<uint8_t> vehicleSpeedKph; // 10
-	
-	// temperatures
-	scaled_channel<int8_t> internalMcuTemperature; // offset 11
-	scaled_temperature coolantTemperature;   // offset 12
-	scaled_temperature intakeAirTemperature; // offset 14
-	scaled_temperature auxTemp1;             // offset 16
-	scaled_temperature auxTemp2;             // offset 18
-
-	// throttle, pedal
-	scaled_percent throttlePosition;    // 20
-	scaled_percent pedalPosition;       // 22
-	uint16_t tpsADC;                    // 24
-
-	// air flow/mass measurment
-	scaled_voltage massAirFlowVoltage; // 26
-	scaled_channel<uint16_t, PACK_MULT_MASS_FLOW> massAirFlow; // 28
-	scaled_pressure manifoldAirPressure; // 30
-	scaled_pressure baroPressure; // 32
-
-	scaled_lambda lambda; // 34
-	scaled_channel<uint8_t, 10> knockRetard; // 36
-	uint8_t unused37;
-
-	// misc sensors
-	scaled_voltage vBatt; // 38
 	scaled_pressure oilPressure; // 40
 	scaled_angle vvtPositionB1I; // 42
 

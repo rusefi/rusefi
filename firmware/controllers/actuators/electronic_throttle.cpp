@@ -248,7 +248,7 @@ void EtbController::setWastegatePosition(percent_t pos) {
 	m_wastegatePosition = pos;
 }
 
-expected<percent_t> EtbController::getSetpoint() const {
+expected<percent_t> EtbController::getSetpoint() {
 	switch (m_function) {
 		case ETB_Throttle1:
 		case ETB_Throttle2:
@@ -342,7 +342,7 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	return clampF(1, targetPosition, maxPosition);
 }
 
-expected<percent_t> EtbController::getOpenLoop(percent_t target) const {
+expected<percent_t> EtbController::getOpenLoop(percent_t target) {
 	float ff = 0;
 
 	// Don't apply open loop for wastegate/idle valve, only real ETB

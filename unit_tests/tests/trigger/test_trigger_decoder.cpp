@@ -368,12 +368,12 @@ TEST(misc, testRpmCalculator) {
 
 	assertREqualsM("Call@0", (void*)ev0->action.getCallback(), (void*)turnSparkPinHigh);
 	assertEqualsM("ev 0", start + 944, ev0->momentX);
-	assertEqualsLM("coil 0", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev0->action.getArgument())->outputs[0]);
+	assertEqualsLM("coil 0", (uintptr_t)&enginePins.coils[0], (uintptr_t)((IgnitionEvent*)ev0->action.getArgument())->outputs[0]);
 
 	scheduling_s *ev1 = engine->executor.getForUnitTest(1);
 	assertREqualsM("Call@1", (void*)ev1->action.getCallback(), (void*)fireSparkAndPrepareNextSchedule);
 	assertEqualsM("ev 1", start + 1444, ev1->momentX);
-	assertEqualsLM("coil 1", (long)&enginePins.coils[0], (long)((IgnitionEvent*)ev1->action.getArgument())->outputs[0]);
+	assertEqualsLM("coil 1", (uintptr_t)&enginePins.coils[0], (uintptr_t)((IgnitionEvent*)ev1->action.getArgument())->outputs[0]);
 
 	}
 
@@ -466,10 +466,10 @@ TEST(misc, testTriggerDecoder) {
 	s->useOnlyRisingEdgeForTriggerTemp = false;
 	initializeSkippedToothTriggerWaveformExt(s, 2, 0, FOUR_STROKE_CAM_SENSOR);
 	assertEqualsM("shape size", s->getSize(), 4);
-	ASSERT_EQ(s->wave->getSwitchTime(0), 0.25);
-	ASSERT_EQ(s->wave->getSwitchTime(1), 0.5);
-	ASSERT_EQ(s->wave->getSwitchTime(2), 0.75);
-	ASSERT_EQ(s->wave->getSwitchTime(3), 1);
+	ASSERT_EQ(s->wave.getSwitchTime(0), 0.25);
+	ASSERT_EQ(s->wave.getSwitchTime(1), 0.5);
+	ASSERT_EQ(s->wave.getSwitchTime(2), 0.75);
+	ASSERT_EQ(s->wave.getSwitchTime(3), 1);
 
 	}
 

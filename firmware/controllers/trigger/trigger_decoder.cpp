@@ -420,6 +420,7 @@ bool TriggerState::validateEventCounters(const TriggerWaveform& triggerShape) co
 
 void TriggerState::onShaftSynchronization(
 		const TriggerStateCallback triggerCycleCallback,
+		bool wasSynchronized,
 		const efitick_t nowNt,
 		const TriggerWaveform& triggerShape) {
 
@@ -430,7 +431,14 @@ void TriggerState::onShaftSynchronization(
 
 	startOfCycleNt = nowNt;
 	resetCurrentCycleState();
-	incrementTotalEventCounter();
+
+	if (wasSynchronized) {
+		incrementTotalEventCounter();
+	} else {
+		// We have just synchronized, this is the zeroth revolution
+		totalRevolutionCounter = 0;
+	}
+
 	totalEventCountBase += triggerShape.getSize();
 
 #if EFI_UNIT_TEST
@@ -662,7 +670,7 @@ void TriggerState::decodeTriggerEvent(
 			nextTriggerEvent()
 			;
 
-			onShaftSynchronization(triggerCycleCallback, nowNt, triggerShape);
+			onShaftSynchronization(triggerCycleCallback, wasSynchronized, nowNt, triggerShape);
 
 		} else {	/* if (!isSynchronizationPoint) */
 			nextTriggerEvent()
@@ -721,8 +729,6 @@ uint32_t TriggerState::findTriggerZeroEventIndex(
 		return 0;
 	}
 
-
-	// todo: should this variable be declared 'static' to reduce stack usage?
 	TriggerStimulatorHelper helper;
 
 	uint32_t syncIndex = helper.findTriggerSyncPoint(shape,
@@ -731,7 +737,9 @@ uint32_t TriggerState::findTriggerZeroEventIndex(
 	if (syncIndex == EFI_ERROR_CODE) {
 		return syncIndex;
 	}
-	efiAssert(CUSTOM_ERR_ASSERT, getTotalRevolutionCounter() == 1, "findZero_revCounter", EFI_ERROR_CODE);
+
+	// Assert that we found the sync point on the very first revolution
+	efiAssert(CUSTOM_ERR_ASSERT, getTotalRevolutionCounter() == 0, "findZero_revCounter", EFI_ERROR_CODE);
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {

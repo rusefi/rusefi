@@ -211,13 +211,7 @@ static void doPeriodicSlowCallback() {
 		}
 	}
 
-	/**
-	 * Update engine RPM state if needed (check timeouts).
-	 */
-	bool isSpinning = engine->rpmCalculator.checkIfSpinning(nowNt);
-	if (!isSpinning) {
-		engine->rpmCalculator.setStopSpinning();
-	}
+	engine->rpmCalculator.onSlowCallback();
 
 	if (engine->directSelfStimulation || engine->rpmCalculator.isStopped()) {
 		/**
@@ -578,9 +572,6 @@ void commonInitEngineController() {
 		 * This method adds trigger listener which actually schedules ignition
 		 */
 		initMainEventListener();
-#if EFI_HPFP
-		initHPFP();
-#endif // EFI_HPFP
 	}
 #endif /* EFI_ENGINE_CONTROL */
 
@@ -756,10 +747,10 @@ void initEngineContoller() {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 4000
+#define RAM_UNUSED_SIZE 9000
 #endif
 #ifndef CCM_UNUSED_SIZE
-#define CCM_UNUSED_SIZE 2400
+#define CCM_UNUSED_SIZE 32
 #endif
 static char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;

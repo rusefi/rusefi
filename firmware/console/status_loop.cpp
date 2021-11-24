@@ -126,8 +126,24 @@ static void setWarningEnabled(int value) {
 
 #if EFI_FILE_LOGGING
 // this one needs to be in main ram so that SD card SPI DMA works fine
-static NO_CACHE char sdLogBuffer[150];
+static NO_CACHE char sdLogBuffer[220];
 static uint64_t binaryLogCount = 0;
+
+void writeLogLine(Writer& buffer) {
+	if (!main_loop_started)
+		return;
+
+	if (binaryLogCount == 0) {
+		writeHeader(buffer);
+	} else {
+		updateTunerStudioState(&tsOutputChannels);
+		size_t length = writeBlock(sdLogBuffer);
+		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
+		buffer.write(sdLogBuffer, length);
+	}
+
+	binaryLogCount++;
+}
 
 #endif /* EFI_FILE_LOGGING */
 
@@ -143,26 +159,6 @@ static int packEngineMode() {
 
 static float getAirFlowGauge() {
 	return Sensor::get(SensorType::Maf).value_or(engine->engineState.airFlow);
-}
-
-void writeLogLine(Writer& buffer) {
-#if EFI_FILE_LOGGING
-	if (!main_loop_started)
-		return;
-
-	if (binaryLogCount == 0) {
-		writeHeader(buffer);
-	} else {
-		updateTunerStudioState(&tsOutputChannels);
-		size_t length = writeBlock(sdLogBuffer);
-		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
-		buffer.write(sdLogBuffer, length);
-	}
-
-	binaryLogCount++;
-#else
-	(void)buffer;
-#endif /* EFI_FILE_LOGGING */
 }
 
 static int prevCkpEventCounter = -1;

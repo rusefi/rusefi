@@ -69,7 +69,7 @@ static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 #define SYS_ELEMENT_POOL_SIZE 24
 #define UD_ELEMENT_POOL_SIZE 64
 
-static LEElement sysElements[SYS_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
+static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
 CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
 static LEElement * starterRelayDisableLogic;
@@ -77,7 +77,6 @@ static LEElement * starterRelayDisableLogic;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
 FsioResult getEngineValue(le_action_e action) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", unexpected);
 	switch (action) {
 	case LE_METHOD_FAN:
 		return enginePins.fanRelay.getLogicValue();

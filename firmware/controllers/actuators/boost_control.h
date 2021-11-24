@@ -9,10 +9,11 @@
 #include "periodic_task.h"
 #include "closed_loop_controller.h"
 #include "pid.h"
+#include "boost_control_generated.h"
 
 struct IPwm;
 
-class BoostController : public ClosedLoopController<float, percent_t>  {
+class BoostController : public boost_control_s, public ClosedLoopController<float, percent_t>  {
 public:
 	void init(IPwm* pmw, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams);
 	void update();
@@ -23,9 +24,9 @@ public:
 
 	// Helpers for individual parts of boost control
 	expected<float> observePlant() const override;
-	expected<float> getSetpoint() const override;
+	expected<float> getSetpoint() override;
 
-	expected<percent_t> getOpenLoop(float target) const override;
+	expected<percent_t> getOpenLoop(float target) override;
 	expected<percent_t> getClosedLoop(float target, float manifoldPressure) override;
 
 	void setOutput(expected<percent_t> outputValue) override;
@@ -33,7 +34,6 @@ public:
 private:
 	percent_t getClosedLoopImpl(float target, float manifoldPressure);
 
-	bool m_shouldResetPid = false;
 	Pid m_pid;
 
 	const ValueProvider3D* m_openLoopMap = nullptr;

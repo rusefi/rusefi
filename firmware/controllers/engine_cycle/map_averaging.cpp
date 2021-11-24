@@ -124,7 +124,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 			float voltage = adcToVoltsDivided(adcValue);
 			float currentPressure = convertMap(voltage).value_or(0);
 			scAddData(
-					getCrankshaftAngleNt(getTimeNowNt()),
+					engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0),
 					currentPressure);
 		}
 	}

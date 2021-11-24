@@ -500,7 +500,6 @@ void Engine::watchdog() {
 	ignitionEvents.isReady = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("engine has STOPPED");
-	efiPrintf("templog engine has STOPPED %f", secondsSinceTriggerEvent);
 	triggerInfo();
 #endif
 
