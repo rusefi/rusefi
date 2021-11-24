@@ -30,6 +30,7 @@
 #include "launch_control.h"
 #include "trigger_scheduler.h"
 #include "fuel_pump.h"
+#include "main_relay.h"
 #include "type_list.h"
 
 #ifndef EFI_UNIT_TEST
@@ -135,6 +136,7 @@ public:
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
 
 		FuelPumpController,
+		MainRelayController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

@@ -74,3 +74,5 @@
 #define EFI_LUA TRUE
 
 #define EFI_HPFP TRUE
+
+#define EFI_MAIN_RELAY_CONTROL TRUE
