@@ -32,6 +32,7 @@
 #include "fuel_pump.h"
 #include "main_relay.h"
 #include "type_list.h"
+#include "boost_control.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -153,6 +154,10 @@ public:
 	GearControllerBase *gearController;
 	LaunchControlBase launchController;
 	SoftSparkLimiter softSparkLimiter;
+
+#if EFI_BOOST_CONTROL
+	BoostController boostController;
+#endif // EFI_BOOST_CONTROL
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;
