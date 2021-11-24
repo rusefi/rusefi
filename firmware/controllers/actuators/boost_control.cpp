@@ -160,12 +160,11 @@ void BoostController::update() {
 	ClosedLoopController::update();
 }
 
-static BoostController boostController;
 static bool hasInitBoost = false;
 
 void updateBoostControl() {
 	if (hasInitBoost) {
-		boostController.update();
+		engine->boostController.update();
 	}
 }
 
@@ -214,7 +213,7 @@ void startBoostPin() {
 }
 
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {
-	boostController.onConfigurationChange(&previousConfiguration->boostPid);
+	engine->boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
 
 void initBoostCtrl() {
@@ -240,7 +239,7 @@ void initBoostCtrl() {
 	boostMapClosed.init(config->boostTableClosedLoop, config->boostTpsBins, config->boostRpmBins);
 
 	// Set up boost controller instance
-	boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
+	engine->boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
 
 #if !EFI_UNIT_TEST
 	startBoostPin();
