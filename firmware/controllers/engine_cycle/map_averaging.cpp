@@ -94,7 +94,7 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 #if HAL_USE_ADC
 /**
  * This method is invoked from ADC callback.
- * @note This method is invoked OFTEN, this method is a potential bottle-next - the implementation should be
+ * @note This method is invoked OFTEN, this method is a potential bottleneck - the implementation should be
  * as fast as possible
  */
 void mapAveragingAdcCallback(adcsample_t adcValue) {
@@ -106,6 +106,17 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 		tsOutputChannels.debugFloatField5 = convertMap(voltage).value_or(0);
 	}
 #endif // EFI_TUNER_STUDIO
+
+	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN) {
+		float voltage = adcToVoltsDivided(adcValue);
+		float instantMap = convertMap(voltage).value_or(0);
+		engine->triggerCentral.mapState.add(instantMap);
+		if (engine->triggerCentral.mapState.isPeak()) {
+			efitick_t stamp = getTimeNowNt();
+			hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
+			hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
+		}
+	}
 
 	/* Calculates the average values from the ADC samples.*/
 	if (isAveraging) {
