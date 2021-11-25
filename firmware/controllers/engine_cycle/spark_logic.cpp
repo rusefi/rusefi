@@ -94,7 +94,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	bool isTwoWireWasted = engineConfiguration->twoWireBatchIgnition || (engineConfiguration->ignitionMode == IM_INDIVIDUAL_COILS);
 	if (getCurrentIgnitionMode() == IM_WASTED_SPARK && isTwoWireWasted) {
 		int secondIndex = index + engineConfiguration->specs.cylindersCount / 2;
-		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex PASS_ENGINE_PARAMETER_SUFFIX));
+		int secondCoilIndex = ID2INDEX(getCylinderId(secondIndex));
 		secondOutput = &enginePins.coils[secondCoilIndex];
 		assertPinAssigned(secondOutput);
 	} else {
