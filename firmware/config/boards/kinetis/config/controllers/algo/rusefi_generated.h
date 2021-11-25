@@ -1780,12 +1780,11 @@
 #define sdCardPeriodMs_offset 804
 #define sdCardSpiDevice_offset 2584
 #define secondSolenoidPin_offset 810
-#define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "SC_MAP", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
-#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
+#define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "INVALID", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
+#define sensor_chart_e_enum "none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
 #define sensor_chart_e_Internal_ForceMyEnumIntSize_sensor_chart ENUM_32_BITS
 #define sensor_chart_e_SC_AUX_FAST1 5
 #define sensor_chart_e_SC_DETAILED_RPM 4
-#define sensor_chart_e_SC_MAP 2
 #define sensor_chart_e_SC_OFF 0
 #define sensor_chart_e_SC_RPM_ACCEL 3
 #define sensor_chart_e_SC_TRIGGER 1
@@ -1804,7 +1803,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1356114148
+#define SIGNATURE_HASH 2497479369
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2321,7 +2320,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.25.kin.1356114148"
+#define TS_SIGNATURE "rusEFI 2021.11.25.kin.2497479369"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

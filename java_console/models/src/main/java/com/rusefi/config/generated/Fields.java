@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 25 02:43:35 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Nov 25 03:30:06 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1729,7 +1729,6 @@ public class Fields {
 	public static final int secondSolenoidPin_offset = 810;
 	public static final int sensor_chart_e_SC_AUX_FAST1 = 5;
 	public static final int sensor_chart_e_SC_DETAILED_RPM = 4;
-	public static final int sensor_chart_e_SC_MAP = 2;
 	public static final int sensor_chart_e_SC_OFF = 0;
 	public static final int sensor_chart_e_SC_RPM_ACCEL = 3;
 	public static final int sensor_chart_e_SC_TRIGGER = 1;
@@ -1746,6 +1745,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1368172937;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2207,7 +2207,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.25.all.2508489636";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.25.all.1368172937";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2823,7 +2823,7 @@ public class Fields {
 	public static final Field JOYSTICKCPIN = Field.create("JOYSTICKCPIN", 941, FieldType.INT8, brain_pin_e);
 	public static final Field JOYSTICKDPIN = Field.create("JOYSTICKDPIN", 942, FieldType.INT8, brain_pin_e);
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 943, FieldType.INT8);
-	public static final String[] sensor_chart_e = {"none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"};
+	public static final String[] sensor_chart_e = {"none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"};
 	public static final Field SENSORCHARTMODE = Field.create("SENSORCHARTMODE", 944, FieldType.INT, sensor_chart_e);
 	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
 	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 948, FieldType.INT, maf_sensor_type_e);
