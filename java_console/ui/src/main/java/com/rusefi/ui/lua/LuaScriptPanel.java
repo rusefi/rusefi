@@ -10,9 +10,11 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.widgets.AnyCommand;
+import neoe.formatter.lua.LuaFormatter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -38,6 +40,7 @@ public class LuaScriptPanel {
         JButton readButton = new JButton("Read from ECU");
         JButton writeButton = new JButton("Write to ECU");
         JButton resetButton = new JButton("Reset/Reload Lua");
+        JButton formatButton = new JButton("Format");
 
         MessagesPanel mp = new MessagesPanel(null, config);
 
@@ -49,7 +52,20 @@ public class LuaScriptPanel {
         });
         resetButton.addActionListener(e -> resetLua());
 
+        formatButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String sourceCode = scriptText.getText();
+                try {
+                    String formatted = new LuaFormatter().format(sourceCode, new LuaFormatter.Env());
+                    scriptText.setText(formatted);
+                } catch (Exception ignored) {
+                    // todo: fix luaformatter no reason for exception
+                }            }
+        });
+
         upperPanel.add(readButton);
+        upperPanel.add(formatButton);
         upperPanel.add(writeButton);
         upperPanel.add(resetButton);
         upperPanel.add(command.getContent());
