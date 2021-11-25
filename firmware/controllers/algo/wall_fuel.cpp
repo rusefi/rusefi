@@ -11,14 +11,15 @@ void WallFuel::resetWF() {
 	wallFuel = 0;
 }
 
-floatms_t WallFuel::adjust(floatms_t desiredFuel) {
+float WallFuel::adjust(float desiredMassGrams) {
 	invocationCounter++;
-	if (cisnan(desiredFuel)) {
-		return desiredFuel;
+	if (cisnan(desiredMassGrams)) {
+		return desiredMassGrams;
 	}
+
 	// disable this correction for cranking
 	if (engine->rpmCalculator.isCranking()) {
-		return desiredFuel;
+		return desiredMassGrams;
 	}
 
 	ScopePerf perf(PE::WallFuelAdjust);
@@ -29,7 +30,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 				SAE 1999-01-0553 by Peter J Maloney
 
 		M_cmd = commanded fuel mass (output of this function)
-		desiredFuel = desired fuel mass (input to this function)
+		desiredMassGrams = desired fuel mass (input to this function)
 		fuelFilmMass = fuel film mass (how much is currently on the wall)
 
 		First we compute how much fuel to command, by accounting for
@@ -57,21 +58,22 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 		     decreases with decreasing manifold pressure.
 	*/
 
-	// if tau is really small, we get div/0.
+	// if tau or beta is really small, we get div/0.
 	// you probably meant to disable wwae.
 	float tau = engineConfiguration->wwaeTau;
-	if (tau < 0.01f) {
-		return desiredFuel;
+	float beta = engineConfiguration->wwaeBeta;
+
+	if (tau < 0.01f || beta < 0.01f) {
+		return desiredMassGrams;
 	}
 
 	// Ignore really slow RPM
 	int rpm = GET_RPM();
 	if (rpm < 100) {
-		return desiredFuel;
+		return desiredMassGrams;
 	}
 
 	float alpha = expf_taylor(-120 / (rpm * tau));
-	float beta = engineConfiguration->wwaeBeta;
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
@@ -89,7 +91,7 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 	}
 
 	float fuelFilmMass = wallFuel;
-	float M_cmd = (desiredFuel - (1 - alpha) * fuelFilmMass) / (1 - beta);
+	float M_cmd = (desiredMassGrams - (1 - alpha) * fuelFilmMass) / (1 - beta);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
@@ -115,13 +117,10 @@ floatms_t WallFuel::adjust(floatms_t desiredFuel) {
 #endif // EFI_TUNER_STUDIO
 
 	wallFuel = fuelFilmMassNext;
-	wallFuelCorrection = M_cmd - desiredFuel;
+	wallFuelCorrection = M_cmd - desiredMassGrams;
 	return M_cmd;
 }
 
-floatms_t WallFuel::getWallFuel() const {
+float WallFuel::getWallFuel() const {
 	return wallFuel;
 }
-
-
-
