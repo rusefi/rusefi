@@ -11,11 +11,11 @@ void Timer::reset(efitick_t nowNt) {
 }
 
 bool Timer::hasElapsedSec(float seconds) const {
-	return hasElapsedMs(seconds * 1e3);
+	return hasElapsedMs(seconds * 1000);
 }
 
 bool Timer::hasElapsedMs(float milliseconds) const {
-	return hasElapsedUs(milliseconds * 1e3);
+	return hasElapsedUs(milliseconds * 1000);
 }
 
 bool Timer::hasElapsedUs(float microseconds) const {

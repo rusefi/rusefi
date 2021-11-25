@@ -43,24 +43,14 @@
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
 
-void event_trigger_position_s::setAngle(angle_t angle DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	findTriggerPosition(&ENGINE(triggerCentral.triggerShape),
-			&ENGINE(triggerCentral.triggerFormDetails),
-			this, angle PASS_CONFIG_PARAM(engineConfiguration->globalTriggerAngleOffset));
+void event_trigger_position_s::setAngle(angle_t angle) {
+	findTriggerPosition(&engine->triggerCentral.triggerShape,
+			&engine->triggerCentral.triggerFormDetails,
+			this, angle);
 }
 
-trigger_shape_helper::trigger_shape_helper() {
-	memset(&pinStates, 0, sizeof(pinStates));
-	for (int channelIndex = 0; channelIndex < TRIGGER_CHANNEL_COUNT; channelIndex++) {
-		channels[channelIndex].init(pinStates[channelIndex]);
-	}
-}
-
-TriggerWaveform::TriggerWaveform()
-		: waveStorage(switchTimesBuffer, NULL)
-		, wave(&waveStorage) {
+TriggerWaveform::TriggerWaveform() {
 	initialize(OM_NONE);
-	wave->channels = h.channels;
 }
 
 void TriggerWaveform::initialize(operation_mode_e operationMode) {
@@ -85,11 +75,10 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 	this->operationMode = operationMode;
 	triggerShapeSynchPointIndex = 0;
 	memset(initialState, 0, sizeof(initialState));
-	memset(switchTimesBuffer, 0, sizeof(switchTimesBuffer));
 	memset(expectedEventCount, 0, sizeof(expectedEventCount));
-	wave->reset();
-	wave->waveCount = TRIGGER_CHANNEL_COUNT;
-	wave->phaseCount = 0;
+	wave.reset();
+	wave.waveCount = TRIGGER_CHANNEL_COUNT;
+	wave.phaseCount = 0;
 	previousAngle = 0;
 	memset(isRiseEvent, 0, sizeof(isRiseEvent));
 #if EFI_UNIT_TEST
@@ -99,7 +88,7 @@ void TriggerWaveform::initialize(operation_mode_e operationMode) {
 }
 
 size_t TriggerWaveform::getSize() const {
-	return wave->phaseCount;
+	return wave.phaseCount;
 }
 
 int TriggerWaveform::getTriggerWaveformSynchPointIndex() const {
@@ -149,9 +138,9 @@ angle_t TriggerWaveform::getAngle(int index) const {
 	 * See also trigger_central.cpp
 	 * See also getEngineCycleEventCount()
 	 */
-	efiAssert(CUSTOM_ERR_ASSERT, wave->phaseCount != 0, "shapeSize=0", NAN);
-	int crankCycle = index / wave->phaseCount;
-	int remainder = index % wave->phaseCount;
+	efiAssert(CUSTOM_ERR_ASSERT, wave.phaseCount != 0, "shapeSize=0", NAN);
+	int crankCycle = index / wave.phaseCount;
+	int remainder = index % wave.phaseCount;
 
 	auto cycleStartAngle = getCycleDuration() * crankCycle;
 	auto positionWithinCycle = getSwitchAngle(remainder);
@@ -235,9 +224,9 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 #endif
 
 #if EFI_UNIT_TEST
-	assertIsInBounds(wave->phaseCount, triggerSignalIndeces, "trigger shape overflow");
-	triggerSignalIndeces[wave->phaseCount] = channelIndex;
-	triggerSignalStates[wave->phaseCount] = state;
+	assertIsInBounds(wave.phaseCount, triggerSignalIndeces, "trigger shape overflow");
+	triggerSignalIndeces[wave.phaseCount] = channelIndex;
+	triggerSignalStates[wave.phaseCount] = state;
 #endif // EFI_UNIT_TEST
 
 
@@ -249,46 +238,39 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 	}
 
 	efiAssertVoid(CUSTOM_ERR_6599, angle > 0 && angle <= 1, "angle should be positive not above 1");
-	if (wave->phaseCount > 0) {
+	if (wave.phaseCount > 0) {
 		if (angle <= previousAngle) {
 			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %s: new=%.2f/%f and prev=%.2f/%f, size=%d",
 					getTrigger_wheel_e(channelIndex),
 					getTrigger_value_e(state),
 					angle, angle * getCycleDuration(),
 					previousAngle, previousAngle * getCycleDuration(),
-					wave->phaseCount);
+					wave.phaseCount);
 			setShapeDefinitionError(true);
 			return;
 		}
 	}
 	previousAngle = angle;
-	if (wave->phaseCount == 0) {
-		wave->phaseCount = 1;
+	if (wave.phaseCount == 0) {
+		wave.phaseCount = 1;
 		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-			SingleChannelStateSequence *swave = &wave->channels[i];
-
-			if (swave->pinStates == nullptr) {
-				warning(CUSTOM_ERR_STATE_NULL, "wave pinStates is NULL");
-				setShapeDefinitionError(true);
-				return;
-			}
-			wave->setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i]);
+			wave.setChannelState(i, /* switchIndex */ 0, /* value */ initialState[i]);
 		}
 
 		isRiseEvent[0] = TV_RISE == state;
-		wave->setSwitchTime(0, angle);
-		wave->setChannelState(channelIndex, /* channelIndex */ 0, /* value */ state);
+		wave.setSwitchTime(0, angle);
+		wave.setChannelState(channelIndex, /* channelIndex */ 0, /* value */ state);
 		return;
 	}
 
-	int exactMatch = wave->findAngleMatch(angle);
+	int exactMatch = wave.findAngleMatch(angle);
 	if (exactMatch != (int)EFI_ERROR_CODE) {
 		warning(CUSTOM_ERR_SAME_ANGLE, "same angle: not supported");
 		setShapeDefinitionError(true);
 		return;
 	}
 
-	int index = wave->findInsertionAngle(angle);
+	int index = wave.findInsertionAngle(angle);
 
 	/**
 	 * todo: it would be nice to be able to provide trigger angles without sorting them externally
@@ -298,29 +280,29 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 /*
 	for (int i = size - 1; i >= index; i--) {
 		for (int j = 0; j < PWM_PHASE_MAX_WAVE_PER_PWM; j++) {
-			wave->waves[j].pinStates[i + 1] = wave->getChannelState(j, index);
+			wave.waves[j].pinStates[i + 1] = wave.getChannelState(j, index);
 		}
-		wave->setSwitchTime(i + 1, wave->getSwitchTime(i));
+		wave.setSwitchTime(i + 1, wave.getSwitchTime(i));
 	}
 */
 	isRiseEvent[index] = TV_RISE == state;
 
-	if ((unsigned)index != wave->phaseCount) {
+	if ((unsigned)index != wave.phaseCount) {
 		firmwareError(ERROR_TRIGGER_DRAMA, "are we ever here?");
 	}
 
-	wave->phaseCount++;
+	wave.phaseCount++;
 
 	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
-		pin_state_t value = wave->getChannelState(/* channelIndex */i, index - 1);
-		wave->setChannelState(i, index, value);
+		pin_state_t value = wave.getChannelState(/* channelIndex */i, index - 1);
+		wave.setChannelState(i, index, value);
 	}
-	wave->setSwitchTime(index, angle);
-	wave->setChannelState(channelIndex, index, state);
+	wave.setSwitchTime(index, angle);
+	wave.setChannelState(channelIndex, index, state);
 }
 
 angle_t TriggerWaveform::getSwitchAngle(int index) const {
-	return getCycleDuration() * wave->getSwitchTime(index);
+	return getCycleDuration() * wave.getSwitchTime(index);
 }
 
 void setToothedWheelConfiguration(TriggerWaveform *s, int total, int skipped,
@@ -393,18 +375,18 @@ void TriggerWaveform::setShapeDefinitionError(bool value) {
 void findTriggerPosition(TriggerWaveform *triggerShape,
 		TriggerFormDetails *details,
 		event_trigger_position_s *position,
-		angle_t angle DEFINE_CONFIG_PARAM(angle_t, globalTriggerAngleOffset)) {
+		angle_t angle) {
 	efiAssertVoid(CUSTOM_ERR_6574, !cisnan(angle), "findAngle#1");
 	assertAngleRange(angle, "findAngle#a1", CUSTOM_ERR_6545);
 
 	efiAssertVoid(CUSTOM_ERR_6575, !cisnan(triggerShape->tdcPosition), "tdcPos#1")
 	assertAngleRange(triggerShape->tdcPosition, "tdcPos#a1", CUSTOM_UNEXPECTED_TDC_ANGLE);
 
-	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(CONFIG_PARAM(globalTriggerAngleOffset)), "tdcPos#2")
-	assertAngleRange(CONFIG_PARAM(globalTriggerAngleOffset), "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
+	efiAssertVoid(CUSTOM_ERR_6576, !cisnan(engineConfiguration->globalTriggerAngleOffset), "tdcPos#2")
+	assertAngleRange(engineConfiguration->globalTriggerAngleOffset, "tdcPos#a2", CUSTOM_INVALID_GLOBAL_OFFSET);
 
 	// convert engine cycle angle into trigger cycle angle
-	angle += triggerShape->tdcPosition + CONFIG_PARAM(globalTriggerAngleOffset);
+	angle += triggerShape->tdcPosition + engineConfiguration->globalTriggerAngleOffset;
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
 	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
@@ -427,14 +409,14 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	}
 }
 
-void TriggerWaveform::prepareShape(TriggerFormDetails *details DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void TriggerWaveform::prepareShape(TriggerFormDetails *details) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (shapeDefinitionError) {
 		// Nothing to do here if there's a problem with the trigger shape
 		return;
 	}
 
-	prepareEventAngles(this, details PASS_ENGINE_PARAMETER_SUFFIX);
+	prepareEventAngles(this, details);
 #endif
 }
 
@@ -544,6 +526,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		initializeNissanVQvvt(this);
 		break;
 
+	case TT_VVT_MAP_45_V_TWIN:
+		configureVvt45VTwin(this);
+		break;
+
 	case TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
 		break;
@@ -596,7 +582,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		setMercedesTwoSegment(this);
 		break;
 
-	case TT_UNUSED_62:
 	case TT_ONE:
 		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);
 		break;
@@ -761,7 +746,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 	version++;
 
 	if (!shapeDefinitionError) {
-		wave->checkSwitchTimes(getCycleDuration());
+		wave.checkSwitchTimes(getCycleDuration());
 	}
 
 	if (bothFrontsRequired && useOnlyRisingEdgeForTrigger) {

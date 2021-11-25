@@ -65,7 +65,7 @@ public class FirmwareFlasher {
 
     private static void doFlashFirmware(StatusWindow wnd, String fileName) {
         if (!new File(fileName).exists()) {
-            wnd.appendMsg(fileName + " not found, cannot proceed !!!");
+            wnd.append(fileName + " not found, cannot proceed !!!");
             wnd.setStatus("ERROR");
             return;
         }
@@ -74,13 +74,13 @@ public class FirmwareFlasher {
                 fileName +
                 " verify reset exit 0x08000000\"", wnd);
         if (error.contains(NO_DRIVER_MESSAGE_TAG)) {
-            wnd.appendMsg(" !!! ERROR: looks like stm32 driver is not installed? The link is above !!!");
+            wnd.append(" !!! ERROR: looks like stm32 driver is not installed? The link is above !!!");
         } else if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
-            wnd.appendMsg("Flashing looks good!");
+            wnd.append("Flashing looks good!");
             sa.stop();
             wnd.setStatus(DONE);
         } else {
-            wnd.appendMsg("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
+            wnd.append("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
     }
 

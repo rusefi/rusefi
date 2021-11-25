@@ -13,7 +13,7 @@
 #include "subaru.h"
 #include "custom_engine.h"
 
-void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setSubaru2003Wrx() {
 	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
 
@@ -37,15 +37,15 @@ void setSubaru2003Wrx(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * MRE_SUBARU_EJ18
  * set engine_type 37
  */
-void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setSubaruEJ18_MRE() {
 	engineConfiguration->trigger.type = TT_SUBARU_7_WITHOUT_6;
 
 
-//	CONFIG(isDoubleSolenoidIdle) = true;
+//	engineConfiguration->isDoubleSolenoidIdle = true;
 
 	engineConfiguration->specs.displacement = 1.8;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_SUBARU);
-	strcpy(CONFIG(engineCode), "EJ18");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_SUBARU);
+	strcpy(engineConfiguration->engineCode, "EJ18");
 
 	engineConfiguration->specs.firingOrder = FO_1_3_2_4;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -65,7 +65,7 @@ void setSubaruEJ18_MRE(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
  * Subaru SVX (Alcyone SVX)
  */
 
-void setSubaruEG33Defaults(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void setSubaruEG33Defaults() {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 
 	engineConfiguration->trigger.type = TT_SUBARU_SVX;

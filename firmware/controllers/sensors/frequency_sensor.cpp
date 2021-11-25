@@ -9,9 +9,8 @@
 #include "digital_input_exti.h"
 
 // Callback adapter since we can't pass a member function to a callback
-static void freqSensorExtiCallback(void* arg) {
-	auto inst = reinterpret_cast<FrequencySensor*>(arg);
-	inst->onEdge(getTimeNowNt());
+static void freqSensorExtiCallback(void* arg, efitick_t nowNt) {
+	reinterpret_cast<FrequencySensor*>(arg)->onEdge(nowNt);
 }
 
 void FrequencySensor::init(brain_pin_e pin) {

@@ -269,6 +269,7 @@ public class VariableRegistry  {
         data.put(key, value);
     }
 
+    @Nullable
     public String get(Object key) {
         return data.get(key);
     }

@@ -64,8 +64,8 @@ static const uint8_t racingFestivaVeTable[16][16] = {
  * pin 1I/W9 - extra +5v
  * set engine_type 14
  */
-void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common079721_2351(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setFordEscortGt() {
+	common079721_2351();
 
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
@@ -76,7 +76,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	static const float veRpmBins[] = 
 	{
@@ -123,14 +123,14 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L);
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5 // PA2
 
 	// set_idle_position 10
 	engineConfiguration->manIdlePosition = 10;
 	engineConfiguration->crankingIACposition = 65;
 
-	setWholeIatCorrTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeIatCorrTimingTable(0);
 
 
 	// set global_trigger_offset_angle -37
@@ -141,10 +141,10 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingTimingAngle = 3;
 
 	setLinearCurve(config->ignitionLoadBins, 20, 105, 5);
-	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(10);
 	setTable(config->lambdaTable, 0.92f);
 
-	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setSingleCoilDwell();
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;

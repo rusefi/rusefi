@@ -17,7 +17,7 @@
 #include "console_io.h"
 #endif /* EFI_PROD_CODE */
 
-void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void efiSetPadUnused(brain_pin_e brainPin) {
 #if EFI_PROD_CODE
 	/* input with pull up, is it safe? */
 	iomode_t mode = PAL_STM32_MODE_INPUT | PAL_STM32_PUPDR_PULLUP;
@@ -39,19 +39,19 @@ void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	#endif
 #endif /* EFI_PROD_CODE */
 
-	brain_pin_markUnused(brainPin PASS_ENGINE_PARAMETER_SUFFIX);
+	brain_pin_markUnused(brainPin);
 }
 
 /**
  * This method would set an error condition if pin is already used
  */
-void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void efiSetPadMode(const char *msg, brain_pin_e brainPin, iomode_t mode) {
 	if (!isBrainPinValid(brainPin)) {
 		// No pin configured, nothing to do here.
 		return;
 	}
 
-	bool wasUsed = brain_pin_markUsed(brainPin, msg PASS_ENGINE_PARAMETER_SUFFIX);
+	bool wasUsed = brain_pin_markUsed(brainPin, msg);
 
 	if (!wasUsed) {
 		efiSetPadModeWithoutOwnershipAcquisition(msg, brainPin, mode);

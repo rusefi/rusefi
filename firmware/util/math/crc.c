@@ -95,6 +95,27 @@ uint32_t crc32(const void *buf, uint32_t size) {
 	return crc32inc(buf, 0, size);
 }
 
+/**
+ * http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
+ * https://stackoverflow.com/questions/38639423/understanding-results-of-crc8-sae-j1850-normal-vs-zero
+ * j1850 SAE crc8
+ */
+uint8_t crc8(const uint8_t *data, uint8_t len) {
+	uint8_t crc = 0;
+
+	if (data == 0)
+		return 0;
+	crc ^= 0xff;
+	while (len--) {
+		crc ^= *data++;
+		for (unsigned k = 0; k < 8; k++)
+			crc = crc & 0x80 ? (crc << 1) ^ 0x1d : crc << 1;
+	}
+	crc &= 0xff;
+	crc ^= 0xff;
+	return crc;
+}
+
 uint32_t crc32inc(const void *buf, uint32_t crc, uint32_t size) {
 	const uint8_t *p;
 

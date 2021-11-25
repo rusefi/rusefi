@@ -29,6 +29,12 @@ TEST(util, negativeZero) {
 	ASSERT_FALSE(IS_NEGATIVE_ZERO(0.0));
 }
 
+TEST(util, crc8) {
+	const uint8_t crc8_tab[] = {0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38};
+
+	ASSERT_EQ(0xB, crc8(crc8_tab, 8));
+}
+
 TEST(util, crc) {
 	ASSERT_EQ(4, efiRound(4.4, 1));
 	ASSERT_FLOAT_EQ(1.2, efiRound(1.2345, 0.1));

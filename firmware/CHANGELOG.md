@@ -27,6 +27,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+### Fixed
+ - Faster engine sync + startup on engines with crank-speed primary trigger
+
 ## November 2021 Release - "Loosen Up Lighten Up Day"
 
 ### Added
@@ -34,6 +37,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - turbo speed sensor #2935
  - A TON of Lua progress
  - Overall performance
+ - Knock retard #3396
 
 ### Fixed
  - A/C control bugfix

@@ -9,6 +9,6 @@
 
 #include "engine_configuration.h"
 
-void setHellenMercedes128_4_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHellenMercedes128_6_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setHellenMercedes128_8_cyl(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHellenMercedes128_4_cyl();
+void setHellenMercedes128_6_cyl();
+void setHellenMercedes128_8_cyl();

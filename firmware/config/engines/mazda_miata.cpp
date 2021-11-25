@@ -73,7 +73,7 @@ static const uint8_t miataNA8_maf_advance_table[16][16] = { {/*0  engineLoad=1.2
 		+29, /*12 5760.0*/+28, /*13 6173.0*/+28, /*14 6586.0*/+27, /*15 7000.0*/+27 } };
 #endif
 
-static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void commonMiataNa() {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->engineChartSize = 100;
 
@@ -106,8 +106,8 @@ static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 }
 
-void common079721_2351(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void common079721_2351() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->engineChartSize = 300;
 
@@ -143,8 +143,8 @@ void common079721_2351(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 /**
  * Tom tomiata, Frankenstein board
  */
-void setFrankensteinMiata1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	commonMiataNa(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setFrankensteinMiata1996() {
+	commonMiataNa();
 	engineConfiguration->specs.displacement = 1.839;
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT

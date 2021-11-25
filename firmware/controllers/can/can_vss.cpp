@@ -48,20 +48,20 @@ float processW202(const CANRxFrame& frame) {
 /* End of specific processing functions */
 
 void canVssInfo(void) {
-	efiPrintf("vss using can option selected %x", CONFIG(canVssNbcType));
+	efiPrintf("vss using can option selected %x", engineConfiguration->canVssNbcType);
 	efiPrintf("vss filter for %x canID", filterCanID);
 	efiPrintf("Vss module is %d", isInit);
-	efiPrintf("CONFIG_enableCanVss is %d", CONFIG(enableCanVss));
+	efiPrintf("CONFIG_enableCanVss is %d", engineConfiguration->enableCanVss);
 }
 
 expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
-	switch (CONFIG(canVssNbcType)){
+	switch (engineConfiguration->canVssNbcType){
 		case BMW_e46:
 			return processBMW_e46(frame);
 		case W202:
 			return processW202(frame);
 		default:
-			efiPrintf("vss unsupported can option selected %x", CONFIG(canVssNbcType) );
+			efiPrintf("vss unsupported can option selected %x", engineConfiguration->canVssNbcType );
 	}
 
 	return unexpected;
@@ -70,7 +70,7 @@ expected<float> processCanRxVssImpl(const CANRxFrame& frame) {
 static StoredValueSensor canSpeed(SensorType::VehicleSpeed, MS2NT(500));
 
 void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
-	if ((!CONFIG(enableCanVss)) || (!isInit)) {
+	if ((!engineConfiguration->enableCanVss) || (!isInit)) {
 		return;
 	}
 
@@ -83,7 +83,7 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 		canSpeed.setValidValue(speed.Value, nowNt);
 
 #if EFI_DYNO_VIEW
-		updateDynoViewCan(PASS_ENGINE_PARAMETER_SIGNATURE);
+		updateDynoViewCan();
 #endif
 	}
 }
@@ -91,8 +91,8 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 void initCanVssSupport() {
 	addConsoleAction("canvssinfo", canVssInfo);
 
-	if (CONFIG(enableCanVss)) {
-		if (auto canId = look_up_can_id(CONFIG(canVssNbcType))) {
+	if (engineConfiguration->enableCanVss) {
+		if (auto canId = look_up_can_id(engineConfiguration->canVssNbcType)) {
 			filterCanID = canId.Value;
 			canSpeed.Register();
 			isInit = true;

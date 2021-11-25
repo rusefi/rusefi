@@ -33,7 +33,7 @@ int getSimulatedEventTime(const TriggerWaveform& shape, int i) {
 	int stateIndex = i % shape.getSize();
 	int loopIndex = i / shape.getSize();
 
-	return (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave->getSwitchTime(stateIndex)));
+	return (int) (SIMULATION_CYCLE_PERIOD * (loopIndex + shape.wave.getSwitchTime(stateIndex)));
 }
 
 void TriggerStimulatorHelper::feedSimulatedEvent(
@@ -48,7 +48,7 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 
 	int time = getSimulatedEventTime(shape, i);
 
-	const MultiChannelStateSequence& multiChannelStateSequence = *shape.wave;
+	const auto & multiChannelStateSequence = shape.wave;
 
 #if EFI_UNIT_TEST
 	int prevIndex = getPreviousIndex(stateIndex, shape.getSize());
@@ -111,7 +111,7 @@ void TriggerStimulatorHelper::assertSyncPositionAndSetDutyCycle(
 				state, shape, i);
 	}
 	int revolutionCounter = state.getTotalRevolutionCounter();
-	if (revolutionCounter != TEST_REVOLUTIONS + 1) {
+	if (revolutionCounter != TEST_REVOLUTIONS) {
 		warning(CUSTOM_OBD_TRIGGER_WAVEFORM, "sync failed/wrong gap parameters trigger=%s revolutionCounter=%d",
 				getTrigger_type_e(triggerConfiguration.TriggerType),
 				revolutionCounter);

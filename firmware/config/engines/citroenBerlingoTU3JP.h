@@ -8,5 +8,5 @@
 #pragma once
 #include "engine_configuration.h"
 
-void setCitroenBerlingoTU3JPConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setCitroenBerlingoTU3JPConfiguration();
 

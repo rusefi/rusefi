@@ -3,16 +3,16 @@
 #include "limp_manager.h"
 
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
-	Clearable allowFuel = CONFIG(isInjectionEnabled);
-	Clearable allowSpark = CONFIG(isIgnitionEnabled);
+	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
+	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
 
 	// User-configured hard RPM limit
-	if (rpm > CONFIG(rpmHardLimit)) {
-		if (CONFIG(cutFuelOnHardLimit)) {
+	if (rpm > engineConfiguration->rpmHardLimit) {
+		if (engineConfiguration->cutFuelOnHardLimit) {
 			allowFuel.clear();
 		}
 
-		if (CONFIG(cutSparkOnHardLimit)) {
+		if (engineConfiguration->cutSparkOnHardLimit) {
 			allowSpark.clear();
 		}
 	}
@@ -23,19 +23,19 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 
 	// Limit fuel only on boost pressure (limiting spark bends valves)
-	if (CONFIG(boostCutPressure) != 0) {
-		if (Sensor::getOrZero(SensorType::Map) > CONFIG(boostCutPressure)) {
+	if (engineConfiguration->boostCutPressure != 0) {
+		if (Sensor::getOrZero(SensorType::Map) > engineConfiguration->boostCutPressure) {
 			allowFuel.clear();
 		}
 	}
 
-	if (ENGINE(rpmCalculator).isRunning()) {
-		uint16_t minOilPressure = CONFIG(minOilPressureAfterStart);
+	if (engine->rpmCalculator.isRunning()) {
+		uint16_t minOilPressure = engineConfiguration->minOilPressureAfterStart;
 
 		// Only check if the setting is enabled
 		if (minOilPressure > 0) {
 			// Has it been long enough we should have pressure?
-			bool isTimedOut = ENGINE(rpmCalculator).getTimeSinceEngineStart(nowNt) > 5.0f;
+			bool isTimedOut = engine->rpmCalculator.getTimeSinceEngineStart(nowNt) > 5.0f;
 
 			// Only check before timed out
 			if (!isTimedOut) {

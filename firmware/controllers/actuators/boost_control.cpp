@@ -40,18 +40,21 @@ expected<float> BoostController::observePlant() const {
 	return Sensor::get(SensorType::Map);
 }
 
-expected<float> BoostController::getSetpoint() const {
+expected<float> BoostController::getSetpoint() {
 	// If we're in open loop only mode, disregard any target computation.
 	// Open loop needs to work even in case of invalid closed loop config
-	if (engineConfiguration->boostType != CLOSED_LOOP) {
-		return 0;
+	isNotClosedLoop = engineConfiguration->boostType != CLOSED_LOOP;
+	if (isNotClosedLoop) {
+		closedLoopPart = 0;
+		return closedLoopPart;
 	}
 
 	float rpm = GET_RPM();
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
+	isTpsValid = tps.Valid;
 
-	if (!tps) {
+	if (!isTpsValid) {
 		return unexpected;
 	}
 
@@ -62,14 +65,16 @@ expected<float> BoostController::getSetpoint() const {
 	return m_closedLoopTargetMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps.Value / TPS_1_BYTE_PACKING_MULT);
 }
 
-expected<percent_t> BoostController::getOpenLoop(float target) const {
+expected<percent_t> BoostController::getOpenLoop(float target) {
 	// Boost control open loop doesn't care about target - only TPS/RPM
 	UNUSED(target);
 
 	float rpm = GET_RPM();
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
-	if (!tps) {
+	isTpsValid = tps.Valid;
+
+	if (!isTpsValid) {
 		return unexpected;
 	}
 
@@ -90,7 +95,8 @@ expected<percent_t> BoostController::getOpenLoop(float target) const {
 
 percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressure) {
 	// If we're in open loop only mode, make no closed loop correction.
-	if (engineConfiguration->boostType != CLOSED_LOOP) {
+	isNotClosedLoop = engineConfiguration->boostType != CLOSED_LOOP;
+	if (isNotClosedLoop) {
 		return 0;
 	}
 
@@ -106,13 +112,16 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 		return 0;
 	}
 
-	if (manifoldPressure < CONFIG(minimumBoostClosedLoopMap)) {
+	isBelowClosedLoopThreshold = manifoldPressure < engineConfiguration->minimumBoostClosedLoopMap;
+	if (isBelowClosedLoopThreshold) {
 		// We're below the CL threshold, inhibit CL for now
 		m_pid.reset();
-		return 0;
+		closedLoopPart = 0;
+		return closedLoopPart;
 	}
 
-	return m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	closedLoopPart = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	return closedLoopPart;
 }
 
 expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
@@ -129,7 +138,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 }
 
 void BoostController::setOutput(expected<float> output) {
-	percent_t percent = output.value_or(CONFIG(boostControlSafeDutyCycle));
+	percent_t percent = output.value_or(engineConfiguration->boostControlSafeDutyCycle);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
@@ -143,7 +152,7 @@ void BoostController::setOutput(expected<float> output) {
 		m_pwm->setSimplePwmDutyCycle(duty);
 	}
 
-	setEtbWastegatePosition(percent PASS_ENGINE_PARAMETER_SUFFIX);
+	setEtbWastegatePosition(percent);
 }
 
 void BoostController::update() {
@@ -153,16 +162,15 @@ void BoostController::update() {
 	ClosedLoopController::update();
 }
 
-static BoostController boostController;
 static bool hasInitBoost = false;
 
 void updateBoostControl() {
 	if (hasInitBoost) {
-		boostController.update();
+		engine->boostController.update();
 	}
 }
 
-void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setDefaultBoostParameters() {
 	engineConfiguration->boostPwmFrequency = 33;
 	engineConfiguration->boostPid.offset = 0;
 	engineConfiguration->boostPid.pFactor = 0.5;
@@ -183,15 +191,15 @@ void setDefaultBoostParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 
 	// Defaults for ETB-style wastegate actuator
-	CONFIG(etbWastegatePid).pFactor = 1;
-	CONFIG(etbWastegatePid).minValue = -60;
-	CONFIG(etbWastegatePid).maxValue = 60;
+	engineConfiguration->etbWastegatePid.pFactor = 1;
+	engineConfiguration->etbWastegatePid.minValue = -60;
+	engineConfiguration->etbWastegatePid.maxValue = 60;
 }
 
 void startBoostPin() {
 #if !EFI_UNIT_TEST
 	// Only init if a pin is set, no need to start PWM without a pin
-	if (!isBrainPinValid(CONFIG(boostControlPin))) {
+	if (!isBrainPinValid(engineConfiguration->boostControlPin)) {
 		return;
 	}
 
@@ -207,24 +215,24 @@ void startBoostPin() {
 }
 
 void onConfigurationChangeBoostCallback(engine_configuration_s *previousConfiguration) {
-	boostController.onConfigurationChange(&previousConfiguration->boostPid);
+	engine->boostController.onConfigurationChange(&previousConfiguration->boostPid);
 }
 
-void initBoostCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initBoostCtrl() {
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initAuxPid' is an example of a subsystem without explicit enable
-	if (!CONFIG(isBoostControlEnabled)) {
+	if (!engineConfiguration->isBoostControlEnabled) {
 		return;
 	}
 
 	bool hasAnyEtbWastegate = false;
 
-	for (size_t i = 0; i < efi::size(CONFIG(etbFunctions)); i++) {
-		hasAnyEtbWastegate |= CONFIG(etbFunctions)[i] == ETB_Wastegate;
+	for (size_t i = 0; i < efi::size(engineConfiguration->etbFunctions); i++) {
+		hasAnyEtbWastegate |= engineConfiguration->etbFunctions[i] == ETB_Wastegate;
 	}
 
 	// If we have neither a boost PWM pin nor ETB wastegate, nothing more to do
-	if (!isBrainPinValid(CONFIG(boostControlPin)) && !hasAnyEtbWastegate) {
+	if (!isBrainPinValid(engineConfiguration->boostControlPin) && !hasAnyEtbWastegate) {
 		return;
 	}
 
@@ -233,7 +241,7 @@ void initBoostCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	boostMapClosed.init(config->boostTableClosedLoop, config->boostTpsBins, config->boostRpmBins);
 
 	// Set up boost controller instance
-	boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
+	engine->boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
 
 #if !EFI_UNIT_TEST
 	startBoostPin();

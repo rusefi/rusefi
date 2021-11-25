@@ -3,6 +3,7 @@ build/
 build_kinetis/
 pinouts
 workarea
+bundle_name.txt
 out/
 logs/
 blbuild/
@@ -25,3 +26,6 @@ log.txt
 
 # Eclipse
 .metadata/
+
+# rusEFI simulator makes logs, ignore those
+rusefi_simulator_log.mlg

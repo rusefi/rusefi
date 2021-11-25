@@ -81,8 +81,8 @@ static const float mazda_miata_nb2_targetLambdaLoadBins[FUEL_LOAD_COUNT] = {10.0
 		90.0, 100.0, 110.0, 120.0,
 		130.0, 140.0, 150.0, 160.0};
 
-void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMazdaMiata2003EngineConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMazdaMiata2003EngineConfigurationNaFuelRail() {
+	setMazdaMiata2003EngineConfiguration();
 
 	copyTable(config->scriptTable1, SCRIPT_TABLE_dyno);
 
@@ -102,7 +102,7 @@ void setMazdaMiata2003EngineConfigurationNaFuelRail(DECLARE_CONFIG_PARAMETER_SIG
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_4; // PA4
 
-	setEgoSensor(ES_14Point7_Free PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_14Point7_Free);
 
 	engineConfiguration->cranking.baseFuel = 27; // higher value for return system NA conversion since lower fuel pressure
 	engineConfiguration->vbattDividerCoeff = 9.30; // actual value on my new board

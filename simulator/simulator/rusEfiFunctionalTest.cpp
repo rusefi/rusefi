@@ -30,7 +30,7 @@
 
 extern WaveChart waveChart;
 
-int getRemainingStack(thread_t *otp) {
+int getRemainingStack(thread_t*) {
 	return 99999;
 }
 
@@ -86,33 +86,39 @@ void rusEfiFunctionalTest(void) {
 	initializeConsole();
 
 	initStatusLoop();
-	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initDataStructures();
 
 
 	// todo: reduce code duplication with initEngineContoller
 
-	resetConfigurationExt(MINIMAL_PINS PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(MINIMAL_PINS);
 	enableTriggerStimulator();
 
 	commonInitEngineController();
 
 	initTriggerCentral();
-	initTriggerEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTriggerEmulator();
 
 	startStatusThreads();
 
 	startLoggingProcessor();
 
+	void initMmcCard();
+	initMmcCard();
+
 	runChprintfTest();
 
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initPeriodicEvents();
 
-	setTriggerEmulatorRPM(DEFAULT_SIM_RPM PASS_ENGINE_PARAMETER_SUFFIX);
+	setTriggerEmulatorRPM(DEFAULT_SIM_RPM);
 	engineConfiguration->engineSnifferRpmThreshold = DEFAULT_SNIFFER_THR;
 
 	startSerialChannels();
 
 	startLua();
+
+	extern bool main_loop_started;
+	main_loop_started = true;
 }
 
 void printPendingMessages(void) {

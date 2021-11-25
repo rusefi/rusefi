@@ -27,10 +27,10 @@
 static tps_tps_Map3D_t tpsTpsMap;
 
 // todo: eliminate code duplication between these two methods! Some pointer magic would help.
-floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
-	int maxDeltaIndex = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
+	int maxDeltaIndex = getMaxDeltaIndex();
 
 //	FuelSchedule *fs = engineConfiguration->injectionEvents;
 	percent_t tpsTo = cb.get(maxDeltaIndex);
@@ -50,11 +50,11 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATUR
 
 	// Fractional enrichment (fuel portions are accumulated and split between several engine cycles.
 	// This is a crude imitation of carburetor's acceleration pump.
-	isFractionalEnrichment = CONFIG(tpsAccelFractionPeriod) > 1 || CONFIG(tpsAccelFractionDivisor) > 1.0f;
+	isFractionalEnrichment = engineConfiguration->tpsAccelFractionPeriod > 1 || engineConfiguration->tpsAccelFractionDivisor > 1.0f;
 	if (isFractionalEnrichment) {
 		// make sure both values are non-zero
-		float periodF = (float)maxI(CONFIG(tpsAccelFractionPeriod), 1);
-		float divisor = maxF(CONFIG(tpsAccelFractionDivisor), 1.0f);
+		float periodF = (float)maxI(engineConfiguration->tpsAccelFractionPeriod, 1);
+		float divisor = maxF(engineConfiguration->tpsAccelFractionDivisor, 1.0f);
 
 		// if current extra fuel portion is not "strong" enough, then we keep up the "pump pressure" with the accumulated portion
 		floatms_t maxExtraFuel = maxF(extraFuel, accumulatedValue);
@@ -87,7 +87,7 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATUR
 	return extraFuel;
 }
 
-void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void TpsAccelEnrichment::onEngineCycleTps() {
 	// we update values in handleFuel() directly by calling onNewValue()
 
 	onUpdateInvocationCounter++;
@@ -116,11 +116,11 @@ void TpsAccelEnrichment::onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 		}
 
 		// reset the counter
-		cycleCnt = CONFIG(tpsAccelFractionPeriod);
+		cycleCnt = engineConfiguration->tpsAccelFractionPeriod;
 	}
 }
 
-int AccelEnrichment::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int AccelEnrichment::getMaxDeltaIndex() {
 
 	int len = minI(cb.getSize(), cb.getCount());
 	if (len < 2)
@@ -143,8 +143,8 @@ int AccelEnrichment::getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	return resultIndex;
 }
 
-float AccelEnrichment::getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	int index = getMaxDeltaIndex(PASS_ENGINE_PARAMETER_SIGNATURE);
+float AccelEnrichment::getMaxDelta() {
+	int index = getMaxDeltaIndex();
 
 	return (cb.get(index) - (cb.get(index - 1)));
 }
@@ -170,7 +170,7 @@ void AccelEnrichment::setLength(int length) {
 	cb.setSize(length);
 }
 
-void AccelEnrichment::onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void AccelEnrichment::onNewValue(float currentValue) {
 	cb.add(currentValue);
 }
 
@@ -219,7 +219,7 @@ void updateAccelParameters() {
 #endif /* ! EFI_UNIT_TEST */
 
 
-void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initAccelEnrichment() {
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
 #if ! EFI_UNIT_TEST

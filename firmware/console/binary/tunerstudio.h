@@ -48,7 +48,7 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
  */
 void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX);
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels);
 void printTsStats(void);
 void requestBurn(void);
 
@@ -86,5 +86,5 @@ public:
 
 #endif /* EFI_TUNER_STUDIO */
 
-void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, void *content DECLARE_ENGINE_PARAMETER_SUFFIX);
-void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode DECLARE_ENGINE_PARAMETER_SUFFIX);
+void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, void *content);
+void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode);

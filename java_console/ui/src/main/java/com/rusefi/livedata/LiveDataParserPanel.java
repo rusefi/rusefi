@@ -40,7 +40,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
  * this panel shows a live view of rusEFI firmware C/C++ code
  */
 public class LiveDataParserPanel {
-    private static final String CONFIG_MAGIC_PREFIX = "CONFIG";
+    private static final String CONFIG_MAGIC_PREFIX = "engineConfiguration";
     private static final Logging log = getLogging(LiveDataParserPanel.class);
 
     {
@@ -134,7 +134,7 @@ public class LiveDataParserPanel {
         return parser.translationUnit();
     }
 
-    public static ParseResult applyVariables(VariableValueSource valueSource, String s, SourceCodePainter painter, ParseTree tree) {
+    public static ParseResult applyVariables(VariableValueSource valueSource, String sourceCode, SourceCodePainter painter, ParseTree tree) {
         Stack<Boolean> currentState = new Stack<>();
         currentState.add(Boolean.TRUE);
 
@@ -143,7 +143,7 @@ public class LiveDataParserPanel {
         new ParseTreeWalker().walk(new CPP14ParserBaseListener() {
             @Override
             public void enterStatement(CPP14Parser.StatementContext ctx) {
-                String origin = getOrigin(ctx, s);
+                String origin = getOrigin(ctx, sourceCode);
 //                System.out.println("enter statement [" + origin + "]");
             }
 
@@ -187,8 +187,7 @@ public class LiveDataParserPanel {
         for (int i = 0; i < allTerminals.size() - 3; i++) {
 
             if (allTerminals.get(i).getText().equals(CONFIG_MAGIC_PREFIX) &&
-                    allTerminals.get(i + 1).getText().equals("(") &&
-                    allTerminals.get(i + 3).getText().equals(")")
+                    allTerminals.get(i + 1).getText().equals("->")
             ) {
                 Token token = allTerminals.get(i + 2).getSymbol();
                 painter.paintForeground(Color.BLUE, new Range(token, token));

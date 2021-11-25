@@ -68,7 +68,7 @@ TEST(binary, testWriteCrc) {
 }
 
 TEST(TunerstudioCommands, writeChunkEngineConfig) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	MockTsChannel channel;
 
 	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);
@@ -79,18 +79,18 @@ TEST(TunerstudioCommands, writeChunkEngineConfig) {
 
 	// two step - writes to the engineConfiguration section require a burn
 	uint8_t val = 50;
-	handleWriteChunkCommand(&channel, TS_CRC, 100, 1, &val PASS_ENGINE_PARAMETER_SUFFIX);
+	handleWriteChunkCommand(&channel, TS_CRC, 100, 1, &val);
 
 	// hasn't changed yet
 	EXPECT_EQ(configBytes[100], 0);
 
-	handleBurnCommand(&channel, TS_CRC PASS_ENGINE_PARAMETER_SUFFIX);
+	handleBurnCommand(&channel, TS_CRC);
 
 	EXPECT_EQ(configBytes[100], 50);
 }
 
 TEST(TunerstudioCommands, writeChunkOutsideEngineConfig) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	MockTsChannel channel;
 
 	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);
@@ -103,7 +103,7 @@ TEST(TunerstudioCommands, writeChunkOutsideEngineConfig) {
 
 	// one step - writes past engineConfiguration don't need a burn
 	uint8_t val = 50;
-	handleWriteChunkCommand(&channel, TS_CRC, offset, 1, &val PASS_ENGINE_PARAMETER_SUFFIX);
+	handleWriteChunkCommand(&channel, TS_CRC, offset, 1, &val);
 
 	EXPECT_EQ(configBytes[offset], 50);
 }

@@ -24,9 +24,8 @@
 static ioline_t shaftLines[TRIGGER_SUPPORTED_CHANNELS];
 static ioline_t camLines[CAM_INPUTS_COUNT];
 
-static void shaft_callback(void *arg) {
+static void shaft_callback(void *arg, efitick_t stamp) {
 	// do the time sensitive things as early as possible!
-	efitick_t stamp = getTimeNowNt();
 	TRIGGER_BAIL_IF_DISABLED
 //#if HW_CHECK_MODE
 //	TRIGGER_BAIL_IF_SELF_STIM
@@ -42,8 +41,7 @@ static void shaft_callback(void *arg) {
 	hwHandleShaftSignal(index, rise, stamp);
 }
 
-static void cam_callback(void *arg) {
-	efitick_t stamp = getTimeNowNt();
+static void cam_callback(void *arg, efitick_t stamp) {
 	TRIGGER_BAIL_IF_DISABLED
 //#if HW_CHECK_MODE
 //	TRIGGER_BAIL_IF_SELF_STIM
@@ -66,7 +64,7 @@ static void cam_callback(void *arg) {
 /*==========================================================================*/
 
 int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
-	brain_pin_e brainPin = isTriggerShaft ? CONFIG(triggerInputPins)[index] : engineConfiguration->camInputs[index];
+	brain_pin_e brainPin = isTriggerShaft ? engineConfiguration->triggerInputPins[index] : engineConfiguration->camInputs[index];
 
 	efiPrintf("extiTriggerTurnOnInputPin %s %s", msg, hwPortname(brainPin));
 

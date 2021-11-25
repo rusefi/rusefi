@@ -55,17 +55,13 @@ static LENameOrdinalPair leOilPressure(LE_METHOD_OIL_PRESSURE, "oilp");
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 // @returns float number of seconds since last A/C toggle
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
-static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, FSIO_METHOD_FSIO_SETTING);
 static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, FSIO_METHOD_FSIO_ANALOG_INPUT);
 static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_METHOD_FSIO_DIGITAL_INPUT);
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
-static LENameOrdinalPair leStartupFuelPumpDuration(LE_METHOD_STARTUP_FUEL_PUMP_DURATION, "startup_fuel_pump_duration");
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
-static LENameOrdinalPair leInMrBench(LE_METHOD_IN_MR_BENCH, "in_mr_bench");
-static LENameOrdinalPair leTimeSinceTrigger(LE_METHOD_TIME_SINCE_TRIGGER_EVENT, "time_since_trigger");
 static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 
 #include "fsio_names.def"
@@ -73,27 +69,21 @@ static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 #define SYS_ELEMENT_POOL_SIZE 24
 #define UD_ELEMENT_POOL_SIZE 64
 
-static LEElement sysElements[SYS_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
+static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
 CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
-static LEElement * fuelPumpLogic;
 static LEElement * starterRelayDisableLogic;
-
-#if EFI_MAIN_RELAY_CONTROL
-static LEElement * mainRelayLogic;
-#endif /* EFI_MAIN_RELAY_CONTROL */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
-FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", unexpected);
+FsioResult getEngineValue(le_action_e action) {
 	switch (action) {
 	case LE_METHOD_FAN:
 		return enginePins.fanRelay.getLogicValue();
 	case LE_METHOD_TIME_SINCE_AC_TOGGLE:
 		return (getTimeNowUs() - engine->acSwitchLastChangeTime) / US_PER_SECOND_F;
 	case LE_METHOD_AC_TOGGLE:
-		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getAcToggle();
 	case LE_METHOD_COOLANT:
 		return Sensor::getOrZero(SensorType::Clt);
 	case LE_METHOD_IS_COOLANT_BROKEN:
@@ -112,25 +102,10 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	case LE_METHOD_EXHAUST_VVT:
 		return engine->triggerCentral.getVVTPosition(0, 1);
 #endif
-	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
-		return engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
-	case LE_METHOD_TIME_SINCE_BOOT:
-#if EFI_MAIN_RELAY_CONTROL
-		// in main relay control mode, we return the number of seconds since the ignition is turned on
-		// (or negative if the ignition key is switched off)
-		return engine->getTimeIgnitionSeconds();
-#else
-		return getTimeNowSeconds();
-#endif /* EFI_MAIN_RELAY_CONTROL */
-	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
-		return engineConfiguration->startUpFuelPumpDuration;
-
 	case LE_METHOD_CRANKING_RPM:
 		return engineConfiguration->cranking.rpm;
 	case LE_METHOD_IN_SHUTDOWN:
 		return engine->isInShutdownMode();
-	case LE_METHOD_IN_MR_BENCH:
-		return engine->isInMainRelayBench();
 	case LE_METHOD_VBATT:
 		return Sensor::getOrZero(SensorType::BatteryVoltage);
 	case LE_METHOD_TPS:
@@ -149,7 +124,7 @@ FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
 
 #endif
 
-void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration) {
 	(void)previousConfiguration;
 }
 
@@ -166,12 +141,8 @@ static const char * action2String(le_action_e action) {
 			return "CLT";
 		case LE_METHOD_FAN:
 			return "fan";
-		case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
-			return leStartupFuelPumpDuration.name;
 		case LE_METHOD_IN_SHUTDOWN:
 			return leInShutdown.name;
-		case LE_METHOD_IN_MR_BENCH:
-			return leInMrBench.name;
 #include "fsio_strings.def"
 
 		default: {
@@ -182,7 +153,7 @@ static const char * action2String(le_action_e action) {
 	return buffer;
 }
 
-static void setPinState(const char * msg, OutputPin *pin, LEElement *element DECLARE_ENGINE_PARAMETER_SUFFIX) {
+static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing
@@ -192,7 +163,7 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 	if (!element) {
 		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
 	} else {
-		int value = (int)calc.evaluate(msg, pin->getLogicValue(), element PASS_ENGINE_PARAMETER_SUFFIX);
+		int value = (int)calc.evaluate(msg, pin->getLogicValue(), element);
 		if (pin->isInitialized() && value != pin->getLogicValue()) {
 
 			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
@@ -208,27 +179,9 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element DEC
 /**
  * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
  */
-void runFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-#if EFI_FUEL_PUMP
-	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
-		setPinState("pump", &enginePins.fuelPumpRelay, fuelPumpLogic PASS_ENGINE_PARAMETER_SUFFIX);
-	}
-#endif /* EFI_FUEL_PUMP */
-
-#if EFI_MAIN_RELAY_CONTROL
-	if (isBrainPinValid(CONFIG(mainRelayPin)))
-		// the MAIN_RELAY_LOGIC calls engine->isInShutdownMode()
-		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic PASS_ENGINE_PARAMETER_SUFFIX);
-#else /* EFI_MAIN_RELAY_CONTROL */
-	/**
-	 * main relay is always on if ECU is on, that's a good enough initial implementation
-	 */
-	if (isBrainPinValid(CONFIG(mainRelayPin)))
-		enginePins.mainRelay.setValue(!engine->isInMainRelayBench(PASS_ENGINE_PARAMETER_SIGNATURE));
-#endif /* EFI_MAIN_RELAY_CONTROL */
-
-	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
-		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic PASS_ENGINE_PARAMETER_SUFFIX);
+void runFsio() {
+	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
+		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic);
 
 	/**
 	 * o2 heater is off during cranking
@@ -252,12 +205,10 @@ static void showFsio(const char *msg, LEElement *element) {
 }
 
 // todo: move somewhere else
-static void showFsioInfo(void) {
+static void showFsioInfo() {
 #if EFI_PROD_CODE || EFI_SIMULATOR
-	showFsio("fuel", fuelPumpLogic);
-
 	for (int i = 0; i < SCRIPT_SETTING_COUNT; i++) {
-		float v = CONFIG(scriptSetting)[i];
+		float v = engineConfiguration->scriptSetting[i];
 		if (!cisnan(v)) {
 			efiPrintf("user property #%d: %.2f", i + 1, v);
 		}
@@ -282,7 +233,7 @@ ValueProvider3D *getscriptTable(int index) {
 /**
  * @return zero-based index of curve with given name
  */
-int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+int getCurveIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_CURVE_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptCurveName[i])) {
 			return i;
@@ -291,7 +242,7 @@ int getCurveIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return EFI_ERROR_CODE;
 }
 
-int getTableIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+int getTableIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_TABLE_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptTableName[i])) {
 			return i;
@@ -300,7 +251,7 @@ int getTableIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return EFI_ERROR_CODE;
 }
 
-int getSettingIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
+int getSettingIndexByName(const char *name) {
 	for (int i = 0;i<SCRIPT_SETTING_COUNT;i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptSettingName[i])) {
 			return i;
@@ -309,7 +260,7 @@ int getSettingIndexByName(const char *name DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	return EFI_ERROR_CODE;
 }
 
-float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getCurveValue(int index, float key) {
 	// not great code at all :(
 	switch (index) {
 	default:
@@ -327,21 +278,13 @@ float getCurveValue(int index, float key DECLARE_ENGINE_PARAMETER_SUFFIX) {
 	}
 }
 
-void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initFsioImpl() {
 #if EFI_UNIT_TEST
 	// only unit test needs this
 	sysPool.reset();
 #endif
 
-#if EFI_FUEL_PUMP
-	fuelPumpLogic = sysPool.parseExpression(FUEL_PUMP_LOGIC);
-#endif /* EFI_FUEL_PUMP */
-
-#if EFI_MAIN_RELAY_CONTROL
-	if (isBrainPinValid(CONFIG(mainRelayPin)))
-		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
-#endif /* EFI_MAIN_RELAY_CONTROL */
-	if (isBrainPinValid(CONFIG(starterRelayDisablePin)))
+	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
 		starterRelayDisableLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
 
 	scriptTable1.init(config->scriptTable1, config->scriptTable1LoadBins,
@@ -358,28 +301,18 @@ void initFsioImpl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #else /* !EFI_FSIO */
 
 // "Limp-mode" implementation for some RAM-limited configs without FSIO
-void runHardcodedFsio(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void runHardcodedFsio() {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
 		return; // let's not mess with bench testing
 	}
 #endif /* EFI_PROD_CODE */
 
-	// see MAIN_RELAY_LOGIC
-	if (isBrainPinValid(CONFIG(mainRelayPin))) {
-		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (Sensor::getOrZero(SensorType::BatteryVoltage) > LOW_VBATT) || engine->isInShutdownMode());
-	}
 	// see STARTER_RELAY_LOGIC
-	if (isBrainPinValid(CONFIG(starterRelayDisablePin))) {
+	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin)) {
 		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
 	}
-	// see FUEL_PUMP_LOGIC
-	if (isBrainPinValid(CONFIG(fuelPumpPin))) {
-		int triggerActivityOrEcuStartSecond = maxI(0, engine->triggerActivityMs / 1000);
 
-		enginePins.fuelPumpRelay.setValue((getTimeNowSeconds() < triggerActivityOrEcuStartSecond + engineConfiguration->startUpFuelPumpDuration) || (engine->rpmCalculator.getRpm() > 0));
-	}
-	
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 }
 

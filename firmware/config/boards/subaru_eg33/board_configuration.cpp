@@ -254,9 +254,9 @@ void setBoardDefaultConfiguration(void) {
 	//engineConfiguration->isEngineChartEnabled = false;
 
 	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
-		setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+		setAlgorithm(LM_SPEED_DENSITY);
 	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)
-		setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
+		setAlgorithm(LM_ALPHA_N);
 }
 
 /* Schematic RefDef DA3 */
@@ -331,7 +331,7 @@ static const struct mc33810_config mc33810_even = {
 	.en = {.port = nullptr, .pad = 0}
 };
 
-static void board_init_ext_gpios(void)
+static void board_init_ext_gpios()
 {
 	int ret;
 

@@ -105,7 +105,7 @@ const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
 }
 
 void onStartKnockSampling(uint8_t cylinderIndex, float samplingSeconds, uint8_t channelIdx) {
-	if (!CONFIG(enableSoftwareKnock)) {
+	if (!engineConfiguration->enableSoftwareKnock) {
 		return;
 	}
 
@@ -144,8 +144,8 @@ public:
 static KnockThread kt;
 
 void initSoftwareKnock() {
-	if (CONFIG(enableSoftwareKnock)) {
-		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * CONFIG(knockBandCustom), 3);
+	if (engineConfiguration->enableSoftwareKnock) {
+		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * engineConfiguration->knockBandCustom, 3);
 		adcStart(&KNOCK_ADC, nullptr);
 
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);

@@ -200,7 +200,7 @@ int HIP9011::handleChannel(DEFINE_HIP_PARAMS) {
 
 	/* find next firing cylinder */
 	/* MAGIC +1 -1, couse getNextFiringCylinderId expect cylinders to start from 1 */
-	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1) PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1)) - 1;
 
 	int nextChannelIdx = cylinderToChannelIdx(expectedCylinderNumber);
 	if (nextChannelIdx == channelIdx)
@@ -225,7 +225,7 @@ int HIP9011::readValueAndHandleChannel(DEFINE_HIP_PARAMS) {
 
 	/* find next firing cylinder */
 	/* MAGIC +1 -1, couse getNextFiringCylinderId expect cylinders to start from 1 */
-	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1) PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1)) - 1;
 
 	int nextChannelIdx = cylinderToChannelIdx(expectedCylinderNumber);
 

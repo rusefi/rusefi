@@ -5,7 +5,7 @@ extern float getTachDuty(void);
 
 TEST(tachometer, testPulsePerRev) {
     // This engine has a tach pin set - we need that
-    WITH_ENGINE_TEST_HELPER(FRANKENSO_MAZDA_MIATA_2003);
+    EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
     // We don't actually care about ign/inj at all, just tach
     engineConfiguration->isInjectionEnabled = false;
@@ -33,7 +33,7 @@ TEST(tachometer, testPulsePerRev) {
     ASSERT_EQ(engine->triggerCentral.triggerState.getShaftSynchronized(), true);
 
 	// Poke the fast callback to update the tach
-	engine->periodicFastCallback(PASS_ENGINE_PARAMETER_SIGNATURE);
+	engine->periodicFastCallback();
 
     ASSERT_EQ(100, getTachFreq());
     ASSERT_EQ(0.5, getTachDuty());

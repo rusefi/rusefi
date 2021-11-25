@@ -27,7 +27,7 @@ static percent_t currentAltDuty;
 static bool currentPlainOnOffState = false;
 static bool shouldResetPid = false;
 
-static void pidReset(void) {
+static void pidReset() {
 	alternatorPid.reset();
 }
 
@@ -59,7 +59,7 @@ class AlternatorController : public PeriodicTimerController {
 		// todo: migrate this to FSIO
 		bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
 
-		if (!CONFIG(isAlternatorControlEnabled) || !alternatorShouldBeEnabledAtCurrentRpm) {
+		if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
 			// we need to avoid accumulating iTerm while engine is not running
 			pidReset();
 
@@ -72,7 +72,7 @@ class AlternatorController : public PeriodicTimerController {
 		auto vBatt = Sensor::get(SensorType::BatteryVoltage);
 		float targetVoltage = engineConfiguration->targetVBatt;
 
-		if (CONFIG(onOffAlternatorLogic)) {
+		if (engineConfiguration->onOffAlternatorLogic) {
 			if (!vBatt) {
 				// Somehow battery voltage isn't valid, disable alternator control
 				enginePins.alternatorPin.setValue(false);
@@ -97,7 +97,7 @@ class AlternatorController : public PeriodicTimerController {
 			alternatorControl.setSimplePwmDutyCycle(0);
 		} else {
 			currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value);
-			if (CONFIG(isVerboseAlternator)) {
+			if (engineConfiguration->isVerboseAlternator) {
 				efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
 						alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
 			}
@@ -111,7 +111,7 @@ static AlternatorController instance;
 
 void showAltInfo(void) {
 	efiPrintf("alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
-			hwPortname(CONFIG(alternatorControlPin)),
+			hwPortname(engineConfiguration->alternatorControlPin),
 			engineConfiguration->alternatorControl.periodMs);
 	efiPrintf("p=%.2f/i=%.2f/d=%.2f offset=%.2f", engineConfiguration->alternatorControl.pFactor,
 			0, 0, engineConfiguration->alternatorControl.offset); // todo: i & d
@@ -130,12 +130,12 @@ void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousCon
 	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
-void initAlternatorCtrl(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initAlternatorCtrl() {
 	addConsoleAction("altinfo", showAltInfo);
-	if (!isBrainPinValid(CONFIG(alternatorControlPin)))
+	if (!isBrainPinValid(engineConfiguration->alternatorControlPin))
 		return;
 
-	if (!CONFIG(onOffAlternatorLogic)) {
+	if (!engineConfiguration->onOffAlternatorLogic) {
 		startSimplePwm(&alternatorControl,
 				"Alternator control",
 				&engine->executor,

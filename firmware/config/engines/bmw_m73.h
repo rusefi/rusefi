@@ -9,12 +9,12 @@
 
 #include "engine_configuration.h"
 
-void m73engine(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void m73engine();
 
-void setBMW_M73_TwoCoilUnitTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setBMW_M73_TwoCoilUnitTest();
 // set engine_type 24
-void setEngineBMW_M73_Manhattan(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_Manhattan();
 // set engine_type 63
-void setEngineBMW_M73_Proteus(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_Proteus();
 
-void setEngineBMW_M73_microRusEfi(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setEngineBMW_M73_microRusEfi();

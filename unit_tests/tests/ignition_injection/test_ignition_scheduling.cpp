@@ -11,20 +11,20 @@
 using ::testing::_;
 
 TEST(ignition, twoCoils) {
-	WITH_ENGINE_TEST_HELPER(FRANKENSO_BMW_M73_F);
+	EngineTestHelper eth(FRANKENSO_BMW_M73_F);
 
 	// first one to fire uses first coil
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(1)]), 0);
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(2)]), 1);
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(3)]), 0);
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(4)]), 1);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(1)], 0);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(2)], 1);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(3)], 0);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(4)], 1);
 
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(11)]), 0);
-	ASSERT_EQ(ENGINE(ignitionPin[ID2INDEX(12)]), 1);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(11)], 0);
+	ASSERT_EQ(engine->ignitionPin[ID2INDEX(12)], 1);
 
 	// let's recalculate with zero timing so that we can focus on relation advance between cylinders
 	engine->engineState.timingAdvance = 0;
-	initializeIgnitionActions(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initializeIgnitionActions();
 
 	ASSERT_EQ(engine->ignitionEvents.elements[0].sparkAngle, 0);
 	ASSERT_EQ((void*)engine->ignitionEvents.elements[0].outputs[0], (void*)&enginePins.coils[0]);
@@ -38,7 +38,7 @@ TEST(ignition, twoCoils) {
 }
 
 TEST(ignition, trailingSpark) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	/**
 	// TODO #3220: this feature makes this test sad, eventually remove this line (and the ability to disable it altogether)
@@ -50,13 +50,13 @@ TEST(ignition, trailingSpark) {
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	CONFIG(specs.cylindersCount) = 1;
-	CONFIG(specs.firingOrder) = FO_1;
-	CONFIG(isInjectionEnabled) = false;
-	CONFIG(isIgnitionEnabled) = true;
+	engineConfiguration->specs.cylindersCount = 1;
+	engineConfiguration->specs.firingOrder = FO_1;
+	engineConfiguration->isInjectionEnabled = false;
+	engineConfiguration->isIgnitionEnabled = true;
 
 	// Fire trailing spark 10 degrees after main spark
-	ENGINE(engineState.trailingSparkAngle) = 10;
+	engine->engineState.trailingSparkAngle = 10;
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
@@ -86,7 +86,7 @@ TEST(ignition, trailingSpark) {
 	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), false);
 
 	// Now enable trailing sparks
-	CONFIG(enableTrailingSparks) = true;
+	engineConfiguration->enableTrailingSparks = true;
 
 	// Fire trigger fall - should schedule ignition chargings (rising edges)
 	eth.fireFall(20);

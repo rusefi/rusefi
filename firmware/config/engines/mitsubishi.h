@@ -9,5 +9,5 @@
 
 #include "engine_configuration.h"
 
-void setMitsubishiConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setMitsubishiConfiguration();
 

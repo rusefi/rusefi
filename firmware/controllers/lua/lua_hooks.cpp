@@ -7,6 +7,7 @@
 #include "airmass.h"
 #include "lua_airmass.h"
 #include "can_msg_tx.h"
+#include "crc.h"
 #include "settings.h"
 #include <new>
 
@@ -18,10 +19,6 @@ using namespace luaaa;
 
 // Some functions lean on existing FSIO implementation
 #include "fsio_impl.h"
-
-#if EFI_UNIT_TEST
-Engine *engineForLuaUnitTests;
-#endif
 
 static int lua_readpin(lua_State* l) {
 	auto msg = luaL_checkstring(l, 1);
@@ -104,24 +101,15 @@ static int lua_curve2d(lua_State* l) {
 	auto humanCurveIdx = luaL_checkinteger(l, 1);
 	auto x = luaL_checknumber(l, 2);
 
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
-
-	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveValue(humanCurveIdx - HUMAN_OFFSET, x);
 
 	lua_pushnumber(l, result);
 	return 1;
 }
 
 static int lua_findCurveIndex(lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 	auto name = luaL_checklstring(l, 1, nullptr);
-	auto result = getCurveIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+	auto result = getCurveIndexByName(name);
 	if (result == EFI_ERROR_CODE) {
 		lua_pushnil(l);
 	} else {
@@ -130,6 +118,39 @@ static int lua_findCurveIndex(lua_State* l) {
 	}
 	return 1;
 }
+
+static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size) {
+	uint32_t result = 0;
+
+	luaL_checktype(l, paramIndex, LUA_TTABLE);
+	while (true) {
+		lua_pushnumber(l, result + 1);
+		auto elementType = lua_gettable(l, paramIndex);
+		auto val = lua_tonumber(l, -1);
+		lua_pop(l, 1);
+
+		if (elementType == LUA_TNIL) {
+			// we're done, this is the end of the array.
+			break;
+		}
+
+		if (elementType != LUA_TNUMBER) {
+			// We're not at the end, but this isn't a number!
+			luaL_error(l, "Unexpected data at position %d: %s", result, lua_tostring(l, -1));
+		}
+
+		// This element is valid, increment DLC
+		result++;
+
+		if (result > size) {
+			luaL_error(l, "Input array longer than buffer");
+		}
+
+		data[result - 1] = val;
+	}
+	return result;
+}
+
 
 static int lua_txCan(lua_State* l) {
 	auto channel = luaL_checkinteger(l, 1);
@@ -146,8 +167,6 @@ static int lua_txCan(lua_State* l) {
 		luaL_argcheck(l, id <= 0x1FFF'FFFF, 2, "ID specified is greater than max ext ID");
 	}
 
-	luaL_checktype(l, 4, LUA_TTABLE);
-
 	// conform ext parameter to true/false
 	CanTxMessage msg(id, 8, ext == 0 ? false : true);
 
@@ -155,6 +174,8 @@ static int lua_txCan(lua_State* l) {
 	// so we have to just iterate until we run out of numbers
 	uint8_t dlc = 0;
 
+	// todo: reduce code duplication with getArray
+	luaL_checktype(l, 4, LUA_TTABLE);
 	while (true) {
 		lua_pushnumber(l, dlc + 1);
 		auto elementType = lua_gettable(l, 4);
@@ -223,7 +244,7 @@ static int lua_startPwm(lua_State* l) {
 
 	startSimplePwmExt(
 		&p.pwm, "lua", &engine->executor,
-		CONFIG(luaOutputPins[p.idx]), &pins[p.idx],
+		engineConfiguration->luaOutputPins[p.idx], &pins[p.idx],
 		freq, duty
 	);
 
@@ -288,7 +309,7 @@ static int lua_getDigital(lua_State* l) {
 
 static int lua_setDebug(lua_State* l) {
 	// wrong debug mode, ignore
-	if (CONFIG(debugMode) != DBG_LUA) {
+	if (engineConfiguration->debugMode != DBG_LUA) {
 		return 0;
 	}
 
@@ -309,7 +330,7 @@ static int lua_setDebug(lua_State* l) {
 static auto lua_getAirmassResolveMode(lua_State* l) {
 	if (lua_gettop(l) == 0) {
 		// zero args, return configured mode
-		return CONFIG(fuelAlgorithm);
+		return engineConfiguration->fuelAlgorithm;
 	} else {
 		return static_cast<engine_load_mode_e>(luaL_checkinteger(l, 1));
 	}
@@ -349,25 +370,25 @@ static int lua_stopEngine(lua_State*) {
 }
 
 static int lua_setTimingAdd(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setTimingMult(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setFuelAdd(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
 
 	return 0;
 }
 
 static int lua_setFuelMult(lua_State* l) {
-	ENGINE(engineState).luaAdjustments.fuelMult = luaL_checknumber(l, 1);
+	engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
 
 	return 0;
 }
@@ -473,12 +494,8 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "findTableIndex",
 			[](lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 			auto name = luaL_checklstring(l, 1, nullptr);
-			auto index = getTableIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			auto index = getTableIndexByName(name);
 			if (index == EFI_ERROR_CODE) {
 				lua_pushnil(l);
 			} else {
@@ -490,14 +507,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 
 	lua_register(l, "findSetting",
 			[](lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 			auto name = luaL_checklstring(l, 1, nullptr);
 			auto defaultValue = luaL_checknumber(l, 2);
 
-			auto index = getSettingIndexByName(name PASS_ENGINE_PARAMETER_SUFFIX);
+			auto index = getSettingIndexByName(name);
 			if (index == EFI_ERROR_CODE) {
 				lua_pushnumber(l, defaultValue);
 			} else {
@@ -505,6 +518,22 @@ void configureRusefiLuaHooks(lua_State* l) {
 				lua_pushnumber(l, engineConfiguration->scriptSetting[index]);
 			}
 			return 1;
+	});
+
+	lua_register(l, "setSparkSkipRatio", [](lua_State* l) {
+		auto targetSkipRatio = luaL_checknumber(l, 1);
+		engine->softSparkLimiter.setTargetSkipRatio(targetSkipRatio);
+		return 1;
+	});
+
+	lua_register(l, "crc8_j1850", [](lua_State* l) {
+		uint8_t data[8];
+		uint32_t length = getArray(l, 1, data, sizeof(data));
+		auto trimLength = luaL_checkinteger(l, 2);
+		int crc = crc8(data, minI(length, trimLength));
+
+		lua_pushnumber(l, crc);
+		return 1;
 	});
 
 #if !EFI_UNIT_TEST
@@ -527,10 +556,6 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "setFuelMult", lua_setFuelMult);
 
 	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
-#if EFI_UNIT_TEST
-	Engine *engine = engineForLuaUnitTests;
-	EXPAND_Engine;
-#endif
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
 		lua_pushnumber(l, result);
 		return 1;

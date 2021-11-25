@@ -5,10 +5,8 @@
 #include "function_pointer_sensor.h"
 
 struct GetAfrWrapper {
-	DECLARE_ENGINE_PTR;
-
 	float getLambda() {
-		return getAfr(PASS_ENGINE_PARAMETER_SIGNATURE) / 14.7f;
+		return getAfr() / 14.7f;
 	}
 };
 
@@ -25,12 +23,11 @@ static AemXSeriesWideband aem1(0, SensorType::Lambda1);
 static AemXSeriesWideband aem2(1, SensorType::Lambda2);
 #endif
 
-void initLambda(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&afrWrapper);
+void initLambda() {
 
 #if EFI_CAN_SUPPORT
-	if (CONFIG(enableAemXSeries)) {
-		if (!CONFIG(canWriteEnabled) || !CONFIG(canReadEnabled)) {
+	if (engineConfiguration->enableAemXSeries) {
+		if (!engineConfiguration->canWriteEnabled || !engineConfiguration->canReadEnabled) {
 			firmwareError(OBD_PCM_Processor_Fault, "CAN read and write are required to use CAN wideband.");
 			return;
 		}

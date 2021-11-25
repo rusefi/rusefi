@@ -9,13 +9,12 @@ using ::testing::InSequence;
 TEST(injectionScheduling, NormalDutyCycle) {
 	StrictMock<MockExecutor> mockExec;
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engine->executor.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
 
 	InjectionEvent event;
-	INJECT_ENGINE_REFERENCE(&event);
 	InjectorOutputPin pin;
 	pin.injectorIndex = 0;
 	event.outputs[0] = &pin;
@@ -23,7 +22,7 @@ TEST(injectionScheduling, NormalDutyCycle) {
 	// Injection duration of 20ms
 	MockInjectorModel2 im;
 	EXPECT_CALL(im, getInjectionDuration(_)).WillOnce(Return(20.0f));
-	engine->injectorModel = &im;
+	engine->module<InjectorModel>().set(&im);
 
 	{
 		InSequence is;

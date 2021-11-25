@@ -3,6 +3,7 @@ package com.rusefi.ui.lua;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.MessagesPanel;
 import com.rusefi.ui.UIContext;
@@ -24,6 +25,8 @@ public class LuaScriptPanel {
     private final AnyCommand command;
     private final TextEditor scriptText = new TextEditor();
     private boolean isFirstRender = true;
+    private boolean alreadyRequestedFromListener;
+    private boolean renderedBeforeConnected;
 
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
@@ -61,6 +64,19 @@ public class LuaScriptPanel {
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
+            if (renderedBeforeConnected && !alreadyRequestedFromListener) {
+                // this whole listener is one huge hack :(
+                alreadyRequestedFromListener = true;
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        readFromECU();
+                    }
+                });
+            }
+        });
+
         JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel) {
             @Override
             public void paint(Graphics g) {
@@ -95,6 +111,7 @@ public class LuaScriptPanel {
 
         if (bp == null) {
             scriptText.setText("No ECU located");
+            renderedBeforeConnected = true;
             return;
         }
 

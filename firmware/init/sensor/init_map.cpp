@@ -8,10 +8,8 @@
 #include "identity_func.h"
 
 struct GetBaroWrapper {
-	DECLARE_ENGINE_PTR;
-
 	float getBaro() {
-		return ::getBaroPressure(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return ::getBaroPressure();
 	}
 };
 
@@ -53,7 +51,7 @@ struct MapCfg {
 	float map2;
 };
 
-static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static MapCfg getMapCfg() {
 	auto sensorType = engineConfiguration->map.sensor.type;
 	switch (sensorType) {
 	case MT_DENSO183:
@@ -99,8 +97,8 @@ static MapCfg getMapCfg(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}}
 }
 
-void configureMapFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	auto cfg = getMapCfg(PASS_CONFIG_PARAMETER_SIGNATURE);
+void configureMapFunction() {
+	auto cfg = getMapCfg();
 
 	mapConverter.configure(
 		cfg.v1,
@@ -112,14 +110,13 @@ void configureMapFunction(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	);
 }
 
-void initMap(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	INJECT_ENGINE_REFERENCE(&baroWrapper);
+void initMap() {
 
 	auto mapChannel = engineConfiguration->map.sensor.hwChannel;
 
 	if (isAdcChannelValid(mapChannel)) {
 		// Set up the conversion function
-		configureMapFunction(PASS_CONFIG_PARAMETER_SIGNATURE);
+		configureMapFunction();
 
 		slowMapSensor.setFunction(mapConverter);
 		fastMapSensor.setFunction(identityFunction);

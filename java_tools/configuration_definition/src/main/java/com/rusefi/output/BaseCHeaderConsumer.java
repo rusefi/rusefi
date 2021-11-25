@@ -11,7 +11,7 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
     public static String getHeaderText(ConfigField configField, int currentOffset, int bitIndex) {
         if (configField.isBit()) {
             String comment = "\t/**" + EOL + ConfigDefinition.packComment(configField.getCommentContent(), "\t") + "\toffset " + currentOffset + " bit " + bitIndex + " */" + EOL;
-            return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1;" + EOL;
+            return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
         }
 
         String cEntry = ConfigDefinition.getComment(configField.getCommentContent(), currentOffset, configField.getUnits());

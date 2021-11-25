@@ -12,11 +12,10 @@ TEST(BoostControl, Setpoint) {
 	EXPECT_CALL(targetMap, getValue(_, _))
 		.WillRepeatedly([](float xRpm, float tps) { return tps * 2; });
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->boostType = CLOSED_LOOP;
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
 
 	// Should return unexpected without a pedal map cfg'd
 	EXPECT_EQ(bc.getSetpoint(), unexpected);
@@ -33,10 +32,9 @@ TEST(BoostControl, Setpoint) {
 }
 
 TEST(BoostControl, ObservePlant) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
 
 	Sensor::resetMockValue(SensorType::Map);
 	// Check that invalid MAP returns unexpected
@@ -55,10 +53,9 @@ TEST(BoostControl, OpenLoop) {
 	EXPECT_CALL(openMap, getValue(_, _))
 		.WillRepeatedly([](float xRpm, float tps) { return tps * 2; });
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
 
 	// Without table set, should return unexpected
 	EXPECT_EQ(bc.getOpenLoop(0), unexpected);
@@ -71,10 +68,9 @@ TEST(BoostControl, OpenLoop) {
 }
 
 TEST(BoostControl, ClosedLoop) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
 
 	pid_s pidCfg = {
 		1, 0, 0,	 // P controller, easier to test
@@ -86,37 +82,36 @@ TEST(BoostControl, ClosedLoop) {
 	bc.init(nullptr, nullptr, nullptr, &pidCfg);
 
 	// Enable closed loop
-	CONFIG(boostType) = CLOSED_LOOP;
+	engineConfiguration->boostType = CLOSED_LOOP;
 	// Minimum 75kpa
-	CONFIG(minimumBoostClosedLoopMap) = 75;
+	engineConfiguration->minimumBoostClosedLoopMap = 75;
 
 	// At 0 RPM, closed loop is disabled
-	ENGINE(rpmCalculator.mockRpm) = 0;
+	engine->rpmCalculator.mockRpm = 0;
 	EXPECT_EQ(0, bc.getClosedLoop(150, 100).value_or(-1000));
 
 	// too low MAP, disable closed loop
-	ENGINE(rpmCalculator.mockRpm) = 0;
+	engine->rpmCalculator.mockRpm = 0;
 	EXPECT_EQ(0, bc.getClosedLoop(150, 50).value_or(-1000));
 
 	// With RPM, we should get an output
-	ENGINE(rpmCalculator.mockRpm) = 1000;
+	engine->rpmCalculator.mockRpm = 1000;
 	// Actual is below target -> positive output
 	EXPECT_FLOAT_EQ(50, bc.getClosedLoop(150, 100).value_or(-1000));
 	// Actual is above target -> negative output
 	EXPECT_FLOAT_EQ(-25.0f, bc.getClosedLoop(150, 175).value_or(-1000));
 
 	// Disabling closed loop should return 0
-	CONFIG(boostType) = OPEN_LOOP;
+	engineConfiguration->boostType = OPEN_LOOP;
 	EXPECT_FLOAT_EQ(0, bc.getClosedLoop(150, 175).value_or(-1000));
 }
 
 TEST(BoostControl, SetOutput) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	StrictMock<MockPwm> pwm;
 	StrictMock<MockEtb> etb;
 	BoostController bc;
-	INJECT_ENGINE_REFERENCE(&bc);
 
 	// ETB wastegate position & PWM should both be set
 	EXPECT_CALL(etb, setWastegatePosition(25.0f));

@@ -22,13 +22,13 @@ typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float, float> tps
 class AccelEnrichment : public tps_accel_state_s {
 public:
 	AccelEnrichment();
-	int getMaxDeltaIndex(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	float getMaxDelta(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	int getMaxDeltaIndex();
+	float getMaxDelta();
 
 	void resetAE();
 	void setLength(int length);
 	cyclic_buffer<float> cb;
-	void onNewValue(float currentValue DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void onNewValue(float currentValue);
 	int onUpdateInvocationCounter = 0;
 };
 
@@ -37,13 +37,13 @@ public:
 	/**
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */
-	floatms_t getTpsEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-	void onEngineCycleTps(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	floatms_t getTpsEnrichment();
+	void onEngineCycleTps();
 	void resetFractionValues();
 	void resetAE();
 };
 
-void initAccelEnrichment(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initAccelEnrichment();
 
 void setTpsAccelThr(float value);
 void setTpsDecelThr(float value);

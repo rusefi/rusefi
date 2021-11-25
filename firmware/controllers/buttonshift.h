@@ -16,10 +16,10 @@ public:
 	ButtonShiftController();
 
     void update() override;
-    void init(DECLARE_ENGINE_PARAMETER_SIGNATURE) override;
+    void init() override;
 private:
     ButtonDebounce debounceUp;
     ButtonDebounce debounceDown;
 };
 
-void initButtonShift(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initButtonShift();

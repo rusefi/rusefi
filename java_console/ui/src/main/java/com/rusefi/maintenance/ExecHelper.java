@@ -39,12 +39,12 @@ public class ExecHelper {
                     String line = bis.readLine();
                     if (line == null)
                         break;
-                    wnd.appendMsg(line);
+                    wnd.append(line);
                     buffer.append(line);
                     wasRunningTime = System.currentTimeMillis();
                 }
             } catch (IOException e) {
-                wnd.appendMsg("Stream " + e);
+                wnd.append("Stream " + e);
             }
         });
         t.setDaemon(true);
@@ -65,11 +65,11 @@ public class ExecHelper {
         StringBuffer error = new StringBuffer();
         String binaryFullName = workingDirPath + File.separator + binaryRelativeName;
         if (!new File(binaryFullName).exists()) {
-            wnd.appendMsg(binaryFullName + " not found :(");
+            wnd.append(binaryFullName + " not found :(");
             return error.toString();
         }
 
-        wnd.appendMsg("Executing " + command);
+        wnd.append("Executing " + command);
         try {
             File workingDir = new File(workingDirPath);
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
@@ -77,11 +77,11 @@ public class ExecHelper {
             startStreamThread(p, p.getErrorStream(), error, wnd);
             p.waitFor(3, TimeUnit.MINUTES);
         } catch (IOException e) {
-            wnd.appendMsg("IOError: " + e);
+            wnd.append("IOError: " + e);
         } catch (InterruptedException e) {
-            wnd.appendMsg("WaitError: " + e);
+            wnd.append("WaitError: " + e);
         }
-        wnd.appendMsg("Done!");
+        wnd.append("Done!");
         return error.toString();
     }
 

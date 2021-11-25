@@ -44,14 +44,14 @@ static const SPIConfig accelerometerCfg = {
 };
 #endif /* EFI_MEMS */
 
-void configureAccelerometerPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void configureAccelerometerPins() {
 //	engineConfiguration->LIS302DLCsPin = GPIOE_3; // we have a conflict with VVT output on Miata
-// 	CONFIG(is_enabled_spi_1) = true; // we have a conflict with PA5 input pin
+// 	engineConfiguration->is_enabled_spi_1 = true; // we have a conflict with PA5 input pin
 
 	// stm32f4discovery defaults
-	CONFIG(spi1mosiPin) = GPIOA_7;
-	CONFIG(spi1misoPin) = GPIOA_6;
-	CONFIG(spi1sckPin) = GPIOA_5;
+	engineConfiguration->spi1mosiPin = GPIOA_7;
+	engineConfiguration->spi1misoPin = GPIOA_6;
+	engineConfiguration->spi1sckPin = GPIOA_5;
 }
 
 
@@ -74,11 +74,11 @@ private:
 
 static BenchController instance;
 
-void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initAccelerometer() {
 	if (!isBrainPinValid(engineConfiguration->LIS302DLCsPin))
 		return; // not used
 
-	if (!CONFIG(is_enabled_spi_1))
+	if (!engineConfiguration->is_enabled_spi_1)
 		return; // temporary
 #if HAL_USE_SPI
 	driver = getSpiDevice(engineConfiguration->accelerometerSpiDevice);
@@ -92,8 +92,8 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	initSpiCs((SPIConfig *)driver->config, engineConfiguration->LIS302DLCsPin);
 
 //	memsCs.initPin("LIS302 CS", engineConfiguration->LIS302DLCsPin);
-//	memsCfg.ssport = getHwPort("mmc", CONFIG(sdCardCsPin));
-//	memsCfg.sspad = getHwPin("mmc", CONFIG(sdCardCsPin));
+//	memsCfg.ssport = getHwPort("mmc", engineConfiguration->sdCardCsPin);
+//	memsCfg.sspad = getHwPin("mmc", engineConfiguration->sdCardCsPin);
 
 
 	/* LIS302DL initialization.*/
@@ -108,10 +108,10 @@ void initAccelerometer(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #endif /* EFI_MEMS */
 
 
-float getLongitudinalAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getLongitudinalAcceleration() {
 	return engine->sensors.accelerometer.x;
 }
 
-float getTransverseAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getTransverseAcceleration() {
 	return engine->sensors.accelerometer.y;
 }

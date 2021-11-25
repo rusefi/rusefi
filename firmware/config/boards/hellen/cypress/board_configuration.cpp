@@ -21,7 +21,7 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->isEngineChartEnabled = false;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
