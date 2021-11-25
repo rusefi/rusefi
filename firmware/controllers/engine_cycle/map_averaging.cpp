@@ -34,21 +34,10 @@
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
 
-#define FAST_MAP_CHART_SKIP_FACTOR 16
-
 /**
  * this instance does not have a real physical pin - it's only used for engine sniffer
  */
 static NamedOutputPin mapAveragingPin("map");
-
-/**
- * Running counter of measurements per revolution
- */
-static volatile int measurementsPerRevolutionCounter = 0;
-/**
- * Number of measurements in previous shaft revolution
- */
-static volatile int measurementsPerRevolution = 0;
 
 /**
  * Running MAP accumulator - sum of all measurements within averaging window
@@ -110,19 +99,6 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
  */
 void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
-
-#if EFI_SENSOR_CHART && EFI_ANALOG_SENSORS
-	if (engine->sensorChartMode == SC_MAP) {
-		measurementsPerRevolutionCounter++;
-		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR == 0) {
-			float voltage = adcToVoltsDivided(adcValue);
-			float currentPressure = convertMap(voltage).value_or(0);
-			scAddData(
-					engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0),
-					currentPressure);
-		}
-	}
-#endif /* EFI_SENSOR_CHART */
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_MAP) {
@@ -245,9 +221,6 @@ void mapAveragingTriggerCallback(
 		applyMapMinBufferLength();
 	}
 
-	measurementsPerRevolution = measurementsPerRevolutionCounter;
-	measurementsPerRevolutionCounter = 0;
-
 	// todo: this could be pre-calculated
 	int samplingCount = engineConfiguration->measureMapOnlyInOneCylinder ? 1 : engineConfiguration->specs.cylindersCount;
 
@@ -287,15 +260,7 @@ void mapAveragingTriggerCallback(
 #endif
 }
 
-static void showMapStats() {
-	efiPrintf("per revolution %d", measurementsPerRevolution);
-}
-
 void initMapAveraging() {
-#if !EFI_UNIT_TEST
-	addConsoleAction("faststat", showMapStats);
-#endif /* EFI_UNIT_TEST */
-
 	applyMapMinBufferLength();
 }
 
