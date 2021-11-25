@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Nov 24 19:08:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Nov 25 02:43:41 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1171,7 +1171,7 @@ struct engine_configuration_s {
 	Deg
 	 * offset 552
 	 */
-	float unused552;
+	float mapCamDetectionAnglePosition;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	 * offset 556
@@ -1243,7 +1243,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 615
 	 */
-	uint8_t unused615;
+	uint8_t mapCamDetectionThreshold;
 	/**
 	 * offset 616
 	 */
@@ -4533,4 +4533,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Wed Nov 24 19:08:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Thu Nov 25 02:43:41 UTC 2021
