@@ -5,11 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "sensor_chart.h"
-#include "engine.h"
-#include "rpm_calculator.h"
 
 #if EFI_SENSOR_CHART
 #include "status_loop.h"
@@ -54,7 +52,7 @@ void scAddData(float angle, float value) {
 
 			// Reset logging and append header
 			scLogging.reset();
-			scLogging.appendPrintf( "%s%s", PROTOCOL_ANALOG_CHART, DELIMETER);
+			scLogging.appendPrintf(PROTOCOL_ANALOG_CHART LOG_DELIMITER);
 		}
 	} else if (state == ScState::Logging) {
 		// If running and the revolution idx changes, terminate logging and wait for flush
@@ -88,7 +86,7 @@ void publishSensorChartIfFull() {
 		return;
 	}
 
-	scLogging.appendPrintf(DELIMETER);
+	scLogging.appendPrintf(LOG_DELIMITER);
 	scheduleLogging(&scLogging);
 
 	state = ScState::Armed;

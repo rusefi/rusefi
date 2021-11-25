@@ -30,7 +30,7 @@
  *
  */
 
-#include "globalaccess.h"
+#include "pch.h"
 
 #if ! EFI_UNIT_TEST
 #include "os_access.h"
@@ -132,14 +132,6 @@ void Logging::appendFloat(float value, int precision) {
 	default:
 		appendPrintf("%.2f", value);
 	}
-}
-
-void appendMsgPrefix(Logging *logging) {
-	logging->append(PROTOCOL_MSG DELIMETER);
-}
-
-void appendMsgPostfix(Logging *logging) {
-	logging->append(DELIMETER);
 }
 
 void Logging::reset() {

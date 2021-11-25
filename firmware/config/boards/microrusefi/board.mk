@@ -14,7 +14,7 @@ endif
 
 # Set this if you want a default engine type other than normal MRE
 ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MICRO_RUS_EFI
+  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
 endif
 
 ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)

@@ -28,8 +28,8 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	// nominal gap is 0.325
-	s->setTriggerSynchronizationGap2(0.1, 0.4);
-	// nominal gap is ~1.6
+	s->setTriggerSynchronizationGap2(0.1, 0.45);
+	// nominal gap is ~1.52
 	s->setSecondTriggerSynchronizationGap2(1.2, 1.8);
 
 	s->useRiseEdge = false;
@@ -91,7 +91,6 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->setTriggerSynchronizationGap3(0, 0.065, 0.17f);
 	s->useRiseEdge = false;
-	s->bothFrontsRequired = true;
 	s->useOnlyPrimaryForSync = true;
 	efiAssertVoid(OBD_PCM_Processor_Fault, s->gapBothDirections == false, "NB1 trigger measures on FALL events");
 

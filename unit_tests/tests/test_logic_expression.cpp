@@ -7,34 +7,27 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "fsio_impl.h"
 #include "cli_registry.h"
-#include "engine_test_helper.h"
-#include "thermistors.h"
-#include "allsensors.h"
 
 #define TEST_POOL_SIZE 256
 
-FsioResult getEngineValue(le_action_e action DECLARE_ENGINE_PARAMETER_SUFFIX) {
+FsioResult getEngineValue(le_action_e action) {
 	switch(action) {
 	case LE_METHOD_FAN:
 		return engine->fsioState.mockFan;
 	case LE_METHOD_COOLANT:
-		return Sensor::get(SensorType::Clt).value_or(0);
+		return Sensor::getOrZero(SensorType::Clt);
 	case LE_METHOD_RPM:
 		return engine->fsioState.mockRpm;
 	case LE_METHOD_CRANKING_RPM:
 		return engine->fsioState.mockCrankingRpm;
-	case LE_METHOD_TIME_SINCE_BOOT:
-		return engine->fsioState.mockTimeSinceBoot;
-	case LE_METHOD_STARTUP_FUEL_PUMP_DURATION:
-		return 2.0f;
-	case LE_METHOD_TIME_SINCE_TRIGGER_EVENT:
-		return engine->fsioState.mockTimeSinceTrigger;
 	case LE_METHOD_VBATT:
 		return 12;
 	case LE_METHOD_AC_TOGGLE:
-		return getAcToggle(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getAcToggle();
 	case LE_METHOD_IS_COOLANT_BROKEN:
 		return 0;
 #include "fsio_getters.def"
@@ -115,13 +108,13 @@ static void testExpression2(float selfValue, const char *line, float expected, E
 	ASSERT_TRUE(element != NULL) << "Not NULL expected";
 	LECalculator c;
 
-	EXPAND_Engine;
+	
 
-	ASSERT_NEAR(expected, c.evaluate("test", selfValue, element PASS_ENGINE_PARAMETER_SUFFIX), EPS4D) << line;
+	ASSERT_NEAR(expected, c.evaluate("test", selfValue, element), EPS4D) << line;
 }
 
 static void testExpression2(float selfValue, const char *line, float expected, const std::unordered_map<SensorType, float>& sensorVals = {}) {
-	WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+	EngineTestHelper eth(FORD_INLINE_6_1995, sensorVals);
 	testExpression2(selfValue, line, expected, engine);
 }
 
@@ -130,7 +123,7 @@ static void testExpression(const char *line, float expectedValue, const std::uno
 }
 
 TEST(fsio, testHysteresisSelf) {
-	WITH_ENGINE_TEST_HELPER(FORD_INLINE_6_1995);
+	EngineTestHelper eth(FORD_INLINE_6_1995);
 
 	LEElement thepool[TEST_POOL_SIZE];
 	LEElementPool pool(thepool, TEST_POOL_SIZE);
@@ -144,20 +137,20 @@ TEST(fsio, testHysteresisSelf) {
 	double selfValue = 0;
 
 	engine->fsioState.mockRpm = 0;
-	selfValue = c.evaluate("test", selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate("test", selfValue, element);
 	ASSERT_EQ(0, selfValue);
 
 	engine->fsioState.mockRpm = 430;
-	selfValue = c.evaluate("test", selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate("test", selfValue, element);
 	// OFF since not ON yet
 	ASSERT_EQ(0, selfValue);
 
 	engine->fsioState.mockRpm = 460;
-	selfValue = c.evaluate("test", selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate("test", selfValue, element);
 	ASSERT_EQ(1, selfValue);
 
 	engine->fsioState.mockRpm = 430;
-	selfValue = c.evaluate("test", selfValue, element PASS_ENGINE_PARAMETER_SUFFIX);
+	selfValue = c.evaluate("test", selfValue, element);
 	// OFF since was ON yet
 	ASSERT_EQ(1, selfValue);
 }
@@ -235,13 +228,13 @@ TEST(fsio, testLogicExpressions) {
 	testExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR", 1, sensorVals);
 
 	{
-		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+		EngineTestHelper eth(FORD_INLINE_6_1995, sensorVals);
 		LEElement thepool[TEST_POOL_SIZE];
 		LEElementPool pool(thepool, TEST_POOL_SIZE);
 		LEElement * element = pool.parseExpression("fan NOT coolant 90 > AND fan coolant 85 > AND OR");
 		ASSERT_TRUE(element != NULL) << "Not NULL expected";
 		LECalculator c;
-		ASSERT_EQ( 1,  c.evaluate("test", 0, element PASS_ENGINE_PARAMETER_SUFFIX)) << "that expression";
+		ASSERT_EQ( 1,  c.evaluate("test", 0, element)) << "that expression";
 
 		ASSERT_EQ(12, c.currentCalculationLogPosition);
 		ASSERT_EQ(102, c.calcLogAction[0]);
@@ -249,7 +242,7 @@ TEST(fsio, testLogicExpressions) {
 	}
 
 	{
-		WITH_ENGINE_TEST_HELPER_SENS(FORD_INLINE_6_1995, sensorVals);
+		EngineTestHelper eth(FORD_INLINE_6_1995, sensorVals);
 		engine->fsioState.mockRpm = 900;
 		engine->fsioState.mockCrankingRpm = 200;
 		testExpression2(0, "rpm", 900, engine);
@@ -259,40 +252,40 @@ TEST(fsio, testLogicExpressions) {
 	}
 }
 
+extern int timeNowUs;
+
 TEST(fsio, fuelPump) {
 	// this will init fuel pump fsio logic
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Mock a fuel pump pin
-	CONFIG(fuelPumpPin) = GPIOA_0;
+	engineConfiguration->fuelPumpPin = GPIOA_0;
 	// Re-init so it picks up the new config
-	enginePins.fuelPumpRelay.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+	enginePins.fuelPumpRelay.init();
 
 	// ECU just started, haven't seen trigger yet
-	engine->fsioState.mockTimeSinceBoot = 0.5f;
-	engine->fsioState.mockTimeSinceTrigger = 100;
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timeNowUs = 0.5e6;
+	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
 	// Long time since ecu start, haven't seen trigger yet
-	engine->fsioState.mockTimeSinceBoot = 60;
-	engine->fsioState.mockTimeSinceTrigger = 100;
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timeNowUs = 60e6;
+	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be off!
 	EXPECT_FALSE(efiReadPin(GPIOA_0));
 
 	// Long time since ecu start, just saw a trigger!
-	engine->fsioState.mockTimeSinceBoot = 60;
-	engine->fsioState.mockTimeSinceTrigger = 0.1f;
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timeNowUs = 10e6;
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
+	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
 	// ECU just started, and we just saw a trigger!
-	engine->fsioState.mockTimeSinceBoot = 0.5f;
-	engine->fsioState.mockTimeSinceTrigger = 0.1f;
-	runFsio(PASS_ENGINE_PARAMETER_SIGNATURE);
+	timeNowUs = 10e6;
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
+	engine->module<FuelPumpController>().unmock().onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 }

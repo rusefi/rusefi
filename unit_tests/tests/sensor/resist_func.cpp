@@ -2,7 +2,8 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "unit_test_framework.h"
+#include "pch.h"
+
 #include "resistance_func.h"
 
 TEST(resistance, OutOfRange)

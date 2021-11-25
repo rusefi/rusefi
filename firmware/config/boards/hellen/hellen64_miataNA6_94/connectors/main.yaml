@@ -1,6 +1,6 @@
 #
 # open issues: knock do we need to do anything?
-# todo: we've inhecrited dual mode on A/C etc from H72 needs to be addressed
+# todo: we've inherited dual mode on A/C etc from H72 needs to be addressed
 #
 
 pins:
@@ -30,9 +30,6 @@ pins:
     function: Check Engine Light
     type: ls
 
-  - pin: 1F
-    function: Tachometer
-    
   - pin: 1G
     id: GPIOI_8
     class: outputs
@@ -102,23 +99,58 @@ pins:
     function: GND
 
   - pin: 2B    
-    function: GND
+    function: +5v
     
-  - pin: 2L
-    id: GPIOE_13
-    class: analog_inputs
-    ts_name: 2L - Flex Fuel
-    function: Flex Fuel Input
+  - pin: 2C    
+    function: WBO Heater -
+
+  - pin: 2D    
+    function: +12v
+   
+  - pin: 2E     
+    function: WBO R Trim
+
+  - pin: 2F    
+    function: WBO Ip 
+    
+  - pin: 2G     
+    function: WBO Vs/Ip
+
+  - pin: 2H    
+    function: WBO Vs  
   
   - pin: 2I
-    function: Options Sensor Ground
-    type: Gnd
+    function: VVT Output
     
   - pin: 2J
     id: GPIOF_12
     class: outputs
-    ts_name: 2A - Boost Control
+    ts_name: 2J - Boost Control
     function: Boost Control Solenoid
+    
+  - pin: 2K     
+    function: GND
+  
+  - pin: 2L
+    id: GPIOF_3
+    class: event_inputs
+    ts_name: 2L - Flex Fuel
+    function: Flex Fuel Input
+  
+  - pin: 2M
+    id: [GPIOC_1, EFI_ADC_11]
+    class: [switch_inputs, analog_inputs] 
+    ts_name: 2M - Pressure Sensor
+    function: pressure input 
+    
+  - pin: 2N 
+    id: [GPIOA_1, EFI_ADC_1]
+    class: [switch_inputs, analog_inputs]
+    ts_name: 2N - Temperature Sensor
+    function: temp input
+
+  - pin: 2O    
+    function: +5v 
     
   - pin: 2P
     function: Knock Input   
@@ -258,6 +290,7 @@ pins:
     ts_name: intMAP (A15)
 
 info:
+  title: Hellen Miata NA6
   image:
     file: main.jpg
   pins:
@@ -317,6 +350,70 @@ info:
     - pin: 1V
       x: 2838
       y: 512
+      
+    - pin: 2A
+      x: 2616
+      y: 352
+      
+    - pin: 2B
+      x: 2616
+      y: 544
+
+    - pin: 2C
+      x: 2506
+      y: 352
+      
+    - pin: 2D
+      x: 2506
+      y: 544
+
+    - pin: 2E
+      x: 2396
+      y: 352
+      
+    - pin: 2F
+      x: 2396
+      y: 544
+
+    - pin: 2G
+      x: 2286
+      y: 352
+      
+    - pin: 2H
+      x: 2286
+      y: 544
+
+    - pin: 2I
+      x: 2176
+      y: 352
+      
+    - pin: 2J
+      x: 2176
+      y: 544
+  
+    - pin: 2K
+      x: 2066
+      y: 352
+      
+    - pin: 2L
+      x: 2066
+      y: 544
+
+    - pin: 2M
+      x: 1956
+      y: 352
+      
+    - pin: 2N
+      x: 1956
+      y: 544
+
+    - pin: 2O
+      x: 1846
+      y: 352
+      
+    - pin: 2P
+      x: 1846
+      y: 544
 
     - pin: 3A
       x: 1604

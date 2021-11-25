@@ -5,10 +5,7 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "gtest/gtest.h"
-
-#include "efilib.h"
-#include <math.h>
+#include "pch.h"
 
 TEST(EfiLibTest, ExpTaylor)
 {

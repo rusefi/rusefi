@@ -1,0 +1,58 @@
+plugins {
+    id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+apply from: '../../android/dependencies.gradle'
+
+defaultTasks 'shadowJar'
+
+dependencies {
+    // https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305
+    implementation libs.jsr305
+    implementation project(':logging')
+    implementation project(':logging-api')
+    implementation libs.annotations
+    testImplementation libs.junit
+}
+
+/*
+ don't use it, otherwise
+ you'll get jar only with
+ enum_to_string classes
+ for the full jar with logging*
+ use shadowJar task
+*/
+jar {
+    archivesBaseName = 'enum2string'
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+            'Main-Class': 'com.rusefi.EnumToString'
+        )
+    }
+}
+
+shadowJar {
+    /*
+     to exclude suffix '-all'
+     in resulting archive file name
+    */
+    archiveBaseName = 'enum2string'
+    archiveClassifier = ''
+
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        inheritFrom project.tasks.jar.manifest
+    }
+
+    /*
+     to keep only classes from logging
+     and loggin-api as in build.xml
+    */
+    dependencies {
+        exclude(dependency(libs.jsr305))
+        exclude(dependency(libs.junit))
+        exclude(dependency(libs.annotations))
+    }
+}

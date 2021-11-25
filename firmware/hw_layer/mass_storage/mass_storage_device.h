@@ -7,8 +7,6 @@
  * This file implements a USB mass storage device with multiple LUNs, so multiple drives can be mounted at once.
  */
 
-#include "ch.hpp"
-#include "hal.h"
 #include "hal_usb_msd.h"
 #include "thread_controller.h"
 

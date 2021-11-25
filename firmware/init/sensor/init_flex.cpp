@@ -1,6 +1,6 @@
+#include "pch.h"
+
 #include "init.h"
-#include "pin_repository.h"
-#include "engine.h"
 #include "frequency_sensor.h"
 #include "flex_sensor.h"
 
@@ -9,8 +9,8 @@ static FlexConverter converter;
 
 // https://rusefi.com/forum/viewtopic.php?p=37452&sid=829804c90d5b2e1fecd1b900cf1b1811#p37452
 
-void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	auto pin = CONFIG(flexSensorPin);
+void initFlexSensor() {
+	auto pin = engineConfiguration->flexSensorPin;
 
 	// Nothing to do if no sensor configured
 	if (!isBrainPinValid(pin)) {
@@ -20,4 +20,8 @@ void initFlexSensor(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	flexSensor.setFunction(converter);
 	flexSensor.init(pin);
 	flexSensor.Register();
+}
+
+void deInitFlexSensor() {
+	flexSensor.deInit();
 }

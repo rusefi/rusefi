@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "unit_test_framework.h"
+#include "pch.h"
 
 // in C++ struct is pretty much a class just fields are public by default
 struct TestParent {

@@ -48,6 +48,7 @@ pins:
     ts_name: 14 - Cam Left
 
   - pin: 21a
+# Q307
     id: GPIOD_9
     class: outputs
     ts_name: 21 - INJ_5
@@ -55,6 +56,7 @@ pins:
     type: inj
 
   - pin: 22a
+# Q309
     id: GPIOD_11
     class: outputs
     ts_name: 22 - INJ_3
@@ -62,6 +64,7 @@ pins:
     type: inj
 
   - pin: 23a
+# Q312
     id: GPIOG_7
     class: outputs
     ts_name: 23 - INJ_1
@@ -88,6 +91,7 @@ pins:
     function: IAT sensor
 
   - pin: 40a
+# Q311
     id: GPIOF_12
     class: outputs
     ts_name: 40 - INJ_6
@@ -95,6 +99,7 @@ pins:
     type: inj
 
   - pin: 41a
+# Q310
     id: GPIOD_10
     class: outputs
     ts_name: 41 - INJ_4
@@ -102,6 +107,7 @@ pins:
     type: inj
 
   - pin: 42a
+# Q305
     id: GPIOG_8
     class: outputs
     ts_name: 42 - INJ_2
@@ -116,7 +122,7 @@ pins:
 
 
   - pin: 50a
-# in_tps AIN17 PA4
+# in_tps AIN17 PA4 U108
     id: EFI_ADC_4
     class: analog_inputs
     ts_name: 50 - TPS 1
@@ -151,7 +157,7 @@ pins:
     function: GNDA many sensors
 
   - pin: 69a
-# in_aux1 AIN23 PB0
+# in_aux1 AIN23 PB0 U109
     id: EFI_ADC_8
     class: analog_inputs
     ts_name: 69 - TPS 2
@@ -211,7 +217,7 @@ pins:
     type: can
 
   - pin: 98a
-# IN_AUX2 AIN21 A21 PC4
+# IN_AUX2 AIN21 A21 PC4 U109
     id: EFI_ADC_14
     class: analog_inputs
     ts_name: 98 - PPS 2
@@ -238,7 +244,7 @@ pins:
     type: ls
 
   - pin: 106a
-# IN_PPS, AIN18, A18, PA3
+# IN_PPS, AIN18, A18, PA3 U106
     id: EFI_ADC_3
     class: analog_inputs
     ts_name: 106 - PPS 1
@@ -287,6 +293,7 @@ pins:
 
 
 info:
+  title: Hellen 121 Nissan
   image:
     file: main.jpg
   pins:

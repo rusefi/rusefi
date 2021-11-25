@@ -12,12 +12,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "gpio/gpio_ext.h"
 #include "gpio/drv8860.h"
-#include "pin_repository.h"
 #include "os_util.h"
-#include "thread_priority.h"
 
 #if (BOARD_DRV8860_COUNT > 0)
 

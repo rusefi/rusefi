@@ -5,10 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-/* getNextFiringCylinderId */
-#include "engine_math.h"
+#include "pch.h"
+
 /* getCylinderKnockBank */
 #include "knock_logic.h"
 #include "hip9011_logic.h"
@@ -202,7 +200,7 @@ int HIP9011::handleChannel(DEFINE_HIP_PARAMS) {
 
 	/* find next firing cylinder */
 	/* MAGIC +1 -1, couse getNextFiringCylinderId expect cylinders to start from 1 */
-	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1) PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1)) - 1;
 
 	int nextChannelIdx = cylinderToChannelIdx(expectedCylinderNumber);
 	if (nextChannelIdx == channelIdx)
@@ -227,7 +225,7 @@ int HIP9011::readValueAndHandleChannel(DEFINE_HIP_PARAMS) {
 
 	/* find next firing cylinder */
 	/* MAGIC +1 -1, couse getNextFiringCylinderId expect cylinders to start from 1 */
-	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1) PASS_ENGINE_PARAMETER_SUFFIX) - 1;
+	expectedCylinderNumber = getNextFiringCylinderId((cylinderNumber + 1)) - 1;
 
 	int nextChannelIdx = cylinderToChannelIdx(expectedCylinderNumber);
 

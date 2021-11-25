@@ -61,6 +61,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
+	$(PROJECT_DIR)/../unit_tests/mocks.cpp \
 
 INCDIR += \
 	$(PCH_DIR) \
@@ -68,6 +69,7 @@ INCDIR += \
 	$(ALLINC) \
 	$(UTIL_INC) \
 	$(PROJECT_DIR)/config/engines \
+	$(PROJECT_DIR)/config/boards/ \
 	$(CONTROLLERS_INC) \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \

@@ -19,24 +19,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if HAL_USE_ADC
 #include "os_access.h"
 
-#include "engine.h"
-#include "adc_inputs.h"
 #include "adc_subscription.h"
 #include "AdcConfiguration.h"
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
-
-#include "pin_repository.h"
-#include "engine_math.h"
-#include "engine_controller.h"
-#include "maf.h"
-#include "perf_trace.h"
-#include "thread_priority.h"
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #ifndef ADC_BUF_DEPTH_FAST
@@ -49,12 +40,12 @@ static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNE
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
 // Board voltage, with divider coefficient accounted for
-float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getVoltage(msg, hwChannel PASS_ENGINE_PARAMETER_SUFFIX) * engineConfiguration->analogInputDividerCoefficient;
+float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
+	return getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
 }
 
 // voltage in MCU universe, from zero to VDD
-float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getVoltage(const char *msg, adc_channel_e hwChannel) {
 	return adcToVolts(getAdcValue(msg, hwChannel));
 }
 
@@ -304,13 +295,6 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }
 
-void AdcDevice::enableChannelAndPin(const char *msg, adc_channel_e hwChannel) {
-	enableChannel(hwChannel);
-
-	brain_pin_e pin = getAdcChannelBrainPin(msg, hwChannel);
-	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
-}
-
 adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
 	return hardwareIndexByIndernalAdcIndex[index];
 }
@@ -429,14 +413,12 @@ void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode
 
 #if EFI_USE_FAST_ADC
 	if (mode == ADC_FAST) {
-		fastAdc.enableChannelAndPin(name, setting);
+		fastAdc.enableChannel(setting);
 		return;
 	}
 #endif
 
-	// Slow ADC always samples all channels, simply set the input mode
-	brain_pin_e pin = getAdcChannelBrainPin(name, setting);
-	efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
+	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
 }
 
 void removeChannel(const char *name, adc_channel_e setting) {
@@ -450,7 +432,7 @@ void removeChannel(const char *name, adc_channel_e setting) {
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void setAdcChannelOverrides() { }
 
-static void configureInputs(void) {
+static void configureInputs() {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
 
 	/**
@@ -463,18 +445,9 @@ static void configureInputs(void) {
 
 	addChannel("HIP9011", engineConfiguration->hipOutputChannel, ADC_FAST);
 
-	addChannel("Baro Press", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 
 	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
-
-	addChannel("AFR", engineConfiguration->afr.hwChannel, ADC_SLOW);
-
-	if (CONFIG(isCJ125Enabled)) {
-		addChannel("CJ125 UR", engineConfiguration->cj125ur, ADC_SLOW);
-		addChannel("CJ125 UA", engineConfiguration->cj125ua, ADC_SLOW);
-	}
 
 	setAdcChannelOverrides();
 }
@@ -516,12 +489,12 @@ void printFullAdcReportIfNeeded(void) {
 
 #else /* not HAL_USE_ADC */
 
-__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e) {
 	return 0;
 }
 
 // voltage in MCU universe, from zero to VDD
-__attribute__((weak)) float getVoltage(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+__attribute__((weak)) float getVoltage(const char*, adc_channel_e) {
 	return 0;
 }
 

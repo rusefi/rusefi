@@ -12,8 +12,6 @@
 
 #include "pch.h"
 
-#include "thermistors.h"
-
 void setDodgeSensor(ThermistorConf *thermistorConf, float pullup) {
 	thermistorConf->config = {-40, 30, 120, 336660, 7550, 390, pullup};
 }

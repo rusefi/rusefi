@@ -15,5 +15,6 @@
     <orderEntry type="module" module-name="io" exported="" />
     <orderEntry type="module" module-name="models" exported="" />
     <orderEntry type="module" module-name="inifile" exported="" />
+    <orderEntry type="module" module-name="logging" exported="" />
   </component>
 </module>

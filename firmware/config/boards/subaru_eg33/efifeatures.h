@@ -21,13 +21,11 @@
 #define LED_RUNING_BRAIN_PIN_MODE		INVERTED_OUTPUT
 
 /* debug console */
-#undef TS_PRIMARY_SERIAL
-#undef TS_PRIMARY_UART
-#define TS_PRIMARY_SERIAL		SD1
+#undef TS_PRIMARY_PORT
+#define TS_PRIMARY_PORT		SD1
 
 // no secondary channel
-#undef TS_SECONDARY_UART
-#undef TS_SECONDARY_SERIAL
+#undef TS_SECONDARY_PORT
 
 /* Knock detection */
 #undef EFI_HIP_9011
@@ -81,9 +79,6 @@
 #undef EFI_USB_SERIAL
 #define EFI_USB_SERIAL				TRUE
 
-#undef EFI_FUEL_PUMP
-#define EFI_FUEL_PUMP				TRUE
-
 #define EFI_SDC_DEVICE				SDCD2
 
 #define ADC_CHANNEL_VREF			ADC_CHANNEL_IN14
@@ -97,7 +92,7 @@
 #undef SERIAL_SPEED
 #define SERIAL_SPEED				115200
 
-#ifdef TS_PRIMARY_SERIAL
+#ifdef TS_PRIMARY_PORT
 	#undef EFI_CONSOLE_TX_PORT
 	#define EFI_CONSOLE_TX_PORT 		GPIOA
 	#undef EFI_CONSOLE_TX_PIN
@@ -138,5 +133,12 @@
 #define NO_RPM_EVENTS_TIMEOUT_SECS	5	// (RPM < 12)
 
 #define EFI_NARROW_EGO_AVERAGING		TRUE
+
+/* this board has external QSPI NOR flash */
+#undef EFI_STORAGE_EXT_SNOR
+#define EFI_STORAGE_EXT_SNOR		TRUE
+
+#undef EFI_STORAGE_INT_FLASH
+#define EFI_STORAGE_INT_FLASH   	FALSE
 
 #endif /* EFIFEATURES_SUBARUEG33_H_ */

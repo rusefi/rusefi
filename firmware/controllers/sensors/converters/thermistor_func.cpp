@@ -2,9 +2,9 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "thermistor_func.h"
+#include "pch.h"
 
-#include "thermistors.h"
+#include "thermistor_func.h"
 
 #include <math.h>
 

@@ -9,8 +9,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "cdm_ion_sense.h"
-#include "engine.h"
 
 CdmState::CdmState() {
 	accumilatingAtRevolution = 0;
@@ -72,11 +73,11 @@ static void extIonCallback(void *arg) {
 }
 
 void cdmIonInit(void) {
-	if (!isBrainPinValid(CONFIG(cdmInputPin))) {
+	if (!isBrainPinValid(engineConfiguration->cdmInputPin)) {
 		return;
 	}
 
-	efiExtiEnablePin("ion", CONFIG(cdmInputPin), PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
+	efiExtiEnablePin("ion", engineConfiguration->cdmInputPin, PAL_EVENT_MODE_RISING_EDGE, extIonCallback, NULL);
 }
 
 #endif /* EFI_CDM_INTEGRATION */

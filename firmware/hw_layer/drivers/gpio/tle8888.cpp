@@ -29,7 +29,7 @@
  * Andrey Gusakov, (c) 2019
  */
 
-#include "global.h"
+#include "pch.h"
 
 #include "gpio/tle8888.h"
 
@@ -38,9 +38,7 @@
 #include "persistent_configuration.h"
 #include "hardware.h"
 #include "gpio/gpio_ext.h"
-#include "pin_repository.h"
 #include "os_util.h"
-#include "thread_priority.h"
 
 /*
  * TODO list:
@@ -710,7 +708,7 @@ int Tle8888::chip_init()
 			palSetPort(cfg->inj_en.port, PAL_PORT_BIT(cfg->inj_en.pad));
 	}
 
-	if (CONFIG(verboseTLE8888)) {
+	if (engineConfiguration->verboseTLE8888) {
 		tle8888_dump_regs();
 	}
 

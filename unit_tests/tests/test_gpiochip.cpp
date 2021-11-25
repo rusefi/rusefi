@@ -4,8 +4,8 @@
  * @date Mar 12, 2019
  */
 
-#include "unit_test_framework.h"
-#include "global.h"
+#include "pch.h"
+
 #include "gpio/gpio_ext.h"
 
 using ::testing::_;

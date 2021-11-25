@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include "global.h"
 #include "listener_array.h"
 
 struct digital_input_s {

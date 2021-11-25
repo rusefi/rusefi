@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include "engine_ptr.h"
 #include "periodic_task.h"
 #include "closed_loop_controller.h"
 #include "pwm_generator_logic.h"
@@ -21,8 +20,6 @@ void stopVvtControlPins();
 
 class VvtController : public PeriodicTimerController, public ClosedLoopController<angle_t, percent_t> {
 public:
-	DECLARE_ENGINE_PTR;
-
 	void init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap);
 
 	// PeriodicTimerController implementation
@@ -32,8 +29,8 @@ public:
 	// ClosedLoopController implementation
 	expected<angle_t> observePlant() const override;
 
-	expected<angle_t> getSetpoint() const override;
-	expected<percent_t> getOpenLoop(angle_t target) const override;
+	expected<angle_t> getSetpoint() override;
+	expected<percent_t> getOpenLoop(angle_t target) override;
 	expected<percent_t> getClosedLoop(angle_t setpoint, angle_t observation) override;
 	void setOutput(expected<percent_t> outputValue) override;
 

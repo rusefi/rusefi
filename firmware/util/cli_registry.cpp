@@ -14,9 +14,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "cli_registry.h"
-#include "efilib.h"
 
 #if ! EFI_UNIT_TEST
 #include "eficonsole.h"

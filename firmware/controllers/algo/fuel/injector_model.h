@@ -1,9 +1,8 @@
 #pragma once
 
-#include "engine.h"
 #include "expected.h"
 
-struct IInjectorModel {
+struct IInjectorModel : public EngineModule {
 	virtual void prepare() = 0;
 	virtual floatms_t getInjectionDuration(float fuelMassGram) const = 0;
 	virtual float getFuelMassForDuration(floatms_t duration) const = 0;
@@ -30,8 +29,6 @@ private:
 
 class InjectorModel : public InjectorModelBase {
 public:
-	DECLARE_ENGINE_PTR;
-
 	void postState(float deadtime) const override;
 	floatms_t getDeadtime() const override;
 	float getInjectorMassFlowRate() const override;
@@ -41,4 +38,6 @@ public:
 	// Small pulse correction logic
 	float correctShortPulse(float baseDuration) const override;
 	virtual float correctInjectionPolynomial(float baseDuration) const;
+
+	using interface_t = IInjectorModel; // Mock interface
 };

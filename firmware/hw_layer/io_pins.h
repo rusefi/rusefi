@@ -9,7 +9,6 @@
 #pragma once
 
 #include "global.h"
-#include "engine_ptr.h"
 
 #define INITIAL_PIN_STATE -1
 #define GPIO_NULL NULL
@@ -19,10 +18,19 @@
 	efiAssertVoid(CUSTOM_INVALID_MODE_SETTING, mode <= OM_OPENDRAIN_INVERTED, "invalid pin_output_mode_e"); \
  }
 
+#define efiSetPadModeIfConfigurationChanged(msg, pin, mode)                      \
+	if (isConfigurationChanged(pin)) {                                           \
+		efiSetPadMode(msg, engineConfiguration->pin, mode);      \
+	}
 
-EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode DECLARE_ENGINE_PARAMETER_SUFFIX);
+#define efiSetPadUnusedIfConfigurationChanged(pin)                               \
+	if (isConfigurationChanged(pin)) {                                           \
+		efiSetPadUnused(activeConfiguration.pin);   \
+	}
+
+EXTERNC void efiSetPadMode(const char *msg, brain_pin_e pin, iomode_t mode);
 EXTERNC void efiSetPadModeWithoutOwnershipAcquisition(const char *msg, brain_pin_e brainPin, iomode_t mode);
-EXTERNC void efiSetPadUnused(brain_pin_e brainPin DECLARE_ENGINE_PARAMETER_SUFFIX);
+EXTERNC void efiSetPadUnused(brain_pin_e brainPin);
 
 #if EFI_GPIO_HARDWARE
 EXTERNC bool efiReadPin(brain_pin_e pin);

@@ -7,13 +7,10 @@
 
 #pragma once
 
-#include "engine.h"
 #include "trigger_central.h"
-#include "rpm_calculator.h"
 #include "main_trigger_callback.h"
 #include "unit_test_framework.h"
-#include "sensor.h"
-#include "mocks.h"
+#include "engine.h"
 
 #include <unordered_map>
 
@@ -24,7 +21,8 @@ class EngineTestHelperBase
 public:
 	// we have the base method and base constructor in order to better control order if initialization
 	// base constructor contains things which need to be executed first
-	EngineTestHelperBase();
+	EngineTestHelperBase(Engine * eng, engine_configuration_s * config, persistent_config_s * pers);
+	~EngineTestHelperBase();
 };
 
 /**
@@ -32,6 +30,7 @@ public:
  */
 class EngineTestHelper : public EngineTestHelperBase {
 public:
+	explicit EngineTestHelper(engine_type_e engineType);
 	EngineTestHelper(engine_type_e engineType, const std::unordered_map<SensorType, float>& sensorValues);
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback);
 	EngineTestHelper(engine_type_e engineType, configuration_callback_t boardCallback, const std::unordered_map<SensorType, float>& sensorValues);
@@ -41,7 +40,7 @@ public:
 	int getWarningCounter();
 
 	void applyTriggerWaveform();
-	void setTriggerType(trigger_type_e trigger DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setTriggerType(trigger_type_e trigger);
 	/**
 	 * DEPRECATED these methods do not execute events on the queue
 	 */
@@ -72,6 +71,11 @@ public:
 	void firePrimaryTriggerFall();
 	void fireTriggerEvents(int count);
 	void fireTriggerEventsWithDuration(float delayMs);
+	/**
+	 * todo: better method name since this method executes events in the FUTURE
+	 * looks like such a method should be used only in some pretty narrow circumstances
+	 * a healthy test should probably use executeActions instead?
+	 */
 	void clearQueue();
 
 	scheduling_s * assertEvent5(const char *msg, int index, void *callback, efitime_t expectedTimestamp);

@@ -1,5 +1,6 @@
+#include "pch.h"
+
 #include "linear_func.h"
-#include "unit_test_framework.h"
 
 class LinearFuncTest : public ::testing::Test {
 protected:

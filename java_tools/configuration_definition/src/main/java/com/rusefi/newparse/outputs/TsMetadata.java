@@ -12,12 +12,16 @@ public class TsMetadata {
         }
 
         comment = comment.trim();
-        if (!comment.startsWith("+")) {
-            return;
+
+        // LEGACY FEATURE: clips off the previously-required +
+        if (comment.startsWith("+")) {
+            // Clip off leading +, and any leading/trailing whitespace
+            comment = comment.substring(1).trim();
         }
 
-        // Clip off leading +, and any leading/trailing whitespace
-        comment = comment.substring(1).trim();
+        if (comment.length() == 0) {
+            return;
+        }
 
         comments.add("\t" + name + " = \"" + comment + "\"");
     }

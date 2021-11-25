@@ -1,0 +1,10 @@
+plugins {
+    id 'java-library'
+}
+
+apply from: '../../android/dependencies.gradle'
+
+dependencies {
+  implementation project(':logging-api')
+  implementation libs.annotations
+}

@@ -1,5 +1,5 @@
+#include "pch.h"
 #include "rusefi_lua.h"
-#include <gtest/gtest.h>
 
 TEST(LuaBasic, ReturnsNumber) {
 	auto script = R"(
@@ -11,6 +11,18 @@ TEST(LuaBasic, ReturnsNumber) {
 	float result = testLuaReturnsNumber(script);
 
 	EXPECT_FLOAT_EQ(result, 5.5f);
+}
+
+TEST(LuaBasic, MathLib) {
+	auto script = R"(
+		function testFunc()
+			return math.min(3, 1, 2)
+		end
+	)";
+
+	float result = testLuaReturnsNumber(script);
+
+	EXPECT_FLOAT_EQ(result, 1.0f);
 }
 
 TEST(LuaBasic, ReturnsInteger) {
@@ -75,4 +87,8 @@ TEST(LuaBasic, ExpectNumOrNilReturnsNothing) {
 			return
 		end
 	)"), unexpected);
+}
+
+TEST(SystemLua, ScriptLoads) {
+	startLua();
 }

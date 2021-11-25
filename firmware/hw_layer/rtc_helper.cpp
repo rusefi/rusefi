@@ -6,9 +6,10 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include <string.h> 
 #include <time.h>
-#include "global.h"
 #include "os_access.h"
 #include "os_util.h"
 #include "rtc_helper.h"
@@ -46,7 +47,7 @@ extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
 #endif
 
 #if EFI_RTC
-static time_t GetTimeUnixSec(void) {
+static time_t GetTimeUnixSec() {
   struct tm tim;
 
   rtcGetTime(&RTCD1, &timespec);

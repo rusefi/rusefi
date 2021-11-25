@@ -1,9 +1,8 @@
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "timer.h"
 
-
 TEST(util, timer) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	Timer timer;
 	ASSERT_TRUE(timer.hasElapsedSec(3));
 	timer.reset();

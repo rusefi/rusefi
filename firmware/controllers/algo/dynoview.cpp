@@ -9,16 +9,15 @@
 
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
-#include "vehicle_speed.h"
 
-DynoView dynoInstance;
+static DynoView dynoInstance;
 
 void DynoView::update(vssSrc src) {
 
     efitimeus_t timeNow, deltaTime = 0.0;
     float speed,deltaSpeed = 0.0;
     timeNow = getTimeNowUs();
-    speed = getVehicleSpeed(PASS_ENGINE_PARAMETER_SIGNATURE);
+    speed = Sensor::getOrZero(SensorType::VehicleSpeed);
     if (src == ICU) {
         speed = efiRound(speed,1.0);
     } else {
@@ -46,7 +45,7 @@ void DynoView::update(vssSrc src) {
         //updating here would display acceleration = 0 at constant speed
         updateAcceleration(deltaTime, deltaSpeed);
 #if EFI_TUNER_STUDIO
-	    if (CONFIG(debugMode) == DBG_LOGIC_ANALYZER) {
+	    if (engineConfiguration->debugMode == DBG_LOGIC_ANALYZER) {
 		    tsOutputChannels.debugIntField1 = deltaTime;
 		    tsOutputChannels.debugFloatField1 = vss;
 		    tsOutputChannels.debugFloatField2 = speed;
@@ -69,7 +68,7 @@ void DynoView::update(vssSrc src) {
  */
 void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
     if (deltaSpeed != 0.0) {
-        acceleration = ((deltaSpeed / 3.6) / (deltaTime / 1000000.0));
+        acceleration = ((deltaSpeed / 3.6) / (deltaTime / US_PER_SECOND_F));
         if (direction) {
             //decceleration
             acceleration *= -1;
@@ -93,7 +92,7 @@ void DynoView::updateHP() {
     //these are actually at the wheel
     //we would need final drive to calcualte the correct torque at the wheel
     if (acceleration != 0) {
-        engineForce = CONFIG(vehicleWeight) * acceleration;
+        engineForce = engineConfiguration->vehicleWeight * acceleration;
         enginePower = engineForce * (vss / 3.6);
         engineHP = enginePower / 746;
         if (isValidRpm(GET_RPM())) { 
@@ -132,11 +131,11 @@ int DynoView::getEngineTorque() {
 }
 
 
-float getDynoviewAcceleration(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+float getDynoviewAcceleration() {
     return dynoInstance.getAcceleration();
 }
 
-int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+int getDynoviewPower() {
     return dynoInstance.getEnginePower();
 }
 
@@ -144,10 +143,9 @@ int getDynoviewPower(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * Periodic update function called from SlowCallback.
  * Only updates if we have Vss from input pin.
  */
-void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	if (isBrainPinValid(CONFIG(vehicleSpeedSensorInputPin)) &&
-		(!CONFIG(enableCanVss))) {
-		INJECT_ENGINE_REFERENCE(&dynoInstance);
+void updateDynoView() {
+	if (isBrainPinValid(engineConfiguration->vehicleSpeedSensorInputPin) &&
+		(!engineConfiguration->enableCanVss)) {
 		dynoInstance.update(ICU);
 	}
 }
@@ -156,8 +154,8 @@ void updateDynoView(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
  * This function is called after every CAN msg received, we process it
  * as soon as we can to be more acurate.
  */ 
-void updateDynoViewCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-    if (!CONFIG(enableCanVss)) {
+void updateDynoViewCan() {
+    if (!engineConfiguration->enableCanVss) {
         return;
     }
     

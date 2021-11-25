@@ -5,8 +5,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "cj125_logic.h"
-#include "engine_test_helper.h"
 
 class TestSpi : public Cj125SpiStream {
 public:
@@ -21,9 +22,9 @@ TEST(testCJ125, testInitialState) {
 	ASSERT_FALSE(cj.isWorkingState());
 	ASSERT_EQ(cj.heaterDuty, 0);
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
-	cj.StartHeaterControl(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cj.StartHeaterControl();
 	ASSERT_EQ(cj.heaterDuty, CJ125_HEATER_IDLE_RATE);
 
 	TestSpi mock;
@@ -34,7 +35,7 @@ TEST(testCJ125, testInitialState) {
 	EXPECT_CALL(mock, ReadRegister(INIT_REG2_RD)).Times(1).WillOnce(Return(CJ125_INIT2_DIAG));
 	EXPECT_CALL(mock, ReadRegister(DIAG_REG_RD)).Times(1);
 
-	cj.cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cj.cjIdentify();
 	// validate that error state was not set
 	ASSERT_EQ(cj.state, CJ125_INIT);
 }
@@ -48,9 +49,9 @@ TEST(testCJ125, testFailedIdentify) {
 	TestSpi mock;
 	cj.spi = &mock;
 
-	WITH_ENGINE_TEST_HELPER(FORD_ASPIRE_1996);
+	EngineTestHelper eth(FORD_ASPIRE_1996);
 
-	cj.cjIdentify(PASS_ENGINE_PARAMETER_SIGNATURE);
+	cj.cjIdentify();
 	ASSERT_EQ(cj.errorCode, CJ125_ERROR_WRONG_IDENT);
 	ASSERT_EQ(cj.state, CJ125_ERROR);
 }

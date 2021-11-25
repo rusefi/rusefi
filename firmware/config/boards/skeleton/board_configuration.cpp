@@ -2,12 +2,12 @@
  * @file boards/skeleton/board_configuration.cpp
  *
  *
- * @brief Example configuration defaults for a RusEFI board
+ * @brief Example configuration defaults for a rusEFI board
  *
  * @author Donald Becker November 2019
  * @author Hugo Becker November 2019
  *
- * This file is an example of board-specific firmware for RusEFI.
+ * This file is an example of board-specific firmware for rusEFI.
  * It contains the unique code need for the setup of a specific board.
  * 
  * This file must contain the configuration for the hard-wired aspects
@@ -27,12 +27,8 @@
  * Future: Clean up the distinction between these functions.
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
 
 // An example of how to configure complex features on the board.
 // Generally these should be local (static) functions, one function per chip.
@@ -40,7 +36,7 @@
 // This shows a SPI connected TLE8888.
 static void setupTle8888() {
 	// Enable the SPI channel and set up the SPI pins
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->spi3mosiPin = GPIOB_5;
 	engineConfiguration->spi3misoPin = GPIOB_4;
 	engineConfiguration->spi3sckPin = GPIOB_3;
@@ -140,7 +136,6 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->communicationLedPin = GPIOE_2;
 	engineConfiguration->runningLedPin = GPIOE_4;
 	engineConfiguration->warningLedPin = GPIOE_5;
-	engineConfiguration->checkEngineLedPin = GPIOE_6;
 	engineConfiguration->errorLedPin = GPIOE_7;
 
 	// Set injector pins and the pin output mode
@@ -212,7 +207,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;

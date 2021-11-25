@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertTrue;
 
@@ -30,9 +31,9 @@ public class BitParsingTest {
                 writeContent(fieldsSection, new TsFileContent("", ""), createOutput(sw));
             }
         };
-        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
 
-        System.out.printf("start[" + sw.toString() + "]end");
+        System.out.printf("start[" + sw + "]end");
 
         assertTrue(sw.toString().contains("\"false\", \"true\""));
         assertTrue(sw.toString().contains("\"nada\", \"si\""));

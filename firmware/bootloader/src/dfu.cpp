@@ -1,13 +1,13 @@
-#include "global.h"
+#include "pch.h"
+
 #include "hardware.h"
-#include "efi_gpio.h"
 
 #include "flash_int.h"
 
 #include "dfu.h"
 
 // Communication vars
-static UartTsChannel blTsChannel(TS_PRIMARY_UART);
+static UartTsChannel blTsChannel(TS_PRIMARY_PORT);
 static uint8_t buffer[DFU_BUFFER_SIZE];
 // Use short timeout for the first data packet, and normal timeout for the rest
 static int sr5Timeout = DFU_SR5_TIMEOUT_FIRST;
@@ -29,7 +29,7 @@ static bool getByte(uint8_t *b) {
 }
 
 static void sendByte(uint8_t b) {
-	blTsChannel.write(&b, 1);
+	blTsChannel.write(&b, 1, true);
 }
 
 static uint8_t dfuCalcChecksum(const uint8_t *buf, uint8_t size) {  
@@ -77,7 +77,7 @@ static uint16_t bufToInt16(uint8_t *buf) {
 	return (buf[0] << 8) | buf[1];
 }
 
-static void prepareInterruptsForJump(void) {
+static void prepareInterruptsForJump() {
 #ifdef STM32F4
 	// interrupt control
 	SCB->ICSR &= ~SCB_ICSR_PENDSVSET_Msk;
@@ -112,7 +112,7 @@ void dfuJumpToApp(uint32_t addr) {
     chSysHalt("dfuJumpToApp FAIL");
 }
 
-static void dfuHandleGetList(void) {
+static void dfuHandleGetList() {
 	static const uint8_t cmdsInfo[] = { DFU_VERSION_NUMBER, DFU_GET_LIST_CMD, DFU_DEVICE_ID_CMD, DFU_READ_CMD, DFU_GO_CMD, 
 		DFU_WRITE_CMD, DFU_ERASE_CMD };
 	size_t numBytes = sizeof(cmdsInfo);
@@ -122,7 +122,7 @@ static void dfuHandleGetList(void) {
 	sendByte(DFU_ACK_BYTE);						
 }
 
-static void dfuHandleDeviceId(void) {
+static void dfuHandleDeviceId() {
 	uint32_t mcuRev = getMcuRevision();
 	sendByte(0x01); // the number of bytes to be send - 1
     // send 12 bit MCU revision
@@ -131,7 +131,7 @@ static void dfuHandleDeviceId(void) {
 	sendByte(DFU_ACK_BYTE);
 }
 
-static void dfuHandleGo(void) {
+static void dfuHandleGo() {
 	uint32_t addr;
 	
 	if (!readAddress(&addr)) {
@@ -143,7 +143,7 @@ static void dfuHandleGo(void) {
 	dfuJumpToApp(addr);
 }
 
-static void dfuHandleRead(void) {
+static void dfuHandleRead() {
 	uint32_t addr;
 
 	if (!readAddress(&addr)) {
@@ -171,10 +171,10 @@ static void dfuHandleRead(void) {
 		intFlashRead(addr, (char *)buffer, numBytes);
 
 	// transmit data
-	blTsChannel.write(buffer, numBytes);
+	blTsChannel.write(buffer, numBytes, true);
 }
 
-static void dfuHandleWrite(void) {
+static void dfuHandleWrite() {
 	uint32_t addr;
 
 	if (!readAddress(&addr)) {
@@ -206,7 +206,7 @@ static void dfuHandleWrite(void) {
 	sendByte(DFU_ACK_BYTE);
 }
 
-static void dfuHandleErase(void) {
+static void dfuHandleErase() {
 	int numSectors;
 	if (!getByte(buffer))
     	return;

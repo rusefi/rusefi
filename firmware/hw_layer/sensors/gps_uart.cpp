@@ -11,20 +11,19 @@
  * Kot_dnz 2014
  */
 
+#include "pch.h"
+
 #include <string.h>
 // todo: MISRA does not like time.h
 #include <time.h>
-#include "global.h"
 
 #if EFI_UART_GPS
 
 #include "console_io.h"
 #include "eficonsole.h"
-#include "pin_repository.h"
 #include "nmea.h"
 #include "gps_uart.h"
 #include "rtc_helper.h"
-#include "engine.h"
 
 static SerialConfig GPSserialConfig = { GPS_SERIAL_SPEED, 0, USART_CR2_STOP1_BITS | USART_CR2_LINEN, 0 };
 static THD_WORKING_AREA(gpsThreadStack, UTILITY_THREAD_STACK_SIZE);
@@ -41,9 +40,9 @@ float getCurrentSpeed(void) {
 	return GPSdata.speed;
 }
 
-static void printGpsInfo(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiPrintf("GPS RX %s", hwPortname(CONFIG(gps_rx_pin)));
-	efiPrintf("GPS TX %s", hwPortname(CONFIG(gps_tx_pin)));
+static void printGpsInfo() {
+	efiPrintf("GPS RX %s", hwPortname(engineConfiguration->gps_rx_pin));
+	efiPrintf("GPS TX %s", hwPortname(engineConfiguration->gps_tx_pin));
 
 	efiPrintf("m=%d,e=%d: vehicle speed = %.2f", gpsMesagesCount, uartErrors, getCurrentSpeed());
 
@@ -97,8 +96,8 @@ static THD_FUNCTION(GpsThreadEntryPoint, arg) {
 }
 
 static bool isGpsEnabled() {
-	return (isBrainPinValid(CONFIG(gps_rx_pin)) &&
-			isBrainPinValid(CONFIG(gps_tx_pin)));
+	return (isBrainPinValid(engineConfiguration->gps_rx_pin) &&
+			isBrainPinValid(engineConfiguration->gps_tx_pin));
 }
 
 void initGps(void) {
@@ -108,8 +107,8 @@ void initGps(void) {
 
 	sdStart(GPS_SERIAL_DEVICE, &GPSserialConfig);
 //  GPS we have USART1: PB7 -> USART1_RX and PB6 -> USART1_TX
-	efiSetPadMode("GPS tx", CONFIG(gps_tx_pin), PAL_MODE_ALTERNATE(7));
-	efiSetPadMode("GPS rx", CONFIG(gps_rx_pin), PAL_MODE_ALTERNATE(7));
+	efiSetPadMode("GPS tx", engineConfiguration->gps_tx_pin, PAL_MODE_ALTERNATE(7));
+	efiSetPadMode("GPS rx", engineConfiguration->gps_rx_pin, PAL_MODE_ALTERNATE(7));
 
 // todo: add a thread which would save location. If the GPS 5Hz - we should save the location each 200 ms
 	chThdCreateStatic(gpsThreadStack, sizeof(gpsThreadStack), LOWPRIO, (tfunc_t)(void*) GpsThreadEntryPoint, NULL);

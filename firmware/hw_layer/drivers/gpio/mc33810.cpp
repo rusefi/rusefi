@@ -10,12 +10,10 @@
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33810.h"
-#include "pin_repository.h"
 #include "os_util.h"
-#include "thread_priority.h"
 
 #if (BOARD_MC33810_COUNT > 0)
 
@@ -341,10 +339,12 @@ int Mc33810::chip_init()
 			goto err_gpios;
 		}
 
-		ret = spi_rw(MC_CMD_MODE_SELECT(0xf << 8), NULL);
+		/* set IGN/GP outputs to GP mode - to be fixed!
+		 * disable retry after recovering from under/overvoltage */
+		ret = spi_rw(MC_CMD_MODE_SELECT((0xf << 8) | (1 << 6)) , NULL);
 		if (ret) {
 			goto err_gpios;
-		}		
+		}
 	}
 
 	/* n. set EN pin low - active */

@@ -21,8 +21,8 @@
  *
  * See also setMiataNA_1_6_Configuration
  */
-void setMazdaMiataNA8Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setMiataNA6_MAP_Frankenso(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setMazdaMiataNA8Configuration() {
+	setMiataNA6_MAP_Frankenso();
 
 	// blue jumper wire to W45 bottom jumper, not OEM
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_7;
@@ -34,8 +34,8 @@ void setMazdaMiataNA8Configuration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.flow = 265;
 
 	engineConfiguration->specs.displacement = 1.839;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_MAZDA);
-	strcpy(CONFIG(engineCode), "NA8");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
+	strcpy(engineConfiguration->engineCode, "NA8");
 
 
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;

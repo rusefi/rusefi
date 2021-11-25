@@ -1,7 +1,6 @@
-#include "functional_sensor.h"
-#include "global.h"
+#include "pch.h"
 
-#include <gtest/gtest.h>
+#include "functional_sensor.h"
 
 struct DoublerFunc final : public SensorConverter {
 	SensorResult convert(float input) const {

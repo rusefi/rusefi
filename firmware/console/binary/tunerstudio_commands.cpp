@@ -1,4 +1,4 @@
-#include "global.h"
+#include "pch.h"
 
 #include "tunerstudio_impl.h"
 #include "tunerstudio.h"

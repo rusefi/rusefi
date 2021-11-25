@@ -1,2 +1,0 @@
- 1) RESOLVED IN R0.2  SOIC24 wrong size
- 2) RESOLVED IN R0.2  Q1 MOSFET is not connected properly. 

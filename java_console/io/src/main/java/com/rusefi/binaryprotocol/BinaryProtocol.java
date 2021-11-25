@@ -68,6 +68,7 @@ public class BinaryProtocol {
     private final IoStream stream;
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
+    public String signature;
 
     private BinaryProtocolState state = new BinaryProtocolState();
 
@@ -219,21 +220,24 @@ public class BinaryProtocol {
         linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
+    public String getSignature() throws IOException {
+        HelloCommand.send(stream);
+        return HelloCommand.getHelloResponse(incomingData);
+    }
+
     /**
-     * this method would switch controller to binary protocol and read configuration snapshot from controller
+     * this method reads configuration snapshot from controller
      *
      * @return true if everything fine
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
         try {
-            HelloCommand.send(stream);
-            String response = HelloCommand.getHelloResponse(incomingData);
-            System.out.println("Got " + response);
-            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(response));
+            signature = getSignature();
+            System.out.println("Got " + signature);
+            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
             return false;
         }
-//        switchToBinaryProtocol();
         readImage(Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
             return false;
@@ -463,7 +467,7 @@ public class BinaryProtocol {
         if (isClosed)
             return null;
         try {
-            LinkManager.assertCommunicationThread();
+            linkManager.assertCommunicationThread();
             dropPending();
 
             sendPacket(packet);
@@ -488,7 +492,7 @@ public class BinaryProtocol {
     public void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
-        byte packet[] = new byte[5 + size];
+        byte[] packet = new byte[5 + size];
         packet[0] = Fields.TS_CHUNK_WRITE_COMMAND;
         putShort(packet, 1, swap16(ecuOffset));
         putShort(packet, 3, swap16(size));

@@ -37,6 +37,11 @@ public:
 			return unexpected;
 		}
 
+		// Timeouts are disabled, return last value
+		if (Sensor::s_inhibitSensorTimeouts) {
+			return value;
+		}
+
 		if (m_timeoutPeriod != 0) { // zero m_timeoutPeriod means value lasts forever
 			if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
 				return unexpected;
@@ -46,7 +51,6 @@ public:
 		return value;
 	}
 
-protected:
 	StoredValueSensor(SensorType type, efitick_t timeoutNt)
 		: Sensor(type)
 		, m_timeoutPeriod(timeoutNt)
@@ -65,6 +69,8 @@ protected:
 		m_isValid = true;
 		m_lastUpdate = timestamp;
 	}
+
+	void showInfo(const char*) const override { }
 
 private:
 	bool m_isValid = false;

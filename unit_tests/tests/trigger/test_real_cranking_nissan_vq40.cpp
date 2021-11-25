@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 #include "logicdata_csv_reader.h"
 
 TEST(realCrankingVQ40, normalCranking) {
@@ -13,7 +13,7 @@ TEST(realCrankingVQ40, normalCranking) {
 	int indeces[] = {0};
 
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv", indeces);
-	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN);
+	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
 
 	bool hasSeenFirstVvt = false;
 
@@ -22,7 +22,7 @@ TEST(realCrankingVQ40, normalCranking) {
 		float vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
 
 		if (vvt1 != 0 && !hasSeenFirstVvt) {
-			EXPECT_NEAR(vvt1, -38.69, 1);
+			EXPECT_NEAR(vvt1, 24.91, 1);
 			hasSeenFirstVvt = true;
 		}
 	}
@@ -32,7 +32,8 @@ TEST(realCrankingVQ40, normalCranking) {
 	ASSERT_EQ(241, GET_RPM())<< reader.lineIndex();
 
 	// TODO: why warnings?
-	ASSERT_EQ(2, eth.recentWarnings()->getCount());
+	ASSERT_EQ(3, eth.recentWarnings()->getCount());
 	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, eth.recentWarnings()->get(0));
-	ASSERT_EQ(CUSTOM_SYNC_ERROR, eth.recentWarnings()->get(1));
+	ASSERT_EQ(CUSTOM_OUT_OF_ORDER_COIL, eth.recentWarnings()->get(1));	// this is from a coil being protected by overdwell protection
+	ASSERT_EQ(CUSTOM_SYNC_ERROR, eth.recentWarnings()->get(2));
 }

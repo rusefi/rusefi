@@ -6,13 +6,7 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "ch.h"
-#include "hal.h"
-
-#include "mpu_util.h"
-#include "io_pins.h"
-
-#include "efilib.h"
+#include "pch.h"
 
 #if USE_ADC3_VBATT_HACK
 

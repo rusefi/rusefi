@@ -10,12 +10,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
+#include "custom_engine.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -59,16 +56,6 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
-}
-
 static void setupVbatt() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
@@ -108,7 +95,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
@@ -144,7 +131,7 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->isSdCardEnabled = true;
 
-	CONFIG(enableSoftwareKnock) = true;
+	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->acRelayPin = GPIOH_15;
 	engineConfiguration->acSwitch = GPIOB_0;
@@ -156,7 +143,11 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->fan2Pin = GPIOD_9;
 	engineConfiguration->enableFan2WithAc = true;
 	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
-	engineConfiguration->auxPidPins[0] = GPIOI_0;    // 4R - VVT (O5)
+	engineConfiguration->vvtPins[0] = GPIOI_0;    // 4R - VVT (O5)
+
+    engineConfiguration->tachOutputPin = GPIOD_13; // 3O - TACH (PWM7)
+    engineConfiguration->alternatorControlPin = GPIOD_15; // 3M - ALTERN (PWM6)
+
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -165,7 +156,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -193,5 +184,5 @@ void setSdCardConfigurationOverrides(void) {
 //	engineConfiguration->spi2misoPin = GPIOB_14;
 //	engineConfiguration->spi2sckPin = GPIOB_13;
 //	engineConfiguration->sdCardCsPin = GPIOB_12;
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 }

@@ -1,7 +1,7 @@
+#include "pch.h"
+
 #include "init.h"
-#include "adc_inputs.h"
 #include "adc_subscription.h"
-#include "engine_configuration.h"
 #include "functional_sensor.h"
 #include "table_func.h"
 
@@ -13,12 +13,10 @@ using BinType = std::remove_extent_t<decltype(config->mafDecodingBins)>;
 using ValueType = std::remove_extent_t<decltype(config->mafDecoding)>;
 
 // This function converts volts -> kg/h
-static TableFunc
-	<BinType, ValueType, MAF_DECODING_COUNT>
-	mafCurve(config->mafDecodingBins, config->mafDecoding);
+static TableFunc mafCurve(config->mafDecodingBins, config->mafDecoding);
 
-void initMaf(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	adc_channel_e channel = CONFIG(mafAdcChannel);
+void initMaf() {
+	adc_channel_e channel = engineConfiguration->mafAdcChannel;
 
 	if (!isAdcChannelValid(channel)) {
 		return;

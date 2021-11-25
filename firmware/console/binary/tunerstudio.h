@@ -9,11 +9,6 @@
 #include "global.h"
 #include "tunerstudio_io.h"
 
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#include "thread_controller.h"
-#include "thread_priority.h"
-
 typedef struct {
 	int queryCommandCounter;
 	int outputChannelsCommandCounter;
@@ -31,8 +26,17 @@ typedef struct {
 
 extern tunerstudio_counters_s tsState;
 
-// SD protocol file removal is one of the stack consuming use-cases
-#define CONNECTIVITY_THREAD_STACK (3 * UTILITY_THREAD_STACK_SIZE)
+void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
+void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
+
+char *getWorkingPageAddr();
+
+#if EFI_TUNER_STUDIO
+#include "thread_controller.h"
+#include "thread_priority.h"
+
+
+#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
 
 /**
  * handle non CRC wrapped command
@@ -44,12 +48,7 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
  */
 void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
-char *getWorkingPageAddr();
-
-void tunerStudioDebug(const char *msg);
-void tunerStudioError(const char *msg);
-
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels DECLARE_ENGINE_PARAMETER_SUFFIX);
+void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels);
 void printTsStats(void);
 void requestBurn(void);
 
@@ -86,3 +85,6 @@ public:
 };
 
 #endif /* EFI_TUNER_STUDIO */
+
+void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count, void *content);
+void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode);

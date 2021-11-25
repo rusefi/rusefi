@@ -62,7 +62,8 @@ dependencies {
     implementation "ch.acra:acra-toast:$acraVersion"
 
     implementation files('lib/dfu_java.jar')
-    implementation 'com.github.mik3y:usb-serial-for-android:v2.2.3'
+//    implementation 'com.github.mik3y:usb-serial-for-android:v2.2.3'
+    implementation 'com.github.mik3y:usb-serial-for-android:v3.1.0'
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'

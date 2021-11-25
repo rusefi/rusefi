@@ -2,12 +2,13 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigDefinition;
 import com.rusefi.ReaderState;
+import com.rusefi.ToolUtil;
 import com.rusefi.util.LazyFile;
 
 import java.io.IOException;
 import java.util.Arrays;
 
-import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ToolUtil.EOL;
 
 public class FileFsioSettingsConsumer extends FsioSettingsConsumer {
     private final LazyFile enumFile;
@@ -30,7 +31,7 @@ public class FileFsioSettingsConsumer extends FsioSettingsConsumer {
     @Override
     public void startFile() {
         for (LazyFile file : Arrays.asList(enumFile, gettersFile, stringsFile, namesFile)) {
-            file.write("// this file " + ConfigDefinition.MESSAGE + ConfigDefinition.EOL + EOL);
+            file.write("// this file " + ConfigDefinition.MESSAGE + ToolUtil.EOL + EOL);
             file.write("// by " + getClass() + EOL);
         }
     }

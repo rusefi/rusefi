@@ -6,9 +6,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "table_helper.h"
-#include "efilib.h"
-#include "interpolation.h"
+#include "pch.h"
 
 void setRpmBin(float array[], int size, float idleRpm, float topRpm) {
 	array[0] = idleRpm - 150;

@@ -201,7 +201,7 @@
 							 DEFAULT_GPIO_SPEED( 3)	| \
 							 DEFAULT_GPIO_SPEED( 4)	| \
 							 DEFAULT_GPIO_SPEED( 5)	| \
-							 DEFAULT_GPIO_SPEED( 6)	| \
+							 PIN_OSPEED_HIGH( 6)	| \
 							 DEFAULT_GPIO_SPEED( 7)	| \
 							 DEFAULT_GPIO_SPEED( 8)	| \
 							 DEFAULT_GPIO_SPEED( 9)	| \
@@ -241,7 +241,7 @@
 							 PIN_AFIO_AF( 3,  0U)	| \
 							 PIN_AFIO_AF( 4,  0U)	| \
 							 PIN_AFIO_AF( 5,  0U)	| \
-							 PIN_AFIO_AF( 6,  0U)	| \
+							 PIN_AFIO_AF( 6, 10U)	| \
 							 PIN_AFIO_AF( 7,  0U))
 #define VAL_GPIOB_AFRH		(PIN_AFIO_AF( 8,  0U)	| \
 							 PIN_AFIO_AF( 9,  0U)	| \
@@ -376,7 +376,7 @@
  * PD10 - Power hold to PMIC
  * PD11 - QSPI IO0
  * PD12 - QSPI IO1
- * PD13 - QSPI IO2
+ * PD13 - QSPI IO3
  * PD14 - Speed sensor input
  * PD15 - LIN RTS
  */
@@ -435,7 +435,7 @@
 							 PIN_PUPDR_FLOATING( 4)	| \
 							 PIN_PUPDR_FLOATING( 5)	| \
 							 PIN_PUPDR_FLOATING( 6)	| \
-							 PIN_PUPDR_FLOATING( 7)	| \
+							 PIN_PUPDR_PULLUP( 7)	| \
 							 PIN_PUPDR_FLOATING( 8)	| \
 							 PIN_PUPDR_PULLUP( 9)	| \
 							 PIN_PUPDR_FLOATING(10)	| \
@@ -488,7 +488,7 @@
  */
 #define VAL_GPIOE_MODER     (PIN_MODE_ALTERNATE(0)	| \
 							 PIN_MODE_ALTERNATE(1)	| \
-							 PIN_MODE_OUTPUT(2) /* PIN_MODE_ALTERNATE(2) */	| \
+							 PIN_MODE_ALTERNATE(2)	| \
 							 PIN_MODE_OUTPUT(3)		| \
 							 PIN_MODE_OUTPUT(4)		| \
 							 PIN_MODE_OUTPUT(5)		| \
@@ -520,7 +520,7 @@
 							 PIN_OTYPE_OPENDRAIN(15))
 #define VAL_GPIOE_OSPEEDR	(DEFAULT_GPIO_SPEED( 0)	| \
 							 DEFAULT_GPIO_SPEED( 1)	| \
-							 DEFAULT_GPIO_SPEED( 2)	| \
+							 PIN_OSPEED_HIGH( 2)	| \
 							 DEFAULT_GPIO_SPEED( 3)	| \
 							 DEFAULT_GPIO_SPEED( 4)	| \
 							 DEFAULT_GPIO_SPEED( 5)	| \
@@ -744,10 +744,10 @@
 							 DEFAULT_GPIO_SPEED( 6)	| \
 							 DEFAULT_GPIO_SPEED( 7)	| \
 							 DEFAULT_GPIO_SPEED( 8)	| \
-							 DEFAULT_GPIO_SPEED( 9)	| \
-							 DEFAULT_GPIO_SPEED(10)	| \
-							 DEFAULT_GPIO_SPEED(11)	| \
-							 DEFAULT_GPIO_SPEED(12)	| \
+							 PIN_OSPEED_HIGH( 9)	| \
+							 PIN_OSPEED_HIGH(10)	| \
+							 PIN_OSPEED_HIGH(11)	| \
+							 PIN_OSPEED_HIGH(12)	| \
 							 DEFAULT_GPIO_SPEED(13)	| \
 							 DEFAULT_GPIO_SPEED(14)	| \
 							 DEFAULT_GPIO_SPEED(15))

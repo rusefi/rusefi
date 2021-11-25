@@ -1,6 +1,4 @@
-#include "loggingcentral.h"
-#include <gtest/gtest.h>
-#include <gmock/gmock.h>
+#include "pch.h"
 
 using ::testing::ElementsAre;
 

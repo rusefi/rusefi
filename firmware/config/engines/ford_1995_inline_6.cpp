@@ -11,16 +11,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "ford_1995_inline_6.h"
-#include "engine_math.h"
-#include "allsensors.h"
 
 /**
  * @brief Default values for persistent properties
  */
-void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setFordInline6() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->specs.cylindersCount = 6;
 
@@ -36,7 +35,7 @@ void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	/**
 	 * 0.5ms dweel time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
 	 */
-	setConstantDwell(0.5 PASS_CONFIG_PARAMETER_SUFFIX);
+	setConstantDwell(0.5);
 
 	/**
 	 * We treat the trigger as 6/0 toothed wheel
@@ -93,6 +92,4 @@ void setFordInline6(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_8;
 	engineConfiguration->triggerInputPins[1] = GPIOA_5;
-	engineConfiguration->logicAnalyzerPins[0] = GPIOC_6;
-	engineConfiguration->logicAnalyzerPins[1] = GPIOE_5;
 }

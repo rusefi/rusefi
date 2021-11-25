@@ -1,1 +1,0 @@
-java -jar ../../java_tools/pcb_sync.jar bom_builder adc_amp_divider.cmp ../frankenstein/bom_dictionary_digikey.csv digikey_parts > bom_builder.log

@@ -7,15 +7,13 @@
 
 #pragma once
 
-#include "engine.h"
-
 class PwmConfig;
 class MultiChannelStateSequence;
 
-void initTriggerEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void startTriggerEmulatorPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initTriggerEmulator();
+void startTriggerEmulatorPins();
 void stopTriggerEmulatorPins();
-void setTriggerEmulatorRPM(int value DECLARE_ENGINE_PARAMETER_SUFFIX);
+void setTriggerEmulatorRPM(int value);
 void onConfigurationChangeRpmEmulatorCallback(engine_configuration_s *previousConfiguration);
 
 // Start & stop trigger emulation
@@ -26,11 +24,11 @@ void disableTriggerStimulator();
 class TriggerEmulatorHelper {
 public:
     TriggerEmulatorHelper();
-	void handleEmulatorCallback(const int size, const MultiChannelStateSequence& mcss, int stateIndex DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void handleEmulatorCallback(const MultiChannelStateSequence& mcss, int stateIndex);
 };
 
-void initTriggerEmulatorLogic(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initTriggerEmulatorLogic();
 
 int getPreviousIndex(const int currentIndex, const int size);
-bool needEvent(const int currentIndex, const int size, const MultiChannelStateSequence& mcss, int channelIndex);
+bool needEvent(const int currentIndex, const MultiChannelStateSequence& mcss, int channelIndex);
 

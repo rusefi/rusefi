@@ -5,7 +5,6 @@
  * set engine_type 14
  * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
  *
- * MIATA_1990 = 19 (Frankenstein board)
  * MRE_MIATA_94_MAP = 20
  * MIATA_1996 = 21
  * set engine_type 21
@@ -14,12 +13,11 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "fsio_impl.h"
 #include "mazda_miata.h"
-#include "engine_math.h"
 #include "advance_map.h"
-#include "allsensors.h"
 #include "custom_engine.h"
 
 
@@ -75,7 +73,7 @@ static const uint8_t miataNA8_maf_advance_table[16][16] = { {/*0  engineLoad=1.2
 		+29, /*12 5760.0*/+28, /*13 6173.0*/+28, /*14 6586.0*/+27, /*15 7000.0*/+27 } };
 #endif
 
-static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void commonMiataNa() {
 	engineConfiguration->trigger.type = TT_MAZDA_MIATA_NA;
 	engineConfiguration->engineChartSize = 100;
 
@@ -108,8 +106,8 @@ static void commonMiataNa(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 }
 
-void common079721_2351(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void common079721_2351() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->engineChartSize = 300;
 
@@ -143,42 +141,10 @@ void common079721_2351(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 }
 
 /**
- * Frankenstein board
- */
-void setMiata1990(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common079721_2351(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	commonMiataNa(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	// Frankenstein: low side - out #1: PC14
-	// Frankenstein: low side - out #2: PC15
-	// Frankenstein: low side - out #3: PE6
-	// Frankenstein: low side - out #4: PC13
-	// Frankenstein: low side - out #5: PE4
-	// Frankenstein: low side - out #6: PE5
-	// Frankenstein: low side - out #7: PE2
-	// Frankenstein: low side - out #8: PE3
-	// Frankenstein: low side - out #9: PE0
-	// Frankenstein: low side - out #10: PE1
-	// Frankenstein: low side - out #11: PB8
-	// Frankenstein: low side - out #12: PB9
-
-	engineConfiguration->injectionPins[0] = GPIOB_9; // Frankenstein: low side - out #12
-	engineConfiguration->injectionPins[1] = GPIOB_8; // Frankenstein: low side - out #11
-	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPinMode = OM_DEFAULT;
-
-// todo: idleValvePin
-}
-
-/**
  * Tom tomiata, Frankenstein board
  */
-void setMiata1996(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	commonMiataNa(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setFrankensteinMiata1996() {
+	commonMiataNa();
 	engineConfiguration->specs.displacement = 1.839;
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT

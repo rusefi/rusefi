@@ -1,6 +1,5 @@
 package com.rusefi.ui;
 
-import com.rusefi.ui.livedocs.LiveDocPanel;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -10,7 +9,6 @@ import java.awt.*;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SensorsLiveDataPane {
-    private JPanel liveDocs;
     /**
      * this is the panel we expose to the outside world
      */
@@ -19,8 +17,6 @@ public class SensorsLiveDataPane {
     public SensorsLiveDataPane(UIContext uiContext) {
         JPanel vertical = new JPanel(new VerticalFlowLayout());
 
-        liveDocs = LiveDocPanel.createSensorsLiveDataPanel(uiContext);
-        vertical.add(liveDocs);
 
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         content.add(scroll, BorderLayout.CENTER);

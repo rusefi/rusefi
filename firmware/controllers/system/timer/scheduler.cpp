@@ -3,6 +3,8 @@
  *
  * @date October 1, 2020
  */
+#include "pch.h"
+
 #include "scheduler.h"
 
 void action_s::execute() {

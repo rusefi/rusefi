@@ -8,18 +8,15 @@
 #pragma once
 
 #include "efifeatures.h"
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
 
 void initCan(void);
 void setCanType(int type);
 void setCanVss(int type);
 
 #if EFI_CAN_SUPPORT
-void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void stopCanPins();
+void startCanPins();
+void enableFrankensoCan();
 #if EFI_TUNER_STUDIO
 void postCanState(TunerStudioOutputChannels *tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */

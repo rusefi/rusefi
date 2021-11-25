@@ -8,6 +8,19 @@
 #include "trigger_misc.h"
 #include "trigger_universal.h"
 
+void configureVvt45VTwin(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->setTriggerSynchronizationGap(0.78);
+	s->setSecondTriggerSynchronizationGap(1.29);
+
+	s->addEvent720(315 - 1, T_PRIMARY, TV_RISE);
+	s->addEvent720(315, T_PRIMARY, TV_FALL);
+
+	s->addEvent720(720 - 1, T_PRIMARY, TV_RISE);
+	s->addEvent720(720, T_PRIMARY, TV_FALL);
+}
+
 // TT_FIAT_IAW_P8
 void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
@@ -47,6 +60,33 @@ void configureTriTach(TriggerWaveform * s) {
 	addSkippedToothTriggerEvents(T_SECONDARY, s, totalTeethCount, /* skipped */ 0, toothWidth, offset, engineCycle,
 			1.0 * FOUR_STROKE_ENGINE_CYCLE / 135,
 			NO_RIGHT_FILTER);
+}
+
+/**
+ * based on https://fordsix.com/threads/understanding-standard-and-signature-pip-thick-film-ignition.81515/
+ * based on https://www.w8ji.com/distributor_stabbing.htm
+ */
+void configureFordPip(TriggerWaveform * s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+
+	s->tdcPosition = 662.5;
+
+	s->setTriggerSynchronizationGap(0.66);
+	s->setSecondTriggerSynchronizationGap(1.25);
+	/**
+	 * sensor is mounted on distributor but trigger shape is defined in engine cycle angles
+	 */
+	int oneCylinder = s->getCycleDuration() / 8;
+
+	s->addEventAngle(oneCylinder * 0.75, T_PRIMARY, TV_RISE);
+	s->addEventAngle(oneCylinder, T_PRIMARY, TV_FALL);
+
+
+	for (int i = 2;i<=8;i++) {
+		s->addEventAngle(oneCylinder * (i - 0.5), T_PRIMARY, TV_RISE);
+		s->addEventAngle(oneCylinder * i, T_PRIMARY, TV_FALL);
+	}
+
 }
 
 void configureFordST170(TriggerWaveform * s) {

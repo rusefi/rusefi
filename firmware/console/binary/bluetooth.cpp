@@ -10,15 +10,13 @@
  * @author andreika, (c) 2017
  */
 
-#include "global.h"
+#include "pch.h"
+
 #include "os_access.h"
-#include "allsensors.h"
 #include "tunerstudio.h"
 
 #include "tunerstudio_io.h"
 #include "bluetooth.h"
-#include "engine_configuration.h"
-#include "thread_priority.h"
 
 #if EFI_BLUETOOTH_SETUP
 
@@ -56,7 +54,7 @@ static void runCommands() {
 	chThdSleepMilliseconds(1000);	// safety
 
 	// Store current serial port speed - we're going to change it
-	int savedSerialSpeed = CONFIG(tunerStudioSerialSpeed);
+	int savedSerialSpeed = engineConfiguration->tunerStudioSerialSpeed;
 	
 	int prevBaudIdx = -1, baudIdx = -1, baudListIdx = 0;
 	int cmdIdx = 0;
@@ -80,9 +78,9 @@ static void runCommands() {
 			chThdSleepMilliseconds(10);	// safety
 
 			// change the port speed
-			CONFIG(tunerStudioSerialSpeed) = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
+			engineConfiguration->tunerStudioSerialSpeed = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
 
-			tsChannel->start(CONFIG(tunerStudioSerialSpeed));
+			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
 
 			chThdSleepMilliseconds(10);	// safety
 			prevBaudIdx = baudIdx;
@@ -166,7 +164,7 @@ void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, 
 	tsChannel = btChan;
 	
 	// if a binary protocol uses USB, we cannot init the bluetooth module!
-	if (!CONFIG(useSerialPort)) {
+	if (!engineConfiguration->useSerialPort) {
 		efiPrintf("Failed! Serial Port connection is disabled!");
 		return;
 	}

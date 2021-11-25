@@ -6,7 +6,7 @@
 #include "table_helper.h"
 #include "expected.h"
 
-expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+expected<float> readGppwmChannel(gppwm_channel_e channel) {
 	switch (channel) {
 	case GPPWM_Tps:
 		return Sensor::get(SensorType::Tps1);
@@ -17,9 +17,9 @@ expected<float> readGppwmChannel(gppwm_channel_e channel DECLARE_ENGINE_PARAMETE
 	case GPPWM_Iat:
 		return Sensor::get(SensorType::Iat);
 	case GPPWM_FuelLoad:
-		return getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getFuelingLoad();
 	case GPPWM_IgnLoad:
-		return getIgnitionLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
+		return getIgnitionLoad();
 	case GPPWM_AuxTemp1:
 		return Sensor::get(SensorType::AuxTemp1);
 	case GPPWM_AuxTemp2:
@@ -46,6 +46,11 @@ void GppwmChannel::setOutput(float result) {
 		m_pwm->setSimplePwmDutyCycle(clampF(0, result / 100.0f, 1));
 	} else {
 		efiAssertVoid(OBD_PCM_Processor_Fault, m_output, "m_output null");
+		if (m_config->offBelowDuty > m_config->onAboveDuty) {
+			firmwareError(CUSTOM_ERR_6122, "You can't have off below %d greater than on above %d",
+					m_config->offBelowDuty,
+					m_config->onAboveDuty);
+		}
 		// Apply hysteresis with provided values
 		if (m_state && result < m_config->offBelowDuty) {
 			m_state = false;
@@ -66,7 +71,7 @@ void GppwmChannel::init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const Valu
 }
 
 percent_t GppwmChannel::getOutput() const {
-	expected<float> loadAxisValue = readGppwmChannel(m_config->loadAxis PASS_ENGINE_PARAMETER_SUFFIX);
+	expected<float> loadAxisValue = readGppwmChannel(m_config->loadAxis);
 
 	// If we couldn't get load axis value, fall back on error value
 	if (!loadAxisValue) {

@@ -5,8 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
+#include "pch.h"
 
-#include "engine_test_helper.h"
 #include "logicdata_csv_reader.h"
 
 TEST(crankingVW, vwRealCrankingFromFile) {
@@ -14,20 +14,20 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 	int indeces[1] = {0};
 
 	reader.open("tests/trigger/resources/nick_1.csv", indeces);
-	WITH_ENGINE_TEST_HELPER (VW_ABA);
-	eth.setTriggerType(TT_60_2_VW PASS_ENGINE_PARAMETER_SUFFIX);
+	EngineTestHelper eth (VW_ABA);
+	eth.setTriggerType(TT_60_2_VW);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
 
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-	ASSERT_EQ( 1687, GET_RPM())<< reader.lineIndex();
+	ASSERT_EQ( 1683, GET_RPM())<< reader.lineIndex();
 }
 
 TEST(crankingVW, crankingTwiceWithGap) {
-	WITH_ENGINE_TEST_HELPER (VW_ABA);
-	eth.setTriggerType(TT_60_2_VW PASS_ENGINE_PARAMETER_SUFFIX);
+	EngineTestHelper eth (VW_ABA);
+	eth.setTriggerType(TT_60_2_VW);
 
 	{
 		CsvReader reader(1, /* vvtCount */ 0);
@@ -40,7 +40,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		}
 
 		ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-		ASSERT_EQ(1687, GET_RPM())<< reader.lineIndex();
+		ASSERT_EQ(1683, GET_RPM())<< reader.lineIndex();
 	}
 
 	auto now = getTimeNowNt();
@@ -57,7 +57,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		}
 
 		ASSERT_EQ(0, eth.recentWarnings()->getCount());
-		ASSERT_EQ(1687, GET_RPM())<< reader.lineIndex();
+		ASSERT_EQ(1683, GET_RPM())<< reader.lineIndex();
 	}
 
 	{
@@ -72,6 +72,6 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		}
 
 		ASSERT_EQ(0, eth.recentWarnings()->getCount());
-		ASSERT_EQ(1688, GET_RPM())<< reader.lineIndex();
+		ASSERT_EQ(1683, GET_RPM())<< reader.lineIndex();
 	}
 }

@@ -9,6 +9,7 @@
     </target>
 
     <target name="antlr">
+        <echo message="Invoking grammar generator..."/>
         <java jar="lib/antlr-4.5-complete.jar" args="-o src/main/java/com/rusefi/generated RusefiConfigGrammar.g4" fork="true" failonerror="true" />
     </target>
 

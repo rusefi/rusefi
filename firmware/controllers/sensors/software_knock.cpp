@@ -4,8 +4,6 @@
 #include "thread_controller.h"
 #include "knock_logic.h"
 #include "software_knock.h"
-#include "thread_priority.h"
-#include "peak_detect.h"
 
 #if EFI_SOFTWARE_KNOCK
 
@@ -94,24 +92,20 @@ static const ADCConversionGroup adcConvGroupCh2 = { FALSE, 1, &completionCallbac
 };
 #endif // KNOCK_HAS_CH2
 
-const ADCConversionGroup* getConversionGroup(uint8_t cylinderIndex) {
+const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
 #if KNOCK_HAS_CH2
-	if (getCylinderKnockBank(cylinderIndex)) {
+	if (channelIdx == 1) {
 		return &adcConvGroupCh2;
 	}
 #else
-	(void)cylinderIndex;
+	(void)channelIdx;
 #endif // KNOCK_HAS_CH2
 
 	return &adcConvGroupCh1;
 }
 
-void startKnockSampling(uint8_t cylinderIndex) {
-	if (!CONFIG(enableSoftwareKnock)) {
-		return;
-	}
-
-	if (!engine->rpmCalculator.isRunning()) {
+void onStartKnockSampling(uint8_t cylinderIndex, float samplingSeconds, uint8_t channelIdx) {
+	if (!engineConfiguration->enableSoftwareKnock) {
 		return;
 	}
 
@@ -127,13 +121,12 @@ void startKnockSampling(uint8_t cylinderIndex) {
 		return;
 	}
 
-	// Sample for 45 degrees
-	float samplingSeconds = ENGINE(rpmCalculator).oneDegreeUs * 45 * 1e-6;
+	// Convert sampling time to number of samples
 	constexpr int sampleRate = KNOCK_SAMPLE_RATE;
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
 	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
-	auto conversionGroup = getConversionGroup(cylinderIndex);
+	auto conversionGroup = getConversionGroup(channelIdx);
 
 	// Stash the current cylinder's index so we can store the result appropriately
 	currentCylinderIndex = cylinderIndex;
@@ -151,8 +144,8 @@ public:
 static KnockThread kt;
 
 void initSoftwareKnock() {
-	if (CONFIG(enableSoftwareKnock)) {
-		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * CONFIG(knockBandCustom), 3);
+	if (engineConfiguration->enableSoftwareKnock) {
+		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * engineConfiguration->knockBandCustom, 3);
 		adcStart(&KNOCK_ADC, nullptr);
 
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
@@ -162,10 +155,6 @@ void initSoftwareKnock() {
 		kt.Start();
 	}
 }
-
-using PD = PeakDetect<float, MS2NT(100)>;
-static PD peakDetectors[12];
-static PD allCylinderPeakDetector;
 
 void processLastKnockEvent() {
 	if (!knockNeedsProcess) {
@@ -189,6 +178,10 @@ void processLastKnockEvent() {
 		float volts = ratio * sampleBuffer[i];
 
 		float filtered = knockFilter.filter(volts);
+		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
+			tsOutputChannels.debugFloatField1 = volts;
+			tsOutputChannels.debugFloatField2 = filtered;
+		}
 
 		sumSq += filtered * filtered;
 	}
@@ -208,12 +201,7 @@ void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	// Pass through peak detector
-	float cylPeak = peakDetectors[currentCylinderIndex].detect(db, lastKnockTime);
-
-	tsOutputChannels.knockLevels[currentCylinderIndex] = roundf(cylPeak);
-	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(db, lastKnockTime);
-
+	engine->knockController.onKnockSenseCompleted(currentCylinderIndex, db, lastKnockTime);
 }
 
 void KnockThread::ThreadTask() {

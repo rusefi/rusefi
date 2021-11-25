@@ -1,6 +1,6 @@
-#include "function_pointer_sensor.h"
+#include "pch.h"
 
-#include <gtest/gtest.h>
+#include "function_pointer_sensor.h"
 
 class SensorFunctionPointer : public ::testing::Test {
 protected:

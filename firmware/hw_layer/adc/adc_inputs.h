@@ -62,13 +62,14 @@ void removeChannel(const char *name, adc_channel_e setting);
 
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 
-#else
-#define getAdcValue(msg, channel) 0
-#endif /* HAL_USE_ADC */
-
-void printFullAdcReport(void);
-
-#if HAL_USE_ADC
 // This callback is called by the ADC driver when a new fast ADC sample is ready
 void onFastAdcComplete(adcsample_t* samples);
-#endif
+
+
+using FastAdcToken = size_t;
+
+FastAdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
+adcsample_t getFastAdc(FastAdcToken token);
+#endif // HAL_USE_ADC
+
+void printFullAdcReport(void);

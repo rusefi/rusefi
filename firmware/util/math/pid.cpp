@@ -8,14 +8,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "os_access.h"
 #include "pid.h"
 #include "math.h"
-#include "engine_configuration_generated_structures.h"
 
 Pid::Pid() {
-	initPidClass(NULL);
+	initPidClass(nullptr);
 }
 
 Pid::Pid(pid_s *parameters) {
@@ -61,6 +60,11 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 	dTerm = parameters->dFactor / dTime * (error - previousError);
 
 	previousError = error;
+
+	if (dTime <=0) {
+		warning(CUSTOM_PID_DTERM, "PID: unexpected dTime");
+		return pTerm + getOffset();
+	}
 
 	return pTerm + iTerm + dTerm + getOffset();
 }

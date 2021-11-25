@@ -1,7 +1,11 @@
 package com.rusefi;
 
+import com.fathzer.soft.javaluator.Parameters;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.rusefi.ConfigField.BOOLEAN_T;
 
@@ -30,6 +34,7 @@ public class ConfigStructure {
     public final BitState readingBitState = new BitState();
 
     private ConfigField cPrevField = ConfigField.VOID;
+    private final Set<String> names = new HashSet<>();
 
     public ConfigStructure(String name, String comment, boolean withPrefix, boolean withConstructor) {
         this.name = name;
@@ -68,9 +73,16 @@ public class ConfigStructure {
         int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);
 
         if (fillSize != 0) {
+	    int[] fillSizeArray;
+	    if (fillSize != 1) {
+		fillSizeArray = new int[1];
+		fillSizeArray[0] = fillSize;
+	    } else {
+		fillSizeArray = new int[0];
+	    }
             ConfigField fill = new ConfigField(state, ALIGNMENT_FILL_AT + totalSize, "need 4 byte alignment",
                     "" + fillSize,
-                    TypesHelper.UINT8_T, fillSize, "\"units\", 1, 0, -20, 100, 0", false, false, null, -1, null, null);
+		    TypesHelper.UINT8_T, fillSizeArray, "\"units\", 1, 0, -20, 100, 0", false, false, false, null, -1, null, null);
             addBoth(fill);
         }
         totalSize += fillSize;
@@ -82,9 +94,13 @@ public class ConfigStructure {
     }
 
     public void addC(ConfigField cf) {
-        // skip duplicate names
+        // skip duplicate names - that's the weird use-case of conditional project definition like lambdaTable
         if (cf.getName().equals(cPrevField.getName()))
             return;
+
+        boolean isNew = names.add(cf.getName());
+        if (!isNew)
+            throw new IllegalStateException(cf.getName() + " name already used");
 
         cFields.add(cf);
 
@@ -100,7 +116,7 @@ public class ConfigStructure {
             return;
         int sizeAtStartOfPadding = cFields.size();
         while (readingBitState.get() < 32) {
-            ConfigField bitField = new ConfigField(readerState, "unusedBit_" + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, 0, null, false, false, null, -1, null, null);
+            ConfigField bitField = new ConfigField(readerState, "unusedBit_" + sizeAtStartOfPadding + "_" + readingBitState.get(), "", null, BOOLEAN_T, new int[0], null, false, false, false, null, -1, null, null);
             addBitField(bitField);
         }
         readingBitState.reset();

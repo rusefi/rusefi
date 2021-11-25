@@ -8,19 +8,20 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "chevrolet_camaro_4.h"
-#include "engine_math.h"
 #include "custom_engine.h"
 
-void setCamaro4(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setCamaro4() {
+	setFrankensoConfiguration();
 
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.displacement = 5.7;
 	engineConfiguration->specs.cylindersCount = 8;
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_GM);
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->triggerInputPins[0] = GPIOA_5;

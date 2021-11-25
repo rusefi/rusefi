@@ -1,6 +1,6 @@
-#include "linear_func.h"
+#include "pch.h"
 
-#include "interpolation.h"
+#include "linear_func.h"
 
 void LinearFunc::configure(float in1, float out1, float in2, float out2, float minOutput, float maxOutput) {
 	m_minOutput = minOutput;

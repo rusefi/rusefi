@@ -7,7 +7,8 @@
 
 // see also idle.timingPid test
 
-#include "unit_test_framework.h"
+#include "pch.h"
+
 #include "pid.h"
 
 TEST(util, pid) {

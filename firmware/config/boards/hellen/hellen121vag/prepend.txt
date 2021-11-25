@@ -3,8 +3,8 @@
 #define ts_show_hip9011 false
 #define ts_show_cj125 false
 
-//Jokeri says it's better with full pinout just in case
-//#define ts_show_full_pinout false
+! Jokeri says it's better with full pinout just in case
+! #define ts_show_full_pinout false
 
 #define ts_show_lcd false
 #define ts_show_joystick false

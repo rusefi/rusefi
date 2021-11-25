@@ -87,6 +87,13 @@ public:
 	static SensorResult get(SensorType type);
 
 	/*
+	 * Get a reading from the specified sensor, or zero if unavailable.
+	 */
+	static float getOrZero(SensorType type) {
+		return Sensor::get(type).value_or(0);
+	}
+
+	/*
 	 * Get a raw (unconverted) value from the sensor, if available.
 	 */
 	static float getRaw(SensorType type);
@@ -122,6 +129,12 @@ public:
 	static void resetAllMocks();
 
 	/*
+	 * Inhibit sensor timeouts. Used if you're doing something that will block sensor updates, such as 
+	 * erasing flash memory (which stalls the CPU on some MCUs)
+	 */
+	static void inhibitTimeouts(bool inhibit);
+
+	/*
 	 * Get a friendly name for the sensor.
 	 * For example, CLT, IAT, Throttle Position 2, etc.
 	 */
@@ -135,7 +148,7 @@ public:
 	// this should be field lookup and simple math.
 	virtual SensorResult get() const = 0;
 
-	// Retrieve whether the sensor is present.  Some sensors may be registered but not present, ie if inintialization failed.
+	// Retrieve whether the sensor is present.  Some sensors may be registered but not present, i.e. if initialization failed.
 	virtual bool hasSensor() const {
 		return true;
 	}
@@ -155,10 +168,14 @@ public:
 		return false;
 	}
 
+	void unregister();
+
 protected:
 	// Protected constructor - only subclasses call this
 	explicit Sensor(SensorType type)
 		: m_type(type) {}
+
+	static bool s_inhibitSensorTimeouts;
 
 private:
 	const SensorType m_type;
@@ -178,3 +195,5 @@ private:
 	 */
 	static SensorRegistryEntry *getEntryForType(SensorType type);
 };
+
+SensorType findSensorTypeByName(const char *name);

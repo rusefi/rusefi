@@ -1,7 +1,5 @@
 #pragma once
 
-#include "engine.h"
-
 class ValueProvider3D;
 
 struct AirmassResult {
@@ -15,8 +13,6 @@ struct AirmassModelBase {
 
 class AirmassVeModelBase : public AirmassModelBase {
 public:
-	DECLARE_ENGINE_PTR;
-
 	explicit AirmassVeModelBase(const ValueProvider3D& veTable);
 
 protected:

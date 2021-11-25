@@ -5,9 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_configuration.h"
+#include "pch.h"
 #include "fuel_math.h"
-#include "interpolation.h"
 
 #if 1
 

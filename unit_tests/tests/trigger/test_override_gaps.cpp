@@ -5,18 +5,19 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "engine_test_helper.h"
-#include "globalaccess.h"
+#include "pch.h"
 
 TEST(subaru, overrideGap) {
-	WITH_ENGINE_TEST_HELPER(MIATA_NA6_MAP);
+	EngineTestHelper eth(FRANKENSO_MIATA_NA6_MAP);
 
-	CONFIG(overrideTriggerGaps) = true;
-	CONFIG(gapTrackingLengthOverride) = 2;
-	CONFIG(triggerGapOverride[0]) = 11.3;
-	CONFIG(triggerGapOverride[1]) = 1;
+	engineConfiguration->overrideTriggerGaps = true;
+	engineConfiguration->gapTrackingLengthOverride = 2;
+	engineConfiguration->triggerGapOverrideFrom[0] = 0.75 * 11.3;
+	engineConfiguration->triggerGapOverrideTo[0] = 1.75 * 11.3;
+	engineConfiguration->triggerGapOverrideFrom[1] = 0.75;
+	engineConfiguration->triggerGapOverrideTo[1] = 1.25;
 
-	eth.setTriggerType(TT_SUBARU_7_WITHOUT_6 PASS_ENGINE_PARAMETER_SUFFIX);
+	eth.setTriggerType(TT_SUBARU_7_WITHOUT_6);
 
 	ASSERT_EQ(2, engine->triggerCentral.triggerShape.gapTrackingLength);
 

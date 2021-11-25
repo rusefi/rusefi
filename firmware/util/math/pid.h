@@ -7,14 +7,7 @@
 
 #pragma once
 
-#include "engine_state_generated.h"
 #include "pid_state_generated.h"
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-#include "tunerstudio_outputs.h"
-#else
-#include "engine.h"
-#endif
 
 // See PidCic below
 #define PID_AVG_BUF_SIZE_SHIFT 5
@@ -35,10 +28,7 @@ struct pid_s;
  * default basic implementation also known as PidParallelController
  */
 class Pid : public pid_state_s {
-
 public:
-	DECLARE_ENGINE_PTR;
-
 	Pid();
 	explicit Pid(pid_s *parameters);
 	void initPidClass(pid_s *parameters);
@@ -59,8 +49,8 @@ public:
 	float getP(void) const;
 	float getI(void) const;
 	float getD(void) const;
-	virtual float getOffset(void) const;
-	virtual float getMinValue(void) const;
+	float getOffset() const;
+	float getMinValue() const;
 	float getIntegration(void) const;
 	float getPrevError(void) const;
 	void setErrorAmplification(float coef);
@@ -132,4 +122,15 @@ public:
 
 private:
 	float limitOutput(float v) const;
+};
+
+
+// todo: composition instead of inheritance? :(
+class PidWithParameters : public Pid {
+public:
+	pid_s parametersStorage;
+
+	PidWithParameters() {
+		initPidClass(&parametersStorage);
+	}
 };

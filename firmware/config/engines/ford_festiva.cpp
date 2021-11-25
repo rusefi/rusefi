@@ -11,11 +11,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "ford_festiva.h"
-#include "thermistors.h"
-#include "engine_math.h"
-#include "maf.h"
-#include "ego.h"
 #include "fsio_impl.h"
 #include "mazda_miata.h"
 #include "custom_engine.h"
@@ -66,8 +64,8 @@ static const uint8_t racingFestivaVeTable[16][16] = {
  * pin 1I/W9 - extra +5v
  * set engine_type 14
  */
-void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	common079721_2351(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setFordEscortGt() {
+	common079721_2351();
 
 	engineConfiguration->trigger.type = TT_MAZDA_DOHC_1_4;
 
@@ -78,7 +76,7 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->globalFuelCorrection = 0.75;
 	engineConfiguration->specs.displacement = 1.839;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	static const float veRpmBins[] = 
 	{
@@ -125,14 +123,14 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 
-	setEgoSensor(ES_Innovate_MTX_L PASS_CONFIG_PARAMETER_SUFFIX);
+	setEgoSensor(ES_Innovate_MTX_L);
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5 // PA2
 
 	// set_idle_position 10
 	engineConfiguration->manIdlePosition = 10;
 	engineConfiguration->crankingIACposition = 65;
 
-	setWholeIatCorrTimingTable(0 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeIatCorrTimingTable(0);
 
 
 	// set global_trigger_offset_angle -37
@@ -143,10 +141,10 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->crankingTimingAngle = 3;
 
 	setLinearCurve(config->ignitionLoadBins, 20, 105, 5);
-	setWholeTimingTable_d(10 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(10);
 	setTable(config->lambdaTable, 0.92f);
 
-	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setSingleCoilDwell();
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
 	engineConfiguration->triggerSimulatorPinModes[0] = OM_OPENDRAIN;
@@ -213,34 +211,6 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 	// VICS solenoid
-#if EFI_FSIO
-	/**
-	 * to test
-	 * set_fsio_setting 1 5000
-	 */
-	engineConfiguration->fsio_setting[0] = 5000;
-	// set_fsio_expression 1 "rpm > fsio_setting(1)"
-	setFsioExt(0, GPIOE_3, RPM_ABOVE_USER_SETTING_1, 150 PASS_CONFIG_PARAMETER_SUFFIX);
-
-	// warning light
-	/**
-	 * to test
-	 * set_fsio_setting 2 1800
-	 * set_fsio_setting 3 95
-	 * set_fsio_setting 4 14
-	 *
-	 * set_fsio_expression 2 "rpm > fsio_setting(2)"
-	 * set_rpn_expression 1 "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
-	 * eval "rpm 0 fsio_setting > coolant 1 fsio_setting > | vbatt 2 fsio_setting < |"
-	 */
-	engineConfiguration->fsio_setting[1] = 6200; // RPM threshold
-	engineConfiguration->fsio_setting[2] = 90; // CLT threshold
-	engineConfiguration->fsio_setting[3] = 13.5; // voltage threshold
-
-//	setFsio(1, GPIOC_13, "rpm 2 fsio_setting > coolant 3 fsio_setting > | vbatt 4 fsio_setting < |" PASS_CONFIG_PARAMETER_SUFFIX);
-	setFsio(1, GPIOD_7, RPM_ABOVE_USER_SETTING_2 PASS_CONFIG_PARAMETER_SUFFIX);
-#endif /* EFI_FSIO */
-
 	static const float ignitionRpmBins[] =
 	{
 		800,
@@ -269,16 +239,11 @@ void setFordEscortGt(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
 
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5.0;
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 1;
-
 	engineConfiguration->isSdCardEnabled = true;
 
 //	engineConfiguration->useFSIO16ForTimingAdjustment = true;
 //  we wanted to have a timinig table adjustment switch here
 //	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PC2
-
-	strcpy(config->fsioFormulas[15], ANALOG_CONDITION);
 
 	// end of Ford Escort GT config
 }

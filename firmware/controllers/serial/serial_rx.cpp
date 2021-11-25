@@ -14,9 +14,6 @@
 #include "serial_hw.h"
 #include "serial_sensor.h"
 
-#include "vehicle_speed.h"
-#include "thread_priority.h"
-
 uint8_t ser_buffer[SERBUFFLEN] = {};
 size_t innovate_msg_len = 1;
 innovate_serial_id_state_t innovate_serial_id_state = UNKNOWN;
@@ -29,7 +26,7 @@ SerialRead::SerialRead()
 
 void SerialRead::ThreadTask() {
 	while (true) {
-		if (CONFIG(enableInnovateLC2)) {
+		if (engineConfiguration->enableInnovateLC2) {
 			len = innovate_msg_len;
 		}
 

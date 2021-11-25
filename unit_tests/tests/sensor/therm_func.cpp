@@ -2,9 +2,9 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "unit_test_framework.h"
+#include "pch.h"
+
 #include "thermistor_func.h"
-#include "thermistors.h"
 
 TEST(thermistor, Thermistor1) {
 	ThermistorFunc tf;

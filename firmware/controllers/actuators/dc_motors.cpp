@@ -12,6 +12,17 @@
 #include "dc_motors.h"
 #include "dc_motor.h"
 
+// Simple wrapper to use an OutputPin as "PWM" that can only do 0 or 1
+struct PwmWrapper : public IPwm {
+	OutputPin& m_pin;
+
+	PwmWrapper(OutputPin& pin) : m_pin(pin) { }
+
+	void setSimplePwmDutyCycle(float dutyCycle) override {
+		m_pin.setValue(dutyCycle > 0.5f);
+	}
+};
+
 class DcHardware {
 private:
 	OutputPin m_pinEnable;
@@ -19,9 +30,12 @@ private:
 	OutputPin m_pinDir2;
 	OutputPin m_disablePin;
 
-	SimplePwm m_pwmEnable;
-	SimplePwm m_pwmDir1;
-	SimplePwm m_pwmDir2;
+	PwmWrapper wrappedEnable{m_pinEnable};
+	PwmWrapper wrappedDir1{m_pinDir1};
+	PwmWrapper wrappedDir2{m_pinDir2};
+
+	SimplePwm m_pwm1;
+	SimplePwm m_pwm2;
 
 public:
 	DcHardware() : dcMotor(m_disablePin) {}
@@ -29,9 +43,8 @@ public:
 	TwoPinDcMotor dcMotor;
 	
 	void setFrequency(int frequency) {
-		m_pwmEnable.setFrequency(frequency);
-		m_pwmDir1.setFrequency(frequency);
-		m_pwmDir2.setFrequency(frequency);
+		m_pwm1.setFrequency(frequency);
+		m_pwm2.setFrequency(frequency);
 	}
 
 	void start(bool useTwoWires, 
@@ -39,6 +52,7 @@ public:
 			brain_pin_e pinDir1,
 			brain_pin_e pinDir2,
 			brain_pin_e pinDisable,
+			bool isInverted,
 			ExecutorInterface* executor,
 			int frequency) {
 		dcMotor.setType(useTwoWires ? TwoPinDcMotor::ControlType::PwmDirectionPins : TwoPinDcMotor::ControlType::PwmEnablePin);
@@ -50,40 +64,57 @@ public:
 		// Clamp to >100hz
 		int clampedFrequency = maxI(100, frequency);
 
+		if (clampedFrequency > ETB_HW_MAX_FREQUENCY) {
+			firmwareError(OBD_PCM_Processor_Fault, "Electronic throttle frequency too high, maximum %d hz", ETB_HW_MAX_FREQUENCY);
+			return;
+		}
+
+		if (useTwoWires) {
+			m_pinEnable.initPin("ETB Enable", pinEnable);
+
 // no need to complicate event queue with ETB PWM in unit tests
 #if ! EFI_UNIT_TEST
-		startSimplePwmHard(&m_pwmEnable, "ETB Enable",
-			executor,
-			pinEnable,
-			&m_pinEnable,
-			clampedFrequency,
-			0
-		);
+			startSimplePwmHard(&m_pwm1, "ETB Dir 1",
+				executor,
+				pinDir1,
+				&m_pinDir1,
+				clampedFrequency,
+				0
+			);
 
-		startSimplePwmHard(&m_pwmDir1, "ETB Dir 1",
-			executor,
-			pinDir1,
-			&m_pinDir1,
-			clampedFrequency,
-			0
-		);
+			startSimplePwmHard(&m_pwm2, "ETB Dir 2",
+				executor,
+				pinDir2,
+				&m_pinDir2,
+				clampedFrequency,
+				0
+			);
+#endif // EFI_UNIT_TEST
 
-		startSimplePwmHard(&m_pwmDir2, "ETB Dir 2",
-			executor,
-			pinDir2,
-			&m_pinDir2,
-			clampedFrequency,
-			0
-		);
-#endif /* EFI_UNIT_TEST */
+			dcMotor.configure(wrappedEnable, m_pwm1, m_pwm2, isInverted);
+		} else {
+			m_pinDir1.initPin("ETB Dir 1", pinDir1);
+			m_pinDir2.initPin("ETB Dir 2", pinDir2);
 
-		dcMotor.configure(m_pwmEnable, m_pwmDir1, m_pwmDir2);
+// no need to complicate event queue with ETB PWM in unit tests
+#if ! EFI_UNIT_TEST
+			startSimplePwmHard(&m_pwm1, "ETB Enable",
+				executor,
+				pinEnable,
+				&m_pinEnable,
+				clampedFrequency,
+				0
+			);
+#endif // EFI_UNIT_TEST
+
+			dcMotor.configure(m_pwm1, wrappedDir1, wrappedDir2, isInverted);
+		}
 	}
 };
 
 static DcHardware dcHardware[ETB_COUNT + DC_PER_STEPPER];
 
-DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENGINE_PARAMETER_SUFFIX) {
+DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
 	auto& hw = dcHardware[index];
 
 	hw.start(
@@ -92,8 +123,9 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires DECLARE_ENG
 		io.directionPin1,
 		io.directionPin2,
 		io.disablePin,
-		&ENGINE(executor),
-		CONFIG(etbFreq)
+		engineConfiguration->stepperDcInvertedPins,
+		&engine->executor,
+		engineConfiguration->etbFreq
 	);
 
 	return &hw.dcMotor;

@@ -1,7 +1,7 @@
 
-#include "global.h"
+#include "pch.h"
+
 #include "hardware.h"
-#include "efi_gpio.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -36,10 +36,10 @@ int main(void) {
 	halInit();
 	chSysInit();
 	// set base pin configuration based on the board
-	setDefaultBasePins(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultBasePins();
 /* at the moment SD card is not needed by bootloader
 	// set SD card configuration also
-	setDefaultSdCardParameters(PASS_ENGINE_PARAMETER_SIGNATURE);
+	setDefaultSdCardParameters();
 */
 
 	// start UART

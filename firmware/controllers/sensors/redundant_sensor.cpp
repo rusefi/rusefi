@@ -1,6 +1,6 @@
-#include "redundant_sensor.h"
+#include "pch.h"
 
-#include "efilib.h"
+#include "redundant_sensor.h"
 
 RedundantSensor::RedundantSensor(SensorType outputType, SensorType first, SensorType second)
 	: Sensor(outputType)

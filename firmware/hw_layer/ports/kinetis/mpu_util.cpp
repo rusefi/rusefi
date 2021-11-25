@@ -6,14 +6,12 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_PROD_CODE
 
 #include "mpu_util.h"
 #include "flash_int.h"
-#include "engine.h"
-#include "pin_repository.h"
 #include "os_util.h"
 
 void baseMCUInit(void) {
@@ -75,11 +73,11 @@ static int getSpiAf(SPIDriver *driver) {
 brain_pin_e getMisoPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1misoPin);
+		return engineConfiguration->spi1misoPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2misoPin);
+		return engineConfiguration->spi2misoPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3misoPin);
+		return engineConfiguration->spi3misoPin;
 	default:
 		break;
 	}
@@ -89,11 +87,11 @@ brain_pin_e getMisoPin(spi_device_e device) {
 brain_pin_e getMosiPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1mosiPin);
+		return engineConfiguration->spi1mosiPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2mosiPin);
+		return engineConfiguration->spi2mosiPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3mosiPin);
+		return engineConfiguration->spi3mosiPin;
 	default:
 		break;
 	}
@@ -103,11 +101,11 @@ brain_pin_e getMosiPin(spi_device_e device) {
 brain_pin_e getSckPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1sckPin);
+		return engineConfiguration->spi1sckPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2sckPin);
+		return engineConfiguration->spi2sckPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3sckPin);
+		return engineConfiguration->spi3sckPin;
 	default:
 		break;
 	}
@@ -280,6 +278,26 @@ float getMcuTemperature() {
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	// TODO: implement me!
 	return true;
+}
+
+static constexpr FastAdcToken invalidToken = (FastAdcToken)(-1);
+
+FastAdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return invalidToken;
+	}
+
+	// TODO: implement me!
+	return invalidToken;
+}
+
+adcsample_t getFastAdc(FastAdcToken token) {
+	if (token == invalidToken) {
+		return 0;
+	}
+
+	// TODO: implement me!
+	return 0;
 }
 
 #endif /* EFI_PROD_CODE */

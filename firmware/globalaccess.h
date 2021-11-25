@@ -1,7 +1,5 @@
 /*
  * @file globalaccess.h
- * @bried version of global.h with DECLARE_ENGINE_PARAMETER_SIGNATURE & PASS_ENGINE_PARAMETER_SUFFIX
- *
  *
  * unit_tests have a more meaningful version of this header
  *

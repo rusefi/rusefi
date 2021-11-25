@@ -9,26 +9,38 @@
  * this file.
  */
 
+#ifndef FALSE
+#define FALSE (0)
+#endif /* FALSE */
+
+#ifndef TRUE
+#define TRUE (!(FALSE))
+#endif /* TRUE */
+
 #include "efifeatures.h"
-#include "engine_ptr.h"
+#include "rusefi_generated.h"
+#include "loggingcentral.h"
+#include "error_handling.h"
 #include "global.h"
 #include "efi_gpio.h"
+#include "tunerstudio_outputs.h"
 #include "engine.h"
 #include "engine_configuration.h"
 #include "engine_controller.h"
-#include "tunerstudio_outputs.h"
 #include "engine_math.h"
 #include "pwm_generator_logic.h"
 #include "allsensors.h"
 #include "sensor.h"
-#include "error_handling.h"
 #include "settings.h"
 #include "interpolation.h"
 #include "perf_trace.h"
+#include "hardware.h"
+#include "thread_priority.h"
 
 #if EFI_UNIT_TEST
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include "engine_test_helper.h"
 #include "mocks.h"
+#include "engine_test_helper.h"
+#include "mock/mock_sensor.h"
 #endif

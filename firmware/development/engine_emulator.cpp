@@ -8,19 +8,19 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 #include "engine_emulator.h"
 
 #include "poten.h"
 #include "trigger_emulator_algo.h"
 
-void initEngineEmulator(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initEngineEmulator() {
 	if (hasFirmwareError())
 		return;
 
 #if EFI_POTENTIOMETER && HAL_USE_SPI
-	initPotentiometers(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initPotentiometers();
 #endif /* EFI_POTENTIOMETER && HAL_USE_SPI*/
 
-	initTriggerEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initTriggerEmulator();
 }

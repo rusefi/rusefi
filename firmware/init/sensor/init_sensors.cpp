@@ -9,35 +9,96 @@
 
 static void initSensorCli();
 
-void initNewSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initIfValid(const char* msg, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return;
+	}
+
+#if EFI_PROD_CODE
+	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
+	efiSetPadMode(msg, pin, PAL_MODE_INPUT_ANALOG);
+#endif
+}
+
+void deInitIfValid(const char* msg, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return;
+	}
+
+#if EFI_PROD_CODE
+	brain_pin_e pin = getAdcChannelBrainPin(msg, channel);
+	efiSetPadUnused(pin);
+#endif
+}
+
+static void initOldAnalogInputs() {
+	initIfValid("AFR", engineConfiguration->afr.hwChannel);
+	initIfValid("Baro", engineConfiguration->baroSensor.hwChannel);
+	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
+	initIfValid("CJ125 UR", engineConfiguration->cj125ur);
+	initIfValid("CJ125 UA", engineConfiguration->cj125ua);
+}
+
+static void deInitOldAnalogInputs() {
+	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
+	deInitIfValid("Baro", activeConfiguration.baroSensor.hwChannel);
+	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
+	deInitIfValid("CJ125 UR", activeConfiguration.cj125ur);
+	deInitIfValid("CJ125 UA", activeConfiguration.cj125ua);
+}
+
+void initNewSensors() {
 #if EFI_CAN_SUPPORT
 	initCanSensors();
 #endif
 
-	initVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initMap(PASS_ENGINE_PARAMETER_SIGNATURE);
-	initTps(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initLambda(PASS_ENGINE_PARAMETER_SIGNATURE);
-	initFlexSensor(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initBaro(PASS_CONFIG_PARAMETER_SIGNATURE);
-	initAuxSensors(PASS_CONFIG_PARAMETER_SIGNATURE);
+	initVbatt();
+	initMap();
+	initTps();
+	initOilPressure();
+	initThermistors();
+	initLambda();
+	initFlexSensor();
+	initBaro();
+	initAuxSensors();
+	initVehicleSpeedSensor();
+	initTurbochargerSpeedSensor();
 
 	#if !EFI_UNIT_TEST
-		initFuelLevel(PASS_CONFIG_PARAMETER_SIGNATURE);
-		initMaf(PASS_CONFIG_PARAMETER_SIGNATURE);
+		initFuelLevel();
+		initMaf();
 	#endif
+
+	initOldAnalogInputs();
 
 	// Init CLI functionality for sensors (mocking)
 	initSensorCli();
 }
 
-void reconfigureSensors(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	reconfigureVbatt(PASS_CONFIG_PARAMETER_SIGNATURE);
-	reconfigureTps(PASS_CONFIG_PARAMETER_SIGNATURE);
-	reconfigureOilPressure(PASS_CONFIG_PARAMETER_SIGNATURE);
-	reconfigureThermistors(PASS_CONFIG_PARAMETER_SIGNATURE);
+void stopSensors() {
+	deInitOldAnalogInputs();
+
+	deinitTps();
+	deinitOilPressure();
+	deinitVbatt();
+	deinitThermistors();
+	deInitFlexSensor();
+	deInitVehicleSpeedSensor();
+	deinitTurbochargerSpeedSensor();
+	deinitMap();
+}
+
+void reconfigureSensors() {
+	initMap();
+	initTps();
+	initOilPressure();
+	initVbatt();
+	initThermistors();
+	initFlexSensor();
+	initVehicleSpeedSensor();
+	initTurbochargerSpeedSensor();
+
+	initOldAnalogInputs();
 }
 
 // Mocking/testing helpers

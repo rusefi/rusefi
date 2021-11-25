@@ -1,3 +1,0 @@
- 1) resolved in R0.2 SPI silk screen is not correct.
- 2)                  5.04 screw-in terminal option
- 3)                  multichannel?

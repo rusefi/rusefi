@@ -1,5 +1,5 @@
+#include "pch.h"
 
-#include <gtest/gtest.h>
 #include "deadband.h"
 
 TEST(Deadband, OutsideDeadband) {

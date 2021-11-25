@@ -31,8 +31,8 @@ private:
 	FILE *fp;
 	char buffer[255];
 
-	bool currentState[2];
-	bool currentVvtState[CAM_INPUTS_COUNT];
+	bool currentState[2] = {0, 0};
+	bool currentVvtState[CAM_INPUTS_COUNT] = {0, 0};
 
 	int m_lineIndex = -1;
 

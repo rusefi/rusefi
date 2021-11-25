@@ -129,10 +129,12 @@ static evhandler_t fhandlers[] = { termination_handler, sd1_handler, sd2_handler
 
 bool verboseMode = true;
 
+static virtual_timer_t exitTimer;
+
 /*------------------------------------------------------------------------*
  * Simulator main.                                                        *
  *------------------------------------------------------------------------*/
-int main(void) {
+int main(int argc, char** argv) {
 	/*
 	 * System initializations.
 	 * - HAL initialization, this also initializes the configured device drivers
@@ -142,6 +144,15 @@ int main(void) {
 	 */
 	halInit();
 	chSysInit();
+
+	if (argc == 2) {
+		int timeoutSeconds = atoi(argv[1]);
+		printf("Running rusEFI simulator for %d seconds, then exiting.\n\n", timeoutSeconds);
+
+		chSysLock();
+		chVTSetI(&exitTimer, MY_US2ST(timeoutSeconds * 1e6), &exit, 0);
+		chSysUnlock();
+	}
 
 	/*
 	 * Console thread started.

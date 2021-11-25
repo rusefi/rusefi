@@ -5,7 +5,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include <gmock/gmock.h>
+#include "pch.h"
+
 #include "periodic_thread_controller.h"
 #include <thread>
 

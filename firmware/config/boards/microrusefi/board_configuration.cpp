@@ -18,12 +18,9 @@
  * @author Matthew Kennedy, (c) 2019
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
+#include "mre_meta.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = TLE8888_PIN_1;
@@ -87,7 +84,7 @@ static void setupTle8888() {
 	// on microRusEFI SPI3 is exposed on PC10/PC11 and there is interest to use SD card there
 	// PB3/PB4 could be either SPI1 or SP3, let's use not SPI3 to address the contention
 	// Enable spi1
-	CONFIG(is_enabled_spi_1) = true;
+	engineConfiguration->is_enabled_spi_1 = true;
 
 	// Wire up spi1
 	engineConfiguration->spi1mosiPin = GPIOB_5;
@@ -137,22 +134,18 @@ static void setupDefaultSensorInputs() {
 	// open question if it's great to have TPS in default TPS - the down-side is for
 	// vehicles without TPS or for first start without TPS one would have to turn in off
 	// to avoid cranking corrections based on wrong TPS data
-	// tps = "20 - AN volt 5" PC3
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_13;
+	engineConfiguration->tps1_1AdcChannel = MRE_IN_TPS;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 
-	// EFI_ADC_10: "27 - AN volt 1"
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+	engineConfiguration->map.sensor.hwChannel = MRE_IN_MAP;
 
 	// EFI_ADC_14: "32 - AN volt 6"
 	engineConfiguration->afr.hwChannel = EFI_ADC_14;
 
-	// clt = "18 - AN temp 1"
-	engineConfiguration->clt.adcChannel = EFI_ADC_0;
+	engineConfiguration->clt.adcChannel = MRE_IN_CLT;
 
-	// iat = "23 - AN temp 2"
-	engineConfiguration->iat.adcChannel = EFI_ADC_1;
+	engineConfiguration->iat.adcChannel = MRE_IN_IAT;
 
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor1, 2700);
 	setCommonNTCSensor(&engineConfiguration->auxTempSensor2, 2700);
@@ -176,7 +169,7 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canRxPin = GPIOB_12;
 
 	// SPI for SD card
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	engineConfiguration->sdCardCsPin = GPIOB_9;
 
@@ -233,7 +226,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;

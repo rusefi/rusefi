@@ -5,6 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
 #include "global_execution_queue.h"
 
 bool_t debugSignalExecutor = false;
@@ -67,6 +68,15 @@ void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduli
 	}
 
 	scheduleByTimestamp("test", scheduling, NT2US(timeNt), action);
+}
+
+void TestExecutor::cancel(scheduling_s* s) {
+	if (m_mockExecutor) {
+		m_mockExecutor->cancel(s);
+		return;
+	}
+
+	schedulingQueue.remove(s);
 }
 
 void TestExecutor::setMockExecutor(ExecutorInterface* exec) {

@@ -138,7 +138,7 @@ static char panicMessage[200];
 static virtual_timer_t resetTimer;
 
 // todo: move this into a hw-specific file
-void rebootNow(void) {
+void rebootNow() {
 	NVIC_SystemReset();
 }
 
@@ -146,81 +146,10 @@ void rebootNow(void) {
  * Some configuration changes require full firmware reset.
  * Once day we will write graceful shutdown, but that would be one day.
  */
-static void scheduleReboot(void) {
+static void scheduleReboot() {
 	efiPrintf("Rebooting in 3 seconds...");
 	chibios_rt::CriticalSectionLocker csl;
 	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
-}
-
-// Returns false if there's an obvious problem with the loaded configuration
-static bool validateConfig() {
-	if (CONFIG(specs.cylindersCount) > MAX_CYLINDER_COUNT) {
-		firmwareError(OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", CONFIG(specs.cylindersCount));
-		return false;
-	}
-
-	// Fueling
-	{
-		ensureArrayIsAscending("VE load", config->veLoadBins);
-		ensureArrayIsAscending("VE RPM", config->veRpmBins);
-
-		ensureArrayIsAscending("Lambda/AFR load", config->lambdaLoadBins);
-		ensureArrayIsAscending("Lambda/AFR RPM", config->lambdaRpmBins);
-
-		ensureArrayIsAscending("Fuel CLT mult", config->cltFuelCorrBins);
-		ensureArrayIsAscending("Fuel IAT mult", config->iatFuelCorrBins);
-
-		ensureArrayIsAscending("Injection phase load", config->injPhaseLoadBins);
-		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
-
-		ensureArrayIsAscending("TPS/TPS AE from", config->tpsTpsAccelFromRpmBins);
-		ensureArrayIsAscending("TPS/TPS AE to", config->tpsTpsAccelToRpmBins);
-	}
-
-	// Ignition
-	{
-		ensureArrayIsAscending("Dwell RPM", engineConfiguration->sparkDwellRpmBins);
-
-		ensureArrayIsAscending("Ignition load", config->ignitionLoadBins);
-		ensureArrayIsAscending("Ignition RPM", config->ignitionRpmBins);
-
-		ensureArrayIsAscending("Ignition CLT corr", engineConfiguration->cltTimingBins);
-
-		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrLoadBins);
-		ensureArrayIsAscending("Ignition IAT corr RPM", config->ignitionIatCorrRpmBins);
-	}
-
-	ensureArrayIsAscending("Map estimate TPS", config->mapEstimateTpsBins);
-	ensureArrayIsAscending("Map estimate RPM", config->mapEstimateRpmBins);
-	ensureArrayIsAscending("Ignition load", config->mafDecodingBins);
-
-	// Cranking tables
-	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
-	ensureArrayIsAscending("Cranking duration", config->crankingCycleBins);
-	ensureArrayIsAscending("Cranking TPS", engineConfiguration->crankingTpsBins);
-
-	// Idle tables
-	ensureArrayIsAscending("Idle target RPM", engineConfiguration->cltIdleRpmBins);
-	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
-	ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
-	ensureArrayIsAscending("Idle VE", config->idleVeBins);
-	ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
-
-	// Boost
-	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
-	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
-
-	// ETB
-	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
-	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
-
-	// VVT
-	ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
-	ensureArrayIsAscending("VVT intake RPM", config->vvtTable1RpmBins);
-	ensureArrayIsAscending("VVT exhaust load", config->vvtTable2LoadBins);
-	ensureArrayIsAscending("VVT exhaust RPM", config->vvtTable2RpmBins);
-
-	return true;
 }
 
 static jmp_buf jmpEnv;
@@ -233,9 +162,8 @@ void onAssertionFailure() {
 void runRusEfiWithConfig();
 void runMainLoop();
 
-void runRusEfi(void) {
+void runRusEfi() {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
-	assertEngineReference();
 	engine->setConfig();
 
 #if EFI_TEXT_LOGGING
@@ -254,10 +182,14 @@ void runRusEfi(void) {
 	/**
 	 * we need to initialize table objects before default configuration can set values
 	 */
-	initDataStructures(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initDataStructures();
 
 	// Perform hardware initialization that doesn't need configuration
 	initHardwareNoConfig();
+
+#if EFI_ETHERNET
+	startEthernetConsole();
+#endif
 
 #if EFI_USB_SERIAL
 	startUsbConsole();
@@ -273,7 +205,7 @@ void runRusEfi(void) {
 	initializeConsole();
 
 	// Read configuration from flash memory
-	loadConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	loadConfiguration();
 
 #if EFI_TUNER_STUDIO
 	startTunerStudioConnectivity();
@@ -285,7 +217,7 @@ void runRusEfi(void) {
 	runRusEfiWithConfig();
 
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
-	initPeriodicEvents(PASS_ENGINE_PARAMETER_SIGNATURE);
+	initPeriodicEvents();
 
 	runMainLoop();
 }
@@ -328,14 +260,14 @@ void runRusEfiWithConfig() {
 		 * Now let's initialize actual engine control logic
 		 * todo: should we initialize some? most? controllers before hardware?
 		 */
-		initEngineContoller(PASS_ENGINE_PARAMETER_SIGNATURE);
+		initEngineContoller();
 
 	#if EFI_ENGINE_EMULATOR
-		initEngineEmulator(PASS_ENGINE_PARAMETER_SIGNATURE);
+		initEngineEmulator();
 	#endif
 
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
-		rememberCurrentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		rememberCurrentConfiguration();
 
 	#if EFI_PERF_METRICS
 		initTimePerfActions();

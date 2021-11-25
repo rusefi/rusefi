@@ -8,14 +8,9 @@
 
 #pragma once
 
-#include "efifeatures.h"
-#if EFI_TUNER_STUDIO
-#include "tunerstudio_outputs.h"
-#endif /* EFI_TUNER_STUDIO */
-
 void initAuxSerial(void);
 #if EFI_AUX_SERIAL
-void stopAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void startAuxSerialPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void enableAuxSerial(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void stopAuxSerialPins();
+void startAuxSerialPins();
+void enableAuxSerial();
 #endif //EFI_AUX_SERIAL

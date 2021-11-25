@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "global.h"
-
 #define OBD_TEST_REQUEST 0x7DF
 
 #define OBD_TEST_RESPONSE 0x7E8

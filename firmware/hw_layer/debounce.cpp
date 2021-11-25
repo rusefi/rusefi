@@ -5,9 +5,9 @@
  * @date Aug 31, 2020
  * @author David Holdeman, (c) 2020
  */
+#include "pch.h"
+
 #include "debounce.h"
-#include "pin_repository.h"
-#include "engine_configuration.h"
 #include "hardware.h"
 
 ButtonDebounce* ButtonDebounce::s_firstDebounce = nullptr;

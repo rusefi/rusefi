@@ -7,12 +7,7 @@
  * @author andreika, (c) 2019
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_configuration.h"
-#include "adc_inputs.h"
-#include "engine_math.h"
-#include "tps.h"
+#include "pch.h"
 
 #if 0
 char __debugBuffer[80];
@@ -27,7 +22,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->useNoiselessTriggerDecoder = true;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;

@@ -7,19 +7,20 @@
 
 #pragma once
 
-#include "engine.h"
-
 #if EFI_MAP_AVERAGING
 
 #if HAL_USE_ADC
 void mapAveragingAdcCallback(adcsample_t newValue);
 #endif
 
-void initMapAveraging(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void refreshMapAveragingPreCalc(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initMapAveraging();
+void refreshMapAveragingPreCalc();
 
 void mapAveragingTriggerCallback(
-		uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX);
+		uint32_t index, efitick_t edgeTimestamp);
+
+void onMapAveraged(float mapKpa, efitick_t nowNt);
+SensorResult convertMap(float volts);
 
 #if EFI_TUNER_STUDIO
 void postMapState(TunerStudioOutputChannels *tsOutputChannels);

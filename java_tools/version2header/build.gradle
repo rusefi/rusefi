@@ -1,0 +1,20 @@
+plugins {
+    id 'java-library'
+}
+
+defaultTasks 'jar'
+
+apply from: '../../android/dependencies.gradle'
+
+dependencies {
+    testImplementation libs.junit
+}
+
+jar {
+    destinationDirectory = file( '$rootDir/../..' )
+    manifest {
+        attributes(
+            'Main-Class': 'com.rusefi.Version2Header'
+        )
+    }
+}

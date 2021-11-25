@@ -2,7 +2,7 @@ package com.rusefi.output;
 
 import com.rusefi.*;
 
-import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ToolUtil.EOL;
 
 public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
     private static final String BOOLEAN_TYPE = "bool";
@@ -11,21 +11,28 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
     public static String getHeaderText(ConfigField configField, int currentOffset, int bitIndex) {
         if (configField.isBit()) {
             String comment = "\t/**" + EOL + ConfigDefinition.packComment(configField.getCommentContent(), "\t") + "\toffset " + currentOffset + " bit " + bitIndex + " */" + EOL;
-            return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1;" + EOL;
+            return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
         }
 
         String cEntry = ConfigDefinition.getComment(configField.getCommentContent(), currentOffset, configField.getUnits());
 
+        String typeName = configField.getType();
+
+        String autoscaleSpec = configField.autoscaleSpec();
+        if (autoscaleSpec != null) {
+            typeName = "scaled_channel<" + typeName + ", " + autoscaleSpec + ">";
+        }
+
         if (!configField.isArray()) {
             // not an array
-            cEntry += "\t" + configField.getType() + " " + configField.getName();
+            cEntry += "\t" + typeName + " " + configField.getName();
             if (ConfigDefinition.needZeroInit && TypesHelper.isPrimitive(configField.getType())) {
                 // we need this cast in case of enums
                 cEntry += " = (" + configField.getType() + ")0";
             }
             cEntry += ";" + EOL;
         } else {
-            cEntry += "\t" + configField.getType() + " " + configField.getName() + "[" + configField.arraySizeVariableName + "];" + EOL;
+            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.arraySizeVariableName + "];" + EOL;
         }
         return cEntry;
     }

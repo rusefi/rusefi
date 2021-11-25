@@ -113,7 +113,7 @@ public class LightweightGUI {
 
     private static String detectPortUntilDetected() {
         while (true) {
-            String port = PortDetector.autoDetectSerial(null);
+            String port = PortDetector.autoDetectSerial(null).getSerialPort();
             System.out.println("Detected " + port);
             if (port != null)
                 return port;

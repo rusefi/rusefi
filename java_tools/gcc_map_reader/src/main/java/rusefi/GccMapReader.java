@@ -17,8 +17,8 @@ import java.util.regex.Pattern;
  */
 public class GccMapReader {
     private static final Pattern MULTI_LINE_PATTERN = Pattern.compile(".*0x(\\S*)(.*)");
-    private static final String[] REGIONS = {"bss", "text", "data", "rodata"};
-    private static final Pattern SINGLE_LINE_PATTERN = Pattern.compile(".*\\.(bss|text|data|rodata)\\.(\\S*).*0x.*0x(\\S*)(.*)");
+    private static final String[] REGIONS = {"bss", "ram4", "text", "data", "rodata"};
+    private static final Pattern SINGLE_LINE_PATTERN = Pattern.compile(".*\\.(bss|ram4|text|data|rodata)\\.(\\S*).*0x.*0x(\\S*)(.*)");
     static final String START_OF_DATA_TAG = "Linker script and memory map";
 
     public static void main(String[] args) throws IOException {

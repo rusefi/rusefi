@@ -20,7 +20,7 @@ using ::testing::StrictMock;
 TEST(etb, initializationNoPedal) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -30,36 +30,39 @@ TEST(etb, initializationNoPedal) {
 	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, _, _, false)).WillOnce(Return(false));
 
 	// This shouldn't throw, since no throttles are configured, but no pedal is configured either
-	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle());
 }
 
 TEST(etb, initializationMissingThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+		engineConfiguration->etbFunctions[0] = ETB_None;
+		engineConfiguration->etbFunctions[1] = ETB_None;
+	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
 	}
 
-	engineConfiguration->etbFunctions[0] = ETB_None;
-	engineConfiguration->etbFunctions[1] = ETB_None;
-
-	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _, true)).WillOnce(Return(false));
-	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, true)).WillOnce(Return(false));
+	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _, true)).Times(0);
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, true)).Times(0);
 
 	// Must have a sensor configured before init
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	// This should throw: a pedal is configured but no throttles
-	EXPECT_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_FATAL_ERROR(doInitElectronicThrottle());
 }
 
 TEST(etb, initializationSingleThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+		engineConfiguration->etbFunctions[0] = ETB_Throttle1;
+		engineConfiguration->etbFunctions[1] = ETB_None;
+	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -69,22 +72,22 @@ TEST(etb, initializationSingleThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
-	engineConfiguration->etbFunctions[0] = ETB_Throttle1;
-	engineConfiguration->etbFunctions[1] = ETB_None;
-
 	// Expect mock0 to be init as throttle 1, and PID params
 	EXPECT_CALL(mocks[0], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
 	// Expect mock1 to be init as none
-	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, true)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, true)).Times(0);
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doInitElectronicThrottle();
 }
 
 TEST(etb, initializationSingleThrottleInSecondSlot) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+		engineConfiguration->etbFunctions[0] = ETB_None;
+		engineConfiguration->etbFunctions[1] = ETB_Throttle1;
+	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -94,22 +97,19 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0, false);
 
-	engineConfiguration->etbFunctions[0] = ETB_None;
-	engineConfiguration->etbFunctions[1] = ETB_Throttle1;
-
 	// Expect mock0 to be init as none
-	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _, true)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[0], init(ETB_None, _, _, _, true)).Times(0);
 
 	// Expect mock1 to be init as throttle 1, and PID params
 	EXPECT_CALL(mocks[1], init(ETB_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doInitElectronicThrottle();
 }
 
 TEST(etb, initializationDualThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
@@ -131,28 +131,28 @@ TEST(etb, initializationDualThrottle) {
 	// Expect mock1 to be init as throttle 2, and PID params
 	EXPECT_CALL(mocks[1], init(ETB_Throttle2, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doInitElectronicThrottle();
 }
 
 TEST(etb, initializationWastegate) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+		engineConfiguration->etbFunctions[0] = ETB_Wastegate;
+		engineConfiguration->etbFunctions[1] = ETB_None;
+	});
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &mocks[i];
 	}
 
-	engineConfiguration->etbFunctions[0] = ETB_Wastegate;
-	engineConfiguration->etbFunctions[1] = ETB_None;
-
 	// Expect mock0 to be init as throttle 1, and PID wastegate params
 	EXPECT_CALL(mocks[0], init(ETB_Wastegate, _, &engineConfiguration->etbWastegatePid, Ne(nullptr), false)).WillOnce(Return(true));
 
 	// Expect mock1 to be init as none
-	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, false)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(ETB_None, _, _, _, false)).Times(0);
 
-	doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE);
+	doInitElectronicThrottle();
 }
 
 TEST(etb, initializationNoFunction) {
@@ -174,6 +174,7 @@ TEST(etb, initializationNotRedundantTps) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	// Not redundant, should fail upon init
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
 
 	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
@@ -186,16 +187,37 @@ TEST(etb, initializationNotRedundantPedal) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, false);
 
 	// Normal redundant TPS
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
 	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
+}
+
+TEST(etb, initializationNoPrimarySensor) {
+	Sensor::resetAllMocks();
+
+	EtbController dut;
+
+	// Needs pedal for init
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
+
+	// Redundant, but no primary configured
+	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
+
+	EXPECT_FALSE(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
+
+	// Now configure primary TPS
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+
+	// With primary TPS, should return true (ie, throttle was configured)
+	EXPECT_TRUE(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
 }
 
 TEST(etb, initializationNoThrottles) {
 	// This tests the case where you don't want an ETB, and expect everything to go fine
 	EtbController duts[2];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	for (int i = 0; i < ETB_COUNT; i++) {
 		engine->etbControllers[i] = &duts[i];
@@ -209,15 +231,16 @@ TEST(etb, initializationNoThrottles) {
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
 
 	// Not redundant TPS (aka cable throttle)
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
 
-	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle(PASS_ENGINE_PARAMETER_SIGNATURE));
+	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle());
 }
 
 TEST(etb, idlePlumbing) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->useETBforIdleControl = true;
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
@@ -228,17 +251,16 @@ TEST(etb, idlePlumbing) {
 		EXPECT_CALL(mocks[i], setIdlePosition(33.0f));
 	}
 
-	applyIACposition(33.0f PASS_ENGINE_PARAMETER_SUFFIX);
+	applyIACposition(33.0f);
 }
 
 TEST(etb, testSetpointOnlyPedal) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Don't use ETB for idle, we aren't testing that yet - just pedal table for now
 	engineConfiguration->useETBforIdleControl = false;
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 
 	// Mock pedal map that's just passthru pedal -> target
 	StrictMock<MockVp3d> pedalMap;
@@ -251,6 +273,7 @@ TEST(etb, testSetpointOnlyPedal) {
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
@@ -258,7 +281,7 @@ TEST(etb, testSetpointOnlyPedal) {
 
 	// Check endpoints and midpoint
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 100.0f, true);
@@ -272,35 +295,47 @@ TEST(etb, testSetpointOnlyPedal) {
 
 	// Valid but out of range - should clamp to [0, 100]
 	Sensor::setMockValue(SensorType::AcceleratorPedal, -5, true);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 105, true);
 	EXPECT_EQ(100, etb.getSetpoint().value_or(-1));
 
 	// Check that ETB idle does NOT work - it's disabled
 	etb.setIdlePosition(50);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 20, true);
 	EXPECT_EQ(20, etb.getSetpoint().value_or(-1));
 
 	// Test invalid pedal position - should give 0 position
 	Sensor::resetMockValue(SensorType::AcceleratorPedal);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
+
+	// Check that adjustable clamping works correctly
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
+
+	engineConfiguration->etbMaximumPosition = 90;
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 85, true);
+	EXPECT_EQ(85, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 90, true);
+	EXPECT_EQ(90, etb.getSetpoint().value_or(-1));
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 95, true);
+	EXPECT_EQ(90, etb.getSetpoint().value_or(-1));
 }
 
 TEST(etb, setpointIdle) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Use ETB for idle, but don't give it any range (yet)
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->etbIdleThrottleRange = 0;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 
 	// Mock pedal map that's just passthru pedal -> target
 	StrictMock<MockVp3d> pedalMap;
@@ -312,7 +347,7 @@ TEST(etb, setpointIdle) {
 
 	// No idle range, should just pass pedal
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 50.0f, true);
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
 
@@ -346,18 +381,18 @@ TEST(etb, setpointIdle) {
 }
 
 TEST(etb, setpointRevLimit) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Configure 5000 limit start, with 750 rpm taper
 	engineConfiguration->etbRevLimitStart = 5000;
 	engineConfiguration->etbRevLimitRange = 750;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 
 	// Mock pedal map to just return 80%
 	StrictMock<MockVp3d> pedalMap;
@@ -368,24 +403,24 @@ TEST(etb, setpointRevLimit) {
 	etb.init(ETB_Throttle1, nullptr, nullptr, &pedalMap, true);
 
 	// Below threshold, should return unadjusted throttle
-	ENGINE(rpmCalculator.mockRpm) = 1000;
+	engine->rpmCalculator.mockRpm = 1000;
 	EXPECT_EQ(80, etb.getSetpoint().value_or(-1));
 
 	// At threshold, should return unadjusted throttle
-	ENGINE(rpmCalculator.mockRpm) = 5000;
+	engine->rpmCalculator.mockRpm = 5000;
 	EXPECT_EQ(80, etb.getSetpoint().value_or(-1));
 
 	// Middle of range, should return half of unadjusted
-	ENGINE(rpmCalculator.mockRpm) = 5375;
+	engine->rpmCalculator.mockRpm = 5375;
 	EXPECT_EQ(40, etb.getSetpoint().value_or(-1));
 
 	// At limit+range, should return 0
-	ENGINE(rpmCalculator.mockRpm) = 5750;
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	engine->rpmCalculator.mockRpm = 5750;
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 
 	// Above limit+range, should return 0
-	ENGINE(rpmCalculator.mockRpm) = 6000;
-	EXPECT_EQ(0, etb.getSetpoint().value_or(-1));
+	engine->rpmCalculator.mockRpm = 6000;
+	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 }
 
 TEST(etb, setpointNoPedalMap) {
@@ -479,16 +514,16 @@ TEST(etb, etbTpsSensor) {
 }
 
 TEST(etb, setOutputInvalid) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	StrictMock<MockMotor> motor;
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be disabled in case of unexpected
@@ -498,15 +533,15 @@ TEST(etb, setOutputInvalid) {
 }
 
 TEST(etb, setOutputValid) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -518,15 +553,15 @@ TEST(etb, setOutputValid) {
 }
 
 TEST(etb, setOutputValid2) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -538,15 +573,15 @@ TEST(etb, setOutputValid2) {
 }
 
 TEST(etb, setOutputOutOfRangeHigh) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -558,15 +593,15 @@ TEST(etb, setOutputOutOfRangeHigh) {
 }
 
 TEST(etb, setOutputOutOfRangeLow) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be enabled and value set
@@ -578,15 +613,15 @@ TEST(etb, setOutputOutOfRangeLow) {
 }
 
 TEST(etb, setOutputPauseControl) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Pause control - should get no output
@@ -599,22 +634,22 @@ TEST(etb, setOutputPauseControl) {
 }
 
 TEST(etb, setOutputLimpHome) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, &motor, nullptr, nullptr, true);
 
 	// Should be disabled when in ETB limp mode
 	EXPECT_CALL(motor, disable());
 
 	// Trip a fatal error
-	ENGINE(limpManager).fatalError();
+	engine->limpManager.fatalError();
 
 	etb.setOutput(25.0f);
 }
@@ -626,6 +661,7 @@ TEST(etb, closedLoopPid) {
 	pid.minValue = -60;
 
 	// Must have TPS & PPS initialized for ETB setup
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
@@ -634,8 +670,8 @@ TEST(etb, closedLoopPid) {
 
 	// Disable autotune for now
 	Engine e;
+	EngineTestHelperBase base(&e, nullptr, nullptr);
 	e.etbAutoTune = false;
-	etb.engine = &e;
 
 	// Setpoint greater than actual, should be positive output
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 40).value_or(-1), 50);
@@ -648,14 +684,14 @@ TEST(etb, closedLoopPid) {
 }
 
 TEST(etb, openLoopThrottle) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Throttle1, nullptr, nullptr, nullptr, true);
 
 	// Map [0, 100] -> [-50, 50]
@@ -670,14 +706,14 @@ TEST(etb, openLoopThrottle) {
 }
 
 TEST(etb, openLoopNonThrottle) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
 
 	EtbController etb;
-	INJECT_ENGINE_REFERENCE(&etb);
 	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
 
 	// Map [0, 100] -> [-50, 50]

@@ -5,7 +5,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "engine_test_helper.h"
+#include "pch.h"
 
 static void boardConfigurationForIssue898(engine_configuration_s *engineConfiguration) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -15,7 +15,6 @@ static void boardConfigurationForIssue898(engine_configuration_s *engineConfigur
 
 TEST(issues, issue898) {
 	EngineTestHelper eth(TEST_ISSUE_898, &boardConfigurationForIssue898);
-	EXPAND_EngineTestHelper;
 
 	ASSERT_EQ(TRUE, engine->triggerCentral.triggerShape.shapeDefinitionError) << "MRE_MIATA_NA6 shapeDefinitionError";
 

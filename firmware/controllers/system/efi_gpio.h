@@ -15,7 +15,7 @@
 #include "smart_gpio.h"
 
 void initPrimaryPins();
-void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initOutputPins();
 
 #if EFI_GPIO_HARDWARE
 void turnAllPinsOff(void);
@@ -91,8 +91,6 @@ private:
  */
 class NamedOutputPin : public virtual OutputPin {
 public:
-	DECLARE_ENGINE_PTR;
-
 	NamedOutputPin();
 	explicit NamedOutputPin(const char *name);
 	void setHigh();
@@ -116,8 +114,8 @@ public:
 	InjectorOutputPin();
 	void reset();
 
-	void open(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
-	void close(efitick_t nowNt DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void open(efitick_t nowNt);
+	void close(efitick_t nowNt);
 
 	int8_t getOverlappingCounter() const { return overlappingCounter; }
 
@@ -142,7 +140,7 @@ public:
 class RegisteredOutputPin : public virtual OutputPin {
 public:
 	RegisteredOutputPin(const char *registrationName, short pinOffset, short pinModeOffset);
-	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void init();
 	void unregister();
 	RegisteredOutputPin *next;
 	const char *registrationName;
@@ -159,8 +157,6 @@ public:
 
 class EnginePins {
 public:
-	DECLARE_ENGINE_PTR;
-
 	EnginePins();
 	void startPins();
 	void reset();
@@ -204,7 +200,6 @@ public:
 
 	RegisteredNamedOutputPin tachOut;
 
-	OutputPin fsioOutputs[FSIO_COMMAND_COUNT];
 	RegisteredOutputPin triggerDecoderErrorPin;
 	OutputPin sdCsPin;
 	OutputPin accelerometerCs;

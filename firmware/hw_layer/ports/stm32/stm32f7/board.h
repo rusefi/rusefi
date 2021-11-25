@@ -27,14 +27,10 @@
 /*===========================================================================*/
 
 /*
- * Setup for STMicroelectronics STM32 Nucleo144-F767ZI board.
- */
-
-/*
  * Board identifier.
  */
 #define BOARD_ST_NUCLEO144_F767ZI
-#define BOARD_NAME                  "STM32 Nucleo144-F767ZI for RusEFI"
+#define BOARD_NAME                  "F7 for rusEFI"
 
 #define EFI_USB_AF 10U
 #define EFI_USB_SERIAL_DM GPIOA_11

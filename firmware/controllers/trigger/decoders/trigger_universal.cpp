@@ -56,11 +56,11 @@ void initializeSkippedToothTriggerWaveformExt(TriggerWaveform *s, int totalTeeth
 void configureOnePlusOne(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
-	s->addEvent720(180, T_PRIMARY, TV_RISE);
-	s->addEvent720(360, T_PRIMARY, TV_FALL);
+	s->addEvent360( 90, T_PRIMARY, TV_RISE);
+	s->addEvent360(180, T_PRIMARY, TV_FALL);
 
-	s->addEvent720(540, T_SECONDARY, TV_RISE);
-	s->addEvent720(720, T_SECONDARY, TV_FALL);
+	s->addEvent360(270, T_SECONDARY, TV_RISE);
+	s->addEvent360(360, T_SECONDARY, TV_FALL);
 
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
@@ -125,19 +125,19 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 
 	s->useRiseEdge = false;
 
-	int offset = 2 * 20;
+	int offset = 20;
 
 	s->setTriggerSynchronizationGap3(0, 2, 3);
 
-	s->addEventAngle(offset + 2 * 0, T_PRIMARY, TV_RISE);
-	s->addEventAngle(offset + 2 * 70, T_PRIMARY, TV_FALL);
+	s->addEvent360(offset + 0, T_PRIMARY, TV_RISE);
+	s->addEvent360(offset + 70, T_PRIMARY, TV_FALL);
 
-	s->addEventAngle(offset + 2 * 90, T_PRIMARY, TV_RISE);
-	s->addEventAngle(offset + 2 * 110, T_PRIMARY, TV_FALL);
+	s->addEvent360(offset + 90, T_PRIMARY, TV_RISE);
+	s->addEvent360(offset + 110, T_PRIMARY, TV_FALL);
 
-	s->addEventAngle(offset + 2 * 180, T_PRIMARY, TV_RISE);
-	s->addEventAngle(offset + 2 * 200, T_PRIMARY, TV_FALL);
+	s->addEvent360(offset + 180, T_PRIMARY, TV_RISE);
+	s->addEvent360(offset + 200, T_PRIMARY, TV_FALL);
 
-	s->addEventAngle(offset + 2 * 270, T_PRIMARY, TV_RISE);
-	s->addEventAngle(offset + 2 * 340, T_PRIMARY, TV_FALL);
+	s->addEvent360(offset + 270, T_PRIMARY, TV_RISE);
+	s->addEvent360(offset + 340, T_PRIMARY, TV_FALL);
 }

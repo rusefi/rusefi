@@ -6,8 +6,8 @@
  */
 
 
+#include "pch.h"
 #include <stdlib.h>
-#include "gtest/gtest.h"
 
 GTEST_API_ int main(int argc, char **argv) {
 	testing::InitGoogleTest(&argc, argv);
@@ -15,6 +15,7 @@ GTEST_API_ int main(int argc, char **argv) {
 	/**
 	 * See TEST_FROM_TRIGGER_ID to limit test just for last trigger
 	 */
+//	setVerboseTrigger(true);
 	//::testing::GTEST_FLAG(filter) = "*AllTriggersFixture*";
 	int result = RUN_ALL_TESTS();
 	// windows ERRORLEVEL in Jenkins batch file seems to want negative value to detect failure

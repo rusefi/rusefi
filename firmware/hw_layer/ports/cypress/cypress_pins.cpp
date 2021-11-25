@@ -7,9 +7,7 @@
  * @author andreika <prometheus.pcb@gmail.com>
  */
 
-#include "global.h"
-#include "engine.h"
-#include "efi_gpio.h"
+#include "pch.h"
 
 #if EFI_GPIO_HARDWARE
 

@@ -1,0 +1,71 @@
+plugins {
+  id 'java-library'
+  id 'com.github.johnrengelman.shadow' version '6.1.0'
+}
+
+defaultTasks 'shadowJar'
+
+apply from: '../../android/dependencies.gradle'
+
+dependencies {
+  testImplementation libs.junit
+  implementation libs.annotations
+  implementation ts_plugin_libs.httpcore
+  implementation ts_plugin_libs.httpmime
+  implementation ts_plugin_libs.httpclient
+  // to automatically exclude transitive dependencies of these projects
+  shadow project(':autoupdate')
+  shadow project(':shared_io')
+  implementation ts_plugin_libs.launcher_api
+  implementation libs.commons_logging
+}
+
+def TODAY = new Date().format('yyyy-MM-dd HH:mm:ss')
+def jarName = 'rusefi_ts_plugin_launcher'
+def jarDir = 'jar'
+def localPath = '.efianalytics/TunerStudio/plugins'
+def userHome = System.properties['user.home']
+
+jar {
+  archiveBaseName = jarName
+
+  manifest {
+    attributes(
+      'Built-Date': TODAY,
+      'Signature-Vendor': 'rusEFI LLC',
+      'ApplicationPlugin': 'com.rusefi.ts_plugin.TsPluginLauncher'
+    )
+  }
+}
+
+shadowJar {
+  /*
+   to exclude suffix '-all'
+   in resulting archive file name
+  */
+  archiveBaseName = jarName
+  archiveClassifier = ''
+
+  destinationDirectory = file( 'build' + '/' + jarDir )
+  manifest {
+      inheritFrom project.tasks.jar.manifest
+  }
+
+  /*
+   to keep only required
+   dependencies in resulting jar
+  */
+  dependencies {
+      exclude(dependency(libs.junit))
+      exclude(dependency(libs.annotations))
+      exclude(dependency(ts_plugin_libs.launcher_api))
+  }
+}
+
+
+// custom task from build.xml
+tasks.register('launcher_local_install', Copy) {
+  dependsOn tasks.shadowJar
+  from layout.buildDirectory.dir( jarDir + '/' + jarName + '.jar')
+  into layout.buildDirectory.dir(userHome + '/' + localPath)
+}

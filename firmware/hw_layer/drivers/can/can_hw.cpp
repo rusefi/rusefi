@@ -12,19 +12,15 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "global.h"
+#include "pch.h"
 
 #if EFI_CAN_SUPPORT
 
 #include "can.h"
-#include "engine_configuration.h"
-#include "pin_repository.h"
 #include "can_hw.h"
 #include "can_msg_tx.h"
 #include "string.h"
 #include "mpu_util.h"
-#include "engine.h"
-#include "thread_priority.h"
 
 static int canReadCounter = 0;
 int canWriteOk = 0;
@@ -137,7 +133,7 @@ public:
 	}
 
 	void ThreadTask() override {
-		CANDriver* device = detectCanDevice(CONFIG(canRxPin), CONFIG(canTxPin));
+		CANDriver* device = detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
 
 		if (!device) {
 			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
@@ -166,14 +162,14 @@ private:
 static CanRead canRead CCM_OPTIONAL;
 static CanWrite canWrite CCM_OPTIONAL;
 
-static void canInfo(void) {
+static void canInfo() {
 	if (!isCanEnabled) {
 		efiPrintf("CAN is not enabled, please enable & restart");
 		return;
 	}
 
-	efiPrintf("CAN TX %s", hwPortname(CONFIG(canTxPin)));
-	efiPrintf("CAN RX %s", hwPortname(CONFIG(canRxPin)));
+	efiPrintf("CAN TX %s speed %d", hwPortname(engineConfiguration->canTxPin), engineConfiguration->canBaudRate);
+	efiPrintf("CAN RX %s", hwPortname(engineConfiguration->canRxPin));
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
@@ -194,56 +190,61 @@ void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
 }
 #endif /* EFI_TUNER_STUDIO */
 
-void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	CONFIG(canTxPin) = GPIOB_6;
-	CONFIG(canRxPin) = GPIOB_12;
+void enableFrankensoCan() {
+	engineConfiguration->canTxPin = GPIOB_6;
+	engineConfiguration->canRxPin = GPIOB_12;
 	engineConfiguration->canReadEnabled = false;
 }
 
-// todo: we usually use 'activeConfiguration' for 'stopPin' why this unusual code here?
-// this is related to #1375
-static brain_pin_e currentTxPin = GPIO_UNASSIGNED;
-static brain_pin_e currentRxPin = GPIO_UNASSIGNED;
-
-void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	efiSetPadUnused(currentTxPin);
-	efiSetPadUnused(currentRxPin);
+void stopCanPins() {
+	efiSetPadUnusedIfConfigurationChanged(canTxPin);
+	efiSetPadUnusedIfConfigurationChanged(canRxPin);
 }
 
-void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	// Store pins so we can disable later
-	currentTxPin = CONFIG(canTxPin);
-	currentRxPin = CONFIG(canRxPin);
-
-	efiSetPadMode("CAN TX", currentTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
-	efiSetPadMode("CAN RX", currentRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
-}
-
-void initCan(void) {
-	addConsoleAction("caninfo", canInfo);
-
-	isCanEnabled = 
-		(isBrainPinValid(CONFIG(canTxPin))) && // both pins are set...
-		(isBrainPinValid(CONFIG(canRxPin))) &&
-		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
-
+// at the moment we support only very limited runtime configuration change, still not supporting online CAN toggle
+void startCanPins() {
 	// nothing to do if we aren't enabled...
 	if (!isCanEnabled) {
 		return;
 	}
 
 	// Validate pins
-	if (!isValidCanTxPin(CONFIG(canTxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(CONFIG(canTxPin)));
+	if (!isValidCanTxPin(engineConfiguration->canTxPin)) {
+		if (engineConfiguration->canTxPin == GPIO_UNASSIGNED) {
+			// todo: smarter online change of settings, kill isCanEnabled with fire
+			return;
+		}
+		firmwareError(CUSTOM_OBD_70, "invalid CAN TX %s", hwPortname(engineConfiguration->canTxPin));
 		return;
 	}
 
-	if (!isValidCanRxPin(CONFIG(canRxPin))) {
-		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(CONFIG(canRxPin)));
+	if (!isValidCanRxPin(engineConfiguration->canRxPin)) {
+		if (engineConfiguration->canRxPin == GPIO_UNASSIGNED) {
+			// todo: smarter online change of settings, kill isCanEnabled with fire
+			return;
+		}
+		firmwareError(CUSTOM_OBD_70, "invalid CAN RX %s", hwPortname(engineConfiguration->canRxPin));
 		return;
 	}
 
-	switch (CONFIG(canBaudRate)) {
+	efiSetPadModeIfConfigurationChanged("CAN TX", canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadModeIfConfigurationChanged("CAN RX", canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+}
+
+void initCan(void) {
+	addConsoleAction("caninfo", canInfo);
+
+	isCanEnabled = 
+		(isBrainPinValid(engineConfiguration->canTxPin)) && // both pins are set...
+		(isBrainPinValid(engineConfiguration->canRxPin)) &&
+		(engineConfiguration->canWriteEnabled || engineConfiguration->canReadEnabled) ; // ...and either read or write is enabled
+
+	// nothing to do if we aren't enabled...
+	if (!isCanEnabled) {
+		return;
+	}
+
+	switch (engineConfiguration->canBaudRate) {
 	case B100KBPS:
 		canConfig = &canConfig100;
 		break;
@@ -260,8 +261,6 @@ void initCan(void) {
 		break;
 	}
 
-	startCanPins();
-
 	// Initialize hardware
 #if STM32_CAN_USE_CAN2
 	// CAN1 is required for CAN2
@@ -273,16 +272,16 @@ void initCan(void) {
 
 	// Plumb CAN device to tx system
 	CanTxMessage::setDevice(detectCanDevice(
-		CONFIG(canRxPin),
-		CONFIG(canTxPin)
+		engineConfiguration->canRxPin,
+		engineConfiguration->canTxPin
 	));
 
 	// fire up threads, as necessary
-	if (CONFIG(canWriteEnabled)) {
+	if (engineConfiguration->canWriteEnabled) {
 		canWrite.Start();
 	}
 
-	if (CONFIG(canReadEnabled)) {
+	if (engineConfiguration->canReadEnabled) {
 		canRead.Start();
 	}
 }
