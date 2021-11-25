@@ -33,7 +33,6 @@ void vag_18_Turbo() {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionPinMode = OM_INVERTED;
 	engineConfiguration->injectionPinMode = OM_OPENDRAIN_INVERTED;
-	engineConfiguration->isCylinderCleanupEnabled = true;
 	engineConfiguration->rpmHardLimit = 8000;
 	engineConfiguration->cranking.baseFuel = 28;
 

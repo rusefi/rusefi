@@ -276,8 +276,6 @@ static void setCommonMazdaNB() {
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTable(config->ignitionTable, mapBased18vvtTimingTable);
 #endif
-	// enable cylinder_cleanup
-	engineConfiguration->isCylinderCleanupEnabled = true;
 	// set_whole_ve_map 80
 	setMazdaMiataNbInjectorLag();
 
