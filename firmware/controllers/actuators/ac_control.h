@@ -2,11 +2,14 @@
 
 #include "ac_control_generated.h"
 
-class AcState final : public ac_control_s {
+class AcController final : public ac_control_s, public EngineModule {
 public:
-	// Returns true if AC is currently active
-	bool updateAc();
+	void onSlowCallback() override;
+
+	bool isAcEnabled() const;
 
 private:
 	bool getAcState();
+
+	bool m_acEnabled = false;
 };
