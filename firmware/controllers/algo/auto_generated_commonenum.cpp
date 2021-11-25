@@ -529,8 +529,6 @@ case SC_AUX_FAST1:
   return "SC_AUX_FAST1";
 case SC_DETAILED_RPM:
   return "SC_DETAILED_RPM";
-case SC_MAP:
-  return "SC_MAP";
 case SC_OFF:
   return "SC_OFF";
 case SC_RPM_ACCEL:
