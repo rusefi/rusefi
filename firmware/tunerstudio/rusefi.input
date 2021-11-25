@@ -272,8 +272,8 @@ enable2ndByteCanID = false
 	  fuelPidCorrection2=scalar, S16,    298,       "%",{1/@@PACK_MULT_PERCENT@@},         0
 
 ; Wall model AE
-      wallFuelAmount  = scalar,  U16,     72,     "ms",{1/@@PACK_MULT_MS@@},         0
-      wallFuelCorrection=scalar, S16,     74,       "ms",0.001,         0
+      wallFuelAmount  = scalar,  U16,     72,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
+      wallFuelCorrection=scalar, S16,     74,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
 
 ; TPS/load AE
       unusedLoadDelta = scalar,  S16,     76,    "value",{1/@@PACK_MULT_PERCENT@@},         0
