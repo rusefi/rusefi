@@ -480,6 +480,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->vvtOutputFrequency[0] = 300; // VVT solenoid control
 
+	engineConfiguration->isCylinderCleanupEnabled = true;
+
 	engineConfiguration->auxPid[1].minValue = 10;
 	engineConfiguration->auxPid[1].maxValue = 90;
 
@@ -644,8 +646,6 @@ static void setDefaultEngineConfiguration() {
 	// todo: start using this for custom MAP
 	engineConfiguration->mapHighValueVoltage = 5;
 
-	engineConfiguration->logFormat = LF_NATIVE;
-
 	engineConfiguration->HD44780width = 20;
 	engineConfiguration->HD44780height = 4;
 
@@ -692,9 +692,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->triggerSimulatorFrequency = 1200;
 
 	engineConfiguration->alternatorPwmFrequency = 300;
-
-	strcpy(config->timingMultiplier, "1");
-	strcpy(config->timingAdditive, "0");
 
 	engineConfiguration->cj125isUaDivided = true;
 
@@ -1166,8 +1163,6 @@ void applyNonPersistentConfiguration() {
 	efiAssertVoid(CUSTOM_APPLY_STACK, getCurrentRemainingStack() > EXPECTED_REMAINING_STACK, "apply c");
 	efiPrintf("applyNonPersistentConfiguration()");
 #endif
-
-	assertEngineReference();
 
 #if EFI_ENGINE_CONTROL
 	engine->initializeTriggerWaveform();

@@ -77,7 +77,7 @@
         </javac>
     </target>
 
-    <target name="test" depends="compile">
+    <target name="test" depends="compile, copy_c_sources">
         <junit fork="no"
                maxmemory="512m"
                printsummary="yes"
@@ -123,7 +123,13 @@
         </jar>
     </target>
 
-    <target name="jar" depends="compile, autoupdate_jar">
+    <target name="copy_c_sources">
+        <copy todir="build/classes/c_sources" flatten="true">
+            <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
+        </copy>
+    </target>
+
+    <target name="jar" depends="compile, copy_c_sources, autoupdate_jar">
         <mkdir dir="build/jar"/>
         <delete file="${jar_file}"/>
         <echo message="Building ${jar_file}"/>
@@ -133,10 +139,6 @@
             <fileset dir="ui/resources" includes="**/*.png"/>
             <fileset dir="ui/resources" includes="**/*.jpg"/>
             <fileset dir="romraider/resources" includes="**/*.*"/>
-        </copy>
-
-        <copy todir="build/classes/c_sources" flatten="true">
-            <fileset dir="../firmware/controllers" includes="**/*.cpp"/>
         </copy>
 
         <tstamp>

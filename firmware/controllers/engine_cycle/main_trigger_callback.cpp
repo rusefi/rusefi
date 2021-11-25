@@ -330,6 +330,10 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
+static bool noFiringUntilVvtSync(vvt_mode_e mode) {
+	return mode == VVT_MIATA_NB2 || mode == VVT_MAP_V_TWIN;
+}
+
 /**
  * This is the main trigger event handler.
  * Both injection and ignition are controlled from this method.
@@ -337,10 +341,11 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (engineConfiguration->vvtMode[0] == VVT_MIATA_NB2 && engine->triggerCentral.vvtSyncTimeNt == 0) {
+	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) && engine->triggerCentral.vvtSyncTimeNt == 0) {
 		// this is a bit spaghetti code for sure
-		// do not spark & do not fuel until we have VVT sync. NB2 is a special case
-		// due to symmetrical crank wheel and we need to make sure no spark happens out of sync
+		// do not spark & do not fuel until we have VVT sync.
+		// NB2 is a special case due to symmetrical crank wheel and we need to make sure no spark happens out of sync
+		// VTwin is another special case where we really need to know phase before firing
 		return;
 	}
 
@@ -503,8 +508,6 @@ static void showMainInfo(Engine *engine) {
 }
 
 void initMainEventListener() {
-	efiAssertVoid(CUSTOM_ERR_6631, engine!=NULL, "null engine");
-
 #if EFI_PROD_CODE
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 #endif

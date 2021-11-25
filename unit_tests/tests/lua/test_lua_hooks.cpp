@@ -2,6 +2,27 @@
 
 #include "rusefi_lua.h"
 
+
+TEST(LuaHooks, TestCrc8) {
+	const char* realHDdata = R"(
+
+	function testFunc()
+		return crc8_j1850({0x13, 0x57, 0x13, 0x45, 0x00, 0xe8, 0x5c }, 7)
+	end
+
+	)";
+	EXPECT_EQ(testLuaReturnsNumberOrNil(realHDdata).value_or(0), 0x86);
+
+	const char* crc8scripts = R"(
+
+	function testFunc()
+		return crc8_j1850({0x31,0x32,0x32 }, 2)
+	end
+
+	)";
+	EXPECT_EQ(testLuaReturnsNumberOrNil(crc8scripts).value_or(0), 0x43);
+}
+
 static const char* getSensorTestByIndex = R"(
 
 function testFunc()

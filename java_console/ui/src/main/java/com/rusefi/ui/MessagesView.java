@@ -5,14 +5,11 @@ import com.rusefi.core.EngineState;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.storage.Node;
+import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.text.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -33,24 +30,7 @@ public class MessagesView {
         this.config = config;
         messages.setEditable(false);
 
-        JPopupMenu menu = createPopupMenu();
-
-        messages.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                pop(e);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                pop(e);
-            }
-
-            private void pop(MouseEvent e) {
-                if (e.isPopupTrigger())
-                    menu.show(e.getComponent(), e.getX(), e.getY());
-            }
-        });
+        UiUtils.installPopupMenu(createPopupMenu(), messages);
 
         StyledDocument d = (StyledDocument) messages.getDocument();
         bold = d.addStyle("StyleName", null);
@@ -84,14 +64,7 @@ public class MessagesView {
         menu.add(selectAll);
 does not work? maybe wrong UI colors since control is not editable?
 */
-        JMenuItem copy = new JMenuItem("Copy");
-        copy.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                messages.copy();
-            }
-        });
-        menu.add(copy);
+        menu.add(UiUtils.createCopyMenu(messages));
 
         menu.add(new JPopupMenu.Separator());
 

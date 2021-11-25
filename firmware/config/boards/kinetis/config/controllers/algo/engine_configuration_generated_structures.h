@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Nov 20 04:15:16 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Nov 25 03:30:09 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1082,7 +1082,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 496
 	 */
-	log_format_e logFormat;
+	log_format_e unusedLogFormat;
 	/**
 	index
 	 * offset 500
@@ -1171,7 +1171,7 @@ struct engine_configuration_s {
 	Deg
 	 * offset 552
 	 */
-	float unused552;
+	float mapCamDetectionAnglePosition;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	 * offset 556
@@ -1243,7 +1243,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 615
 	 */
-	uint8_t unused615;
+	uint8_t mapCamDetectionThreshold;
 	/**
 	 * offset 616
 	 */
@@ -4240,19 +4240,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6644
 	 */
-	le_formula_t fsioFormulas[6];
-	/**
-	 * offset 7844
-	 */
 	lua_script_t luaScript;
-	/**
-	 * offset 9844
-	 */
-	le_formula_t timingMultiplier;
-	/**
-	 * offset 10044
-	 */
-	le_formula_t timingAdditive;
 	/**
 	C
 	 * offset 10244
@@ -4539,4 +4527,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Nov 20 04:15:16 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Thu Nov 25 03:30:09 UTC 2021

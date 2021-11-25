@@ -21,8 +21,6 @@ void setVwAba() {
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
 
-	engineConfiguration->isCylinderCleanupEnabled = true;
-
 	// set global_trigger_offset_angle 93
 	engineConfiguration->globalTriggerAngleOffset = 93;
 

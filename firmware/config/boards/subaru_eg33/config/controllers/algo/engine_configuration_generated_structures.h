@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Nov 20 04:15:21 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Nov 25 03:30:14 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1082,7 +1082,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 496
 	 */
-	log_format_e logFormat;
+	log_format_e unusedLogFormat;
 	/**
 	index
 	 * offset 500
@@ -1171,7 +1171,7 @@ struct engine_configuration_s {
 	Deg
 	 * offset 552
 	 */
-	float unused552;
+	float mapCamDetectionAnglePosition;
 	/**
 	 * Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	 * offset 556
@@ -1243,7 +1243,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 615
 	 */
-	uint8_t unused615;
+	uint8_t mapCamDetectionThreshold;
 	/**
 	 * offset 616
 	 */
@@ -4246,19 +4246,7 @@ struct persistent_config_s {
 	/**
 	 * offset 6672
 	 */
-	le_formula_t fsioFormulas[6];
-	/**
-	 * offset 7872
-	 */
 	lua_script_t luaScript;
-	/**
-	 * offset 9872
-	 */
-	le_formula_t timingMultiplier;
-	/**
-	 * offset 10072
-	 */
-	le_formula_t timingAdditive;
 	/**
 	C
 	 * offset 10272
@@ -4545,4 +4533,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Nov 20 04:15:21 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Thu Nov 25 03:30:14 UTC 2021

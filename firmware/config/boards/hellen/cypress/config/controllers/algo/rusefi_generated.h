@@ -957,12 +957,6 @@
 #define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
 #define FSIO_METHOD_FSIO_SETTING "fsio_setting"
 #define FSIO_METHOD_FSIO_TABLE "fsio_table"
-#define fsioFormulas1_offset 6672
-#define fsioFormulas2_offset 6872
-#define fsioFormulas3_offset 7072
-#define fsioFormulas4_offset 7272
-#define fsioFormulas5_offset 7472
-#define fsioFormulas6_offset 7672
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -1507,7 +1501,6 @@
 #define log_format_e_Force_4_bytes_size_log_format ENUM_32_BITS
 #define log_format_e_LF_NATIVE 0
 #define log_format_e_LM_MLV 1
-#define logFormat_offset 496
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define logicAnalyzerPins1_offset 748
 #define logicAnalyzerPins2_offset 749
@@ -1524,7 +1517,7 @@
 #define lps25BaroSensorSda_offset 1459
 #define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_PWM_COUNT 8
-#define LUA_SCRIPT_SIZE 2000
+#define LUA_SCRIPT_SIZE 3600
 #define luaOutputPins1_offset 1220
 #define luaOutputPins2_offset 1221
 #define luaOutputPins3_offset 1222
@@ -1533,7 +1526,7 @@
 #define luaOutputPins6_offset 1225
 #define luaOutputPins7_offset 1226
 #define luaOutputPins8_offset 1227
-#define luaScript_offset 7872
+#define luaScript_offset 6672
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
 #define maf_sensor_type_e_Bosch0280218004 2
@@ -1571,6 +1564,8 @@
 #define mapAccelTaperBins_offset 2136
 #define mapAccelTaperMult_offset 2168
 #define mapAveragingSchedulingAtIndex_offset 1540
+#define mapCamDetectionAnglePosition_offset 552
+#define mapCamDetectionThreshold_offset 615
 #define mapErrorDetectionTooHigh_offset 1780
 #define mapErrorDetectionTooLow_offset 1776
 #define mapEstimateRpmBins_offset 15744
@@ -1800,12 +1795,11 @@
 #define sdCardPeriodMs_offset 804
 #define sdCardSpiDevice_offset 2592
 #define secondSolenoidPin_offset 810
-#define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "SC_MAP", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
-#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
+#define sensor_chart_e_auto_enum "SC_OFF", "SC_TRIGGER", "INVALID", "SC_RPM_ACCEL", "SC_DETAILED_RPM", "SC_AUX_FAST1"
+#define sensor_chart_e_enum "none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
 #define sensor_chart_e_Internal_ForceMyEnumIntSize_sensor_chart ENUM_32_BITS
 #define sensor_chart_e_SC_AUX_FAST1 5
 #define sensor_chart_e_SC_DETAILED_RPM 4
-#define sensor_chart_e_SC_MAP 2
 #define sensor_chart_e_SC_OFF 0
 #define sensor_chart_e_SC_RPM_ACCEL 3
 #define sensor_chart_e_SC_TRIGGER 1
@@ -1824,7 +1818,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 136196955
+#define SIGNATURE_HASH 1803111989
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1995,9 +1989,7 @@
 #define timing_offset_cylinder7_offset 2564
 #define timing_offset_cylinder8_offset 2568
 #define timing_offset_cylinder9_offset 2572
-#define timingAdditive_offset 10072
 #define timingMode_offset 448
-#define timingMultiplier_offset 9872
 #define tle6240_cs_offset 581
 #define tle6240_csPinMode_offset 582
 #define tle6240spiDevice_offset 4004
@@ -2343,7 +2335,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.20.hellen_cypress.136196955"
+#define TS_SIGNATURE "rusEFI 2021.11.25.hellen_cypress.1803111989"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2388,8 +2380,6 @@
 #define unused3942_offset 3992
 #define unused3988_offset 3988
 #define unused4028_offset 4028
-#define unused552_offset 552
-#define unused615_offset 615
 #define unused616_offset 616
 #define unused6312_offset 6312
 #define unused744b4_offset 744
@@ -2452,6 +2442,7 @@
 #define unusedExHpfp_offset 724
 #define unusedFiller_4703_offset 4703
 #define unusedLaunchRpmThreshold_offset 1032
+#define unusedLogFormat_offset 496
 #define unusedLuaWasHere_offset 16032
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832

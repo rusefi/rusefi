@@ -104,7 +104,7 @@ public class UploadChanges {
                     @Override
                     public void run() {
 //                        System.out.println(msg);
-//                        wnd.appendMsg(msg);
+//                        wnd.append(msg);
                     }
                 });
             }
@@ -115,7 +115,7 @@ public class UploadChanges {
                     @Override
                     public void run() {
                         System.out.println(msg);
-                        wnd.appendMsg(msg);
+                        wnd.append(msg);
                     }
                 });
             }
@@ -126,7 +126,7 @@ public class UploadChanges {
                     @Override
                     public void run() {
                         System.out.println(msg);
-                        wnd.appendMsg(msg);
+                        wnd.append(msg);
                     }
                 });
             }

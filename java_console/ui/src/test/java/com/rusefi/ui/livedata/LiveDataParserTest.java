@@ -1,14 +1,19 @@
 package com.rusefi.ui.livedata;
 
 import com.rusefi.livedata.LiveDataParserPanel;
+import com.rusefi.livedata.LiveDataView;
+import com.rusefi.livedata.ParseResult;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.junit.Test;
 
 import java.awt.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -49,5 +54,15 @@ public class LiveDataParserTest {
 
         verify(painter).paintBackground(eq(Color.red), any());
         verify(painter).paintBackground(eq(Color.green), any());
+    }
+
+    @Test
+    public void testConfigurationInRealSourceCode() throws IOException, URISyntaxException {
+        String sourceCode = LiveDataParserPanel.getContent(LiveDataParserPanel.class, LiveDataView.BOOST_CONTROL.getFileName());
+        assertTrue(sourceCode.length() > 100);
+
+        ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
+        ParseResult parseResult = LiveDataParserPanel.applyVariables(VariableValueSource.VOID, sourceCode, SourceCodePainter.VOID, tree);
+        assertTrue(!parseResult.getConfigTokens().isEmpty());
     }
 }

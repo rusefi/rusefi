@@ -10,13 +10,11 @@
  * Daniel Hill - Modified to use C++ - Mar 2, 2014
 */
 
-#ifndef CYCLIC_BUFFER_H
-#define CYCLIC_BUFFER_H
+#pragma once
 
 #include <limits>
 #include <string.h>
 #include <stdint.h>
-#include "rusefi_true.h"
 
 static const short CB_MAX_SIZE = 128;
 
@@ -30,10 +28,10 @@ class cyclic_buffer
   public:
     void add(T value);
     T get(int index) const;
-    T sum(int length) const;
-    T maxValue(int length) const;
-    T minValue(int length) const;
-    void setSize(unsigned int size);
+    T sum(size_t length) const;
+    T maxValue(size_t length) const;
+    T minValue(size_t length) const;
+    void setSize(size_t size);
     bool contains(T value) const;
     int getSize() const;
     int getCount() const;
@@ -46,7 +44,7 @@ class cyclic_buffer
     /**
      * number of elements added into this buffer, would be eventually bigger then size
      */
-    volatile unsigned count;
+    volatile size_t count;
 };
 
 template<typename T, size_t maxSize>
@@ -78,14 +76,14 @@ template<typename T, size_t maxSize>
 bool cyclic_buffer<T, maxSize>::contains(T value) const {
 	for (int i = 0; i < currentIndex ; i++) {
 		if (elements[i] == value) {
-			return TRUE;
+			return true;
 		}
 	}
-	return FALSE;
+	return false;
 }
 
 template<typename T, size_t maxSize>
-void cyclic_buffer<T, maxSize>::setSize(unsigned int size) {
+void cyclic_buffer<T, maxSize>::setSize(size_t size) {
 	clear();
 	this->size = size < maxSize ? size : maxSize;
 }
@@ -112,14 +110,14 @@ T cyclic_buffer<T, maxSize>::get(int index) const {
 }
 
 template<typename T, size_t maxSize>
-T cyclic_buffer<T, maxSize>::maxValue(int length) const {
+T cyclic_buffer<T, maxSize>::maxValue(size_t length) const {
 	if (length > count) {
 		// not enough data in buffer
 		length = count;
 	}
 	int ci = currentIndex; // local copy to increase thread-safety
 	T result = std::numeric_limits<T>::min();
-	for (int i = 0; i < length; ++i) {
+	for (size_t i = 0; i < length; ++i) {
 		int index = ci - i - 1;
 		while (index < 0) {
 			index += size;
@@ -133,13 +131,13 @@ T cyclic_buffer<T, maxSize>::maxValue(int length) const {
 }
 
 template<typename T, size_t maxSize>
-T cyclic_buffer<T, maxSize>::minValue(int length) const {
+T cyclic_buffer<T, maxSize>::minValue(size_t length) const {
 	if (length > count) {
 		length = count;
 	}
 	int ci = currentIndex; // local copy to increase thread-safety
 	T result = std::numeric_limits<T>::max();
-	for (int i = 0; i < length; ++i) {
+	for (size_t i = 0; i < length; ++i) {
 		int index = ci - i - 1;
 		while (index < 0) {
 			index += size;
@@ -153,7 +151,7 @@ T cyclic_buffer<T, maxSize>::minValue(int length) const {
 }
 
 template<typename T, size_t maxSize>
-T cyclic_buffer<T, maxSize>::sum(int length) const {
+T cyclic_buffer<T, maxSize>::sum(size_t length) const {
 	if (length > count) {
 		length = count;
 	}
@@ -161,7 +159,7 @@ T cyclic_buffer<T, maxSize>::sum(int length) const {
 	int ci = currentIndex; // local copy to increase thread-safety
 	T result = 0;
 
-	for (int i = 0; i < length; ++i) {
+	for (size_t i = 0; i < length; ++i) {
 		int index = ci - i - 1;
 		while (index < 0) {
 			index += size;
@@ -179,5 +177,3 @@ void cyclic_buffer<T, maxSize>::clear() {
 	count = 0;
 	currentIndex = 0;
 }
-
-#endif //CYCLIC_BUFFER_H

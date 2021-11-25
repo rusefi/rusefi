@@ -15,6 +15,8 @@
 #include "pin_repository.h"
 #include "local_version_holder.h"
 
+#define MAP_CAM_BUFFER 8
+
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp);
 
@@ -32,6 +34,26 @@ public:
 	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
 };
 
+struct MapState {
+	float current, previous, prevPrevious;
+	cyclic_buffer<float, MAP_CAM_BUFFER> mapBuffer;
+
+	void add(float value) {
+		// rotate state
+		prevPrevious = previous;
+		previous = current;
+
+		// add new value
+		mapBuffer.add(value);
+		current = mapBuffer.sum(MAP_CAM_BUFFER);
+	}
+
+	bool isPeak() {
+		return previous > prevPrevious && previous >= current;
+	}
+};
+
+
 /**
  * Maybe merge TriggerCentral and TriggerState classes into one class?
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
@@ -44,6 +66,8 @@ public:
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
+
+	MapState mapState;
 
 	/**
 	 * true if a recent configuration change has changed any of the trigger settings which
@@ -86,6 +110,7 @@ public:
 	// synchronization event position
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
+	// todo: convert to Timer!
 	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
 
 	TriggerStateWithRunningStatistics triggerState;

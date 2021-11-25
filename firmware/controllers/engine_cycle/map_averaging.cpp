@@ -34,21 +34,10 @@
 #include "sensor_chart.h"
 #endif /* EFI_SENSOR_CHART */
 
-#define FAST_MAP_CHART_SKIP_FACTOR 16
-
 /**
  * this instance does not have a real physical pin - it's only used for engine sniffer
  */
 static NamedOutputPin mapAveragingPin("map");
-
-/**
- * Running counter of measurements per revolution
- */
-static volatile int measurementsPerRevolutionCounter = 0;
-/**
- * Number of measurements in previous shaft revolution
- */
-static volatile int measurementsPerRevolution = 0;
 
 /**
  * Running MAP accumulator - sum of all measurements within averaging window
@@ -105,32 +94,32 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 #if HAL_USE_ADC
 /**
  * This method is invoked from ADC callback.
- * @note This method is invoked OFTEN, this method is a potential bottle-next - the implementation should be
+ * @note This method is invoked OFTEN, this method is a potential bottleneck - the implementation should be
  * as fast as possible
  */
 void mapAveragingAdcCallback(adcsample_t adcValue) {
-	if (!isAveraging && engine->sensorChartMode != SC_MAP) {
-		return;
+	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
+
+#if EFI_TUNER_STUDIO
+	if (engineConfiguration->debugMode == DBG_MAP) {
+		float voltage = adcToVoltsDivided(adcValue);
+		tsOutputChannels.debugFloatField5 = convertMap(voltage).value_or(0);
+	}
+#endif // EFI_TUNER_STUDIO
+
+	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN) {
+		float voltage = adcToVoltsDivided(adcValue);
+		float instantMap = convertMap(voltage).value_or(0);
+		engine->triggerCentral.mapState.add(instantMap);
+		if (engine->triggerCentral.mapState.isPeak()) {
+			efitick_t stamp = getTimeNowNt();
+			hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
+			hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
+		}
 	}
 
 	/* Calculates the average values from the ADC samples.*/
-	measurementsPerRevolutionCounter++;
-	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
-
-#if EFI_SENSOR_CHART && EFI_ANALOG_SENSORS
-	if (engine->sensorChartMode == SC_MAP) {
-		if (measurementsPerRevolutionCounter % FAST_MAP_CHART_SKIP_FACTOR
-				== 0) {
-			float voltage = adcToVoltsDivided(adcValue);
-			float currentPressure = convertMap(voltage).value_or(0);
-			scAddData(
-					engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0),
-					currentPressure);
-		}
-	}
-#endif /* EFI_SENSOR_CHART */
-
-	{
+	if (isAveraging) {
 		// with locking we will have a consistent state
 		chibios_rt::CriticalSectionLocker csl;
 		mapAdcAccumulator += adcValue;
@@ -243,9 +232,6 @@ void mapAveragingTriggerCallback(
 		applyMapMinBufferLength();
 	}
 
-	measurementsPerRevolution = measurementsPerRevolutionCounter;
-	measurementsPerRevolutionCounter = 0;
-
 	// todo: this could be pre-calculated
 	int samplingCount = engineConfiguration->measureMapOnlyInOneCylinder ? 1 : engineConfiguration->specs.cylindersCount;
 
@@ -285,15 +271,7 @@ void mapAveragingTriggerCallback(
 #endif
 }
 
-static void showMapStats() {
-	efiPrintf("per revolution %d", measurementsPerRevolution);
-}
-
 void initMapAveraging() {
-#if !EFI_UNIT_TEST
-	addConsoleAction("faststat", showMapStats);
-#endif /* EFI_UNIT_TEST */
-
 	applyMapMinBufferLength();
 }
 

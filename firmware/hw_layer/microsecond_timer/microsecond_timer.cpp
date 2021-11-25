@@ -108,7 +108,7 @@ class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 	void PeriodicTask() override {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt >= lastSetTimerTimeNt + 2 * CORE_CLOCK) {
-			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, "no event %d", lastSetTimerTimeNt);
+			firmwareError(CUSTOM_ERR_SCHEDULING_ERROR, "watchdog: no events since %d", lastSetTimerTimeNt);
 			return;
 		}
 

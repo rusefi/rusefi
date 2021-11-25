@@ -44,16 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	scaled_channel<uint16_t, PACK_MULT_MASS_FLOW> massAirFlow; // 28
-	scaled_pressure manifoldAirPressure; // 30
-	scaled_pressure baroPressure; // 32
-
-	scaled_lambda lambda; // 34
-	scaled_channel<uint8_t, 10> knockRetard; // 36
-	uint8_t unused37;
-
-	// misc sensors
-	scaled_voltage vBatt; // 38
 	scaled_pressure oilPressure; // 40
 	scaled_angle vvtPositionB1I; // 42
 

@@ -72,6 +72,8 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
+#include "pch.h"
+
 #include "bmw_m73.h"
 #include "custom_engine.h"
 #include "hip9011_logic.h"

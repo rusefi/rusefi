@@ -30,7 +30,9 @@
 #include "launch_control.h"
 #include "trigger_scheduler.h"
 #include "fuel_pump.h"
+#include "main_relay.h"
 #include "type_list.h"
+#include "boost_control.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -135,6 +137,7 @@ public:
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
 
 		FuelPumpController,
+		MainRelayController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -151,6 +154,10 @@ public:
 	GearControllerBase *gearController;
 	LaunchControlBase launchController;
 	SoftSparkLimiter softSparkLimiter;
+
+#if EFI_BOOST_CONTROL
+	BoostController boostController;
+#endif // EFI_BOOST_CONTROL
 
 	efitick_t mostRecentSparkEvent;
 	efitick_t mostRecentTimeBetweenSparkEvents;

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "obd_error_codes.h"
-// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Fri Oct 29 15:39:44 EDT 2021
+// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Mon Nov 22 23:11:14 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -57,8 +57,6 @@ case CUSTOM_EGO_TYPE:
   return "CUSTOM_EGO_TYPE";
 case CUSTOM_EMPTY_FSIO_STACK:
   return "CUSTOM_EMPTY_FSIO_STACK";
-case CUSTOM_ENGINE_REF:
-  return "CUSTOM_ENGINE_REF";
 case CUSTOM_ERROR_ICU:
   return "CUSTOM_ERROR_ICU";
 case CUSTOM_ERR_2ND_WATCHDOG:
@@ -167,6 +165,8 @@ case CUSTOM_ERR_6598:
   return "CUSTOM_ERR_6598";
 case CUSTOM_ERR_6599:
   return "CUSTOM_ERR_6599";
+case CUSTOM_ERR_6600:
+  return "CUSTOM_ERR_6600";
 case CUSTOM_ERR_6603:
   return "CUSTOM_ERR_6603";
 case CUSTOM_ERR_6604:

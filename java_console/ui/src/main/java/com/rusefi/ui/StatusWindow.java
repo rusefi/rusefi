@@ -63,7 +63,7 @@ public class StatusWindow implements StatusConsumer {
     }
 
     @Override
-    public void appendMsg(final String string) {
+    public void append(final String string) {
         SwingUtilities.invokeLater(() -> {
             String s = string.replaceAll(Character.toString((char) 219), "");
             FileLog.MAIN.logLine(s);

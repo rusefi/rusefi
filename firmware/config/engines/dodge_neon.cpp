@@ -326,7 +326,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 	 */
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 
-	engineConfiguration->sensorChartMode = SC_MAP;
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 
 	engineConfiguration->hip9011Gain = 0.3;
@@ -387,8 +386,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->manIdlePosition = 36; // set_idle_pwm 40
 
 	engineConfiguration->slowAdcAlpha = 0.33333;
-
-	engineConfiguration->isCylinderCleanupEnabled = true;
 
 	// end of setDodgeNeonNGCEngineConfiguration
 }

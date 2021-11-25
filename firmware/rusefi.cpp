@@ -164,7 +164,6 @@ void runMainLoop();
 
 void runRusEfi() {
 	efiAssertVoid(CUSTOM_RM_STACK_1, getCurrentRemainingStack() > 512, "init s");
-	assertEngineReference();
 	engine->setConfig();
 
 #if EFI_TEXT_LOGGING

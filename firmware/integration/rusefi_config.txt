@@ -549,7 +549,7 @@ custom display_mode_e 4 bits, U32, @OFFSET@, [0:1], "none", "hd44780", "hd44780 
 display_mode_e displayMode;
 
 custom log_format_e 4 bits, U32, @OFFSET@, [0:0], "native", "Mega Log Viewer"
-log_format_e logFormat;
+log_format_e unusedLogFormat;
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 	int HD44780width;;"index", 1, 0, 0, 300, 0
 	int HD44780height;;"index", 1, 0, 0, 300, 0
@@ -589,9 +589,7 @@ custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3",
 float globalFuelCorrection;set global_fuel_correction X;"coef", 1, 0, 0, 1000, 2
 
 	float adcVcc;;"volts", 1, 0, 0, 6, 3
-	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
-	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
-	uint8_t unusedNearVss;;"", 1, 0, 0, 1, 0
+	float mapCamDetectionAnglePosition;;"Deg", 1, 0, 0, 360, 0
 	brain_input_pin_e[CAM_INPUTS_COUNT iterate] camInputs;+Camshaft input could be used either just for engine phase detection if your trigger shape does not include cam sensor as 'primary' channel, or it could be used for Variable Valve timing on one of the camshafts.
 	uint8_t[CAM_INPUTS_COUNT_padding] camInputsPadding;;
 	
@@ -639,8 +637,11 @@ uint8_t knockRetardAggression;+Ignition timing to remove when a knock event occu
 uint8_t knockRetardReapplyRate;+After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
 uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 0
 
-uint8_t unused615;;"", 1, 0, 0, 1, 0
-float unused616;;"", 1, 0, 0, 1, 0
+	uint8_t mapCamDetectionThreshold;;"", 1, 0, 0, 240, 0
+	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
+	uint8_t unusedNearVss;;"", 1, 0, 0, 1, 0
+
 
 ! todo: rename to triggerSimulatorRpm
 	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm", 1, 0, 0, 30000, 0
@@ -845,7 +846,7 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	uart_device_e consoleUartDevice;
 
 
-#define sensor_chart_e_enum "none", "trigger", "MAP", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
+#define sensor_chart_e_enum "none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
 custom sensor_chart_e 4 bits, S32, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
 sensor_chart_e sensorChartMode;+rusEfi console Sensor Sniffer mode;
 
@@ -1509,6 +1510,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
 ! end of engine_configuration_s
 end_struct
 
+! note that this magic field name is used by LiveDataParserPanel
 engine_configuration_s engineConfiguration;
 
 error_message_t warning_message;
@@ -1540,12 +1542,9 @@ float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for
 float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", 1, 0, 0, 18000, 2
 float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 2
 
-le_formula_t[6 iterate] fsioFormulas;
-#define LUA_SCRIPT_SIZE 2000
+#define LUA_SCRIPT_SIZE 3600
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
 lua_script_t luaScript;
-	le_formula_t timingMultiplier;
-	le_formula_t timingAdditive;
 
 float[CLT_CURVE_SIZE] cltFuelCorrBins;;"C", 1, 0, -100, 250, 2
 float[CLT_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2

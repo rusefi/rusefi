@@ -180,7 +180,7 @@ void initRpmCalculator();
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 
 #if EFI_ENGINE_SNIFFER
-#define addEngineSnifferEvent(name, msg) { efiAssertVoid(OBD_PCM_Processor_Fault, engine!=NULL, "engine ptr missing");  if (engine->isEngineChartEnabled) { waveChart.addEvent3((name), (msg)); } }
+#define addEngineSnifferEvent(name, msg) { if (engine->isEngineChartEnabled) { waveChart.addEvent3((name), (msg)); } }
  #else
 #define addEngineSnifferEvent(n, msg) {}
 #endif /* EFI_ENGINE_SNIFFER */

@@ -55,7 +55,6 @@ static LENameOrdinalPair leOilPressure(LE_METHOD_OIL_PRESSURE, "oilp");
 static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
 // @returns float number of seconds since last A/C toggle
 static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
-static LENameOrdinalPair leTimeSinceBoot(LE_METHOD_TIME_SINCE_BOOT, "time_since_boot");
 static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, FSIO_METHOD_FSIO_SETTING);
 static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, FSIO_METHOD_FSIO_ANALOG_INPUT);
 static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_METHOD_FSIO_DIGITAL_INPUT);
@@ -63,7 +62,6 @@ static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
-static LENameOrdinalPair leInMrBench(LE_METHOD_IN_MR_BENCH, "in_mr_bench");
 static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 
 #include "fsio_names.def"
@@ -71,19 +69,14 @@ static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 #define SYS_ELEMENT_POOL_SIZE 24
 #define UD_ELEMENT_POOL_SIZE 64
 
-static LEElement sysElements[SYS_ELEMENT_POOL_SIZE] CCM_OPTIONAL;
+static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
 CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
 static LEElement * starterRelayDisableLogic;
 
-#if EFI_MAIN_RELAY_CONTROL
-static LEElement * mainRelayLogic;
-#endif /* EFI_MAIN_RELAY_CONTROL */
-
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
 FsioResult getEngineValue(le_action_e action) {
-	efiAssert(CUSTOM_ERR_ASSERT, engine!=NULL, "getLEValue", unexpected);
 	switch (action) {
 	case LE_METHOD_FAN:
 		return enginePins.fanRelay.getLogicValue();
@@ -109,20 +102,10 @@ FsioResult getEngineValue(le_action_e action) {
 	case LE_METHOD_EXHAUST_VVT:
 		return engine->triggerCentral.getVVTPosition(0, 1);
 #endif
-	case LE_METHOD_TIME_SINCE_BOOT:
-#if EFI_MAIN_RELAY_CONTROL
-		// in main relay control mode, we return the number of seconds since the ignition is turned on
-		// (or negative if the ignition key is switched off)
-		return engine->getTimeIgnitionSeconds();
-#else
-		return getTimeNowSeconds();
-#endif /* EFI_MAIN_RELAY_CONTROL */
 	case LE_METHOD_CRANKING_RPM:
 		return engineConfiguration->cranking.rpm;
 	case LE_METHOD_IN_SHUTDOWN:
 		return engine->isInShutdownMode();
-	case LE_METHOD_IN_MR_BENCH:
-		return engine->isInMainRelayBench();
 	case LE_METHOD_VBATT:
 		return Sensor::getOrZero(SensorType::BatteryVoltage);
 	case LE_METHOD_TPS:
@@ -160,8 +143,6 @@ static const char * action2String(le_action_e action) {
 			return "fan";
 		case LE_METHOD_IN_SHUTDOWN:
 			return leInShutdown.name;
-		case LE_METHOD_IN_MR_BENCH:
-			return leInMrBench.name;
 #include "fsio_strings.def"
 
 		default: {
@@ -199,18 +180,6 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
  * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
  */
 void runFsio() {
-#if EFI_MAIN_RELAY_CONTROL
-	if (isBrainPinValid(engineConfiguration->mainRelayPin))
-		// the MAIN_RELAY_LOGIC calls engine->isInShutdownMode()
-		setPinState("main_relay", &enginePins.mainRelay, mainRelayLogic);
-#else /* EFI_MAIN_RELAY_CONTROL */
-	/**
-	 * main relay is always on if ECU is on, that's a good enough initial implementation
-	 */
-	if (isBrainPinValid(engineConfiguration->mainRelayPin))
-		enginePins.mainRelay.setValue(!engine->isInMainRelayBench());
-#endif /* EFI_MAIN_RELAY_CONTROL */
-
 	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
 		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic);
 
@@ -315,10 +284,6 @@ void initFsioImpl() {
 	sysPool.reset();
 #endif
 
-#if EFI_MAIN_RELAY_CONTROL
-	if (isBrainPinValid(engineConfiguration->mainRelayPin))
-		mainRelayLogic = sysPool.parseExpression(MAIN_RELAY_LOGIC);
-#endif /* EFI_MAIN_RELAY_CONTROL */
 	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
 		starterRelayDisableLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
 
@@ -343,10 +308,6 @@ void runHardcodedFsio() {
 	}
 #endif /* EFI_PROD_CODE */
 
-	// see MAIN_RELAY_LOGIC
-	if (isBrainPinValid(engineConfiguration->mainRelayPin)) {
-		enginePins.mainRelay.setValue((getTimeNowSeconds() < 2) || (Sensor::getOrZero(SensorType::BatteryVoltage) > LOW_VBATT) || engine->isInShutdownMode());
-	}
 	// see STARTER_RELAY_LOGIC
 	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin)) {
 		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);

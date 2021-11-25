@@ -96,6 +96,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_NISSAN_VQ35;
 	case VVT_NISSAN_MR:
 		return TT_NISSAN_MR18_CAM_VVT;
+	case VVT_MAP_V_TWIN:
+		return TT_VVT_MAP_45_V_TWIN;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return TT_ONE; // we have to return something for the sake of -Werror=return-type
@@ -538,7 +540,7 @@ bool Engine::isInMainRelayBench() {
 }
 
 bool Engine::isInShutdownMode() const {
-#if EFI_MAIN_RELAY_CONTROL
+#if EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
 	// if we are in "ignition_on" mode and not in shutdown mode
 	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
 		const float vBattThresholdOff = 5.0f;

@@ -48,7 +48,7 @@ public class DriverInstall {
         FileLog.MAIN.logLine("IsWindows=" + FileLog.isWindows());
         if (!new File(FOLDER).exists()) {
             String message = FOLDER + " not found";
-            wnd.appendMsg(message);
+            wnd.append(message);
             FileLog.MAIN.logLine(message);
             return;
         }

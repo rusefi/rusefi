@@ -1,6 +1,8 @@
 package com.rusefi.ui.lua;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.ui.util.UiUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -47,12 +49,21 @@ public class TextEditor {
             }
         });
 
-        area.add(textArea, BorderLayout.CENTER);
+        JScrollPane textAreaScroll = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        area.add(textAreaScroll, BorderLayout.CENTER);
         JPanel bottomArea = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         area.add(bottomArea, BorderLayout.SOUTH);
         bottomArea.add(sizeLabel);
 
         installUndoRedoKeystrokes();
+        UiUtils.installPopupMenu(createPopupMenu(), textArea);
+    }
+
+    @NotNull
+    private JPopupMenu createPopupMenu() {
+        JPopupMenu menu = new JPopupMenu();
+        menu.add(UiUtils.createCopyMenu(textArea));
+        return menu;
     }
 
     private void updateSize() {

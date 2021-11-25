@@ -526,6 +526,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		initializeNissanVQvvt(this);
 		break;
 
+	case TT_VVT_MAP_45_V_TWIN:
+		configureVvt45VTwin(this);
+		break;
+
 	case TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
 		break;
@@ -578,7 +582,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		setMercedesTwoSegment(this);
 		break;
 
-	case TT_UNUSED_62:
 	case TT_ONE:
 		setToothedWheelConfiguration(this, 1, 0, ambiguousOperationMode);
 		break;

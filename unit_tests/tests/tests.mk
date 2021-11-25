@@ -12,6 +12,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_volkswagen.cpp \
 	tests/trigger/test_real_nb2_cranking.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
+	tests/trigger/test_map_cam.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_nissan_vq_vvt.cpp \
@@ -46,6 +47,7 @@ TESTS_SRC_CPP = \
 	tests/test_etb.cpp \
 	tests/test_dc_motor.cpp \
 	tests/test_fan_control.cpp \
+	tests/test_main_relay.cpp \
 	tests/test_vvt.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
