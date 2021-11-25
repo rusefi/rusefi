@@ -70,8 +70,8 @@ struct TunerStudioOutputChannels : ts_outputs_s {
 	uint16_t currentEnginePhase; // 70
 
 	// Wall model AE
-	scaled_ms wallFuelAmount; // 72
-	scaled_channel<int16_t, 1000> wallFuelCorrection; // 74
+	scaled_fuel_mass_mg wallFuelAmount; // 72
+	scaled_fuel_mass_mg wallFuelCorrection; // 74
 	
 	// TPS/load AE
 	scaled_percent unused76; // 76
