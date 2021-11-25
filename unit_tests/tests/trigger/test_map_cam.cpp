@@ -1,8 +1,7 @@
 
 
 #include "pch.h"
-
-#define MAP_CAM_BUFFER 8
+#include "trigger_central.h"
 
 static int getZigZag(int index) {
 	index = index % 1000;
@@ -22,25 +21,6 @@ static int getZigZag(int index) {
 	// going down from 400 to 0
 	return 1000 - index;
 }
-
-struct MapState {
-	float current, previous, prevPrevious;
-	cyclic_buffer<float, MAP_CAM_BUFFER> mapBuffer;
-
-	void add(float value) {
-		// rotate state
-		prevPrevious = previous;
-		previous = current;
-
-		// add new value
-		mapBuffer.add(value);
-		current = mapBuffer.sum(MAP_CAM_BUFFER);
-	}
-
-	bool isPeak() {
-		return previous > prevPrevious && previous >= current;
-	}
-};
 
 TEST(trigger, map_cam) {
 
