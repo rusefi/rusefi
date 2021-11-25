@@ -245,7 +245,7 @@ static const void * getStructAddr(live_data_e structId) {
 	case LDS_TRIGGER_STATE:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 	case LDS_AC_CONTROL:
-		return static_cast<ac_control_s*>(&engine->acState);
+		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
 	case LDS_FUEL_PUMP:
 		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
 #if EFI_ELECTRONIC_THROTTLE_BODY
