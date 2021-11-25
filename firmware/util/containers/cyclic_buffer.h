@@ -10,8 +10,7 @@
  * Daniel Hill - Modified to use C++ - Mar 2, 2014
 */
 
-#ifndef CYCLIC_BUFFER_H
-#define CYCLIC_BUFFER_H
+#pragma once
 
 #include <limits>
 #include <string.h>
@@ -178,5 +177,3 @@ void cyclic_buffer<T, maxSize>::clear() {
 	count = 0;
 	currentIndex = 0;
 }
-
-#endif //CYCLIC_BUFFER_H
