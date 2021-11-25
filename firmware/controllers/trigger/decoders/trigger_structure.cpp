@@ -527,6 +527,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_VVT_MAP_45_V_TWIN:
+		configureVvt45VTwin(this);
+		break;
+
 	case TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
 		break;
