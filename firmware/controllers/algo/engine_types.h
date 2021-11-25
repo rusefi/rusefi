@@ -508,7 +508,7 @@ typedef enum {
 
 	TT_NISSAN_QR25 = 61,
 
-	TT_UNUSED_62 = 62,
+	TT_VVT_MAP_45_V_TWIN = 62,
 
 	TT_SUBARU_SVX_CRANK_1 = 63,
 
