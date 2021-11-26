@@ -44,25 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	scaled_percent unused80; // 80
-	scaled_ms tpsAccelFuel; // 82
-
-	// Ignition
-	scaled_angle ignitionAdvance; // 84
-	scaled_ms sparkDwell; // 86
-	scaled_percent coilDutyCycle; // 88
-
-	// Idle & ETB
-	scaled_percent idlePosition; // 90
-	scaled_percent etbTarget; // 92
-	scaled_percent etb1DutyCycle; // 94
-	scaled_percent etb1Error; // 96
-
-	// Fuel system
-	scaled_percent fuelTankLevel; // 98
-	scaled_channel<uint16_t> totalFuelConsumption; // 100
-	scaled_channel<uint16_t, PACK_MULT_FUEL_FLOW> fuelFlowRate; // 102
-
 	// Y axis values for selectable tables
 	scaled_channel<uint16_t, 100> veTableYAxis;  // 104
 	scaled_channel<uint16_t, 100> afrTableYAxis; // 106

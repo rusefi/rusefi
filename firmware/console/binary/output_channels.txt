@@ -96,5 +96,22 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	uint16_t autoscale unused76;;"",{1/1}, 0, 0, 0, 0
 	uint16_t autoscale deltaTps;TPS acceleration enrichment;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
+	uint16_t autoscale unused80;;"",{1/1}, 0, 0, 0, 0
+	uint16_t autoscale tpsAccelFuel;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+! Ignition
+	uint16_t autoscale ignitionAdvance;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale sparkDwell;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+
+	uint16_t autoscale coilDutyCycle;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+! Idle & ETB
+	uint16_t autoscale idlePosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etbTarget;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etb1DutyCycle;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etb1Error;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+! Fuel system
+	uint16_t autoscale fuelTankLevel;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale totalFuelConsumption;;"",{1/1}, 0, 0, 0, 0
+	uint16_t autoscale fuelFlowRate;;"",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
 
 end_struct
