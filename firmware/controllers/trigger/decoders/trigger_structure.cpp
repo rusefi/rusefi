@@ -598,6 +598,13 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
 		break;
 
+	case TT_TOOTHED_WHEEL_32_2:
+		setToothedWheelConfiguration(this, 32, 2, ambiguousOperationMode);
+		// todo: add this second/third into 'setToothedWheelConfiguration' as long as we have enough tooth?
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		setThirdTriggerSynchronizationGap(1);
+		break;
+
 	case TT_TOOTHED_WHEEL_60_2:
 		setToothedWheelConfiguration(this, 60, 2, ambiguousOperationMode);
 		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
