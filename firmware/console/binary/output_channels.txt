@@ -67,5 +67,18 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	uint16_t autoscale oilPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB1I;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
+	uint16_t autoscale chargeAirMass;;"",{1/1000}, 0, 0, 0, 0
+	uint16_t autoscale crankingFuelMass;airmass in mg, 0-65 grams;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+
+	uint16_t autoscale currentTargetAfr;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelBase;This is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+
+	uint16_t autoscale fuelRunning;Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale actualLastInjection;Actual last injection time - including all compensation and injection mode;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+
+
+	uint8_t autoscale injectorDutyCycle;;"",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale veValue;;"",{1/2}, 0, 0, 0, 0
+	uint16_t autoscale injectionOffset;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
 end_struct
