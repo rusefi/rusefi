@@ -44,22 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	scaled_temperature tCharge; // 60
-
-	// Corrections
-	scaled_ms injectorLagMs; // 62
-	scaled_percent iatCorrection; // 64
-	scaled_percent cltCorrection; // 66
-	scaled_percent baroCorrection; // 68
-	uint16_t currentEnginePhase; // 70
-
-	// Wall model AE
-	scaled_fuel_mass_mg wallFuelAmount; // 72
-	scaled_fuel_mass_mg wallFuelCorrection; // 74
-	
-	// TPS/load AE
-	scaled_percent unused76; // 76
-	scaled_percent deltaTps; // 78
 	scaled_percent unused80; // 80
 	scaled_ms tpsAccelFuel; // 82
 

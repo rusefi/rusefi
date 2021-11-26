@@ -81,4 +81,20 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	uint8_t autoscale veValue;;"",{1/2}, 0, 0, 0, 0
 	uint16_t autoscale injectionOffset;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
+	uint16_t autoscale tCharge;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+
+!  Corrections
+	uint16_t autoscale injectorLagMs;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale iatCorrection;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale cltCorrection;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale baroCorrection;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale currentEnginePhase;;"",1, 0, 0, 0, 0
+! Wall model AE
+	uint16_t autoscale wallFuelAmount;;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale wallFuelCorrection;;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+
+	uint16_t autoscale unused76;;"",{1/1}, 0, 0, 0, 0
+	uint16_t autoscale deltaTps;TPS acceleration enrichment;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+
 end_struct

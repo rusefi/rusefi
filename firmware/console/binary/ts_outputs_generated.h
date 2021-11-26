@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:15:48 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:25:20 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -229,8 +229,49 @@ struct ts_outputs_s {
 	 * offset 58
 	 */
 	scaled_channel<uint16_t, 50, 1> injectionOffset = (uint16_t)0;
-	/** total size 60*/
+	/**
+	 * offset 60
+	 */
+	scaled_channel<uint16_t, 100, 1> tCharge = (uint16_t)0;
+	/**
+	 * offset 62
+	 */
+	scaled_channel<uint16_t, 300, 1> injectorLagMs = (uint16_t)0;
+	/**
+	 * offset 64
+	 */
+	scaled_channel<uint16_t, 100, 1> iatCorrection = (uint16_t)0;
+	/**
+	 * offset 66
+	 */
+	scaled_channel<uint16_t, 100, 1> cltCorrection = (uint16_t)0;
+	/**
+	 * offset 68
+	 */
+	scaled_channel<uint16_t, 100, 1> baroCorrection = (uint16_t)0;
+	/**
+	 * offset 70
+	 */
+	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
+	/**
+	 * offset 72
+	 */
+	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
+	/**
+	 * offset 74
+	 */
+	scaled_channel<uint16_t, 100, 1> wallFuelCorrection = (uint16_t)0;
+	/**
+	 * offset 76
+	 */
+	scaled_channel<uint16_t, 1, 1> unused76 = (uint16_t)0;
+	/**
+	 * TPS acceleration enrichment
+	 * offset 78
+	 */
+	scaled_channel<uint16_t, 100, 1> deltaTps = (uint16_t)0;
+	/** total size 80*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:15:48 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:25:20 EST 2021
