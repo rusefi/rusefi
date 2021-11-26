@@ -14,6 +14,7 @@
 #include "advance_map.h"
 #include "engine_state.h"
 #include "advance_map.h"
+#include "tinymt32.h"
 
 /**
  * We can have active condition from switch or from clutch.
@@ -143,18 +144,21 @@ void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
 	this->targetSkipRatio = targetSkipRatio;
 }
 
+static tinymt32_t tinymt;
+
 bool SoftSparkLimiter::shouldSkip()  {
 	if (targetSkipRatio == 0 || wasJustSkipped) {
 		wasJustSkipped = false;
 		return false;
 	}
 
-	float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	float r = tinymt32_generate_float(&tinymt);
 	wasJustSkipped = r < 2 * targetSkipRatio;
 	return wasJustSkipped;
 }
 
 void initLaunchControl() {
+    tinymt32_init(&tinymt, 1345135);
 }
 
 #endif /* EFI_LAUNCH_CONTROL */
