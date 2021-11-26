@@ -44,9 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	scaled_pressure oilPressure; // 40
-	scaled_angle vvtPositionB1I; // 42
-
 	// Fuel math
 	scaled_channel<uint16_t, 1000> chargeAirMass; // 44  cylinder airmass in mg, 0-65 grams
 	scaled_fuel_mass_mg crankingFuelMass; // 46

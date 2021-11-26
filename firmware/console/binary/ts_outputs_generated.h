@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sun Nov 21 09:35:08 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 15:52:23 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -181,8 +181,16 @@ struct ts_outputs_s {
 	 * offset 38
 	 */
 	scaled_channel<uint16_t, 1000, 1> vBatt = (uint16_t)0;
-	/** total size 40*/
+	/**
+	 * offset 40
+	 */
+	scaled_channel<uint16_t, 30, 1> oilPressure = (uint16_t)0;
+	/**
+	 * offset 42
+	 */
+	scaled_channel<uint16_t, 50, 1> vvtPositionB1I = (uint16_t)0;
+	/** total size 44*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sun Nov 21 09:35:08 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 15:52:23 EST 2021
