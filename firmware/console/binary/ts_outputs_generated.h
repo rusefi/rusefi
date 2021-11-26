@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:25:20 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:48:47 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -270,8 +270,56 @@ struct ts_outputs_s {
 	 * offset 78
 	 */
 	scaled_channel<uint16_t, 100, 1> deltaTps = (uint16_t)0;
-	/** total size 80*/
+	/**
+	 * offset 80
+	 */
+	scaled_channel<uint16_t, 1, 1> unused80 = (uint16_t)0;
+	/**
+	 * offset 82
+	 */
+	scaled_channel<uint16_t, 300, 1> tpsAccelFuel = (uint16_t)0;
+	/**
+	 * offset 84
+	 */
+	scaled_channel<uint16_t, 50, 1> ignitionAdvance = (uint16_t)0;
+	/**
+	 * offset 86
+	 */
+	scaled_channel<uint16_t, 300, 1> sparkDwell = (uint16_t)0;
+	/**
+	 * offset 88
+	 */
+	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
+	/**
+	 * offset 90
+	 */
+	scaled_channel<uint16_t, 100, 1> idlePosition = (uint16_t)0;
+	/**
+	 * offset 92
+	 */
+	scaled_channel<uint16_t, 100, 1> etbTarget = (uint16_t)0;
+	/**
+	 * offset 94
+	 */
+	scaled_channel<uint16_t, 100, 1> etb1DutyCycle = (uint16_t)0;
+	/**
+	 * offset 96
+	 */
+	scaled_channel<uint16_t, 100, 1> etb1Error = (uint16_t)0;
+	/**
+	 * offset 98
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelTankLevel = (uint16_t)0;
+	/**
+	 * offset 100
+	 */
+	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
+	/**
+	 * offset 102
+	 */
+	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
+	/** total size 104*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:25:20 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:48:47 EST 2021
