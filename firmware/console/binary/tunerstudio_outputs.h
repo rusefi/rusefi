@@ -44,19 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	// Fuel math
-	scaled_channel<uint16_t, 1000> chargeAirMass; // 44  cylinder airmass in mg, 0-65 grams
-	scaled_fuel_mass_mg crankingFuelMass; // 46
-	scaled_afr currentTargetAfr; // 48
-	// This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
-	scaled_fuel_mass_mg fuelBase; // 50
-	// Total fuel with CLT, IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
-	scaled_fuel_mass_mg fuelRunning; // 52
-	// Actual last injection time - including all compensation and injection mode
-	scaled_ms actualLastInjection; // 54
-	scaled_channel<uint8_t, 2> injectorDutyCycle; // 56
-	scaled_channel<uint8_t, 2> veValue; // 57
-	scaled_angle injectionOffset; // 58
 	scaled_temperature tCharge; // 60
 
 	// Corrections

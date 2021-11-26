@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 15:52:23 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:15:48 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -189,8 +189,48 @@ struct ts_outputs_s {
 	 * offset 42
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB1I = (uint16_t)0;
-	/** total size 44*/
+	/**
+	 * offset 44
+	 */
+	scaled_channel<uint16_t, 1000, 1> chargeAirMass = (uint16_t)0;
+	/**
+	 * airmass in mg, 0-65 grams
+	 * offset 46
+	 */
+	scaled_channel<uint16_t, 100, 1> crankingFuelMass = (uint16_t)0;
+	/**
+	 * offset 48
+	 */
+	scaled_channel<uint16_t, 1000, 1> currentTargetAfr = (uint16_t)0;
+	/**
+	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
+	 * offset 50
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelBase = (uint16_t)0;
+	/**
+	 * Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
+	 * offset 52
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelRunning = (uint16_t)0;
+	/**
+	 * Actual last injection time - including all compensation and injection mode
+	 * offset 54
+	 */
+	scaled_channel<uint16_t, 300, 1> actualLastInjection = (uint16_t)0;
+	/**
+	 * offset 56
+	 */
+	scaled_channel<uint8_t, 2, 1> injectorDutyCycle = (uint8_t)0;
+	/**
+	 * offset 57
+	 */
+	scaled_channel<uint8_t, 2, 1> veValue = (uint8_t)0;
+	/**
+	 * offset 58
+	 */
+	scaled_channel<uint16_t, 50, 1> injectionOffset = (uint16_t)0;
+	/** total size 60*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 15:52:23 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:15:48 EST 2021
