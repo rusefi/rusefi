@@ -480,7 +480,6 @@ void testLuaExecString(const char* script) {
 // It doesn't properly handle very small and very large numbers, and doesn't
 // parse numbers in the format 1.3e5 at all.
 extern "C" float strtof_rusefi(const char* str, char** endPtr) {
-	float res = 0;
 	bool afterDecimalPoint = false;
 	float div = 1; // Divider to place digits after the decimal point
 
@@ -488,7 +487,8 @@ extern "C" float strtof_rusefi(const char* str, char** endPtr) {
 		*endPtr = const_cast<char*>(str);
 	}
 
-	auto origStr = str;
+	float integerPart = 0;
+	float fractionalPart = 0;
 
 	while (*str != '\0') {
 		char c = *str;
@@ -497,11 +497,11 @@ extern "C" float strtof_rusefi(const char* str, char** endPtr) {
 		if (c >= '0' && c <= '9') {
 			if (!afterDecimalPoint) {
 				// Integer part
-				res = 10 * res + digitVal;
+				integerPart = 10 * integerPart + digitVal;
 			} else {
 				// Fractional part
+				fractionalPart = 10 * fractionalPart + digitVal;
 				div *= 10;
-				res += (float)digitVal / div;
 			}
 		} else if (c == '.') {
 			afterDecimalPoint = true;
@@ -516,7 +516,7 @@ extern "C" float strtof_rusefi(const char* str, char** endPtr) {
 		}
 	}
 
-	return res;
+	return integerPart + fractionalPart / div;
 }
 
 #endif // EFI_LUA
