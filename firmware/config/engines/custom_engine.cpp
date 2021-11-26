@@ -913,7 +913,7 @@ function onTick()
     --print('Rpm ' .. rpm)
 	--print('getTimeSinceTriggerEventMs ' .. getTimeSinceTriggerEventMs())
 	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() < compReleaseDulationLimit and rpm < rpmLimitSetting
-    duty = enableCompressionReleaseSolenoid and 100 or 0
+    duty = enableCompressionReleaseSolenoid and 1 or 0
     print("Compression release solenoid " .. duty)
 	setPwmDuty(outputIndex, duty)
   else
