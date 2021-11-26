@@ -64,5 +64,8 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 
 	uint16_t autoscale vBatt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
+	uint16_t autoscale oilPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB1I;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+
 
 end_struct
