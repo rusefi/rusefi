@@ -245,6 +245,9 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 	uint32_t current_index, efitick_t nowNt) {
 
+	/**
+	 * todo: Martin has this fatal error while feeding external RPM and changing trigger mode from 4 stoke cam to 4 stroke symmetrical
+	 */
 	assertIsInBoundsWithResult((int)current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 
 	// Record the time of this event so we can calculate RPM from it later
