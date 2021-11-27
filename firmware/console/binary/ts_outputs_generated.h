@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:48:47 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:55:26 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -318,8 +318,40 @@ struct ts_outputs_s {
 	 * offset 102
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
-	/** total size 104*/
+	/**
+	 * offset 104
+	 */
+	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
+	/**
+	 * offset 106
+	 */
+	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
+	/**
+	 * offset 108
+	 */
+	scaled_channel<float, 1, 1> knockLevel = (float)0;
+	/**
+	 * offset 112
+	 */
+	scaled_channel<uint32_t, 1, 1> timeSeconds = (uint32_t)0;
+	/**
+	 * offset 116
+	 */
+	scaled_channel<uint32_t, 1, 1> engineMode = (uint32_t)0;
+	/**
+	 * offset 120
+	 */
+	scaled_channel<uint32_t, 1, 1> firmwareVersion = (uint32_t)0;
+	/**
+	 * offset 124
+	 */
+	scaled_channel<uint32_t, 1, 1> tsConfigVersion = (uint32_t)0;
+	/**
+	 * offset 128
+	 */
+	scaled_channel<float, 1, 1> calibrationValue = (float)0;
+	/** total size 132*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:48:47 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:55:26 EST 2021
