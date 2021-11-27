@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 05:00:44 PST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 05:37:21 PST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -105,7 +105,7 @@ struct ts_outputs_s {
 	RPM
 	 * offset 4
 	 */
-	uint16_t RPMValue = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> RPMValue = (uint16_t)0;
 	/**
 	RPM/s
 	 * offset 6
@@ -120,12 +120,12 @@ struct ts_outputs_s {
 	kph
 	 * offset 10
 	 */
-	uint8_t vehicleSpeedKph = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
 	/**
 	deg C
 	 * offset 11
 	 */
-	uint8_t internalMcuTemperature = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
 	/**
 	deg C
 	 * offset 12
@@ -330,7 +330,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 100
 	 */
-	uint16_t totalFuelConsumption = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
 	/**
 	 * offset 102
 	 */
@@ -386,11 +386,11 @@ struct ts_outputs_s {
 	/**
 	 * offset 138
 	 */
-	uint16_t engineMakeCodeNameCrc16 = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> engineMakeCodeNameCrc16 = (uint16_t)0;
 	/**
 	 * offset 140
 	 */
-	uint32_t totalTriggerErrorCounter = (uint32_t)0;
+	scaled_channel<uint32_t, 1, 1> totalTriggerErrorCounter = (uint32_t)0;
 	/**
 	 * offset 144
 	 */
@@ -398,11 +398,11 @@ struct ts_outputs_s {
 	/**
 	 * offset 148
 	 */
-	uint16_t warningCounter = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
 	/**
 	 * offset 150
 	 */
-	uint16_t lastErrorCode = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> lastErrorCode = (uint16_t)0;
 	/**
 	 * offset 152
 	 */
@@ -510,11 +510,11 @@ struct ts_outputs_s {
 	/**
 	 * offset 250
 	 */
-	uint8_t knockLevels[12];
+	scaled_channel<uint8_t, 1, 1> knockLevels[12];
 	/**
 	 * offset 262
 	 */
-	uint8_t tcuDesiredGear = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
 	/**
 	 * offset 263
 	 */
@@ -621,7 +621,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 314
 	 */
-	uint8_t vvtTargets[4];
+	scaled_channel<uint8_t, 1, 1> vvtTargets[4];
 	/**
 	 * offset 318
 	 */
@@ -640,4 +640,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 05:00:44 PST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 05:37:21 PST 2021
