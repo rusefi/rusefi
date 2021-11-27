@@ -34,7 +34,7 @@ static constexpr LogField fields[] = {
 	{tsOutputChannels.AFRValue, GAUGE_NAME_AFR, "afr", 2},
 	{tsOutputChannels.AFRValue2, GAUGE_NAME_AFR2, "afr", 2},
 	{tsOutputChannels.lambdaValue, GAUGE_NAME_LAMBDA, "", 3},
-	{tsOutputChannels.lambda2, GAUGE_NAME_LAMBDA2, "", 3},
+	{tsOutputChannels.lambdaValue2, GAUGE_NAME_LAMBDA2, "", 3},
 	{tsOutputChannels.warningCounter, GAUGE_NAME_WARNING_COUNTER, "", 0},
 	{tsOutputChannels.lastErrorCode, GAUGE_NAME_WARNING_LAST, "", 0},
 	{tsOutputChannels.tuneCrc16, GAUGE_NAME_TUNE_CRC16, "", 0},
