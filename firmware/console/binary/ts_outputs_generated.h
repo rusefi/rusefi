@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:55:26 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 19:33:53 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -350,8 +350,20 @@ struct ts_outputs_s {
 	 * offset 128
 	 */
 	scaled_channel<float, 1, 1> calibrationValue = (float)0;
-	/** total size 132*/
+	/**
+	 * offset 132
+	 */
+	scaled_channel<uint8_t, 1, 1> calibrationMode = (uint8_t)0;
+	/**
+	 * offset 133
+	 */
+	scaled_channel<uint8_t, 1, 1> padding = (uint8_t)0;
+	/**
+	 * offset 134
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelingLoad = (uint16_t)0;
+	/** total size 136*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 18:55:26 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 19:33:53 EST 2021

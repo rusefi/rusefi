@@ -44,12 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	TsCalMode calibrationMode; // 132
-	uint8_t padding[1]; // 133
-
-	// Values used for load axes for fuel/ign tables
-	// These may or may not be the same value, depending on mode
-	scaled_channel<uint16_t, 100> fuelingLoad; // 134
 	scaled_channel<uint16_t, 100> ignitionLoad; // 136
 
 	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune

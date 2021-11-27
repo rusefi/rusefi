@@ -140,4 +140,11 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	! The ECU simply has to sequentially set a mode/value, wait briefly, then repeat until all the values
 	! it wants to send have been sent.
 	float autoscale calibrationValue;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale calibrationMode;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale padding;;"", 1, 0, 0, 0, 0
+
+	! Values used for load axes for fuel/ign tables
+	! These may or may not be the same value, depending on mode
+	uint16_t autoscale fuelingLoad;;"",{1/100}, 0, 0, 0, 0
+
 end_struct
