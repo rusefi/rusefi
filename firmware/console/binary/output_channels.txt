@@ -173,4 +173,28 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	uint16_t autoscale debugIntField4;;"", 1, 0, 0, 0, 0
 	uint16_t autoscale debugIntField5;;"", 1, 0, 0, 0, 0
 
+	uint16_t autoscale accelerationX;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationY;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t[EGT_CHANNEL_COUNT] egtValues;;"", 1, 0, 0, 0, 0
+
+	uint16_t autoscale throttle2Position;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale rawTps1Primary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawPpsPrimary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawClt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawIat;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawOilPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale tuneCrc16;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale unusedAt246;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale tcuCurrentGear;;"", 1, 0, 0, 0, 0
+
+	uint16_t autoscale rawPpsSecondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint8_t[12] autoscale knockLevels;;"",1, 0, 0, 0, 0
+
+	uint8_t autoscale tcuDesiredGear;;"",{1/1}, 0, 0, 0, 0
+	uint8_t autoscale flexPercent;;"",{1/2}, 0, 0, 0, 0
+
 end_struct

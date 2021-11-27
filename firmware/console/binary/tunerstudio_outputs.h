@@ -44,34 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	// accelerometer
-	scaled_percent accelerationX; // 212
-	scaled_percent accelerationY; // 214
-
-	// EGT
-	uint16_t egtValues[EGT_CHANNEL_COUNT] ; // 216
-
-	scaled_percent throttle2Position;    // 232
-
-	scaled_voltage rawTps1Primary;		// 234
-	scaled_voltage rawPpsPrimary;		// 236
-	scaled_voltage rawClt;				// 238
-	scaled_voltage rawIat;				// 240
-	scaled_voltage rawOilPressure;		// 242
-
-	scaled_channel<uint16_t> tuneCrc16; // 244
-
-	scaled_channel<uint8_t> unusedAt246;
-
-	scaled_channel<uint8_t> tcuCurrentGear; // 247
-
-	scaled_voltage rawPpsSecondary;		// 248
-
-	scaled_channel<int8_t> knockLevels[12];		// 250
-
-	scaled_channel<uint8_t> tcuDesiredGear; // 262
-	scaled_channel<uint8_t, 2> flexPercent;		// 263
-
 	scaled_voltage rawIdlePositionSensor;	// 264
 	scaled_voltage rawWastegatePositionSensor;	// 266
 
