@@ -27,6 +27,9 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+## Added
+ - Improved vehicle speed sensor configuration: now uses real physical constants about tires, gear ratio, sensor, etc.
+
 ### Fixed
  - Faster engine sync + startup on engines with crank-speed primary trigger
 
