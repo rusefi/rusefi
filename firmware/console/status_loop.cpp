@@ -540,7 +540,7 @@ static void updateRawSensors() {
 	tsOutputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	tsOutputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
 	tsOutputChannels.MAFValue = Sensor::getRaw(SensorType::Maf);
-	tsOutputChannels.rawWastegatePositionSensor = Sensor::getRaw(SensorType::WastegatePosition);
+	tsOutputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	tsOutputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 }
 static void updatePressures() {
