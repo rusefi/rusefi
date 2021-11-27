@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 05:37:21 PST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 11:56:34 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -194,10 +194,12 @@ struct ts_outputs_s {
 	 */
 	uint8_t unused37 = (uint8_t)0;
 	/**
+	V
 	 * offset 38
 	 */
 	scaled_channel<uint16_t, 1000, 1> VBatt = (uint16_t)0;
 	/**
+	kPa
 	 * offset 40
 	 */
 	scaled_channel<uint16_t, 30, 1> oilPressure = (uint16_t)0;
@@ -207,74 +209,91 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB1I = (uint16_t)0;
 	/**
+	g
 	 * offset 44
 	 */
 	scaled_channel<uint16_t, 1000, 1> chargeAirMass = (uint16_t)0;
 	/**
 	 * airmass in mg, 0-65 grams
+	ms
 	 * offset 46
 	 */
 	scaled_channel<uint16_t, 100, 1> crankingFuelMass = (uint16_t)0;
 	/**
+	ratio
 	 * offset 48
 	 */
 	scaled_channel<uint16_t, 1000, 1> currentTargetAfr = (uint16_t)0;
 	/**
 	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
+	mg
 	 * offset 50
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelBase = (uint16_t)0;
 	/**
 	 * Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
+	mg
 	 * offset 52
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelRunning = (uint16_t)0;
 	/**
 	 * Actual last injection time - including all compensation and injection mode
+	ms
 	 * offset 54
 	 */
 	scaled_channel<uint16_t, 300, 1> actualLastInjection = (uint16_t)0;
 	/**
+	%
 	 * offset 56
 	 */
 	scaled_channel<uint8_t, 2, 1> injectorDutyCycle = (uint8_t)0;
 	/**
+	ratio
 	 * offset 57
 	 */
 	scaled_channel<uint8_t, 2, 1> veValue = (uint8_t)0;
 	/**
+	deg
 	 * offset 58
 	 */
 	scaled_channel<uint16_t, 50, 1> injectionOffset = (uint16_t)0;
 	/**
+	deg C
 	 * offset 60
 	 */
 	scaled_channel<uint16_t, 100, 1> tCharge = (uint16_t)0;
 	/**
+	ms
 	 * offset 62
 	 */
 	scaled_channel<uint16_t, 300, 1> injectorLagMs = (uint16_t)0;
 	/**
+	%
 	 * offset 64
 	 */
 	scaled_channel<uint16_t, 100, 1> iatCorrection = (uint16_t)0;
 	/**
+	%
 	 * offset 66
 	 */
 	scaled_channel<uint16_t, 100, 1> cltCorrection = (uint16_t)0;
 	/**
+	%
 	 * offset 68
 	 */
 	scaled_channel<uint16_t, 100, 1> baroCorrection = (uint16_t)0;
 	/**
+	deg
 	 * offset 70
 	 */
 	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
 	/**
+	mg
 	 * offset 72
 	 */
 	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
 	/**
+	mg
 	 * offset 74
 	 */
 	scaled_channel<uint16_t, 100, 1> wallFuelCorrection = (uint16_t)0;
@@ -284,6 +303,7 @@ struct ts_outputs_s {
 	uint16_t unused76 = (uint16_t)0;
 	/**
 	 * TPS acceleration enrichment
+	ratio
 	 * offset 78
 	 */
 	scaled_channel<uint16_t, 100, 1> deltaTps = (uint16_t)0;
@@ -292,46 +312,57 @@ struct ts_outputs_s {
 	 */
 	uint16_t unused80 = (uint16_t)0;
 	/**
+	ms
 	 * offset 82
 	 */
 	scaled_channel<uint16_t, 300, 1> tpsAccelFuel = (uint16_t)0;
 	/**
+	deg
 	 * offset 84
 	 */
 	scaled_channel<uint16_t, 50, 1> ignitionAdvance = (uint16_t)0;
 	/**
+	ms
 	 * offset 86
 	 */
-	scaled_channel<uint16_t, 300, 1> sparkDwell = (uint16_t)0;
+	scaled_channel<uint16_t, 300, 1> sparkDwellValue = (uint16_t)0;
 	/**
+	%
 	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 	/**
+	%
 	 * offset 90
 	 */
-	scaled_channel<uint16_t, 100, 1> idlePosition = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
 	/**
+	%
 	 * offset 92
 	 */
 	scaled_channel<uint16_t, 100, 1> etbTarget = (uint16_t)0;
 	/**
+	%
 	 * offset 94
 	 */
 	scaled_channel<uint16_t, 100, 1> etb1DutyCycle = (uint16_t)0;
 	/**
+	%
 	 * offset 96
 	 */
 	scaled_channel<uint16_t, 100, 1> etb1Error = (uint16_t)0;
 	/**
+	%
 	 * offset 98
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelTankLevel = (uint16_t)0;
 	/**
+	grams
 	 * offset 100
 	 */
 	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
 	/**
+	gram/s
 	 * offset 102
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
@@ -640,4 +671,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 05:37:21 PST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 11:56:34 EST 2021
