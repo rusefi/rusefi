@@ -34,35 +34,35 @@ bit isTps2Error;
 bit isIdleClosedLoop;
 bit isIdleCoasting;
 
-uint16_t autoscale rpm;;"",1, 0, 0, 0, 0
+uint16_t autoscale RPMValue;;"RPM",1, 0, 0, 0, 0
 
-uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
+uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 
-	uint16_t autoscale speedToRpmRatio;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint8_t autoscale vehicleSpeedKph;;"",1, 0, 0, 0, 0
-	uint8_t autoscale internalMcuTemperature;;"",1, 0, 0, 0, 0
+	uint16_t autoscale speedToRpmRatio;;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint8_t autoscale vehicleSpeedKph;;"kph",1, 0, 0, 0, 0
+	uint8_t autoscale internalMcuTemperature;;"deg C",1, 0, 0, 0, 0
 
-	uint16_t autoscale coolantTemperature;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
-	uint16_t autoscale intakeAirTemperature;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale coolant;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale intake;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale auxTemp1;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
-	uint16_t autoscale auxTemp2;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale auxTemp1;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale auxTemp2;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale throttlePosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale pedalPosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale TPSValue;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale throttlePedalPosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t tpsADC;;"", 1, 0, 0, 0, 0
-	uint16_t autoscale massAirFlowVoltage;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale MAFValue;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale massAirFlow;;"",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
-	uint16_t autoscale manifoldAirPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale massAirFlowValue;;"",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale MAPValue;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	uint16_t autoscale baroPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale lambda;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint16_t autoscale lambdaValue;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint8_t autoscale knockRetard;;"",{1/10}, 0, 0, 0, 0
 	uint8_t unused37;;"",1, 0, 0, 0, 0
 
-	uint16_t autoscale vBatt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale VBatt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale oilPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB1I;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
