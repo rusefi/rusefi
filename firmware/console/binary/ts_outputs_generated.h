@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 14:08:44 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 18:34:07 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -451,7 +451,7 @@ struct ts_outputs_s {
 	error
 	 * offset 152
 	 */
-	uint16_t recentErrorCodes[8];
+	uint16_t recentErrorCode[8];
 	/**
 	val
 	 * offset 168
@@ -647,7 +647,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 286
 	 */
-	scaled_channel<uint16_t, 10000, 1> lambda2 = (uint16_t)0;
+	scaled_channel<uint16_t, 10000, 1> lambdaValue2 = (uint16_t)0;
 	/**
 	AFR
 	 * offset 288
@@ -729,4 +729,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 14:08:44 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 18:34:07 EST 2021
