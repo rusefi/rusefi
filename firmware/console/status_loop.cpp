@@ -494,7 +494,7 @@ static void updateLambda() {
 	tsOutputChannels.AFRValue = lambdaValue * engine->engineState.stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
-	tsOutputChannels.lambda2 = lambda2Value;
+	tsOutputChannels.lambdaValue2 = lambda2Value;
 	tsOutputChannels.AFRValue2 = lambda2Value * engine->engineState.stoichiometricRatio;
 }
 
@@ -767,7 +767,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
 	for (int i = 0; i < 8;i++) {
-		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
+		tsOutputChannels->recentErrorCode[i] = engine->engineState.warnings.recentWarnings.get(i);
 	}
 
 	switch (engineConfiguration->debugMode)	{
