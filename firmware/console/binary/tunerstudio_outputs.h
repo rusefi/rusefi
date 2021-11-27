@@ -44,40 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	scaled_voltage rawIdlePositionSensor;	// 264
-	scaled_voltage rawWastegatePositionSensor;	// 266
-
-	scaled_percent wastegatePosition;	// 268
-	scaled_percent idlePositionSensor;	// 270
-
-	scaled_voltage rawLowFuelPressure; // 272
-	scaled_voltage rawHighFuelPressure; // 274
-
-	scaled_pressure lowFuelPressure;	// 276
-	scaled_high_pressure highFuelPressure;	// 278
-
-	scaled_lambda targetLambda; // 280
-	scaled_afr airFuelRatio; // 282
-
-	scaled_ms VssAcceleration; //284
-
-	scaled_lambda lambda2; // 286
-	scaled_afr airFuelRatio2; // 288
-
-	scaled_angle vvtPositionB1E; // 290
-	scaled_angle vvtPositionB2I; // 292
-	scaled_angle vvtPositionB2E; // 294
-
-	scaled_percent fuelTrim[2];	// 296 & 298
-
-	scaled_voltage rawTps1Secondary;	// 300
-	scaled_voltage rawTps2Primary;		// 302
-	scaled_voltage rawTps2Secondary;	// 304
-
-	scaled_channel<uint16_t> knockCount;// 306
-
-	scaled_percent accelerationZ; // 308
-	scaled_percent accelerationRoll; // 310
 	scaled_percent accelerationYaw; // 312
 
 	scaled_channel<int8_t> vvtTargets[4]; // 314
