@@ -33,15 +33,15 @@ public class VssHardwareLoopTest extends RusefiTestBase {
 
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 1 none");
+        ecu.sendCommand(CMD_TRIGGER_PIN + " 1 none");
+
+        // Hook up 1khz idle on formerly-trigger-stim pin
         ecu.sendCommand(CMD_IDLE_PIN + " PD2");
-
-		ecu.sendCommand(CMD_TRIGGER_PIN + " 1 none");
-
         ecu.sendCommand("set idle_solenoid_freq 1000");
 
         EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VSS));
 
-        // attaching VSS to trigger simulator since there is a jumper on test discovery
+        // attaching VSS to idle output since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " pa5");
 
         sleep(2 * Timeouts.SECOND);
@@ -52,5 +52,4 @@ public class VssHardwareLoopTest extends RusefiTestBase {
         if (ControllerConnectorState.firmwareVersion == null)
             throw new IllegalStateException("firmwareVersion has not arrived");
     }
-
 }
