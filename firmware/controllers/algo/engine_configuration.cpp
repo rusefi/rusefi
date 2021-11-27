@@ -697,8 +697,9 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isAlternatorControlEnabled = false;
 
-	engineConfiguration->vehicleSpeedCoef = 1.0f;
-
+	engineConfiguration->driveWheelRevPerKm = 500;
+	engineConfiguration->vssGearRatio = 3.73;
+	engineConfiguration->vssToothCount = 21;
 
 	engineConfiguration->mapErrorDetectionTooLow = 5;
 	engineConfiguration->mapErrorDetectionTooHigh = 250;

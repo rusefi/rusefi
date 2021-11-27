@@ -1143,11 +1143,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		currentI++;
 	}
 
-
-	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
-		engineConfiguration->vehicleSpeedCoef = valueF;
 #if EFI_ALTERNATOR_CONTROL
-	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
+	if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
 			engineConfiguration->alternatorControl.periodMs = valueI;
 		}
@@ -1156,14 +1153,9 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->alternatorControl.offset = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
+	} else
 #endif /* EFI_ALTERNATOR_CONTROL */
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-	} else if (strEqualCaseInsensitive(paramStr, "warning_period")) {
+	if (strEqualCaseInsensitive(paramStr, "warning_period")) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF);
