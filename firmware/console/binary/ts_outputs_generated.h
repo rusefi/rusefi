@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 13:29:54 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 14:08:44 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -599,12 +599,12 @@ struct ts_outputs_s {
 	V
 	 * offset 266
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawWastegatePositionSensor = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> rawWastegatePosition = (uint16_t)0;
 	/**
 	%
 	 * offset 268
 	 */
-	scaled_channel<uint16_t, 100, 1> wastegatePosition = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> wastegatePositionSensor = (uint16_t)0;
 	/**
 	%
 	 * offset 270
@@ -729,4 +729,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 13:29:54 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 14:08:44 EST 2021

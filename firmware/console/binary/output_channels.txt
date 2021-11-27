@@ -199,7 +199,7 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint8_t autoscale flexPercent;;"%",{1/2}, 0, 0, 0, 0
 
 	uint16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale rawWastegatePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawWastegatePosition;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale wastegatePositionSensor;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale idlePositionSensor;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
