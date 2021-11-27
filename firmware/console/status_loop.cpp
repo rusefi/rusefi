@@ -628,7 +628,7 @@ static void updateIgnition(int rpm) {
 	// that's weird logic. also seems broken for two stroke?
 	tsOutputChannels.ignitionAdvance = timing > FOUR_STROKE_CYCLE_DURATION / 2 ? timing - FOUR_STROKE_CYCLE_DURATION : timing;
 	// 60
-	tsOutputChannels.sparkDwell = engine->engineState.sparkDwell;
+	tsOutputChannels.sparkDwellValue = engine->engineState.sparkDwell;
 
 	tsOutputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
 
@@ -761,7 +761,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif /* EFI_MAX_31855 */
 
 #if EFI_IDLE_CONTROL
-	tsOutputChannels->idlePosition = getIdlePosition();
+	tsOutputChannels->idleAirValvePosition = getIdlePosition();
 #endif
 
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;

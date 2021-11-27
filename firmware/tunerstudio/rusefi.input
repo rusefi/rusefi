@@ -235,42 +235,31 @@ baroPressure = scalar, U16, 32, "kPa", 0.03333333333333333, 0
 lambdaValue = scalar, U16, 34, "", 1.0E-4, 0
 knockRetard = scalar, U08, 36, "", 0.1, 0
 unused37 = scalar, U08, 37, "", 1, 0
-      VBatt           = scalar,	 U16,     38,        "V",{1/@@PACK_MULT_VOLTAGE@@},       0.0
-      oilPressure     = scalar,  U16,     40,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
-      vvtPositionB1I  = scalar,  S16,     42,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-
-      ; 10 bit TPS ADC value (from 0 to 1023 in 5v scale)
-      ;tpsADC2         = scalar,  U16,    44,             "ADC",            1,       0.0;
-
-; fuel math
-      chargeAirMass   = scalar,  U16,     44,        "g",0.001,         0
-      crankingFuelMs  = scalar,  U16,     46,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},     0.0
-      currentTargetAfr= scalar,  U16,     48,    "ratio",{1/@@PACK_MULT_AFR@@},         0
-      baseFuel        = scalar,  U16,     50,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-      fuelRunning     = scalar,  U16,     52,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-      actualLastInjection=scalar,U16,     54,     "ms",{1/@@PACK_MULT_MS@@},     0.0
-      injectorDutyCycle=scalar,  U08,     56,        "%",  0.5,         0
-      veValue         = scalar,  U08,     57,    "ratio",  0.5,         0
-      injectionOffset = scalar,  S16,     58,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-      tCharge         = scalar,  U16,     60,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-
-; Corrections
-      injectorLagMs   = scalar,  U16,     62,     "ms",{1/@@PACK_MULT_MS@@},       0.0
-      iatCorrection   = scalar,  S16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      cltCorrection   = scalar,  S16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      baroCorrection  = scalar,  S16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      fuelPidCorrection=scalar,  S16,    296,       "%",{1/@@PACK_MULT_PERCENT@@},         0
-	  fuelPidCorrection2=scalar, S16,    298,       "%",{1/@@PACK_MULT_PERCENT@@},         0
-
-; Wall model AE
-      wallFuelAmount  = scalar,  U16,     72,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-      wallFuelCorrection=scalar, S16,     74,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-
-; TPS/load AE
-      unusedLoadDelta = scalar,  S16,     76,    "value",{1/@@PACK_MULT_PERCENT@@},         0
-      deltaTps        = scalar,  S16,     78,    "ratio",{1/@@PACK_MULT_PERCENT@@},         0
-      unusedLoadAccelExtra=scalar,S16,    80,    "value",{1/@@PACK_MULT_PERCENT@@},         0
-      tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/@@PACK_MULT_MS@@},         0
+VBatt = scalar, U16, 38, "V", 0.001, 0
+oilPressure = scalar, U16, 40, "kPa", 0.03333333333333333, 0
+vvtPositionB1I = scalar, U16, 42, "deg", 0.02, 0
+chargeAirMass = scalar, U16, 44, "g", 0.001, 0
+crankingFuelMass = scalar, U16, 46, "ms", 0.01, 0
+currentTargetAfr = scalar, U16, 48, "ratio", 0.001, 0
+fuelBase = scalar, U16, 50, "mg", 0.01, 0
+fuelRunning = scalar, U16, 52, "mg", 0.01, 0
+actualLastInjection = scalar, U16, 54, "ms", 0.0033333333333333335, 0
+injectorDutyCycle = scalar, U08, 56, "%", 0.5, 0
+veValue = scalar, U08, 57, "ratio", 0.5, 0
+injectionOffset = scalar, U16, 58, "deg", 0.02, 0
+tCharge = scalar, U16, 60, "deg C", 0.01, 0
+injectorLagMs = scalar, U16, 62, "ms", 0.0033333333333333335, 0
+iatCorrection = scalar, U16, 64, "%", 0.01, 0
+cltCorrection = scalar, U16, 66, "%", 0.01, 0
+baroCorrection = scalar, U16, 68, "%", 0.01, 0
+currentEnginePhase = scalar, U16, 70, "deg", 1, 0
+currentEnginePhase = scalar, U16, 70, "deg", 1, 0
+wallFuelAmount = scalar, U16, 72, "mg", 0.01, 0
+wallFuelCorrection = scalar, U16, 74, "mg", 0.01, 0
+unused76 = scalar, U16, 76, "", 1, 0
+deltaTps = scalar, U16, 78, "ratio", 0.01, 0
+unused80 = scalar, U16, 80, "", 1, 0
+tpsAccelFuel = scalar, U16, 82, "ms", 0.0033333333333333335, 0
 
 ; Ignition
       ignitionAdvance = scalar,  S16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
@@ -407,6 +396,9 @@ unused37 = scalar, U08, 37, "", 1, 0
 	vvtPositionB2I=scalar,S16,  292,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 	vvtPositionB2E=scalar,S16,  294,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
 
+      fuelPidCorrection=scalar,  S16,    296,       "%",{1/@@PACK_MULT_PERCENT@@},         0
+	  fuelPidCorrection2=scalar, S16,    298,       "%",{1/@@PACK_MULT_PERCENT@@},         0
+
 	vvtTargetB1I = scalar, S08, 314, "deg", 1, 0
 	vvtTargetB1E = scalar, S08, 315, "deg", 1, 0
 	vvtTargetB2I = scalar, S08, 316, "deg", 1, 0
@@ -418,7 +410,6 @@ unused37 = scalar, U08, 37, "", 1, 0
 	rawTps2Primary    = scalar,	 U16,    302, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 	rawTps2Secondary  = scalar,	 U16,    304, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
 
-	currentEnginePhase = scalar, U16, 70, "deg", 1, 0
 ;
 ; see TunerStudioOutputChannels struct
 ;
@@ -3764,7 +3755,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Trailing Pin 4",						trailingCoilPins4
 
 	dialog = parkingLot, "Experimental/Broken"
-		field = "mapCamDetectionAnglePosition",         mapCapDetectionAnglePosition
+		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
 		field = "mapCamDetectionThreshold",             mapCamDetectionThreshold
 		field = "#System hacks"
 		field = "Global fuel correction", 				globalFuelCorrection
