@@ -457,11 +457,11 @@ extern HIP9011 instance;
 
 static void updateTempSensors() {
 	SensorResult clt = Sensor::get(SensorType::Clt);
-	tsOutputChannels.coolantTemperature = clt.Value;
+	tsOutputChannels.coolant = clt.Value;
 	tsOutputChannels.isCltError = !clt.Valid;
 
 	SensorResult iat = Sensor::get(SensorType::Iat);
-	tsOutputChannels.intakeAirTemperature = iat.Value;
+	tsOutputChannels.intake = iat.Value;
 	tsOutputChannels.isIatError = !iat.Valid;
 
 	SensorResult auxTemp1 = Sensor::get(SensorType::AuxTemp1);
@@ -473,7 +473,7 @@ static void updateTempSensors() {
 
 static void updateThrottles() {
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
-	tsOutputChannels.throttlePosition = tps1.Value;
+	tsOutputChannels.TPSValue = tps1.Value;
 	tsOutputChannels.isTpsError = !tps1.Valid;
 	tsOutputChannels.tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
 
@@ -483,14 +483,14 @@ static void updateThrottles() {
 	tsOutputChannels.isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
-	tsOutputChannels.pedalPosition = pedal.Value;
+	tsOutputChannels.throttlePedalPosition = pedal.Value;
 	// Only report fail if you have one (many people don't)
 	tsOutputChannels.isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 }
 
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
-	tsOutputChannels.lambda = lambdaValue;
+	tsOutputChannels.lambdaValue = lambdaValue;
 	tsOutputChannels.airFuelRatio = lambdaValue * engine->engineState.stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
@@ -539,18 +539,18 @@ static void updateRawSensors() {
 	tsOutputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 	tsOutputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	tsOutputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
-	tsOutputChannels.massAirFlowVoltage = Sensor::getRaw(SensorType::Maf);
+	tsOutputChannels.MAFValue = Sensor::getRaw(SensorType::Maf);
 	tsOutputChannels.rawWastegatePositionSensor = Sensor::getRaw(SensorType::WastegatePosition);
 	tsOutputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 }
 static void updatePressures() {
 	tsOutputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
-	tsOutputChannels.manifoldAirPressure = Sensor::getOrZero(SensorType::Map);
+	tsOutputChannels.MAPValue = Sensor::getOrZero(SensorType::Map);
 	tsOutputChannels.oilPressure = Sensor::get(SensorType::OilPressure).Value;
 }
 
 static void updateMiscSensors() {
-	tsOutputChannels.vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
+	tsOutputChannels.VBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 	
 	tsOutputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
@@ -611,8 +611,8 @@ static void updateFuelInfo() {
 	updateFuelResults();
 
 	const auto& wallFuel = engine->injectionEvents.elements[0].wallFuel;
-	tsOutputChannels.wallFuelAmount = wallFuel.getWallFuel();
-	tsOutputChannels.wallFuelCorrection = wallFuel.wallFuelCorrection;
+	tsOutputChannels.wallFuelAmount = wallFuel.getWallFuel() * 1000;			// Convert grams to mg
+	tsOutputChannels.wallFuelCorrection = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
 
 	tsOutputChannels.injectionOffset = engine->engineState.injectionOffset;
 
@@ -692,7 +692,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
 
 	// offset 0
-	tsOutputChannels->rpm = rpm;
+	tsOutputChannels->RPMValue = rpm;
 
 	updateSensors(rpm);
 	updateFuelInfo();
@@ -703,7 +703,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	// offset 108
 	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
-	tsOutputChannels->massAirFlow = getAirFlowGauge();
+	tsOutputChannels->massAirFlowValue = getAirFlowGauge();
 	// offset 116
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();

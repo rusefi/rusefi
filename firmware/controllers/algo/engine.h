@@ -31,6 +31,7 @@
 #include "trigger_scheduler.h"
 #include "fuel_pump.h"
 #include "main_relay.h"
+#include "ac_control.h"
 #include "type_list.h"
 #include "boost_control.h"
 
@@ -110,7 +111,7 @@ protected:
 class Engine final : public TriggerStateListener {
 public:
 	Engine();
-	AcState acState;
+
 	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
 
@@ -138,6 +139,7 @@ public:
 
 		FuelPumpController,
 		MainRelayController,
+		AcController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

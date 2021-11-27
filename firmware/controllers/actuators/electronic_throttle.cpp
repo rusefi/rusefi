@@ -414,7 +414,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		m_autotuneCounter++;
 
 		// Multiplex 3 signals on to the {mode, value} format
-		tsOutputChannels.calibrationMode = static_cast<TsCalMode>(m_autotuneCurrentParam + 3);
+		tsOutputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>(m_autotuneCurrentParam + 3);
 
 		switch (m_autotuneCurrentParam) {
 		case 0:
@@ -635,21 +635,21 @@ struct EtbImpl final : public EtbController {
 		}
 
 		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
-		tsOutputChannels.calibrationMode = functionToCalModePriMax(myFunction);
+		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
 		tsOutputChannels.calibrationValue = primaryMax * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = functionToCalModePriMin(myFunction);
+		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
 		tsOutputChannels.calibrationValue = primaryMin * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 
-		tsOutputChannels.calibrationMode = functionToCalModeSecMax(myFunction);
+		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
 		tsOutputChannels.calibrationValue = secondaryMax * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = functionToCalModeSecMin(myFunction);
+		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
 		tsOutputChannels.calibrationValue = secondaryMin * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 
-		tsOutputChannels.calibrationMode = TsCalMode::None;
+		tsOutputChannels.calibrationMode = (uint8_t)TsCalMode::None;
 
 		m_isAutocal = false;
 		return;

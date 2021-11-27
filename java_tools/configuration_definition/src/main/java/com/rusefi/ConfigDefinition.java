@@ -30,6 +30,7 @@ import java.util.zip.CRC32;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     private static final String SIGNATURE_HASH = "SIGNATURE_HASH";
+    private static String TS_OUTPUTS_SECTION = null;
     public static String MESSAGE;
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
@@ -89,7 +90,7 @@ public class ConfigDefinition {
 
         SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
-        String tsPath = null;
+        String tsInputFileFolder = null;
         String destCHeaderFileName = null;
         String destCDefinesFileName = null;
         String destCFsioConstantsFileName = null;
@@ -128,7 +129,10 @@ public class ConfigDefinition {
                     inputFiles.add(definitionInputFile);
                     break;
                 case KEY_TS_DESTINATION:
-                    tsPath = args[i + 1];
+                    tsInputFileFolder = args[i + 1];
+                    break;
+                case "-ts_outputs_section":
+                    TS_OUTPUTS_SECTION = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
                     destCHeaderFileName = args[i + 1];
@@ -209,12 +213,12 @@ public class ConfigDefinition {
         }
 
         List<String> inputAllFiles = new ArrayList<>(inputFiles);
-        if (tsPath != null) {
+        if (tsInputFileFolder != null) {
             // used to update .ini files
-            inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
+            inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
         }
 
-        boolean needToUpdateTsFiles = isNeedToUpdateTsFiles(tsPath, cachePath, cacheZipFile, inputAllFiles);
+        boolean needToUpdateTsFiles = isNeedToUpdateTsFiles(tsInputFileFolder, cachePath, cacheZipFile, inputAllFiles);
 
         boolean needToUpdateOtherFiles = CachingStrategy.checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
@@ -232,7 +236,7 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = signatureHash(state, parseState, tsPath, inputAllFiles);
+        long crc32 = signatureHash(state, parseState, tsInputFileFolder, inputAllFiles);
 
         handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
@@ -281,9 +285,12 @@ public class ConfigDefinition {
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        if (tsPath != null && needToUpdateTsFiles) {
+        if (TS_OUTPUTS_SECTION != null) {
+            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_SECTION, state));
+        }
+        if (tsInputFileFolder != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
-            destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
+            destinations.add(new TSProjectConsumer(tsWriter, tsInputFileFolder, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable

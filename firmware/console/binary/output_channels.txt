@@ -1,0 +1,241 @@
+struct_no_prefix ts_outputs_s
+
+bit sd_present
+bit isIgnitionEnabledIndicator;
+bit isInjectionEnabledIndicator;
+bit sd_logging_internal
+bit isCylinderCleanupActivated;
+bit isFuelPumpOn;
+bit isFanOn;
+bit isO2HeaterOn;
+bit checkEngine;
+bit needBurn;
+
+bit sd_msd
+bit clutchUpState;
+bit clutchDownState;
+bit isFan2On
+bit unusedb14;
+bit brakePedalState;
+bit toothLogReady;
+bit acSwitchState;
+bit isTpsError;
+bit isCltError;
+bit isMapError;
+bit isIatError;
+bit acState;
+bit isTriggerError;
+bit hasCriticalError;
+bit isWarnNow;
+bit isPedalError;
+bit isKnockChipOk;
+bit launchTriggered;
+bit isTps2Error;
+bit isIdleClosedLoop;
+bit isIdleCoasting;
+
+uint16_t autoscale RPMValue;;"RPM",1, 0, 0, 0, 0
+
+uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
+
+	uint16_t autoscale speedToRpmRatio;;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint8_t autoscale vehicleSpeedKph;;"kph",1, 0, 0, 0, 0
+	uint8_t autoscale internalMcuTemperature;;"deg C",1, 0, 0, 0, 0
+
+	uint16_t autoscale coolant;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale intake;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale auxTemp1;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale auxTemp2;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale TPSValue;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale throttlePedalPosition;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t tpsADC;;"ADC", 1, 0, 0, 0, 0
+	uint16_t autoscale MAFValue;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale massAirFlowValue;;"Kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale MAPValue;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale baroPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale lambdaValue;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint8_t autoscale knockRetard;;"",{1/10}, 0, 0, 0, 0
+	uint8_t unused37;;"",1, 0, 0, 0, 0
+
+	uint16_t autoscale VBatt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale oilPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB1I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale chargeAirMass;;"",{1/1000}, 0, 0, 0, 0
+	uint16_t autoscale crankingFuelMass;airmass in mg, 0-65 grams;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+
+	uint16_t autoscale currentTargetAfr;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelBase;This is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+
+	uint16_t autoscale fuelRunning;Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale actualLastInjection;Actual last injection time - including all compensation and injection mode;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+
+
+	uint8_t autoscale injectorDutyCycle;;"",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale veValue;;"",{1/2}, 0, 0, 0, 0
+	uint16_t autoscale injectionOffset;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale tCharge;;"",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+
+!  Corrections
+	uint16_t autoscale injectorLagMs;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale iatCorrection;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale cltCorrection;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale baroCorrection;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale currentEnginePhase;;"",1, 0, 0, 0, 0
+! Wall model AE
+	uint16_t autoscale wallFuelAmount;;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale wallFuelCorrection;;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+
+	uint16_t autoscale unused76;;"",{1/1}, 0, 0, 0, 0
+	uint16_t autoscale deltaTps;TPS acceleration enrichment;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale unused80;;"",{1/1}, 0, 0, 0, 0
+	uint16_t autoscale tpsAccelFuel;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+! Ignition
+	uint16_t autoscale ignitionAdvance;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale sparkDwell;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+
+	uint16_t autoscale coilDutyCycle;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+! Idle & ETB
+	uint16_t autoscale idlePosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etbTarget;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etb1DutyCycle;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etb1Error;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+! Fuel system
+	uint16_t autoscale fuelTankLevel;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale totalFuelConsumption;;"",{1/1}, 0, 0, 0, 0
+	uint16_t autoscale fuelFlowRate;;"",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
+
+! Y axis values for selectable tables
+	uint16_t autoscale veTableYAxis;;"",{1/100}, 0, 0, 0, 0
+	uint16_t autoscale afrTableYAxis;;"",{1/100}, 0, 0, 0, 0
+
+	float autoscale knockLevel;;"", 1, 0, 0, 0, 0
+
+	uint32_t autoscale timeSeconds;;"", 1, 0, 0, 0, 0
+	uint32_t autoscale engineMode;;"", 1, 0, 0, 0, 0
+	uint32_t autoscale firmwareVersion;;"", 1, 0, 0, 0, 0
+
+! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
+! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
+	uint32_t autoscale tsConfigVersion;;"", 1, 0, 0, 0, 0
+
+
+	! These two fields indicate to TS that we'd like to set a particular field to a particular value
+	! We use a maintainConstantValue in TS for each field we'd like to set, like this:
+	!		maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
+	!		maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
+	! When the mode is set to a particular value, TS will copy the calibrationValue in to the specified field.
+	!
+	! With this simple construct, the ECU can send any number of internally computed configuration fields
+	! back to TunerStudio, getting around the problem of setting values on the controller without TS's knowledge.
+	! The ECU simply has to sequentially set a mode/value, wait briefly, then repeat until all the values
+	! it wants to send have been sent.
+	float autoscale calibrationValue;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale calibrationMode;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale padding;;"", 1, 0, 0, 0, 0
+
+	! Values used for load axes for fuel/ign tables
+	! These may or may not be the same value, depending on mode
+	uint16_t autoscale fuelingLoad;;"",{1/100}, 0, 0, 0, 0
+
+	uint16_t autoscale ignitionLoad;;"",{1/100}, 0, 0, 0, 0
+! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
+	uint16_t autoscale engineMakeCodeNameCrc16;;"",{1/1}, 0, 0, 0, 0
+! Errors
+	uint32_t autoscale totalTriggerErrorCounter;;"",{1/1}, 0, 0, 0, 0
+	uint32_t autoscale orderingErrorCounter;;"",{1/1}, 0, 0, 0, 0
+
+	uint16_t autoscale warningCounter;;"",{1/1}, 0, 0, 0, 0
+	uint16_t autoscale lastErrorCode;;"",{1/1}, 0, 0, 0, 0
+
+	uint16_t[8] recentErrorCodes;;"", 1, 0, 0, 0, 0
+
+	float autoscale debugFloatField1;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField2;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField3;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField4;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField5;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField6;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField7;;"", 1, 0, 0, 0, 0
+
+	uint32_t autoscale debugIntField1;;"", 1, 0, 0, 0, 0
+	uint32_t autoscale debugIntField2;;"", 1, 0, 0, 0, 0
+	uint32_t autoscale debugIntField3;;"", 1, 0, 0, 0, 0
+	uint16_t autoscale debugIntField4;;"", 1, 0, 0, 0, 0
+	uint16_t autoscale debugIntField5;;"", 1, 0, 0, 0, 0
+
+	uint16_t autoscale accelerationX;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationY;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t[EGT_CHANNEL_COUNT] egtValues;;"", 1, 0, 0, 0, 0
+
+	uint16_t autoscale throttle2Position;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale rawTps1Primary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawPpsPrimary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawClt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawIat;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawOilPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale tuneCrc16;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale unusedAt246;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale tcuCurrentGear;;"", 1, 0, 0, 0, 0
+
+	uint16_t autoscale rawPpsSecondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint8_t[12] autoscale knockLevels;;"",1, 0, 0, 0, 0
+
+	uint8_t autoscale tcuDesiredGear;;"",{1/1}, 0, 0, 0, 0
+	uint8_t autoscale flexPercent;;"",{1/2}, 0, 0, 0, 0
+
+	uint16_t autoscale rawIdlePositionSensor;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawWastegatePositionSensor;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale wastegatePosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale idlePositionSensor;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale rawLowFuelPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawHighFuelPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale lowFuelPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale highFuelPressure;;"",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale targetLambda;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint16_t autoscale airFuelRatio;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+
+	uint16_t autoscale VssAcceleration;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale lambda2;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+
+	uint16_t autoscale airFuelRatio2;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB1E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB2I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB2E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+
+	uint16_t[2] autoscale fuelTrim;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale rawTps1Secondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawTps2Primary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale rawTps2Secondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale knockCount;;"",{1/1}, 0, 0, 0, 0
+
+	uint16_t autoscale accelerationZ;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationRoll;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationYaw;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint8_t[4] autoscale vvtTargets;;"",1, 0, 0, 0, 0
+	uint16_t autoscale turboSpeed;;"",1, 0, 0, 0, 0
+
+! we have some unused bytes to allow compatible TS changes
+	uint8_t[18] autoscale unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
+end_struct

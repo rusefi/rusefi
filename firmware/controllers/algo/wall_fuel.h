@@ -12,11 +12,11 @@
 class WallFuel : public wall_fuel_state {
 public:
 	/**
-	 * @param target desired squirt duration
-	 * @return total adjusted fuel squirt duration once wall wetting is taken into effect
+	 * @param desiredMassGrams desired fuel quantity, in grams
+	 * @return total adjusted fuel squirt mass in grams once wall wetting is taken into effect
 	 */
-	floatms_t adjust(floatms_t target);
-	floatms_t getWallFuel() const;
+	float adjust(float desiredMassGrams);
+	float getWallFuel() const;
 	void resetWF();
 	int invocationCounter = 0;
 };

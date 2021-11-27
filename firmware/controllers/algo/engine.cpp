@@ -232,12 +232,11 @@ void Engine::periodicSlowCallback() {
 	runHardcodedFsio();
 #endif /* EFI_FSIO */
 
-	bool acActive = acState.updateAc();
-	updateFans(acActive);
-
 	updateGppwm();
 
 	engine->engineModules.apply_all([](auto & m) { m.onSlowCallback(); });
+
+	updateFans(module<AcController>().unmock().isAcEnabled());
 
 #if EFI_BOOST_CONTROL
 	updateBoostControl();

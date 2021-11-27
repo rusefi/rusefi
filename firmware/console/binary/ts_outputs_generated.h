@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sun Nov 21 09:35:08 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:43:13 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -102,49 +102,58 @@ struct ts_outputs_s {
 	offset 0 bit 31 */
 	bool isIdleCoasting : 1 {};
 	/**
+	RPM
 	 * offset 4
 	 */
-	scaled_channel<uint16_t, 1, 1> rpm = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> RPMValue = (uint16_t)0;
 	/**
+	RPM/s
 	 * offset 6
 	 */
 	uint16_t rpmAcceleration = (uint16_t)0;
 	/**
+	value
 	 * offset 8
 	 */
 	scaled_channel<uint16_t, 100, 1> speedToRpmRatio = (uint16_t)0;
 	/**
+	kph
 	 * offset 10
 	 */
 	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
 	/**
+	deg C
 	 * offset 11
 	 */
 	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
 	/**
+	deg C
 	 * offset 12
 	 */
-	scaled_channel<uint16_t, 100, 1> coolantTemperature = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> coolant = (uint16_t)0;
 	/**
+	deg C
 	 * offset 14
 	 */
-	scaled_channel<uint16_t, 100, 1> intakeAirTemperature = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> intake = (uint16_t)0;
 	/**
+	deg C
 	 * offset 16
 	 */
 	scaled_channel<uint16_t, 100, 1> auxTemp1 = (uint16_t)0;
 	/**
+	deg C
 	 * offset 18
 	 */
 	scaled_channel<uint16_t, 100, 1> auxTemp2 = (uint16_t)0;
 	/**
 	 * offset 20
 	 */
-	scaled_channel<uint16_t, 100, 1> throttlePosition = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> TPSValue = (uint16_t)0;
 	/**
 	 * offset 22
 	 */
-	scaled_channel<uint16_t, 100, 1> pedalPosition = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> throttlePedalPosition = (uint16_t)0;
 	/**
 	 * offset 24
 	 */
@@ -152,15 +161,15 @@ struct ts_outputs_s {
 	/**
 	 * offset 26
 	 */
-	scaled_channel<uint16_t, 1000, 1> massAirFlowVoltage = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> MAFValue = (uint16_t)0;
 	/**
 	 * offset 28
 	 */
-	scaled_channel<uint16_t, 10, 1> massAirFlow = (uint16_t)0;
+	scaled_channel<uint16_t, 10, 1> massAirFlowValue = (uint16_t)0;
 	/**
 	 * offset 30
 	 */
-	scaled_channel<uint16_t, 30, 1> manifoldAirPressure = (uint16_t)0;
+	scaled_channel<uint16_t, 30, 1> MAPValue = (uint16_t)0;
 	/**
 	 * offset 32
 	 */
@@ -168,7 +177,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 34
 	 */
-	scaled_channel<uint16_t, 10000, 1> lambda = (uint16_t)0;
+	scaled_channel<uint16_t, 10000, 1> lambdaValue = (uint16_t)0;
 	/**
 	 * offset 36
 	 */
@@ -180,9 +189,444 @@ struct ts_outputs_s {
 	/**
 	 * offset 38
 	 */
-	scaled_channel<uint16_t, 1000, 1> vBatt = (uint16_t)0;
-	/** total size 40*/
+	scaled_channel<uint16_t, 1000, 1> VBatt = (uint16_t)0;
+	/**
+	 * offset 40
+	 */
+	scaled_channel<uint16_t, 30, 1> oilPressure = (uint16_t)0;
+	/**
+	 * offset 42
+	 */
+	scaled_channel<uint16_t, 50, 1> vvtPositionB1I = (uint16_t)0;
+	/**
+	 * offset 44
+	 */
+	scaled_channel<uint16_t, 1000, 1> chargeAirMass = (uint16_t)0;
+	/**
+	 * airmass in mg, 0-65 grams
+	 * offset 46
+	 */
+	scaled_channel<uint16_t, 100, 1> crankingFuelMass = (uint16_t)0;
+	/**
+	 * offset 48
+	 */
+	scaled_channel<uint16_t, 1000, 1> currentTargetAfr = (uint16_t)0;
+	/**
+	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
+	 * offset 50
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelBase = (uint16_t)0;
+	/**
+	 * Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
+	 * offset 52
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelRunning = (uint16_t)0;
+	/**
+	 * Actual last injection time - including all compensation and injection mode
+	 * offset 54
+	 */
+	scaled_channel<uint16_t, 300, 1> actualLastInjection = (uint16_t)0;
+	/**
+	 * offset 56
+	 */
+	scaled_channel<uint8_t, 2, 1> injectorDutyCycle = (uint8_t)0;
+	/**
+	 * offset 57
+	 */
+	scaled_channel<uint8_t, 2, 1> veValue = (uint8_t)0;
+	/**
+	 * offset 58
+	 */
+	scaled_channel<uint16_t, 50, 1> injectionOffset = (uint16_t)0;
+	/**
+	 * offset 60
+	 */
+	scaled_channel<uint16_t, 100, 1> tCharge = (uint16_t)0;
+	/**
+	 * offset 62
+	 */
+	scaled_channel<uint16_t, 300, 1> injectorLagMs = (uint16_t)0;
+	/**
+	 * offset 64
+	 */
+	scaled_channel<uint16_t, 100, 1> iatCorrection = (uint16_t)0;
+	/**
+	 * offset 66
+	 */
+	scaled_channel<uint16_t, 100, 1> cltCorrection = (uint16_t)0;
+	/**
+	 * offset 68
+	 */
+	scaled_channel<uint16_t, 100, 1> baroCorrection = (uint16_t)0;
+	/**
+	 * offset 70
+	 */
+	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
+	/**
+	 * offset 72
+	 */
+	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
+	/**
+	 * offset 74
+	 */
+	scaled_channel<uint16_t, 100, 1> wallFuelCorrection = (uint16_t)0;
+	/**
+	 * offset 76
+	 */
+	scaled_channel<uint16_t, 1, 1> unused76 = (uint16_t)0;
+	/**
+	 * TPS acceleration enrichment
+	 * offset 78
+	 */
+	scaled_channel<uint16_t, 100, 1> deltaTps = (uint16_t)0;
+	/**
+	 * offset 80
+	 */
+	scaled_channel<uint16_t, 1, 1> unused80 = (uint16_t)0;
+	/**
+	 * offset 82
+	 */
+	scaled_channel<uint16_t, 300, 1> tpsAccelFuel = (uint16_t)0;
+	/**
+	 * offset 84
+	 */
+	scaled_channel<uint16_t, 50, 1> ignitionAdvance = (uint16_t)0;
+	/**
+	 * offset 86
+	 */
+	scaled_channel<uint16_t, 300, 1> sparkDwell = (uint16_t)0;
+	/**
+	 * offset 88
+	 */
+	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
+	/**
+	 * offset 90
+	 */
+	scaled_channel<uint16_t, 100, 1> idlePosition = (uint16_t)0;
+	/**
+	 * offset 92
+	 */
+	scaled_channel<uint16_t, 100, 1> etbTarget = (uint16_t)0;
+	/**
+	 * offset 94
+	 */
+	scaled_channel<uint16_t, 100, 1> etb1DutyCycle = (uint16_t)0;
+	/**
+	 * offset 96
+	 */
+	scaled_channel<uint16_t, 100, 1> etb1Error = (uint16_t)0;
+	/**
+	 * offset 98
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelTankLevel = (uint16_t)0;
+	/**
+	 * offset 100
+	 */
+	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
+	/**
+	 * offset 102
+	 */
+	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
+	/**
+	 * offset 104
+	 */
+	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
+	/**
+	 * offset 106
+	 */
+	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
+	/**
+	 * offset 108
+	 */
+	scaled_channel<float, 1, 1> knockLevel = (float)0;
+	/**
+	 * offset 112
+	 */
+	scaled_channel<uint32_t, 1, 1> timeSeconds = (uint32_t)0;
+	/**
+	 * offset 116
+	 */
+	scaled_channel<uint32_t, 1, 1> engineMode = (uint32_t)0;
+	/**
+	 * offset 120
+	 */
+	scaled_channel<uint32_t, 1, 1> firmwareVersion = (uint32_t)0;
+	/**
+	 * offset 124
+	 */
+	scaled_channel<uint32_t, 1, 1> tsConfigVersion = (uint32_t)0;
+	/**
+	 * offset 128
+	 */
+	scaled_channel<float, 1, 1> calibrationValue = (float)0;
+	/**
+	 * offset 132
+	 */
+	scaled_channel<uint8_t, 1, 1> calibrationMode = (uint8_t)0;
+	/**
+	 * offset 133
+	 */
+	scaled_channel<uint8_t, 1, 1> padding = (uint8_t)0;
+	/**
+	 * offset 134
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelingLoad = (uint16_t)0;
+	/**
+	 * offset 136
+	 */
+	scaled_channel<uint16_t, 100, 1> ignitionLoad = (uint16_t)0;
+	/**
+	 * offset 138
+	 */
+	scaled_channel<uint16_t, 1, 1> engineMakeCodeNameCrc16 = (uint16_t)0;
+	/**
+	 * offset 140
+	 */
+	scaled_channel<uint32_t, 1, 1> totalTriggerErrorCounter = (uint32_t)0;
+	/**
+	 * offset 144
+	 */
+	scaled_channel<uint32_t, 1, 1> orderingErrorCounter = (uint32_t)0;
+	/**
+	 * offset 148
+	 */
+	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
+	/**
+	 * offset 150
+	 */
+	scaled_channel<uint16_t, 1, 1> lastErrorCode = (uint16_t)0;
+	/**
+	 * offset 152
+	 */
+	uint16_t recentErrorCodes[8];
+	/**
+	 * offset 168
+	 */
+	scaled_channel<float, 1, 1> debugFloatField1 = (float)0;
+	/**
+	 * offset 172
+	 */
+	scaled_channel<float, 1, 1> debugFloatField2 = (float)0;
+	/**
+	 * offset 176
+	 */
+	scaled_channel<float, 1, 1> debugFloatField3 = (float)0;
+	/**
+	 * offset 180
+	 */
+	scaled_channel<float, 1, 1> debugFloatField4 = (float)0;
+	/**
+	 * offset 184
+	 */
+	scaled_channel<float, 1, 1> debugFloatField5 = (float)0;
+	/**
+	 * offset 188
+	 */
+	scaled_channel<float, 1, 1> debugFloatField6 = (float)0;
+	/**
+	 * offset 192
+	 */
+	scaled_channel<float, 1, 1> debugFloatField7 = (float)0;
+	/**
+	 * offset 196
+	 */
+	scaled_channel<uint32_t, 1, 1> debugIntField1 = (uint32_t)0;
+	/**
+	 * offset 200
+	 */
+	scaled_channel<uint32_t, 1, 1> debugIntField2 = (uint32_t)0;
+	/**
+	 * offset 204
+	 */
+	scaled_channel<uint32_t, 1, 1> debugIntField3 = (uint32_t)0;
+	/**
+	 * offset 208
+	 */
+	scaled_channel<uint16_t, 1, 1> debugIntField4 = (uint16_t)0;
+	/**
+	 * offset 210
+	 */
+	scaled_channel<uint16_t, 1, 1> debugIntField5 = (uint16_t)0;
+	/**
+	 * offset 212
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationX = (uint16_t)0;
+	/**
+	 * offset 214
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationY = (uint16_t)0;
+	/**
+	 * offset 216
+	 */
+	uint16_t egtValues[EGT_CHANNEL_COUNT];
+	/**
+	 * offset 232
+	 */
+	scaled_channel<uint16_t, 100, 1> throttle2Position = (uint16_t)0;
+	/**
+	 * offset 234
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawTps1Primary = (uint16_t)0;
+	/**
+	 * offset 236
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawPpsPrimary = (uint16_t)0;
+	/**
+	 * offset 238
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawClt = (uint16_t)0;
+	/**
+	 * offset 240
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawIat = (uint16_t)0;
+	/**
+	 * offset 242
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawOilPressure = (uint16_t)0;
+	/**
+	 * offset 244
+	 */
+	scaled_channel<uint16_t, 1, 1> tuneCrc16 = (uint16_t)0;
+	/**
+	 * offset 246
+	 */
+	scaled_channel<uint8_t, 1, 1> unusedAt246 = (uint8_t)0;
+	/**
+	 * offset 247
+	 */
+	scaled_channel<uint8_t, 1, 1> tcuCurrentGear = (uint8_t)0;
+	/**
+	 * offset 248
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawPpsSecondary = (uint16_t)0;
+	/**
+	 * offset 250
+	 */
+	scaled_channel<uint8_t, 1, 1> knockLevels[12];
+	/**
+	 * offset 262
+	 */
+	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
+	/**
+	 * offset 263
+	 */
+	scaled_channel<uint8_t, 2, 1> flexPercent = (uint8_t)0;
+	/**
+	 * offset 264
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawIdlePositionSensor = (uint16_t)0;
+	/**
+	 * offset 266
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawWastegatePositionSensor = (uint16_t)0;
+	/**
+	 * offset 268
+	 */
+	scaled_channel<uint16_t, 100, 1> wastegatePosition = (uint16_t)0;
+	/**
+	 * offset 270
+	 */
+	scaled_channel<uint16_t, 100, 1> idlePositionSensor = (uint16_t)0;
+	/**
+	 * offset 272
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawLowFuelPressure = (uint16_t)0;
+	/**
+	 * offset 274
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawHighFuelPressure = (uint16_t)0;
+	/**
+	 * offset 276
+	 */
+	scaled_channel<uint16_t, 30, 1> lowFuelPressure = (uint16_t)0;
+	/**
+	 * offset 278
+	 */
+	scaled_channel<uint16_t, 10, 1> highFuelPressure = (uint16_t)0;
+	/**
+	 * offset 280
+	 */
+	scaled_channel<uint16_t, 10000, 1> targetLambda = (uint16_t)0;
+	/**
+	 * offset 282
+	 */
+	scaled_channel<uint16_t, 1000, 1> airFuelRatio = (uint16_t)0;
+	/**
+	 * offset 284
+	 */
+	scaled_channel<uint16_t, 300, 1> VssAcceleration = (uint16_t)0;
+	/**
+	 * offset 286
+	 */
+	scaled_channel<uint16_t, 10000, 1> lambda2 = (uint16_t)0;
+	/**
+	 * offset 288
+	 */
+	scaled_channel<uint16_t, 1000, 1> airFuelRatio2 = (uint16_t)0;
+	/**
+	 * offset 290
+	 */
+	scaled_channel<uint16_t, 50, 1> vvtPositionB1E = (uint16_t)0;
+	/**
+	 * offset 292
+	 */
+	scaled_channel<uint16_t, 50, 1> vvtPositionB2I = (uint16_t)0;
+	/**
+	 * offset 294
+	 */
+	scaled_channel<uint16_t, 50, 1> vvtPositionB2E = (uint16_t)0;
+	/**
+	 * offset 296
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelTrim[2];
+	/**
+	 * offset 300
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawTps1Secondary = (uint16_t)0;
+	/**
+	 * offset 302
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawTps2Primary = (uint16_t)0;
+	/**
+	 * offset 304
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawTps2Secondary = (uint16_t)0;
+	/**
+	 * offset 306
+	 */
+	scaled_channel<uint16_t, 1, 1> knockCount = (uint16_t)0;
+	/**
+	 * offset 308
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationZ = (uint16_t)0;
+	/**
+	 * offset 310
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationRoll = (uint16_t)0;
+	/**
+	 * offset 312
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationYaw = (uint16_t)0;
+	/**
+	 * offset 314
+	 */
+	scaled_channel<uint8_t, 1, 1> vvtTargets[4];
+	/**
+	 * offset 318
+	 */
+	scaled_channel<uint16_t, 1, 1> turboSpeed = (uint16_t)0;
+	/**
+	 * offset 320
+	 */
+	scaled_channel<uint8_t, 1, 1> unusedAtTheEnd[18];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 338
+	 */
+	uint8_t alignmentFill_at_338[2];
+	/** total size 340*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/output_channels.txt Sun Nov 21 09:35:08 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:43:13 EST 2021

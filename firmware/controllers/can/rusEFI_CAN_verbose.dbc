@@ -1,0 +1,115 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_:
+
+
+BO_ 512 BASE0: 8 Vector__XXX
+ SG_ WarningCounter : 7|16@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ LastError : 23|16@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ RevLimAct : 32|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ MainRelayAct : 33|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ FuelPumpAct : 34|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ CELAct : 35|1@0+ (1,0) [0|0] "" Vector__XXX
+ SG_ EGOHeatAct : 36|1@0+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 513 BASE1: 8 Vector__XXX
+ SG_ RPM : 7|16@0+ (1,0) [0|0] "RPM" Vector__XXX
+ SG_ IgnitionTiming : 23|16@0- (0.02,0) [0|0] "°" Vector__XXX
+ SG_ InjDuty : 39|8@0+ (0.5,0) [0|100] "%" Vector__XXX
+ SG_ IgnDuty : 47|8@0+ (0.5,0) [0|100] "%" Vector__XXX
+ SG_ VehicleSpeed : 55|8@0+ (1,0) [0|255] "kph" Vector__XXX
+
+BO_ 514 BASE2: 8 Vector__XXX
+ SG_ PPS : 7|16@0- (0.01,0) [0|0] "%" Vector__XXX
+ SG_ TPS1 : 23|16@0- (0.01,0) [0|0] "%" Vector__XXX
+ SG_ TPS2 : 39|16@0- (0.01,0) [0|0] "%" Vector__XXX
+
+BO_ 515 BASE3: 8 Vector__XXX
+ SG_ MAP : 7|16@0+ (0.03,0) [0|0] "kPa" Vector__XXX
+ SG_ CoolantTemp : 23|8@0+ (1,0) [0|0] "°C" Vector__XXX
+ SG_ IntakeTemp : 31|8@0+ (1,0) [0|0] "°C" Vector__XXX
+ SG_ AUX1Temp : 39|8@0+ (1,0) [0|0] "°C" Vector__XXX
+ SG_ AUX2Temp : 47|8@0+ (1,0) [0|0] "°C" Vector__XXX
+ SG_ MCUTemp : 55|8@0+ (1,0) [0|0] "°C" Vector__XXX
+ SG_ FuelLevel : 63|8@0+ (0.5,0) [0|0] "%" Vector__XXX
+
+BO_ 516 BASE4: 8 Vector__XXX
+ SG_ AFR : 7|16@0+ (0.001,0) [0|0] "AFR" Vector__XXX
+ SG_ OilPress : 15|16@0+ (0.03,0) [0|0] "kPa" Vector__XXX
+ SG_ VVTPos : 23|16@0- (0.02,0) [0|0] "°" Vector__XXX
+ SG_ BattVolt : 31|16@0+ (1,0) [0|0] "mV" Vector__XXX
+
+BO_ 517 BASE5: 8 Vector__XXX
+ SG_ CylAM : 7|16@0+ (1,0) [0|0] "mg" Vector__XXX
+ SG_ EstMAF : 23|16@0+ (0.01,0) [0|0] "kg/h" Vector__XXX
+ SG_ InjPW : 39|16@0- (0.003,0) [0|0] "ms" Vector__XXX
+
+
+
+CM_ SG_ 512 WarningCounter "Total warnings since ECU start time";
+CM_ SG_ 512 LastError "Last error code";
+CM_ SG_ 512 RevLimAct "RPM Limiter Active";
+CM_ SG_ 512 MainRelayAct "Main Relay Active";
+CM_ SG_ 512 FuelPumpAct "Fuel Pump Output Active";
+CM_ SG_ 512 CELAct "Check Engine Light Active";
+CM_ SG_ 512 EGOHeatAct "EGO Heater Commanded On";
+CM_ SG_ 513 RPM "Current RPM";
+CM_ SG_ 513 IgnitionTiming "Current Ignition Timing. Positive is advance.";
+CM_ SG_ 513 InjDuty "Injection Duty
+";
+CM_ SG_ 513 IgnDuty "Ignition Duty";
+CM_ SG_ 513 VehicleSpeed "Current Vehicle Speed";
+CM_ SG_ 514 PPS "Current Accelerator Pedal Position
+";
+CM_ SG_ 514 TPS1 "Throttle Body 1 Position";
+CM_ SG_ 514 TPS2 "Throttle Body 2 Position";
+CM_ SG_ 515 MAP "Current MAP Reading";
+CM_ SG_ 515 CoolantTemp "Current Coolant Temperature Reading";
+CM_ SG_ 515 IntakeTemp "Current Intake Air Temperature";
+CM_ SG_ 515 AUX1Temp "Current Aux1 Temperature";
+CM_ SG_ 515 AUX2Temp "Current Aux2 Temperature";
+CM_ SG_ 515 MCUTemp "Current MCU Temperature";
+CM_ SG_ 515 FuelLevel "Current Fuel Level";
+CM_ SG_ 516 AFR "Current AFR Reading
+";
+CM_ SG_ 516 OilPress "Current Oil Pressure Reading";
+CM_ SG_ 516 VVTPos "Current VVT Position Reading";
+CM_ SG_ 516 BattVolt "Current Battery Voltage Reading";
+CM_ SG_ 517 CylAM "Current Estmated Cylinder Airmass";
+CM_ SG_ 517 EstMAF "Currrent Estimated Total Airflow
+";
+CM_ SG_ 517 InjPW "Current Commanded Injector Pulsewidth";
+
