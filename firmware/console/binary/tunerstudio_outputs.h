@@ -36,6 +36,7 @@ enum class TsCalMode : uint8_t {
  * 1) we inherit from generated ts_outputs_s based on output_channels.txt
  * 2) '[OutputChannels]' block in rusefi.input
  * 3) com.rusefi.core.Sensor enum in rusEFI console source code
+ * 4) static constexpr LogField fields[] SD card logging
  *
  * see also [OutputChannels] in rusefi.input
  * see also TS_OUTPUT_SIZE in rusefi_config.txt
