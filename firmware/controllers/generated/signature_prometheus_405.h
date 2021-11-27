@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt
 //
 
-#define SIGNATURE_HASH 1944829004
-#define TS_SIGNATURE "rusEFI 2021.11.27.prometheus_405.1944829004"
+#define SIGNATURE_HASH 2188602719
+#define TS_SIGNATURE "rusEFI 2021.11.27.prometheus_405.2188602719"
