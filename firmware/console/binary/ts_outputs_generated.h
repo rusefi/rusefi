@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 13:01:48 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 13:29:54 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -219,7 +219,7 @@ struct ts_outputs_s {
 	ms
 	 * offset 46
 	 */
-	scaled_channel<uint16_t, 100, 1> crankingFuelMass = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> crankingFuelMs = (uint16_t)0;
 	/**
 	ratio
 	 * offset 48
@@ -230,7 +230,7 @@ struct ts_outputs_s {
 	mg
 	 * offset 50
 	 */
-	scaled_channel<uint16_t, 100, 1> fuelBase = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> baseFuel = (uint16_t)0;
 	/**
 	 * Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
 	mg
@@ -526,29 +526,34 @@ struct ts_outputs_s {
 	deg C
 	 * offset 216
 	 */
-	uint16_t egtValues[EGT_CHANNEL_COUNT];
+	uint16_t egt[EGT_CHANNEL_COUNT];
 	/**
 	%
 	 * offset 232
 	 */
 	scaled_channel<uint16_t, 100, 1> TPS2Value = (uint16_t)0;
 	/**
+	V
 	 * offset 234
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawTps1Primary = (uint16_t)0;
 	/**
+	V
 	 * offset 236
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawPpsPrimary = (uint16_t)0;
 	/**
+	V
 	 * offset 238
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawClt = (uint16_t)0;
 	/**
+	V
 	 * offset 240
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawIat = (uint16_t)0;
 	/**
+	V
 	 * offset 242
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawOilPressure = (uint16_t)0;
@@ -562,54 +567,66 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> unusedAt246 = (uint8_t)0;
 	/**
+	gear
 	 * offset 247
 	 */
 	scaled_channel<uint8_t, 1, 1> tcuCurrentGear = (uint8_t)0;
 	/**
+	V
 	 * offset 248
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawPpsSecondary = (uint16_t)0;
 	/**
 	 * offset 250
 	 */
-	scaled_channel<uint8_t, 1, 1> knockLevels[12];
+	scaled_channel<uint8_t, 1, 1> knock[12];
 	/**
+	gear
 	 * offset 262
 	 */
 	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
 	/**
+	%
 	 * offset 263
 	 */
 	scaled_channel<uint8_t, 2, 1> flexPercent = (uint8_t)0;
 	/**
+	V
 	 * offset 264
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawIdlePositionSensor = (uint16_t)0;
 	/**
+	V
 	 * offset 266
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawWastegatePositionSensor = (uint16_t)0;
 	/**
+	%
 	 * offset 268
 	 */
 	scaled_channel<uint16_t, 100, 1> wastegatePosition = (uint16_t)0;
 	/**
+	%
 	 * offset 270
 	 */
 	scaled_channel<uint16_t, 100, 1> idlePositionSensor = (uint16_t)0;
 	/**
+	V
 	 * offset 272
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawLowFuelPressure = (uint16_t)0;
 	/**
+	V
 	 * offset 274
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawHighFuelPressure = (uint16_t)0;
 	/**
+	kpa
 	 * offset 276
 	 */
 	scaled_channel<uint16_t, 30, 1> lowFuelPressure = (uint16_t)0;
 	/**
+	bar
 	 * offset 278
 	 */
 	scaled_channel<uint16_t, 10, 1> highFuelPressure = (uint16_t)0;
@@ -618,10 +635,12 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 10000, 1> targetLambda = (uint16_t)0;
 	/**
+	AFR
 	 * offset 282
 	 */
-	scaled_channel<uint16_t, 1000, 1> airFuelRatio = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> AFRValue = (uint16_t)0;
 	/**
+	m/s2
 	 * offset 284
 	 */
 	scaled_channel<uint16_t, 300, 1> VssAcceleration = (uint16_t)0;
@@ -630,9 +649,10 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambda2 = (uint16_t)0;
 	/**
+	AFR
 	 * offset 288
 	 */
-	scaled_channel<uint16_t, 1000, 1> airFuelRatio2 = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> AFRValue2 = (uint16_t)0;
 	/**
 	deg
 	 * offset 290
@@ -649,18 +669,22 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB2E = (uint16_t)0;
 	/**
+	%
 	 * offset 296
 	 */
-	scaled_channel<uint16_t, 100, 1> fuelTrim[2];
+	scaled_channel<uint16_t, 100, 1> fuelPidCorrection[2];
 	/**
+	V
 	 * offset 300
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawTps1Secondary = (uint16_t)0;
 	/**
+	V
 	 * offset 302
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawTps2Primary = (uint16_t)0;
 	/**
+	V
 	 * offset 304
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawTps2Secondary = (uint16_t)0;
@@ -682,10 +706,12 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationYaw = (uint16_t)0;
 	/**
+	deg
 	 * offset 314
 	 */
 	scaled_channel<uint8_t, 1, 1> vvtTargets[4];
 	/**
+	hz
 	 * offset 318
 	 */
 	uint16_t turboSpeed = (uint16_t)0;
@@ -703,4 +729,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 13:01:48 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 13:29:54 EST 2021

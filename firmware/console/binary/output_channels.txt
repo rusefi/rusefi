@@ -68,10 +68,10 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB1I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale chargeAirMass;;"g",{1/1000}, 0, 0, 0, 0
-	uint16_t autoscale crankingFuelMass;airmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale crankingFuelMs;airmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
 	uint16_t autoscale currentTargetAfr;;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
-	uint16_t autoscale fuelBase;This is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale baseFuel;This is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
 	uint16_t autoscale fuelRunning;Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 	uint16_t autoscale actualLastInjection;Actual last injection time - including all compensation and injection mode;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
@@ -177,64 +177,64 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale accelerationX;;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale accelerationY;;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t[EGT_CHANNEL_COUNT] egtValues;;"deg C", 1, 0, 0, 0, 0
+	uint16_t[EGT_CHANNEL_COUNT iterate] egt;;"deg C", 1, 0, 0, 0, 0
 
 	uint16_t autoscale TPS2Value;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t autoscale rawTps1Primary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale rawPpsPrimary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale rawClt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale rawIat;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale rawOilPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawTps1Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawClt;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawIat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawOilPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale tuneCrc16;;"crc16", 1, 0, 0, 0, 0
 	uint8_t autoscale unusedAt246;;"", 1, 0, 0, 0, 0
-	uint8_t autoscale tcuCurrentGear;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale tcuCurrentGear;;"gear", 1, 0, 0, 0, 0
 
-	uint16_t autoscale rawPpsSecondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint8_t[12] autoscale knockLevels;;"",1, 0, 0, 0, 0
+	uint8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
 
-	uint8_t autoscale tcuDesiredGear;;"",1, 0, 0, 0, 0
-	uint8_t autoscale flexPercent;;"",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale tcuDesiredGear;;"gear",1, 0, 0, 0, 0
+	uint8_t autoscale flexPercent;;"%",{1/2}, 0, 0, 0, 0
 
-	uint16_t autoscale rawIdlePositionSensor;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale rawWastegatePositionSensor;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawWastegatePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale wastegatePosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale idlePositionSensor;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale wastegatePosition;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale idlePositionSensor;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t autoscale rawLowFuelPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale rawHighFuelPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawLowFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawHighFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale lowFuelPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-	uint16_t autoscale highFuelPressure;;"",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale lowFuelPressure;;"kpa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale highFuelPressure;;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale targetLambda;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
-	uint16_t autoscale airFuelRatio;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale AFRValue;;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
 
-	uint16_t autoscale VssAcceleration;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale VssAcceleration;;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 	uint16_t autoscale lambda2;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 
-	uint16_t autoscale airFuelRatio2;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale AFRValue2;;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB1E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB2I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB2E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
-	uint16_t[2] autoscale fuelTrim;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t[2 iterate] autoscale fuelPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t autoscale rawTps1Secondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale rawTps2Primary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawTps1Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale rawTps2Secondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawTps2Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t knockCount;;"",1, 0, 0, 0, 0
 
 	uint16_t autoscale accelerationZ;;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale accelerationRoll;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale accelerationYaw;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint8_t[4] autoscale vvtTargets;;"",1, 0, 0, 0, 0
-	uint16_t turboSpeed;;"",1, 0, 0, 0, 0
+	uint8_t[4 iterate] autoscale vvtTargets;;"deg",1, 0, 0, 0, 0
+	uint16_t turboSpeed;;"hz",1, 0, 0, 0, 0
 
 ! we have some unused bytes to allow compatible TS changes
 	uint8_t[18] unusedAtTheEnd;;"",1, 0, 0, 0, 0

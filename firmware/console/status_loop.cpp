@@ -491,11 +491,11 @@ static void updateThrottles() {
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	tsOutputChannels.lambdaValue = lambdaValue;
-	tsOutputChannels.airFuelRatio = lambdaValue * engine->engineState.stoichiometricRatio;
+	tsOutputChannels.AFRValue = lambdaValue * engine->engineState.stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
 	tsOutputChannels.lambda2 = lambda2Value;
-	tsOutputChannels.airFuelRatio2 = lambda2Value * engine->engineState.stoichiometricRatio;
+	tsOutputChannels.AFRValue2 = lambda2Value * engine->engineState.stoichiometricRatio;
 }
 
 static void updateFuelSensors() {
@@ -581,8 +581,8 @@ static void updateFuelCorrections() {
 	tsOutputChannels.iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
 	tsOutputChannels.cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 
-	tsOutputChannels.fuelTrim[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
-	tsOutputChannels.fuelTrim[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
+	tsOutputChannels.fuelPidCorrection[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
+	tsOutputChannels.fuelPidCorrection[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
 
 	tsOutputChannels.injectorLagMs = engine->engineState.running.injectorLag;
 }
@@ -597,7 +597,7 @@ static void updateFuelLoads() {
 static void updateFuelResults() {
 	tsOutputChannels.chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 
-	tsOutputChannels.fuelBase = engine->engineState.baseFuel * 1000;	// Convert grams to mg
+	tsOutputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	tsOutputChannels.fuelRunning = engine->engineState.running.fuel;
 	tsOutputChannels.actualLastInjection = engine->actualLastInjection[0];
 
@@ -620,7 +620,7 @@ static void updateFuelInfo() {
 	tsOutputChannels.currentTargetAfr = engine->engineState.targetAFR;
 	tsOutputChannels.targetLambda = engine->engineState.targetLambda;
 
-	tsOutputChannels.crankingFuelMass = engine->engineState.cranking.fuel;
+	tsOutputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
 }
 
 static void updateIgnition(int rpm) {
@@ -757,7 +757,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 
 #if EFI_MAX_31855
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
-		tsOutputChannels->egtValues[i] = getEgtValue(i);
+		tsOutputChannels->egt[i] = getEgtValue(i);
 #endif /* EFI_MAX_31855 */
 
 #if EFI_IDLE_CONTROL
