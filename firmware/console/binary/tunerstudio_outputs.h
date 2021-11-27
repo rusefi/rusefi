@@ -44,33 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	// Y axis values for selectable tables
-	scaled_channel<uint16_t, 100> veTableYAxis;  // 104
-	scaled_channel<uint16_t, 100> afrTableYAxis; // 106
-
-	// Knock
-	scaled_channel<float> knockLevel; // 108
-
-	// Mode, firmware, protocol, run time
-	scaled_channel<uint32_t> timeSeconds; // 112
-	scaled_channel<uint32_t> engineMode; // 116
-	scaled_channel<uint32_t> firmwareVersion; // 120
-	// todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
-	// rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-
-	uint32_t tsConfigVersion; // 124
-
-	// These two fields indicate to TS that we'd like to set a particular field to a particular value
-	// We use a maintainConstantValue in TS for each field we'd like to set, like this:
-	//		maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
-	//		maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
-	// When the mode is set to a particular value, TS will copy the calibrationValue in to the specified field.
-	//
-	// With this simple construct, the ECU can send any number of internally computed configuration fields
-	// back to TunerStudio, getting around the problem of setting values on the controller without TS's knowledge.
-	// The ECU simply has to sequentially set a mode/value, wait briefly, then repeat until all the values
-	// it wants to send have been sent.
-	float calibrationValue;	// 128
 	TsCalMode calibrationMode; // 132
 	uint8_t padding[1]; // 133
 
