@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:02:55 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:09:57 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -502,8 +502,100 @@ struct ts_outputs_s {
 	 * offset 263
 	 */
 	scaled_channel<uint8_t, 2, 1> flexPercent = (uint8_t)0;
-	/** total size 264*/
+	/**
+	 * offset 264
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawIdlePositionSensor = (uint16_t)0;
+	/**
+	 * offset 266
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawWastegatePositionSensor = (uint16_t)0;
+	/**
+	 * offset 268
+	 */
+	scaled_channel<uint16_t, 100, 1> wastegatePosition = (uint16_t)0;
+	/**
+	 * offset 270
+	 */
+	scaled_channel<uint16_t, 100, 1> idlePositionSensor = (uint16_t)0;
+	/**
+	 * offset 272
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawLowFuelPressure = (uint16_t)0;
+	/**
+	 * offset 274
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawHighFuelPressure = (uint16_t)0;
+	/**
+	 * offset 276
+	 */
+	scaled_channel<uint16_t, 30, 1> lowFuelPressure = (uint16_t)0;
+	/**
+	 * offset 278
+	 */
+	scaled_channel<uint16_t, 10, 1> highFuelPressure = (uint16_t)0;
+	/**
+	 * offset 280
+	 */
+	scaled_channel<uint16_t, 10000, 1> targetLambda = (uint16_t)0;
+	/**
+	 * offset 282
+	 */
+	scaled_channel<uint16_t, 1000, 1> airFuelRatio = (uint16_t)0;
+	/**
+	 * offset 284
+	 */
+	scaled_channel<uint16_t, 300, 1> VssAcceleration = (uint16_t)0;
+	/**
+	 * offset 286
+	 */
+	scaled_channel<uint16_t, 10000, 1> lambda2 = (uint16_t)0;
+	/**
+	 * offset 288
+	 */
+	scaled_channel<uint16_t, 1000, 1> airFuelRatio2 = (uint16_t)0;
+	/**
+	 * offset 290
+	 */
+	scaled_channel<uint16_t, 50, 1> vvtPositionB1E = (uint16_t)0;
+	/**
+	 * offset 292
+	 */
+	scaled_channel<uint16_t, 50, 1> vvtPositionB2I = (uint16_t)0;
+	/**
+	 * offset 294
+	 */
+	scaled_channel<uint16_t, 50, 1> vvtPositionB2E = (uint16_t)0;
+	/**
+	 * offset 296
+	 */
+	scaled_channel<uint16_t, 100, 1> fuelTrim[2];
+	/**
+	 * offset 300
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawTps1Secondary = (uint16_t)0;
+	/**
+	 * offset 302
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawTps2Primary = (uint16_t)0;
+	/**
+	 * offset 304
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawTps2Secondary = (uint16_t)0;
+	/**
+	 * offset 306
+	 */
+	scaled_channel<uint16_t, 1, 1> knockCount = (uint16_t)0;
+	/**
+	 * offset 308
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationZ = (uint16_t)0;
+	/**
+	 * offset 310
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationRoll = (uint16_t)0;
+	/** total size 312*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:02:55 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:09:57 EST 2021

@@ -197,4 +197,37 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	uint8_t autoscale tcuDesiredGear;;"",{1/1}, 0, 0, 0, 0
 	uint8_t autoscale flexPercent;;"",{1/2}, 0, 0, 0, 0
 
+	uint16_t autoscale rawIdlePositionSensor;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawWastegatePositionSensor;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale wastegatePosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale idlePositionSensor;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale rawLowFuelPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawHighFuelPressure;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale lowFuelPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale highFuelPressure;;"",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale targetLambda;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint16_t autoscale airFuelRatio;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+
+	uint16_t autoscale VssAcceleration;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale lambda2;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+
+	uint16_t autoscale airFuelRatio2;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB1E;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB2I;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB2E;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+
+	uint16_t[2] autoscale fuelTrim;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint16_t autoscale rawTps1Secondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawTps2Primary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+
+	uint16_t autoscale rawTps2Secondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale knockCount;;"",{1/1}, 0, 0, 0, 0
+
+	uint16_t autoscale accelerationZ;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationRoll;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 end_struct
