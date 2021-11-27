@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:43:13 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 05:00:44 PST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -105,7 +105,7 @@ struct ts_outputs_s {
 	RPM
 	 * offset 4
 	 */
-	scaled_channel<uint16_t, 1, 1> RPMValue = (uint16_t)0;
+	uint16_t RPMValue = (uint16_t)0;
 	/**
 	RPM/s
 	 * offset 6
@@ -120,12 +120,12 @@ struct ts_outputs_s {
 	kph
 	 * offset 10
 	 */
-	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
+	uint8_t vehicleSpeedKph = (uint8_t)0;
 	/**
 	deg C
 	 * offset 11
 	 */
-	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
+	uint8_t internalMcuTemperature = (uint8_t)0;
 	/**
 	deg C
 	 * offset 12
@@ -147,30 +147,37 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> auxTemp2 = (uint16_t)0;
 	/**
+	%
 	 * offset 20
 	 */
 	scaled_channel<uint16_t, 100, 1> TPSValue = (uint16_t)0;
 	/**
+	%
 	 * offset 22
 	 */
 	scaled_channel<uint16_t, 100, 1> throttlePedalPosition = (uint16_t)0;
 	/**
+	ADC
 	 * offset 24
 	 */
 	uint16_t tpsADC = (uint16_t)0;
 	/**
+	V
 	 * offset 26
 	 */
 	scaled_channel<uint16_t, 1000, 1> MAFValue = (uint16_t)0;
 	/**
+	Kg/h
 	 * offset 28
 	 */
 	scaled_channel<uint16_t, 10, 1> massAirFlowValue = (uint16_t)0;
 	/**
+	kPa
 	 * offset 30
 	 */
 	scaled_channel<uint16_t, 30, 1> MAPValue = (uint16_t)0;
 	/**
+	kPa
 	 * offset 32
 	 */
 	scaled_channel<uint16_t, 30, 1> baroPressure = (uint16_t)0;
@@ -195,6 +202,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 30, 1> oilPressure = (uint16_t)0;
 	/**
+	deg
 	 * offset 42
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB1I = (uint16_t)0;
@@ -273,7 +281,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 76
 	 */
-	scaled_channel<uint16_t, 1, 1> unused76 = (uint16_t)0;
+	uint16_t unused76 = (uint16_t)0;
 	/**
 	 * TPS acceleration enrichment
 	 * offset 78
@@ -282,7 +290,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 80
 	 */
-	scaled_channel<uint16_t, 1, 1> unused80 = (uint16_t)0;
+	uint16_t unused80 = (uint16_t)0;
 	/**
 	 * offset 82
 	 */
@@ -322,7 +330,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 100
 	 */
-	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
+	uint16_t totalFuelConsumption = (uint16_t)0;
 	/**
 	 * offset 102
 	 */
@@ -378,23 +386,23 @@ struct ts_outputs_s {
 	/**
 	 * offset 138
 	 */
-	scaled_channel<uint16_t, 1, 1> engineMakeCodeNameCrc16 = (uint16_t)0;
+	uint16_t engineMakeCodeNameCrc16 = (uint16_t)0;
 	/**
 	 * offset 140
 	 */
-	scaled_channel<uint32_t, 1, 1> totalTriggerErrorCounter = (uint32_t)0;
+	uint32_t totalTriggerErrorCounter = (uint32_t)0;
 	/**
 	 * offset 144
 	 */
-	scaled_channel<uint32_t, 1, 1> orderingErrorCounter = (uint32_t)0;
+	uint32_t orderingErrorCounter = (uint32_t)0;
 	/**
 	 * offset 148
 	 */
-	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
+	uint16_t warningCounter = (uint16_t)0;
 	/**
 	 * offset 150
 	 */
-	scaled_channel<uint16_t, 1, 1> lastErrorCode = (uint16_t)0;
+	uint16_t lastErrorCode = (uint16_t)0;
 	/**
 	 * offset 152
 	 */
@@ -502,11 +510,11 @@ struct ts_outputs_s {
 	/**
 	 * offset 250
 	 */
-	scaled_channel<uint8_t, 1, 1> knockLevels[12];
+	uint8_t knockLevels[12];
 	/**
 	 * offset 262
 	 */
-	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
+	uint8_t tcuDesiredGear = (uint8_t)0;
 	/**
 	 * offset 263
 	 */
@@ -564,14 +572,17 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> airFuelRatio2 = (uint16_t)0;
 	/**
+	deg
 	 * offset 290
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB1E = (uint16_t)0;
 	/**
+	deg
 	 * offset 292
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB2I = (uint16_t)0;
 	/**
+	deg
 	 * offset 294
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB2E = (uint16_t)0;
@@ -594,7 +605,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 306
 	 */
-	scaled_channel<uint16_t, 1, 1> knockCount = (uint16_t)0;
+	uint16_t knockCount = (uint16_t)0;
 	/**
 	 * offset 308
 	 */
@@ -610,15 +621,15 @@ struct ts_outputs_s {
 	/**
 	 * offset 314
 	 */
-	scaled_channel<uint8_t, 1, 1> vvtTargets[4];
+	uint8_t vvtTargets[4];
 	/**
 	 * offset 318
 	 */
-	scaled_channel<uint16_t, 1, 1> turboSpeed = (uint16_t)0;
+	uint16_t turboSpeed = (uint16_t)0;
 	/**
 	 * offset 320
 	 */
-	scaled_channel<uint8_t, 1, 1> unusedAtTheEnd[18];
+	uint8_t unusedAtTheEnd[18];
 	/**
 	 * need 4 byte alignment
 	units
@@ -629,4 +640,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:43:13 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 05:00:44 PST 2021

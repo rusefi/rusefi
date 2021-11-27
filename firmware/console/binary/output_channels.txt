@@ -34,13 +34,13 @@ bit isTps2Error;
 bit isIdleClosedLoop;
 bit isIdleCoasting;
 
-uint16_t autoscale RPMValue;;"RPM",1, 0, 0, 0, 0
+uint16_t RPMValue;;"RPM",1, 0, 0, 0, 0
 
 uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale speedToRpmRatio;;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint8_t autoscale vehicleSpeedKph;;"kph",1, 0, 0, 0, 0
-	uint8_t autoscale internalMcuTemperature;;"deg C",1, 0, 0, 0, 0
+	uint8_t vehicleSpeedKph;;"kph",1, 0, 0, 0, 0
+	uint8_t internalMcuTemperature;;"deg C",1, 0, 0, 0, 0
 
 	uint16_t autoscale coolant;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 	uint16_t autoscale intake;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
@@ -93,10 +93,10 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale wallFuelAmount;;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 	uint16_t autoscale wallFuelCorrection;;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
-	uint16_t autoscale unused76;;"",{1/1}, 0, 0, 0, 0
+	uint16_t unused76;;"",1, 0, 0, 0, 0
 	uint16_t autoscale deltaTps;TPS acceleration enrichment;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t autoscale unused80;;"",{1/1}, 0, 0, 0, 0
+	uint16_t unused80;;"",1, 0, 0, 0, 0
 	uint16_t autoscale tpsAccelFuel;;"",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 ! Ignition
 	uint16_t autoscale ignitionAdvance;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
@@ -111,7 +111,7 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 ! Fuel system
 	uint16_t autoscale fuelTankLevel;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t autoscale totalFuelConsumption;;"",{1/1}, 0, 0, 0, 0
+	uint16_t totalFuelConsumption;;"",1, 0, 0, 0, 0
 	uint16_t autoscale fuelFlowRate;;"",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
 
 ! Y axis values for selectable tables
@@ -149,13 +149,13 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale ignitionLoad;;"",{1/100}, 0, 0, 0, 0
 ! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	uint16_t autoscale engineMakeCodeNameCrc16;;"",{1/1}, 0, 0, 0, 0
+	uint16_t engineMakeCodeNameCrc16;;"",1, 0, 0, 0, 0
 ! Errors
-	uint32_t autoscale totalTriggerErrorCounter;;"",{1/1}, 0, 0, 0, 0
-	uint32_t autoscale orderingErrorCounter;;"",{1/1}, 0, 0, 0, 0
+	uint32_t totalTriggerErrorCounter;;"",1, 0, 0, 0, 0
+	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
 
-	uint16_t autoscale warningCounter;;"",{1/1}, 0, 0, 0, 0
-	uint16_t autoscale lastErrorCode;;"",{1/1}, 0, 0, 0, 0
+	uint16_t warningCounter;;"",1, 0, 0, 0, 0
+	uint16_t lastErrorCode;;"",1, 0, 0, 0, 0
 
 	uint16_t[8] recentErrorCodes;;"", 1, 0, 0, 0, 0
 
@@ -192,9 +192,9 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale rawPpsSecondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint8_t[12] autoscale knockLevels;;"",1, 0, 0, 0, 0
+	uint8_t[12] knockLevels;;"",1, 0, 0, 0, 0
 
-	uint8_t autoscale tcuDesiredGear;;"",{1/1}, 0, 0, 0, 0
+	uint8_t tcuDesiredGear;;"",1, 0, 0, 0, 0
 	uint8_t autoscale flexPercent;;"",{1/2}, 0, 0, 0, 0
 
 	uint16_t autoscale rawIdlePositionSensor;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
@@ -226,16 +226,16 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale rawTps2Primary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale rawTps2Secondary;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t autoscale knockCount;;"",{1/1}, 0, 0, 0, 0
+	uint16_t knockCount;;"",1, 0, 0, 0, 0
 
 	uint16_t autoscale accelerationZ;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale accelerationRoll;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale accelerationYaw;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint8_t[4] autoscale vvtTargets;;"",1, 0, 0, 0, 0
-	uint16_t autoscale turboSpeed;;"",1, 0, 0, 0, 0
+	uint8_t[4] vvtTargets;;"",1, 0, 0, 0, 0
+	uint16_t turboSpeed;;"",1, 0, 0, 0, 0
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[18] autoscale unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[18] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 end_struct
