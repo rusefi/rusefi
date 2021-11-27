@@ -51,7 +51,7 @@ bool KnockController::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, ef
 #if EFI_TUNER_STUDIO
 	// Pass through per-cylinder peak detector
 	float cylPeak = peakDetectors[cylinderIndex].detect(dbv, lastKnockTime);
-	tsOutputChannels.knockLevels[cylinderIndex] = roundf(cylPeak);
+	tsOutputChannels.knock[cylinderIndex] = roundf(cylPeak);
 
 	// Pass through all-cylinders peak detector
 	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
