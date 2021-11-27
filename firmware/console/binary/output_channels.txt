@@ -48,15 +48,15 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale auxTemp1;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 	uint16_t autoscale auxTemp2;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale TPSValue;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale throttlePedalPosition;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale TPSValue;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale throttlePedalPosition;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t tpsADC;;"", 1, 0, 0, 0, 0
-	uint16_t autoscale MAFValue;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t tpsADC;;"ADC", 1, 0, 0, 0, 0
+	uint16_t autoscale MAFValue;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale massAirFlowValue;;"",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
-	uint16_t autoscale MAPValue;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-	uint16_t autoscale baroPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale massAirFlowValue;;"Kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale MAPValue;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale baroPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale lambdaValue;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint8_t autoscale knockRetard;;"",{1/10}, 0, 0, 0, 0
@@ -65,7 +65,7 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale VBatt;;"",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale oilPressure;;"",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-	uint16_t autoscale vvtPositionB1I;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB1I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale chargeAirMass;;"",{1/1000}, 0, 0, 0, 0
 	uint16_t autoscale crankingFuelMass;airmass in mg, 0-65 grams;"",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
@@ -216,9 +216,9 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale lambda2;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 
 	uint16_t autoscale airFuelRatio2;;"",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
-	uint16_t autoscale vvtPositionB1E;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
-	uint16_t autoscale vvtPositionB2I;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
-	uint16_t autoscale vvtPositionB2E;;"",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB1E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB2I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB2E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
 	uint16_t[2] autoscale fuelTrim;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
