@@ -147,4 +147,30 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 	! These may or may not be the same value, depending on mode
 	uint16_t autoscale fuelingLoad;;"",{1/100}, 0, 0, 0, 0
 
+	uint16_t autoscale ignitionLoad;;"",{1/100}, 0, 0, 0, 0
+! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
+	uint16_t autoscale engineMakeCodeNameCrc16;;"",{1/1}, 0, 0, 0, 0
+! Errors
+	uint32_t autoscale totalTriggerErrorCounter;;"",{1/1}, 0, 0, 0, 0
+	uint32_t autoscale orderingErrorCounter;;"",{1/1}, 0, 0, 0, 0
+
+	uint16_t autoscale warningCounter;;"",{1/1}, 0, 0, 0, 0
+	uint16_t autoscale lastErrorCode;;"",{1/1}, 0, 0, 0, 0
+
+	uint16_t[8] recentErrorCodes;;"", 1, 0, 0, 0, 0
+
+	float autoscale debugFloatField1;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField2;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField3;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField4;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField5;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField6;;"", 1, 0, 0, 0, 0
+	float autoscale debugFloatField7;;"", 1, 0, 0, 0, 0
+
+	uint32_t autoscale debugIntField1;;"", 1, 0, 0, 0, 0
+	uint32_t autoscale debugIntField2;;"", 1, 0, 0, 0, 0
+	uint32_t autoscale debugIntField3;;"", 1, 0, 0, 0, 0
+	uint16_t autoscale debugIntField4;;"", 1, 0, 0, 0, 0
+	uint16_t autoscale debugIntField5;;"", 1, 0, 0, 0, 0
+
 end_struct
