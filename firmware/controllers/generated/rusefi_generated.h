@@ -711,6 +711,7 @@
 #define display_mode_e_Force_4_bytes_size_display_mode ENUM_32_BITS
 #define displayLogicLevelsInEngineSniffer_offset 76
 #define displayMode_offset 492
+#define driveWheelRevPerKm_offset 476
 #define drv8860_cs_offset 1201
 #define drv8860_csPinMode_offset 1202
 #define drv8860_miso_offset 1203
@@ -1818,7 +1819,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 2609070538
+#define SIGNATURE_HASH 273943143
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2336,7 +2337,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.26.all.2609070538"
+#define TS_SIGNATURE "rusEFI 2021.11.27.all.273943143"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2381,7 +2382,6 @@
 #define unused3942_offset 3992
 #define unused3988_offset 3988
 #define unused4028_offset 4028
-#define unused616_offset 616
 #define unused6312_offset 6312
 #define unused744b4_offset 744
 #define unused970_offset 970
@@ -2398,33 +2398,33 @@
 #define unusedAtOldBoardConfigurationEnd_offset 1340
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_298_30_offset 976
-#define unusedBit_298_31_offset 976
+#define unusedBit_300_30_offset 976
+#define unusedBit_300_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_507_10_offset 2116
-#define unusedBit_507_11_offset 2116
-#define unusedBit_507_12_offset 2116
-#define unusedBit_507_13_offset 2116
-#define unusedBit_507_14_offset 2116
-#define unusedBit_507_15_offset 2116
-#define unusedBit_507_16_offset 2116
-#define unusedBit_507_17_offset 2116
-#define unusedBit_507_18_offset 2116
-#define unusedBit_507_19_offset 2116
-#define unusedBit_507_20_offset 2116
-#define unusedBit_507_21_offset 2116
-#define unusedBit_507_22_offset 2116
-#define unusedBit_507_23_offset 2116
-#define unusedBit_507_24_offset 2116
-#define unusedBit_507_25_offset 2116
-#define unusedBit_507_26_offset 2116
-#define unusedBit_507_27_offset 2116
-#define unusedBit_507_28_offset 2116
-#define unusedBit_507_29_offset 2116
-#define unusedBit_507_30_offset 2116
-#define unusedBit_507_31_offset 2116
-#define unusedBit_507_8_offset 2116
-#define unusedBit_507_9_offset 2116
+#define unusedBit_509_10_offset 2116
+#define unusedBit_509_11_offset 2116
+#define unusedBit_509_12_offset 2116
+#define unusedBit_509_13_offset 2116
+#define unusedBit_509_14_offset 2116
+#define unusedBit_509_15_offset 2116
+#define unusedBit_509_16_offset 2116
+#define unusedBit_509_17_offset 2116
+#define unusedBit_509_18_offset 2116
+#define unusedBit_509_19_offset 2116
+#define unusedBit_509_20_offset 2116
+#define unusedBit_509_21_offset 2116
+#define unusedBit_509_22_offset 2116
+#define unusedBit_509_23_offset 2116
+#define unusedBit_509_24_offset 2116
+#define unusedBit_509_25_offset 2116
+#define unusedBit_509_26_offset 2116
+#define unusedBit_509_27_offset 2116
+#define unusedBit_509_28_offset 2116
+#define unusedBit_509_29_offset 2116
+#define unusedBit_509_30_offset 2116
+#define unusedBit_509_31_offset 2116
+#define unusedBit_509_8_offset 2116
+#define unusedBit_509_9_offset 2116
 #define unusedBitHere1_offset 1464
 #define unusedBitHere2_offset 1464
 #define unusedBitHere3_offset 1464
@@ -2445,6 +2445,7 @@
 #define unusedLaunchRpmThreshold_offset 1032
 #define unusedLogFormat_offset 496
 #define unusedLuaWasHere_offset 16032
+#define unusedNearVss_offset 619
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832
 #define unusedOutputWhereHere_offset 794
@@ -2491,7 +2492,6 @@
 #define ve_override_e_VE_TPS 2
 #define VEHICLE_INFO_SIZE 32
 #define vehicleName_offset 1160
-#define vehicleSpeedCoef_offset 476
 #define vehicleSpeedSensorInputPin_offset 968
 #define vehicleWeight_offset 1456
 #define veLoadBins_offset 18464
@@ -2519,6 +2519,8 @@
 #define vrThreshold2_rpmBins_offset 1264
 #define vrThreshold2_values_offset 1270
 #define vssFilterReciprocal_offset 15196
+#define vssGearRatio_offset 616
+#define vssToothCount_offset 618
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR", "VVT_MAP_V_TWIN"
 #define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "VTwin 45", "vvt13", "vvt14", "vvt15"
 #define vvt_mode_e_VVT_2JZ 2
