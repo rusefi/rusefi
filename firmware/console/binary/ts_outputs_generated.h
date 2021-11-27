@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:15:07 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:43:13 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -102,49 +102,58 @@ struct ts_outputs_s {
 	offset 0 bit 31 */
 	bool isIdleCoasting : 1 {};
 	/**
+	RPM
 	 * offset 4
 	 */
-	scaled_channel<uint16_t, 1, 1> rpm = (uint16_t)0;
+	scaled_channel<uint16_t, 1, 1> RPMValue = (uint16_t)0;
 	/**
+	RPM/s
 	 * offset 6
 	 */
 	uint16_t rpmAcceleration = (uint16_t)0;
 	/**
+	value
 	 * offset 8
 	 */
 	scaled_channel<uint16_t, 100, 1> speedToRpmRatio = (uint16_t)0;
 	/**
+	kph
 	 * offset 10
 	 */
 	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
 	/**
+	deg C
 	 * offset 11
 	 */
 	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
 	/**
+	deg C
 	 * offset 12
 	 */
-	scaled_channel<uint16_t, 100, 1> coolantTemperature = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> coolant = (uint16_t)0;
 	/**
+	deg C
 	 * offset 14
 	 */
-	scaled_channel<uint16_t, 100, 1> intakeAirTemperature = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> intake = (uint16_t)0;
 	/**
+	deg C
 	 * offset 16
 	 */
 	scaled_channel<uint16_t, 100, 1> auxTemp1 = (uint16_t)0;
 	/**
+	deg C
 	 * offset 18
 	 */
 	scaled_channel<uint16_t, 100, 1> auxTemp2 = (uint16_t)0;
 	/**
 	 * offset 20
 	 */
-	scaled_channel<uint16_t, 100, 1> throttlePosition = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> TPSValue = (uint16_t)0;
 	/**
 	 * offset 22
 	 */
-	scaled_channel<uint16_t, 100, 1> pedalPosition = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> throttlePedalPosition = (uint16_t)0;
 	/**
 	 * offset 24
 	 */
@@ -152,15 +161,15 @@ struct ts_outputs_s {
 	/**
 	 * offset 26
 	 */
-	scaled_channel<uint16_t, 1000, 1> massAirFlowVoltage = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> MAFValue = (uint16_t)0;
 	/**
 	 * offset 28
 	 */
-	scaled_channel<uint16_t, 10, 1> massAirFlow = (uint16_t)0;
+	scaled_channel<uint16_t, 10, 1> massAirFlowValue = (uint16_t)0;
 	/**
 	 * offset 30
 	 */
-	scaled_channel<uint16_t, 30, 1> manifoldAirPressure = (uint16_t)0;
+	scaled_channel<uint16_t, 30, 1> MAPValue = (uint16_t)0;
 	/**
 	 * offset 32
 	 */
@@ -168,7 +177,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 34
 	 */
-	scaled_channel<uint16_t, 10000, 1> lambda = (uint16_t)0;
+	scaled_channel<uint16_t, 10000, 1> lambdaValue = (uint16_t)0;
 	/**
 	 * offset 36
 	 */
@@ -180,7 +189,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 38
 	 */
-	scaled_channel<uint16_t, 1000, 1> vBatt = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> VBatt = (uint16_t)0;
 	/**
 	 * offset 40
 	 */
@@ -620,4 +629,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:15:07 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:43:13 EST 2021

@@ -224,8 +224,8 @@ enable2ndByteCanID = false
      internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
       coolant         = scalar,  S16,     12,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
       intake          = scalar,  S16,     14,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-      auxt1           = scalar,  S16,     16,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-      auxt2           = scalar,  S16,     18,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
+      auxTemp1           = scalar,  S16,     16,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
+      auxTemp2           = scalar,  S16,     18,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
       
 
 ; throttle, pedal
@@ -1105,8 +1105,8 @@ gaugeCategory = Sensors - Extra 1
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   @@GAUGE_NAME_OIL_PRESSURE@@,       @@GAUGE_NAME_OIL_PRESSURE_UNITS@@,        0,    750,      35,     75,     550,   700,   0,   0	
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
-   AuxT1Gauge        = auxt1,     @@GAUGE_NAME_AUX_TEMP1@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
-   AuxT2Gauge        = auxt2,     @@GAUGE_NAME_AUX_TEMP2@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   AuxT1Gauge        = auxTemp1,     @@GAUGE_NAME_AUX_TEMP1@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   AuxT2Gauge        = auxTemp2,     @@GAUGE_NAME_AUX_TEMP2@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
    highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
    flexPercentGauge = flexPercent, @@GAUGE_NAME_FLEX@@, "%", 0, 100, 0, 0, 100, 100, 0, 0
