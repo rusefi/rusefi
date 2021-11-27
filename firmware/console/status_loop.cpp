@@ -478,7 +478,7 @@ static void updateThrottles() {
 	tsOutputChannels.tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
-	tsOutputChannels.throttle2Position = tps2.Value;
+	tsOutputChannels.TPS2Value = tps2.Value;
 	// If we don't have a TPS2 at all, don't turn on the failure light
 	tsOutputChannels.isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
 
@@ -719,7 +719,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 
 	// 224
 	efitimesec_t timeSeconds = getTimeNowSeconds();
-	tsOutputChannels->timeSeconds = timeSeconds;
+	tsOutputChannels->seconds = timeSeconds;
 
 	// 252
 	tsOutputChannels->engineMode = packEngineMode();
