@@ -290,7 +290,14 @@ totalTriggerErrorCounter = scalar, U32, 140, "counter", 1, 0
 orderingErrorCounter = scalar, U32, 144, "", 1, 0
 warningCounter = scalar, U16, 148, "count", 1, 0
 lastErrorCode = scalar, U16, 150, "error", 1, 0
-recentErrorCodes = array, U16, 152, [8], "error", 1, 0
+recentErrorCodes1 = scalar, U16, 152, "error", 1, 0
+recentErrorCodes2 = scalar, U16, 154, "error", 1, 0
+recentErrorCodes3 = scalar, U16, 156, "error", 1, 0
+recentErrorCodes4 = scalar, U16, 158, "error", 1, 0
+recentErrorCodes5 = scalar, U16, 160, "error", 1, 0
+recentErrorCodes6 = scalar, U16, 162, "error", 1, 0
+recentErrorCodes7 = scalar, U16, 164, "error", 1, 0
+recentErrorCodes8 = scalar, U16, 166, "error", 1, 0
 debugFloatField1 = scalar, F32, 168, "val", 1, 0
 debugFloatField2 = scalar, F32, 172, "val", 1, 0
 debugFloatField3 = scalar, F32, 176, "val", 1, 0
@@ -379,7 +386,7 @@ turboSpeed = scalar, U16, 318, "hz", 1, 0
 
       time            = { timeNow }
 
-	  egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection }
+	  egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection1 }
 
 	; These "synthetic" channels provide the Y-axis (load) value for gen purp PWM table's Y axes
 	gppwm1_load = {(gppwm1_loadAxis == 0) ? TPSValue : ((gppwm1_loadAxis == 1) ? MAPValue : ((gppwm1_loadAxis == 2) ? coolant : ((gppwm1_loadAxis == 3) ? intake : ((gppwm1_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
@@ -1091,7 +1098,7 @@ gaugeCategory = Fueling
    injectorLagMsGauge = injectorLagMs,       @@GAUGE_NAME_INJECTOR_LAG@@,      "mSec",        0,   10,     0,    0,      10,    10,   3, 1
    fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mg",        0,   100,     0,    0,      100,    100,   3, 1
    baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mg",        0,   100, 0, 0, 100, 100,   2, 0
-   fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_TRIM@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
+   fuelPidCorrectionGauge = fuelPidCorrection1,       @@GAUGE_NAME_FUEL_TRIM@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelPidCorrectionGauge2= fuelPidCorrection2,      @@GAUGE_NAME_FUEL_TRIM_2@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
    totalFuelConsumptionGauge = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, "g", 0, 10000, 0, 0, 10000, 10000, 0, 0
@@ -1292,7 +1299,7 @@ gaugeCategory = DynoView
    entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
    entry = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, float,  "%.3f"
    entry = baseFuel,	    @@GAUGE_NAME_FUEL_BASE@@,  float,  "%.2f"
-   entry = fuelPidCorrection,@@GAUGE_NAME_FUEL_TRIM@@,  float,  "%.2f"
+   entry = fuelPidCorrection1,@@GAUGE_NAME_FUEL_TRIM@@,  float,  "%.2f"
    entry = fuelPidCorrection2,@@GAUGE_NAME_FUEL_TRIM_2@@,  float,  "%.2f"
    entry = veValue,         @@GAUGE_NAME_FUEL_VE@@,    float,  "%.3f"
    entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
