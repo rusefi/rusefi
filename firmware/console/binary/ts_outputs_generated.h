@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 19:33:53 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 20:52:04 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -362,8 +362,84 @@ struct ts_outputs_s {
 	 * offset 134
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelingLoad = (uint16_t)0;
-	/** total size 136*/
+	/**
+	 * offset 136
+	 */
+	scaled_channel<uint16_t, 100, 1> ignitionLoad = (uint16_t)0;
+	/**
+	 * offset 138
+	 */
+	scaled_channel<uint16_t, 1, 1> engineMakeCodeNameCrc16 = (uint16_t)0;
+	/**
+	 * offset 140
+	 */
+	scaled_channel<uint32_t, 1, 1> totalTriggerErrorCounter = (uint32_t)0;
+	/**
+	 * offset 144
+	 */
+	scaled_channel<uint32_t, 1, 1> orderingErrorCounter = (uint32_t)0;
+	/**
+	 * offset 148
+	 */
+	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
+	/**
+	 * offset 150
+	 */
+	scaled_channel<uint16_t, 1, 1> lastErrorCode = (uint16_t)0;
+	/**
+	 * offset 152
+	 */
+	uint16_t recentErrorCodes[8];
+	/**
+	 * offset 168
+	 */
+	scaled_channel<float, 1, 1> debugFloatField1 = (float)0;
+	/**
+	 * offset 172
+	 */
+	scaled_channel<float, 1, 1> debugFloatField2 = (float)0;
+	/**
+	 * offset 176
+	 */
+	scaled_channel<float, 1, 1> debugFloatField3 = (float)0;
+	/**
+	 * offset 180
+	 */
+	scaled_channel<float, 1, 1> debugFloatField4 = (float)0;
+	/**
+	 * offset 184
+	 */
+	scaled_channel<float, 1, 1> debugFloatField5 = (float)0;
+	/**
+	 * offset 188
+	 */
+	scaled_channel<float, 1, 1> debugFloatField6 = (float)0;
+	/**
+	 * offset 192
+	 */
+	scaled_channel<float, 1, 1> debugFloatField7 = (float)0;
+	/**
+	 * offset 196
+	 */
+	scaled_channel<uint32_t, 1, 1> debugIntField1 = (uint32_t)0;
+	/**
+	 * offset 200
+	 */
+	scaled_channel<uint32_t, 1, 1> debugIntField2 = (uint32_t)0;
+	/**
+	 * offset 204
+	 */
+	scaled_channel<uint32_t, 1, 1> debugIntField3 = (uint32_t)0;
+	/**
+	 * offset 208
+	 */
+	scaled_channel<uint16_t, 1, 1> debugIntField4 = (uint16_t)0;
+	/**
+	 * offset 210
+	 */
+	scaled_channel<uint16_t, 1, 1> debugIntField5 = (uint16_t)0;
+	/** total size 212*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 19:33:53 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 20:52:04 EST 2021

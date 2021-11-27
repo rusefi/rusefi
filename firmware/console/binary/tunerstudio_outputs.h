@@ -44,31 +44,6 @@ enum class TsCalMode : uint8_t {
 struct TunerStudioOutputChannels : ts_outputs_s {
 	/* see also [OutputChannels] in rusefi.input */
 
-	scaled_channel<uint16_t, 100> ignitionLoad; // 136
-
-	// we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	scaled_channel<uint16_t> engineMakeCodeNameCrc16; // 138
-	// Errors
-	scaled_channel<uint32_t> totalTriggerErrorCounter; // 140
-	int orderingErrorCounter; // 144
-	scaled_channel<uint16_t> warningCounter; // 148
-	scaled_channel<uint16_t> lastErrorCode; // 150
-	int16_t recentErrorCodes[8]; // 152-166
-
-	// Debug
-	scaled_channel<float> debugFloatField1; // 168
-	scaled_channel<float> debugFloatField2;
-	scaled_channel<float> debugFloatField3;
-	scaled_channel<float> debugFloatField4;
-	scaled_channel<float> debugFloatField5;
-	scaled_channel<float> debugFloatField6;
-	scaled_channel<float> debugFloatField7;
-	scaled_channel<uint32_t> debugIntField1;
-	scaled_channel<uint32_t> debugIntField2;
-	scaled_channel<uint32_t> debugIntField3;
-	scaled_channel<uint16_t> debugIntField4;
-	scaled_channel<uint16_t> debugIntField5; // 210
-
 	// accelerometer
 	scaled_percent accelerationX; // 212
 	scaled_percent accelerationY; // 214
