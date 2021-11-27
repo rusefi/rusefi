@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 20:52:04 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:02:55 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -438,8 +438,72 @@ struct ts_outputs_s {
 	 * offset 210
 	 */
 	scaled_channel<uint16_t, 1, 1> debugIntField5 = (uint16_t)0;
-	/** total size 212*/
+	/**
+	 * offset 212
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationX = (uint16_t)0;
+	/**
+	 * offset 214
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationY = (uint16_t)0;
+	/**
+	 * offset 216
+	 */
+	uint16_t egtValues[EGT_CHANNEL_COUNT];
+	/**
+	 * offset 232
+	 */
+	scaled_channel<uint16_t, 100, 1> throttle2Position = (uint16_t)0;
+	/**
+	 * offset 234
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawTps1Primary = (uint16_t)0;
+	/**
+	 * offset 236
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawPpsPrimary = (uint16_t)0;
+	/**
+	 * offset 238
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawClt = (uint16_t)0;
+	/**
+	 * offset 240
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawIat = (uint16_t)0;
+	/**
+	 * offset 242
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawOilPressure = (uint16_t)0;
+	/**
+	 * offset 244
+	 */
+	scaled_channel<uint16_t, 1, 1> tuneCrc16 = (uint16_t)0;
+	/**
+	 * offset 246
+	 */
+	scaled_channel<uint8_t, 1, 1> unusedAt246 = (uint8_t)0;
+	/**
+	 * offset 247
+	 */
+	scaled_channel<uint8_t, 1, 1> tcuCurrentGear = (uint8_t)0;
+	/**
+	 * offset 248
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawPpsSecondary = (uint16_t)0;
+	/**
+	 * offset 250
+	 */
+	scaled_channel<uint8_t, 1, 1> knockLevels[12];
+	/**
+	 * offset 262
+	 */
+	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
+	/**
+	 * offset 263
+	 */
+	scaled_channel<uint8_t, 2, 1> flexPercent = (uint8_t)0;
+	/** total size 264*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 20:52:04 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:02:55 EST 2021
