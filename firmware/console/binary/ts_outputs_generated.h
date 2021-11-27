@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 11:56:34 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 13:01:48 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -186,6 +186,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambdaValue = (uint16_t)0;
 	/**
+	deg
 	 * offset 36
 	 */
 	scaled_channel<uint8_t, 10, 1> knockRetard = (uint8_t)0;
@@ -367,26 +368,32 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 	/**
+	%
 	 * offset 104
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
+	%
 	 * offset 106
 	 */
 	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
 	/**
+	Volts
 	 * offset 108
 	 */
 	scaled_channel<float, 1, 1> knockLevel = (float)0;
 	/**
+	sec
 	 * offset 112
 	 */
-	scaled_channel<uint32_t, 1, 1> timeSeconds = (uint32_t)0;
+	scaled_channel<uint32_t, 1, 1> seconds = (uint32_t)0;
 	/**
+	em
 	 * offset 116
 	 */
 	scaled_channel<uint32_t, 1, 1> engineMode = (uint32_t)0;
 	/**
+	version_f
 	 * offset 120
 	 */
 	scaled_channel<uint32_t, 1, 1> firmwareVersion = (uint32_t)0;
@@ -407,18 +414,22 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> padding = (uint8_t)0;
 	/**
+	%
 	 * offset 134
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelingLoad = (uint16_t)0;
 	/**
+	%
 	 * offset 136
 	 */
 	scaled_channel<uint16_t, 100, 1> ignitionLoad = (uint16_t)0;
 	/**
+	crc16
 	 * offset 138
 	 */
 	scaled_channel<uint16_t, 1, 1> engineMakeCodeNameCrc16 = (uint16_t)0;
 	/**
+	counter
 	 * offset 140
 	 */
 	scaled_channel<uint32_t, 1, 1> totalTriggerErrorCounter = (uint32_t)0;
@@ -427,81 +438,100 @@ struct ts_outputs_s {
 	 */
 	uint32_t orderingErrorCounter = (uint32_t)0;
 	/**
+	count
 	 * offset 148
 	 */
 	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
 	/**
+	error
 	 * offset 150
 	 */
 	scaled_channel<uint16_t, 1, 1> lastErrorCode = (uint16_t)0;
 	/**
+	error
 	 * offset 152
 	 */
 	uint16_t recentErrorCodes[8];
 	/**
+	val
 	 * offset 168
 	 */
 	scaled_channel<float, 1, 1> debugFloatField1 = (float)0;
 	/**
+	val
 	 * offset 172
 	 */
 	scaled_channel<float, 1, 1> debugFloatField2 = (float)0;
 	/**
+	val
 	 * offset 176
 	 */
 	scaled_channel<float, 1, 1> debugFloatField3 = (float)0;
 	/**
+	val
 	 * offset 180
 	 */
 	scaled_channel<float, 1, 1> debugFloatField4 = (float)0;
 	/**
+	val
 	 * offset 184
 	 */
 	scaled_channel<float, 1, 1> debugFloatField5 = (float)0;
 	/**
+	val
 	 * offset 188
 	 */
 	scaled_channel<float, 1, 1> debugFloatField6 = (float)0;
 	/**
+	val
 	 * offset 192
 	 */
 	scaled_channel<float, 1, 1> debugFloatField7 = (float)0;
 	/**
+	val
 	 * offset 196
 	 */
 	scaled_channel<uint32_t, 1, 1> debugIntField1 = (uint32_t)0;
 	/**
+	val
 	 * offset 200
 	 */
 	scaled_channel<uint32_t, 1, 1> debugIntField2 = (uint32_t)0;
 	/**
+	val
 	 * offset 204
 	 */
 	scaled_channel<uint32_t, 1, 1> debugIntField3 = (uint32_t)0;
 	/**
+	val
 	 * offset 208
 	 */
 	scaled_channel<uint16_t, 1, 1> debugIntField4 = (uint16_t)0;
 	/**
+	val
 	 * offset 210
 	 */
 	scaled_channel<uint16_t, 1, 1> debugIntField5 = (uint16_t)0;
 	/**
+	G
 	 * offset 212
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationX = (uint16_t)0;
 	/**
+	G
 	 * offset 214
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationY = (uint16_t)0;
 	/**
+	deg C
 	 * offset 216
 	 */
 	uint16_t egtValues[EGT_CHANNEL_COUNT];
 	/**
+	%
 	 * offset 232
 	 */
-	scaled_channel<uint16_t, 100, 1> throttle2Position = (uint16_t)0;
+	scaled_channel<uint16_t, 100, 1> TPS2Value = (uint16_t)0;
 	/**
 	 * offset 234
 	 */
@@ -523,6 +553,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawOilPressure = (uint16_t)0;
 	/**
+	crc16
 	 * offset 244
 	 */
 	scaled_channel<uint16_t, 1, 1> tuneCrc16 = (uint16_t)0;
@@ -638,6 +669,7 @@ struct ts_outputs_s {
 	 */
 	uint16_t knockCount = (uint16_t)0;
 	/**
+	G
 	 * offset 308
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationZ = (uint16_t)0;
@@ -671,4 +703,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 11:56:34 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 13:01:48 EST 2021
