@@ -158,7 +158,7 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale warningCounter;;"count",1, 0, 0, 0, 0
 	uint16_t autoscale lastErrorCode;;"error",1, 0, 0, 0, 0
 
-	uint16_t[8] recentErrorCodes;;"error", 1, 0, 0, 0, 0
+	uint16_t[8 iterate] recentErrorCodes;;"error", 1, 0, 0, 0, 0
 
 	float autoscale debugFloatField1;;"val", 1, 0, 0, 0, 0
 	float autoscale debugFloatField2;;"val", 1, 0, 0, 0, 0
@@ -201,7 +201,7 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t autoscale rawWastegatePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale wastegatePosition;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale wastegatePositionSensor;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale idlePositionSensor;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t autoscale rawLowFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0

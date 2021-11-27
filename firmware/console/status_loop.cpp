@@ -554,7 +554,7 @@ static void updateMiscSensors() {
 	
 	tsOutputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
-	tsOutputChannels.wastegatePosition = Sensor::getOrZero(SensorType::WastegatePosition);
+	tsOutputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
 
 #if	HAL_USE_ADC
 	tsOutputChannels.internalMcuTemperature = getMCUInternalTemperature();

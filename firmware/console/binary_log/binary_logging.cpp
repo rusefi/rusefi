@@ -71,7 +71,7 @@ static constexpr LogField fields[] = {
 	{tsOutputChannels.vvtTargets[1], GAUGE_NAME_VVT_TARGET_B1E, "deg", 0},
 	{tsOutputChannels.vvtTargets[2], GAUGE_NAME_VVT_TARGET_B2I, "deg", 0},
 	{tsOutputChannels.vvtTargets[3], GAUGE_NAME_VVT_TARGET_B2E, "deg", 0},
-	{tsOutputChannels.wastegatePosition, GAUGE_NAME_WG_POSITION, "%", 2},
+	{tsOutputChannels.wastegatePositionSensor, GAUGE_NAME_WG_POSITION, "%", 2},
 	{tsOutputChannels.idlePositionSensor, GAUGE_NAME_IDLE_POSITION, "%", 2},
 	{tsOutputChannels.chargeAirMass, GAUGE_NAME_AIR_MASS, "g", 3},
 	{tsOutputChannels.currentTargetAfr, GAUGE_NAME_TARGET_AFR, "afr", 2},
