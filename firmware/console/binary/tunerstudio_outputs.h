@@ -32,32 +32,20 @@ enum class TsCalMode : uint8_t {
 
 /**
  * todo https://github.com/rusefi/rusefi/issues/197
- * At the moment rusEFI does NOT have any code generation around TS output channels, three locations have to be changed manually
- * 1) this TunerStudioOutputChannels firmware version of the structure
+ * three locations have to be changed manually
+ * 1) we inherit from generated ts_outputs_s based on output_channels.txt
  * 2) '[OutputChannels]' block in rusefi.input
  * 3) com.rusefi.core.Sensor enum in rusEFI console source code
  *
- * status update: there is progress, a portion of this struct is now generated! we inherit from generated
- * ts_outputs_s and eventually the whole thing would be generated
- *
+ * see also [OutputChannels] in rusefi.input
+ * see also TS_OUTPUT_SIZE in rusefi_config.txt
  */
 struct TunerStudioOutputChannels : ts_outputs_s {
-	/* see also [OutputChannels] in rusefi.input */
-
-	scaled_percent accelerationYaw; // 312
-
-	scaled_channel<int8_t> vvtTargets[4]; // 314
-	scaled_channel<uint16_t> turboSpeed; // 318
-
-	uint8_t unusedAtTheEnd[18]; // we have some unused bytes to allow compatible TS changes
-
 	// Temporary - will remove soon
 	TsDebugChannels* getDebugChannels() {
 		return reinterpret_cast<TsDebugChannels*>(&debugFloatField1);
 	}
 
-	/* see also [OutputChannels] in rusefi.input */
-	/* see also TS_OUTPUT_SIZE in rusefi_config.txt */
 };
 
 extern TunerStudioOutputChannels tsOutputChannels;

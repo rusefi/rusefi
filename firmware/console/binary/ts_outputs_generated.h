@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:09:57 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:15:07 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -594,8 +594,30 @@ struct ts_outputs_s {
 	 * offset 310
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationRoll = (uint16_t)0;
-	/** total size 312*/
+	/**
+	 * offset 312
+	 */
+	scaled_channel<uint16_t, 100, 1> accelerationYaw = (uint16_t)0;
+	/**
+	 * offset 314
+	 */
+	scaled_channel<uint8_t, 1, 1> vvtTargets[4];
+	/**
+	 * offset 318
+	 */
+	scaled_channel<uint16_t, 1, 1> turboSpeed = (uint16_t)0;
+	/**
+	 * offset 320
+	 */
+	scaled_channel<uint8_t, 1, 1> unusedAtTheEnd[18];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 338
+	 */
+	uint8_t alignmentFill_at_338[2];
+	/** total size 340*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:09:57 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Nov 26 21:15:07 EST 2021

@@ -230,4 +230,12 @@ uint16_t rpmAcceleration;;"",1, 0, 0, 0, 0
 
 	uint16_t autoscale accelerationZ;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale accelerationRoll;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationYaw;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+
+	uint8_t[4] autoscale vvtTargets;;"",1, 0, 0, 0, 0
+	uint16_t autoscale turboSpeed;;"",1, 0, 0, 0, 0
+
+! we have some unused bytes to allow compatible TS changes
+	uint8_t[18] autoscale unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
 end_struct
