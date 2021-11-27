@@ -29,11 +29,15 @@ public class VssHardwareLoopTest extends RusefiTestBase {
     @Test
     public void test() {
         ecu.setEngineType(engine_type_e.FRANKENSO_MIATA_NA6_MAP);
-        ecu.sendCommand(getEnableCommand(Fields.CMD_EXTERNAL_STIMULATION));
-        ecu.changeRpm(1400);
+        ecu.changeRpm(1000);
 
-        // moving second trigger to another pin
-        ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
+        ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");
+        ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 1 none");
+        ecu.sendCommand(CMD_IDLE_PIN + " PD2");
+
+		ecu.sendCommand(CMD_TRIGGER_PIN + " 1 none");
+
+        ecu.sendCommand("set idle_solenoid_freq 1000");
 
         EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VSS));
 
@@ -42,7 +46,7 @@ public class VssHardwareLoopTest extends RusefiTestBase {
 
         sleep(2 * Timeouts.SECOND);
 
-        EcuTestHelper.assertSomewhatClose("VSS with input", 9, SensorCentral.getInstance().getValue(Sensor.VSS));
+        EcuTestHelper.assertSomewhatClose("VSS with input", 92, SensorCentral.getInstance().getValue(Sensor.VSS));
 
         // not related to VSS test, just need to validate this somewhere, so this random test is as good as any
         if (ControllerConnectorState.firmwareVersion == null)
