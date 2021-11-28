@@ -1,11 +1,12 @@
 package com.rusefi.output;
 
 import com.opensr5.ini.field.IniField;
-import com.rusefi.*;
+import com.rusefi.ConfigField;
+import com.rusefi.ReaderState;
+import com.rusefi.TypesHelper;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.List;
 
 import static com.rusefi.ToolUtil.EOL;
 
@@ -100,10 +101,9 @@ public class TsOutput {
     }
 
     protected int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {
-        List<ConfigField> tsFields = configStructure.tsFields;
-        FieldIterator iterator = new FieldIterator(tsFields);
+        FieldIterator iterator = new FieldIterator(configStructure.tsFields);
         int prevTsPosition = tsPosition;
-        for (int i = 0; i < tsFields.size(); i++) {
+        for (int i = 0; i < configStructure.tsFields.size(); i++) {
             iterator.start(i);
 
             // if duplicate names, use previous position

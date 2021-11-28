@@ -1,17 +1,14 @@
 package com.rusefi.test;
 
 import com.rusefi.ReaderState;
-import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
 
 public class OutputsTest {
     @Test
@@ -29,7 +26,7 @@ public class OutputsTest {
         state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
 
 
-        Assert.assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
+        assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
                 "afr_typet = scalar, U08, 4, \"ms\", 1, 0\n" +
                 "isForcedInduction = bits, U32, 5, [0:0]\n" +
                 "enableFan1WithAc = bits, U32, 5, [1:1]\n" +
@@ -71,15 +68,22 @@ public class OutputsTest {
     public void generateDataLog() throws IOException {
         String test = "struct total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "uint8_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
                 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
+        state.variableRegistry.register("PACK_MULT_PERCENT", 100);
         BufferedReader reader = new BufferedReader(new StringReader(test));
 
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(state);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
         state.readBufferedReader(reader, Collections.singletonList(dataLogConsumer));
+        assertEquals("entry = afr_type, \"PID dTime\", float,  \"%.3f\"\n" +
+                "entry = speedToRpmRatio, \"s2rpm\", float,  \"%.3f\"\n" +
+                "entry = afr_typet, \"PID dTime\", int,    \"%d\"\n" +
+                "entry = vehicleSpeedKph, \"\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
 
     }
 }
