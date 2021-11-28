@@ -79,7 +79,7 @@ public class GaugesPanel {
     private final JPanel messagesPanel = new JPanel(new BorderLayout());
     private final JSplitPane middleSplitPanel;
 
-    public GaugesPanel(UIContext uiContext, final Node config, PaneSettings paneSettings) {
+    public GaugesPanel(UIContext uiContext, final Node config) {
         this.uiContext = uiContext;
         gauges = new GaugesGrid(DEFAULT_ROWS, DEFAULT_COLUMNS);
         this.config = config;
@@ -101,7 +101,7 @@ public class GaugesPanel {
 
         content.add(middleSplitPanel, BorderLayout.CENTER);
 
-        content.add(new WarningPanel().getPanel(), BorderLayout.SOUTH);
+        content.add(new WarningPanel(config).getPanel(config), BorderLayout.SOUTH);
 
         applyShowFlags();
         final int splitLocation = config.getIntProperty(SPLIT_LOCATION, -1);
@@ -203,7 +203,7 @@ public class GaugesPanel {
     }
 
     private void prepareMessagesPanel() {
-        MessagesPanel mp = new MessagesPanel(null);
+        MessagesPanel mp = new MessagesPanel(null, config);
         messagesPanel.add(BorderLayout.NORTH, mp.getButtonPanel());
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
     }

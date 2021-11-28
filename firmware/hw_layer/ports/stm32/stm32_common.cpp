@@ -177,10 +177,8 @@ public:
 
 		// If we have too few usable bits, we run out of resolution, so don't allow that either.
 		// 200 counts = 0.5% resolution
-		if (m_period < _2_MHZ / ETB_HW_MAX_FREQUENCY) {
-			firmwareError(CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %d limit %d hz on pin \"%s\"", frequency,
-					ETB_HW_MAX_FREQUENCY,
-					msg);
+		if (m_period < 200) {
+			firmwareError(CUSTOM_OBD_HIGH_FREQUENCY, "PWM Frequency too high %d hz on pin \"%s\"", frequency, msg);
 			return;
 		}
 
@@ -258,6 +256,12 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	case GPIOD_13: return stm32_pwm_config{&PWMD4, 1, 2};
 	case GPIOD_14: return stm32_pwm_config{&PWMD4, 2, 2};
 	case GPIOD_15: return stm32_pwm_config{&PWMD4, 3, 2};
+#endif
+#if STM32_PWM_USE_TIM5
+	case GPIOA_0: return stm32_pwm_config{&PWMD5, 0, 2};
+	case GPIOA_1: return stm32_pwm_config{&PWMD5, 1, 2};
+	case GPIOA_2: return stm32_pwm_config{&PWMD5, 2, 2};
+	case GPIOA_3: return stm32_pwm_config{&PWMD5, 3, 2};
 #endif
 #if STM32_PWM_USE_TIM8
 	case GPIOC_6: return stm32_pwm_config{&PWMD8, 0, 3};
@@ -576,11 +580,11 @@ static int getSpiAf(SPIDriver *driver) {
 brain_pin_e getMisoPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1misoPin);
+		return engineConfiguration->spi1misoPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2misoPin);
+		return engineConfiguration->spi2misoPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3misoPin);
+		return engineConfiguration->spi3misoPin;
 	default:
 		break;
 	}
@@ -590,11 +594,11 @@ brain_pin_e getMisoPin(spi_device_e device) {
 brain_pin_e getMosiPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1mosiPin);
+		return engineConfiguration->spi1mosiPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2mosiPin);
+		return engineConfiguration->spi2mosiPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3mosiPin);
+		return engineConfiguration->spi3mosiPin;
 	default:
 		break;
 	}
@@ -604,11 +608,11 @@ brain_pin_e getMosiPin(spi_device_e device) {
 brain_pin_e getSckPin(spi_device_e device) {
 	switch(device) {
 	case SPI_DEVICE_1:
-		return CONFIG(spi1sckPin);
+		return engineConfiguration->spi1sckPin;
 	case SPI_DEVICE_2:
-		return CONFIG(spi2sckPin);
+		return engineConfiguration->spi2sckPin;
 	case SPI_DEVICE_3:
-		return CONFIG(spi3sckPin);
+		return engineConfiguration->spi3sckPin;
 	default:
 		break;
 	}

@@ -19,9 +19,9 @@ static gppwm_Map3D_t* tables[] = {
 	&table4,
 };
 
-void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initGpPwm() {
 	for (size_t i = 0; i < efi::size(channels); i++) {
-		auto& cfg = CONFIG(gppwm)[i];
+		auto& cfg = engineConfiguration->gppwm[i];
 
 		// If no pin, don't enable this channel.
 		if (!isBrainPinValid(cfg.pin)) {
@@ -34,13 +34,14 @@ void initGpPwm(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 
 		// Setup pin & pwm
 		pins[i].initPin("gp pwm", cfg.pin);
-		startSimplePwm(&outputs[i], "gp pwm", &engine->executor, &pins[i], freq, 0);
+		if (usePwm) {
+			startSimplePwm(&outputs[i], "gp pwm", &engine->executor, &pins[i], freq, 0);
+		}
 
 		// Set up this channel's lookup table
 		tables[i]->init(cfg.table, cfg.loadBins, cfg.rpmBins);
 
 		// Finally configure the channel
-		INJECT_ENGINE_REFERENCE(&channels[i]);
 		channels[i].init(usePwm, &outputs[i], &pins[i], tables[i], &cfg);
 	}
 }
@@ -53,8 +54,8 @@ void updateGppwm() {
 		float result = channels[i].update();
 
 #ifdef EFI_TUNER_STUDIO
-		if (CONFIG(debugMode) == DBG_GPPWM) {
-			float* debugFloats = &tsOutputChannels.debugFloatField1;
+		if (engineConfiguration->debugMode == DBG_GPPWM) {
+			scaled_channel<float>* debugFloats = &tsOutputChannels.debugFloatField1;
 			debugFloats[i] = result;
 		}
 #endif

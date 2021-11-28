@@ -42,7 +42,7 @@ ObdCanSensor<1, 0> obdTpsSensor(
 //);
 
 void initCanSensors() {
-	if (CONFIG(consumeObdSensors)) {
+	if (engineConfiguration->consumeObdSensors) {
 //		registerCanSensor(canPedalSensor);
 		registerCanSensor(obdRpmSensor);
 		registerCanSensor(obdCltSensor);

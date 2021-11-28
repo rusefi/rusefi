@@ -8,35 +8,36 @@
 
 #include "pch.h"
 #include "fsio_impl.h"
+#include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {
-	GPIOD_7,
-	GPIOG_9,
-	GPIOG_10,
-	GPIOG_11,
-	GPIOG_12,
-	GPIOG_13,
-	GPIOG_14,
-	GPIOB_4,
-	GPIOB_5,
-	GPIOB_6,
-	GPIOB_7,
-	GPIOB_8
+	PROTEUS_LS_1,
+	PROTEUS_LS_2,
+	PROTEUS_LS_3,
+	PROTEUS_LS_4,
+	PROTEUS_LS_5,
+	PROTEUS_LS_6,
+	PROTEUS_LS_7,
+	PROTEUS_LS_8,
+	PROTEUS_LS_9,
+	PROTEUS_LS_10,
+	PROTEUS_LS_11,
+	PROTEUS_LS_12
 };
 
 static const brain_pin_e ignPins[] = {
-	GPIOD_4,
-	GPIOD_3,
-	GPIOC_9,
-	GPIOC_8,
-	GPIOC_7,
-	GPIOG_8,
-	GPIOG_7,
-	GPIOG_6,
-	GPIOG_5,
-	GPIOG_4,
-	GPIOG_3,
-	GPIOG_2,
+	PROTEUS_IGN_1,
+	PROTEUS_IGN_2,
+	PROTEUS_IGN_3,
+	PROTEUS_IGN_4,
+	PROTEUS_IGN_5,
+	PROTEUS_IGN_6,
+	PROTEUS_IGN_7,
+	PROTEUS_IGN_8,
+	PROTEUS_IGN_9,
+	PROTEUS_IGN_10,
+	PROTEUS_IGN_11,
+	PROTEUS_IGN_12,
 };
 
 static void setInjectorPins() {
@@ -54,9 +55,9 @@ void setSdCardConfigurationOverrides(void) {
 
 static void setLedPins() {
 	// PE3 is error LED, configured in board.mk
-	CONFIG(communicationLedPin) = GPIOE_4;
-	CONFIG(runningLedPin) = GPIOE_5;
-	CONFIG(warningLedPin) = GPIOE_6;
+	engineConfiguration->communicationLedPin = GPIOE_4;
+	engineConfiguration->runningLedPin = GPIOE_5;
+	engineConfiguration->warningLedPin = GPIOE_6;
 }
 
 static void setupVbatt() {
@@ -107,30 +108,22 @@ static void setupDefaultSensorInputs() {
 	// trigger inputs
 #if VR_HW_CHECK_MODE
 	// set_trigger_input_pin 0 PE7
-	// GPIOE_7:  "VR 1"
-	engineConfiguration->triggerInputPins[0] = GPIOE_7;
-	// GPIOE_8:  "VR 2"
-	engineConfiguration->camInputs[0] = GPIOE_8;
+	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+	engineConfiguration->camInputs[0] = PROTEUS_VR_2;
 #else
 	// Digital channel 1 as default - others not set
-	engineConfiguration->triggerInputPins[0] = GPIOC_6;
+	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 #endif
 
 	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 
-	// CLT = Analog Temp 3 = PB0
-	engineConfiguration->clt.adcChannel = EFI_ADC_8;
 
-	// IAT = Analog Temp 2 = PC5
-	engineConfiguration->iat.adcChannel = EFI_ADC_15;
-
-	// TPS = Analog volt 2 = PC1
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_11;
-
-	// MAP = Analog volt 1 = PC0
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_10;
+	engineConfiguration->clt.adcChannel = PROTEUS_IN_CLT;
+	engineConfiguration->iat.adcChannel = PROTEUS_IN_IAT;
+	engineConfiguration->tps1_1AdcChannel = PROTEUS_IN_TPS;
+	engineConfiguration->map.sensor.hwChannel = PROTEUS_IN_MAP;
 
 	// pin #28 WBO AFR "Analog Volt 10"
 	engineConfiguration->afr.hwChannel = EFI_ADC_5;
@@ -149,7 +142,6 @@ static void setupSdCard() {
 
 void setBoardConfigOverrides(void) {
 	setupSdCard();
-	setupEtb();
 	setLedPins();
 	setupVbatt();
 
@@ -185,6 +177,7 @@ void setSerialConfigurationOverrides(void) {
 void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
+	setupEtb();
 
 	engineConfiguration->isSdCardEnabled = true;
 
@@ -195,20 +188,22 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 8;
 	engineConfiguration->specs.firingOrder = FO_1_8_7_2_6_5_4_3;
 
-	CONFIG(enableSoftwareKnock) = true;
+	engineConfiguration->enableSoftwareKnock = true;
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	CONFIG(mainRelayPin) = GPIOB_9;//  "Lowside 13"    # pin 10/black35
-	CONFIG(fanPin) = GPIOE_1;//  "Lowside 15"    # pin 12/black35
-	CONFIG(fuelPumpPin) = GPIOE_2;//  "Lowside 16"    # pin 23/black35
+#if HW_PROTEUS & EFI_PROD_CODE
+	engineConfiguration->mainRelayPin = PROTEUS_LS_13;
+	engineConfiguration->fanPin = PROTEUS_LS_15;
+	engineConfiguration->fuelPumpPin = PROTEUS_LS_16;
+#endif // HW_PROTEUS
 
 	// If we're running as hardware CI, borrow a few extra pins for that
 #ifdef HARDWARE_CI

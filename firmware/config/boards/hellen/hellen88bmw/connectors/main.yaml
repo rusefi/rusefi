@@ -1,0 +1,186 @@
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+
+pins:
+  - pin: 1
+    id: GPIOG_14
+    class: outputs
+    function: Fuel Pump Relay Output (low)
+    ts_name: 1 - OUT_PUMP
+
+  - pin: 2
+    # H144_OUT_PWM8
+    id: GPIOD_12
+    class: outputs
+    ts_name: 2 - IdleC
+
+  - pin: 3
+    id: GPIOD_9
+    function: Injector 5 Output
+    class: outputs
+    ts_name: 3 - INJ_5
+    type: inj
+
+  - pin: 4
+    id: GPIOF_12
+    function: Injector 6 Output
+    class: outputs
+    ts_name: 4 - INJ_6
+    type: inj
+
+  - pin: 5
+    id: GPIOD_10
+    function: Injector 4 Output
+    class: outputs
+    ts_name: 5 - INJ_4
+    type: inj
+
+  - pin: 7
+    id: GPIOF_13
+    function: Injector 7/VVT Output
+    class: outputs
+    ts_name: 7 - INJ_7/VVT
+    type: inj
+
+  - pin: 8
+    ts_name: CEL
+
+  - pin: 16
+    id: [GPIOB_1, EFI_ADC_9]
+    class: [event_inputs, analog_inputs]
+    ts_name: 16 - CRANK
+    function: Crankshaft Sensor
+
+  - pin: 17
+    id: [GPIOA_6, EFI_ADC_6]
+    class: [event_inputs, analog_inputs]
+    ts_name: 17 - CAM
+    function: Camshaft Sensor
+
+  - pin: 23
+    id: GPIOE_3
+    class: outputs
+    ts_name: 23 - Coil 4
+    function: Coil 4
+    type: ign
+
+  - pin: 24
+    id: GPIOB_8
+    class: outputs
+    ts_name: 24 - Coil 6
+    function: Coil 6
+    type: ign
+
+  - pin: 25
+    id: GPIOE_2
+    class: outputs
+    ts_name: 25 - Coil 5
+    function: Coil 5
+    type: ign
+
+  - pin: 27
+    id: GPIOD_3
+    class: outputs
+    ts_name: 27 - MAIN
+    function: Main relay control
+    type: ls
+
+  - pin: 29
+# H144_OUT_PWM5
+    id: GPIOC_9
+    class: outputs
+    ts_name: 29 - Idle
+
+  - pin: 31
+    id: GPIOD_11
+    function: Injector 3 Output
+    class: outputs
+    ts_name: 31 - INJ_3
+    type: inj
+
+  - pin: 32
+    id: GPIOG_8
+    function: Injector 2 Output
+    class: outputs
+    ts_name: 32 - INJ_2
+    type: inj
+
+  - pin: 33
+    id: GPIOG_7
+    function: Injector 1 Output
+    class: outputs
+    ts_name: 33 - INJ_1
+    type: inj
+
+  - pin: 35
+    id: GPIOF_14
+    function: Injector 8 Output
+    class: outputs
+    ts_name: 35 - INJ_8
+    type: inj
+
+  - pin: 41
+    id: EFI_ADC_10
+    class: analog_inputs
+    ts_name: 41 - MAF
+    function: MAF sensor
+
+  - pin: 47
+# H144_OUT_PWM7
+    id: GPIOD_15
+    class: outputs
+    ts_name: 47 - Tach
+
+  - pin: 50
+    id: GPIOC_13
+    class: outputs
+    ts_name: 50 - Coil 1
+    function: Coil 1
+    type: ign
+
+
+  - pin: 51
+    id: GPIOE_5
+    class: outputs
+    ts_name: 51 - Coil 2
+    function: Coil 2
+    type: ign
+
+  - pin: 52
+    id: GPIOE_4
+    class: outputs
+    ts_name: 52 - Coil 3
+    function: Coil 3
+    type: ign
+
+  - pin: 73
+    id: EFI_ADC_4
+    class: analog_inputs
+    ts_name: 73 - TPS
+
+  - pin: 77
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: 77 - IAT
+    function: IAT sensor
+
+  - pin: 78
+    id: EFI_ADC_12
+    class: analog_inputs
+    ts_name: 78 - CLT
+    function: CLT sensor
+
+  - pin: Aux MAP
+# H144_IN_MAP2
+    id: EFI_ADC_11
+    class: analog_inputs
+    ts_name: Aux MAP
+
+  - pin: Aux BARO
+# H144_IN_AUX4
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Aux BARO
+
+info:
+  title: Hellen 88 BMW
+  pins:

@@ -90,6 +90,13 @@ void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* s
 	}
 }
 
+void SingleTimerExecutor::cancel(scheduling_s* scheduling) {
+	// Lock for queue removal - we may already be locked, but that's ok
+	chibios_rt::CriticalSectionLocker csl;
+
+	queue.remove(scheduling);
+}
+
 void SingleTimerExecutor::onTimerCallback() {
 	timerCallbackCounter++;
 

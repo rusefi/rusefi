@@ -34,6 +34,10 @@ public class IoUtil {
         sendCommand(command, CommandQueue.DEFAULT_TIMEOUT, commandQueue);
     }
 
+    public static String getSetCommand(String settingName) {
+        return Fields.CMD_SET + " " + settingName;
+    }
+
     public static String getEnableCommand(String settingName) {
         return Fields.CMD_ENABLE + " " + settingName;
     }

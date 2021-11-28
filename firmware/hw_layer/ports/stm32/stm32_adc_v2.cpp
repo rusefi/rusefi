@@ -87,7 +87,7 @@ float getMcuTemperature() {
 	}
 
 	float volts = (float)sum / (4096 * oversample);
-	volts *= CONFIG(adcVcc);
+	volts *= engineConfiguration->adcVcc;
 
 	volts -= 0.760f; // Subtract the reference voltage at 25 deg C
 	float degrees = volts / 0.0025f; // Divide by slope 2.5mV
@@ -173,5 +173,31 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 
 	return true;
 }
+
+#if EFI_USE_FAST_ADC
+
+#include "AdcConfiguration.h"
+
+extern AdcDevice fastAdc;
+
+static constexpr FastAdcToken invalidToken = (FastAdcToken)(-1);
+
+FastAdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
+	if (!isAdcChannelValid(channel)) {
+		return invalidToken;
+	}
+
+	return fastAdc.internalAdcIndexByHardwareIndex[static_cast<size_t>(channel)];
+}
+
+adcsample_t getFastAdc(FastAdcToken token) {
+	if (token == invalidToken) {
+		return 0;
+	}
+
+	return fastAdc.samples[token];
+}
+
+#endif
 
 #endif // HAL_USE_ADC

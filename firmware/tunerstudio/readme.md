@@ -1,7 +1,7 @@
 # TunerStudio
 
 This directory contains the initialization and configuration files for the
-RusEFI interface to TunerStudio.
+rusEFI interface to TunerStudio.
 
 The primary contents are a set ```rusefi*.ini``` initialization files, used to
 configure TunerStudio to setup and monitor a specific ECU board.  These are

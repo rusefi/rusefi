@@ -29,7 +29,6 @@
  */
 
 #include "global.h"
-#include "engine_ptr.h"
 
 #define EXPECTED_REMAINING_STACK 128
 

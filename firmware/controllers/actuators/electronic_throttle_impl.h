@@ -43,12 +43,12 @@ public:
 	// Helpers for individual parts of throttle control
 	expected<percent_t> observePlant() const override;
 
-	expected<percent_t> getSetpoint() const override;
+	expected<percent_t> getSetpoint() override;
 	expected<percent_t> getSetpointEtb() const;
 	expected<percent_t> getSetpointWastegate() const;
 	expected<percent_t> getSetpointIdleValve() const;
 
-	expected<percent_t> getOpenLoop(percent_t target) const override;
+	expected<percent_t> getOpenLoop(percent_t target) override;
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;
 	expected<percent_t> getClosedLoopAutotune(percent_t setpoint, percent_t actualThrottlePosition);
 

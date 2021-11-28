@@ -13,8 +13,6 @@
 #include "signature.h"
 
 // We take these precautions to avoid redefinition of signature in generated .h files
-#undef SIGNATURE_BOARD
-#undef SIGNATURE_DATE
 #undef SIGNATURE_HASH
 #undef TS_SIGNATURE
 

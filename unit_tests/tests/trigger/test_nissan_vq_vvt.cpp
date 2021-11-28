@@ -16,20 +16,21 @@ public:
 	TriggerWaveform *form;
 	bool isVvt;
 	int vvtBankIndex;
+	scheduling_s sched;
 };
 
 static void func(TriggerCallback *callback) {
 	int formIndex = callback->toothIndex % callback->form->getSize();
 	Engine *engine = callback->engine;
-	EXPAND_Engine;
 
-	int value = callback->form->wave.channels[0].getState(formIndex);
+
+	int value = callback->form->wave.getChannelState(0, formIndex);
 	efitick_t nowNt = getTimeNowNt();
 	if (callback->isVvt) {
 		trigger_value_e v = value ? TV_RISE : TV_FALL;
-		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK PASS_ENGINE_PARAMETER_SUFFIX);
+		hwHandleVvtCamSignal(v, nowNt, callback->vvtBankIndex * CAMS_PER_BANK);
 	} else {
-		handleShaftSignal(0, value, nowNt PASS_ENGINE_PARAMETER_SUFFIX);
+		handleShaftSignal(0, value, nowNt);
 	}
 }
 
@@ -39,8 +40,8 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 		int count,
 		bool isVvt,
 		int vvtBankIndex,
-		int vvtOffset
-		DECLARE_ENGINE_PARAMETER_SUFFIX) {
+		int vvtOffset,
+		std::vector<std::shared_ptr<TriggerCallback>>& ptrs) {
 	int totalIndex = 0;
 
 	/**
@@ -50,15 +51,17 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 	for (int r = 0; r < count; r++) {
 		for (size_t i = 0; i < shape->getSize(); i++) {
 			float angle = vvtOffset + shape->getAngle(totalIndex);
-			TriggerCallback *param = new TriggerCallback();
+
+			std::shared_ptr<TriggerCallback> param = std::make_shared<TriggerCallback>();
+			ptrs.push_back(param);
+
 			param->engine = engine;
 			param->toothIndex = totalIndex;
 			param->form = shape;
 			param->isVvt = isVvt;
 			param->vvtBankIndex = vvtBankIndex;
 
-			scheduling_s *sch = new scheduling_s();
-			engine->executor.scheduleByTimestamp("test", sch, timeScale * 1000 * angle, { func, param });
+			engine->executor.scheduleByTimestamp("test", &param->sched, timeScale * 1000 * angle, { func, param.get() });
 			totalIndex++;
 		}
 	}
@@ -66,7 +69,10 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 
 
 TEST(nissan, vq_vvt) {
-	WITH_ENGINE_TEST_HELPER (HELLEN_121_NISSAN_6_CYL);
+	// hold a reference to the heap allocated scheduling events until the test is done
+	std::vector<std::shared_ptr<TriggerCallback>> ptrs;
+
+	EngineTestHelper eth (HELLEN_121_NISSAN_6_CYL);
 	engineConfiguration->isIgnitionEnabled = false;
 	engineConfiguration->isInjectionEnabled = false;
 
@@ -78,7 +84,7 @@ TEST(nissan, vq_vvt) {
 
 		scheduleTriggerEvents(&crank,
 				/* timeScale */ 1,
-				cyclesCount, false, -1, 0 PASS_ENGINE_PARAMETER_SUFFIX);
+				cyclesCount, false, -1, 0, ptrs);
 	}
 	float vvtTimeScale = 1;
 
@@ -92,8 +98,8 @@ TEST(nissan, vq_vvt) {
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
 				/* vvtBankIndex */ 0,
-				/* vvtOffset */ testVvtOffset
-				PASS_ENGINE_PARAMETER_SUFFIX);
+				/* vvtOffset */ testVvtOffset,
+				ptrs);
 	}
 
 	{
@@ -104,12 +110,12 @@ TEST(nissan, vq_vvt) {
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
 				/* vvtBankIndex */1,
-				/* vvtOffset */ testVvtOffset + NISSAN_VQ_CAM_OFFSET
-				PASS_ENGINE_PARAMETER_SUFFIX);
+				/* vvtOffset */ testVvtOffset + NISSAN_VQ_CAM_OFFSET,
+				ptrs);
 	}
 
 	eth.executeUntil(1473000);
-	ASSERT_EQ(0, GET_RPM());
+	ASSERT_EQ(167, GET_RPM());
 
 	eth.executeUntil(1475000);
 	ASSERT_EQ(167, GET_RPM());

@@ -40,12 +40,12 @@ static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNE
 static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
 // Board voltage, with divider coefficient accounted for
-float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
-	return getVoltage(msg, hwChannel PASS_ENGINE_PARAMETER_SUFFIX) * engineConfiguration->analogInputDividerCoefficient;
+float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
+	return getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
 }
 
 // voltage in MCU universe, from zero to VDD
-float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getVoltage(const char *msg, adc_channel_e hwChannel) {
 	return adcToVolts(getAdcValue(msg, hwChannel));
 }
 
@@ -432,7 +432,7 @@ void removeChannel(const char *name, adc_channel_e setting) {
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void setAdcChannelOverrides() { }
 
-static void configureInputs(void) {
+static void configureInputs() {
 	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
 
 	/**
@@ -445,16 +445,9 @@ static void configureInputs(void) {
 
 	addChannel("HIP9011", engineConfiguration->hipOutputChannel, ADC_FAST);
 
-	addChannel("Baro Press", engineConfiguration->baroSensor.hwChannel, ADC_SLOW);
-
 	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 
 	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
-
-	if (CONFIG(isCJ125Enabled)) {
-		addChannel("CJ125 UR", engineConfiguration->cj125ur, ADC_SLOW);
-		addChannel("CJ125 UA", engineConfiguration->cj125ua, ADC_SLOW);
-	}
 
 	setAdcChannelOverrides();
 }
@@ -496,12 +489,12 @@ void printFullAdcReportIfNeeded(void) {
 
 #else /* not HAL_USE_ADC */
 
-__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e) {
 	return 0;
 }
 
 // voltage in MCU universe, from zero to VDD
-__attribute__((weak)) float getVoltage(const char*, adc_channel_e DECLARE_ENGINE_PARAMETER_SUFFIX) {
+__attribute__((weak)) float getVoltage(const char*, adc_channel_e) {
 	return 0;
 }
 

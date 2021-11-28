@@ -9,9 +9,9 @@
 
 #include "engine_configuration.h"
 
-void setTestEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setTestVVTEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setTestEngineConfiguration();
+void setTestVVTEngineConfiguration();
 
-void setTestEngineIssue366both(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setTestEngineIssue366rise(DECLARE_CONFIG_PARAMETER_SIGNATURE);
-void setProteusAnalogPwmTest(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setTestEngineIssue366both();
+void setTestEngineIssue366rise();
+void setProteusAnalogPwmTest();

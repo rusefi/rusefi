@@ -8,5 +8,5 @@
 #pragma once
 #include "engine_configuration.h"
 
-void setHonda600(DECLARE_CONFIG_PARAMETER_SIGNATURE);
+void setHonda600();
 

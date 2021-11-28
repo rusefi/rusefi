@@ -727,7 +727,7 @@
  *          the system is halted.
  */
 #define CH_CFG_SYSTEM_HALT_HOOK(reason) {                                   \
-		  printf("chSysHalt\r\n");                                          \
+		  printf("chSysHalt: %s\r\n", reason);                              \
 		  exit(-1);                                                         \
 }
 

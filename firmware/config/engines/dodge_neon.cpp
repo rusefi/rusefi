@@ -82,8 +82,8 @@ static const uint8_t veDodgeNeon2003Table[16][16] = {
 };
 
 
-void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setDodgeNeon1995EngineConfiguration() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->trigger.type = TT_DODGE_NEON_1995;
 
@@ -113,7 +113,7 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * that's 1995 config
 	 */
 
-	setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
+	setWholeTimingTable_d(12);
 
 	// set cranking_injection_mode 0
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
@@ -180,8 +180,8 @@ void setDodgeNeon1995EngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->clt.config = {0, 30, 100, 32500, 7550, 700, 2700};
 }
 
-void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setDodgeNeonNGCEngineConfiguration() {
+	setDefaultFrankensoConfiguration();
 	engineConfiguration->trigger.type = TT_DODGE_NEON_2003_CAM;
 	setFrankenso_01_LCD(engineConfiguration);
 	setFrankenso0_1_joystick(engineConfiguration);
@@ -206,7 +206,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * fuel 2.8
 	 *
 	 */
-	//setWholeTimingTable_d(12 PASS_CONFIG_PARAMETER_SUFFIX);
+	//setWholeTimingTable_d(12);
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTable(config->ignitionTable, fromODB);
 #endif
@@ -226,9 +226,9 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 	setLinearCurve(config->ignitionLoadBins, 20, 120, 1);
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
-	setFuelTablesLoadBin(20, 120 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(20, 120);
 
 	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 
@@ -326,7 +326,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 */
 	engineConfiguration->clt.adcChannel = EFI_ADC_12;
 
-	engineConfiguration->sensorChartMode = SC_MAP;
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 
 	engineConfiguration->hip9011Gain = 0.3;
@@ -350,15 +349,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 //	engineConfiguration->clutchUpPin = GPIOA_14; // note SWCLK - conflict with SWD
 	engineConfiguration->clutchUpPinMode = PI_PULLUP;
 
-	engineConfiguration->auxPidPins[0] = GPIOD_5; // playing with AUX PID for alternator
-	engineConfiguration->auxPidFrequency[0] = 300;
-
-//	engineConfiguration->isVerboseAuxPid1 = true;
-	engineConfiguration->auxPid[0].offset = 10;
-	engineConfiguration->auxPid[0].pFactor = 5;
-	engineConfiguration->auxPid[0].iFactor = 0.1;
-	engineConfiguration->auxPid[0].dFactor = 0.1;
-
 //	engineConfiguration->vehicleSpeedSensorInputPin = GPIOA_8;
 
 	engineConfiguration->fanOnTemperature = 92;
@@ -368,7 +358,7 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 
 //	engineConfiguration->tunerStudioSerialSpeed = 9600;
 	engineConfiguration->tunerStudioSerialSpeed = 19200;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 //temp	engineConfiguration->alternatorControlPin = GPIOD_5;
 	engineConfiguration->targetVBatt = 14.0;
@@ -383,10 +373,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 //	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
-	engineConfiguration->engineLoadAccelLength = 12;
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 0;
-
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 
@@ -400,8 +386,6 @@ void setDodgeNeonNGCEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->manIdlePosition = 36; // set_idle_pwm 40
 
 	engineConfiguration->slowAdcAlpha = 0.33333;
-
-	engineConfiguration->isCylinderCleanupEnabled = true;
 
 	// end of setDodgeNeonNGCEngineConfiguration
 }

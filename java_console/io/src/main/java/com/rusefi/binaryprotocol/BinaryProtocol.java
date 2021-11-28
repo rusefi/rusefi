@@ -220,6 +220,11 @@ public class BinaryProtocol {
         linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
+    public String getSignature() throws IOException {
+        HelloCommand.send(stream);
+        return HelloCommand.getHelloResponse(incomingData);
+    }
+
     /**
      * this method reads configuration snapshot from controller
      *
@@ -227,8 +232,7 @@ public class BinaryProtocol {
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
         try {
-            HelloCommand.send(stream);
-            signature = HelloCommand.getHelloResponse(incomingData);
+            signature = getSignature();
             System.out.println("Got " + signature);
             SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
@@ -463,7 +467,7 @@ public class BinaryProtocol {
         if (isClosed)
             return null;
         try {
-            LinkManager.assertCommunicationThread();
+            linkManager.assertCommunicationThread();
             dropPending();
 
             sendPacket(packet);
@@ -488,7 +492,7 @@ public class BinaryProtocol {
     public void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
-        byte packet[] = new byte[5 + size];
+        byte[] packet = new byte[5 + size];
         packet[0] = Fields.TS_CHUNK_WRITE_COMMAND;
         putShort(packet, 1, swap16(ecuOffset));
         putShort(packet, 3, swap16(size));

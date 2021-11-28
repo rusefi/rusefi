@@ -18,7 +18,7 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class SerialIoStreamJSerialComm extends AbstractIoStream {
     private static final Logging log = getLogging(SerialIoStreamJSerialComm.class);
-    private SerialPort sp;
+    private final SerialPort sp;
     private final String port;
     private final IncomingDataBuffer dataBuffer;
 
@@ -98,5 +98,10 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
         serialPort.openPort(0);
 //        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
         return new SerialIoStreamJSerialComm(serialPort, port);
+    }
+
+    @Override
+    public String toString() {
+        return port + " " + super.toString();
     }
 }

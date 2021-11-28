@@ -1,3 +1,8 @@
+Sept, 23 2021 status
+* two Hellen-Mercedes driving
+* Hellen-Nissan started!
+* Lua progress
+
 July, 25 2021 status
 * we now have five or six Hellen boards too many of these untested
 * Matt is helping Hellen-Mercedes and H7 progress

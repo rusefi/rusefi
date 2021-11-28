@@ -4,7 +4,7 @@
 #include "table_helper.h"
 #include "mazda_miata_vvt.h"
 
-static void setBosch02880155868(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setBosch02880155868() {
 	// http://www.boschdealer.com/specsheets/0280155868cs.jpg
 	engineConfiguration->injector.battLagCorrBins[0] = 6;
 	engineConfiguration->injector.battLagCorr[0] = 3.371;
@@ -31,7 +31,7 @@ static void setBosch02880155868(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->injector.battLagCorr[7] = 0.726;
 }
 
-static void setDefaultWarmupFuelEnrichment(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setDefaultWarmupFuelEnrichment() {
 	static const float bins[] =
 	{
 		-40,
@@ -77,7 +77,7 @@ static void setDefaultWarmupFuelEnrichment(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	copyArray(config->cltFuelCorr, values);
 }
 
-static void setDefaultVETable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setDefaultVETable() {
 	setRpmTableBin(config->veRpmBins, FUEL_RPM_COUNT);
 	setTable(config->veTable, 80);
 
@@ -97,7 +97,7 @@ static void setDefaultVETable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
-static void setDefaultFuelCutParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setDefaultFuelCutParameters() {
 	engineConfiguration->coastingFuelCutEnabled = false;
 	engineConfiguration->coastingFuelCutRpmLow = 1300;
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
@@ -106,14 +106,14 @@ static void setDefaultFuelCutParameters(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->coastingFuelCutClt = 30;
 }
 
-static void setDefaultStftSettings(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	auto& cfg = CONFIG(stft);
+static void setDefaultStftSettings() {
+	auto& cfg = engineConfiguration->stft;
 
 	// Default to disabled
-	CONFIG(fuelClosedLoopCorrectionEnabled) = false;
+	engineConfiguration->fuelClosedLoopCorrectionEnabled = false;
 
 	// Default to proportional mode (for wideband sensors)
-	CONFIG(stftIgnoreErrorMagnitude) = false;
+	engineConfiguration->stftIgnoreErrorMagnitude = false;
 
 	// 60 second startup delay - some O2 sensors are slow to warm up.
 	cfg.startupDelay = 60;
@@ -156,19 +156,19 @@ static const uint8_t tpsTpsTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE] = {
 {/* 7 100	*//* 0 0.0*/37,	/* 1 10.0*/35,	/* 2 20.0*/32,	/* 3 35.0*/28,	/* 4 50.0*/23,	/* 5 65.0*/17,	/* 6 80.0*/10,	/* 7 100.0*/0,	},
 };
 
-static void setMazdaMiataNbTpsTps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+static void setMazdaMiataNbTpsTps() {
 	setLinearCurve(config->tpsTpsAccelFromRpmBins, 0, 100, 10);
 	setLinearCurve(config->tpsTpsAccelToRpmBins, 0, 100, 10);
 	copyTable(config->tpsTpsAccelTable, tpsTpsTable);
 }
 
-static void setDefaultLambdaTable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	constexpr float mapBins[] = {
+static void setDefaultLambdaTable() {
+	static constexpr float mapBins[] = {
 		30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 175, 200, 225, 250
 	};
 	copyArray(config->lambdaLoadBins, mapBins);
 
-	constexpr float rowValues[] = {
+	static constexpr float rowValues[] = {
 		1,		1,		1,		1,		// 30, 40, 50, 60 kpa
 		1,		0.95,	0.92,	0.90,	// 70, 80, 90, 100 kpa
 		0.89,	0.88,	0.86,	0.84,	// 110, 120, 130, 150 kpa
@@ -183,7 +183,7 @@ static void setDefaultLambdaTable(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	}
 }
 
-void setDefaultFuel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
+void setDefaultFuel() {
 	// Base injection configuration
 	engineConfiguration->isInjectionEnabled = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
@@ -192,20 +192,20 @@ void setDefaultFuel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	 * By the way http://users.erols.com/srweiss/tableifc.htm has a LOT of data
 	 */
 	engineConfiguration->injector.flow = 200;
-	engineConfiguration->stoichRatioPrimary = STOICH_RATIO * PACK_MULT_AFR_CFG;
+	engineConfiguration->stoichRatioPrimary = STOICH_RATIO;
 
 	// 9.0 = E100 pure ethanol
-	engineConfiguration->stoichRatioSecondary = 9.0f * PACK_MULT_AFR_CFG;
+	engineConfiguration->stoichRatioSecondary = 9.0f;
 
 	// Injector deadtime
-	setBosch02880155868(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setBosch02880155868();
 
 	// Tables
-	setFuelTablesLoadBin(10, 160 PASS_CONFIG_PARAMETER_SUFFIX);
+	setFuelTablesLoadBin(10, 160);
 	setRpmTableBin(config->injPhaseRpmBins, FUEL_RPM_COUNT);
-	setDefaultVETable(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultVETable();
 	setTable(config->injectionPhase, -180.0f);
-	setDefaultLambdaTable(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultLambdaTable();
 
 	// Charge temperature estimation
 	engineConfiguration->tChargeMinRpmMinTps = 0.25;
@@ -220,21 +220,16 @@ void setDefaultFuel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->tChargeAirDecrLimit = 12.5f;
 
 	// CLT correction table
-	setDefaultWarmupFuelEnrichment(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultWarmupFuelEnrichment();
 
 	// IAT correction table
 	// TODO
 
 	// Closed loop fuel correction
-	setDefaultStftSettings(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultStftSettings();
 
 	// Decel fuel cut
-	setDefaultFuelCutParameters(PASS_CONFIG_PARAMETER_SIGNATURE);
-
-	// Accel Enrich
-	engineConfiguration->engineLoadAccelLength = 6;
-	engineConfiguration->engineLoadAccelEnrichmentThreshold = 5; // kPa
-	engineConfiguration->engineLoadAccelEnrichmentMultiplier = 0; // todo: improve implementation and re-enable by default
+	setDefaultFuelCutParameters();
 
 	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
@@ -246,7 +241,7 @@ void setDefaultFuel(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 #endif // EFI_UNIT_TEST
 
 	// TPS/TPS AE curve
-	setMazdaMiataNbTpsTps(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setMazdaMiataNbTpsTps();
 
 	// AE load taper
 	setLinearCurve(engineConfiguration->mapAccelTaperBins, 0, 32, 4);

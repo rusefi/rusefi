@@ -54,8 +54,8 @@ pins:
   - pin: 8
     id: MC33810_1_GD_2
     class: outputs
-    function: Ignition 6
-    ts_name: D08 - Ignition Cyl 6
+    function: Ignition 2
+    ts_name: D08 - Ignition Cyl 2
     type: ign
 
   - pin: 9
@@ -68,8 +68,8 @@ pins:
   - pin: 10
     id: MC33810_1_GD_3
     class: outputs
-    function: Ignition 2
-    ts_name: D10 - Ignition Cyl 2
+    function: Ignition 1
+    ts_name: D10 - Ignition Cyl 1
     type: ign
 
   - pin: 11
@@ -104,8 +104,8 @@ pins:
   - pin: 16
     id: MC33810_1_GD_1
     class: outputs
-    function: Ignition 1
-    ts_name: D16 - Ignition Cyl 1
+    function: Ignition 6
+    ts_name: D16 - Ignition Cyl 6
     type: ign
 
   - pin: 17

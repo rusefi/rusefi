@@ -11,6 +11,7 @@
 
 void updateDevConsoleState(void);
 void prepareTunerStudioOutputs(void);
+void updateCurrentEnginePhase();
 void startStatusThreads(void);
 void initStatusLoop(void);
 

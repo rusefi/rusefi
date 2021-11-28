@@ -34,9 +34,10 @@ static void test100dutyCycle() {
 	printf("*************************************** test100dutyCycle\r\n");
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
-	TestExecutor executor;
-	SimplePwm pwm("test PWM1");
+
 	OutputPin pin;
+	SimplePwm pwm("test PWM1");
+	TestExecutor executor;
 
 	startSimplePwm(&pwm, "unit_test",
 			&executor,
@@ -60,9 +61,10 @@ static void testSwitchToNanPeriod() {
 	printf("*************************************** testSwitchToNanPeriod\r\n");
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
-	TestExecutor executor;
-	SimplePwm pwm("test PWM1");
+
 	OutputPin pin;
+	SimplePwm pwm("test PWM1");
+	TestExecutor executor;
 
 	startSimplePwm(&pwm, "unit_test",
 			&executor,
@@ -95,9 +97,10 @@ TEST(misc, testPwmGenerator) {
 	testSwitchToNanPeriod();
 
 	expectedTimeOfNextEvent = timeNowUs = 0;
-	TestExecutor executor;
-	SimplePwm pwm("test PWM3");
+
 	OutputPin pin;
+	SimplePwm pwm("test PWM3");
+	TestExecutor executor;
 
 	startSimplePwm(&pwm,
 			"unit_test",
@@ -105,7 +108,6 @@ TEST(misc, testPwmGenerator) {
 			&pin,
 			1000 /* frequency */,
 			0.80 /* duty cycle */);
-
 
 	expectedTimeOfNextEvent += 800;
 	assertEqualsM2("1@1000/80", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
@@ -145,10 +147,5 @@ TEST(misc, testPwmGenerator) {
 	ASSERT_EQ( 5000,  timeNowUs) << "time4";
 	assertEqualsM2("7@1000/0", expectedTimeOfNextEvent, executor.getForUnitTest(0)->momentX, 0);
 
-
 	assertNextEvent("exec@6", LOW_VALUE /* pin value */, &executor, pin);
 }
-
-
-
-

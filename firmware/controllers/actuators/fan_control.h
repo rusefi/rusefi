@@ -1,5 +1,19 @@
 #pragma once
 
-#include "engine_ptr.h"
+#include "fan_control_generated.h"
 
-void updateFans(bool acActive DECLARE_ENGINE_PARAMETER_SUFFIX);
+struct FanController : public fan_control_s {
+	void update(bool acActive);
+
+private:
+	bool getState(bool acActive, bool lastState);
+
+protected:
+	virtual OutputPin& getPin() = 0;
+	virtual float getFanOnTemp() = 0;
+	virtual float getFanOffTemp() = 0;
+	virtual bool enableWithAc() = 0;
+	virtual bool disableWhenStopped() = 0;
+};
+
+void updateFans(bool acActive);

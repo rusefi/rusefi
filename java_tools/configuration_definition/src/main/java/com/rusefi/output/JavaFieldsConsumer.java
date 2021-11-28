@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static com.rusefi.ConfigDefinition.EOL;
+import static com.rusefi.ToolUtil.EOL;
 
 public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     // todo: why is this field 'static'?
@@ -17,7 +17,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
 
     private final CharArrayWriter javaFieldsWriter = new CharArrayWriter();
     protected final StringBuffer allFields = new StringBuffer("\tpublic static final Field[] VALUES = {" + EOL);
-    private final ReaderState state;
+    protected final ReaderState state;
 
     public JavaFieldsConsumer(ReaderState state) {
         this.state = state;
@@ -36,18 +36,16 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private int writeJavaFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
-        BitState bitState = new BitState();
-        ConfigField prev = ConfigField.VOID;
+        FieldIterator iterator = new FieldIterator(tsFields);
         for (int i = 0; i < tsFields.size(); i++) {
-            ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
-            ConfigField cf = tsFields.get(i);
+            iterator.start(i);
             // skip duplicate names
-            if (cf.getName().equals(prev.getName()) || cf.isDirective())
+            if (iterator.cf.getName().equals(iterator.prev.getName()) || iterator.cf.isDirective())
                 continue;
-            tsPosition = writeOneField(cf, prefix, tsPosition, next, bitState.get());
+            tsPosition = writeOneField(iterator.cf, prefix, tsPosition, iterator.next, iterator.bitState.get());
 
-            bitState.incrementBitIndex(cf, next);
-            prev = cf;
+            iterator.prev = iterator.cf;
+            iterator.end();
         }
         return tsPosition;
     }
@@ -68,13 +66,11 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             return tsPosition;
         }
 
-        if (configField.getArraySize() != 1) {
-            // todo: array support
-        } else if (TypesHelper.isFloat(configField.getType())) {
+        if (TypesHelper.isFloat(configField.getType())) {
             writeJavaFieldName(nameWithPrefix, tsPosition);
             javaFieldsWriter.write("FieldType.FLOAT);" + EOL);
         } else {
-            String enumOptions = VariableRegistry.INSTANCE.get(configField.getType() + ConfigField.ENUM_SUFFIX);
+            String enumOptions = state.variableRegistry.get(configField.getType() + VariableRegistry.ENUM_SUFFIX);
 
             if (enumOptions != null && !javaEnums.contains(configField.getType())) {
                 javaEnums.add(configField.getType());
@@ -101,7 +97,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             javaFieldsWriter.write(");" + EOL);
         }
 
-        tsPosition += configField.getArraySize() * configField.getElementSize();
+        tsPosition += configField.getSize(next);
 
         return tsPosition;
     }

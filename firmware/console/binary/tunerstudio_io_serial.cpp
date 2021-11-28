@@ -4,7 +4,7 @@
 
 #include "tunerstudio_io.h"
 
-#if HAS_PRIMARY || HAS_PRIMARY
+#if HAS_PRIMARY || HAS_SECONDARY
 #if HAL_USE_SERIAL
 void SerialTsChannel::start(uint32_t baud) {
 	SerialConfig cfg = {
@@ -23,7 +23,7 @@ void SerialTsChannel::stop() {
 	sdStop(m_driver);
 }
 
-void SerialTsChannel::write(const uint8_t* buffer, size_t size) {
+void SerialTsChannel::write(const uint8_t* buffer, size_t size, bool) {
 	chnWriteTimeout(m_driver, buffer, size, BINARY_IO_TIMEOUT);
 }
 
@@ -56,7 +56,7 @@ void UartTsChannel::stop() {
 	uartStop(m_driver);
 }
 
-void UartTsChannel::write(const uint8_t* buffer, size_t size) {
+void UartTsChannel::write(const uint8_t* buffer, size_t size, bool) {
 	uartSendTimeout(m_driver, &size, buffer, BINARY_IO_TIMEOUT);
 }
 
@@ -65,4 +65,4 @@ size_t UartTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 	return size;
 }
 #endif // HAL_USE_UART
-#endif // HAS_PRIMARY || HAS_PRIMARY
+#endif // HAS_PRIMARY || HAS_SECONDARY

@@ -6,7 +6,7 @@ using ::testing::StrictMock;
 using ::testing::Return;
 
 TEST(Vvt, setpoint) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Set up a mock target map
 	StrictMock<MockVp3d> targetMap;
@@ -18,7 +18,6 @@ TEST(Vvt, setpoint) {
 	engine->rpmCalculator.mockRpm = 4321;
 
 	VvtController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 	dut.init(0, 0, 0, &targetMap);
 
 	// Test dut
@@ -26,12 +25,11 @@ TEST(Vvt, setpoint) {
 }
 
 TEST(Vvt, observePlant) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	engine->triggerCentral.vvtPosition[0][0] = 23;
 
 	VvtController dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 	dut.init(0, 0, 0, nullptr);
 
 	EXPECT_EQ(23, dut.observePlant().value_or(0));

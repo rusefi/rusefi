@@ -1,10 +1,12 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.util.TimeUtil;
 import com.rusefi.SimulatorExecHelper;
 import com.rusefi.ui.StatusConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,16 +29,22 @@ public class ExecHelper {
     private static void startStreamThread(final Process p, final InputStream stream, final StringBuffer buffer, final StatusConsumer wnd) {
         final Thread t = new Thread(() -> {
             try {
-                BufferedReader bis = new BufferedReader(new InputStreamReader(stream));
-                while (isRunning(p)) {
+                BufferedReader bis = new BufferedReader(new InputStreamReader(stream, StandardCharsets.ISO_8859_1));
+                /*
+                 * Sometimes process has already finished but we still want to read output, so give it extra half a second
+                 * TODO: are we supposed to just NOT check process status and just wait for 'null' from readLine?
+                 */
+                long wasRunningTime = System.currentTimeMillis();
+                while (isRunning(p) || (System.currentTimeMillis() - wasRunningTime) < 0.5 * TimeUtil.SECOND) {
                     String line = bis.readLine();
                     if (line == null)
                         break;
-                    wnd.appendMsg(line);
+                    wnd.append(line);
                     buffer.append(line);
+                    wasRunningTime = System.currentTimeMillis();
                 }
             } catch (IOException e) {
-                wnd.appendMsg("Stream " + e);
+                wnd.append("Stream " + e);
             }
         });
         t.setDaemon(true);
@@ -57,11 +65,11 @@ public class ExecHelper {
         StringBuffer error = new StringBuffer();
         String binaryFullName = workingDirPath + File.separator + binaryRelativeName;
         if (!new File(binaryFullName).exists()) {
-            wnd.appendMsg(binaryFullName + " not found :(");
+            wnd.append(binaryFullName + " not found :(");
             return error.toString();
         }
 
-        wnd.appendMsg("Executing " + command);
+        wnd.append("Executing " + command);
         try {
             File workingDir = new File(workingDirPath);
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
@@ -69,11 +77,11 @@ public class ExecHelper {
             startStreamThread(p, p.getErrorStream(), error, wnd);
             p.waitFor(3, TimeUnit.MINUTES);
         } catch (IOException e) {
-            wnd.appendMsg("IOError: " + e);
+            wnd.append("IOError: " + e);
         } catch (InterruptedException e) {
-            wnd.appendMsg("WaitError: " + e);
+            wnd.append("WaitError: " + e);
         }
-        wnd.appendMsg("Done!");
+        wnd.append("Done!");
         return error.toString();
     }
 

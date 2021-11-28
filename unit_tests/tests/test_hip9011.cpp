@@ -6,7 +6,6 @@
 
 #include "pch.h"
 #include "hip9011_logic.h"
-#include "test_parameters.h"
 
 using ::testing::_;
 

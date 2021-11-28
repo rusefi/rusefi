@@ -236,7 +236,7 @@ void initSmartGpio() {
 void tle8888startup() {
 	static efitick_t tle8888CrankingResetTime = 0;
 
-	if (CONFIG(useTLE8888_cranking_hack) && ENGINE(rpmCalculator).isCranking()) {
+	if (engineConfiguration->useTLE8888_cranking_hack && engine->rpmCalculator.isCranking()) {
 		efitick_t nowNt = getTimeNowNt();
 		if (nowNt - tle8888CrankingResetTime > MS2NT(300)) {
 			tle8888_req_init();

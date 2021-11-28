@@ -11,6 +11,8 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_cranking_nissan_vq40.cpp \
 	tests/trigger/test_real_volkswagen.cpp \
 	tests/trigger/test_real_nb2_cranking.cpp \
+	tests/trigger/test_real_gm_24x.cpp \
+	tests/trigger/test_map_cam.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_nissan_vq_vvt.cpp \
@@ -24,9 +26,11 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/lua/test_lua_basic.cpp \
+	tests/lua/test_lua_with_engine.cpp \
 	tests/lua/test_lua_hooks.cpp \
 	tests/sensor/test_cj125.cpp \
 	tests/test_change_engine_type.cpp \
+	tests/util/test_scaled_channel.cpp \
 	tests/util/test_timer.cpp \
 	tests/system/test_periodic_thread_controller.cpp \
 	tests/test_util.cpp \
@@ -34,7 +38,6 @@ TESTS_SRC_CPP = \
 	tests/test_hardware_reinit.cpp \
 	tests/test_ion.cpp \
 	tests/test_aux_valves.cpp \
-	tests/test_on_demand_parameters.cpp \
 	tests/test_hip9011.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
@@ -44,6 +47,7 @@ TESTS_SRC_CPP = \
 	tests/test_etb.cpp \
 	tests/test_dc_motor.cpp \
 	tests/test_fan_control.cpp \
+	tests/test_main_relay.cpp \
 	tests/test_vvt.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
@@ -62,6 +66,7 @@ TESTS_SRC_CPP = \
 	tests/test_tacho.cpp \
 	tests/test_gpiochip.cpp \
 	tests/test_deadband.cpp \
+	tests/test_knock.cpp \
 	tests/sensor/basic_sensor.cpp \
 	tests/sensor/func_sensor.cpp \
 	tests/sensor/function_pointer_sensor.cpp \
@@ -78,6 +83,7 @@ TESTS_SRC_CPP = \
 	tests/test_stft.cpp \
 	tests/test_boost.cpp \
 	tests/test_gppwm.cpp \
+	tests/test_hpfp.cpp \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
 	tests/test_dynoview.cpp \
@@ -86,7 +92,5 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_all_triggers.cpp \
 	tests/test_stepper.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
-	tests/sensor/test_vehicle_speed.cpp \
+	tests/sensor/test_turbocharger_speed_converter.cpp \
 	tests/sensor/test_vehicle_speed_converter.cpp
-	
-

@@ -47,7 +47,7 @@ extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
 #endif
 
 #if EFI_RTC
-static time_t GetTimeUnixSec(void) {
+static time_t GetTimeUnixSec() {
   struct tm tim;
 
   rtcGetTime(&RTCD1, &timespec);

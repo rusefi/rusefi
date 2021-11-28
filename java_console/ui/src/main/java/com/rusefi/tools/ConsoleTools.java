@@ -83,8 +83,23 @@ public class ConsoleTools {
         registerTool("local_proxy", ConsoleTools::localProxy, "Detect rusEFI ECU and proxy serial <> TCP");
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");
+        registerTool("send_command", new ConsoleTool() {
+            @Override
+            public void runTool(String[] args) throws Exception {
+                String command = args[1];
+                System.out.println("Sending command " + command);
+                sendCommand(command);
+            }
+        }, "Sends command specified as second argument");
         registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
-        registerTool(Fields.CMD_REBOOT_DFU, args -> sendCommand(Fields.CMD_REBOOT_DFU), "Sends a command to switch rusEFI controller into DFU mode.");
+        registerTool(Fields.CMD_REBOOT_DFU, args -> {
+            sendCommand(Fields.CMD_REBOOT_DFU);
+            /**
+             * AndreiKA reports that auto-detect fails to interrupt communication threads while in native code
+             * See https://github.com/rusefi/rusefi/issues/3300
+             */
+            System.exit(0);
+        }, "Sends a command to switch rusEFI controller into DFU mode.");
     }
 
     private static void localProxy(String[] strings) throws IOException {
@@ -239,7 +254,7 @@ public class ConsoleTools {
 
     public static void startAndConnect(final Function<LinkManager, Void> onConnectionEstablished) {
 
-        String autoDetectedPort = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return;
@@ -342,7 +357,7 @@ public class ConsoleTools {
 
     @Nullable
     private static String autoDetectPort() {
-        String autoDetectedPort = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = PortDetector.autoDetectSerial(null).getSerialPort();
         if (autoDetectedPort == null) {
             System.err.println(RUS_EFI_NOT_DETECTED);
             return null;
@@ -367,7 +382,8 @@ public class ConsoleTools {
     }
 
     static void detect(String[] strings) throws IOException {
-        String autoDetectedPort = autoDetectPort();
+        SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectSerial(null);
+        String autoDetectedPort = detectResult.getSerialPort();
         if (autoDetectedPort == null) {
             System.out.println(RUS_EFI_NOT_DETECTED);
             return;
@@ -413,9 +429,9 @@ public class ConsoleTools {
         });
         responseBuffer.append(textResponse + "\r\n", LinkManager.ENCODER);
 
-        System.out.println("Signature: " + SerialAutoChecker.SIGNATURE);
+        System.out.println("Signature: " + detectResult.getSignature());
         System.out.println("It says " + messages);
-        Pair<String, String> stringPair = SignatureHelper.getUrl(SerialAutoChecker.SIGNATURE);
+        Pair<String, String> stringPair = SignatureHelper.getUrl(detectResult.getSignature());
         if (stringPair != null)
             System.out.println("Ini file: " + stringPair.first);
         System.exit(0);

@@ -1,6 +1,6 @@
-#include "func_chain.h"
+#include "pch.h"
 
-#include <gtest/gtest.h>
+#include "func_chain.h"
 
 struct AddOne final : public SensorConverter {
     SensorResult convert(float input) const {

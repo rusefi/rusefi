@@ -16,7 +16,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install Tools
-      run: sudo apt-get install ncftp sshpass mtools
+      run: sudo apt-get install sshpass sshpass mtools
 
     - name: Generate Enum Strings
       working-directory: ./firmware/
@@ -28,7 +28,6 @@ jobs:
 
     - name: Upload .ini files
       working-directory: ./firmware/tunerstudio/generated
-#      run: ./upload.sh ${{ secrets.RUSEFI_DOXYGEN_FTP_USER }} ${{ secrets.RUSEFI_DOXYGEN_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
       run: ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Generate Live Documentation
@@ -44,6 +43,7 @@ jobs:
         git config --local user.name "GitHub build-firmware Action"
         git add firmware/tunerstudio/generated
         git add firmware/controllers/generated
+        git add java_console/io/src/main/java/com/rusefi/enums
         # get the original ramdisk images back in order to not overwrite the default placeholder
         git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
         git status
@@ -82,7 +82,7 @@ jobs:
 
     - name: Run Tests
       working-directory: ./unit_tests/
-      run: build/rusefi_test
+      run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
 
       # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit fresh triggers.txt

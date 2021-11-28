@@ -123,7 +123,7 @@ void setWidebandOffset(uint8_t index) {
 void sendWidebandInfo() {
 	CanTxMessage m(0xEF5'0000, 2, true);
 
-	float vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0) * 10;
+	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
 
 	m[0] = vbatt;
 

@@ -26,7 +26,7 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 
 #if EFI_TUNER_STUDIO
 	// rusEfi controller sends some extra diagnostic data about its internal workings
-	if (isRusefiController && CONFIG(debugMode) == DBG_RUSEFI_WIDEBAND) {
+	if (isRusefiController && engineConfiguration->debugMode == DBG_RUSEFI_WIDEBAND) {
 		float pumpDuty = frame.data8[2] / 255.0f;
 		float sensorEsr = frame.data8[3] * 4;
 		float nernstVoltage = frame.data8[4] / 200.0f;

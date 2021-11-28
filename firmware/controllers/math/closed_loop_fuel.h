@@ -13,6 +13,6 @@ struct ClosedLoopFuelResult {
 	float banks[STFT_BANK_COUNT];
 };
 
-ClosedLoopFuelResult fuelClosedLoopCorrection(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+ClosedLoopFuelResult fuelClosedLoopCorrection();
 size_t computeStftBin(int rpm, float load, stft_s& cfg);
-bool shouldUpdateCorrection(SensorType sensor DECLARE_ENGINE_PARAMETER_SUFFIX);
+bool shouldUpdateCorrection(SensorType sensor);

@@ -155,11 +155,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->malfunctionIndicatorPin = TLE6240_PIN_7;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	/* Starter input signal connected through MC33972 - SG11 */
-	//setFsio(0, (GPIOB_1), STARTER_RELAY_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
-
 	/* not used */
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
 	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
@@ -210,9 +206,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->hip9011PrescalerAndSDO = (0x6 << 1); //HIP_16MHZ_PRESCALER;
 	engineConfiguration->hip9011Gain = 1.0;
 	engineConfiguration->knockBandCustom = 0.0;
-	engineConfiguration->knockVThreshold = 4.0;
 	engineConfiguration->cylinderBore = 96.9;
-	engineConfiguration->maxKnockSubDeg = 20.0;
 
 	/* Cylinder to knock bank mapping */
 	engineConfiguration->knockBankCyl1 = 0;
@@ -260,11 +254,12 @@ void setBoardDefaultConfiguration(void) {
 	//engineConfiguration->isEngineChartEnabled = false;
 
 	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
-		setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+		setAlgorithm(LM_SPEED_DENSITY);
 	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)
-		setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
+		setAlgorithm(LM_ALPHA_N);
 }
 
+/* Schematic RefDef DA3 */
 static const struct mc33810_config mc33810_odd = {
 	.spi_bus = &SPID5,
 	.spi_config = {
@@ -291,7 +286,7 @@ static const struct mc33810_config mc33810_odd = {
 		[2] = {.port = GPIOI, .pad = 4},	/* INJ 5 */
 		[3] = {.port = GPIOB, .pad = 9},	/* INJ 7 */
 		/* ignition pre-dirvers */
-		[4] = {.port = GPIOB, .pad = 3},	/* IGN 1 */
+		[4] = {.port = GPIOB, .pad = 3},	/* IGN 4 */
 		[5] = {.port = GPIOB, .pad = 4},	/* IGN 3 */
 		[6] = {.port = GPIOB, .pad = 5},	/* IGN 7 */
 		[7] = {.port = GPIOB, .pad = 8},	/* IGN 5 */
@@ -300,6 +295,7 @@ static const struct mc33810_config mc33810_odd = {
 	.en = {.port = GPIOI, .pad = 7}
 };
 
+/* Schematic RefDef DA22 */
 static const struct mc33810_config mc33810_even = {
 	.spi_bus = &SPID5,
 	.spi_config = {
@@ -326,16 +322,16 @@ static const struct mc33810_config mc33810_even = {
 		[2] = {.port = GPIOE, .pad = 5},	/* INJ 6 */
 		[3] = {.port = GPIOE, .pad = 6},	/* INJ 8 */
 		/* ignition pre-dirvers */
-		[4] = {.port = GPIOC, .pad = 14},	/* IGN 2 */
-		[5] = {.port = GPIOC, .pad = 13},	/* IGN 4 */
-		[6] = {.port = GPIOC, .pad = 15},	/* IGN 6 */
-		[7] = {.port = GPIOI, .pad = 9},	/* IGN 8 */
+		[4] = {.port = GPIOI, .pad = 9},	/* IGN 8 */
+		[5] = {.port = GPIOC, .pad = 15},	/* IGN 6 */
+		[6] = {.port = GPIOC, .pad = 14},	/* IGN 2 */
+		[7] = {.port = GPIOC, .pad = 13},	/* IGN 1 */
 	},
 	/* en shared between two chips */
 	.en = {.port = nullptr, .pad = 0}
 };
 
-static void board_init_ext_gpios(void)
+static void board_init_ext_gpios()
 {
 	int ret;
 

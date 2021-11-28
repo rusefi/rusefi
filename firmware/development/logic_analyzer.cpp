@@ -93,7 +93,7 @@ static void waIcuPeriodCallback(WaveReader *reader) {
 }
 
 static void initWave(const char *name, int index) {
-	brain_pin_e brainPin = CONFIG(logicAnalyzerPins)[index];
+	brain_pin_e brainPin = engineConfiguration->logicAnalyzerPins[index];
 
 	waveReaderCount++;
 	efiAssertVoid(CUSTOM_ERR_6655, index < MAX_ICU_COUNT, "too many ICUs");
@@ -126,7 +126,7 @@ WaveReader::WaveReader() {
 	hw = nullptr;
 }
 
-void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void waTriggerEventListener(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp) {
 	(void)ckpSignalType;
 	if (index != 0) {
 		return;
@@ -169,38 +169,38 @@ static void reportWave(Logging *logging, int index) {
 		float dwellMs = getSignalOnTime(index);
 		float periodMs = getSignalPeriodMs(index);
 
-		logging->appendPrintf("duty%d%s", index, DELIMETER);
+		logging->appendPrintf("duty%d%s", index, LOG_DELIMITER);
 		logging->appendFloat(100.0f * dwellMs / periodMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 
 		/**
 		 * that's the ON time of the LAST signal
 		 */
-		logging->appendPrintf("dwell%d%s", index, DELIMETER);
+		logging->appendPrintf("dwell%d%s", index, LOG_DELIMITER);
 		logging->appendFloat(dwellMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 
 		/**
 		 * that's the total ON time during the previous engine cycle
 		 */
-		logging->appendPrintf("total_dwell%d%s", index, DELIMETER);
+		logging->appendPrintf("total_dwell%d%s", index, LOG_DELIMITER);
 		logging->appendFloat(readers[index].prevTotalOnTimeUs / 1000.0f, 2);
-		logging->appendPrintf("%s", DELIMETER);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 
-		logging->appendPrintf("period%d%s", index, DELIMETER);
+		logging->appendPrintf("period%d%s", index, LOG_DELIMITER);
 		logging->appendFloat(periodMs, 2);
-		logging->appendPrintf("%s", DELIMETER);
+		logging->appendPrintf("%s", LOG_DELIMITER);
 
 		uint32_t offsetUs = getWaveOffset(index);
 		int rpm = GET_RPM();
 		if (rpm != 0) {
 			float oneDegreeUs = getOneDegreeTimeUs(rpm);
 
-			logging->appendPrintf("advance%d%s", index, DELIMETER);
+			logging->appendPrintf("advance%d%s", index, LOG_DELIMITER);
 			float angle = (offsetUs / oneDegreeUs) - tdcPosition();
 			fixAngle(angle, "waveAn", CUSTOM_ERR_6564);
 			logging->appendFloat(angle, 3);
-			logging->appendPrintf("%s", DELIMETER);
+			logging->appendPrintf("%s", LOG_DELIMITER);
 		}
 	}
 }
@@ -239,7 +239,7 @@ void stopLogicAnalyzerPins() {
 	}
 }
 
-void getChannelFreqAndDuty(int index, float *duty, int *freq) {
+static void getChannelFreqAndDuty(int index, scaled_channel<float> *duty, scaled_channel<uint32_t> *freq) {
 
 	float high,period;
 
@@ -268,12 +268,12 @@ void getChannelFreqAndDuty(int index, float *duty, int *freq) {
 
 void reportLogicAnalyzerToTS() {
 #if EFI_TUNER_STUDIO	
-	int tmp;
+	scaled_channel<uint32_t> tmp;
 	getChannelFreqAndDuty(0,&tsOutputChannels.debugFloatField1, &tsOutputChannels.debugIntField1);
 	getChannelFreqAndDuty(1,&tsOutputChannels.debugFloatField2, &tsOutputChannels.debugIntField2);
 	getChannelFreqAndDuty(2,&tsOutputChannels.debugFloatField3, &tsOutputChannels.debugIntField3);
 	getChannelFreqAndDuty(3,&tsOutputChannels.debugFloatField4, &tmp);
-	tsOutputChannels.debugIntField4 = (int16_t)tmp;
+	tsOutputChannels.debugIntField4 = (uint16_t)tmp;
 #endif	
 }
 

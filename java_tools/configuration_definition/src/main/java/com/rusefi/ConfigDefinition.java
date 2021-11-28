@@ -12,6 +12,7 @@ import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.yaml.snakeyaml.Yaml;
 
@@ -28,11 +29,10 @@ import java.util.zip.CRC32;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
-    public static final String EOL = "\n";
     private static final String SIGNATURE_HASH = "SIGNATURE_HASH";
+    private static String TS_OUTPUTS_DESTINATION = null;
     public static String MESSAGE;
 
-    public static String TOOL = "(unknown script)";
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     public static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
@@ -65,10 +65,6 @@ public class ConfigDefinition {
     public static boolean needZeroInit = true;
     public static String definitionInputFile = null;
 
-    public static String getGeneratedAutomaticallyTag() {
-        return LazyFile.LAZY_FILE_TAG + "ConfigDefinition.jar based on " + TOOL + " ";
-    }
-
     public static void main(String[] args) {
         try {
             doJob(args);
@@ -94,7 +90,7 @@ public class ConfigDefinition {
 
         SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
-        String tsPath = null;
+        String tsInputFileFolder = null;
         String destCHeaderFileName = null;
         String destCDefinesFileName = null;
         String destCFsioConstantsFileName = null;
@@ -126,14 +122,17 @@ public class ConfigDefinition {
             String key = args[i];
             switch (key) {
                 case "-tool":
-                    ConfigDefinition.TOOL = args[i + 1];
+                    ToolUtil.TOOL = args[i + 1];
                     break;
                 case KEY_DEFINITION:
                     definitionInputFile = args[i + 1];
                     inputFiles.add(definitionInputFile);
                     break;
                 case KEY_TS_DESTINATION:
-                    tsPath = args[i + 1];
+                    tsInputFileFolder = args[i + 1];
+                    break;
+                case "-ts_outputs_section":
+                    TS_OUTPUTS_DESTINATION = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
                     destCHeaderFileName = args[i + 1];
@@ -214,12 +213,12 @@ public class ConfigDefinition {
         }
 
         List<String> inputAllFiles = new ArrayList<>(inputFiles);
-        if (tsPath != null) {
+        if (tsInputFileFolder != null) {
             // used to update .ini files
-            inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsPath));
+            inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
         }
 
-        boolean needToUpdateTsFiles = isNeedToUpdateTsFiles(tsPath, cachePath, cacheZipFile, inputAllFiles);
+        boolean needToUpdateTsFiles = isNeedToUpdateTsFiles(tsInputFileFolder, cachePath, cacheZipFile, inputAllFiles);
 
         boolean needToUpdateOtherFiles = CachingStrategy.checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
         if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
@@ -229,81 +228,80 @@ public class ConfigDefinition {
 
         if (!enumInputFiles.isEmpty()) {
             for (String ef : enumInputFiles) {
-                state.enumsReader.process(".", ef);
+                state.read(new FileReader(ef));
             }
 
-            SystemOut.println(state.enumsReader.getEnums() + " total enumsReader");
+            SystemOut.println(state.enumsReader.getEnums().size() + " total enumsReader");
         }
 
-        long crc32 = signatureHash(tsPath, inputAllFiles);
+        ParseState parseState = new ParseState(state.enumsReader);
+        // Add the variable for the config signature
+        long crc32 = signatureHash(state, parseState, tsInputFileFolder, inputAllFiles);
 
-        handleFiringOrder(firingEnumFileName);
+        handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
-        MESSAGE = getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
+        MESSAGE = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
         SystemOut.println("Reading definition from " + definitionInputFile);
 
         for (String prependFile : prependFiles)
-            readPrependValues(VariableRegistry.INSTANCE, prependFile);
+            state.variableRegistry.readPrependValues(prependFile);
 
         if (yamlFiles != null) {
-            processYamls(VariableRegistry.INSTANCE, yamlFiles, state);
+            processYamls(state.variableRegistry, yamlFiles, state);
         }
 
         // Parse the input files
         {
-            ParseState listener = new ParseState(state.enumsReader);
-
             // First process yaml files
-            //processYamls(listener, yamlFiles);
-
-            // Process firing order enum
-            handleFiringOrder(firingEnumFileName, listener);
+            //processYamls(parseState, yamlFiles);
 
             // Load prepend files
             {
                 // Ignore duplicates of definitions made during prepend phase
-                listener.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
+                parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
-                //for (String prependFile : prependFiles) {
-                    // TODO: fix signature define file parsing
-                    //parseFile(listener, prependFile);
-                //}
+                for (String prependFile : prependFiles) {
+                    parseFile(parseState.getListener(), prependFile);
+                }
             }
 
             // Now load the main config file
             {
                 // don't allow duplicates in the main file
-                listener.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-                parseFile(listener, definitionInputFile);
+                parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
+                parseFile(parseState.getListener(), definitionInputFile);
             }
 
             // Write C structs
             // CStructWriter cStructs = new CStructWriter();
-            // cStructs.writeCStructs(listener, destCHeaderFileName + ".test");
+            // cStructs.writeCStructs(parseState, destCHeaderFileName + ".test");
 
             // Write tunerstudio layout
             // TsWriter writer = new TsWriter();
-            // writer.writeTunerstudio(listener, "TODO", tsPath + "/test.ini");
-
+            // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
         }
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        if (tsPath != null && needToUpdateTsFiles) {
+        if (TS_OUTPUTS_DESTINATION != null) {
+            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "output_channels.ini", state));
+            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "data_logs.ini", state));
+        }
+        if (tsInputFileFolder != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
-            destinations.add(new TSProjectConsumer(tsWriter, tsPath, state));
+            destinations.add(new TSProjectConsumer(tsWriter, tsInputFileFolder, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
             tmpRegistry.register(SIGNATURE_HASH, "" + crc32);
-            readPrependValues(tmpRegistry, signaturePrependFile);
+            tmpRegistry.readPrependValues(signaturePrependFile);
             destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
         if (needToUpdateOtherFiles) {
             if (destCHeaderFileName != null) {
-                destinations.add(new CHeaderConsumer(destCHeaderFileName));
+                destinations.add(new CHeaderConsumer(state.variableRegistry, destCHeaderFileName));
             }
             if (javaDestinationFileName != null) {
                 destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
@@ -328,30 +326,25 @@ public class ConfigDefinition {
 
 
         if (destCDefinesFileName != null && needToUpdateOtherFiles)
-            VariableRegistry.INSTANCE.writeDefinesToFile(destCDefinesFileName);
+            writeDefinesToFile(state.variableRegistry, destCDefinesFileName);
 
         if (romRaiderDestination != null && romRaiderInputFile != null && needToUpdateOtherFiles) {
-            processTextTemplate(romRaiderInputFile, romRaiderDestination);
+            processTextTemplate(state, romRaiderInputFile, romRaiderDestination);
         }
 
         CachingStrategy.saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
     }
 
-    private static void handleFiringOrder(String firingEnumFileName) throws IOException {
+    private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, ParseState parseState) throws IOException {
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
-            VariableRegistry.INSTANCE.register("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName));
+            String result = FiringOrderTSLogic.invoke(firingEnumFileName);
+            variableRegistry.register("FIRINGORDER", result);
+            parseState.addDefinition("FIRINGORDER", result, Definition.OverwritePolicy.NotAllowed);
         }
     }
 
-    private static void handleFiringOrder(String firingEnumFileName, ParseState parser) throws IOException {
-        if (firingEnumFileName != null) {
-            SystemOut.println("Reading firing from " + firingEnumFileName);
-            parser.addDefinition("FIRINGORDER", FiringOrderTSLogic.invoke(firingEnumFileName), Definition.OverwritePolicy.NotAllowed);
-        }
-    }
-
-    private static long signatureHash(String tsPath, List<String> inputAllFiles) throws IOException {
+    private static long signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputAllFiles) throws IOException {
         // get CRC32 of given input files
         long crc32 = 0;
         for (String iFile : inputAllFiles) {
@@ -361,8 +354,13 @@ public class ConfigDefinition {
         }
         SystemOut.println("CRC32 from all input files = " + crc32);
         // store the CRC32 as a built-in variable
-        if (tsPath != null) // nasty trick - do not insert signature into live data files
-            VariableRegistry.INSTANCE.register(SIGNATURE_HASH, "" + crc32);
+
+        // nasty trick - do not insert signature into live data files
+        if (tsPath != null) {
+            state.variableRegistry.register(SIGNATURE_HASH, "" + crc32);
+            parseState.addDefinition(SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
+        }
+
         return crc32;
     }
 
@@ -373,22 +371,6 @@ public class ConfigDefinition {
             needToUpdateTsFiles = CachingStrategy.checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
         }
         return needToUpdateTsFiles;
-    }
-
-    public static void readPrependValues(VariableRegistry registry, String prependFile) throws IOException {
-        BufferedReader definitionReader = new BufferedReader(new FileReader(prependFile));
-        String line;
-        while ((line = definitionReader.readLine()) != null) {
-            line = trimLine(line);
-            /**
-             * we should ignore empty lines and comments
-             */
-            if (ReaderState.isEmptyDefinitionLine(line))
-                continue;
-            if (startsWithToken(line, ReaderState.DEFINE)) {
-                processDefine(registry, line.substring(ReaderState.DEFINE.length()).trim());
-            }
-        }
     }
 
     public static void processYamls(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {
@@ -475,7 +457,7 @@ public class ConfigDefinition {
             }
             PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
             String pinType = listPinType.getPinType();
-            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()) {
                 if (kv.getKey().equals(id)) {
                     int index = kv.getValue().getIntValue();
@@ -493,7 +475,7 @@ public class ConfigDefinition {
             String outputEnumName = namePinType.getOutputEnumName();
             String pinType = namePinType.getPinType();
             String nothingName = namePinType.getNothingName();
-            Map<String, Value> enumList = state.enumsReader.getEnums().get(pinType);
+            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < kv.getValue().size(); i++) {
                 if (sb.length() > 0)
@@ -519,11 +501,11 @@ public class ConfigDefinition {
         }
     }
 
-    private static void processTextTemplate(String inputFileName, String outputFileName) throws IOException {
+    private static void processTextTemplate(ReaderState state, String inputFileName, String outputFileName) throws IOException {
         SystemOut.println("Reading from " + inputFileName);
         SystemOut.println("Writing to " + outputFileName);
 
-        VariableRegistry.INSTANCE.put("generator_message", ConfigDefinition.getGeneratedAutomaticallyTag() + new Date());
+        state.variableRegistry.put("generator_message", ToolUtil.getGeneratedAutomaticallyTag() + new Date());
 
         File inputFile = new File(inputFileName);
 
@@ -532,31 +514,20 @@ public class ConfigDefinition {
 
         String line;
         while ((line = fr.readLine()) != null) {
-            line = VariableRegistry.INSTANCE.applyVariables(line);
-            fw.write(line + ConfigDefinition.EOL);
+            line = state.variableRegistry.applyVariables(line);
+            fw.write(line + ToolUtil.EOL);
         }
         fw.close();
     }
 
-    static String trimLine(String line) {
-        line = line.trim();
-        line = line.replaceAll("\\s+", " ");
-        return line;
-    }
-
-    static boolean startsWithToken(String line, String token) {
-        return line.startsWith(token + " ") || line.startsWith(token + "\t");
-    }
-
-
     public static String getComment(String comment, int currentOffset, String units) {
         String start = "\t/**";
         String packedComment = packComment(comment, "\t");
-        String unitsComment = units.isEmpty() ? "" : "\t" + units + EOL;
-        return start + EOL +
+        String unitsComment = units.isEmpty() ? "" : "\t" + units + ToolUtil.EOL;
+        return start + ToolUtil.EOL +
                 packedComment +
                 unitsComment +
-                "\t * offset " + currentOffset + EOL + "\t */" + EOL;
+                "\t * offset " + currentOffset + ToolUtil.EOL + "\t */" + ToolUtil.EOL;
     }
 
     public static String packComment(String comment, String linePrefix) {
@@ -566,38 +537,16 @@ public class ConfigDefinition {
             return "";
         String result = "";
         for (String line : comment.split("\\\\n")) {
-            result += linePrefix + " * " + line + EOL;
+            result += linePrefix + " * " + line + ToolUtil.EOL;
         }
         return result;
     }
 
-    public static int getSize(String s) {
-        if (VariableRegistry.INSTANCE.intValues.containsKey(s)) {
-            return VariableRegistry.INSTANCE.intValues.get(s);
+    public static int getSize(VariableRegistry variableRegistry, String s) {
+        if (variableRegistry.intValues.containsKey(s)) {
+            return variableRegistry.intValues.get(s);
         }
         return Integer.parseInt(s);
-    }
-
-    static void processDefine(VariableRegistry registry, String line) {
-        int index = line.indexOf(' ');
-        String name;
-        if (index == -1) {
-            name = line;
-            line = "";
-        } else {
-            name = line.substring(0, index);
-            line = line.substring(index).trim();
-        }
-        if (VariableRegistry.isNumeric(line)) {
-            int v = Integer.parseInt(line);
-            registry.register(name, v);
-        } else {
-            if (line.contains(" ") && !VariableRegistry.isQuoted(line, '\"') && !VariableRegistry.isQuoted(line, '\'')) {
-                throw new IllegalStateException("Unexpected space in unquoted " + line);
-            }
-
-            registry.register(name, line);
-        }
     }
 
     private static long getCrc32(String fileName) throws IOException {
@@ -611,6 +560,16 @@ public class ConfigDefinition {
         CRC32 c = new CRC32();
         c.update(fileContent, 0, fileContent.length);
         return c.getValue();
+    }
+
+    public static void writeDefinesToFile(VariableRegistry variableRegistry, String fileName) throws IOException {
+
+        SystemOut.println("Writing to " + fileName);
+        LazyFile cHeader = new LazyFile(fileName);
+
+        cHeader.write("//\n// " + ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + "\n//\n\n");
+        cHeader.write(variableRegistry.getDefinesSection());
+        cHeader.close();
     }
 
     public static class RusefiParseErrorStrategy extends DefaultErrorStrategy {
@@ -635,7 +594,7 @@ public class ConfigDefinition {
         }
     }
 
-    private static void parseFile(ParseState listener, String filePath) throws IOException {
+    private static void parseFile(ParseTreeListener listener, String filePath) throws IOException {
         SystemOut.println("Parsing file (Antlr) " + filePath);
 
         CharStream in = new ANTLRInputStream(new FileInputStream(filePath));

@@ -45,7 +45,7 @@ static sensor_data_t innovate_o2_sensor[NUM_INNOVATE_O2_SENSORS];
 static size_t tmsglen;
 
 void IdentifyInnovateSerialMsg() {		//this identifies an innovate LC1/LC2 o2 sensor by it's first word (header)
-	if (CONFIG(enableInnovateLC2)) {
+	if (engineConfiguration->enableInnovateLC2) {
 		if ((((ser_buffer[0]) & lc2_header_mask) != lc2_header_mask) && innovate_serial_id_state == IDENTIFIED) {		//not serial header word
 			innovate_serial_id_state = UNKNOWN;
 			innovate_msg_len = 1;
@@ -181,7 +181,7 @@ void ClearSerialBuffer() {
 }
 
 void ParseSerialData()  {
-	if (CONFIG(enableInnovateLC2))
+	if (engineConfiguration->enableInnovateLC2)
 		IdentifyInnovateSerialMsg();
 }
 

@@ -72,6 +72,57 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitime_t timeX, action_s 
 	}
 }
 
+void EventQueue::remove(scheduling_s* scheduling) {
+#if EFI_UNIT_TEST
+		assertListIsSorted();
+#endif /* EFI_UNIT_TEST */
+
+	// Special case: event isn't scheduled, so don't cancel it
+	if (!scheduling->action) {
+		return;
+	}
+
+	// Special case: empty list, nothing to do
+	if (!head) {
+		return;
+	}
+
+	// Special case: is the item to remove at the head?
+	if (scheduling == head) {
+		head = head->nextScheduling_s;
+		scheduling->nextScheduling_s = nullptr;
+		scheduling->action = {};
+	} else {
+		auto prev = head;	// keep track of the element before the one to remove, so we can link around it
+		auto current = prev->nextScheduling_s;
+
+		// Find our element
+		while (current && current != scheduling) {
+			prev = current;
+			current = current->nextScheduling_s;
+		}
+
+		// Walked off the end, this is an error since this *should* have been scheduled
+		if (!current) {
+			firmwareError(OBD_PCM_Processor_Fault, "EventQueue::remove didn't find element");
+			return;
+		}
+
+		efiAssertVoid(OBD_PCM_Processor_Fault, current == scheduling, "current not equal to scheduling");
+
+		// Link around the removed item
+		prev->nextScheduling_s = current->nextScheduling_s;
+
+		// Clean the item to remove
+		current->nextScheduling_s = nullptr;
+		current->action = {};
+	}
+
+#if EFI_UNIT_TEST
+	assertListIsSorted();
+#endif /* EFI_UNIT_TEST */
+}
+
 /**
  * On this layer it does not matter which units are used - us, ms ot nt.
  *
@@ -161,7 +212,7 @@ bool EventQueue::executeOne(efitime_t now) {
 	current->action = {};
 
 #if EFI_UNIT_TEST
-	printf("QUEUE: execute current=%d param=%d\r\n", (long)current, (long)action.getArgument());
+	printf("QUEUE: execute current=%d param=%d\r\n", (uintptr_t)current, (uintptr_t)action.getArgument());
 #endif
 
 	// Execute the current element
@@ -207,9 +258,7 @@ scheduling_s *EventQueue::getElementAtIndexForUnitText(int index) {
 			return current;
 		index--;
 	}
-#if EFI_UNIT_TEST
-	firmwareError(OBD_PCM_Processor_Fault, "getForUnitText: null");
-#endif /* EFI_UNIT_TEST */
+
 	return NULL;
 }
 

@@ -76,6 +76,7 @@ private:
 	IPwm* m_dir2 = nullptr;
 	OutputPin* const m_disable;
 	float m_value = 0;
+	bool m_isInverted = false;
 
 	ControlType m_type = ControlType::PwmDirectionPins;
 public:
@@ -86,7 +87,7 @@ public:
 	 */
 	TwoPinDcMotor(OutputPin& disable);
 
-	void configure(IPwm& enable, IPwm& dir1, IPwm& dir2);
+	void configure(IPwm& enable, IPwm& dir1, IPwm& dir2, bool isInverted);
 
 	virtual bool set(float duty) override;
 	float get() const override;

@@ -10,11 +10,11 @@
 #include "boards.h"
 
 // see setMockVoltage
-float getVoltageDivided(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
 	return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel));;
 }
 
-float getVoltage(const char *msg, adc_channel_e hwChannel DECLARE_ENGINE_PARAMETER_SUFFIX) {
+float getVoltage(const char *msg, adc_channel_e hwChannel) {
 	if (engine->engineState.mockAdcState.hasMockAdc[hwChannel])
 		return adcToVolts(engine->engineState.mockAdcState.getMockAdcValue(hwChannel) * engineConfiguration->analogInputDividerCoefficient);
 	return 0;

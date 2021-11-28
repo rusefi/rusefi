@@ -17,11 +17,6 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-// Back in the day we wanted enums to be 32 bit integers.
-// as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
-#define ENUM_16_BITS 60000
-#define ENUM_32_BITS 2000000000
-
 typedef enum {
 //P0001 Fuel Volume Regulator Control Circuit/Open
 //P0002 Fuel Volume Regulator Control Circuit Range/Performance
@@ -1786,7 +1781,7 @@ typedef enum {
 	CUSTOM_OBD_94 = 6094,
 	CUSTOM_OBD_95 = 6095,
 	CUSTOM_OBD_96 = 6096,
-	CUSTOM_OBD_97 = 6097,
+	CUSTOM_PID_DTERM = 6097,
 	CUSTOM_DWELL = 6098,
 	CUSTOM_TS_OVERFLOW = 6099,
 
@@ -1950,7 +1945,7 @@ typedef enum {
 	CUSTOM_ERR_6598 = 6598,
 	CUSTOM_ERR_6599 = 6599,
 
-	CUSTOM_ENGINE_REF = 6600,
+	CUSTOM_ERR_6600 = 6600,
 	CUSTOM_CONSOLE_TOO_MANY = 6601,
 	CUSTOM_APPEND_NULL = 6602,
 	CUSTOM_ERR_6603 = 6603,
@@ -2032,21 +2027,21 @@ typedef enum {
 	CUSTOM_ICU_DRIVER = 6672,
 	CUSTOM_ICU_DRIVER_STATE = 6673,
 	CUSTOM_STACK_SPI = 6674,
-	CUSTOM_ERR_6675 = 6675,
-	CUSTOM_ERR_6676 = 6676,
+	CUSTOM_VVT_SYNC_POSITION = 6675,
+	CUSTOM_STACK_ADC = 6676,
 	CUSTOM_IH_STACK = 6677,
 	CUSTOM_EC_NULL = 6678,
-	CUSTOM_ERR_6679 = 6679,
+	CUSTOM_ERROR_ICU = 6679,
 
-	CUSTOM_ERR_6680 = 6680,
+	CUSTOM_ERR_ANGLE_CR = 6680,
 	CUSTOM_DELTA_NOT_POSITIVE = 6681,
-	CUSTOM_ERR_6682 = 6682,
+	CUSTOM_TIMER_WATCHDOG = 6682,
 	CUSTOM_SAME_TWICE = 6683,
 	CUSTOM_ERR_6684 = 6684,
 	CUSTOM_ERR_6685 = 6685,
 	CUSTOM_ERR_6686 = 6686,
-	CUSTOM_ERR_6687 = 6687,
-	CUSTOM_ERR_6688 = 6688,
+	CUSTOM_FIRING_LENGTH = 6687,
+	CUSTOM_ADVANCE_SPARK = 6688,
 	CUSTOM_SPARK_ANGLE_9 = 6689,
 
 	CUSTOM_ERR_MAP_START_ASSERT = 6690,
@@ -2064,7 +2059,7 @@ typedef enum {
 	CUSTOM_CJ125_0 = 6700,
 	CUSTOM_CJ125_1 = 6701,
 	CUSTOM_CJ125_2 = 6702,
-	CUSTOM_ERR_6703 = 6703,
+	CUSTOM_ERR_BENCH_PARAM = 6703,
 	CUSTOM_ERR_BOTH_FRONTS_REQUIRED = 6704,
 	CUSTOM_TLE8888 = 6705,
 	CUSTOM_KNOCK_WINDOW = 6706,
@@ -2087,7 +2082,7 @@ typedef enum {
 	NO_LONGER_USED_CUSTOM_ERR_VVT_OUT_OF_RANGE = 6726,
 	CUSTOM_VVT_MODE_NOT_SELECTED = 6727,
 	CUSTOM_ERR_6728 = 6728,
-	CUSTOM_ERR_6729 = 6729,
+	CUSTOM_ARTIFICIAL_MISFIRE = 6729,
 
 
 	STACK_USAGE_COMMUNICATION = 6900,
@@ -2127,8 +2122,10 @@ typedef enum {
 
 
 
+// Back in the day we wanted enums to be 32 bit integers.
+// as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
 	// this is needed for proper enum size, this matters for malfunction_central
-	Internal_ForceMyEnumIntSize_cranking_obd_code = ENUM_32_BITS,
+	Internal_ForceMyEnumIntSize_cranking_obd_code = 2000000000,
 } obd_code_e;
 
 #ifdef __cplusplus

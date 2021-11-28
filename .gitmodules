@@ -29,3 +29,19 @@
 	path = firmware/ext/lua
 	url = https://github.com/rusefi/lua
 	branch = rusefi-5.4.3
+[submodule "firmware/controllers/lua/luaaa"]
+	path = firmware/controllers/lua/luaaa
+	url = https://github.com/rusefi/luaaa
+	branch = rusefi_prod_2021_11_12
+[submodule "firmware/ext/openblt"]
+	path = firmware/ext/openblt
+	url = https://github.com/rusefi/openblt
+	branch = rusefi_prod
+[submodule "misc/hex2dfu"]
+	path = misc/hex2dfu
+	url = https://github.com/rusefi/hex2dfu
+	branch = rusefi_prod
+[submodule "java_console/luaformatter"]
+	path = java_console/luaformatter
+	url = https://github.com/rusefi/luaformatter
+	branch = prod

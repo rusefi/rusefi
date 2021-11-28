@@ -26,20 +26,26 @@ RULESFILE = ../firmware/rusefi_rules.mk
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
+PCHSUB = simulator
 
 # used by USE_SMART_BUILD
 CONFDIR = .
 
+ifneq ($(OS),Windows_NT)
+	SANITIZE = yes
+else
+	SANITIZE = no
+endif
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
 # this config if debugging is needed, but the binary is about 50M
 #  USE_OPT = -Wall     -ggdb    -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings -Wno-error=strict-aliasing
-#  USE_OPT = -Wall -O0 -ggdb -g -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Werror -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
+#  USE_OPT = -Wall -O0 -ggdb -g -Wno-error=implicit-fallthrough -Werror-implicit-function-declaration -Wno-error=pointer-sign -Wno-error=unused-function -Wno-error=unused-variable -Wno-error=sign-compare -Wno-error=unused-parameter -Wno-error=missing-field-initializers -Wno-error=write-strings
 # this config producec a smaller binary file
 # 7.3 compiler would want -Wno-error=implicit-fallthrough while 6.4 does not know about it
 # see https://github.com/rusefi/rusefi/issues/517
-  USE_OPT = -Wall -O2 -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
+  USE_OPT = -Wall -O2 -g -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
 
 	ifeq ($(OS),Windows_NT)
 	else
@@ -49,6 +55,11 @@ endif
 
 # See explanation in main firmware Makefile for these three defines
 USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=0 -DEFI_SIMULATOR=1
+
+# Enable address sanitizer, but not on Windows since x86_64-w64-mingw32-g++ doesn't support it.
+ifeq ($(SANITIZE),yes)
+	USE_OPT += -fsanitize=address
+endif
 
 ifeq ($(CCACHE_DIR),)
  $(info No CCACHE_DIR)
@@ -64,7 +75,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -Winvalid-pch
+  USE_CPPOPT = -std=c++2a -Wno-register -fno-rtti
 endif
 
 # Enable this if you want the linker to remove unused code and data.
@@ -204,6 +215,7 @@ INCDIR = . \
           $(PROJECT_DIR)/init \
           $(CONSOLE_INC) \
           $(PROJECT_DIR)/config/engines \
+		  $(PROJECT_DIR)/config/boards/ \
           $(PROJECT_DIR)/ext_algo \
           $(HW_LAYER_DRIVERS_INC) \
           $(HW_LAYER_INC) \
@@ -288,6 +300,10 @@ ifeq ($(OS),Windows_NT)
 ULIBS = -lws2_32 -static
 else
 ULIBS =
+endif
+
+ifeq ($(SANITIZE),yes)
+	ULIBS += -fsanitize=address
 endif
 
 #

@@ -22,7 +22,7 @@ public:
 	void SetUp() override {
 		// If somehow prodcode will be unwrapped for test it MAYBE! will fire with error.
 		// At least we must init FlexSensor somehow
-		dut.init(GPIO_INVALID, "Test");
+		dut.init(GPIO_INVALID);
 		dut.setFunction(identityFunc);
 	}
 
@@ -51,7 +51,7 @@ public:
  */
 TEST_F(FrequencySensorTest, testValidWithPwm) {
 	ASSERT_TRUE(dut.Register());
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	// Should be invalid - not set yet
 	{

@@ -82,7 +82,7 @@ public class TS2C {
         }
 
         w.write(FINGER_PRINT);
-        w.write("static void set" + methodName + "(DECLARE_CONFIG_PARAMETER_SIGNATURE) {\n");
+        w.write("static void set" + methodName + "() {\n");
         w.write("\tMEMCPY(config->" + loadSectionName + ", hardCoded" + loadSectionName + ");\n");
         w.write("\tMEMCPY(config->" + rpmSectionName + ", hardCoded" + rpmSectionName + ");\n");
 

@@ -29,10 +29,6 @@
 
 static bool needToWriteConfiguration = false;
 
-extern persistent_config_container_s persistentState;
-
-extern engine_configuration_s *engineConfiguration;
-
 /* if we store settings externally */
 #if EFI_STORAGE_EXT_SNOR == TRUE
 
@@ -82,7 +78,12 @@ crc_t flashStateCrc(persistent_config_container_s *state) {
 #if EFI_FLASH_WRITE_THREAD
 chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
 
+#if EFI_STORAGE_EXT_SNOR == TRUE
+/* in case of MFS we need more stack */
+static THD_WORKING_AREA(flashWriteStack, 3 * UTILITY_THREAD_STACK_SIZE);
+#else
 static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
+#endif
 static void flashWriteThread(void*) {
 	chRegSetThreadName("flash writer");
 
@@ -192,7 +193,6 @@ void writeToFlashNow(void) {
 	} else {
 		efiPrintf("Flashing failed");
 	}
-	assertEngineReference();
 
 	resetMaxValues();
 
@@ -206,8 +206,8 @@ static bool isValidCrc(persistent_config_container_s *state) {
 	return isValidCrc_b;
 }
 
-static void doResetConfiguration(void) {
-	resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+static void doResetConfiguration() {
+	resetConfigurationExt(engineConfiguration->engineType);
 }
 
 typedef enum {
@@ -218,7 +218,10 @@ typedef enum {
 	PC_ERROR = 4
 } persisted_configuration_state_e;
 
-static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) {
+/**
+ * Read single copy of rusEFI configuration from flash
+ */
+static persisted_configuration_state_e readOneConfigurationCopy(flashaddr_t address) {
 	efiPrintf("readFromFlash %x", address);
 
 	// error already reported, return
@@ -240,6 +243,8 @@ static persisted_configuration_state_e doReadConfiguration(flashaddr_t address) 
 /**
  * this method could and should be executed before we have any
  * connectivity so no console output here
+ *
+ * in this method we read first copy of configuration in flash. if that first copy has CRC or other issues we read second copy.
  */
 static persisted_configuration_state_e readConfiguration() {
 	persisted_configuration_state_e result = CRC_FAILED;
@@ -260,11 +265,11 @@ static persisted_configuration_state_e readConfiguration() {
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
-	result = doReadConfiguration(firstCopyAddr);
+	result = readOneConfigurationCopy(firstCopyAddr);
 
 	if (result != PC_OK) {
 		efiPrintf("Reading second configuration copy");
-		result = doReadConfiguration(secondyCopyAddr);
+		result = readOneConfigurationCopy(secondyCopyAddr);
 	}
 #endif
 
@@ -283,7 +288,7 @@ void readFromFlash() {
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
-	resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+	resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 #else
 	result = readConfiguration();
 #endif
@@ -291,20 +296,20 @@ void readFromFlash() {
 	if (result == CRC_FAILED) {
 	    // we are here on first boot on brand new chip
 		warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
-		resetConfigurationExt(DEFAULT_ENGINE_TYPE PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 	} else if (result == INCOMPATIBLE_VERSION) {
-		resetConfigurationExt(engineConfiguration->engineType PASS_ENGINE_PARAMETER_SUFFIX);
+		resetConfigurationExt(engineConfiguration->engineType);
 	} else {
 		/**
 		 * At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
 		 */
-		applyNonPersistentConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+		applyNonPersistentConfiguration();
 	}
 
 	// we can only change the state after the CRC check
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
 	memset(persistentState.persistentConfiguration.warning_message , 0, ERROR_BUFFER_SIZE);
-	validateConfiguration(PASS_ENGINE_PARAMETER_SIGNATURE);
+	validateConfiguration();
 
 	if (result == CRC_FAILED) {
 		efiPrintf("Need to reset flash to default due to CRC");
@@ -315,7 +320,7 @@ void readFromFlash() {
 	}
 }
 
-static void rewriteConfig(void) {
+static void rewriteConfig() {
 	doResetConfiguration();
 	writeToFlashNow();
 }

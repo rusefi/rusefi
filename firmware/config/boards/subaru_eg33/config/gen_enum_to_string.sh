@@ -7,7 +7,7 @@ echo This batch files reads rusefi_enums.h and produces auto_generated_enums.* f
 
 BOARD=subaru_eg33
 
-java -DSystemOut.name=gen_enum_to_string \
+java -DSystemOut.name=logs/gen_enum_to_string \
     -jar ../java_tools/enum2string.jar \
     -inputPath . \
     -outputPath config/boards/${BOARD}/config/controllers/algo \

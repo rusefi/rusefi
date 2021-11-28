@@ -1,8 +1,6 @@
+#include "pch.h"
+
 #include "sensor_reader.h"
-
-#include "mock/mock_sensor.h"
-
-#include <gtest/gtest.h>
 
 class SensorBasicReader : public ::testing::Test {
 protected:

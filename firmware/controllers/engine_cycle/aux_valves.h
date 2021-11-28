@@ -7,6 +7,6 @@
 
 #pragma once
 
-void initAuxValves(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-void recalculateAuxValveTiming(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initAuxValves();
+void recalculateAuxValveTiming();
 void auxPlainPinTurnOn(AuxActor *current);

@@ -1,4 +1,5 @@
-#include <gtest/gtest.h>
+#include "pch.h"
+
 #include "error_accumulator.h"
 
 TEST(errorAccumulator, ignoreSmallError) {

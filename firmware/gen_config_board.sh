@@ -42,24 +42,22 @@ if [ "" = "$BOARD_SPECIFIC_URL" ]; then
 fi
 echo "BOARD_SPECIFIC_URL=[$BOARD_SPECIFIC_URL]"
 
+source gen_config_common.sh
+echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
+
 # work in progress: migrating to rusefi_${BUNDLE_NAME}.txt
-java -DSystemOut.name=gen_config_board \
-	-jar ../java_tools/ConfigDefinition.jar \
-	-definition integration/rusefi_config.txt \
+java -DSystemOut.name=logs/gen_config_board \
+ $COMMON_GEN_CONFIG \
   -romraider integration \
 	-tool gen_config.sh \
-	-ts_destination tunerstudio \
 	-board ${BOARDNAME} \
 	-ts_output_name generated/${INI} \
 	-cache ${SHORT_BOARDNAME} \
-	-cache_zip_file tunerstudio/generated/cache.zip \
   -with_c_defines $SOMETHINGSOMETHING \
   -initialize_to_zero $SOMETHINGSOMETHING \
-	-firing_order controllers/algo/firing_order.h \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
   -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \
-	-enumInputFile controllers/algo/rusefi_enums.h \
 	-enumInputFile controllers/algo/rusefi_hw_enums.h \
   -romraider_destination ../java_console/rusefi.xml \
   -c_defines        controllers/generated/rusefi_generated.h \
