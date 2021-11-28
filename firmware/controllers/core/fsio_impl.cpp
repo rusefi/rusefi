@@ -61,7 +61,6 @@ static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_M
 static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
 static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
 static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
-static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 
 #define SYS_ELEMENT_POOL_SIZE 24
@@ -100,8 +99,6 @@ FsioResult getEngineValue(le_action_e action) {
 #endif
 	case LE_METHOD_CRANKING_RPM:
 		return engineConfiguration->cranking.rpm;
-	case LE_METHOD_IN_SHUTDOWN:
-		return engine->isInShutdownMode();
 	case LE_METHOD_VBATT:
 		return Sensor::getOrZero(SensorType::BatteryVoltage);
 	case LE_METHOD_TPS:
@@ -132,8 +129,6 @@ static const char * action2String(le_action_e action) {
 			return "CLT";
 		case LE_METHOD_FAN:
 			return "fan";
-		case LE_METHOD_IN_SHUTDOWN:
-			return leInShutdown.name;
 
 		default: {
 			// this is here to make compiler happy
