@@ -1,6 +1,5 @@
 package com.rusefi.output;
 
-import com.rusefi.ConfigStructure;
 import com.rusefi.ReaderState;
 
 import java.io.*;

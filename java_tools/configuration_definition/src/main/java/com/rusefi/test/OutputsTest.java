@@ -2,6 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.ReaderState;
 import com.rusefi.output.ConfigurationConsumer;
+import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.junit.Assert;
 import org.junit.Test;
@@ -63,6 +64,22 @@ public class OutputsTest {
                 "unusedBit_4_30 = bits, U32, 5, [30:30]\n" +
                 "unusedBit_4_31 = bits, U32, 5, [31:31]\n" +
                 "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n", new String(tsProjectConsumer.getTsWriter().toCharArray()));
+
+    }
+
+    @Test
+    public void generateDataLog() throws IOException {
+        String test = "struct total\n" +
+                "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
+                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        BufferedReader reader = new BufferedReader(new StringReader(test));
+
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(state);
+        state.readBufferedReader(reader, Collections.singletonList(dataLogConsumer));
 
     }
 }

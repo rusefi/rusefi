@@ -3,6 +3,7 @@ package com.rusefi;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.enum_reader.Value;
+import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.util.SystemOut;
 
