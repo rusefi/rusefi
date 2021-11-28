@@ -30,7 +30,6 @@ FsioResult getEngineValue(le_action_e action) {
 		return getAcToggle();
 	case LE_METHOD_IS_COOLANT_BROKEN:
 		return 0;
-#include "fsio_getters.def"
 	default:
 	firmwareError(OBD_PCM_Processor_Fault, "FSIO: No mock value for %d", action);
 		return unexpected;
