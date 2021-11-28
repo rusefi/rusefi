@@ -67,6 +67,7 @@ public class OutputsTest {
     @Test
     public void generateDataLog() throws IOException {
         String test = "struct total\n" +
+                "uint8_t[2 iterate] autoscale knock;;\"\",1, 0, 0, 0, 0\n" +
                 "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
@@ -83,7 +84,10 @@ public class OutputsTest {
 
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
         state.readBufferedReader(reader, Collections.singletonList(dataLogConsumer));
-        assertEquals("entry = baseFuel, \"hello\", float,  \"%.3f\"\n" +
+        assertEquals(
+                "entry = knock1, \"knock1\", int,    \"%d\"\n" +
+                        "entry = knock2, \"knock2\", int,    \"%d\"\n" +
+                "entry = baseFuel, \"hello\", float,  \"%.3f\"\n" +
                 "entry = afr_type, \"PID dTime\", float,  \"%.3f\"\n" +
                 "entry = speedToRpmRatio, \"s2rpm\", float,  \"%.3f\"\n" +
                 "entry = afr_typet, \"afr_typet\", int,    \"%d\"\n" +
