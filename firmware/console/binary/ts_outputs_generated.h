@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 11:49:12 PST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 16:09:14 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -318,11 +318,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
 	mg
 	 * offset 72
 	 */
 	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	mg
 	 * offset 74
 	 */
@@ -332,7 +334,7 @@ struct ts_outputs_s {
 	 */
 	uint16_t unused76 = (uint16_t)0;
 	/**
-	 * TPS acceleration enrichment
+	 * @@GAUGE_NAME_FUEL_TPS_ROC@@
 	ratio
 	 * offset 78
 	 */
@@ -342,46 +344,55 @@ struct ts_outputs_s {
 	 */
 	uint16_t unused80 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_TPS_EXTRA@@
 	ms
 	 * offset 82
 	 */
 	scaled_channel<uint16_t, 300, 1> tpsAccelFuel = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TIMING_ADVANCE@@
 	deg
 	 * offset 84
 	 */
 	scaled_channel<uint16_t, 50, 1> ignitionAdvance = (uint16_t)0;
 	/**
+	 * @@GAUGE_COIL_DWELL_TIME@@
 	ms
 	 * offset 86
 	 */
 	scaled_channel<uint16_t, 300, 1> sparkDwellValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_DWELL_DUTY@@
 	%
 	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_IAC@@
 	%
 	 * offset 90
 	 */
 	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
 	/**
+	 * "ETB Target"
 	%
 	 * offset 92
 	 */
 	scaled_channel<uint16_t, 100, 1> etbTarget = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ETB_DUTY@@
 	%
 	 * offset 94
 	 */
 	scaled_channel<uint16_t, 100, 1> etb1DutyCycle = (uint16_t)0;
 	/**
+	 * "ETB Error"
 	%
 	 * offset 96
 	 */
 	scaled_channel<uint16_t, 100, 1> etb1Error = (uint16_t)0;
 	/**
+	 * "Fuel level"
 	%
 	 * offset 98
 	 */
@@ -392,6 +403,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_FLOW@@
 	gram/s
 	 * offset 102
 	 */
@@ -407,6 +419,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_KNOCK_LEVEL@@
 	Volts
 	 * offset 108
 	 */
@@ -418,6 +431,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint32_t, 1, 1> seconds = (uint32_t)0;
 	/**
+	 * "Engine Mode"
 	em
 	 * offset 116
 	 */
@@ -443,23 +457,27 @@ struct ts_outputs_s {
 	/**
 	 * offset 133
 	 */
-	scaled_channel<uint8_t, 1, 1> padding = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> unusedPadding = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_LOAD@@
 	%
 	 * offset 134
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelingLoad = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_IGNITION_LOAD@@
 	%
 	 * offset 136
 	 */
 	scaled_channel<uint16_t, 100, 1> ignitionLoad = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ENGINE_CRC16@@
 	crc16
 	 * offset 138
 	 */
 	scaled_channel<uint16_t, 1, 1> engineMakeCodeNameCrc16 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TRG_ERR@@
 	counter
 	 * offset 140
 	 */
@@ -469,11 +487,13 @@ struct ts_outputs_s {
 	 */
 	uint32_t orderingErrorCounter = (uint32_t)0;
 	/**
+	 * @@GAUGE_NAME_WARNING_COUNTER@@
 	count
 	 * offset 148
 	 */
 	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_WARNING_LAST@@
 	error
 	 * offset 150
 	 */
@@ -590,6 +610,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawOilPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TUNE_CRC16@@
 	crc16
 	 * offset 244
 	 */
@@ -599,6 +620,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> unusedAt246 = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_CURRENT_GEAR@@
 	gear
 	 * offset 247
 	 */
@@ -613,11 +635,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> knock[12];
 	/**
+	 * @@GAUGE_NAME_DESIRED_GEAR@@
 	gear
 	 * offset 262
 	 */
 	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_FLEX@@
 	%
 	 * offset 263
 	 */
@@ -759,4 +783,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 11:49:12 PST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 16:09:14 EST 2021
