@@ -68,12 +68,13 @@ void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, Exti
 		return;
 	}
 
-	ioline_t line = PAL_LINE(port, index);
-	palEnableLineEvent(line, mode);
-
 	channel.Name = msg;
 	channel.Callback = cb;
 	channel.CallbackData = cb_data;
+	channel.Timestamp = 0;
+
+	ioline_t line = PAL_LINE(port, index);
+	palEnableLineEvent(line, mode);
 }
 
 void efiExtiDisablePin(brain_pin_e brainPin)
@@ -101,6 +102,7 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	palDisableLineEvent(line);
 
 	/* mark unused */
+	channel.Timestamp = 0;
 	channel.Name = nullptr;
 	channel.Callback = nullptr;
 	channel.CallbackData = nullptr;

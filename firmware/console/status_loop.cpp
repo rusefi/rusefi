@@ -478,7 +478,7 @@ static void updateThrottles() {
 	tsOutputChannels.tpsADC = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1Primary));
 
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
-	tsOutputChannels.throttle2Position = tps2.Value;
+	tsOutputChannels.TPS2Value = tps2.Value;
 	// If we don't have a TPS2 at all, don't turn on the failure light
 	tsOutputChannels.isTps2Error = !tps2.Valid && Sensor::hasSensor(SensorType::Tps2Primary);
 
@@ -491,11 +491,11 @@ static void updateThrottles() {
 static void updateLambda() {
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	tsOutputChannels.lambdaValue = lambdaValue;
-	tsOutputChannels.airFuelRatio = lambdaValue * engine->engineState.stoichiometricRatio;
+	tsOutputChannels.AFRValue = lambdaValue * engine->engineState.stoichiometricRatio;
 
 	float lambda2Value = Sensor::getOrZero(SensorType::Lambda2);
-	tsOutputChannels.lambda2 = lambda2Value;
-	tsOutputChannels.airFuelRatio2 = lambda2Value * engine->engineState.stoichiometricRatio;
+	tsOutputChannels.lambdaValue2 = lambda2Value;
+	tsOutputChannels.AFRValue2 = lambda2Value * engine->engineState.stoichiometricRatio;
 }
 
 static void updateFuelSensors() {
@@ -540,7 +540,7 @@ static void updateRawSensors() {
 	tsOutputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	tsOutputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
 	tsOutputChannels.MAFValue = Sensor::getRaw(SensorType::Maf);
-	tsOutputChannels.rawWastegatePositionSensor = Sensor::getRaw(SensorType::WastegatePosition);
+	tsOutputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	tsOutputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 }
 static void updatePressures() {
@@ -554,7 +554,7 @@ static void updateMiscSensors() {
 	
 	tsOutputChannels.idlePositionSensor = Sensor::getOrZero(SensorType::IdlePosition);
 
-	tsOutputChannels.wastegatePosition = Sensor::getOrZero(SensorType::WastegatePosition);
+	tsOutputChannels.wastegatePositionSensor = Sensor::getOrZero(SensorType::WastegatePosition);
 
 #if	HAL_USE_ADC
 	tsOutputChannels.internalMcuTemperature = getMCUInternalTemperature();
@@ -581,8 +581,8 @@ static void updateFuelCorrections() {
 	tsOutputChannels.iatCorrection = engine->engineState.running.intakeTemperatureCoefficient;
 	tsOutputChannels.cltCorrection = engine->engineState.running.coolantTemperatureCoefficient;
 
-	tsOutputChannels.fuelTrim[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
-	tsOutputChannels.fuelTrim[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
+	tsOutputChannels.fuelPidCorrection[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
+	tsOutputChannels.fuelPidCorrection[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
 
 	tsOutputChannels.injectorLagMs = engine->engineState.running.injectorLag;
 }
@@ -597,7 +597,7 @@ static void updateFuelLoads() {
 static void updateFuelResults() {
 	tsOutputChannels.chargeAirMass = engine->engineState.sd.airMassInOneCylinder;
 
-	tsOutputChannels.fuelBase = engine->engineState.baseFuel * 1000;	// Convert grams to mg
+	tsOutputChannels.baseFuel = engine->engineState.baseFuel * 1000;	// Convert grams to mg
 	tsOutputChannels.fuelRunning = engine->engineState.running.fuel;
 	tsOutputChannels.actualLastInjection = engine->actualLastInjection[0];
 
@@ -620,7 +620,7 @@ static void updateFuelInfo() {
 	tsOutputChannels.currentTargetAfr = engine->engineState.targetAFR;
 	tsOutputChannels.targetLambda = engine->engineState.targetLambda;
 
-	tsOutputChannels.crankingFuelMass = engine->engineState.cranking.fuel;
+	tsOutputChannels.crankingFuelMs = engine->engineState.cranking.fuel;
 }
 
 static void updateIgnition(int rpm) {
@@ -628,7 +628,7 @@ static void updateIgnition(int rpm) {
 	// that's weird logic. also seems broken for two stroke?
 	tsOutputChannels.ignitionAdvance = timing > FOUR_STROKE_CYCLE_DURATION / 2 ? timing - FOUR_STROKE_CYCLE_DURATION : timing;
 	// 60
-	tsOutputChannels.sparkDwell = engine->engineState.sparkDwell;
+	tsOutputChannels.sparkDwellValue = engine->engineState.sparkDwell;
 
 	tsOutputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
 
@@ -719,7 +719,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 
 	// 224
 	efitimesec_t timeSeconds = getTimeNowSeconds();
-	tsOutputChannels->timeSeconds = timeSeconds;
+	tsOutputChannels->seconds = timeSeconds;
 
 	// 252
 	tsOutputChannels->engineMode = packEngineMode();
@@ -757,17 +757,17 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 
 #if EFI_MAX_31855
 	for (int i = 0; i < EGT_CHANNEL_COUNT; i++)
-		tsOutputChannels->egtValues[i] = getEgtValue(i);
+		tsOutputChannels->egt[i] = getEgtValue(i);
 #endif /* EFI_MAX_31855 */
 
 #if EFI_IDLE_CONTROL
-	tsOutputChannels->idlePosition = getIdlePosition();
+	tsOutputChannels->idleAirValvePosition = getIdlePosition();
 #endif
 
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = engine->engineState.warnings.lastErrorCode;
 	for (int i = 0; i < 8;i++) {
-		tsOutputChannels->recentErrorCodes[i] = engine->engineState.warnings.recentWarnings.get(i);
+		tsOutputChannels->recentErrorCode[i] = engine->engineState.warnings.recentWarnings.get(i);
 	}
 
 	switch (engineConfiguration->debugMode)	{

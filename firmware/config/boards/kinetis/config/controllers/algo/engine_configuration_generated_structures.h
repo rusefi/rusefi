@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 26 02:04:42 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 28 00:43:24 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1052,11 +1052,11 @@ struct engine_configuration_s {
 	 */
 	float fanOffTemperature;
 	/**
-	 * This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h
-	coef
+	 * Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.
+	revs/km
 	 * offset 476
 	 */
-	float vehicleSpeedCoef;
+	float driveWheelRevPerKm;
 	/**
 	 * set can_mode X
 	 * offset 480
@@ -1245,9 +1245,21 @@ struct engine_configuration_s {
 	 */
 	uint8_t mapCamDetectionThreshold;
 	/**
+	 * Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.
+	ratio
 	 * offset 616
 	 */
-	float unused616;
+	scaled_channel<uint16_t, 1000, 1> vssGearRatio;
+	/**
+	 * Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.
+	count
+	 * offset 618
+	 */
+	uint8_t vssToothCount;
+	/**
+	 * offset 619
+	 */
+	uint8_t unusedNearVss;
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
@@ -2041,10 +2053,10 @@ struct engine_configuration_s {
 	bool unusedBit_251_29 : 1 {};
 	/**
 	offset 976 bit 30 */
-	bool unusedBit_298_30 : 1 {};
+	bool unusedBit_300_30 : 1 {};
 	/**
 	offset 976 bit 31 */
-	bool unusedBit_298_31 : 1 {};
+	bool unusedBit_300_31 : 1 {};
 	/**
 	 * offset 980
 	 */
@@ -2652,12 +2664,12 @@ struct engine_configuration_s {
 	x
 	 * offset 1760
 	 */
-	float alternator_derivativeFilterLoss;
+	float unused1760;
 	/**
 	x
 	 * offset 1764
 	 */
-	float alternator_antiwindupFreq;
+	float unused1764;
 	/**
 	 * Closed throttle#2. todo: extract these two fields into a structure
 	 * See also tps2_1AdcChannel
@@ -3005,76 +3017,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 2116 bit 8 */
-	bool unusedBit_507_8 : 1 {};
+	bool unusedBit_509_8 : 1 {};
 	/**
 	offset 2116 bit 9 */
-	bool unusedBit_507_9 : 1 {};
+	bool unusedBit_509_9 : 1 {};
 	/**
 	offset 2116 bit 10 */
-	bool unusedBit_507_10 : 1 {};
+	bool unusedBit_509_10 : 1 {};
 	/**
 	offset 2116 bit 11 */
-	bool unusedBit_507_11 : 1 {};
+	bool unusedBit_509_11 : 1 {};
 	/**
 	offset 2116 bit 12 */
-	bool unusedBit_507_12 : 1 {};
+	bool unusedBit_509_12 : 1 {};
 	/**
 	offset 2116 bit 13 */
-	bool unusedBit_507_13 : 1 {};
+	bool unusedBit_509_13 : 1 {};
 	/**
 	offset 2116 bit 14 */
-	bool unusedBit_507_14 : 1 {};
+	bool unusedBit_509_14 : 1 {};
 	/**
 	offset 2116 bit 15 */
-	bool unusedBit_507_15 : 1 {};
+	bool unusedBit_509_15 : 1 {};
 	/**
 	offset 2116 bit 16 */
-	bool unusedBit_507_16 : 1 {};
+	bool unusedBit_509_16 : 1 {};
 	/**
 	offset 2116 bit 17 */
-	bool unusedBit_507_17 : 1 {};
+	bool unusedBit_509_17 : 1 {};
 	/**
 	offset 2116 bit 18 */
-	bool unusedBit_507_18 : 1 {};
+	bool unusedBit_509_18 : 1 {};
 	/**
 	offset 2116 bit 19 */
-	bool unusedBit_507_19 : 1 {};
+	bool unusedBit_509_19 : 1 {};
 	/**
 	offset 2116 bit 20 */
-	bool unusedBit_507_20 : 1 {};
+	bool unusedBit_509_20 : 1 {};
 	/**
 	offset 2116 bit 21 */
-	bool unusedBit_507_21 : 1 {};
+	bool unusedBit_509_21 : 1 {};
 	/**
 	offset 2116 bit 22 */
-	bool unusedBit_507_22 : 1 {};
+	bool unusedBit_509_22 : 1 {};
 	/**
 	offset 2116 bit 23 */
-	bool unusedBit_507_23 : 1 {};
+	bool unusedBit_509_23 : 1 {};
 	/**
 	offset 2116 bit 24 */
-	bool unusedBit_507_24 : 1 {};
+	bool unusedBit_509_24 : 1 {};
 	/**
 	offset 2116 bit 25 */
-	bool unusedBit_507_25 : 1 {};
+	bool unusedBit_509_25 : 1 {};
 	/**
 	offset 2116 bit 26 */
-	bool unusedBit_507_26 : 1 {};
+	bool unusedBit_509_26 : 1 {};
 	/**
 	offset 2116 bit 27 */
-	bool unusedBit_507_27 : 1 {};
+	bool unusedBit_509_27 : 1 {};
 	/**
 	offset 2116 bit 28 */
-	bool unusedBit_507_28 : 1 {};
+	bool unusedBit_509_28 : 1 {};
 	/**
 	offset 2116 bit 29 */
-	bool unusedBit_507_29 : 1 {};
+	bool unusedBit_509_29 : 1 {};
 	/**
 	offset 2116 bit 30 */
-	bool unusedBit_507_30 : 1 {};
+	bool unusedBit_509_30 : 1 {};
 	/**
 	offset 2116 bit 31 */
-	bool unusedBit_507_31 : 1 {};
+	bool unusedBit_509_31 : 1 {};
 	/**
 	 * set can_mode X
 	 * offset 2120
@@ -4527,4 +4539,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Fri Nov 26 02:04:42 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Nov 28 00:43:24 UTC 2021

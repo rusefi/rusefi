@@ -29,24 +29,27 @@ public class VssHardwareLoopTest extends RusefiTestBase {
     @Test
     public void test() {
         ecu.setEngineType(engine_type_e.FRANKENSO_MIATA_NA6_MAP);
-        ecu.sendCommand(getEnableCommand(Fields.CMD_EXTERNAL_STIMULATION));
-        ecu.changeRpm(1400);
+        ecu.changeRpm(1000);
 
-        // moving second trigger to another pin
-        ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
+        ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");
+        ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 1 none");
+        ecu.sendCommand(CMD_TRIGGER_PIN + " 1 none");
+
+        // Hook up 1khz idle on formerly-trigger-stim pin
+        ecu.sendCommand(CMD_IDLE_PIN + " PD2");
+        ecu.sendCommand("set idle_solenoid_freq 1000");
 
         EcuTestHelper.assertSomewhatClose("VSS no input", 0, SensorCentral.getInstance().getValue(Sensor.VSS));
 
-        // attaching VSS to trigger simulator since there is a jumper on test discovery
+        // attaching VSS to idle output since there is a jumper on test discovery
         ecu.sendCommand("set " + CMD_VSS_PIN + " pa5");
 
         sleep(2 * Timeouts.SECOND);
 
-        EcuTestHelper.assertSomewhatClose("VSS with input", 3, SensorCentral.getInstance().getValue(Sensor.VSS));
+        EcuTestHelper.assertSomewhatClose("VSS with input", 92, SensorCentral.getInstance().getValue(Sensor.VSS));
 
         // not related to VSS test, just need to validate this somewhere, so this random test is as good as any
         if (ControllerConnectorState.firmwareVersion == null)
             throw new IllegalStateException("firmwareVersion has not arrived");
     }
-
 }
