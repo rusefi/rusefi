@@ -4,33 +4,95 @@
 
 #include "bench_test.h"
 
-static void fanControl(bool acActive, OutputPin& pin, int8_t fanOnTemp, int8_t fanOffTemp, bool enableWithAc, bool disableWhenStopped) {
+bool FanController::getState(bool acActive, bool lastState) {
 	auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 
-	bool isCranking = engine->rpmCalculator.isCranking();
-	bool isRunning = engine->rpmCalculator.isRunning();
+	cranking = engine->rpmCalculator.isCranking();
+	notRunning = !engine->rpmCalculator.isRunning();
 
-	if (isCranking) {
+	disabledWhileEngineStopped = notRunning && disableWhenStopped();
+	brokenClt = !cltValid;
+	enabledForAc = enableWithAc() && acActive;
+	hot = clt > getFanOnTemp();
+	cold = clt < getFanOffTemp();
+
+	if (cranking) {
 		// Inhibit while cranking
-		pin.setValue(false);
-	} else if (disableWhenStopped && !isRunning) {
+		return false;
+	} else if (disabledWhileEngineStopped) {
 		// Inhibit while not running (if so configured)
-		pin.setValue(false);
-	} else if (!cltValid) {
+		return false;
+	} else if (brokenClt) {
 		// If CLT is broken, turn the fan on
-		pin.setValue(true);
-	} else if (enableWithAc && acActive) {
-		pin.setValue(true);
-	} else if (clt > fanOnTemp) {
+		return true;
+	} else if (enabledForAc) {
+		return true;
+	} else if (hot) {
 		// If hot, turn the fan on
-		pin.setValue(true);
-	} else if (clt < fanOffTemp) {
+		return true;
+	} else if (cold) {
 		// If cold, turn the fan off
-		pin.setValue(false);
+		return false;
 	} else {
 		// no condition met, maintain previous state
+		return lastState;
 	}
 }
+
+void FanController::update(bool acActive) {
+	auto& pin = getPin();
+
+	bool result = getState(acActive, pin.getLogicValue());
+
+	pin.setValue(result);
+}
+
+struct FanControl1 : public FanController {
+	OutputPin& getPin() {
+		return enginePins.fanRelay;
+	}
+
+	float getFanOnTemp() {
+		return engineConfiguration->fanOnTemperature;
+	}
+
+	float getFanOffTemp() {
+		return engineConfiguration->fanOffTemperature;
+	}
+
+	bool enableWithAc() {
+		return engineConfiguration->enableFan1WithAc;
+	}
+
+	bool disableWhenStopped() {
+		return engineConfiguration->disableFan1WhenStopped;
+	}
+};
+
+struct FanControl2 : public FanController {
+	OutputPin& getPin() {
+		return enginePins.fanRelay2;
+	}
+
+	float getFanOnTemp() {
+		return engineConfiguration->fan2OnTemperature;
+	}
+
+	float getFanOffTemp() {
+		return engineConfiguration->fan2OffTemperature;
+	}
+
+	bool enableWithAc() {
+		return engineConfiguration->enableFan2WithAc;
+	}
+
+	bool disableWhenStopped() {
+		return engineConfiguration->disableFan2WhenStopped;
+	}
+};
+
+static FanControl1 fan1;
+static FanControl2 fan2;
 
 void updateFans(bool acActive) {
 #if EFI_PROD_CODE
@@ -39,6 +101,6 @@ void updateFans(bool acActive) {
 	}
 #endif
 
-	fanControl(acActive, enginePins.fanRelay, engineConfiguration->fanOnTemperature, engineConfiguration->fanOffTemperature, engineConfiguration->enableFan1WithAc, engineConfiguration->disableFan1WhenStopped);
-	fanControl(acActive, enginePins.fanRelay2, engineConfiguration->fan2OnTemperature, engineConfiguration->fan2OffTemperature, engineConfiguration->enableFan2WithAc, engineConfiguration->disableFan2WhenStopped);
+	fan1.update(acActive);
+	fan2.update(acActive);
 }
