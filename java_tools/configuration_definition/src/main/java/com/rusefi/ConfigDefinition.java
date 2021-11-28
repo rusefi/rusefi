@@ -38,10 +38,6 @@ public class ConfigDefinition {
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
     public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
-    private static final String KEY_C_FSIO_CONSTANTS = "-c_fsio_constants";
-    private static final String KEY_C_FSIO_GETTERS = "-c_fsio_getters";
-    private static final String KEY_C_FSIO_NAMES = "-c_fsio_names";
-    private static final String KEY_C_FSIO_STRING = "-c_fsio_strings";
     private static final String KEY_C_DEFINES = "-c_defines";
     /**
      * @see CHeaderConsumer#withC_Defines
@@ -93,10 +89,6 @@ public class ConfigDefinition {
         String tsInputFileFolder = null;
         String destCHeaderFileName = null;
         String destCDefinesFileName = null;
-        String destCFsioConstantsFileName = null;
-        String destCFsioGettersFileName = null;
-        String namesCFileName = null;
-        String stringsCFileName = null;
         String javaDestinationFileName = null;
         String romRaiderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
@@ -136,18 +128,6 @@ public class ConfigDefinition {
                     break;
                 case KEY_C_DESTINATION:
                     destCHeaderFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_GETTERS:
-                    destCFsioGettersFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_STRING:
-                    stringsCFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_NAMES:
-                    namesCFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_CONSTANTS:
-                    destCFsioConstantsFileName = args[i + 1];
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
@@ -305,14 +285,6 @@ public class ConfigDefinition {
             }
             if (javaDestinationFileName != null) {
                 destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
-            }
-
-            if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
-                destinations.add(new FileFsioSettingsConsumer(state,
-                        destCFsioConstantsFileName,
-                        destCFsioGettersFileName,
-                        namesCFileName,
-                        stringsCFileName));
             }
         }
 
