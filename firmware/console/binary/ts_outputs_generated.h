@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 14:39:28 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 11:49:12 PST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -326,7 +326,7 @@ struct ts_outputs_s {
 	mg
 	 * offset 74
 	 */
-	scaled_channel<uint16_t, 100, 1> wallFuelCorrection = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> wallFuelCorrection = (int16_t)0;
 	/**
 	 * offset 76
 	 */
@@ -759,4 +759,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 14:39:28 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 11:49:12 PST 2021
