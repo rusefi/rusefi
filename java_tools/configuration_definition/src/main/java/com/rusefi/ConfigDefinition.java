@@ -287,6 +287,7 @@ public class ConfigDefinition {
         List<ConfigurationConsumer> destinations = new ArrayList<>();
         if (TS_OUTPUTS_SECTION != null) {
             destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_SECTION, state));
+            destinations.add(new DataLogConsumer(state));
         }
         if (tsInputFileFolder != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
