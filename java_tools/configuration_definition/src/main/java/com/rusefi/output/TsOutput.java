@@ -5,7 +5,7 @@ import com.rusefi.*;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Arrays;
+import java.util.List;
 
 import static com.rusefi.ToolUtil.EOL;
 
@@ -100,27 +100,26 @@ public class TsOutput {
     }
 
     protected int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {
-        BitState bitState = new BitState();
-        ConfigField prev = ConfigField.VOID;
+        List<ConfigField> tsFields = configStructure.tsFields;
+        FieldIterator iterator = new FieldIterator(tsFields);
         int prevTsPosition = tsPosition;
-        for (int i = 0; i < configStructure.tsFields.size(); i++) {
-            ConfigField next = i == configStructure.tsFields.size() - 1 ? ConfigField.VOID : configStructure.tsFields.get(i + 1);
-            ConfigField cf = configStructure.tsFields.get(i);
+        for (int i = 0; i < tsFields.size(); i++) {
+            iterator.start(i);
 
             // if duplicate names, use previous position
-            if (cf.getName().equals(prev.getName())) {
+            if (iterator.cf.getName().equals(iterator.prev.getName())) {
                 tsPosition = prevTsPosition;
             }
 
             // Update 'prev' state needed for duplicate names recognition
-            if (!cf.isDirective()) {
+            if (!iterator.cf.isDirective()) {
                 prevTsPosition = tsPosition;
-                prev = cf;
+                iterator.prev = iterator.cf;
             }
 
-            tsPosition = writeTunerStudio(cf, prefix, tsHeader, tsPosition, next, bitState.get());
+            tsPosition = writeTunerStudio(iterator.cf, prefix, tsHeader, tsPosition, iterator.next, iterator.bitState.get());
 
-            bitState.incrementBitIndex(cf, next);
+            iterator.end();
         }
         return tsPosition;
     }
