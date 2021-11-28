@@ -41,7 +41,7 @@ public class ConfigField {
     private final String tsInfo;
     private final boolean isIterate;
     private final ReaderState state;
-    private boolean fsioVisible;
+    private final boolean fsioVisible;
     private final boolean hasAutoscale;
     private final String individualName;
     private final int indexWithinArray;

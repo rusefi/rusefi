@@ -30,7 +30,7 @@ import java.util.zip.CRC32;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     private static final String SIGNATURE_HASH = "SIGNATURE_HASH";
-    private static String TS_OUTPUTS_SECTION = null;
+    private static String TS_OUTPUTS_DESTINATION = null;
     public static String MESSAGE;
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
@@ -132,7 +132,7 @@ public class ConfigDefinition {
                     tsInputFileFolder = args[i + 1];
                     break;
                 case "-ts_outputs_section":
-                    TS_OUTPUTS_SECTION = args[i + 1];
+                    TS_OUTPUTS_DESTINATION = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
                     destCHeaderFileName = args[i + 1];
@@ -285,9 +285,9 @@ public class ConfigDefinition {
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        if (TS_OUTPUTS_SECTION != null) {
-            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_SECTION, state));
-            destinations.add(new DataLogConsumer(state));
+        if (TS_OUTPUTS_DESTINATION != null) {
+            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "output_channels.ini", state));
+            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "data_logs.ini", state));
         }
         if (tsInputFileFolder != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();

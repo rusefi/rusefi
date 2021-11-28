@@ -34,61 +34,62 @@ bit isTps2Error;
 bit isIdleClosedLoop;
 bit isIdleCoasting;
 
-uint16_t autoscale RPMValue;;"RPM",1, 0, 0, 0, 0
 
-uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
+uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 0, 0
 
-	uint16_t autoscale speedToRpmRatio;;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint8_t autoscale vehicleSpeedKph;;"kph",1, 0, 0, 0, 0
-	uint8_t autoscale internalMcuTemperature;;"deg C",1, 0, 0, 0, 0
+uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
-	uint16_t autoscale coolant;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
-	uint16_t autoscale intake;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale speedToRpmRatio;s2rpm;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint8_t autoscale vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",1, 0, 0, 0, 0
+	uint8_t autoscale internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;"deg C",1, 0, 0, 0, 0
+
+	uint16_t autoscale coolant;@@GAUGE_NAME_CLT@@;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
+	uint16_t autoscale intake;@@GAUGE_NAME_IAT@@;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale auxTemp1;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 	uint16_t autoscale auxTemp2;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale TPSValue;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale throttlePedalPosition;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale TPSValue;@@GAUGE_NAME_TPS@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale throttlePedalPosition;@@GAUGE_NAME_THROTTLE_PEDAL@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t tpsADC;;"ADC", 1, 0, 0, 0, 0
-	uint16_t autoscale MAFValue;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale MAFValue;@@GAUGE_NAME_MAF@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale massAirFlowValue;;"Kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
-	uint16_t autoscale MAPValue;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale massAirFlowValue;@@GAUGE_NAME_AIR_FLOW@@;"Kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale MAPValue;@@GAUGE_NAME_MAP@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	uint16_t autoscale baroPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale lambdaValue;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint8_t autoscale knockRetard;;"deg",{1/10}, 0, 0, 0, 0
 	uint8_t unused37;;"",1, 0, 0, 0, 0
 
-	uint16_t autoscale VBatt;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale oilPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-	uint16_t autoscale vvtPositionB1I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale oilPressure;@@GAUGE_NAME_OIL_PRESSURE@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB1I;@@GAUGE_NAME_VVT_B1I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale chargeAirMass;;"g",{1/1000}, 0, 0, 0, 0
-	uint16_t autoscale crankingFuelMs;airmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale chargeAirMass;@@GAUGE_NAME_AIR_MASS@@;"g",{1/1000}, 0, 0, 0, 0
+	uint16_t autoscale crankingFuelMs;crankingFuelMs\nairmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
-	uint16_t autoscale currentTargetAfr;;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
-	uint16_t autoscale baseFuel;This is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale currentTargetAfr;@@GAUGE_NAME_TARGET_AFR@@;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
-	uint16_t autoscale fuelRunning;Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
-	uint16_t autoscale actualLastInjection;Actual last injection time - including all compensation and injection mode;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelRunning;@@GAUGE_NAME_FUEL_RUNNING@@\nTotal fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale actualLastInjection;@@GAUGE_NAME_FUEL_LAST_INJECTION@@\nActual last injection time - including all compensation and injection mode;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 
 
-	uint8_t autoscale injectorDutyCycle;;"%",{1/2}, 0, 0, 0, 0
-	uint8_t autoscale veValue;;"ratio",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale injectorDutyCycle;@@GAUGE_NAME_FUEL_INJ_DUTY@@;"%",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/2}, 0, 0, 0, 0
 	uint16_t autoscale injectionOffset;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale tCharge;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 
 !  Corrections
-	uint16_t autoscale injectorLagMs;;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
-	uint16_t autoscale iatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale cltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale baroCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale currentEnginePhase;;"deg",1, 0, 0, 0, 0
+	uint16_t autoscale injectorLagMs;@@GAUGE_NAME_INJECTOR_LAG@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale iatCorrection;@@GAUGE_NAME_FUEL_IAT_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale cltCorrection;@@GAUGE_NAME_FUEL_CLT_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale currentEnginePhase;"Engine Phase";"deg",1, 0, 0, 0, 0
 ! Wall model AE
 	uint16_t autoscale wallFuelAmount;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 	int16_t autoscale wallFuelCorrection;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
@@ -121,9 +122,9 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	float autoscale knockLevel;;"Volts", 1, 0, 0, 0, 0
 
 ! integration magic: TS requires exact 'seconds' name
-	uint32_t autoscale seconds;;"sec", 1, 0, 0, 0, 0
+	uint32_t autoscale seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0
 	uint32_t autoscale engineMode;;"em", 1, 0, 0, 0, 0
-	uint32_t autoscale firmwareVersion;;"version_f", 1, 0, 0, 0, 0
+	uint32_t autoscale firmwareVersion;@@GAUGE_NAME_VERSION@@;"version_f", 1, 0, 0, 0, 0
 
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
@@ -179,7 +180,7 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t[EGT_CHANNEL_COUNT iterate] egt;;"deg C", 1, 0, 0, 0, 0
 
-	uint16_t autoscale TPS2Value;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t autoscale rawTps1Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t autoscale rawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
@@ -211,12 +212,12 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale highFuelPressure;;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale targetLambda;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
-	uint16_t autoscale AFRValue;;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale AFRValue;@@GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
 
-	uint16_t autoscale VssAcceleration;;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
-	uint16_t autoscale lambdaValue2;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint16_t autoscale VssAcceleration;"Vss Accel";"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale lambdaValue2;@@GAUGE_NAME_LAMBDA2@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 
-	uint16_t autoscale AFRValue2;;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale AFRValue2;@@GAUGE_NAME_AFR2@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB1E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB2I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB2E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
