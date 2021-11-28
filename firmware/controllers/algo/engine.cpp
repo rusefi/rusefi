@@ -554,7 +554,8 @@ bool Engine::isInMainRelayBench() {
 }
 
 bool Engine::isInShutdownMode() const {
-#if EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
+	// TODO: this logic is currently broken
+#if 0 && EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
 	// if we are in "ignition_on" mode and not in shutdown mode
 	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
 		const float vBattThresholdOff = 5.0f;
