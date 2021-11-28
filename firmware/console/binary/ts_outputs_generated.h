@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 19:22:57 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 14:09:25 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -102,36 +102,43 @@ struct ts_outputs_s {
 	offset 0 bit 31 */
 	bool isIdleCoasting : 1 {};
 	/**
+	 * @@GAUGE_NAME_RPM@@
 	RPM
 	 * offset 4
 	 */
 	scaled_channel<uint16_t, 1, 1> RPMValue = (uint16_t)0;
 	/**
+	 * dRPM
 	RPM/s
 	 * offset 6
 	 */
 	uint16_t rpmAcceleration = (uint16_t)0;
 	/**
+	 * s2rpm
 	value
 	 * offset 8
 	 */
 	scaled_channel<uint16_t, 100, 1> speedToRpmRatio = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVS@@
 	kph
 	 * offset 10
 	 */
 	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_CPU_TEMP@@
 	deg C
 	 * offset 11
 	 */
 	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_CLT@@
 	deg C
 	 * offset 12
 	 */
 	scaled_channel<uint16_t, 100, 1> coolant = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_IAT@@
 	deg C
 	 * offset 14
 	 */
@@ -147,11 +154,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> auxTemp2 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TPS@@
 	%
 	 * offset 20
 	 */
 	scaled_channel<uint16_t, 100, 1> TPSValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_THROTTLE_PEDAL@@
 	%
 	 * offset 22
 	 */
@@ -162,16 +171,19 @@ struct ts_outputs_s {
 	 */
 	uint16_t tpsADC = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_MAF@@
 	V
 	 * offset 26
 	 */
 	scaled_channel<uint16_t, 1000, 1> MAFValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AIR_FLOW@@
 	Kg/h
 	 * offset 28
 	 */
 	scaled_channel<uint16_t, 10, 1> massAirFlowValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_MAP@@
 	kPa
 	 * offset 30
 	 */
@@ -182,6 +194,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 30, 1> baroPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_LAMBDA@@
 	 * offset 34
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambdaValue = (uint16_t)0;
@@ -195,16 +208,19 @@ struct ts_outputs_s {
 	 */
 	uint8_t unused37 = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_VBAT@@
 	V
 	 * offset 38
 	 */
 	scaled_channel<uint16_t, 1000, 1> VBatt = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_OIL_PRESSURE@@
 	kPa
 	 * offset 40
 	 */
 	scaled_channel<uint16_t, 30, 1> oilPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVT_B1I@@
 	deg
 	 * offset 42
 	 */
@@ -383,6 +399,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<float, 1, 1> knockLevel = (float)0;
 	/**
+	 * @@GAUGE_NAME_UPTIME@@
 	sec
 	 * offset 112
 	 */
@@ -393,6 +410,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint32_t, 1, 1> engineMode = (uint32_t)0;
 	/**
+	 * @@GAUGE_NAME_VERSION@@
 	version_f
 	 * offset 120
 	 */
@@ -723,4 +741,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 19:22:57 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 14:09:25 EST 2021

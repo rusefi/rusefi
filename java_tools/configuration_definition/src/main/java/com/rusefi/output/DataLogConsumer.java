@@ -55,6 +55,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
     }
 
     private String handle(ConfigField configField) {
+        if (configField.getName().contains("unused"))
+            return "";
         if (configField.isBit()) {
             return "";
         }
@@ -75,7 +77,10 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
 
         String comment = state.variableRegistry.applyVariables(configField.getComment());
-        if (comment.isEmpty() || comment.charAt(0) != '"')
+        if (comment.isEmpty())
+            comment = configField.getName();
+
+        if (comment.charAt(0) != '"')
             comment = quote(comment);
 
         return "entry = " + configField.getName() + ", " + comment + ", " + typeString + "\n";

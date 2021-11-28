@@ -69,9 +69,10 @@ public class OutputsTest {
         String test = "struct total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
-                "uint8_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t afr_typet;;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
                 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
+                "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
@@ -82,8 +83,8 @@ public class OutputsTest {
         state.readBufferedReader(reader, Collections.singletonList(dataLogConsumer));
         assertEquals("entry = afr_type, \"PID dTime\", float,  \"%.3f\"\n" +
                 "entry = speedToRpmRatio, \"s2rpm\", float,  \"%.3f\"\n" +
-                "entry = afr_typet, \"PID dTime\", int,    \"%d\"\n" +
-                "entry = vehicleSpeedKph, \"\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
+                "entry = afr_typet, \"afr_typet\", int,    \"%d\"\n" +
+                "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
 
     }
 }
