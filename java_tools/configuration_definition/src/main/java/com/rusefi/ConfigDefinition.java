@@ -286,8 +286,8 @@ public class ConfigDefinition {
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
         if (TS_OUTPUTS_DESTINATION != null) {
-            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "output_channels.ini", state));
-            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "data_logs.ini", state));
+            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/output_channels.ini", state));
+            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/data_logs.ini", state));
         }
         if (tsInputFileFolder != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
