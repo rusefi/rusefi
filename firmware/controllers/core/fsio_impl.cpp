@@ -64,8 +64,6 @@ static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
 static LENameOrdinalPair leInShutdown(LE_METHOD_IN_SHUTDOWN, "in_shutdown");
 static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 
-#include "fsio_names.def"
-
 #define SYS_ELEMENT_POOL_SIZE 24
 #define UD_ELEMENT_POOL_SIZE 64
 
@@ -115,7 +113,6 @@ FsioResult getEngineValue(le_action_e action) {
 	case LE_METHOD_OIL_PRESSURE:
 		return Sensor::getOrZero(SensorType::OilPressure);
 	// cfg_xxx references are code generated
-#include "fsio_getters.def"
 	default:
 		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO ERROR no data for action=%d", action);
 		return unexpected;
@@ -143,7 +140,6 @@ static const char * action2String(le_action_e action) {
 			return "fan";
 		case LE_METHOD_IN_SHUTDOWN:
 			return leInShutdown.name;
-#include "fsio_strings.def"
 
 		default: {
 			// this is here to make compiler happy
