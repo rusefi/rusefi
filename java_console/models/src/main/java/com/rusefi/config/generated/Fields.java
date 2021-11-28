@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Nov 27 13:59:38 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Nov 28 00:43:21 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -83,8 +83,6 @@ public class Fields {
 	public static final int alignmentFill_at_2253_offset = 2253;
 	public static final int alignmentFill_at_4539_offset = 4539;
 	public static final int alignmentFill_at_5126_offset = 5126;
-	public static final int alternator_antiwindupFreq_offset = 1764;
-	public static final int alternator_derivativeFilterLoss_offset = 1760;
 	public static final int alternatorControl_dFactor_offset = 1724;
 	public static final int alternatorControl_iFactor_offset = 1720;
 	public static final int alternatorControl_maxValue_offset = 1734;
@@ -1746,7 +1744,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 273943143;
+	public static final int SIGNATURE_HASH = 521411257;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2209,7 +2207,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.27.all.273943143";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.28.all.521411257";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2239,6 +2237,8 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
+	public static final int unused1760_offset = 1760;
+	public static final int unused1764_offset = 1764;
 	public static final int unused20Inputs_offset = 1512;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2432_offset = 2432;
@@ -3096,8 +3096,8 @@ public class Fields {
 	public static final Field TRIGGERINPUTDEBUGPINS2 = Field.create("TRIGGERINPUTDEBUGPINS2", 1757, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERINPUTDEBUGPINS3 = Field.create("TRIGGERINPUTDEBUGPINS3", 1758, FieldType.INT8, brain_pin_e);
 	public static final Field TURBOSPEEDSENSORINPUTPIN = Field.create("TURBOSPEEDSENSORINPUTPIN", 1759, FieldType.INT8, brain_input_pin_e);
-	public static final Field ALTERNATOR_DERIVATIVEFILTERLOSS = Field.create("ALTERNATOR_DERIVATIVEFILTERLOSS", 1760, FieldType.FLOAT);
-	public static final Field ALTERNATOR_ANTIWINDUPFREQ = Field.create("ALTERNATOR_ANTIWINDUPFREQ", 1764, FieldType.FLOAT);
+	public static final Field UNUSED1760 = Field.create("UNUSED1760", 1760, FieldType.FLOAT);
+	public static final Field UNUSED1764 = Field.create("UNUSED1764", 1764, FieldType.FLOAT);
 	public static final Field TPS2MIN = Field.create("TPS2MIN", 1768, FieldType.INT16);
 	public static final Field TPS2MAX = Field.create("TPS2MAX", 1770, FieldType.INT16);
 	public static final Field STARTERCONTROLPIN = Field.create("STARTERCONTROLPIN", 1772, FieldType.INT8, output_pin_e);
@@ -4368,8 +4368,8 @@ public class Fields {
 	TRIGGERINPUTDEBUGPINS2,
 	TRIGGERINPUTDEBUGPINS3,
 	TURBOSPEEDSENSORINPUTPIN,
-	ALTERNATOR_DERIVATIVEFILTERLOSS,
-	ALTERNATOR_ANTIWINDUPFREQ,
+	UNUSED1760,
+	UNUSED1764,
 	TPS2MIN,
 	TPS2MAX,
 	STARTERCONTROLPIN,

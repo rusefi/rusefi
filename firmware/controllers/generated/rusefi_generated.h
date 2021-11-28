@@ -87,8 +87,6 @@
 #define alignmentFill_at_2253_offset 2253
 #define alignmentFill_at_4539_offset 4539
 #define alignmentFill_at_5126_offset 5126
-#define alternator_antiwindupFreq_offset 1764
-#define alternator_derivativeFilterLoss_offset 1760
 #define alternatorControl_dFactor_offset 1724
 #define alternatorControl_iFactor_offset 1720
 #define alternatorControl_maxValue_offset 1734
@@ -1819,7 +1817,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 273943143
+#define SIGNATURE_HASH 521411257
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2337,7 +2335,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.11.27.all.273943143"
+#define TS_SIGNATURE "rusEFI 2021.11.28.all.521411257"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2370,6 +2368,8 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
+#define unused1760_offset 1760
+#define unused1764_offset 1764
 #define unused20Inputs_offset 1512
 #define unused2260_offset 2260
 #define unused2432_offset 2432
