@@ -3184,6 +3184,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "inertia measurement unit",             imuType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
+		field = "rusEFI CAN data address type",			rusefiVerbose29b
 		field = "rusEFI CAN data period",				canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
