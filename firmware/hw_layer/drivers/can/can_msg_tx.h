@@ -82,7 +82,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(uint32_t eid) : CanTxMessage(eid, sizeof(TData)) { }
+	explicit CanTxTyped(uint32_t id, bool isExtended) : CanTxMessage(id, sizeof(TData), isExtended) { }
 
 #if EFI_CAN_SUPPORT
 	/**
@@ -103,9 +103,9 @@ public:
 };
 
 template <typename TData>
-void transmitStruct(uint32_t eid)
+void transmitStruct(uint32_t id, bool isExtended)
 {
-	CanTxTyped<TData> frame(eid);
+	CanTxTyped<TData> frame(id, isExtended);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());
