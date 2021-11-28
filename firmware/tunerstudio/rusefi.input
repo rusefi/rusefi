@@ -1276,8 +1276,6 @@ gaugeCategory = DynoView
 [Datalog]
    ;       Channel          Label          Type    Format
    entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
-   entry = seconds,         @@GAUGE_NAME_UPTIME@@,      float,  "%.3f"
-
 entry = RPMValue, "RPM", int,    "%d"
 entry = rpmAcceleration, "dRPM", int,    "%d"
 entry = speedToRpmRatio, "s2rpm", float,  "%.3f"
@@ -1313,21 +1311,46 @@ entry = iatCorrection, "fuel: IAT correction", float,  "%.3f"
 entry = cltCorrection, "fuel: CLT correction", float,  "%.3f"
 entry = baroCorrection, "fuel: Barometric pressure correction", float,  "%.3f"
 entry = currentEnginePhase, "Engine Phase", int,    "%d"
+entry = wallFuelAmount, "fuel: wall corr ms", float,  "%.3f"
+entry = wallFuelCorrection, "fuel: wall amount", float,  "%.3f"
+entry = deltaTps, "fuel: TPS change", float,  "%.3f"
+entry = tpsAccelFuel, "fuel: TPS acceleration extra fuel ms", float,  "%.3f"
+entry = ignitionAdvance, "timing", float,  "%.3f"
+entry = sparkDwellValue, "dwell: coil charge time", float,  "%.3f"
+entry = coilDutyCycle, "dwell: coil duty cycle", float,  "%.3f"
+entry = idleAirValvePosition, "Idle Air Valve", float,  "%.3f"
+entry = etbTarget, "ETB Target", float,  "%.3f"
+entry = etb1DutyCycle, "ETB Duty", float,  "%.3f"
+entry = etb1Error, "ETB Error", float,  "%.3f"
+entry = fuelTankLevel, "Fuel level", float,  "%.3f"
+entry = fuelFlowRate, "fuel: Flow rate", float,  "%.3f"
+entry = veTableYAxis, "veTableYAxis", float,  "%.3f"
+entry = afrTableYAxis, "afrTableYAxis", float,  "%.3f"
+entry = knockLevel, "knock: current level", float,  "%.3f"
+entry = seconds, "Uptime", int,    "%d"
+entry = engineMode, "Engine Mode", int,    "%d"
+entry = firmwareVersion, "firmware", int,    "%d"
+entry = tsConfigVersion, "tsConfigVersion", int,    "%d"
+entry = calibrationValue, "calibrationValue", float,  "%.3f"
+entry = calibrationMode, "calibrationMode", int,    "%d"
+entry = fuelingLoad, "fuel: load", float,  "%.3f"
+entry = ignitionLoad, "ign: load", float,  "%.3f"
+entry = engineMakeCodeNameCrc16, "Engine CRC16", int,    "%d"
+entry = totalTriggerErrorCounter, "trg err", int,    "%d"
+entry = orderingErrorCounter, "orderingErrorCounter", int,    "%d"
+entry = warningCounter, "warning: counter", int,    "%d"
+entry = lastErrorCode, "warning: last", int,    "%d"
    entry = TPS2Value,       @@GAUGE_NAME_TPS2@@,        float, "%.2f"
    entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
    entry = AFRValue2,       @@GAUGE_NAME_AFR2@@,        float,  "%.2f"
    entry = lambdaValue2,    @@GAUGE_NAME_LAMBDA2@@,     float,  "%.2f"
-   entry = fuelingLoad,     @@GAUGE_NAME_FUEL_LOAD@@,     float, "%.1f"
-   entry = ignitionLoad,    @@GAUGE_NAME_IGNITION_LOAD@@, float, "%.1f"
    entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
    entry = knockLevel,	    @@GAUGE_NAME_KNOCK_LEVEL@@, 	   float,  "%.2f"
-   entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
    entry = turboSpeed,      @@GAUGE_NAME_TURBO_SPEED@@        int,  "%d"
    entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
    entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"
    entry = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,       float,  "%.3f"
    entry = totalTriggerErrorCounter, @@GAUGE_NAME_TRG_ERR@@,int,    "%d"
-   entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
    entry = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, float,  "%.3f"
 ;   entry = rawLowFuelPressure, @@GAUGE_NAME_RAW_FUEL_PRESSURE_LOW@@, float,  "%.3f"
    entry = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, float,  "%.3f"
@@ -1336,10 +1359,8 @@ entry = currentEnginePhase, "Engine Phase", int,    "%d"
    entry = injectorLagMs,   , float,  "%.3f"
    entry = fuelPidCorrection1,@@GAUGE_NAME_FUEL_TRIM@@,  float,  "%.2f"
    entry = fuelPidCorrection2,@@GAUGE_NAME_FUEL_TRIM_2@@,  float,  "%.2f"
-   entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
    entry = targetLambda, @@GAUGE_NAME_TARGET_LAMBDA@@,	float,"%.4f"
    entry = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, int, "%d"
-   entry = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, float, "%.2f"
 
    entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	  float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0 }
    entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	  float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
@@ -1354,14 +1375,6 @@ entry = currentEnginePhase, "Engine Phase", int,    "%d"
    entry = egt6,	        "EGT6",	float,"%.1f", { max31855_cs6 != 0}
    entry = egt7,	        "EGT7",	float,"%.1f", { max31855_cs7 != 0}
    entry = egt8,	        "EGT8",	float,"%.1f", { max31855_cs8 != 0}
-
-   entry = deltaTps,		@@GAUGE_NAME_FUEL_TPS_ROC@@,float,  "%.3f"
-   entry = tpsAccelFuel,    @@GAUGE_NAME_FUEL_TPS_EXTRA@@,    float,  "%.3f"
-
-   entry = wallFuelCorrection,@@GAUGE_NAME_FUEL_WALL_CORRECTION@@,	float,   "%.3f"
-   entry = wallFuelAmount, @@GAUGE_NAME_FUEL_WALL_AMOUNT@@,	float,   "%.3f"
-   
-   entry = sparkDwellValue,	@@GAUGE_COIL_DWELL_TIME@@, float,"%.3f"
 
    entry = vvtPositionB1E, @@GAUGE_NAME_VVT_B1E@@, float, "%.1f"
    entry = vvtPositionB2I, @@GAUGE_NAME_VVT_B2I@@, float, "%.1f"
@@ -1385,13 +1398,8 @@ entry = currentEnginePhase, "Engine Phase", int,    "%d"
    entry = debugIntField4,     {bitStringValue( debugFieldI4List,  debugMode )},int,"%d", { !enableLogDebugChannels }
    entry = debugIntField5,     {bitStringValue( debugFieldI5List,  debugMode )},int,"%d", { !enableLogDebugChannels }
 
-
-   entry = engineMakeCodeNameCrc16,   @@GAUGE_NAME_ENGINE_CRC16@@,int,"%d"
    entry = tuneCrc16,   @@GAUGE_NAME_TUNE_CRC16@@,int,"%d"
 
-   entry = engineMode,   "Engine Mode",int,"%d"
-   entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
-   entry = lastErrorCode,   @@GAUGE_NAME_WARNING_LAST@@,int,"%d"
    entry = recentErrorCode1,   "error 1",int,"%d", { !enableLogErrorList }
    entry = recentErrorCode2,   "error 2",int,"%d", { !enableLogErrorList }
    entry = recentErrorCode3,   "error 3",int,"%d", { !enableLogErrorList }
@@ -1407,11 +1415,6 @@ entry = currentEnginePhase, "Engine Phase", int,    "%d"
    entry = acSwitchState,   @@INDICATOR_NAME_AC_SWITCH@@,int,"%d"
    entry = isFanOn, "radiator fan",int,"%d"
 
-; Electronic throttle body
-   entry = etb1Error,      "ETB Error", float, "%.3f"
-   entry = etb1DutyCycle,  @@GAUGE_NAME_ETB_DUTY@@, float, "%.3f"
-   entry = etbTarget,      "ETB Target", float, "%.3f"
-   
 ; Transmission
    entry = tcuDesiredGear,  @@GAUGE_NAME_DESIRED_GEAR@@, int, "%d"
    entry = tcuCurrentGear,  @@GAUGE_NAME_CURRENT_GEAR@@, int, "%d"

@@ -91,39 +91,39 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale currentEnginePhase;"Engine Phase";"deg",1, 0, 0, 0, 0
 ! Wall model AE
-	uint16_t autoscale wallFuelAmount;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
-	int16_t autoscale wallFuelCorrection;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	int16_t autoscale wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
 	uint16_t unused76;;"",1, 0, 0, 0, 0
-	uint16_t autoscale deltaTps;TPS acceleration enrichment;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale deltaTps;@@GAUGE_NAME_FUEL_TPS_ROC@@;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t unused80;;"",1, 0, 0, 0, 0
-	uint16_t autoscale tpsAccelFuel;;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 ! Ignition
-	uint16_t autoscale ignitionAdvance;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
-	uint16_t autoscale sparkDwellValue;;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale ignitionAdvance;@@GAUGE_NAME_TIMING_ADVANCE@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale sparkDwellValue;@@GAUGE_COIL_DWELL_TIME@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 
-	uint16_t autoscale coilDutyCycle;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale coilDutyCycle;@@GAUGE_NAME_DWELL_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 ! Idle & ETB
-	uint16_t autoscale idleAirValvePosition;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale etbTarget;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale etb1DutyCycle;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale etb1Error;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale idleAirValvePosition;@@GAUGE_NAME_IAC@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etbTarget;"ETB Target";"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etb1DutyCycle;@@GAUGE_NAME_ETB_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etb1Error;"ETB Error";"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 ! Fuel system
-	uint16_t autoscale fuelTankLevel;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelTankLevel;"Fuel level";"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t autoscale totalFuelConsumption;;"grams",1, 0, 0, 0, 0
-	uint16_t autoscale fuelFlowRate;;"gram/s",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelFlowRate;@@GAUGE_NAME_FUEL_FLOW@@;"gram/s",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
 
 ! Y axis values for selectable tables
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 	uint16_t autoscale afrTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 
-	float autoscale knockLevel;;"Volts", 1, 0, 0, 0, 0
+	float autoscale knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 0
 
 ! integration magic: TS requires exact 'seconds' name
 	uint32_t autoscale seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0
-	uint32_t autoscale engineMode;;"em", 1, 0, 0, 0, 0
+	uint32_t autoscale engineMode;"Engine Mode";"em", 1, 0, 0, 0, 0
 	uint32_t autoscale firmwareVersion;@@GAUGE_NAME_VERSION@@;"version_f", 1, 0, 0, 0, 0
 
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
@@ -143,21 +143,21 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	! it wants to send have been sent.
 	float autoscale calibrationValue;;"", 1, 0, 0, 0, 0
 	uint8_t autoscale calibrationMode;;"", 1, 0, 0, 0, 0
-	uint8_t autoscale padding;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale unusedPadding;;"", 1, 0, 0, 0, 0
 
 	! Values used for load axes for fuel/ign tables
 	! These may or may not be the same value, depending on mode
-	uint16_t autoscale fuelingLoad;;"%",{1/100}, 0, 0, 0, 0
+	uint16_t autoscale fuelingLoad;@@GAUGE_NAME_FUEL_LOAD@@;"%",{1/100}, 0, 0, 0, 0
 
-	uint16_t autoscale ignitionLoad;;"%",{1/100}, 0, 0, 0, 0
+	uint16_t autoscale ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@;"%",{1/100}, 0, 0, 0, 0
 ! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	uint16_t autoscale engineMakeCodeNameCrc16;;"crc16",1, 0, 0, 0, 0
+	uint16_t autoscale engineMakeCodeNameCrc16;@@GAUGE_NAME_ENGINE_CRC16@@;"crc16",1, 0, 0, 0, 0
 ! Errors
-	uint32_t autoscale totalTriggerErrorCounter;;"counter",1, 0, 0, 0, 0
+	uint32_t autoscale totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
 	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
 
-	uint16_t autoscale warningCounter;;"count",1, 0, 0, 0, 0
-	uint16_t autoscale lastErrorCode;;"error",1, 0, 0, 0, 0
+	uint16_t autoscale warningCounter;@@GAUGE_NAME_WARNING_COUNTER@@;"count",1, 0, 0, 0, 0
+	uint16_t autoscale lastErrorCode;@@GAUGE_NAME_WARNING_LAST@@;"error",1, 0, 0, 0, 0
 
 	uint16_t[8 iterate] recentErrorCode;;"error", 1, 0, 0, 0, 0
 
@@ -188,16 +188,16 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale rawIat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t autoscale rawOilPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale tuneCrc16;;"crc16", 1, 0, 0, 0, 0
+	uint16_t autoscale tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
 	uint8_t autoscale unusedAt246;;"", 1, 0, 0, 0, 0
-	uint8_t autoscale tcuCurrentGear;;"gear", 1, 0, 0, 0, 0
+	uint8_t autoscale tcuCurrentGear;@@GAUGE_NAME_CURRENT_GEAR@@;"gear", 1, 0, 0, 0, 0
 
 	uint16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
 
-	uint8_t autoscale tcuDesiredGear;;"gear",1, 0, 0, 0, 0
-	uint8_t autoscale flexPercent;;"%",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, 0, 0, 0
+	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
 
 	uint16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t autoscale rawWastegatePosition;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
