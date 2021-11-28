@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 16:09:14 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 16:27:26 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -564,11 +564,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1, 1> debugIntField5 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_X@@
 	G
 	 * offset 212
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationX = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_Y@@
 	G
 	 * offset 214
 	 */
@@ -657,6 +659,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawWastegatePosition = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_WG_POSITION@@
 	%
 	 * offset 268
 	 */
@@ -677,16 +680,19 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawHighFuelPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_PRESSURE_LOW@@
 	kpa
 	 * offset 276
 	 */
 	scaled_channel<uint16_t, 30, 1> lowFuelPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@
 	bar
 	 * offset 278
 	 */
 	scaled_channel<uint16_t, 10, 1> highFuelPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TARGET_LAMBDA@@
 	 * offset 280
 	 */
 	scaled_channel<uint16_t, 10000, 1> targetLambda = (uint16_t)0;
@@ -714,16 +720,19 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> AFRValue2 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVT_B1E@@
 	deg
 	 * offset 290
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB1E = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVT_B2I@@
 	deg
 	 * offset 292
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB2I = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVT_B2E@@
 	deg
 	 * offset 294
 	 */
@@ -749,19 +758,23 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawTps2Secondary = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_KNOCK_LEVEL@@
 	 * offset 306
 	 */
 	uint16_t knockCount = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_Z@@
 	G
 	 * offset 308
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationZ = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_ROLL@@
 	 * offset 310
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationRoll = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_YAW@@
 	 * offset 312
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationYaw = (uint16_t)0;
@@ -771,6 +784,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> vvtTargets[4];
 	/**
+	 * @@GAUGE_NAME_TURBO_SPEED@@
 	hz
 	 * offset 318
 	 */
@@ -783,4 +797,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 16:09:14 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 16:27:26 EST 2021
