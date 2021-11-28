@@ -506,19 +506,21 @@ void Engine::checkShutdown() {
 		return;
 	}
 
-	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
-	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
-	// in shutdown mode, we need a small cooldown time between the ignition off and on
-	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
-		// if the ignition key is turned on again,
-		// we cancel the shutdown mode, but only if all shutdown procedures are complete
-		const float vBattThresholdOn = 8.0f;
-		if ((Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > vBattThresholdOn) && !isInShutdownMode()) {
-			ignitionOnTimeNt = getTimeNowNt();
-			stopEngineRequestTimeNt = 0;
-			efiPrintf("Ignition voltage detected! Cancel the engine shutdown!");
-		}
-	}
+	// TODO: this logic is currently broken
+
+	// // here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
+	// const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
+	// // in shutdown mode, we need a small cooldown time between the ignition off and on
+	// if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
+	// 	// if the ignition key is turned on again,
+	// 	// we cancel the shutdown mode, but only if all shutdown procedures are complete
+	// 	const float vBattThresholdOn = 8.0f;
+	// 	if ((Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > vBattThresholdOn) && !isInShutdownMode()) {
+	// 		ignitionOnTimeNt = getTimeNowNt();
+	// 		stopEngineRequestTimeNt = 0;
+	// 		efiPrintf("Ignition voltage detected! Cancel the engine shutdown!");
+	// 	}
+	// }
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
@@ -530,7 +532,8 @@ bool Engine::isInMainRelayBench() {
 }
 
 bool Engine::isInShutdownMode() const {
-#if EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
+	// TODO: this logic is currently broken
+#if 0 && EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
 	// if we are in "ignition_on" mode and not in shutdown mode
 	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
 		const float vBattThresholdOff = 5.0f;
