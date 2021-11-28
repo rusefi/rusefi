@@ -1112,8 +1112,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s etb;
 	brain_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
 	brain_input_pin_e turboSpeedSensorInputPin;
-	float alternator_derivativeFilterLoss;;"x", 1, 0, -1000000, 1000000, 4
-	float alternator_antiwindupFreq;;"x", 1, 0, -1000000, 1000000, 4
+	float unused1760;;"x", 1, 0, 0, 1, 1
+	float unused1764;;"x", 1, 0, 0, 1, 1
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC", 1, 0, 0, 1023, 0
 	output_pin_e starterControlPin;See also startStopButtonPin

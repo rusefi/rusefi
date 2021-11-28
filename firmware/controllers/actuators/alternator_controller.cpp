@@ -20,7 +20,7 @@
 #endif /* HAS_OS_ACCESS */
 
 static SimplePwm alternatorControl("alt");
-static PidIndustrial alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
+static Pid alternatorPid(&persistentState.persistentConfiguration.engineConfiguration.alternatorControl);
 
 static percent_t currentAltDuty;
 
@@ -43,10 +43,6 @@ class AlternatorController : public PeriodicTimerController {
 			shouldResetPid = false;
 		}
 #endif
-
-		// todo: move this to pid_s one day
-		alternatorPid.antiwindupFreq = engineConfiguration->alternator_antiwindupFreq;
-		alternatorPid.derivativeFilterLoss = engineConfiguration->alternator_derivativeFilterLoss;
 
 		if (engineConfiguration->debugMode == DBG_ALTERNATOR_PID) {
 			// this block could be executed even in on/off alternator control mode
