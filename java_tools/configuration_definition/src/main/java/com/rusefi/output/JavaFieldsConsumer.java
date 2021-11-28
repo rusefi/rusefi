@@ -36,18 +36,16 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private int writeJavaFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
-        BitState bitState = new BitState();
-        ConfigField prev = ConfigField.VOID;
+        FieldIterator iterator = new FieldIterator(tsFields);
         for (int i = 0; i < tsFields.size(); i++) {
-            ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
-            ConfigField cf = tsFields.get(i);
+            iterator.start(i);
             // skip duplicate names
-            if (cf.getName().equals(prev.getName()) || cf.isDirective())
+            if (iterator.cf.getName().equals(iterator.prev.getName()) || iterator.cf.isDirective())
                 continue;
-            tsPosition = writeOneField(cf, prefix, tsPosition, next, bitState.get());
+            tsPosition = writeOneField(iterator.cf, prefix, tsPosition, iterator.next, iterator.bitState.get());
 
-            bitState.incrementBitIndex(cf, next);
-            prev = cf;
+            iterator.prev = iterator.cf;
+            iterator.end();
         }
         return tsPosition;
     }
