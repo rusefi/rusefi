@@ -91,7 +91,7 @@ uint16_t rpmAcceleration;;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale currentEnginePhase;;"deg",1, 0, 0, 0, 0
 ! Wall model AE
 	uint16_t autoscale wallFuelAmount;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
-	uint16_t autoscale wallFuelCorrection;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	int16_t autoscale wallFuelCorrection;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
 	uint16_t unused76;;"",1, 0, 0, 0, 0
 	uint16_t autoscale deltaTps;TPS acceleration enrichment;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
