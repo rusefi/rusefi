@@ -57,9 +57,6 @@ public class DataLogConsumer implements ConfigurationConsumer {
     private String handle(ConfigField configField) {
         if (configField.getName().contains("unused"))
             return "";
-        if (configField.isBit()) {
-            return "";
-        }
 
         if (configField.isArray()) {
 

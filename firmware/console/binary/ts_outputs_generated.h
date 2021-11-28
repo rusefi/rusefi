@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 16:27:26 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 17:03:12 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -24,6 +24,7 @@ struct ts_outputs_s {
 	offset 0 bit 5 */
 	bool isFuelPumpOn : 1 {};
 	/**
+	 * "radiator fan"
 	offset 0 bit 6 */
 	bool isFanOn : 1 {};
 	/**
@@ -39,9 +40,11 @@ struct ts_outputs_s {
 	offset 0 bit 10 */
 	bool sd_msd : 1 {};
 	/**
+	 * @@INDICATOR_NAME_CLUTCH_UP@@
 	offset 0 bit 11 */
 	bool clutchUpState : 1 {};
 	/**
+	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
 	offset 0 bit 12 */
 	bool clutchDownState : 1 {};
 	/**
@@ -51,12 +54,14 @@ struct ts_outputs_s {
 	offset 0 bit 14 */
 	bool unusedb14 : 1 {};
 	/**
+	 * @@INDICATOR_NAME_BRAKE_DOWN@@
 	offset 0 bit 15 */
 	bool brakePedalState : 1 {};
 	/**
 	offset 0 bit 16 */
 	bool toothLogReady : 1 {};
 	/**
+	 * @@INDICATOR_NAME_AC_SWITCH@@
 	offset 0 bit 17 */
 	bool acSwitchState : 1 {};
 	/**
@@ -398,6 +403,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelTankLevel = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	grams
 	 * offset 100
 	 */
@@ -665,6 +671,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> wastegatePositionSensor = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_IDLE_POSITION@@
 	%
 	 * offset 270
 	 */
@@ -797,4 +804,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 16:27:26 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 17:03:12 EST 2021
