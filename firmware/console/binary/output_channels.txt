@@ -68,28 +68,28 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale oilPressure;@@GAUGE_NAME_OIL_PRESSURE@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB1I;@@GAUGE_NAME_VVT_B1I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale chargeAirMass;;"g",{1/1000}, 0, 0, 0, 0
-	uint16_t autoscale crankingFuelMs;airmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale chargeAirMass;@@GAUGE_NAME_AIR_MASS@@;"g",{1/1000}, 0, 0, 0, 0
+	uint16_t autoscale crankingFuelMs;crankingFuelMs\nairmass in mg, 0-65 grams;"ms",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
-	uint16_t autoscale currentTargetAfr;;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
-	uint16_t autoscale baseFuel;This is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale currentTargetAfr;@@GAUGE_NAME_TARGET_AFR@@;"ratio",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
-	uint16_t autoscale fuelRunning;Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
-	uint16_t autoscale actualLastInjection;Actual last injection time - including all compensation and injection mode;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelRunning;@@GAUGE_NAME_FUEL_RUNNING@@\nTotal fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale actualLastInjection;@@GAUGE_NAME_FUEL_LAST_INJECTION@@\nActual last injection time - including all compensation and injection mode;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 
 
-	uint8_t autoscale injectorDutyCycle;;"%",{1/2}, 0, 0, 0, 0
-	uint8_t autoscale veValue;;"ratio",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale injectorDutyCycle;@@GAUGE_NAME_FUEL_INJ_DUTY@@;"%",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale veValue;@@GAUGE_NAME_FUEL_VE@@;"ratio",{1/2}, 0, 0, 0, 0
 	uint16_t autoscale injectionOffset;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale tCharge;;"deg C",{1/@@PACK_MULT_TEMPERATURE@@}, 0, 0, 0, 0
 
 !  Corrections
-	uint16_t autoscale injectorLagMs;;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
-	uint16_t autoscale iatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale cltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale baroCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale currentEnginePhase;;"deg",1, 0, 0, 0, 0
+	uint16_t autoscale injectorLagMs;@@GAUGE_NAME_INJECTOR_LAG@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale iatCorrection;@@GAUGE_NAME_FUEL_IAT_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale cltCorrection;@@GAUGE_NAME_FUEL_CLT_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale currentEnginePhase;"Engine Phase";"deg",1, 0, 0, 0, 0
 ! Wall model AE
 	uint16_t autoscale wallFuelAmount;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 	uint16_t autoscale wallFuelCorrection;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
@@ -180,7 +180,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t[EGT_CHANNEL_COUNT iterate] egt;;"deg C", 1, 0, 0, 0, 0
 
-	uint16_t autoscale TPS2Value;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t autoscale rawTps1Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t autoscale rawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
@@ -212,12 +212,12 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale highFuelPressure;;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale targetLambda;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
-	uint16_t autoscale AFRValue;;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale AFRValue;@@GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
 
-	uint16_t autoscale VssAcceleration;;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
-	uint16_t autoscale lambdaValue2;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint16_t autoscale VssAcceleration;"Vss Accel";"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale lambdaValue2;@@GAUGE_NAME_LAMBDA2@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 
-	uint16_t autoscale AFRValue2;;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
+	uint16_t autoscale AFRValue2;@@GAUGE_NAME_AFR2@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB1E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB2I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 	uint16_t autoscale vvtPositionB2E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0

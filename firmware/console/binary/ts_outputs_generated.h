@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 14:09:25 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 14:39:28 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -226,45 +226,53 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB1I = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AIR_MASS@@
 	g
 	 * offset 44
 	 */
 	scaled_channel<uint16_t, 1000, 1> chargeAirMass = (uint16_t)0;
 	/**
+	 * crankingFuelMs
 	 * airmass in mg, 0-65 grams
 	ms
 	 * offset 46
 	 */
 	scaled_channel<uint16_t, 100, 1> crankingFuelMs = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TARGET_AFR@@
 	ratio
 	 * offset 48
 	 */
 	scaled_channel<uint16_t, 1000, 1> currentTargetAfr = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_BASE@@
 	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
 	mg
 	 * offset 50
 	 */
 	scaled_channel<uint16_t, 100, 1> baseFuel = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_RUNNING@@
 	 * Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
 	mg
 	 * offset 52
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelRunning = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_LAST_INJECTION@@
 	 * Actual last injection time - including all compensation and injection mode
 	ms
 	 * offset 54
 	 */
 	scaled_channel<uint16_t, 300, 1> actualLastInjection = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_INJ_DUTY@@
 	%
 	 * offset 56
 	 */
 	scaled_channel<uint8_t, 2, 1> injectorDutyCycle = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_VE@@
 	ratio
 	 * offset 57
 	 */
@@ -280,26 +288,31 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> tCharge = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_INJECTOR_LAG@@
 	ms
 	 * offset 62
 	 */
 	scaled_channel<uint16_t, 300, 1> injectorLagMs = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_IAT_CORR@@
 	%
 	 * offset 64
 	 */
 	scaled_channel<uint16_t, 100, 1> iatCorrection = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_CLT_CORR@@
 	%
 	 * offset 66
 	 */
 	scaled_channel<uint16_t, 100, 1> cltCorrection = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_BARO_CORR@@
 	%
 	 * offset 68
 	 */
 	scaled_channel<uint16_t, 100, 1> baroCorrection = (uint16_t)0;
 	/**
+	 * "Engine Phase"
 	deg
 	 * offset 70
 	 */
@@ -546,6 +559,7 @@ struct ts_outputs_s {
 	 */
 	uint16_t egt[EGT_CHANNEL_COUNT];
 	/**
+	 * @@GAUGE_NAME_TPS2@@
 	%
 	 * offset 232
 	 */
@@ -653,20 +667,24 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 10000, 1> targetLambda = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AFR@@
 	AFR
 	 * offset 282
 	 */
 	scaled_channel<uint16_t, 1000, 1> AFRValue = (uint16_t)0;
 	/**
+	 * "Vss Accel"
 	m/s2
 	 * offset 284
 	 */
 	scaled_channel<uint16_t, 300, 1> VssAcceleration = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_LAMBDA2@@
 	 * offset 286
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambdaValue2 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AFR2@@
 	AFR
 	 * offset 288
 	 */
@@ -741,4 +759,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 14:09:25 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Nov 28 14:39:28 EST 2021

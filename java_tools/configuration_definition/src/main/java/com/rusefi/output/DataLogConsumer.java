@@ -77,6 +77,9 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
 
         String comment = state.variableRegistry.applyVariables(configField.getComment());
+        String[] comments = comment.split("\\\\n");
+        comment = comments[0];
+
         if (comment.isEmpty())
             comment = configField.getName();
 
