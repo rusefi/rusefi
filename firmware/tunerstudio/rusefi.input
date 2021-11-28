@@ -254,7 +254,7 @@ cltCorrection = scalar, U16, 66, "%", 0.01, 0
 baroCorrection = scalar, U16, 68, "%", 0.01, 0
 currentEnginePhase = scalar, U16, 70, "deg", 1, 0
 wallFuelAmount = scalar, U16, 72, "mg", 0.01, 0
-wallFuelCorrection = scalar, U16, 74, "mg", 0.01, 0
+wallFuelCorrection = scalar, S16, 74, "mg", 0.01, 0
 unused76 = scalar, U16, 76, "", 1, 0
 deltaTps = scalar, U16, 78, "ratio", 0.01, 0
 unused80 = scalar, U16, 80, "", 1, 0
@@ -1096,8 +1096,8 @@ gaugeCategory = Ignition
 gaugeCategory = Acceleration Enrichment
    deltaTpsGauge     = deltaTps,                "AE: TPS change",            "",        0,    120,      10,     10,     100,   100,   1,   1
    tpsAccelFuelGauge = tpsAccelFuel,"AE: TPS enrich",             "ms",        0,    120,      10,     10,     100,   100,   1,   1
-   wallFuelAmountGauge = wallFuelAmount, "AE: wall amount", "ms",     0,   100,     0,    0,    100,  100,   0,   0
-   wallFuelCorrectionGauge = wallFuelCorrection, "AE: wall correction extra", "ms",     0,   100,     0,    0,    100,  100,   0,   0
+   wallFuelAmountGauge = wallFuelAmount, "AE: wall amount", "mg",     0,   100,     0,    0,    100,  100,   0,   0
+   wallFuelCorrectionGauge = wallFuelCorrection, "AE: wall correction extra", "mg",     -20,   20,     -100,    -100,    100,  100,   1,   1
 
 gaugeCategory = Fueling
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
