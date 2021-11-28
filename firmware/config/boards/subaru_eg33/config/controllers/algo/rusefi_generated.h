@@ -1745,6 +1745,7 @@
 #define RPM_1_BYTE_PACKING_MULT 50
 #define rpmHardLimit_offset 416
 #define runningLedPin_offset 1813
+#define rusefiVerbose29b_offset 744
 #define SCRIPT_CURVE_16 16
 #define SCRIPT_CURVE_8 8
 #define SCRIPT_CURVE_COUNT 6
@@ -1830,7 +1831,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 3702394089
+#define SIGNATURE_HASH 341875870
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2348,7 +2349,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.11.28.subaru_eg33_f7.3702394089"
+#define TS_SIGNATURE "rusEFI 2021.11.28.subaru_eg33_f7.341875870"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2396,7 +2397,6 @@
 #define unused3988_offset 3988
 #define unused4028_offset 4028
 #define unused6312_offset 6312
-#define unused744b4_offset 744
 #define unused970_offset 970
 #define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476
