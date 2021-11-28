@@ -141,6 +141,11 @@ public class ConfigDefinition {
                 case KEY_JAVA_DESTINATION:
                     javaDestinationFileName = args[i + 1];
                     break;
+                case "-readfile":
+                    String keyName = args[i + 1];
+                    // yes, we take three parameters here thus pre-increment!
+                    String fileName = args[++i + 1];
+                    state.variableRegistry.register(keyName, readFile(fileName));
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
                     inputFiles.add(firingEnumFileName);
@@ -305,6 +310,26 @@ public class ConfigDefinition {
         }
 
         CachingStrategy.saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
+    }
+
+    private static String readFile(String fileName) {
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        String ls = System.getProperty("line.separator");
+        try {
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+                while (true) {
+                    if (!((line = reader.readLine()) != null)) break;
+                    stringBuilder.append(line);
+                    stringBuilder.append(ls);
+                }
+
+                return stringBuilder.toString();
+            }
+        } catch (IOException e) {
+            return "";
+        }
     }
 
     private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, ParseState parseState) throws IOException {
