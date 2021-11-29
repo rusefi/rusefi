@@ -184,9 +184,9 @@ void setCanType(int type) {
 
 #if EFI_TUNER_STUDIO
 void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
-	tsOutputChannels->debugIntField1 = isCanEnabled ? canReadCounter : -1;
-	tsOutputChannels->debugIntField2 = isCanEnabled ? canWriteOk : -1;
-	tsOutputChannels->debugIntField3 = isCanEnabled ? canWriteNotOk : -1;
+	tsOutputChannels->canReadCounter = isCanEnabled ? canReadCounter : -1;
+	tsOutputChannels->canWriteOk = isCanEnabled ? canWriteOk : -1;
+	tsOutputChannels->canWriteNotOk = isCanEnabled ? canWriteNotOk : -1;
 }
 #endif /* EFI_TUNER_STUDIO */
 
