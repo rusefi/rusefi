@@ -54,7 +54,7 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
         FieldIterator iterator = new FieldIterator(structure.cFields);
         for (int i = 0; i < structure.cFields.size(); i++) {
             iterator.start(i);
-            content.append(BaseCHeaderConsumer.getHeaderText(iterator.cf, currentOffset, iterator.bitState.get()));
+            content.append(getHeaderText(iterator.cf, currentOffset, iterator.bitState.get()));
 
             currentOffset += iterator.cf.getSize(iterator.next);
             iterator.end();
