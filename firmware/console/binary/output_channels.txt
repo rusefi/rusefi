@@ -17,7 +17,7 @@ bit sd_msd
 bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
 bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
 bit isFan2On
-bit unusedb14;
+bit alternatorOnOff;
 bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
 bit toothLogReady;
 bit acSwitchState;@@INDICATOR_NAME_AC_SWITCH@@
