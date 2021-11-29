@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Nov 29 06:56:41 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Nov 29 16:48:05 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -612,8 +612,11 @@ public class Fields {
 	public static final int cylindersCount_offset = 400;
 	public static final int dc_io_size = 4;
 	public static final int DC_PER_STEPPER = 2;
+	public static final int debug_mode_e_DBG_0 = 0;
+	public static final int debug_mode_e_DBG_16 = 16;
 	public static final int debug_mode_e_DBG_34 = 34;
-	public static final int debug_mode_e_DBG_ALTERNATOR_PID = 0;
+	public static final int debug_mode_e_DBG_35 = 35;
+	public static final int debug_mode_e_DBG_43 = 43;
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS = 21;
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS2 = 32;
 	public static final int debug_mode_e_DBG_AUX_VALVES = 20;
@@ -629,13 +632,11 @@ public class Fields {
 	public static final int debug_mode_e_DBG_ELECTRONIC_THROTTLE_EXTRA = 29;
 	public static final int debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID = 17;
 	public static final int debug_mode_e_DBG_ETB_AUTOTUNE = 39;
-	public static final int debug_mode_e_DBG_ETB_LOGIC = 35;
 	public static final int debug_mode_e_DBG_EXECUTOR = 18;
 	public static final int debug_mode_e_DBG_FUEL_PID_CORRECTION = 11;
 	public static final int debug_mode_e_DBG_GPPWM = 2;
 	public static final int debug_mode_e_DBG_IDLE_CONTROL = 3;
 	public static final int debug_mode_e_DBG_IGNITION_TIMING = 10;
-	public static final int debug_mode_e_DBG_INJECTOR_COMPENSATION = 43;
 	public static final int debug_mode_e_DBG_INSTANT_RPM = 22;
 	public static final int debug_mode_e_DBG_ION = 30;
 	public static final int debug_mode_e_DBG_KNOCK = 15;
@@ -662,7 +663,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_VVT_2_PID = 49;
 	public static final int debug_mode_e_DBG_VVT_3_PID = 50;
 	public static final int debug_mode_e_DBG_VVT_4_PID = 51;
-	public static final int debug_mode_e_DBG_WALL_WETTING = 16;
 	public static final int debug_mode_e_MODE_52 = 52;
 	public static final int debug_mode_e_MODE_53 = 53;
 	public static final int debug_mode_e_UNUSED23 = 23;
@@ -1745,7 +1745,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 723950363;
+	public static final int SIGNATURE_HASH = 415937249;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2208,7 +2208,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.11.29.all.723950363";
+	public static final String TS_SIGNATURE = "rusEFI 2021.11.29.all.415937249";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;

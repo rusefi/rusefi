@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 06:55:43 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 16:47:03 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -824,7 +824,27 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[196];
+	uint8_t unusedAtTheEnd[188];
+	/**
+	%
+	 * offset 508
+	 */
+	scaled_channel<uint16_t, 100, 1> timingCltCorrection = (uint16_t)0;
+	/**
+	%
+	 * offset 510
+	 */
+	scaled_channel<uint16_t, 100, 1> timingIatCorrection = (uint16_t)0;
+	/**
+	%
+	 * offset 512
+	 */
+	scaled_channel<uint16_t, 100, 1> timingPidCorrection = (uint16_t)0;
+	/**
+	%
+	 * offset 514
+	 */
+	scaled_channel<uint16_t, 100, 1> unusedA = (uint16_t)0;
 	/**
 	 * offset 516
 	 */
@@ -888,7 +908,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 555
 	 */
-	uint8_t unusedStarterRelayDisable = (uint8_t)0;
+	uint8_t multiSparkCounter = (uint8_t)0;
 	/**
 	 * offset 556
 	 */
@@ -929,4 +949,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 06:55:43 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 16:47:03 UTC 2021
