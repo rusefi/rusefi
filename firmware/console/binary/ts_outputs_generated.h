@@ -1,8 +1,33 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 02:00:36 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 04:25:02 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
 #include "rusefi_types.h"
+// start of pid_status_s
+struct pid_status_s {
+	/**
+	 * offset 0
+	 */
+	float iTerm = (float)0;
+	/**
+	 * offset 4
+	 */
+	float dTerm = (float)0;
+	/**
+	 * offset 8
+	 */
+	float output = (float)0;
+	/**
+	 * offset 12
+	 */
+	float error = (float)0;
+	/**
+	 * offset 16
+	 */
+	int resetCounter = (int)0;
+	/** total size 20*/
+};
+
 // start of ts_outputs_s
 struct ts_outputs_s {
 	/**
@@ -799,9 +824,21 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[320];
+	uint8_t unusedAtTheEnd[260];
+	/**
+	 * offset 580
+	 */
+	pid_status_s alternatorStatus;
+	/**
+	 * offset 600
+	 */
+	pid_status_s idleStatus;
+	/**
+	 * offset 620
+	 */
+	pid_status_s etbStatus;
 	/** total size 640*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 02:00:36 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 04:25:02 UTC 2021
