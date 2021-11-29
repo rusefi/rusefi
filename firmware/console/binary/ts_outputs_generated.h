@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:58:39 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 06:55:43 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -77,7 +77,7 @@ struct ts_outputs_s {
 	bool isFan2On : 1 {};
 	/**
 	offset 0 bit 14 */
-	bool unusedb14 : 1 {};
+	bool alternatorOnOff : 1 {};
 	/**
 	 * @@INDICATOR_NAME_BRAKE_DOWN@@
 	offset 0 bit 15 */
@@ -651,7 +651,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 246
 	 */
-	scaled_channel<uint8_t, 1, 1> unusedAt246 = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> fuelClosedLoopBinIdx = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_CURRENT_GEAR@@
 	gear
@@ -824,7 +824,23 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[204];
+	uint8_t unusedAtTheEnd[196];
+	/**
+	 * offset 516
+	 */
+	uint16_t mostRecentTimeBetweenSparkEvents = (uint16_t)0;
+	/**
+	 * offset 518
+	 */
+	uint16_t mostRecentTimeBetweenIgnitionEvents = (uint16_t)0;
+	/**
+	 * offset 520
+	 */
+	uint16_t maxLockedDuration = (uint16_t)0;
+	/**
+	 * offset 522
+	 */
+	uint16_t maxTriggerReentraint = (uint16_t)0;
 	/**
 	 * offset 524
 	 */
@@ -913,4 +929,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:58:39 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 06:55:43 UTC 2021
