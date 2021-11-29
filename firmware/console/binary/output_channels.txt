@@ -253,7 +253,14 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[204 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[196 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
+    uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
+    uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
+
+    uint16_t maxLockedDuration;;"", 1, 0, -10000, 10000, 3
+    uint16_t maxTriggerReentraint;;"", 1, 0, -10000, 10000, 3
+
 
     uint16_t canWriteOk;;"", 1, 0, -10000, 10000, 3
     uint16_t canWriteNotOk;;"", 1, 0, -10000, 10000, 3
