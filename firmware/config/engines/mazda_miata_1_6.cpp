@@ -167,8 +167,6 @@ static void miataNAcommonEngineSettings() {
 
 	engineConfiguration->tachPulsePerRev = 2;
 
-	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
-
 	setCommonNTCSensor(&engineConfiguration->clt, 2700);
 	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
