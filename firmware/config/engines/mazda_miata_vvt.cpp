@@ -359,15 +359,6 @@ static void setMazdaMiataEngineNB2Defaults() {
 	setCommonMazdaNB();
 
 	setMazdaNB2VVTSettings();
-
-
-
-//	engineConfiguration->debugTriggerSync = GPIOD_3;
-
-//	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
-	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
-
-
 } // end of setMazdaMiataEngineNB2Defaults
 
 // MAZDA_MIATA_2003

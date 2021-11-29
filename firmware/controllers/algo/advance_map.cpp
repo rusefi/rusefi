@@ -91,14 +91,12 @@ angle_t getAdvanceCorrections(int rpm) {
 
 	float pidTimingCorrection = engine->module<IdleController>().unmock().getIdleTimingAdjustment(rpm);
 
-	if (engineConfiguration->debugMode == DBG_IGNITION_TIMING) {
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugFloatField1 = iatCorrection;
-		tsOutputChannels.debugFloatField2 = engine->engineState.cltTimingCorrection;
-		tsOutputChannels.debugFloatField4 = pidTimingCorrection;
-		tsOutputChannels.debugIntField1 = engine->engineState.multispark.count;
+		tsOutputChannels.timingIatCorrection = iatCorrection;
+		tsOutputChannels.timingCltCorrection = engine->engineState.cltTimingCorrection;
+		tsOutputChannels.timingPidCorrection = pidTimingCorrection;
+		tsOutputChannels.multiSparkCounter = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
-	}
 
 	return iatCorrection
 		+ engine->engineState.cltTimingCorrection
