@@ -198,7 +198,7 @@ sd_msd = bits, U32, 0, [10:10]
 clutchUpState = bits, U32, 0, [11:11]
 clutchDownState = bits, U32, 0, [12:12]
 isFan2On = bits, U32, 0, [13:13]
-unusedb14 = bits, U32, 0, [14:14]
+isMainRelayOn = bits, U32, 0, [14:14]
 brakePedalState = bits, U32, 0, [15:15]
 toothLogReady = bits, U32, 0, [16:16]
 acSwitchState = bits, U32, 0, [17:17]
@@ -1238,6 +1238,7 @@ gaugeCategory = DynoView
 	; minor info	
     indicator = { isFanOn },   "fan off",     "fan on",     white, black, green,   black
 	indicator = { isFan2On }, "fan 2 off",   "fan 2 on",   white, black, green,   black
+	indicator = { isMainRelayOn }, "main relay off",   "main relay on",   white, black, green,   black
     indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, yellow,   black
     indicator = { isFuelPumpOn}, "pump off",   "pump on",   white, black, green,   black
     indicator = { clutchUpState }, "Clutch Up",   "clutch Up",   white, black, red,   black

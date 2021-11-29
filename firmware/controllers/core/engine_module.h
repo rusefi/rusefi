@@ -10,4 +10,7 @@ public:
 
 	// Called approx 200Hz
 	virtual void onFastCallback() { }
+
+	// Queried to determine whether this module needs a delayed shutoff, defaults to false
+	virtual bool needsDelayedShutoff() { return false; }
 };
