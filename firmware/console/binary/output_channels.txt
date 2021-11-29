@@ -253,7 +253,12 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[196 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[188 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
+	uint16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale timingIatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale timingPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale unusedA;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
     uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
     uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
@@ -276,7 +281,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
     uint8_t startStopStateToggleCounter;;"", 1, 0, -10000, 10000, 3
     uint8_t starterState;;"", 1, 0, -10000, 10000, 3
     uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
-    uint8_t unusedStarterRelayDisable;;"", 1, 0, -10000, 10000, 3
+    uint8_t multiSparkCounter;;"", 1, 0, -10000, 10000, 3
 
     int idleState;;"", 1, 0, -10000, 10000, 3
 
