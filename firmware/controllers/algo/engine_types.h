@@ -262,9 +262,9 @@ typedef enum {
 	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
 	 */
 	DBG_VVT = 8,
-	DBG_CRANKING_DETAILS = 9,
-	DBG_IGNITION_TIMING = 10,
-	DBG_FUEL_PID_CORRECTION = 11,
+	DBG_9 = 9,
+	DBG_10 = 10,
+	DBG_11 = 11,
 	DBG_UNUSED12 = 12,
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
@@ -279,7 +279,7 @@ typedef enum {
 	 * See tunerstudio.cpp
 	 */
 	DBG_BENCH_TEST = 19,
-	DBG_AUX_VALVES = 20,
+	DBG_20 = 20,
 	/**
 	 * ADC
 	 * See also DBG_ANALOG_INPUTS2
@@ -293,7 +293,7 @@ typedef enum {
 	DBG_CAN = 26,
 	DBG_MAP = 27,
 	DBG_METRICS = 28,
-	DBG_ELECTRONIC_THROTTLE_EXTRA = 29,
+	DBG_29 = 29,
 	DBG_ION = 30,
 	DBG_TLE8888 = 31,
 	/**
@@ -304,7 +304,7 @@ typedef enum {
 	DBG_34 = 34,
 	DBG_35 = 35,
 	DBG_BOOST = 36,
-	DBG_START_STOP = 37,
+	DBG_37 = 37,
 	DBG_LAUNCH = 38,
 	DBG_ETB_AUTOTUNE = 39,
 	DBG_COMPOSITE_LOG = 40,
@@ -319,8 +319,6 @@ typedef enum {
 	DBG_VVT_2_PID = 49,
 	DBG_VVT_3_PID = 50,
 	DBG_VVT_4_PID = 51,
-	MODE_52 = 52,
-	MODE_53 = 53,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
