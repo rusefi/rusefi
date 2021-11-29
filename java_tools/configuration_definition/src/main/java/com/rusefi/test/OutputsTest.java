@@ -2,15 +2,19 @@ package com.rusefi.test;
 
 import com.rusefi.ReaderState;
 import com.rusefi.output.DataLogConsumer;
+import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
 public class OutputsTest {
+    private com.rusefi.output.GaugeConsumer GaugeConsumer;
+
     @Test
     public void generateSomething() throws IOException {
         String test = "struct total\n" +
@@ -101,8 +105,8 @@ public class OutputsTest {
     public void sensorStruct() throws IOException {
         String test = "struct total\n" +
                 "    struct pid_status_s\n" +
-                "    \tfloat iTerm;;\"\", 1, 0, -10000, 10000, 4\n" +
-                "    \tfloat dTerm;;\"\", 1, 0, -10000, 10000, 4\n" +
+                "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
+                "    \tfloat dTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
                 "    end_struct\n" +
                 "\tpid_status_s alternatorStatus\n" +
                 "\tpid_status_s idleStatus\n" +
@@ -110,13 +114,20 @@ public class OutputsTest {
 
         ReaderState state = new ReaderState();
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
-        state.readBufferedReader(test, Collections.singletonList(dataLogConsumer));
+        GaugeConsumer gaugeConsumer = new GaugeConsumer(null, state);
+        state.readBufferedReader(test, Arrays.asList(dataLogConsumer, gaugeConsumer));
         assertEquals(
                 "entry = alternatorStatus_iTerm, \"iTerm\", float,  \"%.3f\"\n" +
                         "entry = alternatorStatus_dTerm, \"dTerm\", float,  \"%.3f\"\n" +
                         "entry = idleStatus_iTerm, \"iTerm\", float,  \"%.3f\"\n" +
                         "entry = idleStatus_dTerm, \"dTerm\", float,  \"%.3f\"\n",
                 new String(dataLogConsumer.getTsWriter().toCharArray()));
+
+        assertEquals("alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
+                        "alternatorStatus_dTermGauge = alternatorStatus_dTerm,\"alternatorStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
+                        "idleStatus_iTermGauge = idleStatus_iTerm,\"idleStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
+                        "idleStatus_dTermGauge = idleStatus_dTerm,\"idleStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n",
+                new String(gaugeConsumer.getTsWriter().toCharArray()));
 
     }
 }
