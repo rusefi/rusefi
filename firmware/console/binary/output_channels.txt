@@ -244,6 +244,6 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[20 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[320 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 end_struct
