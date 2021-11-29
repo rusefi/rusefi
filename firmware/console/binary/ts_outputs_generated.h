@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:41:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:58:39 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -362,7 +362,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 76
 	 */
-	uint16_t unused76 = (uint16_t)0;
+	uint16_t revolutionCounterSinceStart = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_TPS_ROC@@
 	ratio
@@ -372,7 +372,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 80
 	 */
-	uint16_t unused80 = (uint16_t)0;
+	uint16_t canReadCounter = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_TPS_EXTRA@@
 	ms
@@ -824,7 +824,55 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[236];
+	uint8_t unusedAtTheEnd[204];
+	/**
+	 * offset 524
+	 */
+	uint16_t canWriteOk = (uint16_t)0;
+	/**
+	 * offset 526
+	 */
+	uint16_t canWriteNotOk = (uint16_t)0;
+	/**
+	 * offset 528
+	 */
+	int triggerPrimaryFall = (int)0;
+	/**
+	 * offset 532
+	 */
+	int triggerPrimaryRise = (int)0;
+	/**
+	 * offset 536
+	 */
+	int triggerSecondaryFall = (int)0;
+	/**
+	 * offset 540
+	 */
+	int triggerSecondaryRise = (int)0;
+	/**
+	 * offset 544
+	 */
+	int triggerVvtFall = (int)0;
+	/**
+	 * offset 548
+	 */
+	int triggerVvtRise = (int)0;
+	/**
+	 * offset 552
+	 */
+	uint8_t startStopStateToggleCounter = (uint8_t)0;
+	/**
+	 * offset 553
+	 */
+	uint8_t starterState = (uint8_t)0;
+	/**
+	 * offset 554
+	 */
+	uint8_t starterRelayDisable = (uint8_t)0;
+	/**
+	 * offset 555
+	 */
+	uint8_t unusedStarterRelayDisable = (uint8_t)0;
 	/**
 	 * offset 556
 	 */
@@ -865,4 +913,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:41:44 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:58:39 UTC 2021
