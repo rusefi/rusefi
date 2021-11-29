@@ -1,3 +1,5 @@
+! units,scale,offset,min,max,digits
+
 struct_no_prefix ts_outputs_s
 
 bit sd_present

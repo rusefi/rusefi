@@ -49,6 +49,10 @@
 !
 !
 ! bit bitName,"true value","false value";+Tooltip text
+!
+!
+!
+! units,scale,offset,min,max,digits
 
 !
 ! this is here so that rusEFI console can access it, too
