@@ -63,7 +63,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint8_t autoscale knockRetard;;"deg",{1/10}, 0, 0, 0, 0
-	uint8_t unused37;;"",1, 0, 0, 0, 0
+	uint8_t idleCurrentPosition;;"",1, 0, 0, 0, 0
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
@@ -145,7 +145,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	! it wants to send have been sent.
 	float autoscale calibrationValue;;"", 1, 0, 0, 0, 0
 	uint8_t autoscale calibrationMode;;"", 1, 0, 0, 0, 0
-	uint8_t autoscale unusedPadding;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale idleTargetPosition;;"", 1, 0, 0, 0, 0
 
 	! Values used for load axes for fuel/ign tables
 	! These may or may not be the same value, depending on mode
@@ -253,8 +253,15 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[252 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[236 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
+    int idleState;;"", 1, 0, -10000, 10000, 3
+
+    float injectorFlowPressureRatio;;"", 1, 0, -10000, 10000, 3
+    float injectorFlowPressureDelta;;"", 1, 0, -10000, 10000, 3
+
+
+    float etbFeedForward;;"", 1, 0, -10000, 10000, 3
     float etbIntegralError;;"", 1, 0, -10000, 10000, 3
     float etbCurrentTarget;;"", 1, 0, -10000, 10000, 3
 	pid_status_s alternatorStatus
