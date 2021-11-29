@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:52:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 22:50:38 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -857,7 +857,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> timingPidCorrection = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_MAP@@
+	 * Instant @@GAUGE_NAME_MAP@@
 	kPa
 	 * offset 514
 	 */
@@ -966,4 +966,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:52:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 22:50:38 UTC 2021

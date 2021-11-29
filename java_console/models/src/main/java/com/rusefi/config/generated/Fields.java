@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Nov 29 17:53:32 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Nov 29 22:51:31 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -613,30 +613,31 @@ public class Fields {
 	public static final int dc_io_size = 4;
 	public static final int DC_PER_STEPPER = 2;
 	public static final int debug_mode_e_DBG_0 = 0;
+	public static final int debug_mode_e_DBG_10 = 10;
+	public static final int debug_mode_e_DBG_11 = 11;
 	public static final int debug_mode_e_DBG_16 = 16;
+	public static final int debug_mode_e_DBG_20 = 20;
+	public static final int debug_mode_e_DBG_29 = 29;
 	public static final int debug_mode_e_DBG_34 = 34;
 	public static final int debug_mode_e_DBG_35 = 35;
+	public static final int debug_mode_e_DBG_37 = 37;
 	public static final int debug_mode_e_DBG_43 = 43;
+	public static final int debug_mode_e_DBG_9 = 9;
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS = 21;
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS2 = 32;
-	public static final int debug_mode_e_DBG_AUX_VALVES = 20;
 	public static final int debug_mode_e_DBG_BENCH_TEST = 19;
 	public static final int debug_mode_e_DBG_BOOST = 36;
 	public static final int debug_mode_e_DBG_CAN = 26;
 	public static final int debug_mode_e_DBG_CJ125 = 25;
 	public static final int debug_mode_e_DBG_COMPOSITE_LOG = 40;
-	public static final int debug_mode_e_DBG_CRANKING_DETAILS = 9;
 	public static final int debug_mode_e_DBG_DWELL_METRIC = 33;
 	public static final int debug_mode_e_DBG_DYNO_VIEW = 44;
 	public static final int debug_mode_e_DBG_EL_ACCEL = 4;
-	public static final int debug_mode_e_DBG_ELECTRONIC_THROTTLE_EXTRA = 29;
 	public static final int debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID = 17;
 	public static final int debug_mode_e_DBG_ETB_AUTOTUNE = 39;
 	public static final int debug_mode_e_DBG_EXECUTOR = 18;
-	public static final int debug_mode_e_DBG_FUEL_PID_CORRECTION = 11;
 	public static final int debug_mode_e_DBG_GPPWM = 2;
 	public static final int debug_mode_e_DBG_IDLE_CONTROL = 3;
-	public static final int debug_mode_e_DBG_IGNITION_TIMING = 10;
 	public static final int debug_mode_e_DBG_INSTANT_RPM = 22;
 	public static final int debug_mode_e_DBG_ION = 30;
 	public static final int debug_mode_e_DBG_KNOCK = 15;
@@ -649,7 +650,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_SD_CARD = 13;
 	public static final int debug_mode_e_DBG_SOFT_SPARK_CUT = 6;
 	public static final int debug_mode_e_DBG_SR5_PROTOCOL = 14;
-	public static final int debug_mode_e_DBG_START_STOP = 37;
 	public static final int debug_mode_e_DBG_STATUS = 24;
 	public static final int debug_mode_e_DBG_TCU = 47;
 	public static final int debug_mode_e_DBG_TLE8888 = 31;
@@ -663,8 +663,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_VVT_2_PID = 49;
 	public static final int debug_mode_e_DBG_VVT_3_PID = 50;
 	public static final int debug_mode_e_DBG_VVT_4_PID = 51;
-	public static final int debug_mode_e_MODE_52 = 52;
-	public static final int debug_mode_e_MODE_53 = 53;
 	public static final int debug_mode_e_UNUSED23 = 23;
 	public static final int debugMapAveraging_offset = 807;
 	public static final int debugMode_offset = 2092;
