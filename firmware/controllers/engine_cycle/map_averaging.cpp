@@ -100,16 +100,13 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
+	float instantVoltage = adcToVoltsDivided(adcValue);
+	float instantMap = convertMap(instantVoltage).value_or(0);
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_MAP) {
-		float voltage = adcToVoltsDivided(adcValue);
-		tsOutputChannels.debugFloatField5 = convertMap(voltage).value_or(0);
-	}
+	tsOutputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
 
 	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN) {
-		float voltage = adcToVoltsDivided(adcValue);
-		float instantMap = convertMap(voltage).value_or(0);
 		engine->triggerCentral.mapState.add(instantMap);
 		if (engine->triggerCentral.mapState.isPeak()) {
 			efitick_t stamp = getTimeNowNt();

@@ -47,9 +47,7 @@ float SpeedDensityAirmass::getMap(int rpm) const {
 		}
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_MAP) {
-		tsOutputChannels.debugFloatField4 = fallbackMap;
-	}
+	tsOutputChannels.fallbackMap = fallbackMap;
 #endif // EFI_TUNER_STUDIO
 
 		return fallbackMap;
