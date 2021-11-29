@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:25:21 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:41:44 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -236,7 +236,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 37
 	 */
-	uint8_t unused37 = (uint8_t)0;
+	uint8_t idleCurrentPosition = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_VBAT@@
 	V
@@ -488,7 +488,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 133
 	 */
-	scaled_channel<uint8_t, 1, 1> unusedPadding = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> idleTargetPosition = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
 	%
@@ -824,7 +824,23 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[252];
+	uint8_t unusedAtTheEnd[236];
+	/**
+	 * offset 556
+	 */
+	int idleState = (int)0;
+	/**
+	 * offset 560
+	 */
+	float injectorFlowPressureRatio = (float)0;
+	/**
+	 * offset 564
+	 */
+	float injectorFlowPressureDelta = (float)0;
+	/**
+	 * offset 568
+	 */
+	float etbFeedForward = (float)0;
 	/**
 	 * offset 572
 	 */
@@ -849,4 +865,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:25:21 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 05:41:44 UTC 2021
