@@ -253,8 +253,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[260 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[252 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
+    float etbIntegralError;;"", 1, 0, -10000, 10000, 3
+    float etbCurrentTarget;;"", 1, 0, -10000, 10000, 3
 	pid_status_s alternatorStatus
 	pid_status_s idleStatus
 	pid_status_s etbStatus
