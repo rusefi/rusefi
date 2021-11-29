@@ -15,7 +15,7 @@ bit sd_msd
 bit clutchUpState;
 bit clutchDownState;
 bit isFan2On
-bit unusedb14;
+bit isMainRelayOn;
 bit brakePedalState;
 bit toothLogReady;
 bit acSwitchState;
