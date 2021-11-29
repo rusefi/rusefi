@@ -87,11 +87,10 @@ public class ConfigFieldParserTest {
                 "ego_sensor_e afr_type;\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
         assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
@@ -283,13 +282,12 @@ public class ConfigFieldParserTest {
                 "int[ERROR_BUFFER_SIZE iterate] field\n" +
                 "end_struct\n" +
                 "";
-        BufferedReader reader = new BufferedReader(new StringReader(test));
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
             @Override
             public void endFile() {
             }
         };
-        new ReaderState().readBufferedReader(reader, Collections.singletonList(consumer));
+        new ReaderState().readBufferedReader(test, Collections.singletonList(consumer));
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +
                 "\t/**\n" +
@@ -375,11 +373,10 @@ public class ConfigFieldParserTest {
                 "pid_s pid;comment\n" +
         "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_isForcedInduction = bits, U32, 8, [0:0], \"false\", \"true\"\n" +
