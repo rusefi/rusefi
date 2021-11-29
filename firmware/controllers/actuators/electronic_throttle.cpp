@@ -530,7 +530,7 @@ void EtbController::update() {
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {
 		m_pid.postState(&tsOutputChannels.etbStatus);
-		tsOutputChannels.etbFeedForward = engine->engineState.etbFeedForward
+		tsOutputChannels.etbFeedForward = engine->engineState.etbFeedForward;
 		tsOutputChannels.etbStatus.output = directPwmValue;
 	}
 #endif /* EFI_TUNER_STUDIO */
