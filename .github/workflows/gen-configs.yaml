@@ -22,6 +22,10 @@ jobs:
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
 
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: bash gen_live_documentation.sh
+
     - name: Generate All Configs
       working-directory: ./firmware/
       run: bash gen_config.sh
@@ -29,10 +33,6 @@ jobs:
     - name: Upload .ini files
       working-directory: ./firmware/tunerstudio/generated
       run: ../upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
-
-    - name: Generate Live Documentation
-      working-directory: ./firmware/
-      run: bash gen_live_documentation.sh
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit fresh generated headers and TS project
