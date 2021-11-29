@@ -146,6 +146,7 @@ public class ConfigDefinition {
                     // yes, we take three parameters here thus pre-increment!
                     String fileName = args[++i + 1];
                     state.variableRegistry.register(keyName, readFile(fileName));
+                    inputFiles.add(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
                     inputFiles.add(firingEnumFileName);
