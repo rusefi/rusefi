@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 28 00:43:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Nov 29 17:53:38 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1566,8 +1566,9 @@ struct engine_configuration_s {
 	offset 744 bit 3 */
 	bool isSdCardEnabled : 1 {};
 	/**
+	 * Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	offset 744 bit 4 */
-	bool unused744b4 : 1 {};
+	bool rusefiVerbose29b : 1 {};
 	/**
 	offset 744 bit 5 */
 	bool isEngineControlEnabled : 1 {};
@@ -4545,4 +4546,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Sun Nov 28 00:43:27 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Nov 29 17:53:38 UTC 2021

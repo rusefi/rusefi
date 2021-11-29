@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Fri Nov 26 02:03:50 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Nov 29 10:16:12 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -42,10 +42,16 @@ case BENCH_STARTER_ENABLE_RELAY:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
+case DBG_0:
+  return "DBG_0";
+case DBG_16:
+  return "DBG_16";
 case DBG_34:
   return "DBG_34";
-case DBG_ALTERNATOR_PID:
-  return "DBG_ALTERNATOR_PID";
+case DBG_35:
+  return "DBG_35";
+case DBG_43:
+  return "DBG_43";
 case DBG_ANALOG_INPUTS:
   return "DBG_ANALOG_INPUTS";
 case DBG_ANALOG_INPUTS2:
@@ -76,8 +82,6 @@ case DBG_EL_ACCEL:
   return "DBG_EL_ACCEL";
 case DBG_ETB_AUTOTUNE:
   return "DBG_ETB_AUTOTUNE";
-case DBG_ETB_LOGIC:
-  return "DBG_ETB_LOGIC";
 case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
 case DBG_FUEL_PID_CORRECTION:
@@ -88,8 +92,6 @@ case DBG_IDLE_CONTROL:
   return "DBG_IDLE_CONTROL";
 case DBG_IGNITION_TIMING:
   return "DBG_IGNITION_TIMING";
-case DBG_INJECTOR_COMPENSATION:
-  return "DBG_INJECTOR_COMPENSATION";
 case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
 case DBG_ION:
@@ -142,8 +144,6 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
-case DBG_WALL_WETTING:
-  return "DBG_WALL_WETTING";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
 case MODE_52:

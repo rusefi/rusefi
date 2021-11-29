@@ -30,7 +30,7 @@ import java.util.zip.CRC32;
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     private static final String SIGNATURE_HASH = "SIGNATURE_HASH";
-    private static String TS_OUTPUTS_SECTION = null;
+    private static String TS_OUTPUTS_DESTINATION = null;
     public static String MESSAGE;
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
@@ -38,10 +38,6 @@ public class ConfigDefinition {
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
     public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
-    private static final String KEY_C_FSIO_CONSTANTS = "-c_fsio_constants";
-    private static final String KEY_C_FSIO_GETTERS = "-c_fsio_getters";
-    private static final String KEY_C_FSIO_NAMES = "-c_fsio_names";
-    private static final String KEY_C_FSIO_STRING = "-c_fsio_strings";
     private static final String KEY_C_DEFINES = "-c_defines";
     /**
      * @see CHeaderConsumer#withC_Defines
@@ -93,10 +89,6 @@ public class ConfigDefinition {
         String tsInputFileFolder = null;
         String destCHeaderFileName = null;
         String destCDefinesFileName = null;
-        String destCFsioConstantsFileName = null;
-        String destCFsioGettersFileName = null;
-        String namesCFileName = null;
-        String stringsCFileName = null;
         String javaDestinationFileName = null;
         String romRaiderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
@@ -132,22 +124,10 @@ public class ConfigDefinition {
                     tsInputFileFolder = args[i + 1];
                     break;
                 case "-ts_outputs_section":
-                    TS_OUTPUTS_SECTION = args[i + 1];
+                    TS_OUTPUTS_DESTINATION = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
                     destCHeaderFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_GETTERS:
-                    destCFsioGettersFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_STRING:
-                    stringsCFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_NAMES:
-                    namesCFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_CONSTANTS:
-                    destCFsioConstantsFileName = args[i + 1];
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
@@ -161,6 +141,12 @@ public class ConfigDefinition {
                 case KEY_JAVA_DESTINATION:
                     javaDestinationFileName = args[i + 1];
                     break;
+                case "-readfile":
+                    String keyName = args[i + 1];
+                    // yes, we take three parameters here thus pre-increment!
+                    String fileName = args[++i + 1];
+                    state.variableRegistry.register(keyName, readFile(fileName));
+                    inputFiles.add(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
                     inputFiles.add(firingEnumFileName);
@@ -285,9 +271,10 @@ public class ConfigDefinition {
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
-        if (TS_OUTPUTS_SECTION != null) {
-            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_SECTION, state));
-            destinations.add(new DataLogConsumer(state));
+        if (TS_OUTPUTS_DESTINATION != null) {
+            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/output_channels.ini", state));
+            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/data_logs.ini", state));
+            destinations.add(new GaugeConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/gauges.ini", state));
         }
         if (tsInputFileFolder != null && needToUpdateTsFiles) {
             CharArrayWriter tsWriter = new CharArrayWriter();
@@ -305,14 +292,6 @@ public class ConfigDefinition {
             }
             if (javaDestinationFileName != null) {
                 destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
-            }
-
-            if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
-                destinations.add(new FileFsioSettingsConsumer(state,
-                        destCFsioConstantsFileName,
-                        destCFsioGettersFileName,
-                        namesCFileName,
-                        stringsCFileName));
             }
         }
 
@@ -333,6 +312,26 @@ public class ConfigDefinition {
         }
 
         CachingStrategy.saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
+    }
+
+    private static String readFile(String fileName) {
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        String ls = System.getProperty("line.separator");
+        try {
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+                while (true) {
+                    if (!((line = reader.readLine()) != null)) break;
+                    stringBuilder.append(line);
+                    stringBuilder.append(ls);
+                }
+
+                return stringBuilder.toString();
+            }
+        } catch (IOException e) {
+            return "";
+        }
     }
 
     private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, ParseState parseState) throws IOException {

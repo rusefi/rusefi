@@ -8,7 +8,7 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
     private static final String BOOLEAN_TYPE = "bool";
     private final StringBuilder content = new StringBuilder();
 
-    public static String getHeaderText(ConfigField configField, int currentOffset, int bitIndex) {
+    private static String getHeaderText(ConfigField configField, int currentOffset, int bitIndex) {
         if (configField.isBit()) {
             String comment = "\t/**" + EOL + ConfigDefinition.packComment(configField.getCommentContent(), "\t") + "\toffset " + currentOffset + " bit " + bitIndex + " */" + EOL;
             return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
@@ -54,7 +54,7 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
         FieldIterator iterator = new FieldIterator(structure.cFields);
         for (int i = 0; i < structure.cFields.size(); i++) {
             iterator.start(i);
-            content.append(BaseCHeaderConsumer.getHeaderText(iterator.cf, currentOffset, iterator.bitState.get()));
+            content.append(getHeaderText(iterator.cf, currentOffset, iterator.bitState.get()));
 
             currentOffset += iterator.cf.getSize(iterator.next);
             iterator.end();

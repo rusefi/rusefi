@@ -676,8 +676,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 
-	engineConfiguration->debugMode = DBG_ALTERNATOR_PID;
-
 	engineConfiguration->acIdleRpmBump = 200;
 
 	/* these two are used for HIP9011 only

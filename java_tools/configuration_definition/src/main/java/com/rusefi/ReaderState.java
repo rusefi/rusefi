@@ -10,6 +10,7 @@ import com.rusefi.util.SystemOut;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.*;
 
 import static com.rusefi.ConfigField.BOOLEAN_T;
@@ -157,6 +158,10 @@ public class ReaderState {
 
         for (ConfigurationConsumer consumer : consumers)
             consumer.handleEndStruct(structure);
+    }
+
+    public void readBufferedReader(String inputString, List<ConfigurationConsumer> consumers) throws IOException {
+        readBufferedReader(new BufferedReader(new StringReader(inputString)), consumers);
     }
 
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {

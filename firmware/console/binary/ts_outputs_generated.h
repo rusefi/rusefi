@@ -1,8 +1,33 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 19:22:57 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:52:38 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
 #include "rusefi_types.h"
+// start of pid_status_s
+struct pid_status_s {
+	/**
+	 * offset 0
+	 */
+	float iTerm = (float)0;
+	/**
+	 * offset 4
+	 */
+	float dTerm = (float)0;
+	/**
+	 * offset 8
+	 */
+	float output = (float)0;
+	/**
+	 * offset 12
+	 */
+	float error = (float)0;
+	/**
+	 * offset 16
+	 */
+	int resetCounter = (int)0;
+	/** total size 20*/
+};
+
 // start of ts_outputs_s
 struct ts_outputs_s {
 	/**
@@ -24,6 +49,7 @@ struct ts_outputs_s {
 	offset 0 bit 5 */
 	bool isFuelPumpOn : 1 {};
 	/**
+	 * "radiator fan"
 	offset 0 bit 6 */
 	bool isFanOn : 1 {};
 	/**
@@ -39,9 +65,11 @@ struct ts_outputs_s {
 	offset 0 bit 10 */
 	bool sd_msd : 1 {};
 	/**
+	 * @@INDICATOR_NAME_CLUTCH_UP@@
 	offset 0 bit 11 */
 	bool clutchUpState : 1 {};
 	/**
+	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
 	offset 0 bit 12 */
 	bool clutchDownState : 1 {};
 	/**
@@ -49,14 +77,16 @@ struct ts_outputs_s {
 	bool isFan2On : 1 {};
 	/**
 	offset 0 bit 14 */
-	bool unusedb14 : 1 {};
+	bool alternatorOnOff : 1 {};
 	/**
+	 * @@INDICATOR_NAME_BRAKE_DOWN@@
 	offset 0 bit 15 */
 	bool brakePedalState : 1 {};
 	/**
 	offset 0 bit 16 */
 	bool toothLogReady : 1 {};
 	/**
+	 * @@INDICATOR_NAME_AC_SWITCH@@
 	offset 0 bit 17 */
 	bool acSwitchState : 1 {};
 	/**
@@ -102,36 +132,43 @@ struct ts_outputs_s {
 	offset 0 bit 31 */
 	bool isIdleCoasting : 1 {};
 	/**
+	 * @@GAUGE_NAME_RPM@@
 	RPM
 	 * offset 4
 	 */
 	scaled_channel<uint16_t, 1, 1> RPMValue = (uint16_t)0;
 	/**
+	 * dRPM
 	RPM/s
 	 * offset 6
 	 */
 	uint16_t rpmAcceleration = (uint16_t)0;
 	/**
+	 * s2rpm
 	value
 	 * offset 8
 	 */
 	scaled_channel<uint16_t, 100, 1> speedToRpmRatio = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVS@@
 	kph
 	 * offset 10
 	 */
 	scaled_channel<uint8_t, 1, 1> vehicleSpeedKph = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_CPU_TEMP@@
 	deg C
 	 * offset 11
 	 */
 	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_CLT@@
 	deg C
 	 * offset 12
 	 */
 	scaled_channel<uint16_t, 100, 1> coolant = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_IAT@@
 	deg C
 	 * offset 14
 	 */
@@ -147,11 +184,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> auxTemp2 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TPS@@
 	%
 	 * offset 20
 	 */
 	scaled_channel<uint16_t, 100, 1> TPSValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_THROTTLE_PEDAL@@
 	%
 	 * offset 22
 	 */
@@ -162,16 +201,19 @@ struct ts_outputs_s {
 	 */
 	uint16_t tpsADC = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_MAF@@
 	V
 	 * offset 26
 	 */
 	scaled_channel<uint16_t, 1000, 1> MAFValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AIR_FLOW@@
 	Kg/h
 	 * offset 28
 	 */
 	scaled_channel<uint16_t, 10, 1> massAirFlowValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_MAP@@
 	kPa
 	 * offset 30
 	 */
@@ -182,6 +224,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 30, 1> baroPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_LAMBDA@@
 	 * offset 34
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambdaValue = (uint16_t)0;
@@ -193,62 +236,73 @@ struct ts_outputs_s {
 	/**
 	 * offset 37
 	 */
-	uint8_t unused37 = (uint8_t)0;
+	uint8_t idleCurrentPosition = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_VBAT@@
 	V
 	 * offset 38
 	 */
 	scaled_channel<uint16_t, 1000, 1> VBatt = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_OIL_PRESSURE@@
 	kPa
 	 * offset 40
 	 */
 	scaled_channel<uint16_t, 30, 1> oilPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVT_B1I@@
 	deg
 	 * offset 42
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB1I = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AIR_MASS@@
 	g
 	 * offset 44
 	 */
 	scaled_channel<uint16_t, 1000, 1> chargeAirMass = (uint16_t)0;
 	/**
+	 * crankingFuelMs
 	 * airmass in mg, 0-65 grams
 	ms
 	 * offset 46
 	 */
 	scaled_channel<uint16_t, 100, 1> crankingFuelMs = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TARGET_AFR@@
 	ratio
 	 * offset 48
 	 */
 	scaled_channel<uint16_t, 1000, 1> currentTargetAfr = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_BASE@@
 	 * This is the raw value we take from the fuel map or base fuel algorithm, before the corrections
 	mg
 	 * offset 50
 	 */
 	scaled_channel<uint16_t, 100, 1> baseFuel = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_RUNNING@@
 	 * Total fuel with CLT IAT and TPS acceleration without injector lag corrections per cycle, as pulse per cycle
 	mg
 	 * offset 52
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelRunning = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_LAST_INJECTION@@
 	 * Actual last injection time - including all compensation and injection mode
 	ms
 	 * offset 54
 	 */
 	scaled_channel<uint16_t, 300, 1> actualLastInjection = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_INJ_DUTY@@
 	%
 	 * offset 56
 	 */
 	scaled_channel<uint8_t, 2, 1> injectorDutyCycle = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_VE@@
 	ratio
 	 * offset 57
 	 */
@@ -264,46 +318,53 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> tCharge = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_INJECTOR_LAG@@
 	ms
 	 * offset 62
 	 */
 	scaled_channel<uint16_t, 300, 1> injectorLagMs = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_IAT_CORR@@
 	%
 	 * offset 64
 	 */
 	scaled_channel<uint16_t, 100, 1> iatCorrection = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_CLT_CORR@@
 	%
 	 * offset 66
 	 */
 	scaled_channel<uint16_t, 100, 1> cltCorrection = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_BARO_CORR@@
 	%
 	 * offset 68
 	 */
 	scaled_channel<uint16_t, 100, 1> baroCorrection = (uint16_t)0;
 	/**
+	 * "Engine Phase"
 	deg
 	 * offset 70
 	 */
 	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
 	mg
 	 * offset 72
 	 */
 	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	mg
 	 * offset 74
 	 */
-	scaled_channel<uint16_t, 100, 1> wallFuelCorrection = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> wallFuelCorrection = (int16_t)0;
 	/**
 	 * offset 76
 	 */
-	uint16_t unused76 = (uint16_t)0;
+	uint16_t revolutionCounterSinceStart = (uint16_t)0;
 	/**
-	 * TPS acceleration enrichment
+	 * @@GAUGE_NAME_FUEL_TPS_ROC@@
 	ratio
 	 * offset 78
 	 */
@@ -311,58 +372,69 @@ struct ts_outputs_s {
 	/**
 	 * offset 80
 	 */
-	uint16_t unused80 = (uint16_t)0;
+	uint16_t canReadCounter = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_TPS_EXTRA@@
 	ms
 	 * offset 82
 	 */
 	scaled_channel<uint16_t, 300, 1> tpsAccelFuel = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TIMING_ADVANCE@@
 	deg
 	 * offset 84
 	 */
 	scaled_channel<uint16_t, 50, 1> ignitionAdvance = (uint16_t)0;
 	/**
+	 * @@GAUGE_COIL_DWELL_TIME@@
 	ms
 	 * offset 86
 	 */
 	scaled_channel<uint16_t, 300, 1> sparkDwellValue = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_DWELL_DUTY@@
 	%
 	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_IAC@@
 	%
 	 * offset 90
 	 */
 	scaled_channel<uint16_t, 100, 1> idleAirValvePosition = (uint16_t)0;
 	/**
+	 * "ETB Target"
 	%
 	 * offset 92
 	 */
 	scaled_channel<uint16_t, 100, 1> etbTarget = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ETB_DUTY@@
 	%
 	 * offset 94
 	 */
 	scaled_channel<uint16_t, 100, 1> etb1DutyCycle = (uint16_t)0;
 	/**
+	 * "ETB Error"
 	%
 	 * offset 96
 	 */
 	scaled_channel<uint16_t, 100, 1> etb1Error = (uint16_t)0;
 	/**
+	 * "Fuel level"
 	%
 	 * offset 98
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelTankLevel = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	grams
 	 * offset 100
 	 */
 	scaled_channel<uint16_t, 1, 1> totalFuelConsumption = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_FLOW@@
 	gram/s
 	 * offset 102
 	 */
@@ -378,21 +450,25 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> afrTableYAxis = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_KNOCK_LEVEL@@
 	Volts
 	 * offset 108
 	 */
 	scaled_channel<float, 1, 1> knockLevel = (float)0;
 	/**
+	 * @@GAUGE_NAME_UPTIME@@
 	sec
 	 * offset 112
 	 */
 	scaled_channel<uint32_t, 1, 1> seconds = (uint32_t)0;
 	/**
+	 * "Engine Mode"
 	em
 	 * offset 116
 	 */
 	scaled_channel<uint32_t, 1, 1> engineMode = (uint32_t)0;
 	/**
+	 * @@GAUGE_NAME_VERSION@@
 	version_f
 	 * offset 120
 	 */
@@ -412,23 +488,27 @@ struct ts_outputs_s {
 	/**
 	 * offset 133
 	 */
-	scaled_channel<uint8_t, 1, 1> padding = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> idleTargetPosition = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_LOAD@@
 	%
 	 * offset 134
 	 */
 	scaled_channel<uint16_t, 100, 1> fuelingLoad = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_IGNITION_LOAD@@
 	%
 	 * offset 136
 	 */
 	scaled_channel<uint16_t, 100, 1> ignitionLoad = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ENGINE_CRC16@@
 	crc16
 	 * offset 138
 	 */
 	scaled_channel<uint16_t, 1, 1> engineMakeCodeNameCrc16 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TRG_ERR@@
 	counter
 	 * offset 140
 	 */
@@ -438,11 +518,13 @@ struct ts_outputs_s {
 	 */
 	uint32_t orderingErrorCounter = (uint32_t)0;
 	/**
+	 * @@GAUGE_NAME_WARNING_COUNTER@@
 	count
 	 * offset 148
 	 */
 	scaled_channel<uint16_t, 1, 1> warningCounter = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_WARNING_LAST@@
 	error
 	 * offset 150
 	 */
@@ -513,11 +595,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1, 1> debugIntField5 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_X@@
 	G
 	 * offset 212
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationX = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_Y@@
 	G
 	 * offset 214
 	 */
@@ -528,6 +612,7 @@ struct ts_outputs_s {
 	 */
 	uint16_t egt[EGT_CHANNEL_COUNT];
 	/**
+	 * @@GAUGE_NAME_TPS2@@
 	%
 	 * offset 232
 	 */
@@ -558,6 +643,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawOilPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TUNE_CRC16@@
 	crc16
 	 * offset 244
 	 */
@@ -565,8 +651,9 @@ struct ts_outputs_s {
 	/**
 	 * offset 246
 	 */
-	scaled_channel<uint8_t, 1, 1> unusedAt246 = (uint8_t)0;
+	scaled_channel<uint8_t, 1, 1> fuelClosedLoopBinIdx = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_CURRENT_GEAR@@
 	gear
 	 * offset 247
 	 */
@@ -581,11 +668,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> knock[12];
 	/**
+	 * @@GAUGE_NAME_DESIRED_GEAR@@
 	gear
 	 * offset 262
 	 */
 	scaled_channel<uint8_t, 1, 1> tcuDesiredGear = (uint8_t)0;
 	/**
+	 * @@GAUGE_NAME_FLEX@@
 	%
 	 * offset 263
 	 */
@@ -601,11 +690,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawWastegatePosition = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_WG_POSITION@@
 	%
 	 * offset 268
 	 */
 	scaled_channel<uint16_t, 100, 1> wastegatePositionSensor = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_IDLE_POSITION@@
 	%
 	 * offset 270
 	 */
@@ -621,49 +712,59 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawHighFuelPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_PRESSURE_LOW@@
 	kpa
 	 * offset 276
 	 */
 	scaled_channel<uint16_t, 30, 1> lowFuelPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@
 	bar
 	 * offset 278
 	 */
 	scaled_channel<uint16_t, 10, 1> highFuelPressure = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_TARGET_LAMBDA@@
 	 * offset 280
 	 */
 	scaled_channel<uint16_t, 10000, 1> targetLambda = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AFR@@
 	AFR
 	 * offset 282
 	 */
 	scaled_channel<uint16_t, 1000, 1> AFRValue = (uint16_t)0;
 	/**
+	 * "Vss Accel"
 	m/s2
 	 * offset 284
 	 */
 	scaled_channel<uint16_t, 300, 1> VssAcceleration = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_LAMBDA2@@
 	 * offset 286
 	 */
 	scaled_channel<uint16_t, 10000, 1> lambdaValue2 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_AFR2@@
 	AFR
 	 * offset 288
 	 */
 	scaled_channel<uint16_t, 1000, 1> AFRValue2 = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVT_B1E@@
 	deg
 	 * offset 290
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB1E = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVT_B2I@@
 	deg
 	 * offset 292
 	 */
 	scaled_channel<uint16_t, 50, 1> vvtPositionB2I = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_VVT_B2E@@
 	deg
 	 * offset 294
 	 */
@@ -689,19 +790,23 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawTps2Secondary = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_KNOCK_LEVEL@@
 	 * offset 306
 	 */
 	uint16_t knockCount = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_Z@@
 	G
 	 * offset 308
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationZ = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_ROLL@@
 	 * offset 310
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationRoll = (uint16_t)0;
 	/**
+	 * @@GAUGE_NAME_ACCEL_YAW@@
 	 * offset 312
 	 */
 	scaled_channel<uint16_t, 100, 1> accelerationYaw = (uint16_t)0;
@@ -711,6 +816,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> vvtTargets[4];
 	/**
+	 * @@GAUGE_NAME_TURBO_SPEED@@
 	hz
 	 * offset 318
 	 */
@@ -718,9 +824,146 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[20];
-	/** total size 340*/
+	uint8_t unusedAtTheEnd[184];
+	/**
+	 * offset 504
+	 */
+	uint8_t fallbackMap = (uint8_t)0;
+	/**
+	 * offset 505
+	 */
+	uint8_t unused111 = (uint8_t)0;
+	/**
+	 * offset 506
+	 */
+	uint8_t unused112 = (uint8_t)0;
+	/**
+	 * offset 507
+	 */
+	uint8_t unused113 = (uint8_t)0;
+	/**
+	%
+	 * offset 508
+	 */
+	scaled_channel<uint16_t, 100, 1> timingCltCorrection = (uint16_t)0;
+	/**
+	%
+	 * offset 510
+	 */
+	scaled_channel<uint16_t, 100, 1> timingIatCorrection = (uint16_t)0;
+	/**
+	%
+	 * offset 512
+	 */
+	scaled_channel<uint16_t, 100, 1> timingPidCorrection = (uint16_t)0;
+	/**
+	 * @@GAUGE_NAME_MAP@@
+	kPa
+	 * offset 514
+	 */
+	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
+	/**
+	 * offset 516
+	 */
+	uint16_t mostRecentTimeBetweenSparkEvents = (uint16_t)0;
+	/**
+	 * offset 518
+	 */
+	uint16_t mostRecentTimeBetweenIgnitionEvents = (uint16_t)0;
+	/**
+	 * offset 520
+	 */
+	uint16_t maxLockedDuration = (uint16_t)0;
+	/**
+	 * offset 522
+	 */
+	uint16_t maxTriggerReentraint = (uint16_t)0;
+	/**
+	 * offset 524
+	 */
+	uint16_t canWriteOk = (uint16_t)0;
+	/**
+	 * offset 526
+	 */
+	uint16_t canWriteNotOk = (uint16_t)0;
+	/**
+	 * offset 528
+	 */
+	int triggerPrimaryFall = (int)0;
+	/**
+	 * offset 532
+	 */
+	int triggerPrimaryRise = (int)0;
+	/**
+	 * offset 536
+	 */
+	int triggerSecondaryFall = (int)0;
+	/**
+	 * offset 540
+	 */
+	int triggerSecondaryRise = (int)0;
+	/**
+	 * offset 544
+	 */
+	int triggerVvtFall = (int)0;
+	/**
+	 * offset 548
+	 */
+	int triggerVvtRise = (int)0;
+	/**
+	 * offset 552
+	 */
+	uint8_t startStopStateToggleCounter = (uint8_t)0;
+	/**
+	 * offset 553
+	 */
+	uint8_t starterState = (uint8_t)0;
+	/**
+	 * offset 554
+	 */
+	uint8_t starterRelayDisable = (uint8_t)0;
+	/**
+	 * offset 555
+	 */
+	uint8_t multiSparkCounter = (uint8_t)0;
+	/**
+	 * offset 556
+	 */
+	int idleState = (int)0;
+	/**
+	 * offset 560
+	 */
+	float injectorFlowPressureRatio = (float)0;
+	/**
+	 * offset 564
+	 */
+	float injectorFlowPressureDelta = (float)0;
+	/**
+	 * offset 568
+	 */
+	float etbFeedForward = (float)0;
+	/**
+	 * offset 572
+	 */
+	float etbIntegralError = (float)0;
+	/**
+	 * offset 576
+	 */
+	float etbCurrentTarget = (float)0;
+	/**
+	 * offset 580
+	 */
+	pid_status_s alternatorStatus;
+	/**
+	 * offset 600
+	 */
+	pid_status_s idleStatus;
+	/**
+	 * offset 620
+	 */
+	pid_status_s etbStatus;
+	/** total size 640*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Nov 27 19:22:57 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:52:38 UTC 2021

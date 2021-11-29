@@ -1,19 +1,20 @@
 package com.rusefi.test;
 
 import com.rusefi.ReaderState;
-import com.rusefi.output.ConfigurationConsumer;
 import com.rusefi.output.DataLogConsumer;
+import com.rusefi.output.GaugeConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
+import java.util.Arrays;
 import java.util.Collections;
 
+import static org.junit.Assert.assertEquals;
+
 public class OutputsTest {
+    private com.rusefi.output.GaugeConsumer GaugeConsumer;
+
     @Test
     public void generateSomething() throws IOException {
         String test = "struct total\n" +
@@ -23,13 +24,12 @@ public class OutputsTest {
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
-        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
 
 
-        Assert.assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
+        assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
                 "afr_typet = scalar, U08, 4, \"ms\", 1, 0\n" +
                 "isForcedInduction = bits, U32, 5, [0:0]\n" +
                 "enableFan1WithAc = bits, U32, 5, [1:1]\n" +
@@ -70,16 +70,64 @@ public class OutputsTest {
     @Test
     public void generateDataLog() throws IOException {
         String test = "struct total\n" +
+                "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
+                "uint8_t[2 iterate] autoscale knock;;\"\",1, 0, 0, 0, 0\n" +
+                "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "uint8_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
+                "uint8_t afr_typet;;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
                 "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
+                "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
+        state.variableRegistry.register("PACK_MULT_PERCENT", 100);
+        state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
 
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(state);
-        state.readBufferedReader(reader, Collections.singletonList(dataLogConsumer));
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
+        state.readBufferedReader(test, Collections.singletonList(dataLogConsumer));
+        assertEquals(
+                "entry = issue_294_31, \"issue_294_31\", int,    \"%d\"\n" +
+                        "entry = knock1, \"knock1\", int,    \"%d\"\n" +
+                        "entry = knock2, \"knock2\", int,    \"%d\"\n" +
+                        "entry = baseFuel, \"hello\", float,  \"%.3f\"\n" +
+                        "entry = afr_type, \"PID dTime\", float,  \"%.3f\"\n" +
+                        "entry = speedToRpmRatio, \"s2rpm\", float,  \"%.3f\"\n" +
+                        "entry = afr_typet, \"afr_typet\", int,    \"%d\"\n" +
+                        "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
+                        "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
+                        "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
+
+    }
+
+    @Test
+    public void sensorStruct() throws IOException {
+        String test = "struct total\n" +
+                "    struct pid_status_s\n" +
+                "    \tfloat iTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
+                "    \tfloat dTerm;;\"v\", 1, 0, -10000, 10000, 4\n" +
+                "    end_struct\n" +
+                "\tpid_status_s alternatorStatus\n" +
+                "\tpid_status_s idleStatus\n" +
+                "end_struct\n";
+
+        ReaderState state = new ReaderState();
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
+        GaugeConsumer gaugeConsumer = new GaugeConsumer(null, state);
+        state.readBufferedReader(test, Arrays.asList(dataLogConsumer, gaugeConsumer));
+        assertEquals(
+                "entry = alternatorStatus_iTerm, \"iTerm\", float,  \"%.3f\"\n" +
+                        "entry = alternatorStatus_dTerm, \"dTerm\", float,  \"%.3f\"\n" +
+                        "entry = idleStatus_iTerm, \"iTerm\", float,  \"%.3f\"\n" +
+                        "entry = idleStatus_dTerm, \"dTerm\", float,  \"%.3f\"\n",
+                new String(dataLogConsumer.getTsWriter().toCharArray()));
+
+        assertEquals("alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
+                        "alternatorStatus_dTermGauge = alternatorStatus_dTerm,\"alternatorStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
+                        "idleStatus_iTermGauge = idleStatus_iTerm,\"idleStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +
+                        "idleStatus_dTermGauge = idleStatus_dTerm,\"idleStatus_ dTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n",
+                new String(gaugeConsumer.getTsWriter().toCharArray()));
 
     }
 }

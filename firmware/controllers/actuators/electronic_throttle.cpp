@@ -482,8 +482,8 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		float errorIntegral = m_errorAccumulator.accumulate(target - observation);
 
 #if EFI_TUNER_STUDIO
-		if (m_function == ETB_Throttle1 && engineConfiguration->debugMode == DBG_ETB_LOGIC) {
-			tsOutputChannels.debugFloatField3 = errorIntegral;
+		if (m_function == ETB_Throttle1) {
+			tsOutputChannels.etbIntegralError = errorIntegral;
 		}
 #endif // EFI_TUNER_STUDIO
 
@@ -529,14 +529,9 @@ void EtbController::update() {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {
-		// set debug_mode 17
-		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
-			m_pid.postState(&tsOutputChannels);
-			tsOutputChannels.debugIntField5 = engine->engineState.etbFeedForward;
-		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
-			// set debug_mode 29
-			tsOutputChannels.debugFloatField1 = directPwmValue;
-		}
+		m_pid.postState(&tsOutputChannels.etbStatus);
+		tsOutputChannels.etbFeedForward = engine->engineState.etbFeedForward;
+		tsOutputChannels.etbStatus.output = directPwmValue;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -554,11 +549,7 @@ void EtbController::update() {
 		}
 	}
 
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
-		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
-	}
-#endif
+	tsOutputChannels.etbCurrentTarget = engine->engineState.targetFromTable;
 
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;

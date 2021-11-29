@@ -49,11 +49,15 @@
 !
 !
 ! bit bitName,"true value","false value";+Tooltip text
+!
+!
+!
+! units,scale,offset,min,max,digits
 
 !
 ! this is here so that rusEFI console can access it, too
 !
-#define TS_OUTPUT_SIZE 340
+#define TS_OUTPUT_SIZE 640
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
@@ -733,7 +737,7 @@ bit is_enabled_spi_1
 bit is_enabled_spi_2
 	bit is_enabled_spi_3
 	bit isSdCardEnabled;enable sd/disable sd
-	bit unused744b4
+	bit rusefiVerbose29b,"29 bit","11 bit";+Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit isEngineControlEnabled
 	bit isHip9011Enabled
 	bit isVerboseAlternator
