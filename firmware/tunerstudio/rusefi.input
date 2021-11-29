@@ -786,6 +786,24 @@ enable2ndByteCanID = false
 
 [GaugeConfigurations]
 
+gaugeCategory = PIDs
+alternatorStatus_iTermGauge = alternatorStatus_iTerm,"alternatorStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_dTermGauge = alternatorStatus_dTerm,"alternatorStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_outputGauge = alternatorStatus_output,"alternatorStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_errorGauge = alternatorStatus_error,"alternatorStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_resetCounterGauge = alternatorStatus_resetCounter,"alternatorStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+idleStatus_iTermGauge = idleStatus_iTerm,"idleStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_dTermGauge = idleStatus_dTerm,"idleStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_outputGauge = idleStatus_output,"idleStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_errorGauge = idleStatus_error,"idleStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_resetCounterGauge = idleStatus_resetCounter,"idleStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+etbStatus_iTermGauge = etbStatus_iTerm,"etbStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_dTermGauge = etbStatus_dTerm,"etbStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_outputGauge = etbStatus_output,"etbStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_errorGauge = etbStatus_error,"etbStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_resetCounterGauge = etbStatus_resetCounter,"etbStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+
+
 gaugeCategory = Sensors - Extra 2
    egt1Gauge         = egt1, "EGT#1", "C", 0, 2000
    egt2Gauge         = egt2, "EGT#2", "C", 0, 2000
