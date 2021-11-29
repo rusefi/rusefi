@@ -1127,10 +1127,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration();
-
-#if EFI_TUNER_STUDIO
-	syncTunerStudioCopy();
-#endif /* EFI_TUNER_STUDIO */
 }
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engineConfiguration) {
