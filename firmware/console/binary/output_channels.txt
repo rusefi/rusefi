@@ -243,7 +243,19 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint8_t[4 iterate] autoscale vvtTargets;;"deg",1, 0, 0, 0, 0
 	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
 
+    struct pid_status_s
+    	float iTerm;;"", 1, 0, -10000, 10000, 4
+    	float dTerm;;"", 1, 0, -10000, 10000, 4
+    	float output;;"", 1, 0, -10000, 10000, 4
+    	float error;;"", 1, 0, -10000, 10000, 4
+    	int resetCounter;;"", 1, 0, -10000, 10000, 4
+    end_struct
+
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[320 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[260 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
+	pid_status_s alternatorStatus
+	pid_status_s idleStatus
+	pid_status_s etbStatus
 
 end_struct
