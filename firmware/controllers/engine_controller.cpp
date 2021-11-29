@@ -351,12 +351,6 @@ static void getByte(int offset) {
 }
 
 static void onConfigurationChanged() {
-#if EFI_TUNER_STUDIO
-	// on start-up rusEfi would read from working copy of TS while
-	// we have a lot of console commands which write into real copy of configuration directly
-	// we have a bit of a mess here
-	syncTunerStudioCopy();
-#endif /* EFI_TUNER_STUDIO */
 	incrementGlobalConfigurationVersion();
 }
 
@@ -747,7 +741,7 @@ void initEngineContoller() {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 8000
+#define RAM_UNUSED_SIZE 26000
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 16
