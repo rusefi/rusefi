@@ -70,7 +70,7 @@ post_packed {
 	short int count;
 } TunerStudioWriteChunkRequest;
 
-class TunerstudioThread : public ThreadController<2 * CONNECTIVITY_THREAD_STACK> {
+class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
 public:
 	TunerstudioThread(const char* name)
 		: ThreadController(name, PRIO_CONSOLE)
