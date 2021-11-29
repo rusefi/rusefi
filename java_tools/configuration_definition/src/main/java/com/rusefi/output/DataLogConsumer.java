@@ -37,14 +37,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
         if (state.stack.isEmpty()) {
 
             FieldIterator iterator = new FieldIterator(structure.tsFields);
-            for (int i = 0; i < structure.tsFields.size(); i++) {
-                iterator.start(i);
-
-                tsWriter.append(handle(iterator.cf));
-
-                iterator.end();
-
-            }
+            String content = handleFields(structure, iterator, "");
+            tsWriter.append(content);
         }
 
         if (fileName != null) {
@@ -54,9 +48,29 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigField configField) {
+    private String handleFields(ConfigStructure structure, FieldIterator iterator, String prefix) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < structure.tsFields.size(); i++) {
+            iterator.start(i);
+
+            String content = handle(iterator.cf, prefix);
+            sb.append(content);
+            iterator.end();
+
+        }
+        return sb.toString();
+    }
+
+    private String handle(ConfigField configField, String prefix) {
         if (configField.getName().contains("unused"))
             return "";
+
+        ConfigStructure cs = configField.getState().structures.get(configField.getType());
+        if (cs != null) {
+            String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
+            return handleFields(cs, new FieldIterator(cs.tsFields), extraPrefix);
+        }
+
 
         if (configField.isArray()) {
 
@@ -74,8 +88,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
 
         String comment = state.variableRegistry.applyVariables(configField.getComment());
-        String[] comments = comment.split("\\\\n");
-        comment = comments[0];
+        String[] comments =  comment == null ? new String[0] : comment.split("\\\\n");
+        comment = (comments.length > 0) ? comments[0] : "";
 
         if (comment.isEmpty())
             comment = configField.getName();
@@ -83,7 +97,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         if (comment.charAt(0) != '"')
             comment = quote(comment);
 
-        return "entry = " + configField.getName() + ", " + comment + ", " + typeString + "\n";
+        return "entry = " + prefix + configField.getName() + ", " + comment + ", " + typeString + "\n";
     }
 
     public CharArrayWriter getTsWriter() {

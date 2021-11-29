@@ -20,10 +20,9 @@ public class OutputsTest {
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
-        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
 
 
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0\n" +
@@ -81,10 +80,9 @@ public class OutputsTest {
         ReaderState state = new ReaderState();
         state.variableRegistry.register("PACK_MULT_PERCENT", 100);
         state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
-        state.readBufferedReader(reader, Collections.singletonList(dataLogConsumer));
+        state.readBufferedReader(test, Collections.singletonList(dataLogConsumer));
         assertEquals(
                 "entry = issue_294_31, \"issue_294_31\", int,    \"%d\"\n" +
                         "entry = knock1, \"knock1\", int,    \"%d\"\n" +
@@ -96,6 +94,29 @@ public class OutputsTest {
                         "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
                         "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
                         "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
+
+    }
+
+    @Test
+    public void sensorStruct() throws IOException {
+        String test = "struct total\n" +
+                "    struct pid_status_s\n" +
+                "    \tfloat iTerm;;\"\", 1, 0, -10000, 10000, 4\n" +
+                "    \tfloat dTerm;;\"\", 1, 0, -10000, 10000, 4\n" +
+                "    end_struct\n" +
+                "\tpid_status_s alternatorStatus\n" +
+                "\tpid_status_s idleStatus\n" +
+                "end_struct\n";
+
+        ReaderState state = new ReaderState();
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
+        state.readBufferedReader(test, Collections.singletonList(dataLogConsumer));
+        assertEquals(
+                "entry = alternatorStatus_iTerm, \"iTerm\", float,  \"%.3f\"\n" +
+                        "entry = alternatorStatus_dTerm, \"dTerm\", float,  \"%.3f\"\n" +
+                        "entry = idleStatus_iTerm, \"iTerm\", float,  \"%.3f\"\n" +
+                        "entry = idleStatus_dTerm, \"dTerm\", float,  \"%.3f\"\n",
+                new String(dataLogConsumer.getTsWriter().toCharArray()));
 
     }
 }
