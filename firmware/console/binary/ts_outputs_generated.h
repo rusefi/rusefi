@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:33:30 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:52:38 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -824,7 +824,23 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[188];
+	uint8_t unusedAtTheEnd[184];
+	/**
+	 * offset 504
+	 */
+	uint8_t fallbackMap = (uint8_t)0;
+	/**
+	 * offset 505
+	 */
+	uint8_t unused111 = (uint8_t)0;
+	/**
+	 * offset 506
+	 */
+	uint8_t unused112 = (uint8_t)0;
+	/**
+	 * offset 507
+	 */
+	uint8_t unused113 = (uint8_t)0;
 	/**
 	%
 	 * offset 508
@@ -950,4 +966,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:33:30 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:52:38 UTC 2021
