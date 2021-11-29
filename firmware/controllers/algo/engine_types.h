@@ -250,7 +250,7 @@ typedef enum {
  * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
  */
 typedef enum {
-	DBG_ALTERNATOR_PID = 0,
+	DBG_0 = 0,
 	DBG_TPS_ACCEL = 1,
 	DBG_GPPWM = 2,
 	DBG_IDLE_CONTROL = 3,
@@ -269,7 +269,7 @@ typedef enum {
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
-	DBG_WALL_WETTING = 16,
+	DBG_16 = 16,
 	/**
 	 * See also DBG_ELECTRONIC_THROTTLE_EXTRA
 	 */
@@ -302,7 +302,7 @@ typedef enum {
 	DBG_ANALOG_INPUTS2 = 32,
 	DBG_DWELL_METRIC = 33,
 	DBG_34 = 34,
-	DBG_ETB_LOGIC = 35,
+	DBG_35 = 35,
 	DBG_BOOST = 36,
 	DBG_START_STOP = 37,
 	DBG_LAUNCH = 38,
@@ -310,7 +310,7 @@ typedef enum {
 	DBG_COMPOSITE_LOG = 40,
 	DBG_UNUSED41 = 41,
 	DBG_UNUSED_42 = 42,
-	DBG_INJECTOR_COMPENSATION = 43,
+	DBG_43 = 43,
 	DBG_DYNO_VIEW = 44,
 	DBG_LOGIC_ANALYZER = 45,
 	DBG_RUSEFI_WIDEBAND = 46,
