@@ -27,7 +27,6 @@ public class ReaderState {
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
-    private static final String DEFINE_CONSTRUCTOR = "define_constructor";
     public final Stack<ConfigStructure> stack = new Stack<>();
     public final Map<String, Integer> tsCustomSize = new HashMap<>();
     public final Map<String, String> tsCustomLine = new HashMap<>();
@@ -221,15 +220,6 @@ public class ReaderState {
     }
 
     private static void handleStartStructure(ReaderState state, String line, boolean withPrefix) {
-        boolean withConstructor;
-        if (line.toLowerCase().startsWith(DEFINE_CONSTRUCTOR)) {
-            withConstructor = true;
-            line = line.substring(DEFINE_CONSTRUCTOR.length()).trim();
-        } else {
-            withConstructor = false;
-        }
-
-
         String name;
         String comment;
         if (line.contains(" ")) {
@@ -240,7 +230,7 @@ public class ReaderState {
             name = line;
             comment = null;
         }
-        ConfigStructure structure = new ConfigStructure(name, comment, withPrefix, withConstructor);
+        ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
         state.stack.push(structure);
         SystemOut.println("Starting structure " + structure.getName());
     }
