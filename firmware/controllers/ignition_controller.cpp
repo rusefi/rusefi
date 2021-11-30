@@ -13,6 +13,7 @@ void IgnitionController::onSlowCallback() {
 		return;
 	}
 
+	// Store state and notify other modules of the change
 	m_lastState = hasIgnVoltage;
 	engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
 }
