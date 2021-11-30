@@ -9,6 +9,6 @@ public:
 	void onSlowCallback() override;
 
 private:
-	Timer m_timeout;
+	Timer m_timeSinceIgnVoltage;
 	bool m_lastState = false;
 };

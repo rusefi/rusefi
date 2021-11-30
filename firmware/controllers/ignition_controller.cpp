@@ -3,13 +3,18 @@
 void IgnitionController::onSlowCallback() {
 	auto hasIgnVoltage = Sensor::get(SensorType::BatteryVoltage).value_or(12) > 5;
 
+	if (hasIgnVoltage) {
+		m_timeSinceIgnVoltage.reset();
+	}
+
 	if (hasIgnVoltage == m_lastState) {
 		// nothing to do, states match
 		return;
 	}
 
-	// We just changed state, suppress another change
-	if (!m_timeout.hasElapsedSec(2)) {
+	// Ignore low voltage transients - we may see this at the start of cranking
+	// and we don't want to 
+	if (!hasIgnVoltage && !m_timeSinceIgnVoltage.hasElapsedSec(0.2f)) {
 		return;
 	}
 
