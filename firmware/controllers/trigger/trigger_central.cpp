@@ -44,7 +44,7 @@ TriggerCentral::TriggerCentral() :
 		vvtPosition(),
 		vvtSyncTimeNt()
 {
-	memset(&hwEventCounters, 0, sizeof(hwEventCounters);
+	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
