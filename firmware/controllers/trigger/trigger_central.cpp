@@ -38,15 +38,13 @@ WaveChart waveChart;
 static scheduling_s debugToggleScheduling;
 #define DEBUG_PIN_DELAY US2NT(60)
 
-trigger_central_s::trigger_central_s() : hwEventCounters() {
-}
-
-TriggerCentral::TriggerCentral() : trigger_central_s(),
+TriggerCentral::TriggerCentral() :
 		vvtEventRiseCounter(),
 		vvtEventFallCounter(),
 		vvtPosition(),
 		vvtSyncTimeNt()
 {
+	memset(&hwEventCounters, 0, sizeof(hwEventCounters);
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
