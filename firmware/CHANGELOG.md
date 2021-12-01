@@ -27,9 +27,48 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+## Added
+ - Improved vehicle speed sensor configuration: now uses real physical constants about tires, gear ratio, sensor, etc.
+
+### Fixed
+ - Faster engine sync + startup on engines with crank-speed primary trigger
+
+### Added
+ - Lua 'Format' button
+
+## November 2021 Release - "Loosen Up Lighten Up Day"
+
+### Added
+ - Higher Data Rate with TS 3.1.06.14 Beta or newer 
+ - turbo speed sensor #2935
+ - A TON of Lua progress
+ - Overall performance
+ - Knock retard #3396
+
+### Fixed
+ - A/C control bugfix
+ - Better Windows build-in DFU #3338
+ - Proteus now waits for VBatt to enable main relay output
+
+## Removed
+ - Remove engine load acceleration enrichment #3357
+ - FSIO removed from user interface #2928
+
+## October 2021 Release - "Pierogi Day"
+
 ### Added
  - Ford PIP trigger decoder https://github.com/rusefi/rusefi/wiki/Images/triggers/trigger_65.png
  - Dwell battery voltage correction table
+ - rusEFI firmware feature should be honest about it's Windows-only limitation
+ - Bosch MM5.10 accelerometer integration
+ - CLT/IAT sensor calibration presets
+
+### Fixed
+ - Fix of 36/2/2/2 attributes to help rotary #3242
+ - SD card doesn't work on H7
+ - rusEFI console to validate current bundle against bundle already in ECU #3266
+ - GPPWM usability: notes field #3270
+ - overdwell protection #3220
 
 ## September 2021 Release - "Iguana Awareness Day"
 

@@ -51,7 +51,6 @@ public:
 		return value;
 	}
 
-protected:
 	StoredValueSensor(SensorType type, efitick_t timeoutNt)
 		: Sensor(type)
 		, m_timeoutPeriod(timeoutNt)
@@ -70,6 +69,8 @@ protected:
 		m_isValid = true;
 		m_lastUpdate = timestamp;
 	}
+
+	void showInfo(const char*) const override { }
 
 private:
 	bool m_isValid = false;

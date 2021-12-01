@@ -28,10 +28,7 @@ struct pid_s;
  * default basic implementation also known as PidParallelController
  */
 class Pid : public pid_state_s {
-
 public:
-	DECLARE_ENGINE_PTR;
-
 	Pid();
 	explicit Pid(pid_s *parameters);
 	void initPidClass(pid_s *parameters);
@@ -58,6 +55,7 @@ public:
 	float getPrevError(void) const;
 	void setErrorAmplification(float coef);
 #if EFI_TUNER_STUDIO
+	void postState(pid_status_s *pidStatus) const;
 	void postState(TunerStudioOutputChannels *tsOutputChannels) const;
 	void postState(TunerStudioOutputChannels *tsOutputChannels, int pMult) const;
 #endif /* EFI_TUNER_STUDIO */
@@ -125,4 +123,15 @@ public:
 
 private:
 	float limitOutput(float v) const;
+};
+
+
+// todo: composition instead of inheritance? :(
+class PidWithParameters : public Pid {
+public:
+	pid_s parametersStorage;
+
+	PidWithParameters() {
+		initPidClass(&parametersStorage);
+	}
 };

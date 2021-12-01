@@ -6,26 +6,14 @@
 
 #pragma once
 
-#include "engine_ptr.h"
 
 struct air_pressure_sensor_config_s;
 
-void initMapDecoder(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+void initMapDecoder();
 
-/**
- * @return Raw MAP sensor value right now
- */
-float getRawMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getBaroPressure(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-bool hasMapSensor(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+float getBaroPressure();
 
-/**
- * @return MAP value averaged within a window of measurement
- */
-float getMap(DECLARE_ENGINE_PARAMETER_SIGNATURE);
-float getMapByVoltage(float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
-float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig DECLARE_ENGINE_PARAMETER_SUFFIX);
-float validateMap(float mapKPa DECLARE_ENGINE_PARAMETER_SUFFIX);
+float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig);
 
 #define KPA_PER_PSI 6.89475728f
 

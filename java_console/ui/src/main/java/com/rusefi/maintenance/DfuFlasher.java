@@ -5,18 +5,26 @@ import com.rusefi.ConsoleUI;
 import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.ui.StatusWindow;
-import com.rusefi.ui.util.URLLabel;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 
 import static com.rusefi.StartupFrame.appendBundleName;
 
@@ -24,24 +32,8 @@ import static com.rusefi.StartupFrame.appendBundleName;
  * @see FirmwareFlasher
  */
 public class DfuFlasher {
-    public static final String DFU_BINARY = Launcher.TOOLS_PATH + File.separator + "DfuSe/DfuSeCommand.exe";
-    private static final String DFU_SETUP_EXE = "https://github.com/rusefi/rusefi_external_utils/raw/master/DFU_mode/DfuSe_Demo_V3.0.6_Setup.exe";
-
-    private final JButton button = new JButton("Auto Program via DFU");
-    private final JButton manualButton = new JButton("Manual Program via DFU");
-
-    public DfuFlasher(JComboBox<String> comboPorts) {
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                // todo: better usability would be to disable "Program" port in case of no ports found
-                Object selectedItem = comboPorts.getSelectedItem();
-                doAutoDfu(selectedItem, comboPorts);
-            }
-        });
-
-        manualButton.addActionListener(e -> runDfuProgramming());
-    }
+    private static final String DFU_BINARY_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
+    private static final String DFU_BINARY = "STM32_Programmer_CLI.exe";
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
@@ -49,102 +41,168 @@ public class DfuFlasher {
             return;
         }
         String port = selectedItem.toString();
-        StringBuilder messages = new StringBuilder();
 
-        if (!PortDetector.isAutoPort(port)) {
-            messages.append("Using selected " + port + "\n");
-            IoStream stream = SerialIoStreamJSerialComm.openPort(port);
-            DfuHelper.sendDfuRebootCommand(stream, messages);
+        StatusWindow wnd = createStatusWindow();
+
+        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, wnd);
+        if (isSignatureValidated == null) return;
+        if (isSignatureValidated.get()) {
+            if (!ProgramSelector.IS_WIN) {
+                wnd.append("Switched to DFU mode!");
+                wnd.append("rusEFI console can only program on Windows");
+                return;
+            }
+            submitAction(() -> {
+                timeForDfuSwitch(wnd);
+                executeDFU(wnd);
+            });
         } else {
-            messages.append("Auto-detecting port...\n");
+            wnd.append("Please use manual DFU to change bundle type.");
+        }
+    }
+
+    private static void submitAction(Runnable r) {
+        ExecHelper.submitAction(r, DfuFlasher.class + " thread");
+    }
+
+    @Nullable
+    public static AtomicBoolean rebootToDfu(JComponent parent, String port, StatusWindow wnd) {
+        AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
+        if (!PortDetector.isAutoPort(port)) {
+            wnd.append("Using selected " + port + "\n");
+            IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+            AtomicReference<String> signature = new AtomicReference<>();
+            new SerialAutoChecker(port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
+                @Override
+                public Void apply(SerialAutoChecker.CallbackContext callbackContext) {
+                    signature.set(callbackContext.getSignature());
+                    return null;
+                }
+            });
+            if (signature.get() == null) {
+                JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI has not responded on selected " + port + "\n" +
+                        "Maybe try automatic serial port detection?");
+                return null;
+            }
+            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, wnd);
+            isSignatureValidated.set(isSignatureValidatedLocal);
+        } else {
+            wnd.append("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
             // it's more reliable this way
-            port = PortDetector.autoDetectSerial(stream -> {
-                DfuHelper.sendDfuRebootCommand(stream, messages);
+            port = PortDetector.autoDetectSerial(callbackContext -> {
+                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), wnd);
+                isSignatureValidated.set(isSignatureValidatedLocal);
                 return null;
-            });
+            }).getSerialPort();
             if (port == null) {
                 JOptionPane.showMessageDialog(ConsoleUI.getFrame(), "rusEFI serial port not detected");
-                return;
+                return null;
             } else {
-                messages.append("Detected rusEFI on " + port + "\n");
+                wnd.append("Detected rusEFI on " + port + "\n");
             }
         }
+        return isSignatureValidated;
+    }
+
+    @NotNull
+    protected static StatusWindow createStatusWindow() {
         StatusWindow wnd = new StatusWindow();
         wnd.showFrame(appendBundleName("DFU status " + Launcher.CONSOLE_VERSION));
-        wnd.appendMsg(messages.toString());
-        ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
+        return wnd;
+    }
+
+    public static void runDfuErase() {
+        StatusWindow wnd = createStatusWindow();
+        submitAction(() -> ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                getDfuEraseCommand(),
+                DFU_BINARY, wnd, new StringBuffer()));
     }
 
     public static void runDfuProgramming() {
-        StatusWindow wnd = new StatusWindow();
-        wnd.showFrame(appendBundleName("DFU status " + Launcher.CONSOLE_VERSION));
-        ExecHelper.submitAction(() -> executeDFU(wnd), DfuFlasher.class + " thread");
+        StatusWindow wnd = createStatusWindow();
+        submitAction(() -> executeDFU(wnd));
     }
 
     private static void executeDFU(StatusWindow wnd) {
-        wnd.appendMsg("Giving time for USB enumeration...");
+        StringBuffer stdout = new StringBuffer();
+        String errorResponse = ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                getDfuWriteCommand(),
+                DFU_BINARY, wnd, stdout);
+        if (stdout.toString().contains("Download verified successfully")) {
+            // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
+            wnd.append("SUCCESS!");
+            wnd.append("Please power cycle device to exit DFU mode");
+        } else if (stdout.toString().contains("Target device not found")) {
+            wnd.append("ERROR: Device not connected or STM32 Bootloader driver not installed?");
+            wnd.append("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
+            wnd.append("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
+            appendDeviceReport(wnd);
+            wnd.setErrorState(true);
+        } else {
+            wnd.append(stdout.length() + " / " + errorResponse.length());
+            wnd.append("ERROR: does not look like DFU has worked!");
+            appendDeviceReport(wnd);
+            wnd.setErrorState(true);
+        }
+    }
+
+    private static void appendDeviceReport(StatusWindow wnd) {
+        for (String line : getDevicesReport()) {
+            if (line.contains("STM Device in DFU Mode")) {
+                wnd.append(" ******************************************************************");
+                wnd.append(" ************* YOU NEED TO REMOVE LEGACY DFU DRIVER ***************");
+                wnd.append(" ******************************************************************");
+            }
+            wnd.append("Devices: " + line);
+        }
+    }
+
+    private static void timeForDfuSwitch(StatusWindow wnd) {
+        wnd.append("Giving time for USB enumeration...");
         try {
+            // two seconds not enough on my Windows 10
             Thread.sleep(3 * Timeouts.SECOND);
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
-        AtomicBoolean errorReported = new AtomicBoolean();
-        StringBuffer stdout = new StringBuffer();
-        String errorResponse = ExecHelper.executeCommand(FirmwareFlasher.BINARY_LOCATION,
-                FirmwareFlasher.BINARY_LOCATION + File.separator + getDfuCommand(),
-                DFU_BINARY, s -> {
-                    if (s.contains("0x12340005") && errorReported.compareAndSet(false, true)) {
-                        wnd.appendMsg("   ***************");
-                        wnd.appendMsg("   ***************");
-                        wnd.appendMsg("ERROR: Maybe DFU device not attached? Please check Device Manager.");
-                        wnd.appendMsg("ERROR: Maybe ST DFU Driver is missing?");
-                        wnd.appendMsg("ERROR: Maybe driver conflict with STM32Cube?");
-                        wnd.appendMsg("ERROR: Reminder about 'Install Drivers' button on top of rusEFI splash screen");
-                        wnd.appendMsg(System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch"));
-                        wnd.appendMsg("   ***************");
-                        wnd.appendMsg("   ***************");
-                    }
-                    wnd.appendMsg(s);
-                }, stdout);
-        if (stdout.toString().contains("Matching not good")) {
-            // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
-            wnd.appendMsg("VERIFICATION ERROR maybe nDBANK issue?");
-            wnd.appendMsg("https://github.com/rusefi/rusefi/wiki/HOWTO-nDBANK");
-        } else if (stdout.toString().contains("Verify successful") || stdout.toString().contains("Upgrade successful")) {
-            // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
-            wnd.appendMsg("SUCCESS!");
-        } else {
-            if (stdout.length() == 0 && errorResponse.length() == 0) {
-                // looks like DFU util is not installed properly?
-                // ugly temporary solution
-                // see https://github.com/rusefi/rusefi/issues/1170
-                // see https://github.com/rusefi/rusefi/issues/1182
-                URLLabel.open(DFU_SETUP_EXE);
-                wnd.appendMsg("Please install DfuSe_Demo_V3.0.6_Setup.exe, power cycle your device and try again.");
-            } else {
-                wnd.appendMsg(stdout.length() + " / " + errorResponse.length());
+    }
+
+    private static String getDfuWriteCommand() {
+        String hexFileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, "rusefi", ".hex");
+        if (hexFileName == null)
+            return "File not found";
+        String hexAbsolutePath = new File(hexFileName).getAbsolutePath();
+
+        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " -v -s";
+    }
+
+    private static String getDfuEraseCommand() {
+        return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -e all";
+    }
+
+    @NotNull
+    static List<String> getDevicesReport() {
+        // todo: assert windows 10, explicit message if not
+        List<String> report = new ArrayList<>();
+
+        try {
+            Process powerShellProcess = Runtime.getRuntime().exec("powershell \"Get-PnpDevice -PresentOnly\"");
+            // Getting the results
+            powerShellProcess.getOutputStream().close();
+
+            String line;
+            BufferedReader stdout = new BufferedReader(new InputStreamReader(powerShellProcess.getInputStream()));
+            while ((line = stdout.readLine()) != null) {
+                String lowerCase = line.toLowerCase();
+                if (!lowerCase.contains("stm32") && !lowerCase.contains("dfu") && !lowerCase.contains("rusefi"))
+                    continue;
+                report.add(line);
             }
-            wnd.appendMsg("ERROR: does not look like DFU has worked!");
+            stdout.close();
+            return report;
+        } catch (IOException e) {
+            return Collections.emptyList();
         }
-        wnd.appendMsg("Please power cycle device to exit DFU mode");
-    }
-
-    private static String getDfuCommand() {
-        String fileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, "rusefi", ".dfu");
-
-        return DFU_BINARY + " -c -d --v --fn " + fileName;
-    }
-
-    /**
-     * connect via serial + initiate software DFU jump + program
-     */
-    public Component getAutoButton() {
-        return button;
-    }
-
-    // todo: maybe not couple these two different buttons in same class?
-    public Component getManualButton() {
-        return manualButton;
     }
 }

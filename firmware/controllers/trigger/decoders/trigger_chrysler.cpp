@@ -24,7 +24,7 @@ void initDodgeRam(TriggerWaveform *s) {
 	s->addEvent720(720, T_PRIMARY, TV_FALL);
 }
 
-void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s DECLARE_ENGINE_PARAMETER_SUFFIX) {
+void configureNeon2003TriggerWaveformCrank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 	s->useRiseEdge = true;
 

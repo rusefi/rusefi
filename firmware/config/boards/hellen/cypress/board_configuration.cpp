@@ -21,7 +21,7 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->isEngineChartEnabled = false;
 
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -72,12 +72,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->runningLedPin = GPIO_UNASSIGNED;
 	engineConfiguration->warningLedPin = GPIO_UNASSIGNED;
 	engineConfiguration->triggerErrorPin = GPIO_UNASSIGNED;
-	
-	//engineConfiguration->checkEngineLedPin = GPIO_UNASSIGNED;
-	//engineConfiguration->errorLedPin = GPIOJ_15;
-	//engineConfiguration->fatalErrorPin = GPIOJ_15;
 
-	//!!!!!!!!!
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13;
 	engineConfiguration->clt.adcChannel = EFI_ADC_26;
 	engineConfiguration->iat.adcChannel = EFI_ADC_27;

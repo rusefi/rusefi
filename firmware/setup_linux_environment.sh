@@ -12,7 +12,7 @@
 sudo apt-get update
 
 # install dependencies
-sudo apt-get install -y build-essential gcc make openjdk-8-jdk-headless ant mtools
+sudo apt-get install -y build-essential gcc make openjdk-8-jdk-headless ant mtools zip xxd
 
 # delete any old tools, create a new folder, and go there
 rm -rf ~/.rusefi-tools
@@ -31,3 +31,6 @@ rm arm-none-eabi-gcc.tar.bz2
 
 # Add the compiler to your path
 echo 'export PATH=$PATH:$HOME/.rusefi-tools/gcc-arm-none-eabi-9-2020-q2-update/bin' >> ~/.profile
+
+# Allow the current user to use serial ports
+sudo usermod -a -G dialout $USER

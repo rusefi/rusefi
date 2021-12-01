@@ -14,10 +14,9 @@ public:
 };
 
 TEST(FuelComputer, getCycleFuel) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	MockFuelComputer dut;
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	EXPECT_CALL(dut, getTargetLambdaLoadAxis(FloatEq(0.8f)))
 		.WillOnce(Return(0.8f));
@@ -41,15 +40,14 @@ TEST(FuelComputer, LambdaLookup) {
 }
 
 TEST(FuelComputer, FlexFuel) {
-	WITH_ENGINE_TEST_HELPER(TEST_ENGINE);
+	EngineTestHelper eth(TEST_ENGINE);
 
 	MockVp3d lambdaTable;
 	FuelComputer dut(lambdaTable);
-	INJECT_ENGINE_REFERENCE(&dut);
 
 	// easier values for testing
-	engineConfiguration->stoichRatioPrimary = 150;
-	engineConfiguration->stoichRatioSecondary = 100;
+	engineConfiguration->stoichRatioPrimary = 15;
+	engineConfiguration->stoichRatioSecondary = 10;
 
 	// No sensor -> returns primary
 	Sensor::resetMockValue(SensorType::FuelEthanolPercent);

@@ -3,6 +3,8 @@
 # see setup_linux_environment.sh but Windows is also totally fine
 #
 
+.PHONY: openblt
+
 CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
@@ -16,6 +18,7 @@ PROJECT_DIR = .
 # Configure precompiled header
 PCH_DIR = $(PROJECT_DIR)/pch
 PCHSRC = $(PCH_DIR)/pch.h
+PCHSUB = firmware
 
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
@@ -59,7 +62,7 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++17 -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit -Winvalid-pch
+  USE_CPPOPT = -std=c++2a -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
 endif
 
 # Hellen is one of the boards which cares
@@ -99,6 +102,10 @@ endif
 
 ifeq ($(USE_BOOTLOADER),)
   USE_BOOTLOADER = no
+endif
+
+ifeq ($(USE_OPENBLT),)
+  USE_OPENBLT = no
 endif
 
 ifeq ($(USE_FATFS),)
@@ -166,6 +173,11 @@ include $(CHIBIOS)/os/ex/devices/ST/lis302dl.mk
 endif
 include $(CHIBIOS)/os/hal/lib/streams/streams.mk
 include $(CHIBIOS)/os/various/cpp_wrappers/chcpp.mk
+
+ifeq ($(LWIP),yes)
+	include $(CHIBIOS)/os/various/lwip_bindings/lwip.mk
+endif
+
 include $(CHIBIOS)/os/hal/lib/complex/mfs/hal_mfs.mk
 
 ifeq ($(USE_FATFS),yes)
@@ -199,6 +211,11 @@ ifeq ($(USE_BOOTLOADER),yes)
 include $(PROJECT_DIR)/bootloader/bootloader.mk
 endif
 
+ifeq ($(USE_OPENBLT),yes)
+  # Reserve start of flash for OpenBLT
+  USE_OPT += -Wl,--defsym=BOOTLOADER=1
+endif
+
 $(info PROJECT_BOARD: $(PROJECT_BOARD))
 $(info PROJECT_CPU:   $(PROJECT_CPU))
 $(info CONFDIR:       $(CONFDIR))
@@ -209,6 +226,7 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 CSRC =  $(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
+	$(CHIBIOS)/os/various/evtimer.c \
 	$(TRIGGER_SRC) \
 	$(TRIGGER_DECODERS_SRC) \
 	$(DEV_SRC) \
@@ -284,6 +302,7 @@ INCDIR = \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFDIR) \
 	config/engines \
+	config/boards \
 	config \
 	ext \
 	ext_algo \
@@ -338,6 +357,8 @@ OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
+# OpenBLT flasher expects srec files
+SREC = $(CP) -O srec
 
 # ARM-specific options here
 AOPT =
@@ -380,5 +401,15 @@ ULIBS = -lm --specs=nano.specs
 
 include $(RULESFILE)
 
+openblt:
+	make -f $(PROJECT_DIR)/openblt.mk
+
+openblt_clean:
+	make -f $(PROJECT_DIR)/openblt.mk clean
+
 # Enable precompiled header
 include rusefi_pch.mk
+
+POST_MAKE_ALL_RULE_HOOK: $(BUILDDIR)/$(PROJECT).elf
+	@java -jar ../java_tools/gcc_map_reader.jar $(BUILDDIR)/$(PROJECT).map | grep Total || echo Unable to run gcc_map_reader
+	@$(TRGT)objdump -h $(BUILDDIR)/$(PROJECT).elf | grep -w ram4

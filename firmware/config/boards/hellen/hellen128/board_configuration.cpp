@@ -13,20 +13,21 @@
 #include "pch.h"
 #include "fsio_impl.h"
 #include "custom_engine.h"
+#include "../hellen_meta.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
 }
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = GPIOG_7;
-	engineConfiguration->injectionPins[1] = GPIOG_8;
-	engineConfiguration->injectionPins[2] = GPIOD_11;
-	engineConfiguration->injectionPins[3] = GPIOD_10;
-	engineConfiguration->injectionPins[4] = GPIOD_9;
-	engineConfiguration->injectionPins[5] = GPIOF_12;
-	engineConfiguration->injectionPins[6] = GPIOF_13;
-	engineConfiguration->injectionPins[7] = GPIOF_14;
+	engineConfiguration->injectionPins[0] = H176_LS_1;
+	engineConfiguration->injectionPins[1] = H176_LS_2;
+	engineConfiguration->injectionPins[2] = H176_LS_3;
+	engineConfiguration->injectionPins[3] = H176_LS_4;
+	engineConfiguration->injectionPins[4] = H176_LS_5;
+	engineConfiguration->injectionPins[5] = H176_LS_6;
+	engineConfiguration->injectionPins[6] = H176_LS_7;
+	engineConfiguration->injectionPins[7] = H176_LS_8;
 
 	// Disable remainder
 	for (int i = 8; i < MAX_CYLINDER_COUNT;i++) {
@@ -52,16 +53,6 @@ static void setIgnitionPins() {
 	}
 
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
-}
-
-static void setLedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
 }
 
 static void setupVbatt() {
@@ -104,7 +95,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides(void) {
-	setLedPins();
+	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
 
@@ -112,11 +103,8 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->clt.config.bias_resistor = 2700;
 	engineConfiguration->iat.config.bias_resistor = 2700;
 
-	engineConfiguration->canTxPin = GPIOD_1;
-	engineConfiguration->canRxPin = GPIOD_0;
-
-	setHellenDefaultVrThresholds(PASS_CONFIG_PARAMETER_SIGNATURE);
-	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
+	engineConfiguration->canTxPin = H176_CAN_TX;
+	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
 void setPinConfigurationOverrides(void) {
@@ -144,12 +132,16 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->isSdCardEnabled = true;
 
-	CONFIG(enableSoftwareKnock) = true;
+	engineConfiguration->enableSoftwareKnock = true;
 
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
+	engineConfiguration->fuelPumpPin = GPIOD_15;
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+
+	engineConfiguration->starterControlPin = H176_OUT_IO10;
+	engineConfiguration->startStopButtonPin = H176_IN_A16;
+	engineConfiguration->startStopButtonMode = PI_PULLDOWN;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -158,7 +150,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
@@ -169,13 +161,13 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
 
 	//Set default ETB config
-	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6; // out_pwm2
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7; // out_pwm3
-	engineConfiguration->etbIo[0].controlPin = GPIOD_13; // ETB_EN out_pwm1
-	CONFIG(etb_use_two_wires) = true;
+	engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
+	engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
+	engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
+	engineConfiguration->etb_use_two_wires = true;
 
-	strcpy(CONFIG(engineMake), ENGINE_MAKE_MERCEDES);
-	strcpy(CONFIG(engineCode), "");
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MERCEDES);
+	strcpy(engineConfiguration->engineCode, "");
 
 	/**
 	 * Jimmy best tune
@@ -201,14 +193,9 @@ void setBoardDefaultConfiguration(void) {
 void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
-//	engineConfiguration->spi3mosiPin = GPIOC_12;
-//	engineConfiguration->spi3misoPin = GPIOC_11;
-//	engineConfiguration->spi3sckPin = GPIOC_10;
-//	engineConfiguration->sdCardCsPin = GPIOA_15;
-
-	engineConfiguration->spi2mosiPin = GPIOB_15;
-	engineConfiguration->spi2misoPin = GPIOB_14;
-	engineConfiguration->spi2sckPin = GPIOB_13;
-	engineConfiguration->sdCardCsPin = GPIOB_12;
-	CONFIG(is_enabled_spi_2) = true;
+	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
+	engineConfiguration->spi2misoPin = H_SPI2_MISO;
+	engineConfiguration->spi2sckPin = H_SPI2_SCK;
+	engineConfiguration->sdCardCsPin = H_SPI2_CS;
+	engineConfiguration->is_enabled_spi_2 = true;
 }

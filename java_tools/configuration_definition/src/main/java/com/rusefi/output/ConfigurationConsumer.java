@@ -1,7 +1,5 @@
 package com.rusefi.output;
 
-import com.rusefi.ConfigStructure;
-
 import java.io.IOException;
 
 public interface ConfigurationConsumer {

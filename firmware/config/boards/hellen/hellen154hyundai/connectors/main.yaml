@@ -1,9 +1,15 @@
+# https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
+
 pins:
   - pin: K1
     function: GND
     type: gnd
 
   - pin: K2
+    # VIGN PA5
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: K2 Ignition Key Voltage
     function: V ign
 
   - pin: K3
@@ -37,8 +43,11 @@ pins:
     function: Analog Ground
 
   - pin: K15
+# cam2  IN_AUX4
+    id: [GPIOA_7]
     function: Cam Sensor
-    ts_name: Cam - k15
+    class: [event_inputs]
+    ts_name: Cam - K15
 
   - pin: K16
     function: Analog Ground
@@ -49,10 +58,13 @@ pins:
     # IN_CRANK AIN24 A24
     id: [GPIOB_1]
     class: [event_inputs]
-    ts_name: Crank - k17
+    ts_name: Crank - K17
+
+  - pin: K21
+    ts_name: Ambient Temperature
 
   - pin: K22
-    ts_name: Wastegate Position - 22
+    ts_name: BK2 Wastegate Position - 22
 
   - pin: K25
     id: GPIOG_7
@@ -83,26 +95,43 @@ pins:
     type: inj
 
   - pin: K30
-    function: Sensor 5v
+    function: sensor +5v feed
+    type: 5v
 
   - pin: K31
+# IN_MAP1 AIN9
+    id: EFI_ADC_10
+    class: analog_inputs
     ts_name: Map Sensor K31
     function: Manifold Pressure Sensor
 
   - pin: K32
+# IN_AUX1 AIN23 PB0
+    id: EFI_ADC_8
+    class: analog_inputs
     ts_name: TPS 2
     function: TPS 2 sensor input
 
   - pin: K33
+# IN_CLT AIN11
+    id: EFI_ADC_12
+    class: analog_inputs
     ts_name: CLT
     function: CLT
 
   - pin: K34
     function: Analog Ground
 
-  - pin: K36
+  - pin: K35
+# IN_AUX2 AIN21 PC4
+    id: EFI_ADC_14
+    class: analog_inputs
     ts_name: PPS 2
     function: PPS 2 sensor input
+
+  - pin: K36
+    function: sensor +5v feed
+    type: 5v
 
   - pin: K37
     function: Analog Ground
@@ -110,17 +139,83 @@ pins:
   - pin: K39
     function: Analog Ground
 
+  - pin: K40
+    id: GPIOF_11
+    class: event_inputs
+    ts_name: K40 VSS
+    function: Vehicle Speed Sensor
+
+  - pin: K43
+    function: sensor +5v feed
+    type: 5v
+
   - pin: K44
     function: Analog Ground
+
+  - pin: K47
+    class: outputs
+    function: BK1 Wastegate Solenoid
+
+  - pin: K53
+    # IN_IAT AIN14 PC3
+    id: EFI_ADC_13
+    class: analog_inputs
+    ts_name: IAT
+    function: IAT
 
   - pin: K57
     function: Analog Ground
 
+  - pin: K58
+# IN_O2S2 AIN12 PA1 EFI_ADC_1
+    class: analog_inputs
+    ts_name: Oil Temp
+    function: Oil Temperature
+
   - pin: K59
     function: Analog Ground
 
+  - pin: K60
+    function: sensor +5v feed
+    type: 5v
+
   - pin: K61
     function: Analog Ground
+
+  - pin: K62
+# cam1 IN_CAM
+    id: [GPIOA_6]
+    function: Cam Sensor
+    class: [event_inputs]
+    ts_name: Cam - K62
+
+  - pin: K63
+    function: sensor +5v feed
+    type: 5v
+
+  - pin: K64
+# H144_OUT_IO3
+    id: GPIOG_14
+    class: outputs
+    ts_name: Main Relay K64
+    function: Main relay control
+    type: ls
+
+  - pin: K70
+# H144_OUT_IO9
+    id: GPIOG_13
+    class: outputs
+    ts_name: Fuel Pump K70
+    function: Fuel Pump Relay
+    type: ls
+
+  - pin: K71
+    ts_name: ETB w1
+    function: DC Motor w1
+
+  - pin: K72
+    ts_name: ETB w2
+    function: DC Motor w2
 
   - pin: K77
     function: CAN bus high
@@ -134,10 +229,15 @@ pins:
     function: Analog Ground
 
   - pin: K80
+# IN_TPS AIN17 PA4
+    id: EFI_ADC_4
+    class: analog_inputs
     ts_name: TPS 1
     function: TPS 1 sensor input
 
   - pin: K82
+    id: EFI_ADC_3
+    class: analog_inputs
     ts_name: PPS 1
     function: PPS 1 sensor input
 
@@ -145,14 +245,37 @@ pins:
     function: Analog Ground
 
   - pin: K86
+    # H144_OUT_PWM7
+    id: GPIOD_15
+    class: outputs
     ts_name: Tacho
     function: Tachometer
 
+  - pin: K87
+    # H144_OUT_IO10
+    id: GPIOG_12
+    class: outputs
+    ts_name: K87 AC Relay
+    function: A/C Relay
+    type: ls
+
+  - pin: K88
+    # H144_OUT_IO8
+    id: GPIOG_4
+    class: outputs
+    ts_name: Fan Relay HI
+    function: Fan relay high
+
   - pin: K92
+    # H144_OUT_PWM8
+    id: GPIOD_12
+    class: outputs
     ts_name: MIL
     function: Check Engine Light
 
   - pin: A1
+    id: GPIOE_3
+    class: outputs
     ts_name: Coil 4
     function: Coil 4
     type: ign
@@ -164,17 +287,21 @@ pins:
     function: Ground
 
   - pin: A16
+    id: GPIOE_5
+    class: outputs
     ts_name: Coil 2
     function: Coil 2
     type: ign
 
   - pin: A29
     class: switch_inputs
-    ts_name: rake Input
+    ts_name: Brake Input
     function: Brake Switch
 
 
   - pin: A31
+    id: GPIOC_13
+    class: outputs
     ts_name: Coil 1
     function: Coil 1
     type: ign
@@ -182,9 +309,11 @@ pins:
   - pin: A43
     function: Clutch Input
   - pin: A45
-    function: DC Wastegate Pos
+    function: BK2 DC Wastegate Pos
 
   - pin: A46
+    id: GPIOE_4
+    class: outputs
     ts_name: Coil 3
     function: Coil 3
     type: ign
@@ -193,9 +322,10 @@ pins:
     function: AC Request Switch
 
   - pin: A60
-    function: DC Wastegate Neg
+    function: BK2 DC Wastegate Neg
 
 info:
+  title: Hellen 154 Hyundai
   image:
     file: main.jpg
   pins:

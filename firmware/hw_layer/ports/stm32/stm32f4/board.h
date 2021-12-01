@@ -34,6 +34,12 @@
 #define BOARD_OTG_NOVBUSSENS TRUE
 
 /*
+ * Ethernet PHY type.
+ */
+#define BOARD_PHY_ID                MII_LAN8742A_ID
+#define BOARD_PHY_RMII
+
+/*
  * Default to input mode, with internal pulldown resistor enabled.
  */
 #define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT

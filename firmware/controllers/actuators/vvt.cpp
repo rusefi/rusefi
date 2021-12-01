@@ -27,13 +27,13 @@ void VvtController::init(int index, int bankIndex, int camIndex, const ValueProv
 	m_cam = camIndex;
 
 	// Use the same settings for the Nth cam in every bank (ie, all exhaust cams use the same PID)
-	m_pid.initPidClass(&CONFIG(auxPid[camIndex]));
+	m_pid.initPidClass(&engineConfiguration->auxPid[camIndex]);
 
 	m_targetMap = targetMap;
 }
 
 int VvtController::getPeriodMs() {
-	return isBrainPinValid(engineConfiguration->auxPidPins[index]) ?
+	return isBrainPinValid(engineConfiguration->vvtPins[index]) ?
 		GET_PERIOD_LIMITED(&engineConfiguration->auxPid[index]) : NO_PIN_PERIOD;
 }
 
@@ -49,13 +49,19 @@ expected<angle_t> VvtController::observePlant() const {
 	return engine->triggerCentral.getVVTPosition(m_bank, m_cam);
 }
 
-expected<angle_t> VvtController::getSetpoint() const {
+expected<angle_t> VvtController::getSetpoint() {
 	int rpm = GET_RPM();
-	float load = getFuelingLoad(PASS_ENGINE_PARAMETER_SIGNATURE);
-	return m_targetMap->getValue(rpm, load);
+	float load = getFuelingLoad();
+	float target = m_targetMap->getValue(rpm, load);
+
+#if EFI_TUNER_STUDIO
+	tsOutputChannels.vvtTargets[index] = target;
+#endif
+
+	return target;
 }
 
-expected<percent_t> VvtController::getOpenLoop(angle_t target) const {
+expected<percent_t> VvtController::getOpenLoop(angle_t target) {
 	// TODO: could we do VVT open loop?
 	UNUSED(target);
 	return 0;
@@ -102,16 +108,16 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 static VvtController instances[CAM_INPUTS_COUNT] CCM_OPTIONAL;
 
 static void turnAuxPidOn(int index) {
-	if (!isBrainPinValid(engineConfiguration->auxPidPins[index])) {
+	if (!isBrainPinValid(engineConfiguration->vvtPins[index])) {
 		return;
 	}
 
 	startSimplePwmExt(&instances[index].m_pwm, "Aux PID",
 			&engine->executor,
-			engineConfiguration->auxPidPins[index],
+			engineConfiguration->vvtPins[index],
 			&instances[index].m_pin,
 			// todo: do we need two separate frequencies?
-			engineConfiguration->auxPidFrequency[0], 0.1);
+			engineConfiguration->vvtOutputFrequency[0], 0.1);
 }
 
 void startVvtControlPins() {
@@ -134,7 +140,6 @@ void initAuxPid() {
 			config->vvtTable2RpmBins);
 
 	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
-		INJECT_ENGINE_REFERENCE(&instances[i]);
 
 		int camIndex = i % CAMS_PER_BANK;
 		int bankIndex = i / CAMS_PER_BANK;

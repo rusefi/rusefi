@@ -37,6 +37,9 @@
 // only the MSD driver requires USB_USE_WAIT
 #define USB_USE_WAIT (EFI_FILE_LOGGING && EFI_USB_SERIAL)
 
+// Ethernet
+#define HAL_USE_MAC EFI_ETHERNET
+
 /*===========================================================================*/
 /* Required rusEFI settings                                                  */
 /*===========================================================================*/
@@ -86,3 +89,7 @@
 
 // Extra field in the UART driver's struct to store a reference to the DMA receive buffer object
 #define UART_DRIVER_EXT_FIELDS void* dmaAdapterInstance;
+
+// Ethernet MAC
+#define MAC_USE_ZERO_COPY FALSE
+#define MAC_USE_EVENTS TRUE

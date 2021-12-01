@@ -2,11 +2,11 @@ UTIL_DIR=$(PROJECT_DIR)/util
 
 UTILSRC = \
 	$(UTIL_DIR)/math/crc.c \
+	$(UTIL_DIR)/tinymt32.c \
 	$(UTIL_DIR)/os_util.c \
 
 UTILSRC_CPP = \
 	$(UTIL_DIR)/histogram.cpp \
-    $(UTIL_DIR)/containers/cyclic_buffer.cpp \
 	$(UTIL_DIR)/containers/listener_array.cpp \
 	$(UTIL_DIR)/containers/local_version_holder.cpp \
 	$(UTIL_DIR)/containers/table_helper.cpp \

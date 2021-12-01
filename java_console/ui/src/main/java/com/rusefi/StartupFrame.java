@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.autoupdate.Autoupdate;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.io.LinkManager;
@@ -11,6 +12,7 @@ import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -36,7 +38,8 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  * @see FirmwareFlasher
  */
 public class StartupFrame {
-    private static final String LOGO = "/com/rusefi/logo.gif";
+    public static final String LOGO_PATH = "/com/rusefi/";
+    private static final String LOGO = LOGO_PATH + "logo.png";
     public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
@@ -142,9 +145,6 @@ public class StartupFrame {
             ProgramSelector selector = new ProgramSelector(comboPorts);
             realHardwarePanel.add(selector.getControl(), "right, wrap");
 
-
-//            realHardwarePanel.add(new DfuFlasher(comboPorts).getAutoButton());
-//            realHardwarePanel.add(new DfuFlasher(comboPorts).getManualButton());
             // for F7 builds we just build one file at the moment
 //            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
             if (new File(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE).exists()) {
@@ -152,7 +152,12 @@ public class StartupFrame {
                 FirmwareFlasher firmwareFlasher = new FirmwareFlasher(FirmwareFlasher.IMAGE_NO_ASSERTS_FILE, "ST-LINK Program Firmware/NoAsserts", "Please only use this version if you know that you need this version");
                 realHardwarePanel.add(firmwareFlasher.getButton(), "right, wrap");
             }
-            realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
+            JComponent updateHelp = ProgramSelector.createHelpButton();
+
+            realHardwarePanel.add(updateHelp, "right, wrap");
+
+            // st-link is pretty advanced use-case, real humans do not have st-link as of 2021
+            //realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
         }
 
         SerialPortScanner.INSTANCE.listeners.add(() -> SwingUtilities.invokeLater(this::applyKnownPorts));
@@ -218,13 +223,13 @@ public class StartupFrame {
     }
 
     public static void setFrameIcon(Frame frame) {
-        ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
+        ImageIcon icon = getBundleIcon();
         if (icon != null)
             frame.setIconImage(icon.getImage());
     }
 
     public static JLabel createLogoLabel() {
-        ImageIcon logoIcon = AutoupdateUtil.loadIcon(LOGO);
+        ImageIcon logoIcon = getBundleIcon();
         if (logoIcon == null)
             return null;
         JLabel logo = new JLabel(logoIcon);
@@ -234,11 +239,27 @@ public class StartupFrame {
         return logo;
     }
 
+    @Nullable
+    private static ImageIcon getBundleIcon() {
+        String bundle = Autoupdate.readBundleFullName();
+        bundle = bundle == null ? "" : bundle;
+        String logoName;
+        if (bundle.contains("proteus")) {
+            logoName = LOGO_PATH + "logo_proteus.png";
+        } else if (bundle.contains("_mre")) {
+            logoName = LOGO_PATH + "logo_mre.png";
+        } else {
+            logoName = LOGO;
+        }
+        return AutoupdateUtil.loadIcon(logoName);
+    }
+
     private void connectButtonAction(JComboBox<String> comboSpeeds) {
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
         String selectedPort = comboPorts.getSelectedItem().toString();
         if (SerialPortScanner.AUTO_SERIAL.equals(selectedPort)) {
-            String autoDetectedPort = PortDetector.autoDetectPort(StartupFrame.this.frame);
+            SerialAutoChecker.AutoDetectResult detectResult = PortDetector.autoDetectPort(StartupFrame.this.frame);
+            String autoDetectedPort = detectResult == null ? null : detectResult.getSerialPort();
             if (autoDetectedPort == null)
                 return;
             selectedPort = autoDetectedPort;

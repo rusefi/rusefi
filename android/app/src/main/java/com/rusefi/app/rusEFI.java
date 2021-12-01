@@ -57,6 +57,7 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
+import com.rusefi.ui.StatusConsumer;
 
 import java.util.Date;
 
@@ -212,7 +213,7 @@ public class rusEFI extends Activity {
         }
 
         mResultView.append("Switching to DFU\n");
-        DfuHelper.sendDfuRebootCommand(serial, new StringBuilder());
+        DfuHelper.sendDfuRebootCommand(serial, StatusConsumer.VOID);
     }
 
     private void dfuUpdate(UsbDevice dfuDevice) {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "stored_value_sensor.h"
-#include "global.h"
 
 struct MockSensor final : public StoredValueSensor
 {

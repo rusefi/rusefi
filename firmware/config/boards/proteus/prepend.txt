@@ -16,8 +16,13 @@
 #define ts_show_software_knock true
 #define ts_show_hardware_simulator false
 
+! in case of direct Lua control we need UI to undo defaults
+#define ts_show_etb_pins true
+
 #define show_test_presets false
 #define show_Frankenso_presets false
 #define show_microRusEFI_presets false
 #define show_Proteus_presets true
 #define ts_show_f7_presets true
+
+#define LUA_SCRIPT_SIZE 6600

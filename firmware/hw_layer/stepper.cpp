@@ -80,9 +80,9 @@ void StepperMotorBase::setInitialPosition(void) {
 	bool isRunning = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
 	// now check if stepper motor re-initialization is requested - if the throttle pedal is pressed at startup
-	auto tpsPos = Sensor::get(SensorType::DriverThrottleIntent).value_or(0);
+	auto tpsPos = Sensor::getOrZero(SensorType::DriverThrottleIntent);
 	bool forceStepperParking = !isRunning && tpsPos > STEPPER_PARKING_TPS;
-	if (CONFIG(stepperForceParkingEveryRestart))
+	if (engineConfiguration->stepperForceParkingEveryRestart)
 		forceStepperParking = true;
 	efiPrintf("Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), tpsPos);
 
@@ -99,7 +99,7 @@ void StepperMotorBase::setInitialPosition(void) {
 		 *
 		 * Add extra steps to compensate step skipping by some old motors.
 		 */
-		int numParkingSteps = (int)efiRound((1.0f + (float)CONFIG(stepperParkingExtraSteps) / PERCENT_MULT) * m_totalSteps, 1.0f);
+		int numParkingSteps = (int)efiRound((1.0f + (float)engineConfiguration->stepperParkingExtraSteps / PERCENT_MULT) * m_totalSteps, 1.0f);
 		for (int i = 0; i < numParkingSteps; i++) {
 			if (!m_hw->step(false)) {
 				initialPositionSet = false;
@@ -137,7 +137,7 @@ void StepperMotorBase::doIteration() {
 	}
 
 	if (targetPosition == currentPosition) {
-		m_hw->pause();
+		m_hw->sleep();
 		m_isBusy = false;
 		return;
 	}
@@ -188,8 +188,13 @@ bool StepDirectionStepper::pulse() {
 	return true;
 }
 
-void StepperHw::pause() const {
-	chThdSleepMicroseconds((int)(MS2US(m_reactionTime)));
+void StepperHw::sleep() {
+	pause();
+}
+
+void StepperHw::pause(int divisor) const {
+	// currently we can't sleep less than 1ms (see #3214)
+	chThdSleepMicroseconds(maxI(MS2US(1), (int)(MS2US(m_reactionTime)) / divisor));
 }
 
 void StepperHw::setReactionTime(float ms) {
@@ -231,3 +236,7 @@ void StepDirectionStepper::initialize(brain_pin_e stepPin, brain_pin_e direction
 }
 
 #endif
+
+#if EFI_UNIT_TEST
+void StepperHw::sleep() { }
+#endif // EFI_UNIT_TEST

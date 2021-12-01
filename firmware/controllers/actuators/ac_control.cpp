@@ -8,53 +8,53 @@ static Deadband<200> maxRpmDeadband;
 static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
 
-static bool getAcState(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	auto rpm = Sensor::get(SensorType::Rpm).value_or(0);
+bool AcController::getAcState() {
+	latest_usage_ac_control = getTimeNowSeconds();
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-	// Engine too slow, disable
-	if (rpm < 500) {
+	engineTooSlow = rpm < 500;
+
+	if (engineTooSlow) {
 		return false;
 	}
 
-	// Engine too fast, disable
-	auto maxRpm = CONFIG(maxAcRpm);
-	if (maxRpm != 0) {
-		if (maxRpmDeadband.gt(rpm, maxRpm)) {
-			return false;
-		}
+	auto maxRpm = engineConfiguration->maxAcRpm;
+	engineTooFast = maxRpm != 0 && maxRpmDeadband.gt(rpm, maxRpm);
+	if (engineTooFast) {
+		return false;
 	}
 
 	auto clt = Sensor::get(SensorType::Clt);
 
+	noClt = !clt;
 	// No AC with failed CLT
-	if (!clt) {
+	if (noClt) {
 		return false;
 	}
 
 	// Engine too hot, disable
-	auto maxClt = CONFIG(maxAcClt);
-	if (maxClt != 0) {
-		if (maxCltDeadband.gt(maxClt, clt.Value)) {
-			return false;
-		}
+	auto maxClt = engineConfiguration->maxAcClt;
+	engineTooHot = (maxClt != 0) && maxCltDeadband.gt(clt.Value, maxClt);
+	if (engineTooHot) {
+		return false;
 	}
 
 	// TPS too high, disable
-	auto maxTps = CONFIG(maxAcTps);
-	if (maxTps != 0) {
-		auto tps = Sensor::get(SensorType::Tps1).value_or(0);
-
-		if (maxTpsDeadband.gt(maxTps, tps)) {
+	auto maxTps = engineConfiguration->maxAcTps;
+	tpsTooHigh = maxTps != 0 && maxTpsDeadband.gt(Sensor::getOrZero(SensorType::Tps1), maxTps);
+	if (tpsTooHigh) {
 			return false;
-		}
 	}
 
+	acButtonState = engine->acSwitchState;
 	// All conditions allow AC, simply pass thru switch
-	return ENGINE(acSwitchState);
+	return acButtonState;
 }
 
-bool updateAc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
-	bool isEnabled = getAcState(PASS_ENGINE_PARAMETER_SIGNATURE);
+void AcController::onSlowCallback() {
+	bool isEnabled = getAcState();
+
+	m_acEnabled = isEnabled;
 
 	enginePins.acRelay.setValue(isEnabled);
 
@@ -62,6 +62,8 @@ bool updateAc(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 	tsOutputChannels.acSwitchState = engine->acSwitchState;
 	tsOutputChannels.acState = isEnabled;
 #endif // EFI_TUNER_STUDIO
+}
 
-	return isEnabled;
+bool AcController::isAcEnabled() const {
+	return m_acEnabled;
 }

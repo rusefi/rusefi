@@ -1,6 +1,0 @@
-1) changed in R0.2 -- silkscreen font is really small
-2) changed in R0.2 -- add breakout holes for all unused pins to simplify CS routing
-3) changed in R0.2 -- add 'Power' LED
-4) changed in R0.2 -- add two MAX232 chips (four VR stimulation channels)
-5) changed in R0.2 -- merge 5v's
-6) changed in R0.2 -- add ECU power LED

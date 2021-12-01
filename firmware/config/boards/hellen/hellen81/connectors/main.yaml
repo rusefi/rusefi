@@ -511,6 +511,7 @@ pins:
     function: CAN-L (ME7.8.8-compatible)
 
 info:
+  title: Hellen 81
   image:
     file: main.jpg
   pins:

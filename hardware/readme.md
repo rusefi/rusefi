@@ -1,11 +1,3 @@
-
-# Frankenso
-The most interesting folder here is [Frankenso](frankenso/) - that's rusEfi most useful board
-
-# microRusEfi
-
-microRusEfi is another official rusEfi board, it lives at https://github.com/rusefi/hw_microRusEfi
-
 # Connectors
 Some vehicle-specific connector boards are also pretty nice if you want to keep original harness intact
 
@@ -51,16 +43,14 @@ Some stuff we have given up on completely is located at https://github.com/rusef
 
 Above mentioned modules are known to work unless stated otherwise
 
-### Frankenstein
-
-[Our older ECU board](frankenstein)
-
 ### More rusEFI hardware
 
-* [PnP MRE 55 pin TE](https://github.com/rusefi/hw_55_te)
-* [PnP MRE 68 pin VAG](https://github.com/rusefi/hw_68_vag/)
-* [Proteus](https://github.com/mck1117/proteus)
-* Hellen TODO
+See https://github.com/rusefi/rusefi/wiki/Hardware
+
+# Frankenso
+Frankenso has moved to https://github.com/rusefi/rusefi-hardware/tree/main/classic-designs
+
+
 
 # More info
 

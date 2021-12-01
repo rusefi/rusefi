@@ -58,10 +58,10 @@ TEST(misc, testSignalExecutor2) {
 
 }
 
-static long prevValue = -1;
+static uintptr_t prevValue = 0;
 
 static void orderCallback(void *a) {
-	long value = (long)a;
+	uintptr_t value = (uintptr_t)a;
 
 	printf("value=%d prevValue=%d\r\n", value, prevValue);
 	ASSERT_TRUE(value > prevValue) << "orderCallback";

@@ -1,1 +1,5 @@
-User-agent: * Disallow: /wiki
+User-agent: * 
+
+Disallow: /wiki
+Disallow: /wiki3
+Disallow: /docs/wiki

@@ -18,7 +18,7 @@ public:
 	bool hasMockAdc[MOCK_ADC_SIZE];
 	int fakeAdcValues[MOCK_ADC_SIZE];
 
-	void setMockVoltage(int hwChannel, float voltage DECLARE_ENGINE_PARAMETER_SUFFIX);
+	void setMockVoltage(int hwChannel, float voltage);
 	int getMockAdcValue(int hwChannel) const;
 };
 
@@ -27,6 +27,8 @@ public:
 	float x = 0; // G value
 	float y = 0;
 	float z = 0;
+	float yaw = 0;
+	float roll = 0;
 };
 
 class SensorsState {
@@ -61,7 +63,7 @@ class WarningCodeState {
 public:
 	WarningCodeState();
 	void addWarningCode(obd_code_e code);
-	bool isWarningNow(efitimesec_t now, bool forIndicator DECLARE_ENGINE_PARAMETER_SUFFIX) const;
+	bool isWarningNow(efitimesec_t now, bool forIndicator) const;
 	void clear();
 	int warningCounter;
 	int lastErrorCode;
@@ -73,14 +75,12 @@ public:
 class FsioState {
 public:
 	FsioState();
-	float fsioLastValue[FSIO_COMMAND_COUNT];
 
 #if EFI_UNIT_TEST
 	float mockFan = 0;
 	float mockRpm = 0;
 	float mockCrankingRpm = 0;
 	float mockTimeSinceBoot = 0;
-	float mockTimeSinceTrigger = 0;
 	int mockAcToggle = 0;
 #endif
 
@@ -109,7 +109,7 @@ public:
 class StartupFuelPumping {
 public:
 	StartupFuelPumping();
-	void update(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+	void update();
 	bool isTpsAbove50;
 	int pumpsCounter;
 private:

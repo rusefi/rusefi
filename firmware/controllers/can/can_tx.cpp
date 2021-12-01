@@ -31,10 +31,10 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 	CanCycle cycle(cycleCount);
 
 	//in case we have Verbose Can enabled, we should keep user configured period
-	if (CONFIG(enableVerboseCanTx)) {
+	if (engineConfiguration->enableVerboseCanTx) {
 		uint16_t cycleCountsPeriodMs = cycleCount * CAN_CYCLE_PERIOD;
-		if (0 != CONFIG(canSleepPeriodMs)) {
-			if (cycleCountsPeriodMs % CONFIG(canSleepPeriodMs)) {
+		if (0 != engineConfiguration->canSleepPeriodMs) {
+			if (cycleCountsPeriodMs % engineConfiguration->canSleepPeriodMs) {
 				void sendCanVerbose();
 				sendCanVerbose();
 			}
@@ -54,7 +54,7 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 
 	updateDash(cycle);
 
-	if (CONFIG(enableAemXSeries) && cycle.isInterval(CI::_50ms)) {
+	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms)) {
 		sendWidebandInfo();
 	}
 

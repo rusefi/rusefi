@@ -2,7 +2,5 @@
 // was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt
 //
 
-#define SIGNATURE_BOARD f429-discovery
-#define SIGNATURE_DATE 2021.09.18
-#define SIGNATURE_HASH 1529213781
-#define TS_SIGNATURE "rusEFI 2021.09.18.f429-discovery.1529213781"
+#define SIGNATURE_HASH 1742637490
+#define TS_SIGNATURE "rusEFI 2021.12.01.f429-discovery.1742637490"

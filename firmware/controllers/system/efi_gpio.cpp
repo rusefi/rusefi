@@ -81,7 +81,7 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 #endif // EFI_PROD_CODE
 }
 
-void RegisteredOutputPin::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void RegisteredOutputPin::init() {
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[pinOffset]));
     pin_output_mode_e *newMode = (pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[pinModeOffset]));
 
@@ -185,10 +185,6 @@ void EnginePins::unregisterPins() {
 	unregisterOutputIfPinChanged(sdCsPin, sdCardCsPin);
 	unregisterOutputIfPinChanged(accelerometerCs, LIS302DLCsPin);
 
-	for (int i = 0;i < FSIO_COMMAND_COUNT;i++) {
-		unregisterOutputIfPinChanged(fsioOutputs[i], fsioOutputPins[i]);
-	}
-
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
 		pin->unregister();
@@ -213,7 +209,7 @@ void EnginePins::startPins() {
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
-		pin->init(PASS_ENGINE_PARAMETER_SIGNATURE);
+		pin->init();
 		pin = pin->next;
 	}
 }
@@ -266,12 +262,12 @@ void EnginePins::startIgnitionPins() {
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *trailingOutput = &enginePins.trailingCoils[i];
 		if (isPinOrModeChanged(trailingCoilPins[i], ignitionPinMode)) {
-			trailingOutput->initPin(trailingOutput->name, CONFIG(trailingCoilPins)[i], &CONFIG(ignitionPinMode));
+			trailingOutput->initPin(trailingOutput->name, engineConfiguration->trailingCoilPins[i], &engineConfiguration->ignitionPinMode);
 		}
 
 		NamedOutputPin *output = &enginePins.coils[i];
 		if (isPinOrModeChanged(ignitionPins[i], ignitionPinMode)) {
-			output->initPin(output->name, CONFIG(ignitionPins)[i], &CONFIG(ignitionPinMode));
+			output->initPin(output->name, engineConfiguration->ignitionPins[i], &engineConfiguration->ignitionPinMode);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -283,8 +279,8 @@ void EnginePins::startInjectionPins() {
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		NamedOutputPin *output = &enginePins.injectors[i];
 		if (isPinOrModeChanged(injectionPins[i], injectionPinMode)) {
-			output->initPin(output->name, CONFIG(injectionPins)[i],
-					&CONFIG(injectionPinMode));
+			output->initPin(output->name, engineConfiguration->injectionPins[i],
+					&engineConfiguration->injectionPinMode);
 		}
 	}
 #endif /* EFI_PROD_CODE */
@@ -305,7 +301,16 @@ const char *NamedOutputPin::getShortName() const {
 	return shortName == nullptr ? name : shortName;
 }
 
+#if EFI_UNIT_TEST
+extern bool verboseMode;
+#endif // EFI_UNIT_TEST
+
 void NamedOutputPin::setHigh() {
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		efiPrintf("pin %s goes high", name);
+	}
+#endif // EFI_UNIT_TEST
 #if EFI_DEFAILED_LOGGING
 //	signal->hi_time = hTimeNow();
 #endif /* EFI_DEFAILED_LOGGING */
@@ -319,6 +324,12 @@ void NamedOutputPin::setHigh() {
 }
 
 void NamedOutputPin::setLow() {
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		efiPrintf("pin %s goes low", name);
+	}
+#endif // EFI_UNIT_TEST
+
 	// turn off the output
 	setValue(false);
 
@@ -328,6 +339,7 @@ void NamedOutputPin::setLow() {
 }
 
 InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
+	overlappingCounter = 1; // Force update in reset
 	reset();
 	injectorIndex = -1;
 }
@@ -402,6 +414,12 @@ void OutputPin::setValue(int logicValue) {
 //	ScopePerf perf(PE::OutputPinSetValue);
 #endif // ENABLE_PERF_TRACE
 
+#if EFI_UNIT_TEST
+	if (verboseMode) {
+		efiPrintf("pin goes %d", logicValue);
+	}
+#endif // EFI_UNIT_TEST
+
 	// Always store the current logical value of the pin (so it can be
 	// used internally even if not connected to a real hardware pin)
 	currentLogicValue = logicValue;
@@ -446,19 +464,19 @@ void OutputPin::setDefaultPinState(const pin_output_mode_e *outputMode) {
 	setValue(false); // initial state
 }
 
-void initOutputPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
+void initOutputPins() {
 #if EFI_GPIO_HARDWARE
 
 #if HAL_USE_SPI
-	enginePins.sdCsPin.initPin("SD CS", CONFIG(sdCardCsPin));
+	enginePins.sdCsPin.initPin("SD CS", engineConfiguration->sdCardCsPin);
 #endif /* HAL_USE_SPI */
 
 #if EFI_SHAFT_POSITION_INPUT
 	// todo: migrate remaining OutputPin to RegisteredOutputPin in order to get consistent dynamic pin init/deinit
-	enginePins.debugTriggerSync.initPin("debug: sync", CONFIG(debugTriggerSync));
+	enginePins.debugTriggerSync.initPin("debug: sync", engineConfiguration->debugTriggerSync);
 #endif // EFI_SHAFT_POSITION_INPUT
 
-	enginePins.o2heater.initPin("O2 heater", CONFIG(o2heaterPin));
+	enginePins.o2heater.initPin("O2 heater", engineConfiguration->o2heaterPin);
 
 #endif /* EFI_GPIO_HARDWARE */
 }
@@ -547,7 +565,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_
 
 			// if the pin was set to logical 1, then set an error and disable the pin so that things don't catch fire
 			if (logicalValue) {
-				firmwareError(OBD_PCM_Processor_Fault, "%s: startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
+				firmwareError(OBD_PCM_Processor_Fault, "HARDWARE VALIDATION FAILED %s: unexpected startup pin state %s actual value=%d logical value=%d mode=%s", msg, hwPortname(brainPin), actualValue, logicalValue, getPin_output_mode_e(*outputMode));
 				OutputPin::deInit();
 			}
 		}

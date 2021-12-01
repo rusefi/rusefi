@@ -1,0 +1,1902 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="SCHVerif.xsd">
+<Device>
+		<DeviceID>0x501</DeviceID>
+		<Vendor>STMicroelectronics</Vendor>
+		<Type>MPU</Type>
+		<CPU>Cortex-A7</CPU>
+		<Name>STM32MP13xx</Name>
+		<Series>STM32MP</Series>
+		<Description>ARM 32-bit Cortex-A7 based device, CPU clock up to 600MHz</Description>
+		<!-- Gonfigurations' List -->
+		<Configurations>
+			<!-- Bootloader Interface -->
+			<Interface name="Bootloader">
+				<Configuration number="0x0">
+					<ReadRegister address="0x0" mask="0x0" value="0x4"/>
+				</Configuration>
+			</Interface>
+		</Configurations>
+		<!-- Peripherals -->
+		<Peripherals>
+			<Peripheral>
+				<Name>Embedded SRAM</Name>
+				<Type>Storage</Type>
+				<Description/>
+				<ErasedValue>0xFF</ErasedValue>
+				<Access>RWE</Access>
+				<!-- dummy -->
+				<Configuration>
+					<Parameters address="0x10000000" name="SRAM" size="0x20000"/>
+					<Description/>
+					<Organization>Single</Organization>
+					<Bank>
+						<Field>
+							<Parameters address="0x10000000" name="SRAM" occurence="0x1" size="0x20000"/>
+						</Field>
+					</Bank>
+				</Configuration>
+			</Peripheral>
+			<Peripheral>
+				<Name>OTP Memory</Name>
+				<Type>Configuration</Type>
+				<Description/>
+				<Access>RW</Access>
+				<Bank>
+					<Parameters address="0x0" name="Bank 1" size="0x400"/>
+					<Category>
+						<Name>OTP</Name>
+						<Field>
+							<Parameters address="0x0" name="STRUCT VERSION" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>version</Name>
+									<Description>Structure version</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x4" name="OTP GLOBAL STATE" size="0x4"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Value</Name>
+									<Description>BSEC state</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x2</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x8" name="OTP0" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x10" name="OTP1" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x18" name="OTP2" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x20" name="OTP3" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x28" name="OTP4" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x30" name="OTP5" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x38" name="OTP6" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x40" name="OTP7" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x48" name="OTP8" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x50" name="OTP9" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x58" name="OTP10" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x60" name="OTP11" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x68" name="OTP12" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x70" name="OTP13" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x78" name="OTP14" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x80" name="OTP15" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x88" name="OTP16" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x90" name="OTP17" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x98" name="OTP18" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xA0" name="OTP19" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xA8" name="OTP20" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xB0" name="OTP21" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xB8" name="OTP22" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xC0" name="OTP23" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xC8" name="OTP24" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xD0" name="OTP25" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xD8" name="OTP26" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xE0" name="OTP27" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xE8" name="OTP28" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xF0" name="OTP29" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0xF8" name="OTP30" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x100" name="OTP31" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x108" name="OTP32" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x110" name="OTP33" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x118" name="OTP34" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x120" name="OTP35" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x128" name="OTP36" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x130" name="OTP37" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x138" name="OTP38" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x140" name="OTP39" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x148" name="OTP40" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x150" name="OTP41" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x158" name="OTP42" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x160" name="OTP43" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x168" name="OTP44" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x170" name="OTP45" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x178" name="OTP46" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x180" name="OTP47" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x188" name="OTP48" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x190" name="OTP49" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x198" name="OTP50" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1A0" name="OTP51" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1A8" name="OTP52" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1B0" name="OTP53" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1B8" name="OTP54" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1C0" name="OTP55" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1C8" name="OTP56" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1D0" name="OTP57" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1D8" name="OTP58" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1E0" name="OTP59" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1E8" name="OTP60" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1F0" name="OTP61" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x1F8" name="OTP62" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x200" name="OTP63" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x208" name="OTP64" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x210" name="OTP65" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x218" name="OTP66" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x220" name="OTP67" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x228" name="OTP68" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x230" name="OTP69" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x238" name="OTP70" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x240" name="OTP71" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x248" name="OTP72" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x250" name="OTP73" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x258" name="OTP74" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x260" name="OTP75" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x268" name="OTP76" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x270" name="OTP77" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x278" name="OTP78" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x280" name="OTP79" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x288" name="OTP80" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x290" name="OTP81" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x298" name="OTP82" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2A0" name="OTP83" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2A8" name="OTP84" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2B0" name="OTP85" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2B8" name="OTP86" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2C0" name="OTP87" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2C8" name="OTP88" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2D0" name="OTP89" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2D8" name="OTP90" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2E0" name="OTP91" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2E8" name="OTP92" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2F0" name="OTP93" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x2F8" name="OTP94" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+						<Field>
+							<Parameters address="0x300" name="OTP95" size="0x8"/>
+							<AssignedBits>
+								<Bit>
+									<Name>Data</Name>
+									<Description>Data</Description>
+									<BitOffset>0x0</BitOffset>
+									<BitWidth>0x20</BitWidth>
+									<Access>RW</Access>
+								</Bit>
+								<Bit>
+									<Name>Status</Name>
+									<Description>Status</Description>
+									<BitOffset>0x4</BitOffset> <!-- in Bytes to fix C++ code -->
+									<BitWidth>0x20</BitWidth>
+									<Access>R</Access>
+								</Bit>
+							</AssignedBits>
+						</Field>
+					</Category>
+				</Bank>
+			</Peripheral>
+		</Peripherals>
+	</Device>
+</Root>

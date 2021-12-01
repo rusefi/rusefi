@@ -11,10 +11,20 @@
 #define TAG "LUA "
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
-static char luaUserHeap[10000];
-static char luaSystemHeap[10000];
+
+#ifndef LUA_USER_HEAP
+#define LUA_USER_HEAP 1
+#endif // LUA_USER_HEAP
+
+#ifndef LUA_SYSTEM_HEAP
+#define LUA_SYSTEM_HEAP 1
+#endif // LUA_SYSTEM_HEAP
+
+static char luaUserHeap[LUA_USER_HEAP];
+static char luaSystemHeap[LUA_SYSTEM_HEAP];
 
 class Heap {
+public:
 	memory_heap_t m_heap;
 
 	size_t m_memoryUsed = 0;
@@ -74,13 +84,17 @@ public:
 	}
 };
 
-static Heap heaps[] = { luaUserHeap, luaSystemHeap };
+static Heap heaps[] = { luaUserHeap,
+#if LUA_SYSTEM_HEAP > 1
+luaSystemHeap
+#endif
+};
 
 template <int HeapIdx>
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 	static_assert(HeapIdx < efi::size(heaps));
 
-	if (CONFIG(debugMode) == DBG_LUA) {
+	if (engineConfiguration->debugMode == DBG_LUA) {
 		switch (HeapIdx) {
 			case 0: tsOutputChannels.debugIntField1 = heaps[HeapIdx].used(); break;
 			case 1: tsOutputChannels.debugIntField2 = heaps[HeapIdx].used(); break;
@@ -106,43 +120,6 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 }
 #endif // EFI_PROD_CODE
 
-class LuaHandle final {
-public:
-	LuaHandle() : LuaHandle(nullptr) { }
-	LuaHandle(lua_State* ptr) : m_ptr(ptr) { }
-
-	// Don't allow copying!
-	LuaHandle(const LuaHandle&) = delete;
-	LuaHandle& operator=(const LuaHandle&) = delete;
-
-	// Allow moving!
-	LuaHandle(LuaHandle&& rhs) {
-		m_ptr = rhs.m_ptr;
-		rhs.m_ptr = nullptr;
-	}
-
-	// Move assignment operator
-	LuaHandle& operator=(LuaHandle&& rhs) {
-		m_ptr = rhs.m_ptr;
-		rhs.m_ptr = nullptr;
-
-		return *this;
-	}
-
-	// Destruction cleans up lua state
-	~LuaHandle() {
-		if (m_ptr) {
-			efiPrintf("LUA: Tearing down instance...");
-			lua_close(m_ptr);
-		}
-	}
-
-	operator lua_State*() const { return m_ptr; }
-
-private:
-	lua_State* m_ptr;
-};
-
 static int luaTickPeriodMs;
 
 static int lua_setTickRate(lua_State* l) {
@@ -155,6 +132,19 @@ static int lua_setTickRate(lua_State* l) {
 	return 0;
 }
 
+static void loadLibraries(LuaHandle& ls) {
+	constexpr luaL_Reg libs[] = {
+		// TODO: do we even need the base lib?
+		//{ LUA_GNAME, luaopen_base },
+		{ LUA_MATHLIBNAME, luaopen_math },
+	};
+
+	for (size_t i = 0; i < efi::size(libs); i++) {
+		luaL_requiref(ls, libs[i].name, libs[i].func, 1);
+		lua_pop(ls, 1);
+	}
+}
+
 static LuaHandle setupLuaState(lua_Alloc alloc) {
 	LuaHandle ls = lua_newstate(alloc, NULL);
 
@@ -164,9 +154,8 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 		return nullptr;
 	}
 
-	// load libraries
-	luaopen_base(ls);
-	luaopen_math(ls);
+	// Load Lua's own libraries
+	loadLibraries(ls);
 
 	// Load rusEFI hooks
 	lua_register(ls, "setTickRate", lua_setTickRate);
@@ -194,6 +183,35 @@ static bool loadScript(LuaHandle& ls, const char* scriptStr) {
 	efiPrintf(TAG "script loaded successfully!");
 
 	return true;
+}
+
+static LuaHandle systemLua;
+
+const char* getSystemLuaScript();
+
+void initSystemLua() {
+#if LUA_SYSTEM_HEAP > 1
+	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
+
+	Timer startTimer;
+	startTimer.reset();
+
+	systemLua = setupLuaState(myAlloc<1>);
+
+	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
+
+	if (!loadScript(systemLua, getSystemLuaScript())) {
+		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
+		systemLua = nullptr;
+		return;
+	}
+
+	auto startTime = startTimer.getElapsedSeconds();
+
+#if !EFI_UNIT_TEST
+	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
+#endif
+#endif
 }
 
 #if !EFI_UNIT_TEST
@@ -289,13 +307,22 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	}
 
 	while (!needsReset && !chThdShouldTerminateX()) {
-		// First, check if there is a pending interactive command entered by the user
+#if EFI_CAN_SUPPORT
+		// First, process any pending can RX messages
+		doLuaCanRx(ls);
+#endif // EFI_CAN_SUPPORT
+
+		// Next, check if there is a pending interactive command entered by the user
 		doInteractive(ls);
 
 		invokeTick(ls);
 
 		chThdSleepMilliseconds(luaTickPeriodMs);
 	}
+
+#if EFI_CAN_SUPPORT
+	resetLuaCanRx();
+#endif // EFI_CAN_SUPPORT
 
 	// De-init pins, they will reinit next start of the script.
 	luaDeInitPins();
@@ -304,8 +331,13 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 }
 
 void LuaThread::ThreadTask() {
+	//initSystemLua();
+
 	while (!chThdShouldTerminateX()) {
 		bool wasOk = runOneLua(myAlloc<0>, config->luaScript);
+
+		// Reset any lua adjustments the script made
+		engine->engineState.luaAdjustments = {};
 
 		if (!wasOk) {
 			// Something went wrong executing the script, spin
@@ -317,34 +349,17 @@ void LuaThread::ThreadTask() {
 	}
 }
 
-static LuaThread luaThread;
-
-static LuaHandle systemLua;
-
-void initSystemLua() {
-	efiAssertVoid(OBD_PCM_Processor_Fault, !systemLua, "system lua already init");
-
-	Timer startTimer;
-	startTimer.reset();
-
-	systemLua = setupLuaState(myAlloc<1>);
-
-	efiAssertVoid(OBD_PCM_Processor_Fault, systemLua, "system lua init fail");
-
-	if (!loadScript(systemLua, "function x() end")) {
-		firmwareError(OBD_PCM_Processor_Fault, "system lua script load fail");
-		systemLua = nullptr;
-		return;
-	}
-
-	auto startTime = startTimer.getElapsedSeconds();
-	efiPrintf("System Lua loaded in %.2f ms using %d bytes", startTime * 1'000, heaps[1].used());
-}
+#if LUA_USER_HEAP > 1
+static LuaThread luaThread CCM_OPTIONAL;
+#endif
 
 void startLua() {
-	luaThread.Start();
+#if LUA_USER_HEAP > 1
+#if EFI_CAN_SUPPORT
+	initLuaCanRx();
+#endif // EFI_CAN_SUPPORT
 
-	initSystemLua();
+	luaThread.Start();
 
 	addConsoleActionS("lua", [](const char* str){
 		if (interactivePending) {
@@ -369,12 +384,13 @@ void startLua() {
 			efiPrintf("Lua memory heap %d: %d / %d bytes = %.1f%%", i, memoryUsed, heapSize, pct);
 		}
 	});
+#endif
 }
 
 #else // not EFI_UNIT_TEST
 
 void startLua() {
-	// todo
+	initSystemLua();
 }
 
 #include <stdexcept>
@@ -459,5 +475,48 @@ void testLuaExecString(const char* script) {
 }
 
 #endif // EFI_UNIT_TEST
+
+// This is technically non-compliant, but it's only used for lua float parsing.
+// It doesn't properly handle very small and very large numbers, and doesn't
+// parse numbers in the format 1.3e5 at all.
+extern "C" float strtof_rusefi(const char* str, char** endPtr) {
+	bool afterDecimalPoint = false;
+	float div = 1; // Divider to place digits after the decimal point
+
+	if (endPtr) {
+		*endPtr = const_cast<char*>(str);
+	}
+
+	float integerPart = 0;
+	float fractionalPart = 0;
+
+	while (*str != '\0') {
+		char c = *str;
+		int digitVal = c - '0';
+
+		if (c >= '0' && c <= '9') {
+			if (!afterDecimalPoint) {
+				// Integer part
+				integerPart = 10 * integerPart + digitVal;
+			} else {
+				// Fractional part
+				fractionalPart = 10 * fractionalPart + digitVal;
+				div *= 10;
+			}
+		} else if (c == '.') {
+			afterDecimalPoint = true;
+		} else {
+			break;
+		}
+
+		str++;
+
+		if (endPtr) {
+			*endPtr = const_cast<char*>(str);
+		}
+	}
+
+	return integerPart + fractionalPart / div;
+}
 
 #endif // EFI_LUA

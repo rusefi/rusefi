@@ -60,8 +60,6 @@
  */
 #define EFI_TUNER_STUDIO TRUE
 
-#define EFI_NO_CONFIG_WORKING_COPY TRUE
-
 /**
  * Bluetooth UART setup support.
  */
@@ -170,8 +168,6 @@
 #define EFI_VEHICLE_SPEED FALSE
 #endif
 
-#define EFI_FUEL_PUMP FALSE
-
 #ifndef EFI_ENGINE_EMULATOR
 #define EFI_ENGINE_EMULATOR FALSE
 #endif
@@ -270,8 +266,8 @@
  */
 #define EFI_USE_UART_DMA FALSE
 
-#define TS_PRIMARY_UART UARTD2
-#undef TS_SECONDARY_UART
+#define TS_PRIMARY_PORT UARTD2
+#undef TS_SECONDARY_PORT
 
 #define EFI_CONSOLE_TX_BRAIN_PIN GPIOA_10
 #define EFI_CONSOLE_RX_BRAIN_PIN GPIOA_11
@@ -362,7 +358,7 @@
 	if (__debugEnabled) { \
 		extern char __debugBuffer[80]; \
 		chsnprintf(__debugBuffer, sizeof(__debugBuffer), fmt, ##__VA_ARGS__); \
-		uart_lld_blocking_send(TS_PRIMARY_UART, strlen(__debugBuffer), (void *)__debugBuffer); \
+		uart_lld_blocking_send(TS_PRIMARY_PORT, strlen(__debugBuffer), (void *)__debugBuffer); \
 	} \
 }
 

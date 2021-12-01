@@ -37,17 +37,17 @@ static const int8_t default_aspire_timing_table[16][16] = {
 };
 #endif
 
-static void setDefaultAspireMaps(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setTimingLoadBin(1.2, 4.4 PASS_CONFIG_PARAMETER_SUFFIX);
-	setTimingRpmBin(800, 7000 PASS_CONFIG_PARAMETER_SUFFIX);
+static void setDefaultAspireMaps() {
+	setTimingLoadBin(1.2, 4.4);
+	setTimingRpmBin(800, 7000);
 
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTable(config->ignitionTable, default_aspire_timing_table);
 #endif
 }
 
-void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
-	setDefaultFrankensoConfiguration(PASS_CONFIG_PARAMETER_SIGNATURE);
+void setFordAspireEngineConfiguration() {
+	setDefaultFrankensoConfiguration();
 
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 750;
@@ -73,13 +73,13 @@ void setFordAspireEngineConfiguration(DECLARE_CONFIG_PARAMETER_SIGNATURE) {
 	engineConfiguration->globalTriggerAngleOffset = 175;
 	engineConfiguration->extraInjectionOffset = 54 + 360;
 
-	setDefaultAspireMaps(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setDefaultAspireMaps();
 	// set_cranking_rpm 550
 	engineConfiguration->cranking.rpm = 550;
 	// set cranking_timing_angle 37
 	engineConfiguration->crankingTimingAngle = -37;
 
-	setSingleCoilDwell(PASS_CONFIG_PARAMETER_SIGNATURE);
+	setSingleCoilDwell();
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

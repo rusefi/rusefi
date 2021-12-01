@@ -1,12 +1,9 @@
 package com.rusefi.output;
 
 import com.rusefi.*;
-import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 
 import java.io.IOException;
-
-import static com.rusefi.ConfigDefinition.EOL;
 
 /**
  * Configuration consumer which writes Signature header file
@@ -27,7 +24,7 @@ public class SignatureConsumer implements ConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
-        registry.writeDefinesToFile(destHeader);
+        ConfigDefinition.writeDefinesToFile(registry, destHeader);
     }
 
     @Override

@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "rusefi_true.h"
-
 #define EFI_ENABLE_ASSERTS TRUE
 
 #define EFI_EMULATE_POSITION_SENSORS TRUE
@@ -73,6 +71,8 @@
 
 #define EFI_MAP_AVERAGING TRUE
 
-#define EFI_FUEL_PUMP TRUE
-
 #define EFI_LUA TRUE
+
+#define EFI_HPFP TRUE
+
+#define EFI_MAIN_RELAY_CONTROL TRUE

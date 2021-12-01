@@ -12,37 +12,38 @@
  * https://rusefi.com/forum/viewtopic.php?f=2&t=1932
  */
 void initialize36_2_2_2(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
 	float wide = 30 * 2;
 	float narrow = 10 * 2;
 
-	s->setTriggerSynchronizationGap(0.6);
-	s->setSecondTriggerSynchronizationGap(0.9);
+	s->setTriggerSynchronizationGap(0.333f);
+	s->setSecondTriggerSynchronizationGap(1.0f);
+	s->setThirdTriggerSynchronizationGap(3.0f);
 
 	float base = 0;
 
 	for (int i = 0; i < 12; i++) {
-		s->addEvent720(base + narrow / 2, T_PRIMARY, TV_RISE);
-		s->addEvent720(base + narrow, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + narrow / 2, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + narrow, T_PRIMARY, TV_RISE);
 		base += narrow;
 	}
 
-	s->addEvent720(base + wide / 2, T_PRIMARY, TV_RISE);
-	s->addEvent720(base + wide, T_PRIMARY, TV_FALL);
+	s->addEvent720(base + wide / 2, T_PRIMARY, TV_FALL);
+	s->addEvent720(base + wide, T_PRIMARY, TV_RISE);
 	base += wide;
 
 	for (int i = 0; i < 15; i++) {
-		s->addEvent720(base + narrow / 2, T_PRIMARY, TV_RISE);
-		s->addEvent720(base + narrow, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + narrow / 2, T_PRIMARY, TV_FALL);
+		s->addEvent720(base + narrow, T_PRIMARY, TV_RISE);
 		base += narrow;
 	}
 
-	s->addEvent720(720 - wide - wide / 2, T_PRIMARY, TV_RISE);
-	s->addEvent720(720 - wide, T_PRIMARY, TV_FALL);
+	s->addEvent720(720 - wide - wide / 2, T_PRIMARY, TV_FALL);
+	s->addEvent720(720 - wide, T_PRIMARY, TV_RISE);
 
-	s->addEvent720(720 - wide / 2, T_PRIMARY, TV_RISE);
-	s->addEvent720(720, T_PRIMARY, TV_FALL);
+	s->addEvent720(720 - wide / 2, T_PRIMARY, TV_FALL);
+	s->addEvent720(720, T_PRIMARY, TV_RISE);
 	s->useOnlyPrimaryForSync = true;
 }
 

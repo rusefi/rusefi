@@ -26,7 +26,7 @@ SerialRead::SerialRead()
 
 void SerialRead::ThreadTask() {
 	while (true) {
-		if (CONFIG(enableInnovateLC2)) {
+		if (engineConfiguration->enableInnovateLC2) {
 			len = innovate_msg_len;
 		}
 

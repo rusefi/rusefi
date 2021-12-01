@@ -5,4 +5,4 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-bool acceptCanRx(int sid DECLARE_ENGINE_PARAMETER_SUFFIX);
+bool acceptCanRx(int sid);

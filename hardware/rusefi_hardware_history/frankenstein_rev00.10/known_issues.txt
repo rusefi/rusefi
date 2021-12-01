@@ -1,2 +1,0 @@
-1) hi-side driver: the part numbr is for SOIC package but the board has MSOP package. Part number should be TC4427AEUA
-2) diode part number is not exactly right: 497-2521-1-ND is a single diode, VCC side stays unprotected

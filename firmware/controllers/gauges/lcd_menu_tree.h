@@ -31,7 +31,6 @@ typedef enum {
 	LL_MAF_KG_HR,
 	LL_EGO,
 	LL_BARO,
-	LL_KNOCK,
 
 	LL_FUEL_BASE,
 	LL_FUEL_TOTAL,

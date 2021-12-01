@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#include "mock/mock_sensor.h"
-
 class SensorMocking : public ::testing::Test {
 protected:
 	MockSensor realSensor;

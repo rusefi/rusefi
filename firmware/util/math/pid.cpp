@@ -14,7 +14,7 @@
 #include "math.h"
 
 Pid::Pid() {
-	initPidClass(NULL);
+	initPidClass(nullptr);
 }
 
 Pid::Pid(pid_s *parameters) {
@@ -60,6 +60,11 @@ float Pid::getUnclampedOutput(float target, float input, float dTime) {
 	dTerm = parameters->dFactor / dTime * (error - previousError);
 
 	previousError = error;
+
+	if (dTime <=0) {
+		warning(CUSTOM_PID_DTERM, "PID: unexpected dTime");
+		return pTerm + getOffset();
+	}
 
 	return pTerm + iTerm + dTerm + getOffset();
 }
@@ -128,6 +133,13 @@ void Pid::setErrorAmplification(float coef) {
 #if EFI_TUNER_STUDIO
 void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) const {
 	postState(tsOutputChannels, 1);
+}
+
+void Pid::postState(pid_status_s *pidStatus) const {
+	pidStatus->output = output;
+	pidStatus->error = getPrevError();
+	pidStatus->iTerm = iTerm;
+	pidStatus->dTerm = dTerm;
 }
 
 /**

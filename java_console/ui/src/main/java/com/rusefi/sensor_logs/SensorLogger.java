@@ -25,6 +25,7 @@ public class SensorLogger {
             Sensor.IAT,
             Sensor.MAF,
             Sensor.MAP,
+            Sensor.instantMAP,
             Sensor.Lambda,
 
             Sensor.PPS,
@@ -59,9 +60,25 @@ public class SensorLogger {
             Sensor.runningFuel,
             Sensor.injectorLagMs,
 
-            Sensor.vvtPosition,
+            Sensor.vvtPositionB1I,
+            Sensor.vvtPositionB1E,
+            Sensor.vvtPositionB2I,
+            Sensor.vvtPositionB2E,
+
+            Sensor.vvtTargetB1I,
+            Sensor.vvtTargetB1E,
+            Sensor.vvtTargetB2I,
+            Sensor.vvtTargetB2E,
+
             Sensor.VSS,
             Sensor.SPEED2RPM,
+            Sensor.turboSpeed,
+
+            Sensor.accelerationX,
+            Sensor.accelerationY,
+            Sensor.accelerationZ,
+            Sensor.accelerationRoll,
+            Sensor.accelerationYaw,
 
             Sensor.debugFloatField1,
             Sensor.debugFloatField2,
@@ -75,6 +92,14 @@ public class SensorLogger {
             Sensor.debugIntField3,
             Sensor.debugIntField4,
             Sensor.debugIntField5,
+
+            Sensor.knockLevel,
+            Sensor.wastegatePosition,
+            Sensor.idlePositionSensor,
+            Sensor.airFuelRatio,
+            Sensor.airFuelRatio2,
+            Sensor.lowFuelPressure,
+            Sensor.highFuelPressure,
 
             Sensor.totalTriggerErrorCounter,
             Sensor.lastErrorCode,

@@ -10,7 +10,7 @@
 #include "interpolation.h"
 #include "efi_ratio.h"
 
-template <class TBin, class TValue, int TSize, typename TInputScale = efi::ratio<1>, typename TOutputScale = efi::ratio<1>>
+template <class TBin, class TValue, int TSize, typename TOutputScale = efi::ratio<1>>
 class TableFunc final : public SensorConverter {
 public:
 	TableFunc(TBin (&bins)[TSize], TValue (&values)[TSize])
@@ -20,9 +20,6 @@ public:
 	}
 
 	SensorResult convert(float inputValue) const override {
-		// Multiply by the reciprocal instead of dividing
-		inputValue = inputValue * TInputScale::recip::asFloat();
-
 		return interpolate2d(inputValue, m_bins, m_values) * TOutputScale::asFloat();
 	}
 

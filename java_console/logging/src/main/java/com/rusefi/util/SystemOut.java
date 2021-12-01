@@ -1,5 +1,6 @@
 package com.rusefi.util;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +28,9 @@ public class SystemOut {
             return;
         String fileName = System.getProperty("SystemOut.name", "rusefi_tool") + LOG;
         System.out.println("Opening " + fileName);
+        File parentFile = new File(fileName).getParentFile();
+        if (parentFile != null)
+            parentFile.mkdirs();
         logFile = new PrintWriter(new FileWriter(fileName, true));
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             @Override

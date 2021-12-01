@@ -155,11 +155,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->malfunctionIndicatorPin = TLE6240_PIN_7;
 	engineConfiguration->malfunctionIndicatorPinMode = OM_DEFAULT;
 
-	/* Starter input signal connected through MC33972 - SG11 */
-	//setFsio(0, (GPIOB_1), STARTER_RELAY_LOGIC PASS_CONFIG_PARAMETER_SUFFIX);
-
 	/* not used */
-	engineConfiguration->externalKnockSenseAdc = EFI_ADC_NONE;
 	engineConfiguration->displayMode = DM_NONE;
 	engineConfiguration->HD44780_rs = GPIO_UNASSIGNED;
 	engineConfiguration->HD44780_e = GPIO_UNASSIGNED;
@@ -210,9 +206,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->hip9011PrescalerAndSDO = (0x6 << 1); //HIP_16MHZ_PRESCALER;
 	engineConfiguration->hip9011Gain = 1.0;
 	engineConfiguration->knockBandCustom = 0.0;
-	engineConfiguration->knockVThreshold = 4.0;
 	engineConfiguration->cylinderBore = 96.9;
-	engineConfiguration->maxKnockSubDeg = 20.0;
 
 	/* Cylinder to knock bank mapping */
 	engineConfiguration->knockBankCyl1 = 0;
@@ -260,9 +254,9 @@ void setBoardDefaultConfiguration(void) {
 	//engineConfiguration->isEngineChartEnabled = false;
 
 	if (engineConfiguration->fuelAlgorithm == LM_REAL_MAF)
-		setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+		setAlgorithm(LM_SPEED_DENSITY);
 	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)
-		setAlgorithm(LM_ALPHA_N PASS_CONFIG_PARAMETER_SUFFIX);
+		setAlgorithm(LM_ALPHA_N);
 }
 
 /* Schematic RefDef DA3 */
@@ -337,7 +331,7 @@ static const struct mc33810_config mc33810_even = {
 	.en = {.port = nullptr, .pad = 0}
 };
 
-static void board_init_ext_gpios(void)
+static void board_init_ext_gpios()
 {
 	int ret;
 

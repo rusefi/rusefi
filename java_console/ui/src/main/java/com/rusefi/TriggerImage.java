@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.enums.trigger_type_e;
 import com.rusefi.trigger.WaveState;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.ui.util.FrameHelper;
@@ -41,7 +42,7 @@ public class TriggerImage {
      */
     public static int EXTRA_COUNT = 1;
     private static int sleepAtEnd;
-    private static int onlyOneTrigger = -1;
+    private static trigger_type_e onlyOneTrigger = null;
 
     /**
      * todo: https://github.com/rusefi/rusefi/issues/2077
@@ -49,51 +50,51 @@ public class TriggerImage {
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (triggerName.id) {
-            case Fields.TT_TT_FORD_ASPIRE:
+            case TT_FORD_ASPIRE:
                 return "Ford Aspire";
-            case Fields.TT_TT_VVT_BOSCH_QUICK_START:
+            case TT_VVT_BOSCH_QUICK_START:
                 return "Bosch Quick Start";
-            case Fields.TT_TT_MAZDA_MIATA_NA:
+            case TT_MAZDA_MIATA_NA:
                 return "Miata NA";
-            case Fields.TT_TT_MAZDA_MIATA_NB1:
+            case TT_MAZDA_MIATA_NB1:
                 return "Miata NB";
-            case Fields.TT_TT_SUBARU_SVX:
+            case TT_SUBARU_SVX:
                 return "Subaru SVX";
-            case Fields.TT_TT_HONDA_K_12_1:
+            case TT_HONDA_K_12_1:
                 return "Honda K 1/12";
-            case Fields.TT_TT_HONDA_1_24:
+            case TT_HONDA_1_24:
                 return "Honda 1+24";
-            case Fields.TT_TT_SUBARU_7_6:
+            case TT_SUBARU_7_6:
                 return "Subaru 7/6";
-            case Fields.TT_TT_GM_LS_24:
+            case TT_GM_LS_24:
                 return "GM 24x";
-            case Fields.TT_TT_SKODA_FAVORIT:
+            case TT_SKODA_FAVORIT:
                 return "Skoda Favorit";
-            case Fields.TT_TT_GM_7X:
+            case TT_GM_7X:
                 return "GM 7x";
-            case Fields.TT_TT_CHRYSLER_NGC_36_2_2:
+            case TT_CHRYSLER_NGC_36_2_2:
                 return "Chrysler NGC 36/2/2";
-            case Fields.TT_TT_ONE:
+            case TT_ONE:
                 return "Single Tooth";
-            case Fields.TT_TT_2JZ_1_12:
+            case TT_2JZ_1_12:
                 return "2JZ 1/12";
-            case Fields.TT_TT_JEEP_4_CYL:
+            case TT_JEEP_4_CYL:
                 return "Jeep 4 cylinder";
-            case Fields.TT_TT_JEEP_18_2_2_2:
+            case TT_JEEP_18_2_2_2:
                 return "18/2/2/2";
-            case Fields.TT_TT_RENIX_44_2_2:
+            case TT_RENIX_44_2_2:
                 return "44/2/2";
-            case Fields.TT_TT_RENIX_66_2_2_2:
+            case TT_RENIX_66_2_2_2:
                 return "66/2/2/2";
-            case Fields.TT_TT_TOOTHED_WHEEL_36_1:
+            case TT_TOOTHED_WHEEL_36_1:
                 return "36/1";
-            case Fields.TT_TT_TOOTHED_WHEEL_36_2:
+            case TT_TOOTHED_WHEEL_36_2:
                 return "36/2";
-            case Fields.TT_TT_TRI_TACH:
+            case TT_TRI_TACH:
                 return "TriTach";
-            case Fields.TT_TT_TOOTHED_WHEEL_60_2:
+            case TT_TOOTHED_WHEEL_60_2:
                 return "60/2";
-            case Fields.TT_TT_GM_60_2_2_2:
+            case TT_GM_60_2_2_2:
                 return "GM 60/2/2/2";
         }
         return triggerName.triggerName;
@@ -108,7 +109,7 @@ public class TriggerImage {
         }
 
         if (args.length > 1)
-            onlyOneTrigger = Integer.parseInt(args[1]);
+            onlyOneTrigger = TriggerWheelInfo.findByOrdinal(Integer.parseInt(args[1]));
 
         if (args.length > 2)
             sleepAtEnd = Integer.parseInt(args[2]);
@@ -164,7 +165,7 @@ public class TriggerImage {
 
     private static void readTrigger(BufferedReader reader, String line, TriggerPanel triggerPanel, JPanel topPanel, JPanel content) throws IOException {
         TriggerWheelInfo triggerWheelInfo = TriggerWheelInfo.readTriggerWheelInfo(line, reader);
-        if (onlyOneTrigger != -1 && triggerWheelInfo.id != onlyOneTrigger)
+        if (onlyOneTrigger != null && triggerWheelInfo.id != onlyOneTrigger)
             return;
 
         topPanel.removeAll();

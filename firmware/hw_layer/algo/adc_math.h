@@ -21,7 +21,7 @@
 
 #define voltsToAdc(volts) ((volts) * (ADC_MAX_VALUE / (engineConfiguration->adcVcc)))
 
-float getVoltage(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getVoltage(const char *msg, adc_channel_e channel);
 
-float getVoltageDivided(const char *msg, adc_channel_e channel DECLARE_ENGINE_PARAMETER_SUFFIX);
+float getVoltageDivided(const char *msg, adc_channel_e channel);
 

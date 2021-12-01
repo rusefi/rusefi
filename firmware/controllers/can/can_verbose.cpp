@@ -36,7 +36,7 @@ static void populateFrame(Status& msg) {
 	msg.warningCounter = engine->engineState.warnings.warningCounter;
 	msg.lastErrorCode = engine->engineState.warnings.lastErrorCode;
 
-	msg.revLimit = GET_RPM() > CONFIG(rpmHardLimit);
+	msg.revLimit = GET_RPM() > engineConfiguration->rpmHardLimit;
 	msg.mainRelay = enginePins.mainRelay.getLogicValue();
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
@@ -62,7 +62,7 @@ static void populateFrame(Speeds& msg) {
 	msg.injDuty = getInjectorDutyCycle(rpm);
 	msg.coilDuty = getCoilDutyCycle(rpm);
 
-	msg.vssKph = Sensor::get(SensorType::VehicleSpeed).value_or(0);
+	msg.vssKph = Sensor::getOrZero(SensorType::VehicleSpeed);
 }
 
 struct PedalAndTps {
@@ -90,16 +90,16 @@ struct Sensors1 {
 };
 
 static void populateFrame(Sensors1& msg) {
-	msg.map = Sensor::get(SensorType::Map).value_or(0);
+	msg.map = Sensor::getOrZero(SensorType::Map);
 
-	msg.clt = Sensor::get(SensorType::Clt).value_or(0) + PACK_ADD_TEMPERATURE;
-	msg.iat = Sensor::get(SensorType::Iat).value_or(0) + PACK_ADD_TEMPERATURE;
+	msg.clt = Sensor::getOrZero(SensorType::Clt) + PACK_ADD_TEMPERATURE;
+	msg.iat = Sensor::getOrZero(SensorType::Iat) + PACK_ADD_TEMPERATURE;
 
-	msg.aux1 = Sensor::get(SensorType::AuxTemp1).value_or(0) + PACK_ADD_TEMPERATURE;
-	msg.aux2 = Sensor::get(SensorType::AuxTemp2).value_or(0) + PACK_ADD_TEMPERATURE;
+	msg.aux1 = Sensor::getOrZero(SensorType::AuxTemp1) + PACK_ADD_TEMPERATURE;
+	msg.aux2 = Sensor::getOrZero(SensorType::AuxTemp2) + PACK_ADD_TEMPERATURE;
 
 	msg.mcuTemp = getMCUInternalTemperature();
-	msg.fuelLevel = Sensor::get(SensorType::FuelLevel).value_or(0);
+	msg.fuelLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
 
 struct Sensors2 {
@@ -110,10 +110,10 @@ struct Sensors2 {
 };
 
 static void populateFrame(Sensors2& msg) {
-	msg.afr = Sensor::get(SensorType::Lambda1).value_or(0) * STOICH_RATIO;
+	msg.afr = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	msg.oilPressure = Sensor::get(SensorType::OilPressure).value_or(-1);
 	msg.vvtPos = engine->triggerCentral.getVVTPosition(0, 0);
-	msg.vbatt = Sensor::get(SensorType::BatteryVoltage).value_or(0);
+	msg.vbatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 }
 
 struct Fueling {
@@ -140,20 +140,21 @@ static void populateFrame(Fueling2& msg) {
 	msg.fuelFlowRate = engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
 
 	for (size_t i = 0; i < 2; i++) {
-		msg.fuelTrim[i] = 100.0f * (ENGINE(stftCorrection)[i] - 1.0f);
+		msg.fuelTrim[i] = 100.0f * (engine->stftCorrection[i] - 1.0f);
 	}
 }
 
 void sendCanVerbose() {
-	auto base = CONFIG(verboseCanBaseAddress);
+	auto base = engineConfiguration->verboseCanBaseAddress;
+	auto isExt = engineConfiguration->rusefiVerbose29b;
 
-	transmitStruct<Status>	  (base + 0);
-	transmitStruct<Speeds>	  (base + 1);
-	transmitStruct<PedalAndTps> (base + CAN_PEDAL_TPS_OFFSET);
-	transmitStruct<Sensors1>	(base + CAN_SENSOR_1_OFFSET);
-	transmitStruct<Sensors2>	(base + 4);
-	transmitStruct<Fueling>	 (base + 5);
-	transmitStruct<Fueling2>	(base + 6);
+	transmitStruct<Status>	  (base + 0, isExt);
+	transmitStruct<Speeds>	  (base + 1, isExt);
+	transmitStruct<PedalAndTps> (base + CAN_PEDAL_TPS_OFFSET, isExt);
+	transmitStruct<Sensors1>	(base + CAN_SENSOR_1_OFFSET, isExt);
+	transmitStruct<Sensors2>	(base + 4, isExt);
+	transmitStruct<Fueling>	 (base + 5, isExt);
+	transmitStruct<Fueling2>	(base + 6, isExt);
 }
 
 #endif // EFI_CAN_SUPPORT
