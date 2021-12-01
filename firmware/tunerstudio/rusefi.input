@@ -907,7 +907,6 @@ gaugeCategory = Acceleration Enrichment
    wallFuelAmountGauge = wallFuelAmount, "AE: wall amount", "mg",     0,   100,     0,    0,    100,  100,   0,   0
    wallFuelCorrectionGauge = wallFuelCorrection, "AE: wall correction extra", "mg",     -20,   20,     -100,    -100,    100,  100,   1,   1
 
-
 gaugeCategory = Fueling
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
    tChargeGauge          = tCharge,     @@GAUGE_NAME_FUEL_CHARGE_TEMP@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
