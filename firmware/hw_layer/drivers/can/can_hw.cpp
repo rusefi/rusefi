@@ -234,13 +234,15 @@ void startCanPins() {
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
-	isCanEnabled = 
+	isCanEnabled = false;
+
+	bool isCanConfigGood =
 		(isBrainPinValid(engineConfiguration->canTxPin)) && // both pins are set...
 		(isBrainPinValid(engineConfiguration->canRxPin)) &&
 		(engineConfiguration->canWriteEnabled || engineConfiguration->canReadEnabled) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...
-	if (!isCanEnabled) {
+	if (!isCanConfigGood) {
 		return;
 	}
 
@@ -284,6 +286,12 @@ void initCan(void) {
 	if (engineConfiguration->canReadEnabled) {
 		canRead.Start();
 	}
+
+	isCanEnabled = true;
+}
+
+bool getIsCanEnabled(void) {
+	return isCanEnabled;
 }
 
 #endif /* EFI_CAN_SUPPORT */

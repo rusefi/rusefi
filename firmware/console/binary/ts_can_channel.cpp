@@ -1,41 +1,57 @@
-// TODO: @andreika-git finish this implementation
+/**
+ * @file	This file implements CAN-to-TS bridge.
+ *
+ * @date Apr 24, 2021
+ * @author andreika <prometheus.pcb@gmail.com>
+ * @author Andrey Belomutskiy, (c) 2012-2021
+ */
 
+#include "pch.h"
+#include "tunerstudio.h"
 #include "tunerstudio_io.h"
 
-#ifdef TS_CAN_DEVICE
+#ifdef EFI_CAN_SERIAL
 #include "serial_can.h"
+#include "can_hw.h"
+
+#if !EFI_CAN_SUPPORT
+#error "EFI_CAN_SERIAL requires EFI_CAN_SUPPORT"
+#endif
+
 
 class CanTsChannel : public TsChannelBase {
+public:
 	void start();
 
 	// TsChannelBase implementation
 	void write(const uint8_t* buffer, size_t size) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 	void flush() override;
-	bool isReady() override;
+	bool isReady() const override;
 	void stop() override;
 
 	// Special override for writeCrcPacket for small packets
 	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) override;
 };
 
-static CANConfig tsCanConfig = { CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP, CAN_BTR_500 };
 
 void CanTsChannel::start() {
-	efiSetPadMode("ts can rx", GPIOG_13/*engineConfiguration->canRxPin*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_RX2_0
-	efiSetPadMode("ts can tx", GPIOG_14/*engineConfiguration->canTxPin*/, PAL_MODE_ALTERNATE(TS_CAN_AF)); // CAN2_TX2_0
+	if (!getIsCanEnabled()) {
+		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN not enabled");
+		return;
+	}
 
-	canStart(&TS_CAN_DEVICE, &tsCanConfig);
-	canInit(&TS_CAN_DEVICE);
+	if (!CONFIG(canReadEnabled) || !CONFIG(canWriteEnabled)) {
+		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN read or write not enabled");
+	}
 }
 
 void CanTsChannel::stop() {
-	canStop(&TS_CAN_DEVICE);
 }
 
 void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
 #ifdef TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME
-	// a special case for short packets: we can sent them in 1 frame, without CRC & size,
+	// a special case for short packets: we can send them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
 	if ((size + 1) <= 7) {
 		write(&responseCode, 1);      // header without size
@@ -45,28 +61,48 @@ void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size
 		flush();
 		return;
 	}
-#endif /* TS_CAN_DEVICE */
+#endif /* TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME */
 
 	// Packet too large, use default implementation
 	TsChannelBase::writeCrcPacket(responseCode, buf, size);
 }
 
 void CanTsChannel::write(const uint8_t* buffer, size_t size) {
-	canAddToTxStreamTimeout(&TS_CAN_DEVICE, &size, buffer, BINARY_IO_TIMEOUT);
+	canStreamAddToTxTimeout(&size, buffer, BINARY_IO_TIMEOUT);
 }
 
 size_t CanTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
-	canStreamReceiveTimeout(&TS_CAN_DEVICE, &size, buffer, timeout);
+	canStreamReceiveTimeout(&size, buffer, timeout);
+	//!!!!!!!!!!!!!
+	efiPrintf("--RT: %d %02x", size, (size > 0 ? buffer[0] : 0));
 	return size;
 }
 
 void CanTsChannel::flush() {
-	canFlushTxStream(&TS_CAN_DEVICE);
+	canStreamFlushTx(BINARY_IO_TIMEOUT);
 }
 
-bool CanTsChannel::isReady() {
+bool CanTsChannel::isReady() const {
 	// this channel is always ready
 	return true;
 }
 
-#endif // def TS_CAN_DEVICE
+static CanTsChannel canChannel;
+
+struct CanTsThread : public TunerstudioThread {
+	CanTsThread() : TunerstudioThread("CAN TS Channel") { }
+
+	TsChannelBase* setupChannel() override {
+		canChannel.start();
+		return &canChannel;
+	}
+};
+
+static CanTsThread canTsThread;
+
+void startCanConsole() {
+	canTsThread.Start();
+	canStreamInit();
+}
+
+#endif // def EFI_CAN_SERIAL
