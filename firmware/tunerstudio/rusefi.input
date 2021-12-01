@@ -83,7 +83,6 @@ enable2ndByteCanID = false
    ;  name           		= array,  type, offset,  shape, units,     scale, translate,    lo,      hi, digits
    ;  name       			= scalar, type, offset,         units,     scale, translate,    lo,      hi, digits
 
-; see PAGE_0_SIZE in C source code    
 ; CONFIG_DEFINITION_START
 
 ; this section will be generated automatically by ConfigDefinition.jar based on rusefi_config.txt
