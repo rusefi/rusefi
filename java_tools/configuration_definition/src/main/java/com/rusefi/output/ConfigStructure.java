@@ -24,7 +24,6 @@ public class ConfigStructure {
     public final String name;
     public final String comment;
     public final boolean withPrefix;
-
     /**
      * We have two different collections because if 'array iterate' feature which is handled differently
      * in C and TS
