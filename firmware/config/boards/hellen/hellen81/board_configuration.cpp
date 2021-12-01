@@ -173,6 +173,17 @@ void setBoardDefaultConfiguration(void) {
  * @todo    Add your board-specific code, if any.
  */
 void setSdCardConfigurationOverrides(void) {
+// Hellen81a uses SPI2 for SD-card
+#if 1
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
+
+	engineConfiguration->spi2mosiPin = GPIOB_15;
+	engineConfiguration->spi2misoPin = GPIOB_14;
+	engineConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->sdCardCsPin = GPIOB_12;
+
+	CONFIG(is_enabled_spi_2) = true;
+#else
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
 	engineConfiguration->spi3mosiPin = GPIOC_12;
@@ -180,9 +191,6 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi3sckPin = GPIOC_10;
 	engineConfiguration->sdCardCsPin = GPIOA_15;
 
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
-	engineConfiguration->is_enabled_spi_3 = true;
+	CONFIG(is_enabled_spi_3) = true;
+#endif
 }
