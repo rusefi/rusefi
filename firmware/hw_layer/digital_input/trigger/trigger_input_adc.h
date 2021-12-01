@@ -29,10 +29,15 @@ public:
 	triggerAdcSample_t adcMinThreshold;
 	triggerAdcSample_t adcMaxThreshold;
 
+	float triggerInputDividerCoefficient;
+
 	float triggerAdcITermCoef = 1600.0f;
 	float triggerAdcITermMin = 3.125e-8f;	// corresponds to rpm=25
 
 	int transitionCooldown = 5;
+
+	int analogToDigitalTransitionCnt;
+	int digitalToAnalogTransitionCnt;
 
 	triggerAdcMode_t curAdcMode = TRIGGER_ADC_NONE;
 	float adcThreshold = adcDefaultThreshold;
@@ -57,4 +62,6 @@ public:
 	int minDeltaThresholdCntPos = 0, minDeltaThresholdCntNeg = 0;
 	int integralSum = 0;
 	int transitionCooldownCnt = 0;
+
+	int modeSwitchCnt = 0;
 };
