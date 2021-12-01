@@ -243,6 +243,11 @@ void runRusEfiWithConfig() {
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
 
+#if EFI_CAN_SERIAL
+	// needs to be called after initCan() inside initHardware()
+	startCanConsole();
+#endif /* EFI_CAN_SERIAL */
+
 #if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
 	// to be executed at the place of assembly
