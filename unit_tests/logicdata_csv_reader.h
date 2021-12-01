@@ -13,11 +13,13 @@ public:
 		, m_timestampOffset(timestampOffset)
 	{
 	}
+	~CsvReader();
 
 	void open(const char *fileName, const int* columnIndeces);
 	bool haveMore();
 	void processLine(EngineTestHelper *eth);
 	void readLine(EngineTestHelper *eth);
+	double readTimestampAndValues(double *v);
 
 	int lineIndex() const {
 		return m_lineIndex;
@@ -28,7 +30,7 @@ private:
 	const size_t m_vvtCount;
 	const double m_timestampOffset;
 
-	FILE *fp;
+	FILE *fp = nullptr;
 	char buffer[255];
 
 	bool currentState[2];
