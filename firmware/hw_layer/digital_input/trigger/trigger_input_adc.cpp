@@ -70,7 +70,7 @@ void setTriggerAdcMode(triggerAdcMode_t adcMode) {
 	trigAdcState.curAdcMode = adcMode;
 	trigAdcState.modeSwitchCnt++;
 
-	palSetPadMode(triggerInputPort, triggerInputPin, 
+	palSetPadMode(triggerInputPort, triggerInputPin,
 		(adcMode == TRIGGER_ADC_ADC) ? PAL_MODE_INPUT_ANALOG : PAL_MODE_EXTINT);
 }
 
@@ -396,7 +396,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 			return;
 		}
 	} else {
-		// we don't see "big teeth" anymore 
+		// we don't see "big teeth" anymore
 		switchingTeethCnt = 0;
 	}
 	
