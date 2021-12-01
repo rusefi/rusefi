@@ -25,4 +25,4 @@
 #define show_Proteus_presets true
 #define ts_show_f7_presets true
 
-#define LUA_SCRIPT_SIZE 6600
+#define LUA_SCRIPT_SIZE 4000

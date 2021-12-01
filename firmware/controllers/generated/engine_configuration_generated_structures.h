@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 01 01:59:12 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 01 04:22:06 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -514,10 +514,10 @@
 #define CLT_TIMING_CURVE_SIZE 8
 #define cltCrankingCorr_offset 6512
 #define cltCrankingCorrBins_offset 6480
-#define cltFuelCorr_offset 13336
-#define cltFuelCorrBins_offset 13272
-#define cltIdleCorr_offset 13720
-#define cltIdleCorrBins_offset 13656
+#define cltFuelCorr_offset 10736
+#define cltFuelCorrBins_offset 10672
+#define cltIdleCorr_offset 11120
+#define cltIdleCorrBins_offset 11056
 #define cltIdleRpm_offset 1960
 #define cltIdleRpmBins_offset 1896
 #define cltRevLimitRpm_offset 3332
@@ -605,10 +605,10 @@
 #define cranking_rpm_offset 92
 #define crankingAdvance_offset 3124
 #define crankingAdvanceBins_offset 3108
-#define crankingCycleBins_offset 13624
-#define crankingCycleCoef_offset 13592
-#define crankingFuelBins_offset 13560
-#define crankingFuelCoef_offset 13528
+#define crankingCycleBins_offset 11024
+#define crankingCycleCoef_offset 10992
+#define crankingFuelBins_offset 10960
+#define crankingFuelCoef_offset 10928
 #define crankingIACposition_offset 2228
 #define crankingInjectionMode_offset 424
 #define crankingTimingAngle_offset 436
@@ -1252,8 +1252,8 @@
 #define iat_tempC_1_offset 284
 #define iat_tempC_2_offset 288
 #define iat_tempC_3_offset 292
-#define iatFuelCorr_offset 13464
-#define iatFuelCorrBins_offset 13400
+#define iatFuelCorr_offset 10864
+#define iatFuelCorrBins_offset 10800
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define idle_antiwindupFreq_offset 696
 #define idle_derivativeFilterLoss_offset 516
@@ -1327,10 +1327,10 @@
 #define ignition_mode_e_IM_TWO_COILS 3
 #define ignition_mode_e_IM_WASTED_SPARK 2
 #define ignitionDwellForCrankingMs_offset 100
-#define ignitionIatCorrLoadBins_offset 16856
-#define ignitionIatCorrRpmBins_offset 16920
-#define ignitionIatCorrTable_offset 15832
-#define ignitionLoadBins_offset 20312
+#define ignitionIatCorrLoadBins_offset 14256
+#define ignitionIatCorrRpmBins_offset 14320
+#define ignitionIatCorrTable_offset 13232
+#define ignitionLoadBins_offset 17712
 #define ignitionMode_offset 440
 #define ignitionPinMode_offset 649
 #define ignitionPins10_offset 645
@@ -1345,8 +1345,8 @@
 #define ignitionPins7_offset 642
 #define ignitionPins8_offset 643
 #define ignitionPins9_offset 644
-#define ignitionRpmBins_offset 20376
-#define ignitionTable_offset 19288
+#define ignitionRpmBins_offset 17776
+#define ignitionTable_offset 16688
 #define ignOverrideMode_offset 2128
 #define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_MM5_10", "IMU_TYPE_3", "IMU_TYPE_4"
 #define imu_type_e_IMU_MM5_10 2
@@ -1366,7 +1366,7 @@
 #define injection_mode_e_IM_SIMULTANEOUS 0
 #define injection_mode_e_IM_SINGLE_POINT 3
 #define injectionMode_offset 428
-#define injectionPhase_offset 16984
+#define injectionPhase_offset 14384
 #define injectionPinMode_offset 648
 #define injectionPins10_offset 633
 #define injectionPins11_offset 634
@@ -1406,8 +1406,8 @@
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define injectorNonlinearMode_offset 2510
 #define injectorPressureType_offset 2129
-#define injPhaseLoadBins_offset 18008
-#define injPhaseRpmBins_offset 18072
+#define injPhaseLoadBins_offset 15408
+#define injPhaseRpmBins_offset 15472
 #define invertCamVVTSignal_offset 976
 #define invertPrimaryTriggerSignal_offset 1464
 #define invertSecondaryTriggerSignal_offset 1464
@@ -1465,9 +1465,9 @@
 #define knockRetardMaximum_offset 614
 #define knockRetardReapplyRate_offset 613
 #define knockSamplingDuration_offset 2512
-#define lambdaLoadBins_offset 21848
-#define lambdaRpmBins_offset 21912
-#define lambdaTable_offset 21592
+#define lambdaLoadBins_offset 19248
+#define lambdaRpmBins_offset 19312
+#define lambdaTable_offset 18992
 #define launchActivateDelay_offset 1060
 #define launchActivatePin_offset 991
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
@@ -1515,7 +1515,7 @@
 #define lps25BaroSensorSda_offset 1459
 #define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_PWM_COUNT 8
-#define LUA_SCRIPT_SIZE 6600
+#define LUA_SCRIPT_SIZE 4000
 #define luaOutputPins1_offset 1220
 #define luaOutputPins2_offset 1221
 #define luaOutputPins3_offset 1222
@@ -1534,8 +1534,8 @@
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 #define maf_sensor_type_e_Internal_ForceMyEnumIntSize_maf_sensor ENUM_32_BITS
 #define mafAdcChannel_offset 543
-#define mafDecoding_offset 13784
-#define mafDecodingBins_offset 14808
+#define mafDecoding_offset 11184
+#define mafDecodingBins_offset 12208
 #define mafSensorType_offset 948
 #define MAIN_HELP_URL "https://github.com/rusefi/rusefi/wiki/Proteus-Manual"
 #define mainRelayPin_offset 706
@@ -1566,9 +1566,9 @@
 #define mapCamDetectionThreshold_offset 615
 #define mapErrorDetectionTooHigh_offset 1780
 #define mapErrorDetectionTooLow_offset 1776
-#define mapEstimateRpmBins_offset 18744
-#define mapEstimateTable_offset 18200
-#define mapEstimateTpsBins_offset 18712
+#define mapEstimateRpmBins_offset 16144
+#define mapEstimateTable_offset 15600
+#define mapEstimateTpsBins_offset 16112
 #define mapHighValueVoltage_offset 2212
 #define mapLowValueVoltage_offset 2208
 #define mapMinBufferLength_offset 812
@@ -1668,7 +1668,7 @@
 #define pedalToTpsRpmBins_offset 6472
 #define pedalToTpsTable_offset 6400
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 23000
+#define persistent_config_s_size 20400
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1773,18 +1773,18 @@
 #define scriptSettingName6_offset 3708
 #define scriptSettingName7_offset 3724
 #define scriptSettingName8_offset 3740
-#define scriptTable1_offset 22296
-#define scriptTable1LoadBins_offset 22552
-#define scriptTable1RpmBins_offset 22584
-#define scriptTable2_offset 22616
-#define scriptTable2LoadBins_offset 22680
-#define scriptTable2RpmBins_offset 22712
-#define scriptTable3_offset 22744
-#define scriptTable3LoadBins_offset 22808
-#define scriptTable3RpmBins_offset 22840
-#define scriptTable4_offset 22872
-#define scriptTable4LoadBins_offset 22936
-#define scriptTable4RpmBins_offset 22968
+#define scriptTable1_offset 19696
+#define scriptTable1LoadBins_offset 19952
+#define scriptTable1RpmBins_offset 19984
+#define scriptTable2_offset 20016
+#define scriptTable2LoadBins_offset 20080
+#define scriptTable2RpmBins_offset 20112
+#define scriptTable3_offset 20144
+#define scriptTable3LoadBins_offset 20208
+#define scriptTable3RpmBins_offset 20240
+#define scriptTable4_offset 20272
+#define scriptTable4LoadBins_offset 20336
+#define scriptTable4RpmBins_offset 20368
 #define scriptTableName1_offset 3564
 #define scriptTableName2_offset 3580
 #define scriptTableName3_offset 3596
@@ -1819,7 +1819,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 2803138081
+#define SIGNATURE_HASH 4173296285
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1960,7 +1960,7 @@
 #define tcuDownshiftButtonPin_offset 1819
 #define tcuDownshiftButtonPinMode_offset 4515
 #define tcuEnabled_offset 976
-#define tcuSolenoidTable_offset 18136
+#define tcuSolenoidTable_offset 15536
 #define tcuUpshiftButtonPin_offset 1818
 #define tcuUpshiftButtonPinMode_offset 4514
 #define test557pin_offset 3101
@@ -2007,7 +2007,7 @@
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
-#define TOTAL_CONFIG_SIZE 23000
+#define TOTAL_CONFIG_SIZE 20400
 #define tps1_1AdcChannel_offset 512
 #define tps1_2AdcChannel_offset 681
 #define tps1SecondaryMax_offset 822
@@ -2031,9 +2031,9 @@
 #define tpsErrorDetectionTooLow_offset 84
 #define tpsMax_offset 82
 #define tpsMin_offset 80
-#define tpsTpsAccelFromRpmBins_offset 22232
-#define tpsTpsAccelTable_offset 21976
-#define tpsTpsAccelToRpmBins_offset 22264
+#define tpsTpsAccelFromRpmBins_offset 19632
+#define tpsTpsAccelTable_offset 19376
+#define tpsTpsAccelToRpmBins_offset 19664
 #define trailingCoilPins10_offset 2349
 #define trailingCoilPins11_offset 2350
 #define trailingCoilPins12_offset 2351
@@ -2338,7 +2338,7 @@
 #define ts_show_spi false
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.12.01.proteus_f4.2803138081"
+#define TS_SIGNATURE "rusEFI 2021.12.01.proteus_f4.4173296285"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2446,7 +2446,7 @@
 #define unusedFiller_4703_offset 4703
 #define unusedLaunchRpmThreshold_offset 1032
 #define unusedLogFormat_offset 496
-#define unusedLuaWasHere_offset 19032
+#define unusedLuaWasHere_offset 16432
 #define unusedNearVss_offset 619
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832
@@ -2496,15 +2496,15 @@
 #define vehicleName_offset 1160
 #define vehicleSpeedSensorInputPin_offset 968
 #define vehicleWeight_offset 1456
-#define veLoadBins_offset 21464
+#define veLoadBins_offset 18864
 #define veOverrideMode_offset 2109
 #define verboseCan2BaseAddress_offset 2112
 #define verboseCanBaseAddress_offset 756
 #define verboseTLE8888_offset 744
 #define verboseTriggerSynchDetails_offset 1476
 #define verboseVVTDecoding_offset 976
-#define veRpmBins_offset 21528
-#define veTable_offset 20440
+#define veRpmBins_offset 18928
+#define veTable_offset 17840
 #define VM_VVT_INACTIVE 0
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define VR_THRESHOLD_COUNT 2
@@ -2520,7 +2520,7 @@
 #define vrThreshold2_pin_offset 1260
 #define vrThreshold2_rpmBins_offset 1264
 #define vrThreshold2_values_offset 1270
-#define vssFilterReciprocal_offset 18196
+#define vssFilterReciprocal_offset 15596
 #define vssGearRatio_offset 616
 #define vssToothCount_offset 618
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR", "VVT_MAP_V_TWIN"
@@ -2553,12 +2553,12 @@
 #define vvtPins2_offset 2221
 #define vvtPins3_offset 2222
 #define vvtPins4_offset 2223
-#define vvtTable1_offset 18776
-#define vvtTable1LoadBins_offset 18840
-#define vvtTable1RpmBins_offset 18872
-#define vvtTable2_offset 18904
-#define vvtTable2LoadBins_offset 18968
-#define vvtTable2RpmBins_offset 19000
+#define vvtTable1_offset 16176
+#define vvtTable1LoadBins_offset 16240
+#define vvtTable1RpmBins_offset 16272
+#define vvtTable2_offset 16304
+#define vvtTable2LoadBins_offset 16368
+#define vvtTable2RpmBins_offset 16400
 #define warning_message_offset 6000
 #define warningLedPin_offset 2041
 #define warningPeriod_offset 1498
@@ -6827,54 +6827,54 @@ struct persistent_config_s {
 	lua_script_t luaScript;
 	/**
 	C
-	 * offset 13272
+	 * offset 10672
 	 */
 	float cltFuelCorrBins[CLT_CURVE_SIZE];
 	/**
 	ratio
-	 * offset 13336
+	 * offset 10736
 	 */
 	float cltFuelCorr[CLT_CURVE_SIZE];
 	/**
 	C
-	 * offset 13400
+	 * offset 10800
 	 */
 	float iatFuelCorrBins[IAT_CURVE_SIZE];
 	/**
 	ratio
-	 * offset 13464
+	 * offset 10864
 	 */
 	float iatFuelCorr[IAT_CURVE_SIZE];
 	/**
 	ratio
-	 * offset 13528
+	 * offset 10928
 	 */
 	float crankingFuelCoef[CRANKING_CURVE_SIZE];
 	/**
 	C
-	 * offset 13560
+	 * offset 10960
 	 */
 	float crankingFuelBins[CRANKING_CURVE_SIZE];
 	/**
 	ratio
-	 * offset 13592
+	 * offset 10992
 	 */
 	float crankingCycleCoef[CRANKING_CURVE_SIZE];
 	/**
 	counter
-	 * offset 13624
+	 * offset 11024
 	 */
 	float crankingCycleBins[CRANKING_CURVE_SIZE];
 	/**
 	 * CLT-based idle position multiplier for simple manual idle controller
 	C
-	 * offset 13656
+	 * offset 11056
 	 */
 	float cltIdleCorrBins[CLT_CURVE_SIZE];
 	/**
 	 * CLT-based idle position multiplier for simple manual idle controller
 	ratio
-	 * offset 13720
+	 * offset 11120
 	 */
 	float cltIdleCorr[CLT_CURVE_SIZE];
 	/**
@@ -6882,233 +6882,233 @@ struct persistent_config_s {
 	 * kg/hour value.
 	 * By the way 2.081989116 kg/h = 1 ft3/m
 	kg/hour
-	 * offset 13784
+	 * offset 11184
 	 */
 	float mafDecoding[MAF_DECODING_COUNT];
 	/**
 	V
-	 * offset 14808
+	 * offset 12208
 	 */
 	float mafDecodingBins[MAF_DECODING_COUNT];
 	/**
 	deg
-	 * offset 15832
+	 * offset 13232
 	 */
 	float ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Temperature
-	 * offset 16856
+	 * offset 14256
 	 */
 	float ignitionIatCorrLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 16920
+	 * offset 14320
 	 */
 	float ignitionIatCorrRpmBins[IGN_RPM_COUNT];
 	/**
 	deg
-	 * offset 16984
+	 * offset 14384
 	 */
 	float injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 18008
+	 * offset 15408
 	 */
 	float injPhaseLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18072
+	 * offset 15472
 	 */
 	float injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
 	onoff
-	 * offset 18136
+	 * offset 15536
 	 */
 	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 	/**
 	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	Hz
-	 * offset 18196
+	 * offset 15596
 	 */
 	float vssFilterReciprocal = (float)0;
 	/**
 	kPa
-	 * offset 18200
+	 * offset 15600
 	 */
 	uint16_t mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	% TPS
-	 * offset 18712
+	 * offset 16112
 	 */
 	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18744
+	 * offset 16144
 	 */
 	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 18776
+	 * offset 16176
 	 */
 	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 18840
+	 * offset 16240
 	 */
 	float vvtTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
-	 * offset 18872
+	 * offset 16272
 	 */
 	float vvtTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 18904
+	 * offset 16304
 	 */
 	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 18968
+	 * offset 16368
 	 */
 	float vvtTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
-	 * offset 19000
+	 * offset 16400
 	 */
 	float vvtTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 19032
+	 * offset 16432
 	 */
 	float unusedLuaWasHere[64];
 	/**
 	deg
-	 * offset 19288
+	 * offset 16688
 	 */
 	float ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 20312
+	 * offset 17712
 	 */
 	float ignitionLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 20376
+	 * offset 17776
 	 */
 	float ignitionRpmBins[IGN_RPM_COUNT];
 	/**
 	%
-	 * offset 20440
+	 * offset 17840
 	 */
 	float veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	kPa
-	 * offset 21464
+	 * offset 18864
 	 */
 	float veLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 21528
+	 * offset 18928
 	 */
 	float veRpmBins[FUEL_RPM_COUNT];
 	/**
 	lambda
-	 * offset 21592
+	 * offset 18992
 	 */
 	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
-	 * offset 21848
+	 * offset 19248
 	 */
 	float lambdaLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 21912
+	 * offset 19312
 	 */
 	float lambdaRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 21976
+	 * offset 19376
 	 */
 	float tpsTpsAccelTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 	/**
 	from
-	 * offset 22232
+	 * offset 19632
 	 */
 	float tpsTpsAccelFromRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	to
-	 * offset 22264
+	 * offset 19664
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	value
-	 * offset 22296
+	 * offset 19696
 	 */
 	float scriptTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22552
+	 * offset 19952
 	 */
 	float scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
-	 * offset 22584
+	 * offset 19984
 	 */
 	float scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22616
+	 * offset 20016
 	 */
 	uint8_t scriptTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22680
+	 * offset 20080
 	 */
 	float scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
-	 * offset 22712
+	 * offset 20112
 	 */
 	float scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22744
+	 * offset 20144
 	 */
 	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22808
+	 * offset 20208
 	 */
 	float scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
-	 * offset 22840
+	 * offset 20240
 	 */
 	float scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22872
+	 * offset 20272
 	 */
 	uint8_t scriptTable4[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22936
+	 * offset 20336
 	 */
 	float scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	 * RPM is float and not integer in order to use unified methods for interpolation
 	RPM
-	 * offset 22968
+	 * offset 20368
 	 */
 	float scriptTable4RpmBins[SCRIPT_TABLE_8];
-	/** total size 23000*/
+	/** total size 20400*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 01 01:59:12 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 01 04:22:06 UTC 2021
