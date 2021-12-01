@@ -10,13 +10,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
-#include "global.h"
-#include "engine.h"
-#include "engine_math.h"
-#include "allsensors.h"
+#include "pch.h"
 #include "fsio_impl.h"
-#include "engine_configuration.h"
-
+#include "../hellen_meta.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7;
@@ -162,7 +158,7 @@ void setBoardDefaultConfiguration(void) {
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY PASS_CONFIG_PARAMETER_SUFFIX);
+	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->specs.cylindersCount = 4;
 	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
