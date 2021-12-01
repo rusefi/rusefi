@@ -70,6 +70,7 @@ static void shaft_callback(void *arg) {
 	ioline_t pal_line = (ioline_t)arg;
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
+	efitick_t stamp = getTimeNowNt();
 	trigAdcState.digitalCallback(stamp, true, rise);
 }
 
@@ -90,7 +91,7 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	if (!isBrainPinValid(brainPin))
 		return 0;
 
-	trigAdcState.init(PASS_ENGINE_PARAMETER_SIGNATURE);
+	trigAdcState.init();
 
 	triggerInputPort = getHwPort("trg", brainPin);
 	triggerInputPin = getHwPin("trg", brainPin);
