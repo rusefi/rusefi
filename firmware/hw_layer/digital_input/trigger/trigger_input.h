@@ -10,6 +10,7 @@
 
 #include "trigger_structure.h"
 #include "trigger_central.h"
+#include "trigger_input.h"
 
 #define TRIGGER_BAIL_IF_DISABLED          \
     if (!engine->hwTriggerInputEnabled) { \
