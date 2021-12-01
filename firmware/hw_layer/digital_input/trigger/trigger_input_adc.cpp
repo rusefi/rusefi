@@ -153,6 +153,8 @@ void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 
 
 void TriggerAdcDetector::init() {
+#if ! EFI_SIMULATOR
+
 	// todo: move some of these to config
 
 	// we need to make at least minNumAdcMeasurementsPerTooth for 1 tooth (i.e. between two consequent events)
@@ -176,6 +178,7 @@ void TriggerAdcDetector::init() {
 	adcMaxThreshold = adcDefaultThreshold - adcDeltaThreshold;
 
 	reset();
+#endif // EFI_SIMULATOR
 }
 
 void TriggerAdcDetector::reset() {
@@ -226,6 +229,7 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 }
 
 void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t value) {
+#if ! EFI_SIMULATOR
 	if (curAdcMode != TRIGGER_ADC_ADC) {
 		return;
 	}
@@ -353,5 +357,6 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 	
 	prevValue = transition;
 	prevStamp = stamp;
+#endif // EFI_SIMULATOR
 }
 
