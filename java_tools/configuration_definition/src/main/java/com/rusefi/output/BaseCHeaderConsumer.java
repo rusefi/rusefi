@@ -45,9 +45,6 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
 
         content.append("// start of " + structure.name + EOL);
         content.append("struct " + structure.name + " {" + EOL);
-        if (structure.isWithConstructor()) {
-            content.append("\t" + structure.name + "();" + EOL);
-        }
 
         int currentOffset = 0;
 
