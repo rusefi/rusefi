@@ -20,6 +20,7 @@ void setCanVss(int type);
 void stopCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 void enableFrankensoCan(DECLARE_ENGINE_PARAMETER_SIGNATURE);
+bool getIsCanEnabled(void);
 #if EFI_TUNER_STUDIO
 void postCanState(TunerStudioOutputChannels *tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */

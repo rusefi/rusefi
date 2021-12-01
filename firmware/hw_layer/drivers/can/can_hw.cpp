@@ -222,13 +222,15 @@ void startCanPins(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
-	isCanEnabled = 
+	isCanEnabled = false;
+
+	bool isCanConfigGood = 
 		(isBrainPinValid(CONFIG(canTxPin))) && // both pins are set...
 		(isBrainPinValid(CONFIG(canRxPin))) &&
 		(CONFIG(canWriteEnabled) || CONFIG(canReadEnabled)) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...
-	if (!isCanEnabled) {
+	if (!isCanConfigGood) {
 		return;
 	}
 
@@ -285,6 +287,12 @@ void initCan(void) {
 	if (CONFIG(canReadEnabled)) {
 		canRead.Start();
 	}
+
+	isCanEnabled = true;
+}
+
+bool getIsCanEnabled(void) {
+	return isCanEnabled;
 }
 
 #endif /* EFI_CAN_SUPPORT */

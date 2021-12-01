@@ -69,16 +69,12 @@ void cyclic_buffer<T, maxSize>::baseC(int size) {
 
 template<typename T, size_t maxSize>
 void cyclic_buffer<T, maxSize>::add(T value) {
-	// Too lazy to make this thread safe, but at the very least let's never let currentIndex
-	// become invalid.  And yes I did see a crash due to an overrun here.
-	volatile int idx = currentIndex;
+	((T &)elements[currentIndex]) = value;
 
-	((T &)elements[idx]) = value;
-
-	if (++idx == size) {
-		idx = 0;
+	++currentIndex;
+	if (currentIndex == size) {
+		currentIndex = 0;
 	}
-	currentIndex = idx;
 
 	++count;
 }

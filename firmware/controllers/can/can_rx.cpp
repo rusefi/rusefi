@@ -70,7 +70,7 @@ static void printPacket(const CANRxFrame &rx) {
 	// only print info if we're in can debug mode
 
 	// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
-	efiPrintf("CAN_rx %x %d %x, %x %x %x %x %x %x %x %x", CAN_SID(rx),
+	efiPrintf("CAN_rx %x(%d) %d: %02x %02x %02x %02x %02x %02x %02x %02x", CAN_SID(rx),
 			CAN_SID(rx), rx.DLC, rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
 			rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
 
