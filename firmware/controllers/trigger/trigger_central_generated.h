@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sat Oct 23 23:05:22 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Dec 01 00:34:52 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,7 +6,6 @@
 #define HW_EVENT_TYPES 6
 // start of trigger_central_s
 struct trigger_central_s {
-	trigger_central_s();
 	/**
 	 * Counter of hardware events since ECU start
 	 * offset 0
@@ -20,4 +19,4 @@ struct trigger_central_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Sat Oct 23 23:05:22 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Dec 01 00:34:52 UTC 2021
