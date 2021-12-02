@@ -95,7 +95,9 @@
 /**
  * Bluetooth UART setup support.
  */
+#ifndef EFI_BLUETOOTH_SETUP
 #define EFI_BLUETOOTH_SETUP TRUE
+#endif /* EFI_BLUETOOTH_SETUP */
 
 /**
  * TunerStudio debug output
