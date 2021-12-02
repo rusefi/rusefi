@@ -145,7 +145,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->tachOutputPin = GPIOD_14;	// OUT_PWM6
 
 	engineConfiguration->useStepperIdle = true;
-	engineConfiguration->useHbridges = true;
+	engineConfiguration->useHbridgesToDriveIdleStepper = true;
 	engineConfiguration->stepperDcIo[0].directionPin1 = GPIOC_6;	// COIL_A1 = OUT_PWM2
 	engineConfiguration->stepperDcIo[0].directionPin2 = GPIOC_7;	// COIL_A2 = OUT_PWM3
 	engineConfiguration->stepperDcIo[1].directionPin1 = GPIOC_8;	// COIL_B1 = OUT_PWM4
