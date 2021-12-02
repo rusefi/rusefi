@@ -44,6 +44,7 @@ jobs:
         git add firmware/tunerstudio/generated
         git add firmware/controllers/generated
         git add java_console/io/src/main/java/com/rusefi/enums
+        git add java_console/models/src/main/java/com/rusefi/config/generated
         # get the original ramdisk images back in order to not overwrite the default placeholder
         git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
         git status
