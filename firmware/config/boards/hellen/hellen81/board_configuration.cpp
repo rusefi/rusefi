@@ -182,7 +182,7 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi2sckPin = GPIOB_13;
 	engineConfiguration->sdCardCsPin = GPIOB_12;
 
-	CONFIG(is_enabled_spi_2) = true;
+	engineConfiguration->is_enabled_spi_2 = true;
 #else
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
@@ -191,6 +191,6 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi3sckPin = GPIOC_10;
 	engineConfiguration->sdCardCsPin = GPIOA_15;
 
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 #endif
 }
