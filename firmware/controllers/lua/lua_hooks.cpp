@@ -537,6 +537,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 		engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
 		return 0;
 	});
+	lua_register(l, "setEtbAdd", [](lua_State* l) {
+		engine->engineState.luaAdjustments.etbTargetPositionAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
 
 	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
