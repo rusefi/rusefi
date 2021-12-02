@@ -160,6 +160,9 @@ static angle_t adjustCrankPhase(int camIndex) {
 	}
 }
 
+/**
+ * See also wrapAngle
+ */
 static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	// Wrap VVT position in to the range [-360, 360)
 	while (vvtPosition < -period / 2) {
