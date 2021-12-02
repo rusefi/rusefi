@@ -68,6 +68,9 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
 
+/**
+ * @return angle since trigger synchronization point, NOT angle since TDC.
+ */
 expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 
@@ -75,7 +78,7 @@ expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 		return unexpected;
 	}
 
-	return m_virtualZeroTimer.getElapsedUs(nowNt) / oneDegreeUs;
+	return m_syncPointTimer.getElapsedUs(nowNt) / oneDegreeUs;
 }
 
 /**
@@ -617,7 +620,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	if (triggerIndexForListeners == 0) {
-		m_virtualZeroTimer.reset(timestamp);
+		m_syncPointTimer.reset(timestamp);
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners);
 
