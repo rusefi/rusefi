@@ -126,7 +126,8 @@ public:
 
 private:
 	// Keep track of the last time we saw the sync tooth go by (trigger index 0)
-	Timer m_virtualZeroTimer;
+	// not TDC point
+	Timer m_syncPointTimer;
 };
 
 void triggerInfo(void);
