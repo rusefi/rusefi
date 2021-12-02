@@ -47,7 +47,7 @@ void printRuntimeStats(void) {
 	efiPrintf("maxSchedulingPrecisionLoss=%d", maxSchedulingPrecisionLoss);
 
 #if EFI_CLOCK_LOCKS
-	efiPrintf("maxLockedDuration=%d / maxTriggerReentraint=%d", maxLockedDuration, maxTriggerReentraint);
+	efiPrintf("maxLockedDuration=%d / maxTriggerReentrant=%d", maxLockedDuration, maxTriggerReentrant);
 
 	efiPrintf("perSecondIrqDuration=%d ticks / perSecondIrqCounter=%d", perSecondIrqDuration, perSecondIrqCounter);
 	efiPrintf("IRQ CPU utilization %f%%", perSecondIrqDuration / (float)CORE_CLOCK * 100);

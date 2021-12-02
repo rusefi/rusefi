@@ -364,8 +364,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
 }
 
-int triggerReentraint = 0;
-int maxTriggerReentraint = 0;
+int triggerReentrant = 0;
+int maxTriggerReentrant = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
@@ -466,13 +466,13 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 #endif /* EFI_TOOTH_LOGGER */
 
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
-	if (triggerReentraint > maxTriggerReentraint)
-		maxTriggerReentraint = triggerReentraint;
-	triggerReentraint++;
+	if (triggerReentrant > maxTriggerReentrant)
+		maxTriggerReentrant = triggerReentrant;
+	triggerReentrant++;
 
 	engine->triggerCentral.handleShaftSignal(signal, timestamp);
 
-	triggerReentraint--;
+	triggerReentrant--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	triggerMaxDuration = maxI(triggerMaxDuration, triggerDuration);
 }
