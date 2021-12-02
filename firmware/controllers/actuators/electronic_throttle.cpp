@@ -322,6 +322,8 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 		// Linearly taper throttle to closed from the limit across the range
 		targetPosition = interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
 	}
+	// todo: this does not mix well with etbRevLimitStart interpolation does it?
+	targetPosition += engine->engineState.luaAdjustments.etbTargetPositionAdd;
 
 #if EFI_TUNER_STUDIO
 	if (m_function == ETB_Throttle1) {
