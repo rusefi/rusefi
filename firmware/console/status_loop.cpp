@@ -109,7 +109,7 @@ extern pin_output_mode_e INVERTED_OUTPUT;
 
 int warningEnabled = true;
 
-extern int maxTriggerReentraint;
+extern int maxTriggerReentrant;
 extern uint32_t maxLockedDuration;
 
 
@@ -781,7 +781,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 
 #if EFI_CLOCK_LOCKS
 		tsOutputChannels->maxLockedDuration = maxLockedDuration;
-		tsOutputChannels->maxTriggerReentraint = maxTriggerReentraint;
+		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 #endif /* EFI_CLOCK_LOCKS */
 
 	switch (engineConfiguration->debugMode)	{
