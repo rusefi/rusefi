@@ -145,7 +145,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->tachOutputPin = GPIOD_14;	// OUT_PWM6
 
 	engineConfiguration->useStepperIdle = true;
-	engineConfiguration->useHbridges = true;
+	engineConfiguration->useHbridgesToDriveIdleStepper = true;
 	engineConfiguration->stepperDcIo[0].directionPin1 = GPIOC_6;	// COIL_A1 = OUT_PWM2
 	engineConfiguration->stepperDcIo[0].directionPin2 = GPIOC_7;	// COIL_A2 = OUT_PWM3
 	engineConfiguration->stepperDcIo[1].directionPin1 = GPIOC_8;	// COIL_B1 = OUT_PWM4
@@ -182,7 +182,7 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi2sckPin = GPIOB_13;
 	engineConfiguration->sdCardCsPin = GPIOB_12;
 
-	CONFIG(is_enabled_spi_2) = true;
+	engineConfiguration->is_enabled_spi_2 = true;
 #else
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
@@ -191,6 +191,6 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi3sckPin = GPIOC_10;
 	engineConfiguration->sdCardCsPin = GPIOA_15;
 
-	CONFIG(is_enabled_spi_3) = true;
+	engineConfiguration->is_enabled_spi_3 = true;
 #endif
 }
