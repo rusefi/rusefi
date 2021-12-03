@@ -316,5 +316,3 @@ void chDbgStackOverflowPanic(thread_t *otp) {
 #endif
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
-
-
