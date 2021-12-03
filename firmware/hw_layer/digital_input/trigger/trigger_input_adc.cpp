@@ -110,7 +110,7 @@ int adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	if (!isBrainPinValid(brainPin))
 		return 0;
 
-	trigAdcState.init();
+	trigAdcState.init(PASS_ENGINE_PARAMETER_SIGNATURE);
 
 	triggerInputPort = getHwPort("trg", brainPin);
 	triggerInputPin = getHwPin("trg", brainPin);
@@ -176,7 +176,7 @@ void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising) {
 #endif /* EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC */
 
 
-void TriggerAdcDetector::init() {
+void TriggerAdcDetector::init(DECLARE_ENGINE_PARAMETER_SIGNATURE) {
 #if ! EFI_SIMULATOR
 
 	// todo: move some of these to config

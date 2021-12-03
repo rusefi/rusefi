@@ -18,7 +18,7 @@
 
 class TriggerAdcDetector {
 public:
-	void init();
+	void init(DECLARE_ENGINE_PARAMETER_SIGNATURE);
 	void reset();
 
 	void digitalCallback(efitick_t stamp, bool isPrimary, bool rise);
