@@ -108,7 +108,14 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 
 	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN) {
 		engine->triggerCentral.mapState.add(instantMap);
-		if (engine->triggerCentral.mapState.isPeak()) {
+		bool isPeak = engine->triggerCentral.mapState.isPeak();
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = engine->triggerCentral.mapState.current;
+		if (isPeak) {
+			tsOutputChannels.TEMPLOG_map_peak++;
+		}
+#endif //EFI_TUNER_STUDIO
+		if (isPeak) {
 			efitick_t stamp = getTimeNowNt();
 			hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
 			hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
