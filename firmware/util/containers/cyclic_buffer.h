@@ -71,7 +71,7 @@ template<typename T, size_t maxSize>
 void cyclic_buffer<T, maxSize>::add(T value) {
 	// Too lazy to make this thread safe, but at the very least let's never let currentIndex
 	// become invalid.  And yes I did see a crash due to an overrun here.
-	uint16_t idx = currentIndex;
+	volatile int idx = currentIndex;
 
 	((T &)elements[idx]) = value;
 
