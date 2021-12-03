@@ -656,7 +656,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		mainTriggerCallback(triggerIndexForListeners, timestamp);
 
 #if EFI_TUNER_STUDIO
-		updateCurrentEnginePhase();
+		auto toothAngle = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
+		wrapAngle(toothAngle, "currentEnginePhase", CUSTOM_ERR_6555);
+		tsOutputChannels.currentEnginePhase = toothAngle;
 #endif
 	}
 }
