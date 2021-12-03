@@ -8,23 +8,35 @@
  */
  
 #include "global.h"
+#include "trigger_input_adc.h"
+
+
+/*static*/ TriggerAdcDetector trigAdcState;
 
 #define DELTA_THRESHOLD_CNT_LOW (GPT_FREQ_FAST / GPT_PERIOD_FAST / 32)		// ~1/32 second?
 #define DELTA_THRESHOLD_CNT_HIGH (GPT_FREQ_FAST / GPT_PERIOD_FAST / 4)		// ~1/4 second?
+
+#define triggerVoltsToAdcDivided(volts) (voltsToAdc(volts) / trigAdcState.triggerInputDividerCoefficient)
 
 // hardware-dependent part
 #if (EFI_SHAFT_POSITION_INPUT && HAL_TRIGGER_USE_ADC && HAL_USE_ADC) || defined(__DOXYGEN__)
 
 #include "digital_input_exti.h"
-#include "adc_inputs.h"
 
 //!!!!!!!!!!
 #define TRIGGER_ADC_DEBUG_LED TRUE
+//#define DEBUG_OUTPUT_IGN1 TRUE
+//#define TRIGGER_ADC_DUMP_BUF TRUE
 
 #ifdef TRIGGER_ADC_DEBUG_LED
 #define TRIGGER_ADC_DEBUG_LED1_PORT GPIOH
 #define TRIGGER_ADC_DEBUG_LED1_PIN 9
-//#define DEBUG_OUTPUT_IGN1
+
+#ifdef TRIGGER_ADC_DUMP_BUF
+static const int dumpBufNum = 100;
+static triggerAdcSample_t dumpBuf[dumpBufNum];
+static int dumpBufCnt = 0;
+#endif /* TRIGGER_ADC_DUMP_BUF */
 
 void toggleLed(int led, int mode) {
 #if 1
@@ -55,9 +67,11 @@ static ioportmask_t triggerInputPin;
 #endif /* PAL_MODE_EXTINT */
 
 void setTriggerAdcMode(triggerAdcMode_t adcMode) {
-	palSetPadMode(triggerInputPort, triggerInputPin,
-		(adcMode == TRIGGER_ADC_ADC) ? PAL_MODE_INPUT_ANALOG : PAL_MODE_EXTINT);
 	trigAdcState.curAdcMode = adcMode;
+	trigAdcState.modeSwitchCnt++;
+
+	palSetPadMode(triggerInputPort, triggerInputPin, 
+		(adcMode == TRIGGER_ADC_ADC) ? PAL_MODE_INPUT_ANALOG : PAL_MODE_EXTINT);
 }
 
 static void shaft_callback(void *arg, efitick_t stamp) {
@@ -77,8 +91,19 @@ void triggerAdcCallback(triggerAdcSample_t value) {
 	trigAdcState.analogCallback(stamp, value);
 }
 
+#ifdef TRIGGER_ADC_DUMP_BUF
+static void printDumpBuf(void) {
+	efiPrintf("------");
+	for (int i = 0; i < dumpBufNum; i++) {
+		int pos = (dumpBufCnt - i - 1 + dumpBufNum) % dumpBufNum;
+		triggerAdcSample_t v = dumpBuf[pos];
+		efiPrintf("[%d] %d", i, v);
+	}
+}
+#endif /* TRIGGER_ADC_DUMP_BUF */
 
-static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft) {
+
+int adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	brain_pin_e brainPin = isTriggerShaft ?
 		engineConfiguration->triggerInputPins[index] : engineConfiguration->camInputs[index];
 
@@ -92,9 +117,9 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 
 	ioline_t pal_line = PAL_LINE(triggerInputPort, triggerInputPin);
 	efiPrintf("turnOnTriggerInputPin %s l=%d", hwPortname(brainPin), pal_line);
-
+	
 	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
-
+	
 	// ADC mode is default, because we don't know if the wheel is already spinning
 	setTriggerAdcMode(TRIGGER_ADC_ADC);
 
@@ -104,6 +129,10 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	palSetPadMode(GPIOI, 8, PAL_MODE_OUTPUT_PUSHPULL);
 #endif
 #endif /* TRIGGER_ADC_DEBUG_LED */
+
+#ifdef TRIGGER_ADC_DUMP_BUF
+	addConsoleAction("trigger_adc_dump", printDumpBuf);
+#endif /* TRIGGER_ADC_DUMP_BUF */
 
 	return 0;
 }
@@ -152,25 +181,34 @@ void TriggerAdcDetector::init() {
 
 	// todo: move some of these to config
 
+	// 4.7k||5.1k + 4.7k
+	triggerInputDividerCoefficient = 1.52f;	// = analogInputDividerCoefficient
+
 	// we need to make at least minNumAdcMeasurementsPerTooth for 1 tooth (i.e. between two consequent events)
-	const int minNumAdcMeasurementsPerTooth = 20;
+	const int minNumAdcMeasurementsPerTooth = 10; // for 60-2 wheel: 1/(10*2*60/10000/60) = 500 RPM
 	minDeltaTimeForStableAdcDetectionNt = US2NT(US_PER_SECOND_LL * minNumAdcMeasurementsPerTooth * GPT_PERIOD_FAST / GPT_FREQ_FAST);
 	// we assume that the transition occurs somewhere in the middle of the measurement period, so we take the half of it
 	stampCorrectionForAdc = US2NT(US_PER_SECOND_LL * GPT_PERIOD_FAST / GPT_FREQ_FAST / 2);
 
-	// these thresholds allow to switch from ADC mode to EXTI mode, indicating the clamping of the signal
-	switchingThresholdLow = voltsToAdcDivided(1.0f);
-	switchingThresholdHigh = voltsToAdcDivided(4.0f);
+	analogToDigitalTransitionCnt = 4;
+	digitalToAnalogTransitionCnt = 4;
 
 	// used to filter out low signals
-	minDeltaThresholdWeakSignal = voltsToAdcDivided(0.05f);	// 50mV
+	minDeltaThresholdWeakSignal = triggerVoltsToAdcDivided(0.05f);	// 50mV
 	// we need to shift the default threshold even for strong signals because of the possible loss of the first tooth (after the sync)
-	minDeltaThresholdStrongSignal = voltsToAdcDivided(0.04f);	// 5mV
+	minDeltaThresholdStrongSignal = triggerVoltsToAdcDivided(0.04f);	// 5mV
 
-	const triggerAdcSample_t adcDeltaThreshold = voltsToAdcDivided(0.25f);
-	adcDefaultThreshold = voltsToAdcDivided(3.4f);	// this corresponds to VREF1 on Hellen boards
+	const triggerAdcSample_t adcDeltaThreshold = triggerVoltsToAdcDivided(0.25f);
+	adcDefaultThreshold = triggerVoltsToAdcDivided(2.5f);	// this corresponds to VREF1 on Hellen boards
 	adcMinThreshold = adcDefaultThreshold - adcDeltaThreshold;
 	adcMaxThreshold = adcDefaultThreshold - adcDeltaThreshold;
+
+	// these thresholds allow to switch from ADC mode to EXTI mode, indicating the clamping of the signal
+	// they should exceed the MCU schmitt trigger thresholds (usually 0.3*Vdd and 0.7*Vdd)
+	switchingThresholdLow = triggerVoltsToAdcDivided(1.0f);  // = 0.2*Vdd (<0.3*Vdd)
+	switchingThresholdHigh = triggerVoltsToAdcDivided(4.0f); // = 0.8*Vdd (>0.7*Vdd)
+
+	modeSwitchCnt = 0;
 
 	reset();
 #endif // EFI_SIMULATOR
@@ -209,7 +247,7 @@ void TriggerAdcDetector::digitalCallback(efitick_t stamp, bool isPrimary, bool r
 		switchingTeethCnt = 0;
 	}
 
-	if (switchingCnt > 4) {
+	if (switchingCnt >= digitalToAnalogTransitionCnt) {
 		switchingCnt = 0;
 		// we need at least 3 wide teeth to be certain!
 		// we don't want to confuse them with a sync.gap
@@ -229,12 +267,17 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		return;
 	}
 
+#ifdef TRIGGER_ADC_DUMP_BUF
+	dumpBuf[dumpBufCnt] = value;
+	dumpBufCnt = (dumpBufCnt + 1) % dumpBufNum;
+#endif /* TRIGGER_ADC_DUMP_BUF */
+
 	// <1V or >4V?
 	if (value >= switchingThresholdHigh || value <= switchingThresholdLow) {
 		switchingCnt++;
 	} else {
-		switchingCnt = 0;
-		switchingTeethCnt = 0;
+		//switchingCnt = 0;
+		switchingCnt = maxI(switchingCnt - 1, 0);
 	}
 
 	int delta = value - adcThreshold;
@@ -323,16 +366,17 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 
 		// it should not accumulate too much
 		integralSum = 0;
-
+#if 0
 		// update triggerAdcITerm
 		efitime_t deltaTimeUs = NT2US(stamp - prevStamp);
 		if (deltaTimeUs > 200) {	// 200 us = ~2500 RPM (we don't need this correction for large RPM)
 			triggerAdcITerm = 1.0f / (triggerAdcITermCoef * deltaTimeUs);
 			triggerAdcITerm = maxF(triggerAdcITerm, triggerAdcITermMin);
 		}
+#endif
 	}
 
-	if (switchingCnt > 4) {
+	if (switchingCnt >= analogToDigitalTransitionCnt) {
 		switchingCnt = 0;
 		// we need at least 3 high-signal teeth to be certain!
 		if (switchingTeethCnt++ > 3) {
@@ -344,10 +388,15 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 			// we want to reset the thresholds on return
 			zeroThreshold = minDeltaThresholdStrongSignal;
 			adcThreshold = adcDefaultThreshold;
+			// reset integrator
+			triggerAdcITerm = triggerAdcITermMin;
 			integralSum = 0;
 			transitionCooldownCnt = 0;
 			return;
 		}
+	} else {
+		// we don't see "big teeth" anymore 
+		switchingTeethCnt = 0;
 	}
 	
 	prevValue = transition;
@@ -355,3 +404,14 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 #endif // EFI_SIMULATOR
 }
 
+triggerAdcMode_t getTriggerAdcMode(void) {
+	return trigAdcState.curAdcMode;
+}
+
+float getTriggerAdcThreshold(void) {
+	return trigAdcState.adcThreshold;
+}
+
+int getTriggerAdcModeCnt(void) {
+	return trigAdcState.modeSwitchCnt;
+}
