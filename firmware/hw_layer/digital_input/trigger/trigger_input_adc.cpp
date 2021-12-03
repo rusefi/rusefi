@@ -74,15 +74,16 @@ void setTriggerAdcMode(triggerAdcMode_t adcMode) {
 		(adcMode == TRIGGER_ADC_ADC) ? PAL_MODE_INPUT_ANALOG : PAL_MODE_EXTINT);
 }
 
-static void shaft_callback(void *arg, efitick_t stamp) {
+static void shaft_callback(void *arg) {
 	// do the time sensitive things as early as possible!
 	ioline_t pal_line = (ioline_t)arg;
 	bool rise = (palReadLine(pal_line) == PAL_HIGH);
 
+	efitick_t stamp = getTimeNowNt();
 	trigAdcState.digitalCallback(stamp, true, rise);
 }
 
-static void cam_callback(void *, efitick_t stamp) {
+static void cam_callback(void *) {
 	// TODO: implement...
 }
 
