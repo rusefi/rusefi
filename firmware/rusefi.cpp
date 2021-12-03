@@ -3,7 +3,7 @@
  * @brief Initialization code and main status reporting look
  *
  * @date Dec 25, 2013
- * @author Andrey Belomutskiy, (c) 2012-2020
+ * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
 /**
