@@ -872,16 +872,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 	}
 }
 
-void updateCurrentEnginePhase() {
-	if (auto phase = engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt())) {
-		angle_t angle = phase.Value - tdcPosition();
-		wrapAngle(angle, "updateCurrentEnginePhase", CUSTOM_ERR_6555);
-		tsOutputChannels.currentEnginePhase = angle;
-	} else {
-		tsOutputChannels.currentEnginePhase = 0;
-	}
-}
-
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio
 	updateTunerStudioState(&tsOutputChannels);
