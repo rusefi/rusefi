@@ -15,7 +15,7 @@
 #include "pin_repository.h"
 #include "local_version_holder.h"
 
-#define MAP_CAM_BUFFER 8
+#define MAP_CAM_BUFFER 64
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp);
