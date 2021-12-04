@@ -248,7 +248,8 @@ public class Elm327Connector implements Closeable {
         }
         // return the response only if it matches the given regexp
         Pattern pattern = Pattern.compile(responseFilter);
-		Matcher matcher = pattern.matcher(this.completeLines.get(responseIdx));
+		String inputLine = completeLines.get(responseIdx);
+		Matcher matcher = pattern.matcher(inputLine);
 		if (matcher.find()) {
         	// store the echo mode
         	//this.waitForEcho = responseIdx != 0;
