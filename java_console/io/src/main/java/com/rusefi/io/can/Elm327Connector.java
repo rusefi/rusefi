@@ -6,7 +6,6 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
-import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpConnector;
 
 import java.io.Closeable;
@@ -35,12 +34,10 @@ public class Elm327Connector implements Closeable, DataListener {
 	private final static int ISO_TP_FRAME_FLOW_CONTROL = 3;
     
     private IoStream stream = null;
-	private String partialLine = new String();
-	private List<String> completeLines = new ArrayList<String>();
-	private boolean waitForEcho = true;
+	private String partialLine = "";
+	private final List<String> completeLines = new ArrayList<>();
 	private boolean isCommandMode = false;
 
-	private ServerSocketReference serverHolder;
 	private Elm327IoStream elmStream;
 
     // CAN multiframe decoder state
@@ -51,7 +48,7 @@ public class Elm327Connector implements Closeable, DataListener {
     	public byte [] decodePacket(byte [] data) throws Exception {
         	int frameType = (data[0] >> 4) & 0xf;
     		int numBytesAvailable, frameIdx;
-    		int dataOffset = 0;
+    		int dataOffset;
     		switch (frameType) {
     		case ISO_TP_FRAME_SINGLE:
     			numBytesAvailable = data[0] & 0xf;
@@ -100,7 +97,7 @@ public class Elm327Connector implements Closeable, DataListener {
 
         	// Echo off
         	sendCommand("ATE0", "OK");
-        	waitForEcho = false;
+        	//waitForEcho = false;
         	
         	// protocol #6 - ISO 15765-4 CAN (11 bit ID, 500 kbaud)
 			sendCommand("ATSP6", "OK");
@@ -151,7 +148,7 @@ public class Elm327Connector implements Closeable, DataListener {
     }
 
     @Override
-    public void onDataArrived(byte freshData[]) {
+    public void onDataArrived(byte[] freshData) {
     	// ELM327 uses a text protocol, so we convert the data to a string
     	String freshStr = new String(freshData);
     	while (true) {
@@ -161,7 +158,7 @@ public class Elm327Connector implements Closeable, DataListener {
 	        // split the stream into separate lines
     	    if (newL >= 0) {
         		String curLine = this.partialLine;
-	        	this.partialLine = new String();
+	        	this.partialLine = "";
     	    	if (newL > 0)
         		    curLine += freshStr.substring(0, newL);
     	        if (curLine.length() > 0)
@@ -174,7 +171,7 @@ public class Elm327Connector implements Closeable, DataListener {
 		}
     }
 
-	public void sendBytesToSerial(byte [] bytes)  throws IOException {
+	public void sendBytesToSerial(byte [] bytes) {
     	log.info("-------sendBytesToSerial "+bytes.length+" bytes:");
 
     	for (int i = 0; i < bytes.length; i++) {
@@ -191,7 +188,7 @@ public class Elm327Connector implements Closeable, DataListener {
     	// send the first header frame
     	sendFrame((ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
     	// get a flow control frame
-    	byte[] fc = receiveData();
+    	receiveData();
 
     	// send the rest of the data
     	int idx = 1, offset = 6;
@@ -233,9 +230,7 @@ public class Elm327Connector implements Closeable, DataListener {
        	try {
        		this.stream.write((command + "\r").getBytes());
        		waitForResponse(timeout);
-	    } catch (IOException ignore) {
-	        return null;
-	    } catch (InterruptedException ignore) {
+	    } catch (IOException | InterruptedException ignore) {
 	        return null;
 	    } finally {
 	    	isCommandMode = false;
@@ -256,7 +251,7 @@ public class Elm327Connector implements Closeable, DataListener {
 		Matcher matcher = pattern.matcher(this.completeLines.get(responseIdx));
 		if (matcher.find()) {
         	// store the echo mode
-        	this.waitForEcho = responseIdx != 0;
+        	//this.waitForEcho = responseIdx != 0;
 			
         	return (matcher.groupCount() > 0) ? matcher.group(1) : matcher.group();
         }
@@ -288,7 +283,7 @@ public class Elm327Connector implements Closeable, DataListener {
 		try {
        		this.stream.write(hexData);
 	    } catch (IOException ignore) {
-	        return;
+			// ignore
 	    }
     }
 
@@ -342,11 +337,11 @@ public class Elm327Connector implements Closeable, DataListener {
     private boolean startNetworkConnector(int controllerPort) {
         try {
 	        elmStream = new Elm327IoStream(this, "elm327Stream");
-	        serverHolder = BinaryProtocolProxy.createProxy(elmStream, controllerPort, new BinaryProtocolProxy.ClientApplicationActivityListener() {
-                @Override
-                public void onActivity() {
-                }
-            });
+			BinaryProtocolProxy.createProxy(elmStream, controllerPort, new BinaryProtocolProxy.ClientApplicationActivityListener() {
+				@Override
+				public void onActivity() {
+				}
+			});
 	    } catch (IOException ignore) {
 	        return false;
 	    }
