@@ -16,13 +16,17 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.rusefi.Timeouts.SECOND;
+
 public class Elm327Connector implements Closeable, DataListener {
 	private final static Logging log = Logging.getLogging(Elm327Connector.class);
 	private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes();
 
-	private final static int ELM327_DEFAULT_BAUDRATE = 38400;
-	private final static int BIG_TIMEOUT = 2000;
-	private final static int TIMEOUT = 70;
+    public final static int ELM327_DEFAULT_BAUDRATE = 38400;
+    private final static int BIG_TIMEOUT = 2 * SECOND;
+    private final static int TIMEOUT = 70;
+
+    private final Object lock = new Object();
 
 	// these should match the defines in the firmware
 	private final static int CAN_SERIAL_TX_ID = 0x100;
@@ -32,7 +36,7 @@ public class Elm327Connector implements Closeable, DataListener {
 	private final static int ISO_TP_FRAME_FIRST = 1;
 	private final static int ISO_TP_FRAME_CONSECUTIVE = 2;
 	private final static int ISO_TP_FRAME_FLOW_CONTROL = 3;
-    
+
     private IoStream stream = null;
 	private String partialLine = "";
 	private final List<String> completeLines = new ArrayList<>();
@@ -75,7 +79,7 @@ public class Elm327Connector implements Closeable, DataListener {
 			default:
 				throw new Exception("Unknown frame type");
     		}
-    	
+
     		return Arrays.copyOfRange(data, dataOffset, dataOffset + numBytesAvailable);
         }
 	}
@@ -98,10 +102,10 @@ public class Elm327Connector implements Closeable, DataListener {
         	// Echo off
         	sendCommand("ATE0", "OK");
         	//waitForEcho = false;
-        	
+
         	// protocol #6 - ISO 15765-4 CAN (11 bit ID, 500 kbaud)
 			sendCommand("ATSP6", "OK");
-			
+
 			// set rx ID
 			sendCommand("ATCF " + Integer.toHexString(CAN_SERIAL_RX_ID), "OK");
 
@@ -120,7 +124,7 @@ public class Elm327Connector implements Closeable, DataListener {
 
 			// disable data auto-formatting (less bytes in a stream)
 			sendCommand("ATCAF 0", "OK");
-			
+
 			// allow "long" 8-byte messages
 			sendCommand("ATAL", "OK");
 
@@ -134,7 +138,7 @@ public class Elm327Connector implements Closeable, DataListener {
 			String voltage = sendCommand("ATRV", "([0-9\\.]+)V");
 			log.info("* Ignition voltage = " + voltage);
         }
-        
+
         startNetworkConnector(TcpConnector.DEFAULT_PORT);
 		//sendBytesToSerial(new byte[] { 0, 1, 83, 32, 96, (byte)239, (byte)195 });
 		//sendBytesToSerial(new byte[] { (byte)'V' });
@@ -154,7 +158,7 @@ public class Elm327Connector implements Closeable, DataListener {
     	while (true) {
 	    	int newL = freshStr.indexOf('\r');
     	    //log.info("* onData: " + newL + " [" + freshStr + "]");
-        
+
 	        // split the stream into separate lines
     	    if (newL >= 0) {
         		String curLine = this.partialLine;
@@ -202,14 +206,11 @@ public class Elm327Connector implements Closeable, DataListener {
     	}
 	}
 
-	///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
 
     private boolean initConnection(String msg, IoStream stream) {
-        // todo: this seems like a hack-ish way? Shouldn't be openPort(port, baudrate)?
-        BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
-    	
     	this.stream = stream;
-        
+
         this.stream.setInputListener(this);
         if (sendCommand("ATZ", "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
         	log.info("ELM DETECTED on " + msg + "!");
@@ -252,7 +253,7 @@ public class Elm327Connector implements Closeable, DataListener {
 		if (matcher.find()) {
         	// store the echo mode
         	//this.waitForEcho = responseIdx != 0;
-			
+
         	return (matcher.groupCount() > 0) ? matcher.group(1) : matcher.group();
         }
         return null;
@@ -261,7 +262,7 @@ public class Elm327Connector implements Closeable, DataListener {
     private void sendFrame(int hdr0, byte [] data, int offset, int len) {
     	sendData(new byte[] { (byte)hdr0 }, data, offset, len);
     }
-    
+
     private void sendFrame(int hdr0, int hdr1, byte [] data, int offset, int len) {
     	sendData(new byte[] { (byte)hdr0, (byte)hdr1 }, data, offset, len);
     }
@@ -287,42 +288,48 @@ public class Elm327Connector implements Closeable, DataListener {
 	    }
     }
 
-    private synchronized byte[] receiveData() {
-		try {
-       		waitForResponse(TIMEOUT);
-       		//log.info("Elm327Connector.receiveData(): size=" + this.completeLines.size());
-       		return null;
-	    } catch (InterruptedException ignore) {
-	        return null;
-	    }
+    private byte[] receiveData() {
+        synchronized (lock) {
+            try {
+                waitForResponse(TIMEOUT);
+                //log.info("Elm327Connector.receiveData(): size=" + this.completeLines.size());
+                return null;
+            } catch (InterruptedException ignore) {
+                return null;
+            }
+        }
     }
 
-    private synchronized void waitForResponse(int timeout) throws InterruptedException {
-    	// multiple lines can be sent, we need to wait for them all
-    	while (true) {
-       		int numLines = this.completeLines.size();
-	        wait(timeout);
-	        // if nothing changed
-	        if (this.completeLines.size() == numLines)
-	        	break;
-	    }
+    private void waitForResponse(int timeout) throws InterruptedException {
+        synchronized (lock) {
+            // multiple lines can be sent, we need to wait for them all
+            while (true) {
+                int numLines = completeLines.size();
+                lock.wait(timeout);
+                // if nothing changed
+                if (completeLines.size() == numLines)
+                    break;
+            }
+        }
     }
 
-    private synchronized void processLine(String line) {
-    	log.info("Elm327Connector.processLine(): {" + line + "}");
-    	
-    	// remove the 'cursor'
-    	if (line.charAt(0) == '>')
-    		line = line.substring(1);
-    	
-    	if (isCommandMode) {
-	    	// store the output as a response to the command (for verification)
-	    	this.completeLines.add(line);
-	    	notifyAll();
-	    } else {
-	    	// just send it back to the proxy
-	    	sendDataBack(line);
-	    }
+    private void processLine(String line) {
+        synchronized (lock) {
+            log.info("Elm327Connector.processLine(): {" + line + "}");
+
+            // remove the 'cursor'
+            if (line.charAt(0) == '>')
+                line = line.substring(1);
+
+            if (isCommandMode) {
+                // store the output as a response to the command (for verification)
+                this.completeLines.add(line);
+                lock.notifyAll();
+            } else {
+                // just send it back to the proxy
+                sendDataBack(line);
+            }
+        }
     }
 
     private void sendDataBack(String line) {
@@ -348,5 +355,4 @@ public class Elm327Connector implements Closeable, DataListener {
 
         return true;
 	}
-
 }
