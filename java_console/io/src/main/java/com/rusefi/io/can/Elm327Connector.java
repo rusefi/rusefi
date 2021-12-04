@@ -3,7 +3,6 @@ package com.rusefi.io.can;
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.TcpConnector;
@@ -18,7 +17,7 @@ import java.util.regex.Pattern;
 
 import static com.rusefi.Timeouts.SECOND;
 
-public class Elm327Connector implements Closeable, DataListener {
+public class Elm327Connector implements Closeable {
 	private final static Logging log = Logging.getLogging(Elm327Connector.class);
 	private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes();
 
@@ -83,7 +82,6 @@ public class Elm327Connector implements Closeable, DataListener {
     		return Arrays.copyOfRange(data, dataOffset, dataOffset + numBytesAvailable);
         }
 	}
-
 
 	public static boolean checkConnection(String serialPort, IoStream stream) {
 		Elm327Connector con = new Elm327Connector();
@@ -151,8 +149,7 @@ public class Elm327Connector implements Closeable, DataListener {
     		stream.close();
     }
 
-    @Override
-    public void onDataArrived(byte[] freshData) {
+	private final DataListener listener = freshData -> {
     	// ELM327 uses a text protocol, so we convert the data to a string
     	String freshStr = new String(freshData);
     	while (true) {
@@ -173,7 +170,7 @@ public class Elm327Connector implements Closeable, DataListener {
 			this.partialLine += freshStr;
 			break;
 		}
-    }
+	};
 
 	public void sendBytesToSerial(byte [] bytes) {
     	log.info("-------sendBytesToSerial "+bytes.length+" bytes:");
@@ -211,7 +208,7 @@ public class Elm327Connector implements Closeable, DataListener {
     private boolean initConnection(String msg, IoStream stream) {
     	this.stream = stream;
 
-        this.stream.setInputListener(this);
+        this.stream.setInputListener(listener);
         if (sendCommand("ATZ", "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
         	log.info("ELM DETECTED on " + msg + "!");
         	return true;
