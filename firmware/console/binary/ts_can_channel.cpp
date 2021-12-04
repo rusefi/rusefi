@@ -21,10 +21,13 @@
 
 class CanTsChannel : public TsChannelBase {
 public:
+	CanTsChannel() : TsChannelBase("CAN") {
+
+	}
 	void start();
 
 	// TsChannelBase implementation
-	void write(const uint8_t* buffer, size_t size) override;
+	void write(const uint8_t* buffer, size_t size, bool) override;
 	size_t readTimeout(uint8_t* buffer, size_t size, int timeout) override;
 	void flush() override;
 	bool isReady() const override;
@@ -41,7 +44,7 @@ void CanTsChannel::start() {
 		return;
 	}
 
-	if (!CONFIG(canReadEnabled) || !CONFIG(canWriteEnabled)) {
+	if (!engineConfiguration->canReadEnabled || !engineConfiguration->canWriteEnabled) {
 		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN read or write not enabled");
 	}
 }
@@ -54,9 +57,9 @@ void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size
 	// a special case for short packets: we can send them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
 	if ((size + 1) <= 7) {
-		write(&responseCode, 1);      // header without size
+		write(&responseCode, 1, false);      // header without size
 		if (size > 0) {
-			write(buf, size);      // body
+			write(buf, size, false);      // body
 		}
 		flush();
 		return;
@@ -67,7 +70,7 @@ void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size
 	TsChannelBase::writeCrcPacket(responseCode, buf, size);
 }
 
-void CanTsChannel::write(const uint8_t* buffer, size_t size) {
+void CanTsChannel::write(const uint8_t* buffer, size_t size, bool) {
 	canStreamAddToTxTimeout(&size, buffer, BINARY_IO_TIMEOUT);
 }
 
