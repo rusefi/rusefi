@@ -24,8 +24,10 @@ public class Elm327Connector implements Closeable {
     public final static int ELM327_DEFAULT_BAUDRATE = 38400;
     private final static int BIG_TIMEOUT = 2 * SECOND;
     private final static int TIMEOUT = 70;
+	public static final String HELLO = "ATZ";
+	public static final String ELM_EOL = "\r";
 
-    private final Object lock = new Object();
+	private final Object lock = new Object();
 
 	// these should match the defines in the firmware
 	private final static int CAN_SERIAL_TX_ID = 0x100;
@@ -209,7 +211,7 @@ public class Elm327Connector implements Closeable {
     	this.stream = stream;
 
         this.stream.setInputListener(listener);
-        if (sendCommand("ATZ", "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
+        if (sendCommand(HELLO, "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
         	log.info("ELM DETECTED on " + msg + "!");
         	return true;
         }
@@ -226,7 +228,7 @@ public class Elm327Connector implements Closeable {
     	isCommandMode = true;
     	this.completeLines.clear();
        	try {
-       		this.stream.write((command + "\r").getBytes());
+       		this.stream.write((command + ELM_EOL).getBytes());
        		waitForResponse(timeout);
 	    } catch (IOException | InterruptedException ignore) {
 	        return null;
