@@ -152,6 +152,9 @@ public enum Sensor {
     accelerationRoll(GAUGE_NAME_ACCEL_ROLL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 310, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
     accelerationYaw(GAUGE_NAME_ACCEL_YAW, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 312, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
 
+    instantMAP("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 514, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+
+
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
     ;

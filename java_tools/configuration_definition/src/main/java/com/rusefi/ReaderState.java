@@ -10,6 +10,7 @@ import com.rusefi.util.SystemOut;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.*;
 
 import static com.rusefi.ConfigField.BOOLEAN_T;
@@ -26,7 +27,6 @@ public class ReaderState {
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
-    private static final String DEFINE_CONSTRUCTOR = "define_constructor";
     public final Stack<ConfigStructure> stack = new Stack<>();
     public final Map<String, Integer> tsCustomSize = new HashMap<>();
     public final Map<String, String> tsCustomLine = new HashMap<>();
@@ -159,6 +159,10 @@ public class ReaderState {
             consumer.handleEndStruct(structure);
     }
 
+    public void readBufferedReader(String inputString, List<ConfigurationConsumer> consumers) throws IOException {
+        readBufferedReader(new BufferedReader(new StringReader(inputString)), consumers);
+    }
+
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
         for (ConfigurationConsumer consumer : consumers)
             consumer.startFile();
@@ -216,15 +220,6 @@ public class ReaderState {
     }
 
     private static void handleStartStructure(ReaderState state, String line, boolean withPrefix) {
-        boolean withConstructor;
-        if (line.toLowerCase().startsWith(DEFINE_CONSTRUCTOR)) {
-            withConstructor = true;
-            line = line.substring(DEFINE_CONSTRUCTOR.length()).trim();
-        } else {
-            withConstructor = false;
-        }
-
-
         String name;
         String comment;
         if (line.contains(" ")) {
@@ -235,7 +230,7 @@ public class ReaderState {
             name = line;
             comment = null;
         }
-        ConfigStructure structure = new ConfigStructure(name, comment, withPrefix, withConstructor);
+        ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
         state.stack.push(structure);
         SystemOut.println("Starting structure " + structure.getName());
     }

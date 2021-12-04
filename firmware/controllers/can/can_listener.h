@@ -11,21 +11,21 @@
 
 class CanListener {
 public:
-	CanListener(uint32_t eid)
-		: m_eid(eid)
+	CanListener(uint32_t id)
+		: m_id(id)
 	{
 	}
 
 	CanListener* processFrame(const CANRxFrame& frame, efitick_t nowNt) {
-		if (CAN_EID(frame) == m_eid) {
+		if (CAN_ID(frame) == m_id) {
 			decodeFrame(frame, nowNt);
 		}
 
 		return m_next;
 	}
 
-	uint32_t getEid() {
-		return m_eid;
+	uint32_t getId() {
+		return m_id;
 	}
 
 	void setNext(CanListener* next) {
@@ -41,5 +41,5 @@ protected:
 	CanListener* m_next = nullptr;
 
 private:
-	const uint32_t m_eid;
+	const uint32_t m_id;
 };

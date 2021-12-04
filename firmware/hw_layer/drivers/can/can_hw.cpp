@@ -184,9 +184,9 @@ void setCanType(int type) {
 
 #if EFI_TUNER_STUDIO
 void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
-	tsOutputChannels->debugIntField1 = isCanEnabled ? canReadCounter : -1;
-	tsOutputChannels->debugIntField2 = isCanEnabled ? canWriteOk : -1;
-	tsOutputChannels->debugIntField3 = isCanEnabled ? canWriteNotOk : -1;
+	tsOutputChannels->canReadCounter = isCanEnabled ? canReadCounter : -1;
+	tsOutputChannels->canWriteOk = isCanEnabled ? canWriteOk : -1;
+	tsOutputChannels->canWriteNotOk = isCanEnabled ? canWriteNotOk : -1;
 }
 #endif /* EFI_TUNER_STUDIO */
 
@@ -234,13 +234,15 @@ void startCanPins() {
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
-	isCanEnabled = 
+	isCanEnabled = false;
+
+	bool isCanConfigGood =
 		(isBrainPinValid(engineConfiguration->canTxPin)) && // both pins are set...
 		(isBrainPinValid(engineConfiguration->canRxPin)) &&
 		(engineConfiguration->canWriteEnabled || engineConfiguration->canReadEnabled) ; // ...and either read or write is enabled
 
 	// nothing to do if we aren't enabled...
-	if (!isCanEnabled) {
+	if (!isCanConfigGood) {
 		return;
 	}
 
@@ -284,6 +286,12 @@ void initCan(void) {
 	if (engineConfiguration->canReadEnabled) {
 		canRead.Start();
 	}
+
+	isCanEnabled = true;
+}
+
+bool getIsCanEnabled(void) {
+	return isCanEnabled;
 }
 
 #endif /* EFI_CAN_SUPPORT */

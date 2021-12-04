@@ -109,7 +109,7 @@ extern pin_output_mode_e INVERTED_OUTPUT;
 
 int warningEnabled = true;
 
-extern int maxTriggerReentraint;
+extern int maxTriggerReentrant;
 extern uint32_t maxLockedDuration;
 
 
@@ -117,7 +117,7 @@ extern uint32_t maxLockedDuration;
 #define STATUS_LOGGING_BUFFER_SIZE 1800
 #endif /* STATUS_LOGGING_BUFFER_SIZE */
 
-static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
+static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE];
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
@@ -770,21 +770,24 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 		tsOutputChannels->recentErrorCode[i] = engine->engineState.warnings.recentWarnings.get(i);
 	}
 
+	tsOutputChannels->startStopStateToggleCounter = engine->startStopStateToggleCounter;
+	tsOutputChannels->starterState = enginePins.starterControl.getLogicValue();
+	tsOutputChannels->starterRelayDisable = enginePins.starterRelayDisable.getLogicValue();
+
+	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
+#if EFI_CAN_SUPPORT
+		postCanState(tsOutputChannels);
+#endif /* EFI_CAN_SUPPORT */
+
+#if EFI_CLOCK_LOCKS
+		tsOutputChannels->maxLockedDuration = maxLockedDuration;
+		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
+#endif /* EFI_CLOCK_LOCKS */
+
 	switch (engineConfiguration->debugMode)	{
-	case DBG_START_STOP:
-		tsOutputChannels->debugIntField1 = engine->startStopStateToggleCounter;
-		tsOutputChannels->debugIntField2 = enginePins.starterControl.getLogicValue();
-		tsOutputChannels->debugIntField3 = enginePins.starterRelayDisable.getLogicValue();
-		break;
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;
 		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
-		break;
-	case DBG_METRICS:
-#if EFI_CLOCK_LOCKS
-		tsOutputChannels->debugIntField1 = maxLockedDuration;
-		tsOutputChannels->debugIntField2 = maxTriggerReentraint;
-#endif /* EFI_CLOCK_LOCKS */
 		break;
 	case DBG_TPS_ACCEL:
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
@@ -796,31 +799,24 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 		tsOutputChannels->debugIntField3 = tsState.readPageCommandsCounter * _10_6 + tsState.burnCommandCounter;
 		break;
 		}
-	case DBG_AUX_VALVES:
-		tsOutputChannels->debugFloatField1 = engine->engineState.auxValveStart;
-		tsOutputChannels->debugFloatField2 = engine->engineState.auxValveEnd;
-		break;
 	case DBG_TRIGGER_COUNTERS:
-		tsOutputChannels->debugIntField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
-		tsOutputChannels->debugIntField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
+		tsOutputChannels->triggerPrimaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
+		tsOutputChannels->triggerSecondaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
 // no one uses shaft so far		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugFloatField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
-		tsOutputChannels->debugFloatField4 = engine->triggerCentral.vvtEventRiseCounter[0];
-		tsOutputChannels->debugFloatField5 = engine->triggerCentral.vvtEventFallCounter[0];
+		tsOutputChannels->triggerVvtRise = engine->triggerCentral.vvtEventRiseCounter[0];
+		tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
 
-		tsOutputChannels->debugFloatField1 = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
-		tsOutputChannels->debugFloatField2 = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
+		tsOutputChannels->triggerPrimaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
+		tsOutputChannels->triggerSecondaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
 
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];
 
 		// debugFloatField6 used
 		// no one uses shaft so far		tsOutputChannels->debugFloatField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_RISING);
-		break;
-	case DBG_CRANKING_DETAILS:
-		tsOutputChannels->debugIntField1 = engine->rpmCalculator.getRevolutionCounterSinceStart();
 		break;
 #if EFI_HIP_9011_DEBUG
 	case DBG_KNOCK:
@@ -839,11 +835,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 		postMapState(tsOutputChannels);
 		break;
 #endif /* EFI_MAP_AVERAGING */
-#if EFI_CAN_SUPPORT
-	case DBG_CAN:
-		postCanState(tsOutputChannels);
-		break;
-#endif /* EFI_CAN_SUPPORT */
 	case DBG_ANALOG_INPUTS:
 		tsOutputChannels->debugFloatField4 = isAdcChannelValid(engineConfiguration->map.sensor.hwChannel) ? getVoltageDivided("map", engineConfiguration->map.sensor.hwChannel) : 0.0f;
 		tsOutputChannels->debugFloatField7 = isAdcChannelValid(engineConfiguration->afr.hwChannel) ? getVoltageDivided("ego", engineConfiguration->afr.hwChannel) : 0.0f;
@@ -857,8 +848,8 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
 
-			tsOutputChannels->debugIntField1 = engine->mostRecentTimeBetweenSparkEvents;
-			tsOutputChannels->debugIntField2 = engine->mostRecentTimeBetweenIgnitionEvents;
+			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
+			tsOutputChannels->mostRecentTimeBetweenIgnitionEvents = engine->mostRecentTimeBetweenIgnitionEvents;
 		}
 		break;
 	case DBG_ION:
@@ -878,14 +869,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 		break;
 	default:
 		;
-	}
-}
-
-void updateCurrentEnginePhase() {
-	if (auto phase = engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt())) {
-		tsOutputChannels.currentEnginePhase = phase.Value - tdcPosition();
-	} else {
-		tsOutputChannels.currentEnginePhase = 0;
 	}
 }
 

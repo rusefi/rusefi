@@ -363,36 +363,6 @@ static int lua_setAirmass(lua_State* l) {
 	return 0;
 }
 
-static int lua_stopEngine(lua_State*) {
-	doScheduleStopEngine();
-
-	return 0;
-}
-
-static int lua_setTimingAdd(lua_State* l) {
-	engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
-
-	return 0;
-}
-
-static int lua_setTimingMult(lua_State* l) {
-	engine->engineState.luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
-
-	return 0;
-}
-
-static int lua_setFuelAdd(lua_State* l) {
-	engine->engineState.luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
-
-	return 0;
-}
-
-static int lua_setFuelMult(lua_State* l) {
-	engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
-
-	return 0;
-}
-
 #endif // EFI_UNIT_TEST
 
 struct LuaSensor final : public StoredValueSensor {
@@ -547,13 +517,30 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getAirmass", lua_getAirmass);
 	lua_register(l, "setAirmass", lua_setAirmass);
 
-	lua_register(l, "stopEngine", lua_stopEngine);
-
-	lua_register(l, "setTimingAdd", lua_setTimingAdd);
-	lua_register(l, "setTimingMult", lua_setTimingMult);
-
-	lua_register(l, "setFuelAdd", lua_setFuelAdd);
-	lua_register(l, "setFuelMult", lua_setFuelMult);
+	lua_register(l, "stopEngine", [](lua_State* l) {
+		doScheduleStopEngine();
+		return 0;
+	});
+	lua_register(l, "setTimingAdd", [](lua_State* l) {
+		engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
+	lua_register(l, "setTimingMult", [](lua_State* l) {
+		engine->engineState.luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
+		return 0;
+	});
+	lua_register(l, "setFuelAdd", [](lua_State* l) {
+		engine->engineState.luaAdjustments.fuelAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
+	lua_register(l, "setFuelMult", [](lua_State* l) {
+		engine->engineState.luaAdjustments.fuelMult = luaL_checknumber(l, 1);
+		return 0;
+	});
+	lua_register(l, "setEtbAdd", [](lua_State* l) {
+		engine->engineState.luaAdjustments.etbTargetPositionAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
 
 	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;

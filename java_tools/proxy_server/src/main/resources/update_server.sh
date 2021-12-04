@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo Stopping...
 ./stop_server.sh
 

@@ -24,4 +24,8 @@ static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	}
 }
 
+#define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
+#define GPT_FREQ_FAST 100000
+#define GPT_PERIOD_FAST 10
+
 #include "boards.h"

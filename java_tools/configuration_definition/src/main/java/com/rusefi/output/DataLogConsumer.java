@@ -3,6 +3,8 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
+import com.rusefi.VariableRegistry;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.CharArrayWriter;
 import java.io.FileWriter;
@@ -35,16 +37,9 @@ public class DataLogConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
-
             FieldIterator iterator = new FieldIterator(structure.tsFields);
-            for (int i = 0; i < structure.tsFields.size(); i++) {
-                iterator.start(i);
-
-                tsWriter.append(handle(iterator.cf));
-
-                iterator.end();
-
-            }
+            String content = handleFields(structure, iterator, "");
+            tsWriter.append(content);
         }
 
         if (fileName != null) {
@@ -54,12 +49,29 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigField configField) {
+    private String handleFields(ConfigStructure structure, FieldIterator iterator, String prefix) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < structure.tsFields.size(); i++) {
+            iterator.start(i);
+
+            String content = handle(iterator.cf, prefix);
+            sb.append(content);
+            iterator.end();
+
+        }
+        return sb.toString();
+    }
+
+    private String handle(ConfigField configField, String prefix) {
         if (configField.getName().contains("unused"))
             return "";
-        if (configField.isBit()) {
-            return "";
+
+        ConfigStructure cs = configField.getState().structures.get(configField.getType());
+        if (cs != null) {
+            String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
+            return handleFields(cs, new FieldIterator(cs.tsFields), extraPrefix);
         }
+
 
         if (configField.isArray()) {
 
@@ -76,17 +88,23 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = state.variableRegistry.applyVariables(configField.getComment());
-        String[] comments = comment.split("\\\\n");
-        comment = comments[0];
+        String comment = getComment(configField, state.variableRegistry);
+
+        return "entry = " + prefix + configField.getName() + ", " + comment + ", " + typeString + "\n";
+    }
+
+    @NotNull
+    public static String getComment(ConfigField configField, VariableRegistry variableRegistry) {
+        String comment = variableRegistry.applyVariables(configField.getComment());
+        String[] comments = comment == null ? new String[0] : comment.split("\\\\n");
+        comment = (comments.length > 0) ? comments[0] : "";
 
         if (comment.isEmpty())
             comment = configField.getName();
 
         if (comment.charAt(0) != '"')
             comment = quote(comment);
-
-        return "entry = " + configField.getName() + ", " + comment + ", " + typeString + "\n";
+        return comment;
     }
 
     public CharArrayWriter getTsWriter() {

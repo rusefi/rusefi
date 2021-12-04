@@ -24,7 +24,6 @@ public class ConfigStructure {
     public final String name;
     public final String comment;
     public final boolean withPrefix;
-    private final boolean withConstructor;
     /**
      * We have two different collections because if 'array iterate' feature which is handled differently
      * in C and TS
@@ -39,20 +38,15 @@ public class ConfigStructure {
     private ConfigField cPrevField = ConfigField.VOID;
     private final Set<String> names = new HashSet<>();
 
-    public ConfigStructure(String name, String comment, boolean withPrefix, boolean withConstructor) {
+    public ConfigStructure(String name, String comment, boolean withPrefix) {
         this.name = name;
         this.comment = comment;
         this.withPrefix = withPrefix;
-        this.withConstructor = withConstructor;
     }
 
     public void addBitField(ConfigField bitField) {
         addBoth(bitField);
         this.readingBitState.incrementBitIndex(bitField);
-    }
-
-    public boolean isWithConstructor() {
-        return withConstructor;
     }
 
     public String getName() {

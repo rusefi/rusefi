@@ -1,3 +1,5 @@
+! units,scale,offset,min,max,digits
+
 struct_no_prefix ts_outputs_s
 
 bit sd_present
@@ -6,19 +8,19 @@ bit isInjectionEnabledIndicator;
 bit sd_logging_internal
 bit isCylinderCleanupActivated;
 bit isFuelPumpOn;
-bit isFanOn;
+bit isFanOn;"radiator fan"
 bit isO2HeaterOn;
 bit checkEngine;
 bit needBurn;
 
 bit sd_msd
-bit clutchUpState;
-bit clutchDownState;
+bit clutchUpState;@@INDICATOR_NAME_CLUTCH_UP@@
+bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
 bit isFan2On
-bit unusedb14;
-bit brakePedalState;
+bit alternatorOnOff;
+bit brakePedalState;@@INDICATOR_NAME_BRAKE_DOWN@@
 bit toothLogReady;
-bit acSwitchState;
+bit acSwitchState;@@INDICATOR_NAME_AC_SWITCH@@
 bit isTpsError;
 bit isCltError;
 bit isMapError;
@@ -61,7 +63,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint8_t autoscale knockRetard;;"deg",{1/10}, 0, 0, 0, 0
-	uint8_t unused37;;"",1, 0, 0, 0, 0
+	uint8_t idleCurrentPosition;;"",1, 0, 0, 0, 0
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
@@ -91,39 +93,39 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale currentEnginePhase;"Engine Phase";"deg",1, 0, 0, 0, 0
 ! Wall model AE
-	uint16_t autoscale wallFuelAmount;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
-	uint16_t autoscale wallFuelCorrection;;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	int16_t autoscale wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
-	uint16_t unused76;;"",1, 0, 0, 0, 0
-	uint16_t autoscale deltaTps;TPS acceleration enrichment;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
+	uint16_t autoscale deltaTps;@@GAUGE_NAME_FUEL_TPS_ROC@@;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t unused80;;"",1, 0, 0, 0, 0
-	uint16_t autoscale tpsAccelFuel;;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t canReadCounter;;"",1, 0, 0, 0, 0
+	uint16_t autoscale tpsAccelFuel;@@GAUGE_NAME_FUEL_TPS_EXTRA@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 ! Ignition
-	uint16_t autoscale ignitionAdvance;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
-	uint16_t autoscale sparkDwellValue;;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
+	uint16_t autoscale ignitionAdvance;@@GAUGE_NAME_TIMING_ADVANCE@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale sparkDwellValue;@@GAUGE_COIL_DWELL_TIME@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 
-	uint16_t autoscale coilDutyCycle;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale coilDutyCycle;@@GAUGE_NAME_DWELL_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 ! Idle & ETB
-	uint16_t autoscale idleAirValvePosition;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale etbTarget;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale etb1DutyCycle;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale etb1Error;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale idleAirValvePosition;@@GAUGE_NAME_IAC@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etbTarget;"ETB Target";"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etb1DutyCycle;@@GAUGE_NAME_ETB_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale etb1Error;"ETB Error";"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 ! Fuel system
-	uint16_t autoscale fuelTankLevel;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale fuelTankLevel;"Fuel level";"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	uint16_t autoscale totalFuelConsumption;;"grams",1, 0, 0, 0, 0
-	uint16_t autoscale fuelFlowRate;;"gram/s",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale totalFuelConsumption;@@GAUGE_NAME_FUEL_CONSUMPTION@@;"grams",1, 0, 0, 0, 0
+	uint16_t autoscale fuelFlowRate;@@GAUGE_NAME_FUEL_FLOW@@;"gram/s",{1/@@PACK_MULT_FUEL_FLOW@@}, 0, 0, 0, 0
 
 ! Y axis values for selectable tables
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 	uint16_t autoscale afrTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 
-	float autoscale knockLevel;;"Volts", 1, 0, 0, 0, 0
+	float autoscale knockLevel;@@GAUGE_NAME_KNOCK_LEVEL@@;"Volts", 1, 0, 0, 0, 0
 
 ! integration magic: TS requires exact 'seconds' name
 	uint32_t autoscale seconds;@@GAUGE_NAME_UPTIME@@;"sec", 1, 0, 0, 0, 0
-	uint32_t autoscale engineMode;;"em", 1, 0, 0, 0, 0
+	uint32_t autoscale engineMode;"Engine Mode";"em", 1, 0, 0, 0, 0
 	uint32_t autoscale firmwareVersion;@@GAUGE_NAME_VERSION@@;"version_f", 1, 0, 0, 0, 0
 
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
@@ -143,24 +145,26 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	! it wants to send have been sent.
 	float autoscale calibrationValue;;"", 1, 0, 0, 0, 0
 	uint8_t autoscale calibrationMode;;"", 1, 0, 0, 0, 0
-	uint8_t autoscale padding;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale idleTargetPosition;;"", 1, 0, 0, 0, 0
 
 	! Values used for load axes for fuel/ign tables
 	! These may or may not be the same value, depending on mode
-	uint16_t autoscale fuelingLoad;;"%",{1/100}, 0, 0, 0, 0
+	uint16_t autoscale fuelingLoad;@@GAUGE_NAME_FUEL_LOAD@@;"%",{1/100}, 0, 0, 0, 0
 
-	uint16_t autoscale ignitionLoad;;"%",{1/100}, 0, 0, 0, 0
+	uint16_t autoscale ignitionLoad;@@GAUGE_NAME_IGNITION_LOAD@@;"%",{1/100}, 0, 0, 0, 0
 ! we want a hash of engineMake+engineCode+vehicleName in the log file in order to match TS logs to rusEFI Online tune
-	uint16_t autoscale engineMakeCodeNameCrc16;;"crc16",1, 0, 0, 0, 0
+	uint16_t autoscale engineMakeCodeNameCrc16;@@GAUGE_NAME_ENGINE_CRC16@@;"crc16",1, 0, 0, 0, 0
 ! Errors
-	uint32_t autoscale totalTriggerErrorCounter;;"counter",1, 0, 0, 0, 0
+	uint32_t autoscale totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
 	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
 
-	uint16_t autoscale warningCounter;;"count",1, 0, 0, 0, 0
-	uint16_t autoscale lastErrorCode;;"error",1, 0, 0, 0, 0
+	uint16_t autoscale warningCounter;@@GAUGE_NAME_WARNING_COUNTER@@;"count",1, 0, 0, 0, 0
+	uint16_t autoscale lastErrorCode;@@GAUGE_NAME_WARNING_LAST@@;"error",1, 0, 0, 0, 0
 
+! todo: re-implement enableLogErrorList
 	uint16_t[8 iterate] recentErrorCode;;"error", 1, 0, 0, 0, 0
 
+! todo: re-implement enableLogDebugChannels
 	float autoscale debugFloatField1;;"val", 1, 0, 0, 0, 0
 	float autoscale debugFloatField2;;"val", 1, 0, 0, 0, 0
 	float autoscale debugFloatField3;;"val", 1, 0, 0, 0, 0
@@ -175,9 +179,11 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale debugIntField4;;"val", 1, 0, 0, 0, 0
 	uint16_t autoscale debugIntField5;;"val", 1, 0, 0, 0, 0
 
-	uint16_t autoscale accelerationX;;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale accelerationY;;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+! todo: reimplement { LIS302DLCsPin != 0 || imuType != 0  }
+	uint16_t autoscale accelerationX;@@GAUGE_NAME_ACCEL_X@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationY;@@GAUGE_NAME_ACCEL_Y@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
+! todo: { max31855_cs1 != 0}
 	uint16_t[EGT_CHANNEL_COUNT iterate] egt;;"deg C", 1, 0, 0, 0, 0
 
 	uint16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
@@ -188,39 +194,39 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale rawIat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t autoscale rawOilPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale tuneCrc16;;"crc16", 1, 0, 0, 0, 0
-	uint8_t autoscale unusedAt246;;"", 1, 0, 0, 0, 0
-	uint8_t autoscale tcuCurrentGear;;"gear", 1, 0, 0, 0, 0
+	uint16_t autoscale tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
+	uint8_t autoscale fuelClosedLoopBinIdx;;"", 1, 0, 0, 0, 0
+	uint8_t autoscale tcuCurrentGear;@@GAUGE_NAME_CURRENT_GEAR@@;"gear", 1, 0, 0, 0, 0
 
 	uint16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
 
-	uint8_t autoscale tcuDesiredGear;;"gear",1, 0, 0, 0, 0
-	uint8_t autoscale flexPercent;;"%",{1/2}, 0, 0, 0, 0
+	uint8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, 0, 0, 0
+	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
 
 	uint16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t autoscale rawWastegatePosition;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale wastegatePositionSensor;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale idlePositionSensor;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale wastegatePositionSensor;@@GAUGE_NAME_WG_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale idlePositionSensor;@@GAUGE_NAME_IDLE_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t autoscale rawLowFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 	uint16_t autoscale rawHighFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale lowFuelPressure;;"kpa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-	uint16_t autoscale highFuelPressure;;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale lowFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_LOW@@;"kpa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale targetLambda;;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
+	uint16_t autoscale targetLambda;@@GAUGE_NAME_TARGET_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint16_t autoscale AFRValue;@@GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
 
 	uint16_t autoscale VssAcceleration;"Vss Accel";"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 0
 	uint16_t autoscale lambdaValue2;@@GAUGE_NAME_LAMBDA2@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 
 	uint16_t autoscale AFRValue2;@@GAUGE_NAME_AFR2@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 0
-	uint16_t autoscale vvtPositionB1E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
-	uint16_t autoscale vvtPositionB2I;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
-	uint16_t autoscale vvtPositionB2E;;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB1E;@@GAUGE_NAME_VVT_B1E@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB2I;@@GAUGE_NAME_VVT_B2I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+	uint16_t autoscale vvtPositionB2E;@@GAUGE_NAME_VVT_B2E@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
 	uint16_t[2 iterate] autoscale fuelPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
@@ -228,16 +234,74 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale rawTps2Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t knockCount;;"",1, 0, 0, 0, 0
+	uint16_t knockCount;@@GAUGE_NAME_KNOCK_LEVEL@@;"",1, 0, 0, 0, 0
 
-	uint16_t autoscale accelerationZ;;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale accelerationRoll;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale accelerationYaw;;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationZ;@@GAUGE_NAME_ACCEL_Z@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale accelerationYaw;@@GAUGE_NAME_ACCEL_YAW@@;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint8_t[4 iterate] autoscale vvtTargets;;"deg",1, 0, 0, 0, 0
-	uint16_t turboSpeed;;"hz",1, 0, 0, 0, 0
+	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
+
+    struct pid_status_s
+    	float iTerm;;"", 1, 0, -10000, 10000, 3
+    	float dTerm;;"", 1, 0, -10000, 10000, 3
+    	float output;;"", 1, 0, -10000, 10000, 3
+    	float error;;"", 1, 0, -10000, 10000, 3
+    	int resetCounter;;"", 1, 0, -10000, 10000, 0
+    end_struct
+
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[20 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[180 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
+    float autoscale TEMPLOG_MAP_INSTANT_AVERAGE;;"", 1, 0, -10000, 10000, 3
+
+    uint8_t fallbackMap;;"", 1, 0, -10000, 10000, 3
+    uint8_t TEMPLOG_map_peak;;"", 1, 0, -10000, 10000, 3
+    uint8_t unused112;;"", 1, 0, -10000, 10000, 3
+    uint8_t unused113;;"", 1, 0, -10000, 10000, 3
+
+
+	uint16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale timingIatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale timingPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+
+    uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
+    uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
+
+    uint16_t maxLockedDuration;;"", 1, 0, -10000, 10000, 3
+    uint16_t maxTriggerReentrant;;"", 1, 0, -10000, 10000, 3
+
+
+    uint16_t canWriteOk;;"", 1, 0, -10000, 10000, 3
+    uint16_t canWriteNotOk;;"", 1, 0, -10000, 10000, 3
+
+    int triggerPrimaryFall;;"", 1, 0, -10000, 10000, 3
+    int triggerPrimaryRise;;"", 1, 0, -10000, 10000, 3
+    int triggerSecondaryFall;;"", 1, 0, -10000, 10000, 3
+    int triggerSecondaryRise;;"", 1, 0, -10000, 10000, 3
+    int triggerVvtFall;;"", 1, 0, -10000, 10000, 3
+    int triggerVvtRise;;"", 1, 0, -10000, 10000, 3
+
+
+    uint8_t startStopStateToggleCounter;;"", 1, 0, -10000, 10000, 3
+    uint8_t starterState;;"", 1, 0, -10000, 10000, 3
+    uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
+    uint8_t multiSparkCounter;;"", 1, 0, -10000, 10000, 3
+
+    int idleState;;"", 1, 0, -10000, 10000, 3
+
+    float injectorFlowPressureRatio;;"", 1, 0, -10000, 10000, 3
+    float injectorFlowPressureDelta;;"", 1, 0, -10000, 10000, 3
+
+
+    float etbFeedForward;;"", 1, 0, -10000, 10000, 3
+    float etbIntegralError;;"", 1, 0, -10000, 10000, 3
+    float etbCurrentTarget;;"", 1, 0, -10000, 10000, 3
+	pid_status_s alternatorStatus
+	pid_status_s idleStatus
+	pid_status_s etbStatus
 
 end_struct
