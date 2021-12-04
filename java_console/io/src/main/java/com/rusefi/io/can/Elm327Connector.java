@@ -3,7 +3,7 @@ package com.rusefi.io.can;
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.TcpConnector;
 
@@ -95,7 +95,7 @@ public class Elm327Connector implements Closeable {
     public void start(String serialPort) {
     	log.info("* Elm327.start()");
 
-        if (initConnection(serialPort, SerialIoStreamJSerialComm.openPort(serialPort))) {
+        if (initConnection(serialPort, BufferedSerialIoStream.openPort(serialPort))) {
         	// reset to defaults
         	sendCommand("ATD", "OK");
 

@@ -6,7 +6,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.io.serial.BufferedSerialIoStream;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -57,7 +57,7 @@ public class SerialAutoChecker {
 
     public void openAndCheckResponse(AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
         String signature;
-        try (IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort)) {
+        try (IoStream stream = BufferedSerialIoStream.openPort(serialPort)) {
             signature = checkResponse(stream, callback);
         }
         if (signature != null) {
