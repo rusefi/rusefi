@@ -784,7 +784,8 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e acFanPinMode;
 
 
-	uint8_t[6] unused11;;"volts", 0.1, 0, 0, 20, 1
+    uint8_t mapCamSkipFactor;;"", 1, 0, 0, 255, 0
+	uint8_t[5] unused11;;"volts", 0.1, 0, 0, 20, 1
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 2", "type 2"
