@@ -13,15 +13,16 @@
 #include "global.h"
 #include "os_access.h"
 #include "crc.h"
+
+#if HAL_USE_CAN
+
 #include "serial_can.h"
 #include "can.h"
 #include "can_msg_tx.h"
 
-#if HAL_USE_CAN
 static CanStreamer streamer;
 static CanStreamerState state(&streamer);
 static CanTsListener listener;
-#endif /* HAL_USE_CAN */
 
 int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout) {
 	int dlc = 8; // standard 8 bytes
@@ -310,7 +311,6 @@ can_msg_t CanStreamerState::streamReceiveTimeout(size_t *np, uint8_t *rxbuf, can
 	return CAN_MSG_OK;
 }
 
-
 void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
 	// todo: what if the FIFO is full?
 	CanRxMessage msg(frame);
@@ -318,8 +318,6 @@ void CanTsListener::decodeFrame(const CANRxFrame& frame, efitick_t /*nowNt*/) {
 		//warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
 	}
 }
-
-#if HAL_USE_CAN
 
 void CanStreamer::init() {
 	registerCanListener(listener);
