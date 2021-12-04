@@ -64,7 +64,7 @@ public class PortDetector {
                     if (mode == DetectorMode.DETECT_ELM327) {
                         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
                     }
-                    new SerialAutoChecker(mode, serialPort, portFound).openAndCheckResponse(result, callback);
+                    new SerialAutoChecker(mode, serialPort, portFound).openAndCheckResponse(mode, result, callback);
                 }
 
                 @Override

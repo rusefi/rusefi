@@ -5,14 +5,32 @@ import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 
 public class SerialIoStream extends AbstractIoStream {
     protected final SerialPort sp;
     protected final String port;
+    private boolean withListener;
 
     public SerialIoStream(SerialPort sp, String port) {
         this.sp = sp;
         this.port = port;
+    }
+
+    public static IoStream openPort(String port) {
+        log.info("[SerialIoStream] openPort " + port);
+        SerialPort serialPort = openSerial(port);
+//        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
+        return new SerialIoStream(serialPort, port);
+    }
+
+    @NotNull
+    protected static SerialPort openSerial(String port) {
+        SerialPort serialPort = SerialPort.getCommPort(port);
+        serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
+        serialPort.openPort(0);
+        return serialPort;
     }
 
     @Override
@@ -40,8 +58,14 @@ public class SerialIoStream extends AbstractIoStream {
 
     @Override
     public void setInputListener(DataListener listener) {
-        // datalistener can be redefined
-        sp.removeDataListener();
+        if (withListener) {
+            /**
+             * it looks like some drivers do not handle change of listener properly
+             * AndreyB had this problem at least on a random ELM327 clone with CH340 serial chip
+             */
+            throw new IllegalStateException("Not possible to change listener");
+        }
+        withListener = true;
         sp.addDataListener(new SerialPortDataListener() {
             private boolean isFirstEvent = true;
 
