@@ -23,14 +23,16 @@ static int getZigZag(int index) {
 }
 
 TEST(trigger, map_cam) {
+	EngineTestHelper eth(TEST_ENGINE);
 
+	engineConfiguration->mapCamAveragingLength = 8;
 	MapState state;
 
 	int i = 0;
 	for (;i<404;i++) {
 		state.add(getZigZag(i));
 
-		if (state.mapBuffer.getCount() > MAP_CAM_BUFFER) {
+		if (state.mapBuffer.getCount() > engineConfiguration->mapCamAveragingLength) {
 			ASSERT_FALSE(state.isPeak()) << "At " << i;
 		}
 	}
