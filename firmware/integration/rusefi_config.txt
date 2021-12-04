@@ -644,7 +644,7 @@ uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 
 	uint8_t mapCamDetectionThreshold;;"", 1, 0, 0, 240, 0
 	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
-	uint8_t unusedNearVss;;"", 1, 0, 0, 1, 0
+	uint8_t mapCamAveragingLength;;"", 1, 0, 0, 255, 0
 
 
 ! todo: rename to triggerSimulatorRpm

@@ -110,6 +110,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 		engine->triggerCentral.mapState.add(instantMap);
 		bool isPeak = engine->triggerCentral.mapState.isPeak();
 #if EFI_TUNER_STUDIO
+		tsOutputChannels.TEMPLOG_map_length = MAP_CAM_BUFFER;
 		tsOutputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = engine->triggerCentral.mapState.current;
 		if (isPeak) {
 			tsOutputChannels.TEMPLOG_map_peak++;

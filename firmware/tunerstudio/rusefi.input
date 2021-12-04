@@ -3399,6 +3399,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = parkingLot, "Experimental/Broken"
 		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
 		field = "mapCamDetectionThreshold",             mapCamDetectionThreshold
+		field = "mapCamAveragingLength",                  mapCamAveragingLength
 		field = "#System hacks"
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
