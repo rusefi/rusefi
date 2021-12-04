@@ -15,7 +15,7 @@ public class Elm327ConnectorStartup {
             return;
         }
 
-        (new Elm327Connector()).start(autoDetectedPort);
+        new Elm327Connector().start(autoDetectedPort);
         log.info("Running Elm327 connector for " + autoDetectedPort);
     }
 }
