@@ -3,7 +3,7 @@ package com.rusefi.binaryprotocol.test;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.serial.BaudRateHolder;
-import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.io.serial.BufferedSerialIoStream;
 
 import java.io.IOException;
 
@@ -16,7 +16,7 @@ public class Elm327Sandbox {
         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
         String serialPort = "COM5";
 
-        IoStream stream = SerialIoStreamJSerialComm.openPort(serialPort);
+        IoStream stream = BufferedSerialIoStream.openPort(serialPort);
         stream.setInputListener(freshData -> System.out.println("onDataArrived"));
 
         stream.write((Elm327Connector.HELLO + ELM_EOL).getBytes());
