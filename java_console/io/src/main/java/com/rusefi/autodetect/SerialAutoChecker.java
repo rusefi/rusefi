@@ -30,7 +30,7 @@ public class SerialAutoChecker {
 
     public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
         if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
-            if (Elm327Connector.checkConnection(serialPort, SerialIoStreamJSerialComm.openPort(serialPort))) {
+            if (Elm327Connector.checkConnection(serialPort, stream)) {
                 return serialPort;
             }
             return null;
