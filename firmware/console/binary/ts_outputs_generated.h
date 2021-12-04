@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 04 22:10:26 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 04 23:26:00 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -844,7 +844,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 507
 	 */
-	uint8_t unused113 = (uint8_t)0;
+	uint8_t TEMPLOG_mapIndex = (uint8_t)0;
 	/**
 	%
 	 * offset 508
@@ -970,4 +970,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 04 22:10:26 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Dec 04 23:26:00 UTC 2021
