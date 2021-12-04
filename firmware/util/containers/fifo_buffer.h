@@ -15,6 +15,10 @@
 
 #include "cyclic_buffer.h"
 
+#if EFI_UNIT_TEST
+#include "global.h"
+#endif // EFI_UNIT_TEST
+
 // todo: this is not a thread-safe version!
 template<typename T, size_t maxSize = CB_MAX_SIZE>
 class fifo_buffer : public cyclic_buffer<T, maxSize> {
@@ -92,7 +96,9 @@ template<typename T, size_t maxSize = CB_MAX_SIZE>
 class fifo_buffer_sync : public fifo_buffer<T, maxSize> {
 public:
 	fifo_buffer_sync() {
+#if !EFI_UNIT_TEST
 		osalThreadQueueObjectInit(&q_waiting);
+#endif // EFI_UNIT_TEST
 	}
 
 	bool put(T item) override {
@@ -116,7 +122,8 @@ public:
 	}
 
 	bool get(T &item, int timeout) {
-    	chSysLock();
+#if !EFI_UNIT_TEST
+		chSysLock();
 		while (fifo_buffer<T, maxSize>::isEmpty()) {
 			msg_t msg = osalThreadEnqueueTimeoutS(&q_waiting, timeout);
 			if (msg != MSG_OK) {
@@ -127,17 +134,22 @@ public:
 		item = fifo_buffer<T, maxSize>::get();
 		chSysUnlock();
 		return true;
+#endif // EFI_UNIT_TEST
     }
 
 	void clear() {
 		chSysLock();
 		fifo_buffer<T, maxSize>::clear();
+#if !EFI_UNIT_TEST
 		osalThreadDequeueAllI(&q_waiting, MSG_RESET);
+#endif // EFI_UNIT_TEST
 		chSysUnlock();
 	}
 
 protected:
+#if !EFI_UNIT_TEST
 	threads_queue_t q_waiting;
+#endif // EFI_UNIT_TEST
 };
 
 #endif /* FIFO_BUFFER_H */
