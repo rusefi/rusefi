@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
 import org.jetbrains.annotations.Nullable;
@@ -17,15 +18,23 @@ import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class SerialAutoChecker {
     private final static Logging log = Logging.getLogging(SerialAutoChecker.class);
+    private final PortDetector.DetectorMode mode;
     private final String serialPort;
     private final CountDownLatch portFound;
 
-    public SerialAutoChecker(String serialPort, CountDownLatch portFound) {
+    public SerialAutoChecker(PortDetector.DetectorMode mode, String serialPort, CountDownLatch portFound) {
+        this.mode = mode;
         this.serialPort = serialPort;
         this.portFound = portFound;
     }
 
     public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
+        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
+            if (Elm327Connector.checkConnection(serialPort, SerialIoStreamJSerialComm.openPort(serialPort))) {
+                return serialPort;
+            }
+            return null;
+        }
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         try {
             HelloCommand.send(stream);

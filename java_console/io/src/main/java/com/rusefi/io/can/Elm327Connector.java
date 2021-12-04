@@ -2,7 +2,6 @@ package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
-import com.romraider.util.HexUtil;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialIoStreamJSerialComm;
@@ -12,11 +11,9 @@ import com.rusefi.io.tcp.TcpConnector;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.lang.Thread;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -87,9 +84,9 @@ public class Elm327Connector implements Closeable, DataListener {
 	}
 
 
-	public static boolean checkConnection(String serialPort) {
+	public static boolean checkConnection(String serialPort, IoStream stream) {
 		Elm327Connector con = new Elm327Connector();
-		boolean found = con.initConnection(serialPort);
+		boolean found = con.initConnection(serialPort, stream);
 		con.close();
 		return found;
 	}
@@ -97,7 +94,7 @@ public class Elm327Connector implements Closeable, DataListener {
     public void start(String serialPort) {
     	log.info("* Elm327.start()");
 
-        if (initConnection(serialPort)) {
+        if (initConnection(serialPort, SerialIoStreamJSerialComm.openPort(serialPort))) {
         	// reset to defaults
         	sendCommand("ATD", "OK");
 
@@ -210,18 +207,18 @@ public class Elm327Connector implements Closeable, DataListener {
 
 	///////////////////////////////////////////////////////
 
-    private boolean initConnection(String serialPort) {
+    private boolean initConnection(String msg, IoStream stream) {
         // todo: this seems like a hack-ish way? Shouldn't be openPort(port, baudrate)?
         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
     	
-    	this.stream = SerialIoStreamJSerialComm.openPort(serialPort);
+    	this.stream = stream;
         
         this.stream.setInputListener(this);
         if (sendCommand("ATZ", "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
-        	log.info("ELM DETECTED on " + serialPort + "!");
+        	log.info("ELM DETECTED on " + msg + "!");
         	return true;
         }
-		log.info("ELM NOT FOUND on " + serialPort + "!");
+		log.info("ELM NOT FOUND on " + msg + "!");
 		return false;
     }
 

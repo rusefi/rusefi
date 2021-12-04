@@ -72,7 +72,7 @@ public class DfuFlasher {
             wnd.append("Using selected " + port + "\n");
             IoStream stream = SerialIoStreamJSerialComm.openPort(port);
             AtomicReference<String> signature = new AtomicReference<>();
-            new SerialAutoChecker(port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
+            new SerialAutoChecker(PortDetector.DetectorMode.DETECT_TS, port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
                 @Override
                 public Void apply(SerialAutoChecker.CallbackContext callbackContext) {
                     signature.set(callbackContext.getSignature());
