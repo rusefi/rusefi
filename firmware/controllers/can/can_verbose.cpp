@@ -56,7 +56,7 @@ static void populateFrame(Speeds& msg) {
 	auto rpm = GET_RPM();
 	msg.rpm = rpm;
 
-	auto timing = engine->engineState.timingAdvance;
+	auto timing = engine->engineState.timingAdvance[0];
 	msg.timing = timing > 360 ? timing - 720 : timing;
 
 	msg.injDuty = getInjectorDutyCycle(rpm);

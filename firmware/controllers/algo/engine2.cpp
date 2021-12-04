@@ -165,7 +165,11 @@ void EngineState::periodicFastCallback() {
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 
 	float ignitionLoad = getIgnitionLoad();
-	timingAdvance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+	float advance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount / 2; i++) {
+		timingAdvance[i] = advance;
+	}
 
 	// TODO: calculate me from a table!
 	trailingSparkAngle = engineConfiguration->trailingSparkAngle;
