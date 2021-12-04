@@ -1313,8 +1313,8 @@
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
 #define SIGNATURE_BOARD all
-#define SIGNATURE_DATE 2021.07.22
-#define SIGNATURE_HASH 2229263337
+#define SIGNATURE_DATE 2021.12.03
+#define SIGNATURE_HASH 1544512377
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1350,6 +1350,9 @@
 #define startStopButtonMode_offset 1773
 #define startStopButtonPin_offset 811
 #define startUpFuelPumpDuration_offset 1892
+#define stepper_num_micro_steps_e_auto_enum "STEPPER_FULL", "INVALID", "STEPPER_HALF", "INVALID", "STEPPER_FOURTH", "INVALID", "INVALID", "INVALID", "STEPPER_EIGHTH"
+#define stepper_num_micro_steps_e_enum "Full-Step (Default)", "INVALID", "Half-Step", "INVALID", "1/4 Micro-Step", "INVALID", "INVALID", "INVALID", "1/8 Micro-Step"
+#define stepperDcInvertedPins_offset 2116
 #define stepperDcIo1_controlPin_offset 1090
 #define stepperDcIo1_directionPin1_offset 1088
 #define stepperDcIo1_directionPin2_offset 1089
@@ -1364,6 +1367,9 @@
 #define stepperEnablePin_offset 3104
 #define stepperEnablePinMode_offset 2605
 #define stepperForceParkingEveryRestart_offset 744
+#define stepperMaxDutyCycle_offset 2538
+#define stepperMinDutyCycle_offset 2537
+#define stepperNumMicroSteps_offset 2536
 #define stepperParkingExtraSteps_offset 818
 #define STFT_BANK_COUNT 2
 #define stft_cell_cfg_s_size 4
@@ -1672,7 +1678,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.07.22.all.2229263337"
+#define TS_SIGNATURE "rusEFI 2021.12.03.all.1544512377"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -1730,7 +1736,6 @@
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
 #define uartConsoleSerialSpeed_offset 2076
 #define unused1059_offset 3964
-#define unused1126_offset 2116
 #define unused1127_offset 2116
 #define unused1128_offset 2116
 #define unused1129_offset 2116
@@ -1748,7 +1753,7 @@
 #define unused244_2_offset 2424
 #define unused244_3_offset 2428
 #define unused2508_offset 2511
-#define unused2536_offset 2536
+#define unused2536_offset 2539
 #define unused3328_offset 3340
 #define unused3942_offset 3992
 #define unused3988_offset 3988

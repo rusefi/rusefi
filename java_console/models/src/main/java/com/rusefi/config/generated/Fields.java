@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Jul 22 04:19:10 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 03 14:10:09 EST 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1269,6 +1269,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
+	public static final int SIGNATURE_HASH = 1544512377;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1303,6 +1304,7 @@ public class Fields {
 	public static final int startStopButtonMode_offset = 1773;
 	public static final int startStopButtonPin_offset = 811;
 	public static final int startUpFuelPumpDuration_offset = 1892;
+	public static final int stepperDcInvertedPins_offset = 2116;
 	public static final int stepperDcIo1_controlPin_offset = 1090;
 	public static final int stepperDcIo1_directionPin1_offset = 1088;
 	public static final int stepperDcIo1_directionPin2_offset = 1089;
@@ -1317,6 +1319,9 @@ public class Fields {
 	public static final int stepperEnablePin_offset = 3104;
 	public static final int stepperEnablePinMode_offset = 2605;
 	public static final int stepperForceParkingEveryRestart_offset = 744;
+	public static final int stepperMaxDutyCycle_offset = 2538;
+	public static final int stepperMinDutyCycle_offset = 2537;
+	public static final int stepperNumMicroSteps_offset = 2536;
 	public static final int stepperParkingExtraSteps_offset = 818;
 	public static final int STFT_BANK_COUNT = 2;
 	public static final int stft_cell_cfg_s_size = 4;
@@ -1577,7 +1582,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.07.22.all.2229263337";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.03.all.1544512377";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TT_TT_1_16 = 50;
@@ -1632,7 +1637,6 @@ public class Fields {
 	public static final int twoWireBatchInjection_offset = 1476;
 	public static final int uartConsoleSerialSpeed_offset = 2076;
 	public static final int unused1059_offset = 3964;
-	public static final int unused1126_offset = 2116;
 	public static final int unused1127_offset = 2116;
 	public static final int unused1128_offset = 2116;
 	public static final int unused1129_offset = 2116;
@@ -1650,7 +1654,7 @@ public class Fields {
 	public static final int unused244_2_offset = 2424;
 	public static final int unused244_3_offset = 2428;
 	public static final int unused2508_offset = 2511;
-	public static final int unused2536_offset = 2536;
+	public static final int unused2536_offset = 2539;
 	public static final int unused3328_offset = 3340;
 	public static final int unused3942_offset = 3992;
 	public static final int unused3988_offset = 3988;
@@ -2556,7 +2560,7 @@ public class Fields {
 	public static final Field ENABLEVERBOSECAN2TX = Field.create("ENABLEVERBOSECAN2TX", 2116, FieldType.BIT, 0);
 	public static final Field CAN2READENABLED = Field.create("CAN2READENABLED", 2116, FieldType.BIT, 1);
 	public static final Field CAN2WRITEENABLED = Field.create("CAN2WRITEENABLED", 2116, FieldType.BIT, 2);
-	public static final Field UNUSED1126 = Field.create("UNUSED1126", 2116, FieldType.BIT, 3);
+	public static final Field STEPPERDCINVERTEDPINS = Field.create("STEPPERDCINVERTEDPINS", 2116, FieldType.BIT, 3);
 	public static final Field UNUSED1127 = Field.create("UNUSED1127", 2116, FieldType.BIT, 4);
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 2116, FieldType.BIT, 5);
 	public static final Field UNUSED1129 = Field.create("UNUSED1129", 2116, FieldType.BIT, 6);
@@ -2673,6 +2677,11 @@ public class Fields {
 	public static final Field ETBWASTEGATEPID_PERIODMS = Field.create("ETBWASTEGATEPID_PERIODMS", 2530, FieldType.INT16);
 	public static final Field ETBWASTEGATEPID_MINVALUE = Field.create("ETBWASTEGATEPID_MINVALUE", 2532, FieldType.INT16);
 	public static final Field ETBWASTEGATEPID_MAXVALUE = Field.create("ETBWASTEGATEPID_MAXVALUE", 2534, FieldType.INT16);
+	public static final String[] stepper_num_micro_steps_e = {"Full-Step (Default)", "INVALID", "Half-Step", "INVALID", "1/4 Micro-Step", "INVALID", "INVALID", "INVALID", "1/8 Micro-Step"};
+	public static final Field STEPPERNUMMICROSTEPS = Field.create("STEPPERNUMMICROSTEPS", 2536, FieldType.INT8, stepper_num_micro_steps_e);
+	public static final Field STEPPERMINDUTYCYCLE = Field.create("STEPPERMINDUTYCYCLE", 2537, FieldType.INT8);
+	public static final Field STEPPERMAXDUTYCYCLE = Field.create("STEPPERMAXDUTYCYCLE", 2538, FieldType.INT8);
+	public static final Field UNUSED2536 = Field.create("UNUSED2536", 2539, FieldType.INT8);
 	public static final Field TIMING_OFFSET_CYLINDER1 = Field.create("TIMING_OFFSET_CYLINDER1", 2540, FieldType.FLOAT);
 	public static final Field TIMING_OFFSET_CYLINDER2 = Field.create("TIMING_OFFSET_CYLINDER2", 2544, FieldType.FLOAT);
 	public static final Field TIMING_OFFSET_CYLINDER3 = Field.create("TIMING_OFFSET_CYLINDER3", 2548, FieldType.FLOAT);
@@ -3687,7 +3696,7 @@ public class Fields {
 	ENABLEVERBOSECAN2TX,
 	CAN2READENABLED,
 	CAN2WRITEENABLED,
-	UNUSED1126,
+	STEPPERDCINVERTEDPINS,
 	UNUSED1127,
 	UNUSED1128,
 	UNUSED1129,
@@ -3803,6 +3812,10 @@ public class Fields {
 	ETBWASTEGATEPID_PERIODMS,
 	ETBWASTEGATEPID_MINVALUE,
 	ETBWASTEGATEPID_MAXVALUE,
+	STEPPERNUMMICROSTEPS,
+	STEPPERMINDUTYCYCLE,
+	STEPPERMAXDUTYCYCLE,
+	UNUSED2536,
 	TIMING_OFFSET_CYLINDER1,
 	TIMING_OFFSET_CYLINDER2,
 	TIMING_OFFSET_CYLINDER3,
