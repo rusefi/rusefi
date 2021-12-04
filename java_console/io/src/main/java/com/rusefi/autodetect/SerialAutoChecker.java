@@ -7,6 +7,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.BufferedSerialIoStream;
+import com.rusefi.io.serial.SerialIoStream;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -55,11 +56,15 @@ public class SerialAutoChecker {
         }
     }
 
-    public void openAndCheckResponse(AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
+    public void openAndCheckResponse(PortDetector.DetectorMode mode, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
         String signature;
-        try (IoStream stream = BufferedSerialIoStream.openPort(serialPort)) {
-            signature = checkResponse(stream, callback);
+        IoStream stream;
+        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
+            stream = SerialIoStream.openPort(serialPort);
+        } else {
+            stream = BufferedSerialIoStream.openPort(serialPort);
         }
+        signature = checkResponse(stream, callback);
         if (signature != null) {
             /**
              * propagating result after closing the port so that it could be used right away

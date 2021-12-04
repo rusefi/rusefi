@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class AbstractIoStream implements IoStream {
     private boolean isClosed;
 
-    protected StreamStats streamStats = new StreamStats();
+    protected final StreamStats streamStats = new StreamStats();
     private final AtomicInteger bytesOut = new AtomicInteger();
     private long latestActivity;
 

@@ -2,9 +2,6 @@ package com.rusefi.io.serial;
 
 import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortDataListener;
-import com.fazecast.jSerialComm.SerialPortEvent;
-import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
 
@@ -38,10 +35,8 @@ public class BufferedSerialIoStream extends SerialIoStream {
      * @see PortHolder#connectAndReadConfiguration()
      */
     public static IoStream openPort(String port) {
-        log.info("[SerialIoStreamJSerialComm] openPort " + port);
-        SerialPort serialPort = SerialPort.getCommPort(port);
-        serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
-        serialPort.openPort(0);
+        log.info("[BufferedSerialIoStream] openPort " + port);
+        SerialPort serialPort = openSerial(port);
 //        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
         return new BufferedSerialIoStream(serialPort, port);
     }
