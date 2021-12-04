@@ -67,8 +67,11 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 
 	if (!engine->isMainRelayEnabled()) {
+/*
+todo AndreiKA this change breaks 22 unit tests?
 		allowFuel.clear();
 		allowSpark.clear();
+*/
 	}
 
 	m_transientAllowInjection = allowFuel;
