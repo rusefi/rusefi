@@ -7,7 +7,11 @@
 
 #pragma once
 
+#if EFI_UNIT_TEST
+#include "can_mocks.h"
+#else
 #include "hal.h"
+#endif // EFI_UNIT_TEST
 
 #include "periodic_thread_controller.h"
 
