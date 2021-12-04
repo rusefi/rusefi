@@ -1546,6 +1546,7 @@
 #define mapAccelTaperBins_offset 2136
 #define mapAccelTaperMult_offset 2168
 #define mapAveragingSchedulingAtIndex_offset 1540
+#define mapCamAveragingLength_offset 619
 #define mapCamDetectionAnglePosition_offset 552
 #define mapCamDetectionThreshold_offset 615
 #define mapErrorDetectionTooHigh_offset 1780
@@ -1801,7 +1802,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 3214995028
+#define SIGNATURE_HASH 3399260965
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2319,7 +2320,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.04.kin.3214995028"
+#define TS_SIGNATURE "rusEFI 2021.12.04.kin.3399260965"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2428,7 +2429,6 @@
 #define unusedLaunchRpmThreshold_offset 1032
 #define unusedLogFormat_offset 496
 #define unusedLuaWasHere_offset 16004
-#define unusedNearVss_offset 619
 #define unusedOldBiquad_offset 2323
 #define unusedOutputFreqWhereHere_offset 832
 #define unusedOutputWhereHere_offset 794

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 04 07:03:57 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 04 22:38:25 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1504,6 +1504,7 @@ public class Fields {
 	public static final int mapAccelTaperBins_offset = 2136;
 	public static final int mapAccelTaperMult_offset = 2168;
 	public static final int mapAveragingSchedulingAtIndex_offset = 1540;
+	public static final int mapCamAveragingLength_offset = 619;
 	public static final int mapCamDetectionAnglePosition_offset = 552;
 	public static final int mapCamDetectionThreshold_offset = 615;
 	public static final int mapErrorDetectionTooHigh_offset = 1780;
@@ -1743,7 +1744,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 2062599444;
+	public static final int SIGNATURE_HASH = 265072741;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -2206,7 +2207,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.04.all.2062599444";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.04.all.265072741";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2312,7 +2313,6 @@ public class Fields {
 	public static final int unusedLaunchRpmThreshold_offset = 1032;
 	public static final int unusedLogFormat_offset = 496;
 	public static final int unusedLuaWasHere_offset = 16032;
-	public static final int unusedNearVss_offset = 619;
 	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedOutputFreqWhereHere_offset = 832;
 	public static final int unusedOutputWhereHere_offset = 794;
@@ -2628,7 +2628,7 @@ public class Fields {
 	public static final Field MAPCAMDETECTIONTHRESHOLD = Field.create("MAPCAMDETECTIONTHRESHOLD", 615, FieldType.INT8);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 616, FieldType.INT16);
 	public static final Field VSSTOOTHCOUNT = Field.create("VSSTOOTHCOUNT", 618, FieldType.INT8);
-	public static final Field UNUSEDNEARVSS = Field.create("UNUSEDNEARVSS", 619, FieldType.INT8);
+	public static final Field MAPCAMAVERAGINGLENGTH = Field.create("MAPCAMAVERAGINGLENGTH", 619, FieldType.INT8);
 	public static final Field TRIGGERSIMULATORFREQUENCY = Field.create("TRIGGERSIMULATORFREQUENCY", 620, FieldType.INT);
 	public static final Field INJECTIONPINS1 = Field.create("INJECTIONPINS1", 624, FieldType.INT8, output_pin_e);
 	public static final Field INJECTIONPINS2 = Field.create("INJECTIONPINS2", 625, FieldType.INT8, output_pin_e);
@@ -3906,7 +3906,7 @@ public class Fields {
 	MAPCAMDETECTIONTHRESHOLD,
 	VSSGEARRATIO,
 	VSSTOOTHCOUNT,
-	UNUSEDNEARVSS,
+	MAPCAMAVERAGINGLENGTH,
 	TRIGGERSIMULATORFREQUENCY,
 	INJECTIONPINS1,
 	INJECTIONPINS2,
