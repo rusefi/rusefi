@@ -7,7 +7,11 @@
 
 #pragma once
 
+#if EFI_UNIT_TEST
+#include "can_mocks.h"
+#else
 #include "hal.h"
+#endif // EFI_UNIT_TEST
 
 #include "periodic_thread_controller.h"
 
@@ -91,7 +95,9 @@ private:
 #ifdef STM32H7XX
 #define CAN_SID(f) ((f).std.SID)
 #define CAN_EID(f) ((f).ext.EID)
+#define CAN_ID(f) ((f).common.XTD ? CAN_EID(f) : CAN_SID(f))
 #else
 #define CAN_SID(f) ((f).SID)
 #define CAN_EID(f) ((f).EID)
+#define CAN_ID(f) ((f).IDE ? CAN_EID(f) : CAN_SID(f))
 #endif

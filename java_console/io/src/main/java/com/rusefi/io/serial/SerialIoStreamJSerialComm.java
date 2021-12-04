@@ -38,6 +38,8 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
 
     @Override
     public void setInputListener(DataListener listener) {
+        // datalistener can be redefined
+        sp.removeDataListener();
         sp.addDataListener(new SerialPortDataListener() {
             private boolean isFirstEvent = true;
 

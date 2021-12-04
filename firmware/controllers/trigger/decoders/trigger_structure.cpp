@@ -388,7 +388,7 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	// convert engine cycle angle into trigger cycle angle
 	angle += triggerShape->tdcPosition + engineConfiguration->globalTriggerAngleOffset;
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
-	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
+	wrapAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
 	int triggerEventIndex = triggerShape->findAngleIndex(details, angle);
 	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];

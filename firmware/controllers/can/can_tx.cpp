@@ -52,7 +52,9 @@ void CanWrite::PeriodicTask(efitime_t nowNt) {
 		cycleCount = 0;
 	}
 
+#ifndef DISABLE_CAN_UPDATE_DASH
 	updateDash(cycle);
+#endif /* DISABLE_CAN_UPDATE_DASH */
 
 	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms)) {
 		sendWidebandInfo();

@@ -253,10 +253,12 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[184 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[180 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
+    float autoscale TEMPLOG_MAP_INSTANT_AVERAGE;;"", 1, 0, -10000, 10000, 3
 
     uint8_t fallbackMap;;"", 1, 0, -10000, 10000, 3
-    uint8_t unused111;;"", 1, 0, -10000, 10000, 3
+    uint8_t TEMPLOG_map_peak;;"", 1, 0, -10000, 10000, 3
     uint8_t unused112;;"", 1, 0, -10000, 10000, 3
     uint8_t unused113;;"", 1, 0, -10000, 10000, 3
 
@@ -264,13 +266,13 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale timingIatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale timingPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale instantMAPValue;@@GAUGE_NAME_MAP@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 
     uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
     uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
 
     uint16_t maxLockedDuration;;"", 1, 0, -10000, 10000, 3
-    uint16_t maxTriggerReentraint;;"", 1, 0, -10000, 10000, 3
+    uint16_t maxTriggerReentrant;;"", 1, 0, -10000, 10000, 3
 
 
     uint16_t canWriteOk;;"", 1, 0, -10000, 10000, 3

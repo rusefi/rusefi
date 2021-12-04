@@ -109,7 +109,7 @@ extern pin_output_mode_e INVERTED_OUTPUT;
 
 int warningEnabled = true;
 
-extern int maxTriggerReentraint;
+extern int maxTriggerReentrant;
 extern uint32_t maxLockedDuration;
 
 
@@ -117,7 +117,7 @@ extern uint32_t maxLockedDuration;
 #define STATUS_LOGGING_BUFFER_SIZE 1800
 #endif /* STATUS_LOGGING_BUFFER_SIZE */
 
-static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE] CCM_OPTIONAL;
+static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE];
 static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
@@ -781,7 +781,7 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 
 #if EFI_CLOCK_LOCKS
 		tsOutputChannels->maxLockedDuration = maxLockedDuration;
-		tsOutputChannels->maxTriggerReentraint = maxTriggerReentraint;
+		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 #endif /* EFI_CLOCK_LOCKS */
 
 	switch (engineConfiguration->debugMode)	{
@@ -869,14 +869,6 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 		break;
 	default:
 		;
-	}
-}
-
-void updateCurrentEnginePhase() {
-	if (auto phase = engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt())) {
-		tsOutputChannels.currentEnginePhase = phase.Value - tdcPosition();
-	} else {
-		tsOutputChannels.currentEnginePhase = 0;
 	}
 }
 

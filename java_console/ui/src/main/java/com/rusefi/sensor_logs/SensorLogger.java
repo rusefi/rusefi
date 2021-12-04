@@ -25,6 +25,7 @@ public class SensorLogger {
             Sensor.IAT,
             Sensor.MAF,
             Sensor.MAP,
+            Sensor.instantMAP,
             Sensor.Lambda,
 
             Sensor.PPS,

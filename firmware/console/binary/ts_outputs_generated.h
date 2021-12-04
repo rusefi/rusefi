@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:52:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 02 22:39:40 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -824,7 +824,11 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[184];
+	uint8_t unusedAtTheEnd[180];
+	/**
+	 * offset 500
+	 */
+	scaled_channel<float, 1, 1> TEMPLOG_MAP_INSTANT_AVERAGE = (float)0;
 	/**
 	 * offset 504
 	 */
@@ -832,7 +836,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 505
 	 */
-	uint8_t unused111 = (uint8_t)0;
+	uint8_t TEMPLOG_map_peak = (uint8_t)0;
 	/**
 	 * offset 506
 	 */
@@ -857,7 +861,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> timingPidCorrection = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_MAP@@
+	 * Instant MAP
 	kPa
 	 * offset 514
 	 */
@@ -877,7 +881,7 @@ struct ts_outputs_s {
 	/**
 	 * offset 522
 	 */
-	uint16_t maxTriggerReentraint = (uint16_t)0;
+	uint16_t maxTriggerReentrant = (uint16_t)0;
 	/**
 	 * offset 524
 	 */
@@ -966,4 +970,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Nov 29 17:52:38 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 02 22:39:40 UTC 2021

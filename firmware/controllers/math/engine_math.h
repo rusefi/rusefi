@@ -13,8 +13,13 @@ void setAlgorithm(engine_load_mode_e algo);
 
 void setFlatInjectorLag(float value);
 
-#define fixAngle(angle, msg, code) fixAngle2(angle, msg, code, engine->engineCycle)
-
+/**
+ * See also wrapVvt
+ * TODO: replace all usages of fixAngle with wrapAngle?
+ * Should we make this a nice method instead of that off macro which changes parameter value?
+ */
+#define fixAngle(angle, msg, code) wrapAngle2(angle, msg, code, engine->engineCycle)
+#define wrapAngle(angle, msg, code) fixAngle(angle, msg, code)
 
 /**
  * @return time needed to rotate crankshaft by one degree, in milliseconds.
