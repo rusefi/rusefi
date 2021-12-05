@@ -129,9 +129,10 @@ public class Elm327IoStream extends AbstractIoStream {
     	dataListener.onDataArrived(packet);
     }
 
-    public void processCanPacket(byte [] data) throws Exception {
+    public void processCanPacket(byte [] data) {
     	byte [] rawData = canDecoder.decodePacket(data);
-    	sendDataToClient(rawData);
+        if (rawData.length != 0)
+            sendDataToClient(rawData);
     }
 
     public interface DisconnectListener {

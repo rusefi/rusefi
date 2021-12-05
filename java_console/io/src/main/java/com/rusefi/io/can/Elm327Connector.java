@@ -47,6 +47,17 @@ public class Elm327Connector implements Closeable {
 		tsStream = new Elm327IoStream(this, "elm327Stream");
 	}
 
+	/**
+	 * TODO: HUH? what's that about?!
+	 */
+	public static void whyDoWeNeedToSleepBetweenCommands() {
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
 	public Elm327IoStream getTsStream() {
 		return tsStream;
 	}
@@ -134,7 +145,7 @@ public class Elm327Connector implements Closeable {
 		log.info("-------sendBytesToSerial " + bytes.length + " byte(s):");
 
 		for (int i = 0; i < bytes.length; i++) {
-			log.info("[" + i + "] " + ((int) bytes[i] & 0xff));
+			log.info("[index=" + i + "] " + ((int) bytes[i] & 0xff));
 		}
 
     	// 1 frame
@@ -165,10 +176,10 @@ public class Elm327Connector implements Closeable {
 
     private boolean initConnection(String msg) {
         if (sendCommand(HELLO, "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
-        	log.info("ELM DETECTED on " + msg + "!");
+        	log.info("ELM DETECTED on " + msg + "! " + ELM327_DEFAULT_BAUDRATE);
         	return true;
         }
-		log.info("ELM NOT FOUND on " + msg + "!");
+		log.info("ELM NOT FOUND on " + msg + "!" + ELM327_DEFAULT_BAUDRATE);
 		return false;
     }
 
@@ -287,11 +298,7 @@ public class Elm327Connector implements Closeable {
 
     private void sendDataBack(String line) {
 		byte [] canPacket = HexUtil.asBytes(line);
-        try {
-			tsStream.processCanPacket(canPacket);
-	    } catch (Exception e) {
-			System.out.println("ELM327: Error processing " + line);
-	    }
+		tsStream.processCanPacket(canPacket);
     }
 
 	public static boolean checkConnection(String serialPort, IoStream stream) {
