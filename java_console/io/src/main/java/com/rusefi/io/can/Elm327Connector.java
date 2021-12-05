@@ -128,11 +128,11 @@ public class Elm327Connector implements Closeable {
 	};
 
 	public void sendBytesToSerial(byte [] bytes) {
-    	log.info("-------sendBytesToSerial "+bytes.length+" bytes:");
+		log.info("-------sendBytesToSerial " + bytes.length + " byte(s):");
 
-    	for (int i = 0; i < bytes.length; i++) {
-        	log.info("["+i+"] " + ((int)bytes[i] & 0xff));
-    	}
+		for (int i = 0; i < bytes.length; i++) {
+			log.info("[" + i + "] " + ((int) bytes[i] & 0xff));
+		}
 
     	// 1 frame
     	if (bytes.length <= 7) {
