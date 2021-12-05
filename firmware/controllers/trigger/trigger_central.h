@@ -48,8 +48,12 @@ struct MapState {
 		current = mapBuffer.sum(engineConfiguration->mapCamAveragingLength);
 	}
 
-	bool isPeak() {
-		return previous > prevPrevious && previous >= current;
+	bool isPeak(bool lookForLowPeak) {
+		if (lookForLowPeak) {
+			return previous < prevPrevious && previous <= current;
+		} else {
+			return previous > prevPrevious && previous >= current;
+		}
 	}
 };
 
