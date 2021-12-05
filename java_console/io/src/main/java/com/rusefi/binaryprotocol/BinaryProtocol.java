@@ -70,7 +70,7 @@ public class BinaryProtocol {
     private boolean isBurnPending;
     public String signature;
 
-    private BinaryProtocolState state = new BinaryProtocolState();
+    private final BinaryProtocolState state = new BinaryProtocolState();
 
     // todo: this ioLock needs better documentation!
     private final Object ioLock = new Object();
@@ -233,7 +233,7 @@ public class BinaryProtocol {
     public boolean connectAndReadConfiguration(DataListener listener) {
         try {
             signature = getSignature();
-            System.out.println("Got " + signature);
+            System.out.println("BinaryProtocol: Got " + signature + " signature");
             SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
             return false;
