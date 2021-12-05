@@ -456,6 +456,8 @@
 #define can_nbc_e_CAN_BUS_W202_C180 5
 #define can_nbc_e_Internal_ForceMyEnumIntSize_can_nbc ENUM_32_BITS
 #define CAN_RX_PREFIX "CAN_rx"
+#define CAN_SERIAL_RX_ID 0x100
+#define CAN_SERIAL_TX_ID 0x102
 #define can_vss_nbc_e_auto_enum "BMW_e46", "W202"
 #define can_vss_nbc_e_BMW_e46 0
 #define can_vss_nbc_e_Force_4_bytes_size_can_vss_nbc_e ENUM_32_BITS
@@ -1803,7 +1805,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 777280773
+#define SIGNATURE_HASH 2076954581
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2321,7 +2323,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.04.kin.777280773"
+#define TS_SIGNATURE "rusEFI 2021.12.05.kin.2076954581"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
