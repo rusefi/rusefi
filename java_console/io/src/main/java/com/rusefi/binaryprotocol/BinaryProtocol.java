@@ -430,10 +430,7 @@ public class BinaryProtocol {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
-            byte packet[] = new byte[5];
-            packet[0] = Fields.TS_CRC_CHECK_COMMAND;
-            putShort(packet, 1, swap16(/*offset = */ 0));
-            putShort(packet, 3, swap16(localCached.getSize()));
+            byte[] packet = createCrcCommand(localCached.getSize());
             byte[] response = executeCommand(packet, "get CRC32");
 
             if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
@@ -450,6 +447,14 @@ public class BinaryProtocol {
             }
         }
         return null;
+    }
+
+    public static byte[] createCrcCommand(int size) {
+        byte[] packet = new byte[5];
+        packet[0] = Fields.TS_CRC_CHECK_COMMAND;
+        putShort(packet, 1, swap16(/*offset = */ 0));
+        putShort(packet, 3, swap16(size));
+        return packet;
     }
 
     public byte[] executeCommand(byte[] packet, String msg) {
