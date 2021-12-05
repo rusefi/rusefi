@@ -25,7 +25,13 @@ public class Elm327ConnectorStartup {
         Elm327Connector elm327Connector = new Elm327Connector(SerialIoStream.openPort(autoDetectedPort));
         elm327Connector.start(autoDetectedPort);
 
-        BinaryProtocolProxy.createProxy(elm327Connector.getTsStream(), TcpConnector.DEFAULT_PORT, BinaryProtocolProxy.ClientApplicationActivityListener.VOID);
+        BinaryProtocolProxy.createProxy(elm327Connector.getTsStream(), TcpConnector.DEFAULT_PORT, new BinaryProtocolProxy.ClientApplicationActivityListener() {
+            @Override
+            public void onActivity() {
+                System.out.println("onActivity");
+                Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
+            }
+        });
 
         log.info("Running Elm327 connector for " + autoDetectedPort);
     }
