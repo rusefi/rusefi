@@ -8,6 +8,7 @@ import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.serial.SerialIoStream;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -29,9 +30,13 @@ public class SerialAutoChecker {
         this.portFound = portFound;
     }
 
+    /**
+     * @return ECU signature from specified stream
+     */
     public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
         if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
             if (Elm327Connector.checkConnection(serialPort, stream)) {
+                // todo: this method is supposed to return signature not serial port!
                 return serialPort;
             }
             return null;
@@ -58,19 +63,25 @@ public class SerialAutoChecker {
 
     public void openAndCheckResponse(PortDetector.DetectorMode mode, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
         String signature;
-        IoStream stream;
-        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
-            stream = SerialIoStream.openPort(serialPort);
-        } else {
-            stream = BufferedSerialIoStream.openPort(serialPort);
+        // java 101: just a reminder that try-with syntax would take care of closing stream and that's important here!
+        try (IoStream stream = getStreamByMode(mode)) {
+            signature = checkResponse(stream, callback);
         }
-        signature = checkResponse(stream, callback);
         if (signature != null) {
             /**
              * propagating result after closing the port so that it could be used right away
              */
             result.set(new AutoDetectResult(serialPort, signature));
             portFound.countDown();
+        }
+    }
+
+    @NotNull
+    private IoStream getStreamByMode(PortDetector.DetectorMode mode) {
+        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
+            return SerialIoStream.openPort(serialPort);
+        } else {
+            return BufferedSerialIoStream.openPort(serialPort);
         }
     }
 
