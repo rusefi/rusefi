@@ -26,6 +26,7 @@ public class Elm327IoStream extends AbstractIoStream {
     private final ByteBuffer outBuf;
 
     // this should match the TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME in the firmware
+    // todo: move this to rusefi_config.txt / prepend.txt?
     private final static boolean sendShortPacketsInOneFrame = true;
     private final static boolean receiveShortPacketsInOneFrame = false;
 
@@ -92,6 +93,7 @@ public class Elm327IoStream extends AbstractIoStream {
         super.flush();
         byte [] bytes;
         // for smaller packets, send them in one 'simple' frame by stripping the header+footer off
+        // i.e. un-pack CRC32 TS protocol
         // (2 = 16-bit length, 4 = 32-bit crc)
         if (sendShortPacketsInOneFrame && outBuf.position() >= 2 + 1 + 4 && outBuf.position() <= 2 + 7 + 4) {
         	bytes = Arrays.copyOfRange(outBuf.array(), 2, outBuf.position() - 4);
