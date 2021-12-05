@@ -4,9 +4,6 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.SerialIoStream;
-import com.rusefi.io.tcp.BinaryProtocolProxy;
-import com.rusefi.io.tcp.TcpConnector;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -29,24 +26,32 @@ public class Elm327Connector implements Closeable {
 
 	private final Object lock = new Object();
 
-	private IoStream stream = null;
+	/**
+	 * Connection to ELM327 device where text based ELM protocol happens
+	 */
+	private final IoStream underlyingStream;
+	/**
+	 * Binary serial stream for TS traffic
+	 */
+	private final Elm327IoStream tsStream;
 	private String partialLine = "";
 	private final List<String> completeLines = new ArrayList<>();
 	private boolean isCommandMode = false;
 
-	private Elm327IoStream elmStream;
-
-	public static boolean checkConnection(String serialPort, IoStream stream) {
-		Elm327Connector con = new Elm327Connector();
-		boolean found = con.initConnection(serialPort, stream);
-		con.close();
-		return found;
+	public Elm327Connector(IoStream underlyingStream) {
+		this.underlyingStream = underlyingStream;
+		underlyingStream.setInputListener(listener);
+		tsStream = new Elm327IoStream(this, "elm327Stream");
 	}
 
-    public void start(String serialPort) {
+	public Elm327IoStream getTsStream() {
+		return tsStream;
+	}
+
+	public void start(String msg) {
     	log.info("* Elm327.start()");
 
-        if (initConnection(serialPort, SerialIoStream.openPort(serialPort))) {
+        if (initConnection(msg)) {
         	// reset to defaults
         	sendCommand("ATD", "OK");
 
@@ -90,16 +95,13 @@ public class Elm327Connector implements Closeable {
 			log.info("* Ignition voltage = " + voltage);
         }
 
-        startNetworkConnector(TcpConnector.DEFAULT_PORT);
-		//sendBytesToSerial(new byte[] { 0, 1, 83, 32, 96, (byte)239, (byte)195 });
-		//sendBytesToSerial(new byte[] { (byte)'V' });
     }
 
     @Override
     public void close() {
     	log.info("* Elm327.close()");
-    	if (stream != null)
-    		stream.close();
+    	if (underlyingStream != null)
+    		underlyingStream.close();
     }
 
 	private final DataListener listener = freshData -> {
@@ -158,10 +160,7 @@ public class Elm327Connector implements Closeable {
 
     ///////////////////////////////////////////////////////
 
-    private boolean initConnection(String msg, IoStream stream) {
-    	this.stream = stream;
-
-        this.stream.setInputListener(listener);
+    private boolean initConnection(String msg) {
         if (sendCommand(HELLO, "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
         	log.info("ELM DETECTED on " + msg + "!");
         	return true;
@@ -179,7 +178,7 @@ public class Elm327Connector implements Closeable {
     	isCommandMode = true;
     	this.completeLines.clear();
        	try {
-       		this.stream.write((command + ELM_EOL).getBytes());
+       		underlyingStream.write((command + ELM_EOL).getBytes());
        		waitForResponse(timeout);
 	    } catch (IOException | InterruptedException ignore) {
 	        return null;
@@ -233,7 +232,7 @@ public class Elm327Connector implements Closeable {
    		//log.info("* Elm327.data: " + (new String(hexData)));
 
 		try {
-       		this.stream.write(hexData);
+       		underlyingStream.write(hexData);
 	    } catch (IOException ignore) {
 			// ignore
 	    }
@@ -286,20 +285,16 @@ public class Elm327Connector implements Closeable {
     private void sendDataBack(String line) {
 		byte [] canPacket = HexUtil.asBytes(line);
         try {
-			elmStream.processCanPacket(canPacket);
+			tsStream.processCanPacket(canPacket);
 	    } catch (Exception e) {
 			System.out.println("ELM327: Error processing " + line);
 	    }
     }
 
-    private boolean startNetworkConnector(int controllerPort) {
-        try {
-	        elmStream = new Elm327IoStream(this, "elm327Stream");
-			BinaryProtocolProxy.createProxy(elmStream, controllerPort, BinaryProtocolProxy.ClientApplicationActivityListener.VOID);
-	    } catch (IOException ignore) {
-	        return false;
-	    }
-
-        return true;
+	public static boolean checkConnection(String serialPort, IoStream stream) {
+		Elm327Connector con = new Elm327Connector(stream);
+		boolean found = con.initConnection(serialPort);
+		con.close();
+		return found;
 	}
 }

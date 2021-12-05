@@ -27,10 +27,6 @@
 #define CAN_FIFO_BUF_SIZE 64
 #define CAN_FIFO_FRAME_SIZE 8
 
-// todo: find a better place for these defs
-#define CAN_SERIAL_RX_ID 0x100
-#define CAN_SERIAL_TX_ID 0x102
-
 #define CAN_FLOW_STATUS_OK 0
 #define CAN_FLOW_STATUS_WAIT_MORE 1
 #define CAN_FLOW_STATUS_ABORT 2
