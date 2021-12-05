@@ -23,6 +23,9 @@ public class Elm327Connector implements Closeable {
     private final static int TIMEOUT = 70;
 	public static final String HELLO = "ATZ";
 	public static final String ELM_EOL = "\r";
+	// those are inverted between ECU side and PC side
+	private static final int CAN_PC_SERIAL_RX_ID = Fields.CAN_SERIAL_TX_ID;
+	private static final int CAN_PC_SERIAL_TX_ID = Fields.CAN_SERIAL_RX_ID;
 
 	private final Object lock = new Object();
 
@@ -63,16 +66,16 @@ public class Elm327Connector implements Closeable {
 			sendCommand("ATSP6", "OK");
 
 			// set rx ID
-			sendCommand("ATCF " + Integer.toHexString(Fields.CAN_SERIAL_RX_ID), "OK");
+			sendCommand("ATCF " + Integer.toHexString(CAN_PC_SERIAL_RX_ID), "OK");
 
 			// rx ID mask = "all bits set"
 			sendCommand("ATCM FFF", "OK");
 
 			// set tx ID
-			sendCommand("ATSH " + Integer.toHexString(Fields.CAN_SERIAL_TX_ID), "OK");
+			sendCommand("ATSH " + Integer.toHexString(CAN_PC_SERIAL_TX_ID), "OK");
 
 			// set FC tx ID (should match our tx ID)
-			sendCommand("ATFCSH " + Integer.toHexString(Fields.CAN_SERIAL_TX_ID), "OK");
+			sendCommand("ATFCSH " + Integer.toHexString(CAN_PC_SERIAL_TX_ID), "OK");
 			// set FC data
 			sendCommand("ATFCSD 30 00 00", "OK");
 			// use custom FC ID & data
