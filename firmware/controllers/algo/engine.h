@@ -34,6 +34,7 @@
 #include "ac_control.h"
 #include "type_list.h"
 #include "boost_control.h"
+#include "alternator_controller.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -136,7 +137,9 @@ public:
 #if EFI_HPFP && EFI_ENGINE_CONTROL
 		HpfpController,
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
-
+#if EFI_ALTERNATOR_CONTROL
+		AlternatorController,
+#endif /* EFI_ALTERNATOR_CONTROL */
 		FuelPumpController,
 		MainRelayController,
 		AcController,
