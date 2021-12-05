@@ -18,10 +18,12 @@ class IsoTpCanDecoder {
     final static int ISO_TP_FRAME_FIRST = 1;
     final static int ISO_TP_FRAME_CONSECUTIVE = 2;
 
+    private final static int FC_ContinueToSend = 0;
+
     public int waitingForNumBytes = 0;
     public int waitingForFrameIndex = 0;
 
-    public byte[] decodePacket(byte[] data) throws Exception {
+    public byte[] decodePacket(byte[] data) {
         int frameType = (data[0] >> 4) & 0xf;
         int numBytesAvailable;
         int frameIdx;
@@ -31,6 +33,8 @@ class IsoTpCanDecoder {
                 numBytesAvailable = data[0] & 0xf;
                 dataOffset = 1;
                 this.waitingForNumBytes = 0;
+                if (log.debugEnabled())
+                    log.debug("ISO_TP_FRAME_SINGLE " + numBytesAvailable);
                 break;
             case ISO_TP_FRAME_FIRST:
                 this.waitingForNumBytes = ((data[0] & 0xf) << 8) | data[1];
@@ -44,7 +48,7 @@ class IsoTpCanDecoder {
             case ISO_TP_FRAME_CONSECUTIVE:
                 frameIdx = data[0] & 0xf;
                 if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
-                    throw new Exception("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react?");
+                    throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? " + waitingForNumBytes + " " + waitingForFrameIndex + " " + frameIdx);
                 }
                 this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
                 numBytesAvailable = Math.min(this.waitingForNumBytes, 7);
@@ -54,13 +58,18 @@ class IsoTpCanDecoder {
                     log.debug("ISO_TP_FRAME_CONSECUTIVE Got " + numBytesAvailable + ", still expecting: " + waitingForNumBytes);
                 break;
             case ISO_TP_FRAME_FLOW_CONTROL:
-                throw new Exception("ISO_TP_FRAME_FLOW_CONTROL: should we just ignore the FC frame?");
+                int flowStatus = data[0] & 0xf;
+                int blockSize = data[1];
+                int separationTime = data[2];
+                if (flowStatus == FC_ContinueToSend && blockSize == 0 && separationTime == 0)
+                    return new byte[0];
+                throw new IllegalStateException("ISO_TP_FRAME_FLOW_CONTROL: should we just ignore the FC frame? " + flowStatus + " " + blockSize + " " + separationTime);
             default:
-                throw new Exception("Unknown frame type");
+                throw new IllegalStateException("Unknown frame type");
         }
         byte[] bytes = Arrays.copyOfRange(data, dataOffset, dataOffset + numBytesAvailable);
         if (log.debugEnabled())
-            log.debug(numBytesAvailable + " bytes(s) arrived in this packet:" + IoStream.printHexBinary(bytes));
+            log.debug(numBytesAvailable + " bytes(s) arrived in this packet: " + IoStream.printHexBinary(bytes));
         return bytes;
     }
 }
