@@ -31,76 +31,72 @@ static void pidReset() {
 	alternatorPid.reset();
 }
 
-class AlternatorController : public PeriodicTimerController {
-	int getPeriodMs() override {
-		return GET_PERIOD_LIMITED(&engineConfiguration->alternatorControl);
+void AlternatorController::onFastCallback() {
+	if (!isBrainPinValid(engineConfiguration->alternatorControlPin)) {
+		return;
 	}
 
-	void PeriodicTask() override {
 #if ! EFI_UNIT_TEST
-		if (shouldResetPid) {
-			pidReset();
-			shouldResetPid = false;
-		}
+	if (shouldResetPid) {
+		pidReset();
+		shouldResetPid = false;
+	}
 #endif
 
-			// this block could be executed even in on/off alternator control mode
-			// but at least we would reflect latest state
+	// this block could be executed even in on/off alternator control mode
+	// but at least we would reflect latest state
 #if EFI_TUNER_STUDIO
-			alternatorPid.postState(&tsOutputChannels.alternatorStatus);
+	alternatorPid.postState(&tsOutputChannels.alternatorStatus);
 #endif /* EFI_TUNER_STUDIO */
 
-		// todo: migrate this to FSIO
-		bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
+	// todo: migrate this to FSIO
+	bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
 
-		if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
-			// we need to avoid accumulating iTerm while engine is not running
-			pidReset();
+	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
+		// we need to avoid accumulating iTerm while engine is not running
+		pidReset();
 
-			// Shut off output if not needed
-			alternatorControl.setSimplePwmDutyCycle(0);
+		// Shut off output if not needed
+		alternatorControl.setSimplePwmDutyCycle(0);
 
-			return;
-		}
+		return;
+	}
 
-		auto vBatt = Sensor::get(SensorType::BatteryVoltage);
-		float targetVoltage = engineConfiguration->targetVBatt;
+	auto vBatt = Sensor::get(SensorType::BatteryVoltage);
+	float targetVoltage = engineConfiguration->targetVBatt;
 
-		// todo: I am not aware of a SINGLE person to use this onOffAlternatorLogic
-		if (engineConfiguration->onOffAlternatorLogic) {
-			if (!vBatt) {
-				// Somehow battery voltage isn't valid, disable alternator control
-				enginePins.alternatorPin.setValue(false);
-			}
-
-			float h = 0.1;
-			bool newState = (vBatt.Value < targetVoltage - h) || (currentPlainOnOffState && vBatt.Value < targetVoltage);
-			enginePins.alternatorPin.setValue(newState);
-			currentPlainOnOffState = newState;
-#if EFI_TUNER_STUDIO
-				tsOutputChannels.alternatorOnOff = newState;
-#endif /* EFI_TUNER_STUDIO */
-
-			return;
-		}
-
+	// todo: I am not aware of a SINGLE person to use this onOffAlternatorLogic
+	if (engineConfiguration->onOffAlternatorLogic) {
 		if (!vBatt) {
 			// Somehow battery voltage isn't valid, disable alternator control
-			alternatorPid.reset();
-			alternatorControl.setSimplePwmDutyCycle(0);
-		} else {
-			currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value);
-			if (engineConfiguration->isVerboseAlternator) {
-				efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
-						alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
-			}
-
-			alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
+			enginePins.alternatorPin.setValue(false);
 		}
-	}
-};
 
-static AlternatorController instance;
+		float h = 0.1;
+		bool newState = (vBatt.Value < targetVoltage - h) || (currentPlainOnOffState && vBatt.Value < targetVoltage);
+		enginePins.alternatorPin.setValue(newState);
+		currentPlainOnOffState = newState;
+#if EFI_TUNER_STUDIO
+			tsOutputChannels.alternatorOnOff = newState;
+#endif /* EFI_TUNER_STUDIO */
+
+		return;
+	}
+
+	if (!vBatt) {
+		// Somehow battery voltage isn't valid, disable alternator control
+		alternatorPid.reset();
+		alternatorControl.setSimplePwmDutyCycle(0);
+	} else {
+		currentAltDuty = alternatorPid.getOutput(targetVoltage, vBatt.Value);
+		if (engineConfiguration->isVerboseAlternator) {
+			efiPrintf("alt duty: %.2f/vbatt=%.2f/p=%.2f/i=%.2f/d=%.2f int=%.2f", currentAltDuty, vBatt.Value,
+					alternatorPid.getP(), alternatorPid.getI(), alternatorPid.getD(), alternatorPid.getIntegration());
+		}
+
+		alternatorControl.setSimplePwmDutyCycle(PERCENT_TO_DUTY(currentAltDuty));
+	}
+}
 
 void showAltInfo(void) {
 	efiPrintf("alt=%s @%s t=%dms", boolToString(engineConfiguration->isAlternatorControlEnabled),
@@ -135,7 +131,6 @@ void initAlternatorCtrl() {
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0);
 	}
-	instance.Start();
 }
 
 // todo: start invoking this method like 'startVvtControlPins'
@@ -146,6 +141,5 @@ void startAlternatorPin(void) {
 void stopAlternatorPin(void) {
 	// todo: implementation!
 }
-
 
 #endif /* EFI_ALTERNATOR_CONTROL */
