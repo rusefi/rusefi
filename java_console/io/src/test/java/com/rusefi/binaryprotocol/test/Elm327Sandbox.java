@@ -1,25 +1,25 @@
 package com.rusefi.binaryprotocol.test;
 
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.serial.BaudRateHolder;
-import com.rusefi.io.serial.BufferedSerialIoStream;
+import com.rusefi.io.serial.SerialIoStream;
 
 import java.io.IOException;
 
-import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.io.can.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
-import static com.rusefi.io.can.Elm327Connector.ELM_EOL;
 
 public class Elm327Sandbox {
     public static void main(String[] args) throws InterruptedException, IOException {
         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
         String serialPort = "COM5";
+        Elm327Connector connector = new Elm327Connector(SerialIoStream.openPort(serialPort));
+        connector.start("sandbox");
 
-        IoStream stream = BufferedSerialIoStream.openPort(serialPort);
-        stream.setInputListener(freshData -> System.out.println("onDataArrived"));
+        IoStream tsStream = connector.getTsStream();
 
-        stream.write((Elm327Connector.HELLO + ELM_EOL).getBytes());
-        Thread.sleep(6 * SECOND);
+        String signature = BinaryProtocol.getSignature(tsStream);
+        System.out.println("Got " + signature + " signature via CAN/ELM327");
     }
 }
