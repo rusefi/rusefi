@@ -27,7 +27,8 @@ public class Elm327IoStream extends AbstractIoStream {
 
     // this should match the TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME in the firmware
     // todo: move this to rusefi_config.txt / prepend.txt?
-    private final static boolean sendShortPacketsInOneFrame = true;
+    private final static boolean sendShortPacketsInOneFrame = false;
+    //private final static boolean receiveShortPacketsInOneFrame = sendShortPacketsInOneFrame;
     private final static boolean receiveShortPacketsInOneFrame = false;
 
 	private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
