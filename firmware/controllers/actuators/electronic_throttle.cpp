@@ -322,6 +322,8 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 		// Linearly taper throttle to closed from the limit across the range
 		targetPosition = interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
 	}
+	// todo: this does not mix well with etbRevLimitStart interpolation does it?
+	targetPosition += engine->engineState.luaAdjustments.etbTargetPositionAdd;
 
 #if EFI_TUNER_STUDIO
 	if (m_function == ETB_Throttle1) {
@@ -414,7 +416,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		m_autotuneCounter++;
 
 		// Multiplex 3 signals on to the {mode, value} format
-		tsOutputChannels.calibrationMode = static_cast<TsCalMode>(m_autotuneCurrentParam + 3);
+		tsOutputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>(m_autotuneCurrentParam + 3);
 
 		switch (m_autotuneCurrentParam) {
 		case 0:
@@ -482,8 +484,8 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		float errorIntegral = m_errorAccumulator.accumulate(target - observation);
 
 #if EFI_TUNER_STUDIO
-		if (m_function == ETB_Throttle1 && engineConfiguration->debugMode == DBG_ETB_LOGIC) {
-			tsOutputChannels.debugFloatField3 = errorIntegral;
+		if (m_function == ETB_Throttle1) {
+			tsOutputChannels.etbIntegralError = errorIntegral;
 		}
 #endif // EFI_TUNER_STUDIO
 
@@ -529,14 +531,9 @@ void EtbController::update() {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {
-		// set debug_mode 17
-		if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_PID) {
-			m_pid.postState(&tsOutputChannels);
-			tsOutputChannels.debugIntField5 = engine->engineState.etbFeedForward;
-		} else if (engineConfiguration->debugMode == DBG_ELECTRONIC_THROTTLE_EXTRA) {
-			// set debug_mode 29
-			tsOutputChannels.debugFloatField1 = directPwmValue;
-		}
+		m_pid.postState(&tsOutputChannels.etbStatus);
+		tsOutputChannels.etbFeedForward = engine->engineState.etbFeedForward;
+		tsOutputChannels.etbStatus.output = directPwmValue;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -554,11 +551,7 @@ void EtbController::update() {
 		}
 	}
 
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_ETB_LOGIC) {
-		tsOutputChannels.debugFloatField1 = engine->engineState.targetFromTable;
-	}
-#endif
+	tsOutputChannels.etbCurrentTarget = engine->engineState.targetFromTable;
 
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
@@ -635,21 +628,21 @@ struct EtbImpl final : public EtbController {
 		}
 
 		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
-		tsOutputChannels.calibrationMode = functionToCalModePriMax(myFunction);
+		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
 		tsOutputChannels.calibrationValue = primaryMax * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = functionToCalModePriMin(myFunction);
+		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
 		tsOutputChannels.calibrationValue = primaryMin * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 
-		tsOutputChannels.calibrationMode = functionToCalModeSecMax(myFunction);
+		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
 		tsOutputChannels.calibrationValue = secondaryMax * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = functionToCalModeSecMin(myFunction);
+		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
 		tsOutputChannels.calibrationValue = secondaryMin * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 
-		tsOutputChannels.calibrationMode = TsCalMode::None;
+		tsOutputChannels.calibrationMode = (uint8_t)TsCalMode::None;
 
 		m_isAutocal = false;
 		return;

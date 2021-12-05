@@ -83,7 +83,6 @@ enable2ndByteCanID = false
    ;  name           		= array,  type, offset,  shape, units,     scale, translate,    lo,      hi, digits
    ;  name       			= scalar, type, offset,         units,     scale, translate,    lo,      hi, digits
 
-; see PAGE_0_SIZE in C source code    
 ; CONFIG_DEFINITION_START
 
 ; this section will be generated automatically by ConfigDefinition.jar based on rusefi_config.txt
@@ -184,253 +183,7 @@ enable2ndByteCanID = false
 ; see TunerStudioOutputChannels struct
 ;
 
-; Bit flags
-	  sd_present      = bits,    U32,      0,    [0:0], "true", "false";
-	  isIgnitionEnabledIndicator=bits,U32, 0,    [1:1], "true", "false";
-	  isInjectionEnabledIndicator=bits,U32,0,    [2:2], "true", "false";
-	  sd_logging_internal = bits U32  ,    0,    [3:3], "true", "false"
-	  isCylinderCleanupActivated=bits,U32, 0,    [4:4], "true", "false";
-	  ind_fuel_pump   = bits,    U32,      0,    [5:5], "true", "false";
-	  ind_fan         = bits,    U32,      0,    [6:6], "true", "false";
-	  ind_o2_heater   = bits,    U32,      0,    [7:7], "true", "false";
-      ind_check_engine= bits,    U32,      0,    [8:8], "true", "false";
-      needBurn        = bits,    U32,      0,    [9:9], "true", "false";
-	  sd_msd          = bits,    U32,      0,  [10:10], "true", "false"
-      clutchUpState    =bits,    U32,      0,  [11:11], "true", "false";
-      clutchDownState  =bits,    U32,      0,  [12:12], "true", "false";
-	  ind_fan_2        = bits,   U32,      0,  [13:13], "true", "false"
-      brakePedalIndicator=bits,  U32,      0,  [15:15], "true", "false";
-      toothLogReady      =bits,  U32,      0,  [16:16], "true", "false";
-      acSwitchState     =bits,   U32,      0,  [17:17], "true", "false";
-      isTpsError      = bits,    U32,      0,  [18:18], "true", "false";
-      ind_clt_error   = bits,    U32,      0,  [19:19], "true", "false";
-; not implemented
-;      ind_map_error   = bits,    U32,      0,  [20:20], "true", "false";
-
-      ind_iat_error   = bits,    U32,      0,  [21:21], "true", "false";
-	  acState         = bits,    U32,      0,  [22:22], "true", "false";
-      ind_isTriggerError = bits, U32,      0,  [23:23], "true", "false";
-      ind_hasFatalError=bits,    U32,      0,  [24:24], "true", "false";
-	  ind_isWarnNow    =bits,    U32,      0,  [25:25], "true", "false";
-	  ind_pedal_error  =bits,    U32,      0,  [26:26], "true", "false";
-	  isTps2Error     = bits,    U32,      0,  [29:29], "true", "false";
-	  isIdleClosedLoop= bits,    U32,      0,  [30:30], "true", "false";
-	  isIdleCoasting  = bits,    U32,      0,  [31:31], "true", "false";
-
-; RPM, vss
-      RPMValue        = scalar,  U16,      4,      "RPM",    1,   0.00000
-      rpmAcceleration = scalar,  S16,      6,     "RPM/s", 1,         0
-      speedToRpmRatio = scalar,  S16,      8,    "value",{1/@@PACK_MULT_PERCENT@@},         0
-      vehicleSpeedKph = scalar,  U08,     10,      "kph",    1,       0.0
-
-; temperatures
-     internalMcuTemperature = scalar,S08, 11,    "deg C",    1,         0
-      coolant         = scalar,  S16,     12,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-      intake          = scalar,  S16,     14,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-      auxt1           = scalar,  S16,     16,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-      auxt2           = scalar,  S16,     18,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-      
-
-; throttle, pedal
-      TPSValue        = scalar,  S16,     20,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      throttlePedalPosition = scalar,S16, 22,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      tpsADC          = scalar,  U16,     24,      "ADC",    1,       0.0;
-
-; air flow/mass measurments
-      MAFValue        = scalar,  U16,     26,        "V",{1/@@PACK_MULT_VOLTAGE@@},         0
-      massAirFlowValue= scalar,  U16,     28,     "Kg/h", {1/@@PACK_MULT_MASS_FLOW@@},         0
-      MAPValue        = scalar,  U16,     30,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
-      baroPressure    = scalar,  U16,     32,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
-      lambdaValue     = scalar,  U16,     34,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
-
-; misc sensors
-      VBatt           = scalar,	 U16,     38,        "V",{1/@@PACK_MULT_VOLTAGE@@},       0.0
-      oilPressure     = scalar,  U16,     40,     "kPa",{1/@@PACK_MULT_PRESSURE@@},       0.0
-      vvtPositionB1I  = scalar,  S16,     42,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-
-      ; 10 bit TPS ADC value (from 0 to 1023 in 5v scale)
-      ;tpsADC2         = scalar,  U16,    44,             "ADC",            1,       0.0;
-
-; fuel math
-      chargeAirMass   = scalar,  U16,     44,        "g",0.001,         0
-      crankingFuelMs  = scalar,  U16,     46,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},     0.0
-      currentTargetAfr= scalar,  U16,     48,    "ratio",{1/@@PACK_MULT_AFR@@},         0
-      baseFuel        = scalar,  U16,     50,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-      fuelRunning     = scalar,  U16,     52,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-      actualLastInjection=scalar,U16,     54,     "ms",{1/@@PACK_MULT_MS@@},     0.0
-      injectorDutyCycle=scalar,  U08,     56,        "%",  0.5,         0
-      veValue         = scalar,  U08,     57,    "ratio",  0.5,         0
-      injectionOffset = scalar,  S16,     58,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-      tCharge         = scalar,  U16,     60,    "deg C",{1/@@PACK_MULT_TEMPERATURE@@},       0.0
-
-; Corrections
-      injectorLagMs   = scalar,  U16,     62,     "ms",{1/@@PACK_MULT_MS@@},       0.0
-      iatCorrection   = scalar,  S16,     64,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      cltCorrection   = scalar,  S16,     66,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      baroCorrection  = scalar,  S16,     68,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-      fuelPidCorrection=scalar,  S16,    296,       "%",{1/@@PACK_MULT_PERCENT@@},         0
-	  fuelPidCorrection2=scalar, S16,    298,       "%",{1/@@PACK_MULT_PERCENT@@},         0
-
-; Wall model AE
-      wallFuelAmount  = scalar,  U16,     72,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-      wallFuelCorrection=scalar, S16,     74,     "mg",{1/@@PACK_MULT_FUEL_MASS@@},       0
-
-; TPS/load AE
-      unusedLoadDelta = scalar,  S16,     76,    "value",{1/@@PACK_MULT_PERCENT@@},         0
-      deltaTps        = scalar,  S16,     78,    "ratio",{1/@@PACK_MULT_PERCENT@@},         0
-      unusedLoadAccelExtra=scalar,S16,    80,    "value",{1/@@PACK_MULT_PERCENT@@},         0
-      tpsAccelFuel    = scalar,  U16,     82,     "ms",{1/@@PACK_MULT_MS@@},         0
-
-; Ignition
-      ignitionAdvance = scalar,  S16,     84,    "deg",{1/@@PACK_MULT_ANGLE@@},       0.0
-      sparkDwellValue = scalar,  U16,     86,     "ms",{1/@@PACK_MULT_MS@@},       0.0
-      coilDutyCycle   = scalar,  S16,     88,      "%",{1/@@PACK_MULT_PERCENT@@},         0
-
-; Idle & ETB
-      idleAirValvePosition=scalar,S16,    90,      "%",{1/@@PACK_MULT_PERCENT@@},         0
-      etbTarget       = scalar,  S16,     92,      "%",{1/@@PACK_MULT_PERCENT@@},         0
-      etb1DutyCycle   = scalar,  S16,     94,      "%",{1/@@PACK_MULT_PERCENT@@},         0
-      etb1Error       = scalar,  S16,     96,      "%",{1/@@PACK_MULT_PERCENT@@},         0
-
-; Fuel system
-      fuelTankLevel   = scalar,  U16,     98,      "%",{1/@@PACK_MULT_PERCENT@@},         0
-      totalFuelConsumption=scalar,U16,   100,  "grams",                        1,         0
-      fuelFlowRate    = scalar,  U16,    102, "gram/s",{1/@@PACK_MULT_FUEL_FLOW@@},         0
-
-; Y axis values for selectable tables
-      veTableYAxis    = scalar, U16,     104,      "%",     0.01, 0
-      afrTableYAxis   = scalar, U16,     106,      "%",     0.01, 0
-
-; Knock
-      knockLevel      = scalar,  F32,    108,  "Volts",      1,         0
-	  knockCount      = scalar,  U16,    306,  "count",      1,         0
-	  knockRetard     = scalar,  U08,    36,   "deg",      0.1,         0
-
-; Mode, firmware, protocol, run time
-; TS requires 'seconds' name since it has special internal meaning
-      seconds         = scalar,  U32,    112,    "sec",      1,       0.0
-      engineMode      = scalar,  U32,    116,     "em",      1,       0.0;
-      firmwareVersion = scalar,  U32,    120,"version_f",    1,         0
-
-
-; calibation helpers
-      calibrationValue = scalar, F32, 128, "", 1, 0
-      calibrationMode = scalar, U08, 132, "", 1, 0
-      ; 1 bytes padding1
-
-      fuelingLoad     = scalar, U16,     134,      "%",     0.01, 0
-      ignitionLoad    = scalar, U16,     136,      "%",     0.01, 0
-
-      engineMakeCodeNameCrc16= scalar,  U16,    138,  "crc16",           1,         0
-
-; Errors
-      totalTriggerErrorCounter=scalar,U32,   140,"counter",           1,         0
-      ; orderingErrorCounter 144
-      warningCounter  = scalar,  U16,    148,  "count",           1,         0
-      lastErrorCode   = scalar,  U16,    150,  "error",           1,         0
-      recentErrorCode0= scalar,  U16,    152,  "error",           1,         0
-      recentErrorCode1= scalar,  U16,    154,  "error",           1,         0
-      recentErrorCode2= scalar,  U16,    156,  "error",           1,         0
-      recentErrorCode3= scalar,  U16,    158,  "error",           1,         0
-      recentErrorCode4= scalar,  U16,    160,  "error",           1,         0
-      recentErrorCode5= scalar,  U16,    162,  "error",           1,         0
-      recentErrorCode6= scalar,  U16,    164,  "error",           1,         0
-      recentErrorCode7= scalar,  U16,    166,  "error",           1,         0
-
-; Debug
-      debugFloatField1= scalar,  F32,    168,    "val",           1,       0.0
-      debugFloatField2= scalar,  F32,    172,    "val",           1,       0.0
-      debugFloatField3= scalar,  F32,    176,    "val",           1,       0.0
-      debugFloatField4= scalar,  F32,    180,    "val",           1,       0.0
-      debugFloatField5= scalar,  F32,    184,    "val",           1,       0.0
-      debugFloatField6= scalar,  F32,    188,    "val",           1,       0.0
-      debugFloatField7= scalar,  F32,    192,    "val",           1,       0.0
-      debugIntField1  = scalar,  S32,    196,    "val",           1,       0.0
-      debugIntField2  = scalar,  S32,    200,    "val",           1,       0.0
-      debugIntField3  = scalar,  S32,    204,    "val",           1,       0.0
-      debugIntField4  = scalar,  S16,    208,    "val",           1,       0.0
-      debugIntField5  = scalar,  S16,    210,    "val",           1,       0.0
-
-; Accel
-      accelerationX   = scalar,  S16,    212,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
-      accelerationY   = scalar,  S16,    214,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
-      accelerationZ   = scalar,  S16,    308,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
-      accelerationRoll= scalar,  S16,    310,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
-      accelerationYaw = scalar,  S16,    312,      "G",        {1/@@PACK_MULT_PERCENT@@},         0
-
-; egt
-      egt1            = scalar,  S16,    216,  "deg C",      1,         0
-      egt2            = scalar,  S16,    218,  "deg C",      1,         0
-      egt3            = scalar,  S16,    220,  "deg C",      1,         0
-      egt4            = scalar,  S16,    222,  "deg C",      1,         0
-      egt5            = scalar,  S16,    224,  "deg C",      1,         0
-      egt6            = scalar,  S16,    226,  "deg C",      1,         0
-      egt7            = scalar,  S16,    228,  "deg C",      1,         0
-      egt8            = scalar,  S16,    230,  "deg C",      1,         0
-
-      TPS2Value       = scalar,  S16,    232,        "%",{1/@@PACK_MULT_PERCENT@@},         0
-
-      rawTps1Primary  = scalar,	 U16,    234, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-      rawPpsPrimary   = scalar,	 U16,    236, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-      rawClt          = scalar,	 U16,    238, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-      rawIat          = scalar,	 U16,    240, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-      rawOilPressure  = scalar,	 U16,    242, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-      rawPpsSecondary = scalar,	 U16,    248, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-
-	; we use this to match logs to tunes
-	tuneCrc16         = scalar,  U16,    244, "crc16",           1,         0
-
-; Transmission
-      tcuCurrentGear  = scalar,  S08,     247,   "gear",    1,         0
-
-	knock1 = scalar, S08, 250, "dbv", 1, 0
-	knock2 = scalar, S08, 251, "dbv", 1, 0
-	knock3 = scalar, S08, 252, "dbv", 1, 0
-	knock4 = scalar, S08, 253, "dbv", 1, 0
-	knock5 = scalar, S08, 254, "dbv", 1, 0
-	knock6 = scalar, S08, 255, "dbv", 1, 0
-	knock7 = scalar, S08, 256, "dbv", 1, 0
-	knock8 = scalar, S08, 257, "dbv", 1, 0
-    knock9 = scalar, S08, 258, "dbv", 1, 0
-    knock10 = scalar,S08, 259, "dbv", 1, 0
-    knock11 = scalar,S08, 260, "dbv", 1, 0
-    knock12 = scalar,S08, 261, "dbv", 1, 0
-
-    tcuDesiredGear  = scalar,  S08,     262,   "gear",    1,         0
-	flexPercent = scalar, U08, 263, "%", 0.5, 0
-
-	rawIdlePositionSensor = scalar,	 U16,    264, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-	rawWastegatePosition  = scalar,	 U16,    266, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-	wastegatePositionSensor = scalar,  S16,    268, "%",{1/@@PACK_MULT_PERCENT@@}, 0
-	idlePositionSensor    = scalar,  S16,    270, "%",{1/@@PACK_MULT_PERCENT@@}, 0
-	rawLowFuelPressure    = scalar,  U16,     272, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
-	rawHighFuelPressure   = scalar,  U16,     274, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0
-	lowFuelPressure       = scalar,  S16,     276, "kpa", {1/@@PACK_MULT_PRESSURE@@}, 0
-	highFuelPressure      = scalar,  S16,     278, "bar", {1/@@PACK_MULT_HIGH_PRESSURE@@}, 0
-	targetLambda     = scalar,  U16,     280,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
-	AFRValue        = scalar,  U16,     282,      "AFR",{1/@@PACK_MULT_AFR@@},       0.0
-	VssAcceleration = scalar,  S16,     284,      "m/s2", {1/@@PACK_MULT_MS@@}, 0.0
-	lambdaValue2    = scalar,  U16,     286,      "",{1/@@PACK_MULT_LAMBDA@@},       0.0
-	AFRValue2       = scalar,  U16,     288,      "AFR",{1/@@PACK_MULT_AFR@@},       0.0
-	vvtPositionB1E=scalar,S16,  290,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-	vvtPositionB2I=scalar,S16,  292,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-	vvtPositionB2E=scalar,S16,  294,      "deg",{1/@@PACK_MULT_ANGLE@@},         0
-
-	vvtTargetB1I = scalar, S08, 314, "deg", 1, 0
-	vvtTargetB1E = scalar, S08, 315, "deg", 1, 0
-	vvtTargetB2I = scalar, S08, 316, "deg", 1, 0
-	vvtTargetB2E = scalar, S08, 317, "deg", 1, 0
-
-	turboSpeed = scalar, U16, 318, "hz", 1, 0
-
-	rawTps1Secondary  = scalar,	 U16,    300, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-	rawTps2Primary    = scalar,	 U16,    302, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-	rawTps2Secondary  = scalar,	 U16,    304, "V",{1/@@PACK_MULT_VOLTAGE@@}, 0.0
-
-	currentEnginePhase = scalar, U16, 70, "deg", 1, 0
-;
-; see TunerStudioOutputChannels struct
-;
+@@OUTPUTS_SECTION@@
 
 ; todo: generate this section programmatically
 	LM_SPEED_DENSITY = {3},
@@ -438,7 +191,7 @@ enable2ndByteCanID = false
 
       time            = { timeNow }
 
-	  egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection }
+	  egoCorrectionForVeAnalyze = { 100 + fuelPidCorrection1 }
 
 	; These "synthetic" channels provide the Y-axis (load) value for gen purp PWM table's Y axes
 	gppwm1_load = {(gppwm1_loadAxis == 0) ? TPSValue : ((gppwm1_loadAxis == 1) ? MAPValue : ((gppwm1_loadAxis == 2) ? coolant : ((gppwm1_loadAxis == 3) ? intake : ((gppwm1_loadAxis == 4) ? fuelingLoad : ignitionLoad))))}
@@ -1032,6 +785,26 @@ enable2ndByteCanID = false
 
 [GaugeConfigurations]
 
+gaugeCategory = PIDs
+alternatorStatus_iTermGauge = alternatorStatus_iTerm,"alternatorStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_dTermGauge = alternatorStatus_dTerm,"alternatorStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_outputGauge = alternatorStatus_output,"alternatorStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_errorGauge = alternatorStatus_error,"alternatorStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+alternatorStatus_resetCounterGauge = alternatorStatus_resetCounter,"alternatorStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+idleStatus_iTermGauge = idleStatus_iTerm,"idleStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_dTermGauge = idleStatus_dTerm,"idleStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_outputGauge = idleStatus_output,"idleStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_errorGauge = idleStatus_error,"idleStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+idleStatus_resetCounterGauge = idleStatus_resetCounter,"idleStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+etbStatus_iTermGauge = etbStatus_iTerm,"etbStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_dTermGauge = etbStatus_dTerm,"etbStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_outputGauge = etbStatus_output,"etbStatus_ output", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_errorGauge = etbStatus_error,"etbStatus_ error", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+etbStatus_resetCounterGauge = etbStatus_resetCounter,"etbStatus_ resetCounter", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 0,0
+TEMPLOG_MAP_INSTANT_AVERAGEGauge = TEMPLOG_MAP_INSTANT_AVERAGE,"TEMPLOG_MAP_INSTANT_AVERAGE", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+TEMPLOG_map_peakGauge = TEMPLOG_map_peak,"TEMPLOG_map_peak", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+
+
 gaugeCategory = Sensors - Extra 2
    egt1Gauge         = egt1, "EGT#1", "C", 0, 2000
    egt2Gauge         = egt2, "EGT#2", "C", 0, 2000
@@ -1054,14 +827,14 @@ gaugeCategory = ECU Status
    warningCounterGauge = warningCounter, @@GAUGE_NAME_WARNING_COUNT@@, "",     0,   100,     0,    0,    100,  100,   0,   0
    lastErrorCodeGauge = lastErrorCode, @@GAUGE_NAME_LAST_ERROR@@, "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    triggerErrorsCounterGauge = totalTriggerErrorCounter, "Trigger error count", "count",     0,   15000,     0,    0,    6000,  6000,   0,   0
-   recentErrorCode0Gauge = recentErrorCode0, "Error#1", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   recentErrorCode1Gauge = recentErrorCode1, "Error#2", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   recentErrorCode2Gauge = recentErrorCode2, "Error#3", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   recentErrorCode3Gauge = recentErrorCode3, "Error#4", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   recentErrorCode4Gauge = recentErrorCode4, "Error#5", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   recentErrorCode5Gauge = recentErrorCode5, "Error#6", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   recentErrorCode6Gauge = recentErrorCode6, "Error#7", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
-   recentErrorCode7Gauge = recentErrorCode7, "Error#8", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   recentErrorCode1Gauge = recentErrorCode1, "Error#1", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   recentErrorCode2Gauge = recentErrorCode2, "Error#2", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   recentErrorCode3Gauge = recentErrorCode3, "Error#3", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   recentErrorCode4Gauge = recentErrorCode4, "Error#4", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   recentErrorCode5Gauge = recentErrorCode5, "Error#5", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   recentErrorCode6Gauge = recentErrorCode6, "Error#6", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   recentErrorCode7Gauge = recentErrorCode7, "Error#7", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
+   recentErrorCode8Gauge = recentErrorCode8, "Error#8", "",     0,  18000,     0,    0,   18000, 18000,   0,   0
    firmwareVersionGauge  = firmwareVersion , @@GAUGE_NAME_FW_VERSION@@, "%",     0,   100,     0,    0,    100,  100,   0,   0
    timeSecondsGauge     =   seconds, @@GAUGE_NAME_UPTIME@@, "sec",     0,   100,     0,    0,    100,  100,   0,   0
    tuneCrc16Gauge = tuneCrc16, @@GAUGE_NAME_TUNE_CRC16@@, "",     0,  64000,     0,    0,   64000, 64000,   0,   0
@@ -1108,8 +881,8 @@ gaugeCategory = Sensors - Extra 1
    internalMcuTemperatureGauge = internalMcuTemperature, @@GAUGE_NAME_ECU_TEMPERATURE@@, "C",     0,   100,     0,    0,    75,  100,   0,   0
    OilPressGauge   	 = oilPressure,   @@GAUGE_NAME_OIL_PRESSURE@@,       @@GAUGE_NAME_OIL_PRESSURE_UNITS@@,        0,    750,      35,     75,     550,   700,   0,   0	
    idleAirValvePositionGauge = idleAirValvePosition, "Idle position", "%",     0,   100,     0,    0,    100,  100,   1,   1
-   AuxT1Gauge        = auxt1,     @@GAUGE_NAME_AUX_TEMP1@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
-   AuxT2Gauge        = auxt2,     @@GAUGE_NAME_AUX_TEMP2@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   AuxT1Gauge        = auxTemp1,     @@GAUGE_NAME_AUX_TEMP1@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
+   AuxT2Gauge        = auxTemp2,     @@GAUGE_NAME_AUX_TEMP2@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
    highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
    flexPercentGauge = flexPercent, @@GAUGE_NAME_FLEX@@, "%", 0, 100, 0, 0, 100, 100, 0, 0
@@ -1119,10 +892,10 @@ gaugeCategory = VVT
 	vvtPositionB1EGauge = vvtPositionB1E, @@GAUGE_NAME_VVT_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
 	vvtPositionB2IGauge = vvtPositionB2I, @@GAUGE_NAME_VVT_B2I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
 	vvtPositionB2EGauge = vvtPositionB2E, @@GAUGE_NAME_VVT_B2E@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
-	vvtTargetB1IGauge = vvtTargetB1I, @@GAUGE_NAME_VVT_TARGET_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
-	vvtTargetB1EGauge = vvtTargetB1E, @@GAUGE_NAME_VVT_TARGET_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
-	vvtTargetB2IGauge = vvtTargetB2I, @@GAUGE_NAME_VVT_TARGET_B2I@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
-	vvtTargetB2EGauge = vvtTargetB2E, @@GAUGE_NAME_VVT_TARGET_B2E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtTargets1Gauge = vvtTargets1, @@GAUGE_NAME_VVT_TARGET_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtTargets2Gauge = vvtTargets2, @@GAUGE_NAME_VVT_TARGET_B1E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtTargets3Gauge = vvtTargets3, @@GAUGE_NAME_VVT_TARGET_B2I@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
+	vvtTargets4Gauge = vvtTargets4, @@GAUGE_NAME_VVT_TARGET_B2E@@, "deg", -60, 60, -60, -60, 60, 60, 0, 0
 
 gaugeCategory = Ignition
    ignadvGauge = ignitionAdvance,       "Ignition timing",   "degrees",     -100,    100,    -999,   -999,     999,   999,   1, 1
@@ -1133,8 +906,8 @@ gaugeCategory = Ignition
 gaugeCategory = Acceleration Enrichment
    deltaTpsGauge     = deltaTps,                "AE: TPS change",            "",        0,    120,      10,     10,     100,   100,   1,   1
    tpsAccelFuelGauge = tpsAccelFuel,"AE: TPS enrich",             "ms",        0,    120,      10,     10,     100,   100,   1,   1
-   wallFuelAmountGauge = wallFuelAmount, "AE: wall amount", "ms",     0,   100,     0,    0,    100,  100,   0,   0
-   wallFuelCorrectionGauge = wallFuelCorrection, "AE: wall correction extra", "ms",     0,   100,     0,    0,    100,  100,   0,   0
+   wallFuelAmountGauge = wallFuelAmount, "AE: wall amount", "mg",     0,   100,     0,    0,    100,  100,   0,   0
+   wallFuelCorrectionGauge = wallFuelCorrection, "AE: wall correction extra", "mg",     -20,   20,     -100,    -100,    100,  100,   1,   1
 
 gaugeCategory = Fueling
    ;Name               Var            Title                 Units        Lo      Hi      LoD    LoW       HiW   HiD    vd  ld
@@ -1150,11 +923,13 @@ gaugeCategory = Fueling
    injectorLagMsGauge = injectorLagMs,       @@GAUGE_NAME_INJECTOR_LAG@@,      "mSec",        0,   10,     0,    0,      10,    10,   3, 1
    fuelRunningGauge     = fuelRunning,       @@GAUGE_NAME_FUEL_RUNNING@@,      "mg",        0,   100,     0,    0,      100,    100,   3, 1
    baseFuelGauge     = baseFuel,       @@GAUGE_NAME_FUEL_BASE@@,      "mg",        0,   100, 0, 0, 100, 100,   2, 0
-   fuelPidCorrectionGauge = fuelPidCorrection,       @@GAUGE_NAME_FUEL_TRIM@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
+   fuelPidCorrectionGauge = fuelPidCorrection1,       @@GAUGE_NAME_FUEL_TRIM@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelPidCorrectionGauge2= fuelPidCorrection2,      @@GAUGE_NAME_FUEL_TRIM_2@@,      "%",        -10,   10,     -8, -5, 5, 8,   3, 1
    fuelingLoadGauge = fuelingLoad, @@GAUGE_NAME_FUEL_LOAD@@, "%", 0, 300, 0, 0, 300, 300, 1, 1
    totalFuelConsumptionGauge = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, "g", 0, 10000, 0, 0, 10000, 10000, 0, 0
    fuelFlowRateGauge = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, "g/s", 0, 50, 0, 0, 50, 50, 2, 0
+targetLambdaGauge = targetLambda,"fuel: target lambda", "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+currentTargetAfrGauge = currentTargetAfr,"fuel: target AFR", "ratio", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 
 gaugeCategory = Throttle Body (incl. ETB)
    pedalPositionGauge = throttlePedalPosition, @@GAUGE_NAME_THROTTLE_PEDAL@@,        "%",    0,    120,      0,     0,     100,   100,   1,   1
@@ -1257,12 +1032,12 @@ gaugeCategory = DynoView
 ;         =   expression,            off-label,            on-label,            off-bg, off-fg, on-bg, on-fg
 	; important status
 	; todo: do we want to drop this line since we have "config error" feature thing below?
-    indicator = { ind_hasFatalError }, "",   "CRITICAL ERROR",   white, black, red,   black
+    indicator = { hasCriticalError }, "",   "CRITICAL ERROR",   white, black, red,   black
 
     indicator = { needBurn }, "",  "unsaved changes",   white, black, yellow,   black
-    indicator = { ind_isWarnNow }, "",   "WARNING",   white, black, yellow,   black
-    indicator = { ind_check_engine }, "",      "Check Engine",       white,  black,  red, black
-    indicator = { ind_isTriggerError}, "Trigger OK",      "Trigger ERR",       white,  black,  red, black
+    indicator = { isWarnNow }, "",   "WARNING",   white, black, yellow,   black
+    indicator = { checkEngine }, "",      "Check Engine",       white,  black,  red, black
+    indicator = { isTriggerError}, "Trigger OK",      "Trigger ERR",       white,  black,  red, black
     indicator = { isIgnitionEnabledIndicator}, "no ignition",   "ignition",   yellow, black, white,   black
     indicator = { isInjectionEnabledIndicator}, "no injection",   "injection",   yellow, black, white,   black
 
@@ -1270,16 +1045,16 @@ gaugeCategory = DynoView
 	; this is required so that the "config error" feature works in TS
 	; don't change this line - TS is looking for an indicator with particular text/styling
 	; you don't even have to show it by default
-	indicator = { ind_hasFatalError }, "Config Error", "Config Error", white, black, red,   black
+	indicator = { hasCriticalError }, "Config Error", "Config Error", white, black, red,   black
 
 	; minor info	
-    indicator = { ind_fan },   "fan off",     "fan on",     white, black, green,   black
-	indicator = { ind_fan_2 }, "fan 2 off",   "fan 2 on",   white, black, green,   black
+    indicator = { isFanOn },   "fan off",     "fan on",     white, black, green,   black
+	indicator = { isFan2On }, "fan 2 off",   "fan 2 on",   white, black, green,   black
     indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, yellow,   black
-    indicator = { ind_fuel_pump}, "pump off",   "pump on",   white, black, green,   black
+    indicator = { isFuelPumpOn}, "pump off",   "pump on",   white, black, green,   black
     indicator = { clutchUpState }, "Clutch Up",   "clutch Up",   white, black, red,   black
     indicator = { clutchDownState }, "Clutch Down",   "Clutch Down",   white, black, yellow,   black
-    indicator = { brakePedalIndicator }, "brake",   "brake down",   white, black, red,   black
+    indicator = { brakePedalState }, "brake",   "brake down",   white, black, red,   black
     indicator = { acSwitchState }, "AC switch off", "AC switch on", white, black, blue, white
 	indicator = { acState }, "AC off", "AC on", white, black, blue, white
 	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
@@ -1288,9 +1063,9 @@ gaugeCategory = DynoView
     ; error codes
     indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
 	indicator = { isTps2Error}, "tps 2",   "tps 2 error",   white, black, red,   black
-	indicator = { ind_pedal_error}, "pedal",   "pedal error",   white, black, red,   black
-    indicator = { ind_clt_error}, "clt",   "clt error",   white, black, red,   black
-    indicator = { ind_iat_error}, "iat",   "iat error",   white, black, red,   black
+	indicator = { isPedalError}, "pedal",   "pedal error",   white, black, red,   black
+    indicator = { isCltError}, "clt",   "clt error",   white, black, red,   black
+    indicator = { isIatError}, "iat",   "iat error",   white, black, red,   black
 
 ;  not implemented
 ;    indicator = { ind_map_error}, "map",   "map error",   white, black, red,   black
@@ -1313,151 +1088,7 @@ gaugeCategory = DynoView
 [Datalog]
    ;       Channel          Label          Type    Format
    entry = time,            @@GAUGE_NAME_TIME@@,        float,  "%.3f"
-   entry = seconds,         @@GAUGE_NAME_UPTIME@@,      float,  "%.3f"
-   entry = RPMValue,        @@GAUGE_NAME_RPM@@,         int,    "%d"
-   entry = firmwareVersion, @@GAUGE_NAME_VERSION@@,     int,    "%d"
-   entry = coolant,         @@GAUGE_NAME_CLT@@,         float,  "%.2f"
-   entry = intake,          @@GAUGE_NAME_IAT@@,         float,  "%.2f"
-   entry = oilPressure,		@@GAUGE_NAME_OIL_PRESSURE@@,float,  "%.1f"
-   entry = TPSValue,        @@GAUGE_NAME_TPS@@,         float,  "%.2f"
-   entry = TPS2Value,       @@GAUGE_NAME_TPS2@@,        float, "%.2f"
-   entry = MAFValue,        @@GAUGE_NAME_MAF@@,         float,  "%.2f"
-   entry = MAPValue,        @@GAUGE_NAME_MAP@@,         float,  "%.1f"
-   entry = AFRValue,        @@GAUGE_NAME_AFR@@,         float,  "%.2f"
-   entry = AFRValue2,       @@GAUGE_NAME_AFR2@@,        float,  "%.2f"
-   entry = lambdaValue,     @@GAUGE_NAME_LAMBDA@@,      float,  "%.2f"
-   entry = lambdaValue2,    @@GAUGE_NAME_LAMBDA2@@,     float,  "%.2f"
-   entry = VBatt,           @@GAUGE_NAME_VBAT@@,        float,  "%.2f"
-   entry = fuelingLoad,     @@GAUGE_NAME_FUEL_LOAD@@,     float, "%.1f"
-   entry = ignitionLoad,    @@GAUGE_NAME_IGNITION_LOAD@@, float, "%.1f"
-   entry = ignitionAdvance,	@@GAUGE_NAME_TIMING_ADVANCE@@,	   float,  "%.2f"
-   entry = knockLevel,	    @@GAUGE_NAME_KNOCK_LEVEL@@, 	   float,  "%.2f"
-   entry = vehicleSpeedKph,	@@GAUGE_NAME_VVS@@,	   float,  "%.2f"
-   entry = turboSpeed,      @@GAUGE_NAME_TURBO_SPEED@@        int,  "%d"
-   entry = speedToRpmRatio, "s2rpm",	   float,  "%.3f"
-   entry = rpmAcceleration, "dRPM",        int,  "%d"
-   entry = massAirFlowValue,@@GAUGE_NAME_AIR_FLOW@@,    float,  "%.3f"
-   entry = chargeAirMass,   @@GAUGE_NAME_AIR_MASS@@,    float,  "%.3f"
-   entry = throttlePedalPosition,   @@GAUGE_NAME_THROTTLE_PEDAL@@,       float,  "%.3f"
-   entry = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,       float,  "%.3f"
-   entry = totalTriggerErrorCounter, @@GAUGE_NAME_TRG_ERR@@,int,    "%d"
-   entry = idleAirValvePosition, @@GAUGE_NAME_IAC@@, float,  "%.3f"
-   entry = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, float,  "%.3f"
-;   entry = rawLowFuelPressure, @@GAUGE_NAME_RAW_FUEL_PRESSURE_LOW@@, float,  "%.3f"
-   entry = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, float,  "%.3f"
-;   entry = rawHighFuelPressure, @@GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH@@, float,  "%.3f"
-
-   entry = injectorLagMs,   @@GAUGE_NAME_INJECTOR_LAG@@, float,  "%.3f"
-   entry = fuelRunning,     @@GAUGE_NAME_FUEL_RUNNING@@, float,  "%.3f"
-   entry = actualLastInjection,     @@GAUGE_NAME_FUEL_LAST_INJECTION@@, float,  "%.3f"
-   entry = baseFuel,	    @@GAUGE_NAME_FUEL_BASE@@,  float,  "%.2f"
-   entry = fuelPidCorrection,@@GAUGE_NAME_FUEL_TRIM@@,  float,  "%.2f"
-   entry = fuelPidCorrection2,@@GAUGE_NAME_FUEL_TRIM_2@@,  float,  "%.2f"
-   entry = veValue,         @@GAUGE_NAME_FUEL_VE@@,    float,  "%.3f"
-   entry = injectorDutyCycle,@@GAUGE_NAME_FUEL_INJ_DUTY@@,float,"%.3f"
-   entry = coilDutyCycle,	@@GAUGE_NAME_DWELL_DUTY@@,	float,"%.3f"
-   entry = currentTargetAfr,@@GAUGE_NAME_TARGET_AFR@@,	float,"%.3f"
-   entry = targetLambda, @@GAUGE_NAME_TARGET_LAMBDA@@,	float,"%.4f"
-   entry = totalFuelConsumption, @@GAUGE_NAME_FUEL_CONSUMPTION@@, int, "%d"
-   entry = fuelFlowRate, @@GAUGE_NAME_FUEL_FLOW@@, float, "%.2f"
-
-   entry = accelerationX,	@@GAUGE_NAME_ACCEL_X@@,	  float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0 }
-   entry = accelerationY,	@@GAUGE_NAME_ACCEL_Y@@,	  float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
-   entry = accelerationZ,	@@GAUGE_NAME_ACCEL_Z@@,   float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
-   entry = accelerationRoll,@@GAUGE_NAME_ACCEL_ROLL@@,float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
-   entry = accelerationYaw,	@@GAUGE_NAME_ACCEL_YAW@@, float,"%.2f", { LIS302DLCsPin != 0 || imuType != 0  }
-   entry = egt1,	        "EGT1",	float,"%.1f", { max31855_cs1 != 0}
-   entry = egt2,	        "EGT2",	float,"%.1f", { max31855_cs2 != 0}
-   entry = egt3,	        "EGT3",	float,"%.1f", { max31855_cs3 != 0}
-   entry = egt4,	        "EGT4",	float,"%.1f", { max31855_cs4 != 0}
-   entry = egt5,	        "EGT5",	float,"%.1f", { max31855_cs5 != 0}
-   entry = egt6,	        "EGT6",	float,"%.1f", { max31855_cs6 != 0}
-   entry = egt7,	        "EGT7",	float,"%.1f", { max31855_cs7 != 0}
-   entry = egt8,	        "EGT8",	float,"%.1f", { max31855_cs8 != 0}
-
-   entry = deltaTps,		@@GAUGE_NAME_FUEL_TPS_ROC@@,float,  "%.3f"
-   entry = tpsAccelFuel,    @@GAUGE_NAME_FUEL_TPS_EXTRA@@,    float,  "%.3f"
-
-   entry = wallFuelCorrection,@@GAUGE_NAME_FUEL_WALL_CORRECTION@@,	float,   "%.3f"
-   entry = wallFuelAmount, @@GAUGE_NAME_FUEL_WALL_AMOUNT@@,	float,   "%.3f"
-   
-   entry = baroCorrection,  @@GAUGE_NAME_FUEL_BARO_CORR@@,float,"%.3f"
-   entry = iatCorrection,   @@GAUGE_NAME_FUEL_IAT_CORR@@,	float,   "%.3f"
-   entry = cltCorrection,	@@GAUGE_NAME_FUEL_CLT_CORR@@, float,"%.3f"
-
-   entry = sparkDwellValue,	@@GAUGE_COIL_DWELL_TIME@@, float,"%.3f"
-
-   entry = vvtPositionB1I, @@GAUGE_NAME_VVT_B1I@@, float, "%.1f"
-   entry = vvtPositionB1E, @@GAUGE_NAME_VVT_B1E@@, float, "%.1f"
-   entry = vvtPositionB2I, @@GAUGE_NAME_VVT_B2I@@, float, "%.1f"
-   entry = vvtPositionB2E, @@GAUGE_NAME_VVT_B2E@@, float, "%.1f"
-   entry = vvtTargetB1I, @@GAUGE_NAME_VVT_TARGET_B1I@@, int, "%d"
-   entry = vvtTargetB1E, @@GAUGE_NAME_VVT_TARGET_B1E@@, int, "%d"
-   entry = vvtTargetB2I, @@GAUGE_NAME_VVT_TARGET_B2I@@, int, "%d"
-   entry = vvtTargetB2E, @@GAUGE_NAME_VVT_TARGET_B2E@@, int, "%d"
-   entry = injectionOffset, "injOffset"  , float, "%.2F"
-
-; is there a way to log parameter?   entry = debugMode,   "debugMode",int,"%d"
-   entry = debugFloatField1,   {bitStringValue( debugFieldF1List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
-   entry = debugFloatField2,   {bitStringValue( debugFieldF2List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
-   entry = debugFloatField3,   {bitStringValue( debugFieldF3List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
-   entry = debugFloatField4,   {bitStringValue( debugFieldF4List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
-   entry = debugFloatField5,   {bitStringValue( debugFieldF5List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
-   entry = debugFloatField6,   {bitStringValue( debugFieldF6List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
-   entry = debugFloatField7,   {bitStringValue( debugFieldF7List,  debugMode )},float,"%.4f", { !enableLogDebugChannels }
-   entry = debugIntField1,     {bitStringValue( debugFieldI1List,  debugMode )},int,"%d", { !enableLogDebugChannels }
-   entry = debugIntField2,     {bitStringValue( debugFieldI2List,  debugMode )},int,"%d", { !enableLogDebugChannels }
-   entry = debugIntField3,     {bitStringValue( debugFieldI3List,  debugMode )},int,"%d", { !enableLogDebugChannels }
-   entry = debugIntField4,     {bitStringValue( debugFieldI4List,  debugMode )},int,"%d", { !enableLogDebugChannels }
-   entry = debugIntField5,     {bitStringValue( debugFieldI5List,  debugMode )},int,"%d", { !enableLogDebugChannels }
-
-
-   entry = engineMakeCodeNameCrc16,   @@GAUGE_NAME_ENGINE_CRC16@@,int,"%d"
-   entry = tuneCrc16,   @@GAUGE_NAME_TUNE_CRC16@@,int,"%d"
-
-   entry = engineMode,   "Engine Mode",int,"%d"
-   entry = warningCounter,   @@GAUGE_NAME_WARNING_COUNTER@@,int,"%d"
-   entry = lastErrorCode,   @@GAUGE_NAME_WARNING_LAST@@,int,"%d"
-   entry = recentErrorCode0,   "error 0",int,"%d", { !enableLogErrorList }
-   entry = recentErrorCode1,   "error 1",int,"%d", { !enableLogErrorList }
-   entry = recentErrorCode2,   "error 2",int,"%d", { !enableLogErrorList }
-   entry = recentErrorCode3,   "error 3",int,"%d", { !enableLogErrorList }
-   entry = recentErrorCode4,   "error 4",int,"%d", { !enableLogErrorList }
-   entry = recentErrorCode5,   "error 5",int,"%d", { !enableLogErrorList }
-   entry = recentErrorCode6,   "error 6",int,"%d", { !enableLogErrorList }
-   entry = recentErrorCode7,   "error 7",int,"%d", { !enableLogErrorList }
-   entry = internalMcuTemperature,   @@GAUGE_NAME_CPU_TEMP@@,float,"%.2f"
-   
-   entry = tCharge, "tCharge",float,"%.3f"
-   
-   entry = clutchUpState,   @@INDICATOR_NAME_CLUTCH_UP@@,int,"%d"
-   entry = clutchDownState,   @@INDICATOR_NAME_CLUTCH_DOWN@@,int,"%d"
-   entry = brakePedalIndicator,   @@INDICATOR_NAME_BRAKE_DOWN@@,int,"%d"
-   entry = acSwitchState,   @@INDICATOR_NAME_AC_SWITCH@@,int,"%d"
-   entry = ind_fan, "radiator fan",int,"%d"
-
-; Electronic throttle body
-   entry = etb1Error,      "ETB Error", float, "%.3f"
-   entry = etb1DutyCycle,  @@GAUGE_NAME_ETB_DUTY@@, float, "%.3f"
-   entry = etbTarget,      "ETB Target", float, "%.3f"
-   
-; Transmission
-   entry = tcuDesiredGear,  @@GAUGE_NAME_DESIRED_GEAR@@, int, "%d"
-   entry = tcuCurrentGear,  @@GAUGE_NAME_CURRENT_GEAR@@, int, "%d"
-
-   entry = knock1, "Knock 1", int, "%d"
-   entry = knock2, "Knock 2", int, "%d"
-   entry = knock3, "Knock 3", int, "%d"
-   entry = knock4, "Knock 4", int, "%d"
-   entry = knock5, "Knock 5", int, "%d"
-   entry = knock6, "Knock 6", int, "%d"
-   entry = knock7, "Knock 7", int, "%d"
-   entry = knock8, "Knock 8", int, "%d"
-
-   entry = VssAcceleration, "Vss Accel", float, "%.3f"
-
-   entry = flexPercent, @@GAUGE_NAME_FLEX@@, int, "%d"
-   entry = currentEnginePhase, "Engine Phase", int, "%d"
+@@DATALOG_SECTION@@
 
 [Menu]
 
@@ -1754,11 +1385,7 @@ cmd_test_fsio14 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x0
 cmd_test_fsio15 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x0f"
 cmd_test_fsio16 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_FSIO_CATEGORY_16_hex@@\x00\x10"
 
-cmd_test_debug_mode_tps_accel = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_TPS_ACCEL_16_hex@@"
-cmd_test_debug_mode_wall = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_WALL_WETTING_16_hex@@"
-cmd_test_debug_mode_trigger = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_TRIGGER_COUNTERS_16_hex@@"
 cmd_test_debug_mode_vvt  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_VVT_1_PID_16_hex@@"
-cmd_test_debug_mode_can  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_MODE_16_hex@@@@debug_mode_e_DBG_CAN_16_hex@@"
 
 cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x01"
 cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x02"
@@ -2022,7 +1649,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = triggerConfiguration_gap, "Trigger Gap Override"
 		field = "!This is a pretty advanced feature for when you are debugging trigger synchronization"
-		commandButton = "Enable Trigger debug mode",    cmd_test_debug_mode_trigger
 		field = "Override well known trigger gaps",    overrideTriggerGaps
 		field = gapTrackingLengthOverride,				gapTrackingLengthOverride, { overrideTriggerGaps == 1 }
 		field = "First gap from",						triggerGapOverrideFrom1, { overrideTriggerGaps == 1 }
@@ -2932,8 +2558,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		commandButton = "Test Fan 2", cmd_test_fan_2
 
 	indicatorPanel = fanIndicators, 2
-		indicator = { ind_fan },   "fan 1 off", "fan 1 on", white, black, green, black
-		indicator = { ind_fan_2 }, "fan 2 off", "fan 2 on", white, black, green, black
+		indicator = { isFanOn },   "fan 1 off", "fan 1 on", white, black, green, black
+		indicator = { isFan2On }, "fan 2 off", "fan 2 on", white, black, green, black
 
 	dialog = acSettings, "A/C Settings"
 		field = "A/C switch",						acSwitch
@@ -3170,7 +2796,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = speedSensorAnalog
 		field = "Input pin",					vehicleSpeedSensorInputPin
-		field = "revolution to speed mult",				vehicleSpeedCoef
+		field = "Wheel revolutions per kilometer",		driveWheelRevPerKm
+		field = "Speed sensor gear ratio",				vssGearRatio
+		field = "Speed sensor tooth count",				vssToothCount
 
 	dialog = speedSensorCan
 		field = "Vss Car Type",						canVssNbcType, { enableCanVss }
@@ -3211,7 +2839,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
 
 	dialog = canBus, "CAN Bus"
-	    commandButton = "CAN Debug Mode",               cmd_test_debug_mode_can
 		field = "CAN read enabled",						canReadEnabled
 		field = "CAN write enabled",					canWriteEnabled
 		field = "CAN bitrate",							canBaudRate
@@ -3219,6 +2846,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "inertia measurement unit",             imuType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
+		field = "rusEFI CAN data address type",			rusefiVerbose29b
 		field = "rusEFI CAN data period",				canSleepPeriodMs
 		field = "RX pin",								canRxPin @@if_ts_show_can_pins
 		field = "TX pin",								canTxPin @@if_ts_show_can_pins
@@ -3362,7 +2990,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = TpsAccelPanel, "TPS"
 		field = "Set 'Debug Mode' to see detailed 'TPS acceleration enrichment' diagnostics"
-		commandButton = "Enable TPS2TPS debug mode",      cmd_test_debug_mode_tps_accel
    		field = "Length",						tpsAccelLength
 		field = "Accel Threshold", 				tpsAccelEnrichmentThreshold
 		field = "Decel Threshold", 				tpsDecelEnleanmentThreshold
@@ -3372,7 +2999,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fraction Divisor",				tpsAccelFractionDivisor
 		
 	dialog = WallWettingAccelPanel, "Wall Wetting (alpha version)"
-		commandButton = "Enable Wall Wetting debug mode",      cmd_test_debug_mode_wall
 		field = "evaporation time constant / tau",          wwaeTau
 		field = "added to wall coef / beta",                   wwaeBeta
 	
@@ -3771,8 +3397,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Trailing Pin 4",						trailingCoilPins4
 
 	dialog = parkingLot, "Experimental/Broken"
-		field = "mapCamDetectionAnglePosition",         mapCapDetectionAnglePosition
+		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
 		field = "mapCamDetectionThreshold",             mapCamDetectionThreshold
+		field = "mapCamAveragingLength",                  mapCamAveragingLength
+		field = "mapCamSkipFactor",                     mapCamSkipFactor
 		field = "#System hacks"
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
@@ -3914,3 +3542,4 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 #else
  addTool = afrTableGenerator, "AFR Table Generator", afrTableTbl
 #endif
+

@@ -1,4 +1,4 @@
-name: Generate documentation
+name: Generate firmware Doxygen
 
 on:
   schedule:

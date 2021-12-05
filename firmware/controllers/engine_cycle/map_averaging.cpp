@@ -92,6 +92,8 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 }
 
 #if HAL_USE_ADC
+static int fastMapCounter = 0;
+
 /**
  * This method is invoked from ADC callback.
  * @note This method is invoked OFTEN, this method is a potential bottleneck - the implementation should be
@@ -100,18 +102,24 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 void mapAveragingAdcCallback(adcsample_t adcValue) {
 	efiAssertVoid(CUSTOM_ERR_6650, getCurrentRemainingStack() > 128, "lowstck#9a");
 
+	float instantVoltage = adcToVoltsDivided(adcValue);
+	float instantMap = convertMap(instantVoltage).value_or(0);
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_MAP) {
-		float voltage = adcToVoltsDivided(adcValue);
-		tsOutputChannels.debugFloatField5 = convertMap(voltage).value_or(0);
-	}
+	tsOutputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
 
-	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN) {
-		float voltage = adcToVoltsDivided(adcValue);
-		float instantMap = convertMap(voltage).value_or(0);
+	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
+			((fastMapCounter++ % engineConfiguration->mapCamSkipFactor) == 0)) {
 		engine->triggerCentral.mapState.add(instantMap);
-		if (engine->triggerCentral.mapState.isPeak()) {
+		bool isPeak = engine->triggerCentral.mapState.isPeak();
+#if EFI_TUNER_STUDIO
+		tsOutputChannels.TEMPLOG_map_length = MAP_CAM_BUFFER;
+		tsOutputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = engine->triggerCentral.mapState.current;
+		if (isPeak) {
+			tsOutputChannels.TEMPLOG_map_peak++;
+		}
+#endif //EFI_TUNER_STUDIO
+		if (isPeak) {
 			efitick_t stamp = getTimeNowNt();
 			hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
 			hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);

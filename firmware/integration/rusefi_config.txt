@@ -49,11 +49,15 @@
 !
 !
 ! bit bitName,"true value","false value";+Tooltip text
+!
+!
+!
+! units,scale,offset,min,max,digits
 
 !
 ! this is here so that rusEFI console can access it, too
 !
-#define TS_OUTPUT_SIZE 340
+#define TS_OUTPUT_SIZE 640
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
@@ -534,8 +538,7 @@ float vbattDividerCoeff;+This is the ratio of the resistors for the battery volt
 float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 
-
-float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef", 1, 0, 0.01, 2000, 2
+float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
 
 custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "type 12", "type 13", "type 14", "INVALID"
 can_nbc_e canNbcType;set can_mode X
@@ -638,8 +641,11 @@ uint8_t knockRetardAggression;+Ignition timing to remove when a knock event occu
 uint8_t knockRetardReapplyRate;+After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
 uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 0
 
-uint8_t mapCamDetectionThreshold;;"", 1, 0, 0, 240, 0
-float unused616;;"", 1, 0, 0, 1, 0
+	uint8_t mapCamDetectionThreshold;;"", 1, 0, 0, 240, 0
+	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
+	uint8_t mapCamAveragingLength;;"", 1, 0, 0, 255, 0
+
 
 ! todo: rename to triggerSimulatorRpm
 	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm", 1, 0, 0, 30000, 0
@@ -731,7 +737,7 @@ bit is_enabled_spi_1
 bit is_enabled_spi_2
 	bit is_enabled_spi_3
 	bit isSdCardEnabled;enable sd/disable sd
-	bit unused744b4
+	bit rusefiVerbose29b,"29 bit","11 bit";+Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit isEngineControlEnabled
 	bit isHip9011Enabled
 	bit isVerboseAlternator
@@ -778,7 +784,8 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e acFanPinMode;
 
 
-	uint8_t[6] unused11;;"volts", 0.1, 0, 0, 20, 1
+    uint8_t mapCamSkipFactor;;"", 1, 0, 0, 255, 0
+	uint8_t[5] unused11;;"volts", 0.1, 0, 0, 20, 1
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 2", "type 2"
@@ -1110,8 +1117,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s etb;
 	brain_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
 	brain_input_pin_e turboSpeedSensorInputPin;
-	float alternator_derivativeFilterLoss;;"x", 1, 0, -1000000, 1000000, 4
-	float alternator_antiwindupFreq;;"x", 1, 0, -1000000, 1000000, 4
+	float unused1760;;"x", 1, 0, 0, 1, 1
+	float unused1764;;"x", 1, 0, 0, 1, 1
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC", 1, 0, 0, 1023, 0
 	output_pin_e starterControlPin;See also startStopButtonPin
@@ -1215,6 +1222,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	pin_output_mode_e starterControlPinMode;
 	adc_channel_e wastegatePositionSensor;
 	afr_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+
 
 	custom injector_pressure_type_e 1 bits, U08, @OFFSET@, [0:0], "Low", "High"
 	injector_pressure_type_e injectorPressureType;+Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
@@ -1982,3 +1990,6 @@ end_struct
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
+
+#define CAN_ECU_SERIAL_RX_ID 0x100
+#define CAN_ECU_SERIAL_TX_ID 0x102

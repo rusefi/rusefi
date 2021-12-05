@@ -20,10 +20,9 @@ public class ConfigFieldParserIssue1057Test {
         String inputString = "struct pid_s\nbit activateAuxPid1;\n" +
                 "int fieldName;\n" +
                 "end_struct\n";
-        BufferedReader reader = new BufferedReader(new StringReader(inputString));
 
 
-        state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer));
+        state.readBufferedReader(inputString, Arrays.asList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final Field ACTIVATEAUXPID1 = Field.create(\"ACTIVATEAUXPID1\", 0, FieldType.BIT, 0);\n" +
                         "\tpublic static final Field UNUSEDBIT_1_1 = Field.create(\"UNUSEDBIT_1_1\", 0, FieldType.BIT, 1);\n" +

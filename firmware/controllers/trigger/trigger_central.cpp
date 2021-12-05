@@ -38,15 +38,13 @@ WaveChart waveChart;
 static scheduling_s debugToggleScheduling;
 #define DEBUG_PIN_DELAY US2NT(60)
 
-trigger_central_s::trigger_central_s() : hwEventCounters() {
-}
-
-TriggerCentral::TriggerCentral() : trigger_central_s(),
+TriggerCentral::TriggerCentral() :
 		vvtEventRiseCounter(),
 		vvtEventFallCounter(),
 		vvtPosition(),
 		vvtSyncTimeNt()
 {
+	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
@@ -70,6 +68,9 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
 
+/**
+ * @return angle since trigger synchronization point, NOT angle since TDC.
+ */
 expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 
@@ -77,7 +78,7 @@ expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 		return unexpected;
 	}
 
-	return m_virtualZeroTimer.getElapsedUs(nowNt) / oneDegreeUs;
+	return m_syncPointTimer.getElapsedUs(nowNt) / oneDegreeUs;
 }
 
 /**
@@ -159,6 +160,9 @@ static angle_t adjustCrankPhase(int camIndex) {
 	}
 }
 
+/**
+ * See also wrapAngle
+ */
 static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	// Wrap VVT position in to the range [-360, 360)
 	while (vvtPosition < -period / 2) {
@@ -366,8 +370,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
 }
 
-int triggerReentraint = 0;
-int maxTriggerReentraint = 0;
+int triggerReentrant = 0;
+int maxTriggerReentrant = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
@@ -468,13 +472,13 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 #endif /* EFI_TOOTH_LOGGER */
 
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
-	if (triggerReentraint > maxTriggerReentraint)
-		maxTriggerReentraint = triggerReentraint;
-	triggerReentraint++;
+	if (triggerReentrant > maxTriggerReentrant)
+		maxTriggerReentrant = triggerReentrant;
+	triggerReentrant++;
 
 	engine->triggerCentral.handleShaftSignal(signal, timestamp);
 
-	triggerReentraint--;
+	triggerReentrant--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	triggerMaxDuration = maxI(triggerMaxDuration, triggerDuration);
 }
@@ -619,7 +623,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	if (triggerIndexForListeners == 0) {
-		m_virtualZeroTimer.reset(timestamp);
+		m_syncPointTimer.reset(timestamp);
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners);
 
@@ -652,7 +656,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		mainTriggerCallback(triggerIndexForListeners, timestamp);
 
 #if EFI_TUNER_STUDIO
-		updateCurrentEnginePhase();
+		auto toothAngle = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
+		wrapAngle(toothAngle, "currentEnginePhase", CUSTOM_ERR_6555);
+		tsOutputChannels.currentEnginePhase = toothAngle;
 #endif
 	}
 }

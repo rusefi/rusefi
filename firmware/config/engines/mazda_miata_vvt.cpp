@@ -359,15 +359,6 @@ static void setMazdaMiataEngineNB2Defaults() {
 	setCommonMazdaNB();
 
 	setMazdaNB2VVTSettings();
-
-
-
-//	engineConfiguration->debugTriggerSync = GPIOD_3;
-
-//	engineConfiguration->debugMode = DBG_IDLE_CONTROL;
-	engineConfiguration->debugMode = DBG_TRIGGER_COUNTERS;
-
-
 } // end of setMazdaMiataEngineNB2Defaults
 
 // MAZDA_MIATA_2003
@@ -687,12 +678,12 @@ void setMiataNB2_Proteus_TCU() {
 	// "VR 1"
 	engineConfiguration->triggerInputPins[0] = GPIOE_7;
 
-	engineConfiguration->vehicleSpeedCoef = 1;
 	// "VR 2"
 	engineConfiguration->vehicleSpeedSensorInputPin = GPIOE_8;
 
-
-
+	engineConfiguration->driveWheelRevPerKm = 544;	// 205/50R15
+	engineConfiguration->vssGearRatio = 4.3;
+	engineConfiguration->vssToothCount = 22;
 
 	// "Highside 2"
 	engineConfiguration->tcu_solenoid[0] = GPIOA_8;

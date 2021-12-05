@@ -41,7 +41,7 @@ public class ConfigField {
     private final String tsInfo;
     private final boolean isIterate;
     private final ReaderState state;
-    private boolean fsioVisible;
+    private final boolean fsioVisible;
     private final boolean hasAutoscale;
     private final String individualName;
     private final int indexWithinArray;
@@ -157,13 +157,13 @@ public class ConfigField {
         String arraySizeAsText;
         if (matcher.group(5) != null) {
             arraySizeAsText = matcher.group(3) + "][" + matcher.group(5);
-	    arraySizes = new int[2];
-	    arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(3));
-	    arraySizes[1] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(5));
-	} else if (matcher.group(3) != null) {
+            arraySizes = new int[2];
+            arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(3));
+            arraySizes[1] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(5));
+        } else if (matcher.group(3) != null) {
             arraySizeAsText = matcher.group(3);
             arraySizes = new int[1];
-	    arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, arraySizeAsText);
+            arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, arraySizeAsText);
         } else {
             arraySizes = new int[0];
             arraySizeAsText = null;
@@ -192,10 +192,10 @@ public class ConfigField {
             return 0;
         if (isBit())
             return 4;
-	int size = getElementSize();
-	for (int s : arraySizes) {
-	    size *= s;
-	}
+        int size = getElementSize();
+        for (int s : arraySizes) {
+            size *= s;
+        }
         return size;
     }
 
@@ -283,14 +283,14 @@ public class ConfigField {
         }
         int mul, div;
         if (factor < 1.d) {
-            mul = (int)Math.round(1. / factor);
+            mul = (int) Math.round(1. / factor);
             div = 1;
         } else {
             mul = 1;
-            div = (int)factor;
+            div = (int) factor;
         }
         // Verify accuracy
-        double factor2 = ((double)div) / mul;
+        double factor2 = ((double) div) / mul;
         double accuracy = Math.abs((factor2 / factor) - 1.);
         if (accuracy > 0.0000001) {
             // Don't want to deal with exception propogation; this should adequately not compile
@@ -300,16 +300,41 @@ public class ConfigField {
         return mul + ", " + div;
     }
 
-    public String getUnits() {
+    private String[] getTokens() {
         if (tsInfo == null)
-            return "";
-        String[] tokens = tsInfo.split("\\,");
+            return new String[0];
+        return tsInfo.split("\\,");
+    }
+
+    public String getUnits() {
+        String[] tokens = getTokens();
         if (tokens.length == 0)
             return "";
         return unquote(tokens[0].trim());
     }
 
-    private static String unquote(String token) {
+    public double getMin() {
+        String[] tokens = getTokens();
+        if (tokens.length < 4)
+            return -1;
+        return Double.parseDouble(tokens[3]);
+    }
+
+    public double getMax() {
+        String[] tokens = getTokens();
+        if (tokens.length < 5)
+            return -1;
+        return Double.parseDouble(tokens[4]);
+    }
+
+    public int getDigits() {
+        String[] tokens = getTokens();
+        if (tokens.length < 6)
+            return -1;
+        return Integer.parseInt(tokens[5].trim());
+    }
+
+    public static String unquote(String token) {
         int length = token.length();
         if (length < 2)
             return token;

@@ -8,7 +8,7 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
     private static final String BOOLEAN_TYPE = "bool";
     private final StringBuilder content = new StringBuilder();
 
-    public static String getHeaderText(ConfigField configField, int currentOffset, int bitIndex) {
+    private static String getHeaderText(ConfigField configField, int currentOffset, int bitIndex) {
         if (configField.isBit()) {
             String comment = "\t/**" + EOL + ConfigDefinition.packComment(configField.getCommentContent(), "\t") + "\toffset " + currentOffset + " bit " + bitIndex + " */" + EOL;
             return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
@@ -45,20 +45,16 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
 
         content.append("// start of " + structure.name + EOL);
         content.append("struct " + structure.name + " {" + EOL);
-        if (structure.isWithConstructor()) {
-            content.append("\t" + structure.name + "();" + EOL);
-        }
 
         int currentOffset = 0;
 
-        BitState bitState = new BitState();
+        FieldIterator iterator = new FieldIterator(structure.cFields);
         for (int i = 0; i < structure.cFields.size(); i++) {
-            ConfigField cf = structure.cFields.get(i);
-            content.append(BaseCHeaderConsumer.getHeaderText(cf, currentOffset, bitState.get()));
-            ConfigField next = i == structure.cFields.size() - 1 ? ConfigField.VOID : structure.cFields.get(i + 1);
+            iterator.start(i);
+            content.append(getHeaderText(iterator.cf, currentOffset, iterator.bitState.get()));
 
-            bitState.incrementBitIndex(cf, next);
-            currentOffset += cf.getSize(next);
+            currentOffset += iterator.cf.getSize(iterator.next);
+            iterator.end();
         }
 
         content.append("\t/** total size " + currentOffset + "*/" + EOL);

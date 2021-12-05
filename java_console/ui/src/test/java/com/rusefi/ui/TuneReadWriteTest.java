@@ -23,6 +23,7 @@ public class TuneReadWriteTest {
     private static final String PATH = "ui/src/test/resources/frankenso/";
     private static final String TEST_INI = PATH + "mainController.ini";
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.rusefi_binary";
+    private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
 
     @Before
     public void before() {
@@ -39,7 +40,7 @@ public class TuneReadWriteTest {
         assertNotNull(flow);
         assertEquals("2", flow.getDigits());
 
-        ConfigurationImage tsBinaryData = tsTune.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
+        ConfigurationImage tsBinaryData = tsTune.asImage(IniFileModel.getInstance(), LEGACY_TOTAL_CONFIG_SIZE);
 
         System.out.println("Reading " + TEST_BINARY_FILE);
         ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
@@ -84,7 +85,7 @@ public class TuneReadWriteTest {
         Msq tuneFromFile = Msq.readTune(fileName);
         assertNotNull(tuneFromFile.getVersionInfo().getSignature());
 
-        ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
+        ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(IniFileModel.getInstance(), LEGACY_TOTAL_CONFIG_SIZE);
 
         assertEquals(0, compareImages(binaryDataFromXml, fileBinaryData));
         // todo: looks like this is not removing the temporary file?

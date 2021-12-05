@@ -18,6 +18,7 @@ struct LuaAdjustments {
 	float ignitionTimingMult = 1;
 	float fuelAdd = 0;
 	float fuelMult = 1;
+	float etbTargetPositionAdd = 0;
 };
 
 class EngineState : public engine_state2_s {

@@ -454,17 +454,15 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		tsOutputChannels.isIdleClosedLoop = phase == Phase::Idling;
 		tsOutputChannels.isIdleCoasting = phase == Phase::Coasting;
 
-		if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
-				getIdlePid()->postState(&tsOutputChannels, 1000000);
-				tsOutputChannels.debugIntField4 = engine->idle.idleState;
+				getIdlePid()->postState(&tsOutputChannels.idleStatus);
+				tsOutputChannels.idleState = engine->idle.idleState;
 			} else {
-				tsOutputChannels.debugFloatField1 = iacPosition;
+				tsOutputChannels.idleCurrentPosition = iacPosition;
 				extern StepperMotor iacMotor;
-				tsOutputChannels.debugIntField1 = iacMotor.getTargetPosition();
+				tsOutputChannels.idleTargetPosition = iacMotor.getTargetPosition();
 			}
-		}
 #endif /* EFI_TUNER_STUDIO */
 
 		engine->idle.currentIdlePosition = iacPosition;

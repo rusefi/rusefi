@@ -15,7 +15,7 @@
 #include "pin_repository.h"
 #include "local_version_holder.h"
 
-#define MAP_CAM_BUFFER 8
+#define MAP_CAM_BUFFER 64
 
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp);
@@ -45,7 +45,7 @@ struct MapState {
 
 		// add new value
 		mapBuffer.add(value);
-		current = mapBuffer.sum(MAP_CAM_BUFFER);
+		current = mapBuffer.sum(engineConfiguration->mapCamAveragingLength);
 	}
 
 	bool isPeak() {
@@ -126,7 +126,8 @@ public:
 
 private:
 	// Keep track of the last time we saw the sync tooth go by (trigger index 0)
-	Timer m_virtualZeroTimer;
+	// not TDC point
+	Timer m_syncPointTimer;
 };
 
 void triggerInfo(void);

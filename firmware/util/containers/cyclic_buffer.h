@@ -62,7 +62,7 @@ void cyclic_buffer<T, maxSize>::add(T value) {
 	// become invalid.  And yes I did see a crash due to an overrun here.
 	uint16_t idx = currentIndex;
 
-	elements[idx] = value;
+	((T &)elements[idx]) = value;
 
 	if (++idx == size) {
 		idx = 0;

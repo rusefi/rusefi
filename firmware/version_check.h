@@ -10,4 +10,6 @@ static constexpr auto gccVersion = (__GNUC__ * 100) + (__GNUC_MINOR__ * 10) + ( 
 // Firmware builds require at least GCC 9.3.1
 static_assert(gccVersion >= 931, "GCC compiler >= 9.3.1 required");
 
+static_assert(gccVersion < 1000, "GCC10 not supported see https://github.com/rusefi/rusefi/labels/Gcc10");
+
 #endif

@@ -350,7 +350,7 @@ void LuaThread::ThreadTask() {
 }
 
 #if LUA_USER_HEAP > 1
-static LuaThread luaThread CCM_OPTIONAL;
+static LuaThread luaThread;
 #endif
 
 void startLua() {
@@ -475,5 +475,48 @@ void testLuaExecString(const char* script) {
 }
 
 #endif // EFI_UNIT_TEST
+
+// This is technically non-compliant, but it's only used for lua float parsing.
+// It doesn't properly handle very small and very large numbers, and doesn't
+// parse numbers in the format 1.3e5 at all.
+extern "C" float strtof_rusefi(const char* str, char** endPtr) {
+	bool afterDecimalPoint = false;
+	float div = 1; // Divider to place digits after the decimal point
+
+	if (endPtr) {
+		*endPtr = const_cast<char*>(str);
+	}
+
+	float integerPart = 0;
+	float fractionalPart = 0;
+
+	while (*str != '\0') {
+		char c = *str;
+		int digitVal = c - '0';
+
+		if (c >= '0' && c <= '9') {
+			if (!afterDecimalPoint) {
+				// Integer part
+				integerPart = 10 * integerPart + digitVal;
+			} else {
+				// Fractional part
+				fractionalPart = 10 * fractionalPart + digitVal;
+				div *= 10;
+			}
+		} else if (c == '.') {
+			afterDecimalPoint = true;
+		} else {
+			break;
+		}
+
+		str++;
+
+		if (endPtr) {
+			*endPtr = const_cast<char*>(str);
+		}
+	}
+
+	return integerPart + fractionalPart / div;
+}
 
 #endif // EFI_LUA

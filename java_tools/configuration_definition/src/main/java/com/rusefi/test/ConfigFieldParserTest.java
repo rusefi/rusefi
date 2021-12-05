@@ -53,11 +53,10 @@ public class ConfigFieldParserTest {
                 "percent_t afr_typet;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "; total TS size = 8\n", new String(writer.toCharArray()));
@@ -71,14 +70,13 @@ public class ConfigFieldParserTest {
                 "int afr_type1;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
             @Override
             public void endFile() {
             }
         };
-        state.readBufferedReader(reader, Collections.singletonList(consumer));
+        state.readBufferedReader(test, Collections.singletonList(consumer));
     }
 
     @Test
@@ -89,11 +87,10 @@ public class ConfigFieldParserTest {
                 "ego_sensor_e afr_type;\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
         assertEquals("afr_type = bits, S32, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "; total TS size = 4\n", new String(writer.toCharArray()));
     }
@@ -108,10 +105,9 @@ public class ConfigFieldParserTest {
                 "\tint periodSec2;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals(16, TypesHelper.getElementSize(state, "pid_s"));
 
@@ -126,8 +122,7 @@ public class ConfigFieldParserTest {
                 "#define ERROR_BUFFER_SIZE \"***\"\n" +
                 "end_struct\n" +
                 "";
-        BufferedReader reader = new BufferedReader(new StringReader(test));
-        new ReaderState().readBufferedReader(reader, Collections.emptyList());
+        new ReaderState().readBufferedReader(test, Collections.emptyList());
     }
 
     @Test(expected = IllegalStateException.class)
@@ -136,8 +131,7 @@ public class ConfigFieldParserTest {
                 VariableRegistry.DEFINE + " show show_Hellen121vag_presets true\n" +
                 "end_struct\n" +
                 "";
-        BufferedReader reader = new BufferedReader(new StringReader(test));
-        new ReaderState().readBufferedReader(reader, Collections.emptyList());
+        new ReaderState().readBufferedReader(test, Collections.emptyList());
     }
 
     @Test
@@ -150,9 +144,8 @@ public class ConfigFieldParserTest {
                 "end_struct\n" +
                 "";
 
-        BufferedReader reader = new BufferedReader(new StringReader(test));
         ReaderState state = new ReaderState();
-        state.readBufferedReader(reader, Collections.emptyList());
+        state.readBufferedReader(test, Collections.emptyList());
 
         assertEquals("#define ERROR_BUFFER_COUNT 120\n" +
                 "#define ERROR_BUFFER_SIZE 120\n" +
@@ -168,13 +161,11 @@ public class ConfigFieldParserTest {
                 "end_struct\n" +
                 "";
 
-        BufferedReader reader = new BufferedReader(new StringReader(test));
-
         CharArrayWriter writer = new CharArrayWriter();
         ReaderState state = new ReaderState();
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
 
-        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
 
         assertEquals("periodMs = scalar, S16, 0, \"ms\", 0.1, 0, 0, 3000, 0\n" +
                 "periodMs2 = scalar, S16, 2, \"ms\", 1, 0, 0, 3000, 0\n" +
@@ -192,10 +183,9 @@ public class ConfigFieldParserTest {
                 "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n" +
                 "";
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final Field VAR = Field.create(\"VAR\", 0, 120, FieldType.STRING);\n" +
                      "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 120, FieldType.INT16);\n" +
@@ -209,10 +199,9 @@ public class ConfigFieldParserTest {
         String test =
                 "#define SD_r 'r'\n" +
                         "";
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final char SD_r = 'r';\n" +
                         "",
@@ -226,10 +215,9 @@ public class ConfigFieldParserTest {
                 "#define ERROR_BUFFER_SIZE 120\n" +
                         "#define ERROR_BUFFER_SIZE_H 0x120\n" +
                 "";
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
-        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
 
         assertEquals("\tpublic static final int ERROR_BUFFER_SIZE = 120;\n" +
                         "\tpublic static final int ERROR_BUFFER_SIZE_H = 0x120;\n" +
@@ -261,22 +249,10 @@ public class ConfigFieldParserTest {
                     "end_struct\n" +
                     "" +
                     "";
-            BufferedReader reader = new BufferedReader(new StringReader(test));
 
             JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
-            FsioSettingsConsumer fsioSettingsConsumer = new FsioSettingsConsumer(state) {
-                @Override
-                public void startFile() {
-                }
-
-                @Override
-                public void endFile() {
-                }
-            };
-
-            state.readBufferedReader(reader, Arrays.asList(javaFieldsConsumer,
-                    fsioSettingsConsumer));
+            state.readBufferedReader(test, Collections.singletonList(javaFieldsConsumer));
 
 
             assertEquals("\tpublic static final Field OFFSET = Field.create(\"OFFSET\", 0, FieldType.INT16);\n" +
@@ -296,60 +272,6 @@ public class ConfigFieldParserTest {
                          "\tpublic static final Field ETB2_MINVALUE = Field.create(\"ETB2_MINVALUE\", 20, FieldType.INT16);\n" +
                          "\tpublic static final Field ETB2_ALIGNMENTFILL_AT_6 = Field.create(\"ETB2_ALIGNMENTFILL_AT_6\", 22, FieldType.INT8);\n",
                     javaFieldsConsumer.getJavaFieldsWriter());
-
-            assertEquals("\tcase FSIO_SETTING_OFFSET:\n" +
-                            "\t\treturn engineConfiguration->offset;\n" +
-                            "\tcase FSIO_SETTING_MINVALUE:\n" +
-                            "\t\treturn engineConfiguration->minValue;\n" +
-                            "\tcase FSIO_SETTING_ALTERNATORCONTROL_OFFSET:\n" +
-                            "\t\treturn engineConfiguration->alternatorControl.offset;\n" +
-                            "\tcase FSIO_SETTING_ALTERNATORCONTROL_MINVALUE:\n" +
-                            "\t\treturn engineConfiguration->alternatorControl.minValue;\n" +
-                            "\tcase FSIO_SETTING_ETB1_OFFSET:\n" +
-                            "\t\treturn engineConfiguration->etb[0].offset;\n" +
-                            "\tcase FSIO_SETTING_ETB1_MINVALUE:\n" +
-                            "\t\treturn engineConfiguration->etb[0].minValue;\n" +
-                            "\tcase FSIO_SETTING_ETB2_OFFSET:\n" +
-                            "\t\treturn engineConfiguration->etb[1].offset;\n" +
-                            "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
-                            "\t\treturn engineConfiguration->etb[1].minValue;\n",
-                    fsioSettingsConsumer.getContent());
-
-            assertEquals("\tFSIO_SETTING_OFFSET = 1000,\n" +
-                            "\tFSIO_SETTING_MINVALUE = 1001,\n" +
-                            "\tFSIO_SETTING_ALTERNATORCONTROL_OFFSET = 1002,\n" +
-                            "\tFSIO_SETTING_ALTERNATORCONTROL_MINVALUE = 1003,\n" +
-                            "\tFSIO_SETTING_ETB1_OFFSET = 1004,\n" +
-                            "\tFSIO_SETTING_ETB1_MINVALUE = 1005,\n" +
-                            "\tFSIO_SETTING_ETB2_OFFSET = 1006,\n" +
-                            "\tFSIO_SETTING_ETB2_MINVALUE = 1007,\n",
-                    fsioSettingsConsumer.getEnumDefinition());
-
-            assertEquals("static LENameOrdinalPair leoffset(FSIO_SETTING_OFFSET, \"cfg_offset\");\n" +
-                    "static LENameOrdinalPair leminValue(FSIO_SETTING_MINVALUE, \"cfg_minValue\");\n" +
-                    "static LENameOrdinalPair lealternatorControl_offset(FSIO_SETTING_ALTERNATORCONTROL_OFFSET, \"cfg_alternatorControl_offset\");\n" +
-                    "static LENameOrdinalPair lealternatorControl_minValue(FSIO_SETTING_ALTERNATORCONTROL_MINVALUE, \"cfg_alternatorControl_minValue\");\n" +
-                    "static LENameOrdinalPair leetb1_offset(FSIO_SETTING_ETB1_OFFSET, \"cfg_etb1_offset\");\n" +
-                    "static LENameOrdinalPair leetb1_minValue(FSIO_SETTING_ETB1_MINVALUE, \"cfg_etb1_minValue\");\n" +
-                    "static LENameOrdinalPair leetb2_offset(FSIO_SETTING_ETB2_OFFSET, \"cfg_etb2_offset\");\n" +
-                    "static LENameOrdinalPair leetb2_minValue(FSIO_SETTING_ETB2_MINVALUE, \"cfg_etb2_minValue\");\n", fsioSettingsConsumer.getNames());
-
-            assertEquals("\tcase FSIO_SETTING_OFFSET:\n" +
-                    "\t\treturn \"cfg_offset\";\n" +
-                    "\tcase FSIO_SETTING_MINVALUE:\n" +
-                    "\t\treturn \"cfg_minValue\";\n" +
-                    "\tcase FSIO_SETTING_ALTERNATORCONTROL_OFFSET:\n" +
-                    "\t\treturn \"cfg_alternatorControl_offset\";\n" +
-                    "\tcase FSIO_SETTING_ALTERNATORCONTROL_MINVALUE:\n" +
-                    "\t\treturn \"cfg_alternatorControl_minValue\";\n" +
-                    "\tcase FSIO_SETTING_ETB1_OFFSET:\n" +
-                    "\t\treturn \"cfg_etb1_offset\";\n" +
-                    "\tcase FSIO_SETTING_ETB1_MINVALUE:\n" +
-                    "\t\treturn \"cfg_etb1_minValue\";\n" +
-                    "\tcase FSIO_SETTING_ETB2_OFFSET:\n" +
-                    "\t\treturn \"cfg_etb2_offset\";\n" +
-                    "\tcase FSIO_SETTING_ETB2_MINVALUE:\n" +
-                    "\t\treturn \"cfg_etb2_minValue\";\n", fsioSettingsConsumer.getStrings());
         }
     }
 
@@ -360,13 +282,12 @@ public class ConfigFieldParserTest {
                 "int[ERROR_BUFFER_SIZE iterate] field\n" +
                 "end_struct\n" +
                 "";
-        BufferedReader reader = new BufferedReader(new StringReader(test));
         BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
             @Override
             public void endFile() {
             }
         };
-        new ReaderState().readBufferedReader(reader, Collections.singletonList(consumer));
+        new ReaderState().readBufferedReader(test, Collections.singletonList(consumer));
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +
                 "\t/**\n" +
@@ -452,11 +373,10 @@ public class ConfigFieldParserTest {
                 "pid_s pid;comment\n" +
         "end_struct\n";
         ReaderState state = new ReaderState();
-        BufferedReader reader = new BufferedReader(new StringReader(test));
 
         CharArrayWriter writer = new CharArrayWriter();
         TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
-        state.readBufferedReader(reader, Collections.singletonList(tsProjectConsumer));
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_isForcedInduction = bits, U32, 8, [0:0], \"false\", \"true\"\n" +
