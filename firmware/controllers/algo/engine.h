@@ -109,6 +109,11 @@ protected:
 
 #define DEFAULT_MOCK_SPEED -1
 
+class PrimeController : public EngineModule {
+public:
+	void onIgnitionStateChanged(bool ignitionOn) override;
+};
+
 class Engine final : public TriggerStateListener {
 public:
 	Engine();
@@ -142,6 +147,7 @@ public:
 		MainRelayController,
 		IgnitionController,
 		AcController,
+		PrimeController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
