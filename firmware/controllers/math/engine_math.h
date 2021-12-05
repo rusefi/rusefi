@@ -62,3 +62,11 @@ void setSingleCoilDwell();
 // while for toothed wheels user would have to provide a value
 #define tdcPosition() \
 		(TRIGGER_WAVEFORM(tdcPosition) + engineConfiguration->globalTriggerAngleOffset)
+
+/** Gets phase offset for a particular cylinder's ID and number
+ * For example on 4 cylinder engine with firing order 1-3-4-2, this
+ * returns 0-180-360-540 for index 0-1-2-3
+ * Cylinder number is used for per-cylinder adjustment, if you have
+ * an odd-fire engine (v-twin, V10, some v6, etc)
+ */
+angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber);

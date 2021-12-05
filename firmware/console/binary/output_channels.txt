@@ -234,7 +234,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
 	uint16_t autoscale rawTps2Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	uint16_t knockCount;@@GAUGE_NAME_KNOCK_LEVEL@@;"",1, 0, 0, 0, 0
+	uint16_t knockCount;"knock: count";"",1, 0, 0, 0, 0
 
 	uint16_t autoscale accelerationZ;@@GAUGE_NAME_ACCEL_Z@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
@@ -259,8 +259,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     uint8_t fallbackMap;;"", 1, 0, -10000, 10000, 3
     uint8_t TEMPLOG_map_peak;;"", 1, 0, -10000, 10000, 3
-    uint8_t unused112;;"", 1, 0, -10000, 10000, 3
-    uint8_t unused113;;"", 1, 0, -10000, 10000, 3
+    uint8_t TEMPLOG_map_length;;"", 1, 0, -10000, 10000, 3
+    uint8_t TEMPLOG_mapIndex;;"", 1, 0, -10000, 10000, 3
 
 
 	uint16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0

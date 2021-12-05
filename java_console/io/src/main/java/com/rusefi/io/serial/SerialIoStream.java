@@ -1,34 +1,41 @@
 package com.rusefi.io.serial;
 
-import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 
-import static com.devexperts.logging.Logging.getLogging;
+public class SerialIoStream extends AbstractIoStream {
+    protected final SerialPort sp;
+    protected final String port;
+    private boolean withListener;
 
-/**
- * https://github.com/Fazecast/jSerialComm looks to be alive as of 2020
- * <p>
- * Andrey Belomutskiy, (c) 2013-2020
- * 06/03/2019
- */
-public class SerialIoStreamJSerialComm extends AbstractIoStream {
-    private static final Logging log = getLogging(SerialIoStreamJSerialComm.class);
-    private final SerialPort sp;
-    private final String port;
-    private final IncomingDataBuffer dataBuffer;
-
-    /**
-     * @see #openPort(String)
-     */
-    private SerialIoStreamJSerialComm(SerialPort sp, String port) {
+    public SerialIoStream(SerialPort sp, String port) {
         this.sp = sp;
         this.port = port;
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer("[serial] ", this);
+    }
+
+    public static IoStream openPort(String port) {
+        log.info("[SerialIoStream] openPort " + port);
+        SerialPort serialPort = openSerial(port);
+//        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
+        return new SerialIoStream(serialPort, port);
+    }
+
+    @NotNull
+    protected static SerialPort openSerial(String port) {
+        SerialPort serialPort = SerialPort.getCommPort(port);
+        serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
+        serialPort.openPort(0);
+        return serialPort;
+    }
+
+    @Override
+    public IncomingDataBuffer getDataBuffer() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -37,9 +44,28 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
     }
 
     @Override
+    public void close() {
+        log.info(port + ": Closing port...");
+        super.close();
+        sp.closePort();
+        log.info(port + ": Closed port.");
+    }
+
+    @Override
+    public void write(byte[] bytes) {
+        sp.writeBytes(bytes, bytes.length);
+    }
+
+    @Override
     public void setInputListener(DataListener listener) {
-        // datalistener can be redefined
-        sp.removeDataListener();
+        if (withListener) {
+            /**
+             * it looks like some drivers do not handle change of listener properly
+             * AndreyB had this problem at least on a random ELM327 clone with CH340 serial chip
+             */
+            throw new IllegalStateException("Not possible to change listener");
+        }
+        withListener = true;
         sp.addDataListener(new SerialPortDataListener() {
             private boolean isFirstEvent = true;
 
@@ -71,39 +97,4 @@ public class SerialIoStreamJSerialComm extends AbstractIoStream {
 
     }
 
-    @Override
-    public IncomingDataBuffer getDataBuffer() {
-        return dataBuffer;
-    }
-
-    @Override
-    public void close() {
-        log.info(port + ": Closing port...");
-        super.close();
-        sp.closePort();
-        log.info(port + ": Closed port.");
-    }
-
-    @Override
-    public void write(byte[] bytes) {
-        sp.writeBytes(bytes, bytes.length);
-    }
-
-    /**
-     * Just open physical serial and not much more
-     * @see PortHolder#connectAndReadConfiguration()
-     */
-    public static IoStream openPort(String port) {
-        log.info("[SerialIoStreamJSerialComm] openPort " + port);
-        SerialPort serialPort = SerialPort.getCommPort(port);
-        serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
-        serialPort.openPort(0);
-//        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
-        return new SerialIoStreamJSerialComm(serialPort, port);
-    }
-
-    @Override
-    public String toString() {
-        return port + " " + super.toString();
-    }
 }

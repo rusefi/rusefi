@@ -333,11 +333,6 @@ public:
 	void resetEngineSnifferIfInTestMode();
 
 	/**
-	 * pre-calculated offset for given sequence index within engine cycle
-	 * (not cylinder ID)
-	 */
-	angle_t ignitionPositionWithinEngineCycle[MAX_CYLINDER_COUNT];
-	/**
 	 * pre-calculated reference to which output pin should be used for
 	 * given sequence index within engine cycle
 	 * todo: update documentation

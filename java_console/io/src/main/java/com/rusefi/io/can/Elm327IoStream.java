@@ -3,15 +3,16 @@ package com.rusefi.io.can;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
-import com.rusefi.io.ByteReader;
 import com.rusefi.io.serial.AbstractIoStream;
-import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ *
+ */
 public class Elm327IoStream extends AbstractIoStream {
     private final String loggingPrefix;
     private final Elm327Connector con;
@@ -22,27 +23,28 @@ public class Elm327IoStream extends AbstractIoStream {
 
     // the buffer size is limited by CAN-TP protocol
     private final static int OUT_BUFFER_SIZE = 4095;
-    private ByteBuffer inBuf;
-    private ByteBuffer outBuf;
+    private final ByteBuffer outBuf;
 
     // this should match the TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME in the firmware
-    private final static boolean sendShortPacketsInOneFrame = true;
+    // todo: move this to rusefi_config.txt / prepend.txt?
+    private final static boolean sendShortPacketsInOneFrame = false;
+    //private final static boolean receiveShortPacketsInOneFrame = sendShortPacketsInOneFrame;
     private final static boolean receiveShortPacketsInOneFrame = false;
 
-	private Elm327Connector.CanDecoder canDecoder = new Elm327Connector.CanDecoder();
+	private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
 
 
-    public Elm327IoStream(Elm327Connector con, String loggingPrefix) throws IOException {
+    public Elm327IoStream(Elm327Connector con, String loggingPrefix) {
         this(con, loggingPrefix, DisconnectListener.VOID);
     }
 
-    public Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) throws IOException {
+    private Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) {
         this.con = con;
         this.loggingPrefix = loggingPrefix;
         this.disconnectListener = disconnectListener;
         this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
 
-        inBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
+//        ByteBuffer inBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
         outBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
     }
 
@@ -62,6 +64,7 @@ public class Elm327IoStream extends AbstractIoStream {
         return loggingPrefix;
     }
 
+    @NotNull
     @Override
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
@@ -91,6 +94,7 @@ public class Elm327IoStream extends AbstractIoStream {
         super.flush();
         byte [] bytes;
         // for smaller packets, send them in one 'simple' frame by stripping the header+footer off
+        // i.e. un-pack CRC32 TS protocol
         // (2 = 16-bit length, 4 = 32-bit crc)
         if (sendShortPacketsInOneFrame && outBuf.position() >= 2 + 1 + 4 && outBuf.position() <= 2 + 7 + 4) {
         	bytes = Arrays.copyOfRange(outBuf.array(), 2, outBuf.position() - 4);
@@ -114,9 +118,7 @@ public class Elm327IoStream extends AbstractIoStream {
 	    	packet = new byte [2 + data.length + 4];
 			IoHelper.putShort(packet, 0, data.length);
 
-    		for (int i = 0; i < data.length; i++) {
-	    		packet[i + 2] = data[i];
-	    	}
+            System.arraycopy(data, 0, packet, 2, data.length);
 	    	int crc = IoHelper.getCrc32(data);
 	    	IoHelper.putInt(packet, 2 + data.length, crc);
 		} else {
@@ -127,9 +129,10 @@ public class Elm327IoStream extends AbstractIoStream {
     	dataListener.onDataArrived(packet);
     }
 
-    public void processCanPacket(byte [] data) throws Exception {
+    public void processCanPacket(byte [] data) {
     	byte [] rawData = canDecoder.decodePacket(data);
-    	sendDataToClient(rawData);
+        if (rawData.length != 0)
+            sendDataToClient(rawData);
     }
 
     public interface DisconnectListener {

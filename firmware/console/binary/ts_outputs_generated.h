@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 02 22:39:40 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Dec 05 04:34:28 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -790,7 +790,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> rawTps2Secondary = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_KNOCK_LEVEL@@
+	 * "knock: count"
 	 * offset 306
 	 */
 	uint16_t knockCount = (uint16_t)0;
@@ -840,11 +840,11 @@ struct ts_outputs_s {
 	/**
 	 * offset 506
 	 */
-	uint8_t unused112 = (uint8_t)0;
+	uint8_t TEMPLOG_map_length = (uint8_t)0;
 	/**
 	 * offset 507
 	 */
-	uint8_t unused113 = (uint8_t)0;
+	uint8_t TEMPLOG_mapIndex = (uint8_t)0;
 	/**
 	%
 	 * offset 508
@@ -970,4 +970,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 02 22:39:40 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Dec 05 04:34:28 UTC 2021

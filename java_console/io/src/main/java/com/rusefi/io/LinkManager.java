@@ -8,7 +8,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.StreamConnector;
-import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +82,7 @@ public class LinkManager implements Closeable {
     public static IoStream open(String port) throws IOException {
         if (TcpConnector.isTcpPort(port))
             return TcpIoStream.open(port);
-        return SerialIoStreamJSerialComm.openPort(port);
+        return BufferedSerialIoStream.openPort(port);
     }
 
     @NotNull
@@ -230,7 +230,7 @@ public class LinkManager implements Closeable {
                 @Override
                 public IoStream call() {
                     messageListener.postMessage(getClass(), "Opening port: " + port);
-                    IoStream stream = ((Callable<IoStream>) () -> SerialIoStreamJSerialComm.openPort(port)).call();
+                    IoStream stream = ((Callable<IoStream>) () -> BufferedSerialIoStream.openPort(port)).call();
                     if (stream == null) {
                         // error already reported
                         return null;
