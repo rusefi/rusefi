@@ -32,11 +32,11 @@ public class Elm327IoStream extends AbstractIoStream {
 	private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
 
 
-    public Elm327IoStream(Elm327Connector con, String loggingPrefix) throws IOException {
+    public Elm327IoStream(Elm327Connector con, String loggingPrefix) {
         this(con, loggingPrefix, DisconnectListener.VOID);
     }
 
-    public Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) {
+    private Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) {
         this.con = con;
         this.loggingPrefix = loggingPrefix;
         this.disconnectListener = disconnectListener;
