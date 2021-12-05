@@ -21,5 +21,8 @@ public class Elm327Sandbox {
 
         String signature = BinaryProtocol.getSignature(tsStream);
         System.out.println("Got " + signature + " signature via CAN/ELM327");
+
+        String signature2 = BinaryProtocol.getSignature(tsStream);
+        System.out.println("Got " + signature2 + " signature via CAN/ELM327");
     }
 }
