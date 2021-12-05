@@ -468,6 +468,8 @@
 #define can_baudrate_e_B500KBPS 2
 #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
+#define CAN_ECU_SERIAL_RX_ID 0x100
+#define CAN_ECU_SERIAL_TX_ID 0x102
 #define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ", "CAN_BUS_GENESIS_COUPE", "CAN_BUS_HONDA_K"
 #define can_nbc_e_CAN_BUS_BMW_E90 6
 #define can_nbc_e_CAN_BUS_GENESIS_COUPE 10
@@ -1573,8 +1575,10 @@
 #define mapAccelTaperBins_offset 2136
 #define mapAccelTaperMult_offset 2168
 #define mapAveragingSchedulingAtIndex_offset 1540
+#define mapCamAveragingLength_offset 619
 #define mapCamDetectionAnglePosition_offset 552
 #define mapCamDetectionThreshold_offset 615
+#define mapCamSkipFactor_offset 764
 #define mapErrorDetectionTooHigh_offset 1780
 #define mapErrorDetectionTooLow_offset 1776
 #define mapEstimateRpmBins_offset 15744
@@ -1829,7 +1833,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 3108688708
+#define SIGNATURE_HASH 127665338
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2347,7 +2351,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.12.04.subaru_eg33_f7.3108688708"
+#define TS_SIGNATURE "rusEFI 2021.12.05.subaru_eg33_f7.127665338"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2371,7 +2375,7 @@
 #define unused1128_offset 2116
 #define unused1129_offset 2116
 #define unused1130_offset 2116
-#define unused11_offset 764
+#define unused11_offset 765
 #define unused1366_offset 2684
 #define unused1464b0_offset 1464
 #define unused1464b20_offset 1464
@@ -2409,33 +2413,33 @@
 #define unusedAtOldBoardConfigurationEnd_offset 1340
 #define unusedBit4_1476_offset 1476
 #define unusedBit_251_29_offset 976
-#define unusedBit_300_30_offset 976
-#define unusedBit_300_31_offset 976
+#define unusedBit_301_30_offset 976
+#define unusedBit_301_31_offset 976
 #define unusedBit_34_31_offset 76
-#define unusedBit_509_10_offset 2116
-#define unusedBit_509_11_offset 2116
-#define unusedBit_509_12_offset 2116
-#define unusedBit_509_13_offset 2116
-#define unusedBit_509_14_offset 2116
-#define unusedBit_509_15_offset 2116
-#define unusedBit_509_16_offset 2116
-#define unusedBit_509_17_offset 2116
-#define unusedBit_509_18_offset 2116
-#define unusedBit_509_19_offset 2116
-#define unusedBit_509_20_offset 2116
-#define unusedBit_509_21_offset 2116
-#define unusedBit_509_22_offset 2116
-#define unusedBit_509_23_offset 2116
-#define unusedBit_509_24_offset 2116
-#define unusedBit_509_25_offset 2116
-#define unusedBit_509_26_offset 2116
-#define unusedBit_509_27_offset 2116
-#define unusedBit_509_28_offset 2116
-#define unusedBit_509_29_offset 2116
-#define unusedBit_509_30_offset 2116
-#define unusedBit_509_31_offset 2116
-#define unusedBit_509_8_offset 2116
-#define unusedBit_509_9_offset 2116
+#define unusedBit_510_10_offset 2116
+#define unusedBit_510_11_offset 2116
+#define unusedBit_510_12_offset 2116
+#define unusedBit_510_13_offset 2116
+#define unusedBit_510_14_offset 2116
+#define unusedBit_510_15_offset 2116
+#define unusedBit_510_16_offset 2116
+#define unusedBit_510_17_offset 2116
+#define unusedBit_510_18_offset 2116
+#define unusedBit_510_19_offset 2116
+#define unusedBit_510_20_offset 2116
+#define unusedBit_510_21_offset 2116
+#define unusedBit_510_22_offset 2116
+#define unusedBit_510_23_offset 2116
+#define unusedBit_510_24_offset 2116
+#define unusedBit_510_25_offset 2116
+#define unusedBit_510_26_offset 2116
+#define unusedBit_510_27_offset 2116
+#define unusedBit_510_28_offset 2116
+#define unusedBit_510_29_offset 2116
+#define unusedBit_510_30_offset 2116
+#define unusedBit_510_31_offset 2116
+#define unusedBit_510_8_offset 2116
+#define unusedBit_510_9_offset 2116
 #define unusedBitHere1_offset 1464
 #define unusedBitHere2_offset 1464
 #define unusedBitHere3_offset 1464
@@ -2456,7 +2460,6 @@
 #define unusedLaunchRpmThreshold_offset 1032
 #define unusedLogFormat_offset 496
 #define unusedLuaWasHere_offset 16032
-#define unusedNearVss_offset 619
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832
 #define unusedOutputWhereHere_offset 794

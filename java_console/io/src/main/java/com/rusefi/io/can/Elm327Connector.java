@@ -2,120 +2,80 @@ package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.BaudRateHolder;
-import com.rusefi.io.serial.SerialIoStreamJSerialComm;
-import com.rusefi.io.tcp.BinaryProtocolProxy;
-import com.rusefi.io.tcp.ServerSocketReference;
-import com.rusefi.io.tcp.TcpConnector;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Elm327Connector implements Closeable, DataListener {
+import static com.rusefi.Timeouts.SECOND;
+
+public class Elm327Connector implements Closeable {
 	private final static Logging log = Logging.getLogging(Elm327Connector.class);
 	private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes();
 
-	private final static int ELM327_DEFAULT_BAUDRATE = 38400;
-	private final static int BIG_TIMEOUT = 2000;
-	private final static int TIMEOUT = 70;
+    public final static int ELM327_DEFAULT_BAUDRATE = 38400;
+    private final static int BIG_TIMEOUT = 2 * SECOND;
+    private final static int TIMEOUT = 70;
+	public static final String HELLO = "ATZ";
+	public static final String ELM_EOL = "\r";
+	// those are inverted between ECU side and PC side
+	private static final int CAN_PC_SERIAL_RX_ID = Fields.CAN_ECU_SERIAL_TX_ID;
+	private static final int CAN_PC_SERIAL_TX_ID = Fields.CAN_ECU_SERIAL_RX_ID;
 
-	// these should match the defines in the firmware
-	private final static int CAN_SERIAL_TX_ID = 0x100;
-	private final static int CAN_SERIAL_RX_ID = 0x102;
+	private final Object lock = new Object();
 
-	private final static int ISO_TP_FRAME_SINGLE = 0;
-	private final static int ISO_TP_FRAME_FIRST = 1;
-	private final static int ISO_TP_FRAME_CONSECUTIVE = 2;
-	private final static int ISO_TP_FRAME_FLOW_CONTROL = 3;
-    
-    private IoStream stream = null;
-	private String partialLine = new String();
-	private List<String> completeLines = new ArrayList<String>();
-	private boolean waitForEcho = true;
+	/**
+	 * Connection to ELM327 device where text based ELM protocol happens
+	 */
+	private final IoStream underlyingStream;
+	/**
+	 * Binary serial stream for TS traffic
+	 */
+	private final Elm327IoStream tsStream;
+	private String partialLine = "";
+	private final List<String> completeLines = new ArrayList<>();
 	private boolean isCommandMode = false;
 
-	private ServerSocketReference serverHolder;
-	private Elm327IoStream elmStream;
-
-    // CAN multiframe decoder state
-    static class CanDecoder {
-        public int waitingForNumBytes = 0;
-		public int waitingForFrameIndex = 0;
-
-    	public byte [] decodePacket(byte [] data) throws Exception {
-        	int frameType = (data[0] >> 4) & 0xf;
-    		int numBytesAvailable, frameIdx;
-    		int dataOffset = 0;
-    		switch (frameType) {
-    		case ISO_TP_FRAME_SINGLE:
-    			numBytesAvailable = data[0] & 0xf;
-    			dataOffset = 1;
-    			this.waitingForNumBytes = 0;
-    			break;
-    		case ISO_TP_FRAME_FIRST:
-    			this.waitingForNumBytes = ((data[0] & 0xf) << 8) | data[1];
-    			this.waitingForFrameIndex = 1;
-    			numBytesAvailable = Math.min(this.waitingForNumBytes, 6);
-    			dataOffset = 2;
-    			break;
-    		case ISO_TP_FRAME_CONSECUTIVE:
-    			frameIdx = data[0] & 0xf;
-    			if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
-    				throw new Exception("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react?");
-    			}
-    			this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
-    			numBytesAvailable = Math.min(this.waitingForNumBytes, 7);
-    			dataOffset = 1;
-    			break;
-    		case ISO_TP_FRAME_FLOW_CONTROL:
-    			throw new Exception("ISO_TP_FRAME_FLOW_CONTROL: should we just ignore the FC frame?");
-			default:
-				throw new Exception("Unknown frame type");
-    		}
-    	
-    		return Arrays.copyOfRange(data, dataOffset, dataOffset + numBytesAvailable);
-        }
+	public Elm327Connector(IoStream underlyingStream) {
+		this.underlyingStream = underlyingStream;
+		underlyingStream.setInputListener(listener);
+		tsStream = new Elm327IoStream(this, "elm327Stream");
 	}
 
-
-	public static boolean checkConnection(String serialPort, IoStream stream) {
-		Elm327Connector con = new Elm327Connector();
-		boolean found = con.initConnection(serialPort, stream);
-		con.close();
-		return found;
+	public Elm327IoStream getTsStream() {
+		return tsStream;
 	}
 
-    public void start(String serialPort) {
+	public void start(String msg) {
     	log.info("* Elm327.start()");
 
-        if (initConnection(serialPort, SerialIoStreamJSerialComm.openPort(serialPort))) {
+        if (initConnection(msg)) {
         	// reset to defaults
         	sendCommand("ATD", "OK");
 
         	// Echo off
         	sendCommand("ATE0", "OK");
-        	waitForEcho = false;
-        	
+        	//waitForEcho = false;
+
         	// protocol #6 - ISO 15765-4 CAN (11 bit ID, 500 kbaud)
 			sendCommand("ATSP6", "OK");
-			
+
 			// set rx ID
-			sendCommand("ATCF " + Integer.toHexString(CAN_SERIAL_RX_ID), "OK");
+			sendCommand("ATCF " + Integer.toHexString(CAN_PC_SERIAL_RX_ID), "OK");
 
 			// rx ID mask = "all bits set"
 			sendCommand("ATCM FFF", "OK");
 
 			// set tx ID
-			sendCommand("ATSH " + Integer.toHexString(CAN_SERIAL_TX_ID), "OK");
+			sendCommand("ATSH " + Integer.toHexString(CAN_PC_SERIAL_TX_ID), "OK");
 
 			// set FC tx ID (should match our tx ID)
-			sendCommand("ATFCSH " + Integer.toHexString(CAN_SERIAL_TX_ID), "OK");
+			sendCommand("ATFCSH " + Integer.toHexString(CAN_PC_SERIAL_TX_ID), "OK");
 			// set FC data
 			sendCommand("ATFCSD 30 00 00", "OK");
 			// use custom FC ID & data
@@ -123,7 +83,7 @@ public class Elm327Connector implements Closeable, DataListener {
 
 			// disable data auto-formatting (less bytes in a stream)
 			sendCommand("ATCAF 0", "OK");
-			
+
 			// allow "long" 8-byte messages
 			sendCommand("ATAL", "OK");
 
@@ -137,31 +97,27 @@ public class Elm327Connector implements Closeable, DataListener {
 			String voltage = sendCommand("ATRV", "([0-9\\.]+)V");
 			log.info("* Ignition voltage = " + voltage);
         }
-        
-        startNetworkConnector(TcpConnector.DEFAULT_PORT);
-		//sendBytesToSerial(new byte[] { 0, 1, 83, 32, 96, (byte)239, (byte)195 });
-		//sendBytesToSerial(new byte[] { (byte)'V' });
+
     }
 
     @Override
     public void close() {
     	log.info("* Elm327.close()");
-    	if (stream != null)
-    		stream.close();
+    	if (underlyingStream != null)
+    		underlyingStream.close();
     }
 
-    @Override
-    public void onDataArrived(byte freshData[]) {
+	private final DataListener listener = freshData -> {
     	// ELM327 uses a text protocol, so we convert the data to a string
     	String freshStr = new String(freshData);
     	while (true) {
 	    	int newL = freshStr.indexOf('\r');
     	    //log.info("* onData: " + newL + " [" + freshStr + "]");
-        
+
 	        // split the stream into separate lines
     	    if (newL >= 0) {
         		String curLine = this.partialLine;
-	        	this.partialLine = new String();
+	        	this.partialLine = "";
     	    	if (newL > 0)
         		    curLine += freshStr.substring(0, newL);
     	        if (curLine.length() > 0)
@@ -172,26 +128,26 @@ public class Elm327Connector implements Closeable, DataListener {
 			this.partialLine += freshStr;
 			break;
 		}
-    }
+	};
 
-	public void sendBytesToSerial(byte [] bytes)  throws IOException {
-    	log.info("-------sendBytesToSerial "+bytes.length+" bytes:");
+	public void sendBytesToSerial(byte [] bytes) {
+		log.info("-------sendBytesToSerial " + bytes.length + " byte(s):");
 
-    	for (int i = 0; i < bytes.length; i++) {
-        	log.info("["+i+"] " + ((int)bytes[i] & 0xff));
-    	}
+		for (int i = 0; i < bytes.length; i++) {
+			log.info("[" + i + "] " + ((int) bytes[i] & 0xff));
+		}
 
     	// 1 frame
     	if (bytes.length <= 7) {
-    		sendFrame((ISO_TP_FRAME_SINGLE << 4) | bytes.length, bytes, 0, bytes.length);
+    		sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_SINGLE << 4) | bytes.length, bytes, 0, bytes.length);
     		return;
     	}
 
     	// multiple frames
     	// send the first header frame
-    	sendFrame((ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
+    	sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
     	// get a flow control frame
-    	byte[] fc = receiveData();
+    	receiveData();
 
     	// send the rest of the data
     	int idx = 1, offset = 6;
@@ -199,22 +155,16 @@ public class Elm327Connector implements Closeable, DataListener {
     	while (remaining > 0) {
     		int len = Math.min(remaining, 7);
     		// send the consecutive frames
-    		sendFrame((ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
+    		sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
     		offset += len;
     		remaining -= len;
     	}
 	}
 
-	///////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////
 
-    private boolean initConnection(String msg, IoStream stream) {
-        // todo: this seems like a hack-ish way? Shouldn't be openPort(port, baudrate)?
-        BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
-    	
-    	this.stream = stream;
-        
-        this.stream.setInputListener(this);
-        if (sendCommand("ATZ", "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
+    private boolean initConnection(String msg) {
+        if (sendCommand(HELLO, "ELM327 v[0-9]+\\.[0-9]+", BIG_TIMEOUT) != null) {
         	log.info("ELM DETECTED on " + msg + "!");
         	return true;
         }
@@ -231,11 +181,9 @@ public class Elm327Connector implements Closeable, DataListener {
     	isCommandMode = true;
     	this.completeLines.clear();
        	try {
-       		this.stream.write((command + "\r").getBytes());
+       		underlyingStream.write((command + ELM_EOL).getBytes());
        		waitForResponse(timeout);
-	    } catch (IOException ignore) {
-	        return null;
-	    } catch (InterruptedException ignore) {
+	    } catch (IOException | InterruptedException ignore) {
 	        return null;
 	    } finally {
 	    	isCommandMode = false;
@@ -253,25 +201,26 @@ public class Elm327Connector implements Closeable, DataListener {
         }
         // return the response only if it matches the given regexp
         Pattern pattern = Pattern.compile(responseFilter);
-		Matcher matcher = pattern.matcher(this.completeLines.get(responseIdx));
+		String inputLine = completeLines.get(responseIdx);
+		Matcher matcher = pattern.matcher(inputLine);
 		if (matcher.find()) {
         	// store the echo mode
-        	this.waitForEcho = responseIdx != 0;
-			
+        	//this.waitForEcho = responseIdx != 0;
+
         	return (matcher.groupCount() > 0) ? matcher.group(1) : matcher.group();
         }
         return null;
     }
 
-    private void sendFrame(int hdr0, byte [] data, int offset, int len) {
-    	sendData(new byte[] { (byte)hdr0 }, data, offset, len);
-    }
-    
-    private void sendFrame(int hdr0, int hdr1, byte [] data, int offset, int len) {
-    	sendData(new byte[] { (byte)hdr0, (byte)hdr1 }, data, offset, len);
+    private void sendCanFrame(int hdr0, byte [] data, int offset, int len) {
+    	sendCanData(new byte[] { (byte)hdr0 }, data, offset, len);
     }
 
-    private void sendData(byte [] hdr, byte [] data, int offset, int len) {
+    private void sendCanFrame(int hdr0, int hdr1, byte [] data, int offset, int len) {
+    	sendCanData(new byte[] { (byte)hdr0, (byte)hdr1 }, data, offset, len);
+    }
+
+    private void sendCanData(byte [] hdr, byte [] data, int offset, int len) {
     	//log.info("--------sendData offset="+Integer.toString(offset) + " len=" + Integer.toString(len) + "hdr.len=" + Integer.toString(hdr.length));
 
     	len += hdr.length;
@@ -286,72 +235,69 @@ public class Elm327Connector implements Closeable, DataListener {
    		//log.info("* Elm327.data: " + (new String(hexData)));
 
 		try {
-       		this.stream.write(hexData);
+       		underlyingStream.write(hexData);
 	    } catch (IOException ignore) {
-	        return;
+			// ignore
 	    }
     }
 
-    private synchronized byte[] receiveData() {
-		try {
-       		waitForResponse(TIMEOUT);
-       		//log.info("Elm327Connector.receiveData(): size=" + this.completeLines.size());
-       		return null;
-	    } catch (InterruptedException ignore) {
-	        return null;
-	    }
+    private byte[] receiveData() {
+        synchronized (lock) {
+            try {
+                waitForResponse(TIMEOUT);
+                //log.info("Elm327Connector.receiveData(): size=" + this.completeLines.size());
+                return null;
+            } catch (InterruptedException ignore) {
+                return null;
+            }
+        }
     }
 
-    private synchronized void waitForResponse(int timeout) throws InterruptedException {
-    	// multiple lines can be sent, we need to wait for them all
-    	while (true) {
-       		int numLines = this.completeLines.size();
-	        wait(timeout);
-	        // if nothing changed
-	        if (this.completeLines.size() == numLines)
-	        	break;
-	    }
+    private void waitForResponse(int timeout) throws InterruptedException {
+        synchronized (lock) {
+            // multiple lines can be sent, we need to wait for them all
+            while (true) {
+                int numLines = completeLines.size();
+                lock.wait(timeout);
+                // if nothing changed
+                if (completeLines.size() == numLines)
+                    break;
+            }
+        }
     }
 
-    private synchronized void processLine(String line) {
-    	log.info("Elm327Connector.processLine(): {" + line + "}");
-    	
-    	// remove the 'cursor'
-    	if (line.charAt(0) == '>')
-    		line = line.substring(1);
-    	
-    	if (isCommandMode) {
-	    	// store the output as a response to the command (for verification)
-	    	this.completeLines.add(line);
-	    	notifyAll();
-	    } else {
-	    	// just send it back to the proxy
-	    	sendDataBack(line);
-	    }
+    private void processLine(String line) {
+        synchronized (lock) {
+            log.info("Elm327Connector.processLine(): {" + line + "}");
+
+            // remove the 'cursor'
+            if (line.charAt(0) == '>')
+                line = line.substring(1);
+
+            if (isCommandMode) {
+                // store the output as a response to the command (for verification)
+                this.completeLines.add(line);
+                lock.notifyAll();
+            } else {
+                // just send it back to the proxy
+                sendDataBack(line);
+            }
+        }
     }
 
     private void sendDataBack(String line) {
 		byte [] canPacket = HexUtil.asBytes(line);
         try {
-			elmStream.processCanPacket(canPacket);
-	    } catch (Exception ignore) {
-	    	// todo: ?
+			tsStream.processCanPacket(canPacket);
+	    } catch (Exception e) {
+			System.out.println("ELM327: Error processing " + line);
 	    }
     }
 
-    private boolean startNetworkConnector(int controllerPort) {
-        try {
-	        elmStream = new Elm327IoStream(this, "elm327Stream");
-	        serverHolder = BinaryProtocolProxy.createProxy(elmStream, controllerPort, new BinaryProtocolProxy.ClientApplicationActivityListener() {
-                @Override
-                public void onActivity() {
-                }
-            });
-	    } catch (IOException ignore) {
-	        return false;
-	    }
-
-        return true;
+	public static boolean checkConnection(String serialPort, IoStream stream) {
+		Elm327Connector con = new Elm327Connector(stream);
+		boolean found = con.initConnection(serialPort);
+		con.close();
+		return found;
 	}
-
 }

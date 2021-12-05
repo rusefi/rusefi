@@ -8,7 +8,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.serial.SerialIoStreamJSerialComm;
+import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -70,7 +70,7 @@ public class DfuFlasher {
         AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
         if (!PortDetector.isAutoPort(port)) {
             wnd.append("Using selected " + port + "\n");
-            IoStream stream = SerialIoStreamJSerialComm.openPort(port);
+            IoStream stream = BufferedSerialIoStream.openPort(port);
             AtomicReference<String> signature = new AtomicReference<>();
             new SerialAutoChecker(PortDetector.DetectorMode.DETECT_TS, port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
                 @Override

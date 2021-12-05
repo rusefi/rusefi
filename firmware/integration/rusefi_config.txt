@@ -644,7 +644,7 @@ uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 
 	uint8_t mapCamDetectionThreshold;;"", 1, 0, 0, 240, 0
 	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
-	uint8_t unusedNearVss;;"", 1, 0, 0, 1, 0
+	uint8_t mapCamAveragingLength;;"", 1, 0, 0, 255, 0
 
 
 ! todo: rename to triggerSimulatorRpm
@@ -784,7 +784,8 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e acFanPinMode;
 
 
-	uint8_t[6] unused11;;"volts", 0.1, 0, 0, 20, 1
+    uint8_t mapCamSkipFactor;;"", 1, 0, 0, 255, 0
+	uint8_t[5] unused11;;"volts", 0.1, 0, 0, 20, 1
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 2", "type 2"
@@ -1989,3 +1990,6 @@ end_struct
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
+
+#define CAN_ECU_SERIAL_RX_ID 0x100
+#define CAN_ECU_SERIAL_TX_ID 0x102
