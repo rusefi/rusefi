@@ -3,9 +3,7 @@ package com.rusefi.io.can;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
-import com.rusefi.io.ByteReader;
 import com.rusefi.io.serial.AbstractIoStream;
-import com.rusefi.shared.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -29,7 +27,7 @@ public class Elm327IoStream extends AbstractIoStream {
     private final static boolean sendShortPacketsInOneFrame = true;
     private final static boolean receiveShortPacketsInOneFrame = false;
 
-	private Elm327Connector.CanDecoder canDecoder = new Elm327Connector.CanDecoder();
+	private IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
 
 
     public Elm327IoStream(Elm327Connector con, String loggingPrefix) throws IOException {

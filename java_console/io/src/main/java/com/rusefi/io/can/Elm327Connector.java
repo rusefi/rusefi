@@ -2,6 +2,7 @@ package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.SerialIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
@@ -10,7 +11,6 @@ import com.rusefi.io.tcp.TcpConnector;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,61 +29,12 @@ public class Elm327Connector implements Closeable {
 
 	private final Object lock = new Object();
 
-	// these should match the defines in the firmware
-	private final static int CAN_SERIAL_TX_ID = 0x100;
-	private final static int CAN_SERIAL_RX_ID = 0x102;
-
-	private final static int ISO_TP_FRAME_SINGLE = 0;
-	private final static int ISO_TP_FRAME_FIRST = 1;
-	private final static int ISO_TP_FRAME_CONSECUTIVE = 2;
-	private final static int ISO_TP_FRAME_FLOW_CONTROL = 3;
-
-    private IoStream stream = null;
+	private IoStream stream = null;
 	private String partialLine = "";
 	private final List<String> completeLines = new ArrayList<>();
 	private boolean isCommandMode = false;
 
 	private Elm327IoStream elmStream;
-
-    // CAN multiframe decoder state
-    static class CanDecoder {
-        public int waitingForNumBytes = 0;
-		public int waitingForFrameIndex = 0;
-
-    	public byte [] decodePacket(byte [] data) throws Exception {
-        	int frameType = (data[0] >> 4) & 0xf;
-    		int numBytesAvailable, frameIdx;
-    		int dataOffset;
-    		switch (frameType) {
-    		case ISO_TP_FRAME_SINGLE:
-    			numBytesAvailable = data[0] & 0xf;
-    			dataOffset = 1;
-    			this.waitingForNumBytes = 0;
-    			break;
-    		case ISO_TP_FRAME_FIRST:
-    			this.waitingForNumBytes = ((data[0] & 0xf) << 8) | data[1];
-    			this.waitingForFrameIndex = 1;
-    			numBytesAvailable = Math.min(this.waitingForNumBytes, 6);
-    			dataOffset = 2;
-    			break;
-    		case ISO_TP_FRAME_CONSECUTIVE:
-    			frameIdx = data[0] & 0xf;
-    			if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
-    				throw new Exception("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react?");
-    			}
-    			this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
-    			numBytesAvailable = Math.min(this.waitingForNumBytes, 7);
-    			dataOffset = 1;
-    			break;
-    		case ISO_TP_FRAME_FLOW_CONTROL:
-    			throw new Exception("ISO_TP_FRAME_FLOW_CONTROL: should we just ignore the FC frame?");
-			default:
-				throw new Exception("Unknown frame type");
-    		}
-
-    		return Arrays.copyOfRange(data, dataOffset, dataOffset + numBytesAvailable);
-        }
-	}
 
 	public static boolean checkConnection(String serialPort, IoStream stream) {
 		Elm327Connector con = new Elm327Connector();
@@ -107,16 +58,16 @@ public class Elm327Connector implements Closeable {
 			sendCommand("ATSP6", "OK");
 
 			// set rx ID
-			sendCommand("ATCF " + Integer.toHexString(CAN_SERIAL_RX_ID), "OK");
+			sendCommand("ATCF " + Integer.toHexString(Fields.CAN_SERIAL_RX_ID), "OK");
 
 			// rx ID mask = "all bits set"
 			sendCommand("ATCM FFF", "OK");
 
 			// set tx ID
-			sendCommand("ATSH " + Integer.toHexString(CAN_SERIAL_TX_ID), "OK");
+			sendCommand("ATSH " + Integer.toHexString(Fields.CAN_SERIAL_TX_ID), "OK");
 
 			// set FC tx ID (should match our tx ID)
-			sendCommand("ATFCSH " + Integer.toHexString(CAN_SERIAL_TX_ID), "OK");
+			sendCommand("ATFCSH " + Integer.toHexString(Fields.CAN_SERIAL_TX_ID), "OK");
 			// set FC data
 			sendCommand("ATFCSD 30 00 00", "OK");
 			// use custom FC ID & data
@@ -183,13 +134,13 @@ public class Elm327Connector implements Closeable {
 
     	// 1 frame
     	if (bytes.length <= 7) {
-    		sendFrame((ISO_TP_FRAME_SINGLE << 4) | bytes.length, bytes, 0, bytes.length);
+    		sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_SINGLE << 4) | bytes.length, bytes, 0, bytes.length);
     		return;
     	}
 
     	// multiple frames
     	// send the first header frame
-    	sendFrame((ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
+    	sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
     	// get a flow control frame
     	receiveData();
 
@@ -199,7 +150,7 @@ public class Elm327Connector implements Closeable {
     	while (remaining > 0) {
     		int len = Math.min(remaining, 7);
     		// send the consecutive frames
-    		sendFrame((ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
+    		sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
     		offset += len;
     		remaining -= len;
     	}
@@ -259,15 +210,15 @@ public class Elm327Connector implements Closeable {
         return null;
     }
 
-    private void sendFrame(int hdr0, byte [] data, int offset, int len) {
-    	sendData(new byte[] { (byte)hdr0 }, data, offset, len);
+    private void sendCanFrame(int hdr0, byte [] data, int offset, int len) {
+    	sendCanData(new byte[] { (byte)hdr0 }, data, offset, len);
     }
 
-    private void sendFrame(int hdr0, int hdr1, byte [] data, int offset, int len) {
-    	sendData(new byte[] { (byte)hdr0, (byte)hdr1 }, data, offset, len);
+    private void sendCanFrame(int hdr0, int hdr1, byte [] data, int offset, int len) {
+    	sendCanData(new byte[] { (byte)hdr0, (byte)hdr1 }, data, offset, len);
     }
 
-    private void sendData(byte [] hdr, byte [] data, int offset, int len) {
+    private void sendCanData(byte [] hdr, byte [] data, int offset, int len) {
     	//log.info("--------sendData offset="+Integer.toString(offset) + " len=" + Integer.toString(len) + "hdr.len=" + Integer.toString(hdr.length));
 
     	len += hdr.length;
@@ -336,19 +287,15 @@ public class Elm327Connector implements Closeable {
 		byte [] canPacket = HexUtil.asBytes(line);
         try {
 			elmStream.processCanPacket(canPacket);
-	    } catch (Exception ignore) {
-	    	// todo: ?
+	    } catch (Exception e) {
+			System.out.println("ELM327: Error processing " + line);
 	    }
     }
 
     private boolean startNetworkConnector(int controllerPort) {
         try {
 	        elmStream = new Elm327IoStream(this, "elm327Stream");
-			BinaryProtocolProxy.createProxy(elmStream, controllerPort, new BinaryProtocolProxy.ClientApplicationActivityListener() {
-				@Override
-				public void onActivity() {
-				}
-			});
+			BinaryProtocolProxy.createProxy(elmStream, controllerPort, BinaryProtocolProxy.ClientApplicationActivityListener.VOID);
 	    } catch (IOException ignore) {
 	        return false;
 	    }
