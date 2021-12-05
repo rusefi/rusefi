@@ -12,7 +12,6 @@ import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -28,7 +27,6 @@ import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -220,9 +218,9 @@ public class BinaryProtocol {
         linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
-    public String getSignature() throws IOException {
+    public static String getSignature(IoStream stream) throws IOException {
         HelloCommand.send(stream);
-        return HelloCommand.getHelloResponse(incomingData);
+        return HelloCommand.getHelloResponse(stream.getDataBuffer());
     }
 
     /**
@@ -232,7 +230,7 @@ public class BinaryProtocol {
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
         try {
-            signature = getSignature();
+            signature = getSignature(stream);
             System.out.println("BinaryProtocol: Got " + signature + " signature");
             SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
