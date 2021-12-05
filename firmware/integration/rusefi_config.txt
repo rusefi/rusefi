@@ -1990,3 +1990,6 @@ end_struct
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
+
+#define CAN_SERIAL_RX_ID 0x100
+#define CAN_SERIAL_TX_ID 0x102
