@@ -110,7 +110,7 @@ public:
 class CanTsListener : public CanListener {
 public:
 	CanTsListener()
-		: CanListener(CAN_SERIAL_RX_ID)
+		: CanListener(CAN_ECU_SERIAL_RX_ID)
 	{
 	}
 

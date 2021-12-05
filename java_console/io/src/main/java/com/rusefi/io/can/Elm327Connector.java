@@ -24,8 +24,8 @@ public class Elm327Connector implements Closeable {
 	public static final String HELLO = "ATZ";
 	public static final String ELM_EOL = "\r";
 	// those are inverted between ECU side and PC side
-	private static final int CAN_PC_SERIAL_RX_ID = Fields.CAN_SERIAL_TX_ID;
-	private static final int CAN_PC_SERIAL_TX_ID = Fields.CAN_SERIAL_RX_ID;
+	private static final int CAN_PC_SERIAL_RX_ID = Fields.CAN_ECU_SERIAL_TX_ID;
+	private static final int CAN_PC_SERIAL_TX_ID = Fields.CAN_ECU_SERIAL_RX_ID;
 
 	private final Object lock = new Object();
 
