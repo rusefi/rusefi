@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Dec 05 00:27:07 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Dec 05 03:17:51 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -442,6 +442,8 @@ public class Fields {
 	public static final int can_baudrate_e_B250KBPS = 1;
 	public static final int can_baudrate_e_B500KBPS = 2;
 	public static final int CAN_DEFAULT_BASE = 0x200;
+	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
+	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
 	public static final int can_nbc_e_CAN_BUS_BMW_E90 = 6;
 	public static final int can_nbc_e_CAN_BUS_GENESIS_COUPE = 10;
 	public static final int can_nbc_e_CAN_BUS_Haltech = 7;
@@ -2209,7 +2211,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.05.all.3197887637";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.05.all.3014649361";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;

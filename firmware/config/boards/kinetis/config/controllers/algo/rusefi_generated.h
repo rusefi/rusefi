@@ -441,6 +441,8 @@
 #define can_baudrate_e_B500KBPS 2
 #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 #define CAN_DEFAULT_BASE 0x200
+#define CAN_ECU_SERIAL_RX_ID 0x100
+#define CAN_ECU_SERIAL_TX_ID 0x102
 #define can_nbc_e_auto_enum "CAN_BUS_NBC_NONE", "CAN_BUS_NBC_FIAT", "CAN_BUS_NBC_VAG", "CAN_BUS_MAZDA_RX8", "CAN_BUS_NBC_BMW", "CAN_BUS_W202_C180", "CAN_BUS_BMW_E90", "CAN_BUS_Haltech", "CAN_BUS_MQB", "CAN_BUS_NISSAN_VQ", "CAN_BUS_GENESIS_COUPE", "CAN_BUS_HONDA_K"
 #define can_nbc_e_CAN_BUS_BMW_E90 6
 #define can_nbc_e_CAN_BUS_GENESIS_COUPE 10
@@ -1805,7 +1807,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 2076954581
+#define SIGNATURE_HASH 1996475729
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2323,7 +2325,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.05.kin.2076954581"
+#define TS_SIGNATURE "rusEFI 2021.12.05.kin.1996475729"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
