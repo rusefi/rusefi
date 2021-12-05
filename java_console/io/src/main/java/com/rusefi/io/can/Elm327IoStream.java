@@ -10,6 +10,9 @@ import java.io.*;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
+/**
+ *
+ */
 public class Elm327IoStream extends AbstractIoStream {
     private final String loggingPrefix;
     private final Elm327Connector con;
@@ -20,27 +23,26 @@ public class Elm327IoStream extends AbstractIoStream {
 
     // the buffer size is limited by CAN-TP protocol
     private final static int OUT_BUFFER_SIZE = 4095;
-    private ByteBuffer inBuf;
-    private ByteBuffer outBuf;
+    private final ByteBuffer outBuf;
 
     // this should match the TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME in the firmware
     private final static boolean sendShortPacketsInOneFrame = true;
     private final static boolean receiveShortPacketsInOneFrame = false;
 
-	private IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
+	private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder();
 
 
     public Elm327IoStream(Elm327Connector con, String loggingPrefix) throws IOException {
         this(con, loggingPrefix, DisconnectListener.VOID);
     }
 
-    public Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) throws IOException {
+    public Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) {
         this.con = con;
         this.loggingPrefix = loggingPrefix;
         this.disconnectListener = disconnectListener;
         this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
 
-        inBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
+//        ByteBuffer inBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
         outBuf = ByteBuffer.allocate(OUT_BUFFER_SIZE);
     }
 
@@ -60,6 +62,7 @@ public class Elm327IoStream extends AbstractIoStream {
         return loggingPrefix;
     }
 
+    @NotNull
     @Override
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
@@ -112,9 +115,7 @@ public class Elm327IoStream extends AbstractIoStream {
 	    	packet = new byte [2 + data.length + 4];
 			IoHelper.putShort(packet, 0, data.length);
 
-    		for (int i = 0; i < data.length; i++) {
-	    		packet[i + 2] = data[i];
-	    	}
+            System.arraycopy(data, 0, packet, 2, data.length);
 	    	int crc = IoHelper.getCrc32(data);
 	    	IoHelper.putInt(packet, 2 + data.length, crc);
 		} else {
