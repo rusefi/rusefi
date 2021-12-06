@@ -210,14 +210,6 @@ public class Elm327Connector implements Closeable {
         return null;
     }
 
-    private void sendCanFrame(int hdr0, byte [] data, int offset, int len) {
-    	sendCanData(new byte[] { (byte)hdr0 }, data, offset, len);
-    }
-
-    private void sendCanFrame(int hdr0, int hdr1, byte [] data, int offset, int len) {
-    	sendCanData(new byte[] { (byte)hdr0, (byte)hdr1 }, data, offset, len);
-    }
-
     private void sendCanData(byte [] hdr, byte [] data, int offset, int len) {
     	//log.info("--------sendData offset="+Integer.toString(offset) + " len=" + Integer.toString(len) + "hdr.len=" + Integer.toString(hdr.length));
 
