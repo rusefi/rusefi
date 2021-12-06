@@ -185,7 +185,7 @@ void runRusEfi() {
 		// enable Deepsleep mode
 		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-		// Wait for interrupt - this will
+		// Wait for event - this will return when stop mode is done
 		__WFE();
 
 		// Lastly, reboot
@@ -202,7 +202,7 @@ void runRusEfi() {
 		// enable Deepsleep mode
 		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-		// Wait for interrupt - this will
+		// Wait for event - this should never return as it kills the chip until a reset
 		__WFE();
 
 		// Lastly, reboot
