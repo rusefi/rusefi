@@ -176,6 +176,39 @@ void runRusEfi() {
 	addConsoleAction("dual_bank", sys_dual_bank);
 #endif
 
+	addConsoleAction("stm32_stop", [](){
+		__disable_irq();
+
+		// configure mode bits
+		PWR->CR &= ~PWR_CR_PDDS;
+
+		// enable Deepsleep mode
+		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+		// Wait for interrupt - this will
+		__WFE();
+
+		// Lastly, reboot
+		NVIC_SystemReset();
+	});
+
+	addConsoleAction("stm32_standby", [](){
+		__disable_irq();
+
+		// configure mode bits
+		PWR->CR |= PWR_CR_PDDS;
+		PWR->CR &= ~PWR_CR_CWUF;
+
+		// enable Deepsleep mode
+		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+		// Wait for interrupt - this will
+		__WFE();
+
+		// Lastly, reboot
+		NVIC_SystemReset();
+	});
+
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 
