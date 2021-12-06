@@ -258,10 +258,7 @@ typedef enum {
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_SOFT_SPARK_CUT = 6,
 	DBG_VVT_1_PID = 7,
-	/**
-	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
-	 */
-	DBG_VVT = 8,
+	DBG_8 = 8,
 	DBG_9 = 9,
 	DBG_10 = 10,
 	DBG_11 = 11,

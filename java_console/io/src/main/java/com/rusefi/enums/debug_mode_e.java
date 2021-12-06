@@ -12,7 +12,7 @@ public enum debug_mode_e {
 	DBG_TRIGGER_COUNTERS,
 	DBG_SOFT_SPARK_CUT,
 	DBG_VVT_1_PID,
-	DBG_VVT,
+	DBG_8,
 	DBG_9,
 	DBG_10,
 	DBG_11,
