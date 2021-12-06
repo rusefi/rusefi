@@ -140,6 +140,12 @@ public class IncomingDataBuffer {
         return false; // looks good!
     }
 
+    public int getPendingCount() {
+        synchronized (cbb) {
+            return cbb.length();
+        }
+    }
+
     public void dropPending() {
         // todo: when exactly do we need this logic?
         synchronized (cbb) {

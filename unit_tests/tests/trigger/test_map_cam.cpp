@@ -29,22 +29,43 @@ TEST(trigger, map_cam) {
 	MapState state;
 
 	int i = 0;
-	for (;i<404;i++) {
+	for (;i<403;i++) {
 		state.add(getZigZag(i));
 
 		if (state.mapBuffer.getCount() > engineConfiguration->mapCamAveragingLength) {
-			ASSERT_FALSE(state.isPeak()) << "At " << i;
+			ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+			ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
 		}
 	}
 
 	state.add(getZigZag(i));
-	ASSERT_TRUE(state.isPeak()) << "At " << i;
+	ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+	ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
+	i++;
 
-	for (;i<604;i++) {
+
+	state.add(getZigZag(i));
+	ASSERT_TRUE(state.isPeak(false)) << "high At " << i;
+	ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
+
+	for (;i<504;i++) {
 		state.add(getZigZag(i));
-		ASSERT_FALSE(state.isPeak()) << "At " << i;
+		ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+		ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
 	}
 
 	state.add(getZigZag(i));
-	ASSERT_TRUE(state.isPeak()) << "At " << i;
+	ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+	ASSERT_TRUE(state.isPeak(true)) << "low At " << i;
+	i++;
+
+	for (;i<604;i++) {
+		state.add(getZigZag(i));
+		ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+		ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
+	}
+
+	state.add(getZigZag(i));
+	ASSERT_TRUE(state.isPeak(false)) << "high At " << i;
+	ASSERT_TRUE(state.isPeak(false)) << "low At " << i;
 }
