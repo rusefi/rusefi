@@ -179,7 +179,7 @@ void stm32_stop() {
 	__disable_irq();
 
 	// configure mode bits
-	PWR->CR1 &= ~PWR_CR1_PDDS;
+	PWR->CR1 &= ~PWR_CR1_PDDS;	// cleared PDDS means stop mode (not standby) 
 
 	// enable Deepsleep mode
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
@@ -195,10 +195,7 @@ void stm32_standby() {
 	__disable_irq();
 
 	// configure mode bits
-	PWR->CR1 |= PWR_CR1_PDDS;
-
-	// TODO: datasheet mentions that F7 has WUF, but no define for it?
-	//PWR->CR1 &= ~PWR_CR1_CWUF;
+	PWR->CR1 |= PWR_CR1_PDDS;		// PDDS = use standby mode (not stop mode)
 
 	// enable Deepsleep mode
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
@@ -209,5 +206,3 @@ void stm32_standby() {
 	// Lastly, reboot
 	NVIC_SystemReset();
 }
-
-
