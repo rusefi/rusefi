@@ -39,11 +39,6 @@ public class SerialIoStream extends AbstractIoStream {
     }
 
     @Override
-    public String getLoggingPrefix() {
-        return "";
-    }
-
-    @Override
     public void close() {
         log.info(port + ": Closing port...");
         super.close();
