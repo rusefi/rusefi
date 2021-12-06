@@ -51,19 +51,10 @@ public class PCanSandbox {
         System.out.println("****************************************");
 */
         LinkManager linkManager = new LinkManager();
-        BinaryProtocol bp = new BinaryProtocol(linkManager, tsStream);
-        linkManager.COMMUNICATION_EXECUTOR.submit(() -> {
-            if (tsStream.getDataBuffer().dropPending() != 0)
-                System.out.println("ERROR Extra data before CRC");
-            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
-//            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
-//            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
-            if (tsStream.getDataBuffer().dropPending() != 0)
-                System.out.println("ERROR Extra data after CRC");
-        });
+        SandboxCommon.verifyCrcNoPending(tsStream, linkManager);
 
-/*
-*/
+        ConfigurationImage ci = SandboxCommon.readImage(tsStream, linkManager);
+
     }
 
 }
