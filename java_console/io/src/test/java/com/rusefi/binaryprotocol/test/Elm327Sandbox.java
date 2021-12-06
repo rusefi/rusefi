@@ -98,7 +98,8 @@ public class Elm327Sandbox {
 
     private static void runFcommand(String prefix, IoStream tsStream) throws IOException {
         IncomingDataBuffer dataBuffer = tsStream.getDataBuffer();
-        tsStream.sendPacket(new byte[]{Fields.TS_COMMAND_F});
+        tsStream.write(new byte[]{Fields.TS_COMMAND_F});
+        tsStream.flush();
         byte[] fResponse = new byte[3];
         dataBuffer.waitForBytes("hello", System.currentTimeMillis(), fResponse.length);
         dataBuffer.getData(fResponse);
