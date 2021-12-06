@@ -120,6 +120,11 @@ public:
 	bool isPwmEnabled = true;
 
 	const char *prevOutputName = nullptr;
+	/**
+	 * ELM327 cannot handle both RX and TX at the same time, we have to stay quite once first ISO/TP packet was detected
+	 * this is a pretty temporary hack only while we are trying ELM327, long term ISO/TP and rusEFI broadcast should find a way to coexists
+	 */
+	bool pauseCANdueToSerial = false;
 
 	PinRepository pinRepository;
 
