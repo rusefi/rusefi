@@ -61,11 +61,6 @@ public class TcpIoStream extends AbstractIoStream {
     }
 
     @Override
-    public String getLoggingPrefix() {
-        return loggingPrefix;
-    }
-
-    @Override
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
     }

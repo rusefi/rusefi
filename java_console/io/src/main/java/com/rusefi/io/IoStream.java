@@ -85,8 +85,6 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
 
     void close();
 
-    String getLoggingPrefix();
-
     IncomingDataBuffer getDataBuffer();
 
     default short readShort() throws EOFException {
