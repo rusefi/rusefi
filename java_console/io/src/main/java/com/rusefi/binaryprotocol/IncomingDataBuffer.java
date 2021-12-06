@@ -10,7 +10,6 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -151,7 +150,7 @@ public class IncomingDataBuffer {
         }
     }
 
-    public void dropPending() {
+    public int dropPending() {
         // todo: when exactly do we need this logic?
         synchronized (cbb) {
             int pending = cbb.length();
@@ -161,6 +160,7 @@ public class IncomingDataBuffer {
                 cbb.get(bytes);
                 log.error("DROPPED FROM BUFFER: " + IoStream.printByteArray(bytes));
             }
+            return pending;
         }
     }
 

@@ -144,7 +144,7 @@ public class BinaryProtocol {
 
     private final Thread hook = new Thread(() -> closeComposites(), "BinaryProtocol::hook");
 
-    public BinaryProtocol(LinkManager linkManager, IoStream stream, IncomingDataBuffer dataBuffer) {
+    public BinaryProtocol(LinkManager linkManager, IoStream stream) {
         this.linkManager = linkManager;
         this.stream = stream;
 
@@ -155,7 +155,7 @@ public class BinaryProtocol {
             }
         };
 
-        incomingData = dataBuffer;
+        incomingData = stream.getDataBuffer();
         Runtime.getRuntime().addShutdownHook(hook);
         needCompositeLogger = linkManager.getCompositeLogicEnabled();
         rpmListener = value -> {
@@ -432,23 +432,32 @@ public class BinaryProtocol {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
-            byte[] packet = createCrcCommand(localCached.getSize());
-            byte[] response = executeCommand(packet, "get CRC32");
+            int crcFromController = getCrcFromController(localCached.getSize());
 
-            if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
-                ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
-                // that's unusual - most of the protocol is LITTLE_ENDIAN
-                bb.order(ByteOrder.BIG_ENDIAN);
-                int crcFromController = bb.getInt();
-                log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crcFromController, crcFromController));
-                short crc16FromController = (short) crcFromController;
-                log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
-                if (crcOfLocallyCachedConfiguration == crcFromController) {
-                    return localCached;
-                }
+            if (crcOfLocallyCachedConfiguration == crcFromController) {
+                return localCached;
             }
+
         }
         return null;
+    }
+
+    public int getCrcFromController(int configSize) {
+        byte[] packet = createCrcCommand(configSize);
+        byte[] response = executeCommand(packet, "get CRC32");
+
+        if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
+            ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
+            // that's unusual - most of the protocol is LITTLE_ENDIAN
+            bb.order(ByteOrder.BIG_ENDIAN);
+            int crcFromController = bb.getInt();
+            log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crcFromController, crcFromController));
+            short crc16FromController = (short) crcFromController;
+            log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
+            return crcFromController;
+        } else {
+            return  -1;
+        }
     }
 
     public static byte[] createCrcCommand(int size) {
