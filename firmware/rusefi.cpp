@@ -176,7 +176,7 @@ void runRusEfi() {
 	addConsoleAction("dual_bank", sys_dual_bank);
 #endif
 
-#if defined(STM32F4) || defined(STM32F7)
+#if defined(STM32F4)
 	addConsoleAction("stm32_stop", [](){
 		__disable_irq();
 
@@ -209,7 +209,7 @@ void runRusEfi() {
 		// Lastly, reboot
 		NVIC_SystemReset();
 	});
-#endif // stm32f4 or stm32f7
+#endif // stm32f4
 
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
