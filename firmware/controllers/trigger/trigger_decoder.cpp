@@ -547,11 +547,6 @@ void TriggerState::decodeTriggerEvent(
 		if (triggerShape.isSynchronizationNeeded) {
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
 
-#if EFI_TUNER_STUDIO
-			tsOutputChannels.triggerSyncGapRatio = currentGap;
-			tsOutputChannels.triggerStateIndex = currentCycle.current_index;
-#endif /* EFI_TUNER_STUDIO */
-
 			bool isSync = true;
 			for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
 				bool isGapCondition = cisnan(triggerShape.syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * triggerShape.syncronizationRatioFrom[i]

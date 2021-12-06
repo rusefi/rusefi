@@ -113,9 +113,9 @@ static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(engine->getOperationMode());
 
 	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
-	if (offset > 0 && engineConfiguration->debugMode == DBG_VVT) {
+	if (offset > 0) {
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1++;
+		tsOutputChannels.vvtSyncCounter++;
 #endif /* EFI_TUNER_STUDIO */
 	}
 	return offset;
@@ -276,12 +276,17 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	}
 
 	if (isVvtWithRealDecoder) {
-		tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
+		TriggerState *vvtState = &tc->vvtState[bankIndex][camIndex];
+
+		vvtState->decodeTriggerEvent(
 			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+		// yes we log data from all VVT channels into same fields for now
+		tsOutputChannels.vvtSyncGapRatio = vvtState->currentGap;
+		tsOutputChannels.vvtStateIndex = vvtState->currentCycle.current_index;
 	}
 
 	tc->vvtCamCounter++;
@@ -295,11 +300,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	tc->currentVVTEventPosition[bankIndex][camIndex] = currentPosition;
 #endif // EFI_UNIT_TEST
 
-	if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugFloatField1 = currentPosition;
+		tsOutputChannels.vvtCurrentPosition = currentPosition;
 #endif /* EFI_TUNER_STUDIO */
-	}
 
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
@@ -319,11 +322,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			// this is not sync tooth - exiting
 			return;
 		}
-		if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
-			tsOutputChannels.debugIntField1++;
+		tsOutputChannels.vvtCounter++;
 #endif /* EFI_TUNER_STUDIO */
-		}
 	}
 	default:
 		// else, do nothing
@@ -613,6 +614,12 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine,
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
+
+#if EFI_TUNER_STUDIO
+			tsOutputChannels.triggerSyncGapRatio = triggerState.currentGap;
+			tsOutputChannels.triggerStateIndex = triggerState.currentCycle.current_index;
+#endif /* EFI_TUNER_STUDIO */
+
 
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree

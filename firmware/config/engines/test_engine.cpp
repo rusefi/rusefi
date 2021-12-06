@@ -68,7 +68,6 @@ void setTestVVTEngineConfiguration() {
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
-	engineConfiguration->debugMode = DBG_VVT;
 }
 
 #if EFI_UNIT_TEST
