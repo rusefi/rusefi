@@ -1,16 +1,16 @@
 package com.rusefi.io.can;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.io.IoStream;
 
 public abstract class IsoTpConnector {
     private final static Logging log = Logging.getLogging(Elm327Connector.class);
 
     public static void sendStrategy(byte[] bytes, IsoTpConnector connector) {
-        log.info("-------sendBytesToSerial " + bytes.length + " byte(s):");
+        log.info("-------sendBytesToCan " + bytes.length + " byte(s):");
 
-        for (int i = 0; i < bytes.length; i++) {
-            log.info("[index=" + i + "] " + ((int) bytes[i] & 0xff));
-        }
+        System.out.println(IoStream.printHexBinary(bytes));
+
 
         // 1 frame
         if (bytes.length <= 7) {

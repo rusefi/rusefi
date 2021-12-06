@@ -65,9 +65,9 @@ public class Elm327Sandbox {
         }
 
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
-        System.out.println("***********************************");
-        System.out.println("*****  LOOKS GREAT     ************");
-        System.out.println("***********************************");
+        System.out.println("****************************************");
+        System.out.println("********  ELM327 LOOKS GREAT  **********");
+        System.out.println("****************************************");
         System.exit(-1);
 
         /*
