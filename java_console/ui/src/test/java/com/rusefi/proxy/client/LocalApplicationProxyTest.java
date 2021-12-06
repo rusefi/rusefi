@@ -31,6 +31,7 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.findCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
+import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 import static com.rusefi.shared.FileUtil.close;
 import static org.junit.Assert.*;
 
