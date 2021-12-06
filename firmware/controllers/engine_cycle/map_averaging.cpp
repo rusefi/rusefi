@@ -111,7 +111,7 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
 			((fastMapCounter++ % engineConfiguration->mapCamSkipFactor) == 0)) {
 		engine->triggerCentral.mapState.add(instantMap);
-		bool isPeak = engine->triggerCentral.mapState.isPeak();
+		bool isPeak = engine->triggerCentral.mapState.isPeak(engineConfiguration->mapCamLookForLowPeaks);
 #if EFI_TUNER_STUDIO
 		tsOutputChannels.TEMPLOG_map_length = MAP_CAM_BUFFER;
 		tsOutputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = engine->triggerCentral.mapState.current;
