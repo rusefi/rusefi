@@ -63,10 +63,11 @@ public class Elm327Connector implements Closeable {
 		return tsStream;
 	}
 
-	public void start(String msg) {
+	public boolean start(String msg) {
     	log.info("* Elm327.start()");
 
-        if (initConnection(msg)) {
+		boolean initConnection = initConnection(msg);
+		if (initConnection) {
         	// reset to defaults
         	sendCommand("ATD", "OK");
 
@@ -109,7 +110,7 @@ public class Elm327Connector implements Closeable {
 			String voltage = sendCommand("ATRV", "([0-9\\.]+)V");
 			log.info("* Ignition voltage = " + voltage);
         }
-
+        return initConnection;
     }
 
     @Override

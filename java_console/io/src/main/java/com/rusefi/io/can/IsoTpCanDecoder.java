@@ -69,7 +69,7 @@ public class IsoTpCanDecoder {
         }
         byte[] bytes = Arrays.copyOfRange(data, dataOffset, dataOffset + numBytesAvailable);
         if (log.debugEnabled())
-            log.debug(numBytesAvailable + " bytes(s) arrived in this packet: " + IoStream.printHexBinary(bytes));
+            log.debug(numBytesAvailable + " bytes(s) arrived in this packet: " + IoStream.printByteArray(bytes));
         return bytes;
     }
 }

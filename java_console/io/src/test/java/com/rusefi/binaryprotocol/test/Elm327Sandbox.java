@@ -21,7 +21,9 @@ public class Elm327Sandbox {
         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
         String serialPort = "COM7";
         Elm327Connector connector = new Elm327Connector(SerialIoStream.openPort(serialPort));
-        connector.start(serialPort);
+        boolean initConnection = connector.start(serialPort);
+        if (!initConnection)
+            return;
 
         IoStream tsStream = connector.getTsStream();
 
@@ -68,7 +70,7 @@ public class Elm327Sandbox {
             byte[] fResponse = new byte[3];
             dataBuffer.waitForBytes("CRC", System.currentTimeMillis(), fResponse.length);
             dataBuffer.getData(fResponse);
-            System.out.println(" Got CRC response " + IoStream.printHexBinary(fResponse));
+            System.out.println(" Got CRC response " + IoStream.printByteArray(fResponse));
         }
 
         LinkManager linkManager = new LinkManager();
@@ -94,7 +96,7 @@ public class Elm327Sandbox {
         byte[] fResponse = new byte[3];
         dataBuffer.waitForBytes("hello", System.currentTimeMillis(), fResponse.length);
         dataBuffer.getData(fResponse);
-        System.out.println(prefix + " Got F response " + IoStream.printHexBinary(fResponse));
+        System.out.println(prefix + " Got F response " + IoStream.printByteArray(fResponse));
     }
 
 }
