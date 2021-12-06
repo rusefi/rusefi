@@ -228,7 +228,7 @@ public class BinaryProtocol {
      *
      * @return true if everything fine
      */
-    public boolean connectAndReadConfiguration(DataListener listener) {
+    public boolean connectAndReadConfiguration(Arguments arguments, DataListener listener) {
         try {
             signature = getSignature(stream);
             log.info("Got " + signature + " signature");
@@ -236,7 +236,7 @@ public class BinaryProtocol {
         } catch (IOException e) {
             return false;
         }
-        readImage(Fields.TOTAL_CONFIG_SIZE);
+        readImage(arguments, Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
             return false;
 
@@ -340,11 +340,11 @@ public class BinaryProtocol {
     /**
      * read complete tune from physical data stream
      */
-    public void readImage(int size) {
+    public void readImage(Arguments arguments, int size) {
         ConfigurationImage image = getAndValidateLocallyCached();
 
         if (image == null) {
-            image = readFullImageFromController(size);
+            image = readFullImageFromController(arguments, size);
             if (image == null)
                 return;
         }
@@ -362,7 +362,7 @@ public class BinaryProtocol {
     }
 
     @Nullable
-    private ConfigurationImage readFullImageFromController(int size) {
+    private ConfigurationImage readFullImageFromController(Arguments arguments, int size) {
         ConfigurationImage image;
         image = new ConfigurationImage(size);
 
@@ -398,12 +398,14 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
-        try {
-            ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
-            Msq tune = MsqFactory.valueOf(image);
-            tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
-        } catch (Exception e) {
-            System.err.println("Ignoring " + e);
+        if (arguments.saveFile) {
+            try {
+                ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
+                Msq tune = MsqFactory.valueOf(image);
+                tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
+            } catch (Exception e) {
+                System.err.println("Ignoring " + e);
+            }
         }
         return image;
     }
