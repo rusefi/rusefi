@@ -176,7 +176,7 @@ void runRusEfi() {
 	addConsoleAction("dual_bank", sys_dual_bank);
 #endif
 
-#ifdef STM32F4 || STM32F7
+#if defined(STM32F4) || defined(STM32F7)
 	addConsoleAction("stm32_stop", [](){
 		__disable_irq();
 
