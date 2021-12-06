@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Dec 05 04:34:28 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Dec 06 13:05:09 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -824,7 +824,27 @@ struct ts_outputs_s {
 	/**
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[180];
+	uint8_t unusedAtTheEnd[172];
+	/**
+	 * offset 492
+	 */
+	scaled_channel<float, 1, 1> triggerSyncGapRatio = (float)0;
+	/**
+	 * offset 496
+	 */
+	uint8_t triggerStateIndex = (uint8_t)0;
+	/**
+	 * offset 497
+	 */
+	uint8_t unused1k = (uint8_t)0;
+	/**
+	 * offset 498
+	 */
+	uint8_t unused2k = (uint8_t)0;
+	/**
+	 * offset 499
+	 */
+	uint8_t unused3k = (uint8_t)0;
 	/**
 	 * offset 500
 	 */
@@ -970,4 +990,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Dec 05 04:34:28 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Dec 06 13:05:09 EST 2021
