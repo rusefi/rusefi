@@ -1,11 +1,19 @@
 package com.rusefi.binaryprotocol.test;
 
+import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.ConnectionStateListener;
+import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.StreamConnector;
 import peak.can.basic.*;
 
 import java.io.IOException;
 
+/**
+ * @see Elm327Sandbox
+ */
 public class PCanSandbox {
 
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
@@ -22,7 +30,7 @@ public class PCanSandbox {
 
         PCanIoStream tsStream = new PCanIoStream(can);
 
-
+/*
         {
             String signature = BinaryProtocol.getSignature(tsStream);
             System.out.println("Got " + signature + " signature via PCAN");
@@ -41,5 +49,29 @@ public class PCanSandbox {
         System.out.println("****************************************");
         System.out.println("*********  PCAN LOOKS GREAT  ***********");
         System.out.println("****************************************");
+*/
+        LinkManager linkManager = new LinkManager();
+        StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
+        linkManager.setConnector(streamConnector);
+        streamConnector.connectAndReadConfiguration(new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                System.out.println("onConnectionEstablished");
+            }
+
+            @Override
+            public void onConnectionFailed() {
+                System.out.println("onConnectionFailed");
+            }
+        });
+        BinaryProtocol currentStreamState = linkManager.getCurrentStreamState();
+        if (currentStreamState == null) {
+            System.out.println("No BinaryProtocol");
+        } else {
+            BinaryProtocolState binaryProtocolState = currentStreamState.getBinaryProtocolState();
+            ConfigurationImage ci = binaryProtocolState.getControllerConfiguration();
+            System.out.println("Got ConfigurationImage " + ci);
+            System.exit(0);
+        }
     }
 }

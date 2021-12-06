@@ -231,7 +231,7 @@ public class BinaryProtocol {
     public boolean connectAndReadConfiguration(DataListener listener) {
         try {
             signature = getSignature(stream);
-            System.out.println("BinaryProtocol: Got " + signature + " signature");
+            log.info("Got " + signature + " signature");
             SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
             return false;
@@ -378,8 +378,8 @@ public class BinaryProtocol {
             byte[] response = executeCommand(packet, "load image offset=" + offset);
 
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
-                String code = (response == null || response.length == 0) ? "empty" : "code " + getCode(response);
-                String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
+                String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
+                String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
                 log.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
                 continue;
             }
@@ -411,6 +411,8 @@ public class BinaryProtocol {
                 return "OUT_OF_RANGE";
             case TS_RESPONSE_FRAMING_ERROR:
                 return "FRAMING_ERROR";
+            case TS_RESPONSE_UNDERRUN:
+                return "TS_RESPONSE_UNDERRUN";
         }
         return Integer.toString(b);
     }
@@ -438,9 +440,9 @@ public class BinaryProtocol {
                 // that's unusual - most of the protocol is LITTLE_ENDIAN
                 bb.order(ByteOrder.BIG_ENDIAN);
                 int crcFromController = bb.getInt();
-                log.info(String.format("From rusEFI tune CRC32 0x%x %d\n", crcFromController, crcFromController));
+                log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crcFromController, crcFromController));
                 short crc16FromController = (short) crcFromController;
-                log.info(String.format("From rusEFI tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
+                log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
                 if (crcOfLocallyCachedConfiguration == crcFromController) {
                     return localCached;
                 }

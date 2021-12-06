@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.io.IoStream;
 
 public abstract class IsoTpConnector {
-    private final static Logging log = Logging.getLogging(Elm327Connector.class);
+    private final static Logging log = Logging.getLogging(IsoTpConnector.class);
 
     public static void sendStrategy(byte[] bytes, IsoTpConnector connector) {
         log.info("-------sendBytesToCan " + bytes.length + " byte(s):");

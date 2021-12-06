@@ -49,7 +49,7 @@ public class IsoTpCanDecoder {
             case ISO_TP_FRAME_CONSECUTIVE:
                 frameIdx = data[0] & 0xf;
                 if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
-                    throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? " + waitingForNumBytes + " " + waitingForFrameIndex + " " + frameIdx);
+                    throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? waitingForNumBytes=" + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
                 }
                 this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
                 numBytesAvailable = Math.min(this.waitingForNumBytes, 7);
