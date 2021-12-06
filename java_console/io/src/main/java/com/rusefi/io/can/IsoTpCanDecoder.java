@@ -6,7 +6,7 @@ import com.rusefi.io.IoStream;
 import java.util.Arrays;
 
 // CAN multiframe decoder state
-class IsoTpCanDecoder {
+public class IsoTpCanDecoder {
     private static Logging log = Logging.getLogging(IsoTpCanDecoder.class);
 
     static {
