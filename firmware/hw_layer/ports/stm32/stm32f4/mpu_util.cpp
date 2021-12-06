@@ -30,3 +30,36 @@ uintptr_t getFlashAddrFirstCopy() {
 uintptr_t getFlashAddrSecondCopy() {
 	return 0x080C0000;
 }
+
+void stm32_stop() {
+	__disable_irq();
+
+	// configure mode bits
+	PWR->CR &= ~PWR_CR_PDDS;
+
+	// enable Deepsleep mode
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	// Wait for event - this will return when stop mode is done
+	__WFE();
+
+	// Lastly, reboot
+	NVIC_SystemReset();
+}
+
+void stm32_standby() {
+	__disable_irq();
+
+	// configure mode bits
+	PWR->CR |= PWR_CR_PDDS;
+	PWR->CR &= ~PWR_CR_CWUF;
+
+	// enable Deepsleep mode
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	// Wait for event - this should never return as it kills the chip until a reset
+	__WFE();
+
+	// Lastly, reboot
+	NVIC_SystemReset();
+}

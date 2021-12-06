@@ -174,3 +174,40 @@ void sys_dual_bank(void) {
      */
 }
 
+
+void stm32_stop() {
+	__disable_irq();
+
+	// configure mode bits
+	PWR->CR1 &= ~PWR_CR1_PDDS;
+
+	// enable Deepsleep mode
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	// Wait for event - this will return when stop mode is done
+	__WFE();
+
+	// Lastly, reboot
+	NVIC_SystemReset();
+}
+
+void stm32_standby() {
+	__disable_irq();
+
+	// configure mode bits
+	PWR->CR1 |= PWR_CR1_PDDS;
+
+	// TODO: datasheet mentions that F7 has WUF, but no define for it?
+	//PWR->CR1 &= ~PWR_CR1_CWUF;
+
+	// enable Deepsleep mode
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	// Wait for event - this should never return as it kills the chip until a reset
+	__WFE();
+
+	// Lastly, reboot
+	NVIC_SystemReset();
+}
+
+

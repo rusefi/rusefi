@@ -176,40 +176,10 @@ void runRusEfi() {
 	addConsoleAction("dual_bank", sys_dual_bank);
 #endif
 
-#if defined(STM32F4)
-	addConsoleAction("stm32_stop", [](){
-		__disable_irq();
-
-		// configure mode bits
-		PWR->CR &= ~PWR_CR_PDDS;
-
-		// enable Deepsleep mode
-		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-		// Wait for event - this will return when stop mode is done
-		__WFE();
-
-		// Lastly, reboot
-		NVIC_SystemReset();
-	});
-
-	addConsoleAction("stm32_standby", [](){
-		__disable_irq();
-
-		// configure mode bits
-		PWR->CR |= PWR_CR_PDDS;
-		PWR->CR &= ~PWR_CR_CWUF;
-
-		// enable Deepsleep mode
-		SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-		// Wait for event - this should never return as it kills the chip until a reset
-		__WFE();
-
-		// Lastly, reboot
-		NVIC_SystemReset();
-	});
-#endif // stm32f4
+#if defined(STM32F4) || defined(STM32F7)
+	addConsoleAction("stm32_stop", stm32_stop);
+	addConsoleAction("stm32_standby", stm32_standby);
+#endif
 
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
