@@ -107,9 +107,7 @@ bool FuelSchedule::addFuelEventsForCylinder(int i ) {
 		warning(CUSTOM_OBD_INJECTION_NO_PIN_ASSIGNED, "no_pin_inj #%s", output->name);
 	}
 
-	angle_t ignitionPositionWithinEngineCycle = engine->ignitionPositionWithinEngineCycle[i];
-
-	float angle = baseAngle + ignitionPositionWithinEngineCycle;
+	float angle = baseAngle + getCylinderAngle(i, ev->cylinderNumber);
 
 	if (TRIGGER_WAVEFORM(getSize()) < 1) {
 		warning(CUSTOM_ERR_NOT_INITIALIZED_TRIGGER, "uninitialized TriggerWaveform");

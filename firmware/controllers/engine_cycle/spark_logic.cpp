@@ -73,12 +73,14 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// let's save planned duration so that we can later compare it with reality
 	event->sparkDwell = sparkDwell;
 
-	// change of sign here from 'before TDC' to 'after TDC'
-	angle_t ignitionPositionWithinEngineCycle = engine->ignitionPositionWithinEngineCycle[event->cylinderIndex];
-	assertAngleRange(ignitionPositionWithinEngineCycle, "aPWEC", CUSTOM_ERR_6566);
-	// this correction is usually zero (not used)
-	float perCylinderCorrection = engineConfiguration->timing_offset_cylinder[event->cylinderIndex];
-	const angle_t sparkAngle = -engine->engineState.timingAdvance + engine->knockController.getKnockRetard() + ignitionPositionWithinEngineCycle + perCylinderCorrection;
+	const angle_t sparkAngle =
+		// Negate because timing *before* TDC, and we schedule *after* TDC
+		- engine->engineState.timingAdvance
+		// Offset by this cylinder's position in the cycle
+		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber)
+		// Pull any extra timing for knock retard
+		+ engine->knockController.getKnockRetard();
+
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");

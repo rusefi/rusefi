@@ -12,7 +12,6 @@ import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
 import com.rusefi.config.generated.Fields;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -28,7 +27,6 @@ import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -84,7 +82,7 @@ public class BinaryProtocol {
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
-    private List<StreamFile> compositeLogs = new ArrayList<>();
+    private final List<StreamFile> compositeLogs = new ArrayList<>();
     public static boolean DISABLE_LOCAL_CACHE;
 
     public static String findCommand(byte command) {
@@ -220,9 +218,9 @@ public class BinaryProtocol {
         linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
-    public String getSignature() throws IOException {
+    public static String getSignature(IoStream stream) throws IOException {
         HelloCommand.send(stream);
-        return HelloCommand.getHelloResponse(incomingData);
+        return HelloCommand.getHelloResponse(stream.getDataBuffer());
     }
 
     /**
@@ -232,7 +230,7 @@ public class BinaryProtocol {
      */
     public boolean connectAndReadConfiguration(DataListener listener) {
         try {
-            signature = getSignature();
+            signature = getSignature(stream);
             System.out.println("BinaryProtocol: Got " + signature + " signature");
             SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
@@ -432,10 +430,7 @@ public class BinaryProtocol {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
-            byte packet[] = new byte[5];
-            packet[0] = Fields.TS_CRC_CHECK_COMMAND;
-            putShort(packet, 1, swap16(/*offset = */ 0));
-            putShort(packet, 3, swap16(localCached.getSize()));
+            byte[] packet = createCrcCommand(localCached.getSize());
             byte[] response = executeCommand(packet, "get CRC32");
 
             if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
@@ -452,6 +447,14 @@ public class BinaryProtocol {
             }
         }
         return null;
+    }
+
+    public static byte[] createCrcCommand(int size) {
+        byte[] packet = new byte[5];
+        packet[0] = Fields.TS_CRC_CHECK_COMMAND;
+        putShort(packet, 1, swap16(/*offset = */ 0));
+        putShort(packet, 3, swap16(size));
+        return packet;
     }
 
     public byte[] executeCommand(byte[] packet, String msg) {

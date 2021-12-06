@@ -26,7 +26,7 @@ endif
 # *TODO* need to give people the horrible choice between Bluetooth via TTL or SD card via SPI :( horrible choice 
 EFI_CONSOLE_TTL_PINS = -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOB_10 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOB_11
 
-DDEFS += -DEFI_CAN_SERIAL=TRUE -DTS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME=TRUE
+DDEFS += -DEFI_CAN_SERIAL=TRUE
 
 
 # Add them all together
