@@ -32,7 +32,7 @@ public class BufferedSerialIoStream extends SerialIoStream {
 
     /**
      * Just open physical serial and not much more
-     * @see PortHolder#connectAndReadConfiguration()
+     * @see PortHolder#connectAndReadConfiguration(com.rusefi.binaryprotocol.BinaryProtocol.Arguments)
      */
     public static IoStream openPort(String port) {
         log.info("[BufferedSerialIoStream] openPort " + port);

@@ -13,12 +13,14 @@ import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.rusefi.io.tcp.TcpConnector.DEFAULT_PORT;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 
 public class SimulatorTcpSandbox {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         BinaryProtocol.DISABLE_LOCAL_CACHE = true;
 
         Socket s = new Socket(LOCALHOST, DEFAULT_PORT);
@@ -27,10 +29,12 @@ public class SimulatorTcpSandbox {
         LinkManager linkManager = new LinkManager();
         verifyCrcNoPending(tsStream, linkManager);
 
+        AtomicReference<ConfigurationImage> configurationImageAtomicReference = new AtomicReference<>();
+        CountDownLatch imageLatch = new CountDownLatch(1);
 
         StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
         linkManager.setConnector(streamConnector);
-        streamConnector.connectAndReadConfiguration(new BinaryProtocol.Arguments(   false), new ConnectionStateListener() {
+        streamConnector.connectAndReadConfiguration(new BinaryProtocol.Arguments(false), new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 System.out.println("onConnectionEstablished");
@@ -41,8 +45,8 @@ public class SimulatorTcpSandbox {
                 } else {
                     BinaryProtocolState binaryProtocolState = currentStreamState.getBinaryProtocolState();
                     ConfigurationImage ci = binaryProtocolState.getControllerConfiguration();
-                    System.out.println("Got ConfigurationImage " + ci);
-                    System.exit(0);
+                    configurationImageAtomicReference.set(ci);
+                    imageLatch.countDown();
                 }
             }
 
@@ -52,6 +56,10 @@ public class SimulatorTcpSandbox {
             }
         });
 
+        imageLatch.await();
+        ConfigurationImage ci = configurationImageAtomicReference.get();
+        System.out.println("Got ConfigurationImage " + ci + ", " + ci.getSize());
+        System.exit(0);
     }
 
     private static void verifyCrcNoPending(IoStream tsStream, LinkManager linkManager) {

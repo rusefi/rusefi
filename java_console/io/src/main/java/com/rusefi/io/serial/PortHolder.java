@@ -39,7 +39,7 @@ public class PortHolder {
         this.ioStreamFactory = ioStreamFactory;
     }
 
-    boolean connectAndReadConfiguration() {
+    boolean connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
         IoStream stream = ioStreamFactory.call();
         if (stream == null) {
             // error already reported
@@ -50,7 +50,7 @@ public class PortHolder {
             portLock.notifyAll();
         }
 
-        boolean result = bp.connectAndReadConfiguration(dataListener);
+        boolean result = bp.connectAndReadConfiguration( arguments, dataListener);
         if (listener != null) {
             if (result) {
                 listener.onConnectionEstablished();
