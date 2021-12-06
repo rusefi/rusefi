@@ -51,12 +51,34 @@ public class PCanSandbox {
         System.out.println("****************************************");
 */
         LinkManager linkManager = new LinkManager();
+        BinaryProtocol bp = new BinaryProtocol(linkManager, tsStream);
+        linkManager.COMMUNICATION_EXECUTOR.submit(() -> {
+            if (tsStream.getDataBuffer().dropPending() != 0)
+                System.out.println("ERROR Extra data before CRC");
+            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
+//            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
+//            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
+            if (tsStream.getDataBuffer().dropPending() != 0)
+                System.out.println("ERROR Extra data after CRC");
+        });
+
+/*
         StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
         linkManager.setConnector(streamConnector);
         streamConnector.connectAndReadConfiguration(new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 System.out.println("onConnectionEstablished");
+
+                BinaryProtocol currentStreamState = linkManager.getCurrentStreamState();
+                if (currentStreamState == null) {
+                    System.out.println("No BinaryProtocol");
+                } else {
+                    BinaryProtocolState binaryProtocolState = currentStreamState.getBinaryProtocolState();
+                    ConfigurationImage ci = binaryProtocolState.getControllerConfiguration();
+                    System.out.println("Got ConfigurationImage " + ci);
+                    System.exit(0);
+                }
             }
 
             @Override
@@ -64,14 +86,8 @@ public class PCanSandbox {
                 System.out.println("onConnectionFailed");
             }
         });
-        BinaryProtocol currentStreamState = linkManager.getCurrentStreamState();
-        if (currentStreamState == null) {
-            System.out.println("No BinaryProtocol");
-        } else {
-            BinaryProtocolState binaryProtocolState = currentStreamState.getBinaryProtocolState();
-            ConfigurationImage ci = binaryProtocolState.getControllerConfiguration();
-            System.out.println("Got ConfigurationImage " + ci);
-            System.exit(0);
-        }
+*/
     }
+
 }
+

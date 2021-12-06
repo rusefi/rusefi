@@ -46,7 +46,7 @@ public class PortHolder {
             return false;
         }
         synchronized (portLock) {
-            bp = new BinaryProtocol(linkManager, stream, stream.getDataBuffer());
+            bp = new BinaryProtocol(linkManager, stream);
             portLock.notifyAll();
         }
 
