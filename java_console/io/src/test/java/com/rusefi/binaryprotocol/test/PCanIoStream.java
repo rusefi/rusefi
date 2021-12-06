@@ -44,7 +44,6 @@ public class PCanIoStream extends AbstractIoStream {
 
         @Override
         public void receiveData() {
-            System.out.println("empty receiveData");
         }
     };
 
@@ -91,7 +90,7 @@ public class PCanIoStream extends AbstractIoStream {
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
 
-            System.out.println("Decoded " + IoStream.printByteArray(decode));
+            //            System.out.println("Decoded " + IoStream.printByteArray(decode));
         } else {
 //                   System.out.println(new Date() + ": Receive " + status);
         }

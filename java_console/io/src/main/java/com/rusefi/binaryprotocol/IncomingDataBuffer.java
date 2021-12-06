@@ -159,7 +159,7 @@ public class IncomingDataBuffer {
                 log.error("dropPending: Unexpected pending data: " + pending + " byte(s)");
                 byte[] bytes = new byte[pending];
                 cbb.get(bytes);
-                log.error("data: " + Arrays.toString(bytes));
+                log.error("DROPPED FROM BUFFER: " + IoStream.printByteArray(bytes));
             }
         }
     }
