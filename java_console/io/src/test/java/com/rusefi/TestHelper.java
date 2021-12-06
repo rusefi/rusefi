@@ -11,6 +11,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ControllerInfo;
@@ -27,11 +28,11 @@ import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
+import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 import static org.junit.Assert.assertTrue;
 
 public class TestHelper {
     private static final Logging log = getLogging(TestHelper.class);
-    public static final String LOCALHOST = "localhost";
     public static final String TEST_SIGNATURE_1 = "rusEFI 2020.07.06.frankenso_na6.2468827536";
     public static final String TEST_SIGNATURE_2 = "rusEFI 2020.07.11.proteus_f4.1986715563";
     public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
@@ -79,7 +80,7 @@ public class TestHelper {
     }
 
     @NotNull
-    public static IoStream connectToLocalhost(int controllerPort, Logger logger) {
+    public static IoStream connectToLocalhost(int controllerPort) {
         IoStream targetEcuSocket;
         try {
             targetEcuSocket = new TcpIoStream("[local]", new Socket(LOCALHOST, controllerPort));
