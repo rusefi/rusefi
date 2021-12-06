@@ -82,7 +82,7 @@ public class BinaryProtocol {
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
-    private List<StreamFile> compositeLogs = new ArrayList<>();
+    private final List<StreamFile> compositeLogs = new ArrayList<>();
     public static boolean DISABLE_LOCAL_CACHE;
 
     public static String findCommand(byte command) {

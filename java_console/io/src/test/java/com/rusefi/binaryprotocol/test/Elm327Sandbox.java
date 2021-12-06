@@ -3,10 +3,13 @@ package com.rusefi.binaryprotocol.test;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialIoStream;
+import com.rusefi.io.serial.StreamConnector;
 
 import java.io.IOException;
 
@@ -18,12 +21,12 @@ public class Elm327Sandbox {
         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
         String serialPort = "COM7";
         Elm327Connector connector = new Elm327Connector(SerialIoStream.openPort(serialPort));
-        connector.start("sandbox");
+        connector.start(serialPort);
 
         IoStream tsStream = connector.getTsStream();
 
         IncomingDataBuffer dataBuffer = tsStream.getDataBuffer();
-        System.out.println("Hello new connection " + dataBuffer.getPendingCount());
+        System.out.println("Hello new ELM327 connection, pending=" + dataBuffer.getPendingCount());
 
         runFcommand("First time", tsStream);
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
@@ -34,6 +37,8 @@ public class Elm327Sandbox {
         {
             String signature = BinaryProtocol.getSignature(tsStream);
             System.out.println("Got " + signature + " signature via CAN/ELM327");
+            if (signature == null)
+                return;
         }
 
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
@@ -41,6 +46,8 @@ public class Elm327Sandbox {
         {
             String signature = BinaryProtocol.getSignature(tsStream);
             System.out.println("Let's do it again! Got " + signature + " signature via CAN/ELM327");
+            if (signature == null)
+                return;
         }
 
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
@@ -63,6 +70,21 @@ public class Elm327Sandbox {
             dataBuffer.getData(fResponse);
             System.out.println(" Got CRC response " + IoStream.printHexBinary(fResponse));
         }
+
+        LinkManager linkManager = new LinkManager();
+        StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
+        linkManager.setConnector(streamConnector);
+        streamConnector.connectAndReadConfiguration(new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                System.out.println("onConnectionEstablished");
+            }
+
+            @Override
+            public void onConnectionFailed() {
+                System.out.println("onConnectionFailed");
+            }
+        });
 
     }
 
