@@ -63,29 +63,6 @@ public class PCanSandbox {
         });
 
 /*
-        StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
-        linkManager.setConnector(streamConnector);
-        streamConnector.connectAndReadConfiguration(new ConnectionStateListener() {
-            @Override
-            public void onConnectionEstablished() {
-                System.out.println("onConnectionEstablished");
-
-                BinaryProtocol currentStreamState = linkManager.getCurrentStreamState();
-                if (currentStreamState == null) {
-                    System.out.println("No BinaryProtocol");
-                } else {
-                    BinaryProtocolState binaryProtocolState = currentStreamState.getBinaryProtocolState();
-                    ConfigurationImage ci = binaryProtocolState.getControllerConfiguration();
-                    System.out.println("Got ConfigurationImage " + ci);
-                    System.exit(0);
-                }
-            }
-
-            @Override
-            public void onConnectionFailed() {
-                System.out.println("onConnectionFailed");
-            }
-        });
 */
     }
 
