@@ -73,11 +73,6 @@ public class AndroidSerial extends AbstractIoStream {
     }
 
     @Override
-    public String getLoggingPrefix() {
-        return "";
-    }
-
-    @Override
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
     }
