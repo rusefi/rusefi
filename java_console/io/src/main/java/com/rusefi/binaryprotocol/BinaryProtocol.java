@@ -353,6 +353,14 @@ public class BinaryProtocol {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
+    public static class Arguments {
+        final boolean saveFile;
+
+        public Arguments(boolean saveFile) {
+            this.saveFile = saveFile;
+        }
+    }
+
     @Nullable
     private ConfigurationImage readFullImageFromController(int size) {
         ConfigurationImage image;
@@ -370,7 +378,7 @@ public class BinaryProtocol {
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
-            byte packet[] = new byte[5];
+            byte[] packet = new byte[5];
             packet[0] = Fields.TS_READ_COMMAND;
             putShort(packet, 1, swap16(offset));
             putShort(packet, 3, swap16(requestSize));
