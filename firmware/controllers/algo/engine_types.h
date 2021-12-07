@@ -287,7 +287,7 @@ typedef enum {
 	UNUSED23 = 23,
 	DBG_STATUS = 24,
 	DBG_CJ125 = 25,
-	DBG_CAN = 26,
+	DBG_26 = 26,
 	DBG_MAP = 27,
 	DBG_METRICS = 28,
 	DBG_29 = 29,

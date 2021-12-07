@@ -732,6 +732,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->useTLE8888_cranking_hack = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		engineConfiguration->verboseTLE8888 = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseCan")) {
+		engineConfiguration->verboseCan = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
 		engineConfiguration->artificialTestMisfire = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {

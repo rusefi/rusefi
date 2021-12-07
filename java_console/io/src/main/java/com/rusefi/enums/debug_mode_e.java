@@ -30,7 +30,7 @@ public enum debug_mode_e {
 	UNUSED23,
 	DBG_STATUS,
 	DBG_CJ125,
-	DBG_CAN,
+	DBG_26,
 	DBG_MAP,
 	DBG_METRICS,
 	DBG_29,
