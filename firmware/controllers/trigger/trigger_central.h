@@ -49,6 +49,8 @@ struct MapState {
 	}
 
 	bool isPeak(bool lookForLowPeak) {
+		if (mapBuffer.getCount() < MAP_CAM_BUFFER + 3)
+			return false;
 		if (lookForLowPeak) {
 			return previous < prevPrevious && previous <= current;
 		} else {
