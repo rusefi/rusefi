@@ -84,14 +84,4 @@ public class Elm327Sandbox {
 */
     }
 
-    private static void runFcommand(String prefix, IoStream tsStream) throws IOException {
-        IncomingDataBuffer dataBuffer = tsStream.getDataBuffer();
-        tsStream.write(new byte[]{Fields.TS_COMMAND_F});
-        tsStream.flush();
-        byte[] fResponse = new byte[3];
-        dataBuffer.waitForBytes("hello", System.currentTimeMillis(), fResponse.length);
-        dataBuffer.getData(fResponse);
-        System.out.println(prefix + " Got F response " + IoStream.printByteArray(fResponse));
-    }
-
 }
