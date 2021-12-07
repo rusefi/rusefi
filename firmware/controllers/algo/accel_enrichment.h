@@ -16,24 +16,18 @@
 
 typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float, float> tps_tps_Map3D_t;
 
-/**
- * this object is used for MAP rate-of-change and TPS rate-of-change corrections
- */
-class AccelEnrichment : public tps_accel_state_s {
+class TpsAccelEnrichment : public tps_accel_state_s {
 public:
-	AccelEnrichment();
+	TpsAccelEnrichment();
+
 	int getMaxDeltaIndex();
 	float getMaxDelta();
 
-	void resetAE();
 	void setLength(int length);
 	cyclic_buffer<float> cb;
 	void onNewValue(float currentValue);
 	int onUpdateInvocationCounter = 0;
-};
 
-class TpsAccelEnrichment : public AccelEnrichment {
-public:
 	/**
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */
