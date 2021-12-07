@@ -58,9 +58,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 
 	const char s[2] = ",";
-	char *line = buffer;
-
-	char *timeStampstr = trim(strtok(line, s));
+	char *timeStampstr = trim(strtok(buffer, s));
 
 	bool newState[TRIGGER_INPUT_PIN_COUNT];
 	bool newVvtState[CAM_INPUTS_COUNT];
