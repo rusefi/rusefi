@@ -580,6 +580,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
 		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 	}
+	tsChannel->flush();
 }
 
 extern CommandHandler console_line_callback;
@@ -646,6 +647,7 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
 
 		tunerStudioDebug(tsChannel, "not ignoring F");
 		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
+		tsChannel->flush();
 		return true;
 	} else {
 		// This wasn't a valid command
