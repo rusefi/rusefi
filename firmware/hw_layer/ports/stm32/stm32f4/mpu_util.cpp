@@ -32,16 +32,13 @@ uintptr_t getFlashAddrSecondCopy() {
 }
 
 void stm32_stop() {
+	SysTick->CTRL = 0;
 	__disable_irq();
-
-	// Clear pending events
-	PWR->CR |= PWR_CR_
+	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
 
 	// configure mode bits
 	PWR->CR &= ~PWR_CR_PDDS;	// cleared PDDS means stop mode (not standby) 
 	PWR->CR |= PWR_CR_FPDS;		// turn off flash in stop mode
-	PWR->CR |= PWR_CR_UDEN;		// regulator underdrive in stop mode
-	PWR->CR |= PWR_CR_LPUDS;	// low power regulator in under drive mode
 	PWR->CR |= PWR_CR_LPDS;		// regulator in low power mode
 
 	// enable Deepsleep mode
@@ -55,6 +52,7 @@ void stm32_stop() {
 }
 
 void stm32_standby() {
+	SysTick->CTRL = 0;
 	__disable_irq();
 
 	// configure mode bits
