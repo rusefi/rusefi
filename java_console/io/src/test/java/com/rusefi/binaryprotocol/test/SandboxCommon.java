@@ -60,7 +60,7 @@ public class SandboxCommon {
 //            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
 //            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
             if (tsStream.getDataBuffer().dropPending() != 0)
-                System.out.println("ERROR Extra data after CRC");
+                throw new IllegalStateException("ERROR Extra data after CRC");
         });
     }
 
