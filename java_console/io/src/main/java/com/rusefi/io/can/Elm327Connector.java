@@ -229,7 +229,8 @@ public class Elm327Connector implements Closeable {
 	public static byte[] byteToString(byte[] hdr, byte[] data, int offset, int payloadLength) {
 		int totalLength = hdr.length + payloadLength;
 		byte[] hexData = new byte[totalLength * 2 + 1];
-		for (int i = 0, j = 0; i < totalLength; i++, j += 2) {
+		for (int i = 0; i < totalLength; i++) {
+			int j = i * 2;
 			int v = ((i < hdr.length) ? hdr[i] : data[i - hdr.length + offset]) & 0xFF;
 			hexData[j] = HEX_ARRAY[v >>> 4];
 			hexData[j + 1] = HEX_ARRAY[v & 0x0F];
