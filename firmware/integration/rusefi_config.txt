@@ -450,7 +450,7 @@ bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just
 bit useTLE8888_stepper
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit usescriptTableForCanSniffingFiltering
-bit issue_294_29
+bit verboseCanRx,"Print all","Do not print";Print incoming CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
 bit issue_294_31,"si_example","nada_example"
 
