@@ -12,7 +12,7 @@ import java.util.zip.CRC32;
  * 3/6/2015
  */
 public class IoHelper {
-    private static final Logging log = Logging.getLogging(IoStream.class);
+    private static final Logging log = Logging.getLogging(IoHelper.class);
 
     static {
         log.configureDebugEnabled(false);

@@ -17,6 +17,11 @@ import static com.rusefi.Timeouts.SECOND;
 
 public class Elm327Connector implements Closeable {
 	private final static Logging log = Logging.getLogging(Elm327Connector.class);
+
+	static {
+		log.configureDebugEnabled(false);
+	}
+
 	private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes();
 
 //	public final static int ELM327_DEFAULT_BAUDRATE = 115200; // OBDlink SX, 1.3a STN1110
@@ -212,6 +217,10 @@ public class Elm327Connector implements Closeable {
     }
 
     private void sendCanData(byte [] hdr, byte [] data, int offset, int len) {
+        if (log.debugEnabled()) {
+            log.debug("sendCanData header  " + IoStream.printByteArray(hdr));
+            log.debug("sendCanData payload " + IoStream.printByteArray(data) + " len=" + len + " from offset=" + offset);
+        }
     	//log.info("--------sendData offset="+Integer.toString(offset) + " len=" + Integer.toString(len) + "hdr.len=" + Integer.toString(hdr.length));
 
 		byte[] hexData = byteToString(hdr, data, offset, len);
