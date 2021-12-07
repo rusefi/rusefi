@@ -159,7 +159,7 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 }
 
 void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
-	if (engineConfiguration->debugMode == DBG_CAN) {
+	if (engineConfiguration->verboseCan) {
 		printPacket(frame);
 	}
 
