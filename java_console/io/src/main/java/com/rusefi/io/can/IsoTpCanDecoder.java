@@ -5,9 +5,12 @@ import com.rusefi.io.IoStream;
 
 import java.util.Arrays;
 
-// CAN multiframe decoder state
+/**
+ * ISO 15765-2 or ISO-TP (Transport Layer) CAN multi-frame decoder state
+ * @see IsoTpConnector
+ */
 public class IsoTpCanDecoder {
-    private static Logging log = Logging.getLogging(IsoTpCanDecoder.class);
+    private static final Logging log = Logging.getLogging(IsoTpCanDecoder.class);
 
     static {
         log.configureDebugEnabled(false);
@@ -20,8 +23,8 @@ public class IsoTpCanDecoder {
 
     private final static int FC_ContinueToSend = 0;
 
-    public int waitingForNumBytes = 0;
-    public int waitingForFrameIndex = 0;
+    private int waitingForNumBytes = 0;
+    private int waitingForFrameIndex = 0;
 
     public byte[] decodePacket(byte[] data) {
         int frameType = (data[0] >> 4) & 0xf;
