@@ -167,7 +167,7 @@ void EngineState::periodicFastCallback() {
 	float ignitionLoad = getIgnitionLoad();
 	float advance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
 
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount / 2; i++) {
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		timingAdvance[i] = advance;
 	}
 
