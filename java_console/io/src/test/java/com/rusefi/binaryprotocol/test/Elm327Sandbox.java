@@ -3,6 +3,7 @@ package com.rusefi.binaryprotocol.test;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import com.rusefi.io.LinkManager;
 import com.rusefi.io.can.Elm327Connector;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.io.serial.SerialIoStream;
@@ -26,11 +27,21 @@ public class Elm327Sandbox {
         IncomingDataBuffer dataBuffer = tsStream.getDataBuffer();
         System.out.println("Hello new ELM327 connection, pending=" + dataBuffer.getPendingCount());
 
-        /*
-        runFcommand("First time", tsStream);
+
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
 
-        runFcommand("Second time", tsStream);
+        LinkManager linkManager = new LinkManager();
+        SandboxCommon.verifyCrcNoPending(tsStream, linkManager);
+
+//        SandboxCommon.runFcommand("First time", tsStream);
+        if (1 == 1)
+            return;
+
+        /*
+        SandboxCommon.runFcommand("First time", tsStream);
+        Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
+
+        SandboxCommon.runFcommand("Second time", tsStream);
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
 */
 
@@ -56,32 +67,15 @@ public class Elm327Sandbox {
         System.out.println("****************************************");
         System.out.println("********  ELM327 LOOKS GREAT  **********");
         System.out.println("****************************************");
+
+
+        SandboxCommon.verifyCrcNoPending(tsStream, linkManager);
+        SandboxCommon.verifyCrcNoPending(tsStream, linkManager);
+
+        SandboxCommon.readImage(tsStream, linkManager);
+
+
         System.exit(-1);
-
-        /*
-        {
-            tsStream.sendPacket(BinaryProtocol.createCrcCommand(1000));
-            byte[] fResponse = new byte[3];
-            dataBuffer.waitForBytes("CRC", System.currentTimeMillis(), fResponse.length);
-            dataBuffer.getData(fResponse);
-            System.out.println(" Got CRC response " + IoStream.printByteArray(fResponse));
-        }
-
-        LinkManager linkManager = new LinkManager();
-        StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
-        linkManager.setConnector(streamConnector);
-        streamConnector.connectAndReadConfiguration(new ConnectionStateListener() {
-            @Override
-            public void onConnectionEstablished() {
-                System.out.println("onConnectionEstablished");
-            }
-
-            @Override
-            public void onConnectionFailed() {
-                System.out.println("onConnectionFailed");
-            }
-        });
-*/
     }
 
 }
