@@ -448,8 +448,8 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
 
 	if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
-		efiPrintf("TunerStudio: %s invalid size: %d", tsChannel->name, incomingPacketSize);
-		tunerStudioError(tsChannel, "ERROR: CRC header size");
+		efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
+		tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 		return -1;
 	}
