@@ -9,12 +9,12 @@
 
 #include "peak_detect.h"
 
-int getCylinderKnockBank(uint8_t cylinderIndex);
+int getCylinderKnockBank(uint8_t cylinderNumber);
 
 class KnockController {
 public:
 	// onKnockSenseCompleted is the callback from the knock sense driver to report a sensed knock level
-	bool onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime);
+	bool onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime);
 	void periodicFastCallback();
 
 	float getKnockRetard() const;
