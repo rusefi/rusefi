@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -213,14 +214,7 @@ public class Elm327Connector implements Closeable {
     private void sendCanData(byte [] hdr, byte [] data, int offset, int len) {
     	//log.info("--------sendData offset="+Integer.toString(offset) + " len=" + Integer.toString(len) + "hdr.len=" + Integer.toString(hdr.length));
 
-    	len += hdr.length;
-    	byte [] hexData = new byte [len * 2 + 1];
-   		for (int i = 0, j = 0; i < len; i++, j += 2) {
-      		int v = ((i < hdr.length) ? hdr[i] : data[i - hdr.length + offset]) & 0xFF;
-        	hexData[j] = HEX_ARRAY[v >>> 4];
-        	hexData[j + 1] = HEX_ARRAY[v & 0x0F];
-      	}
-      	hexData[len * 2] = '\r';
+		byte[] hexData = byteToString(hdr, data, offset, len);
 
    		//log.info("* Elm327.data: " + (new String(hexData)));
 
@@ -231,7 +225,20 @@ public class Elm327Connector implements Closeable {
 	    }
     }
 
-    private byte[] receiveData() {
+	@NotNull
+	public static byte[] byteToString(byte[] hdr, byte[] data, int offset, int payloadLength) {
+		int totalLength = hdr.length + payloadLength;
+		byte[] hexData = new byte[totalLength * 2 + 1];
+		for (int i = 0, j = 0; i < totalLength; i++, j += 2) {
+			int v = ((i < hdr.length) ? hdr[i] : data[i - hdr.length + offset]) & 0xFF;
+			hexData[j] = HEX_ARRAY[v >>> 4];
+			hexData[j + 1] = HEX_ARRAY[v & 0x0F];
+		}
+		hexData[totalLength * 2] = '\r';
+		return hexData;
+	}
+
+	private byte[] receiveData() {
         synchronized (lock) {
             try {
                 waitForResponse(TIMEOUT);
