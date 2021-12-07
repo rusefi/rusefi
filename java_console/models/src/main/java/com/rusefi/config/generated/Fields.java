@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 07 00:03:51 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Dec 07 01:23:37 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1383,7 +1383,6 @@ public class Fields {
 	public static final int isManualSpinningMode_offset = 1476;
 	public static final int isMapAveragingEnabled_offset = 1476;
 	public static final int isSdCardEnabled_offset = 744;
-	public static final int issue_294_29_offset = 76;
 	public static final int issue_294_31_offset = 76;
 	public static final int isVerboseAlternator_offset = 744;
 	public static final int isVerboseAuxPid1_offset = 76;
@@ -2210,7 +2209,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.07.all.3654067045";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.07.all.3467132150";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2365,6 +2364,7 @@ public class Fields {
 	public static final int veOverrideMode_offset = 2109;
 	public static final int verboseCan2BaseAddress_offset = 2112;
 	public static final int verboseCanBaseAddress_offset = 756;
+	public static final int verboseCanRx_offset = 76;
 	public static final int verboseTLE8888_offset = 744;
 	public static final int verboseTriggerSynchDetails_offset = 1476;
 	public static final int verboseVVTDecoding_offset = 976;
@@ -2463,7 +2463,7 @@ public class Fields {
 	public static final Field USETLE8888_STEPPER = Field.create("USETLE8888_STEPPER", 76, FieldType.BIT, 25);
 	public static final Field ENABLEMAPESTIMATIONTABLEFALLBACK = Field.create("ENABLEMAPESTIMATIONTABLEFALLBACK", 76, FieldType.BIT, 26);
 	public static final Field USESCRIPTTABLEFORCANSNIFFINGFILTERING = Field.create("USESCRIPTTABLEFORCANSNIFFINGFILTERING", 76, FieldType.BIT, 27);
-	public static final Field ISSUE_294_29 = Field.create("ISSUE_294_29", 76, FieldType.BIT, 28);
+	public static final Field VERBOSECANRX = Field.create("VERBOSECANRX", 76, FieldType.BIT, 28);
 	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 76, FieldType.BIT, 29);
 	public static final Field ISSUE_294_31 = Field.create("ISSUE_294_31", 76, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_34_31 = Field.create("UNUSEDBIT_34_31", 76, FieldType.BIT, 31);
@@ -3750,7 +3750,7 @@ public class Fields {
 	USETLE8888_STEPPER,
 	ENABLEMAPESTIMATIONTABLEFALLBACK,
 	USESCRIPTTABLEFORCANSNIFFINGFILTERING,
-	ISSUE_294_29,
+	VERBOSECANRX,
 	ARTIFICIALTESTMISFIRE,
 	ISSUE_294_31,
 	UNUSEDBIT_34_31,

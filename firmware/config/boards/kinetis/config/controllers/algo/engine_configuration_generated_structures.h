@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Dec 05 19:41:10 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Dec 07 01:23:25 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -800,8 +800,9 @@ struct engine_configuration_s {
 	offset 76 bit 27 */
 	bool usescriptTableForCanSniffingFiltering : 1 {};
 	/**
+	 * Print incoming CAN messages in rusEFI console
 	offset 76 bit 28 */
-	bool issue_294_29 : 1 {};
+	bool verboseCanRx : 1 {};
 	/**
 	 * Experimental setting that will cause a misfire
 	 * DO NOT ENABLE.
@@ -4544,4 +4545,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sun Dec 05 19:41:10 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Dec 07 01:23:25 UTC 2021
