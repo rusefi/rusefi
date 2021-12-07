@@ -115,6 +115,9 @@ typedef enum  __attribute__ ((__packed__)) {
 	 * Most HD are 45 degrees with some 60 degree twin.
 	 */
 	VVT_MAP_V_TWIN = 12,
+
+	VVT_MAP_V_TWIN_ANOTHER = 13,
+
 } vvt_mode_e;
 
 /**
