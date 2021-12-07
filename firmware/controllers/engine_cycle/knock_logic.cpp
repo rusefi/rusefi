@@ -11,9 +11,9 @@
 
 #include "hip9011.h"
 
-int getCylinderKnockBank(uint8_t cylinderIndex) {
+int getCylinderKnockBank(uint8_t cylinderNumber) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
-	switch (cylinderIndex) {
+	switch (cylinderNumber) {
 #if EFI_PROD_CODE
 		case 0:
 			return engineConfiguration->knockBankCyl1;
@@ -45,13 +45,13 @@ int getCylinderKnockBank(uint8_t cylinderIndex) {
 	}
 }
 
-bool KnockController::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, efitick_t lastKnockTime) {
+bool KnockController::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, efitick_t lastKnockTime) {
 	bool isKnock = dbv > engine->engineState.knockThreshold;
 
 #if EFI_TUNER_STUDIO
 	// Pass through per-cylinder peak detector
-	float cylPeak = peakDetectors[cylinderIndex].detect(dbv, lastKnockTime);
-	tsOutputChannels.knock[cylinderIndex] = roundf(cylPeak);
+	float cylPeak = peakDetectors[cylinderNumber].detect(dbv, lastKnockTime);
+	tsOutputChannels.knock[cylinderNumber] = roundf(cylPeak);
 
 	// Pass through all-cylinders peak detector
 	tsOutputChannels.knockLevel = allCylinderPeakDetector.detect(dbv, lastKnockTime);
@@ -64,7 +64,7 @@ bool KnockController::onKnockSenseCompleted(uint8_t cylinderIndex, float dbv, ef
 
 	// TODO: retard timing, then put it back!
 	if (isKnock) {
-		auto baseTiming = engine->engineState.timingAdvance;
+		auto baseTiming = engine->engineState.timingAdvance[cylinderNumber];
 
 		// TODO: 20 configurable? Better explanation why 20?
 		auto distToMinimum = baseTiming - (-20);
@@ -107,13 +107,13 @@ void KnockController::periodicFastCallback() {
 }
 
 // This callback is to be implemented by the knock sense driver
-__attribute__((weak)) void onStartKnockSampling(uint8_t cylinderIndex, float samplingTimeSeconds, uint8_t channelIdx) {
-	UNUSED(cylinderIndex);
+__attribute__((weak)) void onStartKnockSampling(uint8_t cylinderNumber, float samplingTimeSeconds, uint8_t channelIdx) {
+	UNUSED(cylinderNumber);
 	UNUSED(samplingTimeSeconds);
 	UNUSED(channelIdx);
 }
 
-static uint8_t cylinderIndexCopy;
+static uint8_t cylinderNumberCopy;
 
 // Called when its time to start listening for knock
 // Does some math, then hands off to the driver to start any sampling hardware
@@ -126,16 +126,16 @@ static void startKnockSampling(Engine* engine) {
 	float samplingSeconds = engine->rpmCalculator.oneDegreeUs * engineConfiguration->knockSamplingDuration / US_PER_SECOND_F;
 
 	// Look up which channel this cylinder uses
-	auto channel = getCylinderKnockBank(cylinderIndexCopy);
+	auto channel = getCylinderKnockBank(cylinderNumberCopy);
 
 	// Call the driver to begin sampling
-	onStartKnockSampling(cylinderIndexCopy, samplingSeconds, channel);
+	onStartKnockSampling(cylinderNumberCopy, samplingSeconds, channel);
 }
 
 static scheduling_s startSampling;
 
-void Engine::onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
-	cylinderIndexCopy = cylinderIndex;
+void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
+	cylinderNumberCopy = cylinderNumber;
 
 #if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
 	scheduleByAngle(&startSampling, nowNt,
@@ -143,6 +143,6 @@ void Engine::onSparkFireKnockSense(uint8_t cylinderIndex, efitick_t nowNt) {
 #endif
 
 #if EFI_HIP_9011
-	hip9011_onFireEvent(cylinderIndex, nowNt);
+	hip9011_onFireEvent(cylinderNumber, nowNt);
 #endif
 }

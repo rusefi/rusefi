@@ -75,7 +75,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 	const angle_t sparkAngle =
 		// Negate because timing *before* TDC, and we schedule *after* TDC
-		- engine->engineState.timingAdvance
+		- engine->engineState.timingAdvance[event->cylinderNumber]
 		// Offset by this cylinder's position in the cycle
 		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber)
 		// Pull any extra timing for knock retard
@@ -373,7 +373,7 @@ void initializeIgnitionActions() {
 	IgnitionEventList *list = &engine->ignitionEvents;
 	angle_t dwellAngle = engine->engineState.dwellAngle;
 	floatms_t sparkDwell = engine->engineState.sparkDwell;
-	if (cisnan(engine->engineState.timingAdvance) || cisnan(dwellAngle)) {
+	if (cisnan(engine->engineState.timingAdvance[0]) || cisnan(dwellAngle)) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
 		list->isReady = false;
