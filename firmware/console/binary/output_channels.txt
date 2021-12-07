@@ -200,7 +200,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
+	int8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
 
 	uint8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, 0, 0, 0
 	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
