@@ -34,6 +34,7 @@
 #include "ac_control.h"
 #include "type_list.h"
 #include "boost_control.h"
+#include "alternator_controller.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -119,6 +120,11 @@ public:
 	bool isPwmEnabled = true;
 
 	const char *prevOutputName = nullptr;
+	/**
+	 * ELM327 cannot handle both RX and TX at the same time, we have to stay quite once first ISO/TP packet was detected
+	 * this is a pretty temporary hack only while we are trying ELM327, long term ISO/TP and rusEFI broadcast should find a way to coexists
+	 */
+	bool pauseCANdueToSerial = false;
 
 	PinRepository pinRepository;
 
@@ -136,7 +142,9 @@ public:
 #if EFI_HPFP && EFI_ENGINE_CONTROL
 		HpfpController,
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
-
+#if EFI_ALTERNATOR_CONTROL
+		AlternatorController,
+#endif /* EFI_ALTERNATOR_CONTROL */
 		FuelPumpController,
 		MainRelayController,
 		AcController,

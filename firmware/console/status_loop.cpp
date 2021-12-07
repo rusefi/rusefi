@@ -784,6 +784,16 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 		tsOutputChannels->maxTriggerReentrant = maxTriggerReentrant;
 #endif /* EFI_CLOCK_LOCKS */
 
+	tsOutputChannels->triggerPrimaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
+	tsOutputChannels->triggerPrimaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
+
+	tsOutputChannels->triggerSecondaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
+	tsOutputChannels->triggerSecondaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
+
+	tsOutputChannels->triggerVvtRise = engine->triggerCentral.vvtEventRiseCounter[0];
+	tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
+
+
 	switch (engineConfiguration->debugMode)	{
 	case DBG_STATUS:
 		tsOutputChannels->debugFloatField1 = timeSeconds;
@@ -800,17 +810,10 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 		break;
 		}
 	case DBG_TRIGGER_COUNTERS:
-		tsOutputChannels->triggerPrimaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_FALLING);
-		tsOutputChannels->triggerSecondaryFall = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_FALLING);
 // no one uses shaft so far		tsOutputChannels->debugIntField3 = engine->triggerCentral.getHwEventCounter((int)SHAFT_3RD_FALLING);
 #if EFI_PROD_CODE && HAL_USE_ICU == TRUE
 		tsOutputChannels->debugFloatField3 = icuRisingCallbackCounter + icuFallingCallbackCounter;
 #endif /* EFI_PROD_CODE */
-		tsOutputChannels->triggerVvtRise = engine->triggerCentral.vvtEventRiseCounter[0];
-		tsOutputChannels->triggerVvtFall = engine->triggerCentral.vvtEventFallCounter[0];
-
-		tsOutputChannels->triggerPrimaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_PRIMARY_RISING);
-		tsOutputChannels->triggerSecondaryRise = engine->triggerCentral.getHwEventCounter((int)SHAFT_SECONDARY_RISING);
 
 		tsOutputChannels->debugIntField4 = engine->triggerCentral.triggerState.currentCycle.eventCount[0];
 		tsOutputChannels->debugIntField5 = engine->triggerCentral.triggerState.currentCycle.eventCount[1];

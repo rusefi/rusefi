@@ -18,22 +18,27 @@ public class Elm327Sandbox {
         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
         String serialPort = "COM7";
         Elm327Connector connector = new Elm327Connector(SerialIoStream.openPort(serialPort));
-        connector.start("sandbox");
+        boolean initConnection = connector.start(serialPort);
+        if (!initConnection)
+            return;
 
         IoStream tsStream = connector.getTsStream();
 
         IncomingDataBuffer dataBuffer = tsStream.getDataBuffer();
-        System.out.println("Hello new connection " + dataBuffer.getPendingCount());
+        System.out.println("Hello new ELM327 connection, pending=" + dataBuffer.getPendingCount());
 
+        /*
         runFcommand("First time", tsStream);
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
 
         runFcommand("Second time", tsStream);
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
-
+*/
         {
             String signature = BinaryProtocol.getSignature(tsStream);
             System.out.println("Got " + signature + " signature via CAN/ELM327");
+            if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
+                throw new IllegalStateException("Unexpected S " + signature);
         }
 
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
@@ -41,6 +46,8 @@ public class Elm327Sandbox {
         {
             String signature = BinaryProtocol.getSignature(tsStream);
             System.out.println("Let's do it again! Got " + signature + " signature via CAN/ELM327");
+            if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
+                throw new IllegalStateException("Unexpected S " + signature);
         }
 
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
@@ -52,27 +59,51 @@ public class Elm327Sandbox {
                 return;
             String signature = new String(response, 1, response.length - 1);
             System.out.println(Fields.TS_HELLO_COMMAND + " returned " + signature);
+
+            if (!signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
+                throw new IllegalStateException("Unexpected S " + signature);
         }
 
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
+        System.out.println("****************************************");
+        System.out.println("********  ELM327 LOOKS GREAT  **********");
+        System.out.println("****************************************");
+        System.exit(-1);
 
+        /*
         {
             tsStream.sendPacket(BinaryProtocol.createCrcCommand(1000));
             byte[] fResponse = new byte[3];
             dataBuffer.waitForBytes("CRC", System.currentTimeMillis(), fResponse.length);
             dataBuffer.getData(fResponse);
-            System.out.println(" Got CRC response " + IoStream.printHexBinary(fResponse));
+            System.out.println(" Got CRC response " + IoStream.printByteArray(fResponse));
         }
 
+        LinkManager linkManager = new LinkManager();
+        StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
+        linkManager.setConnector(streamConnector);
+        streamConnector.connectAndReadConfiguration(new ConnectionStateListener() {
+            @Override
+            public void onConnectionEstablished() {
+                System.out.println("onConnectionEstablished");
+            }
+
+            @Override
+            public void onConnectionFailed() {
+                System.out.println("onConnectionFailed");
+            }
+        });
+*/
     }
 
     private static void runFcommand(String prefix, IoStream tsStream) throws IOException {
         IncomingDataBuffer dataBuffer = tsStream.getDataBuffer();
-        tsStream.sendPacket(new byte[]{Fields.TS_COMMAND_F});
+        tsStream.write(new byte[]{Fields.TS_COMMAND_F});
+        tsStream.flush();
         byte[] fResponse = new byte[3];
         dataBuffer.waitForBytes("hello", System.currentTimeMillis(), fResponse.length);
         dataBuffer.getData(fResponse);
-        System.out.println(prefix + " Got F response " + IoStream.printHexBinary(fResponse));
+        System.out.println(prefix + " Got F response " + IoStream.printByteArray(fResponse));
     }
 
 }

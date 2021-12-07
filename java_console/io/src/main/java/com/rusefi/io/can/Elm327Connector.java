@@ -63,10 +63,11 @@ public class Elm327Connector implements Closeable {
 		return tsStream;
 	}
 
-	public void start(String msg) {
+	public boolean start(String msg) {
     	log.info("* Elm327.start()");
 
-        if (initConnection(msg)) {
+		boolean initConnection = initConnection(msg);
+		if (initConnection) {
         	// reset to defaults
         	sendCommand("ATD", "OK");
 
@@ -109,7 +110,7 @@ public class Elm327Connector implements Closeable {
 			String voltage = sendCommand("ATRV", "([0-9\\.]+)V");
 			log.info("* Ignition voltage = " + voltage);
         }
-
+        return initConnection;
     }
 
     @Override
@@ -142,36 +143,21 @@ public class Elm327Connector implements Closeable {
 		}
 	};
 
-	public void sendBytesToSerial(byte [] bytes) {
-		log.info("-------sendBytesToSerial " + bytes.length + " byte(s):");
-
-		for (int i = 0; i < bytes.length; i++) {
-			log.info("[index=" + i + "] " + ((int) bytes[i] & 0xff));
+	private final IsoTpConnector connector = new IsoTpConnector() {
+		@Override
+		public void sendCanData(byte[] hdr, byte[] data, int offset, int len) {
+			Elm327Connector.this.sendCanData(hdr, data, offset, len);
 		}
 
-    	// 1 frame
-    	if (bytes.length <= 7) {
-    		sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_SINGLE << 4) | bytes.length, bytes, 0, bytes.length);
-    		return;
-    	}
+		@Override
+		public void receiveData() {
+			Elm327Connector.this.receiveData();
+		}
+	};
 
-    	// multiple frames
-    	// send the first header frame
-    	sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
-    	// get a flow control frame
-    	receiveData();
-
-    	// send the rest of the data
-    	int idx = 1, offset = 6;
-    	int remaining = bytes.length - 6;
-    	while (remaining > 0) {
-    		int len = Math.min(remaining, 7);
-    		// send the consecutive frames
-    		sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
-    		offset += len;
-    		remaining -= len;
-    	}
-	}
+	public void sendBytesToSerial(byte [] bytes) {
+        IsoTpConnector.sendStrategy(bytes, connector);
+    }
 
     ///////////////////////////////////////////////////////
 
@@ -222,14 +208,6 @@ public class Elm327Connector implements Closeable {
         	return (matcher.groupCount() > 0) ? matcher.group(1) : matcher.group();
         }
         return null;
-    }
-
-    private void sendCanFrame(int hdr0, byte [] data, int offset, int len) {
-    	sendCanData(new byte[] { (byte)hdr0 }, data, offset, len);
-    }
-
-    private void sendCanFrame(int hdr0, int hdr1, byte [] data, int offset, int len) {
-    	sendCanData(new byte[] { (byte)hdr0, (byte)hdr1 }, data, offset, len);
     }
 
     private void sendCanData(byte [] hdr, byte [] data, int offset, int len) {

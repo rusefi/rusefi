@@ -14,7 +14,6 @@ import java.util.Arrays;
  *
  */
 public class Elm327IoStream extends AbstractIoStream {
-    private final String loggingPrefix;
     private final Elm327Connector con;
     private final DisconnectListener disconnectListener;
     @NotNull
@@ -40,7 +39,6 @@ public class Elm327IoStream extends AbstractIoStream {
 
     private Elm327IoStream(Elm327Connector con, String loggingPrefix, DisconnectListener disconnectListener) {
         this.con = con;
-        this.loggingPrefix = loggingPrefix;
         this.disconnectListener = disconnectListener;
         this.dataBuffer = IncomingDataBuffer.createDataBuffer(loggingPrefix, this);
 
@@ -57,11 +55,6 @@ public class Elm327IoStream extends AbstractIoStream {
                 disconnectListener.onDisconnect("on close");
             }
         }
-    }
-
-    @Override
-    public String getLoggingPrefix() {
-        return loggingPrefix;
     }
 
     @NotNull
