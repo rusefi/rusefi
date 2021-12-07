@@ -23,7 +23,7 @@ public class PCanSandbox {
         can.initializeAPI();
         TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            System.out.println(status);
+            System.out.println("Error initializing PCAN: " + status);
             return;
         }
         System.out.println("Hello PCAN " + can);
