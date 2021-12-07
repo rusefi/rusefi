@@ -11,7 +11,7 @@
 #include "ch.hpp"
 
 static NO_CACHE adcsample_t sampleBuffer[2000];
-static int8_t currentcylinderNumber = 0;
+static int8_t currentCylinderNumber = 0;
 static efitick_t lastKnockSampleTime = 0;
 static Biquad knockFilter;
 
@@ -201,7 +201,7 @@ void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	engine->knockController.onKnockSenseCompleted(currentcylinderNumber, db, lastKnockTime);
+	engine->knockController.onKnockSenseCompleted(currentCylinderNumber, db, lastKnockTime);
 }
 
 void KnockThread::ThreadTask() {
