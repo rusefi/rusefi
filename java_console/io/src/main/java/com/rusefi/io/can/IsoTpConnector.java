@@ -3,6 +3,9 @@ package com.rusefi.io.can;
 import com.devexperts.logging.Logging;
 import com.rusefi.io.IoStream;
 
+/**
+ * @see IsoTpCanDecoder
+ */
 public abstract class IsoTpConnector {
     private final static Logging log = Logging.getLogging(IsoTpConnector.class);
 
