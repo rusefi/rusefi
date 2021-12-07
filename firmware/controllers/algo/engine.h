@@ -116,6 +116,11 @@ public:
 	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
 
+	/**
+	 * Sometimes for instance during shutdown we need to completely supress CAN TX
+	 */
+	bool allowCanTx = true;
+
 	// used by HW CI
 	bool isPwmEnabled = true;
 
