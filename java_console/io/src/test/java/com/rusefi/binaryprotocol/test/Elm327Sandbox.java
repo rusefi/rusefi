@@ -1,6 +1,5 @@
 package com.rusefi.binaryprotocol.test;
 
-import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
@@ -34,22 +33,11 @@ public class Elm327Sandbox {
         runFcommand("Second time", tsStream);
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
 */
-        {
-            String signature = BinaryProtocol.getSignature(tsStream);
-            System.out.println("Got " + signature + " signature via CAN/ELM327");
-            if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
-                throw new IllegalStateException("Unexpected S " + signature);
-        }
 
+        SandboxCommon.verifySignature(tsStream, "", "ELM");
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
 
-        {
-            String signature = BinaryProtocol.getSignature(tsStream);
-            System.out.println("Let's do it again! Got " + signature + " signature via CAN/ELM327");
-            if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
-                throw new IllegalStateException("Unexpected S " + signature);
-        }
-
+        SandboxCommon.verifySignature(tsStream, "Let's do it again! ", "ELM");
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
 
         {

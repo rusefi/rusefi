@@ -9,6 +9,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.StreamConnector;
 
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -59,5 +60,12 @@ public class SandboxCommon {
             if (tsStream.getDataBuffer().dropPending() != 0)
                 System.out.println("ERROR Extra data after CRC");
         });
+    }
+
+    static void verifySignature(IoStream tsStream, String prefix, String suffix) throws IOException {
+        String signature = BinaryProtocol.getSignature(tsStream);
+        System.out.println(prefix + "Got " + signature + " signature via " + suffix);
+        if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
+            throw new IllegalStateException("Unexpected S " + signature);
     }
 }
