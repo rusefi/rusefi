@@ -18,7 +18,7 @@ public class Elm327Connector implements Closeable {
 	private final static Logging log = Logging.getLogging(Elm327Connector.class);
 	private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes();
 
-//	public final static int ELM327_DEFAULT_BAUDRATE = 115200; // OBDlink SX, 1.3a
+//	public final static int ELM327_DEFAULT_BAUDRATE = 115200; // OBDlink SX, 1.3a STN1110
     public final static int ELM327_DEFAULT_BAUDRATE = 38400;
     private final static int BIG_TIMEOUT = 2 * SECOND;
     private final static int TIMEOUT = 70;
