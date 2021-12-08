@@ -80,7 +80,6 @@ public:
 
 	angle_t mapCamPrevToothAngle = -1;
 	float mapCamPrevCycleValue = 0;
-	uint8_t mapCamCounter = 0;
 
 	/**
 	 * true if a recent configuration change has changed any of the trigger settings which

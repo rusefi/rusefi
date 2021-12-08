@@ -852,7 +852,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
 	case TEST_ENGINE:
-		setTestEngineConfiguration();
+		setTestCamEngineConfiguration();
+		break;
+	case TEST_CRANK_ENGINE:
+		setTestCrankEngineConfiguration();
 		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
@@ -1056,7 +1059,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setHonda600();
 		break;
 	case UNUSED9:
-	case UNUSED28:
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;

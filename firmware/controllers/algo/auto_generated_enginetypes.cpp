@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Dec 06 21:27:50 EST 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Dec 07 20:56:44 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -325,6 +325,8 @@ case TEST_110:
   return "TEST_110";
 case TEST_33816:
   return "TEST_33816";
+case TEST_CRANK_ENGINE:
+  return "TEST_CRANK_ENGINE";
 case TEST_ENGINE:
   return "TEST_ENGINE";
 case TEST_ENGINE_VVT:
@@ -351,8 +353,6 @@ case UNUSED101:
   return "UNUSED101";
 case UNUSED18:
   return "UNUSED18";
-case UNUSED28:
-  return "UNUSED28";
 case UNUSED30:
   return "UNUSED30";
 case UNUSED39:
