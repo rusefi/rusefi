@@ -321,7 +321,7 @@ static int lua_setDebug(lua_State* l) {
 		return 0;
 	}
 
-	auto firstDebugField = &tsOutputChannels.debugFloatField1;
+	auto firstDebugField = &engine->outputChannels.debugFloatField1;
 	firstDebugField[idx - 1] = val;
 
 	return 0;

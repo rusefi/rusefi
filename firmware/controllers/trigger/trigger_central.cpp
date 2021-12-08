@@ -105,7 +105,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
 			&& vvtMode != VVT_HONDA_K
-			&& vvtMode != VVT_MAP_V_TWIN_ANOTHER &&
+			&& vvtMode != VVT_MAP_V_TWIN_ANOTHER
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
 }
@@ -115,9 +115,7 @@ static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
 
 	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
 	if (offset > 0) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.vvtSyncCounter++;
-#endif /* EFI_TUNER_STUDIO */
+		engine->outputChannels.vvtSyncCounter++;
 	}
 	return offset;
 }
@@ -287,8 +285,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		// yes we log data from all VVT channels into same fields for now
-		tsOutputChannels.vvtSyncGapRatio = vvtState->currentGap;
-		tsOutputChannels.vvtStateIndex = vvtState->currentCycle.current_index;
+		engine->outputChannels.vvtSyncGapRatio = vvtState->currentGap;
+		engine->outputChannels.vvtStateIndex = vvtState->currentCycle.current_index;
 	}
 
 	tc->vvtCamCounter++;
@@ -303,7 +301,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 #endif // EFI_UNIT_TEST
 
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.vvtCurrentPosition = currentPosition;
+		engine->outputChannels.vvtCurrentPosition = currentPosition;
 #endif /* EFI_TUNER_STUDIO */
 
 	switch(engineConfiguration->vvtMode[camIndex]) {
@@ -325,7 +323,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			return;
 		}
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.vvtCounter++;
+		engine->outputChannels.vvtCounter++;
 #endif /* EFI_TUNER_STUDIO */
 	}
 	default:
@@ -618,8 +616,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			signal, timestamp);
 
 #if EFI_TUNER_STUDIO
-			tsOutputChannels.triggerSyncGapRatio = triggerState.currentGap;
-			tsOutputChannels.triggerStateIndex = triggerState.currentCycle.current_index;
+			engine->outputChannels.triggerSyncGapRatio = triggerState.currentGap;
+			engine->outputChannels.triggerStateIndex = triggerState.currentCycle.current_index;
 #endif /* EFI_TUNER_STUDIO */
 
 
@@ -667,7 +665,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		auto toothAngle = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
 		wrapAngle(toothAngle, "currentEnginePhase", CUSTOM_ERR_6555);
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.currentEnginePhase = toothAngle;
+		engine->outputChannels.currentEnginePhase = toothAngle;
 #endif // EFI_TUNER_STUDIO
 
 		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER) {
@@ -685,9 +683,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 					hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
 				}
 #if EFI_TUNER_STUDIO
-				tsOutputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = map;
-				tsOutputChannels.TEMPLOG_map_peak = mapCamCounter;
-				tsOutputChannels.TEMPLOG_MAP_AT_DIFF = map - mapCamPrevCycleValue;
+				engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = map;
+				engine->outputChannels.TEMPLOG_map_peak = mapCamCounter;
+				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = map - mapCamPrevCycleValue;
 #endif // EFI_TUNER_STUDIO
 
 				mapCamPrevCycleValue = map;

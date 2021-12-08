@@ -168,16 +168,16 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	// todo: smarted solution for index to field mapping
 	switch (event->cylinderIndex) {
 	case 0:
-		tsOutputChannels.debugFloatField1 = ratio;
+		engine->outputChannels.debugFloatField1 = ratio;
 		break;
 	case 1:
-		tsOutputChannels.debugFloatField2 = ratio;
+		engine->outputChannels.debugFloatField2 = ratio;
 		break;
 	case 2:
-		tsOutputChannels.debugFloatField3 = ratio;
+		engine->outputChannels.debugFloatField3 = ratio;
 		break;
 	case 3:
-		tsOutputChannels.debugFloatField4 = ratio;
+		engine->outputChannels.debugFloatField4 = ratio;
 		break;
 	}
 #endif

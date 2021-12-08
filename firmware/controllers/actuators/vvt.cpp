@@ -55,7 +55,7 @@ expected<angle_t> VvtController::getSetpoint() {
 	float target = m_targetMap->getValue(rpm, load);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.vvtTargets[index] = target;
+	engine->outputChannels.vvtTargets[index] = target;
 #endif
 
 	return target;
@@ -79,8 +79,8 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	static debug_mode_e debugModeByIndex[4] = {DBG_VVT_1_PID, DBG_VVT_2_PID, DBG_VVT_3_PID, DBG_VVT_4_PID};
 
 	if (engineConfiguration->debugMode == debugModeByIndex[index]) {
-		m_pid.postState(&tsOutputChannels);
-		tsOutputChannels.debugIntField3 = (int)(10 * target);
+		m_pid.postState(&engine->outputChannels);
+		engine->outputChannels.debugIntField3 = (int)(10 * target);
 	}
 #endif /* EFI_TUNER_STUDIO */
 

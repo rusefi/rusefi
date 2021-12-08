@@ -77,8 +77,8 @@ float WallFuel::adjust(float desiredMassGrams) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
-		tsOutputChannels.debugFloatField1 = alpha;
-		tsOutputChannels.debugFloatField2 = beta;
+		engine->outputChannels.debugFloatField1 = alpha;
+		engine->outputChannels.debugFloatField2 = beta;
 	}
 #endif // EFI_TUNER_STUDIO
 
@@ -95,8 +95,8 @@ float WallFuel::adjust(float desiredMassGrams) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
-		tsOutputChannels.debugFloatField3 = fuelFilmMass;
-		tsOutputChannels.debugFloatField4 = M_cmd;
+		engine->outputChannels.debugFloatField3 = fuelFilmMass;
+		engine->outputChannels.debugFloatField4 = M_cmd;
 	}
 #endif // EFI_TUNER_STUDIO
 
@@ -112,7 +112,7 @@ float WallFuel::adjust(float desiredMassGrams) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_KNOCK) {
-		tsOutputChannels.debugFloatField5 = fuelFilmMassNext;
+		engine->outputChannels.debugFloatField5 = fuelFilmMassNext;
 	}
 #endif // EFI_TUNER_STUDIO
 

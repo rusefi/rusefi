@@ -72,14 +72,14 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
-		tsOutputChannels.debugFloatField1 = tpsFrom;
-		tsOutputChannels.debugFloatField2 = tpsTo;
-		tsOutputChannels.debugFloatField3 = valueFromTable;
-		tsOutputChannels.debugFloatField4 = extraFuel;
-		tsOutputChannels.debugFloatField5 = accumulatedValue;
-		tsOutputChannels.debugFloatField6 = maxExtraPerPeriod;
-		tsOutputChannels.debugFloatField7 = maxInjectedPerPeriod;
-		tsOutputChannels.debugIntField1 = cycleCnt;
+		engine->outputChannels.debugFloatField1 = tpsFrom;
+		engine->outputChannels.debugFloatField2 = tpsTo;
+		engine->outputChannels.debugFloatField3 = valueFromTable;
+		engine->outputChannels.debugFloatField4 = extraFuel;
+		engine->outputChannels.debugFloatField5 = accumulatedValue;
+		engine->outputChannels.debugFloatField6 = maxExtraPerPeriod;
+		engine->outputChannels.debugFloatField7 = maxInjectedPerPeriod;
+		engine->outputChannels.debugIntField1 = cycleCnt;
 	}
 #endif /* EFI_TUNER_STUDIO */
 

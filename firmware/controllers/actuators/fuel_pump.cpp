@@ -18,6 +18,6 @@ void FuelPumpController::onSlowCallback() {
 	enginePins.fuelPumpRelay.setValue(isPumpOn);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.isFuelPumpOn = isPumpOn;
+	engine->outputChannels.isFuelPumpOn = isPumpOn;
 #endif
 }

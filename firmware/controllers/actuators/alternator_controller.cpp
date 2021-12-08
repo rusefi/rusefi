@@ -46,7 +46,7 @@ void AlternatorController::onFastCallback() {
 	// this block could be executed even in on/off alternator control mode
 	// but at least we would reflect latest state
 #if EFI_TUNER_STUDIO
-	alternatorPid.postState(&tsOutputChannels.alternatorStatus);
+	alternatorPid.postState(&engine->outputChannels.alternatorStatus);
 #endif /* EFI_TUNER_STUDIO */
 
 	// todo: migrate this to FSIO
@@ -77,7 +77,7 @@ void AlternatorController::onFastCallback() {
 		enginePins.alternatorPin.setValue(newState);
 		currentPlainOnOffState = newState;
 #if EFI_TUNER_STUDIO
-			tsOutputChannels.alternatorOnOff = newState;
+			engine->outputChannels.alternatorOnOff = newState;
 #endif /* EFI_TUNER_STUDIO */
 
 		return;

@@ -451,17 +451,17 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		}
 
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.isIdleClosedLoop = phase == Phase::Idling;
-		tsOutputChannels.isIdleCoasting = phase == Phase::Coasting;
+		engine->outputChannels.isIdleClosedLoop = phase == Phase::Idling;
+		engine->outputChannels.isIdleCoasting = phase == Phase::Coasting;
 
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
-				getIdlePid()->postState(&tsOutputChannels.idleStatus);
-				tsOutputChannels.idleState = engine->idle.idleState;
+				getIdlePid()->postState(&engine->outputChannels.idleStatus);
+				engine->outputChannels.idleState = engine->idle.idleState;
 			} else {
-				tsOutputChannels.idleCurrentPosition = iacPosition;
+				engine->outputChannels.idleCurrentPosition = iacPosition;
 				extern StepperMotor iacMotor;
-				tsOutputChannels.idleTargetPosition = iacMotor.getTargetPosition();
+				engine->outputChannels.idleTargetPosition = iacMotor.getTargetPosition();
 			}
 #endif /* EFI_TUNER_STUDIO */
 
