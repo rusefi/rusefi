@@ -42,10 +42,9 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 	// we need below freezing temperature to get prime fuel
 	Sensor::setMockValue(SensorType::Clt, -10);
 
-	// prod code invokes this on ECU start, here we have to mimic this behavior
-	startPrimeInjectionPulse();
+	// Turn on the ignition switch!
+	engine->module<PrimeController>()->onIgnitionStateChanged(true);
 
-
-	ASSERT_EQ( 1,  engine->executor.size()) << "prime fuel";
+	ASSERT_EQ(2, engine->executor.size()) << "prime fuel";
 }
 
