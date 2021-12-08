@@ -13,6 +13,8 @@
 #define H144_LS_4 GPIOD_10
 #define H144_LS_5 GPIOD_9
 #define H144_LS_6 GPIOF_12
+#define H144_LS_7 GPIOF_13
+#define H144_LS_8 GPIOF_14
 
 #define H144_IGN_1 GPIOC_13
 #define H144_IGN_2 GPIOE_5
