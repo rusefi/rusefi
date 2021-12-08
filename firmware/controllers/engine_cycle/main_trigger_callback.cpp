@@ -63,7 +63,7 @@ void startSimultaniousInjection(void*) {
 	}
 }
 
-static void endSimultaniousInjectionOnlyTogglePins(void*) {
+static void endSimultaniousInjectionOnlyTogglePins(void* = nullptr) {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].close(nowNt);
@@ -489,9 +489,16 @@ void PrimeController::onPrimeStart() {
 
 	auto endTime = getTimeNowNt() + MS2NT(durationMs);
 
-	// Open all injectors, schedule closing a short time later
+	// Open all injectors, schedule closing later
+	m_isPriming = true;
 	startSimultaniousInjection();
-	engine->executor.scheduleByTimestampNt("prime", &m_end, endTime, endSimultaniousInjectionOnlyTogglePins);
+	engine->executor.scheduleByTimestampNt("prime", &m_end, endTime, { onPrimeEndAdapter, this });
+}
+
+void PrimeController::onPrimeEnd() {
+	endSimultaniousInjectionOnlyTogglePins();
+
+	m_isPriming = false;
 }
 
 floatms_t PrimeController::getPrimeDuration() const {
