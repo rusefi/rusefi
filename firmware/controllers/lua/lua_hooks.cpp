@@ -6,7 +6,9 @@
 #include "fuel_math.h"
 #include "airmass.h"
 #include "lua_airmass.h"
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
+#endif // EFI_CAN_SUPPORT
 #include "crc.h"
 #include "settings.h"
 #include <new>
@@ -151,7 +153,7 @@ static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t s
 	return result;
 }
 
-
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 static int lua_txCan(lua_State* l) {
 	auto channel = luaL_checkinteger(l, 1);
 	// TODO: support multiple channels
@@ -207,6 +209,7 @@ static int lua_txCan(lua_State* l) {
 	// no return value
 	return 0;
 }
+#endif // EFI_CAN_SUPPORT
 
 static LuaAirmass luaAirmass;
 
@@ -459,8 +462,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "table3d", lua_table3d);
 	lua_register(l, "curve", lua_curve2d);
 	lua_register(l, "findCurveIndex", lua_findCurveIndex);
-	// used by unit tests
+
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	lua_register(l, "txCan", lua_txCan);
+#endif
 
 	lua_register(l, "findTableIndex",
 			[](lua_State* l) {
