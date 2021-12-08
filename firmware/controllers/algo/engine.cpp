@@ -480,6 +480,11 @@ void Engine::watchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
 		return;
+
+	if (module<PrimeController>()->isPriming()) {
+		return;
+	}
+
 	if (!isSpinning) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
 			// todo: make this a firmwareError assuming functional tests would run

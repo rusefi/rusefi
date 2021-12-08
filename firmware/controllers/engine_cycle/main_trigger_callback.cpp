@@ -63,7 +63,7 @@ void startSimultaniousInjection(void*) {
 	}
 }
 
-static void endSimultaniousInjectionOnlyTogglePins(void*) {
+static void endSimultaniousInjectionOnlyTogglePins(void* = nullptr) {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].close(nowNt);
@@ -439,7 +439,6 @@ static bool isPrimeInjectionPulseSkipped() {
 
 /**
  * Prime injection pulse
- * See testStartOfCrankingPrimingPulse()
  */
 void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 	if (!ignitionOn) {
@@ -464,26 +463,10 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 		ignSwitchCounter = -1;
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
-		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
-		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
-		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
-		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, engineConfiguration->startOfCrankingPrimingPulse,
-			engineConfiguration->primeInjFalloffTemperature, 0.0f, Sensor::get(SensorType::Clt).value_or(70));
+		auto primeDelayMs = engineConfiguration->primingDelay * 1000;
 
-		efiPrintf("Firing priming pulse of %.2f ms", pulseLength);
-
-		if (pulseLength > 0) {
-			auto now = getTimeNowNt();
-
-			// TODO: configurable prime delay
-			auto primeDelayMs = 200;
-
-			auto start = now + MS2NT(primeDelayMs);
-			auto end = start + MS2NT(pulseLength);
-
-			engine->executor.scheduleByTimestampNt("prime", &m_start, start, startSimultaniousInjection);
-			engine->executor.scheduleByTimestampNt("prime", &m_end, end, endSimultaniousInjectionOnlyTogglePins);
-		}
+		auto startTime = getTimeNowNt() + MS2NT(primeDelayMs);
+		engine->executor.scheduleByTimestampNt("prime", &m_start, startTime, { PrimeController::onPrimeStartAdapter, this});
 	} else {
 		efiPrintf("Skipped priming pulse since ignSwitchCounter = %d", ignSwitchCounter);
 	}
@@ -491,6 +474,46 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 	// we'll reset it later when the engine starts
 	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, ignSwitchCounter + 1);
 #endif /* EFI_PROD_CODE */
+}
+
+void PrimeController::onPrimeStart() {
+	auto durationMs = getPrimeDuration();
+
+	// Don't prime a zero-duration pulse
+	if (durationMs <= 0) {
+		efiPrintf("Skipped zero-duration priming pulse.");
+		return;
+	}
+
+	efiPrintf("Firing priming pulse of %.2f ms", durationMs);
+
+	auto endTime = getTimeNowNt() + MS2NT(durationMs);
+
+	// Open all injectors, schedule closing later
+	m_isPriming = true;
+	startSimultaniousInjection();
+	engine->executor.scheduleByTimestampNt("prime", &m_end, endTime, { onPrimeEndAdapter, this });
+}
+
+void PrimeController::onPrimeEnd() {
+	endSimultaniousInjectionOnlyTogglePins();
+
+	m_isPriming = false;
+}
+
+floatms_t PrimeController::getPrimeDuration() const {
+	auto clt = Sensor::get(SensorType::Clt);
+
+	// If the coolant sensor is dead, skip the prime. The engine will still start fine, but may take a little longer.
+	if (!clt) {
+		return 0;
+	}
+
+	auto primeMass = 
+		0.001f *	// convert milligram to gram
+		interpolate2d(clt.Value, engineConfiguration->primeBins, engineConfiguration->primeValues);
+
+	return engine->module<InjectorModel>()->getInjectionDuration(primeMass);
 }
 
 void updatePrimeInjectionPulseState() {
