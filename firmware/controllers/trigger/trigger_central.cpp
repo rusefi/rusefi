@@ -669,8 +669,13 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif // EFI_TUNER_STUDIO
 
 		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER) {
+			// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
+			auto toothAngle360 = toothAngle;
+			while (toothAngle360 >= 360) {
+				toothAngle360 -= 360;
+			}
 
-			if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle > engineConfiguration->mapCamDetectionAnglePosition) {
+			if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle360 > engineConfiguration->mapCamDetectionAnglePosition) {
 				// we are somewhere close to 'mapCamDetectionAnglePosition'
 
 				float map = Sensor::getOrZero(SensorType::Map);
@@ -695,7 +700,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 			}
 
-			mapCamPrevToothAngle = toothAngle;
+			mapCamPrevToothAngle = toothAngle360;
 
 		}
 
