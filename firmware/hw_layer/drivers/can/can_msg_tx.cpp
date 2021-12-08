@@ -25,6 +25,7 @@ extern int canWriteNotOk;
 #endif // EFI_CAN_SUPPORT
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
+#if HAL_USE_CAN || EFI_UNIT_TEST
 #ifndef STM32H7XX
 	// ST bxCAN device
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
@@ -44,6 +45,7 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 	setDlc(dlc);
 
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 }
 
 CanTxMessage::~CanTxMessage() {
@@ -77,6 +79,7 @@ CanTxMessage::~CanTxMessage() {
 #endif /* EFI_CAN_SUPPORT */
 }
 
+#if HAL_USE_CAN || EFI_UNIT_TEST
 void CanTxMessage::setDlc(uint8_t dlc) {
 	m_frame.DLC = dlc;
 }
@@ -93,4 +96,5 @@ void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 uint8_t& CanTxMessage::operator[](size_t index) {
 	return m_frame.data8[index];
 }
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 

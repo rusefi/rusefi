@@ -13,7 +13,6 @@
 #include "pch.h"
 #include "os_access.h"
 #include "crc.h"
-#include "serial_can.h"
 
 #if HAL_USE_CAN
 static CanStreamer streamer;
@@ -21,8 +20,8 @@ static CanStreamerState state(&streamer);
 static CanTsListener listener;
 #endif // HAL_USE_CAN
 
-
 #if HAL_USE_CAN || EFI_UNIT_TEST
+#include "serial_can.h"
 #include "can.h"
 #include "can_msg_tx.h"
 
