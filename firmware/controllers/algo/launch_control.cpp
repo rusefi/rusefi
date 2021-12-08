@@ -14,6 +14,7 @@
 #include "advance_map.h"
 #include "engine_state.h"
 #include "advance_map.h"
+#include "tinymt32.h"
 
 /**
  * We can have active condition from switch or from clutch.
@@ -86,10 +87,10 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		tsOutputChannels.debugIntField1 = rpmCondition;
-		tsOutputChannels.debugIntField2 = tpsCondition;
-		tsOutputChannels.debugIntField3 = speedCondition;
-		tsOutputChannels.debugIntField4 = activateSwitchCondition;
+		engine->outputChannels.debugIntField1 = rpmCondition;
+		engine->outputChannels.debugIntField2 = tpsCondition;
+		engine->outputChannels.debugIntField3 = speedCondition;
+		engine->outputChannels.debugIntField4 = activateSwitchCondition;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -119,10 +120,10 @@ void LaunchControlBase::update() {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		tsOutputChannels.debugIntField5 = engine->clutchDownState;
-		tsOutputChannels.debugFloatField1 = launchActivatePinState;
-		tsOutputChannels.debugFloatField2 = isLaunchCondition;
-		tsOutputChannels.debugFloatField3 = combinedConditions;
+		engine->outputChannels.debugIntField5 = engine->clutchDownState;
+		engine->outputChannels.debugFloatField1 = launchActivatePinState;
+		engine->outputChannels.debugFloatField2 = isLaunchCondition;
+		engine->outputChannels.debugFloatField3 = combinedConditions;
 	}
 #endif /* EFI_TUNER_STUDIO */
 }
@@ -143,18 +144,21 @@ void SoftSparkLimiter::setTargetSkipRatio(float targetSkipRatio) {
 	this->targetSkipRatio = targetSkipRatio;
 }
 
+static tinymt32_t tinymt;
+
 bool SoftSparkLimiter::shouldSkip()  {
 	if (targetSkipRatio == 0 || wasJustSkipped) {
 		wasJustSkipped = false;
 		return false;
 	}
 
-	float r = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	float r = tinymt32_generate_float(&tinymt);
 	wasJustSkipped = r < 2 * targetSkipRatio;
 	return wasJustSkipped;
 }
 
 void initLaunchControl() {
+    tinymt32_init(&tinymt, 1345135);
 }
 
 #endif /* EFI_LAUNCH_CONTROL */

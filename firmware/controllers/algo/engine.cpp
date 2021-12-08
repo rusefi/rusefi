@@ -87,6 +87,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_TOYOTA_4_1:
 	case VVT_FIRST_HALF:
 	case VVT_SECOND_HALF:
+	case VVT_MAP_V_TWIN_ANOTHER:
 		return TT_ONE;
 	case VVT_FORD_ST170:
 		return TT_FORD_ST170;
@@ -232,12 +233,11 @@ void Engine::periodicSlowCallback() {
 	runHardcodedFsio();
 #endif /* EFI_FSIO */
 
-	bool acActive = acState.updateAc();
-	updateFans(acActive);
-
 	updateGppwm();
 
 	engine->engineModules.apply_all([](auto & m) { m.onSlowCallback(); });
+
+	updateFans(module<AcController>().unmock().isAcEnabled());
 
 #if EFI_BOOST_CONTROL
 	updateBoostControl();
@@ -377,11 +377,11 @@ void Engine::preCalculate() {
 #if EFI_TUNER_STUDIO
 	// we take 2 bytes of crc32, no idea if it's right to call it crc16 or not
 	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
-	tsOutputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
+	engine->outputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
 
 	// we need and can empty warning message for CRC purposes
 	memset(config->warning_message, 0, sizeof(error_message_t));
-	tsOutputChannels.tuneCrc16 = crc32(config, sizeof(persistent_config_s));
+	engine->outputChannels.tuneCrc16 = crc32(config, sizeof(persistent_config_s));
 #endif /* EFI_TUNER_STUDIO */
 }
 
@@ -480,6 +480,11 @@ void Engine::watchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
 		return;
+
+	if (module<PrimeController>()->isPriming()) {
+		return;
+	}
+
 	if (!isSpinning) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
 			// todo: make this a firmwareError assuming functional tests would run
@@ -523,10 +528,15 @@ void Engine::checkShutdown() {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
 		const float vBattThresholdOn = 8.0f;
-		if ((Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > vBattThresholdOn) && !isInShutdownMode()) {
+		// we fallback into zero instead of VBAT_FALLBACK_VALUE because it's not safe to false-trigger the "ignition on" event,
+		// and we want to turn on the main relay only when 100% sure.
+		if ((Sensor::get(SensorType::BatteryVoltage).value_or(0) > vBattThresholdOn) && !isInShutdownMode()) {
 			ignitionOnTimeNt = getTimeNowNt();
-			stopEngineRequestTimeNt = 0;
-			efiPrintf("Ignition voltage detected! Cancel the engine shutdown!");
+			efiPrintf("Ignition voltage detected!");
+			if (stopEngineRequestTimeNt != 0) {
+				efiPrintf("Cancel the engine shutdown!");
+				stopEngineRequestTimeNt = 0;
+			}
 		}
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */

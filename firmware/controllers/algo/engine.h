@@ -31,8 +31,11 @@
 #include "trigger_scheduler.h"
 #include "fuel_pump.h"
 #include "main_relay.h"
+#include "ac_control.h"
 #include "type_list.h"
 #include "boost_control.h"
+#include "ignition_controller.h"
+#include "alternator_controller.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -105,23 +108,59 @@ protected:
 	trigger_type_e getType() const override;
 };
 
-#define DEFAULT_MOCK_SPEED -1
+class PrimeController : public EngineModule {
+public:
+	void onIgnitionStateChanged(bool ignitionOn) override;
+
+	floatms_t getPrimeDuration() const;
+
+	void onPrimeStart();
+	void onPrimeEnd();
+
+	bool isPriming() const {
+		return m_isPriming;
+	}
+
+private:
+	scheduling_s m_start;
+	scheduling_s m_end;
+
+	bool m_isPriming = false;
+
+	static void onPrimeStartAdapter(PrimeController* instance) {
+		instance->onPrimeStart();
+	}
+
+	static void onPrimeEndAdapter(PrimeController* instance) {
+		instance->onPrimeEnd();
+	}
+};
 
 class Engine final : public TriggerStateListener {
 public:
 	Engine();
-	AcState acState;
+
 	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
+
+	TunerStudioOutputChannels outputChannels;
+
+	/**
+	 * Sometimes for instance during shutdown we need to completely supress CAN TX
+	 */
+	bool allowCanTx = true;
 
 	// used by HW CI
 	bool isPwmEnabled = true;
 
 	const char *prevOutputName = nullptr;
+	/**
+	 * ELM327 cannot handle both RX and TX at the same time, we have to stay quite once first ISO/TP packet was detected
+	 * this is a pretty temporary hack only while we are trying ELM327, long term ISO/TP and rusEFI broadcast should find a way to coexists
+	 */
+	bool pauseCANdueToSerial = false;
 
 	PinRepository pinRepository;
-
-	InjectionEvent primeInjEvent;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
@@ -135,9 +174,14 @@ public:
 #if EFI_HPFP && EFI_ENGINE_CONTROL
 		HpfpController,
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
-
+#if EFI_ALTERNATOR_CONTROL
+		AlternatorController,
+#endif /* EFI_ALTERNATOR_CONTROL */
 		FuelPumpController,
 		MainRelayController,
+		IgnitionController,
+		AcController,
+		PrimeController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -328,11 +372,6 @@ public:
 
 	void resetEngineSnifferIfInTestMode();
 
-	/**
-	 * pre-calculated offset for given sequence index within engine cycle
-	 * (not cylinder ID)
-	 */
-	angle_t ignitionPositionWithinEngineCycle[MAX_CYLINDER_COUNT];
 	/**
 	 * pre-calculated reference to which output pin should be used for
 	 * given sequence index within engine cycle

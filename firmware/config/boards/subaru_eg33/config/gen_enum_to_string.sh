@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo This batch files reads rusefi_enums.h and produces auto_generated_enums.* files
 

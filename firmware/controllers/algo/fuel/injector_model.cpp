@@ -60,15 +60,13 @@ float InjectorModel::getInjectorFlowRatio() const {
 		return 1.0f;
 	}
 
+	// todo: live data model
 	float pressureRatio = pressureDelta / referencePressure;
 	float flowRatio = sqrtf(pressureRatio);
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_INJECTOR_COMPENSATION) {
-		tsOutputChannels.debugFloatField1 = pressureDelta;
-		tsOutputChannels.debugFloatField2 = pressureRatio;
-		tsOutputChannels.debugFloatField3 = flowRatio;
-	}
+	engine->outputChannels.injectorFlowPressureDelta = pressureDelta;
+	engine->outputChannels.injectorFlowPressureRatio = pressureRatio;
 #endif // EFI_TUNER_STUDIO
 
 	// TODO: should the flow ratio be clamped?

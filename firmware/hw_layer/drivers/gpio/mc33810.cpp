@@ -2,6 +2,7 @@
  * mc33810.c
  *
  * Automotive Engine Control IC
+ * MCZ33810
  *
  * @date Dec 29, 2018
  * @author Andrey Belomutskiy, (c) 2012-2020

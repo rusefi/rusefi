@@ -89,18 +89,9 @@
 #include "rusEfiFunctionalTest.h"
 #endif /* EFI_SIMULATOR */
 
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
-/**
- * this is a local copy of the configuration. Any changes to this copy
- * have no effect until this copy is explicitly propagated to the main working copy
- */
-persistent_config_s configWorkingCopy;
-
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
-
 static void printErrorCounters() {
 	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			sizeof(engine->outputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
@@ -169,12 +160,8 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 #endif /* EFI_TUNER_STUDIO_VERBOSE */
 }
 
-char *getWorkingPageAddr() {
-#ifndef EFI_NO_CONFIG_WORKING_COPY
-	return (char*) &configWorkingCopy.engineConfiguration;
-#else
-	return (char*) engineConfiguration;
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
+uint8_t* getWorkingPageAddr() {
+	return (uint8_t*)engineConfiguration;
 }
 
 static constexpr size_t getTunerStudioPageSize() {
@@ -199,39 +186,6 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
 	sendOkResponse(tsChannel, mode);
 }
 
-/**
- * Copy specified amount of bytes from specified offset from communication layer working copy into real configuration
- *
- * Some changes like changing VE table or timing table are applied right away, meaning
- * that the values are copied from communication copy into actual engine control copy right away.
- * We call these parameters 'soft parameters'
- *
- * This is needed to support TS online auto-tune.
- *
- * On the contrary, 'hard parameters' are waiting for the Burn button to be clicked and configuration version
- * would be increased and much more complicated logic would be executed.
- */
-static void onlineApplyWorkingCopyBytes(uint32_t offset, int count) {
-	if (offset >= sizeof(engine_configuration_s)) {
-		int maxSize = sizeof(persistent_config_s) - offset;
-		if (count > maxSize) {
-			warning(CUSTOM_TS_OVERFLOW, "TS overflow %d %d", offset, count);
-			return;
-		}
-		efiPrintf("applying soft change from %d length %d", offset, count);
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
-		memcpy(((char*)config) + offset, ((char*) &configWorkingCopy) + offset,
-				count);
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
-
-	}
-	// todo: ECU does not burn while engine is running yet tune CRC
-	// tune CRC is calculated based on the latest online part (FSIO formulas are in online region of the tune)
-	// open question what's the best strategy to balance coding efforts, performance matters and tune crc functionality
-	// open question what is the runtime cost of wiping 2K of bytes on each IO communication, could be that 2K of byte memset
-	// is negligable comparing with the IO costs?
-}
-
 #if EFI_TUNER_STUDIO
 
 static const void * getStructAddr(live_data_e structId) {
@@ -245,7 +199,7 @@ static const void * getStructAddr(live_data_e structId) {
 	case LDS_TRIGGER_STATE:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
 	case LDS_AC_CONTROL:
-		return static_cast<ac_control_s*>(&engine->acState);
+		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
 	case LDS_FUEL_PUMP:
 		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
 #if EFI_ELECTRONIC_THROTTLE_BODY
@@ -326,7 +280,6 @@ void handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode
 	if (!rebootForPresetPending) {
 		uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 		memcpy(addr, content, count);
-		onlineApplyWorkingCopyBytes(offset, count);
 	}
 
 	sendOkResponse(tsChannel, mode);
@@ -342,7 +295,7 @@ static void handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode
 		return;
 	}
 
-	const char* start = getWorkingPageAddr() + offset;
+	const uint8_t* start = getWorkingPageAddr() + offset;
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(mode, (const uint8_t *) &crc, 4);
@@ -373,8 +326,6 @@ static void handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format
 	// Skip the write if a preset was just loaded - we don't want to overwrite it
 	if (!rebootForPresetPending) {
 		getWorkingPageAddr()[offset] = value;
-
-		onlineApplyWorkingCopyBytes(offset, 1);
 	}
 }
 
@@ -394,7 +345,7 @@ static void handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e
 		return;
 	}
 
-	const uint8_t *addr = (const uint8_t *) (getWorkingPageAddr() + offset);
+	const uint8_t* addr = getWorkingPageAddr() + offset;
 	tsChannel->sendResponse(mode, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	efiPrintf("Sending %d done", count);
@@ -430,10 +381,6 @@ void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
 	if (!rebootForPresetPending) {
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
-		memcpy(config, &configWorkingCopy, sizeof(persistent_config_s));
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
-
 		requestBurn();
 	}
 
@@ -481,6 +428,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	if (received != 1) {
 //			tunerStudioError("ERROR: no command");
 #if EFI_BLUETOOTH_SETUP
+		// no data in a whole second means time to disconnect BT
 		// assume there's connection loss and notify the bluetooth init code
 		bluetoothSoftwareDisconnectNotify();
 #endif  /* EFI_BLUETOOTH_SETUP */
@@ -501,8 +449,8 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
 
 	if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
-		efiPrintf("TunerStudio: %s invalid size: %d", tsChannel->name, incomingPacketSize);
-		tunerStudioError(tsChannel, "ERROR: CRC header size");
+		efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
+		tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 		return -1;
 	}
@@ -571,27 +519,18 @@ void TunerstudioThread::ThreadTask() {
 	}
 
 	// Until the end of time, process incoming messages.
-	while(true) {
-		if (tsProcessOne(channel) == 0)
+	while (true) {
+		if (tsProcessOne(channel) == 0) {
 			onDataArrived(true);
-		else
+		} else {
 			onDataArrived(false);
+		}
 	}
-}
-
-/**
- * Copy real configuration into the communications layer working copy
- */
-void syncTunerStudioCopy(void) {
-#if !defined(EFI_NO_CONFIG_WORKING_COPY)
-	memcpy(&configWorkingCopy, &persistentState.persistentConfiguration, sizeof(persistent_config_s));
-#endif /* EFI_NO_CONFIG_WORKING_COPY */
 }
 
 #endif // EFI_TUNER_STUDIO
 
 tunerstudio_counters_s tsState;
-TunerStudioOutputChannels tsOutputChannels;
 
 void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 	tunerStudioDebug(tsChannel, msg);
@@ -642,6 +581,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
 		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 	}
+	tsChannel->flush();
 }
 
 extern CommandHandler console_line_callback;
@@ -708,6 +648,7 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
 
 		tunerStudioDebug(tsChannel, "not ignoring F");
 		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
+		tsChannel->flush();
 		return true;
 	} else {
 		// This wasn't a valid command
@@ -783,9 +724,9 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 			uint16_t index = SWAP_UINT16(data16[1]);
 
 			if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
-				tsOutputChannels.debugIntField1++;
-				tsOutputChannels.debugIntField2 = subsystem;
-				tsOutputChannels.debugIntField3 = index;
+				engine->outputChannels.debugIntField1++;
+				engine->outputChannels.debugIntField2 = subsystem;
+				engine->outputChannels.debugIntField3 = index;
 			}
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
@@ -823,8 +764,8 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 
 			// set debug_mode 40
 			if (engineConfiguration->debugMode == DBG_COMPOSITE_LOG) {
-				tsOutputChannels.debugIntField1 = currentEnd;
-				tsOutputChannels.debugIntField2 = transmitted;
+				engine->outputChannels.debugIntField1 = currentEnd;
+				engine->outputChannels.debugIntField2 = transmitted;
 
 			}
 
@@ -891,7 +832,6 @@ void startTunerStudioConnectivity(void) {
 //	char (*__kaboom)[sizeof(persistent_config_s)] = 1;
 
 	memset(&tsState, 0, sizeof(tsState));
-	syncTunerStudioCopy();
 
 	addConsoleAction("tsinfo", printTsStats);
 	addConsoleAction("reset_ts", resetTs);

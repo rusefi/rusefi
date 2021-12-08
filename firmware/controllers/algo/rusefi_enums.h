@@ -115,6 +115,9 @@ typedef enum  __attribute__ ((__packed__)) {
 	 * Most HD are 45 degrees with some 60 degree twin.
 	 */
 	VVT_MAP_V_TWIN = 12,
+
+	VVT_MAP_V_TWIN_ANOTHER = 13,
+
 } vvt_mode_e;
 
 /**
@@ -516,7 +519,7 @@ typedef enum {
 	CAN_BUS_NISSAN_VQ = 9,
 	CAN_BUS_GENESIS_COUPE = 10,
 	CAN_BUS_HONDA_K = 11,
-
+	CAN_AIM_DASH = 12,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;

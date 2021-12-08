@@ -41,3 +41,7 @@
 	path = misc/hex2dfu
 	url = https://github.com/rusefi/hex2dfu
 	branch = rusefi_prod
+[submodule "java_console/luaformatter"]
+	path = java_console/luaformatter
+	url = https://github.com/rusefi/luaformatter
+	branch = prod

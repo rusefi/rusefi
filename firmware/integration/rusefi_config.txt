@@ -49,11 +49,15 @@
 !
 !
 ! bit bitName,"true value","false value";+Tooltip text
+!
+!
+!
+! units,scale,offset,min,max,digits
 
 !
 ! this is here so that rusEFI console can access it, too
 !
-#define TS_OUTPUT_SIZE 340
+#define TS_OUTPUT_SIZE 640
 
 !
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
@@ -66,7 +70,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10003
+#define FLASH_DATA_VERSION 10004
 
 #define LOG_DELIMITER "`"
 
@@ -287,12 +291,12 @@ float baseFuel;+Base mass of the per-cylinder fuel injected during cranking. Thi
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 3000, 0
 end_struct
 
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "INVALID", "SD card", "sr5", "Knock", "Wall Wetting", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 custom debug_mode_e 4 bits, U32, @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define VM_VVT_INACTIVE 0
 
-#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "vvt12", "vvt13"
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "VTwin 45", "VTwin by MAP", "vvt14", "vvt15"
 custom vvt_mode_e 1 bits, U08, @OFFSET@, [0:3], @@vvt_mode_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
@@ -446,7 +450,7 @@ bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just
 bit useTLE8888_stepper
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit usescriptTableForCanSniffingFiltering
-bit issue_294_29
+bit verboseCan,"Print all","Do not print";Print incoming and outgoing CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
 bit issue_294_31,"si_example","nada_example"
 
@@ -534,10 +538,9 @@ float vbattDividerCoeff;+This is the ratio of the resistors for the battery volt
 float fanOnTemperature;+Cooling fan turn-on temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 float fanOffTemperature;+Cooling fan turn-off temperature threshold, in Celsius;"deg C", 1, 0, 0, 150, 0
 
+float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
 
-float vehicleSpeedCoef;+This coefficient translates vehicle speed input frequency (in Hz) into vehicle speed, km/h;"coef", 1, 0, 0.01, 2000, 2
-
-custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "type 12", "type 13", "type 14", "INVALID"
+custom can_nbc_e 4 bits, U32, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "AiM", "type 13", "type 14", "INVALID"
 can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
@@ -566,7 +569,7 @@ adc_channel_e fuelLevelSensor;+This is the processor pin that your fuel level se
 
 struct trigger_config_s @brief Trigger wheel(s) configuration
 
-#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "INVALID"
+#define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "trg70", "trg71"
 
 custom trigger_type_e 4 bits, U32, @OFFSET@, [0:6], @@trigger_type_e_enum@@
 	trigger_type_e type;+https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers\nset trigger_type X
@@ -638,8 +641,11 @@ uint8_t knockRetardAggression;+Ignition timing to remove when a knock event occu
 uint8_t knockRetardReapplyRate;+After a knock event, reapply timing at this rate.;"deg/s", 0.1, 0, 0, 10, 1
 uint8_t knockRetardMaximum;+Maximum amount of knock retard.;"deg", 1, 0, 0, 30, 0
 
-uint8_t mapCamDetectionThreshold;;"", 1, 0, 0, 240, 0
-float unused616;;"", 1, 0, 0, 1, 0
+	uint8_t mapCamDetectionThreshold;;"", 1, 0, 0, 240, 0
+	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.; "ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted.  For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
+	uint8_t mapCamAveragingLength;;"", 1, 0, 0, 255, 0
+
 
 ! todo: rename to triggerSimulatorRpm
 	int triggerSimulatorFrequency;+Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)\nSee also directSelfStimulation (no wires, bypassing input hardware)\nrpm X\nTODO: rename to triggerSimulatorRpm;"Rpm", 1, 0, 0, 30000, 0
@@ -731,7 +737,7 @@ bit is_enabled_spi_1
 bit is_enabled_spi_2
 	bit is_enabled_spi_3
 	bit isSdCardEnabled;enable sd/disable sd
-	bit unused744b4
+	bit rusefiVerbose29b,"29 bit","11 bit";+Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit isEngineControlEnabled
 	bit isHip9011Enabled
 	bit isVerboseAlternator
@@ -778,7 +784,8 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 	pin_output_mode_e acFanPinMode;
 
 
-	uint8_t[6] unused11;;"volts", 0.1, 0, 0, 20, 1
+    uint8_t mapCamSkipFactor;;"", 1, 0, 0, 255, 0
+	uint8_t[5] unused11;;"volts", 0.1, 0, 0, 20, 1
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 2", "type 2"
@@ -803,7 +810,7 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	switch_input_pin_e startStopButtonPin;See also starterControlPin
 	
 	int mapMinBufferLength;+This many MAP samples are used to estimate the current MAP. This many samples are considered, and the minimum taken. Recommended value is 1 for single-throttle engines, and your number of cylinders for individual throttle bodies.;"count", 1, 0, 1, 24, 0
-	int16_t idlePidDeactivationTpsThreshold;+Below this throttle position, the engine is considered idling.;"%", 1, 0, 0, 50, 0
+	int16_t idlePidDeactivationTpsThreshold;+Below this throttle position, the engine is considered idling. If you have an electronic throttle, this checks accelerator pedal position instead of throttle position, and should be set to 1-2%.;"%", 1, 0, 0, 50, 0
 	int16_t stepperParkingExtraSteps;;"%", 1, 0, 0, 3000, 0
 	uint16_t tps1SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps1SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
@@ -886,7 +893,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit enableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;+If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise. Use of this mode is required if you have a narrowband O2 sensor.
-	bit unused976b11
+	bit mapCamLookForLowPeaks
 	bit enableSoftwareKnock
 	bit verboseVVTDecoding;enable vvt_details
 	bit invertCamVVTSignal;get invertCamVVTSignal
@@ -1061,7 +1068,7 @@ bit unused_1484_bit_31
 	uint32_t engineChartSize;;"count", 1, 0, 0, 300, 0
 
 	int16_t idlePidRpmUpperLimit;+How far above idle speed do we consider idling?\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.;"RPM", 1, 0, 0, 500, 0
-    int16_t primeInjFalloffTemperature;+This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.;"*C", 1, 0, 0, 1000, 0
+	int16_t unused1486;;"", 1, 0, 0, 1000, 0
 
 
 	float turboSpeedSensorMultiplier;;"mult", 1, 0, 0, 7000, 3
@@ -1110,8 +1117,8 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s etb;
 	brain_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
 	brain_input_pin_e turboSpeedSensorInputPin;
-	float alternator_derivativeFilterLoss;;"x", 1, 0, -1000000, 1000000, 4
-	float alternator_antiwindupFreq;;"x", 1, 0, -1000000, 1000000, 4
+	float unused1760;;"x", 1, 0, 0, 1, 1
+	float unused1764;;"x", 1, 0, 0, 1, 1
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC", 1, 0, 0, 1023, 0
 	output_pin_e starterControlPin;See also startStopButtonPin
@@ -1152,7 +1159,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	float targetVBatt;+This is the target battery voltage the alternator PID control will attempt to maintain;"Volts", 1, 0, 0, 30, 1
 	float alternatorOffAboveTps;+Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.;"%", 1, 0, 0, 200, 2
-	float startOfCrankingPrimingPulse;+Prime pulse for cold engine, duration in ms\nLinear interpolation between -40F/-40C and fallout temperature\n\nSee also isFasterEngineSpinUpEnabled\nset cranking_priming_pulse X;"ms", 1, 0, 0, 200, 1
+	float unused2032;;"", 1, 0, 0, 1, 1
 	int16_t afterCrankingIACtaperDuration;+This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.;"cycles", 1, 0, 0, 5000, 0
 	
 	int16_t iacByTpsTaper;+Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent", 1, 0, 0, 500, 0
@@ -1216,6 +1223,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	adc_channel_e wastegatePositionSensor;
 	afr_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
+
 	custom injector_pressure_type_e 1 bits, U08, @OFFSET@, [0:0], "Low", "High"
 	injector_pressure_type_e injectorPressureType;+Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
 
@@ -1257,7 +1265,7 @@ custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	vvt_mode_e[CAMS_PER_BANK iterate] vvtMode;set vvt_mode X
 	uint8_t[CAMS_PER_BANK_padding] vvtModePadding;;
 	uint8_t fan2ExtraIdle;+Additional idle % when fan #2 is active;"%", 1, 0, 0, 100, 0
-	uint8_t[1] unusedOldBiquad;;"units", 1, 0, -20, 100, 0
+	uint8_t autoscale primingDelay;+Delay to allow fuel pressure to build before firing the priming pulse.;"sec", 0.01, 0, 0, 1, 2
 	adc_channel_e[AUX_ANALOG_INPUT_COUNT iterate] auxAnalogInputs;
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] trailingCoilPins;
@@ -1327,7 +1335,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 
 	pid_s[CAMS_PER_BANK iterate] auxPid;
 	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
-	uint8_t[8] unused1366;;"units", 1, 0, -20, 100, 0
+	int8_t[8] primeBins;;"C", 1, 0, -40, 120, 0
 
 	linear_sensor_s oilPressure;
 
@@ -1430,7 +1438,7 @@ tChargeMode_e tChargeMode;
 
 	uint8_t[MAX_CYLINDER_COUNT iterate] cylinderBankSelect;+Select which fuel correction bank this cylinder belongs to. Group cylinders that share the same O2 sensor;"", 1, 1, 1, 2, 0
 
-	int[2] unused4028;;"units", 1, 0, -20, 100, 0
+	uint8_t[8] autoscale primeValues;;"mg", 5, 0, 0, 1250, 0
 
 	uint8_t triggerCompCenterVolt;+Trigger comparator center point voltage;"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
 	uint8_t triggerCompHystMin;+Trigger comparator hysteresis voltage (Min);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
@@ -1540,7 +1548,7 @@ float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for
 float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", 1, 0, 0, 18000, 2
 float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 2
 
-#define LUA_SCRIPT_SIZE 3600
+#define LUA_SCRIPT_SIZE 8000
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
 lua_script_t luaScript;
 
@@ -1982,3 +1990,6 @@ end_struct
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
+
+#define CAN_ECU_SERIAL_RX_ID 0x100
+#define CAN_ECU_SERIAL_TX_ID 0x102

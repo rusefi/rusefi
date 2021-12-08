@@ -336,6 +336,9 @@ void startSimplePwmExt(SimplePwm *state, const char *msg,
 	startSimplePwm(state, msg, executor, output, frequency, dutyCycle);
 }
 
+/**
+ * @param dutyCycle value between 0 and 1
+ */
 void startSimplePwmHard(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,

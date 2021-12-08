@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class TcpConnector {
     public final static int DEFAULT_PORT = 29001;
-    private static final String LOCALHOST = "localhost";
+    public static final String LOCALHOST = "localhost";
 
     public static boolean isTcpPort(String port) {
         try {

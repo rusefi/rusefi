@@ -3,6 +3,7 @@ package com.rusefi.autodetect;
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.LinkManager;
+import com.rusefi.io.serial.BaudRateHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
+import static com.rusefi.io.can.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
+
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  */
@@ -24,16 +27,21 @@ public class PortDetector {
     private static final NamedThreadFactory AUTO_DETECT_PORT = new NamedThreadFactory("AutoDetectPort");
     public static final String AUTO = "auto";
 
+    public enum DetectorMode {
+        DETECT_TS,
+        DETECT_ELM327,
+    }
+
     /**
      * Connect to all serial ports and find out which one respond first
      * @param callback
      * @return port name on which rusEFI was detected or null if none
      */
     @NotNull
-    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
+    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback, PortDetector.DetectorMode mode) {
         String rusEfiAddress = System.getProperty("rusefi.address");
         if (rusEfiAddress != null) {
-            return getSignatureFromPorts(callback, new String[] {rusEfiAddress});
+            return getSignatureFromPorts(mode, callback, new String[] {rusEfiAddress});
         }
         String[] serialPorts = getPortNames();
         if (serialPorts.length == 0) {
@@ -41,11 +49,11 @@ public class PortDetector {
             return new SerialAutoChecker.AutoDetectResult(null, null);
         }
         log.info("Trying " + Arrays.toString(serialPorts));
-        return getSignatureFromPorts(callback, serialPorts);
+        return getSignatureFromPorts(mode, callback, serialPorts);
     }
 
     @NotNull
-    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(Function<SerialAutoChecker.CallbackContext, Void> callback, String[] serialPorts) {
+    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(DetectorMode mode, Function<SerialAutoChecker.CallbackContext, Void> callback, String[] serialPorts) {
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<SerialAutoChecker.AutoDetectResult> result = new AtomicReference<>();
@@ -53,7 +61,10 @@ public class PortDetector {
             Thread thread = AUTO_DETECT_PORT.newThread(new Runnable() {
                 @Override
                 public void run() {
-                    new SerialAutoChecker(serialPort, portFound).openAndCheckResponse(result, callback);
+                    if (mode == DetectorMode.DETECT_ELM327) {
+                        BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
+                    }
+                    new SerialAutoChecker(mode, serialPort, portFound).openAndCheckResponse(mode, result, callback);
                 }
 
                 @Override
@@ -86,6 +97,10 @@ public class PortDetector {
         log.debug("Found " + autoDetectResult + " now stopping threads");
 //        FileLog.MAIN.logLine("Returning " + result.get());
         return autoDetectResult;
+    }
+
+    public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
+        return autoDetectSerial(callback, PortDetector.DetectorMode.DETECT_TS);
     }
 
     private static String[] getPortNames() {

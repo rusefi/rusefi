@@ -3,7 +3,6 @@ package com.rusefi.io.serial;
 import com.devexperts.logging.Logging;
 import com.rusefi.Callable;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
@@ -20,6 +19,7 @@ public class StreamConnector implements LinkConnector {
 
     private final PortHolder portHolder;
     private final LinkManager linkManager;
+    private BinaryProtocol.Arguments arguments;
 
     public StreamConnector(LinkManager linkManager, Callable<IoStream> ioStreamCallable) {
         this.linkManager = linkManager;
@@ -28,13 +28,14 @@ public class StreamConnector implements LinkConnector {
     }
 
     @Override
-    public void connectAndReadConfiguration(ConnectionStateListener listener) {
+    public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
+        this.arguments = arguments;
         log.info("StreamConnector: connecting");
         portHolder.listener = listener;
         log.info("scheduleOpening");
         linkManager.execute(() -> {
             log.info("scheduleOpening>openPort");
-            portHolder.connectAndReadConfiguration();
+            portHolder.connectAndReadConfiguration(arguments);
         });
     }
 
@@ -53,7 +54,7 @@ public class StreamConnector implements LinkConnector {
         linkManager.execute(() -> {
             linkManager.messageListener.postMessage(StreamConnector.this.getClass(), "Restarting serial IO");
             portHolder.close();
-            portHolder.connectAndReadConfiguration();
+            portHolder.connectAndReadConfiguration(arguments);
         });
     }
 

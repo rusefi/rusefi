@@ -45,6 +45,7 @@ import com.rusefi.Callable;
 import com.rusefi.Timeouts;
 import com.rusefi.app.serial.AndroidSerial;
 import com.rusefi.auth.AuthTokenUtil;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.dfu.DfuConnection;
 import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.DfuLogic;
@@ -273,7 +274,8 @@ public class rusEFI extends Activity {
                     return serial;
                 }
             }));
-            linkManager.getConnector().connectAndReadConfiguration(new ConnectionStateListener() {
+            linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true),
+                    new ConnectionStateListener() {
                 @Override
                 public void onConnectionEstablished() {
                     mResultView.post(() -> mResultView.append(new Date() + " On connection established\n"));

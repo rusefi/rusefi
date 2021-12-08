@@ -71,7 +71,7 @@ void attachMsdSdCard(BaseBlockDevice* blkdev) {
 
 #if EFI_TUNER_STUDIO
 	// SD MSD attached, enable indicator in TS
-	tsOutputChannels.sd_msd = true;
+	engine->outputChannels.sd_msd = true;
 #endif
 }
 

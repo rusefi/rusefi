@@ -21,7 +21,6 @@ public class BitParsingTest {
                 ReaderState.BIT + " fieldName\n" +
                 ReaderState.BIT + " fieldName2,\"si\",\"nada\";comment\n" +
                 "end_struct\n";
-        BufferedReader reader = new BufferedReader(new StringReader(inputString));
 
         StringWriter sw = new StringWriter();
 
@@ -31,7 +30,7 @@ public class BitParsingTest {
                 writeContent(fieldsSection, new TsFileContent("", ""), createOutput(sw));
             }
         };
-        state.readBufferedReader(reader, Collections.singletonList(javaFieldsConsumer));
+        state.readBufferedReader(inputString, Collections.singletonList(javaFieldsConsumer));
 
         System.out.printf("start[" + sw + "]end");
 

@@ -245,6 +245,9 @@ float TriggerStateWithRunningStatistics::calculateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 	uint32_t current_index, efitick_t nowNt) {
 
+	/**
+	 * todo: Martin has this fatal error while feeding external RPM and changing trigger mode from 4 stoke cam to 4 stroke symmetrical
+	 */
 	assertIsInBoundsWithResult((int)current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 
 	// Record the time of this event so we can calculate RPM from it later
@@ -543,13 +546,6 @@ void TriggerState::decodeTriggerEvent(
 
 		if (triggerShape.isSynchronizationNeeded) {
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
-
-			if (engineConfiguration->debugMode == DBG_TRIGGER_COUNTERS) {
-#if EFI_TUNER_STUDIO
-				tsOutputChannels.debugFloatField6 = currentGap;
-				tsOutputChannels.debugIntField3 = currentCycle.current_index;
-#endif /* EFI_TUNER_STUDIO */
-			}
 
 			bool isSync = true;
 			for (int i = 0; i < triggerShape.gapTrackingLength; i++) {

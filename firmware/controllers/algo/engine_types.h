@@ -89,7 +89,7 @@ typedef enum {
 	// see TriggerWaveform::bothFrontsRequired
 	TEST_ISSUE_898 = 27,
 
-	UNUSED28 = 28,
+	TEST_CRANK_ENGINE = 28,
 
 	SACHS = 29,
 
@@ -250,7 +250,7 @@ typedef enum {
  * https://rusefi.com//wiki/index.php?title=Manual:Debug_fields
  */
 typedef enum {
-	DBG_ALTERNATOR_PID = 0,
+	DBG_0 = 0,
 	DBG_TPS_ACCEL = 1,
 	DBG_GPPWM = 2,
 	DBG_IDLE_CONTROL = 3,
@@ -258,18 +258,15 @@ typedef enum {
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_SOFT_SPARK_CUT = 6,
 	DBG_VVT_1_PID = 7,
-	/**
-	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
-	 */
-	DBG_VVT = 8,
-	DBG_CRANKING_DETAILS = 9,
-	DBG_IGNITION_TIMING = 10,
-	DBG_FUEL_PID_CORRECTION = 11,
+	DBG_8 = 8,
+	DBG_9 = 9,
+	DBG_10 = 10,
+	DBG_11 = 11,
 	DBG_UNUSED12 = 12,
 	DBG_SD_CARD = 13,
 	DBG_SR5_PROTOCOL = 14,
 	DBG_KNOCK = 15,
-	DBG_WALL_WETTING = 16,
+	DBG_16 = 16,
 	/**
 	 * See also DBG_ELECTRONIC_THROTTLE_EXTRA
 	 */
@@ -279,7 +276,7 @@ typedef enum {
 	 * See tunerstudio.cpp
 	 */
 	DBG_BENCH_TEST = 19,
-	DBG_AUX_VALVES = 20,
+	DBG_20 = 20,
 	/**
 	 * ADC
 	 * See also DBG_ANALOG_INPUTS2
@@ -290,10 +287,10 @@ typedef enum {
 	UNUSED23 = 23,
 	DBG_STATUS = 24,
 	DBG_CJ125 = 25,
-	DBG_CAN = 26,
+	DBG_26 = 26,
 	DBG_MAP = 27,
 	DBG_METRICS = 28,
-	DBG_ELECTRONIC_THROTTLE_EXTRA = 29,
+	DBG_29 = 29,
 	DBG_ION = 30,
 	DBG_TLE8888 = 31,
 	/**
@@ -302,15 +299,15 @@ typedef enum {
 	DBG_ANALOG_INPUTS2 = 32,
 	DBG_DWELL_METRIC = 33,
 	DBG_34 = 34,
-	DBG_ETB_LOGIC = 35,
+	DBG_35 = 35,
 	DBG_BOOST = 36,
-	DBG_START_STOP = 37,
+	DBG_37 = 37,
 	DBG_LAUNCH = 38,
 	DBG_ETB_AUTOTUNE = 39,
 	DBG_COMPOSITE_LOG = 40,
 	DBG_UNUSED41 = 41,
 	DBG_UNUSED_42 = 42,
-	DBG_INJECTOR_COMPENSATION = 43,
+	DBG_43 = 43,
 	DBG_DYNO_VIEW = 44,
 	DBG_LOGIC_ANALYZER = 45,
 	DBG_RUSEFI_WIDEBAND = 46,
@@ -319,8 +316,6 @@ typedef enum {
 	DBG_VVT_2_PID = 49,
 	DBG_VVT_3_PID = 50,
 	DBG_VVT_4_PID = 51,
-	MODE_52 = 52,
-	MODE_53 = 53,
 
 	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
@@ -522,14 +517,16 @@ typedef enum {
 
 	TT_NISSAN_MR18_CRANK = 68,
 
+	TT_TOOTHED_WHEEL_32_2 = 69,
+
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	// todo: before increasing from 69 to 70 we shall use the half dozen of unused IDs
-	TT_UNUSED = 69, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 70, // this is used if we want to iterate over all trigger types
 
 	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,

@@ -388,7 +388,7 @@ void findTriggerPosition(TriggerWaveform *triggerShape,
 	// convert engine cycle angle into trigger cycle angle
 	angle += triggerShape->tdcPosition + engineConfiguration->globalTriggerAngleOffset;
 	efiAssertVoid(CUSTOM_ERR_6577, !cisnan(angle), "findAngle#2");
-	fixAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
+	wrapAngle2(angle, "addFuel#2", CUSTOM_ERR_6555, getEngineCycle(triggerShape->getOperationMode()));
 
 	int triggerEventIndex = triggerShape->findAngleIndex(details, angle);
 	angle_t triggerEventAngle = details->eventAngles[triggerEventIndex];
@@ -596,6 +596,13 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 
 	case TT_VVT_JZ:
 		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
+		break;
+
+	case TT_TOOTHED_WHEEL_32_2:
+		setToothedWheelConfiguration(this, 32, 2, ambiguousOperationMode);
+		// todo: add this second/third into 'setToothedWheelConfiguration' as long as we have enough tooth?
+		setSecondTriggerSynchronizationGap(1); // this gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
+		setThirdTriggerSynchronizationGap(1);
 		break;
 
 	case TT_TOOTHED_WHEEL_60_2:

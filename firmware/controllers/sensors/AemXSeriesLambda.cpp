@@ -31,10 +31,10 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 		float sensorEsr = frame.data8[3] * 4;
 		float nernstVoltage = frame.data8[4] / 200.0f;
 
-		tsOutputChannels.debugFloatField1 = pumpDuty;
-		tsOutputChannels.debugFloatField2 = sensorEsr;
-		tsOutputChannels.debugFloatField3 = nernstVoltage;
-		tsOutputChannels.debugFloatField4 = lambdaFloat;
+		engine->outputChannels.debugFloatField1 = pumpDuty;
+		engine->outputChannels.debugFloatField2 = sensorEsr;
+		engine->outputChannels.debugFloatField3 = nernstVoltage;
+		engine->outputChannels.debugFloatField4 = lambdaFloat;
 	}
 #endif
 

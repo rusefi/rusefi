@@ -23,26 +23,76 @@ static int getZigZag(int index) {
 }
 
 TEST(trigger, map_cam) {
+	EngineTestHelper eth(TEST_ENGINE);
 
+	engineConfiguration->mapCamAveragingLength = 8;
 	MapState state;
 
 	int i = 0;
-	for (;i<404;i++) {
+	for (;i<403;i++) {
 		state.add(getZigZag(i));
 
-		if (state.mapBuffer.getCount() > MAP_CAM_BUFFER) {
-			ASSERT_FALSE(state.isPeak()) << "At " << i;
+		if (state.mapBuffer.getCount() > engineConfiguration->mapCamAveragingLength) {
+			ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+			ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
 		}
 	}
 
 	state.add(getZigZag(i));
-	ASSERT_TRUE(state.isPeak()) << "At " << i;
+	ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+	ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
+	i++;
 
-	for (;i<604;i++) {
+
+	state.add(getZigZag(i));
+	ASSERT_TRUE(state.isPeak(false)) << "high At " << i;
+	ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
+
+	for (;i<504;i++) {
 		state.add(getZigZag(i));
-		ASSERT_FALSE(state.isPeak()) << "At " << i;
+		ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+		ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
 	}
 
 	state.add(getZigZag(i));
-	ASSERT_TRUE(state.isPeak()) << "At " << i;
+	ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+	ASSERT_TRUE(state.isPeak(true)) << "low At " << i;
+	i++;
+
+	for (;i<604;i++) {
+		state.add(getZigZag(i));
+		ASSERT_FALSE(state.isPeak(false)) << "high At " << i;
+		ASSERT_FALSE(state.isPeak(true)) << "low At " << i;
+	}
+
+	state.add(getZigZag(i));
+	ASSERT_TRUE(state.isPeak(false)) << "high At " << i;
+	ASSERT_TRUE(state.isPeak(false)) << "low At " << i;
+}
+
+TEST(trigger, map_cam_by_magic_point) {
+
+	EngineTestHelper eth(TEST_CRANK_ENGINE);
+
+	engineConfiguration->camInputs[0] = GPIOA_0;
+	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
+
+	Sensor::setMockValue(SensorType::Map, 100);
+
+	engineConfiguration->mapCamDetectionAnglePosition = 90;
+
+	eth.smartFireTriggerEvents2(/*count*/10, /*delayMs*/200);
+	ASSERT_EQ( 75,  GET_RPM()) << "RPM";
+
+	ASSERT_EQ(1, engine->outputChannels.TEMPLOG_map_peak);
+	ASSERT_EQ(0, engine->outputChannels.vvtSyncCounter);
+
+
+	Sensor::setMockValue(SensorType::Map, 120);
+	eth.smartFireTriggerEvents2(/*count*/4, /*delayMs*/200);
+
+	ASSERT_EQ(2, engine->outputChannels.TEMPLOG_map_peak);
+	ASSERT_EQ(1, engine->outputChannels.vvtSyncCounter);
+
+
 }

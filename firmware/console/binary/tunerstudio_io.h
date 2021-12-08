@@ -50,7 +50,7 @@ public:
 	// Base functions that use the above virtual implementation
 	size_t read(uint8_t* buffer, size_t size);
 
-#ifdef TS_CAN_DEVICE
+#ifdef EFI_CAN_SERIAL
 	virtual	// CAN device needs this function to be virtual for small-packet optimization
 #endif
 	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
@@ -122,5 +122,7 @@ protected:
 
 void startSerialChannels();
 SerialTsChannelBase* getBluetoothChannel();
+
+void startCanConsole();
 
 void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode);

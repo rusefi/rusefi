@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Nov 24 22:34:46 EST 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Dec 07 20:56:44 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -42,54 +42,60 @@ case BENCH_STARTER_ENABLE_RELAY:
 }
 const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
+case DBG_0:
+  return "DBG_0";
+case DBG_10:
+  return "DBG_10";
+case DBG_11:
+  return "DBG_11";
+case DBG_16:
+  return "DBG_16";
+case DBG_20:
+  return "DBG_20";
+case DBG_26:
+  return "DBG_26";
+case DBG_29:
+  return "DBG_29";
 case DBG_34:
   return "DBG_34";
-case DBG_ALTERNATOR_PID:
-  return "DBG_ALTERNATOR_PID";
+case DBG_35:
+  return "DBG_35";
+case DBG_37:
+  return "DBG_37";
+case DBG_43:
+  return "DBG_43";
+case DBG_8:
+  return "DBG_8";
+case DBG_9:
+  return "DBG_9";
 case DBG_ANALOG_INPUTS:
   return "DBG_ANALOG_INPUTS";
 case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
-case DBG_AUX_VALVES:
-  return "DBG_AUX_VALVES";
 case DBG_BENCH_TEST:
   return "DBG_BENCH_TEST";
 case DBG_BOOST:
   return "DBG_BOOST";
-case DBG_CAN:
-  return "DBG_CAN";
 case DBG_CJ125:
   return "DBG_CJ125";
 case DBG_COMPOSITE_LOG:
   return "DBG_COMPOSITE_LOG";
-case DBG_CRANKING_DETAILS:
-  return "DBG_CRANKING_DETAILS";
 case DBG_DWELL_METRIC:
   return "DBG_DWELL_METRIC";
 case DBG_DYNO_VIEW:
   return "DBG_DYNO_VIEW";
-case DBG_ELECTRONIC_THROTTLE_EXTRA:
-  return "DBG_ELECTRONIC_THROTTLE_EXTRA";
 case DBG_ELECTRONIC_THROTTLE_PID:
   return "DBG_ELECTRONIC_THROTTLE_PID";
 case DBG_EL_ACCEL:
   return "DBG_EL_ACCEL";
 case DBG_ETB_AUTOTUNE:
   return "DBG_ETB_AUTOTUNE";
-case DBG_ETB_LOGIC:
-  return "DBG_ETB_LOGIC";
 case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
-case DBG_FUEL_PID_CORRECTION:
-  return "DBG_FUEL_PID_CORRECTION";
 case DBG_GPPWM:
   return "DBG_GPPWM";
 case DBG_IDLE_CONTROL:
   return "DBG_IDLE_CONTROL";
-case DBG_IGNITION_TIMING:
-  return "DBG_IGNITION_TIMING";
-case DBG_INJECTOR_COMPENSATION:
-  return "DBG_INJECTOR_COMPENSATION";
 case DBG_INSTANT_RPM:
   return "DBG_INSTANT_RPM";
 case DBG_ION:
@@ -114,8 +120,6 @@ case DBG_SOFT_SPARK_CUT:
   return "DBG_SOFT_SPARK_CUT";
 case DBG_SR5_PROTOCOL:
   return "DBG_SR5_PROTOCOL";
-case DBG_START_STOP:
-  return "DBG_START_STOP";
 case DBG_STATUS:
   return "DBG_STATUS";
 case DBG_TCU:
@@ -132,8 +136,6 @@ case DBG_UNUSED41:
   return "DBG_UNUSED41";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
-case DBG_VVT:
-  return "DBG_VVT";
 case DBG_VVT_1_PID:
   return "DBG_VVT_1_PID";
 case DBG_VVT_2_PID:
@@ -142,14 +144,8 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
-case DBG_WALL_WETTING:
-  return "DBG_WALL_WETTING";
 case Force_4_bytes_size_debug_mode_e:
   return "Force_4_bytes_size_debug_mode_e";
-case MODE_52:
-  return "MODE_52";
-case MODE_53:
-  return "MODE_53";
 case UNUSED23:
   return "UNUSED23";
   }
@@ -329,6 +325,8 @@ case TEST_110:
   return "TEST_110";
 case TEST_33816:
   return "TEST_33816";
+case TEST_CRANK_ENGINE:
+  return "TEST_CRANK_ENGINE";
 case TEST_ENGINE:
   return "TEST_ENGINE";
 case TEST_ENGINE_VVT:
@@ -355,8 +353,6 @@ case UNUSED101:
   return "UNUSED101";
 case UNUSED18:
   return "UNUSED18";
-case UNUSED28:
-  return "UNUSED28";
 case UNUSED30:
   return "UNUSED30";
 case UNUSED39:
@@ -506,6 +502,8 @@ case TT_SUZUKI_G13B:
   return "TT_SUZUKI_G13B";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
+case TT_TOOTHED_WHEEL_32_2:
+  return "TT_TOOTHED_WHEEL_32_2";
 case TT_TOOTHED_WHEEL_36_1:
   return "TT_TOOTHED_WHEEL_36_1";
 case TT_TOOTHED_WHEEL_36_2:

@@ -17,7 +17,9 @@ TEST(misc, structSize) {
 	ASSERT_EQ(1, sizeof(pin_output_mode_e)) << "small enum size";
 	ASSERT_EQ(1, sizeof(brain_pin_e)) << "small enum size";
 	ASSERT_EQ(16, sizeof(air_pressure_sensor_config_s));
+/* no longer the case at least for Proteus
 	ASSERT_EQ(20000, sizeof(persistent_config_s));
+*/
 }
 
 TEST(misc, testIgnitionPlanning) {

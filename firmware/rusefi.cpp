@@ -3,7 +3,7 @@
  * @brief Initialization code and main status reporting look
  *
  * @date Dec 25, 2013
- * @author Andrey Belomutskiy, (c) 2012-2020
+ * @author Andrey Belomutskiy, (c) 2012-2021
  */
 
 /**
@@ -176,6 +176,11 @@ void runRusEfi() {
 	addConsoleAction("dual_bank", sys_dual_bank);
 #endif
 
+#if defined(STM32F4) || defined(STM32F7)
+	addConsoleAction("stm32_stop", stm32_stop);
+	addConsoleAction("stm32_standby", stm32_standby);
+#endif
+
 	addConsoleAction(CMD_REBOOT, scheduleReboot);
 	addConsoleAction(CMD_REBOOT_DFU, jump_to_bootloader);
 
@@ -242,6 +247,11 @@ void runRusEfiWithConfig() {
 #if EFI_FILE_LOGGING
 	initMmcCard();
 #endif /* EFI_FILE_LOGGING */
+
+#if EFI_CAN_SERIAL
+	// needs to be called after initCan() inside initHardware()
+	startCanConsole();
+#endif /* EFI_CAN_SERIAL */
 
 #if HW_CHECK_ALWAYS_STIMULATE
 	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
@@ -316,5 +326,3 @@ void chDbgStackOverflowPanic(thread_t *otp) {
 #endif
 	chDbgPanic3(panicMessage, __FILE__, __LINE__);
 }
-
-

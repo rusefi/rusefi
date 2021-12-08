@@ -24,6 +24,7 @@ for BOARD in \
    "hellen/hellen154hyundai hellen154hyundai" \
    "hellen/hellen88bmw hellen88bmw" \
    "hellen/hellen72 hellen72" \
+   "hellen/hellen81 hellen81" \
    "hellen/hellen-nb1 hellen-nb1" \
    "hellen/hellen64_miataNA6_94 hellenNA6" \
    "microrusefi mre_f7" \

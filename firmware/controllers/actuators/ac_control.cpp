@@ -8,7 +8,7 @@ static Deadband<200> maxRpmDeadband;
 static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
 
-bool AcState::getAcState() {
+bool AcController::getAcState() {
 	latest_usage_ac_control = getTimeNowSeconds();
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
@@ -51,15 +51,19 @@ bool AcState::getAcState() {
 	return acButtonState;
 }
 
-bool AcState::updateAc() {
+void AcController::onSlowCallback() {
 	bool isEnabled = getAcState();
+
+	m_acEnabled = isEnabled;
 
 	enginePins.acRelay.setValue(isEnabled);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.acSwitchState = engine->acSwitchState;
-	tsOutputChannels.acState = isEnabled;
+	engine->outputChannels.acSwitchState = engine->acSwitchState;
+	engine->outputChannels.acState = isEnabled;
 #endif // EFI_TUNER_STUDIO
+}
 
-	return isEnabled;
+bool AcController::isAcEnabled() const {
+	return m_acEnabled;
 }

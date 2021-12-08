@@ -62,6 +62,10 @@ void chDbgAssert(int c, char *msg, void *arg);
 
 #define CCM_OPTIONAL
 
+#define chSysLock() {}
+#define chSysUnlock() {}
+#define osalThreadDequeueNextI(x, y) {}
+
 #ifdef __cplusplus
 namespace chibios_rt {
 	// Noop for unit tests - this does real lock in FW/sim
