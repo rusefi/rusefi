@@ -40,7 +40,7 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 	// Turn on the ignition switch!
 	engine->module<PrimeController>()->onIgnitionStateChanged(true);
 
-	ASSERT_EQ(2, engine->executor.size()) << "prime fuel";
+	ASSERT_EQ(1, engine->executor.size()) << "prime fuel";
 }
 
 TEST(engine, primingPulseDuration) {

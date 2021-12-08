@@ -112,15 +112,6 @@ class PrimeController : public EngineModule {
 public:
 	void onIgnitionStateChanged(bool ignitionOn) override;
 
-private:
-	scheduling_s m_start;
-	scheduling_s m_end;
-};
-
-class PrimeController : public EngineModule {
-public:
-	void onIgnitionStateChanged(bool ignitionOn) override;
-
 	floatms_t getPrimeDuration() const;
 
 	void onPrimeStart();
