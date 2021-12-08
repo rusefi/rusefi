@@ -141,8 +141,8 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 		memcpy(buf, srcBuf, numBytesToCopy);
 	}
 	srcBuf += numBytesToCopy;
+	waitingForNumBytes -= numBytesAvailable;
 	numBytesAvailable -= numBytesToCopy;
-	waitingForNumBytes -= numBytesToCopy;
 	// if there are some more bytes left, we save them for the next time
 	for (int i = 0; i < numBytesAvailable; i++) {
 		rxFifoBuf.put(srcBuf[i]);
