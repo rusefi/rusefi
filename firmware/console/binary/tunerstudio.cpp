@@ -91,7 +91,7 @@
 
 static void printErrorCounters() {
 	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			sizeof(engine->outputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
@@ -529,7 +529,6 @@ void TunerstudioThread::ThreadTask() {
 #endif // EFI_TUNER_STUDIO
 
 tunerstudio_counters_s tsState;
-TunerStudioOutputChannels tsOutputChannels;
 
 void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 	tunerStudioDebug(tsChannel, msg);
@@ -723,9 +722,9 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 			uint16_t index = SWAP_UINT16(data16[1]);
 
 			if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
-				tsOutputChannels.debugIntField1++;
-				tsOutputChannels.debugIntField2 = subsystem;
-				tsOutputChannels.debugIntField3 = index;
+				engine->outputChannels.debugIntField1++;
+				engine->outputChannels.debugIntField2 = subsystem;
+				engine->outputChannels.debugIntField3 = index;
 			}
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
@@ -763,8 +762,8 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 
 			// set debug_mode 40
 			if (engineConfiguration->debugMode == DBG_COMPOSITE_LOG) {
-				tsOutputChannels.debugIntField1 = currentEnd;
-				tsOutputChannels.debugIntField2 = transmitted;
+				engine->outputChannels.debugIntField1 = currentEnd;
+				engine->outputChannels.debugIntField2 = transmitted;
 
 			}
 

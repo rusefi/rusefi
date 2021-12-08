@@ -92,10 +92,10 @@ angle_t getAdvanceCorrections(int rpm) {
 	float pidTimingCorrection = engine->module<IdleController>().unmock().getIdleTimingAdjustment(rpm);
 
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.timingIatCorrection = iatCorrection;
-		tsOutputChannels.timingCltCorrection = engine->engineState.cltTimingCorrection;
-		tsOutputChannels.timingPidCorrection = pidTimingCorrection;
-		tsOutputChannels.multiSparkCounter = engine->engineState.multispark.count;
+		engine->outputChannels.timingIatCorrection = iatCorrection;
+		engine->outputChannels.timingCltCorrection = engine->engineState.cltTimingCorrection;
+		engine->outputChannels.timingPidCorrection = pidTimingCorrection;
+		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 
 	return iatCorrection

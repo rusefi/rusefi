@@ -299,7 +299,7 @@ void CJ125::calibrate() {
 
 #if EFI_TUNER_STUDIO
 		if (engineConfiguration->debugMode == DBG_CJ125) {
-			cjPostState(&tsOutputChannels);
+			cjPostState(&engine->outputChannels);
 		}
 #endif /* EFI_TUNER_STUDIO */
 

@@ -116,6 +116,8 @@ public:
 	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
 
+	TunerStudioOutputChannels outputChannels;
+
 	/**
 	 * Sometimes for instance during shutdown we need to completely supress CAN TX
 	 */

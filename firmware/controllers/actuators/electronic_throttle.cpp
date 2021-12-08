@@ -266,7 +266,7 @@ expected<percent_t> EtbController::getSetpointIdleValve() const {
 	// VW ETB idle mode uses an ETB only for idle (a mini-ETB sets the lower stop, and a normal cable
 	// can pull the throttle up off the stop.), so we directly control the throttle with the idle position.
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.etbTarget = m_idlePosition;
+	engine->outputChannels.etbTarget = m_idlePosition;
 #endif // EFI_TUNER_STUDIO
 	return clampF(0, m_idlePosition, 100);
 }
@@ -327,7 +327,7 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 
 #if EFI_TUNER_STUDIO
 	if (m_function == ETB_Throttle1) {
-		tsOutputChannels.etbTarget = targetPosition;
+		engine->outputChannels.etbTarget = targetPosition;
 	}
 #endif // EFI_TUNER_STUDIO
 
@@ -416,33 +416,33 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		m_autotuneCounter++;
 
 		// Multiplex 3 signals on to the {mode, value} format
-		tsOutputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>(m_autotuneCurrentParam + 3);
+		engine->outputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>(m_autotuneCurrentParam + 3);
 
 		switch (m_autotuneCurrentParam) {
 		case 0:
-			tsOutputChannels.calibrationValue = kp;
+			engine->outputChannels.calibrationValue = kp;
 			break;
 		case 1:
-			tsOutputChannels.calibrationValue = ki;
+			engine->outputChannels.calibrationValue = ki;
 			break;
 		case 2:
-			tsOutputChannels.calibrationValue = kd;
+			engine->outputChannels.calibrationValue = kd;
 			break;
 		}
 
 		// Also output to debug channels if configured
 		if (engineConfiguration->debugMode == DBG_ETB_AUTOTUNE) {
 			// a - amplitude of output (TPS %)
-			tsOutputChannels.debugFloatField1 = m_a;
+			engine->outputChannels.debugFloatField1 = m_a;
 			// b - amplitude of input (Duty cycle %)
-			tsOutputChannels.debugFloatField2 = b;
+			engine->outputChannels.debugFloatField2 = b;
 			// Tu - oscillation period (seconds)
-			tsOutputChannels.debugFloatField3 = m_tu;
+			engine->outputChannels.debugFloatField3 = m_tu;
 
-			tsOutputChannels.debugFloatField4 = ku;
-			tsOutputChannels.debugFloatField5 = kp;
-			tsOutputChannels.debugFloatField6 = ki;
-			tsOutputChannels.debugFloatField7 = kd;
+			engine->outputChannels.debugFloatField4 = ku;
+			engine->outputChannels.debugFloatField5 = kp;
+			engine->outputChannels.debugFloatField6 = ki;
+			engine->outputChannels.debugFloatField7 = kd;
 		}
 #endif
 	}
@@ -472,7 +472,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	if (m_function == ETB_Throttle1) {
 #if EFI_TUNER_STUDIO
 		// Error is positive if the throttle needs to open further
-		tsOutputChannels.etb1Error = target - observation;
+		engine->outputChannels.etb1Error = target - observation;
 #endif /* EFI_TUNER_STUDIO */
 	}
 
@@ -485,7 +485,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 
 #if EFI_TUNER_STUDIO
 		if (m_function == ETB_Throttle1) {
-			tsOutputChannels.etbIntegralError = errorIntegral;
+			engine->outputChannels.etbIntegralError = errorIntegral;
 		}
 #endif // EFI_TUNER_STUDIO
 
@@ -504,7 +504,7 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 #if EFI_TUNER_STUDIO
 	// Only report first-throttle stats
 	if (m_function == ETB_Throttle1) {
-		tsOutputChannels.etb1DutyCycle = outputValue.value_or(0);
+		engine->outputChannels.etb1DutyCycle = outputValue.value_or(0);
 	}
 #endif
 
@@ -531,9 +531,9 @@ void EtbController::update() {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {
-		m_pid.postState(&tsOutputChannels.etbStatus);
-		tsOutputChannels.etbFeedForward = engine->engineState.etbFeedForward;
-		tsOutputChannels.etbStatus.output = directPwmValue;
+		m_pid.postState(&engine->outputChannels.etbStatus);
+		engine->outputChannels.etbFeedForward = engine->engineState.etbFeedForward;
+		engine->outputChannels.etbStatus.output = directPwmValue;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -551,7 +551,7 @@ void EtbController::update() {
 		}
 	}
 
-	tsOutputChannels.etbCurrentTarget = engine->engineState.targetFromTable;
+	engine->outputChannels.etbCurrentTarget = engine->engineState.targetFromTable;
 
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
@@ -628,21 +628,21 @@ struct EtbImpl final : public EtbController {
 		}
 
 		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
-		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
-		tsOutputChannels.calibrationValue = primaryMax * TPS_TS_CONVERSION;
+		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
+		engine->outputChannels.calibrationValue = primaryMax * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
-		tsOutputChannels.calibrationValue = primaryMin * TPS_TS_CONVERSION;
-		chThdSleepMilliseconds(500);
-
-		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
-		tsOutputChannels.calibrationValue = secondaryMax * TPS_TS_CONVERSION;
-		chThdSleepMilliseconds(500);
-		tsOutputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
-		tsOutputChannels.calibrationValue = secondaryMin * TPS_TS_CONVERSION;
+		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
+		engine->outputChannels.calibrationValue = primaryMin * TPS_TS_CONVERSION;
 		chThdSleepMilliseconds(500);
 
-		tsOutputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
+		engine->outputChannels.calibrationValue = secondaryMax * TPS_TS_CONVERSION;
+		chThdSleepMilliseconds(500);
+		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
+		engine->outputChannels.calibrationValue = secondaryMin * TPS_TS_CONVERSION;
+		chThdSleepMilliseconds(500);
+
+		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
 
 		m_isAutocal = false;
 		return;

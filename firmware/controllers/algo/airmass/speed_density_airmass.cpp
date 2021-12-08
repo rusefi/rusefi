@@ -47,7 +47,7 @@ float SpeedDensityAirmass::getMap(int rpm) const {
 		}
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.fallbackMap = fallbackMap;
+	engine->outputChannels.fallbackMap = fallbackMap;
 #endif // EFI_TUNER_STUDIO
 
 		return fallbackMap;

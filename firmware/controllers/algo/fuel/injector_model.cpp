@@ -65,8 +65,8 @@ float InjectorModel::getInjectorFlowRatio() const {
 	float flowRatio = sqrtf(pressureRatio);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.injectorFlowPressureDelta = pressureDelta;
-	tsOutputChannels.injectorFlowPressureRatio = pressureRatio;
+	engine->outputChannels.injectorFlowPressureDelta = pressureDelta;
+	engine->outputChannels.injectorFlowPressureRatio = pressureRatio;
 #endif // EFI_TUNER_STUDIO
 
 	// TODO: should the flow ratio be clamped?

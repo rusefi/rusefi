@@ -87,10 +87,10 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		tsOutputChannels.debugIntField1 = rpmCondition;
-		tsOutputChannels.debugIntField2 = tpsCondition;
-		tsOutputChannels.debugIntField3 = speedCondition;
-		tsOutputChannels.debugIntField4 = activateSwitchCondition;
+		engine->outputChannels.debugIntField1 = rpmCondition;
+		engine->outputChannels.debugIntField2 = tpsCondition;
+		engine->outputChannels.debugIntField3 = speedCondition;
+		engine->outputChannels.debugIntField4 = activateSwitchCondition;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -120,10 +120,10 @@ void LaunchControlBase::update() {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		tsOutputChannels.debugIntField5 = engine->clutchDownState;
-		tsOutputChannels.debugFloatField1 = launchActivatePinState;
-		tsOutputChannels.debugFloatField2 = isLaunchCondition;
-		tsOutputChannels.debugFloatField3 = combinedConditions;
+		engine->outputChannels.debugIntField5 = engine->clutchDownState;
+		engine->outputChannels.debugFloatField1 = launchActivatePinState;
+		engine->outputChannels.debugFloatField2 = isLaunchCondition;
+		engine->outputChannels.debugFloatField3 = combinedConditions;
 	}
 #endif /* EFI_TUNER_STUDIO */
 }

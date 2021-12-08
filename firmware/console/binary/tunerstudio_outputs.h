@@ -48,5 +48,3 @@ struct TunerStudioOutputChannels : ts_outputs_s {
 	}
 
 };
-
-extern TunerStudioOutputChannels tsOutputChannels;
