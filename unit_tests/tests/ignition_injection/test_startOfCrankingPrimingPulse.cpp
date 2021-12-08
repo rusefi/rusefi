@@ -32,7 +32,7 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 }
 
 
-TEST(engine, testStartOfCrankingPrimingPulse) {
+TEST(priming, startScheduling) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
@@ -43,7 +43,7 @@ TEST(engine, testStartOfCrankingPrimingPulse) {
 	ASSERT_EQ(1, engine->executor.size()) << "prime fuel";
 }
 
-TEST(engine, primingPulseDuration) {
+TEST(priming, duration) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	MockInjectorModel2 injectorModel;
