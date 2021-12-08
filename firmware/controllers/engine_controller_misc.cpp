@@ -41,6 +41,7 @@ void setMockVoltage(int hwChannel, float voltage) {
 	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
 }
 
+// used by HW CI testing
 void setMockMafVoltage(float voltage) {
 	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
 }
