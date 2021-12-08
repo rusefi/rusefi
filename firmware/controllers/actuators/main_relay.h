@@ -5,4 +5,5 @@
 
 struct MainRelayController : public EngineModule, public main_relay_s {
 	void onSlowCallback() override;
+	void onIgnitionStateChanged(bool ignitionOn) override;
 };
