@@ -59,16 +59,16 @@ public:
 
 	void setDlc(uint8_t dlc);
 
-//#if ! EFI_SIMULATOR
+#if HAL_USE_CAN || EFI_UNIT_TEST
 	const CANTxFrame *getFrame() const {
 		return &m_frame;
 	}
-//#endif // EFI_SIMULATOR
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 
 protected:
-//#if ! EFI_SIMULATOR
+#if HAL_USE_CAN || EFI_UNIT_TEST
 	CANTxFrame m_frame;
-//#endif // EFI_SIMULATOR
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 
 private:
 #if EFI_CAN_SUPPORT
