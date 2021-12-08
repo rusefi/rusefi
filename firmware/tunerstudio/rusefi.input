@@ -403,7 +403,15 @@ enable2ndByteCanID = false
       xBins       = dwellVoltageCorrVoltBins, VBatt
       yBins       = dwellVoltageCorrValues
       gauge       = VBattGauge
-    
+
+	curve = primingPulse, "Priming pulse fuel mass"
+      columnLabel = "Coolant", "Prime Pulse"
+      xAxis       =  -40, 120, 9
+      yAxis       =  0, 200, 9
+      xBins       = primeBins, coolant
+      yBins       = primeValues
+      gauge       = CLTGauge
+
    curve = map_samplingAngleCurve, "MAP Sampling Start Angle"
       columnLabel = "RPM", "Angle"
       xAxis       =  0, 8000, 9
@@ -2981,10 +2989,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = postCrankingEnrichment, "After start enrichment"
 		field = "Post-Cranking factor", 				postCrankingFactor
 		field = "Duration", 				postCrankingDurationSec
-		
+
 	dialog = primingFuelPulsePanel, "Priming fuel pulse"
-		field = "Duration at -40C degrees",	startOfCrankingPrimingPulse
-		field = "Falloff temperature", primeInjFalloffTemperature
+		field = "Priming delay",	primingDelay
+		panel = primingPulse
 
 	dialog = crankingAdv, "Advanced"
 		field = "Enable flood clear",				isCylinderCleanupEnabled
