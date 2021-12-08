@@ -34,6 +34,7 @@
 #include "ac_control.h"
 #include "type_list.h"
 #include "boost_control.h"
+#include "ignition_controller.h"
 #include "alternator_controller.h"
 
 #ifndef EFI_UNIT_TEST
@@ -154,6 +155,7 @@ public:
 #endif /* EFI_ALTERNATOR_CONTROL */
 		FuelPumpController,
 		MainRelayController,
+		IgnitionController,
 		AcController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;

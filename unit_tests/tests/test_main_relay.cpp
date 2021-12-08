@@ -7,13 +7,13 @@ TEST(MainRelay, mr) {
 
 	MainRelayController dut;
 
-	// Low battery voltage, MR is off
-	Sensor::setMockValue(SensorType::BatteryVoltage, 1);
+	// Ignition is off, MR is off
+	dut.onIgnitionStateChanged(false);
 	dut.onSlowCallback();
 	EXPECT_EQ(enginePins.mainRelay.getLogicValue(), false);
 
 	// Ignition is now on, MR is on
-	Sensor::setMockValue(SensorType::BatteryVoltage, 12);
+	dut.onIgnitionStateChanged(true);
 	dut.onSlowCallback();
 	EXPECT_EQ(enginePins.mainRelay.getLogicValue(), true);
 }
