@@ -15,7 +15,12 @@
 #include "crc.h"
 
 #if HAL_USE_CAN
-static CanStreamer streamer;
+#include "serial_can.h"
+#include "can.h"
+#include "can_msg_tx.h"
+
+
+ CanStreamer streamer;
 static CanStreamerState state(&streamer);
 static CanTsListener listener;
 #endif // HAL_USE_CAN
@@ -136,8 +141,8 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 		memcpy(buf, srcBuf, numBytesToCopy);
 	}
 	srcBuf += numBytesToCopy;
+	waitingForNumBytes -= numBytesAvailable;
 	numBytesAvailable -= numBytesToCopy;
-	waitingForNumBytes -= numBytesToCopy;
 	// if there are some more bytes left, we save them for the next time
 	for (int i = 0; i < numBytesAvailable; i++) {
 		rxFifoBuf.put(srcBuf[i]);

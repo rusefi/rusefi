@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 08 00:30:49 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 08 22:48:30 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2529,11 +2529,9 @@ struct engine_configuration_s {
 	 */
 	int16_t idlePidRpmUpperLimit;
 	/**
-	 * This sets the temperature above which no priming pulse is used, The value at -40 is reduced until there is no more priming injection at this temperature.
-	*C
 	 * offset 1486
 	 */
-	int16_t primeInjFalloffTemperature;
+	int16_t unused1486;
 	/**
 	mult
 	 * offset 1488
@@ -2837,15 +2835,9 @@ struct engine_configuration_s {
 	 */
 	float alternatorOffAboveTps;
 	/**
-	 * Prime pulse for cold engine, duration in ms
-	 * Linear interpolation between -40F/-40C and fallout temperature
-	 * 
-	 * See also isFasterEngineSpinUpEnabled
-	 * set cranking_priming_pulse X
-	ms
 	 * offset 2032
 	 */
-	float startOfCrankingPrimingPulse;
+	float unused2032;
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	cycles
@@ -3283,10 +3275,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t fan2ExtraIdle;
 	/**
-	units
+	 * Delay to allow fuel pressure to build before firing the priming pulse.
+	sec
 	 * offset 2331
 	 */
-	uint8_t unusedOldBiquad[1];
+	scaled_channel<uint8_t, 100, 1> primingDelay;
 	/**
 	 * offset 2332
 	 */
@@ -3516,10 +3509,10 @@ struct engine_configuration_s {
 	 */
 	float injectorCorrectionPolynomial[8];
 	/**
-	units
+	C
 	 * offset 2684
 	 */
-	uint8_t unused1366[8];
+	int8_t primeBins[8];
 	/**
 	 * offset 2692
 	 */
@@ -3897,10 +3890,10 @@ struct engine_configuration_s {
 	 */
 	uint8_t cylinderBankSelect[MAX_CYLINDER_COUNT];
 	/**
-	units
+	mg
 	 * offset 4028
 	 */
-	int unused4028[2];
+	scaled_channel<uint8_t, 1, 5> primeValues[8];
 	/**
 	 * Trigger comparator center point voltage
 	V
@@ -4551,4 +4544,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 08 00:30:49 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 08 22:48:30 UTC 2021

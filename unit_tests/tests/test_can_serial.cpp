@@ -110,12 +110,14 @@ public:
 		for (size_t i = 0; i < totalSize; i++) {
 			EXPECT_EQ(totalData[i], totalReceivedData[i]) << "Rcv. byte #" << i << " differs!";
 		}
+		// check the FIFO buf size
+		EXPECT_EQ(0, rxFifoBuf.getCount());
+
 	}
 
 protected:
 	TestCanStreamer streamer;
 };
-
 
 TEST(testCanSerial, test1Frame) {
 
@@ -145,6 +147,10 @@ TEST(testCanSerial, test2Frames) {
 	{
 		TestCanStreamerState state;
 		state.test({ "01234567" }, { "\x10"s "\x08"s "012345"s, "\x21"s "67\0\0\0\0\0"s }, 8, { 8 }); // 8 bytes -> 2 8-byte frames, 8 bytes in FIFO
+	}
+	{
+		TestCanStreamerState state;
+		state.test({ "0123456789A" }, { "\x10"s "\x0B"s "012345"s, "\x21"s "6789A\0\0"s }, 11, { 2, 5, 4 }); // 11 bytes -> 2 8-byte frames
 	}
 	/*
 	{
