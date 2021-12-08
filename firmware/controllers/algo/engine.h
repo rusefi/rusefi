@@ -114,9 +114,17 @@ class PrimeController : public EngineModule {
 public:
 	void onIgnitionStateChanged(bool ignitionOn) override;
 
+	floatms_t getPrimeDuration() const;
+
+	void onPrimeStart();
+
 private:
 	scheduling_s m_start;
 	scheduling_s m_end;
+
+	static void onPrimeStartAdapter(PrimeController* instance) {
+		instance->onPrimeStart();
+	}
 };
 
 class Engine final : public TriggerStateListener {
