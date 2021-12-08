@@ -15,7 +15,12 @@
 #include "crc.h"
 
 #if HAL_USE_CAN
-static CanStreamer streamer;
+#include "serial_can.h"
+#include "can.h"
+#include "can_msg_tx.h"
+
+
+ CanStreamer streamer;
 static CanStreamerState state(&streamer);
 static CanTsListener listener;
 #endif // HAL_USE_CAN
