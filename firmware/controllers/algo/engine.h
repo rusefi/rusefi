@@ -113,6 +113,10 @@ protected:
 class PrimeController : public EngineModule {
 public:
 	void onIgnitionStateChanged(bool ignitionOn) override;
+
+private:
+	scheduling_s m_start;
+	scheduling_s m_end;
 };
 
 class Engine final : public TriggerStateListener {
@@ -140,8 +144,6 @@ public:
 	bool pauseCANdueToSerial = false;
 
 	PinRepository pinRepository;
-
-	InjectionEvent primeInjEvent;
 
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;

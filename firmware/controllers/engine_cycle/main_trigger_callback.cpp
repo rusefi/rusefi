@@ -464,10 +464,6 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 		ignSwitchCounter = -1;
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
-		engine->primeInjEvent.ownIndex = 0;
-		engine->primeInjEvent.isSimultanious = true;
-
-		scheduling_s *sDown = &engine->injectionEvents.elements[0].endOfInjectionEvent;
 		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
 		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
 		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
@@ -477,9 +473,16 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 		efiPrintf("Firing priming pulse of %.2f ms", pulseLength);
 
 		if (pulseLength > 0) {
-			startSimultaniousInjection();
-			int turnOffDelayUs = efiRound(MS2US(pulseLength), 1.0f);
-			engine->executor.scheduleForLater(sDown, turnOffDelayUs, { &endSimultaniousInjectionOnlyTogglePins, engine });
+			auto now = getTimeNowNt();
+
+			// TODO: configurable prime delay
+			auto primeDelayMs = 200;
+
+			auto start = now + MS2NT(primeDelayMs);
+			auto end = start + MS2NT(pulseLength);
+
+			engine->executor.scheduleByTimestampNt("prime", &m_start, start, startSimultaniousInjection);
+			engine->executor.scheduleByTimestampNt("prime", &m_end, end, endSimultaniousInjectionOnlyTogglePins);
 		}
 	} else {
 		efiPrintf("Skipped priming pulse since ignSwitchCounter = %d", ignSwitchCounter);
