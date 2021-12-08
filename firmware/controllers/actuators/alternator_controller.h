@@ -18,4 +18,9 @@ void setAltIFactor(float p);
 void setAltDFactor(float p);
 void showAltInfo(void);
 
+class AlternatorController : public EngineModule {
+public:
+	void onFastCallback() override;
+};
+
 void onConfigurationChangeAlternatorCallback(engine_configuration_s *previousConfiguration);

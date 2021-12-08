@@ -10,7 +10,6 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -25,6 +24,10 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
 @ThreadSafe
 public class IncomingDataBuffer {
     private static final Logging log = getLogging(IoStream.class);
+
+    static {
+        log.configureDebugEnabled(false);
+    }
 
     private static final int BUFFER_SIZE = 32768;
     private static String loggingPrefix;
@@ -98,7 +101,6 @@ public class IncomingDataBuffer {
     }
 
     public void addData(byte[] freshData) {
-        //log.info("IncomingDataBuffer: " + freshData.length + " byte(s) arrived");
         synchronized (cbb) {
             if (cbb.size() - cbb.length() < freshData.length) {
                 log.error("IncomingDataBuffer: buffer overflow not expected");
@@ -107,6 +109,8 @@ public class IncomingDataBuffer {
             cbb.put(freshData);
             cbb.notifyAll();
         }
+        if (log.debugEnabled())
+            log.debug("IncomingDataBuffer: " + freshData.length + " byte(s) arrived, total " + cbb.length());
     }
 
     /**
@@ -127,7 +131,7 @@ public class IncomingDataBuffer {
             while (cbb.length() < count) {
                 int timeout = (int) (startTimestamp + timeoutMs - System.currentTimeMillis());
                 if (timeout <= 0) {
-                    log.info(loggingMessage + ": timeout. Got only " + cbb.length());
+                    log.info(loggingMessage + ": timeout. Got only " + cbb.length() + " while expecting " + count);
                     return true; // timeout. Sad face.
                 }
                 try {
@@ -146,7 +150,7 @@ public class IncomingDataBuffer {
         }
     }
 
-    public void dropPending() {
+    public int dropPending() {
         // todo: when exactly do we need this logic?
         synchronized (cbb) {
             int pending = cbb.length();
@@ -154,8 +158,9 @@ public class IncomingDataBuffer {
                 log.error("dropPending: Unexpected pending data: " + pending + " byte(s)");
                 byte[] bytes = new byte[pending];
                 cbb.get(bytes);
-                log.error("data: " + Arrays.toString(bytes));
+                log.error("DROPPED FROM BUFFER: " + IoStream.printByteArray(bytes));
             }
+            return pending;
         }
     }
 

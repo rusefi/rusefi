@@ -131,6 +131,7 @@ public class EngineSnifferPanel {
             JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
             lowerButtons.add(new ConfigField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
+            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSEVVTDECODING, "Verbose VVT Sync").getContent());
             lowerButtons.add(new BitConfigField(uiContext, Fields.ISENGINECHARTENABLED, "Collect Engine Data").getContent());
             lowerButtons.add(new ConfigField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
             lowerButtons.add(new ConfigField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());

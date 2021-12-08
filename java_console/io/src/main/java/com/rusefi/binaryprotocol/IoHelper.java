@@ -1,5 +1,8 @@
 package com.rusefi.binaryprotocol;
 
+import com.devexperts.logging.Logging;
+import com.rusefi.io.IoStream;
+
 import java.util.zip.CRC32;
 
 /**
@@ -9,6 +12,12 @@ import java.util.zip.CRC32;
  * 3/6/2015
  */
 public class IoHelper {
+    private static final Logging log = Logging.getLogging(IoHelper.class);
+
+    static {
+        log.configureDebugEnabled(false);
+    }
+
     public static int getCrc32(byte[] packet) {
         return getCrc32(packet, 0, packet.length);
     }
@@ -23,6 +32,8 @@ public class IoHelper {
      * this method adds two bytes for packet size before and four bytes for IoHelper after
      */
     public static byte[] makeCrc32Packet(byte[] command) {
+        if (log.debugEnabled())
+            log.info("makeCrc32Packet: raw packet " + IoStream.printByteArray(command));
         byte[] packet = new byte[command.length + 6];
 
         packet[0] = (byte) (command.length / 256);
@@ -31,6 +42,8 @@ public class IoHelper {
         System.arraycopy(command, 0, packet, 2, command.length);
         int crc = getCrc32(command);
 
+        if (log.debugEnabled())
+            log.info(String.format("makeCrc32Packet: CRC 0x%08X", crc));
         putInt(packet, packet.length - 4, crc);
         return packet;
     }

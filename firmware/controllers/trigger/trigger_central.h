@@ -48,8 +48,14 @@ struct MapState {
 		current = mapBuffer.sum(engineConfiguration->mapCamAveragingLength);
 	}
 
-	bool isPeak() {
-		return previous > prevPrevious && previous >= current;
+	bool isPeak(bool lookForLowPeak) {
+		if (mapBuffer.getCount() < MAP_CAM_BUFFER + 3)
+			return false;
+		if (lookForLowPeak) {
+			return previous < prevPrevious && previous <= current;
+		} else {
+			return previous > prevPrevious && previous >= current;
+		}
 	}
 };
 
@@ -67,14 +73,19 @@ public:
 	void resetCounters();
 	void validateCamVvtCounters();
 
+	LocalVersionHolder triggerVersion;
+
 	MapState mapState;
+
+
+	angle_t mapCamPrevToothAngle = -1;
+	float mapCamPrevCycleValue = 0;
 
 	/**
 	 * true if a recent configuration change has changed any of the trigger settings which
 	 * we have not adjusted for yet
 	 */
 	bool triggerConfigChanged = false;
-	LocalVersionHolder triggerVersion;
 
 	bool checkIfTriggerConfigChanged();
 	bool isTriggerConfigChanged();

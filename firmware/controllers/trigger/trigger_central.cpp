@@ -105,6 +105,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
 			&& vvtMode != VVT_HONDA_K
+			&& vvtMode != VVT_MAP_V_TWIN_ANOTHER
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
 }
@@ -113,10 +114,8 @@ static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(engine->getOperationMode());
 
 	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
-	if (offset > 0 && engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1++;
-#endif /* EFI_TUNER_STUDIO */
+	if (offset > 0) {
+		engine->outputChannels.vvtSyncCounter++;
 	}
 	return offset;
 }
@@ -143,6 +142,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 
 	switch (engineConfiguration->vvtMode[camIndex]) {
 	case VVT_FIRST_HALF:
+	case VVT_MAP_V_TWIN_ANOTHER:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
@@ -276,12 +276,17 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	}
 
 	if (isVvtWithRealDecoder) {
-		tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
+		TriggerState *vvtState = &tc->vvtState[bankIndex][camIndex];
+
+		vvtState->decodeTriggerEvent(
 			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+		// yes we log data from all VVT channels into same fields for now
+		engine->outputChannels.vvtSyncGapRatio = vvtState->currentGap;
+		engine->outputChannels.vvtStateIndex = vvtState->currentCycle.current_index;
 	}
 
 	tc->vvtCamCounter++;
@@ -295,11 +300,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	tc->currentVVTEventPosition[bankIndex][camIndex] = currentPosition;
 #endif // EFI_UNIT_TEST
 
-	if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugFloatField1 = currentPosition;
+		engine->outputChannels.vvtCurrentPosition = currentPosition;
 #endif /* EFI_TUNER_STUDIO */
-	}
 
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
@@ -319,11 +322,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			// this is not sync tooth - exiting
 			return;
 		}
-		if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
-			tsOutputChannels.debugIntField1++;
+		engine->outputChannels.vvtCounter++;
 #endif /* EFI_TUNER_STUDIO */
-		}
 	}
 	default:
 		// else, do nothing
@@ -614,6 +615,12 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
 
+#if EFI_TUNER_STUDIO
+			engine->outputChannels.triggerSyncGapRatio = triggerState.currentGap;
+			engine->outputChannels.triggerStateIndex = triggerState.currentCycle.current_index;
+#endif /* EFI_TUNER_STUDIO */
+
+
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
 	 * cycle into a four stroke, 720 degrees cycle.
@@ -655,11 +662,49 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		mainTriggerCallback(triggerIndexForListeners, timestamp);
 
-#if EFI_TUNER_STUDIO
 		auto toothAngle = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
 		wrapAngle(toothAngle, "currentEnginePhase", CUSTOM_ERR_6555);
-		tsOutputChannels.currentEnginePhase = toothAngle;
-#endif
+#if EFI_TUNER_STUDIO
+		engine->outputChannels.currentEnginePhase = toothAngle;
+#endif // EFI_TUNER_STUDIO
+
+		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER) {
+			// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
+			auto toothAngle360 = toothAngle;
+			while (toothAngle360 >= 360) {
+				toothAngle360 -= 360;
+			}
+
+			if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle360 > engineConfiguration->mapCamDetectionAnglePosition) {
+				// we are somewhere close to 'mapCamDetectionAnglePosition'
+
+				float map = Sensor::getOrZero(SensorType::Map);
+
+				if (map > mapCamPrevCycleValue) {
+#if WITH_TS_STATE
+					engine->outputChannels.TEMPLOG_map_peak++;
+#endif // WITH_TS_STATE
+
+					efitick_t stamp = getTimeNowNt();
+					hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
+					hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
+				}
+#if WITH_TS_STATE
+				engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = map;
+				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = map - mapCamPrevCycleValue;
+#endif // WITH_TS_STATE
+
+				mapCamPrevCycleValue = map;
+
+
+
+			}
+
+			mapCamPrevToothAngle = toothAngle360;
+
+		}
+
+
 	}
 }
 

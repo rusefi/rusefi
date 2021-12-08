@@ -174,3 +174,42 @@ void sys_dual_bank(void) {
      */
 }
 
+
+void stm32_stop() {
+	SysTick->CTRL = 0;
+	__disable_irq();
+	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
+
+	// configure mode bits
+	PWR->CR1 &= ~PWR_CR1_PDDS;	// cleared PDDS means stop mode (not standby) 
+	PWR->CR1 |= PWR_CR1_FPDS;	// turn off flash in stop mode
+	PWR->CR1 |= PWR_CR1_UDEN;	// regulator underdrive in stop mode
+	PWR->CR1 |= PWR_CR1_LPUDS;	// low power regulator in under drive mode
+	PWR->CR1 |= PWR_CR1_LPDS;	// regulator in low power mode
+
+	// enable Deepsleep mode
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	__WFE();
+
+	// Lastly, reboot
+	NVIC_SystemReset();
+}
+
+void stm32_standby() {
+	SysTick->CTRL = 0;
+	__disable_irq();
+	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
+
+	// configure mode bits
+	PWR->CR1 |= PWR_CR1_PDDS;		// PDDS = use standby mode (not stop mode)
+
+	// enable Deepsleep mode
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	// Wait for event - this should never return as it kills the chip until a reset
+	__WFE();
+
+	// Lastly, reboot
+	NVIC_SystemReset();
+}

@@ -515,10 +515,10 @@
 #define CLT_TIMING_CURVE_SIZE 8
 #define cltCrankingCorr_offset 6512
 #define cltCrankingCorrBins_offset 6480
-#define cltFuelCorr_offset 10336
-#define cltFuelCorrBins_offset 10272
-#define cltIdleCorr_offset 10720
-#define cltIdleCorrBins_offset 10656
+#define cltFuelCorr_offset 14736
+#define cltFuelCorrBins_offset 14672
+#define cltIdleCorr_offset 15120
+#define cltIdleCorrBins_offset 15056
 #define cltIdleRpm_offset 1960
 #define cltIdleRpmBins_offset 1896
 #define cltRevLimitRpm_offset 3332
@@ -606,10 +606,10 @@
 #define cranking_rpm_offset 92
 #define crankingAdvance_offset 3124
 #define crankingAdvanceBins_offset 3108
-#define crankingCycleBins_offset 10624
-#define crankingCycleCoef_offset 10592
-#define crankingFuelBins_offset 10560
-#define crankingFuelCoef_offset 10528
+#define crankingCycleBins_offset 15024
+#define crankingCycleCoef_offset 14992
+#define crankingFuelBins_offset 14960
+#define crankingFuelCoef_offset 14928
 #define crankingIACposition_offset 2228
 #define crankingInjectionMode_offset 424
 #define crankingTimingAngle_offset 436
@@ -634,23 +634,24 @@
 #define cylindersCount_offset 400
 #define dc_io_size 4
 #define DC_PER_STEPPER 2
-#define debug_mode_e_auto_enum "DBG_0", "DBG_TPS_ACCEL", "DBG_GPPWM", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "DBG_SOFT_SPARK_CUT", "DBG_VVT_1_PID", "DBG_VVT", "DBG_9", "DBG_10", "DBG_11", "DBG_UNUSED12", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_16", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_20", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "UNUSED23", "DBG_STATUS", "DBG_CJ125", "DBG_CAN", "DBG_MAP", "DBG_METRICS", "DBG_29", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_35", "DBG_BOOST", "DBG_37", "DBG_LAUNCH", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "DBG_UNUSED41", "DBG_UNUSED_42", "DBG_43", "DBG_DYNO_VIEW", "DBG_LOGIC_ANALYZER", "DBG_RUSEFI_WIDEBAND", "DBG_TCU", "DBG_LUA", "DBG_VVT_2_PID", "DBG_VVT_3_PID", "DBG_VVT_4_PID"
+#define debug_mode_e_auto_enum "DBG_0", "DBG_TPS_ACCEL", "DBG_GPPWM", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "DBG_SOFT_SPARK_CUT", "DBG_VVT_1_PID", "DBG_8", "DBG_9", "DBG_10", "DBG_11", "DBG_UNUSED12", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_16", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_20", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "UNUSED23", "DBG_STATUS", "DBG_CJ125", "DBG_26", "DBG_MAP", "DBG_METRICS", "DBG_29", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_35", "DBG_BOOST", "DBG_37", "DBG_LAUNCH", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "DBG_UNUSED41", "DBG_UNUSED_42", "DBG_43", "DBG_DYNO_VIEW", "DBG_LOGIC_ANALYZER", "DBG_RUSEFI_WIDEBAND", "DBG_TCU", "DBG_LUA", "DBG_VVT_2_PID", "DBG_VVT_3_PID", "DBG_VVT_4_PID"
 #define debug_mode_e_DBG_0 0
 #define debug_mode_e_DBG_10 10
 #define debug_mode_e_DBG_11 11
 #define debug_mode_e_DBG_16 16
 #define debug_mode_e_DBG_20 20
+#define debug_mode_e_DBG_26 26
 #define debug_mode_e_DBG_29 29
 #define debug_mode_e_DBG_34 34
 #define debug_mode_e_DBG_35 35
 #define debug_mode_e_DBG_37 37
 #define debug_mode_e_DBG_43 43
+#define debug_mode_e_DBG_8 8
 #define debug_mode_e_DBG_9 9
 #define debug_mode_e_DBG_ANALOG_INPUTS 21
 #define debug_mode_e_DBG_ANALOG_INPUTS2 32
 #define debug_mode_e_DBG_BENCH_TEST 19
 #define debug_mode_e_DBG_BOOST 36
-#define debug_mode_e_DBG_CAN 26
 #define debug_mode_e_DBG_CJ125 25
 #define debug_mode_e_DBG_COMPOSITE_LOG 40
 #define debug_mode_e_DBG_DWELL_METRIC 33
@@ -681,12 +682,11 @@
 #define debug_mode_e_DBG_UNUSED12 12
 #define debug_mode_e_DBG_UNUSED41 41
 #define debug_mode_e_DBG_UNUSED_42 42
-#define debug_mode_e_DBG_VVT 8
 #define debug_mode_e_DBG_VVT_1_PID 7
 #define debug_mode_e_DBG_VVT_2_PID 49
 #define debug_mode_e_DBG_VVT_3_PID 50
 #define debug_mode_e_DBG_VVT_4_PID 51
-#define debug_mode_e_enum "Alternator PID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "VVT input", "Cranking", "Timing", "Closed-loop fuel corr PID", "INVALID", "SD card", "sr5", "Knock", "Wall Wetting", "Electronic Throttle", "Executor", "Bench Test / TS commands", "Aux Valves", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "CAN", "MAP", "Metrics", "ETB#2", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "ETB Logic", "Boost Control", "Start/Stop", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "Injector Compensation", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 #define debug_mode_e_Force_4_bytes_size_debug_mode_e ENUM_32_BITS
 #define debug_mode_e_UNUSED23 23
 #define debugMapAveraging_offset 807
@@ -764,7 +764,7 @@
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define ENGINE_SNIFFER_UNIT_US 10
-#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "MRE_SECONDARY_CAN", "NISSAN_PRIMERA", "PROTEUS_HARLEY", "FORD_INLINE_6_1995", "GY6_139QMB", "UNUSED9", "UNUSED10", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "UNUSED18", "UNUSED_19", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "PROTEUS_LUA_DEMO", "TEST_ENGINE", "TEST_ISSUE_898", "UNUSED28", "SACHS", "UNUSED30", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "UNUSED39", "FRANKENSO_BMW_M73_F", "FRANKENSO_MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "FRANKENSO_MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "UNUSED_50", "UNUSED_51", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "FRANKENSO_MAZDA_MIATA_NA8", "FRANKENSO_MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "UNUSED60", "UNUSED61", "VW_B6", "PROTEUS_BMW_M73", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG_4_CYL", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "HELLEN_121_NISSAN_8_CYL", "HELLEN_NB2_36", "HELLEN_121_NISSAN_ALMERA_N16", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "HELLEN_NB1_36", "HELLEN_154_HYUNDAI_COUPE_BK2", "ET_UNUSED96", "ET_UNUSED97", "ET_UNUSED98", "MINIMAL_PINS", "UNUSED100", "UNUSED101", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "PROTEUS_ANALOG_PWM_TEST", "TEST_ROTARY", "TEST_108", "TEST_109", "TEST_110"
+#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "MRE_SECONDARY_CAN", "NISSAN_PRIMERA", "PROTEUS_HARLEY", "FORD_INLINE_6_1995", "GY6_139QMB", "UNUSED9", "UNUSED10", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "UNUSED18", "UNUSED_19", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "PROTEUS_LUA_DEMO", "TEST_ENGINE", "TEST_ISSUE_898", "TEST_CRANK_ENGINE", "SACHS", "UNUSED30", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "UNUSED39", "FRANKENSO_BMW_M73_F", "FRANKENSO_MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "FRANKENSO_MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "UNUSED_50", "UNUSED_51", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "FRANKENSO_MAZDA_MIATA_NA8", "FRANKENSO_MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "UNUSED60", "UNUSED61", "VW_B6", "PROTEUS_BMW_M73", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG_4_CYL", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "HELLEN_121_NISSAN_8_CYL", "HELLEN_NB2_36", "HELLEN_121_NISSAN_ALMERA_N16", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "HELLEN_NB1_36", "HELLEN_154_HYUNDAI_COUPE_BK2", "ET_UNUSED96", "ET_UNUSED97", "ET_UNUSED98", "MINIMAL_PINS", "UNUSED100", "UNUSED101", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "PROTEUS_ANALOG_PWM_TEST", "TEST_ROTARY", "TEST_108", "TEST_109", "TEST_110"
 #define engine_type_e_BMW_M73_M 24
 #define engine_type_e_BMW_M73_MRE 104
 #define engine_type_e_BMW_M73_MRE_SLAVE 105
@@ -851,6 +851,7 @@
 #define engine_type_e_TEST_109 109
 #define engine_type_e_TEST_110 110
 #define engine_type_e_TEST_33816 103
+#define engine_type_e_TEST_CRANK_ENGINE 28
 #define engine_type_e_TEST_ENGINE 26
 #define engine_type_e_TEST_ENGINE_VVT 45
 #define engine_type_e_TEST_ISSUE_366_BOTH 52
@@ -864,7 +865,6 @@
 #define engine_type_e_UNUSED100 100
 #define engine_type_e_UNUSED101 101
 #define engine_type_e_UNUSED18 18
-#define engine_type_e_UNUSED28 28
 #define engine_type_e_UNUSED30 30
 #define engine_type_e_UNUSED39 39
 #define engine_type_e_UNUSED60 60
@@ -950,7 +950,7 @@
 #define firingOrder_offset 404
 #define fixedModeTiming_offset 452
 #define fixedTiming_offset 2204
-#define FLASH_DATA_VERSION 10003
+#define FLASH_DATA_VERSION 10004
 #define flexSensorPin_offset 3100
 #define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
 #define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
@@ -1253,8 +1253,8 @@
 #define iat_tempC_1_offset 284
 #define iat_tempC_2_offset 288
 #define iat_tempC_3_offset 292
-#define iatFuelCorr_offset 10464
-#define iatFuelCorrBins_offset 10400
+#define iatFuelCorr_offset 14864
+#define iatFuelCorrBins_offset 14800
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define idle_antiwindupFreq_offset 696
 #define idle_derivativeFilterLoss_offset 516
@@ -1328,10 +1328,10 @@
 #define ignition_mode_e_IM_TWO_COILS 3
 #define ignition_mode_e_IM_WASTED_SPARK 2
 #define ignitionDwellForCrankingMs_offset 100
-#define ignitionIatCorrLoadBins_offset 13856
-#define ignitionIatCorrRpmBins_offset 13920
-#define ignitionIatCorrTable_offset 12832
-#define ignitionLoadBins_offset 17312
+#define ignitionIatCorrLoadBins_offset 18256
+#define ignitionIatCorrRpmBins_offset 18320
+#define ignitionIatCorrTable_offset 17232
+#define ignitionLoadBins_offset 21712
 #define ignitionMode_offset 440
 #define ignitionPinMode_offset 649
 #define ignitionPins10_offset 645
@@ -1346,8 +1346,8 @@
 #define ignitionPins7_offset 642
 #define ignitionPins8_offset 643
 #define ignitionPins9_offset 644
-#define ignitionRpmBins_offset 17376
-#define ignitionTable_offset 16288
+#define ignitionRpmBins_offset 21776
+#define ignitionTable_offset 20688
 #define ignOverrideMode_offset 2128
 #define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_MM5_10", "IMU_TYPE_3", "IMU_TYPE_4"
 #define imu_type_e_IMU_MM5_10 2
@@ -1367,7 +1367,7 @@
 #define injection_mode_e_IM_SIMULTANEOUS 0
 #define injection_mode_e_IM_SINGLE_POINT 3
 #define injectionMode_offset 428
-#define injectionPhase_offset 13984
+#define injectionPhase_offset 18384
 #define injectionPinMode_offset 648
 #define injectionPins10_offset 633
 #define injectionPins11_offset 634
@@ -1407,8 +1407,8 @@
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define injectorNonlinearMode_offset 2510
 #define injectorPressureType_offset 2129
-#define injPhaseLoadBins_offset 15008
-#define injPhaseRpmBins_offset 15072
+#define injPhaseLoadBins_offset 19408
+#define injPhaseRpmBins_offset 19472
 #define invertCamVVTSignal_offset 976
 #define invertPrimaryTriggerSignal_offset 1464
 #define invertSecondaryTriggerSignal_offset 1464
@@ -1432,7 +1432,6 @@
 #define isManualSpinningMode_offset 1476
 #define isMapAveragingEnabled_offset 1476
 #define isSdCardEnabled_offset 744
-#define issue_294_29_offset 76
 #define issue_294_31_offset 76
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
@@ -1466,9 +1465,9 @@
 #define knockRetardMaximum_offset 614
 #define knockRetardReapplyRate_offset 613
 #define knockSamplingDuration_offset 2512
-#define lambdaLoadBins_offset 18848
-#define lambdaRpmBins_offset 18912
-#define lambdaTable_offset 18592
+#define lambdaLoadBins_offset 23248
+#define lambdaRpmBins_offset 23312
+#define lambdaTable_offset 22992
 #define launchActivateDelay_offset 1060
 #define launchActivatePin_offset 991
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
@@ -1516,7 +1515,7 @@
 #define lps25BaroSensorSda_offset 1459
 #define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_PWM_COUNT 8
-#define LUA_SCRIPT_SIZE 3600
+#define LUA_SCRIPT_SIZE 8000
 #define luaOutputPins1_offset 1220
 #define luaOutputPins2_offset 1221
 #define luaOutputPins3_offset 1222
@@ -1535,8 +1534,8 @@
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 #define maf_sensor_type_e_Internal_ForceMyEnumIntSize_maf_sensor ENUM_32_BITS
 #define mafAdcChannel_offset 543
-#define mafDecoding_offset 10784
-#define mafDecodingBins_offset 11808
+#define mafDecoding_offset 15184
+#define mafDecodingBins_offset 16208
 #define mafSensorType_offset 948
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 706
@@ -1566,12 +1565,13 @@
 #define mapCamAveragingLength_offset 619
 #define mapCamDetectionAnglePosition_offset 552
 #define mapCamDetectionThreshold_offset 615
+#define mapCamLookForLowPeaks_offset 976
 #define mapCamSkipFactor_offset 764
 #define mapErrorDetectionTooHigh_offset 1780
 #define mapErrorDetectionTooLow_offset 1776
-#define mapEstimateRpmBins_offset 15744
-#define mapEstimateTable_offset 15200
-#define mapEstimateTpsBins_offset 15712
+#define mapEstimateRpmBins_offset 20144
+#define mapEstimateTable_offset 19600
+#define mapEstimateTpsBins_offset 20112
 #define mapHighValueVoltage_offset 2212
 #define mapLowValueVoltage_offset 2208
 #define mapMinBufferLength_offset 812
@@ -1671,7 +1671,7 @@
 #define pedalToTpsRpmBins_offset 6472
 #define pedalToTpsTable_offset 6400
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 20000
+#define persistent_config_s_size 24400
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1776,18 +1776,18 @@
 #define scriptSettingName6_offset 3708
 #define scriptSettingName7_offset 3724
 #define scriptSettingName8_offset 3740
-#define scriptTable1_offset 19296
-#define scriptTable1LoadBins_offset 19552
-#define scriptTable1RpmBins_offset 19584
-#define scriptTable2_offset 19616
-#define scriptTable2LoadBins_offset 19680
-#define scriptTable2RpmBins_offset 19712
-#define scriptTable3_offset 19744
-#define scriptTable3LoadBins_offset 19808
-#define scriptTable3RpmBins_offset 19840
-#define scriptTable4_offset 19872
-#define scriptTable4LoadBins_offset 19936
-#define scriptTable4RpmBins_offset 19968
+#define scriptTable1_offset 23696
+#define scriptTable1LoadBins_offset 23952
+#define scriptTable1RpmBins_offset 23984
+#define scriptTable2_offset 24016
+#define scriptTable2LoadBins_offset 24080
+#define scriptTable2RpmBins_offset 24112
+#define scriptTable3_offset 24144
+#define scriptTable3LoadBins_offset 24208
+#define scriptTable3RpmBins_offset 24240
+#define scriptTable4_offset 24272
+#define scriptTable4LoadBins_offset 24336
+#define scriptTable4RpmBins_offset 24368
 #define scriptTableName1_offset 3564
 #define scriptTableName2_offset 3580
 #define scriptTableName3_offset 3596
@@ -1820,7 +1820,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 4275303766
+#define SIGNATURE_HASH 1829547044
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1961,7 +1961,7 @@
 #define tcuDownshiftButtonPin_offset 1819
 #define tcuDownshiftButtonPinMode_offset 4515
 #define tcuEnabled_offset 976
-#define tcuSolenoidTable_offset 15136
+#define tcuSolenoidTable_offset 19536
 #define tcuUpshiftButtonPin_offset 1818
 #define tcuUpshiftButtonPinMode_offset 4514
 #define test557pin_offset 3101
@@ -2008,7 +2008,7 @@
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
-#define TOTAL_CONFIG_SIZE 20000
+#define TOTAL_CONFIG_SIZE 24400
 #define tps1_1AdcChannel_offset 512
 #define tps1_2AdcChannel_offset 681
 #define tps1SecondaryMax_offset 822
@@ -2032,9 +2032,9 @@
 #define tpsErrorDetectionTooLow_offset 84
 #define tpsMax_offset 82
 #define tpsMin_offset 80
-#define tpsTpsAccelFromRpmBins_offset 19232
-#define tpsTpsAccelTable_offset 18976
-#define tpsTpsAccelToRpmBins_offset 19264
+#define tpsTpsAccelFromRpmBins_offset 23632
+#define tpsTpsAccelTable_offset 23376
+#define tpsTpsAccelToRpmBins_offset 23664
 #define trailingCoilPins10_offset 2349
 #define trailingCoilPins11_offset 2350
 #define trailingCoilPins12_offset 2351
@@ -2338,7 +2338,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.05.hellen_cypress.4275303766"
+#define TS_SIGNATURE "rusEFI 2021.12.08.hellen_cypress.1829547044"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2387,7 +2387,6 @@
 #define unused4028_offset 4028
 #define unused6312_offset 6312
 #define unused970_offset 970
-#define unused976b11_offset 976
 #define unused_1484_bit_24_offset 1476
 #define unused_1484_bit_25_offset 1476
 #define unused_1484_bit_26_offset 1476
@@ -2446,7 +2445,7 @@
 #define unusedFiller_4703_offset 4703
 #define unusedLaunchRpmThreshold_offset 1032
 #define unusedLogFormat_offset 496
-#define unusedLuaWasHere_offset 16032
+#define unusedLuaWasHere_offset 20432
 #define unusedOldBiquad_offset 2331
 #define unusedOutputFreqWhereHere_offset 832
 #define unusedOutputWhereHere_offset 794
@@ -2495,15 +2494,16 @@
 #define vehicleName_offset 1160
 #define vehicleSpeedSensorInputPin_offset 968
 #define vehicleWeight_offset 1456
-#define veLoadBins_offset 18464
+#define veLoadBins_offset 22864
 #define veOverrideMode_offset 2109
 #define verboseCan2BaseAddress_offset 2112
+#define verboseCan_offset 76
 #define verboseCanBaseAddress_offset 756
 #define verboseTLE8888_offset 744
 #define verboseTriggerSynchDetails_offset 1476
 #define verboseVVTDecoding_offset 976
-#define veRpmBins_offset 18528
-#define veTable_offset 17440
+#define veRpmBins_offset 22928
+#define veTable_offset 21840
 #define VM_VVT_INACTIVE 0
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define VR_THRESHOLD_COUNT 2
@@ -2519,11 +2519,11 @@
 #define vrThreshold2_pin_offset 1260
 #define vrThreshold2_rpmBins_offset 1264
 #define vrThreshold2_values_offset 1270
-#define vssFilterReciprocal_offset 15196
+#define vssFilterReciprocal_offset 19596
 #define vssGearRatio_offset 616
 #define vssToothCount_offset 618
-#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR", "VVT_MAP_V_TWIN"
-#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "VTwin 45", "vvt13", "vvt14", "vvt15"
+#define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR", "VVT_MAP_V_TWIN", "VVT_MAP_V_TWIN_ANOTHER"
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "VTwin 45", "VTwin by MAP", "vvt14", "vvt15"
 #define vvt_mode_e_VVT_2JZ 2
 #define vvt_mode_e_VVT_BARRA_3_PLUS_1 8
 #define vvt_mode_e_VVT_BOSCH_QUICK_START 5
@@ -2532,6 +2532,7 @@
 #define vvt_mode_e_VVT_HONDA_K 10
 #define vvt_mode_e_VVT_INACTIVE 0
 #define vvt_mode_e_VVT_MAP_V_TWIN 12
+#define vvt_mode_e_VVT_MAP_V_TWIN_ANOTHER 13
 #define vvt_mode_e_VVT_MIATA_NB2 3
 #define vvt_mode_e_VVT_NISSAN_MR 11
 #define vvt_mode_e_VVT_NISSAN_VQ 9
@@ -2552,12 +2553,12 @@
 #define vvtPins2_offset 2221
 #define vvtPins3_offset 2222
 #define vvtPins4_offset 2223
-#define vvtTable1_offset 15776
-#define vvtTable1LoadBins_offset 15840
-#define vvtTable1RpmBins_offset 15872
-#define vvtTable2_offset 15904
-#define vvtTable2LoadBins_offset 15968
-#define vvtTable2RpmBins_offset 16000
+#define vvtTable1_offset 20176
+#define vvtTable1LoadBins_offset 20240
+#define vvtTable1RpmBins_offset 20272
+#define vvtTable2_offset 20304
+#define vvtTable2LoadBins_offset 20368
+#define vvtTable2RpmBins_offset 20400
 #define warning_message_offset 6000
 #define warningLedPin_offset 2041
 #define warningPeriod_offset 1498

@@ -5,9 +5,12 @@ import com.rusefi.io.IoStream;
 
 import java.util.Arrays;
 
-// CAN multiframe decoder state
-class IsoTpCanDecoder {
-    private static Logging log = Logging.getLogging(IsoTpCanDecoder.class);
+/**
+ * ISO 15765-2 or ISO-TP (Transport Layer) CAN multi-frame decoder state
+ * @see IsoTpConnector
+ */
+public class IsoTpCanDecoder {
+    private static final Logging log = Logging.getLogging(IsoTpCanDecoder.class);
 
     static {
         log.configureDebugEnabled(false);
@@ -20,8 +23,8 @@ class IsoTpCanDecoder {
 
     private final static int FC_ContinueToSend = 0;
 
-    public int waitingForNumBytes = 0;
-    public int waitingForFrameIndex = 0;
+    private int waitingForNumBytes = 0;
+    private int waitingForFrameIndex = 0;
 
     public byte[] decodePacket(byte[] data) {
         int frameType = (data[0] >> 4) & 0xf;
@@ -44,11 +47,12 @@ class IsoTpCanDecoder {
                 numBytesAvailable = Math.min(this.waitingForNumBytes, 6);
                 waitingForNumBytes -= numBytesAvailable;
                 dataOffset = 2;
+                onTpFirstFrame();
                 break;
             case ISO_TP_FRAME_CONSECUTIVE:
                 frameIdx = data[0] & 0xf;
                 if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
-                    throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? " + waitingForNumBytes + " " + waitingForFrameIndex + " " + frameIdx);
+                    throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? waitingForNumBytes=" + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
                 }
                 this.waitingForFrameIndex = (this.waitingForFrameIndex + 1) & 0xf;
                 numBytesAvailable = Math.min(this.waitingForNumBytes, 7);
@@ -69,7 +73,10 @@ class IsoTpCanDecoder {
         }
         byte[] bytes = Arrays.copyOfRange(data, dataOffset, dataOffset + numBytesAvailable);
         if (log.debugEnabled())
-            log.debug(numBytesAvailable + " bytes(s) arrived in this packet: " + IoStream.printHexBinary(bytes));
+            log.debug(numBytesAvailable + " bytes(s) arrived in this packet: " + IoStream.printByteArray(bytes));
         return bytes;
+    }
+
+    protected void onTpFirstFrame() {
     }
 }

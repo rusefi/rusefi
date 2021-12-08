@@ -89,7 +89,7 @@ typedef enum {
 	// see TriggerWaveform::bothFrontsRequired
 	TEST_ISSUE_898 = 27,
 
-	UNUSED28 = 28,
+	TEST_CRANK_ENGINE = 28,
 
 	SACHS = 29,
 
@@ -258,10 +258,7 @@ typedef enum {
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_SOFT_SPARK_CUT = 6,
 	DBG_VVT_1_PID = 7,
-	/**
-	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
-	 */
-	DBG_VVT = 8,
+	DBG_8 = 8,
 	DBG_9 = 9,
 	DBG_10 = 10,
 	DBG_11 = 11,
@@ -290,7 +287,7 @@ typedef enum {
 	UNUSED23 = 23,
 	DBG_STATUS = 24,
 	DBG_CJ125 = 25,
-	DBG_CAN = 26,
+	DBG_26 = 26,
 	DBG_MAP = 27,
 	DBG_METRICS = 28,
 	DBG_29 = 29,

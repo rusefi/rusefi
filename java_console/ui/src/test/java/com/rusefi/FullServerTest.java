@@ -8,6 +8,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
@@ -112,7 +113,7 @@ public class FullServerTest {
 
             // start "rusEFI network connector" to connect controller with backend since in real life controller has only local serial port it does not have network
             NetworkConnector.NetworkConnectorResult networkConnectorResult = networkConnector.start(NetworkConnector.Implementation.Unknown,
-                    TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
+                    TestHelper.TEST_TOKEN_1, TcpConnector.LOCALHOST + ":" + controllerPort, networkConnectorContext, NetworkConnector.ReconnectListener.VOID);
             ControllerInfo controllerInfo = networkConnectorResult.getControllerInfo();
 
             TestHelper.assertLatch("controllerRegistered", controllerRegistered);
@@ -133,7 +134,7 @@ public class FullServerTest {
             CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);
 
             // connect to proxy and read virtual controller through it
-            clientManager.startAndConnect(TestHelper.LOCALHOST + ":" + localApplicationProxyContext.authenticatorPort(), new ConnectionStateListener() {
+            clientManager.startAndConnect(TcpConnector.LOCALHOST + ":" + localApplicationProxyContext.authenticatorPort(), new ConnectionStateListener() {
                 @Override
                 public void onConnectionEstablished() {
                     connectionEstablishedCountDownLatch.countDown();

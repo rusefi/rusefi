@@ -94,7 +94,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), engineConfiguration->stft);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.fuelClosedLoopBinIdx = binIdx;
+	engine->outputChannels.fuelClosedLoopBinIdx = binIdx;
 #endif // EFI_TUNER_STUDIO
 
 	ClosedLoopFuelResult result;

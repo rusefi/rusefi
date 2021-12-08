@@ -200,7 +200,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
+	int8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
 
 	uint8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, 0, 0, 0
 	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
@@ -253,7 +253,21 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[180 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[156 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+
+    float autoscale TEMPLOG_MAP_AT_SPECIAL_POINT;;"", 1, 0, -10000, 10000, 3
+    float autoscale TEMPLOG_MAP_AT_DIFF;;"", 1, 0, -10000, 10000, 3
+
+    float autoscale     vvtSyncGapRatio;;"", 1, 0, -10000, 10000, 3
+    float autoscale vvtCurrentPosition;;"", 1, 0, -10000, 10000, 3
+
+    float autoscale triggerSyncGapRatio;;"", 1, 0, -10000, 10000, 3
+
+    uint8_t triggerStateIndex;;"", 1, 0, -10000, 10000, 3
+    uint8_t vvtCounter;;"", 1, 0, -10000, 10000, 3
+    uint8_t vvtSyncCounter;;"", 1, 0, -10000, 10000, 3
+    uint8_t vvtStateIndex;;"", 1, 0, -10000, 10000, 3
+
 
     float autoscale TEMPLOG_MAP_INSTANT_AVERAGE;;"", 1, 0, -10000, 10000, 3
 

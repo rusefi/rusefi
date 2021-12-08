@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -16,9 +17,14 @@ import static com.rusefi.Timeouts.SECOND;
 
 public class Elm327Connector implements Closeable {
 	private final static Logging log = Logging.getLogging(Elm327Connector.class);
+
+	static {
+		log.configureDebugEnabled(false);
+	}
+
 	private static final byte[] HEX_ARRAY = "0123456789ABCDEF".getBytes();
 
-//	public final static int ELM327_DEFAULT_BAUDRATE = 115200; // OBDlink SX, 1.3a
+//	public final static int ELM327_DEFAULT_BAUDRATE = 115200; // OBDlink SX, 1.3a STN1110
     public final static int ELM327_DEFAULT_BAUDRATE = 38400;
     private final static int BIG_TIMEOUT = 2 * SECOND;
     private final static int TIMEOUT = 70;
@@ -63,10 +69,11 @@ public class Elm327Connector implements Closeable {
 		return tsStream;
 	}
 
-	public void start(String msg) {
+	public boolean start(String msg) {
     	log.info("* Elm327.start()");
 
-        if (initConnection(msg)) {
+		boolean initConnection = initConnection(msg);
+		if (initConnection) {
         	// reset to defaults
         	sendCommand("ATD", "OK");
 
@@ -109,7 +116,7 @@ public class Elm327Connector implements Closeable {
 			String voltage = sendCommand("ATRV", "([0-9\\.]+)V");
 			log.info("* Ignition voltage = " + voltage);
         }
-
+        return initConnection;
     }
 
     @Override
@@ -142,36 +149,21 @@ public class Elm327Connector implements Closeable {
 		}
 	};
 
-	public void sendBytesToSerial(byte [] bytes) {
-		log.info("-------sendBytesToSerial " + bytes.length + " byte(s):");
-
-		for (int i = 0; i < bytes.length; i++) {
-			log.info("[index=" + i + "] " + ((int) bytes[i] & 0xff));
+	private final IsoTpConnector connector = new IsoTpConnector() {
+		@Override
+		public void sendCanData(byte[] hdr, byte[] data, int offset, int len) {
+			Elm327Connector.this.sendCanData(hdr, data, offset, len);
 		}
 
-    	// 1 frame
-    	if (bytes.length <= 7) {
-    		sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_SINGLE << 4) | bytes.length, bytes, 0, bytes.length);
-    		return;
-    	}
+		@Override
+		public void receiveData() {
+			Elm327Connector.this.receiveData();
+		}
+	};
 
-    	// multiple frames
-    	// send the first header frame
-    	sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_FIRST << 4) | ((bytes.length >> 8) & 0x0f), bytes.length & 0xff, bytes, 0, 6);
-    	// get a flow control frame
-    	receiveData();
-
-    	// send the rest of the data
-    	int idx = 1, offset = 6;
-    	int remaining = bytes.length - 6;
-    	while (remaining > 0) {
-    		int len = Math.min(remaining, 7);
-    		// send the consecutive frames
-    		sendCanFrame((IsoTpCanDecoder.ISO_TP_FRAME_CONSECUTIVE << 4) | ((idx++) & 0x0f), bytes, offset, len);
-    		offset += len;
-    		remaining -= len;
-    	}
-	}
+	public void sendBytesToSerial(byte [] bytes) {
+        IsoTpConnector.sendStrategy(bytes, connector);
+    }
 
     ///////////////////////////////////////////////////////
 
@@ -224,25 +216,14 @@ public class Elm327Connector implements Closeable {
         return null;
     }
 
-    private void sendCanFrame(int hdr0, byte [] data, int offset, int len) {
-    	sendCanData(new byte[] { (byte)hdr0 }, data, offset, len);
-    }
-
-    private void sendCanFrame(int hdr0, int hdr1, byte [] data, int offset, int len) {
-    	sendCanData(new byte[] { (byte)hdr0, (byte)hdr1 }, data, offset, len);
-    }
-
     private void sendCanData(byte [] hdr, byte [] data, int offset, int len) {
+        if (log.debugEnabled()) {
+            log.debug("sendCanData header  " + IoStream.printByteArray(hdr));
+            log.debug("sendCanData payload " + IoStream.printByteArray(data) + " len=" + len + " from offset=" + offset);
+        }
     	//log.info("--------sendData offset="+Integer.toString(offset) + " len=" + Integer.toString(len) + "hdr.len=" + Integer.toString(hdr.length));
 
-    	len += hdr.length;
-    	byte [] hexData = new byte [len * 2 + 1];
-   		for (int i = 0, j = 0; i < len; i++, j += 2) {
-      		int v = ((i < hdr.length) ? hdr[i] : data[i - hdr.length + offset]) & 0xFF;
-        	hexData[j] = HEX_ARRAY[v >>> 4];
-        	hexData[j + 1] = HEX_ARRAY[v & 0x0F];
-      	}
-      	hexData[len * 2] = '\r';
+		byte[] hexData = byteToString(hdr, data, offset, len);
 
    		//log.info("* Elm327.data: " + (new String(hexData)));
 
@@ -253,7 +234,21 @@ public class Elm327Connector implements Closeable {
 	    }
     }
 
-    private byte[] receiveData() {
+	@NotNull
+	public static byte[] byteToString(byte[] hdr, byte[] data, int offset, int payloadLength) {
+		int totalLength = hdr.length + payloadLength;
+		byte[] hexData = new byte[totalLength * 2 + 1];
+		for (int i = 0; i < totalLength; i++) {
+			int j = i * 2;
+			int v = ((i < hdr.length) ? hdr[i] : data[i - hdr.length + offset]) & 0xFF;
+			hexData[j] = HEX_ARRAY[v >>> 4];
+			hexData[j + 1] = HEX_ARRAY[v & 0x0F];
+		}
+		hexData[totalLength * 2] = '\r';
+		return hexData;
+	}
+
+	private byte[] receiveData() {
         synchronized (lock) {
             try {
                 waitForResponse(TIMEOUT);

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Nov 29 14:06:03 EST 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Dec 07 20:56:44 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -52,6 +52,8 @@ case DBG_16:
   return "DBG_16";
 case DBG_20:
   return "DBG_20";
+case DBG_26:
+  return "DBG_26";
 case DBG_29:
   return "DBG_29";
 case DBG_34:
@@ -62,6 +64,8 @@ case DBG_37:
   return "DBG_37";
 case DBG_43:
   return "DBG_43";
+case DBG_8:
+  return "DBG_8";
 case DBG_9:
   return "DBG_9";
 case DBG_ANALOG_INPUTS:
@@ -72,8 +76,6 @@ case DBG_BENCH_TEST:
   return "DBG_BENCH_TEST";
 case DBG_BOOST:
   return "DBG_BOOST";
-case DBG_CAN:
-  return "DBG_CAN";
 case DBG_CJ125:
   return "DBG_CJ125";
 case DBG_COMPOSITE_LOG:
@@ -134,8 +136,6 @@ case DBG_UNUSED41:
   return "DBG_UNUSED41";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
-case DBG_VVT:
-  return "DBG_VVT";
 case DBG_VVT_1_PID:
   return "DBG_VVT_1_PID";
 case DBG_VVT_2_PID:
@@ -325,6 +325,8 @@ case TEST_110:
   return "TEST_110";
 case TEST_33816:
   return "TEST_33816";
+case TEST_CRANK_ENGINE:
+  return "TEST_CRANK_ENGINE";
 case TEST_ENGINE:
   return "TEST_ENGINE";
 case TEST_ENGINE_VVT:
@@ -351,8 +353,6 @@ case UNUSED101:
   return "UNUSED101";
 case UNUSED18:
   return "UNUSED18";
-case UNUSED28:
-  return "UNUSED28";
 case UNUSED30:
   return "UNUSED30";
 case UNUSED39:

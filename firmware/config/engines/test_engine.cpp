@@ -15,7 +15,7 @@
 #include "test_engine.h"
 
 // TEST_ENGINE
-void setTestEngineConfiguration() {
+void setTestCamEngineConfiguration() {
 	setDefaultFrankensoConfiguration();
 
 	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
@@ -50,6 +50,13 @@ void setTestEngineConfiguration() {
 	engineConfiguration->ignitionPins[5] = GPIO_UNASSIGNED; // #6
 }
 
+
+void setTestCrankEngineConfiguration() {
+	setTestCamEngineConfiguration();
+
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+}
+
 void setTestVVTEngineConfiguration() {
 	setDefaultFrankensoConfiguration();
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
@@ -68,12 +75,11 @@ void setTestVVTEngineConfiguration() {
 	engineConfiguration->globalTriggerAngleOffset = 0;
 
 	engineConfiguration->vvtMode[0] = VVT_SECOND_HALF;
-	engineConfiguration->debugMode = DBG_VVT;
 }
 
 #if EFI_UNIT_TEST
 void setTestEngineIssue366both() {
-	setTestEngineConfiguration();
+	setTestCamEngineConfiguration();
 
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = false;

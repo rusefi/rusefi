@@ -392,7 +392,7 @@ static bool mountMmc() {
 
 #if EFI_TUNER_STUDIO
 	// If not null, card is present
-	tsOutputChannels.sd_present = cardBlockDevice != nullptr;
+	engine->outputChannels.sd_present = cardBlockDevice != nullptr;
 #endif
 
 #if HAL_USE_USB_MSD
@@ -513,7 +513,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	}
 
 	#if EFI_TUNER_STUDIO
-		tsOutputChannels.sd_logging_internal = true;
+		engine->outputChannels.sd_logging_internal = true;
 	#endif
 
 	while (true) {
@@ -525,10 +525,10 @@ static THD_FUNCTION(MMCmonThread, arg) {
 #endif
 
 		if (engineConfiguration->debugMode == DBG_SD_CARD) {
-			tsOutputChannels.debugIntField1 = totalLoggedBytes;
-			tsOutputChannels.debugIntField2 = totalWritesCounter;
-			tsOutputChannels.debugIntField3 = totalSyncCounter;
-			tsOutputChannels.debugIntField4 = fileCreatedCounter;
+			engine->outputChannels.debugIntField1 = totalLoggedBytes;
+			engine->outputChannels.debugIntField2 = totalWritesCounter;
+			engine->outputChannels.debugIntField3 = totalSyncCounter;
+			engine->outputChannels.debugIntField4 = fileCreatedCounter;
 		}
 
 		writeLogLine(logBuffer);

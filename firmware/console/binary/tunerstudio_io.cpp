@@ -46,6 +46,7 @@ void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf
 
 	// Write to the underlying stream
 	write(reinterpret_cast<uint8_t*>(scratchBuffer), size + 7, true);
+	flush();
 }
 
 void TsChannelBase::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size) {
@@ -71,6 +72,7 @@ void TsChannelBase::writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf
 
 	// Lastly the CRC footer
 	write(crcBuffer, sizeof(crcBuffer), true);
+	flush();
 }
 
 TsChannelBase::TsChannelBase(const char *name) {
@@ -92,8 +94,6 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 	} else {
 		writeCrcPacketLarge(responseCode, buf, size);
 	}
-
-	flush();
 }
 
 void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {

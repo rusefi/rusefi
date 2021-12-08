@@ -600,7 +600,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[2] = 0x00;
 			msg[3] = 0x00;
 			/* Ignition Angle (Leading) - y = x/10 */
-			float timing = engine->engineState.timingAdvance;
+			float timing = engine->engineState.timingAdvance[0];
 			int16_t ignAngle = ((timing > 360 ? timing - 720 : timing) * 10);
 			msg[4] = (ignAngle >> 8);			
 			msg[5] = (ignAngle & 0x00ff);
@@ -731,7 +731,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x36A, 4);
 			/* Knock Level 1 */
-			tmp = (tsOutputChannels.knockLevel * 100);
+			tmp = (engine->outputChannels.knockLevel * 100);
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
 			/* Knock Level 2 */

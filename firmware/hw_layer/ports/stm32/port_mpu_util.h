@@ -63,3 +63,8 @@ typedef enum {
 #ifndef ADC_CR2_SWSTART
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif
+
+#ifdef __cplusplus
+void stm32_stop();
+void stm32_standby();
+#endif

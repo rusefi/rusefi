@@ -321,7 +321,7 @@ static int lua_setDebug(lua_State* l) {
 		return 0;
 	}
 
-	auto firstDebugField = &tsOutputChannels.debugFloatField1;
+	auto firstDebugField = &engine->outputChannels.debugFloatField1;
 	firstDebugField[idx - 1] = val;
 
 	return 0;
@@ -494,6 +494,11 @@ void configureRusefiLuaHooks(lua_State* l) {
 		auto targetSkipRatio = luaL_checknumber(l, 1);
 		engine->softSparkLimiter.setTargetSkipRatio(targetSkipRatio);
 		return 1;
+	});
+
+	lua_register(l, "enableCanTx", [](lua_State* l) {
+		engine->allowCanTx = lua_toboolean(l, 1);
+		return 0;
 	});
 
 	lua_register(l, "crc8_j1850", [](lua_State* l) {

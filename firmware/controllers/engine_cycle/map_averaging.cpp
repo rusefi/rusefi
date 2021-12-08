@@ -105,18 +105,18 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	float instantVoltage = adcToVoltsDivided(adcValue);
 	float instantMap = convertMap(instantVoltage).value_or(0);
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.instantMAPValue = instantMap;
+	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
 
 	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
 			((fastMapCounter++ % engineConfiguration->mapCamSkipFactor) == 0)) {
 		engine->triggerCentral.mapState.add(instantMap);
-		bool isPeak = engine->triggerCentral.mapState.isPeak();
+		bool isPeak = engine->triggerCentral.mapState.isPeak(engineConfiguration->mapCamLookForLowPeaks);
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.TEMPLOG_map_length = MAP_CAM_BUFFER;
-		tsOutputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = engine->triggerCentral.mapState.current;
+		engine->outputChannels.TEMPLOG_map_length = MAP_CAM_BUFFER;
+		engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = engine->triggerCentral.mapState.current;
 		if (isPeak) {
-			tsOutputChannels.TEMPLOG_map_peak++;
+			engine->outputChannels.TEMPLOG_map_peak++;
 		}
 #endif //EFI_TUNER_STUDIO
 		if (isPeak) {

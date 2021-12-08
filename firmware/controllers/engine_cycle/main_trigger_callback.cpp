@@ -512,7 +512,7 @@ static void showMainInfo(Engine *engine) {
 	int rpm = GET_RPM();
 	float el = getFuelingLoad();
 	efiPrintf("rpm %d engine_load %.2f", rpm, el);
-	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance);
+	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance[0]);
 #endif /* EFI_PROD_CODE */
 }
 

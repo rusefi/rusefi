@@ -82,7 +82,7 @@ public class BinaryProtocol {
     private boolean isCompositeLoggerEnabled;
     private long lastLowRpmTime = System.currentTimeMillis();
 
-    private List<StreamFile> compositeLogs = new ArrayList<>();
+    private final List<StreamFile> compositeLogs = new ArrayList<>();
     public static boolean DISABLE_LOCAL_CACHE;
 
     public static String findCommand(byte command) {
@@ -144,7 +144,7 @@ public class BinaryProtocol {
 
     private final Thread hook = new Thread(() -> closeComposites(), "BinaryProtocol::hook");
 
-    public BinaryProtocol(LinkManager linkManager, IoStream stream, IncomingDataBuffer dataBuffer) {
+    public BinaryProtocol(LinkManager linkManager, IoStream stream) {
         this.linkManager = linkManager;
         this.stream = stream;
 
@@ -155,7 +155,7 @@ public class BinaryProtocol {
             }
         };
 
-        incomingData = dataBuffer;
+        incomingData = stream.getDataBuffer();
         Runtime.getRuntime().addShutdownHook(hook);
         needCompositeLogger = linkManager.getCompositeLogicEnabled();
         rpmListener = value -> {
@@ -228,15 +228,15 @@ public class BinaryProtocol {
      *
      * @return true if everything fine
      */
-    public boolean connectAndReadConfiguration(DataListener listener) {
+    public boolean connectAndReadConfiguration(Arguments arguments, DataListener listener) {
         try {
             signature = getSignature(stream);
-            System.out.println("BinaryProtocol: Got " + signature + " signature");
+            log.info("Got " + signature + " signature");
             SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         } catch (IOException e) {
             return false;
         }
-        readImage(Fields.TOTAL_CONFIG_SIZE);
+        readImage(arguments, Fields.TOTAL_CONFIG_SIZE);
         if (isClosed)
             return false;
 
@@ -340,11 +340,11 @@ public class BinaryProtocol {
     /**
      * read complete tune from physical data stream
      */
-    public void readImage(int size) {
+    public void readImage(Arguments arguments, int size) {
         ConfigurationImage image = getAndValidateLocallyCached();
 
         if (image == null) {
-            image = readFullImageFromController(size);
+            image = readFullImageFromController(arguments, size);
             if (image == null)
                 return;
         }
@@ -353,8 +353,16 @@ public class BinaryProtocol {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
+    public static class Arguments {
+        final boolean saveFile;
+
+        public Arguments(boolean saveFile) {
+            this.saveFile = saveFile;
+        }
+    }
+
     @Nullable
-    private ConfigurationImage readFullImageFromController(int size) {
+    private ConfigurationImage readFullImageFromController(Arguments arguments, int size) {
         ConfigurationImage image;
         image = new ConfigurationImage(size);
 
@@ -370,7 +378,7 @@ public class BinaryProtocol {
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
-            byte packet[] = new byte[5];
+            byte[] packet = new byte[5];
             packet[0] = Fields.TS_READ_COMMAND;
             putShort(packet, 1, swap16(offset));
             putShort(packet, 3, swap16(requestSize));
@@ -378,8 +386,8 @@ public class BinaryProtocol {
             byte[] response = executeCommand(packet, "load image offset=" + offset);
 
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
-                String code = (response == null || response.length == 0) ? "empty" : "code " + getCode(response);
-                String info = response == null ? "NO RESPONSE" : (code + " size " + response.length);
+                String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
+                String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
                 log.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
                 continue;
             }
@@ -390,12 +398,14 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
-        try {
-            ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
-            Msq tune = MsqFactory.valueOf(image);
-            tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
-        } catch (Exception e) {
-            System.err.println("Ignoring " + e);
+        if (arguments.saveFile) {
+            try {
+                ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
+                Msq tune = MsqFactory.valueOf(image);
+                tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
+            } catch (Exception e) {
+                System.err.println("Ignoring " + e);
+            }
         }
         return image;
     }
@@ -411,6 +421,8 @@ public class BinaryProtocol {
                 return "OUT_OF_RANGE";
             case TS_RESPONSE_FRAMING_ERROR:
                 return "FRAMING_ERROR";
+            case TS_RESPONSE_UNDERRUN:
+                return "TS_RESPONSE_UNDERRUN";
         }
         return Integer.toString(b);
     }
@@ -430,23 +442,32 @@ public class BinaryProtocol {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
-            byte[] packet = createCrcCommand(localCached.getSize());
-            byte[] response = executeCommand(packet, "get CRC32");
+            int crcFromController = getCrcFromController(localCached.getSize());
 
-            if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
-                ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
-                // that's unusual - most of the protocol is LITTLE_ENDIAN
-                bb.order(ByteOrder.BIG_ENDIAN);
-                int crcFromController = bb.getInt();
-                log.info(String.format("From rusEFI tune CRC32 0x%x %d\n", crcFromController, crcFromController));
-                short crc16FromController = (short) crcFromController;
-                log.info(String.format("From rusEFI tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
-                if (crcOfLocallyCachedConfiguration == crcFromController) {
-                    return localCached;
-                }
+            if (crcOfLocallyCachedConfiguration == crcFromController) {
+                return localCached;
             }
+
         }
         return null;
+    }
+
+    public int getCrcFromController(int configSize) {
+        byte[] packet = createCrcCommand(configSize);
+        byte[] response = executeCommand(packet, "get CRC32");
+
+        if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
+            ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
+            // that's unusual - most of the protocol is LITTLE_ENDIAN
+            bb.order(ByteOrder.BIG_ENDIAN);
+            int crcFromController = bb.getInt();
+            log.info(String.format("rusEFI says tune CRC32 0x%x %d\n", crcFromController, crcFromController));
+            short crc16FromController = (short) crcFromController;
+            log.info(String.format("rusEFI says tune CRC16 0x%x %d\n", crc16FromController, crc16FromController));
+            return crcFromController;
+        } else {
+            return  -1;
+        }
     }
 
     public static byte[] createCrcCommand(int size) {
