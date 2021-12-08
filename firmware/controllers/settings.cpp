@@ -306,11 +306,6 @@ static void setGlobalTriggerAngleOffset(float value) {
 	doPrintConfiguration();
 }
 
-static void setCrankingPrimingPulse(float value) {
-	engineConfiguration->startOfCrankingPrimingPulse = value;
-	incrementGlobalConfigurationVersion();
-}
-
 static void setCrankingTimingAngle(float value) {
 	engineConfiguration->crankingTimingAngle = value;
 	incrementGlobalConfigurationVersion();
@@ -1037,7 +1032,6 @@ const command_f_s commandsF[] = {
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
-		{"cranking_priming_pulse", setCrankingPrimingPulse},
 		{"flat_injector_lag", setFlatInjectorLag},
 #endif // EFI_ENGINE_CONTROL
 		{"script_curve_1_value", setScriptCurve1Value},

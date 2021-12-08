@@ -519,7 +519,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->startCrankingDuration = 3;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
-	engineConfiguration->startOfCrankingPrimingPulse = 0;
 
 	engineConfiguration->maxAcRpm = 5000;
 	engineConfiguration->maxAcClt = 100;
