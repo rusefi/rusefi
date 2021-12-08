@@ -1,6 +1,8 @@
 /*
  * @file test_can_serial.cpp
  *
+ * This is more like ISO-TP test really?
+ *
  *  Created on: Nov 26, 2020
  * @author andreika <prometheus.pcb@gmail.com>
  * @author Andrey Belomutskiy, (c) 2012-2020
