@@ -153,6 +153,8 @@ pins:
     function: Analog Ground
 
   - pin: K47
+    # H144_LS_7
+    id: GPIOF_13
     class: outputs
     function: BK1 Wastegate Solenoid
 
@@ -200,6 +202,28 @@ pins:
     ts_name: Main Relay K64
     function: Main relay control
     type: ls
+
+  - pin: K65
+    # H144_OUT_IO7
+    id: GPIOG_3
+    class: outputs
+    ts_name: Fan Relay Low
+    function: Fan relay low
+
+  - pin: K65
+    # H144_LS_5
+    id: GPIOD_9
+    class: outputs
+    ts_name: VVT1
+    function: VVT1
+
+  - pin: K68
+    # H144_LS_6
+    id: GPIOF_12
+    class: outputs
+    ts_name: VVT2
+    function: VVT2
+
 
   - pin: K70
 # H144_OUT_IO9
