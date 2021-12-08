@@ -108,7 +108,14 @@ protected:
 	trigger_type_e getType() const override;
 };
 
-#define DEFAULT_MOCK_SPEED -1
+class PrimeController : public EngineModule {
+public:
+	void onIgnitionStateChanged(bool ignitionOn) override;
+
+private:
+	scheduling_s m_start;
+	scheduling_s m_end;
+};
 
 class Engine final : public TriggerStateListener {
 public:
@@ -136,8 +143,6 @@ public:
 
 	PinRepository pinRepository;
 
-	InjectionEvent primeInjEvent;
-
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 	IFuelComputer *fuelComputer = nullptr;
 
@@ -157,6 +162,7 @@ public:
 		MainRelayController,
 		IgnitionController,
 		AcController,
+		PrimeController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
