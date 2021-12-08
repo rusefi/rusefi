@@ -49,6 +49,10 @@ public:
         return cyclic_buffer<T, maxSize>::getCount();
     }
 
+    int getSize() const {
+        return cyclic_buffer<T, maxSize>::getSize();
+    }
+
     const volatile T* getElements() const {
         return elements;
     }

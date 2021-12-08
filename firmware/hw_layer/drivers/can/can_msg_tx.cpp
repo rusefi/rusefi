@@ -11,17 +11,18 @@
 
 #include "can_msg_tx.h"
 
-#if EFI_CAN_SUPPORT
 #include "can.h"
 
 extern int canWriteOk;
 extern int canWriteNotOk;
 
+#if EFI_CAN_SUPPORT
 /*static*/ CANDriver* CanTxMessage::s_device = nullptr;
 
 /*static*/ void CanTxMessage::setDevice(CANDriver* device) {
 	s_device = device;
 }
+#endif // EFI_CAN_SUPPORT
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 #ifndef STM32H7XX
@@ -46,6 +47,7 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 }
 
 CanTxMessage::~CanTxMessage() {
+#if EFI_CAN_SUPPORT
 	auto device = s_device;
 
 	if (!device) {
@@ -72,6 +74,7 @@ CanTxMessage::~CanTxMessage() {
 	} else {
 		canWriteNotOk++;
 	}
+#endif /* EFI_CAN_SUPPORT */
 }
 
 void CanTxMessage::setDlc(uint8_t dlc) {
@@ -86,20 +89,6 @@ void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
 void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 	m_frame.data8[byteIdx] |= 1 << bitIdx;
 }
-
-#else
-
-CanTxMessage::CanTxMessage(uint32_t /*eid*/, uint8_t /*dlc*/, bool /*isExtended*/) {
-
-}
-
-CanTxMessage::~CanTxMessage() {
-
-}
-
-void CanTxMessage::setDlc(uint8_t) { }
-
-#endif // EFI_CAN_SUPPORT
 
 uint8_t& CanTxMessage::operator[](size_t index) {
 	return m_frame.data8[index];
