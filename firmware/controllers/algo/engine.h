@@ -108,8 +108,6 @@ protected:
 	trigger_type_e getType() const override;
 };
 
-#define DEFAULT_MOCK_SPEED -1
-
 class PrimeController : public EngineModule {
 public:
 	void onIgnitionStateChanged(bool ignitionOn) override;
