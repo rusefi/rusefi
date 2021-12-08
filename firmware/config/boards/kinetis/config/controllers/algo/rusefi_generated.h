@@ -1689,7 +1689,9 @@
 #define pin_output_mode_e_OM_OPENDRAIN_INVERTED 3
 #define postCrankingDurationSec_offset 2432
 #define postCrankingFactor_offset 2428
-#define primeInjFalloffTemperature_offset 1486
+#define primeBins_offset 2656
+#define primeValues_offset 4000
+#define primingDelay_offset 2323
 #define primingSquirtDurationMs_offset 96
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
@@ -1806,7 +1808,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 4150959037
+#define SIGNATURE_HASH 622196418
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -1847,7 +1849,6 @@
 #define starterControlPinMode_offset 2126
 #define starterRelayDisablePin_offset 808
 #define starterRelayDisablePinMode_offset 809
-#define startOfCrankingPrimingPulse_offset 2032
 #define startStopButtonMode_offset 1773
 #define startStopButtonPin_offset 811
 #define startUpFuelPumpDuration_offset 1892
@@ -2324,7 +2325,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.08.kin.4150959037"
+#define TS_SIGNATURE "rusEFI 2021.12.08.kin.622196418"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2349,7 +2350,6 @@
 #define unused1129_offset 2116
 #define unused1130_offset 2116
 #define unused11_offset 765
-#define unused1366_offset 2656
 #define unused1464b0_offset 1464
 #define unused1464b20_offset 1464
 #define unused1464b4_offset 1464
@@ -2357,8 +2357,10 @@
 #define unused1476b20_offset 1476
 #define unused1476b3_offset 1476
 #define unused1476b8_offset 1476
+#define unused1486_offset 1486
 #define unused1760_offset 1760
 #define unused1764_offset 1764
+#define unused2032_offset 2032
 #define unused20Inputs_offset 1512
 #define unused2260_offset 2252
 #define unused2432_offset 2424
@@ -2370,7 +2372,6 @@
 #define unused3328_offset 3728
 #define unused3942_offset 3964
 #define unused3988_offset 3960
-#define unused4028_offset 4000
 #define unused6312_offset 6284
 #define unused970_offset 970
 #define unused_1484_bit_24_offset 1476
@@ -2432,7 +2433,6 @@
 #define unusedLaunchRpmThreshold_offset 1032
 #define unusedLogFormat_offset 496
 #define unusedLuaWasHere_offset 20404
-#define unusedOldBiquad_offset 2323
 #define unusedOutputFreqWhereHere_offset 832
 #define unusedOutputWhereHere_offset 794
 #define unusedpinModesWhereHere_offset 779

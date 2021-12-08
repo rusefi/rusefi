@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 08 12:09:25 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 08 22:48:33 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1636,7 +1636,9 @@ public class Fields {
 	public static final int pin_output_mode_e_OM_OPENDRAIN_INVERTED = 3;
 	public static final int postCrankingDurationSec_offset = 2440;
 	public static final int postCrankingFactor_offset = 2436;
-	public static final int primeInjFalloffTemperature_offset = 1486;
+	public static final int primeBins_offset = 2684;
+	public static final int primeValues_offset = 4028;
+	public static final int primingDelay_offset = 2331;
 	public static final int primingSquirtDurationMs_offset = 96;
 	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";
@@ -1748,7 +1750,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 3147;
 	public static final int showHumanReadableWarning_offset = 976;
 	public static final int showSdCardWarning_offset = 76;
-	public static final int SIGNATURE_HASH = 842707197;
 	public static final int silentTriggerError_offset = 1464;
 	public static final int slowAdcAlpha_offset = 2088;
 	public static final int sparkDwellRpmBins_offset = 332;
@@ -1788,7 +1789,6 @@ public class Fields {
 	public static final int starterControlPinMode_offset = 2126;
 	public static final int starterRelayDisablePin_offset = 808;
 	public static final int starterRelayDisablePinMode_offset = 809;
-	public static final int startOfCrankingPrimingPulse_offset = 2032;
 	public static final int startStopButtonMode_offset = 1773;
 	public static final int startStopButtonPin_offset = 811;
 	public static final int startUpFuelPumpDuration_offset = 1892;
@@ -2211,7 +2211,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.08.all.842707197";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.08.all.3762675074";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2233,7 +2233,6 @@ public class Fields {
 	public static final int unused1129_offset = 2116;
 	public static final int unused1130_offset = 2116;
 	public static final int unused11_offset = 765;
-	public static final int unused1366_offset = 2684;
 	public static final int unused1464b0_offset = 1464;
 	public static final int unused1464b20_offset = 1464;
 	public static final int unused1464b4_offset = 1464;
@@ -2241,8 +2240,10 @@ public class Fields {
 	public static final int unused1476b20_offset = 1476;
 	public static final int unused1476b3_offset = 1476;
 	public static final int unused1476b8_offset = 1476;
+	public static final int unused1486_offset = 1486;
 	public static final int unused1760_offset = 1760;
 	public static final int unused1764_offset = 1764;
+	public static final int unused2032_offset = 2032;
 	public static final int unused20Inputs_offset = 1512;
 	public static final int unused2260_offset = 2260;
 	public static final int unused2432_offset = 2432;
@@ -2254,7 +2255,6 @@ public class Fields {
 	public static final int unused3328_offset = 3756;
 	public static final int unused3942_offset = 3992;
 	public static final int unused3988_offset = 3988;
-	public static final int unused4028_offset = 4028;
 	public static final int unused6312_offset = 6312;
 	public static final int unused970_offset = 970;
 	public static final int unused_1484_bit_24_offset = 1476;
@@ -2316,7 +2316,6 @@ public class Fields {
 	public static final int unusedLaunchRpmThreshold_offset = 1032;
 	public static final int unusedLogFormat_offset = 496;
 	public static final int unusedLuaWasHere_offset = 20432;
-	public static final int unusedOldBiquad_offset = 2331;
 	public static final int unusedOutputFreqWhereHere_offset = 832;
 	public static final int unusedOutputWhereHere_offset = 794;
 	public static final int unusedpinModesWhereHere_offset = 779;
@@ -3056,7 +3055,7 @@ public class Fields {
 	public static final Field UNUSED_1484_BIT_31 = Field.create("UNUSED_1484_BIT_31", 1476, FieldType.BIT, 31);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1480, FieldType.INT);
 	public static final Field IDLEPIDRPMUPPERLIMIT = Field.create("IDLEPIDRPMUPPERLIMIT", 1484, FieldType.INT16);
-	public static final Field PRIMEINJFALLOFFTEMPERATURE = Field.create("PRIMEINJFALLOFFTEMPERATURE", 1486, FieldType.INT16);
+	public static final Field UNUSED1486 = Field.create("UNUSED1486", 1486, FieldType.INT16);
 	public static final Field TURBOSPEEDSENSORMULTIPLIER = Field.create("TURBOSPEEDSENSORMULTIPLIER", 1488, FieldType.FLOAT);
 	public static final Field CAMINPUTSDEBUG1 = Field.create("CAMINPUTSDEBUG1", 1492, FieldType.INT8, brain_pin_e);
 	public static final Field CAMINPUTSDEBUG2 = Field.create("CAMINPUTSDEBUG2", 1493, FieldType.INT8, brain_pin_e);
@@ -3138,7 +3137,7 @@ public class Fields {
 	public static final Field CLTIDLERPM = Field.create("CLTIDLERPM", 1960, FieldType.FLOAT);
 	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 2024, FieldType.FLOAT);
 	public static final Field ALTERNATOROFFABOVETPS = Field.create("ALTERNATOROFFABOVETPS", 2028, FieldType.FLOAT);
-	public static final Field STARTOFCRANKINGPRIMINGPULSE = Field.create("STARTOFCRANKINGPRIMINGPULSE", 2032, FieldType.FLOAT);
+	public static final Field UNUSED2032 = Field.create("UNUSED2032", 2032, FieldType.FLOAT);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 2036, FieldType.INT16);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 2038, FieldType.INT16);
 	public static final Field AUXSERIALTXPIN = Field.create("AUXSERIALTXPIN", 2040, FieldType.INT8, brain_pin_e);
@@ -3245,7 +3244,7 @@ public class Fields {
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 2329, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODEPADDING = Field.create("VVTMODEPADDING", 2330, FieldType.INT8);
 	public static final Field FAN2EXTRAIDLE = Field.create("FAN2EXTRAIDLE", 2330, FieldType.INT8);
-	public static final Field UNUSEDOLDBIQUAD = Field.create("UNUSEDOLDBIQUAD", 2331, FieldType.INT8);
+	public static final Field PRIMINGDELAY = Field.create("PRIMINGDELAY", 2331, FieldType.INT8);
 	public static final Field AUXANALOGINPUTS1 = Field.create("AUXANALOGINPUTS1", 2332, FieldType.INT8, adc_channel_e);
 	public static final Field AUXANALOGINPUTS2 = Field.create("AUXANALOGINPUTS2", 2333, FieldType.INT8, adc_channel_e);
 	public static final Field AUXANALOGINPUTS3 = Field.create("AUXANALOGINPUTS3", 2334, FieldType.INT8, adc_channel_e);
@@ -3367,7 +3366,7 @@ public class Fields {
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL6 = Field.create("INJECTORCORRECTIONPOLYNOMIAL6", 2672, FieldType.FLOAT);
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL7 = Field.create("INJECTORCORRECTIONPOLYNOMIAL7", 2676, FieldType.FLOAT);
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL8 = Field.create("INJECTORCORRECTIONPOLYNOMIAL8", 2680, FieldType.FLOAT);
-	public static final Field UNUSED1366 = Field.create("UNUSED1366", 2684, FieldType.INT8);
+	public static final Field PRIMEBINS = Field.create("PRIMEBINS", 2684, FieldType.INT8);
 	public static final Field OILPRESSURE_HWCHANNEL = Field.create("OILPRESSURE_HWCHANNEL", 2692, FieldType.INT8, adc_channel_e);
 	public static final Field OILPRESSURE_ALIGNMENTFILL = Field.create("OILPRESSURE_ALIGNMENTFILL", 2693, FieldType.INT8);
 	public static final Field OILPRESSURE_V1 = Field.create("OILPRESSURE_V1", 2696, FieldType.FLOAT);
@@ -3497,7 +3496,7 @@ public class Fields {
 	public static final Field CYLINDERBANKSELECT10 = Field.create("CYLINDERBANKSELECT10", 4025, FieldType.INT8);
 	public static final Field CYLINDERBANKSELECT11 = Field.create("CYLINDERBANKSELECT11", 4026, FieldType.INT8);
 	public static final Field CYLINDERBANKSELECT12 = Field.create("CYLINDERBANKSELECT12", 4027, FieldType.INT8);
-	public static final Field UNUSED4028 = Field.create("UNUSED4028", 4028, FieldType.INT);
+	public static final Field PRIMEVALUES = Field.create("PRIMEVALUES", 4028, FieldType.INT8);
 	public static final Field TRIGGERCOMPCENTERVOLT = Field.create("TRIGGERCOMPCENTERVOLT", 4036, FieldType.INT8);
 	public static final Field TRIGGERCOMPHYSTMIN = Field.create("TRIGGERCOMPHYSTMIN", 4037, FieldType.INT8);
 	public static final Field TRIGGERCOMPHYSTMAX = Field.create("TRIGGERCOMPHYSTMAX", 4038, FieldType.INT8);
@@ -4329,7 +4328,7 @@ public class Fields {
 	UNUSED_1484_BIT_31,
 	ENGINECHARTSIZE,
 	IDLEPIDRPMUPPERLIMIT,
-	PRIMEINJFALLOFFTEMPERATURE,
+	UNUSED1486,
 	TURBOSPEEDSENSORMULTIPLIER,
 	CAMINPUTSDEBUG1,
 	CAMINPUTSDEBUG2,
@@ -4411,7 +4410,7 @@ public class Fields {
 	CLTIDLERPM,
 	TARGETVBATT,
 	ALTERNATOROFFABOVETPS,
-	STARTOFCRANKINGPRIMINGPULSE,
+	UNUSED2032,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
 	AUXSERIALTXPIN,
@@ -4513,7 +4512,7 @@ public class Fields {
 	VVTMODE2,
 	VVTMODEPADDING,
 	FAN2EXTRAIDLE,
-	UNUSEDOLDBIQUAD,
+	PRIMINGDELAY,
 	AUXANALOGINPUTS1,
 	AUXANALOGINPUTS2,
 	AUXANALOGINPUTS3,
@@ -4633,7 +4632,7 @@ public class Fields {
 	INJECTORCORRECTIONPOLYNOMIAL6,
 	INJECTORCORRECTIONPOLYNOMIAL7,
 	INJECTORCORRECTIONPOLYNOMIAL8,
-	UNUSED1366,
+	PRIMEBINS,
 	OILPRESSURE_HWCHANNEL,
 	OILPRESSURE_ALIGNMENTFILL,
 	OILPRESSURE_V1,
@@ -4762,7 +4761,7 @@ public class Fields {
 	CYLINDERBANKSELECT10,
 	CYLINDERBANKSELECT11,
 	CYLINDERBANKSELECT12,
-	UNUSED4028,
+	PRIMEVALUES,
 	TRIGGERCOMPCENTERVOLT,
 	TRIGGERCOMPHYSTMIN,
 	TRIGGERCOMPHYSTMAX,
