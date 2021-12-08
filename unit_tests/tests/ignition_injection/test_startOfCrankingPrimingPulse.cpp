@@ -47,15 +47,14 @@ TEST(engine, primingPulseDuration) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	MockInjectorModel2 injectorModel;
-	EXPECT_CALL(injectorModel, getInjectionDuration(0.075f)).WillOnce(Return(20.0f));
+	engine->module<InjectorModel>().set(&injectorModel);
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->primeBins); i++) {
 		engineConfiguration->primeBins[i] = i * 10;
 	}
 
+	EXPECT_CALL(injectorModel, getInjectionDuration(0.075f)).WillOnce(Return(20.0f));
 	engineConfiguration->primeValues[5] = 75;	// <-- We test this point
-
-	engine->module<InjectorModel>().set(&injectorModel);
 
 	// With coolant temp, we should see value from mock
 	Sensor::setMockValue(SensorType::Clt, 50);
