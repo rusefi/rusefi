@@ -15,6 +15,11 @@
 #include "tunerstudio_debug_struct.h"
 #include "ts_outputs_generated.h"
 
+#ifndef WITH_TS_STATE
+// do we ever see a case of compiling without TSOutputChannels? Shall we wipe out all '#if EFI_TUNER_STUDIO' or replace with '#if WITH_TS_STATE'
+#define WITH_TS_STATE TRUE
+#endif
+
 enum class TsCalMode : uint8_t {
 	None = 0,
 	Tps1Max = 1,

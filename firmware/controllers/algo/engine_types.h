@@ -89,7 +89,7 @@ typedef enum {
 	// see TriggerWaveform::bothFrontsRequired
 	TEST_ISSUE_898 = 27,
 
-	UNUSED28 = 28,
+	TEST_CRANK_ENGINE = 28,
 
 	SACHS = 29,
 

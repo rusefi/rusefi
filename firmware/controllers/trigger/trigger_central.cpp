@@ -676,17 +676,18 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 				float map = Sensor::getOrZero(SensorType::Map);
 
 				if (map > mapCamPrevCycleValue) {
-					mapCamCounter++;
+#if WITH_TS_STATE
+					engine->outputChannels.TEMPLOG_map_peak++;
+#endif // WITH_TS_STATE
 
 					efitick_t stamp = getTimeNowNt();
 					hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
 					hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
 				}
-#if EFI_TUNER_STUDIO
+#if WITH_TS_STATE
 				engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = map;
-				engine->outputChannels.TEMPLOG_map_peak = mapCamCounter;
 				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = map - mapCamPrevCycleValue;
-#endif // EFI_TUNER_STUDIO
+#endif // WITH_TS_STATE
 
 				mapCamPrevCycleValue = map;
 
