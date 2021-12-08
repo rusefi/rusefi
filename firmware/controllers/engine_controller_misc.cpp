@@ -41,6 +41,17 @@ void setMockVoltage(int hwChannel, float voltage) {
 	engine->engineState.mockAdcState.setMockVoltage(hwChannel, voltage);
 }
 
+void setMockMafVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->mafAdcChannel, voltage);
+}
+
+void setMockAfrVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->afr.hwChannel, voltage);
+}
+
+void setMockMapVoltage(float voltage) {
+	setMockVoltage(engineConfiguration->map.sensor.hwChannel, voltage);
+}
 #endif /* EFI_ENABLE_MOCK_ADC */
 
 #if !EFI_UNIT_TEST
