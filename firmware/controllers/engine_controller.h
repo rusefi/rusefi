@@ -23,8 +23,4 @@ void slowStartStopButtonCallback();
 void setMockVoltage(int hwChannel, float voltage);
 #endif
 
-void setMockMapVoltage(float voltage);
-void setMockAfrVoltage(float voltage);
-void setMockMafVoltage(float voltage);
-
 void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);
