@@ -108,6 +108,7 @@ void canDashboardBMWE90(CanCycle cycle);
 void canDashboardVagMqb(CanCycle cycle);
 void canDashboardNissanVQ(CanCycle cycle);
 void canDashboardGenesisCoupe(CanCycle cycle);
+void canDashboardAim(CanCycle cycle);
 
 void updateDash(CanCycle cycle) {
 
@@ -140,6 +141,8 @@ void updateDash(CanCycle cycle) {
 	case CAN_BUS_GENESIS_COUPE:
 		canDashboardGenesisCoupe(cycle);
 		break;
+	case CAN_AIM_DASH:
+		canDashboardAim(cycle);
 	default:
 		break;
 	}
@@ -1118,6 +1121,152 @@ void canDashboardHaltech(CanCycle cycle) {
 		}
 
 	}
+}
+
+struct Aim5f0 {
+	scaled_channel<uint16_t, 1> Rpm;
+	scaled_channel<uint16_t, 65> Tps;
+	scaled_channel<uint16_t, 65> Pps;
+	scaled_channel<uint16_t, 100> Vss;
+};
+
+static void populateFrame(Aim5f0& msg) {
+	msg.Rpm = Sensor::getOrZero(SensorType::Rpm);
+	msg.Tps = Sensor::getOrZero(SensorType::Tps1);
+	msg.Pps = Sensor::getOrZero(SensorType::AcceleratorPedal);
+	msg.Vss = Sensor::getOrZero(SensorType::VehicleSpeed);
+}
+
+struct Aim5f1 {
+	scaled_channel<uint16_t, 10> WheelSpeedFR;
+	scaled_channel<uint16_t, 10> WheelSpeedFL;
+	scaled_channel<uint16_t, 10> WheelSpeedRR;
+	scaled_channel<uint16_t, 10> WheelSpeedRL;
+};
+
+static void populateFrame(Aim5f1& msg) {
+	// We don't handle wheel speed, just set to 0?
+	msg.WheelSpeedFR = 0;
+	msg.WheelSpeedFL = 0;
+	msg.WheelSpeedRR = 0;
+	msg.WheelSpeedRL = 0;
+}
+
+struct Aim5f2 {
+	scaled_channel<uint16_t, 10> Iat;
+	scaled_channel<uint16_t, 10> Ect;
+	scaled_channel<uint16_t, 10> FuelT;
+	scaled_channel<uint16_t, 10> OilT;
+};
+
+static void populateFrame(Aim5f2& msg) {
+	msg.Iat = Sensor::getOrZero(SensorType::Iat) + 45;
+	msg.Ect = Sensor::getOrZero(SensorType::Clt) + 45;
+	msg.FuelT = Sensor::getOrZero(SensorType::AuxTemp1) + 45;
+	msg.OilT = Sensor::getOrZero(SensorType::AuxTemp2) + 45;
+}
+
+struct Aim5f3 {
+	scaled_channel<uint16_t, 10> Map;
+	scaled_channel<uint16_t, 10> Baro;
+	scaled_channel<uint16_t, 1000> OilP;
+	scaled_channel<uint16_t, 20> FuelP;
+};
+
+static void populateFrame(Aim5f3& msg) {
+	// MAP/Baro are sent in millibar -> 10 millibar per kpa
+	msg.Map = 10 * Sensor::getOrZero(SensorType::Map);
+	msg.Baro = 10 * Sensor::getOrZero(SensorType::BarometricPressure);
+
+	// Oil/Fuel P use bar -> 100 kpa per bar
+	msg.OilP = Sensor::getOrZero(SensorType::OilPressure) / 100;
+	msg.FuelP = Sensor::getOrZero(SensorType::FuelPressureInjector) / 100;
+}
+
+struct Aim5f4 {
+	scaled_channel<uint16_t, 10000> Boost;
+	scaled_channel<uint16_t, 10> Vbat;
+	scaled_channel<uint16_t, 10> FuelUse;
+	scaled_channel<uint16_t, 10> Gear;
+};
+
+static void populateFrame(Aim5f4& msg) {
+	float deltaKpa = Sensor::getOrZero(SensorType::Map) 
+		- Sensor::get(SensorType::BarometricPressure).value_or(101.325);
+	float boostBar = deltaKpa / 100;
+
+	msg.Boost = boostBar;
+	msg.Vbat = Sensor::getOrZero(SensorType::BatteryVoltage);
+	msg.FuelUse = 0;
+	msg.Gear = 0;
+}
+
+struct Aim5f5 {
+	scaled_channel<uint16_t, 1> ShiftFlag;
+	scaled_channel<uint16_t, 1> GearTime;
+	scaled_channel<uint16_t, 1> TpsV;
+	scaled_channel<uint16_t, 100> FuelLevel;
+};
+
+static void populateFrame(Aim5f5& msg) {
+	msg.FuelLevel = Sensor::getOrZero(SensorType::FuelLevel);
+
+	// Dunno what to do with these
+	msg.ShiftFlag = 0;
+	msg.GearTime = 0;
+	msg.TpsV = 0;
+}
+
+struct Aim5f6 {
+	scaled_channel<uint16_t, 2000> Lambda1;
+	scaled_channel<uint16_t, 2000> Lambda2;
+	scaled_channel<uint16_t, 10> LambdaTemp1;
+	scaled_channel<uint16_t, 10> LambdaTemp2;
+};
+
+static void populateFrame(Aim5f6& msg) {
+	msg.Lambda1 = Sensor::getOrZero(SensorType::Lambda1);
+	msg.Lambda2 = Sensor::getOrZero(SensorType::Lambda2);
+	msg.LambdaTemp1 = 0;
+	msg.LambdaTemp2 = 0;
+}
+
+struct Aim5f7 {
+	scaled_channel<uint16_t, 10> LambdaErr1;
+	scaled_channel<uint16_t, 10> LambdaErr2;
+	scaled_channel<uint16_t, 2000> LambdaTarget1;
+	scaled_channel<uint16_t, 2000> LambdaTarget2;
+};
+
+static void populateFrame(Aim5f7& msg) {
+	// We don't handle wheel speed, just set to 0?
+	msg.LambdaErr1 = 0;
+	msg.LambdaErr2 = 0;
+	msg.LambdaTarget1 = engine->engineState.targetLambda;
+	msg.LambdaTarget2 = engine->engineState.targetLambda;
+}
+
+void canDashboardAim(CanCycle cycle) {
+	if (!cycle.isInterval(CI::_10ms)) {
+		return;
+	}
+
+	transmitStruct<Aim5f0>(0x5f0, false);
+	transmitStruct<Aim5f1>(0x5f1, false);
+	transmitStruct<Aim5f2>(0x5f2, false);
+	transmitStruct<Aim5f3>(0x5f3, false);
+	transmitStruct<Aim5f4>(0x5f4, false);
+	transmitStruct<Aim5f5>(0x5f5, false);
+	transmitStruct<Aim5f6>(0x5f6, false);
+	transmitStruct<Aim5f7>(0x5f7, false);
+
+	// there are more, but less important for us
+	// transmitStruct<Aim5f8>(0x5f8, false);
+	// transmitStruct<Aim5f9>(0x5f9, false);
+	// transmitStruct<Aim5fa>(0x5fa, false);
+	// transmitStruct<Aim5fb>(0x5fb, false);
+	// transmitStruct<Aim5fc>(0x5fc, false);
+	// transmitStruct<Aim5fd>(0x5fd, false);
 }
 
 #endif // EFI_CAN_SUPPORT
