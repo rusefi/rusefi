@@ -14,14 +14,17 @@
 #include "os_access.h"
 #include "crc.h"
 #include "serial_can.h"
-#include "can.h"
-#include "can_msg_tx.h"
 
 #if HAL_USE_CAN
 static CanStreamer streamer;
 static CanStreamerState state(&streamer);
 static CanTsListener listener;
 #endif // HAL_USE_CAN
+
+
+#if HAL_USE_CAN || EFI_UNIT_TEST
+#include "can.h"
+#include "can_msg_tx.h"
 
 int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout) {
 	int dlc = 8; // standard 8 bytes
@@ -360,3 +363,7 @@ msg_t canStreamReceiveTimeout(size_t *np, uint8_t *rxbuf, sysinterval_t timeout)
 }
 
 #endif /* HAL_USE_CAN */
+
+
+
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
