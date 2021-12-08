@@ -180,6 +180,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	int totalNumSent = numSent;
 
 	// get a flow control (FC) frame
+#if !EFI_UNIT_TEST // todo: add FC to unit-tests?
 	CANRxFrame rxmsg;
 	for (int numFcReceived = 0; ; numFcReceived++) {
 		if (streamer->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) != CAN_MSG_OK) {
@@ -214,6 +215,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 		}
 		break;
 	}
+#endif /* EFI_UNIT_TEST */
 
 	// send the rest of the data
 	int idx = 1;
@@ -250,16 +252,17 @@ int CanStreamerState::getDataFromFifo(uint8_t *rxbuf, size_t &numBytes) {
 can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbuf, can_sysinterval_t timeout) {
 	int numBytes = *np;
 	int offset = 0;
-	int minNumBytesRequiredToSend = 7 - txFifoBuf.getCount();
-	while (numBytes >= minNumBytesRequiredToSend) {
-		txFifoBuf.put(txbuf + offset, numBytes);
+
+	// we send here only if the TX FIFO buffer is getting overflowed
+	while (numBytes >= txFifoBuf.getSize() - txFifoBuf.getCount()) {
+		int numBytesToAdd = txFifoBuf.getSize() - txFifoBuf.getCount();
+		txFifoBuf.put(txbuf + offset, numBytesToAdd);
 		int numSent = sendDataTimeout((const uint8_t *)txFifoBuf.getElements(), txFifoBuf.getCount(), timeout);
 		if (numSent < 1)
 			break;
 		txFifoBuf.clear();
 		offset += numSent;
 		numBytes -= numSent;
-		minNumBytesRequiredToSend = 7;
 	}
 	
 	// now we put the rest on hold
