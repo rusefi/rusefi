@@ -78,10 +78,6 @@ void CanTxMessage::setDlc(uint8_t dlc) {
 	m_frame.DLC = dlc;
 }
 
-uint8_t& CanTxMessage::operator[](size_t index) {
-	return m_frame.data8[index];
-}
-
 void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
 	m_frame.data8[offset] = value & 0xFF;
 	m_frame.data8[offset + 1] = value >> 8;
@@ -101,10 +97,11 @@ CanTxMessage::~CanTxMessage() {
 
 }
 
-uint8_t& CanTxMessage::operator[](size_t index) {
-	return m_data8[index];
-}
-
 void CanTxMessage::setDlc(uint8_t) { }
 
 #endif // EFI_CAN_SUPPORT
+
+uint8_t& CanTxMessage::operator[](size_t index) {
+	return m_frame.data8[index];
+}
+

@@ -690,7 +690,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 					hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
 				}
 #if WITH_TS_STATE
-				engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = map;
+				engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT = map;
 				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = map - mapCamPrevCycleValue;
 #endif // WITH_TS_STATE
 

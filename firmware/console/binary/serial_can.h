@@ -12,7 +12,7 @@
 #include "can_listener.h"
 #include "can_msg_tx.h"
 
-#if !EFI_UNIT_TEST
+#if EFI_PROD_CODE
 #define can_msg_t msg_t
 #define can_sysinterval_t sysinterval_t
 #define CAN_MSG_OK MSG_OK

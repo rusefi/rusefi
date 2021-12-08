@@ -13,6 +13,7 @@
 #include <cstddef>
 
 #include "os_access.h"
+#include "can.h"
 
 /**
  * Represent a message to be transmitted over CAN.
@@ -58,12 +59,16 @@ public:
 
 	void setDlc(uint8_t dlc);
 
+//#if ! EFI_SIMULATOR
+	const CANTxFrame *getFrame() const {
+		return &m_frame;
+	}
+//#endif // EFI_SIMULATOR
+
 protected:
-#if EFI_CAN_SUPPORT
+//#if ! EFI_SIMULATOR
 	CANTxFrame m_frame;
-#else // not EFI_CAN_SUPPORT
-	uint8_t m_data8[8];
-#endif // EFI_CAN_SUPPORT
+//#endif // EFI_SIMULATOR
 
 private:
 #if EFI_CAN_SUPPORT

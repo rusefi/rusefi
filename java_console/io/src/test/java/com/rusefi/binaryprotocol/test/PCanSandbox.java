@@ -31,21 +31,12 @@ public class PCanSandbox {
         PCanIoStream tsStream = new PCanIoStream(can);
 
 /*
-        {
+        for (int i = 0; i < 17; i++) {
             String signature = BinaryProtocol.getSignature(tsStream);
-            System.out.println("Got " + signature + " signature via PCAN");
+            System.out.println("Got " + i + " " + signature + " signature via PCAN");
             if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
                 throw new IllegalStateException("Unexpected S " + signature);
         }
-
-        {
-            String signature = BinaryProtocol.getSignature(tsStream);
-            System.out.println("AGAIN, got " + signature + " signature via PCAN");
-            if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
-                throw new IllegalStateException("Unexpected S " + signature);
-        }
-
-
         System.out.println("****************************************");
         System.out.println("*********  PCAN LOOKS GREAT  ***********");
         System.out.println("****************************************");
@@ -55,7 +46,7 @@ public class PCanSandbox {
 
         ConfigurationImage ci = SandboxCommon.readImage(tsStream, linkManager);
 
+        System.exit(0);
     }
-
 }
 

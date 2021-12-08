@@ -428,6 +428,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	if (received != 1) {
 //			tunerStudioError("ERROR: no command");
 #if EFI_BLUETOOTH_SETUP
+		// no data in a whole second means time to disconnect BT
 		// assume there's connection loss and notify the bluetooth init code
 		bluetoothSoftwareDisconnectNotify();
 #endif  /* EFI_BLUETOOTH_SETUP */
@@ -518,11 +519,12 @@ void TunerstudioThread::ThreadTask() {
 	}
 
 	// Until the end of time, process incoming messages.
-	while(true) {
-		if (tsProcessOne(channel) == 0)
+	while (true) {
+		if (tsProcessOne(channel) == 0) {
 			onDataArrived(true);
-		else
+		} else {
 			onDataArrived(false);
+		}
 	}
 }
 
