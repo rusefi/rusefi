@@ -105,6 +105,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
 			&& vvtMode != VVT_HONDA_K
+			&& vvtMode != VVT_MAP_V_TWIN_ANOTHER &&
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
 }
@@ -143,6 +144,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 
 	switch (engineConfiguration->vvtMode[camIndex]) {
 	case VVT_FIRST_HALF:
+	case VVT_MAP_V_TWIN_ANOTHER:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
@@ -662,11 +664,43 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		mainTriggerCallback(triggerIndexForListeners, timestamp);
 
-#if EFI_TUNER_STUDIO
 		auto toothAngle = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
 		wrapAngle(toothAngle, "currentEnginePhase", CUSTOM_ERR_6555);
+#if EFI_TUNER_STUDIO
 		tsOutputChannels.currentEnginePhase = toothAngle;
-#endif
+#endif // EFI_TUNER_STUDIO
+
+		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER) {
+
+			if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle > engineConfiguration->mapCamDetectionAnglePosition) {
+				// we are somewhere close to 'mapCamDetectionAnglePosition'
+
+				float map = Sensor::getOrZero(SensorType::Map);
+
+				if (map > mapCamPrevCycleValue) {
+					mapCamCounter++;
+
+					efitick_t stamp = getTimeNowNt();
+					hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
+					hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
+				}
+#if EFI_TUNER_STUDIO
+				tsOutputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = map;
+				tsOutputChannels.TEMPLOG_map_peak = mapCamCounter;
+				tsOutputChannels.TEMPLOG_MAP_AT_DIFF = map - mapCamPrevCycleValue;
+#endif // EFI_TUNER_STUDIO
+
+				mapCamPrevCycleValue = map;
+
+
+
+			}
+
+			mapCamPrevToothAngle = toothAngle;
+
+		}
+
+
 	}
 }
 
