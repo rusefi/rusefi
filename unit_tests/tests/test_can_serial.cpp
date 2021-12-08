@@ -28,6 +28,8 @@ public:
 	}
 
 	virtual can_msg_t receive(canmbx_t mailbox, CANRxFrame *crfp, can_sysinterval_t timeout) override {
+		if (crfList.empty())
+			return CAN_MSG_TIMEOUT;
 		*crfp = *crfList.begin();
 		crfList.pop_front();
 		return CAN_MSG_OK;
@@ -51,6 +53,8 @@ public:
 	TestCanStreamerState() : CanStreamerState(&streamer) {}
 
 	void test(const std::vector<std::string> & dataList, const std::vector<std::string> & frames, int fifoLeftoverSize, const std::vector<size_t> & receiveChunks) {
+		EngineTestHelper eth(TEST_ENGINE);
+
 		size_t totalSize = 0;
 		std::string totalData;
 		for (auto data : dataList) {
@@ -110,37 +114,37 @@ protected:
 	TestCanStreamer streamer;
 };
 
+
 TEST(testCanSerial, test1Frame) {
-	/*
+
 	{
 		TestCanStreamerState state;
 		state.test({ "1" }, { "\x01"s "1\0\0\0\0\0\0"s }, 1, { 1 }); // 1 byte -> 1 frame, 1 byte in FIFO
 	}
 	{
 		TestCanStreamerState state;
-		state.test({ "0123456" }, { "\x07"s "0123456"s }, 0, { 7 }); // 7 bytes -> 1 8-byte frame
+		state.test({ "0123456" }, { "\x07"s "0123456"s }, 7, { 7 }); // 7 bytes -> 1 8-byte frame
 	}
 	{
 		TestCanStreamerState state;
-		state.test({ "0123456" }, { "\x07"s "0123456"s }, 0, { 1, 1, 1, 1, 1, 1, 1 }); // 7 bytes -> 1 8-byte frame, split receive test
+		state.test({ "0123456" }, { "\x07"s "0123456"s }, 7, { 1, 1, 1, 1, 1, 1, 1 }); // 7 bytes -> 1 8-byte frame, split receive test
 	}
 	{
 		TestCanStreamerState state;
-		state.test({ "0123456" }, { "\x07"s "0123456"s }, 0, { 3, 4 }); // 7 bytes -> 1 8-byte frame, split receive test
+		state.test({ "0123456" }, { "\x07"s "0123456"s }, 7, { 3, 4 }); // 7 bytes -> 1 8-byte frame, split receive test
 	}
 	{
 		TestCanStreamerState state;
-		state.test({ "0", "1", "2", "3", "4", "5", "6" }, { "\x07"s "0123456"s }, 0, { 7 }); // 7 bytes separately -> 1 8-byte frame
+		state.test({ "0", "1", "2", "3", "4", "5", "6" }, { "\x07"s "0123456"s }, 7, { 7 }); // 7 bytes separately -> 1 8-byte frame
 	}
-*/
 }
 
-/*
 TEST(testCanSerial, test2Frames) {
 	{
 		TestCanStreamerState state;
-		state.test({ "01234567" }, { "\x07"s "0123456"s, "\x01"s "7\0\0\0\0\0\0"s }, 1, { 8 }); // 8 bytes -> 2 8-byte frames, 1 byte in FIFO
+		state.test({ "01234567" }, { "\x10"s "\x08"s "012345"s, "\x21"s "67\0\0\0\0\0"s }, 8, { 8 }); // 8 bytes -> 2 8-byte frames, 8 bytes in FIFO
 	}
+	/*
 	{
 		TestCanStreamerState state;
 		state.test({ "0123456ABCDEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 14 }); // 14 bytes -> 2 8-byte frames, empty FIFO
@@ -149,8 +153,10 @@ TEST(testCanSerial, test2Frames) {
 		TestCanStreamerState state;
 		state.test({ "0123456ABCDEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 6, 1, 1, 6 }); // 14 bytes -> 2 8-byte frames, empty FIFO, split receive test
 	}
+	*/
 }
 
+/*
 TEST(testCanSerial, testIrregularSplits) {
 	{
 		TestCanStreamerState state;
