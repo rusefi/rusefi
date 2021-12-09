@@ -39,7 +39,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         FieldIterator iterator = new FieldIterator(tsFields);
         for (int i = 0; i < tsFields.size(); i++) {
             iterator.start(i);
-            // skip duplicate names
+            // skip duplicate names which happens in case of conditional compilation
             if (iterator.cf.getName().equals(iterator.prev.getName()) || iterator.cf.isDirective())
                 continue;
             tsPosition = writeOneField(iterator.cf, prefix, tsPosition, iterator.next, iterator.bitState.get());

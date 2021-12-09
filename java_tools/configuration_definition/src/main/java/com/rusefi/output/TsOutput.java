@@ -111,6 +111,7 @@ public class TsOutput {
             iterator.start(i);
 
             // if duplicate names, use previous position
+            // we can have same member twice in the
             if (iterator.cf.getName().equals(iterator.prev.getName())) {
                 tsPosition = prevTsPosition;
             }
