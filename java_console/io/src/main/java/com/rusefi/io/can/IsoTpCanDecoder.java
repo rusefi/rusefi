@@ -51,6 +51,11 @@ public class IsoTpCanDecoder {
                 break;
             case ISO_TP_FRAME_CONSECUTIVE:
                 frameIdx = data[0] & 0xf;
+                if (frameIdx < waitingForFrameIndex) {
+                    // todo: open question why we see message duplicates but we see those
+                    // is that rusEFI firmware bug or is that an OK thingy for CAN physical level?
+                    return new byte[0];
+                }
                 if (this.waitingForNumBytes < 0 || this.waitingForFrameIndex != frameIdx) {
                     throw new IllegalStateException("ISO_TP_FRAME_CONSECUTIVE: That's an abnormal situation, and we probably should react? waitingForNumBytes=" + waitingForNumBytes + " waitingForFrameIndex=" + waitingForFrameIndex + " frameIdx=" + frameIdx);
                 }
