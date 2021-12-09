@@ -112,14 +112,13 @@ public class TsOutput {
 
             // if duplicate names, use previous position
             // we can have same member twice in the
-            if (iterator.cf.getName().equals(iterator.prev.getName())) {
+            if (iterator.cf.getName().equals(iterator.getPrev().getName())) {
                 tsPosition = prevTsPosition;
             }
 
             // Update 'prev' state needed for duplicate names recognition
             if (!iterator.cf.isDirective()) {
                 prevTsPosition = tsPosition;
-                iterator.prev = iterator.cf;
             }
 
             tsPosition = writeTunerStudio(iterator.cf, prefix, tsHeader, tsPosition, iterator.next, iterator.bitState.get());

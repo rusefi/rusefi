@@ -11,12 +11,16 @@ import java.util.List;
 public class FieldIterator {
     private final List<ConfigField> tsFields;
     BitState bitState = new BitState();
-    ConfigField prev = ConfigField.VOID;
+    private ConfigField prev = ConfigField.VOID;
     ConfigField next;
     ConfigField cf;
 
     public FieldIterator(List<ConfigField> tsFields) {
         this.tsFields = tsFields;
+    }
+
+    public ConfigField getPrev() {
+        return prev;
     }
 
     public void start(int index) {
@@ -25,6 +29,8 @@ public class FieldIterator {
     }
 
     public void end() {
+        if (!cf.isDirective())
+            prev = cf;
         bitState.incrementBitIndex(cf, next);
     }
 }
