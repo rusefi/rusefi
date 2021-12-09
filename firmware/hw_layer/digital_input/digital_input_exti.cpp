@@ -126,6 +126,8 @@ static inline void triggerInterrupt() {
 CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 	OSAL_IRQ_PROLOGUE();
 
+	auto now = getTimeNowNt();
+
 	for (size_t i = 0; i < 16; i++) {
 		auto& channel = channels[i];
 
@@ -135,6 +137,11 @@ CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 		auto timestamp = channel.Timestamp;
 		channel.Timestamp = 0;
 		__enable_irq();
+
+		if (now - timestamp > MS2NT(10)) {
+			efiPrintf("EXTI skipped late event ch %d", i);
+			continue;
+		}
 
 		if (timestamp != 0) {
 			channel.Callback(channel.CallbackData, timestamp);
