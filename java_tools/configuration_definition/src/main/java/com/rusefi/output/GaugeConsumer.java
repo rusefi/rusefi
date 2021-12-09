@@ -67,7 +67,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
             return handleFields(cs, new FieldIterator(cs.tsFields), extraPrefix);
         }
 
-        String comment = getComment(configField, state.variableRegistry);
+        String comment = getComment("", configField, state.variableRegistry);
         comment = ConfigField.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;

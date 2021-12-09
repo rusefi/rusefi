@@ -13,8 +13,6 @@ import java.util.Collections;
 import static org.junit.Assert.assertEquals;
 
 public class OutputsTest {
-    private com.rusefi.output.GaugeConsumer GaugeConsumer;
-
     @Test
     public void generateSomething() throws IOException {
         String test = "struct total\n" +
@@ -117,10 +115,10 @@ public class OutputsTest {
         GaugeConsumer gaugeConsumer = new GaugeConsumer(null, state);
         state.readBufferedReader(test, Arrays.asList(dataLogConsumer, gaugeConsumer));
         assertEquals(
-                "entry = alternatorStatus_iTerm, \"iTerm\", float,  \"%.3f\"\n" +
-                        "entry = alternatorStatus_dTerm, \"dTerm\", float,  \"%.3f\"\n" +
-                        "entry = idleStatus_iTerm, \"iTerm\", float,  \"%.3f\"\n" +
-                        "entry = idleStatus_dTerm, \"dTerm\", float,  \"%.3f\"\n",
+                "entry = alternatorStatus_iTerm, \"alternatorStatus_iTerm\", float,  \"%.3f\"\n" +
+                        "entry = alternatorStatus_dTerm, \"alternatorStatus_dTerm\", float,  \"%.3f\"\n" +
+                        "entry = idleStatus_iTerm, \"idleStatus_iTerm\", float,  \"%.3f\"\n" +
+                        "entry = idleStatus_dTerm, \"idleStatus_dTerm\", float,  \"%.3f\"\n",
                 new String(dataLogConsumer.getTsWriter().toCharArray()));
 
         assertEquals("alternatorStatus_iTermGauge = alternatorStatus_iTerm,\"alternatorStatus_ iTerm\", \"v\", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 4,4\n" +

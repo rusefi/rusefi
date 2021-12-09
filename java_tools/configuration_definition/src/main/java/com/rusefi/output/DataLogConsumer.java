@@ -9,13 +9,16 @@ import org.jetbrains.annotations.NotNull;
 import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.TreeSet;
 
+import static com.rusefi.ConfigField.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class DataLogConsumer implements ConfigurationConsumer {
     private final String fileName;
     private final ReaderState state;
     private final CharArrayWriter tsWriter = new CharArrayWriter();
+    private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
     public DataLogConsumer(String fileName, ReaderState state) {
         this.fileName = fileName;
@@ -88,19 +91,22 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = getComment(configField, state.variableRegistry);
+        String comment = getComment(prefix, configField, state.variableRegistry);
 
+        if (comments.contains(comment))
+            throw new IllegalStateException(comment + " already present in the outputs!");
+        comments.add(comment);
         return "entry = " + prefix + configField.getName() + ", " + comment + ", " + typeString + "\n";
     }
 
     @NotNull
-    public static String getComment(ConfigField configField, VariableRegistry variableRegistry) {
+    public static String getComment(String prefix, ConfigField configField, VariableRegistry variableRegistry) {
         String comment = variableRegistry.applyVariables(configField.getComment());
         String[] comments = comment == null ? new String[0] : comment.split("\\\\n");
         comment = (comments.length > 0) ? comments[0] : "";
 
         if (comment.isEmpty())
-            comment = configField.getName();
+            comment =  prefix + unquote(configField.getName());
 
         if (comment.charAt(0) != '"')
             comment = quote(comment);
