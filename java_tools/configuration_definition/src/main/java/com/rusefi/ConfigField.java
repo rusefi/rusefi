@@ -204,7 +204,7 @@ public class ConfigField {
         return "ConfigField{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
-                ", arraySizes=" + arraySizes +
+                ", arraySizes=" + Arrays.toString(arraySizes) +
                 '}';
     }
 
