@@ -10,14 +10,18 @@ import java.io.Writer;
 
 import static com.rusefi.ToolUtil.EOL;
 
+/**
+ * Same code is used to generate [Constants] and [OutputChannels] bodies, with just one flag controlling the minor
+ * difference in behaviours
+ */
 public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final ReaderState state;
-    private final boolean longForm;
+    private final boolean isConstantsSection;
 
     public TsOutput(ReaderState state, boolean longForm) {
         this.state = state;
-        this.longForm = longForm;
+        this.isConstantsSection = longForm;
     }
 
     public StringBuilder getSettingContextHelp() {
@@ -49,7 +53,7 @@ public class TsOutput {
             tsHeader.write(" " + tsPosition + ", [");
             tsHeader.write(bitIndex + ":" + bitIndex);
             tsHeader.write("]");
-            if (longForm)
+            if (isConstantsSection)
                 tsHeader.write(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
             tsHeader.write(EOL);
 
@@ -144,7 +148,7 @@ public class TsOutput {
                 }
             }
             StringBuilder sb = new StringBuilder();
-            if (!longForm) {
+            if (!isConstantsSection) {
                 String[] subarray = new String[3];
                 System.arraycopy(fields, 0, subarray, 0, subarray.length);
                 fields = subarray;
