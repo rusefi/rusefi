@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.util.SystemOut;
 import com.rusefi.test.ConfigFieldParserTest;
 
@@ -43,8 +44,6 @@ public class ConfigField {
     private final ReaderState state;
     private final boolean fsioVisible;
     private final boolean hasAutoscale;
-    private final String individualName;
-    private final int indexWithinArray;
     private final String trueName;
     private final String falseName;
 
@@ -62,11 +61,11 @@ public class ConfigField {
                        boolean fsioVisible,
                        boolean hasAutoscale,
                        String individualName,
-                       int indexWithinArray, String trueName, String falseName) {
+                       int indexWithinArray,
+                       String trueName,
+                       String falseName) {
         this.fsioVisible = fsioVisible;
         this.hasAutoscale = hasAutoscale;
-        this.individualName = individualName;
-        this.indexWithinArray = indexWithinArray;
         this.trueName = trueName == null ? "true" : trueName;
         this.falseName = falseName == null ? "false" : falseName;
         Objects.requireNonNull(name, comment + " " + type);
@@ -97,19 +96,6 @@ public class ConfigField {
 
     public String getFalseName() {
         return falseName;
-    }
-
-    public String getCFieldName() {
-        return getIndividualName() == null ? getName() : getIndividualName() + "["
-                + (getIndexWithinArray() - 1) + "]";
-    }
-
-    public String getIndividualName() {
-        return individualName;
-    }
-
-    public int getIndexWithinArray() {
-        return indexWithinArray;
     }
 
     public boolean isBit() {
@@ -182,14 +168,16 @@ public class ConfigField {
         return field;
     }
 
-    public static boolean isPreprocessorDirective(ReaderState state, String line) {
+    public static boolean isPreprocessorDirective(String line) {
         Matcher matcher = DIRECTIVE.matcher(line);
         return matcher.matches();
     }
 
     public int getSize(ConfigField next) {
-        if (isBit() && next.isBit())
+        if (isBit() && next.isBit()) {
+            // we have a protection from 33+ bits in a row in BitState, see BitState.TooManyBitsInARow
             return 0;
+        }
         if (isBit())
             return 4;
         int size = getElementSize();
@@ -265,7 +253,7 @@ public class ConfigField {
         }
         if (tsInfo == null)
             throw new IllegalArgumentException("tsInfo expected with autoscale");
-        String[] tokens = tsInfo.split("\\,");
+        String[] tokens = tsInfo.split(",");
         if (tokens.length < 2)
             throw new IllegalArgumentException("Second comma-separated token expected in [" + tsInfo + "] for " + name);
 
@@ -303,7 +291,7 @@ public class ConfigField {
     private String[] getTokens() {
         if (tsInfo == null)
             return new String[0];
-        return tsInfo.split("\\,");
+        return tsInfo.split(",");
     }
 
     public String getUnits() {
