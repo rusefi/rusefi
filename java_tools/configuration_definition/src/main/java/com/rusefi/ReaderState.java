@@ -240,7 +240,7 @@ public class ReaderState {
         ConfigField cf = ConfigField.parse(state, line);
 
         if (cf == null) {
-            if (ConfigField.isPreprocessorDirective(state, line)) {
+            if (ConfigField.isPreprocessorDirective(line)) {
                 cf = new ConfigField(state, "", line, null,
                         ConfigField.DIRECTIVE_T, new int[0], null, false, false, false, null, 0,
 			null, null);

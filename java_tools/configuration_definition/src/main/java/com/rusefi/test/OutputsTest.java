@@ -1,5 +1,6 @@
 package com.rusefi.test;
 
+import com.rusefi.BitState;
 import com.rusefi.ReaderState;
 import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
@@ -63,6 +64,20 @@ public class OutputsTest {
                 "unusedBit_4_31 = bits, U32, 5, [31:31]\n" +
                 "alignmentFill_at_9 = array, U08, 9, [3], \"units\", 1, 0\n", new String(tsProjectConsumer.getTsWriter().toCharArray()));
 
+    }
+
+    @Test(expected = BitState.TooManyBitsInARow.class)
+    public void tooManyBits() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 40; i++)
+            sb.append("bit b" + i + "\n");
+        String test = "struct total\n" +
+                sb +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+
+        OutputsSectionConsumer tsProjectConsumer = new OutputsSectionConsumer(null, state);
+        state.readBufferedReader(test, Collections.singletonList(tsProjectConsumer));
     }
 
     @Test
