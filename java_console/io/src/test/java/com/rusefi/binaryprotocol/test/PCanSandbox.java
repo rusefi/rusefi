@@ -1,13 +1,8 @@
 package com.rusefi.binaryprotocol.test;
 
 import com.opensr5.ConfigurationImage;
-import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.BinaryProtocolState;
-import com.rusefi.config.generated.Fields;
-import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.serial.StreamConnector;
-import peak.can.basic.*;
+import com.rusefi.io.stream.PCanIoStream;
 
 import java.io.IOException;
 
@@ -16,19 +11,10 @@ import java.io.IOException;
  */
 public class PCanSandbox {
 
-    public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
-
     public static void main(String[] args) throws IOException, InterruptedException {
-        PCANBasic can = new PCANBasic();
-        can.initializeAPI();
-        TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
-        if (status != TPCANStatus.PCAN_ERROR_OK) {
-            System.out.println("Error initializing PCAN: " + status);
-            return;
-        }
-        System.out.println("Hello PCAN " + can);
-
-        PCanIoStream tsStream = new PCanIoStream(can);
+        PCanIoStream tsStream = PCanIoStream.getPCANIoStream();
+        if (tsStream == null)
+            throw new IOException("No PCAN");
 
 /*
         for (int i = 0; i < 17; i++) {
@@ -42,11 +28,15 @@ public class PCanSandbox {
         System.out.println("****************************************");
 */
         LinkManager linkManager = new LinkManager();
-        SandboxCommon.verifyCrcNoPending(tsStream, linkManager);
-
+/*
+        for (int i = 0; i < 4; i++) {
+            SandboxCommon.verifyCrcNoPending(tsStream, linkManager);
+        }
+*/
         ConfigurationImage ci = SandboxCommon.readImage(tsStream, linkManager);
 
-        System.exit(0);
+//        System.out.println("We are done");
+//        System.exit(0);
     }
 }
 
