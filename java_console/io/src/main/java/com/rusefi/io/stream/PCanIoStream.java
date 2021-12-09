@@ -1,4 +1,4 @@
-package com.rusefi.binaryprotocol.test;
+package com.rusefi.io.stream;
 
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
@@ -8,9 +8,8 @@ import com.rusefi.io.can.IsoTpCanDecoder;
 import com.rusefi.io.can.IsoTpConnector;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.BinaryProtocolServer;
-import peak.can.basic.PCANBasic;
-import peak.can.basic.TPCANMsg;
-import peak.can.basic.TPCANStatus;
+import org.jetbrains.annotations.Nullable;
+import peak.can.basic.*;
 
 import java.io.IOException;
 import java.util.concurrent.Executor;
@@ -19,6 +18,7 @@ import java.util.concurrent.Executors;
 import static peak.can.basic.TPCANMessageType.PCAN_MESSAGE_STANDARD;
 
 public class PCanIoStream extends AbstractIoStream {
+    public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
     private final IncomingDataBuffer dataBuffer;
     private final PCANBasic can;
     private final IsoTpCanDecoder canDecoder = new IsoTpCanDecoder() {
@@ -47,10 +47,23 @@ public class PCanIoStream extends AbstractIoStream {
         }
     };
 
+    @Nullable
+    public static PCanIoStream getPCANIoStream() {
+        PCANBasic can = new PCANBasic();
+        can.initializeAPI();
+        TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
+        if (status != TPCANStatus.PCAN_ERROR_OK) {
+            System.err.println("Error initializing PCAN: " + status);
+            return null;
+        }
+        System.out.println("Hello PCAN!");
+        return new PCanIoStream(can);
+    }
+
     private void sendCanPacket(byte[] payLoad) {
         TPCANMsg msg = new TPCANMsg(Fields.CAN_ECU_SERIAL_RX_ID, PCAN_MESSAGE_STANDARD.getValue(),
                 (byte) payLoad.length, payLoad);
-        TPCANStatus status = can.Write(PCanSandbox.CHANNEL, msg);
+        TPCANStatus status = can.Write(CHANNEL, msg);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
             System.out.println("Unable to write the CAN message: " + status);
             System.exit(0);
@@ -84,7 +97,7 @@ public class PCanIoStream extends AbstractIoStream {
     public void readOnePacket() {
         // todo: can we reuse instance?
         TPCANMsg rx = new TPCANMsg();
-        TPCANStatus status = can.Read(PCanSandbox.CHANNEL, rx, null);
+        TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
             System.out.println(rx + " id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
             byte[] decode = canDecoder.decodePacket(rx.getData());
