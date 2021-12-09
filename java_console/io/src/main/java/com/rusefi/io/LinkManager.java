@@ -9,6 +9,7 @@ import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.serial.StreamConnector;
+import com.rusefi.io.stream.PCanIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,7 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class LinkManager implements Closeable {
     private static final Logging log = getLogging(LinkManager.class);
+    public static final String PCAN = "PCAN";
 
     @NotNull
     public static LogLevel LOG_LEVEL = LogLevel.INFO;
@@ -209,6 +211,9 @@ public class LinkManager implements Closeable {
         log.info("LinkManager: Starting " + port);
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
+        } else if (PCAN.equals(port)) {
+            Callable<IoStream> streamFactory = PCanIoStream::getPCANIoStream;
+            setConnector(new StreamConnector(this, streamFactory));
         } else if (TcpConnector.isTcpPort(port)) {
             Callable<IoStream> streamFactory = new Callable<IoStream>() {
                 @Override

@@ -2,10 +2,8 @@ package com.rusefi;
 
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
-import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +16,8 @@ public enum SerialPortScanner {
     INSTANCE;
 
     private volatile boolean isRunning = true;
+
+    private static final boolean SHOW_PCAN = Boolean.parseBoolean(System.getenv().get("RUSEFI_PCAN"));
 
     static final String AUTO_SERIAL = "Auto Serial";
     @NotNull
@@ -36,6 +36,8 @@ public enum SerialPortScanner {
         ports.addAll(Arrays.asList(serialPorts));
         if (includeSlowTcpLookup)
             ports.addAll(TcpConnector.getAvailablePorts());
+        if (SHOW_PCAN)
+            ports.add(LinkManager.PCAN);
 
         boolean isListUpdated;
         synchronized (knownPorts) {
