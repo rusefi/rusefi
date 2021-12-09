@@ -5,6 +5,9 @@ import com.rusefi.ConfigField;
 
 import java.util.List;
 
+/**
+ * custom iterator with references to previous and next elements
+ */
 public class FieldIterator {
     private final List<ConfigField> tsFields;
     BitState bitState = new BitState();
