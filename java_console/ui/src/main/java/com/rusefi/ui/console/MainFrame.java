@@ -111,7 +111,7 @@ public class MainFrame {
         String disconnected = ConnectionStatusLogic.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
         BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
         String signature = bp == null ? "not loaded" : bp.signature;
-        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.port + " " + signature);
+        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature);
     }
 
     private void windowClosedHandler() {
