@@ -7,11 +7,10 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
-import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.BufferedSerialIoStream;
+import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
