@@ -678,7 +678,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle360 > engineConfiguration->mapCamDetectionAnglePosition) {
 				// we are somewhere close to 'mapCamDetectionAnglePosition'
 
-				float map = Sensor::getOrZero(SensorType::Map);
+				// warning: hack hack hack
+				float map = engine->outputChannels.instantMAPValue;
 
 				if (map > mapCamPrevCycleValue) {
 #if WITH_TS_STATE
