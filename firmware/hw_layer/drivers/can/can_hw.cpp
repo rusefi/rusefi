@@ -127,13 +127,14 @@ static const CANConfig *canConfig = &canConfig500;
 
 class CanRead final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
-	CanRead()
+	CanRead(size_t index)
 		: ThreadController("CAN RX", PRIO_CAN_RX)
+		, m_index(index)
 	{
 	}
 
 	void ThreadTask() override {
-		CANDriver* device = detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
+		CANDriver* device = detectCanDevice(m_index);
 
 		if (!device) {
 			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
@@ -156,10 +157,12 @@ public:
 	}
 
 private:
+	const size_t m_index;
 	CANRxFrame m_buffer;
 };
 
-static CanRead canRead CCM_OPTIONAL;
+CCM_OPTIONAL static CanRead canRead(0);
+//CCM_OPTIONAL static CanRead canRead2(1);
 static CanWrite canWrite CCM_OPTIONAL;
 
 static void canInfo() {
@@ -272,11 +275,13 @@ void initCan(void) {
 	canStart(&CAND1, canConfig);
 #endif /* STM32_CAN_USE_CAN2 */
 
+	if (detectCanDevice(0) == detectCanDevice(1)) {
+		firmwareError(OBD_PCM_Processor_Fault, "CAN pins must be set to different devices");
+		return;
+	}
+
 	// Plumb CAN device to tx system
-	CanTxMessage::setDevice(detectCanDevice(
-		engineConfiguration->canRxPin,
-		engineConfiguration->canTxPin
-	));
+	CanTxMessage::setDevice(detectCanDevice(0));
 
 	// fire up threads, as necessary
 	if (engineConfiguration->canWriteEnabled) {
@@ -285,6 +290,7 @@ void initCan(void) {
 
 	if (engineConfiguration->canReadEnabled) {
 		canRead.Start();
+		//canRead2.Start();
 	}
 
 	isCanEnabled = true;
@@ -292,6 +298,17 @@ void initCan(void) {
 
 bool getIsCanEnabled(void) {
 	return isCanEnabled;
+}
+
+CANDriver* detectCanDevice(size_t logicalIndex) {
+	switch (logicalIndex) {
+	case 0:
+		return detectCanDeviceImpl(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
+	case 1:
+		return detectCanDeviceImpl(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
+	}
+
+	return nullptr;
 }
 
 #endif /* EFI_CAN_SUPPORT */
