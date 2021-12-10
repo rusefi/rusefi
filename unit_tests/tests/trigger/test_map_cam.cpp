@@ -93,6 +93,6 @@ TEST(trigger, map_cam_by_magic_point) {
 
 	ASSERT_EQ(2, engine->outputChannels.TEMPLOG_map_peak);
 	ASSERT_EQ(1, engine->outputChannels.vvtSyncCounter);
-
+	ASSERT_EQ(6, engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT);
 
 }
