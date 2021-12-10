@@ -304,7 +304,7 @@ CANDriver* detectCanDevice(size_t logicalIndex) {
 	switch (logicalIndex) {
 	case 0:
 		return detectCanDeviceImpl(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
-	case 2:
+	case 1:
 		return detectCanDeviceImpl(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
 	}
 
