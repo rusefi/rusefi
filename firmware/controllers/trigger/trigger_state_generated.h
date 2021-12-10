@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Oct 17 01:13:41 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Dec 09 21:55:23 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -9,8 +9,13 @@ struct trigger_state_s {
 	 * offset 0
 	 */
 	float currentGap = (float)0;
-	/** total size 4*/
+	/**
+	 * Crank revolution counter
+	 * offset 4
+	 */
+	uint32_t totalRevolutionCounter = (uint32_t)0;
+	/** total size 8*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Sun Oct 17 01:13:41 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Dec 09 21:55:23 EST 2021
