@@ -668,6 +668,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		engine->outputChannels.currentEnginePhase = toothAngle;
 #endif // EFI_TUNER_STUDIO
 
+#if WITH_TS_STATE
 		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER) {
 			// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
 			auto toothAngle360 = toothAngle;
@@ -681,34 +682,27 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 				// warning: hack hack hack
 				float map = engine->outputChannels.instantMAPValue;
 
-				if (map > mapCamPrevCycleValue) {
-#if WITH_TS_STATE
-					engine->outputChannels.TEMPLOG_map_peak++;
-					int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
-					engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
-					prevChangeAtCycle = revolutionCounter;
-#endif // WITH_TS_STATE
-
-					efitick_t stamp = getTimeNowNt();
-					hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
-					hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
-				}
-#if WITH_TS_STATE
-				engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT = map;
-				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = map - mapCamPrevCycleValue;
-#endif // WITH_TS_STATE
-
+				// Compute diff against the last time we were here
+				float diff = map - mapCamPrevCycleValue;
 				mapCamPrevCycleValue = map;
 
+				if (diff > 0) {
+					engine->outputChannels.TEMPLOG_map_peak++;
+					int revolutionCounter = engine->tri ggerCentral.triggerState.getTotalRevolutionCounter();
+					engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
+					prevChangeAtCycle = revolutionCounter;
 
+					hwHandleVvtCamSignal(TV_RISE, timestamp, /*index*/0);
+					hwHandleVvtCamSignal(TV_FALL, timestamp, /*index*/0);
+				}
 
+				engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT = map;
+				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = diff;
 			}
 
 			mapCamPrevToothAngle = toothAngle360;
-
 		}
-
-
+#endif // WITH_TS_STATE
 	}
 }
 
