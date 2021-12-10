@@ -688,7 +688,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 				if (diff > 0) {
 					engine->outputChannels.TEMPLOG_map_peak++;
-					int revolutionCounter = engine->tri ggerCentral.triggerState.getTotalRevolutionCounter();
+					int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
 					engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 					prevChangeAtCycle = revolutionCounter;
 
