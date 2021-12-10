@@ -683,6 +683,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 				if (map > mapCamPrevCycleValue) {
 #if WITH_TS_STATE
 					engine->outputChannels.TEMPLOG_map_peak++;
+					int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+					engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
+					prevChangeAtCycle = revolutionCounter;
 #endif // WITH_TS_STATE
 
 					efitick_t stamp = getTimeNowNt();
