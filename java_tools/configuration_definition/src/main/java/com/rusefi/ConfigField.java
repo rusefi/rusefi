@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, new int[0], null, false, false, false, null, -1, null, null);
+    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, new int[0], null, false, false, false, null, null);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
@@ -60,8 +60,6 @@ public class ConfigField {
                        boolean isIterate,
                        boolean fsioVisible,
                        boolean hasAutoscale,
-                       String individualName,
-                       int indexWithinArray,
                        String trueName,
                        String falseName) {
         this.fsioVisible = fsioVisible;
@@ -160,7 +158,7 @@ public class ConfigField {
 
 
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySizes,
-                tsInfo, isIterate, isFsioVisible, hasAutoscale, null, -1, null, null);
+                tsInfo, isIterate, isFsioVisible, hasAutoscale, null, null);
         SystemOut.println("type " + type);
         SystemOut.println("name " + name);
         SystemOut.println("comment " + comment);
