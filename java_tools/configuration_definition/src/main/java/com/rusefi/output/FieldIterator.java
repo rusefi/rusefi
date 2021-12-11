@@ -19,12 +19,19 @@ public class FieldIterator {
         this.tsFields = tsFields;
     }
 
+    /**
+     * return previous field which is not a directive
+     */
     public ConfigField getPrev() {
         return prev;
     }
 
     public void start(int index) {
-        next = index == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(index + 1);
+        int nextIndex = index + 1;
+        while (nextIndex < tsFields.size() && tsFields.get(nextIndex).isDirective())
+            nextIndex++;
+
+        next = nextIndex >= tsFields.size() ? ConfigField.VOID : tsFields.get(nextIndex);
         cf = tsFields.get(index);
     }
 
