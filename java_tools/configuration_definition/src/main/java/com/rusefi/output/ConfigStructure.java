@@ -58,12 +58,14 @@ public class ConfigStructure {
          * we make alignment decision based on C fields since we expect iteration and non-iteration fields
          * to match in size
          */
-        FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(cFields);
-        for (int i = 0; i < cFields.size(); i++) {
-            iterator.start(i);
-            iterator.end();
-            iterator.currentOffset += iterator.cf.getSize(iterator.next);
-        }
+        FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(cFields) {
+            @Override
+            public void end() {
+                super.end();
+                currentOffset += cf.getSize(next);
+            }
+        };
+        iterator.loop();
 
         totalSize = iterator.currentOffset;
         int fillSize = totalSize % 4 == 0 ? 0 : 4 - (totalSize % 4);

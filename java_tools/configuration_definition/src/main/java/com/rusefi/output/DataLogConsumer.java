@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import java.util.TreeSet;
 
 import static com.rusefi.ConfigField.unquote;
@@ -40,8 +41,9 @@ public class DataLogConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
-            FieldIterator iterator = new FieldIterator(structure.tsFields);
-            String content = handleFields(structure, iterator, "");
+            DataLogFieldIterator iterator = new DataLogFieldIterator(structure.tsFields, "");
+            iterator.loop();
+            String content = iterator.sb.toString();
             tsWriter.append(content);
         }
 
@@ -52,17 +54,21 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handleFields(ConfigStructure structure, FieldIterator iterator, String prefix) {
+    class DataLogFieldIterator extends FieldIterator {
+        private final String prefix;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < structure.tsFields.size(); i++) {
-            iterator.start(i);
 
-            String content = handle(iterator.cf, prefix);
-            sb.append(content);
-            iterator.end();
-
+        public DataLogFieldIterator(List<ConfigField> fields, String prefix) {
+            super(fields);
+            this.prefix = prefix;
         }
-        return sb.toString();
+
+        @Override
+        public void end() {
+            String content = handle(cf, prefix);
+            sb.append(content);
+            super.end();
+        }
     }
 
     private String handle(ConfigField configField, String prefix) {
@@ -72,7 +78,9 @@ public class DataLogConsumer implements ConfigurationConsumer {
         ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            return handleFields(cs, new FieldIterator(cs.tsFields), extraPrefix);
+            DataLogFieldIterator fieldIterator = new DataLogFieldIterator(cs.tsFields, extraPrefix);
+            fieldIterator.loop();
+            return fieldIterator.sb.toString();
         }
 
 
