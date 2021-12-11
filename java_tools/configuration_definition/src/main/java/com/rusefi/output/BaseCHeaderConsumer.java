@@ -53,6 +53,7 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
             iterator.start(i);
             content.append(getHeaderText(iterator.cf, currentOffset, iterator.bitState.get()));
 
+            // todo: do we have a bug with conditional field offsets being wrong?
             currentOffset += iterator.cf.getSize(iterator.next);
             iterator.end();
         }
