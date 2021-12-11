@@ -77,7 +77,7 @@ TEST(trigger, map_cam_by_magic_point) {
 	engineConfiguration->camInputs[0] = GPIOA_0;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
 
-	Sensor::setMockValue(SensorType::Map, 100);
+	engine->outputChannels.instantMAPValue = 100;
 
 	engineConfiguration->mapCamDetectionAnglePosition = 90;
 
@@ -88,7 +88,7 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(0, engine->outputChannels.vvtSyncCounter);
 
 
-	Sensor::setMockValue(SensorType::Map, 120);
+	engine->outputChannels.instantMAPValue = 120;
 	eth.smartFireTriggerEvents2(/*count*/4, /*delayMs*/200);
 
 	ASSERT_EQ(2, engine->outputChannels.TEMPLOG_map_peak);
