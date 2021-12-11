@@ -9,7 +9,6 @@ import org.jetbrains.annotations.NotNull;
 import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 import java.util.TreeSet;
 
 import static com.rusefi.ConfigField.unquote;
@@ -41,7 +40,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
-            DataLogFieldIterator iterator = new DataLogFieldIterator(structure.tsFields, "");
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(structure.tsFields, "",
+                    this::handle);
             iterator.loop();
             String content = iterator.sb.toString();
             tsWriter.append(content);
@@ -54,35 +54,9 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    class DataLogFieldIterator extends FieldIterator {
-        private final String prefix;
-        StringBuilder sb = new StringBuilder();
-
-        public DataLogFieldIterator(List<ConfigField> fields, String prefix) {
-            super(fields);
-            this.prefix = prefix;
-        }
-
-        @Override
-        public void end() {
-            String content = handle(cf, prefix);
-            sb.append(content);
-            super.end();
-        }
-    }
-
     private String handle(ConfigField configField, String prefix) {
         if (configField.getName().contains("unused"))
             return "";
-
-        ConfigStructure cs = configField.getState().structures.get(configField.getType());
-        if (cs != null) {
-            String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            DataLogFieldIterator fieldIterator = new DataLogFieldIterator(cs.tsFields, extraPrefix);
-            fieldIterator.loop();
-            return fieldIterator.sb.toString();
-        }
-
 
         if (configField.isArray()) {
 
@@ -114,7 +88,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         comment = (comments.length > 0) ? comments[0] : "";
 
         if (comment.isEmpty())
-            comment =  prefix + unquote(configField.getName());
+            comment = prefix + unquote(configField.getName());
 
         if (comment.charAt(0) != '"')
             comment = quote(comment);
