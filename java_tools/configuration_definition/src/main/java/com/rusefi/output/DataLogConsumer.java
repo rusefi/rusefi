@@ -14,7 +14,7 @@ import java.util.TreeSet;
 import static com.rusefi.ConfigField.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
-public class DataLogConsumer implements ConfigurationConsumer {
+public class DataLogConsumer extends AbstractConfigurationConsumer {
     private final String fileName;
     private final ReaderState state;
     private final CharArrayWriter tsWriter = new CharArrayWriter();
@@ -23,18 +23,6 @@ public class DataLogConsumer implements ConfigurationConsumer {
     public DataLogConsumer(String fileName, ReaderState state) {
         this.fileName = fileName;
         this.state = state;
-    }
-
-    @Override
-    public void startFile() throws IOException {
-        System.out.println("startFile");
-
-    }
-
-    @Override
-    public void endFile() throws IOException {
-        System.out.println("endFile");
-
     }
 
     @Override
