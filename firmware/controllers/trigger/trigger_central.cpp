@@ -669,7 +669,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 #endif // EFI_TUNER_STUDIO
 
 #if WITH_TS_STATE
-		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER) {
+		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER &&
+				Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm) {
 			// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
 			auto toothAngle360 = toothAngle;
 			while (toothAngle360 >= 360) {
