@@ -1,6 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.ReaderState;
+import com.rusefi.output.BaseCHeaderConsumer;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.output.TSProjectConsumer;
 import org.junit.Test;
@@ -45,7 +46,14 @@ public class TSProjectConsumerTest {
         TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(writer, "", state);
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
-        state.readBufferedReader(test, Arrays.asList(javaFieldsConsumer, tsProjectConsumer));
+
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
+            @Override
+            public void endFile() {
+            }
+        };
+
+        state.readBufferedReader(test, Arrays.asList(javaFieldsConsumer, consumer, tsProjectConsumer));
 
         assertEquals("#if LAMBDA\n" +
                 "periodMs2 = scalar, S16, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
@@ -65,5 +73,27 @@ public class TSProjectConsumerTest {
                         "\tpublic static final Field PERIODMS = Field.create(\"PERIODMS\", 18, FieldType.INT16);\n",
                 javaFieldsConsumer.getJavaFieldsWriter());
 
+
+        assertEquals("// start of pid_s\n" +
+                "struct pid_s {\n" +
+                "\t/**\n" +
+                "\t * PID dTime\n" +
+                "\tms\n" +
+                "\t * offset 0\n" +
+                "\t */\n" +
+                "\tint16_t periodMs2 = (int16_t)0;\n" +
+                "\t/**\n" +
+                "\t * offset 2\n" +
+                "\t */\n" +
+                "\tafr_table_t afrTable;\n" +
+                "\t/**\n" +
+                "\t * PID dTime\n" +
+                "\tms\n" +
+                "\t * offset 18\n" +
+                "\t */\n" +
+                "\tint16_t periodMs = (int16_t)0;\n" +
+                "\t/** total size 20*/\n" +
+                "};\n" +
+                "\n", consumer.getContent().toString());
     }
 }
