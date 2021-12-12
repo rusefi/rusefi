@@ -57,6 +57,7 @@ public class ConfigDefinition {
      */
     public static boolean needZeroInit = true;
     public static String definitionInputFile = null;
+    private static String fieldLookupFile = null;
 
     public static void main(String[] args) {
         try {
@@ -135,6 +136,9 @@ public class ConfigDefinition {
                     break;
                 case KEY_JAVA_DESTINATION:
                     javaDestinationFileName = args[i + 1];
+                    break;
+                case "-field_lookup_file":
+                    fieldLookupFile = args[i + 1];
                     break;
                 case "-readfile":
                     String keyName = args[i + 1];
@@ -270,6 +274,8 @@ public class ConfigDefinition {
         if (destCHeaderFileName != null) {
             destinations.add(new CHeaderConsumer(state.variableRegistry, destCHeaderFileName));
         }
+        if (fieldLookupFile!=null)
+            destinations.add(new GetConfigValueConsumer(fieldLookupFile));
         if (javaDestinationFileName != null) {
             destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
         }
