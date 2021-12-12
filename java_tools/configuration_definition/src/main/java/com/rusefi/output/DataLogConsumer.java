@@ -5,6 +5,7 @@ import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.CharArrayWriter;
 import java.io.FileWriter;
@@ -15,6 +16,7 @@ import static com.rusefi.ConfigField.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class DataLogConsumer extends AbstractConfigurationConsumer {
+    public static final String UNUSED = "unused";
     private final String fileName;
     private final ReaderState state;
     private final CharArrayWriter tsWriter = new CharArrayWriter();
@@ -35,15 +37,19 @@ public class DataLogConsumer extends AbstractConfigurationConsumer {
             tsWriter.append(content);
         }
 
+        writeStringToFile(fileName, tsWriter);
+    }
+
+    private void writeStringToFile(@Nullable String fileName, CharArrayWriter writer) throws IOException {
         if (fileName != null) {
             FileWriter fw = new FileWriter(fileName);
-            fw.write(tsWriter.toCharArray());
+            fw.write(writer.toCharArray());
             fw.close();
         }
     }
 
     private String handle(ConfigField configField, String prefix) {
-        if (configField.getName().contains("unused"))
+        if (configField.getName().contains(UNUSED))
             return "";
 
         if (configField.isArray()) {

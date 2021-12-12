@@ -4,6 +4,7 @@ import com.rusefi.BitState;
 import com.rusefi.ReaderState;
 import com.rusefi.output.DataLogConsumer;
 import com.rusefi.output.GaugeConsumer;
+import com.rusefi.output.GetConfigValueConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.junit.Test;
 
@@ -111,6 +112,93 @@ public class OutputsTest {
                         "entry = vehicleSpeedKph, \"vehicleSpeedKph\", int,    \"%d\"\n" +
                         "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
                         "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
+
+    }
+
+    @Test
+    public void generateGetConfig() throws IOException {
+        String test = "struct total\n" +
+                "#define adc_channel_e_enum \"Disabled\", \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\", \"PA5\", \"PA6\", \"PA7\", \"PB0\", \"PB1\", \"PC0\", \"PC1\", \"PC2\", \"PC3\", \"PC4\", \"PC5\"\n" +
+                "custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5], @@adc_channel_e_enum@@\n" +
+                "struct_no_prefix thermistor_conf_s @brief Thermistor known values\n" +
+                "float tempC_1;these values are in Celcius;\"*C\", 1, 0, -40, 200, 1\n" +
+                "float tempC_2;;\"*C\", 1, 0, -40, 200, 1\n" +
+                "float tempC_3;;\"*C\", 1, 0, -40, 200, 1\n" +
+                "float resistance_1;;\"Ohm\", 1, 0, 0, 200000, 1\n" +
+                "float resistance_2;;\"Ohm\", 1, 0, 0, 200000, 1\n" +
+                "float resistance_3;;\"Ohm\", 1, 0, 0, 200000, 1\n" +
+                "\n" +
+                "\tfloat bias_resistor;+Pull-up resistor value on your board;\"Ohm\", 1, 0, 0, 200000, 1\n" +
+                "end_struct\n" +
+                "struct ThermistorConf @brief Thermistor curve parameters\n" +
+                "\tthermistor_conf_s config;\n" +
+                "\tadc_channel_e adcChannel;\n" +
+                "end_struct\n" +
+                "ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!\n" +
+                "ThermistorConf iat;\n" +
+                "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
+                "uint8_t[2 iterate] autoscale knock;;\"\",1, 0, 0, 0, 0\n" +
+                "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
+                "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
+                "uint8_t afr_typet;;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
+                "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
+                "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
+                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+        state.variableRegistry.register("PACK_MULT_PERCENT", 100);
+        state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
+
+
+        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
+        state.readBufferedReader(test, Collections.singletonList(getConfigValueConsumer));
+
+        assertEquals("#include \"pch.h\"\n" +
+                "float getConfigValueByName(const char *name) {\n" +
+                "\tif (strEqualCaseInsensitive(name, \"tempC_1\"))\n" +
+                "\t\treturn engineConfiguration->tempC_1;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"tempC_2\"))\n" +
+                "\t\treturn engineConfiguration->tempC_2;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"tempC_3\"))\n" +
+                "\t\treturn engineConfiguration->tempC_3;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"resistance_1\"))\n" +
+                "\t\treturn engineConfiguration->resistance_1;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"resistance_2\"))\n" +
+                "\t\treturn engineConfiguration->resistance_2;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"resistance_3\"))\n" +
+                "\t\treturn engineConfiguration->resistance_3;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"bias_resistor\"))\n" +
+                "\t\treturn engineConfiguration->bias_resistor;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"config\"))\n" +
+                "\t\treturn engineConfiguration->config;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"adcChannel\"))\n" +
+                "\t\treturn engineConfiguration->adcChannel;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"clt\"))\n" +
+                "\t\treturn engineConfiguration->clt;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"iat\"))\n" +
+                "\t\treturn engineConfiguration->iat;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
+                "\t\treturn engineConfiguration->issue_294_31;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"knock\"))\n" +
+                "\t\treturn engineConfiguration->knock;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"baseFuel\"))\n" +
+                "\t\treturn engineConfiguration->baseFuel;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"afr_type\"))\n" +
+                "\t\treturn engineConfiguration->afr_type;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"speedToRpmRatio\"))\n" +
+                "\t\treturn engineConfiguration->speedToRpmRatio;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"afr_typet\"))\n" +
+                "\t\treturn engineConfiguration->afr_typet;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"vehicleSpeedKph\"))\n" +
+                "\t\treturn engineConfiguration->vehicleSpeedKph;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"isForcedInduction\"))\n" +
+                "\t\treturn engineConfiguration->isForcedInduction;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"enableFan1WithAc\"))\n" +
+                "\t\treturn engineConfiguration->enableFan1WithAc;\n" +
+                "\treturn EFI_ERROR_CODE;\n" +
+                "}\n", getConfigValueConsumer.getContent());
 
     }
 
