@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
+import com.rusefi.ReaderState;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.FileWriter;
@@ -28,18 +29,12 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
-        FieldIterator iterator = new FieldIterator(structure.cFields);
-        for (int i = 0; i < structure.cFields.size(); i++) {
-            iterator.start(i);
-
-
-            append(iterator.cf);
-
-
-            iterator.end();
+    public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
+        if (state.stack.isEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
+                    this::process, ".");
+            iterator.loop();
         }
-
     }
 
     @Override
@@ -55,12 +50,16 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
         writeStringToFile(outputFIleName, content.toString());
     }
 
-    private void append(ConfigField cf) {
+    private String process(ReaderState readerState, ConfigField cf, String prefix) {
         if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
-            return;
+            return "";
 
-        content.append("\tif (strEqualCaseInsensitive(name, \"" + cf.getName() + "\"))\n");
-        content.append("\t\treturn engineConfiguration->" + cf.getName() + ";\n");
+        if (cf.isArray() || cf.isFromIterate())
+            return "";
+
+        content.append("\tif (strEqualCaseInsensitive(name, \"" + prefix + cf.getName() + "\"))\n");
+        content.append("\t\treturn engineConfiguration->" + prefix + cf.getName() + ";\n");
+        return "";
     }
 
     public String getContent() {

@@ -156,7 +156,7 @@ public class ReaderState {
         structures.put(structure.getName(), structure);
 
         for (ConfigurationConsumer consumer : consumers)
-            consumer.handleEndStruct(structure);
+            consumer.handleEndStruct(this, structure);
     }
 
     public void readBufferedReader(String inputString, List<ConfigurationConsumer> consumers) throws IOException {
@@ -267,6 +267,7 @@ public class ReaderState {
             for (int i = 1; i <= cf.getArraySizes()[0]; i++) {
                 ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
                         cf.getType(), new int[0], cf.getTsInfo(), false, false, false, null, null);
+                element.isFromIterate(true);
                 structure.addTs(element);
             }
         } else if (cf.isDirective()) {

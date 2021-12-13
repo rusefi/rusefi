@@ -21,7 +21,7 @@ public class OutputsSectionConsumer extends AbstractConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         System.out.println("handleEndStruct");
 
         if (state.stack.isEmpty()) {

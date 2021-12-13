@@ -46,6 +46,7 @@ public class ConfigField {
     private final boolean hasAutoscale;
     private final String trueName;
     private final String falseName;
+    private boolean isFromIterate;
 
     /**
      * todo: one day someone should convert this into a builder
@@ -327,6 +328,14 @@ public class ConfigField {
         if (token.charAt(0) == '\"')
             return token.substring(1, length - 1);
         return token;
+    }
+
+    public void isFromIterate(boolean isFromIterate) {
+        this.isFromIterate = isFromIterate;
+    }
+
+    public boolean isFromIterate() {
+        return isFromIterate;
     }
 }
 

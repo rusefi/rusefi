@@ -39,7 +39,7 @@ public abstract class BaseCHeaderConsumer extends AbstractConfigurationConsumer 
     }
 
     @Override
-    public void handleEndStruct(ConfigStructure structure) {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
         if (structure.comment != null) {
             content.append("/**" + EOL + ConfigDefinition.packComment(structure.comment, "") + EOL + "*/" + EOL);
         }
