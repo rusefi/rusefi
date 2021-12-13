@@ -54,7 +54,7 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
         if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
             return "";
 
-        if (cf.isArray() || cf.isFromIterate())
+        if (cf.isArray() || cf.isFromIterate() || cf.isDirective())
             return "";
 
         content.append("\tif (strEqualCaseInsensitive(name, \"" + prefix + cf.getName() + "\"))\n");

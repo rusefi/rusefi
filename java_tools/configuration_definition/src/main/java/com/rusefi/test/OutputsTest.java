@@ -118,22 +118,42 @@ public class OutputsTest {
     @Test
     public void generateGetConfig() throws IOException {
         String test = "struct total\n" +
-                "#define adc_channel_e_enum \"Disabled\", \"PA0\", \"PA1\", \"PA2\", \"PA3\", \"PA4\", \"PA5\", \"PA6\", \"PA7\", \"PB0\", \"PB1\", \"PC0\", \"PC1\", \"PC2\", \"PC3\", \"PC4\", \"PC5\"\n" +
-                "custom adc_channel_e 1 bits, U08, @OFFSET@, [0:5], @@adc_channel_e_enum@@\n" +
                 "struct_no_prefix thermistor_conf_s @brief Thermistor known values\n" +
                 "float tempC_1;these values are in Celcius;\"*C\", 1, 0, -40, 200, 1\n" +
-                "float tempC_2;;\"*C\", 1, 0, -40, 200, 1\n" +
-                "float tempC_3;;\"*C\", 1, 0, -40, 200, 1\n" +
-                "float resistance_1;;\"Ohm\", 1, 0, 0, 200000, 1\n" +
-                "float resistance_2;;\"Ohm\", 1, 0, 0, 200000, 1\n" +
-                "float resistance_3;;\"Ohm\", 1, 0, 0, 200000, 1\n" +
                 "\n" +
+                "custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], \"Custom\", \"DENSO183\", \"MPX4250\", \"HONDA3BAR\", \"NEON_2003\", \"22012AA090\", \"3 Bar\", \"MPX4100\", \"Toyota 89420-02010\", \"MPX4250A\", \"Bosch 2.5\", \"Mazda1Bar\", \"GM 2 Bar\", \"GM 1 Bar\", \"MPXH6400\"\n" +
+                "struct air_pressure_sensor_config_s\n" +
+                "float lowValue;kPa value at low volts;\"kpa\", 1, 0, -400, 800, 2\n" +
+                "float highValue;kPa value at high volts;\"kpa\", 1, 0, -400, 800, 2\n" +
+                "air_pressure_sensor_type_e type;\n" +
+                "int hwChannel;\n" +
+                "uint8_t[3] alignmentFill;;\"unit\", 1, 0, 0, 100, 0\n" +
+                "\n" +
+                "end_struct\n" +
+                "\n" +
+                "struct MAP_sensor_config_s @brief MAP averaging configuration\n" +
+                "float[6] samplingAngleBins;;\"\", 1, 0, 0, 18000, 2\n" +
+                "float[6] samplingAngle;MAP averaging sampling start crank degree angle;\"deg\", 1, 0, -720, 720, 2\n" +
+                "float[6] samplingWindowBins;;\"\", 1, 0, 0, 18000, 2\n" +
+                "float[6] samplingWindow;MAP averaging angle crank degree duration;\"deg\", 1, 0, -720, 720, 2\n" +
+                "air_pressure_sensor_config_s sensor\n" +
+                "end_struct\n" +
+                "MAP_sensor_config_s map;@see isMapAveragingEnabled\n" +
+                "struct injector_s\n" +
+                "\tfloat flow;+This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\\nBy the way, g/s = 0.125997881 * (lb/hr)\\ng/s = 0.125997881 * (cc/min)/10.5\\ng/s = 0.0119997981 * cc/min;\"cm3/min\", 1, 0, 0, 99999, 2\n" +
+                "\n" +
+                "float[8] battLagCorrBins;set_flat_injector_lag LAG\\nset_injector_lag VOLTAGE LAG;\"volts\", 1, 0, 0, 20, 2\n" +
+                "float[8] battLagCorr;ms delay between injector open and close dead times;\"ms\", 1, 0, 0, 50, 2\n" +
+                "\n" +
+                "end_struct\n" +
+                "\n" +
+                "injector_s injector\n" +
          "\tint[12 iterate] ignitionPins;\n" +
                 "\tfloat bias_resistor;+Pull-up resistor value on your board;\"Ohm\", 1, 0, 0, 200000, 1\n" +
                 "end_struct\n" +
                 "struct ThermistorConf @brief Thermistor curve parameters\n" +
                 "\tthermistor_conf_s config;\n" +
-                "\tadc_channel_e adcChannel;\n" +
+                "\tint adcChannel;\n" +
                 "end_struct\n" +
                 "ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!\n" +
                 "ThermistorConf iat;\n" +
@@ -160,32 +180,32 @@ public class OutputsTest {
                 "float getConfigValueByName(const char *name) {\n" +
                 "\tif (strEqualCaseInsensitive(name, \"tempC_1\"))\n" +
                 "\t\treturn engineConfiguration->tempC_1;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"tempC_2\"))\n" +
-                "\t\treturn engineConfiguration->tempC_2;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"tempC_3\"))\n" +
-                "\t\treturn engineConfiguration->tempC_3;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"resistance_1\"))\n" +
-                "\t\treturn engineConfiguration->resistance_1;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"resistance_2\"))\n" +
-                "\t\treturn engineConfiguration->resistance_2;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"resistance_3\"))\n" +
-                "\t\treturn engineConfiguration->resistance_3;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"map.sensor.lowValue\"))\n" +
+                "\t\treturn engineConfiguration->map.sensor.lowValue;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"map.sensor.highValue\"))\n" +
+                "\t\treturn engineConfiguration->map.sensor.highValue;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"map.sensor.type\"))\n" +
+                "\t\treturn engineConfiguration->map.sensor.type;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"map.sensor.hwChannel\"))\n" +
+                "\t\treturn engineConfiguration->map.sensor.hwChannel;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"injector.flow\"))\n" +
+                "\t\treturn engineConfiguration->injector.flow;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"bias_resistor\"))\n" +
                 "\t\treturn engineConfiguration->bias_resistor;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"clt.adcChannel\"))\n" +
                 "\t\treturn engineConfiguration->clt.adcChannel;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"tempC_1\"))\n" +
                 "\t\treturn engineConfiguration->tempC_1;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"tempC_2\"))\n" +
-                "\t\treturn engineConfiguration->tempC_2;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"tempC_3\"))\n" +
-                "\t\treturn engineConfiguration->tempC_3;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"resistance_1\"))\n" +
-                "\t\treturn engineConfiguration->resistance_1;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"resistance_2\"))\n" +
-                "\t\treturn engineConfiguration->resistance_2;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"resistance_3\"))\n" +
-                "\t\treturn engineConfiguration->resistance_3;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"map.sensor.lowValue\"))\n" +
+                "\t\treturn engineConfiguration->map.sensor.lowValue;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"map.sensor.highValue\"))\n" +
+                "\t\treturn engineConfiguration->map.sensor.highValue;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"map.sensor.type\"))\n" +
+                "\t\treturn engineConfiguration->map.sensor.type;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"map.sensor.hwChannel\"))\n" +
+                "\t\treturn engineConfiguration->map.sensor.hwChannel;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"injector.flow\"))\n" +
+                "\t\treturn engineConfiguration->injector.flow;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"bias_resistor\"))\n" +
                 "\t\treturn engineConfiguration->bias_resistor;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +

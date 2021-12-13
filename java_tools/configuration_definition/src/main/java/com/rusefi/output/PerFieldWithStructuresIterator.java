@@ -29,8 +29,8 @@ class PerFieldWithStructuresIterator extends FieldIterator {
         ConfigStructure cs = cf.getState().structures.get(cf.getType());
         String content;
         if (cs != null) {
-            String extraPrefix = cs.withPrefix ? cf.getName() + prefixSeparator : "";
-            PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.tsFields, extraPrefix, strategy);
+            String extraPrefix = cs.withPrefix ? prefix + cf.getName() + prefixSeparator : "";
+            PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.tsFields, extraPrefix, strategy, prefixSeparator);
             fieldIterator.loop();
             content = fieldIterator.sb.toString();
         } else {
