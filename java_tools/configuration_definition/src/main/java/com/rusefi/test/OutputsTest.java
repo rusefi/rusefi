@@ -99,7 +99,7 @@ public class OutputsTest {
         state.variableRegistry.register("PACK_MULT_PERCENT", 100);
         state.variableRegistry.register("GAUGE_NAME_FUEL_BASE", "hello");
 
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         state.readBufferedReader(test, Collections.singletonList(dataLogConsumer));
         assertEquals(
                 "entry = issue_294_31, \"issue_294_31\", int,    \"%d\"\n" +
@@ -128,6 +128,7 @@ public class OutputsTest {
                 "float resistance_2;;\"Ohm\", 1, 0, 0, 200000, 1\n" +
                 "float resistance_3;;\"Ohm\", 1, 0, 0, 200000, 1\n" +
                 "\n" +
+         "\tint[12 iterate] ignitionPins;\n" +
                 "\tfloat bias_resistor;+Pull-up resistor value on your board;\"Ohm\", 1, 0, 0, 200000, 1\n" +
                 "end_struct\n" +
                 "struct ThermistorConf @brief Thermistor curve parameters\n" +
@@ -171,18 +172,26 @@ public class OutputsTest {
                 "\t\treturn engineConfiguration->resistance_3;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"bias_resistor\"))\n" +
                 "\t\treturn engineConfiguration->bias_resistor;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"config\"))\n" +
-                "\t\treturn engineConfiguration->config;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"adcChannel\"))\n" +
-                "\t\treturn engineConfiguration->adcChannel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"clt\"))\n" +
-                "\t\treturn engineConfiguration->clt;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"iat\"))\n" +
-                "\t\treturn engineConfiguration->iat;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"clt.adcChannel\"))\n" +
+                "\t\treturn engineConfiguration->clt.adcChannel;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"tempC_1\"))\n" +
+                "\t\treturn engineConfiguration->tempC_1;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"tempC_2\"))\n" +
+                "\t\treturn engineConfiguration->tempC_2;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"tempC_3\"))\n" +
+                "\t\treturn engineConfiguration->tempC_3;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"resistance_1\"))\n" +
+                "\t\treturn engineConfiguration->resistance_1;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"resistance_2\"))\n" +
+                "\t\treturn engineConfiguration->resistance_2;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"resistance_3\"))\n" +
+                "\t\treturn engineConfiguration->resistance_3;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"bias_resistor\"))\n" +
+                "\t\treturn engineConfiguration->bias_resistor;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
+                "\t\treturn engineConfiguration->iat.adcChannel;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
                 "\t\treturn engineConfiguration->issue_294_31;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"knock\"))\n" +
-                "\t\treturn engineConfiguration->knock;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"baseFuel\"))\n" +
                 "\t\treturn engineConfiguration->baseFuel;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"afr_type\"))\n" +
@@ -214,7 +223,7 @@ public class OutputsTest {
                 "end_struct\n";
 
         ReaderState state = new ReaderState();
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(null, state);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(null);
         GaugeConsumer gaugeConsumer = new GaugeConsumer(null, state);
         state.readBufferedReader(test, Arrays.asList(dataLogConsumer, gaugeConsumer));
         assertEquals(

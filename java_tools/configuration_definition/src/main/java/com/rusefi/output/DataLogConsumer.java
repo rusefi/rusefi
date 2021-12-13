@@ -18,19 +18,17 @@ import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quo
 public class DataLogConsumer extends AbstractConfigurationConsumer {
     public static final String UNUSED = "unused";
     private final String fileName;
-    private final ReaderState state;
     private final CharArrayWriter tsWriter = new CharArrayWriter();
     private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
-    public DataLogConsumer(String fileName, ReaderState state) {
+    public DataLogConsumer(String fileName) {
         this.fileName = fileName;
-        this.state = state;
     }
 
     @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(structure.tsFields, "",
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+        if (readerState.stack.isEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
                     this::handle);
             iterator.loop();
             String content = iterator.sb.toString();
@@ -48,7 +46,7 @@ public class DataLogConsumer extends AbstractConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigField configField, String prefix) {
+    private String handle(ReaderState state, ConfigField configField, String prefix) {
         if (configField.getName().contains(UNUSED))
             return "";
 
