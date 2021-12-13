@@ -254,4 +254,7 @@ void initializeNissanMRvvt(TriggerWaveform *s) {
 
 	// nominal gap 4.31
 	s->setTriggerSynchronizationGap2(3.8, 5);
+
+	// nominal gap 0.44
+	s->setSecondTriggerSynchronizationGap2(0.3, 0.55);
 }
