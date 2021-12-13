@@ -26,7 +26,7 @@ public class GaugeConsumer extends AbstractConfigurationConsumer {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
                     (state, configField, prefix) -> handle(configField, prefix));
             iterator.loop();
-            String content = iterator.sb.toString();
+            String content = iterator.getContent();
             charArrayWriter.append(content);
         }
 

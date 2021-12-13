@@ -10,7 +10,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
     private final String prefix;
     private final Strategy strategy;
     private final String prefixSeparator;
-    StringBuilder sb = new StringBuilder();
+    private final StringBuilder sb = new StringBuilder();
 
     public PerFieldWithStructuresIterator(ReaderState state, List<ConfigField> fields, String prefix, Strategy strategy, String prefixSeparator) {
         super(fields);
@@ -29,15 +29,25 @@ class PerFieldWithStructuresIterator extends FieldIterator {
         ConfigStructure cs = cf.getState().structures.get(cf.getType());
         String content;
         if (cs != null) {
-            String extraPrefix = cs.withPrefix ? prefix + cf.getName() + prefixSeparator : "";
-            PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.tsFields, extraPrefix, strategy, prefixSeparator);
-            fieldIterator.loop();
-            content = fieldIterator.sb.toString();
+            if (cf.isFromIterate()) {
+                // do not support this case yet
+                content = "";
+            } else {
+                // java side of things does not care for 'cs.withPrefix'
+                String extraPrefix = prefix + cf.getName() + prefixSeparator;
+                PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.tsFields, extraPrefix, strategy, prefixSeparator);
+                fieldIterator.loop();
+                content = fieldIterator.sb.toString();
+            }
         } else {
             content = strategy.process(state, cf, prefix);
         }
         sb.append(content);
         super.end();
+    }
+
+    public String getContent() {
+        return sb.toString();
     }
 
     interface Strategy {
