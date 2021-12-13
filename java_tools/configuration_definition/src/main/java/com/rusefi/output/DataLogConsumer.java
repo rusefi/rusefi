@@ -31,7 +31,7 @@ public class DataLogConsumer extends AbstractConfigurationConsumer {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
                     this::handle);
             iterator.loop();
-            String content = iterator.sb.toString();
+            String content = iterator.getContent();
             tsWriter.append(content);
         }
 

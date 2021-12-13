@@ -2,6 +2,7 @@ package com.rusefi.output;
 
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
+import com.rusefi.TypesHelper;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.FileWriter;
@@ -56,9 +57,12 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
 
         if (cf.isArray() || cf.isFromIterate() || cf.isDirective())
             return "";
+        if (!TypesHelper.isPrimitive(cf.getType())) {
+            return "";
+        }
 
         content.append("\tif (strEqualCaseInsensitive(name, \"" + prefix + cf.getName() + "\"))\n");
-        content.append("\t\treturn engineConfiguration->" + prefix + cf.getName() + ";\n");
+        content.append("\t\treturn config->" + prefix + cf.getName() + ";\n");
         return "";
     }
 

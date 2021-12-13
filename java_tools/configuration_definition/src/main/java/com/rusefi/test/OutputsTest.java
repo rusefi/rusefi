@@ -8,7 +8,7 @@ import com.rusefi.output.GetConfigValueConsumer;
 import com.rusefi.output.OutputsSectionConsumer;
 import org.junit.Test;
 
-import java.io.*;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -116,6 +116,53 @@ public class OutputsTest {
     }
 
     @Test
+    public void testStructArrayAndCharArgument() throws IOException {
+        ReaderState state = new ReaderState();
+        String test = "struct total\n" +
+                "custom lua_script_t 200 string, ASCII, @OFFSET@, 200\n" +
+                "lua_script_t luaScript;\n" +
+                "struct dc_io\n" +
+                "\tint disablePin;\n" +
+                "end_struct\n" +
+                "\tdc_io[2 iterate] etbIn\n" +
+                "end_struct\n";
+        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
+        state.readBufferedReader(test, Collections.singletonList(getConfigValueConsumer));
+
+        assertEquals("#include \"pch.h\"\n" +
+                "float getConfigValueByName(const char *name) {\n" +
+                "\treturn EFI_ERROR_CODE;\n" +
+                "}\n", getConfigValueConsumer.getContent());
+    }
+
+    @Test
+    public void generateEmbeddedStruct() throws IOException {
+        ReaderState state = new ReaderState();
+        String test = "struct total\n" +
+                "struct_no_prefix thermistor_conf_s @brief Thermistor known values\n" +
+                "float tempC_1;these values are in Celcius;\"*C\", 1, 0, -40, 200, 1\n" +
+                "\n" +
+                "end_struct\n" +
+                "struct ThermistorConf @brief Thermistor curve parameters\n" +
+                "\tthermistor_conf_s config;\n" +
+                "\tint adcChannel;\n" +
+                "end_struct\n" +
+                "ThermistorConf iat;\n" +
+                "end_struct\n";
+        GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
+        state.readBufferedReader(test, Collections.singletonList(getConfigValueConsumer));
+
+        assertEquals("#include \"pch.h\"\n" +
+                "float getConfigValueByName(const char *name) {\n" +
+                "\tif (strEqualCaseInsensitive(name, \"iat.config.tempC_1\"))\n" +
+                "\t\treturn config->iat.config.tempC_1;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
+                "\t\treturn config->iat.adcChannel;\n" +
+                "\treturn EFI_ERROR_CODE;\n" +
+                "}\n", getConfigValueConsumer.getContent());
+    }
+
+    @Test
     public void generateGetConfig() throws IOException {
         String test = "struct total\n" +
                 "struct_no_prefix thermistor_conf_s @brief Thermistor known values\n" +
@@ -123,7 +170,6 @@ public class OutputsTest {
                 "\n" +
                 "custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], \"Custom\", \"DENSO183\", \"MPX4250\", \"HONDA3BAR\", \"NEON_2003\", \"22012AA090\", \"3 Bar\", \"MPX4100\", \"Toyota 89420-02010\", \"MPX4250A\", \"Bosch 2.5\", \"Mazda1Bar\", \"GM 2 Bar\", \"GM 1 Bar\", \"MPXH6400\"\n" +
                 "struct air_pressure_sensor_config_s\n" +
-                "float lowValue;kPa value at low volts;\"kpa\", 1, 0, -400, 800, 2\n" +
                 "float highValue;kPa value at high volts;\"kpa\", 1, 0, -400, 800, 2\n" +
                 "air_pressure_sensor_type_e type;\n" +
                 "int hwChannel;\n" +
@@ -133,16 +179,12 @@ public class OutputsTest {
                 "\n" +
                 "struct MAP_sensor_config_s @brief MAP averaging configuration\n" +
                 "float[6] samplingAngleBins;;\"\", 1, 0, 0, 18000, 2\n" +
-                "float[6] samplingAngle;MAP averaging sampling start crank degree angle;\"deg\", 1, 0, -720, 720, 2\n" +
-                "float[6] samplingWindowBins;;\"\", 1, 0, 0, 18000, 2\n" +
-                "float[6] samplingWindow;MAP averaging angle crank degree duration;\"deg\", 1, 0, -720, 720, 2\n" +
                 "air_pressure_sensor_config_s sensor\n" +
                 "end_struct\n" +
                 "MAP_sensor_config_s map;@see isMapAveragingEnabled\n" +
                 "struct injector_s\n" +
                 "\tfloat flow;+This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\\nBy the way, g/s = 0.125997881 * (lb/hr)\\ng/s = 0.125997881 * (cc/min)/10.5\\ng/s = 0.0119997981 * cc/min;\"cm3/min\", 1, 0, 0, 99999, 2\n" +
                 "\n" +
-                "float[8] battLagCorrBins;set_flat_injector_lag LAG\\nset_injector_lag VOLTAGE LAG;\"volts\", 1, 0, 0, 20, 2\n" +
                 "float[8] battLagCorr;ms delay between injector open and close dead times;\"ms\", 1, 0, 0, 50, 2\n" +
                 "\n" +
                 "end_struct\n" +
@@ -156,7 +198,6 @@ public class OutputsTest {
                 "\tint adcChannel;\n" +
                 "end_struct\n" +
                 "ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor here!\n" +
-                "ThermistorConf iat;\n" +
                 "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
                 "uint8_t[2 iterate] autoscale knock;;\"\",1, 0, 0, 0, 0\n" +
                 "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
@@ -178,54 +219,28 @@ public class OutputsTest {
 
         assertEquals("#include \"pch.h\"\n" +
                 "float getConfigValueByName(const char *name) {\n" +
-                "\tif (strEqualCaseInsensitive(name, \"tempC_1\"))\n" +
-                "\t\treturn engineConfiguration->tempC_1;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"map.sensor.lowValue\"))\n" +
-                "\t\treturn engineConfiguration->map.sensor.lowValue;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"map.sensor.highValue\"))\n" +
-                "\t\treturn engineConfiguration->map.sensor.highValue;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"map.sensor.type\"))\n" +
-                "\t\treturn engineConfiguration->map.sensor.type;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"map.sensor.hwChannel\"))\n" +
-                "\t\treturn engineConfiguration->map.sensor.hwChannel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"injector.flow\"))\n" +
-                "\t\treturn engineConfiguration->injector.flow;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"bias_resistor\"))\n" +
-                "\t\treturn engineConfiguration->bias_resistor;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"clt.config.tempC_1\"))\n" +
+                "\t\treturn config->clt.config.tempC_1;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"clt.config.map.sensor.highValue\"))\n" +
+                "\t\treturn config->clt.config.map.sensor.highValue;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"clt.config.map.sensor.hwChannel\"))\n" +
+                "\t\treturn config->clt.config.map.sensor.hwChannel;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"clt.config.injector.flow\"))\n" +
+                "\t\treturn config->clt.config.injector.flow;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"clt.config.bias_resistor\"))\n" +
+                "\t\treturn config->clt.config.bias_resistor;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"clt.adcChannel\"))\n" +
-                "\t\treturn engineConfiguration->clt.adcChannel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"tempC_1\"))\n" +
-                "\t\treturn engineConfiguration->tempC_1;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"map.sensor.lowValue\"))\n" +
-                "\t\treturn engineConfiguration->map.sensor.lowValue;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"map.sensor.highValue\"))\n" +
-                "\t\treturn engineConfiguration->map.sensor.highValue;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"map.sensor.type\"))\n" +
-                "\t\treturn engineConfiguration->map.sensor.type;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"map.sensor.hwChannel\"))\n" +
-                "\t\treturn engineConfiguration->map.sensor.hwChannel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"injector.flow\"))\n" +
-                "\t\treturn engineConfiguration->injector.flow;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"bias_resistor\"))\n" +
-                "\t\treturn engineConfiguration->bias_resistor;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
-                "\t\treturn engineConfiguration->iat.adcChannel;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
-                "\t\treturn engineConfiguration->issue_294_31;\n" +
+                "\t\treturn config->clt.adcChannel;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"baseFuel\"))\n" +
-                "\t\treturn engineConfiguration->baseFuel;\n" +
+                "\t\treturn config->baseFuel;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"afr_type\"))\n" +
-                "\t\treturn engineConfiguration->afr_type;\n" +
+                "\t\treturn config->afr_type;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"speedToRpmRatio\"))\n" +
-                "\t\treturn engineConfiguration->speedToRpmRatio;\n" +
+                "\t\treturn config->speedToRpmRatio;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"afr_typet\"))\n" +
-                "\t\treturn engineConfiguration->afr_typet;\n" +
+                "\t\treturn config->afr_typet;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"vehicleSpeedKph\"))\n" +
-                "\t\treturn engineConfiguration->vehicleSpeedKph;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"isForcedInduction\"))\n" +
-                "\t\treturn engineConfiguration->isForcedInduction;\n" +
-                "\tif (strEqualCaseInsensitive(name, \"enableFan1WithAc\"))\n" +
-                "\t\treturn engineConfiguration->enableFan1WithAc;\n" +
+                "\t\treturn config->vehicleSpeedKph;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n", getConfigValueConsumer.getContent());
 
