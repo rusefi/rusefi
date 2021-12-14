@@ -156,6 +156,11 @@ public class OutputsTest {
                 "\t{\n" +
                 "\t\tconfig->iat.config.tempC_1 = value;\n" +
                 "\t\treturn;\n" +
+                "\t}\n" +
+                "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
+                "\t{\n" +
+                "\t\tconfig->iat.adcChannel = (int)value;\n" +
+                "\t\treturn;\n" +
                 "\t}\n", getConfigValueConsumer.getSetterBody());
 
         assertEquals("#include \"pch.h\"\n" +

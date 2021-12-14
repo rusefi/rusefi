@@ -14,13 +14,13 @@ import static com.rusefi.output.DataLogConsumer.UNUSED;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
-    public static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
-    public static final String ENGINE_CONFIGURATION = "engineConfiguration.";
-    public static final String FILE_HEADER = "#include \"pch.h\"\n";
-    public static final String GET_METHOD_HEADER = "float getConfigValueByName(const char *name) {\n";
-    public static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
-    public static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
-    public static final String SET_METHOD_FOOTER = "}\n";
+    private static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
+    private static final String ENGINE_CONFIGURATION = "engineConfiguration.";
+    private static final String FILE_HEADER = "#include \"pch.h\"\n";
+    private static final String GET_METHOD_HEADER = "float getConfigValueByName(const char *name) {\n";
+    private static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
+    private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
+    private static final String SET_METHOD_FOOTER = "}\n";
     private final StringBuilder getterBody = new StringBuilder();
     private final StringBuilder setterBody = new StringBuilder();
     private final String outputFIleName;
@@ -79,12 +79,23 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
 
         if (TypesHelper.isFloat(cf.getType())) {
             setterBody.append(getCompareName(userName));
-            setterBody.append("\t{\n" + "\t\t" + javaName + cf.getName() + " = value;\n" +
-                    "\t\treturn;\n\t}\n");
+            String str = getAssignment(cf, javaName, "");
+            setterBody.append(str);
+        } else {
+            setterBody.append(getCompareName(userName));
+            String str = getAssignment(cf, javaName, "(int)");
+            setterBody.append(str);
         }
 
 
         return "";
+    }
+
+    @NotNull
+    private String getAssignment(ConfigField cf, String javaName, String cast) {
+        return "\t{\n" + "\t\t" + javaName + cf.getName() + " = " + cast +
+                "value;\n" +
+                "\t\treturn;\n\t}\n";
     }
 
     @NotNull
