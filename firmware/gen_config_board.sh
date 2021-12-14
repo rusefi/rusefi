@@ -50,6 +50,7 @@ java -DSystemOut.name=logs/gen_config_board \
  $COMMON_GEN_CONFIG \
   -romraider integration \
 	-tool gen_config.sh \
+ -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
 	-board ${BOARDNAME} \
 	-ts_output_name generated/${INI} \
 	-cache ${SHORT_BOARDNAME} \
