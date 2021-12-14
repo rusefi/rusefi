@@ -26,9 +26,6 @@
 
 #if EFI_ENGINE_CONTROL
 
-static ign_Map3D_t advanceMap;
-static ign_Map3D_t iatAdvanceCorrectionMap;
-
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
 
@@ -47,7 +44,11 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
 
-	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
+	float advanceAngle = interpolate3d(
+		config->ignitionTable,
+		config->ignitionLoadBins, engineLoad,
+		config->ignitionRpmBins, rpm
+	);
 
 	// get advance from the separate table for Idle
 	if (engineConfiguration->useSeparateAdvanceForIdle &&
@@ -86,7 +87,11 @@ angle_t getAdvanceCorrections(int rpm) {
 	if (!iatValid) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
+		iatCorrection = interpolate3d(
+			config->ignitionIatCorrTable,
+			config->ignitionIatCorrLoadBins, iat,
+			config->ignitionIatCorrRpmBins, rpm
+		);
 	}
 
 	float pidTimingCorrection = engine->module<IdleController>().unmock().getIdleTimingAdjustment(rpm);
@@ -199,14 +204,6 @@ size_t getMultiSparkCount(int rpm) {
 	} else {
 		return 0;
 	}
-}
-
-void initTimingMap() {
-	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
-	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
-			config->ignitionRpmBins);
-	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
-			config->ignitionIatCorrRpmBins);
 }
 
 /**

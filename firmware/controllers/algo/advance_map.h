@@ -8,7 +8,6 @@
 #pragma once
 
 angle_t getAdvance(int rpm, float engineLoad);
-void initTimingMap();
 float getTopAdvanceForBore(chamber_style_e style, int octane, double compression, double bore);
 float getInitialAdvance(int rpm, float map, float advanceMax);
 void buildTimingMap(float advanceMax);
