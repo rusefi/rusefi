@@ -3,6 +3,7 @@ package com.rusefi.output;
 import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.FileWriter;
@@ -15,7 +16,13 @@ import static com.rusefi.output.DataLogConsumer.UNUSED;
 public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
     public static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
     public static final String ENGINE_CONFIGURATION = "engineConfiguration.";
-    private final StringBuilder content = new StringBuilder();
+    public static final String FILE_HEADER = "#include \"pch.h\"\n";
+    public static final String GET_METHOD_HEADER = "float getConfigValueByName(const char *name) {\n";
+    public static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
+    public static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
+    public static final String SET_METHOD_FOOTER = "}\n";
+    private final StringBuilder getterBody = new StringBuilder();
+    private final StringBuilder setterBody = new StringBuilder();
     private final String outputFIleName;
 
     public GetConfigValueConsumer(String outputFIleName) {
@@ -42,15 +49,11 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
 
     @Override
     public void startFile() {
-        content.append("#include \"pch.h\"\n");
-        content.append("float getConfigValueByName(const char *name) {\n");
     }
 
     @Override
     public void endFile() throws IOException {
-        content.append("\treturn EFI_ERROR_CODE;\n");
-        content.append("}\n");
-        writeStringToFile(outputFIleName, content.toString());
+        writeStringToFile(outputFIleName, getContent());
     }
 
     private String process(ReaderState readerState, ConfigField cf, String prefix) {
@@ -66,17 +69,43 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
         String userName = prefix + cf.getName();
         if (userName.startsWith(ENGINE_CONFIGURATION))
             userName = userName.substring(ENGINE_CONFIGURATION.length());
-        content.append("\tif (strEqualCaseInsensitive(name, \"" + userName + "\"))\n");
 
         String javaName = "config->" + prefix;
         if (javaName.startsWith(CONFIG_ENGINE_CONFIGURATION))
             javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
 
-        content.append("\t\treturn " + javaName + cf.getName() + ";\n");
+        getterBody.append(getCompareName(userName));
+        getterBody.append("\t\treturn " + javaName + cf.getName() + ";\n");
+
+        if (TypesHelper.isFloat(cf.getType())) {
+            setterBody.append(getCompareName(userName));
+            setterBody.append("\t{\n" + "\t\t" + javaName + cf.getName() + " = value;\n" +
+                    "\t\treturn;\n\t}\n");
+        }
+
+
         return "";
     }
 
+    @NotNull
+    private String getCompareName(String userName) {
+        return "\tif (strEqualCaseInsensitive(name, \"" + userName + "\"))\n";
+    }
+
+    public String getGetterForUnitTest() {
+        return FILE_HEADER +
+                GET_METHOD_HEADER + getterBody + GET_METHOD_FOOTER;
+    }
+
+    public String getSetterBody() {
+        return setterBody.toString();
+    }
+
     public String getContent() {
-        return content.toString();
+        return FILE_HEADER +
+                GET_METHOD_HEADER + getterBody + GET_METHOD_FOOTER
+                +
+                SET_METHOD_HEADER + setterBody + SET_METHOD_FOOTER
+                ;
     }
 }

@@ -132,7 +132,7 @@ public class OutputsTest {
         assertEquals("#include \"pch.h\"\n" +
                 "float getConfigValueByName(const char *name) {\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
-                "}\n", getConfigValueConsumer.getContent());
+                "}\n", getConfigValueConsumer.getGetterForUnitTest());
     }
 
     @Test
@@ -152,6 +152,12 @@ public class OutputsTest {
         GetConfigValueConsumer getConfigValueConsumer = new GetConfigValueConsumer(null);
         state.readBufferedReader(test, Collections.singletonList(getConfigValueConsumer));
 
+        assertEquals("\tif (strEqualCaseInsensitive(name, \"iat.config.tempC_1\"))\n" +
+                "\t{\n" +
+                "\t\tconfig->iat.config.tempC_1 = value;\n" +
+                "\t\treturn;\n" +
+                "\t}\n", getConfigValueConsumer.getSetterBody());
+
         assertEquals("#include \"pch.h\"\n" +
                 "float getConfigValueByName(const char *name) {\n" +
                 "\tif (strEqualCaseInsensitive(name, \"iat.config.tempC_1\"))\n" +
@@ -159,7 +165,7 @@ public class OutputsTest {
                 "\tif (strEqualCaseInsensitive(name, \"iat.adcChannel\"))\n" +
                 "\t\treturn config->iat.adcChannel;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
-                "}\n", getConfigValueConsumer.getContent());
+                "}\n", getConfigValueConsumer.getGetterForUnitTest());
     }
 
     @Test
@@ -242,7 +248,7 @@ public class OutputsTest {
                 "\tif (strEqualCaseInsensitive(name, \"vehicleSpeedKph\"))\n" +
                 "\t\treturn config->vehicleSpeedKph;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
-                "}\n", getConfigValueConsumer.getContent());
+                "}\n", getConfigValueConsumer.getGetterForUnitTest());
 
     }
 
