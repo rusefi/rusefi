@@ -1248,10 +1248,10 @@ float[MAP_ACCEL_TAPER] mapAccelTaperMult;;"mult", 1, 0, 0, 300, 2
 	pin_output_mode_e sdCardCsPinMode;
 
 	int crankingIACposition;+This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.;"percent", 1, 0, -100, 100, 0
-	float tChargeMinRpmMinTps;;"mult", 1, 0, 0, 3, 4
-	float tChargeMinRpmMaxTps;;"mult", 1, 0, 0, 3, 4
-	float tChargeMaxRpmMinTps;;"mult", 1, 0, 0, 3, 4
-	float tChargeMaxRpmMaxTps;;"mult", 1, 0, 0, 3, 4   
+	float tChargeMinRpmMinTps;;"", 1, 0, 0, 3, 4
+	float tChargeMinRpmMaxTps;;"", 1, 0, 0, 3, 4
+	float tChargeMaxRpmMinTps;;"", 1, 0, 0, 3, 4
+	float tChargeMaxRpmMaxTps;;"", 1, 0, 0, 3, 4   
 
 custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	pwm_freq_t[CAMS_PER_BANK iterate] vvtOutputFrequency;
@@ -1394,11 +1394,11 @@ gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
 gppwm_note_t[SCRIPT_SETTING_COUNT iterate] scriptSettingName;
 uint8_t[108] unused3328;;"units", 1, 0, -20, 100, 0
 
-float tChargeAirCoefMin;;"Min tCharge Coeff.", 1, 0, 0, 1, 4
-float tChargeAirCoefMax;;"Max tCharge Coeff.", 1, 0, 0, 1, 4
-float tChargeAirFlowMax;;"Max Air Flow (kg/h)", 1, 0, 0, 1000, 1
-float tChargeAirIncrLimit;;"tChange Increment Limit (deg/sec)", 1, 0, 0, 100, 1
-float tChargeAirDecrLimit;;"tChange Decrement Limit (deg/sec)", 1, 0, 0, 100, 1
+float tChargeAirCoefMin;Heat transfer coefficient at zero flow.\n0 means the air charge is fully heated to the same temperature as CLT.\n1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.;"", 1, 0, 0, 1, 3
+float tChargeAirCoefMax;Heat transfer coefficient at high flow, as defined by "max air flow".\n0 means the air charge is fully heated to the same temperature as CLT.\n1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.;"", 1, 0, 0, 1, 3
+float tChargeAirFlowMax;High flow point for heat transfer estimation.\nSet this to perhaps 50-75% of your maximum airflow at wide open throttle.;"kg/h", 1, 0, 0, 1000, 1
+float tChargeAirIncrLimit;Maximum allowed rate of increase allowed for the estimated charge temperature;"deg/sec", 1, 0, 0, 100, 1
+float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estimated charge temperature;"deg/sec", 1, 0, 0, 100, 1
 
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
 custom tChargeMode_e 4 bits, U32, @OFFSET@, [0:0], @@tChargeMode_e_enum@@
@@ -1637,6 +1637,20 @@ float[SCRIPT_TABLE_8] scriptTable3RpmBins;RPM is float and not integer in order 
 uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable4;;"value", 1, 0, 0, 255, 0
 float[SCRIPT_TABLE_8] scriptTable4LoadBins;;"L",	  1, 0, 0, 255, 0
 float[SCRIPT_TABLE_8] scriptTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+
+#define TRIM_SIZE 4
+
+struct cyl_trim_s
+	int8_t[TRIM_SIZE x TRIM_SIZE] autoscale table;;"", 0.2, 0, -25, 25, 2
+end_struct
+
+cyl_trim_s[12] ignTrims
+uint16_t[TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 100, 0
+uint16_t[TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
+
+cyl_trim_s[12] fuelTrims
+uint16_t[TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 100, 0
+uint16_t[TRIM_SIZE] fuelTrimRpmbins;;"rpm", 1, 0, 0, 20000, 0
 
 end_struct
 

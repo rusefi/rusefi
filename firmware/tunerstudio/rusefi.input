@@ -1582,7 +1582,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "Name", scriptCurveName6
 		panel = scriptCurve6
 
-	dialog = tChargeRpmTpsSettings, "RPM+TPS Mode Settings"
+	dialog = tChargeRpmTpsSettings, "RPM+TPS mode"
 	    field = "We use these coefficients to approximate air/fuel charge temperate"
 	    field = "based on CLT and IAT, depending on RPM and TPM"
 		field = "minRPM minTPS", tChargeMinRpmMinTps
@@ -1591,17 +1591,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "maxRPM maxTPS", tChargeMaxRpmMaxTps
 
 	dialog = tChargeGeneralSettings, ""
-		field = "tCharge Mode", tChargeMode
-		field = "tChange Increment Limit, deg/sec", tChargeAirIncrLimit
-		field = "tChange Decrement Limit, deg/sec", tChargeAirDecrLimit
+		field = "Mode", tChargeMode
+		field = "#These two parameters limit the estimate's rate of change"
+		field = "Increase rate limit", tChargeAirIncrLimit
+		field = "Decrease rate limit", tChargeAirDecrLimit
 	    field = ""
 
-	dialog = tChargeAirInterpSettings, "Air Interpolation Mode Settings"
-		field = "Min tCharge Coeff.", tChargeAirCoefMin
-		field = "Max tCharge Coeff.", tChargeAirCoefMax
-		field = "Max Air Flow, kg/h", tChargeAirFlowMax
+	dialog = tChargeAirInterpSettings, "Airflow interpolation mode"
+		field = "Low flow coefficient", tChargeAirCoefMin
+		field = "High flow coefficient", tChargeAirCoefMax
+		field = "Max air flow", tChargeAirFlowMax
 		
-	dialog = tChargeSettings, "tCharge Settings"
+	dialog = tChargeSettings, "Charge temperature estimation"
 		panel = tChargeGeneralSettings
 		panel = tChargeRpmTpsSettings, { tChargeMode == 0}
 		panel = tChargeAirInterpSettings, { tChargeMode == 1}
