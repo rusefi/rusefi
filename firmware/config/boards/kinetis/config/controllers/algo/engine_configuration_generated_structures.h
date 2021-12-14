@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Dec 08 22:48:26 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Dec 14 19:48:17 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3197,22 +3197,18 @@ struct engine_configuration_s {
 	 */
 	int crankingIACposition;
 	/**
-	mult
 	 * offset 2228
 	 */
 	float tChargeMinRpmMinTps;
 	/**
-	mult
 	 * offset 2232
 	 */
 	float tChargeMinRpmMaxTps;
 	/**
-	mult
 	 * offset 2236
 	 */
 	float tChargeMaxRpmMinTps;
 	/**
-	mult
 	 * offset 2240
 	 */
 	float tChargeMaxRpmMaxTps;
@@ -3726,27 +3722,35 @@ struct engine_configuration_s {
 	 */
 	uint8_t unused3328[108];
 	/**
-	Min tCharge Coeff.
+	 * Heat transfer coefficient at zero flow.
+	 * 0 means the air charge is fully heated to the same temperature as CLT.
+	 * 1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.
 	 * offset 3836
 	 */
 	float tChargeAirCoefMin;
 	/**
-	Max tCharge Coeff.
+	 * Heat transfer coefficient at high flow, as defined by "max air flow".
+	 * 0 means the air charge is fully heated to the same temperature as CLT.
+	 * 1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.
 	 * offset 3840
 	 */
 	float tChargeAirCoefMax;
 	/**
-	Max Air Flow (kg/h)
+	 * High flow point for heat transfer estimation.
+	 * Set this to perhaps 50-75% of your maximum airflow at wide open throttle.
+	kg/h
 	 * offset 3844
 	 */
 	float tChargeAirFlowMax;
 	/**
-	tChange Increment Limit (deg/sec)
+	 * Maximum allowed rate of increase allowed for the estimated charge temperature
+	deg/sec
 	 * offset 3848
 	 */
 	float tChargeAirIncrLimit;
 	/**
-	tChange Decrement Limit (deg/sec)
+	 * Maximum allowed rate of decrease allowed for the estimated charge temperature
+	deg/sec
 	 * offset 3852
 	 */
 	float tChargeAirDecrLimit;
@@ -4538,4 +4542,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Wed Dec 08 22:48:26 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Dec 14 19:48:17 UTC 2021
