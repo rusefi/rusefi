@@ -1585,10 +1585,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = tChargeRpmTpsSettings, "RPM+TPS mode"
 	    field = "We use these coefficients to approximate air/fuel charge temperate"
 	    field = "based on CLT and IAT, depending on RPM and TPM"
-		field = "minRPM minTPS", tChargeMinRpmMinTps
-		field = "minRPM maxTPS", tChargeMinRpmMaxTps
-		field = "maxRPM minTPS", tChargeMaxRpmMinTps
-		field = "maxRPM maxTPS", tChargeMaxRpmMaxTps
+		field = "Low RPM/Low TPS", tChargeMinRpmMinTps
+		field = "Low RPM/High TPS", tChargeMinRpmMaxTps
+		field = "High RPM/Low TPS", tChargeMaxRpmMinTps
+		field = "High RPM/High TPS", tChargeMaxRpmMaxTps
 
 	dialog = tChargeGeneralSettings, ""
 		field = "Mode", tChargeMode
