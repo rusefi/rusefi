@@ -2713,22 +2713,22 @@ event 0 0 1 0.00
 event 1 0 0 8.00
 event 2 0 1 180.00
 event 3 0 0 188.00
-event 4 0 1 212.00
-event 5 0 0 220.00
-event 6 0 1 244.00
-event 7 0 0 252.00
+event 4 0 1 214.00
+event 5 0 0 222.00
+event 6 0 1 248.00
+event 7 0 0 256.00
 event 8 0 1 360.00
 event 9 0 0 368.00
-event 10 0 1 392.00
-event 11 0 0 400.00
-event 12 0 1 424.00
-event 13 0 0 432.00
-event 14 0 1 456.00
-event 15 0 0 464.00
+event 10 0 1 394.00
+event 11 0 0 402.00
+event 12 0 1 428.00
+event 13 0 0 436.00
+event 14 0 1 462.00
+event 15 0 0 470.00
 event 16 0 1 540.00
 event 17 0 0 548.00
-event 18 0 1 572.00
-event 19 0 0 580.00
+event 18 0 1 574.00
+event 19 0 0 582.00
 TRIGGERTYPE 53 544 TT_TRI_TACH 0.00
 # duty 1.00 0.50
 event 0 0 1 0.00
@@ -3947,7 +3947,7 @@ event 6 0 1 540.00
 event 7 0 0 570.00
 event 8 0 1 595.00
 event 9 0 0 609.00
-TRIGGERTYPE 68 128 TT_NISSAN_MR18_CRANK 640.00
+TRIGGERTYPE 68 128 TT_NISSAN_MR18_CRANK 80.00
 # duty 0.56 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
