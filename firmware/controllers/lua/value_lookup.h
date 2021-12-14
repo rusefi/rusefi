@@ -7,3 +7,4 @@
 
 #pragma once
 float getConfigValueByName(const char *name);
+void setConfigValueByName(const char *name, float value);
