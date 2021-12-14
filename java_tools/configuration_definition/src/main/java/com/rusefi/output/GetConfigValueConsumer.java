@@ -13,6 +13,8 @@ import static com.rusefi.output.DataLogConsumer.UNUSED;
 
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
+    public static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
+    public static final String ENGINE_CONFIGURATION = "engineConfiguration.";
     private final StringBuilder content = new StringBuilder();
     private final String outputFIleName;
 
@@ -61,8 +63,16 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
             return "";
         }
 
-        content.append("\tif (strEqualCaseInsensitive(name, \"" + prefix + cf.getName() + "\"))\n");
-        content.append("\t\treturn config->" + prefix + cf.getName() + ";\n");
+        String userName = prefix + cf.getName();
+        if (userName.startsWith(ENGINE_CONFIGURATION))
+            userName = userName.substring(ENGINE_CONFIGURATION.length());
+        content.append("\tif (strEqualCaseInsensitive(name, \"" + userName + "\"))\n");
+
+        String javaName = "config->" + prefix;
+        if (javaName.startsWith(CONFIG_ENGINE_CONFIGURATION))
+            javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
+
+        content.append("\t\treturn " + javaName + cf.getName() + ";\n");
         return "";
     }
 
