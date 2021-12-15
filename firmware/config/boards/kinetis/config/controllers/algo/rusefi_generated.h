@@ -1421,7 +1421,6 @@
 #define issue_294_31_offset 76
 #define isVerboseAlternator_offset 744
 #define isVerboseAuxPid1_offset 76
-#define isVerboseETB_offset 1464
 #define isVerboseIAC_offset 1464
 #define isWaveAnalyzerEnabled_offset 1476
 #define joystickAPin_offset 939
@@ -1808,7 +1807,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1848440777
+#define SIGNATURE_HASH 1374093618
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2325,7 +2324,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.15.kin.1848440777"
+#define TS_SIGNATURE "rusEFI 2021.12.15.kin.1374093618"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2352,6 +2351,7 @@
 #define unused11_offset 765
 #define unused1464b0_offset 1464
 #define unused1464b20_offset 1464
+#define unused1464b3_offset 1464
 #define unused1464b4_offset 1464
 #define unused1476b19_offset 1476
 #define unused1476b20_offset 1476

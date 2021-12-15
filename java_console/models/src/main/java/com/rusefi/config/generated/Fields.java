@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 15 02:24:57 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 15 13:24:14 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1387,7 +1387,6 @@ public class Fields {
 	public static final int issue_294_31_offset = 76;
 	public static final int isVerboseAlternator_offset = 744;
 	public static final int isVerboseAuxPid1_offset = 76;
-	public static final int isVerboseETB_offset = 1464;
 	public static final int isVerboseIAC_offset = 1464;
 	public static final int isWaveAnalyzerEnabled_offset = 1476;
 	public static final int joystickAPin_offset = 939;
@@ -2211,7 +2210,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.15.all.2877086857";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.15.all.2495031922";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 728;
@@ -2235,6 +2234,7 @@ public class Fields {
 	public static final int unused11_offset = 765;
 	public static final int unused1464b0_offset = 1464;
 	public static final int unused1464b20_offset = 1464;
+	public static final int unused1464b3_offset = 1464;
 	public static final int unused1464b4_offset = 1464;
 	public static final int unused1476b19_offset = 1476;
 	public static final int unused1476b20_offset = 1476;
@@ -2987,7 +2987,7 @@ public class Fields {
 	public static final Field UNUSED1464B0 = Field.create("UNUSED1464B0", 1464, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1464, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1464, FieldType.BIT, 2);
-	public static final Field ISVERBOSEETB = Field.create("ISVERBOSEETB", 1464, FieldType.BIT, 3);
+	public static final Field UNUSED1464B3 = Field.create("UNUSED1464B3", 1464, FieldType.BIT, 3);
 	public static final Field UNUSED1464B4 = Field.create("UNUSED1464B4", 1464, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1464, FieldType.BIT, 5);
 	public static final Field SILENTTRIGGERERROR = Field.create("SILENTTRIGGERERROR", 1464, FieldType.BIT, 6);
@@ -4260,7 +4260,7 @@ public class Fields {
 	UNUSED1464B0,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
-	ISVERBOSEETB,
+	UNUSED1464B3,
 	UNUSED1464B4,
 	ISENGINECHARTENABLED,
 	SILENTTRIGGERERROR,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Dec 14 19:48:21 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 15 13:24:11 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2276,9 +2276,8 @@ struct engine_configuration_s {
 	offset 1464 bit 2 */
 	bool isVerboseIAC : 1 {};
 	/**
-	 * Prints ETB details to rusEFI console
 	offset 1464 bit 3 */
-	bool isVerboseETB : 1 {};
+	bool unused1464b3 : 1 {};
 	/**
 	offset 1464 bit 4 */
 	bool unused1464b4 : 1 {};
@@ -4548,4 +4547,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Dec 14 19:48:21 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 15 13:24:11 UTC 2021
