@@ -548,7 +548,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		auto incrementVersion = lua_toboolean(l, 3);
 		setConfigValueByName(propertyName, value);
 		if (incrementVersion) {
-
+			incrementGlobalConfigurationVersion();
 		}
 		return 0;
 	});
