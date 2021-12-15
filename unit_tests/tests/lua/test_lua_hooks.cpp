@@ -24,14 +24,14 @@ TEST(LuaHooks, TestCrc8) {
 }
 
 TEST(LuaHooks, TestGetCalibration) {
-//	const char* sourceCode = R"(
-//
-//	function testFunc()
-//		return getCalibration("cranking.rpm")
-//	end
-//
-//	)";
-//	EXPECT_EQ(testLuaReturnsNumber(sourceCode), 0x86);
+	const char* sourceCode = R"(
+
+	function testFunc()
+		return getCalibration("cranking.rpm")
+	end
+
+	)";
+	EXPECT_EQ(testLuaReturnsNumber(sourceCode), 0x86);
 }
 
 TEST(LuaHooks, TestSetCalibration) {
