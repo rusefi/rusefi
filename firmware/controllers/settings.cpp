@@ -769,8 +769,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		engineConfiguration->isHip9011Enabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "verbose_etb")) {
-		engineConfiguration->isVerboseETB = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
