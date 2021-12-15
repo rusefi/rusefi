@@ -556,10 +556,6 @@ void EtbController::update() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
-	if (engineConfiguration->isVerboseETB) {
-		m_pid.showPidStatus("ETB");
-	}
-
 	// Update local state about autotune
 	m_isAutotune = GET_RPM() == 0
 		&& engine->etbAutoTune
