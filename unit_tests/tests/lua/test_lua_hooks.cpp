@@ -23,6 +23,29 @@ TEST(LuaHooks, TestCrc8) {
 	EXPECT_EQ(testLuaReturnsNumberOrNil(crc8scripts).value_or(0), 0x43);
 }
 
+TEST(LuaHooks, TestGetCalibration) {
+//	const char* sourceCode = R"(
+//
+//	function testFunc()
+//		return getCalibration("cranking.rpm")
+//	end
+//
+//	)";
+//	EXPECT_EQ(testLuaReturnsNumber(sourceCode), 0x86);
+}
+
+TEST(LuaHooks, TestSetCalibration) {
+	//	const char* sourceCode = R"(
+	//
+	//	function testFunc()
+	//		setCalibration("cranking.rpm", 900, false)
+	//	end
+	//
+	//	)";
+	//	EXPECT_EQ(testLuaReturnsNumber(sourceCode), 0x43);
+
+}
+
 static const char* getSensorTestByIndex = R"(
 
 function testFunc()
