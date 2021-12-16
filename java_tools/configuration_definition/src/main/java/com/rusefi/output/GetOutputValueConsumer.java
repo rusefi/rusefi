@@ -40,7 +40,7 @@ public class GetOutputValueConsumer extends AbstractConfigurationConsumer {
         }
 
         String userName = prefix + cf.getName();
-        String javaName = "tsOutputChannels->" + prefix;
+        String javaName = "engine->outputChannels." + prefix;
 
         getterBody.append(getCompareName(userName));
         getterBody.append("\t\treturn " + javaName + cf.getName() + ";\n");
