@@ -2,10 +2,7 @@ package com.rusefi.test;
 
 import com.rusefi.BitState;
 import com.rusefi.ReaderState;
-import com.rusefi.output.DataLogConsumer;
-import com.rusefi.output.GaugeConsumer;
-import com.rusefi.output.GetConfigValueConsumer;
-import com.rusefi.output.OutputsSectionConsumer;
+import com.rusefi.output.*;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -113,6 +110,26 @@ public class OutputsTest {
                         "entry = isForcedInduction, \"Does the vehicle have a turbo or supercharger?\", int,    \"%d\"\n" +
                         "entry = enableFan1WithAc, \"+Turn on this fan when AC is on.\", int,    \"%d\"\n", new String(dataLogConsumer.getTsWriter().toCharArray()));
 
+    }
+
+    @Test
+    public void generateGetOutputs() throws IOException {
+        String test = "struct_no_prefix ts_outputs_s\n" +
+                "bit issue_294_31,\"si_example\",\"nada_example\"\n" +
+                "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
+                "int hwChannel;\n" +
+                "end_struct\n";
+        ReaderState state = new ReaderState();
+
+        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(null);
+        state.readBufferedReader(test, Collections.singletonList(outputValueConsumer));
+        assertEquals(
+                "#include \"pch.h\"\n" +
+                        "float getOutputValueByName(const char *name) {\n" +
+                        "\tif (strEqualCaseInsensitive(name, \"hwChannel\"))\n" +
+                        "\t\treturn tsOutputChannels->hwChannel;\n" +
+                        "\treturn EFI_ERROR_CODE;\n" +
+                        "}\n", outputValueConsumer.getContent());
     }
 
     @Test
