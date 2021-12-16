@@ -4,6 +4,68 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->engineSnifferRpmThreshold;
 	if (strEqualCaseInsensitive(name, "injector.flow"))
 		return engineConfiguration->injector.flow;
+	if (strEqualCaseInsensitive(name, "isForcedInduction"))
+		return engineConfiguration->isForcedInduction;
+	if (strEqualCaseInsensitive(name, "useFordRedundantTps"))
+		return engineConfiguration->useFordRedundantTps;
+	if (strEqualCaseInsensitive(name, "isVerboseAuxPid1"))
+		return engineConfiguration->isVerboseAuxPid1;
+	if (strEqualCaseInsensitive(name, "overrideTriggerGaps"))
+		return engineConfiguration->overrideTriggerGaps;
+	if (strEqualCaseInsensitive(name, "enableFan1WithAc"))
+		return engineConfiguration->enableFan1WithAc;
+	if (strEqualCaseInsensitive(name, "enableFan2WithAc"))
+		return engineConfiguration->enableFan2WithAc;
+	if (strEqualCaseInsensitive(name, "disableFan1WhenStopped"))
+		return engineConfiguration->disableFan1WhenStopped;
+	if (strEqualCaseInsensitive(name, "disableFan2WhenStopped"))
+		return engineConfiguration->disableFan2WhenStopped;
+	if (strEqualCaseInsensitive(name, "enableTrailingSparks"))
+		return engineConfiguration->enableTrailingSparks;
+	if (strEqualCaseInsensitive(name, "isCJ125Verbose"))
+		return engineConfiguration->isCJ125Verbose;
+	if (strEqualCaseInsensitive(name, "cj125isUaDivided"))
+		return engineConfiguration->cj125isUaDivided;
+	if (strEqualCaseInsensitive(name, "cj125isLsu49"))
+		return engineConfiguration->cj125isLsu49;
+	if (strEqualCaseInsensitive(name, "etb_use_two_wires"))
+		return engineConfiguration->etb_use_two_wires;
+	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
+		return engineConfiguration->isDoubleSolenoidIdle;
+	if (strEqualCaseInsensitive(name, "showSdCardWarning"))
+		return engineConfiguration->showSdCardWarning;
+	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
+		return engineConfiguration->cj125isUrDivided;
+	if (strEqualCaseInsensitive(name, "useCicPidForIdle"))
+		return engineConfiguration->useCicPidForIdle;
+	if (strEqualCaseInsensitive(name, "useTLE8888_cranking_hack"))
+		return engineConfiguration->useTLE8888_cranking_hack;
+	if (strEqualCaseInsensitive(name, "useInstantRpmForIdle"))
+		return engineConfiguration->useInstantRpmForIdle;
+	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))
+		return engineConfiguration->useSeparateIdleTablesForCrankingTaper;
+	if (strEqualCaseInsensitive(name, "launchControlEnabled"))
+		return engineConfiguration->launchControlEnabled;
+	if (strEqualCaseInsensitive(name, "rollingLaunchEnabled"))
+		return engineConfiguration->rollingLaunchEnabled;
+	if (strEqualCaseInsensitive(name, "antiLagEnabled"))
+		return engineConfiguration->antiLagEnabled;
+	if (strEqualCaseInsensitive(name, "useRunningMathForCranking"))
+		return engineConfiguration->useRunningMathForCranking;
+	if (strEqualCaseInsensitive(name, "displayLogicLevelsInEngineSniffer"))
+		return engineConfiguration->displayLogicLevelsInEngineSniffer;
+	if (strEqualCaseInsensitive(name, "useTLE8888_stepper"))
+		return engineConfiguration->useTLE8888_stepper;
+	if (strEqualCaseInsensitive(name, "enableMapEstimationTableFallback"))
+		return engineConfiguration->enableMapEstimationTableFallback;
+	if (strEqualCaseInsensitive(name, "usescriptTableForCanSniffingFiltering"))
+		return engineConfiguration->usescriptTableForCanSniffingFiltering;
+	if (strEqualCaseInsensitive(name, "verboseCan"))
+		return engineConfiguration->verboseCan;
+	if (strEqualCaseInsensitive(name, "artificialTestMisfire"))
+		return engineConfiguration->artificialTestMisfire;
+	if (strEqualCaseInsensitive(name, "issue_294_31"))
+		return engineConfiguration->issue_294_31;
 	if (strEqualCaseInsensitive(name, "tpsMin"))
 		return engineConfiguration->tpsMin;
 	if (strEqualCaseInsensitive(name, "tpsMax"))
@@ -110,6 +172,12 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->idle_derivativeFilterLoss;
 	if (strEqualCaseInsensitive(name, "trailingSparkAngle"))
 		return engineConfiguration->trailingSparkAngle;
+	if (strEqualCaseInsensitive(name, "trigger.todoRemoveMeOneDay0"))
+		return engineConfiguration->trigger.todoRemoveMeOneDay0;
+	if (strEqualCaseInsensitive(name, "trigger.todoRemoveMeOneDay1"))
+		return engineConfiguration->trigger.todoRemoveMeOneDay1;
+	if (strEqualCaseInsensitive(name, "trigger.useOnlyFirstChannel"))
+		return engineConfiguration->trigger.useOnlyFirstChannel;
 	if (strEqualCaseInsensitive(name, "trigger.customTotalToothCount"))
 		return engineConfiguration->trigger.customTotalToothCount;
 	if (strEqualCaseInsensitive(name, "trigger.customSkippedToothCount"))
@@ -174,6 +242,70 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->tunerStudioSerialSpeed;
 	if (strEqualCaseInsensitive(name, "compressionRatio"))
 		return engineConfiguration->compressionRatio;
+	if (strEqualCaseInsensitive(name, "is_enabled_spi_1"))
+		return engineConfiguration->is_enabled_spi_1;
+	if (strEqualCaseInsensitive(name, "is_enabled_spi_2"))
+		return engineConfiguration->is_enabled_spi_2;
+	if (strEqualCaseInsensitive(name, "is_enabled_spi_3"))
+		return engineConfiguration->is_enabled_spi_3;
+	if (strEqualCaseInsensitive(name, "isSdCardEnabled"))
+		return engineConfiguration->isSdCardEnabled;
+	if (strEqualCaseInsensitive(name, "rusefiVerbose29b"))
+		return engineConfiguration->rusefiVerbose29b;
+	if (strEqualCaseInsensitive(name, "isEngineControlEnabled"))
+		return engineConfiguration->isEngineControlEnabled;
+	if (strEqualCaseInsensitive(name, "isHip9011Enabled"))
+		return engineConfiguration->isHip9011Enabled;
+	if (strEqualCaseInsensitive(name, "isVerboseAlternator"))
+		return engineConfiguration->isVerboseAlternator;
+	if (strEqualCaseInsensitive(name, "useSerialPort"))
+		return engineConfiguration->useSerialPort;
+	if (strEqualCaseInsensitive(name, "useStepperIdle"))
+		return engineConfiguration->useStepperIdle;
+	if (strEqualCaseInsensitive(name, "enabledStep1Limiter"))
+		return engineConfiguration->enabledStep1Limiter;
+	if (strEqualCaseInsensitive(name, "useTpicAdvancedMode"))
+		return engineConfiguration->useTpicAdvancedMode;
+	if (strEqualCaseInsensitive(name, "useLcdScreen"))
+		return engineConfiguration->useLcdScreen;
+	if (strEqualCaseInsensitive(name, "verboseTLE8888"))
+		return engineConfiguration->verboseTLE8888;
+	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
+		return engineConfiguration->enableVerboseCanTx;
+	if (strEqualCaseInsensitive(name, "onOffAlternatorLogic"))
+		return engineConfiguration->onOffAlternatorLogic;
+	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
+		return engineConfiguration->isCJ125Enabled;
+	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
+		return engineConfiguration->vvtCamSensorUseRise;
+	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
+		return engineConfiguration->measureMapOnlyInOneCylinder;
+	if (strEqualCaseInsensitive(name, "stepperForceParkingEveryRestart"))
+		return engineConfiguration->stepperForceParkingEveryRestart;
+	if (strEqualCaseInsensitive(name, "isFasterEngineSpinUpEnabled"))
+		return engineConfiguration->isFasterEngineSpinUpEnabled;
+	if (strEqualCaseInsensitive(name, "coastingFuelCutEnabled"))
+		return engineConfiguration->coastingFuelCutEnabled;
+	if (strEqualCaseInsensitive(name, "useIacTableForCoasting"))
+		return engineConfiguration->useIacTableForCoasting;
+	if (strEqualCaseInsensitive(name, "useNoiselessTriggerDecoder"))
+		return engineConfiguration->useNoiselessTriggerDecoder;
+	if (strEqualCaseInsensitive(name, "useIdleTimingPidControl"))
+		return engineConfiguration->useIdleTimingPidControl;
+	if (strEqualCaseInsensitive(name, "disableEtbWhenEngineStopped"))
+		return engineConfiguration->disableEtbWhenEngineStopped;
+	if (strEqualCaseInsensitive(name, "is_enabled_spi_4"))
+		return engineConfiguration->is_enabled_spi_4;
+	if (strEqualCaseInsensitive(name, "pauseEtbControl"))
+		return engineConfiguration->pauseEtbControl;
+	if (strEqualCaseInsensitive(name, "alignEngineSnifferAtTDC"))
+		return engineConfiguration->alignEngineSnifferAtTDC;
+	if (strEqualCaseInsensitive(name, "useETBforIdleControl"))
+		return engineConfiguration->useETBforIdleControl;
+	if (strEqualCaseInsensitive(name, "idleIncrementalPidCic"))
+		return engineConfiguration->idleIncrementalPidCic;
+	if (strEqualCaseInsensitive(name, "enableAemXSeries"))
+		return engineConfiguration->enableAemXSeries;
 	if (strEqualCaseInsensitive(name, "verboseCanBaseAddress"))
 		return engineConfiguration->verboseCanBaseAddress;
 	if (strEqualCaseInsensitive(name, "mc33_hvolt"))
@@ -204,6 +336,64 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->multisparkMaxSparkingAngle;
 	if (strEqualCaseInsensitive(name, "multisparkMaxExtraSparkCount"))
 		return engineConfiguration->multisparkMaxExtraSparkCount;
+	if (strEqualCaseInsensitive(name, "clutchUpPinInverted"))
+		return engineConfiguration->clutchUpPinInverted;
+	if (strEqualCaseInsensitive(name, "clutchDownPinInverted"))
+		return engineConfiguration->clutchDownPinInverted;
+	if (strEqualCaseInsensitive(name, "useHbridgesToDriveIdleStepper"))
+		return engineConfiguration->useHbridgesToDriveIdleStepper;
+	if (strEqualCaseInsensitive(name, "multisparkEnable"))
+		return engineConfiguration->multisparkEnable;
+	if (strEqualCaseInsensitive(name, "enableLaunchRetard"))
+		return engineConfiguration->enableLaunchRetard;
+	if (strEqualCaseInsensitive(name, "unfinishedenableLaunchBoost"))
+		return engineConfiguration->unfinishedenableLaunchBoost;
+	if (strEqualCaseInsensitive(name, "unfinishedlaunchDisableBySpeed"))
+		return engineConfiguration->unfinishedlaunchDisableBySpeed;
+	if (strEqualCaseInsensitive(name, "enableCanVss"))
+		return engineConfiguration->enableCanVss;
+	if (strEqualCaseInsensitive(name, "enableInnovateLC2"))
+		return engineConfiguration->enableInnovateLC2;
+	if (strEqualCaseInsensitive(name, "showHumanReadableWarning"))
+		return engineConfiguration->showHumanReadableWarning;
+	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
+		return engineConfiguration->stftIgnoreErrorMagnitude;
+	if (strEqualCaseInsensitive(name, "mapCamLookForLowPeaks"))
+		return engineConfiguration->mapCamLookForLowPeaks;
+	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
+		return engineConfiguration->enableSoftwareKnock;
+	if (strEqualCaseInsensitive(name, "verboseVVTDecoding"))
+		return engineConfiguration->verboseVVTDecoding;
+	if (strEqualCaseInsensitive(name, "invertCamVVTSignal"))
+		return engineConfiguration->invertCamVVTSignal;
+	if (strEqualCaseInsensitive(name, "consumeObdSensors"))
+		return engineConfiguration->consumeObdSensors;
+	if (strEqualCaseInsensitive(name, "knockBankCyl1"))
+		return engineConfiguration->knockBankCyl1;
+	if (strEqualCaseInsensitive(name, "knockBankCyl2"))
+		return engineConfiguration->knockBankCyl2;
+	if (strEqualCaseInsensitive(name, "knockBankCyl3"))
+		return engineConfiguration->knockBankCyl3;
+	if (strEqualCaseInsensitive(name, "knockBankCyl4"))
+		return engineConfiguration->knockBankCyl4;
+	if (strEqualCaseInsensitive(name, "knockBankCyl5"))
+		return engineConfiguration->knockBankCyl5;
+	if (strEqualCaseInsensitive(name, "knockBankCyl6"))
+		return engineConfiguration->knockBankCyl6;
+	if (strEqualCaseInsensitive(name, "knockBankCyl7"))
+		return engineConfiguration->knockBankCyl7;
+	if (strEqualCaseInsensitive(name, "knockBankCyl8"))
+		return engineConfiguration->knockBankCyl8;
+	if (strEqualCaseInsensitive(name, "knockBankCyl9"))
+		return engineConfiguration->knockBankCyl9;
+	if (strEqualCaseInsensitive(name, "knockBankCyl10"))
+		return engineConfiguration->knockBankCyl10;
+	if (strEqualCaseInsensitive(name, "knockBankCyl11"))
+		return engineConfiguration->knockBankCyl11;
+	if (strEqualCaseInsensitive(name, "knockBankCyl12"))
+		return engineConfiguration->knockBankCyl12;
+	if (strEqualCaseInsensitive(name, "tcuEnabled"))
+		return engineConfiguration->tcuEnabled;
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
 		return engineConfiguration->boostPid.pFactor;
 	if (strEqualCaseInsensitive(name, "boostPid.iFactor"))
@@ -258,8 +448,82 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->tps2SecondaryMin;
 	if (strEqualCaseInsensitive(name, "tps2SecondaryMax"))
 		return engineConfiguration->tps2SecondaryMax;
+	if (strEqualCaseInsensitive(name, "fuelClosedLoopCorrectionEnabled"))
+		return engineConfiguration->fuelClosedLoopCorrectionEnabled;
+	if (strEqualCaseInsensitive(name, "isVerboseIAC"))
+		return engineConfiguration->isVerboseIAC;
+	if (strEqualCaseInsensitive(name, "isEngineChartEnabled"))
+		return engineConfiguration->isEngineChartEnabled;
+	if (strEqualCaseInsensitive(name, "silentTriggerError"))
+		return engineConfiguration->silentTriggerError;
+	if (strEqualCaseInsensitive(name, "useLinearCltSensor"))
+		return engineConfiguration->useLinearCltSensor;
+	if (strEqualCaseInsensitive(name, "canReadEnabled"))
+		return engineConfiguration->canReadEnabled;
+	if (strEqualCaseInsensitive(name, "canWriteEnabled"))
+		return engineConfiguration->canWriteEnabled;
+	if (strEqualCaseInsensitive(name, "useLinearIatSensor"))
+		return engineConfiguration->useLinearIatSensor;
+	if (strEqualCaseInsensitive(name, "tachPulseDurationAsDutyCycle"))
+		return engineConfiguration->tachPulseDurationAsDutyCycle;
+	if (strEqualCaseInsensitive(name, "isAlternatorControlEnabled"))
+		return engineConfiguration->isAlternatorControlEnabled;
+	if (strEqualCaseInsensitive(name, "invertPrimaryTriggerSignal"))
+		return engineConfiguration->invertPrimaryTriggerSignal;
+	if (strEqualCaseInsensitive(name, "invertSecondaryTriggerSignal"))
+		return engineConfiguration->invertSecondaryTriggerSignal;
+	if (strEqualCaseInsensitive(name, "cutFuelOnHardLimit"))
+		return engineConfiguration->cutFuelOnHardLimit;
+	if (strEqualCaseInsensitive(name, "cutSparkOnHardLimit"))
+		return engineConfiguration->cutSparkOnHardLimit;
+	if (strEqualCaseInsensitive(name, "launchFuelCutEnable"))
+		return engineConfiguration->launchFuelCutEnable;
+	if (strEqualCaseInsensitive(name, "launchSparkCutEnable"))
+		return engineConfiguration->launchSparkCutEnable;
+	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
+		return engineConfiguration->useFSIO5ForCriticalIssueEngineStop;
+	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
+		return engineConfiguration->useFSIO4ForSeriousEngineWarning;
 	if (strEqualCaseInsensitive(name, "etbNeutralPosition"))
 		return engineConfiguration->etbNeutralPosition;
+	if (strEqualCaseInsensitive(name, "isInjectionEnabled"))
+		return engineConfiguration->isInjectionEnabled;
+	if (strEqualCaseInsensitive(name, "isIgnitionEnabled"))
+		return engineConfiguration->isIgnitionEnabled;
+	if (strEqualCaseInsensitive(name, "isCylinderCleanupEnabled"))
+		return engineConfiguration->isCylinderCleanupEnabled;
+	if (strEqualCaseInsensitive(name, "isMapAveragingEnabled"))
+		return engineConfiguration->isMapAveragingEnabled;
+	if (strEqualCaseInsensitive(name, "overrideCrankingIacSetting"))
+		return engineConfiguration->overrideCrankingIacSetting;
+	if (strEqualCaseInsensitive(name, "useSeparateAdvanceForIdle"))
+		return engineConfiguration->useSeparateAdvanceForIdle;
+	if (strEqualCaseInsensitive(name, "isWaveAnalyzerEnabled"))
+		return engineConfiguration->isWaveAnalyzerEnabled;
+	if (strEqualCaseInsensitive(name, "useSeparateVeForIdle"))
+		return engineConfiguration->useSeparateVeForIdle;
+	if (strEqualCaseInsensitive(name, "verboseTriggerSynchDetails"))
+		return engineConfiguration->verboseTriggerSynchDetails;
+	if (strEqualCaseInsensitive(name, "isManualSpinningMode"))
+		return engineConfiguration->isManualSpinningMode;
+	if (strEqualCaseInsensitive(name, "twoWireBatchInjection"))
+		return engineConfiguration->twoWireBatchInjection;
+	if (strEqualCaseInsensitive(name, "useOnlyRisingEdgeForTrigger"))
+		return engineConfiguration->useOnlyRisingEdgeForTrigger;
+	if (strEqualCaseInsensitive(name, "twoWireBatchIgnition"))
+		return engineConfiguration->twoWireBatchIgnition;
+	if (strEqualCaseInsensitive(name, "useFixedBaroCorrFromMap"))
+		return engineConfiguration->useFixedBaroCorrFromMap;
+	if (strEqualCaseInsensitive(name, "useSeparateAdvanceForCranking"))
+		return engineConfiguration->useSeparateAdvanceForCranking;
+	if (strEqualCaseInsensitive(name, "useAdvanceCorrectionsForCranking"))
+		return engineConfiguration->useAdvanceCorrectionsForCranking;
+	if (strEqualCaseInsensitive(name, "useIacPidMultTable"))
+		return engineConfiguration->useIacPidMultTable;
+	if (strEqualCaseInsensitive(name, "isBoostControlEnabled"))
+		return engineConfiguration->isBoostControlEnabled;
+	if (strEqualCaseInsensitive(name, "launchSmoothRetard"))
+		return engineConfiguration->launchSmoothRetard;
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
 		return engineConfiguration->engineChartSize;
 	if (strEqualCaseInsensitive(name, "idlePidRpmUpperLimit"))
@@ -388,6 +652,14 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->throttlePedalSecondaryWOTVoltage;
 	if (strEqualCaseInsensitive(name, "verboseCan2BaseAddress"))
 		return engineConfiguration->verboseCan2BaseAddress;
+	if (strEqualCaseInsensitive(name, "enableVerboseCan2Tx"))
+		return engineConfiguration->enableVerboseCan2Tx;
+	if (strEqualCaseInsensitive(name, "can2ReadEnabled"))
+		return engineConfiguration->can2ReadEnabled;
+	if (strEqualCaseInsensitive(name, "can2WriteEnabled"))
+		return engineConfiguration->can2WriteEnabled;
+	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
+		return engineConfiguration->stepperDcInvertedPins;
 	if (strEqualCaseInsensitive(name, "boostCutPressure"))
 		return engineConfiguration->boostCutPressure;
 	if (strEqualCaseInsensitive(name, "fixedTiming"))
@@ -633,6 +905,161 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "injector.flow"))
 	{
 		engineConfiguration->injector.flow = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isForcedInduction"))
+	{
+		engineConfiguration->isForcedInduction = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useFordRedundantTps"))
+	{
+		engineConfiguration->useFordRedundantTps = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isVerboseAuxPid1"))
+	{
+		engineConfiguration->isVerboseAuxPid1 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "overrideTriggerGaps"))
+	{
+		engineConfiguration->overrideTriggerGaps = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableFan1WithAc"))
+	{
+		engineConfiguration->enableFan1WithAc = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableFan2WithAc"))
+	{
+		engineConfiguration->enableFan2WithAc = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "disableFan1WhenStopped"))
+	{
+		engineConfiguration->disableFan1WhenStopped = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "disableFan2WhenStopped"))
+	{
+		engineConfiguration->disableFan2WhenStopped = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableTrailingSparks"))
+	{
+		engineConfiguration->enableTrailingSparks = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isCJ125Verbose"))
+	{
+		engineConfiguration->isCJ125Verbose = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "cj125isUaDivided"))
+	{
+		engineConfiguration->cj125isUaDivided = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "cj125isLsu49"))
+	{
+		engineConfiguration->cj125isLsu49 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "etb_use_two_wires"))
+	{
+		engineConfiguration->etb_use_two_wires = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
+	{
+		engineConfiguration->isDoubleSolenoidIdle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "showSdCardWarning"))
+	{
+		engineConfiguration->showSdCardWarning = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
+	{
+		engineConfiguration->cj125isUrDivided = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useCicPidForIdle"))
+	{
+		engineConfiguration->useCicPidForIdle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useTLE8888_cranking_hack"))
+	{
+		engineConfiguration->useTLE8888_cranking_hack = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useInstantRpmForIdle"))
+	{
+		engineConfiguration->useInstantRpmForIdle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useSeparateIdleTablesForCrankingTaper"))
+	{
+		engineConfiguration->useSeparateIdleTablesForCrankingTaper = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "launchControlEnabled"))
+	{
+		engineConfiguration->launchControlEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "rollingLaunchEnabled"))
+	{
+		engineConfiguration->rollingLaunchEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "antiLagEnabled"))
+	{
+		engineConfiguration->antiLagEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useRunningMathForCranking"))
+	{
+		engineConfiguration->useRunningMathForCranking = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "displayLogicLevelsInEngineSniffer"))
+	{
+		engineConfiguration->displayLogicLevelsInEngineSniffer = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useTLE8888_stepper"))
+	{
+		engineConfiguration->useTLE8888_stepper = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableMapEstimationTableFallback"))
+	{
+		engineConfiguration->enableMapEstimationTableFallback = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "usescriptTableForCanSniffingFiltering"))
+	{
+		engineConfiguration->usescriptTableForCanSniffingFiltering = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "verboseCan"))
+	{
+		engineConfiguration->verboseCan = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "artificialTestMisfire"))
+	{
+		engineConfiguration->artificialTestMisfire = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "issue_294_31"))
+	{
+		engineConfiguration->issue_294_31 = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "tpsMin"))
@@ -900,6 +1327,21 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->trailingSparkAngle = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "trigger.todoRemoveMeOneDay0"))
+	{
+		engineConfiguration->trigger.todoRemoveMeOneDay0 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "trigger.todoRemoveMeOneDay1"))
+	{
+		engineConfiguration->trigger.todoRemoveMeOneDay1 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "trigger.useOnlyFirstChannel"))
+	{
+		engineConfiguration->trigger.useOnlyFirstChannel = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "trigger.customTotalToothCount"))
 	{
 		engineConfiguration->trigger.customTotalToothCount = (int)value;
@@ -1060,6 +1502,166 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->compressionRatio = value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "is_enabled_spi_1"))
+	{
+		engineConfiguration->is_enabled_spi_1 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "is_enabled_spi_2"))
+	{
+		engineConfiguration->is_enabled_spi_2 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "is_enabled_spi_3"))
+	{
+		engineConfiguration->is_enabled_spi_3 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isSdCardEnabled"))
+	{
+		engineConfiguration->isSdCardEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "rusefiVerbose29b"))
+	{
+		engineConfiguration->rusefiVerbose29b = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isEngineControlEnabled"))
+	{
+		engineConfiguration->isEngineControlEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isHip9011Enabled"))
+	{
+		engineConfiguration->isHip9011Enabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isVerboseAlternator"))
+	{
+		engineConfiguration->isVerboseAlternator = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useSerialPort"))
+	{
+		engineConfiguration->useSerialPort = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useStepperIdle"))
+	{
+		engineConfiguration->useStepperIdle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enabledStep1Limiter"))
+	{
+		engineConfiguration->enabledStep1Limiter = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useTpicAdvancedMode"))
+	{
+		engineConfiguration->useTpicAdvancedMode = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useLcdScreen"))
+	{
+		engineConfiguration->useLcdScreen = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "verboseTLE8888"))
+	{
+		engineConfiguration->verboseTLE8888 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableVerboseCanTx"))
+	{
+		engineConfiguration->enableVerboseCanTx = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "onOffAlternatorLogic"))
+	{
+		engineConfiguration->onOffAlternatorLogic = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isCJ125Enabled"))
+	{
+		engineConfiguration->isCJ125Enabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "vvtCamSensorUseRise"))
+	{
+		engineConfiguration->vvtCamSensorUseRise = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "measureMapOnlyInOneCylinder"))
+	{
+		engineConfiguration->measureMapOnlyInOneCylinder = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "stepperForceParkingEveryRestart"))
+	{
+		engineConfiguration->stepperForceParkingEveryRestart = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isFasterEngineSpinUpEnabled"))
+	{
+		engineConfiguration->isFasterEngineSpinUpEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "coastingFuelCutEnabled"))
+	{
+		engineConfiguration->coastingFuelCutEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useIacTableForCoasting"))
+	{
+		engineConfiguration->useIacTableForCoasting = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useNoiselessTriggerDecoder"))
+	{
+		engineConfiguration->useNoiselessTriggerDecoder = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useIdleTimingPidControl"))
+	{
+		engineConfiguration->useIdleTimingPidControl = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "disableEtbWhenEngineStopped"))
+	{
+		engineConfiguration->disableEtbWhenEngineStopped = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "is_enabled_spi_4"))
+	{
+		engineConfiguration->is_enabled_spi_4 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "pauseEtbControl"))
+	{
+		engineConfiguration->pauseEtbControl = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "alignEngineSnifferAtTDC"))
+	{
+		engineConfiguration->alignEngineSnifferAtTDC = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useETBforIdleControl"))
+	{
+		engineConfiguration->useETBforIdleControl = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "idleIncrementalPidCic"))
+	{
+		engineConfiguration->idleIncrementalPidCic = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableAemXSeries"))
+	{
+		engineConfiguration->enableAemXSeries = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "verboseCanBaseAddress"))
 	{
 		engineConfiguration->verboseCanBaseAddress = (int)value;
@@ -1133,6 +1735,151 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "multisparkMaxExtraSparkCount"))
 	{
 		engineConfiguration->multisparkMaxExtraSparkCount = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "clutchUpPinInverted"))
+	{
+		engineConfiguration->clutchUpPinInverted = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "clutchDownPinInverted"))
+	{
+		engineConfiguration->clutchDownPinInverted = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useHbridgesToDriveIdleStepper"))
+	{
+		engineConfiguration->useHbridgesToDriveIdleStepper = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "multisparkEnable"))
+	{
+		engineConfiguration->multisparkEnable = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableLaunchRetard"))
+	{
+		engineConfiguration->enableLaunchRetard = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "unfinishedenableLaunchBoost"))
+	{
+		engineConfiguration->unfinishedenableLaunchBoost = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "unfinishedlaunchDisableBySpeed"))
+	{
+		engineConfiguration->unfinishedlaunchDisableBySpeed = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableCanVss"))
+	{
+		engineConfiguration->enableCanVss = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableInnovateLC2"))
+	{
+		engineConfiguration->enableInnovateLC2 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "showHumanReadableWarning"))
+	{
+		engineConfiguration->showHumanReadableWarning = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
+	{
+		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "mapCamLookForLowPeaks"))
+	{
+		engineConfiguration->mapCamLookForLowPeaks = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
+	{
+		engineConfiguration->enableSoftwareKnock = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "verboseVVTDecoding"))
+	{
+		engineConfiguration->verboseVVTDecoding = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "invertCamVVTSignal"))
+	{
+		engineConfiguration->invertCamVVTSignal = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "consumeObdSensors"))
+	{
+		engineConfiguration->consumeObdSensors = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl1"))
+	{
+		engineConfiguration->knockBankCyl1 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl2"))
+	{
+		engineConfiguration->knockBankCyl2 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl3"))
+	{
+		engineConfiguration->knockBankCyl3 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl4"))
+	{
+		engineConfiguration->knockBankCyl4 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl5"))
+	{
+		engineConfiguration->knockBankCyl5 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl6"))
+	{
+		engineConfiguration->knockBankCyl6 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl7"))
+	{
+		engineConfiguration->knockBankCyl7 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl8"))
+	{
+		engineConfiguration->knockBankCyl8 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl9"))
+	{
+		engineConfiguration->knockBankCyl9 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl10"))
+	{
+		engineConfiguration->knockBankCyl10 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl11"))
+	{
+		engineConfiguration->knockBankCyl11 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "knockBankCyl12"))
+	{
+		engineConfiguration->knockBankCyl12 = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tcuEnabled"))
+	{
+		engineConfiguration->tcuEnabled = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
@@ -1270,9 +2017,194 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->tps2SecondaryMax = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "fuelClosedLoopCorrectionEnabled"))
+	{
+		engineConfiguration->fuelClosedLoopCorrectionEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isVerboseIAC"))
+	{
+		engineConfiguration->isVerboseIAC = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isEngineChartEnabled"))
+	{
+		engineConfiguration->isEngineChartEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "silentTriggerError"))
+	{
+		engineConfiguration->silentTriggerError = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useLinearCltSensor"))
+	{
+		engineConfiguration->useLinearCltSensor = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "canReadEnabled"))
+	{
+		engineConfiguration->canReadEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "canWriteEnabled"))
+	{
+		engineConfiguration->canWriteEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useLinearIatSensor"))
+	{
+		engineConfiguration->useLinearIatSensor = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tachPulseDurationAsDutyCycle"))
+	{
+		engineConfiguration->tachPulseDurationAsDutyCycle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isAlternatorControlEnabled"))
+	{
+		engineConfiguration->isAlternatorControlEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "invertPrimaryTriggerSignal"))
+	{
+		engineConfiguration->invertPrimaryTriggerSignal = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "invertSecondaryTriggerSignal"))
+	{
+		engineConfiguration->invertSecondaryTriggerSignal = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "cutFuelOnHardLimit"))
+	{
+		engineConfiguration->cutFuelOnHardLimit = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "cutSparkOnHardLimit"))
+	{
+		engineConfiguration->cutSparkOnHardLimit = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "launchFuelCutEnable"))
+	{
+		engineConfiguration->launchFuelCutEnable = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "launchSparkCutEnable"))
+	{
+		engineConfiguration->launchSparkCutEnable = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
+	{
+		engineConfiguration->useFSIO5ForCriticalIssueEngineStop = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
+	{
+		engineConfiguration->useFSIO4ForSeriousEngineWarning = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "etbNeutralPosition"))
 	{
 		engineConfiguration->etbNeutralPosition = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isInjectionEnabled"))
+	{
+		engineConfiguration->isInjectionEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isIgnitionEnabled"))
+	{
+		engineConfiguration->isIgnitionEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isCylinderCleanupEnabled"))
+	{
+		engineConfiguration->isCylinderCleanupEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isMapAveragingEnabled"))
+	{
+		engineConfiguration->isMapAveragingEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "overrideCrankingIacSetting"))
+	{
+		engineConfiguration->overrideCrankingIacSetting = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useSeparateAdvanceForIdle"))
+	{
+		engineConfiguration->useSeparateAdvanceForIdle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isWaveAnalyzerEnabled"))
+	{
+		engineConfiguration->isWaveAnalyzerEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useSeparateVeForIdle"))
+	{
+		engineConfiguration->useSeparateVeForIdle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "verboseTriggerSynchDetails"))
+	{
+		engineConfiguration->verboseTriggerSynchDetails = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isManualSpinningMode"))
+	{
+		engineConfiguration->isManualSpinningMode = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "twoWireBatchInjection"))
+	{
+		engineConfiguration->twoWireBatchInjection = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useOnlyRisingEdgeForTrigger"))
+	{
+		engineConfiguration->useOnlyRisingEdgeForTrigger = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "twoWireBatchIgnition"))
+	{
+		engineConfiguration->twoWireBatchIgnition = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useFixedBaroCorrFromMap"))
+	{
+		engineConfiguration->useFixedBaroCorrFromMap = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useSeparateAdvanceForCranking"))
+	{
+		engineConfiguration->useSeparateAdvanceForCranking = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useAdvanceCorrectionsForCranking"))
+	{
+		engineConfiguration->useAdvanceCorrectionsForCranking = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useIacPidMultTable"))
+	{
+		engineConfiguration->useIacPidMultTable = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "isBoostControlEnabled"))
+	{
+		engineConfiguration->isBoostControlEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "launchSmoothRetard"))
+	{
+		engineConfiguration->launchSmoothRetard = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "engineChartSize"))
@@ -1593,6 +2525,26 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "verboseCan2BaseAddress"))
 	{
 		engineConfiguration->verboseCan2BaseAddress = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "enableVerboseCan2Tx"))
+	{
+		engineConfiguration->enableVerboseCan2Tx = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "can2ReadEnabled"))
+	{
+		engineConfiguration->can2ReadEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "can2WriteEnabled"))
+	{
+		engineConfiguration->can2WriteEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
+	{
+		engineConfiguration->stepperDcInvertedPins = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "boostCutPressure"))

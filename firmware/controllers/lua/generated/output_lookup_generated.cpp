@@ -1,5 +1,69 @@
 #include "pch.h"
 float getOutputValueByName(const char *name) {
+	if (strEqualCaseInsensitive(name, "sd_present"))
+		return engine->outputChannels.sd_present;
+	if (strEqualCaseInsensitive(name, "isIgnitionEnabledIndicator"))
+		return engine->outputChannels.isIgnitionEnabledIndicator;
+	if (strEqualCaseInsensitive(name, "isInjectionEnabledIndicator"))
+		return engine->outputChannels.isInjectionEnabledIndicator;
+	if (strEqualCaseInsensitive(name, "sd_logging_internal"))
+		return engine->outputChannels.sd_logging_internal;
+	if (strEqualCaseInsensitive(name, "isCylinderCleanupActivated"))
+		return engine->outputChannels.isCylinderCleanupActivated;
+	if (strEqualCaseInsensitive(name, "isFuelPumpOn"))
+		return engine->outputChannels.isFuelPumpOn;
+	if (strEqualCaseInsensitive(name, "isFanOn"))
+		return engine->outputChannels.isFanOn;
+	if (strEqualCaseInsensitive(name, "isO2HeaterOn"))
+		return engine->outputChannels.isO2HeaterOn;
+	if (strEqualCaseInsensitive(name, "checkEngine"))
+		return engine->outputChannels.checkEngine;
+	if (strEqualCaseInsensitive(name, "needBurn"))
+		return engine->outputChannels.needBurn;
+	if (strEqualCaseInsensitive(name, "sd_msd"))
+		return engine->outputChannels.sd_msd;
+	if (strEqualCaseInsensitive(name, "clutchUpState"))
+		return engine->outputChannels.clutchUpState;
+	if (strEqualCaseInsensitive(name, "clutchDownState"))
+		return engine->outputChannels.clutchDownState;
+	if (strEqualCaseInsensitive(name, "isFan2On"))
+		return engine->outputChannels.isFan2On;
+	if (strEqualCaseInsensitive(name, "alternatorOnOff"))
+		return engine->outputChannels.alternatorOnOff;
+	if (strEqualCaseInsensitive(name, "brakePedalState"))
+		return engine->outputChannels.brakePedalState;
+	if (strEqualCaseInsensitive(name, "toothLogReady"))
+		return engine->outputChannels.toothLogReady;
+	if (strEqualCaseInsensitive(name, "acSwitchState"))
+		return engine->outputChannels.acSwitchState;
+	if (strEqualCaseInsensitive(name, "isTpsError"))
+		return engine->outputChannels.isTpsError;
+	if (strEqualCaseInsensitive(name, "isCltError"))
+		return engine->outputChannels.isCltError;
+	if (strEqualCaseInsensitive(name, "isMapError"))
+		return engine->outputChannels.isMapError;
+	if (strEqualCaseInsensitive(name, "isIatError"))
+		return engine->outputChannels.isIatError;
+	if (strEqualCaseInsensitive(name, "acState"))
+		return engine->outputChannels.acState;
+	if (strEqualCaseInsensitive(name, "isTriggerError"))
+		return engine->outputChannels.isTriggerError;
+	if (strEqualCaseInsensitive(name, "hasCriticalError"))
+		return engine->outputChannels.hasCriticalError;
+	if (strEqualCaseInsensitive(name, "isWarnNow"))
+		return engine->outputChannels.isWarnNow;
+	if (strEqualCaseInsensitive(name, "isPedalError"))
+		return engine->outputChannels.isPedalError;
+	if (strEqualCaseInsensitive(name, "isKnockChipOk"))
+		return engine->outputChannels.isKnockChipOk;
+	if (strEqualCaseInsensitive(name, "launchTriggered"))
+		return engine->outputChannels.launchTriggered;
+	if (strEqualCaseInsensitive(name, "isTps2Error"))
+		return engine->outputChannels.isTps2Error;
+	if (strEqualCaseInsensitive(name, "isIdleClosedLoop"))
+		return engine->outputChannels.isIdleClosedLoop;
+	if (strEqualCaseInsensitive(name, "isIdleCoasting"))
+		return engine->outputChannels.isIdleCoasting;
 	if (strEqualCaseInsensitive(name, "RPMValue"))
 		return engine->outputChannels.RPMValue;
 	if (strEqualCaseInsensitive(name, "rpmAcceleration"))
