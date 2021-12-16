@@ -304,6 +304,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.accelerationYaw;
 	if (strEqualCaseInsensitive(name, "turboSpeed"))
 		return engine->outputChannels.turboSpeed;
+	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
+		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_SPECIAL_POINT"))
