@@ -131,8 +131,6 @@ void setDodgeNeon1995EngineConfiguration() {
 
 	// set global_trigger_offset_angle 497
 	engineConfiguration->globalTriggerAngleOffset = 497;
-	 // set injection_offset 510
-	engineConfiguration->extraInjectionOffset = 510 + 497;
 
 	/**
 	 * that's 1995 config
