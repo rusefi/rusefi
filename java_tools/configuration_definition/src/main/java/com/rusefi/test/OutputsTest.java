@@ -127,7 +127,7 @@ public class OutputsTest {
                 "#include \"pch.h\"\n" +
                         "float getOutputValueByName(const char *name) {\n" +
                         "\tif (strEqualCaseInsensitive(name, \"hwChannel\"))\n" +
-                        "\t\treturn tsOutputChannels->hwChannel;\n" +
+                        "\t\treturn engine->outputChannels.hwChannel;\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
                         "}\n", outputValueConsumer.getContent());
     }

@@ -542,6 +542,13 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
+	lua_register(l, "getOutput", [](lua_State* l) {
+		auto propertyName = luaL_checklstring(l, 1, nullptr);
+		auto result = getOutputValueByName(propertyName);
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
 	lua_register(l, "setCalibration", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
 		auto value = luaL_checknumber(l, 2);
