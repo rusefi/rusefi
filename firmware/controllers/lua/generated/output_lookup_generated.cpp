@@ -306,6 +306,18 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.turboSpeed;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
+	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
+		return engine->outputChannels.launchRpmCondition;
+	if (strEqualCaseInsensitive(name, "launchTpsCondition"))
+		return engine->outputChannels.launchTpsCondition;
+	if (strEqualCaseInsensitive(name, "launchActivateSwitchCondition"))
+		return engine->outputChannels.launchActivateSwitchCondition;
+	if (strEqualCaseInsensitive(name, "launchIsLaunchCondition"))
+		return engine->outputChannels.launchIsLaunchCondition;
+	if (strEqualCaseInsensitive(name, "launchCombinedConditions"))
+		return engine->outputChannels.launchCombinedConditions;
+	if (strEqualCaseInsensitive(name, "launchActivatePinState"))
+		return engine->outputChannels.launchActivatePinState;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_SPECIAL_POINT"))
