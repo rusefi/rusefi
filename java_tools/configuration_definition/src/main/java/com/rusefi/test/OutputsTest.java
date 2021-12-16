@@ -126,6 +126,10 @@ public class OutputsTest {
         assertEquals(
                 "#include \"pch.h\"\n" +
                         "float getOutputValueByName(const char *name) {\n" +
+                        "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
+                        "\t\treturn engine->outputChannels.issue_294_31;\n" +
+                        "\tif (strEqualCaseInsensitive(name, \"enableFan1WithAc\"))\n" +
+                        "\t\treturn engine->outputChannels.enableFan1WithAc;\n" +
                         "\tif (strEqualCaseInsensitive(name, \"hwChannel\"))\n" +
                         "\t\treturn engine->outputChannels.hwChannel;\n" +
                         "\treturn EFI_ERROR_CODE;\n" +
@@ -259,6 +263,8 @@ public class OutputsTest {
                 "\t\treturn config->clt.config.bias_resistor;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"clt.adcChannel\"))\n" +
                 "\t\treturn config->clt.adcChannel;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"issue_294_31\"))\n" +
+                "\t\treturn config->issue_294_31;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"baseFuel\"))\n" +
                 "\t\treturn config->baseFuel;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"afr_type\"))\n" +
@@ -269,6 +275,10 @@ public class OutputsTest {
                 "\t\treturn config->afr_typet;\n" +
                 "\tif (strEqualCaseInsensitive(name, \"vehicleSpeedKph\"))\n" +
                 "\t\treturn config->vehicleSpeedKph;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"isForcedInduction\"))\n" +
+                "\t\treturn config->isForcedInduction;\n" +
+                "\tif (strEqualCaseInsensitive(name, \"enableFan1WithAc\"))\n" +
+                "\t\treturn config->enableFan1WithAc;\n" +
                 "\treturn EFI_ERROR_CODE;\n" +
                 "}\n", getConfigValueConsumer.getGetterForUnitTest());
 

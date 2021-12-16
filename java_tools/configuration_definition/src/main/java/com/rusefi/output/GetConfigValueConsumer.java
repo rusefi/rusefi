@@ -62,7 +62,7 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
 
         if (cf.isArray() || cf.isFromIterate() || cf.isDirective())
             return "";
-        if (!TypesHelper.isPrimitive(cf.getType())) {
+        if (!TypesHelper.isPrimitive(cf.getType()) && !TypesHelper.isBoolean(cf.getType())) {
             return "";
         }
 
