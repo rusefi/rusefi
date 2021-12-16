@@ -84,7 +84,7 @@
 // A3 AIN3 no code to use ADC3 as analog
 #define H144_IN_SENS3 GPIOF_5
 // A4 AIN4 no code to use ADC3 as analog
-#define H144_IN_SENS3 GPIOF_6
+#define H144_IN_SENS4 GPIOF_6
 
 #define H144_IN_O2S2 EFI_ADC_1
 
