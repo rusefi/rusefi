@@ -647,7 +647,7 @@
 #define cylindersCount_offset 400
 #define dc_io_size 4
 #define DC_PER_STEPPER 2
-#define debug_mode_e_auto_enum "DBG_0", "DBG_TPS_ACCEL", "DBG_GPPWM", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "DBG_SOFT_SPARK_CUT", "DBG_VVT_1_PID", "DBG_8", "DBG_9", "DBG_10", "DBG_11", "DBG_UNUSED12", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_16", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_20", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "UNUSED23", "DBG_STATUS", "DBG_CJ125", "DBG_26", "DBG_MAP", "DBG_METRICS", "DBG_29", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_35", "DBG_BOOST", "DBG_37", "DBG_LAUNCH", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "DBG_UNUSED41", "DBG_UNUSED_42", "DBG_43", "DBG_DYNO_VIEW", "DBG_LOGIC_ANALYZER", "DBG_RUSEFI_WIDEBAND", "DBG_TCU", "DBG_LUA", "DBG_VVT_2_PID", "DBG_VVT_3_PID", "DBG_VVT_4_PID"
+#define debug_mode_e_auto_enum "DBG_0", "DBG_TPS_ACCEL", "DBG_GPPWM", "DBG_IDLE_CONTROL", "DBG_EL_ACCEL", "DBG_TRIGGER_COUNTERS", "DBG_SOFT_SPARK_CUT", "DBG_VVT_1_PID", "DBG_8", "DBG_9", "DBG_10", "DBG_11", "DBG_UNUSED12", "DBG_SD_CARD", "DBG_SR5_PROTOCOL", "DBG_KNOCK", "DBG_16", "DBG_ELECTRONIC_THROTTLE_PID", "DBG_EXECUTOR", "DBG_BENCH_TEST", "DBG_20", "DBG_ANALOG_INPUTS", "DBG_INSTANT_RPM", "UNUSED23", "DBG_STATUS", "DBG_CJ125", "DBG_26", "DBG_MAP", "DBG_METRICS", "DBG_29", "DBG_ION", "DBG_TLE8888", "DBG_ANALOG_INPUTS2", "DBG_DWELL_METRIC", "DBG_34", "DBG_35", "DBG_BOOST", "DBG_37", "DBG_38", "DBG_ETB_AUTOTUNE", "DBG_COMPOSITE_LOG", "DBG_UNUSED41", "DBG_UNUSED_42", "DBG_43", "DBG_DYNO_VIEW", "DBG_LOGIC_ANALYZER", "DBG_RUSEFI_WIDEBAND", "DBG_TCU", "DBG_LUA", "DBG_VVT_2_PID", "DBG_VVT_3_PID", "DBG_VVT_4_PID"
 #define debug_mode_e_DBG_0 0
 #define debug_mode_e_DBG_10 10
 #define debug_mode_e_DBG_11 11
@@ -658,6 +658,7 @@
 #define debug_mode_e_DBG_34 34
 #define debug_mode_e_DBG_35 35
 #define debug_mode_e_DBG_37 37
+#define debug_mode_e_DBG_38 38
 #define debug_mode_e_DBG_43 43
 #define debug_mode_e_DBG_8 8
 #define debug_mode_e_DBG_9 9
@@ -678,7 +679,6 @@
 #define debug_mode_e_DBG_INSTANT_RPM 22
 #define debug_mode_e_DBG_ION 30
 #define debug_mode_e_DBG_KNOCK 15
-#define debug_mode_e_DBG_LAUNCH 38
 #define debug_mode_e_DBG_LOGIC_ANALYZER 45
 #define debug_mode_e_DBG_LUA 48
 #define debug_mode_e_DBG_MAP 27
@@ -699,7 +699,7 @@
 #define debug_mode_e_DBG_VVT_2_PID 49
 #define debug_mode_e_DBG_VVT_3_PID 50
 #define debug_mode_e_DBG_VVT_4_PID 51
-#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "Launch", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 #define debug_mode_e_Force_4_bytes_size_debug_mode_e ENUM_32_BITS
 #define debug_mode_e_UNUSED23 23
 #define debugMapAveraging_offset 807
@@ -1835,7 +1835,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 976
 #define showSdCardWarning_offset 76
-#define SIGNATURE_HASH 1460485154
+#define SIGNATURE_HASH 2675012811
 #define silentTriggerError_offset 1464
 #define slowAdcAlpha_offset 2088
 #define sparkDwellRpmBins_offset 332
@@ -2352,7 +2352,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.12.16.subaru_eg33_f7.1460485154"
+#define TS_SIGNATURE "rusEFI 2021.12.16.subaru_eg33_f7.2675012811"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
