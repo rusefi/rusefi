@@ -6,6 +6,10 @@ bit combinedConditions
 bit launchActivatePinState
 bit isLaunchCondition
 
+bit     activateSwitchCondition;
+bit     rpmCondition;
+bit     speedCondition;
+bit     tpsCondition;
 
 
 end_struct
