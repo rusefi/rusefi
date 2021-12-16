@@ -57,7 +57,6 @@ public class ConfigDefinition {
      */
     public static boolean needZeroInit = true;
     public static String definitionInputFile = null;
-    private static String fieldLookupFile = null;
 
     public static void main(String[] args) {
         try {
@@ -104,6 +103,7 @@ public class ConfigDefinition {
         // disable the lazy checks because we use timestamps to detect changes
         LazyFile.setLazyFileEnabled(true);
 
+        List<ConfigurationConsumer> destinations = new ArrayList<>();
         ReaderState state = new ReaderState();
 
         for (int i = 0; i < args.length - 1; i += 2) {
@@ -138,7 +138,10 @@ public class ConfigDefinition {
                     javaDestinationFileName = args[i + 1];
                     break;
                 case "-field_lookup_file":
-                    fieldLookupFile = args[i + 1];
+                    destinations.add(new GetConfigValueConsumer(args[i + 1]));
+                    break;
+                case "-output_lookup_file":
+                    destinations.add(new GetOutputValueConsumer(args[i + 1]));
                     break;
                 case "-readfile":
                     String keyName = args[i + 1];
@@ -254,7 +257,6 @@ public class ConfigDefinition {
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
-        List<ConfigurationConsumer> destinations = new ArrayList<>();
         if (TS_OUTPUTS_DESTINATION != null) {
             destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/output_channels.ini", state));
             destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/data_logs.ini"));
@@ -274,8 +276,6 @@ public class ConfigDefinition {
         if (destCHeaderFileName != null) {
             destinations.add(new CHeaderConsumer(state.variableRegistry, destCHeaderFileName));
         }
-        if (fieldLookupFile!=null)
-            destinations.add(new GetConfigValueConsumer(fieldLookupFile));
         if (javaDestinationFileName != null) {
             destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
         }

@@ -16,21 +16,21 @@ import static com.rusefi.output.DataLogConsumer.UNUSED;
 public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
     private static final String CONFIG_ENGINE_CONFIGURATION = "config->engineConfiguration.";
     private static final String ENGINE_CONFIGURATION = "engineConfiguration.";
-    private static final String FILE_HEADER = "#include \"pch.h\"\n";
+    static final String FILE_HEADER = "#include \"pch.h\"\n";
     private static final String GET_METHOD_HEADER = "float getConfigValueByName(const char *name) {\n";
-    private static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
+    static final String GET_METHOD_FOOTER = "\treturn EFI_ERROR_CODE;\n" + "}\n";
     private static final String SET_METHOD_HEADER = "void setConfigValueByName(const char *name, float value) {\n";
     private static final String SET_METHOD_FOOTER = "}\n";
     private final StringBuilder getterBody = new StringBuilder();
     private final StringBuilder setterBody = new StringBuilder();
-    private final String outputFIleName;
+    private final String outputFileName;
 
-    public GetConfigValueConsumer(String outputFIleName) {
-        System.out.println("Hello " + getClass() + " " + outputFIleName);
-        this.outputFIleName = outputFIleName;
+    public GetConfigValueConsumer(String outputFileName) {
+        System.out.println("Hello " + getClass() + " " + outputFileName);
+        this.outputFileName = outputFileName;
     }
 
-    private void writeStringToFile(@Nullable String fileName, String content) throws IOException {
+    public static void writeStringToFile(@Nullable String fileName, String content) throws IOException {
         if (fileName != null) {
             FileWriter fw = new FileWriter(fileName);
             fw.write(content);
@@ -42,7 +42,7 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
-                    this::process, ".");
+                    this::processConfig, ".");
             iterator.loop();
         }
     }
@@ -53,10 +53,10 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
 
     @Override
     public void endFile() throws IOException {
-        writeStringToFile(outputFIleName, getContent());
+        writeStringToFile(outputFileName, getContent());
     }
 
-    private String process(ReaderState readerState, ConfigField cf, String prefix) {
+    private String processConfig(ReaderState readerState, ConfigField cf, String prefix) {
         if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
             return "";
 
@@ -99,7 +99,7 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
     }
 
     @NotNull
-    private String getCompareName(String userName) {
+    static String getCompareName(String userName) {
         return "\tif (strEqualCaseInsensitive(name, \"" + userName + "\"))\n";
     }
 
