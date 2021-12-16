@@ -97,15 +97,20 @@ bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
 }
 
+LaunchControlBase::LaunchControlBase() {
+	launchActivatePinState = false;
+	isLaunchCondition = false;
+}
+
 void LaunchControlBase::update() {
 	if (!engineConfiguration->launchControlEnabled) {
 		return;
 	}
 
 	int rpm = GET_RPM();
-	bool combinedConditions = isLaunchConditionMet(rpm);
+	combinedConditions = isLaunchConditionMet(rpm);
 
-	//and still recalculat in case user changed the values
+	//and still recalculate in case user changed the values
 	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ? 
 	                     engineConfiguration->launchAdvanceRpmRange : 0) + engineConfiguration->hardCutRpmRange;
 
