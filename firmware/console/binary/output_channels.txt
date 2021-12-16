@@ -256,6 +256,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint8_t[150 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
+	bit launchRpmCondition
+	bit launchTpsCondition
+	bit launchActivateSwitchCondition
 
     uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
     uint8_t unused11;;"", 1, 0, -10000, 10000, 3
