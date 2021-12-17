@@ -2352,7 +2352,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.12.16.subaru_eg33_f7.2675012811"
+#define TS_SIGNATURE "rusEFI 2021.12.17.subaru_eg33_f7.2675012811"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
