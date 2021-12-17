@@ -318,6 +318,8 @@ pins:
     type: ign
 
   - pin: A29
+    # H144_IN_RES3
+    id: GPIOF_8
     class: switch_inputs
     ts_name: Brake Input
     function: Brake Switch
@@ -331,7 +333,11 @@ pins:
     type: ign
 
   - pin: A43
+# H144_IN_RES2
+    id: GPIOF_10
+    class: switch_inputs
     function: Clutch Input
+
   - pin: A45
     function: BK2 DC Wastegate Pos
 
@@ -343,6 +349,9 @@ pins:
     type: ign
 
   - pin: A57
+    # H144_IN_RES1
+    id: GPIOF_9
+    class: switch_inputs
     function: AC Request Switch
 
   - pin: A60

@@ -68,6 +68,16 @@
 // AIN10 PC1
 #define H144_IN_MAP2 EFI_ADC_11
 
+// AIN7
+#define H144_IN_RES1 GPIOF_9
+
+// AIN16
+#define H144_IN_RES2 GPIOF_10
+
+// AIN8
+#define H144_IN_RES3 GPIOF_8
+
+
 #define H144_IN_AUX1 EFI_ADC_8
 //
 #define H144_IN_AUX2 EFI_ADC_14
