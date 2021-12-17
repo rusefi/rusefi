@@ -186,8 +186,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 
 	// set global_trigger_offset_angle 38
 	engineConfiguration->globalTriggerAngleOffset = 38;
-	// set injection_offset 0
-	engineConfiguration->extraInjectionOffset = 0;
 
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;

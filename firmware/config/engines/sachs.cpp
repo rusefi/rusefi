@@ -22,9 +22,6 @@ void setSachs() {
 	engineConfiguration->specs.firingOrder = FO_1;
 	engineConfiguration->engineChartSize = 400;
 
-	 // set injection_offset 0
-	engineConfiguration->extraInjectionOffset = 0;
-
 	setEgoSensor(ES_Innovate_MTX_L);
 
 	/**
