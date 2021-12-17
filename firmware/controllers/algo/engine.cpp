@@ -321,7 +321,7 @@ static bool getClutchUpState() {
 
 static bool getBrakePedalState() {
 #if EFI_GPIO_HARDWARE
-	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
+	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		return efiReadPin(engineConfiguration->brakePedalPin);
 	}
 	return engine->engineState.luaAdjustments.brakePedalState;
