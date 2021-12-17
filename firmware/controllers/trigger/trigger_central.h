@@ -49,9 +49,6 @@ public:
 
 	LocalVersionHolder triggerVersion;
 
-	MapState mapState;
-
-
 	angle_t mapCamPrevToothAngle = -1;
 	float mapCamPrevCycleValue = 0;
 	int prevChangeAtCycle = 0;
