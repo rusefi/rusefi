@@ -618,9 +618,6 @@ static void setDefaultEngineConfiguration() {
 	// performance optimization
 	engineConfiguration->sensorChartMode = SC_OFF;
 
-
-	engineConfiguration->extraInjectionOffset = 0;
-
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
 	engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(0);
