@@ -809,7 +809,7 @@ void proteusHarley() {
 
 	// for now we need non wired camInput to keep TS field enable/disable logic happy
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
-	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
+	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
 
 	engineConfiguration->mapCamAveragingLength = 16;
 	engineConfiguration->mapCamSkipFactor = 50;

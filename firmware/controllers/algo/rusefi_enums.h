@@ -109,12 +109,7 @@ typedef enum  __attribute__ ((__packed__)) {
 
 	VVT_NISSAN_MR = 11,
 
-	/**
-	 * MAP sensor gives us pressure drop corresponding to intake stroke of individual cylinder
-	 * Due to uneven cylinder firing on a V-Twin this gives us a decodable virtual two tooth cam sensor.
-	 * Most HD are 45 degrees with some 60 degree twin.
-	 */
-	VVT_MAP_V_TWIN = 12,
+	VVT_12 = 12,
 
 	VVT_MAP_V_TWIN_ANOTHER = 13,
 
