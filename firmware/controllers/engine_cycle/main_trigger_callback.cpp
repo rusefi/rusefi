@@ -331,7 +331,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
 static bool noFiringUntilVvtSync(vvt_mode_e mode) {
-	return mode == VVT_MIATA_NB2 || mode == VVT_MAP_V_TWIN;
+	return mode == VVT_MIATA_NB2 || mode == VVT_MAP_V_TWIN_ANOTHER;
 }
 
 /**
