@@ -8,20 +8,15 @@ import com.rusefi.enums.live_data_e;
  */
 public abstract class LiveDocHolder {
     private final live_data_e id;
-    private final RefreshActionsMap actions;
+    private final RefreshActions action;
 
-    public LiveDocHolder(live_data_e id, RefreshActionsMap actions) {
+    public LiveDocHolder(live_data_e id, RefreshActions action) {
         this.id = id;
-        this.actions = actions;
+        this.action = action;
     }
 
-    public RefreshActionsMap getActions() {
-        return actions;
-    }
-
-    public void update(BinaryProtocol binaryProtocol, live_data_e context, byte[] response) {
-        for (RefreshActions action : actions.getActions().get(context))
-            action.refresh(binaryProtocol, response);
+    public void update(BinaryProtocol binaryProtocol, byte[] response) {
+        action.refresh(binaryProtocol, response);
     }
 
     public abstract boolean isVisible();

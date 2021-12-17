@@ -17,7 +17,6 @@ import com.rusefi.ui.livedata.VariableValueSource;
 import com.rusefi.ui.livedocs.LiveDocHolder;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import com.rusefi.ui.livedocs.RefreshActions;
-import com.rusefi.ui.livedocs.RefreshActionsMap;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -262,8 +261,7 @@ public class LiveDataParserPanel {
                 return number != 0;
             }
         }, fileName);
-        RefreshActionsMap refreshActionsMap = new RefreshActionsMap();
-        refreshActionsMap.put(live_data_e, new RefreshActions() {
+        RefreshActions refreshAction = new RefreshActions() {
             @Override
             public void refresh(BinaryProtocol bp, byte[] response) {
                 if (log.debugEnabled())
@@ -271,9 +269,9 @@ public class LiveDataParserPanel {
                 reference.set(response);
                 livePanel.refresh();
             }
-        });
+        };
 
-        LiveDocsRegistry.INSTANCE.register(new LiveDocHolder(live_data_e, refreshActionsMap) {
+        LiveDocsRegistry.INSTANCE.register(new LiveDocHolder(live_data_e, refreshAction) {
             @Override
             public boolean isVisible() {
                 JPanel panel = livePanel.getContent();

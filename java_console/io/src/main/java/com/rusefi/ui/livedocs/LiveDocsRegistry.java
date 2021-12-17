@@ -52,6 +52,6 @@ public enum LiveDocsRegistry {
 
         System.arraycopy(responseWithCode, 1, response, 0, size);
 
-        holder.update(binaryProtocol, context, response);
+        holder.update(binaryProtocol, response);
     }
 }
