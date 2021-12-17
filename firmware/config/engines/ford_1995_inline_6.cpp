@@ -45,7 +45,6 @@ void setFordInline6() {
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
-	engineConfiguration->extraInjectionOffset = 207.269999;
 
 	engineConfiguration->clt.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
 	engineConfiguration->iat.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
