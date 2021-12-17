@@ -264,7 +264,8 @@ public class BinaryProtocol {
                                 String text = requestPendingMessages();
                                 if (text != null)
                                     listener.onDataArrived((text + "\r\n").getBytes());
-                                LiveDocsRegistry.INSTANCE.refresh(BinaryProtocol.this);
+                                LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider(BinaryProtocol.this);
+                                LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
                             }
                         });
                     }

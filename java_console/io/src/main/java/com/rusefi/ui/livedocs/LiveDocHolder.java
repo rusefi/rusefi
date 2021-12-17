@@ -15,8 +15,8 @@ public abstract class LiveDocHolder {
         this.action = action;
     }
 
-    public void update(BinaryProtocol binaryProtocol, byte[] response) {
-        action.refresh(binaryProtocol, response);
+    public void update(byte[] response) {
+        action.refresh(response);
     }
 
     public abstract boolean isVisible();
