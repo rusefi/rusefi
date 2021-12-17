@@ -29,9 +29,8 @@ public enum LiveDocsRegistry {
         for (LiveDocHolder holder : liveDocs) {
             boolean visible = holder.isVisible();
             if (visible) {
-                for (live_data_e context : holder.getActions().getActions().keySet()) {
-                    refresh(binaryProtocol, holder, context);
-                }
+                live_data_e context = holder.getId();
+                refresh(binaryProtocol, holder, context);
             }
         }
     }
