@@ -45,6 +45,8 @@ void setFordInline6() {
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
+	// there is a unit test which cares about this value!
+	// todo: remove value and adjust unit test
 	engineConfiguration->extraInjectionOffset = 207.269999;
 
 	engineConfiguration->clt.config = {-10, 60, 120, 160310, 7700, 1180, 2700};

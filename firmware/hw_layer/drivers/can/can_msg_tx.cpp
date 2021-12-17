@@ -11,19 +11,21 @@
 
 #include "can_msg_tx.h"
 
-#if EFI_CAN_SUPPORT
 #include "can.h"
 
 extern int canWriteOk;
 extern int canWriteNotOk;
 
+#if EFI_CAN_SUPPORT
 /*static*/ CANDriver* CanTxMessage::s_device = nullptr;
 
 /*static*/ void CanTxMessage::setDevice(CANDriver* device) {
 	s_device = device;
 }
+#endif // EFI_CAN_SUPPORT
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
+#if HAL_USE_CAN || EFI_UNIT_TEST
 #ifndef STM32H7XX
 	// ST bxCAN device
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
@@ -43,9 +45,11 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 	setDlc(dlc);
 
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 }
 
 CanTxMessage::~CanTxMessage() {
+#if EFI_CAN_SUPPORT
 	auto device = s_device;
 
 	if (!device) {
@@ -53,7 +57,11 @@ CanTxMessage::~CanTxMessage() {
 		return;
 	}
 
-	if (engineConfiguration->debugMode == DBG_CAN) {
+	if (!engine->allowCanTx) {
+		return;
+	}
+
+	if (engineConfiguration->verboseCan) {
 		efiPrintf("Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", CAN_SID(m_frame), m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
 				m_frame.data8[2], m_frame.data8[3],
@@ -68,14 +76,12 @@ CanTxMessage::~CanTxMessage() {
 	} else {
 		canWriteNotOk++;
 	}
+#endif /* EFI_CAN_SUPPORT */
 }
 
+#if HAL_USE_CAN || EFI_UNIT_TEST
 void CanTxMessage::setDlc(uint8_t dlc) {
 	m_frame.DLC = dlc;
-}
-
-uint8_t& CanTxMessage::operator[](size_t index) {
-	return m_frame.data8[index];
 }
 
 void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
@@ -87,20 +93,8 @@ void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 	m_frame.data8[byteIdx] |= 1 << bitIdx;
 }
 
-#else
-
-CanTxMessage::CanTxMessage(uint32_t /*eid*/, uint8_t /*dlc*/, bool /*isExtended*/) {
-
-}
-
-CanTxMessage::~CanTxMessage() {
-
-}
-
 uint8_t& CanTxMessage::operator[](size_t index) {
-	return m_data8[index];
+	return m_frame.data8[index];
 }
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 
-void CanTxMessage::setDlc(uint8_t) { }
-
-#endif // EFI_CAN_SUPPORT

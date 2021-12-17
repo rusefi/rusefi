@@ -23,7 +23,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples);
 #if HAL_USE_CAN
 bool isValidCanTxPin(brain_pin_e pin);
 bool isValidCanRxPin(brain_pin_e pin);
-CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
+CANDriver* detectCanDeviceImpl(brain_pin_e pinRx, brain_pin_e pinTx);
 #endif // HAL_USE_CAN
 
 bool isValidSerialTxPin(brain_pin_e pin);

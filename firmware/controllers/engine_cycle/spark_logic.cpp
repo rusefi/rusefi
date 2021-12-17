@@ -73,12 +73,14 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	// let's save planned duration so that we can later compare it with reality
 	event->sparkDwell = sparkDwell;
 
-	// change of sign here from 'before TDC' to 'after TDC'
-	angle_t ignitionPositionWithinEngineCycle = engine->ignitionPositionWithinEngineCycle[event->cylinderIndex];
-	assertAngleRange(ignitionPositionWithinEngineCycle, "aPWEC", CUSTOM_ERR_6566);
-	// this correction is usually zero (not used)
-	float perCylinderCorrection = engineConfiguration->timing_offset_cylinder[event->cylinderIndex];
-	const angle_t sparkAngle = -engine->engineState.timingAdvance + engine->knockController.getKnockRetard() + ignitionPositionWithinEngineCycle + perCylinderCorrection;
+	const angle_t sparkAngle =
+		// Negate because timing *before* TDC, and we schedule *after* TDC
+		- engine->engineState.timingAdvance[event->cylinderNumber]
+		// Offset by this cylinder's position in the cycle
+		+ getCylinderAngle(event->cylinderIndex, event->cylinderNumber)
+		// Pull any extra timing for knock retard
+		+ engine->knockController.getKnockRetard();
+
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_9, !cisnan(sparkAngle), "findAngle#9");
 
 	efiAssertVoid(CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
@@ -166,16 +168,16 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	// todo: smarted solution for index to field mapping
 	switch (event->cylinderIndex) {
 	case 0:
-		tsOutputChannels.debugFloatField1 = ratio;
+		engine->outputChannels.debugFloatField1 = ratio;
 		break;
 	case 1:
-		tsOutputChannels.debugFloatField2 = ratio;
+		engine->outputChannels.debugFloatField2 = ratio;
 		break;
 	case 2:
-		tsOutputChannels.debugFloatField3 = ratio;
+		engine->outputChannels.debugFloatField3 = ratio;
 		break;
 	case 3:
-		tsOutputChannels.debugFloatField4 = ratio;
+		engine->outputChannels.debugFloatField4 = ratio;
 		break;
 	}
 #endif
@@ -371,7 +373,7 @@ void initializeIgnitionActions() {
 	IgnitionEventList *list = &engine->ignitionEvents;
 	angle_t dwellAngle = engine->engineState.dwellAngle;
 	floatms_t sparkDwell = engine->engineState.sparkDwell;
-	if (cisnan(engine->engineState.timingAdvance) || cisnan(dwellAngle)) {
+	if (cisnan(engine->engineState.timingAdvance[0]) || cisnan(dwellAngle)) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
 		list->isReady = false;

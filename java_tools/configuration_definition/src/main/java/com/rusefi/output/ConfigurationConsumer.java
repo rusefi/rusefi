@@ -1,6 +1,6 @@
 package com.rusefi.output;
 
-import com.rusefi.ConfigStructure;
+import com.rusefi.ReaderState;
 
 import java.io.IOException;
 
@@ -9,5 +9,5 @@ public interface ConfigurationConsumer {
 
     void endFile() throws IOException;
 
-    void handleEndStruct(ConfigStructure structure) throws IOException;
+    void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException;
 }

@@ -306,11 +306,6 @@ static void setGlobalTriggerAngleOffset(float value) {
 	doPrintConfiguration();
 }
 
-static void setCrankingPrimingPulse(float value) {
-	engineConfiguration->startOfCrankingPrimingPulse = value;
-	incrementGlobalConfigurationVersion();
-}
-
 static void setCrankingTimingAngle(float value) {
 	engineConfiguration->crankingTimingAngle = value;
 	incrementGlobalConfigurationVersion();
@@ -732,6 +727,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->useTLE8888_cranking_hack = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		engineConfiguration->verboseTLE8888 = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseCan")) {
+		engineConfiguration->verboseCan = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
 		engineConfiguration->artificialTestMisfire = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
@@ -772,8 +769,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		engineConfiguration->isHip9011Enabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "verbose_etb")) {
-		engineConfiguration->isVerboseETB = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
@@ -1035,7 +1030,6 @@ const command_f_s commandsF[] = {
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
-		{"cranking_priming_pulse", setCrankingPrimingPulse},
 		{"flat_injector_lag", setFlatInjectorLag},
 #endif // EFI_ENGINE_CONTROL
 		{"script_curve_1_value", setScriptCurve1Value},
@@ -1143,11 +1137,8 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		currentI++;
 	}
 
-
-	if (strEqualCaseInsensitive(paramStr, "vsscoeff")) {
-		engineConfiguration->vehicleSpeedCoef = valueF;
 #if EFI_ALTERNATOR_CONTROL
-	} else if (strEqualCaseInsensitive(paramStr, "alt_t")) {
+	if (strEqualCaseInsensitive(paramStr, "alt_t")) {
 		if (valueI > 10) {
 			engineConfiguration->alternatorControl.periodMs = valueI;
 		}
@@ -1156,14 +1147,9 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->alternatorControl.offset = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "alt_p")) {
 		setAltPFactor(valueF);
+	} else
 #endif /* EFI_ALTERNATOR_CONTROL */
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-//	} else if (strEqualCaseInsensitive(paramStr, "cranking_rpm")) {
-	} else if (strEqualCaseInsensitive(paramStr, "warning_period")) {
+	if (strEqualCaseInsensitive(paramStr, "warning_period")) {
 		engineConfiguration->warningPeriod = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF);

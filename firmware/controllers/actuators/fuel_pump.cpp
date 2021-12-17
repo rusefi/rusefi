@@ -4,10 +4,10 @@
 #include "fuel_pump.h"
 
 void FuelPumpController::onSlowCallback() {
-	auto uptime = getTimeNowSeconds();
+	auto timeSinceIgn = m_ignOnTimer.getElapsedSeconds();
 
-	// If the ECU just started, turn on the fuel pump to prime
-	isPrime = uptime >= 0 && uptime < engineConfiguration->startUpFuelPumpDuration;
+	// If the ignition just turned on, turn on the fuel pump to prime
+	isPrime = timeSinceIgn >= 0 && timeSinceIgn < engineConfiguration->startUpFuelPumpDuration;
 
 	// If there was a trigger event recently, turn on the pump, the engine is running!
 	auto timeSinceTrigger = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
@@ -18,6 +18,12 @@ void FuelPumpController::onSlowCallback() {
 	enginePins.fuelPumpRelay.setValue(isPumpOn);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.isFuelPumpOn = isPumpOn;
+	engine->outputChannels.isFuelPumpOn = isPumpOn;
 #endif
+}
+
+void FuelPumpController::onIgnitionStateChanged(bool ignitionOn) {
+	if (ignitionOn) {
+		m_ignOnTimer.reset();
+	}
 }

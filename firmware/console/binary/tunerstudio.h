@@ -29,7 +29,7 @@ extern tunerstudio_counters_s tsState;
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg);
 void tunerStudioError(TsChannelBase* tsChannel, const char *msg);
 
-char *getWorkingPageAddr();
+uint8_t* getWorkingPageAddr();
 
 #if EFI_TUNER_STUDIO
 #include "thread_controller.h"
@@ -48,12 +48,11 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
  */
 void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels);
+void updateTunerStudioState();
 void printTsStats(void);
 void requestBurn(void);
 
 void startTunerStudioConnectivity(void);
-void syncTunerStudioCopy(void);
 
 #if defined __GNUC__
 // GCC

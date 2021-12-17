@@ -269,11 +269,11 @@ static void getChannelFreqAndDuty(int index, scaled_channel<float> *duty, scaled
 void reportLogicAnalyzerToTS() {
 #if EFI_TUNER_STUDIO	
 	scaled_channel<uint32_t> tmp;
-	getChannelFreqAndDuty(0,&tsOutputChannels.debugFloatField1, &tsOutputChannels.debugIntField1);
-	getChannelFreqAndDuty(1,&tsOutputChannels.debugFloatField2, &tsOutputChannels.debugIntField2);
-	getChannelFreqAndDuty(2,&tsOutputChannels.debugFloatField3, &tsOutputChannels.debugIntField3);
-	getChannelFreqAndDuty(3,&tsOutputChannels.debugFloatField4, &tmp);
-	tsOutputChannels.debugIntField4 = (uint16_t)tmp;
+	getChannelFreqAndDuty(0,&engine->outputChannels.debugFloatField1, &engine->outputChannels.debugIntField1);
+	getChannelFreqAndDuty(1,&engine->outputChannels.debugFloatField2, &engine->outputChannels.debugIntField2);
+	getChannelFreqAndDuty(2,&engine->outputChannels.debugFloatField3, &engine->outputChannels.debugIntField3);
+	getChannelFreqAndDuty(3,&engine->outputChannels.debugFloatField4, &tmp);
+	engine->outputChannels.debugIntField4 = (uint16_t)tmp;
 #endif	
 }
 

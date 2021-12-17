@@ -87,6 +87,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_TOYOTA_4_1:
 	case VVT_FIRST_HALF:
 	case VVT_SECOND_HALF:
+	case VVT_MAP_V_TWIN_ANOTHER:
 		return TT_ONE;
 	case VVT_FORD_ST170:
 		return TT_FORD_ST170;
@@ -96,8 +97,6 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_NISSAN_VQ35;
 	case VVT_NISSAN_MR:
 		return TT_NISSAN_MR18_CAM_VVT;
-	case VVT_MAP_V_TWIN:
-		return TT_VVT_MAP_45_V_TWIN;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return TT_ONE; // we have to return something for the sake of -Werror=return-type
@@ -311,6 +310,24 @@ void Engine::updateSlowSensors() {
 #endif
 }
 
+static bool getClutchUpState() {
+#if EFI_GPIO_HARDWARE
+	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
+		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
+	}
+#endif // EFI_GPIO_HARDWARE
+	return engine->engineState.luaAdjustments.clutchUpState;
+}
+
+static bool getBrakePedalState() {
+#if EFI_GPIO_HARDWARE
+	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
+		return efiReadPin(engineConfiguration->brakePedalPin);
+	}
+	return engine->engineState.luaAdjustments.brakePedalState;
+#endif // EFI_GPIO_HARDWARE
+}
+
 void Engine::updateSwitchInputs() {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
@@ -325,16 +342,14 @@ void Engine::updateSwitchInputs() {
 		}
 		engine->acSwitchState = result;
 	}
-	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
-		engine->clutchUpState = engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
-	}
+	engine->clutchUpState = getClutchUpState();
+
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
 		engine->idle.throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
-	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-		engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
-	}
+	engine->brakePedalState = getBrakePedalState();
+
 #endif // EFI_GPIO_HARDWARE
 }
 
@@ -376,11 +391,11 @@ void Engine::preCalculate() {
 #if EFI_TUNER_STUDIO
 	// we take 2 bytes of crc32, no idea if it's right to call it crc16 or not
 	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
-	tsOutputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
+	engine->outputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
 
 	// we need and can empty warning message for CRC purposes
 	memset(config->warning_message, 0, sizeof(error_message_t));
-	tsOutputChannels.tuneCrc16 = crc32(config, sizeof(persistent_config_s));
+	engine->outputChannels.tuneCrc16 = crc32(config, sizeof(persistent_config_s));
 #endif /* EFI_TUNER_STUDIO */
 }
 
@@ -479,6 +494,11 @@ void Engine::watchdog() {
 #if EFI_ENGINE_CONTROL
 	if (isRunningPwmTest)
 		return;
+
+	if (module<PrimeController>()->isPriming()) {
+		return;
+	}
+
 	if (!isSpinning) {
 		if (!isRunningBenchTest() && enginePins.stopPins()) {
 			// todo: make this a firmwareError assuming functional tests would run
@@ -522,10 +542,15 @@ void Engine::checkShutdown() {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
 		const float vBattThresholdOn = 8.0f;
-		if ((Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) > vBattThresholdOn) && !isInShutdownMode()) {
+		// we fallback into zero instead of VBAT_FALLBACK_VALUE because it's not safe to false-trigger the "ignition on" event,
+		// and we want to turn on the main relay only when 100% sure.
+		if ((Sensor::get(SensorType::BatteryVoltage).value_or(0) > vBattThresholdOn) && !isInShutdownMode()) {
 			ignitionOnTimeNt = getTimeNowNt();
-			stopEngineRequestTimeNt = 0;
-			efiPrintf("Ignition voltage detected! Cancel the engine shutdown!");
+			efiPrintf("Ignition voltage detected!");
+			if (stopEngineRequestTimeNt != 0) {
+				efiPrintf("Cancel the engine shutdown!");
+				stopEngineRequestTimeNt = 0;
+			}
 		}
 	}
 #endif /* EFI_MAIN_RELAY_CONTROL */

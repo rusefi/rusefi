@@ -18,6 +18,9 @@ struct LuaAdjustments {
 	float ignitionTimingMult = 1;
 	float fuelAdd = 0;
 	float fuelMult = 1;
+	float etbTargetPositionAdd = 0;
+	bool clutchUpState = false;
+	bool brakePedalState = false;
 };
 
 class EngineState : public engine_state2_s {
@@ -53,7 +56,7 @@ public:
 	/**
 	 * timing advance is angle distance before Top Dead Center (TDP), i.e. "10 degree timing advance" means "happens 10 degrees before TDC"
 	 */
-	angle_t timingAdvance = 0;
+	angle_t timingAdvance[MAX_CYLINDER_COUNT] = {0};
 
 	// Angle between firing the main (primary) spark and the secondary (trailing) spark
 	angle_t trailingSparkAngle = 0;

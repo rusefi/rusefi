@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.server.Backend;
 import com.rusefi.server.UserDetails;
 import com.rusefi.server.UserDetailsResolver;
@@ -41,7 +42,7 @@ public class BackendTestHelper {
     }
 
     public static void commonServerTest() throws MalformedURLException {
-        HttpUtil.RUSEFI_PROXY_HOSTNAME = TestHelper.LOCALHOST;
+        HttpUtil.RUSEFI_PROXY_HOSTNAME = TcpConnector.LOCALHOST;
         BinaryProtocol.DISABLE_LOCAL_CACHE = true;
 
         rusEFISSLContext.init("certificate/test_pkcs12.jks", "password");

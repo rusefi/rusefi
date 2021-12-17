@@ -2,10 +2,16 @@
 
 rm gen_live_documentation.log
 
+bash gen_live_documentation_one_file.sh launch_control_state LaunchControl.java controllers/algo
+[ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
+
 bash gen_live_documentation_one_file.sh boost_control BoostControl.java controllers/actuators
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 
 bash gen_live_documentation_one_file.sh ac_control AcControl.java controllers/actuators
+[ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
+
+bash gen_live_documentation_one_file.sh fan_control FanControl.java controllers/actuators
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 
 bash gen_live_documentation_one_file.sh fuel_pump FuelPump.java controllers/actuators
@@ -39,3 +45,5 @@ java -DSystemOut.name=logs/gen_live_documentation \
  -cp ../java_tools/ConfigDefinition.jar \
  com.rusefi.ldmp.UsagesReader integration/LiveData.yaml
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
+
+bash gen_output_channels.sh

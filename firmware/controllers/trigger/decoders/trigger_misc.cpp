@@ -8,19 +8,6 @@
 #include "trigger_misc.h"
 #include "trigger_universal.h"
 
-void configureVvt45VTwin(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR);
-
-	s->setTriggerSynchronizationGap(0.78);
-	s->setSecondTriggerSynchronizationGap(1.29);
-
-	s->addEvent720(315 - 1, T_PRIMARY, TV_RISE);
-	s->addEvent720(315, T_PRIMARY, TV_FALL);
-
-	s->addEvent720(720 - 1, T_PRIMARY, TV_RISE);
-	s->addEvent720(720, T_PRIMARY, TV_FALL);
-}
-
 // TT_FIAT_IAW_P8
 void configureFiatIAQ_P8(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);

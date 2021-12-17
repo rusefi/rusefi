@@ -18,4 +18,5 @@ public enum live_data_e {
 	LDS_TPS_ACCEL,
 	LDS_MAIN_RELAY,
 	LDS_BOOST_CONTROL,
+	LDS_LAUNCH_CONTROL,
 }

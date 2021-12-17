@@ -13,6 +13,7 @@
 #include <cstddef>
 
 #include "os_access.h"
+#include "can.h"
 
 /**
  * Represent a message to be transmitted over CAN.
@@ -58,12 +59,16 @@ public:
 
 	void setDlc(uint8_t dlc);
 
+#if HAL_USE_CAN || EFI_UNIT_TEST
+	const CANTxFrame *getFrame() const {
+		return &m_frame;
+	}
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
+
 protected:
-#if EFI_CAN_SUPPORT
+#if HAL_USE_CAN || EFI_UNIT_TEST
 	CANTxFrame m_frame;
-#else // not EFI_CAN_SUPPORT
-	uint8_t m_data8[8];
-#endif // EFI_CAN_SUPPORT
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 
 private:
 #if EFI_CAN_SUPPORT
@@ -82,7 +87,7 @@ class CanTxTyped final : public CanTxMessage
 #endif // EFI_CAN_SUPPORT
 
 public:
-	explicit CanTxTyped(uint32_t eid) : CanTxMessage(eid, sizeof(TData)) { }
+	explicit CanTxTyped(uint32_t id, bool isExtended) : CanTxMessage(id, sizeof(TData), isExtended) { }
 
 #if EFI_CAN_SUPPORT
 	/**
@@ -103,9 +108,9 @@ public:
 };
 
 template <typename TData>
-void transmitStruct(uint32_t eid)
+void transmitStruct(uint32_t id, bool isExtended)
 {
-	CanTxTyped<TData> frame(eid);
+	CanTxTyped<TData> frame(id, isExtended);
 	// Destruction of an instance of CanTxMessage will transmit the message over the wire.
 	// see CanTxMessage::~CanTxMessage()
 	populateFrame(frame.get());

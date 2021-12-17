@@ -27,7 +27,7 @@ public enum Sensor {
     // RPM, vss
     RPM(GAUGE_NAME_RPM, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 4, 1, 0, 8000, "RPM"),
     SPEED2RPM("SpeedToRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0 / PACK_MULT_PERCENT, 0, 5, "RPM/kph"),
-    VSS(GAUGE_NAME_VVS, SensorCategory.OPERATIONS, FieldType.UINT8, 8, 1, 0, 150, "kph"),
+    VSS(GAUGE_NAME_VVS, SensorCategory.OPERATIONS, FieldType.UINT8, 10, 1, 0, 150, "kph"),
 
     // Temperatures
     INT_TEMP(GAUGE_NAME_CPU_TEMP, SensorCategory.OPERATIONS, FieldType.INT8, 11, 1, 0, 5, "C"),
@@ -151,6 +151,9 @@ public enum Sensor {
     accelerationZ(GAUGE_NAME_ACCEL_Z, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 308, 1.0 / PACK_MULT_PERCENT, -3, 3, "G"),
     accelerationRoll(GAUGE_NAME_ACCEL_ROLL, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 310, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
     accelerationYaw(GAUGE_NAME_ACCEL_YAW, SensorCategory.SENSOR_INPUTS, FieldType.INT16, 312, 1.0 / PACK_MULT_PERCENT, -30, 30, "deg/s"),
+
+    instantMAP("Instant " + GAUGE_NAME_MAP, SensorCategory.SENSOR_INPUTS, FieldType.UINT16, 514, 1.0 / PACK_MULT_PRESSURE, 20, 300, "kPa"),
+
 
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),

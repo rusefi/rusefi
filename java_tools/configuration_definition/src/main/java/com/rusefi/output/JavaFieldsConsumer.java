@@ -36,23 +36,25 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private int writeJavaFields(List<ConfigField> tsFields, String prefix, int tsPosition) throws IOException {
-        BitState bitState = new BitState();
-        ConfigField prev = ConfigField.VOID;
+        FieldIterator iterator = new FieldIterator(tsFields);
         for (int i = 0; i < tsFields.size(); i++) {
-            ConfigField next = i == tsFields.size() - 1 ? ConfigField.VOID : tsFields.get(i + 1);
-            ConfigField cf = tsFields.get(i);
-            // skip duplicate names
-            if (cf.getName().equals(prev.getName()) || cf.isDirective())
-                continue;
-            tsPosition = writeOneField(cf, prefix, tsPosition, next, bitState.get());
+            iterator.start(i);
+            tsPosition = writeOneField(iterator.cf, prefix, tsPosition, iterator.next,
+                    iterator.bitState.get(),
+                    iterator.getPrev());
 
-            bitState.incrementBitIndex(cf, next);
-            prev = cf;
+            iterator.end();
         }
         return tsPosition;
     }
 
-    private int writeOneField(ConfigField configField, String prefix, int tsPosition, ConfigField next, int bitIndex) throws IOException {
+    private int writeOneField(ConfigField configField, String prefix, int tsPosition, ConfigField next, int bitIndex, ConfigField prev) throws IOException {
+        if (configField.isDirective())
+            return tsPosition;
+        // skip duplicate names which happens in case of conditional compilation
+        if (configField.getName().equals(prev.getName())) {
+            return tsPosition;
+        }
         ConfigStructure cs = configField.getState().structures.get(configField.getType());
         if (cs != null) {
             String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
@@ -109,7 +111,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         return custom != null && custom.toLowerCase().startsWith(IniFileModel.FIELD_TYPE_STRING);
     }
 
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
             writeJavaFields(structure.tsFields, "", 0);
         }

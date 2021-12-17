@@ -5,5 +5,5 @@ package com.opensr5.io;
 *         3/3/14
 */
 public interface DataListener {
-    void onDataArrived(byte freshData[]);
+    void onDataArrived(byte[] freshData);
 }

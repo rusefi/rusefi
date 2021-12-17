@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.util.SystemOut;
 import com.rusefi.test.ConfigFieldParserTest;
 
@@ -14,7 +15,7 @@ import java.util.regex.Pattern;
  * 1/15/15
  */
 public class ConfigField {
-    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, new int[0], null, false, false, false, null, -1, null, null);
+    public static final ConfigField VOID = new ConfigField(null, "", null, null, null, new int[0], null, false, false, false, null, null);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
 
@@ -41,12 +42,11 @@ public class ConfigField {
     private final String tsInfo;
     private final boolean isIterate;
     private final ReaderState state;
-    private boolean fsioVisible;
+    private final boolean fsioVisible;
     private final boolean hasAutoscale;
-    private final String individualName;
-    private final int indexWithinArray;
     private final String trueName;
     private final String falseName;
+    private boolean isFromIterate;
 
     /**
      * todo: one day someone should convert this into a builder
@@ -61,12 +61,10 @@ public class ConfigField {
                        boolean isIterate,
                        boolean fsioVisible,
                        boolean hasAutoscale,
-                       String individualName,
-                       int indexWithinArray, String trueName, String falseName) {
+                       String trueName,
+                       String falseName) {
         this.fsioVisible = fsioVisible;
         this.hasAutoscale = hasAutoscale;
-        this.individualName = individualName;
-        this.indexWithinArray = indexWithinArray;
         this.trueName = trueName == null ? "true" : trueName;
         this.falseName = falseName == null ? "false" : falseName;
         Objects.requireNonNull(name, comment + " " + type);
@@ -97,19 +95,6 @@ public class ConfigField {
 
     public String getFalseName() {
         return falseName;
-    }
-
-    public String getCFieldName() {
-        return getIndividualName() == null ? getName() : getIndividualName() + "["
-                + (getIndexWithinArray() - 1) + "]";
-    }
-
-    public String getIndividualName() {
-        return individualName;
-    }
-
-    public int getIndexWithinArray() {
-        return indexWithinArray;
     }
 
     public boolean isBit() {
@@ -157,13 +142,13 @@ public class ConfigField {
         String arraySizeAsText;
         if (matcher.group(5) != null) {
             arraySizeAsText = matcher.group(3) + "][" + matcher.group(5);
-	    arraySizes = new int[2];
-	    arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(3));
-	    arraySizes[1] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(5));
-	} else if (matcher.group(3) != null) {
+            arraySizes = new int[2];
+            arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(3));
+            arraySizes[1] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(5));
+        } else if (matcher.group(3) != null) {
             arraySizeAsText = matcher.group(3);
             arraySizes = new int[1];
-	    arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, arraySizeAsText);
+            arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, arraySizeAsText);
         } else {
             arraySizes = new int[0];
             arraySizeAsText = null;
@@ -174,7 +159,7 @@ public class ConfigField {
 
 
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySizes,
-                tsInfo, isIterate, isFsioVisible, hasAutoscale, null, -1, null, null);
+                tsInfo, isIterate, isFsioVisible, hasAutoscale, null, null);
         SystemOut.println("type " + type);
         SystemOut.println("name " + name);
         SystemOut.println("comment " + comment);
@@ -182,20 +167,22 @@ public class ConfigField {
         return field;
     }
 
-    public static boolean isPreprocessorDirective(ReaderState state, String line) {
+    public static boolean isPreprocessorDirective(String line) {
         Matcher matcher = DIRECTIVE.matcher(line);
         return matcher.matches();
     }
 
     public int getSize(ConfigField next) {
-        if (isBit() && next.isBit())
+        if (isBit() && next.isBit()) {
+            // we have a protection from 33+ bits in a row in BitState, see BitState.TooManyBitsInARow
             return 0;
+        }
         if (isBit())
             return 4;
-	int size = getElementSize();
-	for (int s : arraySizes) {
-	    size *= s;
-	}
+        int size = getElementSize();
+        for (int s : arraySizes) {
+            size *= s;
+        }
         return size;
     }
 
@@ -204,7 +191,7 @@ public class ConfigField {
         return "ConfigField{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
-                ", arraySizes=" + arraySizes +
+                ", arraySizes=" + Arrays.toString(arraySizes) +
                 '}';
     }
 
@@ -265,7 +252,7 @@ public class ConfigField {
         }
         if (tsInfo == null)
             throw new IllegalArgumentException("tsInfo expected with autoscale");
-        String[] tokens = tsInfo.split("\\,");
+        String[] tokens = tsInfo.split(",");
         if (tokens.length < 2)
             throw new IllegalArgumentException("Second comma-separated token expected in [" + tsInfo + "] for " + name);
 
@@ -283,14 +270,14 @@ public class ConfigField {
         }
         int mul, div;
         if (factor < 1.d) {
-            mul = (int)Math.round(1. / factor);
+            mul = (int) Math.round(1. / factor);
             div = 1;
         } else {
             mul = 1;
-            div = (int)factor;
+            div = (int) factor;
         }
         // Verify accuracy
-        double factor2 = ((double)div) / mul;
+        double factor2 = ((double) div) / mul;
         double accuracy = Math.abs((factor2 / factor) - 1.);
         if (accuracy > 0.0000001) {
             // Don't want to deal with exception propogation; this should adequately not compile
@@ -300,22 +287,55 @@ public class ConfigField {
         return mul + ", " + div;
     }
 
-    public String getUnits() {
+    private String[] getTokens() {
         if (tsInfo == null)
-            return "";
-        String[] tokens = tsInfo.split("\\,");
+            return new String[0];
+        return tsInfo.split(",");
+    }
+
+    public String getUnits() {
+        String[] tokens = getTokens();
         if (tokens.length == 0)
             return "";
         return unquote(tokens[0].trim());
     }
 
-    private static String unquote(String token) {
+    public double getMin() {
+        String[] tokens = getTokens();
+        if (tokens.length < 4)
+            return -1;
+        return Double.parseDouble(tokens[3]);
+    }
+
+    public double getMax() {
+        String[] tokens = getTokens();
+        if (tokens.length < 5)
+            return -1;
+        return Double.parseDouble(tokens[4]);
+    }
+
+    public int getDigits() {
+        String[] tokens = getTokens();
+        if (tokens.length < 6)
+            return -1;
+        return Integer.parseInt(tokens[5].trim());
+    }
+
+    public static String unquote(String token) {
         int length = token.length();
         if (length < 2)
             return token;
         if (token.charAt(0) == '\"')
             return token.substring(1, length - 1);
         return token;
+    }
+
+    public void isFromIterate(boolean isFromIterate) {
+        this.isFromIterate = isFromIterate;
+    }
+
+    public boolean isFromIterate() {
+        return isFromIterate;
     }
 }
 

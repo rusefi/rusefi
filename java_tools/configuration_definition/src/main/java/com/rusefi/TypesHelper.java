@@ -15,6 +15,7 @@ public class TypesHelper {
     private static final String FLOAT_T = "float";
     private static final String INT_32_T = "int";
     private static final String UINT_32_T = "uint32_t";
+    private static final String BOOLEAN_T = "boolean";
 
     public static int getElementSize(ReaderState state, String type) {
         Objects.requireNonNull(state);
@@ -79,6 +80,10 @@ public class TypesHelper {
             return "U08";
         SystemOut.println("No TS type conversion for " + type);
         return type;
+    }
+
+    public static boolean isBoolean(String type) {
+        return BOOLEAN_T.equals(type);
     }
 
     public static boolean isFloat(String type) {
