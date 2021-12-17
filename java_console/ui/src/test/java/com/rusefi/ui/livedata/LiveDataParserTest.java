@@ -13,6 +13,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -63,6 +64,6 @@ public class LiveDataParserTest {
 
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
         ParseResult parseResult = LiveDataParserPanel.applyVariables(VariableValueSource.VOID, sourceCode, SourceCodePainter.VOID, tree);
-        assertTrue(!parseResult.getConfigTokens().isEmpty());
+        assertFalse(parseResult.getConfigTokens().isEmpty());
     }
 }

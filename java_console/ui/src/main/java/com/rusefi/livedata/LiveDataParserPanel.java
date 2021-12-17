@@ -37,6 +37,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 /**
  * this panel shows a live view of rusEFI firmware C/C++ code
+ * @see LiveDataParserPanelSandbox
  */
 public class LiveDataParserPanel {
     private static final String CONFIG_MAGIC_PREFIX = "engineConfiguration";
@@ -263,7 +264,7 @@ public class LiveDataParserPanel {
         }, fileName);
         RefreshActions refreshAction = new RefreshActions() {
             @Override
-            public void refresh(BinaryProtocol bp, byte[] response) {
+            public void refresh(byte[] response) {
                 if (log.debugEnabled())
                     log.debug("Got data " + response.length + " bytes");
                 reference.set(response);
