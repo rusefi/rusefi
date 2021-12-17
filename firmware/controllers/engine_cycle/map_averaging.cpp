@@ -108,24 +108,6 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
 
-	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
-			((fastMapCounter++ % engineConfiguration->mapCamSkipFactor) == 0)) {
-		engine->triggerCentral.mapState.add(instantMap);
-		bool isPeak = engine->triggerCentral.mapState.isPeak(engineConfiguration->mapCamLookForLowPeaks);
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.TEMPLOG_map_length = MAP_CAM_BUFFER;
-		engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = engine->triggerCentral.mapState.current;
-		if (isPeak) {
-			engine->outputChannels.TEMPLOG_map_peak++;
-		}
-#endif //EFI_TUNER_STUDIO
-		if (isPeak) {
-			efitick_t stamp = getTimeNowNt();
-			hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
-			hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
-		}
-	}
-
 	/* Calculates the average values from the ADC samples.*/
 	if (isAveraging) {
 		// with locking we will have a consistent state
