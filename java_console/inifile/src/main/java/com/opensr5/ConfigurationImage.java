@@ -16,7 +16,7 @@ public class ConfigurationImage {
      * 2) as RomRaider RomID#internalIdString
      */
     public final static String BIN_HEADER = "OPEN_SR5_0.1";
-    private byte content[];
+    private final byte[] content;
 
     public ConfigurationImage(int size) {
         content = new byte[size];
@@ -49,13 +49,16 @@ public class ConfigurationImage {
         return content;
     }
 
-    @SuppressWarnings("CloneDoesntCallSuperClone")
+    @SuppressWarnings("MethodDoesntCallSuperMethod")
     @Override
     public ConfigurationImage clone() {
         byte[] copy = content.clone();
         return new ConfigurationImage(copy);
     }
 
+    /**
+     * @return a COPY of the specified range
+     */
     public byte[] getRange(int offset, int size) {
         byte[] r = new byte[size];
         System.arraycopy(content, offset, r, 0, size);
