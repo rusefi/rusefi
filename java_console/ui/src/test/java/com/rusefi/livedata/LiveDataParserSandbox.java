@@ -17,12 +17,7 @@ public class LiveDataParserSandbox {
         values.put("engineTooSlow", Boolean.TRUE);
         values.put("engineTooFast", Boolean.FALSE);
 
-        VariableValueSource valueSource = new VariableValueSource() {
-            @Override
-            public Object getValue(String name) {
-                return values.get(name);
-            }
-        };
+        VariableValueSource valueSource = name -> values.get(name);
 
         new FrameHelper(JDialog.EXIT_ON_CLOSE).showFrame(new LiveDataParserPanel(new UIContext(), valueSource, "ac_control.cpp").getContent());
     }
