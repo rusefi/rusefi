@@ -1,6 +1,24 @@
 # https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
 
 pins:
+  - pin: P66
+    # LOW3 IO1
+    id: GPIOD_3
+    class: outputs
+    ts_name: Aux P66
+
+  - pin: P67
+    # LOW4 IO2
+    id: GPIOA_9
+    class: outputs
+    ts_name: Aux P67
+
+  - pin: P68
+    # LOW6 IO4
+    id: GPIOG_5
+    class: outputs
+    ts_name: Aux P68
+
   - pin: K1
     function: GND
     type: gnd
