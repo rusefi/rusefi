@@ -340,6 +340,7 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 
 	// Symmetrical crank modes require cam sync before firing
 	// non-symmetrical cranks can use faster spin-up mode (firing before VVT sync)
+	// Examples include Nissan MR/VQ, Miata NB, etc
 	return operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR || operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR;
 }
 
