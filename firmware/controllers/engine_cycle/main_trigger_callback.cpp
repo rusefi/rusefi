@@ -333,7 +333,7 @@ uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	auto operationMode = engine->getOperationMode();
 
-	// v-twin MAP phase sense needs to always wait for sync
+	// V-Twin MAP phase sense needs to always wait for sync
 	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
 		return false;
 	}
