@@ -321,7 +321,7 @@ pins:
     # H144_IN_RES3
     id: GPIOF_8
     class: switch_inputs
-    ts_name: Brake Input
+    ts_name: A29 Brake Input
     function: Brake Switch
 
 
@@ -336,6 +336,7 @@ pins:
 # H144_IN_RES2
     id: GPIOF_10
     class: switch_inputs
+    ts_name: A43 Clutch Input
     function: Clutch Input
 
   - pin: A45
@@ -352,6 +353,7 @@ pins:
     # H144_IN_RES1
     id: GPIOF_9
     class: switch_inputs
+    ts_name: A57 AC Request
     function: AC Request Switch
 
   - pin: A60
