@@ -17,7 +17,6 @@ import com.rusefi.ui.livedata.VariableValueSource;
 import com.rusefi.ui.livedocs.LiveDocHolder;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import com.rusefi.ui.livedocs.RefreshActions;
-import com.rusefi.ui.livedocs.RefreshActionsMap;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -38,6 +37,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 /**
  * this panel shows a live view of rusEFI firmware C/C++ code
+ * @see LiveDataParserPanelSandbox
  */
 public class LiveDataParserPanel {
     private static final String CONFIG_MAGIC_PREFIX = "engineConfiguration";
@@ -262,18 +262,17 @@ public class LiveDataParserPanel {
                 return number != 0;
             }
         }, fileName);
-        RefreshActionsMap refreshActionsMap = new RefreshActionsMap();
-        refreshActionsMap.put(live_data_e, new RefreshActions() {
+        RefreshActions refreshAction = new RefreshActions() {
             @Override
-            public void refresh(BinaryProtocol bp, byte[] response) {
+            public void refresh(byte[] response) {
                 if (log.debugEnabled())
                     log.debug("Got data " + response.length + " bytes");
                 reference.set(response);
                 livePanel.refresh();
             }
-        });
+        };
 
-        LiveDocsRegistry.INSTANCE.register(new LiveDocHolder(live_data_e, refreshActionsMap) {
+        LiveDocsRegistry.INSTANCE.register(new LiveDocHolder(live_data_e, refreshAction) {
             @Override
             public boolean isVisible() {
                 JPanel panel = livePanel.getContent();

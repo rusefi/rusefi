@@ -6,12 +6,6 @@ void MainRelayController::onSlowCallback() {
 	isBenchTest = engine->isInMainRelayBench();
 
 #if EFI_MAIN_RELAY_CONTROL
-	hasIgnitionVoltage = Sensor::getOrZero(SensorType::BatteryVoltage) > 5;
-
-	if (hasIgnitionVoltage) {
-		m_lastIgnitionTime.reset();
-	}
-
 	// Query whether any engine modules want to keep the lights on
 	delayedShutoffRequested = engine->engineModules.aggregate([](auto& m, bool prev) { return m.needsDelayedShutoff() | prev; }, false);
 	// TODO: delayed shutoff timeout?
@@ -29,4 +23,8 @@ bool MainRelayController::needsDelayedShutoff() {
 	// This avoids accidentally killing the car during a transient, for example
 	// right when the starter is engaged.
 	return !m_lastIgnitionTime.hasElapsedSec(1);
+}
+
+void MainRelayController::onIgnitionStateChanged(bool ignitionOn) {
+	hasIgnitionVoltage = ignitionOn;
 }

@@ -325,16 +325,6 @@ static void rewriteConfig() {
 	writeToFlashNow();
 }
 
-static void writeConfigCommand() {
-#if EFI_TUNER_STUDIO
-	// on start-up rusEfi would read from working copy of TS while
-	// we have a lot of console commands which write into real copy of configuration directly
-	// we have a bit of a mess here
-	syncTunerStudioCopy();
-#endif /* EFI_TUNER_STUDIO */
-	writeToFlashNow();
-}
-
 void initFlash() {
 #if EFI_STORAGE_EXT_SNOR == TRUE
 	mfs_error_t err;
@@ -359,7 +349,7 @@ void initFlash() {
 	/**
 	 * This would write NOW (you should not be doing this while connected to real engine)
 	 */
-	addConsoleAction(CMD_WRITECONFIG, writeConfigCommand);
+	addConsoleAction(CMD_WRITECONFIG, writeToFlashNow);
 #if EFI_TUNER_STUDIO
 	/**
 	 * This would schedule write to flash once the engine is stopped

@@ -14,9 +14,12 @@ void setCanType(int type);
 void setCanVss(int type);
 
 #if EFI_CAN_SUPPORT
+CANDriver* detectCanDevice(size_t logicalIndex);
+
 void stopCanPins();
 void startCanPins();
 void enableFrankensoCan();
+bool getIsCanEnabled(void);
 #if EFI_TUNER_STUDIO
 void postCanState(TunerStudioOutputChannels *tsOutputChannels);
 #endif /* EFI_TUNER_STUDIO */

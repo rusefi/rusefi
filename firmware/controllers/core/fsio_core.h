@@ -53,8 +53,6 @@ typedef enum {
 	LE_METHOD_FUEL_FLOW_RATE = 131,
 	LE_METHOD_OIL_PRESSURE = 132,
 
-#include "fsio_enums_generated.def"
-
 	Force_4b_le_action = ENUM_32_BITS,
 
 } le_action_e;

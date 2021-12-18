@@ -41,6 +41,18 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
         return r.toString();
     }
 
+    static String printByteArray(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : data) {
+            if (Character.isJavaIdentifierPart(b)) {
+                sb.append((char) b);
+            } else {
+                sb.append(' ');
+            }
+        }
+        return printHexBinary(data) + sb;
+    }
+
     @NotNull
     default BinaryProtocolServer.Packet readPacket() throws IOException {
         short length = readShort();
@@ -84,8 +96,6 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
     AbstractIoStream.StreamStats getStreamStats();
 
     void close();
-
-    String getLoggingPrefix();
 
     IncomingDataBuffer getDataBuffer();
 

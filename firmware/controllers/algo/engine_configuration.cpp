@@ -519,7 +519,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->startCrankingDuration = 3;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
-	engineConfiguration->startOfCrankingPrimingPulse = 0;
 
 	engineConfiguration->maxAcRpm = 5000;
 	engineConfiguration->maxAcClt = 100;
@@ -619,9 +618,6 @@ static void setDefaultEngineConfiguration() {
 	// performance optimization
 	engineConfiguration->sensorChartMode = SC_OFF;
 
-
-	engineConfiguration->extraInjectionOffset = 0;
-
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
 	engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(0);
@@ -675,8 +671,6 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
-
-	engineConfiguration->debugMode = DBG_ALTERNATOR_PID;
 
 	engineConfiguration->acIdleRpmBump = 200;
 
@@ -854,7 +848,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
 	case TEST_ENGINE:
-		setTestEngineConfiguration();
+		setTestCamEngineConfiguration();
+		break;
+	case TEST_CRANK_ENGINE:
+		setTestCrankEngineConfiguration();
 		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
@@ -1058,7 +1055,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setHonda600();
 		break;
 	case UNUSED9:
-	case UNUSED28:
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
@@ -1129,10 +1125,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		firmwareError(CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
 	}
 	applyNonPersistentConfiguration();
-
-#if EFI_TUNER_STUDIO
-	syncTunerStudioCopy();
-#endif /* EFI_TUNER_STUDIO */
 }
 
 void emptyCallbackWithConfiguration(engine_configuration_s * engineConfiguration) {

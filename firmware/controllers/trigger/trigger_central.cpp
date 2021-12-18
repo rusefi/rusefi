@@ -38,15 +38,13 @@ WaveChart waveChart;
 static scheduling_s debugToggleScheduling;
 #define DEBUG_PIN_DELAY US2NT(60)
 
-trigger_central_s::trigger_central_s() : hwEventCounters() {
-}
-
-TriggerCentral::TriggerCentral() : trigger_central_s(),
+TriggerCentral::TriggerCentral() :
 		vvtEventRiseCounter(),
 		vvtEventFallCounter(),
 		vvtPosition(),
 		vvtSyncTimeNt()
 {
+	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetTriggerState();
 	noiseFilter.resetAccumSignalData();
 }
@@ -70,6 +68,9 @@ angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	return vvtPosition[bankIndex][camIndex];
 }
 
+/**
+ * @return angle since trigger synchronization point, NOT angle since TDC.
+ */
 expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 	floatus_t oneDegreeUs = engine->rpmCalculator.oneDegreeUs;
 
@@ -77,7 +78,7 @@ expected<float> TriggerCentral::getCurrentEnginePhase(efitick_t nowNt) const {
 		return unexpected;
 	}
 
-	return m_virtualZeroTimer.getElapsedUs(nowNt) / oneDegreeUs;
+	return m_syncPointTimer.getElapsedUs(nowNt) / oneDegreeUs;
 }
 
 /**
@@ -104,6 +105,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_2JZ
 			&& vvtMode != VVT_HONDA_K
+			&& vvtMode != VVT_MAP_V_TWIN_ANOTHER
 			&& vvtMode != VVT_SECOND_HALF
 			&& vvtMode != VVT_FIRST_HALF;
 }
@@ -112,10 +114,8 @@ static angle_t syncAndReport(TriggerCentral *tc, int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(engine->getOperationMode());
 
 	angle_t offset = tc->triggerState.syncSymmetricalCrank(divider, remainder, engineCycle);
-	if (offset > 0 && engineConfiguration->debugMode == DBG_VVT) {
-#if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1++;
-#endif /* EFI_TUNER_STUDIO */
+	if (offset > 0) {
+		engine->outputChannels.vvtSyncCounter++;
 	}
 	return offset;
 }
@@ -142,6 +142,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 
 	switch (engineConfiguration->vvtMode[camIndex]) {
 	case VVT_FIRST_HALF:
+	case VVT_MAP_V_TWIN_ANOTHER:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
@@ -159,6 +160,9 @@ static angle_t adjustCrankPhase(int camIndex) {
 	}
 }
 
+/**
+ * See also wrapAngle
+ */
 static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	// Wrap VVT position in to the range [-360, 360)
 	while (vvtPosition < -period / 2) {
@@ -272,12 +276,17 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	}
 
 	if (isVvtWithRealDecoder) {
-		tc->vvtState[bankIndex][camIndex].decodeTriggerEvent(
+		TriggerState *vvtState = &tc->vvtState[bankIndex][camIndex];
+
+		vvtState->decodeTriggerEvent(
 			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
 			engine->vvtTriggerConfiguration[camIndex],
 			front == TV_RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
+		// yes we log data from all VVT channels into same fields for now
+		engine->outputChannels.vvtSyncGapRatio = vvtState->currentGap;
+		engine->outputChannels.vvtStateIndex = vvtState->currentCycle.current_index;
 	}
 
 	tc->vvtCamCounter++;
@@ -291,11 +300,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	tc->currentVVTEventPosition[bankIndex][camIndex] = currentPosition;
 #endif // EFI_UNIT_TEST
 
-	if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugFloatField1 = currentPosition;
+		engine->outputChannels.vvtCurrentPosition = currentPosition;
 #endif /* EFI_TUNER_STUDIO */
-	}
 
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
@@ -315,11 +322,9 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			// this is not sync tooth - exiting
 			return;
 		}
-		if (engineConfiguration->debugMode == DBG_VVT) {
 #if EFI_TUNER_STUDIO
-			tsOutputChannels.debugIntField1++;
+		engine->outputChannels.vvtCounter++;
 #endif /* EFI_TUNER_STUDIO */
-		}
 	}
 	default:
 		// else, do nothing
@@ -366,8 +371,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
 }
 
-int triggerReentraint = 0;
-int maxTriggerReentraint = 0;
+int triggerReentrant = 0;
+int maxTriggerReentrant = 0;
 uint32_t triggerDuration;
 uint32_t triggerMaxDuration = 0;
 
@@ -468,13 +473,13 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 #endif /* EFI_TOOTH_LOGGER */
 
 	uint32_t triggerHandlerEntryTime = getTimeNowLowerNt();
-	if (triggerReentraint > maxTriggerReentraint)
-		maxTriggerReentraint = triggerReentraint;
-	triggerReentraint++;
+	if (triggerReentrant > maxTriggerReentrant)
+		maxTriggerReentrant = triggerReentrant;
+	triggerReentrant++;
 
 	engine->triggerCentral.handleShaftSignal(signal, timestamp);
 
-	triggerReentraint--;
+	triggerReentrant--;
 	triggerDuration = getTimeNowLowerNt() - triggerHandlerEntryTime;
 	triggerMaxDuration = maxI(triggerMaxDuration, triggerDuration);
 }
@@ -610,6 +615,12 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			engine->primaryTriggerConfiguration,
 			signal, timestamp);
 
+#if EFI_TUNER_STUDIO
+			engine->outputChannels.triggerSyncGapRatio = triggerState.currentGap;
+			engine->outputChannels.triggerStateIndex = triggerState.currentCycle.current_index;
+#endif /* EFI_TUNER_STUDIO */
+
+
 	/**
 	 * If we only have a crank position sensor with four stroke, here we are extending crank revolutions with a 360 degree
 	 * cycle into a four stroke, 720 degrees cycle.
@@ -619,7 +630,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	int crankInternalIndex = triggerState.getTotalRevolutionCounter() % crankDivider;
 	int triggerIndexForListeners = triggerState.getCurrentIndex() + (crankInternalIndex * getTriggerSize());
 	if (triggerIndexForListeners == 0) {
-		m_virtualZeroTimer.reset(timestamp);
+		m_syncPointTimer.reset(timestamp);
 	}
 	reportEventToWaveChart(signal, triggerIndexForListeners);
 
@@ -651,9 +662,48 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		mainTriggerCallback(triggerIndexForListeners, timestamp);
 
+		auto toothAngle = engine->triggerCentral.triggerFormDetails.eventAngles[triggerIndexForListeners] - tdcPosition();
+		wrapAngle(toothAngle, "currentEnginePhase", CUSTOM_ERR_6555);
 #if EFI_TUNER_STUDIO
-		updateCurrentEnginePhase();
-#endif
+		engine->outputChannels.currentEnginePhase = toothAngle;
+#endif // EFI_TUNER_STUDIO
+
+#if WITH_TS_STATE
+		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER &&
+				Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm) {
+			// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
+			auto toothAngle360 = toothAngle;
+			while (toothAngle360 >= 360) {
+				toothAngle360 -= 360;
+			}
+
+			if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle360 > engineConfiguration->mapCamDetectionAnglePosition) {
+				// we are somewhere close to 'mapCamDetectionAnglePosition'
+
+				// warning: hack hack hack
+				float map = engine->outputChannels.instantMAPValue;
+
+				// Compute diff against the last time we were here
+				float diff = map - mapCamPrevCycleValue;
+				mapCamPrevCycleValue = map;
+
+				if (diff > 0) {
+					engine->outputChannels.TEMPLOG_map_peak++;
+					int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+					engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
+					prevChangeAtCycle = revolutionCounter;
+
+					hwHandleVvtCamSignal(TV_RISE, timestamp, /*index*/0);
+					hwHandleVvtCamSignal(TV_FALL, timestamp, /*index*/0);
+				}
+
+				engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT = map;
+				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = diff;
+			}
+
+			mapCamPrevToothAngle = toothAngle360;
+		}
+#endif // WITH_TS_STATE
 	}
 }
 

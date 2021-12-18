@@ -10,6 +10,7 @@ import com.rusefi.util.SystemOut;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 import java.util.*;
 
 import static com.rusefi.ConfigField.BOOLEAN_T;
@@ -26,7 +27,6 @@ public class ReaderState {
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
-    private static final String DEFINE_CONSTRUCTOR = "define_constructor";
     public final Stack<ConfigStructure> stack = new Stack<>();
     public final Map<String, Integer> tsCustomSize = new HashMap<>();
     public final Map<String, String> tsCustomLine = new HashMap<>();
@@ -53,7 +53,7 @@ public class ReaderState {
         String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
 
-        ConfigField bitField = new ConfigField(state, bitNameParts[0], comment, null, BOOLEAN_T, new int[0], null, false, false, false, null, -1, trueName, falseName);
+        ConfigField bitField = new ConfigField(state, bitNameParts[0], comment, null, BOOLEAN_T, new int[0], null, false, false, false, trueName, falseName);
         if (state.stack.isEmpty())
             throw new IllegalStateException("Parent structure expected");
         ConfigStructure structure = state.stack.peek();
@@ -156,7 +156,11 @@ public class ReaderState {
         structures.put(structure.getName(), structure);
 
         for (ConfigurationConsumer consumer : consumers)
-            consumer.handleEndStruct(structure);
+            consumer.handleEndStruct(this, structure);
+    }
+
+    public void readBufferedReader(String inputString, List<ConfigurationConsumer> consumers) throws IOException {
+        readBufferedReader(new BufferedReader(new StringReader(inputString)), consumers);
     }
 
     public void readBufferedReader(BufferedReader definitionReader, List<ConfigurationConsumer> consumers) throws IOException {
@@ -216,15 +220,6 @@ public class ReaderState {
     }
 
     private static void handleStartStructure(ReaderState state, String line, boolean withPrefix) {
-        boolean withConstructor;
-        if (line.toLowerCase().startsWith(DEFINE_CONSTRUCTOR)) {
-            withConstructor = true;
-            line = line.substring(DEFINE_CONSTRUCTOR.length()).trim();
-        } else {
-            withConstructor = false;
-        }
-
-
         String name;
         String comment;
         if (line.contains(" ")) {
@@ -235,7 +230,7 @@ public class ReaderState {
             name = line;
             comment = null;
         }
-        ConfigStructure structure = new ConfigStructure(name, comment, withPrefix, withConstructor);
+        ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
         state.stack.push(structure);
         SystemOut.println("Starting structure " + structure.getName());
     }
@@ -245,10 +240,10 @@ public class ReaderState {
         ConfigField cf = ConfigField.parse(state, line);
 
         if (cf == null) {
-            if (ConfigField.isPreprocessorDirective(state, line)) {
+            if (ConfigField.isPreprocessorDirective(line)) {
                 cf = new ConfigField(state, "", line, null,
-                        ConfigField.DIRECTIVE_T, new int[0], null, false, false, false, null, 0,
-			null, null);
+                        ConfigField.DIRECTIVE_T, new int[0], null, false, false, false,
+                        null, null);
             } else {
                 throw new IllegalStateException("Cannot parse line [" + line + "]");
             }
@@ -271,7 +266,8 @@ public class ReaderState {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySizes()[0]; i++) {
                 ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
-                        cf.getType(), new int[0], cf.getTsInfo(), false, false, false, cf.getName(), i, null, null);
+                        cf.getType(), new int[0], cf.getTsInfo(), false, false, false, null, null);
+                element.isFromIterate(true);
                 structure.addTs(element);
             }
         } else if (cf.isDirective()) {

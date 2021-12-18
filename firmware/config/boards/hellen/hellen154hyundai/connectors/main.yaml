@@ -153,6 +153,8 @@ pins:
     function: Analog Ground
 
   - pin: K47
+    # H144_LS_7
+    id: GPIOF_13
     class: outputs
     function: BK1 Wastegate Solenoid
 
@@ -200,6 +202,28 @@ pins:
     ts_name: Main Relay K64
     function: Main relay control
     type: ls
+
+  - pin: K65
+    # H144_OUT_IO7
+    id: GPIOG_3
+    class: outputs
+    ts_name: Fan Relay Low
+    function: Fan relay low
+
+  - pin: K65
+    # H144_LS_5
+    id: GPIOD_9
+    class: outputs
+    ts_name: VVT1
+    function: VVT1
+
+  - pin: K68
+    # H144_LS_6
+    id: GPIOF_12
+    class: outputs
+    ts_name: VVT2
+    function: VVT2
+
 
   - pin: K70
 # H144_OUT_IO9
@@ -294,6 +318,8 @@ pins:
     type: ign
 
   - pin: A29
+    # H144_IN_RES3
+    id: GPIOF_8
     class: switch_inputs
     ts_name: Brake Input
     function: Brake Switch
@@ -307,7 +333,11 @@ pins:
     type: ign
 
   - pin: A43
+# H144_IN_RES2
+    id: GPIOF_10
+    class: switch_inputs
     function: Clutch Input
+
   - pin: A45
     function: BK2 DC Wastegate Pos
 
@@ -319,6 +349,9 @@ pins:
     type: ign
 
   - pin: A57
+    # H144_IN_RES1
+    id: GPIOF_9
+    class: switch_inputs
     function: AC Request Switch
 
   - pin: A60

@@ -9,7 +9,8 @@
 
 #include "engine_configuration.h"
 
-void setTestEngineConfiguration();
+void setTestCamEngineConfiguration();
+void setTestCrankEngineConfiguration();
 void setTestVVTEngineConfiguration();
 
 void setTestEngineIssue366both();

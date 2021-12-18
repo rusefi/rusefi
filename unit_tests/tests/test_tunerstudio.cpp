@@ -69,7 +69,7 @@ TEST(binary, testWriteCrc) {
 
 TEST(TunerstudioCommands, writeChunkEngineConfig) {
 	EngineTestHelper eth(TEST_ENGINE);
-	MockTsChannel channel;
+	::testing::NiceMock<MockTsChannel> channel;
 
 	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);
 
@@ -81,29 +81,5 @@ TEST(TunerstudioCommands, writeChunkEngineConfig) {
 	uint8_t val = 50;
 	handleWriteChunkCommand(&channel, TS_CRC, 100, 1, &val);
 
-	// hasn't changed yet
-	EXPECT_EQ(configBytes[100], 0);
-
-	handleBurnCommand(&channel, TS_CRC);
-
 	EXPECT_EQ(configBytes[100], 50);
-}
-
-TEST(TunerstudioCommands, writeChunkOutsideEngineConfig) {
-	EngineTestHelper eth(TEST_ENGINE);
-	MockTsChannel channel;
-
-	uint8_t* configBytes = reinterpret_cast<uint8_t*>(config);
-
-	size_t offset = sizeof(engine_configuration_s) + 100;
-
-	// Contains zero before the write
-	configBytes[offset] = 0;
-	EXPECT_EQ(configBytes[offset], 0);
-
-	// one step - writes past engineConfiguration don't need a burn
-	uint8_t val = 50;
-	handleWriteChunkCommand(&channel, TS_CRC, offset, 1, &val);
-
-	EXPECT_EQ(configBytes[offset], 50);
 }

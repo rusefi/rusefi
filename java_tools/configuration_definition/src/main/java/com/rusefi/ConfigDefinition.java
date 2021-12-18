@@ -6,7 +6,6 @@ import com.rusefi.generated.RusefiConfigGrammarParser;
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
-import com.rusefi.util.CachingStrategy;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
@@ -38,10 +37,6 @@ public class ConfigDefinition {
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
     public static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
-    private static final String KEY_C_FSIO_CONSTANTS = "-c_fsio_constants";
-    private static final String KEY_C_FSIO_GETTERS = "-c_fsio_getters";
-    private static final String KEY_C_FSIO_NAMES = "-c_fsio_names";
-    private static final String KEY_C_FSIO_STRING = "-c_fsio_strings";
     private static final String KEY_C_DEFINES = "-c_defines";
     /**
      * @see CHeaderConsumer#withC_Defines
@@ -53,8 +48,6 @@ public class ConfigDefinition {
     public static final String KEY_PREPEND = "-prepend";
     public static final String KEY_SIGNATURE = "-signature";
     public static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
-    public static final String KEY_CACHE = "-cache";
-    public static final String KEY_CACHE_ZIP_FILE = "-cache_zip_file";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     private static final String KEY_BOARD_NAME = "-board";
     /**
@@ -93,18 +86,12 @@ public class ConfigDefinition {
         String tsInputFileFolder = null;
         String destCHeaderFileName = null;
         String destCDefinesFileName = null;
-        String destCFsioConstantsFileName = null;
-        String destCFsioGettersFileName = null;
-        String namesCFileName = null;
-        String stringsCFileName = null;
         String javaDestinationFileName = null;
         String romRaiderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
         List<String> prependFiles = new ArrayList<>();
         String romRaiderInputFile = null;
         String firingEnumFileName = null;
-        String cachePath = null;
-        String cacheZipFile = null;
         String signatureDestination = null;
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
@@ -114,8 +101,9 @@ public class ConfigDefinition {
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
         // disable the lazy checks because we use timestamps to detect changes
-        LazyFile.setLazyFileEnabled(false);
+        LazyFile.setLazyFileEnabled(true);
 
+        List<ConfigurationConsumer> destinations = new ArrayList<>();
         ReaderState state = new ReaderState();
 
         for (int i = 0; i < args.length - 1; i += 2) {
@@ -137,18 +125,6 @@ public class ConfigDefinition {
                 case KEY_C_DESTINATION:
                     destCHeaderFileName = args[i + 1];
                     break;
-                case KEY_C_FSIO_GETTERS:
-                    destCFsioGettersFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_STRING:
-                    stringsCFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_NAMES:
-                    namesCFileName = args[i + 1];
-                    break;
-                case KEY_C_FSIO_CONSTANTS:
-                    destCFsioConstantsFileName = args[i + 1];
-                    break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
                     break;
@@ -161,6 +137,18 @@ public class ConfigDefinition {
                 case KEY_JAVA_DESTINATION:
                     javaDestinationFileName = args[i + 1];
                     break;
+                case "-field_lookup_file":
+                    destinations.add(new GetConfigValueConsumer(args[i + 1]));
+                    break;
+                case "-output_lookup_file":
+                    destinations.add(new GetOutputValueConsumer(args[i + 1]));
+                    break;
+                case "-readfile":
+                    String keyName = args[i + 1];
+                    // yes, we take three parameters here thus pre-increment!
+                    String fileName = args[++i + 1];
+                    state.variableRegistry.register(keyName, readFile(fileName));
+                    inputFiles.add(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
                     inputFiles.add(firingEnumFileName);
@@ -182,12 +170,6 @@ public class ConfigDefinition {
                     break;
                 case EnumToString.KEY_ENUM_INPUT_FILE:
                     enumInputFiles.add(args[i + 1]);
-                    break;
-                case KEY_CACHE:
-                    cachePath = args[i + 1];
-                    break;
-                case KEY_CACHE_ZIP_FILE:
-                    cacheZipFile = args[i + 1];
                     break;
                 case "-ts_output_name":
                     TSProjectConsumer.TS_FILE_OUTPUT_NAME = args[i + 1];
@@ -212,18 +194,9 @@ public class ConfigDefinition {
             }
         }
 
-        List<String> inputAllFiles = new ArrayList<>(inputFiles);
         if (tsInputFileFolder != null) {
             // used to update .ini files
-            inputAllFiles.add(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
-        }
-
-        boolean needToUpdateTsFiles = isNeedToUpdateTsFiles(tsInputFileFolder, cachePath, cacheZipFile, inputAllFiles);
-
-        boolean needToUpdateOtherFiles = CachingStrategy.checkIfOutputFilesAreOutdated(inputFiles, cachePath, cacheZipFile);
-        if (!needToUpdateTsFiles && !needToUpdateOtherFiles) {
-            SystemOut.println("All output files are up-to-date, nothing to do here!");
-            return;
+            inputFiles.add(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
         }
 
         if (!enumInputFiles.isEmpty()) {
@@ -236,7 +209,7 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = signatureHash(state, parseState, tsInputFileFolder, inputAllFiles);
+        long crc32 = signatureHash(state, parseState, tsInputFileFolder, inputFiles);
 
         handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
@@ -284,12 +257,12 @@ public class ConfigDefinition {
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
-        List<ConfigurationConsumer> destinations = new ArrayList<>();
         if (TS_OUTPUTS_DESTINATION != null) {
-            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "output_channels.ini", state));
-            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "data_logs.ini", state));
+            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/output_channels.ini", state));
+            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/data_logs.ini"));
+            destinations.add(new GaugeConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/gauges.ini", state));
         }
-        if (tsInputFileFolder != null && needToUpdateTsFiles) {
+        if (tsInputFileFolder != null) {
             CharArrayWriter tsWriter = new CharArrayWriter();
             destinations.add(new TSProjectConsumer(tsWriter, tsInputFileFolder, state));
 
@@ -299,21 +272,12 @@ public class ConfigDefinition {
             tmpRegistry.readPrependValues(signaturePrependFile);
             destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
-        if (needToUpdateOtherFiles) {
-            if (destCHeaderFileName != null) {
-                destinations.add(new CHeaderConsumer(state.variableRegistry, destCHeaderFileName));
-            }
-            if (javaDestinationFileName != null) {
-                destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
-            }
 
-            if (destCFsioConstantsFileName != null || destCFsioGettersFileName != null) {
-                destinations.add(new FileFsioSettingsConsumer(state,
-                        destCFsioConstantsFileName,
-                        destCFsioGettersFileName,
-                        namesCFileName,
-                        stringsCFileName));
-            }
+        if (destCHeaderFileName != null) {
+            destinations.add(new CHeaderConsumer(state.variableRegistry, destCHeaderFileName));
+        }
+        if (javaDestinationFileName != null) {
+            destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
         }
 
         if (destinations.isEmpty())
@@ -324,15 +288,33 @@ public class ConfigDefinition {
          */
         state.readBufferedReader(definitionReader, destinations);
 
-
-        if (destCDefinesFileName != null && needToUpdateOtherFiles)
+        if (destCDefinesFileName != null) {
             writeDefinesToFile(state.variableRegistry, destCDefinesFileName);
-
-        if (romRaiderDestination != null && romRaiderInputFile != null && needToUpdateOtherFiles) {
-            processTextTemplate(state, romRaiderInputFile, romRaiderDestination);
         }
 
-        CachingStrategy.saveCachedInputFiles(inputAllFiles, cachePath, cacheZipFile);
+        if (romRaiderDestination != null && romRaiderInputFile != null) {
+            processTextTemplate(state, romRaiderInputFile, romRaiderDestination);
+        }
+    }
+
+    private static String readFile(String fileName) {
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
+        String ls = System.getProperty("line.separator");
+        try {
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+                while (true) {
+                    if (!((line = reader.readLine()) != null)) break;
+                    stringBuilder.append(line);
+                    stringBuilder.append(ls);
+                }
+
+                return stringBuilder.toString();
+            }
+        } catch (IOException e) {
+            return "";
+        }
     }
 
     private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, ParseState parseState) throws IOException {
@@ -362,15 +344,6 @@ public class ConfigDefinition {
         }
 
         return crc32;
-    }
-
-    private static boolean isNeedToUpdateTsFiles(String tsPath, String cachePath, String cacheZipFile, List<String> inputAllFiles) {
-        boolean needToUpdateTsFiles = false;
-        if (tsPath != null) {
-            SystemOut.println("Check the input/output TS files:");
-            needToUpdateTsFiles = CachingStrategy.checkIfOutputFilesAreOutdated(inputAllFiles, cachePath, cacheZipFile);
-        }
-        return needToUpdateTsFiles;
     }
 
     public static void processYamls(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {

@@ -440,16 +440,27 @@ void prepareOutputSignals() {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		engine->ignitionPositionWithinEngineCycle[i] = engine->engineCycle * i / engineConfiguration->specs.cylindersCount;
-	}
-
 	prepareIgnitionPinIndices(engineConfiguration->ignitionMode);
 
 	TRIGGER_WAVEFORM(prepareShape(&engine->triggerCentral.triggerFormDetails));
 
 	// Fuel schedule may now be completely wrong, force a reset
 	engine->injectionEvents.invalidate();
+}
+
+angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber) {
+	// base = position of this cylinder in the firing order.
+	// We get a cylinder every n-th of an engine cycle where N is the number of cylinders
+	auto base = engine->engineCycle * cylinderIndex / engineConfiguration->specs.cylindersCount;
+
+	// Plus or minus any adjustment if this is an odd-fire engine
+	auto adjustment = engineConfiguration->timing_offset_cylinder[cylinderNumber];
+
+	auto result = base + adjustment;
+
+	assertAngleRange(result, "getCylinderAngle", CUSTOM_ERR_6566);
+
+	return result;
 }
 
 void setTimingRpmBin(float from, float to) {

@@ -32,20 +32,35 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 }
 
 
-TEST(engine, testStartOfCrankingPrimingPulse) {
+TEST(priming, startScheduling) {
 	EngineTestHelper eth(TEST_ENGINE);
-
-	engineConfiguration->startOfCrankingPrimingPulse = 4;
 
 	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
 
-	// we need below freezing temperature to get prime fuel
-	Sensor::setMockValue(SensorType::Clt, -10);
+	// Turn on the ignition switch!
+	engine->module<PrimeController>()->onIgnitionStateChanged(true);
 
-	// prod code invokes this on ECU start, here we have to mimic this behavior
-	startPrimeInjectionPulse();
-
-
-	ASSERT_EQ( 1,  engine->executor.size()) << "prime fuel";
+	ASSERT_EQ(1, engine->executor.size()) << "prime fuel";
 }
 
+TEST(priming, duration) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	MockInjectorModel2 injectorModel;
+	engine->module<InjectorModel>().set(&injectorModel);
+
+	for (size_t i = 0; i < efi::size(engineConfiguration->primeBins); i++) {
+		engineConfiguration->primeBins[i] = i * 10;
+	}
+
+	EXPECT_CALL(injectorModel, getInjectionDuration(0.075f)).WillOnce(Return(20.0f));
+	engineConfiguration->primeValues[5] = 75;	// <-- We test this point
+
+	// With coolant temp, we should see value from mock
+	Sensor::setMockValue(SensorType::Clt, 50);
+	EXPECT_EQ(20, engine->module<PrimeController>()->getPrimeDuration());
+
+	// Without coolant temp, no prime
+	Sensor::resetMockValue(SensorType::Clt);
+	EXPECT_EQ(0, engine->module<PrimeController>()->getPrimeDuration());
+}

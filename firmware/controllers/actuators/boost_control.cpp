@@ -86,7 +86,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
-		tsOutputChannels.debugFloatField1 = openLoop;
+		engine->outputChannels.debugFloatField1 = openLoop;
 	}
 #endif
 
@@ -129,8 +129,8 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
-		tsOutputChannels.debugFloatField2 = closedLoop;
-		tsOutputChannels.debugFloatField3 = target;
+		engine->outputChannels.debugFloatField2 = closedLoop;
+		engine->outputChannels.debugFloatField3 = target;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -142,7 +142,7 @@ void BoostController::setOutput(expected<float> output) {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
-		tsOutputChannels.debugFloatField3 = percent;
+		engine->outputChannels.debugFloatField3 = percent;
 	}
 #endif /* EFI_TUNER_STUDIO */
 

@@ -30,6 +30,10 @@ jobs:
       run: |
         bash gen_enum_to_string.sh
 
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: bash gen_live_documentation.sh
+
     - name: Compile Simulator
       working-directory: ./simulator/
       run: bash compile.sh

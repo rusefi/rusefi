@@ -50,6 +50,7 @@ java -DSystemOut.name=logs/gen_config_board \
  $COMMON_GEN_CONFIG \
   -romraider integration \
 	-tool gen_config.sh \
+ -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
 	-board ${BOARDNAME} \
 	-ts_output_name generated/${INI} \
 	-cache ${SHORT_BOARDNAME} \
@@ -62,10 +63,6 @@ java -DSystemOut.name=logs/gen_config_board \
   -romraider_destination ../java_console/rusefi.xml \
   -c_defines        controllers/generated/rusefi_generated.h \
   -c_destination    controllers/generated/engine_configuration_generated_structures.h \
-  -c_fsio_constants controllers/generated/fsio_enums_generated.def \
-  -c_fsio_getters   controllers/generated/fsio_getters.def \
-  -c_fsio_names     controllers/generated/fsio_names.def \
-  -c_fsio_strings   controllers/generated/fsio_strings.def \
 	-prepend $PREPEND_FILE
 
 [ $? -eq 0 ] || { echo "ERROR generating TunerStudio config for ${BOARDNAME}"; exit 1; }

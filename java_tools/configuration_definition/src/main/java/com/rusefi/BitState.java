@@ -17,7 +17,7 @@ public class BitState {
 
     public void incrementBitIndex(ConfigField cf) {
         if (bitIndex == 32)
-            throw new IllegalStateException("Too many bits: " + cf.getName());
+            throw new TooManyBitsInARow("Too many bits in a row: " + cf.getName());
         bitIndex++;
     }
 
@@ -27,5 +27,11 @@ public class BitState {
 
     public int get() {
         return bitIndex;
+    }
+
+    public static class TooManyBitsInARow extends RuntimeException {
+        public TooManyBitsInARow(String s) {
+            super(s);
+        }
     }
 }
