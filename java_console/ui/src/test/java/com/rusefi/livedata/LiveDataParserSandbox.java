@@ -4,9 +4,13 @@ import com.rusefi.ui.UIContext;
 import com.rusefi.ui.livedata.VariableValueSource;
 import com.rusefi.ui.util.FrameHelper;
 
+import javax.swing.*;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * @see LiveDataParserPanelSandbox
+ */
 public class LiveDataParserSandbox {
     public static void main(String[] args) {
         Map<String, Object> values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -20,6 +24,6 @@ public class LiveDataParserSandbox {
             }
         };
 
-        new FrameHelper().showFrame(new LiveDataParserPanel(new UIContext(), valueSource, "ac_control.cpp").getContent());
+        new FrameHelper(JDialog.EXIT_ON_CLOSE).showFrame(new LiveDataParserPanel(new UIContext(), valueSource, "ac_control.cpp").getContent());
     }
 }
