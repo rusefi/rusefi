@@ -14,15 +14,18 @@ bool AcController::getAcState() {
 
 	engineTooSlow = rpm < 500;
 
-	if (engineTooSlow) {
-		return false;
-	}
-
 	auto maxRpm = engineConfiguration->maxAcRpm;
 	engineTooFast = maxRpm != 0 && maxRpmDeadband.gt(rpm, maxRpm);
 	if (engineTooFast) {
+	    invokeMethodRed();
 		return false;
 	}
+
+	if (engineTooSlow) {
+	    invokeMethod();
+		return false;
+	}
+
 
 	auto clt = Sensor::get(SensorType::Clt);
 

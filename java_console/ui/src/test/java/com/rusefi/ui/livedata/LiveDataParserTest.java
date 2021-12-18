@@ -1,5 +1,6 @@
 package com.rusefi.ui.livedata;
 
+import com.rusefi.CodeWalkthrough;
 import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.livedata.LiveDataView;
 import com.rusefi.livedata.ParseResult;
@@ -31,9 +32,8 @@ public class LiveDataParserTest {
         String sourceCode = "bool AcState::getAcState() {\n" +
                 "\tauto rpm = Sensor::getOrZero(SensorType::Rpm);\n" +
                 "\n" +
-                "\tengineTooSlow = rpm < 500;\n" +
-                "\n" +
                 "\tif (engineTooSlow) {\n" +
+                "\t\tinvokeMethod();\n" +
                 "\t\treturn true;\n" +
                 "\t} else {\n  " +
                 "auto ff2 = engineConfiguration->Alternatorcontrolpin;\n" +
@@ -43,18 +43,30 @@ public class LiveDataParserTest {
                 "\t\treturn false;\n" +
                 "\t} \n  " +
                 "return ff;\n" +
-                "}";
+                "}\n" +
+                "bool AcState::getAcState2() {\n" +
+                "return ff;\n" +
+                "}\n";
 
         SourceCodePainter painter = mock(SourceCodePainter.class);
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
+
+        System.out.println("******************************************* Just print everything for educational purposes");
         new ParseTreeWalker().walk(new PrintCPP14ParserListener(), tree);
 
+        System.out.println("******************************************* Now running FOR REAL");
 
-        LiveDataParserPanel.applyVariables(valueSource, sourceCode, painter, tree);
+
+        CodeWalkthrough.applyVariables(valueSource, sourceCode, painter, tree);
         verify(painter, times(2)).paintForeground(eq(Color.blue), any());
 
         verify(painter).paintBackground(eq(Color.red), any());
         verify(painter).paintBackground(eq(Color.green), any());
+
+        verify(painter, times(4)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
+        verify(painter, times(1)).paintBackground(eq(CodeWalkthrough.INACTIVE_BRANCH), any());
+
+        verify(painter, times(3)).paintBackground(eq(CodeWalkthrough.PASSIVE_CODE), any());
     }
 
     @Test
@@ -63,7 +75,7 @@ public class LiveDataParserTest {
         assertTrue(sourceCode.length() > 100);
 
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
-        ParseResult parseResult = LiveDataParserPanel.applyVariables(VariableValueSource.VOID, sourceCode, SourceCodePainter.VOID, tree);
+        ParseResult parseResult = CodeWalkthrough.applyVariables(VariableValueSource.VOID, sourceCode, SourceCodePainter.VOID, tree);
         assertFalse(parseResult.getConfigTokens().isEmpty());
     }
 }
