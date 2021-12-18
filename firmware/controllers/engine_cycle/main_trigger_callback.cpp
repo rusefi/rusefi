@@ -354,7 +354,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) && engine->triggerCentral.vvtSyncTimeNt == 0) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// NB2 is a special case due to symmetrical crank wheel and we need to make sure no spark happens out of sync
-		// VTwin is another special case where we really need to know phase before firing
+		// VTwin is another special case where we really need to know phase before firing, as we can't run wasted spark
 		return;
 	}
 
