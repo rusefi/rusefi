@@ -164,6 +164,10 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sysinterval_t timeout) {
 	int offset = 0;
 
+#ifdef SERIAL_CAN_DEBUG
+			efiPrintf("*** INFO: sendDataTimeout %d", numBytes);
+#endif /* SERIAL_CAN_DEBUG */
+
 	if (numBytes < 1)
 		return 0;
 
@@ -260,11 +264,20 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 	int numBytes = *np;
 	int offset = 0;
 
+#ifdef SERIAL_CAN_DEBUG
+			efiPrintf("*** INFO: streamAddToTxTimeout adding %d", numBytes);
+#endif /* SERIAL_CAN_DEBUG */
+
 	// we send here only if the TX FIFO buffer is getting overflowed
 	while (numBytes >= txFifoBuf.getSize() - txFifoBuf.getCount()) {
 		int numBytesToAdd = txFifoBuf.getSize() - txFifoBuf.getCount();
 		txFifoBuf.put(txbuf + offset, numBytesToAdd);
 		int numSent = sendDataTimeout((const uint8_t *)txFifoBuf.getElements(), txFifoBuf.getCount(), timeout);
+
+#ifdef SERIAL_CAN_DEBUG
+			efiPrintf("*** INFO: streamAddToTxTimeout numSent %d / numBytes", numSent, numBytes);
+#endif /* SERIAL_CAN_DEBUG */
+
 		if (numSent < 1)
 			break;
 		txFifoBuf.clear();
@@ -272,6 +285,10 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 		numBytes -= numSent;
 	}
 	
+#ifdef SERIAL_CAN_DEBUG
+			efiPrintf("*** INFO: streamAddToTxTimeout remaining goes to buffer %d", numBytes);
+#endif /* SERIAL_CAN_DEBUG */
+
 	// now we put the rest on hold
 	txFifoBuf.put(txbuf + offset, numBytes);
 
