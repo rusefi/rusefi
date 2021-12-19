@@ -23,7 +23,7 @@ import static com.rusefi.binaryprotocol.IoHelper.*;
  */
 @ThreadSafe
 public class IncomingDataBuffer {
-    private static final Logging log = getLogging(IoStream.class);
+    private static final Logging log = getLogging(IncomingDataBuffer.class);
 
     static {
         log.configureDebugEnabled(false);
@@ -103,14 +103,14 @@ public class IncomingDataBuffer {
     public void addData(byte[] freshData) {
         synchronized (cbb) {
             if (cbb.size() - cbb.length() < freshData.length) {
-                log.error("IncomingDataBuffer: buffer overflow not expected");
+                log.error("buffer overflow not expected");
                 cbb.clear();
             }
             cbb.put(freshData);
             cbb.notifyAll();
         }
         if (log.debugEnabled())
-            log.debug("IncomingDataBuffer: " + freshData.length + " byte(s) arrived, total " + cbb.length());
+            log.debug(freshData.length + " byte(s) arrived, total " + cbb.length());
     }
 
     /**
@@ -174,7 +174,10 @@ public class IncomingDataBuffer {
     public int getShort() throws EOFException {
         streamStats.onArrived(2);
         synchronized (cbb) {
-            return cbb.getShort();
+            int result = cbb.getShort();
+            if (log.debugEnabled())
+                log.debug("Consumed some, " + cbb.length() + " remaining");
+            return result;
         }
     }
 
