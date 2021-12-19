@@ -194,7 +194,7 @@ TEST(testCanSerial, test64_7Message) {
 	TestCanStreamerState state;
 	state.test({ str }, {
 			/* 0 */
-			"\x10"s  "\x40"s "\x01\0\0\0\0\0"s,
+			"\x10"s  "\x47"s "\x01\0\0\0\0\0"s,
 			"\x21"s "\0\0\0\0\0\0\0"s,
 			"\x22"s "\0\0\0\0\0\0\0"s,
 		    "\x23"s "\0\0\0\0\0\0\0"s,
@@ -206,9 +206,9 @@ TEST(testCanSerial, test64_7Message) {
 		    "\x29"s "\0\0\0\0\0\0\0"s,
 
 			/* 10 */
-			"\x07"s "\0\0\0\0\0\0\4"s,
+			"\x2A"s "\0\4\0\0\0\0\0"s,
 
-	}, 7, { 64 + 7 });
+	}, 71, { 64 + 7 });
 }
 
 TEST(testCanSerial, test3_64_4Message) {
@@ -224,7 +224,7 @@ TEST(testCanSerial, test3_64_4Message) {
 	TestCanStreamerState state;
 	state.test({ "123"s, str, "abcd"s }, {
 			/* 0 */
-			"\x10"s  "\x40"s "123\1\0\0"s,
+			"\x10"s  "\x47"s "123\1\0\0"s,
 			"\x21"s "\0\0\0\0\0\0\0"s,
 			"\x22"s "\0\0\0\0\0\0\0"s,
 		    "\x23"s "\0\0\0\0\0\0\0"s,
@@ -233,11 +233,11 @@ TEST(testCanSerial, test3_64_4Message) {
 		    "\x26"s "\0\0\0\0\0\0\0"s,
 		    "\x27"s "\0\0\0\0\0\0\0"s,
 		    "\x28"s "\0\0\0\0\0\0\0"s,
-		    "\x29"s "\0\0\0\0\0\0\0"s,
+		    "\x29"s "\0\0\0\0\4ab"s,
 
 			/* 10 */
-			"\x07"s "\0\0\4abcd"s,
+			"\x2A"s "cd\0\0\0\0\0"s,
 
-	}, 7, { 64 + 7 });
+	}, 71, { 64 + 7 });
 }
 
