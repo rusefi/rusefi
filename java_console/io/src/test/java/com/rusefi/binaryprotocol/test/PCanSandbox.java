@@ -1,15 +1,21 @@
 package com.rusefi.binaryprotocol.test;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.stream.PCanIoStream;
 
 import java.io.IOException;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * @see Elm327Sandbox
  */
 public class PCanSandbox {
+    private static final Logging log = getLogging(PCanSandbox.class);
 
     public static void main(String[] args) throws IOException, InterruptedException {
         PCanIoStream tsStream = PCanIoStream.getPCANIoStream();
@@ -23,9 +29,9 @@ public class PCanSandbox {
             if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
                 throw new IllegalStateException("Unexpected S " + signature);
         }
-        System.out.println("****************************************");
-        System.out.println("*********  PCAN LOOKS GREAT  ***********");
-        System.out.println("****************************************");
+        log.info("****************************************");
+        log.info("*********  PCAN LOOKS GREAT  ***********");
+        log.info("****************************************");
 */
         LinkManager linkManager = new LinkManager();
 /*
@@ -33,7 +39,18 @@ public class PCanSandbox {
             SandboxCommon.verifyCrcNoPending(tsStream, linkManager);
         }
 */
+
+        BinaryProtocol bp = new BinaryProtocol(linkManager, tsStream);
+        linkManager.submit(new Runnable() {
+            @Override
+            public void run() {
+                boolean response = bp.requestOutputChannels();
+                log.info("requestOutputChannels " + response);
+            }
+        });
+
         ConfigurationImage ci = SandboxCommon.readImage(tsStream, linkManager);
+        log.info("Got ConfigurationImage " + ci);
 
 //        System.out.println("We are done");
 //        System.exit(0);
