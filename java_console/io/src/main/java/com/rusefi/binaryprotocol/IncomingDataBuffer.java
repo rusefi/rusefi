@@ -131,7 +131,7 @@ public class IncomingDataBuffer {
             while (cbb.length() < count) {
                 int timeout = (int) (startTimestamp + timeoutMs - System.currentTimeMillis());
                 if (timeout <= 0) {
-                    log.info(loggingMessage + ": timeout. Got only " + cbb.length() + " while expecting " + count);
+                    log.info(loggingMessage + ": timeout " + timeoutMs + "ms. Got only " + cbb.length() + " while expecting " + count);
                     return true; // timeout. Sad face.
                 }
                 try {
