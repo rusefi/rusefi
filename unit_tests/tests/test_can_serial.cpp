@@ -182,7 +182,7 @@ TEST(testCanSerial, testLongMessage) {
 }
 
 TEST(testCanSerial, test64_7Message) {
-	std::array<char, 64 + 7> buffer;
+	std::array<char, 71> buffer;
 
 	std::fill(std::begin(buffer), std::end(buffer), 0);
 
