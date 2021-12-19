@@ -879,6 +879,8 @@ void updateTunerStudioState() {
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio
 	updateTunerStudioState();
+	engine->outputChannels.idleStatus.resetCounter = 0x53;
+	engine->outputChannels.etbStatus.resetCounter = 0x54;
 }
 
 #endif /* EFI_TUNER_STUDIO */
