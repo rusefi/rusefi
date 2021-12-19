@@ -12,6 +12,7 @@
 #include "engine_test_helper.h"
 #include "serial_can.h"
 
+#include <array>
 #include <list>
 #include <string>
 
