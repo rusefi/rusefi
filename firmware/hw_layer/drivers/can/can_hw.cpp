@@ -161,8 +161,8 @@ private:
 	CANRxFrame m_buffer;
 };
 
-CCM_OPTIONAL static CanRead canRead(0);
-//CCM_OPTIONAL static CanRead canRead2(1);
+CCM_OPTIONAL static CanRead canRead1(0);
+CCM_OPTIONAL static CanRead canRead2(1);
 static CanWrite canWrite CCM_OPTIONAL;
 
 static void canInfo() {
@@ -289,8 +289,8 @@ void initCan(void) {
 	}
 
 	if (engineConfiguration->canReadEnabled) {
-		canRead.Start();
-		//canRead2.Start();
+		canRead1.Start();
+		canRead2.Start();
 	}
 
 	isCanEnabled = true;
