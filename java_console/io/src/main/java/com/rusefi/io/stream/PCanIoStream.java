@@ -37,7 +37,7 @@ public class PCanIoStream extends AbstractIoStream {
 
             log.info("-------sendIsoTp " + total.length + " byte(s):");
 
-            System.out.println(IoStream.printHexBinary(total));
+            log.info(IoStream.printHexBinary(total));
 
             sendCanPacket(total);
         }
@@ -53,7 +53,7 @@ public class PCanIoStream extends AbstractIoStream {
         can.initializeAPI();
         TPCANStatus status = can.Initialize(CHANNEL, TPCANBaudrate.PCAN_BAUD_500K, TPCANType.PCAN_TYPE_NONE, 0, (short) 0);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            System.err.println("Error initializing PCAN: " + status);
+            log.info("Error initializing PCAN: " + status);
             return null;
         }
         System.out.println("Hello PCAN!");
@@ -65,10 +65,10 @@ public class PCanIoStream extends AbstractIoStream {
                 (byte) payLoad.length, payLoad);
         TPCANStatus status = can.Write(CHANNEL, msg);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            System.out.println("Unable to write the CAN message: " + status);
+            log.info("Unable to write the CAN message: " + status);
             System.exit(0);
         }
-//        System.out.println("Send OK! length=" + payLoad.length);
+//        log.info("Send OK! length=" + payLoad.length);
     }
 
     private DataListener listener;
@@ -99,7 +99,7 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANMsg rx = new TPCANMsg();
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
-            System.out.println(rx + " id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            log.info(rx + " id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
 
