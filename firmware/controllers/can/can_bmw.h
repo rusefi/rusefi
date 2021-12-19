@@ -28,8 +28,11 @@
 #define CAN_BMW_E90_TORQUE_2          0x0A9
 // 10ms period
 #define CAN_BMW_E90_RPM_THROTTLE      0x0AA
+
+// ??? 0x0B5
 // 20ms period
 #define CAN_BMW_E90_TORQUE_DEMAND     0x0B6
+// Requirement wheel torque 0x0BF
 
 #define CAN_BMW_E90_STEERING_WHEEL    0x0C4
 #define CAN_BMW_E90_WHEEL_SPEEDS      0x0CE
@@ -40,4 +43,11 @@
 // Engine data
 #define CAN_BMW_E90_COOLANT           0x1D0
 
+// SEAT_BELT 2FA
+// DOOR_STATUS 2FC
+
+// EXTERNAL_TEMP_TIME 0x310
+
+// MILEAGE_RANGE 0x310
 //#define CAN_BMW_E90_HAND_BRAKE        0x34F
+// WHEEL_TOLERANCE 374
