@@ -14,6 +14,14 @@
 #include "os_access.h"
 #include "crc.h"
 
+#if EFI_UNIT_TEST
+#define PRINT printf
+#define PRINT_EOL "\n"
+#else
+#define PRINT efiPrintf
+#define PRINT_EOL ""
+#endif
+
 // todo: this file is asking to improve conditional compilation. unit_tests and cypress/kinetis are both special cases
 #if HAL_USE_CAN || EFI_UNIT_TEST
 #include "serial_can.h"
@@ -165,7 +173,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	int offset = 0;
 
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** INFO: sendDataTimeout %d", numBytes);
+			PRINT("*** INFO: sendDataTimeout %d" PRINT_EOL, numBytes);
 #endif /* SERIAL_CAN_DEBUG */
 
 	if (numBytes < 1)
@@ -196,7 +204,7 @@ int CanStreamerState::sendDataTimeout(const uint8_t *txbuf, int numBytes, can_sy
 	for (int numFcReceived = 0; ; numFcReceived++) {
 		if (streamer->receive(CAN_ANY_MAILBOX, &rxmsg, timeout) != CAN_MSG_OK) {
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** ERROR: CAN Flow Control frame not received");
+			PRINT("*** ERROR: CAN Flow Control frame not received" PRINT_EOL);
 #endif /* SERIAL_CAN_DEBUG */
 			//warning(CUSTOM_ERR_CAN_COMMUNICATION, "CAN Flow Control frame not received");
 			return 0;
@@ -265,7 +273,7 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 	int offset = 0;
 
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** INFO: streamAddToTxTimeout adding %d", numBytes);
+			PRINT("*** INFO: streamAddToTxTimeout adding %d, in buffer %d" PRINT_EOL, numBytes, txFifoBuf.getCount());
 #endif /* SERIAL_CAN_DEBUG */
 
 	// we send here only if the TX FIFO buffer is getting overflowed
@@ -275,22 +283,27 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 		int numSent = sendDataTimeout((const uint8_t *)txFifoBuf.getElements(), txFifoBuf.getCount(), timeout);
 
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** INFO: streamAddToTxTimeout numSent %d / numBytes", numSent, numBytes);
+		PRINT("*** INFO: streamAddToTxTimeout numBytesToAdd %d / numSent %d / numBytes %d" PRINT_EOL, numBytesToAdd, numSent, numBytes);
 #endif /* SERIAL_CAN_DEBUG */
 
 		if (numSent < 1)
 			break;
 		txFifoBuf.clear();
-		offset += numSent;
-		numBytes -= numSent;
+		offset += numBytesToAdd;
+		numBytes -= numBytesToAdd;
 	}
 	
 #ifdef SERIAL_CAN_DEBUG
-			efiPrintf("*** INFO: streamAddToTxTimeout remaining goes to buffer %d", numBytes);
+	PRINT("*** INFO: streamAddToTxTimeout remaining goes to buffer %d" PRINT_EOL, numBytes);
 #endif /* SERIAL_CAN_DEBUG */
 
 	// now we put the rest on hold
 	txFifoBuf.put(txbuf + offset, numBytes);
+
+
+#ifdef SERIAL_CAN_DEBUG
+	PRINT("*** INFO: in buffer %d" PRINT_EOL, txFifoBuf.getCount());
+#endif /* SERIAL_CAN_DEBUG */
 
 	return CAN_MSG_OK;
 }

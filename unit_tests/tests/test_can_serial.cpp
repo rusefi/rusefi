@@ -38,10 +38,10 @@ public:
 	}
 
 	template<typename T>
-	void checkFrame(const T & frame, const std::string & bytes) {
+	void checkFrame(const T & frame, const std::string & bytes, int frameIndex) {
 		EXPECT_EQ(bytes.size(), frame.DLC);
 		for (size_t i = 0; i < bytes.size(); i++) {
-  			EXPECT_EQ(bytes[i], frame.data8[i]) << "Frame byte #" << i << " differs!";
+  			EXPECT_EQ(bytes[i], frame.data8[i]) << "Frame byte #" << i << " differs! Frame " << frameIndex;
 		}
 	}
 
@@ -78,9 +78,10 @@ public:
 		EXPECT_EQ(frames.size(), streamer.ctfList.size());
 		
 		auto it1 = streamer.ctfList.begin();
+		int frameIndex = 0;
 		auto it2 = frames.begin();
 		for (; it1 != streamer.ctfList.end() && it2 != frames.end(); it1++, it2++) {
-			streamer.checkFrame(*it1, *it2);
+			streamer.checkFrame(*it1, *it2, frameIndex++);
 		}
 	
 		// copy transmitted data back into the receive buffer
@@ -98,7 +99,7 @@ public:
 		std::string totalReceivedData;
 		for (size_t chunkSize : receiveChunks) {
 			size_t nr = chunkSize;
-			uint8_t rxbuf[256];
+			uint8_t rxbuf[1256];
 			streamReceiveTimeout(&nr, rxbuf, 0);
 			EXPECT_EQ(nr, chunkSize);
 			totalReceivedSize += nr;
@@ -179,3 +180,64 @@ TEST(testCanSerial, testLongMessage) {
 			    "\x23"s "uvwxyz\0"s }, 26, { 26 }); // 26 bytes -> 4 8-byte frames, 5 bytes left in FIFO
 	}
 }
+
+TEST(testCanSerial, test64_7Message) {
+	std::array<char, 64 + 7> buffer;
+
+	std::fill(std::begin(buffer), std::end(buffer), 0);
+
+	buffer[0] = 1;
+
+	buffer[64 + 7 - 1] = 4;
+	std::string str(std::begin(buffer),std::end(buffer));
+
+	TestCanStreamerState state;
+	state.test({ str }, {
+			/* 0 */
+			"\x10"s  "\x40"s "\x01\0\0\0\0\0"s,
+			"\x21"s "\0\0\0\0\0\0\0"s,
+			"\x22"s "\0\0\0\0\0\0\0"s,
+		    "\x23"s "\0\0\0\0\0\0\0"s,
+		    "\x24"s "\0\0\0\0\0\0\0"s,
+		    "\x25"s "\0\0\0\0\0\0\0"s,
+		    "\x26"s "\0\0\0\0\0\0\0"s,
+		    "\x27"s "\0\0\0\0\0\0\0"s,
+		    "\x28"s "\0\0\0\0\0\0\0"s,
+		    "\x29"s "\0\0\0\0\0\0\0"s,
+
+			/* 10 */
+			"\x07"s "\0\0\0\0\0\0\4"s,
+
+	}, 7, { 64 + 7 });
+}
+
+TEST(testCanSerial, test3_64_4Message) {
+	std::array<char, 64> buffer64;
+
+	std::fill(std::begin(buffer64), std::end(buffer64), 0);
+
+	buffer64[0] = 1;
+
+	buffer64[64 - 1] = 4;
+	std::string str(std::begin(buffer64),std::end(buffer64));
+
+	TestCanStreamerState state;
+	state.test({ "123"s, str, "abcd"s }, {
+			/* 0 */
+			"\x10"s  "\x40"s "123\1\0\0"s,
+			"\x21"s "\0\0\0\0\0\0\0"s,
+			"\x22"s "\0\0\0\0\0\0\0"s,
+		    "\x23"s "\0\0\0\0\0\0\0"s,
+		    "\x24"s "\0\0\0\0\0\0\0"s,
+		    "\x25"s "\0\0\0\0\0\0\0"s,
+		    "\x26"s "\0\0\0\0\0\0\0"s,
+		    "\x27"s "\0\0\0\0\0\0\0"s,
+		    "\x28"s "\0\0\0\0\0\0\0"s,
+		    "\x29"s "\0\0\0\0\0\0\0"s,
+
+			/* 10 */
+			"\x07"s "\0\0\4abcd"s,
+
+	}, 7, { 64 + 7 });
+}
+
