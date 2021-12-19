@@ -12,7 +12,7 @@ public abstract class IsoTpConnector {
     public static void sendStrategy(byte[] bytes, IsoTpConnector connector) {
         log.info("-------sendBytesToCan " + bytes.length + " byte(s):");
 
-        System.out.println(IoStream.printHexBinary(bytes));
+        log.info(IoStream.printHexBinary(bytes));
 
 
         // 1 frame

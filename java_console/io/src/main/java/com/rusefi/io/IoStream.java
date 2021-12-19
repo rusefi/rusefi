@@ -25,8 +25,6 @@ import static com.devexperts.logging.Logging.getLogging;
  * 5/11/2015.
  */
 public interface IoStream extends WriteStream, Closeable, StreamStatistics {
-    Logging log = getLogging(IoStream.class);
-
     static String printHexBinary(byte[] data) {
         if (data == null)
             return "(null)";

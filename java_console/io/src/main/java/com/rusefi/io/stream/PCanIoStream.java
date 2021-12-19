@@ -1,5 +1,6 @@
 package com.rusefi.io.stream;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
@@ -15,9 +16,12 @@ import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static peak.can.basic.TPCANMessageType.PCAN_MESSAGE_STANDARD;
 
 public class PCanIoStream extends AbstractIoStream {
+    static Logging log = getLogging(PCanIoStream.class);
+
     public static final TPCANHandle CHANNEL = TPCANHandle.PCAN_USBBUS1;
     private final IncomingDataBuffer dataBuffer;
     private final PCANBasic can;
@@ -37,7 +41,7 @@ public class PCanIoStream extends AbstractIoStream {
 
             log.info("-------sendIsoTp " + total.length + " byte(s):");
 
-            log.info(IoStream.printHexBinary(total));
+            log.info("Sending " + IoStream.printHexBinary(total));
 
             sendCanPacket(total);
         }
@@ -56,7 +60,7 @@ public class PCanIoStream extends AbstractIoStream {
             log.info("Error initializing PCAN: " + status);
             return null;
         }
-        System.out.println("Hello PCAN!");
+        log.info("Hello PCAN!");
         return new PCanIoStream(can);
     }
 
@@ -99,13 +103,13 @@ public class PCanIoStream extends AbstractIoStream {
         TPCANMsg rx = new TPCANMsg();
         TPCANStatus status = can.Read(CHANNEL, rx, null);
         if (status == TPCANStatus.PCAN_ERROR_OK) {
-            log.info(rx + " id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
+            log.info("Got [" + rx + "] id=" + rx.getID() + " len=" + rx.getLength() + ": " + IoStream.printByteArray(rx.getData()));
             byte[] decode = canDecoder.decodePacket(rx.getData());
             listener.onDataArrived(decode);
 
-            //            System.out.println("Decoded " + IoStream.printByteArray(decode));
+            //            log.info("Decoded " + IoStream.printByteArray(decode));
         } else {
-//                   System.out.println(new Date() + ": Receive " + status);
+//                   log.info("Receive " + status);
         }
     }
 
