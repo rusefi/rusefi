@@ -8,13 +8,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include <list>
-#include <string>
-
 #include "pch.h"
 #include "engine_test_helper.h"
 #include "serial_can.h"
 
+#include <array>
+#include <list>
+#include <string>
 
 using namespace std::string_literals;
 
