@@ -152,27 +152,20 @@ TEST(testCanSerial, test2Frames) {
 		TestCanStreamerState state;
 		state.test({ "0123456789A" }, { "\x10"s "\x0B"s "012345"s, "\x21"s "6789A\0\0"s }, 11, { 2, 5, 4 }); // 11 bytes -> 2 8-byte frames
 	}
-	/*
 	{
 		TestCanStreamerState state;
-		state.test({ "0123456ABCDEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 14 }); // 14 bytes -> 2 8-byte frames, empty FIFO
+		state.test({ "0123456ABCDEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 14 }); // 14 bytes -> 3 8-byte frames, empty FIFO
 	}
-	{
-		TestCanStreamerState state;
-		state.test({ "0123456ABCDEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 6, 1, 1, 6 }); // 14 bytes -> 2 8-byte frames, empty FIFO, split receive test
-	}
-	*/
 }
 
-/*
 TEST(testCanSerial, testIrregularSplits) {
 	{
 		TestCanStreamerState state;
-		state.test({ "012", "3456ABCDEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 7, 7 }); // 14 bytes -> 2 8-byte frames, empty FIFO
+		state.test({ "012", "3456ABCDEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 7, 7 }); // 14 bytes -> 2 8-byte frames, empty FIFO
 	}
 	{
 		TestCanStreamerState state;
-		state.test({ "0123456ABC", "DEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 14 }); // 14 bytes -> 2 8-byte frames, empty FIFO
+		state.test({ "0123456ABC", "DEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 14 }); // 14 bytes -> 2 8-byte frames, empty FIFO
 	}
 }
 
@@ -180,13 +173,9 @@ TEST(testCanSerial, testLongMessage) {
 	{
 		TestCanStreamerState state;
 		state.test({ "abcdefghijklmnopqrstuvwxyz" }, {
-			"\x07"s "abcdefg"s,
-			"\x07"s "hijklmn"s,
-			"\x07"s "opqrstu"s,
-			"\x05"s "vwxyz\0\0"s }, 5, { 26 }); // 26 bytes -> 4 8-byte frames, 5 bytes left in FIFO
+				"\x10"s  "\x1A"s "abcdef"s,
+				"\x21"s "ghijklm"s,
+				"\x22"s "nopqrst"s,
+			    "\x23"s "uvwxyz\0"s }, 26, { 26 }); // 26 bytes -> 4 8-byte frames, 5 bytes left in FIFO
 	}
 }
-*/
-
-
-
