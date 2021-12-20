@@ -981,7 +981,6 @@ end_struct
 	vr_threshold_s[VR_THRESHOLD_COUNT iterate] vrThreshold;
 
     gppwm_note_t[GPPWM_CHANNELS iterate] gpPwmNote;
-	int[29] unusedAtOldBoardConfigurationEnd;;"units", 1, 0, -20, 100, 0
 	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	brain_pin_e lps25BaroSensorScl
 	brain_pin_e lps25BaroSensorSda
@@ -1511,7 +1510,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
         uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
         uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0, 0, 12500, 0
 
-	int[218] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[100] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1543,9 +1542,9 @@ uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C", 1, 0, -100, 250, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%", 1, 0, 0, 500, 2
 
-float[IDLE_ADVANCE_CURVE_SIZE] idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", 1, 0, 0, 18000, 2
+uint16_t[IDLE_ADVANCE_CURVE_SIZE] idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", 1, 0, 0, 18000, 0
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg", 1, 0, -20, 90, 2
-float[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", 1, 0, 0, 18000, 2
+uint16_t[IDLE_VE_CURVE_SIZE] idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", 1, 0, 0, 18000, 0
 float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 2
 
 #define LUA_SCRIPT_SIZE 8000
@@ -1570,13 +1569,13 @@ float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for sim
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
-float[IGN_RPM_COUNT x IGN_LOAD_COUNT] ignitionIatCorrTable;;"deg", 1, 0, -720, 720, 2
-float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 2
-float[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+float[IGN_RPM_COUNT x IGN_LOAD_COUNT] ignitionIatCorrTable;;"deg", 1, 0, -720, 720, 1
+float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 0
+uint16_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
-float[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 2
-float[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 500, 2
-float[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+float[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
+uint16_t[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 500, 0
+uint16_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
 
@@ -1587,22 +1586,20 @@ uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable1;;"value", 1, 0, 0, 255, 0
-float[SCRIPT_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
-float[SCRIPT_TABLE_8] vvtTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
+uint16_t[SCRIPT_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 255, 0
+uint16_t[SCRIPT_TABLE_8] vvtTable1RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable2;;"value", 1, 0, 0, 255, 0
-float[SCRIPT_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
-float[SCRIPT_TABLE_8] vvtTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM", 1, 0, 0, 25500, 2
-
-float[64] unusedLuaWasHere;;"L", 1, 0, 0, 255, 0
+uint16_t[SCRIPT_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
+uint16_t[SCRIPT_TABLE_8] vvtTable2RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 float[IGN_RPM_COUNT x IGN_LOAD_COUNT] ignitionTable;;"deg", 1, 0, -20, 90, 1
-float[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 2
-float[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 0
+uint16_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 float[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] veTable;;"%", 1, 0, 0, 999, 1
-float[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 400, 2
-float[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 2
+uint16_t[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 400, 0
+uint16_t[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 #if LAMBDA
 uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale lambdaTable;;"lambda", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
@@ -1615,28 +1612,28 @@ uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] lambdaTable;;"afr", {1/@@PACK_MULT_AFR
 !	afr_table_t afrTable
 ! end_union
 
-float[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 500, 2
-float[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 2
+uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 500, 0
+uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
 
 float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
-float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;RPM is float and not integer in order to use unified methods for interpolation;"to",	  1, 0, 0, 25500, 2
+float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;;"to",	  1, 0, 0, 25500, 2
 
 float[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable1;;"value", 1, 0, 0, 30000, 2
 float[SCRIPT_TABLE_8] scriptTable1LoadBins;;"L",	  1, 0, 0, 30000, 2
-float[SCRIPT_TABLE_8] scriptTable1RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint16_t[SCRIPT_TABLE_8] scriptTable1RpmBins;;"RPM",	  1, 0, 0, 25500, 0
 
 uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable2;;"value", 1, 0, 0, 255, 0
 float[SCRIPT_TABLE_8] scriptTable2LoadBins;;"L",	  1, 0, 0, 255, 0
-float[SCRIPT_TABLE_8] scriptTable2RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint16_t[SCRIPT_TABLE_8] scriptTable2RpmBins;;"RPM",	  1, 0, 0, 25500, 0
 
 uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable3;;"value", 1, 0, 0, 255, 0
 float[SCRIPT_TABLE_8] scriptTable3LoadBins;;"L",	  1, 0, 0, 255, 0
-float[SCRIPT_TABLE_8] scriptTable3RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint16_t[SCRIPT_TABLE_8] scriptTable3RpmBins;;"RPM",	  1, 0, 0, 25500, 0
 
 uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] scriptTable4;;"value", 1, 0, 0, 255, 0
 float[SCRIPT_TABLE_8] scriptTable4LoadBins;;"L",	  1, 0, 0, 255, 0
-float[SCRIPT_TABLE_8] scriptTable4RpmBins;RPM is float and not integer in order to use unified methods for interpolation;"RPM",	  1, 0, 0, 25500, 2
+uint16_t[SCRIPT_TABLE_8] scriptTable4RpmBins;;"RPM",	  1, 0, 0, 25500, 0
 
 #define TRIM_SIZE 4
 
@@ -1645,7 +1642,7 @@ struct cyl_trim_s
 end_struct
 
 ! All ign trim tables share axes
-uint16_t[TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 100, 0
+uint16_t[TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 400, 0
 uint16_t[TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 cyl_trim_s[12 iterate] ignTrims
 
