@@ -27,7 +27,6 @@
 #if EFI_ENGINE_CONTROL
 
 static ign_Map3D_t advanceMap;
-static ign_Map3D_t iatAdvanceCorrectionMap;
 
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
@@ -86,7 +85,11 @@ angle_t getAdvanceCorrections(int rpm) {
 	if (!iatValid) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
+		iatCorrection = interpolate3d(
+			config->ignitionIatCorrTable,
+			config->ignitionIatCorrLoadBins, iat,
+			config->ignitionIatCorrRpmBins, rpm
+		);
 	}
 
 	float pidTimingCorrection = engine->module<IdleController>().unmock().getIdleTimingAdjustment(rpm);
@@ -205,8 +208,6 @@ void initTimingMap() {
 	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
 	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
 			config->ignitionRpmBins);
-	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
-			config->ignitionIatCorrRpmBins);
 }
 
 /**
