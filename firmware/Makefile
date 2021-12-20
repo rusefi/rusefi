@@ -223,7 +223,9 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CSRC =  $(ALLCSRC) \
+# check.c goes first to throw error as soon as possible
+CSRC =  check.c \
+	$(ALLCSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
 	$(CHIBIOS)/os/various/evtimer.c \
