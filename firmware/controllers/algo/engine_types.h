@@ -302,7 +302,7 @@ typedef enum {
 	DBG_35 = 35,
 	DBG_BOOST = 36,
 	DBG_37 = 37,
-	DBG_LAUNCH = 38,
+	DBG_38 = 38,
 	DBG_ETB_AUTOTUNE = 39,
 	DBG_COMPOSITE_LOG = 40,
 	DBG_UNUSED41 = 41,
@@ -503,7 +503,7 @@ typedef enum {
 
 	TT_NISSAN_QR25 = 61,
 
-	TT_VVT_MAP_45_V_TWIN = 62,
+	TT_UNUSED_62 = 62,
 
 	TT_SUBARU_SVX_CRANK_1 = 63,
 

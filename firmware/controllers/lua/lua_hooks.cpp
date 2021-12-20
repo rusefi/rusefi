@@ -6,6 +6,7 @@
 #include "fuel_math.h"
 #include "airmass.h"
 #include "lua_airmass.h"
+#include "value_lookup.h"
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_msg_tx.h"
 #endif // EFI_CAN_SUPPORT
@@ -516,25 +517,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
-#if !EFI_UNIT_TEST
-	lua_register(l, "startPwm", lua_startPwm);
-	lua_register(l, "setPwmDuty", lua_setPwmDuty);
-	lua_register(l, "setPwmFreq", lua_setPwmFreq);
 
-	lua_register(l, "getFan", lua_fan);
-	lua_register(l, "getDigital", lua_getDigital);
-	lua_register(l, "setDebug", lua_setDebug);
-	lua_register(l, "getAirmass", lua_getAirmass);
-	lua_register(l, "setAirmass", lua_setAirmass);
-
-	lua_register(l, "stopEngine", [](lua_State* l) {
-		doScheduleStopEngine();
-		return 0;
-	});
-	lua_register(l, "setTimingAdd", [](lua_State* l) {
-		engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
-		return 0;
-	});
 	lua_register(l, "setTimingMult", [](lua_State* l) {
 		engine->engineState.luaAdjustments.ignitionTimingMult = luaL_checknumber(l, 1);
 		return 0;
@@ -552,11 +535,68 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 0;
 	});
 
+	lua_register(l, "setClutchUpState", [](lua_State* l) {
+		engine->engineState.luaAdjustments.clutchUpState = lua_toboolean(l, 1);
+		return 0;
+	});
+
+	lua_register(l, "setBrakePedalState", [](lua_State* l) {
+		engine->engineState.luaAdjustments.brakePedalState = lua_toboolean(l, 1);
+		return 0;
+	});
+
+	lua_register(l, "getCalibration", [](lua_State* l) {
+		auto propertyName = luaL_checklstring(l, 1, nullptr);
+		auto result = getConfigValueByName(propertyName);
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
+	lua_register(l, "getOutput", [](lua_State* l) {
+		auto propertyName = luaL_checklstring(l, 1, nullptr);
+		auto result = getOutputValueByName(propertyName);
+		lua_pushnumber(l, result);
+		return 1;
+	});
+
+	lua_register(l, "setCalibration", [](lua_State* l) {
+		auto propertyName = luaL_checklstring(l, 1, nullptr);
+		auto value = luaL_checknumber(l, 2);
+		auto incrementVersion = lua_toboolean(l, 3);
+		setConfigValueByName(propertyName, value);
+		if (incrementVersion) {
+			incrementGlobalConfigurationVersion();
+		}
+		return 0;
+	});
+
+	lua_register(l, "setTimingAdd", [](lua_State* l) {
+		engine->engineState.luaAdjustments.ignitionTimingAdd = luaL_checknumber(l, 1);
+		return 0;
+	});
+
+#if !EFI_UNIT_TEST
+	lua_register(l, "startPwm", lua_startPwm);
+	lua_register(l, "setPwmDuty", lua_setPwmDuty);
+	lua_register(l, "setPwmFreq", lua_setPwmFreq);
+
+	lua_register(l, "getFan", lua_fan);
+	lua_register(l, "getDigital", lua_getDigital);
+	lua_register(l, "setDebug", lua_setDebug);
+	lua_register(l, "getAirmass", lua_getAirmass);
+	lua_register(l, "setAirmass", lua_setAirmass);
+
+	lua_register(l, "stopEngine", [](lua_State* l) {
+		doScheduleStopEngine();
+		return 0;
+	});
+
 	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
 		lua_pushnumber(l, result);
 		return 1;
 	});
+
 
 #if EFI_CAN_SUPPORT
 	lua_register(l, "canRxAdd", [](lua_State* l) {

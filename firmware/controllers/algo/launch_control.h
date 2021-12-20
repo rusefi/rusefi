@@ -8,11 +8,13 @@
 #pragma once
 
 #include "timer.h"
+#include "launch_control_state_generated.h"
 
 void initLaunchControl();
 
-class LaunchControlBase {
+class LaunchControlBase : public launch_control_state_s {
 public:
+	LaunchControlBase();
 	// Update the state of the launch control system
 	void update();
 
@@ -24,10 +26,6 @@ public:
 
 	bool isLaunchSparkRpmRetardCondition() const;
 	bool isLaunchFuelRpmRetardCondition() const;
-
-	int retardThresholdRpm;
-	bool launchActivatePinState = false;
-	bool isLaunchCondition = false;
 
 private:
 	bool isLaunchRpmRetardCondition() const;

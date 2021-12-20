@@ -19,6 +19,8 @@ struct LuaAdjustments {
 	float fuelAdd = 0;
 	float fuelMult = 1;
 	float etbTargetPositionAdd = 0;
+	bool clutchUpState = false;
+	bool brakePedalState = false;
 };
 
 class EngineState : public engine_state2_s {

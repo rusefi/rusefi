@@ -46,6 +46,7 @@ public class ConfigField {
     private final boolean hasAutoscale;
     private final String trueName;
     private final String falseName;
+    private boolean isFromIterate;
 
     /**
      * todo: one day someone should convert this into a builder
@@ -262,7 +263,7 @@ public class ConfigField {
             scale = scale.substring(1, scale.length() - 1);
             String[] parts = scale.split("/");
             if (parts.length != 2)
-                throw new IllegalArgumentException("Two parts of division expected in " + scale);
+                throw new IllegalArgumentException(name + ": Two parts of division expected in " + scale);
             factor = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
         } else {
             factor = Double.parseDouble(scale);
@@ -327,6 +328,14 @@ public class ConfigField {
         if (token.charAt(0) == '\"')
             return token.substring(1, length - 1);
         return token;
+    }
+
+    public void isFromIterate(boolean isFromIterate) {
+        this.isFromIterate = isFromIterate;
+    }
+
+    public boolean isFromIterate() {
+        return isFromIterate;
     }
 }
 

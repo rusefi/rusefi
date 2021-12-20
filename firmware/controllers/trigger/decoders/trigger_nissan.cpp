@@ -157,7 +157,7 @@ void initializeNissanVQ35crank(TriggerWaveform *s) {
 void initializeNissanMR18crank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR);
 
-	s->tdcPosition = 640;
+	s->tdcPosition = 80;
 
 	// 4 cylinder = 36 tooth wheel, missing 2 teeth in 2 spots
 	makeNissanPattern(s, 2, 36, 2);
@@ -226,16 +226,16 @@ void initializeNissanMRvvt(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->tdcPosition = 0;
 
-	int x = 74;
+	int x = 73;
 
 	// All "groups" start every 90 degrees of cam rotation
 	// The groups have 1, 3, 4, 2 teeth each (which is the firing order?)
 
-	// Teeth within a group are spaced 16 cam degrees apart
-	int toothSpacing = 16;
+	// Teeth within a group are spaced 17 cam degrees apart
+	int toothSpacing = 17;
 
 	// "1"
-	addvq30tooth(s, x + 0);
+	addvq30tooth(s, x + 0);	// <-- sync point here
 
 	// "3"
 	addvq30tooth(s, x + 90 + 0 * toothSpacing);
@@ -252,5 +252,9 @@ void initializeNissanMRvvt(TriggerWaveform *s) {
 	addvq30tooth(s, x + 270 + 0 * toothSpacing);
 	addvq30tooth(s, x + 270 + 1 * toothSpacing);
 
-	s->setTriggerSynchronizationGap(5.4);
+	// nominal gap 4.31
+	s->setTriggerSynchronizationGap2(3.8, 5);
+
+	// nominal gap 0.44
+	s->setSecondTriggerSynchronizationGap2(0.3, 0.55);
 }

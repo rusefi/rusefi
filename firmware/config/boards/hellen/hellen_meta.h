@@ -68,6 +68,16 @@
 // AIN10 PC1
 #define H144_IN_MAP2 EFI_ADC_11
 
+// AIN7
+#define H144_IN_RES1 GPIOF_9
+
+// AIN16
+#define H144_IN_RES2 GPIOF_10
+
+// AIN8
+#define H144_IN_RES3 GPIOF_8
+
+
 #define H144_IN_AUX1 EFI_ADC_8
 //
 #define H144_IN_AUX2 EFI_ADC_14
@@ -76,6 +86,15 @@
 #define H144_IN_AUX3 EFI_ADC_15
 // AIN20 PA7
 #define H144_IN_AUX4 EFI_ADC_7
+
+// A1 AIN1 no code to use ADC3 as analog
+#define H144_IN_SENS1 GPIOF_3
+// A2 AIN2 no code to use ADC3 as analog
+#define H144_IN_SENS2 GPIOF_4
+// A3 AIN3 no code to use ADC3 as analog
+#define H144_IN_SENS3 GPIOF_5
+// A4 AIN4 no code to use ADC3 as analog
+#define H144_IN_SENS4 GPIOF_6
 
 #define H144_IN_O2S2 EFI_ADC_1
 

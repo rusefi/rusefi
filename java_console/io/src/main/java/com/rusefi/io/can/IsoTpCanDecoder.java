@@ -59,7 +59,7 @@ public class IsoTpCanDecoder {
                 dataOffset = 1;
                 waitingForNumBytes -= numBytesAvailable;
                 if (log.debugEnabled())
-                    log.debug("ISO_TP_FRAME_CONSECUTIVE Got " + numBytesAvailable + ", still expecting: " + waitingForNumBytes);
+                    log.debug("ISO_TP_FRAME_CONSECUTIVE Got " + numBytesAvailable + " byte(s), still expecting: " + waitingForNumBytes + " byte(s)");
                 break;
             case ISO_TP_FRAME_FLOW_CONTROL:
                 int flowStatus = data[0] & 0xf;

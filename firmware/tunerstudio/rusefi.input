@@ -214,7 +214,7 @@ enable2ndByteCanID = false
 
 ; wall of debug mode :)
 ; https://rusefi.com/wiki/index.php?title=Manual:Debug_fields
-;											 Alternator                 TPS Acceleration      GPPWM        Idle                              Engine Load Acc        Trigger Counters                           VVT1 PID                                        Cranking                  Ignition Timing      Fu Corr  VSS          SD Card     Knock                         Wall Wetting         ETB PID                  Executor                                                            InstantRpm                                 CJ125             CAN          MAP                                        TLE8888           Analog inputs 2                                  Boost                    Start             Launcher      ETB Autotune                                                   Injector flow compensation       DYNO_VIEW     LOGIC_ANALYZER     Wideband              TCU                 Lua               VVT2 PID                  VVT3 PID                  VVT4 PID
+;											 Alternator                 TPS Acceleration      GPPWM        Idle                              Engine Load Acc        Trigger Counters                           VVT1 PID                                        Cranking                  Ignition Timing      Fu Corr  VSS          SD Card     Knock                         Wall Wetting         ETB PID                  Executor                                                            InstantRpm                                 CJ125             CAN          MAP                                        TLE8888           Analog inputs 2                                  Boost                    Start                           ETB Autotune                                                   Injector flow compensation       DYNO_VIEW     LOGIC_ANALYZER     Wideband              TCU                 Lua               VVT2 PID                  VVT3 PID                  VVT4 PID
 ;                                            0                          1                     2            3                                 4                      5                            6             7                          8                    9                         10                   11       12           13          14              15            16                   17                       18                   19            20              21               22                23         24            25                26           27              28        29      30       31                32                      33     34       35       36                       37                38            39                40               41           42             43                               44            45                 46                    47                  48                49                        50                        51
 ;                                            DBG_ALTERNATOR_PID         DBG_TPS_ACCEL         DBG_GPPWM    DBG_IDLE_CONTROL
     debugFieldF1List = bits,   U08,   [0:7], "Alt: Controller Output",  "From TPS",           "GPPWM 1",   "Idle: Controller Output",        "Idle output",         "                      ",    "",           "VVT1: Controller Output","                  ", "",                       "Ign IAT Corr",      "",      "",          "Total SD", "last volts",   "",           "WW: Alpha",         "ETB Controller Output", "",                  "",           "df1",          "df1",           "InstantRpm",     "",        "24:df1",     "CJ125: output",  "",          "MAP Average",  "",       "",     "",     "",               "TPS1 Pri/Sec Diff",    "",    "",      "",      "Boost Open Loop Duty",  "S unused"        "",           "Osc Amplitude",  "",              "",          "",            "Pressure across injector(kpa)", "VSS",        "",                "WB: Pump DAC duty",  "",                  "Lua Debug 1",    "VVT2: Controller Output","VVT3: Controller Output","VVT4: Controller Output"
@@ -1410,15 +1410,15 @@ cmd_test_debug_mode_vvt  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_DEBUG_M
 cmd_test_inj1  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x01"
 cmd_test_inj2  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x02"
 cmd_test_inj3  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x03"
-cmd_test_inj4  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x04"
-cmd_test_inj5  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x05"
-cmd_test_inj6  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x06"
-cmd_test_inj7  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x07"
-cmd_test_inj8  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x08"
-cmd_test_inj9  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x09"
-cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x0a"
-cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x0b"
-cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex\x00\x0c"
+cmd_test_inj4  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x04"
+cmd_test_inj5  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x05"
+cmd_test_inj6  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x06"
+cmd_test_inj7  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x07"
+cmd_test_inj8  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x08"
+cmd_test_inj9  = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x09"
+cmd_test_inj10 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x0a"
+cmd_test_inj11 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x0b"
+cmd_test_inj12 = "@@TS_IO_TEST_COMMAND_char@@@@ts_command_e_TS_INJECTOR_CATEGORY_16_hex@@\x00\x0c"
 
 cmd_test_sol1 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_SOLENOID_CATEGORY_16_hex@@\x00\x01"
 cmd_test_sol2 = "@@TS_IO_TEST_COMMAND_char@@@@CMD_TS_SOLENOID_CATEGORY_16_hex@@\x00\x02"
@@ -1582,26 +1582,27 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "Name", scriptCurveName6
 		panel = scriptCurve6
 
-	dialog = tChargeRpmTpsSettings, "RPM+TPS Mode Settings"
-	    field = "We use these coefficients to approximate air/fuel charge temperate"
-	    field = "based on CLT and IAT, depending on RPM and TPM"
-		field = "minRPM minTPS", tChargeMinRpmMinTps
-		field = "minRPM maxTPS", tChargeMinRpmMaxTps
-		field = "maxRPM minTPS", tChargeMaxRpmMinTps
-		field = "maxRPM maxTPS", tChargeMaxRpmMaxTps
+	dialog = tChargeRpmTpsSettings, "RPM+TPS mode"
+	    field = "We use these coefficients to approximate air/fuel charge"
+	    field = "temperature based on CLT and IAT, depending on RPM and TPM"
+		field = "Low RPM/Low TPS", tChargeMinRpmMinTps
+		field = "Low RPM/High TPS", tChargeMinRpmMaxTps
+		field = "High RPM/Low TPS", tChargeMaxRpmMinTps
+		field = "High RPM/High TPS", tChargeMaxRpmMaxTps
 
 	dialog = tChargeGeneralSettings, ""
-		field = "tCharge Mode", tChargeMode
-		field = "tChange Increment Limit, deg/sec", tChargeAirIncrLimit
-		field = "tChange Decrement Limit, deg/sec", tChargeAirDecrLimit
+		field = "Mode", tChargeMode
+		field = "#These two parameters limit the estimate's rate of change"
+		field = "Increase rate limit", tChargeAirIncrLimit
+		field = "Decrease rate limit", tChargeAirDecrLimit
 	    field = ""
 
-	dialog = tChargeAirInterpSettings, "Air Interpolation Mode Settings"
-		field = "Min tCharge Coeff.", tChargeAirCoefMin
-		field = "Max tCharge Coeff.", tChargeAirCoefMax
-		field = "Max Air Flow, kg/h", tChargeAirFlowMax
+	dialog = tChargeAirInterpSettings, "Airflow interpolation mode"
+		field = "Low flow coefficient", tChargeAirCoefMin
+		field = "High flow coefficient", tChargeAirCoefMax
+		field = "Max air flow", tChargeAirFlowMax
 		
-	dialog = tChargeSettings, "tCharge Settings"
+	dialog = tChargeSettings, "Charge temperature estimation"
 		panel = tChargeGeneralSettings
 		panel = tChargeRpmTpsSettings, { tChargeMode == 0}
 		panel = tChargeAirInterpSettings, { tChargeMode == 1}
@@ -3191,7 +3192,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = etbDialogLeft
 		field = "https://rusefi.com/s/etb"
-		field = "Detailed status in console",			isVerboseETB
 		field = "Disable ETB if engine is stopped",		disableEtbWhenEngineStopped
 		field = "Disable ETB Motor",					pauseEtbControl
 		field = "H-Bridge #1 function",					etbFunctions1

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Dec 08 12:08:09 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Dec 16 21:14:24 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -683,6 +683,8 @@ case VE_TPS:
 }
 const char *getVvt_mode_e(vvt_mode_e value){
 switch(value) {
+case VVT_12:
+  return "VVT_12";
 case VVT_2JZ:
   return "VVT_2JZ";
 case VVT_BARRA_3_PLUS_1:
@@ -697,8 +699,6 @@ case VVT_HONDA_K:
   return "VVT_HONDA_K";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
-case VVT_MAP_V_TWIN:
-  return "VVT_MAP_V_TWIN";
 case VVT_MAP_V_TWIN_ANOTHER:
   return "VVT_MAP_V_TWIN_ANOTHER";
 case VVT_MIATA_NB2:

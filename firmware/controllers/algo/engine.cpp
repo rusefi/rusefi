@@ -97,8 +97,6 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_NISSAN_VQ35;
 	case VVT_NISSAN_MR:
 		return TT_NISSAN_MR18_CAM_VVT;
-	case VVT_MAP_V_TWIN:
-		return TT_VVT_MAP_45_V_TWIN;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return TT_ONE; // we have to return something for the sake of -Werror=return-type
@@ -312,6 +310,24 @@ void Engine::updateSlowSensors() {
 #endif
 }
 
+static bool getClutchUpState() {
+#if EFI_GPIO_HARDWARE
+	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
+		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
+	}
+#endif // EFI_GPIO_HARDWARE
+	return engine->engineState.luaAdjustments.clutchUpState;
+}
+
+static bool getBrakePedalState() {
+#if EFI_GPIO_HARDWARE
+	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
+		return efiReadPin(engineConfiguration->brakePedalPin);
+	}
+	return engine->engineState.luaAdjustments.brakePedalState;
+#endif // EFI_GPIO_HARDWARE
+}
+
 void Engine::updateSwitchInputs() {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
@@ -326,16 +342,14 @@ void Engine::updateSwitchInputs() {
 		}
 		engine->acSwitchState = result;
 	}
-	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
-		engine->clutchUpState = engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
-	}
+	engine->clutchUpState = getClutchUpState();
+
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
 		engine->idle.throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
-	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-		engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
-	}
+	engine->brakePedalState = getBrakePedalState();
+
 #endif // EFI_GPIO_HARDWARE
 }
 

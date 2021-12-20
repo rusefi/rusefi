@@ -196,7 +196,10 @@ public:
 	cyclic_buffer<int> triggerErrorDetection;
 
 	GearControllerBase *gearController;
+#if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;
+#endif // EFI_LAUNCH_CONTROL
+
 	SoftSparkLimiter softSparkLimiter;
 
 #if EFI_BOOST_CONTROL

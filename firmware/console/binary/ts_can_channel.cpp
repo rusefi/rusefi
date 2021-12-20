@@ -76,8 +76,6 @@ void CanTsChannel::write(const uint8_t* buffer, size_t size, bool) {
 
 size_t CanTsChannel::readTimeout(uint8_t* buffer, size_t size, int timeout) {
 	canStreamReceiveTimeout(&size, buffer, timeout);
-	//!!!!!!!!!!!!!
-	efiPrintf("--RT: %d %02x", size, (size > 0 ? buffer[0] : 0));
 	return size;
 }
 

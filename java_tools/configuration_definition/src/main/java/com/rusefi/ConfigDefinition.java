@@ -103,6 +103,7 @@ public class ConfigDefinition {
         // disable the lazy checks because we use timestamps to detect changes
         LazyFile.setLazyFileEnabled(true);
 
+        List<ConfigurationConsumer> destinations = new ArrayList<>();
         ReaderState state = new ReaderState();
 
         for (int i = 0; i < args.length - 1; i += 2) {
@@ -135,6 +136,12 @@ public class ConfigDefinition {
                     break;
                 case KEY_JAVA_DESTINATION:
                     javaDestinationFileName = args[i + 1];
+                    break;
+                case "-field_lookup_file":
+                    destinations.add(new GetConfigValueConsumer(args[i + 1]));
+                    break;
+                case "-output_lookup_file":
+                    destinations.add(new GetOutputValueConsumer(args[i + 1]));
                     break;
                 case "-readfile":
                     String keyName = args[i + 1];
@@ -250,10 +257,9 @@ public class ConfigDefinition {
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
-        List<ConfigurationConsumer> destinations = new ArrayList<>();
         if (TS_OUTPUTS_DESTINATION != null) {
             destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/output_channels.ini", state));
-            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/data_logs.ini", state));
+            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/data_logs.ini"));
             destinations.add(new GaugeConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/gauges.ini", state));
         }
         if (tsInputFileFolder != null) {

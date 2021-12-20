@@ -125,8 +125,6 @@ typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boos
 typedef Map3D<GPPWM_RPM_COUNT, GPPWM_LOAD_COUNT, uint8_t, uint8_t, uint8_t> gppwm_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, uint16_t, efi::ratio<1, PACK_MULT_MAP_ESTIMATE>> mapEstimate_Map3D_t;
 
-void setRpmBin(float array[], int size, float idleRpm, float topRpm);
-
 /**
  * @param precision for example '0.1' for one digit fractional part. Default to 0.01, two digits.
  */
@@ -167,4 +165,19 @@ constexpr void copyTable(TDest (&dest)[N][M], const TSource (&source)[N][M], flo
 	}
 }
 
-void setRpmTableBin(float array[], int size);
+template<typename kType>
+void setRpmBin(kType array[], int size, float idleRpm, float topRpm) {
+	array[0] = idleRpm - 150;
+	int rpmStep = (int)(efiRound((topRpm - idleRpm) / (size - 2), 50) - 150);
+	for (int i = 1; i < size - 1;i++)
+		array[i] = idleRpm + rpmStep * (i - 1);
+	array[size - 1] = topRpm;
+}
+
+/**
+ * initialize RPM table axis using default RPM range
+ */
+template<typename kType>
+void setRpmTableBin(kType array[], int size) {
+	setRpmBin(array, size, 800, 7000);
+}

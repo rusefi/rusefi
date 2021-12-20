@@ -136,7 +136,7 @@ void writeLogLine(Writer& buffer) {
 	if (binaryLogCount == 0) {
 		writeHeader(buffer);
 	} else {
-		updateTunerStudioState(&engine->outputChannels);
+		updateTunerStudioState();
 		size_t length = writeBlock(sdLogBuffer);
 		efiAssertVoid(OBD_PCM_Processor_Fault, length <= efi::size(sdLogBuffer), "SD log buffer overflow");
 		buffer.write(sdLogBuffer, length);
@@ -677,7 +677,8 @@ static void updateTpsDebug() {
 	engine->outputChannels.debugFloatField5 = 100 * Sensor::getOrZero(SensorType::Tps1Primary) / Sensor::getOrZero(SensorType::Tps1Secondary);
 }
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
+void updateTunerStudioState() {
+	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
 #if EFI_SHAFT_POSITION_INPUT
 	int rpm = Sensor::get(SensorType::Rpm).Value;
 #else /* EFI_SHAFT_POSITION_INPUT */
@@ -877,7 +878,9 @@ void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels) {
 
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio
-	updateTunerStudioState(&engine->outputChannels);
+	updateTunerStudioState();
+	engine->outputChannels.idleStatus.resetCounter = 0x12345653;
+	engine->outputChannels.etbStatus.resetCounter  = 0x12345654;
 }
 
 #endif /* EFI_TUNER_STUDIO */

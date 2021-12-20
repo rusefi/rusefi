@@ -5,6 +5,7 @@ import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.CharArrayWriter;
 import java.io.FileWriter;
@@ -15,35 +16,38 @@ import static com.rusefi.ConfigField.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
 public class DataLogConsumer extends AbstractConfigurationConsumer {
+    public static final String UNUSED = "unused";
     private final String fileName;
-    private final ReaderState state;
     private final CharArrayWriter tsWriter = new CharArrayWriter();
     private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
-    public DataLogConsumer(String fileName, ReaderState state) {
+    public DataLogConsumer(String fileName) {
         this.fileName = fileName;
-        this.state = state;
     }
 
     @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(structure.tsFields, "",
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+        if (readerState.stack.isEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
                     this::handle);
             iterator.loop();
-            String content = iterator.sb.toString();
+            String content = iterator.getContent();
             tsWriter.append(content);
         }
 
+        writeStringToFile(fileName, tsWriter);
+    }
+
+    private void writeStringToFile(@Nullable String fileName, CharArrayWriter writer) throws IOException {
         if (fileName != null) {
             FileWriter fw = new FileWriter(fileName);
-            fw.write(tsWriter.toCharArray());
+            fw.write(writer.toCharArray());
             fw.close();
         }
     }
 
-    private String handle(ConfigField configField, String prefix) {
-        if (configField.getName().contains("unused"))
+    private String handle(ReaderState state, ConfigField configField, String prefix) {
+        if (configField.getName().contains(UNUSED))
             return "";
 
         if (configField.isArray()) {

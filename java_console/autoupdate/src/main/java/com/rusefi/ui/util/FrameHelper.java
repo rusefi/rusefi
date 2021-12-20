@@ -13,6 +13,14 @@ import java.util.Arrays;
 public class FrameHelper {
     private final JFrame frame = new JFrame();
 
+    public FrameHelper() {
+        this(JDialog.DISPOSE_ON_CLOSE);
+    }
+
+    public FrameHelper(int operation) {
+        frame.setDefaultCloseOperation(operation);
+    }
+
     public JFrame getFrame() {
         return frame;
     }
@@ -28,7 +36,6 @@ public class FrameHelper {
 
     public void initFrame(JComponent component, final boolean maximizeOnStart) {
         frame.setSize(800, 500);
-        frame.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         frame.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent e) {

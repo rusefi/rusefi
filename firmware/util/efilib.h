@@ -139,8 +139,8 @@ constexpr void clear(T& obj) {
 /**
  * Copies an array from src to dest.  The lengths of the arrays must match.
  */
-template <typename TElement, size_t N>
-constexpr void copyArray(TElement (&dest)[N], const TElement (&src)[N]) {
+template <typename DElement, typename SElement, size_t N>
+constexpr void copyArray(DElement (&dest)[N], const SElement (&src)[N]) {
 	for (size_t i = 0; i < N; i++) {
 		dest[i] = src[i];
 	}

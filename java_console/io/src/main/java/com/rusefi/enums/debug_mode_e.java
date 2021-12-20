@@ -42,7 +42,7 @@ public enum debug_mode_e {
 	DBG_35,
 	DBG_BOOST,
 	DBG_37,
-	DBG_LAUNCH,
+	DBG_38,
 	DBG_ETB_AUTOTUNE,
 	DBG_COMPOSITE_LOG,
 	DBG_UNUSED41,

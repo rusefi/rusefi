@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Dec 07 20:56:44 EST 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Dec 16 21:16:03 EST 2021
 // see also gen_config_and_enums.bat
 
 
@@ -62,6 +62,8 @@ case DBG_35:
   return "DBG_35";
 case DBG_37:
   return "DBG_37";
+case DBG_38:
+  return "DBG_38";
 case DBG_43:
   return "DBG_43";
 case DBG_8:
@@ -102,8 +104,6 @@ case DBG_ION:
   return "DBG_ION";
 case DBG_KNOCK:
   return "DBG_KNOCK";
-case DBG_LAUNCH:
-  return "DBG_LAUNCH";
 case DBG_LOGIC_ANALYZER:
   return "DBG_LOGIC_ANALYZER";
 case DBG_LUA:
@@ -514,14 +514,14 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_UNUSED_62:
+  return "TT_UNUSED_62";
 case TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
   return "TT_VVT_JZ";
-case TT_VVT_MAP_45_V_TWIN:
-  return "TT_VVT_MAP_45_V_TWIN";
 case TT_VVT_MIATA_NB2:
   return "TT_VVT_MIATA_NB2";
 case TT_VVT_NISSAN_VQ35:

@@ -21,12 +21,12 @@ public class GaugeConsumer extends AbstractConfigurationConsumer {
     }
 
     @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(structure.tsFields, "",
-                    this::handle);
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
+                    (state, configField, prefix) -> handle(configField, prefix));
             iterator.loop();
-            String content = iterator.sb.toString();
+            String content = iterator.getContent();
             charArrayWriter.append(content);
         }
 

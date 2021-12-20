@@ -111,7 +111,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
         return custom != null && custom.toLowerCase().startsWith(IniFileModel.FIELD_TYPE_STRING);
     }
 
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
             writeJavaFields(structure.tsFields, "", 0);
         }

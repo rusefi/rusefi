@@ -34,32 +34,6 @@ public:
 	efitick_t accumSignalPrevPeriods[HW_EVENT_TYPES];
 };
 
-struct MapState {
-	float current, previous, prevPrevious;
-	cyclic_buffer<float, MAP_CAM_BUFFER> mapBuffer;
-
-	void add(float value) {
-		// rotate state
-		prevPrevious = previous;
-		previous = current;
-
-		// add new value
-		mapBuffer.add(value);
-		current = mapBuffer.sum(engineConfiguration->mapCamAveragingLength);
-	}
-
-	bool isPeak(bool lookForLowPeak) {
-		if (mapBuffer.getCount() < MAP_CAM_BUFFER + 3)
-			return false;
-		if (lookForLowPeak) {
-			return previous < prevPrevious && previous <= current;
-		} else {
-			return previous > prevPrevious && previous >= current;
-		}
-	}
-};
-
-
 /**
  * Maybe merge TriggerCentral and TriggerState classes into one class?
  * Probably not: we have an instance of TriggerState which is used for trigger initialization,
@@ -74,9 +48,6 @@ public:
 	void validateCamVvtCounters();
 
 	LocalVersionHolder triggerVersion;
-
-	MapState mapState;
-
 
 	angle_t mapCamPrevToothAngle = -1;
 	float mapCamPrevCycleValue = 0;

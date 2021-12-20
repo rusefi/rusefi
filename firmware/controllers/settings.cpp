@@ -769,8 +769,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		engineConfiguration->isHip9011Enabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "verbose_etb")) {
-		engineConfiguration->isVerboseETB = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
@@ -897,7 +895,7 @@ const plain_get_integer_s getI_plain[] = {
 //		{"timing_mode", setTimingMode},
 //		{"engine_type", setEngineType},
 		{"warning_period", (int*)&engineConfiguration->warningPeriod},
-		{"hard_limit", &engineConfiguration->rpmHardLimit},
+//		{"hard_limit", &engineConfiguration->rpmHardLimit},
 //		{"firing_order", setFiringOrder},
 //		{"injection_pin_mode", setInjectionPinMode},
 //		{"ignition_pin_mode", setIgnitionPinMode},
