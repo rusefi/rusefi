@@ -983,8 +983,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 struct vr_threshold_s
 	brain_pin_e pin;
 	uint8_t[3] pad;;"",1,0,0,0,0
-	uint8_t[6] rpmBins;;"rpm", {@@RPM_1_BYTE_PACKING_MULT@@}, 0, 0, 12000, 0
-	uint8_t[6] values;;"volts", {1/@@PACK_PERCENT_BYTE_MULT@@}, 0, 0, 2.5, 2
+	uint8_t[6] autoscale rpmBins;;"rpm", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
+	uint8_t[6] autoscale values;;"volts", {1/@@PACK_PERCENT_BYTE_MULT@@}, 0, 0, 2.5, 2
 end_struct
 
 ! todo: should be '3' since we are dreaming of Honda triple-channel distributor
