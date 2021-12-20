@@ -2,7 +2,6 @@
 
 #include "defaults.h"
 #include "table_helper.h"
-#include "advance_map.h"
 
 static void setDefaultMultisparkParameters() {
 	// 1ms spark + 2ms dwell
