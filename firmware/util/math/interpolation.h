@@ -143,6 +143,19 @@ float interpolate3d(const VType (&table)[RNum][CNum],
     return priv::linterp(left, right, col.Frac);
 }
 
+/**
+ * Sets specified value for specified key in a correction curve
+ * see also setLinearCurve()
+ */
+template<typename VType, typename kType>
+void setCurveValue(const kType bins[], VType values[], int size, float key, float value) {
+	int index = findIndexMsg("tbVl", bins, size, key);
+	if (index == -1)
+		index = 0;
+	values[index] = value;
+}
+
+
 /** @brief	Binary search
  * @returns	the highest index within sorted array such that array[i] is greater than or equal to the parameter
  * @note If the parameter is smaller than the first element of the array, -1 is returned.
@@ -203,7 +216,6 @@ int findIndexMsgExt(const char *msg, const kType array[], int size, kType value)
 	return middle;
 }
 
-void setCurveValue(float bins[], float values[], int size, float key, float value);
 void initInterpolation();
 
 class FastInterpolation {
