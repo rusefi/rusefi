@@ -53,8 +53,6 @@ static void setHondaAccordConfigurationCommon() {
 
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	buildTimingMap(35);
-
 	/**
 	 * 18K Ohm @ -20C
 	 * 2.1K Ohm @ 24C

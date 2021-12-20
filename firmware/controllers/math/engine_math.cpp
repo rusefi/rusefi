@@ -476,10 +476,6 @@ void setTimingLoadBin(float from, float to) {
  */
 void setAlgorithm(engine_load_mode_e algo) {
 	engineConfiguration->fuelAlgorithm = algo;
-	if (algo == LM_SPEED_DENSITY) {
-		setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
-		buildTimingMap(35);
-	}
 }
 
 void setFlatInjectorLag(float value) {
