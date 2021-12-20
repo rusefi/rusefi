@@ -313,6 +313,14 @@ enable2ndByteCanID = false
       yBins       = knockNoise
       gauge       = RPMGauge
 
+	curve = torqueCurve, "Engine Torque"
+      columnLabel = "RPM", "Nm"
+      xAxis       =  0, 8000, 9
+      yAxis       =  0,  8, 10
+      xBins       = torqueRpmBins, RPMValue
+      yBins       = torqueValues
+      gauge       = RPMGauge
+
 	curve = swKnockThresholdCurve, "Engine knock threshold RPM based"
       columnLabel = "RPM", "Threshold dB"
       xAxis       =  0, 8000, 9
@@ -3433,6 +3441,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "turbo speed multiplier",               turboSpeedSensorMultiplier
 		field = "Artificial Misfire",                   artificialTestMisfire
 		panel = allTriggerDebug
+		panel = torqueCurve
 
        help = helpGeneral, "rusEFI General Help"
         webHelp = @@MAIN_HELP_URL@@
