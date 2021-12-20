@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Dec 20 13:18:51 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Dec 20 18:58:34 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -82,7 +82,7 @@ public class Fields {
 	public static final int alignmentFill_at_1847_offset = 1847;
 	public static final int alignmentFill_at_1873_offset = 1873;
 	public static final int alignmentFill_at_4007_offset = 4007;
-	public static final int alignmentFill_at_4594_offset = 4594;
+	public static final int alignmentFill_at_4618_offset = 4618;
 	public static final int alignmentFill_at_62_offset = 62;
 	public static final int alternatorControl_dFactor_offset = 1492;
 	public static final int alternatorControl_iFactor_offset = 1488;
@@ -1484,7 +1484,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 714;
 	public static final int mainRelayPinMode_offset = 756;
-	public static final int mainUnusedEnd_offset = 4596;
+	public static final int mainUnusedEnd_offset = 4620;
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
@@ -1750,7 +1750,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 855718382;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -1927,6 +1926,9 @@ public class Fields {
 	public static final int TOOTH_PACKET_COUNT = 1000;
 	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
+	public static final int TORQUE_CURVE_SIZE = 8;
+	public static final int torqueRpmBins_offset = 4602;
+	public static final int torqueValues_offset = 4594;
 	public static final int TOTAL_CONFIG_SIZE = 24400;
 	public static final int tps1_1AdcChannel_offset = 520;
 	public static final int tps1_2AdcChannel_offset = 689;
@@ -2212,7 +2214,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.20.all.855718382";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.20.all.4033521982";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -3573,8 +3575,10 @@ public class Fields {
 	public static final Field HPFPCOMPENSATION = Field.create("HPFPCOMPENSATION", 4464, FieldType.INT8);
 	public static final Field HPFPCOMPENSATIONLOADBINS = Field.create("HPFPCOMPENSATIONLOADBINS", 4564, FieldType.INT16);
 	public static final Field HPFPCOMPENSATIONRPMBINS = Field.create("HPFPCOMPENSATIONRPMBINS", 4584, FieldType.INT8);
-	public static final Field ALIGNMENTFILL_AT_4594 = Field.create("ALIGNMENTFILL_AT_4594", 4594, FieldType.INT8);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4596, FieldType.INT);
+	public static final Field TORQUEVALUES = Field.create("TORQUEVALUES", 4594, FieldType.INT8);
+	public static final Field TORQUERPMBINS = Field.create("TORQUERPMBINS", 4602, FieldType.INT16);
+	public static final Field ALIGNMENTFILL_AT_4618 = Field.create("ALIGNMENTFILL_AT_4618", 4618, FieldType.INT8);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4620, FieldType.INT);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 6312, 120, FieldType.STRING);
 	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 6432, FieldType.FLOAT);
 	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 6464, FieldType.FLOAT);
@@ -4800,7 +4804,9 @@ public class Fields {
 	HPFPCOMPENSATION,
 	HPFPCOMPENSATIONLOADBINS,
 	HPFPCOMPENSATIONRPMBINS,
-	ALIGNMENTFILL_AT_4594,
+	TORQUEVALUES,
+	TORQUERPMBINS,
+	ALIGNMENTFILL_AT_4618,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,

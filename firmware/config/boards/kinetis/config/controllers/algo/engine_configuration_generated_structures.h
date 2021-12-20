@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Dec 20 13:18:43 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Dec 20 18:58:26 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3976,16 +3976,26 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> hpfpCompensationRpmBins[HPFP_COMPENSATION_SIZE];
 	/**
-	 * need 4 byte alignment
-	units
+	Nm
 	 * offset 4566
 	 */
-	uint8_t alignmentFill_at_4566[2];
+	uint8_t torqueValues[TORQUE_CURVE_SIZE];
+	/**
+	RPM
+	 * offset 4574
+	 */
+	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4590
+	 */
+	uint8_t alignmentFill_at_4590[2];
 	/**
 	units
-	 * offset 4568
+	 * offset 4592
 	 */
-	int mainUnusedEnd[429];
+	int mainUnusedEnd[423];
 	/** total size 6284*/
 };
 
@@ -4373,4 +4383,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Dec 20 13:18:43 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Dec 20 18:58:26 UTC 2021

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Dec 20 13:18:45 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Dec 20 18:58:29 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3982,16 +3982,26 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 50> hpfpCompensationRpmBins[HPFP_COMPENSATION_SIZE];
 	/**
-	 * need 4 byte alignment
-	units
+	Nm
 	 * offset 4594
 	 */
-	uint8_t alignmentFill_at_4594[2];
+	uint8_t torqueValues[TORQUE_CURVE_SIZE];
+	/**
+	RPM
+	 * offset 4602
+	 */
+	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4618
+	 */
+	uint8_t alignmentFill_at_4618[2];
 	/**
 	units
-	 * offset 4596
+	 * offset 4620
 	 */
-	int mainUnusedEnd[429];
+	int mainUnusedEnd[423];
 	/** total size 6312*/
 };
 
@@ -4379,4 +4389,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Dec 20 13:18:45 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Dec 20 18:58:29 UTC 2021
