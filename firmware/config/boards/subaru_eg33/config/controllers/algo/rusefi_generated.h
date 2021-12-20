@@ -1835,7 +1835,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 4276470416
+#define SIGNATURE_HASH 4038799294
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2352,7 +2352,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.12.20.subaru_eg33_f7.4276470416"
+#define TS_SIGNATURE "rusEFI 2021.12.20.subaru_eg33_f7.4038799294"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
