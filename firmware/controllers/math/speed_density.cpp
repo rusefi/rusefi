@@ -20,7 +20,6 @@
 
 fuel_Map3D_t veMap;
 lambda_Map3D_t lambdaMap;
-baroCorr_Map3D_t baroCorrMap;
 
 #define tpMin 0
 #define tpMax 100
@@ -94,5 +93,4 @@ void initSpeedDensity() {
 	veMap.init(config->veTable, config->veLoadBins, config->veRpmBins);
 //	ve2Map.init(engineConfiguration->ve2Table, engineConfiguration->ve2LoadBins, engineConfiguration->ve2RpmBins);
 	lambdaMap.init(config->lambdaTable, config->lambdaLoadBins, config->lambdaRpmBins);
-	baroCorrMap.init(engineConfiguration->baroCorrTable, engineConfiguration->baroCorrPressureBins, engineConfiguration->baroCorrRpmBins);
 }

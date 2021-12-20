@@ -37,6 +37,10 @@
 #include "hardware.h"
 #include "thread_priority.h"
 
+#if EFI_PROD_CODE
+#include "version_check.h"
+#endif
+
 #if EFI_UNIT_TEST
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>

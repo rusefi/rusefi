@@ -86,7 +86,7 @@
 #define alignmentFill_at_1847_offset 1847
 #define alignmentFill_at_1873_offset 1873
 #define alignmentFill_at_4007_offset 4007
-#define alignmentFill_at_4594_offset 4594
+#define alignmentFill_at_4618_offset 4618
 #define alignmentFill_at_62_offset 62
 #define alternatorControl_dFactor_offset 1492
 #define alternatorControl_iFactor_offset 1488
@@ -1540,7 +1540,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4596
+#define mainUnusedEnd_offset 4620
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1822,7 +1822,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 1029690560
+#define SIGNATURE_HASH 59744767
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2009,6 +2009,9 @@
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
+#define TORQUE_CURVE_SIZE 8
+#define torqueRpmBins_offset 4602
+#define torqueValues_offset 4594
 #define TOTAL_CONFIG_SIZE 24400
 #define tps1_1AdcChannel_offset 520
 #define tps1_2AdcChannel_offset 689
@@ -2339,7 +2342,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.20.all.1029690560"
+#define TS_SIGNATURE "rusEFI 2021.12.20.all.59744767"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
