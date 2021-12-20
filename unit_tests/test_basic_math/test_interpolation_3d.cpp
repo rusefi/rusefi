@@ -12,9 +12,12 @@
 #include "interpolation.h"
 
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
-float mafBins[4] = { 1, 2, 3, 4 };
+scaled_channel<uint8_t, 1, 50> rpmBinsScaledByte[5] = { 100, 200, 30, 400, 500};
 
-scaled_channel<int, 10> mafBins2[4] = { 1, 2, 3, 4 };
+float mafBins[4] = { 1, 2, 3, 4 };
+scaled_channel<int, 10> mafBinsScaledInt[4] = { 1, 2, 3, 4 };
+scaled_channel<uint8_t, 10> mafBinsScaledByte[4] = { 1, 2, 3, 4 };
+
 
 float map[4][5] = {
 	{ 1, 2, 3, 4, 4},
@@ -26,21 +29,29 @@ float map[4][5] = {
 #define EXPECT_NEAR_M4(a, b) EXPECT_NEAR(a, b, 1e-4)
 
 static float getValue(float rpm, float maf) {
-	float result1, result2;
-
 	Map3D<5, 4, float, float, float> x1;
 	x1.init(map, mafBins, rpmBins);
-
-	result1 = x1.getValue(rpm, maf);
+	float result1 = x1.getValue(rpm, maf);
 
 
 	Map3D<5, 4, float, float, int> x2;
-	x2.init(map, mafBins2, rpmBins);
-
-	result2 = x2.getValue(rpm, maf);
-
+	x2.init(map, mafBinsScaledInt, rpmBins);
+	float result2 = x2.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result2);
 
+
+	Map3D<5, 4, float, float, uint8_t> x3;
+	x3.init(map, mafBinsScaledByte, rpmBins);
+	float result3 = x3.getValue(rpm, maf);
+	EXPECT_NEAR_M4(result1, result3);
+
+/*
+are we missing something in Map3D?
+	Map3D<5, 4, float, uint8_t, float> x4;
+	x4.init(map, mafBins, rpmBinsScaledByte);
+	float result4 = x4.getValue(rpm, maf);
+	EXPECT_NEAR_M4(result1, result4);
+*/
 	return result1;
 }
 
