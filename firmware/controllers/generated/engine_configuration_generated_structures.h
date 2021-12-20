@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 15 13:24:14 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Dec 20 03:55:12 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -31,7 +31,7 @@ struct stft_s {
 	RPM
 	 * offset 0
 	 */
-	uint8_t maxIdleRegionRpm;
+	scaled_channel<uint8_t, 1, 50> maxIdleRegionRpm;
 	/**
 	 * Below this engine load, the overrun region is active
 	load
@@ -3920,7 +3920,7 @@ struct engine_configuration_s {
 	RPM
 	 * offset 4039
 	 */
-	uint8_t triggerCompSensorSatRpm;
+	scaled_channel<uint8_t, 1, 50> triggerCompSensorSatRpm;
 	/**
 	 * offset 4040
 	 */
@@ -4547,4 +4547,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 15 13:24:14 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Dec 20 03:55:12 UTC 2021
