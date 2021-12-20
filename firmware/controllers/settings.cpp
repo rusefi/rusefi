@@ -689,8 +689,8 @@ static void showPinFunction(const char *pinName) {
 #endif /* EFI_PROD_CODE */
 
 static void setTimingMap(const char * rpmStr, const char *loadStr, const char *valueStr) {
-	float rpm = atoff(rpmStr);
-	float engineLoad = atoff(loadStr);
+	uint16_t rpm = atoi(rpmStr);
+	uint16_t engineLoad = atoi(loadStr);
 	float value = atoff(valueStr);
 
 	int rpmIndex = findIndexMsg("setTM", config->ignitionRpmBins, IGN_RPM_COUNT, rpm);
