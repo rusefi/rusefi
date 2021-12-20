@@ -70,7 +70,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10004
+#define FLASH_DATA_VERSION 10005
 
 #define LOG_DELIMITER "`"
 
@@ -1645,14 +1645,14 @@ struct cyl_trim_s
 end_struct
 
 ! All ign trim tables share axes
-cyl_trim_s[12 iterate] ignTrims
 uint16_t[TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 100, 0
 uint16_t[TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
+cyl_trim_s[12 iterate] ignTrims
 
 ! All fuel trim tables share axes
-cyl_trim_s[12 iterate] fuelTrims
 uint16_t[TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 400, 0
 uint16_t[TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
+cyl_trim_s[12 iterate] fuelTrims
 end_struct
 
 #define MOCK_MAP_COMMAND "mock_map_voltage"
