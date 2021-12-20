@@ -12,7 +12,7 @@
 #include "interpolation.h"
 
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
-scaled_channel<uint8_t, 1, 50> rpmBinsScaledByte[5] = { 100, 200, 30, 400, 500};
+scaled_channel<uint8_t, 1, 50> rpmBinsScaledByte[5] = { 100, 200, 300, 400, 500};
 
 float mafBins[4] = { 1, 2, 3, 4 };
 scaled_channel<int, 10> mafBinsScaledInt[4] = { 1, 2, 3, 4 };
@@ -52,6 +52,14 @@ are we missing something in Map3D?
 	float result4 = x4.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result4);
 */
+
+	float result4 = interpolate3d(
+		map,
+		mafBinsScaledInt, maf,
+		rpmBinsScaledByte, rpm
+	);
+	EXPECT_NEAR_M4(result1, result4);
+
 	return result1;
 }
 

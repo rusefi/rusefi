@@ -58,8 +58,6 @@ Pid * getIdlePid() {
 	return &industrialWithOverrideIdlePid;
 }
 
-static iacPidMultiplier_t iacPidMultMap;
-
 #if ! EFI_UNIT_TEST
 
 void idleDebug(const char *msg, percent_t value) {
@@ -367,7 +365,11 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// Apply PID Multiplier if used
 	if (engineConfiguration->useIacPidMultTable) {
 		float engineLoad = getFuelingLoad();
-		float multCoef = iacPidMultMap.getValue(rpm / RPM_1_BYTE_PACKING_MULT, engineLoad);
+		float multCoef = interpolate3d(
+			engineConfiguration->iacPidMultTable,
+			engineConfiguration->iacPidMultLoadBins, engineLoad,
+			engineConfiguration->iacPidMultRpmBins, rpm
+		);
 		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
 		newValue = interpolateClamped(0, 0, 1, newValue, multCoef);
 	}
@@ -477,7 +479,6 @@ void IdleController::onSlowCallback() {
 
 static void applyPidSettings() {
 	getIdlePid()->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
-	iacPidMultMap.init(engineConfiguration->iacPidMultTable, engineConfiguration->iacPidMultLoadBins, engineConfiguration->iacPidMultRpmBins);
 }
 
 void setDefaultIdleParameters() {
