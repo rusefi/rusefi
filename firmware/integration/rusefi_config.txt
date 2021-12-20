@@ -416,7 +416,7 @@ uint8_t autoscale launchRpm;A secondary Rev limit engaged by the driver to help 
 uint8_t autoscale engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 30000, 0
 
 	uint8_t autoscale multisparkMaxRpm;+Disable multispark above this engine speed.;"rpm", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 3000, 0
-	uint8_t maxAcRpm;+Above this RPM, disable AC. Set to 0 to disable check.;"rpm", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 10000, 0
+	uint8_t autoscale maxAcRpm;+Above this RPM, disable AC. Set to 0 to disable check.;"rpm", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 10000, 0
 	uint8_t maxAcTps;+Above this TPS, disable AC. Set to 0 to disable check.;"%", 1, 0, 0, 100, 0
 	uint8_t maxAcClt;+Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.;"deg C", 1, 0, 0, 150, 0
 
