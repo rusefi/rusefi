@@ -895,7 +895,7 @@ const plain_get_integer_s getI_plain[] = {
 //		{"timing_mode", setTimingMode},
 //		{"engine_type", setEngineType},
 		{"warning_period", (int*)&engineConfiguration->warningPeriod},
-		{"hard_limit", &engineConfiguration->rpmHardLimit},
+//		{"hard_limit", &engineConfiguration->rpmHardLimit},
 //		{"firing_order", setFiringOrder},
 //		{"injection_pin_mode", setInjectionPinMode},
 //		{"ignition_pin_mode", setIgnitionPinMode},

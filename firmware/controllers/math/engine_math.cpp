@@ -56,11 +56,11 @@ float getIgnitionLoad() {
  */
 void setSingleCoilDwell() {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellRpmBins[i] = i + 1;
+		engineConfiguration->sparkDwellRpmBins[i] = (i + 1) * 50;
 		engineConfiguration->sparkDwellValues[i] = 4;
 	}
 
-	engineConfiguration->sparkDwellRpmBins[5] = 10;
+	engineConfiguration->sparkDwellRpmBins[5] = 500;
 	engineConfiguration->sparkDwellValues[5] = 4;
 
 	engineConfiguration->sparkDwellRpmBins[6] = 4500;
