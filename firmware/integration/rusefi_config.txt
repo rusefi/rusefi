@@ -70,7 +70,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10004
+#define FLASH_DATA_VERSION 10005
 
 #define LOG_DELIMITER "`"
 
@@ -552,8 +552,6 @@ operation_mode_e ambiguousOperationMode;+'Some triggers could be mounted differe
 custom display_mode_e 4 bits, U32, @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
 display_mode_e displayMode;
 
-custom log_format_e 4 bits, U32, @OFFSET@, [0:0], "native", "Mega Log Viewer"
-log_format_e unusedLogFormat;
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 	int HD44780width;;"index", 1, 0, 0, 300, 0
 	int HD44780height;;"index", 1, 0, 0, 300, 0
@@ -721,7 +719,6 @@ pin_input_mode_e throttlePedalUpPinMode;
 	uint16_t idlePositionMax;+Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 
 
-        uint16_t[2] unusedExHpfp;;"", 1, 0, -20, 100, 0
 
 	uint32_t tunerStudioSerialSpeed;+Secondary TTL channel baud rate;"BPs", 1, 0, 0, 1000000, 0
 
@@ -785,13 +782,10 @@ output_pin_e acFanPin;+Optional Radiator Fan used with A/C
 
 
     uint8_t mapCamSkipFactor;;"", 1, 0, 0, 255, 0
-	uint8_t[5] unused11;;"volts", 0.1, 0, 0, 20, 1
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 2", "type 2"
 	imu_type_e imuType
-
-	uint8_t[7] unusedpinModesWhereHere;;"", 1, 0, 0, 255, 0
 
 	uint8_t[DWELL_CURVE_SIZE] dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
@@ -822,12 +816,10 @@ custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UAR
 	output_pin_e acRelayPin;
 	pin_output_mode_e acRelayPinMode;
 
-	int16_t[16] unusedOutputFreqWhereHere;;"", 1, 0, 0, 255, 0
 
 
 custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	script_setting_t[SCRIPT_SETTING_COUNT iterate] scriptSetting;
-    int[8] unusedSettings;;"", 1, 0, 0, 255, 0
 
 ! todo: migrate to spi_pins & combine with spi pin modes
 	brain_pin_e spi1mosiPin;
@@ -873,7 +865,6 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	custom error_message_t @@ERROR_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@ERROR_BUFFER_SIZE@@
 	custom le_formula_t @@LE_COMMAND_LENGTH@@ string, ASCII, @OFFSET@, @@LE_COMMAND_LENGTH@@
-    uint8_t[16] unusedDigital;;"", 1, 0, 0, 255, 0
 
 	brain_input_pin_e vehicleSpeedSensorInputPin;
 	switch_input_pin_e clutchUpPin;+Some vehicles have a switch to indicate that clutch pedal is all the way up
@@ -1085,7 +1076,6 @@ bit unused_1484_bit_31
 
 float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
 
-	uint8_t[20] unused20Inputs;;"", 1, 0, 0, 255, 0
 
 	int idleStepperTotalSteps;;"count", 1, 0, 5, 3000, 0
 
@@ -1117,8 +1107,6 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	pid_s etb;
 	brain_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
 	brain_input_pin_e turboSpeedSensorInputPin;
-	float unused1760;;"x", 1, 0, 0, 1, 1
-	float unused1764;;"x", 1, 0, 0, 1, 1
 int16_t tps2Min;Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X;"ADC", 1, 0, 0, 1023, 0
 	output_pin_e starterControlPin;See also startStopButtonPin
@@ -1156,11 +1144,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	
 	float[CLT_CURVE_SIZE] cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C", 1, 0, -100, 250, 2
 	uint8_t[CLT_CURVE_SIZE] autoscale cltIdleRpm;See idleRpmPid;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 8000, 0
-	int[12] unusedCltIdleRpm;See idleRpmPid;"RPM", 1, 0, 0, 8000, 0
-	
+
 	float targetVBatt;+This is the target battery voltage the alternator PID control will attempt to maintain;"Volts", 1, 0, 0, 30, 1
 	float alternatorOffAboveTps;+Turns off alternator output above specified TPS, enabling this reduced parasitic drag on the engine at full load.;"%", 1, 0, 0, 200, 2
-	float unused2032;;"", 1, 0, 0, 1, 1
 	int16_t afterCrankingIACtaperDuration;+This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.;"cycles", 1, 0, 0, 5000, 0
 	
 	int16_t iacByTpsTaper;+Extra IAC, in percent between 0 and 100, tapered between zero and idle deactivation TPS value;"percent", 1, 0, 0, 500, 0
@@ -1173,14 +1159,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	int tpsAccelLength;+This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles. ;"cycles", 1, 0, 1, 200, 0
 	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 3
-	float unusedVvtOffsetWasHere;;"v", 1, 0, -720, 1000, 1
-	
+
 	int engineLoadAccelLength;;"cycles", 1, 0, 1, 200, 0
-	
-	float unusedEL1;;"roc", 1, 0, 0, 200, 3
-	float unusedEL2;;"coeff", 1, 0, 0, 200, 3
-	float unusedEL3;;"roc", 1, 0, 0, 200, 3
-	float unusedEL4;;"coeff", 1, 0, 0, 200, 3
+
 
 
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
@@ -1393,7 +1374,6 @@ gppwm_note_t[SCRIPT_CURVE_COUNT iterate] scriptCurveName;
 	float[SCRIPT_CURVE_8] scriptCurve6;;"y", 1, 0, -999, 1000, 3
 gppwm_note_t[SCRIPT_TABLE_COUNT iterate] scriptTableName;
 gppwm_note_t[SCRIPT_SETTING_COUNT iterate] scriptSettingName;
-uint8_t[108] unused3328;;"units", 1, 0, -20, 100, 0
 
 float tChargeAirCoefMin;Heat transfer coefficient at zero flow.\n0 means the air charge is fully heated to the same temperature as CLT.\n1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.;"", 1, 0, 0, 1, 3
 float tChargeAirCoefMax;Heat transfer coefficient at high flow, as defined by "max air flow".\n0 means the air charge is fully heated to the same temperature as CLT.\n1 means the air charge gains no heat, and enters the cylinder at the temperature measured by IAT.;"", 1, 0, 0, 1, 3
@@ -1512,7 +1492,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
         uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
         uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12500, 0
 
-	int[218] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+	int[295] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
