@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Dec 20 18:58:29 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Dec 20 19:13:35 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3985,7 +3985,7 @@ struct engine_configuration_s {
 	Nm
 	 * offset 4594
 	 */
-	uint8_t torqueValues[TORQUE_CURVE_SIZE];
+	scaled_channel<uint8_t, 1, 10> torqueValues[TORQUE_CURVE_SIZE];
 	/**
 	RPM
 	 * offset 4602
@@ -4389,4 +4389,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Dec 20 18:58:29 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on hellen_cypress_gen_config.bat integration/rusefi_config.txt Mon Dec 20 19:13:35 UTC 2021
