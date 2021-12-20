@@ -60,6 +60,8 @@ TEST(ignition, trailingSpark) {
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
+	setWholeTimingTable(0);
+
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);

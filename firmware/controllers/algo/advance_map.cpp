@@ -249,43 +249,4 @@ float getTopAdvanceForBore(chamber_style_e style, int octane, double compression
     return ((int)(result * 10)) / 10.0;
 }
 
-float getAdvanceForRpm(int rpm, float advanceMax) {
-        if (rpm >= 3000)
-            return advanceMax;
-        if (rpm < 600)
-            return 10;
-       return interpolateMsg("advance", 600, 10, 3000, advanceMax, rpm);
-}
-
-#define round10(x) efiRound(x, 0.1)
-
-float getInitialAdvance(int rpm, float map, float advanceMax) {
-	map = minF(map, 100);
-	float advance = getAdvanceForRpm(rpm, advanceMax);
-
-	if (rpm >= 3000)
-		return round10(advance + 0.1 * (100 - map));
-	return round10(advance + 0.1 * (100 - map) * rpm / 3000);
-}
-
-/**
- * this method builds a good-enough base timing advance map bases on a number of heuristics
- */
-void buildTimingMap(float advanceMax) {
-	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
-		warning(CUSTOM_WRONG_ALGORITHM, "wrong algorithm for MAP-based timing");
-		return;
-	}
-	/**
-	 * good enough (but do not trust us!) default timing map in case of MAP-based engine load
-	 */
-	for (int loadIndex = 0; loadIndex < IGN_LOAD_COUNT; loadIndex++) {
-		float load = config->ignitionLoadBins[loadIndex];
-		for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
-			float rpm = config->ignitionRpmBins[rpmIndex];
-			config->ignitionTable[loadIndex][rpmIndex] = getInitialAdvance(rpm, load, advanceMax);
-		}
-	}
-}
-
 #endif // EFI_ENGINE_CONTROL

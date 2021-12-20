@@ -688,20 +688,6 @@ static void showPinFunction(const char *pinName) {
 
 #endif /* EFI_PROD_CODE */
 
-static void setTimingMap(const char * rpmStr, const char *loadStr, const char *valueStr) {
-	float rpm = atoff(rpmStr);
-	float engineLoad = atoff(loadStr);
-	float value = atoff(valueStr);
-
-	int rpmIndex = findIndexMsg("setTM", config->ignitionRpmBins, IGN_RPM_COUNT, rpm);
-	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndexMsg("setTM", config->ignitionLoadBins, IGN_LOAD_COUNT, engineLoad);
-	loadIndex = loadIndex < 0 ? 0 : loadIndex;
-
-	config->ignitionTable[loadIndex][rpmIndex] = value;
-	efiPrintf("Setting timing map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
-}
-
 static void setSpiMode(int index, bool mode) {
 	switch (index) {
 	case 1:
@@ -1221,8 +1207,6 @@ void initSettings(void) {
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
 	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
-
-	addConsoleActionSSS("set_timing_map", setTimingMap);
 
 	addConsoleAction("stopengine", (Void) scheduleStopEngine);
 
