@@ -263,7 +263,7 @@ public class ConfigField {
             scale = scale.substring(1, scale.length() - 1);
             String[] parts = scale.split("/");
             if (parts.length != 2)
-                throw new IllegalArgumentException("Two parts of division expected in " + scale);
+                throw new IllegalArgumentException(name + ": Two parts of division expected in " + scale);
             factor = Double.parseDouble(parts[0]) / Double.parseDouble(parts[1]);
         } else {
             factor = Double.parseDouble(scale);

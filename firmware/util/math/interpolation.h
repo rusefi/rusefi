@@ -20,7 +20,6 @@
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 
 int findIndex(const float array[], int size, float value);
-#define findIndexMsg(msg, array, size, value) findIndexMsgExt<float>(msg, array, size, value)
 int findIndex2(const float array[], unsigned size, float value);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
@@ -203,7 +202,20 @@ int findIndexMsgExt(const char *msg, const kType array[], int size, kType value)
 	return middle;
 }
 
-void setCurveValue(float bins[], float values[], int size, float key, float value);
+#define findIndexMsg(msg, array, size, value) findIndexMsgExt<float>(msg, array, size, value)
+
+/**
+ * Sets specified value for specified key in a correction curve
+ * see also setLinearCurve()
+ */
+template<typename VType, typename kType>
+void setCurveValue(const kType bins[], VType values[], int size, float key, float value) {
+	int index = findIndexMsg("tbVl", bins, size, key);
+	if (index == -1)
+		index = 0;
+	values[index] = value;
+}
+
 void initInterpolation();
 
 class FastInterpolation {

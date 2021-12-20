@@ -11,7 +11,7 @@ TEST(sensors, vrThreshold) {
 	EngineTestHelper eth(HELLEN_128_MERCEDES_4_CYL);
 
 	auto& cfg = engineConfiguration->vrThreshold[0];
-	ASSERT_FLOAT_EQ(0.8 * PACK_PERCENT_BYTE_MULT, cfg.values[2]);
+	ASSERT_FLOAT_EQ(0.8, cfg.values[2]);
 }
 
 TEST(sensors, mapDecoding) {

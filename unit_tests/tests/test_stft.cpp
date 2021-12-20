@@ -51,7 +51,7 @@ TEST(ClosedLoopFuel, CellSelection) {
 	stft_s cfg;
 
 	// Sensible region config
-	cfg.maxIdleRegionRpm = 1500 / RPM_1_BYTE_PACKING_MULT;
+	cfg.maxIdleRegionRpm = 1500;
 	cfg.minPowerLoad = 80;
 	cfg.maxOverrunLoad = 30;
 
