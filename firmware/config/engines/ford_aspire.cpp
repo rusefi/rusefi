@@ -38,9 +38,6 @@ static const int8_t default_aspire_timing_table[16][16] = {
 #endif
 
 static void setDefaultAspireMaps() {
-	setTimingLoadBin(1.2, 4.4);
-	setTimingRpmBin(800, 7000);
-
 #if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
 	copyTable(config->ignitionTable, default_aspire_timing_table);
 #endif
