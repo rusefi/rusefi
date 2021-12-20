@@ -703,6 +703,138 @@ enable2ndByteCanID = false
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
+   table = fuelTrimTbl1,  fuelTrimMap1,  "Fuel trim cyl 1",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims1_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl2,  fuelTrimMap2,  "Fuel trim cyl 2",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims2_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl3,  fuelTrimMap3,  "Fuel trim cyl 3",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims3_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl4,  fuelTrimMap4,  "Fuel trim cyl 4",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims4_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl5,  fuelTrimMap5,  "Fuel trim cyl 5",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims5_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl6,  fuelTrimMap6,  "Fuel trim cyl 6",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims6_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl7,  fuelTrimMap7,  "Fuel trim cyl 7",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims7_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl8,  fuelTrimMap8,  "Fuel trim cyl 8",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims8_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl9,  fuelTrimMap9,  "Fuel trim cyl 9",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims9_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl10,  fuelTrimMap10,  "Fuel trim cyl 10",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims10_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl11,  fuelTrimMap11,  "Fuel trim cyl 11",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims11_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = fuelTrimTbl12,  fuelTrimMap12,  "Fuel trim cyl 12",   1
+      xBins = fuelTrimRpmBins,  RPMValue
+      yBins = fuelTrimLoadBins, veTableYAxis
+      zBins = fuelTrims12_table
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = ignTrimTbl1,  ignTrimMap1,  "Ign trim cyl 1",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims1_table
+
+   table = ignTrimTbl2,  ignTrimMap2,  "Ign trim cyl 2",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims2_table
+
+   table = ignTrimTbl3,  ignTrimMap3,  "Ign trim cyl 3",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims3_table
+
+   table = ignTrimTbl4,  ignTrimMap4,  "Ign trim cyl 4",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims4_table
+
+   table = ignTrimTbl5,  ignTrimMap5,  "Ign trim cyl 5",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims5_table
+
+   table = ignTrimTbl6,  ignTrimMap6,  "Ign trim cyl 6",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims6_table
+
+   table = ignTrimTbl7,  ignTrimMap7,  "Ign trim cyl 7",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims7_table
+
+   table = ignTrimTbl8,  ignTrimMap8,  "Ign trim cyl 8",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims8_table
+
+   table = ignTrimTbl9,  ignTrimMap9,  "Ign trim cyl 9",   1
+      xBins =ignTrimRpmBins,  RPMValue
+      yBins =ignTrimLoadBins, ignitionLoad
+      zBins =ignTrims9_table
+
+   table = ignTrimTbl10,  ignTrimMap10,  "Ign trim cyl 10",   1
+      xBins = ignTrimRpmBins,  RPMValue
+      yBins = ignTrimLoadBins, ignitionLoad
+      zBins = ignTrims10_table
+
+   table = ignTrimTbl11,  ignTrimMap11,  "Ign trim cyl 11",   1
+      xBins = ignTrimRpmBins,  RPMValue
+      yBins = ignTrimLoadBins, ignitionLoad
+      zBins = ignTrims11_table
+
+   table = ignTrimTbl12,  ignTrimMap12,  "Ign trim cyl 12",   1
+      xBins = ignTrimRpmBins,  RPMValue
+      yBins = ignTrimLoadBins, ignitionLoad
+      zBins = ignTrims12_table
+
 	table = mapEstimateTableTbl, mapEstimateTableMap, "MAP Estimate", 1
 		xBins = mapEstimateRpmBins, RPMValue
 		yBins = mapEstimateTpsBins, TPSValue
@@ -1356,6 +1488,33 @@ menuDialog = main
 #		subMenu = antiLag,        			"Antilag Setup"
 #		subMenu = std_separator
 
+		groupMenu = "Cylinder fuel trims"
+		groupChildMenu = fuelTrimTbl1,		"Fuel trim cyl 1"
+		groupChildMenu = fuelTrimTbl2,		"Fuel trim cyl 2"
+		groupChildMenu = fuelTrimTbl3,		"Fuel trim cyl 3"
+		groupChildMenu = fuelTrimTbl4,		"Fuel trim cyl 4"
+		groupChildMenu = fuelTrimTbl5,		"Fuel trim cyl 5"
+		groupChildMenu = fuelTrimTbl6,		"Fuel trim cyl 6"
+		groupChildMenu = fuelTrimTbl7,		"Fuel trim cyl 7"
+		groupChildMenu = fuelTrimTbl8,		"Fuel trim cyl 8"
+		groupChildMenu = fuelTrimTbl9,		"Fuel trim cyl 9"
+		groupChildMenu = fuelTrimTbl10,		"Fuel trim cyl 10"
+		groupChildMenu = fuelTrimTbl11,		"Fuel trim cyl 11"
+		groupChildMenu = fuelTrimTbl12,		"Fuel trim cyl 12"
+
+		groupMenu = "Cylinder ign trims"
+		groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
+		groupChildMenu = ignTrimTbl2,		"Ignition trim cyl 2"
+		groupChildMenu = ignTrimTbl3,		"Ignition trim cyl 3"
+		groupChildMenu = ignTrimTbl4,		"Ignition trim cyl 4"
+		groupChildMenu = ignTrimTbl5,		"Ignition trim cyl 5"
+		groupChildMenu = ignTrimTbl6,		"Ignition trim cyl 6"
+		groupChildMenu = ignTrimTbl7,		"Ignition trim cyl 7"
+		groupChildMenu = ignTrimTbl8,		"Ignition trim cyl 8"
+		groupChildMenu = ignTrimTbl9,		"Ignition trim cyl 9"
+		groupChildMenu = ignTrimTbl10,		"Ignition trim cyl 10"
+		groupChildMenu = ignTrimTbl11,		"Ignition trim cyl 11"
+		groupChildMenu = ignTrimTbl12,		"Ignition trim cyl 12"
 
       menu = "Help"
          subMenu = helpGeneral,     "rusEFI Info"
