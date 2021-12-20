@@ -1,7 +1,25 @@
 #include "pch.h"
 float getConfigValueByName(const char *name) {
+	if (strEqualCaseInsensitive(name, "sensorSnifferRpmThreshold"))
+		return engineConfiguration->sensorSnifferRpmThreshold;
+	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
+		return engineConfiguration->rpmHardLimit;
+	if (strEqualCaseInsensitive(name, "launchRpm"))
+		return engineConfiguration->launchRpm;
 	if (strEqualCaseInsensitive(name, "engineSnifferRpmThreshold"))
 		return engineConfiguration->engineSnifferRpmThreshold;
+	if (strEqualCaseInsensitive(name, "multisparkMaxRpm"))
+		return engineConfiguration->multisparkMaxRpm;
+	if (strEqualCaseInsensitive(name, "maxAcRpm"))
+		return engineConfiguration->maxAcRpm;
+	if (strEqualCaseInsensitive(name, "maxAcTps"))
+		return engineConfiguration->maxAcTps;
+	if (strEqualCaseInsensitive(name, "maxAcClt"))
+		return engineConfiguration->maxAcClt;
+	if (strEqualCaseInsensitive(name, "multisparkMaxSparkingAngle"))
+		return engineConfiguration->multisparkMaxSparkingAngle;
+	if (strEqualCaseInsensitive(name, "multisparkMaxExtraSparkCount"))
+		return engineConfiguration->multisparkMaxExtraSparkCount;
 	if (strEqualCaseInsensitive(name, "injector.flow"))
 		return engineConfiguration->injector.flow;
 	if (strEqualCaseInsensitive(name, "isForcedInduction"))
@@ -118,8 +136,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->iat.config.resistance_3;
 	if (strEqualCaseInsensitive(name, "iat.config.bias_resistor"))
 		return engineConfiguration->iat.config.bias_resistor;
-	if (strEqualCaseInsensitive(name, "launchRpm"))
-		return engineConfiguration->launchRpm;
 	if (strEqualCaseInsensitive(name, "launchTimingRetard"))
 		return engineConfiguration->launchTimingRetard;
 	if (strEqualCaseInsensitive(name, "hip9011PrescalerAndSDO"))
@@ -132,10 +148,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->specs.cylindersCount;
 	if (strEqualCaseInsensitive(name, "cylinderBore"))
 		return engineConfiguration->cylinderBore;
-	if (strEqualCaseInsensitive(name, "sensorSnifferRpmThreshold"))
-		return engineConfiguration->sensorSnifferRpmThreshold;
-	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
-		return engineConfiguration->rpmHardLimit;
 	if (strEqualCaseInsensitive(name, "extraInjectionOffset"))
 		return engineConfiguration->extraInjectionOffset;
 	if (strEqualCaseInsensitive(name, "crankingTimingAngle"))
@@ -340,12 +352,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->antiLagRpmTreshold;
 	if (strEqualCaseInsensitive(name, "startCrankingDuration"))
 		return engineConfiguration->startCrankingDuration;
-	if (strEqualCaseInsensitive(name, "multisparkMaxRpm"))
-		return engineConfiguration->multisparkMaxRpm;
-	if (strEqualCaseInsensitive(name, "multisparkMaxSparkingAngle"))
-		return engineConfiguration->multisparkMaxSparkingAngle;
-	if (strEqualCaseInsensitive(name, "multisparkMaxExtraSparkCount"))
-		return engineConfiguration->multisparkMaxExtraSparkCount;
 	if (strEqualCaseInsensitive(name, "clutchUpPinInverted"))
 		return engineConfiguration->clutchUpPinInverted;
 	if (strEqualCaseInsensitive(name, "clutchDownPinInverted"))
@@ -554,12 +560,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->mapAveragingSchedulingAtIndex;
 	if (strEqualCaseInsensitive(name, "tachPulseDuractionMs"))
 		return engineConfiguration->tachPulseDuractionMs;
-	if (strEqualCaseInsensitive(name, "maxAcRpm"))
-		return engineConfiguration->maxAcRpm;
-	if (strEqualCaseInsensitive(name, "maxAcTps"))
-		return engineConfiguration->maxAcTps;
-	if (strEqualCaseInsensitive(name, "maxAcClt"))
-		return engineConfiguration->maxAcClt;
 	if (strEqualCaseInsensitive(name, "wwaeTau"))
 		return engineConfiguration->wwaeTau;
 	if (strEqualCaseInsensitive(name, "alternatorControl.pFactor"))
@@ -897,9 +897,54 @@ float getConfigValueByName(const char *name) {
 	return EFI_ERROR_CODE;
 }
 void setConfigValueByName(const char *name, float value) {
+	if (strEqualCaseInsensitive(name, "sensorSnifferRpmThreshold"))
+	{
+		engineConfiguration->sensorSnifferRpmThreshold = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
+	{
+		engineConfiguration->rpmHardLimit = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "launchRpm"))
+	{
+		engineConfiguration->launchRpm = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "engineSnifferRpmThreshold"))
 	{
 		engineConfiguration->engineSnifferRpmThreshold = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "multisparkMaxRpm"))
+	{
+		engineConfiguration->multisparkMaxRpm = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "maxAcRpm"))
+	{
+		engineConfiguration->maxAcRpm = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "maxAcTps"))
+	{
+		engineConfiguration->maxAcTps = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "maxAcClt"))
+	{
+		engineConfiguration->maxAcClt = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "multisparkMaxSparkingAngle"))
+	{
+		engineConfiguration->multisparkMaxSparkingAngle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "multisparkMaxExtraSparkCount"))
+	{
+		engineConfiguration->multisparkMaxExtraSparkCount = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "injector.flow"))
@@ -1192,11 +1237,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->iat.config.bias_resistor = value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "launchRpm"))
-	{
-		engineConfiguration->launchRpm = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "launchTimingRetard"))
 	{
 		engineConfiguration->launchTimingRetard = (int)value;
@@ -1225,16 +1265,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "cylinderBore"))
 	{
 		engineConfiguration->cylinderBore = value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "sensorSnifferRpmThreshold"))
-	{
-		engineConfiguration->sensorSnifferRpmThreshold = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "rpmHardLimit"))
-	{
-		engineConfiguration->rpmHardLimit = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "extraInjectionOffset"))
@@ -1745,21 +1775,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "startCrankingDuration"))
 	{
 		engineConfiguration->startCrankingDuration = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "multisparkMaxRpm"))
-	{
-		engineConfiguration->multisparkMaxRpm = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "multisparkMaxSparkingAngle"))
-	{
-		engineConfiguration->multisparkMaxSparkingAngle = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "multisparkMaxExtraSparkCount"))
-	{
-		engineConfiguration->multisparkMaxExtraSparkCount = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "clutchUpPinInverted"))
@@ -2280,21 +2295,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "tachPulseDuractionMs"))
 	{
 		engineConfiguration->tachPulseDuractionMs = value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "maxAcRpm"))
-	{
-		engineConfiguration->maxAcRpm = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "maxAcTps"))
-	{
-		engineConfiguration->maxAcTps = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "maxAcClt"))
-	{
-		engineConfiguration->maxAcClt = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "wwaeTau"))
