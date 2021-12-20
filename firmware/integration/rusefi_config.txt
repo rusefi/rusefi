@@ -130,6 +130,7 @@ struct_no_prefix engine_configuration_s
 
 #define NARROW_BAND_WIDE_BAND_CONVERSION_SIZE 8
 
+#define TORQUE_CURVE_SIZE 8
 #define CLT_CURVE_SIZE 16
 #define CLT_LIMITER_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
@@ -192,7 +193,10 @@ struct_no_prefix engine_configuration_s
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
 ! or packing numeric voltage inside an integer byte
 ! See usages of '@@RPM_1_BYTE_PACKING_MULT@@' where we apply the TS part of the magic
-! 
+!
+!
+! one byte RPM with '50' multiplier limits us at 12750 RPM which is below what small engines do
+! in order for rusEFI to run on some F1 engines shall we move away from one byte RPM or bump multiplier to 100 or what?
 #define RPM_1_BYTE_PACKING_MULT 50
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
@@ -1477,7 +1481,12 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
         uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
         uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12500, 0
 
-	int[429] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
+        uint8_t[TORQUE_CURVE_SIZE] torqueValues;;"Nm", 1, 0, 0, 255, 0
+        uint16_t[TORQUE_CURVE_SIZE] torqueRpmBins;;"RPM", 1, 0, 0, 65000, 0
+
+
+
+	int[423] mainUnusedEnd;;"units", 1, 0, -20, 100, 0
 
 ! end of engine_configuration_s
 end_struct
