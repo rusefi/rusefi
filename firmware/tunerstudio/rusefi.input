@@ -2017,8 +2017,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = injectorsDeadTime
 
 	dialog = ignitionCylExtra, "Cylinder offsets"
-		field = "Offset angle for each cylinder if you have an"
-		field = "odd-fire engine, like a v-twin or some V6/V10 engines"
+		field = "Offset angle for each cylinder if you have an odd fire"
+		field = "engine, like a v-twin or some V6/V10 engines"
 		field = "#Positive numbers retard, negative numbers advance"
 		field = "Offset cyl 1",                       timing_offset_cylinder1
 		field = "Offset cyl 2",                       timing_offset_cylinder2, {cylindersCount > 1}
