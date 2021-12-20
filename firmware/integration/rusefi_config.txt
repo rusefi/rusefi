@@ -993,10 +993,6 @@ end_struct
 
     gppwm_note_t[GPPWM_CHANNELS iterate] gpPwmNote;
 
-	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
-	brain_pin_e lps25BaroSensorScl
-	brain_pin_e lps25BaroSensorSda
-
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 
@@ -1512,10 +1508,10 @@ uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C", 1, 0, -100, 250, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%", 1, 0, 0, 500, 2
 
-uint8_t[IDLE_ADVANCE_CURVE_SIZE] autoscale idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 18000, 2
-float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg", 1, 0, -20, 90, 2
-uint8_t[IDLE_VE_CURVE_SIZE] autoscale idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 18000, 2
-float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 2
+uint8_t[IDLE_ADVANCE_CURVE_SIZE] autoscale idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 18000, 0
+float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg", 1, 0, -20, 90, 1
+uint8_t[IDLE_VE_CURVE_SIZE] autoscale idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 18000, 0
+float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 1
 
 #define LUA_SCRIPT_SIZE 8000
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
