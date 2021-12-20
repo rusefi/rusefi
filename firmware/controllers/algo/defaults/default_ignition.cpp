@@ -2,6 +2,7 @@
 
 #include "defaults.h"
 #include "table_helper.h"
+#include "advance_map.h"
 
 static void setDefaultMultisparkParameters() {
 	// 1ms spark + 2ms dwell
@@ -63,9 +64,9 @@ void setDefaultIgnition() {
 	setDefaultMultisparkParameters();
 
 	// Ignition advance table
-	// TODO: populate some values that aren't all 0?
-	setTimingLoadBin(1.2, 4.4);
+	setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
 	setTimingRpmBin(800, 7000);
+	buildTimingMap(35);
 
 	engineConfiguration->trailingSparkAngle = 10;
 
