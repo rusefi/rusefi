@@ -1312,7 +1312,6 @@ menuDialog = main
         subMenu = std_separator
 
 		subMenu = dwellSettings,			"Dwell", 0, {isIgnitionEnabled == 1}
-		subMenu = ignitionCylExtra,			"Ignition cylinder trim", 0, {isIgnitionEnabled == 1}
 		subMenu = multisparkSettings,		"Multispark", 0, {isIgnitionEnabled == 1}
 		subMenu = std_separator
 
@@ -1354,7 +1353,10 @@ menuDialog = main
 		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
 
 	menu = "&Advanced"
-        subMenu = boostDialog,          "Boost Control"
+		subMenu = ignitionCylExtra,			"Cylinder offsets", 0
+
+		subMenu = std_separator
+		subMenu = boostDialog,          "Boost Control"
 		subMenu = boostOpenLoopDialog,	"Boost Control Open Loop",          { isBoostControlEnabled && boostType == 0 }
 		subMenu = boostPidDialog,       "Boost Control Closed Loop PID",    { isBoostControlEnabled && boostType == 1 }
 		subMenu = boostTargetDialog,	"Boost Control Closed Loop Target", { isBoostControlEnabled && boostType == 1 }
@@ -2014,19 +2016,22 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = fuelParams
 		panel = injectorsDeadTime
 
-	dialog = ignitionCylExtra, "Ignition Cylinder Extra Timing"
-		field = "Extra cyl #1",                       timing_offset_cylinder1
-		field = "Extra cyl #2",                       timing_offset_cylinder2, {cylindersCount > 1}
-		field = "Extra cyl #3",                       timing_offset_cylinder3, {cylindersCount > 2}
-		field = "Extra cyl #4",                       timing_offset_cylinder4, {cylindersCount > 3}
-		field = "Extra cyl #5",                       timing_offset_cylinder5, {cylindersCount > 4}
-		field = "Extra cyl #6",                       timing_offset_cylinder6, {cylindersCount > 5}
-		field = "Extra cyl #7",                       timing_offset_cylinder7, {cylindersCount > 6}
-		field = "Extra cyl #8",                       timing_offset_cylinder8, {cylindersCount > 7}
-		field = "Extra cyl #9",                       timing_offset_cylinder9, {cylindersCount > 8}
-		field = "Extra cyl #10",                       timing_offset_cylinder10, {cylindersCount > 9}
-		field = "Extra cyl #11",                       timing_offset_cylinder11, {cylindersCount > 10} 
-		field = "Extra cyl #12",                       timing_offset_cylinder12, {cylindersCount > 11}
+	dialog = ignitionCylExtra, "Cylinder offsets"
+		field = "Offset angle for each cylinder if you have an"
+		field = "odd-fire engine, like a v-twin or some V6/V10 engines"
+		field = "#Positive numbers retard, negative numbers advance"
+		field = "Offset cyl 1",                       timing_offset_cylinder1
+		field = "Offset cyl 2",                       timing_offset_cylinder2, {cylindersCount > 1}
+		field = "Offset cyl 3",                       timing_offset_cylinder3, {cylindersCount > 2}
+		field = "Offset cyl 4",                       timing_offset_cylinder4, {cylindersCount > 3}
+		field = "Offset cyl 5",                       timing_offset_cylinder5, {cylindersCount > 4}
+		field = "Offset cyl 6",                       timing_offset_cylinder6, {cylindersCount > 5}
+		field = "Offset cyl 7",                       timing_offset_cylinder7, {cylindersCount > 6}
+		field = "Offset cyl 8",                       timing_offset_cylinder8, {cylindersCount > 7}
+		field = "Offset cyl 9",                       timing_offset_cylinder9, {cylindersCount > 8}
+		field = "Offset cyl 10",                       timing_offset_cylinder10, {cylindersCount > 9}
+		field = "Offset cyl 11",                       timing_offset_cylinder11, {cylindersCount > 10} 
+		field = "Offset cyl 12",                       timing_offset_cylinder12, {cylindersCount > 11}
 
 	dialog = multisparkDwellParams, "Delay & Dwell"
 		field = "Spark duration",						multisparkSparkDuration, {multisparkEnable}
