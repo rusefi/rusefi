@@ -62,7 +62,9 @@ endif
 
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
-  USE_CPPOPT = -std=c++2a -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
+  USE_CPPOPT  = -std=c++2a -Wno-register -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-use-cxa-atexit
+  # gcc-10 c++ 2a depricated uses of volatile errors
+  USE_CPPOPT += -Wno-deprecated
 endif
 
 # Hellen is one of the boards which cares
