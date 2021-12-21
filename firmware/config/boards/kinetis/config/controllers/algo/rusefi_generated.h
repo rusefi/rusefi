@@ -60,10 +60,10 @@
 #define AFTERSTART_DECAY_CURVE_SIZE 8
 #define AFTERSTART_ENRICH_CURVE_SIZE 8
 #define AFTERSTART_HOLD_CURVE_SIZE 8
-#define afterstartCoolantBins_offset 6404
-#define afterstartDecayTime_offset 6500
-#define afterstartEnrich_offset 6468
-#define afterstartHoldTime_offset 6436
+#define afterstartCoolantBins_offset 5112
+#define afterstartDecayTime_offset 5208
+#define afterstartEnrich_offset 5176
+#define afterstartHoldTime_offset 5144
 #define air_pressure_sensor_config_s_size 16
 #define air_pressure_sensor_type_e_auto_enum "MT_CUSTOM", "MT_DENSO183", "MT_MPX4250", "MT_HONDA3BAR", "MT_DODGE_NEON_2003", "MT_SUBY_DENSO", "MT_GM_3_BAR", "MT_MPX4100", "MT_TOYOTA_89420_02010", "MT_MPX4250A", "MT_BOSCH_2_5", "MT_MAZDA_1_BAR", "MT_GM_2_BAR", "MT_GM_1_BAR", "MT_MPXH6400"
 #define air_pressure_sensor_type_e_Force_4_bytes_size_cranking_map_type ENUM_32_BITS
@@ -202,10 +202,10 @@
 #define boostPid_periodMs_offset 926
 #define boostPid_pFactor_offset 912
 #define boostPwmFrequency_offset 936
-#define boostRpmBins_offset 6596
-#define boostTableClosedLoop_offset 6604
-#define boostTableOpenLoop_offset 6532
-#define boostTpsBins_offset 6668
+#define boostRpmBins_offset 5304
+#define boostTableClosedLoop_offset 5312
+#define boostTableOpenLoop_offset 5240
+#define boostTpsBins_offset 5376
 #define boostType_e_auto_enum "OPEN_LOOP", "CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_Force_4bytes_size_boostType_e ENUM_32_BITS
@@ -500,12 +500,12 @@
 #define clt_tempC_2_offset 344
 #define clt_tempC_3_offset 348
 #define CLT_TIMING_CURVE_SIZE 8
-#define cltCrankingCorr_offset 6788
-#define cltCrankingCorrBins_offset 6756
-#define cltFuelCorr_offset 14964
-#define cltFuelCorrBins_offset 14900
-#define cltIdleCorr_offset 15348
-#define cltIdleCorrBins_offset 15284
+#define cltCrankingCorr_offset 5496
+#define cltCrankingCorrBins_offset 5464
+#define cltFuelCorr_offset 13672
+#define cltFuelCorrBins_offset 13608
+#define cltIdleCorr_offset 14056
+#define cltIdleCorrBins_offset 13992
 #define cltIdleRpm_offset 1656
 #define cltIdleRpmBins_offset 1592
 #define cltRevLimitRpm_offset 2896
@@ -593,10 +593,10 @@
 #define cranking_rpm_offset 180
 #define crankingAdvance_offset 2688
 #define crankingAdvanceBins_offset 2672
-#define crankingCycleBins_offset 15252
-#define crankingCycleCoef_offset 15220
-#define crankingFuelBins_offset 15188
-#define crankingFuelCoef_offset 15156
+#define crankingCycleBins_offset 13960
+#define crankingCycleCoef_offset 13928
+#define crankingFuelBins_offset 13896
+#define crankingFuelCoef_offset 13864
 #define crankingIACposition_offset 1844
 #define crankingInjectionMode_offset 436
 #define crankingTimingAngle_offset 448
@@ -605,6 +605,7 @@
 #define CRITICAL_PREFIX "CRITICAL"
 #define cutFuelOnHardLimit_offset 1260
 #define cutSparkOnHardLimit_offset 1260
+#define cyl_trim_s_size 16
 #define cylinderBankSelect10_offset 3465
 #define cylinderBankSelect11_offset 3466
 #define cylinderBankSelect12_offset 3467
@@ -729,7 +730,7 @@
 #define enableTrailingSparks_offset 164
 #define enableVerboseCan2Tx_offset 1740
 #define enableVerboseCanTx_offset 748
-#define engine_configuration_s_size 6284
+#define engine_configuration_s_size 4992
 #define engine_load_mode_e_auto_enum "INVALID", "INVALID", "INVALID", "LM_SPEED_DENSITY", "LM_REAL_MAF", "LM_ALPHA_N", "LM_LUA", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "LM_MOCK"
 #define engine_load_mode_e_enum "INVALID", "INVALID", "INVALID", "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_Force_4_bytes_size_engine_load_mode ENUM_32_BITS
@@ -966,6 +967,32 @@
 #define fuelTrim7_offset 4058
 #define fuelTrim8_offset 4059
 #define fuelTrim9_offset 4060
+#define fuelTrimLoadBins_offset 22808
+#define fuelTrimRpmBins_offset 22816
+#define fuelTrims10_offset 22968
+#define fuelTrims10_table_offset 22968
+#define fuelTrims11_offset 22984
+#define fuelTrims11_table_offset 22984
+#define fuelTrims12_offset 23000
+#define fuelTrims12_table_offset 23000
+#define fuelTrims1_offset 22824
+#define fuelTrims1_table_offset 22824
+#define fuelTrims2_offset 22840
+#define fuelTrims2_table_offset 22840
+#define fuelTrims3_offset 22856
+#define fuelTrims3_table_offset 22856
+#define fuelTrims4_offset 22872
+#define fuelTrims4_table_offset 22872
+#define fuelTrims5_offset 22888
+#define fuelTrims5_table_offset 22888
+#define fuelTrims6_offset 22904
+#define fuelTrims6_table_offset 22904
+#define fuelTrims7_offset 22920
+#define fuelTrims7_table_offset 22920
+#define fuelTrims8_offset 22936
+#define fuelTrims8_table_offset 22936
+#define fuelTrims9_offset 22952
+#define fuelTrims9_table_offset 22952
 #define GAP_TRACKING_LENGTH 18
 #define gapTrackingLengthOverride_offset 456
 #define GAUGE_COIL_DWELL_TIME "dwell: coil charge time"
@@ -1240,8 +1267,8 @@
 #define iat_tempC_1_offset 372
 #define iat_tempC_2_offset 376
 #define iat_tempC_3_offset 380
-#define iatFuelCorr_offset 15092
-#define iatFuelCorrBins_offset 15028
+#define iatFuelCorr_offset 13800
+#define iatFuelCorrBins_offset 13736
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define idle_antiwindupFreq_offset 704
 #define idle_derivativeFilterLoss_offset 524
@@ -1264,8 +1291,8 @@
 #define idle_stepperDirectionPin_offset 613
 #define idle_stepperStepPin_offset 614
 #define IDLE_VE_CURVE_SIZE 8
-#define idleAdvance_offset 6828
-#define idleAdvanceBins_offset 6820
+#define idleAdvance_offset 5536
+#define idleAdvanceBins_offset 5528
 #define idleIncrementalPidCic_offset 748
 #define idleMode_offset 1268
 #define idlePidActivationTime_offset 2180
@@ -1304,8 +1331,8 @@
 #define idleTimingPid_periodMs_offset 3430
 #define idleTimingPid_pFactor_offset 3416
 #define idleTimingPidDeadZone_offset 3436
-#define idleVe_offset 6868
-#define idleVeBins_offset 6860
+#define idleVe_offset 5576
+#define idleVeBins_offset 5568
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
 #define ignition_mode_e_auto_enum "IM_ONE_COIL", "IM_INDIVIDUAL_COILS", "IM_WASTED_SPARK", "IM_TWO_COILS"
@@ -1315,10 +1342,10 @@
 #define ignition_mode_e_IM_TWO_COILS 3
 #define ignition_mode_e_IM_WASTED_SPARK 2
 #define ignitionDwellForCrankingMs_offset 188
-#define ignitionIatCorrLoadBins_offset 18484
-#define ignitionIatCorrRpmBins_offset 18548
-#define ignitionIatCorrTable_offset 17460
-#define ignitionLoadBins_offset 21684
+#define ignitionIatCorrLoadBins_offset 17192
+#define ignitionIatCorrRpmBins_offset 17256
+#define ignitionIatCorrTable_offset 16168
+#define ignitionLoadBins_offset 20232
 #define ignitionMode_offset 452
 #define ignitionPinMode_offset 657
 #define ignitionPins10_offset 653
@@ -1333,9 +1360,35 @@
 #define ignitionPins7_offset 650
 #define ignitionPins8_offset 651
 #define ignitionPins9_offset 652
-#define ignitionRpmBins_offset 21748
-#define ignitionTable_offset 20660
+#define ignitionRpmBins_offset 20264
+#define ignitionTable_offset 19208
 #define ignOverrideMode_offset 1752
+#define ignTrimLoadBins_offset 22600
+#define ignTrimRpmBins_offset 22608
+#define ignTrims10_offset 22760
+#define ignTrims10_table_offset 22760
+#define ignTrims11_offset 22776
+#define ignTrims11_table_offset 22776
+#define ignTrims12_offset 22792
+#define ignTrims12_table_offset 22792
+#define ignTrims1_offset 22616
+#define ignTrims1_table_offset 22616
+#define ignTrims2_offset 22632
+#define ignTrims2_table_offset 22632
+#define ignTrims3_offset 22648
+#define ignTrims3_table_offset 22648
+#define ignTrims4_offset 22664
+#define ignTrims4_table_offset 22664
+#define ignTrims5_offset 22680
+#define ignTrims5_table_offset 22680
+#define ignTrims6_offset 22696
+#define ignTrims6_table_offset 22696
+#define ignTrims7_offset 22712
+#define ignTrims7_table_offset 22712
+#define ignTrims8_offset 22728
+#define ignTrims8_table_offset 22728
+#define ignTrims9_offset 22744
+#define ignTrims9_table_offset 22744
 #define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_MM5_10", "IMU_TYPE_3", "IMU_TYPE_4"
 #define imu_type_e_IMU_MM5_10 2
 #define imu_type_e_IMU_NONE 0
@@ -1354,7 +1407,7 @@
 #define injection_mode_e_IM_SIMULTANEOUS 0
 #define injection_mode_e_IM_SINGLE_POINT 3
 #define injectionMode_offset 440
-#define injectionPhase_offset 18612
+#define injectionPhase_offset 17288
 #define injectionPinMode_offset 656
 #define injectionPins10_offset 641
 #define injectionPins11_offset 642
@@ -1394,8 +1447,8 @@
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define injectorNonlinearMode_offset 796
 #define injectorPressureType_offset 1753
-#define injPhaseLoadBins_offset 19636
-#define injPhaseRpmBins_offset 19700
+#define injPhaseLoadBins_offset 18312
+#define injPhaseRpmBins_offset 18344
 #define invertCamVVTSignal_offset 896
 #define invertPrimaryTriggerSignal_offset 1260
 #define invertSecondaryTriggerSignal_offset 1260
@@ -1451,9 +1504,9 @@
 #define knockRetardMaximum_offset 622
 #define knockRetardReapplyRate_offset 621
 #define knockSamplingDuration_offset 2104
-#define lambdaLoadBins_offset 23220
-#define lambdaRpmBins_offset 23284
-#define lambdaTable_offset 22964
+#define lambdaLoadBins_offset 21640
+#define lambdaRpmBins_offset 21672
+#define lambdaTable_offset 21384
 #define launchActivateDelay_offset 976
 #define launchActivatePin_offset 911
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
@@ -1509,7 +1562,7 @@
 #define luaOutputPins6_offset 1141
 #define luaOutputPins7_offset 1142
 #define luaOutputPins8_offset 1143
-#define luaScript_offset 6900
+#define luaScript_offset 5608
 #define MAF_DECODING_COUNT 256
 #define maf_sensor_type_e_auto_enum "CUSTOM", "Bosch0280218037", "Bosch0280218004", "DensoTODO"
 #define maf_sensor_type_e_Bosch0280218004 2
@@ -1519,8 +1572,8 @@
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
 #define maf_sensor_type_e_Internal_ForceMyEnumIntSize_maf_sensor ENUM_32_BITS
 #define mafAdcChannel_offset 551
-#define mafDecoding_offset 15412
-#define mafDecodingBins_offset 16436
+#define mafDecoding_offset 14120
+#define mafDecodingBins_offset 15144
 #define mafSensorType_offset 892
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
@@ -1554,9 +1607,9 @@
 #define mapCamSkipFactor_offset 768
 #define mapErrorDetectionTooHigh_offset 1540
 #define mapErrorDetectionTooLow_offset 1536
-#define mapEstimateRpmBins_offset 20372
-#define mapEstimateTable_offset 19828
-#define mapEstimateTpsBins_offset 20340
+#define mapEstimateRpmBins_offset 18984
+#define mapEstimateTable_offset 18440
+#define mapEstimateTpsBins_offset 18952
 #define mapHighValueVoltage_offset 1832
 #define mapLowValueVoltage_offset 1828
 #define mapMinBufferLength_offset 820
@@ -1652,11 +1705,11 @@
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define pauseEtbControl_offset 748
 #define PEDAL_TO_TPS_SIZE 8
-#define pedalToTpsPedalBins_offset 6740
-#define pedalToTpsRpmBins_offset 6748
-#define pedalToTpsTable_offset 6676
+#define pedalToTpsPedalBins_offset 5448
+#define pedalToTpsRpmBins_offset 5456
+#define pedalToTpsTable_offset 5384
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 24372
+#define persistent_config_s_size 23016
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1763,18 +1816,18 @@
 #define scriptSettingName6_offset 3272
 #define scriptSettingName7_offset 3288
 #define scriptSettingName8_offset 3304
-#define scriptTable1_offset 23668
-#define scriptTable1LoadBins_offset 23924
-#define scriptTable1RpmBins_offset 23956
-#define scriptTable2_offset 23988
-#define scriptTable2LoadBins_offset 24052
-#define scriptTable2RpmBins_offset 24084
-#define scriptTable3_offset 24116
-#define scriptTable3LoadBins_offset 24180
-#define scriptTable3RpmBins_offset 24212
-#define scriptTable4_offset 24244
-#define scriptTable4LoadBins_offset 24308
-#define scriptTable4RpmBins_offset 24340
+#define scriptTable1_offset 22024
+#define scriptTable1LoadBins_offset 22280
+#define scriptTable1RpmBins_offset 22296
+#define scriptTable2_offset 22312
+#define scriptTable2LoadBins_offset 22376
+#define scriptTable2RpmBins_offset 22392
+#define scriptTable3_offset 22408
+#define scriptTable3LoadBins_offset 22472
+#define scriptTable3RpmBins_offset 22488
+#define scriptTable4_offset 22504
+#define scriptTable4LoadBins_offset 22568
+#define scriptTable4RpmBins_offset 22584
 #define scriptTableName1_offset 3128
 #define scriptTableName2_offset 3144
 #define scriptTableName3_offset 3160
@@ -1807,7 +1860,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 3336538815
+#define SIGNATURE_HASH 3409005675
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -1947,7 +2000,7 @@
 #define tcuDownshiftButtonPin_offset 1579
 #define tcuDownshiftButtonPinMode_offset 3955
 #define tcuEnabled_offset 896
-#define tcuSolenoidTable_offset 19764
+#define tcuSolenoidTable_offset 18376
 #define tcuUpshiftButtonPin_offset 1578
 #define tcuUpshiftButtonPinMode_offset 3954
 #define test557pin_offset 807
@@ -1997,7 +2050,7 @@
 #define TORQUE_CURVE_SIZE 8
 #define torqueRpmBins_offset 4574
 #define torqueValues_offset 4566
-#define TOTAL_CONFIG_SIZE 24372
+#define TOTAL_CONFIG_SIZE 23016
 #define tps1_1AdcChannel_offset 520
 #define tps1_2AdcChannel_offset 689
 #define tps1SecondaryMax_offset 830
@@ -2021,9 +2074,9 @@
 #define tpsErrorDetectionTooLow_offset 172
 #define tpsMax_offset 170
 #define tpsMin_offset 168
-#define tpsTpsAccelFromRpmBins_offset 23604
-#define tpsTpsAccelTable_offset 23348
-#define tpsTpsAccelToRpmBins_offset 23636
+#define tpsTpsAccelFromRpmBins_offset 21960
+#define tpsTpsAccelTable_offset 21704
+#define tpsTpsAccelToRpmBins_offset 21992
 #define trailingCoilPins10_offset 1957
 #define trailingCoilPins11_offset 1958
 #define trailingCoilPins12_offset 1959
@@ -2218,6 +2271,7 @@
 #define triggerSimulatorPins1_offset 740
 #define triggerSimulatorPins2_offset 741
 #define triggerSimulatorPins3_offset 742
+#define TRIM_SIZE 4
 #define TS_BURN_COMMAND 'B'
 #define TS_BURN_COMMAND_char B
 #define TS_CHUNK_WRITE_COMMAND 'C'
@@ -2327,7 +2381,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.20.kin.3336538815"
+#define TS_SIGNATURE "rusEFI 2021.12.21.kin.3409005675"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2446,7 +2500,7 @@
 #define vehicleName_offset 1076
 #define vehicleSpeedSensorInputPin_offset 794
 #define vehicleWeight_offset 786
-#define veLoadBins_offset 22836
+#define veLoadBins_offset 21320
 #define veOverrideMode_offset 1733
 #define verboseCan2BaseAddress_offset 1736
 #define verboseCan_offset 164
@@ -2454,8 +2508,8 @@
 #define verboseTLE8888_offset 748
 #define verboseTriggerSynchDetails_offset 1272
 #define verboseVVTDecoding_offset 896
-#define veRpmBins_offset 22900
-#define veTable_offset 21812
+#define veRpmBins_offset 21352
+#define veTable_offset 20296
 #define VM_VVT_INACTIVE 0
 #define VOLTAGE_1_BYTE_PACKING_DIV 0.02
 #define VR_THRESHOLD_COUNT 2
@@ -2471,7 +2525,7 @@
 #define vrThreshold2_pin_offset 1176
 #define vrThreshold2_rpmBins_offset 1180
 #define vrThreshold2_values_offset 1186
-#define vssFilterReciprocal_offset 19824
+#define vssFilterReciprocal_offset 18436
 #define vssGearRatio_offset 624
 #define vssToothCount_offset 626
 #define vvt_mode_e_auto_enum "VVT_INACTIVE", "VVT_SECOND_HALF", "VVT_2JZ", "VVT_MIATA_NB2", "VVT_FIRST_HALF", "VVT_BOSCH_QUICK_START", "VVT_TOYOTA_4_1", "VVT_FORD_ST170", "VVT_BARRA_3_PLUS_1", "VVT_NISSAN_VQ", "VVT_HONDA_K", "VVT_NISSAN_MR", "VVT_12", "VVT_MAP_V_TWIN_ANOTHER"
@@ -2497,13 +2551,13 @@
 #define vvtOffsetsPadding_offset 1148
 #define vvtOutputFrequency1_offset 1864
 #define vvtPins1_offset 1840
-#define vvtTable1_offset 20404
-#define vvtTable1LoadBins_offset 20468
-#define vvtTable1RpmBins_offset 20500
-#define vvtTable2_offset 20532
-#define vvtTable2LoadBins_offset 20596
-#define vvtTable2RpmBins_offset 20628
-#define warning_message_offset 6284
+#define vvtTable1_offset 19016
+#define vvtTable1LoadBins_offset 19080
+#define vvtTable1RpmBins_offset 19096
+#define vvtTable2_offset 19112
+#define vvtTable2LoadBins_offset 19176
+#define vvtTable2RpmBins_offset 19192
+#define warning_message_offset 4992
 #define warningLedPin_offset 1685
 #define warningPeriod_offset 1290
 #define wastegatePositionMax_offset 726
