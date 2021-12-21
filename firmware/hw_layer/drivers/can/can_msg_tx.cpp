@@ -48,7 +48,7 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 
 CanTxMessage::~CanTxMessage() {
 #if EFI_CAN_SUPPORT
-	auto device = s_devices[0];
+	auto device = s_devices[busIndex];
 
 	if (!device) {
 		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
@@ -60,7 +60,9 @@ CanTxMessage::~CanTxMessage() {
 	}
 
 	if (engineConfiguration->verboseCan) {
-		efiPrintf("Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", CAN_SID(m_frame), m_frame.DLC,
+		efiPrintf("Sending CAN bus%d message: SID %x/%x %x %x %x %x %x %x %x %x",
+				busIndex,
+				CAN_SID(m_frame), m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
 				m_frame.data8[2], m_frame.data8[3],
 				m_frame.data8[4], m_frame.data8[5],
