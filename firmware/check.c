@@ -14,11 +14,4 @@
 	#error "GCC compiler >= 9.3.1 required"
 #endif
 
-#if (GCC_VERSION > 1000)
-	#pragma message("GCC is " STR(__GNUC__)"."STR(__GNUC_MINOR__)"."STR(__GNUC_PATCHLEVEL__))
-	#error "GCC10 not supported see https://github.com/rusefi/rusefi/labels/Gcc10"
-#endif
-
-
-
 #endif
