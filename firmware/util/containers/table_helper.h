@@ -64,7 +64,7 @@ private:
 	template <int TMult, int TDiv>
 	void initValues(scaled_channel<TValue, TMult, TDiv> (&table)[TRowNum][TColNum]) {
 		m_values = reinterpret_cast<TValue (*)[TRowNum][TColNum]>(&table);
-		m_valueMult = efi::ratio<TMult, TDiv>::asFloat();
+		m_valueMult = 1 / efi::ratio<TMult, TDiv>::asFloat();
 	}
 
 	void initValues(TValue (&table)[TRowNum][TColNum]) {
