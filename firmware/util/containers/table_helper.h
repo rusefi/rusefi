@@ -117,8 +117,9 @@ private:
 	float m_colMult = 1;
 };
 
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, float, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float, float> fuel_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, uint16_t, uint16_t, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, uint16_t, uint16_t> fuel_Map3D_t;
+typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float, float> baroCorr_Map3D_t;
 typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t, uint8_t> pedal2tps_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t, efi::ratio<LOAD_1_BYTE_PACKING_MULT>> boostOpenLoop_Map3D_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostClosedLoop_Map3D_t;
