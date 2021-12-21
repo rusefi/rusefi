@@ -202,7 +202,7 @@ int findIndexMsgExt(const char *msg, const kType array[], int size, kType value)
 	return middle;
 }
 
-#define findIndexMsg(msg, array, size, value) findIndexMsgExt<float>(msg, array, size, value)
+#define findIndexMsg(msg, array, size, value) findIndexMsgExt(msg, array, size, value)
 
 /**
  * Sets specified value for specified key in a correction curve
