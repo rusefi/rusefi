@@ -42,6 +42,9 @@ public:
 	 */
 	static void setDevice(CANDriver* device1, CANDriver* device2);
 #endif // EFI_CAN_SUPPORT
+
+	size_t busIndex = 0;
+
 	/**
 	 * @brief Read & write the raw underlying 8-byte buffer.
 	 */
