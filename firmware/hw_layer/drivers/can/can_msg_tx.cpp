@@ -13,14 +13,12 @@
 
 #include "can.h"
 
-extern int canWriteOk;
-extern int canWriteNotOk;
-
 #if EFI_CAN_SUPPORT
-/*static*/ CANDriver* CanTxMessage::s_device = nullptr;
+/*static*/ CANDriver* CanTxMessage::s_devices[2] = {nullptr, nullptr};
 
-/*static*/ void CanTxMessage::setDevice(CANDriver* device) {
-	s_device = device;
+/*static*/ void CanTxMessage::setDevice(CANDriver* device1, CANDriver* device2) {
+	s_devices[0] = device1;
+	s_devices[1] = device2;
 }
 #endif // EFI_CAN_SUPPORT
 
@@ -50,7 +48,7 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 
 CanTxMessage::~CanTxMessage() {
 #if EFI_CAN_SUPPORT
-	auto device = s_device;
+	auto device = s_devices[0];
 
 	if (!device) {
 		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
@@ -71,11 +69,13 @@ CanTxMessage::~CanTxMessage() {
 
 	// 100 ms timeout
 	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+#if EFI_TUNER_STUDIO
 	if (msg == MSG_OK) {
-		canWriteOk++;
+		engine->outputChannels.canWriteOk++;
 	} else {
-		canWriteNotOk++;
+		engine->outputChannels.canWriteNotOk++;
 	}
+#endif // EFI_TUNER_STUDIO
 #endif /* EFI_CAN_SUPPORT */
 }
 

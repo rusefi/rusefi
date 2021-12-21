@@ -22,9 +22,6 @@
 #include "string.h"
 #include "mpu_util.h"
 
-static int canReadCounter = 0;
-int canWriteOk = 0;
-int canWriteNotOk = 0;
 static bool isCanEnabled = false;
 
 // Values below calculated with http://www.bittiming.can-wiki.info/
@@ -150,9 +147,9 @@ public:
 			}
 
 			// Process the message
-			canReadCounter++;
+			engine->outputChannels.canReadCounter++;
 
-			processCanRxMessage(m_buffer, getTimeNowNt());
+			processCanRxMessage(m_index, m_buffer, getTimeNowNt());
 		}
 	}
 
@@ -177,7 +174,10 @@ static void canInfo() {
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
 
-	efiPrintf("CAN rx_cnt=%d/tx_ok=%d/tx_not_ok=%d", canReadCounter, canWriteOk, canWriteNotOk);
+	efiPrintf("CAN rx_cnt=%d/tx_ok=%d/tx_not_ok=%d",
+			engine->outputChannels.canReadCounter,
+			engine->outputChannels.canWriteOk,
+			engine->outputChannels.canWriteNotOk);
 }
 
 void setCanType(int type) {
@@ -186,10 +186,12 @@ void setCanType(int type) {
 }
 
 #if EFI_TUNER_STUDIO
-void postCanState(TunerStudioOutputChannels *tsOutputChannels) {
-	tsOutputChannels->canReadCounter = isCanEnabled ? canReadCounter : -1;
-	tsOutputChannels->canWriteOk = isCanEnabled ? canWriteOk : -1;
-	tsOutputChannels->canWriteNotOk = isCanEnabled ? canWriteNotOk : -1;
+void postCanState() {
+	if (!isCanEnabled) {
+		engine->outputChannels.canReadCounter = -1;
+		engine->outputChannels.canWriteOk = -1;
+		engine->outputChannels.canWriteNotOk = -1;
+	}
 }
 #endif /* EFI_TUNER_STUDIO */
 
@@ -202,6 +204,8 @@ void enableFrankensoCan() {
 void stopCanPins() {
 	efiSetPadUnusedIfConfigurationChanged(canTxPin);
 	efiSetPadUnusedIfConfigurationChanged(canRxPin);
+	efiSetPadUnusedIfConfigurationChanged(can2TxPin);
+	efiSetPadUnusedIfConfigurationChanged(can2RxPin);
 }
 
 // at the moment we support only very limited runtime configuration change, still not supporting online CAN toggle
@@ -232,6 +236,9 @@ void startCanPins() {
 
 	efiSetPadModeIfConfigurationChanged("CAN TX", canTxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
 	efiSetPadModeIfConfigurationChanged("CAN RX", canRxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
+
+	efiSetPadModeIfConfigurationChanged("CAN2 TX", can2TxPin, PAL_MODE_ALTERNATE(EFI_CAN_TX_AF));
+	efiSetPadModeIfConfigurationChanged("CAN2 RX", can2RxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
 void initCan(void) {
@@ -281,7 +288,7 @@ void initCan(void) {
 	}
 
 	// Plumb CAN device to tx system
-	CanTxMessage::setDevice(detectCanDevice(0));
+	CanTxMessage::setDevice(detectCanDevice(0), detectCanDevice(1));
 
 	// fire up threads, as necessary
 	if (engineConfiguration->canWriteEnabled) {
