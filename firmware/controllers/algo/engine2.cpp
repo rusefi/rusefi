@@ -168,7 +168,7 @@ void EngineState::periodicFastCallback() {
 	float advance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
 
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		timingAdvance[i] = advance;
+		timingAdvance[i] = advance + getCylinderIgnitionTrim(i, rpm, ignitionLoad);
 	}
 
 	// TODO: calculate me from a table!
