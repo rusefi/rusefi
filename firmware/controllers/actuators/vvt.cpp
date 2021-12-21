@@ -18,8 +18,10 @@
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-static fsio8_Map3D_u8t vvtTable1;
-static fsio8_Map3D_u8t vvtTable2;
+using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, uint16_t, uint16_t>;
+
+static vvt_map_t vvtTable1;
+static vvt_map_t vvtTable2;
 
 void VvtController::init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap) {
 	this->index = index;

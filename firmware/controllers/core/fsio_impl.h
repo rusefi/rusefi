@@ -17,8 +17,8 @@
 // see useFSIO5ForCriticalIssueEngineStop
 #define MAGIC_OFFSET_FOR_CRITICAL_ENGINE 5
 
-typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, float, float, float> fsio8_Map3D_f32t;
-typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, float, float> fsio8_Map3D_u8t;
+typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, float, uint16_t, uint16_t> fsio8_Map3D_f32t;
+typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, uint16_t, uint16_t> fsio8_Map3D_u8t;
 
 expected<float> getEngineValue(le_action_e action);
 

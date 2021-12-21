@@ -8,13 +8,13 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include <list>
-#include <string>
-
 #include "pch.h"
 #include "engine_test_helper.h"
 #include "serial_can.h"
 
+#include <array>
+#include <list>
+#include <string>
 
 using namespace std::string_literals;
 
@@ -38,10 +38,10 @@ public:
 	}
 
 	template<typename T>
-	void checkFrame(const T & frame, const std::string & bytes) {
+	void checkFrame(const T & frame, const std::string & bytes, int frameIndex) {
 		EXPECT_EQ(bytes.size(), frame.DLC);
 		for (size_t i = 0; i < bytes.size(); i++) {
-  			EXPECT_EQ(bytes[i], frame.data8[i]) << "Frame byte #" << i << " differs!";
+  			EXPECT_EQ(bytes[i], frame.data8[i]) << "Frame byte #" << i << " differs! Frame " << frameIndex;
 		}
 	}
 
@@ -78,9 +78,10 @@ public:
 		EXPECT_EQ(frames.size(), streamer.ctfList.size());
 		
 		auto it1 = streamer.ctfList.begin();
+		int frameIndex = 0;
 		auto it2 = frames.begin();
 		for (; it1 != streamer.ctfList.end() && it2 != frames.end(); it1++, it2++) {
-			streamer.checkFrame(*it1, *it2);
+			streamer.checkFrame(*it1, *it2, frameIndex++);
 		}
 	
 		// copy transmitted data back into the receive buffer
@@ -98,7 +99,7 @@ public:
 		std::string totalReceivedData;
 		for (size_t chunkSize : receiveChunks) {
 			size_t nr = chunkSize;
-			uint8_t rxbuf[256];
+			uint8_t rxbuf[1256];
 			streamReceiveTimeout(&nr, rxbuf, 0);
 			EXPECT_EQ(nr, chunkSize);
 			totalReceivedSize += nr;
@@ -152,27 +153,20 @@ TEST(testCanSerial, test2Frames) {
 		TestCanStreamerState state;
 		state.test({ "0123456789A" }, { "\x10"s "\x0B"s "012345"s, "\x21"s "6789A\0\0"s }, 11, { 2, 5, 4 }); // 11 bytes -> 2 8-byte frames
 	}
-	/*
 	{
 		TestCanStreamerState state;
-		state.test({ "0123456ABCDEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 14 }); // 14 bytes -> 2 8-byte frames, empty FIFO
+		state.test({ "0123456ABCDEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 14 }); // 14 bytes -> 3 8-byte frames, empty FIFO
 	}
-	{
-		TestCanStreamerState state;
-		state.test({ "0123456ABCDEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 6, 1, 1, 6 }); // 14 bytes -> 2 8-byte frames, empty FIFO, split receive test
-	}
-	*/
 }
 
-/*
 TEST(testCanSerial, testIrregularSplits) {
 	{
 		TestCanStreamerState state;
-		state.test({ "012", "3456ABCDEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 7, 7 }); // 14 bytes -> 2 8-byte frames, empty FIFO
+		state.test({ "012", "3456ABCDEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 7, 7 }); // 14 bytes -> 2 8-byte frames, empty FIFO
 	}
 	{
 		TestCanStreamerState state;
-		state.test({ "0123456ABC", "DEFG" }, { "\x07"s "0123456"s, "\x07"s "ABCDEFG"s }, 0, { 14 }); // 14 bytes -> 2 8-byte frames, empty FIFO
+		state.test({ "0123456ABC", "DEFG" }, { "\x10"s  "\x0E"s "012345"s, "\x21"s "6ABCDEF"s, "\x22"s "G\0\0\0\0\0\0"s }, 14, { 14 }); // 14 bytes -> 2 8-byte frames, empty FIFO
 	}
 }
 
@@ -180,13 +174,70 @@ TEST(testCanSerial, testLongMessage) {
 	{
 		TestCanStreamerState state;
 		state.test({ "abcdefghijklmnopqrstuvwxyz" }, {
-			"\x07"s "abcdefg"s,
-			"\x07"s "hijklmn"s,
-			"\x07"s "opqrstu"s,
-			"\x05"s "vwxyz\0\0"s }, 5, { 26 }); // 26 bytes -> 4 8-byte frames, 5 bytes left in FIFO
+				"\x10"s  "\x1A"s "abcdef"s,
+				"\x21"s "ghijklm"s,
+				"\x22"s "nopqrst"s,
+			    "\x23"s "uvwxyz\0"s }, 26, { 26 }); // 26 bytes -> 4 8-byte frames, 5 bytes left in FIFO
 	}
 }
-*/
 
+TEST(testCanSerial, test64_7Message) {
+	std::array<char, 71> buffer;
 
+	std::fill(std::begin(buffer), std::end(buffer), 0);
+
+	buffer[0] = 1;
+
+	buffer[64 + 7 - 1] = 4;
+	std::string str(std::begin(buffer),std::end(buffer));
+
+	TestCanStreamerState state;
+	state.test({ str }, {
+			/* 0 */
+			"\x10"s  "\x47"s "\x01\0\0\0\0\0"s,
+			"\x21"s "\0\0\0\0\0\0\0"s,
+			"\x22"s "\0\0\0\0\0\0\0"s,
+		    "\x23"s "\0\0\0\0\0\0\0"s,
+		    "\x24"s "\0\0\0\0\0\0\0"s,
+		    "\x25"s "\0\0\0\0\0\0\0"s,
+		    "\x26"s "\0\0\0\0\0\0\0"s,
+		    "\x27"s "\0\0\0\0\0\0\0"s,
+		    "\x28"s "\0\0\0\0\0\0\0"s,
+		    "\x29"s "\0\0\0\0\0\0\0"s,
+
+			/* 10 */
+			"\x2A"s "\0\4\0\0\0\0\0"s,
+
+	}, 71, { 64 + 7 });
+}
+
+TEST(testCanSerial, test3_64_4Message) {
+	std::array<char, 64> buffer64;
+
+	std::fill(std::begin(buffer64), std::end(buffer64), 0);
+
+	buffer64[0] = 1;
+
+	buffer64[64 - 1] = 4;
+	std::string str(std::begin(buffer64),std::end(buffer64));
+
+	TestCanStreamerState state;
+	state.test({ "123"s, str, "abcd"s }, {
+			/* 0 */
+			"\x10"s  "\x47"s "123\1\0\0"s,
+			"\x21"s "\0\0\0\0\0\0\0"s,
+			"\x22"s "\0\0\0\0\0\0\0"s,
+		    "\x23"s "\0\0\0\0\0\0\0"s,
+		    "\x24"s "\0\0\0\0\0\0\0"s,
+		    "\x25"s "\0\0\0\0\0\0\0"s,
+		    "\x26"s "\0\0\0\0\0\0\0"s,
+		    "\x27"s "\0\0\0\0\0\0\0"s,
+		    "\x28"s "\0\0\0\0\0\0\0"s,
+		    "\x29"s "\0\0\0\0\4ab"s,
+
+			/* 10 */
+			"\x2A"s "cd\0\0\0\0\0"s,
+
+	}, 71, { 64 + 7 });
+}
 

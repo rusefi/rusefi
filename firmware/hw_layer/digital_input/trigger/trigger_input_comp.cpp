@@ -114,7 +114,7 @@ void startTriggerInputPins(void) {
 	dacHysteresisDelta = dacHysteresisMin;
 	
 	// 20 rpm (60_2) = 1000*60/((2*60)*20) = 25 ms for 1 tooth event
-	float satRpm = engineConfiguration->triggerCompSensorSatRpm * RPM_1_BYTE_PACKING_MULT;
+	float satRpm = engineConfiguration->triggerCompSensorSatRpm;
 	hystUpdatePeriodNumEvents = engine->triggerCentral.triggerShape.getSize();	// = 116 for "60-2" trigger wheel
 	float saturatedToothDurationUs = 60.0f * US_PER_SECOND_F / satRpm / hystUpdatePeriodNumEvents;
 	saturatedVrFreqNt = 1.0f / US2NT(saturatedToothDurationUs);

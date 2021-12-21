@@ -777,7 +777,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
 #if EFI_CAN_SUPPORT
-		postCanState(tsOutputChannels);
+		postCanState();
 #endif /* EFI_CAN_SUPPORT */
 
 #if EFI_CLOCK_LOCKS
@@ -879,6 +879,8 @@ void updateTunerStudioState() {
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio
 	updateTunerStudioState();
+	engine->outputChannels.idleStatus.resetCounter = 0x12345653;
+	engine->outputChannels.etbStatus.resetCounter  = 0x12345654;
 }
 
 #endif /* EFI_TUNER_STUDIO */

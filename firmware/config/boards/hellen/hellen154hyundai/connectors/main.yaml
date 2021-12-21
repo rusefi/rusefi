@@ -1,6 +1,24 @@
 # https://github.com/rusefi/rusefi/blob/master/firmware/config/boards/hellen/hellen_meta.h
 
 pins:
+  - pin: P66
+    # LOW3 IO1
+    id: GPIOD_3
+    class: outputs
+    ts_name: Aux P66
+
+  - pin: P67
+    # LOW4 IO2
+    id: GPIOA_9
+    class: outputs
+    ts_name: Aux P67
+
+  - pin: P68
+    # LOW6 IO4
+    id: GPIOG_5
+    class: outputs
+    ts_name: Aux P68
+
   - pin: K1
     function: GND
     type: gnd
@@ -156,6 +174,7 @@ pins:
     # H144_LS_7
     id: GPIOF_13
     class: outputs
+    ts_name: K48 BK1 Wastegate Solenoid
     function: BK1 Wastegate Solenoid
 
   - pin: K53
@@ -321,7 +340,7 @@ pins:
     # H144_IN_RES3
     id: GPIOF_8
     class: switch_inputs
-    ts_name: Brake Input
+    ts_name: A29 Brake Input
     function: Brake Switch
 
 
@@ -336,6 +355,7 @@ pins:
 # H144_IN_RES2
     id: GPIOF_10
     class: switch_inputs
+    ts_name: A43 Clutch Input
     function: Clutch Input
 
   - pin: A45
@@ -352,6 +372,7 @@ pins:
     # H144_IN_RES1
     id: GPIOF_9
     class: switch_inputs
+    ts_name: A57 AC Request
     function: AC Request Switch
 
   - pin: A60

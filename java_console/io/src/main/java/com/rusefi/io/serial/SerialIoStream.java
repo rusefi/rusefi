@@ -1,5 +1,6 @@
 package com.rusefi.io.serial;
 
+import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
@@ -8,7 +9,11 @@ import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.NotNull;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class SerialIoStream extends AbstractIoStream {
+    static Logging log = getLogging(SerialIoStream.class);
+
     protected final SerialPort sp;
     protected final String port;
     private boolean withListener;

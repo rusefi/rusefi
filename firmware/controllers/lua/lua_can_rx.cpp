@@ -28,7 +28,7 @@ chibios_rt::Mailbox<CANRxFrame*, canFrameCount> freeBuffers;
 // CAN frame buffers that are waiting to be processed by the lua thread
 chibios_rt::Mailbox<CANRxFrame*, canFrameCount> filledBuffers;
 
-void processLuaCan(const CANRxFrame& frame) {
+void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	// Filter the frame if we aren't listening for it
 	if (!shouldRxCanFrame(frame)) {
 		return;

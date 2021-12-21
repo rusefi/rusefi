@@ -30,7 +30,7 @@ class Map3D : public ValueProvider3D {
 public:
 	template <typename TValueInit, typename TRowInit, typename TColumnInit>
 	void init(TValueInit (&table)[TRowNum][TColNum],
-                  const TRowInit (&rowBins)[TRowNum], const TColumnInit (&columnBins)[TColNum]) {
+				  const TRowInit (&rowBins)[TRowNum], const TColumnInit (&columnBins)[TColNum]) {
 		// This splits out here so that we don't need one overload of init per possible combination of table/rows/columns types/dimensions
 		// Overload resolution figures out the correct versions of the functions below to call, some of which have assertions about what's allowed
 		initValues(table);
@@ -44,19 +44,19 @@ public:
 			return 0;
 		}
 
-                return interpolate3d(*m_values,
-                                     *m_rowBins, yRow * m_rowMult,
-                                     *m_columnBins, xColumn * m_colMult) *
-                    TValueMultiplier::asFloat();
+		return interpolate3d(*m_values,
+								*m_rowBins, yRow * m_rowMult,
+								*m_columnBins, xColumn * m_colMult) *
+			TValueMultiplier::asFloat();
 	}
 
 	void setAll(TValue value) {
 		efiAssertVoid(CUSTOM_ERR_6573, m_values, "map not initialized");
 
-                for (size_t r = 0; r < TRowNum; r++) {
-                    for (size_t c = 0; c < TColNum; c++) {
-			(*m_values)[r][c] = value / TValueMultiplier::asFloat();
-                    }
+		for (size_t r = 0; r < TRowNum; r++) {
+			for (size_t c = 0; c < TColNum; c++) {
+				(*m_values)[r][c] = value / TValueMultiplier::asFloat();
+			}
 		}
 	}
 
@@ -69,28 +69,28 @@ private:
 		m_values = reinterpret_cast<TValue (*)[TRowNum][TColNum]>(&table);
 	}
 
-    void initValues(TValue (&table)[TRowNum][TColNum]) {
-        m_values = &table;
+	void initValues(TValue (&table)[TRowNum][TColNum]) {
+		m_values = &table;
 	}
 
-	template <int TRowMult>
-	void initRows(const scaled_channel<TRow, TRowMult> (&rowBins)[TRowNum]) {
-            m_rowBins = reinterpret_cast<const TRow (*)[TRowNum]>(&rowBins);
-		m_rowMult = TRowMult;
+	template <int TRowMult, int TRowDiv>
+	void initRows(const scaled_channel<TRow, TRowMult, TRowDiv> (&rowBins)[TRowNum]) {
+		m_rowBins = reinterpret_cast<const TRow (*)[TRowNum]>(&rowBins);
+		m_rowMult = (float)TRowMult / TRowDiv;
 	}
 
-    void initRows(const TRow (&rowBins)[TRowNum]) {
+	void initRows(const TRow (&rowBins)[TRowNum]) {
 		m_rowBins = &rowBins;
 		m_rowMult = 1;
 	}
 
-	template <int TColMult>
-	void initCols(const scaled_channel<TColumn, TColMult> (&columnBins)[TColNum]) {
-            m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
-		m_colMult = TColMult;
+	template <int TColMult, int TColDiv>
+	void initCols(const scaled_channel<TColumn, TColMult, TColDiv> (&columnBins)[TColNum]) {
+		m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
+		m_colMult = (float)TColMult / TColDiv;
 	}
 
-    void initCols(const TColumn (&columnBins)[TColNum]) {
+	void initCols(const TColumn (&columnBins)[TColNum]) {
 		m_columnBins = &columnBins;
 		m_colMult = 1;
 	}
@@ -108,27 +108,23 @@ private:
 	}
 
 	// TODO: should be const
-    /*const*/ TValue (*m_values)[TRowNum][TColNum] = nullptr;
+	/*const*/ TValue (*m_values)[TRowNum][TColNum] = nullptr;
 
-    const TRow (*m_rowBins)[TRowNum] = nullptr;
-    const TColumn (*m_columnBins)[TColNum] = nullptr;
+	const TRow (*m_rowBins)[TRowNum] = nullptr;
+	const TColumn (*m_columnBins)[TColNum] = nullptr;
 
 	float m_rowMult = 1;
 	float m_colMult = 1;
 };
 
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, float, float, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
-typedef Map3D<IGN_RPM_COUNT, IGN_LOAD_COUNT, float, float, float> ign_Map3D_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, float, float> fuel_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, uint16_t, uint16_t, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, uint16_t, uint16_t> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float, float> baroCorr_Map3D_t;
 typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t, uint8_t> pedal2tps_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t, efi::ratio<LOAD_1_BYTE_PACKING_MULT>> boostOpenLoop_Map3D_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostClosedLoop_Map3D_t;
-typedef Map3D<IAC_PID_MULT_SIZE, IAC_PID_MULT_SIZE, uint8_t, uint8_t, uint8_t> iacPidMultiplier_t;
 typedef Map3D<GPPWM_RPM_COUNT, GPPWM_LOAD_COUNT, uint8_t, uint8_t, uint8_t> gppwm_Map3D_t;
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, uint16_t, efi::ratio<1, PACK_MULT_MAP_ESTIMATE>> mapEstimate_Map3D_t;
-
-void setRpmBin(float array[], int size, float idleRpm, float topRpm);
 
 /**
  * @param precision for example '0.1' for one digit fractional part. Default to 0.01, two digits.
@@ -170,4 +166,19 @@ constexpr void copyTable(TDest (&dest)[N][M], const TSource (&source)[N][M], flo
 	}
 }
 
-void setRpmTableBin(float array[], int size);
+template<typename kType>
+void setRpmBin(kType array[], int size, float idleRpm, float topRpm) {
+	array[0] = idleRpm - 150;
+	int rpmStep = (int)(efiRound((topRpm - idleRpm) / (size - 2), 50) - 150);
+	for (int i = 1; i < size - 1;i++)
+		array[i] = idleRpm + rpmStep * (i - 1);
+	array[size - 1] = topRpm;
+}
+
+/**
+ * initialize RPM table axis using default RPM range
+ */
+template<typename kType>
+void setRpmTableBin(kType array[], int size) {
+	setRpmBin(array, size, 800, 7000);
+}
