@@ -30,7 +30,7 @@ class Map3D : public ValueProvider3D {
 public:
 	template <typename TValueInit, typename TRowInit, typename TColumnInit>
 	void init(TValueInit (&table)[TRowNum][TColNum],
-                  const TRowInit (&rowBins)[TRowNum], const TColumnInit (&columnBins)[TColNum]) {
+				  const TRowInit (&rowBins)[TRowNum], const TColumnInit (&columnBins)[TColNum]) {
 		// This splits out here so that we don't need one overload of init per possible combination of table/rows/columns types/dimensions
 		// Overload resolution figures out the correct versions of the functions below to call, some of which have assertions about what's allowed
 		initValues(table);
@@ -44,19 +44,19 @@ public:
 			return 0;
 		}
 
-                return interpolate3d(*m_values,
-                                     *m_rowBins, yRow * m_rowMult,
-                                     *m_columnBins, xColumn * m_colMult) *
-                    TValueMultiplier::asFloat();
+		return interpolate3d(*m_values,
+								*m_rowBins, yRow * m_rowMult,
+								*m_columnBins, xColumn * m_colMult) *
+			TValueMultiplier::asFloat();
 	}
 
 	void setAll(TValue value) {
 		efiAssertVoid(CUSTOM_ERR_6573, m_values, "map not initialized");
 
-                for (size_t r = 0; r < TRowNum; r++) {
-                    for (size_t c = 0; c < TColNum; c++) {
-			(*m_values)[r][c] = value / TValueMultiplier::asFloat();
-                    }
+		for (size_t r = 0; r < TRowNum; r++) {
+			for (size_t c = 0; c < TColNum; c++) {
+				(*m_values)[r][c] = value / TValueMultiplier::asFloat();
+			}
 		}
 	}
 
@@ -69,28 +69,28 @@ private:
 		m_values = reinterpret_cast<TValue (*)[TRowNum][TColNum]>(&table);
 	}
 
-    void initValues(TValue (&table)[TRowNum][TColNum]) {
-        m_values = &table;
+	void initValues(TValue (&table)[TRowNum][TColNum]) {
+		m_values = &table;
 	}
 
-	template <int TRowMult>
-	void initRows(const scaled_channel<TRow, TRowMult> (&rowBins)[TRowNum]) {
-            m_rowBins = reinterpret_cast<const TRow (*)[TRowNum]>(&rowBins);
-		m_rowMult = TRowMult;
+	template <int TRowMult, int TRowDiv>
+	void initRows(const scaled_channel<TRow, TRowMult, TRowDiv> (&rowBins)[TRowNum]) {
+		m_rowBins = reinterpret_cast<const TRow (*)[TRowNum]>(&rowBins);
+		m_rowMult = (float)TRowMult / TRowDiv;
 	}
 
-    void initRows(const TRow (&rowBins)[TRowNum]) {
+	void initRows(const TRow (&rowBins)[TRowNum]) {
 		m_rowBins = &rowBins;
 		m_rowMult = 1;
 	}
 
-	template <int TColMult>
-	void initCols(const scaled_channel<TColumn, TColMult> (&columnBins)[TColNum]) {
-            m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
-		m_colMult = TColMult;
+	template <int TColMult, int TColDiv>
+	void initCols(const scaled_channel<TColumn, TColMult, TColDiv> (&columnBins)[TColNum]) {
+		m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
+		m_colMult = (float)TColMult / TColDiv;
 	}
 
-    void initCols(const TColumn (&columnBins)[TColNum]) {
+	void initCols(const TColumn (&columnBins)[TColNum]) {
 		m_columnBins = &columnBins;
 		m_colMult = 1;
 	}
@@ -108,10 +108,10 @@ private:
 	}
 
 	// TODO: should be const
-    /*const*/ TValue (*m_values)[TRowNum][TColNum] = nullptr;
+	/*const*/ TValue (*m_values)[TRowNum][TColNum] = nullptr;
 
-    const TRow (*m_rowBins)[TRowNum] = nullptr;
-    const TColumn (*m_columnBins)[TColNum] = nullptr;
+	const TRow (*m_rowBins)[TRowNum] = nullptr;
+	const TColumn (*m_columnBins)[TColNum] = nullptr;
 
 	float m_rowMult = 1;
 	float m_colMult = 1;

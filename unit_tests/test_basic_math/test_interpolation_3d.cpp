@@ -45,20 +45,17 @@ static float getValue(float rpm, float maf) {
 	float result3 = x3.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result3);
 
-/*
-are we missing something in Map3D?
 	Map3D<5, 4, float, uint8_t, float> x4;
 	x4.init(map, mafBins, rpmBinsScaledByte);
 	float result4 = x4.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result4);
-*/
 
-	float result4 = interpolate3d(
+	float result5 = interpolate3d(
 		map,
 		mafBinsScaledInt, maf,
 		rpmBinsScaledByte, rpm
 	);
-	EXPECT_NEAR_M4(result1, result4);
+	EXPECT_NEAR_M4(result1, result5);
 
 	return result1;
 }
