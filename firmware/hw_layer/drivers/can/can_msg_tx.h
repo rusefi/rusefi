@@ -40,7 +40,7 @@ public:
 	/**
 	 * Configures the device for all messages to transmit from.
 	 */
-	static void setDevice(CANDriver* device);
+	static void setDevice(CANDriver* device1, CANDriver* device2);
 #endif // EFI_CAN_SUPPORT
 	/**
 	 * @brief Read & write the raw underlying 8-byte buffer.
@@ -72,7 +72,7 @@ protected:
 
 private:
 #if EFI_CAN_SUPPORT
-	static CANDriver* s_device;
+	static CANDriver* s_devices[2];
 #endif // EFI_CAN_SUPPORT
 };
 

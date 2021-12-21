@@ -158,7 +158,7 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 	}
 }
 
-void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
+void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
 	if (engineConfiguration->verboseCan) {
 		printPacket(frame);
 	}
