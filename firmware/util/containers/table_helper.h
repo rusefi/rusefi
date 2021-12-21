@@ -76,7 +76,7 @@ private:
 	template <int TRowMult, int TRowDiv>
 	void initRows(const scaled_channel<TRow, TRowMult, TRowDiv> (&rowBins)[TRowNum]) {
             m_rowBins = reinterpret_cast<const TRow (*)[TRowNum]>(&rowBins);
-		m_rowMult = TRowMult / TRowDiv;
+		m_rowMult = (float)TRowMult / TRowDiv;
 	}
 
     void initRows(const TRow (&rowBins)[TRowNum]) {
@@ -86,8 +86,8 @@ private:
 
 	template <int TColMult, int TColDiv>
 	void initCols(const scaled_channel<TColumn, TColMult, TColDiv> (&columnBins)[TColNum]) {
-            m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
-		m_colMult = TColMult / TColDiv;
+		m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
+		m_colMult = (float)TColMult / TColDiv;
 	}
 
     void initCols(const TColumn (&columnBins)[TColNum]) {
