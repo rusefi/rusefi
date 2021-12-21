@@ -29,7 +29,6 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	// rusEfi controller sends some extra diagnostic data about its internal workings
 	if (isRusefiController && engineConfiguration->debugMode == DBG_RUSEFI_WIDEBAND) {
 		float pumpDuty = frame.data8[2] / 255.0f;
-		float sensorEsr = frame.data8[3] * 4;
 		float nernstVoltage = frame.data8[4] / 200.0f;
 
 		engine->outputChannels.debugFloatField1 = pumpDuty;
@@ -37,6 +36,8 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	}
 
 	if (isRusefiController) {
+		float wbEsr = frame.data8[3] * 4;
+
 		// TODO: convert ESR to temperature
 		engine->outputChannels.wbTemperature[m_sensorIndex] = wbEsr;
 

@@ -173,9 +173,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	float autoscale debugFloatField6;;"val", 1, 0, 0, 0, 0
 	float autoscale debugFloatField7;;"val", 1, 0, 0, 0, 0
 
-	int autoscale debugIntField1;;"val", 1, 0, 0, 0, 0
-	int autoscale debugIntField2;;"val", 1, 0, 0, 0, 0
-	int autoscale debugIntField3;;"val", 1, 0, 0, 0, 0
+	uint32_t autoscale debugIntField1;;"val", 1, 0, 0, 0, 0
+	uint32_t autoscale debugIntField2;;"val", 1, 0, 0, 0, 0
+	uint32_t autoscale debugIntField3;;"val", 1, 0, 0, 0, 0
 	int16_t autoscale debugIntField4;;"val", 1, 0, 0, 0, 0
 	int16_t autoscale debugIntField5;;"val", 1, 0, 0, 0, 0
 
