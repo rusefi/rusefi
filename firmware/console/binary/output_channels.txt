@@ -251,9 +251,11 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
     	int resetCounter;;"", 1, 0, -10000, 10000, 0
     end_struct
 
+	uint16_t[2 iterate] wbTemperature;;"deg C", 1, 0, 0, 1000, 0
+	uint8_t[2 iterate] wbHeaterDuty;;"%", 1, 0, 0, 100, 0
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[150 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[144 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition
