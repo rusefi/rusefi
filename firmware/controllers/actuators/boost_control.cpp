@@ -62,7 +62,7 @@ expected<float> BoostController::getSetpoint() {
 		return unexpected;
 	}
 
-	return m_closedLoopTargetMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps.Value / TPS_1_BYTE_PACKING_MULT);
+	return m_closedLoopTargetMap->getValue(rpm, tps.Value);
 }
 
 expected<percent_t> BoostController::getOpenLoop(float target) {
@@ -82,7 +82,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 		return unexpected;
 	}
 
-	percent_t openLoop = m_openLoopMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps.Value / TPS_1_BYTE_PACKING_MULT);
+	percent_t openLoop = m_openLoopMap->getValue(rpm, tps.Value);
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_BOOST) {
@@ -180,13 +180,13 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostControlPin = GPIO_UNASSIGNED;
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
-	setLinearCurve(config->boostRpmBins, 0, 8000 / RPM_1_BYTE_PACKING_MULT, 1);
-	setLinearCurve(config->boostTpsBins, 0, 100 / TPS_1_BYTE_PACKING_MULT, 1);
+	setLinearCurve(config->boostRpmBins, 0, 8000, 1);
+	setLinearCurve(config->boostTpsBins, 0, 100, 1);
 
 	for (int loadIndex = 0; loadIndex < BOOST_LOAD_COUNT; loadIndex++) {
 		for (int rpmIndex = 0; rpmIndex < BOOST_RPM_COUNT; rpmIndex++) {
-			config->boostTableOpenLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
-			config->boostTableClosedLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
+			config->boostTableOpenLoop[loadIndex][rpmIndex] = (float)config->boostTpsBins[loadIndex];
+			config->boostTableClosedLoop[loadIndex][rpmIndex] = (float)config->boostTpsBins[loadIndex];
 		}
 	}
 

@@ -299,7 +299,7 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	float sanitizedPedal = clampF(0, pedalPosition.value_or(0), 100);
 	
 	float rpm = GET_RPM();
-	float targetFromTable = m_pedalMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, sanitizedPedal);
+	float targetFromTable = m_pedalMap->getValue(rpm, sanitizedPedal);
 	engine->engineState.targetFromTable = targetFromTable;
 
 	percent_t etbIdlePosition = clampF(
@@ -826,7 +826,7 @@ void setDefaultEtbParameters() {
 	engineConfiguration->etbIdleThrottleRange = 5;
 
 	setLinearCurve(config->pedalToTpsPedalBins, /*from*/0, /*to*/100, 1);
-	setLinearCurve(config->pedalToTpsRpmBins, /*from*/0, /*to*/8000 / RPM_1_BYTE_PACKING_MULT, 1);
+	setLinearCurve(config->pedalToTpsRpmBins, /*from*/0, /*to*/8000, 1);
 
 	for (int pedalIndex = 0;pedalIndex<PEDAL_TO_TPS_SIZE;pedalIndex++) {
 		for (int rpmIndex = 0;rpmIndex<PEDAL_TO_TPS_SIZE;rpmIndex++) {

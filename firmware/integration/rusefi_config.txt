@@ -213,9 +213,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
 #define PACK_MULT_MASS_FLOW 10
-#define TPS_1_BYTE_PACKING_MULT 2
 #define TPS_2_BYTE_PACKING_MULT 100
-#define LOAD_1_BYTE_PACKING_MULT 2
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_LAMBDA_CFG 147
 #define PACK_MULT_FUEL_MASS 100
@@ -357,7 +355,7 @@ struct gppwm_channel
 	uint8_t alignmentFill_map;;"unit", 1, 0, 0, 100, 0
 
 	uint8_t[GPPWM_LOAD_COUNT] loadBins;;"load", 1, 0, 0, 250, 0
-	uint8_t[GPPWM_RPM_COUNT] rpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
+	uint8_t[GPPWM_RPM_COUNT] autoscale rpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 	uint8_t[GPPWM_RPM_COUNT x GPPWM_LOAD_COUNT] table;;"duty", 1, 0, 0, 100, 0
 end_struct
 
@@ -1500,18 +1498,15 @@ float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds", 1, 0, 0, 100, 1
 float[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%", 1, 0, 0, 600, 1
 float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds", 1, 0, 0, 100, 1
 
-! TODO: use autoscale
-uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] boostTableOpenLoop;;"", @@LOAD_1_BYTE_PACKING_MULT@@, 0 , 0, 100, 0
-uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
+uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0 , 0, 100, 1
+uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 
-! TODO: use autoscale
-uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] boostTableClosedLoop;;"", @@LOAD_1_BYTE_PACKING_MULT@@, 0 , 0, 3000, 0
-uint8_t[BOOST_LOAD_COUNT] boostTpsBins;;"%", @@TPS_1_BYTE_PACKING_MULT@@, 0, 0, 100, 2
+uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableClosedLoop;;"", 2, 0 , 0, 3000, 0
+uint8_t[BOOST_LOAD_COUNT] autoscale boostTpsBins;;"%", 1, 0, 0, 100, 0
 
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
-! it's not serious to use one byte for RPM but let me try that just to try it
-uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
+uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C", 1, 0, -100, 250, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%", 1, 0, 0, 500, 2
