@@ -19,6 +19,16 @@ scaled_channel<int, 10> mafBinsScaledInt[4] = { 1, 2, 3, 4 };
 scaled_channel<uint8_t, 10> mafBinsScaledByte[4] = { 1, 2, 3, 4 };
 
 
+scaled_channel<uint8_t, 1, 50> mapScaledByByte;
+/*
+ = {
+	{ 1, 2, 3, 4, 4},
+	{ 2, 3, 4, 200, 200 },
+	{ 3, 4, 200, 500, 500 },
+	{ 4, 5, 300, 600, 600 },
+};
+*/
+
 float map[4][5] = {
 	{ 1, 2, 3, 4, 4},
 	{ 2, 3, 4, 200, 200 },
@@ -29,6 +39,11 @@ float map[4][5] = {
 #define EXPECT_NEAR_M4(a, b) EXPECT_NEAR(a, b, 1e-4)
 
 static float getValue(float rpm, float maf) {
+	Map3D<5, 4, uint8_t, float, float> x0;
+//	x0.init(mapScaledByByte, mafBins, rpmBins);
+//	float result0 = x0.getValue(rpm, maf);
+
+
 	Map3D<5, 4, float, float, float> x1;
 	x1.init(map, mafBins, rpmBins);
 	float result1 = x1.getValue(rpm, maf);
