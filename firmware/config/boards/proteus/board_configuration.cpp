@@ -151,6 +151,9 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
+	engineConfiguration->can2RxPin = GPIOB_12;
+	engineConfiguration->can2TxPin = GPIOB_13;
+
 	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
 	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
 }
