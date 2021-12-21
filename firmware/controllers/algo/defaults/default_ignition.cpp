@@ -42,7 +42,7 @@ static void setDefaultIatTimingCorrection() {
 
 	// Set each row of the table to the same value (no rpm dependence by default)
 	for (size_t i = 0; i < efi::size(defaultIatCorr); i++) {
-		setArrayValues(config->ignitionIatCorrTable[i], (float)defaultIatCorr[i]);
+		setArrayValues(config->ignitionIatCorrTable[i], defaultIatCorr[i]);
 	}
 #else
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from*/0, 6000, 1);
