@@ -89,8 +89,8 @@ public class StartupFrame {
 
     @NotNull
     public static String appendBundleName(String title) {
-        String bundleName = Autoupdate.readBundleFullName();
-        return title + " " + (bundleName != null ? bundleName : "Unknown bundle");
+        String bundleName = Autoupdate.readBundleFullNameNotNull();
+        return title + " " + bundleName;
     }
 
     public void chooseSerialPort() {
@@ -183,6 +183,17 @@ public class StartupFrame {
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
+        if (Autoupdate.readBundleFullNameNotNull().contains("proteus_f7")) {
+            URLLabel urlLabel = new URLLabel("WARNING: Proteus F7", "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
+            new Timer(500, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    urlLabel.setVisible(!urlLabel.isVisible());
+                }
+            }).start();
+            rightPanel.add(urlLabel);
+        }
+
         JLabel logo = createLogoLabel();
         if (logo != null)
             rightPanel.add(logo);
@@ -241,8 +252,7 @@ public class StartupFrame {
 
     @Nullable
     private static ImageIcon getBundleIcon() {
-        String bundle = Autoupdate.readBundleFullName();
-        bundle = bundle == null ? "" : bundle;
+        String bundle = Autoupdate.readBundleFullNameNotNull();
         String logoName;
         if (bundle.contains("proteus")) {
             logoName = LOGO_PATH + "logo_proteus.png";
