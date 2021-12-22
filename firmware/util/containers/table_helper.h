@@ -118,7 +118,7 @@ private:
 };
 
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, uint16_t, uint16_t> lambda_Map3D_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, uint16_t, uint16_t> fuel_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, uint16_t> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float, float> baroCorr_Map3D_t;
 typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t, uint8_t> pedal2tps_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostOpenLoop_Map3D_t;
@@ -142,7 +142,7 @@ void setLinearCurve(TValue (&array)[TSize], float from, float to, float precisio
 }
 
 template<typename TValue, int TSize>
-void setArrayValues(TValue (&array)[TSize], TValue value) {
+void setArrayValues(TValue (&array)[TSize], float value) {
 	for (int i = 0; i < TSize; i++) {
 		array[i] = value;
 	}

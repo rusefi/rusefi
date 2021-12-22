@@ -390,7 +390,7 @@ void setDefaultGppwmParameters() {
 		}
 
 		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
-			cfg.rpmBins[j] = 1000 * j / RPM_1_BYTE_PACKING_MULT;
+			cfg.rpmBins[j] = 1000 * j;
 		}
 	}
 }
