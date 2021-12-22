@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Dec 21 03:02:51 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 22 13:13:51 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -220,7 +220,7 @@ struct gppwm_channel {
 	RPM
 	 * offset 16
 	 */
-	uint8_t rpmBins[GPPWM_RPM_COUNT];
+	scaled_channel<uint8_t, 1, 50> rpmBins[GPPWM_RPM_COUNT];
 	/**
 	duty
 	 * offset 24
@@ -4047,21 +4047,21 @@ struct persistent_config_s {
 	/**
 	 * offset 5268
 	 */
-	uint8_t boostTableOpenLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
+	scaled_channel<uint8_t, 2, 1> boostTableOpenLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	RPM
 	 * offset 5332
 	 */
-	uint8_t boostRpmBins[BOOST_RPM_COUNT];
+	scaled_channel<uint8_t, 1, 50> boostRpmBins[BOOST_RPM_COUNT];
 	/**
 	 * offset 5340
 	 */
-	uint8_t boostTableClosedLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
+	scaled_channel<uint8_t, 1, 2> boostTableClosedLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	%
 	 * offset 5404
 	 */
-	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
+	scaled_channel<uint8_t, 1, 1> boostTpsBins[BOOST_LOAD_COUNT];
 	/**
 	%
 	 * offset 5412
@@ -4076,7 +4076,7 @@ struct persistent_config_s {
 	RPM
 	 * offset 5484
 	 */
-	uint8_t pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE];
+	scaled_channel<uint8_t, 1, 50> pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE];
 	/**
 	 * CLT-based cranking position multiplier for simple manual idle controller
 	C
@@ -4186,235 +4186,235 @@ struct persistent_config_s {
 	deg
 	 * offset 16196
 	 */
-	float ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	scaled_channel<int16_t, 10, 1> ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Temperature
-	 * offset 17220
+	 * offset 16708
 	 */
 	float ignitionIatCorrLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 17284
+	 * offset 16772
 	 */
 	uint16_t ignitionIatCorrRpmBins[IGN_RPM_COUNT];
 	/**
 	deg
-	 * offset 17316
+	 * offset 16804
 	 */
-	float injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	int16_t injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 18340
+	 * offset 17316
 	 */
 	uint16_t injPhaseLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18372
+	 * offset 17348
 	 */
 	uint16_t injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
 	onoff
-	 * offset 18404
+	 * offset 17380
 	 */
 	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 	/**
 	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	Hz
-	 * offset 18464
+	 * offset 17440
 	 */
 	float vssFilterReciprocal;
 	/**
 	kPa
-	 * offset 18468
+	 * offset 17444
 	 */
 	uint16_t mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	% TPS
-	 * offset 18980
+	 * offset 17956
 	 */
 	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 19012
+	 * offset 17988
 	 */
 	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 19044
+	 * offset 18020
 	 */
 	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 19108
+	 * offset 18084
 	 */
 	uint16_t vvtTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 19124
+	 * offset 18100
 	 */
 	uint16_t vvtTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 19140
+	 * offset 18116
 	 */
 	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 19204
+	 * offset 18180
 	 */
 	uint16_t vvtTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 19220
+	 * offset 18196
 	 */
 	uint16_t vvtTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	deg
-	 * offset 19236
+	 * offset 18212
 	 */
-	float ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	scaled_channel<int16_t, 10, 1> ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 20260
+	 * offset 18724
 	 */
 	uint16_t ignitionLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 20292
+	 * offset 18756
 	 */
 	uint16_t ignitionRpmBins[IGN_RPM_COUNT];
 	/**
 	%
-	 * offset 20324
+	 * offset 18788
 	 */
-	float veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
+	scaled_channel<uint16_t, 10, 1> veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	kPa
-	 * offset 21348
+	 * offset 19300
 	 */
 	uint16_t veLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 21380
+	 * offset 19332
 	 */
 	uint16_t veRpmBins[FUEL_RPM_COUNT];
 	/**
 	lambda
-	 * offset 21412
+	 * offset 19364
 	 */
 	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
-	 * offset 21668
+	 * offset 19620
 	 */
 	uint16_t lambdaLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 21700
+	 * offset 19652
 	 */
 	uint16_t lambdaRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 21732
+	 * offset 19684
 	 */
 	float tpsTpsAccelTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 	/**
 	from
-	 * offset 21988
+	 * offset 19940
 	 */
 	float tpsTpsAccelFromRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	to
-	 * offset 22020
+	 * offset 19972
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	value
-	 * offset 22052
+	 * offset 20004
 	 */
 	float scriptTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22308
+	 * offset 20260
 	 */
 	uint16_t scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 22324
+	 * offset 20276
 	 */
 	uint16_t scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22340
+	 * offset 20292
 	 */
 	uint8_t scriptTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22404
+	 * offset 20356
 	 */
 	uint16_t scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 22420
+	 * offset 20372
 	 */
 	uint16_t scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22436
+	 * offset 20388
 	 */
 	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22500
+	 * offset 20452
 	 */
 	uint16_t scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 22516
+	 * offset 20468
 	 */
 	uint16_t scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22532
+	 * offset 20484
 	 */
 	uint8_t scriptTable4[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22596
+	 * offset 20548
 	 */
 	uint16_t scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 22612
+	 * offset 20564
 	 */
 	uint16_t scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/**
-	 * offset 22628
+	 * offset 20580
 	 */
 	uint16_t ignTrimLoadBins[TRIM_SIZE];
 	/**
 	rpm
-	 * offset 22636
+	 * offset 20588
 	 */
 	uint16_t ignTrimRpmBins[TRIM_SIZE];
 	/**
-	 * offset 22644
+	 * offset 20596
 	 */
 	cyl_trim_s ignTrims[12];
 	/**
-	 * offset 22836
+	 * offset 20788
 	 */
 	uint16_t fuelTrimLoadBins[TRIM_SIZE];
 	/**
 	rpm
-	 * offset 22844
+	 * offset 20796
 	 */
 	uint16_t fuelTrimRpmBins[TRIM_SIZE];
 	/**
-	 * offset 22852
+	 * offset 20804
 	 */
 	cyl_trim_s fuelTrims[12];
-	/** total size 23044*/
+	/** total size 20996*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Dec 21 03:02:51 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 22 13:13:51 UTC 2021
