@@ -43,6 +43,16 @@
     </target>
 
     <target name="compile">
+        <fail message="Unsupported Java version: ${ant.java.version}.
+  Make sure that the Java version is 1.8 NOT greater see https://github.com/rusefi/rusefi/issues/3128">
+            <condition>
+                <not>
+                    <or>
+                        <equals arg1="${ant.java.version}" arg2="1.8"/>
+                    </or>
+                </not>
+            </condition>
+        </fail>
         <mkdir dir="build/classes"/>
         <javac debug="yes" destdir="build/classes"
                classpath="${lib_list}">
