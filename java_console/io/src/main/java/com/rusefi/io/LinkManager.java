@@ -279,7 +279,7 @@ public class LinkManager implements Closeable {
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
         String[] ports = getCommPorts();
-        boolean isPortAvaliableAgain = Arrays.stream(ports).anyMatch(portRec::equals);
+        boolean isPortAvaliableAgain = Arrays.stream(ports).anyMatch(lastTriedPort::equals);
         if(isPortAvaliableAgain) {
             connect(lastTriedPort);
         }
