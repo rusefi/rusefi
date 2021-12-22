@@ -304,6 +304,14 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.accelerationYaw;
 	if (strEqualCaseInsensitive(name, "turboSpeed"))
 		return engine->outputChannels.turboSpeed;
+	if (strEqualCaseInsensitive(name, "tps1Split"))
+		return engine->outputChannels.tps1Split;
+	if (strEqualCaseInsensitive(name, "tps2Split"))
+		return engine->outputChannels.tps2Split;
+	if (strEqualCaseInsensitive(name, "tps12Split"))
+		return engine->outputChannels.tps12Split;
+	if (strEqualCaseInsensitive(name, "accPedalSplit"))
+		return engine->outputChannels.accPedalSplit;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
