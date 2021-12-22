@@ -410,6 +410,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockBankCyl12;
 	if (strEqualCaseInsensitive(name, "tcuEnabled"))
 		return engineConfiguration->tcuEnabled;
+	if (strEqualCaseInsensitive(name, "canBroadcastUseChannelTwo"))
+		return engineConfiguration->canBroadcastUseChannelTwo;
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
 		return engineConfiguration->boostPid.pFactor;
 	if (strEqualCaseInsensitive(name, "boostPid.iFactor"))
@@ -1920,6 +1922,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "tcuEnabled"))
 	{
 		engineConfiguration->tcuEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "canBroadcastUseChannelTwo"))
+	{
+		engineConfiguration->canBroadcastUseChannelTwo = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))

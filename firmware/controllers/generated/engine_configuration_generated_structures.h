@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 22 13:13:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 22 16:07:37 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2113,7 +2113,7 @@ struct engine_configuration_s {
 	bool tcuEnabled : 1 {};
 	/**
 	offset 896 bit 29 */
-	bool unusedBit_251_29 : 1 {};
+	bool canBroadcastUseChannelTwo : 1 {};
 	/**
 	offset 896 bit 30 */
 	bool unusedBit_310_30 : 1 {};
@@ -4417,4 +4417,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 22 13:13:54 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 22 16:07:37 UTC 2021

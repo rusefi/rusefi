@@ -480,6 +480,7 @@
 #define can_vss_nbc_e_Force_4_bytes_size_can_vss_nbc_e ENUM_32_BITS
 #define can_vss_nbc_e_W202 1
 #define canBaudRate_offset 1732
+#define canBroadcastUseChannelTwo_offset 896
 #define canNbcType_offset 492
 #define canReadEnabled_offset 1260
 #define canRxPin_offset 717
@@ -1874,7 +1875,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 1012670280
+#define SIGNATURE_HASH 3258499318
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2394,7 +2395,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.22.hellen_cypress.1012670280"
+#define TS_SIGNATURE "rusEFI 2021.12.22.hellen_cypress.3258499318"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2434,7 +2435,6 @@
 #define unused_1484_bit_30_offset 1272
 #define unused_1484_bit_31_offset 1272
 #define unusedBit4_1476_offset 1272
-#define unusedBit_251_29_offset 896
 #define unusedBit_310_30_offset 896
 #define unusedBit_310_31_offset 896
 #define unusedBit_48_31_offset 164

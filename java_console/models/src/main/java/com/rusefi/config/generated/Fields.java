@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 22 13:13:54 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 22 16:07:37 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -462,6 +462,7 @@ public class Fields {
 	public static final int can_vss_nbc_e_BMW_e46 = 0;
 	public static final int can_vss_nbc_e_W202 = 1;
 	public static final int canBaudRate_offset = 1732;
+	public static final int canBroadcastUseChannelTwo_offset = 896;
 	public static final int canNbcType_offset = 492;
 	public static final int canReadEnabled_offset = 1260;
 	public static final int canRxPin_offset = 717;
@@ -1802,7 +1803,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 111802612;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2267,7 +2267,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.22.all.111802612";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.22.all.4174194506";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2304,7 +2304,6 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1272;
 	public static final int unused_1484_bit_31_offset = 1272;
 	public static final int unusedBit4_1476_offset = 1272;
-	public static final int unusedBit_251_29_offset = 896;
 	public static final int unusedBit_310_30_offset = 896;
 	public static final int unusedBit_310_31_offset = 896;
 	public static final int unusedBit_48_31_offset = 164;
@@ -2901,7 +2900,7 @@ public class Fields {
 	public static final Field KNOCKBANKCYL11 = Field.create("KNOCKBANKCYL11", 896, FieldType.BIT, 26);
 	public static final Field KNOCKBANKCYL12 = Field.create("KNOCKBANKCYL12", 896, FieldType.BIT, 27);
 	public static final Field TCUENABLED = Field.create("TCUENABLED", 896, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_251_29 = Field.create("UNUSEDBIT_251_29", 896, FieldType.BIT, 29);
+	public static final Field CANBROADCASTUSECHANNELTWO = Field.create("CANBROADCASTUSECHANNELTWO", 896, FieldType.BIT, 29);
 	public static final Field UNUSEDBIT_310_30 = Field.create("UNUSEDBIT_310_30", 896, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_310_31 = Field.create("UNUSEDBIT_310_31", 896, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 900, FieldType.INT8, brain_pin_e);
@@ -4170,7 +4169,7 @@ public class Fields {
 	KNOCKBANKCYL11,
 	KNOCKBANKCYL12,
 	TCUENABLED,
-	UNUSEDBIT_251_29,
+	CANBROADCASTUSECHANNELTWO,
 	UNUSEDBIT_310_30,
 	UNUSEDBIT_310_31,
 	ETBIO1_DIRECTIONPIN1,
