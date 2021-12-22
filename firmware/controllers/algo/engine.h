@@ -336,6 +336,9 @@ public:
 
 	float stftCorrection[STFT_BANK_COUNT] = {0};
 
+	// Per-cylinder fuel trim.  1.0 = no correction, 1.1 = 10% extra
+	angle_t cylinderFuelTrim[MAX_CYLINDER_COUNT] = {1};
+
 	/**
 	 * This one with wall wetting accounted for, used for logging.
 	 */

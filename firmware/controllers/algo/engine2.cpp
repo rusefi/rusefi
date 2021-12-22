@@ -169,6 +169,8 @@ void EngineState::periodicFastCallback() {
 
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		timingAdvance[i] = advance;
+
+		engine->cylinderFuelTrim[i] = getCylinderFuelTrim(rpm, fuelLoad);
 	}
 
 	// TODO: calculate me from a table!
