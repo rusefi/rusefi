@@ -10,3 +10,6 @@
 #include "engine_configuration.h"
 
 void setEngineProteusBMW_N73_GDI();
+
+void setEngineProteusGearboxManInTheMiddle();
+
