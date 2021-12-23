@@ -70,3 +70,6 @@
 //#define CAN_BMW_E90_HAND_BRAKE        0x34F
 // WHEEL_TOLERANCE 0x374
 // MECH Getriebedaten 3 0x3B1
+
+// https://www.loopybunny.co.uk/CarPC/can/3B4.html
+// Operating voltage              #3B4
