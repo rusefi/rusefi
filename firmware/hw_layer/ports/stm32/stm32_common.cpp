@@ -779,6 +779,9 @@ bool isValidCanRxPin(brain_pin_e pin) {
 }
 
 CANDriver* detectCanDeviceImpl(brain_pin_e pinRx, brain_pin_e pinTx) {
+	if (pinRx == GPIO_UNASSIGNED && pinTx == GPIO_UNASSIGNED) {
+		return nullptr;
+	}
 #if STM32_CAN_USE_CAN1 || STM32_CAN_USE_FDCAN1
    if (isValidCan1RxPin(pinRx) && isValidCan1TxPin(pinTx))
       return &CAND1;
