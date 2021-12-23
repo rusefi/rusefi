@@ -46,8 +46,7 @@ public class LinkManager implements Closeable {
     public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue;
 
-
-    private String lastTriedPort;
+    private String lastTriedPort = null;
 
     private LinkConnector connector = LinkConnector.VOID;
     private boolean isStarted;
