@@ -134,7 +134,7 @@ public:
 		CANDriver* device = detectCanDevice(m_index);
 
 		if (!device) {
-			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
+			warning(CUSTOM_ERR_CAN_CONFIGURATION, "Read: CAN configuration issue bus=%d", m_index);
 			return;
 		}
 
