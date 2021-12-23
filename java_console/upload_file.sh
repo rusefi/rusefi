@@ -17,4 +17,4 @@ echo -e "\nUploading file: $5"
 
 pwd
 ls -l $5
-sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3 "put $5 $4"
+echo "put $5 $4" | sshpass -p $2 sftp -o StrictHostKeyChecking=no $1@$3
