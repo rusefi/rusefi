@@ -26,6 +26,8 @@
 #define CAN_BMW_E90_TORQUE_BRAKE      0x0A8
 // 10ms period
 #define CAN_BMW_E90_TORQUE_2          0x0A9
+
+// https://www.loopybunny.co.uk/CarPC/can/0AA.html
 // 10ms period
 #define CAN_BMW_E90_RPM_THROTTLE      0x0AA
 
@@ -56,9 +58,13 @@
 // SEAT_BELT 2FA
 // DOOR_STATUS 2FC
 
-// MECH Status Gang 0x304
+// MECH Status Gang
+#define CAN_BMW_E90_GANG_STATUS       0x304
 
 // EXTERNAL_TEMP_TIME 0x310
+
+// Fahreranzeige Drehzahlbereich
+#define CAN_BMW_E90_DASH_ON           0x332
 
 // MILEAGE_RANGE 0x310
 //#define CAN_BMW_E90_HAND_BRAKE        0x34F
