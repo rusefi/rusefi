@@ -787,7 +787,7 @@ CANDriver* detectCanDeviceImpl(brain_pin_e pinRx, brain_pin_e pinTx) {
    if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
       return &CAND2;
 #endif
-   firmwareError(OBD_PCM_Processor_Fault, "invalid CAN pins", hwPortname(pinTx));
+   firmwareError(OBD_PCM_Processor_Fault, "invalid CAN pins %s", hwPortname(pinTx));
    return nullptr;
 }
 
