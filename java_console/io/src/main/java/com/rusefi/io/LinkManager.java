@@ -49,7 +49,7 @@ public class LinkManager implements Closeable {
     private String lastTriedPort = null;
 
     private LinkConnector connector = LinkConnector.VOID;
-    private boolean isStarted;
+    private boolean isStarted = false;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
     public MessagesListener messageListener = new MessagesListener() {
