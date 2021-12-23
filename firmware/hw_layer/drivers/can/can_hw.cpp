@@ -120,7 +120,8 @@ static const CANConfig canConfig1000 = {
 };
 #endif
 
-static const CANConfig *canConfig = &canConfig500;
+static const CANConfig *can1Config = &canConfig500;
+static const CANConfig *can2Config = &canConfig500;
 
 class CanRead final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
@@ -168,8 +169,12 @@ static void canInfo() {
 		return;
 	}
 
-	efiPrintf("CAN TX %s speed %d", hwPortname(engineConfiguration->canTxPin), engineConfiguration->canBaudRate);
-	efiPrintf("CAN RX %s", hwPortname(engineConfiguration->canRxPin));
+	efiPrintf("CAN1 TX %s speed %d", hwPortname(engineConfiguration->canTxPin), engineConfiguration->canBaudRate);
+	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
+
+	efiPrintf("CAN2 TX %s speed %d", hwPortname(engineConfiguration->can2TxPin), engineConfiguration->can2BaudRate);
+	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
+
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
@@ -241,6 +246,22 @@ void startCanPins() {
 	efiSetPadModeIfConfigurationChanged("CAN2 RX", can2RxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
+static const CANConfig * findConfig(can_baudrate_e rate) {
+	switch (engineConfiguration->canBaudRate) {
+	case B100KBPS:
+		return &canConfig100;
+		break;
+	case B250KBPS:
+		return &canConfig250;
+		break;
+	case B1MBPS:
+		return &canConfig1000;
+		break;
+	default:
+		return &canConfig500;
+	}
+}
+
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
@@ -256,30 +277,16 @@ void initCan(void) {
 		return;
 	}
 
-	switch (engineConfiguration->canBaudRate) {
-	case B100KBPS:
-		canConfig = &canConfig100;
-		break;
-	case B250KBPS:
-		canConfig = &canConfig250;
-		break;
-	case B500KBPS:
-		canConfig = &canConfig500;
-		break;
-	case B1MBPS:
-		canConfig = &canConfig1000;
-		break;
-	default:
-		break;
-	}
+	can1Config = findConfig(engineConfiguration->canBaudRate);
+	can2Config = findConfig(engineConfiguration->can2BaudRate);
 
 	// Initialize hardware
 #if STM32_CAN_USE_CAN2
 	// CAN1 is required for CAN2
-	canStart(&CAND1, canConfig);
-	canStart(&CAND2, canConfig);
+	canStart(&CAND1, can1Config);
+	canStart(&CAND2, can2Config);
 #else
-	canStart(&CAND1, canConfig);
+	canStart(&CAND1, can1Config);
 #endif /* STM32_CAN_USE_CAN2 */
 
 	if (detectCanDevice(0) == detectCanDevice(1)) {
