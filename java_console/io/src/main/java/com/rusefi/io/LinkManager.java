@@ -282,8 +282,6 @@ public class LinkManager implements Closeable {
         if(isPortAvaliableAgain) {
             connect(lastTriedPort);
         }
-
-       // connector.restart();
     }
 
     @Override
