@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "vehicle_speed_converter.h"
 
-#define EXPECT_NEAR_M3(x, y) EXPECT_NEAR((x), (y), 1e-3)
 
 float GetVssFor(float revPerKm, float axle, float teeth, float hz) {
 	EngineTestHelper eth(TEST_ENGINE);

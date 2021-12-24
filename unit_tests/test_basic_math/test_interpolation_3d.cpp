@@ -32,8 +32,6 @@ float map[4][5] = {
 	{ 4, 5, 300, 600, 600 },
 };
 
-#define EXPECT_NEAR_M4(a, b) EXPECT_NEAR(a, b, 1e-4)
-
 static float getValue(float rpm, float maf) {
 	Map3D<5, 4, float, float, float> x1;
 	x1.init(map, mafBins, rpmBins);
