@@ -151,8 +151,10 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
+#if defined(STM32F4) || defined(STM32F7)
 	engineConfiguration->can2RxPin = GPIOB_12;
 	engineConfiguration->can2TxPin = GPIOB_13;
+#endif
 
 	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
 	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
