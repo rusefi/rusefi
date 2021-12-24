@@ -1,14 +1,11 @@
 #include "pch.h"
 #include "rusefi_lua.h"
 
-#define TWO_BYTES "(           \
-	function twoBytes(data, offset, factor)   \
-		return (data[offset + 1] * 256 + data[offset]) * factor   \
-	end"
-
-
 TEST(LuaE65, Battery) {
-	const char* realdata = TWO_BYTES R"(
+	const char* realdata = R"(
+	function twoBytes(data, offset, factor)   
+		return (data[offset + 1] * 256 + data[offset]) * factor   
+	end
 
 	function testFunc()
 		data = {0xdc, 0x03, 0x00, 0x53, 0xFE, 0xD3, 0x04, 0x00}
