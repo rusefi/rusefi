@@ -14,6 +14,12 @@ void setEngineProteusBMW_N73_GDI() {
 void setEngineProteusGearboxManInTheMiddle() {
 	strncpy(config->luaScript, R"(
 
+function twoBytes(data, offset, factor)
+		return (data[offset + 2] * 256 + data[offset + 1]) * factor
+end
+
+CAN_BMW_E90_TORQUE_1 = 0x0A8
+CAN_BMW_E90_TORQUE_2 = 0x0A9
 CAN_BMW_E90_RPM_THROTTLE = 0x0AA
 CAN_BMW_E90_TORQUE_DEMAND = 0x0B6
 CAN_BMW_E90_IGNITION_KEY = 0x130
@@ -57,6 +63,18 @@ function onCanRx(bus, id, dlc, data)
 	if id == CAN_BMW_E90_IGNITION_KEY then
 		print('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY')
 		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+    elseif id == CAN_BMW_E90_TORQUE_1 then
+		print('CAN_BMW_E90_TORQUE_1')
+		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+    elseif id == CAN_BMW_E90_TORQUE_2 then
+		print('CAN_BMW_E90_TORQUE_2')
+		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+    elseif id == CAN_BMW_E90_TORQUE_DEMAND then
+		print('CAN_BMW_E90_TORQUE_DEMAND') 
+		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+    elseif id == CAN_BMW_E90_DASH_ON then
+		print('CAN_BMW_E90_DASH_ON') 
+		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
 	elseif id == CAN_BMW_E65_GEAR_SELECTOR then
 		print('CAN_BMW_E65_GEAR_SELECTOR')
 		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
@@ -64,7 +82,8 @@ function onCanRx(bus, id, dlc, data)
 		print('CAN_BMW_E65_GEAR_SELECTOR')
 		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
 	elseif id == CAN_BMW_E90_RPM_THROTTLE then
-		print('CAN_BMW_E90_RPM_THROTTLE 2')
+		rpm = twoBytes(data, 4, 0.25)
+		print('CAN_BMW_E90_RPM_THROTTLE ' .. rpm)
 		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
 	elseif id == CAN_BMW_E90_COOLANT then
 		print('CAN_BMW_E90_COOLANT')

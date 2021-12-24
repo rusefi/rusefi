@@ -51,6 +51,7 @@
 #define CAN_BMW_E90_GEARBOX_DATA_2    0x1A2
 
 // Engine data
+// https://github.com/HeinrichG-V12/E65_ReverseEngineering/blob/main/docs/0x1D0.md
 #define CAN_BMW_E90_COOLANT           0x1D0
 // MECH Anzeige Getriebedaten
 #define CAN_BMW_E90_TRANSMISSION_DISP 0x1D2
@@ -72,4 +73,5 @@
 // MECH Getriebedaten 3 0x3B1
 
 // https://www.loopybunny.co.uk/CarPC/can/3B4.html
-// Operating voltage              #3B4
+// Powermanagement Batteriespannung
+#define CAN_BMW_E90_VOLTAGE       0x3B4
