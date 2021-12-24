@@ -31,8 +31,32 @@ canRxAdd(CAN_BMW_E65_GEAR_SELECTOR)
 canRxAdd(CAN_BMW_E90_COOLANT)
 canRxAdd(CAN_BMW_E90_DASH_ON)
 
-
 txPayload = {}
+
+function onCanRx(bus, id, dlc, data)
+	id = id % 2048
+	-- local output = string.format("%x", id)
+
+	if id == CAN_BMW_E90_IGNITION_KEY then
+		print('CAN_BMW_E90_IGNITION_KEY')
+	else
+		if id == CAN_BMW_E65_GEAR_SELECTOR then
+			print('CAN_BMW_E65_GEAR_SELECTOR')
+		else
+			if id == CAN_BMW_E90_RPM_THROTTLE then
+				print('CAN_BMW_E90_RPM_THROTTLE')
+			else
+				if id == CAN_BMW_E90_COOLANT then
+					print('CAN_BMW_E90_COOLANT')
+				else
+					print('got CAN id=' ..id ..' dlc=' ..dlc)
+				end
+			end
+		end
+	end
+end
+
+
 function onTick()
 end
 )", efi::size(config->luaScript));
