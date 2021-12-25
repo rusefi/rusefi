@@ -14,7 +14,6 @@ void setCanType(int type);
 void setCanVss(int type);
 
 #if EFI_CAN_SUPPORT
-CANDriver* detectCanDevice(size_t logicalIndex);
 
 void stopCanPins();
 void startCanPins();
