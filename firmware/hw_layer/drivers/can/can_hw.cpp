@@ -131,7 +131,9 @@ public:
 	void Start(CANDriver* device) {
 		m_device = device;
 
-		ThreadController::Start();
+		if (device) {
+			ThreadController::Start();
+		}
 	}
 
 	void ThreadTask() override {
@@ -307,13 +309,8 @@ void initCan(void) {
 	}
 
 	if (engineConfiguration->canReadEnabled) {
-		if (device1) {
-			canRead1.Start(device1);
-		}
-
-		if (device2) {
-			canRead2.Start(device2);
-		}
+		canRead1.Start(device1);
+		canRead2.Start(device2);
 	}
 
 	isCanEnabled = true;
