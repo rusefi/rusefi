@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 22 16:07:33 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Dec 25 04:39:43 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1532,11 +1532,10 @@ struct engine_configuration_s {
 	 */
 	uint8_t acIdleExtraOffset;
 	/**
-	 * CANbus thread period, ms
 	ms
 	 * offset 720
 	 */
-	int can2SleepPeriodMs;
+	int unused720;
 	/**
 	 * Voltage when the wastegate is closed.
 	 * You probably don't have one of these!
@@ -2933,20 +2932,16 @@ struct engine_configuration_s {
 	/**
 	 * offset 1736
 	 */
-	uint32_t verboseCan2BaseAddress;
+	uint32_t unused1736;
 	/**
-	 * CAN broadcast using custom rusEFI protocol
-	 * enable can_broadcast/disable can_broadcast
 	offset 1740 bit 0 */
-	bool enableVerboseCan2Tx : 1 {};
+	bool unused1740b0 : 1 {};
 	/**
-	 * enable can_read/disable can_read
 	offset 1740 bit 1 */
-	bool can2ReadEnabled : 1 {};
+	bool unused1740b1 : 1 {};
 	/**
-	 * enable can_write/disable can_write
 	offset 1740 bit 2 */
-	bool can2WriteEnabled : 1 {};
+	bool unused1740b2 : 1 {};
 	/**
 	 * Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	offset 1740 bit 3 */
@@ -3036,10 +3031,9 @@ struct engine_configuration_s {
 	offset 1740 bit 31 */
 	bool unusedBit_498_31 : 1 {};
 	/**
-	 * set can_mode X
 	 * offset 1744
 	 */
-	can_nbc_e can2NbcType;
+	uint32_t unused1744;
 	/**
 	 * set_can2_tx_pin X
 	 * offset 1748
@@ -4417,4 +4411,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Wed Dec 22 16:07:33 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Dec 25 04:39:43 UTC 2021

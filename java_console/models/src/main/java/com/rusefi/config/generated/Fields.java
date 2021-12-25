@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 24 04:14:26 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sat Dec 25 04:39:46 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -432,12 +432,8 @@ public class Fields {
 	public static final int CAMS_PER_BANK = 2;
 	public static final int CAMS_PER_BANK_padding = 0;
 	public static final int can2BaudRate_offset = 1734;
-	public static final int can2NbcType_offset = 1744;
-	public static final int can2ReadEnabled_offset = 1740;
 	public static final int can2RxPin_offset = 1749;
-	public static final int can2SleepPeriodMs_offset = 720;
 	public static final int can2TxPin_offset = 1748;
-	public static final int can2WriteEnabled_offset = 1740;
 	public static final int can_baudrate_e_B100KBPS = 0;
 	public static final int can_baudrate_e_B1MBPS = 3;
 	public static final int can_baudrate_e_B250KBPS = 1;
@@ -716,7 +712,6 @@ public class Fields {
 	public static final int enableMapEstimationTableFallback_offset = 164;
 	public static final int enableSoftwareKnock_offset = 896;
 	public static final int enableTrailingSparks_offset = 164;
-	public static final int enableVerboseCan2Tx_offset = 1740;
 	public static final int enableVerboseCanTx_offset = 748;
 	public static final int engine_configuration_s_size = 5020;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 5;
@@ -2267,7 +2262,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.24.all.4174194506";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.25.all.4051637398";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2295,6 +2290,12 @@ public class Fields {
 	public static final int unused1476b20_offset = 1272;
 	public static final int unused1476b3_offset = 1272;
 	public static final int unused1476b8_offset = 1272;
+	public static final int unused1736_offset = 1736;
+	public static final int unused1740b0_offset = 1740;
+	public static final int unused1740b1_offset = 1740;
+	public static final int unused1740b2_offset = 1740;
+	public static final int unused1744_offset = 1744;
+	public static final int unused720_offset = 720;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
 	public static final int unused_1484_bit_26_offset = 1272;
@@ -2382,7 +2383,6 @@ public class Fields {
 	public static final int vehicleWeight_offset = 786;
 	public static final int veLoadBins_offset = 19300;
 	public static final int veOverrideMode_offset = 1733;
-	public static final int verboseCan2BaseAddress_offset = 1736;
 	public static final int verboseCan_offset = 164;
 	public static final int verboseCanBaseAddress_offset = 760;
 	public static final int verboseTLE8888_offset = 748;
@@ -2738,7 +2738,7 @@ public class Fields {
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 717, FieldType.INT8, brain_pin_e);
 	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 718, FieldType.INT8, pin_input_mode_e);
 	public static final Field ACIDLEEXTRAOFFSET = Field.create("ACIDLEEXTRAOFFSET", 719, FieldType.INT8);
-	public static final Field CAN2SLEEPPERIODMS = Field.create("CAN2SLEEPPERIODMS", 720, FieldType.INT);
+	public static final Field UNUSED720 = Field.create("UNUSED720", 720, FieldType.INT);
 	public static final Field WASTEGATEPOSITIONMIN = Field.create("WASTEGATEPOSITIONMIN", 724, FieldType.INT16);
 	public static final Field WASTEGATEPOSITIONMAX = Field.create("WASTEGATEPOSITIONMAX", 726, FieldType.INT16);
 	public static final Field IDLEPOSITIONMIN = Field.create("IDLEPOSITIONMIN", 728, FieldType.INT16);
@@ -3175,10 +3175,10 @@ public class Fields {
 	public static final Field CAN2BAUDRATE = Field.create("CAN2BAUDRATE", 1734, FieldType.INT8, can_baudrate_e);
 	public static final String[] afr_override_e = {"None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"};
 	public static final Field AFROVERRIDEMODE = Field.create("AFROVERRIDEMODE", 1735, FieldType.INT8, afr_override_e);
-	public static final Field VERBOSECAN2BASEADDRESS = Field.create("VERBOSECAN2BASEADDRESS", 1736, FieldType.INT);
-	public static final Field ENABLEVERBOSECAN2TX = Field.create("ENABLEVERBOSECAN2TX", 1740, FieldType.BIT, 0);
-	public static final Field CAN2READENABLED = Field.create("CAN2READENABLED", 1740, FieldType.BIT, 1);
-	public static final Field CAN2WRITEENABLED = Field.create("CAN2WRITEENABLED", 1740, FieldType.BIT, 2);
+	public static final Field UNUSED1736 = Field.create("UNUSED1736", 1736, FieldType.INT);
+	public static final Field UNUSED1740B0 = Field.create("UNUSED1740B0", 1740, FieldType.BIT, 0);
+	public static final Field UNUSED1740B1 = Field.create("UNUSED1740B1", 1740, FieldType.BIT, 1);
+	public static final Field UNUSED1740B2 = Field.create("UNUSED1740B2", 1740, FieldType.BIT, 2);
 	public static final Field STEPPERDCINVERTEDPINS = Field.create("STEPPERDCINVERTEDPINS", 1740, FieldType.BIT, 3);
 	public static final Field UNUSED1127 = Field.create("UNUSED1127", 1740, FieldType.BIT, 4);
 	public static final Field UNUSED1128 = Field.create("UNUSED1128", 1740, FieldType.BIT, 5);
@@ -3208,7 +3208,7 @@ public class Fields {
 	public static final Field UNUSEDBIT_498_29 = Field.create("UNUSEDBIT_498_29", 1740, FieldType.BIT, 29);
 	public static final Field UNUSEDBIT_498_30 = Field.create("UNUSEDBIT_498_30", 1740, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_498_31 = Field.create("UNUSEDBIT_498_31", 1740, FieldType.BIT, 31);
-	public static final Field CAN2NBCTYPE = Field.create("CAN2NBCTYPE", 1744, FieldType.INT);
+	public static final Field UNUSED1744 = Field.create("UNUSED1744", 1744, FieldType.INT);
 	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 1748, FieldType.INT8, brain_pin_e);
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 1749, FieldType.INT8, brain_pin_e);
 	public static final Field STARTERCONTROLPINMODE = Field.create("STARTERCONTROLPINMODE", 1750, FieldType.INT8, pin_output_mode_e);
@@ -4009,7 +4009,7 @@ public class Fields {
 	CANRXPIN,
 	THROTTLEPEDALUPPINMODE,
 	ACIDLEEXTRAOFFSET,
-	CAN2SLEEPPERIODMS,
+	UNUSED720,
 	WASTEGATEPOSITIONMIN,
 	WASTEGATEPOSITIONMAX,
 	IDLEPOSITIONMIN,
@@ -4438,10 +4438,10 @@ public class Fields {
 	VEOVERRIDEMODE,
 	CAN2BAUDRATE,
 	AFROVERRIDEMODE,
-	VERBOSECAN2BASEADDRESS,
-	ENABLEVERBOSECAN2TX,
-	CAN2READENABLED,
-	CAN2WRITEENABLED,
+	UNUSED1736,
+	UNUSED1740B0,
+	UNUSED1740B1,
+	UNUSED1740B2,
 	STEPPERDCINVERTEDPINS,
 	UNUSED1127,
 	UNUSED1128,
@@ -4471,7 +4471,7 @@ public class Fields {
 	UNUSEDBIT_498_29,
 	UNUSEDBIT_498_30,
 	UNUSEDBIT_498_31,
-	CAN2NBCTYPE,
+	UNUSED1744,
 	CAN2TXPIN,
 	CAN2RXPIN,
 	STARTERCONTROLPINMODE,

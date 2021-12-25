@@ -429,12 +429,8 @@
 #define CAMS_PER_BANK 1
 #define CAMS_PER_BANK_padding 1
 #define can2BaudRate_offset 1734
-#define can2NbcType_offset 1744
-#define can2ReadEnabled_offset 1740
 #define can2RxPin_offset 1749
-#define can2SleepPeriodMs_offset 720
 #define can2TxPin_offset 1748
-#define can2WriteEnabled_offset 1740
 #define can_baudrate_e_auto_enum "B100KBPS", "B250KBPS", "B500KBPS", "B1MBPS"
 #define can_baudrate_e_B100KBPS 0
 #define can_baudrate_e_B1MBPS 3
@@ -729,7 +725,6 @@
 #define enableMapEstimationTableFallback_offset 164
 #define enableSoftwareKnock_offset 896
 #define enableTrailingSparks_offset 164
-#define enableVerboseCan2Tx_offset 1740
 #define enableVerboseCanTx_offset 748
 #define engine_configuration_s_size 4992
 #define engine_load_mode_e_auto_enum "INVALID", "INVALID", "INVALID", "LM_SPEED_DENSITY", "LM_REAL_MAF", "LM_ALPHA_N", "LM_LUA", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "LM_MOCK"
@@ -1860,7 +1855,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 1033702410
+#define SIGNATURE_HASH 875511766
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2380,7 +2375,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2021.12.24.kin.1033702410"
+#define TS_SIGNATURE "rusEFI 2021.12.25.kin.875511766"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2411,6 +2406,12 @@
 #define unused1476b20_offset 1272
 #define unused1476b3_offset 1272
 #define unused1476b8_offset 1272
+#define unused1736_offset 1736
+#define unused1740b0_offset 1740
+#define unused1740b1_offset 1740
+#define unused1740b2_offset 1740
+#define unused1744_offset 1744
+#define unused720_offset 720
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272
@@ -2500,7 +2501,6 @@
 #define vehicleWeight_offset 786
 #define veLoadBins_offset 19272
 #define veOverrideMode_offset 1733
-#define verboseCan2BaseAddress_offset 1736
 #define verboseCan_offset 164
 #define verboseCanBaseAddress_offset 760
 #define verboseTLE8888_offset 748
