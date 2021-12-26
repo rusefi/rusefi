@@ -19,7 +19,7 @@
  */
 #define AIR_R 0.28705f
 
-float idealGasLaw(float volume, float pressure, float temperature) {
+mass_t idealGasLaw(float volume, float pressure, float temperature) {
 	return volume * pressure / (AIR_R * temperature);
 }
 

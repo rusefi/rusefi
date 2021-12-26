@@ -11,7 +11,10 @@
 
 #include "airmass.h"
 
-float idealGasLaw(float volume, float pressure, float temperature);
+/**
+ * @returns mass of air in cylinder
+ */
+mass_t idealGasLaw(float volume, float pressure, float temperature);
 
 class SpeedDensityBase : public AirmassVeModelBase {
 protected:

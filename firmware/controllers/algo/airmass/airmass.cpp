@@ -20,18 +20,18 @@ float AirmassVeModelBase::getVe(int rpm, float load) const {
 	// Override the load value if necessary
 	load = getVeLoadAxis(load);
 
-	float ve = m_veTable->getValue(rpm, load);
+	percent_t ve = m_veTable->getValue(rpm, load);
 
 	auto tps = Sensor::get(SensorType::Tps1);
 	// get VE from the separate table for Idle if idling
 	if (engine->module<IdleController>().unmock().isIdlingOrTaper() &&
 	    tps && engineConfiguration->useSeparateVeForIdle) {
-		float idleVe = interpolate2d(rpm, config->idleVeBins, config->idleVe);
+		percent_t idleVe = interpolate2d(rpm, config->idleVeBins, config->idleVe);
 		// interpolate between idle table and normal (running) table using TPS threshold
 		ve = interpolateClamped(0.0f, idleVe, engineConfiguration->idlePidDeactivationTpsThreshold, ve, tps.Value);
 	}
 
 	engine->engineState.currentVe = ve;
 	engine->engineState.currentVeLoad = load;
-	return ve * 0.01f;
+	return ve * PERCENT_DIV;
 }

@@ -307,7 +307,7 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 									engineConfiguration->useETBforIdleControl ? m_idlePosition : 0,
 									100
 								);
-	percent_t etbIdleAddition = 0.01f * engineConfiguration->etbIdleThrottleRange * etbIdlePosition;
+	percent_t etbIdleAddition = PERCENT_DIV * engineConfiguration->etbIdleThrottleRange * etbIdlePosition;
 
 	// Interpolate so that the idle adder just "compresses" the throttle's range upward.
 	// [0, 100] -> [idle, 100]

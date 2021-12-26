@@ -2,7 +2,7 @@
 
 class ValueProvider3D;
 
-using mass_t = float;
+#include "rusefi_types.h"
 
 struct IFuelComputer {
 	virtual mass_t getCycleFuel(mass_t airmass, int rpm, float load) const = 0;
