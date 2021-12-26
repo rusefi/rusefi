@@ -33,5 +33,5 @@ private:
 	const ValueProvider3D* const m_lambdaTable;
 };
 
-float getLoadOverride(float defaultLoad, afr_override_e overrideMode);
+float getLoadOverride(float defaultLoad, load_override_e overrideMode);
 constexpr float fuelDensity = 0.72; // g/cc

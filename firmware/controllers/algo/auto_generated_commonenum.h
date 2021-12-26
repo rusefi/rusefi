@@ -9,7 +9,7 @@ const char *getInjectorNonlinearMode(InjectorNonlinearMode value);
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 const char *getAdc_channel_mode_e(adc_channel_mode_e value);
-const char *getAfr_override_e(afr_override_e value);
+const char *getload_override_e(load_override_e value);
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value);
 const char *getAntiLagActivationMode_e(antiLagActivationMode_e value);
 const char *getBoostType_e(boostType_e value);

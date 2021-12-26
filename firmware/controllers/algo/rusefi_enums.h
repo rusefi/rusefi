@@ -607,7 +607,7 @@ typedef enum __attribute__ ((__packed__)) {
 	AFR_Tps = 2,
 	AFR_AccPedal = 3,
 	AFR_CylFilling = 4,
-} afr_override_e;
+} load_override_e;
 
 typedef enum __attribute__ ((__packed__)) {
 // todo: rename to HB_None?

@@ -57,7 +57,7 @@ case Force_4_bytes_size_adc_channel_mode:
   }
  return NULL;
 }
-const char *getAfr_override_e(afr_override_e value){
+const char *getload_override_e(load_override_e value){
 switch(value) {
 case AFR_AccPedal:
   return "AFR_AccPedal";

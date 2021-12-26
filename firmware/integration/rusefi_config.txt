@@ -1196,9 +1196,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	can_baudrate_e can2BaudRate;
 
-	#define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
-	custom afr_override_e 1 bits, U08, @OFFSET@, [0:2], @@afr_override_e_enum@@
-	afr_override_e afrOverrideMode;+Override the Y axis (load) value used for the AFR table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+	#define load_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
+	custom load_override_e 1 bits, U08, @OFFSET@, [0:2], @@load_override_e_enum@@
+	load_override_e afrOverrideMode;+Override the Y axis (load) value used for the AFR table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 	uint32_t unused1736;;"", 1, 0, 0, 536870911, 0
 	bit unused1740b0
@@ -1214,7 +1214,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	brain_pin_e can2RxPin;set_can2_rx_pin X	
 	pin_output_mode_e starterControlPinMode;
 	adc_channel_e wastegatePositionSensor;
-	afr_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+	load_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 
 	custom injector_pressure_type_e 1 bits, U08, @OFFSET@, [0:0], "Low", "High"
