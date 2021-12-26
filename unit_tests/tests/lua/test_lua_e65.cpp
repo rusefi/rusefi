@@ -28,3 +28,21 @@ TEST(LuaE65, Rpm) {
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 845);
 }
+
+TEST(LuaE65, sumChecksum) {
+	// checksum is first byte
+	// id = A8, packet:
+	// 12 AD 05 A0 05 0F 00 02
+
+	const char* realdata = R"(
+
+	function testFunc()
+	canID = 0xA8
+		data = { 0xAD, 0x05, 0xA0, 0x05, 0x0F, 0x00, 0x02 }
+		checksum = data[1] + data[2] + data[3] + data[4] + data[5] + data[6] + data[7] + canID
+		checksum = math.floor (checksum / 0x100) + (checksum & 0xff)
+		return checksum; 
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x12);
+}
