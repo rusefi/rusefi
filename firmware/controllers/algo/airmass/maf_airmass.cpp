@@ -22,19 +22,19 @@ AirmassResult MafAirmass::getAirmassImpl(float massAirFlow, int rpm) const {
 
 	// 1/min -> 1/s
 	float revsPerSecond = rpm / 60.0f;
-	float airPerRevolution = gramPerSecond / revsPerSecond;
+	mass_t airPerRevolution = gramPerSecond / revsPerSecond;
 
 	// Now we have to divide among cylinders - on a 4 stroke, half of the cylinders happen every revolution
 	// This math is floating point to work properly on engines with odd cylinder count
 	float halfCylCount = engineConfiguration->specs.cylindersCount / 2.0f;
 
-	float cylinderAirmass = airPerRevolution / halfCylCount;
+	mass_t cylinderAirmass = airPerRevolution / halfCylCount;
 
 	//Create % load for fuel table using relative naturally aspirated cylinder filling
 	float airChargeLoad = 100 * cylinderAirmass / engine->standardAirCharge;
 	
 	//Correct air mass by VE table
-	float correctedAirmass = cylinderAirmass * getVe(rpm, airChargeLoad);
+	mass_t correctedAirmass = cylinderAirmass * getVe(rpm, airChargeLoad);
 
 	return {
 		correctedAirmass,

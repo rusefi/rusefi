@@ -21,5 +21,5 @@ protected:
 	explicit SpeedDensityBase(const ValueProvider3D& veTable) : AirmassVeModelBase(veTable) {}
 
 public:
-	static float getAirmassImpl(float ve, float manifoldPressure, float temperature);
+	static mass_t getAirmassImpl(float ve, float manifoldPressure, float temperature);
 };
