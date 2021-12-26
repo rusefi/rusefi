@@ -1,4 +1,4 @@
-struct_no_prefix main_relay_s
+struct_no_prefix injector_model_s
 float m_deadtime
 float pressureDelta
 float pressureRatio
