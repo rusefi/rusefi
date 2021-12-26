@@ -77,6 +77,9 @@ typedef efitime_t efitick_t;
 
 typedef float angle_t;
 
+// mass in grams
+typedef float mass_t;
+
 // temperature, in Celsius
 typedef float temperature_t;
 typedef float floatms_t;

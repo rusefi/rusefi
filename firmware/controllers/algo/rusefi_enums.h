@@ -18,12 +18,6 @@
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
 
-// I believe that TunerStudio curve editor has a bug with F32 support
-// because of that bug we cannot have '1.05' for 5% extra multiplier
-/**
- * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
- */
-
 #define PERCENT_MULT 100.0f
 #define PERCENT_DIV 0.01f
 
