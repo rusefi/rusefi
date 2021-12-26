@@ -42,13 +42,13 @@
 #define afr_alignmentFill_afr_offset 569
 #define afr_hwChannel_offset 568
 #define afr_offset 568
-#define afr_override_e_AFR_AccPedal 3
-#define afr_override_e_AFR_CylFilling 4
-#define afr_override_e_AFR_MAP 1
-#define afr_override_e_AFR_None 0
-#define afr_override_e_AFR_Tps 2
-#define afr_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
-#define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
+#define load_override_e_AFR_AccPedal 3
+#define load_override_e_AFR_CylFilling 4
+#define load_override_e_AFR_MAP 1
+#define load_override_e_AFR_None 0
+#define load_override_e_AFR_Tps 2
+#define load_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
+#define load_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define afr_sensor_s_size 20
 #define afr_type_offset 700
 #define afr_v1_offset 572

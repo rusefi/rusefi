@@ -2928,7 +2928,7 @@ struct engine_configuration_s {
 	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 1735
 	 */
-	afr_override_e afrOverrideMode;
+	load_override_e afrOverrideMode;
 	/**
 	 * offset 1736
 	 */
@@ -3057,7 +3057,7 @@ struct engine_configuration_s {
 	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 1752
 	 */
-	afr_override_e ignOverrideMode;
+	load_override_e ignOverrideMode;
 	/**
 	 * Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
 	 * offset 1753
