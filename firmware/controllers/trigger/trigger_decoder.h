@@ -139,7 +139,7 @@ public:
 	uint32_t totalTriggerErrorCounter;
 	uint32_t orderingErrorCounter;
 
-	void resetTriggerState();
+	virtual void resetTriggerState();
 	void setShaftSynchronized(bool value);
 	bool getShaftSynchronized();
 
@@ -175,6 +175,7 @@ private:
 class TriggerStateWithRunningStatistics : public TriggerState {
 public:
 	TriggerStateWithRunningStatistics();
+	void resetTriggerState() override;
 
 	float getInstantRpm() const {
 		return m_instantRpm;
