@@ -26,6 +26,8 @@
 #define CAN_BMW_E90_TORQUE_BRAKE      0x0A8
 // 10ms period
 #define CAN_BMW_E90_TORQUE_2          0x0A9
+
+// https://www.loopybunny.co.uk/CarPC/can/0AA.html
 // 10ms period
 #define CAN_BMW_E90_RPM_THROTTLE      0x0AA
 
@@ -49,6 +51,7 @@
 #define CAN_BMW_E90_GEARBOX_DATA_2    0x1A2
 
 // Engine data
+// https://github.com/HeinrichG-V12/E65_ReverseEngineering/blob/main/docs/0x1D0.md
 #define CAN_BMW_E90_COOLANT           0x1D0
 // MECH Anzeige Getriebedaten
 #define CAN_BMW_E90_TRANSMISSION_DISP 0x1D2
@@ -56,11 +59,19 @@
 // SEAT_BELT 2FA
 // DOOR_STATUS 2FC
 
-// MECH Status Gang 0x304
+// MECH Status Gang
+#define CAN_BMW_E90_GANG_STATUS       0x304
 
 // EXTERNAL_TEMP_TIME 0x310
+
+// Fahreranzeige Drehzahlbereich
+#define CAN_BMW_E90_DASH_ON           0x332
 
 // MILEAGE_RANGE 0x310
 //#define CAN_BMW_E90_HAND_BRAKE        0x34F
 // WHEEL_TOLERANCE 0x374
 // MECH Getriebedaten 3 0x3B1
+
+// https://www.loopybunny.co.uk/CarPC/can/3B4.html
+// Powermanagement Batteriespannung
+#define CAN_BMW_E90_VOLTAGE       0x3B4

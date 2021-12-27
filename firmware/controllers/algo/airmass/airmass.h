@@ -1,10 +1,11 @@
 #pragma once
 
+#include "rusefi_types.h"
 class ValueProvider3D;
 
 struct AirmassResult {
-	float CylinderAirmass = 0;
-	float EngineLoadPercent = 100;
+	mass_t CylinderAirmass = 0;
+	percent_t EngineLoadPercent = 100;
 };
 
 struct AirmassModelBase {

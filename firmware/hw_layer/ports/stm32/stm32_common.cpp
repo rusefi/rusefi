@@ -778,7 +778,10 @@ bool isValidCanRxPin(brain_pin_e pin) {
    return isValidCan1RxPin(pin) || isValidCan2RxPin(pin);
 }
 
-CANDriver* detectCanDeviceImpl(brain_pin_e pinRx, brain_pin_e pinTx) {
+CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
+	if (pinRx == GPIO_UNASSIGNED && pinTx == GPIO_UNASSIGNED) {
+		return nullptr;
+	}
 #if STM32_CAN_USE_CAN1 || STM32_CAN_USE_FDCAN1
    if (isValidCan1RxPin(pinRx) && isValidCan1TxPin(pinTx))
       return &CAND1;
@@ -787,7 +790,8 @@ CANDriver* detectCanDeviceImpl(brain_pin_e pinRx, brain_pin_e pinTx) {
    if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
       return &CAND2;
 #endif
-   return NULL;
+   firmwareError(OBD_PCM_Processor_Fault, "invalid CAN pins tx %s and rx %s", hwPortname(pinTx), hwPortname(pinRx));
+   return nullptr;
 }
 
 #endif /* EFI_CAN_SUPPORT */

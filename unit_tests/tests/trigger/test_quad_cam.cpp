@@ -64,10 +64,10 @@ TEST(trigger, testQuadCam) {
 	float basePos = -80.2f;
 
 	// All four cams should now have the same position
-	EXPECT_NEAR(360 + basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam), EPS3D);
-	EXPECT_NEAR(basePos, engine->triggerCentral.getVVTPosition(firstBank, secondCam), EPS3D);
-	EXPECT_NEAR(basePos, engine->triggerCentral.getVVTPosition(secondBank, firstCam), EPS3D);
-	EXPECT_NEAR(basePos, engine->triggerCentral.getVVTPosition(secondBank, secondCam), EPS3D);
+	EXPECT_NEAR_M3(360 + basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam));
+	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(firstBank, secondCam));
+	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(secondBank, firstCam));
+	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(secondBank, secondCam));
 
 	// Now fire cam events again, but with time gaps between each
 	eth.moveTimeForwardMs(1);

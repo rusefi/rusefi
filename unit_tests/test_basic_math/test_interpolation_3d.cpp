@@ -18,6 +18,12 @@ float mafBins[4] = { 1, 2, 3, 4 };
 scaled_channel<int, 10> mafBinsScaledInt[4] = { 1, 2, 3, 4 };
 scaled_channel<uint8_t, 10> mafBinsScaledByte[4] = { 1, 2, 3, 4 };
 
+scaled_channel<uint32_t, 10000, 3> mapScaledChannel[4][5] = {
+	{ 1, 2, 3, 4, 4},
+	{ 2, 3, 4, 200, 200 },
+	{ 3, 4, 200, 500, 500 },
+	{ 4, 5, 300, 600, 600 },
+};
 
 float map[4][5] = {
 	{ 1, 2, 3, 4, 4},
@@ -25,8 +31,6 @@ float map[4][5] = {
 	{ 3, 4, 200, 500, 500 },
 	{ 4, 5, 300, 600, 600 },
 };
-
-#define EXPECT_NEAR_M4(a, b) EXPECT_NEAR(a, b, 1e-4)
 
 static float getValue(float rpm, float maf) {
 	Map3D<5, 4, float, float, float> x1;
@@ -57,6 +61,12 @@ static float getValue(float rpm, float maf) {
 	);
 	EXPECT_NEAR_M4(result1, result5);
 
+	// Test with values stored in scaled bytes
+	Map3D<5, 4, uint32_t, float, float> x6;
+	x6.init(mapScaledChannel, mafBins, rpmBins);
+	float result6 = x6.getValue(rpm, maf);
+	EXPECT_NEAR(result1, result6, 1e-3);
+
 	return result1;
 }
 
@@ -69,6 +79,7 @@ static void newTestToComfirmInterpolation() {
 //______|__2|__3|_LOAD
 
 	map[1][2] = 10;
+	mapScaledChannel[1][2] = 10;
 
 
 	// let's start by testing corners

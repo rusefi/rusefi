@@ -390,7 +390,7 @@ void setDefaultGppwmParameters() {
 		}
 
 		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
-			cfg.rpmBins[j] = 1000 * j / RPM_1_BYTE_PACKING_MULT;
+			cfg.rpmBins[j] = 1000 * j;
 		}
 	}
 }
@@ -1054,7 +1054,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_600:
 		setHonda600();
 		break;
-	case UNUSED9:
+	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+		setEngineProteusGearboxManInTheMiddle();
+		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;

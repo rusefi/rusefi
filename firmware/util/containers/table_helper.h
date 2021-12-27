@@ -25,7 +25,7 @@ public:
 /**
  * this helper class brings together 3D table with two 2D axis curves
  */
-template<int TColNum, int TRowNum, typename TValue, typename TColumn, typename TRow, typename TValueMultiplier = efi::ratio<1>>
+template<int TColNum, int TRowNum, typename TValue, typename TColumn, typename TRow>
 class Map3D : public ValueProvider3D {
 public:
 	template <typename TValueInit, typename TRowInit, typename TColumnInit>
@@ -47,7 +47,7 @@ public:
 		return interpolate3d(*m_values,
 								*m_rowBins, yRow * m_rowMult,
 								*m_columnBins, xColumn * m_colMult) *
-			TValueMultiplier::asFloat();
+			m_valueMult;
 	}
 
 	void setAll(TValue value) {
@@ -55,28 +55,27 @@ public:
 
 		for (size_t r = 0; r < TRowNum; r++) {
 			for (size_t c = 0; c < TColNum; c++) {
-				(*m_values)[r][c] = value / TValueMultiplier::asFloat();
+				(*m_values)[r][c] = value / m_valueMult;
 			}
 		}
 	}
 
 private:
-	template <int TMult>
-	void initValues(scaled_channel<TValue, TMult> (&table)[TRowNum][TColNum]) {
-		static_assert(TValueMultiplier::den == TMult);
-		static_assert(TValueMultiplier::num == 1);
-
+	template <int TMult, int TDiv>
+	void initValues(scaled_channel<TValue, TMult, TDiv> (&table)[TRowNum][TColNum]) {
 		m_values = reinterpret_cast<TValue (*)[TRowNum][TColNum]>(&table);
+		m_valueMult = 1 / efi::ratio<TMult, TDiv>::asFloat();
 	}
 
 	void initValues(TValue (&table)[TRowNum][TColNum]) {
 		m_values = &table;
+		m_valueMult = 1;
 	}
 
 	template <int TRowMult, int TRowDiv>
 	void initRows(const scaled_channel<TRow, TRowMult, TRowDiv> (&rowBins)[TRowNum]) {
 		m_rowBins = reinterpret_cast<const TRow (*)[TRowNum]>(&rowBins);
-		m_rowMult = (float)TRowMult / TRowDiv;
+		m_rowMult = efi::ratio<TRowMult, TRowDiv>::asFloat();
 	}
 
 	void initRows(const TRow (&rowBins)[TRowNum]) {
@@ -87,7 +86,7 @@ private:
 	template <int TColMult, int TColDiv>
 	void initCols(const scaled_channel<TColumn, TColMult, TColDiv> (&columnBins)[TColNum]) {
 		m_columnBins = reinterpret_cast<const TColumn (*)[TColNum]>(&columnBins);
-		m_colMult = (float)TColMult / TColDiv;
+		m_colMult = efi::ratio<TColMult, TColDiv>::asFloat();
 	}
 
 	void initCols(const TColumn (&columnBins)[TColNum]) {
@@ -115,16 +114,17 @@ private:
 
 	float m_rowMult = 1;
 	float m_colMult = 1;
+	float m_valueMult = 1;
 };
 
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, uint16_t, uint16_t, efi::ratio<1, PACK_MULT_LAMBDA_CFG>> lambda_Map3D_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, float, uint16_t, uint16_t> fuel_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, uint16_t, uint16_t> lambda_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, uint16_t> fuel_Map3D_t;
 typedef Map3D<BARO_CORR_SIZE, BARO_CORR_SIZE, float, float, float> baroCorr_Map3D_t;
 typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t, uint8_t> pedal2tps_t;
-typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t, efi::ratio<LOAD_1_BYTE_PACKING_MULT>> boostOpenLoop_Map3D_t;
+typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostOpenLoop_Map3D_t;
 typedef Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostClosedLoop_Map3D_t;
 typedef Map3D<GPPWM_RPM_COUNT, GPPWM_LOAD_COUNT, uint8_t, uint8_t, uint8_t> gppwm_Map3D_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, uint16_t, efi::ratio<1, PACK_MULT_MAP_ESTIMATE>> mapEstimate_Map3D_t;
+typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, uint16_t> mapEstimate_Map3D_t;
 
 /**
  * @param precision for example '0.1' for one digit fractional part. Default to 0.01, two digits.
@@ -142,7 +142,7 @@ void setLinearCurve(TValue (&array)[TSize], float from, float to, float precisio
 }
 
 template<typename TValue, int TSize>
-void setArrayValues(TValue (&array)[TSize], TValue value) {
+void setArrayValues(TValue (&array)[TSize], float value) {
 	for (int i = 0; i < TSize; i++) {
 		array[i] = value;
 	}
