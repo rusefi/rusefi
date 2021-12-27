@@ -50,13 +50,6 @@
 #define afr_alignmentFill_afr_offset 569
 #define afr_hwChannel_offset 568
 #define afr_offset 568
-#define load_override_e_AFR_AccPedal 3
-#define load_override_e_AFR_CylFilling 4
-#define load_override_e_AFR_MAP 1
-#define load_override_e_AFR_None 0
-#define load_override_e_AFR_Tps 2
-#define load_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
-#define load_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define afr_sensor_s_size 20
 #define afr_type_offset 700
 #define afr_v1_offset 572
@@ -1555,6 +1548,13 @@
 #define linear_sensor_s_size 20
 #define LIS302DLCsPin_offset 1687
 #define LIS302DLCsPinMode_offset 2033
+#define load_override_e_AFR_AccPedal 3
+#define load_override_e_AFR_CylFilling 4
+#define load_override_e_AFR_MAP 1
+#define load_override_e_AFR_None 0
+#define load_override_e_AFR_Tps 2
+#define load_override_e_auto_enum "AFR_None", "AFR_MAP", "AFR_Tps", "AFR_AccPedal", "AFR_CylFilling"
+#define load_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
 #define LOG_DELIMITER "`"
 #define log_format_e_Force_4_bytes_size_log_format ENUM_32_BITS
 #define log_format_e_LF_NATIVE 0
@@ -1883,7 +1883,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 851772102
+#define SIGNATURE_HASH 710929568
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2403,7 +2403,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2021.12.26.subaru_eg33_f7.851772102"
+#define TS_SIGNATURE "rusEFI 2021.12.27.subaru_eg33_f7.710929568"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

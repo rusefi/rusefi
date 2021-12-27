@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Dec 26 17:52:45 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Dec 27 17:14:18 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -42,11 +42,6 @@ public class Fields {
 	public static final int afr_alignmentFill_afr_offset = 569;
 	public static final int afr_hwChannel_offset = 568;
 	public static final int afr_offset = 568;
-	public static final int afr_override_e_AFR_AccPedal = 3;
-	public static final int afr_override_e_AFR_CylFilling = 4;
-	public static final int afr_override_e_AFR_MAP = 1;
-	public static final int afr_override_e_AFR_None = 0;
-	public static final int afr_override_e_AFR_Tps = 2;
 	public static final int afr_sensor_s_size = 20;
 	public static final int afr_type_offset = 700;
 	public static final int afr_v1_offset = 572;
@@ -1491,6 +1486,11 @@ public class Fields {
 	public static final int linear_sensor_s_size = 20;
 	public static final int LIS302DLCsPin_offset = 1687;
 	public static final int LIS302DLCsPinMode_offset = 2033;
+	public static final int load_override_e_AFR_AccPedal = 3;
+	public static final int load_override_e_AFR_CylFilling = 4;
+	public static final int load_override_e_AFR_MAP = 1;
+	public static final int load_override_e_AFR_None = 0;
+	public static final int load_override_e_AFR_Tps = 2;
 	public static final String LOG_DELIMITER = "`";
 	public static final int log_format_e_LF_NATIVE = 0;
 	public static final int log_format_e_LM_MLV = 1;
@@ -2262,7 +2262,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.26.all.4051637398";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.27.all.3924163312";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -3173,8 +3173,8 @@ public class Fields {
 	public static final String[] ve_override_e = {"None", "MAP", "TPS"};
 	public static final Field VEOVERRIDEMODE = Field.create("VEOVERRIDEMODE", 1733, FieldType.INT8, ve_override_e);
 	public static final Field CAN2BAUDRATE = Field.create("CAN2BAUDRATE", 1734, FieldType.INT8, can_baudrate_e);
-	public static final String[] afr_override_e = {"None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"};
-	public static final Field AFROVERRIDEMODE = Field.create("AFROVERRIDEMODE", 1735, FieldType.INT8, afr_override_e);
+	public static final String[] load_override_e = {"None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"};
+	public static final Field AFROVERRIDEMODE = Field.create("AFROVERRIDEMODE", 1735, FieldType.INT8, load_override_e);
 	public static final Field UNUSED1736 = Field.create("UNUSED1736", 1736, FieldType.INT);
 	public static final Field UNUSED1740B0 = Field.create("UNUSED1740B0", 1740, FieldType.BIT, 0);
 	public static final Field UNUSED1740B1 = Field.create("UNUSED1740B1", 1740, FieldType.BIT, 1);
@@ -3213,7 +3213,7 @@ public class Fields {
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 1749, FieldType.INT8, brain_pin_e);
 	public static final Field STARTERCONTROLPINMODE = Field.create("STARTERCONTROLPINMODE", 1750, FieldType.INT8, pin_output_mode_e);
 	public static final Field WASTEGATEPOSITIONSENSOR = Field.create("WASTEGATEPOSITIONSENSOR", 1751, FieldType.INT8, adc_channel_e);
-	public static final Field IGNOVERRIDEMODE = Field.create("IGNOVERRIDEMODE", 1752, FieldType.INT8, afr_override_e);
+	public static final Field IGNOVERRIDEMODE = Field.create("IGNOVERRIDEMODE", 1752, FieldType.INT8, load_override_e);
 	public static final Field INJECTORPRESSURETYPE = Field.create("INJECTORPRESSURETYPE", 1753, FieldType.INT8);
 	public static final Field HPFPVALVEPIN = Field.create("HPFPVALVEPIN", 1754, FieldType.INT8, output_pin_e);
 	public static final Field HPFPVALVEPINMODE = Field.create("HPFPVALVEPINMODE", 1755, FieldType.INT8, pin_output_mode_e);
