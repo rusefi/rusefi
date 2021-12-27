@@ -41,8 +41,7 @@ static scheduling_s debugToggleScheduling;
 TriggerCentral::TriggerCentral() :
 		vvtEventRiseCounter(),
 		vvtEventFallCounter(),
-		vvtPosition(),
-		vvtSyncTimeNt()
+		vvtPosition()
 {
 	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetTriggerState();
@@ -330,8 +329,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		// else, do nothing
 		break;
 	}
-
-	tc->vvtSyncTimeNt[bankIndex][camIndex] = nowNt;
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
