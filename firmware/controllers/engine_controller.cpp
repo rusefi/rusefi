@@ -198,18 +198,6 @@ static void doPeriodicSlowCallback() {
 
 	slowStartStopButtonCallback();
 
-
-	efitick_t nowNt = getTimeNowNt();
-	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
-		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
-			if (nowNt - engine->triggerCentral.vvtSyncTimeNt[bankIndex][camIndex] >= NT_PER_SECOND) {
-				// loss of VVT sync
-				// todo: this code would get simpler if we convert vvtSyncTimeNt to Timer
-				engine->triggerCentral.vvtSyncTimeNt[bankIndex][camIndex] = 0;
-			}
-		}
-	}
-
 	engine->rpmCalculator.onSlowCallback();
 
 	if (engine->directSelfStimulation || engine->rpmCalculator.isStopped()) {
