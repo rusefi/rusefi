@@ -351,7 +351,8 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) && engine->triggerCentral.vvtSyncTimeNt[0][0] == 0) {
+	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) 
+		&& !engine->triggerCentral.vvtState[0][0].getShaftSynchronized()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// examples:
 		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync

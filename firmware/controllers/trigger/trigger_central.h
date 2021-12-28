@@ -93,9 +93,6 @@ public:
 	// synchronization event position
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
 
-	// todo: convert to Timer!
-	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
-
 	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;
 
