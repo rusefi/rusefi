@@ -80,6 +80,8 @@ void TriggerState::resetTriggerState() {
 
 	totalEventCountBase = 0;
 	isFirstEvent = true;
+
+	m_hasSynchronizedSymmetrical = false;
 }
 
 void TriggerState::setTriggerErrorState() {
@@ -404,6 +406,9 @@ angle_t TriggerState::syncSymmetricalCrank(int divider, int remainder, angle_t e
 		incrementTotalEventCounter();
 		totalShift += engineCycle / divider;
 	}
+
+	m_hasSynchronizedSymmetrical = true;
+
 	return totalShift;
 }
 
