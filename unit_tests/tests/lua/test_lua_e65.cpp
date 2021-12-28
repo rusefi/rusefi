@@ -36,11 +36,20 @@ TEST(LuaE65, sumChecksum) {
 
 	const char* realdata = R"(
 
-	function testFunc()
-	canID = 0xA8
-		data = { 0xAD, 0x05, 0xA0, 0x05, 0x0F, 0x00, 0x02 }
-		checksum = data[1] + data[2] + data[3] + data[4] + data[5] + data[6] + data[7] + canID
+	function bmwChecksum(canID, data, offset, length) 
+		checksum = canID
+		for i = offset, offset + length - 1,1 
+		do 
+	   		checksum = checksum + data[i]
+		end
 		checksum = math.floor (checksum / 0x100) + (checksum & 0xff)
+		return checksum
+	end
+
+	function testFunc()
+	    canID = 0xA8
+		data = { 0xAD, 0x05, 0xA0, 0x05, 0x0F, 0x00, 0x02 }
+		checksum = bmwChecksum(canID, data, 1, 7)
 		return checksum; 
 	end)";
 
