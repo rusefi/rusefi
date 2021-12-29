@@ -84,7 +84,7 @@ TEST(GpPwm, GetOutput) {
 	MockVp3d table;
 
 	engine->rpmCalculator.mockRpm = 1200;
-	EXPECT_CALL(table, getValue(1200 / RPM_1_BYTE_PACKING_MULT, 35.0f))
+	EXPECT_CALL(table, getValue(1200, 35.0f))
 		.WillRepeatedly([](float x, float tps) {
 			return tps;
 		});

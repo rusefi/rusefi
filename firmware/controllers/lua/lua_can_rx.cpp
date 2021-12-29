@@ -5,7 +5,7 @@
 #include "rusefi_lua.h"
 #include "can.h"
 
-static constexpr size_t maxFilterCount = 16;
+static constexpr size_t maxFilterCount = 48;
 
 size_t filterCount = 0;
 int32_t luaCanRxIds[maxFilterCount] = {0};

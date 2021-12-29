@@ -41,8 +41,7 @@ static scheduling_s debugToggleScheduling;
 TriggerCentral::TriggerCentral() :
 		vvtEventRiseCounter(),
 		vvtEventFallCounter(),
-		vvtPosition(),
-		vvtSyncTimeNt()
+		vvtPosition()
 {
 	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetTriggerState();
@@ -264,14 +263,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 	logFront(isImportantFront, nowNt, index);
 
-
-	auto currentPhase = tc->getCurrentEnginePhase(nowNt);
-	if (!currentPhase) {
-		// todo: this code branch is slowing NB2 cranking since we require RPM sync for VVT sync!
-		// todo: smarter code
-		//
-		// we are here if we are getting VVT position signals while engine is not running
-		// for example if crank position sensor is broken :)
+	// If the main trigger is not synchronized, don't decode VVT yet
+	if (!tc->triggerState.getShaftSynchronized()) {
 		return;
 	}
 
@@ -290,6 +283,13 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	}
 
 	tc->vvtCamCounter++;
+
+	auto currentPhase = tc->getCurrentEnginePhase(nowNt);
+	if (!currentPhase) {
+		// If we couldn't resolve engine speed (yet primary trigger is sync'd), this
+		// probably means that we have partial crank sync, but not RPM information yet
+		return;
+	}
 
 	angle_t currentPosition = currentPhase.Value;
 	// convert engine cycle angle into trigger cycle angle
@@ -317,7 +317,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 	case VVT_BOSCH_QUICK_START:
 	case VVT_BARRA_3_PLUS_1:
 	case VVT_NISSAN_VQ:
-	 {
+	case VVT_NISSAN_MR:
+	{
 		if (tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
 			// this is not sync tooth - exiting
 			return;
@@ -330,8 +331,6 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		// else, do nothing
 		break;
 	}
-
-	tc->vvtSyncTimeNt[bankIndex][camIndex] = nowNt;
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 

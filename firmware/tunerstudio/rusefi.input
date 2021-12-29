@@ -3030,34 +3030,35 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TX pin",                               binarySerialTxPin, {useSerialPort == 1}
 		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
 
+	dialog = canHw1, "Primary CAN"
+		field = "Bitrate",		canBaudRate
+		field = "RX pin",		canRxPin @@if_ts_show_can_pins
+		field = "TX pin",		canTxPin @@if_ts_show_can_pins
+
+	dialog = canHw2, "Secondary CAN"
+		field = "Bitrate",	can2BaudRate
+		field = "RX pin",		can2RxPin @@if_ts_show_can_pins
+		field = "TX pin",		can2TxPin @@if_ts_show_can_pins
+
 	dialog = canBus, "CAN Bus"
 		field = "CAN read enabled",						canReadEnabled
 		field = "CAN write enabled",					canWriteEnabled
-		field = "CAN bitrate",							canBaudRate
 		field = "CAN dash type",						canNbcType
 		field = "Verbose Can",                          verboseCan
 		field = "inertia measurement unit",             imuType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
+		field = "rusEFI CAN data bus",    canBroadcastUseChannelTwo
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
 		field = "rusEFI CAN data address type",			rusefiVerbose29b
 		field = "rusEFI CAN data period",				canSleepPeriodMs
-		field = "RX pin",								canRxPin @@if_ts_show_can_pins
-		field = "TX pin",								canTxPin @@if_ts_show_can_pins
 
 	dialog = canBus2, "Secondary CAN Bus"
-		field = "CAN read enabled",						can2ReadEnabled
-		field = "CAN write enabled",					can2WriteEnabled
-		field = "CAN bitrate",							can2BaudRate
-		field = "CAN dash type",						can2NbcType
-		field = "Enable rusEFI CAN broadcast",			enableVerboseCan2Tx
-		field = "rusEFI CAN data base address",			verboseCan2BaseAddress
-		field = "rusEFI CAN data period",				can2SleepPeriodMs
-		field = "RX pin",								can2RxPin @@if_ts_show_can_pins
-		field = "TX pin",								can2TxPin @@if_ts_show_can_pins
 
 	dialog = canBusMain, "CAN Bus Communication", yAxis
 		panel = canBus
-		panel = canBus2							@@if_ts_show_can2
+
+		panel = canHw1
+		panel = canHw2	@@if_ts_show_can2
 
 	dialog = auxSerial, "AUX Sensor Serial"
 		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins

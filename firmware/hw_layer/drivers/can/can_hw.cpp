@@ -120,9 +120,7 @@ static const CANConfig canConfig1000 = {
 };
 #endif
 
-static const CANConfig *canConfig = &canConfig500;
-
-class CanRead final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
+class CanRead final : protected ThreadController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	CanRead(size_t index)
 		: ThreadController("CAN RX", PRIO_CAN_RX)
@@ -130,17 +128,18 @@ public:
 	{
 	}
 
-	void ThreadTask() override {
-		CANDriver* device = detectCanDevice(m_index);
+	void Start(CANDriver* device) {
+		m_device = device;
 
-		if (!device) {
-			warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
-			return;
+		if (device) {
+			ThreadController::Start();
 		}
+	}
 
+	void ThreadTask() override {
 		while (true) {
 			// Block until we get a message
-			msg_t result = canReceiveTimeout(device, CAN_ANY_MAILBOX, &m_buffer, TIME_INFINITE);
+			msg_t result = canReceiveTimeout(m_device, CAN_ANY_MAILBOX, &m_buffer, TIME_INFINITE);
 
 			if (result != MSG_OK) {
 				continue;
@@ -156,6 +155,7 @@ public:
 private:
 	const size_t m_index;
 	CANRxFrame m_buffer;
+	CANDriver* m_device;
 };
 
 CCM_OPTIONAL static CanRead canRead1(0);
@@ -168,8 +168,12 @@ static void canInfo() {
 		return;
 	}
 
-	efiPrintf("CAN TX %s speed %d", hwPortname(engineConfiguration->canTxPin), engineConfiguration->canBaudRate);
-	efiPrintf("CAN RX %s", hwPortname(engineConfiguration->canRxPin));
+	efiPrintf("CAN1 TX %s speed %d", hwPortname(engineConfiguration->canTxPin), engineConfiguration->canBaudRate);
+	efiPrintf("CAN1 RX %s", hwPortname(engineConfiguration->canRxPin));
+
+	efiPrintf("CAN2 TX %s speed %d", hwPortname(engineConfiguration->can2TxPin), engineConfiguration->can2BaudRate);
+	efiPrintf("CAN2 RX %s", hwPortname(engineConfiguration->can2RxPin));
+
 	efiPrintf("type=%d canReadEnabled=%s canWriteEnabled=%s period=%d", engineConfiguration->canNbcType,
 			boolToString(engineConfiguration->canReadEnabled), boolToString(engineConfiguration->canWriteEnabled),
 			engineConfiguration->canSleepPeriodMs);
@@ -241,54 +245,63 @@ void startCanPins() {
 	efiSetPadModeIfConfigurationChanged("CAN2 RX", can2RxPin, PAL_MODE_ALTERNATE(EFI_CAN_RX_AF));
 }
 
+static const CANConfig * findConfig(can_baudrate_e rate) {
+	switch (rate) {
+	case B100KBPS:
+		return &canConfig100;
+		break;
+	case B250KBPS:
+		return &canConfig250;
+		break;
+	case B1MBPS:
+		return &canConfig1000;
+		break;
+	case B500KBPS:
+	default:
+		return &canConfig500;
+	}
+}
+
 void initCan(void) {
 	addConsoleAction("caninfo", canInfo);
 
 	isCanEnabled = false;
 
-	bool isCanConfigGood =
-		(isBrainPinValid(engineConfiguration->canTxPin)) && // both pins are set...
-		(isBrainPinValid(engineConfiguration->canRxPin)) &&
-		(engineConfiguration->canWriteEnabled || engineConfiguration->canReadEnabled) ; // ...and either read or write is enabled
-
-	// nothing to do if we aren't enabled...
-	if (!isCanConfigGood) {
+	// No CAN features enabled, nothing more to do.
+	if (!engineConfiguration->canWriteEnabled && !engineConfiguration->canReadEnabled) {
 		return;
 	}
 
-	switch (engineConfiguration->canBaudRate) {
-	case B100KBPS:
-		canConfig = &canConfig100;
-		break;
-	case B250KBPS:
-		canConfig = &canConfig250;
-		break;
-	case B500KBPS:
-		canConfig = &canConfig500;
-		break;
-	case B1MBPS:
-		canConfig = &canConfig1000;
-		break;
-	default:
-		break;
-	}
+	// Determine physical CAN peripherals based on selected pins
+	auto device1 = detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
+	auto device2 = detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
 
-	// Initialize hardware
-#if STM32_CAN_USE_CAN2
-	// CAN1 is required for CAN2
-	canStart(&CAND1, canConfig);
-	canStart(&CAND2, canConfig);
-#else
-	canStart(&CAND1, canConfig);
-#endif /* STM32_CAN_USE_CAN2 */
-
-	if (detectCanDevice(0) == detectCanDevice(1)) {
+	// Devices can't be the same!
+	if (device1 == device2) {
 		firmwareError(OBD_PCM_Processor_Fault, "CAN pins must be set to different devices");
 		return;
 	}
 
-	// Plumb CAN device to tx system
-	CanTxMessage::setDevice(detectCanDevice(0), detectCanDevice(1));
+	// If both devices are null, a firmware error was already thrown by detectCanDevice, but we shouldn't continue
+	if (!device1 && !device2) {
+		return;
+	}
+
+	// Generate configs based on baud rate
+	auto config1 = findConfig(engineConfiguration->canBaudRate);
+	auto config2 = findConfig(engineConfiguration->can2BaudRate);
+
+	// Initialize peripherals
+	if (device1) {
+		canStart(device1, config1);
+	}
+
+	if (device2) {
+		canStart(device2, config2);
+	}
+
+	// Plumb CAN devices to tx system
+	CanTxMessage::setDevice(device1, device2);
 
 	// fire up threads, as necessary
 	if (engineConfiguration->canWriteEnabled) {
@@ -296,8 +309,8 @@ void initCan(void) {
 	}
 
 	if (engineConfiguration->canReadEnabled) {
-		canRead1.Start();
-		canRead2.Start();
+		canRead1.Start(device1);
+		canRead2.Start(device2);
 	}
 
 	isCanEnabled = true;
@@ -305,17 +318,6 @@ void initCan(void) {
 
 bool getIsCanEnabled(void) {
 	return isCanEnabled;
-}
-
-CANDriver* detectCanDevice(size_t logicalIndex) {
-	switch (logicalIndex) {
-	case 0:
-		return detectCanDeviceImpl(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
-	case 1:
-		return detectCanDeviceImpl(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
-	}
-
-	return nullptr;
 }
 
 #endif /* EFI_CAN_SUPPORT */

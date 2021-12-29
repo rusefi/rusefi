@@ -48,10 +48,11 @@ TEST(AirmassModes, AlphaNNormal) {
 
 	AlphaNAirmass dut(veTable);
 
+	// that's 0.71% not 71%
 	Sensor::setMockValue(SensorType::Tps1, 0.71f);
 
 	// Mass of 1 liter of air * VE
-	float expectedAirmass = 1.2047f * 0.35f;
+	mass_t expectedAirmass = 1.2047f * 0.35f;
 
 	auto result = dut.getAirmass(1200);
 	EXPECT_NEAR(result.CylinderAirmass, expectedAirmass, EPS4D);

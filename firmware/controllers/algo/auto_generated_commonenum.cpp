@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Dec 16 21:14:24 EST 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Dec 27 17:12:56 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -54,21 +54,6 @@ case ADC_SLOW:
   return "ADC_SLOW";
 case Force_4_bytes_size_adc_channel_mode:
   return "Force_4_bytes_size_adc_channel_mode";
-  }
- return NULL;
-}
-const char *getAfr_override_e(afr_override_e value){
-switch(value) {
-case AFR_AccPedal:
-  return "AFR_AccPedal";
-case AFR_CylFilling:
-  return "AFR_CylFilling";
-case AFR_MAP:
-  return "AFR_MAP";
-case AFR_None:
-  return "AFR_None";
-case AFR_Tps:
-  return "AFR_Tps";
   }
  return NULL;
 }
@@ -451,6 +436,21 @@ case Force_4bytes_size_launchActivationMode_e:
   return "Force_4bytes_size_launchActivationMode_e";
 case SWITCH_INPUT_LAUNCH:
   return "SWITCH_INPUT_LAUNCH";
+  }
+ return NULL;
+}
+const char *getLoad_override_e(load_override_e value){
+switch(value) {
+case AFR_AccPedal:
+  return "AFR_AccPedal";
+case AFR_CylFilling:
+  return "AFR_CylFilling";
+case AFR_MAP:
+  return "AFR_MAP";
+case AFR_None:
+  return "AFR_None";
+case AFR_Tps:
+  return "AFR_Tps";
   }
  return NULL;
 }

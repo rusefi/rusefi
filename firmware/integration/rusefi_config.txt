@@ -70,7 +70,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10005
+#define FLASH_DATA_VERSION 10006
 
 #define LOG_DELIMITER "`"
 
@@ -213,9 +213,7 @@ struct_no_prefix engine_configuration_s
 #define PACK_MULT_ANGLE 50
 #define PACK_MULT_VOLTAGE 1000
 #define PACK_MULT_MASS_FLOW 10
-#define TPS_1_BYTE_PACKING_MULT 2
 #define TPS_2_BYTE_PACKING_MULT 100
-#define LOAD_1_BYTE_PACKING_MULT 2
 #define PACK_MULT_AFR_CFG 10
 #define PACK_MULT_LAMBDA_CFG 147
 #define PACK_MULT_FUEL_MASS 100
@@ -357,7 +355,7 @@ struct gppwm_channel
 	uint8_t alignmentFill_map;;"unit", 1, 0, 0, 100, 0
 
 	uint8_t[GPPWM_LOAD_COUNT] loadBins;;"load", 1, 0, 0, 250, 0
-	uint8_t[GPPWM_RPM_COUNT] rpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
+	uint8_t[GPPWM_RPM_COUNT] autoscale rpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 	uint8_t[GPPWM_RPM_COUNT x GPPWM_LOAD_COUNT] table;;"duty", 1, 0, 0, 100, 0
 end_struct
 
@@ -726,7 +724,7 @@ custom adc_channel_mode_e 4 bits, U32, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 pin_input_mode_e throttlePedalUpPinMode;
 	uint8_t acIdleExtraOffset;+Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
 
-	int can2SleepPeriodMs;+CANbus thread period, ms;"ms", 1, 0, 0, 1000, 2
+	int unused720;;"ms", 1, 0, 0, 1000, 2
 	uint16_t wastegatePositionMin;+Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t wastegatePositionMax;+Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMin;+Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
@@ -927,8 +925,10 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit knockBankCyl11,"Channel 2","Channel 1"
 	bit knockBankCyl12,"Channel 2","Channel 1"
 	bit tcuEnabled
-	bit unusedBit_251_29
-	
+bit canBroadcastUseChannelTwo,"second","first"
+bit unusedBit_310_30
+bit unusedBit_310_31
+
 	dc_io[ETB_COUNT iterate] etbIo
 
 
@@ -1196,25 +1196,25 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	can_baudrate_e can2BaudRate;
 
-	#define afr_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
-	custom afr_override_e 1 bits, U08, @OFFSET@, [0:2], @@afr_override_e_enum@@
-	afr_override_e afrOverrideMode;+Override the Y axis (load) value used for the AFR table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+	#define load_override_e_enum "None", "MAP", "TPS", "Acc Pedal", "Cyl Filling %"
+	custom load_override_e 1 bits, U08, @OFFSET@, [0:2], @@load_override_e_enum@@
+	load_override_e afrOverrideMode;+Override the Y axis (load) value used for the AFR table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
-	uint32_t verboseCan2BaseAddress;;"", 1, 0, 0, 536870911, 0
-	bit enableVerboseCan2Tx;+CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
-	bit can2ReadEnabled;enable can_read/disable can_read
-	bit can2WriteEnabled;enable can_write/disable can_write
+	uint32_t unused1736;;"", 1, 0, 0, 536870911, 0
+	bit unused1740b0
+	bit unused1740b1
+	bit unused1740b2
 	bit stepperDcInvertedPins;+Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	bit unused1127
 	bit unused1128
 	bit unused1129
 	bit unused1130
-	can_nbc_e can2NbcType;set can_mode X
+	uint32_t unused1744;;"",1,0,0,0,0
 	brain_pin_e can2TxPin;set_can2_tx_pin X
 	brain_pin_e can2RxPin;set_can2_rx_pin X	
 	pin_output_mode_e starterControlPinMode;
 	adc_channel_e wastegatePositionSensor;
-	afr_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
+	load_override_e ignOverrideMode;+Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 
 	custom injector_pressure_type_e 1 bits, U08, @OFFSET@, [0:0], "Low", "High"
@@ -1500,18 +1500,15 @@ float[AFTERSTART_HOLD_CURVE_SIZE] afterstartHoldTime;;"Seconds", 1, 0, 0, 100, 1
 float[AFTERSTART_ENRICH_CURVE_SIZE] afterstartEnrich;;"%", 1, 0, 0, 600, 1
 float[AFTERSTART_DECAY_CURVE_SIZE] afterstartDecayTime;;"Seconds", 1, 0, 0, 100, 1
 
-! TODO: use autoscale
-uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] boostTableOpenLoop;;"", @@LOAD_1_BYTE_PACKING_MULT@@, 0 , 0, 100, 0
-uint8_t[BOOST_RPM_COUNT] boostRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
+uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0 , 0, 100, 1
+uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 
-! TODO: use autoscale
-uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] boostTableClosedLoop;;"", @@LOAD_1_BYTE_PACKING_MULT@@, 0 , 0, 3000, 0
-uint8_t[BOOST_LOAD_COUNT] boostTpsBins;;"%", @@TPS_1_BYTE_PACKING_MULT@@, 0, 0, 100, 2
+uint8_t[BOOST_RPM_COUNT x BOOST_LOAD_COUNT] autoscale boostTableClosedLoop;;"", 2, 0 , 0, 3000, 0
+uint8_t[BOOST_LOAD_COUNT] autoscale boostTpsBins;;"%", 1, 0, 0, 100, 0
 
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
-! it's not serious to use one byte for RPM but let me try that just to try it
-uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
+uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 12000, 0
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C", 1, 0, -100, 250, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%", 1, 0, 0, 500, 2
@@ -1543,11 +1540,11 @@ float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for sim
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
-float[IGN_RPM_COUNT x IGN_LOAD_COUNT] ignitionIatCorrTable;;"deg", 1, 0, -720, 720, 1
+int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -720, 720, 1
 float[IGN_LOAD_COUNT] ignitionIatCorrLoadBins;;"Temperature", 1, 0, 0, 500, 0
 uint16_t[IGN_RPM_COUNT] ignitionIatCorrRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
-float[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
+int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
 uint16_t[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0, 500, 0
 uint16_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
@@ -1567,11 +1564,11 @@ uint8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable2;;"value", 1, 0, 0, 255, 0
 uint16_t[SCRIPT_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 255, 0
 uint16_t[SCRIPT_TABLE_8] vvtTable2RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
-float[IGN_RPM_COUNT x IGN_LOAD_COUNT] ignitionTable;;"deg", 1, 0, -20, 90, 1
+int16_t[IGN_RPM_COUNT x IGN_LOAD_COUNT] autoscale ignitionTable;;"deg", 0.1, 0, -20, 90, 1
 uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 500, 0
 uint16_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
-float[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] veTable;;"%", 1, 0, 0, 999, 1
+uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale veTable;;"%", 0.1, 0, 0, 999, 1
 uint16_t[FUEL_LOAD_COUNT] veLoadBins;;"kPa",	1, 0, 0, 400, 0
 uint16_t[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 

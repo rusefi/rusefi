@@ -333,8 +333,18 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
-static bool noFiringUntilVvtSync(vvt_mode_e mode) {
-	return mode == VVT_MIATA_NB2 || mode == VVT_MAP_V_TWIN_ANOTHER;
+static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
+	auto operationMode = engine->getOperationMode();
+
+	// V-Twin MAP phase sense needs to always wait for sync
+	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
+		return false;
+	}
+
+	// Symmetrical crank modes require cam sync before firing
+	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
+	// Examples include Nissan MR/VQ, Miata NB, etc
+	return operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR || operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR;
 }
 
 /**
@@ -344,11 +354,12 @@ static bool noFiringUntilVvtSync(vvt_mode_e mode) {
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) && engine->triggerCentral.vvtSyncTimeNt == 0) {
-		// this is a bit spaghetti code for sure
-		// do not spark & do not fuel until we have VVT sync.
-		// NB2 is a special case due to symmetrical crank wheel and we need to make sure no spark happens out of sync
-		// VTwin is another special case where we really need to know phase before firing
+	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) 
+		&& !engine->triggerCentral.vvtState[0][0].getShaftSynchronized()) {
+		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
+		// examples:
+		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
+		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
 		return;
 	}
 

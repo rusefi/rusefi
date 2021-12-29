@@ -399,7 +399,7 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
-        if (arguments.saveFile) {
+        if (arguments != null && arguments.saveFile) {
             try {
                 ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
                 Msq tune = MsqFactory.valueOf(image);

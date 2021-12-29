@@ -258,7 +258,7 @@
  * CAN driver system settings.
  */
 #define STM32_CAN_USE_FDCAN1                TRUE
-#define STM32_CAN_USE_FDCAN2                FALSE
+#define STM32_CAN_USE_FDCAN2                TRUE
 
 /*
  * DAC driver system settings.

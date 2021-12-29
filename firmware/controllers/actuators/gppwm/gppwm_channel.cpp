@@ -80,7 +80,7 @@ percent_t GppwmChannel::getOutput() const {
 
 	float rpm = GET_RPM();
 
-	float result = m_table->getValue(rpm / RPM_1_BYTE_PACKING_MULT, loadAxisValue.Value);
+	float result = m_table->getValue(rpm, loadAxisValue.Value);
 
 	if (cisnan(result)) {
 		return m_config->dutyIfError;
