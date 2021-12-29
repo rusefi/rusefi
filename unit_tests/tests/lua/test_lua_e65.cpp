@@ -17,6 +17,18 @@ TEST(LuaE65, Battery) {
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 14.5236);
 }
 
+// https://github.com/HeinrichG-V12/E65_ReverseEngineering/blob/main/docs/0x0A8.md
+TEST(LuaE65, extractTorqueFromA8) {
+	const char* realdata = TWO_BYTES R"(
+
+function testFunc()
+	data = { 0x42, 0x89, 0x10, 0x80, 0x10, 0x0F, 0x00, 0x60 }
+	return 0.5 * (twoBytes(data, 1, 1) >> 4)
+end
+)";
+			EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x108 / 2);
+}
+
 // http://loopybunny.co.uk/CarPC/can/0AA.html
 TEST(LuaE65, Rpm) {
 	const char* realdata = TWO_BYTES R"(
@@ -36,13 +48,13 @@ TEST(LuaE65, sumChecksum) {
 
 	const char* realdata = R"(
 
-	function bmwChecksum(canID, data, offset, length) 
+	function bmwChecksum(canID, data, offset, length)
 		checksum = canID
-		for i = offset, offset + length - 1,1 
-		do 
+		for i = offset, offset + length - 1,1
+		do
 	   		checksum = checksum + data[i]
 		end
-		checksum = math.floor (checksum / 0x100) + (checksum & 0xff)
+		checksum = (checksum >> 8) + (checksum & 0xff)
 		return checksum
 	end
 

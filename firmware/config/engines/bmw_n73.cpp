@@ -25,6 +25,7 @@ CAN_BMW_E90_TORQUE_DEMAND = 0x0B6
 CAN_BMW_E90_IGNITION_KEY = 0x130
 CAN_BMW_E65_GEAR_SELECTOR = 0x192
 CAN_BMW_E90_COOLANT = 0x1D0
+CAN_BMW_E90_LOCKING = 0x2FC
 CAN_BMW_E90_DASH_ON = 0x332
 
 CAN_BMW_GEAR_TORQUE_DEMAND2 = 0x0B5
@@ -43,6 +44,7 @@ canRxAdd(CAN_BMW_E90_TORQUE_DEMAND)
 canRxAdd(CAN_BMW_E90_IGNITION_KEY)
 canRxAdd(CAN_BMW_E65_GEAR_SELECTOR)
 canRxAdd(CAN_BMW_E90_COOLANT)
+canRxAdd(CAN_BMW_E90_LOCKING)
 canRxAdd(CAN_BMW_E90_DASH_ON)
 
 canRxAdd(CAN_BMW_GEAR_TORQUE_DEMAND2)
@@ -56,58 +58,71 @@ canRxAdd(CAN_BMW_GEAR_SERVICE)
 
 txPayload = { }
 
+function relayToTcu(id, data)
+	txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+end
+
+function printDebug(msg)
+    print(msg)
+end
+
 function onCanRx(bus, id, dlc, data)
 	id = id % 2048
 	-- local output = string.format("%x", id)
 
 	if id == CAN_BMW_E90_IGNITION_KEY then
-		print('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY')
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY')
+		relayToTcu(id, data)
     elseif id == CAN_BMW_E90_TORQUE_1 then
-		print('CAN_BMW_E90_TORQUE_1')
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		TORQ_AVL = 0.5 * (twoBytes(data, 1, 1) >> 4)
+		TORQ_AVL_DMEE = 0.5 * (twoBytes(data, 3, 1) >> 4)
+		print('CAN_BMW_E90_TORQUE_1 ' .. TORQ_AVL .. TORQ_AVL_DMEE)
+		relayToTcu(id, data)
     elseif id == CAN_BMW_E90_TORQUE_2 then
-		print('CAN_BMW_E90_TORQUE_2')
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		printDebug('CAN_BMW_E90_TORQUE_2')
+		relayToTcu(id, data)
     elseif id == CAN_BMW_E90_TORQUE_DEMAND then
-		print('CAN_BMW_E90_TORQUE_DEMAND') 
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		printDebug('CAN_BMW_E90_TORQUE_DEMAND')
+		relayToTcu(id, data)
     elseif id == CAN_BMW_E90_DASH_ON then
-		print('CAN_BMW_E90_DASH_ON') 
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		printDebug('CAN_BMW_E90_DASH_ON')
+		relayToTcu(id, data)
 	elseif id == CAN_BMW_E65_GEAR_SELECTOR then
-		print('CAN_BMW_E65_GEAR_SELECTOR')
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		printDebug('CAN_BMW_E65_GEAR_SELECTOR')
+		relayToTcu(id, data)
 	elseif id == CAN_BMW_E65_GEAR_SELECTOR then
-		print('CAN_BMW_E65_GEAR_SELECTOR')
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		printDebug('CAN_BMW_E65_GEAR_SELECTOR')
+		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_RPM_THROTTLE then
 		rpm = twoBytes(data, 4, 0.25)
 		print('CAN_BMW_E90_RPM_THROTTLE ' .. rpm)
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_COOLANT then
-		print('CAN_BMW_E90_COOLANT')
-		txCan(GEAR_BUS, id, 0, data) -- relay non-TCU message to TCU
+		printDebug('CAN_BMW_E90_COOLANT')
+		relayToTcu(id, data)
+	elseif id == CAN_BMW_E90_LOCKING then
+		printDebug('CAN_BMW_E90_LOCKING')
+		relayToTcu(id, data)
 	elseif id == CAN_BMW_GEAR_TORQUE_DEMAND2 then
-		print('*******CAN_BMW_GEAR_TORQUE_DEMAND2')
+		printDebug('*******CAN_BMW_GEAR_TORQUE_DEMAND2')
 		txCan(ECU_BUS, id, 0, data) -- relay TCU message to non-TCU
 	elseif id == CAN_BMW_GEAR_TRANSMISSION_DATA then
-		print('*******CAN_BMW_GEAR_TRANSMISSION_DATA')
+		printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DATA')
 		txCan(ECU_BUS, id, 0, data) -- relay TCU message to non-TCU
 	elseif id == CAN_BMW_GEAR_TRANSMISSION_DISP then
-		print('*******CAN_BMW_GEAR_TRANSMISSION_DISP')
+		printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DISP')
 		txCan(ECU_BUS, id, 0, data) -- relay TCU message to non-TCU
 	elseif id == CAN_BMW_GEAR_GANG_STATUS then
-		print('*******CAN_BMW_GEAR_GANG_STATUS')
+		printDebug('*******CAN_BMW_GEAR_GANG_STATUS')
 		txCan(ECU_BUS, id, 0, data) -- relay TCU message to non-TCU
 	elseif id == CAN_BMW_GEAR_GEARBOX_DATA_2 then
-		print('CAN_BMW_GEAR_GEARBOX_DATA_2')
+		printDebug('CAN_BMW_GEAR_GEARBOX_DATA_2')
 		txCan(ECU_BUS, id, 0, data) -- relay TCU message to non-TCU
 	elseif id == CAN_BMW_GEAR_NETWORK then
-		print('CAN_BMW_GEAR_NETWORK')
+		printDebug('CAN_BMW_GEAR_NETWORK')
 		txCan(ECU_BUS, id, 0, data) -- relay TCU message to non-TCU
 	elseif id == CAN_BMW_GEAR_SERVICE then
-		print('CAN_BMW_GEAR_SERVICE')
+		printDebug('CAN_BMW_GEAR_SERVICE')
 		txCan(ECU_BUS, id, 0, data) -- relay TCU message to non-TCU
 	else
 	end
