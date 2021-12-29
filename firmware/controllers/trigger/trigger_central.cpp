@@ -462,7 +462,9 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 
 #if EFI_TOOTH_LOGGER
 	if (logLogicState) {
+		// first log rising normally
 		LogTriggerTooth(signal, timestamp);
+		// in 'logLogicState' mode we log opposite front right after logical rising away
 		if (signal == SHAFT_PRIMARY_RISING) {
 			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp);
 		} else {
