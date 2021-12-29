@@ -306,11 +306,6 @@ static void setGlobalTriggerAngleOffset(float value) {
 	doPrintConfiguration();
 }
 
-static void setCrankingPrimingPulse(float value) {
-	engineConfiguration->startOfCrankingPrimingPulse = value;
-	incrementGlobalConfigurationVersion();
-}
-
 static void setCrankingTimingAngle(float value) {
 	engineConfiguration->crankingTimingAngle = value;
 	incrementGlobalConfigurationVersion();
@@ -693,20 +688,6 @@ static void showPinFunction(const char *pinName) {
 
 #endif /* EFI_PROD_CODE */
 
-static void setTimingMap(const char * rpmStr, const char *loadStr, const char *valueStr) {
-	float rpm = atoff(rpmStr);
-	float engineLoad = atoff(loadStr);
-	float value = atoff(valueStr);
-
-	int rpmIndex = findIndexMsg("setTM", config->ignitionRpmBins, IGN_RPM_COUNT, rpm);
-	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndexMsg("setTM", config->ignitionLoadBins, IGN_LOAD_COUNT, engineLoad);
-	loadIndex = loadIndex < 0 ? 0 : loadIndex;
-
-	config->ignitionTable[loadIndex][rpmIndex] = value;
-	efiPrintf("Setting timing map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
-}
-
 static void setSpiMode(int index, bool mode) {
 	switch (index) {
 	case 1:
@@ -732,6 +713,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->useTLE8888_cranking_hack = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseTLE8888")) {
 		engineConfiguration->verboseTLE8888 = isEnabled;
+	} else if (strEqualCaseInsensitive(param, "verboseCan")) {
+		engineConfiguration->verboseCan = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "artificialMisfire")) {
 		engineConfiguration->artificialTestMisfire = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_level_trigger")) {
@@ -772,8 +755,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		engineConfiguration->isHip9011Enabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "verbose_etb")) {
-		engineConfiguration->isVerboseETB = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
@@ -900,7 +881,7 @@ const plain_get_integer_s getI_plain[] = {
 //		{"timing_mode", setTimingMode},
 //		{"engine_type", setEngineType},
 		{"warning_period", (int*)&engineConfiguration->warningPeriod},
-		{"hard_limit", &engineConfiguration->rpmHardLimit},
+//		{"hard_limit", &engineConfiguration->rpmHardLimit},
 //		{"firing_order", setFiringOrder},
 //		{"injection_pin_mode", setInjectionPinMode},
 //		{"ignition_pin_mode", setIgnitionPinMode},
@@ -1035,7 +1016,6 @@ const command_f_s commandsF[] = {
 		{"tps_accel_threshold", setTpsAccelThr},
 		{"tps_decel_threshold", setTpsDecelThr},
 		{"tps_decel_multiplier", setTpsDecelMult},
-		{"cranking_priming_pulse", setCrankingPrimingPulse},
 		{"flat_injector_lag", setFlatInjectorLag},
 #endif // EFI_ENGINE_CONTROL
 		{"script_curve_1_value", setScriptCurve1Value},
@@ -1227,8 +1207,6 @@ void initSettings(void) {
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
 	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
-
-	addConsoleActionSSS("set_timing_map", setTimingMap);
 
 	addConsoleAction("stopengine", (Void) scheduleStopEngine);
 

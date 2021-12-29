@@ -72,7 +72,7 @@ int copyCompositeEvents(CompositeEvent *events) {
 
 static void setToothLogReady(bool value) {
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.toothLogReady = value;
+	engine->outputChannels.toothLogReady = value;
 #endif // EFI_TUNER_STUDIO
 }
 

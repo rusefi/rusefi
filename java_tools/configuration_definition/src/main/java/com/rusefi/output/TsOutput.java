@@ -10,21 +10,28 @@ import java.io.Writer;
 
 import static com.rusefi.ToolUtil.EOL;
 
+/**
+ * Same code is used to generate [Constants] and [OutputChannels] bodies, with just one flag controlling the minor
+ * difference in behaviours
+ */
 public class TsOutput {
     private final StringBuilder settingContextHelp = new StringBuilder();
     private final ReaderState state;
-    private final boolean longForm;
+    private final boolean isConstantsSection;
 
     public TsOutput(ReaderState state, boolean longForm) {
         this.state = state;
-        this.longForm = longForm;
+        this.isConstantsSection = longForm;
     }
 
     public StringBuilder getSettingContextHelp() {
         return settingContextHelp;
     }
 
-    private int writeTunerStudio(ConfigField configField, String prefix, Writer tsHeader, int tsPosition, ConfigField next, int bitIndex) throws IOException {
+    private int writeTunerStudio(FieldIterator it, String prefix, Writer tsHeader, int tsPosition) throws IOException {
+        ConfigField configField = it.cf;
+        ConfigField next = it.next;
+        int bitIndex = it.bitState.get();
         String nameWithPrefix = prefix + configField.getName();
 
         if (configField.isDirective() && configField.getComment() != null) {
@@ -49,7 +56,7 @@ public class TsOutput {
             tsHeader.write(" " + tsPosition + ", [");
             tsHeader.write(bitIndex + ":" + bitIndex);
             tsHeader.write("]");
-            if (longForm)
+            if (isConstantsSection)
                 tsHeader.write(", \"" + configField.getFalseName() + "\", \"" + configField.getTrueName() + "\"");
             tsHeader.write(EOL);
 
@@ -66,7 +73,8 @@ public class TsOutput {
             bits = bits.replaceAll("@OFFSET@", "" + tsPosition);
             tsHeader.write(nameWithPrefix + " = " + bits);
 
-            tsPosition += configField.getState().tsCustomSize.get(configField.getType());
+            if (!configField.getName().equals(next.getName()))
+                tsPosition += configField.getState().tsCustomSize.get(configField.getType());
         } else if (configField.getTsInfo() == null) {
             throw new IllegalArgumentException("Need TS info for " + configField.getName() + " at " + prefix);
         } else if (configField.getArraySizes().length == 0) {
@@ -74,7 +82,8 @@ public class TsOutput {
             tsHeader.write(TypesHelper.convertToTs(configField.getType()) + ",");
             tsHeader.write(" " + tsPosition + ",");
             tsHeader.write(" " + handleTsInfo(configField.getTsInfo(), 1));
-            tsPosition += configField.getSize(next);
+            if (!configField.getName().equals(next.getName()))
+                tsPosition += configField.getSize(next);
         } else if (configField.getSize(next) == 0) {
             // write nothing for empty array
             // TS does not like those
@@ -94,7 +103,8 @@ public class TsOutput {
             }
             tsHeader.write("], " + handleTsInfo(configField.getTsInfo(), 1));
 
-            tsPosition += configField.getSize(next);
+            if (!configField.getName().equals(next.getName()))
+                tsPosition += configField.getSize(next);
         }
         tsHeader.write(EOL);
         return tsPosition;
@@ -102,22 +112,10 @@ public class TsOutput {
 
     protected int writeTunerStudio(ConfigStructure configStructure, String prefix, Writer tsHeader, int tsPosition) throws IOException {
         FieldIterator iterator = new FieldIterator(configStructure.tsFields);
-        int prevTsPosition = tsPosition;
         for (int i = 0; i < configStructure.tsFields.size(); i++) {
             iterator.start(i);
 
-            // if duplicate names, use previous position
-            if (iterator.cf.getName().equals(iterator.prev.getName())) {
-                tsPosition = prevTsPosition;
-            }
-
-            // Update 'prev' state needed for duplicate names recognition
-            if (!iterator.cf.isDirective()) {
-                prevTsPosition = tsPosition;
-                iterator.prev = iterator.cf;
-            }
-
-            tsPosition = writeTunerStudio(iterator.cf, prefix, tsHeader, tsPosition, iterator.next, iterator.bitState.get());
+            tsPosition = writeTunerStudio(iterator, prefix, tsHeader, tsPosition);
 
             iterator.end();
         }
@@ -144,7 +142,7 @@ public class TsOutput {
                 }
             }
             StringBuilder sb = new StringBuilder();
-            if (!longForm) {
+            if (!isConstantsSection) {
                 String[] subarray = new String[3];
                 System.arraycopy(fields, 0, subarray, 0, subarray.length);
                 fields = subarray;

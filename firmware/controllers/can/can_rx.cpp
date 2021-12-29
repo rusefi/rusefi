@@ -61,7 +61,7 @@ bool acceptCanRx(int sid) {
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
-static void printPacket(const CANRxFrame &rx) {
+static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
 	bool accept = acceptCanRx(CAN_SID(rx));
 	if (!accept) {
 		return;
@@ -70,10 +70,10 @@ static void printPacket(const CANRxFrame &rx) {
 	// only print info if we're in can debug mode
 
 	// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
-	efiPrintf("CAN_rx %x %d %x %x %x %x %x %x %x %x %x",
+	efiPrintf("CAN_rx bus=%d %x(%d) %d: %02x %02x %02x %02x %02x %02x %02x %02x",
+			busIndex,
 			CAN_SID(rx),
-			CAN_SID(rx), rx.DLC,
-			rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
+			CAN_SID(rx), rx.DLC, rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
 			rx.data8[4], rx.data8[5], rx.data8[6], rx.data8[7]);
 
 }
@@ -160,9 +160,9 @@ static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
 	}
 }
 
-void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
-	if (engineConfiguration->debugMode == DBG_CAN) {
-		printPacket(frame);
+void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
+	if (engineConfiguration->verboseCan) {
+		printPacket(busIndex, frame);
 	}
 
 	serviceCanSubscribers(frame, nowNt);
@@ -174,7 +174,7 @@ void processCanRxMessage(const CANRxFrame &frame, efitick_t nowNt) {
 	// todo: convert to CanListener or not?
 	processCanRxImu(frame, nowNt);
 
-	processLuaCan(frame);
+	processLuaCan(busIndex, frame);
 
 #if EFI_CANBUS_SLAVE
 	if (CAN_EID(frame) == engineConfiguration->verboseCanBaseAddress + CAN_SENSOR_1_OFFSET) {

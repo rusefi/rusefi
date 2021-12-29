@@ -5,7 +5,7 @@
 #include "rusefi_lua.h"
 #include "can.h"
 
-static constexpr size_t maxFilterCount = 16;
+static constexpr size_t maxFilterCount = 48;
 
 size_t filterCount = 0;
 int32_t luaCanRxIds[maxFilterCount] = {0};
@@ -28,7 +28,7 @@ chibios_rt::Mailbox<CANRxFrame*, canFrameCount> freeBuffers;
 // CAN frame buffers that are waiting to be processed by the lua thread
 chibios_rt::Mailbox<CANRxFrame*, canFrameCount> filledBuffers;
 
-void processLuaCan(const CANRxFrame& frame) {
+void processLuaCan(const size_t busIndex, const CANRxFrame& frame) {
 	// Filter the frame if we aren't listening for it
 	if (!shouldRxCanFrame(frame)) {
 		return;

@@ -18,12 +18,6 @@
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
 
-// I believe that TunerStudio curve editor has a bug with F32 support
-// because of that bug we cannot have '1.05' for 5% extra multiplier
-/**
- * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
- */
-
 #define PERCENT_MULT 100.0f
 #define PERCENT_DIV 0.01f
 
@@ -109,12 +103,10 @@ typedef enum  __attribute__ ((__packed__)) {
 
 	VVT_NISSAN_MR = 11,
 
-	/**
-	 * MAP sensor gives us pressure drop corresponding to intake stroke of individual cylinder
-	 * Due to uneven cylinder firing on a V-Twin this gives us a decodable virtual two tooth cam sensor.
-	 * Most HD are 45 degrees with some 60 degree twin.
-	 */
-	VVT_MAP_V_TWIN = 12,
+	VVT_12 = 12,
+
+	VVT_MAP_V_TWIN_ANOTHER = 13,
+
 } vvt_mode_e;
 
 /**
@@ -516,7 +508,7 @@ typedef enum {
 	CAN_BUS_NISSAN_VQ = 9,
 	CAN_BUS_GENESIS_COUPE = 10,
 	CAN_BUS_HONDA_K = 11,
-
+	CAN_AIM_DASH = 12,
 
 	Internal_ForceMyEnumIntSize_can_nbc = ENUM_32_BITS,
 } can_nbc_e;
@@ -615,7 +607,7 @@ typedef enum __attribute__ ((__packed__)) {
 	AFR_Tps = 2,
 	AFR_AccPedal = 3,
 	AFR_CylFilling = 4,
-} afr_override_e;
+} load_override_e;
 
 typedef enum __attribute__ ((__packed__)) {
 // todo: rename to HB_None?

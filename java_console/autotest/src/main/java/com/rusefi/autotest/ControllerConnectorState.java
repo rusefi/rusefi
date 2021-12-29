@@ -40,6 +40,7 @@ public class ControllerConnectorState {
             port = PortDetector.autoDetectSerial(null).getSerialPort();
             if (port == null)
                 throw new IllegalStateException("ECU serial not detected");
+            System.out.println("Auto-connected to " + port);
         }
 
         IoUtil.realHardwareConnect(linkManager, port);

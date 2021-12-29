@@ -143,6 +143,8 @@ void setBoardDefaultConfiguration(void) {
 
 	setBoschVAGETB();
 
+	engineConfiguration->globalTriggerAngleOffset = 93;
+
 	engineConfiguration->isSdCardEnabled = true;
 
 	// todo: should this be a global default not just Hellen121?

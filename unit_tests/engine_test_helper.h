@@ -59,6 +59,9 @@ public:
 	void setTimeAndInvokeEventsUs(int timeNowUs);
 	void executeUntil(int timeUs);
 	void moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds);
+	/**
+	 * both Rise and Fall
+	 */
 	void smartFireTriggerEvents2(int count, float delayMs);
 
 	/**

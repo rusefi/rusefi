@@ -23,7 +23,7 @@ TEST(ignition, twoCoils) {
 	ASSERT_EQ(engine->ignitionPin[ID2INDEX(12)], 1);
 
 	// let's recalculate with zero timing so that we can focus on relation advance between cylinders
-	engine->engineState.timingAdvance = 0;
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
 	initializeIgnitionActions();
 
 	ASSERT_EQ(engine->ignitionEvents.elements[0].sparkAngle, 0);
@@ -59,6 +59,8 @@ TEST(ignition, trailingSpark) {
 	engine->engineState.trailingSparkAngle = 10;
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	setWholeTimingTable(0);
 
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration

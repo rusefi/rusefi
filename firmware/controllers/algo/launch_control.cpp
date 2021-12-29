@@ -80,21 +80,25 @@ bool LaunchControlBase::isInsideRPMCondition(int rpm) const {
 
 bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 
-	bool activateSwitchCondition = isInsideSwitchCondition();
-	bool rpmCondition = isInsideRPMCondition(rpm);
-	bool speedCondition = isInsideSpeedCondition();
-	bool tpsCondition = isInsideTpsCondition();
+	activateSwitchCondition = isInsideSwitchCondition();
+	rpmCondition = isInsideRPMCondition(rpm);
+	speedCondition = isInsideSpeedCondition();
+	tpsCondition = isInsideTpsCondition();
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		tsOutputChannels.debugIntField1 = rpmCondition;
-		tsOutputChannels.debugIntField2 = tpsCondition;
-		tsOutputChannels.debugIntField3 = speedCondition;
-		tsOutputChannels.debugIntField4 = activateSwitchCondition;
-	}
+	// todo: implement fancy logging of all live data
+	engine->outputChannels.launchSpeedCondition = speedCondition;
+	engine->outputChannels.launchRpmCondition = rpmCondition;
+	engine->outputChannels.launchTpsCondition = tpsCondition;
+	engine->outputChannels.launchActivateSwitchCondition = activateSwitchCondition;
 #endif /* EFI_TUNER_STUDIO */
 
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
+}
+
+LaunchControlBase::LaunchControlBase() {
+	launchActivatePinState = false;
+	isLaunchCondition = false;
 }
 
 void LaunchControlBase::update() {
@@ -103,9 +107,9 @@ void LaunchControlBase::update() {
 	}
 
 	int rpm = GET_RPM();
-	bool combinedConditions = isLaunchConditionMet(rpm);
+	combinedConditions = isLaunchConditionMet(rpm);
 
-	//and still recalculat in case user changed the values
+	//and still recalculate in case user changed the values
 	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ? 
 	                     engineConfiguration->launchAdvanceRpmRange : 0) + engineConfiguration->hardCutRpmRange;
 
@@ -119,12 +123,10 @@ void LaunchControlBase::update() {
 	}
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		tsOutputChannels.debugIntField5 = engine->clutchDownState;
-		tsOutputChannels.debugFloatField1 = launchActivatePinState;
-		tsOutputChannels.debugFloatField2 = isLaunchCondition;
-		tsOutputChannels.debugFloatField3 = combinedConditions;
-	}
+	engine->outputChannels.clutchDownState = engine->clutchDownState;
+	engine->outputChannels.launchActivatePinState = launchActivatePinState;
+	engine->outputChannels.launchIsLaunchCondition = isLaunchCondition;
+	engine->outputChannels.launchCombinedConditions = combinedConditions;
 #endif /* EFI_TUNER_STUDIO */
 }
 

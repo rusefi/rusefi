@@ -46,11 +46,11 @@ void DynoView::update(vssSrc src) {
         updateAcceleration(deltaTime, deltaSpeed);
 #if EFI_TUNER_STUDIO
 	    if (engineConfiguration->debugMode == DBG_LOGIC_ANALYZER) {
-		    tsOutputChannels.debugIntField1 = deltaTime;
-		    tsOutputChannels.debugFloatField1 = vss;
-		    tsOutputChannels.debugFloatField2 = speed;
-		    tsOutputChannels.debugFloatField3 = deltaSpeed;
-            tsOutputChannels.debugFloatField4 = acceleration;
+		    engine->outputChannels.debugIntField1 = deltaTime;
+		    engine->outputChannels.debugFloatField1 = vss;
+		    engine->outputChannels.debugFloatField2 = speed;
+		    engine->outputChannels.debugFloatField3 = deltaSpeed;
+            engine->outputChannels.debugFloatField4 = acceleration;
 	    }
 #endif /* EFI_TUNER_STUDIO */        
         updateHP();

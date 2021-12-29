@@ -60,7 +60,7 @@ void StepperMotorBase::changeCurrentPosition(bool positive) {
 void StepperMotorBase::postCurrentPosition(void) {
 	if (engineConfiguration->debugMode == DBG_IDLE_CONTROL) {
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField5 = m_currentPosition;
+		engine->outputChannels.debugIntField5 = m_currentPosition;
 #endif /* EFI_TUNER_STUDIO */
 	}
 }

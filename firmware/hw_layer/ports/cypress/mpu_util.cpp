@@ -224,7 +224,7 @@ bool isValidCanRxPin(brain_pin_e pin) {
    return isValidCan1RxPin(pin) || isValidCan2RxPin(pin);
 }
 
-CANDriver * detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
+CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
    if (isValidCan1RxPin(pinRx) && isValidCan1TxPin(pinTx))
       return &CAND1;
    if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))

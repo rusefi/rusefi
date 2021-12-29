@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Nov 29 14:06:03 EST 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Dec 23 21:44:24 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -52,6 +52,8 @@ case DBG_16:
   return "DBG_16";
 case DBG_20:
   return "DBG_20";
+case DBG_26:
+  return "DBG_26";
 case DBG_29:
   return "DBG_29";
 case DBG_34:
@@ -60,8 +62,12 @@ case DBG_35:
   return "DBG_35";
 case DBG_37:
   return "DBG_37";
+case DBG_38:
+  return "DBG_38";
 case DBG_43:
   return "DBG_43";
+case DBG_8:
+  return "DBG_8";
 case DBG_9:
   return "DBG_9";
 case DBG_ANALOG_INPUTS:
@@ -72,8 +78,6 @@ case DBG_BENCH_TEST:
   return "DBG_BENCH_TEST";
 case DBG_BOOST:
   return "DBG_BOOST";
-case DBG_CAN:
-  return "DBG_CAN";
 case DBG_CJ125:
   return "DBG_CJ125";
 case DBG_COMPOSITE_LOG:
@@ -100,8 +104,6 @@ case DBG_ION:
   return "DBG_ION";
 case DBG_KNOCK:
   return "DBG_KNOCK";
-case DBG_LAUNCH:
-  return "DBG_LAUNCH";
 case DBG_LOGIC_ANALYZER:
   return "DBG_LOGIC_ANALYZER";
 case DBG_LUA:
@@ -134,8 +136,6 @@ case DBG_UNUSED41:
   return "DBG_UNUSED41";
 case DBG_UNUSED_42:
   return "DBG_UNUSED_42";
-case DBG_VVT:
-  return "DBG_VVT";
 case DBG_VVT_1_PID:
   return "DBG_VVT_1_PID";
 case DBG_VVT_2_PID:
@@ -295,6 +295,8 @@ case PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case PROTEUS_BMW_M73:
   return "PROTEUS_BMW_M73";
+case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+  return "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE";
 case PROTEUS_HARLEY:
   return "PROTEUS_HARLEY";
 case PROTEUS_HONDA_ELEMENT_2003:
@@ -325,6 +327,8 @@ case TEST_110:
   return "TEST_110";
 case TEST_33816:
   return "TEST_33816";
+case TEST_CRANK_ENGINE:
+  return "TEST_CRANK_ENGINE";
 case TEST_ENGINE:
   return "TEST_ENGINE";
 case TEST_ENGINE_VVT:
@@ -351,8 +355,6 @@ case UNUSED101:
   return "UNUSED101";
 case UNUSED18:
   return "UNUSED18";
-case UNUSED28:
-  return "UNUSED28";
 case UNUSED30:
   return "UNUSED30";
 case UNUSED39:
@@ -361,8 +363,6 @@ case UNUSED60:
   return "UNUSED60";
 case UNUSED61:
   return "UNUSED61";
-case UNUSED9:
-  return "UNUSED9";
 case UNUSED_19:
   return "UNUSED_19";
 case UNUSED_48:
@@ -514,14 +514,14 @@ case TT_TRI_TACH:
   return "TT_TRI_TACH";
 case TT_UNUSED:
   return "TT_UNUSED";
+case TT_UNUSED_62:
+  return "TT_UNUSED_62";
 case TT_VVT_BARRA_3_PLUS_1:
   return "TT_VVT_BARRA_3_PLUS_1";
 case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
   return "TT_VVT_JZ";
-case TT_VVT_MAP_45_V_TWIN:
-  return "TT_VVT_MAP_45_V_TWIN";
 case TT_VVT_MIATA_NB2:
   return "TT_VVT_MIATA_NB2";
 case TT_VVT_NISSAN_VQ35:

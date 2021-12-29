@@ -11,7 +11,7 @@
 #include "ch.hpp"
 
 static NO_CACHE adcsample_t sampleBuffer[2000];
-static int8_t currentCylinderIndex = 0;
+static int8_t currentCylinderNumber = 0;
 static efitick_t lastKnockSampleTime = 0;
 static Biquad knockFilter;
 
@@ -104,7 +104,7 @@ const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
 	return &adcConvGroupCh1;
 }
 
-void onStartKnockSampling(uint8_t cylinderIndex, float samplingSeconds, uint8_t channelIdx) {
+void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t channelIdx) {
 	if (!engineConfiguration->enableSoftwareKnock) {
 		return;
 	}
@@ -128,8 +128,8 @@ void onStartKnockSampling(uint8_t cylinderIndex, float samplingSeconds, uint8_t 
 	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
 	auto conversionGroup = getConversionGroup(channelIdx);
 
-	// Stash the current cylinder's index so we can store the result appropriately
-	currentCylinderIndex = cylinderIndex;
+	// Stash the current cylinder's number so we can store the result appropriately
+	currentCylinderNumber = cylinderNumber;
 
 	adcStartConversionI(&KNOCK_ADC, conversionGroup, sampleBuffer, sampleCount);
 	lastKnockSampleTime = getTimeNowNt();
@@ -179,8 +179,8 @@ void processLastKnockEvent() {
 
 		float filtered = knockFilter.filter(volts);
 		if (i == localCount - 1 && engineConfiguration->debugMode == DBG_KNOCK) {
-			tsOutputChannels.debugFloatField1 = volts;
-			tsOutputChannels.debugFloatField2 = filtered;
+			engine->outputChannels.debugFloatField1 = volts;
+			engine->outputChannels.debugFloatField2 = filtered;
 		}
 
 		sumSq += filtered * filtered;
@@ -201,7 +201,7 @@ void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	engine->knockController.onKnockSenseCompleted(currentCylinderIndex, db, lastKnockTime);
+	engine->knockController.onKnockSenseCompleted(currentCylinderNumber, db, lastKnockTime);
 }
 
 void KnockThread::ThreadTask() {

@@ -33,6 +33,13 @@ static int lua_interpolate(lua_State* l) {
 void configureRusefiLuaUtilHooks(lua_State* l) {
 	lua_register(l, "print", lua_efi_print);
 	lua_register(l, "interpolate", lua_interpolate);
+
+#if defined(STM32F4) || defined(STM32F7)
+	lua_register(l, "mcu_stop", [](lua_State* l) {
+		return 0;
+	});
+#endif
+
 /*
  * todo: shall we? same for milliseconds?
 	lua_register(l, "getNowSeconds", [](lua_State* l) -> int {

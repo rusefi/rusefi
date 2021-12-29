@@ -59,8 +59,8 @@ void AcController::onSlowCallback() {
 	enginePins.acRelay.setValue(isEnabled);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.acSwitchState = engine->acSwitchState;
-	tsOutputChannels.acState = isEnabled;
+	engine->outputChannels.acSwitchState = engine->acSwitchState;
+	engine->outputChannels.acState = isEnabled;
 #endif // EFI_TUNER_STUDIO
 }
 

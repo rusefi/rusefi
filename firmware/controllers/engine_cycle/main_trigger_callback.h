@@ -15,8 +15,6 @@ void initMainEventListener();
 
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp);
 
-void startPrimeInjectionPulse();
-
 void startSimultaniousInjection(void* = nullptr);
 void endSimultaniousInjection(InjectionEvent *event);
 void turnInjectionPinHigh(InjectionEvent *event);

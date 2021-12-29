@@ -71,7 +71,6 @@ void TriggerState::resetTriggerState() {
 	lastDecodingErrorTime = US2NT(-10000000LL);
 	someSortOfTriggerError = false;
 
-	memset(toothDurations, 0, sizeof(toothDurations));
 	curSignal = SHAFT_PRIMARY_FALLING;
 	prevSignal = SHAFT_PRIMARY_FALLING;
 	startOfCycleNt = 0;
@@ -216,6 +215,16 @@ int64_t TriggerState::getTotalEventCounter() const {
 
 int TriggerState::getTotalRevolutionCounter() const {
 	return totalRevolutionCounter;
+}
+
+void TriggerStateWithRunningStatistics::resetTriggerState() {
+	TriggerState::resetTriggerState();
+
+	memset(timeOfLastEvent, 0, sizeof(timeOfLastEvent));
+	memset(spinningEvents, 0, sizeof(spinningEvents));
+	spinningEventIndex = 0;
+	prevInstantRpmValue = 0;
+	m_instantRpm = 0;
 }
 
 void TriggerStateWithRunningStatistics::movePreSynchTimestamps() {
@@ -546,13 +555,6 @@ void TriggerState::decodeTriggerEvent(
 
 		if (triggerShape.isSynchronizationNeeded) {
 			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
-
-			if (engineConfiguration->debugMode == DBG_TRIGGER_COUNTERS) {
-#if EFI_TUNER_STUDIO
-				tsOutputChannels.debugFloatField6 = currentGap;
-				tsOutputChannels.debugIntField3 = currentCycle.current_index;
-#endif /* EFI_TUNER_STUDIO */
-			}
 
 			bool isSync = true;
 			for (int i = 0; i < triggerShape.gapTrackingLength; i++) {

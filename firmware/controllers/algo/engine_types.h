@@ -43,7 +43,7 @@ typedef enum {
 	 */
 	GY6_139QMB = 8,
 
-	UNUSED9 = 9,
+	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
 	UNUSED10 = 10,
 	MRE_MIATA_NB2_MAP = 11,
 	MRE_MIATA_NA6_VAF = 12,
@@ -89,7 +89,7 @@ typedef enum {
 	// see TriggerWaveform::bothFrontsRequired
 	TEST_ISSUE_898 = 27,
 
-	UNUSED28 = 28,
+	TEST_CRANK_ENGINE = 28,
 
 	SACHS = 29,
 
@@ -258,10 +258,7 @@ typedef enum {
 	DBG_TRIGGER_COUNTERS = 5,
 	DBG_SOFT_SPARK_CUT = 6,
 	DBG_VVT_1_PID = 7,
-	/**
-	 * VVT position debugging - not VVT valve control. See AUX pid #1 debug for valve position.
-	 */
-	DBG_VVT = 8,
+	DBG_8 = 8,
 	DBG_9 = 9,
 	DBG_10 = 10,
 	DBG_11 = 11,
@@ -290,7 +287,7 @@ typedef enum {
 	UNUSED23 = 23,
 	DBG_STATUS = 24,
 	DBG_CJ125 = 25,
-	DBG_CAN = 26,
+	DBG_26 = 26,
 	DBG_MAP = 27,
 	DBG_METRICS = 28,
 	DBG_29 = 29,
@@ -305,7 +302,7 @@ typedef enum {
 	DBG_35 = 35,
 	DBG_BOOST = 36,
 	DBG_37 = 37,
-	DBG_LAUNCH = 38,
+	DBG_38 = 38,
 	DBG_ETB_AUTOTUNE = 39,
 	DBG_COMPOSITE_LOG = 40,
 	DBG_UNUSED41 = 41,
@@ -506,7 +503,7 @@ typedef enum {
 
 	TT_NISSAN_QR25 = 61,
 
-	TT_VVT_MAP_45_V_TWIN = 62,
+	TT_UNUSED_62 = 62,
 
 	TT_SUBARU_SVX_CRANK_1 = 63,
 

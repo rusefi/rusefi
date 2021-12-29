@@ -2,7 +2,7 @@
 
 class ValueProvider3D;
 
-using mass_t = float;
+#include "rusefi_types.h"
 
 struct IFuelComputer {
 	virtual mass_t getCycleFuel(mass_t airmass, int rpm, float load) const = 0;
@@ -33,5 +33,5 @@ private:
 	const ValueProvider3D* const m_lambdaTable;
 };
 
-float getLoadOverride(float defaultLoad, afr_override_e overrideMode);
+float getLoadOverride(float defaultLoad, load_override_e overrideMode);
 constexpr float fuelDensity = 0.72; // g/cc

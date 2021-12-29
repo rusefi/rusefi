@@ -145,7 +145,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->tachOutputPin = GPIOD_14;	// OUT_PWM6
 
 	engineConfiguration->useStepperIdle = true;
-	engineConfiguration->useHbridges = true;
+	engineConfiguration->useHbridgesToDriveIdleStepper = true;
 	engineConfiguration->stepperDcIo[0].directionPin1 = GPIOC_6;	// COIL_A1 = OUT_PWM2
 	engineConfiguration->stepperDcIo[0].directionPin2 = GPIOC_7;	// COIL_A2 = OUT_PWM3
 	engineConfiguration->stepperDcIo[1].directionPin1 = GPIOC_8;	// COIL_B1 = OUT_PWM4
@@ -173,6 +173,17 @@ void setBoardDefaultConfiguration(void) {
  * @todo    Add your board-specific code, if any.
  */
 void setSdCardConfigurationOverrides(void) {
+// Hellen81a uses SPI2 for SD-card
+#if 1
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
+
+	engineConfiguration->spi2mosiPin = GPIOB_15;
+	engineConfiguration->spi2misoPin = GPIOB_14;
+	engineConfiguration->spi2sckPin = GPIOB_13;
+	engineConfiguration->sdCardCsPin = GPIOB_12;
+
+	engineConfiguration->is_enabled_spi_2 = true;
+#else
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
 	engineConfiguration->spi3mosiPin = GPIOC_12;
@@ -180,9 +191,6 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi3sckPin = GPIOC_10;
 	engineConfiguration->sdCardCsPin = GPIOA_15;
 
-//	engineConfiguration->spi2mosiPin = GPIOB_15;
-//	engineConfiguration->spi2misoPin = GPIOB_14;
-//	engineConfiguration->spi2sckPin = GPIOB_13;
-//	engineConfiguration->sdCardCsPin = GPIOB_12;
 	engineConfiguration->is_enabled_spi_3 = true;
+#endif
 }

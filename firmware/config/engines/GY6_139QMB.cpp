@@ -16,13 +16,7 @@
 #include "GY6_139QMB.h"
 #include "advance_map.h"
 
-static void setDefault139qmbMaps() {
-	setTimingLoadBin(1.2, 4.4);
-	setTimingRpmBin(1000, 11000);
-}
-
 void setGy6139qmbDefaultEngineConfiguration() {
-	setDefault139qmbMaps();
 //        engineConfiguration->map.sensor.type = MT_3V_SENSOR;
 	setEgoSensor(ES_NarrowBand);
 

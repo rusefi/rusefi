@@ -1,5 +1,4 @@
 #include "pch.h"
-
 #include "rusefi_lua.h"
 
 
@@ -23,15 +22,41 @@ TEST(LuaHooks, TestCrc8) {
 	EXPECT_EQ(testLuaReturnsNumberOrNil(crc8scripts).value_or(0), 0x43);
 }
 
-static const char* getSensorTestByIndex = R"(
+TEST(LuaHooks, TestGetCalibration) {
+	EngineTestHelper eth(TEST_ENGINE);
+	const char* sourceCode = R"(
 
-function testFunc()
-	return getSensorByIndex(10)
-end
+	function testFunc()
+		return getCalibration("cranking.rpm")
+	end
 
-)";
+	)";
+	EXPECT_EQ(testLuaReturnsNumber(sourceCode), 550);
+}
+
+TEST(LuaHooks, TestSetCalibration) {
+	EngineTestHelper eth(TEST_ENGINE);
+		const char* sourceCode = R"(
+	
+		function testFunc()
+			setCalibration("cranking.rpm", 900, false)
+			return getCalibration("cranking.rpm")
+		end
+	
+		)";
+		EXPECT_EQ(testLuaReturnsNumber(sourceCode), 900);
+}
+
 
 TEST(LuaHooks, TestGetSensorByIndex) {
+	const char* getSensorTestByIndex = R"(
+
+	function testFunc()
+		return getSensorByIndex(10)
+	end
+
+	)";
+
 	// Test failed sensor, returns nil
 	Sensor::resetMockValue(static_cast<SensorType>(10));
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByIndex), unexpected);
@@ -41,15 +66,16 @@ TEST(LuaHooks, TestGetSensorByIndex) {
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByIndex).value_or(0), 33);
 }
 
-static const char* getSensorTestByName = R"(
-
-function testFunc()
-	return getSensor("CLT")
-end
-
-)";
 
 TEST(LuaHooks, TestGetSensorByName) {
+	const char* getSensorTestByName = R"(
+
+	function testFunc()
+		return getSensor("CLT")
+	end
+
+	)";
+
 	// Test failed sensor, returns nil
 	Sensor::resetMockValue(SensorType::Clt);
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByName), unexpected);
@@ -59,13 +85,13 @@ TEST(LuaHooks, TestGetSensorByName) {
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByName).value_or(0), 33);
 }
 
-static const char* tableTest = R"(
-function testFunc()
-	return table3d(2, 1000, 40)
-end
-)";
-
 TEST(LuaHooks, Table3d) {
+	const char* tableTest = R"(
+	function testFunc()
+		return table3d(2, 1000, 40)
+	end
+	)";
+
 	EngineTestHelper eth(TEST_ENGINE);
 
 	setTable(config->scriptTable2, (uint8_t)33);
@@ -113,26 +139,22 @@ TEST(LuaHooks, CanTxDataLength) {
 	EXPECT_ANY_THROW(testLuaExecString("txCan(1, 0, 0, 26)"));
 }
 
-static const char* interpolationTest = R"(
-function testFunc()
-	return interpolate(1, 10, 5, 50, 3)
-end
-)";
-
 TEST(LuaHooks, LuaInterpolate) {
-	EXPECT_EQ(testLuaReturnsNumber(interpolationTest), 30);
+	EXPECT_EQ(testLuaReturnsNumber(R"(
+			function testFunc()
+				return interpolate(1, 10, 5, 50, 3)
+			end
+			)"), 30);
 }
 
-static const char* timerTest = R"(
-function testFunc()
-	local a = Timer.new()
-	a:reset()
-	return a:getElapsedSeconds()
-end
-)";
-
 TEST(LuaHooks, TestLuaTimer) {
-	EXPECT_EQ(testLuaReturnsNumber(timerTest), 0);
+	EXPECT_EQ(testLuaReturnsNumber(R"(
+			function testFunc()
+				local a = Timer.new()
+				a:reset()
+				return a:getElapsedSeconds()
+			end
+			)"), 0);
 }
 
 static const char* sensorTest = R"(

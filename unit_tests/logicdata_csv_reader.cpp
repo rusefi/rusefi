@@ -15,6 +15,12 @@ static char* trim(char *str) {
 	return str;
 }
 
+CsvReader::~CsvReader() {
+	if (fp) {
+		fclose(fp);
+	}
+}
+
 void CsvReader::open(const char *fileName, const int* columnIndeces) {
 	printf("Reading from %s\r\n", fileName);
 	fp = fopen(fileName, "r");
@@ -33,13 +39,26 @@ bool CsvReader::haveMore() {
 	return result;
 }
 
-void CsvReader::processLine(EngineTestHelper *eth) {
-	Engine *engine = &eth->engine;
-
+double CsvReader::readTimestampAndValues(double *v) {
 	const char s[2] = ",";
 	char *line = buffer;
 
 	char *timeStampstr = trim(strtok(line, s));
+	double timeStamp = std::stod(timeStampstr);
+
+	for (size_t i = 0; i < m_triggerCount; i++) {
+		char *triggerToken = trim(strtok(NULL, s));
+		v[i] = std::stod(triggerToken);
+	}
+
+	return timeStamp;
+}
+
+void CsvReader::processLine(EngineTestHelper *eth) {
+	Engine *engine = &eth->engine;
+
+	const char s[2] = ",";
+	char *timeStampstr = trim(strtok(buffer, s));
 
 	bool newState[TRIGGER_INPUT_PIN_COUNT];
 	bool newVvtState[CAM_INPUTS_COUNT];

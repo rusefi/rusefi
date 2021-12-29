@@ -26,9 +26,6 @@
 
 #if EFI_ENGINE_CONTROL
 
-static ign_Map3D_t advanceMap;
-static ign_Map3D_t iatAdvanceCorrectionMap;
-
 // todo: reset this between cranking attempts?! #2735
 int minCrankingRpm = 0;
 
@@ -47,7 +44,11 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
 
-	float advanceAngle = advanceMap.getValue((float) rpm, engineLoad);
+	float advanceAngle = interpolate3d(
+		config->ignitionTable,
+		config->ignitionLoadBins, engineLoad,
+		config->ignitionRpmBins, rpm
+	);
 
 	// get advance from the separate table for Idle
 	if (engineConfiguration->useSeparateAdvanceForIdle &&
@@ -86,16 +87,20 @@ angle_t getAdvanceCorrections(int rpm) {
 	if (!iatValid) {
 		iatCorrection = 0;
 	} else {
-		iatCorrection = iatAdvanceCorrectionMap.getValue(rpm, iat);
+		iatCorrection = interpolate3d(
+			config->ignitionIatCorrTable,
+			config->ignitionIatCorrLoadBins, iat,
+			config->ignitionIatCorrRpmBins, rpm
+		);
 	}
 
 	float pidTimingCorrection = engine->module<IdleController>().unmock().getIdleTimingAdjustment(rpm);
 
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.timingIatCorrection = iatCorrection;
-		tsOutputChannels.timingCltCorrection = engine->engineState.cltTimingCorrection;
-		tsOutputChannels.timingPidCorrection = pidTimingCorrection;
-		tsOutputChannels.multiSparkCounter = engine->engineState.multispark.count;
+		engine->outputChannels.timingIatCorrection = iatCorrection;
+		engine->outputChannels.timingCltCorrection = engine->engineState.cltTimingCorrection;
+		engine->outputChannels.timingPidCorrection = pidTimingCorrection;
+		engine->outputChannels.multiSparkCounter = engine->engineState.multispark.count;
 #endif /* EFI_TUNER_STUDIO */
 
 	return iatCorrection
@@ -201,14 +206,6 @@ size_t getMultiSparkCount(int rpm) {
 	}
 }
 
-void initTimingMap() {
-	// We init both tables in RAM because here we're at a very early stage, with no config settings loaded.
-	advanceMap.init(config->ignitionTable, config->ignitionLoadBins,
-			config->ignitionRpmBins);
-	iatAdvanceCorrectionMap.init(config->ignitionIatCorrTable, config->ignitionIatCorrLoadBins,
-			config->ignitionIatCorrRpmBins);
-}
-
 /**
  * @param octane gas octane number
  * @param bore in mm
@@ -247,45 +244,6 @@ float getTopAdvanceForBore(chamber_style_e style, int octane, double compression
     float boreCorrection = (bore - 4 * 25.4) / 25.4 * 6;
     float result = base + octaneCorrection + compressionCorrection + boreCorrection;
     return ((int)(result * 10)) / 10.0;
-}
-
-float getAdvanceForRpm(int rpm, float advanceMax) {
-        if (rpm >= 3000)
-            return advanceMax;
-        if (rpm < 600)
-            return 10;
-       return interpolateMsg("advance", 600, 10, 3000, advanceMax, rpm);
-}
-
-#define round10(x) efiRound(x, 0.1)
-
-float getInitialAdvance(int rpm, float map, float advanceMax) {
-	map = minF(map, 100);
-	float advance = getAdvanceForRpm(rpm, advanceMax);
-
-	if (rpm >= 3000)
-		return round10(advance + 0.1 * (100 - map));
-	return round10(advance + 0.1 * (100 - map) * rpm / 3000);
-}
-
-/**
- * this method builds a good-enough base timing advance map bases on a number of heuristics
- */
-void buildTimingMap(float advanceMax) {
-	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
-		warning(CUSTOM_WRONG_ALGORITHM, "wrong algorithm for MAP-based timing");
-		return;
-	}
-	/**
-	 * good enough (but do not trust us!) default timing map in case of MAP-based engine load
-	 */
-	for (int loadIndex = 0; loadIndex < IGN_LOAD_COUNT; loadIndex++) {
-		float load = config->ignitionLoadBins[loadIndex];
-		for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
-			float rpm = config->ignitionRpmBins[rpmIndex];
-			config->ignitionTable[loadIndex][rpmIndex] = getInitialAdvance(rpm, load, advanceMax);
-		}
-	}
 }
 
 #endif // EFI_ENGINE_CONTROL

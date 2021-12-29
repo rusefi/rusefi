@@ -9,6 +9,7 @@ java -DSystemOut.name=logs/gen_output_channels \
  -cache_zip_file tunerstudio/generated/cache.zip \
  -prepend integration/rusefi_config.txt \
  -definition console/binary/output_channels.txt \
+ -output_lookup_file controllers/lua/generated/output_lookup_generated.cpp \
  -ts_outputs_section console/binary/ \
  -cache . \
  -with_c_defines false \
