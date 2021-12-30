@@ -328,6 +328,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.launchActivatePinState;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
+	if (strEqualCaseInsensitive(name, "m_requested_pump"))
+		return engine->outputChannels.m_requested_pump;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_SPECIAL_POINT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_DIFF"))
