@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:00:49 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:56:30 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -852,9 +852,21 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 	/**
+	 * "Pump Angle"
+	deg
 	 * offset 334
 	 */
-	uint8_t unusedAtTheEnd[136];
+	scaled_channel<int16_t, 50, 1> m_requested_pump = (int16_t)0;
+	/**
+	 * "Pump Angle"
+	deg
+	 * offset 336
+	 */
+	scaled_channel<int16_t, 50, 1> unused16 = (int16_t)0;
+	/**
+	 * offset 338
+	 */
+	uint8_t unusedAtTheEnd[132];
 	/**
 	offset 470 bit 0 */
 	bool launchSpeedCondition : 1 {};
@@ -878,79 +890,79 @@ struct ts_outputs_s {
 	bool launchActivatePinState : 1 {};
 	/**
 	offset 470 bit 7 */
-	bool unusedBit_171_7 : 1 {};
+	bool unusedBit_173_7 : 1 {};
 	/**
 	offset 470 bit 8 */
-	bool unusedBit_171_8 : 1 {};
+	bool unusedBit_173_8 : 1 {};
 	/**
 	offset 470 bit 9 */
-	bool unusedBit_171_9 : 1 {};
+	bool unusedBit_173_9 : 1 {};
 	/**
 	offset 470 bit 10 */
-	bool unusedBit_171_10 : 1 {};
+	bool unusedBit_173_10 : 1 {};
 	/**
 	offset 470 bit 11 */
-	bool unusedBit_171_11 : 1 {};
+	bool unusedBit_173_11 : 1 {};
 	/**
 	offset 470 bit 12 */
-	bool unusedBit_171_12 : 1 {};
+	bool unusedBit_173_12 : 1 {};
 	/**
 	offset 470 bit 13 */
-	bool unusedBit_171_13 : 1 {};
+	bool unusedBit_173_13 : 1 {};
 	/**
 	offset 470 bit 14 */
-	bool unusedBit_171_14 : 1 {};
+	bool unusedBit_173_14 : 1 {};
 	/**
 	offset 470 bit 15 */
-	bool unusedBit_171_15 : 1 {};
+	bool unusedBit_173_15 : 1 {};
 	/**
 	offset 470 bit 16 */
-	bool unusedBit_171_16 : 1 {};
+	bool unusedBit_173_16 : 1 {};
 	/**
 	offset 470 bit 17 */
-	bool unusedBit_171_17 : 1 {};
+	bool unusedBit_173_17 : 1 {};
 	/**
 	offset 470 bit 18 */
-	bool unusedBit_171_18 : 1 {};
+	bool unusedBit_173_18 : 1 {};
 	/**
 	offset 470 bit 19 */
-	bool unusedBit_171_19 : 1 {};
+	bool unusedBit_173_19 : 1 {};
 	/**
 	offset 470 bit 20 */
-	bool unusedBit_171_20 : 1 {};
+	bool unusedBit_173_20 : 1 {};
 	/**
 	offset 470 bit 21 */
-	bool unusedBit_171_21 : 1 {};
+	bool unusedBit_173_21 : 1 {};
 	/**
 	offset 470 bit 22 */
-	bool unusedBit_171_22 : 1 {};
+	bool unusedBit_173_22 : 1 {};
 	/**
 	offset 470 bit 23 */
-	bool unusedBit_171_23 : 1 {};
+	bool unusedBit_173_23 : 1 {};
 	/**
 	offset 470 bit 24 */
-	bool unusedBit_171_24 : 1 {};
+	bool unusedBit_173_24 : 1 {};
 	/**
 	offset 470 bit 25 */
-	bool unusedBit_171_25 : 1 {};
+	bool unusedBit_173_25 : 1 {};
 	/**
 	offset 470 bit 26 */
-	bool unusedBit_171_26 : 1 {};
+	bool unusedBit_173_26 : 1 {};
 	/**
 	offset 470 bit 27 */
-	bool unusedBit_171_27 : 1 {};
+	bool unusedBit_173_27 : 1 {};
 	/**
 	offset 470 bit 28 */
-	bool unusedBit_171_28 : 1 {};
+	bool unusedBit_173_28 : 1 {};
 	/**
 	offset 470 bit 29 */
-	bool unusedBit_171_29 : 1 {};
+	bool unusedBit_173_29 : 1 {};
 	/**
 	offset 470 bit 30 */
-	bool unusedBit_171_30 : 1 {};
+	bool unusedBit_173_30 : 1 {};
 	/**
 	offset 470 bit 31 */
-	bool unusedBit_171_31 : 1 {};
+	bool unusedBit_173_31 : 1 {};
 	/**
 	 * offset 474
 	 */
@@ -960,196 +972,184 @@ struct ts_outputs_s {
 	 */
 	uint8_t unused11 = (uint8_t)0;
 	/**
-	 * "Pump Angle"
-	deg
 	 * offset 476
-	 */
-	scaled_channel<int16_t, 50, 1> m_requested_pump = (int16_t)0;
-	/**
-	 * need 4 byte alignment
-	units
-	 * offset 478
-	 */
-	uint8_t alignmentFill_at_478[2];
-	/**
-	 * offset 480
 	 */
 	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_SPECIAL_POINT = (float)0;
 	/**
-	 * offset 484
+	 * offset 480
 	 */
 	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_DIFF = (float)0;
 	/**
-	 * offset 488
+	 * offset 484
 	 */
 	scaled_channel<float, 1, 1> vvtSyncGapRatio = (float)0;
 	/**
-	 * offset 492
+	 * offset 488
 	 */
 	scaled_channel<float, 1, 1> vvtCurrentPosition = (float)0;
 	/**
-	 * offset 496
+	 * offset 492
 	 */
 	scaled_channel<float, 1, 1> triggerSyncGapRatio = (float)0;
 	/**
-	 * offset 500
+	 * offset 496
 	 */
 	uint8_t triggerStateIndex = (uint8_t)0;
 	/**
-	 * offset 501
+	 * offset 497
 	 */
 	uint8_t vvtCounter = (uint8_t)0;
 	/**
-	 * offset 502
+	 * offset 498
 	 */
 	uint8_t vvtSyncCounter = (uint8_t)0;
 	/**
-	 * offset 503
+	 * offset 499
 	 */
 	uint8_t vvtStateIndex = (uint8_t)0;
 	/**
-	 * offset 504
+	 * offset 500
 	 */
 	scaled_channel<float, 1, 1> TEMPLOG_MAP_INSTANT_AVERAGE = (float)0;
 	/**
-	 * offset 508
+	 * offset 504
 	 */
 	uint8_t fallbackMap = (uint8_t)0;
 	/**
-	 * offset 509
+	 * offset 505
 	 */
 	uint8_t TEMPLOG_map_peak = (uint8_t)0;
 	/**
-	 * offset 510
+	 * offset 506
 	 */
 	uint8_t TEMPLOG_map_length = (uint8_t)0;
 	/**
-	 * offset 511
+	 * offset 507
 	 */
 	uint8_t TEMPLOG_mapIndex = (uint8_t)0;
 	/**
 	%
-	 * offset 512
+	 * offset 508
 	 */
 	scaled_channel<uint16_t, 100, 1> timingCltCorrection = (uint16_t)0;
 	/**
 	%
-	 * offset 514
+	 * offset 510
 	 */
 	scaled_channel<uint16_t, 100, 1> timingIatCorrection = (uint16_t)0;
 	/**
 	%
-	 * offset 516
+	 * offset 512
 	 */
 	scaled_channel<uint16_t, 100, 1> timingPidCorrection = (uint16_t)0;
 	/**
 	 * Instant MAP
 	kPa
-	 * offset 518
+	 * offset 514
 	 */
 	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
 	/**
-	 * offset 520
+	 * offset 516
 	 */
 	uint16_t mostRecentTimeBetweenSparkEvents = (uint16_t)0;
 	/**
-	 * offset 522
+	 * offset 518
 	 */
 	uint16_t mostRecentTimeBetweenIgnitionEvents = (uint16_t)0;
 	/**
-	 * offset 524
+	 * offset 520
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
-	 * offset 526
+	 * offset 522
 	 */
 	uint16_t maxTriggerReentrant = (uint16_t)0;
 	/**
-	 * offset 528
+	 * offset 524
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
-	 * offset 530
+	 * offset 526
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
 	/**
-	 * offset 532
+	 * offset 528
 	 */
 	int triggerPrimaryFall = (int)0;
 	/**
-	 * offset 536
+	 * offset 532
 	 */
 	int triggerPrimaryRise = (int)0;
 	/**
-	 * offset 540
+	 * offset 536
 	 */
 	int triggerSecondaryFall = (int)0;
 	/**
-	 * offset 544
+	 * offset 540
 	 */
 	int triggerSecondaryRise = (int)0;
 	/**
-	 * offset 548
+	 * offset 544
 	 */
 	int triggerVvtFall = (int)0;
 	/**
-	 * offset 552
+	 * offset 548
 	 */
 	int triggerVvtRise = (int)0;
 	/**
-	 * offset 556
+	 * offset 552
 	 */
 	uint8_t startStopStateToggleCounter = (uint8_t)0;
 	/**
-	 * offset 557
+	 * offset 553
 	 */
 	uint8_t starterState = (uint8_t)0;
 	/**
-	 * offset 558
+	 * offset 554
 	 */
 	uint8_t starterRelayDisable = (uint8_t)0;
 	/**
-	 * offset 559
+	 * offset 555
 	 */
 	uint8_t multiSparkCounter = (uint8_t)0;
 	/**
-	 * offset 560
+	 * offset 556
 	 */
 	int idleState = (int)0;
 	/**
-	 * offset 564
+	 * offset 560
 	 */
 	float injectorFlowPressureRatio = (float)0;
 	/**
-	 * offset 568
+	 * offset 564
 	 */
 	float injectorFlowPressureDelta = (float)0;
 	/**
-	 * offset 572
+	 * offset 568
 	 */
 	float etbFeedForward = (float)0;
 	/**
-	 * offset 576
+	 * offset 572
 	 */
 	float etbIntegralError = (float)0;
 	/**
-	 * offset 580
+	 * offset 576
 	 */
 	float etbCurrentTarget = (float)0;
 	/**
-	 * offset 584
+	 * offset 580
 	 */
 	pid_status_s alternatorStatus;
 	/**
-	 * offset 604
+	 * offset 600
 	 */
 	pid_status_s idleStatus;
 	/**
-	 * offset 624
+	 * offset 620
 	 */
 	pid_status_s etbStatus;
-	/** total size 644*/
+	/** total size 640*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:00:49 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:56:30 UTC 2021
