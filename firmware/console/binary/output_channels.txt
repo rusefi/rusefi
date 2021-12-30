@@ -259,9 +259,12 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	int16_t autoscale tps12Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	int16_t autoscale accPedalSplit;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
+    int16_t autoscale m_requested_pump;"Pump Angle";"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+    int16_t autoscale unused16;"Pump Angle";"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[136 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[132 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition
