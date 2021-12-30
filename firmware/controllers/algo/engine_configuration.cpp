@@ -958,6 +958,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMiataNB2_Hellen72_36();
 		break;
 	case HELLEN_NB1:
+	case HELLEN_NA8_96:
 		setHellenNB1();
 		break;
 	case HELLEN72_ETB:

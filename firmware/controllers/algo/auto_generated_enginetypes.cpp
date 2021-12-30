@@ -347,7 +347,7 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED10:
+case HELLEN_NA8_96:
   return "UNUSED10";
 case UNUSED100:
   return "UNUSED100";
