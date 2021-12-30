@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Dec 23 21:44:24 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Dec 30 02:50:58 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -241,6 +241,8 @@ case HELLEN_88_BMW:
   return "HELLEN_88_BMW";
 case HELLEN_NA6:
   return "HELLEN_NA6";
+case HELLEN_NA8_96:
+  return "HELLEN_NA8_96";
 case HELLEN_NA94:
   return "HELLEN_NA94";
 case HELLEN_NB1:
@@ -347,8 +349,6 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case HELLEN_NA8_96:
-  return "UNUSED10";
 case UNUSED100:
   return "UNUSED100";
 case UNUSED101:
