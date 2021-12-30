@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 30 01:29:08 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Thu Dec 30 02:52:03 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -770,6 +770,7 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_55_BMW = 73;
 	public static final int engine_type_e_HELLEN_88_BMW = 74;
 	public static final int engine_type_e_HELLEN_NA6 = 34;
+	public static final int engine_type_e_HELLEN_NA8_96 = 10;
 	public static final int engine_type_e_HELLEN_NA94 = 80;
 	public static final int engine_type_e_HELLEN_NB1 = 83;
 	public static final int engine_type_e_HELLEN_NB1_36 = 94;
@@ -823,7 +824,6 @@ public class Fields {
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
-	public static final int engine_type_e_UNUSED10 = 10;
 	public static final int engine_type_e_UNUSED100 = 100;
 	public static final int engine_type_e_UNUSED101 = 101;
 	public static final int engine_type_e_UNUSED18 = 18;
