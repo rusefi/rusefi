@@ -20,6 +20,8 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(1, engine->outputChannels.TEMPLOG_map_peak);
 	ASSERT_EQ(0, engine->outputChannels.vvtSyncCounter);
 
+	// Nothing should have been scheduled yet
+	ASSERT_EQ(0, engine->executor.size());
 
 	engine->outputChannels.instantMAPValue = 120;
 	eth.smartFireTriggerEvents2(/*count*/4, /*delayMs*/200);
@@ -28,4 +30,6 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(1, engine->outputChannels.vvtSyncCounter);
 	ASSERT_EQ(6, engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT);
 
+	// We have "VVT" sync, things should be scheduled!
+	ASSERT_NE(0, engine->executor.size());
 }
