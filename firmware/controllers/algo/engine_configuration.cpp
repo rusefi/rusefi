@@ -865,6 +865,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
+	case VW_B6:
+		setVwPassatB6();
+		break;
 	case MRE_M111:
 		setM111EngineConfiguration();
 		break;
@@ -955,6 +958,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMiataNB2_Hellen72_36();
 		break;
 	case HELLEN_NB1:
+	case HELLEN_NA8_96:
 		setHellenNB1();
 		break;
 	case HELLEN72_ETB:
@@ -1072,9 +1076,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996();
-		break;
-	case VW_B6:
-		setVwPassatB6();
 		break;
 	case VW_ABA:
 		setVwAba();

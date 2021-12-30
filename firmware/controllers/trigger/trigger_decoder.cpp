@@ -559,17 +559,9 @@ void TriggerState::decodeTriggerEvent(
 		bool wasSynchronized = getShaftSynchronized();
 
 		if (triggerShape.isSynchronizationNeeded) {
-			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
+			currentGap = (float)toothDurations[0] / toothDurations[1];
 
-			bool isSync = true;
-			for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
-				bool isGapCondition = cisnan(triggerShape.syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * triggerShape.syncronizationRatioFrom[i]
-					&& toothDurations[i] < toothDurations[i + 1] * triggerShape.syncronizationRatioTo[i]);
-
-				isSync &= isGapCondition;
-			}
-
-			isSynchronizationPoint = isSync;
+			isSynchronizationPoint = isSyncPoint(triggerShape, triggerConfiguration.TriggerType);
 			if (isSynchronizationPoint) {
 				enginePins.debugTriggerSync.toggle();
 			}
@@ -582,7 +574,7 @@ void TriggerState::decodeTriggerEvent(
 			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
 
 #if EFI_UNIT_TEST
-			actualSynchGap = 1.0 * toothDurations[0] / toothDurations[1];
+			actualSynchGap = currentGap;
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -708,6 +700,32 @@ void TriggerState::decodeTriggerEvent(
 	if (triggerStateListener) {
 		triggerStateListener->OnTriggerStateProperState(nowNt);
 	}
+}
+
+bool TriggerState::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const {
+	for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
+		auto from = triggerShape.syncronizationRatioFrom[i];
+		auto to = triggerShape.syncronizationRatioTo[i];
+
+		if (cisnan(from)) {
+			// don't check this gap, skip it
+			continue;
+		}
+
+		// This is transformed to avoid a division and use a cheaper multiply instead
+		// toothDurations[i] / toothDurations[i+1] > from
+		// is an equivalent comparison to
+		// toothDurations[i] > toothDurations[i+1] * from
+		bool isGapCondition = 
+			  (toothDurations[i] > toothDurations[i + 1] * from
+			&& toothDurations[i] < toothDurations[i + 1] * to);
+
+		if (!isGapCondition) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 static void onFindIndexCallback(TriggerState *state) {

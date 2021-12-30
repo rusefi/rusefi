@@ -359,6 +359,10 @@ public class ConfigDefinition {
                                         ArrayList<Map<String, Object>> listPins) throws IOException {
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
+        if (yamlData == null) {
+            SystemOut.println("Null yaml for " + yamlFile);
+            return;
+        }
         List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
         if (data == null) {
             SystemOut.println("Null yaml for " + yamlFile);

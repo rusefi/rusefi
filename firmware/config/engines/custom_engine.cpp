@@ -767,6 +767,7 @@ void setTest33816EngineConfiguration() {
 	engineConfiguration->mc33816_cs = GPIOD_7;
 	// green
 	engineConfiguration->mc33816_rstb = GPIOD_4;
+	engineConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
 	// yellow
 	engineConfiguration->mc33816_driven = GPIOD_6;
 

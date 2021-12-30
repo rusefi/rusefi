@@ -571,3 +571,11 @@ TEST(util, WrapAround62) {
 		EXPECT_EQ(t.update(0x03453455), 0x003453455LL);
 	}
 }
+
+TEST(util, isInRange) {
+	EXPECT_FALSE(isInRange(5, 4, 10));
+	EXPECT_TRUE(isInRange(5, 5, 10));
+	EXPECT_TRUE(isInRange(5, 7, 10));
+	EXPECT_TRUE(isInRange(5, 10, 10));
+	EXPECT_FALSE(isInRange(5, 11, 10));
+}

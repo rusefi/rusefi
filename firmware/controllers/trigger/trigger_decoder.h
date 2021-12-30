@@ -164,6 +164,7 @@ public:
 
 private:
 	void resetCurrentCycleState();
+	bool isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const;
 
 	trigger_event_e curSignal;
 	trigger_event_e prevSignal;
