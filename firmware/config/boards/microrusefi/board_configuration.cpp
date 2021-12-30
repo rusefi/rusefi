@@ -171,7 +171,6 @@ void setBoardConfigOverrides(void) {
 	// SPI for SD card
 	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = GPIOB_9;
 
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 	engineConfiguration->spi3misoPin = GPIOC_11;
@@ -201,6 +200,7 @@ void setSerialConfigurationOverrides(void) {
 void setBoardDefaultConfiguration(void) {
 	setInjectorPins();
 	setIgnitionPins();
+	engineConfiguration->sdCardCsPin = GPIOB_9;
 
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
