@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Dec 21 23:12:40 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:00:49 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -960,184 +960,196 @@ struct ts_outputs_s {
 	 */
 	uint8_t unused11 = (uint8_t)0;
 	/**
+	 * "Pump Angle"
+	deg
 	 * offset 476
 	 */
-	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_SPECIAL_POINT = (float)0;
+	scaled_channel<int16_t, 50, 1> m_requested_pump = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 478
+	 */
+	uint8_t alignmentFill_at_478[2];
 	/**
 	 * offset 480
 	 */
-	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_DIFF = (float)0;
+	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_SPECIAL_POINT = (float)0;
 	/**
 	 * offset 484
 	 */
-	scaled_channel<float, 1, 1> vvtSyncGapRatio = (float)0;
+	scaled_channel<float, 1, 1> TEMPLOG_MAP_AT_DIFF = (float)0;
 	/**
 	 * offset 488
 	 */
-	scaled_channel<float, 1, 1> vvtCurrentPosition = (float)0;
+	scaled_channel<float, 1, 1> vvtSyncGapRatio = (float)0;
 	/**
 	 * offset 492
 	 */
-	scaled_channel<float, 1, 1> triggerSyncGapRatio = (float)0;
+	scaled_channel<float, 1, 1> vvtCurrentPosition = (float)0;
 	/**
 	 * offset 496
 	 */
-	uint8_t triggerStateIndex = (uint8_t)0;
-	/**
-	 * offset 497
-	 */
-	uint8_t vvtCounter = (uint8_t)0;
-	/**
-	 * offset 498
-	 */
-	uint8_t vvtSyncCounter = (uint8_t)0;
-	/**
-	 * offset 499
-	 */
-	uint8_t vvtStateIndex = (uint8_t)0;
+	scaled_channel<float, 1, 1> triggerSyncGapRatio = (float)0;
 	/**
 	 * offset 500
 	 */
-	scaled_channel<float, 1, 1> TEMPLOG_MAP_INSTANT_AVERAGE = (float)0;
+	uint8_t triggerStateIndex = (uint8_t)0;
+	/**
+	 * offset 501
+	 */
+	uint8_t vvtCounter = (uint8_t)0;
+	/**
+	 * offset 502
+	 */
+	uint8_t vvtSyncCounter = (uint8_t)0;
+	/**
+	 * offset 503
+	 */
+	uint8_t vvtStateIndex = (uint8_t)0;
 	/**
 	 * offset 504
 	 */
+	scaled_channel<float, 1, 1> TEMPLOG_MAP_INSTANT_AVERAGE = (float)0;
+	/**
+	 * offset 508
+	 */
 	uint8_t fallbackMap = (uint8_t)0;
 	/**
-	 * offset 505
+	 * offset 509
 	 */
 	uint8_t TEMPLOG_map_peak = (uint8_t)0;
 	/**
-	 * offset 506
+	 * offset 510
 	 */
 	uint8_t TEMPLOG_map_length = (uint8_t)0;
 	/**
-	 * offset 507
+	 * offset 511
 	 */
 	uint8_t TEMPLOG_mapIndex = (uint8_t)0;
 	/**
 	%
-	 * offset 508
+	 * offset 512
 	 */
 	scaled_channel<uint16_t, 100, 1> timingCltCorrection = (uint16_t)0;
 	/**
 	%
-	 * offset 510
+	 * offset 514
 	 */
 	scaled_channel<uint16_t, 100, 1> timingIatCorrection = (uint16_t)0;
 	/**
 	%
-	 * offset 512
+	 * offset 516
 	 */
 	scaled_channel<uint16_t, 100, 1> timingPidCorrection = (uint16_t)0;
 	/**
 	 * Instant MAP
 	kPa
-	 * offset 514
+	 * offset 518
 	 */
 	scaled_channel<uint16_t, 30, 1> instantMAPValue = (uint16_t)0;
 	/**
-	 * offset 516
+	 * offset 520
 	 */
 	uint16_t mostRecentTimeBetweenSparkEvents = (uint16_t)0;
 	/**
-	 * offset 518
+	 * offset 522
 	 */
 	uint16_t mostRecentTimeBetweenIgnitionEvents = (uint16_t)0;
 	/**
-	 * offset 520
+	 * offset 524
 	 */
 	uint16_t maxLockedDuration = (uint16_t)0;
 	/**
-	 * offset 522
+	 * offset 526
 	 */
 	uint16_t maxTriggerReentrant = (uint16_t)0;
 	/**
-	 * offset 524
+	 * offset 528
 	 */
 	uint16_t canWriteOk = (uint16_t)0;
 	/**
-	 * offset 526
+	 * offset 530
 	 */
 	uint16_t canWriteNotOk = (uint16_t)0;
 	/**
-	 * offset 528
+	 * offset 532
 	 */
 	int triggerPrimaryFall = (int)0;
 	/**
-	 * offset 532
+	 * offset 536
 	 */
 	int triggerPrimaryRise = (int)0;
 	/**
-	 * offset 536
+	 * offset 540
 	 */
 	int triggerSecondaryFall = (int)0;
 	/**
-	 * offset 540
+	 * offset 544
 	 */
 	int triggerSecondaryRise = (int)0;
 	/**
-	 * offset 544
+	 * offset 548
 	 */
 	int triggerVvtFall = (int)0;
 	/**
-	 * offset 548
+	 * offset 552
 	 */
 	int triggerVvtRise = (int)0;
 	/**
-	 * offset 552
+	 * offset 556
 	 */
 	uint8_t startStopStateToggleCounter = (uint8_t)0;
 	/**
-	 * offset 553
+	 * offset 557
 	 */
 	uint8_t starterState = (uint8_t)0;
 	/**
-	 * offset 554
+	 * offset 558
 	 */
 	uint8_t starterRelayDisable = (uint8_t)0;
 	/**
-	 * offset 555
+	 * offset 559
 	 */
 	uint8_t multiSparkCounter = (uint8_t)0;
 	/**
-	 * offset 556
+	 * offset 560
 	 */
 	int idleState = (int)0;
 	/**
-	 * offset 560
+	 * offset 564
 	 */
 	float injectorFlowPressureRatio = (float)0;
 	/**
-	 * offset 564
+	 * offset 568
 	 */
 	float injectorFlowPressureDelta = (float)0;
 	/**
-	 * offset 568
+	 * offset 572
 	 */
 	float etbFeedForward = (float)0;
 	/**
-	 * offset 572
+	 * offset 576
 	 */
 	float etbIntegralError = (float)0;
 	/**
-	 * offset 576
+	 * offset 580
 	 */
 	float etbCurrentTarget = (float)0;
 	/**
-	 * offset 580
+	 * offset 584
 	 */
 	pid_status_s alternatorStatus;
 	/**
-	 * offset 600
+	 * offset 604
 	 */
 	pid_status_s idleStatus;
 	/**
-	 * offset 620
+	 * offset 624
 	 */
 	pid_status_s etbStatus;
-	/** total size 640*/
+	/** total size 644*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Dec 21 23:12:40 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:00:49 UTC 2021
