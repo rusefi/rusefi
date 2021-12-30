@@ -699,10 +699,21 @@ void TriggerState::decodeTriggerEvent(
 
 bool TriggerState::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const {
 	for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
+		auto from = triggerShape.syncronizationRatioFrom[i];
+		auto to = triggerShape.syncronizationRatioTo[i];
+
+		if (cisnan(from)) {
+			// don't check this gap, skip it
+			continue;
+		}
+
+		// This is transformed to avoid a division and use a cheaper multiply instead
+		// toothDurations[i] / toothDurations[i+1] > from
+		// is an equivalent comparison to
+		// toothDurations[i] > toothDurations[i+1] * from
 		bool isGapCondition = 
-			cisnan(triggerShape.syncronizationRatioFrom[i]) ||
-			  (toothDurations[i] > toothDurations[i + 1] * triggerShape.syncronizationRatioFrom[i]
-			&& toothDurations[i] < toothDurations[i + 1] * triggerShape.syncronizationRatioTo[i]);
+			  (toothDurations[i] > toothDurations[i + 1] * from
+			&& toothDurations[i] < toothDurations[i + 1] * to);
 
 		if (!isGapCondition) {
 			return false;
