@@ -335,7 +335,7 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 
 	// V-Twin MAP phase sense needs to always wait for sync
 	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
-		return false;
+		return true;
 	}
 
 	// Symmetrical crank modes require cam sync before firing
