@@ -273,8 +273,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
     uint8_t unused11;;"", 1, 0, -10000, 10000, 3
-    uint8_t unused11;;"", 1, 0, -10000, 10000, 3
-    uint8_t unused11;;"", 1, 0, -10000, 10000, 3
+    int16_t autoscale m_requested_pump;"Pump Angle";"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
     float autoscale TEMPLOG_MAP_AT_SPECIAL_POINT;;"", 1, 0, -10000, 10000, 3
     float autoscale TEMPLOG_MAP_AT_DIFF;;"", 1, 0, -10000, 10000, 3
