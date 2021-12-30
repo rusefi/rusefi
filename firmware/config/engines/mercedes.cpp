@@ -15,6 +15,15 @@ static void common() {
 
 void setHellenMercedes128_4_cyl() {
     common();
+
+	engineConfiguration->injectionPins[0] = H144_LS_7;
+	engineConfiguration->injectionPins[1] = H176_LS_6;
+	engineConfiguration->injectionPins[2] = H176_LS_8;
+	engineConfiguration->injectionPins[3] = H176_LS_5;
+	engineConfiguration->injectionPins[4] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[5] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[6] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[7] = GPIO_UNASSIGNED;
 }
 
 // is this M104 or M112 or both?
