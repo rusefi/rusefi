@@ -15,7 +15,7 @@ TEST(trigger, map_cam_by_magic_point) {
 	engineConfiguration->mapCamDetectionAnglePosition = 90;
 
 	eth.smartFireTriggerEvents2(/*count*/10, /*delayMs*/200);
-	ASSERT_EQ( 75,  GET_RPM()) << "RPM";
+	ASSERT_EQ(150,  GET_RPM()) << "RPM";
 
 	ASSERT_EQ(1, engine->outputChannels.TEMPLOG_map_peak);
 	ASSERT_EQ(0, engine->outputChannels.vvtSyncCounter);
@@ -28,7 +28,7 @@ TEST(trigger, map_cam_by_magic_point) {
 
 	ASSERT_EQ(2, engine->outputChannels.TEMPLOG_map_peak);
 	ASSERT_EQ(1, engine->outputChannels.vvtSyncCounter);
-	ASSERT_EQ(6, engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT);
+	ASSERT_EQ(10, engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT);
 
 	// We have "VVT" sync, things should be scheduled!
 	ASSERT_NE(0, engine->executor.size());

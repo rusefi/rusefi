@@ -54,6 +54,9 @@ void setTestCamEngineConfiguration() {
 void setTestCrankEngineConfiguration() {
 	setTestCamEngineConfiguration();
 
+	engineConfiguration->trigger.type = TT_ONE;
+	incrementGlobalConfigurationVersion();
+
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 }
 
