@@ -80,6 +80,8 @@ void TriggerState::resetTriggerState() {
 
 	totalEventCountBase = 0;
 	isFirstEvent = true;
+
+	m_hasSynchronizedSymmetrical = false;
 }
 
 void TriggerState::setTriggerErrorState() {
@@ -404,6 +406,10 @@ angle_t TriggerState::syncSymmetricalCrank(int divider, int remainder, angle_t e
 		incrementTotalEventCounter();
 		totalShift += engineCycle / divider;
 	}
+
+	// Allow injection/ignition to happen, we've now fully sync'd the crank based on new cam information
+	m_hasSynchronizedSymmetrical = true;
+
 	return totalShift;
 }
 
