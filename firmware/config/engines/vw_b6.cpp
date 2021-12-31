@@ -128,7 +128,7 @@ void setVwPassatB6() {
 	// "7 - Lowside 1"
 	// engineConfiguration->hpfpValvePin = TLE8888_PIN_6; // Disable for now
 	engineConfiguration->hpfpCamLobes = 3;
-	engineConfiguration->hpfpPumpVolume = 290;
+	engineConfiguration->hpfpPumpVolume = 0.290;
 	engineConfiguration->hpfpMinAngle = 10;
 	engineConfiguration->hpfpActivationAngle = 30;
 	engineConfiguration->hpfpTargetDecay = 2000;
@@ -141,6 +141,9 @@ void setVwPassatB6() {
 	setLinearCurve(engineConfiguration->hpfpTargetRpmBins, 0, 8000, 1);
 	setLinearCurve(engineConfiguration->hpfpTargetLoadBins, 0, 180, 1);
 	setTable(engineConfiguration->hpfpTarget, 5000);
+
+	setLinearCurve(engineConfiguration->hpfpCompensationRpmBins, 0, 8000, 1);
+	setLinearCurve(engineConfiguration->hpfpCompensationLoadBins, 0.005, 0.120, 0.001);
 
 	setBoschVAGETB();
 
