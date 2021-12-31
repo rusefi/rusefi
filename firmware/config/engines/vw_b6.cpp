@@ -127,6 +127,20 @@ void setVwPassatB6() {
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
 	// engineConfiguration->hpfpValvePin = TLE8888_PIN_6; // Disable for now
+	engineConfiguration->hpfpCamLobes = 3;
+	engineConfiguration->hpfpPumpVolume = 290;
+	engineConfiguration->hpfpMinAngle = 10;
+	engineConfiguration->hpfpActivationAngle = 30;
+	engineConfiguration->hpfpTargetDecay = 2000;
+	engineConfiguration->hpfpPidP = 0.301;
+	engineConfiguration->hpfpPidI = 0.00012;
+
+	setLinearCurve(engineConfiguration->hpfpLobeProfileAngle, 0, 120, 1);
+	setLinearCurve(engineConfiguration->hpfpLobeProfileQuantityBins, 0, 100, 1);
+
+	setLinearCurve(engineConfiguration->hpfpTargetRpmBins, 0, 8000, 1);
+	setLinearCurve(engineConfiguration->hpfpTargetLoadBins, 0, 180, 1);
+	setTable(engineConfiguration->hpfpTarget, 5000);
 
 	setBoschVAGETB();
 
