@@ -22,3 +22,9 @@
 // tps = "20 - AN volt 5" PC3
 #define MRE_IN_ANALOG_VOLT_5 EFI_ADC_13
 #define MRE_IN_TPS MRE_IN_ANALOG_VOLT_5
+
+// 26 - AN volt 2
+#define MRE_IN_ANALOG_VOLT_2 EFI_ADC_6
+
+// "40 - AN volt 9"
+#define MRE_IN_ANALOG_VOLT_9 EFI_ADC_9

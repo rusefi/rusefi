@@ -388,13 +388,13 @@ void setMiataNA6_MAP_MRE() {
 	engineConfiguration->acSwitch = GPIOA_3;
 
 	// todo: ask Stefan to clarify this
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_6; // "26 - AN volt 2"
+	engineConfiguration->tps1_1AdcChannel = MRE_IN_ANALOG_VOLT_2; // "26 - AN volt 2"
 	engineConfiguration->tpsMin = 0;
 	engineConfiguration->tpsMax = 982;
 
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_13; // "20 - AN volt 5"
+	engineConfiguration->map.sensor.hwChannel = MRE_IN_ANALOG_VOLT_5; // "20 - AN volt 5"
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_9; // "40 - AN volt 9"
+	engineConfiguration->mafAdcChannel = MRE_IN_ANALOG_VOLT_9; // "40 - AN volt 9"
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// GPIOG_1: "Clutch Switch"
