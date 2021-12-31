@@ -24,6 +24,8 @@ void setVwPassatB6() {
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
+	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
+
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
 	// Use high pressure sensor
@@ -44,7 +46,9 @@ void setVwPassatB6() {
 	engineConfiguration->vvtCamSensorUseRise = true;
 
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+	engineConfiguration->throttlePedalPositionAdcChannel = MRE_IN_ANALOG_VOLT_3;
+	// 36 - AN volt 8
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = MRE_IN_ANALOG_VOLT_8;
 
 	// "26 - AN volt 2"
 	engineConfiguration->highPressureFuel.hwChannel = EFI_ADC_6;
