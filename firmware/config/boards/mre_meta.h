@@ -7,6 +7,8 @@
 
 #pragma once
 
+#define MRE_LS_1 TLE8888_PIN_6
+
 // clt = "18 - AN temp 1"
 #define MRE_IN_ANALOG_TEMP_1 EFI_ADC_0
 #define MRE_IN_CLT MRE_IN_ANALOG_TEMP_1
