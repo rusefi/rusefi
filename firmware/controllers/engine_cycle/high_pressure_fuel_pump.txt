@@ -1,0 +1,7 @@
+struct_no_prefix high_pressure_fuel_pump_s
+
+angle_t m_requested_pump
+float fuel_requested_percent
+float fuel_requested_percent_pi
+
+end_struct
