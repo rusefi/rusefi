@@ -37,3 +37,6 @@
 
 // 40 - AN volt 9
 #define MRE_IN_ANALOG_VOLT_9 EFI_ADC_9
+
+// 28 - AN volt 10
+#define MRE_IN_ANALOG_VOLT_10 EFI_ADC_4

@@ -11,6 +11,7 @@
 #include "custom_engine.h"
 #include "table_helper.h"
 #include "electronic_throttle_impl.h"
+#include "mre_meta.h"
 
 /**
  * set engine_type 62
@@ -45,10 +46,12 @@ void setVwPassatB6() {
 	engineConfiguration->invertCamVVTSignal = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 
+#if HW_MICRO_RUSEFI
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
 	engineConfiguration->throttlePedalPositionAdcChannel = MRE_IN_ANALOG_VOLT_3;
 	// 36 - AN volt 8
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = MRE_IN_ANALOG_VOLT_8;
+#endif // HW_MICRO_RUSEFI
 
 	// "26 - AN volt 2"
 	engineConfiguration->highPressureFuel.hwChannel = EFI_ADC_6;

@@ -18,6 +18,7 @@
 #include "fsio_impl.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_base_maps.h"
+#include "mre_meta.h"
 
 static const float hardCodedmafDecodingBins[42] = {0.1, 0.2, 0.3, 0.4, 0.5, 0.5999985, 0.70000076, 0.79999924, 0.9000015, 1.0, 1.0999985, 1.199997, 1.300003, 1.4000015, 1.5, 1.5999985, 1.699997, 1.800003, 1.9000015, 2.0, 2.100006, 2.2000122, 2.2999878, 2.399994, 2.5, 2.600006, 2.7000122, 2.7999878, 2.899994, 3.0, 3.100006, 3.2000122, 3.2999878, 3.399994, 3.5, 3.600006, 3.7000122, 3.7999878, 3.899994, 4.0, 4.0999756, 4.2};
 
@@ -387,6 +388,7 @@ void setMiataNA6_MAP_MRE() {
 	// EFI_ADC_3: "22 - AN temp 4"
 	engineConfiguration->acSwitch = GPIOA_3;
 
+#if HW_MICRO_RUSEFI
 	// todo: ask Stefan to clarify this
 	engineConfiguration->tps1_1AdcChannel = MRE_IN_ANALOG_VOLT_2; // "26 - AN volt 2"
 	engineConfiguration->tpsMin = 0;
@@ -395,6 +397,8 @@ void setMiataNA6_MAP_MRE() {
 	engineConfiguration->map.sensor.hwChannel = MRE_IN_ANALOG_VOLT_5; // "20 - AN volt 5"
 
 	engineConfiguration->mafAdcChannel = MRE_IN_ANALOG_VOLT_9; // "40 - AN volt 9"
+#endif // HW_MICRO_RUSEFI
+
 
 #if (BOARD_TLE8888_COUNT > 0)
 	// GPIOG_1: "Clutch Switch"
