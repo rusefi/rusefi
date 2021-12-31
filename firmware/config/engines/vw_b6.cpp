@@ -41,6 +41,10 @@ void setVwPassatB6() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	strcpy(engineConfiguration->engineCode, "BPY");
 
+	engineConfiguration->throttlePedalUpVoltage = 0.36;
+	engineConfiguration->throttlePedalWOTVoltage = 2.13;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.30;
 
 	engineConfiguration->verboseVVTDecoding = true;
 	engineConfiguration->invertCamVVTSignal = true;
@@ -131,7 +135,7 @@ void setVwPassatB6() {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
-	// engineConfiguration->hpfpValvePin = TLE8888_PIN_6; // Disable for now
+	engineConfiguration->hpfpValvePin = MRE_LS_1;
 	engineConfiguration->hpfpCamLobes = 3;
 	engineConfiguration->hpfpPumpVolume = 0.290;
 	engineConfiguration->hpfpMinAngle = 10;
