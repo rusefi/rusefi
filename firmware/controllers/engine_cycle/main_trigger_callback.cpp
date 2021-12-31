@@ -335,7 +335,7 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 
 	// V-Twin MAP phase sense needs to always wait for sync
 	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
-		return false;
+		return true;
 	}
 
 	// Symmetrical crank modes require cam sync before firing
@@ -352,7 +352,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) 
-		&& !engine->triggerCentral.vvtState[0][0].getShaftSynchronized()) {
+		&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// examples:
 		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
