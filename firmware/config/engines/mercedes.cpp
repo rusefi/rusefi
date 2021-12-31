@@ -8,7 +8,7 @@
 #include "pch.h"
 #include "custom_engine.h"
 #if HW_HELLEN
-#include "../hellen_meta.h"
+#include "hellen_meta.h"
 #endif // HW_HELLEN
 
 static void common() {
