@@ -23,8 +23,8 @@ TEST(realCrankingNB2, normalCranking) {
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), 3.6569f, 1e-4);
 
 	// Check the number of times VVT information was used to adjust crank phase
-	// TODO: this should be wayyyyy fewer than 8!
-	EXPECT_EQ(engine->outputChannels.vvtSyncCounter, 8);
+	// This should happen exactly once: once we sync, we shouldn't lose it.
+	EXPECT_EQ(engine->outputChannels.vvtSyncCounter, 1);
 
 	ASSERT_EQ(942, GET_RPM());
 
