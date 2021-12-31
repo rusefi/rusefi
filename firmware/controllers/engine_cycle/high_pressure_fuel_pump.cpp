@@ -148,6 +148,7 @@ void HpfpController::onFastCallback() {
 			scheduleNextCycle();
 		}
 	}
+	engine->outputChannels.m_requested_pump = m_requested_pump;
 }
 
 void HpfpController::pinTurnOn(HpfpController *self) {

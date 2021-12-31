@@ -13,7 +13,7 @@
 #include "pch.h"
 #include "fsio_impl.h"
 #include "custom_engine.h"
-#include "../hellen_meta.h"
+#include "hellen_meta.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
