@@ -704,6 +704,32 @@ void TriggerState::decodeTriggerEvent(
 }
 
 bool TriggerState::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const {
+	// Miata NB needs a special decoder.
+	// The problem is that the crank wheel only has 4 teeth, also symmetrical, so the pattern
+	// is long-short-long-short for one crank rotation.
+	// A quick acceleration can result in two successive "short gaps", so we see 
+	// long-short-short-short-long instead of the correct long-short-long-short-long
+	// This logic expands the lower bound on a "long" tooth, then compares the last
+	// tooth to the current one.
+
+	// Instead of detecting short/long, this logic first checks for "maybe short" and "maybe long",
+	// then simply tests longer vs. shorter instead of absolute value.
+	if (triggerType == TT_MIATA_VVT) {
+		auto secondGap = (float)toothDurations[1] / toothDurations[2];
+
+		bool currentGapOk = isInRange(triggerShape.syncronizationRatioFrom[0], currentGap, triggerShape.syncronizationRatioTo[0]);
+		bool secondGapOk  = isInRange(triggerShape.syncronizationRatioFrom[1], secondGap,  triggerShape.syncronizationRatioTo[1]);
+
+		// One or both teeth was impossible range, this is not the sync point
+		if (!currentGapOk || !secondGapOk) {
+			return false;
+		}
+
+		// If both teeth are in the range of possibility, return whether this gap is
+		// shorter than the last or not.  If it is, this is the sync point.
+		return currentGap < secondGap;
+	}
+
 	for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
 		auto from = triggerShape.syncronizationRatioFrom[i];
 		auto to = triggerShape.syncronizationRatioTo[i];
