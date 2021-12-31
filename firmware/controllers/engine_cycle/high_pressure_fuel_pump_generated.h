@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Fri Dec 31 03:07:40 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Fri Dec 31 15:12:40 EST 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,6 +6,7 @@
 // start of high_pressure_fuel_pump_s
 struct high_pressure_fuel_pump_s {
 	/**
+	 * Computed requested pump duration in degrees (not including deadtime)
 	 * offset 0
 	 */
 	angle_t m_requested_pump = (angle_t)0;
@@ -21,4 +22,4 @@ struct high_pressure_fuel_pump_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Fri Dec 31 03:07:40 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Fri Dec 31 15:12:40 EST 2021
