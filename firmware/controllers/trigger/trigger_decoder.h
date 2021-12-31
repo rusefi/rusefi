@@ -155,14 +155,24 @@ public:
 			const trigger_config_s& triggerConfig
 			);
 
+	// Returns true if syncSymmetricalCrank has been called,
+	// ie if we have enough VVT information to have full sync on
+	// an indeterminite crank pattern
+	bool hasSynchronizedSymmetrical() const {
+		return m_hasSynchronizedSymmetrical;
+	}
+
 private:
 	void resetCurrentCycleState();
+	bool isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const;
 
 	trigger_event_e curSignal;
 	trigger_event_e prevSignal;
 	int64_t totalEventCountBase;
 
 	bool isFirstEvent;
+
+	bool m_hasSynchronizedSymmetrical = false;
 };
 
 // we only need 90 degrees of events so /4 or maybe even /8 should work?

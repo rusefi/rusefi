@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Dec 21 23:12:40 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:56:30 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -852,9 +852,21 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
 	/**
+	 * "Pump Angle"
+	deg
 	 * offset 334
 	 */
-	uint8_t unusedAtTheEnd[136];
+	scaled_channel<int16_t, 50, 1> m_requested_pump = (int16_t)0;
+	/**
+	 * "Pump Angle"
+	deg
+	 * offset 336
+	 */
+	scaled_channel<int16_t, 50, 1> unused16 = (int16_t)0;
+	/**
+	 * offset 338
+	 */
+	uint8_t unusedAtTheEnd[132];
 	/**
 	offset 470 bit 0 */
 	bool launchSpeedCondition : 1 {};
@@ -878,79 +890,79 @@ struct ts_outputs_s {
 	bool launchActivatePinState : 1 {};
 	/**
 	offset 470 bit 7 */
-	bool unusedBit_171_7 : 1 {};
+	bool unusedBit_173_7 : 1 {};
 	/**
 	offset 470 bit 8 */
-	bool unusedBit_171_8 : 1 {};
+	bool unusedBit_173_8 : 1 {};
 	/**
 	offset 470 bit 9 */
-	bool unusedBit_171_9 : 1 {};
+	bool unusedBit_173_9 : 1 {};
 	/**
 	offset 470 bit 10 */
-	bool unusedBit_171_10 : 1 {};
+	bool unusedBit_173_10 : 1 {};
 	/**
 	offset 470 bit 11 */
-	bool unusedBit_171_11 : 1 {};
+	bool unusedBit_173_11 : 1 {};
 	/**
 	offset 470 bit 12 */
-	bool unusedBit_171_12 : 1 {};
+	bool unusedBit_173_12 : 1 {};
 	/**
 	offset 470 bit 13 */
-	bool unusedBit_171_13 : 1 {};
+	bool unusedBit_173_13 : 1 {};
 	/**
 	offset 470 bit 14 */
-	bool unusedBit_171_14 : 1 {};
+	bool unusedBit_173_14 : 1 {};
 	/**
 	offset 470 bit 15 */
-	bool unusedBit_171_15 : 1 {};
+	bool unusedBit_173_15 : 1 {};
 	/**
 	offset 470 bit 16 */
-	bool unusedBit_171_16 : 1 {};
+	bool unusedBit_173_16 : 1 {};
 	/**
 	offset 470 bit 17 */
-	bool unusedBit_171_17 : 1 {};
+	bool unusedBit_173_17 : 1 {};
 	/**
 	offset 470 bit 18 */
-	bool unusedBit_171_18 : 1 {};
+	bool unusedBit_173_18 : 1 {};
 	/**
 	offset 470 bit 19 */
-	bool unusedBit_171_19 : 1 {};
+	bool unusedBit_173_19 : 1 {};
 	/**
 	offset 470 bit 20 */
-	bool unusedBit_171_20 : 1 {};
+	bool unusedBit_173_20 : 1 {};
 	/**
 	offset 470 bit 21 */
-	bool unusedBit_171_21 : 1 {};
+	bool unusedBit_173_21 : 1 {};
 	/**
 	offset 470 bit 22 */
-	bool unusedBit_171_22 : 1 {};
+	bool unusedBit_173_22 : 1 {};
 	/**
 	offset 470 bit 23 */
-	bool unusedBit_171_23 : 1 {};
+	bool unusedBit_173_23 : 1 {};
 	/**
 	offset 470 bit 24 */
-	bool unusedBit_171_24 : 1 {};
+	bool unusedBit_173_24 : 1 {};
 	/**
 	offset 470 bit 25 */
-	bool unusedBit_171_25 : 1 {};
+	bool unusedBit_173_25 : 1 {};
 	/**
 	offset 470 bit 26 */
-	bool unusedBit_171_26 : 1 {};
+	bool unusedBit_173_26 : 1 {};
 	/**
 	offset 470 bit 27 */
-	bool unusedBit_171_27 : 1 {};
+	bool unusedBit_173_27 : 1 {};
 	/**
 	offset 470 bit 28 */
-	bool unusedBit_171_28 : 1 {};
+	bool unusedBit_173_28 : 1 {};
 	/**
 	offset 470 bit 29 */
-	bool unusedBit_171_29 : 1 {};
+	bool unusedBit_173_29 : 1 {};
 	/**
 	offset 470 bit 30 */
-	bool unusedBit_171_30 : 1 {};
+	bool unusedBit_173_30 : 1 {};
 	/**
 	offset 470 bit 31 */
-	bool unusedBit_171_31 : 1 {};
+	bool unusedBit_173_31 : 1 {};
 	/**
 	 * offset 474
 	 */
@@ -1140,4 +1152,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Dec 21 23:12:40 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:56:30 UTC 2021

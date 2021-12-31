@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Dec 29 05:55:18 UTC 2021
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Fri Dec 31 07:41:41 UTC 2021
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -770,6 +770,7 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_55_BMW = 73;
 	public static final int engine_type_e_HELLEN_88_BMW = 74;
 	public static final int engine_type_e_HELLEN_NA6 = 34;
+	public static final int engine_type_e_HELLEN_NA8_96 = 10;
 	public static final int engine_type_e_HELLEN_NA94 = 80;
 	public static final int engine_type_e_HELLEN_NB1 = 83;
 	public static final int engine_type_e_HELLEN_NB1_36 = 94;
@@ -823,7 +824,6 @@ public class Fields {
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
-	public static final int engine_type_e_UNUSED10 = 10;
 	public static final int engine_type_e_UNUSED100 = 100;
 	public static final int engine_type_e_UNUSED101 = 101;
 	public static final int engine_type_e_UNUSED18 = 18;
@@ -2262,7 +2262,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2021.12.29.all.3924163312";
+	public static final String TS_SIGNATURE = "rusEFI 2021.12.31.all.2808220926";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;

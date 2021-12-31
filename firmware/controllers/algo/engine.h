@@ -467,6 +467,8 @@ private:
 	void injectEngineReferences();
 };
 
+trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode);
+
 void prepareShapes();
 void applyNonPersistentConfiguration();
 void prepareOutputSignals();

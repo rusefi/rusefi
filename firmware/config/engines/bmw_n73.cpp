@@ -76,7 +76,7 @@ function onCanRx(bus, id, dlc, data)
     elseif id == CAN_BMW_E90_TORQUE_1 then
 		TORQ_AVL = 0.5 * (twoBytes(data, 1, 1) >> 4)
 		TORQ_AVL_DMEE = 0.5 * (twoBytes(data, 3, 1) >> 4)
-		print('CAN_BMW_E90_TORQUE_1 ' .. TORQ_AVL .. TORQ_AVL_DMEE)
+		print('CAN_BMW_E90_TORQUE_1 TORQ_AVL=' .. TORQ_AVL .. ' TORQ_AVL_DMEE=' .. TORQ_AVL_DMEE)
 		relayToTcu(id, data)
     elseif id == CAN_BMW_E90_TORQUE_2 then
 		printDebug('CAN_BMW_E90_TORQUE_2')
@@ -95,7 +95,7 @@ function onCanRx(bus, id, dlc, data)
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_RPM_THROTTLE then
 		rpm = twoBytes(data, 4, 0.25)
-		print('CAN_BMW_E90_RPM_THROTTLE ' .. rpm)
+		print('CAN_BMW_E90_RPM_THROTTLE rpm=' .. rpm)
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_COOLANT then
 		printDebug('CAN_BMW_E90_COOLANT')
@@ -125,9 +125,10 @@ function onCanRx(bus, id, dlc, data)
 		printDebug('CAN_BMW_GEAR_SERVICE')
 		txCan(ECU_BUS, id, 0, data) -- relay TCU message to non-TCU
 	else
+        print('No handler for ' .. id)
 	end
 
-	print('got CAN id=' ..id ..' dlc=' ..dlc)
+	printDebug('got CAN id=' ..id ..' dlc=' ..dlc)
 end
 
 function onTick()

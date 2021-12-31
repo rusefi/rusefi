@@ -11,6 +11,7 @@
 #include "custom_engine.h"
 #include "table_helper.h"
 #include "electronic_throttle_impl.h"
+#include "mre_meta.h"
 
 /**
  * set engine_type 62
@@ -23,6 +24,8 @@ void setVwPassatB6() {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
+
+	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
@@ -38,16 +41,22 @@ void setVwPassatB6() {
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	strcpy(engineConfiguration->engineCode, "BPY");
 
+	engineConfiguration->throttlePedalUpVoltage = 0.36;
+	engineConfiguration->throttlePedalWOTVoltage = 2.13;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.30;
 
 	engineConfiguration->verboseVVTDecoding = true;
 	engineConfiguration->invertCamVVTSignal = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+	engineConfiguration->throttlePedalPositionAdcChannel = MRE_IN_ANALOG_VOLT_3;
+	// 36 - AN volt 8
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = MRE_IN_ANALOG_VOLT_8;
 
 	// "26 - AN volt 2"
-	engineConfiguration->highPressureFuel.hwChannel = EFI_ADC_6;
+	engineConfiguration->highPressureFuel.hwChannel = MRE_IN_ANALOG_VOLT_2;
 	/**
 	 * PSS-140
 	 */
@@ -126,7 +135,24 @@ void setVwPassatB6() {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
-	// engineConfiguration->hpfpValvePin = TLE8888_PIN_6; // Disable for now
+	engineConfiguration->hpfpValvePin = MRE_LS_1;
+	engineConfiguration->hpfpCamLobes = 3;
+	engineConfiguration->hpfpPumpVolume = 0.290;
+	engineConfiguration->hpfpMinAngle = 10;
+	engineConfiguration->hpfpActivationAngle = 30;
+	engineConfiguration->hpfpTargetDecay = 2000;
+	engineConfiguration->hpfpPidP = 0.301;
+	engineConfiguration->hpfpPidI = 0.00012;
+
+	setLinearCurve(engineConfiguration->hpfpLobeProfileAngle, 0, 120, 1);
+	setLinearCurve(engineConfiguration->hpfpLobeProfileQuantityBins, 0, 100, 1);
+
+	setLinearCurve(engineConfiguration->hpfpTargetRpmBins, 0, 8000, 1);
+	setLinearCurve(engineConfiguration->hpfpTargetLoadBins, 0, 180, 1);
+	setTable(engineConfiguration->hpfpTarget, 5000);
+
+	setLinearCurve(engineConfiguration->hpfpCompensationRpmBins, 0, 8000, 1);
+	setLinearCurve(engineConfiguration->hpfpCompensationLoadBins, 0.005, 0.120, 0.001);
 
 	setBoschVAGETB();
 
