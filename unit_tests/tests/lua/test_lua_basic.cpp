@@ -25,6 +25,16 @@ TEST(LuaBasic, MathLib) {
 	EXPECT_FLOAT_EQ(result, 1.0f);
 }
 
+TEST(LuaBasic, MathLibFloor) {
+	auto script = R"(
+		function testFunc()
+			return math.floor(3.2)
+		end
+	)";
+
+	EXPECT_FLOAT_EQ(testLuaReturnsNumber(script), 3.0f);
+}
+
 TEST(LuaBasic, ReturnsInteger) {
 	auto script = R"(
 						function testFunc()

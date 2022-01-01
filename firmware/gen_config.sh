@@ -12,9 +12,6 @@ mkdir build
 #
 # see also build-firmware where we compile all versions of firmware
 #
-# While adding a new board do not forget to manually git add/commit .h and .ini into
-# firmware\tunerstudio\generated and firmware\controllers\generated folders
-# maybe one day we will automate but not yet
 #
 for BOARD in \
    "f429-discovery f429-discovery" \
@@ -27,6 +24,7 @@ for BOARD in \
    "hellen/hellen81 hellen81" \
    "hellen/hellen-nb1 hellen-nb1" \
    "hellen/hellen64_miataNA6_94 hellenNA6" \
+   "hellen/hellenNA8_96 hellenNA8_96" \
    "microrusefi mre_f7" \
    "microrusefi mre_f4" \
    "frankenso frankenso_na6" \

@@ -964,6 +964,9 @@ TEMPLOG_MAP_AT_SPECIAL_POINTGauge = TEMPLOG_MAP_AT_SPECIAL_POINT,"TEMPLOG_MAP_AT
 TEMPLOG_MAP_AT_DIFFGauge = TEMPLOG_MAP_AT_DIFF,"TEMPLOG_MAP_AT_DIFF", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 TEMPLOG_MAP_AT_CYCLE_COUNTGauge = TEMPLOG_MAP_AT_CYCLE_COUNT,"TEMPLOG_MAP_AT_CYCLE_COUNT", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 
+gaugeCategory = GDI
+m_requested_pumpGauge = m_requested_pump,"Pump Angle", "deg", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+   highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
 
 gaugeCategory = Sensors - Extra 2
    egt1Gauge         = egt1, "EGT#1", "C", 0, 2000
@@ -1044,7 +1047,6 @@ gaugeCategory = Sensors - Extra 1
    AuxT1Gauge        = auxTemp1,     @@GAUGE_NAME_AUX_TEMP1@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    AuxT2Gauge        = auxTemp2,     @@GAUGE_NAME_AUX_TEMP2@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
-   highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
    flexPercentGauge = flexPercent, @@GAUGE_NAME_FLEX@@, "%", 0, 100, 0, 0, 100, 100, 0, 0
 
 gaugeCategory = VVT
@@ -1284,6 +1286,21 @@ menuDialog = main
 		subMenu = cylinderBankSelect,		"Cylinder bank selection", 0, {isInjectionEnabled == 1}
 		subMenu = injectorNonlinear,		"Injector small-pulse correction", 0, {isInjectionEnabled == 1}
 ;		subMenu = fuelTrimSettings,         "Fuel Trim", 0, {isInjectionEnabled == 1}
+
+		groupMenu = "Cylinder fuel trims"
+		groupChildMenu = fuelTrimTbl1,		"Fuel trim cyl 1"
+		groupChildMenu = fuelTrimTbl2,		"Fuel trim cyl 2"
+		groupChildMenu = fuelTrimTbl3,		"Fuel trim cyl 3"
+		groupChildMenu = fuelTrimTbl4,		"Fuel trim cyl 4"
+		groupChildMenu = fuelTrimTbl5,		"Fuel trim cyl 5"
+		groupChildMenu = fuelTrimTbl6,		"Fuel trim cyl 6"
+		groupChildMenu = fuelTrimTbl7,		"Fuel trim cyl 7"
+		groupChildMenu = fuelTrimTbl8,		"Fuel trim cyl 8"
+		groupChildMenu = fuelTrimTbl9,		"Fuel trim cyl 9"
+		groupChildMenu = fuelTrimTbl10,		"Fuel trim cyl 10"
+		groupChildMenu = fuelTrimTbl11,		"Fuel trim cyl 11"
+		groupChildMenu = fuelTrimTbl12,		"Fuel trim cyl 12"
+
 		subMenu = std_separator
 
 		# Air mass model
@@ -1497,20 +1514,6 @@ menuDialog = main
 #		subMenu = std_separator
 #		subMenu = antiLag,        			"Antilag Setup"
 #		subMenu = std_separator
-
-		groupMenu = "Cylinder fuel trims"
-		groupChildMenu = fuelTrimTbl1,		"Fuel trim cyl 1"
-		groupChildMenu = fuelTrimTbl2,		"Fuel trim cyl 2"
-		groupChildMenu = fuelTrimTbl3,		"Fuel trim cyl 3"
-		groupChildMenu = fuelTrimTbl4,		"Fuel trim cyl 4"
-		groupChildMenu = fuelTrimTbl5,		"Fuel trim cyl 5"
-		groupChildMenu = fuelTrimTbl6,		"Fuel trim cyl 6"
-		groupChildMenu = fuelTrimTbl7,		"Fuel trim cyl 7"
-		groupChildMenu = fuelTrimTbl8,		"Fuel trim cyl 8"
-		groupChildMenu = fuelTrimTbl9,		"Fuel trim cyl 9"
-		groupChildMenu = fuelTrimTbl10,		"Fuel trim cyl 10"
-		groupChildMenu = fuelTrimTbl11,		"Fuel trim cyl 11"
-		groupChildMenu = fuelTrimTbl12,		"Fuel trim cyl 12"
 
 		groupMenu = "Cylinder ign trims"
 		groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
@@ -2175,10 +2178,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = wastegateIdlePosGauges, East
 
     dialog = mc33Dialog, "Low-Z injector control (MC33816)"
-    	field = "MC33816 cs",							mc33816_cs
+    	field = "SPI Chip Select",						mc33816_cs
+		field = "SPI Device",	        				mc33816spiDevice
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
-		field = "MC33816 SPI Device",					mc33972spiDevice
 
 		field = "Boost voltage",						mc33_hvolt
 
@@ -3030,34 +3033,35 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "TX pin",                               binarySerialTxPin, {useSerialPort == 1}
 		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
 
+	dialog = canHw1, "Primary CAN"
+		field = "Bitrate",		canBaudRate
+		field = "RX pin",		canRxPin @@if_ts_show_can_pins
+		field = "TX pin",		canTxPin @@if_ts_show_can_pins
+
+	dialog = canHw2, "Secondary CAN"
+		field = "Bitrate",	can2BaudRate
+		field = "RX pin",		can2RxPin @@if_ts_show_can_pins
+		field = "TX pin",		can2TxPin @@if_ts_show_can_pins
+
 	dialog = canBus, "CAN Bus"
 		field = "CAN read enabled",						canReadEnabled
 		field = "CAN write enabled",					canWriteEnabled
-		field = "CAN bitrate",							canBaudRate
 		field = "CAN dash type",						canNbcType
 		field = "Verbose Can",                          verboseCan
 		field = "inertia measurement unit",             imuType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
+		field = "rusEFI CAN data bus",    canBroadcastUseChannelTwo
 		field = "rusEFI CAN data base address",			verboseCanBaseAddress
 		field = "rusEFI CAN data address type",			rusefiVerbose29b
 		field = "rusEFI CAN data period",				canSleepPeriodMs
-		field = "RX pin",								canRxPin @@if_ts_show_can_pins
-		field = "TX pin",								canTxPin @@if_ts_show_can_pins
 
 	dialog = canBus2, "Secondary CAN Bus"
-		field = "CAN read enabled",						can2ReadEnabled
-		field = "CAN write enabled",					can2WriteEnabled
-		field = "CAN bitrate",							can2BaudRate
-		field = "CAN dash type",						can2NbcType
-		field = "Enable rusEFI CAN broadcast",			enableVerboseCan2Tx
-		field = "rusEFI CAN data base address",			verboseCan2BaseAddress
-		field = "rusEFI CAN data period",				can2SleepPeriodMs
-		field = "RX pin",								can2RxPin @@if_ts_show_can_pins
-		field = "TX pin",								can2TxPin @@if_ts_show_can_pins
 
 	dialog = canBusMain, "CAN Bus Communication", yAxis
 		panel = canBus
-		panel = canBus2							@@if_ts_show_can2
+
+		panel = canHw1
+		panel = canHw2	@@if_ts_show_can2
 
 	dialog = auxSerial, "AUX Sensor Serial"
 		field = "RX pin",								auxSerialRxPin @@if_ts_show_auxserial_pins

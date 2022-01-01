@@ -2,6 +2,12 @@
 
 rm gen_live_documentation.log
 
+bash gen_live_documentation_one_file.sh high_pressure_fuel_pump HighPressureFuelPump.java controllers/engine_cycle
+[ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
+
+bash gen_live_documentation_one_file.sh injector_model InjectorModel.java controllers/algo/fuel
+[ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
+
 bash gen_live_documentation_one_file.sh launch_control_state LaunchControl.java controllers/algo
 [ $? -eq 0 ] || { echo "ERROR generating"; exit 1; }
 

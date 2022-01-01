@@ -82,7 +82,6 @@ public:
 	int vvtEventRiseCounter[CAM_INPUTS_COUNT];
 	int vvtEventFallCounter[CAM_INPUTS_COUNT];
 
-	trigger_type_e vvtTriggerType[CAMS_PER_BANK];
 	angle_t getVVTPosition(uint8_t bankIndex, uint8_t camIndex);
 
 #if EFI_UNIT_TEST
@@ -92,9 +91,6 @@ public:
 
 	// synchronization event position
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
-
-	// todo: convert to Timer!
-	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
 
 	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;

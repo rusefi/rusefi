@@ -533,8 +533,6 @@ TEST(misc, testTriggerDecoder) {
 	testTriggerDecoder2("vw ABA", VW_ABA, 0, 0.51666, 0.0);
 }
 
-extern fuel_Map3D_t fuelMap;
-
 static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
 	ASSERT_EQ(injectorIndex, ev->outputs[0]->injectorIndex) << msg << "inj index";
 	assertEqualsM4(msg, " event index", eventIndex, ev->injectionStart.triggerEventIndex);

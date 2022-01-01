@@ -7,8 +7,8 @@ using ::testing::StrictMock;
 class MockInjectorModel : public InjectorModelBase {
 public:
 	MOCK_METHOD(floatms_t, getDeadtime, (), (const, override));
-	MOCK_METHOD(float, getInjectorMassFlowRate, (), (const, override));
-	MOCK_METHOD(float, getInjectorFlowRatio, (), (const, override));
+	MOCK_METHOD(float, getInjectorMassFlowRate, (), (override));
+	MOCK_METHOD(float, getInjectorFlowRatio, (), (override));
 	MOCK_METHOD(expected<float>, getAbsoluteRailPressure, (), (const, override));
 	MOCK_METHOD(float, correctShortPulse, (float baseDuration), (const, override));
 };
@@ -97,7 +97,7 @@ TEST(InjectorModel, Deadtime) {
 }
 
 struct TesterGetFlowRate : public InjectorModel {
-	MOCK_METHOD(float, getInjectorFlowRatio, (), (const, override));
+	MOCK_METHOD(float, getInjectorFlowRatio, (), (override));
 };
 
 struct TesterGetRailPressure : public InjectorModel {

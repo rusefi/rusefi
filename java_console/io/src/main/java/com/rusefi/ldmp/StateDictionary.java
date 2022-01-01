@@ -33,6 +33,7 @@ public enum StateDictionary {
         register(live_data_e.LDS_MAIN_RELAY, MainRelay.VALUES);
         register(live_data_e.LDS_BOOST_CONTROL, BoostControl.VALUES);
         register(live_data_e.LDS_LAUNCH_CONTROL, LaunchControl.VALUES);
+        register(live_data_e.LDS_HIGH_PRESSURE, HighPressureFuelPump.VALUES);
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());

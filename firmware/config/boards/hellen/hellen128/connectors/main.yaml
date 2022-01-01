@@ -404,17 +404,19 @@ pins:
     type: gnd
 
   - pin: E25
+# H144_LS_7
     id: GPIOF_13
     class: outputs
-    ts_name: E25 - INJ 7
-    function: injector output 7
+    ts_name: INJ E25
+    function: injector output E25
     type: inj
 
   - pin: E26
+# H144_LS_8
     id: GPIOF_14
     class: outputs
-    ts_name: E26 - INJ 8
-    function: injector output 8
+    ts_name: INJ E26
+    function: injector output E26
     type: inj
 
   - pin: E27

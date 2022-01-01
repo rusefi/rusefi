@@ -158,7 +158,7 @@ static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t s
 static int lua_txCan(lua_State* l) {
 	auto channel = luaL_checkinteger(l, 1);
 	// TODO: support multiple channels
-	luaL_argcheck(l, channel == 1, 1, "only channel 1 currently supported");
+	luaL_argcheck(l, channel == 1 || channel == 2, 1, "only channels 1 and 2 currently supported");
 
 	auto id = luaL_checkinteger(l, 2);
 	auto ext = luaL_checkinteger(l, 3);
@@ -172,6 +172,7 @@ static int lua_txCan(lua_State* l) {
 
 	// conform ext parameter to true/false
 	CanTxMessage msg(id, 8, ext == 0 ? false : true);
+	msg.busIndex = channel - HUMAN_OFFSET;
 
 	// Unfortunately there is no way to inspect the length of a table,
 	// so we have to just iterate until we run out of numbers

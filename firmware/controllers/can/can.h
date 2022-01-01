@@ -46,7 +46,7 @@ class CanListener;
 class CanSensorBase;
 
 #if EFI_CAN_SUPPORT
-void processCanRxMessage(const CANRxFrame& msg, efitick_t nowNt);
+void processCanRxMessage(const size_t busIndex, const CANRxFrame& msg, efitick_t nowNt);
 #endif // EFI_CAN_SUPPORT
 
 void registerCanListener(CanListener& listener);

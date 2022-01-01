@@ -198,18 +198,6 @@ static void doPeriodicSlowCallback() {
 
 	slowStartStopButtonCallback();
 
-
-	efitick_t nowNt = getTimeNowNt();
-	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
-		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
-			if (nowNt - engine->triggerCentral.vvtSyncTimeNt[bankIndex][camIndex] >= NT_PER_SECOND) {
-				// loss of VVT sync
-				// todo: this code would get simpler if we convert vvtSyncTimeNt to Timer
-				engine->triggerCentral.vvtSyncTimeNt[bankIndex][camIndex] = 0;
-			}
-		}
-	}
-
 	engine->rpmCalculator.onSlowCallback();
 
 	if (engine->directSelfStimulation || engine->rpmCalculator.isStopped()) {
@@ -654,6 +642,13 @@ bool validateConfig() {
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
+
+	if (engineConfiguration->hpfpCamLobes > 0) {
+		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
+		ensureArrayIsAscending("HPFP lobe profile", engineConfiguration->hpfpLobeProfileQuantityBins);
+		ensureArrayIsAscending("HPFP target rpm", engineConfiguration->hpfpTargetRpmBins);
+		ensureArrayIsAscending("HPFP target load", engineConfiguration->hpfpTargetLoadBins);
+	}
 
 	// VVT
 	if (engineConfiguration->camInputs[0] != GPIO_UNASSIGNED) {

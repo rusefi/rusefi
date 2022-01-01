@@ -486,6 +486,15 @@ static void updateThrottles() {
 	engine->outputChannels.throttlePedalPosition = pedal.Value;
 	// Only report fail if you have one (many people don't)
 	engine->outputChannels.isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+
+	// TPS 1 pri/sec split
+	engine->outputChannels.tps1Split = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
+	// TPS 2 pri/sec split
+	engine->outputChannels.tps2Split = Sensor::getOrZero(SensorType::Tps2Primary) - Sensor::getOrZero(SensorType::Tps2Secondary);
+	// TPS1 - TPS2 split
+	engine->outputChannels.tps12Split = Sensor::getOrZero(SensorType::Tps1) - Sensor::getOrZero(SensorType::Tps2);
+	// Pedal pri/sec split
+	engine->outputChannels.accPedalSplit = Sensor::getOrZero(SensorType::AcceleratorPedalPrimary) - Sensor::getOrZero(SensorType::AcceleratorPedalSecondary);
 }
 
 static void updateLambda() {
@@ -664,15 +673,6 @@ static void updateFlags() {
 // weird thing: one of the reasons for this to be a separate method is stack usage reduction in non-optimized build
 // see https://github.com/rusefi/rusefi/issues/3302 and linked tickets
 static void updateTpsDebug() {
-	// TPS 1 pri/sec split
-	engine->outputChannels.debugFloatField1 = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
-	// TPS 2 pri/sec split
-	engine->outputChannels.debugFloatField2 = Sensor::getOrZero(SensorType::Tps2Primary) - Sensor::getOrZero(SensorType::Tps2Secondary);
-	// TPS1 - TPS2 split
-	engine->outputChannels.debugFloatField3 = Sensor::getOrZero(SensorType::Tps1) - Sensor::getOrZero(SensorType::Tps2);
-	// Pedal pri/sec split
-	engine->outputChannels.debugFloatField4 = Sensor::getOrZero(SensorType::AcceleratorPedalPrimary) - Sensor::getOrZero(SensorType::AcceleratorPedalSecondary);
-
 	// TPS 1 pri/sec ratio - useful for ford ETB that has partial-range second channel
 	engine->outputChannels.debugFloatField5 = 100 * Sensor::getOrZero(SensorType::Tps1Primary) / Sensor::getOrZero(SensorType::Tps1Secondary);
 }
@@ -777,7 +777,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
 #if EFI_CAN_SUPPORT
-		postCanState(tsOutputChannels);
+		postCanState();
 #endif /* EFI_CAN_SUPPORT */
 
 #if EFI_CLOCK_LOCKS

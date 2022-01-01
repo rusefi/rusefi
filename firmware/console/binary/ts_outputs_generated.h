@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 16 21:05:57 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:56:30 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -160,41 +160,41 @@ struct ts_outputs_s {
 	deg C
 	 * offset 11
 	 */
-	scaled_channel<uint8_t, 1, 1> internalMcuTemperature = (uint8_t)0;
+	scaled_channel<int8_t, 1, 1> internalMcuTemperature = (int8_t)0;
 	/**
 	 * @@GAUGE_NAME_CLT@@
 	deg C
 	 * offset 12
 	 */
-	scaled_channel<uint16_t, 100, 1> coolant = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> coolant = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_IAT@@
 	deg C
 	 * offset 14
 	 */
-	scaled_channel<uint16_t, 100, 1> intake = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> intake = (int16_t)0;
 	/**
 	deg C
 	 * offset 16
 	 */
-	scaled_channel<uint16_t, 100, 1> auxTemp1 = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> auxTemp1 = (int16_t)0;
 	/**
 	deg C
 	 * offset 18
 	 */
-	scaled_channel<uint16_t, 100, 1> auxTemp2 = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> auxTemp2 = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TPS@@
 	%
 	 * offset 20
 	 */
-	scaled_channel<uint16_t, 100, 1> TPSValue = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> TPSValue = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_THROTTLE_PEDAL@@
 	%
 	 * offset 22
 	 */
-	scaled_channel<uint16_t, 100, 1> throttlePedalPosition = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> throttlePedalPosition = (int16_t)0;
 	/**
 	ADC
 	 * offset 24
@@ -254,7 +254,7 @@ struct ts_outputs_s {
 	deg
 	 * offset 42
 	 */
-	scaled_channel<uint16_t, 50, 1> vvtPositionB1I = (uint16_t)0;
+	scaled_channel<int16_t, 50, 1> vvtPositionB1I = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_AIR_MASS@@
 	g
@@ -311,12 +311,12 @@ struct ts_outputs_s {
 	deg
 	 * offset 58
 	 */
-	scaled_channel<uint16_t, 50, 1> injectionOffset = (uint16_t)0;
+	scaled_channel<int16_t, 1, 1> injectionOffset = (int16_t)0;
 	/**
 	deg C
 	 * offset 60
 	 */
-	scaled_channel<uint16_t, 100, 1> tCharge = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> tCharge = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_INJECTOR_LAG@@
 	ms
@@ -368,7 +368,7 @@ struct ts_outputs_s {
 	ratio
 	 * offset 78
 	 */
-	scaled_channel<uint16_t, 100, 1> deltaTps = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> deltaTps = (int16_t)0;
 	/**
 	 * offset 80
 	 */
@@ -378,13 +378,13 @@ struct ts_outputs_s {
 	ms
 	 * offset 82
 	 */
-	scaled_channel<uint16_t, 300, 1> tpsAccelFuel = (uint16_t)0;
+	scaled_channel<int16_t, 300, 1> tpsAccelFuel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TIMING_ADVANCE@@
 	deg
 	 * offset 84
 	 */
-	scaled_channel<uint16_t, 50, 1> ignitionAdvance = (uint16_t)0;
+	scaled_channel<int16_t, 50, 1> ignitionAdvance = (int16_t)0;
 	/**
 	 * @@GAUGE_COIL_DWELL_TIME@@
 	ms
@@ -408,25 +408,25 @@ struct ts_outputs_s {
 	%
 	 * offset 92
 	 */
-	scaled_channel<uint16_t, 100, 1> etbTarget = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ETB_DUTY@@
 	%
 	 * offset 94
 	 */
-	scaled_channel<uint16_t, 100, 1> etb1DutyCycle = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 	/**
 	 * "ETB Error"
 	%
 	 * offset 96
 	 */
-	scaled_channel<uint16_t, 100, 1> etb1Error = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> etb1Error = (int16_t)0;
 	/**
 	 * "Fuel level"
 	%
 	 * offset 98
 	 */
-	scaled_channel<uint16_t, 100, 1> fuelTankLevel = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	grams
@@ -588,24 +588,24 @@ struct ts_outputs_s {
 	val
 	 * offset 208
 	 */
-	scaled_channel<uint16_t, 1, 1> debugIntField4 = (uint16_t)0;
+	scaled_channel<int16_t, 1, 1> debugIntField4 = (int16_t)0;
 	/**
 	val
 	 * offset 210
 	 */
-	scaled_channel<uint16_t, 1, 1> debugIntField5 = (uint16_t)0;
+	scaled_channel<int16_t, 1, 1> debugIntField5 = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_X@@
 	G
 	 * offset 212
 	 */
-	scaled_channel<uint16_t, 100, 1> accelerationX = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> accelerationX = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_Y@@
 	G
 	 * offset 214
 	 */
-	scaled_channel<uint16_t, 100, 1> accelerationY = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> accelerationY = (int16_t)0;
 	/**
 	deg C
 	 * offset 216
@@ -616,32 +616,32 @@ struct ts_outputs_s {
 	%
 	 * offset 232
 	 */
-	scaled_channel<uint16_t, 100, 1> TPS2Value = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 	/**
 	V
 	 * offset 234
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawTps1Primary = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawTps1Primary = (int16_t)0;
 	/**
 	V
 	 * offset 236
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawPpsPrimary = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawPpsPrimary = (int16_t)0;
 	/**
 	V
 	 * offset 238
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawClt = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawClt = (int16_t)0;
 	/**
 	V
 	 * offset 240
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawIat = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawIat = (int16_t)0;
 	/**
 	V
 	 * offset 242
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawOilPressure = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawOilPressure = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TUNE_CRC16@@
 	crc16
@@ -662,7 +662,7 @@ struct ts_outputs_s {
 	V
 	 * offset 248
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawPpsSecondary = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawPpsSecondary = (int16_t)0;
 	/**
 	 * offset 250
 	 */
@@ -683,46 +683,46 @@ struct ts_outputs_s {
 	V
 	 * offset 264
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawIdlePositionSensor = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawIdlePositionSensor = (int16_t)0;
 	/**
 	V
 	 * offset 266
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawWastegatePosition = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawWastegatePosition = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_WG_POSITION@@
 	%
 	 * offset 268
 	 */
-	scaled_channel<uint16_t, 100, 1> wastegatePositionSensor = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> wastegatePositionSensor = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_IDLE_POSITION@@
 	%
 	 * offset 270
 	 */
-	scaled_channel<uint16_t, 100, 1> idlePositionSensor = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> idlePositionSensor = (int16_t)0;
 	/**
 	V
 	 * offset 272
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawLowFuelPressure = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawLowFuelPressure = (int16_t)0;
 	/**
 	V
 	 * offset 274
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawHighFuelPressure = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawHighFuelPressure = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_PRESSURE_LOW@@
 	kpa
 	 * offset 276
 	 */
-	scaled_channel<uint16_t, 30, 1> lowFuelPressure = (uint16_t)0;
+	scaled_channel<int16_t, 30, 1> lowFuelPressure = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@
 	bar
 	 * offset 278
 	 */
-	scaled_channel<uint16_t, 10, 1> highFuelPressure = (uint16_t)0;
+	scaled_channel<int16_t, 10, 1> highFuelPressure = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TARGET_LAMBDA@@
 	 * offset 280
@@ -756,39 +756,39 @@ struct ts_outputs_s {
 	deg
 	 * offset 290
 	 */
-	scaled_channel<uint16_t, 50, 1> vvtPositionB1E = (uint16_t)0;
+	scaled_channel<int16_t, 50, 1> vvtPositionB1E = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_VVT_B2I@@
 	deg
 	 * offset 292
 	 */
-	scaled_channel<uint16_t, 50, 1> vvtPositionB2I = (uint16_t)0;
+	scaled_channel<int16_t, 50, 1> vvtPositionB2I = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_VVT_B2E@@
 	deg
 	 * offset 294
 	 */
-	scaled_channel<uint16_t, 50, 1> vvtPositionB2E = (uint16_t)0;
+	scaled_channel<int16_t, 50, 1> vvtPositionB2E = (int16_t)0;
 	/**
 	%
 	 * offset 296
 	 */
-	scaled_channel<uint16_t, 100, 1> fuelPidCorrection[2];
+	scaled_channel<int16_t, 100, 1> fuelPidCorrection[2];
 	/**
 	V
 	 * offset 300
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawTps1Secondary = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawTps1Secondary = (int16_t)0;
 	/**
 	V
 	 * offset 302
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawTps2Primary = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawTps2Primary = (int16_t)0;
 	/**
 	V
 	 * offset 304
 	 */
-	scaled_channel<uint16_t, 1000, 1> rawTps2Secondary = (uint16_t)0;
+	scaled_channel<int16_t, 1000, 1> rawTps2Secondary = (int16_t)0;
 	/**
 	 * "knock: count"
 	 * offset 306
@@ -799,22 +799,22 @@ struct ts_outputs_s {
 	G
 	 * offset 308
 	 */
-	scaled_channel<uint16_t, 100, 1> accelerationZ = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> accelerationZ = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_ROLL@@
 	 * offset 310
 	 */
-	scaled_channel<uint16_t, 100, 1> accelerationRoll = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> accelerationRoll = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_ACCEL_YAW@@
 	 * offset 312
 	 */
-	scaled_channel<uint16_t, 100, 1> accelerationYaw = (uint16_t)0;
+	scaled_channel<int16_t, 100, 1> accelerationYaw = (int16_t)0;
 	/**
 	deg
 	 * offset 314
 	 */
-	scaled_channel<uint8_t, 1, 1> vvtTargets[4];
+	scaled_channel<int8_t, 1, 1> vvtTargets[4];
 	/**
 	 * @@GAUGE_NAME_TURBO_SPEED@@
 	hz
@@ -822,9 +822,51 @@ struct ts_outputs_s {
 	 */
 	uint16_t turboSpeed = (uint16_t)0;
 	/**
+	deg C
 	 * offset 320
 	 */
-	uint8_t unusedAtTheEnd[150];
+	uint16_t wbTemperature[2];
+	/**
+	%
+	 * offset 324
+	 */
+	uint8_t wbHeaterDuty[2];
+	/**
+	%
+	 * offset 326
+	 */
+	scaled_channel<int16_t, 100, 1> tps1Split = (int16_t)0;
+	/**
+	%
+	 * offset 328
+	 */
+	scaled_channel<int16_t, 100, 1> tps2Split = (int16_t)0;
+	/**
+	%
+	 * offset 330
+	 */
+	scaled_channel<int16_t, 100, 1> tps12Split = (int16_t)0;
+	/**
+	%
+	 * offset 332
+	 */
+	scaled_channel<int16_t, 100, 1> accPedalSplit = (int16_t)0;
+	/**
+	 * "Pump Angle"
+	deg
+	 * offset 334
+	 */
+	scaled_channel<int16_t, 50, 1> m_requested_pump = (int16_t)0;
+	/**
+	 * "Pump Angle"
+	deg
+	 * offset 336
+	 */
+	scaled_channel<int16_t, 50, 1> unused16 = (int16_t)0;
+	/**
+	 * offset 338
+	 */
+	uint8_t unusedAtTheEnd[132];
 	/**
 	offset 470 bit 0 */
 	bool launchSpeedCondition : 1 {};
@@ -848,79 +890,79 @@ struct ts_outputs_s {
 	bool launchActivatePinState : 1 {};
 	/**
 	offset 470 bit 7 */
-	bool unusedBit_165_7 : 1 {};
+	bool unusedBit_173_7 : 1 {};
 	/**
 	offset 470 bit 8 */
-	bool unusedBit_165_8 : 1 {};
+	bool unusedBit_173_8 : 1 {};
 	/**
 	offset 470 bit 9 */
-	bool unusedBit_165_9 : 1 {};
+	bool unusedBit_173_9 : 1 {};
 	/**
 	offset 470 bit 10 */
-	bool unusedBit_165_10 : 1 {};
+	bool unusedBit_173_10 : 1 {};
 	/**
 	offset 470 bit 11 */
-	bool unusedBit_165_11 : 1 {};
+	bool unusedBit_173_11 : 1 {};
 	/**
 	offset 470 bit 12 */
-	bool unusedBit_165_12 : 1 {};
+	bool unusedBit_173_12 : 1 {};
 	/**
 	offset 470 bit 13 */
-	bool unusedBit_165_13 : 1 {};
+	bool unusedBit_173_13 : 1 {};
 	/**
 	offset 470 bit 14 */
-	bool unusedBit_165_14 : 1 {};
+	bool unusedBit_173_14 : 1 {};
 	/**
 	offset 470 bit 15 */
-	bool unusedBit_165_15 : 1 {};
+	bool unusedBit_173_15 : 1 {};
 	/**
 	offset 470 bit 16 */
-	bool unusedBit_165_16 : 1 {};
+	bool unusedBit_173_16 : 1 {};
 	/**
 	offset 470 bit 17 */
-	bool unusedBit_165_17 : 1 {};
+	bool unusedBit_173_17 : 1 {};
 	/**
 	offset 470 bit 18 */
-	bool unusedBit_165_18 : 1 {};
+	bool unusedBit_173_18 : 1 {};
 	/**
 	offset 470 bit 19 */
-	bool unusedBit_165_19 : 1 {};
+	bool unusedBit_173_19 : 1 {};
 	/**
 	offset 470 bit 20 */
-	bool unusedBit_165_20 : 1 {};
+	bool unusedBit_173_20 : 1 {};
 	/**
 	offset 470 bit 21 */
-	bool unusedBit_165_21 : 1 {};
+	bool unusedBit_173_21 : 1 {};
 	/**
 	offset 470 bit 22 */
-	bool unusedBit_165_22 : 1 {};
+	bool unusedBit_173_22 : 1 {};
 	/**
 	offset 470 bit 23 */
-	bool unusedBit_165_23 : 1 {};
+	bool unusedBit_173_23 : 1 {};
 	/**
 	offset 470 bit 24 */
-	bool unusedBit_165_24 : 1 {};
+	bool unusedBit_173_24 : 1 {};
 	/**
 	offset 470 bit 25 */
-	bool unusedBit_165_25 : 1 {};
+	bool unusedBit_173_25 : 1 {};
 	/**
 	offset 470 bit 26 */
-	bool unusedBit_165_26 : 1 {};
+	bool unusedBit_173_26 : 1 {};
 	/**
 	offset 470 bit 27 */
-	bool unusedBit_165_27 : 1 {};
+	bool unusedBit_173_27 : 1 {};
 	/**
 	offset 470 bit 28 */
-	bool unusedBit_165_28 : 1 {};
+	bool unusedBit_173_28 : 1 {};
 	/**
 	offset 470 bit 29 */
-	bool unusedBit_165_29 : 1 {};
+	bool unusedBit_173_29 : 1 {};
 	/**
 	offset 470 bit 30 */
-	bool unusedBit_165_30 : 1 {};
+	bool unusedBit_173_30 : 1 {};
 	/**
 	offset 470 bit 31 */
-	bool unusedBit_165_31 : 1 {};
+	bool unusedBit_173_31 : 1 {};
 	/**
 	 * offset 474
 	 */
@@ -1110,4 +1152,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 16 21:05:57 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Dec 30 22:56:30 UTC 2021

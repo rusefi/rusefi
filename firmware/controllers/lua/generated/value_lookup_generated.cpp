@@ -240,8 +240,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->idle_antiwindupFreq;
 	if (strEqualCaseInsensitive(name, "acIdleExtraOffset"))
 		return engineConfiguration->acIdleExtraOffset;
-	if (strEqualCaseInsensitive(name, "can2SleepPeriodMs"))
-		return engineConfiguration->can2SleepPeriodMs;
 	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
 		return engineConfiguration->wastegatePositionMin;
 	if (strEqualCaseInsensitive(name, "wastegatePositionMax"))
@@ -410,6 +408,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockBankCyl12;
 	if (strEqualCaseInsensitive(name, "tcuEnabled"))
 		return engineConfiguration->tcuEnabled;
+	if (strEqualCaseInsensitive(name, "canBroadcastUseChannelTwo"))
+		return engineConfiguration->canBroadcastUseChannelTwo;
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
 		return engineConfiguration->boostPid.pFactor;
 	if (strEqualCaseInsensitive(name, "boostPid.iFactor"))
@@ -656,14 +656,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->throttlePedalSecondaryUpVoltage;
 	if (strEqualCaseInsensitive(name, "throttlePedalSecondaryWOTVoltage"))
 		return engineConfiguration->throttlePedalSecondaryWOTVoltage;
-	if (strEqualCaseInsensitive(name, "verboseCan2BaseAddress"))
-		return engineConfiguration->verboseCan2BaseAddress;
-	if (strEqualCaseInsensitive(name, "enableVerboseCan2Tx"))
-		return engineConfiguration->enableVerboseCan2Tx;
-	if (strEqualCaseInsensitive(name, "can2ReadEnabled"))
-		return engineConfiguration->can2ReadEnabled;
-	if (strEqualCaseInsensitive(name, "can2WriteEnabled"))
-		return engineConfiguration->can2WriteEnabled;
 	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
 		return engineConfiguration->stepperDcInvertedPins;
 	if (strEqualCaseInsensitive(name, "boostCutPressure"))
@@ -1497,11 +1489,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->acIdleExtraOffset = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "can2SleepPeriodMs"))
-	{
-		engineConfiguration->can2SleepPeriodMs = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
 	{
 		engineConfiguration->wastegatePositionMin = (int)value;
@@ -1920,6 +1907,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "tcuEnabled"))
 	{
 		engineConfiguration->tcuEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "canBroadcastUseChannelTwo"))
+	{
+		engineConfiguration->canBroadcastUseChannelTwo = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
@@ -2535,26 +2527,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "throttlePedalSecondaryWOTVoltage"))
 	{
 		engineConfiguration->throttlePedalSecondaryWOTVoltage = value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "verboseCan2BaseAddress"))
-	{
-		engineConfiguration->verboseCan2BaseAddress = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "enableVerboseCan2Tx"))
-	{
-		engineConfiguration->enableVerboseCan2Tx = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "can2ReadEnabled"))
-	{
-		engineConfiguration->can2ReadEnabled = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "can2WriteEnabled"))
-	{
-		engineConfiguration->can2WriteEnabled = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))

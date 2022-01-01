@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Dec 21 03:02:46 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Dec 25 04:39:39 UTC 2021
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -220,7 +220,7 @@ struct gppwm_channel {
 	RPM
 	 * offset 16
 	 */
-	uint8_t rpmBins[GPPWM_RPM_COUNT];
+	scaled_channel<uint8_t, 1, 50> rpmBins[GPPWM_RPM_COUNT];
 	/**
 	duty
 	 * offset 24
@@ -1532,11 +1532,10 @@ struct engine_configuration_s {
 	 */
 	uint8_t acIdleExtraOffset;
 	/**
-	 * CANbus thread period, ms
 	ms
 	 * offset 720
 	 */
-	int can2SleepPeriodMs;
+	int unused720;
 	/**
 	 * Voltage when the wastegate is closed.
 	 * You probably don't have one of these!
@@ -2113,7 +2112,7 @@ struct engine_configuration_s {
 	bool tcuEnabled : 1 {};
 	/**
 	offset 896 bit 29 */
-	bool unusedBit_251_29 : 1 {};
+	bool canBroadcastUseChannelTwo : 1 {};
 	/**
 	offset 896 bit 30 */
 	bool unusedBit_310_30 : 1 {};
@@ -2929,24 +2928,20 @@ struct engine_configuration_s {
 	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 1735
 	 */
-	afr_override_e afrOverrideMode;
+	load_override_e afrOverrideMode;
 	/**
 	 * offset 1736
 	 */
-	uint32_t verboseCan2BaseAddress;
+	uint32_t unused1736;
 	/**
-	 * CAN broadcast using custom rusEFI protocol
-	 * enable can_broadcast/disable can_broadcast
 	offset 1740 bit 0 */
-	bool enableVerboseCan2Tx : 1 {};
+	bool unused1740b0 : 1 {};
 	/**
-	 * enable can_read/disable can_read
 	offset 1740 bit 1 */
-	bool can2ReadEnabled : 1 {};
+	bool unused1740b1 : 1 {};
 	/**
-	 * enable can_write/disable can_write
 	offset 1740 bit 2 */
-	bool can2WriteEnabled : 1 {};
+	bool unused1740b2 : 1 {};
 	/**
 	 * Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	offset 1740 bit 3 */
@@ -3036,10 +3031,9 @@ struct engine_configuration_s {
 	offset 1740 bit 31 */
 	bool unusedBit_498_31 : 1 {};
 	/**
-	 * set can_mode X
 	 * offset 1744
 	 */
-	can_nbc_e can2NbcType;
+	uint32_t unused1744;
 	/**
 	 * set_can2_tx_pin X
 	 * offset 1748
@@ -3063,7 +3057,7 @@ struct engine_configuration_s {
 	 * Advanced users only: If you aren't sure you need this, you probably don't need this.
 	 * offset 1752
 	 */
-	afr_override_e ignOverrideMode;
+	load_override_e ignOverrideMode;
 	/**
 	 * Select which fuel pressure sensor measures the pressure of the fuel at your injectors.
 	 * offset 1753
@@ -4041,21 +4035,21 @@ struct persistent_config_s {
 	/**
 	 * offset 5240
 	 */
-	uint8_t boostTableOpenLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
+	scaled_channel<uint8_t, 2, 1> boostTableOpenLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	RPM
 	 * offset 5304
 	 */
-	uint8_t boostRpmBins[BOOST_RPM_COUNT];
+	scaled_channel<uint8_t, 1, 50> boostRpmBins[BOOST_RPM_COUNT];
 	/**
 	 * offset 5312
 	 */
-	uint8_t boostTableClosedLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
+	scaled_channel<uint8_t, 1, 2> boostTableClosedLoop[BOOST_RPM_COUNT][BOOST_LOAD_COUNT];
 	/**
 	%
 	 * offset 5376
 	 */
-	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
+	scaled_channel<uint8_t, 1, 1> boostTpsBins[BOOST_LOAD_COUNT];
 	/**
 	%
 	 * offset 5384
@@ -4070,7 +4064,7 @@ struct persistent_config_s {
 	RPM
 	 * offset 5456
 	 */
-	uint8_t pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE];
+	scaled_channel<uint8_t, 1, 50> pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE];
 	/**
 	 * CLT-based cranking position multiplier for simple manual idle controller
 	C
@@ -4180,235 +4174,235 @@ struct persistent_config_s {
 	deg
 	 * offset 16168
 	 */
-	float ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	scaled_channel<int16_t, 10, 1> ignitionIatCorrTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Temperature
-	 * offset 17192
+	 * offset 16680
 	 */
 	float ignitionIatCorrLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 17256
+	 * offset 16744
 	 */
 	uint16_t ignitionIatCorrRpmBins[IGN_RPM_COUNT];
 	/**
 	deg
-	 * offset 17288
+	 * offset 16776
 	 */
-	float injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	int16_t injectionPhase[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 18312
+	 * offset 17288
 	 */
 	uint16_t injPhaseLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18344
+	 * offset 17320
 	 */
 	uint16_t injPhaseRpmBins[FUEL_RPM_COUNT];
 	/**
 	onoff
-	 * offset 18376
+	 * offset 17352
 	 */
 	uint8_t tcuSolenoidTable[TCU_SOLENOID_COUNT][TCU_GEAR_COUNT];
 	/**
 	 * Good example: number of tooth on wheel, For Can 10 is a good number.
 	Hz
-	 * offset 18436
+	 * offset 17412
 	 */
 	float vssFilterReciprocal;
 	/**
 	kPa
-	 * offset 18440
+	 * offset 17416
 	 */
 	uint16_t mapEstimateTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	% TPS
-	 * offset 18952
+	 * offset 17928
 	 */
 	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 18984
+	 * offset 17960
 	 */
 	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 19016
+	 * offset 17992
 	 */
 	uint8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 19080
+	 * offset 18056
 	 */
 	uint16_t vvtTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 19096
+	 * offset 18072
 	 */
 	uint16_t vvtTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 19112
+	 * offset 18088
 	 */
 	uint8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 19176
+	 * offset 18152
 	 */
 	uint16_t vvtTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 19192
+	 * offset 18168
 	 */
 	uint16_t vvtTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	deg
-	 * offset 19208
+	 * offset 18184
 	 */
-	float ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
+	scaled_channel<int16_t, 10, 1> ignitionTable[IGN_RPM_COUNT][IGN_LOAD_COUNT];
 	/**
 	Load
-	 * offset 20232
+	 * offset 18696
 	 */
 	uint16_t ignitionLoadBins[IGN_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 20264
+	 * offset 18728
 	 */
 	uint16_t ignitionRpmBins[IGN_RPM_COUNT];
 	/**
 	%
-	 * offset 20296
+	 * offset 18760
 	 */
-	float veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
+	scaled_channel<uint16_t, 10, 1> veTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
 	kPa
-	 * offset 21320
+	 * offset 19272
 	 */
 	uint16_t veLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 21352
+	 * offset 19304
 	 */
 	uint16_t veRpmBins[FUEL_RPM_COUNT];
 	/**
 	lambda
-	 * offset 21384
+	 * offset 19336
 	 */
 	scaled_channel<uint8_t, 147, 1> lambdaTable[FUEL_RPM_COUNT][FUEL_LOAD_COUNT];
 	/**
-	 * offset 21640
+	 * offset 19592
 	 */
 	uint16_t lambdaLoadBins[FUEL_LOAD_COUNT];
 	/**
 	RPM
-	 * offset 21672
+	 * offset 19624
 	 */
 	uint16_t lambdaRpmBins[FUEL_RPM_COUNT];
 	/**
 	value
-	 * offset 21704
+	 * offset 19656
 	 */
 	float tpsTpsAccelTable[TPS_TPS_ACCEL_TABLE][TPS_TPS_ACCEL_TABLE];
 	/**
 	from
-	 * offset 21960
+	 * offset 19912
 	 */
 	float tpsTpsAccelFromRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	to
-	 * offset 21992
+	 * offset 19944
 	 */
 	float tpsTpsAccelToRpmBins[TPS_TPS_ACCEL_TABLE];
 	/**
 	value
-	 * offset 22024
+	 * offset 19976
 	 */
 	float scriptTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22280
+	 * offset 20232
 	 */
 	uint16_t scriptTable1LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 22296
+	 * offset 20248
 	 */
 	uint16_t scriptTable1RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22312
+	 * offset 20264
 	 */
 	uint8_t scriptTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22376
+	 * offset 20328
 	 */
 	uint16_t scriptTable2LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 22392
+	 * offset 20344
 	 */
 	uint16_t scriptTable2RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22408
+	 * offset 20360
 	 */
 	uint8_t scriptTable3[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22472
+	 * offset 20424
 	 */
 	uint16_t scriptTable3LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 22488
+	 * offset 20440
 	 */
 	uint16_t scriptTable3RpmBins[SCRIPT_TABLE_8];
 	/**
 	value
-	 * offset 22504
+	 * offset 20456
 	 */
 	uint8_t scriptTable4[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
 	/**
 	L
-	 * offset 22568
+	 * offset 20520
 	 */
 	uint16_t scriptTable4LoadBins[SCRIPT_TABLE_8];
 	/**
 	RPM
-	 * offset 22584
+	 * offset 20536
 	 */
 	uint16_t scriptTable4RpmBins[SCRIPT_TABLE_8];
 	/**
-	 * offset 22600
+	 * offset 20552
 	 */
 	uint16_t ignTrimLoadBins[TRIM_SIZE];
 	/**
 	rpm
-	 * offset 22608
+	 * offset 20560
 	 */
 	uint16_t ignTrimRpmBins[TRIM_SIZE];
 	/**
-	 * offset 22616
+	 * offset 20568
 	 */
 	cyl_trim_s ignTrims[12];
 	/**
-	 * offset 22808
+	 * offset 20760
 	 */
 	uint16_t fuelTrimLoadBins[TRIM_SIZE];
 	/**
 	rpm
-	 * offset 22816
+	 * offset 20768
 	 */
 	uint16_t fuelTrimRpmBins[TRIM_SIZE];
 	/**
-	 * offset 22824
+	 * offset 20776
 	 */
 	cyl_trim_s fuelTrims[12];
-	/** total size 23016*/
+	/** total size 20968*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Tue Dec 21 03:02:46 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Sat Dec 25 04:39:39 UTC 2021

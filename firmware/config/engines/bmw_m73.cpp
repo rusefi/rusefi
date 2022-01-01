@@ -112,7 +112,7 @@ void m73engine() {
 	engineConfiguration->ignitionMode = IM_TWO_COILS;
 
 	// set cranking_fuel x
-	engineConfiguration->cranking.baseFuel = 40;
+	engineConfiguration->cranking.baseFuel = 27;
 
 	engineConfiguration->crankingTimingAngle = 15;
 	setTable(config->veTable, 45);

@@ -106,15 +106,17 @@ float HpfpQuantity::calcPI(int rpm, float calc_fuel_percent) {
 	return p_control_percent + i_control_percent;
 }
 
-angle_t HpfpQuantity::pumpAngleFuel(int rpm) {
+angle_t HpfpQuantity::pumpAngleFuel(int rpm, HpfpController *model) {
 	// Math based on fuel requested
-	float fuel_requested_percent = calcFuelPercent(rpm);
+	model->fuel_requested_percent = calcFuelPercent(rpm);
 
+	model->fuel_requested_percent_pi = calcPI(rpm, model->fuel_requested_percent);
 	// Apply PI control
-	fuel_requested_percent += calcPI(rpm, fuel_requested_percent);
+	float fuel_requested_percentTotal = model->fuel_requested_percent + model->fuel_requested_percent_pi;
+
 
 	// Convert to degrees
-	return interpolate2d(fuel_requested_percent,
+	return interpolate2d(fuel_requested_percentTotal,
 			     engineConfiguration->hpfpLobeProfileQuantityBins,
 			     engineConfiguration->hpfpLobeProfileAngle);
 }
@@ -141,13 +143,14 @@ void HpfpController::onFastCallback() {
 
 		// We set deadtime first, then pump, in case pump used to be 0.  Pump is what
 		// determines whether we do anything or not.
-		m_requested_pump = m_quantity.pumpAngleFuel(rpm);
+		m_requested_pump = m_quantity.pumpAngleFuel(rpm, this);
 
 		if (!m_running) {
 			m_running = true;
 			scheduleNextCycle();
 		}
 	}
+	engine->outputChannels.m_requested_pump = m_requested_pump;
 }
 
 void HpfpController::pinTurnOn(HpfpController *self) {

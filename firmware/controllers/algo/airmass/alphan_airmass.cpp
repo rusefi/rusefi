@@ -14,7 +14,7 @@ AirmassResult AlphaNAirmass::getAirmass(int rpm) {
 	float ve = getVe(rpm, tps.Value);
 
 	// TODO: should this be barometric pressure and/or temperature compensated?
-	float airmass = getAirmassImpl(
+	mass_t airmass = getAirmassImpl(
 		ve,
 		101.325f,		// std atmosphere pressure
 		273.0f + 20.0f	// std atmosphere pressure
