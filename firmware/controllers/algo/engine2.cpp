@@ -175,7 +175,7 @@ void EngineState::periodicFastCallback() {
 		// Apply both per-bank and per-cylinder trims
 		engine->injectionMass[i] = injectionMass * bankTrim * cylinderTrim;
 
-		timingAdvance[i] = advance;
+		timingAdvance[i] = advance + getCylinderIgnitionTrim(i, rpm, ignitionLoad);
 	}
 
 	// TODO: calculate me from a table!

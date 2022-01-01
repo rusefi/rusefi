@@ -1341,6 +1341,21 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = ignitionTableTbl,			"Ignition advance", 0, {isIgnitionEnabled}
+
+		groupMenu = "Cylinder ign trims"
+		groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
+		groupChildMenu = ignTrimTbl2,		"Ignition trim cyl 2"
+		groupChildMenu = ignTrimTbl3,		"Ignition trim cyl 3"
+		groupChildMenu = ignTrimTbl4,		"Ignition trim cyl 4"
+		groupChildMenu = ignTrimTbl5,		"Ignition trim cyl 5"
+		groupChildMenu = ignTrimTbl6,		"Ignition trim cyl 6"
+		groupChildMenu = ignTrimTbl7,		"Ignition trim cyl 7"
+		groupChildMenu = ignTrimTbl8,		"Ignition trim cyl 8"
+		groupChildMenu = ignTrimTbl9,		"Ignition trim cyl 9"
+		groupChildMenu = ignTrimTbl10,		"Ignition trim cyl 10"
+		groupChildMenu = ignTrimTbl11,		"Ignition trim cyl 11"
+		groupChildMenu = ignTrimTbl12,		"Ignition trim cyl 12"
+
 		subMenu = std_separator
 
 		# corrections
@@ -1514,20 +1529,6 @@ menuDialog = main
 #		subMenu = std_separator
 #		subMenu = antiLag,        			"Antilag Setup"
 #		subMenu = std_separator
-
-		groupMenu = "Cylinder ign trims"
-		groupChildMenu = ignTrimTbl1,		"Ignition trim cyl 1"
-		groupChildMenu = ignTrimTbl2,		"Ignition trim cyl 2"
-		groupChildMenu = ignTrimTbl3,		"Ignition trim cyl 3"
-		groupChildMenu = ignTrimTbl4,		"Ignition trim cyl 4"
-		groupChildMenu = ignTrimTbl5,		"Ignition trim cyl 5"
-		groupChildMenu = ignTrimTbl6,		"Ignition trim cyl 6"
-		groupChildMenu = ignTrimTbl7,		"Ignition trim cyl 7"
-		groupChildMenu = ignTrimTbl8,		"Ignition trim cyl 8"
-		groupChildMenu = ignTrimTbl9,		"Ignition trim cyl 9"
-		groupChildMenu = ignTrimTbl10,		"Ignition trim cyl 10"
-		groupChildMenu = ignTrimTbl11,		"Ignition trim cyl 11"
-		groupChildMenu = ignTrimTbl12,		"Ignition trim cyl 12"
 
       menu = "Help"
          subMenu = helpGeneral,     "rusEFI Info"
