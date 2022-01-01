@@ -29,6 +29,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Added
  - Per-cylinder fuel trim tables
+ - Per-cylinder ignition timing trim tables
 
 ## December 2021 Release - "Cookie Exchange"
 
@@ -37,7 +38,6 @@ All notable user-facing or behavior-altering changes will be documented in this 
  - Improved priming logic. Now includes a table of priming fuel mass vs. engine temperature, in addition to a delay before priming to allow fuel pressure to build. #3674
  - ISO-TP connector in firmware & ISO-TP to TCP/IP bridge in rusEFI console #3667
  - Lua: mcu_stop method for stm32 F4 and F7
- - Per-cylinder ignition timing trim tables
 
 ### Fixed
  - Faster engine sync + startup on engines with crank-speed primary trigger
