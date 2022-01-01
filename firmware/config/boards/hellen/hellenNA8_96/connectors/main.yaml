@@ -29,7 +29,7 @@ pins:
     type: ls
       
   - pin: 1G
-   id: GPIOG_11
+    id: GPIOG_11
     class: outputs
     ts_name: 1G - AC Relay
     function: A/C Relay
