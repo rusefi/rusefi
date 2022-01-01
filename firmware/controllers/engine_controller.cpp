@@ -643,6 +643,13 @@ bool validateConfig() {
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
 
+	if (engineConfiguration->hpfpCamLobes > 0) {
+		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
+		ensureArrayIsAscending("HPFP lobe profile", engineConfiguration->hpfpLobeProfileQuantityBins);
+		ensureArrayIsAscending("HPFP target rpm", engineConfiguration->hpfpTargetRpmBins);
+		ensureArrayIsAscending("HPFP target load", engineConfiguration->hpfpTargetLoadBins);
+	}
+
 	// VVT
 	if (engineConfiguration->camInputs[0] != GPIO_UNASSIGNED) {
 		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
