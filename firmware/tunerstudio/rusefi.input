@@ -965,7 +965,11 @@ TEMPLOG_MAP_AT_DIFFGauge = TEMPLOG_MAP_AT_DIFF,"TEMPLOG_MAP_AT_DIFF", "", -10000
 TEMPLOG_MAP_AT_CYCLE_COUNTGauge = TEMPLOG_MAP_AT_CYCLE_COUNT,"TEMPLOG_MAP_AT_CYCLE_COUNT", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 
 gaugeCategory = GDI
-m_requested_pumpGauge = m_requested_pump,"Pump Angle", "deg", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+m_requested_pumpGauge = m_requested_pump,"DI: Pump Angle", "deg", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+fuel_requested_percentGauge = fuel_requested_percent,"DI: fuel_requested_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+fuel_requested_percent_piGauge = fuel_requested_percent_pi,"DI: fuel_requested_percent_pi", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+m_I_sum_percentGauge = m_I_sum_percent,"DI: m_I_sum_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
+m_pressureTarget_kPaGauge = m_pressureTarget_kPa,"DI: m_pressureTarget_kPa", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
    highFuelPressureGauge = highFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_HIGH@@, @@GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS@@, 0, 200, 0, 0, 200, 200, 1, 0
 
 gaugeCategory = Sensors - Extra 2

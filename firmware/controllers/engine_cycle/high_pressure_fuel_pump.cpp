@@ -151,6 +151,10 @@ void HpfpController::onFastCallback() {
 		}
 	}
 	engine->outputChannels.m_requested_pump = m_requested_pump;
+	engine->outputChannels.fuel_requested_percent = fuel_requested_percent;
+	engine->outputChannels.fuel_requested_percent_pi = fuel_requested_percent_pi;
+	engine->outputChannels.m_I_sum_percent = m_quantity.m_I_sum_percent;
+	engine->outputChannels.m_pressureTarget_kPa = m_quantity.m_pressureTarget_kPa;
 }
 
 void HpfpController::pinTurnOn(HpfpController *self) {

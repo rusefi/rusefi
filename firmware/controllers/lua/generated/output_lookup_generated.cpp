@@ -314,6 +314,14 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.accPedalSplit;
 	if (strEqualCaseInsensitive(name, "m_requested_pump"))
 		return engine->outputChannels.m_requested_pump;
+	if (strEqualCaseInsensitive(name, "fuel_requested_percent"))
+		return engine->outputChannels.fuel_requested_percent;
+	if (strEqualCaseInsensitive(name, "fuel_requested_percent_pi"))
+		return engine->outputChannels.fuel_requested_percent_pi;
+	if (strEqualCaseInsensitive(name, "m_I_sum_percent"))
+		return engine->outputChannels.m_I_sum_percent;
+	if (strEqualCaseInsensitive(name, "m_pressureTarget_kPa"))
+		return engine->outputChannels.m_pressureTarget_kPa;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
