@@ -178,3 +178,25 @@ TEST(FuelMath, deadtime) {
 	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 20 + 2,  engine->injectionDuration);
 }
+
+TEST(FuelMath, CylinderFuelTrim) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+		.WillRepeatedly(Return(AirmassResult{1, 50.0f}));
+
+	setTable(config->fuelTrims[0].table, -4);
+	setTable(config->fuelTrims[1].table, -2);
+	setTable(config->fuelTrims[2].table,  2);
+	setTable(config->fuelTrims[3].table,  4);
+
+	// run the fuel math
+	engine->periodicFastCallback();
+
+	// Check that each cylinder gets the expected amount of fuel
+	float unadjusted = 0.072142f;
+	EXPECT_NEAR(engine->injectionMass[0], unadjusted * 0.96, EPS4D);
+	EXPECT_NEAR(engine->injectionMass[1], unadjusted * 0.98, EPS4D);
+	EXPECT_NEAR(engine->injectionMass[2], unadjusted * 1.02, EPS4D);
+	EXPECT_NEAR(engine->injectionMass[3], unadjusted * 1.04, EPS4D);
+}
