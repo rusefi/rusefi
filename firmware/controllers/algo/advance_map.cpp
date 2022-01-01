@@ -168,6 +168,14 @@ angle_t getAdvance(int rpm, float engineLoad) {
 #endif
 }
 
+angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLoad) {
+	return interpolate3d(
+		config->ignTrims[cylinderNumber].table,
+		config->ignTrimLoadBins, ignitionLoad,
+		config->ignTrimRpmBins, rpm
+	);
+}
+
 size_t getMultiSparkCount(int rpm) {
 	// Compute multispark (if enabled)
 	if (engineConfiguration->multisparkEnable

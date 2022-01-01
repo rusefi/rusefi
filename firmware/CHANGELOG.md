@@ -29,6 +29,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Added
  - Per-cylinder fuel trim tables
+ - Per-cylinder ignition timing trim tables
 
 ## December 2021 Release - "Cookie Exchange"
 
