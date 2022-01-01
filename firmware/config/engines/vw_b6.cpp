@@ -157,12 +157,14 @@ void setVwPassatB6() {
 	setBoschVAGETB();
 
 
-	engineConfiguration->injector.flow = 300;
+	// https://rusefi.com/forum/viewtopic.php?p=38235#p38235
+	engineConfiguration->injector.flow = 1200;
 
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->useETBforIdleControl = true;
+	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 #endif /* BOARD_TLE8888_COUNT */
 }
