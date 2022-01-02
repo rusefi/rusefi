@@ -300,7 +300,7 @@ typedef enum {
 	DBG_DWELL_METRIC = 33,
 	DBG_34 = 34,
 	DBG_35 = 35,
-	DBG_BOOST = 36,
+	DBG_36 = 36,
 	DBG_37 = 37,
 	DBG_38 = 38,
 	DBG_ETB_AUTOTUNE = 39,
