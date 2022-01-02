@@ -2,4 +2,5 @@ struct_no_prefix fuel_pump_control_s
 	bit isPrime
 	bit engineTurnedRecently
 	bit isPumpOn
+	bit ignitionOn
 end_struct

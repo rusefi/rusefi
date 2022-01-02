@@ -15,7 +15,9 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -30,13 +32,14 @@ public class CodeWalkthrough {
     private static final Color BROKEN_CODE = Color.orange;
 
     static {
-        log.configureDebugEnabled(true);
+        log.configureDebugEnabled(false);
     }
 
     private static final String CONFIG_MAGIC_PREFIX = "engineConfiguration";
 
     public static ParseResult applyVariables(VariableValueSource valueSource, String sourceCode, SourceCodePainter painter, ParseTree tree) {
         Stack<BranchingState> currentState = new Stack<>();
+        java.util.List<String> brokenConditions = new ArrayList<>();
 
         java.util.List<TerminalNode> allTerminals = new java.util.ArrayList<>();
 
@@ -105,6 +108,7 @@ public class CodeWalkthrough {
                     log.debug("CURRENT STATE ADD " + state);
                 currentState.add(branchingState);
                 if (branchingState == BranchingState.BROKEN) {
+                    brokenConditions.add(conditionVariable);
                     painter.paintBackground(BROKEN_CODE, new Range(ctx));
                 } else if (branchingState == BranchingState.TRUE) {
                     painter.paintBackground(Color.GREEN, new Range(ctx));
@@ -157,7 +161,7 @@ public class CodeWalkthrough {
                 configTokens.add(token);
             }
         }
-        return new ParseResult(configTokens);
+        return new ParseResult(configTokens, brokenConditions);
     }
 
     private static void resetState(Stack<BranchingState> currentState) {
