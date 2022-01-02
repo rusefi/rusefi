@@ -17,14 +17,11 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Stack;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static com.devexperts.logging.Logging.getLogging;
 
 public class CodeWalkthrough {
     private static final Logging log = getLogging(CodeWalkthrough.class);
-    // inactive statements within inactive branch of code - light red
-    public static final Color INACTIVE_BRANCH = new Color(255, 102, 102);
     // active statements - light green
     public static final Color ACTIVE_STATEMENT = new Color(102, 255, 102);
     // cost past active return statement
@@ -98,18 +95,22 @@ public class CodeWalkthrough {
                 if (log.debugEnabled())
                     log.debug("CONDITIONAL: REQUESTING VALUE " + conditionVariable);
 
-                Boolean state = (Boolean) valueSource.getValue(conditionVariable);
-                BranchingState branchingState = BranchingState.valueOf(state);
-                if (log.debugEnabled())
-                    log.debug("CURRENT STATE ADD " + state);
-                currentState.add(branchingState);
-                if (branchingState == BranchingState.BROKEN) {
-                    brokenConditions.add(conditionVariable);
-                    painter.paintBackground(BROKEN_CODE, new Range(ctx));
-                } else if (branchingState == BranchingState.TRUE) {
-                    painter.paintBackground(TRUE_CONDITION, new Range(ctx));
+                if (currentState.isEmpty()) {
+                    painter.paintBackground(PASSIVE_CODE, new Range(ctx));
                 } else {
-                    painter.paintBackground(FALSE_CONDITION, new Range(ctx));
+                    Boolean state = (Boolean) valueSource.getValue(conditionVariable);
+                    BranchingState branchingState = BranchingState.valueOf(state);
+                    if (log.debugEnabled())
+                        log.debug("CURRENT STATE ADD " + state);
+                    currentState.add(branchingState);
+                    if (branchingState == BranchingState.BROKEN) {
+                        brokenConditions.add(conditionVariable);
+                        painter.paintBackground(BROKEN_CODE, new Range(ctx));
+                    } else if (branchingState == BranchingState.TRUE) {
+                        painter.paintBackground(TRUE_CONDITION, new Range(ctx));
+                    } else {
+                        painter.paintBackground(FALSE_CONDITION, new Range(ctx));
+                    }
                 }
             }
 
@@ -135,7 +136,7 @@ public class CodeWalkthrough {
                     if (isAlive == BranchingState.BROKEN) {
                         color = BROKEN_CODE;
                     } else {
-                        color = isAlive == BranchingState.TRUE ? ACTIVE_STATEMENT : INACTIVE_BRANCH;
+                        color = isAlive == BranchingState.TRUE ? ACTIVE_STATEMENT : PASSIVE_CODE;
                     }
                 }
                 Range range = new Range(ctx);

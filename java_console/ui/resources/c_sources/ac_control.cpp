@@ -26,6 +26,10 @@ bool AcController::getAcState() {
 		return false;
 	}
 
+	if (engineTooFast) {
+	    invokeMethodRed();
+		return false;
+	}
 
 	auto clt = Sensor::get(SensorType::Clt);
 
