@@ -112,7 +112,7 @@ public class LiveDataParserPanel {
         StringBuilder result = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(cpp))) {
             while ((line = br.readLine()) != null) {
-                result.append(line + "\n");
+                result.append(line).append("\n");
             }
         }
         return result.toString();
@@ -149,13 +149,13 @@ public class LiveDataParserPanel {
             @Override
             public void paintBackground(Color color, Range range) {
                 AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
+                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
             }
 
             @Override
             public void paintForeground(Color color, Range range) {
                 AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Foreground, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
+                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
             }
         }, tree);
     }
