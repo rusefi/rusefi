@@ -1,6 +1,5 @@
 package com.rusefi.ui;
 
-import com.opensr5.Logger;
 import com.rusefi.core.Sensor;
 import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.livedata.LiveDataView;
@@ -15,31 +14,41 @@ import java.awt.event.ActionListener;
 
 
 /**
- * todo: it was a nice prototype of jlatexmath usage but it's time to remove it soon!
- * Lua nad live_data_e seems much more promising at the moment
- *
  * Andrey Belomutskiy, (c) 2013-2020
  */
-public class FormulasPane {
+public class LiveDataPane {
     /**
      * this is the panel we expose to the outside world
      */
     private final JPanel content = new JPanel(new BorderLayout());
-    private final JPanel formulaProxy = new JPanel(new BorderLayout());
     private boolean isPaused;
 
-    public FormulasPane(UIContext uiContext) {
+    public LiveDataPane(UIContext uiContext) {
+
 
         JPanel vertical = new JPanel(new VerticalFlowLayout());
-        for (LiveDataView view : LiveDataView.values())
-            vertical.add(LiveDataParserPanel.createLiveDataParserContent(uiContext, view));
-        vertical.add(formulaProxy);
-
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        JPanel leftList = new JPanel(new VerticalFlowLayout());
+        for (LiveDataView view : LiveDataView.values()) {
+            JPanel liveDataParserContent = LiveDataParserPanel.createLiveDataParserContent(uiContext, view);
+
+            JButton shortCut = new JButton(view.getFileName());
+            shortCut.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    scroll.getVerticalScrollBar().setValue(liveDataParserContent.getLocation().y);
+                }
+            });
+            leftList.add(shortCut);
+
+            vertical.add(liveDataParserContent);
+        }
+
+        content.add(leftList, BorderLayout.WEST);
         content.add(scroll, BorderLayout.CENTER);
 
-        formulaProxy.add(new JLabel("Waiting for data..."), BorderLayout.CENTER);
-
+/*
         JButton saveImage = UiUtils.createSaveImageButton();
         saveImage.addActionListener(new ActionListener() {
             @Override
@@ -49,6 +58,7 @@ public class FormulasPane {
                 UiUtils.saveImageWithPrompt(fileName, formulaProxy, formulaProxy);
             }
         });
+*/
 
         final JButton pauseButton = UiUtils.createPauseButton();
         pauseButton.addActionListener(new ActionListener() {
@@ -59,8 +69,7 @@ public class FormulasPane {
             }
         });
         JPanel topButtonsPanel = new JPanel(new FlowLayout());
-        topButtonsPanel.add(saveImage);
-        topButtonsPanel.add(pauseButton);
+// todo: implement this        topButtonsPanel.add(pauseButton);
         content.add(topButtonsPanel, BorderLayout.NORTH);
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
