@@ -27,6 +27,7 @@ public class CodeWalkthrough {
     public static final Color ACTIVE_STATEMENT = new Color(102, 255, 102);
     // cost past active return statement
     public static final Color PASSIVE_CODE = Color.lightGray;
+    private static final Color BROKEN_CODE = Color.orange;
 
     static {
         log.configureDebugEnabled(true);
@@ -35,7 +36,7 @@ public class CodeWalkthrough {
     private static final String CONFIG_MAGIC_PREFIX = "engineConfiguration";
 
     public static ParseResult applyVariables(VariableValueSource valueSource, String sourceCode, SourceCodePainter painter, ParseTree tree) {
-        Stack<Boolean> currentState = new Stack<>();
+        Stack<BranchingState> currentState = new Stack<>();
 
         java.util.List<TerminalNode> allTerminals = new java.util.ArrayList<>();
 
@@ -64,7 +65,7 @@ public class CodeWalkthrough {
                 colorStatement(ctx, painter);
                 if ("return".equalsIgnoreCase(ctx.getStart().getText()) &&
                         !currentState.isEmpty() &&
-                        getOverallState(currentState)) {
+                        getOverallState(currentState) == BranchingState.TRUE) {
                     // we have experienced 'return' in 'green' active flow looks like end of execution for this method?
                     currentState.clear();
                 }
@@ -86,8 +87,8 @@ public class CodeWalkthrough {
                     if (currentState.isEmpty())
                         return;
 
-                    Boolean onTop = currentState.pop();
-                    currentState.add(!onTop);
+                    BranchingState onTop = currentState.pop();
+                    currentState.add(onTop.flip());
                 }
 
             }
@@ -99,14 +100,13 @@ public class CodeWalkthrough {
 //                System.out.println("exp " + getOrigin(ctx.expression(), s));
 
                 Boolean state = (Boolean) valueSource.getValue(conditionVariable);
-                if (state == null) {
-                    // todo: fail on unknown condition variables
-                    return;
-                }
+                BranchingState branchingState = BranchingState.valueOf(state);
                 if (log.debugEnabled())
                     log.debug("CURRENT STATE ADD " + state);
-                currentState.add(state);
-                if (state) {
+                currentState.add(branchingState);
+                if (branchingState == BranchingState.BROKEN) {
+                    painter.paintBackground(BROKEN_CODE, new Range(ctx));
+                } else if (branchingState == BranchingState.TRUE) {
                     painter.paintBackground(Color.GREEN, new Range(ctx));
                 } else {
                     painter.paintBackground(Color.RED, new Range(ctx));
@@ -118,7 +118,9 @@ public class CodeWalkthrough {
                 super.exitSelectionStatement(ctx);
                 if (currentState.isEmpty())
                     return; // we are here if some conditional variables were not resolved
-                currentState.pop();
+                BranchingState onTop = currentState.pop();
+                if (onTop == BranchingState.BROKEN)
+                    currentState.push(BranchingState.BROKEN);
                 if (log.debugEnabled())
                     log.debug("CONDITIONAL: EXIT");
             }
@@ -129,8 +131,12 @@ public class CodeWalkthrough {
                 if (currentState.isEmpty()) {
                     color = PASSIVE_CODE; // we are past return or past error
                 } else {
-                    boolean isAlive = getOverallState(currentState);
-                    color = isAlive ? ACTIVE_STATEMENT : INACTIVE_BRANCH;
+                    BranchingState isAlive = getOverallState(currentState);
+                    if (isAlive == BranchingState.BROKEN) {
+                        color = BROKEN_CODE;
+                    } else {
+                        color = isAlive == BranchingState.TRUE ? ACTIVE_STATEMENT : INACTIVE_BRANCH;
+                    }
                 }
                 Range range = new Range(ctx);
                 if (log.debugEnabled())
@@ -154,22 +160,50 @@ public class CodeWalkthrough {
         return new ParseResult(configTokens);
     }
 
-    private static void resetState(Stack<Boolean> currentState) {
+    private static void resetState(Stack<BranchingState> currentState) {
         currentState.clear();
-        currentState.add(Boolean.TRUE);
+        currentState.add(BranchingState.TRUE);
     }
 
-    private static boolean getOverallState(Stack<Boolean> currentState) {
-        for (boolean value : currentState) {
-            if (!value)
-                return false;
+    private static BranchingState getOverallState(Stack<BranchingState> currentState) {
+        for (BranchingState value : currentState) {
+            if (value == BranchingState.BROKEN)
+                return BranchingState.BROKEN;
         }
-        return true;
+        for (BranchingState value : currentState) {
+            if (value == BranchingState.FALSE)
+                return BranchingState.FALSE;
+        }
+        return BranchingState.TRUE;
     }
 
     @NotNull
     private static String getOrigin(ParserRuleContext ctx, String s) {
         Range range = new Range(ctx);
         return s.substring(range.getStart(), range.getStop());
+    }
+
+    private enum BranchingState {
+        TRUE,
+        FALSE,
+        BROKEN;
+
+        public static BranchingState valueOf(Boolean state) {
+            if (state == null)
+                return BROKEN;
+            return state ? TRUE : FALSE;
+        }
+
+        public BranchingState flip() {
+            switch (this) {
+                case TRUE:
+                    return FALSE;
+                case FALSE:
+                    return TRUE;
+                case BROKEN:
+                default:
+                    return BROKEN;
+            }
+        }
     }
 }
