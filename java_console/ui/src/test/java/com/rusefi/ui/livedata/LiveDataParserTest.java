@@ -22,6 +22,24 @@ import static org.mockito.Mockito.*;
 
 public class LiveDataParserTest {
     @Test
+    public void testGreenCode() {
+        String sourceCode = "void AcController::onSlowCallback() {\n" +
+                "\tbool isEnabled = getAcState();\n" +
+                "\n" +
+                "\tm_acEnabled = isEnabled;\n" +
+                "\n" +
+                "\tenginePins.acRelay.setValue(isEnabled);\n" +
+                "\n" +
+                "#if EFI_TUNER_STUDIO\n" +
+                "\tengine->outputChannels.acState = isEnabled;\n" +
+                "#endif // EFI_TUNER_STUDIO\n" +
+                "}\n";
+
+        SourceCodePainter painter = run(name -> null, sourceCode);
+        verify(painter, times(4)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
+    }
+
+    @Test
     public void testParsing() {
         Map<String, Object> values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         values.put("engineTooSlow", Boolean.TRUE);
@@ -48,16 +66,8 @@ public class LiveDataParserTest {
                 "return ff;\n" +
                 "}\n";
 
-        SourceCodePainter painter = mock(SourceCodePainter.class);
-        ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
+        SourceCodePainter painter = run(valueSource, sourceCode);
 
-        System.out.println("******************************************* Just print everything for educational purposes");
-        new ParseTreeWalker().walk(new PrintCPP14ParserListener(), tree);
-
-        System.out.println("******************************************* Now running FOR REAL");
-
-
-        CodeWalkthrough.applyVariables(valueSource, sourceCode, painter, tree);
         verify(painter, times(2)).paintForeground(eq(Color.blue), any());
 
         verify(painter).paintBackground(eq(Color.red), any());
@@ -67,6 +77,17 @@ public class LiveDataParserTest {
         verify(painter, times(1)).paintBackground(eq(CodeWalkthrough.INACTIVE_BRANCH), any());
 
         verify(painter, times(3)).paintBackground(eq(CodeWalkthrough.PASSIVE_CODE), any());
+    }
+
+    private SourceCodePainter run(VariableValueSource valueSource, String sourceCode) {
+        SourceCodePainter painter = mock(SourceCodePainter.class);
+        ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
+
+        System.out.println("******************************************* Just print everything for educational purposes");
+        new ParseTreeWalker().walk(new PrintCPP14ParserListener(), tree);
+        System.out.println("******************************************* Now running FOR REAL");
+        CodeWalkthrough.applyVariables(valueSource, sourceCode, painter, tree);
+        return painter;
     }
 
     @Test

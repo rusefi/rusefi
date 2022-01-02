@@ -53,6 +53,12 @@ public class CodeWalkthrough {
             }
 
             @Override
+            public void enterExpressionStatement(CPP14Parser.ExpressionStatementContext ctx) {
+                super.enterExpressionStatement(ctx);
+                colorStatement(ctx, painter);
+            }
+
+            @Override
             public void enterJumpStatement(CPP14Parser.JumpStatementContext ctx) {
                 super.enterJumpStatement(ctx);
                 colorStatement(ctx, painter);
@@ -126,7 +132,10 @@ public class CodeWalkthrough {
                     boolean isAlive = getOverallState(currentState);
                     color = isAlive ? ACTIVE_STATEMENT : INACTIVE_BRANCH;
                 }
-                painter.paintBackground(color, new Range(ctx));
+                Range range = new Range(ctx);
+                if (log.debugEnabled())
+                    log.info(color + " for " + sourceCode.substring(range.getStart(), range.getStop()));
+                painter.paintBackground(color, range);
             }
         }, tree);
 

@@ -601,7 +601,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void enterLabeledStatement(CPP14Parser.LabeledStatementContext ctx) {
-        printWithCounter("enterLabeledStatement");
+        printWithCounter("enterLabeledStatement " + ctx.getText());
 
     }
 
@@ -613,8 +613,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void enterExpressionStatement(CPP14Parser.ExpressionStatementContext ctx) {
-        printWithCounter("enterExpressionStatement");
-
+        printWithCounter("enterExpressionStatement " + ctx.getText());
     }
 
     @Override
@@ -650,7 +649,6 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
     @Override
     public void enterSelectionStatement(CPP14Parser.SelectionStatementContext ctx) {
         printWithCounter("CONDITIONAL enterSelectionStatement " + ctx.getText() + " statements" + ctx.statement());
-
     }
 
     @Override
@@ -672,26 +670,22 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void enterIterationStatement(CPP14Parser.IterationStatementContext ctx) {
-        printWithCounter("enterIterationStatement");
-
+        printWithCounter("enterIterationStatement " + ctx.getText());
     }
 
     @Override
     public void exitIterationStatement(CPP14Parser.IterationStatementContext ctx) {
         printWithCounter("exitIterationStatement");
-
     }
 
     @Override
     public void enterForInitStatement(CPP14Parser.ForInitStatementContext ctx) {
         printWithCounter("enterForInitStatement");
-
     }
 
     @Override
     public void exitForInitStatement(CPP14Parser.ForInitStatementContext ctx) {
         printWithCounter("exitForInitStatement");
-
     }
 
     @Override
@@ -732,7 +726,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void enterDeclarationStatement(CPP14Parser.DeclarationStatementContext ctx) {
-        printWithCounter("enterDeclarationStatement");
+        printWithCounter("enterDeclarationStatement " + ctx.getText());
 
     }
 
@@ -756,7 +750,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void enterDeclaration(CPP14Parser.DeclarationContext ctx) {
-        printWithCounter("enterDeclaration");
+        printWithCounter("enterDeclaration " + ctx);
 
     }
 
