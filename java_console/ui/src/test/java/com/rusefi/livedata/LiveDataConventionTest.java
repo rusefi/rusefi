@@ -29,7 +29,7 @@ public class LiveDataConventionTest {
                 return null;
             }
             System.out.println("getValue");
-            return true;
+            return new VariableValueSource.VariableState(null, 0);
         };
 
 

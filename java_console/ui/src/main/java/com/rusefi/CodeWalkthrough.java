@@ -29,6 +29,7 @@ public class CodeWalkthrough {
     public static final Color BROKEN_CODE = Color.orange;
     public static final Color TRUE_CONDITION = Color.GREEN;
     public static final Color FALSE_CONDITION = Color.RED;
+    public static final Color CONFIG = Color.BLUE;
 
     static {
         log.configureDebugEnabled(false);
@@ -76,7 +77,11 @@ public class CodeWalkthrough {
             @Override
             public void visitTerminal(TerminalNode node) {
                 allTerminals.add(node);
-                if ("else".equalsIgnoreCase(node.getSymbol().getText())) {
+
+                String text = node.getSymbol().getText();
+                valueSource.getValue(text);
+
+                if ("else".equalsIgnoreCase(text)) {
                     if (log.debugEnabled())
                         log.debug("CONDITIONAL ELSE terminal, flipping condition");
 
@@ -98,8 +103,14 @@ public class CodeWalkthrough {
                 if (currentState.isEmpty()) {
                     painter.paintBackground(PASSIVE_CODE, new Range(ctx));
                 } else {
-                    Boolean state = (Boolean) valueSource.getValue(conditionVariable);
-                    BranchingState branchingState = BranchingState.valueOf(state);
+                    VariableValueSource.VariableState state = valueSource.getValue(conditionVariable);
+                    Boolean value;
+                    if (state == null) {
+                        value = null;
+                    } else {
+                        value = state.getValue() != 0;
+                    }
+                    BranchingState branchingState = BranchingState.valueOf(value);
                     if (log.debugEnabled())
                         log.debug("CURRENT STATE ADD " + state);
                     currentState.add(branchingState);
@@ -154,7 +165,7 @@ public class CodeWalkthrough {
                     allTerminals.get(i + 1).getText().equals("->")
             ) {
                 Token token = allTerminals.get(i + 2).getSymbol();
-                painter.paintForeground(Color.BLUE, new Range(token, token));
+                painter.paintForeground(CONFIG, new Range(token, token));
                 configTokens.add(token);
             }
         }
