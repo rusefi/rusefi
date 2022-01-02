@@ -1,10 +1,12 @@
 package com.rusefi.ui;
 
+import com.rusefi.CodeWalkthrough;
 import com.rusefi.core.Sensor;
 import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.livedata.LiveDataView;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
+import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -28,6 +30,8 @@ public class LiveDataPane {
 
         JPanel vertical = new JPanel(new VerticalFlowLayout());
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        JPanel legend = populateLegend();
+
 
         JPanel leftList = new JPanel(new VerticalFlowLayout());
         for (LiveDataView view : LiveDataView.values()) {
@@ -47,6 +51,7 @@ public class LiveDataPane {
 
         content.add(leftList, BorderLayout.WEST);
         content.add(scroll, BorderLayout.CENTER);
+        content.add(legend, BorderLayout.EAST);
 
 /*
         JButton saveImage = UiUtils.createSaveImageButton();
@@ -77,6 +82,27 @@ public class LiveDataPane {
         bottomPanel.add(new IntGaugeLabel("error", Sensor.lastErrorCode));
 
         content.add(bottomPanel, BorderLayout.SOUTH);
+    }
+
+    @NotNull
+    private JPanel populateLegend() {
+        JPanel legend = new JPanel(new VerticalFlowLayout());
+        legend.add(new JLabel("Legend:"));
+        legend.add(createLabel(CodeWalkthrough.TRUE_CONDITION, "'true' condition"));
+        legend.add(createLabel(CodeWalkthrough.FALSE_CONDITION, "'false' condition"));
+        legend.add(createLabel(CodeWalkthrough.INACTIVE_BRANCH, "inactive branch"));
+        legend.add(createLabel(CodeWalkthrough.ACTIVE_STATEMENT, "active branch"));
+        legend.add(createLabel(CodeWalkthrough.BROKEN_CODE, "No live data"));
+
+        return legend;
+    }
+
+    @NotNull
+    private JLabel createLabel(Color background, String text) {
+        JLabel label = new JLabel(text);
+        label.setOpaque(true);
+        label.setBackground(background);
+        return label;
     }
 
     public JPanel getContent() {

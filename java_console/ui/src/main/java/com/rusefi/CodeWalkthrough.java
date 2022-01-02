@@ -29,7 +29,9 @@ public class CodeWalkthrough {
     public static final Color ACTIVE_STATEMENT = new Color(102, 255, 102);
     // cost past active return statement
     public static final Color PASSIVE_CODE = Color.lightGray;
-    private static final Color BROKEN_CODE = Color.orange;
+    public static final Color BROKEN_CODE = Color.orange;
+    public static final Color TRUE_CONDITION = Color.GREEN;
+    public static final Color FALSE_CONDITION = Color.RED;
 
     static {
         log.configureDebugEnabled(false);
@@ -75,12 +77,6 @@ public class CodeWalkthrough {
             }
 
             @Override
-            public void enterStatement(CPP14Parser.StatementContext ctx) {
-                String origin = getOrigin(ctx, sourceCode);
-//                System.out.println("enter statement [" + origin + "]");
-            }
-
-            @Override
             public void visitTerminal(TerminalNode node) {
                 allTerminals.add(node);
                 if ("else".equalsIgnoreCase(node.getSymbol().getText())) {
@@ -99,8 +95,8 @@ public class CodeWalkthrough {
             @Override
             public void enterCondition(CPP14Parser.ConditionContext ctx) {
                 String conditionVariable = ctx.getText();
-                System.out.println("CONDITIONAL: REQUESTING VALUE " + conditionVariable);
-//                System.out.println("exp " + getOrigin(ctx.expression(), s));
+                if (log.debugEnabled())
+                    log.debug("CONDITIONAL: REQUESTING VALUE " + conditionVariable);
 
                 Boolean state = (Boolean) valueSource.getValue(conditionVariable);
                 BranchingState branchingState = BranchingState.valueOf(state);
@@ -111,9 +107,9 @@ public class CodeWalkthrough {
                     brokenConditions.add(conditionVariable);
                     painter.paintBackground(BROKEN_CODE, new Range(ctx));
                 } else if (branchingState == BranchingState.TRUE) {
-                    painter.paintBackground(Color.GREEN, new Range(ctx));
+                    painter.paintBackground(TRUE_CONDITION, new Range(ctx));
                 } else {
-                    painter.paintBackground(Color.RED, new Range(ctx));
+                    painter.paintBackground(FALSE_CONDITION, new Range(ctx));
                 }
             }
 
