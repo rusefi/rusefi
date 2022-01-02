@@ -14,6 +14,7 @@ bit isBelowDecelThreshold;
 bit isTimeToResetAccumulator
 bit isFractionalEnrichment
 bit belowEpsilon;
+bit tooShort;
 
 float fractionalInjFuel
 

@@ -31,10 +31,9 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 
 	int maxDeltaIndex = getMaxDeltaIndex();
 
-//	FuelSchedule *fs = engineConfiguration->injectionEvents;
-	percent_t tpsTo = cb.get(maxDeltaIndex);
-	percent_t tpsFrom = cb.get(maxDeltaIndex - 1);
-	percent_t deltaTps = tpsTo - tpsFrom;
+	tpsTo = cb.get(maxDeltaIndex);
+	tpsFrom = cb.get(maxDeltaIndex - 1);
+	deltaTps = tpsTo - tpsFrom;
 
 	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;
 	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
@@ -122,7 +121,8 @@ void TpsAccelEnrichment::onEngineCycleTps() {
 int TpsAccelEnrichment::getMaxDeltaIndex() {
 
 	int len = minI(cb.getSize(), cb.getCount());
-	if (len < 2)
+	tooShort = len < 2;
+	if (tooShort)
 		return 0;
 	int ci = cb.currentIndex - 1;
 	float maxValue = cb.get(ci) - cb.get(ci - 1);
