@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jan 02 01:53:59 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Sun Jan 02 07:18:33 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -618,6 +618,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_29 = 29;
 	public static final int debug_mode_e_DBG_34 = 34;
 	public static final int debug_mode_e_DBG_35 = 35;
+	public static final int debug_mode_e_DBG_36 = 36;
 	public static final int debug_mode_e_DBG_37 = 37;
 	public static final int debug_mode_e_DBG_38 = 38;
 	public static final int debug_mode_e_DBG_43 = 43;
@@ -626,7 +627,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS = 21;
 	public static final int debug_mode_e_DBG_ANALOG_INPUTS2 = 32;
 	public static final int debug_mode_e_DBG_BENCH_TEST = 19;
-	public static final int debug_mode_e_DBG_BOOST = 36;
 	public static final int debug_mode_e_DBG_CJ125 = 25;
 	public static final int debug_mode_e_DBG_COMPOSITE_LOG = 40;
 	public static final int debug_mode_e_DBG_DWELL_METRIC = 33;
@@ -2262,7 +2262,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.02.all.2608828986";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.02.all.3552814770";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
