@@ -28,9 +28,9 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	// nominal gap is 0.325
-	s->setTriggerSynchronizationGap2(0.1, 0.45);
+	s->setTriggerSynchronizationGap2(0.1, 0.5);
 	// nominal gap is ~1.52
-	s->setSecondTriggerSynchronizationGap2(0.65, 2.3);
+	s->setSecondTriggerSynchronizationGap2(0.6, 2.3);
 
 	s->useRiseEdge = false;
 
