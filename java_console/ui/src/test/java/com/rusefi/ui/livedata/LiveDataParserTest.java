@@ -74,9 +74,7 @@ public class LiveDataParserTest {
         verify(painter).paintBackground(eq(Color.green), any());
 
         verify(painter, times(4)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
-        verify(painter, times(1)).paintBackground(eq(CodeWalkthrough.INACTIVE_BRANCH), any());
-
-        verify(painter, times(3)).paintBackground(eq(CodeWalkthrough.PASSIVE_CODE), any());
+        verify(painter, times(4)).paintBackground(eq(CodeWalkthrough.PASSIVE_CODE), any());
     }
 
     private SourceCodePainter run(VariableValueSource valueSource, String sourceCode) {

@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
+ * @see LiveDataParserPanel
  */
 public class LiveDataPane {
     /**
@@ -90,7 +91,7 @@ public class LiveDataPane {
         legend.add(new JLabel("Legend:"));
         legend.add(createLabel(CodeWalkthrough.TRUE_CONDITION, "'true' condition"));
         legend.add(createLabel(CodeWalkthrough.FALSE_CONDITION, "'false' condition"));
-        legend.add(createLabel(CodeWalkthrough.INACTIVE_BRANCH, "inactive branch"));
+        legend.add(createLabel(CodeWalkthrough.PASSIVE_CODE, "inactive code"));
         legend.add(createLabel(CodeWalkthrough.ACTIVE_STATEMENT, "active branch"));
         legend.add(createLabel(CodeWalkthrough.BROKEN_CODE, "No live data"));
 

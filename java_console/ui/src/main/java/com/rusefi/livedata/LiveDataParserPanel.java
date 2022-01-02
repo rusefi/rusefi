@@ -34,7 +34,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 /**
  * this panel shows a live view of rusEFI firmware C/C++ code
- * @see LiveDataParserPanelSandbox
+ * @see LiveDataParserSandbox
  */
 public class LiveDataParserPanel {
     private static final Logging log = getLogging(LiveDataParserPanel.class);
