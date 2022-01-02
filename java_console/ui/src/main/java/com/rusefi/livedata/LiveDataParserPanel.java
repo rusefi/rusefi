@@ -73,12 +73,10 @@ public class LiveDataParserPanel {
                 } catch (BadLocationException e) {
                     throw new IllegalStateException(e);
                 }
+                if (r == null)
+                    return; // when would this happen?
                 g.drawString(value.toString(), r.x, r.y);
-
-
             }
-
-
         }
     };
     private final VariableValueSource valueSource;
@@ -139,7 +137,14 @@ public class LiveDataParserPanel {
 
         StyleContext sc = StyleContext.getDefaultStyleContext();
 
-        StyledDocument styledDocument = text.getStyledDocument();
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        DefaultStyledDocument styledDocument = new DefaultStyledDocument();
+        try {
+            styledDocument.insertString(0, sourceCode, attributes);
+        } catch (BadLocationException e) {
+            throw new IllegalStateException(e);
+        }
+
         AttributeSet oldSet = styledDocument.getCharacterElement(0).getAttributes();
         styledDocument.setCharacterAttributes(0, sourceCode.length(), sc.getEmptySet(), true);
 
@@ -158,6 +163,7 @@ public class LiveDataParserPanel {
                 styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
             }
         }, tree);
+        text.setDocument(styledDocument);
     }
 
     @NotNull
