@@ -99,7 +99,10 @@ float HpfpQuantity::calcPI(int rpm, float calc_fuel_percent) {
 		(FAST_CALLBACK_PERIOD_MS / // (% * revs * ms) / (kPa * min * cycles)
 		 i_factor_divisor); // % / kPa
 	float i_control_percent = m_I_sum_percent + pressureError_kPa * i_factor;
-	calc_fuel_percent += p_control_percent;
+	// Clamp the output so that calc_fuel_percent+i_control_percent is within 0% to 100%
+	// That way the I term can override any fuel calculations over the long term.
+	// The P term is still allowed to drive the total output over 100% or under 0% to react to
+	// short term errors.
 	i_control_percent = clampF(-calc_fuel_percent, i_control_percent,
 				   100.f - calc_fuel_percent);
 	m_I_sum_percent = i_control_percent;
