@@ -171,9 +171,16 @@ static systime_t timeOfPreviousPrintVersion = 0;
 
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
-	if (isBrainPinValid(hwPin)) {
-		logger.appendPrintf(PROTOCOL_OUTPIN LOG_DELIMITER "%s@%s" LOG_DELIMITER, pinName, hwPortname(hwPin));
+	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
+		return;
 	}
+	const char *hwPinName;
+	if (isBrainPinValid(hwPin)) {
+		hwPinName = hwPortname(hwPin);
+	} else {
+		hwPinName = "smart";
+	}
+	logger.appendPrintf(PROTOCOL_OUTPIN LOG_DELIMITER "%s@%s" LOG_DELIMITER, pinName, hwPinName);
 }
 #endif /* EFI_PROD_CODE */
 

@@ -40,7 +40,7 @@ public enum debug_mode_e {
 	DBG_DWELL_METRIC,
 	DBG_34,
 	DBG_35,
-	DBG_BOOST,
+	DBG_36,
 	DBG_37,
 	DBG_38,
 	DBG_ETB_AUTOTUNE,

@@ -188,20 +188,22 @@ TEST(HPFP, Angle) {
 		engineConfiguration->hpfpLobeProfileAngle[i] = 150. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
 	}
 
+	HpfpController model;
+
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1000), 25); // Double check baseline
 	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 0); // Validate no PI
-	EXPECT_NEAR(math.pumpAngleFuel(1000), 37.5, 0.4); // Given the profile, should be 50% higher
+	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 37.5, 0.4); // Given the profile, should be 50% higher
 
 	engine->injectionMass[0] = 0.08 /* cc/cyl */ * fuelDensity;
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1000), 40); // Double check baseline
 	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 0); // Validate no PI
-	EXPECT_NEAR(math.pumpAngleFuel(1000), 60, 0.4); // Given the profile, should be 50% higher
+	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 60, 0.4); // Given the profile, should be 50% higher
 
 	engineConfiguration->hpfpPidP = 0.01;
 	Sensor::setMockValue(SensorType::Map, 40);
 	Sensor::setMockValue(SensorType::FuelPressureHigh, 1000);
 	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 10.1);
-	EXPECT_NEAR(math.pumpAngleFuel(1000), 50.1 * 1.5, 0.4); // Given the profile, should be 50% higher
+	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 50.1 * 1.5, 0.4); // Given the profile, should be 50% higher
 }
 
 TEST(HPFP, Schedule) {

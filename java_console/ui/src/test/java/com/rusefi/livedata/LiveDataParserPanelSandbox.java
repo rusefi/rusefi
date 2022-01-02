@@ -10,7 +10,7 @@ import com.rusefi.ui.util.FrameHelper;
 import javax.swing.*;
 
 /**
- * TODO: not point in this class kill it?
+ * TODO: no point in this class kill it?
  * @see LiveDataParserSandbox
  */
 public class LiveDataParserPanelSandbox {
@@ -28,7 +28,7 @@ public class LiveDataParserPanelSandbox {
         byte[] state = new byte[size];
 
 
-        Field.findFieldOrNull(values, "", BoostControl.ISTPSVALID.getName()).setValue(state, true);
+        Field.findFieldOrNull(values, "", BoostControl.ISTPSINVALID.getName()).setValue(state, true);
         Field.findFieldOrNull(values, "", BoostControl.ISNOTCLOSEDLOOP.getName()).setValue(state, true);
 
         LiveDocsRegistry.INSTANCE.refresh(context1 -> state

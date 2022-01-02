@@ -293,7 +293,7 @@ pins:
   - pin: 4B
     id: GPIOE_12
     class: event_inputs
-    ts_name: 4B - KNOCK
+    ts_name: 4B - DIGITAL/FLEX
     function: DIGITAL
     
   - pin: 4C

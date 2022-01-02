@@ -165,9 +165,8 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		return;
 	}
 
-	// Select fuel mass from the correct bank
-	uint8_t bankIndex = engineConfiguration->cylinderBankSelect[this->cylinderNumber];
-	float injectionMassGrams = engine->injectionMass[bankIndex];
+	// Select fuel mass from the correct cylinder
+	auto injectionMassGrams = engine->injectionMass[this->cylinderNumber];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
@@ -195,7 +194,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	engine->engineState.fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
-	engine->actualLastInjection[bankIndex] = injectionDuration;
+	engine->actualLastInjection[this->cylinderNumber] = injectionDuration;
 
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
@@ -335,7 +334,7 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 
 	// V-Twin MAP phase sense needs to always wait for sync
 	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
-		return false;
+		return true;
 	}
 
 	// Symmetrical crank modes require cam sync before firing
@@ -352,7 +351,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
 	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) 
-		&& !engine->triggerCentral.vvtState[0][0].getShaftSynchronized()) {
+		&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
 		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
 		// examples:
 		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync

@@ -312,6 +312,18 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tps12Split;
 	if (strEqualCaseInsensitive(name, "accPedalSplit"))
 		return engine->outputChannels.accPedalSplit;
+	if (strEqualCaseInsensitive(name, "m_requested_pump"))
+		return engine->outputChannels.m_requested_pump;
+	if (strEqualCaseInsensitive(name, "boostControlTarget"))
+		return engine->outputChannels.boostControlTarget;
+	if (strEqualCaseInsensitive(name, "fuel_requested_percent"))
+		return engine->outputChannels.fuel_requested_percent;
+	if (strEqualCaseInsensitive(name, "fuel_requested_percent_pi"))
+		return engine->outputChannels.fuel_requested_percent_pi;
+	if (strEqualCaseInsensitive(name, "m_I_sum_percent"))
+		return engine->outputChannels.m_I_sum_percent;
+	if (strEqualCaseInsensitive(name, "m_pressureTarget_kPa"))
+		return engine->outputChannels.m_pressureTarget_kPa;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
@@ -328,6 +340,12 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.launchActivatePinState;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
+	if (strEqualCaseInsensitive(name, "boostControllerOutput"))
+		return engine->outputChannels.boostControllerOutput;
+	if (strEqualCaseInsensitive(name, "boostControllerClosedLoopPart"))
+		return engine->outputChannels.boostControllerClosedLoopPart;
+	if (strEqualCaseInsensitive(name, "boostControllerOpenLoopPart"))
+		return engine->outputChannels.boostControllerOpenLoopPart;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_SPECIAL_POINT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_DIFF"))

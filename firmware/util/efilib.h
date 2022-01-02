@@ -160,6 +160,11 @@ constexpr void copyArrayPartial(TElement (&dest)[NDest], const TElement (&src)[N
 	}
 }
 
+template <typename T>
+bool isInRange(T min, T val, T max) {
+	return val >= min && val <= max;
+}
+
 #endif /* __cplusplus */
 
 #if defined(__cplusplus) && defined(__OPTIMIZE__)

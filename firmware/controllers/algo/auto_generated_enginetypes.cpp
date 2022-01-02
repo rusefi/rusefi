@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Thu Dec 23 21:44:24 UTC 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Jan 02 02:03:17 EST 2022
 // see also gen_config_and_enums.bat
 
 
@@ -60,6 +60,8 @@ case DBG_34:
   return "DBG_34";
 case DBG_35:
   return "DBG_35";
+case DBG_36:
+  return "DBG_36";
 case DBG_37:
   return "DBG_37";
 case DBG_38:
@@ -76,8 +78,6 @@ case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
 case DBG_BENCH_TEST:
   return "DBG_BENCH_TEST";
-case DBG_BOOST:
-  return "DBG_BOOST";
 case DBG_CJ125:
   return "DBG_CJ125";
 case DBG_COMPOSITE_LOG:
@@ -241,6 +241,8 @@ case HELLEN_88_BMW:
   return "HELLEN_88_BMW";
 case HELLEN_NA6:
   return "HELLEN_NA6";
+case HELLEN_NA8_96:
+  return "HELLEN_NA8_96";
 case HELLEN_NA94:
   return "HELLEN_NA94";
 case HELLEN_NB1:
@@ -347,8 +349,6 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED10:
-  return "UNUSED10";
 case UNUSED100:
   return "UNUSED100";
 case UNUSED101:

@@ -135,7 +135,7 @@ public class ConsoleUI {
         if (!linkManager.isLogViewer())
             tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!linkManager.isLogViewer()) {
-            tabbedPane.addTab("Formulas/Live Data", new FormulasPane(uiContext).getContent());
+            tabbedPane.addTab("Live Data", new LiveDataPane(uiContext).getContent());
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
         }
 

@@ -34,7 +34,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 /**
  * this panel shows a live view of rusEFI firmware C/C++ code
- * @see LiveDataParserPanelSandbox
+ * @see LiveDataParserSandbox
  */
 public class LiveDataParserPanel {
     private static final Logging log = getLogging(LiveDataParserPanel.class);
@@ -112,7 +112,7 @@ public class LiveDataParserPanel {
         StringBuilder result = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(cpp))) {
             while ((line = br.readLine()) != null) {
-                result.append(line + "\n");
+                result.append(line).append("\n");
             }
         }
         return result.toString();
@@ -149,13 +149,13 @@ public class LiveDataParserPanel {
             @Override
             public void paintBackground(Color color, Range range) {
                 AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
+                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
             }
 
             @Override
             public void paintForeground(Color color, Range range) {
                 AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Foreground, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
+                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
             }
         }, tree);
     }
@@ -170,24 +170,21 @@ public class LiveDataParserPanel {
     private static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
         AtomicReference<byte[]> reference = new AtomicReference<>();
 
-        LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, new VariableValueSource() {
-            @Override
-            public Object getValue(String name) {
-                byte[] bytes = reference.get();
-                if (bytes == null)
-                    return null;
-                Field f = Field.findFieldOrNull(values, "", name);
-                if (f == null) {
-                    log.error("BAD condition, should be variable: " + name);
-                    return null;
-                }
-                int number = f.getValue(new ConfigurationImage(bytes)).intValue();
-                if (log.debugEnabled()) {
-                    log.debug("getValue(" + name + "): " + number);
-                }
-                // convert Number to Boolean
-                return number != 0;
+        LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, name -> {
+            byte[] bytes = reference.get();
+            if (bytes == null)
+                return null;
+            Field f = Field.findFieldOrNull(values, "", name);
+            if (f == null) {
+                //log.error("BAD condition, should be variable: " + name);
+                return null;
             }
+            double number = f.getValue(new ConfigurationImage(bytes)).doubleValue();
+            if (log.debugEnabled()) {
+                log.debug("getValue(" + name + "): " + number);
+            }
+            // convert Number to Boolean
+            return new VariableValueSource.VariableState(f, number);
         }, fileName);
         RefreshActions refreshAction = new RefreshActions() {
             @Override

@@ -22,6 +22,7 @@ typedef enum __attribute__ ((__packed__)) {
  */
 typedef enum __attribute__ ((__packed__)) {
 	GPIO_UNASSIGNED = 0,
+	// only used as return value of 'parseBrainPin' function do we really this this logic special value at all?!
 	GPIO_INVALID = 1,
 
 	GPIOA_0 = 2,

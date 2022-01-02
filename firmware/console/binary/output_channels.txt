@@ -259,9 +259,16 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	int16_t autoscale tps12Split;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	int16_t autoscale accPedalSplit;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
+    int16_t autoscale m_requested_pump;"DI: Pump Angle";"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
+    int16_t autoscale boostControlTarget;"Pump Angle";"deg",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+    float fuel_requested_percent;"DI: fuel_requested_percent";"v", 1, 0, 0, 100, 0
+    float fuel_requested_percent_pi;"DI: fuel_requested_percent_pi";"v", 1, 0, 0, 100, 0
+    float m_I_sum_percent;"DI: m_I_sum_percent";"v", 1, 0, 0, 100, 0
+    float m_pressureTarget_kPa;"DI: m_pressureTarget_kPa";"v", 1, 0, 0, 100, 0
+
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[136 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	int[28 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition
@@ -272,9 +279,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	bit launchActivatePinState
 
     uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
-    uint8_t unused11;;"", 1, 0, -10000, 10000, 3
-    uint8_t unused11;;"", 1, 0, -10000, 10000, 3
-    uint8_t unused11;;"", 1, 0, -10000, 10000, 3
+    uint8_t boostControllerOutput;;"", 1, 0, -10000, 10000, 0
+    uint8_t boostControllerClosedLoopPart;;"", 1, 0, -10000, 10000, 0
+    uint8_t boostControllerOpenLoopPart;;"", 1, 0, -10000, 10000, 0
 
     float autoscale TEMPLOG_MAP_AT_SPECIAL_POINT;;"", 1, 0, -10000, 10000, 3
     float autoscale TEMPLOG_MAP_AT_DIFF;;"", 1, 0, -10000, 10000, 3

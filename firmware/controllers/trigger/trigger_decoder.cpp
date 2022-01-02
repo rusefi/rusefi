@@ -80,6 +80,8 @@ void TriggerState::resetTriggerState() {
 
 	totalEventCountBase = 0;
 	isFirstEvent = true;
+
+	m_hasSynchronizedSymmetrical = false;
 }
 
 void TriggerState::setTriggerErrorState() {
@@ -404,6 +406,10 @@ angle_t TriggerState::syncSymmetricalCrank(int divider, int remainder, angle_t e
 		incrementTotalEventCounter();
 		totalShift += engineCycle / divider;
 	}
+
+	// Allow injection/ignition to happen, we've now fully sync'd the crank based on new cam information
+	m_hasSynchronizedSymmetrical = true;
+
 	return totalShift;
 }
 
@@ -554,17 +560,9 @@ void TriggerState::decodeTriggerEvent(
 		bool wasSynchronized = getShaftSynchronized();
 
 		if (triggerShape.isSynchronizationNeeded) {
-			currentGap = 1.0 * toothDurations[0] / toothDurations[1];
+			currentGap = (float)toothDurations[0] / toothDurations[1];
 
-			bool isSync = true;
-			for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
-				bool isGapCondition = cisnan(triggerShape.syncronizationRatioFrom[i]) || (toothDurations[i] > toothDurations[i + 1] * triggerShape.syncronizationRatioFrom[i]
-					&& toothDurations[i] < toothDurations[i + 1] * triggerShape.syncronizationRatioTo[i]);
-
-				isSync &= isGapCondition;
-			}
-
-			isSynchronizationPoint = isSync;
+			isSynchronizationPoint = isSyncPoint(triggerShape, triggerConfiguration.TriggerType);
 			if (isSynchronizationPoint) {
 				enginePins.debugTriggerSync.toggle();
 			}
@@ -577,7 +575,7 @@ void TriggerState::decodeTriggerEvent(
 			bool silentTriggerError = triggerShape.getSize() > 40 && engineConfiguration->silentTriggerError;
 
 #if EFI_UNIT_TEST
-			actualSynchGap = 1.0 * toothDurations[0] / toothDurations[1];
+			actualSynchGap = currentGap;
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
@@ -703,6 +701,58 @@ void TriggerState::decodeTriggerEvent(
 	if (triggerStateListener) {
 		triggerStateListener->OnTriggerStateProperState(nowNt);
 	}
+}
+
+bool TriggerState::isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const {
+	// Miata NB needs a special decoder.
+	// The problem is that the crank wheel only has 4 teeth, also symmetrical, so the pattern
+	// is long-short-long-short for one crank rotation.
+	// A quick acceleration can result in two successive "short gaps", so we see 
+	// long-short-short-short-long instead of the correct long-short-long-short-long
+	// This logic expands the lower bound on a "long" tooth, then compares the last
+	// tooth to the current one.
+
+	// Instead of detecting short/long, this logic first checks for "maybe short" and "maybe long",
+	// then simply tests longer vs. shorter instead of absolute value.
+	if (triggerType == TT_MIATA_VVT) {
+		auto secondGap = (float)toothDurations[1] / toothDurations[2];
+
+		bool currentGapOk = isInRange(triggerShape.syncronizationRatioFrom[0], currentGap, triggerShape.syncronizationRatioTo[0]);
+		bool secondGapOk  = isInRange(triggerShape.syncronizationRatioFrom[1], secondGap,  triggerShape.syncronizationRatioTo[1]);
+
+		// One or both teeth was impossible range, this is not the sync point
+		if (!currentGapOk || !secondGapOk) {
+			return false;
+		}
+
+		// If both teeth are in the range of possibility, return whether this gap is
+		// shorter than the last or not.  If it is, this is the sync point.
+		return currentGap < secondGap;
+	}
+
+	for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
+		auto from = triggerShape.syncronizationRatioFrom[i];
+		auto to = triggerShape.syncronizationRatioTo[i];
+
+		if (cisnan(from)) {
+			// don't check this gap, skip it
+			continue;
+		}
+
+		// This is transformed to avoid a division and use a cheaper multiply instead
+		// toothDurations[i] / toothDurations[i+1] > from
+		// is an equivalent comparison to
+		// toothDurations[i] > toothDurations[i+1] * from
+		bool isGapCondition = 
+			  (toothDurations[i] > toothDurations[i + 1] * from
+			&& toothDurations[i] < toothDurations[i + 1] * to);
+
+		if (!isGapCondition) {
+			return false;
+		}
+	}
+
+	return true;
 }
 
 static void onFindIndexCallback(TriggerState *state) {
