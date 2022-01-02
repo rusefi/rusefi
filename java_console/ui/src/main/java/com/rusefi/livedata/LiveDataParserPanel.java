@@ -170,24 +170,21 @@ public class LiveDataParserPanel {
     private static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
         AtomicReference<byte[]> reference = new AtomicReference<>();
 
-        LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, new VariableValueSource() {
-            @Override
-            public Object getValue(String name) {
-                byte[] bytes = reference.get();
-                if (bytes == null)
-                    return null;
-                Field f = Field.findFieldOrNull(values, "", name);
-                if (f == null) {
-                    log.error("BAD condition, should be variable: " + name);
-                    return null;
-                }
-                int number = f.getValue(new ConfigurationImage(bytes)).intValue();
-                if (log.debugEnabled()) {
-                    log.debug("getValue(" + name + "): " + number);
-                }
-                // convert Number to Boolean
-                return number != 0;
+        LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, name -> {
+            byte[] bytes = reference.get();
+            if (bytes == null)
+                return null;
+            Field f = Field.findFieldOrNull(values, "", name);
+            if (f == null) {
+                //log.error("BAD condition, should be variable: " + name);
+                return null;
             }
+            double number = f.getValue(new ConfigurationImage(bytes)).doubleValue();
+            if (log.debugEnabled()) {
+                log.debug("getValue(" + name + "): " + number);
+            }
+            // convert Number to Boolean
+            return new VariableValueSource.VariableState(f, number);
         }, fileName);
         RefreshActions refreshAction = new RefreshActions() {
             @Override
