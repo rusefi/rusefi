@@ -10,10 +10,12 @@
 #define MRE_LS_1 TLE8888_PIN_6
 
 // clt = "18 - AN temp 1"
+// R27 pull-up
 #define MRE_IN_ANALOG_TEMP_1 EFI_ADC_0
 #define MRE_IN_CLT MRE_IN_ANALOG_TEMP_1
 
 // iat = "23 - AN temp 2"
+// R25 pull-up
 #define MRE_IN_ANALOG_TEMP_2 EFI_ADC_1
 #define MRE_IN_IAT MRE_IN_ANALOG_TEMP_2
 
