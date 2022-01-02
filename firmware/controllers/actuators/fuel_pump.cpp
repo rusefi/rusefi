@@ -22,7 +22,9 @@ void FuelPumpController::onSlowCallback() {
 #endif
 }
 
-void FuelPumpController::onIgnitionStateChanged(bool ignitionOn) {
+void FuelPumpController::onIgnitionStateChanged(bool ignitionOnParam) {
+	// live data parser convention is asking for a field
+	ignitionOn = ignitionOnParam;
 	if (ignitionOn) {
 		m_ignOnTimer.reset();
 	}

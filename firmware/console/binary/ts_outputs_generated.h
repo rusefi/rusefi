@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jan 01 17:12:52 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 02 00:45:34 EST 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -862,7 +862,7 @@ struct ts_outputs_s {
 	deg
 	 * offset 336
 	 */
-	scaled_channel<int16_t, 50, 1> unused16 = (int16_t)0;
+	scaled_channel<int16_t, 30, 1> boostControlTarget = (int16_t)0;
 	/**
 	 * need 4 byte alignment
 	units
@@ -1000,13 +1000,15 @@ struct ts_outputs_s {
 	/**
 	 * offset 473
 	 */
-	uint8_t unused11 = (uint8_t)0;
+	uint8_t boostControllerOutput = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 474
 	 */
-	uint8_t alignmentFill_at_474[2];
+	uint8_t boostControllerClosedLoopPart = (uint8_t)0;
+	/**
+	 * offset 475
+	 */
+	uint8_t boostControllerOpenLoopPart = (uint8_t)0;
 	/**
 	 * offset 476
 	 */
@@ -1188,4 +1190,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jan 01 17:12:52 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 02 00:45:34 EST 2022
