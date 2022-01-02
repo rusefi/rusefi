@@ -7,6 +7,7 @@
 
 #pragma once
 
+// OpenDrain: 4.5A
 #define MRE_LS_1 TLE8888_PIN_6
 
 // clt = "18 - AN temp 1"
