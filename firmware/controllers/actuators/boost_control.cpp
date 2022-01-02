@@ -52,17 +52,15 @@ expected<float> BoostController::getSetpoint() {
 	float rpm = GET_RPM();
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
-	isTpsValid = tps.Valid;
+	isTpsInvalid = !tps.Valid;
 
-	if (!isTpsValid) {
+	if (isTpsInvalid) {
 		return unexpected;
 	}
 
-	if (!m_closedLoopTargetMap) {
-		return unexpected;
-	}
+	efiAssert(OBD_PCM_Processor_Fault, m_closedLoopTargetMap != nullptr, "boost closed loop target", unexpected);
 
-	return m_closedLoopTargetMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps.Value / TPS_1_BYTE_PACKING_MULT);
+	return m_closedLoopTargetMap->getValue(rpm, tps.Value);
 }
 
 expected<percent_t> BoostController::getOpenLoop(float target) {
@@ -72,25 +70,21 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 	float rpm = GET_RPM();
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
-	isTpsValid = tps.Valid;
+	isTpsInvalid = !tps.Valid;
 
-	if (!isTpsValid) {
+	if (isTpsInvalid) {
 		return unexpected;
 	}
 
-	if (!m_openLoopMap) {
-		return unexpected;
-	}
+	efiAssert(OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
 
-	percent_t openLoop = m_openLoopMap->getValue(rpm / RPM_1_BYTE_PACKING_MULT, tps.Value / TPS_1_BYTE_PACKING_MULT);
+	openLoopPart = m_openLoopMap->getValue(rpm, tps.Value);
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_BOOST) {
-		tsOutputChannels.debugFloatField1 = openLoop;
-	}
+	engine->outputChannels.boostControllerOpenLoopPart = openLoopPart;
 #endif
 
-	return openLoop;
+	return openLoopPart;
 }
 
 percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressure) {
@@ -107,7 +101,8 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 	}
 
 	// If the engine isn't running, don't correct.
-	if (GET_RPM() == 0) {
+	isZeroRpm = GET_RPM() == 0;
+	if (isZeroRpm) {
 		m_pid.reset();
 		return 0;
 	}
@@ -121,6 +116,7 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 	}
 
 	closedLoopPart = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	engine->outputChannels.boostControllerClosedLoopPart = closedLoopPart;
 	return closedLoopPart;
 }
 
@@ -128,10 +124,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 	auto closedLoop = getClosedLoopImpl(target, manifoldPressure);
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_BOOST) {
-		tsOutputChannels.debugFloatField2 = closedLoop;
-		tsOutputChannels.debugFloatField3 = target;
-	}
+	engine->outputChannels.boostControlTarget = target;
 #endif /* EFI_TUNER_STUDIO */
 
 	return closedLoop;
@@ -141,9 +134,7 @@ void BoostController::setOutput(expected<float> output) {
 	percent_t percent = output.value_or(engineConfiguration->boostControlSafeDutyCycle);
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_BOOST) {
-		tsOutputChannels.debugFloatField3 = percent;
-	}
+	engine->outputChannels.boostControllerOutput = percent;
 #endif /* EFI_TUNER_STUDIO */
 
 	float duty = PERCENT_TO_DUTY(percent);
@@ -180,13 +171,13 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostControlPin = GPIO_UNASSIGNED;
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
-	setLinearCurve(config->boostRpmBins, 0, 8000 / RPM_1_BYTE_PACKING_MULT, 1);
-	setLinearCurve(config->boostTpsBins, 0, 100 / TPS_1_BYTE_PACKING_MULT, 1);
+	setLinearCurve(config->boostRpmBins, 0, 8000, 1);
+	setLinearCurve(config->boostTpsBins, 0, 100, 1);
 
 	for (int loadIndex = 0; loadIndex < BOOST_LOAD_COUNT; loadIndex++) {
 		for (int rpmIndex = 0; rpmIndex < BOOST_RPM_COUNT; rpmIndex++) {
-			config->boostTableOpenLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
-			config->boostTableClosedLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
+			config->boostTableOpenLoop[loadIndex][rpmIndex] = (float)config->boostTpsBins[loadIndex];
+			config->boostTableClosedLoop[loadIndex][rpmIndex] = (float)config->boostTpsBins[loadIndex];
 		}
 	}
 

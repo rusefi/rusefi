@@ -5,6 +5,7 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.BaseBroadcastingThread;
 import com.rusefi.proxy.NetworkConnectorContext;
@@ -22,7 +23,6 @@ import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import static com.rusefi.TestHelper.LOCALHOST;
 import static com.rusefi.TestHelper.assertLatch;
 import static org.junit.Assert.assertEquals;
 
@@ -84,7 +84,7 @@ public class ServerTest {
             List<ControllerConnectionState> clients = backend.getControllers();
             assertEquals(2, clients.size());
 
-            List<PublicSession> onlineUsers = ProxyClient.getOnlineApplications(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + TestHelper.LOCALHOST + ":" + httpPort + ProxyClient.LIST_CONTROLLERS_PATH);
+            List<PublicSession> onlineUsers = ProxyClient.getOnlineApplications(HttpUtil.RUSEFI_PROXY_JSON_PROTOCOL + TcpConnector.LOCALHOST + ":" + httpPort + ProxyClient.LIST_CONTROLLERS_PATH);
             assertEquals(2, onlineUsers.size());
 
             allConnected.countDown();
@@ -195,7 +195,7 @@ covered by FullServerTest
         }
 
         public void connect(int serverPort) throws IOException {
-            Socket socket = rusEFISSLContext.getSSLSocket(LOCALHOST, serverPort);
+            Socket socket = rusEFISSLContext.getSSLSocket(TcpConnector.LOCALHOST, serverPort);
             BaseBroadcastingThread baseBroadcastingThread = new BaseBroadcastingThread(socket,
                     sessionDetails,
                     TcpIoStream.DisconnectListener.VOID, new NetworkConnectorContext()) {

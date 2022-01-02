@@ -18,8 +18,10 @@
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-static fsio8_Map3D_u8t vvtTable1;
-static fsio8_Map3D_u8t vvtTable2;
+using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, uint16_t, uint16_t>;
+
+static vvt_map_t vvtTable1;
+static vvt_map_t vvtTable2;
 
 void VvtController::init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap) {
 	this->index = index;
@@ -55,7 +57,7 @@ expected<angle_t> VvtController::getSetpoint() {
 	float target = m_targetMap->getValue(rpm, load);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.vvtTargets[index] = target;
+	engine->outputChannels.vvtTargets[index] = target;
 #endif
 
 	return target;
@@ -79,8 +81,8 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 	static debug_mode_e debugModeByIndex[4] = {DBG_VVT_1_PID, DBG_VVT_2_PID, DBG_VVT_3_PID, DBG_VVT_4_PID};
 
 	if (engineConfiguration->debugMode == debugModeByIndex[index]) {
-		m_pid.postState(&tsOutputChannels);
-		tsOutputChannels.debugIntField3 = (int)(10 * target);
+		m_pid.postState(&engine->outputChannels);
+		engine->outputChannels.debugIntField3 = (int)(10 * target);
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -105,7 +107,7 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 
 #if EFI_AUX_PID
 
-static VvtController instances[CAM_INPUTS_COUNT] CCM_OPTIONAL;
+static VvtController instances[CAM_INPUTS_COUNT];
 
 static void turnAuxPidOn(int index) {
 	if (!isBrainPinValid(engineConfiguration->vvtPins[index])) {

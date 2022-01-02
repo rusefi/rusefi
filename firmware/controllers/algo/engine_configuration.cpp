@@ -390,7 +390,7 @@ void setDefaultGppwmParameters() {
 		}
 
 		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
-			cfg.rpmBins[j] = 1000 * j / RPM_1_BYTE_PACKING_MULT;
+			cfg.rpmBins[j] = 1000 * j;
 		}
 	}
 }
@@ -519,7 +519,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->startCrankingDuration = 3;
 
 	engineConfiguration->idlePidRpmDeadZone = 50;
-	engineConfiguration->startOfCrankingPrimingPulse = 0;
 
 	engineConfiguration->maxAcRpm = 5000;
 	engineConfiguration->maxAcClt = 100;
@@ -618,9 +617,6 @@ static void setDefaultEngineConfiguration() {
 
 	// performance optimization
 	engineConfiguration->sensorChartMode = SC_OFF;
-
-
-	engineConfiguration->extraInjectionOffset = 0;
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
@@ -852,7 +848,10 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
 	case TEST_ENGINE:
-		setTestEngineConfiguration();
+		setTestCamEngineConfiguration();
+		break;
+	case TEST_CRANK_ENGINE:
+		setTestCrankEngineConfiguration();
 		break;
 #if EFI_UNIT_TEST
 	case TEST_ISSUE_366_BOTH:
@@ -866,6 +865,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
+	case VW_B6:
+		setVwPassatB6();
+		break;
 	case MRE_M111:
 		setM111EngineConfiguration();
 		break;
@@ -956,6 +958,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMiataNB2_Hellen72_36();
 		break;
 	case HELLEN_NB1:
+	case HELLEN_NA8_96:
 		setHellenNB1();
 		break;
 	case HELLEN72_ETB:
@@ -1055,8 +1058,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_600:
 		setHonda600();
 		break;
-	case UNUSED9:
-	case UNUSED28:
+	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+		setEngineProteusGearboxManInTheMiddle();
+		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
@@ -1072,9 +1076,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996();
-		break;
-	case VW_B6:
-		setVwPassatB6();
 		break;
 	case VW_ABA:
 		setVwAba();

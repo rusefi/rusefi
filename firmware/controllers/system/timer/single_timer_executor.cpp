@@ -178,11 +178,11 @@ void initSingleTimerExecutorHardware(void) {
 void executorStatistics() {
 	if (engineConfiguration->debugMode == DBG_EXECUTOR) {
 #if EFI_TUNER_STUDIO
-		tsOutputChannels.debugIntField1 = ___engine.executor.timerCallbackCounter;
-		tsOutputChannels.debugIntField2 = ___engine.executor.executeAllPendingActionsInvocationCounter;
-		tsOutputChannels.debugIntField3 = ___engine.executor.scheduleCounter;
-		tsOutputChannels.debugIntField4 = ___engine.executor.executeCounter;
-		tsOutputChannels.debugIntField5 = ___engine.executor.maxExecuteCounter;
+		engine->outputChannels.debugIntField1 = ___engine.executor.timerCallbackCounter;
+		engine->outputChannels.debugIntField2 = ___engine.executor.executeAllPendingActionsInvocationCounter;
+		engine->outputChannels.debugIntField3 = ___engine.executor.scheduleCounter;
+		engine->outputChannels.debugIntField4 = ___engine.executor.executeCounter;
+		engine->outputChannels.debugIntField5 = ___engine.executor.maxExecuteCounter;
 #endif /* EFI_TUNER_STUDIO */
 	}
 }

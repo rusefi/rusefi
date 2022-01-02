@@ -13,7 +13,7 @@
 #include "pch.h"
 #include "fsio_impl.h"
 #include "custom_engine.h"
-#include "../hellen_meta.h"
+#include "hellen_meta.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -142,6 +142,10 @@ void setBoardDefaultConfiguration(void) {
 //	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
 	engineConfiguration->mainRelayPin = GPIOG_14;	// pin: 111a, OUT_IO3
 	engineConfiguration->malfunctionIndicatorPin = H144_OUT_PWM8;
+
+	engineConfiguration->brakePedalPin = H144_IN_RES3;
+	engineConfiguration->clutchUpPin = H144_IN_RES2;
+	engineConfiguration->acSwitch = H144_IN_RES1;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

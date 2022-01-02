@@ -26,6 +26,6 @@ gear_e TransmissionControllerBase::getCurrentGear() const {
 
 void TransmissionControllerBase::postState() {
 #if EFI_TUNER_STUDIO
-    tsOutputChannels.tcuCurrentGear = getCurrentGear();
+    engine->outputChannels.tcuCurrentGear = getCurrentGear();
 #endif
 }

@@ -96,8 +96,8 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
 
 	if (engineConfiguration->debugMode == DBG_LUA) {
 		switch (HeapIdx) {
-			case 0: tsOutputChannels.debugIntField1 = heaps[HeapIdx].used(); break;
-			case 1: tsOutputChannels.debugIntField2 = heaps[HeapIdx].used(); break;
+			case 0: engine->outputChannels.debugIntField1 = heaps[HeapIdx].used(); break;
+			case 1: engine->outputChannels.debugIntField2 = heaps[HeapIdx].used(); break;
 		}
 	}
 
@@ -350,7 +350,7 @@ void LuaThread::ThreadTask() {
 }
 
 #if LUA_USER_HEAP > 1
-static LuaThread luaThread CCM_OPTIONAL;
+static LuaThread luaThread;
 #endif
 
 void startLua() {

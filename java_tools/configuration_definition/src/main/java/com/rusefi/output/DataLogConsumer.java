@@ -5,73 +5,50 @@ import com.rusefi.ReaderState;
 import com.rusefi.TypesHelper;
 import com.rusefi.VariableRegistry;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.CharArrayWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.TreeSet;
 
+import static com.rusefi.ConfigField.unquote;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
-public class DataLogConsumer implements ConfigurationConsumer {
+public class DataLogConsumer extends AbstractConfigurationConsumer {
+    public static final String UNUSED = "unused";
     private final String fileName;
-    private final ReaderState state;
     private final CharArrayWriter tsWriter = new CharArrayWriter();
+    private final TreeSet<String> comments = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
 
-    public DataLogConsumer(String fileName, ReaderState state) {
+    public DataLogConsumer(String fileName) {
         this.fileName = fileName;
-        this.state = state;
     }
 
     @Override
-    public void startFile() throws IOException {
-        System.out.println("startFile");
-
-    }
-
-    @Override
-    public void endFile() throws IOException {
-        System.out.println("endFile");
-
-    }
-
-    @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
-        if (state.stack.isEmpty()) {
-            FieldIterator iterator = new FieldIterator(structure.tsFields);
-            String content = handleFields(structure, iterator, "");
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+        if (readerState.stack.isEmpty()) {
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.tsFields, "",
+                    this::handle);
+            iterator.loop();
+            String content = iterator.getContent();
             tsWriter.append(content);
         }
 
+        writeStringToFile(fileName, tsWriter);
+    }
+
+    private void writeStringToFile(@Nullable String fileName, CharArrayWriter writer) throws IOException {
         if (fileName != null) {
             FileWriter fw = new FileWriter(fileName);
-            fw.write(tsWriter.toCharArray());
+            fw.write(writer.toCharArray());
             fw.close();
         }
     }
 
-    private String handleFields(ConfigStructure structure, FieldIterator iterator, String prefix) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < structure.tsFields.size(); i++) {
-            iterator.start(i);
-
-            String content = handle(iterator.cf, prefix);
-            sb.append(content);
-            iterator.end();
-
-        }
-        return sb.toString();
-    }
-
-    private String handle(ConfigField configField, String prefix) {
-        if (configField.getName().contains("unused"))
+    private String handle(ReaderState state, ConfigField configField, String prefix) {
+        if (configField.getName().contains(UNUSED))
             return "";
-
-        ConfigStructure cs = configField.getState().structures.get(configField.getType());
-        if (cs != null) {
-            String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            return handleFields(cs, new FieldIterator(cs.tsFields), extraPrefix);
-        }
-
 
         if (configField.isArray()) {
 
@@ -88,19 +65,22 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = getComment(configField, state.variableRegistry);
+        String comment = getComment(prefix, configField, state.variableRegistry);
 
+        if (comments.contains(comment))
+            throw new IllegalStateException(comment + " already present in the outputs!");
+        comments.add(comment);
         return "entry = " + prefix + configField.getName() + ", " + comment + ", " + typeString + "\n";
     }
 
     @NotNull
-    public static String getComment(ConfigField configField, VariableRegistry variableRegistry) {
+    public static String getComment(String prefix, ConfigField configField, VariableRegistry variableRegistry) {
         String comment = variableRegistry.applyVariables(configField.getComment());
         String[] comments = comment == null ? new String[0] : comment.split("\\\\n");
         comment = (comments.length > 0) ? comments[0] : "";
 
         if (comment.isEmpty())
-            comment = configField.getName();
+            comment = prefix + unquote(configField.getName());
 
         if (comment.charAt(0) != '"')
             comment = quote(comment);

@@ -12,9 +12,18 @@
 #include "interpolation.h"
 
 float rpmBins[5] = { 100, 200, 300, 400, 500 };
-float mafBins[4] = { 1, 2, 3, 4 };
+scaled_channel<uint8_t, 1, 50> rpmBinsScaledByte[5] = { 100, 200, 300, 400, 500};
 
-scaled_channel<int, 10> mafBins2[4] = { 1, 2, 3, 4 };
+float mafBins[4] = { 1, 2, 3, 4 };
+scaled_channel<int, 10> mafBinsScaledInt[4] = { 1, 2, 3, 4 };
+scaled_channel<uint8_t, 10> mafBinsScaledByte[4] = { 1, 2, 3, 4 };
+
+scaled_channel<uint32_t, 10000, 3> mapScaledChannel[4][5] = {
+	{ 1, 2, 3, 4, 4},
+	{ 2, 3, 4, 200, 200 },
+	{ 3, 4, 200, 500, 500 },
+	{ 4, 5, 300, 600, 600 },
+};
 
 float map[4][5] = {
 	{ 1, 2, 3, 4, 4},
@@ -23,23 +32,40 @@ float map[4][5] = {
 	{ 4, 5, 300, 600, 600 },
 };
 
-#define EXPECT_NEAR_M4(a, b) EXPECT_NEAR(a, b, 1e-4)
-
 static float getValue(float rpm, float maf) {
-	float result1, result2;
-
 	Map3D<5, 4, float, float, float> x1;
 	x1.init(map, mafBins, rpmBins);
-
-	result1 = x1.getValue(rpm, maf);
+	float result1 = x1.getValue(rpm, maf);
 
 
 	Map3D<5, 4, float, float, int> x2;
-	x2.init(map, mafBins2, rpmBins);
-
-	result2 = x2.getValue(rpm, maf);
-
+	x2.init(map, mafBinsScaledInt, rpmBins);
+	float result2 = x2.getValue(rpm, maf);
 	EXPECT_NEAR_M4(result1, result2);
+
+
+	Map3D<5, 4, float, float, uint8_t> x3;
+	x3.init(map, mafBinsScaledByte, rpmBins);
+	float result3 = x3.getValue(rpm, maf);
+	EXPECT_NEAR_M4(result1, result3);
+
+	Map3D<5, 4, float, uint8_t, float> x4;
+	x4.init(map, mafBins, rpmBinsScaledByte);
+	float result4 = x4.getValue(rpm, maf);
+	EXPECT_NEAR_M4(result1, result4);
+
+	float result5 = interpolate3d(
+		map,
+		mafBinsScaledInt, maf,
+		rpmBinsScaledByte, rpm
+	);
+	EXPECT_NEAR_M4(result1, result5);
+
+	// Test with values stored in scaled bytes
+	Map3D<5, 4, uint32_t, float, float> x6;
+	x6.init(mapScaledChannel, mafBins, rpmBins);
+	float result6 = x6.getValue(rpm, maf);
+	EXPECT_NEAR(result1, result6, 1e-3);
 
 	return result1;
 }
@@ -53,6 +79,7 @@ static void newTestToComfirmInterpolation() {
 //______|__2|__3|_LOAD
 
 	map[1][2] = 10;
+	mapScaledChannel[1][2] = 10;
 
 
 	// let's start by testing corners

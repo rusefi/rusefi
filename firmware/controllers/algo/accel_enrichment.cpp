@@ -26,7 +26,6 @@
 
 static tps_tps_Map3D_t tpsTpsMap;
 
-// todo: eliminate code duplication between these two methods! Some pointer magic would help.
 floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
@@ -73,14 +72,14 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 
 #if EFI_TUNER_STUDIO
 	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
-		tsOutputChannels.debugFloatField1 = tpsFrom;
-		tsOutputChannels.debugFloatField2 = tpsTo;
-		tsOutputChannels.debugFloatField3 = valueFromTable;
-		tsOutputChannels.debugFloatField4 = extraFuel;
-		tsOutputChannels.debugFloatField5 = accumulatedValue;
-		tsOutputChannels.debugFloatField6 = maxExtraPerPeriod;
-		tsOutputChannels.debugFloatField7 = maxInjectedPerPeriod;
-		tsOutputChannels.debugIntField1 = cycleCnt;
+		engine->outputChannels.debugFloatField1 = tpsFrom;
+		engine->outputChannels.debugFloatField2 = tpsTo;
+		engine->outputChannels.debugFloatField3 = valueFromTable;
+		engine->outputChannels.debugFloatField4 = extraFuel;
+		engine->outputChannels.debugFloatField5 = accumulatedValue;
+		engine->outputChannels.debugFloatField6 = maxExtraPerPeriod;
+		engine->outputChannels.debugFloatField7 = maxInjectedPerPeriod;
+		engine->outputChannels.debugIntField1 = cycleCnt;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
@@ -120,7 +119,7 @@ void TpsAccelEnrichment::onEngineCycleTps() {
 	}
 }
 
-int AccelEnrichment::getMaxDeltaIndex() {
+int TpsAccelEnrichment::getMaxDeltaIndex() {
 
 	int len = minI(cb.getSize(), cb.getCount());
 	if (len < 2)
@@ -143,18 +142,14 @@ int AccelEnrichment::getMaxDeltaIndex() {
 	return resultIndex;
 }
 
-float AccelEnrichment::getMaxDelta() {
+float TpsAccelEnrichment::getMaxDelta() {
 	int index = getMaxDeltaIndex();
 
 	return (cb.get(index) - (cb.get(index - 1)));
 }
 
-void AccelEnrichment::resetAE() {
-	cb.clear();
-}
-
 void TpsAccelEnrichment::resetAE() {
-	AccelEnrichment::resetAE();
+	cb.clear();
 	resetFractionValues();
 }
 
@@ -166,15 +161,15 @@ void TpsAccelEnrichment::resetFractionValues() {
 	cycleCnt = 0;
 }
 
-void AccelEnrichment::setLength(int length) {
+void TpsAccelEnrichment::setLength(int length) {
 	cb.setSize(length);
 }
 
-void AccelEnrichment::onNewValue(float currentValue) {
+void TpsAccelEnrichment::onNewValue(float currentValue) {
 	cb.add(currentValue);
 }
 
-AccelEnrichment::AccelEnrichment() {
+TpsAccelEnrichment::TpsAccelEnrichment() {
 	resetAE();
 	cb.setSize(4);
 }

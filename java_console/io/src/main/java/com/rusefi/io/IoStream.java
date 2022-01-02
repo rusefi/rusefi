@@ -25,8 +25,6 @@ import static com.devexperts.logging.Logging.getLogging;
  * 5/11/2015.
  */
 public interface IoStream extends WriteStream, Closeable, StreamStatistics {
-    Logging log = getLogging(IoStream.class);
-
     static String printHexBinary(byte[] data) {
         if (data == null)
             return "(null)";
@@ -39,6 +37,18 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
             r.append(' ');
         }
         return r.toString();
+    }
+
+    static String printByteArray(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        for (byte b : data) {
+            if (Character.isJavaIdentifierPart(b)) {
+                sb.append((char) b);
+            } else {
+                sb.append(' ');
+            }
+        }
+        return printHexBinary(data) + sb;
     }
 
     @NotNull
@@ -84,8 +94,6 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
     AbstractIoStream.StreamStats getStreamStats();
 
     void close();
-
-    String getLoggingPrefix();
 
     IncomingDataBuffer getDataBuffer();
 

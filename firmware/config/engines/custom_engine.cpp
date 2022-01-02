@@ -767,6 +767,7 @@ void setTest33816EngineConfiguration() {
 	engineConfiguration->mc33816_cs = GPIOD_7;
 	// green
 	engineConfiguration->mc33816_rstb = GPIOD_4;
+	engineConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
 	// yellow
 	engineConfiguration->mc33816_driven = GPIOD_6;
 
@@ -793,8 +794,8 @@ void setHellen72etb() {
 
 void setHellenDefaultVrThresholds() {
 	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
-		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600 / RPM_1_BYTE_PACKING_MULT, 7000 / RPM_1_BYTE_PACKING_MULT, 100 / RPM_1_BYTE_PACKING_MULT);
-		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
+		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600, 7000, 100);
+		setLinearCurve(engineConfiguration->vrThreshold[i].values, 0.6, 1.2, 0.1);
 	}
 }
 
@@ -809,7 +810,11 @@ void proteusHarley() {
 
 	// for now we need non wired camInput to keep TS field enable/disable logic happy
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
-	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
+	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
+
+	engineConfiguration->mapCamAveragingLength = 16;
+	engineConfiguration->mapCamSkipFactor = 50;
+	engineConfiguration->mapCamLookForLowPeaks = true;
 
 	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
 #if HW_PROTEUS

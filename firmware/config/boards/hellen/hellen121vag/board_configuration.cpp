@@ -14,7 +14,7 @@
 #include "fsio_impl.h"
 #include "custom_engine.h"
 #include "electronic_throttle_impl.h"
-#include "../hellen_meta.h"
+#include "hellen_meta.h"
 
 static void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -142,6 +142,8 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->etb_use_two_wires = true;
 
 	setBoschVAGETB();
+
+	engineConfiguration->globalTriggerAngleOffset = 93;
 
 	engineConfiguration->isSdCardEnabled = true;
 

@@ -39,7 +39,6 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  */
 public class ConsoleUI {
     private static final int DEFAULT_TAB_INDEX = 0;
-    public String port;
     private static SensorCentral.SensorListener wrongVersionListener;
 
     public static final String TAB_INDEX = "main_tab";
@@ -50,8 +49,7 @@ public class ConsoleUI {
     static Frame staticFrame;
 
     private final TabbedPanel tabbedPane;
-
-    private final MainFrame mainFrame;
+    private final String port;
 
     public final UIContext uiContext = new UIContext();
 
@@ -67,7 +65,7 @@ public class ConsoleUI {
     public ConsoleUI(String port) {
         tabbedPane = new TabbedPanel(uiContext);
         this.port = port;
-        mainFrame = new MainFrame(this, tabbedPane);
+        MainFrame mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
         setFrameIcon(ConsoleUI.staticFrame);
         FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
@@ -137,7 +135,7 @@ public class ConsoleUI {
         if (!linkManager.isLogViewer())
             tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!linkManager.isLogViewer()) {
-            tabbedPane.addTab("Formulas/Live Data", new FormulasPane(uiContext).getContent());
+            tabbedPane.addTab("Live Data", new LiveDataPane(uiContext).getContent());
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
         }
 
@@ -180,6 +178,10 @@ public class ConsoleUI {
 
         AutoupdateUtil.setAppIcon(mainFrame.getFrame().getFrame());
         mainFrame.getFrame().showFrame(tabbedPane.tabbedPane);
+    }
+
+    public String getPort() {
+        return port;
     }
 
     static void startUi(String[] args) throws InterruptedException, InvocationTargetException {

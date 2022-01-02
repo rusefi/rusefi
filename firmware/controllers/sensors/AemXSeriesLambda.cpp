@@ -9,6 +9,7 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 		type,
 		MS2NT(21)	// sensor transmits at 100hz, allow a frame to be missed
 	)
+	, m_sensorIndex(sensorIndex)
 {}
 
 void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
@@ -28,13 +29,20 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	// rusEfi controller sends some extra diagnostic data about its internal workings
 	if (isRusefiController && engineConfiguration->debugMode == DBG_RUSEFI_WIDEBAND) {
 		float pumpDuty = frame.data8[2] / 255.0f;
-		float sensorEsr = frame.data8[3] * 4;
 		float nernstVoltage = frame.data8[4] / 200.0f;
 
-		tsOutputChannels.debugFloatField1 = pumpDuty;
-		tsOutputChannels.debugFloatField2 = sensorEsr;
-		tsOutputChannels.debugFloatField3 = nernstVoltage;
-		tsOutputChannels.debugFloatField4 = lambdaFloat;
+		engine->outputChannels.debugFloatField1 = pumpDuty;
+		engine->outputChannels.debugFloatField3 = nernstVoltage;
+	}
+
+	if (isRusefiController) {
+		float wbEsr = frame.data8[3] * 4;
+
+		// TODO: convert ESR to temperature
+		engine->outputChannels.wbTemperature[m_sensorIndex] = wbEsr;
+
+		// TODO: decode heater duty
+		engine->outputChannels.wbHeaterDuty[m_sensorIndex] = 0;
 	}
 #endif
 

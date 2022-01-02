@@ -63,7 +63,7 @@ void startSimultaniousInjection(void*) {
 	}
 }
 
-static void endSimultaniousInjectionOnlyTogglePins(void*) {
+static void endSimultaniousInjectionOnlyTogglePins(void* = nullptr) {
 	efitick_t nowNt = getTimeNowNt();
 	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
 		enginePins.injectors[i].close(nowNt);
@@ -165,9 +165,8 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		return;
 	}
 
-	// Select fuel mass from the correct bank
-	uint8_t bankIndex = engineConfiguration->cylinderBankSelect[this->cylinderNumber];
-	float injectionMassGrams = engine->injectionMass[bankIndex];
+	// Select fuel mass from the correct cylinder
+	auto injectionMassGrams = engine->injectionMass[this->cylinderNumber];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
@@ -195,7 +194,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	engine->engineState.fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
-	engine->actualLastInjection[bankIndex] = injectionDuration;
+	engine->actualLastInjection[this->cylinderNumber] = injectionDuration;
 
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
@@ -330,8 +329,18 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
-static bool noFiringUntilVvtSync(vvt_mode_e mode) {
-	return mode == VVT_MIATA_NB2 || mode == VVT_MAP_V_TWIN;
+static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
+	auto operationMode = engine->getOperationMode();
+
+	// V-Twin MAP phase sense needs to always wait for sync
+	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
+		return true;
+	}
+
+	// Symmetrical crank modes require cam sync before firing
+	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
+	// Examples include Nissan MR/VQ, Miata NB, etc
+	return operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR || operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR;
 }
 
 /**
@@ -341,11 +350,12 @@ static bool noFiringUntilVvtSync(vvt_mode_e mode) {
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) && engine->triggerCentral.vvtSyncTimeNt == 0) {
-		// this is a bit spaghetti code for sure
-		// do not spark & do not fuel until we have VVT sync.
-		// NB2 is a special case due to symmetrical crank wheel and we need to make sure no spark happens out of sync
-		// VTwin is another special case where we really need to know phase before firing
+	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) 
+		&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
+		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
+		// examples:
+		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
+		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
 		return;
 	}
 
@@ -438,10 +448,13 @@ static bool isPrimeInjectionPulseSkipped() {
 }
 
 /**
- * Prime injection pulse, mainly needed for mono-injectors or long intake manifolds.
- * See testStartOfCrankingPrimingPulse()
+ * Prime injection pulse
  */
-void startPrimeInjectionPulse() {
+void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
+	if (!ignitionOn) {
+		// don't prime on ignition-off
+		return;
+	}
 
 	// First, we need a protection against 'fake' ignition switch on and off (i.e. no engine started), to avoid repeated prime pulses.
 	// So we check and update the ignition switch counter in non-volatile backup-RAM
@@ -460,25 +473,57 @@ void startPrimeInjectionPulse() {
 		ignSwitchCounter = -1;
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
-		engine->primeInjEvent.ownIndex = 0;
-		engine->primeInjEvent.isSimultanious = true;
+		auto primeDelayMs = engineConfiguration->primingDelay * 1000;
 
-		scheduling_s *sDown = &engine->injectionEvents.elements[0].endOfInjectionEvent;
-		// When the engine is hot, basically we don't need prime inj.pulse, so we use an interpolation over temperature (falloff).
-		// If 'primeInjFalloffTemperature' is not specified (by default), we have a prime pulse deactivation at zero celsius degrees, which is okay.
-		const float maxPrimeInjAtTemperature = -40.0f;	// at this temperature the pulse is maximal.
-		floatms_t pulseLength = interpolateClamped(maxPrimeInjAtTemperature, engineConfiguration->startOfCrankingPrimingPulse,
-			engineConfiguration->primeInjFalloffTemperature, 0.0f, Sensor::get(SensorType::Clt).value_or(70));
-		if (pulseLength > 0) {
-			startSimultaniousInjection();
-			int turnOffDelayUs = efiRound(MS2US(pulseLength), 1.0f);
-			engine->executor.scheduleForLater(sDown, turnOffDelayUs, { &endSimultaniousInjectionOnlyTogglePins, engine });
-		}
+		auto startTime = getTimeNowNt() + MS2NT(primeDelayMs);
+		engine->executor.scheduleByTimestampNt("prime", &m_start, startTime, { PrimeController::onPrimeStartAdapter, this});
+	} else {
+		efiPrintf("Skipped priming pulse since ignSwitchCounter = %d", ignSwitchCounter);
 	}
 #if EFI_PROD_CODE
 	// we'll reset it later when the engine starts
 	backupRamSave(BACKUP_IGNITION_SWITCH_COUNTER, ignSwitchCounter + 1);
 #endif /* EFI_PROD_CODE */
+}
+
+void PrimeController::onPrimeStart() {
+	auto durationMs = getPrimeDuration();
+
+	// Don't prime a zero-duration pulse
+	if (durationMs <= 0) {
+		efiPrintf("Skipped zero-duration priming pulse.");
+		return;
+	}
+
+	efiPrintf("Firing priming pulse of %.2f ms", durationMs);
+
+	auto endTime = getTimeNowNt() + MS2NT(durationMs);
+
+	// Open all injectors, schedule closing later
+	m_isPriming = true;
+	startSimultaniousInjection();
+	engine->executor.scheduleByTimestampNt("prime", &m_end, endTime, { onPrimeEndAdapter, this });
+}
+
+void PrimeController::onPrimeEnd() {
+	endSimultaniousInjectionOnlyTogglePins();
+
+	m_isPriming = false;
+}
+
+floatms_t PrimeController::getPrimeDuration() const {
+	auto clt = Sensor::get(SensorType::Clt);
+
+	// If the coolant sensor is dead, skip the prime. The engine will still start fine, but may take a little longer.
+	if (!clt) {
+		return 0;
+	}
+
+	auto primeMass = 
+		0.001f *	// convert milligram to gram
+		interpolate2d(clt.Value, engineConfiguration->primeBins, engineConfiguration->primeValues);
+
+	return engine->module<InjectorModel>()->getInjectionDuration(primeMass);
 }
 
 void updatePrimeInjectionPulseState() {
@@ -503,7 +548,7 @@ static void showMainInfo(Engine *engine) {
 	int rpm = GET_RPM();
 	float el = getFuelingLoad();
 	efiPrintf("rpm %d engine_load %.2f", rpm, el);
-	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance);
+	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance[0]);
 #endif /* EFI_PROD_CODE */
 }
 
@@ -511,11 +556,6 @@ void initMainEventListener() {
 #if EFI_PROD_CODE
 	addConsoleActionP("maininfo", (VoidPtr) showMainInfo, engine);
 #endif
-
-    // We start prime injection pulse at the early init stage - don't wait for the engine to start spinning!
-    if (engineConfiguration->startOfCrankingPrimingPulse > 0)
-    	startPrimeInjectionPulse();
-
 }
 
 #endif /* EFI_ENGINE_CONTROL */

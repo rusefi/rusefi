@@ -151,13 +151,6 @@ void EngineState::periodicFastCallback() {
 	float injectionMass = getInjectionMass(rpm);
 	auto clResult = fuelClosedLoopCorrection();
 
-	// compute per-bank fueling
-	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
-		float corr = clResult.banks[i];
-		engine->injectionMass[i] = injectionMass * corr;
-		engine->stftCorrection[i] = corr;
-	}
-
 	// Store the pre-wall wetting injection duration for scheduling purposes only, not the actual injection duration
 	engine->injectionDuration = engine->module<InjectorModel>()->getInjectionDuration(injectionMass);
 
@@ -165,7 +158,25 @@ void EngineState::periodicFastCallback() {
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 
 	float ignitionLoad = getIgnitionLoad();
-	timingAdvance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+	float advance = getAdvance(rpm, ignitionLoad) * luaAdjustments.ignitionTimingMult + luaAdjustments.ignitionTimingAdd;
+
+	// compute per-bank fueling
+	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
+		float corr = clResult.banks[i];
+		engine->stftCorrection[i] = corr;
+	}
+
+	// Now apply that to per-cylinder fueling and timing
+	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
+		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[i];
+		auto bankTrim =engine->stftCorrection[bankIndex];
+		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
+
+		// Apply both per-bank and per-cylinder trims
+		engine->injectionMass[i] = injectionMass * bankTrim * cylinderTrim;
+
+		timingAdvance[i] = advance + getCylinderIgnitionTrim(i, rpm, ignitionLoad);
+	}
 
 	// TODO: calculate me from a table!
 	trailingSparkAngle = engineConfiguration->trailingSparkAngle;
@@ -275,7 +286,8 @@ bool VvtTriggerConfiguration::isUseOnlyRisingEdgeForTrigger() const {
 }
 
 trigger_type_e VvtTriggerConfiguration::getType() const {
-	return engine->triggerCentral.vvtTriggerType[index];
+	// Convert from VVT type to trigger type
+	return getVvtTriggerType(engineConfiguration->vvtMode[index]);
 }
 
 bool VvtTriggerConfiguration::isVerboseTriggerSynchDetails() const {

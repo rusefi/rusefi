@@ -48,7 +48,7 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command);
  */
 void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode);
 
-void updateTunerStudioState(TunerStudioOutputChannels *tsOutputChannels);
+void updateTunerStudioState();
 void printTsStats(void);
 void requestBurn(void);
 

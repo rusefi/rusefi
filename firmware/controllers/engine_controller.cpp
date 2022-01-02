@@ -109,7 +109,6 @@ Engine * engine;
 void initDataStructures() {
 #if EFI_ENGINE_CONTROL
 	initFuelMap();
-	initTimingMap();
 	initSpeedDensity();
 #endif // EFI_ENGINE_CONTROL
 }
@@ -198,18 +197,6 @@ static void doPeriodicSlowCallback() {
 	efiAssertVoid(CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 
 	slowStartStopButtonCallback();
-
-
-	efitick_t nowNt = getTimeNowNt();
-	for (int bankIndex = 0; bankIndex < BANKS_COUNT; bankIndex++) {
-		for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
-			if (nowNt - engine->triggerCentral.vvtSyncTimeNt[bankIndex][camIndex] >= NT_PER_SECOND) {
-				// loss of VVT sync
-				// todo: this code would get simpler if we convert vvtSyncTimeNt to Timer
-				engine->triggerCentral.vvtSyncTimeNt[bankIndex][camIndex] = 0;
-			}
-		}
-	}
 
 	engine->rpmCalculator.onSlowCallback();
 
@@ -656,6 +643,13 @@ bool validateConfig() {
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);
 	ensureArrayIsAscending("Pedal map RPM", config->pedalToTpsRpmBins);
 
+	if (engineConfiguration->hpfpCamLobes > 0) {
+		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
+		ensureArrayIsAscending("HPFP lobe profile", engineConfiguration->hpfpLobeProfileQuantityBins);
+		ensureArrayIsAscending("HPFP target rpm", engineConfiguration->hpfpTargetRpmBins);
+		ensureArrayIsAscending("HPFP target load", engineConfiguration->hpfpTargetLoadBins);
+	}
+
 	// VVT
 	if (engineConfiguration->camInputs[0] != GPIO_UNASSIGNED) {
 		ensureArrayIsAscending("VVT intake load", config->vvtTable1LoadBins);
@@ -741,7 +735,7 @@ void initEngineContoller() {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 26000
+#define RAM_UNUSED_SIZE 13000
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 16

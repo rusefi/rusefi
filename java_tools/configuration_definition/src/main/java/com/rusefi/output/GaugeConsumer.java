@@ -10,7 +10,7 @@ import java.io.IOException;
 import static com.rusefi.output.DataLogConsumer.getComment;
 import static org.abego.treelayout.internal.util.java.lang.string.StringUtil.quote;
 
-public class GaugeConsumer implements ConfigurationConsumer {
+public class GaugeConsumer extends AbstractConfigurationConsumer {
     private final String fileName;
     private final ReaderState state;
     private final CharArrayWriter charArrayWriter = new CharArrayWriter();
@@ -21,22 +21,12 @@ public class GaugeConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void startFile() throws IOException {
-        System.out.println("startFile");
-
-    }
-
-    @Override
-    public void endFile() throws IOException {
-        System.out.println("endFile");
-
-    }
-
-    @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (state.stack.isEmpty()) {
-            FieldIterator iterator = new FieldIterator(structure.tsFields);
-            String content = handleFields(structure, iterator, "");
+            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.tsFields, "",
+                    (state, configField, prefix) -> handle(configField, prefix));
+            iterator.loop();
+            String content = iterator.getContent();
             charArrayWriter.append(content);
         }
 
@@ -47,27 +37,8 @@ public class GaugeConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handleFields(ConfigStructure structure, FieldIterator iterator, String prefix) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < structure.tsFields.size(); i++) {
-            iterator.start(i);
-
-            String content = handle(iterator.cf, prefix);
-            sb.append(content);
-            iterator.end();
-
-        }
-        return sb.toString();
-    }
-
     private String handle(ConfigField configField, String prefix) {
-        ConfigStructure cs = configField.getState().structures.get(configField.getType());
-        if (cs != null) {
-            String extraPrefix = cs.withPrefix ? configField.getName() + "_" : "";
-            return handleFields(cs, new FieldIterator(cs.tsFields), extraPrefix);
-        }
-
-        String comment = getComment(configField, state.variableRegistry);
+        String comment = getComment("", configField, state.variableRegistry);
         comment = ConfigField.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;

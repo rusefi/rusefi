@@ -39,18 +39,18 @@ public class PortHolder {
         this.ioStreamFactory = ioStreamFactory;
     }
 
-    boolean connectAndReadConfiguration() {
+    boolean connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
         IoStream stream = ioStreamFactory.call();
         if (stream == null) {
             // error already reported
             return false;
         }
         synchronized (portLock) {
-            bp = new BinaryProtocol(linkManager, stream, stream.getDataBuffer());
+            bp = new BinaryProtocol(linkManager, stream);
             portLock.notifyAll();
         }
 
-        boolean result = bp.connectAndReadConfiguration(dataListener);
+        boolean result = bp.connectAndReadConfiguration( arguments, dataListener);
         if (listener != null) {
             if (result) {
                 listener.onConnectionEstablished();

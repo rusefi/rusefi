@@ -34,10 +34,8 @@
 #include "speed_density_base.h"
 #include "lua_hooks.h"
 
-static fuel_Map3D_t fuelPhaseMap;
 extern fuel_Map3D_t veMap;
 extern lambda_Map3D_t lambdaMap;
-extern baroCorr_Map3D_t baroCorrMap;
 static mapEstimate_Map3D_t mapEstimationTable;
 
 #if EFI_ENGINE_CONTROL
@@ -182,7 +180,11 @@ angle_t getInjectionOffset(float rpm, float load) {
 		return 0; // error already reported
 	}
 
-	angle_t value = fuelPhaseMap.getValue(rpm, load);
+	angle_t value = interpolate3d(
+		config->injectionPhase,
+		config->injPhaseLoadBins, load,
+		config->injPhaseRpmBins, rpm
+	);
 
 	if (cisnan(value)) {
 		// we could be here while resetting configuration for example
@@ -304,15 +306,9 @@ static FuelComputer fuelComputer(lambdaMap);
  * is to prepare the fuel map data structure for 3d interpolation
  */
 void initFuelMap() {
-
-
 	engine->fuelComputer = &fuelComputer;
 
 	mapEstimationTable.init(config->mapEstimateTable, config->mapEstimateTpsBins, config->mapEstimateRpmBins);
-
-#if (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT)
-	fuelPhaseMap.init(config->injectionPhase, config->injPhaseLoadBins, config->injPhaseRpmBins);
-#endif /* (IGN_LOAD_COUNT == FUEL_LOAD_COUNT) && (IGN_RPM_COUNT == FUEL_RPM_COUNT) */
 }
 
 /**
@@ -401,7 +397,12 @@ float getBaroCorrection() {
 		// Default to 1atm if failed
 		float pressure = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
 
-		float correction = baroCorrMap.getValue(GET_RPM(), pressure);
+		float correction = interpolate3d(
+			engineConfiguration->baroCorrTable,
+			engineConfiguration->baroCorrPressureBins, pressure,
+			engineConfiguration->baroCorrRpmBins, GET_RPM()
+		);
+
 		if (cisnan(correction) || correction < 0.01) {
 			warning(OBD_Barometric_Press_Circ_Range_Perf, "Invalid baro correction %f", correction);
 			return 1;
@@ -428,6 +429,18 @@ float getStandardAirCharge() {
 	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L
 	// 101.325kpa, 20C
 	return idealGasLaw(cylDisplacement, 101.325f, 273.15f + 20.0f);
+}
+
+float getCylinderFuelTrim(size_t cylinderNumber, int rpm, float fuelLoad) {
+	auto trimPercent = interpolate3d(
+		config->fuelTrims[cylinderNumber].table,
+		config->fuelTrimLoadBins, fuelLoad,
+		config->fuelTrimRpmBins, rpm
+	);
+
+	// Convert from percent +- to multiplier
+	// 5% -> 1.05
+	return (100 + trimPercent) / 100;
 }
 
 #endif

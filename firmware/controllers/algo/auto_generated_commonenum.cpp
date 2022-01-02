@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Nov 15 03:01:56 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Dec 27 17:12:56 UTC 2021
 // see also gen_config_and_enums.bat
 
 
@@ -54,21 +54,6 @@ case ADC_SLOW:
   return "ADC_SLOW";
 case Force_4_bytes_size_adc_channel_mode:
   return "Force_4_bytes_size_adc_channel_mode";
-  }
- return NULL;
-}
-const char *getAfr_override_e(afr_override_e value){
-switch(value) {
-case AFR_AccPedal:
-  return "AFR_AccPedal";
-case AFR_CylFilling:
-  return "AFR_CylFilling";
-case AFR_MAP:
-  return "AFR_MAP";
-case AFR_None:
-  return "AFR_None";
-case AFR_Tps:
-  return "AFR_Tps";
   }
  return NULL;
 }
@@ -146,6 +131,8 @@ case B500KBPS:
 }
 const char *getCan_nbc_e(can_nbc_e value){
 switch(value) {
+case CAN_AIM_DASH:
+  return "CAN_AIM_DASH";
 case CAN_BUS_BMW_E90:
   return "CAN_BUS_BMW_E90";
 case CAN_BUS_GENESIS_COUPE:
@@ -452,6 +439,21 @@ case SWITCH_INPUT_LAUNCH:
   }
  return NULL;
 }
+const char *getLoad_override_e(load_override_e value){
+switch(value) {
+case AFR_AccPedal:
+  return "AFR_AccPedal";
+case AFR_CylFilling:
+  return "AFR_CylFilling";
+case AFR_MAP:
+  return "AFR_MAP";
+case AFR_None:
+  return "AFR_None";
+case AFR_Tps:
+  return "AFR_Tps";
+  }
+ return NULL;
+}
 const char *getLog_format_e(log_format_e value){
 switch(value) {
 case Force_4_bytes_size_log_format:
@@ -681,6 +683,8 @@ case VE_TPS:
 }
 const char *getVvt_mode_e(vvt_mode_e value){
 switch(value) {
+case VVT_12:
+  return "VVT_12";
 case VVT_2JZ:
   return "VVT_2JZ";
 case VVT_BARRA_3_PLUS_1:
@@ -695,8 +699,8 @@ case VVT_HONDA_K:
   return "VVT_HONDA_K";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
-case VVT_MAP_V_TWIN:
-  return "VVT_MAP_V_TWIN";
+case VVT_MAP_V_TWIN_ANOTHER:
+  return "VVT_MAP_V_TWIN_ANOTHER";
 case VVT_MIATA_NB2:
   return "VVT_MIATA_NB2";
 case VVT_NISSAN_MR:

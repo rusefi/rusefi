@@ -22,6 +22,7 @@
  */
 
 #pragma once
+#include "high_pressure_fuel_pump_generated.h"
 
 class HpfpLobe {
 public:
@@ -29,6 +30,8 @@ public:
 
 	angle_t findNextLobe(); ///< Calculate the angle (after crank TDC) for the top of the next lobe
 };
+
+class HpfpController;
 
 class HpfpQuantity {
 public:
@@ -38,7 +41,7 @@ public:
 	/**
 	 * Calculate where the pump should become active, in degrees before pump lobe TDC
 	 */
-	angle_t pumpAngleFuel(int rpm);
+	angle_t pumpAngleFuel(int rpm, HpfpController *model);
 
 	/**
 	 * Calculate the percent of the pump stroke needed to replace the fuel injected.  Also
@@ -73,7 +76,7 @@ public:
 	}
 };
 
-class HpfpController : public EngineModule {
+class HpfpController : public EngineModule, public high_pressure_fuel_pump_s {
 public:
 	void onFastCallback() final;
 
@@ -86,7 +89,6 @@ private:
 	HpfpLobe     m_lobe;
 
 	volatile bool m_running = false; ///< Whether events are being scheduled or not
-	volatile angle_t m_requested_pump = 0; ///< Computed requested pump duration in degrees (not including deadtime)
 	volatile angle_t m_deadtime = 0; ///< Computed solenoid deadtime in degrees
 
 	void scheduleNextCycle();

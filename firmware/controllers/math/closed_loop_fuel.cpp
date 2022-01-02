@@ -24,7 +24,7 @@ static SensorType getSensorForBankIndex(size_t index) {
 
 size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 	// Low RPM -> idle
-	if (idleDeadband.lt(rpm, cfg.maxIdleRegionRpm * RPM_1_BYTE_PACKING_MULT))
+	if (idleDeadband.lt(rpm, cfg.maxIdleRegionRpm))
 	{
 		return 0;
 	}
@@ -94,7 +94,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), engineConfiguration->stft);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.fuelClosedLoopBinIdx = binIdx;
+	engine->outputChannels.fuelClosedLoopBinIdx = binIdx;
 #endif // EFI_TUNER_STUDIO
 
 	ClosedLoopFuelResult result;

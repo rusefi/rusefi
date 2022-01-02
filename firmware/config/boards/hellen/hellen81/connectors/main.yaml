@@ -98,7 +98,7 @@ pins:
 
   - pin: 14
     function: Main Relay Output
-    id: GPIOH_13
+    id: GPIOI_2
     class: outputs
     ts_name: 14 - OUT_MAIN
     type: ls

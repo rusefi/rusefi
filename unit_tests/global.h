@@ -24,8 +24,8 @@ typedef uint32_t ioportmask_t;
 #define EXPECTED_REMAINING_STACK 1
 #define getCurrentRemainingStack() (999999)
 
-// this is needed by all DECLARE_ENGINE_PARAMETER_* usages
-#include "engine_configuration_generated_structures.h"
+#define EXPECT_NEAR_M3(x, y) EXPECT_NEAR((x), (y), 1e-3)
+#define EXPECT_NEAR_M4(a, b) EXPECT_NEAR(a, b, 1e-4)
 
 
 #ifdef __cplusplus
@@ -61,6 +61,10 @@ void chDbgAssert(int c, char *msg, void *arg);
 #define EFI_ERROR_CODE 0xffffffff
 
 #define CCM_OPTIONAL
+
+#define chSysLock() {}
+#define chSysUnlock() {}
+#define osalThreadDequeueNextI(x, y) {}
 
 #ifdef __cplusplus
 namespace chibios_rt {

@@ -7,6 +7,7 @@ import com.rusefi.TestHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolServer;
+import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.server.Backend;
 import com.rusefi.server.ControllerConnectionState;
 import org.junit.Before;
@@ -76,7 +77,7 @@ public class NetworkConnectorTest {
             }
         };
         NetworkConnector networkConnector = new NetworkConnector();
-        networkConnector.start(NetworkConnector.Implementation.Unknown, TestHelper.TEST_TOKEN_1, TestHelper.LOCALHOST + ":" + controllerPort, connectorContext, reconnectListener);
+        networkConnector.start(NetworkConnector.Implementation.Unknown, TestHelper.TEST_TOKEN_1, TcpConnector.LOCALHOST + ":" + controllerPort, connectorContext, reconnectListener);
 
         assertLatch(reconnectCounter);
 

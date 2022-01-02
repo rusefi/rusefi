@@ -129,7 +129,7 @@ static void setDefaultStftSettings() {
 	cfg.deadband = 5;
 
 	// Sensible region defaults
-	cfg.maxIdleRegionRpm = 1000 / RPM_1_BYTE_PACKING_MULT;
+	cfg.maxIdleRegionRpm = 1000;
 	cfg.maxOverrunLoad = 35;
 	cfg.minPowerLoad = 85;
 

@@ -3,46 +3,33 @@
 #include "pch.h"
 #include "trigger_central.h"
 
-static int getZigZag(int index) {
-	index = index % 1000;
+TEST(trigger, map_cam_by_magic_point) {
 
-	if (index < 400) {
-		// going up from 0 to 400
-		return index;
-	}
-	if (index < 500) {
-		// going down from 400 to 300
-		return 800 - index;
-	}
-	if (index < 600) {
-		// going up from 300 to 400
-		return index - 200;
-	}
-	// going down from 400 to 0
-	return 1000 - index;
-}
+	EngineTestHelper eth(TEST_CRANK_ENGINE);
 
-TEST(trigger, map_cam) {
+	engineConfiguration->camInputs[0] = GPIOA_0;
+	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
 
-	MapState state;
+	engine->outputChannels.instantMAPValue = 100;
 
-	int i = 0;
-	for (;i<404;i++) {
-		state.add(getZigZag(i));
+	engineConfiguration->mapCamDetectionAnglePosition = 90;
 
-		if (state.mapBuffer.getCount() > MAP_CAM_BUFFER) {
-			ASSERT_FALSE(state.isPeak()) << "At " << i;
-		}
-	}
+	eth.smartFireTriggerEvents2(/*count*/10, /*delayMs*/200);
+	ASSERT_EQ(150,  GET_RPM()) << "RPM";
 
-	state.add(getZigZag(i));
-	ASSERT_TRUE(state.isPeak()) << "At " << i;
+	ASSERT_EQ(1, engine->outputChannels.TEMPLOG_map_peak);
+	ASSERT_EQ(0, engine->outputChannels.vvtSyncCounter);
 
-	for (;i<604;i++) {
-		state.add(getZigZag(i));
-		ASSERT_FALSE(state.isPeak()) << "At " << i;
-	}
+	// Nothing should have been scheduled yet
+	ASSERT_EQ(0, engine->executor.size());
 
-	state.add(getZigZag(i));
-	ASSERT_TRUE(state.isPeak()) << "At " << i;
+	engine->outputChannels.instantMAPValue = 120;
+	eth.smartFireTriggerEvents2(/*count*/4, /*delayMs*/200);
+
+	ASSERT_EQ(2, engine->outputChannels.TEMPLOG_map_peak);
+	ASSERT_EQ(1, engine->outputChannels.vvtSyncCounter);
+	ASSERT_EQ(10, engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT);
+
+	// We have "VVT" sync, things should be scheduled!
+	ASSERT_NE(0, engine->executor.size());
 }

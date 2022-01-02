@@ -14,6 +14,8 @@ public enum LiveDataView {
     MAIN_RELAY(live_data_e.LDS_MAIN_RELAY, MainRelay.VALUES, "main_relay.cpp"),
     TPS_ACCEL(live_data_e.LDS_TPS_ACCEL, TpsAccelState.VALUES, "accel_enrichment.cpp"),
     BOOST_CONTROL(live_data_e.LDS_BOOST_CONTROL, BoostControl.VALUES, "boost_control.cpp"),
+    LAUNCH_CONTROL(live_data_e.LDS_LAUNCH_CONTROL, LaunchControl.VALUES, "launch_control.cpp"),
+    HIGH_PRESSURE(live_data_e.LDS_HIGH_PRESSURE, HighPressureFuelPump.VALUES, "high_pressure_fuel_pump.cpp"),
     ;
 
     private final live_data_e liveDataE;

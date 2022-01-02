@@ -29,7 +29,7 @@
  * @brief Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
  * I guess this implementation would be faster than 'angle % engineCycle'
  */
-#define fixAngle2(angle, msg, code, engineCycle)			   	    	    \
+#define wrapAngle2(angle, msg, code, engineCycle)			   	    	    \
 	{																		\
    	    if (cisnan(angle)) {                                                \
 		   firmwareError(CUSTOM_ERR_ANGLE, "aNaN%s", msg);                  \

@@ -32,7 +32,7 @@ expected<float> InjectorModel::getAbsoluteRailPressure() const {
 	}
 }
 
-float InjectorModel::getInjectorFlowRatio() const {
+float InjectorModel::getInjectorFlowRatio() {
 	// Compensation disabled, use reference flow.
 	if (engineConfiguration->injectorCompensationMode == ICM_None) {
 		return 1.0f;
@@ -53,27 +53,27 @@ float InjectorModel::getInjectorFlowRatio() const {
 		return 1.0f;
 	}
 
-	float pressureDelta = absRailPressure.Value - map.Value;
+	pressureDelta = absRailPressure.Value - map.Value;
 
 	// Somehow pressure delta is less than 0, assume failed sensor and return default flow
 	if (pressureDelta <= 0) {
 		return 1.0f;
 	}
 
-	// todo: live data model
-	float pressureRatio = pressureDelta / referencePressure;
+	pressureRatio = pressureDelta / referencePressure;
+	// todo: live data model?
 	float flowRatio = sqrtf(pressureRatio);
 
 #if EFI_TUNER_STUDIO
-	tsOutputChannels.injectorFlowPressureDelta = pressureDelta;
-	tsOutputChannels.injectorFlowPressureRatio = pressureRatio;
+	engine->outputChannels.injectorFlowPressureDelta = pressureDelta;
+	engine->outputChannels.injectorFlowPressureRatio = pressureRatio;
 #endif // EFI_TUNER_STUDIO
 
 	// TODO: should the flow ratio be clamped?
 	return flowRatio;
 }
 
-float InjectorModel::getInjectorMassFlowRate() const {
+float InjectorModel::getInjectorMassFlowRate() {
 	// TODO: injector flow dependent upon temperature/ethanol content?
 	auto injectorVolumeFlow = engineConfiguration->injector.flow;
 

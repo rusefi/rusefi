@@ -13,6 +13,7 @@
 #include <cstddef>
 
 #include "os_access.h"
+#include "can.h"
 
 /**
  * Represent a message to be transmitted over CAN.
@@ -39,8 +40,11 @@ public:
 	/**
 	 * Configures the device for all messages to transmit from.
 	 */
-	static void setDevice(CANDriver* device);
+	static void setDevice(CANDriver* device1, CANDriver* device2);
 #endif // EFI_CAN_SUPPORT
+
+	size_t busIndex = 0;
+
 	/**
 	 * @brief Read & write the raw underlying 8-byte buffer.
 	 */
@@ -58,16 +62,20 @@ public:
 
 	void setDlc(uint8_t dlc);
 
+#if HAL_USE_CAN || EFI_UNIT_TEST
+	const CANTxFrame *getFrame() const {
+		return &m_frame;
+	}
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
+
 protected:
-#if EFI_CAN_SUPPORT
+#if HAL_USE_CAN || EFI_UNIT_TEST
 	CANTxFrame m_frame;
-#else // not EFI_CAN_SUPPORT
-	uint8_t m_data8[8];
-#endif // EFI_CAN_SUPPORT
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 
 private:
 #if EFI_CAN_SUPPORT
-	static CANDriver* s_device;
+	static CANDriver* s_devices[2];
 #endif // EFI_CAN_SUPPORT
 };
 

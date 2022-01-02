@@ -23,7 +23,7 @@ TEST(ignition, twoCoils) {
 	ASSERT_EQ(engine->ignitionPin[ID2INDEX(12)], 1);
 
 	// let's recalculate with zero timing so that we can focus on relation advance between cylinders
-	engine->engineState.timingAdvance = 0;
+	setArrayValues(engine->engineState.timingAdvance, 0.0f);
 	initializeIgnitionActions();
 
 	ASSERT_EQ(engine->ignitionEvents.elements[0].sparkAngle, 0);
@@ -59,6 +59,8 @@ TEST(ignition, trailingSpark) {
 	engine->engineState.trailingSparkAngle = 10;
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+
+	setWholeTimingTable(0);
 
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
@@ -116,5 +118,27 @@ TEST(ignition, trailingSpark) {
 	eth.executeActions();
 	// secondary coils should be low
 	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), false);
+}
 
+TEST(ignition, CylinderTimingTrim) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	// Base timing 15 degrees
+	setTable(config->ignitionTable, 15);
+
+	// negative numbers retard timing, positive advance
+	setTable(config->ignTrims[0].table, -4);
+	setTable(config->ignTrims[1].table, -2);
+	setTable(config->ignTrims[2].table,  2);
+	setTable(config->ignTrims[3].table,  4);
+
+	// run the ignition math
+	engine->periodicFastCallback();
+
+	// Check that each cylinder gets the expected timing
+	float unadjusted = 15;
+	EXPECT_NEAR(engine->engineState.timingAdvance[0], unadjusted - 4, EPS4D);
+	EXPECT_NEAR(engine->engineState.timingAdvance[1], unadjusted - 2, EPS4D);
+	EXPECT_NEAR(engine->engineState.timingAdvance[2], unadjusted + 2, EPS4D);
+	EXPECT_NEAR(engine->engineState.timingAdvance[3], unadjusted + 4, EPS4D);
 }

@@ -11,19 +11,19 @@
 
 #include "can_msg_tx.h"
 
-#if EFI_CAN_SUPPORT
 #include "can.h"
 
-extern int canWriteOk;
-extern int canWriteNotOk;
+#if EFI_CAN_SUPPORT
+/*static*/ CANDriver* CanTxMessage::s_devices[2] = {nullptr, nullptr};
 
-/*static*/ CANDriver* CanTxMessage::s_device = nullptr;
-
-/*static*/ void CanTxMessage::setDevice(CANDriver* device) {
-	s_device = device;
+/*static*/ void CanTxMessage::setDevice(CANDriver* device1, CANDriver* device2) {
+	s_devices[0] = device1;
+	s_devices[1] = device2;
 }
+#endif // EFI_CAN_SUPPORT
 
 CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
+#if HAL_USE_CAN || EFI_UNIT_TEST
 #ifndef STM32H7XX
 	// ST bxCAN device
 	m_frame.IDE = isExtended ? CAN_IDE_EXT : CAN_IDE_STD;
@@ -43,18 +43,26 @@ CanTxMessage::CanTxMessage(uint32_t eid, uint8_t dlc, bool isExtended) {
 	setDlc(dlc);
 
 	memset(m_frame.data8, 0, sizeof(m_frame.data8));
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 }
 
 CanTxMessage::~CanTxMessage() {
-	auto device = s_device;
+#if EFI_CAN_SUPPORT
+	auto device = s_devices[busIndex];
 
 	if (!device) {
-		warning(CUSTOM_ERR_CAN_CONFIGURATION, "CAN configuration issue");
+		warning(CUSTOM_ERR_CAN_CONFIGURATION, "Send: CAN configuration issue %d", busIndex);
 		return;
 	}
 
-	if (engineConfiguration->debugMode == DBG_CAN) {
-		efiPrintf("Sending CAN message: SID %x/%x %x %x %x %x %x %x %x %x", CAN_SID(m_frame), m_frame.DLC,
+	if (!engine->allowCanTx) {
+		return;
+	}
+
+	if (engineConfiguration->verboseCan) {
+		efiPrintf("Sending CAN bus%d message: SID %x/%x %x %x %x %x %x %x %x %x",
+				busIndex,
+				CAN_SID(m_frame), m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],
 				m_frame.data8[2], m_frame.data8[3],
 				m_frame.data8[4], m_frame.data8[5],
@@ -63,19 +71,19 @@ CanTxMessage::~CanTxMessage() {
 
 	// 100 ms timeout
 	msg_t msg = canTransmit(device, CAN_ANY_MAILBOX, &m_frame, TIME_MS2I(100));
+#if EFI_TUNER_STUDIO
 	if (msg == MSG_OK) {
-		canWriteOk++;
+		engine->outputChannels.canWriteOk++;
 	} else {
-		canWriteNotOk++;
+		engine->outputChannels.canWriteNotOk++;
 	}
+#endif // EFI_TUNER_STUDIO
+#endif /* EFI_CAN_SUPPORT */
 }
 
+#if HAL_USE_CAN || EFI_UNIT_TEST
 void CanTxMessage::setDlc(uint8_t dlc) {
 	m_frame.DLC = dlc;
-}
-
-uint8_t& CanTxMessage::operator[](size_t index) {
-	return m_frame.data8[index];
 }
 
 void CanTxMessage::setShortValue(uint16_t value, size_t offset) {
@@ -87,20 +95,8 @@ void CanTxMessage::setBit(size_t byteIdx, size_t bitIdx) {
 	m_frame.data8[byteIdx] |= 1 << bitIdx;
 }
 
-#else
-
-CanTxMessage::CanTxMessage(uint32_t /*eid*/, uint8_t /*dlc*/, bool /*isExtended*/) {
-
-}
-
-CanTxMessage::~CanTxMessage() {
-
-}
-
 uint8_t& CanTxMessage::operator[](size_t index) {
-	return m_data8[index];
+	return m_frame.data8[index];
 }
+#endif // HAL_USE_CAN || EFI_UNIT_TEST
 
-void CanTxMessage::setDlc(uint8_t) { }
-
-#endif // EFI_CAN_SUPPORT

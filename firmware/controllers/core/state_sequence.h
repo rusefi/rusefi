@@ -77,7 +77,6 @@ public:
 	}
 
 	void setSwitchTime(const int phaseIndex, const float value) {
-		efiAssertVoid(CUSTOM_ERR_PWM_SWITCH_ASSERT, switchTimes != nullptr, "switchTimes");
 		switchTimes[phaseIndex] = value;
 	}
 

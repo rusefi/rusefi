@@ -91,7 +91,7 @@
 
 static void printErrorCounters() {
 	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
-			sizeof(tsOutputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
+			sizeof(engine->outputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
@@ -428,6 +428,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	if (received != 1) {
 //			tunerStudioError("ERROR: no command");
 #if EFI_BLUETOOTH_SETUP
+		// no data in a whole second means time to disconnect BT
 		// assume there's connection loss and notify the bluetooth init code
 		bluetoothSoftwareDisconnectNotify();
 #endif  /* EFI_BLUETOOTH_SETUP */
@@ -448,8 +449,8 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
 
 	if (incomingPacketSize == 0 || incomingPacketSize > (sizeof(tsChannel->scratchBuffer) - CRC_WRAPPING_SIZE)) {
-		efiPrintf("TunerStudio: %s invalid size: %d", tsChannel->name, incomingPacketSize);
-		tunerStudioError(tsChannel, "ERROR: CRC header size");
+		efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
+		tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
 		sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
 		return -1;
 	}
@@ -518,18 +519,18 @@ void TunerstudioThread::ThreadTask() {
 	}
 
 	// Until the end of time, process incoming messages.
-	while(true) {
-		if (tsProcessOne(channel) == 0)
+	while (true) {
+		if (tsProcessOne(channel) == 0) {
 			onDataArrived(true);
-		else
+		} else {
 			onDataArrived(false);
+		}
 	}
 }
 
 #endif // EFI_TUNER_STUDIO
 
 tunerstudio_counters_s tsState;
-TunerStudioOutputChannels tsOutputChannels;
 
 void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 	tunerStudioDebug(tsChannel, msg);
@@ -580,6 +581,7 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 		chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), "error=%s\r\n", error);
 		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 	}
+	tsChannel->flush();
 }
 
 extern CommandHandler console_line_callback;
@@ -646,6 +648,7 @@ bool handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) {
 
 		tunerStudioDebug(tsChannel, "not ignoring F");
 		tsChannel->write((const uint8_t *)TS_PROTOCOL, strlen(TS_PROTOCOL));
+		tsChannel->flush();
 		return true;
 	} else {
 		// This wasn't a valid command
@@ -721,9 +724,9 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 			uint16_t index = SWAP_UINT16(data16[1]);
 
 			if (engineConfiguration->debugMode == DBG_BENCH_TEST) {
-				tsOutputChannels.debugIntField1++;
-				tsOutputChannels.debugIntField2 = subsystem;
-				tsOutputChannels.debugIntField3 = index;
+				engine->outputChannels.debugIntField1++;
+				engine->outputChannels.debugIntField2 = subsystem;
+				engine->outputChannels.debugIntField3 = index;
 			}
 
 #if EFI_PROD_CODE && EFI_ENGINE_CONTROL
@@ -761,8 +764,8 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 
 			// set debug_mode 40
 			if (engineConfiguration->debugMode == DBG_COMPOSITE_LOG) {
-				tsOutputChannels.debugIntField1 = currentEnd;
-				tsOutputChannels.debugIntField2 = transmitted;
+				engine->outputChannels.debugIntField1 = currentEnd;
+				engine->outputChannels.debugIntField2 = transmitted;
 
 			}
 

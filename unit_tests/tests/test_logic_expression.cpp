@@ -254,8 +254,9 @@ TEST(fsio, testLogicExpressions) {
 extern int timeNowUs;
 
 TEST(fsio, fuelPump) {
-	// this will init fuel pump fsio logic
 	EngineTestHelper eth(TEST_ENGINE);
+
+	FuelPumpController dut;
 
 	// Mock a fuel pump pin
 	engineConfiguration->fuelPumpPin = GPIOA_0;
@@ -264,27 +265,30 @@ TEST(fsio, fuelPump) {
 
 	// ECU just started, haven't seen trigger yet
 	timeNowUs = 0.5e6;
-	engine->module<FuelPumpController>().unmock().onSlowCallback();
+	dut.onIgnitionStateChanged(true);
+	dut.onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
 	// Long time since ecu start, haven't seen trigger yet
-	timeNowUs = 60e6;
-	engine->module<FuelPumpController>().unmock().onSlowCallback();
+	dut.onIgnitionStateChanged(true);
+	timeNowUs += 10e6;
+	dut.onSlowCallback();
 	// Pump should be off!
 	EXPECT_FALSE(efiReadPin(GPIOA_0));
 
 	// Long time since ecu start, just saw a trigger!
-	timeNowUs = 10e6;
+	dut.onIgnitionStateChanged(true);
+	timeNowUs += 10e6;
 	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
-	engine->module<FuelPumpController>().unmock().onSlowCallback();
+	dut.onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 
 	// ECU just started, and we just saw a trigger!
-	timeNowUs = 10e6;
+	dut.onIgnitionStateChanged(true);
 	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
-	engine->module<FuelPumpController>().unmock().onSlowCallback();
+	dut.onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(GPIOA_0));
 }

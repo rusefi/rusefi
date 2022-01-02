@@ -56,11 +56,11 @@ float getIgnitionLoad() {
  */
 void setSingleCoilDwell() {
 	for (int i = 0; i < DWELL_CURVE_SIZE; i++) {
-		engineConfiguration->sparkDwellRpmBins[i] = i + 1;
+		engineConfiguration->sparkDwellRpmBins[i] = (i + 1) * 50;
 		engineConfiguration->sparkDwellValues[i] = 4;
 	}
 
-	engineConfiguration->sparkDwellRpmBins[5] = 10;
+	engineConfiguration->sparkDwellRpmBins[5] = 500;
 	engineConfiguration->sparkDwellValues[5] = 4;
 
 	engineConfiguration->sparkDwellRpmBins[6] = 4500;
@@ -440,16 +440,27 @@ void prepareOutputSignals() {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	for (size_t i = 0; i < engineConfiguration->specs.cylindersCount; i++) {
-		engine->ignitionPositionWithinEngineCycle[i] = engine->engineCycle * i / engineConfiguration->specs.cylindersCount;
-	}
-
 	prepareIgnitionPinIndices(engineConfiguration->ignitionMode);
 
 	TRIGGER_WAVEFORM(prepareShape(&engine->triggerCentral.triggerFormDetails));
 
 	// Fuel schedule may now be completely wrong, force a reset
 	engine->injectionEvents.invalidate();
+}
+
+angle_t getCylinderAngle(uint8_t cylinderIndex, uint8_t cylinderNumber) {
+	// base = position of this cylinder in the firing order.
+	// We get a cylinder every n-th of an engine cycle where N is the number of cylinders
+	auto base = engine->engineCycle * cylinderIndex / engineConfiguration->specs.cylindersCount;
+
+	// Plus or minus any adjustment if this is an odd-fire engine
+	auto adjustment = engineConfiguration->timing_offset_cylinder[cylinderNumber];
+
+	auto result = base + adjustment;
+
+	assertAngleRange(result, "getCylinderAngle", CUSTOM_ERR_6566);
+
+	return result;
 }
 
 void setTimingRpmBin(float from, float to) {
@@ -465,10 +476,6 @@ void setTimingLoadBin(float from, float to) {
  */
 void setAlgorithm(engine_load_mode_e algo) {
 	engineConfiguration->fuelAlgorithm = algo;
-	if (algo == LM_SPEED_DENSITY) {
-		setLinearCurve(config->ignitionLoadBins, 20, 120, 3);
-		buildTimingMap(35);
-	}
 }
 
 void setFlatInjectorLag(float value) {

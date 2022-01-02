@@ -7,7 +7,14 @@
 
 #pragma once
 
+#if ! EFI_PROD_CODE
+#include "can_mocks.h"
+#endif // EFI_PROD_CODE
+
+
+#if !EFI_UNIT_TEST
 #include "hal.h"
+#endif // EFI_UNIT_TEST
 
 #include "periodic_thread_controller.h"
 
@@ -39,7 +46,7 @@ class CanListener;
 class CanSensorBase;
 
 #if EFI_CAN_SUPPORT
-void processCanRxMessage(const CANRxFrame& msg, efitick_t nowNt);
+void processCanRxMessage(const size_t busIndex, const CANRxFrame& msg, efitick_t nowNt);
 #endif // EFI_CAN_SUPPORT
 
 void registerCanListener(CanListener& listener);
@@ -91,7 +98,9 @@ private:
 #ifdef STM32H7XX
 #define CAN_SID(f) ((f).std.SID)
 #define CAN_EID(f) ((f).ext.EID)
+#define CAN_ID(f) ((f).common.XTD ? CAN_EID(f) : CAN_SID(f))
 #else
 #define CAN_SID(f) ((f).SID)
 #define CAN_EID(f) ((f).EID)
+#define CAN_ID(f) ((f).IDE ? CAN_EID(f) : CAN_SID(f))
 #endif

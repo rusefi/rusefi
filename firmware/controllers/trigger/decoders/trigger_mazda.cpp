@@ -28,9 +28,9 @@ void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	// nominal gap is 0.325
-	s->setTriggerSynchronizationGap2(0.1, 0.45);
+	s->setTriggerSynchronizationGap2(0.1, 0.5);
 	// nominal gap is ~1.52
-	s->setSecondTriggerSynchronizationGap2(1.2, 1.8);
+	s->setSecondTriggerSynchronizationGap2(0.6, 2.3);
 
 	s->useRiseEdge = false;
 
@@ -71,9 +71,9 @@ void initializeMazdaMiataNb2Crank(TriggerWaveform *s) {
 	s->tdcPosition = 60 + 655;
 
 	// Nominal gap 70/110 = 0.636
-	s->setTriggerSynchronizationGap2(0.35f, 0.98f);
+	s->setTriggerSynchronizationGap2(0.35f, 1.15f);
 	// Nominal gap 110/70 = 1.571
-	s->setSecondTriggerSynchronizationGap2(1.05f, 1.8f);
+	s->setSecondTriggerSynchronizationGap2(0.8f, 1.8f);
 
 	// todo: NB2 fronts are inverted comparing to NB1, life is not perfect :(
 	s->addEventAngle(180.0f - NB_CRANK_MAGIC - 4, T_PRIMARY, TV_FALL);
@@ -185,9 +185,9 @@ void initializeMazdaMiataVVtCamShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 
 	// Nominal gap is 8.92
-	s->setTriggerSynchronizationGap2(7, 13);
+	s->setTriggerSynchronizationGap2(6, 20);
 	// Nominal gap is 0.128
-	s->setSecondTriggerSynchronizationGap2(0.06f, 0.16f);
+	s->setSecondTriggerSynchronizationGap2(0.04f, 0.2f);
 
 	s->addEvent720(325, T_PRIMARY, TV_FALL);
 	s->addEvent720(360, T_PRIMARY, TV_RISE);
