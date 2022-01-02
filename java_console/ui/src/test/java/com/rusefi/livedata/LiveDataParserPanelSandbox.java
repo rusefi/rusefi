@@ -10,7 +10,7 @@ import com.rusefi.ui.util.FrameHelper;
 import javax.swing.*;
 
 /**
- * TODO: not point in this class kill it?
+ * TODO: no point in this class kill it?
  * @see LiveDataParserSandbox
  */
 public class LiveDataParserPanelSandbox {
