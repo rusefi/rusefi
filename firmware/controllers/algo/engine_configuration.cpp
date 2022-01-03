@@ -29,6 +29,7 @@
 #include "flash_main.h"
 
 #include "hip9011_logic.h"
+#include "bench_test.h"
 
 #if EFI_MEMS
 #include "accelerometer.h"
@@ -185,6 +186,10 @@ void incrementGlobalConfigurationVersion() {
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+	onConfigurationChangeBenchTest();
+#endif
 
 #if EFI_SHAFT_POSITION_INPUT
 	onConfigurationChangeTriggerCallback();
