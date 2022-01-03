@@ -2188,6 +2188,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "MC33816 rstb",							mc33816_rstb
 		field = "MC33816 flag0",						mc33816_flag0
 
+		field = "#Injector configuration"
 		field = "Boost voltage",						mc33_hvolt
 
 		field = "Boost current target",					mc33_i_boost
@@ -2199,8 +2200,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Peak -> Hold Bypass Time",				mc33_t_bypass
 
 		field = "Hold current target",					mc33_i_hold
-		field = "mc33_t_hold_off ?????",				mc33_t_hold_off
+		field = "Hold off time",				mc33_t_hold_off
 		field = "Maximum injection duration",			mc33_t_hold_tot
+
+		field = "#HPFP configuration"
+		field = "HPFP Peak current",			mc33_hpfp_i_peak
+		field = "HPFP Hold current",			mc33_hpfp_i_hold
+		field = "HPFP Hold off time",			mc33_hpfp_i_hold_off
+		field = "HPFP maximum duration",		mc33_hpfp_max_hold
 
 
 ;			Sensor Inputs
