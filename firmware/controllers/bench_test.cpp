@@ -71,13 +71,15 @@ void benchOn(OutputPin* output) {
 static char pin_error[64];
 
 void benchOff(OutputPin* output) {
+#if EFI_PROD_CODE
 	brain_pin_diag_e diag = gpiochips_getDiag(output->brainPin);
-	if (diag == PIN_OK) {
-		efiPrintf("Diag says OK");
+	if (diag == PIN_INVALID) {
+		efiPrintf("No Diag on this pin");
 	} else {
 		pinDiag2string(pin_error, sizeof(pin_error), diag);
 		efiPrintf("Diag says %s", pin_error);
 	}
+#endif // EFI_PROD_CODE
 	output->setValue(false);
 }
 
