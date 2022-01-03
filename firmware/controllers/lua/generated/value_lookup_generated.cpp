@@ -666,6 +666,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->mc33_hpfp_max_hold;
 	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
 		return engineConfiguration->stepperDcInvertedPins;
+	if (strEqualCaseInsensitive(name, "benchTestOffTime"))
+		return engineConfiguration->benchTestOffTime;
+	if (strEqualCaseInsensitive(name, "benchTestCount"))
+		return engineConfiguration->benchTestCount;
 	if (strEqualCaseInsensitive(name, "boostCutPressure"))
 		return engineConfiguration->boostCutPressure;
 	if (strEqualCaseInsensitive(name, "fixedTiming"))
@@ -2560,6 +2564,16 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
 	{
 		engineConfiguration->stepperDcInvertedPins = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "benchTestOffTime"))
+	{
+		engineConfiguration->benchTestOffTime = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "benchTestCount"))
+	{
+		engineConfiguration->benchTestCount = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "boostCutPressure"))
