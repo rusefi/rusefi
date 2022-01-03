@@ -1200,7 +1200,11 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	custom load_override_e 1 bits, U08, @OFFSET@, [0:2], @@load_override_e_enum@@
 	load_override_e afrOverrideMode;+Override the Y axis (load) value used for the AFR table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
-	uint32_t unused1736;;"", 1, 0, 0, 536870911, 0
+	uint8_t mc33_hpfp_i_peak;;"A", 0.1, 0, 0, 25, 1
+	uint8_t mc33_hpfp_i_hold;;"A", 0.1, 0, 0, 25, 1
+	uint8_t mc33_hpfp_i_hold_off;+How long to deactivate power when hold current is reached before applying power again;"us", 1, 0, 0, 255, 0
+	uint8_t mc33_hpfp_max_hold;+Maximum amount of time the solenoid can be active before assuming a programming error;"ms", 1, 0, 0, 255, 0
+
 	bit unused1740b0
 	bit unused1740b1
 	bit unused1740b2
