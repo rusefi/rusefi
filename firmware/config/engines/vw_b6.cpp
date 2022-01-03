@@ -143,15 +143,6 @@ void setVwPassatB6() {
 	engineConfiguration->hpfpPidP = 0.301;
 	engineConfiguration->hpfpPidI = 0.00012;
 
-	setLinearCurve(engineConfiguration->hpfpLobeProfileAngle, 0, 120, 1);
-	setLinearCurve(engineConfiguration->hpfpLobeProfileQuantityBins, 0, 100, 1);
-
-	setLinearCurve(engineConfiguration->hpfpTargetRpmBins, 0, 8000, 1);
-	setLinearCurve(engineConfiguration->hpfpTargetLoadBins, 0, 180, 1);
-	setTable(engineConfiguration->hpfpTarget, 5000);
-
-	setLinearCurve(engineConfiguration->hpfpCompensationRpmBins, 0, 8000, 1);
-	setLinearCurve(engineConfiguration->hpfpCompensationLoadBins, 0.005, 0.120, 0.001);
 
 	setBoschVAGETB();
 
