@@ -298,7 +298,7 @@ int gpiochips_readPad(brain_pin_e pin)
 
 /**
  * @brief Get diagnostic for given gpio
- * @details actual output value depent on gpiochip capabilities
+ * @details actual output value depend on gpiochip capabilities
  * returns -1 in case of pin not belong to any gpio chip
  * returns PIN_OK in case of chip does not support getting diagnostic
  * else return brain_pin_diag_e from gpiochip driver;
