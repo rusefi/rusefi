@@ -172,6 +172,20 @@ static void setTimings() {
 	mcUpdateDram(MC33816Mem::Tbypass, (MC_CK * engineConfiguration->mc33_t_bypass));
 	mcUpdateDram(MC33816Mem::Thold_off, (MC_CK * engineConfiguration->mc33_t_hold_off));
 	mcUpdateDram(MC33816Mem::Thold_tot, (MC_CK * engineConfiguration->mc33_t_hold_tot));
+
+	// HPFP solenoid settings
+	mcUpdateDram(MC33816Mem::HPFP_Ipeak,
+		     dacEquation(engineConfiguration->mc33_hpfp_i_peak * 100));
+	mcUpdateDram(MC33816Mem::HPFP_Ihold,
+		     dacEquation(engineConfiguration->mc33_hpfp_i_hold * 100));
+	mcUpdateDram(MC33816Mem::HPFP_Thold_off,
+		     std::min(MC_CK * engineConfiguration->mc33_hpfp_i_hold_off,
+			      UINT16_MAX));
+	// Note, if I'm reading this right, the use of the short and the given clock speed means
+	// the max time here is approx 10ms.
+	mcUpdateDram(MC33816Mem::HPFP_Thold_tot,
+		     std::min(MC_CK * 1000 * engineConfiguration->mc33_hpfp_max_hold,
+			      UINT16_MAX));
 }
 
 void setBoostVoltage(float volts)
