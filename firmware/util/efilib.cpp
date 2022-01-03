@@ -193,7 +193,6 @@ static char* itoa_signed(char *p, int num, unsigned radix) {
  * @return pointer at the end zero symbol after the digits
  */
 char* itoa10(char *p, int num) {
-// todo: unit test
 	return itoa_signed(p, num, 10);
 }
 

@@ -74,6 +74,7 @@ int maxI(int i1, int i2);
 int minI(int i1, int i2);
 float maxF(float i1, float i2);
 float minF(float i1, float i2);
+// sometimes known as 'itoa'
 char* itoa10(char *p, int num);
 bool isSameF(float v1, float v2);
 

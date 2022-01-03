@@ -21,6 +21,12 @@
 #include "crc.h"
 #include "fl_stack.h"
 
+TEST(util, testitoa) {
+	char buffer[12];
+	itoa10(buffer, 239);
+	ASSERT_TRUE(strEqual(buffer, "239"));
+}
+
 TEST(util, negativeZero) {
 	ASSERT_TRUE(IS_NEGATIVE_ZERO(-0.0));
 
