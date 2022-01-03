@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 02 00:45:34 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 03 23:43:55 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -864,11 +864,11 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<int16_t, 30, 1> boostControlTarget = (int16_t)0;
 	/**
-	 * need 4 byte alignment
-	units
+	 * "Pump Angle"
+	deg
 	 * offset 338
 	 */
-	uint8_t alignmentFill_at_338[2];
+	scaled_channel<int16_t, 30, 1> unusedHere1111 = (int16_t)0;
 	/**
 	 * "DI: fuel_requested_percent"
 	v
@@ -1190,4 +1190,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Jan 02 00:45:34 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 03 23:43:55 UTC 2022
