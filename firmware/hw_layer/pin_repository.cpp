@@ -112,6 +112,22 @@ PinRepository::PinRepository() {
 #include "smart_gpio.h"
 #include "hardware.h"
 
+void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag) {
+	/* use autogeneraged helpers here? */
+	if (pin_diag == PIN_OK) {
+		chsnprintf(buffer, size, "Ok");
+	} else if (pin_diag != PIN_INVALID) {
+		chsnprintf(buffer, size, "%s%s%s%s%s",
+			pin_diag & PIN_OPEN ? "open_load " : "",
+			pin_diag & PIN_SHORT_TO_GND ? "short_to_gnd " : "",
+			pin_diag & PIN_SHORT_TO_BAT ? "short_to_bat " : "",
+			pin_diag & PIN_OVERLOAD ? "overload " : "",
+			pin_diag & PIN_DRIVER_OVERTEMP ? "overtemp": "");
+	} else {
+		chsnprintf(buffer, size, "INVALID");
+	}
+}
+
 static brain_pin_e index_to_brainPin(unsigned int i)
 {
 	if (i < getBrainPinTotalNum())
@@ -137,28 +153,13 @@ static void reportPins() {
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		for (unsigned int i = getBrainPinOnchipNum() ; i < getBrainPinTotalNum(); i++) {
 			static char pin_error[64];
-			const char *pin_name;
-			const char *pin_user;
-			brain_pin_diag_e pin_diag;
 			brain_pin_e brainPin = index_to_brainPin(i);
 
-			pin_name = gpiochips_getPinName(brainPin);
-			pin_user = getBrainUsedPin(i);
-			pin_diag = gpiochips_getDiag(brainPin);
+			const char *pin_name = gpiochips_getPinName(brainPin);
+			const char *pin_user = getBrainUsedPin(i);
+			brain_pin_diag_e pin_diag = gpiochips_getDiag(brainPin);
 
-			/* use autogeneraged helpers here? */
-			if (pin_diag == PIN_OK) {
-				chsnprintf(pin_error, sizeof(pin_error), "Ok");
-			} else if (pin_diag != PIN_INVALID) {
-				chsnprintf(pin_error, sizeof(pin_error), "%s%s%s%s%s",
-					pin_diag & PIN_OPEN ? "open_load " : "",
-					pin_diag & PIN_SHORT_TO_GND ? "short_to_gnd " : "",
-					pin_diag & PIN_SHORT_TO_BAT ? "short_to_bat " : "",
-					pin_diag & PIN_OVERLOAD ? "overload " : "",
-					pin_diag & PIN_DRIVER_OVERTEMP ? "overtemp": "");
-			} else {
-				chsnprintf(pin_error, sizeof(pin_error), "INVALID");
-			}
+			pinDiag2string(pin_error, sizeof(pin_error), pin_diag);
 
 			/* here show all pins, unused too */
 			if (pin_name != NULL) {

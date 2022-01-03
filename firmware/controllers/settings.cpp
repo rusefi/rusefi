@@ -1166,6 +1166,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
 		engineConfiguration->wwaeBeta = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "benchTestOffTime")) {
+		engineConfiguration->benchTestOffTime = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "benchTestCount")) {
+		engineConfiguration->benchTestCount = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 #if EFI_PROD_CODE
