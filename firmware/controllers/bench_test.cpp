@@ -37,6 +37,7 @@
 #include "malfunction_central.h"
 #include "trigger_emulator_algo.h"
 #include "microsecond_timer.h"
+#include "gpio_ext.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 #include "rusefi_wideband.h"
@@ -67,7 +68,16 @@ void benchOn(OutputPin* output) {
 	output->setValue(true);
 }
 
+static char pin_error[64];
+
 void benchOff(OutputPin* output) {
+	brain_pin_diag_e diag = gpiochips_getDiag(output->brainPin);
+	if (diag == PIN_OK) {
+		efiPrintf("Diag says OK");
+	} else {
+		pinDiag2string(pin_error, sizeof(pin_error), diag);
+		efiPrintf("Diag says %s", pin_error);
+	}
 	output->setValue(false);
 }
 
@@ -102,6 +112,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
 	}
+
 
 	efiPrintf("Done!");
 	isRunningBench = false;
@@ -521,7 +532,7 @@ void onConfigurationChangeBenchTest() {
 	if (engineConfiguration->benchTestOffTime < 5)
 		engineConfiguration->benchTestOffTime = 500; // default value if configuration was not specified
 	if (engineConfiguration->benchTestCount < 1)
-		engineConfiguration->benchTestOffTime = 3; // default value if configuration was not specified
+		engineConfiguration->benchTestCount = 3; // default value if configuration was not specified
 	itoa10(offTimeBuffer, engineConfiguration->benchTestOffTime);
 	itoa10(counterBuffer, engineConfiguration->benchTestCount);
 }
