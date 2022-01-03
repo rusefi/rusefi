@@ -2199,7 +2199,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Peak -> Hold Bypass Time",				mc33_t_bypass
 
 		field = "Hold current target",					mc33_i_hold
-		field = "mc33_t_hold_off ?????",				mc33_t_hold_off
+		field = "Hold off time",				mc33_t_hold_off
 		field = "Maximum injection duration",			mc33_t_hold_tot
 
 
@@ -3730,6 +3730,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = hpfpPumpDialog, "HPFP Pump Configuration"
         field = "Valve Pin", hpfpValvePin, {hpfpCamLobes != 0}
         field = "Valve Pin Mode", hpfpValvePinMode, {hpfpCamLobes != 0}
+	field = "Valve peak current", mc33_hpfp_i_peak, {hpfpCamLobes != 0}
+	field = "Valve hold current", mc33_hpfp_i_hold, {hpfpCamLobes != 0}
+	field = "Valve hold off time", mc33_hpfp_i_hold_off, {hpfpCamLobes != 0}
+	field = "Valve maximum duration", mc33_hpfp_max_hold, {hpfpCamLobes != 0}
         field = "Pump volume", hpfpPumpVolume, {hpfpCamLobes != 0}
         field = "Minimum angle", hpfpMinAngle, {hpfpCamLobes != 0}
         field = "Activation angle", hpfpActivationAngle, {hpfpCamLobes != 0}
