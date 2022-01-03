@@ -223,7 +223,7 @@ void mainRelayBench(void) {
 }
 
 void hpfpValveBench(void) {
-	pinbench(/*delay*/"1000", /* onTime */"20", /*oftime*/"500", "3", &enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
+	pinbench(/*delay*/"1000", /* onTime */"20", /*offtime*/"500", "3", &enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
 }
 
 void fuelPumpBench(void) {
@@ -443,7 +443,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case TS_INJECTOR_CATEGORY:
 		if (!running) {
-			doRunFuel(index, "300", "4", "400", "3");
+			doRunFuel(index, "300", /*onTime*/"4", /*offTime*/"400", "3");
 		}
 		break;
 
