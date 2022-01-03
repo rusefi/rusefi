@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Jan 03 03:09:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Jan 03 07:17:48 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2933,12 +2933,12 @@ struct engine_configuration_s {
 	A
 	 * offset 1736
 	 */
-	uint8_t mc33_hpfp_i_peak;
+	scaled_channel<uint8_t, 10, 1> mc33_hpfp_i_peak;
 	/**
 	A
 	 * offset 1737
 	 */
-	uint8_t mc33_hpfp_i_hold;
+	scaled_channel<uint8_t, 10, 1> mc33_hpfp_i_hold;
 	/**
 	 * How long to deactivate power when hold current is reached before applying power again
 	us
@@ -4423,4 +4423,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Jan 03 03:09:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on kinetis_gen_config.bat integration/rusefi_config.txt Mon Jan 03 07:17:48 UTC 2022
