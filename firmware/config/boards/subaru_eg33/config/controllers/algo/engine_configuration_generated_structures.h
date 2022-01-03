@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Dec 25 04:39:43 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Jan 03 03:09:28 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2930,9 +2930,27 @@ struct engine_configuration_s {
 	 */
 	load_override_e afrOverrideMode;
 	/**
+	A
 	 * offset 1736
 	 */
-	uint32_t unused1736;
+	uint8_t mc33_hpfp_i_peak;
+	/**
+	A
+	 * offset 1737
+	 */
+	uint8_t mc33_hpfp_i_hold;
+	/**
+	 * How long to deactivate power when hold current is reached before applying power again
+	us
+	 * offset 1738
+	 */
+	uint8_t mc33_hpfp_i_hold_off;
+	/**
+	 * Maximum amount of time the solenoid can be active before assuming a programming error
+	ms
+	 * offset 1739
+	 */
+	uint8_t mc33_hpfp_max_hold;
 	/**
 	offset 1740 bit 0 */
 	bool unused1740b0 : 1 {};
@@ -2960,76 +2978,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1740 bit 8 */
-	bool unusedBit_498_8 : 1 {};
+	bool unusedBit_501_8 : 1 {};
 	/**
 	offset 1740 bit 9 */
-	bool unusedBit_498_9 : 1 {};
+	bool unusedBit_501_9 : 1 {};
 	/**
 	offset 1740 bit 10 */
-	bool unusedBit_498_10 : 1 {};
+	bool unusedBit_501_10 : 1 {};
 	/**
 	offset 1740 bit 11 */
-	bool unusedBit_498_11 : 1 {};
+	bool unusedBit_501_11 : 1 {};
 	/**
 	offset 1740 bit 12 */
-	bool unusedBit_498_12 : 1 {};
+	bool unusedBit_501_12 : 1 {};
 	/**
 	offset 1740 bit 13 */
-	bool unusedBit_498_13 : 1 {};
+	bool unusedBit_501_13 : 1 {};
 	/**
 	offset 1740 bit 14 */
-	bool unusedBit_498_14 : 1 {};
+	bool unusedBit_501_14 : 1 {};
 	/**
 	offset 1740 bit 15 */
-	bool unusedBit_498_15 : 1 {};
+	bool unusedBit_501_15 : 1 {};
 	/**
 	offset 1740 bit 16 */
-	bool unusedBit_498_16 : 1 {};
+	bool unusedBit_501_16 : 1 {};
 	/**
 	offset 1740 bit 17 */
-	bool unusedBit_498_17 : 1 {};
+	bool unusedBit_501_17 : 1 {};
 	/**
 	offset 1740 bit 18 */
-	bool unusedBit_498_18 : 1 {};
+	bool unusedBit_501_18 : 1 {};
 	/**
 	offset 1740 bit 19 */
-	bool unusedBit_498_19 : 1 {};
+	bool unusedBit_501_19 : 1 {};
 	/**
 	offset 1740 bit 20 */
-	bool unusedBit_498_20 : 1 {};
+	bool unusedBit_501_20 : 1 {};
 	/**
 	offset 1740 bit 21 */
-	bool unusedBit_498_21 : 1 {};
+	bool unusedBit_501_21 : 1 {};
 	/**
 	offset 1740 bit 22 */
-	bool unusedBit_498_22 : 1 {};
+	bool unusedBit_501_22 : 1 {};
 	/**
 	offset 1740 bit 23 */
-	bool unusedBit_498_23 : 1 {};
+	bool unusedBit_501_23 : 1 {};
 	/**
 	offset 1740 bit 24 */
-	bool unusedBit_498_24 : 1 {};
+	bool unusedBit_501_24 : 1 {};
 	/**
 	offset 1740 bit 25 */
-	bool unusedBit_498_25 : 1 {};
+	bool unusedBit_501_25 : 1 {};
 	/**
 	offset 1740 bit 26 */
-	bool unusedBit_498_26 : 1 {};
+	bool unusedBit_501_26 : 1 {};
 	/**
 	offset 1740 bit 27 */
-	bool unusedBit_498_27 : 1 {};
+	bool unusedBit_501_27 : 1 {};
 	/**
 	offset 1740 bit 28 */
-	bool unusedBit_498_28 : 1 {};
+	bool unusedBit_501_28 : 1 {};
 	/**
 	offset 1740 bit 29 */
-	bool unusedBit_498_29 : 1 {};
+	bool unusedBit_501_29 : 1 {};
 	/**
 	offset 1740 bit 30 */
-	bool unusedBit_498_30 : 1 {};
+	bool unusedBit_501_30 : 1 {};
 	/**
 	offset 1740 bit 31 */
-	bool unusedBit_498_31 : 1 {};
+	bool unusedBit_501_31 : 1 {};
 	/**
 	 * offset 1744
 	 */
@@ -4411,4 +4429,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Sat Dec 25 04:39:43 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Mon Jan 03 03:09:28 UTC 2022
