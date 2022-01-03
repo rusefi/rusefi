@@ -647,6 +647,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->cylinderBore = 87.5;
 
+	setBoschHDEV_5_injectors();
+
 	setEgoSensor(ES_14Point7_Free);
 
 	engineConfiguration->globalFuelCorrection = 1;

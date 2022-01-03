@@ -77,7 +77,6 @@ void setVwPassatB6() {
 	engineConfiguration->isSdCardEnabled = false;
 
 	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
-	setBoschHDEV_5_injectors();
 	// RED
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 	// YELLOW

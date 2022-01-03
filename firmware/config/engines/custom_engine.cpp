@@ -702,6 +702,11 @@ void setBoschHDEV_5_injectors() {
 	engineConfiguration->mc33_t_bypass = 15;
 	engineConfiguration->mc33_t_hold_off = 60;
 	engineConfiguration->mc33_t_hold_tot = 10000;
+
+	engineConfiguration->mc33_hpfp_i_peak = 5; // A not mA like above
+	engineConfiguration->mc33_hpfp_i_hold = 3;
+	engineConfiguration->mc33_hpfp_i_hold_off = 10; // us
+	engineConfiguration->mc33_hpfp_max_hold = 10; // this value in ms not us
 }
 
 /**

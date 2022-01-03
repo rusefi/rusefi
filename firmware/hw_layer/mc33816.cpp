@@ -175,9 +175,9 @@ static void setTimings() {
 
 	// HPFP solenoid settings
 	mcUpdateDram(MC33816Mem::HPFP_Ipeak,
-		     dacEquation(engineConfiguration->mc33_hpfp_i_peak * 100));
+		     dacEquation(engineConfiguration->mc33_hpfp_i_peak * 1000));
 	mcUpdateDram(MC33816Mem::HPFP_Ihold,
-		     dacEquation(engineConfiguration->mc33_hpfp_i_hold * 100));
+		     dacEquation(engineConfiguration->mc33_hpfp_i_hold * 1000));
 	mcUpdateDram(MC33816Mem::HPFP_Thold_off,
 		     std::min(MC_CK * engineConfiguration->mc33_hpfp_i_hold_off,
 			      UINT16_MAX));
