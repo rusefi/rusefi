@@ -656,6 +656,14 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->throttlePedalSecondaryUpVoltage;
 	if (strEqualCaseInsensitive(name, "throttlePedalSecondaryWOTVoltage"))
 		return engineConfiguration->throttlePedalSecondaryWOTVoltage;
+	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_peak"))
+		return engineConfiguration->mc33_hpfp_i_peak;
+	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_hold"))
+		return engineConfiguration->mc33_hpfp_i_hold;
+	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_hold_off"))
+		return engineConfiguration->mc33_hpfp_i_hold_off;
+	if (strEqualCaseInsensitive(name, "mc33_hpfp_max_hold"))
+		return engineConfiguration->mc33_hpfp_max_hold;
 	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
 		return engineConfiguration->stepperDcInvertedPins;
 	if (strEqualCaseInsensitive(name, "boostCutPressure"))
@@ -2527,6 +2535,26 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "throttlePedalSecondaryWOTVoltage"))
 	{
 		engineConfiguration->throttlePedalSecondaryWOTVoltage = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_peak"))
+	{
+		engineConfiguration->mc33_hpfp_i_peak = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_hold"))
+	{
+		engineConfiguration->mc33_hpfp_i_hold = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "mc33_hpfp_i_hold_off"))
+	{
+		engineConfiguration->mc33_hpfp_i_hold_off = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "mc33_hpfp_max_hold"))
+	{
+		engineConfiguration->mc33_hpfp_max_hold = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "stepperDcInvertedPins"))
