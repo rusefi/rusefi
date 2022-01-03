@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jan 03 07:17:56 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jan 03 08:24:54 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3049,9 +3049,25 @@ struct engine_configuration_s {
 	offset 1740 bit 31 */
 	bool unusedBit_501_31 : 1 {};
 	/**
+	ms
 	 * offset 1744
 	 */
-	uint32_t unused1744;
+	scaled_channel<uint8_t, 1, 5> benchTestOffTime;
+	/**
+	count
+	 * offset 1745
+	 */
+	uint8_t benchTestCount;
+	/**
+	A
+	 * offset 1746
+	 */
+	uint8_t unusedHere;
+	/**
+	A
+	 * offset 1747
+	 */
+	uint8_t unusedHere2;
 	/**
 	 * set_can2_tx_pin X
 	 * offset 1748
@@ -4429,4 +4445,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jan 03 07:17:56 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Mon Jan 03 08:24:54 UTC 2022
