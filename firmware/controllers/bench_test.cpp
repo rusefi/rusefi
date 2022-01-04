@@ -64,14 +64,14 @@ bool isRunningBenchTest(void) {
 static scheduling_s benchSchedStart;
 static scheduling_s benchSchedEnd;
 
-void benchOn(OutputPin* output) {
+static void benchOn(OutputPin* output) {
 	output->setValue(true);
 }
 
 static char pin_error[64];
 
-void benchOff(OutputPin* output) {
-#if EFI_PROD_CODE && #if (BOARD_EXT_GPIOCHIPS > 0)
+static void benchOff(OutputPin* output) {
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
 	brain_pin_diag_e diag = gpiochips_getDiag(output->brainPin);
 	if (diag == PIN_INVALID) {
 		efiPrintf("No Diag on this pin");
