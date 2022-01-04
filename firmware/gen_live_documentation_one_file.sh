@@ -17,7 +17,5 @@ header_file="${meta_name}_generated.h"
 java -DSystemOut.name=logs/gen_live_documentation \
  -jar ../java_tools/ConfigDefinition.jar \
  -definition $folder/$meta_file_name \
- -cache_zip_file tunerstudio/generated/cache.zip \
- -cache . \
  -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/$java_output \
  -c_destination $folder/${header_file}
