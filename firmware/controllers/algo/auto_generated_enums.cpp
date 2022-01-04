@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Mon Jul 12 21:09:56 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Mon Jan 03 20:26:28 EST 2022
 // see also gen_config_and_enums.bat
 
 
@@ -50,6 +50,8 @@ case EFI_ADC_NONE:
 }
 const char *getBrain_pin_diag_e(brain_pin_diag_e value){
 switch(value) {
+case PIN_DRIVER_OFF:
+  return "PIN_DRIVER_OFF";
 case PIN_DRIVER_OVERTEMP:
   return "PIN_DRIVER_OVERTEMP";
 case PIN_INVALID:

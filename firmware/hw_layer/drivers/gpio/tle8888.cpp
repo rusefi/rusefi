@@ -40,6 +40,8 @@
 #include "gpio/gpio_ext.h"
 #include "os_util.h"
 
+static Timer diagResponse;
+
 /*
  * TODO list:
  */
@@ -889,6 +891,8 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			ret = chip->update_status_and_diag();
 			if (ret) {
 				/* set state to TLE8888_FAILED or force reinit? */
+			} else {
+				diagResponse.reset();
 			}
 			/* TODO:
 			 * Procedure to switch on after failure condition occurred:
@@ -989,8 +993,11 @@ int Tle8888::readPad(size_t pin) {
 	return -1;
 }
 
-brain_pin_diag_e Tle8888::getOutputDiag(size_t pin)
-{
+brain_pin_diag_e Tle8888::getOutputDiag(size_t pin) {
+	if (diagResponse.hasElapsedMs(500)) {
+		// has been to long since we've recieved diagnostics
+		return PIN_DRIVER_OFF;
+	}
 	/* OUT1..OUT4, indexes 0..3 */
 	if (pin < 4)
 		return tle8888_2b_to_diag_with_temp((OutDiag[0] >> ((pin - 0) * 2)) & 0x03);

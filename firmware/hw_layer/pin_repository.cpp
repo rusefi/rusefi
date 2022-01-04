@@ -117,7 +117,8 @@ void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag) {
 	if (pin_diag == PIN_OK) {
 		chsnprintf(buffer, size, "Ok");
 	} else if (pin_diag != PIN_INVALID) {
-		chsnprintf(buffer, size, "%s%s%s%s%s",
+		chsnprintf(buffer, size, "%s%s%s%s%s%s",
+			pin_diag & PIN_DRIVER_OFF ? "driver_off " : "",
 			pin_diag & PIN_OPEN ? "open_load " : "",
 			pin_diag & PIN_SHORT_TO_GND ? "short_to_gnd " : "",
 			pin_diag & PIN_SHORT_TO_BAT ? "short_to_bat " : "",
