@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 04 01:03:21 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 04 01:39:00 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -208,6 +208,7 @@ public class Fields {
 	public static final int boostType_e_CLOSED_LOOP = 1;
 	public static final int boostType_e_OPEN_LOOP = 0;
 	public static final int boostType_offset = 932;
+	public static final int brain_pin_diag_e_PIN_DRIVER_OFF = 0x20;
 	public static final int brain_pin_diag_e_PIN_DRIVER_OVERTEMP = 0x10;
 	public static final int brain_pin_diag_e_PIN_INVALID = 0x80;
 	public static final int brain_pin_diag_e_PIN_OK = 0;
