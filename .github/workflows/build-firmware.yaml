@@ -178,14 +178,13 @@ jobs:
             skip-rate: 90
 
     steps:
-    - id: throttle
+      - uses: actions/checkout@v1
+        with:
+          submodules: recursive
+
+      - id: throttle
       name: Execution throttle early exit
       run: bash misc/actions/execution-throttle.sh ${{ matrix.skip-rate }}
-
-    - uses: actions/checkout@v1
-      if: steps.throttle.conclusion == 'success'
-      with:
-        submodules: recursive
 
     - uses: actions/setup-java@v1
       if: steps.throttle.conclusion == 'success'
