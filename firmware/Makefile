@@ -228,6 +228,7 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 # check.c goes first to throw error as soon as possible
 CSRC =  check.c \
 	$(ALLCSRC) \
+	$(BOARDSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
 	$(CHIBIOS)/os/various/evtimer.c \
@@ -252,6 +253,7 @@ CSRC =  check.c \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
+    $(BOARDCPPSRC) \
 	$(TRIGGER_SRC_CPP) \
 	$(TRIGGER_DECODERS_SRC_CPP) \
 	$(DEV_SRC_CPP) \
