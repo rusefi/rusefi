@@ -20,6 +20,6 @@ public class SignatureConsumer extends AbstractConfigurationConsumer {
 
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
-        ConfigDefinition.writeDefinesToFile(registry, destHeader);
+        ExtraUtil.writeDefinesToFile(registry, destHeader);
     }
 }

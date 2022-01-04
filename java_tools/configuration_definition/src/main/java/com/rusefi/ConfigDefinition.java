@@ -16,7 +16,6 @@ import java.util.*;
  *
  * @see ConfigurationConsumer
  */
-@SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
     static final String SIGNATURE_HASH = "SIGNATURE_HASH";
     private static String TS_OUTPUTS_DESTINATION = null;
@@ -201,7 +200,7 @@ public class ConfigDefinition {
         // Add the variable for the config signature
         long crc32 = IoUtil.signatureHash(state, parseState, tsInputFileFolder, inputFiles);
 
-        handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
+        ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
         MESSAGE = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
 
@@ -279,79 +278,11 @@ public class ConfigDefinition {
         state.readBufferedReader(definitionReader, destinations);
 
         if (destCDefinesFileName != null) {
-            writeDefinesToFile(state.variableRegistry, destCDefinesFileName);
+            ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName);
         }
 
         if (romRaiderDestination != null && romRaiderInputFile != null) {
-            processTextTemplate(state, romRaiderInputFile, romRaiderDestination);
+            ExtraUtil.processTextTemplate(state, romRaiderInputFile, romRaiderDestination);
         }
     }
-
-    private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, ParseState parseState) throws IOException {
-        if (firingEnumFileName != null) {
-            SystemOut.println("Reading firing from " + firingEnumFileName);
-            String result = FiringOrderTSLogic.invoke(firingEnumFileName);
-            variableRegistry.register("FIRINGORDER", result);
-            parseState.addDefinition("FIRINGORDER", result, Definition.OverwritePolicy.NotAllowed);
-        }
-    }
-
-    private static void processTextTemplate(ReaderState state, String inputFileName, String outputFileName) throws IOException {
-        SystemOut.println("Reading from " + inputFileName);
-        SystemOut.println("Writing to " + outputFileName);
-
-        state.variableRegistry.put("generator_message", ToolUtil.getGeneratedAutomaticallyTag() + new Date());
-
-        File inputFile = new File(inputFileName);
-
-        BufferedReader fr = new BufferedReader(new FileReader(inputFile));
-        LazyFile fw = new LazyFile(outputFileName);
-
-        String line;
-        while ((line = fr.readLine()) != null) {
-            line = state.variableRegistry.applyVariables(line);
-            fw.write(line + ToolUtil.EOL);
-        }
-        fw.close();
-    }
-
-    public static String getComment(String comment, int currentOffset, String units) {
-        String start = "\t/**";
-        String packedComment = packComment(comment, "\t");
-        String unitsComment = units.isEmpty() ? "" : "\t" + units + ToolUtil.EOL;
-        return start + ToolUtil.EOL +
-                packedComment +
-                unitsComment +
-                "\t * offset " + currentOffset + ToolUtil.EOL + "\t */" + ToolUtil.EOL;
-    }
-
-    public static String packComment(String comment, String linePrefix) {
-        if (comment == null)
-            return "";
-        if (comment.trim().isEmpty())
-            return "";
-        String result = "";
-        for (String line : comment.split("\\\\n")) {
-            result += linePrefix + " * " + line + ToolUtil.EOL;
-        }
-        return result;
-    }
-
-    public static int getSize(VariableRegistry variableRegistry, String s) {
-        if (variableRegistry.intValues.containsKey(s)) {
-            return variableRegistry.intValues.get(s);
-        }
-        return Integer.parseInt(s);
-    }
-
-    public static void writeDefinesToFile(VariableRegistry variableRegistry, String fileName) throws IOException {
-
-        SystemOut.println("Writing to " + fileName);
-        LazyFile cHeader = new LazyFile(fileName);
-
-        cHeader.write("//\n// " + ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + "\n//\n\n");
-        cHeader.write(variableRegistry.getDefinesSection());
-        cHeader.close();
-    }
-
 }

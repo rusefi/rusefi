@@ -85,6 +85,13 @@ public class ConfigField {
         this.isIterate = isIterate;
     }
 
+    private static int getSize(VariableRegistry variableRegistry, String s) {
+        if (variableRegistry.intValues.containsKey(s)) {
+            return variableRegistry.intValues.get(s);
+        }
+        return Integer.parseInt(s);
+    }
+
     public boolean isArray() {
         return arraySizeVariableName != null || arraySizes.length != 0;
     }
@@ -143,12 +150,12 @@ public class ConfigField {
         if (matcher.group(5) != null) {
             arraySizeAsText = matcher.group(3) + "][" + matcher.group(5);
             arraySizes = new int[2];
-            arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(3));
-            arraySizes[1] = ConfigDefinition.getSize(state.variableRegistry, matcher.group(5));
+            arraySizes[0] = getSize(state.variableRegistry, matcher.group(3));
+            arraySizes[1] = getSize(state.variableRegistry, matcher.group(5));
         } else if (matcher.group(3) != null) {
             arraySizeAsText = matcher.group(3);
             arraySizes = new int[1];
-            arraySizes[0] = ConfigDefinition.getSize(state.variableRegistry, arraySizeAsText);
+            arraySizes[0] = getSize(state.variableRegistry, arraySizeAsText);
         } else {
             arraySizes = new int[0];
             arraySizeAsText = null;
