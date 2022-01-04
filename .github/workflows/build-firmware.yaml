@@ -186,10 +186,10 @@ jobs:
       with:
         java-version: '8'
 
-    - id: throttle
-      name: Execution throttle early exit
+#    - id: throttle
+#      name: Execution throttle early exit
       # just running, not using result for anything yet
-      run: bash misc/actions/execution-throttle.sh ${{ matrix.skip-rate }}
+#      run: bash misc/actions/execution-throttle.sh ${{ matrix.skip-rate }}
 
     - name: Install multilib, mingw, sshpass and mtools
       run: |
