@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 04 01:39:00 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Tue Jan 04 04:47:08 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -183,6 +183,7 @@ public class Fields {
 	public static final int bench_mode_e_BENCH_STARTER_ENABLE_RELAY = 2;
 	public static final int benchTestCount_offset = 1745;
 	public static final int benchTestOffTime_offset = 1744;
+	public static final int benchTestOnTime_offset = 1746;
 	public static final int binarySerialRxPin_offset = 1575;
 	public static final int binarySerialTxPin_offset = 1574;
 	public static final int BLOCKING_FACTOR = 256;
@@ -1805,6 +1806,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
+	public static final int SIGNATURE_HASH = 1496132943;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2269,7 +2271,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.04.all.2373288853";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.04.all.1496132943";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2349,7 +2351,6 @@ public class Fields {
 	public static final int unusedBitWasHere5_offset = 1260;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
-	public static final int unusedHere_offset = 1746;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
 	public static final int useETBforIdleControl_offset = 748;
@@ -3220,7 +3221,7 @@ public class Fields {
 	public static final Field UNUSEDBIT_501_31 = Field.create("UNUSEDBIT_501_31", 1740, FieldType.BIT, 31);
 	public static final Field BENCHTESTOFFTIME = Field.create("BENCHTESTOFFTIME", 1744, FieldType.INT8);
 	public static final Field BENCHTESTCOUNT = Field.create("BENCHTESTCOUNT", 1745, FieldType.INT8);
-	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 1746, FieldType.INT8);
+	public static final Field BENCHTESTONTIME = Field.create("BENCHTESTONTIME", 1746, FieldType.INT8);
 	public static final Field UNUSEDHERE2 = Field.create("UNUSEDHERE2", 1747, FieldType.INT8);
 	public static final Field CAN2TXPIN = Field.create("CAN2TXPIN", 1748, FieldType.INT8, brain_pin_e);
 	public static final Field CAN2RXPIN = Field.create("CAN2RXPIN", 1749, FieldType.INT8, brain_pin_e);
@@ -4489,7 +4490,7 @@ public class Fields {
 	UNUSEDBIT_501_31,
 	BENCHTESTOFFTIME,
 	BENCHTESTCOUNT,
-	UNUSEDHERE,
+	BENCHTESTONTIME,
 	UNUSEDHERE2,
 	CAN2TXPIN,
 	CAN2RXPIN,

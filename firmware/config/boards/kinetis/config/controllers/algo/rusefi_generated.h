@@ -179,6 +179,7 @@
 #define bench_mode_e_BENCH_STARTER_ENABLE_RELAY 2
 #define benchTestCount_offset 1745
 #define benchTestOffTime_offset 1744
+#define benchTestOnTime_offset 1746
 #define binarySerialRxPin_offset 1575
 #define binarySerialTxPin_offset 1574
 #define BLOCKING_FACTOR 256
@@ -1862,7 +1863,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 1210427605
+#define SIGNATURE_HASH 2625439247
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2382,7 +2383,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.04.kin.1210427605"
+#define TS_SIGNATURE "rusEFI 2022.01.04.kin.2625439247"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2465,7 +2466,6 @@
 #define unusedBitWasHere5_offset 1260
 #define unusedFiller_4703_offset 4143
 #define unusedHere2_offset 1747
-#define unusedHere_offset 1746
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164
 #define useETBforIdleControl_offset 748
