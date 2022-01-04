@@ -670,6 +670,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->benchTestOffTime;
 	if (strEqualCaseInsensitive(name, "benchTestCount"))
 		return engineConfiguration->benchTestCount;
+	if (strEqualCaseInsensitive(name, "benchTestOnTime"))
+		return engineConfiguration->benchTestOnTime;
 	if (strEqualCaseInsensitive(name, "boostCutPressure"))
 		return engineConfiguration->boostCutPressure;
 	if (strEqualCaseInsensitive(name, "fixedTiming"))
@@ -2574,6 +2576,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "benchTestCount"))
 	{
 		engineConfiguration->benchTestCount = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "benchTestOnTime"))
+	{
+		engineConfiguration->benchTestOnTime = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "boostCutPressure"))
