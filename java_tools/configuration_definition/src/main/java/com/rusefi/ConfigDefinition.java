@@ -1,24 +1,14 @@
 package com.rusefi;
 
-import com.rusefi.enum_reader.Value;
-import com.rusefi.generated.RusefiConfigGrammarLexer;
-import com.rusefi.generated.RusefiConfigGrammarParser;
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
-import java.util.zip.CRC32;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -28,7 +18,7 @@ import java.util.zip.CRC32;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class ConfigDefinition {
-    private static final String SIGNATURE_HASH = "SIGNATURE_HASH";
+    static final String SIGNATURE_HASH = "SIGNATURE_HASH";
     private static String TS_OUTPUTS_DESTINATION = null;
     public static String MESSAGE;
 
@@ -96,7 +86,7 @@ public class ConfigDefinition {
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
         CHeaderConsumer.withC_Defines = true;
-        File[] yamlFiles = null;
+        File[] boardYamlFiles = null;
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
@@ -147,7 +137,7 @@ public class ConfigDefinition {
                     String keyName = args[i + 1];
                     // yes, we take three parameters here thus pre-increment!
                     String fileName = args[++i + 1];
-                    state.variableRegistry.register(keyName, readFile(fileName));
+                    state.variableRegistry.register(keyName, IoUtil.readFile(fileName));
                     inputFiles.add(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
@@ -184,9 +174,9 @@ public class ConfigDefinition {
                     String dirPath = "./config/boards/" + boardName + "/connectors";
                     File dirName = new File(dirPath);
                     FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
-                    yamlFiles = dirName.listFiles(filter);
-                    if (yamlFiles != null) {
-                        for (File yamlFile : yamlFiles) {
+                    boardYamlFiles = dirName.listFiles(filter);
+                    if (boardYamlFiles != null) {
+                        for (File yamlFile : boardYamlFiles) {
                             inputFiles.add("config/boards/" + boardName + "/connectors/" + yamlFile.getName());
                         }
                     }
@@ -209,7 +199,7 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = signatureHash(state, parseState, tsInputFileFolder, inputFiles);
+        long crc32 = IoUtil.signatureHash(state, parseState, tsInputFileFolder, inputFiles);
 
         handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
@@ -220,8 +210,8 @@ public class ConfigDefinition {
         for (String prependFile : prependFiles)
             state.variableRegistry.readPrependValues(prependFile);
 
-        if (yamlFiles != null) {
-            processYamls(state.variableRegistry, yamlFiles, state);
+        if (boardYamlFiles != null) {
+            PinoutLogic.processYamls(state.variableRegistry, boardYamlFiles, state);
         }
 
         // Parse the input files
@@ -235,7 +225,7 @@ public class ConfigDefinition {
                 parseState.setDefinitionPolicy(Definition.OverwritePolicy.IgnoreNew);
 
                 for (String prependFile : prependFiles) {
-                    parseFile(parseState.getListener(), prependFile);
+                    RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), prependFile);
                 }
             }
 
@@ -243,7 +233,7 @@ public class ConfigDefinition {
             {
                 // don't allow duplicates in the main file
                 parseState.setDefinitionPolicy(Definition.OverwritePolicy.NotAllowed);
-                parseFile(parseState.getListener(), definitionInputFile);
+                RusefiParseErrorStrategy.parseDefinitionFile(parseState.getListener(), definitionInputFile);
             }
 
             // Write C structs
@@ -297,184 +287,12 @@ public class ConfigDefinition {
         }
     }
 
-    private static String readFile(String fileName) {
-        String line;
-        StringBuilder stringBuilder = new StringBuilder();
-        String ls = System.getProperty("line.separator");
-        try {
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
-                while (true) {
-                    if (!((line = reader.readLine()) != null)) break;
-                    stringBuilder.append(line);
-                    stringBuilder.append(ls);
-                }
-
-                return stringBuilder.toString();
-            }
-        } catch (IOException e) {
-            return "";
-        }
-    }
-
     private static void handleFiringOrder(String firingEnumFileName, VariableRegistry variableRegistry, ParseState parseState) throws IOException {
         if (firingEnumFileName != null) {
             SystemOut.println("Reading firing from " + firingEnumFileName);
             String result = FiringOrderTSLogic.invoke(firingEnumFileName);
             variableRegistry.register("FIRINGORDER", result);
             parseState.addDefinition("FIRINGORDER", result, Definition.OverwritePolicy.NotAllowed);
-        }
-    }
-
-    private static long signatureHash(ReaderState state, ParseState parseState, String tsPath, List<String> inputAllFiles) throws IOException {
-        // get CRC32 of given input files
-        long crc32 = 0;
-        for (String iFile : inputAllFiles) {
-            long c = getCrc32(iFile) & 0xffffffffL;
-            SystemOut.println("CRC32 from " + iFile + " = " + c);
-            crc32 ^= c;
-        }
-        SystemOut.println("CRC32 from all input files = " + crc32);
-        // store the CRC32 as a built-in variable
-
-        // nasty trick - do not insert signature into live data files
-        if (tsPath != null) {
-            state.variableRegistry.register(SIGNATURE_HASH, "" + crc32);
-            parseState.addDefinition(SIGNATURE_HASH, Long.toString(crc32), Definition.OverwritePolicy.NotAllowed);
-        }
-
-        return crc32;
-    }
-
-    public static void processYamls(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {
-        ArrayList<Map<String, Object>> listPins = new ArrayList<>();
-        for (File yamlFile : yamlFiles) {
-            processYamlFile(yamlFile, listPins);
-        }
-        registerPins(listPins, registry, state);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static void processYamlFile(File yamlFile,
-                                        ArrayList<Map<String, Object>> listPins) throws IOException {
-        Yaml yaml = new Yaml();
-        Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
-        if (yamlData == null) {
-            SystemOut.println("Null yaml for " + yamlFile);
-            return;
-        }
-        List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
-        if (data == null) {
-            SystemOut.println("Null yaml for " + yamlFile);
-            return;
-        }
-        SystemOut.println(data);
-        Objects.requireNonNull(data, "data");
-        for (Map<String, Object> pin : data) {
-            ArrayList<Map<String, Object>> thisPinList = new ArrayList<>();
-            Object pinId = pin.get("id");
-            Object pinClass = pin.get("class");
-            Object pinName = pin.get("ts_name");
-            if (pinId == null || pinClass == null || pinName == null) {
-                continue;
-            }
-            if (pinId instanceof ArrayList) {
-                ArrayList<String> pinIds = (ArrayList<String>) pinId;
-                if (!(pinClass instanceof ArrayList))
-                    throw new IllegalStateException("Expected multiple classes for " + pinIds);
-                for (int i = 0; i < pinIds.size(); i++) {
-                    String id = pinIds.get(i);
-                    addPinToList(listPins, thisPinList, id, pinName, ((ArrayList<String>) pinClass).get(i));
-                }
-            } else if (pinId instanceof String) {
-                if (((String) pinId).length() == 0) {
-                    throw new IllegalStateException("Unexpected empty ID field");
-                }
-                addPinToList(listPins, thisPinList, pinId, pinName, pinClass);
-            } else {
-                throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
-            }
-            listPins.addAll(thisPinList);
-        }
-    }
-
-    private static void addPinToList(ArrayList<Map<String, Object>> listPins, ArrayList<Map<String, Object>> thisPinList, Object id, Object pinName, Object pinClass) {
-/*
- This doesn't work as expected because it's possible that a board has multiple connector pins connected to the same MCU pin.
- https://github.com/rusefi/rusefi/issues/2897
- https://github.com/rusefi/rusefi/issues/2925
-        for (int i = 0; i < listPins.size(); i++) {
-            if (id.equals(listPins.get(i).get("id"))) {
-                throw new IllegalStateException("ID used multiple times: " + id);
-            }
-        }
-*/
-        Map<String, Object> thisPin = new HashMap<>();
-        thisPin.put("id", id);
-        thisPin.put("ts_name", pinName);
-        thisPin.put("class", pinClass);
-        thisPinList.add(thisPin);
-    }
-
-    private static void registerPins(ArrayList<Map<String, Object>> listPins, VariableRegistry registry, ReaderState state) {
-        if (listPins == null || listPins.isEmpty()) {
-            return;
-        }
-        Map<String, ArrayList<String>> names = new HashMap<>();
-        names.put("outputs", new ArrayList<>());
-        names.put("analog_inputs", new ArrayList<>());
-        names.put("event_inputs", new ArrayList<>());
-        names.put("switch_inputs", new ArrayList<>());
-        for (int i = 0; i < listPins.size(); i++) {
-            String id = (String) listPins.get(i).get("id");
-            String className = (String) listPins.get(i).get("class");
-            ArrayList<String> classList = names.get(className);
-            if (classList == null) {
-                throw new IllegalStateException("Class not found:  " + className);
-            }
-            PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
-            String pinType = listPinType.getPinType();
-            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
-            for (Map.Entry<String, Value> kv : enumList.entrySet()) {
-                if (kv.getKey().equals(id)) {
-                    int index = kv.getValue().getIntValue();
-                    classList.ensureCapacity(index + 1);
-                    for (int ii = classList.size(); ii <= index; ii++) {
-                        classList.add(null);
-                    }
-                    classList.set(index, (String) listPins.get(i).get("ts_name"));
-                    break;
-                }
-            }
-        }
-        for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
-            PinType namePinType = PinType.find(kv.getKey());
-            String outputEnumName = namePinType.getOutputEnumName();
-            String pinType = namePinType.getPinType();
-            String nothingName = namePinType.getNothingName();
-            EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < kv.getValue().size(); i++) {
-                if (sb.length() > 0)
-                    sb.append(",");
-                String key = "";
-                for (Map.Entry<String, Value> entry : enumList.entrySet()) {
-                    if (entry.getValue().getIntValue() == i) {
-                        key = entry.getKey();
-                        break;
-                    }
-                }
-                if (key.equals(nothingName)) {
-                    sb.append("\"NONE\"");
-                } else if (kv.getValue().get(i) == null) {
-                    sb.append("\"INVALID\"");
-                } else {
-                    sb.append("\"" + kv.getValue().get(i) + "\"");
-                }
-            }
-            if (sb.length() > 0) {
-                registry.register(outputEnumName, sb.toString());
-            }
         }
     }
 
@@ -526,19 +344,6 @@ public class ConfigDefinition {
         return Integer.parseInt(s);
     }
 
-    private static long getCrc32(String fileName) throws IOException {
-        File file = new File(fileName);
-        byte[] fileContent = Files.readAllBytes(file.toPath());
-        for (int i = 0; i < fileContent.length; i++) {
-            byte aByte = fileContent[i];
-            if (aByte == '\r')
-                throw new IllegalStateException("CR \\r 0x0D byte not allowed in cacheable content " + fileName + " at index=" + i);
-        }
-        CRC32 c = new CRC32();
-        c.update(fileContent, 0, fileContent.length);
-        return c.getValue();
-    }
-
     public static void writeDefinesToFile(VariableRegistry variableRegistry, String fileName) throws IOException {
 
         SystemOut.println("Writing to " + fileName);
@@ -549,48 +354,4 @@ public class ConfigDefinition {
         cHeader.close();
     }
 
-    public static class RusefiParseErrorStrategy extends DefaultErrorStrategy {
-        private boolean hadError = false;
-
-        public boolean hadError() {
-            return this.hadError;
-        }
-
-        @Override
-        public void recover(Parser recognizer, RecognitionException e) {
-            this.hadError = true;
-
-            super.recover(recognizer, e);
-        }
-
-        @Override
-        public Token recoverInline(Parser recognizer) throws RecognitionException {
-            this.hadError = true;
-
-            return super.recoverInline(recognizer);
-        }
-    }
-
-    private static void parseFile(ParseTreeListener listener, String filePath) throws IOException {
-        SystemOut.println("Parsing file (Antlr) " + filePath);
-
-        CharStream in = new ANTLRInputStream(new FileInputStream(filePath));
-
-        long start = System.nanoTime();
-
-        RusefiConfigGrammarParser parser = new RusefiConfigGrammarParser(new CommonTokenStream(new RusefiConfigGrammarLexer(in)));
-
-        RusefiParseErrorStrategy errorStrategy = new RusefiParseErrorStrategy();
-        parser.setErrorHandler(errorStrategy);
-
-        ParseTree tree = parser.content();
-        new ParseTreeWalker().walk(listener, tree);
-        double durationMs = (System.nanoTime() - start) / 1e6;
-
-        if (errorStrategy.hadError()) {
-            throw new RuntimeException("Parse failed, see error output above!");
-        }
-
-        SystemOut.println("Successfully parsed " + filePath + " in " + durationMs + "ms");
-    }
 }
