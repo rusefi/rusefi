@@ -17,7 +17,7 @@ public:
 	}
 
 	CanListener* processFrame(const CANRxFrame& frame, efitick_t nowNt) {
-		if (CAN_ID(frame) == m_id) {
+		if (acceptFrame(frame)) {
 			decodeFrame(frame, nowNt);
 		}
 
@@ -38,8 +38,13 @@ public:
 
 protected:
 	virtual void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) = 0;
-	CanListener* m_next = nullptr;
+
+	virtual bool acceptFrame(const CANRxFrame& frame) const {
+		return CAN_ID(frame) == m_id;
+	}
 
 private:
+	CanListener* m_next = nullptr;
+
 	const uint32_t m_id;
 };
