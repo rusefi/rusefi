@@ -252,6 +252,7 @@ typedef enum __attribute__ ((__packed__))
 	PIN_SHORT_TO_BAT = 0x04,
 	PIN_OVERLOAD =	0x08,
 	PIN_DRIVER_OVERTEMP = 0x10,
+	PIN_DRIVER_OFF = 0x20,
 	PIN_INVALID = 0x80
 } brain_pin_diag_e;
 
