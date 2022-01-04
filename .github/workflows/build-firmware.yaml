@@ -166,7 +166,7 @@ jobs:
             folder: nucleo_h743
             ini-file: no
             skip-config: yes
-            skip-rate: 590
+            skip-rate: 50
 
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
