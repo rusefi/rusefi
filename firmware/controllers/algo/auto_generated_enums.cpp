@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Mon Jan 03 20:26:28 EST 2022
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Tue Jan 04 03:36:49 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -45,27 +45,6 @@ case EFI_ADC_LAST_CHANNEL:
   return "EFI_ADC_LAST_CHANNEL";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-  }
- return NULL;
-}
-const char *getBrain_pin_diag_e(brain_pin_diag_e value){
-switch(value) {
-case PIN_DRIVER_OFF:
-  return "PIN_DRIVER_OFF";
-case PIN_DRIVER_OVERTEMP:
-  return "PIN_DRIVER_OVERTEMP";
-case PIN_INVALID:
-  return "PIN_INVALID";
-case PIN_OK:
-  return "PIN_OK";
-case PIN_OPEN:
-  return "PIN_OPEN";
-case PIN_OVERLOAD:
-  return "PIN_OVERLOAD";
-case PIN_SHORT_TO_BAT:
-  return "PIN_SHORT_TO_BAT";
-case PIN_SHORT_TO_GND:
-  return "PIN_SHORT_TO_GND";
   }
  return NULL;
 }

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Dec 27 17:12:56 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jan 04 03:36:48 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -113,6 +113,27 @@ case Force_4bytes_size_boostType_e:
   return "Force_4bytes_size_boostType_e";
 case OPEN_LOOP:
   return "OPEN_LOOP";
+  }
+ return NULL;
+}
+const char *getBrain_pin_diag_e(brain_pin_diag_e value){
+switch(value) {
+case PIN_DRIVER_OFF:
+  return "PIN_DRIVER_OFF";
+case PIN_DRIVER_OVERTEMP:
+  return "PIN_DRIVER_OVERTEMP";
+case PIN_INVALID:
+  return "PIN_INVALID";
+case PIN_OK:
+  return "PIN_OK";
+case PIN_OPEN:
+  return "PIN_OPEN";
+case PIN_OVERLOAD:
+  return "PIN_OVERLOAD";
+case PIN_SHORT_TO_BAT:
+  return "PIN_SHORT_TO_BAT";
+case PIN_SHORT_TO_GND:
+  return "PIN_SHORT_TO_GND";
   }
  return NULL;
 }
