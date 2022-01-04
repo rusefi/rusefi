@@ -12,7 +12,7 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.zip.CRC32;
 
-public class IoUtil {
+public class IoUtil2 {
     static String readFile(String fileName) {
         String line;
         StringBuilder stringBuilder = new StringBuilder();

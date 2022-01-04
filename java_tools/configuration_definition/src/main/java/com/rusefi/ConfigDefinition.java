@@ -136,7 +136,7 @@ public class ConfigDefinition {
                     String keyName = args[i + 1];
                     // yes, we take three parameters here thus pre-increment!
                     String fileName = args[++i + 1];
-                    state.variableRegistry.register(keyName, IoUtil.readFile(fileName));
+                    state.variableRegistry.register(keyName, IoUtil2.readFile(fileName));
                     inputFiles.add(fileName);
                 case KEY_FIRING:
                     firingEnumFileName = args[i + 1];
@@ -198,7 +198,7 @@ public class ConfigDefinition {
 
         ParseState parseState = new ParseState(state.enumsReader);
         // Add the variable for the config signature
-        long crc32 = IoUtil.signatureHash(state, parseState, tsInputFileFolder, inputFiles);
+        long crc32 = IoUtil2.signatureHash(state, parseState, tsInputFileFolder, inputFiles);
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
