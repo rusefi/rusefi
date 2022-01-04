@@ -178,21 +178,20 @@ jobs:
             skip-rate: 90
 
     steps:
-      - uses: actions/checkout@v1
-        with:
-          submodules: recursive
-
-      - id: throttle
-      name: Execution throttle early exit
-      run: bash misc/actions/execution-throttle.sh ${{ matrix.skip-rate }}
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
 
     - uses: actions/setup-java@v1
-      if: steps.throttle.conclusion == 'success'
       with:
         java-version: '8'
 
+    - id: throttle
+      name: Execution throttle early exit
+      # just running, not using result for anything yet
+      run: bash misc/actions/execution-throttle.sh ${{ matrix.skip-rate }}
+
     - name: Install multilib, mingw, sshpass and mtools
-      if: steps.throttle.conclusion == 'success'
       run: |
         sudo apt-get update
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
