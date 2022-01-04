@@ -166,11 +166,12 @@ jobs:
             folder: nucleo_h743
             ini-file: no
             skip-config: yes
-            skip-rate: 50
+            skip-rate: 590
 
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
+            skip-rate: 90
 
           - build-target: atlas
             folder: atlas
@@ -178,11 +179,11 @@ jobs:
             skip-rate: 90
 
     steps:
-      - uses: actions/checkout@v1
+    - uses: actions/checkout@v1
         with:
           submodules: recursive
 
-      - id: throttle
+    - id: throttle
       name: Execution throttle early exit
       run: bash misc/actions/execution-throttle.sh ${{ matrix.skip-rate }}
 
