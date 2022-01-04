@@ -645,6 +645,7 @@ bool validateConfig() {
 
 	if (engineConfiguration->hpfpCamLobes > 0) {
 		ensureArrayIsAscending("HPFP compensation", engineConfiguration->hpfpCompensationRpmBins);
+		ensureArrayIsAscending("HPFP deadtime", engineConfiguration->hpfpDeadtimeVoltsBins);
 		ensureArrayIsAscending("HPFP lobe profile", engineConfiguration->hpfpLobeProfileQuantityBins);
 		ensureArrayIsAscending("HPFP target rpm", engineConfiguration->hpfpTargetRpmBins);
 		ensureArrayIsAscending("HPFP target load", engineConfiguration->hpfpTargetLoadBins);

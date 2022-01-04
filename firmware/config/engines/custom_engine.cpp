@@ -692,6 +692,7 @@ void mreBoardNewTest() {
 void setBoschHDEV_5_injectors() {
 	setLinearCurve(engineConfiguration->hpfpLobeProfileAngle, 0, 120, 1);
 	setLinearCurve(engineConfiguration->hpfpLobeProfileQuantityBins, 0, 100, 1);
+	setLinearCurve(engineConfiguration->hpfpDeadtimeVoltsBins, 8, 16, 0.5);
 
 	setLinearCurve(engineConfiguration->hpfpTargetRpmBins, 0, 8000, 1);
 	setLinearCurve(engineConfiguration->hpfpTargetLoadBins, 0, 180, 1);
