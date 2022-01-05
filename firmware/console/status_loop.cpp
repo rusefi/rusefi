@@ -707,7 +707,6 @@ void updateTunerStudioState() {
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
 	
 	// Output both the estimated air flow, and measured air flow (if available)
-	tsOutputChannels->massAirFlowValue = getAirFlowGauge();
 	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
 	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
 
