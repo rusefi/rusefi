@@ -3,9 +3,12 @@
 #if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
 
+static constexpr uint32_t aem_base    = 0x180;
+static constexpr uint32_t rusefi_base = 0x190;
+
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
-		0x180 + sensorIndex,	// 0th sensor is 0x180, others sequential above that
+		aem_base + sensorIndex,	// 0th sensor is 0x180, others sequential above that
 		type,
 		MS2NT(21)	// sensor transmits at 100hz, allow a frame to be missed
 	)
@@ -16,10 +19,10 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 	uint32_t id = CAN_ID(frame);
 
 	// 0th sensor is 0x180, 1st sensor is 0x181, etc
-	uint32_t aemXSeriesId = 0x180 + m_sensorIndex;
+	uint32_t aemXSeriesId = aem_base + m_sensorIndex;
 
 	// 0th sensor is 0x190 and 0x191, 1st sensor is 0x192 and 0x193
-	uint32_t rusefiBaseId = 0x190 + 2 * m_sensorIndex;
+	uint32_t rusefiBaseId = rusefi_base + 2 * m_sensorIndex;
 
 	return 
 		id == aemXSeriesId ||
@@ -37,13 +40,16 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 
 	// accept frame has already checked if the message belongs to
 	// this sensor index to us, we just have to check if it's AEM or rusEFI
-	if (id <= 0x190) {
+	if (id < rusefi_base) {
 		decodeAemXSeries(frame, nowNt);
 	} else {
 		// rusEFI custom format
 		if ((id & 0x1) != 0) {
-			// low bit is set, this is the "extra" frame
-
+			// low bit is set, this is the "diag" frame
+			decodeRusefiDiag(frame);
+		} else {
+			// low bit not set, this is standard frame
+			decodeRusefiStandard(frame, nowNt);
 		}
 	}
 }
@@ -138,7 +144,7 @@ void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 	}
 }
 
-void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame, efitick_t /*nowNt*/) {
+void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 	auto data = reinterpret_cast<const wbo::DiagData*>(&frame.data8[0]);
 
 	if (m_sensorIndex == 0 || engineConfiguration->debugMode == DBG_RUSEFI_WIDEBAND) {

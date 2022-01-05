@@ -17,7 +17,7 @@ protected:
 
 	// Decode rusEFI custom format
 	void decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt);
-	void decodeRusefiDiag(const CANRxFrame& frame, efitick_t nowNt);
+	void decodeRusefiDiag(const CANRxFrame& frame);
 
 private:
 	const uint8_t m_sensorIndex;
