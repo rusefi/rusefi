@@ -48,10 +48,6 @@ public class GetConfigValueConsumer extends AbstractConfigurationConsumer {
     }
 
     @Override
-    public void startFile() {
-    }
-
-    @Override
     public void endFile() throws IOException {
         writeStringToFile(outputFileName, getContent());
     }

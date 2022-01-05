@@ -30,6 +30,7 @@ public class BitParsingTest {
                 writeContent(fieldsSection, new TsFileContent("", ""), createOutput(sw));
             }
         };
+        state.headerMessage = "test";
         state.readBufferedReader(inputString, Collections.singletonList(javaFieldsConsumer));
 
         System.out.printf("start[" + sw + "]end");

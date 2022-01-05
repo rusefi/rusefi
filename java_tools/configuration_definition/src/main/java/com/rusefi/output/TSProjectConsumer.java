@@ -51,7 +51,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         tsHeader.write(tsContent.getPrefix());
 
         tsHeader.write("; " + CONFIG_DEFINITION_START + ToolUtil.EOL);
-        tsHeader.write("; this section " + ConfigDefinition.MESSAGE + ToolUtil.EOL + ToolUtil.EOL);
+        tsHeader.write("; this section " + state.getHeader() + ToolUtil.EOL + ToolUtil.EOL);
         tsHeader.write("pageSize            = " + totalTsSize + ToolUtil.EOL);
         tsHeader.write("page = 1" + ToolUtil.EOL);
         tsHeader.write(fieldsSection);
@@ -136,10 +136,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     public static String getTsFileInputName(String tsPath) {
         return tsPath + File.separator + TS_FILE_INPUT_NAME;
-    }
-
-    @Override
-    public void startFile() {
     }
 
     @Override

@@ -47,11 +47,7 @@ public class TSProjectConsumerTest {
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
 
-        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
-            @Override
-            public void endFile() {
-            }
-        };
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
 
         state.readBufferedReader(test, Arrays.asList(javaFieldsConsumer, consumer, tsProjectConsumer));
 
