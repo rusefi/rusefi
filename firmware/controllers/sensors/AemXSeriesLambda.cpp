@@ -121,7 +121,8 @@ struct DiagData
     uint8_t PumpDuty;
     uint8_t Status;
 
-    uint16_t pad;
+    uint8_t HeaterDuty;
+    uint8_t pad;
 };
 } // namespace wbo
 
@@ -146,6 +147,8 @@ void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 
 void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 	auto data = reinterpret_cast<const wbo::DiagData*>(&frame.data8[0]);
+
+	engine->outputChannels.wbHeaterDuty[m_sensorIndex] = data->HeaterDuty / 255.0f;
 
 	if (m_sensorIndex == 0 || engineConfiguration->debugMode == DBG_RUSEFI_WIDEBAND) {
 		engine->outputChannels.debugFloatField1 = data->PumpDuty / 255.0f;
