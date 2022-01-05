@@ -15,6 +15,8 @@ mkdir build
 #
 for BOARD in \
    "f429-discovery f429-discovery" \
+   "hellen/alphax-2chan alphax-2chan" \
+   "hellen/alphax-4chan alphax-4chan" \
    "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
    "hellen/hellen121vag hellen121vag" \
    "hellen/hellen121nissan hellen121nissan" \
