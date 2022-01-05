@@ -161,6 +161,7 @@ include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
+	$(BOARDSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CONSOLESRC) \
 	$(DEV_SRC) \
