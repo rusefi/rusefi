@@ -23,5 +23,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="enum_to_string" />
+    <orderEntry type="module" module-name="logging-api" />
   </component>
 </module>
