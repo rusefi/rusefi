@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Dec 09 21:55:23 EST 2021
+// this section null
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -18,4 +18,4 @@ struct trigger_state_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Thu Dec 09 21:55:23 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Jan 05 05:06:33 UTC 2022

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Fri Dec 31 15:12:40 EST 2021
+// this section null
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -22,4 +22,4 @@ struct high_pressure_fuel_pump_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Fri Dec 31 15:12:40 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Wed Jan 05 05:06:30 UTC 2022
