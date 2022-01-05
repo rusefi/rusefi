@@ -568,12 +568,12 @@ void configureRusefiLuaHooks(lua_State* l) {
 		} else if (state == RUNNING) {
 			luaStateCode = 2;
 		} else {
+			// spinning-up or cranking
 			luaStateCode = 1;
 		}
 		lua_pushnumber(l, luaStateCode);
 		return 1;
 	});
-
 
 	lua_register(l, "setCalibration", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
