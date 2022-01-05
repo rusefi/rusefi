@@ -141,7 +141,6 @@ void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 		setValidValue(lambda, nowNt);
 	} else {
 		invalidate();
-		return;
 	}
 }
 
