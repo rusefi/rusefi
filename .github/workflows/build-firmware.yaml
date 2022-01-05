@@ -17,6 +17,7 @@ jobs:
         # see also build-primary-bundle where default/primary bundle is build separately
         #
         build-target: [
+            alphax-2chan,
             hellen72,
             hellen81,
             hellen88bmw,
@@ -56,6 +57,10 @@ jobs:
           - build-target: hellen81
             folder: hellen/hellen81
             ini-file: rusefi_hellen81.ini
+
+          - build-target: alphax-2chan
+            folder: hellen/alphax-2chan
+            ini-file: rusefi_alphax-2chan.ini
 
           - build-target: hellen88bmw
             folder: hellen/hellen88bmw
