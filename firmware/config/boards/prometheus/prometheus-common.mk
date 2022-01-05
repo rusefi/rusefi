@@ -28,6 +28,4 @@ else
 endif
 
 # Shared variables
-ALLCSRC   += $(BOARDSRC)
-ALLCPPSRC += $(BOARDCPPSRC)
 ALLINC    += $(BOARDINC)

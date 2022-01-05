@@ -47,5 +47,4 @@ ifeq ($(PROTEUS_LEGACY),TRUE)
 endif
 
 # Shared variables
-ALLCPPSRC += $(BOARDCPPSRC)
 ALLINC    += $(BOARDINC)
