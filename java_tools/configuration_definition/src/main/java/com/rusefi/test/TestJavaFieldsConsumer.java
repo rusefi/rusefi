@@ -9,10 +9,6 @@ public class TestJavaFieldsConsumer extends JavaFieldsConsumer {
     }
 
     @Override
-    public void startFile() {
-    }
-
-    @Override
     public void endFile() {
     }
 }

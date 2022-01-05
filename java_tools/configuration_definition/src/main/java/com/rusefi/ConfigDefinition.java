@@ -16,8 +16,7 @@ import java.util.*;
  * @see ConfigurationConsumer
  */
 public class ConfigDefinition {
-    static final String SIGNATURE_HASH = "SIGNATURE_HASH";
-    public static String MESSAGE;
+    public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     private static final String KEY_DEFINITION = "-definition";
@@ -68,7 +67,6 @@ public class ConfigDefinition {
 
         String tsInputFileFolder = null;
         String destCDefinesFileName = null;
-        String javaDestinationFileName = null;
         String romRaiderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
         List<String> prependFiles = new ArrayList<>();
@@ -96,6 +94,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_DEFINITION:
                     definitionInputFile = args[i + 1];
+                    state.headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
                     inputFiles.add(definitionInputFile);
                     break;
                 case KEY_TS_DESTINATION:
@@ -105,7 +104,7 @@ public class ConfigDefinition {
                     tsOutputsDestination = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
-                    destinations.add(new CHeaderConsumer(state.variableRegistry, args[i + 1], withC_Defines));
+                    destinations.add(new CHeaderConsumer(state, args[i + 1], withC_Defines));
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
@@ -117,7 +116,7 @@ public class ConfigDefinition {
                     destCDefinesFileName = args[i + 1];
                     break;
                 case KEY_JAVA_DESTINATION:
-                    javaDestinationFileName = args[i + 1];
+                    destinations.add(new FileJavaFieldsConsumer(state, args[i + 1]));
                     break;
                 case "-field_lookup_file":
                     destinations.add(new GetConfigValueConsumer(args[i + 1]));
@@ -195,9 +194,6 @@ public class ConfigDefinition {
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
-        MESSAGE = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
-
-        SystemOut.println("Reading definition from " + definitionInputFile);
 
         for (String prependFile : prependFiles)
             state.variableRegistry.readPrependValues(prependFile);
@@ -235,8 +231,6 @@ public class ConfigDefinition {
             // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
         }
 
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
-
         if (tsOutputsDestination != null) {
             destinations.add(new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini", state));
             destinations.add(new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini"));
@@ -253,16 +247,14 @@ public class ConfigDefinition {
             destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
 
-        if (javaDestinationFileName != null) {
-            destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
-        }
-
         if (destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
         /*
          * this is the most important invocation - here we read the primary input file and generated code into all
          * the destinations/writers
          */
+        SystemOut.println("Reading definition from " + definitionInputFile);
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
         state.readBufferedReader(definitionReader, destinations);
 
         if (destCDefinesFileName != null) {

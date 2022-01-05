@@ -4,7 +4,7 @@ import com.rusefi.*;
 
 import static com.rusefi.ToolUtil.EOL;
 
-public abstract class BaseCHeaderConsumer extends AbstractConfigurationConsumer {
+public class BaseCHeaderConsumer extends AbstractConfigurationConsumer {
     private static final String BOOLEAN_TYPE = "bool";
     private final StringBuilder content = new StringBuilder();
 

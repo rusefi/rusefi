@@ -31,6 +31,7 @@ public class ReaderState {
     public final Map<String, Integer> tsCustomSize = new HashMap<>();
     public final Map<String, String> tsCustomLine = new HashMap<>();
     public final Map<String, ConfigStructure> structures = new HashMap<>();
+    public String headerMessage;
 
     public final EnumsReader enumsReader = new EnumsReader();
     public final VariableRegistry variableRegistry = new VariableRegistry();
@@ -277,4 +278,9 @@ public class ReaderState {
         }
     }
 
+    public String getHeader() {
+        if (headerMessage == null)
+            throw new NullPointerException("No header message yet");
+        return headerMessage;
+    }
 }

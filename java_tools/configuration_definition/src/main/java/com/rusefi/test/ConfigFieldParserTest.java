@@ -71,11 +71,7 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
-        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
-            @Override
-            public void endFile() {
-            }
-        };
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
         state.readBufferedReader(test, Collections.singletonList(consumer));
     }
 
@@ -282,11 +278,7 @@ public class ConfigFieldParserTest {
                 "int[ERROR_BUFFER_SIZE iterate] field\n" +
                 "end_struct\n" +
                 "";
-        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
-            @Override
-            public void endFile() {
-            }
-        };
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
         new ReaderState().readBufferedReader(test, Collections.singletonList(consumer));
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +
