@@ -208,8 +208,6 @@ public class ConfigDefinition {
 
         // Parse the input files
         {
-            // First process yaml files
-            //processYamls(parseState, yamlFiles);
 
             // Load prepend files
             {
