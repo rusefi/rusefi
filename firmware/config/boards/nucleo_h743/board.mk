@@ -9,5 +9,3 @@ DDEFS = -DTS_NO_PRIMARY=0 \
 # Shared variables
 ALLCPPSRC += $(PROJECT_DIR)/config/boards/nucleo_h743/board_configuration.cpp
 
-# Shared variables
-ALLINC    += $(BOARDINC)

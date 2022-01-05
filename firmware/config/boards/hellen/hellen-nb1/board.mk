@@ -36,5 +36,3 @@ DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOD_6 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOD_5 -
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
 
-# Shared variables
-ALLINC    += $(BOARDINC)

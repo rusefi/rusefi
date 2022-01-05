@@ -26,6 +26,3 @@ else
 	# Override DEFAULT_ENGINE_TYPE
 	DDEFS += -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS -DFIRMWARE_ID=\"prometeus469\"
 endif
-
-# Shared variables
-ALLINC    += $(BOARDINC)

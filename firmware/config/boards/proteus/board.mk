@@ -45,6 +45,3 @@ DDEFS += -DHW_PROTEUS=1
 ifeq ($(PROTEUS_LEGACY),TRUE)
 	DDEFS +=  -DUSE_ADC3_VBATT_HACK
 endif
-
-# Shared variables
-ALLINC    += $(BOARDINC)

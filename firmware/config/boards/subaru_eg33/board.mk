@@ -31,8 +31,5 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 DDEFS += -DHAL_USE_UART=FALSE
 DDEFS += -DUART_USE_WAIT=FALSE
 
-# Shared variables
-ALLINC    += $(BOARDINC)
-
 #Serial flash support
 include $(PROJECT_DIR)/hw_layer/drivers/flash/sst26f_jedec.mk
