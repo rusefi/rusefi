@@ -16,12 +16,13 @@ public class CHeaderConsumer extends BaseCHeaderConsumer {
      * looks like sometimes we want to not include "define XXX value" into generated C headers
      * TODO: document the use-case better
      */
-    public static boolean withC_Defines;
+    private final boolean withC_Defines;
     private final LazyFile cHeader;
     private final VariableRegistry variableRegistry;
 
-    public CHeaderConsumer(VariableRegistry variableRegistry, String destCHeader) {
+    public CHeaderConsumer(VariableRegistry variableRegistry, String destCHeader, boolean withC_Defines) {
         this.variableRegistry = variableRegistry;
+        this.withC_Defines = withC_Defines;
         SystemOut.println("Writing C header to " + destCHeader);
         cHeader = new LazyFile(destCHeader);
         cHeader.write("// this section " + ConfigDefinition.MESSAGE + EOL);

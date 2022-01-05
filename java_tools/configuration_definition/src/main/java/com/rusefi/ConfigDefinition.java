@@ -4,7 +4,6 @@ import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
-import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
@@ -26,9 +25,6 @@ public class ConfigDefinition {
     private static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
-    /**
-     * @see CHeaderConsumer#withC_Defines
-     */
     private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
@@ -81,15 +77,13 @@ public class ConfigDefinition {
         String signatureDestination = null;
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
-        CHeaderConsumer.withC_Defines = true;
+        boolean withC_Defines = true;
         File[] boardYamlFiles = null;
         String tsOutputsDestination = null;
         String definitionInputFile = null;
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
-        // disable the lazy checks because we use timestamps to detect changes
-        LazyFile.setLazyFileEnabled(true);
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
         ReaderState state = new ReaderState();
@@ -111,13 +105,13 @@ public class ConfigDefinition {
                     tsOutputsDestination = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
-                    destinations.add(new CHeaderConsumer(state.variableRegistry, args[i + 1]));
+                    destinations.add(new CHeaderConsumer(state.variableRegistry, args[i + 1], withC_Defines));
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
                     break;
                 case KEY_WITH_C_DEFINES:
-                    CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
+                    withC_Defines = Boolean.parseBoolean(args[i + 1]);
                     break;
                 case KEY_C_DEFINES:
                     destCDefinesFileName = args[i + 1];
