@@ -560,6 +560,21 @@ void configureRusefiLuaHooks(lua_State* l) {
 		return 1;
 	});
 
+	lua_register(l, "getEngineState", [](lua_State* l) {
+		spinning_state_e state = engine->rpmCalculator.getState();
+		int luaStateCode;
+		if (state == STOPPED) {
+			luaStateCode = 0;
+		} else if (state == RUNNING) {
+			luaStateCode = 2;
+		} else {
+			luaStateCode = 1;
+		}
+		lua_pushnumber(l, luaStateCode);
+		return 1;
+	});
+
+
 	lua_register(l, "setCalibration", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
 		auto value = luaL_checknumber(l, 2);
