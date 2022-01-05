@@ -21,5 +21,5 @@ LWIP = yes
 DDEFS += -DEFI_ETHERNET=TRUE
 
 # Shared variables
-ALLCPPSRC += $(BOARDCPPSRC)
+
 ALLINC    += $(BOARDINC)
