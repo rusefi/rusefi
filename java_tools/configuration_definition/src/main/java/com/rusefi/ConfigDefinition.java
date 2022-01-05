@@ -19,13 +19,13 @@ public class ConfigDefinition {
     public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
-    private static final String KEY_DEFINITION = "-definition";
+    public static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
     private static final String KEY_TS_DESTINATION = "-ts_destination";
-    private static final String KEY_C_DESTINATION = "-c_destination";
+    public static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
-    private static final String KEY_JAVA_DESTINATION = "-java_destination";
+    public static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
     private static final String KEY_PREPEND = "-prepend";
