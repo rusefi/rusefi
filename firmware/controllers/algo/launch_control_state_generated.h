@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Thu Dec 16 14:44:22 EST 2021
+// this section null
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -109,4 +109,4 @@ struct launch_control_state_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Thu Dec 16 14:44:22 EST 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/launch_control_state.txt Wed Jan 05 05:06:31 UTC 2022

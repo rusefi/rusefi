@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Dec 02 05:01:51 UTC 2021
+// this section null
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -275,4 +275,4 @@ struct engine_state2_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Thu Dec 02 05:01:51 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/algo/engine_state.txt Wed Jan 05 05:06:32 UTC 2022

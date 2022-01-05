@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Thu Dec 02 05:01:53 UTC 2021
+// this section null
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -131,4 +131,4 @@ struct idle_state_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Thu Dec 02 05:01:53 UTC 2021
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Wed Jan 05 05:06:34 UTC 2022
