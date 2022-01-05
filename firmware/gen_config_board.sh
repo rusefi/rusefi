@@ -48,8 +48,6 @@ java -DSystemOut.name=logs/gen_config_board \
  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
 	-board ${BOARDNAME} \
 	-ts_output_name generated/${INI} \
-  -with_c_defines false \
-  -initialize_to_zero false \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination controllers/generated/signature_${SHORT_BOARDNAME}.h \
   -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java \

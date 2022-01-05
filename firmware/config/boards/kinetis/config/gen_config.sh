@@ -21,8 +21,6 @@ java \
  -DSystemOut.name=logs/gen_config_kinetis \
  $COMMON_GEN_CONFIG \
  -tool kinetis_gen_config.bat \
- -with_c_defines false \
- -initialize_to_zero false \
  -ts_output_name generated/rusefi_kinetis.ini \
  -c_defines config/boards/kinetis/config/controllers/algo/rusefi_generated.h \
  -c_destination config/boards/kinetis/config/controllers/algo/engine_configuration_generated_structures.h \

@@ -21,8 +21,6 @@ java \
  -DSystemOut.name=logs/gen_config_hellen_cypress \
  $COMMON_GEN_CONFIG \
  -tool hellen_cypress_gen_config.bat \
- -with_c_defines false \
- -initialize_to_zero false \
  -ts_output_name generated/rusefi_hellen_cypress.ini \
  -c_defines config/boards/hellen/cypress/config/controllers/algo/rusefi_generated.h \
  -c_destination config/boards/hellen/cypress/config/controllers/algo/engine_configuration_generated_structures.h \
