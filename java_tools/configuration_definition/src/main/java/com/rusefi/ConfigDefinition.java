@@ -18,13 +18,12 @@ import java.util.*;
  */
 public class ConfigDefinition {
     static final String SIGNATURE_HASH = "SIGNATURE_HASH";
-    private static String TS_OUTPUTS_DESTINATION = null;
     public static String MESSAGE;
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
-    public static final String KEY_DEFINITION = "-definition";
+    private static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
-    public static final String KEY_TS_DESTINATION = "-ts_destination";
+    private static final String KEY_TS_DESTINATION = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     /**
@@ -34,9 +33,9 @@ public class ConfigDefinition {
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
-    public static final String KEY_PREPEND = "-prepend";
-    public static final String KEY_SIGNATURE = "-signature";
-    public static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
+    private static final String KEY_PREPEND = "-prepend";
+    private static final String KEY_SIGNATURE = "-signature";
+    private static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     private static final String KEY_BOARD_NAME = "-board";
     /**
@@ -45,7 +44,6 @@ public class ConfigDefinition {
      * This could be related to configuration header use-case versus "live data" (not very alive idea) use-case
      */
     public static boolean needZeroInit = true;
-    public static String definitionInputFile = null;
 
     public static void main(String[] args) {
         try {
@@ -73,7 +71,6 @@ public class ConfigDefinition {
         SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
-        String destCHeaderFileName = null;
         String destCDefinesFileName = null;
         String javaDestinationFileName = null;
         String romRaiderDestination = null;
@@ -86,6 +83,8 @@ public class ConfigDefinition {
         List<String> enumInputFiles = new ArrayList<>();
         CHeaderConsumer.withC_Defines = true;
         File[] boardYamlFiles = null;
+        String tsOutputsDestination = null;
+        String definitionInputFile = null;
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
@@ -109,10 +108,10 @@ public class ConfigDefinition {
                     tsInputFileFolder = args[i + 1];
                     break;
                 case "-ts_outputs_section":
-                    TS_OUTPUTS_DESTINATION = args[i + 1];
+                    tsOutputsDestination = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
-                    destCHeaderFileName = args[i + 1];
+                    destinations.add(new CHeaderConsumer(state.variableRegistry, args[i + 1]));
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
@@ -246,10 +245,10 @@ public class ConfigDefinition {
 
         BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
 
-        if (TS_OUTPUTS_DESTINATION != null) {
-            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/output_channels.ini", state));
-            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/data_logs.ini"));
-            destinations.add(new GaugeConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/gauges.ini", state));
+        if (tsOutputsDestination != null) {
+            destinations.add(new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini", state));
+            destinations.add(new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini"));
+            destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini", state));
         }
         if (tsInputFileFolder != null) {
             CharArrayWriter tsWriter = new CharArrayWriter();
@@ -262,9 +261,6 @@ public class ConfigDefinition {
             destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
 
-        if (destCHeaderFileName != null) {
-            destinations.add(new CHeaderConsumer(state.variableRegistry, destCHeaderFileName));
-        }
         if (javaDestinationFileName != null) {
             destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
         }
@@ -278,7 +274,7 @@ public class ConfigDefinition {
         state.readBufferedReader(definitionReader, destinations);
 
         if (destCDefinesFileName != null) {
-            ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName);
+            ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, definitionInputFile);
         }
 
         if (romRaiderDestination != null && romRaiderInputFile != null) {
