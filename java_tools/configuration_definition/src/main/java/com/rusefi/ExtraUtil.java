@@ -40,12 +40,12 @@ public class ExtraUtil {
         fw.close();
     }
 
-    public static void writeDefinesToFile(VariableRegistry variableRegistry, String fileName) throws IOException {
+    public static void writeDefinesToFile(VariableRegistry variableRegistry, String fileName, String headerComment) throws IOException {
 
         SystemOut.println("Writing to " + fileName);
         LazyFile cHeader = new LazyFile(fileName);
 
-        cHeader.write("//\n// " + ToolUtil.getGeneratedAutomaticallyTag() + ConfigDefinition.definitionInputFile + "\n//\n\n");
+        cHeader.write("//\n// " + ToolUtil.getGeneratedAutomaticallyTag() + headerComment + "\n//\n\n");
         cHeader.write(variableRegistry.getDefinesSection());
         cHeader.close();
     }
