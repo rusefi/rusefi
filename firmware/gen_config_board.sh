@@ -53,7 +53,6 @@ java -DSystemOut.name=logs/gen_config_board \
  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp \
 	-board ${BOARDNAME} \
 	-ts_output_name generated/${INI} \
-	-cache ${SHORT_BOARDNAME} \
   -with_c_defines $SOMETHINGSOMETHING \
   -initialize_to_zero $SOMETHINGSOMETHING \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \

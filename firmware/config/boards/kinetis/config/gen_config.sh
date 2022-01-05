@@ -20,7 +20,6 @@ echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 java \
  -DSystemOut.name=logs/gen_config_kinetis \
  $COMMON_GEN_CONFIG \
- -cache kinetis \
  -tool kinetis_gen_config.bat \
  -with_c_defines false \
  -initialize_to_zero false \

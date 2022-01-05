@@ -20,7 +20,6 @@ echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 java \
  -DSystemOut.name=logs/gen_config_hellen_cypress \
  $COMMON_GEN_CONFIG \
- -cache hellen_cypress \
  -tool hellen_cypress_gen_config.bat \
  -with_c_defines false \
  -initialize_to_zero false \
