@@ -203,7 +203,7 @@ public class VariableRegistry  {
                 javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + ToolUtil.EOL);
             }
         } catch (NumberFormatException e) {
-            SystemOut.println("Not an integer: " + value);
+            //SystemOut.println("Not an integer: " + value);
 
             if (!var.trim().endsWith(ENUM_SUFFIX)) {
                 if (isQuoted(value, '"')) {
