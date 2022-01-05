@@ -56,5 +56,4 @@ public enum debug_mode_e {
 	DBG_VVT_2_PID,
 	DBG_VVT_3_PID,
 	DBG_VVT_4_PID,
-	Force_4_bytes_size_debug_mode_e,
 }
