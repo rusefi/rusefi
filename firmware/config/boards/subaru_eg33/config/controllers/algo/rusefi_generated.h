@@ -696,7 +696,6 @@
 #define debug_mode_e_DBG_VVT_3_PID 50
 #define debug_mode_e_DBG_VVT_4_PID 51
 #define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
-#define debug_mode_e_Force_4_bytes_size_debug_mode_e ENUM_32_BITS
 #define debug_mode_e_UNUSED23 23
 #define debugMapAveraging_offset 815
 #define debugMode_offset 1716
@@ -786,7 +785,6 @@
 #define engine_type_e_ET_UNUSED97 97
 #define engine_type_e_ET_UNUSED98 98
 #define engine_type_e_ETB_BENCH_ENGINE 58
-#define engine_type_e_Force_4_bytes_size_engine_type ENUM_32_BITS
 #define engine_type_e_FORD_ASPIRE_1996 3
 #define engine_type_e_FORD_ESCORT_GT 14
 #define engine_type_e_FORD_INLINE_6_1995 7
@@ -2136,7 +2134,6 @@
 #define trigger_todoRemoveMeOneDay1_offset 536
 #define trigger_type_e_auto_enum "TT_TOOTHED_WHEEL", "TT_FORD_ASPIRE", "TT_DODGE_NEON_1995", "TT_MAZDA_MIATA_NA", "TT_MAZDA_MIATA_NB1", "TT_GM_7X", "TT_DAIHATSU", "TT_MAZDA_SOHC_4", "TT_TOOTHED_WHEEL_60_2", "TT_TOOTHED_WHEEL_36_1", "TT_MERCEDES_2_SEGMENT", "TT_MITSUBISHI", "TT_HONDA_4_24", "TT_HONDA_1_4_24", "TT_DODGE_NEON_2003_CAM", "TT_MAZDA_DOHC_1_4", "TT_ONE_PLUS_ONE", "TT_VVT_JZ", "TT_ONE", "TT_DODGE_RAM", "TT_60_2_VW", "TT_HONDA_1_24", "TT_DODGE_STRATUS", "TT_36_2_2_2", "TT_NISSAN_SR20VE", "TT_2JZ_3_34", "TT_ROVER_K", "TT_GM_LS_24", "TT_HONDA_CBR_600", "TT_2JZ_1_12", "TT_CHRYSLER_NGC_36_2_2", "TT_3_1_CAM", "TT_DODGE_NEON_2003_CRANK", "TT_MIATA_VVT", "TT_HONDA_ACCORD_1_24_SHIFTED", "TT_MAZDA_MIATA_VVT_TEST", "TT_SUBARU_7_6", "TT_JEEP_18_2_2_2", "TT_NISSAN_SR20VE_360", "TT_DODGE_NEON_1995_ONLY_CRANK", "TT_JEEP_4_CYL", "TT_FIAT_IAW_P8", "TT_FORD_ST170", "TT_VVT_MIATA_NB2", "TT_RENIX_44_2_2", "TT_RENIX_66_2_2_2", "TT_HONDA_K_12_1", "TT_VVT_BOSCH_QUICK_START", "TT_TOOTHED_WHEEL_36_2", "TT_SUBARU_SVX", "TT_1_16", "TT_SUBARU_7_WITHOUT_6", "TT_NISSAN_MR18_CAM_VVT", "TT_TRI_TACH", "TT_GM_60_2_2_2", "TT_SKODA_FAVORIT", "TT_VVT_BARRA_3_PLUS_1", "TT_KAWA_KX450F", "TT_NISSAN_VQ35", "TT_VVT_NISSAN_VQ35", "TT_NISSAN_VQ30", "TT_NISSAN_QR25", "TT_UNUSED_62", "TT_SUBARU_SVX_CRANK_1", "TT_SUBARU_SVX_CAM_VVT", "TT_FORD_TFI_PIP", "TT_SUZUKI_G13B", "TT_HONDA_K_4_1", "TT_NISSAN_MR18_CRANK", "TT_TOOTHED_WHEEL_32_2", "TT_UNUSED"
 #define trigger_type_e_enum "custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "trg70", "trg71"
-#define trigger_type_e_Force_4_bytes_size_trigger_type ENUM_32_BITS
 #define trigger_type_e_TT_1_16 50
 #define trigger_type_e_TT_2JZ_1_12 29
 #define trigger_type_e_TT_2JZ_3_34 25
