@@ -27,14 +27,14 @@ public class PinoutLogic {
         names.put("analog_inputs", new ArrayList<>());
         names.put("event_inputs", new ArrayList<>());
         names.put("switch_inputs", new ArrayList<>());
-        for (int i = 0; i < listPins.size(); i++) {
-            String id = (String) listPins.get(i).get("id");
-            String className = (String) listPins.get(i).get("class");
+        for (Map<String, Object> listPin : listPins) {
+            String id = (String) listPin.get("id");
+            String className = (String) listPin.get("class");
             ArrayList<String> classList = names.get(className);
             if (classList == null) {
                 throw new IllegalStateException("Class not found:  " + className);
             }
-            PinType listPinType = PinType.find((String) listPins.get(i).get("class"));
+            PinType listPinType = PinType.find((String) listPin.get("class"));
             String pinType = listPinType.getPinType();
             EnumsReader.EnumState enumList = state.enumsReader.getEnums().get(pinType);
             for (Map.Entry<String, Value> kv : enumList.entrySet()) {
@@ -44,7 +44,7 @@ public class PinoutLogic {
                     for (int ii = classList.size(); ii <= index; ii++) {
                         classList.add(null);
                     }
-                    classList.set(index, (String) listPins.get(i).get("ts_name"));
+                    classList.set(index, (String) listPin.get("ts_name"));
                     break;
                 }
             }
