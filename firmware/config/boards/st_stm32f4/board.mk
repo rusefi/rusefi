@@ -6,6 +6,3 @@ DDEFS += -DSTM32F407xx
 
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
-
-# Shared variables
-ALLINC    += $(BOARDINC)

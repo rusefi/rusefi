@@ -49,6 +49,3 @@ DDEFS += -DEFI_OVERRIDE_FAST_ADC_FOR_STM32H7=TRUE -DADC_FAST_DEVICE=ADCD1 -DEFI_
 
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
-
-# Shared variables
-ALLINC    += $(BOARDINC)

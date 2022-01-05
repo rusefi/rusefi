@@ -34,5 +34,3 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
 
-# Shared variables
-ALLINC    += $(BOARDINC)
