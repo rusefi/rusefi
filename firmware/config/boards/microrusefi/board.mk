@@ -35,5 +35,3 @@ DDEFS += -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"microRusEFI\" $(DEFAULT_ENGINE_TYPE)
 # We are running on microRusEFI hardware!
 DDEFS += -DHW_MICRO_RUSEFI=1
 
-# Shared variables
-ALLINC    += $(BOARDINC)

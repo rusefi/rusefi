@@ -302,6 +302,7 @@ ASMXSRC = $(ALLXASMSRC) \
 INCDIR = \
 	$(PCH_DIR) \
 	$(ALLINC) \
+	$(BOARDINC) \
 	$(TESTINC) \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \
