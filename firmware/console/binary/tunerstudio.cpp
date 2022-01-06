@@ -190,35 +190,35 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
 
 static const void * getStructAddr(live_data_e structId) {
 	switch (structId) {
-	case LDS_ENGINE:
+	case LDS_engine_state:
 		return static_cast<engine_state2_s*>(&engine->engineState);
-	case LDS_FUEL_TRIM:
+	case LDS_wall_fuel_state:
 		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
-	case LDS_TRIGGER_CENTRAL:
+	case LDS_trigger_central:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
-	case LDS_TRIGGER_STATE:
+	case LDS_trigger_state:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
-	case LDS_AC_CONTROL:
+	case LDS_ac_control:
 		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
-	case LDS_FUEL_PUMP:
+	case LDS_fuel_pump:
 		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	case LDS_ETB_PID:
-		return engine->etbControllers[0]->getPidState();
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
-#ifndef EFI_IDLE_CONTROL
-	case LDS_IDLE_PID:
-		return static_cast<pid_state_s*>(getIdlePid());
-#endif /* EFI_IDLE_CONTROL */
-	case LDS_IDLE:
+//#if EFI_ELECTRONIC_THROTTLE_BODY
+//	case LDS_ETB_PID:
+//		return engine->etbControllers[0]->getPidState();
+//#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+//
+//#ifndef EFI_IDLE_CONTROL
+//	case LDS_IDLE_PID:
+//		return static_cast<pid_state_s*>(getIdlePid());
+//#endif /* EFI_IDLE_CONTROL */
+	case LDS_idle_state:
 		return static_cast<idle_state_s*>(&engine->idle);
-	case LDS_TPS_ACCEL:
+	case LDS_tps_accel_state:
 		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
-	case LDS_MAIN_RELAY:
+	case LDS_main_relay:
 		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
 #if EFI_BOOST_CONTROL
-	case LDS_BOOST_CONTROL:
+	case LDS_boost_control:
 		return static_cast<boost_control_s*>(&engine->boostController);
 #endif // EFI_BOOST_CONTROL
 	default:

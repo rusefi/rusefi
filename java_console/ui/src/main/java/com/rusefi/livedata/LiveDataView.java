@@ -9,13 +9,14 @@ import com.rusefi.ldmp.StateDictionary;
  * @see StateDictionary
  */
 public enum LiveDataView {
-    AC_CONTROL(live_data_e.LDS_AC_CONTROL, AcControl.VALUES, "ac_control.cpp"),
-    FUEL_PUMP(live_data_e.LDS_FUEL_PUMP, FuelPump.VALUES, "fuel_pump.cpp"),
-    MAIN_RELAY(live_data_e.LDS_MAIN_RELAY, MainRelay.VALUES, "main_relay.cpp"),
-    TPS_ACCEL(live_data_e.LDS_TPS_ACCEL, TpsAccelState.VALUES, "accel_enrichment.cpp"),
-    BOOST_CONTROL(live_data_e.LDS_BOOST_CONTROL, BoostControl.VALUES, "boost_control.cpp"),
-    LAUNCH_CONTROL(live_data_e.LDS_LAUNCH_CONTROL, LaunchControl.VALUES, "launch_control.cpp"),
-    HIGH_PRESSURE(live_data_e.LDS_HIGH_PRESSURE, HighPressureFuelPump.VALUES, "high_pressure_fuel_pump.cpp"),
+    // todo: code generate this part of the enum with some BEFORE/AFTER tag?
+    AC_CONTROL(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control.cpp"),
+    FUEL_PUMP(live_data_e.LDS_fuel_pump, FuelPump.VALUES, "fuel_pump.cpp"),
+    MAIN_RELAY(live_data_e.LDS_main_relay, MainRelay.VALUES, "main_relay.cpp"),
+    TPS_ACCEL(live_data_e.LDS_tps_accel_state, TpsAccelState.VALUES, "accel_enrichment.cpp"),
+    BOOST_CONTROL(live_data_e.LDS_boost_control, BoostControl.VALUES, "boost_control.cpp"),
+    LAUNCH_CONTROL(live_data_e.LDS_launch_control_state, LaunchControl.VALUES, "launch_control.cpp"),
+    HIGH_PRESSURE(live_data_e.LDS_high_pressure_fuel_pump, HighPressureFuelPump.VALUES, "high_pressure_fuel_pump.cpp"),
     ;
 
     private final live_data_e liveDataE;
@@ -23,7 +24,6 @@ public enum LiveDataView {
     private final String fileName;
 
     LiveDataView(live_data_e liveDataE, Field[] values, String fileName) {
-
         this.liveDataE = liveDataE;
         this.values = values;
         this.fileName = fileName;
