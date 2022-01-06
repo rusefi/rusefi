@@ -268,9 +268,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
     float m_pressureTarget_kPa;"DI: m_pressureTarget_kPa";"v", 1, 0, 0, 100, 0
 
 	uint16_t autoscale mafEstimate;@@GAUGE_NAME_AIR_FLOW_ESTIMATE@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t instantRpm;;"rpm", 1, 0, 0, 0, 0
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[110 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[108 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition

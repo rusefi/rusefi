@@ -697,6 +697,7 @@ void updateTunerStudioState() {
 
 	// offset 0
 	tsOutputChannels->RPMValue = rpm;
+	tsOutputChannels->instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 
 	updateSensors(rpm);
 	updateFuelInfo();
@@ -853,8 +854,6 @@ void updateTunerStudioState() {
 		break;
 	case DBG_INSTANT_RPM:
 		{
-			float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
-			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
 
 			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
