@@ -8,13 +8,13 @@
 #pragma once
 
 struct FragmentEntry {
-	FragmentEntry(uint8_t *data, size_t size) {
+	FragmentEntry(const void *data, size_t size) {
 		this->data = data;
 		this->size = size;
 
 	}
 
-	uint8_t *data;
+	const void *data;
 	size_t size;
 };
 
