@@ -17,8 +17,10 @@
 #include "dc_motors.h"
 #if ! EFI_UNIT_TEST
 #include "stepper.h"
-static StepDirectionStepper iacStepperHw CCM_OPTIONAL;
-static DualHBridgeStepper iacHbridgeHw CCM_OPTIONAL;
+/* Storing two following structs in CCM memory cause HardFault (at least on F4)
+ * This need deep debuging. Until it is moved out of CMM. */
+static StepDirectionStepper iacStepperHw /*CCM_OPTIONAL*/;
+static DualHBridgeStepper iacHbridgeHw /*CCM_OPTIONAL*/;
 StepperMotor iacMotor CCM_OPTIONAL;
 #endif /* EFI_UNIT_TEST */
 
