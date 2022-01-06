@@ -24,7 +24,7 @@ void copyRange(uint8_t *destination, FragmentEntry *fragments, size_t dataOffset
 
 	while (dataLength > 0) {
 		int copyNowSize = minI(dataLength, fragments[fragmentIndex].size - dataOffset);
-		memcpy(destination + destinationIndex, fragments[fragmentIndex].data + dataOffset, copyNowSize);
+		memcpy(destination + destinationIndex, fragments[fragmentIndex + dataOffset].data, copyNowSize);
 		destinationIndex += copyNowSize;
 		dataOffset = 0;
 		dataLength -= copyNowSize;
