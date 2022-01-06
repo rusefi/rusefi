@@ -66,7 +66,7 @@ TEST(misc, testEngineMath) {
 	Sensor::setMockValue(SensorType::Iat, 20);
 	// calc. airFlow using airMass, and find tCharge
 	ASSERT_FLOAT_EQ(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0));
-	ASSERT_FLOAT_EQ(65.5625f/*kg/h*/, engine->engineState.airFlow);
+	ASSERT_FLOAT_EQ(65.5625f/*kg/h*/, engine->engineState.airflowEstimate);
 }
 
 TEST(misc, testIgnitionMapGenerator) {
