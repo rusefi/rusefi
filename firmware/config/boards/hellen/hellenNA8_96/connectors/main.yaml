@@ -14,7 +14,7 @@ pins:
   - pin: 1B
     id: GPIOA_9
     class: outputs
-    ts_name: 1B AC Fan Relay
+    ts_name: 1B - AC Fan Relay
     function: AC Fan Relay
 
   - pin: 1C
@@ -75,7 +75,7 @@ pins:
   - pin: 1U
     id: GPIOG_2
     class: outputs
-    ts_name: 1U
+    ts_name: 1U - Fuel Pump
     function: Fuel Pump Relay
     type: ls
     
@@ -131,7 +131,11 @@ pins:
     function: GND
     
   - pin: 3B
-    function: +12V
+    id: EFI_ADC_5
+    class: analog_inputs
+    ts_name: 3B - Battery Sense
+    function: ECU power in start & run
+    type: 12V
     
   - pin: 3C
     function: GND
@@ -153,7 +157,7 @@ pins:
   - pin: 3G
     id: [GPIOA_6, EFI_ADC_6]
     class: [event_inputs, analog_inputs]
-    ts_name: 2H - CAM
+    ts_name: 3G - CAM
     function: Camshaft Sensor
     
   - pin: 3I    
