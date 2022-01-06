@@ -16,24 +16,26 @@ public enum StateDictionary {
     private final Map<live_data_e, Field[]> map = new HashMap<>();
 
     StateDictionary() {
-        register(live_data_e.LDS_SPEED_DENSITY, EngineState.VALUES); // 2
-        register(live_data_e.LDS_ENGINE, EngineState.VALUES); // 3
-        register(live_data_e.LDS_FUEL_TRIM, EngineState.VALUES);
-        register(live_data_e.LDS_TPS_TPS_ENRICHMENT, EngineState.VALUES); // 5
-        register(live_data_e.LDS_TRIGGER_CENTRAL, TriggerCentral.VALUES);
-        register(live_data_e.LDS_ETB_PID, PidState.VALUES); // 7
-        register(live_data_e.LDS_IDLE_PID, PidState.VALUES);
+        //register(live_data_e.LDS_ETB_PID, PidState.VALUES); // 7
+        //register(live_data_e.LDS_IDLE_PID, PidState.VALUES);
         //register(live_data_e.LDS_ALTERNATOR_PID,
         // LDS_CJ125_PID
-        register(live_data_e.LDS_IDLE, IdleState.VALUES);
-        register(live_data_e.LDS_TRIGGER_STATE, TriggerState.VALUES); // 11
-        register(live_data_e.LDS_AC_CONTROL, AcControl.VALUES); // 12
-        register(live_data_e.LDS_FUEL_PUMP, FuelPump.VALUES);
-        register(live_data_e.LDS_TPS_ACCEL, TpsAccelState.VALUES);
-        register(live_data_e.LDS_MAIN_RELAY, MainRelay.VALUES);
-        register(live_data_e.LDS_BOOST_CONTROL, BoostControl.VALUES);
-        register(live_data_e.LDS_LAUNCH_CONTROL, LaunchControl.VALUES);
-        register(live_data_e.LDS_HIGH_PRESSURE, HighPressureFuelPump.VALUES);
+        //register(live_data_e.LDS_IDLE, IdleState.VALUES);
+        // todo: code generate this!
+        register(live_data_e.LDS_engine_state, EngineState.VALUES); // 3
+        register(live_data_e.LDS_trigger_central, TriggerCentral.VALUES);
+        register(live_data_e.LDS_trigger_state, TriggerState.VALUES); // 11
+        register(live_data_e.LDS_ac_control, AcControl.VALUES); // 12
+        register(live_data_e.LDS_fan_control, FuelPump.VALUES);
+        register(live_data_e.LDS_injector_model, InjectorModel.VALUES);
+        register(live_data_e.LDS_idle_state, IdleState.VALUES);
+        register(live_data_e.LDS_fuel_pump, FuelPump.VALUES);
+        register(live_data_e.LDS_wall_fuel_state, WallFuelState.VALUES);
+        register(live_data_e.LDS_tps_accel_state, TpsAccelState.VALUES);
+        register(live_data_e.LDS_main_relay, MainRelay.VALUES);
+        register(live_data_e.LDS_boost_control, BoostControl.VALUES);
+        register(live_data_e.LDS_launch_control_state, LaunchControl.VALUES);
+        register(live_data_e.LDS_high_pressure_fuel_pump, HighPressureFuelPump.VALUES);
         if (map.size() != live_data_e.values().length) {
             Set<live_data_e> missing = new HashSet<>(Arrays.asList(live_data_e.values()));
             missing.removeAll(map.keySet());
