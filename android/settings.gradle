@@ -23,7 +23,7 @@ include ':enum_to_string'
 project(':enum_to_string').projectDir = new File('../java_tools/enum_to_string')
 include ':bin2header'
 project(':bin2header').projectDir = new File('../java_tools/bin2header')
-include ':config_definition'
-project(':config_definition').projectDir = new File('../java_tools/configuration_definition')
+// todo: uncomment me once works include ':config_definition'
+// todo: uncomment me once works project(':config_definition').projectDir = new File('../java_tools/configuration_definition')
 include ':ts_plugin_launcher'
 project(':ts_plugin_launcher').projectDir = new File('../java_tools/ts_plugin_launcher')
