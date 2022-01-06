@@ -177,10 +177,23 @@ void sys_dual_bank(void) {
 
 void stm32_stop() {
 	SysTick->CTRL = 0;
-	__disable_irq();
-	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
-
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	//RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
+	enginePins.errorLedPin.setValue(0);
+	enginePins.runningLedPin.setValue(0);
+	enginePins.communicationLedPin.setValue(0);
+	enginePins.warningLedPin.setValue(0);
+	
 	// configure mode bits
+    EXTI->IMR |= EXTI_IMR_IM0;              // interrupt request from line 0 not masked
+    EXTI->RTSR |= EXTI_RTSR_TR0;           // rising trigger enabled for input line 0
+
+    // Enable interrupt in the NVIC
+    NVIC_SetPriority(EXTI0_IRQn, 0);
+  	NVIC_EnableIRQ(EXTI0_IRQn);
+
+
+	PWR->CSR1 |= PWR_CSR1_WUIF;
 	PWR->CR1 &= ~PWR_CR1_PDDS;	// cleared PDDS means stop mode (not standby) 
 	PWR->CR1 |= PWR_CR1_FPDS;	// turn off flash in stop mode
 	PWR->CR1 |= PWR_CR1_UDEN;	// regulator underdrive in stop mode
@@ -188,9 +201,8 @@ void stm32_stop() {
 	PWR->CR1 |= PWR_CR1_LPDS;	// regulator in low power mode
 
 	// enable Deepsleep mode
-	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-	__WFE();
+	__disable_irq();
+	__WFI();
 
 	// Lastly, reboot
 	NVIC_SystemReset();
@@ -209,7 +221,8 @@ void stm32_standby() {
 
 	// Wait for event - this should never return as it kills the chip until a reset
 	__WFE();
+	__WFE();
 
 	// Lastly, reboot
-	NVIC_SystemReset();
+	//NVIC_SystemReset();
 }
