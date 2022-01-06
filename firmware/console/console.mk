@@ -13,6 +13,7 @@ CONSOLE_SRC_CPP = $(PROJECT_DIR)/console/status_loop.cpp \
 
 
 CONSOLE_INC=\
+	$(PROJECT_DIR)/console/binary/generated \
 	$(PROJECT_DIR)/console/binary \
 	$(PROJECT_DIR)/console \
 	$(PROJECT_DIR)/console/binary_log
