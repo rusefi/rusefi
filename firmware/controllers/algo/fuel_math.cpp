@@ -158,10 +158,10 @@ static float getBaseFuelMass(int rpm) {
 	engine->engineState.ignitionLoad = getLoadOverride(airmass.EngineLoadPercent, engineConfiguration->ignOverrideMode);
 	
 	auto gramPerCycle = airmass.CylinderAirmass * engineConfiguration->specs.cylindersCount;
-	auto gramPerSecond = rpm == 0 ? 0 : gramPerCycle / getEngineCycleDuration(rpm);
+	auto gramPerMs = rpm == 0 ? 0 : gramPerCycle / getEngineCycleDuration(rpm);
 
 	// convert g/s -> kg/h
-	engine->engineState.airflowEstimate = gramPerSecond * 3600 /* seconds per hour */ / 1000 /* grams per kg */;;
+	engine->engineState.airflowEstimate = gramPerMs * 3600000 /* milliseconds per hour */ / 1000 /* grams per kg */;;
 
 	float baseFuelMass = engine->fuelComputer->getCycleFuel(airmass.CylinderAirmass, rpm, airmass.EngineLoadPercent);
 
