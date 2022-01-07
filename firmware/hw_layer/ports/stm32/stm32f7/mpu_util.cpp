@@ -183,7 +183,8 @@ void stm32_stop() {
 	enginePins.runningLedPin.setValue(0);
 	enginePins.communicationLedPin.setValue(0);
 	enginePins.warningLedPin.setValue(0);
-	
+
+	/* THIS IS ALTERNATIVE HAND FUCKERY WAY OF DOING THIS. HAL way is below.
 	// configure mode bits
     EXTI->IMR |= EXTI_IMR_IM0;              // interrupt request from line 0 not masked
     EXTI->RTSR |= EXTI_RTSR_TR0;           // rising trigger enabled for input line 0
@@ -191,7 +192,8 @@ void stm32_stop() {
     // Enable interrupt in the NVIC
     NVIC_SetPriority(EXTI0_IRQn, 0);
   	NVIC_EnableIRQ(EXTI0_IRQn);
-
+*/
+	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
 
 	PWR->CSR1 |= PWR_CSR1_WUIF;
 	PWR->CR1 &= ~PWR_CR1_PDDS;	// cleared PDDS means stop mode (not standby) 
