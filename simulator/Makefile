@@ -160,7 +160,6 @@ include $(PROJECT_DIR)/common.mk
 CSRC =  $(ALLCSRC) \
         $(SYSTEMSRC) \
         $(CONSOLESRC) \
-        $(CONTROLLERS_ALGO_SRC) \
         $(CONTROLLERS_CORE_SRC) \
         $(CONTROLLERS_SENSORS_SRC) \
         $(ENGINES_SRC) \
@@ -171,25 +170,12 @@ CSRC =  $(ALLCSRC) \
 # setting.
 CPPSRC = $(ALLCPPSRC) \
   $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
-        $(UTILSRC_CPP) \
-	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(CONTROLLERS_SRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
-	$(HW_LAYER_EMS_CPP) \
-	$(HW_SENSORS_CPP) \
 	$(HW_LAYER_DRIVERS_CPP) \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
-	$(TRIGGER_SRC_CPP) \
-	$(TRIGGER_DECODERS_SRC_CPP) \
-	$(SYSTEMSRC_CPP) \
-	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
-	$(INIT_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(CONTROLLERS_CORE_SRC_CPP) \
-	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(DEV_SIMULATOR_SRC_CPP) \
-	$(ENGINES_SRC_CPP) \
 	simulator/rusEfiFunctionalTest.cpp \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
