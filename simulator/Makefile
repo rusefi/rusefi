@@ -158,12 +158,6 @@ include $(PROJECT_DIR)/common.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-        $(SYSTEMSRC) \
-        $(CONSOLESRC) \
-        $(CONTROLLERS_CORE_SRC) \
-        $(CONTROLLERS_SENSORS_SRC) \
-        $(ENGINES_SRC) \
-        $(UTILSRC) \
         main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -190,7 +184,6 @@ INCDIR = . \
           $(ALLINC) \
           $(CHIBIOS)/os/various/cpp_wrappers \
           $(PROJECT_DIR)/hw_layer/drivers/can \
-          $(HW_SENSORS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator

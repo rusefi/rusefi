@@ -223,21 +223,12 @@ CSRC =  check.c \
 	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
 	$(CHIBIOS)/os/various/evtimer.c \
-	$(TRIGGER_SRC) \
-	$(TRIGGER_DECODERS_SRC) \
 	$(DEV_SRC) \
 	$(BOOTLOADERSRC) \
 	${HW_MASS_STORAGE_SRC_C} \
-	$(UTILSRC) \
-	$(SYSTEMSRC) \
-	$(ENGINES_SRC) \
-	$(CONSOLESRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(HW_LAYER_DRIVERS) \
-	$(CONTROLLERSSRC) \
-	$(CONTROLLERS_CORE_SRC) \
-	$(CONTROLLERS_SENSORS_SRC) \
 	main_hardfault.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
@@ -249,8 +240,7 @@ CPPSRC = \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(HW_LAYER_DRIVERS_CPP) \
 	$(CONSOLE_SRC_CPP) \
-	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	rusefi.cpp \
+rusefi.cpp \
 	main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.

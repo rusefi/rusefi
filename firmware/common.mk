@@ -9,6 +9,10 @@ include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 
+ALLCSRC += \
+	$(UTILSRC) \
+
+
 ALLCPPSRC += \
 	$(CONTROLLERS_CORE_SRC_CPP) \
 	$(CONTROLLERS_MATH_SRC_CPP) \
