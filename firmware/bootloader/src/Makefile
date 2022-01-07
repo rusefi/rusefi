@@ -240,6 +240,7 @@ INCDIR = $(ALLINC) \
 	$(PROJECT_DIR)/hw_layer/sensors \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/ports \
+	$(PROJECT_DIR)/console/binary/generated \
 	$(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER) \
 	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \
