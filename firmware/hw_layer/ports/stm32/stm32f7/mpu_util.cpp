@@ -210,19 +210,11 @@ void stm32_stop() {
 
 void stm32_standby() {
 	SysTick->CTRL = 0;
-	__disable_irq();
-	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
-
-	// configure mode bits
-	PWR->CR1 |= PWR_CR1_PDDS;		// PDDS = use standby mode (not stop mode)
-
-	// enable Deepsleep mode
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-	// Wait for event - this should never return as it kills the chip until a reset
-	__WFE();
-	__WFE();
-
-	// Lastly, reboot
-	//NVIC_SystemReset();
+	PWR->CR1 |= PWR_CR1_PDDS;		// PDDS = use standby mode (not stop mode)
+	PWR->CSR2 |= PWR_CSR2_EWUP1; //EWUP1: Enable Wakeup pin for PA0
+	PWR->CR2 |= PWR_CR2_CWUPF1; //Clear Wakeup Pin flag for PA0
+	PWR->CR1 |= PWR_CR1_CSBF;  //Clear standby flag
+	__disable_irq();
+	__WFI();
 }
