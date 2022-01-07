@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 05 06:48:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 07 00:58:16 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2114,8 +2114,9 @@ struct engine_configuration_s {
 	offset 896 bit 29 */
 	bool canBroadcastUseChannelTwo : 1 {};
 	/**
+	 * If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
 	offset 896 bit 30 */
-	bool unusedBit_310_30 : 1 {};
+	bool useRawOutputToDriveIdleStepper : 1 {};
 	/**
 	offset 896 bit 31 */
 	bool unusedBit_310_31 : 1 {};
@@ -4014,16 +4015,20 @@ struct engine_configuration_s {
 	 */
 	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 4590
 	 */
-	uint8_t alignmentFill_at_4590[2];
+	output_pin_e stepper_raw_output[4];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4594
+	 */
+	uint8_t alignmentFill_at_4594[2];
 	/**
 	units
-	 * offset 4592
+	 * offset 4596
 	 */
-	int mainUnusedEnd[100];
+	int mainUnusedEnd[99];
 	/** total size 4992*/
 };
 
@@ -4439,4 +4444,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 05 06:48:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 07 00:58:16 UTC 2022
