@@ -7,7 +7,8 @@ Usages:
   fan_control: [ "FanControl.java", "controllers/actuators" ]
   fuel_pump: [ "FuelPump.java", "controllers/actuators" ]
   main_relay: [ "MainRelay.java", "controllers/actuators" ]
-  pid_state: [ "PidState.java", "util/math" ]
+  #todo: handle ETB pid and Idle pid which point at same pid_state.txt
+  #pid_state: [ "PidState.java", "util/math" ]
   engine_state: [ "EngineState.java", "controllers/algo" ]
   tps_accel_state: [ "TpsAccelState.java", "controllers/algo" ]
   trigger_central: [ "TriggerCentral.java", "controllers/trigger" ]

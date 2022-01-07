@@ -926,7 +926,7 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit knockBankCyl12,"Channel 2","Channel 1"
 	bit tcuEnabled
 bit canBroadcastUseChannelTwo,"second","first"
-bit unusedBit_310_30
+	bit useRawOutputToDriveIdleStepper;+If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
 bit unusedBit_310_31
 
 	dc_io[ETB_COUNT iterate] etbIo
@@ -1491,8 +1491,9 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
         uint8_t[TORQUE_CURVE_SIZE] autoscale torqueValues;;"Nm", 10, 0, 0, 255, 0
         uint16_t[TORQUE_CURVE_SIZE] torqueRpmBins;;"RPM", 1, 0, 0, 65000, 0
 
+	output_pin_e[4 iterate] stepper_raw_output;
 
-	int[100] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+	int[99] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

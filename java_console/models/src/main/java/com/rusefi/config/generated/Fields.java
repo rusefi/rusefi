@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh integration/rusefi_config.txt Wed Jan 05 00:13:22 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 07 00:58:21 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -77,7 +77,7 @@ public class Fields {
 	public static final int alignmentFill_at_1847_offset = 1847;
 	public static final int alignmentFill_at_1873_offset = 1873;
 	public static final int alignmentFill_at_4007_offset = 4007;
-	public static final int alignmentFill_at_4618_offset = 4618;
+	public static final int alignmentFill_at_4622_offset = 4622;
 	public static final int alignmentFill_at_62_offset = 62;
 	public static final int alternatorControl_dFactor_offset = 1492;
 	public static final int alternatorControl_iFactor_offset = 1488;
@@ -1536,7 +1536,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 714;
 	public static final int mainRelayPinMode_offset = 756;
-	public static final int mainUnusedEnd_offset = 4620;
+	public static final int mainUnusedEnd_offset = 4624;
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
@@ -1806,7 +1806,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 1496132943;
+	public static final int SIGNATURE_HASH = 1862394732;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -1853,6 +1853,10 @@ public class Fields {
 	public static final int stepper_num_micro_steps_e_STEPPER_FOURTH = 4;
 	public static final int stepper_num_micro_steps_e_STEPPER_FULL = 0;
 	public static final int stepper_num_micro_steps_e_STEPPER_HALF = 2;
+	public static final int stepper_raw_output1_offset = 4618;
+	public static final int stepper_raw_output2_offset = 4619;
+	public static final int stepper_raw_output3_offset = 4620;
+	public static final int stepper_raw_output4_offset = 4621;
 	public static final int stepperDcInvertedPins_offset = 1740;
 	public static final int stepperDcIo1_controlPin_offset = 1006;
 	public static final int stepperDcIo1_directionPin1_offset = 1004;
@@ -2271,7 +2275,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.05.all.1496132943";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.07.all.1862394732";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2312,7 +2316,6 @@ public class Fields {
 	public static final int unused_1484_bit_30_offset = 1272;
 	public static final int unused_1484_bit_31_offset = 1272;
 	public static final int unusedBit4_1476_offset = 1272;
-	public static final int unusedBit_310_30_offset = 896;
 	public static final int unusedBit_310_31_offset = 896;
 	public static final int unusedBit_48_31_offset = 164;
 	public static final int unusedBit_501_10_offset = 1740;
@@ -2368,6 +2371,7 @@ public class Fields {
 	public static final int useLinearIatSensor_offset = 1260;
 	public static final int useNoiselessTriggerDecoder_offset = 748;
 	public static final int useOnlyRisingEdgeForTrigger_offset = 1272;
+	public static final int useRawOutputToDriveIdleStepper_offset = 896;
 	public static final int useRunningMathForCranking_offset = 164;
 	public static final int usescriptTableForCanSniffingFiltering_offset = 164;
 	public static final int useSeparateAdvanceForCranking_offset = 1272;
@@ -2909,7 +2913,7 @@ public class Fields {
 	public static final Field KNOCKBANKCYL12 = Field.create("KNOCKBANKCYL12", 896, FieldType.BIT, 27);
 	public static final Field TCUENABLED = Field.create("TCUENABLED", 896, FieldType.BIT, 28);
 	public static final Field CANBROADCASTUSECHANNELTWO = Field.create("CANBROADCASTUSECHANNELTWO", 896, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_310_30 = Field.create("UNUSEDBIT_310_30", 896, FieldType.BIT, 30);
+	public static final Field USERAWOUTPUTTODRIVEIDLESTEPPER = Field.create("USERAWOUTPUTTODRIVEIDLESTEPPER", 896, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_310_31 = Field.create("UNUSEDBIT_310_31", 896, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 900, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 901, FieldType.INT8, brain_pin_e);
@@ -3643,8 +3647,12 @@ public class Fields {
 	public static final Field HPFPCOMPENSATIONRPMBINS = Field.create("HPFPCOMPENSATIONRPMBINS", 4584, FieldType.INT8);
 	public static final Field TORQUEVALUES = Field.create("TORQUEVALUES", 4594, FieldType.INT8);
 	public static final Field TORQUERPMBINS = Field.create("TORQUERPMBINS", 4602, FieldType.INT16);
-	public static final Field ALIGNMENTFILL_AT_4618 = Field.create("ALIGNMENTFILL_AT_4618", 4618, FieldType.INT8);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4620, FieldType.INT);
+	public static final Field STEPPER_RAW_OUTPUT1 = Field.create("STEPPER_RAW_OUTPUT1", 4618, FieldType.INT8, output_pin_e);
+	public static final Field STEPPER_RAW_OUTPUT2 = Field.create("STEPPER_RAW_OUTPUT2", 4619, FieldType.INT8, output_pin_e);
+	public static final Field STEPPER_RAW_OUTPUT3 = Field.create("STEPPER_RAW_OUTPUT3", 4620, FieldType.INT8, output_pin_e);
+	public static final Field STEPPER_RAW_OUTPUT4 = Field.create("STEPPER_RAW_OUTPUT4", 4621, FieldType.INT8, output_pin_e);
+	public static final Field ALIGNMENTFILL_AT_4622 = Field.create("ALIGNMENTFILL_AT_4622", 4622, FieldType.INT8);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4624, FieldType.INT);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5020, 120, FieldType.STRING);
 	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5140, FieldType.FLOAT);
 	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5172, FieldType.FLOAT);
@@ -4184,7 +4192,7 @@ public class Fields {
 	KNOCKBANKCYL12,
 	TCUENABLED,
 	CANBROADCASTUSECHANNELTWO,
-	UNUSEDBIT_310_30,
+	USERAWOUTPUTTODRIVEIDLESTEPPER,
 	UNUSEDBIT_310_31,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
@@ -4906,7 +4914,11 @@ public class Fields {
 	HPFPCOMPENSATIONRPMBINS,
 	TORQUEVALUES,
 	TORQUERPMBINS,
-	ALIGNMENTFILL_AT_4618,
+	STEPPER_RAW_OUTPUT1,
+	STEPPER_RAW_OUTPUT2,
+	STEPPER_RAW_OUTPUT3,
+	STEPPER_RAW_OUTPUT4,
+	ALIGNMENTFILL_AT_4622,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,

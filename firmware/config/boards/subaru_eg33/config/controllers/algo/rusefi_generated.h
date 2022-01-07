@@ -87,7 +87,7 @@
 #define alignmentFill_at_1847_offset 1847
 #define alignmentFill_at_1873_offset 1873
 #define alignmentFill_at_4007_offset 4007
-#define alignmentFill_at_4618_offset 4618
+#define alignmentFill_at_4622_offset 4622
 #define alignmentFill_at_62_offset 62
 #define alternatorControl_dFactor_offset 1492
 #define alternatorControl_iFactor_offset 1488
@@ -1602,7 +1602,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4620
+#define mainUnusedEnd_offset 4624
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1889,7 +1889,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2593602335
+#define SIGNATURE_HASH 2897999164
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -1939,6 +1939,10 @@
 #define stepper_num_micro_steps_e_STEPPER_FOURTH 4
 #define stepper_num_micro_steps_e_STEPPER_FULL 0
 #define stepper_num_micro_steps_e_STEPPER_HALF 2
+#define stepper_raw_output1_offset 4618
+#define stepper_raw_output2_offset 4619
+#define stepper_raw_output3_offset 4620
+#define stepper_raw_output4_offset 4621
 #define stepperDcInvertedPins_offset 1740
 #define stepperDcIo1_controlPin_offset 1006
 #define stepperDcIo1_directionPin1_offset 1004
@@ -2408,7 +2412,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.01.05.subaru_eg33_f7.2593602335"
+#define TS_SIGNATURE "rusEFI 2022.01.07.subaru_eg33_f7.2897999164"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2452,7 +2456,6 @@
 #define unused_1484_bit_30_offset 1272
 #define unused_1484_bit_31_offset 1272
 #define unusedBit4_1476_offset 1272
-#define unusedBit_310_30_offset 896
 #define unusedBit_310_31_offset 896
 #define unusedBit_48_31_offset 164
 #define unusedBit_501_10_offset 1740
@@ -2508,6 +2511,7 @@
 #define useLinearIatSensor_offset 1260
 #define useNoiselessTriggerDecoder_offset 748
 #define useOnlyRisingEdgeForTrigger_offset 1272
+#define useRawOutputToDriveIdleStepper_offset 896
 #define useRunningMathForCranking_offset 164
 #define usescriptTableForCanSniffingFiltering_offset 164
 #define useSeparateAdvanceForCranking_offset 1272

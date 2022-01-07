@@ -51,6 +51,7 @@ TESTS_SRC_CPP = \
 	tests/test_dc_motor.cpp \
 	tests/test_fan_control.cpp \
 	tests/test_main_relay.cpp \
+	tests/test_scattered_outputs.cpp \
 	tests/test_vvt.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
