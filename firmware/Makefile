@@ -192,12 +192,6 @@ ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
 endif
 
-include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
-include $(PROJECT_DIR)/development/development.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include $(PROJECT_DIR)/common.mk
 
@@ -305,28 +299,14 @@ INCDIR = \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFDIR) \
-	config/engines \
-	config/boards \
-	config \
 	ext \
-	ext_algo \
-	console_util \
-	$(CONSOLE_INC) \
-	$(HW_LAYER_INC) \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
-	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/lcd \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(HW_SENSORS_INC) \
 	$(HW_INC) \
-	$(HW_LAYER_DRIVERS_INC) \
-	$(UTIL_INC) \
-	init \
-	$(DEVELOPMENT_DIR) \
 	development/hw_layer \
 	development/test \
-	$(CONTROLLERS_INC) \
 	$(CHIBIOS_CONTRIB)/os/various
 	# contrib/os/various must go at the end because it also contains pid.h which conflicts with our pid.h
 
