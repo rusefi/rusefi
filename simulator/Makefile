@@ -152,11 +152,6 @@ endif
 
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
-include $(PROJECT_DIR)/development/development.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(PROJECT_DIR)/common.mk
 
 
@@ -208,20 +203,8 @@ INCDIR = . \
           $(PCH_DIR) \
           $(ALLINC) \
           $(CHIBIOS)/os/various/cpp_wrappers \
-          $(UTIL_INC) \
-          $(PROJECT_DIR)/init \
-          $(CONSOLE_INC) \
-          $(PROJECT_DIR)/config/engines \
-		  $(PROJECT_DIR)/config/boards/ \
-          $(PROJECT_DIR)/ext_algo \
-          $(HW_LAYER_DRIVERS_INC) \
-          $(HW_LAYER_INC) \
-	  $(HW_SENSORS_INC) \
-          $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/drivers/can \
           $(HW_SENSORS_INC) \
-          $(DEVELOPMENT_DIR) \
-          $(CONTROLLERS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator

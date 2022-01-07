@@ -7,13 +7,8 @@ PROJECT_DIR = ../firmware
 UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
 # Imported source files and paths
-include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
-include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 include $(UNIT_TESTS_DIR)/test.mk
 include $(UNIT_TESTS_DIR)/tests/tests.mk
 include $(PROJECT_DIR)/../unit_tests/tests/util/test_util.mk
@@ -63,18 +58,7 @@ INCDIR += \
 	$(PCH_DIR) \
 	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
-	$(UTIL_INC) \
-	$(PROJECT_DIR)/config/engines \
-	$(PROJECT_DIR)/config/boards/ \
-	$(CONTROLLERS_INC) \
-	$(CONSOLE_INC) \
- 	$(DEVELOPMENT_DIR) \
-	$(PROJECT_DIR)/ext_algo \
-	$(PROJECT_DIR)/init/ \
-	$(PROJECT_DIR)/hw_layer/algo \
-	$(HW_LAYER_INC) \
 	$(HW_SENSORS_INC) \
-	$(HW_LAYER_DRIVERS_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
 	$(UNIT_TESTS_DIR)/chibios-mock \
 	$(UNIT_TESTS_DIR)/tests \
