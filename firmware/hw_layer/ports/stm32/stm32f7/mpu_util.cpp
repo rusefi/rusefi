@@ -178,21 +178,12 @@ void sys_dual_bank(void) {
 void stm32_stop() {
 	SysTick->CTRL = 0;
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-	//RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
 	enginePins.errorLedPin.setValue(0);
 	enginePins.runningLedPin.setValue(0);
 	enginePins.communicationLedPin.setValue(0);
 	enginePins.warningLedPin.setValue(0);
 
-	/* THIS IS ALTERNATIVE HAND FUCKERY WAY OF DOING THIS. HAL way is below.
-	// configure mode bits
-    EXTI->IMR |= EXTI_IMR_IM0;              // interrupt request from line 0 not masked
-    EXTI->RTSR |= EXTI_RTSR_TR0;           // rising trigger enabled for input line 0
 
-    // Enable interrupt in the NVIC
-    NVIC_SetPriority(EXTI0_IRQn, 0);
-  	NVIC_EnableIRQ(EXTI0_IRQn);
-*/
 	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
 
 	PWR->CSR1 |= PWR_CSR1_WUIF;
