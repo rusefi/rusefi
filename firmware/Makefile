@@ -197,12 +197,9 @@ include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/controllers/controllers.mk
 include $(PROJECT_DIR)/controllers/lua/lua.mk
 include $(PROJECT_DIR)/development/development.mk
-include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
-include $(PROJECT_DIR)/init/init.mk
-include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/common.mk
 
 ifeq ($(BOOTLOADERINC),)
   # include default bootloader code

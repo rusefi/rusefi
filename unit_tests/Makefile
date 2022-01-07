@@ -13,15 +13,11 @@ include $(PROJECT_DIR)/controllers/lua/lua.mk
 include $(PROJECT_DIR)/development/development.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
-include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
-include $(PROJECT_DIR)/util/util.mk
-include $(PROJECT_DIR)/init/init.mk
 include $(UNIT_TESTS_DIR)/test.mk
 include $(UNIT_TESTS_DIR)/tests/tests.mk
 include $(PROJECT_DIR)/../unit_tests/tests/util/test_util.mk
-
+include $(PROJECT_DIR)/common.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
