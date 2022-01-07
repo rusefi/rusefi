@@ -18,7 +18,6 @@ include $(PROJECT_DIR)/common.mk
 # setting.
 CSRC += $(ALLCSRC) \
 	$(UTILSRC) \
-	$(CONTROLLERS_ALGO_SRC) \
 	$(CONTROLLERS_CORE_SRC) \
 	$(CONTROLLERS_MATH_SRC) \
 	$(CONTROLLERS_SENSORS_SRC) \
@@ -29,23 +28,10 @@ CSRC += $(ALLCSRC) \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC += $(ALLCPPSRC) \
-	$(UTILSRC_CPP) \
-	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(TRIGGER_DECODERS_SRC_CPP) \
-	$(ENGINES_SRC_CPP) \
-	$(CONTROLLERS_SRC_CPP) \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
-	$(CONTROLLERS_CORE_SRC_CPP) \
-	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(FRAMEWORK_SRC_CPP) \
 	$(TESTS_SRC_CPP) \
-	$(SYSTEMSRC_CPP) \
-	$(HW_LAYER_EMS_CPP) \
-	$(TUNERSTUDIO_SRC_CPP) \
-	$(HW_SENSORS_CPP) \
-	$(TRIGGER_SRC_CPP) \
-	$(INIT_SRC_CPP) \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
 	$(DEVELOPMENT_DIR)/engine_sniffer.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \

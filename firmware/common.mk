@@ -9,6 +9,22 @@ include $(PROJECT_DIR)/hw_layer/hw_layer.mk
 include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 
+ALLCPPSRC += \
+	$(CONTROLLERS_CORE_SRC_CPP) \
+	$(CONTROLLERS_MATH_SRC_CPP) \
+	$(ENGINES_SRC_CPP) \
+	$(CONTROLLERS_ALGO_SRC_CPP) \
+	$(TUNERSTUDIO_SRC_CPP) \
+	$(HW_LAYER_EMS_CPP) \
+	$(HW_SENSORS_CPP) \
+	$(SYSTEMSRC_CPP) \
+	$(UTILSRC_CPP) \
+	$(TRIGGER_DECODERS_SRC_CPP) \
+	$(TRIGGER_SRC_CPP) \
+	$(CONTROLLERS_SRC_CPP) \
+	$(INIT_SRC_CPP) \
+
+
 ALLINC += \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
