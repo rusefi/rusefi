@@ -1,6 +1,4 @@
 
-ENGINES_SRC = 
-
 ENGINES_SRC_CPP = $(PROJECT_DIR)/config/engines/ford_aspire.cpp \
 	$(PROJECT_DIR)/config/engines/custom_engine.cpp \
 	$(PROJECT_DIR)/config/engines/bmw_m73.cpp \
