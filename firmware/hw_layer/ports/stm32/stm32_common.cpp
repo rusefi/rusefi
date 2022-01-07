@@ -796,4 +796,8 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 
 #endif /* EFI_CAN_SUPPORT */
 
+// Stubs for per-board low power helpers
+__attribute__((weak)) void boardPrepareForStop() { }
+__attribute__((weak)) void boardPrepareForStandby() { }
+
 #endif // EFI_PROD_CODE
