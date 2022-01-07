@@ -242,7 +242,8 @@ CSRC =  check.c \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(ALLCPPSRC) \
+CPPSRC = \
+    $(ALLCPPSRC) \
     $(BOARDCPPSRC) \
 	$(DEV_SRC_CPP) \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
@@ -276,10 +277,13 @@ TCPPSRC =
 ASMXSRC = $(ALLXASMSRC) \
 	$(RUSEFIASM)
 
+#
+# WARNING! order of variables is important here - for instance cypress own folders should go before default folders
+#
 INCDIR = \
 	$(PCH_DIR) \
-	$(ALLINC) \
 	$(BOARDINC) \
+	$(ALLINC) \
 	$(TESTINC) \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \
