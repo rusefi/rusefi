@@ -66,13 +66,20 @@ void idleDebug(const char *msg, percent_t value) {
 
 static void showIdleInfo() {
 	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
-	efiPrintf("useStepperIdle=%s useHbridges=%s",
-			boolToString(engineConfiguration->useStepperIdle), boolToString(engineConfiguration->useHbridgesToDriveIdleStepper));
+	efiPrintf("useStepperIdle=%s useHbridges=%s useRawOutput=%s",
+			boolToString(engineConfiguration->useStepperIdle),
+			boolToString(engineConfiguration->useHbridgesToDriveIdleStepper),
+			boolToString(engineConfiguration->useRawOutputToDriveIdleStepper));
 	efiPrintf("idleMode=%s position=%.2f",
 			idleModeStr, getIdlePosition());
 
 	if (engineConfiguration->useStepperIdle) {
-		if (engineConfiguration->useHbridgesToDriveIdleStepper) {
+		if (engineConfiguration->useRawOutputToDriveIdleStepper) {
+			efiPrintf(" A+=%s", hwPortname(engineConfiguration->stepper_raw_output[0]));
+			efiPrintf(" A-=%s", hwPortname(engineConfiguration->stepper_raw_output[1]));
+			efiPrintf(" B+=%s", hwPortname(engineConfiguration->stepper_raw_output[2]));
+			efiPrintf(" B-=%s", hwPortname(engineConfiguration->stepper_raw_output[3]));
+		} else if (engineConfiguration->useHbridgesToDriveIdleStepper) {
 			efiPrintf("Coil A:");
 			efiPrintf(" pin1=%s", hwPortname(engineConfiguration->stepperDcIo[0].directionPin1));
 			efiPrintf(" pin2=%s", hwPortname(engineConfiguration->stepperDcIo[0].directionPin2));
