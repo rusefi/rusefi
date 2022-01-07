@@ -2621,6 +2621,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No2 Disable",							etbIo2_disablePin
 
 	dialog = stepperHbridgeHardware, "Stepper H-Bridge Hardware"
+		topicHelp = "stepperHbridgeHardwareHelp"
 		field = "Inverted driver pins",					stepperDcInvertedPins
 		field = "No1 Direction #1",						stepperDcIo1_directionPin1
 		field = "No1 Direction #2",						stepperDcIo1_directionPin2
@@ -2629,19 +2630,29 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No2 Direction #2",						stepperDcIo2_directionPin2
 		field = "No2 Disable",							stepperDcIo2_disablePin
 
-	dialog = idleStepperHw, "Stepper Hardware"
+	dialog = idleStepperHw, "Stepper Controller Hardware"
+		topicHelp = "idleStepperHwHelp"
 		field = "Idle Stepper Step Pin",				idle_stepperStepPin
 		field = "Idle Stepper Dir Pin",					idle_stepperDirectionPin
 		field = "Idle Stepper Dir Pin Mode",			stepperDirectionPinMode
 		field = "Idle Stepper Enable Pin",				stepperEnablePin
 		field = "Idle Stepper Enable Pin Mode",			stepperEnablePinMode
 
-	dialog = idleStepperHwType, "", xAxis
-		panel = idleStepperHw,	East, { useStepperIdle && !useHbridgesToDriveIdleStepper }
-		panel = stepperHbridgeHardware,	West, { useStepperIdle && useHbridgesToDriveIdleStepper }
+	dialog = stepperDirectDriveHardware, "Stepper Direct-Drive Hardware"
+		topicHelp = "stepperDirectDriveHardwareHelp"
+		field = "Stepper A+",								stepper_raw_output1
+		field = "Stepper A-",								stepper_raw_output2
+		field = "Stepper B+",								stepper_raw_output3
+		field = "Stepper B-",								stepper_raw_output4
+
+	dialog = idleStepperHwType, ""
+		panel = idleStepperHw,	{ useStepperIdle && !useHbridgesToDriveIdleStepper && !useRawOutputToDriveIdleStepper }
+		panel = stepperHbridgeHardware, { useStepperIdle && useHbridgesToDriveIdleStepper && !useRawOutputToDriveIdleStepper }
+		panel = stepperDirectDriveHardware,  { useStepperIdle && !useHbridgesToDriveIdleStepper && useRawOutputToDriveIdleStepper }
 
 	dialog = idleStepperGeneral, ""
 		field = "Drive stepper with dual H bridges",	useHbridgesToDriveIdleStepper, useStepperIdle
+		field = "Drive stepper with PushPull outputs", useRawOutputToDriveIdleStepper, { useStepperIdle && !useHbridgesToDriveIdleStepper }
 		field = "Stepper reaction time",				idleStepperReactionTime, useStepperIdle
 		field = "Stepper total steps",					idleStepperTotalSteps, useStepperIdle
 		field = "Stepper parking extra steps, %",		stepperParkingExtraSteps, useStepperIdle
@@ -2652,13 +2663,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Min. Duty Cycle",						stepperMinDutyCycle, { useHbridgesToDriveIdleStepper && stepperNumMicroSteps > 1 }
 		field = "Max. Duty Cycle",						stepperMaxDutyCycle, { useHbridgesToDriveIdleStepper && stepperNumMicroSteps > 1 }
 
-	dialog = idleStepperSettings, "", xAxis
-		panel = idleStepperGeneral, East
-		panel = idleStepperMicro, West
-
 	dialog = idleStepper, "Stepper"
-		panel = idleStepperSettings
+		panel = idleStepperGeneral
 		panel = idleStepperHwType
+		panel = idleStepperMicro
 
 	dialog = idleHwType, "Idle Valve Hardware", yAxis
 		panel = idleSolenoid
@@ -3329,7 +3337,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	help = veTableDialogHelp, "Volumetric Efficiency"
         text = "Volumetric Efficiency is used to calculate fuel in Speed Density mode. VE incorporates pressure ratio as measured by MAP sensor in boost (no VE ever above 105%ish)"
         webHelp = "https://rusefi.com/s/fuel"
-        
+
+	help = stepperHbridgeHardwareHelp, "Stepper driven by Dual H-bridge"
+		text = "In case you are using two H-bridges driving 4-wire stepper. H-brigde control signals connected to MCU pins configured here."
+
+	help = idleStepperHwHelp, "Stepper drivern by step motor driver IC"
+		text = "In case you have some special IC that drives your stepper. MCU to IC control signals (DIR/STEP/EN) configured here"
+
+	help = stepperDirectDriveHardwareHelp, "Stepper driven by 4 Push-Pull/Pull outputs"
+		text = "In case you have 4/6-wire stepper driven by 4 ECU outputs in Push-Pull or Pull mode. Set ECU outputs used for each phase here."
+
     help = fuelHelp, "Fuel Control"    
         text = "More about fuel control on the web"
         webHelp = "https://rusefi.com/s/fuel"
