@@ -17,11 +17,6 @@ include $(PROJECT_DIR)/common.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC += $(ALLCSRC) \
-	$(UTILSRC) \
-	$(CONTROLLERS_CORE_SRC) \
-	$(CONTROLLERS_MATH_SRC) \
-	$(CONTROLLERS_SENSORS_SRC) \
-	$(ENGINES_SRC) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(TEST_SRC_C)
 
@@ -32,19 +27,18 @@ CPPSRC += $(ALLCPPSRC) \
 	$(CONTROLLERS_SENSORS_SRC_CPP) \
 	$(FRAMEWORK_SRC_CPP) \
 	$(TESTS_SRC_CPP) \
-	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
 	$(DEVELOPMENT_DIR)/engine_sniffer.cpp \
-	$(PROJECT_DIR)/../unit_tests/main.cpp \
-	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
+	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
+	$(PROJECT_DIR)/../unit_tests/main.cpp \
+	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/../unit_tests/mocks.cpp \
 
 INCDIR += \
 	$(PCH_DIR) \
 	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
-	$(HW_SENSORS_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
 	$(UNIT_TESTS_DIR)/chibios-mock \
 	$(UNIT_TESTS_DIR)/tests \

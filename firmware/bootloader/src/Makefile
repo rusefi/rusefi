@@ -163,17 +163,14 @@ include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 CSRC =  $(ALLCSRC) \
 	$(BOARDSRC) \
 	$(CHIBIOS)/os/various/syscalls.c \
-	$(CONSOLESRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(FATFSSRC) \
-	$(SYSTEMSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
-	$(DEV_SRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
