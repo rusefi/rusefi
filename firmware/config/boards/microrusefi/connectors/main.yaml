@@ -205,6 +205,18 @@ pins:
     class: outputs
     ts_name: AUX AV10 reuse
 
+  - id: GPIOE_0
+    class: outputs
+    ts_name: AUX J6
+
+  - id: GPIOB_11
+    class: outputs
+    ts_name: AUX J12
+
+  - id: GPIOB_10
+    class: outputs
+    ts_name: AUX J13
+
   - pin: 29
     function: Main relay control signal (low side)
     type: mr
