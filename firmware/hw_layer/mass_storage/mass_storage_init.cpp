@@ -26,10 +26,12 @@
 	#endif
 #endif
 
-#if STM32_USB_USE_OTG2
+#if STM32_USB_USE_OTG1
+  USBDriver *usb_driver = &USBD1;
+#elif STM32_USB_USE_OTG2
   USBDriver *usb_driver = &USBD2;
 #else
-  USBDriver *usb_driver = &USBD1;
+  #error MSD needs OTG1 or OTG2 to be enabled
 #endif
 
 // One block buffer per LUN
