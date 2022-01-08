@@ -1114,8 +1114,10 @@ void detectBoardType() {
 		palClearPad(getBrainPinPort(ledPin), getBrainPinIndex(ledPin));
 		// set LED1 pin to input
 		palSetPadMode(getBrainPinPort(ledPin), getBrainPinIndex(ledPin), PAL_MODE_INPUT); // todo: currently we don't use PAL_MODE_INPUT_PULLDOWN - needs more testing
+#if !EFI_UNIT_TEST
 		// wait for the pin state to settle down
 		chThdSleepMilliseconds(1);
+#endif /* EFI_UNIT_TEST */
 		// get the pin states
 		padState[mcuType] = 1;
 		for (int i = 0; i < 4; i++) {
