@@ -40,3 +40,5 @@ void setVrThresholdTest();
 
 void setHellen144LedPins();
 void setHellen176LedPins();
+
+void detectBoardType();
