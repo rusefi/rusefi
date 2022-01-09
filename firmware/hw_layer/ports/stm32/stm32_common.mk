@@ -14,3 +14,8 @@ RUSEFIASM = $(PROJECT_DIR)/hw_layer/ports/stm32/rusEfiStartup.S
 HW_INC += \
 	$(PROJECT_DIR)/hw_layer/ports/stm32 \
 	$(PROJECT_DIR)/hw_layer/ports/stm32/serial_over_usb
+
+ifeq ($(EFI_HAS_EXT_SDRAM), yes)
+	USE_OPT += -Wl,--defsym=STM32_HAS_SDRAM=1
+	DDEFS += -DEFI_HAS_EXT_SDRAM
+endif
