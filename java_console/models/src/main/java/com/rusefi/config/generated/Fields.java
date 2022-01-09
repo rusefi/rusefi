@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:21:14 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:38:50 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1562,11 +1562,7 @@ public class Fields {
 	public static final int mapAccelTaperBins_offset = 1760;
 	public static final int mapAccelTaperMult_offset = 1792;
 	public static final int mapAveragingSchedulingAtIndex_offset = 1312;
-	public static final int mapCamAveragingLength_offset = 627;
 	public static final int mapCamDetectionAnglePosition_offset = 560;
-	public static final int mapCamDetectionThreshold_offset = 623;
-	public static final int mapCamLookForLowPeaks_offset = 896;
-	public static final int mapCamSkipFactor_offset = 768;
 	public static final int mapErrorDetectionTooHigh_offset = 1540;
 	public static final int mapErrorDetectionTooLow_offset = 1536;
 	public static final int mapEstimateRpmBins_offset = 17988;
@@ -2278,7 +2274,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.09.all.3885400982";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.09.all.3782218442";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2305,6 +2301,7 @@ public class Fields {
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
+	public static final int unused45342_offset = 896;
 	public static final int unused720_offset = 720;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
@@ -2314,6 +2311,7 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1272;
 	public static final int unused_1484_bit_30_offset = 1272;
 	public static final int unused_1484_bit_31_offset = 1272;
+	public static final int unusedAveragingLength_offset = 627;
 	public static final int unusedBit4_1476_offset = 1272;
 	public static final int unusedBit_310_31_offset = 896;
 	public static final int unusedBit_48_31_offset = 164;
@@ -2351,6 +2349,8 @@ public class Fields {
 	public static final int unusedBitWasHere3_offset = 1260;
 	public static final int unusedBitWasHere4_offset = 1260;
 	public static final int unusedBitWasHere5_offset = 1260;
+	public static final int unusedCamSkipFactor_offset = 768;
+	public static final int unusedDtectionThreshold_offset = 623;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
@@ -2667,10 +2667,10 @@ public class Fields {
 	public static final Field KNOCKRETARDAGGRESSION = Field.create("KNOCKRETARDAGGRESSION", 620, FieldType.INT8);
 	public static final Field KNOCKRETARDREAPPLYRATE = Field.create("KNOCKRETARDREAPPLYRATE", 621, FieldType.INT8);
 	public static final Field KNOCKRETARDMAXIMUM = Field.create("KNOCKRETARDMAXIMUM", 622, FieldType.INT8);
-	public static final Field MAPCAMDETECTIONTHRESHOLD = Field.create("MAPCAMDETECTIONTHRESHOLD", 623, FieldType.INT8);
+	public static final Field UNUSEDDTECTIONTHRESHOLD = Field.create("UNUSEDDTECTIONTHRESHOLD", 623, FieldType.INT8);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 624, FieldType.INT16);
 	public static final Field VSSTOOTHCOUNT = Field.create("VSSTOOTHCOUNT", 626, FieldType.INT8);
-	public static final Field MAPCAMAVERAGINGLENGTH = Field.create("MAPCAMAVERAGINGLENGTH", 627, FieldType.INT8);
+	public static final Field UNUSEDAVERAGINGLENGTH = Field.create("UNUSEDAVERAGINGLENGTH", 627, FieldType.INT8);
 	public static final Field TRIGGERSIMULATORFREQUENCY = Field.create("TRIGGERSIMULATORFREQUENCY", 628, FieldType.INT);
 	public static final Field INJECTIONPINS1 = Field.create("INJECTIONPINS1", 632, FieldType.INT8, output_pin_e);
 	public static final Field INJECTIONPINS2 = Field.create("INJECTIONPINS2", 633, FieldType.INT8, output_pin_e);
@@ -2809,7 +2809,7 @@ public class Fields {
 	public static final Field MINIMUMBOOSTCLOSEDLOOPMAP = Field.create("MINIMUMBOOSTCLOSEDLOOPMAP", 765, FieldType.INT8);
 	public static final Field ACFANPIN = Field.create("ACFANPIN", 766, FieldType.INT8, output_pin_e);
 	public static final Field ACFANPINMODE = Field.create("ACFANPINMODE", 767, FieldType.INT8, pin_output_mode_e);
-	public static final Field MAPCAMSKIPFACTOR = Field.create("MAPCAMSKIPFACTOR", 768, FieldType.INT8);
+	public static final Field UNUSEDCAMSKIPFACTOR = Field.create("UNUSEDCAMSKIPFACTOR", 768, FieldType.INT8);
 	public static final Field DWELLVOLTAGECORRVOLTBINS = Field.create("DWELLVOLTAGECORRVOLTBINS", 769, FieldType.INT8);
 	public static final Field IMUTYPE = Field.create("IMUTYPE", 777, FieldType.INT8);
 	public static final Field DWELLVOLTAGECORRVALUES = Field.create("DWELLVOLTAGECORRVALUES", 778, FieldType.INT8);
@@ -2893,7 +2893,7 @@ public class Fields {
 	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 896, FieldType.BIT, 8);
 	public static final Field SHOWHUMANREADABLEWARNING = Field.create("SHOWHUMANREADABLEWARNING", 896, FieldType.BIT, 9);
 	public static final Field STFTIGNOREERRORMAGNITUDE = Field.create("STFTIGNOREERRORMAGNITUDE", 896, FieldType.BIT, 10);
-	public static final Field MAPCAMLOOKFORLOWPEAKS = Field.create("MAPCAMLOOKFORLOWPEAKS", 896, FieldType.BIT, 11);
+	public static final Field UNUSED45342 = Field.create("UNUSED45342", 896, FieldType.BIT, 11);
 	public static final Field ENABLESOFTWAREKNOCK = Field.create("ENABLESOFTWAREKNOCK", 896, FieldType.BIT, 12);
 	public static final Field VERBOSEVVTDECODING = Field.create("VERBOSEVVTDECODING", 896, FieldType.BIT, 13);
 	public static final Field INVERTCAMVVTSIGNAL = Field.create("INVERTCAMVVTSIGNAL", 896, FieldType.BIT, 14);
@@ -3950,10 +3950,10 @@ public class Fields {
 	KNOCKRETARDAGGRESSION,
 	KNOCKRETARDREAPPLYRATE,
 	KNOCKRETARDMAXIMUM,
-	MAPCAMDETECTIONTHRESHOLD,
+	UNUSEDDTECTIONTHRESHOLD,
 	VSSGEARRATIO,
 	VSSTOOTHCOUNT,
-	MAPCAMAVERAGINGLENGTH,
+	UNUSEDAVERAGINGLENGTH,
 	TRIGGERSIMULATORFREQUENCY,
 	INJECTIONPINS1,
 	INJECTIONPINS2,
@@ -4090,7 +4090,7 @@ public class Fields {
 	MINIMUMBOOSTCLOSEDLOOPMAP,
 	ACFANPIN,
 	ACFANPINMODE,
-	MAPCAMSKIPFACTOR,
+	UNUSEDCAMSKIPFACTOR,
 	DWELLVOLTAGECORRVOLTBINS,
 	IMUTYPE,
 	DWELLVOLTAGECORRVALUES,
@@ -4172,7 +4172,7 @@ public class Fields {
 	ENABLEINNOVATELC2,
 	SHOWHUMANREADABLEWARNING,
 	STFTIGNOREERRORMAGNITUDE,
-	MAPCAMLOOKFORLOWPEAKS,
+	UNUSED45342,
 	ENABLESOFTWAREKNOCK,
 	VERBOSEVVTDECODING,
 	INVERTCAMVVTSIGNAL,

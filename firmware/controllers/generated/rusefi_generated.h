@@ -1616,11 +1616,7 @@
 #define mapAccelTaperBins_offset 1760
 #define mapAccelTaperMult_offset 1792
 #define mapAveragingSchedulingAtIndex_offset 1312
-#define mapCamAveragingLength_offset 627
 #define mapCamDetectionAnglePosition_offset 560
-#define mapCamDetectionThreshold_offset 623
-#define mapCamLookForLowPeaks_offset 896
-#define mapCamSkipFactor_offset 768
 #define mapErrorDetectionTooHigh_offset 1540
 #define mapErrorDetectionTooLow_offset 1536
 #define mapEstimateRpmBins_offset 17988
@@ -1880,7 +1876,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 3885400982
+#define SIGNATURE_HASH 3782218442
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2403,7 +2399,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.09.all.3885400982"
+#define TS_SIGNATURE "rusEFI 2022.01.09.all.3782218442"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2433,6 +2429,7 @@
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
+#define unused45342_offset 896
 #define unused720_offset 720
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
@@ -2442,6 +2439,7 @@
 #define unused_1484_bit_29_offset 1272
 #define unused_1484_bit_30_offset 1272
 #define unused_1484_bit_31_offset 1272
+#define unusedAveragingLength_offset 627
 #define unusedBit4_1476_offset 1272
 #define unusedBit_310_31_offset 896
 #define unusedBit_48_31_offset 164
@@ -2479,6 +2477,8 @@
 #define unusedBitWasHere3_offset 1260
 #define unusedBitWasHere4_offset 1260
 #define unusedBitWasHere5_offset 1260
+#define unusedCamSkipFactor_offset 768
+#define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4171
 #define unusedHere2_offset 1747
 #define useAdvanceCorrectionsForCranking_offset 1272

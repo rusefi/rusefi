@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:21:14 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:38:50 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1293,7 +1293,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 623
 	 */
-	uint8_t mapCamDetectionThreshold;
+	uint8_t unusedDtectionThreshold;
 	/**
 	 * Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.
 	ratio
@@ -1309,7 +1309,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 627
 	 */
-	uint8_t mapCamAveragingLength;
+	uint8_t unusedAveragingLength;
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
@@ -1758,7 +1758,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 768
 	 */
-	uint8_t mapCamSkipFactor;
+	uint8_t unusedCamSkipFactor;
 	/**
 	volts
 	 * offset 769
@@ -2054,7 +2054,7 @@ struct engine_configuration_s {
 	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
 	offset 896 bit 11 */
-	bool mapCamLookForLowPeaks : 1 {};
+	bool unused45342 : 1 {};
 	/**
 	offset 896 bit 12 */
 	bool enableSoftwareKnock : 1 {};
@@ -4450,4 +4450,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:21:14 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:38:50 UTC 2022
