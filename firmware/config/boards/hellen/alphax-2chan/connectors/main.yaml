@@ -131,10 +131,10 @@ pins:
   - pin: C2
     # H144_IN_D_3
     id: GPIOE_14
-    class: [event_inputs, switch_inputs]
+    class: switch_inputs
     function: Crank Sensor VR- Negative Input or HALL Input 2
     type: hall
-    ts_name: C2 - Crank VR-/Hall 2
+    ts_name: C2 - Hall 2 (Crank VR-)
     color: white
 
   - pin: C3
@@ -143,7 +143,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Crank Sensor VR+ Positive Input or HALL Input 1
     type: hall
-    ts_name: C3 - Crank VR+/Hall 1
+    ts_name: C3 - Crank VR+ / Hall 1
     color: gray
 
   - pin: C4
