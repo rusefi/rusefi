@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 00:53:23 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:21:14 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -187,6 +187,9 @@ public class Fields {
 	public static final int binarySerialRxPin_offset = 1575;
 	public static final int binarySerialTxPin_offset = 1574;
 	public static final int BLOCKING_FACTOR = 256;
+	public static final int boardUseCrankPullUp_offset = 1260;
+	public static final int boardUseTachPullUp_offset = 1260;
+	public static final int boardUseTempPullUp_offset = 1260;
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
 	public static final int boostControlPin_offset = 908;
@@ -2275,7 +2278,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.09.all.2523549305";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.09.all.3885400982";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2295,9 +2298,6 @@ public class Fields {
 	public static final int unused1128_offset = 1740;
 	public static final int unused1129_offset = 1740;
 	public static final int unused1130_offset = 1740;
-	public static final int unused1464b20_offset = 1260;
-	public static final int unused1464b3_offset = 1260;
-	public static final int unused1464b4_offset = 1260;
 	public static final int unused1476b19_offset = 1272;
 	public static final int unused1476b20_offset = 1272;
 	public static final int unused1476b3_offset = 1272;
@@ -3021,8 +3021,8 @@ public class Fields {
 	public static final Field DISABLEPRIMARYUART = Field.create("DISABLEPRIMARYUART", 1260, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1260, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1260, FieldType.BIT, 2);
-	public static final Field UNUSED1464B3 = Field.create("UNUSED1464B3", 1260, FieldType.BIT, 3);
-	public static final Field UNUSED1464B4 = Field.create("UNUSED1464B4", 1260, FieldType.BIT, 4);
+	public static final Field BOARDUSETACHPULLUP = Field.create("BOARDUSETACHPULLUP", 1260, FieldType.BIT, 3);
+	public static final Field BOARDUSETEMPPULLUP = Field.create("BOARDUSETEMPPULLUP", 1260, FieldType.BIT, 4);
 	public static final Field ISENGINECHARTENABLED = Field.create("ISENGINECHARTENABLED", 1260, FieldType.BIT, 5);
 	public static final Field SILENTTRIGGERERROR = Field.create("SILENTTRIGGERERROR", 1260, FieldType.BIT, 6);
 	public static final Field USELINEARCLTSENSOR = Field.create("USELINEARCLTSENSOR", 1260, FieldType.BIT, 7);
@@ -3038,7 +3038,7 @@ public class Fields {
 	public static final Field CUTSPARKONHARDLIMIT = Field.create("CUTSPARKONHARDLIMIT", 1260, FieldType.BIT, 17);
 	public static final Field LAUNCHFUELCUTENABLE = Field.create("LAUNCHFUELCUTENABLE", 1260, FieldType.BIT, 18);
 	public static final Field LAUNCHSPARKCUTENABLE = Field.create("LAUNCHSPARKCUTENABLE", 1260, FieldType.BIT, 19);
-	public static final Field UNUSED1464B20 = Field.create("UNUSED1464B20", 1260, FieldType.BIT, 20);
+	public static final Field BOARDUSECRANKPULLUP = Field.create("BOARDUSECRANKPULLUP", 1260, FieldType.BIT, 20);
 	public static final Field UNUSEDBITWASHERE1 = Field.create("UNUSEDBITWASHERE1", 1260, FieldType.BIT, 21);
 	public static final Field UNUSEDBITWASHERE2 = Field.create("UNUSEDBITWASHERE2", 1260, FieldType.BIT, 22);
 	public static final Field UNUSEDBITWASHERE3 = Field.create("UNUSEDBITWASHERE3", 1260, FieldType.BIT, 23);
@@ -4298,8 +4298,8 @@ public class Fields {
 	DISABLEPRIMARYUART,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
-	UNUSED1464B3,
-	UNUSED1464B4,
+	BOARDUSETACHPULLUP,
+	BOARDUSETEMPPULLUP,
 	ISENGINECHARTENABLED,
 	SILENTTRIGGERERROR,
 	USELINEARCLTSENSOR,
@@ -4315,7 +4315,7 @@ public class Fields {
 	CUTSPARKONHARDLIMIT,
 	LAUNCHFUELCUTENABLE,
 	LAUNCHSPARKCUTENABLE,
-	UNUSED1464B20,
+	BOARDUSECRANKPULLUP,
 	UNUSEDBITWASHERE1,
 	UNUSEDBITWASHERE2,
 	UNUSEDBITWASHERE3,

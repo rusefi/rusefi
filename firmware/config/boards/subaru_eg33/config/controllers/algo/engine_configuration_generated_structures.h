@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 00:53:20 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:21:11 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2310,10 +2310,10 @@ struct engine_configuration_s {
 	bool isVerboseIAC : 1 {};
 	/**
 	offset 1260 bit 3 */
-	bool unused1464b3 : 1 {};
+	bool boardUseTachPullUp : 1 {};
 	/**
 	offset 1260 bit 4 */
-	bool unused1464b4 : 1 {};
+	bool boardUseTempPullUp : 1 {};
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1260 bit 5 */
@@ -2370,7 +2370,7 @@ struct engine_configuration_s {
 	bool launchSparkCutEnable : 1 {};
 	/**
 	offset 1260 bit 20 */
-	bool unused1464b20 : 1 {};
+	bool boardUseCrankPullUp : 1 {};
 	/**
 	offset 1260 bit 21 */
 	bool unusedBitWasHere1 : 1 {};
@@ -4450,4 +4450,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 00:53:20 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:21:11 UTC 2022
