@@ -37,5 +37,4 @@ void setHellen72etb();
 void setRotary();
 void setVrThresholdTest();
 
-void setHellen144LedPins();
-void setHellen176LedPins();
+void detectBoardType();

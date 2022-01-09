@@ -10,6 +10,12 @@
 void hellenWbo();
 void setHellenDefaultVrThresholds();
 
+void setHellen144LedPins();
+void setHellen176LedPins();
+
+void detectHellenBoardType();
+
+
 #define H144_LS_1 GPIOG_7
 #define H144_LS_2 GPIOG_8
 #define H144_LS_3 GPIOD_11

@@ -1,7 +1,8 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/alphax-2chan/board_configuration.cpp
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/alphax-2chan/board_configuration.cpp \
+    $(BOARDS_DIR)/hellen/hellen_common.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/alphax-2chan
 
 # Set this if you want a default engine type other than normal alphax-2chan

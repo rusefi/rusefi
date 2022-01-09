@@ -17,6 +17,7 @@
 #include "fsio_impl.h"
 #include "mre_meta.h"
 #include "proteus_meta.h"
+#include "hellen_meta.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -1052,24 +1053,11 @@ end
 #endif
 }
 
+void detectBoardType() {
 #if HW_HELLEN
-void setHellen144LedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOE_7;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOG_1;
-	engineConfiguration->warningLedPin = GPIOE_8;
-}
-
-void setHellen176LedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
-}
+#if !EFI_UNIT_TEST
+	detectHellenBoardType();
+#endif /* EFI_UNIT_TEST */
 #endif //HW_HELLEN
+	// todo: add board ID detection?
+}
