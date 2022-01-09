@@ -8,7 +8,7 @@ enum class ClearReason : uint8_t {
 	None, // 0
 	Fatal,
 	Settings,
-	HardLimit,
+	HardLimit, // 3
 	FaultRevLimit,
 	BoostCut, // 5
 	OilPressure,
@@ -78,8 +78,8 @@ private:
 	Clearable m_allowIgnition;
 	Clearable m_allowTriggerInput;
 
-	bool m_transientAllowInjection = true;
-	bool m_transientAllowIgnition = true;
+	Clearable m_transientAllowInjection = true;
+	Clearable m_transientAllowIgnition = true;
 
 	bool m_hadOilPressureAfterStart = false;
 };

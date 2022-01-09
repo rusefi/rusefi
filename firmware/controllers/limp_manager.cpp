@@ -8,6 +8,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 
 	// User-configured hard RPM limit
 	if (rpm > engineConfiguration->rpmHardLimit) {
+		warning(CUSTOM_OBD_NAN_INJECTION, "Hit hard limit %f", engineConfiguration->rpmHardLimit);
 		if (engineConfiguration->cutFuelOnHardLimit) {
 			allowFuel.clear(ClearReason::HardLimit);
 		}
@@ -111,7 +112,7 @@ LimpState LimpManager::allowInjection() const {
 		return {false, m_allowInjection.clearReason};
 	}
 	if (!m_transientAllowInjection) {
-		return {false, ClearReason::Fatal};
+		return {false, m_transientAllowInjection.clearReason};
 	}
 	return {true, ClearReason::None};
 }
@@ -121,7 +122,7 @@ LimpState LimpManager::allowIgnition() const {
 		return {false, m_allowIgnition.clearReason};
 	}
 	if (!m_transientAllowIgnition) {
-		return {false, ClearReason::Fatal};
+		return {false, m_transientAllowIgnition.clearReason};
 	}
 	return {true, ClearReason::None};
 }
