@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Jan 08 00:01:10 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 00:53:23 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -677,6 +677,7 @@ public class Fields {
 	public static final int disableEtbWhenEngineStopped_offset = 748;
 	public static final int disableFan1WhenStopped_offset = 164;
 	public static final int disableFan2WhenStopped_offset = 164;
+	public static final int disablePrimaryUart_offset = 1260;
 	public static final int displacement_offset = 416;
 	public static final int display_mode_e_DM_HD44780 = 1;
 	public static final int display_mode_e_DM_HD44780_OVER_PCF8574 = 2;
@@ -1806,7 +1807,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 1862394732;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2275,7 +2275,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.08.all.1862394732";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.09.all.2523549305";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2295,7 +2295,6 @@ public class Fields {
 	public static final int unused1128_offset = 1740;
 	public static final int unused1129_offset = 1740;
 	public static final int unused1130_offset = 1740;
-	public static final int unused1464b0_offset = 1260;
 	public static final int unused1464b20_offset = 1260;
 	public static final int unused1464b3_offset = 1260;
 	public static final int unused1464b4_offset = 1260;
@@ -3019,7 +3018,7 @@ public class Fields {
 	public static final Field GPPWMNOTE4 = Field.create("GPPWMNOTE4", 1240, 16, FieldType.STRING);
 	public static final Field TPS2SECONDARYMIN = Field.create("TPS2SECONDARYMIN", 1256, FieldType.INT16);
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1258, FieldType.INT16);
-	public static final Field UNUSED1464B0 = Field.create("UNUSED1464B0", 1260, FieldType.BIT, 0);
+	public static final Field DISABLEPRIMARYUART = Field.create("DISABLEPRIMARYUART", 1260, FieldType.BIT, 0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1260, FieldType.BIT, 1);
 	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 1260, FieldType.BIT, 2);
 	public static final Field UNUSED1464B3 = Field.create("UNUSED1464B3", 1260, FieldType.BIT, 3);
@@ -4296,7 +4295,7 @@ public class Fields {
 	GPPWMNOTE4,
 	TPS2SECONDARYMIN,
 	TPS2SECONDARYMAX,
-	UNUSED1464B0,
+	DISABLEPRIMARYUART,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ISVERBOSEIAC,
 	UNUSED1464B3,

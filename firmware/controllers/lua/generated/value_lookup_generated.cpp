@@ -464,6 +464,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->tps2SecondaryMin;
 	if (strEqualCaseInsensitive(name, "tps2SecondaryMax"))
 		return engineConfiguration->tps2SecondaryMax;
+	if (strEqualCaseInsensitive(name, "disablePrimaryUart"))
+		return engineConfiguration->disablePrimaryUart;
 	if (strEqualCaseInsensitive(name, "fuelClosedLoopCorrectionEnabled"))
 		return engineConfiguration->fuelClosedLoopCorrectionEnabled;
 	if (strEqualCaseInsensitive(name, "isVerboseIAC"))
@@ -2063,6 +2065,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "tps2SecondaryMax"))
 	{
 		engineConfiguration->tps2SecondaryMax = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "disablePrimaryUart"))
+	{
+		engineConfiguration->disablePrimaryUart = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "fuelClosedLoopCorrectionEnabled"))

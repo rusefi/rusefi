@@ -682,6 +682,7 @@
 #define disableEtbWhenEngineStopped_offset 748
 #define disableFan1WhenStopped_offset 164
 #define disableFan2WhenStopped_offset 164
+#define disablePrimaryUart_offset 1260
 #define displacement_offset 416
 #define display_mode_e_auto_enum "DM_NONE", "DM_HD44780", "DM_HD44780_OVER_PCF8574"
 #define display_mode_e_DM_HD44780 1
@@ -1861,7 +1862,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2857486380
+#define SIGNATURE_HASH 1396335929
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2384,7 +2385,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.08.kin.2857486380"
+#define TS_SIGNATURE "rusEFI 2022.01.09.kin.1396335929"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2407,7 +2408,6 @@
 #define unused1128_offset 1740
 #define unused1129_offset 1740
 #define unused1130_offset 1740
-#define unused1464b0_offset 1260
 #define unused1464b20_offset 1260
 #define unused1464b3_offset 1260
 #define unused1464b4_offset 1260
