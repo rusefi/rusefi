@@ -8,7 +8,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 
 	// User-configured hard RPM limit
 	if (rpm > engineConfiguration->rpmHardLimit) {
-		warning(CUSTOM_OBD_NAN_INJECTION, "Hit hard limit %f", engineConfiguration->rpmHardLimit);
+		warning(CUSTOM_OBD_NAN_INJECTION, "Hit hard limit %d", engineConfiguration->rpmHardLimit);
 		if (engineConfiguration->cutFuelOnHardLimit) {
 			allowFuel.clear(ClearReason::HardLimit);
 		}
