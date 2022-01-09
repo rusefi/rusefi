@@ -59,11 +59,12 @@ void setHellenDefaultVrThresholds();
 
 // IN_CLT AIN11 PC2
 #define H144_IN_CLT EFI_ADC_12
+// IN_IAT AIN14 PC3
 #define H144_IN_IAT EFI_ADC_13
 
 // IN_TPS AIN17 PA4
 #define H144_IN_TPS EFI_ADC_4
-
+// IN_PPS AIN18 PA3
 #define H144_IN_PPS EFI_ADC_3
 
 // IN_MAP1 AIN9 PC0
@@ -99,9 +100,14 @@ void setHellenDefaultVrThresholds();
 // A4 AIN4 no code to use ADC3 as analog
 #define H144_IN_SENS4 GPIOF_6
 
+// IN_O2S2 AIN12 PA1
 #define H144_IN_O2S2 EFI_ADC_1
 
+#define H144_IN_D_1 GPIOE_12
 #define H144_IN_D_2 GPIOE_13
+#define H144_IN_D_3 GPIOE_14
+#define H144_IN_D_4 GPIOE_15
+
 // A22
 #define H144_IN_D_AUX3 GPIOC_5
 // A20 AIN20
