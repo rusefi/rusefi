@@ -102,8 +102,6 @@
 #include "board.h"
 #endif /* EFI_PROD_CODE */
 
-#include "hellen_meta.h"
-
 #if EFI_EMULATE_POSITION_SENSORS
 #include "trigger_emulator_algo.h"
 #endif /* EFI_EMULATE_POSITION_SENSORS */
