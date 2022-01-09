@@ -310,6 +310,45 @@ static void __early_sdram_init(const SDRAMConfig *config)
 
   __early_sdram_wait_ready();
 }
+
+static int __early_sdram_test(void *base, size_t size)
+{
+  size_t i;
+  uint32_t *ptr = base;
+
+  /* test 0 */
+  for (i = 0; i < size / sizeof(uint32_t); i++) {
+    ptr[i] = 0;
+  }
+
+  for (i = 0; i < size / sizeof(uint32_t); i++) {
+    if (ptr[i] != 0)
+      return -1;
+  }
+
+  /* test 1 */
+  for (i = 0; i < size / sizeof(uint32_t); i++) {
+    ptr[i] = 0xffffffff;
+  }
+
+  for (i = 0; i < size / sizeof(uint32_t); i++) {
+    if (ptr[i] != 0xffffffff)
+      return -1;
+  }
+
+  /* test 2 */
+  for (i = 0; i < size / sizeof(uint32_t); i++) {
+    ptr[i] = i;
+  }
+
+  for (i = 0; i < size / sizeof(uint32_t); i++) {
+    if (ptr[i] != i)
+      return -1;
+  }
+
+  return 0;
+}
+
 /**
  * @brief   Early initialization code.
  * @details GPIO ports and system clocks are initialized before everything
@@ -331,6 +370,11 @@ void __early_init(void) {
 #else
   __early_sdram_init(&sdram_cfg);
 #endif
+
+  if (0) {
+    /* yes, hardcoded values */
+    __early_sdram_test((void *) 0xD0000000, 8 * 1024 * 1024);
+  }
 }
 
 #if HAL_USE_SDC || defined(__DOXYGEN__)
