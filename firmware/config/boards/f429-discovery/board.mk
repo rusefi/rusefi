@@ -10,6 +10,7 @@ BOARDINC = $(BOARD_DIR)
 
 # STM32F429 has FSMC with SDRAM support
 IS_STM32F429 = yes
+EFI_HAS_EXT_SDRAM = yes
 
 # avoid any engine setup
 DDEFS += -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
