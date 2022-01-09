@@ -13,7 +13,7 @@ void setHellenDefaultVrThresholds();
 void setHellen144LedPins();
 void setHellen176LedPins();
 
-void detectBoardType();
+void detectHellenBoardType();
 
 
 #define H144_LS_1 GPIOG_7

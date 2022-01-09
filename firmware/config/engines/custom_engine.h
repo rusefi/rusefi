@@ -40,3 +40,5 @@ void setBoschHDEV_5_injectors();
 void setHellen72etb();
 void setRotary();
 void setVrThresholdTest();
+
+void detectBoardType();

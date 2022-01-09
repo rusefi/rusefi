@@ -12,7 +12,6 @@ void setHellenDefaultVrThresholds() {
 	}
 }
 
-#if HW_HELLEN
 void setHellen144LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
@@ -32,13 +31,10 @@ void setHellen176LedPins() {
 	engineConfiguration->runningLedPin = GPIOH_9;  // green
 	engineConfiguration->warningLedPin = GPIOH_11; // yellow
 }
-#endif //HW_HELLEN
 
-void detectBoardType() {
-#if HW_HELLEN
+// this should be called before setHellenXXXLedPins()
+void detectHellenBoardType() {
 #if !EFI_UNIT_TEST
-	// this should be called before setHellenXXXLedPins()
-	
 	// we test the LED1 pin because the red LED used has the smallest voltage drop,
 	// and thus can be detected more accurately
 	static const brain_pin_e led1Pins[2] = {
@@ -51,7 +47,7 @@ void detectBoardType() {
 	// check each mcu module type sequentially
 	for (int mcuType = 0; mcuType < 2; mcuType++) {
 		brain_pin_e ledPin = led1Pins[mcuType];
-		// set LED1 pin to output & clear the state (discarge parasitic capacitors)
+		// set LED1 pin to output & clear the state (discharge parasitic capacitance)
 		palSetPadMode(getBrainPinPort(ledPin), getBrainPinIndex(ledPin), PAL_MODE_OUTPUT_PUSHPULL);
 		palClearPad(getBrainPinPort(ledPin), getBrainPinIndex(ledPin));
 		// set LED1 pin to input
@@ -76,6 +72,4 @@ void detectBoardType() {
 	}
 
 #endif /* EFI_UNIT_TEST */
-#endif //HW_HELLEN
-	// todo: add board ID detection?
 }

@@ -1039,3 +1039,9 @@ end
 #endif
 }
 
+void detectBoardType() {
+#if HW_HELLEN
+	detectHellenBoardType();
+#endif //HW_HELLEN
+	// todo: add board ID detection?
+}
