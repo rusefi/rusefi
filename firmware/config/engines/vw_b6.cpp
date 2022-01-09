@@ -136,7 +136,9 @@ void setVwPassatB6() {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
-	engineConfiguration->hpfpValvePin = MRE_LS_1;
+	//engineConfiguration->hpfpValvePin = MRE_LS_1;
+	engineConfiguration->disablePrimaryUart = true;
+	engineConfiguration->hpfpValvePin = GPIOB_10; // AUX J13
 	engineConfiguration->hpfpCamLobes = 3;
 	engineConfiguration->hpfpPumpVolume = 0.290;
 	engineConfiguration->hpfpMinAngle = 10;
@@ -145,6 +147,7 @@ void setVwPassatB6() {
 	engineConfiguration->hpfpPidP = 0.0301;
 	engineConfiguration->hpfpPidI = 0.000012;
 
+	setTable(config->veTable, 55);
 
 	setBoschVAGETB();
 
