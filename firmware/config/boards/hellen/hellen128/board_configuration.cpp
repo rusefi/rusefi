@@ -15,10 +15,6 @@
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
 	engineConfiguration->injectionPins[1] = H176_LS_2;
@@ -182,7 +178,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 1.34;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.24;
 
-
+	setHellenDefaultVrThresholds();
 	hellenWbo();
 }
 

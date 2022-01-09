@@ -721,19 +721,6 @@ void setBoschHDEV_5_injectors() {
 }
 
 /**
- * set engine_type 108
- */
-void setVrThresholdTest() {
-	engineConfiguration->trigger.type = TT_HONDA_1_24;
-
-	setHellenDefaultVrThresholds();
-	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
-
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIOC_6;
-}
-
-/**
  * set engine_type 107
  */
 void setRotary() {
@@ -802,19 +789,6 @@ void setTest33816EngineConfiguration() {
 	setBoschHDEV_5_injectors();
 }
 
-void setHellen72etb() {
-	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6;
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7;
-	engineConfiguration->etb_use_two_wires = true;
-}
-
-void setHellenDefaultVrThresholds() {
-	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
-		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600, 7000, 100);
-		setLinearCurve(engineConfiguration->vrThreshold[i].values, 0.6, 1.2, 0.1);
-	}
-}
-
 /**
  * set engine_type 6
  */
@@ -827,10 +801,6 @@ void proteusHarley() {
 	// for now we need non wired camInput to keep TS field enable/disable logic happy
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
-
-	engineConfiguration->mapCamAveragingLength = 16;
-	engineConfiguration->mapCamSkipFactor = 50;
-	engineConfiguration->mapCamLookForLowPeaks = true;
 
 	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
 #if HW_PROTEUS

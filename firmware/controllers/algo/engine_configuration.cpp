@@ -849,8 +849,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 */
 	switch (engineType) {
 	case UNUSED60:
-// todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case UNUSED61:
+	case HELLEN72_ETB:
 	case UNUSED100:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
@@ -969,9 +969,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_NB1:
 	case HELLEN_NA8_96:
 		setHellenNB1();
-		break;
-	case HELLEN72_ETB:
-		setHellen72etb();
 		break;
 	case HELLEN_121_NISSAN_4_CYL:
 		setHellen121nissanQR();
@@ -1120,8 +1117,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTest33816EngineConfiguration();
 		break;
 	case TEST_108:
-		setVrThresholdTest();
-		break;
 	case TEST_109:
 	case TEST_110:
 	case TEST_ROTARY:
