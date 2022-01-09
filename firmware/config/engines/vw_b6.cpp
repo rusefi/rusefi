@@ -107,6 +107,7 @@ void setVwPassatB6() {
 
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
+	strcpy(engineConfiguration->gpPwmNote[1], "LPFP");
 	lowPressureFuelPumpControl->pwmFrequency = 20;
 	lowPressureFuelPumpControl->loadAxis = GPPWM_FuelLoad;
 	lowPressureFuelPumpControl->dutyIfError = 50;
@@ -116,6 +117,7 @@ void setVwPassatB6() {
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
+	strcpy(engineConfiguration->gpPwmNote[0], "Rad Fan");
 
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
@@ -140,8 +142,8 @@ void setVwPassatB6() {
 	engineConfiguration->hpfpMinAngle = 10;
 	engineConfiguration->hpfpActivationAngle = 30;
 	engineConfiguration->hpfpTargetDecay = 2000;
-	engineConfiguration->hpfpPidP = 0.301;
-	engineConfiguration->hpfpPidI = 0.00012;
+	engineConfiguration->hpfpPidP = 0.0301;
+	engineConfiguration->hpfpPidI = 0.000012;
 
 
 	setBoschVAGETB();
@@ -154,7 +156,7 @@ void setVwPassatB6() {
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->useETBforIdleControl = true;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 #endif /* BOARD_TLE8888_COUNT */
 }
