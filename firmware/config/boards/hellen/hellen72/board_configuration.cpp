@@ -14,10 +14,6 @@
 #include "fsio_impl.h"
 #include "custom_engine.h"
 
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7;
 	engineConfiguration->injectionPins[1] = GPIOG_8;

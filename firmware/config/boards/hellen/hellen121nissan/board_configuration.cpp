@@ -15,10 +15,6 @@
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
 	engineConfiguration->injectionPins[1] = H144_LS_2;

@@ -7,6 +7,9 @@
 
 #pragma once
 
+void hellenWbo();
+void setHellenDefaultVrThresholds();
+
 #define H144_LS_1 GPIOG_7
 #define H144_LS_2 GPIOG_8
 #define H144_LS_3 GPIOD_11

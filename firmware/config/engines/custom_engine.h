@@ -8,7 +8,6 @@
 #pragma once
 
 #include "engine_configuration.h"
-void setHellenDefaultVrThresholds();
 void setFrankensoConfiguration();
 void setFrankenso_01_LCD(engine_configuration_s *engineConfiguration);
 void disableLCD(engine_configuration_s *engineConfiguration);
