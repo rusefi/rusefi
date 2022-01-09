@@ -226,14 +226,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->knockRetardReapplyRate;
 	if (strEqualCaseInsensitive(name, "knockRetardMaximum"))
 		return engineConfiguration->knockRetardMaximum;
-	if (strEqualCaseInsensitive(name, "mapCamDetectionThreshold"))
-		return engineConfiguration->mapCamDetectionThreshold;
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
 		return engineConfiguration->vssGearRatio;
 	if (strEqualCaseInsensitive(name, "vssToothCount"))
 		return engineConfiguration->vssToothCount;
-	if (strEqualCaseInsensitive(name, "mapCamAveragingLength"))
-		return engineConfiguration->mapCamAveragingLength;
 	if (strEqualCaseInsensitive(name, "triggerSimulatorFrequency"))
 		return engineConfiguration->triggerSimulatorFrequency;
 	if (strEqualCaseInsensitive(name, "idle_antiwindupFreq"))
@@ -322,8 +318,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->mc33_hvolt;
 	if (strEqualCaseInsensitive(name, "minimumBoostClosedLoopMap"))
 		return engineConfiguration->minimumBoostClosedLoopMap;
-	if (strEqualCaseInsensitive(name, "mapCamSkipFactor"))
-		return engineConfiguration->mapCamSkipFactor;
 	if (strEqualCaseInsensitive(name, "vehicleWeight"))
 		return engineConfiguration->vehicleWeight;
 	if (strEqualCaseInsensitive(name, "idlePidRpmUpperLimit"))
@@ -372,8 +366,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->showHumanReadableWarning;
 	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
 		return engineConfiguration->stftIgnoreErrorMagnitude;
-	if (strEqualCaseInsensitive(name, "mapCamLookForLowPeaks"))
-		return engineConfiguration->mapCamLookForLowPeaks;
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
 		return engineConfiguration->enableSoftwareKnock;
 	if (strEqualCaseInsensitive(name, "verboseVVTDecoding"))
@@ -1478,11 +1470,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->knockRetardMaximum = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mapCamDetectionThreshold"))
-	{
-		engineConfiguration->mapCamDetectionThreshold = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "vssGearRatio"))
 	{
 		engineConfiguration->vssGearRatio = (int)value;
@@ -1491,11 +1478,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "vssToothCount"))
 	{
 		engineConfiguration->vssToothCount = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "mapCamAveragingLength"))
-	{
-		engineConfiguration->mapCamAveragingLength = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "triggerSimulatorFrequency"))
@@ -1718,11 +1700,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->minimumBoostClosedLoopMap = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "mapCamSkipFactor"))
-	{
-		engineConfiguration->mapCamSkipFactor = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "vehicleWeight"))
 	{
 		engineConfiguration->vehicleWeight = (int)value;
@@ -1841,11 +1818,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
 	{
 		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "mapCamLookForLowPeaks"))
-	{
-		engineConfiguration->mapCamLookForLowPeaks = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
