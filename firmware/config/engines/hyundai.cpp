@@ -11,11 +11,12 @@
 static void commonGenesisCoupe() {
 	strncpy(config->luaScript, R"(
 
+-- code outside of functions is invoked once on start-up
 -- listen to CAN ID 0x4f0
 canRxAdd(0x4f0)
 
 -- todo: add payload logic
-packet546 = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06 }
+packet4f1 = { 0xFA, 0x54, 0x00, 0x0, 0x00, 0x51, 0x00, 0x00 }
 
 function onCanRx(bus, id, dlc, data)
 	id11 = id % 2048
@@ -28,13 +29,14 @@ function onCanRx(bus, id, dlc, data)
 
 	if rpm > 800 then
 		-- at the moment we simply
-		txCan(1, 0x546, 0, packet546)
+		txCan(1, 0x4f1, 0, packet4f1)
 	end
 
 
 end
 
 function onTick()
+ -- empty function onTick we are not doing anything periodically so far
 end
 
 
