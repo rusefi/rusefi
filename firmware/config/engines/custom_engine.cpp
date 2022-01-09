@@ -802,10 +802,6 @@ void proteusHarley() {
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
 
-	engineConfiguration->mapCamAveragingLength = 16;
-	engineConfiguration->mapCamSkipFactor = 50;
-	engineConfiguration->mapCamLookForLowPeaks = true;
-
 	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
 #if HW_PROTEUS
 	strncpy(config->luaScript, R"(

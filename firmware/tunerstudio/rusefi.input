@@ -2215,6 +2215,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Throttle Up switch",					throttlePedalUpPin
 		field = "Brake pedal switch",					brakePedalPin
 		field = "Flex fuel sensor",					flexSensorPin
+		field = "Turbo Speed Sensor",                   turboSpeedSensorInputPin
+		field = "Turbo Speed Multiplier",               turboSpeedSensorMultiplier
 
 	dialog = fuelLevelDialog,				"Fuel Level Sensor"
 		field = "Input channel", 						fuelLevelSensor
@@ -3563,7 +3565,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 				;			Racing Features->Launch Control
 	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL"
-	    field = "disablePrimaryUart",                   disablePrimaryUart
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
@@ -3615,15 +3616,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Trailing Pin 3",						trailingCoilPins3
 		field = "Trailing Pin 4",						trailingCoilPins4
 
+    dialog = mapCamDialog, "Engine Phase by MAP sensor"
+		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
+
 	dialog = parkingLot, "Experimental/Broken"
 	    field = "boardUseTachPullUp",                   boardUseTachPullUp
 	    field = "boardUseTempPullUp",                   boardUseTempPullUp
 	    field = "boardUseCrankPullUp",                  boardUseCrankPullUp
-		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
-		field = "mapCamDetectionThreshold",             mapCamDetectionThreshold
-		field = "mapCamAveragingLength",                  mapCamAveragingLength
-		field = "mapCamSkipFactor",                     mapCamSkipFactor
-		field = "mapCamLookForLowPeaks",                mapCamLookForLowPeaks
+	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"
 		field = "Global fuel correction", 				globalFuelCorrection
 		field = "MAP Averaging Logic @",				mapAveragingSchedulingAtIndex
@@ -3631,9 +3631,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Warning Message",                      warning_message
 		field = "Ford redundant TPS mode",				useFordRedundantTps
 		field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
-		field = "turbo speed sensor",                   turboSpeedSensorInputPin
-		field = "turbo speed multiplier",               turboSpeedSensorMultiplier
 		field = "Artificial Misfire",                   artificialTestMisfire
+		panel = mapCamDialog
 		panel = allTriggerDebug
 		panel = torqueCurve
 
