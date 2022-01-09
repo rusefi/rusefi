@@ -3563,6 +3563,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 				;			Racing Features->Launch Control
 	dialog = smLaunchControl, "Launch Control Settings EXPERIMENTAL"
+	    field = "disablePrimaryUart",                   disablePrimaryUart
         field = "Enable Launch Control",               	launchControlEnabled
 		field = "Activation Mode",                      launchActivationMode
 	    field = "Switch Input",                     	launchActivatePin,  {launchActivationMode == 0 && launchControlEnabled == 1}
