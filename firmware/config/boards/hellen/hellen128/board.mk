@@ -1,7 +1,9 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen128/board_configuration.cpp
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen128/board_configuration.cpp \
+    $(BOARDS_DIR)/hellen/hellen_common.cpp
+
 BOARDINC = $(BOARDS_DIR)/hellen/hellen128
 
 # Set this if you want a default engine type other than normal hellen128
