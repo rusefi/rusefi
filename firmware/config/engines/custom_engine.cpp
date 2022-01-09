@@ -1044,7 +1044,9 @@ end
 
 void detectBoardType() {
 #if HW_HELLEN
+#if !EFI_UNIT_TEST
 	detectHellenBoardType();
+#endif /* EFI_UNIT_TEST */
 #endif //HW_HELLEN
 	// todo: add board ID detection?
 }

@@ -34,7 +34,6 @@ void setHellen176LedPins() {
 
 // this should be called before setHellenXXXLedPins()
 void detectHellenBoardType() {
-#if !EFI_UNIT_TEST
 	// we test the LED1 pin because the red LED used has the smallest voltage drop,
 	// and thus can be detected more accurately
 	static const brain_pin_e led1Pins[2] = {
@@ -70,6 +69,4 @@ void detectHellenBoardType() {
 	} else {
 		efiPrintf("* Cannot detect Hellen mcu module!");
 	}
-
-#endif /* EFI_UNIT_TEST */
 }
