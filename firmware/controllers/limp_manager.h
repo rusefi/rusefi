@@ -12,7 +12,7 @@ enum class ClearReason : uint8_t {
 	FaultRevLimit,
 	BoostCut, // 5
 	OilPressure,
-	StopRequested,
+	StopRequested, // 7
 	EtbProblem,
 };
 
