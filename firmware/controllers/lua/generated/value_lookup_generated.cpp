@@ -470,6 +470,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->fuelClosedLoopCorrectionEnabled;
 	if (strEqualCaseInsensitive(name, "isVerboseIAC"))
 		return engineConfiguration->isVerboseIAC;
+	if (strEqualCaseInsensitive(name, "boardUseTachPullUp"))
+		return engineConfiguration->boardUseTachPullUp;
+	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
+		return engineConfiguration->boardUseTempPullUp;
 	if (strEqualCaseInsensitive(name, "isEngineChartEnabled"))
 		return engineConfiguration->isEngineChartEnabled;
 	if (strEqualCaseInsensitive(name, "silentTriggerError"))
@@ -498,6 +502,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->launchFuelCutEnable;
 	if (strEqualCaseInsensitive(name, "launchSparkCutEnable"))
 		return engineConfiguration->launchSparkCutEnable;
+	if (strEqualCaseInsensitive(name, "boardUseCrankPullUp"))
+		return engineConfiguration->boardUseCrankPullUp;
 	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
 		return engineConfiguration->useFSIO5ForCriticalIssueEngineStop;
 	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
@@ -2082,6 +2088,16 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->isVerboseIAC = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "boardUseTachPullUp"))
+	{
+		engineConfiguration->boardUseTachPullUp = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boardUseTempPullUp"))
+	{
+		engineConfiguration->boardUseTempPullUp = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "isEngineChartEnabled"))
 	{
 		engineConfiguration->isEngineChartEnabled = (int)value;
@@ -2150,6 +2166,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "launchSparkCutEnable"))
 	{
 		engineConfiguration->launchSparkCutEnable = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boardUseCrankPullUp"))
+	{
+		engineConfiguration->boardUseCrankPullUp = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
