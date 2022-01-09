@@ -15,6 +15,9 @@
 
 #include "custom_engine.h"
 #include "fsio_impl.h"
+#include "mre_meta.h"
+#include "proteus_meta.h"
+#include "hellen_meta.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
