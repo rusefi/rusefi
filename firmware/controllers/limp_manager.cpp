@@ -9,23 +9,23 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	// User-configured hard RPM limit
 	if (rpm > engineConfiguration->rpmHardLimit) {
 		if (engineConfiguration->cutFuelOnHardLimit) {
-			allowFuel.clear();
+			allowFuel.clear(ClearReason::HardLimit);
 		}
 
 		if (engineConfiguration->cutSparkOnHardLimit) {
-			allowSpark.clear();
+			allowSpark.clear(ClearReason::HardLimit);
 		}
 	}
 
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {
-		allowFuel.clear();
+		allowFuel.clear(ClearReason::FaultRevLimit);
 	}
 
 	// Limit fuel only on boost pressure (limiting spark bends valves)
 	if (engineConfiguration->boostCutPressure != 0) {
 		if (Sensor::getOrZero(SensorType::Map) > engineConfiguration->boostCutPressure) {
-			allowFuel.clear();
+			allowFuel.clear(ClearReason::BoostCut);
 		}
 	}
 
@@ -51,7 +51,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 
 			// If time is up, the sensor works, and no pressure, kill the engine.
 			if (isTimedOut && !m_hadOilPressureAfterStart) {
-				allowFuel.clear();
+				allowFuel.clear(ClearReason::OilPressure);
 			}
 		}
 	} else {
@@ -63,7 +63,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		/**
 		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
 		 */
-		allowFuel.clear();
+		allowFuel.clear(ClearReason::StopRequested);
 	}
 
 	if (!engine->isMainRelayEnabled()) {
@@ -79,15 +79,15 @@ todo AndreiKA this change breaks 22 unit tests?
 }
 
 void LimpManager::etbProblem() {
-	m_allowEtb.clear();
+	m_allowEtb.clear(ClearReason::EtbProblem);
 	setFaultRevLimit(1500);
 }
 
 void LimpManager::fatalError() {
-	m_allowEtb.clear();
-	m_allowIgnition.clear();
-	m_allowInjection.clear();
-	m_allowTriggerInput.clear();
+	m_allowEtb.clear(ClearReason::Fatal);
+	m_allowIgnition.clear(ClearReason::Fatal);
+	m_allowInjection.clear(ClearReason::Fatal);
+	m_allowTriggerInput.clear(ClearReason::Fatal);
 
 	setFaultRevLimit(0);
 }
@@ -106,10 +106,22 @@ bool LimpManager::allowTriggerInput() const {
 	return m_allowTriggerInput;
 }
 
-bool LimpManager::allowInjection() const {
-	return m_transientAllowInjection && m_allowInjection;
+LimpState LimpManager::allowInjection() const {
+	if (!m_allowInjection) {
+		return {false, m_allowInjection.clearReason};
+	}
+	if (!m_transientAllowInjection) {
+		return {false, ClearReason::Fatal};
+	}
+	return {true, ClearReason::None};
 }
 
-bool LimpManager::allowIgnition() const {
-	return m_transientAllowIgnition && m_allowIgnition;
+LimpState LimpManager::allowIgnition() const {
+	if (!m_allowIgnition) {
+		return {false, m_allowIgnition.clearReason};
+	}
+	if (!m_transientAllowIgnition) {
+		return {false, ClearReason::Fatal};
+	}
+	return {true, ClearReason::None};
 }

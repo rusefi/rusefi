@@ -316,6 +316,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.m_requested_pump;
 	if (strEqualCaseInsensitive(name, "boostControlTarget"))
 		return engine->outputChannels.boostControlTarget;
+	if (strEqualCaseInsensitive(name, "sparkCutReason"))
+		return engine->outputChannels.sparkCutReason;
+	if (strEqualCaseInsensitive(name, "fuelCutReason"))
+		return engine->outputChannels.fuelCutReason;
 	if (strEqualCaseInsensitive(name, "fuel_requested_percent"))
 		return engine->outputChannels.fuel_requested_percent;
 	if (strEqualCaseInsensitive(name, "fuel_requested_percent_pi"))

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jan 05 06:47:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jan 08 21:38:58 EST 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -864,11 +864,17 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<int16_t, 30, 1> boostControlTarget = (int16_t)0;
 	/**
-	 * "Pump Angle"
-	deg
+	 * "Spark Cut Code"
+	code
 	 * offset 338
 	 */
-	scaled_channel<int16_t, 30, 1> unusedHere1111 = (int16_t)0;
+	int8_t sparkCutReason = (int8_t)0;
+	/**
+	 * "Fuel Cut Code"
+	code
+	 * offset 339
+	 */
+	int8_t fuelCutReason = (int8_t)0;
 	/**
 	 * "DI: fuel_requested_percent"
 	v
@@ -920,79 +926,79 @@ struct ts_outputs_s {
 	bool launchActivatePinState : 1 {};
 	/**
 	offset 468 bit 7 */
-	bool unusedBit_178_7 : 1 {};
+	bool unusedBit_179_7 : 1 {};
 	/**
 	offset 468 bit 8 */
-	bool unusedBit_178_8 : 1 {};
+	bool unusedBit_179_8 : 1 {};
 	/**
 	offset 468 bit 9 */
-	bool unusedBit_178_9 : 1 {};
+	bool unusedBit_179_9 : 1 {};
 	/**
 	offset 468 bit 10 */
-	bool unusedBit_178_10 : 1 {};
+	bool unusedBit_179_10 : 1 {};
 	/**
 	offset 468 bit 11 */
-	bool unusedBit_178_11 : 1 {};
+	bool unusedBit_179_11 : 1 {};
 	/**
 	offset 468 bit 12 */
-	bool unusedBit_178_12 : 1 {};
+	bool unusedBit_179_12 : 1 {};
 	/**
 	offset 468 bit 13 */
-	bool unusedBit_178_13 : 1 {};
+	bool unusedBit_179_13 : 1 {};
 	/**
 	offset 468 bit 14 */
-	bool unusedBit_178_14 : 1 {};
+	bool unusedBit_179_14 : 1 {};
 	/**
 	offset 468 bit 15 */
-	bool unusedBit_178_15 : 1 {};
+	bool unusedBit_179_15 : 1 {};
 	/**
 	offset 468 bit 16 */
-	bool unusedBit_178_16 : 1 {};
+	bool unusedBit_179_16 : 1 {};
 	/**
 	offset 468 bit 17 */
-	bool unusedBit_178_17 : 1 {};
+	bool unusedBit_179_17 : 1 {};
 	/**
 	offset 468 bit 18 */
-	bool unusedBit_178_18 : 1 {};
+	bool unusedBit_179_18 : 1 {};
 	/**
 	offset 468 bit 19 */
-	bool unusedBit_178_19 : 1 {};
+	bool unusedBit_179_19 : 1 {};
 	/**
 	offset 468 bit 20 */
-	bool unusedBit_178_20 : 1 {};
+	bool unusedBit_179_20 : 1 {};
 	/**
 	offset 468 bit 21 */
-	bool unusedBit_178_21 : 1 {};
+	bool unusedBit_179_21 : 1 {};
 	/**
 	offset 468 bit 22 */
-	bool unusedBit_178_22 : 1 {};
+	bool unusedBit_179_22 : 1 {};
 	/**
 	offset 468 bit 23 */
-	bool unusedBit_178_23 : 1 {};
+	bool unusedBit_179_23 : 1 {};
 	/**
 	offset 468 bit 24 */
-	bool unusedBit_178_24 : 1 {};
+	bool unusedBit_179_24 : 1 {};
 	/**
 	offset 468 bit 25 */
-	bool unusedBit_178_25 : 1 {};
+	bool unusedBit_179_25 : 1 {};
 	/**
 	offset 468 bit 26 */
-	bool unusedBit_178_26 : 1 {};
+	bool unusedBit_179_26 : 1 {};
 	/**
 	offset 468 bit 27 */
-	bool unusedBit_178_27 : 1 {};
+	bool unusedBit_179_27 : 1 {};
 	/**
 	offset 468 bit 28 */
-	bool unusedBit_178_28 : 1 {};
+	bool unusedBit_179_28 : 1 {};
 	/**
 	offset 468 bit 29 */
-	bool unusedBit_178_29 : 1 {};
+	bool unusedBit_179_29 : 1 {};
 	/**
 	offset 468 bit 30 */
-	bool unusedBit_178_30 : 1 {};
+	bool unusedBit_179_30 : 1 {};
 	/**
 	offset 468 bit 31 */
-	bool unusedBit_178_31 : 1 {};
+	bool unusedBit_179_31 : 1 {};
 	/**
 	 * offset 472
 	 */
@@ -1190,4 +1196,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jan 05 06:47:26 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jan 08 21:38:58 EST 2022
