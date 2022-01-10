@@ -178,13 +178,15 @@ void sys_dual_bank(void) {
 void stm32_stop() {
 	SysTick->CTRL = 0;
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+
+	// Turn off the LEDs, those use some power
 	enginePins.errorLedPin.setValue(0);
 	enginePins.runningLedPin.setValue(0);
 	enginePins.communicationLedPin.setValue(0);
 	enginePins.warningLedPin.setValue(0);
 
-
-	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
+	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
+	boardPrepareForStop();
 
 	PWR->CSR1 |= PWR_CSR1_WUIF;
 	PWR->CR1 &= ~PWR_CR1_PDDS;	// cleared PDDS means stop mode (not standby) 
@@ -204,10 +206,12 @@ void stm32_stop() {
 void stm32_standby() {
 	SysTick->CTRL = 0;
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-	PWR->CR1 |= PWR_CR1_PDDS;		// PDDS = use standby mode (not stop mode)
-	PWR->CSR2 |= PWR_CSR2_EWUP1; //EWUP1: Enable Wakeup pin for PA0
-	PWR->CR2 |= PWR_CR2_CWUPF1; //Clear Wakeup Pin flag for PA0
-	PWR->CR1 |= PWR_CR1_CSBF;  //Clear standby flag
+	PWR->CR1 |= PWR_CR1_PDDS;	// PDDS = use standby mode (not stop mode)
+	PWR->CR1 |= PWR_CR1_CSBF;	// Clear standby flag
+
+	// Do anything the board wants to prepare for standby mode - enabling wakeup sources!
+	boardPrepareForStandby();
+
 	__disable_irq();
 	__WFI();
 }

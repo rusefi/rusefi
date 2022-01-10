@@ -796,4 +796,12 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 
 #endif /* EFI_CAN_SUPPORT */
 
+// Stubs for per-board low power helpers
+__attribute__((weak)) void boardPrepareForStop() {
+	// Default implementation - wake up on PA0 - boards should override this
+	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
+}
+
+__attribute__((weak)) void boardPrepareForStandby() { }
+
 #endif // EFI_PROD_CODE
