@@ -45,6 +45,7 @@ jobs:
             stm32f767_nucleo,
             stm32h743_nucleo,
             subaru_eg33_f7,
+            f429-discovery,
             atlas,
         ]
 
@@ -176,6 +177,9 @@ jobs:
           - build-target: subaru_eg33_f7
             folder: subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
+
+          - build-target: f429-discovery
+            folder: f429-discovery
 
           - build-target: atlas
             folder: atlas
