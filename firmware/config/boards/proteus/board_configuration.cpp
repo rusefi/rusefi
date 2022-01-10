@@ -216,3 +216,26 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->triggerSimulatorPins[1] = GPIOG_2;
 #endif
 }
+
+void boardPrepareForStop() {
+	// enable EXTI on PD0 - CAN RX pin
+	palSetPadMode(GPIOD, 0, PAL_MODE_INPUT);
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
+}
+
+void boardPrepareForStandby() {
+	// We're out of luck trying to wake from standby on an F4, since it can only wake from PA0
+
+#ifdef STM32F7XX
+	PWR->CSR2 |= PWR_CSR2_EWUP1; //EWUP1: Enable Wakeup pin for PA0
+	PWR->CR2 |= PWR_CR2_CWUPF1; //Clear Wakeup Pin flag for PA0
+#endif
+
+#ifdef STM32H7XX
+	// Wake on wakeup pin 0 - PA0
+	PWR->WKUPEPR = PWR_WKUPEPR_WKUPEN1;
+
+	// clear all possible wakeup bits
+	PWR->WKUPCR = 0xFFFFFFFF;
+#endif
+}
