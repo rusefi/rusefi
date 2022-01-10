@@ -20,8 +20,13 @@
 #define LUA_SYSTEM_HEAP 1
 #endif // LUA_SYSTEM_HEAP
 
+#ifndef EFI_HAS_EXT_SDRAM
 static char luaUserHeap[LUA_USER_HEAP];
 static char luaSystemHeap[LUA_SYSTEM_HEAP];
+#else
+static char luaUserHeap[LUA_USER_HEAP] SDRAM_OPTIONAL;
+static char luaSystemHeap[LUA_SYSTEM_HEAP] SDRAM_OPTIONAL;
+#endif
 
 class Heap {
 public:
