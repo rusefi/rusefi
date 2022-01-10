@@ -505,7 +505,4 @@
 
 #define ENABLE_AUTO_DETECT_HSE
 
-/* common for all STM32 */
-#include "../../cfg/mcuconf_community.h"
-
 #endif /* MCUCONF_H */
