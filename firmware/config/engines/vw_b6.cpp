@@ -26,6 +26,7 @@ void setVwPassatB6() {
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
 	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
@@ -144,8 +145,8 @@ void setVwPassatB6() {
 	engineConfiguration->hpfpMinAngle = 10;
 	engineConfiguration->hpfpActivationAngle = 30;
 	engineConfiguration->hpfpTargetDecay = 2000;
-	engineConfiguration->hpfpPidP = 0.0301;
-	engineConfiguration->hpfpPidI = 0.000012;
+	engineConfiguration->hpfpPidP = 0.01;
+	engineConfiguration->hpfpPidI = 0.0003;
 
 	setTable(config->veTable, 55);
 
