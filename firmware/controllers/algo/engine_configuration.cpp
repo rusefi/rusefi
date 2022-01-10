@@ -157,6 +157,9 @@ void onBurnRequest() {
 	incrementGlobalConfigurationVersion();
 }
 
+// Weak link a stub so that every board doesn't have to implement this function
+__attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s *previousConfiguration) { }
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
@@ -171,6 +174,8 @@ void incrementGlobalConfigurationVersion() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 	applyNewHardwareSettings();
+
+	boardOnConfigurationChange(&activeConfiguration);
 
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
