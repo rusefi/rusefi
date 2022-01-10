@@ -41,6 +41,7 @@ void setVwPassatB6() {
 	
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	strcpy(engineConfiguration->engineCode, "BPY");
+	strcpy(engineConfiguration->vehicleName, "test");
 
 	engineConfiguration->throttlePedalUpVoltage = 0.36;
 	engineConfiguration->throttlePedalWOTVoltage = 2.13;
