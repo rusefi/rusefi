@@ -1,5 +1,9 @@
+/**
+ * see mc33816/rusefi/readme.md
+*/
 
 typedef enum {
+    // see dram1.def values
     Iboost = 0,
     Ipeak = 1,
     Ihold = 2,
@@ -8,6 +12,7 @@ typedef enum {
     Tbypass = 5,
     Thold_off = 6,
     Thold_tot = 7,
+    // see dram2.def values, base 64 for channel 2
     Vboost_high = 64,
     Vboost_low = 65,
     Isense4_high = 66,

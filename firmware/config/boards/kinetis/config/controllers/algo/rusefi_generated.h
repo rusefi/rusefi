@@ -183,6 +183,9 @@
 #define binarySerialRxPin_offset 1575
 #define binarySerialTxPin_offset 1574
 #define BLOCKING_FACTOR 256
+#define boardUseCrankPullUp_offset 1260
+#define boardUseTachPullUp_offset 1260
+#define boardUseTempPullUp_offset 1260
 #define BOOST_LOAD_COUNT 8
 #define BOOST_RPM_COUNT 8
 #define boostControlPin_offset 908
@@ -682,6 +685,7 @@
 #define disableEtbWhenEngineStopped_offset 748
 #define disableFan1WhenStopped_offset 164
 #define disableFan2WhenStopped_offset 164
+#define disablePrimaryUart_offset 1260
 #define displacement_offset 416
 #define display_mode_e_auto_enum "DM_NONE", "DM_HD44780", "DM_HD44780_OVER_PCF8574"
 #define display_mode_e_DM_HD44780 1
@@ -1597,11 +1601,7 @@
 #define mapAccelTaperBins_offset 1760
 #define mapAccelTaperMult_offset 1792
 #define mapAveragingSchedulingAtIndex_offset 1312
-#define mapCamAveragingLength_offset 627
 #define mapCamDetectionAnglePosition_offset 560
-#define mapCamDetectionThreshold_offset 623
-#define mapCamLookForLowPeaks_offset 896
-#define mapCamSkipFactor_offset 768
 #define mapErrorDetectionTooHigh_offset 1540
 #define mapErrorDetectionTooLow_offset 1536
 #define mapEstimateRpmBins_offset 17960
@@ -1861,7 +1861,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2857486380
+#define SIGNATURE_HASH 3461799027
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2384,7 +2384,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.07.kin.2857486380"
+#define TS_SIGNATURE "rusEFI 2022.01.10.kin.3461799027"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2407,10 +2407,6 @@
 #define unused1128_offset 1740
 #define unused1129_offset 1740
 #define unused1130_offset 1740
-#define unused1464b0_offset 1260
-#define unused1464b20_offset 1260
-#define unused1464b3_offset 1260
-#define unused1464b4_offset 1260
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
 #define unused1476b3_offset 1272
@@ -2418,6 +2414,7 @@
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
+#define unused45342_offset 896
 #define unused720_offset 720
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
@@ -2427,6 +2424,7 @@
 #define unused_1484_bit_29_offset 1272
 #define unused_1484_bit_30_offset 1272
 #define unused_1484_bit_31_offset 1272
+#define unusedAveragingLength_offset 627
 #define unusedBit4_1476_offset 1272
 #define unusedBit_310_31_offset 896
 #define unusedBit_48_31_offset 164
@@ -2464,6 +2462,8 @@
 #define unusedBitWasHere3_offset 1260
 #define unusedBitWasHere4_offset 1260
 #define unusedBitWasHere5_offset 1260
+#define unusedCamSkipFactor_offset 768
+#define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4143
 #define unusedHere2_offset 1747
 #define useAdvanceCorrectionsForCranking_offset 1272

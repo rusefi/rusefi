@@ -157,6 +157,9 @@ void onBurnRequest() {
 	incrementGlobalConfigurationVersion();
 }
 
+// Weak link a stub so that every board doesn't have to implement this function
+__attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s *previousConfiguration) { }
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
@@ -171,6 +174,8 @@ void incrementGlobalConfigurationVersion() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 	applyNewHardwareSettings();
+
+	boardOnConfigurationChange(&activeConfiguration);
 
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
@@ -816,6 +821,8 @@ void loadConfiguration() {
 	resetConfigurationExt(engineConfiguration->engineType);
 #endif /* EFI_INTERNAL_FLASH */
 
+	detectBoardType();
+
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();
 }
@@ -847,8 +854,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 */
 	switch (engineType) {
 	case UNUSED60:
-// todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case UNUSED61:
+	case HELLEN72_ETB:
 	case UNUSED100:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
@@ -967,9 +974,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HELLEN_NB1:
 	case HELLEN_NA8_96:
 		setHellenNB1();
-		break;
-	case HELLEN72_ETB:
-		setHellen72etb();
 		break;
 	case HELLEN_121_NISSAN_4_CYL:
 		setHellen121nissanQR();
@@ -1118,8 +1122,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTest33816EngineConfiguration();
 		break;
 	case TEST_108:
-		setVrThresholdTest();
-		break;
 	case TEST_109:
 	case TEST_110:
 	case TEST_ROTARY:

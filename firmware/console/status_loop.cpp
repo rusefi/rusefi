@@ -652,8 +652,8 @@ static void updateFlags() {
 	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
 	engine->outputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
 	engine->outputChannels.isO2HeaterOn = enginePins.o2heater.getLogicValue();
-	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition();
-	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection();
+	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition().value;
+	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection().value;
 	engine->outputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_LAUNCH_CONTROL

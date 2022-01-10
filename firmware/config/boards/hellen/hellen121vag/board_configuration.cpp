@@ -16,10 +16,6 @@
 #include "electronic_throttle_impl.h"
 #include "hellen_meta.h"
 
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
-
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7; // 96 - INJ_1
 	engineConfiguration->injectionPins[1] = GPIOG_8;

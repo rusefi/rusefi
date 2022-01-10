@@ -26,6 +26,7 @@ void setVwPassatB6() {
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
 	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
@@ -40,6 +41,7 @@ void setVwPassatB6() {
 	
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	strcpy(engineConfiguration->engineCode, "BPY");
+	strcpy(engineConfiguration->vehicleName, "test");
 
 	engineConfiguration->throttlePedalUpVoltage = 0.36;
 	engineConfiguration->throttlePedalWOTVoltage = 2.13;
@@ -107,6 +109,7 @@ void setVwPassatB6() {
 
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
+	strcpy(engineConfiguration->gpPwmNote[1], "LPFP");
 	lowPressureFuelPumpControl->pwmFrequency = 20;
 	lowPressureFuelPumpControl->loadAxis = GPPWM_FuelLoad;
 	lowPressureFuelPumpControl->dutyIfError = 50;
@@ -116,6 +119,7 @@ void setVwPassatB6() {
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
+	strcpy(engineConfiguration->gpPwmNote[0], "Rad Fan");
 
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
@@ -134,15 +138,18 @@ void setVwPassatB6() {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
-	engineConfiguration->hpfpValvePin = MRE_LS_1;
+	//engineConfiguration->hpfpValvePin = MRE_LS_1;
+	engineConfiguration->disablePrimaryUart = true;
+	engineConfiguration->hpfpValvePin = GPIOB_10; // AUX J13
 	engineConfiguration->hpfpCamLobes = 3;
 	engineConfiguration->hpfpPumpVolume = 0.290;
 	engineConfiguration->hpfpMinAngle = 10;
 	engineConfiguration->hpfpActivationAngle = 30;
 	engineConfiguration->hpfpTargetDecay = 2000;
-	engineConfiguration->hpfpPidP = 0.301;
-	engineConfiguration->hpfpPidI = 0.00012;
+	engineConfiguration->hpfpPidP = 0.01;
+	engineConfiguration->hpfpPidI = 0.0003;
 
+	setTable(config->veTable, 55);
 
 	setBoschVAGETB();
 
@@ -154,7 +161,7 @@ void setVwPassatB6() {
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->useETBforIdleControl = true;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 #endif /* BOARD_TLE8888_COUNT */
 }

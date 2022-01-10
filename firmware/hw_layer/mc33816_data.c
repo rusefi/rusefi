@@ -1,6 +1,11 @@
 /*
  * mc33816_data.c
  *
+ * For historic reasons rusEFI source code refers to all this as mc33816 while the microcode
+ * is signed with MC33PT2001 key. to use real mc33816 you would have to replace binary data with true mc33816 version
+ *
+ * this is manual copy-paste of sample_code/PT2001_LoadData.c
+ * see mc33816/rusefi/readme.md
  */
 
 #include "global.h"

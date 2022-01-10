@@ -15,6 +15,10 @@
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
+static OutputPin alphaEn;
+static OutputPin alphaTachPullUp;
+static OutputPin alphaTempPullUp;
+
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
 	engineConfiguration->injectionPins[1] = H144_LS_2;
@@ -83,6 +87,13 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
+}
+
+void boardInitHardware() {
+	alphaEn.initPin("a-EN", H144_OUT_IO3);
+	alphaEn.setValue(1);
+
+	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
 }
 
 void setBoardConfigOverrides(void) {
