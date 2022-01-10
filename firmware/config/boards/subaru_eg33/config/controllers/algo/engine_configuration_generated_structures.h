@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:38:48 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 10 22:04:40 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1309,7 +1309,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 627
 	 */
-	uint8_t unusedAveragingLength;
+	brain_pin_e l9779_cs;
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
@@ -1758,7 +1758,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 768
 	 */
-	uint8_t unusedCamSkipFactor;
+	spi_device_e l9779spiDevice;
 	/**
 	volts
 	 * offset 769
@@ -4450,4 +4450,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 09 01:38:48 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 10 22:04:40 UTC 2022
