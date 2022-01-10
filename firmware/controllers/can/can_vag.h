@@ -15,16 +15,20 @@ void canDashboardVAG(CanCycle cycle);
 
 
 // https://wiki.openstreetmap.org/wiki/VW-CAN
-#define CAN_VAG_RPM      0x280 /* _10ms cycle */
-#define CAN_VAG_CLT      0x288 /* _10ms cycle */
 #define CAN_VAG_CLT_V2   0x420 /* _10ms cycle */
 #define CAN_VAG_IMMO     0x3D0 /* _10ms cycle */
 
-// 0x280
+// 0x280, 10ms period
 #define CAN_VAG_Motor_1 640
 // 0x284
 #define CAN_VAG_Motor_Brake 644
-// 0x288
+// 0x288, 10ms period
 #define CAN_VAG_Motor_2 648
 // 0x480
 #define CAN_VAG_Motor_5 1152
+// 0x488
+#define CAN_VAG_Motor_6 1160
+// 0x580
+#define CAN_VAG_Motor_Flexia 1408
+// 0x588
+#define CAN_VAG_Motor_7 1416

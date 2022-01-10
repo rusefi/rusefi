@@ -222,14 +222,14 @@ void canDashboardVAG(CanCycle cycle) {
 	if (cycle.isInterval(CI::_10ms)) {
 		{
 			//VAG Dashboard
-			CanTxMessage msg(CAN_VAG_RPM);
+			CanTxMessage msg(CAN_VAG_Motor_1);
 			msg.setShortValue(GET_RPM() * 4, 2); //RPM
 		}
 
 		float clt = Sensor::getOrZero(SensorType::Clt);
 
 		{
-			CanTxMessage msg(CAN_VAG_CLT);
+			CanTxMessage msg(CAN_VAG_Motor_2);
 			msg.setShortValue((int) ((clt + 48.373) / 0.75), 1); //Coolant Temp
 		}
 
