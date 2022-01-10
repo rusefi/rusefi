@@ -149,6 +149,8 @@ void setVwPassatB6() {
 	engineConfiguration->hpfpPidP = 0.01;
 	engineConfiguration->hpfpPidI = 0.0003;
 
+	engineConfiguration->hpfpPeakPos = 10;
+
 	setTable(config->veTable, 55);
 
 	setBoschVAGETB();
