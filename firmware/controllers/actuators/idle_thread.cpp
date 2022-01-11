@@ -118,7 +118,7 @@ void setIdleMode(idle_mode_e value) {
 }
 
 percent_t getIdlePosition() {
-	return engine->idle.currentIdlePosition;
+	return engine->module<IdleController>().unmock().currentIdlePosition;
 }
 
 void setManualIdleValvePosition(int positionPercent) {
@@ -135,9 +135,9 @@ void setManualIdleValvePosition(int positionPercent) {
 #endif /* EFI_UNIT_TEST */
 
 void IdleController::init(pid_s* idlePidConfig) {
-	engine->idle.shouldResetPid = false;
-	engine->idle.mightResetPid = false;
-	engine->idle.wasResetPid = false;
+	shouldResetPid = false;
+	mightResetPid = false;
+	wasResetPid = false;
 	m_timingPid.initPidClass(idlePidConfig);
 }
 
@@ -302,15 +302,15 @@ static void undoIdleBlipIfNeeded() {
 float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
 	auto idlePid = getIdlePid();
 
-	if (engine->idle.shouldResetPid) {
+	if (shouldResetPid) {
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-		if (idlePid->getIntegration() <= 0 || engine->idle.mustResetPid) {
+		if (idlePid->getIntegration() <= 0 || mustResetPid) {
 			idlePid->reset();
-			engine->idle.mustResetPid = false;
+			mustResetPid = false;
 		}
 //			alternatorPidResetCounter++;
-		engine->idle.shouldResetPid = false;
-		engine->idle.wasResetPid = true;
+		shouldResetPid = false;
+		wasResetPid = true;
 	}
 
 	// todo: move this to pid_s one day
@@ -322,12 +322,12 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	if (phase != IIdleController::Phase::Idling) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
-		if (engine->idle.mightResetPid) {
-			engine->idle.mightResetPid = false;
-			engine->idle.shouldResetPid = true;
+		if (mightResetPid) {
+			mightResetPid = false;
+			shouldResetPid = true;
 		}
 
-		engine->idle.idleState = TPS_THRESHOLD;
+		idleState = TPS_THRESHOLD;
 
 		// We aren't idling, so don't apply any correction.  A positive correction could inhibit a return to idle.
 		m_lastAutomaticPosition = 0;
@@ -338,7 +338,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	bool acToggleJustTouched = (nowUs - engine->acSwitchLastChangeTime) < MS2US(500);
 	// check if within the dead zone
 	if (!acToggleJustTouched && absI(rpm - targetRpm) <= engineConfiguration->idlePidRpmDeadZone) {
-		engine->idle.idleState = RPM_DEAD_ZONE;
+		idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
 		return m_lastAutomaticPosition;
 	}
@@ -351,9 +351,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	}
 
 	// if PID was previously reset, we store the time when it turned on back (see errorAmpCoef correction below)
-	if (engine->idle.wasResetPid) {
+	if (wasResetPid) {
 		restoreAfterPidResetTimeUs = nowUs;
-		engine->idle.wasResetPid = false;
+		wasResetPid = false;
 	}
 	// increase the errorAmpCoef slowly to restore the process correctly after the PID reset
 	// todo: move restoreAfterPidResetTimeUs to idle?
@@ -364,10 +364,10 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	idlePid->setErrorAmplification(errorAmpCoef);
 
 	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
-	engine->idle.idleState = PID_VALUE;
+	idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
-	engine->idle.mightResetPid = true;
+	mightResetPid = true;
 
 	// Apply PID Multiplier if used
 	if (engineConfiguration->useIacPidMultTable) {
@@ -434,7 +434,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		bool isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
 		if (engineConfiguration->isVerboseIAC && isAutomaticIdle) {
-			efiPrintf("Idle state %s", getIdle_state_e(engine->idle.idleState));
+			efiPrintf("Idle state %s", getIdle_state_e(idleState));
 			getIdlePid()->showPidStatus("idle");
 		}
 
@@ -445,11 +445,11 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 		if (engine->timeToStopBlip != 0) {
 			iacPosition = engine->blipIdlePosition;
-			engine->idle.idleState = BLIP;
+			idleState = BLIP;
 		} else {
 			// Always apply closed loop correction
 			iacPosition = getOpenLoop(phase, clt, tps, crankingTaper);
-			engine->idle.baseIdlePosition = iacPosition;
+			baseIdlePosition = iacPosition;
 
 			// If TPS is working and automatic mode enabled, add any automatic correction
 			if (tps.Valid && engineConfiguration->idleMode == IM_AUTO) {
@@ -466,7 +466,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
 				getIdlePid()->postState(&engine->outputChannels.idleStatus);
-				engine->outputChannels.idleState = engine->idle.idleState;
+				engine->outputChannels.idleState = idleState;
 			} else {
 				engine->outputChannels.idleCurrentPosition = iacPosition;
 				extern StepperMotor iacMotor;
@@ -474,7 +474,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			}
 #endif /* EFI_TUNER_STUDIO */
 
-		engine->idle.currentIdlePosition = iacPosition;
+		currentIdlePosition = iacPosition;
 
 		return iacPosition;
 }
@@ -511,8 +511,8 @@ void setDefaultIdleParameters() {
 
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 #if ! EFI_UNIT_TEST
-	engine->idle.shouldResetPid = !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
-	engine->idle.mustResetPid = engine->idle.shouldResetPid;
+	shouldResetPid = !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
+	mustResetPid = shouldResetPid;
 #endif
 }
 
@@ -569,9 +569,9 @@ void startIdleThread() {
 	initIdleHardware();
 #endif /* EFI_UNIT_TEST */
 
-	engine->idle.idleState = INIT;
-	engine->idle.baseIdlePosition = -100.0f;
-	engine->idle.currentIdlePosition = -100.0f;
+	engine->module<IdleController>().unmock().idleState = INIT;
+	engine->module<IdleController>().unmock().baseIdlePosition = -100.0f;
+	engine->module<IdleController>().unmock().currentIdlePosition = -100.0f;
 
 #if ! EFI_UNIT_TEST
 
