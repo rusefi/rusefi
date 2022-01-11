@@ -28,6 +28,7 @@ public class LiveDataParserTest {
                 "\tbool isEnabled = getAcState();\n" +
                 "\n" +
                 "\tm_acEnabled = isEnabled;\n" +
+                "auto [cltValid, clt] = Sensor::get(SensorType::Clt);\n" +
                 "\n" +
                 "\tenginePins.acRelay.setValue(isEnabled);\n" +
                 "\n" +
@@ -37,7 +38,7 @@ public class LiveDataParserTest {
                 "}\n";
 
         SourceCodePainter painter = run(name -> null, sourceCode);
-        verify(painter, times(4)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
+        verify(painter, times(7)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
     }
 
     @Test

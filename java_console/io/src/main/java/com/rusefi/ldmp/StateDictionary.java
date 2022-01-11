@@ -28,7 +28,7 @@ public enum StateDictionary {
         register(live_data_e.LDS_trigger_state, TriggerState.VALUES, "trigger_decoder.cpp"); // 11
         register(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control.cpp"); // 12
         register(live_data_e.LDS_fan_control, FuelPump.VALUES, "fan_control.cpp");
-        register(live_data_e.LDS_injector_model, InjectorModel.VALUES, "injector_model");
+        register(live_data_e.LDS_injector_model, InjectorModel.VALUES, "injector_model.cpp");
         register(live_data_e.LDS_idle_state, IdleState.VALUES, "idle_thread.cpp");
         register(live_data_e.LDS_fuel_pump, FuelPump.VALUES, "fuel_pump.cpp");
         register(live_data_e.LDS_wall_fuel_state, WallFuelState.VALUES, "wall_fuel.cpp");
