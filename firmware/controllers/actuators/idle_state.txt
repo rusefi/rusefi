@@ -12,6 +12,21 @@ bit mightResetPid;The idea of 'mightResetPid' is to reset PID only once - each t
 bit shouldResetPid;
 bit wasResetPid;This is needed to slowly turn on the PID back after it was reset.
 bit mustResetPid;This is used when the PID configuration is changed, to guarantee the reset
+bit isCoasting
+bit useIacTableForCoasting
+bit notIdling
+bit needReset
+bit isInDeadZone
+bit isBlipping
+bit useClosedLoop
+bit badTps
+bit looksLikeRunning
+bit looksLikeCoasting
+bit looksLikeCrankToIdle
+
+
+int targetRpmByClt
+int targetRpmAcBump
 
 ! end of idle_state_s structure definition
 end_struct

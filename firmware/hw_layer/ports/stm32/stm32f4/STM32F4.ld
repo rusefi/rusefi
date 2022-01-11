@@ -29,9 +29,6 @@ RAM3_SIZE = DEFINED(STM32F4_HAS_SRAM3) ? 64k : 0;
 /* Only STM32F429I-Discovery has external SDRAM */
 SDRAM_SIZE = DEFINED(STM32_HAS_SDRAM) ? 8M : 0;
 
-/* SDRAM */
-SDRAM_SIZE = DEFINED(STM32F4_HAS_SDRAM) ? 8M : 0;
-
 MEMORY
 {
     bl      : org = 0x08000000, len = 16k     /* bootloader section */

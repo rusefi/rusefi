@@ -343,7 +343,7 @@ void Engine::updateSwitchInputs() {
 	engine->clutchUpState = getClutchUpState();
 
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
-		engine->idle.throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
+		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
 	engine->brakePedalState = getBrakePedalState();

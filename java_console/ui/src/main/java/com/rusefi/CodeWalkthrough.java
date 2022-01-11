@@ -165,7 +165,7 @@ public class CodeWalkthrough {
                     allTerminals.get(i + 1).getText().equals("->")
             ) {
                 Token token = allTerminals.get(i + 2).getSymbol();
-                painter.paintForeground(CONFIG, new Range(token, token));
+                painter.paintForeground(CONFIG, Range.create(token, token));
                 configTokens.add(token);
             }
         }

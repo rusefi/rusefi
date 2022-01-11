@@ -156,6 +156,10 @@
 #define BOARD_TLE8888_COUNT 	1
 #endif
 
+#ifndef BOARD_L9779_COUNT
+#define BOARD_L9779_COUNT 	1
+#endif
+
 #ifndef BOARD_DRV8860_COUNT
 #define BOARD_DRV8860_COUNT         0
 #endif

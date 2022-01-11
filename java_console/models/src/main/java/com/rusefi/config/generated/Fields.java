@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 10 02:21:17 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Jan 11 00:30:31 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1469,6 +1469,8 @@ public class Fields {
 	public static final int knockRetardMaximum_offset = 622;
 	public static final int knockRetardReapplyRate_offset = 621;
 	public static final int knockSamplingDuration_offset = 2112;
+	public static final int l9779_cs_offset = 627;
+	public static final int l9779spiDevice_offset = 768;
 	public static final int lambdaLoadBins_offset = 19620;
 	public static final int lambdaRpmBins_offset = 19652;
 	public static final int lambdaTable_offset = 19364;
@@ -1806,7 +1808,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 185005875;
+	public static final int SIGNATURE_HASH = 1400061660;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2275,7 +2277,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.10.all.185005875";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.11.all.1400061660";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2312,7 +2314,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1272;
 	public static final int unused_1484_bit_30_offset = 1272;
 	public static final int unused_1484_bit_31_offset = 1272;
-	public static final int unusedAveragingLength_offset = 627;
 	public static final int unusedBit4_1476_offset = 1272;
 	public static final int unusedBit_310_31_offset = 896;
 	public static final int unusedBit_48_31_offset = 164;
@@ -2350,7 +2351,6 @@ public class Fields {
 	public static final int unusedBitWasHere3_offset = 1260;
 	public static final int unusedBitWasHere4_offset = 1260;
 	public static final int unusedBitWasHere5_offset = 1260;
-	public static final int unusedCamSkipFactor_offset = 768;
 	public static final int unusedDtectionThreshold_offset = 623;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
@@ -2671,7 +2671,7 @@ public class Fields {
 	public static final Field UNUSEDDTECTIONTHRESHOLD = Field.create("UNUSEDDTECTIONTHRESHOLD", 623, FieldType.INT8);
 	public static final Field VSSGEARRATIO = Field.create("VSSGEARRATIO", 624, FieldType.INT16);
 	public static final Field VSSTOOTHCOUNT = Field.create("VSSTOOTHCOUNT", 626, FieldType.INT8);
-	public static final Field UNUSEDAVERAGINGLENGTH = Field.create("UNUSEDAVERAGINGLENGTH", 627, FieldType.INT8);
+	public static final Field L9779_CS = Field.create("L9779_CS", 627, FieldType.INT8, brain_pin_e);
 	public static final Field TRIGGERSIMULATORFREQUENCY = Field.create("TRIGGERSIMULATORFREQUENCY", 628, FieldType.INT);
 	public static final Field INJECTIONPINS1 = Field.create("INJECTIONPINS1", 632, FieldType.INT8, output_pin_e);
 	public static final Field INJECTIONPINS2 = Field.create("INJECTIONPINS2", 633, FieldType.INT8, output_pin_e);
@@ -2810,7 +2810,7 @@ public class Fields {
 	public static final Field MINIMUMBOOSTCLOSEDLOOPMAP = Field.create("MINIMUMBOOSTCLOSEDLOOPMAP", 765, FieldType.INT8);
 	public static final Field ACFANPIN = Field.create("ACFANPIN", 766, FieldType.INT8, output_pin_e);
 	public static final Field ACFANPINMODE = Field.create("ACFANPINMODE", 767, FieldType.INT8, pin_output_mode_e);
-	public static final Field UNUSEDCAMSKIPFACTOR = Field.create("UNUSEDCAMSKIPFACTOR", 768, FieldType.INT8);
+	public static final Field L9779SPIDEVICE = Field.create("L9779SPIDEVICE", 768, FieldType.INT8);
 	public static final Field DWELLVOLTAGECORRVOLTBINS = Field.create("DWELLVOLTAGECORRVOLTBINS", 769, FieldType.INT8);
 	public static final Field IMUTYPE = Field.create("IMUTYPE", 777, FieldType.INT8);
 	public static final Field DWELLVOLTAGECORRVALUES = Field.create("DWELLVOLTAGECORRVALUES", 778, FieldType.INT8);
@@ -3954,7 +3954,7 @@ public class Fields {
 	UNUSEDDTECTIONTHRESHOLD,
 	VSSGEARRATIO,
 	VSSTOOTHCOUNT,
-	UNUSEDAVERAGINGLENGTH,
+	L9779_CS,
 	TRIGGERSIMULATORFREQUENCY,
 	INJECTIONPINS1,
 	INJECTIONPINS2,
@@ -4091,7 +4091,7 @@ public class Fields {
 	MINIMUMBOOSTCLOSEDLOOPMAP,
 	ACFANPIN,
 	ACFANPINMODE,
-	UNUSEDCAMSKIPFACTOR,
+	L9779SPIDEVICE,
 	DWELLVOLTAGECORRVOLTBINS,
 	IMUTYPE,
 	DWELLVOLTAGECORRVALUES,

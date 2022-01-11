@@ -2,6 +2,8 @@ package com.rusefi.livedata;
 
 import com.rusefi.CodeWalkthrough;
 import com.rusefi.config.Field;
+import com.rusefi.enums.live_data_e;
+import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.ui.livedata.SourceCodePainter;
 import com.rusefi.ui.livedata.VariableValueSource;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -18,8 +20,11 @@ public class LiveDataConventionTest {
     @Test
     @Ignore
     public void assertLiveDataConvention() throws IOException, URISyntaxException {
-        for (LiveDataView view : LiveDataView.values())
-            assertFile(view.getFileName(), view.getValues());
+        for (live_data_e view : live_data_e.values()) {
+            String fileName = StateDictionary.INSTANCE.getFileName(view);
+            Field[] values = StateDictionary.INSTANCE.getFields(view);
+            assertFile(fileName, values);
+        }
     }
 
     private void assertFile(String fileName, Field[] values) throws IOException, URISyntaxException {
