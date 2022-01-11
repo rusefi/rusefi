@@ -6,8 +6,10 @@ import com.rusefi.enums.live_data_e;
 import com.rusefi.ldmp.StateDictionary;
 
 /**
+ * todo: kill this legacy class?
  * @see StateDictionary
  */
+@Deprecated
 public enum LiveDataView {
     // todo: code generate this part of the enum with some BEFORE/AFTER tag?
     AC_CONTROL(live_data_e.LDS_ac_control, AcControl.VALUES),

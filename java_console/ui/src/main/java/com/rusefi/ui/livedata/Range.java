@@ -27,6 +27,14 @@ public class Range {
         this(context.start, context.stop);
     }
 
+    public static Range create(Token startToken, Token stopToken) {
+        int start = startToken.getStartIndex();
+        int stop = stopToken.getStopIndex() + 1;
+        if (stop < start)
+            throw new IllegalStateException("Order issue " + startToken + "/" + stopToken);
+        return new Range(startToken, stopToken);
+    }
+
     public int getStart() {
         return start;
     }
