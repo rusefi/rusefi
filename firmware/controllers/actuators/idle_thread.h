@@ -35,7 +35,7 @@ class IdleController : public IIdleController, public EngineModule, public idle_
 public:
 	typedef IIdleController interface_t;
 
-	void init(pid_s* idlePidConfig);
+	void init();
 
 	float getIdlePosition();
 
@@ -65,10 +65,29 @@ public:
 		return m_lastPhase == Phase::Idling || (engineConfiguration->useSeparateIdleTablesForCrankingTaper && m_lastPhase == Phase::CrankToIdleTaper);
 	}
 
+	PidIndustrial industrialWithOverrideIdlePid;
+
+	#if EFI_IDLE_PID_CIC
+	// Use PID with CIC integrator
+		PidCic idleCicPid;
+	#endif //EFI_IDLE_PID_CIC
+
+	Pid * getIdlePid() {
+	#if EFI_IDLE_PID_CIC
+		if (engineConfiguration->useCicPidForIdle) {
+			return &idleCicPid;
+		}
+	#endif /* EFI_IDLE_PID_CIC */
+		return &industrialWithOverrideIdlePid;
+	}
+
+
 private:
+
 	// These are stored by getIdlePosition() and used by getIdleTimingAdjustment()
 	Phase m_lastPhase = Phase::Cranking;
 	int m_lastTargetRpm = 0;
+	efitimeus_t restoreAfterPidResetTimeUs = 0;
 
 	// This is stored by getClosedLoop and used in case we want to "do nothing"
 	float m_lastAutomaticPosition = 0;
@@ -90,6 +109,5 @@ void setIdleIFactor(float value);
 void setIdleDFactor(float value);
 void setIdleMode(idle_mode_e value);
 void setTargetIdleRpm(int value);
-Pid * getIdlePid();
 void startPedalPins();
 void stopPedalPins();

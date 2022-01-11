@@ -40,24 +40,6 @@
 #include "stepper.h"
 #endif
 
-static efitimeus_t restoreAfterPidResetTimeUs = 0;
-
-static PidIndustrial industrialWithOverrideIdlePid;
-
-#if EFI_IDLE_PID_CIC
-// Use PID with CIC integrator
-static PidCic idleCicPid;
-#endif //EFI_IDLE_PID_CIC
-
-Pid * getIdlePid() {
-#if EFI_IDLE_PID_CIC
-	if (engineConfiguration->useCicPidForIdle) {
-		return &idleCicPid;
-	}
-#endif /* EFI_IDLE_PID_CIC */
-	return &industrialWithOverrideIdlePid;
-}
-
 #if ! EFI_UNIT_TEST
 
 void idleDebug(const char *msg, percent_t value) {
@@ -134,11 +116,12 @@ void setManualIdleValvePosition(int positionPercent) {
 
 #endif /* EFI_UNIT_TEST */
 
-void IdleController::init(pid_s* idlePidConfig) {
+void IdleController::init() {
 	shouldResetPid = false;
 	mightResetPid = false;
 	wasResetPid = false;
-	m_timingPid.initPidClass(idlePidConfig);
+	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
+	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
 }
 
 int IdleController::getTargetRpm(float clt) const {
@@ -357,7 +340,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	}
 	// increase the errorAmpCoef slowly to restore the process correctly after the PID reset
 	// todo: move restoreAfterPidResetTimeUs to idle?
-	efitimeus_t timeSincePidResetUs = nowUs - /*engine->idle.*/restoreAfterPidResetTimeUs;
+	efitimeus_t timeSincePidResetUs = nowUs - restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
 	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*engineConfiguration->pidAfterResetDampingPeriodMs*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
@@ -485,7 +468,7 @@ void IdleController::onSlowCallback() {
 }
 
 static void applyPidSettings() {
-	getIdlePid()->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
+	engine->module<IdleController>().unmock().getIdlePid()->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
 }
 
 void setDefaultIdleParameters() {
@@ -559,9 +542,7 @@ void startIdleBench(void) {
 #endif /* EFI_UNIT_TEST */
 
 void startIdleThread() {
-	engine->module<IdleController>().unmock().init(&engineConfiguration->idleTimingPid);
-
-	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
+	engine->module<IdleController>().unmock().init();
 
 #if ! EFI_UNIT_TEST
 	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via

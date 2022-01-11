@@ -24,11 +24,10 @@ TEST(idle_v2, timingPid) {
 
 	engineConfiguration->useIdleTimingPidControl = true;
 
-	pid_s pidCfg{};
-	pidCfg.pFactor = 0.1;
-	pidCfg.minValue = -10;
-	pidCfg.maxValue = 10;
-	dut.init(&pidCfg);
+	engineConfiguration->idleTimingPid.pFactor = 0.1;
+	engineConfiguration->idleTimingPid.minValue = -10;
+	engineConfiguration->idleTimingPid.maxValue = 10;
+	dut.init();
 
 	// Check that out of idle mode it doesn't do anything
 	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1050, 1000, ICP::Cranking));
@@ -300,6 +299,7 @@ extern int timeNowUs;
 TEST(idle_v2, closedLoopBasic) {
 	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
+	dut.init();
 
 	// Not testing PID here, so we can set very simple PID gains
 	engineConfiguration->idleRpmPid.pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
@@ -327,6 +327,8 @@ TEST(idle_v2, closedLoopBasic) {
 TEST(idle_v2, closedLoopDeadzone) {
 	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
+	dut.init();
+
 
 	// Not testing PID here, so we can set very simple PID gains
 	engineConfiguration->idleRpmPid.pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
