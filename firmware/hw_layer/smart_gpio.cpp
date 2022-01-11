@@ -100,8 +100,23 @@ struct mc33972_config mc33972 = {
 static OutputPin l9779Cs;
 struct l9779_config l9779_cfg = {
 	.spi_bus = NULL,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		.ssport = NULL,
+		.sspad = 0,
+		.cr1 =
+			SPI_CR1_16BIT_MODE |
+			SPI_CR1_SSM |
+			SPI_CR1_SSI |
+			//SPI_CR1_LSBFIRST |	//MSB first
+			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16, up to 8 MHz
+			SPI_CR1_MSTR |
+			SPI_CR1_CPHA |
+			0,
+		.cr2 = SPI_CR2_16BIT_MODE
+	},
 };
-
 #endif /* (BOARD_L9779_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
@@ -205,6 +220,19 @@ void initSmartGpio() {
 		efiAssertVoid(OBD_PCM_Processor_Fault, ret == MC33972_PIN_1, "mc33972");
 	}
 #endif /* (BOARD_MC33972_COUNT > 0) */
+
+#if (BOARD_L9779_COUNT > 0)
+	if (isBrainPinValid(engineConfiguration->l9779_cs)) {
+		// todo: reuse initSpiCs method?
+		l9779_cfg.spi_config.ssport = getHwPort("l9779 CS", engineConfiguration->l9779_cs);
+		l9779_cfg.spi_config.sspad = getHwPin("l9779 CS", engineConfiguration->l9779_cs);
+		l9779_cfg.spi_bus = getSpiDevice(engineConfiguration->l9779spiDevice);
+		// todo: propogate 'basePinOffset' parameter
+		int ret = l9779_add(L9779_IGN_1, 0, &l9779_cfg);
+
+		efiAssertVoid(OBD_PCM_Processor_Fault, ret == L9779_IGN_1, "l9779");
+	}
+#endif /* (BOARD_L9779_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
 	if (isBrainPinValid(engineConfiguration->tle8888_cs)) {
