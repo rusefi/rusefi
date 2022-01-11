@@ -7,24 +7,7 @@
  *
  *
  * @date May 23, 2013
- * @author Andrey Belomutskiy, (c) 2012-2020
- *
- * enable verbose_idle
- * disable verbose_idle
- *
- * This file is part of rusEfi - see http://rusefi.com
- *
- * rusEfi is free software; you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
- *
- * rusEfi is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- *
+ * @author Andrey Belomutskiy, (c) 2012-2022
  */
 
 #include "pch.h"
@@ -40,21 +23,22 @@
 #include "stepper.h"
 #endif
 
-int IdleController::getTargetRpm(float clt) const {
-	auto target = interpolate2d(clt, engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm);
+int IdleController::getTargetRpm(float clt) {
+	targetRpmByClt = interpolate2d(clt, engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm);
 
 	// Bump for AC
-	target += engine->acSwitchState ? engineConfiguration->acIdleRpmBump : 0;
+	targetRpmAcBump = engine->acSwitchState ? engineConfiguration->acIdleRpmBump : 0;
 
-	return target;
+	return targetRpmByClt + targetRpmAcBump;
 }
 
-IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) const {
+IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
 	}
+	badTps = !tps;
 
-	if (!tps) {
+	if (badTps) {
 		// If the TPS has failed, assume the engine is running
 		return Phase::Running;
 	}
@@ -66,18 +50,21 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 
 	// If rpm too high (but throttle not pressed), we're coasting
 	int maximumIdleRpm = targetRpm + engineConfiguration->idlePidRpmUpperLimit;
-	if (rpm > maximumIdleRpm) {
+	looksLikeCoasting = rpm > maximumIdleRpm;
+	if (looksLikeCoasting) {
 		return Phase::Coasting;
 	}
 
 	// If the vehicle is moving too quickly, disable CL idle
 	auto maxVss = engineConfiguration->maxIdleVss;
-	if (maxVss != 0 && vss > maxVss) {
+	looksLikeRunning = maxVss != 0 && vss > maxVss;
+	if (looksLikeRunning) {
 		return Phase::Running;
 	}
 
 	// If still in the cranking taper, disable closed loop idle
-	if (crankingTaperFraction < 1) {
+	looksLikeCrankToIdle = crankingTaperFraction < 1;
+	if (looksLikeCrankToIdle) {
 		return Phase::CrankToIdleTaper;
 	}
 
@@ -100,7 +87,7 @@ float IdleController::getCrankingOpenLoop(float clt) const {
 	return engineConfiguration->crankingIACposition * mult;
 }
 
-float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
+percent_t IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 	float running =
 		engineConfiguration->manIdlePosition		// Base idle position (slider)
 		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
@@ -120,25 +107,27 @@ float IdleController::getRunningOpenLoop(float clt, SensorResult tps) const {
 	return clampF(0, running, 100);
 }
 
-float IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) {
-	float cranking = getCrankingOpenLoop(clt);
+percent_t IdleController::getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) {
+	percent_t crankingValvePosition = getCrankingOpenLoop(clt);
 
+	isCoasting = phase == Phase::Cranking;
 	// if we're cranking, nothing more to do.
-	if (phase == Phase::Cranking) {
-		return cranking;
+	if (isCoasting) {
+		return crankingValvePosition;
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
 	// TODO: this should be a table of open loop mult vs. RPM, not vs. clt
-	if (engineConfiguration->useIacTableForCoasting && phase == Phase::Coasting) {
+	useIacTableForCoasting = engineConfiguration->useIacTableForCoasting && phase == Phase::Coasting;
+	if (useIacTableForCoasting) {
 		return interpolate2d(clt, engineConfiguration->iacCoastingBins, engineConfiguration->iacCoasting);
 	}
 
-	float running = getRunningOpenLoop(clt, tps);
+	percent_t running = getRunningOpenLoop(clt, tps);
 
 	// Interpolate between cranking and running over a short time
 	// This clamps once you fall off the end, so no explicit check for >1 required
-	return interpolateClamped(0, cranking, 1, running, crankingTaperFraction);
+	return interpolateClamped(0, crankingValvePosition, 1, running, crankingTaperFraction);
 }
 
 float IdleController::getIdleTimingAdjustment(int rpm) {
@@ -189,12 +178,12 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	auto idlePid = getIdlePid();
 
 	if (shouldResetPid) {
+		needReset = idlePid->getIntegration() <= 0 || mustResetPid;
 		// we reset only if I-term is negative, because the positive I-term is good - it keeps RPM from dropping too low
-		if (idlePid->getIntegration() <= 0 || mustResetPid) {
+		if (needReset) {
 			idlePid->reset();
 			mustResetPid = false;
 		}
-//			alternatorPidResetCounter++;
 		shouldResetPid = false;
 		wasResetPid = true;
 	}
@@ -205,7 +194,8 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 	efitimeus_t nowUs = getTimeNowUs();
 
-	if (phase != IIdleController::Phase::Idling) {
+	notIdling = phase != IIdleController::Phase::Idling;
+	if (notIdling) {
 		// Don't store old I and D terms if PID doesn't work anymore.
 		// Otherwise they will affect the idle position much later, when the throttle is closed.
 		if (mightResetPid) {
@@ -223,7 +213,8 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// #1553 we need to give FSIO variable offset or minValue a chance
 	bool acToggleJustTouched = (nowUs - engine->acSwitchLastChangeTime) < MS2US(500);
 	// check if within the dead zone
-	if (!acToggleJustTouched && absI(rpm - targetRpm) <= engineConfiguration->idlePidRpmDeadZone) {
+	isInDeadZone = !acToggleJustTouched && absI(rpm - targetRpm) <= engineConfiguration->idlePidRpmDeadZone;
+	if (isInDeadZone) {
 		idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything
 		return m_lastAutomaticPosition;
@@ -277,7 +268,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	return newValue;
 }
 
-	float IdleController::getIdlePosition() {
+float IdleController::getIdlePosition() {
 		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
 		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
 		#ifdef HARDWARE_CI
@@ -329,7 +320,8 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 		percent_t iacPosition;
 
-		if (engine->timeToStopBlip != 0) {
+		isBlipping = engine->timeToStopBlip != 0;
+		if (isBlipping) {
 			iacPosition = engine->blipIdlePosition;
 			idleState = BLIP;
 		} else {
@@ -337,8 +329,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 			iacPosition = getOpenLoop(phase, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
 
+			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 			// If TPS is working and automatic mode enabled, add any automatic correction
-			if (tps.Valid && engineConfiguration->idleMode == IM_AUTO) {
+			if (useClosedLoop) {
 				iacPosition += getClosedLoop(phase, tps.Value, rpm, targetRpm);
 			}
 

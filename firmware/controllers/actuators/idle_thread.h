@@ -22,8 +22,8 @@ struct IIdleController {
 		Running,	// On throttle
 	};
 
-	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) const = 0;
-	virtual int getTargetRpm(float clt) const = 0;
+	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) = 0;
+	virtual int getTargetRpm(float clt) = 0;
 	virtual float getCrankingOpenLoop(float clt) const = 0;
 	virtual float getRunningOpenLoop(float clt, SensorResult tps) const = 0;
 	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) = 0;
@@ -40,16 +40,16 @@ public:
 	float getIdlePosition();
 
 	// TARGET DETERMINATION
-	int getTargetRpm(float clt) const override;
+	int getTargetRpm(float clt) override;
 
 	// PHASE DETERMINATION: what is the driver trying to do right now?
-	Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) const override;
+	Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) override;
 	float getCrankingTaperFraction() const override;
 
 	// OPEN LOOP CORRECTIONS
-	float getCrankingOpenLoop(float clt) const override;
-	float getRunningOpenLoop(float clt, SensorResult tps) const override;
-	float getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) override;
+	percent_t getCrankingOpenLoop(float clt) const override;
+	percent_t getRunningOpenLoop(float clt, SensorResult tps) const override;
+	percent_t getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) override;
 
 	float getIdleTimingAdjustment(int rpm);
 	float getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase);
