@@ -30,8 +30,11 @@ public class Range {
     public static Range create(Token startToken, Token stopToken) {
         int start = startToken.getStartIndex();
         int stop = stopToken.getStopIndex() + 1;
-        if (stop < start)
-            throw new IllegalStateException("Order issue " + startToken + "/" + stopToken);
+        if (stop < start) {
+            // this happens in case of parsing error
+            // we are using CPP14 parser while we are using fancier version of C++ maybe that's a contributing factor?
+            return null;
+        }
         return new Range(startToken, stopToken);
     }
 

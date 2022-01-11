@@ -20,6 +20,7 @@ import com.rusefi.ui.livedocs.RefreshActions;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.*;
@@ -103,10 +104,19 @@ public class LiveDataParserPanel {
         }
     }
 
+    @NotNull
     public static String getContent(Class<?> clazz, String fileName) throws IOException, URISyntaxException {
+        String contentOrNull = getContentOrNull(clazz, fileName);
+        if (contentOrNull == null)
+            return fileName + " getResourceAsStream not found";
+        return contentOrNull;
+    }
+
+    @Nullable
+    public static String getContentOrNull(Class<?> clazz, String fileName) throws IOException {
         InputStream cpp = clazz.getResourceAsStream("/c_sources/" + fileName);
         if (cpp == null)
-            return fileName + " getResourceAsStream not found";
+            return null;
         String line;
 
         StringBuilder result = new StringBuilder();

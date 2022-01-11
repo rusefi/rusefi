@@ -150,7 +150,11 @@ public class CodeWalkthrough {
                         color = isAlive == BranchingState.TRUE ? ACTIVE_STATEMENT : PASSIVE_CODE;
                     }
                 }
-                Range range = new Range(ctx);
+                Range range = Range.create(ctx.start, ctx.stop);
+                if (range == null) {
+                    // parsing error sorry we have to bail out
+                    return;
+                }
                 if (log.debugEnabled())
                     log.info(color + " for " + sourceCode.substring(range.getStart(), range.getStop()));
                 painter.paintBackground(color, range);
