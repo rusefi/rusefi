@@ -212,7 +212,7 @@ static const void * getStructAddr(live_data_e structId) {
 //		return static_cast<pid_state_s*>(getIdlePid());
 //#endif /* EFI_IDLE_CONTROL */
 	case LDS_idle_state:
-		return static_cast<idle_state_s*>(&engine->idle);
+		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
 	case LDS_tps_accel_state:
 		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
 	case LDS_main_relay:

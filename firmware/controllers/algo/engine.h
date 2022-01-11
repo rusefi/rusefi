@@ -385,7 +385,6 @@ public:
 	 */
 	void onTriggerSignalEvent();
 	EngineState engineState;
-	idle_state_s idle;
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
 	 */
