@@ -269,28 +269,21 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 }
 
 float IdleController::getIdlePosition() {
-		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
-		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
-		#ifdef HARDWARE_CI
-			return engineConfiguration->manIdlePosition;
-		#endif
-
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
-	 * working thread,
-	 * @see stepper.cpp
+	 * working thread see stepper.cpp
 	 */
-
 		getIdlePid()->iTermMin = engineConfiguration->idlerpmpid_iTermMin;
 		getIdlePid()->iTermMax = engineConfiguration->idlerpmpid_iTermMax;
-
 
 		// On failed sensor, use 0 deg C - should give a safe highish idle
 		float clt = Sensor::getOrZero(SensorType::Clt);
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 
+        // this variable is here to make Live View happier
+        useInstantRpmForIdle = engineConfiguration->useInstantRpmForIdle;
 		float rpm;
-		if (engineConfiguration->useInstantRpmForIdle) {
+		if (useInstantRpmForIdle) {
 			rpm = engine->triggerCentral.triggerState.getInstantRpm();
 		} else {
 			rpm = GET_RPM();
@@ -310,7 +303,8 @@ float IdleController::getIdlePosition() {
 
 		bool isAutomaticIdle = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 
-		if (engineConfiguration->isVerboseIAC && isAutomaticIdle) {
+        isVerboseIAC = engineConfiguration->isVerboseIAC && isAutomaticIdle;
+		if (isVerboseIAC) {
 			efiPrintf("Idle state %s", getIdle_state_e(idleState));
 			getIdlePid()->showPidStatus("idle");
 		}

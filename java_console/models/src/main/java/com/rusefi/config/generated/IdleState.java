@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Jan 10 21:12:38 EST 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Jan 11 14:08:37 EST 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -25,23 +25,23 @@ public class IdleState {
 	public static final Field LOOKSLIKERUNNING = Field.create("LOOKSLIKERUNNING", 16, FieldType.BIT, 12);
 	public static final Field LOOKSLIKECOASTING = Field.create("LOOKSLIKECOASTING", 16, FieldType.BIT, 13);
 	public static final Field LOOKSLIKECRANKTOIDLE = Field.create("LOOKSLIKECRANKTOIDLE", 16, FieldType.BIT, 14);
-	public static final Field UNUSEDBIT_19_15 = Field.create("UNUSEDBIT_19_15", 16, FieldType.BIT, 15);
-	public static final Field UNUSEDBIT_19_16 = Field.create("UNUSEDBIT_19_16", 16, FieldType.BIT, 16);
-	public static final Field UNUSEDBIT_19_17 = Field.create("UNUSEDBIT_19_17", 16, FieldType.BIT, 17);
-	public static final Field UNUSEDBIT_19_18 = Field.create("UNUSEDBIT_19_18", 16, FieldType.BIT, 18);
-	public static final Field UNUSEDBIT_19_19 = Field.create("UNUSEDBIT_19_19", 16, FieldType.BIT, 19);
-	public static final Field UNUSEDBIT_19_20 = Field.create("UNUSEDBIT_19_20", 16, FieldType.BIT, 20);
-	public static final Field UNUSEDBIT_19_21 = Field.create("UNUSEDBIT_19_21", 16, FieldType.BIT, 21);
-	public static final Field UNUSEDBIT_19_22 = Field.create("UNUSEDBIT_19_22", 16, FieldType.BIT, 22);
-	public static final Field UNUSEDBIT_19_23 = Field.create("UNUSEDBIT_19_23", 16, FieldType.BIT, 23);
-	public static final Field UNUSEDBIT_19_24 = Field.create("UNUSEDBIT_19_24", 16, FieldType.BIT, 24);
-	public static final Field UNUSEDBIT_19_25 = Field.create("UNUSEDBIT_19_25", 16, FieldType.BIT, 25);
-	public static final Field UNUSEDBIT_19_26 = Field.create("UNUSEDBIT_19_26", 16, FieldType.BIT, 26);
-	public static final Field UNUSEDBIT_19_27 = Field.create("UNUSEDBIT_19_27", 16, FieldType.BIT, 27);
-	public static final Field UNUSEDBIT_19_28 = Field.create("UNUSEDBIT_19_28", 16, FieldType.BIT, 28);
-	public static final Field UNUSEDBIT_19_29 = Field.create("UNUSEDBIT_19_29", 16, FieldType.BIT, 29);
-	public static final Field UNUSEDBIT_19_30 = Field.create("UNUSEDBIT_19_30", 16, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_19_31 = Field.create("UNUSEDBIT_19_31", 16, FieldType.BIT, 31);
+	public static final Field USEINSTANTRPMFORIDLE = Field.create("USEINSTANTRPMFORIDLE", 16, FieldType.BIT, 15);
+	public static final Field ISVERBOSEIAC = Field.create("ISVERBOSEIAC", 16, FieldType.BIT, 16);
+	public static final Field UNUSEDBIT_21_17 = Field.create("UNUSEDBIT_21_17", 16, FieldType.BIT, 17);
+	public static final Field UNUSEDBIT_21_18 = Field.create("UNUSEDBIT_21_18", 16, FieldType.BIT, 18);
+	public static final Field UNUSEDBIT_21_19 = Field.create("UNUSEDBIT_21_19", 16, FieldType.BIT, 19);
+	public static final Field UNUSEDBIT_21_20 = Field.create("UNUSEDBIT_21_20", 16, FieldType.BIT, 20);
+	public static final Field UNUSEDBIT_21_21 = Field.create("UNUSEDBIT_21_21", 16, FieldType.BIT, 21);
+	public static final Field UNUSEDBIT_21_22 = Field.create("UNUSEDBIT_21_22", 16, FieldType.BIT, 22);
+	public static final Field UNUSEDBIT_21_23 = Field.create("UNUSEDBIT_21_23", 16, FieldType.BIT, 23);
+	public static final Field UNUSEDBIT_21_24 = Field.create("UNUSEDBIT_21_24", 16, FieldType.BIT, 24);
+	public static final Field UNUSEDBIT_21_25 = Field.create("UNUSEDBIT_21_25", 16, FieldType.BIT, 25);
+	public static final Field UNUSEDBIT_21_26 = Field.create("UNUSEDBIT_21_26", 16, FieldType.BIT, 26);
+	public static final Field UNUSEDBIT_21_27 = Field.create("UNUSEDBIT_21_27", 16, FieldType.BIT, 27);
+	public static final Field UNUSEDBIT_21_28 = Field.create("UNUSEDBIT_21_28", 16, FieldType.BIT, 28);
+	public static final Field UNUSEDBIT_21_29 = Field.create("UNUSEDBIT_21_29", 16, FieldType.BIT, 29);
+	public static final Field UNUSEDBIT_21_30 = Field.create("UNUSEDBIT_21_30", 16, FieldType.BIT, 30);
+	public static final Field UNUSEDBIT_21_31 = Field.create("UNUSEDBIT_21_31", 16, FieldType.BIT, 31);
 	public static final Field TARGETRPMBYCLT = Field.create("TARGETRPMBYCLT", 20, FieldType.INT);
 	public static final Field TARGETRPMACBUMP = Field.create("TARGETRPMACBUMP", 24, FieldType.INT);
 	public static final Field[] VALUES = {
@@ -64,23 +64,23 @@ public class IdleState {
 	LOOKSLIKERUNNING,
 	LOOKSLIKECOASTING,
 	LOOKSLIKECRANKTOIDLE,
-	UNUSEDBIT_19_15,
-	UNUSEDBIT_19_16,
-	UNUSEDBIT_19_17,
-	UNUSEDBIT_19_18,
-	UNUSEDBIT_19_19,
-	UNUSEDBIT_19_20,
-	UNUSEDBIT_19_21,
-	UNUSEDBIT_19_22,
-	UNUSEDBIT_19_23,
-	UNUSEDBIT_19_24,
-	UNUSEDBIT_19_25,
-	UNUSEDBIT_19_26,
-	UNUSEDBIT_19_27,
-	UNUSEDBIT_19_28,
-	UNUSEDBIT_19_29,
-	UNUSEDBIT_19_30,
-	UNUSEDBIT_19_31,
+	USEINSTANTRPMFORIDLE,
+	ISVERBOSEIAC,
+	UNUSEDBIT_21_17,
+	UNUSEDBIT_21_18,
+	UNUSEDBIT_21_19,
+	UNUSEDBIT_21_20,
+	UNUSEDBIT_21_21,
+	UNUSEDBIT_21_22,
+	UNUSEDBIT_21_23,
+	UNUSEDBIT_21_24,
+	UNUSEDBIT_21_25,
+	UNUSEDBIT_21_26,
+	UNUSEDBIT_21_27,
+	UNUSEDBIT_21_28,
+	UNUSEDBIT_21_29,
+	UNUSEDBIT_21_30,
+	UNUSEDBIT_21_31,
 	TARGETRPMBYCLT,
 	TARGETRPMACBUMP,
 	};
