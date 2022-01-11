@@ -40,90 +40,6 @@
 #include "stepper.h"
 #endif
 
-#if ! EFI_UNIT_TEST
-
-void idleDebug(const char *msg, percent_t value) {
-	efiPrintf("idle debug: %s%.2f", msg, value);
-}
-
-static void showIdleInfo() {
-	const char * idleModeStr = getIdle_mode_e(engineConfiguration->idleMode);
-	efiPrintf("useStepperIdle=%s useHbridges=%s useRawOutput=%s",
-			boolToString(engineConfiguration->useStepperIdle),
-			boolToString(engineConfiguration->useHbridgesToDriveIdleStepper),
-			boolToString(engineConfiguration->useRawOutputToDriveIdleStepper));
-	efiPrintf("idleMode=%s position=%.2f",
-			idleModeStr, getIdlePosition());
-
-	if (engineConfiguration->useStepperIdle) {
-		if (engineConfiguration->useRawOutputToDriveIdleStepper) {
-			efiPrintf(" A+=%s", hwPortname(engineConfiguration->stepper_raw_output[0]));
-			efiPrintf(" A-=%s", hwPortname(engineConfiguration->stepper_raw_output[1]));
-			efiPrintf(" B+=%s", hwPortname(engineConfiguration->stepper_raw_output[2]));
-			efiPrintf(" B-=%s", hwPortname(engineConfiguration->stepper_raw_output[3]));
-		} else if (engineConfiguration->useHbridgesToDriveIdleStepper) {
-			efiPrintf("Coil A:");
-			efiPrintf(" pin1=%s", hwPortname(engineConfiguration->stepperDcIo[0].directionPin1));
-			efiPrintf(" pin2=%s", hwPortname(engineConfiguration->stepperDcIo[0].directionPin2));
-			showDcMotorInfo(2);
-			efiPrintf("Coil B:");
-			efiPrintf(" pin1=%s", hwPortname(engineConfiguration->stepperDcIo[1].directionPin1));
-			efiPrintf(" pin2=%s", hwPortname(engineConfiguration->stepperDcIo[1].directionPin2));
-			showDcMotorInfo(3);
-		} else {
-			efiPrintf("directionPin=%s reactionTime=%.2f", hwPortname(engineConfiguration->idle.stepperDirectionPin),
-					engineConfiguration->idleStepperReactionTime);
-			efiPrintf("stepPin=%s steps=%d", hwPortname(engineConfiguration->idle.stepperStepPin),
-					engineConfiguration->idleStepperTotalSteps);
-			efiPrintf("enablePin=%s/%d", hwPortname(engineConfiguration->stepperEnablePin),
-					engineConfiguration->stepperEnablePinMode);
-		}
-	} else {
-		if (!engineConfiguration->isDoubleSolenoidIdle) {
-			efiPrintf("idle valve freq=%d on %s", engineConfiguration->idle.solenoidFrequency,
-					hwPortname(engineConfiguration->idle.solenoidPin));
-		} else {
-			efiPrintf("idle valve freq=%d on %s", engineConfiguration->idle.solenoidFrequency,
-					hwPortname(engineConfiguration->idle.solenoidPin));
-			efiPrintf(" and %s", hwPortname(engineConfiguration->secondSolenoidPin));
-		}
-	}
-
-	if (engineConfiguration->idleMode == IM_AUTO) {
-		getIdlePid()->showPidStatus("idle");
-	}
-}
-
-void setIdleMode(idle_mode_e value) {
-	engineConfiguration->idleMode = value ? IM_AUTO : IM_MANUAL;
-	showIdleInfo();
-}
-
-percent_t getIdlePosition() {
-	return engine->module<IdleController>().unmock().currentIdlePosition;
-}
-
-void setManualIdleValvePosition(int positionPercent) {
-	if (positionPercent < 1 || positionPercent > 99)
-		return;
-	efiPrintf("setting idle valve position %d", positionPercent);
-#if ! EFI_UNIT_TEST
-	showIdleInfo();
-#endif /* EFI_UNIT_TEST */
-	// todo: this is not great that we have to write into configuration here
-	engineConfiguration->manIdlePosition = positionPercent;
-}
-
-#endif /* EFI_UNIT_TEST */
-
-void IdleController::init() {
-	shouldResetPid = false;
-	mightResetPid = false;
-	wasResetPid = false;
-	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
-	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
-}
-
 int IdleController::getTargetRpm(float clt) const {
 	auto target = interpolate2d(clt, engineConfiguration->cltIdleRpmBins, engineConfiguration->cltIdleRpm);
 
@@ -253,19 +169,6 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 
 	// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
 	return m_timingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
-}
-
-/**
- * I use this questionable feature to tune acceleration enrichment
- */
-static void blipIdle(int idlePosition, int durationMs) {
-#if ! EFI_UNIT_TEST
-	if (engine->timeToStopBlip != 0) {
-		return; // already in idle blip
-	}
-	engine->blipIdlePosition = idlePosition;
-	engine->timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
-#endif // EFI_UNIT_TEST
 }
 
 static void finishIdleTestIfNeeded() {
@@ -467,31 +370,6 @@ void IdleController::onSlowCallback() {
 	applyIACposition(position);
 }
 
-static void applyPidSettings() {
-	engine->module<IdleController>().unmock().getIdlePid()->updateFactors(engineConfiguration->idleRpmPid.pFactor, engineConfiguration->idleRpmPid.iFactor, engineConfiguration->idleRpmPid.dFactor);
-}
-
-void setDefaultIdleParameters() {
-	engineConfiguration->idleRpmPid.pFactor = 0.1f;
-	engineConfiguration->idleRpmPid.iFactor = 0.05f;
-	engineConfiguration->idleRpmPid.dFactor = 0.0f;
-
-	engineConfiguration->idlerpmpid_iTermMin = -20;
-	engineConfiguration->idlerpmpid_iTermMax =  20;
-
-	// Good starting point is 10 degrees per 100 rpm, aka 0.1 deg/rpm
-	engineConfiguration->idleTimingPid.pFactor = 0.1f;
-	engineConfiguration->idleTimingPid.iFactor = 0;
-	engineConfiguration->idleTimingPid.dFactor = 0;
-
-	// Allow +- 10 degrees adjustment
-	engineConfiguration->idleTimingPid.minValue = -10;
-	engineConfiguration->idleTimingPid.minValue = 10;
-
-	// Idle region is target + 100 RPM
-	engineConfiguration->idlePidRpmUpperLimit = 100;
-}
-
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 #if ! EFI_UNIT_TEST
 	shouldResetPid = !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
@@ -499,106 +377,12 @@ void IdleController::onConfigurationChange(engine_configuration_s const * previo
 #endif
 }
 
-#if ! EFI_UNIT_TEST
-
-void setTargetIdleRpm(int value) {
-	setTargetRpmCurve(value);
-	efiPrintf("target idle RPM %d", value);
-	showIdleInfo();
-}
-
-void setIdleOffset(float value)  {
-	engineConfiguration->idleRpmPid.offset = value;
-	showIdleInfo();
-}
-
-void setIdlePFactor(float value) {
-	engineConfiguration->idleRpmPid.pFactor = value;
-	applyPidSettings();
-	showIdleInfo();
-}
-
-void setIdleIFactor(float value) {
-	engineConfiguration->idleRpmPid.iFactor = value;
-	applyPidSettings();
-	showIdleInfo();
-}
-
-void setIdleDFactor(float value) {
-	engineConfiguration->idleRpmPid.dFactor = value;
-	applyPidSettings();
-	showIdleInfo();
-}
-
-/**
- * Idle test would activate the solenoid for three seconds
- */
-void startIdleBench(void) {
-	engine->timeToStopIdleTest = getTimeNowUs() + MS2US(3000); // 3 seconds
-	efiPrintf("idle valve bench test");
-	showIdleInfo();
-}
-
-#endif /* EFI_UNIT_TEST */
-
-void startIdleThread() {
-	engine->module<IdleController>().unmock().init();
-
-#if ! EFI_UNIT_TEST
-	// todo: we still have to explicitly init all hardware on start in addition to handling configuration change via
-	// 'applyNewHardwareSettings' todo: maybe unify these two use-cases?
-	initIdleHardware();
-#endif /* EFI_UNIT_TEST */
-
-	engine->module<IdleController>().unmock().idleState = INIT;
-	engine->module<IdleController>().unmock().baseIdlePosition = -100.0f;
-	engine->module<IdleController>().unmock().currentIdlePosition = -100.0f;
-
-#if ! EFI_UNIT_TEST
-
-	addConsoleAction("idleinfo", showIdleInfo);
-
-	addConsoleActionII("blipidle", blipIdle);
-
-	// split this whole file into manual controller and auto controller? move these commands into the file
-	// which would be dedicated to just auto-controller?
-
-	addConsoleAction("idlebench", startIdleBench);
-#endif /* EFI_UNIT_TEST */
-	applyPidSettings();
+void IdleController::init() {
+	shouldResetPid = false;
+	mightResetPid = false;
+	wasResetPid = false;
+	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
+	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
 }
 
 #endif /* EFI_IDLE_CONTROL */
-
-void startPedalPins() {
-#if EFI_PROD_CODE
-	// this is neutral/no gear switch input. on Miata it's wired both to clutch pedal and neutral in gearbox
-	// this switch is not used yet
-	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-		efiSetPadMode("clutch down switch", engineConfiguration->clutchDownPin,
-				getInputMode(engineConfiguration->clutchDownPinMode));
-	}
-
-	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
-		efiSetPadMode("clutch up switch", engineConfiguration->clutchUpPin,
-				getInputMode(engineConfiguration->clutchUpPinMode));
-	}
-
-	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
-		efiSetPadMode("throttle pedal up switch", engineConfiguration->throttlePedalUpPin,
-				getInputMode(engineConfiguration->throttlePedalUpPinMode));
-	}
-
-	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-		efiSetPadMode("brake pedal switch", engineConfiguration->brakePedalPin,
-				getInputMode(engineConfiguration->brakePedalPinMode));
-	}
-#endif /* EFI_PROD_CODE */
-}
-
-void stopPedalPins() {
-	brain_pin_markUnused(activeConfiguration.clutchUpPin);
-	brain_pin_markUnused(activeConfiguration.clutchDownPin);
-	brain_pin_markUnused(activeConfiguration.throttlePedalUpPin);
-	brain_pin_markUnused(activeConfiguration.brakePedalPin);
-}
