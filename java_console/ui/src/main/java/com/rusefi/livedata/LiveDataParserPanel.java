@@ -80,11 +80,13 @@ public class LiveDataParserPanel {
         }
     };
     private final VariableValueSource valueSource;
+    private final String fileName;
     private String sourceCode;
 
     public LiveDataParserPanel(UIContext uiContext, VariableValueSource valueSource, String fileName) {
         this.uiContext = uiContext;
         this.valueSource = valueSource;
+        this.fileName = fileName;
 
         JScrollPane rightScrollPane = new JScrollPane(text,
                 VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -150,26 +152,25 @@ public class LiveDataParserPanel {
 
         // todo: technically we do not need to do the complete re-compile on fresh data arrival just repaint!
         // todo: split compilation and painting/repainting
-        parseResult = CodeWalkthrough.applyVariables(valueSource, sourceCode, new SourceCodePainter() {
-            @Override
-            public void paintBackground(Color color, Range range) {
-                AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
-            }
+        try {
+            parseResult = CodeWalkthrough.applyVariables(valueSource, sourceCode, new SourceCodePainter() {
+                @Override
+                public void paintBackground(Color color, Range range) {
+                    AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
+                    styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
+                }
 
-            @Override
-            public void paintForeground(Color color, Range range) {
-                AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Foreground, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
-            }
-        }, tree);
+                @Override
+                public void paintForeground(Color color, Range range) {
+                    AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Foreground, color);
+                    styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
+                }
+            }, tree);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("While " + fileName, e);
+        }
+
         text.setDocument(styledDocument);
-    }
-
-    @NotNull
-    public static JPanel createLiveDataParserContent(UIContext uiContext, LiveDataView view) {
-        LiveDataParserPanel panel = createLiveDataParserPanel(uiContext, view.getLiveDataE(), view.getValues(), view.getFileName());
-        return panel.getContent();
     }
 
     @NotNull

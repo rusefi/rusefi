@@ -6,6 +6,7 @@ import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import com.rusefi.ui.util.FrameHelper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
@@ -20,7 +21,7 @@ public class LiveDataParserPanelSandbox {
 
         UIContext context = new UIContext();
 
-        JPanel panel = LiveDataParserPanel.createLiveDataParserContent(context,
+        JPanel panel = createLiveDataParserContent(context,
                 liveDataView);
 
         Field[] values = StateDictionary.INSTANCE.getFields(liveDataView.getLiveDataE());
@@ -35,5 +36,11 @@ public class LiveDataParserPanelSandbox {
         );
 
         new FrameHelper().showFrame(panel);
+    }
+
+    @NotNull
+    private static JPanel createLiveDataParserContent(UIContext uiContext, LiveDataView view) {
+        LiveDataParserPanel panel = LiveDataParserPanel.createLiveDataParserPanel(uiContext, view.getLiveDataE(), view.getValues(), view.getFileName());
+        return panel.getContent();
     }
 }
