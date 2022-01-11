@@ -173,7 +173,7 @@ public class LiveDataParserPanel {
     }
 
     @NotNull
-    private static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
+    public static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
         AtomicReference<byte[]> reference = new AtomicReference<>();
 
         LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, name -> {
