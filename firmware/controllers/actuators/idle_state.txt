@@ -19,6 +19,14 @@ bit needReset
 bit isInDeadZone
 bit isBlipping
 bit useClosedLoop
+bit badTps
+bit looksLikeRunning
+bit looksLikeCoasting
+bit looksLikeCrankToIdle
+
+
+int targetRpmByClt
+int targetRpmAcBump
 
 ! end of idle_state_s structure definition
 end_struct

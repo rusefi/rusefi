@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Jan 11 01:55:22 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Jan 10 21:12:38 EST 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -66,69 +66,77 @@ struct idle_state_s {
 	bool useClosedLoop : 1 {};
 	/**
 	offset 16 bit 11 */
-	bool unusedBit_15_11 : 1 {};
+	bool badTps : 1 {};
 	/**
 	offset 16 bit 12 */
-	bool unusedBit_15_12 : 1 {};
+	bool looksLikeRunning : 1 {};
 	/**
 	offset 16 bit 13 */
-	bool unusedBit_15_13 : 1 {};
+	bool looksLikeCoasting : 1 {};
 	/**
 	offset 16 bit 14 */
-	bool unusedBit_15_14 : 1 {};
+	bool looksLikeCrankToIdle : 1 {};
 	/**
 	offset 16 bit 15 */
-	bool unusedBit_15_15 : 1 {};
+	bool unusedBit_19_15 : 1 {};
 	/**
 	offset 16 bit 16 */
-	bool unusedBit_15_16 : 1 {};
+	bool unusedBit_19_16 : 1 {};
 	/**
 	offset 16 bit 17 */
-	bool unusedBit_15_17 : 1 {};
+	bool unusedBit_19_17 : 1 {};
 	/**
 	offset 16 bit 18 */
-	bool unusedBit_15_18 : 1 {};
+	bool unusedBit_19_18 : 1 {};
 	/**
 	offset 16 bit 19 */
-	bool unusedBit_15_19 : 1 {};
+	bool unusedBit_19_19 : 1 {};
 	/**
 	offset 16 bit 20 */
-	bool unusedBit_15_20 : 1 {};
+	bool unusedBit_19_20 : 1 {};
 	/**
 	offset 16 bit 21 */
-	bool unusedBit_15_21 : 1 {};
+	bool unusedBit_19_21 : 1 {};
 	/**
 	offset 16 bit 22 */
-	bool unusedBit_15_22 : 1 {};
+	bool unusedBit_19_22 : 1 {};
 	/**
 	offset 16 bit 23 */
-	bool unusedBit_15_23 : 1 {};
+	bool unusedBit_19_23 : 1 {};
 	/**
 	offset 16 bit 24 */
-	bool unusedBit_15_24 : 1 {};
+	bool unusedBit_19_24 : 1 {};
 	/**
 	offset 16 bit 25 */
-	bool unusedBit_15_25 : 1 {};
+	bool unusedBit_19_25 : 1 {};
 	/**
 	offset 16 bit 26 */
-	bool unusedBit_15_26 : 1 {};
+	bool unusedBit_19_26 : 1 {};
 	/**
 	offset 16 bit 27 */
-	bool unusedBit_15_27 : 1 {};
+	bool unusedBit_19_27 : 1 {};
 	/**
 	offset 16 bit 28 */
-	bool unusedBit_15_28 : 1 {};
+	bool unusedBit_19_28 : 1 {};
 	/**
 	offset 16 bit 29 */
-	bool unusedBit_15_29 : 1 {};
+	bool unusedBit_19_29 : 1 {};
 	/**
 	offset 16 bit 30 */
-	bool unusedBit_15_30 : 1 {};
+	bool unusedBit_19_30 : 1 {};
 	/**
 	offset 16 bit 31 */
-	bool unusedBit_15_31 : 1 {};
-	/** total size 20*/
+	bool unusedBit_19_31 : 1 {};
+	/**
+	 * offset 20
+	 */
+	int targetRpmByClt = (int)0;
+	/**
+	 * offset 24
+	 */
+	int targetRpmAcBump = (int)0;
+	/** total size 28*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Tue Jan 11 01:55:22 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/idle_state.txt Mon Jan 10 21:12:38 EST 2022
