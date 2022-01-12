@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jan 08 21:38:58 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jan 12 21:36:23 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -201,17 +201,16 @@ struct ts_outputs_s {
 	 */
 	uint16_t tpsADC = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_MAF@@
 	V
 	 * offset 26
 	 */
-	scaled_channel<uint16_t, 1000, 1> MAFValue = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> rawMaf = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_AIR_FLOW@@
-	Kg/h
+	 * @@GAUGE_NAME_AIR_FLOW_MEASURED@@
+	kg/h
 	 * offset 28
 	 */
-	scaled_channel<uint16_t, 10, 1> massAirFlowValue = (uint16_t)0;
+	scaled_channel<uint16_t, 10, 1> mafMeasured = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_MAP@@
 	kPa
@@ -900,9 +899,20 @@ struct ts_outputs_s {
 	 */
 	float m_pressureTarget_kPa = (float)0;
 	/**
+	 * @@GAUGE_NAME_AIR_FLOW_ESTIMATE@@
+	kg/h
 	 * offset 356
 	 */
-	int unusedAtTheEnd[28];
+	scaled_channel<uint16_t, 10, 1> mafEstimate = (uint16_t)0;
+	/**
+	rpm
+	 * offset 358
+	 */
+	uint16_t instantRpm = (uint16_t)0;
+	/**
+	 * offset 360
+	 */
+	uint8_t unusedAtTheEnd[108];
 	/**
 	offset 468 bit 0 */
 	bool launchSpeedCondition : 1 {};
@@ -926,79 +936,79 @@ struct ts_outputs_s {
 	bool launchActivatePinState : 1 {};
 	/**
 	offset 468 bit 7 */
-	bool unusedBit_179_7 : 1 {};
+	bool unusedBit_181_7 : 1 {};
 	/**
 	offset 468 bit 8 */
-	bool unusedBit_179_8 : 1 {};
+	bool unusedBit_181_8 : 1 {};
 	/**
 	offset 468 bit 9 */
-	bool unusedBit_179_9 : 1 {};
+	bool unusedBit_181_9 : 1 {};
 	/**
 	offset 468 bit 10 */
-	bool unusedBit_179_10 : 1 {};
+	bool unusedBit_181_10 : 1 {};
 	/**
 	offset 468 bit 11 */
-	bool unusedBit_179_11 : 1 {};
+	bool unusedBit_181_11 : 1 {};
 	/**
 	offset 468 bit 12 */
-	bool unusedBit_179_12 : 1 {};
+	bool unusedBit_181_12 : 1 {};
 	/**
 	offset 468 bit 13 */
-	bool unusedBit_179_13 : 1 {};
+	bool unusedBit_181_13 : 1 {};
 	/**
 	offset 468 bit 14 */
-	bool unusedBit_179_14 : 1 {};
+	bool unusedBit_181_14 : 1 {};
 	/**
 	offset 468 bit 15 */
-	bool unusedBit_179_15 : 1 {};
+	bool unusedBit_181_15 : 1 {};
 	/**
 	offset 468 bit 16 */
-	bool unusedBit_179_16 : 1 {};
+	bool unusedBit_181_16 : 1 {};
 	/**
 	offset 468 bit 17 */
-	bool unusedBit_179_17 : 1 {};
+	bool unusedBit_181_17 : 1 {};
 	/**
 	offset 468 bit 18 */
-	bool unusedBit_179_18 : 1 {};
+	bool unusedBit_181_18 : 1 {};
 	/**
 	offset 468 bit 19 */
-	bool unusedBit_179_19 : 1 {};
+	bool unusedBit_181_19 : 1 {};
 	/**
 	offset 468 bit 20 */
-	bool unusedBit_179_20 : 1 {};
+	bool unusedBit_181_20 : 1 {};
 	/**
 	offset 468 bit 21 */
-	bool unusedBit_179_21 : 1 {};
+	bool unusedBit_181_21 : 1 {};
 	/**
 	offset 468 bit 22 */
-	bool unusedBit_179_22 : 1 {};
+	bool unusedBit_181_22 : 1 {};
 	/**
 	offset 468 bit 23 */
-	bool unusedBit_179_23 : 1 {};
+	bool unusedBit_181_23 : 1 {};
 	/**
 	offset 468 bit 24 */
-	bool unusedBit_179_24 : 1 {};
+	bool unusedBit_181_24 : 1 {};
 	/**
 	offset 468 bit 25 */
-	bool unusedBit_179_25 : 1 {};
+	bool unusedBit_181_25 : 1 {};
 	/**
 	offset 468 bit 26 */
-	bool unusedBit_179_26 : 1 {};
+	bool unusedBit_181_26 : 1 {};
 	/**
 	offset 468 bit 27 */
-	bool unusedBit_179_27 : 1 {};
+	bool unusedBit_181_27 : 1 {};
 	/**
 	offset 468 bit 28 */
-	bool unusedBit_179_28 : 1 {};
+	bool unusedBit_181_28 : 1 {};
 	/**
 	offset 468 bit 29 */
-	bool unusedBit_179_29 : 1 {};
+	bool unusedBit_181_29 : 1 {};
 	/**
 	offset 468 bit 30 */
-	bool unusedBit_179_30 : 1 {};
+	bool unusedBit_181_30 : 1 {};
 	/**
 	offset 468 bit 31 */
-	bool unusedBit_179_31 : 1 {};
+	bool unusedBit_181_31 : 1 {};
 	/**
 	 * offset 472
 	 */
@@ -1196,4 +1206,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jan 08 21:38:58 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jan 12 21:36:23 UTC 2022
