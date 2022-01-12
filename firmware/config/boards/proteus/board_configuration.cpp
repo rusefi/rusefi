@@ -218,9 +218,19 @@ void setBoardDefaultConfiguration() {
 }
 
 void boardPrepareForStop() {
+	#ifdef STM32F7XX
 	// enable EXTI on PD0 - CAN RX pin
 	palSetPadMode(GPIOD, 0, PAL_MODE_INPUT);
 	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
+	#endif
+
+	#ifdef STM32F4XX
+	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT);
+	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
+
+	#endif
+
+	
 }
 
 void boardPrepareForStandby() {
@@ -229,6 +239,12 @@ void boardPrepareForStandby() {
 #ifdef STM32F7XX
 	PWR->CSR2 |= PWR_CSR2_EWUP1; //EWUP1: Enable Wakeup pin for PA0
 	PWR->CR2 |= PWR_CR2_CWUPF1; //Clear Wakeup Pin flag for PA0
+#endif
+
+#ifdef STM32F4XX
+	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
+	PWR->CSR |= PWR_CSR_EWUP; //Enable Wakeup Pin for PA0
+
 #endif
 
 #ifdef STM32H7XX

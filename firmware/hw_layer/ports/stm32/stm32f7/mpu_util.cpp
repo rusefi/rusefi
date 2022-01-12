@@ -186,8 +186,8 @@ void stm32_stop() {
 	enginePins.warningLedPin.setValue(0);
 
 	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
-	boardPrepareForStop();
 
+	boardPrepareForStop();
 	PWR->CSR1 |= PWR_CSR1_WUIF;
 	PWR->CR1 &= ~PWR_CR1_PDDS;	// cleared PDDS means stop mode (not standby) 
 	PWR->CR1 |= PWR_CR1_FPDS;	// turn off flash in stop mode
