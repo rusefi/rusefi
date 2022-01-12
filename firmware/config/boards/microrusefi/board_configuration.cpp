@@ -156,7 +156,7 @@ static void setupDefaultSensorInputs() {
 #endif // HW_CHECK_MODE
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setLedPins();
 	setupVbatt();
 	setupTle8888();
@@ -177,10 +177,10 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->spi3sckPin = GPIOC_10;
 }
 
-void setPinConfigurationOverrides(void) {
+void setPinConfigurationOverrides() {
 }
 
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	// why would MRE disable serial by default? we definitely have pads exposed
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
@@ -197,7 +197,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	engineConfiguration->sdCardCsPin = GPIOB_9;
@@ -240,5 +240,5 @@ void setBoardDefaultConfiguration(void) {
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }

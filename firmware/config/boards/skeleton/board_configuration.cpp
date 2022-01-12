@@ -108,11 +108,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.config.bias_resistor = 2700;
 }
 
-void setPinConfigurationOverrides(void) {
+void setPinConfigurationOverrides() {
 }
 
 // Future: configure USART3 for LIN bus and UART4 for console
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
@@ -128,7 +128,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add any board-specific code
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 
 	// Set indicator LED pins.
 	// This is often redundant with efifeatures.h or the run-time config
