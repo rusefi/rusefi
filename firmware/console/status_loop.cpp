@@ -157,10 +157,6 @@ static int packEngineMode() {
 			engineConfiguration->ignitionMode;
 }
 
-static float getAirFlowGauge() {
-	return Sensor::get(SensorType::Maf).value_or(engine->engineState.airFlow);
-}
-
 static int prevCkpEventCounter = -1;
 
 /**
@@ -555,7 +551,7 @@ static void updateRawSensors() {
 	engine->outputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 	engine->outputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	engine->outputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
-	engine->outputChannels.MAFValue = Sensor::getRaw(SensorType::Maf);
+	engine->outputChannels.rawMaf = Sensor::getRaw(SensorType::Maf);
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 }
@@ -701,6 +697,8 @@ void updateTunerStudioState() {
 
 	// offset 0
 	tsOutputChannels->RPMValue = rpm;
+	auto instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+	tsOutputChannels->instantRpm = instantRpm;
 
 	updateSensors(rpm);
 	updateFuelInfo();
@@ -709,9 +707,11 @@ void updateTunerStudioState() {
 
 	// 104
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
-	// offset 108
-	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
-	tsOutputChannels->massAirFlowValue = getAirFlowGauge();
+	
+	// Output both the estimated air flow, and measured air flow (if available)
+	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
+	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
+
 	// offset 116
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
@@ -851,8 +851,6 @@ void updateTunerStudioState() {
 		break;
 	case DBG_INSTANT_RPM:
 		{
-			float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
-			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
 
 			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
