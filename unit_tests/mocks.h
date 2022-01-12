@@ -127,4 +127,5 @@ class MockIdleController : public IIdleController {
 	MOCK_METHOD(float, getClosedLoop, (IIdleController::Phase phase, float tps, int rpm, int target), (override));
 	MOCK_METHOD(float, getCrankingTaperFraction, (), (const, override));
 	MOCK_METHOD(bool, isIdlingOrTaper, (), (const, override));
+	MOCK_METHOD(float, getIdleTimingAdjustment, (int rpm), (override));
 };
