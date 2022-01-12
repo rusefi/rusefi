@@ -998,7 +998,8 @@
 #define GAUGE_NAME_ACCEL_Z "Acceleration: Z"
 #define GAUGE_NAME_AFR "Air/Fuel Ratio"
 #define GAUGE_NAME_AFR2 "Air/Fuel Ratio 2"
-#define GAUGE_NAME_AIR_FLOW "MAF air flow"
+#define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
+#define GAUGE_NAME_AIR_FLOW_MEASURED "MAF sensor"
 #define GAUGE_NAME_AIR_MASS "air mass"
 #define GAUGE_NAME_AUX_TEMP1 "Aux temp 1"
 #define GAUGE_NAME_AUX_TEMP2 "Aux temp 2"
@@ -1863,7 +1864,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2518881692
+#define SIGNATURE_HASH 2939016507
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2386,7 +2387,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.12.kin.2518881692"
+#define TS_SIGNATURE "rusEFI 2022.01.12.kin.2939016507"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

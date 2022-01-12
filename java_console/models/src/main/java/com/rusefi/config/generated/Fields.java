@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 12 04:07:08 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 12 21:37:06 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -983,7 +983,8 @@ public class Fields {
 	public static final String GAUGE_NAME_ACCEL_Z = "Acceleration: Z";
 	public static final String GAUGE_NAME_AFR = "Air/Fuel Ratio";
 	public static final String GAUGE_NAME_AFR2 = "Air/Fuel Ratio 2";
-	public static final String GAUGE_NAME_AIR_FLOW = "MAF air flow";
+	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
+	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF sensor";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
@@ -1808,7 +1809,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 1400061660;
+	public static final int SIGNATURE_HASH = 1786642043;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2277,7 +2278,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.12.all.1400061660";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.12.all.1786642043";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
