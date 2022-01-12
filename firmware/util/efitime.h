@@ -50,9 +50,6 @@
 #define overflowDiff(now, time) ((now) - (time))
 
 #ifdef __cplusplus
-extern "C"
-{
-
 /**
  * Provide a 62-bit counter from a 32-bit counter source that wraps around.
  *
@@ -83,8 +80,6 @@ private:
 	volatile uint32_t m_upper = 0;
 };
 
-#endif /* __cplusplus */
-
 
 /**
  * 64-bit counter of microseconds (1/1 000 000 of a second) since MCU reset
@@ -95,7 +90,7 @@ private:
  * WARNING: you should use getTimeNowNt where possible for performance reasons.
  * The heaviest part is '__aeabi_ildivmod' - non-native 64 bit division
  */
-efitimeus_t getTimeNowUs(void);
+efitimeus_t getTimeNowUs();
 
 /**
  * 64-bit counter CPU cycles since MCU reset
@@ -104,22 +99,20 @@ efitimeus_t getTimeNowUs(void);
  * Lower 32 bits are enough if all we need is to measure relatively short time durations
  * (BTW 2^32 cpu cycles at 168MHz is 25.59 seconds)
  */
-efitick_t getTimeNowNt(void);
+efitick_t getTimeNowNt();
 
 /**
  * @brief   Returns the number of milliseconds since the board initialization.
  */
-efitimems_t currentTimeMillis(void);
+efitimems_t currentTimeMillis();
 
 /**
  * @brief   Current system time in seconds.
  */
-efitimesec_t getTimeNowSeconds(void);
+efitimesec_t getTimeNowSeconds();
 
 // Get a monotonically increasing (but wrapping) 32-bit timer value
-uint32_t getTimeNowLowerNt(void);
+uint32_t getTimeNowLowerNt();
 
-#ifdef __cplusplus
-}
 #endif /* __cplusplus */
 
