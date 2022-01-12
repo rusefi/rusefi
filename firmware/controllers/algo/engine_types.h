@@ -284,7 +284,7 @@ typedef enum {
 
 	DBG_INSTANT_RPM = 22,
 	UNUSED23 = 23,
-	DBG_STATUS = 24,
+	DBG_24 = 24,
 	DBG_CJ125 = 25,
 	DBG_26 = 26,
 	DBG_MAP = 27,
