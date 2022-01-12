@@ -1,6 +1,7 @@
 /**
  * @file boards/hellen/hellen128/board_configuration.cpp
  *
+ * All fabricated boards use 176 pin MCU
  *
  * @brief Configuration defaults for the hellen128 board
  *
@@ -77,8 +78,8 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
+	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
