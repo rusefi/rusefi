@@ -803,10 +803,6 @@ void updateTunerStudioState() {
 
 
 	switch (engineConfiguration->debugMode)	{
-	case DBG_STATUS:
-		tsOutputChannels->debugFloatField1 = timeSeconds;
-		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
-		break;
 	case DBG_TPS_ACCEL:
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
 		break;
