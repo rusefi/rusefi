@@ -46,7 +46,7 @@ public class LinkManager implements Closeable {
     public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue;
 
-    private String lastTriedPort = null;
+    private String lastTriedPort;
 
     private LinkConnector connector = LinkConnector.VOID;
     private boolean isStarted;
@@ -278,8 +278,8 @@ public class LinkManager implements Closeable {
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
         String[] ports = getCommPorts();
-        boolean isPortAvaliableAgain = Arrays.stream(ports).anyMatch(lastTriedPort::equals);
-        if(isPortAvaliableAgain) {
+        boolean isPortAvailableAgain = Arrays.stream(ports).anyMatch(lastTriedPort::equals);
+        if (isPortAvailableAgain) {
             connect(lastTriedPort);
         }
     }
