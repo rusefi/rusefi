@@ -562,18 +562,6 @@ enable2ndByteCanID = false
       yBins       = idleAdvance
       gauge       = RPMGauge
 
-	curve = idleVeCurve, "Idle VE"
-      columnLabel = "RPM", "%"
-      xAxis       = 0, 2400, 13
-      yAxis       = 0, 250, 11
-      xBins       = idleVeBins, RPMValue
-      yBins       = idleVe
-#if LAMBDA
-      gauge       = lambda1Gauge
-#else
-      gauge       = afr1Gauge
-#endif
-    
 	curve = crankingAdvanceCurve, "Cranking Advance Angle"
       columnLabel = "RPM", "degrees"
       xAxis       = 0, 1200, 13
@@ -708,6 +696,13 @@ enable2ndByteCanID = false
       yBins       = veLoadBins, veTableYAxis
       zBins       = veTable
 ;      gridHeight  = 2.0
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = idleVeTableTbl, idleVeTable, "Idle VE"
+      xBins       = idleVeRpmBins,  RPMValue
+      yBins       = idleVeLoadBins, veTableYAxis
+      zBins       = idleVeTable
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
@@ -1395,7 +1390,7 @@ menuDialog = main
 		subMenu = iacPidMultTbl,			"IAC PID Multiplier", 0, {idleMode == 0 && useIacPidMultTable == 1}
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 		subMenu = std_separator
-		subMenu = idleVeCurve,              "VE", 0, {useSeparateVeForIdle == 1}
+		subMenu = idleVeTableTbl,              "Idle VE", 0, {useSeparateVeForIdle == 1}
 		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
 
 	menu = "&Advanced"
