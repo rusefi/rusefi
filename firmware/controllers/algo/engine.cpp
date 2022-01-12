@@ -302,9 +302,6 @@ void Engine::updateSlowSensors() {
 	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
 #endif /* BOARD_TLE8888_COUNT */
 
-#if EFI_MC33816
-	initMc33816IfNeeded();
-#endif // EFI_MC33816
 #endif
 }
 
