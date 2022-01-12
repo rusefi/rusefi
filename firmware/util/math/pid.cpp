@@ -91,30 +91,30 @@ void Pid::updateFactors(float pFactor, float iFactor, float dFactor) {
 	reset();
 }
 
-void Pid::reset(void) {
+void Pid::reset() {
 	dTerm = iTerm = 0;
 	output = input = target = previousError = 0;
 	errorAmplificationCoef = 1.0f;
 	resetCounter++;
 }
 
-float Pid::getP(void) const {
+float Pid::getP() const {
 	return parameters->pFactor;
 }
 
-float Pid::getI(void) const {
+float Pid::getI() const {
 	return parameters->iFactor;
 }
 
-float Pid::getPrevError(void) const {
+float Pid::getPrevError() const {
 	return previousError;
 }
 
-float Pid::getIntegration(void) const {
+float Pid::getIntegration() const {
 	return iTerm;
 }
 
-float Pid::getD(void) const {
+float Pid::getD() const {
 	return parameters->dFactor;
 }
 

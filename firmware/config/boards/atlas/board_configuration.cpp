@@ -1,10 +1,10 @@
 #include "pch.h"
 
-void setPinConfigurationOverrides(void) {
+void setPinConfigurationOverrides() {
 }
 
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 }
 
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }
