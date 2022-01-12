@@ -277,7 +277,7 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 	timeNowUs = targetTime;
 }
 
-efitimeus_t EngineTestHelper::getTimeNowUs(void) {
+efitimeus_t EngineTestHelper::getTimeNowUs() {
 	return timeNowUs;
 }
 
