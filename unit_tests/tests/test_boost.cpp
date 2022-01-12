@@ -109,6 +109,8 @@ TEST(BoostControl, ClosedLoop) {
 TEST(BoostControl, SetOutput) {
 	EngineTestHelper eth(TEST_ENGINE);
 
+	engineConfiguration->isBoostControlEnabled = true;
+
 	StrictMock<MockPwm> pwm;
 	StrictMock<MockEtb> etb;
 	BoostController bc;
