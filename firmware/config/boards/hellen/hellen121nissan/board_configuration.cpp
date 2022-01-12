@@ -1,6 +1,7 @@
 /**
  * @file boards/hellen/hellen121nissan/board_configuration.cpp
  *
+ * All fabricated boards use 144 pin MCU
  *
  * @brief Configuration defaults for the hellen121nissan board
  *
@@ -78,7 +79,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_14;
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
