@@ -28,7 +28,7 @@ public enum debug_mode_e {
 	DBG_ANALOG_INPUTS,
 	DBG_INSTANT_RPM,
 	UNUSED23,
-	DBG_STATUS,
+	DBG_24,
 	DBG_CJ125,
 	DBG_26,
 	DBG_MAP,

@@ -1204,5 +1204,5 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 }
 
 // These symbols are weak so that a board_configuration.cpp file can override them
-__attribute__((weak)) void setBoardDefaultConfiguration(void) { }
-__attribute__((weak)) void setBoardConfigOverrides(void) { }
+__attribute__((weak)) void setBoardDefaultConfiguration() { }
+__attribute__((weak)) void setBoardConfigOverrides() { }
