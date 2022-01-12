@@ -29,6 +29,7 @@ struct IIdleController {
 	virtual float getOpenLoop(Phase phase, float clt, SensorResult tps, float crankingTaperFraction) = 0;
 	virtual float getClosedLoop(Phase phase, float tps, int rpm, int target) = 0;
 	virtual float getCrankingTaperFraction() const = 0;
+	virtual bool isIdlingOrTaper() const = 0;
 };
 
 class IdleController : public IIdleController, public EngineModule, public idle_state_s {
@@ -61,7 +62,7 @@ public:
 	void onSlowCallback() final;
 
 	// Allow querying state from outside
-	bool isIdlingOrTaper() {
+	bool isIdlingOrTaper() const override {
 		return m_lastPhase == Phase::Idling || (engineConfiguration->useSeparateIdleTablesForCrankingTaper && m_lastPhase == Phase::CrankToIdleTaper);
 	}
 
