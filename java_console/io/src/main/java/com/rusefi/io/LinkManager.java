@@ -52,12 +52,7 @@ public class LinkManager implements Closeable {
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
-    public MessagesListener messageListener = new MessagesListener() {
-        @Override
-        public void postMessage(Class<?> source, String message) {
-            System.out.println(source + ": " + message);
-        }
-    };
+    public final MessagesListener messageListener = (source, message) -> System.out.println(source + ": " + message);
     private Thread communicationThread;
 
     public LinkManager() {
