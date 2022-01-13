@@ -144,6 +144,8 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
+case Force_4_bytes_size_debug_mode_e:
+  return "Force_4_bytes_size_debug_mode_e";
 case UNUSED23:
   return "UNUSED23";
   }
@@ -195,6 +197,8 @@ case FRANKENSO_MIATA_NA6_VAF:
   return "FRANKENSO_MIATA_NA6_VAF";
 case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
+case Force_4_bytes_size_engine_type:
+  return "Force_4_bytes_size_engine_type";
 case GY6_139QMB:
   return "GY6_139QMB";
 case HELLEN72_ETB:
@@ -378,6 +382,8 @@ case VW_B6:
 }
 const char *getTrigger_type_e(trigger_type_e value){
 switch(value) {
+case Force_4_bytes_size_trigger_type:
+  return "Force_4_bytes_size_trigger_type";
 case TT_1_16:
   return "TT_1_16";
 case TT_2JZ_1_12:

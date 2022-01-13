@@ -75,4 +75,5 @@ public enum trigger_type_e {
 	TT_NISSAN_MR18_CRANK,
 	TT_TOOTHED_WHEEL_32_2,
 	TT_UNUSED,
+	Force_4_bytes_size_trigger_type,
 }
