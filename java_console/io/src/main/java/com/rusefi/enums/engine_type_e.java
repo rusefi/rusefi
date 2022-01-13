@@ -115,4 +115,5 @@ public enum engine_type_e {
 	TEST_108,
 	TEST_109,
 	TEST_110,
+	Force_4_bytes_size_engine_type,
 }
