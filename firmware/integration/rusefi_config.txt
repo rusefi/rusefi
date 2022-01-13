@@ -70,7 +70,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10007
+#define FLASH_DATA_VERSION 10008
 
 #define LOG_DELIMITER "`"
 
