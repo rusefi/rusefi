@@ -39,7 +39,7 @@ FloatChars: IntegerChars [.] ([0-9]+)?;
 IdentifierChars : [a-zA-Z_]([a-zA-Z0-9_]*);
 
 // TODO: do we need replacementIdent AND identifier to be here?
-replacementIdent: '@@' IdentifierChars '@@' | identifier;
+replacementIdent: integer | '@@' IdentifierChars '@@' | identifier;
 
 String: [a-zA-Z_0-9.']+;
 
