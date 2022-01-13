@@ -4,7 +4,7 @@
  * @date Jul 27, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
-
+#include "pch.h"
 #include "flash_int.h"
 
 bool allowFlashWhileRunning() {
@@ -33,19 +33,28 @@ uintptr_t getFlashAddrSecondCopy() {
 
 void stm32_stop() {
 	SysTick->CTRL = 0;
-	__disable_irq();
-	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	enginePins.errorLedPin.setValue(0);
+	enginePins.runningLedPin.setValue(0);
+	enginePins.communicationLedPin.setValue(0);
+	enginePins.warningLedPin.setValue(0);
 
-	// configure mode bits
+
+	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
+	
+	boardPrepareForStop();
 	PWR->CR &= ~PWR_CR_PDDS;	// cleared PDDS means stop mode (not standby) 
-	PWR->CR |= PWR_CR_FPDS;		// turn off flash in stop mode
-	PWR->CR |= PWR_CR_LPDS;		// regulator in low power mode
+	PWR->CR |= PWR_CR_FPDS;	// turn off flash in stop mode
+	#ifdef STM32F429xx
+	PWR->CR |= PWR_CR_UDEN;	// regulator underdrive in stop mode *
+	PWR->CR |= PWR_CR_LPUDS;	// low power regulator in under drive mode
+	#endif
+	PWR->CR |= PWR_CR_LPDS;	// regulator in low power mode
+
 
 	// enable Deepsleep mode
-	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-	// Wait for event - this will return when stop mode is done
-	__WFE();
+	__disable_irq();
+	__WFI();
 
 	// Lastly, reboot
 	NVIC_SystemReset();
@@ -53,17 +62,14 @@ void stm32_stop() {
 
 void stm32_standby() {
 	SysTick->CTRL = 0;
-	__disable_irq();
-
-	// configure mode bits
-	PWR->CR |= PWR_CR_PDDS;		// PDDS = use standby mode (not stop mode)
-
-	// enable Deepsleep mode
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	PWR->CR |= PWR_CR_PDDS;	// PDDS = use standby mode (not stop mode)
+	PWR->CR |= PWR_CR_CSBF;	// Clear standby flag
+	
 
-	// Wait for event - this should never return as it kills the chip until a reset
-	__WFE();
+	// Do anything the board wants to prepare for standby mode - enabling wakeup sources!
+	boardPrepareForStandby();
 
-	// Lastly, reboot
-	NVIC_SystemReset();
+	__disable_irq();
+	__WFI();
 }
