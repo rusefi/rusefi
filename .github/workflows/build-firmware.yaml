@@ -198,12 +198,12 @@ jobs:
       run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
     - uses: actions/checkout@v1
-      if: ${{ matrix.skip-rate }}
+      if: ${{ env.skip != 'true' }}
       with:
         submodules: recursive
 
     - uses: actions/setup-java@v1
-      if: ${{ matrix.skip-rate }}
+      if: ${{ env.skip != 'true' }}
       with:
         java-version: '8'
 
