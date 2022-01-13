@@ -193,20 +193,22 @@ jobs:
             skip-rate: 90
 
     steps:
+    - name: Execution throttle early exit
+      if: ${{ matrix.skip-rate }}
+      run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
+
     - uses: actions/checkout@v1
+      if: ${{ env.skip != 'true' }}
       with:
         submodules: recursive
 
     - uses: actions/setup-java@v1
+      if: ${{ env.skip != 'true' }}
       with:
         java-version: '8'
 
-#    - id: throttle
-#      name: Execution throttle early exit
-      # just running, not using result for anything yet
-#      run: bash misc/actions/execution-throttle.sh ${{ matrix.skip-rate }}
-
     - name: Install multilib, mingw, sshpass and mtools
+      if: ${{ env.skip != 'true' }}
       run: |
         sudo apt-get update
         sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools
@@ -214,12 +216,13 @@ jobs:
         sudo apt-get install dosfstools
 
     - name: Generate Default config
+      if: ${{ env.skip != 'true' }}
       # todo: why do we even need this 'gen_config_default.sh' here?!
       working-directory: ./firmware/
       run: bash gen_config_default.sh
 
     - name: Generate Configs for build-target
-      if: ${{ matrix.skip-config != 'yes' }}
+      if: ${{ matrix.skip-config != 'yes' && env.skip != 'true' }}
       working-directory: ./firmware/
       run: |
         if [ "${{ matrix.build-target }}" = "kinetis" ]; then
@@ -238,16 +241,19 @@ jobs:
         fi
 
     - name: Generate Live Documentation
+      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: bash gen_live_documentation.sh
 
     # live_data_ids.h is generated above so order of operations is important here!
     - name: Generate Enum Strings
+      if: ${{ env.skip != 'true' }}
       working-directory: ./firmware/
       run: bash gen_enum_to_string.sh
 
     # Build machines don't have arm-none-eabi gcc, so let's download it and put it on the path
     - name: Download & Install GCC
+      if: ${{ env.skip != 'true' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: | # Compiler hosted on our other git repo - avoids having to download from the nice folks at ARM every time
@@ -257,9 +263,11 @@ jobs:
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
+      if: ${{ env.skip != 'true' }}
       run: arm-none-eabi-gcc -v
 
     - name: Configs Set SSH variables
+      if: ${{ env.skip != 'true' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
@@ -271,60 +279,61 @@ jobs:
 
     # Build rusEFI console
     - name: Build console
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       run: bash misc/jenkins/build_java_console.sh
   
     # Build the simulator
     - name: Build simulator
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       # 'OS="Windows_NT"' allows us to build Windows executable on unix
       run: OS="Windows_NT" bash misc/jenkins/build_simulator.sh
 
     # Build the firmware!
     - name: Build Firmware
+      if: ${{ env.skip != 'true' }}
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}} ${{matrix.console-settings}}
 
     - name: Package Bundle
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       run: bash misc/jenkins/compile_other_versions/prepare_bundle.sh ${{matrix.build-target}} ${{matrix.ini-file}}
 
     - name: Attach console junit results
-      if: always()
+      if: ${{ env.skip != 'true' }}
       uses: actions/upload-artifact@v2
       with:
         name: console ${{matrix.build-target}} junit
         path: ./java_console/build/*.txt
 
     - name: Upload build bin
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
+      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload build hex
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
+      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.hex
         path: ./firmware/deliver/rusefi*.hex
 
     - name: Upload build dfu
-      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' }}
+      if: ${{ github.event_name != 'push' || github.ref != 'refs/heads/master' && env.skip != 'true' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle*.zip
 
     - name: Upload autoupdate bundle
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.skip != 'true' }}
       uses: actions/upload-artifact@v2
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
