@@ -50,7 +50,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }
 
 static void setLedPins() {
@@ -140,7 +140,7 @@ static void setupSdCard() {
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setupSdCard();
 	setLedPins();
 	setupVbatt();
@@ -160,10 +160,10 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
 }
 
-void setPinConfigurationOverrides(void) {
+void setPinConfigurationOverrides() {
 }
 
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
@@ -179,7 +179,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setupEtb();
@@ -214,5 +214,47 @@ void setBoardDefaultConfiguration(void) {
 #ifdef HARDWARE_CI
 	engineConfiguration->triggerSimulatorPins[0] = GPIOG_3;
 	engineConfiguration->triggerSimulatorPins[1] = GPIOG_2;
+#endif
+}
+
+void boardPrepareForStop() {
+	#ifdef STM32F7XX
+	// enable EXTI on PD0 - CAN RX pin
+	palSetPadMode(GPIOD, 0, PAL_MODE_INPUT);
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
+	#endif
+
+	#ifdef STM32F4XX
+	// enable EXTI on PA0 - The only WKUP pin F4 has.
+	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
+	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT);
+	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
+
+	#endif
+
+	
+}
+
+void boardPrepareForStandby() {
+	// We're out of luck trying to wake from standby on an F4, since it can only wake from PA0
+
+#ifdef STM32F7XX
+	PWR->CSR2 |= PWR_CSR2_EWUP1; //EWUP1: Enable Wakeup pin for PA0
+	PWR->CR2 |= PWR_CR2_CWUPF1; //Clear Wakeup Pin flag for PA0
+#endif
+
+#ifdef STM32F4XX
+
+	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
+	PWR->CSR |= PWR_CSR_EWUP; //Enable Wakeup Pin for PA0
+
+#endif
+
+#ifdef STM32H7XX
+	// Wake on wakeup pin 0 - PA0
+	PWR->WKUPEPR = PWR_WKUPEPR_WKUPEN1;
+
+	// clear all possible wakeup bits
+	PWR->WKUPCR = 0xFFFFFFFF;
 #endif
 }
