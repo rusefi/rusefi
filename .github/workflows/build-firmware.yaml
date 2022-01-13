@@ -203,7 +203,7 @@ jobs:
 
     - name: Execution throttle early exit
       if: ${{ matrix.skip-rate }}
-      run: if (($(($RANDOM % 100)) > ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
+      run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
     - name: Install multilib, mingw, sshpass and mtools
       if: ${{ env.skip != 'true' }}
