@@ -42,10 +42,8 @@ void stm32_stop() {
 
 
 	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
-	//boardPrepareForStop();
-	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
-	PWR->CSR |= PWR_CSR_EWUP;
 	
+	boardPrepareForStop();
 	PWR->CR &= ~PWR_CR_PDDS;	// cleared PDDS means stop mode (not standby) 
 	PWR->CR |= PWR_CR_FPDS;	// turn off flash in stop mode
 	PWR->CR |= PWR_CR_UDEN;	// regulator underdrive in stop mode *

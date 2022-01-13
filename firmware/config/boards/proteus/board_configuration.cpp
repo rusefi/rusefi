@@ -225,6 +225,8 @@ void boardPrepareForStop() {
 	#endif
 
 	#ifdef STM32F4XX
+	// enable EXTI on PA0 - The only WKUP pin F4 has.
+	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
 	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT);
 	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
 
@@ -242,6 +244,7 @@ void boardPrepareForStandby() {
 #endif
 
 #ifdef STM32F4XX
+
 	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
 	PWR->CSR |= PWR_CSR_EWUP; //Enable Wakeup Pin for PA0
 
