@@ -34,6 +34,7 @@ uintptr_t getFlashAddrSecondCopy() {
 
 void stm32_stop() {
 	SysTick->CTRL = 0;
+	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 	enginePins.errorLedPin.setValue(0);
 	enginePins.runningLedPin.setValue(0);
