@@ -193,17 +193,19 @@ jobs:
             skip-rate: 90
 
     steps:
+    - name: Execution throttle early exit
+      if: ${{ matrix.skip-rate }}
+      run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
+
     - uses: actions/checkout@v1
+      if: ${{ matrix.skip-rate }}
       with:
         submodules: recursive
 
     - uses: actions/setup-java@v1
+      if: ${{ matrix.skip-rate }}
       with:
         java-version: '8'
-
-    - name: Execution throttle early exit
-      if: ${{ matrix.skip-rate }}
-      run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
     - name: Install multilib, mingw, sshpass and mtools
       if: ${{ env.skip != 'true' }}
