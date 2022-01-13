@@ -201,8 +201,7 @@ jobs:
       with:
         java-version: '8'
 
-    - name: throttle
-      name: Execution throttle early exit
+    - name: Execution throttle early exit
       if: ${{ matrix.skip-rate }}
       run: if (($(($RANDOM % 100)) > ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
