@@ -1,9 +1,11 @@
 package com.rusefi.ui;
 
 import com.rusefi.CodeWalkthrough;
+import com.rusefi.config.Field;
 import com.rusefi.core.Sensor;
+import com.rusefi.enums.live_data_e;
+import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.livedata.LiveDataParserPanel;
-import com.rusefi.livedata.LiveDataView;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import org.jetbrains.annotations.NotNull;
@@ -35,15 +37,16 @@ public class LiveDataPane {
 
 
         JPanel leftList = new JPanel(new VerticalFlowLayout());
-        for (LiveDataView view : LiveDataView.values()) {
-            JPanel liveDataParserContent = LiveDataParserPanel.createLiveDataParserContent(uiContext, view);
+        for (live_data_e view : live_data_e.values()) {
+            String fileName = StateDictionary.INSTANCE.getFileName(view);
+            Field[] values = StateDictionary.INSTANCE.getFields(view);
+            JPanel liveDataParserContent = LiveDataParserPanel.createLiveDataParserPanel(uiContext, view, values, fileName).getContent();
 
-            JButton shortCut = new JButton(view.getFileName());
-            shortCut.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    scroll.getVerticalScrollBar().setValue(liveDataParserContent.getLocation().y);
-                }
+            JButton shortCut = new JButton(fileName);
+            shortCut.addActionListener(e -> {
+                scroll.getVerticalScrollBar().setValue(liveDataParserContent.getLocation().y);
+                // we want focus there so that mouse wheel scrolling would be active
+                scroll.requestFocus();
             });
             leftList.add(shortCut);
 

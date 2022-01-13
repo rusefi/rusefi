@@ -37,10 +37,8 @@ public:
 
 	WarningCodeState warnings;
 
-	/**
-	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
-	 */
-	float airFlow = 0;
+	// Estimated airflow based on whatever airmass model is active
+	float airflowEstimate = 0;
 
 	float knockThreshold = 0;
 

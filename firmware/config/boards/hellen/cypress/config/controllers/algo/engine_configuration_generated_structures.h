@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 05 06:48:17 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 10 22:04:39 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1293,7 +1293,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 623
 	 */
-	uint8_t mapCamDetectionThreshold;
+	uint8_t unusedDtectionThreshold;
 	/**
 	 * Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.
 	ratio
@@ -1309,7 +1309,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 627
 	 */
-	uint8_t mapCamAveragingLength;
+	brain_pin_e l9779_cs;
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
@@ -1758,7 +1758,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 768
 	 */
-	uint8_t mapCamSkipFactor;
+	spi_device_e l9779spiDevice;
 	/**
 	volts
 	 * offset 769
@@ -2054,7 +2054,7 @@ struct engine_configuration_s {
 	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
 	offset 896 bit 11 */
-	bool mapCamLookForLowPeaks : 1 {};
+	bool unused45342 : 1 {};
 	/**
 	offset 896 bit 12 */
 	bool enableSoftwareKnock : 1 {};
@@ -2114,8 +2114,9 @@ struct engine_configuration_s {
 	offset 896 bit 29 */
 	bool canBroadcastUseChannelTwo : 1 {};
 	/**
+	 * If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
 	offset 896 bit 30 */
-	bool unusedBit_310_30 : 1 {};
+	bool useRawOutputToDriveIdleStepper : 1 {};
 	/**
 	offset 896 bit 31 */
 	bool unusedBit_310_31 : 1 {};
@@ -2297,7 +2298,7 @@ struct engine_configuration_s {
 	uint16_t tps2SecondaryMax;
 	/**
 	offset 1260 bit 0 */
-	bool unused1464b0 : 1 {};
+	bool disablePrimaryUart : 1 {};
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1260 bit 1 */
@@ -2309,10 +2310,10 @@ struct engine_configuration_s {
 	bool isVerboseIAC : 1 {};
 	/**
 	offset 1260 bit 3 */
-	bool unused1464b3 : 1 {};
+	bool boardUseTachPullUp : 1 {};
 	/**
 	offset 1260 bit 4 */
-	bool unused1464b4 : 1 {};
+	bool boardUseTempPullUp : 1 {};
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1260 bit 5 */
@@ -2369,7 +2370,7 @@ struct engine_configuration_s {
 	bool launchSparkCutEnable : 1 {};
 	/**
 	offset 1260 bit 20 */
-	bool unused1464b20 : 1 {};
+	bool boardUseCrankPullUp : 1 {};
 	/**
 	offset 1260 bit 21 */
 	bool unusedBitWasHere1 : 1 {};
@@ -4020,16 +4021,20 @@ struct engine_configuration_s {
 	 */
 	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 4618
 	 */
-	uint8_t alignmentFill_at_4618[2];
+	output_pin_e stepper_raw_output[4];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4622
+	 */
+	uint8_t alignmentFill_at_4622[2];
 	/**
 	units
-	 * offset 4620
+	 * offset 4624
 	 */
-	int mainUnusedEnd[100];
+	int mainUnusedEnd[99];
 	/** total size 5020*/
 };
 
@@ -4445,4 +4450,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 05 06:48:17 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 10 22:04:39 UTC 2022

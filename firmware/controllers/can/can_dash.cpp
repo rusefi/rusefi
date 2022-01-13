@@ -13,6 +13,7 @@
 #include "can_dash.h"
 #include "can_msg_tx.h"
 #include "can_bmw.h"
+#include "can_vag.h"
 
 #include "rtc_helper.h"
 #include "fuel_math.h"
@@ -22,12 +23,6 @@
 #define CAN_MAZDA_RX_STEERING_WARNING 0x300
 #define CAN_MAZDA_RX_STATUS_1         0x212
 #define CAN_MAZDA_RX_STATUS_2         0x420
-
-// https://wiki.openstreetmap.org/wiki/VW-CAN
-#define CAN_VAG_RPM      0x280 /* _10ms cycle */
-#define CAN_VAG_CLT      0x288 /* _10ms cycle */
-#define CAN_VAG_CLT_V2   0x420 /* _10ms cycle */
-#define CAN_VAG_IMMO     0x3D0 /* _10ms cycle */
 
 //w202 DASH
 #define W202_STAT_1	     0x308 /* _20ms cycle */
@@ -87,7 +82,6 @@ constexpr uint8_t e90_temp_offset = 49;
 
 void canDashboardBMW(CanCycle cycle);
 void canDashboardFiat(CanCycle cycle);
-void canDashboardVAG(CanCycle cycle);
 void canMazdaRX8(CanCycle cycle);
 void canDashboardW202(CanCycle cycle);
 void canDashboardBMWE90(CanCycle cycle);
@@ -228,14 +222,14 @@ void canDashboardVAG(CanCycle cycle) {
 	if (cycle.isInterval(CI::_10ms)) {
 		{
 			//VAG Dashboard
-			CanTxMessage msg(CAN_VAG_RPM);
+			CanTxMessage msg(CAN_VAG_Motor_1);
 			msg.setShortValue(GET_RPM() * 4, 2); //RPM
 		}
 
 		float clt = Sensor::getOrZero(SensorType::Clt);
 
 		{
-			CanTxMessage msg(CAN_VAG_CLT);
+			CanTxMessage msg(CAN_VAG_Motor_2);
 			msg.setShortValue((int) ((clt + 48.373) / 0.75), 1); //Coolant Temp
 		}
 

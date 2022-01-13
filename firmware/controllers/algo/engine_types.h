@@ -243,6 +243,7 @@ typedef enum {
 	TEST_109 = 109,
 	TEST_110 = 110,
 
+	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;
 
 /**
@@ -284,7 +285,7 @@ typedef enum {
 
 	DBG_INSTANT_RPM = 22,
 	UNUSED23 = 23,
-	DBG_STATUS = 24,
+	DBG_24 = 24,
 	DBG_CJ125 = 25,
 	DBG_26 = 26,
 	DBG_MAP = 27,
@@ -316,6 +317,7 @@ typedef enum {
 	DBG_VVT_3_PID = 50,
 	DBG_VVT_4_PID = 51,
 
+	Force_4_bytes_size_debug_mode_e = ENUM_32_BITS,
 } debug_mode_e;
 
 /**
@@ -526,6 +528,8 @@ typedef enum {
 	//
 	TT_UNUSED = 70, // this is used if we want to iterate over all trigger types
 
+	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
+	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
 } trigger_type_e; // TriggerProcessor.java has this "trigger_type_e" name hard-coded!
 
 

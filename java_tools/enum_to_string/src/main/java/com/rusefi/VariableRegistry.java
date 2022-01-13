@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.Nullable;
@@ -14,10 +15,14 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * 3/30/2015
  */
 public class VariableRegistry  {
+    private static final Logging log = getLogging(VariableRegistry.class);
+
     public static final String _16_HEX_SUFFIX = "_16_hex";
     public static final String _HEX_SUFFIX = "_hex";
     public static final String CHAR_SUFFIX = "_char";
@@ -154,7 +159,8 @@ public class VariableRegistry  {
     @Nullable
     private String doRegister(String var, String value) {
         if (data.containsKey(var)) {
-            SystemOut.println("Not redefining " + var);
+            if (log.debugEnabled())
+                log.debug("Not redefining " + var);
             return null;
         }
         value = applyVariables(value);
@@ -165,7 +171,8 @@ public class VariableRegistry  {
             value = String.valueOf(first * second);
         }
 
-        SystemOut.println("Registering " + var + " as " + value);
+        if (log.debugEnabled())
+            log.debug("Registering " + var + " as " + value);
         data.put(var, value);
 
         if (!value.contains("\n")) {
@@ -197,13 +204,14 @@ public class VariableRegistry  {
 
         try {
             int intValue = Integer.parseInt(value);
-            SystemOut.println("key [" + var + "] value: " + intValue);
+            if (log.debugEnabled())
+                log.debug("key [" + var + "] value: " + intValue);
             intValues.put(var, intValue);
             if (!var.endsWith(_HEX_SUFFIX)) {
                 javaDefinitions.put(var, "\tpublic static final int " + var + " = " + intValue + ";" + ToolUtil.EOL);
             }
         } catch (NumberFormatException e) {
-            SystemOut.println("Not an integer: " + value);
+            //SystemOut.println("Not an integer: " + value);
 
             if (!var.trim().endsWith(ENUM_SUFFIX)) {
                 if (isQuoted(value, '"')) {

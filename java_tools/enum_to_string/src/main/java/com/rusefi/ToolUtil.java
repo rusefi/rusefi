@@ -1,10 +1,14 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.util.LazyFile;
 
 import java.net.URISyntaxException;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class ToolUtil {
+    private static final Logging log = getLogging(ToolUtil.class);
     public static final String EOL = "\n";
     public static String TOOL = "(unknown script)";
 
@@ -18,7 +22,8 @@ public class ToolUtil {
                     .getLocation()
                     .toURI()
                     .getPath();
-            System.out.println("JAR Path : " + jarPath);
+            if (log.debugEnabled())
+                log.debug("JAR Path : " + jarPath);
 
             // Get name of the JAR file
             return jarPath.substring(jarPath.lastIndexOf("/") + 1);

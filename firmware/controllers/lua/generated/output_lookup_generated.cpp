@@ -88,10 +88,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.throttlePedalPosition;
 	if (strEqualCaseInsensitive(name, "tpsADC"))
 		return engine->outputChannels.tpsADC;
-	if (strEqualCaseInsensitive(name, "MAFValue"))
-		return engine->outputChannels.MAFValue;
-	if (strEqualCaseInsensitive(name, "massAirFlowValue"))
-		return engine->outputChannels.massAirFlowValue;
+	if (strEqualCaseInsensitive(name, "rawMaf"))
+		return engine->outputChannels.rawMaf;
+	if (strEqualCaseInsensitive(name, "mafMeasured"))
+		return engine->outputChannels.mafMeasured;
 	if (strEqualCaseInsensitive(name, "MAPValue"))
 		return engine->outputChannels.MAPValue;
 	if (strEqualCaseInsensitive(name, "baroPressure"))
@@ -316,6 +316,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.m_requested_pump;
 	if (strEqualCaseInsensitive(name, "boostControlTarget"))
 		return engine->outputChannels.boostControlTarget;
+	if (strEqualCaseInsensitive(name, "sparkCutReason"))
+		return engine->outputChannels.sparkCutReason;
+	if (strEqualCaseInsensitive(name, "fuelCutReason"))
+		return engine->outputChannels.fuelCutReason;
 	if (strEqualCaseInsensitive(name, "fuel_requested_percent"))
 		return engine->outputChannels.fuel_requested_percent;
 	if (strEqualCaseInsensitive(name, "fuel_requested_percent_pi"))
@@ -324,6 +328,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.m_I_sum_percent;
 	if (strEqualCaseInsensitive(name, "m_pressureTarget_kPa"))
 		return engine->outputChannels.m_pressureTarget_kPa;
+	if (strEqualCaseInsensitive(name, "mafEstimate"))
+		return engine->outputChannels.mafEstimate;
+	if (strEqualCaseInsensitive(name, "instantRpm"))
+		return engine->outputChannels.instantRpm;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))

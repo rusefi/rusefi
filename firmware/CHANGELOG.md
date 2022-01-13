@@ -30,6 +30,10 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  - Per-cylinder fuel trim tables
  - Per-cylinder ignition timing trim tables
+ - SDRAM reference binary for stm32f429-discovery
+
+### Fixed
+ - rusefi_Console: Too long re-connection time #3305
 
 ## December 2021 Release - "Cookie Exchange"
 

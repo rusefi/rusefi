@@ -10,7 +10,7 @@
 
     <target name="antlr">
         <echo message="Invoking grammar generator..."/>
-        <java jar="lib/antlr-4.5-complete.jar" args="-o src/main/java/com/rusefi/generated RusefiConfigGrammar.g4" fork="true" failonerror="true" />
+        <java jar="lib/antlr-4.9.3-complete.jar" args="-o src/main/java/com/rusefi/generated RusefiConfigGrammar.g4" fork="true" failonerror="true" />
     </target>
 
     <target name="compile" depends="antlr">
@@ -31,7 +31,7 @@
                 debug="true"
                 target="${javac.target}"
                 destdir="build/classes"
-                classpath="${console_path}/lib/jsr305-2.0.1.jar:lib/junit.jar:../../java_console/lib/annotations.jar:lib/snakeyaml.jar:lib/antlr-4.5-complete.jar">
+                classpath="${console_path}/lib/jsr305-2.0.1.jar:lib/junit.jar:../../java_console/lib/annotations.jar:lib/snakeyaml.jar:lib/antlr-4.9.3-complete.jar">
             <src path="src/main/java"/>
             <src path="${console_path}/autoupdate/src/main/java"/>
             <src path="${console_path}/inifile/src/main/java"/>
@@ -50,7 +50,7 @@
             <jvmarg value="-ea"/>
             <jvmarg value="-XX:+HeapDumpOnOutOfMemoryError"/>
             <formatter type="brief"/>
-            <classpath path="build/classes:lib/junit.jar:lib/annotations.jar:lib/snakeyaml.jar:lib/antlr-4.5-complete.jar"/>
+            <classpath path="build/classes:lib/junit.jar:lib/annotations.jar:lib/snakeyaml.jar:lib/antlr-4.9.3-complete.jar"/>
             <batchtest todir="build">
                 <fileset dir="src/main/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="../enum_to_string/src/main/java" includes="**/test/**/*Test.java"/>
@@ -67,7 +67,7 @@
             </manifest>
             <zipfileset dir="build/classes" includes="**/*.class"/>
             <zipfileset src="lib/snakeyaml.jar" includes="**/*.class"/>
-			<zipfileset src="lib/antlr-4.5-complete.jar" includes="**/*.class"/>
+			<zipfileset src="lib/antlr-4.9.3-complete.jar" includes="**/*.class"/>
         </jar>
     </target>
 

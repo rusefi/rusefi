@@ -12,7 +12,6 @@
 #endif // HW_HELLEN
 
 static void common() {
-	setHellenDefaultVrThresholds();
 	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
 }
 

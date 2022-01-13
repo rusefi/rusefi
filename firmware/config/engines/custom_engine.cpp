@@ -17,6 +17,7 @@
 #include "fsio_impl.h"
 #include "mre_meta.h"
 #include "proteus_meta.h"
+#include "hellen_meta.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -689,9 +690,20 @@ void mreBoardNewTest() {
 
 }
 
+static const float hardCodedHpfpLobeProfileQuantityBins[16] = {0.0, 1.0, 4.5, 9.5,
+16.5, 25.0, 34.5, 45.0 ,
+55.0, 65.5, 75.0, 83.5,
+90.5, 95.5, 99.0, 100.0};
+
+static const float hardCodedHpfpLobeProfileAngle[16] = {0.0, 7.5, 16.5, 24.0,
+32.0 , 40.0, 48.0, 56.0,
+64.0 , 72.0, 80.0, 88.0,
+96.0 , 103.5, 112.5, 120.0
+};
+
 void setBoschHDEV_5_injectors() {
-	setLinearCurve(engineConfiguration->hpfpLobeProfileAngle, 0, 120, 1);
-	setLinearCurve(engineConfiguration->hpfpLobeProfileQuantityBins, 0, 100, 1);
+	copyArray(engineConfiguration->hpfpLobeProfileQuantityBins, hardCodedHpfpLobeProfileQuantityBins);
+	copyArray(engineConfiguration->hpfpLobeProfileAngle, hardCodedHpfpLobeProfileAngle);
 	setLinearCurve(engineConfiguration->hpfpDeadtimeVoltsBins, 8, 16, 0.5);
 
 	setLinearCurve(engineConfiguration->hpfpTargetRpmBins, 0, 8000, 1);
@@ -718,19 +730,6 @@ void setBoschHDEV_5_injectors() {
 	engineConfiguration->mc33_hpfp_i_hold = 3;
 	engineConfiguration->mc33_hpfp_i_hold_off = 10; // us
 	engineConfiguration->mc33_hpfp_max_hold = 10; // this value in ms not us
-}
-
-/**
- * set engine_type 108
- */
-void setVrThresholdTest() {
-	engineConfiguration->trigger.type = TT_HONDA_1_24;
-
-	setHellenDefaultVrThresholds();
-	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
-
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIOC_6;
 }
 
 /**
@@ -802,19 +801,6 @@ void setTest33816EngineConfiguration() {
 	setBoschHDEV_5_injectors();
 }
 
-void setHellen72etb() {
-	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6;
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7;
-	engineConfiguration->etb_use_two_wires = true;
-}
-
-void setHellenDefaultVrThresholds() {
-	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
-		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600, 7000, 100);
-		setLinearCurve(engineConfiguration->vrThreshold[i].values, 0.6, 1.2, 0.1);
-	}
-}
-
 /**
  * set engine_type 6
  */
@@ -827,10 +813,6 @@ void proteusHarley() {
 	// for now we need non wired camInput to keep TS field enable/disable logic happy
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
-
-	engineConfiguration->mapCamAveragingLength = 16;
-	engineConfiguration->mapCamSkipFactor = 50;
-	engineConfiguration->mapCamLookForLowPeaks = true;
 
 	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
 #if HW_PROTEUS
@@ -1071,24 +1053,11 @@ end
 #endif
 }
 
+void detectBoardType() {
 #if HW_HELLEN
-void setHellen144LedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOE_7;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOG_1;
-	engineConfiguration->warningLedPin = GPIOE_8;
-}
-
-void setHellen176LedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
-}
+#if !EFI_UNIT_TEST
+	detectHellenBoardType();
+#endif /* EFI_UNIT_TEST */
 #endif //HW_HELLEN
+	// todo: add board ID detection?
+}

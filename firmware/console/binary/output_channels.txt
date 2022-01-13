@@ -55,9 +55,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	int16_t autoscale throttlePedalPosition;@@GAUGE_NAME_THROTTLE_PEDAL@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t tpsADC;;"ADC", 1, 0, 0, 0, 0
-	uint16_t autoscale MAFValue;@@GAUGE_NAME_MAF@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawMaf;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
-	uint16_t autoscale massAirFlowValue;@@GAUGE_NAME_AIR_FLOW@@;"Kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale mafMeasured;@@GAUGE_NAME_AIR_FLOW_MEASURED@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
 	uint16_t autoscale MAPValue;@@GAUGE_NAME_MAP@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	uint16_t autoscale baroPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 
@@ -261,15 +261,18 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     int16_t autoscale m_requested_pump;"DI: Pump Angle";"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
     int16_t autoscale boostControlTarget;"Pump Angle";"deg",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-    int16_t autoscale unusedHere1111;"Pump Angle";"deg",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+    int8_t sparkCutReason;"Spark Cut Code";"code",1, 0, 0, 0, 0
+    int8_t fuelCutReason;"Fuel Cut Code";"code",1, 0, 0, 0, 0
     float fuel_requested_percent;"DI: fuel_requested_percent";"v", 1, 0, 0, 100, 0
     float fuel_requested_percent_pi;"DI: fuel_requested_percent_pi";"v", 1, 0, 0, 100, 0
     float m_I_sum_percent;"DI: m_I_sum_percent";"v", 1, 0, 0, 100, 0
     float m_pressureTarget_kPa;"DI: m_pressureTarget_kPa";"v", 1, 0, 0, 100, 0
 
+	uint16_t autoscale mafEstimate;@@GAUGE_NAME_AIR_FLOW_ESTIMATE@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t instantRpm;;"rpm", 1, 0, 0, 0, 0
 
 ! we have some unused bytes to allow compatible TS changes
-	int[28 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[108 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition

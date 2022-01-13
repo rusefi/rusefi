@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Wed Jan 05 00:18:40 EST 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Jan 11 22:51:44 EST 2022
 // see also gen_config_and_enums.bat
 
 
@@ -52,6 +52,8 @@ case DBG_16:
   return "DBG_16";
 case DBG_20:
   return "DBG_20";
+case DBG_24:
+  return "DBG_24";
 case DBG_26:
   return "DBG_26";
 case DBG_29:
@@ -120,8 +122,6 @@ case DBG_SOFT_SPARK_CUT:
   return "DBG_SOFT_SPARK_CUT";
 case DBG_SR5_PROTOCOL:
   return "DBG_SR5_PROTOCOL";
-case DBG_STATUS:
-  return "DBG_STATUS";
 case DBG_TCU:
   return "DBG_TCU";
 case DBG_TLE8888:
@@ -144,6 +144,8 @@ case DBG_VVT_3_PID:
   return "DBG_VVT_3_PID";
 case DBG_VVT_4_PID:
   return "DBG_VVT_4_PID";
+case Force_4_bytes_size_debug_mode_e:
+  return "Force_4_bytes_size_debug_mode_e";
 case UNUSED23:
   return "UNUSED23";
   }
@@ -195,6 +197,8 @@ case FRANKENSO_MIATA_NA6_VAF:
   return "FRANKENSO_MIATA_NA6_VAF";
 case FRANKENSO_QA_ENGINE:
   return "FRANKENSO_QA_ENGINE";
+case Force_4_bytes_size_engine_type:
+  return "Force_4_bytes_size_engine_type";
 case GY6_139QMB:
   return "GY6_139QMB";
 case HELLEN72_ETB:
@@ -378,6 +382,8 @@ case VW_B6:
 }
 const char *getTrigger_type_e(trigger_type_e value){
 switch(value) {
+case Force_4_bytes_size_trigger_type:
+  return "Force_4_bytes_size_trigger_type";
 case TT_1_16:
   return "TT_1_16";
 case TT_2JZ_1_12:

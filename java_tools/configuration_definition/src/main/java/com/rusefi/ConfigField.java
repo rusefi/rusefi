@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.output.JavaFieldsConsumer;
 import com.rusefi.util.SystemOut;
 import com.rusefi.test.ConfigFieldParserTest;
@@ -9,12 +10,15 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * This is an immutable model of an individual field
  * Andrey Belomutskiy, (c) 2013-2020
  * 1/15/15
  */
 public class ConfigField {
+    private static final Logging log = getLogging(ConfigField.class);
     public static final ConfigField VOID = new ConfigField(null, "", null, null, null, new int[0], null, false, false, false, null, null);
 
     private static final String typePattern = "([\\w\\d_]+)(\\[([\\w\\d]+)(\\sx\\s([\\w\\d]+))?(\\s([\\w\\d]+))?\\])?";
@@ -167,9 +171,12 @@ public class ConfigField {
 
         ConfigField field = new ConfigField(state, name, comment, arraySizeAsText, type, arraySizes,
                 tsInfo, isIterate, isFsioVisible, hasAutoscale, null, null);
-        SystemOut.println("type " + type);
-        SystemOut.println("name " + name);
-        SystemOut.println("comment " + comment);
+        if (log.debugEnabled())
+            log.debug("type " + type);
+        if (log.debugEnabled())
+            log.debug("name " + name);
+        if (log.debugEnabled())
+            log.debug("comment " + comment);
 
         return field;
     }

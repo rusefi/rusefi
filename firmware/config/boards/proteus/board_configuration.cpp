@@ -231,12 +231,9 @@ void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
 
 	#endif
-
-	
 }
 
 void boardPrepareForStandby() {
-	// We're out of luck trying to wake from standby on an F4, since it can only wake from PA0
 
 #ifdef STM32F7XX
 	PWR->CSR2 |= PWR_CSR2_EWUP1; //EWUP1: Enable Wakeup pin for PA0

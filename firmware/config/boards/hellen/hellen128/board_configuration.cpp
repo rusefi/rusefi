@@ -1,6 +1,7 @@
 /**
  * @file boards/hellen/hellen128/board_configuration.cpp
  *
+ * All fabricated boards use 176 pin MCU
  *
  * @brief Configuration defaults for the hellen128 board
  *
@@ -14,10 +15,6 @@
 #include "fsio_impl.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
-
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
@@ -81,8 +78,8 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_2AdcChannel = EFI_ADC_8;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
+	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -94,7 +91,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
@@ -107,10 +104,10 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
-void setPinConfigurationOverrides(void) {
+void setPinConfigurationOverrides() {
 }
 
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
@@ -126,7 +123,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -182,7 +179,7 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->throttlePedalSecondaryUpVoltage = 1.34;
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.24;
 
-
+	setHellenDefaultVrThresholds();
 	hellenWbo();
 }
 
@@ -190,7 +187,7 @@ void setBoardDefaultConfiguration(void) {
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;

@@ -125,7 +125,7 @@ struct Fueling {
 
 static void populateFrame(Fueling& msg) {
 	msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
-	msg.estAirflow = engine->engineState.airFlow;
+	msg.estAirflow = engine->engineState.airflowEstimate;
 	msg.fuel_pulse = engine->actualLastInjection[0];
 }
 

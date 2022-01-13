@@ -156,6 +156,10 @@
 #define BOARD_TLE8888_COUNT 	1
 #endif
 
+#ifndef BOARD_L9779_COUNT
+#define BOARD_L9779_COUNT 	1
+#endif
+
 #ifndef BOARD_DRV8860_COUNT
 #define BOARD_DRV8860_COUNT         0
 #endif
@@ -257,10 +261,14 @@
 
 #define EFI_CONSOLE_USB_DEVICE SDU1
 
-// F42x has more memory, so we can:
-//  - use compressed USB MSD image (requires 32k of memory)
-//  - use perf trace (requires ~16k of memory)
-#ifdef EFI_IS_F42x
+#if defined(EFI_HAS_EXT_SDRAM)
+    #define ENABLE_PERF_TRACE TRUE
+    #define LUA_USER_HEAP (1 * 1024 * 1024)
+    #define LUA_SYSTEM_HEAP (1 * 1024 * 1024)
+#elif defined(EFI_IS_F42x)
+    // F42x has more memory, so we can:
+    //  - use compressed USB MSD image (requires 32k of memory)
+    //  - use perf trace (requires ~16k of memory)
 	#define EFI_USE_COMPRESSED_INI_MSD
 	#define ENABLE_PERF_TRACE TRUE
 

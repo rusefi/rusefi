@@ -177,10 +177,18 @@ void sys_dual_bank(void) {
 
 void stm32_stop() {
 	SysTick->CTRL = 0;
-	__disable_irq();
-	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
+	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
 
-	// configure mode bits
+	// Turn off the LEDs, those use some power
+	enginePins.errorLedPin.setValue(0);
+	enginePins.runningLedPin.setValue(0);
+	enginePins.communicationLedPin.setValue(0);
+	enginePins.warningLedPin.setValue(0);
+
+	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
+	boardPrepareForStop();
+
+	PWR->CSR1 |= PWR_CSR1_WUIF;
 	PWR->CR1 &= ~PWR_CR1_PDDS;	// cleared PDDS means stop mode (not standby) 
 	PWR->CR1 |= PWR_CR1_FPDS;	// turn off flash in stop mode
 	PWR->CR1 |= PWR_CR1_UDEN;	// regulator underdrive in stop mode
@@ -188,9 +196,8 @@ void stm32_stop() {
 	PWR->CR1 |= PWR_CR1_LPDS;	// regulator in low power mode
 
 	// enable Deepsleep mode
-	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-	__WFE();
+	__disable_irq();
+	__WFI();
 
 	// Lastly, reboot
 	NVIC_SystemReset();
@@ -198,18 +205,13 @@ void stm32_stop() {
 
 void stm32_standby() {
 	SysTick->CTRL = 0;
-	__disable_irq();
-	RCC->AHB1RSTR = RCC_AHB1RSTR_GPIOERST;
-
-	// configure mode bits
-	PWR->CR1 |= PWR_CR1_PDDS;		// PDDS = use standby mode (not stop mode)
-
-	// enable Deepsleep mode
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+	PWR->CR1 |= PWR_CR1_PDDS;	// PDDS = use standby mode (not stop mode)
+	PWR->CR1 |= PWR_CR1_CSBF;	// Clear standby flag
 
-	// Wait for event - this should never return as it kills the chip until a reset
-	__WFE();
+	// Do anything the board wants to prepare for standby mode - enabling wakeup sources!
+	boardPrepareForStandby();
 
-	// Lastly, reboot
-	NVIC_SystemReset();
+	__disable_irq();
+	__WFI();
 }

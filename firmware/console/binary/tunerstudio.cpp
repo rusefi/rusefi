@@ -113,8 +113,8 @@ static void resetTs() {
 void printTsStats(void) {
 #if EFI_PROD_CODE
 #ifdef EFI_CONSOLE_RX_BRAIN_PIN
-	efiPrintf("Primary Channel RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
-	efiPrintf("Primary Channel TX", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
+	efiPrintf("Primary UART RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
+	efiPrintf("Primary UART TX", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
 #endif
 
 	if (false) {
@@ -190,35 +190,35 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
 
 static const void * getStructAddr(live_data_e structId) {
 	switch (structId) {
-	case LDS_ENGINE:
+	case LDS_engine_state:
 		return static_cast<engine_state2_s*>(&engine->engineState);
-	case LDS_FUEL_TRIM:
+	case LDS_wall_fuel_state:
 		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
-	case LDS_TRIGGER_CENTRAL:
+	case LDS_trigger_central:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
-	case LDS_TRIGGER_STATE:
+	case LDS_trigger_state:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
-	case LDS_AC_CONTROL:
+	case LDS_ac_control:
 		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
-	case LDS_FUEL_PUMP:
+	case LDS_fuel_pump:
 		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	case LDS_ETB_PID:
-		return engine->etbControllers[0]->getPidState();
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
-#ifndef EFI_IDLE_CONTROL
-	case LDS_IDLE_PID:
-		return static_cast<pid_state_s*>(getIdlePid());
-#endif /* EFI_IDLE_CONTROL */
-	case LDS_IDLE:
-		return static_cast<idle_state_s*>(&engine->idle);
-	case LDS_TPS_ACCEL:
+//#if EFI_ELECTRONIC_THROTTLE_BODY
+//	case LDS_ETB_PID:
+//		return engine->etbControllers[0]->getPidState();
+//#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+//
+//#ifndef EFI_IDLE_CONTROL
+//	case LDS_IDLE_PID:
+//		return static_cast<pid_state_s*>(getIdlePid());
+//#endif /* EFI_IDLE_CONTROL */
+	case LDS_idle_state:
+		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
+	case LDS_tps_accel_state:
 		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
-	case LDS_MAIN_RELAY:
+	case LDS_main_relay:
 		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
 #if EFI_BOOST_CONTROL
-	case LDS_BOOST_CONTROL:
+	case LDS_boost_control:
 		return static_cast<boost_control_s*>(&engine->boostController);
 #endif // EFI_BOOST_CONTROL
 	default:
@@ -570,10 +570,10 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds", getTimeNowSeconds());
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowSeconds());
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer),  __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	if (hasFirmwareError()) {

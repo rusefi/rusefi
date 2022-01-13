@@ -25,6 +25,10 @@
 /* STM32F42x and F46x have SRAM3 */
 RAM3_SIZE = DEFINED(STM32F4_HAS_SRAM3) ? 64k : 0;
 
+/* SDRAM */
+/* Only STM32F429I-Discovery has external SDRAM */
+SDRAM_SIZE = DEFINED(STM32_HAS_SDRAM) ? 8M : 0;
+
 MEMORY
 {
     bl      : org = 0x08000000, len = 16k     /* bootloader section */
@@ -43,7 +47,7 @@ MEMORY
     ram4    : org = 0x10000000, len = 64k       /* CCM SRAM */
     ram5    : org = 0x40024000, len = 4k        /* BCKP SRAM */
     ram6    : org = 0x00000000, len = 0
-    ram7    : org = 0x00000000, len = 0
+    ram7    : org = 0xD0000000, len = SDRAM_SIZE    /* SDRAM */
 }
 
 /* For each data/text section two region are defined, a virtual region
@@ -89,6 +93,9 @@ REGION_ALIAS("BSS_RAM", ram0);
 
 /* RAM region to be used for the default heap.*/
 REGION_ALIAS("HEAP_RAM", ram0);
+
+/* RAM region to be used for SDRAM segment.*/
+REGION_ALIAS("SDRAM_RAM", ram7);
 
 /* Bootloader section */
 SECTIONS

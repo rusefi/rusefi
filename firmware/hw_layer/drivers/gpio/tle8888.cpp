@@ -1117,6 +1117,10 @@ int Tle8888::chip_init_data() {
 		if ((out < 0) || (cfg->direct_gpio[i].port == NULL))
 			continue;
 
+		/* TODO: implement PP pin driving throught direct gpio */
+		if ((cfg->stepper) && (out >= 20) && (out <= 23))
+			continue;
+
 		/* calculate mask */
 		mask = BIT(out);
 

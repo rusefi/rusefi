@@ -46,16 +46,13 @@ public class LinkManager implements Closeable {
     public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue;
 
+    private String lastTriedPort;
+
     private LinkConnector connector = LinkConnector.VOID;
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
-    public MessagesListener messageListener = new MessagesListener() {
-        @Override
-        public void postMessage(Class<?> source, String message) {
-            System.out.println(source + ": " + message);
-        }
-    };
+    public final MessagesListener messageListener = (source, message) -> System.out.println(source + ": " + message);
     private Thread communicationThread;
 
     public LinkManager() {
@@ -209,6 +206,7 @@ public class LinkManager implements Closeable {
     public void start(String port, ConnectionFailedListener stateListener) {
         Objects.requireNonNull(port, "port");
         log.info("LinkManager: Starting " + port);
+        lastTriedPort = port; // Save port before connection attempt
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
         } else if (PCAN.equals(port)) {
@@ -272,13 +270,20 @@ public class LinkManager implements Closeable {
 
     public void restart() {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
-        connector.restart();
+        close(); // Explicitly kill the connection (call connectors destructor??????)
+
+        String[] ports = getCommPorts();
+        boolean isPortAvailableAgain = Arrays.stream(ports).anyMatch(lastTriedPort::equals);
+        if (isPortAvailableAgain) {
+            connect(lastTriedPort);
+        }
     }
 
     @Override
     public void close() {
         if (connector != null)
             connector.stop();
+        isStarted = false; // Connector is dead and cant be in started state (Otherwise the Exception will raised)
     }
 
     public static String unpackConfirmation(String message) {
