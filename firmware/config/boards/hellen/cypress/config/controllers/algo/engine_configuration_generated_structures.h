@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 10 22:04:39 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 14 03:37:34 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1532,10 +1532,15 @@ struct engine_configuration_s {
 	 */
 	uint8_t acIdleExtraOffset;
 	/**
-	ms
+	ratio
 	 * offset 720
 	 */
-	int unused720;
+	scaled_channel<uint16_t, 10, 1> finalGearRatio;
+	/**
+	m
+	 * offset 722
+	 */
+	scaled_channel<uint16_t, 1000, 1> wheelDiameter;
 	/**
 	 * Voltage when the wastegate is closed.
 	 * You probably don't have one of these!
@@ -2979,76 +2984,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1740 bit 8 */
-	bool unusedBit_501_8 : 1 {};
+	bool unusedBit_502_8 : 1 {};
 	/**
 	offset 1740 bit 9 */
-	bool unusedBit_501_9 : 1 {};
+	bool unusedBit_502_9 : 1 {};
 	/**
 	offset 1740 bit 10 */
-	bool unusedBit_501_10 : 1 {};
+	bool unusedBit_502_10 : 1 {};
 	/**
 	offset 1740 bit 11 */
-	bool unusedBit_501_11 : 1 {};
+	bool unusedBit_502_11 : 1 {};
 	/**
 	offset 1740 bit 12 */
-	bool unusedBit_501_12 : 1 {};
+	bool unusedBit_502_12 : 1 {};
 	/**
 	offset 1740 bit 13 */
-	bool unusedBit_501_13 : 1 {};
+	bool unusedBit_502_13 : 1 {};
 	/**
 	offset 1740 bit 14 */
-	bool unusedBit_501_14 : 1 {};
+	bool unusedBit_502_14 : 1 {};
 	/**
 	offset 1740 bit 15 */
-	bool unusedBit_501_15 : 1 {};
+	bool unusedBit_502_15 : 1 {};
 	/**
 	offset 1740 bit 16 */
-	bool unusedBit_501_16 : 1 {};
+	bool unusedBit_502_16 : 1 {};
 	/**
 	offset 1740 bit 17 */
-	bool unusedBit_501_17 : 1 {};
+	bool unusedBit_502_17 : 1 {};
 	/**
 	offset 1740 bit 18 */
-	bool unusedBit_501_18 : 1 {};
+	bool unusedBit_502_18 : 1 {};
 	/**
 	offset 1740 bit 19 */
-	bool unusedBit_501_19 : 1 {};
+	bool unusedBit_502_19 : 1 {};
 	/**
 	offset 1740 bit 20 */
-	bool unusedBit_501_20 : 1 {};
+	bool unusedBit_502_20 : 1 {};
 	/**
 	offset 1740 bit 21 */
-	bool unusedBit_501_21 : 1 {};
+	bool unusedBit_502_21 : 1 {};
 	/**
 	offset 1740 bit 22 */
-	bool unusedBit_501_22 : 1 {};
+	bool unusedBit_502_22 : 1 {};
 	/**
 	offset 1740 bit 23 */
-	bool unusedBit_501_23 : 1 {};
+	bool unusedBit_502_23 : 1 {};
 	/**
 	offset 1740 bit 24 */
-	bool unusedBit_501_24 : 1 {};
+	bool unusedBit_502_24 : 1 {};
 	/**
 	offset 1740 bit 25 */
-	bool unusedBit_501_25 : 1 {};
+	bool unusedBit_502_25 : 1 {};
 	/**
 	offset 1740 bit 26 */
-	bool unusedBit_501_26 : 1 {};
+	bool unusedBit_502_26 : 1 {};
 	/**
 	offset 1740 bit 27 */
-	bool unusedBit_501_27 : 1 {};
+	bool unusedBit_502_27 : 1 {};
 	/**
 	offset 1740 bit 28 */
-	bool unusedBit_501_28 : 1 {};
+	bool unusedBit_502_28 : 1 {};
 	/**
 	offset 1740 bit 29 */
-	bool unusedBit_501_29 : 1 {};
+	bool unusedBit_502_29 : 1 {};
 	/**
 	offset 1740 bit 30 */
-	bool unusedBit_501_30 : 1 {};
+	bool unusedBit_502_30 : 1 {};
 	/**
 	offset 1740 bit 31 */
-	bool unusedBit_501_31 : 1 {};
+	bool unusedBit_502_31 : 1 {};
 	/**
 	ms
 	 * offset 1744
@@ -4025,16 +4030,21 @@ struct engine_configuration_s {
 	 */
 	output_pin_e stepper_raw_output[4];
 	/**
-	 * need 4 byte alignment
-	units
+	ratio
 	 * offset 4622
 	 */
-	uint8_t alignmentFill_at_4622[2];
+	scaled_channel<uint16_t, 100, 1> gearRatio[GEARS_COUNT];
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4638
+	 */
+	uint8_t alignmentFill_at_4638[2];
 	/**
 	units
-	 * offset 4624
+	 * offset 4640
 	 */
-	int mainUnusedEnd[99];
+	int mainUnusedEnd[95];
 	/** total size 5020*/
 };
 
@@ -4450,4 +4460,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 10 22:04:39 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 14 03:37:34 UTC 2022

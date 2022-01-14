@@ -236,6 +236,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->idle_antiwindupFreq;
 	if (strEqualCaseInsensitive(name, "acIdleExtraOffset"))
 		return engineConfiguration->acIdleExtraOffset;
+	if (strEqualCaseInsensitive(name, "finalGearRatio"))
+		return engineConfiguration->finalGearRatio;
+	if (strEqualCaseInsensitive(name, "wheelDiameter"))
+		return engineConfiguration->wheelDiameter;
 	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
 		return engineConfiguration->wastegatePositionMin;
 	if (strEqualCaseInsensitive(name, "wastegatePositionMax"))
@@ -1493,6 +1497,16 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "acIdleExtraOffset"))
 	{
 		engineConfiguration->acIdleExtraOffset = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "finalGearRatio"))
+	{
+		engineConfiguration->finalGearRatio = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "wheelDiameter"))
+	{
+		engineConfiguration->wheelDiameter = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "wastegatePositionMin"))
