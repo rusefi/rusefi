@@ -3024,6 +3024,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    panel = speedSensorAnalog, { enableCanVss == 0 }
 		field = "Enable CANbus VSS values",			enableCanVss, { canReadEnabled }
 		panel = vssFilter
+		field = "finalGearRatio",       finalGearRatio
+        field = "wheelDiameter",            wheelDiameter
+
 
 	dialog = speedSensor, "Speed sensor", xAxis
 		panel = speedSensorLeft

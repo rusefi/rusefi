@@ -101,6 +101,8 @@ struct_no_prefix engine_configuration_s
 #define CAMS_PER_BANK 2
 #define CAMS_PER_BANK_padding 0
 
+#define GEARS_COUNT 8
+
 #define CAM_INPUTS_COUNT @@BANKS_COUNT@@*@@CAMS_PER_BANK@@
 #define CAM_INPUTS_COUNT_padding 0
 
@@ -724,7 +726,8 @@ custom adc_channel_mode_e 4 bits, U32, @OFFSET@, [0:1], "Off", "Slow", "Fast"
 pin_input_mode_e throttlePedalUpPinMode;
 	uint8_t acIdleExtraOffset;+Additional idle % while A/C is active;"%", 1, 0, 0, 100, 0
 
-	int unused720;;"ms", 1, 0, 0, 1000, 2
+    uint16_t autoscale finalGearRatio;;"ratio", 0.1, 0, 0, 100, 0
+	uint16_t autoscale wheelDiameter;;"m", 0.001, 0, 0, 20, 0
 	uint16_t wastegatePositionMin;+Voltage when the wastegate is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t wastegatePositionMax;+Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMin;+Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
@@ -1493,7 +1496,9 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
 
 	output_pin_e[4 iterate] stepper_raw_output;
 
-	int[99] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+    uint16_t[GEARS_COUNT iterate] autoscale gearRatio;;"ratio", 0.01, 0, 0, 650, 0
+
+	int[95] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
