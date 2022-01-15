@@ -41,7 +41,7 @@ uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 0, 0
 
 uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
-	uint16_t autoscale speedToRpmRatio;s2rpm;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint8_t autoscale vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",1, 0, 0, 0, 0
 	int8_t autoscale internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;"deg C",1, 0, 0, 0, 0
 
