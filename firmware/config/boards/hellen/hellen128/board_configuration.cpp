@@ -104,9 +104,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
@@ -180,6 +177,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.24;
 
 	setHellenDefaultVrThresholds();
+	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
 	hellenWbo();
 }
 

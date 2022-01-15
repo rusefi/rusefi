@@ -1,8 +1,5 @@
 #include "pch.h"
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 }
 

@@ -12,7 +12,7 @@
 #endif // HW_HELLEN
 
 static void common() {
-	engineConfiguration->vrThreshold[0].pin = GPIOD_14;
+
 }
 
 void setHellenMercedes128_4_cyl() {

@@ -91,9 +91,6 @@ void setBoardOverrides() {
 	setSerialConfigurationOverrides();
 }
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOC_7;

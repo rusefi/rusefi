@@ -177,9 +177,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->spi3sckPin = GPIOC_10;
 }
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 	// why would MRE disable serial by default? we definitely have pads exposed
 	engineConfiguration->useSerialPort = false;
