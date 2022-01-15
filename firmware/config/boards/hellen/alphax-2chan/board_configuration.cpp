@@ -18,6 +18,8 @@
 static OutputPin alphaEn;
 static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
+static OutputPin alphaCrankPPullUp;
+static OutputPin alphaCrankNPullUp;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -94,6 +96,9 @@ void boardInitHardware() {
 	alphaEn.setValue(1);
 
 	alphaTachPullUp.initPin("a-tach", H144_OUT_IO1);
+	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
+	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
+	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
 }
 
 void setBoardConfigOverrides() {
