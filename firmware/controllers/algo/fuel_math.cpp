@@ -77,7 +77,7 @@ float getCrankingFuel3(
 	engine->engineState.cranking.tpsCoefficient =
 		tps.Valid
 		? interpolate2d(tps.Value, engineConfiguration->crankingTpsBins, engineConfiguration->crankingTpsCoef)
-		: 1 // in case of failed TPS, don't correct.
+		: 1; // in case of failed TPS, don't correct.
 
 	floatms_t crankingFuel = baseCrankingFuel
 			* engine->engineState.cranking.durationCoefficient
