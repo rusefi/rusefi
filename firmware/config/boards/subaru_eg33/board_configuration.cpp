@@ -12,10 +12,6 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
-void setPinConfigurationOverrides() {
-
-}
-
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIOE_1;

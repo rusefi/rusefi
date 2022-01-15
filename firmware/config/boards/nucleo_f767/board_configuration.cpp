@@ -14,9 +14,6 @@
 #undef SERIAL_SPEED
 #define SERIAL_SPEED 115200
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOD_8;
