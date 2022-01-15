@@ -62,16 +62,15 @@ float getCrankingFuel3(
 	 * If the sensor is failed, use 20 deg C
 	 */
 	auto clt = Sensor::get(SensorType::Clt);
+	auto e0Mult = interpolate2d(clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
 
 	if (Sensor::hasSensor(SensorType::FuelEthanolPercent)) {
-		auto e0   = interpolate2d(clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
 		auto e100 = interpolate2d(clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoefE100);
 
 		auto flex = Sensor::get(SensorType::FuelEthanolPercent);
-		engine->engineState.cranking.coolantTemperatureCoefficient = priv::linterp(e0, e100, flex.value_or(50));
+		engine->engineState.cranking.coolantTemperatureCoefficient = priv::linterp(e0Mult, e100, flex.value_or(50));
 	} else {
-		engine->engineState.cranking.coolantTemperatureCoefficient =
-			interpolate2d(clt.value_or(20), config->crankingFuelBins, config->crankingFuelCoef);
+		engine->engineState.cranking.coolantTemperatureCoefficient = e0Mult;
 	}
 
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
