@@ -394,7 +394,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		float b = 2 * autotuneAmplitude;
 
 		// Ultimate gain per A-H relay tuning rule
-		float ku = 4 * b / (3.14159f * m_a);
+		float ku = 4 * b / (CONST_PI * m_a);
 
 		// The multipliers below are somewhere near the "no overshoot" 
 		// and "some overshoot" flavors of the Ziegler-Nichols method
