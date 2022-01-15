@@ -91,9 +91,9 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_0;	// ADC1_16
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;	// ADC3_0
+	engineConfiguration->clt.adcChannel = H144_IN_CLT;	// ADC3_0
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_13;	// ADC3_1
+	engineConfiguration->iat.adcChannel = H144_IN_IAT;	// ADC3_1
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
