@@ -43,7 +43,7 @@ TEST(hip9011, band) {
 	HIP9011 instance(NULL);
 
 	EXPECT_FLOAT_EQ(3, instance.getBand(/* knockBandCustom*/3, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
-	EXPECT_FLOAT_EQ(7.5389242, instance.getBand(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
+	EXPECT_NEAR_M4(7.5389242, instance.getBand(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
 
 	EXPECT_EQ(42, instance.getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
 
