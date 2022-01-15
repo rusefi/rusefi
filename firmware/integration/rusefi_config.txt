@@ -1541,7 +1541,7 @@ float[CLT_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2
 float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C", 1, 0, -100, 250, 2
 float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
-	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0.1, 50, 2
+	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0, 50, 2
 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C", 1, 0, -80, 170, 2
 
 	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"ratio", 1, 0, 0, 5, 2
@@ -1634,6 +1634,8 @@ cyl_trim_s[12 iterate] ignTrims
 uint16_t[TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 400, 0
 uint16_t[TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 cyl_trim_s[12 iterate] fuelTrims
+
+uint16_t[CRANKING_CURVE_SIZE] crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 end_struct
 
 #define MOCK_MAP_COMMAND "mock_map_voltage"

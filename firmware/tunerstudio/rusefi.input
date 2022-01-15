@@ -498,6 +498,14 @@ enable2ndByteCanID = false
       yBins       = crankingFuelCoef
       gauge       = CLTGauge
 
+	curve = crankingCltCurveE100, "Cranking Coolant Temperature Multiplier (Flex Fuel E100)"
+      columnLabel = "Coolant", "Multiplier"
+      xAxis       =  -40, 120, 9
+      yAxis       =  0,  3, 10
+      xBins       = crankingFuelBins, coolant
+      yBins       = crankingFuelCoefE100
+      gauge       = CLTGauge
+
 	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
       columnLabel = "TPS", "duty bias"
       xAxis       =  0, 50, 11
@@ -1376,6 +1384,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
+		subMenu = crankingCltCurveE100,		"Fuel CLT multiplier (Flex Fuel E100)", 0, { flexSensorPin != @@ADC_CHANNEL_NONE@@ }
 		subMenu = crankingDurationCurve,	"Fuel duration multiplier"	
 		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
 		subMenu = std_separator
