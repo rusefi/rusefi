@@ -102,9 +102,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canRxPin = H176_CAN_RX;
 }
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;

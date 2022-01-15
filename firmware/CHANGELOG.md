@@ -27,6 +27,8 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
+## January 2022 Release - "Rubber ducky"
+
 ### Added
  - Per-cylinder fuel trim tables
  - Per-cylinder ignition timing trim tables

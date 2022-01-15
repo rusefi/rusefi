@@ -100,9 +100,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->iat.config.bias_resistor = 4700;
 }
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;

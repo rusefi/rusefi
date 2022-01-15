@@ -123,9 +123,6 @@ void setBoardDefaultConfiguration() {
 	//engineConfiguration->isFastAdcEnabled = false;
 }
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 #if 0
 	engineConfiguration->useSerialPort = true;

@@ -155,6 +155,9 @@ void setVwPassatB6() {
 
 	setBoschVAGETB();
 
+	// random number just to take position away from zero
+	engineConfiguration->vvtOffsets[0] = 180;
+
 
 	// https://rusefi.com/forum/viewtopic.php?p=38235#p38235
 	engineConfiguration->injector.flow = 1200;
