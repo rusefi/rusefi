@@ -99,6 +99,14 @@ void boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
 	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
 	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
+	boardOnConfigurationChange(nullptr);
+}
+
+void boardOnConfigurationChange(engine_configuration_s *previousConfiguration) {
+	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
+	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
+	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
+	alphaCrankNPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
 }
 
 void setBoardConfigOverrides() {
@@ -111,9 +119,6 @@ void setBoardConfigOverrides() {
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
-}
-
-void setPinConfigurationOverrides() {
 }
 
 void setSerialConfigurationOverrides() {
@@ -171,6 +176,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
 // ?	engineConfiguration->malfunctionIndicatorPin = GPIOG_4; //1E - Check Engine Light
+	setHellenDefaultVrThresholds();
+	engineConfiguration->vrThreshold[0].pin = H144_OUT_PWM6;
 }
 
 /**
