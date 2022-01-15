@@ -103,9 +103,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canRxPin = GPIOD_0;
 }
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;

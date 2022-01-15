@@ -472,6 +472,8 @@ void startHardware() {
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void boardInitHardware() { }
 
+__attribute__((weak)) void setPinConfigurationOverrides() { }
+
 void initHardware() {
 #if HAL_USE_PAL && EFI_PROD_CODE
 	efiExtiInit();

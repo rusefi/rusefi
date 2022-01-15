@@ -160,9 +160,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
 }
 
-void setPinConfigurationOverrides() {
-}
-
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;

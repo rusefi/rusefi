@@ -108,9 +108,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.config.bias_resistor = 2700;
 }
 
-void setPinConfigurationOverrides() {
-}
-
 // Future: configure USART3 for LIN bus and UART4 for console
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
