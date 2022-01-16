@@ -220,7 +220,6 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 CSRC =  check.c \
 	$(ALLCSRC) \
 	$(BOARDSRC) \
-	$(CHIBIOS)/os/various/syscalls.c \
 	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
 	$(CHIBIOS)/os/various/evtimer.c \
 	$(DEV_SRC) \
