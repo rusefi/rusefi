@@ -933,6 +933,18 @@ enable2ndByteCanID = false
 
 [GaugeConfigurations]
 
+gaugeCategory = Trigger
+triggerSyncGapRatioGauge = triggerSyncGapRatio,"triggerSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerStateIndexGauge = triggerStateIndex,"triggerStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+vvtSyncGapRatioGauge = vvtSyncGapRatio,"vvtSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+vvtStateIndexGauge = vvtStateIndex,"vvtStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerPrimaryFallGauge = triggerPrimaryFall,"triggerPrimaryFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerPrimaryRiseGauge = triggerPrimaryRise,"triggerPrimaryRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerSecondaryFallGauge = triggerSecondaryFall,"triggerSecondaryFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerSecondaryRiseGauge = triggerSecondaryRise,"triggerSecondaryRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerVvtFallGauge = triggerVvtFall,"triggerVvtFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerVvtRiseGauge = triggerVvtRise,"triggerVvtRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+
 gaugeCategory = PIDs
 alternatorStatus_iTermGauge = alternatorStatus_iTerm,"alternatorStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 alternatorStatus_dTermGauge = alternatorStatus_dTerm,"alternatorStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -952,10 +964,6 @@ etbStatus_resetCounterGauge = etbStatus_resetCounter,"etbStatus_ resetCounter", 
 canReadCounterGauge = canReadCounter,"canReadCounter", "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 canWriteOkGauge = canWriteOk,"canWriteOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 canWriteNotOkGauge = canWriteNotOk,"canWriteNotOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-triggerSyncGapRatioGauge = triggerSyncGapRatio,"triggerSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-triggerStateIndexGauge = triggerStateIndex,"triggerStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-vvtSyncGapRatioGauge = vvtSyncGapRatio,"vvtSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-vvtStateIndexGauge = vvtStateIndex,"vvtStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 
 gaugeCategory = MAP Cam
 TEMPLOG_MAP_INSTANT_AVERAGEGauge = TEMPLOG_MAP_INSTANT_AVERAGE,"TEMPLOG_MAP_INSTANT_AVERAGE", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
