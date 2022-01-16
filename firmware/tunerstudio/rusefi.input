@@ -974,7 +974,7 @@ m_pressureTarget_kPaGauge = m_pressureTarget_kPa,"DI: m_pressureTarget_kPa", "v"
 
 gaugeCategory = Sensors - Extra 2
    egt1Gauge         = egt1, "EGT#1", "C", 0, 2000
-   egt2Gauge         = egt2, "EGT#2", "C", 0, 2000"
+   egt2Gauge         = egt2, "EGT#2", "C", 0, 2000
    egt3Gauge         = egt3, "EGT#3", "C", 0, 2000
    egt4Gauge         = egt4, "EGT#4", "C", 0, 2000
    egt5Gauge         = egt5, "EGT#5", "C", 0, 2000
