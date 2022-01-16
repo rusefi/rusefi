@@ -7,6 +7,8 @@ pins:
     color: black
 
   - pin: A2
+    id: EFI_ADC_5
+    class: analog_inputs
     function: +12V
     type: 12V
     color: red
