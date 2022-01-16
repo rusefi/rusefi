@@ -56,7 +56,7 @@ static void setupVbatt() {
 	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
 
 	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5; // 4T
+	engineConfiguration->vbattAdcChannel = H144_IN_VBATT; // 4T
 
 	engineConfiguration->adcVcc = 3.29f;
 }
