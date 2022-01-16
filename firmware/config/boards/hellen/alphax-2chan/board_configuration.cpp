@@ -34,10 +34,10 @@ static void setInjectorPins() {
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
-	engineConfiguration->clutchDownPin = GPIOC_4; // Clutch switch input
+	engineConfiguration->clutchDownPin = GPIO_UNASSIGNED;
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO8;
+	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 }
 
 static void setIgnitionPins() {
@@ -75,11 +75,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
+	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
+	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
