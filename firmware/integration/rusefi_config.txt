@@ -1006,8 +1006,8 @@ end_struct
 	bit disablePrimaryUart
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
-	bit boardUseTachPullUp
-	bit boardUseTempPullUp
+	bit boardUseTachPullUp,"with pull-up","without pull-up"
+	bit boardUseTempPullUp,"with pull-up","without pull-up"
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
@@ -1024,7 +1024,7 @@ bit cutFuelOnHardLimit,"yes","no"
 bit cutSparkOnHardLimit,"yes","no"
 bit launchFuelCutEnable
 bit launchSparkCutEnable;+This is the Cut Mode normally used
-	bit boardUseCrankPullUp
+	bit boardUseCrankPullUp,"with pull-up","without pull-up"
 	bit unusedBitWasHere1
 	bit unusedBitWasHere2
 	bit unusedBitWasHere3
