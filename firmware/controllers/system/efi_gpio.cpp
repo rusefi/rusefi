@@ -404,6 +404,11 @@ bool OutputPin::getAndSet(int logicValue) {
 // This function is only used on real hardware
 #if EFI_PROD_CODE
 void OutputPin::setOnchipValue(int electricalValue) {
+	if (brainPin == GPIO_UNASSIGNED || brainPin == GPIO_INVALID) {
+	    // todo: make 'setOnchipValue' or 'reportsetOnchipValueError' virtual and override for NamedOutputPin?
+		warning(CUSTOM_ERR_6586, "attempting to change unassigned pin");
+		return;
+	}
 	palWritePad(port, pin, electricalValue);
 }
 #endif // EFI_PROD_CODE
