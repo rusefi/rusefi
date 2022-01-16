@@ -15,6 +15,8 @@ void setHellen176LedPins();
 
 void detectHellenBoardType();
 
+#define H144_LED1_RED GPIOG_0
+#define H176_LED1_RED GPIOH_8
 
 #define H144_LS_1 GPIOG_7
 #define H144_LS_2 GPIOG_8
