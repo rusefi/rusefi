@@ -750,6 +750,12 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
 		engineConfiguration->twoWireBatchInjection = isEnabled;
 		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "boardUseTempPullUp")) {
+		engineConfiguration->boardUseTempPullUp = isEnabled;
+		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "boardUseTachPullUp")) {
+		engineConfiguration->boardUseTachPullUp = isEnabled;
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();

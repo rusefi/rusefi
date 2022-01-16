@@ -928,6 +928,18 @@ enable2ndByteCanID = false
 
 [GaugeConfigurations]
 
+gaugeCategory = Trigger
+triggerSyncGapRatioGauge = triggerSyncGapRatio,"triggerSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerStateIndexGauge = triggerStateIndex,"triggerStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+vvtSyncGapRatioGauge = vvtSyncGapRatio,"vvtSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+vvtStateIndexGauge = vvtStateIndex,"vvtStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerPrimaryFallGauge = triggerPrimaryFall,"triggerPrimaryFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerPrimaryRiseGauge = triggerPrimaryRise,"triggerPrimaryRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerSecondaryFallGauge = triggerSecondaryFall,"triggerSecondaryFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerSecondaryRiseGauge = triggerSecondaryRise,"triggerSecondaryRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerVvtFallGauge = triggerVvtFall,"triggerVvtFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+triggerVvtRiseGauge = triggerVvtRise,"triggerVvtRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+
 gaugeCategory = PIDs
 alternatorStatus_iTermGauge = alternatorStatus_iTerm,"alternatorStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 alternatorStatus_dTermGauge = alternatorStatus_dTerm,"alternatorStatus_ dTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -947,10 +959,6 @@ etbStatus_resetCounterGauge = etbStatus_resetCounter,"etbStatus_ resetCounter", 
 canReadCounterGauge = canReadCounter,"canReadCounter", "", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 canWriteOkGauge = canWriteOk,"canWriteOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 canWriteNotOkGauge = canWriteNotOk,"canWriteNotOk", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-triggerSyncGapRatioGauge = triggerSyncGapRatio,"triggerSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-triggerStateIndexGauge = triggerStateIndex,"triggerStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-vvtSyncGapRatioGauge = vvtSyncGapRatio,"vvtSyncGapRatio", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
-vvtStateIndexGauge = vvtStateIndex,"vvtStateIndex", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 
 gaugeCategory = MAP Cam
 TEMPLOG_MAP_INSTANT_AVERAGEGauge = TEMPLOG_MAP_INSTANT_AVERAGE,"TEMPLOG_MAP_INSTANT_AVERAGE", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -980,7 +988,7 @@ gaugeCategory = Sensors - Extra 2
    knockLevelGauge   = knockLevel,"Knock level",           "V",        0,      7,      10,     10,     100,   100,   1,   2
    knockCountGauge   = knockCount, "Knock count",          "count",        0, 10000, 0, 0, 10000, 10000, 0, 0
    fuelTankLevelGauge   = fuelTankLevel,"Fuel level",           "%",        0,      100,      10,     20,     100,   100,   1,   1
-   speedToRpmRatioGauge = speedToRpmRatio, "gearbox ratio", "",     0,   100,     0,    0,    100,  100,   4,   4
+   speedToRpmRatioGauge = speedToRpmRatio, @@GAUGE_NAME_GEAR_RATIO@@, "",     0,   100,     0,    0,    100,  100,   4,   4
    wastegatePosGauge = wastegatePositionSensor, @@GAUGE_NAME_WG_POSITION@@,  "%",        0,    100,       0,      0,     100,   100,   1,   1
    idlePosSensGauge  = idlePositionSensor,      @@GAUGE_NAME_IDLE_POSITION@@,       "%",        0,    100,       0,      0,     100,   100,   1,   1
    currentEnginePhaseGauge = currentEnginePhase, "Engine Phase", "deg", 0, 720, 0, 0, 720, 720, 0, 0
@@ -3005,6 +3013,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = speedSensorAnalog
 		field = "Input pin",					vehicleSpeedSensorInputPin
 		field = "Wheel revolutions per kilometer",		driveWheelRevPerKm
+;
+; We prefer quantities that users can actually measure or inspect without math, so we have
+; two separate natural settings here without one 'sensor tooth to wheel revolution' ratio
+;
 		field = "Speed sensor gear ratio",				vssGearRatio
 		field = "Speed sensor tooth count",				vssToothCount
 

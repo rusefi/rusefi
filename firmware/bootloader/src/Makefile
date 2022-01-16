@@ -162,7 +162,6 @@ include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 # setting.
 CSRC =  $(ALLCSRC) \
 	$(BOARDSRC) \
-	$(CHIBIOS)/os/various/syscalls.c \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \

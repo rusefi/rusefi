@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jan 12 21:36:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jan 15 22:43:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -144,7 +144,7 @@ struct ts_outputs_s {
 	 */
 	uint16_t rpmAcceleration = (uint16_t)0;
 	/**
-	 * s2rpm
+	 * @@GAUGE_NAME_GEAR_RATIO@@
 	value
 	 * offset 8
 	 */
@@ -1206,4 +1206,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Jan 12 21:36:23 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sat Jan 15 22:43:04 UTC 2022
