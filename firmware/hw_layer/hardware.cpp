@@ -492,6 +492,8 @@ void initHardware() {
 		return;
 	}
 
+	boardInitHardware();
+
 #if HAL_USE_ADC
 	initAdcInputs();
 
