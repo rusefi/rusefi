@@ -400,3 +400,9 @@ float tanf_taylor(float x) {
 	// tan = sin / cos
 	return sin_val / cos_val;
 }
+
+#if EFI_PROD_CODE
+extern "C" void __cxa_pure_virtual(void) {
+	osalSysHalt("Pure virtual function call.");
+}
+#endif
