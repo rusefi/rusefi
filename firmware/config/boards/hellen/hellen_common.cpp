@@ -34,13 +34,13 @@ void setHellen176LedPins() {
 
 // this should be called before setHellenXXXLedPins()
 void detectHellenBoardType() {
-	// we test the LED1 pin because the red LED used has the smallest voltage drop,
+	// we test the red LED1 pin because the red LED used has the smallest voltage drop,
 	// and thus can be detected more accurately
 	static const brain_pin_e led1Pins[2] = {
 		// LED1 pin of the 176-pin mcu module (we check it first!)
-		GPIOH_8,
+		H176_LED1_RED,
 		// LED1 pin of the 144-pin mcu module
-		GPIOG_0,
+		H144_LED1_RED,
 	};
 	int padState[2];
 	// check each mcu module type sequentially
