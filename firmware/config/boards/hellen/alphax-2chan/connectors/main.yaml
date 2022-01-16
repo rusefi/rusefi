@@ -67,6 +67,14 @@ pins:
     type: gnd
     color: black
 
+  - pin: On-board MAP
+    # H144_IN_MAP3
+    id: EFI_ADC_2
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: On-board MAP
+    color: orange
+
   - pin: B2
     # H144_IN_MAP2 AIN10 PC1
     id: EFI_ADC_11
