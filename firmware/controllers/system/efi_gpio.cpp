@@ -11,6 +11,10 @@
 #include "os_access.h"
 #include "drivers/gpio/gpio_ext.h"
 
+#if HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
