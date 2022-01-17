@@ -802,6 +802,29 @@ __attribute__((weak)) void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
-__attribute__((weak)) void boardPrepareForStandby() { }
+
+void boardPreparePA0ForStandby() {
+#ifdef STM32F4XX
+	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
+	PWR->CSR |= PWR_CSR_EWUP; //Enable Wakeup Pin for PA0
+#endif
+
+#ifdef STM32F7XX
+	PWR->CSR2 |= PWR_CSR2_EWUP1; //EWUP1: Enable Wakeup pin for PA0
+	PWR->CR2 |= PWR_CR2_CWUPF1; //Clear Wakeup Pin flag for PA0
+#endif
+
+#ifdef STM32H7XX
+	// Wake on wakeup pin 0 - PA0
+	PWR->WKUPEPR = PWR_WKUPEPR_WKUPEN1;
+
+	// clear all possible wakeup bits
+	PWR->WKUPCR = 0xFFFFFFFF;
+#endif
+}
+
+__attribute__((weak)) void boardPrepareForStandby() {
+	boardPreparePA0ForStandby();
+}
 
 #endif // EFI_PROD_CODE
