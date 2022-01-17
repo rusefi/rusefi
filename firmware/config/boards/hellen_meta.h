@@ -15,6 +15,14 @@ void setHellen176LedPins();
 
 void detectHellenBoardType();
 
+// stm32 UART8
+#define H144_UART1_RX GPIOE_0
+#define H144_UART1_TX GPIOE_1
+
+// stm32 UART2
+#define H144_UART2_RX GPIOD_6
+#define H144_UART2_TX GPIOD_5
+
 #define H144_LED1_RED GPIOG_0
 #define H176_LED1_RED GPIOH_8
 
