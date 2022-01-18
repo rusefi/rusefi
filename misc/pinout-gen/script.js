@@ -194,6 +194,10 @@ window.addEventListener('load', function() {
     if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
       document.title = connector.info.title;
     }
+    if (typeof(connector.info.board_url) != "undefined" && document.title.length > 0) {
+      document.getElementById("board-link").innerText = document.title;
+      document.getElementById("board-link").href = connector.info.board_url;
+    }
     if (typeof(connector.info.name) != "undefined") {
       sdiv.querySelector(".connector-name").innerText = connector.info.name;
     }
