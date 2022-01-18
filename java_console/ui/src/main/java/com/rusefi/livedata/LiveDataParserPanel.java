@@ -67,6 +67,8 @@ public class LiveDataParserPanel {
                 Field field = Field.findFieldOrNull(Fields.VALUES, "", setting.getText());
                 if (field == null)
                     continue;
+                if (field.getType().isString())
+                    continue;
                 Number value = field.getValue(ci);
                 Rectangle r;
                 try {
