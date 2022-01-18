@@ -275,4 +275,7 @@ table th {
   table, tbody, tr {
     display: block;
   }
+  #board-link {
+    display: none;
+  }
 }
