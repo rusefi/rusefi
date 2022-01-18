@@ -71,15 +71,13 @@ public:
 
 	expected<float> getCurrentEnginePhase(efitick_t nowNt) const;
 
-	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
+	float getSecondsSinceTriggerEvent(efitick_t nowNt) const {
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
 	bool engineMovedRecently(efitick_t nowNt) const {
-		// Trigger event some time in the past second = engine moving
-		// distributor single tooth, large engines crank at close to 120 RPM
-		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
-		return getTimeSinceTriggerEvent(nowNt) < 60.0 / RPM_LOW_THRESHOLD / 2;
+		constexpr float oneRevolutionLimitInSeconds = 60.0 / RPM_LOW_THRESHOLD;
+		return getSecondsSinceTriggerEvent(nowNt) < oneRevolutionLimitInSeconds / triggerShape.getSize();
 	}
 
 	bool engineMovedRecently() const {
