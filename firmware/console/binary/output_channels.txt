@@ -273,8 +273,11 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     float di_nextStart;"DI: next start";"v", 1, 0, 0, 100, 0
 
+    uint16_t systemEventReuse;;"counter", 1, 0, 0, 0, 0
+    uint8_t[2 iterate] unusedAtTheEnd2;;"",1, 0, 0, 0, 0
+
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[104 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[100 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition

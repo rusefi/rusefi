@@ -973,6 +973,7 @@ TEMPLOG_MAP_AT_DIFFGauge = TEMPLOG_MAP_AT_DIFF,"TEMPLOG_MAP_AT_DIFF", "", -10000
 TEMPLOG_MAP_AT_CYCLE_COUNTGauge = TEMPLOG_MAP_AT_CYCLE_COUNT,"TEMPLOG_MAP_AT_CYCLE_COUNT", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 
 gaugeCategory = GDI
+systemEventReuseGauge = systemEventReuse,"systemEventReuse", "counter", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 di_nextStartGauge = di_nextStart,"DI: next start", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0
 m_requested_pumpGauge = m_requested_pump,"DI: Pump Angle", "deg", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 fuel_requested_percentGauge = fuel_requested_percent,"DI: fuel_requested_percent", "v", 0.0,100.0, 0.0,100.0, 0.0,100.0, 0,0

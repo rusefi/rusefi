@@ -64,6 +64,7 @@ bool TriggerScheduler::scheduleOrQueue(AngleBasedEvent *event,
 				return false;
 			}
 		}
+		engine->outputChannels.systemEventReuse++; // not atomic/not volatile but good enough for just debugging
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("isPending thus not adding to queue index=%d rev=%d now=%d",
 			  trgEventIndex, getRevolutionCounter(), (int)getTimeNowUs());
@@ -89,7 +90,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 	{
 		chibios_rt::CriticalSectionLocker csl;
 
-		keephead =m_angleBasedEventsHead;
+		keephead = m_angleBasedEventsHead;
 		m_angleBasedEventsHead = nullptr;
 	}
 
