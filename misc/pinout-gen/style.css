@@ -218,6 +218,14 @@ table th {
   table tr:hover {
     background-color: #f15a24;
   }
+
+  a {
+    color: #71b7ff;
+  }
+
+  a:visited {
+    color: #71b7ff;
+  }
 }
 
 @media print {
