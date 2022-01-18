@@ -191,14 +191,12 @@ window.addEventListener('load', function() {
       checkImagesLoaded();
     }.bind(null, connector, sdiv, img));
     img.src = connector.info.image.file;
-    if (typeof(connector.info.title) != "undefined") {
-      if (document.title.length == 0) {
-        document.title = connector.info.title;
-      }
-      if (typeof(connector.info.board_url) != "undefined") {
-        document.getElementById("board-link").innerText = connector.info.title;
-        document.getElementById("board-link").href = connector.info.board_url;
-      }
+    if (document.title.length == 0 && typeof(connector.info.title) != "undefined") {
+      document.title = connector.info.title;
+    }
+    if (typeof(connector.info.board_url) != "undefined" && document.title.length > 0) {
+      document.getElementById("board-link").innerText = document.title;
+      document.getElementById("board-link").href = connector.info.board_url;
     }
     if (typeof(connector.info.name) != "undefined") {
       sdiv.querySelector(".connector-name").innerText = connector.info.name;
