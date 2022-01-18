@@ -79,7 +79,7 @@ public class CodeWalkthrough {
                 allTerminals.add(node);
 
                 String text = node.getSymbol().getText();
-                valueSource.getValue(text);
+                //valueSource.getValue(text);
 
                 if ("else".equalsIgnoreCase(text)) {
                     if (log.debugEnabled())
