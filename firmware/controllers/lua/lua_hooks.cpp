@@ -608,7 +608,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	});
 
 	lua_register(l, "getTimeSinceTriggerEventMs", [](lua_State* l) {
-		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
+		int result = engine->triggerCentral.getSecondsSinceTriggerEvent() * 1000;
 		lua_pushnumber(l, result);
 		return 1;
 	});
