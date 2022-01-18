@@ -514,9 +514,7 @@ void Engine::watchdog() {
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 */
-	float secondsSinceTriggerEvent = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
-
-	if (secondsSinceTriggerEvent < 0.5f) {
+	if (engine->triggerCentral.engineMovedRecently()) {
 		// Engine moved recently, no need to safe pins.
 		return;
 	}

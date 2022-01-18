@@ -70,11 +70,15 @@ public:
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
-	bool engineMovedRecently() const {
+	bool engineMovedRecently(efitick_t nowNt) const {
 		// Trigger event some time in the past second = engine moving
 		// distributor single tooth, large engines crank at close to 120 RPM
 		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
-		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
+		return getTimeSinceTriggerEvent(nowNt) < 1.0f;
+	}
+
+	bool engineMovedRecently() const {
+		return engineMovedRecently(getTimeNowNt());
 	}
 
 	TriggerNoiseFilter noiseFilter;
