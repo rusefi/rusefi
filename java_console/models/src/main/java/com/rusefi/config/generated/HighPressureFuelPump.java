@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Jan 18 05:08:39 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 00:21:14 EST 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -9,7 +9,7 @@ public class HighPressureFuelPump {
 	public static final Field M_REQUESTED_PUMP = Field.create("M_REQUESTED_PUMP", 0, FieldType.FLOAT);
 	public static final Field FUEL_REQUESTED_PERCENT = Field.create("FUEL_REQUESTED_PERCENT", 4, FieldType.FLOAT);
 	public static final Field FUEL_REQUESTED_PERCENT_PI = Field.create("FUEL_REQUESTED_PERCENT_PI", 8, FieldType.FLOAT);
-	public static final Field HAVEVALVE = Field.create("HAVEVALVE", 12, FieldType.BIT, 0);
+	public static final Field NOVALVE = Field.create("NOVALVE", 12, FieldType.BIT, 0);
 	public static final Field ANGLEABOVEMIN = Field.create("ANGLEABOVEMIN", 12, FieldType.BIT, 1);
 	public static final Field UNUSEDBIT_5_2 = Field.create("UNUSEDBIT_5_2", 12, FieldType.BIT, 2);
 	public static final Field UNUSEDBIT_5_3 = Field.create("UNUSEDBIT_5_3", 12, FieldType.BIT, 3);
@@ -41,11 +41,13 @@ public class HighPressureFuelPump {
 	public static final Field UNUSEDBIT_5_29 = Field.create("UNUSEDBIT_5_29", 12, FieldType.BIT, 29);
 	public static final Field UNUSEDBIT_5_30 = Field.create("UNUSEDBIT_5_30", 12, FieldType.BIT, 30);
 	public static final Field UNUSEDBIT_5_31 = Field.create("UNUSEDBIT_5_31", 12, FieldType.BIT, 31);
+	public static final Field NEXTLOBE = Field.create("NEXTLOBE", 16, FieldType.FLOAT);
+	public static final Field NEXTSTART = Field.create("NEXTSTART", 20, FieldType.FLOAT);
 	public static final Field[] VALUES = {
 	M_REQUESTED_PUMP,
 	FUEL_REQUESTED_PERCENT,
 	FUEL_REQUESTED_PERCENT_PI,
-	HAVEVALVE,
+	NOVALVE,
 	ANGLEABOVEMIN,
 	UNUSEDBIT_5_2,
 	UNUSEDBIT_5_3,
@@ -77,5 +79,7 @@ public class HighPressureFuelPump {
 	UNUSEDBIT_5_29,
 	UNUSEDBIT_5_30,
 	UNUSEDBIT_5_31,
+	NEXTLOBE,
+	NEXTSTART,
 	};
 }

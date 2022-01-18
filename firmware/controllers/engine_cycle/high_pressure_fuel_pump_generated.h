@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Jan 18 05:08:39 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 00:21:14 EST 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -20,7 +20,7 @@ struct high_pressure_fuel_pump_s {
 	float fuel_requested_percent_pi = (float)0;
 	/**
 	offset 12 bit 0 */
-	bool haveValve : 1 {};
+	bool noValve : 1 {};
 	/**
 	offset 12 bit 1 */
 	bool angleAboveMin : 1 {};
@@ -114,8 +114,16 @@ struct high_pressure_fuel_pump_s {
 	/**
 	offset 12 bit 31 */
 	bool unusedBit_5_31 : 1 {};
-	/** total size 16*/
+	/**
+	 * offset 16
+	 */
+	angle_t nextLobe = (angle_t)0;
+	/**
+	 * offset 20
+	 */
+	angle_t nextStart = (angle_t)0;
+	/** total size 24*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Tue Jan 18 05:08:39 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 00:21:14 EST 2022

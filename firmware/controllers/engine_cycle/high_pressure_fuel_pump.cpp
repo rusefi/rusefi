@@ -178,7 +178,8 @@ void HpfpController::pinTurnOff(HpfpController *self) {
 }
 
 void HpfpController::scheduleNextCycle() {
-	if (!enginePins.hpfpValve.isInitialized()) {
+	noValve = !enginePins.hpfpValve.isInitialized();
+	if (noValve) {
 		m_running = false;
 		return;
 	}
@@ -186,10 +187,14 @@ void HpfpController::scheduleNextCycle() {
 	angle_t lobe = m_lobe.findNextLobe();
 	angle_t angle_requested = m_requested_pump;
 
-	if (angle_requested > engineConfiguration->hpfpMinAngle) {
+	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
+	if (angleAboveMin) {
+		nextStart = lobe - angle_requested - m_deadtime;
+		engine->outputChannels.di_nextStart = nextStart;
+
 		engine->module<TriggerScheduler>()->scheduleOrQueue(
 			&m_event, TRIGGER_EVENT_UNDEFINED, 0,
-			lobe - angle_requested - m_deadtime,
+			nextStart,
 			{ pinTurnOn, this });
 
 		// Off will be scheduled after turning the valve on
