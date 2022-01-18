@@ -77,9 +77,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 							   uint32_t trgEventIndex,
 							   efitick_t edgeTimestamp) {
 
-	// Not sure why we check ignitionEnabled; it's left over from when this code lived in
-	// spark_logic.cpp, but I think it should be removed.
-	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled) {
+	if (!isValidRpm(rpm)) {
 		 // this might happen for instance in case of a single trigger event after a pause
 		return;
 	}
