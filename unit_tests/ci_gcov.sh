@@ -1,8 +1,10 @@
 #!/bin/bash
 
 #
-# this one used by github actions
-# this scripts replaces run_gcov.sh
+# this script is used by github actions
+#
+# TODO: this script validates that it has three arguments but then proceeds to use environment variables not arguments!
+# TODO: clean this up!
 #
 
 if [ ! "$1" ] || [ ! "$2" ] || [ ! "$3" ]; then
