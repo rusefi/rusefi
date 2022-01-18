@@ -334,6 +334,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.instantRpm;
 	if (strEqualCaseInsensitive(name, "di_nextStart"))
 		return engine->outputChannels.di_nextStart;
+	if (strEqualCaseInsensitive(name, "systemEventReuse"))
+		return engine->outputChannels.systemEventReuse;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
