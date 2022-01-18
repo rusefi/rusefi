@@ -424,6 +424,8 @@ void OutputPin::setValue(int logicValue) {
 #endif // ENABLE_PERF_TRACE
 
 #if EFI_UNIT_TEST
+	unitTestTurnedOnCounter++;
+
 	if (verboseMode) {
 		efiPrintf("pin goes %d", logicValue);
 	}
@@ -495,6 +497,10 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError) {
+#if EFI_UNIT_TEST
+	unitTestTurnedOnCounter = 0;
+#endif
+
 	if (!isBrainPinValid(brainPin)) {
 		return;
 	}
