@@ -17,11 +17,6 @@
 #define NOISY_RPM -1
 #define UNREALISTIC_RPM 30000
 
-#ifndef RPM_LOW_THRESHOLD
-// no idea what is the best value, 25 is as good as any other guess
-#define RPM_LOW_THRESHOLD 25
-#endif
-
 typedef enum {
 	/**
 	 * The engine is not spinning, RPM=0

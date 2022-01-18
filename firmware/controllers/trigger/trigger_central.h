@@ -17,6 +17,11 @@
 
 #define MAP_CAM_BUFFER 64
 
+#ifndef RPM_LOW_THRESHOLD
+// no idea what is the best value, 25 is as good as any other guess
+#define RPM_LOW_THRESHOLD 25
+#endif
+
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp);
 
@@ -74,7 +79,7 @@ public:
 		// Trigger event some time in the past second = engine moving
 		// distributor single tooth, large engines crank at close to 120 RPM
 		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
-		return getTimeSinceTriggerEvent(nowNt) < 1.0f;
+		return getTimeSinceTriggerEvent(nowNt) < 60.0 / RPM_LOW_THRESHOLD / 2;
 	}
 
 	bool engineMovedRecently() const {
