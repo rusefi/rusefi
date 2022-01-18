@@ -39,5 +39,5 @@ genhtml coverage.info --output-directory gcov
 echo -e "\nGenerating rusEFI unit test HTML"
 
 echo -e "\nUploading HTML"
-tar -czf - gcov/* | sshpass -p "$RUSEFI_SSH_PASS" ssh -o StrictHostKeyChecking=no "$RUSEFI_SSH_USER"@"$RUSEFI_SSH_SERVER" "tar -xzf - -C docs/unit_tests_coverage"
+tar -czf - -C gcov . | sshpass -p "$RUSEFI_SSH_PASS" ssh -o StrictHostKeyChecking=no "$RUSEFI_SSH_USER"@"$RUSEFI_SSH_SERVER" "tar -xzf - -C docs/unit_tests_coverage"
 echo -e "\nHappy End."
