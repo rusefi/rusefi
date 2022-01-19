@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 10:07:25 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 20:53:30 EST 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -26,7 +26,7 @@ struct high_pressure_fuel_pump_s {
 	bool angleAboveMin : 1 {};
 	/**
 	offset 12 bit 2 */
-	bool isHpfpActive : 1 {};
+	bool isHpfpInactive : 1 {};
 	/**
 	offset 12 bit 3 */
 	bool unusedBit_6_3 : 1 {};
@@ -126,4 +126,4 @@ struct high_pressure_fuel_pump_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 10:07:25 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 20:53:30 EST 2022
