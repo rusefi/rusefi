@@ -72,8 +72,8 @@ static const scsi_inquiry_response_t sdCardInquiry = {
 static BlockCache sdReadPrefetch;
 
 void attachMsdSdCard(BaseBlockDevice* blkdev) {
-	sdReadPrefetch.backing = blkdev;
-	sdReadPrefetch.start();
+	// Start the prefetcher
+	sdReadPrefetch.start(blkdev);
 
 	msd.attachLun(1, reinterpret_cast<BaseBlockDevice*>(&sdReadPrefetch), blkbuf1, &sdCardInquiry, nullptr);
 
