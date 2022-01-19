@@ -20,9 +20,9 @@ static bool is_protected(void* instance) {
 
 	chibios_rt::MutexLocker lock(bc->deviceMutex);
 
-	// ask the underlying device, otherwise false
+	// ask the underlying device, otherwise true
 	auto backing = bc->backing;
-	return bc ? backing->vmt->is_inserted(backing) : false;
+	return bc ? backing->vmt->is_inserted(backing) : true;
 }
 
 static bool connect(void* instance) {
