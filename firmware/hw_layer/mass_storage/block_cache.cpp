@@ -55,27 +55,31 @@ static bool read(void* instance, uint32_t startblk, uint8_t* buffer, uint32_t n)
 
 	BlockCache* bc = reinterpret_cast<BlockCache*>(instance);
 
-	if (!bc->backing) {
+	return bc->read(startblk, buffer);
+}
+
+bool BlockCache::read(uint32_t startblk, uint8_t* buffer) {
+	if (!backing) {
 		return HAL_FAILED;
 	}
 
-	priv::handle* h;
-	bc->free.fetch(&h, TIME_INFINITE);
+	Handle* h;
+	m_free.fetch(&h, TIME_INFINITE);
 
 	// copy request information
 	h->startblk = startblk;
 	h->buffer = buffer;
 
 	// make the request
-	bc->requests.post(h, TIME_INFINITE);
+	m_requests.post(h, TIME_INFINITE);
 	// wait for it to complete
-	bc->completed.fetch(&h, TIME_INFINITE);
+	m_completed.fetch(&h, TIME_INFINITE);
 
 	// stash the result
 	auto result = h->result;
 
 	// return the handle to the free list
-	bc->free.post(h, TIME_INFINITE);
+	m_free.post(h, TIME_INFINITE);
 
 	return result;
 }
@@ -88,21 +92,20 @@ static bool write(void* instance, uint32_t startblk, const uint8_t* buffer, uint
 	}
 
 	chibios_rt::MutexLocker lock(bc->deviceMutex);
-	efiPrintf("BC write %d", startblk);
 	return bc->backing->vmt->write(bc->backing, startblk, buffer, n);
 }
 
 bool BlockCache::fetchBlock(uint32_t blockId) {
 	chibios_rt::MutexLocker lock(deviceMutex);
 
-	auto result = backing->vmt->read(backing, blockId, cachedBlockData, 1);
+	auto result = backing->vmt->read(backing, blockId, m_cachedBlockData, 1);
 
 	if (result == HAL_SUCCESS) {
 		// read succeeded, mark cache as valid
-		cachedBlockId = blockId;
+		m_cachedBlockId = blockId;
 	} else {
 		// read failed, invalidate cache
-		cachedBlockId = -1;
+		m_cachedBlockId = -1;
 	}
 
 	return result;
@@ -110,15 +113,15 @@ bool BlockCache::fetchBlock(uint32_t blockId) {
 
 void BlockCache::thread() {
 	while (true) {
-		priv::handle* h;
+		Handle* h;
 		
 		// Wait for a request to come in
-		requests.fetch(&h, TIME_INFINITE);
+		m_requests.fetch(&h, TIME_INFINITE);
 
 		auto startblk = h->startblk;
 
 		// Did we prefetch the wrong block?
-		if (startblk != cachedBlockId) {
+		if (startblk != m_cachedBlockId) {
 			// Cache miss, fetch the correct block
 			h->result = fetchBlock(startblk);
 		} else {
@@ -127,10 +130,10 @@ void BlockCache::thread() {
 		}
 
 		// Copy from the cache to the output buffer
-		memcpy(h->buffer, cachedBlockData, 512);
+		memcpy(h->buffer, m_cachedBlockData, 512);
 
 		// return the completed request
-		completed.post(h, TIME_INFINITE);
+		m_completed.post(h, TIME_INFINITE);
 
 		// Now that we have returned the requested block, prefetch the next block
 		startblk++;
@@ -176,8 +179,8 @@ BlockCache::BlockCache() {
 	vmt = &blockCacheVmt;
 
 	// push all in to the free buffer
-	for (int i = 0; i < efi::size(handles); i++) {
-		free.post(&handles[i], TIME_INFINITE);
+	for (int i = 0; i < efi::size(m_handles); i++) {
+		m_free.post(&m_handles[i], TIME_INFINITE);
 	}
 }
 

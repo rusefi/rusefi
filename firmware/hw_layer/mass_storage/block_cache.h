@@ -3,44 +3,42 @@
 
 #include "ch.hpp"
 #include "hal.h"
-
-namespace priv
-{
-struct handle {
-	bool result;
-
-	// Read request parameters
-	uint32_t startblk;
-	uint8_t* buffer;
-};
-};
-
 struct BlockCache {
 	const BaseBlockDeviceVMT* vmt;
 	_base_block_device_data
 
 	BaseBlockDevice* backing;
+	chibios_rt::Mutex deviceMutex;
 
 	BlockCache();
 
-	static constexpr int handleCount = 1;
-
-	chibios_rt::Mailbox<priv::handle*, handleCount> requests;
-	chibios_rt::Mailbox<priv::handle*, handleCount> completed;
-	chibios_rt::Mailbox<priv::handle*, handleCount> free;
-
-	priv::handle handles[handleCount];
-
-	chibios_rt::Mutex deviceMutex;
-
-	void thread();
 	void start(BaseBlockDevice* backing);
 
+	bool read(uint32_t startblk, uint8_t* buffer);
 
+private:
+	void thread();
 	bool fetchBlock(uint32_t blockId);
 
-	int32_t cachedBlockId = -1;
-	uint8_t cachedBlockData[512];
+	struct Handle {
+		// Read request parameters
+		uint32_t startblk;
+		uint8_t* buffer;
+
+		// Returned result
+		bool result;
+	};
+
+	static constexpr int handleCount = 1;
+
+	chibios_rt::Mailbox<Handle*, handleCount> m_requests;
+	chibios_rt::Mailbox<Handle*, handleCount> m_completed;
+	chibios_rt::Mailbox<Handle*, handleCount> m_free;
+
+	Handle m_handles[handleCount];
+
+	int32_t m_cachedBlockId = -1;
+	uint8_t m_cachedBlockData[512];
 
 	THD_WORKING_AREA(wa, 5 * UTILITY_THREAD_STACK_SIZE);
 };
