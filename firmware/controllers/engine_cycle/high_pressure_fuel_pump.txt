@@ -5,7 +5,7 @@ float fuel_requested_percent
 float fuel_requested_percent_pi
 bit noValve
 bit angleAboveMin
-bit isHpfpActive
+bit isHpfpInactive
 angle_t nextLobe
 angle_t nextStart
 

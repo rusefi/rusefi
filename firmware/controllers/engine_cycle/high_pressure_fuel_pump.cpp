@@ -128,16 +128,17 @@ void HpfpController::onFastCallback() {
 	// Pressure current/target calculation
 	int rpm = engine->rpmCalculator.getRpm();
 
-	isHpfpActive = rpm < rpm_spinning_cutoff ||
+	isHpfpInactive = rpm < rpm_spinning_cutoff ||
 		    engineConfiguration->hpfpCamLobes == 0 ||
 		    engineConfiguration->hpfpPumpVolume == 0 ||
 		    !enginePins.hpfpValve.isInitialized();
 	// What conditions can we not handle?
-	if (isHpfpActive) {
+	if (isHpfpInactive) {
 		m_quantity.reset();
 		m_requested_pump = 0;
 		m_deadtime = 0;
 	} else {
+		efiAssertVoid(OBD_PCM_Processor_Fault, "Too few trigger tooth for this number of HPFP lobes", engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6);
 		// Convert deadtime from ms to degrees based on current RPM
 		float deadtime_ms = interpolate2d(
 			Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
