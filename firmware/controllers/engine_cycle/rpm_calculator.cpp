@@ -245,7 +245,7 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t index, efitick_t nowNt) {
 
-	bool alwaysInstantRpm = config->alwaysInstantRpm;
+	bool alwaysInstantRpm = engineConfiguration->alwaysInstantRpm;
 
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
