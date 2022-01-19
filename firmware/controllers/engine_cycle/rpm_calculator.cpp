@@ -300,9 +300,10 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,
 		index, nowNt);
 
-	if (alwaysInstantRpm || rpmState->isSpinningUp()) {
-		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
-
+	float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+	if (alwaysInstantRpm) {
+		rpmState->setRpmValue(instantRpm);
+	} else if (rpmState->isSpinningUp()) {
 		rpmState->assignRpmValue(instantRpm);
 #if 0
 		efiPrintf("** RPM: idx=%d sig=%d iRPM=%d", index, ckpSignalType, instantRpm);
