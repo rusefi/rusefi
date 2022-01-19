@@ -304,6 +304,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		engine->outputChannels.vvtCurrentPosition = currentPosition;
 #endif /* EFI_TUNER_STUDIO */
 
+	if (isVvtWithRealDecoder && tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+		// this is not sync tooth - exiting
+		return;
+	}
+
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
@@ -313,24 +318,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			return;
 		}
 		break;
-	case VVT_MIATA_NB2:
-	case VVT_BOSCH_QUICK_START:
-	case VVT_BARRA_3_PLUS_1:
-	case VVT_NISSAN_VQ:
-	case VVT_NISSAN_MR:
-	{
-		if (tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
-			// this is not sync tooth - exiting
-			return;
-		}
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.vvtCounter++;
-#endif /* EFI_TUNER_STUDIO */
-	}
 	default:
 		// else, do nothing
 		break;
 	}
+
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.vvtCounter++;
+#endif /* EFI_TUNER_STUDIO */
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
