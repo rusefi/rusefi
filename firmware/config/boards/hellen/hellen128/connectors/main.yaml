@@ -668,6 +668,8 @@ pins:
 
 info:
   title: Hellen 128 Mercedes
+  name: Hellen 128 Mercedes
+  board_url: https://rusefi.com/s/hellen128merc
   image:
     file: main.jpg
   pins:
