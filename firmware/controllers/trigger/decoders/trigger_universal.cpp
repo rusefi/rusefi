@@ -128,6 +128,7 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	int offset = 20;
 
 	s->setTriggerSynchronizationGap3(0, 2, 3);
+	s->setSecondTriggerSynchronizationGap(0.44);
 
 	s->addEvent360(offset + 0, T_PRIMARY, TV_RISE);
 	s->addEvent360(offset + 70, T_PRIMARY, TV_FALL);
