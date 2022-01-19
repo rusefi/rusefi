@@ -139,7 +139,8 @@ static angle_t adjustCrankPhase(int camIndex) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	operation_mode_e operationMode = engine->getOperationMode();
 
-	switch (engineConfiguration->vvtMode[camIndex]) {
+	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
+	switch (vvtMode) {
 	case VVT_FIRST_HALF:
 	case VVT_MAP_V_TWIN_ANOTHER:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
@@ -152,11 +153,22 @@ static angle_t adjustCrankPhase(int camIndex) {
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
 	case VVT_NISSAN_VQ:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
-	default:
+	case VVT_2JZ:
+	case VVT_TOYOTA_4_1:
+	case VVT_FORD_ST170:
+	case VVT_BARRA_3_PLUS_1:
+	case VVT_NISSAN_MR:
+	case VVT_BOSCH_QUICK_START:
+	case VVT_12:
+		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->tempBooleanForVerySpecialCases ? 1 : 0);
+	case VVT_HONDA_K:
+		firmwareError(OBD_PCM_Processor_Fault, "Undecided on VVT phase of %s", getVvt_mode_e(vvtMode));
+		return 0;
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
 	}
+	return 0;
 }
 
 /**
