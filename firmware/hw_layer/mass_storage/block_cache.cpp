@@ -119,13 +119,9 @@ void BlockCache::thread() {
 
 		// Did we prefetch the wrong block?
 		if (startblk != cachedBlockId) {
-			efiPrintf("BC miss %d", startblk);
-
 			// Cache miss, fetch the correct block
 			h->result = fetchBlock(startblk);
 		} else {
-			efiPrintf("BC hit %d", startblk);
-
 			// Cache hit, the correct block is already loaded!
 			h->result = HAL_SUCCESS;
 		}
@@ -138,7 +134,6 @@ void BlockCache::thread() {
 
 		// Now that we have returned the requested block, prefetch the next block
 		startblk++;
-		efiPrintf("BC prefetch %d", startblk);
 		fetchBlock(startblk);
 	}
 }
