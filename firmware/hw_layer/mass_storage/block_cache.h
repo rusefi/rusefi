@@ -34,9 +34,10 @@ struct BlockCache {
 	chibios_rt::Mutex deviceMutex;
 
 	void thread();
-	void start();
+	void start(BaseBlockDevice* backing);
 
 
+	msg_t fetchBlock(uint32_t blockId);
 
 	int32_t cachedBlockId = -1;
 	uint8_t cachedBlockData[512];
