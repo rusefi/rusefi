@@ -245,6 +245,8 @@ void RpmCalculator::setSpinningUp(efitick_t nowNt) {
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		uint32_t index, efitick_t nowNt) {
 
+	bool alwaysInstantRpm = engineConfiguration->alwaysInstantRpm;
+
 	RpmCalculator *rpmState = &engine->rpmCalculator;
 
 	if (index == 0) {
@@ -260,17 +262,19 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		 * and each revolution of crankshaft consists of two engine cycles revolutions
 		 *
 		 */
-			if (periodSeconds == 0) {
-				rpmState->setRpmValue(NOISY_RPM);
-				rpmState->rpmRate = 0;
-			} else {
-				int mult = (int)getEngineCycle(engine->getOperationMode()) / 360;
-				float rpm = 60 * mult / periodSeconds;
+			if (!alwaysInstantRpm) {
+				if (periodSeconds == 0) {
+					rpmState->setRpmValue(NOISY_RPM);
+					rpmState->rpmRate = 0;
+				} else {
+					int mult = (int)getEngineCycle(engine->getOperationMode()) / 360;
+					float rpm = 60 * mult / periodSeconds;
 
-				auto rpmDelta = rpm - rpmState->previousRpmValue;
-				rpmState->rpmRate = rpmDelta / (mult * periodSeconds);
+					auto rpmDelta = rpm - rpmState->previousRpmValue;
+					rpmState->rpmRate = rpmDelta / (mult * periodSeconds);
 
-				rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
+					rpmState->setRpmValue(rpm > UNREALISTIC_RPM ? NOISY_RPM : rpm);
+				}
 			}
 		} else {
 			// we are here only once trigger is synchronized for the first time
@@ -296,7 +300,7 @@ void rpmShaftPositionCallback(trigger_event_e ckpSignalType,
 		engine->triggerCentral.triggerShape, &engine->triggerCentral.triggerFormDetails,
 		index, nowNt);
 
-	if (rpmState->isSpinningUp()) {
+	if (alwaysInstantRpm || rpmState->isSpinningUp()) {
 		float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
 
 		rpmState->assignRpmValue(instantRpm);
