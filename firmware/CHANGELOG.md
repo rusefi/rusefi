@@ -27,8 +27,6 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Month 202x Release - "Release Name"
 
-## January 2022 Release - "Rubber ducky"
-
 ### Added
  - Per-cylinder fuel trim tables
  - Per-cylinder ignition timing trim tables
@@ -36,6 +34,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Fixed
  - rusefi_Console: Too long re-connection time #3305
+ - Bosch Quick Start on B6 Passat is confused about phase #3812
 
 ## December 2021 Release - "Cookie Exchange"
 
