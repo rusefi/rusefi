@@ -138,7 +138,7 @@ void HpfpController::onFastCallback() {
 		m_requested_pump = 0;
 		m_deadtime = 0;
 	} else {
-		efiAssertVoid(OBD_PCM_Processor_Fault, "Too few trigger tooth for this number of HPFP lobes", engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6);
+		efiAssertVoid(OBD_PCM_Processor_Fault, engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6, "Too few trigger tooth for this number of HPFP lobes");
 		// Convert deadtime from ms to degrees based on current RPM
 		float deadtime_ms = interpolate2d(
 			Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
