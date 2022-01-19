@@ -95,10 +95,10 @@ static bool write(void* instance, uint32_t startblk, const uint8_t* buffer, uint
 msg_t BlockCache::fetchBlock(uint32_t blockId) {
 	chibios_rt::MutexLocker lock(deviceMutex);
 
-	// cache miss: do the read
 	auto result = backing->vmt->read(backing, blockId, cachedBlockData, 1);
 
 	if (result == HAL_SUCCESS) {
+		// read succeeded, mark cache as valid
 		cachedBlockId = blockId;
 	} else {
 		// read failed, invalidate cache
@@ -121,9 +121,12 @@ void BlockCache::thread() {
 		if (startblk != cachedBlockId) {
 			efiPrintf("BC miss %d", startblk);
 
+			// Cache miss, fetch the correct block
 			h->result = fetchBlock(startblk);
 		} else {
 			efiPrintf("BC hit %d", startblk);
+
+			// Cache hit, the correct block is already loaded!
 			h->result = HAL_SUCCESS;
 		}
 
