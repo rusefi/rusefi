@@ -3653,6 +3653,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Ford redundant TPS mode",				useFordRedundantTps
 		field = "consumeObdSensors",                    consumeObdSensors, { canReadEnabled == 1 && canWriteEnabled == 1}
 		field = "Artificial Misfire",                   artificialTestMisfire
+		field = "Always use instant RPM",				alwaysInstantRpm
 		panel = mapCamDialog
 		panel = allTriggerDebug
 		panel = torqueCurve
