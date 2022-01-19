@@ -10,7 +10,8 @@ pins:
     id: EFI_ADC_5
     class: analog_inputs
     function: +12V
-    type: 12V
+    ts_name: A2 Battery Sense
+    type: 12v
     color: red
   
   - pin: A3
