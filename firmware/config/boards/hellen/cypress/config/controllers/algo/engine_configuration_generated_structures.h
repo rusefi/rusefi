@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 05:54:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 12:38:05 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2452,7 +2452,7 @@ struct engine_configuration_s {
 	bool unused1476b3 : 1 {};
 	/**
 	offset 1272 bit 4 */
-	bool unusedBit4_1476 : 1 {};
+	bool alwaysInstantRpm : 1 {};
 	/**
 	offset 1272 bit 5 */
 	bool isMapAveragingEnabled : 1 {};
@@ -4460,4 +4460,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 05:54:15 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 12:38:05 UTC 2022

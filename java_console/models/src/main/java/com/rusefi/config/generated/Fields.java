@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 05:54:19 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 12:38:08 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -91,6 +91,7 @@ public class Fields {
 	public static final int alternatorControlPinMode_offset = 674;
 	public static final int alternatorOffAboveTps_offset = 1676;
 	public static final int alternatorPwmFrequency_offset = 1876;
+	public static final int alwaysInstantRpm_offset = 1272;
 	public static final int ambiguousOperationMode_offset = 500;
 	public static final int analogInputDividerCoefficient_offset = 472;
 	public static final int antiLagActivatePin_offset = 910;
@@ -1820,6 +1821,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
+	public static final int SIGNATURE_HASH = 1276172354;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2289,7 +2291,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.19.all.3161347461";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.19.all.1276172354";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2324,7 +2326,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1272;
 	public static final int unused_1484_bit_30_offset = 1272;
 	public static final int unused_1484_bit_31_offset = 1272;
-	public static final int unusedBit4_1476_offset = 1272;
 	public static final int unusedBit_310_31_offset = 896;
 	public static final int unusedBit_48_31_offset = 164;
 	public static final int unusedBit_502_10_offset = 1740;
@@ -3072,7 +3073,7 @@ public class Fields {
 	public static final Field ISIGNITIONENABLED = Field.create("ISIGNITIONENABLED", 1272, FieldType.BIT, 1);
 	public static final Field ISCYLINDERCLEANUPENABLED = Field.create("ISCYLINDERCLEANUPENABLED", 1272, FieldType.BIT, 2);
 	public static final Field UNUSED1476B3 = Field.create("UNUSED1476B3", 1272, FieldType.BIT, 3);
-	public static final Field UNUSEDBIT4_1476 = Field.create("UNUSEDBIT4_1476", 1272, FieldType.BIT, 4);
+	public static final Field ALWAYSINSTANTRPM = Field.create("ALWAYSINSTANTRPM", 1272, FieldType.BIT, 4);
 	public static final Field ISMAPAVERAGINGENABLED = Field.create("ISMAPAVERAGINGENABLED", 1272, FieldType.BIT, 5);
 	public static final Field OVERRIDECRANKINGIACSETTING = Field.create("OVERRIDECRANKINGIACSETTING", 1272, FieldType.BIT, 6);
 	public static final Field USESEPARATEADVANCEFORIDLE = Field.create("USESEPARATEADVANCEFORIDLE", 1272, FieldType.BIT, 7);
@@ -4358,7 +4359,7 @@ public class Fields {
 	ISIGNITIONENABLED,
 	ISCYLINDERCLEANUPENABLED,
 	UNUSED1476B3,
-	UNUSEDBIT4_1476,
+	ALWAYSINSTANTRPM,
 	ISMAPAVERAGINGENABLED,
 	OVERRIDECRANKINGIACSETTING,
 	USESEPARATEADVANCEFORIDLE,

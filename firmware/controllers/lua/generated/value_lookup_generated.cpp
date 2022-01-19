@@ -514,6 +514,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isIgnitionEnabled;
 	if (strEqualCaseInsensitive(name, "isCylinderCleanupEnabled"))
 		return engineConfiguration->isCylinderCleanupEnabled;
+	if (strEqualCaseInsensitive(name, "alwaysInstantRpm"))
+		return engineConfiguration->alwaysInstantRpm;
 	if (strEqualCaseInsensitive(name, "isMapAveragingEnabled"))
 		return engineConfiguration->isMapAveragingEnabled;
 	if (strEqualCaseInsensitive(name, "overrideCrankingIacSetting"))
@@ -2194,6 +2196,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "isCylinderCleanupEnabled"))
 	{
 		engineConfiguration->isCylinderCleanupEnabled = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "alwaysInstantRpm"))
+	{
+		engineConfiguration->alwaysInstantRpm = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "isMapAveragingEnabled"))

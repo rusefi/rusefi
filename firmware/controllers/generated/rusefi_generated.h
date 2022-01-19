@@ -93,6 +93,7 @@
 #define alternatorControlPinMode_offset 674
 #define alternatorOffAboveTps_offset 1676
 #define alternatorPwmFrequency_offset 1876
+#define alwaysInstantRpm_offset 1272
 #define ambiguousOperationMode_offset 500
 #define analogInputDividerCoefficient_offset 472
 #define antiLagActivatePin_offset 910
@@ -1892,7 +1893,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 3161347461
+#define SIGNATURE_HASH 1276172354
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2417,7 +2418,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.19.all.3161347461"
+#define TS_SIGNATURE "rusEFI 2022.01.19.all.1276172354"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2455,7 +2456,6 @@
 #define unused_1484_bit_29_offset 1272
 #define unused_1484_bit_30_offset 1272
 #define unused_1484_bit_31_offset 1272
-#define unusedBit4_1476_offset 1272
 #define unusedBit_310_31_offset 896
 #define unusedBit_48_31_offset 164
 #define unusedBit_502_10_offset 1740
