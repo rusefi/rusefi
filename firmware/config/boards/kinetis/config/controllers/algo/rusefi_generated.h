@@ -1877,7 +1877,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 3757340591
+#define SIGNATURE_HASH 2034138821
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2024,6 +2024,7 @@
 #define tcuSolenoidTable_offset 17352
 #define tcuUpshiftButtonPin_offset 1578
 #define tcuUpshiftButtonPinMode_offset 3954
+#define tempBooleanForVerySpecialCases_offset 896
 #define test557pin_offset 807
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
@@ -2401,7 +2402,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.19.kin.3757340591"
+#define TS_SIGNATURE "rusEFI 2022.01.19.kin.2034138821"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2431,7 +2432,6 @@
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
-#define unused45342_offset 896
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272

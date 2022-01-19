@@ -370,6 +370,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->showHumanReadableWarning;
 	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
 		return engineConfiguration->stftIgnoreErrorMagnitude;
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialCases"))
+		return engineConfiguration->tempBooleanForVerySpecialCases;
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
 		return engineConfiguration->enableSoftwareKnock;
 	if (strEqualCaseInsensitive(name, "verboseVVTDecoding"))
@@ -1832,6 +1834,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
 	{
 		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialCases"))
+	{
+		engineConfiguration->tempBooleanForVerySpecialCases = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 14 03:37:36 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 05:54:16 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2059,7 +2059,7 @@ struct engine_configuration_s {
 	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
 	offset 896 bit 11 */
-	bool unused45342 : 1 {};
+	bool tempBooleanForVerySpecialCases : 1 {};
 	/**
 	offset 896 bit 12 */
 	bool enableSoftwareKnock : 1 {};
@@ -4460,4 +4460,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 14 03:37:36 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 05:54:16 UTC 2022
