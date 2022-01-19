@@ -69,13 +69,19 @@ static const scsi_inquiry_response_t sdCardInquiry = {
     {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
 };
 
+#ifdef SD_PREFETCH
 static BlockCache sdReadPrefetch;
+#endif
 
 void attachMsdSdCard(BaseBlockDevice* blkdev) {
+#ifdef SD_PREFETCH
 	// Start the prefetcher
 	sdReadPrefetch.start(blkdev);
-
 	msd.attachLun(1, reinterpret_cast<BaseBlockDevice*>(&sdReadPrefetch), blkbuf1, &sdCardInquiry, nullptr);
+#else
+	// No prefetching, attach the SD directly
+	msd.attachLun(1, reinterpret_cast<BaseBlockDevice*>(&blkdev), blkbuf1, &sdCardInquiry, nullptr);
+#endif
 
 #if EFI_TUNER_STUDIO
 	// SD MSD attached, enable indicator in TS

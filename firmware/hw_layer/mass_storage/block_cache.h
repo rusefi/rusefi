@@ -17,7 +17,6 @@ struct BlockCache {
 	bool read(uint32_t startblk, uint8_t* buffer);
 
 private:
-	void thread();
 	bool fetchBlock(uint32_t blockId);
 
 	struct Handle {
@@ -40,5 +39,7 @@ private:
 	int32_t m_cachedBlockId = -1;
 	uint8_t m_cachedBlockData[512];
 
-	THD_WORKING_AREA(wa, 5 * UTILITY_THREAD_STACK_SIZE);
+	// Worker thread that operates the cache in the background
+	void thread();
+	THD_WORKING_AREA(wa, USB_MSD_THREAD_WA_SIZE);
 };
