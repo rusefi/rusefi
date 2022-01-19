@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle\high_pressure_fuel_pump.txt Tue Jan 18 10:07:25 EST 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt Wed Jan 19 02:10:32 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -11,7 +11,7 @@ public class HighPressureFuelPump {
 	public static final Field FUEL_REQUESTED_PERCENT_PI = Field.create("FUEL_REQUESTED_PERCENT_PI", 8, FieldType.FLOAT);
 	public static final Field NOVALVE = Field.create("NOVALVE", 12, FieldType.BIT, 0);
 	public static final Field ANGLEABOVEMIN = Field.create("ANGLEABOVEMIN", 12, FieldType.BIT, 1);
-	public static final Field ISHPFPACTIVE = Field.create("ISHPFPACTIVE", 12, FieldType.BIT, 2);
+	public static final Field ISHPFPINACTIVE = Field.create("ISHPFPINACTIVE", 12, FieldType.BIT, 2);
 	public static final Field UNUSEDBIT_6_3 = Field.create("UNUSEDBIT_6_3", 12, FieldType.BIT, 3);
 	public static final Field UNUSEDBIT_6_4 = Field.create("UNUSEDBIT_6_4", 12, FieldType.BIT, 4);
 	public static final Field UNUSEDBIT_6_5 = Field.create("UNUSEDBIT_6_5", 12, FieldType.BIT, 5);
@@ -49,7 +49,7 @@ public class HighPressureFuelPump {
 	FUEL_REQUESTED_PERCENT_PI,
 	NOVALVE,
 	ANGLEABOVEMIN,
-	ISHPFPACTIVE,
+	ISHPFPINACTIVE,
 	UNUSEDBIT_6_3,
 	UNUSEDBIT_6_4,
 	UNUSEDBIT_6_5,
