@@ -92,7 +92,7 @@ static bool write(void* instance, uint32_t startblk, const uint8_t* buffer, uint
 	return bc->backing->vmt->write(bc->backing, startblk, buffer, n);
 }
 
-msg_t BlockCache::fetchBlock(uint32_t blockId) {
+bool BlockCache::fetchBlock(uint32_t blockId) {
 	chibios_rt::MutexLocker lock(deviceMutex);
 
 	auto result = backing->vmt->read(backing, blockId, cachedBlockData, 1);

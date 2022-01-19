@@ -7,7 +7,7 @@
 namespace priv
 {
 struct handle {
-	msg_t result;
+	bool result;
 
 	// Read request parameters
 	uint32_t startblk;
@@ -37,10 +37,10 @@ struct BlockCache {
 	void start(BaseBlockDevice* backing);
 
 
-	msg_t fetchBlock(uint32_t blockId);
+	bool fetchBlock(uint32_t blockId);
 
 	int32_t cachedBlockId = -1;
 	uint8_t cachedBlockData[512];
 
-	THD_WORKING_AREA(wa, UTILITY_THREAD_STACK_SIZE);
+	THD_WORKING_AREA(wa, 5 * UTILITY_THREAD_STACK_SIZE);
 };
