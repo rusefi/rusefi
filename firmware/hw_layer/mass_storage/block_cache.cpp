@@ -99,8 +99,6 @@ void BlockCache::thread() {
 		// Wait for a request to come in
 		requests.fetch(&h, TIME_INFINITE);
 
-		h->result = HAL_SUCCESS;
-
 		auto startblk = h->startblk;
 
 		// Did we prefetch the wrong block?
@@ -122,6 +120,7 @@ void BlockCache::thread() {
 			h->result = result;
 		} else {
 			efiPrintf("BC hit %d", startblk);
+			h->result = HAL_SUCCESS;
 		}
 
 		// Copy from the cache to the output buffer
@@ -187,7 +186,7 @@ BlockCache::BlockCache() {
 	vmt = &blockCacheVmt;
 
 	// push all in to the free buffer
-	for (int i = 0; i < sizeof(handles); i++) {
+	for (int i = 0; i < efi::size(handles); i++) {
 		free.post(&handles[i], TIME_INFINITE);
 	}
 }
