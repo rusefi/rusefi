@@ -92,6 +92,22 @@ static bool write(void* instance, uint32_t startblk, const uint8_t* buffer, uint
 	return bc->backing->vmt->write(bc->backing, startblk, buffer, n);
 }
 
+msg_t BlockCache::fetchBlock(uint32_t blockId) {
+	chibios_rt::MutexLocker lock(deviceMutex);
+
+	// cache miss: do the read
+	auto result = backing->vmt->read(backing, blockId, cachedBlockData, 1);
+
+	if (result == HAL_SUCCESS) {
+		cachedBlockId = blockId;
+	} else {
+		// read failed, invalidate cache
+		cachedBlockId = -1;
+	}
+
+	return result;
+}
+
 void BlockCache::thread() {
 	while (true) {
 		priv::handle* h;
@@ -105,19 +121,7 @@ void BlockCache::thread() {
 		if (startblk != cachedBlockId) {
 			efiPrintf("BC miss %d", startblk);
 
-			chibios_rt::MutexLocker lock(deviceMutex);
-
-			// cache miss: do the read
-			auto result = backing->vmt->read(backing, startblk, cachedBlockData, 1);
-
-			if (result == HAL_SUCCESS) {
-				cachedBlockId = startblk;
-			} else {
-				// read failed, invalidate cache
-				cachedBlockId = -1;
-			}
-
-			h->result = result;
+			h->result = fetchBlock(startblk);
 		} else {
 			efiPrintf("BC hit %d", startblk);
 			h->result = HAL_SUCCESS;
@@ -131,20 +135,8 @@ void BlockCache::thread() {
 
 		// Now that we have returned the requested block, prefetch the next block
 		startblk++;
-
-		{
-			chibios_rt::MutexLocker lock(deviceMutex);
-
-			efiPrintf("BC prefetch %d", startblk);
-			auto result = backing->vmt->read(backing, startblk, cachedBlockData, 1);
-
-			if (result == HAL_SUCCESS) {
-				cachedBlockId = startblk;
-			} else {
-				// read failed, invalidate cache
-				cachedBlockId = HAL_FAILED;
-			}
-		}
+		efiPrintf("BC prefetch %d", startblk);
+		fetchBlock(startblk);
 	}
 }
 
@@ -191,6 +183,11 @@ BlockCache::BlockCache() {
 	}
 }
 
-void BlockCache::start() {
+void BlockCache::start(BaseBlockDevice* backing) {
+	this->backing = backing;
+
+	// prefetch block 0
+	fetchBlock(0);
+
 	chThdCreateStatic(wa, sizeof(wa), NORMALPRIO, [](void* instance) { reinterpret_cast<BlockCache*>(instance)->thread(); }, this);
 }
