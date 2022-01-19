@@ -3,6 +3,7 @@
 
 #include "block_cache.h"
 
+#if HAL_USE_USB_MSD
 
 static bool is_inserted(void* instance) {
 	BlockCache* bc = reinterpret_cast<BlockCache*>(instance);
@@ -192,3 +193,5 @@ void BlockCache::start(BaseBlockDevice* backing) {
 
 	chThdCreateStatic(wa, sizeof(wa), NORMALPRIO, [](void* instance) { reinterpret_cast<BlockCache*>(instance)->thread(); }, this);
 }
+
+#endif // HAL_USE_USB_MSD

@@ -3,6 +3,9 @@
 
 #include "ch.hpp"
 #include "hal.h"
+
+#if HAL_USE_USB_MSD
+
 struct BlockCache {
 	const BaseBlockDeviceVMT* vmt;
 	_base_block_device_data
@@ -43,3 +46,5 @@ private:
 	void thread();
 	THD_WORKING_AREA(wa, USB_MSD_THREAD_WA_SIZE);
 };
+
+#endif // HAL_USE_USB_MSD
