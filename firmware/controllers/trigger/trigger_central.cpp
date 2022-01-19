@@ -145,20 +145,19 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MAP_V_TWIN_ANOTHER:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
+	case VVT_NISSAN_VQ:
+	case VVT_BOSCH_QUICK_START:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
 	case VVT_MIATA_NB2:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
-	case VVT_NISSAN_VQ:
-		return syncAndReport(tc, getCrankDivider(operationMode), 0);
 	case VVT_2JZ:
 	case VVT_TOYOTA_4_1:
 	case VVT_FORD_ST170:
 	case VVT_BARRA_3_PLUS_1:
 	case VVT_NISSAN_MR:
-	case VVT_BOSCH_QUICK_START:
 	case VVT_12:
 		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->tempBooleanForVerySpecialCases ? 1 : 0);
 	case VVT_HONDA_K:
