@@ -127,8 +127,9 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 
 	int offset = 20;
 
-	s->setTriggerSynchronizationGap3(0, 2, 3);
-	s->setSecondTriggerSynchronizationGap(0.44);
+	// our preference is to sync not too close to crank sync point
+	s->setTriggerSynchronizationGap2(/*index*/0, 0.645);
+	s->setTriggerSynchronizationGap2(/*index*/1, 1.556);
 
 	s->addEvent360(offset + 0, T_PRIMARY, TV_RISE);
 	s->addEvent360(offset + 70, T_PRIMARY, TV_FALL);
