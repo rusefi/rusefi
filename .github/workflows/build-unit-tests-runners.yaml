@@ -1,0 +1,59 @@
+name: Unit Tests
+
+on: [push,pull_request]
+
+jobs:
+  build:
+    runs-on: firmware-ci
+
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Discover cores
+      if: ${{ matrix.os != 'macos-latest' }}
+      run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
+
+    - name: Generate Configs for unit tests
+      working-directory: ./firmware/
+      run: bash gen_config_default.sh
+
+    - name: Generate Enums
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
+
+    - name: Generate Live Documentation
+      working-directory: ./firmware/
+      run: bash gen_live_documentation.sh
+
+    - name: Print Compiler version
+      # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
+      working-directory: .
+      run: gcc -v
+
+    - name: Build Tests
+      working-directory: ./unit_tests/
+      run: make -j4 COVERAGE=yes
+
+    - name: Run Tests
+      working-directory: ./unit_tests/
+      run: ASAN_OPTIONS=detect_stack_use_after_return=1 build/rusefi_test
+
+    - name: Run Tests (sharded)
+      working-directory: ./unit_tests/
+      run: bash ./run_sharded_tests.sh
+
+    - name: Rebuild Tests For Valgrind
+      # Valgrind isn't compatible with address sanitizer, so we have to rebuild the code
+      if: ${{ matrix.os != 'macos-latest' }}
+      working-directory: ./unit_tests/
+      run: |
+        make clean
+        make -j4 SANITIZE=no
+
+    - name: Run Tests (Valgrind)
+      if: ${{ matrix.os != 'macos-latest' }}
+      working-directory: ./unit_tests/
+      run: valgrind --error-exitcode=1 --leak-check=no build/rusefi_test
