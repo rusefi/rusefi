@@ -42,9 +42,9 @@ private:
 	int32_t m_cachedBlockId = -1;
 	uint8_t m_cachedBlockData[512];
 
-	// Worker thread that operates the cache in the background
-	void thread();
-	THD_WORKING_AREA(wa, USB_MSD_THREAD_WA_SIZE);
+	// Worker thread that performs actual read operations in the background
+	void readThread();
+	THD_WORKING_AREA(waRead, USB_MSD_THREAD_WA_SIZE);
 };
 
 #endif // HAL_USE_USB_MSD

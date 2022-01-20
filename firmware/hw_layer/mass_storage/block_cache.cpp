@@ -112,7 +112,7 @@ bool BlockCache::fetchBlock(uint32_t blockId) {
 	return result;
 }
 
-void BlockCache::thread() {
+void BlockCache::readThread() {
 	while (true) {
 		Handle* h;
 		
@@ -191,7 +191,7 @@ void BlockCache::start(BaseBlockDevice* backing) {
 	// prefetch block 0
 	fetchBlock(0);
 
-	chThdCreateStatic(wa, sizeof(wa), NORMALPRIO, [](void* instance) { reinterpret_cast<BlockCache*>(instance)->thread(); }, this);
+	chThdCreateStatic(waRead, sizeof(waRead), NORMALPRIO, [](void* instance) { reinterpret_cast<BlockCache*>(instance)->readThread(); }, this);
 }
 
 #endif // HAL_USE_USB_MSD
