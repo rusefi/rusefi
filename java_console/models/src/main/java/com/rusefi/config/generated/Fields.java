@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 20 02:12:36 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 20 19:13:00 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -920,7 +920,7 @@ public class Fields {
 	public static final int firingOrder_offset = 424;
 	public static final int fixedModeTiming_offset = 464;
 	public static final int fixedTiming_offset = 1824;
-	public static final int FLASH_DATA_VERSION = 10007;
+	public static final int FLASH_DATA_VERSION = 10008;
 	public static final int flexSensorPin_offset = 806;
 	public static final String FSIO_METHOD_FSIO_ANALOG_INPUT = "fsio_analog_input";
 	public static final String FSIO_METHOD_FSIO_DIGITAL_INPUT = "fsio_digital_input";
@@ -1276,7 +1276,7 @@ public class Fields {
 	public static final int idle_state_e_TPS_THRESHOLD = 1;
 	public static final int idle_stepperDirectionPin_offset = 613;
 	public static final int idle_stepperStepPin_offset = 614;
-	public static final int IDLE_VE_CURVE_SIZE = 8;
+	public static final int IDLE_VE_SIZE = 4;
 	public static final int idleAdvance_offset = 5564;
 	public static final int idleAdvanceBins_offset = 5556;
 	public static final int idleIncrementalPidCic_offset = 748;
@@ -1317,8 +1317,9 @@ public class Fields {
 	public static final int idleTimingPid_periodMs_offset = 3458;
 	public static final int idleTimingPid_pFactor_offset = 3444;
 	public static final int idleTimingPidDeadZone_offset = 3464;
-	public static final int idleVe_offset = 5604;
-	public static final int idleVeBins_offset = 5596;
+	public static final int idleVeLoadBins_offset = 5600;
+	public static final int idleVeRpmBins_offset = 5596;
+	public static final int idleVeTable_offset = 5604;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
 	public static final int ignition_mode_e_IM_INDIVIDUAL_COILS = 1;
@@ -1821,7 +1822,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 1924855780;
+	public static final int SIGNATURE_HASH = 1474533904;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2291,7 +2292,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.20.all.1924855780";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.20.all.1474533904";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -3690,8 +3691,9 @@ public class Fields {
 	public static final Field CLTCRANKINGCORR = Field.create("CLTCRANKINGCORR", 5524, FieldType.FLOAT);
 	public static final Field IDLEADVANCEBINS = Field.create("IDLEADVANCEBINS", 5556, FieldType.INT8);
 	public static final Field IDLEADVANCE = Field.create("IDLEADVANCE", 5564, FieldType.FLOAT);
-	public static final Field IDLEVEBINS = Field.create("IDLEVEBINS", 5596, FieldType.INT8);
-	public static final Field IDLEVE = Field.create("IDLEVE", 5604, FieldType.FLOAT);
+	public static final Field IDLEVERPMBINS = Field.create("IDLEVERPMBINS", 5596, FieldType.INT8);
+	public static final Field IDLEVELOADBINS = Field.create("IDLEVELOADBINS", 5600, FieldType.INT8);
+	public static final Field IDLEVETABLE = Field.create("IDLEVETABLE", 5604, FieldType.INT16);
 	public static final Field LUASCRIPT = Field.create("LUASCRIPT", 5636, 8000, FieldType.STRING);
 	public static final Field CLTFUELCORRBINS = Field.create("CLTFUELCORRBINS", 13636, FieldType.FLOAT);
 	public static final Field CLTFUELCORR = Field.create("CLTFUELCORR", 13700, FieldType.FLOAT);
@@ -4966,8 +4968,9 @@ public class Fields {
 	CLTCRANKINGCORR,
 	IDLEADVANCEBINS,
 	IDLEADVANCE,
-	IDLEVEBINS,
-	IDLEVE,
+	IDLEVERPMBINS,
+	IDLEVELOADBINS,
+	IDLEVETABLE,
 	LUASCRIPT,
 	CLTFUELCORRBINS,
 	CLTFUELCORR,

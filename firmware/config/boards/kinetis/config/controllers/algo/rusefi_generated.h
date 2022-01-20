@@ -937,7 +937,7 @@
 #define firingOrder_offset 424
 #define fixedModeTiming_offset 464
 #define fixedTiming_offset 1824
-#define FLASH_DATA_VERSION 10007
+#define FLASH_DATA_VERSION 10008
 #define flexSensorPin_offset 806
 #define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
 #define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
@@ -1300,7 +1300,7 @@
 #define idle_state_e_TPS_THRESHOLD 1
 #define idle_stepperDirectionPin_offset 613
 #define idle_stepperStepPin_offset 614
-#define IDLE_VE_CURVE_SIZE 8
+#define IDLE_VE_SIZE 4
 #define idleAdvance_offset 5536
 #define idleAdvanceBins_offset 5528
 #define idleIncrementalPidCic_offset 748
@@ -1341,8 +1341,9 @@
 #define idleTimingPid_periodMs_offset 3430
 #define idleTimingPid_pFactor_offset 3416
 #define idleTimingPidDeadZone_offset 3436
-#define idleVe_offset 5576
-#define idleVeBins_offset 5568
+#define idleVeLoadBins_offset 5572
+#define idleVeRpmBins_offset 5568
+#define idleVeTable_offset 5576
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
 #define ignition_mode_e_auto_enum "IM_ONE_COIL", "IM_INDIVIDUAL_COILS", "IM_WASTED_SPARK", "IM_TWO_COILS"
@@ -1878,7 +1879,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 3085622436
+#define SIGNATURE_HASH 2461249872
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2403,7 +2404,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.20.kin.3085622436"
+#define TS_SIGNATURE "rusEFI 2022.01.20.kin.2461249872"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

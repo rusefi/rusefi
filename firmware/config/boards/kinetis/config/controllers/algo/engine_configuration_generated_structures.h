@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 12:38:03 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 20 19:12:54 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4139,17 +4139,20 @@ struct persistent_config_s {
 	 */
 	float idleAdvance[IDLE_ADVANCE_CURVE_SIZE];
 	/**
-	 * Optional VE table for Idle (see useSeparateVEForIdle)
 	RPM
 	 * offset 5568
 	 */
-	scaled_channel<uint8_t, 1, 50> idleVeBins[IDLE_VE_CURVE_SIZE];
+	scaled_channel<uint8_t, 1, 10> idleVeRpmBins[IDLE_VE_SIZE];
 	/**
-	 * Optional VE table for Idle (see useSeparateVEForIdle)
+	load
+	 * offset 5572
+	 */
+	scaled_channel<uint8_t, 1, 1> idleVeLoadBins[IDLE_VE_SIZE];
+	/**
 	%
 	 * offset 5576
 	 */
-	float idleVe[IDLE_VE_CURVE_SIZE];
+	scaled_channel<uint16_t, 10, 1> idleVeTable[IDLE_VE_SIZE][IDLE_VE_SIZE];
 	/**
 	 * offset 5608
 	 */
@@ -4454,4 +4457,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 12:38:03 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 20 19:12:54 UTC 2022
