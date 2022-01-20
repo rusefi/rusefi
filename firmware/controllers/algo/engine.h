@@ -168,7 +168,7 @@ public:
 	type_list<
 		Mockable<InjectorModel>,
 #if EFI_IDLE_CONTROL
-		IdleController,
+		Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL
 		TriggerScheduler,
 #if EFI_HPFP && EFI_ENGINE_CONTROL
