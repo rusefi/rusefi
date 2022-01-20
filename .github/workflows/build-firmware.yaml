@@ -194,7 +194,7 @@ jobs:
 
     steps:
     - name: Execution throttle early exit
-      if: ${{ matrix.skip-rate && contains(github.ref, "release") }}
+      if: ${{ matrix.skip-rate && contains(github.ref, 'release') }}
       # todo: how do we produce well-defined releases with skip-rate approach? For I can think of hacking the line below before a release
       run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=not_true" >> $GITHUB_ENV; fi
 
