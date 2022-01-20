@@ -33,8 +33,8 @@ dcdc_idle:  stdcctl sync;                               * Enable synchronous mod
 
 *********************************************************************************
 
-* ### Channel 2 - uCore1 drives fuel pump ###
-* PCV ONLY
+* ### Channel 2 - uCore1 drives HPFP high pressure fuel pump pressure control valve ###
+* todo: replace 'PCV' with HPFP
 
 * Note: The Tpeak_tot variable defines the current profile time out. The active STARTx pin is expected to toggle in is low state before this time out.
 

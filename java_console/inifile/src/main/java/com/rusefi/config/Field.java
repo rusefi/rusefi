@@ -1,9 +1,13 @@
 package com.rusefi.config;
 
+import com.macfaq.io.LittleEndianOutputStream;
 import com.opensr5.ConfigurationImage;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Objects;
 
 import static com.rusefi.config.FieldType.*;
@@ -154,6 +158,29 @@ public class Field {
         return options[ordinal];
     }
 
+    public void setValue(byte[] content, boolean value) {
+        ByteBuffer wrapped = ByteBuffer.wrap(content, 0, content.length);
+        wrapped.order(ByteOrder.LITTLE_ENDIAN);
+        if (bitOffset != NO_BIT_OFFSET) {
+            int packed = wrapped.getInt();
+            int thisBit = (value ? 1 : 0) << bitOffset;
+            int mask = 1 << bitOffset;
+            int newValue = (packed & ~mask) | thisBit;
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            LittleEndianOutputStream dout = new LittleEndianOutputStream(baos);
+            // wow worst way to modify an integer in byte array? :)
+            try {
+                dout.writeInt(newValue);
+//                dout.flush();
+                byte[] src = baos.toByteArray();
+                System.arraycopy(src, 0, content, getOffset(), 4);
+                baos.close();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+    }
+
     /**
      * each usage is a potential bug?! we are supposed to have explicit multiplier for each field
      */
@@ -196,8 +223,7 @@ public class Field {
     }
 
     public static Field create(String name, int offset, FieldType type, int bitOffset) {
-        Field field = new Field(name, offset, type, bitOffset);
-        return field;
+        return new Field(name, offset, type, bitOffset);
     }
 
     public static Field create(String name, int offset, FieldType type, String... options) {
@@ -210,8 +236,7 @@ public class Field {
     }
 
     public static Field create(String name, int offset, FieldType type) {
-        Field field = new Field(name, offset, type);
-        return field;
+        return new Field(name, offset, type);
     }
 
     public String getStringValue(ConfigurationImage image) {
@@ -222,5 +247,9 @@ public class Field {
         byte[] bytes = new byte[stringSize];
         bb.get(bytes);
         return new String(bytes).trim();
+    }
+
+    public boolean getBooleanValue(ConfigurationImage ci) {
+        return getValue(ci) != 0.0;
     }
 }

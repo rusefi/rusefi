@@ -1,7 +1,8 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen88bmw/board_configuration.cpp
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen88bmw/board_configuration.cpp \
+    $(BOARDS_DIR)/hellen/hellen_common.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen88bmw
 
 # Set this if you want a default engine type other than normal hellen88bmw
@@ -33,7 +34,3 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
-
-# Shared variables
-ALLCPPSRC += $(BOARDCPPSRC)
-ALLINC    += $(BOARDINC)

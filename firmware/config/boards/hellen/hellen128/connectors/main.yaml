@@ -21,6 +21,24 @@ pins:
     ts_name: Aux P35
     type: ls
 
+  - pin: P40
+    # H144_IN_MAP3 AIN15 A15 PA2
+    id: EFI_ADC_2
+    class: analog_inputs
+    ts_name: Aux P40
+
+  - pin: P41
+    # H144_IN_AUX3 AIN22 PC5
+    id: EFI_ADC_15
+    class: analog_inputs
+    ts_name: Aux P40
+
+  - pin: P30
+    # H144_IN_AUX4
+    id: EFI_ADC_7
+    class: analog_inputs
+    ts_name: Aux P30
+
   - pin: A1
     function: NC
     type:
@@ -404,17 +422,19 @@ pins:
     type: gnd
 
   - pin: E25
+# H144_LS_7
     id: GPIOF_13
     class: outputs
-    ts_name: E25 - INJ 7
-    function: injector output 7
+    ts_name: INJ E25
+    function: injector output E25
     type: inj
 
   - pin: E26
+# H144_LS_8
     id: GPIOF_14
     class: outputs
-    ts_name: E26 - INJ 8
-    function: injector output 8
+    ts_name: INJ E26
+    function: injector output E26
     type: inj
 
   - pin: E27
@@ -648,6 +668,8 @@ pins:
 
 info:
   title: Hellen 128 Mercedes
+  name: Hellen 128 Mercedes
+  board_url: https://rusefi.com/s/hellen128merc
   image:
     file: main.jpg
   pins:

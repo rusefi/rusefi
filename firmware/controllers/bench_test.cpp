@@ -37,6 +37,7 @@
 #include "malfunction_central.h"
 #include "trigger_emulator_algo.h"
 #include "microsecond_timer.h"
+#include "gpio_ext.h"
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 #include "rusefi_wideband.h"
@@ -52,6 +53,9 @@
 #endif // BOARD_TLE8888_COUNT
 
 static bool isRunningBench = false;
+// yes that's a bit lazy/crazy to have those as strings
+static char offTimeBuffer[8];
+static char counterBuffer[8];
 
 bool isRunningBenchTest(void) {
 	return isRunningBench;
@@ -60,11 +64,22 @@ bool isRunningBenchTest(void) {
 static scheduling_s benchSchedStart;
 static scheduling_s benchSchedEnd;
 
-void benchOn(OutputPin* output) {
+static void benchOn(OutputPin* output) {
 	output->setValue(true);
 }
 
-void benchOff(OutputPin* output) {
+static char pin_error[64];
+
+static void benchOff(OutputPin* output) {
+#if EFI_PROD_CODE && (BOARD_EXT_GPIOCHIPS > 0)
+	brain_pin_diag_e diag = gpiochips_getDiag(output->brainPin);
+	if (diag == PIN_INVALID) {
+		efiPrintf("No Diag on this pin");
+	} else {
+		pinDiag2string(pin_error, sizeof(pin_error), diag);
+		efiPrintf("Diag says %s", pin_error);
+	}
+#endif // EFI_PROD_CODE
 	output->setValue(false);
 }
 
@@ -99,6 +114,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
 	}
+
 
 	efiPrintf("Done!");
 	isRunningBench = false;
@@ -223,7 +239,7 @@ void mainRelayBench(void) {
 }
 
 void hpfpValveBench(void) {
-	pinbench(/*delay*/"1000", /* onTime */"20", /*oftime*/"500", "3", &enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
+	pinbench(/*delay*/"1000", /* onTime */"20", offTimeBuffer, counterBuffer, &enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
 }
 
 void fuelPumpBench(void) {
@@ -437,25 +453,25 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case TS_IGNITION_CATEGORY:
 		if (!running) {
-			doRunSpark(index, "300", "4", "400", "3");
+			doRunSpark(index, "300", "4", offTimeBuffer, counterBuffer);
 		}
 		break;
 
 	case TS_INJECTOR_CATEGORY:
 		if (!running) {
-			doRunFuel(index, "300", "4", "400", "3");
+			doRunFuel(index, "300", /*onTime*/"4", offTimeBuffer, counterBuffer);
 		}
 		break;
 
 	case CMD_TS_SOLENOID_CATEGORY:
 		if (!running) {
-			doTestSolenoid(index, "300", "1000", "1000", "3");
+			doTestSolenoid(index, "300", "1000", "1000", counterBuffer);
 		}
 		break;
 
 	case CMD_TS_FSIO_CATEGORY:
 		if (!running) {
-			doBenchTestFsio(index, "300", "4", "400", "3");
+			doBenchTestFsio(index, "300", "4", offTimeBuffer, counterBuffer);
 		}
 		break;
 
@@ -514,6 +530,15 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	}
 }
 
+void onConfigurationChangeBenchTest() {
+	if (engineConfiguration->benchTestOffTime < 5)
+		engineConfiguration->benchTestOffTime = 500; // default value if configuration was not specified
+	if (engineConfiguration->benchTestCount < 1)
+		engineConfiguration->benchTestCount = 3; // default value if configuration was not specified
+	itoa10(offTimeBuffer, engineConfiguration->benchTestOffTime);
+	itoa10(counterBuffer, engineConfiguration->benchTestCount);
+}
+
 void initBenchTest() {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
 	addConsoleAction(CMD_AC_RELAY_BENCH, acRelayBench);
@@ -540,6 +565,7 @@ void initBenchTest() {
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 	instance.setPeriod(200 /*ms*/);
 	instance.Start();
+	onConfigurationChangeBenchTest();
 }
 
 #endif /* EFI_UNIT_TEST */

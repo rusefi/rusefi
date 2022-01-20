@@ -11,6 +11,7 @@
 #include "custom_engine.h"
 #include "table_helper.h"
 #include "electronic_throttle_impl.h"
+#include "mre_meta.h"
 
 /**
  * set engine_type 62
@@ -23,6 +24,9 @@ void setVwPassatB6() {
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
+
+	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
@@ -37,17 +41,24 @@ void setVwPassatB6() {
 	
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	strcpy(engineConfiguration->engineCode, "BPY");
+	strcpy(engineConfiguration->vehicleName, "test");
 
+	engineConfiguration->throttlePedalUpVoltage = 0.36;
+	engineConfiguration->throttlePedalWOTVoltage = 2.13;
+	engineConfiguration->throttlePedalSecondaryUpVoltage = 0.73;
+	engineConfiguration->throttlePedalSecondaryWOTVoltage = 4.30;
 
 	engineConfiguration->verboseVVTDecoding = true;
 	engineConfiguration->invertCamVVTSignal = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
+	engineConfiguration->throttlePedalPositionAdcChannel = MRE_IN_ANALOG_VOLT_3;
+	// 36 - AN volt 8
+	engineConfiguration->throttlePedalPositionSecondAdcChannel = MRE_IN_ANALOG_VOLT_8;
 
 	// "26 - AN volt 2"
-	engineConfiguration->highPressureFuel.hwChannel = EFI_ADC_6;
+	engineConfiguration->highPressureFuel.hwChannel = MRE_IN_ANALOG_VOLT_2;
 	/**
 	 * PSS-140
 	 */
@@ -68,7 +79,6 @@ void setVwPassatB6() {
 	engineConfiguration->isSdCardEnabled = false;
 
 	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
-	setBoschHDEV_5_injectors();
 	// RED
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 	// YELLOW
@@ -99,6 +109,7 @@ void setVwPassatB6() {
 
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
+	strcpy(engineConfiguration->gpPwmNote[1], "LPFP");
 	lowPressureFuelPumpControl->pwmFrequency = 20;
 	lowPressureFuelPumpControl->loadAxis = GPPWM_FuelLoad;
 	lowPressureFuelPumpControl->dutyIfError = 50;
@@ -108,6 +119,7 @@ void setVwPassatB6() {
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
+	strcpy(engineConfiguration->gpPwmNote[0], "Rad Fan");
 
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
@@ -126,17 +138,35 @@ void setVwPassatB6() {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
-	// engineConfiguration->hpfpValvePin = TLE8888_PIN_6; // Disable for now
+	//engineConfiguration->hpfpValvePin = MRE_LS_1;
+	engineConfiguration->disablePrimaryUart = true;
+	engineConfiguration->hpfpValvePin = GPIOB_10; // AUX J13
+	engineConfiguration->hpfpCamLobes = 3;
+	engineConfiguration->hpfpPumpVolume = 0.290;
+	engineConfiguration->hpfpMinAngle = 10;
+	engineConfiguration->hpfpActivationAngle = 30;
+	engineConfiguration->hpfpTargetDecay = 2000;
+	engineConfiguration->hpfpPidP = 0.01;
+	engineConfiguration->hpfpPidI = 0.0003;
+
+	engineConfiguration->hpfpPeakPos = 10;
+
+	setTable(config->veTable, 55);
 
 	setBoschVAGETB();
 
+	// random number just to take position away from zero
+	engineConfiguration->vvtOffsets[0] = 180;
 
-	engineConfiguration->injector.flow = 300;
+
+	// https://rusefi.com/forum/viewtopic.php?p=38235#p38235
+	engineConfiguration->injector.flow = 1200;
 
 	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->useETBforIdleControl = true;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 #endif /* BOARD_TLE8888_COUNT */
 }

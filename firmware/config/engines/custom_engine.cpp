@@ -17,6 +17,7 @@
 #include "fsio_impl.h"
 #include "mre_meta.h"
 #include "proteus_meta.h"
+#include "hellen_meta.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -689,7 +690,29 @@ void mreBoardNewTest() {
 
 }
 
+static const float hardCodedHpfpLobeProfileQuantityBins[16] = {0.0, 1.0, 4.5, 9.5,
+16.5, 25.0, 34.5, 45.0 ,
+55.0, 65.5, 75.0, 83.5,
+90.5, 95.5, 99.0, 100.0};
+
+static const float hardCodedHpfpLobeProfileAngle[16] = {0.0, 7.5, 16.5, 24.0,
+32.0 , 40.0, 48.0, 56.0,
+64.0 , 72.0, 80.0, 88.0,
+96.0 , 103.5, 112.5, 120.0
+};
+
 void setBoschHDEV_5_injectors() {
+	copyArray(engineConfiguration->hpfpLobeProfileQuantityBins, hardCodedHpfpLobeProfileQuantityBins);
+	copyArray(engineConfiguration->hpfpLobeProfileAngle, hardCodedHpfpLobeProfileAngle);
+	setLinearCurve(engineConfiguration->hpfpDeadtimeVoltsBins, 8, 16, 0.5);
+
+	setLinearCurve(engineConfiguration->hpfpTargetRpmBins, 0, 8000, 1);
+	setLinearCurve(engineConfiguration->hpfpTargetLoadBins, 0, 180, 1);
+	setTable(engineConfiguration->hpfpTarget, 5000);
+
+	setLinearCurve(engineConfiguration->hpfpCompensationRpmBins, 0, 8000, 1);
+	setLinearCurve(engineConfiguration->hpfpCompensationLoadBins, 0.005, 0.120, 0.001);
+
 	// This is the configuration for bosch HDEV 5 injectors
 	// all times in microseconds/us
 	engineConfiguration->mc33_hvolt = 65;
@@ -702,19 +725,11 @@ void setBoschHDEV_5_injectors() {
 	engineConfiguration->mc33_t_bypass = 15;
 	engineConfiguration->mc33_t_hold_off = 60;
 	engineConfiguration->mc33_t_hold_tot = 10000;
-}
 
-/**
- * set engine_type 108
- */
-void setVrThresholdTest() {
-	engineConfiguration->trigger.type = TT_HONDA_1_24;
-
-	setHellenDefaultVrThresholds();
-	engineConfiguration->vrThreshold[0].pin = GPIOB_4;
-
-	engineConfiguration->triggerInputPins[0] = GPIOA_5;
-	engineConfiguration->triggerInputPins[1] = GPIOC_6;
+	engineConfiguration->mc33_hpfp_i_peak = 5; // A not mA like above
+	engineConfiguration->mc33_hpfp_i_hold = 3;
+	engineConfiguration->mc33_hpfp_i_hold_off = 10; // us
+	engineConfiguration->mc33_hpfp_max_hold = 10; // this value in ms not us
 }
 
 /**
@@ -767,6 +782,7 @@ void setTest33816EngineConfiguration() {
 	engineConfiguration->mc33816_cs = GPIOD_7;
 	// green
 	engineConfiguration->mc33816_rstb = GPIOD_4;
+	engineConfiguration->sdCardCsPin = GPIO_UNASSIGNED;
 	// yellow
 	engineConfiguration->mc33816_driven = GPIOD_6;
 
@@ -783,152 +799,6 @@ void setTest33816EngineConfiguration() {
 
 	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
 	setBoschHDEV_5_injectors();
-}
-
-void setHellen72etb() {
-	engineConfiguration->etbIo[0].directionPin1 = GPIOC_6;
-	engineConfiguration->etbIo[0].directionPin2 = GPIOC_7;
-	engineConfiguration->etb_use_two_wires = true;
-}
-
-void setHellenDefaultVrThresholds() {
-	for (int i = 0;i<VR_THRESHOLD_COUNT;i++) {
-		setLinearCurve(engineConfiguration->vrThreshold[i].rpmBins, 600 / RPM_1_BYTE_PACKING_MULT, 7000 / RPM_1_BYTE_PACKING_MULT, 100 / RPM_1_BYTE_PACKING_MULT);
-		setLinearCurve(engineConfiguration->vrThreshold[i].values, PACK_PERCENT_BYTE_MULT * 0.6, PACK_PERCENT_BYTE_MULT * 1.2, PACK_PERCENT_BYTE_MULT * 0.1);
-	}
-}
-
-/**
- * set engine_type 6
- */
-void proteusHarley() {
-	strcpy(engineConfiguration->scriptSettingName[0], "compReleaseRpm");
-	engineConfiguration->scriptSetting[0] = 300;
-	strcpy(engineConfiguration->scriptSettingName[1], "compReleaseDur");
-	engineConfiguration->scriptSetting[1] = 5000;
-
-	// for now we need non wired camInput to keep TS field enable/disable logic happy
-	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
-	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN_ANOTHER;
-
-	engineConfiguration->mapCamAveragingLength = 16;
-	engineConfiguration->mapCamSkipFactor = 50;
-	engineConfiguration->mapCamLookForLowPeaks = true;
-
-	engineConfiguration->luaOutputPins[0] = PROTEUS_LS_12;
-#if HW_PROTEUS
-	strncpy(config->luaScript, R"(
-outputIndex = 0
-startPwm(outputIndex, 100, 0)
-
-rpmLimitSetting = findSetting("compReleaseRpm", 300)
-compReleaseDulationLimit = findSetting("compReleaseDur", 6000)
-
-every200msTimer = Timer.new();
-everySecondTimer = Timer.new();
-every50msTimer = Timer.new();
-offCounter = 0
--- cranking!
-packet542 = {0x20, 0x82, 0x81, 0xd9, 0x00, 0x00, 0x00, 0x00}
-packet543 = {0x13, 0x57, 0x13, 0x45, 0x00, 0xe8, 0x00, 0x00}
-packet541 = {0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x00, 0xFF}
-
--- every 200ms
-packet540 = {0x00, 0x00, 0x5a, 0x4c, 0xff, 0x00, 0x00, 0x00}
-
--- every 1000ms
-packet502 = {0x01}
-packet546 = {0x35, 0x48, 0x44, 0x31, 0x46, 0x48}
-packet547 = {0x50, 0x41, 0x31, 0x4b, 0x42, 0x36}
-packet548 = {0x33, 0x34, 0x38, 0x32, 0x32, 0x00}
-
-counter543 = 0;
-setTickRate(66);
-
-canRxAdd(0x570)
-canRxAdd(0x500)
-
-function onCanRx(bus, id, dlc, data)
-  --print('got CAN id=' .. id .. ' dlc='  .. dlc)
-  id11 = id % 2048
-
-  if id11 == 0x500 then --Check can state of BCM
-    canState = data[1]
-    if canState == 01 then
-      packet502[1] = 0x01
-    else
-      packet502[1] = 0x00
-    end
-    if id11 == 0x570 then
-      curState = data[1]
-      if curState == 06 then -- Cranking TODO: MUST ONLY DO THIS ON RPM TILL STARt
-        packet542[2] =  0x82
-      end
-      if curState == 04 then -- Kill off
-        packet542[2] =  0x82
-      end
-      if curState == 01 then -- Kill
-        packet542[2] =  0xA2
-      end
-    end
-  end
-end
-
-
-function onTick()
- 
-  if packet502[1] == 01 then
-    offCounter = 0
-    counter543 = (counter543 + 1) % 64
-    packet543[7] = 64 + counter543
-    packet543[8] = crc8_j1850(packet543, 7)
-    APP = getSensor("AcceleratorPedal") 
-    if APP == nil then
-      packet543[5] = 0
-    else
-      packet543[5] = APP *2
-    end
- 
-    txCan(1, 0x543, 0, packet543)
-	txCan(1, 0x541, 0, packet541)
-   
-    if every200msTimer:getElapsedSeconds() > 0.2 then
-       every200msTimer:reset();
-       txCan(1, 0x540, 0, packet540)
-    end
-
-    if every50msTimer:getElapsedSeconds() > 0.05 then
-       every50msTimer:reset();
-	   txCan(1, 0x542, 0, packet542)
-    end
-	
-    if everySecondTimer:getElapsedSeconds() > 1 then
-       everySecondTimer:reset();
-       txCan(1, 0x502, 0, packet502)
-       txCan(1, 0x546, 0, packet546)
-       txCan(1, 0x547, 0, packet547)
-       txCan(1, 0x548, 0, packet548)
-    end
-
-
-	rpm = getSensor("RPM")
--- handle nil RPM, todo: change firmware to avoid nil RPM
-	rpm = (rpm == nil and 0 or rpm)
-    --print('Rpm ' .. rpm)
-	--print('getTimeSinceTriggerEventMs ' .. getTimeSinceTriggerEventMs())
-	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() < compReleaseDulationLimit and rpm < rpmLimitSetting
-    duty = enableCompressionReleaseSolenoid and 1 or 0
-    print("Compression release solenoid " .. duty)
-	setPwmDuty(outputIndex, duty)
-  else
-    if offCounter == 0 then --goodbye sweet love
-      txCan(1, 0x502, 0, packet502) --goodbye
-      offCounter = 1 --One shot 
-    end
-  end
-end
-)", efi::size(config->luaScript));
-#endif
 }
 
 void proteusLuaDemo() {
@@ -1054,24 +924,11 @@ end
 #endif
 }
 
+void detectBoardType() {
 #if HW_HELLEN
-void setHellen144LedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOE_7;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOG_1;
-	engineConfiguration->warningLedPin = GPIOE_8;
-}
-
-void setHellen176LedPins() {
-#ifdef EFI_COMMUNICATION_PIN
-	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
-#else
-	engineConfiguration->communicationLedPin = GPIOH_10;
-#endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOH_9;  // green
-	engineConfiguration->warningLedPin = GPIOH_11; // yellow
-}
+#if !EFI_UNIT_TEST
+	detectHellenBoardType();
+#endif /* EFI_UNIT_TEST */
 #endif //HW_HELLEN
+	// todo: add board ID detection?
+}

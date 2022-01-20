@@ -1,4 +1,3 @@
-CONTROLLERS_ALGO_SRC =
 
 CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(PROJECT_DIR)/controllers/algo/malfunction_central.cpp \

@@ -172,17 +172,6 @@ int findIndex(const float array[], int size, float value) {
 	return findIndexMsg("", array, size, value);
 }
 
-/**
- * Sets specified value for specified key in a correction curve
- * see also setLinearCurve()
- */
-void setCurveValue(float bins[], float values[], int size, float key, float value) {
-	int index = findIndexMsg("tbVl", bins, size, key);
-	if (index == -1)
-		index = 0;
-	values[index] = value;
-}
-
 void initInterpolation() {
 #if BINARY_PERF && ! EFI_UNIT_TEST
 	addConsoleAction("binarytest", testBinary);

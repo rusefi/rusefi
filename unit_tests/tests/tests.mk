@@ -28,6 +28,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/lua/test_lua_basic.cpp \
+	tests/lua/test_lua_e65.cpp \
 	tests/lua/test_lua_with_engine.cpp \
 	tests/lua/test_lua_hooks.cpp \
 	tests/sensor/test_cj125.cpp \
@@ -50,6 +51,7 @@ TESTS_SRC_CPP = \
 	tests/test_dc_motor.cpp \
 	tests/test_fan_control.cpp \
 	tests/test_main_relay.cpp \
+	tests/test_scattered_outputs.cpp \
 	tests/test_vvt.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
@@ -86,6 +88,7 @@ TESTS_SRC_CPP = \
 	tests/test_boost.cpp \
 	tests/test_gppwm.cpp \
 	tests/test_hpfp.cpp \
+	tests/test_hpfp_integrated.cpp \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
 	tests/test_dynoview.cpp \

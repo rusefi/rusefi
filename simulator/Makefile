@@ -152,52 +152,23 @@ endif
 
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
-include $(PROJECT_DIR)/development/development.mk
-include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
-include $(PROJECT_DIR)/init/init.mk
-include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/common.mk
 
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-        $(SYSTEMSRC) \
-        $(CONSOLESRC) \
-        $(CONTROLLERS_ALGO_SRC) \
-        $(CONTROLLERS_CORE_SRC) \
-        $(CONTROLLERS_SENSORS_SRC) \
-        $(ENGINES_SRC) \
-        $(UTILSRC) \
         main.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
   $(CHIBIOS)/os/various/cpp_wrappers/ch.cpp \
-        $(UTILSRC_CPP) \
-	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(CONTROLLERS_SRC_CPP) \
 	$(PROJECT_DIR)/development/sensor_chart.cpp \
-	$(HW_LAYER_EMS_CPP) \
-	$(HW_SENSORS_CPP) \
 	$(HW_LAYER_DRIVERS_CPP) \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
-	$(TRIGGER_SRC_CPP) \
-	$(TRIGGER_DECODERS_SRC_CPP) \
-	$(SYSTEMSRC_CPP) \
-	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
-	$(INIT_SRC_CPP) \
-	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(CONTROLLERS_CORE_SRC_CPP) \
-	$(CONTROLLERS_MATH_SRC_CPP) \
 	$(DEV_SIMULATOR_SRC_CPP) \
-	$(ENGINES_SRC_CPP) \
 	simulator/rusEfiFunctionalTest.cpp \
 	simulator/framework.cpp \
 	simulator/boards.cpp \
@@ -211,20 +182,7 @@ INCDIR = . \
           $(PCH_DIR) \
           $(ALLINC) \
           $(CHIBIOS)/os/various/cpp_wrappers \
-          $(UTIL_INC) \
-          $(PROJECT_DIR)/init \
-          $(CONSOLE_INC) \
-          $(PROJECT_DIR)/config/engines \
-		  $(PROJECT_DIR)/config/boards/ \
-          $(PROJECT_DIR)/ext_algo \
-          $(HW_LAYER_DRIVERS_INC) \
-          $(HW_LAYER_INC) \
-	  $(HW_SENSORS_INC) \
-          $(PROJECT_DIR)/hw_layer/algo \
           $(PROJECT_DIR)/hw_layer/drivers/can \
-          $(HW_SENSORS_INC) \
-          $(DEVELOPMENT_DIR) \
-          $(CONTROLLERS_INC) \
           ${CHIBIOS}/os/various \
           $(CHIBIOS)/os/hal/lib/streams \
           simulator

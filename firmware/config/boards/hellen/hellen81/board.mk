@@ -1,7 +1,8 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen81/board_configuration.cpp
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen81/board_configuration.cpp \
+    $(BOARDS_DIR)/hellen/hellen_common.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen81
 
 # Set this if you want a default engine type other than normal Hellen81
@@ -49,7 +50,3 @@ DDEFS += -DEFI_OVERRIDE_FAST_ADC_FOR_STM32H7=TRUE -DADC_FAST_DEVICE=ADCD1 -DEFI_
 
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
-
-# Shared variables
-ALLCPPSRC += $(BOARDCPPSRC)
-ALLINC    += $(BOARDINC)

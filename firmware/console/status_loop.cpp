@@ -157,10 +157,6 @@ static int packEngineMode() {
 			engineConfiguration->ignitionMode;
 }
 
-static float getAirFlowGauge() {
-	return Sensor::get(SensorType::Maf).value_or(engine->engineState.airFlow);
-}
-
 static int prevCkpEventCounter = -1;
 
 /**
@@ -171,9 +167,16 @@ static systime_t timeOfPreviousPrintVersion = 0;
 
 #if EFI_PROD_CODE
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
-	if (isBrainPinValid(hwPin)) {
-		logger.appendPrintf(PROTOCOL_OUTPIN LOG_DELIMITER "%s@%s" LOG_DELIMITER, pinName, hwPortname(hwPin));
+	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
+		return;
 	}
+	const char *hwPinName;
+	if (isBrainPinValid(hwPin)) {
+		hwPinName = hwPortname(hwPin);
+	} else {
+		hwPinName = "smart";
+	}
+	logger.appendPrintf(PROTOCOL_OUTPIN LOG_DELIMITER "%s@%s" LOG_DELIMITER, pinName, hwPinName);
 }
 #endif /* EFI_PROD_CODE */
 
@@ -486,6 +489,15 @@ static void updateThrottles() {
 	engine->outputChannels.throttlePedalPosition = pedal.Value;
 	// Only report fail if you have one (many people don't)
 	engine->outputChannels.isPedalError = !pedal.Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
+
+	// TPS 1 pri/sec split
+	engine->outputChannels.tps1Split = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
+	// TPS 2 pri/sec split
+	engine->outputChannels.tps2Split = Sensor::getOrZero(SensorType::Tps2Primary) - Sensor::getOrZero(SensorType::Tps2Secondary);
+	// TPS1 - TPS2 split
+	engine->outputChannels.tps12Split = Sensor::getOrZero(SensorType::Tps1) - Sensor::getOrZero(SensorType::Tps2);
+	// Pedal pri/sec split
+	engine->outputChannels.accPedalSplit = Sensor::getOrZero(SensorType::AcceleratorPedalPrimary) - Sensor::getOrZero(SensorType::AcceleratorPedalSecondary);
 }
 
 static void updateLambda() {
@@ -521,9 +533,11 @@ static void updateVvtSensors() {
 
 static void updateVehicleSpeed(int rpm) {
 #if EFI_VEHICLE_SPEED
-	float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
-	engine->outputChannels.vehicleSpeedKph = vehicleSpeed;
-	engine->outputChannels.speedToRpmRatio = vehicleSpeed / rpm;
+	float vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
+	float wheelRPM = vehicleSpeedKph * 1000 / 60 / (2 * CONST_PI * engineConfiguration->wheelDiameter);
+	float driveshaftRpm = wheelRPM * engineConfiguration->finalGearRatio;
+	engine->outputChannels.vehicleSpeedKph = vehicleSpeedKph;
+	engine->outputChannels.speedToRpmRatio = rpm / driveshaftRpm;
 #endif /* EFI_VEHICLE_SPEED */
 }
 
@@ -539,7 +553,7 @@ static void updateRawSensors() {
 	engine->outputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 	engine->outputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	engine->outputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
-	engine->outputChannels.MAFValue = Sensor::getRaw(SensorType::Maf);
+	engine->outputChannels.rawMaf = Sensor::getRaw(SensorType::Maf);
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
 }
@@ -640,8 +654,8 @@ static void updateFlags() {
 	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
 	engine->outputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
 	engine->outputChannels.isO2HeaterOn = enginePins.o2heater.getLogicValue();
-	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition();
-	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection();
+	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition().value;
+	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection().value;
 	engine->outputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 
 #if EFI_LAUNCH_CONTROL
@@ -664,15 +678,6 @@ static void updateFlags() {
 // weird thing: one of the reasons for this to be a separate method is stack usage reduction in non-optimized build
 // see https://github.com/rusefi/rusefi/issues/3302 and linked tickets
 static void updateTpsDebug() {
-	// TPS 1 pri/sec split
-	engine->outputChannels.debugFloatField1 = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
-	// TPS 2 pri/sec split
-	engine->outputChannels.debugFloatField2 = Sensor::getOrZero(SensorType::Tps2Primary) - Sensor::getOrZero(SensorType::Tps2Secondary);
-	// TPS1 - TPS2 split
-	engine->outputChannels.debugFloatField3 = Sensor::getOrZero(SensorType::Tps1) - Sensor::getOrZero(SensorType::Tps2);
-	// Pedal pri/sec split
-	engine->outputChannels.debugFloatField4 = Sensor::getOrZero(SensorType::AcceleratorPedalPrimary) - Sensor::getOrZero(SensorType::AcceleratorPedalSecondary);
-
 	// TPS 1 pri/sec ratio - useful for ford ETB that has partial-range second channel
 	engine->outputChannels.debugFloatField5 = 100 * Sensor::getOrZero(SensorType::Tps1Primary) / Sensor::getOrZero(SensorType::Tps1Secondary);
 }
@@ -694,6 +699,8 @@ void updateTunerStudioState() {
 
 	// offset 0
 	tsOutputChannels->RPMValue = rpm;
+	auto instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
+	tsOutputChannels->instantRpm = instantRpm;
 
 	updateSensors(rpm);
 	updateFuelInfo();
@@ -702,9 +709,11 @@ void updateTunerStudioState() {
 
 	// 104
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
-	// offset 108
-	// For air-interpolated tCharge mode, we calculate a decent massAirFlow approximation, so we can show it to users even without MAF sensor!
-	tsOutputChannels->massAirFlowValue = getAirFlowGauge();
+	
+	// Output both the estimated air flow, and measured air flow (if available)
+	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
+	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
+
 	// offset 116
 	// TPS acceleration
 	tsOutputChannels->deltaTps = engine->tpsAccelEnrichment.getMaxDelta();
@@ -777,7 +786,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
 #if EFI_CAN_SUPPORT
-		postCanState(tsOutputChannels);
+		postCanState();
 #endif /* EFI_CAN_SUPPORT */
 
 #if EFI_CLOCK_LOCKS
@@ -796,10 +805,6 @@ void updateTunerStudioState() {
 
 
 	switch (engineConfiguration->debugMode)	{
-	case DBG_STATUS:
-		tsOutputChannels->debugFloatField1 = timeSeconds;
-		tsOutputChannels->debugIntField1 = atoi(VCS_VERSION);
-		break;
 	case DBG_TPS_ACCEL:
 		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
 		break;
@@ -848,8 +853,6 @@ void updateTunerStudioState() {
 		break;
 	case DBG_INSTANT_RPM:
 		{
-			float instantRpm = engine->triggerCentral.triggerState.getInstantRpm();
-			tsOutputChannels->debugFloatField1 = instantRpm;
 			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
 
 			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
@@ -879,6 +882,8 @@ void updateTunerStudioState() {
 void prepareTunerStudioOutputs(void) {
 	// sensor state for EFI Analytics Tuner Studio
 	updateTunerStudioState();
+	engine->outputChannels.idleStatus.resetCounter = 0x12345653;
+	engine->outputChannels.etbStatus.resetCounter  = 0x12345654;
 }
 
 #endif /* EFI_TUNER_STUDIO */

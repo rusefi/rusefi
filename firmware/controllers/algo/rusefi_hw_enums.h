@@ -22,6 +22,7 @@ typedef enum __attribute__ ((__packed__)) {
  */
 typedef enum __attribute__ ((__packed__)) {
 	GPIO_UNASSIGNED = 0,
+	// only used as return value of 'parseBrainPin' function do we really this this logic special value at all?!
 	GPIO_INVALID = 1,
 
 	GPIOA_0 = 2,
@@ -239,20 +240,6 @@ typedef enum __attribute__ ((__packed__)) {
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
 #define BRAIN_PIN_LAST 			TLE8888_PIN_WAKE
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - GPIOA_0 + 1)
-
-/* diagnostic for brain pins
- * can be combination of few bits
- * defined as bit mask */
-typedef enum __attribute__ ((__packed__))
-{
-	PIN_OK = 0,
-	PIN_OPEN = 0x01,
-	PIN_SHORT_TO_GND = 0x02,
-	PIN_SHORT_TO_BAT = 0x04,
-	PIN_OVERLOAD =	0x08,
-	PIN_DRIVER_OVERTEMP = 0x10,
-	PIN_INVALID = 0x80
-} brain_pin_diag_e;
 
 /**
  * Frankenso analog #1 PC2 ADC12

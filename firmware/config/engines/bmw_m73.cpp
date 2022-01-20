@@ -97,6 +97,7 @@ void m73engine() {
 	engineConfiguration->specs.firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 
 	engineConfiguration->vvtMode[0] = VVT_FIRST_HALF;
 
@@ -106,12 +107,15 @@ void m73engine() {
 	engineConfiguration->trigger.type = TT_60_2_VW;
 
 	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
-	engineConfiguration->cranking.rpm = 280;
+	engineConfiguration->cranking.rpm = 350;
 
 	engineConfiguration->ignitionMode = IM_TWO_COILS;
 
-	// set cranking_fuel 15
-	engineConfiguration->cranking.baseFuel = 30;
+	// set cranking_fuel x
+	engineConfiguration->cranking.baseFuel = 27;
+
+	engineConfiguration->crankingTimingAngle = 15;
+	setTable(config->veTable, 45);
 
 	engineConfiguration->cylinderBore = 85.0;
 }

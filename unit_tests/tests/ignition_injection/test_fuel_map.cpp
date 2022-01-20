@@ -79,11 +79,11 @@ TEST(misc, testFuelMap) {
 	Sensor::setMockValue(SensorType::Clt, 0);
 	EXPECT_NEAR(7.7333, getCrankingFuel3(2, 4), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 8);
-	EXPECT_NEAR(7, getCrankingFuel3(2, 15), EPS4D);
+	EXPECT_NEAR_M4(7, getCrankingFuel3(2, 15));
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(8, getCrankingFuel3(2, 0), EPS4D);
+	EXPECT_NEAR_M4(8, getCrankingFuel3(2, 0));
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(4, getCrankingFuel3(2, 50), EPS4D);
+	EXPECT_NEAR_M4(4, getCrankingFuel3(2, 50));
 }
 
 

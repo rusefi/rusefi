@@ -17,6 +17,7 @@
 #include "drivers/gpio/mc33810.h"
 #include "drivers/gpio/tle8888.h"
 #include "drivers/gpio/drv8860.h"
+#include "drivers/gpio/l9779.h"
 
 #if (BOARD_TLE6240_COUNT > 0)
 // todo: migrate to TS or board config
@@ -94,6 +95,14 @@ struct mc33972_config mc33972 = {
 	},
 };
 #endif /* (BOARD_MC33972_COUNT > 0) */
+
+#if (BOARD_L9779_COUNT > 0)
+static OutputPin l9779Cs;
+struct l9779_config l9779_cfg = {
+	.spi_bus = NULL,
+};
+
+#endif /* (BOARD_L9779_COUNT > 0) */
 
 #if (BOARD_TLE8888_COUNT > 0)
 static OutputPin tle8888Cs;

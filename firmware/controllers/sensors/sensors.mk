@@ -1,6 +1,4 @@
 
-CONTROLLERS_SENSORS_SRC = 
-																																				
 CONTROLLERS_SENSORS_SRC_CPP = 	$(PROJECT_DIR)/controllers/sensors/thermistors.cpp \
 	$(PROJECT_DIR)/controllers/sensors/allsensors.cpp \
 	$(PROJECT_DIR)/controllers/sensors/auto_generated_sensor.cpp \

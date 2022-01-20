@@ -193,7 +193,6 @@ static char* itoa_signed(char *p, int num, unsigned radix) {
  * @return pointer at the end zero symbol after the digits
  */
 char* itoa10(char *p, int num) {
-// todo: unit test
 	return itoa_signed(p, num, 10);
 }
 
@@ -401,3 +400,9 @@ float tanf_taylor(float x) {
 	// tan = sin / cos
 	return sin_val / cos_val;
 }
+
+#if EFI_PROD_CODE
+extern "C" void __cxa_pure_virtual(void) {
+	osalSysHalt("Pure virtual function call.");
+}
+#endif

@@ -15,7 +15,3 @@ endif
 
 # Add them all together
 DDEFS += -DEFI_USE_OSC=TRUE -DLED_CRITICAL_ERROR_BRAIN_PIN=GPIOE_3 -DFIRMWARE_ID=\"skeleton\" $(DEFAULT_ENGINE_TYPE)
-
-# Shared variables
-ALLCPPSRC += $(BOARDCPPSRC)
-ALLINC    += $(BOARDINC)

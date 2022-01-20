@@ -72,6 +72,7 @@ static void showStats() {
     efiPrintf("MC driver status 0x%x", mcDriverStatus);
 }
 
+static void initMc33816IfNeeded();
 static void mcRestart();
 
 
@@ -172,6 +173,20 @@ static void setTimings() {
 	mcUpdateDram(MC33816Mem::Tbypass, (MC_CK * engineConfiguration->mc33_t_bypass));
 	mcUpdateDram(MC33816Mem::Thold_off, (MC_CK * engineConfiguration->mc33_t_hold_off));
 	mcUpdateDram(MC33816Mem::Thold_tot, (MC_CK * engineConfiguration->mc33_t_hold_tot));
+
+	// HPFP solenoid settings
+	mcUpdateDram(MC33816Mem::HPFP_Ipeak,
+		     dacEquation(engineConfiguration->mc33_hpfp_i_peak * 1000));
+	mcUpdateDram(MC33816Mem::HPFP_Ihold,
+		     dacEquation(engineConfiguration->mc33_hpfp_i_hold * 1000));
+	mcUpdateDram(MC33816Mem::HPFP_Thold_off,
+		     std::min(MC_CK * engineConfiguration->mc33_hpfp_i_hold_off,
+			      UINT16_MAX));
+	// Note, if I'm reading this right, the use of the short and the given clock speed means
+	// the max time here is approx 10ms.
+	mcUpdateDram(MC33816Mem::HPFP_Thold_tot,
+		     std::min(MC_CK * 1000 * engineConfiguration->mc33_hpfp_max_hold,
+			      UINT16_MAX));
 }
 
 void setBoostVoltage(float volts)
@@ -406,8 +421,6 @@ static void download_register(int r_target) {
 	   spiUnselect(driver);
 }
 
-static bool haveMc33816 = false;
-
 void initMc33816() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
@@ -447,8 +460,7 @@ void initMc33816() {
 	addConsoleAction("mc33_restart", mcRestart);
 	//addConsoleActionI("mc33_send", sendWord);
 
-	haveMc33816 = true;
-	mcRestart();
+	initMc33816IfNeeded();
 }
 
 static void mcShutdown() {
@@ -557,14 +569,13 @@ static void mcRestart() {
     }
 }
 
-void initMc33816IfNeeded() {
-	if (!haveMc33816) {
-		return;
-	}
+static void initMc33816IfNeeded() {
 	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
 		isInitializaed = false;
 	} else {
 		if (!isInitializaed) {
+			// WARNING: 'mcRestart' current implementation works in non-irq user content only
+			// note all the locking SPI API usage
 			mcRestart();
 			isInitializaed = true;
 		}

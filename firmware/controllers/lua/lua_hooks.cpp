@@ -158,7 +158,7 @@ static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t s
 static int lua_txCan(lua_State* l) {
 	auto channel = luaL_checkinteger(l, 1);
 	// TODO: support multiple channels
-	luaL_argcheck(l, channel == 1, 1, "only channel 1 currently supported");
+	luaL_argcheck(l, channel == 1 || channel == 2, 1, "only channels 1 and 2 currently supported");
 
 	auto id = luaL_checkinteger(l, 2);
 	auto ext = luaL_checkinteger(l, 3);
@@ -172,6 +172,7 @@ static int lua_txCan(lua_State* l) {
 
 	// conform ext parameter to true/false
 	CanTxMessage msg(id, 8, ext == 0 ? false : true);
+	msg.busIndex = channel - HUMAN_OFFSET;
 
 	// Unfortunately there is no way to inspect the length of a table,
 	// so we have to just iterate until we run out of numbers
@@ -556,6 +557,21 @@ void configureRusefiLuaHooks(lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
 		auto result = getOutputValueByName(propertyName);
 		lua_pushnumber(l, result);
+		return 1;
+	});
+
+	lua_register(l, "getEngineState", [](lua_State* l) {
+		spinning_state_e state = engine->rpmCalculator.getState();
+		int luaStateCode;
+		if (state == STOPPED) {
+			luaStateCode = 0;
+		} else if (state == RUNNING) {
+			luaStateCode = 2;
+		} else {
+			// spinning-up or cranking
+			luaStateCode = 1;
+		}
+		lua_pushnumber(l, luaStateCode);
 		return 1;
 	});
 

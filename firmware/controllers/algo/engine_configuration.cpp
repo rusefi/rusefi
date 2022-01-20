@@ -29,6 +29,7 @@
 #include "flash_main.h"
 
 #include "hip9011_logic.h"
+#include "bench_test.h"
 
 #if EFI_MEMS
 #include "accelerometer.h"
@@ -156,6 +157,9 @@ void onBurnRequest() {
 	incrementGlobalConfigurationVersion();
 }
 
+// Weak link a stub so that every board doesn't have to implement this function
+__attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s *previousConfiguration) { }
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
@@ -171,6 +175,8 @@ void incrementGlobalConfigurationVersion() {
 
 	applyNewHardwareSettings();
 
+	boardOnConfigurationChange(&activeConfiguration);
+
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
  */
@@ -185,6 +191,10 @@ void incrementGlobalConfigurationVersion() {
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+	onConfigurationChangeBenchTest();
+#endif
 
 #if EFI_SHAFT_POSITION_INPUT
 	onConfigurationChangeTriggerCallback();
@@ -390,7 +400,7 @@ void setDefaultGppwmParameters() {
 		}
 
 		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
-			cfg.rpmBins[j] = 1000 * j / RPM_1_BYTE_PACKING_MULT;
+			cfg.rpmBins[j] = 1000 * j;
 		}
 	}
 }
@@ -647,6 +657,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->cylinderBore = 87.5;
 
+	setBoschHDEV_5_injectors();
+
 	setEgoSensor(ES_14Point7_Free);
 
 	engineConfiguration->globalFuelCorrection = 1;
@@ -809,6 +821,8 @@ void loadConfiguration() {
 	resetConfigurationExt(engineConfiguration->engineType);
 #endif /* EFI_INTERNAL_FLASH */
 
+	detectBoardType();
+
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();
 }
@@ -840,8 +854,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 */
 	switch (engineType) {
 	case UNUSED60:
-// todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
 	case UNUSED61:
+	case HELLEN72_ETB:
 	case UNUSED100:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
@@ -865,6 +879,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
+	case VW_B6:
+		setVwPassatB6();
+		break;
 	case MRE_M111:
 		setM111EngineConfiguration();
 		break;
@@ -955,10 +972,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMiataNB2_Hellen72_36();
 		break;
 	case HELLEN_NB1:
+	case HELLEN_NA8_96:
 		setHellenNB1();
-		break;
-	case HELLEN72_ETB:
-		setHellen72etb();
 		break;
 	case HELLEN_121_NISSAN_4_CYL:
 		setHellen121nissanQR();
@@ -1054,7 +1069,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_600:
 		setHonda600();
 		break;
-	case UNUSED9:
+	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+		setEngineProteusGearboxManInTheMiddle();
+		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
@@ -1070,9 +1087,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996();
-		break;
-	case VW_B6:
-		setVwPassatB6();
 		break;
 	case VW_ABA:
 		setVwAba();
@@ -1108,8 +1122,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setTest33816EngineConfiguration();
 		break;
 	case TEST_108:
-		setVrThresholdTest();
-		break;
 	case TEST_109:
 	case TEST_110:
 	case TEST_ROTARY:
@@ -1192,5 +1204,5 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 }
 
 // These symbols are weak so that a board_configuration.cpp file can override them
-__attribute__((weak)) void setBoardDefaultConfiguration(void) { }
-__attribute__((weak)) void setBoardConfigOverrides(void) { }
+__attribute__((weak)) void setBoardDefaultConfiguration() { }
+__attribute__((weak)) void setBoardConfigOverrides() { }

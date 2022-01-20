@@ -18,14 +18,23 @@
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>
 
-// I believe that TunerStudio curve editor has a bug with F32 support
-// because of that bug we cannot have '1.05' for 5% extra multiplier
-/**
- * *0.01 because of https://sourceforge.net/p/rusefi/tickets/153/
- */
-
 #define PERCENT_MULT 100.0f
 #define PERCENT_DIV 0.01f
+
+/* diagnostic for brain pins
+ * can be combination of few bits
+ * defined as bit mask */
+typedef enum __attribute__ ((__packed__))
+{
+	PIN_OK = 0,
+	PIN_OPEN = 0x01,
+	PIN_SHORT_TO_GND = 0x02,
+	PIN_SHORT_TO_BAT = 0x04,
+	PIN_OVERLOAD =	0x08,
+	PIN_DRIVER_OVERTEMP = 0x10,
+	PIN_DRIVER_OFF = 0x20,
+	PIN_INVALID = 0x80
+} brain_pin_diag_e;
 
 typedef enum {
 	ADC_OFF = 0,
@@ -439,6 +448,9 @@ typedef enum {
 
 	MT_GM_1_BAR = 13,
 
+	/**
+	 * 4 bar
+	 */
 	MT_MPXH6400 = 14,
 
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
@@ -613,7 +625,7 @@ typedef enum __attribute__ ((__packed__)) {
 	AFR_Tps = 2,
 	AFR_AccPedal = 3,
 	AFR_CylFilling = 4,
-} afr_override_e;
+} load_override_e;
 
 typedef enum __attribute__ ((__packed__)) {
 // todo: rename to HB_None?

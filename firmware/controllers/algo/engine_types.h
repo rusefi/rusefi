@@ -43,8 +43,8 @@ typedef enum {
 	 */
 	GY6_139QMB = 8,
 
-	UNUSED9 = 9,
-	UNUSED10 = 10,
+	PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9,
+	HELLEN_NA8_96 = 10,
 	MRE_MIATA_NB2_MAP = 11,
 	MRE_MIATA_NA6_VAF = 12,
 	MRE_MIATA_NB2_ETB = 13,
@@ -285,7 +285,7 @@ typedef enum {
 
 	DBG_INSTANT_RPM = 22,
 	UNUSED23 = 23,
-	DBG_STATUS = 24,
+	DBG_24 = 24,
 	DBG_CJ125 = 25,
 	DBG_26 = 26,
 	DBG_MAP = 27,
@@ -300,7 +300,7 @@ typedef enum {
 	DBG_DWELL_METRIC = 33,
 	DBG_34 = 34,
 	DBG_35 = 35,
-	DBG_BOOST = 36,
+	DBG_36 = 36,
 	DBG_37 = 37,
 	DBG_38 = 38,
 	DBG_ETB_AUTOTUNE = 39,

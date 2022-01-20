@@ -32,8 +32,6 @@ DDEFS += -DHAL_USE_UART=FALSE
 DDEFS += -DUART_USE_WAIT=FALSE
 
 # Shared variables
-ALLCSRC   += $(BOARDSRC)
-ALLCPPSRC += $(BOARDCPPSRC)
 ALLINC    += $(BOARDINC)
 
 #Serial flash support

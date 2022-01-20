@@ -42,7 +42,7 @@ TEST(Multispark, EnabledNoMaxRpm) {
 	multisparkCfg();
 
 	// Practically no RPM limit
-	engineConfiguration->multisparkMaxRpm = 65000;
+	engineConfiguration->multisparkMaxRpm = 12500;
 
 	EXPECT_EQ(0,  getMultiSparkCount(0    ));
 	EXPECT_EQ(10, getMultiSparkCount(150  ));

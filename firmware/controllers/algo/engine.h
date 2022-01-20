@@ -168,7 +168,7 @@ public:
 	type_list<
 		Mockable<InjectorModel>,
 #if EFI_IDLE_CONTROL
-		IdleController,
+		Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL
 		TriggerScheduler,
 #if EFI_HPFP && EFI_ENGINE_CONTROL
@@ -332,14 +332,12 @@ public:
 	floatms_t injectionDuration = 0;
 
 	// Per-injection fuel mass, including TPS accel enrich
-	float injectionMass[STFT_BANK_COUNT] = {0};
+	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
 	float stftCorrection[STFT_BANK_COUNT] = {0};
 
-	/**
-	 * This one with wall wetting accounted for, used for logging.
-	 */
-	floatms_t actualLastInjection[STFT_BANK_COUNT] = {0};
+	// Stores the actual pulse duration of the last injection for every cylinder
+	floatms_t actualLastInjection[MAX_CYLINDER_COUNT] = {0};
 
 	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
 	float standardAirCharge = 0;
@@ -387,7 +385,6 @@ public:
 	 */
 	void onTriggerSignalEvent();
 	EngineState engineState;
-	idle_state_s idle;
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
 	 */
@@ -463,6 +460,8 @@ private:
 
 	void injectEngineReferences();
 };
+
+trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode);
 
 void prepareShapes();
 void applyNonPersistentConfiguration();

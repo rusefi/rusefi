@@ -39,7 +39,7 @@ FloatChars: IntegerChars [.] ([0-9]+)?;
 IdentifierChars : [a-zA-Z_]([a-zA-Z0-9_]*);
 
 // TODO: do we need replacementIdent AND identifier to be here?
-replacementIdent: '@@' IdentifierChars '@@' | identifier;
+replacementIdent: integer | '@@' IdentifierChars '@@' | identifier;
 
 String: [a-zA-Z_0-9.']+;
 
@@ -121,7 +121,7 @@ enumRhs
     | enumVal (',' enumVal)*
     ;
 
-enumTypedefSuffix: /*ignored*/integer Bits ',' Datatype ',' '@OFFSET@' ',' '[' integer ':' integer ']' ',' enumRhs ;
+enumTypedefSuffix: /*ignored*/replacementIdent Bits ',' Datatype ',' '@OFFSET@' ',' '[' integer ':' integer ']' ',' enumRhs ;
 scalarTypedefSuffix: /*ignored*/integer Scalar ',' Datatype ',' '@OFFSET@' fieldOptionsList ;
 stringTypedefSuffix: /*ignored*/replacementIdent 'string' ',' 'ASCII' ',' '@OFFSET@' ',' numexpr;
 

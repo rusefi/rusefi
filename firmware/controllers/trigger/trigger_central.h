@@ -17,6 +17,11 @@
 
 #define MAP_CAM_BUFFER 64
 
+#ifndef RPM_LOW_THRESHOLD
+// no idea what is the best value, 25 is as good as any other guess
+#define RPM_LOW_THRESHOLD 25
+#endif
+
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp);
 
@@ -66,15 +71,17 @@ public:
 
 	expected<float> getCurrentEnginePhase(efitick_t nowNt) const;
 
-	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
+	float getSecondsSinceTriggerEvent(efitick_t nowNt) const {
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
+	bool engineMovedRecently(efitick_t nowNt) const {
+		constexpr float oneRevolutionLimitInSeconds = 60.0 / RPM_LOW_THRESHOLD;
+		return getSecondsSinceTriggerEvent(nowNt) < oneRevolutionLimitInSeconds / triggerShape.getSize();
+	}
+
 	bool engineMovedRecently() const {
-		// Trigger event some time in the past second = engine moving
-		// distributor single tooth, large engines crank at close to 120 RPM
-		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
-		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
+		return engineMovedRecently(getTimeNowNt());
 	}
 
 	TriggerNoiseFilter noiseFilter;
@@ -82,7 +89,6 @@ public:
 	int vvtEventRiseCounter[CAM_INPUTS_COUNT];
 	int vvtEventFallCounter[CAM_INPUTS_COUNT];
 
-	trigger_type_e vvtTriggerType[CAMS_PER_BANK];
 	angle_t getVVTPosition(uint8_t bankIndex, uint8_t camIndex);
 
 #if EFI_UNIT_TEST
@@ -92,9 +98,6 @@ public:
 
 	// synchronization event position
 	angle_t vvtPosition[BANKS_COUNT][CAMS_PER_BANK];
-
-	// todo: convert to Timer!
-	efitick_t vvtSyncTimeNt[BANKS_COUNT][CAMS_PER_BANK];
 
 	TriggerStateWithRunningStatistics triggerState;
 	TriggerWaveform triggerShape;

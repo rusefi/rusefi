@@ -63,7 +63,7 @@ void setMockMapVoltage(float voltage) {
 /**
  * 64-bit result would not overflow, but that's complex stuff for our 32-bit MCU
  */
-efitimeus_t getTimeNowUs(void) {
+efitimeus_t getTimeNowUs() {
 	ScopePerf perf(PE::GetTimeNowUs);
 	return NT2US(getTimeNowNt());
 }

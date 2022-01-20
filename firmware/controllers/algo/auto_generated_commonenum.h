@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sat Nov 06 03:26:11 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jan 04 03:36:48 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -9,10 +9,10 @@ const char *getInjectorNonlinearMode(InjectorNonlinearMode value);
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
 const char *getAdc_channel_mode_e(adc_channel_mode_e value);
-const char *getAfr_override_e(afr_override_e value);
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value);
 const char *getAntiLagActivationMode_e(antiLagActivationMode_e value);
 const char *getBoostType_e(boostType_e value);
+const char *getBrain_pin_diag_e(brain_pin_diag_e value);
 const char *getCan_baudrate_e(can_baudrate_e value);
 const char *getCan_nbc_e(can_nbc_e value);
 const char *getCan_vss_nbc_e(can_vss_nbc_e value);
@@ -34,6 +34,7 @@ const char *getInjection_mode_e(injection_mode_e value);
 const char *getInjector_compensation_mode_e(injector_compensation_mode_e value);
 const char *getInjector_pressure_type_e(injector_pressure_type_e value);
 const char *getLaunchActivationMode_e(launchActivationMode_e value);
+const char *getLoad_override_e(load_override_e value);
 const char *getLog_format_e(log_format_e value);
 const char *getMaf_sensor_type_e(maf_sensor_type_e value);
 const char *getOperation_mode_e(operation_mode_e value);

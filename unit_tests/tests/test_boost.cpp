@@ -10,7 +10,7 @@ TEST(BoostControl, Setpoint) {
 
 	// Just pass TPS input to output
 	EXPECT_CALL(targetMap, getValue(_, _))
-		.WillRepeatedly([](float xRpm, float tps) { return tps * 2; });
+		.WillRepeatedly([](float xRpm, float tps) { return tps; });
 
 	EngineTestHelper eth(TEST_ENGINE);
 	engineConfiguration->boostType = CLOSED_LOOP;
@@ -51,7 +51,7 @@ TEST(BoostControl, OpenLoop) {
 
 	// Just pass MAP input to output
 	EXPECT_CALL(openMap, getValue(_, _))
-		.WillRepeatedly([](float xRpm, float tps) { return tps * 2; });
+		.WillRepeatedly([](float xRpm, float tps) { return tps; });
 
 	EngineTestHelper eth(TEST_ENGINE);
 
@@ -108,6 +108,8 @@ TEST(BoostControl, ClosedLoop) {
 
 TEST(BoostControl, SetOutput) {
 	EngineTestHelper eth(TEST_ENGINE);
+
+	engineConfiguration->isBoostControlEnabled = true;
 
 	StrictMock<MockPwm> pwm;
 	StrictMock<MockEtb> etb;

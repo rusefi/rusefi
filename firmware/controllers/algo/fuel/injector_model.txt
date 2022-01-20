@@ -1,0 +1,6 @@
+struct_no_prefix injector_model_s
+float m_deadtime
+float pressureDelta
+float pressureRatio
+
+end_struct

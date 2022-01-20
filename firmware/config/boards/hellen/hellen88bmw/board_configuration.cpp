@@ -13,11 +13,7 @@
 #include "pch.h"
 #include "fsio_impl.h"
 #include "custom_engine.h"
-#include "../hellen_meta.h"
-
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
+#include "hellen_meta.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -60,7 +56,7 @@ static void setupVbatt() {
 	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
 
 	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5; // 4T
+	engineConfiguration->vbattAdcChannel = H144_IN_VBATT; // 4T
 
 	engineConfiguration->adcVcc = 3.29f;
 }
@@ -91,7 +87,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
@@ -100,10 +96,7 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->iat.config.bias_resistor = 4700;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
@@ -119,7 +112,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -183,7 +176,7 @@ void setBoardDefaultConfiguration(void) {
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
 	engineConfiguration->spi3mosiPin = GPIOC_12;

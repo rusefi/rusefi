@@ -19,7 +19,3 @@ DDEFS += -DHW_ATLAS=1
 # Atlas needs networking library
 LWIP = yes
 DDEFS += -DEFI_ETHERNET=TRUE
-
-# Shared variables
-ALLCPPSRC += $(BOARDCPPSRC)
-ALLINC    += $(BOARDINC)

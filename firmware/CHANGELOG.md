@@ -25,9 +25,20 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## Month 202x Release - "Release Name"
+## January 2022 Release - "Tin Can"
 
-## Added
+### Added
+ - Per-cylinder fuel trim tables
+ - Per-cylinder ignition timing trim tables
+ - SDRAM reference binary for stm32f429-discovery
+
+### Fixed
+ - rusefi_Console: Too long re-connection time #3305
+ - Bosch Quick Start on B6 Passat is confused about phase #3812
+
+## December 2021 Release - "Cookie Exchange"
+
+### Added
  - Improved vehicle speed sensor configuration: now uses real physical constants about tires, gear ratio, sensor, etc.
  - Improved priming logic. Now includes a table of priming fuel mass vs. engine temperature, in addition to a delay before priming to allow fuel pressure to build. #3674
  - ISO-TP connector in firmware & ISO-TP to TCP/IP bridge in rusEFI console #3667

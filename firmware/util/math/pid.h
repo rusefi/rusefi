@@ -45,10 +45,10 @@ public:
 	// doesn't limit the result (used in incremental CIC PID, see below)
 	float getUnclampedOutput(float target, float input, float dTime);
 	void updateFactors(float pFactor, float iFactor, float dFactor);
-	virtual void reset(void);
-	float getP(void) const;
-	float getI(void) const;
-	float getD(void) const;
+	virtual void reset();
+	float getP() const;
+	float getI() const;
+	float getD() const;
 	float getOffset() const;
 	float getMinValue() const;
 	float getIntegration(void) const;

@@ -20,10 +20,6 @@ public interface LinkConnector extends LinkDecoder {
         }
 
         @Override
-        public void restart() {
-        }
-
-        @Override
         public BinaryProtocol getBinaryProtocol() {
             return null;
         }
@@ -48,11 +44,6 @@ public interface LinkConnector extends LinkDecoder {
             }
 
             @Override
-            public void restart() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
             public BinaryProtocol getBinaryProtocol() {
                 throw new UnsupportedOperationException();
             }
@@ -62,8 +53,6 @@ public interface LinkConnector extends LinkDecoder {
     void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
-
-    void restart();
 
     BinaryProtocol getBinaryProtocol();
 

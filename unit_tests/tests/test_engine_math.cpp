@@ -38,6 +38,7 @@ TEST(misc, testEngineMath) {
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
 	ASSERT_NEAR( 50,  getOneDegreeTimeMs(600) * 180, EPS4D) << "600 RPM";
 	ASSERT_EQ( 5,  getOneDegreeTimeMs(6000) * 180) << "6000 RPM";
@@ -64,9 +65,14 @@ TEST(misc, testEngineMath) {
 
 	Sensor::setMockValue(SensorType::Clt, 90);
 	Sensor::setMockValue(SensorType::Iat, 20);
+	Sensor::setMockValue(SensorType::Map, 100);
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	engine->rpmCalculator.mockRpm = 1000;
+
 	// calc. airFlow using airMass, and find tCharge
-	ASSERT_FLOAT_EQ(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0));
-	ASSERT_FLOAT_EQ(65.5625f/*kg/h*/, engine->engineState.airFlow);
+	engine->periodicFastCallback();
+	ASSERT_NEAR(59.1175f, engine->engineState.sd.tCharge, EPS4D);
+	ASSERT_NEAR(56.9762f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
 
 TEST(misc, testIgnitionMapGenerator) {

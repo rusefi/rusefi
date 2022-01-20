@@ -77,6 +77,8 @@ void Engine::resetEngineSnifferIfInTestMode() {
  */
 trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
+	case VVT_INACTIVE:
+		return TT_ONE;
 	case VVT_2JZ:
 		return TT_VVT_JZ;
 	case VVT_MIATA_NB2:
@@ -105,28 +107,21 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 
 static void initVvtShape(int camIndex, TriggerState &initState) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
-	TriggerWaveform *shape = &engine->triggerCentral.vvtShape[camIndex];
-
-	// not ideas but good for now code
-	engine->triggerCentral.vvtState[0][0].name = "vvt00";
-	engine->triggerCentral.vvtState[0][1].name = "vvt01";
-	engine->triggerCentral.vvtState[1][0].name = "vvt10";
-	engine->triggerCentral.vvtState[1][1].name = "vvt11";
 
 	if (vvtMode != VVT_INACTIVE) {
 		trigger_config_s config;
 		// todo: should 'vvtWithRealDecoder' be used here?
-		engine->triggerCentral.vvtTriggerType[camIndex] = config.type = getVvtTriggerType(vvtMode);
+		config.type = getVvtTriggerType(vvtMode);
 
-		shape->initializeTriggerWaveform(
+		auto& shape = engine->triggerCentral.vvtShape[camIndex];
+		shape.initializeTriggerWaveform(
 				engineConfiguration->ambiguousOperationMode,
 				engineConfiguration->vvtCamSensorUseRise, &config);
 
-		shape->initializeSyncPoint(initState,
+		shape.initializeSyncPoint(initState,
 				engine->vvtTriggerConfiguration[camIndex],
 				config);
 	}
-
 }
 
 void Engine::initializeTriggerWaveform() {
@@ -175,11 +170,14 @@ void Engine::initializeTriggerWaveform() {
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
 
+	engine->triggerCentral.vvtState[0][0].name = "VVT B1 Int";
+	engine->triggerCentral.vvtState[0][1].name = "VVT B1 Exh";
+	engine->triggerCentral.vvtState[1][0].name = "VVT B2 Int";
+	engine->triggerCentral.vvtState[1][1].name = "VVT B2 Exh";
 
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		initVvtShape(camIndex, initState);
 	}
-
 
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		prepareOutputSignals();
@@ -304,9 +302,6 @@ void Engine::updateSlowSensors() {
 	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
 #endif /* BOARD_TLE8888_COUNT */
 
-#if EFI_MC33816
-	initMc33816IfNeeded();
-#endif // EFI_MC33816
 #endif
 }
 
@@ -321,7 +316,7 @@ static bool getClutchUpState() {
 
 static bool getBrakePedalState() {
 #if EFI_GPIO_HARDWARE
-	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
+	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		return efiReadPin(engineConfiguration->brakePedalPin);
 	}
 	return engine->engineState.luaAdjustments.brakePedalState;
@@ -345,7 +340,7 @@ void Engine::updateSwitchInputs() {
 	engine->clutchUpState = getClutchUpState();
 
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
-		engine->idle.throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
+		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
 	engine->brakePedalState = getBrakePedalState();
@@ -434,6 +429,14 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 void Engine::OnTriggerSynchronizationLost() {
 	// Needed for early instant-RPM detection
 	rpmCalculator.setStopSpinning();
+
+	triggerCentral.triggerState.resetTriggerState();
+
+	for (size_t i = 0; i < efi::size(triggerCentral.vvtState); i++) {
+		for (size_t j = 0; j < efi::size(triggerCentral.vvtState[0]); j++) {
+			triggerCentral.vvtState[i][j].resetTriggerState();
+		}
+	}
 }
 
 void Engine::OnTriggerInvalidIndex(int currentIndex) {
@@ -511,9 +514,7 @@ void Engine::watchdog() {
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 */
-	float secondsSinceTriggerEvent = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
-
-	if (secondsSinceTriggerEvent < 0.5f) {
+	if (engine->triggerCentral.engineMovedRecently()) {
 		// Engine moved recently, no need to safe pins.
 		return;
 	}

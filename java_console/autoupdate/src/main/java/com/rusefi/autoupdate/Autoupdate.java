@@ -4,6 +4,7 @@ import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.FrameHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -202,6 +203,13 @@ public class Autoupdate {
             System.err.println(new Date() + ": Error reading " + BUNDLE_NAME_FILE);
             return null;
         }
+    }
+
+    @NotNull
+    public static String readBundleFullNameNotNull() {
+        String bundle = readBundleFullName();
+        bundle = bundle == null ? "unknown bundle" : bundle;
+        return bundle;
     }
 
     enum UpdateMode {

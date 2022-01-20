@@ -50,7 +50,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }
 
 static void setLedPins() {
@@ -140,7 +140,7 @@ static void setupSdCard() {
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setupSdCard();
 	setLedPins();
 	setupVbatt();
@@ -151,14 +151,16 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
 
+#if defined(STM32F4) || defined(STM32F7)
+	engineConfiguration->can2RxPin = GPIOB_12;
+	engineConfiguration->can2TxPin = GPIOB_13;
+#endif
+
 	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
 	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
 	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
 	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
@@ -174,7 +176,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setupEtb();
@@ -210,4 +212,20 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->triggerSimulatorPins[0] = GPIOG_3;
 	engineConfiguration->triggerSimulatorPins[1] = GPIOG_2;
 #endif
+}
+
+void boardPrepareForStop() {
+	#ifdef STM32F7XX
+	// enable EXTI on PD0 - CAN RX pin
+	palSetPadMode(GPIOD, 0, PAL_MODE_INPUT); //Select Pin 0 on D Port - PD0, CAN RX as input
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE); // Set PD0 to interrupt on rising edge
+	#endif
+
+	#ifdef STM32F4XX
+	// enable EXTI on PA0 - The only WKUP pin F4 has.
+	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
+	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT); //Select Pin 0 on D Port - PA0, Wkup
+	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE); // Set PA0 to interrupt on rising edge
+
+	#endif
 }

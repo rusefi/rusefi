@@ -1,7 +1,8 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen-nb1/board_configuration.cpp
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen-nb1/board_configuration.cpp \
+    $(BOARDS_DIR)/hellen/hellen_common.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen-nb1
 
 # Set this if you want a default engine type other than normal hellen-nb1
@@ -36,6 +37,3 @@ DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOD_6 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOD_5 -
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
 
-# Shared variables
-ALLCPPSRC += $(BOARDCPPSRC)
-ALLINC    += $(BOARDINC)

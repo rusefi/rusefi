@@ -2,6 +2,7 @@ package com.rusefi.livedata;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.rusefi.CodeWalkthrough;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
@@ -9,7 +10,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.live_data_e;
 import com.rusefi.livedata.generated.CPP14Lexer;
 import com.rusefi.livedata.generated.CPP14Parser;
-import com.rusefi.livedata.generated.CPP14ParserBaseListener;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.livedata.Range;
 import com.rusefi.ui.livedata.SourceCodePainter;
@@ -19,16 +19,14 @@ import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import com.rusefi.ui.livedocs.RefreshActions;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.Stack;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -37,10 +35,9 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 
 /**
  * this panel shows a live view of rusEFI firmware C/C++ code
- * @see LiveDataParserPanelSandbox
+ * @see LiveDataParserSandbox
  */
 public class LiveDataParserPanel {
-    private static final String CONFIG_MAGIC_PREFIX = "engineConfiguration";
     private static final Logging log = getLogging(LiveDataParserPanel.class);
 
     {
@@ -70,6 +67,8 @@ public class LiveDataParserPanel {
                 Field field = Field.findFieldOrNull(Fields.VALUES, "", setting.getText());
                 if (field == null)
                     continue;
+                if (field.getType().isString())
+                    continue;
                 Number value = field.getValue(ci);
                 Rectangle r;
                 try {
@@ -77,20 +76,20 @@ public class LiveDataParserPanel {
                 } catch (BadLocationException e) {
                     throw new IllegalStateException(e);
                 }
+                if (r == null)
+                    return; // when would this happen?
                 g.drawString(value.toString(), r.x, r.y);
-
-
             }
-
-
         }
     };
     private final VariableValueSource valueSource;
+    private final String fileName;
     private String sourceCode;
 
     public LiveDataParserPanel(UIContext uiContext, VariableValueSource valueSource, String fileName) {
         this.uiContext = uiContext;
         this.valueSource = valueSource;
+        this.fileName = fileName;
 
         JScrollPane rightScrollPane = new JScrollPane(text,
                 VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -107,16 +106,25 @@ public class LiveDataParserPanel {
         }
     }
 
+    @NotNull
     public static String getContent(Class<?> clazz, String fileName) throws IOException, URISyntaxException {
+        String contentOrNull = getContentOrNull(clazz, fileName);
+        if (contentOrNull == null)
+            return fileName + " getResourceAsStream not found";
+        return contentOrNull;
+    }
+
+    @Nullable
+    public static String getContentOrNull(Class<?> clazz, String fileName) throws IOException {
         InputStream cpp = clazz.getResourceAsStream("/c_sources/" + fileName);
         if (cpp == null)
-            return fileName + " getResourceAsStream not found";
+            return null;
         String line;
 
         StringBuilder result = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(cpp))) {
             while ((line = br.readLine()) != null) {
-                result.append(line + "\n");
+                result.append(line).append("\n");
             }
         }
         return result.toString();
@@ -134,75 +142,6 @@ public class LiveDataParserPanel {
         return parser.translationUnit();
     }
 
-    public static ParseResult applyVariables(VariableValueSource valueSource, String sourceCode, SourceCodePainter painter, ParseTree tree) {
-        Stack<Boolean> currentState = new Stack<>();
-        currentState.add(Boolean.TRUE);
-
-        java.util.List<TerminalNode> allTerminals = new java.util.ArrayList<>();
-
-        new ParseTreeWalker().walk(new CPP14ParserBaseListener() {
-            @Override
-            public void enterStatement(CPP14Parser.StatementContext ctx) {
-                String origin = getOrigin(ctx, sourceCode);
-//                System.out.println("enter statement [" + origin + "]");
-            }
-
-            @Override
-            public void visitTerminal(TerminalNode node) {
-                allTerminals.add(node);
-            }
-
-            @Override
-            public void enterCondition(CPP14Parser.ConditionContext ctx) {
-                String conditionVariable = ctx.getText();
-//                System.out.println("REQUESTING VALUE " + conditionVariable);
-//                System.out.println("exp " + getOrigin(ctx.expression(), s));
-
-                Boolean state = (Boolean) valueSource.getValue(conditionVariable);
-                if (state == null) {
-                    // todo: fail on unknown condition variables
-                    return;
-                }
-                if (state) {
-                    painter.paintBackground(Color.GREEN, new Range(ctx));
-                } else {
-                    painter.paintBackground(Color.RED, new Range(ctx));
-                }
-            }
-
-            @Override
-            public void enterSelectionStatement(CPP14Parser.SelectionStatementContext ctx) {
-                super.enterSelectionStatement(ctx);
-//                System.out.println("Else terminal " + ctx.Else());
-            }
-
-            @Override
-            public void enterJumpStatement(CPP14Parser.JumpStatementContext ctx) {
-
-            }
-        }, tree);
-
-        java.util.List<Token> configTokens = new java.util.ArrayList<>();
-
-        for (int i = 0; i < allTerminals.size() - 3; i++) {
-
-            if (allTerminals.get(i).getText().equals(CONFIG_MAGIC_PREFIX) &&
-                    allTerminals.get(i + 1).getText().equals("->")
-            ) {
-                Token token = allTerminals.get(i + 2).getSymbol();
-                painter.paintForeground(Color.BLUE, new Range(token, token));
-                configTokens.add(token);
-            }
-        }
-        return new ParseResult(configTokens);
-    }
-
-    @NotNull
-    private static String getOrigin(ParserRuleContext ctx, String s) {
-        Range range = new Range(ctx);
-        return s.substring(range.getStart(), range.getStop());
-    }
-
     public JPanel getContent() {
         return content;
     }
@@ -212,55 +151,59 @@ public class LiveDataParserPanel {
 
         StyleContext sc = StyleContext.getDefaultStyleContext();
 
-        StyledDocument styledDocument = text.getStyledDocument();
+        SimpleAttributeSet attributes = new SimpleAttributeSet();
+        DefaultStyledDocument styledDocument = new DefaultStyledDocument();
+        try {
+            styledDocument.insertString(0, sourceCode, attributes);
+        } catch (BadLocationException e) {
+            throw new IllegalStateException(e);
+        }
+
         AttributeSet oldSet = styledDocument.getCharacterElement(0).getAttributes();
         styledDocument.setCharacterAttributes(0, sourceCode.length(), sc.getEmptySet(), true);
 
         // todo: technically we do not need to do the complete re-compile on fresh data arrival just repaint!
         // todo: split compilation and painting/repainting
-        parseResult = applyVariables(valueSource, sourceCode, new SourceCodePainter() {
-            @Override
-            public void paintBackground(Color color, Range range) {
-                AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
-            }
+        try {
+            parseResult = CodeWalkthrough.applyVariables(valueSource, sourceCode, new SourceCodePainter() {
+                @Override
+                public void paintBackground(Color color, Range range) {
+                    AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Background, color);
+                    styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
+                }
 
-            @Override
-            public void paintForeground(Color color, Range range) {
-                AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Foreground, color);
-                styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, true);
-            }
-        }, tree);
+                @Override
+                public void paintForeground(Color color, Range range) {
+                    AttributeSet s = sc.addAttribute(oldSet, StyleConstants.Foreground, color);
+                    styledDocument.setCharacterAttributes(range.getStart(), range.getLength(), s, false);
+                }
+            }, tree);
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("While " + fileName, e);
+        }
+
+        text.setDocument(styledDocument);
     }
 
     @NotNull
-    public static JPanel createLiveDataParserContent(UIContext uiContext, LiveDataView view) {
-        LiveDataParserPanel panel = createLiveDataParserPanel(uiContext, view.getLiveDataE(), view.getValues(), view.getFileName());
-        return panel.getContent();
-    }
-
-    @NotNull
-    private static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
+    public static LiveDataParserPanel createLiveDataParserPanel(UIContext uiContext, final live_data_e live_data_e, final Field[] values, String fileName) {
         AtomicReference<byte[]> reference = new AtomicReference<>();
 
-        LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, new VariableValueSource() {
-            @Override
-            public Object getValue(String name) {
-                byte[] bytes = reference.get();
-                if (bytes == null)
-                    return null;
-                Field f = Field.findFieldOrNull(values, "", name);
-                if (f == null) {
-                    log.error("BAD condition, should be variable: " + name);
-                    return null;
-                }
-                int number = f.getValue(new ConfigurationImage(bytes)).intValue();
-                if (log.debugEnabled()) {
-                    log.debug("getValue(" + name + "): " + number);
-                }
-                // convert Number to Boolean
-                return number != 0;
+        LiveDataParserPanel livePanel = new LiveDataParserPanel(uiContext, name -> {
+            byte[] bytes = reference.get();
+            if (bytes == null)
+                return null;
+            Field f = Field.findFieldOrNull(values, "", name);
+            if (f == null) {
+                //log.error("BAD condition, should be variable: " + name);
+                return null;
             }
+            double number = f.getValue(new ConfigurationImage(bytes)).doubleValue();
+            if (log.debugEnabled()) {
+                log.debug("getValue(" + name + "): " + number);
+            }
+            // convert Number to Boolean
+            return new VariableValueSource.VariableState(f, number);
         }, fileName);
         RefreshActions refreshAction = new RefreshActions() {
             @Override
