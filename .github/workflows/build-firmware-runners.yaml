@@ -17,10 +17,12 @@ jobs:
         # see also build-primary-bundle where default/primary bundle is build separately
         #
         build-target: [
+            alphax-2chan,
             hellen72,
             hellen81,
             hellen88bmw,
             hellen-nb1,
+            hellenNA8_96,
             hellenNA6,
             hellen128,
             hellen121vag,
@@ -29,6 +31,7 @@ jobs:
             frankenso_na6,
             kinetis,
             mre_f4,
+            mre_f4_debug,
             mre_f4_recovery,
             mre_f4_hardware_QC_special_build,
             mre_f7,
@@ -43,6 +46,7 @@ jobs:
             stm32f767_nucleo,
             stm32h743_nucleo,
             subaru_eg33_f7,
+            f429-discovery,
             atlas,
         ]
 
@@ -56,6 +60,10 @@ jobs:
             folder: hellen/hellen81
             ini-file: rusefi_hellen81.ini
 
+          - build-target: alphax-2chan
+            folder: hellen/alphax-2chan
+            ini-file: rusefi_alphax-2chan.ini
+
           - build-target: hellen88bmw
             folder: hellen/hellen88bmw
             ini-file: rusefi_hellen88bmw.ini
@@ -63,6 +71,10 @@ jobs:
           - build-target: hellen-nb1
             folder: hellen/hellen-nb1
             ini-file: rusefi_hellen-nb1.ini
+
+          - build-target: hellenNA8_96
+            folder: hellen/hellenNA8_96
+            ini-file: rusefi_hellenNA8_96
 
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
@@ -97,6 +109,10 @@ jobs:
             ini-file: rusefi_kinetis.ini
 
           - build-target: mre_f4
+            folder: microrusefi
+            ini-file: rusefi_mre_f4.ini
+
+          - build-target: mre_f4_debug
             folder: microrusefi
             ini-file: rusefi_mre_f4.ini
 
@@ -160,6 +176,9 @@ jobs:
             folder: subaru_eg33
             ini-file: rusefi_subaru_eg33_f7.ini
 
+          - build-target: f429-discovery
+            folder: f429-discovery
+
           - build-target: atlas
             folder: atlas
             ini-file: rusefi_atlas.ini
@@ -193,13 +212,14 @@ jobs:
           bash gen_config_board.sh ${{matrix.folder}} ${{matrix.build-target}} ${{matrix.ini-file}}
         fi
 
-    - name: Generate Enum Strings
-      working-directory: ./firmware/
-      run: bash gen_enum_to_string.sh
-
     - name: Generate Live Documentation
       working-directory: ./firmware/
       run: bash gen_live_documentation.sh
+
+    # live_data_ids.h is generated above so order of operations is important here!
+    - name: Generate Enum Strings
+      working-directory: ./firmware/
+      run: bash gen_enum_to_string.sh
 
     # Make sure the compiler we just downloaded works - just print out the version
     - name: Test Compiler
