@@ -606,7 +606,7 @@ void TriggerState::decodeTriggerEvent(
 					} else {
 						efiPrintf("%srpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
 								triggerConfiguration.PrintPrefix,
-								GET_RPM(),
+								(int)Sensor::getOrZero(SensorType::Rpm),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							currentCycle.current_index,
 							i,
