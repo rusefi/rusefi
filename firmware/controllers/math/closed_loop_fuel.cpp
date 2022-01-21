@@ -91,7 +91,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 		return {};
 	}
 
-	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), engineConfiguration->stft);
+	size_t binIdx = computeStftBin(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad(), engineConfiguration->stft);
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.fuelClosedLoopBinIdx = binIdx;
