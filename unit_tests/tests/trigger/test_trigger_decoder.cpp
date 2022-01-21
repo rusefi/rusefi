@@ -251,7 +251,7 @@ TEST(misc, testStartupFuelPumping) {
 
 	StartupFuelPumping sf;
 
-	engine->rpmCalculator.mockRpm = 0;
+	Sensor::setMockValue(SensorType::Rpm, 0);
 
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 60);
 	sf.update();
@@ -264,12 +264,12 @@ TEST(misc, testStartupFuelPumping) {
 	sf.update();
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#3";
 
-	engine->rpmCalculator.mockRpm = 10;
+	Sensor::setMockValue(SensorType::Rpm, 10);
 	sf.update();
 	ASSERT_EQ( 0,  sf.pumpsCounter) << "pc#4";
 
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
-	engine->rpmCalculator.mockRpm = 0;
+	Sensor::setMockValue(SensorType::Rpm,  0);
 	sf.update();
 	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#5";
 
