@@ -581,7 +581,7 @@ void TriggerState::decodeTriggerEvent(
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError && !silentTriggerError)) {
 
-				int rpm = GET_RPM();
+				int rpm = Sensor::getOrZero(SensorType::Rpm);
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 				if (!engineConfiguration->useOnlyRisingEdgeForTrigger) {
 					int time = currentCycle.totalTimeNt[0];

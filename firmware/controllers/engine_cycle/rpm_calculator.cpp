@@ -345,7 +345,7 @@ void tdcMarkCallback(
 	if (isTriggerSynchronizationPoint && engine->isEngineChartEnabled && engine->tdcMarkEnabled) {
 		// two instances of scheduling_s are needed to properly handle event overlap
 		int revIndex2 = getRevolutionCounter() % 2;
-		int rpm = GET_RPM();
+		int rpm = Sensor::getOrZero(SensorType::Rpm);
 		// todo: use tooth event-based scheduling, not just time-based scheduling
 		if (isValidRpm(rpm)) {
 			angle_t tdcPosition = tdcPosition();
