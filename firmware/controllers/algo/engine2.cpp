@@ -114,7 +114,7 @@ void EngineState::periodicFastCallback() {
 	}
 	recalculateAuxValveTiming();
 
-	int rpm = engine->rpmCalculator.getRpm();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	sparkDwell = getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 

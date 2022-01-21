@@ -67,7 +67,7 @@ TEST(misc, testEngineMath) {
 	Sensor::setMockValue(SensorType::Iat, 20);
 	Sensor::setMockValue(SensorType::Map, 100);
 	Sensor::setMockValue(SensorType::Tps1, 0);
-	engine->rpmCalculator.mockRpm = 1000;
+	Sensor::setMockValue(SensorType::Rpm, 1000);
 
 	// calc. airFlow using airMass, and find tCharge
 	engine->periodicFastCallback();
