@@ -126,7 +126,7 @@ angle_t HpfpQuantity::pumpAngleFuel(int rpm, HpfpController *model) {
 
 void HpfpController::onFastCallback() {
 	// Pressure current/target calculation
-	int rpm = engine->rpmCalculator.getRpm();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	isHpfpInactive = rpm < rpm_spinning_cutoff ||
 		    engineConfiguration->hpfpCamLobes == 0 ||
