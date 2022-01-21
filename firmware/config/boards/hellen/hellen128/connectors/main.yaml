@@ -16,7 +16,7 @@ pins:
   - pin: P36
     id: EFI_ADC_0
     class: analog_inputs
-    ts_name: P32_IN_O2S
+    ts_name: P36_IN_O2S
 
   - pin: P40
     # H144_IN_MAP3 AIN15 A15 PA2
