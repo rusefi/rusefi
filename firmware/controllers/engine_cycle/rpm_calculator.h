@@ -39,9 +39,6 @@ typedef enum {
 
 class RpmCalculator : public StoredValueSensor {
 public:
-#if !EFI_PROD_CODE
-	int mockRpm;
-#endif /* EFI_PROD_CODE */
 	RpmCalculator();
 
 	void onSlowCallback();
@@ -81,7 +78,6 @@ public:
 
 	/**
 	 * Just a getter for rpmValue
-	 * Also handles mockRpm if not EFI_PROD_CODE
 	 */
 	int getRpm() const;
 	/**
@@ -157,7 +153,7 @@ private:
 	Timer engineStartTimer;
 };
 
-// Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
+// Just a getter for rpmValue
 #define GET_RPM() ( engine->rpmCalculator.getRpm() )
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)

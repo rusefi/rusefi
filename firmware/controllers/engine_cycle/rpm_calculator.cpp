@@ -67,11 +67,6 @@ uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) const {
  */
 // todo: migrate to float return result or add a float version? this would have with calculations
 int RpmCalculator::getRpm() const {
-#if !EFI_PROD_CODE
-	if (mockRpm != MOCK_UNDEFINED) {
-		return mockRpm;
-	}
-#endif /* EFI_PROD_CODE */
 	return rpmValue;
 }
 
@@ -80,9 +75,6 @@ int RpmCalculator::getRpm() const {
 RpmCalculator::RpmCalculator() :
 		StoredValueSensor(SensorType::Rpm, 0)
 	{
-#if !EFI_PROD_CODE
-	mockRpm = MOCK_UNDEFINED;
-#endif /* EFI_PROD_CODE */
 	assignRpmValue(0);
 }
 
