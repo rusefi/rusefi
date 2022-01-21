@@ -111,12 +111,10 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 	// TODO: RPM should eventually switch to floating point across the ECU
 	rpmValue = efiRound(floatRpmValue, 1);
 
+	setValidValue(floatRpmValue, 0);	// 0 for current time since RPM sensor never times out
 	if (rpmValue <= 0) {
 		oneDegreeUs = NAN;
-		setValidValue(0, 0);	// 0 for current time since RPM sensor never times out
 	} else {
-		setValidValue(floatRpmValue, 0);	// 0 for current time since RPM sensor never times out
-
 		// here it's really important to have more precise float RPM value, see #796
 		oneDegreeUs = getOneDegreeTimeUs(floatRpmValue);
 		if (previousRpmValue == 0) {
