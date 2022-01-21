@@ -1128,6 +1128,8 @@ gaugeCategory = Sensors - Raw
    rawLowFuelPressureGauge = rawLowFuelPressure,"Raw fuel pressure (low) voltage","V", 0, 5, 0, 0, 5, 5, 3, 0
    rawHighFuelPressureGauge = rawHighFuelPressure,"Raw fuel pressure (high) voltage","V", 0, 5, 0, 0, 5, 5, 3, 0
    rawMafGauge          = rawMaf        , "Raw MAF",           "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawMapGauge          = rawMap        , "Raw MAP",           "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAfrGauge          = rawAfr        , "Raw EGO",           "V", 0, 5, 0, 0, 5, 5, 3, 0
 
 
 gaugeCategory = Transmission
