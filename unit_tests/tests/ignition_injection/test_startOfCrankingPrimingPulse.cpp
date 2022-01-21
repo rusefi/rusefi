@@ -14,15 +14,15 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	engineConfiguration->cranking.baseFuel = 12;
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
+	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "RPM=0";
 
 	eth.fireTriggerEventsWithDuration(/* durationMs */ 200);
 	// still no RPM since need to cycles measure cycle duration
-	ASSERT_EQ( 0,  GET_RPM()) << "start-RPM#1";
+	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "start-RPM#1";
 
 
 	eth.fireRise(/* delayMs */ 200);
-	ASSERT_EQ( 300,  GET_RPM()) << "RPM#2";
+	ASSERT_EQ( 300,  Sensor::getOrZero(SensorType::Rpm)) << "RPM#2";
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 
@@ -35,7 +35,7 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 TEST(priming, startScheduling) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	ASSERT_EQ( 0,  GET_RPM()) << "RPM=0";
+	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "RPM=0";
 
 	// Turn on the ignition switch!
 	engine->module<PrimeController>()->onIgnitionStateChanged(true);

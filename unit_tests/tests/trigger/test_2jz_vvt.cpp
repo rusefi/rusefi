@@ -16,14 +16,14 @@ TEST(sensors, test2jz) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	eth.setTriggerType(TT_ONE);
 
-	ASSERT_EQ( 0,  GET_RPM()) << "test2jz RPM";
+	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";
 	for (int i = 0; i < 2;i++) {
 		eth.fireRise(25);
-		ASSERT_EQ( 0,  GET_RPM()) << "test2jz RPM at " << i;
+		ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM at " << i;
 	}
 	eth.fireRise(25);
 	// first time we have RPM
-	ASSERT_EQ(2400,  GET_RPM()) << "test2jz RPM";
+	ASSERT_EQ(2400,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";
 
 
 	eth.moveTimeForwardUs(MS2US(3)); // shifting VVT phase a few angles
