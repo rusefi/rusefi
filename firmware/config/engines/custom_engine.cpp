@@ -280,8 +280,6 @@ void setEtbTestConfiguration() {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_2; // PA2
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_9; // PB1
 
-	engineConfiguration->debugMode = DBG_ELECTRONIC_THROTTLE_PID;
-
 	// turning off other PWMs to simplify debugging
 	engineConfiguration->triggerSimulatorFrequency = 0;
 	engineConfiguration->stepperEnablePin = GPIO_UNASSIGNED;
