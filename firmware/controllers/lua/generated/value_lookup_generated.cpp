@@ -908,6 +908,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hpfpPidI;
 	if (strEqualCaseInsensitive(name, "hpfpTargetDecay"))
 		return engineConfiguration->hpfpTargetDecay;
+	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
+		return engineConfiguration->vvtActivationDelayMs;
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 		return config->vssFilterReciprocal;
 	return EFI_ERROR_CODE;
@@ -3181,6 +3183,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "hpfpTargetDecay"))
 	{
 		engineConfiguration->hpfpTargetDecay = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
+	{
+		engineConfiguration->vvtActivationDelayMs = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
