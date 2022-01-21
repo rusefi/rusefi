@@ -404,8 +404,8 @@ void canDashboardBMWE90(CanCycle cycle)
 				rpmcounter = 0xF0;
 			CanTxMessage msg(E90_RPM, 3);
 			msg[0] = rpmcounter;
-			msg[1] = (Sensor::getOrZero(SensorType::Rpm) * 4) & 0xFF;
-			msg[2] = (Sensor::getOrZero(SensorType::Rpm) * 4) >> 8;
+			msg[1] = ((int)(Sensor::getOrZero(SensorType::Rpm)) * 4) & 0xFF;
+			msg[2] = ((int)(Sensor::getOrZero(SensorType::Rpm)) * 4) >> 8;
 		}
 
 		{ //oil & coolant temp (all in C, despite gauge being F)
