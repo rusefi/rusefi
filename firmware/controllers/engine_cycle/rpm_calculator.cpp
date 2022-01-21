@@ -326,7 +326,7 @@ static void onTdcCallback(void *) {
 	}
 #endif /* EFI_UNIT_TEST */
 
-	itoa10(rpmBuffer, GET_RPM());
+	itoa10(rpmBuffer, Sensor::getOrZero(SensorType::Rpm));
 #if EFI_ENGINE_SNIFFER
 	waveChart.startDataCollection();
 #endif

@@ -344,7 +344,7 @@ void EngineTestHelper::applyTriggerWaveform() {
 void EngineTestHelper::assertRpm(int expectedRpm, const char *msg) {
 	Engine *engine = &this->engine;
 
-	EXPECT_EQ(expectedRpm, GET_RPM()) << msg;
+	EXPECT_EQ(expectedRpm, Sensor::getOrZero(SensorType::Rpm)) << msg;
 }
 
 void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode,
