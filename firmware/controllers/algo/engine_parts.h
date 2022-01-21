@@ -78,7 +78,6 @@ public:
 
 #if EFI_UNIT_TEST
 	float mockFan = 0;
-	float mockRpm = 0;
 	float mockCrankingRpm = 0;
 	float mockTimeSinceBoot = 0;
 	int mockAcToggle = 0;

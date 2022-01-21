@@ -83,7 +83,6 @@ TEST(GpPwm, TestGetOutput) {
 
 	MockVp3d table;
 
-	engine->rpmCalculator.mockRpm = 1200;
 	EXPECT_CALL(table, getValue(1200, 35.0f))
 		.WillRepeatedly([](float x, float tps) {
 			return tps;
@@ -98,5 +97,6 @@ TEST(GpPwm, TestGetOutput) {
 
 	// Set TPS, should return tps value
 	Sensor::setMockValue(SensorType::Tps1, 35.0f);
+	Sensor::setMockValue(SensorType::Rpm, 1200);
 	EXPECT_FLOAT_EQ(35.0f, ch.getOutput());	
 }
