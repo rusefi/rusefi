@@ -29,7 +29,7 @@ TEST(tachometer, testPulsePerRev) {
     eth.fireTriggerEvents(48);
 
     // ensure engine speed
-	ASSERT_EQ(1500,  GET_RPM()) << "RPM";
+	ASSERT_EQ(1500,  Sensor::getOrZero(SensorType::Rpm)) << "RPM";
     ASSERT_EQ(engine->triggerCentral.triggerState.getShaftSynchronized(), true);
 
 	// Poke the fast callback to update the tach
