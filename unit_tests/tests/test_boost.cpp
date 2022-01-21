@@ -67,7 +67,7 @@ TEST(BoostControl, OpenLoop) {
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), 47.0f);
 }
 
-TEST(BoostControl, ClosedLoop) {
+TEST(BoostControl, TestClosedLoop) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	BoostController bc;
@@ -87,15 +87,15 @@ TEST(BoostControl, ClosedLoop) {
 	engineConfiguration->minimumBoostClosedLoopMap = 75;
 
 	// At 0 RPM, closed loop is disabled
-	engine->rpmCalculator.mockRpm = 0;
+	Sensor::setMockValue(SensorType::Rpm, 0);
 	EXPECT_EQ(0, bc.getClosedLoop(150, 100).value_or(-1000));
 
 	// too low MAP, disable closed loop
-	engine->rpmCalculator.mockRpm = 0;
+	Sensor::setMockValue(SensorType::Rpm, 0);
 	EXPECT_EQ(0, bc.getClosedLoop(150, 50).value_or(-1000));
 
 	// With RPM, we should get an output
-	engine->rpmCalculator.mockRpm = 1000;
+	Sensor::setMockValue(SensorType::Rpm, 1000);
 	// Actual is below target -> positive output
 	EXPECT_FLOAT_EQ(50, bc.getClosedLoop(150, 100).value_or(-1000));
 	// Actual is above target -> negative output

@@ -73,7 +73,7 @@ TEST(GpPwm, OutputOnOff) {
 	ch.setOutput(41.0f);
 }
 
-TEST(GpPwm, GetOutput) {
+TEST(GpPwm, TestGetOutput) {
 	EngineTestHelper eth(TEST_ENGINE);
 	GppwmChannel ch;
 

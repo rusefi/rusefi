@@ -102,7 +102,7 @@
  *
  * <BR>See main_trigger_callback.cpp for main trigger event handler
  * <BR>See fuel_math.cpp for details on fuel amount logic
- * <BR>See rpm_calculator.cpp for details on how getRpm() is calculated
+ * <BR>See rpm_calculator.cpp for details on how RPM is calculated
  *
  */
 
