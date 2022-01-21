@@ -406,7 +406,7 @@ float getBaroCorrection() {
 		float correction = interpolate3d(
 			engineConfiguration->baroCorrTable,
 			engineConfiguration->baroCorrPressureBins, pressure,
-			engineConfiguration->baroCorrRpmBins, GET_RPM()
+			engineConfiguration->baroCorrRpmBins, Sensor::getOrZero(SensorType::Rpm)
 		);
 
 		if (cisnan(correction) || correction < 0.01) {

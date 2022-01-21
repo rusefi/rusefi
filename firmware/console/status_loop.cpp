@@ -311,7 +311,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL
 static void showFuelInfo() {
-	showFuelInfo2((float) GET_RPM(), getFuelingLoad());
+	showFuelInfo2(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad());
 }
 #endif
 
@@ -853,7 +853,7 @@ void updateTunerStudioState() {
 		break;
 	case DBG_INSTANT_RPM:
 		{
-			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
+			tsOutputChannels->debugFloatField2 = instantRpm / Sensor::getOrZero(SensorType::Rpm);
 
 			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
 			tsOutputChannels->mostRecentTimeBetweenIgnitionEvents = engine->mostRecentTimeBetweenIgnitionEvents;
