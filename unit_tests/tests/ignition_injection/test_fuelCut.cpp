@@ -38,7 +38,7 @@ TEST(fuelCut, coasting) {
 	// mock TPS - throttle is opened
 	Sensor::setMockValue(SensorType::Tps1, 60);
 	// set 'running' RPM - just above RpmHigh threshold
-	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmHigh + 1;
+	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmHigh + 1);
 	// 'advance' time (amount doesn't matter)
 	eth.moveTimeForwardUs(1000);
 
@@ -70,28 +70,28 @@ TEST(fuelCut, coasting) {
 	// restore CLT
 	Sensor::setMockValue(SensorType::Clt, hotClt);
 	// And set RPM - somewhere between RpmHigh and RpmLow threshold
-	engine->rpmCalculator.mockRpm = (engineConfiguration->coastingFuelCutRpmHigh + engineConfiguration->coastingFuelCutRpmLow) / 2;
+	Sensor::setMockValue(SensorType::Rpm, (engineConfiguration->coastingFuelCutRpmHigh + engineConfiguration->coastingFuelCutRpmLow) / 2);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is enabled - nothing should change
 	assertEqualsM("inj dur#4 mid", normalInjDuration, engine->injectionDuration);
 
 	// Now drop RPM just below RpmLow threshold
-	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmLow - 1;
+	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmLow - 1);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is now disabled (the engine is idling)
 	assertEqualsM("inj dur#5 idle", normalInjDuration, engine->injectionDuration);
 
 	// Now change RPM just below RpmHigh threshold
-	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmHigh - 1;
+	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmHigh - 1);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is still disabled
 	assertEqualsM("inj dur#6 mid", normalInjDuration, engine->injectionDuration);
 
 	// Now set RPM just above RpmHigh threshold
-	engine->rpmCalculator.mockRpm = engineConfiguration->coastingFuelCutRpmHigh + 1;
+	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmHigh + 1);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is active again!
