@@ -83,9 +83,7 @@ RpmCalculator::RpmCalculator() :
 #if !EFI_PROD_CODE
 	mockRpm = MOCK_UNDEFINED;
 #endif /* EFI_PROD_CODE */
-	// todo: reuse assignRpmValue() method which needs
-	// which we cannot provide inside this parameter-less constructor. need a solution for this minor mess
-	setValidValue(0, 0);	// 0 for current time since RPM sensor never times out
+	assignRpmValue(0);
 }
 
 /**
