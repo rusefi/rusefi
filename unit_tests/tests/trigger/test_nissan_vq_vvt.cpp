@@ -115,10 +115,10 @@ TEST(nissan, vq_vvt) {
 	}
 
 	eth.executeUntil(1473000);
-	ASSERT_EQ(167, GET_RPM());
+	ASSERT_EQ(167, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	eth.executeUntil(1475000);
-	ASSERT_EQ(167, GET_RPM());
+	ASSERT_EQ(167, round(Sensor::getOrZero(SensorType::Rpm)));
 	TriggerCentral *tc = &engine->triggerCentral;
 
 	eth.executeUntil(3593000);

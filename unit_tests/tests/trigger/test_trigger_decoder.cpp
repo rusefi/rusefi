@@ -52,7 +52,7 @@ TEST(misc, testSkipped2_0) {
 	engineConfiguration->trigger.customTotalToothCount = 2;
 	engineConfiguration->trigger.customSkippedToothCount = 0;
 	eth.setTriggerType(TT_TOOTHED_WHEEL);
-	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 }
 
 static void testDodgeNeonDecoder() {
@@ -320,7 +320,7 @@ TEST(misc, testRpmCalculator) {
 
 	engine->updateSlowSensors();
 
-	ASSERT_EQ(0, GET_RPM());
+	ASSERT_EQ(0, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// triggerIndexByAngle update is now fixed! prepareOutputSignals() wasn't reliably called
 	ASSERT_EQ(5, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 240));
@@ -328,7 +328,7 @@ TEST(misc, testRpmCalculator) {
 
 	eth.fireTriggerEvents(/* count */ 48);
 
-	ASSERT_EQ( 1500,  GET_RPM()) << "RPM";
+	ASSERT_EQ( 1500,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM";
 	ASSERT_EQ( 15,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 
 
@@ -660,10 +660,10 @@ static void setTestBug299(EngineTestHelper *eth) {
 	ASSERT_EQ( 1,  engine->engineState.running.coolantTemperatureCoefficient) << "cltC";
 	ASSERT_EQ( 0,  engine->engineState.running.injectorLag) << "lag";
 
-	ASSERT_EQ( 3000,  GET_RPM()) << "setTestBug299: RPM";
+	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "setTestBug299: RPM";
 
 	assertEqualsM("fuel#1", 1.5, engine->injectionDuration);
-	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(GET_RPM()));
+	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 }
 
 static void assertInjectors(const char *msg, int value0, int value1) {
@@ -697,7 +697,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(12.5f));
 	engine->module<InjectorModel>().set(&im);
 
-	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(GET_RPM()));
+	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "qs#1";
 	eth.moveTimeForwardUs(MS2US(20));
@@ -858,7 +858,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	engine->module<InjectorModel>().set(&im2);
 
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
-	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM()));
+	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 
 
 	assertInjectionEvent("#03", &t->elements[0], 0, 0, 315);
@@ -994,7 +994,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
 	engine->module<InjectorModel>().set(&im);
 
-	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(GET_RPM()));
+	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
 
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "Lqs#1";
@@ -1061,7 +1061,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EXPECT_CALL(im2, getInjectionDuration(_)).WillRepeatedly(Return(2.0f));
 	engine->module<InjectorModel>().set(&im2);
 
-	ASSERT_EQ( 10,  getInjectorDutyCycle(GET_RPM())) << "Lduty for maf=3";
+	ASSERT_EQ( 10,  getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm)))) << "Lduty for maf=3";
 
 
 	eth.firePrimaryTriggerRise();
@@ -1124,7 +1124,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.fireFall(20);
 
-	ASSERT_EQ( 3000,  GET_RPM()) << "testSparkReverseOrderBug319: RPM";
+	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "testSparkReverseOrderBug319: RPM";
 
 
 	ASSERT_EQ( 8,  engine->executor.size()) << "testSparkReverseOrderBug319: queue size";
@@ -1155,7 +1155,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 545,  GET_RPM()) << "RPM#2";
+	ASSERT_EQ( 545,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#2";
 
 	ASSERT_EQ( 0,  enginePins.coils[3].outOfOrder) << "out-of-order #3";
 
@@ -1169,7 +1169,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 3000,  GET_RPM()) << "RPM#3";
+	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#3";
 
 	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #5 on c4";
 
@@ -1183,7 +1183,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireRise(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 3000,  GET_RPM()) << "RPM#4";
+	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#4";
 
 	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #7";
 
