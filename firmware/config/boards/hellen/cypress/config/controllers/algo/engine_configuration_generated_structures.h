@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 20 19:12:56 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:52 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4035,16 +4035,27 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> gearRatio[GEARS_COUNT];
 	/**
-	 * need 4 byte alignment
-	units
+	 * We need to give engine time to build oil pressure without diverting it to VVT
+	ms
 	 * offset 4638
 	 */
-	uint8_t alignmentFill_at_4638[2];
+	uint16_t vvtActivationDelayMs;
 	/**
-	units
+	RPM
 	 * offset 4640
 	 */
-	int mainUnusedEnd[95];
+	uint16_t unusedShort;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4642
+	 */
+	uint8_t alignmentFill_at_4642[2];
+	/**
+	units
+	 * offset 4644
+	 */
+	int mainUnusedEnd[94];
 	/** total size 5020*/
 };
 
@@ -4463,4 +4474,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 20 19:12:56 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:52 UTC 2022

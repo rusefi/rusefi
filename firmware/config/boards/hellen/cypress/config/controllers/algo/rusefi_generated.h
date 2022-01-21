@@ -79,7 +79,7 @@
 #define alignmentFill_at_1847_offset 1847
 #define alignmentFill_at_1873_offset 1873
 #define alignmentFill_at_4007_offset 4007
-#define alignmentFill_at_4638_offset 4638
+#define alignmentFill_at_4642_offset 4642
 #define alignmentFill_at_62_offset 62
 #define alternatorControl_dFactor_offset 1492
 #define alternatorControl_iFactor_offset 1488
@@ -1612,7 +1612,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4640
+#define mainUnusedEnd_offset 4644
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1894,7 +1894,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 1830190508
+#define SIGNATURE_HASH 4113285080
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2419,7 +2419,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.20.hellen_cypress.1830190508"
+#define TS_SIGNATURE "rusEFI 2022.01.21.hellen_cypress.4113285080"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2496,6 +2496,7 @@
 #define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4171
 #define unusedHere2_offset 1747
+#define unusedShort_offset 4640
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164
 #define useETBforIdleControl_offset 748
@@ -2580,6 +2581,7 @@
 #define vvt_mode_e_VVT_NISSAN_VQ 9
 #define vvt_mode_e_VVT_SECOND_HALF 1
 #define vvt_mode_e_VVT_TOYOTA_4_1 6
+#define vvtActivationDelayMs_offset 4638
 #define vvtCamSensorUseRise_offset 748
 #define vvtMode1_offset 1944
 #define vvtMode2_offset 1945

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 20 19:13:00 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:57 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -77,7 +77,7 @@ public class Fields {
 	public static final int alignmentFill_at_1847_offset = 1847;
 	public static final int alignmentFill_at_1873_offset = 1873;
 	public static final int alignmentFill_at_4007_offset = 4007;
-	public static final int alignmentFill_at_4638_offset = 4638;
+	public static final int alignmentFill_at_4642_offset = 4642;
 	public static final int alignmentFill_at_62_offset = 62;
 	public static final int alternatorControl_dFactor_offset = 1492;
 	public static final int alternatorControl_iFactor_offset = 1488;
@@ -1556,7 +1556,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 714;
 	public static final int mainRelayPinMode_offset = 756;
-	public static final int mainUnusedEnd_offset = 4640;
+	public static final int mainUnusedEnd_offset = 4644;
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
@@ -1822,7 +1822,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 1474533904;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2292,7 +2291,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.20.all.1474533904";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.21.all.3487455332";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int tunerStudioSerialSpeed_offset = 732;
@@ -2366,6 +2365,7 @@ public class Fields {
 	public static final int unusedDtectionThreshold_offset = 623;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
+	public static final int unusedShort_offset = 4640;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
 	public static final int useETBforIdleControl_offset = 748;
@@ -2445,6 +2445,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SECOND_HALF = 1;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
+	public static final int vvtActivationDelayMs_offset = 4638;
 	public static final int vvtCamSensorUseRise_offset = 748;
 	public static final int vvtMode1_offset = 1944;
 	public static final int vvtMode2_offset = 1945;
@@ -3673,8 +3674,10 @@ public class Fields {
 	public static final Field GEARRATIO6 = Field.create("GEARRATIO6", 4632, FieldType.INT16);
 	public static final Field GEARRATIO7 = Field.create("GEARRATIO7", 4634, FieldType.INT16);
 	public static final Field GEARRATIO8 = Field.create("GEARRATIO8", 4636, FieldType.INT16);
-	public static final Field ALIGNMENTFILL_AT_4638 = Field.create("ALIGNMENTFILL_AT_4638", 4638, FieldType.INT8);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4640, FieldType.INT);
+	public static final Field VVTACTIVATIONDELAYMS = Field.create("VVTACTIVATIONDELAYMS", 4638, FieldType.INT16);
+	public static final Field UNUSEDSHORT = Field.create("UNUSEDSHORT", 4640, FieldType.INT16);
+	public static final Field ALIGNMENTFILL_AT_4642 = Field.create("ALIGNMENTFILL_AT_4642", 4642, FieldType.INT8);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4644, FieldType.INT);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5020, 120, FieldType.STRING);
 	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5140, FieldType.FLOAT);
 	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5172, FieldType.FLOAT);
@@ -4950,7 +4953,9 @@ public class Fields {
 	GEARRATIO6,
 	GEARRATIO7,
 	GEARRATIO8,
-	ALIGNMENTFILL_AT_4638,
+	VVTACTIVATIONDELAYMS,
+	UNUSEDSHORT,
+	ALIGNMENTFILL_AT_4642,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,
