@@ -21,7 +21,7 @@ FsioResult getEngineValue(le_action_e action) {
 	case LE_METHOD_COOLANT:
 		return Sensor::getOrZero(SensorType::Clt);
 	case LE_METHOD_RPM:
-		return engine->fsioState.mockRpm;
+		return Sensor::getOrZero(SensorType::Rpm);
 	case LE_METHOD_CRANKING_RPM:
 		return engine->fsioState.mockCrankingRpm;
 	case LE_METHOD_VBATT:
@@ -135,20 +135,20 @@ TEST(fsio, testHysteresisSelf) {
 	LECalculator c;
 	double selfValue = 0;
 
-	engine->fsioState.mockRpm = 0;
+	Sensor::setMockValue(SensorType::Rpm,  0);
 	selfValue = c.evaluate("test", selfValue, element);
 	ASSERT_EQ(0, selfValue);
 
-	engine->fsioState.mockRpm = 430;
+	Sensor::setMockValue(SensorType::Rpm, 430);
 	selfValue = c.evaluate("test", selfValue, element);
 	// OFF since not ON yet
 	ASSERT_EQ(0, selfValue);
 
-	engine->fsioState.mockRpm = 460;
+	Sensor::setMockValue(SensorType::Rpm,  460);
 	selfValue = c.evaluate("test", selfValue, element);
 	ASSERT_EQ(1, selfValue);
 
-	engine->fsioState.mockRpm = 430;
+	Sensor::setMockValue(SensorType::Rpm, 430);
 	selfValue = c.evaluate("test", selfValue, element);
 	// OFF since was ON yet
 	ASSERT_EQ(1, selfValue);
@@ -242,7 +242,7 @@ TEST(fsio, testLogicExpressions) {
 
 	{
 		EngineTestHelper eth(FORD_INLINE_6_1995, sensorVals);
-		engine->fsioState.mockRpm = 900;
+		Sensor::setMockValue(SensorType::Rpm,  900);
 		engine->fsioState.mockCrankingRpm = 200;
 		testExpression2(0, "rpm", 900, engine);
 		testExpression2(0, "cranking_rpm", 200, engine);
