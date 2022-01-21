@@ -45,12 +45,12 @@ float RpmCalculator::getRpmAcceleration() const {
 
 bool RpmCalculator::isStopped() const {
 	// Spinning-up with zero RPM means that the engine is not ready yet, and is treated as 'stopped'.
-	return state == STOPPED || (state == SPINNING_UP && rpmValue == 0);
+	return state == STOPPED || (state == SPINNING_UP && cachedRpmValue == 0);
 }
 
 bool RpmCalculator::isCranking() const {
 	// Spinning-up with non-zero RPM is suitable for all engine math, as good as cranking
-	return state == CRANKING || (state == SPINNING_UP && rpmValue > 0);
+	return state == CRANKING || (state == SPINNING_UP && cachedRpmValue > 0);
 }
 
 bool RpmCalculator::isSpinningUp() const {
@@ -65,9 +65,8 @@ uint32_t RpmCalculator::getRevolutionCounterSinceStart(void) const {
  * @return -1 in case of isNoisySignal(), current RPM otherwise
  * See NOISY_RPM
  */
-// todo: migrate to float return result or add a float version? this would have with calculations
-int RpmCalculator::getRpm() const {
-	return rpmValue;
+float RpmCalculator::getCachedRpm() const {
+	return cachedRpmValue;
 }
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -105,14 +104,12 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 }
 
 void RpmCalculator::assignRpmValue(float floatRpmValue) {
-	previousRpmValue = rpmValue;
+	previousRpmValue = cachedRpmValue;
 
-	// Round to the nearest integer RPM - some other parts of the ECU expect integer, so that's what we hand out.
-	// TODO: RPM should eventually switch to floating point across the ECU
-	rpmValue = efiRound(floatRpmValue, 1);
+	cachedRpmValue = floatRpmValue;
 
 	setValidValue(floatRpmValue, 0);	// 0 for current time since RPM sensor never times out
-	if (rpmValue <= 0) {
+	if (cachedRpmValue <= 0) {
 		oneDegreeUs = NAN;
 	} else {
 		// here it's really important to have more precise float RPM value, see #796
@@ -131,9 +128,9 @@ void RpmCalculator::setRpmValue(float value) {
 	assignRpmValue(value);
 	spinning_state_e oldState = state;
 	// Change state
-	if (rpmValue == 0) {
+	if (cachedRpmValue == 0) {
 		state = STOPPED;
-	} else if (rpmValue >= engineConfiguration->cranking.rpm) {
+	} else if (cachedRpmValue >= engineConfiguration->cranking.rpm) {
 		if (state != RUNNING) {
 			// Store the time the engine started
 			engineStartTimer.reset();
@@ -190,7 +187,7 @@ void RpmCalculator::setStopped() {
 
 	rpmRate = 0;
 
-	if (rpmValue != 0) {
+	if (cachedRpmValue != 0) {
 		assignRpmValue(0);
 		// needed by 'useNoiselessTriggerDecoder'
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
