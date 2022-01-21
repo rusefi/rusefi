@@ -2950,6 +2950,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = stftPartitionSettingsOverrun, {fuelClosedLoopCorrectionEnabled == 1}
 
 	dialog = vvtPidDialog0, "Configuration"
+	    field = vvtActivationDelayMs,                   vvtActivationDelayMs
 		commandButton = "Enable VVT#1 debug mode",      cmd_test_debug_mode_vvt
 		field = "VVT solenoid bank 1 intake",					vvtPins1
         field = "VVT solenoid bank 1 exhaust",                  vvtPins2
