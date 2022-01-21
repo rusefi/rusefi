@@ -93,8 +93,6 @@ void vag_18_Turbo() {
 	engineConfiguration->cj125CsPin = GPIOB_11;
 #endif
 
-	engineConfiguration->debugMode = DBG_CJ125;
-
 	//Digital Inputs/Outputs
 #if (BOARD_TLE8888_COUNT > 0)
 	engineConfiguration->tle8888spiDevice = SPI_DEVICE_1;
