@@ -1470,7 +1470,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
 
         custom hpfp_cam_e 1 bits, U08, @OFFSET@, [0:2], @@hpfp_cam_e_enum@@
 
-        uint8_t hpfpCamLobes;;"lobes/cam", 1, 0, 1, 255, 0
+        uint8_t hpfpCamLobes;;"lobes/cam", 1, 0, 0, 255, 0
         hpfp_cam_e hpfpCam;
         uint8_t hpfpPeakPos;+Crank angle ATDC of first lobe peak;"deg", 1, 0, 0, 255, 0
         uint8_t hpfpMinAngle;+If the requested activation time is below this angle, don't bother running the pump;"deg", 1, 0, 0, 255, 0
