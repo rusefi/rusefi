@@ -384,7 +384,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 		return;
 	}
 
-	int rpm = GET_RPM();
+	int rpm = engine->rpmCalculator.getRpm();
 	if (rpm == 0) {
 		// this happens while we just start cranking
 

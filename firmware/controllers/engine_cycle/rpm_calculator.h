@@ -153,9 +153,6 @@ private:
 	Timer engineStartTimer;
 };
 
-// Just a getter for rpmValue
-#define GET_RPM() ( engine->rpmCalculator.getRpm() )
-
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 
 void rpmShaftPositionCallback(trigger_event_e ckpSignalType, uint32_t index, efitick_t edgeTimestamp);
