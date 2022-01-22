@@ -29,6 +29,11 @@ static tps_tps_Map3D_t tpsTpsMap;
 floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
+	if (engineConfiguration->tpsAccelLookback == 0) {
+		// If disabled, return 0.
+		return 0;
+	}
+
 	if (isAboveAccelThreshold) {
 		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
 		extraFuel = valueFromTable;
@@ -212,7 +217,8 @@ void setTpsAccelLen(int length) {
 }
 
 void updateAccelParameters() {
-	setTpsAccelLen(engineConfiguration->tpsAccelLength);
+	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
+	setTpsAccelLen(engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond);
 }
 
 #endif /* ! EFI_UNIT_TEST */
