@@ -29,14 +29,6 @@ static tps_tps_Map3D_t tpsTpsMap;
 floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
-	int maxDeltaIndex = getMaxDeltaIndex();
-
-	tpsTo = cb.get(maxDeltaIndex);
-	tpsFrom = cb.get(maxDeltaIndex - 1);
-	deltaTps = tpsTo - tpsFrom;
-
-	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;
-	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
 	if (isAboveAccelThreshold) {
 		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
 		extraFuel = valueFromTable;
@@ -119,7 +111,6 @@ void TpsAccelEnrichment::onEngineCycleTps() {
 }
 
 int TpsAccelEnrichment::getMaxDeltaIndex() {
-
 	int len = minI(cb.getSize(), cb.getCount());
 	tooShort = len < 2;
 	if (tooShort)
@@ -166,7 +157,20 @@ void TpsAccelEnrichment::setLength(int length) {
 }
 
 void TpsAccelEnrichment::onNewValue(float currentValue) {
+	// Push new value in to the history buffer
 	cb.add(currentValue);
+
+	// Update deltas
+	int maxDeltaIndex = getMaxDeltaIndex();
+	tpsFrom = cb.get(maxDeltaIndex - 1);
+	tpsTo = cb.get(maxDeltaIndex);
+	deltaTps = tpsTo - tpsFrom;
+
+	// Update threshold detection
+	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;
+
+	// TODO: can deltaTps actually be negative? Will this ever trigger?
+	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
 }
 
 TpsAccelEnrichment::TpsAccelEnrichment() {
