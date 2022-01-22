@@ -46,6 +46,7 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
 	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelLookback = 2;
 
 	eth.setTriggerType(TT_ONE);
 
@@ -101,6 +102,7 @@ TEST(fuel, testAccelEnrichmentFractionalTps) {
 
 	// setup
 	engineConfiguration->tpsAccelEnrichmentThreshold = 5;
+	engineConfiguration->tpsAccelLookback = 2;
 
 	// fill tps2tps map (todo: there should be a better way?)
 	static const float tpsTpsConst = 1.0f;
