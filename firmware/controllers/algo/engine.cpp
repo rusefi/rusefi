@@ -221,6 +221,8 @@ void Engine::periodicSlowCallback() {
 	updateSlowSensors();
 	checkShutdown();
 
+	tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
+
 	updateVrPwm();
 
 #if EFI_FSIO
