@@ -185,11 +185,3 @@ void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardCsPin = H_SPI2_CS;
 	engineConfiguration->is_enabled_spi_2 = true;
 }
-
-void boardPrepareForStandby() {
-	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
-	PWR->CSR |= PWR_CSR_EWUP; //Enable Wakeup Pin for PA0
-
-	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT); //Select Pin 0 on A Port - PA0, Wkup
-	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_FALLING_EDGE); // Set PA0 to interrupt on rising edge
-}

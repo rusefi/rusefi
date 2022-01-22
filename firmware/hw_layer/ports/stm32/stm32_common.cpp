@@ -802,12 +802,14 @@ __attribute__((weak)) void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
+/**
+ Standby uses special low power hardware - it always wakes on rising edge
+*/
 
 void boardPreparePA0ForStandby() {
 #ifdef STM32F4XX
 	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
 	PWR->CSR |= PWR_CSR_EWUP; //Enable Wakeup Pin for PA0
-	// why do we not enable PAL event like in boardPrepareForStop?
 #endif
 
 #ifdef STM32F7XX
