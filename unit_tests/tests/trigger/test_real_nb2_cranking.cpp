@@ -26,7 +26,7 @@ TEST(realCrankingNB2, normalCranking) {
 	// This should happen exactly once: once we sync, we shouldn't lose it.
 	EXPECT_EQ(engine->outputChannels.vvtSyncCounter, 1);
 
-	ASSERT_EQ(942, GET_RPM());
+	ASSERT_EQ(942, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// TODO: why warnings?
 	ASSERT_EQ(2, eth.recentWarnings()->getCount());
@@ -46,7 +46,7 @@ TEST(realCrankingNB2, crankingMissingInjector) {
 	// VVT position nearly zero!
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), -7.1926f, 1e-4);
 
-	ASSERT_EQ(668, GET_RPM());
+	ASSERT_EQ(668, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// TODO: why warnings?
 	ASSERT_EQ(2, eth.recentWarnings()->getCount());

@@ -114,7 +114,7 @@ void EngineState::periodicFastCallback() {
 	}
 	recalculateAuxValveTiming();
 
-	int rpm = engine->rpmCalculator.getRpm();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	sparkDwell = getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
@@ -234,7 +234,7 @@ void StartupFuelPumping::setPumpsCounter(int newValue) {
 }
 
 void StartupFuelPumping::update() {
-	if (GET_RPM() == 0) {
+	if (Sensor::getOrZero(SensorType::Rpm) == 0) {
 		bool isTpsAbove50 = Sensor::getOrZero(SensorType::DriverThrottleIntent) >= 50;
 
 		if (this->isTpsAbove50 != isTpsAbove50) {

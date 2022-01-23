@@ -87,8 +87,10 @@ public class ConsoleUI {
             tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
 
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-            FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-            linkManager.restart();
+            uiContext.getLinkManager().execute(() -> {
+                FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
+                linkManager.restart();
+            });
         }).start();
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));

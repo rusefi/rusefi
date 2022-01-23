@@ -78,7 +78,7 @@
 #define alignEngineSnifferAtTDC_offset 748
 #define alignmentFill_at_1867_offset 1867
 #define alignmentFill_at_3979_offset 3979
-#define alignmentFill_at_4610_offset 4610
+#define alignmentFill_at_4614_offset 4614
 #define alignmentFill_at_62_offset 62
 #define alternatorControl_dFactor_offset 1492
 #define alternatorControl_iFactor_offset 1488
@@ -937,7 +937,7 @@
 #define firingOrder_offset 424
 #define fixedModeTiming_offset 464
 #define fixedTiming_offset 1824
-#define FLASH_DATA_VERSION 10007
+#define FLASH_DATA_VERSION 10008
 #define flexSensorPin_offset 806
 #define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
 #define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
@@ -1055,7 +1055,7 @@
 #define GAUGE_NAME_FUEL_TRIM_2 "fuel: fuel trim 2"
 #define GAUGE_NAME_FUEL_VE "fuel: VE"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
-#define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
+#define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall correction"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
 #define GAUGE_NAME_IAC "Idle Air Valve"
@@ -1300,7 +1300,7 @@
 #define idle_state_e_TPS_THRESHOLD 1
 #define idle_stepperDirectionPin_offset 613
 #define idle_stepperStepPin_offset 614
-#define IDLE_VE_CURVE_SIZE 8
+#define IDLE_VE_SIZE 4
 #define idleAdvance_offset 5536
 #define idleAdvanceBins_offset 5528
 #define idleIncrementalPidCic_offset 748
@@ -1341,8 +1341,9 @@
 #define idleTimingPid_periodMs_offset 3430
 #define idleTimingPid_pFactor_offset 3416
 #define idleTimingPidDeadZone_offset 3436
-#define idleVe_offset 5576
-#define idleVeBins_offset 5568
+#define idleVeLoadBins_offset 5572
+#define idleVeRpmBins_offset 5568
+#define idleVeTable_offset 5576
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
 #define ignition_mode_e_auto_enum "IM_ONE_COIL", "IM_INDIVIDUAL_COILS", "IM_WASTED_SPARK", "IM_TWO_COILS"
@@ -1596,7 +1597,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4612
+#define mainUnusedEnd_offset 4616
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1878,7 +1879,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2302735106
+#define SIGNATURE_HASH 2010230433
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2403,7 +2404,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.19.kin.2302735106"
+#define TS_SIGNATURE "rusEFI 2022.01.23.kin.2010230433"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2480,6 +2481,7 @@
 #define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4143
 #define unusedHere2_offset 1747
+#define unusedShort_offset 4612
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164
 #define useETBforIdleControl_offset 748
@@ -2564,6 +2566,7 @@
 #define vvt_mode_e_VVT_NISSAN_VQ 9
 #define vvt_mode_e_VVT_SECOND_HALF 1
 #define vvt_mode_e_VVT_TOYOTA_4_1 6
+#define vvtActivationDelayMs_offset 4610
 #define vvtCamSensorUseRise_offset 748
 #define vvtMode1_offset 1936
 #define vvtModePadding_offset 1937

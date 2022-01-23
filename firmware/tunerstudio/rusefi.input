@@ -562,18 +562,6 @@ enable2ndByteCanID = false
       yBins       = idleAdvance
       gauge       = RPMGauge
 
-	curve = idleVeCurve, "Idle VE"
-      columnLabel = "RPM", "%"
-      xAxis       = 0, 2400, 13
-      yAxis       = 0, 250, 11
-      xBins       = idleVeBins, RPMValue
-      yBins       = idleVe
-#if LAMBDA
-      gauge       = lambda1Gauge
-#else
-      gauge       = afr1Gauge
-#endif
-    
 	curve = crankingAdvanceCurve, "Cranking Advance Angle"
       columnLabel = "RPM", "degrees"
       xAxis       = 0, 1200, 13
@@ -708,6 +696,13 @@ enable2ndByteCanID = false
       yBins       = veLoadBins, veTableYAxis
       zBins       = veTable
 ;      gridHeight  = 2.0
+      gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
+      upDownLabel = "(RICHER)", "(LEANER)"
+
+   table = idleVeTableTbl, idleVeTable, "Idle VE"
+      xBins       = idleVeRpmBins,  RPMValue
+      yBins       = idleVeLoadBins, veTableYAxis
+      zBins       = idleVeTable
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
@@ -1133,6 +1128,8 @@ gaugeCategory = Sensors - Raw
    rawLowFuelPressureGauge = rawLowFuelPressure,"Raw fuel pressure (low) voltage","V", 0, 5, 0, 0, 5, 5, 3, 0
    rawHighFuelPressureGauge = rawHighFuelPressure,"Raw fuel pressure (high) voltage","V", 0, 5, 0, 0, 5, 5, 3, 0
    rawMafGauge          = rawMaf        , "Raw MAF",           "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawMapGauge          = rawMap        , "Raw MAP",           "V", 0, 5, 0, 0, 5, 5, 3, 0
+   rawAfrGauge          = rawAfr        , "Raw EGO",           "V", 0, 5, 0, 0, 5, 5, 3, 0
 
 
 gaugeCategory = Transmission
@@ -1406,7 +1403,7 @@ menuDialog = main
 		subMenu = iacPidMultTbl,			"IAC PID Multiplier", 0, {idleMode == 0 && useIacPidMultTable == 1}
 		subMenu = iacCoastingCurve,			"Coasting IAC Position for Auto-Idle", 0, {useIacTableForCoasting == 1}
 		subMenu = std_separator
-		subMenu = idleVeCurve,              "VE", 0, {useSeparateVeForIdle == 1}
+		subMenu = idleVeTableTbl,              "Idle VE", 0, {useSeparateVeForIdle == 1}
 		subMenu = idleAdvanceCurve,			"Ignition advance", 0, {useSeparateAdvanceForIdle == 1}
 
 	menu = "&Advanced"
@@ -2571,11 +2568,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = baroSettings, "Baro sensor"
 		field = "Baro ADC input",						baroSensor_hwChannel
-		field = baroSensor_lowValue,					baroSensor_lowValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
-		field = baroSensor_highValue,					baroSensor_highValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
-		field = baroSensor_type,						baroSensor_type, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@}
-		field = "LPS25 Baro SCL",						lps25BaroSensorScl
-		field = "LPS25 Baro SDA",						lps25BaroSensorSda
+		field = "Low Value",					baroSensor_lowValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@ || lps25BaroSensorScl != 0 }
+		field = "High Value",					baroSensor_highValue, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@ || lps25BaroSensorScl != 0 }
+		field = "Type",         						baroSensor_type, {baroSensor_hwChannel != @@ADC_CHANNEL_NONE@@ || lps25BaroSensorScl != 0 }
+		field = "LPS25 Baro SCL",						lps25BaroSensorScl, { baroSensor_hwChannel == @@ADC_CHANNEL_NONE@@}
+		field = "LPS25 Baro SDA",						lps25BaroSensorSda, { baroSensor_hwChannel == @@ADC_CHANNEL_NONE@@}
 
 	dialog = mapCurves, "MAP sampling", yAxis
 		field = "isMapAveragingEnabled",				isMapAveragingEnabled
@@ -2955,6 +2952,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = stftPartitionSettingsOverrun, {fuelClosedLoopCorrectionEnabled == 1}
 
 	dialog = vvtPidDialog0, "Configuration"
+	    field = vvtActivationDelayMs,                   vvtActivationDelayMs
 		commandButton = "Enable VVT#1 debug mode",      cmd_test_debug_mode_vvt
 		field = "VVT solenoid bank 1 intake",					vvtPins1
         field = "VVT solenoid bank 1 exhaust",                  vvtPins2

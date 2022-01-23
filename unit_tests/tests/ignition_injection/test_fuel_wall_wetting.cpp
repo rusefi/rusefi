@@ -35,7 +35,7 @@ TEST(fuel, testWallWettingEnrichmentScheduling) {
 
 
 	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);
-	ASSERT_EQ( 1200,  GET_RPM()) << "RPM";
+	ASSERT_EQ( 1200,  Sensor::getOrZero(SensorType::Rpm)) << "RPM";
 
 	int expectedInvocationCounter = 1;
 

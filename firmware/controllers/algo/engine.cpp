@@ -291,7 +291,7 @@ void Engine::updateSlowSensors() {
 	updateSwitchInputs();
 
 #if EFI_ENGINE_CONTROL
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	isEngineChartEnabled = engineConfiguration->isEngineChartEnabled && rpm < engineConfiguration->engineSnifferRpmThreshold;
 	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
@@ -441,7 +441,7 @@ void Engine::OnTriggerSynchronizationLost() {
 
 void Engine::OnTriggerInvalidIndex(int currentIndex) {
 	// let's not show a warning if we are just starting to spin
-	if (GET_RPM() != 0) {
+	if (Sensor::getOrZero(SensorType::Rpm) != 0) {
 		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
 		triggerCentral.triggerState.setTriggerErrorState();
 	}

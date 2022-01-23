@@ -15,7 +15,7 @@ static void runRpmTest(operation_mode_e mode, int expected) {
 	eth.setTriggerType(TT_ONE);
 
 	eth.smartFireTriggerEvents2(/*count*/200, /*delay*/ 40);
-	ASSERT_EQ(expected, GET_RPM());
+	ASSERT_EQ(expected, Sensor::getOrZero(SensorType::Rpm));
 }
 
 // todo: google test profiles one day?

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Jan 18 00:40:09 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jan 21 23:12:48 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -347,13 +347,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
+	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	mg
 	 * offset 72
 	 */
 	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
+	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
 	mg
 	 * offset 74
 	 */
@@ -921,13 +921,19 @@ struct ts_outputs_s {
 	 */
 	uint16_t systemEventReuse = (uint16_t)0;
 	/**
+	V
 	 * offset 366
 	 */
-	uint8_t unusedAtTheEnd2[2];
+	scaled_channel<uint16_t, 1000, 1> rawMap = (uint16_t)0;
 	/**
+	V
 	 * offset 368
 	 */
-	uint8_t unusedAtTheEnd[100];
+	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
+	/**
+	 * offset 370
+	 */
+	uint8_t unusedAtTheEnd[98];
 	/**
 	offset 468 bit 0 */
 	bool launchSpeedCondition : 1 {};
@@ -951,79 +957,79 @@ struct ts_outputs_s {
 	bool launchActivatePinState : 1 {};
 	/**
 	offset 468 bit 7 */
-	bool unusedBit_184_7 : 1 {};
+	bool unusedBit_185_7 : 1 {};
 	/**
 	offset 468 bit 8 */
-	bool unusedBit_184_8 : 1 {};
+	bool unusedBit_185_8 : 1 {};
 	/**
 	offset 468 bit 9 */
-	bool unusedBit_184_9 : 1 {};
+	bool unusedBit_185_9 : 1 {};
 	/**
 	offset 468 bit 10 */
-	bool unusedBit_184_10 : 1 {};
+	bool unusedBit_185_10 : 1 {};
 	/**
 	offset 468 bit 11 */
-	bool unusedBit_184_11 : 1 {};
+	bool unusedBit_185_11 : 1 {};
 	/**
 	offset 468 bit 12 */
-	bool unusedBit_184_12 : 1 {};
+	bool unusedBit_185_12 : 1 {};
 	/**
 	offset 468 bit 13 */
-	bool unusedBit_184_13 : 1 {};
+	bool unusedBit_185_13 : 1 {};
 	/**
 	offset 468 bit 14 */
-	bool unusedBit_184_14 : 1 {};
+	bool unusedBit_185_14 : 1 {};
 	/**
 	offset 468 bit 15 */
-	bool unusedBit_184_15 : 1 {};
+	bool unusedBit_185_15 : 1 {};
 	/**
 	offset 468 bit 16 */
-	bool unusedBit_184_16 : 1 {};
+	bool unusedBit_185_16 : 1 {};
 	/**
 	offset 468 bit 17 */
-	bool unusedBit_184_17 : 1 {};
+	bool unusedBit_185_17 : 1 {};
 	/**
 	offset 468 bit 18 */
-	bool unusedBit_184_18 : 1 {};
+	bool unusedBit_185_18 : 1 {};
 	/**
 	offset 468 bit 19 */
-	bool unusedBit_184_19 : 1 {};
+	bool unusedBit_185_19 : 1 {};
 	/**
 	offset 468 bit 20 */
-	bool unusedBit_184_20 : 1 {};
+	bool unusedBit_185_20 : 1 {};
 	/**
 	offset 468 bit 21 */
-	bool unusedBit_184_21 : 1 {};
+	bool unusedBit_185_21 : 1 {};
 	/**
 	offset 468 bit 22 */
-	bool unusedBit_184_22 : 1 {};
+	bool unusedBit_185_22 : 1 {};
 	/**
 	offset 468 bit 23 */
-	bool unusedBit_184_23 : 1 {};
+	bool unusedBit_185_23 : 1 {};
 	/**
 	offset 468 bit 24 */
-	bool unusedBit_184_24 : 1 {};
+	bool unusedBit_185_24 : 1 {};
 	/**
 	offset 468 bit 25 */
-	bool unusedBit_184_25 : 1 {};
+	bool unusedBit_185_25 : 1 {};
 	/**
 	offset 468 bit 26 */
-	bool unusedBit_184_26 : 1 {};
+	bool unusedBit_185_26 : 1 {};
 	/**
 	offset 468 bit 27 */
-	bool unusedBit_184_27 : 1 {};
+	bool unusedBit_185_27 : 1 {};
 	/**
 	offset 468 bit 28 */
-	bool unusedBit_184_28 : 1 {};
+	bool unusedBit_185_28 : 1 {};
 	/**
 	offset 468 bit 29 */
-	bool unusedBit_184_29 : 1 {};
+	bool unusedBit_185_29 : 1 {};
 	/**
 	offset 468 bit 30 */
-	bool unusedBit_184_30 : 1 {};
+	bool unusedBit_185_30 : 1 {};
 	/**
 	offset 468 bit 31 */
-	bool unusedBit_184_31 : 1 {};
+	bool unusedBit_185_31 : 1 {};
 	/**
 	 * offset 472
 	 */
@@ -1221,4 +1227,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Jan 18 00:40:09 EST 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jan 21 23:12:48 UTC 2022

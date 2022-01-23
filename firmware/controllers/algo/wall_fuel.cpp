@@ -68,7 +68,7 @@ float WallFuel::adjust(float desiredMassGrams) {
 	}
 
 	// Ignore really slow RPM
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (rpm < 100) {
 		return desiredMassGrams;
 	}

@@ -21,6 +21,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->compressionRatio = 9;
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
+	// let's have valid default while we still have the field
+	engineConfiguration->debugMode = DBG_INSTANT_RPM;
 
 	// Limits and Fallbacks
 	engineConfiguration->rpmHardLimit = 7000;

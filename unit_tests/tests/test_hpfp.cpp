@@ -250,7 +250,7 @@ TEST(HPFP, Schedule) {
 	{
 		testing::InSequence is;
 
-		// First call to assignRpmValue will cause a dummy call to fast periodic timer.
+		// First call to setRpmValue will cause a dummy call to fast periodic timer.
 		// Injection Mass will be 0 so expect a no-op.
 		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &hpfp.m_event.scheduling, nt0, action_s(HpfpController::pinTurnOff, &hpfp)));
 
@@ -266,12 +266,12 @@ TEST(HPFP, Schedule) {
 	// peak pos occurs after the next tooth.
 	engineConfiguration->hpfpPeakPos = 90;
 	// This will call the fast callback routine
-	engine->rpmCalculator.assignRpmValue(1000);
+	engine->rpmCalculator.setRpmValue(1000);
 	engine->injectionMass[0] = 0.05 /* cc/cyl */ * fuelDensity;
 	engineConfiguration->hpfpValvePin = GPIOA_2; // arbitrary
 
 	hpfp.onFastCallback();
-	// First event was scheduled by assignRpmValue with 0 injection mass.  So, it's off.
+	// First event was scheduled by setRpmValue with 0 injection mass.  So, it's off.
 	eth.assertTriggerEvent("h0", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOff,
 			       1, angle0 - 0);
 

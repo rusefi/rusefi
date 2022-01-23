@@ -5,7 +5,7 @@
 using ::testing::StrictMock;
 using ::testing::Return;
 
-TEST(Vvt, setpoint) {
+TEST(Vvt, TestSetPoint) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Set up a mock target map
@@ -15,7 +15,7 @@ TEST(Vvt, setpoint) {
 
 	// Mock necessary inputs
 	engine->engineState.fuelingLoad = 55;
-	engine->rpmCalculator.mockRpm = 4321;
+	Sensor::setMockValue(SensorType::Rpm,  4321);
 
 	VvtController dut;
 	dut.init(0, 0, 0, &targetMap);

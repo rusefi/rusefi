@@ -29,7 +29,7 @@ TEST(realCrankingVQ40, normalCranking) {
 
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), -46.817, 1e-2);
 	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), -47.411, 1e-2);
-	ASSERT_EQ(241, GET_RPM())<< reader.lineIndex();
+	ASSERT_EQ(241, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 
 	// TODO: why warnings?
 	ASSERT_EQ(3, eth.recentWarnings()->getCount());

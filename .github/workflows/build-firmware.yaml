@@ -1,6 +1,6 @@
 name: FW
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build-firmware:
@@ -194,7 +194,8 @@ jobs:
 
     steps:
     - name: Execution throttle early exit
-      if: ${{ matrix.skip-rate }}
+      # Don't skip any jobs if this workflow was run manually.
+      if: ${{ matrix.skip-rate && github.event_name != 'workflow_dispatch' }}
       run: if (($(($RANDOM % 100)) < ${{ matrix.skip-rate }})); then echo "skip=true" >> $GITHUB_ENV; fi
 
     - uses: actions/checkout@v1

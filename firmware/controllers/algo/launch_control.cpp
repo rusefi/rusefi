@@ -106,7 +106,7 @@ void LaunchControlBase::update() {
 		return;
 	}
 
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	combinedConditions = isLaunchConditionMet(rpm);
 
 	//and still recalculate in case user changed the values
@@ -131,7 +131,7 @@ void LaunchControlBase::update() {
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
-	return isLaunchCondition && (retardThresholdRpm < GET_RPM());
+	return isLaunchCondition && (retardThresholdRpm < Sensor::getOrZero(SensorType::Rpm));
 }
 
 bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 12:38:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:52 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4035,16 +4035,27 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> gearRatio[GEARS_COUNT];
 	/**
-	 * need 4 byte alignment
-	units
+	 * We need to give engine time to build oil pressure without diverting it to VVT
+	ms
 	 * offset 4638
 	 */
-	uint8_t alignmentFill_at_4638[2];
+	uint16_t vvtActivationDelayMs;
 	/**
-	units
+	RPM
 	 * offset 4640
 	 */
-	int mainUnusedEnd[95];
+	uint16_t unusedShort;
+	/**
+	 * need 4 byte alignment
+	units
+	 * offset 4642
+	 */
+	uint8_t alignmentFill_at_4642[2];
+	/**
+	units
+	 * offset 4644
+	 */
+	int mainUnusedEnd[94];
 	/** total size 5020*/
 };
 
@@ -4145,17 +4156,20 @@ struct persistent_config_s {
 	 */
 	float idleAdvance[IDLE_ADVANCE_CURVE_SIZE];
 	/**
-	 * Optional VE table for Idle (see useSeparateVEForIdle)
 	RPM
 	 * offset 5596
 	 */
-	scaled_channel<uint8_t, 1, 50> idleVeBins[IDLE_VE_CURVE_SIZE];
+	scaled_channel<uint8_t, 1, 10> idleVeRpmBins[IDLE_VE_SIZE];
 	/**
-	 * Optional VE table for Idle (see useSeparateVEForIdle)
+	load
+	 * offset 5600
+	 */
+	scaled_channel<uint8_t, 1, 1> idleVeLoadBins[IDLE_VE_SIZE];
+	/**
 	%
 	 * offset 5604
 	 */
-	float idleVe[IDLE_VE_CURVE_SIZE];
+	scaled_channel<uint16_t, 10, 1> idleVeTable[IDLE_VE_SIZE][IDLE_VE_SIZE];
 	/**
 	 * offset 5636
 	 */
@@ -4460,4 +4474,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Jan 19 12:38:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:52 UTC 2022

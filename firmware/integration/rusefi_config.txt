@@ -70,7 +70,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 10007
+#define FLASH_DATA_VERSION 10008
 
 #define LOG_DELIMITER "`"
 
@@ -142,7 +142,7 @@ struct_no_prefix engine_configuration_s
 
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define CLT_TIMING_CURVE_SIZE 8
-#define IDLE_VE_CURVE_SIZE 8
+#define IDLE_VE_SIZE 4
 
 #define TCU_SOLENOID_COUNT 6
 #define TCU_GEAR_COUNT 10
@@ -361,7 +361,7 @@ struct gppwm_channel
 	uint8_t[GPPWM_RPM_COUNT x GPPWM_LOAD_COUNT] table;;"duty", 1, 0, 0, 100, 0
 end_struct
 
-custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "MPXH6400"
+custom air_pressure_sensor_type_e 4 bits, U32, @OFFSET@, [0:4], "Custom", "DENSO183", "MPX4250", "HONDA3BAR", "NEON_2003", "22012AA090", "GM 3 Bar", "MPX4100", "Toyota 89420-02010", "MPX4250A", "Bosch 2.5", "Mazda1Bar", "GM 2 Bar", "GM 1 Bar", "MPXH6400"
 
 !
 ! lower 16 values are used on stm32 rusEfi, values above 16 are related to Kinetis work in progress
@@ -1470,7 +1470,7 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
 
         custom hpfp_cam_e 1 bits, U08, @OFFSET@, [0:2], @@hpfp_cam_e_enum@@
 
-        uint8_t hpfpCamLobes;;"lobes/cam", 1, 0, 1, 255, 0
+        uint8_t hpfpCamLobes;;"lobes/cam", 1, 0, 0, 255, 0
         hpfp_cam_e hpfpCam;
         uint8_t hpfpPeakPos;+Crank angle ATDC of first lobe peak;"deg", 1, 0, 0, 255, 0
         uint8_t hpfpMinAngle;+If the requested activation time is below this angle, don't bother running the pump;"deg", 1, 0, 0, 255, 0
@@ -1498,7 +1498,10 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
 
     uint16_t[GEARS_COUNT iterate] autoscale gearRatio;;"ratio", 0.01, 0, 0, 650, 0
 
-	int[95] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+uint16_t vvtActivationDelayMs;We need to give engine time to build oil pressure without diverting it to VVT;"ms", 1, 0, 0, 65000, 0
+uint16_t unusedShort;;"RPM", 1, 0, 0, 65000, 0
+
+	int[94] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1528,8 +1531,9 @@ float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position m
 
 uint8_t[IDLE_ADVANCE_CURVE_SIZE] autoscale idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 18000, 0
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg", 1, 0, -20, 90, 1
-uint8_t[IDLE_VE_CURVE_SIZE] autoscale idleVeBins;Optional VE table for Idle (see useSeparateVEForIdle);"RPM", @@RPM_1_BYTE_PACKING_MULT@@, 0, 0, 18000, 0
-float[IDLE_VE_CURVE_SIZE] idleVe;    Optional VE table for Idle (see useSeparateVEForIdle);"%", 1, 0, 0, 999, 1
+uint8_t[IDLE_VE_SIZE] autoscale idleVeRpmBins;;"RPM", 10, 0, 0, 2500, 0
+uint8_t[IDLE_VE_SIZE] autoscale idleVeLoadBins;;"load", 1, 0, 0, 100, 0
+uint16_t[IDLE_VE_SIZE x IDLE_VE_SIZE] autoscale idleVeTable;;"%", 0.1, 0, 0, 999, 1
 
 #define LUA_SCRIPT_SIZE 8000
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
@@ -1755,7 +1759,7 @@ end_struct
 #define GAUGE_NAME_FUEL_TRIM "fuel: fuel trim"
 #define GAUGE_NAME_FUEL_TRIM_2 "fuel: fuel trim 2"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
-#define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
+#define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall correction"
 #define GAUGE_NAME_FUEL_LOAD "fuel: load"
 #define GAUGE_NAME_FUEL_CONSUMPTION "fuel: Total consumed"
 #define GAUGE_NAME_FUEL_FLOW "fuel: Flow rate"

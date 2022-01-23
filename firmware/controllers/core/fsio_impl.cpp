@@ -306,7 +306,7 @@ void runHardcodedFsio() {
 
 	// see STARTER_RELAY_LOGIC
 	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin)) {
-		enginePins.starterRelayDisable.setValue(engine->rpmCalculator.getRpm() < engineConfiguration->cranking.rpm);
+		enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 	}
 
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());

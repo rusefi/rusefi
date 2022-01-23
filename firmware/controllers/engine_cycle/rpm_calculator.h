@@ -37,11 +37,11 @@ typedef enum {
 	RUNNING,
 } spinning_state_e;
 
+/**
+ * Most consumers should access value via Sensor framework by SensorType::Rpm key
+ */
 class RpmCalculator : public StoredValueSensor {
 public:
-#if !EFI_PROD_CODE
-	int mockRpm;
-#endif /* EFI_PROD_CODE */
 	RpmCalculator();
 
 	void onSlowCallback();
@@ -80,10 +80,11 @@ public:
 	void setStopSpinning();
 
 	/**
-	 * Just a getter for rpmValue
-	 * Also handles mockRpm if not EFI_PROD_CODE
+	 * Just a quick getter for rpmValue
+	 * Should be same exact value as Sensor::get(SensorType::Rpm).Value just quicker.
+	 * Open question if we have any cases where this opimization is needed.
 	 */
-	int getRpm() const;
+	float getCachedRpm() const;
 	/**
 	 * This method is invoked once per engine cycle right after we calculate new RPM value
 	 */
@@ -126,10 +127,11 @@ protected:
 
 private:
 	/**
-	 * Sometimes we cannot afford to call isRunning() and the value is good enough
-	 * Zero if engine is not running
+	 * At this point this value is same exact value as in private m_value variable
+	 * At this point all this is performance optimization?
+	 * Open question is when do we need it for performance reasons.
 	 */
-	 int rpmValue = 0;
+	 float cachedRpmValue = 0;
 
 	/**
 	 * Should be called once we've realized engine is not spinning any more.
@@ -156,9 +158,6 @@ private:
 
 	Timer engineStartTimer;
 };
-
-// Just a getter for rpmValue which also handles mockRpm if not EFI_PROD_CODE
-#define GET_RPM() ( engine->rpmCalculator.getRpm() )
 
 #define isValidRpm(rpm) ((rpm) > 0 && (rpm) < UNREALISTIC_RPM)
 

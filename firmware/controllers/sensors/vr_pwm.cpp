@@ -22,7 +22,7 @@ static void updateVrPwm(int rpm, size_t index) {
 }
 
 void updateVrPwm() {
-	auto rpm = GET_RPM();
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->vrThreshold); i++) {
 		updateVrPwm(rpm, i);

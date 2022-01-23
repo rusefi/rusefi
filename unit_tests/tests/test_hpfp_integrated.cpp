@@ -25,7 +25,7 @@ TEST(HPFP, IntegratedSchedule) {
 
 
 	eth.smartFireTriggerEvents2(/*count*/40, /*delay*/ 4);
-	ASSERT_EQ(937, GET_RPM());
+	ASSERT_EQ(937, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	for (int i = 0;i<100;i++) {
 		eth.smartFireTriggerEvents2(/*count*/1, /*delay*/ 4);
