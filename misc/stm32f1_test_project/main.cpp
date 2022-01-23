@@ -16,7 +16,7 @@
 
 #include "ch.h"
 #include "hal.h"
-
+#include "uart.h"
 
 #define BL_PORT GPIOC
 #define BL_PIN 13
@@ -53,18 +53,14 @@ int main(void) {
   halInit();
   chSysInit();
 
-  /*
-   * Activates the serial driver 2 using the driver default configuration.
-   */
-  sdStart(&SD2, NULL);
-
-
   palSetPadMode(BL_PORT, BL_PIN, PAL_MODE_OUTPUT_PUSHPULL);
 
   /*
    * Creates the blinker thread.
    */
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
+
+  InitUart();
 
   /*
    * Normal main() thread activity, in this demo it does nothing except

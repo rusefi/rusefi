@@ -802,6 +802,9 @@ __attribute__((weak)) void boardPrepareForStop() {
 	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
 
+/**
+ Standby uses special low power hardware - it always wakes on rising edge
+*/
 
 void boardPreparePA0ForStandby() {
 #ifdef STM32F4XX
