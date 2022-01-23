@@ -191,7 +191,7 @@ void BlockCache::start(BaseBlockDevice* backing) {
 	// prefetch block 0
 	fetchBlock(0);
 
-	chThdCreateStatic(waRead, sizeof(waRead), NORMALPRIO, [](void* instance) { reinterpret_cast<BlockCache*>(instance)->readThread(); }, this);
+	chThdCreateStatic(waRead, sizeof(waRead), MSD_CACHE_PRIO, [](void* instance) { reinterpret_cast<BlockCache*>(instance)->readThread(); }, this);
 }
 
 #endif // HAL_USE_USB_MSD
