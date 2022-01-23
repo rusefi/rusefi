@@ -11,10 +11,6 @@ struct air_pressure_sensor_config_s;
 
 void initMapDecoder();
 
-float getBaroPressure();
-
-float decodePressure(float voltage, air_pressure_sensor_config_s * mapConfig);
-
 #define KPA_PER_PSI 6.89475728f
 
 #define PSI2KPA(psi)  (KPA_PER_PSI * (psi))

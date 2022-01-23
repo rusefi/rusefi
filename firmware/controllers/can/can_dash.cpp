@@ -953,7 +953,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[4] = 0x00;
 			msg[5] = 0x00;
 			/* Barometric pressure */
-			tmp = (uint16_t)(getBaroPressure()*10);
+			tmp = (uint16_t)(Sensor::getOrZero(SensorType::BarometricPressure) * 10);
 			msg[6] = (tmp >> 8);
 			msg[7] = (tmp & 0x00ff);
 		}
