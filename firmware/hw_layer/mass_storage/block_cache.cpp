@@ -12,7 +12,7 @@ static bool is_inserted(void* instance) {
 
 	// ask the underlying device, otherwise false
 	auto backing = bc->backing;
-	return bc ? backing->vmt->is_inserted(backing) : false;
+	return backing ? backing->vmt->is_inserted(backing) : false;
 }
 
 static bool is_protected(void* instance) {
@@ -22,7 +22,7 @@ static bool is_protected(void* instance) {
 
 	// ask the underlying device, otherwise true
 	auto backing = bc->backing;
-	return bc ? backing->vmt->is_inserted(backing) : true;
+	return backing ? backing->vmt->is_protected(backing) : true;
 }
 
 static bool connect(void* instance) {
