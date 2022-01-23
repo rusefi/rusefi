@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 23 20:40:50 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2851,11 +2851,15 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e LIS302DLCsPin;
 	/**
-	 * This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles.
-	cycles
+	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
+	sec
 	 * offset 1688
 	 */
-	int tpsAccelLength;
+	uint8_t tpsAccelLookback;
+	/**
+	 * offset 1689
+	 */
+	uint8_t unused1689[3];
 	/**
 	 * Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
 	roc
@@ -2984,76 +2988,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1740 bit 8 */
-	bool unusedBit_502_8 : 1 {};
+	bool unusedBit_503_8 : 1 {};
 	/**
 	offset 1740 bit 9 */
-	bool unusedBit_502_9 : 1 {};
+	bool unusedBit_503_9 : 1 {};
 	/**
 	offset 1740 bit 10 */
-	bool unusedBit_502_10 : 1 {};
+	bool unusedBit_503_10 : 1 {};
 	/**
 	offset 1740 bit 11 */
-	bool unusedBit_502_11 : 1 {};
+	bool unusedBit_503_11 : 1 {};
 	/**
 	offset 1740 bit 12 */
-	bool unusedBit_502_12 : 1 {};
+	bool unusedBit_503_12 : 1 {};
 	/**
 	offset 1740 bit 13 */
-	bool unusedBit_502_13 : 1 {};
+	bool unusedBit_503_13 : 1 {};
 	/**
 	offset 1740 bit 14 */
-	bool unusedBit_502_14 : 1 {};
+	bool unusedBit_503_14 : 1 {};
 	/**
 	offset 1740 bit 15 */
-	bool unusedBit_502_15 : 1 {};
+	bool unusedBit_503_15 : 1 {};
 	/**
 	offset 1740 bit 16 */
-	bool unusedBit_502_16 : 1 {};
+	bool unusedBit_503_16 : 1 {};
 	/**
 	offset 1740 bit 17 */
-	bool unusedBit_502_17 : 1 {};
+	bool unusedBit_503_17 : 1 {};
 	/**
 	offset 1740 bit 18 */
-	bool unusedBit_502_18 : 1 {};
+	bool unusedBit_503_18 : 1 {};
 	/**
 	offset 1740 bit 19 */
-	bool unusedBit_502_19 : 1 {};
+	bool unusedBit_503_19 : 1 {};
 	/**
 	offset 1740 bit 20 */
-	bool unusedBit_502_20 : 1 {};
+	bool unusedBit_503_20 : 1 {};
 	/**
 	offset 1740 bit 21 */
-	bool unusedBit_502_21 : 1 {};
+	bool unusedBit_503_21 : 1 {};
 	/**
 	offset 1740 bit 22 */
-	bool unusedBit_502_22 : 1 {};
+	bool unusedBit_503_22 : 1 {};
 	/**
 	offset 1740 bit 23 */
-	bool unusedBit_502_23 : 1 {};
+	bool unusedBit_503_23 : 1 {};
 	/**
 	offset 1740 bit 24 */
-	bool unusedBit_502_24 : 1 {};
+	bool unusedBit_503_24 : 1 {};
 	/**
 	offset 1740 bit 25 */
-	bool unusedBit_502_25 : 1 {};
+	bool unusedBit_503_25 : 1 {};
 	/**
 	offset 1740 bit 26 */
-	bool unusedBit_502_26 : 1 {};
+	bool unusedBit_503_26 : 1 {};
 	/**
 	offset 1740 bit 27 */
-	bool unusedBit_502_27 : 1 {};
+	bool unusedBit_503_27 : 1 {};
 	/**
 	offset 1740 bit 28 */
-	bool unusedBit_502_28 : 1 {};
+	bool unusedBit_503_28 : 1 {};
 	/**
 	offset 1740 bit 29 */
-	bool unusedBit_502_29 : 1 {};
+	bool unusedBit_503_29 : 1 {};
 	/**
 	offset 1740 bit 30 */
-	bool unusedBit_502_30 : 1 {};
+	bool unusedBit_503_30 : 1 {};
 	/**
 	offset 1740 bit 31 */
-	bool unusedBit_502_31 : 1 {};
+	bool unusedBit_503_31 : 1 {};
 	/**
 	ms
 	 * offset 1744
@@ -4474,4 +4478,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:57 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 23 20:40:50 UTC 2022
