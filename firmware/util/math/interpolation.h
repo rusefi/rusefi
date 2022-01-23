@@ -219,13 +219,3 @@ void setCurveValue(const kType bins[], VType values[], int size, float key, floa
 }
 
 void initInterpolation();
-
-class FastInterpolation {
-public:
-	FastInterpolation();
-	FastInterpolation(float x1, float y1, float x2, float y2);
-	void init(float x1, float y1, float x2, float y2);
-	float getValue(float x) const;
-private:
-	float a, b;
-};
