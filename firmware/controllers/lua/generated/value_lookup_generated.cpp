@@ -646,8 +646,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->afterCrankingIACtaperDuration;
 	if (strEqualCaseInsensitive(name, "iacByTpsTaper"))
 		return engineConfiguration->iacByTpsTaper;
-	if (strEqualCaseInsensitive(name, "tpsAccelLength"))
-		return engineConfiguration->tpsAccelLength;
+	if (strEqualCaseInsensitive(name, "tpsAccelLookback"))
+		return engineConfiguration->tpsAccelLookback;
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
 		return engineConfiguration->tpsAccelEnrichmentThreshold;
 	if (strEqualCaseInsensitive(name, "engineLoadAccelLength"))
@@ -2530,9 +2530,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->iacByTpsTaper = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tpsAccelLength"))
+	if (strEqualCaseInsensitive(name, "tpsAccelLookback"))
 	{
-		engineConfiguration->tpsAccelLength = (int)value;
+		engineConfiguration->tpsAccelLookback = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
