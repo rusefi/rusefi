@@ -231,7 +231,6 @@ void setDefaultFuel() {
 	// Decel fuel cut
 	setDefaultFuelCutParameters();
 
-	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 
 #if !EFI_UNIT_TEST
