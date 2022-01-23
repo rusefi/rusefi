@@ -8,9 +8,9 @@ const CANConfig canConfig500 =
 {
     CAN_MCR_ABOM | CAN_MCR_AWUM | CAN_MCR_TXFP,
     /*
-     For 24MHz http://www.bittiming.can-wiki.info/ gives us Pre-scaler=3, Seq 1=13 and Seq 2=2. Subtract '1' for register values
+     For 36MHz http://www.bittiming.can-wiki.info/ gives us Pre-scaler=4, Seq 1=15 and Seq 2=2. Subtract '1' for register values
     */
-    CAN_BTR_SJW(0) | CAN_BTR_BRP(2)  | CAN_BTR_TS1(12) | CAN_BTR_TS2(1),
+    CAN_BTR_SJW(0) | CAN_BTR_BRP(3)  | CAN_BTR_TS1(13) | CAN_BTR_TS2(1),
 };
 
 
@@ -24,10 +24,13 @@ void SendSomething()
         CANTxFrame m_frame;
 
 	    m_frame.IDE = CAN_IDE_STD;
-	    m_frame.EID = baseAddress;
+	    m_frame.EID = 0;
+	    m_frame.SID = baseAddress;
 	    m_frame.RTR = CAN_RTR_DATA;
 	    m_frame.DLC = 8;
 	    memset(m_frame.data8, 0, sizeof(m_frame.data8));
+	    m_frame.data8[3] = 0x33;
+	    m_frame.data8[6] = 0x66;
 
     	canTransmitTimeout(&CAND1, CAN_ANY_MAILBOX, &m_frame, TIME_IMMEDIATE);
     }
