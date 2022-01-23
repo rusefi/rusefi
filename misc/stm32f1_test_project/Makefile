@@ -127,7 +127,9 @@ CSRC = $(ALLCSRC)
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
-          main.cpp \
+        main.cpp \
+	spi.cpp \
+	can.cpp \
 	uart.cpp
 
 # List ASM source files here.
