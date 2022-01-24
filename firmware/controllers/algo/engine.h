@@ -36,6 +36,7 @@
 #include "boost_control.h"
 #include "ignition_controller.h"
 #include "alternator_controller.h"
+#include "dfco.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -182,6 +183,7 @@ public:
 		IgnitionController,
 		AcController,
 		PrimeController,
+		DfcoController,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
