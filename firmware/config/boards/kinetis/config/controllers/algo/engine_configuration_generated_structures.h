@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 23 20:40:42 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 24 12:36:19 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2855,7 +2855,7 @@ struct engine_configuration_s {
 	sec
 	 * offset 1688
 	 */
-	uint8_t tpsAccelLookback;
+	scaled_channel<uint8_t, 20, 1> tpsAccelLookback;
 	/**
 	 * offset 1689
 	 */
@@ -4472,4 +4472,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 23 20:40:42 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 24 12:36:19 UTC 2022
