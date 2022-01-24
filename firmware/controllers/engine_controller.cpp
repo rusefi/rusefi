@@ -635,7 +635,6 @@ bool validateConfig() {
 			continue;
 		}
 		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
-		ensureArrayIsAscending("VR values", cfg.values);
 	}
 
 	// Boost
