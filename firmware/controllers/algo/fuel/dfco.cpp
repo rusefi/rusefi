@@ -6,7 +6,7 @@ bool DfcoController::getState() const {
 	}
 
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
-	const auto [tpsValid, tpsPos] = Sensor::get(SensorType::Tps1);
+	const auto [tpsValid, tpsPos] = Sensor::get(SensorType::DriverThrottleIntent);
 	const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 	const auto [mapValid, map] = Sensor::get(SensorType::Map);
 
