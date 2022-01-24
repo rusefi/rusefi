@@ -354,6 +354,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.launchCombinedConditions;
 	if (strEqualCaseInsensitive(name, "launchActivatePinState"))
 		return engine->outputChannels.launchActivatePinState;
+	if (strEqualCaseInsensitive(name, "dfcoActive"))
+		return engine->outputChannels.dfcoActive;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
 	if (strEqualCaseInsensitive(name, "boostControllerOutput"))
