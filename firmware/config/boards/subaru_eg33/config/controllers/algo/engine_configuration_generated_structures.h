@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 24 12:36:22 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 24 19:31:17 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3556,7 +3556,7 @@ struct engine_configuration_s {
 	 */
 	int16_t coastingFuelCutRpmLow;
 	/**
-	 * Throttle position below which fuel cut is active.
+	 * Throttle position below which fuel cut is active. With an electronic throttle enabled, this checks against pedal position.
 	%
 	 * offset 2744
 	 */
@@ -4478,4 +4478,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 24 12:36:22 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 24 19:31:17 UTC 2022
