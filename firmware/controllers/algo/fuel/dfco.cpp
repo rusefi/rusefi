@@ -38,7 +38,7 @@ bool DfcoController::getState() const {
 	return m_isDfco;
 }
 
-void DfcoController::onFastCallback() {
+void DfcoController::update() {
 	// Run state machine
 	m_isDfco = getState();
 }

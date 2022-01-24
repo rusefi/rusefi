@@ -652,13 +652,13 @@ void Engine::periodicFastCallback() {
 	refreshMapAveragingPreCalc();
 #endif
 
-	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
-
 	engineState.periodicFastCallback();
 
 	knockController.periodicFastCallback();
 
 	tachSignalCallback();
+
+	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
 }
 
 void doScheduleStopEngine() {

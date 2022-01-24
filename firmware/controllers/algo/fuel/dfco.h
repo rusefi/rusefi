@@ -2,7 +2,7 @@
 
 class DfcoController : public EngineModule {
 public:
-	void onFastCallback() override;
+	void update();
 
 	bool cutFuel() const;
 
