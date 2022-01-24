@@ -287,6 +287,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	bit launchIsLaunchCondition;
 	bit launchCombinedConditions
 	bit launchActivatePinState
+	bit dfcoActive
 
     uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
     uint8_t boostControllerOutput;;"", 1, 0, -10000, 10000, 0
