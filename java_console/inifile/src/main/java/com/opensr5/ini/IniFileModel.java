@@ -83,7 +83,7 @@ public class IniFileModel {
             return null;
         log.info("Searching for " + prefix + "*" + suffix + " in " + fileDirectory);
         for (String file : dir.list()) {
-            if (file.contains(' '))
+            if (file.contains(" "))
                 continue; // spaces not acceptable
             if (file.startsWith(prefix) && file.endsWith(suffix))
                 return fileDirectory + File.separator + file;
