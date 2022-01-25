@@ -22,6 +22,8 @@ import java.awt.event.ActionListener;
  * @see LiveDataParserPanel
  */
 public class LiveDataPane {
+    public static final String CPP_SUFFIX = ".cpp";
+
     /**
      * this is the panel we expose to the outside world
      */
@@ -38,7 +40,7 @@ public class LiveDataPane {
 
         JPanel leftList = new JPanel(new VerticalFlowLayout());
         for (live_data_e view : live_data_e.values()) {
-            String fileName = StateDictionary.INSTANCE.getFileName(view);
+            String fileName = StateDictionary.INSTANCE.getFileName(view) + CPP_SUFFIX;
             Field[] values = StateDictionary.INSTANCE.getFields(view);
             JPanel liveDataParserContent = LiveDataParserPanel.createLiveDataParserPanel(uiContext, view, values, fileName).getContent();
 

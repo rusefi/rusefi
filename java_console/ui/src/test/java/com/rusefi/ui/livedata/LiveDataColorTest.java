@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static com.rusefi.livedata.LiveDataParserPanel.getContentOrNull;
+import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -20,7 +21,7 @@ public class LiveDataColorTest {
     public void testAllFiles() throws IOException, URISyntaxException {
         int counter = 0;
         for (live_data_e view : live_data_e.values()) {
-            String fileName = StateDictionary.INSTANCE.getFileName(view);
+            String fileName = StateDictionary.INSTANCE.getFileName(view) + CPP_SUFFIX;
 
             try {
                 testSpecificFile(fileName);

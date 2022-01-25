@@ -5,6 +5,8 @@ import com.rusefi.config.generated.*;
 import com.rusefi.enums.live_data_e;
 import com.rusefi.ldmp.StateDictionary;
 
+import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
+
 /**
  * todo: kill this legacy class?
  * @see StateDictionary
@@ -28,7 +30,7 @@ public enum LiveDataView {
     LiveDataView(live_data_e liveDataE, Field[] values) {
         this.liveDataE = liveDataE;
         this.values = values;
-        this.fileName = StateDictionary.INSTANCE.getFileName(liveDataE);
+        this.fileName = StateDictionary.INSTANCE.getFileName(liveDataE) + CPP_SUFFIX;
     }
 
     public live_data_e getLiveDataE() {
