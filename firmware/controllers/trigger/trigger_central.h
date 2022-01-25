@@ -76,7 +76,6 @@ public:
 	}
 
 	bool engineMovedRecently(efitick_t nowNt) const {
-/*
 		constexpr float oneRevolutionLimitInSeconds = 60.0 / RPM_LOW_THRESHOLD;
 		auto maxAverageToothTime = oneRevolutionLimitInSeconds / triggerShape.getSize();
 
@@ -86,9 +85,7 @@ public:
 		// Clamp between 0.1 seconds ("instant" for a human) and worst case of one engine cycle on low tooth count wheel
 		maxAllowedGap = clampF(0.1f, maxAllowedGap, oneRevolutionLimitInSeconds);
 
-		return getSecondsSinceTriggerEvent(nowNt) < maxAverageToothTime;
-*/
-		return getSecondsSinceTriggerEvent(nowNt) < 1;
+		return getSecondsSinceTriggerEvent(nowNt) < maxAllowedGap;
 	}
 
 	bool engineMovedRecently() const {
