@@ -1,9 +1,10 @@
 package com.rusefi.ui.livedata;
 
 import com.rusefi.CodeWalkthrough;
+import com.rusefi.enums.live_data_e;
+import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.livedata.LiveDataParserSandbox;
-import com.rusefi.livedata.LiveDataView;
 import com.rusefi.livedata.ParseResult;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static com.rusefi.CodeWalkthrough.TRUE_CONDITION;
+import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -91,7 +93,8 @@ public class LiveDataParserTest {
 
     @Test
     public void testConfigurationInRealSourceCode() throws IOException, URISyntaxException {
-        String sourceCode = LiveDataParserPanel.getContent(LiveDataParserPanel.class, LiveDataView.BOOST_CONTROL.getFileName());
+        String fileName = StateDictionary.INSTANCE.getFileName(live_data_e.LDS_boost_control);
+        String sourceCode = LiveDataParserPanel.getContent(LiveDataParserPanel.class, fileName + CPP_SUFFIX);
         assertTrue(sourceCode.length() > 100);
 
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
