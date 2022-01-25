@@ -2419,7 +2419,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.24.hellen_cypress.2530820142"
+#define TS_SIGNATURE "rusEFI 2022.01.25.hellen_cypress.2530820142"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
