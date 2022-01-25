@@ -198,7 +198,7 @@ pins:
     id: [GPIOA_4, EFI_ADC_4]
     class: [switch_inputs, analog_inputs]
     color: light blue left
-    ts_name: 28 - AN volt 10
+    ts_name: 28 - AN volt 10, Aux Reuse
     type: av
 
   - id: GPIOA_4
@@ -241,7 +241,7 @@ pins:
     id: [GPIOC_4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     color: pink
-    function: External wideband O2 sensor WBO AFR EGO
+    function: External wideband O2 sensor WBO AFR EGO, Aux Reuse
     ts_name: 32 - AN volt 6
     type: av
 
@@ -281,7 +281,7 @@ pins:
     id: [GPIOB_0, EFI_ADC_8]
     class: [switch_inputs, analog_inputs]
     color: orange left    
-    ts_name: 36 - AN volt 8
+    ts_name: 36 - AN volt 8, Aux Reuse
     type: av
 
   - id: GPIOB_0
@@ -313,7 +313,7 @@ pins:
     id: [GPIOB_1, EFI_ADC_9]
     class: [switch_inputs, analog_inputs]
     color: grey
-    ts_name: 40 - AN volt 9
+    ts_name: 40 - AN volt 9, Aux Reuse
     type: av
 
   - id: GPIOB_1
