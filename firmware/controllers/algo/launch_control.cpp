@@ -21,8 +21,11 @@
  * In case we are dependent on VSS we just return true.
  */
 bool LaunchControlBase::isInsideSwitchCondition() {
-	switch (engineConfiguration->launchActivationMode) {
-	case SWITCH_INPUT_LAUNCH:
+	isSwitchActivated = engineConfiguration->launchActivationMode == SWITCH_INPUT_LAUNCH;
+	isClutchActivated = engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH;
+
+
+	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
 		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {
 			//todo: we should take into consideration if this sw is pulled high or low!
@@ -30,15 +33,13 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 		}
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
-
-	case CLUTCH_INPUT_LAUNCH:
+	} else if (isClutchActivated) {
 		if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
 			return engine->clutchDownState;
 		} else {
 			return false;
 		}
-		
-	default:
+	} else {
 		// ALWAYS_ACTIVE_LAUNCH
 		return true;
 	}
