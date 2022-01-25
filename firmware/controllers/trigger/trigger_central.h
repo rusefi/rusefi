@@ -76,6 +76,7 @@ public:
 	}
 
 	bool engineMovedRecently(efitick_t nowNt) const {
+/*
 		constexpr float oneRevolutionLimitInSeconds = 60.0 / RPM_LOW_THRESHOLD;
 		auto maxAverageToothTime = oneRevolutionLimitInSeconds / triggerShape.getSize();
 
@@ -86,6 +87,8 @@ public:
 		maxAllowedGap = clampF(0.1f, maxAllowedGap, oneRevolutionLimitInSeconds);
 
 		return getSecondsSinceTriggerEvent(nowNt) < maxAverageToothTime;
+*/
+		return getSecondsSinceTriggerEvent(nowNt) < 1;
 	}
 
 	bool engineMovedRecently() const {
