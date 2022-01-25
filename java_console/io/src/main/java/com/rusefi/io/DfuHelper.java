@@ -10,6 +10,7 @@ import com.rusefi.ui.StatusConsumer;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
@@ -40,23 +41,30 @@ public class DfuHelper {
             }
 
             if (!bundleName.equalsIgnoreCase(signatureWithPrefix)) {
-                String message = String.format("You have \"%s\" controller does not look right to program it with \"%s\"", s.getBundle(), bundleName);
+                String message = String.format("Your ECU has firmware reporting as: \"%s\"\nThis console will flash it with firmware: \"%s\"\nThis looks wrong, like you have downloaded the wrong bundle for your hardware.\nDo you want to attempt to flash this firmware anyway?\nWARNING: doing this may render your ECU inoperable. Proceed with caution!", s.getBundle(), bundleName);
                 FileLog.MAIN.logLine(message);
 
+                boolean shouldContinue = false;
+                CountDownLatch latch = new CountDownLatch(1);
+
                 SwingUtilities.invokeLater(() -> {
-                    JOptionPane.showMessageDialog(parent, message);
-                    // in case of mismatched bundle type we are supposed do close connection
-                    // and properly handle the case of user hitting "Update Firmware" again
-                    // closing connection is a mess on Windows so it's simpler to just exit
-                    new Thread(() -> {
-                        // let's have a delay and separate thread to address
-                        // "wrong bundle" warning text sometimes not visible #3267
-                        sleep(5 * SECOND);
-                        System.exit(-5);
-                    }).start();
+                    int result = JOptionPane.showConfirmDialog(parent, message, "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+
+                    // Any option other than explicit YES should not continue
+                    shouldContinue = result == JOptionPane.YES_OPTION;
                 });
 
-                return false;
+                // wait for the user to pick an option
+                latch.await();
+
+                // in case of mismatched bundle type we are supposed do close connection
+                // and properly handle the case of user hitting "Update Firmware" again
+                // closing connection is a mess on Windows so it's simpler to just exit
+                if (!shouldContinue) {
+                    System.exit(-5);
+                }
+
+                return shouldContinue;
             }
         }
 
