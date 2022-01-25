@@ -20,6 +20,9 @@ import java.util.Stack;
 
 import static com.devexperts.logging.Logging.getLogging;
 
+/**
+ * see PrintCPP14ParserListener
+ */
 public class CodeWalkthrough {
     private static final Logging log = getLogging(CodeWalkthrough.class);
     // active statements - light green
@@ -43,11 +46,14 @@ public class CodeWalkthrough {
 
         java.util.List<TerminalNode> allTerminals = new java.util.ArrayList<>();
 
+        java.util.List<CPP14Parser.DeclaratorContext> functions = new ArrayList<>();
+
         new ParseTreeWalker().walk(new CPP14ParserBaseListener() {
             @Override
             public void enterFunctionDefinition(CPP14Parser.FunctionDefinitionContext ctx) {
                 // new method is starting new all over
                 resetState(currentState);
+                functions.add(ctx.declarator());
             }
 
             @Override

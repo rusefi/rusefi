@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * @see LiveDataParserPanel
+ * See LiveDataPaneSandbox
  */
 public class LiveDataPane {
     public static final String CPP_SUFFIX = ".cpp";

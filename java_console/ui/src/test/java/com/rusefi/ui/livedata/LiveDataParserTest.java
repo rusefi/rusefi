@@ -84,11 +84,15 @@ public class LiveDataParserTest {
         SourceCodePainter painter = mock(SourceCodePainter.class);
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
 
+        printTree(tree);
+        CodeWalkthrough.applyVariables(valueSource, sourceCode, painter, tree);
+        return painter;
+    }
+
+    private static void printTree(ParseTree tree) {
         System.out.println("******************************************* Just print everything for educational purposes");
         new ParseTreeWalker().walk(new PrintCPP14ParserListener(), tree);
         System.out.println("******************************************* Now running FOR REAL");
-        CodeWalkthrough.applyVariables(valueSource, sourceCode, painter, tree);
-        return painter;
     }
 
     @Test
@@ -98,6 +102,7 @@ public class LiveDataParserTest {
         assertTrue(sourceCode.length() > 100);
 
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
+        LiveDataParserTest.printTree(tree);
         ParseResult parseResult = CodeWalkthrough.applyVariables(VariableValueSource.VOID, sourceCode, SourceCodePainter.VOID, tree);
         assertFalse(parseResult.getConfigTokens().isEmpty());
     }
