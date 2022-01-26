@@ -1,4 +1,4 @@
-name: FW
+name: Firmware at GHA
 
 on: [push, pull_request, workflow_dispatch]
 
