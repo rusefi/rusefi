@@ -25,7 +25,7 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## January 2022 Release - "Tin Can"
+## January 2022 Release - "Green Juice"
 
 ### Added
  - Per-cylinder fuel trim tables
