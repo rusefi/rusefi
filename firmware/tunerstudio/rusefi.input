@@ -1236,6 +1236,7 @@ gaugeCategory = DynoView
 	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
 	indicator = { isIdleCoasting }, "not coasting", "coasting", white, black, green, black
 	indicator = { dfcoActive }, "no decel cut", "decel cut", white, black, yellow, black
+	indicator = { tpsAccelActive }, "no TPS accel", "TPS accel active", white, black, yellow, black
 
     ; error codes
     indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
