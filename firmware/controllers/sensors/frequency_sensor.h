@@ -1,5 +1,6 @@
 #include "functional_sensor.h"
 #include "timer.h"
+#include "biquad.h"
 
 class FrequencySensor : public FunctionalSensor {
 public:
