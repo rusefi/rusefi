@@ -237,8 +237,8 @@ pins:
     id: [GPIOC_4, GPIOC_4, EFI_ADC_14]
     class: [outputs, switch_inputs, analog_inputs]
     color: pink
-    function: External wideband O2 sensor WBO AFR EGO, Aux Reuse
-    ts_name: 32 - AN volt 6
+    function: External wideband O2 sensor WBO AFR EGO
+    ts_name: 32 - AN volt 6, Aux Reuse
     type: av
 
   # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT23
