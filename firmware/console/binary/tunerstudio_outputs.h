@@ -20,21 +20,6 @@
 #define WITH_TS_STATE TRUE
 #endif
 
-enum class TsCalMode : uint8_t {
-	None = 0,
-	Tps1Max = 1,
-	Tps1Min = 2,
-	EtbKp = 3,
-	EtbKi = 4,
-	EtbKd = 5,
-	Tps1SecondaryMax = 6,
-	Tps1SecondaryMin = 7,
-	Tps2Max = 8,
-	Tps2Min = 9,
-	Tps2SecondaryMax = 10,
-	Tps2SecondaryMin = 11,
-};
-
 /**
  * todo https://github.com/rusefi/rusefi/issues/197
  * three locations have to be changed manually
