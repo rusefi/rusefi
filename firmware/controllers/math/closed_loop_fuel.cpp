@@ -85,7 +85,7 @@ bool shouldUpdateCorrection(SensorType sensor) {
 
 	// Pause correction if DFCO was active recently
 	auto timeSinceDfco = engine->module<DfcoController>()->getTimeSinceCut();
-	if (timeSinceDfco > engineConfiguration->noFuelTrimAfterDfcoTime) {
+	if (timeSinceDfco < engineConfiguration->noFuelTrimAfterDfcoTime) {
 		return false;
 	}
 
