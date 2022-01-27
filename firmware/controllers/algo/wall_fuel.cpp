@@ -44,12 +44,12 @@ float WallFuel::adjust(float desiredMassGrams) {
 	*/
 
 	// If disabled, pass value through
-	if (!engine->module<WallFuelController>()->m_enable) {
+	if (!engine->module<WallFuelController>()->getEnable()) {
 		return desiredMassGrams;
 	}
 
-	float alpha = engine->module<WallFuelController>()->m_alpha;
-	float beta = engine->module<WallFuelController>()->m_beta;
+	float alpha = engine->module<WallFuelController>()->getAlpha();
+	float beta = engine->module<WallFuelController>()->getBeta();
 
 	float fuelFilmMass = wallFuel;
 	float M_cmd = (desiredMassGrams - (1 - alpha) * fuelFilmMass) / (1 - beta);
@@ -86,19 +86,26 @@ float WallFuel::getWallFuel() const {
 	return wallFuel;
 }
 
+/*
+	TODO: these parameters, tau and beta vary with various engine parameters,
+	most notably manifold pressure (as a proxy for air speed), and coolant
+	temperature (as a proxy for the intake valve and runner temperature).
+
+	TAU: decreases with increasing temperature.
+		decreases with decreasing manifold pressure.
+
+	BETA: decreases with increasing temperature.
+		decreases with decreasing manifold pressure.
+*/
+float WallFuelController::computeTau() const {
+	return engineConfiguration->wwaeTau;
+}
+
+float WallFuelController::computeBeta() const {
+	return engineConfiguration->wwaeBeta;
+}
+
 void WallFuelController::onFastCallback() {
-	/*
-		TODO: these parameters, tau and beta vary with various engine parameters,
-		most notably manifold pressure (as a proxy for air speed), and coolant
-		temperature (as a proxy for the intake valve and runner temperature).
-
-		TAU: decreases with increasing temperature.
-		     decreases with decreasing manifold pressure.
-
-		BETA: decreases with increasing temperature.
-		     decreases with decreasing manifold pressure.
-	*/
-
 	// disable wall wetting cranking
 	// TODO: is this correct? Why not correct for cranking?
 	if (engine->rpmCalculator.isCranking()) {
@@ -106,9 +113,8 @@ void WallFuelController::onFastCallback() {
 		return;
 	}
 
-	float tau = engineConfiguration->wwaeTau;
-	float beta = engineConfiguration->wwaeBeta;
-	auto rpm = Sensor::getOrZero(SensorType::Rpm);
+	float tau = computeTau();
+	float beta = computeBeta();
 
 	// if tau or beta is really small, we get div/0.
 	// you probably meant to disable wwae.
@@ -116,6 +122,8 @@ void WallFuelController::onFastCallback() {
 		m_enable = false;
 		return;
 	}
+
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	// Ignore low RPM
 	if (rpm < 100) {
@@ -137,7 +145,6 @@ void WallFuelController::onFastCallback() {
 	m_alpha = alpha;
 	m_beta = beta;
 	m_enable = true;
-
 
 #if EFI_TUNER_STUDIO
 	// TODO: why DBG_KNOCK? That seems wrong.

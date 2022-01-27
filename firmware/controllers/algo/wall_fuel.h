@@ -21,12 +21,31 @@ public:
 	int invocationCounter = 0;
 };
 
-class WallFuelController : public EngineModule {
+struct IWallFuelController {
+	virtual bool getEnable() const = 0;
+	virtual float getAlpha() const = 0;
+	virtual float getBeta() const = 0;
+};
+
+class WallFuelController : public IWallFuelController, public EngineModule {
 public:
 	void onFastCallback() override;
 
-	// allow WallFuel to peek inside
-	friend class WallFuel;
+	bool getEnable() const override {
+		return m_enable;
+	}
+
+	float getAlpha() const override {
+		return m_alpha;
+	}
+
+	float getBeta() const override {
+		return m_beta;
+	}
+
+protected:
+	float computeTau() const;
+	float computeBeta() const;
 
 private:
 	bool m_enable = false;
