@@ -277,8 +277,11 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale rawMap;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t autoscale rawAfr;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
+	uint8_t tpsAccelFrom;;"%", 1, 0, 0, 100, 0
+	uint8_t tpsAccelTo;;"%", 1, 0, 0, 100, 0
+
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[98 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[96 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition
@@ -288,6 +291,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	bit launchCombinedConditions
 	bit launchActivatePinState
 	bit dfcoActive
+	bit tpsAccelActive
 
     uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
     uint8_t boostControllerOutput;;"", 1, 0, -10000, 10000, 0
