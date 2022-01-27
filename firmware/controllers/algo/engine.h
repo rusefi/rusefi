@@ -184,6 +184,7 @@ public:
 		AcController,
 		PrimeController,
 		DfcoController,
+		Mockable<WallFuelController>,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
