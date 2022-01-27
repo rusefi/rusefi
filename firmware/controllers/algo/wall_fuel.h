@@ -29,6 +29,8 @@ struct IWallFuelController {
 
 class WallFuelController : public IWallFuelController, public EngineModule {
 public:
+	using interface_t = IWallFuelController;
+
 	void onFastCallback() override;
 
 	bool getEnable() const override {
