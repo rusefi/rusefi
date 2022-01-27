@@ -1896,7 +1896,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 825032291
+#define SIGNATURE_HASH 2805731995
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2421,11 +2421,23 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.27.all.825032291"
+#define TS_SIGNATURE "rusEFI 2022.01.27.all.2805731995"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
+#define TsCalMode_EtbKd 5
+#define TsCalMode_EtbKi 4
+#define TsCalMode_EtbKp 3
+#define TsCalMode_None 0
+#define TsCalMode_Tps1Max 1
+#define TsCalMode_Tps1Min 2
+#define TsCalMode_Tps1SecondaryMax 6
+#define TsCalMode_Tps1SecondaryMin 7
+#define TsCalMode_Tps2Max 8
+#define TsCalMode_Tps2Min 9
+#define TsCalMode_Tps2SecondaryMax 10
+#define TsCalMode_Tps2SecondaryMin 11
 #define tunerStudioSerialSpeed_offset 732
 #define turboSpeedSensorInputPin_offset 1527
 #define turboSpeedSensorMultiplier_offset 1280

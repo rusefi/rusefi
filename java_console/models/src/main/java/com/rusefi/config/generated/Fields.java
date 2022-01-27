@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 27 19:25:56 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 27 22:58:12 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1824,7 +1824,6 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 825032291;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2294,9 +2293,21 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.27.all.825032291";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.27.all.2805731995";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
+	public static final int TsCalMode_EtbKd = 5;
+	public static final int TsCalMode_EtbKi = 4;
+	public static final int TsCalMode_EtbKp = 3;
+	public static final int TsCalMode_None = 0;
+	public static final int TsCalMode_Tps1Max = 1;
+	public static final int TsCalMode_Tps1Min = 2;
+	public static final int TsCalMode_Tps1SecondaryMax = 6;
+	public static final int TsCalMode_Tps1SecondaryMin = 7;
+	public static final int TsCalMode_Tps2Max = 8;
+	public static final int TsCalMode_Tps2Min = 9;
+	public static final int TsCalMode_Tps2SecondaryMax = 10;
+	public static final int TsCalMode_Tps2SecondaryMin = 11;
 	public static final int tunerStudioSerialSpeed_offset = 732;
 	public static final int turboSpeedSensorInputPin_offset = 1527;
 	public static final int turboSpeedSensorMultiplier_offset = 1280;
