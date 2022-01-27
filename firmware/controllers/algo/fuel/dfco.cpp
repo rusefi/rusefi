@@ -5,7 +5,6 @@ bool DfcoController::getState() const {
 		return false;
 	}
 
-	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 	const auto [tpsValid, tpsPos] = Sensor::get(SensorType::DriverThrottleIntent);
 	const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
 	const auto [mapValid, map] = Sensor::get(SensorType::Map);
@@ -14,6 +13,9 @@ bool DfcoController::getState() const {
 	if (!tpsValid || !cltValid || !mapValid) {
 		return false;
 	}
+
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
+	float vss = Sensor::getOrZero(SensorType::VehicleSpeed);
 
 	bool mapActivate = map < engineConfiguration->coastingFuelCutMap;
 	bool tpsActivate = tpsPos < engineConfiguration->coastingFuelCutTps;
@@ -24,13 +26,16 @@ bool DfcoController::getState() const {
 	bool rpmActivate = (rpm > engineConfiguration->coastingFuelCutRpmHigh);
 	bool rpmDeactivate = (rpm < engineConfiguration->coastingFuelCutRpmLow);
 
-	// RPM is high enough, and DFCO allowed
-	if (dfcoAllowed && rpmActivate) {
+	bool vssActivate = (vss > engineConfiguration->coastingFuelCutVssHigh);
+	bool vssDeactivate = (vss < engineConfiguration->coastingFuelCutVssLow);
+
+	// RPM is high enough, VSS high enough, and DFCO allowed
+	if (dfcoAllowed && rpmActivate && vssActivate) {
 		return true;
 	}
 
-	// RPM too low, or DFCO not allowed
-	if (!dfcoAllowed || rpmDeactivate) {
+	// RPM too low, VSS too low, or DFCO not allowed
+	if (!dfcoAllowed || rpmDeactivate || vssDeactivate) {
 		return false;
 	}
 
