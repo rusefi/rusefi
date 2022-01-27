@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 27 22:58:12 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 27 23:43:13 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2300,6 +2300,8 @@ public class Fields {
 	public static final int TsCalMode_EtbKi = 4;
 	public static final int TsCalMode_EtbKp = 3;
 	public static final int TsCalMode_None = 0;
+	public static final int TsCalMode_PedalMax = 13;
+	public static final int TsCalMode_PedalMin = 12;
 	public static final int TsCalMode_Tps1Max = 1;
 	public static final int TsCalMode_Tps1Min = 2;
 	public static final int TsCalMode_Tps1SecondaryMax = 6;

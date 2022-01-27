@@ -2415,6 +2415,8 @@
 #define TsCalMode_EtbKi 4
 #define TsCalMode_EtbKp 3
 #define TsCalMode_None 0
+#define TsCalMode_PedalMax 13
+#define TsCalMode_PedalMin 12
 #define TsCalMode_Tps1Max 1
 #define TsCalMode_Tps1Min 2
 #define TsCalMode_Tps1SecondaryMax 6
