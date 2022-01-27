@@ -17,11 +17,6 @@ float WallFuel::adjust(float desiredMassGrams) {
 		return desiredMassGrams;
 	}
 
-	// disable this correction for cranking
-	if (engine->rpmCalculator.isCranking()) {
-		return desiredMassGrams;
-	}
-
 	ScopePerf perf(PE::WallFuelAdjust);
 
 	/*
@@ -46,49 +41,15 @@ float WallFuel::adjust(float desiredMassGrams) {
 		the time the fuel spent on the wall this cycle, (recriprocal RPM).
 
 		beta describes the amount of fuel that hits the wall.
-
-		TODO: these parameters, tau and beta vary with various engine parameters,
-		most notably manifold pressure (as a proxy for air speed), and coolant
-		temperature (as a proxy for the intake valve and runner temperature).
-
-		TAU: decreases with increasing temperature.
-		     decreases with decreasing manifold pressure.
-
-		BETA: decreases with increasing temperature.
-		     decreases with decreasing manifold pressure.
 	*/
 
-	// if tau or beta is really small, we get div/0.
-	// you probably meant to disable wwae.
-	float tau = engineConfiguration->wwaeTau;
-	float beta = engineConfiguration->wwaeBeta;
-
-	if (tau < 0.01f || beta < 0.01f) {
+	// If disabled, pass value through
+	if (!engine->module<WallFuelController>()->m_enable) {
 		return desiredMassGrams;
 	}
 
-	// Ignore really slow RPM
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
-	if (rpm < 100) {
-		return desiredMassGrams;
-	}
-
-	float alpha = expf_taylor(-120 / (rpm * tau));
-
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_KNOCK) {
-		engine->outputChannels.debugFloatField1 = alpha;
-		engine->outputChannels.debugFloatField2 = beta;
-	}
-#endif // EFI_TUNER_STUDIO
-
-	// If beta is larger than alpha, the system is underdamped.
-	// For reasonable values {tau, beta}, this should only be possible
-	// at extremely low engine speeds (<300rpm ish)
-	// Clamp beta to less than alpha.
-	if (beta > alpha) {
-		beta = alpha;
-	}
+	float alpha = engine->module<WallFuelController>()->m_alpha;
+	float beta = engine->module<WallFuelController>()->m_beta;
 
 	float fuelFilmMass = wallFuel;
 	float M_cmd = (desiredMassGrams - (1 - alpha) * fuelFilmMass) / (1 - beta);
@@ -123,4 +84,66 @@ float WallFuel::adjust(float desiredMassGrams) {
 
 float WallFuel::getWallFuel() const {
 	return wallFuel;
+}
+
+void WallFuelController::onFastCallback() {
+	/*
+		TODO: these parameters, tau and beta vary with various engine parameters,
+		most notably manifold pressure (as a proxy for air speed), and coolant
+		temperature (as a proxy for the intake valve and runner temperature).
+
+		TAU: decreases with increasing temperature.
+		     decreases with decreasing manifold pressure.
+
+		BETA: decreases with increasing temperature.
+		     decreases with decreasing manifold pressure.
+	*/
+
+	// disable wall wetting cranking
+	// TODO: is this correct? Why not correct for cranking?
+	if (engine->rpmCalculator.isCranking()) {
+		m_enable = false;
+		return;
+	}
+
+	float tau = engineConfiguration->wwaeTau;
+	float beta = engineConfiguration->wwaeBeta;
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
+
+	// if tau or beta is really small, we get div/0.
+	// you probably meant to disable wwae.
+	if (tau < 0.01f || beta < 0.01f) {
+		m_enable = false;
+		return;
+	}
+
+	// Ignore low RPM
+	if (rpm < 100) {
+		m_enable = false;
+		return;
+	}
+
+	float alpha = expf_taylor(-120 / (rpm * tau));
+
+	// If beta is larger than alpha, the system is underdamped.
+	// For reasonable values {tau, beta}, this should only be possible
+	// at extremely low engine speeds (<300rpm ish)
+	// Clamp beta to less than alpha.
+	if (beta > alpha) {
+		beta = alpha;
+	}
+
+	// Store parameters so the model can read them
+	m_alpha = alpha;
+	m_beta = beta;
+	m_enable = true;
+
+
+#if EFI_TUNER_STUDIO
+	// TODO: why DBG_KNOCK? That seems wrong.
+	if (engineConfiguration->debugMode == DBG_KNOCK) {
+		engine->outputChannels.debugFloatField1 = alpha;
+		engine->outputChannels.debugFloatField2 = beta;
+	}
+#endif // EFI_TUNER_STUDIO
 }

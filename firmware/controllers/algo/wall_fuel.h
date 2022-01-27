@@ -20,3 +20,16 @@ public:
 	void resetWF();
 	int invocationCounter = 0;
 };
+
+class WallFuelController : public EngineModule {
+public:
+	void onFastCallback() override;
+
+	// allow WallFuel to peek inside
+	friend class WallFuel;
+
+private:
+	bool m_enable = false;
+	float m_alpha = 0;
+	float m_beta = 0;
+};
