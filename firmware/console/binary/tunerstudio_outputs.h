@@ -12,7 +12,6 @@
 
 #include "rusefi_types.h"
 #include "scaled_channel.h"
-#include "tunerstudio_debug_struct.h"
 #include "ts_outputs_generated.h"
 
 #ifndef WITH_TS_STATE
@@ -31,10 +30,4 @@
  * see also [OutputChannels] in rusefi.input
  * see also TS_OUTPUT_SIZE in rusefi_config.txt
  */
-struct TunerStudioOutputChannels : ts_outputs_s {
-	// Temporary - will remove soon
-	TsDebugChannels* getDebugChannels() {
-		return reinterpret_cast<TsDebugChannels*>(&debugFloatField1);
-	}
-
-};
+struct TunerStudioOutputChannels : ts_outputs_s { };
