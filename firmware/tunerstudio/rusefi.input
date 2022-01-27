@@ -239,7 +239,7 @@ enable2ndByteCanID = false
 
 	; TPS 1 Primary
 	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
-	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
+	maintainConstantValue = tpsMin, { (calibrationMode == @@TsCalMode_Tps1Min@@ ) ? calibrationValue : tpsMin }
 
 	; TPS 1 Secondary
 	maintainConstantValue = tps1SecondaryMax, { (calibrationMode == 6 ) ? calibrationValue : tps1SecondaryMax }
