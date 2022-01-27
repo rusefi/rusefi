@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jan 04 03:36:48 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jan 27 22:57:18 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -41,6 +41,35 @@ case MINIMUM:
   return "MINIMUM";
 case NOT_A_PEAK:
   return "NOT_A_PEAK";
+  }
+ return NULL;
+}
+const char *getTsCalMode(TsCalMode value){
+switch(value) {
+case TsCalMode::EtbKd:
+  return "EtbKd";
+case TsCalMode::EtbKi:
+  return "EtbKi";
+case TsCalMode::EtbKp:
+  return "EtbKp";
+case TsCalMode::None:
+  return "None";
+case TsCalMode::Tps1Max:
+  return "Tps1Max";
+case TsCalMode::Tps1Min:
+  return "Tps1Min";
+case TsCalMode::Tps1SecondaryMax:
+  return "Tps1SecondaryMax";
+case TsCalMode::Tps1SecondaryMin:
+  return "Tps1SecondaryMin";
+case TsCalMode::Tps2Max:
+  return "Tps2Max";
+case TsCalMode::Tps2Min:
+  return "Tps2Min";
+case TsCalMode::Tps2SecondaryMax:
+  return "Tps2SecondaryMax";
+case TsCalMode::Tps2SecondaryMin:
+  return "Tps2SecondaryMin";
   }
  return NULL;
 }

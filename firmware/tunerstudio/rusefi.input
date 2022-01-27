@@ -239,7 +239,7 @@ enable2ndByteCanID = false
 
 	; TPS 1 Primary
 	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
-	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
+	maintainConstantValue = tpsMin, { (calibrationMode == @@TsCalMode_Tps1Min@@ ) ? calibrationValue : tpsMin }
 
 	; TPS 1 Secondary
 	maintainConstantValue = tps1SecondaryMax, { (calibrationMode == 6 ) ? calibrationValue : tps1SecondaryMax }
@@ -3669,8 +3669,10 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
 		field = "Enable Coasting Fuel Cutoff",			coastingFuelCutEnabled
 		field = "No cut below CLT",				coastingFuelCutClt, {coastingFuelCutEnabled == 1}
-		field = "Cut fuel above",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
-		field = "Restore fuel below",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
+		field = "RPM cut fuel above",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
+		field = "RPM restore fuel below",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
+		field = "Vehicle speed cut above",		coastingFuelCutVssHigh, {coastingFuelCutEnabled == 1}
+		field = "Vehicle speed restore below",	coastingFuelCutVssLow, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below TPS",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below MAP",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
 
