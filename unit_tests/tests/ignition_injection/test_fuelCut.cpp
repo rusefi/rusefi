@@ -100,5 +100,34 @@ TEST(fuelCut, coasting) {
 
 	// Fuel cut-off is active again!
 	EXPECT_CUT();
+
+	// Configure vehicle speed thresholds
+	engineConfiguration->coastingFuelCutVssHigh = 50;
+	engineConfiguration->coastingFuelCutVssLow = 40;
+
+	// High speed, should still be cut.
+	Sensor::setMockValue(SensorType::VehicleSpeed, 55);
+	eth.engine.periodicFastCallback();
+	EXPECT_CUT();
+
+	// Between thresholds, still cut.
+	Sensor::setMockValue(SensorType::VehicleSpeed, 45);
+	eth.engine.periodicFastCallback();
+	EXPECT_CUT();
+
+	// Below lower threshold, normal fuel resumes
+	Sensor::setMockValue(SensorType::VehicleSpeed, 35);
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+
+	// Between thresholds, still normal.
+	Sensor::setMockValue(SensorType::VehicleSpeed, 45);
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+
+	// Back above upper, cut again.
+	Sensor::setMockValue(SensorType::VehicleSpeed, 55);
+	eth.engine.periodicFastCallback();
+	EXPECT_CUT();
 }
 

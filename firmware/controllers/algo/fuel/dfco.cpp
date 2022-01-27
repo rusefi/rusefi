@@ -26,7 +26,8 @@ bool DfcoController::getState() const {
 	bool rpmActivate = (rpm > engineConfiguration->coastingFuelCutRpmHigh);
 	bool rpmDeactivate = (rpm < engineConfiguration->coastingFuelCutRpmLow);
 
-	bool vssActivate = (vss > engineConfiguration->coastingFuelCutVssHigh);
+	// greater than or equal so that it works if both config params are set to 0
+	bool vssActivate = (vss >= engineConfiguration->coastingFuelCutVssHigh);
 	bool vssDeactivate = (vss < engineConfiguration->coastingFuelCutVssLow);
 
 	// RPM is high enough, VSS high enough, and DFCO allowed
