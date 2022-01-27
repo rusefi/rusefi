@@ -612,6 +612,38 @@ enable2ndByteCanID = false
         xBins       = hpfpDeadtimeVoltsBins
         yBins       = hpfpDeadtimeMS
 
+	curve = wwTauCltCurve, "Evap time vs. CLT"
+		columnLabel = "coolant", "seconds"
+		xAxis       = -40, 120, 9
+		yAxis       = 0, 2, 9
+		xBins       = wwCltBins, coolant
+		yBins       = wwTauCltValues
+		gauge       = CLTGauge
+
+	curve = wwTauMapCurve, "Evap time vs. MAP"
+		columnLabel = "MAP", "mult"
+		xAxis       = 0, 100, 5
+		yAxis       = 0, 2, 9
+		xBins       = wwMapBins, MAPValue
+		yBins       = wwTauMapValues
+		gauge       = MAPGauge
+
+	curve = wwBetaCltCurve, "Impact fraction vs. CLT"
+		columnLabel = "coolant", "fraction"
+		xAxis       = -40, 120, 9
+		yAxis       = 0, 2, 9
+		xBins       = wwCltBins, coolant
+		yBins       = wwBetaCltValues
+		gauge       = CLTGauge
+
+	curve = wwBetaMapCurve, "Impact fraction vs. MAP"
+		columnLabel = "MAP", "mult"
+		xAxis       = 0, 100, 5
+		yAxis       = 0, 2, 9
+		xBins       = wwMapBins, MAPValue
+		yBins       = wwBetaMapValues
+		gauge       = MAPGauge
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -1346,6 +1378,9 @@ menuDialog = main
 		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
 		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
 
+		groupMenu = "Wall wetting AE"
+		groupChildMenu = wwTauCurves, "Evap time", 0, { complexWallModel != 0 }
+		groupChildMenu = wwBetaCurves, "Impact fraction", 0, { complexWallModel != 0 }
 
 	menu = "Ignition"
 		subMenu = ignitionSettings,			"Ignition settings"
@@ -3230,8 +3265,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fraction Divisor",				tpsAccelFractionDivisor
 		
 	dialog = WallWettingAccelPanel, "Wall Wetting (alpha version)"
-		field = "evaporation time constant / tau",          wwaeTau
-		field = "added to wall coef / beta",                   wwaeBeta
+		field = "Wall fueling model type",				complexWallModel
+		field = "evaporation time constant / tau",		wwaeTau, { complexWallModel == 0 }
+		field = "added to wall coef / beta",			wwaeBeta, { complexWallModel == 0 }
 	
 		
 ;			Tuning->AccelEnrichment
@@ -3241,6 +3277,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No accel after RPM hard limit",		noAccelAfterHardLimitPeriodSecs
 		
 		
+	dialog = wwTauCurves, "Wall wetting AE evaporation time"
+		field = "#Set a base evaporation time based on coolant temperature, and a multiplier based on MAP."
+		panel = wwTauCltCurve
+		panel = wwTauMapCurve
+
+	dialog = wwBetaCurves, "Wall wetting AE impact fraction"
+		field = "#Set a base impact fraction based on coolant temperature, and a multiplier based on MAP."
+		panel = wwBetaCltCurve
+		panel = wwBetaMapCurve
+
 	dialog = auxValvesIO, "Outputs"
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
