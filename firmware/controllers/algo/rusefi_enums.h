@@ -670,6 +670,8 @@ typedef enum __attribute__ ((__packed__)) {
 
 
 #if __cplusplus
+#include <cstdint>
+
 enum class TsCalMode : uint8_t {
 	None = 0,
 	Tps1Max = 1,
@@ -683,5 +685,7 @@ enum class TsCalMode : uint8_t {
 	Tps2Min = 9,
 	Tps2SecondaryMax = 10,
 	Tps2SecondaryMin = 11,
+	PedalMin = 12,
+	PedalMax = 13,
 };
 #endif // __cplusplus
