@@ -176,6 +176,10 @@ void TpsAccelEnrichment::onNewValue(float currentValue) {
 
 	// TODO: can deltaTps actually be negative? Will this ever trigger?
 	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
+
+	engine->outputChannels.tpsAccelActive = isAboveAccelThreshold;
+	engine->outputChannels.tpsAccelFrom = tpsFrom;
+	engine->outputChannels.tpsAccelTo = tpsTo;
 }
 
 TpsAccelEnrichment::TpsAccelEnrichment() {

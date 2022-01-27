@@ -86,17 +86,6 @@ float WallFuel::getWallFuel() const {
 	return wallFuel;
 }
 
-/*
-	TODO: these parameters, tau and beta vary with various engine parameters,
-	most notably manifold pressure (as a proxy for air speed), and coolant
-	temperature (as a proxy for the intake valve and runner temperature).
-
-	TAU: decreases with increasing temperature.
-		decreases with decreasing manifold pressure.
-
-	BETA: decreases with increasing temperature.
-		decreases with decreasing manifold pressure.
-*/
 float WallFuelController::computeTau() const {
 	if (!engineConfiguration->complexWallModel) {
 		return engineConfiguration->wwaeTau;

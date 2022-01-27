@@ -340,6 +340,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.rawMap;
 	if (strEqualCaseInsensitive(name, "rawAfr"))
 		return engine->outputChannels.rawAfr;
+	if (strEqualCaseInsensitive(name, "tpsAccelFrom"))
+		return engine->outputChannels.tpsAccelFrom;
+	if (strEqualCaseInsensitive(name, "tpsAccelTo"))
+		return engine->outputChannels.tpsAccelTo;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
@@ -356,6 +360,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.launchActivatePinState;
 	if (strEqualCaseInsensitive(name, "dfcoActive"))
 		return engine->outputChannels.dfcoActive;
+	if (strEqualCaseInsensitive(name, "tpsAccelActive"))
+		return engine->outputChannels.tpsAccelActive;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
 	if (strEqualCaseInsensitive(name, "boostControllerOutput"))
