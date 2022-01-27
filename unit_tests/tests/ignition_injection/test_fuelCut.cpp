@@ -50,22 +50,26 @@ TEST(fuelCut, coasting) {
 	// process
 	eth.engine.periodicFastCallback();
 
+	// Define some helpers for not-cut and cut
+	#define EXPECT_NORMAL() EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration)
+	#define EXPECT_CUT() EXPECT_FLOAT_EQ(0, engine->injectionDuration)
+
 	// this is normal injection mode (the throttle is opened), no fuel cut-off
-	EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration);
+	EXPECT_NORMAL();
 
 	// 'releasing' the throttle
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is enabled now
-	EXPECT_FLOAT_EQ(0.0f, engine->injectionDuration);
+	EXPECT_CUT();
 
 	// Now drop the CLT below threshold
 	Sensor::setMockValue(SensorType::Clt, engineConfiguration->coastingFuelCutClt - 1);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off should be diactivated - the engine is 'cold'
-	EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration);
+	EXPECT_NORMAL();
 
 	// restore CLT
 	Sensor::setMockValue(SensorType::Clt, hotClt);
@@ -74,27 +78,27 @@ TEST(fuelCut, coasting) {
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is enabled - nothing should change
-	EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration);
+	EXPECT_NORMAL();
 
 	// Now drop RPM just below RpmLow threshold
 	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmLow - 1);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is now disabled (the engine is idling)
-	EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration);
+	EXPECT_NORMAL();
 
 	// Now change RPM just below RpmHigh threshold
 	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmHigh - 1);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is still disabled
-	EXPECT_FLOAT_EQ(normalInjDuration, engine->injectionDuration);
+	EXPECT_NORMAL();
 
 	// Now set RPM just above RpmHigh threshold
 	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmHigh + 1);
 	eth.engine.periodicFastCallback();
 
 	// Fuel cut-off is active again!
-	EXPECT_FLOAT_EQ(0.0f, engine->injectionDuration);
+	EXPECT_CUT();
 }
 
