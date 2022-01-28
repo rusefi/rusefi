@@ -8,7 +8,6 @@ import com.rusefi.file.TableGenerator;
 import com.rusefi.models.Point3D;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
-import com.rusefi.test.EcuStimulatorSandbox;
 import com.rusefi.ui.ChartHelper;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.widgets.PotCommand;
