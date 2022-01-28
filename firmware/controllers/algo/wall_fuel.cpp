@@ -86,23 +86,63 @@ float WallFuel::getWallFuel() const {
 	return wallFuel;
 }
 
-/*
-	TODO: these parameters, tau and beta vary with various engine parameters,
-	most notably manifold pressure (as a proxy for air speed), and coolant
-	temperature (as a proxy for the intake valve and runner temperature).
-
-	TAU: decreases with increasing temperature.
-		decreases with decreasing manifold pressure.
-
-	BETA: decreases with increasing temperature.
-		decreases with decreasing manifold pressure.
-*/
 float WallFuelController::computeTau() const {
-	return engineConfiguration->wwaeTau;
+	if (!engineConfiguration->complexWallModel) {
+		return engineConfiguration->wwaeTau;
+	}
+
+	// Default to normal operating temperature in case of
+	// CLT failure, this is not critical to get perfect
+	float clt = Sensor::get(SensorType::Clt).value_or(90);
+
+	float tau = interpolate2d(
+		clt,
+		engineConfiguration->wwCltBins,
+		engineConfiguration->wwTauCltValues
+	);
+
+	// If you have a MAP sensor, apply MAP correction
+	if (Sensor::hasSensor(SensorType::Map)) {
+		auto map = Sensor::get(SensorType::Map).value_or(60);
+
+		tau *= interpolate2d(
+			map,
+			engineConfiguration->wwMapBins,
+			engineConfiguration->wwTauMapValues
+		);
+	}
+
+	return tau;
 }
 
 float WallFuelController::computeBeta() const {
-	return engineConfiguration->wwaeBeta;
+	if (!engineConfiguration->complexWallModel) {
+		return engineConfiguration->wwaeBeta;
+	}
+
+	// Default to normal operating temperature in case of
+	// CLT failure, this is not critical to get perfect
+	float clt = Sensor::get(SensorType::Clt).value_or(90);
+
+	float beta = interpolate2d(
+		clt,
+		engineConfiguration->wwCltBins,
+		engineConfiguration->wwBetaCltValues
+	);
+
+	// If you have a MAP sensor, apply MAP correction
+	if (Sensor::hasSensor(SensorType::Map)) {
+		auto map = Sensor::get(SensorType::Map).value_or(60);
+
+		beta *= interpolate2d(
+			map,
+			engineConfiguration->wwMapBins,
+			engineConfiguration->wwBetaMapValues
+		);
+	}
+
+	// Clamp to 0..1 (you can't have more than 100% of the fuel hit the wall!)
+	return clampF(0, beta, 1);
 }
 
 void WallFuelController::onFastCallback() {
