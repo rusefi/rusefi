@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.CodeWalkthrough;
 import com.rusefi.config.Field;
+import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.enums.live_data_e;
 import com.rusefi.ldmp.StateDictionary;
@@ -13,18 +14,18 @@ import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 import static com.rusefi.autoupdate.AutoupdateUtil.wrap;
 
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
+ *
  * @see LiveDataParserPanel
  * See LiveDataPaneSandbox
  */
@@ -46,30 +47,43 @@ public class LiveDataPane {
         JPanel legend = populateLegend();
 
 
-     //   DefaultMutableTreeNode      root = new DefaultMutableTreeNode("JTree");
-        JTree leftList = new JTree();
-        leftList.setRootVisible(false);
-        DefaultTreeModel model = (DefaultTreeModel) leftList.getModel();
-        MutableTreeNode root = (MutableTreeNode) model.getRoot();
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode();
         for (live_data_e view : live_data_e.values()) {
             String fileName = StateDictionary.INSTANCE.getFileName(view) + CPP_SUFFIX;
             Field[] values = StateDictionary.INSTANCE.getFields(view);
             JPanel liveDataParserContent = LiveDataParserPanel.createLiveDataParserPanel(uiContext, view, values, fileName).getContent();
 
-            JButton shortCut = new JButton(fileName);
-            shortCut.addActionListener(e -> {
-                scroll.getVerticalScrollBar().setValue(liveDataParserContent.getLocation().y);
-                // we want focus there so that mouse wheel scrolling would be active
-                scroll.requestFocus();
-            });
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(fileName);
+            child.setUserObject(new PanelAndName(liveDataParserContent, fileName));
+            DefaultMutableTreeNode method1 = new DefaultMutableTreeNode();
+            method1.setUserObject(new Pair<String, String>(fileName, "method"));
+            child.add(method1);
 
-            model.insertNodeInto(child, root, root.getChildCount());
+            root.add(child);
 
             vertical.add(liveDataParserContent, "grow, wrap");
         }
 
-        content.add(leftList, BorderLayout.WEST);
+        JTree tree = new JTree(new DefaultTreeModel(root));
+        tree.setRootVisible(false);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+        MouseListener ml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                        tree.getLastSelectedPathComponent();
+                Object payload = node.getUserObject();
+
+                if (payload instanceof PanelAndName) {
+                    PanelAndName panel = (PanelAndName) payload;
+                    scroll.getVerticalScrollBar().setValue(panel.panel.getLocation().y);
+                    // we want focus there so that mouse wheel scrolling would be active
+                    scroll.requestFocus();
+                }
+            }
+        };
+        tree.addMouseListener(ml);
+        content.add(tree, BorderLayout.WEST);
         content.add(scroll, BorderLayout.CENTER);
         content.add(legend, BorderLayout.EAST);
 
@@ -127,5 +141,20 @@ public class LiveDataPane {
 
     public JPanel getContent() {
         return content;
+    }
+
+    static class PanelAndName {
+        public final JPanel panel;
+        public final String name;
+
+        public PanelAndName(JPanel panel, String name) {
+            this.panel = panel;
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }
