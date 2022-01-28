@@ -1,6 +1,5 @@
 package com.rusefi.test;
 
-import com.rusefi.StimulationInputs;
 import com.rusefi.ui.widgets.PotCommand;
 import junit.framework.TestCase;
 import org.junit.Test;
