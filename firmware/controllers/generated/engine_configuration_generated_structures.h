@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 27 19:25:56 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:03:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2448,8 +2448,9 @@ struct engine_configuration_s {
 	offset 1272 bit 2 */
 	bool isCylinderCleanupEnabled : 1 {};
 	/**
+	 * Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 	offset 1272 bit 3 */
-	bool unused1476b3 : 1 {};
+	bool complexWallModel : 1 {};
 	/**
 	offset 1272 bit 4 */
 	bool alwaysInstantRpm : 1 {};
@@ -4062,16 +4063,36 @@ struct engine_configuration_s {
 	 */
 	uint16_t unusedShort;
 	/**
-	 * need 4 byte alignment
-	units
+	deg C
 	 * offset 4642
 	 */
-	uint8_t alignmentFill_at_4642[2];
+	int8_t wwCltBins[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4650
+	 */
+	scaled_channel<uint8_t, 100, 1> wwTauCltValues[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4658
+	 */
+	scaled_channel<uint8_t, 100, 1> wwBetaCltValues[WWAE_TABLE_SIZE];
+	/**
+	kPa
+	 * offset 4666
+	 */
+	int8_t wwMapBins[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4674
+	 */
+	scaled_channel<uint8_t, 100, 1> wwTauMapValues[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4682
+	 */
+	scaled_channel<uint8_t, 100, 1> wwBetaMapValues[WWAE_TABLE_SIZE];
 	/**
 	units
-	 * offset 4644
+	 * offset 4690
 	 */
-	int mainUnusedEnd[94];
+	uint8_t mainUnusedEnd[330];
 	/** total size 5020*/
 };
 
@@ -4490,4 +4511,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Jan 27 19:25:56 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:03:04 UTC 2022

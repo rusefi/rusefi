@@ -79,7 +79,6 @@
 #define alignmentFill_at_1847_offset 1847
 #define alignmentFill_at_1873_offset 1873
 #define alignmentFill_at_4007_offset 4007
-#define alignmentFill_at_4642_offset 4642
 #define alignmentFill_at_62_offset 62
 #define alternatorControl_dFactor_offset 1492
 #define alternatorControl_iFactor_offset 1488
@@ -585,6 +584,7 @@
 #define coastingFuelCutVssHigh_offset 1690
 #define coastingFuelCutVssLow_offset 1689
 #define communicationLedPin_offset 1572
+#define complexWallModel_offset 1272
 #define COMPOSITE_DATA_LENGTH 2500
 #define COMPOSITE_DATA_LENGTH_HALF 1250
 #define COMPOSITE_PACKET_COUNT 500
@@ -1612,7 +1612,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4644
+#define mainUnusedEnd_offset 4690
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1894,7 +1894,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 1844843211
+#define SIGNATURE_HASH 40759209
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2419,7 +2419,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.28.hellen_cypress.1844843211"
+#define TS_SIGNATURE "rusEFI 2022.01.28.hellen_cypress.40759209"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2458,7 +2458,6 @@
 #define unused1130_offset 1740
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
-#define unused1476b3_offset 1272
 #define unused1476b8_offset 1272
 #define unused1689_offset 1691
 #define unused1740b0_offset 1740
@@ -2626,5 +2625,12 @@
 #define wastegatePositionSensor_offset 1751
 #define wboHeaterPin_offset 681
 #define wheelDiameter_offset 722
+#define WWAE_TABLE_SIZE 8
 #define wwaeBeta_offset 1568
 #define wwaeTau_offset 1480
+#define wwBetaCltValues_offset 4658
+#define wwBetaMapValues_offset 4682
+#define wwCltBins_offset 4642
+#define wwMapBins_offset 4666
+#define wwTauCltValues_offset 4650
+#define wwTauMapValues_offset 4674

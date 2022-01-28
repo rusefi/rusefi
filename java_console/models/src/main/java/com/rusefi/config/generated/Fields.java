@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 01:15:07 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:03:04 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -77,7 +77,6 @@ public class Fields {
 	public static final int alignmentFill_at_1847_offset = 1847;
 	public static final int alignmentFill_at_1873_offset = 1873;
 	public static final int alignmentFill_at_4007_offset = 4007;
-	public static final int alignmentFill_at_4642_offset = 4642;
 	public static final int alignmentFill_at_62_offset = 62;
 	public static final int alternatorControl_dFactor_offset = 1492;
 	public static final int alternatorControl_iFactor_offset = 1488;
@@ -568,6 +567,7 @@ public class Fields {
 	public static final int coastingFuelCutVssHigh_offset = 1690;
 	public static final int coastingFuelCutVssLow_offset = 1689;
 	public static final int communicationLedPin_offset = 1572;
+	public static final int complexWallModel_offset = 1272;
 	public static final int COMPOSITE_DATA_LENGTH = 2500;
 	public static final int COMPOSITE_DATA_LENGTH_HALF = 1250;
 	public static final int COMPOSITE_PACKET_COUNT = 500;
@@ -1556,7 +1556,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 714;
 	public static final int mainRelayPinMode_offset = 756;
-	public static final int mainUnusedEnd_offset = 4644;
+	public static final int mainUnusedEnd_offset = 4690;
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
@@ -1822,7 +1822,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 1459877239;
+	public static final int SIGNATURE_HASH = 949487637;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2292,7 +2292,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.28.all.1459877239";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.28.all.949487637";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2328,7 +2328,6 @@ public class Fields {
 	public static final int unused1130_offset = 1740;
 	public static final int unused1476b19_offset = 1272;
 	public static final int unused1476b20_offset = 1272;
-	public static final int unused1476b3_offset = 1272;
 	public static final int unused1476b8_offset = 1272;
 	public static final int unused1689_offset = 1691;
 	public static final int unused1740b0_offset = 1740;
@@ -2491,8 +2490,15 @@ public class Fields {
 	public static final int wastegatePositionSensor_offset = 1751;
 	public static final int wboHeaterPin_offset = 681;
 	public static final int wheelDiameter_offset = 722;
+	public static final int WWAE_TABLE_SIZE = 8;
 	public static final int wwaeBeta_offset = 1568;
 	public static final int wwaeTau_offset = 1480;
+	public static final int wwBetaCltValues_offset = 4658;
+	public static final int wwBetaMapValues_offset = 4682;
+	public static final int wwCltBins_offset = 4642;
+	public static final int wwMapBins_offset = 4666;
+	public static final int wwTauCltValues_offset = 4650;
+	public static final int wwTauMapValues_offset = 4674;
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT);
 	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 4, FieldType.INT8);
 	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 5, FieldType.INT8);
@@ -3090,7 +3096,7 @@ public class Fields {
 	public static final Field ISINJECTIONENABLED = Field.create("ISINJECTIONENABLED", 1272, FieldType.BIT, 0);
 	public static final Field ISIGNITIONENABLED = Field.create("ISIGNITIONENABLED", 1272, FieldType.BIT, 1);
 	public static final Field ISCYLINDERCLEANUPENABLED = Field.create("ISCYLINDERCLEANUPENABLED", 1272, FieldType.BIT, 2);
-	public static final Field UNUSED1476B3 = Field.create("UNUSED1476B3", 1272, FieldType.BIT, 3);
+	public static final Field COMPLEXWALLMODEL = Field.create("COMPLEXWALLMODEL", 1272, FieldType.BIT, 3);
 	public static final Field ALWAYSINSTANTRPM = Field.create("ALWAYSINSTANTRPM", 1272, FieldType.BIT, 4);
 	public static final Field ISMAPAVERAGINGENABLED = Field.create("ISMAPAVERAGINGENABLED", 1272, FieldType.BIT, 5);
 	public static final Field OVERRIDECRANKINGIACSETTING = Field.create("OVERRIDECRANKINGIACSETTING", 1272, FieldType.BIT, 6);
@@ -3695,8 +3701,13 @@ public class Fields {
 	public static final Field GEARRATIO8 = Field.create("GEARRATIO8", 4636, FieldType.INT16);
 	public static final Field VVTACTIVATIONDELAYMS = Field.create("VVTACTIVATIONDELAYMS", 4638, FieldType.INT16);
 	public static final Field UNUSEDSHORT = Field.create("UNUSEDSHORT", 4640, FieldType.INT16);
-	public static final Field ALIGNMENTFILL_AT_4642 = Field.create("ALIGNMENTFILL_AT_4642", 4642, FieldType.INT8);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4644, FieldType.INT);
+	public static final Field WWCLTBINS = Field.create("WWCLTBINS", 4642, FieldType.INT8);
+	public static final Field WWTAUCLTVALUES = Field.create("WWTAUCLTVALUES", 4650, FieldType.INT8);
+	public static final Field WWBETACLTVALUES = Field.create("WWBETACLTVALUES", 4658, FieldType.INT8);
+	public static final Field WWMAPBINS = Field.create("WWMAPBINS", 4666, FieldType.INT8);
+	public static final Field WWTAUMAPVALUES = Field.create("WWTAUMAPVALUES", 4674, FieldType.INT8);
+	public static final Field WWBETAMAPVALUES = Field.create("WWBETAMAPVALUES", 4682, FieldType.INT8);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4690, FieldType.INT8);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5020, 120, FieldType.STRING);
 	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5140, FieldType.FLOAT);
 	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5172, FieldType.FLOAT);
@@ -4382,7 +4393,7 @@ public class Fields {
 	ISINJECTIONENABLED,
 	ISIGNITIONENABLED,
 	ISCYLINDERCLEANUPENABLED,
-	UNUSED1476B3,
+	COMPLEXWALLMODEL,
 	ALWAYSINSTANTRPM,
 	ISMAPAVERAGINGENABLED,
 	OVERRIDECRANKINGIACSETTING,
@@ -4977,7 +4988,12 @@ public class Fields {
 	GEARRATIO8,
 	VVTACTIVATIONDELAYMS,
 	UNUSEDSHORT,
-	ALIGNMENTFILL_AT_4642,
+	WWCLTBINS,
+	WWTAUCLTVALUES,
+	WWBETACLTVALUES,
+	WWMAPBINS,
+	WWTAUMAPVALUES,
+	WWBETAMAPVALUES,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,
