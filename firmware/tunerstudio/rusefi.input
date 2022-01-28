@@ -237,8 +237,9 @@ enable2ndByteCanID = false
      ; defaultValue = constantName, value;
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
 
+    ; this magic is best described in output_channels.txt search for 'maintainConstantValue'
 	; TPS 1 Primary
-	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
+	maintainConstantValue = tpsMax, { (calibrationMode == @@TsCalMode_Tps1Max@@ ) ? calibrationValue : tpsMax }
 	maintainConstantValue = tpsMin, { (calibrationMode == @@TsCalMode_Tps1Min@@ ) ? calibrationValue : tpsMin }
 
 	; TPS 1 Secondary
@@ -250,13 +251,19 @@ enable2ndByteCanID = false
 	maintainConstantValue = tps2Min, { (calibrationMode == 9 ) ? calibrationValue : tps2Min }
 
 	; TPS 2 Secondary
-	maintainConstantValue = tps2SecondaryMax, { (calibrationMode == 10 ) ? calibrationValue : tps2SecondaryMax }
-	maintainConstantValue = tps2SecondaryMin, { (calibrationMode == 11 ) ? calibrationValue : tps2SecondaryMin }
+	maintainConstantValue = tps2SecondaryMax, { (calibrationMode == @@TsCalMode_Tps2SecondaryMax@@ ) ? calibrationValue : tps2SecondaryMax }
+	maintainConstantValue = tps2SecondaryMin, { (calibrationMode == @@TsCalMode_Tps2SecondaryMin@@ ) ? calibrationValue : tps2SecondaryMin }
 
 	; ETB Auto Gain Calibration
 	maintainConstantValue = etb_pFactor, { (calibrationMode == 3 ) ? calibrationValue : etb_pFactor }
 	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
 	maintainConstantValue = etb_dFactor, { (calibrationMode == 5 ) ? calibrationValue : etb_dFactor }
+
+	maintainConstantValue = throttlePedalUpVoltage,          { (calibrationMode == @@TsCalMode_PedalMin@@ ) ? calibrationValue  : throttlePedalUpVoltage }
+	maintainConstantValue = throttlePedalSecondaryUpVoltage, { (calibrationMode == @@TsCalMode_PedalMin@@ ) ? calibrationValue2 : throttlePedalSecondaryUpVoltage }
+
+	maintainConstantValue = throttlePedalWOTVoltage,         { (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue  : throttlePedalWOTVoltage }
+	maintainConstantValue = throttlePedalSecondaryWOTVoltage,{ (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue2 : throttlePedalSecondaryWOTVoltage }
 
      requiresPowerCycle = useETBforIdleControl
      requiresPowerCycle = warningLedPin
@@ -2146,7 +2153,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = pedalSensorLeft, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
 		field = "Up voltage",							throttlePedalUpVoltage
+		commandButton = "Grab Up", cmd_calibrate_pedal_up
 		field = "Down (WOT) voltage",					throttlePedalWOTVoltage
+		commandButton = "Grab Down", cmd_calibrate_pedal_down
 		field = "Accelerator position 2nd sensor",		throttlePedalPositionSecondAdcChannel
 		field = "Up voltage",	    					throttlePedalSecondaryUpVoltage
 		field = "Down (WOT) voltage",					throttlePedalSecondaryWOTVoltage
