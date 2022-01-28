@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Jan 27 12:59:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jan 28 01:14:16 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -943,7 +943,11 @@ struct ts_outputs_s {
 	/**
 	 * offset 372
 	 */
-	uint8_t unusedAtTheEnd[96];
+	scaled_channel<float, 1, 1> calibrationValue2 = (float)0;
+	/**
+	 * offset 376
+	 */
+	uint8_t unusedAtTheEnd[92];
 	/**
 	offset 468 bit 0 */
 	bool launchSpeedCondition : 1 {};
@@ -973,73 +977,73 @@ struct ts_outputs_s {
 	bool tpsAccelActive : 1 {};
 	/**
 	offset 468 bit 9 */
-	bool unusedBit_189_9 : 1 {};
+	bool unusedBit_190_9 : 1 {};
 	/**
 	offset 468 bit 10 */
-	bool unusedBit_189_10 : 1 {};
+	bool unusedBit_190_10 : 1 {};
 	/**
 	offset 468 bit 11 */
-	bool unusedBit_189_11 : 1 {};
+	bool unusedBit_190_11 : 1 {};
 	/**
 	offset 468 bit 12 */
-	bool unusedBit_189_12 : 1 {};
+	bool unusedBit_190_12 : 1 {};
 	/**
 	offset 468 bit 13 */
-	bool unusedBit_189_13 : 1 {};
+	bool unusedBit_190_13 : 1 {};
 	/**
 	offset 468 bit 14 */
-	bool unusedBit_189_14 : 1 {};
+	bool unusedBit_190_14 : 1 {};
 	/**
 	offset 468 bit 15 */
-	bool unusedBit_189_15 : 1 {};
+	bool unusedBit_190_15 : 1 {};
 	/**
 	offset 468 bit 16 */
-	bool unusedBit_189_16 : 1 {};
+	bool unusedBit_190_16 : 1 {};
 	/**
 	offset 468 bit 17 */
-	bool unusedBit_189_17 : 1 {};
+	bool unusedBit_190_17 : 1 {};
 	/**
 	offset 468 bit 18 */
-	bool unusedBit_189_18 : 1 {};
+	bool unusedBit_190_18 : 1 {};
 	/**
 	offset 468 bit 19 */
-	bool unusedBit_189_19 : 1 {};
+	bool unusedBit_190_19 : 1 {};
 	/**
 	offset 468 bit 20 */
-	bool unusedBit_189_20 : 1 {};
+	bool unusedBit_190_20 : 1 {};
 	/**
 	offset 468 bit 21 */
-	bool unusedBit_189_21 : 1 {};
+	bool unusedBit_190_21 : 1 {};
 	/**
 	offset 468 bit 22 */
-	bool unusedBit_189_22 : 1 {};
+	bool unusedBit_190_22 : 1 {};
 	/**
 	offset 468 bit 23 */
-	bool unusedBit_189_23 : 1 {};
+	bool unusedBit_190_23 : 1 {};
 	/**
 	offset 468 bit 24 */
-	bool unusedBit_189_24 : 1 {};
+	bool unusedBit_190_24 : 1 {};
 	/**
 	offset 468 bit 25 */
-	bool unusedBit_189_25 : 1 {};
+	bool unusedBit_190_25 : 1 {};
 	/**
 	offset 468 bit 26 */
-	bool unusedBit_189_26 : 1 {};
+	bool unusedBit_190_26 : 1 {};
 	/**
 	offset 468 bit 27 */
-	bool unusedBit_189_27 : 1 {};
+	bool unusedBit_190_27 : 1 {};
 	/**
 	offset 468 bit 28 */
-	bool unusedBit_189_28 : 1 {};
+	bool unusedBit_190_28 : 1 {};
 	/**
 	offset 468 bit 29 */
-	bool unusedBit_189_29 : 1 {};
+	bool unusedBit_190_29 : 1 {};
 	/**
 	offset 468 bit 30 */
-	bool unusedBit_189_30 : 1 {};
+	bool unusedBit_190_30 : 1 {};
 	/**
 	offset 468 bit 31 */
-	bool unusedBit_189_31 : 1 {};
+	bool unusedBit_190_31 : 1 {};
 	/**
 	 * offset 472
 	 */
@@ -1237,4 +1241,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Jan 27 12:59:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jan 28 01:14:16 UTC 2022
