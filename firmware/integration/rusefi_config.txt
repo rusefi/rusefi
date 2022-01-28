@@ -1819,8 +1819,6 @@ end_struct
 #define CMD_FAN_BENCH "fanbench"
 #define CMD_FAN2_BENCH "fan2bench"
 #define CMD_PINS "pins"
-#define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
-#define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_SELF_STIMULATION "self_stimulation"
 #define CMD_EXTERNAL_STIMULATION "ext_stimulation"

@@ -281,7 +281,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint8_t tpsAccelTo;;"%", 1, 0, 0, 100, 0
 
 ! we have some unused bytes to allow compatible TS changes
-	uint8_t[96 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	float autoscale calibrationValue2;;"", 1, 0, 0, 0, 0
+	uint8_t[92 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition
