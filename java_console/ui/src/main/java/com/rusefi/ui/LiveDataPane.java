@@ -8,6 +8,7 @@ import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
@@ -15,6 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import static com.rusefi.autoupdate.AutoupdateUtil.wrap;
 
 
 /**
@@ -34,7 +37,8 @@ public class LiveDataPane {
     public LiveDataPane(UIContext uiContext) {
 
 
-        JPanel vertical = new JPanel(new VerticalFlowLayout());
+        JPanel vertical = new JPanel(new MigLayout("wrap 1", "[grow,fill]"));
+        vertical.setBorder(BorderFactory.createLineBorder(Color.orange));
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel legend = populateLegend();
 
@@ -53,7 +57,7 @@ public class LiveDataPane {
             });
             leftList.add(shortCut);
 
-            vertical.add(liveDataParserContent);
+            vertical.add(liveDataParserContent, "grow, wrap");
         }
 
         content.add(leftList, BorderLayout.WEST);
