@@ -624,8 +624,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void enterCompoundStatement(CPP14Parser.CompoundStatementContext ctx) {
-        printWithCounter("enterCompoundStatement " + ctx.statementSeq().getText());
-
+        printWithCounter("enterCompoundStatement " + (ctx.statementSeq() != null ? ctx.statementSeq().getText() : ""));
     }
 
     @Override

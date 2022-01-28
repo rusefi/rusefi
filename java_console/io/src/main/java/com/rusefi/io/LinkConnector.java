@@ -2,7 +2,6 @@ package com.rusefi.io;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 import org.jetbrains.annotations.NotNull;
 
 /**

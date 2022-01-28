@@ -514,6 +514,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isIgnitionEnabled;
 	if (strEqualCaseInsensitive(name, "isCylinderCleanupEnabled"))
 		return engineConfiguration->isCylinderCleanupEnabled;
+	if (strEqualCaseInsensitive(name, "complexWallModel"))
+		return engineConfiguration->complexWallModel;
 	if (strEqualCaseInsensitive(name, "alwaysInstantRpm"))
 		return engineConfiguration->alwaysInstantRpm;
 	if (strEqualCaseInsensitive(name, "isMapAveragingEnabled"))
@@ -648,6 +650,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->iacByTpsTaper;
 	if (strEqualCaseInsensitive(name, "tpsAccelLookback"))
 		return engineConfiguration->tpsAccelLookback;
+	if (strEqualCaseInsensitive(name, "coastingFuelCutVssLow"))
+		return engineConfiguration->coastingFuelCutVssLow;
+	if (strEqualCaseInsensitive(name, "coastingFuelCutVssHigh"))
+		return engineConfiguration->coastingFuelCutVssHigh;
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
 		return engineConfiguration->tpsAccelEnrichmentThreshold;
 	if (strEqualCaseInsensitive(name, "engineLoadAccelLength"))
@@ -2200,6 +2206,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->isCylinderCleanupEnabled = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "complexWallModel"))
+	{
+		engineConfiguration->complexWallModel = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "alwaysInstantRpm"))
 	{
 		engineConfiguration->alwaysInstantRpm = (int)value;
@@ -2533,6 +2544,16 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "tpsAccelLookback"))
 	{
 		engineConfiguration->tpsAccelLookback = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "coastingFuelCutVssLow"))
+	{
+		engineConfiguration->coastingFuelCutVssLow = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "coastingFuelCutVssHigh"))
+	{
+		engineConfiguration->coastingFuelCutVssHigh = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))

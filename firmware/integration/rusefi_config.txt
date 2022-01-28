@@ -1049,7 +1049,7 @@ custom idle_mode_e 4 bits, U32, @OFFSET@, [0:0], "Open Loop + Closed Loop", "Ope
 	bit isInjectionEnabled;+Enable fuel injection - This is default off for new projects as a safety feature, set to "true" to enable fuel injection and further injector settings.
 	bit isIgnitionEnabled;+Enable ignition - This is default off for new projects as a safety feature, set to "true" to enable ignition and further ignition settings.
 	bit isCylinderCleanupEnabled;+When enabled if TPS is held above 95% no fuel is injected while cranking to clear excess fuel from the cylinders.
-	bit unused1476b3
+	bit complexWallModel,"Advanced (tables)","Basic (constants)";Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 	bit alwaysInstantRpm
 	bit isMapAveragingEnabled
 	bit overrideCrankingIacSetting;+If enabled, use separate temperature multiplier table for cranking idle position.\nIf disabled, use normal running multiplier table applied to the cranking base position.
@@ -1172,8 +1172,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 
 	uint8_t autoscale tpsAccelLookback;+How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.;"sec", 0.05, 0, 0, 5, 2
-	uint8_t coastingFuelCutVssLow;+Below this speed, disable DFCO.;"kph", 1, 0, 0, 255, 0
-	uint8_t coastingFuelCutVssHigh;+Above this speed, allow DFCO.;"kph", 1, 0, 0, 255, 0
+	uint8_t coastingFuelCutVssLow;+Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;"kph", 1, 0, 0, 255, 0
+	uint8_t coastingFuelCutVssHigh;+Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;"kph", 1, 0, 0, 255, 0
 	uint8_t autoscale noFuelTrimAfterDfcoTime;Disable closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.;"sec", 0.1, 0, 0, 10, 1
 	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 1
 
@@ -1504,7 +1504,17 @@ int8_t[MAX_CYLINDER_COUNT iterate] fuelTrim;;"Percent", @@PERCENT_TRIM_BYTE_PACK
 uint16_t vvtActivationDelayMs;We need to give engine time to build oil pressure without diverting it to VVT;"ms", 1, 0, 0, 65000, 0
 uint16_t unusedShort;;"RPM", 1, 0, 0, 65000, 0
 
-	int[94] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
+#define WWAE_TABLE_SIZE 8
+
+int8_t[WWAE_TABLE_SIZE] wwCltBins;;"deg C", 1, 0, -40, 120, 0
+uint8_t[WWAE_TABLE_SIZE] autoscale wwTauCltValues;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaCltValues;;"", 0.01, 0, 0, 1, 2
+
+int8_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
+uint8_t[WWAE_TABLE_SIZE] autoscale wwTauMapValues;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaMapValues;;"", 0.01, 0, 0, 2.5, 2
+
+uint8_t[330] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
@@ -1819,8 +1829,6 @@ end_struct
 #define CMD_FAN_BENCH "fanbench"
 #define CMD_FAN2_BENCH "fan2bench"
 #define CMD_PINS "pins"
-#define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
-#define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
 #define CMD_ETB_DUTY "set_etb_duty"
 #define CMD_SELF_STIMULATION "self_stimulation"
 #define CMD_EXTERNAL_STIMULATION "ext_stimulation"

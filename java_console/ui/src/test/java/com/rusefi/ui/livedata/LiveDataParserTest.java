@@ -17,8 +17,7 @@ import java.util.TreeMap;
 
 import static com.rusefi.CodeWalkthrough.TRUE_CONDITION;
 import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -41,6 +40,25 @@ public class LiveDataParserTest {
 
         SourceCodePainter painter = run(name -> null, sourceCode);
         verify(painter, times(7)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
+    }
+
+    @Test
+    public void testMethodNamesCode() {
+        String sourceCode = "void AcController::onSlowCallback() {\n" +
+                "}\n" +
+                "void onSlowCallback2() {\n" +
+                "                }\n" +
+                "int onSlowCallback3() {\n" +
+                "                }\n" +
+                ""
+                ;
+
+        SourceCodePainter painter = mock(SourceCodePainter.class);
+        ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
+
+        printTree(tree);
+        ParseResult result = CodeWalkthrough.applyVariables(name -> null, sourceCode, painter, tree);
+        assertEquals(3, result.getFunctions().size());
     }
 
     @Test
