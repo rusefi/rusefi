@@ -103,7 +103,7 @@ void boardInitHardware() {
 	boardOnConfigurationChange(nullptr);
 }
 
-void boardOnConfigurationChange(engine_configuration_s *previousConfiguration) {
+void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
 	alphaTachPullUp.setValue(engineConfiguration->boardUseTachPullUp);
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
