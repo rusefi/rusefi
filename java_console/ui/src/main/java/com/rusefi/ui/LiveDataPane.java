@@ -13,6 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +46,11 @@ public class LiveDataPane {
         JPanel legend = populateLegend();
 
 
-        JPanel leftList = new JPanel(new VerticalFlowLayout());
+     //   DefaultMutableTreeNode      root = new DefaultMutableTreeNode("JTree");
+        JTree leftList = new JTree();
+        leftList.setRootVisible(false);
+        DefaultTreeModel model = (DefaultTreeModel) leftList.getModel();
+        MutableTreeNode root = (MutableTreeNode) model.getRoot();
         for (live_data_e view : live_data_e.values()) {
             String fileName = StateDictionary.INSTANCE.getFileName(view) + CPP_SUFFIX;
             Field[] values = StateDictionary.INSTANCE.getFields(view);
@@ -55,7 +62,9 @@ public class LiveDataPane {
                 // we want focus there so that mouse wheel scrolling would be active
                 scroll.requestFocus();
             });
-            leftList.add(shortCut);
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(fileName);
+
+            model.insertNodeInto(child, root, root.getChildCount());
 
             vertical.add(liveDataParserContent, "grow, wrap");
         }
