@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -46,14 +47,24 @@ public class CodeWalkthrough {
 
         java.util.List<TerminalNode> allTerminals = new java.util.ArrayList<>();
 
-        java.util.List<CPP14Parser.DeclaratorContext> functions = new ArrayList<>();
+        List<CPP14Parser.UnqualifiedIdContext> functions = new ArrayList<>();
 
         new ParseTreeWalker().walk(new CPP14ParserBaseListener() {
             @Override
             public void enterFunctionDefinition(CPP14Parser.FunctionDefinitionContext ctx) {
                 // new method is starting new all over
                 resetState(currentState);
-                functions.add(ctx.declarator());
+                CPP14Parser.DeclaratoridContext declaratorid = ctx.declarator().pointerDeclarator().noPointerDeclarator().noPointerDeclarator().declaratorid();
+                CPP14Parser.IdExpressionContext idExpressionContext = declaratorid.idExpression();
+                CPP14Parser.QualifiedIdContext qualifiedIdContext = idExpressionContext.qualifiedId();
+                CPP14Parser.UnqualifiedIdContext unqualifiedIdContext;
+                if (qualifiedIdContext != null) {
+                    unqualifiedIdContext = qualifiedIdContext.unqualifiedId();
+                } else {
+                    unqualifiedIdContext = idExpressionContext.unqualifiedId();
+                }
+                System.out.println(declaratorid.getText());
+                functions.add(unqualifiedIdContext);
             }
 
             @Override
@@ -179,7 +190,7 @@ public class CodeWalkthrough {
                 configTokens.add(token);
             }
         }
-        return new ParseResult(configTokens, brokenConditions);
+        return new ParseResult(configTokens, brokenConditions, functions);
     }
 
     private static void resetState(Stack<BranchingState> currentState) {
