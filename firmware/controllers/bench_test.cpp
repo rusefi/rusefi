@@ -161,8 +161,8 @@ static void doTestSolenoid(int humanIndex, const char *delayStr, const char * on
 	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.tcuSolenoids[humanIndex - 1], b);
 }
 
-static void doBenchTestFsio(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
-		const char *countStr) {
+static void doBenchTestFsio(int /*humanIndex*/, const char * /*delayStr*/, const char * /*onTimeStr*/, const char * /*offTimeStr*/,
+		const char * /*countStr*/) {
 //	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
 //		efiPrintf("Invalid index: %d", humanIndex);
 //		return;
