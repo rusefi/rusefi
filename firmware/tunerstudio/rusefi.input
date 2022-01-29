@@ -1384,7 +1384,6 @@ menuDialog = main
 		# Accel enrichment
 		subMenu = AccelEnrich,				"Acceleration enrichment", 0, {isInjectionEnabled == 1}
 		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
-		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
 
 		groupMenu = "Wall wetting AE"
 		groupChildMenu = wwTauCurves, "Evap time", 0, { complexWallModel != 0 }
