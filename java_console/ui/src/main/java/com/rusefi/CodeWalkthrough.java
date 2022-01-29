@@ -63,7 +63,6 @@ public class CodeWalkthrough {
                 } else {
                     unqualifiedIdContext = idExpressionContext.unqualifiedId();
                 }
-                System.out.println(declaratorid.getText());
                 functions.add(unqualifiedIdContext);
             }
 
