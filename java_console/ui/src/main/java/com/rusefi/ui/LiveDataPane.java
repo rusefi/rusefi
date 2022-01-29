@@ -1,12 +1,14 @@
 package com.rusefi.ui;
 
+import com.camick.RXTextUtilities;
 import com.rusefi.CodeWalkthrough;
 import com.rusefi.config.Field;
-import com.rusefi.core.Pair;
 import com.rusefi.core.Sensor;
 import com.rusefi.enums.live_data_e;
 import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.livedata.LiveDataParserPanel;
+import com.rusefi.livedata.ParseResult;
+import com.rusefi.livedata.generated.CPP14Parser;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
 import net.miginfocom.swing.MigLayout;
@@ -14,13 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.text.BadLocationException;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-
-import static com.rusefi.autoupdate.AutoupdateUtil.wrap;
 
 
 /**
@@ -51,13 +50,18 @@ public class LiveDataPane {
         for (live_data_e view : live_data_e.values()) {
             String fileName = StateDictionary.INSTANCE.getFileName(view) + CPP_SUFFIX;
             Field[] values = StateDictionary.INSTANCE.getFields(view);
-            JPanel liveDataParserContent = LiveDataParserPanel.createLiveDataParserPanel(uiContext, view, values, fileName).getContent();
+            LiveDataParserPanel liveDataParserPanel = LiveDataParserPanel.createLiveDataParserPanel(uiContext, view, values, fileName);
+            ParseResult parseResult = liveDataParserPanel.getParseResult();
+            JPanel liveDataParserContent = liveDataParserPanel.getContent();
 
             DefaultMutableTreeNode child = new DefaultMutableTreeNode(fileName);
             child.setUserObject(new PanelAndName(liveDataParserContent, fileName));
-            DefaultMutableTreeNode method1 = new DefaultMutableTreeNode();
-            method1.setUserObject(new Pair<String, String>(fileName, "method"));
-            child.add(method1);
+
+            for (CPP14Parser.UnqualifiedIdContext functionId : parseResult.getFunctions()) {
+                DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode();
+                methodNode.setUserObject(new SpecificMethod(liveDataParserPanel, functionId));
+                child.add(methodNode);
+            }
 
             root.add(child);
 
@@ -70,16 +74,30 @@ public class LiveDataPane {
 
         MouseListener ml = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                DefaultMutableTreeNode node = (DefaultMutableTreeNode)
-                        tree.getLastSelectedPathComponent();
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
                 Object payload = node.getUserObject();
 
                 if (payload instanceof PanelAndName) {
                     PanelAndName panel = (PanelAndName) payload;
-                    scroll.getVerticalScrollBar().setValue(panel.panel.getLocation().y);
-                    // we want focus there so that mouse wheel scrolling would be active
-                    scroll.requestFocus();
+                    scrollToPanel(panel.panel, 0);
+                } else if (payload instanceof SpecificMethod) {
+                    SpecificMethod method = (SpecificMethod) payload;
+                    JTextPane jTextPane = method.liveDataParserPanel.getText();
+                    int position = RXTextUtilities.getStartOfLineOffset(jTextPane, method.method.getStart().getLine());
+                    Rectangle r;
+                    try {
+                        r = jTextPane.modelToView(position);
+                    } catch (BadLocationException ex) {
+                        return;
+                    }
+                    scrollToPanel(method.liveDataParserPanel.getContent(), r.y);
                 }
+            }
+
+            private void scrollToPanel(JPanel panel, int yOffset) {
+                scroll.getVerticalScrollBar().setValue(panel.getLocation().y + yOffset);
+                // we want focus there so that mouse wheel scrolling would be active
+                scroll.requestFocus();
             }
         };
         tree.addMouseListener(ml);
@@ -155,6 +173,25 @@ public class LiveDataPane {
         @Override
         public String toString() {
             return name;
+        }
+    }
+
+    static class SpecificMethod {
+        private final LiveDataParserPanel liveDataParserPanel;
+        private final CPP14Parser.UnqualifiedIdContext method;
+
+        public SpecificMethod(LiveDataParserPanel liveDataParserPanel, CPP14Parser.UnqualifiedIdContext method) {
+            this.liveDataParserPanel = liveDataParserPanel;
+            this.method = method;
+        }
+
+        public LiveDataParserPanel getLiveDataParserPanel() {
+            return liveDataParserPanel;
+        }
+
+        @Override
+        public String toString() {
+            return method.getText();
         }
     }
 }

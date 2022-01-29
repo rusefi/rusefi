@@ -106,6 +106,14 @@ public class LiveDataParserPanel {
         }
     }
 
+    public ParseResult getParseResult() {
+        return parseResult;
+    }
+
+    public JTextPane getText() {
+        return text;
+    }
+
     @NotNull
     public static String getContent(Class<?> clazz, String fileName) throws IOException, URISyntaxException {
         String contentOrNull = getContentOrNull(clazz, fileName);
