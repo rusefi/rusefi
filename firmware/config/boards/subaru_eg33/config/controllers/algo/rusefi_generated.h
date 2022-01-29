@@ -1628,7 +1628,6 @@
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
-#define MAP_ACCEL_TAPER 8
 #define MAP_ANGLE_SIZE 8
 #define map_offset 196
 #define map_samplingAngle_offset 228
@@ -1643,8 +1642,6 @@
 #define map_sensor_offset 324
 #define map_sensor_type_offset 332
 #define MAP_WINDOW_SIZE 8
-#define mapAccelTaperBins_offset 1760
-#define mapAccelTaperMult_offset 1792
 #define mapAveragingSchedulingAtIndex_offset 1312
 #define mapCamDetectionAnglePosition_offset 560
 #define mapErrorDetectionTooHigh_offset 1540
@@ -1907,7 +1904,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 4213317189
+#define SIGNATURE_HASH 3127657361
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2432,7 +2429,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.01.28.subaru_eg33_f7.4213317189"
+#define TS_SIGNATURE "rusEFI 2022.01.29.subaru_eg33_f7.3127657361"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2523,6 +2520,7 @@
 #define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4171
 #define unusedHere2_offset 1747
+#define unusedMapAccelTaperBins_offset 1760
 #define unusedShort_offset 4640
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164

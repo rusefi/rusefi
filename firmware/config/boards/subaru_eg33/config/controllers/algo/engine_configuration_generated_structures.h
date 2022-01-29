@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:03:01 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Jan 29 00:56:06 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3139,12 +3139,7 @@ struct engine_configuration_s {
 	counter
 	 * offset 1760
 	 */
-	float mapAccelTaperBins[MAP_ACCEL_TAPER];
-	/**
-	mult
-	 * offset 1792
-	 */
-	float mapAccelTaperMult[MAP_ACCEL_TAPER];
+	float unusedMapAccelTaperBins[16];
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -4511,4 +4506,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:03:01 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Jan 29 00:56:06 UTC 2022

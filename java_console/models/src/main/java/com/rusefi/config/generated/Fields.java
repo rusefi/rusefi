@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:03:04 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Jan 29 00:56:08 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1560,7 +1560,6 @@ public class Fields {
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
-	public static final int MAP_ACCEL_TAPER = 8;
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int map_offset = 196;
 	public static final int map_samplingAngle_offset = 228;
@@ -1575,8 +1574,6 @@ public class Fields {
 	public static final int map_sensor_offset = 324;
 	public static final int map_sensor_type_offset = 332;
 	public static final int MAP_WINDOW_SIZE = 8;
-	public static final int mapAccelTaperBins_offset = 1760;
-	public static final int mapAccelTaperMult_offset = 1792;
 	public static final int mapAveragingSchedulingAtIndex_offset = 1312;
 	public static final int mapCamDetectionAnglePosition_offset = 560;
 	public static final int mapErrorDetectionTooHigh_offset = 1540;
@@ -1822,7 +1819,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 949487637;
+	public static final int SIGNATURE_HASH = 2044089793;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2292,7 +2289,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.28.all.949487637";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.29.all.2044089793";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2380,6 +2377,7 @@ public class Fields {
 	public static final int unusedDtectionThreshold_offset = 623;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
+	public static final int unusedMapAccelTaperBins_offset = 1760;
 	public static final int unusedShort_offset = 4640;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
@@ -3276,8 +3274,7 @@ public class Fields {
 	public static final Field HPFPVALVEPIN = Field.create("HPFPVALVEPIN", 1754, FieldType.INT8, output_pin_e);
 	public static final Field HPFPVALVEPINMODE = Field.create("HPFPVALVEPINMODE", 1755, FieldType.INT8, pin_output_mode_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 1756, FieldType.FLOAT);
-	public static final Field MAPACCELTAPERBINS = Field.create("MAPACCELTAPERBINS", 1760, FieldType.FLOAT);
-	public static final Field MAPACCELTAPERMULT = Field.create("MAPACCELTAPERMULT", 1792, FieldType.FLOAT);
+	public static final Field UNUSEDMAPACCELTAPERBINS = Field.create("UNUSEDMAPACCELTAPERBINS", 1760, FieldType.FLOAT);
 	public static final Field FIXEDTIMING = Field.create("FIXEDTIMING", 1824, FieldType.FLOAT);
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 1828, FieldType.FLOAT);
 	public static final Field MAPHIGHVALUEVOLTAGE = Field.create("MAPHIGHVALUEVOLTAGE", 1832, FieldType.FLOAT);
@@ -4569,8 +4566,7 @@ public class Fields {
 	HPFPVALVEPIN,
 	HPFPVALVEPINMODE,
 	BOOSTCUTPRESSURE,
-	MAPACCELTAPERBINS,
-	MAPACCELTAPERMULT,
+	UNUSEDMAPACCELTAPERBINS,
 	FIXEDTIMING,
 	MAPLOWVALUEVOLTAGE,
 	MAPHIGHVALUEVOLTAGE,
