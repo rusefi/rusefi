@@ -396,13 +396,6 @@ enable2ndByteCanID = false
       yBins       = scriptCurve6
       showTextValues = true
 
-   curve = mapAccelTaper, "Engine Load Acceleration Enrichment Taper"
-      columnLabel = "Distance", "Multiplier"
-      xAxis       =  0, 128, 10
-      yAxis       = -5,  5, 10
-      xBins       = mapAccelTaperBins
-      yBins       = mapAccelTaperMult
-
 	curve = dwellCorrection, "Dwell time base"
       columnLabel = "RPM", "Dwell"
       xAxis       =  0, 8000, 9
