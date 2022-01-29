@@ -1708,6 +1708,7 @@
 #define narrowToWideOxygen_offset 1912
 #define narrowToWideOxygenBins_offset 1880
 #define noAccelAfterHardLimitPeriodSecs_offset 1308
+#define noFuelTrimAfterDfcoTime_offset 1691
 #define o2heaterPin_offset 746
 #define o2heaterPinModeTodO_offset 747
 #define oilPressure_alignmentFill_offset 2289
@@ -1904,7 +1905,7 @@
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 4086852195
+#define SIGNATURE_HASH 1647633007
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2429,7 +2430,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.01.29.subaru_eg33_f7.4086852195"
+#define TS_SIGNATURE "rusEFI 2022.01.29.subaru_eg33_f7.1647633007"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2469,7 +2470,6 @@
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
-#define unused1689_offset 1691
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
