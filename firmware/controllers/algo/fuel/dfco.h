@@ -7,7 +7,11 @@ public:
 
 	bool cutFuel() const;
 
+	float getTimeSinceCut() const;
+
 private:
 	bool getState() const;
 	bool m_isDfco = false;
+
+	Timer m_timeSinceCut;
 };
