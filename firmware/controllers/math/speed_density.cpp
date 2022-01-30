@@ -54,8 +54,11 @@ static float getTChargeCoefficient(int rpm, float tps) {
 			airFlow
 		);
 	} else if (engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP_TABLE) {
-		// TODO: implement
-		return 0;
+		return interpolate2d(
+			airFlow,
+			engineConfiguration->tchargeBins,
+			engineConfiguration->tchargeValues
+		);
 	} else {
 		firmwareError(OBD_PCM_Processor_Fault, "Unexpected tChargeMode: %d", engineConfiguration->tChargeMode);
 		return 0;
