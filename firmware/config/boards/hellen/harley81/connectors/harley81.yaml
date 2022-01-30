@@ -60,8 +60,16 @@ pins:
     function: Front Coil
     type: ign
 
-  - pin: 58a
+  - pin: 29
+    type: gnd
+    function: Sensor Ground
+
+  - pin: 38
     function: CAN bus low
+    type: can
+
+  - pin: 39
+    function: CAN bus high
     type: can
 
 
@@ -172,3 +180,11 @@ info:
       x: 440
       y: 221
 
+    #
+    - pin: 25
+      x: 1254
+      y: 221
+
+    - pin: 26
+      x: 1209
+      y: 221
