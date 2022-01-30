@@ -1,5 +1,94 @@
+pins:
+  - pin: 1
+    class: outputs
+    function: Oil Cooling Fan
+    ts_name: 1 Oil Cooling
+
+  - pin: 2
+    type: gnd
+    function: Power Ground
+
+  - pin: 3
+    type: gnd
+    function: Power Ground
+
+  - pin: 4
+    class: outputs
+    function: Left Cooling Fan
+    ts_name: 4 Left Fan
+
+  - pin: 5
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: +12V
+    ts_name: 5 Battery Sense
+    type: 12v
+
+  - pin: 6
+    class: outputs
+    function: Front Injector
+    ts_name: 6 Front Injector
+
+  - pin: 7
+    class: outputs
+    function: Rear Injector
+    ts_name: 6 Rear Injector
+
+  - pin: 8
+    class: outputs
+    function: Rear ACR
+    ts_name: 6 Rear ACR
+
+  - pin: 11
+    function: Crank Sensor VR- Negative Input
+    ts_name: 11 Crank VR-
+
+  - pin: 20
+    class: outputs
+    ts_name: 20 ETB_OUT-
+    function: -ETB_OUT
+
+  - pin: 21
+    class: outputs
+    ts_name: 21 ETB_OUT+
+    function: +ETB_OUT
+
+
+  - pin: 24
+    class: outputs
+    ts_name: 24 Front Coil
+    function: Front Coil
+    type: ign
+
+  - pin: 58a
+    function: CAN bus low
+    type: can
+
+
+  - pin: 43
+    class: outputs
+    ts_name: 24 Rear Coil
+    function: Rear Coil
+    type: ign
+
+  - pin: 44
+    class: outputs
+    function: Chassis Cooling Fan
+    ts_name: 44 Chassis Cooling
+
+
 info:
   title: Hellen Harley 81
   name: Hellen Harley 81
   board_url: https://rusefi.com/s/harley81
+  image:
+    file: harley81.jpg
+  pins:
+    - pin: 1
+      x: 206
+      y: 407
 
+
+    - pin: 4
+      x: 206
+      y: 236
