@@ -750,6 +750,12 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
 		engineConfiguration->twoWireBatchInjection = isEnabled;
 		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "boardUseTempPullUp")) {
+		engineConfiguration->boardUseTempPullUp = isEnabled;
+		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "boardUseTachPullUp")) {
+		engineConfiguration->boardUseTachPullUp = isEnabled;
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();
@@ -1199,8 +1205,6 @@ void initSettings(void) {
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-	addConsoleAction(CMD_CALIBRATE_PEDAL_UP, grabPedalIsUp);
-	addConsoleAction(CMD_CALIBRATE_PEDAL_DOWN, grabPedalIsWideOpen);
 	addConsoleAction("info", printAllInfo);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);

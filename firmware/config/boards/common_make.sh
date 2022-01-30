@@ -24,7 +24,7 @@ chmod u+x $HEX2DFU
 mkdir -p deliver
 rm -f deliver/*
 
-echo "$SCRIPT_NAME: invoking hex2dfu for RusEFI"
+echo "$SCRIPT_NAME: invoking hex2dfu for incremental rusEFI image"
 $HEX2DFU -i build/rusefi.hex -C 0x1C -o build/rusefi.dfu
 
 if [ $USE_OPENBLT = "yes" ]; then
@@ -39,8 +39,6 @@ else
   # standalone images (for use with no bootloader)
   cp build/rusefi.bin  deliver/
   cp build/rusefi.dfu  deliver/
-  # rusEFI console does not use .hex files but for Cypress that's the primary binary format
-  cp build/rusefi.hex  deliver/
 fi
 
 # bootloader and composite image
@@ -55,10 +53,13 @@ if [ $USE_OPENBLT = "yes" ]; then
   #cp build-openblt/openblt_$PROJECT_BOARD.hex  deliver/openblt.hex
 
   rm -f deliver/rusefi_openblt.dfu
-  echo "$SCRIPT_NAME: invoking hex2dfu for composite RusEFI+OpenBLT image"
+  echo "$SCRIPT_NAME: invoking hex2dfu for composite rusEFI+OpenBLT image"
   $HEX2DFU -i build-openblt/openblt_$PROJECT_BOARD.hex -i build/rusefi.hex -C 0x1C -o deliver/rusefi.dfu -b deliver/rusefi.bin
   #todo: how to create 'signed' hex and srec? Do we need?
 fi
+
+# rusEFI console DFU uses rusefi*.hex file
+cp build/rusefi.hex  deliver/
 
 echo "$SCRIPT_NAME: build folder content:"
 ls -l build

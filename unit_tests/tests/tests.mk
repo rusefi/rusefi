@@ -63,7 +63,6 @@ TESTS_SRC_CPP = \
 	tests/test_log_buffer.cpp \
 	tests/test_signal_executor.cpp \
 	tests/test_cpp_memory_layout.cpp \
-	tests/test_sensors.cpp \
 	tests/test_pid_auto.cpp \
 	tests/test_pid.cpp \
 	tests/test_accel_enrichment.cpp \
@@ -88,6 +87,7 @@ TESTS_SRC_CPP = \
 	tests/test_boost.cpp \
 	tests/test_gppwm.cpp \
 	tests/test_hpfp.cpp \
+	tests/test_hpfp_integrated.cpp \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
 	tests/test_dynoview.cpp \

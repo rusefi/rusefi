@@ -139,24 +139,35 @@ static angle_t adjustCrankPhase(int camIndex) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	operation_mode_e operationMode = engine->getOperationMode();
 
-	switch (engineConfiguration->vvtMode[camIndex]) {
+	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
+	switch (vvtMode) {
 	case VVT_FIRST_HALF:
 	case VVT_MAP_V_TWIN_ANOTHER:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
+	case VVT_NISSAN_VQ:
+	case VVT_BOSCH_QUICK_START:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
 	case VVT_MIATA_NB2:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
-	case VVT_NISSAN_VQ:
-		return syncAndReport(tc, getCrankDivider(operationMode), 0);
-	default:
+	case VVT_2JZ:
+	case VVT_TOYOTA_4_1:
+	case VVT_FORD_ST170:
+	case VVT_BARRA_3_PLUS_1:
+	case VVT_NISSAN_MR:
+	case VVT_12:
+		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->tempBooleanForVerySpecialCases ? 1 : 0);
+	case VVT_HONDA_K:
+		firmwareError(OBD_PCM_Processor_Fault, "Undecided on VVT phase of %s", getVvt_mode_e(vvtMode));
+		return 0;
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
 	}
+	return 0;
 }
 
 /**
@@ -304,6 +315,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		engine->outputChannels.vvtCurrentPosition = currentPosition;
 #endif /* EFI_TUNER_STUDIO */
 
+	if (isVvtWithRealDecoder && tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+		// this is not sync tooth - exiting
+		return;
+	}
+
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
@@ -313,24 +329,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			return;
 		}
 		break;
-	case VVT_MIATA_NB2:
-	case VVT_BOSCH_QUICK_START:
-	case VVT_BARRA_3_PLUS_1:
-	case VVT_NISSAN_VQ:
-	case VVT_NISSAN_MR:
-	{
-		if (tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
-			// this is not sync tooth - exiting
-			return;
-		}
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.vvtCounter++;
-#endif /* EFI_TUNER_STUDIO */
-	}
 	default:
 		// else, do nothing
 		break;
 	}
+
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.vvtCounter++;
+#endif /* EFI_TUNER_STUDIO */
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 

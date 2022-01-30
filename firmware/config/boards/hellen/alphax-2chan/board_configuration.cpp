@@ -24,8 +24,8 @@ static OutputPin alphaCrankNPullUp;
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
 	engineConfiguration->injectionPins[1] = H144_LS_2;
-	engineConfiguration->injectionPins[2] = H144_LS_3;
-	engineConfiguration->injectionPins[3] = H144_LS_4;
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -34,10 +34,10 @@ static void setInjectorPins() {
 
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
-	engineConfiguration->clutchDownPin = GPIOC_4; // Clutch switch input
+	engineConfiguration->clutchDownPin = GPIO_UNASSIGNED;
 	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
 	engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
-	engineConfiguration->malfunctionIndicatorPin = H144_OUT_IO8;
+	engineConfiguration->malfunctionIndicatorPin = GPIO_UNASSIGNED;
 }
 
 static void setIgnitionPins() {
@@ -62,24 +62,25 @@ static void setupVbatt() {
 	// 33k / 6.8k
 	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
 
-	// pin input +12 from Main Relay
-	engineConfiguration->vbattAdcChannel = EFI_ADC_5; // 4T
+	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
 
 	engineConfiguration->adcVcc = 3.29f;
 }
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = GPIOA_6;
-	engineConfiguration->triggerInputPins[1] = GPIOB_1;
+	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
+	engineConfiguration->triggerInputPins[1] = H144_IN_CAM;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
+	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engineConfiguration->map.sensor.hwChannel = EFI_ADC_11;
+	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
+	engineConfiguration->baroSensor.type = MT_MPXH6400;
+	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -141,20 +142,11 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->isSdCardEnabled = true;
-
-	engineConfiguration->enableSoftwareKnock = true;
-
-	engineConfiguration->boostControlPin = H144_LS_6;
-	engineConfiguration->acSwitch = H144_IN_D_AUX3;
-	engineConfiguration->acRelayPin = H144_OUT_IO6;
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
-	engineConfiguration->idle.solenoidPin = GPIOD_14;	// OUT_PWM5
-	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
-    engineConfiguration->tachOutputPin = H144_OUT_PWM1;
-	engineConfiguration->alternatorControlPin = H144_OUT_PWM7;
-	engineConfiguration->fan2Pin = H144_OUT_IO2;
+	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
+	engineConfiguration->fanPin = H144_OUT_PWM4;
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+    engineConfiguration->tachOutputPin = H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

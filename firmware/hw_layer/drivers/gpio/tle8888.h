@@ -82,6 +82,5 @@ void tle8888_req_init();
 void tle8888_dump_regs();
 
 #if EFI_TUNER_STUDIO
-#include "tunerstudio_debug_struct.h"
-void tle8888PostState(TsDebugChannels *tsDebugChannels);
+void tle8888PostState();
 #endif /* EFI_TUNER_STUDIO */

@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * @see LiveDataParserPanelSandbox
+ *
  */
 public class LiveDataParserSandbox {
     public static void main(String[] args) {

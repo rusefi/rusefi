@@ -448,6 +448,9 @@ typedef enum {
 
 	MT_GM_1_BAR = 13,
 
+	/**
+	 * 4 bar
+	 */
 	MT_MPXH6400 = 14,
 
 	Force_4_bytes_size_cranking_map_type = ENUM_32_BITS,
@@ -531,6 +534,7 @@ typedef enum {
 typedef enum {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
+	TCHARGE_MODE_AIR_INTERP_TABLE = 2,
 	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS,
 } tChargeMode_e;
 
@@ -664,3 +668,25 @@ typedef enum __attribute__ ((__packed__)) {
     HPFP_CAM_IN2 = 3,
     HPFP_CAM_EX2 = 4,
 } hpfp_cam_e;
+
+
+#if __cplusplus
+#include <cstdint>
+
+enum class TsCalMode : uint8_t {
+	None = 0,
+	Tps1Max = 1,
+	Tps1Min = 2,
+	EtbKp = 3,
+	EtbKi = 4,
+	EtbKd = 5,
+	Tps1SecondaryMax = 6,
+	Tps1SecondaryMin = 7,
+	Tps2Max = 8,
+	Tps2Min = 9,
+	Tps2SecondaryMax = 10,
+	Tps2SecondaryMin = 11,
+	PedalMin = 12,
+	PedalMax = 13,
+};
+#endif // __cplusplus

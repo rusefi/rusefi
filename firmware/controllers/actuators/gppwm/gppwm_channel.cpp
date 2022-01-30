@@ -78,7 +78,7 @@ percent_t GppwmChannel::getOutput() const {
 		return m_config->dutyIfError;
 	}
 
-	float rpm = GET_RPM();
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	float result = m_table->getValue(rpm, loadAxisValue.Value);
 

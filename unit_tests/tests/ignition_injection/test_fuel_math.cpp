@@ -200,3 +200,50 @@ TEST(FuelMath, CylinderFuelTrim) {
 	EXPECT_NEAR(engine->injectionMass[2], unadjusted * 1.02, EPS4D);
 	EXPECT_NEAR(engine->injectionMass[3], unadjusted * 1.04, EPS4D);
 }
+
+struct MockIdle : public MockIdleController {
+	bool isIdling = false;
+
+	bool isIdlingOrTaper() const override {
+		return isIdling;
+	}
+};
+
+TEST(FuelMath, IdleVeTable) {
+	EngineTestHelper eth(TEST_ENGINE);
+
+	MockAirmass dut;
+
+	// Install mock idle controller
+	MockIdle idler;
+	engine->engineModules.get<IdleController>().set(&idler);
+
+	// Main VE table returns 50
+	EXPECT_CALL(dut.veTable, getValue(_, _)).WillRepeatedly(Return(50));
+
+	// Idle VE table returns 40
+	setTable(config->idleVeTable, 40);
+
+	// Enable separate idle VE table
+	engineConfiguration->useSeparateVeForIdle = true;
+	engineConfiguration->idlePidDeactivationTpsThreshold = 10;
+
+	// Set TPS so this works
+	Sensor::setMockValue(SensorType::Tps1, 0);
+
+	// Gets normal VE table
+	idler.isIdling = false;
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.5f);
+
+	// Gets idle VE table
+	idler.isIdling = true;
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.4f);
+
+	// As TPS approaches idle threshold, phase-out the idle VE table
+	Sensor::setMockValue(SensorType::Tps1, 2.5f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.425f);
+	Sensor::setMockValue(SensorType::Tps1, 5.0f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.45f);
+	Sensor::setMockValue(SensorType::Tps1, 7.5f);
+	EXPECT_FLOAT_EQ(dut.getVe(1000, 50), 0.475f);
+}

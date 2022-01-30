@@ -448,7 +448,7 @@ static msg_t hipThread(void *arg) {
 		msg_t msg;
 
 		/* load new/updated settings */
-		instance.handleSettings(GET_RPM() DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
+		instance.handleSettings(Sensor::getOrZero(SensorType::Rpm) DEFINE_PARAM_SUFFIX(PASS_HIP_PARAMS));
 		/* in advanced more driver will set channel while reading integrator value */
 		if (!instance.adv_mode) {
 			/* switch input channel */

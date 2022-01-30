@@ -16,10 +16,10 @@ TEST(trigger, testNoStartUpWarningsNoSyncronizationTrigger) {
 	EngineTestHelper eth(TEST_ENGINE);
 	// one tooth does not need synchronization it just counts tooth
 	eth.setTriggerType(TT_ONE);
-	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 
 	eth.fireTriggerEvents2(/*count*/10, /*duration*/50);
-	ASSERT_EQ(1200,  GET_RPM()) << "testNoStartUpWarnings RPM";
+	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarningsNoSyncronizationTrigger";
 }
 
@@ -29,7 +29,7 @@ TEST(trigger, testNoStartUpWarnings) {
 	engineConfiguration->trigger.customTotalToothCount = 3;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
 	eth.setTriggerType(TT_TOOTHED_WHEEL);
-	ASSERT_EQ( 0,  GET_RPM()) << "testNoStartUpWarnings RPM";
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 
 	for (int i = 0;i < 10;i++) {
 		eth.fireRise(50);
@@ -38,7 +38,7 @@ TEST(trigger, testNoStartUpWarnings) {
 		eth.fireFall(150);
 	}
 
-	ASSERT_EQ(400,  GET_RPM()) << "testNoStartUpWarnings RPM";
+	ASSERT_EQ(400,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings";
 	// now let's post something unneeded
 	eth.fireRise(50);
@@ -61,7 +61,7 @@ TEST(trigger, testNoStartUpWarnings) {
 TEST(trigger, testNoisyInput) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	ASSERT_EQ( 0,  GET_RPM()) << "testNoisyInput RPM";
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoisyInput RPM";
 
 	eth.firePrimaryTriggerRise();
 	eth.firePrimaryTriggerFall();
@@ -72,7 +72,7 @@ TEST(trigger, testNoisyInput) {
 	eth.firePrimaryTriggerRise();
 	eth.firePrimaryTriggerFall();
 	// error condition since events happened too quick while time does not move
-	ASSERT_EQ(NOISY_RPM,  GET_RPM()) << "testNoisyInput RPM should be noisy";
+	ASSERT_EQ(NOISY_RPM,  Sensor::getOrZero(SensorType::Rpm)) << "testNoisyInput RPM should be noisy";
 
 	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoisyInput";
 	ASSERT_EQ(CUSTOM_SYNC_COUNT_MISMATCH, unitTestWarningCodeState.recentWarnings.get(0)) << "@0";
@@ -91,13 +91,13 @@ TEST(trigger, testCamInput) {
 	eth.setTriggerType(TT_ONE);
 	engineConfiguration->camInputs[0] = GPIOA_10; // we just need to indicate that we have CAM
 
-	ASSERT_EQ( 0,  GET_RPM()) << "testCamInput RPM";
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
 
 	for (int i = 0; i < 5;i++) {
 		eth.fireRise(50);
 	}
 
-	ASSERT_EQ(1200,  GET_RPM()) << "testCamInput RPM";
+	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
 
 	for (int i = 0; i < 600;i++) {
@@ -130,14 +130,14 @@ TEST(trigger, testNB2CamInput) {
 
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 
-	ASSERT_EQ( 0,  GET_RPM());
+	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm)));
 	for (int i = 0; i < 4;i++) {
 		eth.fireRise(25);
-		ASSERT_EQ( 0,  GET_RPM());
+		ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm)));
 	}
 	eth.fireRise(25);
 	// first time we have RPM
-	ASSERT_EQ(1200,  GET_RPM());
+	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
 
 	int totalRevolutionCountBeforeVvtSync = 6;
 	// need to be out of VVT sync to see VVT sync in action

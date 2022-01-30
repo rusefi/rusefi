@@ -215,6 +215,10 @@ static const void * getStructAddr(live_data_e structId) {
 		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
 	case LDS_tps_accel_state:
 		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
+#if EFI_HPFP
+	case LDS_high_pressure_fuel_pump:
+		return static_cast<high_pressure_fuel_pump_s*>(&engine->module<HpfpController>().unmock());
+#endif // EFI_HPFP
 	case LDS_main_relay:
 		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
 #if EFI_BOOST_CONTROL

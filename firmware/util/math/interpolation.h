@@ -24,6 +24,8 @@ int findIndex2(const float array[], unsigned size, float value);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
 
+// _technically_ and _theoretically_ we can support flat line for both bins and values but I am not sure if
+// such a rare case is something we want to support
 template<typename TValue, int TSize>
 void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 	for (size_t i = 0; i < TSize - 1; i++) {
@@ -217,13 +219,3 @@ void setCurveValue(const kType bins[], VType values[], int size, float key, floa
 }
 
 void initInterpolation();
-
-class FastInterpolation {
-public:
-	FastInterpolation();
-	FastInterpolation(float x1, float y1, float x2, float y2);
-	void init(float x1, float y1, float x2, float y2);
-	float getValue(float x) const;
-private:
-	float a, b;
-};

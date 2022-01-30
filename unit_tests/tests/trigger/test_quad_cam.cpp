@@ -24,14 +24,14 @@ TEST(trigger, testQuadCam) {
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
 	engineConfiguration->vvtCamSensorUseRise = true;
 
-	ASSERT_EQ(0, GET_RPM());
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 	for (int i = 0; i < 2;i++) {
 		eth.fireRise(25);
-		ASSERT_EQ( 0,  GET_RPM());
+		ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm));
 	}
 	eth.fireRise(25);
 	// first time we have RPM
-	ASSERT_EQ(2400, GET_RPM());
+	ASSERT_EQ(2400, Sensor::getOrZero(SensorType::Rpm));
 
 	// need to be out of VVT sync to see VVT sync in action
 	eth.fireRise(25);

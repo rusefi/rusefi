@@ -65,7 +65,7 @@ TEST(ignition, trailingSpark) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
-	ASSERT_EQ( 3000,  GET_RPM()) << "RPM#0";
+	ASSERT_EQ( 3000,  Sensor::getOrZero(SensorType::Rpm)) << "RPM#0";
 	eth.clearQueue();
 
 	/**

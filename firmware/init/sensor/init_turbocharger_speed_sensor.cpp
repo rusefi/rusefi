@@ -4,7 +4,8 @@
 #include "frequency_sensor.h"
 #include "turbocharger_speed_converter.h"
 
-static FrequencySensor turbochargerSpeedSensor(SensorType::TurbochargerSpeed, MS2NT(500));
+// Filter parameter of 0.01 filters over roughly 100 teeth
+static FrequencySensor turbochargerSpeedSensor(SensorType::TurbochargerSpeed, MS2NT(500), 0.01f);
 static TurbochargerSpeedConverter turbochargerSpeedConverter;
 
 

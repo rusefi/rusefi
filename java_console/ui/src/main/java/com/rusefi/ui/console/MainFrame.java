@@ -10,13 +10,11 @@ import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.TimeZone;
 
-import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class MainFrame {

@@ -15,6 +15,16 @@ void setHellen176LedPins();
 
 void detectHellenBoardType();
 
+// stm32 UART8
+#define H144_UART1_RX GPIOE_0
+#define H144_UART1_TX GPIOE_1
+
+// stm32 UART2
+#define H144_UART2_RX GPIOD_6
+#define H144_UART2_TX GPIOD_5
+
+#define H144_LED1_RED GPIOG_0
+#define H176_LED1_RED GPIOH_8
 
 #define H144_LS_1 GPIOG_7
 #define H144_LS_2 GPIOG_8
@@ -68,10 +78,12 @@ void detectHellenBoardType();
 // IN_IAT AIN14 PC3
 #define H144_IN_IAT EFI_ADC_13
 
-// IN_TPS AIN17 PA4
-#define H144_IN_TPS EFI_ADC_4
 // IN_PPS AIN18 PA3
 #define H144_IN_PPS EFI_ADC_3
+// IN_TPS AIN17 PA4
+#define H144_IN_TPS EFI_ADC_4
+// VIGN PA5
+#define H144_IN_VBATT EFI_ADC_5
 
 // IN_MAP1 AIN9 PC0
 #define H144_IN_MAP1 EFI_ADC_10

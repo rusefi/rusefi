@@ -14,10 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -126,9 +123,16 @@ public class DfuFlasher {
 
     private static void executeDFU(StatusWindow wnd) {
         StringBuffer stdout = new StringBuffer();
-        String errorResponse = ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-                getDfuWriteCommand(),
-                DFU_BINARY, wnd, stdout);
+        String errorResponse;
+        try {
+            errorResponse = ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                    getDfuWriteCommand(),
+                    DFU_BINARY, wnd, stdout);
+        } catch (FileNotFoundException e) {
+            wnd.append("ERROR: " + e);
+            wnd.setErrorState(true);
+            return;
+        }
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             wnd.append("SUCCESS!");
@@ -168,10 +172,12 @@ public class DfuFlasher {
         }
     }
 
-    private static String getDfuWriteCommand() {
-        String hexFileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, "rusefi", ".hex");
+    private static String getDfuWriteCommand() throws FileNotFoundException {
+        String prefix = "rusefi";
+        String suffix = ".hex";
+        String hexFileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
         if (hexFileName == null)
-            return "File not found";
+            throw new FileNotFoundException("File not found " + prefix + "*" + suffix);
         String hexAbsolutePath = new File(hexFileName).getAbsolutePath();
 
         return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " -v -s";

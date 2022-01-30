@@ -52,7 +52,7 @@ expected<angle_t> VvtController::observePlant() const {
 }
 
 expected<angle_t> VvtController::getSetpoint() {
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
 
@@ -90,7 +90,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 }
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
-	float rpm = GET_RPM();
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	// todo: make this configurable?
 	bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;

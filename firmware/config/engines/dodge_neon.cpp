@@ -369,7 +369,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->canNbcType = CAN_BUS_NBC_BMW;
 //	engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;
 
-	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 10;
 
 	engineConfiguration->wwaeTau = 1.0f;
