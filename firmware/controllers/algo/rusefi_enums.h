@@ -534,6 +534,7 @@ typedef enum {
 typedef enum {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
+	TCHARGE_MODE_AIR_INTERP_TABLE = 2,
 	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS,
 } tChargeMode_e;
 
