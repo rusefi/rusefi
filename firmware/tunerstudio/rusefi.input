@@ -644,6 +644,14 @@ enable2ndByteCanID = false
 		yBins       = wwBetaMapValues
 		gauge       = MAPGauge
 
+	curve = tchargeCurve, "Charge temperature estimation coefficient"
+		columnLabel = "flow", "coefficient"
+		xAxis = 0, 500, 6
+		yAxis = 0, 100, 5
+		xBins = tchargeBins, mafEstimate
+		yBins = tchargeValues
+		gauge = tChargeGauge
+
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
 
@@ -1829,6 +1837,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = tChargeGeneralSettings
 		panel = tChargeRpmTpsSettings, { tChargeMode == 0}
 		panel = tChargeAirInterpSettings, { tChargeMode == 1}
+		panel = tchargeCurve, { tChargeMode == 2 }
 
 	dialog = baseInjection, "General"
 		field = "Enabled",						isInjectionEnabled
