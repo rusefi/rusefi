@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jan 27 23:42:26 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Jan 30 13:58:45 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -641,6 +641,8 @@ case Force_4bytes_size_tChargeMode_e:
   return "Force_4bytes_size_tChargeMode_e";
 case TCHARGE_MODE_AIR_INTERP:
   return "TCHARGE_MODE_AIR_INTERP";
+case TCHARGE_MODE_AIR_INTERP_TABLE:
+  return "TCHARGE_MODE_AIR_INTERP_TABLE";
 case TCHARGE_MODE_RPM_TPS:
   return "TCHARGE_MODE_RPM_TPS";
   }
