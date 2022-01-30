@@ -311,7 +311,7 @@ static void showFuelInfo2(float rpm, float engineLoad) {
 
 #if EFI_ENGINE_CONTROL
 static void showFuelInfo() {
-	showFuelInfo2((float) GET_RPM(), getFuelingLoad());
+	showFuelInfo2(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad());
 }
 #endif
 
@@ -554,8 +554,12 @@ static void updateRawSensors() {
 	engine->outputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	engine->outputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
 	engine->outputChannels.rawMaf = Sensor::getRaw(SensorType::Maf);
+	engine->outputChannels.rawMap = Sensor::getRaw(SensorType::MapSlow);
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
+
+	// TODO: transition AFR to new sensor model
+	engine->outputChannels.rawAfr = getVoltageDivided("ego", engineConfiguration->afr.hwChannel);
 }
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
@@ -657,6 +661,7 @@ static void updateFlags() {
 	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition().value;
 	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection().value;
 	engine->outputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
+	engine->outputChannels.dfcoActive = engine->module<DfcoController>()->cutFuel();
 
 #if EFI_LAUNCH_CONTROL
 	engine->outputChannels.launchTriggered = engine->launchController.isLaunchCondition;
@@ -853,7 +858,7 @@ void updateTunerStudioState() {
 		break;
 	case DBG_INSTANT_RPM:
 		{
-			tsOutputChannels->debugFloatField2 = instantRpm / GET_RPM();
+			tsOutputChannels->debugFloatField2 = instantRpm / Sensor::getOrZero(SensorType::Rpm);
 
 			tsOutputChannels->mostRecentTimeBetweenSparkEvents = engine->mostRecentTimeBetweenSparkEvents;
 			tsOutputChannels->mostRecentTimeBetweenIgnitionEvents = engine->mostRecentTimeBetweenIgnitionEvents;
@@ -866,7 +871,7 @@ void updateTunerStudioState() {
 		break;
 	case DBG_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)
-		tle8888PostState(tsOutputChannels->getDebugChannels());
+		tle8888PostState();
 #endif /* BOARD_TLE8888_COUNT */
 		break;
 	case DBG_LOGIC_ANALYZER: 

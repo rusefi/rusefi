@@ -15,7 +15,7 @@ static IdentityFunction identityFunc;
 class FrequencySensorTest : public ::testing::Test {
 public:
 	FrequencySensorTest()
-		: dut(SensorType::FuelEthanolPercent, MS2NT(50))
+		: dut(SensorType::FuelEthanolPercent, MS2NT(50), 0.5f)
 	{
 	}
 
@@ -32,7 +32,7 @@ public:
 	 *  (as Sensor works by falling edge)
 	 */
 	void generatePwm(EngineTestHelper &eth, float freqHz) {
-		constexpr auto periods = 50;
+		constexpr auto periods = 1000;
 		auto period = (1 / freqHz);
 
 		std::cout << "PERIOD: " << period << std::endl;
@@ -65,6 +65,6 @@ TEST_F(FrequencySensorTest, testValidWithPwm) {
 	{
 		auto s = Sensor::get(SensorType::FuelEthanolPercent);
 		EXPECT_TRUE(s.Valid);
-		EXPECT_FLOAT_EQ(s.Value, 10);
+		EXPECT_NEAR(s.Value, 10, 1e-3);
 	}
 }

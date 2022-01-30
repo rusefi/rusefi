@@ -221,6 +221,8 @@ void Engine::periodicSlowCallback() {
 	updateSlowSensors();
 	checkShutdown();
 
+	tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
+
 	updateVrPwm();
 
 #if EFI_FSIO
@@ -291,7 +293,7 @@ void Engine::updateSlowSensors() {
 	updateSwitchInputs();
 
 #if EFI_ENGINE_CONTROL
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	isEngineChartEnabled = engineConfiguration->isEngineChartEnabled && rpm < engineConfiguration->engineSnifferRpmThreshold;
 	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
@@ -441,7 +443,7 @@ void Engine::OnTriggerSynchronizationLost() {
 
 void Engine::OnTriggerInvalidIndex(int currentIndex) {
 	// let's not show a warning if we are just starting to spin
-	if (GET_RPM() != 0) {
+	if (Sensor::getOrZero(SensorType::Rpm) != 0) {
 		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
 		triggerCentral.triggerState.setTriggerErrorState();
 	}
@@ -514,9 +516,7 @@ void Engine::watchdog() {
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 */
-	float secondsSinceTriggerEvent = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
-
-	if (secondsSinceTriggerEvent < 0.5f) {
+	if (engine->triggerCentral.engineMovedRecently()) {
 		// Engine moved recently, no need to safe pins.
 		return;
 	}

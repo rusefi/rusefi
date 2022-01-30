@@ -76,4 +76,8 @@ public enum FieldType {
             throw new UnsupportedOperationException("storage size is unclear on " + this);
         return storageSize;
     }
+
+    public boolean isString() {
+        return this == STRING;
+    }
 }

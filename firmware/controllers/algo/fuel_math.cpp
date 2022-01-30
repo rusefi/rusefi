@@ -280,8 +280,10 @@ float getInjectionMass(int rpm) {
 	float cycleFuelMass = getCycleFuelMass(isCranking, baseFuelMass);
 	efiAssert(CUSTOM_ERR_ASSERT, !cisnan(cycleFuelMass), "NaN cycleFuelMass", 0);
 
-	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	cycleFuelMass *= engine->engineState.fuelCutoffCorrection;
+	if (engine->module<DfcoController>()->cutFuel()) {
+		// If decel fuel cut, zero out fuel
+		cycleFuelMass = 0;
+	}
 
 	float durationMultiplier = getInjectionModeDurationMultiplier();
 	float injectionFuelMass = cycleFuelMass * durationMultiplier;
@@ -347,57 +349,6 @@ float getIatFuelCorrection() {
 	return interpolate2d(iat, config->iatFuelCorrBins, config->iatFuelCorr);
 }
 
-/**
- * @brief	Called from EngineState::periodicFastCallback to update the state.
- * @note The returned value is float, not boolean - to implement taper (smoothed correction).
- * @return	Fuel duration correction for fuel cut-off control (ex. if coasting). No correction if 1.0
- */
-float getFuelCutOffCorrection(efitick_t nowNt, int rpm) {
-	// no corrections by default
-	float fuelCorr = 1.0f;
-
-	// coasting fuel cut-off correction
-	if (engineConfiguration->coastingFuelCutEnabled) {
-		auto [tpsValid, tpsPos] = Sensor::get(SensorType::Tps1);
-		if (!tpsValid) {
-			return 1.0f;
-		}
-
-		const auto [cltValid, clt] = Sensor::get(SensorType::Clt);
-		if (!cltValid) {
-			return 1.0f;
-		}
-
-		const auto [mapValid, map] = Sensor::get(SensorType::Map);
-		if (!mapValid) {
-			return 1.0f;
-		}
-
-		// gather events
-		bool mapDeactivate = (map >= engineConfiguration->coastingFuelCutMap);
-		bool tpsDeactivate = (tpsPos >= engineConfiguration->coastingFuelCutTps);
-		// If no CLT sensor (or broken), don't allow DFCO
-		bool cltDeactivate = clt < (float)engineConfiguration->coastingFuelCutClt;
-		bool rpmDeactivate = (rpm < engineConfiguration->coastingFuelCutRpmLow);
-		bool rpmActivate = (rpm > engineConfiguration->coastingFuelCutRpmHigh);
-		
-		// state machine (coastingFuelCutStartTime is also used as a flag)
-		if (!mapDeactivate && !tpsDeactivate && !cltDeactivate && rpmActivate) {
-			engine->engineState.coastingFuelCutStartTime = nowNt;
-		} else if (mapDeactivate || tpsDeactivate || rpmDeactivate || cltDeactivate) {
-			engine->engineState.coastingFuelCutStartTime = 0;
-		}
-		// enable fuelcut?
-		if (engine->engineState.coastingFuelCutStartTime != 0) {
-			// todo: add taper - interpolate using (nowNt - coastingFuelCutStartTime)?
-			fuelCorr = 0.0f;
-		}
-	}
-	
-	// todo: add other fuel cut-off checks here (possibly cutFuelOnHardLimit?)
-	return fuelCorr;
-}
-
 float getBaroCorrection() {
 	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 		// Default to 1atm if failed
@@ -406,7 +357,7 @@ float getBaroCorrection() {
 		float correction = interpolate3d(
 			engineConfiguration->baroCorrTable,
 			engineConfiguration->baroCorrPressureBins, pressure,
-			engineConfiguration->baroCorrRpmBins, GET_RPM()
+			engineConfiguration->baroCorrRpmBins, Sensor::getOrZero(SensorType::Rpm)
 		);
 
 		if (cisnan(correction) || correction < 0.01) {

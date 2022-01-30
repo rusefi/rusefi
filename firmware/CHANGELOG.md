@@ -25,9 +25,7 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
-## Month 202x Release - "Release Name"
-
-## January 2022 Release - "Rubber ducky"
+## January 2022 Release - "Green Juice"
 
 ### Added
  - Per-cylinder fuel trim tables
@@ -36,6 +34,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Fixed
  - rusefi_Console: Too long re-connection time #3305
+ - Bosch Quick Start on B6 Passat is confused about phase #3812
 
 ## December 2021 Release - "Cookie Exchange"
 

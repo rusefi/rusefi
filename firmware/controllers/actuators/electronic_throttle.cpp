@@ -298,7 +298,7 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	// and let the engine idle.
 	float sanitizedPedal = clampF(0, pedalPosition.value_or(0), 100);
 	
-	float rpm = GET_RPM();
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	float targetFromTable = m_pedalMap->getValue(rpm, sanitizedPedal);
 	engine->engineState.targetFromTable = targetFromTable;
 
@@ -543,7 +543,7 @@ void EtbController::update() {
 	}
 
 	if (engineConfiguration->disableEtbWhenEngineStopped) {
-		if (engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt()) > 1) {
+		if (!engine->triggerCentral.engineMovedRecently()) {
 			// If engine is stopped and so configured, skip the ETB update entirely
 			// This is quieter and pulls less power than leaving it on all the time
 			m_motor->disable();
@@ -557,7 +557,7 @@ void EtbController::update() {
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	// Update local state about autotune
-	m_isAutotune = GET_RPM() == 0
+	m_isAutotune = Sensor::getOrZero(SensorType::Rpm) == 0
 		&& engine->etbAutoTune
 		&& m_function == ETB_Throttle1;
 
@@ -583,7 +583,7 @@ struct EtbImpl final : public EtbController {
 #if EFI_TUNER_STUDIO
 	if (m_isAutocal) {
 		// Don't allow if engine is running!
-		if (GET_RPM() > 0) {
+		if (Sensor::getOrZero(SensorType::Rpm) > 0) {
 			m_isAutocal = false;
 			return;
 		}

@@ -19,7 +19,7 @@ static void doTest(const char* testFile, int expectedRpm) {
 	}
 
 	ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";
-	ASSERT_EQ(expectedRpm, GET_RPM())<< reader.lineIndex();
+	ASSERT_EQ(expectedRpm, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
 
 TEST(realk24, crankingNoPlugs1) {

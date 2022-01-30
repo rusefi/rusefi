@@ -79,7 +79,6 @@
 #define alignmentFill_at_1847_offset 1847
 #define alignmentFill_at_1873_offset 1873
 #define alignmentFill_at_4007_offset 4007
-#define alignmentFill_at_4638_offset 4638
 #define alignmentFill_at_62_offset 62
 #define alternatorControl_dFactor_offset 1492
 #define alternatorControl_iFactor_offset 1488
@@ -93,6 +92,7 @@
 #define alternatorControlPinMode_offset 674
 #define alternatorOffAboveTps_offset 1676
 #define alternatorPwmFrequency_offset 1876
+#define alwaysInstantRpm_offset 1272
 #define ambiguousOperationMode_offset 500
 #define analogInputDividerCoefficient_offset 472
 #define antiLagActivatePin_offset 910
@@ -534,8 +534,6 @@
 #define CMD_ALTERNATOR_PIN "set_alternator_pin"
 #define CMD_BOOST_PIN "set_boost_pin"
 #define CMD_BURNCONFIG "burnconfig"
-#define CMD_CALIBRATE_PEDAL_DOWN "calibrate_pedal_down"
-#define CMD_CALIBRATE_PEDAL_UP "calibrate_pedal_up"
 #define CMD_DATE "date"
 #define CMD_DISABLE "disable"
 #define CMD_ENABLE "enable"
@@ -583,7 +581,10 @@
 #define coastingFuelCutRpmHigh_offset 2740
 #define coastingFuelCutRpmLow_offset 2742
 #define coastingFuelCutTps_offset 2744
+#define coastingFuelCutVssHigh_offset 1690
+#define coastingFuelCutVssLow_offset 1689
 #define communicationLedPin_offset 1572
+#define complexWallModel_offset 1272
 #define COMPOSITE_DATA_LENGTH 2500
 #define COMPOSITE_DATA_LENGTH_HALF 1250
 #define COMPOSITE_PACKET_COUNT 500
@@ -951,7 +952,7 @@
 #define firingOrder_offset 424
 #define fixedModeTiming_offset 464
 #define fixedTiming_offset 1824
-#define FLASH_DATA_VERSION 10007
+#define FLASH_DATA_VERSION 10009
 #define flexSensorPin_offset 806
 #define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
 #define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
@@ -1069,7 +1070,7 @@
 #define GAUGE_NAME_FUEL_TRIM_2 "fuel: fuel trim 2"
 #define GAUGE_NAME_FUEL_VE "fuel: VE"
 #define GAUGE_NAME_FUEL_WALL_AMOUNT "fuel: wall amount"
-#define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall corr ms"
+#define GAUGE_NAME_FUEL_WALL_CORRECTION "fuel: wall correction"
 #define GAUGE_NAME_FW_VERSION "ECU Software Version"
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
 #define GAUGE_NAME_IAC "Idle Air Valve"
@@ -1314,7 +1315,7 @@
 #define idle_state_e_TPS_THRESHOLD 1
 #define idle_stepperDirectionPin_offset 613
 #define idle_stepperStepPin_offset 614
-#define IDLE_VE_CURVE_SIZE 8
+#define IDLE_VE_SIZE 4
 #define idleAdvance_offset 5564
 #define idleAdvanceBins_offset 5556
 #define idleIncrementalPidCic_offset 748
@@ -1355,8 +1356,9 @@
 #define idleTimingPid_periodMs_offset 3458
 #define idleTimingPid_pFactor_offset 3444
 #define idleTimingPidDeadZone_offset 3464
-#define idleVe_offset 5604
-#define idleVeBins_offset 5596
+#define idleVeLoadBins_offset 5600
+#define idleVeRpmBins_offset 5596
+#define idleVeTable_offset 5604
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
 #define ignition_mode_e_auto_enum "IM_ONE_COIL", "IM_INDIVIDUAL_COILS", "IM_WASTED_SPARK", "IM_TWO_COILS"
@@ -1610,11 +1612,10 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4640
+#define mainUnusedEnd_offset 4690
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
-#define MAP_ACCEL_TAPER 8
 #define MAP_ANGLE_SIZE 8
 #define map_offset 196
 #define map_samplingAngle_offset 228
@@ -1629,8 +1630,6 @@
 #define map_sensor_offset 324
 #define map_sensor_type_offset 332
 #define MAP_WINDOW_SIZE 8
-#define mapAccelTaperBins_offset 1760
-#define mapAccelTaperMult_offset 1792
 #define mapAveragingSchedulingAtIndex_offset 1312
 #define mapCamDetectionAnglePosition_offset 560
 #define mapErrorDetectionTooHigh_offset 1540
@@ -1697,6 +1696,7 @@
 #define narrowToWideOxygen_offset 1912
 #define narrowToWideOxygenBins_offset 1880
 #define noAccelAfterHardLimitPeriodSecs_offset 1308
+#define noFuelTrimAfterDfcoTime_offset 1691
 #define o2heaterPin_offset 746
 #define o2heaterPinModeTodO_offset 747
 #define oilPressure_alignmentFill_offset 2289
@@ -1892,7 +1892,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2419827345
+#define SIGNATURE_HASH 1903147655
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2009,16 +2009,19 @@
 #define tChargeAirDecrLimit_offset 3364
 #define tChargeAirFlowMax_offset 3356
 #define tChargeAirIncrLimit_offset 3360
+#define tchargeBins_offset 1760
 #define tChargeMaxRpmMaxTps_offset 1864
 #define tChargeMaxRpmMinTps_offset 1860
 #define tChargeMinRpmMaxTps_offset 1856
 #define tChargeMinRpmMinTps_offset 1852
-#define tChargeMode_e_auto_enum "TCHARGE_MODE_RPM_TPS", "TCHARGE_MODE_AIR_INTERP"
-#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
+#define tChargeMode_e_auto_enum "TCHARGE_MODE_RPM_TPS", "TCHARGE_MODE_AIR_INTERP", "TCHARGE_MODE_AIR_INTERP_TABLE"
+#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
 #define tChargeMode_e_Force_4bytes_size_tChargeMode_e ENUM_32_BITS
 #define tChargeMode_e_TCHARGE_MODE_AIR_INTERP 1
+#define tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE 2
 #define tChargeMode_e_TCHARGE_MODE_RPM_TPS 0
 #define tChargeMode_offset 3368
+#define tchargeValues_offset 1776
 #define TCU_GEAR_COUNT 10
 #define tcu_solenoid1_offset 1108
 #define tcu_solenoid2_offset 1109
@@ -2039,6 +2042,7 @@
 #define tcuSolenoidTable_offset 17380
 #define tcuUpshiftButtonPin_offset 1578
 #define tcuUpshiftButtonPinMode_offset 3982
+#define tempBooleanForVerySpecialCases_offset 896
 #define test557pin_offset 807
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
@@ -2102,7 +2106,7 @@
 #define tpsAccelEnrichmentThreshold_offset 1692
 #define tpsAccelFractionDivisor_offset 3468
 #define tpsAccelFractionPeriod_offset 3466
-#define tpsAccelLength_offset 1688
+#define tpsAccelLookback_offset 1688
 #define tpsDecelEnleanmentMultiplier_offset 1708
 #define tpsDecelEnleanmentThreshold_offset 1704
 #define tpsErrorDetectionTooHigh_offset 174
@@ -2416,11 +2420,25 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.16.all.2419827345"
+#define TS_SIGNATURE "rusEFI 2022.01.30.all.1903147655"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
+#define TsCalMode_EtbKd 5
+#define TsCalMode_EtbKi 4
+#define TsCalMode_EtbKp 3
+#define TsCalMode_None 0
+#define TsCalMode_PedalMax 13
+#define TsCalMode_PedalMin 12
+#define TsCalMode_Tps1Max 1
+#define TsCalMode_Tps1Min 2
+#define TsCalMode_Tps1SecondaryMax 6
+#define TsCalMode_Tps1SecondaryMin 7
+#define TsCalMode_Tps2Max 8
+#define TsCalMode_Tps2Min 9
+#define TsCalMode_Tps2SecondaryMax 10
+#define TsCalMode_Tps2SecondaryMin 11
 #define tunerStudioSerialSpeed_offset 732
 #define turboSpeedSensorInputPin_offset 1527
 #define turboSpeedSensorMultiplier_offset 1280
@@ -2441,12 +2459,10 @@
 #define unused1130_offset 1740
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
-#define unused1476b3_offset 1272
 #define unused1476b8_offset 1272
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
-#define unused45342_offset 896
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272
@@ -2455,33 +2471,32 @@
 #define unused_1484_bit_29_offset 1272
 #define unused_1484_bit_30_offset 1272
 #define unused_1484_bit_31_offset 1272
-#define unusedBit4_1476_offset 1272
 #define unusedBit_310_31_offset 896
 #define unusedBit_48_31_offset 164
-#define unusedBit_502_10_offset 1740
-#define unusedBit_502_11_offset 1740
-#define unusedBit_502_12_offset 1740
-#define unusedBit_502_13_offset 1740
-#define unusedBit_502_14_offset 1740
-#define unusedBit_502_15_offset 1740
-#define unusedBit_502_16_offset 1740
-#define unusedBit_502_17_offset 1740
-#define unusedBit_502_18_offset 1740
-#define unusedBit_502_19_offset 1740
-#define unusedBit_502_20_offset 1740
-#define unusedBit_502_21_offset 1740
-#define unusedBit_502_22_offset 1740
-#define unusedBit_502_23_offset 1740
-#define unusedBit_502_24_offset 1740
-#define unusedBit_502_25_offset 1740
-#define unusedBit_502_26_offset 1740
-#define unusedBit_502_27_offset 1740
-#define unusedBit_502_28_offset 1740
-#define unusedBit_502_29_offset 1740
-#define unusedBit_502_30_offset 1740
-#define unusedBit_502_31_offset 1740
-#define unusedBit_502_8_offset 1740
-#define unusedBit_502_9_offset 1740
+#define unusedBit_505_10_offset 1740
+#define unusedBit_505_11_offset 1740
+#define unusedBit_505_12_offset 1740
+#define unusedBit_505_13_offset 1740
+#define unusedBit_505_14_offset 1740
+#define unusedBit_505_15_offset 1740
+#define unusedBit_505_16_offset 1740
+#define unusedBit_505_17_offset 1740
+#define unusedBit_505_18_offset 1740
+#define unusedBit_505_19_offset 1740
+#define unusedBit_505_20_offset 1740
+#define unusedBit_505_21_offset 1740
+#define unusedBit_505_22_offset 1740
+#define unusedBit_505_23_offset 1740
+#define unusedBit_505_24_offset 1740
+#define unusedBit_505_25_offset 1740
+#define unusedBit_505_26_offset 1740
+#define unusedBit_505_27_offset 1740
+#define unusedBit_505_28_offset 1740
+#define unusedBit_505_29_offset 1740
+#define unusedBit_505_30_offset 1740
+#define unusedBit_505_31_offset 1740
+#define unusedBit_505_8_offset 1740
+#define unusedBit_505_9_offset 1740
 #define unusedBitHere1_offset 1260
 #define unusedBitHere2_offset 1260
 #define unusedBitHere3_offset 1260
@@ -2495,6 +2510,8 @@
 #define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4171
 #define unusedHere2_offset 1747
+#define unusedMapAccelTaperBins_offset 1792
+#define unusedShort_offset 4640
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164
 #define useETBforIdleControl_offset 748
@@ -2579,6 +2596,7 @@
 #define vvt_mode_e_VVT_NISSAN_VQ 9
 #define vvt_mode_e_VVT_SECOND_HALF 1
 #define vvt_mode_e_VVT_TOYOTA_4_1 6
+#define vvtActivationDelayMs_offset 4638
 #define vvtCamSensorUseRise_offset 748
 #define vvtMode1_offset 1944
 #define vvtMode2_offset 1945
@@ -2608,5 +2626,12 @@
 #define wastegatePositionSensor_offset 1751
 #define wboHeaterPin_offset 681
 #define wheelDiameter_offset 722
+#define WWAE_TABLE_SIZE 8
 #define wwaeBeta_offset 1568
 #define wwaeTau_offset 1480
+#define wwBetaCltValues_offset 4658
+#define wwBetaMapValues_offset 4682
+#define wwCltBins_offset 4642
+#define wwMapBins_offset 4666
+#define wwTauCltValues_offset 4650
+#define wwTauMapValues_offset 4674

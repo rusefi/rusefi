@@ -11,6 +11,10 @@
 #include "os_access.h"
 #include "drivers/gpio/gpio_ext.h"
 
+#if HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
+
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
@@ -420,6 +424,8 @@ void OutputPin::setValue(int logicValue) {
 #endif // ENABLE_PERF_TRACE
 
 #if EFI_UNIT_TEST
+	unitTestTurnedOnCounter++;
+
 	if (verboseMode) {
 		efiPrintf("pin goes %d", logicValue);
 	}
@@ -491,6 +497,10 @@ void OutputPin::initPin(const char *msg, brain_pin_e brainPin) {
 }
 
 void OutputPin::initPin(const char *msg, brain_pin_e brainPin, const pin_output_mode_e *outputMode, bool forceInitWithFatalError) {
+#if EFI_UNIT_TEST
+	unitTestTurnedOnCounter = 0;
+#endif
+
 	if (!isBrainPinValid(brainPin)) {
 		return;
 	}

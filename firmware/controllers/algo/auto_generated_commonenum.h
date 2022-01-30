@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jan 04 03:36:48 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jan 27 22:57:18 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -8,6 +8,9 @@
 const char *getInjectorNonlinearMode(InjectorNonlinearMode value);
 const char *getPidAutoTune_AutoTunerState(PidAutoTune_AutoTunerState value);
 const char *getPidAutoTune_Peak(PidAutoTune_Peak value);
+#if __cplusplus
+const char *getTsCalMode(TsCalMode value);
+#endif //__cplusplus
 const char *getAdc_channel_mode_e(adc_channel_mode_e value);
 const char *getAir_pressure_sensor_type_e(air_pressure_sensor_type_e value);
 const char *getAntiLagActivationMode_e(antiLagActivationMode_e value);

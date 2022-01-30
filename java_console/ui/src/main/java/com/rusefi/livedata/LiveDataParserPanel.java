@@ -67,6 +67,8 @@ public class LiveDataParserPanel {
                 Field field = Field.findFieldOrNull(Fields.VALUES, "", setting.getText());
                 if (field == null)
                     continue;
+                if (field.getType().isString())
+                    continue;
                 Number value = field.getValue(ci);
                 Rectangle r;
                 try {
@@ -102,6 +104,14 @@ public class LiveDataParserPanel {
         } catch (IOException | URISyntaxException e) {
             log.warn("Error reading: " + e);
         }
+    }
+
+    public ParseResult getParseResult() {
+        return parseResult;
+    }
+
+    public JTextPane getText() {
+        return text;
     }
 
     @NotNull

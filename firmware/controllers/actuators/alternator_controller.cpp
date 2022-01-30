@@ -50,7 +50,7 @@ void AlternatorController::onFastCallback() {
 #endif /* EFI_TUNER_STUDIO */
 
 	// todo: migrate this to FSIO
-	bool alternatorShouldBeEnabledAtCurrentRpm = GET_RPM() > engineConfiguration->cranking.rpm;
+	bool alternatorShouldBeEnabledAtCurrentRpm = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->cranking.rpm;
 
 	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
 		// we need to avoid accumulating iTerm while engine is not running

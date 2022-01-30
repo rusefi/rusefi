@@ -36,6 +36,7 @@
 #include "boost_control.h"
 #include "ignition_controller.h"
 #include "alternator_controller.h"
+#include "dfco.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -168,7 +169,7 @@ public:
 	type_list<
 		Mockable<InjectorModel>,
 #if EFI_IDLE_CONTROL
-		IdleController,
+		Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL
 		TriggerScheduler,
 #if EFI_HPFP && EFI_ENGINE_CONTROL
@@ -182,6 +183,8 @@ public:
 		IgnitionController,
 		AcController,
 		PrimeController,
+		DfcoController,
+		Mockable<WallFuelController>,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

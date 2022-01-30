@@ -24,8 +24,8 @@ static OutputPin alphaCrankNPullUp;
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
 	engineConfiguration->injectionPins[1] = H144_LS_2;
-	engineConfiguration->injectionPins[2] = H144_LS_3;
-	engineConfiguration->injectionPins[3] = H144_LS_4;
+	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -79,6 +79,8 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
+	engineConfiguration->baroSensor.type = MT_MPXH6400;
+	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
@@ -140,11 +142,11 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
-	engineConfiguration->acSwitch = H144_IN_D_AUX3;
-	engineConfiguration->fuelPumpPin = GPIOG_2;	// OUT_IO9
-	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIOI_2;	// OUT_LOW3
-    engineConfiguration->tachOutputPin = H144_OUT_PWM1;
+	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
+	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
+	engineConfiguration->fanPin = H144_OUT_PWM4;
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+    engineConfiguration->tachOutputPin = H144_OUT_PWM3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();

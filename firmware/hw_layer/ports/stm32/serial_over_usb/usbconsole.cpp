@@ -1,5 +1,5 @@
 /**
- * @file    usbconsole.c
+ * @file    usbconsole.cpp
  * @brief	USB-over-serial configuration
  *
  * @date Oct 14, 2013

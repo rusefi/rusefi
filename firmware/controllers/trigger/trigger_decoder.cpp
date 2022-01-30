@@ -581,7 +581,7 @@ void TriggerState::decodeTriggerEvent(
 #if EFI_PROD_CODE || EFI_SIMULATOR
 			if (triggerConfiguration.VerboseTriggerSynchDetails || (someSortOfTriggerError && !silentTriggerError)) {
 
-				int rpm = GET_RPM();
+				int rpm = Sensor::getOrZero(SensorType::Rpm);
 				floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 				if (!engineConfiguration->useOnlyRisingEdgeForTrigger) {
 					int time = currentCycle.totalTimeNt[0];
@@ -606,7 +606,7 @@ void TriggerState::decodeTriggerEvent(
 					} else {
 						efiPrintf("%srpm=%d time=%d eventIndex=%d gapIndex=%d: gap=%.3f expected from %.3f to %.3f error=%s",
 								triggerConfiguration.PrintPrefix,
-								GET_RPM(),
+								(int)Sensor::getOrZero(SensorType::Rpm),
 							/* cast is needed to make sure we do not put 64 bit value to stack*/ (int)getTimeNowSeconds(),
 							currentCycle.current_index,
 							i,

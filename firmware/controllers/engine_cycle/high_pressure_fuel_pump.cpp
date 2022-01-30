@@ -126,17 +126,21 @@ angle_t HpfpQuantity::pumpAngleFuel(int rpm, HpfpController *model) {
 
 void HpfpController::onFastCallback() {
 	// Pressure current/target calculation
-	int rpm = engine->rpmCalculator.getRpm();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 
+	isHpfpInactive = rpm < rpm_spinning_cutoff ||
+		    engineConfiguration->hpfpCamLobes == 0 ||
+		    engineConfiguration->hpfpPumpVolume == 0 ||
+		    !enginePins.hpfpValve.isInitialized();
 	// What conditions can we not handle?
-	if (rpm < rpm_spinning_cutoff ||
-	    engineConfiguration->hpfpCamLobes == 0 ||
-	    engineConfiguration->hpfpPumpVolume == 0 ||
-	    !enginePins.hpfpValve.isInitialized()) {
+	if (isHpfpInactive) {
 		m_quantity.reset();
 		m_requested_pump = 0;
 		m_deadtime = 0;
 	} else {
+#if EFI_PROD_CODE
+		efiAssertVoid(OBD_PCM_Processor_Fault, engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6, "Too few trigger tooth for this number of HPFP lobes");
+#endif // EFI_PROD_CODE
 		// Convert deadtime from ms to degrees based on current RPM
 		float deadtime_ms = interpolate2d(
 			Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
@@ -178,7 +182,8 @@ void HpfpController::pinTurnOff(HpfpController *self) {
 }
 
 void HpfpController::scheduleNextCycle() {
-	if (!enginePins.hpfpValve.isInitialized()) {
+	noValve = !enginePins.hpfpValve.isInitialized();
+	if (noValve) {
 		m_running = false;
 		return;
 	}
@@ -186,16 +191,24 @@ void HpfpController::scheduleNextCycle() {
 	angle_t lobe = m_lobe.findNextLobe();
 	angle_t angle_requested = m_requested_pump;
 
-	if (angle_requested > engineConfiguration->hpfpMinAngle) {
+	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
+	if (angleAboveMin) {
+		nextStart = lobe - angle_requested - m_deadtime;
+		engine->outputChannels.di_nextStart = nextStart;
+
+		/**
+		 * We are good to use just one m_event instance because new events are scheduled when we turn off valve.
+		 */
 		engine->module<TriggerScheduler>()->scheduleOrQueue(
 			&m_event, TRIGGER_EVENT_UNDEFINED, 0,
-			lobe - angle_requested - m_deadtime,
+			nextStart,
 			{ pinTurnOn, this });
 
 		// Off will be scheduled after turning the valve on
 	} else {
 		// Schedule this, even if we aren't opening the valve this time, since this
 		// will schedule the next lobe.
+		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
 		engine->module<TriggerScheduler>()->scheduleOrQueue(
 			&m_event, TRIGGER_EVENT_UNDEFINED, 0, lobe,
 			{ pinTurnOff, this });

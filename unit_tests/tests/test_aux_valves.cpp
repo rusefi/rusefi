@@ -20,10 +20,10 @@ TEST(misc, testAuxValves) {
 	engineConfiguration->isInjectionEnabled = false;
 
 	eth.fireTriggerEvents2(2 /* count */ , 600 /* ms */);
-	ASSERT_EQ( 100,  GET_RPM()) << "spinning-RPM#1";
+	ASSERT_EQ( 100,  round(Sensor::getOrZero(SensorType::Rpm))) << "spinning-RPM#1";
 
 	eth.assertTriggerEvent("a0", 0, &engine->auxValves[0][0].open, (void*)&auxPlainPinTurnOn, 7, 86);
 	eth.assertTriggerEvent("a1", 1, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 3, 86);
-	eth.assertTriggerEvent("a2", 2, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 1, 86);
+	eth.assertTriggerEvent("a2", 2, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 5, 86);
 
 }

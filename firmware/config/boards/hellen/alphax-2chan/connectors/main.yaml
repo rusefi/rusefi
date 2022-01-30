@@ -10,7 +10,8 @@ pins:
     id: EFI_ADC_5
     class: analog_inputs
     function: +12V
-    type: 12V
+    ts_name: A2 Battery Sense
+    type: 12v
     color: red
   
   - pin: A3
@@ -66,6 +67,14 @@ pins:
     function: Power Ground
     type: gnd
     color: black
+
+  - pin: On-board MAP
+    # H144_IN_MAP3
+    id: EFI_ADC_2
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: On-board MAP
+    color: orange
 
   - pin: B2
     # H144_IN_MAP2 AIN10 PC1
@@ -187,6 +196,8 @@ pins:
 
 info:
   title: AlphaX 2chan
+  name: AlphaX 2chan
+  board_url: https://rusefi.com/s/2chan
   image:
     file: alphax-2chan.jpg
   pins:

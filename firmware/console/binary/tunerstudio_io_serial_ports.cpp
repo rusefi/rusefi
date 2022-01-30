@@ -10,6 +10,9 @@
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"
+#if HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
 
 // These may not be defined due to the HAL, but they're necessary for the compiler to do it's magic
 class UARTDriver;

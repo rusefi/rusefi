@@ -370,6 +370,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->showHumanReadableWarning;
 	if (strEqualCaseInsensitive(name, "stftIgnoreErrorMagnitude"))
 		return engineConfiguration->stftIgnoreErrorMagnitude;
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialCases"))
+		return engineConfiguration->tempBooleanForVerySpecialCases;
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
 		return engineConfiguration->enableSoftwareKnock;
 	if (strEqualCaseInsensitive(name, "verboseVVTDecoding"))
@@ -512,6 +514,10 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->isIgnitionEnabled;
 	if (strEqualCaseInsensitive(name, "isCylinderCleanupEnabled"))
 		return engineConfiguration->isCylinderCleanupEnabled;
+	if (strEqualCaseInsensitive(name, "complexWallModel"))
+		return engineConfiguration->complexWallModel;
+	if (strEqualCaseInsensitive(name, "alwaysInstantRpm"))
+		return engineConfiguration->alwaysInstantRpm;
 	if (strEqualCaseInsensitive(name, "isMapAveragingEnabled"))
 		return engineConfiguration->isMapAveragingEnabled;
 	if (strEqualCaseInsensitive(name, "overrideCrankingIacSetting"))
@@ -642,8 +648,14 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->afterCrankingIACtaperDuration;
 	if (strEqualCaseInsensitive(name, "iacByTpsTaper"))
 		return engineConfiguration->iacByTpsTaper;
-	if (strEqualCaseInsensitive(name, "tpsAccelLength"))
-		return engineConfiguration->tpsAccelLength;
+	if (strEqualCaseInsensitive(name, "tpsAccelLookback"))
+		return engineConfiguration->tpsAccelLookback;
+	if (strEqualCaseInsensitive(name, "coastingFuelCutVssLow"))
+		return engineConfiguration->coastingFuelCutVssLow;
+	if (strEqualCaseInsensitive(name, "coastingFuelCutVssHigh"))
+		return engineConfiguration->coastingFuelCutVssHigh;
+	if (strEqualCaseInsensitive(name, "noFuelTrimAfterDfcoTime"))
+		return engineConfiguration->noFuelTrimAfterDfcoTime;
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
 		return engineConfiguration->tpsAccelEnrichmentThreshold;
 	if (strEqualCaseInsensitive(name, "engineLoadAccelLength"))
@@ -904,6 +916,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hpfpPidI;
 	if (strEqualCaseInsensitive(name, "hpfpTargetDecay"))
 		return engineConfiguration->hpfpTargetDecay;
+	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
+		return engineConfiguration->vvtActivationDelayMs;
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 		return config->vssFilterReciprocal;
 	return EFI_ERROR_CODE;
@@ -1834,6 +1848,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "tempBooleanForVerySpecialCases"))
+	{
+		engineConfiguration->tempBooleanForVerySpecialCases = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "enableSoftwareKnock"))
 	{
 		engineConfiguration->enableSoftwareKnock = (int)value;
@@ -2189,6 +2208,16 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->isCylinderCleanupEnabled = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "complexWallModel"))
+	{
+		engineConfiguration->complexWallModel = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "alwaysInstantRpm"))
+	{
+		engineConfiguration->alwaysInstantRpm = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "isMapAveragingEnabled"))
 	{
 		engineConfiguration->isMapAveragingEnabled = (int)value;
@@ -2514,9 +2543,24 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->iacByTpsTaper = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "tpsAccelLength"))
+	if (strEqualCaseInsensitive(name, "tpsAccelLookback"))
 	{
-		engineConfiguration->tpsAccelLength = (int)value;
+		engineConfiguration->tpsAccelLookback = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "coastingFuelCutVssLow"))
+	{
+		engineConfiguration->coastingFuelCutVssLow = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "coastingFuelCutVssHigh"))
+	{
+		engineConfiguration->coastingFuelCutVssHigh = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "noFuelTrimAfterDfcoTime"))
+	{
+		engineConfiguration->noFuelTrimAfterDfcoTime = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
@@ -3167,6 +3211,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "hpfpTargetDecay"))
 	{
 		engineConfiguration->hpfpTargetDecay = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
+	{
+		engineConfiguration->vvtActivationDelayMs = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))

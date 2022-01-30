@@ -83,6 +83,12 @@ bool shouldUpdateCorrection(SensorType sensor) {
 		return false;
 	}
 
+	// Pause correction if DFCO was active recently
+	auto timeSinceDfco = engine->module<DfcoController>()->getTimeSinceCut();
+	if (timeSinceDfco < engineConfiguration->noFuelTrimAfterDfcoTime) {
+		return false;
+	}
+
 	return true;
 }
 
@@ -91,7 +97,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 		return {};
 	}
 
-	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), engineConfiguration->stft);
+	size_t binIdx = computeStftBin(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad(), engineConfiguration->stft);
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.fuelClosedLoopBinIdx = binIdx;

@@ -292,7 +292,7 @@ float IdleController::getIdlePosition() {
 		if (useInstantRpmForIdle) {
 			rpm = engine->triggerCentral.triggerState.getInstantRpm();
 		} else {
-			rpm = GET_RPM();
+			rpm = Sensor::getOrZero(SensorType::Rpm);
 		}
 
 		// Compute the target we're shooting for
