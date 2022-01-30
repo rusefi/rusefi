@@ -1892,7 +1892,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2710500415
+#define SIGNATURE_HASH 1903147655
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2009,16 +2009,19 @@
 #define tChargeAirDecrLimit_offset 3364
 #define tChargeAirFlowMax_offset 3356
 #define tChargeAirIncrLimit_offset 3360
+#define tchargeBins_offset 1760
 #define tChargeMaxRpmMaxTps_offset 1864
 #define tChargeMaxRpmMinTps_offset 1860
 #define tChargeMinRpmMaxTps_offset 1856
 #define tChargeMinRpmMinTps_offset 1852
-#define tChargeMode_e_auto_enum "TCHARGE_MODE_RPM_TPS", "TCHARGE_MODE_AIR_INTERP"
-#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
+#define tChargeMode_e_auto_enum "TCHARGE_MODE_RPM_TPS", "TCHARGE_MODE_AIR_INTERP", "TCHARGE_MODE_AIR_INTERP_TABLE"
+#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
 #define tChargeMode_e_Force_4bytes_size_tChargeMode_e ENUM_32_BITS
 #define tChargeMode_e_TCHARGE_MODE_AIR_INTERP 1
+#define tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE 2
 #define tChargeMode_e_TCHARGE_MODE_RPM_TPS 0
 #define tChargeMode_offset 3368
+#define tchargeValues_offset 1776
 #define TCU_GEAR_COUNT 10
 #define tcu_solenoid1_offset 1108
 #define tcu_solenoid2_offset 1109
@@ -2417,7 +2420,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.30.all.2710500415"
+#define TS_SIGNATURE "rusEFI 2022.01.30.all.1903147655"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2507,7 +2510,7 @@
 #define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4171
 #define unusedHere2_offset 1747
-#define unusedMapAccelTaperBins_offset 1760
+#define unusedMapAccelTaperBins_offset 1792
 #define unusedShort_offset 4640
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164
