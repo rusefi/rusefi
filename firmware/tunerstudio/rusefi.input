@@ -237,9 +237,10 @@ enable2ndByteCanID = false
      ; defaultValue = constantName, value;
     defaultValue = wueAfrTargetOffset, -1.5 -1.4 -1.15 -0.95 -0.775 -0.65 -0.5625 -0.5 -0.4375 -0.375 -0.3125 -0.25 -0.1875 -0.125 -0.0625 0
 
+    ; this magic is best described in output_channels.txt search for 'maintainConstantValue'
 	; TPS 1 Primary
-	maintainConstantValue = tpsMax, { (calibrationMode == 1 ) ? calibrationValue : tpsMax }
-	maintainConstantValue = tpsMin, { (calibrationMode == 2 ) ? calibrationValue : tpsMin }
+	maintainConstantValue = tpsMax, { (calibrationMode == @@TsCalMode_Tps1Max@@ ) ? calibrationValue : tpsMax }
+	maintainConstantValue = tpsMin, { (calibrationMode == @@TsCalMode_Tps1Min@@ ) ? calibrationValue : tpsMin }
 
 	; TPS 1 Secondary
 	maintainConstantValue = tps1SecondaryMax, { (calibrationMode == 6 ) ? calibrationValue : tps1SecondaryMax }
@@ -250,13 +251,19 @@ enable2ndByteCanID = false
 	maintainConstantValue = tps2Min, { (calibrationMode == 9 ) ? calibrationValue : tps2Min }
 
 	; TPS 2 Secondary
-	maintainConstantValue = tps2SecondaryMax, { (calibrationMode == 10 ) ? calibrationValue : tps2SecondaryMax }
-	maintainConstantValue = tps2SecondaryMin, { (calibrationMode == 11 ) ? calibrationValue : tps2SecondaryMin }
+	maintainConstantValue = tps2SecondaryMax, { (calibrationMode == @@TsCalMode_Tps2SecondaryMax@@ ) ? calibrationValue : tps2SecondaryMax }
+	maintainConstantValue = tps2SecondaryMin, { (calibrationMode == @@TsCalMode_Tps2SecondaryMin@@ ) ? calibrationValue : tps2SecondaryMin }
 
 	; ETB Auto Gain Calibration
 	maintainConstantValue = etb_pFactor, { (calibrationMode == 3 ) ? calibrationValue : etb_pFactor }
 	maintainConstantValue = etb_iFactor, { (calibrationMode == 4 ) ? calibrationValue : etb_iFactor }
 	maintainConstantValue = etb_dFactor, { (calibrationMode == 5 ) ? calibrationValue : etb_dFactor }
+
+	maintainConstantValue = throttlePedalUpVoltage,          { (calibrationMode == @@TsCalMode_PedalMin@@ ) ? calibrationValue  : throttlePedalUpVoltage }
+	maintainConstantValue = throttlePedalSecondaryUpVoltage, { (calibrationMode == @@TsCalMode_PedalMin@@ ) ? calibrationValue2 : throttlePedalSecondaryUpVoltage }
+
+	maintainConstantValue = throttlePedalWOTVoltage,         { (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue  : throttlePedalWOTVoltage }
+	maintainConstantValue = throttlePedalSecondaryWOTVoltage,{ (calibrationMode == @@TsCalMode_PedalMax@@ ) ? calibrationValue2 : throttlePedalSecondaryWOTVoltage }
 
      requiresPowerCycle = useETBforIdleControl
      requiresPowerCycle = warningLedPin
@@ -388,13 +395,6 @@ enable2ndByteCanID = false
       xBins       = scriptCurve6Bins
       yBins       = scriptCurve6
       showTextValues = true
-
-   curve = mapAccelTaper, "Engine Load Acceleration Enrichment Taper"
-      columnLabel = "Distance", "Multiplier"
-      xAxis       =  0, 128, 10
-      yAxis       = -5,  5, 10
-      xBins       = mapAccelTaperBins
-      yBins       = mapAccelTaperMult
 
 	curve = dwellCorrection, "Dwell time base"
       columnLabel = "RPM", "Dwell"
@@ -611,6 +611,46 @@ enable2ndByteCanID = false
         yAxis       = 0, 5, 6
         xBins       = hpfpDeadtimeVoltsBins
         yBins       = hpfpDeadtimeMS
+
+	curve = wwTauCltCurve, "Evap time vs. CLT"
+		columnLabel = "coolant", "seconds"
+		xAxis       = -40, 120, 9
+		yAxis       = 0, 2, 9
+		xBins       = wwCltBins, coolant
+		yBins       = wwTauCltValues
+		gauge       = CLTGauge
+
+	curve = wwTauMapCurve, "Evap time vs. MAP"
+		columnLabel = "MAP", "mult"
+		xAxis       = 0, 100, 5
+		yAxis       = 0, 2, 9
+		xBins       = wwMapBins, MAPValue
+		yBins       = wwTauMapValues
+		gauge       = MAPGauge
+
+	curve = wwBetaCltCurve, "Impact fraction vs. CLT"
+		columnLabel = "coolant", "fraction"
+		xAxis       = -40, 120, 9
+		yAxis       = 0, 2, 9
+		xBins       = wwCltBins, coolant
+		yBins       = wwBetaCltValues
+		gauge       = CLTGauge
+
+	curve = wwBetaMapCurve, "Impact fraction vs. MAP"
+		columnLabel = "MAP", "mult"
+		xAxis       = 0, 100, 5
+		yAxis       = 0, 2, 9
+		xBins       = wwMapBins, MAPValue
+		yBins       = wwBetaMapValues
+		gauge       = MAPGauge
+
+	curve = tchargeCurve, "Charge temperature estimation coefficient"
+		columnLabel = "flow", "coefficient"
+		xAxis = 0, 500, 6
+		yAxis = 0, 100, 5
+		xBins = tchargeBins, mafEstimate
+		yBins = tchargeValues
+		gauge = tChargeGauge
 
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
@@ -1235,6 +1275,8 @@ gaugeCategory = DynoView
 	indicator = { acState }, "AC off", "AC on", white, black, blue, white
 	indicator = { isIdleClosedLoop }, "not idling", "idling", white, black, green, black
 	indicator = { isIdleCoasting }, "not coasting", "coasting", white, black, green, black
+	indicator = { dfcoActive }, "no decel cut", "decel cut", white, black, yellow, black
+	indicator = { tpsAccelActive }, "no TPS accel", "TPS accel active", white, black, yellow, black
 
     ; error codes
     indicator = { isTpsError}, "tps",   "tps error",   white, black, red,   black
@@ -1343,8 +1385,10 @@ menuDialog = main
 		# Accel enrichment
 		subMenu = AccelEnrich,				"Acceleration enrichment", 0, {isInjectionEnabled == 1}
 		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
-		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
 
+		groupMenu = "Wall wetting AE"
+		groupChildMenu = wwTauCurves, "Evap time", 0, { complexWallModel != 0 }
+		groupChildMenu = wwBetaCurves, "Impact fraction", 0, { complexWallModel != 0 }
 
 	menu = "Ignition"
 		subMenu = ignitionSettings,			"Ignition settings"
@@ -1793,6 +1837,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = tChargeGeneralSettings
 		panel = tChargeRpmTpsSettings, { tChargeMode == 0}
 		panel = tChargeAirInterpSettings, { tChargeMode == 1}
+		panel = tchargeCurve, { tChargeMode == 2 }
 
 	dialog = baseInjection, "General"
 		field = "Enabled",						isInjectionEnabled
@@ -2144,7 +2189,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = pedalSensorLeft, "Accelerator pedal"
 		field = "Accelerator position sensor",			throttlePedalPositionAdcChannel
 		field = "Up voltage",							throttlePedalUpVoltage
+		commandButton = "Grab Up", cmd_calibrate_pedal_up
 		field = "Down (WOT) voltage",					throttlePedalWOTVoltage
+		commandButton = "Grab Down", cmd_calibrate_pedal_down
 		field = "Accelerator position 2nd sensor",		throttlePedalPositionSecondAdcChannel
 		field = "Up voltage",	    					throttlePedalSecondaryUpVoltage
 		field = "Down (WOT) voltage",					throttlePedalSecondaryWOTVoltage
@@ -3220,7 +3267,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = TpsAccelPanel, "TPS"
 		field = "Set 'Debug Mode' to see detailed 'TPS acceleration enrichment' diagnostics"
-   		field = "Length",						tpsAccelLength
+   		field = "Length",						tpsAccelLookback
 		field = "Accel Threshold", 				tpsAccelEnrichmentThreshold
 		field = "Decel Threshold", 				tpsDecelEnleanmentThreshold
 ;		field = "Decel Multiplier",	 			tpsDecelEnleanmentMultiplier
@@ -3229,8 +3276,9 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Fraction Divisor",				tpsAccelFractionDivisor
 		
 	dialog = WallWettingAccelPanel, "Wall Wetting (alpha version)"
-		field = "evaporation time constant / tau",          wwaeTau
-		field = "added to wall coef / beta",                   wwaeBeta
+		field = "Wall fueling model type",				complexWallModel
+		field = "evaporation time constant / tau",		wwaeTau, { complexWallModel == 0 }
+		field = "added to wall coef / beta",			wwaeBeta, { complexWallModel == 0 }
 	
 		
 ;			Tuning->AccelEnrichment
@@ -3240,6 +3288,16 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "No accel after RPM hard limit",		noAccelAfterHardLimitPeriodSecs
 		
 		
+	dialog = wwTauCurves, "Wall wetting AE evaporation time"
+		field = "#Set a base evaporation time based on coolant temperature, and a multiplier based on MAP."
+		panel = wwTauCltCurve
+		panel = wwTauMapCurve
+
+	dialog = wwBetaCurves, "Wall wetting AE impact fraction"
+		field = "#Set a base impact fraction based on coolant temperature, and a multiplier based on MAP."
+		panel = wwBetaCltCurve
+		panel = wwBetaMapCurve
+
 	dialog = auxValvesIO, "Outputs"
 		field = "aux valve #1", 						auxValves1
 		field = "aux valve #2", 						auxValves2
@@ -3621,10 +3679,13 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = coastingFuelCutControl, "Coasting Fuel Cutoff Settings"
 		field = "Enable Coasting Fuel Cutoff",			coastingFuelCutEnabled
 		field = "No cut below CLT",				coastingFuelCutClt, {coastingFuelCutEnabled == 1}
-		field = "Cut fuel above",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
-		field = "Restore fuel below",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
+		field = "RPM cut fuel above",		coastingFuelCutRpmHigh, {coastingFuelCutEnabled == 1}
+		field = "RPM restore fuel below",	coastingFuelCutRpmLow, {coastingFuelCutEnabled == 1}
+		field = "Vehicle speed cut above",		coastingFuelCutVssHigh, {coastingFuelCutEnabled == 1}
+		field = "Vehicle speed restore below",	coastingFuelCutVssLow, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below TPS",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below MAP",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
+		field = "Inhibit closed loop fuel after cut", noFuelTrimAfterDfcoTime, {coastingFuelCutEnabled == 1}
 
     dialog = rotaryDialog, "Rotary"
         field = "Enable Trailing Sparks", enableTrailingSparks

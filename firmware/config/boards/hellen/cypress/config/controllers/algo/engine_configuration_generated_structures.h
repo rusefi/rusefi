@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:23 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2448,8 +2448,9 @@ struct engine_configuration_s {
 	offset 1272 bit 2 */
 	bool isCylinderCleanupEnabled : 1 {};
 	/**
+	 * Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 	offset 1272 bit 3 */
-	bool unused1476b3 : 1 {};
+	bool complexWallModel : 1 {};
 	/**
 	offset 1272 bit 4 */
 	bool alwaysInstantRpm : 1 {};
@@ -2851,11 +2852,29 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e LIS302DLCsPin;
 	/**
-	 * This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles.
-	cycles
+	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
+	sec
 	 * offset 1688
 	 */
-	int tpsAccelLength;
+	scaled_channel<uint8_t, 20, 1> tpsAccelLookback;
+	/**
+	 * Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
+	kph
+	 * offset 1689
+	 */
+	uint8_t coastingFuelCutVssLow;
+	/**
+	 * Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
+	kph
+	 * offset 1690
+	 */
+	uint8_t coastingFuelCutVssHigh;
+	/**
+	 * Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
+	sec
+	 * offset 1691
+	 */
+	scaled_channel<uint8_t, 10, 1> noFuelTrimAfterDfcoTime;
 	/**
 	 * Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
 	roc
@@ -2984,76 +3003,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1740 bit 8 */
-	bool unusedBit_502_8 : 1 {};
+	bool unusedBit_505_8 : 1 {};
 	/**
 	offset 1740 bit 9 */
-	bool unusedBit_502_9 : 1 {};
+	bool unusedBit_505_9 : 1 {};
 	/**
 	offset 1740 bit 10 */
-	bool unusedBit_502_10 : 1 {};
+	bool unusedBit_505_10 : 1 {};
 	/**
 	offset 1740 bit 11 */
-	bool unusedBit_502_11 : 1 {};
+	bool unusedBit_505_11 : 1 {};
 	/**
 	offset 1740 bit 12 */
-	bool unusedBit_502_12 : 1 {};
+	bool unusedBit_505_12 : 1 {};
 	/**
 	offset 1740 bit 13 */
-	bool unusedBit_502_13 : 1 {};
+	bool unusedBit_505_13 : 1 {};
 	/**
 	offset 1740 bit 14 */
-	bool unusedBit_502_14 : 1 {};
+	bool unusedBit_505_14 : 1 {};
 	/**
 	offset 1740 bit 15 */
-	bool unusedBit_502_15 : 1 {};
+	bool unusedBit_505_15 : 1 {};
 	/**
 	offset 1740 bit 16 */
-	bool unusedBit_502_16 : 1 {};
+	bool unusedBit_505_16 : 1 {};
 	/**
 	offset 1740 bit 17 */
-	bool unusedBit_502_17 : 1 {};
+	bool unusedBit_505_17 : 1 {};
 	/**
 	offset 1740 bit 18 */
-	bool unusedBit_502_18 : 1 {};
+	bool unusedBit_505_18 : 1 {};
 	/**
 	offset 1740 bit 19 */
-	bool unusedBit_502_19 : 1 {};
+	bool unusedBit_505_19 : 1 {};
 	/**
 	offset 1740 bit 20 */
-	bool unusedBit_502_20 : 1 {};
+	bool unusedBit_505_20 : 1 {};
 	/**
 	offset 1740 bit 21 */
-	bool unusedBit_502_21 : 1 {};
+	bool unusedBit_505_21 : 1 {};
 	/**
 	offset 1740 bit 22 */
-	bool unusedBit_502_22 : 1 {};
+	bool unusedBit_505_22 : 1 {};
 	/**
 	offset 1740 bit 23 */
-	bool unusedBit_502_23 : 1 {};
+	bool unusedBit_505_23 : 1 {};
 	/**
 	offset 1740 bit 24 */
-	bool unusedBit_502_24 : 1 {};
+	bool unusedBit_505_24 : 1 {};
 	/**
 	offset 1740 bit 25 */
-	bool unusedBit_502_25 : 1 {};
+	bool unusedBit_505_25 : 1 {};
 	/**
 	offset 1740 bit 26 */
-	bool unusedBit_502_26 : 1 {};
+	bool unusedBit_505_26 : 1 {};
 	/**
 	offset 1740 bit 27 */
-	bool unusedBit_502_27 : 1 {};
+	bool unusedBit_505_27 : 1 {};
 	/**
 	offset 1740 bit 28 */
-	bool unusedBit_502_28 : 1 {};
+	bool unusedBit_505_28 : 1 {};
 	/**
 	offset 1740 bit 29 */
-	bool unusedBit_502_29 : 1 {};
+	bool unusedBit_505_29 : 1 {};
 	/**
 	offset 1740 bit 30 */
-	bool unusedBit_502_30 : 1 {};
+	bool unusedBit_505_30 : 1 {};
 	/**
 	offset 1740 bit 31 */
-	bool unusedBit_502_31 : 1 {};
+	bool unusedBit_505_31 : 1 {};
 	/**
 	ms
 	 * offset 1744
@@ -3119,15 +3138,20 @@ struct engine_configuration_s {
 	 */
 	float boostCutPressure;
 	/**
-	counter
+	kg/h
 	 * offset 1760
 	 */
-	float mapAccelTaperBins[MAP_ACCEL_TAPER];
+	uint8_t tchargeBins[16];
 	/**
-	mult
+	ratio
+	 * offset 1776
+	 */
+	uint8_t tchargeValues[16];
+	/**
+	counter
 	 * offset 1792
 	 */
-	float mapAccelTaperMult[MAP_ACCEL_TAPER];
+	float unusedMapAccelTaperBins[8];
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -3552,7 +3576,7 @@ struct engine_configuration_s {
 	 */
 	int16_t coastingFuelCutRpmLow;
 	/**
-	 * Throttle position below which fuel cut is active.
+	 * Throttle position below which fuel cut is active. With an electronic throttle enabled, this checks against pedal position.
 	%
 	 * offset 2744
 	 */
@@ -4046,16 +4070,36 @@ struct engine_configuration_s {
 	 */
 	uint16_t unusedShort;
 	/**
-	 * need 4 byte alignment
-	units
+	deg C
 	 * offset 4642
 	 */
-	uint8_t alignmentFill_at_4642[2];
+	int8_t wwCltBins[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4650
+	 */
+	scaled_channel<uint8_t, 100, 1> wwTauCltValues[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4658
+	 */
+	scaled_channel<uint8_t, 100, 1> wwBetaCltValues[WWAE_TABLE_SIZE];
+	/**
+	kPa
+	 * offset 4666
+	 */
+	int8_t wwMapBins[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4674
+	 */
+	scaled_channel<uint8_t, 100, 1> wwTauMapValues[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4682
+	 */
+	scaled_channel<uint8_t, 100, 1> wwBetaMapValues[WWAE_TABLE_SIZE];
 	/**
 	units
-	 * offset 4644
+	 * offset 4690
 	 */
-	int mainUnusedEnd[94];
+	uint8_t mainUnusedEnd[330];
 	/** total size 5020*/
 };
 
@@ -4474,4 +4518,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 21 01:43:52 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:23 UTC 2022

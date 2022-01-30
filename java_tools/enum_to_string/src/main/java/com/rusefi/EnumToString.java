@@ -17,7 +17,10 @@ public class EnumToString {
     private final StringBuilder cppFileContent = new StringBuilder();
     private final StringBuilder includesSection = new StringBuilder();
 
-    private final static StringBuilder bothFilesHeader = new StringBuilder("// by enum2string.jar tool " +
+    /**
+     * same header for .cpp and .h
+     */
+    private final static StringBuilder commonFilesHeader = new StringBuilder("// by enum2string.jar tool " +
             "on " + new Date() + "\n" +
             "// see also gen_config_and_enums.bat\n" +
             "\n" +
@@ -43,7 +46,7 @@ public class EnumToString {
 
         state.outputData(enumsReader);
 
-        state.cppFileContent.insert(0, bothFilesHeader.toString());
+        state.cppFileContent.insert(0, commonFilesHeader.toString());
 
         state.cppFileContent.insert(0, state.includesSection);
         headerFileContent.insert(0, state.includesSection);
@@ -51,7 +54,7 @@ public class EnumToString {
         SystemOut.println("includesSection:\n" + state.includesSection + "end of includesSection\n");
 
         state.cppFileContent.insert(0, "#include \"global.h\"\n");
-        headerFileContent.insert(0, bothFilesHeader.toString());
+        headerFileContent.insert(0, commonFilesHeader);
 
         new File(outputPath).mkdirs();
         state.writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
@@ -74,7 +77,7 @@ public class EnumToString {
         File f = new File(inputPath + File.separator + headerInputFileName);
         SystemOut.println("Reading enums from " + headerInputFileName);
 
-        bothFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + f.getName() + " ");
+        commonFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + f.getName() + " ");
 
         includesSection.append("#include \"" + f.getName() + "\"\n");
         enumsReader.read(new FileReader(f));
@@ -87,7 +90,11 @@ public class EnumToString {
             String enumName = e.getKey();
             EnumsReader.EnumState enumState = e.getValue();
             cppFileContent.append(makeCode(enumName, enumState));
+            if (enumState.isEnumClass)
+                headerFileContent.append("#if __cplusplus\n");
             headerFileContent.append(getMethodSignature(enumName) + ";\n");
+            if (enumState.isEnumClass)
+                headerFileContent.append("#endif //__cplusplus\n");
         }
         SystemOut.println("EnumToString: " + headerFileContent.length() + " bytes of content\n");
         return this;

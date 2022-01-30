@@ -21,6 +21,7 @@ static const UARTConfig uartCfg =
     .cr1 = 0,
     .cr2 = 0,
     .cr3 = 0,
+    .rxhalf_cb = nullptr,
 };
 
 static char printBuffer[200];
@@ -30,9 +31,6 @@ static void UartThread(void*)
 {
     while(true)
     {
-        float lambda = 0;
-        int lambdaIntPart = 1;
-        int lambdaThousandths = 2;
 
         size_t writeCount = chsnprintf(printBuffer, 200, "%d.%03d\t%d\t%d\r\n", 0, 0, 0, 100);
         uartStartSend(&UARTD1, writeCount, printBuffer);

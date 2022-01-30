@@ -123,8 +123,7 @@ void EngineState::periodicFastCallback() {
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection();
 
-	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm);
+	engine->module<DfcoController>()->update();
 
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)

@@ -15,23 +15,23 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void enterEveryRule(ParserRuleContext parserRuleContext) {
-//        printWithCounter("enterEveryRule");
+//        printWithCounter("enterEveryRule " + ctx.getText());
     }
 
     @Override
     public void exitEveryRule(ParserRuleContext parserRuleContext) {
-//        printWithCounter("exitEveryRule");
+//        printWithCounter("exitEveryRule " + ctx.getText());
     }
 
     @Override
     public void exitTranslationUnit(CPP14Parser.TranslationUnitContext ctx) {
-        printWithCounter("exitTranslationUnit");
+        printWithCounter("exitTranslationUnit " + ctx.getText());
 
     }
 
     @Override
     public void enterTranslationUnit(CPP14Parser.TranslationUnitContext ctx) {
-        printWithCounter("enterTranslationUnit");
+        printWithCounter("enterTranslationUnit " + ctx.getText());
 
     }
 
@@ -43,487 +43,487 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitPrimaryExpression(CPP14Parser.PrimaryExpressionContext ctx) {
-        printWithCounter("exitPrimaryExpression");
+        printWithCounter("exitPrimaryExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterIdExpression(CPP14Parser.IdExpressionContext ctx) {
-        printWithCounter("enterIdExpression");
+        printWithCounter("enterIdExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitIdExpression(CPP14Parser.IdExpressionContext ctx) {
-        printWithCounter("exitIdExpression");
+        printWithCounter("exitIdExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterUnqualifiedId(CPP14Parser.UnqualifiedIdContext ctx) {
-        printWithCounter("enterUnqualifiedId");
+        printWithCounter("enterUnqualifiedId " + ctx.getText());
 
     }
 
     @Override
     public void exitUnqualifiedId(CPP14Parser.UnqualifiedIdContext ctx) {
-        printWithCounter("exitUnqualifiedId");
+        printWithCounter("exitUnqualifiedId " + ctx.getText());
 
     }
 
     @Override
     public void enterQualifiedId(CPP14Parser.QualifiedIdContext ctx) {
-        printWithCounter("enterQualifiedId");
+        printWithCounter("enterQualifiedId " + ctx.getText());
 
     }
 
     @Override
     public void exitQualifiedId(CPP14Parser.QualifiedIdContext ctx) {
-        printWithCounter("exitQualifiedId");
+        printWithCounter("exitQualifiedId " + ctx.getText());
 
     }
 
     @Override
     public void enterNestedNameSpecifier(CPP14Parser.NestedNameSpecifierContext ctx) {
-        printWithCounter("enterNestedNameSpecifier");
+        printWithCounter("enterNestedNameSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitNestedNameSpecifier(CPP14Parser.NestedNameSpecifierContext ctx) {
-        printWithCounter("exitNestedNameSpecifier");
+        printWithCounter("exitNestedNameSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterLambdaExpression(CPP14Parser.LambdaExpressionContext ctx) {
-        printWithCounter("enterLambdaExpression");
+        printWithCounter("enterLambdaExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitLambdaExpression(CPP14Parser.LambdaExpressionContext ctx) {
-        printWithCounter("exitLambdaExpression");
+        printWithCounter("exitLambdaExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterLambdaIntroducer(CPP14Parser.LambdaIntroducerContext ctx) {
-        printWithCounter("enterLambdaIntroducer");
+        printWithCounter("enterLambdaIntroducer " + ctx.getText());
 
     }
 
     @Override
     public void exitLambdaIntroducer(CPP14Parser.LambdaIntroducerContext ctx) {
-        printWithCounter("exitLambdaIntroducer");
+        printWithCounter("exitLambdaIntroducer " + ctx.getText());
 
     }
 
     @Override
     public void enterLambdaCapture(CPP14Parser.LambdaCaptureContext ctx) {
-        printWithCounter("enterLambdaCapture");
+        printWithCounter("enterLambdaCapture " + ctx.getText());
 
     }
 
     @Override
     public void exitLambdaCapture(CPP14Parser.LambdaCaptureContext ctx) {
-        printWithCounter("exitLambdaCapture");
+        printWithCounter("exitLambdaCapture " + ctx.getText());
 
     }
 
     @Override
     public void enterCaptureDefault(CPP14Parser.CaptureDefaultContext ctx) {
-        printWithCounter("enterCaptureDefault");
+        printWithCounter("enterCaptureDefault " + ctx.getText());
 
     }
 
     @Override
     public void exitCaptureDefault(CPP14Parser.CaptureDefaultContext ctx) {
-        printWithCounter("exitCaptureDefault");
+        printWithCounter("exitCaptureDefault " + ctx.getText());
 
     }
 
     @Override
     public void enterCaptureList(CPP14Parser.CaptureListContext ctx) {
-        printWithCounter("enterCaptureList");
+        printWithCounter("enterCaptureList " + ctx.getText());
 
     }
 
     @Override
     public void exitCaptureList(CPP14Parser.CaptureListContext ctx) {
-        printWithCounter("exitCaptureList");
+        printWithCounter("exitCaptureList " + ctx.getText());
 
     }
 
     @Override
     public void enterCapture(CPP14Parser.CaptureContext ctx) {
-        printWithCounter("enterCapture");
+        printWithCounter("enterCapture " + ctx.getText());
 
     }
 
     @Override
     public void exitCapture(CPP14Parser.CaptureContext ctx) {
-        printWithCounter("exitCapture");
+        printWithCounter("exitCapture " + ctx.getText());
 
     }
 
     @Override
     public void enterSimpleCapture(CPP14Parser.SimpleCaptureContext ctx) {
-        printWithCounter("enterSimpleCapture");
+        printWithCounter("enterSimpleCapture " + ctx.getText());
 
     }
 
     @Override
     public void exitSimpleCapture(CPP14Parser.SimpleCaptureContext ctx) {
-        printWithCounter("exitSimpleCapture");
+        printWithCounter("exitSimpleCapture " + ctx.getText());
 
     }
 
     @Override
     public void enterInitcapture(CPP14Parser.InitcaptureContext ctx) {
-        printWithCounter("enterInitcapture");
+        printWithCounter("enterInitcapture " + ctx.getText());
 
     }
 
     @Override
     public void exitInitcapture(CPP14Parser.InitcaptureContext ctx) {
-        printWithCounter("exitInitcapture");
+        printWithCounter("exitInitcapture " + ctx.getText());
 
     }
 
     @Override
     public void enterLambdaDeclarator(CPP14Parser.LambdaDeclaratorContext ctx) {
-        printWithCounter("enterLambdaDeclarator");
+        printWithCounter("enterLambdaDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitLambdaDeclarator(CPP14Parser.LambdaDeclaratorContext ctx) {
-        printWithCounter("exitLambdaDeclarator");
+        printWithCounter("exitLambdaDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterPostfixExpression(CPP14Parser.PostfixExpressionContext ctx) {
-        printWithCounter("enterPostfixExpression");
+        printWithCounter("enterPostfixExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitPostfixExpression(CPP14Parser.PostfixExpressionContext ctx) {
-        printWithCounter("exitPostfixExpression");
+        printWithCounter("exitPostfixExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterTypeIdOfTheTypeId(CPP14Parser.TypeIdOfTheTypeIdContext ctx) {
-        printWithCounter("enterTypeIdOfTheTypeId");
+        printWithCounter("enterTypeIdOfTheTypeId " + ctx.getText());
 
     }
 
     @Override
     public void exitTypeIdOfTheTypeId(CPP14Parser.TypeIdOfTheTypeIdContext ctx) {
-        printWithCounter("exitTypeIdOfTheTypeId");
+        printWithCounter("exitTypeIdOfTheTypeId " + ctx.getText());
 
     }
 
     @Override
     public void enterExpressionList(CPP14Parser.ExpressionListContext ctx) {
-        printWithCounter("enterExpressionList");
+        printWithCounter("enterExpressionList " + ctx.getText());
 
     }
 
     @Override
     public void exitExpressionList(CPP14Parser.ExpressionListContext ctx) {
-        printWithCounter("exitExpressionList");
+        printWithCounter("exitExpressionList " + ctx.getText());
 
     }
 
     @Override
     public void enterPseudoDestructorName(CPP14Parser.PseudoDestructorNameContext ctx) {
-        printWithCounter("enterPseudoDestructorName");
+        printWithCounter("enterPseudoDestructorName " + ctx.getText());
 
     }
 
     @Override
     public void exitPseudoDestructorName(CPP14Parser.PseudoDestructorNameContext ctx) {
-        printWithCounter("exitPseudoDestructorName");
+        printWithCounter("exitPseudoDestructorName " + ctx.getText());
 
     }
 
     @Override
     public void enterUnaryExpression(CPP14Parser.UnaryExpressionContext ctx) {
-        printWithCounter("enterUnaryExpression");
+        printWithCounter("enterUnaryExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitUnaryExpression(CPP14Parser.UnaryExpressionContext ctx) {
-        printWithCounter("exitUnaryExpression");
+        printWithCounter("exitUnaryExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterUnaryOperator(CPP14Parser.UnaryOperatorContext ctx) {
-        printWithCounter("enterUnaryOperator");
+        printWithCounter("enterUnaryOperator " + ctx.getText());
 
     }
 
     @Override
     public void exitUnaryOperator(CPP14Parser.UnaryOperatorContext ctx) {
-        printWithCounter("exitUnaryOperator");
+        printWithCounter("exitUnaryOperator " + ctx.getText());
 
     }
 
     @Override
     public void enterNewExpression(CPP14Parser.NewExpressionContext ctx) {
-        printWithCounter("enterNewExpression");
+        printWithCounter("enterNewExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitNewExpression(CPP14Parser.NewExpressionContext ctx) {
-        printWithCounter("exitNewExpression");
+        printWithCounter("exitNewExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterNewPlacement(CPP14Parser.NewPlacementContext ctx) {
-        printWithCounter("enterNewPlacement");
+        printWithCounter("enterNewPlacement " + ctx.getText());
 
     }
 
     @Override
     public void exitNewPlacement(CPP14Parser.NewPlacementContext ctx) {
-        printWithCounter("exitNewPlacement");
+        printWithCounter("exitNewPlacement " + ctx.getText());
 
     }
 
     @Override
     public void enterNewTypeId(CPP14Parser.NewTypeIdContext ctx) {
-        printWithCounter("enterNewTypeId");
+        printWithCounter("enterNewTypeId " + ctx.getText());
 
     }
 
     @Override
     public void exitNewTypeId(CPP14Parser.NewTypeIdContext ctx) {
-        printWithCounter("exitNewTypeId");
+        printWithCounter("exitNewTypeId " + ctx.getText());
 
     }
 
     @Override
     public void enterNewDeclarator(CPP14Parser.NewDeclaratorContext ctx) {
-        printWithCounter("enterNewDeclarator");
+        printWithCounter("enterNewDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitNewDeclarator(CPP14Parser.NewDeclaratorContext ctx) {
-        printWithCounter("exitNewDeclarator");
+        printWithCounter("exitNewDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterNoPointerNewDeclarator(CPP14Parser.NoPointerNewDeclaratorContext ctx) {
-        printWithCounter("enterNoPointerNewDeclarator");
+        printWithCounter("enterNoPointerNewDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitNoPointerNewDeclarator(CPP14Parser.NoPointerNewDeclaratorContext ctx) {
-        printWithCounter("exitNoPointerNewDeclarator");
+        printWithCounter("exitNoPointerNewDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterNewInitializer(CPP14Parser.NewInitializerContext ctx) {
-        printWithCounter("enterNewInitializer");
+        printWithCounter("enterNewInitializer " + ctx.getText());
 
     }
 
     @Override
     public void exitNewInitializer(CPP14Parser.NewInitializerContext ctx) {
-        printWithCounter("exitNewInitializer");
+        printWithCounter("exitNewInitializer " + ctx.getText());
 
     }
 
     @Override
     public void enterDeleteExpression(CPP14Parser.DeleteExpressionContext ctx) {
-        printWithCounter("enterDeleteExpression");
+        printWithCounter("enterDeleteExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitDeleteExpression(CPP14Parser.DeleteExpressionContext ctx) {
-        printWithCounter("exitDeleteExpression");
+        printWithCounter("exitDeleteExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterNoExceptExpression(CPP14Parser.NoExceptExpressionContext ctx) {
-        printWithCounter("enterNoExceptExpression");
+        printWithCounter("enterNoExceptExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitNoExceptExpression(CPP14Parser.NoExceptExpressionContext ctx) {
-        printWithCounter("exitNoExceptExpression");
+        printWithCounter("exitNoExceptExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterCastExpression(CPP14Parser.CastExpressionContext ctx) {
-        printWithCounter("enterCastExpression");
+        printWithCounter("enterCastExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitCastExpression(CPP14Parser.CastExpressionContext ctx) {
-        printWithCounter("exitCastExpression");
+        printWithCounter("exitCastExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterPointerMemberExpression(CPP14Parser.PointerMemberExpressionContext ctx) {
-        printWithCounter("enterPointerMemberExpression");
+        printWithCounter("enterPointerMemberExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitPointerMemberExpression(CPP14Parser.PointerMemberExpressionContext ctx) {
-        printWithCounter("exitPointerMemberExpression");
+        printWithCounter("exitPointerMemberExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterMultiplicativeExpression(CPP14Parser.MultiplicativeExpressionContext ctx) {
-        printWithCounter("enterMultiplicativeExpression");
+        printWithCounter("enterMultiplicativeExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitMultiplicativeExpression(CPP14Parser.MultiplicativeExpressionContext ctx) {
-        printWithCounter("exitMultiplicativeExpression");
+        printWithCounter("exitMultiplicativeExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterAdditiveExpression(CPP14Parser.AdditiveExpressionContext ctx) {
-        printWithCounter("enterAdditiveExpression");
+        printWithCounter("enterAdditiveExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitAdditiveExpression(CPP14Parser.AdditiveExpressionContext ctx) {
-        printWithCounter("exitAdditiveExpression");
+        printWithCounter("exitAdditiveExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterShiftExpression(CPP14Parser.ShiftExpressionContext ctx) {
-        printWithCounter("enterShiftExpression");
+        printWithCounter("enterShiftExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitShiftExpression(CPP14Parser.ShiftExpressionContext ctx) {
-        printWithCounter("exitShiftExpression");
+        printWithCounter("exitShiftExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterShiftOperator(CPP14Parser.ShiftOperatorContext ctx) {
-        printWithCounter("enterShiftOperator");
+        printWithCounter("enterShiftOperator " + ctx.getText());
 
     }
 
     @Override
     public void exitShiftOperator(CPP14Parser.ShiftOperatorContext ctx) {
-        printWithCounter("exitShiftOperator");
+        printWithCounter("exitShiftOperator " + ctx.getText());
 
     }
 
     @Override
     public void enterRelationalExpression(CPP14Parser.RelationalExpressionContext ctx) {
-        printWithCounter("enterRelationalExpression");
+        printWithCounter("enterRelationalExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitRelationalExpression(CPP14Parser.RelationalExpressionContext ctx) {
-        printWithCounter("exitRelationalExpression");
+        printWithCounter("exitRelationalExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterEqualityExpression(CPP14Parser.EqualityExpressionContext ctx) {
-        printWithCounter("enterEqualityExpression");
+        printWithCounter("enterEqualityExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitEqualityExpression(CPP14Parser.EqualityExpressionContext ctx) {
-        printWithCounter("exitEqualityExpression");
+        printWithCounter("exitEqualityExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterAndExpression(CPP14Parser.AndExpressionContext ctx) {
-        printWithCounter("enterAndExpression");
+        printWithCounter("enterAndExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitAndExpression(CPP14Parser.AndExpressionContext ctx) {
-        printWithCounter("exitAndExpression");
+        printWithCounter("exitAndExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterExclusiveOrExpression(CPP14Parser.ExclusiveOrExpressionContext ctx) {
-        printWithCounter("enterExclusiveOrExpression");
+        printWithCounter("enterExclusiveOrExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitExclusiveOrExpression(CPP14Parser.ExclusiveOrExpressionContext ctx) {
-        printWithCounter("exitExclusiveOrExpression");
+        printWithCounter("exitExclusiveOrExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterInclusiveOrExpression(CPP14Parser.InclusiveOrExpressionContext ctx) {
-        printWithCounter("enterInclusiveOrExpression");
+        printWithCounter("enterInclusiveOrExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitInclusiveOrExpression(CPP14Parser.InclusiveOrExpressionContext ctx) {
-        printWithCounter("exitInclusiveOrExpression");
+        printWithCounter("exitInclusiveOrExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterLogicalAndExpression(CPP14Parser.LogicalAndExpressionContext ctx) {
-        printWithCounter("enterLogicalAndExpression");
+        printWithCounter("enterLogicalAndExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitLogicalAndExpression(CPP14Parser.LogicalAndExpressionContext ctx) {
-        printWithCounter("exitLogicalAndExpression");
+        printWithCounter("exitLogicalAndExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterLogicalOrExpression(CPP14Parser.LogicalOrExpressionContext ctx) {
-        printWithCounter("enterLogicalOrExpression");
+        printWithCounter("enterLogicalOrExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitLogicalOrExpression(CPP14Parser.LogicalOrExpressionContext ctx) {
-        printWithCounter("exitLogicalOrExpression");
+        printWithCounter("exitLogicalOrExpression " + ctx.getText());
 
     }
 
@@ -535,55 +535,55 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitConditionalExpression(CPP14Parser.ConditionalExpressionContext ctx) {
-        printWithCounter("exitConditionalExpression");
+        printWithCounter("exitConditionalExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterAssignmentExpression(CPP14Parser.AssignmentExpressionContext ctx) {
-        printWithCounter("enterAssignmentExpression");
+        printWithCounter("enterAssignmentExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitAssignmentExpression(CPP14Parser.AssignmentExpressionContext ctx) {
-        printWithCounter("exitAssignmentExpression");
+        printWithCounter("exitAssignmentExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterAssignmentOperator(CPP14Parser.AssignmentOperatorContext ctx) {
-        printWithCounter("enterAssignmentOperator");
+        printWithCounter("enterAssignmentOperator " + ctx.getText());
 
     }
 
     @Override
     public void exitAssignmentOperator(CPP14Parser.AssignmentOperatorContext ctx) {
-        printWithCounter("exitAssignmentOperator");
+        printWithCounter("exitAssignmentOperator " + ctx.getText());
 
     }
 
     @Override
     public void enterExpression(CPP14Parser.ExpressionContext ctx) {
-        printWithCounter("enterExpression");
+        printWithCounter("enterExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitExpression(CPP14Parser.ExpressionContext ctx) {
-        printWithCounter("exitExpression");
+        printWithCounter("exitExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterConstantExpression(CPP14Parser.ConstantExpressionContext ctx) {
-        printWithCounter("enterConstantExpression");
+        printWithCounter("enterConstantExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitConstantExpression(CPP14Parser.ConstantExpressionContext ctx) {
-        printWithCounter("exitConstantExpression");
+        printWithCounter("exitConstantExpression " + ctx.getText());
 
     }
 
@@ -595,7 +595,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitStatement(CPP14Parser.StatementContext ctx) {
-        printWithCounter("exitStatement");
+        printWithCounter("exitStatement " + ctx.getText());
 
     }
 
@@ -607,7 +607,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitLabeledStatement(CPP14Parser.LabeledStatementContext ctx) {
-        printWithCounter("exitLabeledStatement");
+        printWithCounter("exitLabeledStatement " + ctx.getText());
 
     }
 
@@ -618,19 +618,18 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitExpressionStatement(CPP14Parser.ExpressionStatementContext ctx) {
-        printWithCounter("exitExpressionStatement");
+        printWithCounter("exitExpressionStatement " + ctx.getText());
 
     }
 
     @Override
     public void enterCompoundStatement(CPP14Parser.CompoundStatementContext ctx) {
-        printWithCounter("enterCompoundStatement " + ctx.statementSeq().getText());
-
+        printWithCounter("enterCompoundStatement " + (ctx.statementSeq() != null ? ctx.statementSeq().getText() : ""));
     }
 
     @Override
     public void exitCompoundStatement(CPP14Parser.CompoundStatementContext ctx) {
-        printWithCounter("exitCompoundStatement");
+        printWithCounter("exitCompoundStatement " + ctx.getText());
 
     }
 
@@ -642,7 +641,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitStatementSeq(CPP14Parser.StatementSeqContext ctx) {
-        printWithCounter("exitStatementSeq");
+        printWithCounter("exitStatementSeq " + ctx.getText());
 
     }
 
@@ -664,7 +663,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitCondition(CPP14Parser.ConditionContext ctx) {
-        printWithCounter("CONDITIONAL exitCondition - end of condition variable");
+        printWithCounter("CONDITIONAL exitCondition - end of condition variable " + ctx.getText());
 
     }
 
@@ -675,40 +674,40 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitIterationStatement(CPP14Parser.IterationStatementContext ctx) {
-        printWithCounter("exitIterationStatement");
+        printWithCounter("exitIterationStatement " + ctx.getText());
     }
 
     @Override
     public void enterForInitStatement(CPP14Parser.ForInitStatementContext ctx) {
-        printWithCounter("enterForInitStatement");
+        printWithCounter("enterForInitStatement " + ctx.getText());
     }
 
     @Override
     public void exitForInitStatement(CPP14Parser.ForInitStatementContext ctx) {
-        printWithCounter("exitForInitStatement");
+        printWithCounter("exitForInitStatement " + ctx.getText());
     }
 
     @Override
     public void enterForRangeDeclaration(CPP14Parser.ForRangeDeclarationContext ctx) {
-        printWithCounter("enterForRangeDeclaration");
+        printWithCounter("enterForRangeDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitForRangeDeclaration(CPP14Parser.ForRangeDeclarationContext ctx) {
-        printWithCounter("exitForRangeDeclaration");
+        printWithCounter("exitForRangeDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterForRangeInitializer(CPP14Parser.ForRangeInitializerContext ctx) {
-        printWithCounter("enterForRangeInitializer");
+        printWithCounter("enterForRangeInitializer " + ctx.getText());
 
     }
 
     @Override
     public void exitForRangeInitializer(CPP14Parser.ForRangeInitializerContext ctx) {
-        printWithCounter("exitForRangeInitializer");
+        printWithCounter("exitForRangeInitializer " + ctx.getText());
 
     }
 
@@ -720,7 +719,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitJumpStatement(CPP14Parser.JumpStatementContext ctx) {
-        printWithCounter("exitJumpStatement");
+        printWithCounter("exitJumpStatement " + ctx.getText());
 
     }
 
@@ -732,7 +731,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitDeclarationStatement(CPP14Parser.DeclarationStatementContext ctx) {
-        printWithCounter("exitDeclarationStatement");
+        printWithCounter("exitDeclarationStatement " + ctx.getText());
 
     }
 
@@ -744,7 +743,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitDeclarationseq(CPP14Parser.DeclarationseqContext ctx) {
-        printWithCounter("exitDeclarationseq");
+        printWithCounter("exitDeclarationseq " + ctx.getText());
 
     }
 
@@ -756,619 +755,619 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitDeclaration(CPP14Parser.DeclarationContext ctx) {
-        printWithCounter("exitDeclaration");
+        printWithCounter("exitDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterBlockDeclaration(CPP14Parser.BlockDeclarationContext ctx) {
-        printWithCounter("enterBlockDeclaration");
+        printWithCounter("enterBlockDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitBlockDeclaration(CPP14Parser.BlockDeclarationContext ctx) {
-        printWithCounter("exitBlockDeclaration");
+        printWithCounter("exitBlockDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterAliasDeclaration(CPP14Parser.AliasDeclarationContext ctx) {
-        printWithCounter("enterAliasDeclaration");
+        printWithCounter("enterAliasDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitAliasDeclaration(CPP14Parser.AliasDeclarationContext ctx) {
-        printWithCounter("exitAliasDeclaration");
+        printWithCounter("exitAliasDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterSimpleDeclaration(CPP14Parser.SimpleDeclarationContext ctx) {
-        printWithCounter("enterSimpleDeclaration");
+        printWithCounter("enterSimpleDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitSimpleDeclaration(CPP14Parser.SimpleDeclarationContext ctx) {
-        printWithCounter("exitSimpleDeclaration");
+        printWithCounter("exitSimpleDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterStaticAssertDeclaration(CPP14Parser.StaticAssertDeclarationContext ctx) {
-        printWithCounter("enterStaticAssertDeclaration");
+        printWithCounter("enterStaticAssertDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitStaticAssertDeclaration(CPP14Parser.StaticAssertDeclarationContext ctx) {
-        printWithCounter("exitStaticAssertDeclaration");
+        printWithCounter("exitStaticAssertDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterEmptyDeclaration(CPP14Parser.EmptyDeclarationContext ctx) {
-        printWithCounter("enterEmptyDeclaration");
+        printWithCounter("enterEmptyDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitEmptyDeclaration(CPP14Parser.EmptyDeclarationContext ctx) {
-        printWithCounter("exitEmptyDeclaration");
+        printWithCounter("exitEmptyDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterAttributeDeclaration(CPP14Parser.AttributeDeclarationContext ctx) {
-        printWithCounter("enterAttributeDeclaration");
+        printWithCounter("enterAttributeDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitAttributeDeclaration(CPP14Parser.AttributeDeclarationContext ctx) {
-        printWithCounter("exitAttributeDeclaration");
+        printWithCounter("exitAttributeDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterDeclSpecifier(CPP14Parser.DeclSpecifierContext ctx) {
-        printWithCounter("enterDeclSpecifier");
+        printWithCounter("enterDeclSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitDeclSpecifier(CPP14Parser.DeclSpecifierContext ctx) {
-        printWithCounter("exitDeclSpecifier");
+        printWithCounter("exitDeclSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterDeclSpecifierSeq(CPP14Parser.DeclSpecifierSeqContext ctx) {
-        printWithCounter("enterDeclSpecifierSeq");
+        printWithCounter("enterDeclSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void exitDeclSpecifierSeq(CPP14Parser.DeclSpecifierSeqContext ctx) {
-        printWithCounter("exitDeclSpecifierSeq");
+        printWithCounter("exitDeclSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void enterStorageClassSpecifier(CPP14Parser.StorageClassSpecifierContext ctx) {
-        printWithCounter("enterStorageClassSpecifier");
+        printWithCounter("enterStorageClassSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitStorageClassSpecifier(CPP14Parser.StorageClassSpecifierContext ctx) {
-        printWithCounter("exitStorageClassSpecifier");
+        printWithCounter("exitStorageClassSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterFunctionSpecifier(CPP14Parser.FunctionSpecifierContext ctx) {
-        printWithCounter("enterFunctionSpecifier");
+        printWithCounter("enterFunctionSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitFunctionSpecifier(CPP14Parser.FunctionSpecifierContext ctx) {
-        printWithCounter("exitFunctionSpecifier");
+        printWithCounter("exitFunctionSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterTypedefName(CPP14Parser.TypedefNameContext ctx) {
-        printWithCounter("enterTypedefName");
+        printWithCounter("enterTypedefName " + ctx.getText());
 
     }
 
     @Override
     public void exitTypedefName(CPP14Parser.TypedefNameContext ctx) {
-        printWithCounter("exitTypedefName");
+        printWithCounter("exitTypedefName " + ctx.getText());
 
     }
 
     @Override
     public void enterTypeSpecifier(CPP14Parser.TypeSpecifierContext ctx) {
-        printWithCounter("enterTypeSpecifier");
+        printWithCounter("enterTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitTypeSpecifier(CPP14Parser.TypeSpecifierContext ctx) {
-        printWithCounter("exitTypeSpecifier");
+        printWithCounter("exitTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterTrailingTypeSpecifier(CPP14Parser.TrailingTypeSpecifierContext ctx) {
-        printWithCounter("enterTrailingTypeSpecifier");
+        printWithCounter("enterTrailingTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitTrailingTypeSpecifier(CPP14Parser.TrailingTypeSpecifierContext ctx) {
-        printWithCounter("exitTrailingTypeSpecifier");
+        printWithCounter("exitTrailingTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterTypeSpecifierSeq(CPP14Parser.TypeSpecifierSeqContext ctx) {
-        printWithCounter("enterTypeSpecifierSeq");
+        printWithCounter("enterTypeSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void exitTypeSpecifierSeq(CPP14Parser.TypeSpecifierSeqContext ctx) {
-        printWithCounter("exitTypeSpecifierSeq");
+        printWithCounter("exitTypeSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void enterTrailingTypeSpecifierSeq(CPP14Parser.TrailingTypeSpecifierSeqContext ctx) {
-        printWithCounter("enterTrailingTypeSpecifierSeq");
+        printWithCounter("enterTrailingTypeSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void exitTrailingTypeSpecifierSeq(CPP14Parser.TrailingTypeSpecifierSeqContext ctx) {
-        printWithCounter("exitTrailingTypeSpecifierSeq");
+        printWithCounter("exitTrailingTypeSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void enterSimpleTypeLengthModifier(CPP14Parser.SimpleTypeLengthModifierContext ctx) {
-        printWithCounter("enterSimpleTypeLengthModifier");
+        printWithCounter("enterSimpleTypeLengthModifier " + ctx.getText());
 
     }
 
     @Override
     public void exitSimpleTypeLengthModifier(CPP14Parser.SimpleTypeLengthModifierContext ctx) {
-        printWithCounter("exitSimpleTypeLengthModifier");
+        printWithCounter("exitSimpleTypeLengthModifier " + ctx.getText());
 
     }
 
     @Override
     public void enterSimpleTypeSignednessModifier(CPP14Parser.SimpleTypeSignednessModifierContext ctx) {
-        printWithCounter("enterSimpleTypeSignednessModifier");
+        printWithCounter("enterSimpleTypeSignednessModifier " + ctx.getText());
 
     }
 
     @Override
     public void exitSimpleTypeSignednessModifier(CPP14Parser.SimpleTypeSignednessModifierContext ctx) {
-        printWithCounter("exitSimpleTypeSignednessModifier");
+        printWithCounter("exitSimpleTypeSignednessModifier " + ctx.getText());
 
     }
 
     @Override
     public void enterSimpleTypeSpecifier(CPP14Parser.SimpleTypeSpecifierContext ctx) {
-        printWithCounter("enterSimpleTypeSpecifier");
+        printWithCounter("enterSimpleTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitSimpleTypeSpecifier(CPP14Parser.SimpleTypeSpecifierContext ctx) {
-        printWithCounter("exitSimpleTypeSpecifier");
+        printWithCounter("exitSimpleTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterTheTypeName(CPP14Parser.TheTypeNameContext ctx) {
-        printWithCounter("enterTheTypeName");
+        printWithCounter("enterTheTypeName " + ctx.getText());
 
     }
 
     @Override
     public void exitTheTypeName(CPP14Parser.TheTypeNameContext ctx) {
-        printWithCounter("exitTheTypeName");
+        printWithCounter("exitTheTypeName " + ctx.getText());
 
     }
 
     @Override
     public void enterDecltypeSpecifier(CPP14Parser.DecltypeSpecifierContext ctx) {
-        printWithCounter("enterDecltypeSpecifier");
+        printWithCounter("enterDecltypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitDecltypeSpecifier(CPP14Parser.DecltypeSpecifierContext ctx) {
-        printWithCounter("exitDecltypeSpecifier");
+        printWithCounter("exitDecltypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterElaboratedTypeSpecifier(CPP14Parser.ElaboratedTypeSpecifierContext ctx) {
-        printWithCounter("enterElaboratedTypeSpecifier");
+        printWithCounter("enterElaboratedTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitElaboratedTypeSpecifier(CPP14Parser.ElaboratedTypeSpecifierContext ctx) {
-        printWithCounter("exitElaboratedTypeSpecifier");
+        printWithCounter("exitElaboratedTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterEnumName(CPP14Parser.EnumNameContext ctx) {
-        printWithCounter("enterEnumName");
+        printWithCounter("enterEnumName " + ctx.getText());
 
     }
 
     @Override
     public void exitEnumName(CPP14Parser.EnumNameContext ctx) {
-        printWithCounter("exitEnumName");
+        printWithCounter("exitEnumName " + ctx.getText());
 
     }
 
     @Override
     public void enterEnumSpecifier(CPP14Parser.EnumSpecifierContext ctx) {
-        printWithCounter("enterEnumSpecifier");
+        printWithCounter("enterEnumSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitEnumSpecifier(CPP14Parser.EnumSpecifierContext ctx) {
-        printWithCounter("exitEnumSpecifier");
+        printWithCounter("exitEnumSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterEnumHead(CPP14Parser.EnumHeadContext ctx) {
-        printWithCounter("enterEnumHead");
+        printWithCounter("enterEnumHead " + ctx.getText());
 
     }
 
     @Override
     public void exitEnumHead(CPP14Parser.EnumHeadContext ctx) {
-        printWithCounter("exitEnumHead");
+        printWithCounter("exitEnumHead " + ctx.getText());
 
     }
 
     @Override
     public void enterOpaqueEnumDeclaration(CPP14Parser.OpaqueEnumDeclarationContext ctx) {
-        printWithCounter("enterOpaqueEnumDeclaration");
+        printWithCounter("enterOpaqueEnumDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitOpaqueEnumDeclaration(CPP14Parser.OpaqueEnumDeclarationContext ctx) {
-        printWithCounter("exitOpaqueEnumDeclaration");
+        printWithCounter("exitOpaqueEnumDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterEnumkey(CPP14Parser.EnumkeyContext ctx) {
-        printWithCounter("enterEnumkey");
+        printWithCounter("enterEnumkey " + ctx.getText());
 
     }
 
     @Override
     public void exitEnumkey(CPP14Parser.EnumkeyContext ctx) {
-        printWithCounter("exitEnumkey");
+        printWithCounter("exitEnumkey " + ctx.getText());
 
     }
 
     @Override
     public void enterEnumbase(CPP14Parser.EnumbaseContext ctx) {
-        printWithCounter("enterEnumbase");
+        printWithCounter("enterEnumbase " + ctx.getText());
 
     }
 
     @Override
     public void exitEnumbase(CPP14Parser.EnumbaseContext ctx) {
-        printWithCounter("exitEnumbase");
+        printWithCounter("exitEnumbase " + ctx.getText());
 
     }
 
     @Override
     public void enterEnumeratorList(CPP14Parser.EnumeratorListContext ctx) {
-        printWithCounter("enterEnumeratorList");
+        printWithCounter("enterEnumeratorList " + ctx.getText());
 
     }
 
     @Override
     public void exitEnumeratorList(CPP14Parser.EnumeratorListContext ctx) {
-        printWithCounter("exitEnumeratorList");
+        printWithCounter("exitEnumeratorList " + ctx.getText());
 
     }
 
     @Override
     public void enterEnumeratorDefinition(CPP14Parser.EnumeratorDefinitionContext ctx) {
-        printWithCounter("enterEnumeratorDefinition");
+        printWithCounter("enterEnumeratorDefinition " + ctx.getText());
 
     }
 
     @Override
     public void exitEnumeratorDefinition(CPP14Parser.EnumeratorDefinitionContext ctx) {
-        printWithCounter("exitEnumeratorDefinition");
+        printWithCounter("exitEnumeratorDefinition " + ctx.getText());
 
     }
 
     @Override
     public void enterEnumerator(CPP14Parser.EnumeratorContext ctx) {
-        printWithCounter("enterEnumerator");
+        printWithCounter("enterEnumerator " + ctx.getText());
 
     }
 
     @Override
     public void exitEnumerator(CPP14Parser.EnumeratorContext ctx) {
-        printWithCounter("exitEnumerator");
+        printWithCounter("exitEnumerator " + ctx.getText());
 
     }
 
     @Override
     public void enterNamespaceName(CPP14Parser.NamespaceNameContext ctx) {
-        printWithCounter("enterNamespaceName");
+        printWithCounter("enterNamespaceName " + ctx.getText());
 
     }
 
     @Override
     public void exitNamespaceName(CPP14Parser.NamespaceNameContext ctx) {
-        printWithCounter("exitNamespaceName");
+        printWithCounter("exitNamespaceName " + ctx.getText());
 
     }
 
     @Override
     public void enterOriginalNamespaceName(CPP14Parser.OriginalNamespaceNameContext ctx) {
-        printWithCounter("enterOriginalNamespaceName");
+        printWithCounter("enterOriginalNamespaceName " + ctx.getText());
 
     }
 
     @Override
     public void exitOriginalNamespaceName(CPP14Parser.OriginalNamespaceNameContext ctx) {
-        printWithCounter("exitOriginalNamespaceName");
+        printWithCounter("exitOriginalNamespaceName " + ctx.getText());
 
     }
 
     @Override
     public void enterNamespaceDefinition(CPP14Parser.NamespaceDefinitionContext ctx) {
-        printWithCounter("enterNamespaceDefinition");
+        printWithCounter("enterNamespaceDefinition " + ctx.getText());
 
     }
 
     @Override
     public void exitNamespaceDefinition(CPP14Parser.NamespaceDefinitionContext ctx) {
-        printWithCounter("exitNamespaceDefinition");
+        printWithCounter("exitNamespaceDefinition " + ctx.getText());
 
     }
 
     @Override
     public void enterNamespaceAlias(CPP14Parser.NamespaceAliasContext ctx) {
-        printWithCounter("enterNamespaceAlias");
+        printWithCounter("enterNamespaceAlias " + ctx.getText());
 
     }
 
     @Override
     public void exitNamespaceAlias(CPP14Parser.NamespaceAliasContext ctx) {
-        printWithCounter("exitNamespaceAlias");
+        printWithCounter("exitNamespaceAlias " + ctx.getText());
 
     }
 
     @Override
     public void enterNamespaceAliasDefinition(CPP14Parser.NamespaceAliasDefinitionContext ctx) {
-        printWithCounter("enterNamespaceAliasDefinition");
+        printWithCounter("enterNamespaceAliasDefinition " + ctx.getText());
 
     }
 
     @Override
     public void exitNamespaceAliasDefinition(CPP14Parser.NamespaceAliasDefinitionContext ctx) {
-        printWithCounter("exitNamespaceAliasDefinition");
+        printWithCounter("exitNamespaceAliasDefinition " + ctx.getText());
 
     }
 
     @Override
     public void enterQualifiednamespacespecifier(CPP14Parser.QualifiednamespacespecifierContext ctx) {
-        printWithCounter("enterQualifiednamespacespecifier");
+        printWithCounter("enterQualifiednamespacespecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitQualifiednamespacespecifier(CPP14Parser.QualifiednamespacespecifierContext ctx) {
-        printWithCounter("exitQualifiednamespacespecifier");
+        printWithCounter("exitQualifiednamespacespecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterUsingDeclaration(CPP14Parser.UsingDeclarationContext ctx) {
-        printWithCounter("enterUsingDeclaration");
+        printWithCounter("enterUsingDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitUsingDeclaration(CPP14Parser.UsingDeclarationContext ctx) {
-        printWithCounter("exitUsingDeclaration");
+        printWithCounter("exitUsingDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterUsingDirective(CPP14Parser.UsingDirectiveContext ctx) {
-        printWithCounter("enterUsingDirective");
+        printWithCounter("enterUsingDirective " + ctx.getText());
 
     }
 
     @Override
     public void exitUsingDirective(CPP14Parser.UsingDirectiveContext ctx) {
-        printWithCounter("exitUsingDirective");
+        printWithCounter("exitUsingDirective " + ctx.getText());
 
     }
 
     @Override
     public void enterAsmDefinition(CPP14Parser.AsmDefinitionContext ctx) {
-        printWithCounter("enterAsmDefinition");
+        printWithCounter("enterAsmDefinition " + ctx.getText());
 
     }
 
     @Override
     public void exitAsmDefinition(CPP14Parser.AsmDefinitionContext ctx) {
-        printWithCounter("exitAsmDefinition");
+        printWithCounter("exitAsmDefinition " + ctx.getText());
 
     }
 
     @Override
     public void enterLinkageSpecification(CPP14Parser.LinkageSpecificationContext ctx) {
-        printWithCounter("enterLinkageSpecification");
+        printWithCounter("enterLinkageSpecification " + ctx.getText());
 
     }
 
     @Override
     public void exitLinkageSpecification(CPP14Parser.LinkageSpecificationContext ctx) {
-        printWithCounter("exitLinkageSpecification");
+        printWithCounter("exitLinkageSpecification " + ctx.getText());
 
     }
 
     @Override
     public void enterAttributeSpecifierSeq(CPP14Parser.AttributeSpecifierSeqContext ctx) {
-        printWithCounter("enterAttributeSpecifierSeq");
+        printWithCounter("enterAttributeSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void exitAttributeSpecifierSeq(CPP14Parser.AttributeSpecifierSeqContext ctx) {
-        printWithCounter("exitAttributeSpecifierSeq");
+        printWithCounter("exitAttributeSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void enterAttributeSpecifier(CPP14Parser.AttributeSpecifierContext ctx) {
-        printWithCounter("enterAttributeSpecifier");
+        printWithCounter("enterAttributeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitAttributeSpecifier(CPP14Parser.AttributeSpecifierContext ctx) {
-        printWithCounter("exitAttributeSpecifier");
+        printWithCounter("exitAttributeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterAlignmentspecifier(CPP14Parser.AlignmentspecifierContext ctx) {
-        printWithCounter("enterAlignmentspecifier");
+        printWithCounter("enterAlignmentspecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitAlignmentspecifier(CPP14Parser.AlignmentspecifierContext ctx) {
-        printWithCounter("exitAlignmentspecifier");
+        printWithCounter("exitAlignmentspecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterAttributeList(CPP14Parser.AttributeListContext ctx) {
-        printWithCounter("enterAttributeList");
+        printWithCounter("enterAttributeList " + ctx.getText());
 
     }
 
     @Override
     public void exitAttributeList(CPP14Parser.AttributeListContext ctx) {
-        printWithCounter("exitAttributeList");
+        printWithCounter("exitAttributeList " + ctx.getText());
 
     }
 
     @Override
     public void enterAttribute(CPP14Parser.AttributeContext ctx) {
-        printWithCounter("enterAttribute");
+        printWithCounter("enterAttribute " + ctx.getText());
 
     }
 
     @Override
     public void exitAttribute(CPP14Parser.AttributeContext ctx) {
-        printWithCounter("exitAttribute");
+        printWithCounter("exitAttribute " + ctx.getText());
 
     }
 
     @Override
     public void enterAttributeNamespace(CPP14Parser.AttributeNamespaceContext ctx) {
-        printWithCounter("enterAttributeNamespace");
+        printWithCounter("enterAttributeNamespace " + ctx.getText());
 
     }
 
     @Override
     public void exitAttributeNamespace(CPP14Parser.AttributeNamespaceContext ctx) {
-        printWithCounter("exitAttributeNamespace");
+        printWithCounter("exitAttributeNamespace " + ctx.getText());
 
     }
 
     @Override
     public void enterAttributeArgumentClause(CPP14Parser.AttributeArgumentClauseContext ctx) {
-        printWithCounter("enterAttributeArgumentClause");
+        printWithCounter("enterAttributeArgumentClause " + ctx.getText());
 
     }
 
     @Override
     public void exitAttributeArgumentClause(CPP14Parser.AttributeArgumentClauseContext ctx) {
-        printWithCounter("exitAttributeArgumentClause");
+        printWithCounter("exitAttributeArgumentClause " + ctx.getText());
 
     }
 
     @Override
     public void enterBalancedTokenSeq(CPP14Parser.BalancedTokenSeqContext ctx) {
-        printWithCounter("enterBalancedTokenSeq");
+        printWithCounter("enterBalancedTokenSeq " + ctx.getText());
 
     }
 
     @Override
     public void exitBalancedTokenSeq(CPP14Parser.BalancedTokenSeqContext ctx) {
-        printWithCounter("exitBalancedTokenSeq");
+        printWithCounter("exitBalancedTokenSeq " + ctx.getText());
 
     }
 
     @Override
     public void enterBalancedtoken(CPP14Parser.BalancedtokenContext ctx) {
-        printWithCounter("enterBalancedtoken");
+        printWithCounter("enterBalancedtoken " + ctx.getText());
 
     }
 
     @Override
     public void exitBalancedtoken(CPP14Parser.BalancedtokenContext ctx) {
-        printWithCounter("exitBalancedtoken");
+        printWithCounter("exitBalancedtoken " + ctx.getText());
 
     }
 
     @Override
     public void enterInitDeclaratorList(CPP14Parser.InitDeclaratorListContext ctx) {
-        printWithCounter("enterInitDeclaratorList");
+        printWithCounter("enterInitDeclaratorList " + ctx.getText());
 
     }
 
     @Override
     public void exitInitDeclaratorList(CPP14Parser.InitDeclaratorListContext ctx) {
-        printWithCounter("exitInitDeclaratorList");
+        printWithCounter("exitInitDeclaratorList " + ctx.getText());
 
     }
 
     @Override
     public void enterInitDeclarator(CPP14Parser.InitDeclaratorContext ctx) {
-        printWithCounter("enterInitDeclarator");
+        printWithCounter("enterInitDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitInitDeclarator(CPP14Parser.InitDeclaratorContext ctx) {
-        printWithCounter("exitInitDeclarator");
+        printWithCounter("exitInitDeclarator " + ctx.getText());
 
     }
 
@@ -1380,223 +1379,223 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitDeclarator(CPP14Parser.DeclaratorContext ctx) {
-        printWithCounter("exitDeclarator");
+        printWithCounter("exitDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterPointerDeclarator(CPP14Parser.PointerDeclaratorContext ctx) {
-        printWithCounter("enterPointerDeclarator");
+        printWithCounter("enterPointerDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitPointerDeclarator(CPP14Parser.PointerDeclaratorContext ctx) {
-        printWithCounter("exitPointerDeclarator");
+        printWithCounter("exitPointerDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterNoPointerDeclarator(CPP14Parser.NoPointerDeclaratorContext ctx) {
-        printWithCounter("enterNoPointerDeclarator");
+        printWithCounter("enterNoPointerDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitNoPointerDeclarator(CPP14Parser.NoPointerDeclaratorContext ctx) {
-        printWithCounter("exitNoPointerDeclarator");
+        printWithCounter("exitNoPointerDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterParametersAndQualifiers(CPP14Parser.ParametersAndQualifiersContext ctx) {
-        printWithCounter("enterParametersAndQualifiers");
+        printWithCounter("enterParametersAndQualifiers " + ctx.getText());
 
     }
 
     @Override
     public void exitParametersAndQualifiers(CPP14Parser.ParametersAndQualifiersContext ctx) {
-        printWithCounter("exitParametersAndQualifiers");
+        printWithCounter("exitParametersAndQualifiers " + ctx.getText());
 
     }
 
     @Override
     public void enterTrailingReturnType(CPP14Parser.TrailingReturnTypeContext ctx) {
-        printWithCounter("enterTrailingReturnType");
+        printWithCounter("enterTrailingReturnType " + ctx.getText());
 
     }
 
     @Override
     public void exitTrailingReturnType(CPP14Parser.TrailingReturnTypeContext ctx) {
-        printWithCounter("exitTrailingReturnType");
+        printWithCounter("exitTrailingReturnType " + ctx.getText());
 
     }
 
     @Override
     public void enterPointerOperator(CPP14Parser.PointerOperatorContext ctx) {
-        printWithCounter("enterPointerOperator");
+        printWithCounter("enterPointerOperator " + ctx.getText());
 
     }
 
     @Override
     public void exitPointerOperator(CPP14Parser.PointerOperatorContext ctx) {
-        printWithCounter("exitPointerOperator");
+        printWithCounter("exitPointerOperator " + ctx.getText());
 
     }
 
     @Override
     public void enterCvqualifierseq(CPP14Parser.CvqualifierseqContext ctx) {
-        printWithCounter("enterCvqualifierseq");
+        printWithCounter("enterCvqualifierseq " + ctx.getText());
 
     }
 
     @Override
     public void exitCvqualifierseq(CPP14Parser.CvqualifierseqContext ctx) {
-        printWithCounter("exitCvqualifierseq");
+        printWithCounter("exitCvqualifierseq " + ctx.getText());
 
     }
 
     @Override
     public void enterCvQualifier(CPP14Parser.CvQualifierContext ctx) {
-        printWithCounter("enterCvQualifier");
+        printWithCounter("enterCvQualifier " + ctx.getText());
 
     }
 
     @Override
     public void exitCvQualifier(CPP14Parser.CvQualifierContext ctx) {
-        printWithCounter("exitCvQualifier");
+        printWithCounter("exitCvQualifier " + ctx.getText());
 
     }
 
     @Override
     public void enterRefqualifier(CPP14Parser.RefqualifierContext ctx) {
-        printWithCounter("enterRefqualifier");
+        printWithCounter("enterRefqualifier " + ctx.getText());
 
     }
 
     @Override
     public void exitRefqualifier(CPP14Parser.RefqualifierContext ctx) {
-        printWithCounter("exitRefqualifier");
+        printWithCounter("exitRefqualifier " + ctx.getText());
 
     }
 
     @Override
     public void enterDeclaratorid(CPP14Parser.DeclaratoridContext ctx) {
-        printWithCounter("enterDeclaratorid");
+        printWithCounter("enterDeclaratorid " + ctx.getText());
 
     }
 
     @Override
     public void exitDeclaratorid(CPP14Parser.DeclaratoridContext ctx) {
-        printWithCounter("exitDeclaratorid");
+        printWithCounter("exitDeclaratorid " + ctx.getText());
 
     }
 
     @Override
     public void enterTheTypeId(CPP14Parser.TheTypeIdContext ctx) {
-        printWithCounter("enterTheTypeId");
+        printWithCounter("enterTheTypeId " + ctx.getText());
 
     }
 
     @Override
     public void exitTheTypeId(CPP14Parser.TheTypeIdContext ctx) {
-        printWithCounter("exitTheTypeId");
+        printWithCounter("exitTheTypeId " + ctx.getText());
 
     }
 
     @Override
     public void enterAbstractDeclarator(CPP14Parser.AbstractDeclaratorContext ctx) {
-        printWithCounter("enterAbstractDeclarator");
+        printWithCounter("enterAbstractDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitAbstractDeclarator(CPP14Parser.AbstractDeclaratorContext ctx) {
-        printWithCounter("exitAbstractDeclarator");
+        printWithCounter("exitAbstractDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterPointerAbstractDeclarator(CPP14Parser.PointerAbstractDeclaratorContext ctx) {
-        printWithCounter("enterPointerAbstractDeclarator");
+        printWithCounter("enterPointerAbstractDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitPointerAbstractDeclarator(CPP14Parser.PointerAbstractDeclaratorContext ctx) {
-        printWithCounter("exitPointerAbstractDeclarator");
+        printWithCounter("exitPointerAbstractDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterNoPointerAbstractDeclarator(CPP14Parser.NoPointerAbstractDeclaratorContext ctx) {
-        printWithCounter("enterNoPointerAbstractDeclarator");
+        printWithCounter("enterNoPointerAbstractDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitNoPointerAbstractDeclarator(CPP14Parser.NoPointerAbstractDeclaratorContext ctx) {
-        printWithCounter("exitNoPointerAbstractDeclarator");
+        printWithCounter("exitNoPointerAbstractDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterAbstractPackDeclarator(CPP14Parser.AbstractPackDeclaratorContext ctx) {
-        printWithCounter("enterAbstractPackDeclarator");
+        printWithCounter("enterAbstractPackDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitAbstractPackDeclarator(CPP14Parser.AbstractPackDeclaratorContext ctx) {
-        printWithCounter("exitAbstractPackDeclarator");
+        printWithCounter("exitAbstractPackDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterNoPointerAbstractPackDeclarator(CPP14Parser.NoPointerAbstractPackDeclaratorContext ctx) {
-        printWithCounter("enterNoPointerAbstractPackDeclarator");
+        printWithCounter("enterNoPointerAbstractPackDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitNoPointerAbstractPackDeclarator(CPP14Parser.NoPointerAbstractPackDeclaratorContext ctx) {
-        printWithCounter("exitNoPointerAbstractPackDeclarator");
+        printWithCounter("exitNoPointerAbstractPackDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterParameterDeclarationClause(CPP14Parser.ParameterDeclarationClauseContext ctx) {
-        printWithCounter("enterParameterDeclarationClause");
+        printWithCounter("enterParameterDeclarationClause " + ctx.getText());
 
     }
 
     @Override
     public void exitParameterDeclarationClause(CPP14Parser.ParameterDeclarationClauseContext ctx) {
-        printWithCounter("exitParameterDeclarationClause");
+        printWithCounter("exitParameterDeclarationClause " + ctx.getText());
 
     }
 
     @Override
     public void enterParameterDeclarationList(CPP14Parser.ParameterDeclarationListContext ctx) {
-        printWithCounter("enterParameterDeclarationList");
+        printWithCounter("enterParameterDeclarationList " + ctx.getText());
 
     }
 
     @Override
     public void exitParameterDeclarationList(CPP14Parser.ParameterDeclarationListContext ctx) {
-        printWithCounter("exitParameterDeclarationList");
+        printWithCounter("exitParameterDeclarationList " + ctx.getText());
 
     }
 
     @Override
     public void enterParameterDeclaration(CPP14Parser.ParameterDeclarationContext ctx) {
-        printWithCounter("enterParameterDeclaration");
+        printWithCounter("enterParameterDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitParameterDeclaration(CPP14Parser.ParameterDeclarationContext ctx) {
-        printWithCounter("exitParameterDeclaration");
+        printWithCounter("exitParameterDeclaration " + ctx.getText());
 
     }
 
@@ -1608,703 +1607,703 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void exitFunctionDefinition(CPP14Parser.FunctionDefinitionContext ctx) {
-        printWithCounter("exitFunctionDefinition");
+        printWithCounter("exitFunctionDefinition " + ctx.getText());
 
     }
 
     @Override
     public void enterFunctionBody(CPP14Parser.FunctionBodyContext ctx) {
-        printWithCounter("enterFunctionBody");
+        printWithCounter("enterFunctionBody " + ctx.getText());
 
     }
 
     @Override
     public void exitFunctionBody(CPP14Parser.FunctionBodyContext ctx) {
-        printWithCounter("exitFunctionBody");
+        printWithCounter("exitFunctionBody " + ctx.getText());
 
     }
 
     @Override
     public void enterInitializer(CPP14Parser.InitializerContext ctx) {
-        printWithCounter("enterInitializer");
+        printWithCounter("enterInitializer " + ctx.getText());
 
     }
 
     @Override
     public void exitInitializer(CPP14Parser.InitializerContext ctx) {
-        printWithCounter("exitInitializer");
+        printWithCounter("exitInitializer " + ctx.getText());
 
     }
 
     @Override
     public void enterBraceOrEqualInitializer(CPP14Parser.BraceOrEqualInitializerContext ctx) {
-        printWithCounter("enterBraceOrEqualInitializer");
+        printWithCounter("enterBraceOrEqualInitializer " + ctx.getText());
 
     }
 
     @Override
     public void exitBraceOrEqualInitializer(CPP14Parser.BraceOrEqualInitializerContext ctx) {
-        printWithCounter("exitBraceOrEqualInitializer");
+        printWithCounter("exitBraceOrEqualInitializer " + ctx.getText());
 
     }
 
     @Override
     public void enterInitializerClause(CPP14Parser.InitializerClauseContext ctx) {
-        printWithCounter("enterInitializerClause");
+        printWithCounter("enterInitializerClause " + ctx.getText());
 
     }
 
     @Override
     public void exitInitializerClause(CPP14Parser.InitializerClauseContext ctx) {
-        printWithCounter("exitInitializerClause");
+        printWithCounter("exitInitializerClause " + ctx.getText());
 
     }
 
     @Override
     public void enterInitializerList(CPP14Parser.InitializerListContext ctx) {
-        printWithCounter("enterInitializerList");
+        printWithCounter("enterInitializerList " + ctx.getText());
 
     }
 
     @Override
     public void exitInitializerList(CPP14Parser.InitializerListContext ctx) {
-        printWithCounter("exitInitializerList");
+        printWithCounter("exitInitializerList " + ctx.getText());
 
     }
 
     @Override
     public void enterBracedInitList(CPP14Parser.BracedInitListContext ctx) {
-        printWithCounter("enterBracedInitList");
+        printWithCounter("enterBracedInitList " + ctx.getText());
 
     }
 
     @Override
     public void exitBracedInitList(CPP14Parser.BracedInitListContext ctx) {
-        printWithCounter("exitBracedInitList");
+        printWithCounter("exitBracedInitList " + ctx.getText());
 
     }
 
     @Override
     public void enterClassName(CPP14Parser.ClassNameContext ctx) {
-        printWithCounter("enterClassName");
+        printWithCounter("enterClassName " + ctx.getText());
 
     }
 
     @Override
     public void exitClassName(CPP14Parser.ClassNameContext ctx) {
-        printWithCounter("exitClassName");
+        printWithCounter("exitClassName " + ctx.getText());
 
     }
 
     @Override
     public void enterClassSpecifier(CPP14Parser.ClassSpecifierContext ctx) {
-        printWithCounter("enterClassSpecifier");
+        printWithCounter("enterClassSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitClassSpecifier(CPP14Parser.ClassSpecifierContext ctx) {
-        printWithCounter("exitClassSpecifier");
+        printWithCounter("exitClassSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterClassHead(CPP14Parser.ClassHeadContext ctx) {
-        printWithCounter("enterClassHead");
+        printWithCounter("enterClassHead " + ctx.getText());
 
     }
 
     @Override
     public void exitClassHead(CPP14Parser.ClassHeadContext ctx) {
-        printWithCounter("exitClassHead");
+        printWithCounter("exitClassHead " + ctx.getText());
 
     }
 
     @Override
     public void enterClassHeadName(CPP14Parser.ClassHeadNameContext ctx) {
-        printWithCounter("enterClassHeadName");
+        printWithCounter("enterClassHeadName " + ctx.getText());
 
     }
 
     @Override
     public void exitClassHeadName(CPP14Parser.ClassHeadNameContext ctx) {
-        printWithCounter("exitClassHeadName");
+        printWithCounter("exitClassHeadName " + ctx.getText());
 
     }
 
     @Override
     public void enterClassVirtSpecifier(CPP14Parser.ClassVirtSpecifierContext ctx) {
-        printWithCounter("enterClassVirtSpecifier");
+        printWithCounter("enterClassVirtSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitClassVirtSpecifier(CPP14Parser.ClassVirtSpecifierContext ctx) {
-        printWithCounter("exitClassVirtSpecifier");
+        printWithCounter("exitClassVirtSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterClassKey(CPP14Parser.ClassKeyContext ctx) {
-        printWithCounter("enterClassKey");
+        printWithCounter("enterClassKey " + ctx.getText());
 
     }
 
     @Override
     public void exitClassKey(CPP14Parser.ClassKeyContext ctx) {
-        printWithCounter("exitClassKey");
+        printWithCounter("exitClassKey " + ctx.getText());
 
     }
 
     @Override
     public void enterMemberSpecification(CPP14Parser.MemberSpecificationContext ctx) {
-        printWithCounter("enterMemberSpecification");
+        printWithCounter("enterMemberSpecification " + ctx.getText());
 
     }
 
     @Override
     public void exitMemberSpecification(CPP14Parser.MemberSpecificationContext ctx) {
-        printWithCounter("exitMemberSpecification");
+        printWithCounter("exitMemberSpecification " + ctx.getText());
 
     }
 
     @Override
     public void enterMemberdeclaration(CPP14Parser.MemberdeclarationContext ctx) {
-        printWithCounter("enterMemberdeclaration");
+        printWithCounter("enterMemberdeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitMemberdeclaration(CPP14Parser.MemberdeclarationContext ctx) {
-        printWithCounter("exitMemberdeclaration");
+        printWithCounter("exitMemberdeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterMemberDeclaratorList(CPP14Parser.MemberDeclaratorListContext ctx) {
-        printWithCounter("enterMemberDeclaratorList");
+        printWithCounter("enterMemberDeclaratorList " + ctx.getText());
 
     }
 
     @Override
     public void exitMemberDeclaratorList(CPP14Parser.MemberDeclaratorListContext ctx) {
-        printWithCounter("exitMemberDeclaratorList");
+        printWithCounter("exitMemberDeclaratorList " + ctx.getText());
 
     }
 
     @Override
     public void enterMemberDeclarator(CPP14Parser.MemberDeclaratorContext ctx) {
-        printWithCounter("enterMemberDeclarator");
+        printWithCounter("enterMemberDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitMemberDeclarator(CPP14Parser.MemberDeclaratorContext ctx) {
-        printWithCounter("exitMemberDeclarator");
+        printWithCounter("exitMemberDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterVirtualSpecifierSeq(CPP14Parser.VirtualSpecifierSeqContext ctx) {
-        printWithCounter("enterVirtualSpecifierSeq");
+        printWithCounter("enterVirtualSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void exitVirtualSpecifierSeq(CPP14Parser.VirtualSpecifierSeqContext ctx) {
-        printWithCounter("exitVirtualSpecifierSeq");
+        printWithCounter("exitVirtualSpecifierSeq " + ctx.getText());
 
     }
 
     @Override
     public void enterVirtualSpecifier(CPP14Parser.VirtualSpecifierContext ctx) {
-        printWithCounter("enterVirtualSpecifier");
+        printWithCounter("enterVirtualSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitVirtualSpecifier(CPP14Parser.VirtualSpecifierContext ctx) {
-        printWithCounter("exitVirtualSpecifier");
+        printWithCounter("exitVirtualSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterPureSpecifier(CPP14Parser.PureSpecifierContext ctx) {
-        printWithCounter("enterPureSpecifier");
+        printWithCounter("enterPureSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitPureSpecifier(CPP14Parser.PureSpecifierContext ctx) {
-        printWithCounter("exitPureSpecifier");
+        printWithCounter("exitPureSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterBaseClause(CPP14Parser.BaseClauseContext ctx) {
-        printWithCounter("enterBaseClause");
+        printWithCounter("enterBaseClause " + ctx.getText());
 
     }
 
     @Override
     public void exitBaseClause(CPP14Parser.BaseClauseContext ctx) {
-        printWithCounter("exitBaseClause");
+        printWithCounter("exitBaseClause " + ctx.getText());
 
     }
 
     @Override
     public void enterBaseSpecifierList(CPP14Parser.BaseSpecifierListContext ctx) {
-        printWithCounter("enterBaseSpecifierList");
+        printWithCounter("enterBaseSpecifierList " + ctx.getText());
 
     }
 
     @Override
     public void exitBaseSpecifierList(CPP14Parser.BaseSpecifierListContext ctx) {
-        printWithCounter("exitBaseSpecifierList");
+        printWithCounter("exitBaseSpecifierList " + ctx.getText());
 
     }
 
     @Override
     public void enterBaseSpecifier(CPP14Parser.BaseSpecifierContext ctx) {
-        printWithCounter("enterBaseSpecifier");
+        printWithCounter("enterBaseSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitBaseSpecifier(CPP14Parser.BaseSpecifierContext ctx) {
-        printWithCounter("exitBaseSpecifier");
+        printWithCounter("exitBaseSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterClassOrDeclType(CPP14Parser.ClassOrDeclTypeContext ctx) {
-        printWithCounter("enterClassOrDeclType");
+        printWithCounter("enterClassOrDeclType " + ctx.getText());
 
     }
 
     @Override
     public void exitClassOrDeclType(CPP14Parser.ClassOrDeclTypeContext ctx) {
-        printWithCounter("exitClassOrDeclType");
+        printWithCounter("exitClassOrDeclType " + ctx.getText());
 
     }
 
     @Override
     public void enterBaseTypeSpecifier(CPP14Parser.BaseTypeSpecifierContext ctx) {
-        printWithCounter("enterBaseTypeSpecifier");
+        printWithCounter("enterBaseTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitBaseTypeSpecifier(CPP14Parser.BaseTypeSpecifierContext ctx) {
-        printWithCounter("exitBaseTypeSpecifier");
+        printWithCounter("exitBaseTypeSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterAccessSpecifier(CPP14Parser.AccessSpecifierContext ctx) {
-        printWithCounter("enterAccessSpecifier");
+        printWithCounter("enterAccessSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitAccessSpecifier(CPP14Parser.AccessSpecifierContext ctx) {
-        printWithCounter("exitAccessSpecifier");
+        printWithCounter("exitAccessSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterConversionFunctionId(CPP14Parser.ConversionFunctionIdContext ctx) {
-        printWithCounter("enterConversionFunctionId");
+        printWithCounter("enterConversionFunctionId " + ctx.getText());
 
     }
 
     @Override
     public void exitConversionFunctionId(CPP14Parser.ConversionFunctionIdContext ctx) {
-        printWithCounter("exitConversionFunctionId");
+        printWithCounter("exitConversionFunctionId " + ctx.getText());
 
     }
 
     @Override
     public void enterConversionTypeId(CPP14Parser.ConversionTypeIdContext ctx) {
-        printWithCounter("enterConversionTypeId");
+        printWithCounter("enterConversionTypeId " + ctx.getText());
 
     }
 
     @Override
     public void exitConversionTypeId(CPP14Parser.ConversionTypeIdContext ctx) {
-        printWithCounter("exitConversionTypeId");
+        printWithCounter("exitConversionTypeId " + ctx.getText());
 
     }
 
     @Override
     public void enterConversionDeclarator(CPP14Parser.ConversionDeclaratorContext ctx) {
-        printWithCounter("enterConversionDeclarator");
+        printWithCounter("enterConversionDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void exitConversionDeclarator(CPP14Parser.ConversionDeclaratorContext ctx) {
-        printWithCounter("exitConversionDeclarator");
+        printWithCounter("exitConversionDeclarator " + ctx.getText());
 
     }
 
     @Override
     public void enterConstructorInitializer(CPP14Parser.ConstructorInitializerContext ctx) {
-        printWithCounter("enterConstructorInitializer");
+        printWithCounter("enterConstructorInitializer " + ctx.getText());
 
     }
 
     @Override
     public void exitConstructorInitializer(CPP14Parser.ConstructorInitializerContext ctx) {
-        printWithCounter("exitConstructorInitializer");
+        printWithCounter("exitConstructorInitializer " + ctx.getText());
 
     }
 
     @Override
     public void enterMemInitializerList(CPP14Parser.MemInitializerListContext ctx) {
-        printWithCounter("enterMemInitializerList");
+        printWithCounter("enterMemInitializerList " + ctx.getText());
 
     }
 
     @Override
     public void exitMemInitializerList(CPP14Parser.MemInitializerListContext ctx) {
-        printWithCounter("exitMemInitializerList");
+        printWithCounter("exitMemInitializerList " + ctx.getText());
 
     }
 
     @Override
     public void enterMemInitializer(CPP14Parser.MemInitializerContext ctx) {
-        printWithCounter("enterMemInitializer");
+        printWithCounter("enterMemInitializer " + ctx.getText());
 
     }
 
     @Override
     public void exitMemInitializer(CPP14Parser.MemInitializerContext ctx) {
-        printWithCounter("exitMemInitializer");
+        printWithCounter("exitMemInitializer " + ctx.getText());
 
     }
 
     @Override
     public void enterMeminitializerid(CPP14Parser.MeminitializeridContext ctx) {
-        printWithCounter("enterMeminitializerid");
+        printWithCounter("enterMeminitializerid " + ctx.getText());
 
     }
 
     @Override
     public void exitMeminitializerid(CPP14Parser.MeminitializeridContext ctx) {
-        printWithCounter("exitMeminitializerid");
+        printWithCounter("exitMeminitializerid " + ctx.getText());
 
     }
 
     @Override
     public void enterOperatorFunctionId(CPP14Parser.OperatorFunctionIdContext ctx) {
-        printWithCounter("enterOperatorFunctionId");
+        printWithCounter("enterOperatorFunctionId " + ctx.getText());
 
     }
 
     @Override
     public void exitOperatorFunctionId(CPP14Parser.OperatorFunctionIdContext ctx) {
-        printWithCounter("exitOperatorFunctionId");
+        printWithCounter("exitOperatorFunctionId " + ctx.getText());
 
     }
 
     @Override
     public void enterLiteralOperatorId(CPP14Parser.LiteralOperatorIdContext ctx) {
-        printWithCounter("enterLiteralOperatorId");
+        printWithCounter("enterLiteralOperatorId " + ctx.getText());
 
     }
 
     @Override
     public void exitLiteralOperatorId(CPP14Parser.LiteralOperatorIdContext ctx) {
-        printWithCounter("exitLiteralOperatorId");
+        printWithCounter("exitLiteralOperatorId " + ctx.getText());
 
     }
 
     @Override
     public void enterTemplateDeclaration(CPP14Parser.TemplateDeclarationContext ctx) {
-        printWithCounter("enterTemplateDeclaration");
+        printWithCounter("enterTemplateDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitTemplateDeclaration(CPP14Parser.TemplateDeclarationContext ctx) {
-        printWithCounter("exitTemplateDeclaration");
+        printWithCounter("exitTemplateDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterTemplateparameterList(CPP14Parser.TemplateparameterListContext ctx) {
-        printWithCounter("enterTemplateparameterList");
+        printWithCounter("enterTemplateparameterList " + ctx.getText());
 
     }
 
     @Override
     public void exitTemplateparameterList(CPP14Parser.TemplateparameterListContext ctx) {
-        printWithCounter("exitTemplateparameterList");
+        printWithCounter("exitTemplateparameterList " + ctx.getText());
 
     }
 
     @Override
     public void enterTemplateParameter(CPP14Parser.TemplateParameterContext ctx) {
-        printWithCounter("enterTemplateParameter");
+        printWithCounter("enterTemplateParameter " + ctx.getText());
 
     }
 
     @Override
     public void exitTemplateParameter(CPP14Parser.TemplateParameterContext ctx) {
-        printWithCounter("exitTemplateParameter");
+        printWithCounter("exitTemplateParameter " + ctx.getText());
 
     }
 
     @Override
     public void enterTypeParameter(CPP14Parser.TypeParameterContext ctx) {
-        printWithCounter("enterTypeParameter");
+        printWithCounter("enterTypeParameter " + ctx.getText());
 
     }
 
     @Override
     public void exitTypeParameter(CPP14Parser.TypeParameterContext ctx) {
-        printWithCounter("exitTypeParameter");
+        printWithCounter("exitTypeParameter " + ctx.getText());
 
     }
 
     @Override
     public void enterSimpleTemplateId(CPP14Parser.SimpleTemplateIdContext ctx) {
-        printWithCounter("enterSimpleTemplateId");
+        printWithCounter("enterSimpleTemplateId " + ctx.getText());
 
     }
 
     @Override
     public void exitSimpleTemplateId(CPP14Parser.SimpleTemplateIdContext ctx) {
-        printWithCounter("exitSimpleTemplateId");
+        printWithCounter("exitSimpleTemplateId " + ctx.getText());
 
     }
 
     @Override
     public void enterTemplateId(CPP14Parser.TemplateIdContext ctx) {
-        printWithCounter("enterTemplateId");
+        printWithCounter("enterTemplateId " + ctx.getText());
 
     }
 
     @Override
     public void exitTemplateId(CPP14Parser.TemplateIdContext ctx) {
-        printWithCounter("exitTemplateId");
+        printWithCounter("exitTemplateId " + ctx.getText());
 
     }
 
     @Override
     public void enterTemplateName(CPP14Parser.TemplateNameContext ctx) {
-        printWithCounter("enterTemplateName");
+        printWithCounter("enterTemplateName " + ctx.getText());
 
     }
 
     @Override
     public void exitTemplateName(CPP14Parser.TemplateNameContext ctx) {
-        printWithCounter("exitTemplateName");
+        printWithCounter("exitTemplateName " + ctx.getText());
 
     }
 
     @Override
     public void enterTemplateArgumentList(CPP14Parser.TemplateArgumentListContext ctx) {
-        printWithCounter("enterTemplateArgumentList");
+        printWithCounter("enterTemplateArgumentList " + ctx.getText());
 
     }
 
     @Override
     public void exitTemplateArgumentList(CPP14Parser.TemplateArgumentListContext ctx) {
-        printWithCounter("exitTemplateArgumentList");
+        printWithCounter("exitTemplateArgumentList " + ctx.getText());
 
     }
 
     @Override
     public void enterTemplateArgument(CPP14Parser.TemplateArgumentContext ctx) {
-        printWithCounter("enterTemplateArgument");
+        printWithCounter("enterTemplateArgument " + ctx.getText());
 
     }
 
     @Override
     public void exitTemplateArgument(CPP14Parser.TemplateArgumentContext ctx) {
-        printWithCounter("exitTemplateArgument");
+        printWithCounter("exitTemplateArgument " + ctx.getText());
 
     }
 
     @Override
     public void enterTypeNameSpecifier(CPP14Parser.TypeNameSpecifierContext ctx) {
-        printWithCounter("enterTypeNameSpecifier");
+        printWithCounter("enterTypeNameSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void exitTypeNameSpecifier(CPP14Parser.TypeNameSpecifierContext ctx) {
-        printWithCounter("exitTypeNameSpecifier");
+        printWithCounter("exitTypeNameSpecifier " + ctx.getText());
 
     }
 
     @Override
     public void enterExplicitInstantiation(CPP14Parser.ExplicitInstantiationContext ctx) {
-        printWithCounter("enterExplicitInstantiation");
+        printWithCounter("enterExplicitInstantiation " + ctx.getText());
 
     }
 
     @Override
     public void exitExplicitInstantiation(CPP14Parser.ExplicitInstantiationContext ctx) {
-        printWithCounter("exitExplicitInstantiation");
+        printWithCounter("exitExplicitInstantiation " + ctx.getText());
 
     }
 
     @Override
     public void enterExplicitSpecialization(CPP14Parser.ExplicitSpecializationContext ctx) {
-        printWithCounter("enterExplicitSpecialization");
+        printWithCounter("enterExplicitSpecialization " + ctx.getText());
 
     }
 
     @Override
     public void exitExplicitSpecialization(CPP14Parser.ExplicitSpecializationContext ctx) {
-        printWithCounter("exitExplicitSpecialization");
+        printWithCounter("exitExplicitSpecialization " + ctx.getText());
 
     }
 
     @Override
     public void enterTryBlock(CPP14Parser.TryBlockContext ctx) {
-        printWithCounter("enterTryBlock");
+        printWithCounter("enterTryBlock " + ctx.getText());
 
     }
 
     @Override
     public void exitTryBlock(CPP14Parser.TryBlockContext ctx) {
-        printWithCounter("exitTryBlock");
+        printWithCounter("exitTryBlock " + ctx.getText());
 
     }
 
     @Override
     public void enterFunctionTryBlock(CPP14Parser.FunctionTryBlockContext ctx) {
-        printWithCounter("enterFunctionTryBlock");
+        printWithCounter("enterFunctionTryBlock " + ctx.getText());
 
     }
 
     @Override
     public void exitFunctionTryBlock(CPP14Parser.FunctionTryBlockContext ctx) {
-        printWithCounter("exitFunctionTryBlock");
+        printWithCounter("exitFunctionTryBlock " + ctx.getText());
 
     }
 
     @Override
     public void enterHandlerSeq(CPP14Parser.HandlerSeqContext ctx) {
-        printWithCounter("enterHandlerSeq");
+        printWithCounter("enterHandlerSeq " + ctx.getText());
 
     }
 
     @Override
     public void exitHandlerSeq(CPP14Parser.HandlerSeqContext ctx) {
-        printWithCounter("exitHandlerSeq");
+        printWithCounter("exitHandlerSeq " + ctx.getText());
 
     }
 
     @Override
     public void enterHandler(CPP14Parser.HandlerContext ctx) {
-        printWithCounter("enterHandler");
+        printWithCounter("enterHandler " + ctx.getText());
 
     }
 
     @Override
     public void exitHandler(CPP14Parser.HandlerContext ctx) {
-        printWithCounter("exitHandler");
+        printWithCounter("exitHandler " + ctx.getText());
 
     }
 
     @Override
     public void enterExceptionDeclaration(CPP14Parser.ExceptionDeclarationContext ctx) {
-        printWithCounter("enterExceptionDeclaration");
+        printWithCounter("enterExceptionDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void exitExceptionDeclaration(CPP14Parser.ExceptionDeclarationContext ctx) {
-        printWithCounter("exitExceptionDeclaration");
+        printWithCounter("exitExceptionDeclaration " + ctx.getText());
 
     }
 
     @Override
     public void enterThrowExpression(CPP14Parser.ThrowExpressionContext ctx) {
-        printWithCounter("enterThrowExpression");
+        printWithCounter("enterThrowExpression " + ctx.getText());
 
     }
 
     @Override
     public void exitThrowExpression(CPP14Parser.ThrowExpressionContext ctx) {
-        printWithCounter("exitThrowExpression");
+        printWithCounter("exitThrowExpression " + ctx.getText());
 
     }
 
     @Override
     public void enterExceptionSpecification(CPP14Parser.ExceptionSpecificationContext ctx) {
-        printWithCounter("enterExceptionSpecification");
+        printWithCounter("enterExceptionSpecification " + ctx.getText());
 
     }
 
     @Override
     public void exitExceptionSpecification(CPP14Parser.ExceptionSpecificationContext ctx) {
-        printWithCounter("exitExceptionSpecification");
+        printWithCounter("exitExceptionSpecification " + ctx.getText());
 
     }
 
     @Override
     public void enterDynamicExceptionSpecification(CPP14Parser.DynamicExceptionSpecificationContext ctx) {
-        printWithCounter("enterDynamicExceptionSpecification");
+        printWithCounter("enterDynamicExceptionSpecification " + ctx.getText());
 
     }
 
     @Override
     public void exitDynamicExceptionSpecification(CPP14Parser.DynamicExceptionSpecificationContext ctx) {
-        printWithCounter("exitDynamicExceptionSpecification");
+        printWithCounter("exitDynamicExceptionSpecification " + ctx.getText());
 
     }
 
     @Override
     public void enterTypeIdList(CPP14Parser.TypeIdListContext ctx) {
-        printWithCounter("enterTypeIdList");
+        printWithCounter("enterTypeIdList " + ctx.getText());
 
     }
 
     @Override
     public void exitTypeIdList(CPP14Parser.TypeIdListContext ctx) {
-        printWithCounter("exitTypeIdList");
+        printWithCounter("exitTypeIdList " + ctx.getText());
 
     }
 
     @Override
     public void enterNoeExceptSpecification(CPP14Parser.NoeExceptSpecificationContext ctx) {
-        printWithCounter("enterNoeExceptSpecification");
+        printWithCounter("enterNoeExceptSpecification " + ctx.getText());
 
     }
 
     @Override
     public void exitNoeExceptSpecification(CPP14Parser.NoeExceptSpecificationContext ctx) {
-        printWithCounter("exitNoeExceptSpecification");
+        printWithCounter("exitNoeExceptSpecification " + ctx.getText());
 
     }
 
     @Override
     public void enterTheOperator(CPP14Parser.TheOperatorContext ctx) {
-        printWithCounter("enterTheOperator");
+        printWithCounter("enterTheOperator " + ctx.getText());
 
     }
 
     @Override
     public void exitTheOperator(CPP14Parser.TheOperatorContext ctx) {
-        printWithCounter("exitTheOperator");
+        printWithCounter("exitTheOperator " + ctx.getText());
 
     }
 
     @Override
     public void enterLiteral(CPP14Parser.LiteralContext ctx) {
-        printWithCounter("enterLiteral");
+        printWithCounter("enterLiteral " + ctx.getText());
 
     }
 
     @Override
     public void exitLiteral(CPP14Parser.LiteralContext ctx) {
-        printWithCounter("exitLiteral");
+        printWithCounter("exitLiteral " + ctx.getText());
 
     }
 
@@ -2316,7 +2315,7 @@ public class PrintCPP14ParserListener implements CPP14ParserListener {
 
     @Override
     public void visitErrorNode(ErrorNode errorNode) {
-        printWithCounter("visitErrorNode");
+        printWithCounter("visitErrorNode " + errorNode);
 
     }
 }

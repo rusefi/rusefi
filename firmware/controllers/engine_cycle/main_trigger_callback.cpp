@@ -285,7 +285,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	engine->tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
 	if (trgEventIndex == 0) {
 		engine->tpsAccelEnrichment.onEngineCycleTps();
 	}

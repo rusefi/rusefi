@@ -21,14 +21,19 @@ void grabTPSIsWideOpen() {
 
 void grabPedalIsUp() {
 #if EFI_PROD_CODE
-	engineConfiguration->throttlePedalUpVoltage = Sensor::getRaw(SensorType::AcceleratorPedal);
-	printTPSInfo();
+	/**
+	 * search for 'maintainConstantValue' to find how this TS magic works
+	 */
+	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::PedalMin;
+	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
+	engine->outputChannels.calibrationValue2 = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
 #endif /* EFI_PROD_CODE */
 }
 
 void grabPedalIsWideOpen() {
 #if EFI_PROD_CODE
-	engineConfiguration->throttlePedalWOTVoltage = Sensor::getRaw(SensorType::AcceleratorPedal);
-	printTPSInfo();
+	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::PedalMax;
+	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
+	engine->outputChannels.calibrationValue2 = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
 #endif /* EFI_PROD_CODE */
 }

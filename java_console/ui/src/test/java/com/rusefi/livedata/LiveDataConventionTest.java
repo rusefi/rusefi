@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 
 import static com.rusefi.livedata.LiveDataParserPanel.getParseTree;
+import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
 import static org.junit.Assert.assertTrue;
 
 public class LiveDataConventionTest {
@@ -21,7 +22,7 @@ public class LiveDataConventionTest {
     @Ignore
     public void assertLiveDataConvention() throws IOException, URISyntaxException {
         for (live_data_e view : live_data_e.values()) {
-            String fileName = StateDictionary.INSTANCE.getFileName(view);
+            String fileName = StateDictionary.INSTANCE.getFileName(view) + CPP_SUFFIX;
             Field[] values = StateDictionary.INSTANCE.getFields(view);
             assertFile(fileName, values);
         }

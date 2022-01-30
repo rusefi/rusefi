@@ -661,6 +661,7 @@ static void updateFlags() {
 	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition().value;
 	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection().value;
 	engine->outputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
+	engine->outputChannels.dfcoActive = engine->module<DfcoController>()->cutFuel();
 
 #if EFI_LAUNCH_CONTROL
 	engine->outputChannels.launchTriggered = engine->launchController.isLaunchCondition;
@@ -870,7 +871,7 @@ void updateTunerStudioState() {
 		break;
 	case DBG_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)
-		tle8888PostState(tsOutputChannels->getDebugChannels());
+		tle8888PostState();
 #endif /* BOARD_TLE8888_COUNT */
 		break;
 	case DBG_LOGIC_ANALYZER: 

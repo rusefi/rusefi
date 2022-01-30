@@ -195,15 +195,11 @@ pins:
     type: av
 
   - pin: 28
-    id: [GPIOA_4, EFI_ADC_4]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOA_4, GPIOA_4, EFI_ADC_4]
+    class: [outputs, switch_inputs, analog_inputs]
     color: light blue left
-    ts_name: 28 - AN volt 10
+    ts_name: 28 - AN volt 10, Aux Reuse
     type: av
-
-  - id: GPIOA_4
-    class: outputs
-    ts_name: AUX AV10 reuse
 
   - id: GPIOE_0
     class: outputs
@@ -238,17 +234,12 @@ pins:
     type: av
 
   - pin: 32
-    id: [GPIOC_4, EFI_ADC_14]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOC_4, GPIOC_4, EFI_ADC_14]
+    class: [outputs, switch_inputs, analog_inputs]
     color: pink
     function: External wideband O2 sensor WBO AFR EGO
-    ts_name: 32 - AN volt 6
+    ts_name: 32 - AN volt 6, Aux Reuse
     type: av
-
-  - id: GPIOC_4
-    class: outputs
-    ts_name: AUX AV6 reuse
-
 
   # TLE8888 half bridges (pushpull, lowside, or high-low) TLE8888_OUT23
   - pin: 33
@@ -278,15 +269,11 @@ pins:
     type: [gp_low, gp_pp]
 
   - pin: 36
-    id: [GPIOB_0, EFI_ADC_8]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOB_0, GPIOB_0, EFI_ADC_8]
+    class: [outputs, switch_inputs, analog_inputs]
     color: orange left    
-    ts_name: 36 - AN volt 8
+    ts_name: 36 - AN volt 8, Aux Reuse
     type: av
-
-  - id: GPIOB_0
-    class: outputs
-    ts_name: AUX AV8 reuse
 
   - pin: 37
     id: TLE8888_PIN_1
@@ -310,15 +297,11 @@ pins:
     color: grey
 
   - pin: 40
-    id: [GPIOB_1, EFI_ADC_9]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOB_1, GPIOB_1, EFI_ADC_9]
+    class: [outputs, switch_inputs, analog_inputs]
     color: grey
-    ts_name: 40 - AN volt 9
+    ts_name: 40 - AN volt 9, Aux Reuse
     type: av
-
-  - id: GPIOB_1
-    class: outputs
-    ts_name: AUX AV9 reuse
 
   - pin: 41
     id: TLE8888_PIN_3

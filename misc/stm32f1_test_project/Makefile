@@ -16,6 +16,7 @@ endif
 # C++ specific options here (added to USE_OPT).
 ifeq ($(USE_CPPOPT),)
   USE_CPPOPT = -fno-rtti -fno-exceptions -ffast-math -funsafe-math-optimizations -fno-threadsafe-statics -fno-use-cxa-atexit
+  USE_CPPOPT += -std=c++2a	
 endif
 
 # Enable this if you want the linker to remove unused code and data.
@@ -127,7 +128,9 @@ CSRC = $(ALLCSRC)
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC = $(ALLCPPSRC) \
-          main.cpp \
+        main.cpp \
+	spi.cpp \
+	can.cpp \
 	uart.cpp
 
 # List ASM source files here.

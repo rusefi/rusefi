@@ -17,6 +17,8 @@
 #include "ch.h"
 #include "hal.h"
 #include "uart.h"
+#include "can.h"
+#include "spi.h"
 
 #define BL_PORT GPIOC
 #define BL_PIN 13
@@ -61,6 +63,8 @@ int main(void) {
   chThdCreateStatic(waThread1, sizeof(waThread1), NORMALPRIO, Thread1, NULL);
 
   InitUart();
+  InitCan();
+  InitSpi();
 
   /*
    * Normal main() thread activity, in this demo it does nothing except

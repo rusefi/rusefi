@@ -59,10 +59,6 @@ public:
 	// Angle between firing the main (primary) spark and the secondary (trailing) spark
 	angle_t trailingSparkAngle = 0;
 
-	// fuel-related;
-	float fuelCutoffCorrection = 0;
-	efitick_t coastingFuelCutStartTime = 0;
-
 	efitick_t timeSinceLastTChargeK;
 
 	float currentVe = 0;
