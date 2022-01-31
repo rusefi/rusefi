@@ -1616,7 +1616,6 @@
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
-#define MAP_ACCEL_TAPER 8
 #define MAP_ANGLE_SIZE 8
 #define map_offset 196
 #define map_samplingAngle_offset 228
@@ -1631,8 +1630,6 @@
 #define map_sensor_offset 324
 #define map_sensor_type_offset 332
 #define MAP_WINDOW_SIZE 8
-#define mapAccelTaperBins_offset 1760
-#define mapAccelTaperMult_offset 1792
 #define mapAveragingSchedulingAtIndex_offset 1312
 #define mapCamDetectionAnglePosition_offset 560
 #define mapErrorDetectionTooHigh_offset 1540
@@ -1699,6 +1696,7 @@
 #define narrowToWideOxygen_offset 1912
 #define narrowToWideOxygenBins_offset 1880
 #define noAccelAfterHardLimitPeriodSecs_offset 1308
+#define noFuelTrimAfterDfcoTime_offset 1691
 #define o2heaterPin_offset 746
 #define o2heaterPinModeTodO_offset 747
 #define oilPressure_alignmentFill_offset 2289
@@ -1894,7 +1892,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 40759209
+#define SIGNATURE_HASH 1268407611
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2011,16 +2009,19 @@
 #define tChargeAirDecrLimit_offset 3364
 #define tChargeAirFlowMax_offset 3356
 #define tChargeAirIncrLimit_offset 3360
+#define tchargeBins_offset 1760
 #define tChargeMaxRpmMaxTps_offset 1864
 #define tChargeMaxRpmMinTps_offset 1860
 #define tChargeMinRpmMaxTps_offset 1856
 #define tChargeMinRpmMinTps_offset 1852
-#define tChargeMode_e_auto_enum "TCHARGE_MODE_RPM_TPS", "TCHARGE_MODE_AIR_INTERP"
-#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation"
+#define tChargeMode_e_auto_enum "TCHARGE_MODE_RPM_TPS", "TCHARGE_MODE_AIR_INTERP", "TCHARGE_MODE_AIR_INTERP_TABLE"
+#define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
 #define tChargeMode_e_Force_4bytes_size_tChargeMode_e ENUM_32_BITS
 #define tChargeMode_e_TCHARGE_MODE_AIR_INTERP 1
+#define tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE 2
 #define tChargeMode_e_TCHARGE_MODE_RPM_TPS 0
 #define tChargeMode_offset 3368
+#define tchargeValues_offset 1776
 #define TCU_GEAR_COUNT 10
 #define tcu_solenoid1_offset 1108
 #define tcu_solenoid2_offset 1109
@@ -2419,7 +2420,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.28.hellen_cypress.40759209"
+#define TS_SIGNATURE "rusEFI 2022.01.31.hellen_cypress.1268407611"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2459,7 +2460,6 @@
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
-#define unused1689_offset 1691
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
@@ -2510,6 +2510,7 @@
 #define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4171
 #define unusedHere2_offset 1747
+#define unusedMapAccelTaperBins_offset 1792
 #define unusedShort_offset 4640
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164

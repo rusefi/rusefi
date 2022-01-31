@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:02:58 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:21 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2870,9 +2870,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t coastingFuelCutVssHigh;
 	/**
+	 * Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
+	sec
 	 * offset 1691
 	 */
-	uint8_t unused1689[1];
+	scaled_channel<uint8_t, 10, 1> noFuelTrimAfterDfcoTime;
 	/**
 	 * Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
 	roc
@@ -3136,15 +3138,20 @@ struct engine_configuration_s {
 	 */
 	float boostCutPressure;
 	/**
-	counter
+	kg/h
 	 * offset 1760
 	 */
-	float mapAccelTaperBins[MAP_ACCEL_TAPER];
+	uint8_t tchargeBins[16];
 	/**
-	mult
+	ratio
+	 * offset 1776
+	 */
+	uint8_t tchargeValues[16];
+	/**
+	counter
 	 * offset 1792
 	 */
-	float mapAccelTaperMult[MAP_ACCEL_TAPER];
+	float unusedMapAccelTaperBins[8];
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -4505,4 +4512,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:02:58 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:21 UTC 2022

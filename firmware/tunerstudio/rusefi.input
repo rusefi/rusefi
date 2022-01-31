@@ -396,13 +396,6 @@ enable2ndByteCanID = false
       yBins       = scriptCurve6
       showTextValues = true
 
-   curve = mapAccelTaper, "Engine Load Acceleration Enrichment Taper"
-      columnLabel = "Distance", "Multiplier"
-      xAxis       =  0, 128, 10
-      yAxis       = -5,  5, 10
-      xBins       = mapAccelTaperBins
-      yBins       = mapAccelTaperMult
-
 	curve = dwellCorrection, "Dwell time base"
       columnLabel = "RPM", "Dwell"
       xAxis       =  0, 8000, 9
@@ -650,6 +643,14 @@ enable2ndByteCanID = false
 		xBins       = wwMapBins, MAPValue
 		yBins       = wwBetaMapValues
 		gauge       = MAPGauge
+
+	curve = tchargeCurve, "Charge temperature estimation coefficient"
+		columnLabel = "flow", "coefficient"
+		xAxis = 0, 500, 6
+		yAxis = 0, 100, 5
+		xBins = tchargeBins, mafEstimate
+		yBins = tchargeValues
+		gauge = tChargeGauge
 
 [TableEditor]
    ;       table_id,    map3d_id,    "title",      page
@@ -1384,7 +1385,6 @@ menuDialog = main
 		# Accel enrichment
 		subMenu = AccelEnrich,				"Acceleration enrichment", 0, {isInjectionEnabled == 1}
 		subMenu = tpsTpsAccelTbl, 			"TPS/TPS acceleration extra fuel", 0, {isInjectionEnabled == 1}
-		subMenu = mapAccelTaper,			"Engine load AE taper", 0, {isInjectionEnabled == 1}
 
 		groupMenu = "Wall wetting AE"
 		groupChildMenu = wwTauCurves, "Evap time", 0, { complexWallModel != 0 }
@@ -1837,6 +1837,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = tChargeGeneralSettings
 		panel = tChargeRpmTpsSettings, { tChargeMode == 0}
 		panel = tChargeAirInterpSettings, { tChargeMode == 1}
+		panel = tchargeCurve, { tChargeMode == 2 }
 
 	dialog = baseInjection, "General"
 		field = "Enabled",						isInjectionEnabled
@@ -3684,6 +3685,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Vehicle speed restore below",	coastingFuelCutVssLow, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below TPS",			coastingFuelCutTps, {coastingFuelCutEnabled == 1}
 		field = "Cut fuel below MAP",      coastingFuelCutMap, {coastingFuelCutEnabled == 1}
+		field = "Inhibit closed loop fuel after cut", noFuelTrimAfterDfcoTime, {coastingFuelCutEnabled == 1}
 
     dialog = rotaryDialog, "Rotary"
         field = "Enable Trailing Sparks", enableTrailingSparks

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Jan 28 06:03:04 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 04:51:05 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1560,7 +1560,6 @@ public class Fields {
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
-	public static final int MAP_ACCEL_TAPER = 8;
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int map_offset = 196;
 	public static final int map_samplingAngle_offset = 228;
@@ -1575,8 +1574,6 @@ public class Fields {
 	public static final int map_sensor_offset = 324;
 	public static final int map_sensor_type_offset = 332;
 	public static final int MAP_WINDOW_SIZE = 8;
-	public static final int mapAccelTaperBins_offset = 1760;
-	public static final int mapAccelTaperMult_offset = 1792;
 	public static final int mapAveragingSchedulingAtIndex_offset = 1312;
 	public static final int mapCamDetectionAnglePosition_offset = 560;
 	public static final int mapErrorDetectionTooHigh_offset = 1540;
@@ -1643,6 +1640,7 @@ public class Fields {
 	public static final int narrowToWideOxygen_offset = 1912;
 	public static final int narrowToWideOxygenBins_offset = 1880;
 	public static final int noAccelAfterHardLimitPeriodSecs_offset = 1308;
+	public static final int noFuelTrimAfterDfcoTime_offset = 1691;
 	public static final int o2heaterPin_offset = 746;
 	public static final int o2heaterPinModeTodO_offset = 747;
 	public static final int oilPressure_alignmentFill_offset = 2289;
@@ -1822,7 +1820,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 949487637;
+	public static final int SIGNATURE_HASH = 1903147655;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -1935,13 +1933,16 @@ public class Fields {
 	public static final int tChargeAirDecrLimit_offset = 3364;
 	public static final int tChargeAirFlowMax_offset = 3356;
 	public static final int tChargeAirIncrLimit_offset = 3360;
+	public static final int tchargeBins_offset = 1760;
 	public static final int tChargeMaxRpmMaxTps_offset = 1864;
 	public static final int tChargeMaxRpmMinTps_offset = 1860;
 	public static final int tChargeMinRpmMaxTps_offset = 1856;
 	public static final int tChargeMinRpmMinTps_offset = 1852;
 	public static final int tChargeMode_e_TCHARGE_MODE_AIR_INTERP = 1;
+	public static final int tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE = 2;
 	public static final int tChargeMode_e_TCHARGE_MODE_RPM_TPS = 0;
 	public static final int tChargeMode_offset = 3368;
+	public static final int tchargeValues_offset = 1776;
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int tcu_solenoid1_offset = 1108;
 	public static final int tcu_solenoid2_offset = 1109;
@@ -2292,7 +2293,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.28.all.949487637";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.31.all.1903147655";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2329,7 +2330,6 @@ public class Fields {
 	public static final int unused1476b19_offset = 1272;
 	public static final int unused1476b20_offset = 1272;
 	public static final int unused1476b8_offset = 1272;
-	public static final int unused1689_offset = 1691;
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
@@ -2380,6 +2380,7 @@ public class Fields {
 	public static final int unusedDtectionThreshold_offset = 623;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
+	public static final int unusedMapAccelTaperBins_offset = 1792;
 	public static final int unusedShort_offset = 4640;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
@@ -3208,7 +3209,7 @@ public class Fields {
 	public static final Field TPSACCELLOOKBACK = Field.create("TPSACCELLOOKBACK", 1688, FieldType.INT8);
 	public static final Field COASTINGFUELCUTVSSLOW = Field.create("COASTINGFUELCUTVSSLOW", 1689, FieldType.INT8);
 	public static final Field COASTINGFUELCUTVSSHIGH = Field.create("COASTINGFUELCUTVSSHIGH", 1690, FieldType.INT8);
-	public static final Field UNUSED1689 = Field.create("UNUSED1689", 1691, FieldType.INT8);
+	public static final Field NOFUELTRIMAFTERDFCOTIME = Field.create("NOFUELTRIMAFTERDFCOTIME", 1691, FieldType.INT8);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 1692, FieldType.FLOAT);
 	public static final Field ENGINELOADACCELLENGTH = Field.create("ENGINELOADACCELLENGTH", 1696, FieldType.INT);
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1700, FieldType.INT);
@@ -3276,8 +3277,9 @@ public class Fields {
 	public static final Field HPFPVALVEPIN = Field.create("HPFPVALVEPIN", 1754, FieldType.INT8, output_pin_e);
 	public static final Field HPFPVALVEPINMODE = Field.create("HPFPVALVEPINMODE", 1755, FieldType.INT8, pin_output_mode_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 1756, FieldType.FLOAT);
-	public static final Field MAPACCELTAPERBINS = Field.create("MAPACCELTAPERBINS", 1760, FieldType.FLOAT);
-	public static final Field MAPACCELTAPERMULT = Field.create("MAPACCELTAPERMULT", 1792, FieldType.FLOAT);
+	public static final Field TCHARGEBINS = Field.create("TCHARGEBINS", 1760, FieldType.INT8);
+	public static final Field TCHARGEVALUES = Field.create("TCHARGEVALUES", 1776, FieldType.INT8);
+	public static final Field UNUSEDMAPACCELTAPERBINS = Field.create("UNUSEDMAPACCELTAPERBINS", 1792, FieldType.FLOAT);
 	public static final Field FIXEDTIMING = Field.create("FIXEDTIMING", 1824, FieldType.FLOAT);
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 1828, FieldType.FLOAT);
 	public static final Field MAPHIGHVALUEVOLTAGE = Field.create("MAPHIGHVALUEVOLTAGE", 1832, FieldType.FLOAT);
@@ -3503,7 +3505,7 @@ public class Fields {
 	public static final Field TCHARGEAIRFLOWMAX = Field.create("TCHARGEAIRFLOWMAX", 3356, FieldType.FLOAT);
 	public static final Field TCHARGEAIRINCRLIMIT = Field.create("TCHARGEAIRINCRLIMIT", 3360, FieldType.FLOAT);
 	public static final Field TCHARGEAIRDECRLIMIT = Field.create("TCHARGEAIRDECRLIMIT", 3364, FieldType.FLOAT);
-	public static final String[] tChargeMode_e = {"RPM+TPS (Default)", "Air Mass Interpolation"};
+	public static final String[] tChargeMode_e = {"RPM+TPS (Default)", "Air Mass Interpolation", "Table"};
 	public static final Field TCHARGEMODE = Field.create("TCHARGEMODE", 3368, FieldType.INT, tChargeMode_e);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 3372, FieldType.FLOAT);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 3404, FieldType.FLOAT);
@@ -4505,7 +4507,7 @@ public class Fields {
 	TPSACCELLOOKBACK,
 	COASTINGFUELCUTVSSLOW,
 	COASTINGFUELCUTVSSHIGH,
-	UNUSED1689,
+	NOFUELTRIMAFTERDFCOTIME,
 	TPSACCELENRICHMENTTHRESHOLD,
 	ENGINELOADACCELLENGTH,
 	UARTCONSOLESERIALSPEED,
@@ -4569,8 +4571,9 @@ public class Fields {
 	HPFPVALVEPIN,
 	HPFPVALVEPINMODE,
 	BOOSTCUTPRESSURE,
-	MAPACCELTAPERBINS,
-	MAPACCELTAPERMULT,
+	TCHARGEBINS,
+	TCHARGEVALUES,
+	UNUSEDMAPACCELTAPERBINS,
 	FIXEDTIMING,
 	MAPLOWVALUEVOLTAGE,
 	MAPHIGHVALUEVOLTAGE,

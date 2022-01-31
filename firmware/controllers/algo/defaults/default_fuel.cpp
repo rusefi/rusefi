@@ -271,8 +271,4 @@ void setDefaultFuel() {
 
 	// TPS/TPS AE curve
 	setMazdaMiataNbTpsTps();
-
-	// AE load taper
-	setLinearCurve(engineConfiguration->mapAccelTaperBins, 0, 32, 4);
-	setArrayValues(engineConfiguration->mapAccelTaperMult, 1.0f);
 }

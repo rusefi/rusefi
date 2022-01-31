@@ -46,9 +46,20 @@ bool DfcoController::getState() const {
 
 void DfcoController::update() {
 	// Run state machine
-	m_isDfco = getState();
+	bool newState = getState();
+
+	// If fuel is cut, reset the timer
+	if (newState) {
+		m_timeSinceCut.reset();
+	}
+
+	m_isDfco = newState;
 }
 
 bool DfcoController::cutFuel() const {
 	return m_isDfco;
+}
+
+float DfcoController::getTimeSinceCut() const {
+	return m_timeSinceCut.getElapsedSeconds();
 }
