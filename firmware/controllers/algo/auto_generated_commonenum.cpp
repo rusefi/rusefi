@@ -757,7 +757,7 @@ case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MAP_V_TWIN_ANOTHER:
   return "VVT_MAP_V_TWIN_ANOTHER";
-case VVT_MIATA_NB2:
+case VVT_MIATA_NB:
   return "VVT_MIATA_NB2";
 case VVT_NISSAN_MR:
   return "VVT_NISSAN_MR";

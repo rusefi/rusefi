@@ -462,9 +462,12 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
 	case TT_MAZDA_MIATA_NB1:
-		initializeMazdaMiataNb1Shape(this);
+#if EFI_PROD_CODE
+		// todo: remove this fatal and remove 'TT_MAZDA_MIATA_NB1' in May of 2022
+		firmwareError(CUSTOM_ERR_TEST_ERROR, "Miata NB1 needs to adjust trigger configuration");
+#endif
+		initializeMazdaMiataVVtTestShape(this);
 		break;
-
 	case TT_MAZDA_MIATA_VVT_TEST:
 		initializeMazdaMiataVVtTestShape(this);
 		break;
@@ -481,7 +484,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		configureFordST170(this);
 		break;
 
-	case TT_VVT_MIATA_NB2:
+	case TT_VVT_MIATA_NB:
 		initializeMazdaMiataVVtCamShape(this);
 		break;
 
