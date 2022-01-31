@@ -37,7 +37,7 @@ pins:
   - pin: 8
     class: outputs
     function: Rear ACR
-    ts_name: 6 Rear ACR
+    ts_name: 8 Rear ACR
 
   - pin: 11
     function: Crank Sensor VR- Negative Input
@@ -53,16 +53,37 @@ pins:
     ts_name: 21 ETB_OUT+
     function: +ETB_OUT
 
-
   - pin: 24
     class: outputs
     ts_name: 24 Front Coil
     function: Front Coil
     type: ign
 
+  - pin: 25
+    class: outputs
+    ts_name: 25 Front ACR
+    function: Front ACR
+
+  - pin: 27
+    class: analog_inputs
+    ts_name: 27 - TPS 2
+    function: TPS 2 sensor input
+
   - pin: 29
     type: gnd
     function: Sensor Ground
+
+  - pin: 30
+    function: Crank Sensor VR+ Negative Input
+    ts_name: 30 Crank VR+
+
+  - pin: 36
+    ts_name: Front Knock +
+    function: Front Knock sense pos
+
+  - pin: 37
+    ts_name: Front Knock -
+    function: Front Knock sense neg
 
   - pin: 38
     function: CAN bus low
@@ -72,10 +93,19 @@ pins:
     function: CAN bus high
     type: can
 
+  - pin: 41
+    class: analog_inputs
+    ts_name: 41 - PPS 1
+    function: PPS 1 sensor input
+
+  - pin: 42
+    class: analog_inputs
+    ts_name: 42 - PPS 2
+    function: PPS 2 sensor input
 
   - pin: 43
     class: outputs
-    ts_name: 24 Rear Coil
+    ts_name: 43 Rear Coil
     function: Rear Coil
     type: ign
 
@@ -84,10 +114,33 @@ pins:
     function: Chassis Cooling Fan
     ts_name: 44 Chassis Cooling
 
+  - pin: 45
+    ts_name: Rear Knock +
+    function: Rear Knock sense pos
+
+  - pin: 46
+    ts_name: Rear Knock -
+    function: Rear Knock sense neg
+
   - pin: 49
     class: analog_inputs
     ts_name: 49 CLT
     function: CLT sensor
+
+  - pin: 51
+    class: event_inputs
+    ts_name: 51 - VSS
+    function: VSS in
+
+  - pin: 52
+    class: analog_inputs
+    ts_name: 52 - TPS 1
+    function: TPS 1 sensor input
+
+  - pin: 53
+    class: analog_inputs
+    ts_name: 53 - MAP
+    function: Map
 
   - pin: 55
     class: analog_inputs
@@ -122,9 +175,20 @@ info:
       x: 206
       y: 407
 
+    - pin: 2
+      x: 306
+      y: 407
+
+    - pin: 3
+      x: 261
+      y: 322
 
     - pin: 4
       x: 206
+      y: 236
+
+    - pin: 5
+      x: 306
       y: 236
 
 #
