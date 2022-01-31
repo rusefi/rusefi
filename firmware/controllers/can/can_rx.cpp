@@ -14,7 +14,7 @@
 
 typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
 
-bool acceptCanRx(int sid) {
+bool acceptCanRx(int /*sid*/) {
 	if (!engineConfiguration->usescriptTableForCanSniffingFiltering) {
 		// accept anything if filtering is not enabled
 		return true;
@@ -115,7 +115,7 @@ static int16_t getShiftedLSB_intel(const CANRxFrame& frame, int offset) {
 	return getLSB_intel(frame, offset) - 0x8000;
 }
 
-static void processCanRxImu(const CANRxFrame& frame, efitick_t nowNt) {
+static void processCanRxImu(const CANRxFrame& frame) {
 /*
 	if (CAN_SID(frame) == 0x130) {
 		float a = getShiftedLSB_intel(frame, 0);
@@ -172,7 +172,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	processCanRxVss(frame, nowNt);
 
 	// todo: convert to CanListener or not?
-	processCanRxImu(frame, nowNt);
+	processCanRxImu(frame);
 
 	processLuaCan(busIndex, frame);
 

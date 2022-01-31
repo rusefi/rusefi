@@ -602,7 +602,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getAirmass", lua_getAirmass);
 	lua_register(l, "setAirmass", lua_setAirmass);
 
-	lua_register(l, "stopEngine", [](lua_State* l) {
+	lua_register(l, "stopEngine", [](lua_State*) {
 		doScheduleStopEngine();
 		return 0;
 	});
