@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 23:25:01 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 23:54:07 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -850,7 +850,6 @@ public class Fields {
 	public static final int engineChartSize_offset = 1276;
 	public static final int engineCode_offset = 1044;
 	public static final int engineConfiguration_offset = 0;
-	public static final int engineLoadAccelLength_offset = 1696;
 	public static final int engineMake_offset = 1012;
 	public static final int engineSnifferRpmThreshold_offset = 7;
 	public static final int engineType_offset = 0;
@@ -1820,7 +1819,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 37824192;
+	public static final int SIGNATURE_HASH = 1454450943;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2271,6 +2270,7 @@ public class Fields {
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
+	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
@@ -2293,7 +2293,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.31.all.37824192";
+	public static final String TS_SIGNATURE = "rusEFI 2022.01.31.all.1454450943";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2330,6 +2330,7 @@ public class Fields {
 	public static final int unused1476b19_offset = 1272;
 	public static final int unused1476b20_offset = 1272;
 	public static final int unused1476b8_offset = 1272;
+	public static final int unused1696_offset = 1696;
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
@@ -3211,7 +3212,7 @@ public class Fields {
 	public static final Field COASTINGFUELCUTVSSHIGH = Field.create("COASTINGFUELCUTVSSHIGH", 1690, FieldType.INT8);
 	public static final Field NOFUELTRIMAFTERDFCOTIME = Field.create("NOFUELTRIMAFTERDFCOTIME", 1691, FieldType.INT8);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 1692, FieldType.FLOAT);
-	public static final Field ENGINELOADACCELLENGTH = Field.create("ENGINELOADACCELLENGTH", 1696, FieldType.INT);
+	public static final Field UNUSED1696 = Field.create("UNUSED1696", 1696, FieldType.INT);
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1700, FieldType.INT);
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1704, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 1708, FieldType.FLOAT);
@@ -4509,7 +4510,7 @@ public class Fields {
 	COASTINGFUELCUTVSSHIGH,
 	NOFUELTRIMAFTERDFCOTIME,
 	TPSACCELENRICHMENTTHRESHOLD,
-	ENGINELOADACCELLENGTH,
+	UNUSED1696,
 	UARTCONSOLESERIALSPEED,
 	TPSDECELENLEANMENTTHRESHOLD,
 	TPSDECELENLEANMENTMULTIPLIER,

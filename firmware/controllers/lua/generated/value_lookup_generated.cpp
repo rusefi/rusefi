@@ -658,8 +658,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->noFuelTrimAfterDfcoTime;
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
 		return engineConfiguration->tpsAccelEnrichmentThreshold;
-	if (strEqualCaseInsensitive(name, "engineLoadAccelLength"))
-		return engineConfiguration->engineLoadAccelLength;
 	if (strEqualCaseInsensitive(name, "uartConsoleSerialSpeed"))
 		return engineConfiguration->uartConsoleSerialSpeed;
 	if (strEqualCaseInsensitive(name, "tpsDecelEnleanmentThreshold"))
@@ -2566,11 +2564,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
 	{
 		engineConfiguration->tpsAccelEnrichmentThreshold = value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "engineLoadAccelLength"))
-	{
-		engineConfiguration->engineLoadAccelLength = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "uartConsoleSerialSpeed"))

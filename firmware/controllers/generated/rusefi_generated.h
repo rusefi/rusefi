@@ -881,7 +881,6 @@
 #define engineChartSize_offset 1276
 #define engineCode_offset 1044
 #define engineConfiguration_offset 0
-#define engineLoadAccelLength_offset 1696
 #define engineMake_offset 1012
 #define engineSnifferRpmThreshold_offset 7
 #define engineType_offset 0
@@ -1892,7 +1891,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 37824192
+#define SIGNATURE_HASH 1454450943
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2365,6 +2364,8 @@
 #define TS_GET_FIRMWARE_VERSION_char V
 #define TS_GET_LOGGER_GET_BUFFER 'L'
 #define TS_GET_LOGGER_GET_BUFFER_char L
+#define TS_GET_OUTPUTS_SIZE '4'
+#define TS_GET_OUTPUTS_SIZE_char 4
 #define TS_GET_STRUCT '9'
 #define TS_GET_STRUCT_char 9
 #define TS_GET_TEXT 'G'
@@ -2420,7 +2421,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.01.31.all.37824192"
+#define TS_SIGNATURE "rusEFI 2022.01.31.all.1454450943"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2460,6 +2461,7 @@
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
+#define unused1696_offset 1696
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740

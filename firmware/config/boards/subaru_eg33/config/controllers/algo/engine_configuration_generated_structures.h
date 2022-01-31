@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 23:54:04 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2882,10 +2882,9 @@ struct engine_configuration_s {
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
-	cycles
 	 * offset 1696
 	 */
-	int engineLoadAccelLength;
+	int unused1696;
 	/**
 	 * Band rate for primary TTL
 	BPs
@@ -4518,4 +4517,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 23:54:04 UTC 2022
