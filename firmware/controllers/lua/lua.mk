@@ -6,7 +6,6 @@ ALLCPPSRC += $(LUA_DIR)/lua.cpp \
 			 $(LUA_DIR)/lua_hooks_util.cpp \
 			 $(LUA_DIR)/generated/output_lookup_generated.cpp \
 			 $(LUA_DIR)/generated/value_lookup_generated.cpp \
-			 $(LUA_DIR)/system_lua.cpp \
 			 $(LUA_DIR)/lua_can_rx.cpp \
 
 ALLINC += $(LUA_DIR) $(LUA_DIR)/luaaa $(LUA_EXT)
