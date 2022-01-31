@@ -738,7 +738,7 @@ void initEngineContoller() {
  * UNUSED_SIZE constants.
  */
 #ifndef RAM_UNUSED_SIZE
-#define RAM_UNUSED_SIZE 12500
+#define RAM_UNUSED_SIZE 13000
 #endif
 #ifndef CCM_UNUSED_SIZE
 #define CCM_UNUSED_SIZE 16
