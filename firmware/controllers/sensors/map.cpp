@@ -14,8 +14,6 @@
  * @return unchanged mapKPa parameter or NaN
  */
 static float validateBaroMap(float mapKPa) {
-	const float atmoPressure = 100.0f;
-
 	// Highest interstate is the Eisenhower Tunnel at 11158 feet -> 66 kpa
 	// Lowest point is the Dead Sea, -1411 feet -> 106 kpa
 	if (cisnan(mapKPa) || mapKPa > 110 || mapKPa < 60) {
