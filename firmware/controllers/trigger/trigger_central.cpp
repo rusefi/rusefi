@@ -148,7 +148,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
-	case VVT_MIATA_NB2:
+	case VVT_MIATA_NB:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */

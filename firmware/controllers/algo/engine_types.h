@@ -456,7 +456,7 @@ typedef enum {
 	/**
 	 * cam sensor of Mazda Miata NB2 - the VVT signal shape
 	 */
-	TT_VVT_MIATA_NB2 = 43,
+	TT_VVT_MIATA_NB = 43,
 
 	TT_RENIX_44_2_2 = 44,
 

@@ -353,7 +353,7 @@ static void setMazdaMiataEngineNB2Defaults() {
 
 	engineConfiguration->vvtCamSensorUseRise = true;
 	// set vvt_mode 3
-	engineConfiguration->vvtMode[0] = VVT_MIATA_NB2;
+	engineConfiguration->vvtMode[0] = VVT_MIATA_NB;
 	engineConfiguration->vvtOffsets[0] = 98; // 2003 red car value
 
 	setCommonMazdaNB();

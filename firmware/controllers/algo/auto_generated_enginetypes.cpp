@@ -522,7 +522,7 @@ case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
   return "TT_VVT_JZ";
-case TT_VVT_MIATA_NB2:
+case TT_VVT_MIATA_NB:
   return "TT_VVT_MIATA_NB2";
 case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
