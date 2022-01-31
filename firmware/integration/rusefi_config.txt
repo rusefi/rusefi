@@ -1928,6 +1928,8 @@ end_struct
 ! 0x45
 #define TS_EXECUTE 'E'
 #define TS_ONLINE_PROTOCOL 'z'
+! 0x34
+#define TS_GET_OUTPUTS_SIZE '4'
 ! 0x39
 #define TS_GET_STRUCT '9'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
