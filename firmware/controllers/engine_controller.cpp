@@ -84,7 +84,6 @@
 #endif /* EFI_UNIT_TEST */
 
 #if EFI_PROD_CODE
-#include "pwm_tester.h"
 #include "lcd_controller.h"
 #endif /* EFI_PROD_CODE */
 
@@ -700,10 +699,6 @@ void initEngineContoller() {
 	engineStateBlinkingTask.Start();
 
 	initVrPwm();
-
-#if EFI_PWM_TESTER
-	initPwmTester();
-#endif /* EFI_PWM_TESTER */
 
 #if EFI_ALTERNATOR_CONTROL
 	initAlternatorCtrl();

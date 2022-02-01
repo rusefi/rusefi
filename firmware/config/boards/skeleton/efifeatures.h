@@ -35,9 +35,6 @@
 // A logic analyzer viewer is included in the java console.
 #define EFI_LOGIC_ANALYZER TRUE
 
-// A development feature to test output jitter and consistency
-#define EFI_PWM_TESTER FALSE
-
 #define EFI_ENABLE_CRITICAL_ENGINE_STOP TRUE
 #define EFI_ENABLE_ENGINE_WARNING TRUE
 
