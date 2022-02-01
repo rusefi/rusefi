@@ -8,7 +8,7 @@
 #include "pch.h"
 
 #include "advance_map.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "electronic_throttle.h"
