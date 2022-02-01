@@ -1,8 +1,7 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen88bmw/board_configuration.cpp \
-    $(BOARDS_DIR)/hellen/hellen_common.cpp
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen88bmw/board_configuration.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen88bmw
 
 # Set this if you want a default engine type other than normal hellen88bmw
@@ -17,11 +16,6 @@ endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-DDEFS += -DLED_ERROR_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_RUNING_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_WARNING_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_COMMUNICATION_BRAIN_PIN_MODE=INVERTED_OUTPUT
-
 # Disable serial ports on this board as UART3 causes a DMA conflict with the SD card
 DDEFS += -DTS_NO_PRIMARY=1 -DTS_NO_SECONDARY=1
 
@@ -32,5 +26,4 @@ DDEFS += -DEFI_ICU_INPUTS=FALSE -DHAL_TRIGGER_USE_PAL=TRUE
 # todo: is it broken?
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 
-# We are running on Hellen-One hardware!
-DDEFS += -DHW_HELLEN=1
+include $(BOARDS_DIR)/hellen/hellen-common.mk
