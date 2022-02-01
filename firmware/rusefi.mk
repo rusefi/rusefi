@@ -19,7 +19,11 @@ ifeq ($(PROJECT_BOARD),)
   PROJECT_BOARD = f407-discovery
 endif
 
-# minus before 'include' makes this directive optional, we will be good without config.mk file
+ifeq ($(PROJECT_CPU),)
+  # many boards all the way to Proteus use this F4 default
+  PROJECT_CPU = ARCH_STM32F4
+endif
+
 -include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/config.mk
 
 # CPU-dependent defs
