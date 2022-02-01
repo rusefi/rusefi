@@ -226,11 +226,6 @@ struct_no_prefix engine_configuration_s
 #define SCRIPT_CURVE_8 8
 #define SCRIPT_CURVE_16 16
 
-#define FSIO_METHOD_FSIO_SETTING "fsio_setting"
-#define FSIO_METHOD_FSIO_TABLE "fsio_table"
-#define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
-#define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
-
 #define TPS_TPS_ACCEL_TABLE 8
 #define ADC_CHANNEL_NONE 0
 

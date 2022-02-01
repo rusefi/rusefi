@@ -240,10 +240,6 @@ void setFordEscortGt() {
 
 	engineConfiguration->isSdCardEnabled = true;
 
-//	engineConfiguration->useFSIO16ForTimingAdjustment = true;
-//  we wanted to have a timinig table adjustment switch here
-//	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PC2
-
 	// end of Ford Escort GT config
 }
 
