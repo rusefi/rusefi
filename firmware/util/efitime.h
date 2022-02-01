@@ -34,6 +34,7 @@
 
 // And back
 #define NT2US(x) ((x) / US_TO_NT_MULTIPLIER)
+#define NT2USF(x) (((float)(x)) / US_TO_NT_MULTIPLIER)
 
 // milliseconds to ticks
 #define MS2NT(msTime) US2NT(MS2US(msTime))
