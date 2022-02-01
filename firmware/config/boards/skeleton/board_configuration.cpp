@@ -28,7 +28,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 
 // An example of how to configure complex features on the board.
 // Generally these should be local (static) functions, one function per chip.

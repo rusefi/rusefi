@@ -8,7 +8,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "smart_gpio.h"
 #include "drivers/gpio/mc33810.h"
 
