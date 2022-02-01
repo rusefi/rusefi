@@ -1,8 +1,6 @@
 package com.rusefi.ui.widgets;
 
-import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.rusefi.FileLog;
-import com.rusefi.InfixConverter;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.functional_tests.EcuTestHelper;
@@ -132,23 +130,9 @@ public class AnyCommand {
 
     public static String prepareCommand(String rawCommand, LinkManager linkManager) {
         try {
-            if (rawCommand.startsWith("eval" + " ")) {
-                String result = prepareEvalCommand(rawCommand);
-                if (result.equals(rawCommand)) {
-                    // result was not translated
-                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Not valid expression");
-                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "Please try eval \"2 + 2\"");
-                    MessagesCentral.getInstance().postMessage(AnyCommand.class, "For RPN use rpn_eval \"2 2 +\"");
-                }
-                return result;
-            } else if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
+            if (rawCommand.toLowerCase().startsWith("stim_check" + " ")) {
                 handleStimulationSelfCheck(rawCommand, linkManager);
                 return null;
-            } else if (rawCommand.toLowerCase().startsWith(DECODE_RPN + " ")) {
-                handleDecodeRpn(rawCommand);
-                return null;
-            } else if (rawCommand.toLowerCase().startsWith("set_fsio_expression" + " ")) {
-                return prepareSetFsioCommand(rawCommand);
             } else {
                 return rawCommand;
             }
@@ -191,42 +175,8 @@ public class AnyCommand {
         }).start();
     }
 
-    private static String prepareSetFsioCommand(String rawCommand) {
-        String[] parts = rawCommand.split(" ", 3);
-        if (parts.length != 3)
-            return rawCommand; // let's ignore invalid command
-        return "set_rpn_expression " + parts[1] + " " + quote(infix2postfix(unquote(parts[2])));
-    }
-
-    private static void handleDecodeRpn(String rawCommand) {
-        String[] parts = rawCommand.split(" ", 2);
-        if (parts.length != 2) {
-            MessagesCentral.getInstance().postMessage(AnyCommand.class, "Failed to parse, one argument expected");
-            return;
-        }
-        String argument = unquote(parts[1]);
-        String humanForm = InfixConverter.getHumanInfixFormOrError(argument);
-        MessagesCentral.getInstance().postMessage(AnyCommand.class, "Human form is \"" + humanForm + "\"");
-    }
-
-    public static String prepareEvalCommand(String rawCommand) {
-        String[] parts = rawCommand.split(" ", 2);
-        if (parts.length != 2)
-            return rawCommand; // let's ignore invalid command
-
-        try {
-            return "rpn_eval" + " " + quote(infix2postfix(unquote(parts[1])));
-        } catch (IllegalArgumentException e) {
-            return rawCommand;
-        }
-    }
-
     private static String quote(String s) {
         return "\"" + s + "\"";
-    }
-
-    private static String infix2postfix(String infixExpression) {
-        return DoubleEvaluator.process(infixExpression).getPosftfixExpression();
     }
 
     public static String unquote(String quoted) {

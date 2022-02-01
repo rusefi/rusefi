@@ -1,6 +1,5 @@
 package com.rusefi.tools;
 
-import com.fathzer.soft.javaluator.DoubleEvaluator;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
@@ -58,10 +57,6 @@ public class ConsoleTools {
 
         registerTool("get_image_tune_crc", ConsoleTools::calcBinaryImageTuneCrc, "Calculate tune CRC for given binary tune");
         registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
-
-        registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
-        registerTool("decompile_fsio_line", ConsoleTools::invokeDecompileExpressionTool, "Convert a line from RPN form.");
-        registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
@@ -201,11 +196,6 @@ public class ConsoleTools {
         FiringOrderTSLogic.invoke(args[1]);
     }
 
-    private static void runCompileTool(String[] args) throws IOException {
-        int returnCode = invokeCompileFileTool(args);
-        System.exit(returnCode);
-    }
-
     private static void setAuthToken(String[] args) {
         String newToken = args[1];
         System.out.println("Saving auth token " + newToken);
@@ -316,33 +306,6 @@ public class ConsoleTools {
                 }
             }
         }, "callback");
-    }
-
-    private static int invokeCompileFileTool(String[] args) throws IOException {
-        /**
-         * re-packaging array which contains input and output file names
-         */
-        return CompileTool.run(Arrays.asList(args).subList(1, args.length));
-    }
-
-
-    private static void invokeDecompileExpressionTool(String[] args) {
-        if (args.length != 2) {
-            System.err.println("input RPN parameter expected");
-            System.exit(-1);
-        }
-        String rpn = args[1];
-        String humanForm = InfixConverter.getHumanInfixFormOrError(rpn);
-        System.out.println(humanForm);
-    }
-
-    private static void invokeCompileExpressionTool(String[] args) {
-        if (args.length != 2) {
-            System.err.println("input expression parameter expected");
-            System.exit(-1);
-        }
-        String expression = args[1];
-        System.out.println(DoubleEvaluator.process(expression).getPosftfixExpression());
     }
 
     public static boolean runTool(String[] args) throws Exception {
