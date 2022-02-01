@@ -79,10 +79,6 @@ extern int icuFallingCallbackCounter;
 #include "map_averaging.h"
 #endif
 
-#if EFI_FSIO
-#include "fsio_impl.h"
-#endif /* EFI_FSIO */
-
 #if (BOARD_TLE8888_COUNT > 0)
 #include "tle8888.h"
 #endif /* BOARD_TLE8888_COUNT */
