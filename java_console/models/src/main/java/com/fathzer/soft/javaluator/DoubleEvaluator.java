@@ -114,13 +114,6 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	/** Returns the decimal logarithm of a number */
 	public static final Function LOG = new Function("log", 1);
 
-	public static final Function fsio_setting = new Function(FSIO_METHOD_FSIO_SETTING, 1);
-	public static final Function fsio_analog_input = new Function(FSIO_METHOD_FSIO_ANALOG_INPUT, 1);
-	public static final Function fsio_digital_input = new Function(FSIO_METHOD_FSIO_DIGITAL_INPUT, 1);
-	public static final Function if_function = new Function("if", 3);
-	public static final Function table_function = new Function(FSIO_METHOD_FSIO_TABLE, 3);
-
-
 	/** Returns a pseudo random number */
 	public static final Function RANDOM = new Function("random", 0);
 
@@ -161,21 +154,13 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 	/** The standard whole set of predefined operators */
 	private static final Operator[] OPERATORS = new Operator[]{NEGATE, NOT, NOT2, MORE, MORE_EQ, AND, AND2, OR, OR2, LESS, LESS_EQ, MINUS, PLUS, MULTIPLY, DIVIDE, EXPONENT, MODULO};
 
-	private static final List<Function> MISC_FUNCTIONS = Arrays.asList(if_function,
-			fsio_setting,
-			fsio_analog_input,
-			fsio_digital_input,
-			table_function);
-
 	/** The whole set of predefined functions */
 	private static final List<Function> FUNCTIONS = new ArrayList<>(
 			Arrays.asList(
 					new Function[]{
 							SINE, COSINE, TANGENT, ASINE, ACOSINE, ATAN, SINEH, COSINEH, TANGENTH, MIN, MAX, LN, LOG, ROUND, CEIL, FLOOR, ABS, RANDOM,
 					}));
-	static {
-		FUNCTIONS.addAll(MISC_FUNCTIONS);
-	}
+
 	/** The whole set of predefined constants */
 	private static final Constant[] CONSTANTS = new Constant[]{TRUE, FALSE};
 	
