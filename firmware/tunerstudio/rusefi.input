@@ -1545,7 +1545,7 @@ menuDialog = main
 		subMenu = ecuStimulator,			"ECU stimulator"
 		subMenu = datalogSettings,			"Datalogging"
 		subMenu = ioTest,					"Bench test"
-		subMenu = engineTypeDialog,			"Popular vehicles"
+		subMenu = engineTypeDialog,			"Popular vehicles" @@if_show_test_presets
 		subMenu = std_separator
 		
 		subMenu = lcdScreen,				"LCD" @@if_ts_show_lcd
@@ -1557,7 +1557,7 @@ menuDialog = main
 		subMenu = canBusMain,				"CAN Bus Communication"
 		subMenu = sdCard,					"SD Card Logger" @@if_ts_show_sd_card
 		subMenu = connection,            	"Connection"
-		subMenu = tle8888,					"TLE8888"
+		subMenu = tle8888,					"TLE8888" @@if_ts_show_tle8888
 
 		subMenu = allPins1,					"Full pinout 1/3" @@if_ts_show_full_pinout
 		subMenu = allPins2,					"Full pinout 2/3" @@if_ts_show_full_pinout
@@ -1566,14 +1566,14 @@ menuDialog = main
 
 
 		# EXPERIMENTAL FEATURES
-                subMenu = mc33Dialog,                           "GDI Dreams"
+        subMenu = mc33Dialog,                           "GDI Dreams" @@if_ts_show_gdi
 		subMenu = hpfpCamDialog,			"HPFP Cam Configuration"
 		subMenu = hpfpPumpDialog,			"HPFP Pump Configuration", {hpfpCamLobes != 0}
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
-		subMenu = parkingLot,				"Experimental/Broken"
-		subMenu = rotaryDialog, 			"Rotary"
+		subMenu = parkingLot,				"Experimental/Broken" @@if_ts_show_experimental
+		subMenu = rotaryDialog, 			"Rotary" @@if_ts_show_rotary
 		subMenu = vrThreshold,				"VR Sensor Threshold"
 		subMenu = std_separator
 		
@@ -1581,11 +1581,11 @@ menuDialog = main
 		subMenu = softwareKnock,			"Software Knock" @@if_ts_show_software_knock
 		subMenu = std_separator
 
-		subMenu = smLaunchControl,			"Launch Control"
+		subMenu = smLaunchControl,			"Launch Control" @@if_ts_show_launchcontrol
 		subMenu = std_separator
-#		subMenu = smRollingLaunch,			"Rolling Launch"
+#		subMenu = smRollingLaunch,			"Rolling Launch" @@if_ts_rollinglaunch
 #		subMenu = std_separator
-#		subMenu = antiLag,        			"Antilag Setup"
+#		subMenu = antiLag,        			"Antilag Setup" @@if_ts_antiLag
 #		subMenu = std_separator
 
       menu = "Help"

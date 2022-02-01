@@ -48,5 +48,7 @@ static void setupDefaultSensorInputs() {
 void setBoardDefaultConfiguration(void) {
 	
 	setupVbatt();
+	
+	engineConfiguration->isSdCardEnabled = true;
 
 }
