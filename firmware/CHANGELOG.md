@@ -27,6 +27,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ## Removed
  - Miata NB1 trigger was merged with Miata NB2 trigger
+ - FSIO
 
 ## January 2022 Release - "Green Juice"
 
