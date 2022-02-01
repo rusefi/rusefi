@@ -77,6 +77,16 @@ pins:
     function: Crank Sensor VR+ Negative Input
     ts_name: 30 Crank VR+
 
+  - pin: 32
+    class: analog_inputs
+    ts_name: 32 Oil Pressure
+    function: Oil Pressure input
+
+  - pin: 34
+    class: analog_inputs
+    ts_name: 34 Kickstand Position Sensor
+    function: Kickstand Position Sensor
+
   - pin: 36
     ts_name: Front Knock +
     function: Front Knock sense pos
@@ -147,6 +157,16 @@ pins:
     ts_name: 55 Engine Temperature
     function: Engine Temperature
 
+  - pin: 61
+    class: outputs
+    ts_name: 61 Reverse Gear
+    function: Reverse Gear
+
+  - pin: 63
+    class: outputs
+    ts_name: 63 Cooling Pump
+    function: Cooling Pump
+
   - pin: 66
     function: Sensor +5V
 
@@ -163,6 +183,15 @@ pins:
     type: gnd
     function: Sensor Ground
 
+  - pin: 78
+    class: analog_inputs
+    ts_name: 78 Gear Position
+    function: Gear Position
+
+  - pin: 79
+    class: switch_inputs
+    function: Rider Cooling Switch
+    ts_name: 79 Rider Cooling Switch
 
 info:
   title: Hellen Harley 81
