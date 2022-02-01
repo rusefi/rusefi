@@ -5,6 +5,7 @@
 [submodule "firmware/ChibiOS-Contrib"]
 	path = firmware/ChibiOS-Contrib
 	url = https://github.com/ChibiOS/ChibiOS-Contrib.git
+	branch = chibios-20.3.x
 [submodule "unit_tests/googletest"]
 	path = unit_tests/googletest
 	url = https://github.com/google/googletest.git
