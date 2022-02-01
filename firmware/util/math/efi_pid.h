@@ -1,6 +1,9 @@
 /**
  * @file efi_pid.h
  *
+ * everyone including ChibiOS-Contrib has a version of 'pid.h' so we use unique file name to avoid drama
+ *
+ *
  * @date Sep 16, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
