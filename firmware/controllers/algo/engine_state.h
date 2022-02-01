@@ -10,7 +10,7 @@
 
 #include "global.h"
 #include "engine_parts.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "engine_state_generated.h"
 
 struct LuaAdjustments {

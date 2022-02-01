@@ -11,7 +11,7 @@
 
 #if EFI_ALTERNATOR_CONTROL
 #include "alternator_controller.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "local_version_holder.h"
 #include "periodic_task.h"
 

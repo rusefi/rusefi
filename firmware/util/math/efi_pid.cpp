@@ -10,7 +10,7 @@
 
 #include "pch.h"
 #include "os_access.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "math.h"
 
 Pid::Pid() {

@@ -8,7 +8,7 @@
 
 #include "periodic_task.h"
 #include "closed_loop_controller.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "boost_control_generated.h"
 
 struct IPwm;
