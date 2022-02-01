@@ -3150,7 +3150,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	
 	dialog = sdCard, "SD Card Logger"
 		field = "Enable SD Card",						isSdCardEnabled
-		field = "showSdCardWarning",					showSdCardWarning
 		field = "CS Pin",								sdCardCsPin
 		field = "SPI",									sdCardSpiDevice
 		field = "Write Period",							sdCardPeriodMs
