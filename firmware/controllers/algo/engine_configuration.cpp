@@ -23,7 +23,6 @@
 #include "pch.h"
 
 #include "os_access.h"
-#include "fsio_impl.h"
 #include "speed_density.h"
 #include "advance_map.h"
 #include "flash_main.h"
@@ -202,10 +201,6 @@ void incrementGlobalConfigurationVersion() {
 #if EFI_EMULATE_POSITION_SENSORS && ! EFI_UNIT_TEST
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
-
-#if EFI_FSIO
-	onConfigurationChangeFsioCallback(&activeConfiguration);
-#endif /* EFI_FSIO */
 
 	engine->engineModules.apply_all([](auto & m) {
 			m.onConfigurationChange(&activeConfiguration);

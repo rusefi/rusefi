@@ -19,7 +19,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "mre_meta.h"
 
 static void setInjectorPins() {

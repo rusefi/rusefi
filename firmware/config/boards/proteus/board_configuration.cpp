@@ -7,7 +7,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {

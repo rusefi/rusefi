@@ -15,7 +15,6 @@
 #include "pch.h"
 
 #include "custom_engine.h"
-#include "fsio_impl.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_base_maps.h"
 #include "mre_meta.h"

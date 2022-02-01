@@ -20,7 +20,6 @@
 #include "os_access.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
-#include "fsio_impl.h"
 #include "perf_trace.h"
 #include "backup_ram.h"
 #include "idle_thread.h"
@@ -225,11 +224,8 @@ void Engine::periodicSlowCallback() {
 
 	updateVrPwm();
 
-#if EFI_FSIO
-	runFsio();
-#else
-	runHardcodedFsio();
-#endif /* EFI_FSIO */
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 
 	updateGppwm();
 
