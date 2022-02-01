@@ -70,7 +70,7 @@
  * @brief   Enables the EEPROM subsystem.
  */
 #if !defined(HAL_USE_EEPROM) || defined(__DOXYGEN__)
-#define HAL_USE_EEPROM            FALSE
+#define HAL_USE_EEPROM            TRUE
 #endif
 
 /**
@@ -126,8 +126,8 @@
 /* EEProm driver related settings.                                           */
 /*===========================================================================*/
 
-#define EEPROM_USE_EE24XX FALSE
-#define EEPROM_USE_EE25XX TRUE
+#define EEPROM_USE_EE24XX TRUE
+#define EEPROM_USE_EE25XX FALSE
 
 
 
