@@ -618,12 +618,6 @@ void setMiataNB2_MRE_ETB() {
 
 	engineConfiguration->useETBforIdleControl = true;
 
-#if EFI_FSIO
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	// todo lua ETB setFsio(7, GPIOC_8, "0");
-#endif /* EFI_FSIO */
-
 	//set idle_offset 0
 	engineConfiguration->idleRpmPid.offset = 0;
 	engineConfiguration->idleRpmPid.pFactor = 0.2;
