@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 01 21:12:29 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 01 22:40:46 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -366,6 +366,40 @@ public class Fields {
 	public static final int brain_pin_e_GPIOI_7 = 137;
 	public static final int brain_pin_e_GPIOI_8 = 138;
 	public static final int brain_pin_e_GPIOI_9 = 139;
+	public static final int brain_pin_e_L9779_IGN_1 = 215;
+	public static final int brain_pin_e_L9779_IGN_2 = 216;
+	public static final int brain_pin_e_L9779_IGN_3 = 217;
+	public static final int brain_pin_e_L9779_IGN_4 = 218;
+	public static final int brain_pin_e_L9779_OUT_1 = 219;
+	public static final int brain_pin_e_L9779_OUT_10 = 228;
+	public static final int brain_pin_e_L9779_OUT_11 = 229;
+	public static final int brain_pin_e_L9779_OUT_12 = 230;
+	public static final int brain_pin_e_L9779_OUT_13 = 231;
+	public static final int brain_pin_e_L9779_OUT_14 = 232;
+	public static final int brain_pin_e_L9779_OUT_15 = 233;
+	public static final int brain_pin_e_L9779_OUT_16 = 234;
+	public static final int brain_pin_e_L9779_OUT_17 = 235;
+	public static final int brain_pin_e_L9779_OUT_18 = 236;
+	public static final int brain_pin_e_L9779_OUT_19 = 237;
+	public static final int brain_pin_e_L9779_OUT_2 = 220;
+	public static final int brain_pin_e_L9779_OUT_20 = 238;
+	public static final int brain_pin_e_L9779_OUT_25 = 243;
+	public static final int brain_pin_e_L9779_OUT_26 = 244;
+	public static final int brain_pin_e_L9779_OUT_27 = 245;
+	public static final int brain_pin_e_L9779_OUT_28 = 246;
+	public static final int brain_pin_e_L9779_OUT_3 = 221;
+	public static final int brain_pin_e_L9779_OUT_4 = 222;
+	public static final int brain_pin_e_L9779_OUT_5 = 223;
+	public static final int brain_pin_e_L9779_OUT_6 = 224;
+	public static final int brain_pin_e_L9779_OUT_7 = 225;
+	public static final int brain_pin_e_L9779_OUT_8 = 226;
+	public static final int brain_pin_e_L9779_OUT_9 = 227;
+	public static final int brain_pin_e_L9779_OUT_A = 239;
+	public static final int brain_pin_e_L9779_OUT_B = 240;
+	public static final int brain_pin_e_L9779_OUT_C = 241;
+	public static final int brain_pin_e_L9779_OUT_D = 242;
+	public static final int brain_pin_e_L9779_OUT_MRD = 247;
+	public static final int brain_pin_e_L9779_PIN_KEY = 248;
 	public static final int brain_pin_e_MC33972_PIN_1 = 146;
 	public static final int brain_pin_e_MC33972_PIN_21 = 166;
 	public static final int brain_pin_e_MC33972_PIN_22 = 167;
@@ -2291,7 +2325,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.02.01.all.2608863047";
+	public static final String TS_SIGNATURE = "rusEFI 2022.02.01.all.2166788358";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
