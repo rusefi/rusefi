@@ -32,8 +32,6 @@ import java.util.function.Function;
 public class AnyCommand {
     private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("AnyCommand");
     public static final String KEY = "last_value";
-    // todo: kill while killing FSIO
-    private static final String DECODE_RPN = "decode_rpn";
 
     private final UIContext uiContext;
     private final JTextComponent text;
@@ -175,17 +173,6 @@ public class AnyCommand {
         }).start();
     }
 
-    private static String quote(String s) {
-        return "\"" + s + "\"";
-    }
-
-    public static String unquote(String quoted) {
-        quoted = quoted.trim().replace('\u201C', '"').replace('\u201D', '"');
-        if (quoted.charAt(0) == '"')
-            return quoted.substring(1, quoted.length() - 1);
-        return quoted; // ignoring invalid input
-    }
-
     private static boolean isValidInput(String text) {
         boolean isOk = true;
         for (char c : text.toCharArray()) {
@@ -233,12 +220,7 @@ public class AnyCommand {
         });
 
         final AtomicInteger index = new AtomicInteger();
-        command.listener = new Listener() {
-            @Override
-            public void onSend() {
-                index.set(0);
-            }
-        };
+        command.listener = () -> index.set(0);
 
         text.addKeyListener(new KeyAdapter() {
             @Override
