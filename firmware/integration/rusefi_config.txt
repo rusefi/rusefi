@@ -88,6 +88,7 @@ struct_no_prefix engine_configuration_s
 
 ! Back in the day we wanted enums to be 32 bit integers.
 ! as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
+! todo: Technical debt: ENUM_32_BITS #3874
 #define ENUM_16_BITS 60000
 #define ENUM_32_BITS 2000000000
 
