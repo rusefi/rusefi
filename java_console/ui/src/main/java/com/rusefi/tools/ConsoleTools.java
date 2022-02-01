@@ -61,7 +61,6 @@ public class ConsoleTools {
 
         registerTool("compile_fsio_line", ConsoleTools::invokeCompileExpressionTool, "Convert a line to RPN form.");
         registerTool("decompile_fsio_line", ConsoleTools::invokeDecompileExpressionTool, "Convert a line from RPN form.");
-        registerTool("compile_fsio_file", ConsoleTools::runCompileTool, "Convert all lines from a file to RPN form.");
 
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
@@ -199,11 +198,6 @@ public class ConsoleTools {
 
     private static void runFiringOrderTool(String[] args) throws IOException {
         FiringOrderTSLogic.invoke(args[1]);
-    }
-
-    private static void runCompileTool(String[] args) throws IOException {
-        int returnCode = invokeCompileFileTool(args);
-        System.exit(returnCode);
     }
 
     private static void setAuthToken(String[] args) {

@@ -361,8 +361,6 @@ public:
 
 	bool isRunningPwmTest = false;
 
-	FsioState fsioState;
-
 	/**
 	 * are we running any kind of functional test? this affect
 	 * some areas
