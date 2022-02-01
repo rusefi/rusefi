@@ -70,8 +70,6 @@ static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
 static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
 CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
 
-static LEElement * starterRelayDisableLogic;
-
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
 FsioResult getEngineValue(le_action_e action) {
@@ -172,21 +170,6 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
 	}
 }
 
-/**
- * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
- */
-void runFsio() {
-	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
-		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic);
-
-	/**
-	 * o2 heater is off during cranking
-	 * todo: convert to FSIO?
-	 * open question if heater should be ON during cranking
-	 */
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
-}
-
 ValueProvider3D *getscriptTable(int index) {
 	switch (index) {
 	default:
@@ -250,14 +233,6 @@ float getCurveValue(int index, float key) {
 }
 
 void initFsioImpl() {
-#if EFI_UNIT_TEST
-	// only unit test needs this
-	sysPool.reset();
-#endif
-
-	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
-		starterRelayDisableLogic = sysPool.parseExpression(STARTER_RELAY_LOGIC);
-
 	scriptTable1.init(config->scriptTable1, config->scriptTable1LoadBins,
 			config->scriptTable1RpmBins);
 	scriptTable2.init(config->scriptTable2, config->scriptTable2LoadBins,
@@ -267,24 +242,6 @@ void initFsioImpl() {
 	scriptTable4.init(config->scriptTable4, config->scriptTable4LoadBins,
 			config->scriptTable4RpmBins);
 
-}
-
-#else /* !EFI_FSIO */
-
-// "Limp-mode" implementation for some RAM-limited configs without FSIO
-void runHardcodedFsio() {
-#if EFI_PROD_CODE
-	if (isRunningBenchTest()) {
-		return; // let's not mess with bench testing
-	}
-#endif /* EFI_PROD_CODE */
-
-	// see STARTER_RELAY_LOGIC
-	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin)) {
-		enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
-	}
-
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 }
 
 #endif /* EFI_FSIO */
