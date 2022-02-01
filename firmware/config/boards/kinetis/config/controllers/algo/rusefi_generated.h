@@ -1875,8 +1875,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2480997311
+#define SIGNATURE_HASH 1590705159
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2402,11 +2401,12 @@
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_sd_card true
+#define ts_show_sd_pins true
 #define ts_show_software_knock false
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.02.01.kin.2480997311"
+#define TS_SIGNATURE "rusEFI 2022.02.01.kin.1590705159"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2446,6 +2446,7 @@
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
+#define unused164b14_offset 164
 #define unused1696_offset 1696
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
