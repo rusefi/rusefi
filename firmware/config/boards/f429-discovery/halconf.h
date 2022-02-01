@@ -10,7 +10,7 @@
 #ifndef _HALCONF_F429_H_
 #define _HALCONF_F429_H_
 
-/* this file is exist just to include mcuconf.h from THIS directory */
+/* this line exists just to include mcuconf.h from THIS directory */
 #include "mcuconf.h"
 
 /* you can override some halconf defaults here */
