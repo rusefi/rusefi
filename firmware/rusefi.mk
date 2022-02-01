@@ -19,10 +19,7 @@ ifeq ($(PROJECT_BOARD),)
   PROJECT_BOARD = f407-discovery
 endif
 
-ifeq ($(PROJECT_CPU),)
-  PROJECT_CPU = ARCH_STM32F4
-endif
-
+# minus before 'include' makes this directive optional, we will be good without config.mk file
 -include $(PROJECT_DIR)/config/boards/$(PROJECT_BOARD)/config.mk
 
 # CPU-dependent defs
