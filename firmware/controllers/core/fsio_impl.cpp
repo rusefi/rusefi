@@ -121,10 +121,6 @@ FsioResult getEngineValue(le_action_e action) {
 
 #endif
 
-void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration) {
-	(void)previousConfiguration;
-}
-
 static LECalculator calc CCM_OPTIONAL;
 
 static const char * action2String(le_action_e action) {
@@ -170,21 +166,6 @@ static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
 			pin->setValue(value);
 		}
 	}
-}
-
-/**
- * this method should be invoked periodically to calculate FSIO and toggle corresponding FSIO outputs
- */
-void runFsio() {
-	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin))
-		setPinState("starter_relay", &enginePins.starterRelayDisable, starterRelayDisableLogic);
-
-	/**
-	 * o2 heater is off during cranking
-	 * todo: convert to FSIO?
-	 * open question if heater should be ON during cranking
-	 */
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 }
 
 ValueProvider3D *getscriptTable(int index) {
@@ -267,24 +248,6 @@ void initFsioImpl() {
 	scriptTable4.init(config->scriptTable4, config->scriptTable4LoadBins,
 			config->scriptTable4RpmBins);
 
-}
-
-#else /* !EFI_FSIO */
-
-// "Limp-mode" implementation for some RAM-limited configs without FSIO
-void runHardcodedFsio() {
-#if EFI_PROD_CODE
-	if (isRunningBenchTest()) {
-		return; // let's not mess with bench testing
-	}
-#endif /* EFI_PROD_CODE */
-
-	// see STARTER_RELAY_LOGIC
-	if (isBrainPinValid(engineConfiguration->starterRelayDisablePin)) {
-		enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
-	}
-
-	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 }
 
 #endif /* EFI_FSIO */

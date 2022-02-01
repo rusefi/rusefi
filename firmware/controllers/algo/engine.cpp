@@ -225,11 +225,8 @@ void Engine::periodicSlowCallback() {
 
 	updateVrPwm();
 
-#if EFI_FSIO
-	runFsio();
-#else
-	runHardcodedFsio();
-#endif /* EFI_FSIO */
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 
 	updateGppwm();
 

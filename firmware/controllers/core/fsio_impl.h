@@ -23,10 +23,6 @@ typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, uint16_t, uint16_t> fsio8
 expected<float> getEngineValue(le_action_e action);
 
 void initFsioImpl();
-void runFsio();
-
-void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration);
-void runHardcodedFsio();
 
 float getCurveValue(int index, float key);
 int getCurveIndexByName(const char *name);
