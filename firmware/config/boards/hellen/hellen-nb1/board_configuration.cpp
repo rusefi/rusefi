@@ -63,11 +63,6 @@ static void setupVbatt() {
 }
 
 static void setupDefaultSensorInputs() {
-	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = GPIOA_6;
-	engineConfiguration->triggerInputPins[1] = GPIOB_1;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
@@ -170,4 +165,10 @@ void setSdCardConfigurationOverrides() {
 	if (engineConfiguration->trigger.type == TT_MAZDA_MIATA_NB1) {
 	    engineConfiguration->trigger.type = TT_MIATA_VVT;
 	}
+
+	// trigger inputs, hall
+	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->camInputs[0] = H144_IN_CAM;
 }
