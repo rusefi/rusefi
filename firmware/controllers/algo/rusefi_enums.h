@@ -85,9 +85,9 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_2JZ = 2,
 	/**
 	 * Mazda NB2 has three cam tooth. We synchronize based on gap ratio.
-	 * @see TT_VVT_MIATA_NB2
+	 * @see TT_VVT_MIATA_NB
 	 */
-	VVT_MIATA_NB2 = 3,
+	VVT_MIATA_NB = 3,
 
 	/**
 	 * Single-tooth cam sensor mode where TDC and cam signal happen in the same 360 degree of 720 degree engine cycle
@@ -534,6 +534,7 @@ typedef enum {
 typedef enum {
 	TCHARGE_MODE_RPM_TPS = 0,
 	TCHARGE_MODE_AIR_INTERP = 1,
+	TCHARGE_MODE_AIR_INTERP_TABLE = 2,
 	Force_4bytes_size_tChargeMode_e = ENUM_32_BITS,
 } tChargeMode_e;
 

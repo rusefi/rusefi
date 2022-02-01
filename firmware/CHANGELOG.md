@@ -25,6 +25,9 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
+## Removed
+ - Miata NB1 trigger was merged with Miata NB2 trigger
+
 ## January 2022 Release - "Green Juice"
 
 ### Added

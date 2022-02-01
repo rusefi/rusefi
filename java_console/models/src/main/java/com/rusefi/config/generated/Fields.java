@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Jan 29 02:39:40 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 01 00:26:49 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -850,7 +850,6 @@ public class Fields {
 	public static final int engineChartSize_offset = 1276;
 	public static final int engineCode_offset = 1044;
 	public static final int engineConfiguration_offset = 0;
-	public static final int engineLoadAccelLength_offset = 1696;
 	public static final int engineMake_offset = 1012;
 	public static final int engineSnifferRpmThreshold_offset = 7;
 	public static final int engineType_offset = 0;
@@ -1820,6 +1819,7 @@ public class Fields {
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
 	public static final int showSdCardWarning_offset = 164;
+	public static final int SIGNATURE_HASH = 1454450943;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -1932,13 +1932,16 @@ public class Fields {
 	public static final int tChargeAirDecrLimit_offset = 3364;
 	public static final int tChargeAirFlowMax_offset = 3356;
 	public static final int tChargeAirIncrLimit_offset = 3360;
+	public static final int tchargeBins_offset = 1760;
 	public static final int tChargeMaxRpmMaxTps_offset = 1864;
 	public static final int tChargeMaxRpmMinTps_offset = 1860;
 	public static final int tChargeMinRpmMaxTps_offset = 1856;
 	public static final int tChargeMinRpmMinTps_offset = 1852;
 	public static final int tChargeMode_e_TCHARGE_MODE_AIR_INTERP = 1;
+	public static final int tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE = 2;
 	public static final int tChargeMode_e_TCHARGE_MODE_RPM_TPS = 0;
 	public static final int tChargeMode_offset = 3368;
+	public static final int tchargeValues_offset = 1776;
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int tcu_solenoid1_offset = 1108;
 	public static final int tcu_solenoid2_offset = 1109;
@@ -2126,7 +2129,7 @@ public class Fields {
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int trigger_type_e_TT_VVT_JZ = 17;
-	public static final int trigger_type_e_TT_VVT_MIATA_NB2 = 43;
+	public static final int trigger_type_e_TT_VVT_MIATA_NB = 43;
 	public static final int trigger_type_e_TT_VVT_NISSAN_VQ35 = 59;
 	public static final int trigger_type_offset = 532;
 	public static final int trigger_unusedBit_4_10_offset = 536;
@@ -2267,6 +2270,7 @@ public class Fields {
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
+	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
@@ -2289,7 +2293,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.29.all.2710500415";
+	public static final String TS_SIGNATURE = "rusEFI 2022.02.01.all.1454450943";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2326,6 +2330,7 @@ public class Fields {
 	public static final int unused1476b19_offset = 1272;
 	public static final int unused1476b20_offset = 1272;
 	public static final int unused1476b8_offset = 1272;
+	public static final int unused1696_offset = 1696;
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
@@ -2376,7 +2381,7 @@ public class Fields {
 	public static final int unusedDtectionThreshold_offset = 623;
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
-	public static final int unusedMapAccelTaperBins_offset = 1760;
+	public static final int unusedMapAccelTaperBins_offset = 1792;
 	public static final int unusedShort_offset = 4640;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
@@ -2452,7 +2457,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_HONDA_K = 10;
 	public static final int vvt_mode_e_VVT_INACTIVE = 0;
 	public static final int vvt_mode_e_VVT_MAP_V_TWIN_ANOTHER = 13;
-	public static final int vvt_mode_e_VVT_MIATA_NB2 = 3;
+	public static final int vvt_mode_e_VVT_MIATA_NB = 3;
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SECOND_HALF = 1;
@@ -2624,7 +2629,7 @@ public class Fields {
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 523, FieldType.INT8, adc_channel_e);
 	public static final Field IDLE_DERIVATIVEFILTERLOSS = Field.create("IDLE_DERIVATIVEFILTERLOSS", 524, FieldType.FLOAT);
 	public static final Field TRAILINGSPARKANGLE = Field.create("TRAILINGSPARKANGLE", 528, FieldType.INT);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "trg70", "trg71"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "trg70", "trg71"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 532, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY0 = Field.create("TRIGGER_TODOREMOVEMEONEDAY0", 536, FieldType.BIT, 0);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY1 = Field.create("TRIGGER_TODOREMOVEMEONEDAY1", 536, FieldType.BIT, 1);
@@ -3207,7 +3212,7 @@ public class Fields {
 	public static final Field COASTINGFUELCUTVSSHIGH = Field.create("COASTINGFUELCUTVSSHIGH", 1690, FieldType.INT8);
 	public static final Field NOFUELTRIMAFTERDFCOTIME = Field.create("NOFUELTRIMAFTERDFCOTIME", 1691, FieldType.INT8);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 1692, FieldType.FLOAT);
-	public static final Field ENGINELOADACCELLENGTH = Field.create("ENGINELOADACCELLENGTH", 1696, FieldType.INT);
+	public static final Field UNUSED1696 = Field.create("UNUSED1696", 1696, FieldType.INT);
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1700, FieldType.INT);
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1704, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 1708, FieldType.FLOAT);
@@ -3273,7 +3278,9 @@ public class Fields {
 	public static final Field HPFPVALVEPIN = Field.create("HPFPVALVEPIN", 1754, FieldType.INT8, output_pin_e);
 	public static final Field HPFPVALVEPINMODE = Field.create("HPFPVALVEPINMODE", 1755, FieldType.INT8, pin_output_mode_e);
 	public static final Field BOOSTCUTPRESSURE = Field.create("BOOSTCUTPRESSURE", 1756, FieldType.FLOAT);
-	public static final Field UNUSEDMAPACCELTAPERBINS = Field.create("UNUSEDMAPACCELTAPERBINS", 1760, FieldType.FLOAT);
+	public static final Field TCHARGEBINS = Field.create("TCHARGEBINS", 1760, FieldType.INT8);
+	public static final Field TCHARGEVALUES = Field.create("TCHARGEVALUES", 1776, FieldType.INT8);
+	public static final Field UNUSEDMAPACCELTAPERBINS = Field.create("UNUSEDMAPACCELTAPERBINS", 1792, FieldType.FLOAT);
 	public static final Field FIXEDTIMING = Field.create("FIXEDTIMING", 1824, FieldType.FLOAT);
 	public static final Field MAPLOWVALUEVOLTAGE = Field.create("MAPLOWVALUEVOLTAGE", 1828, FieldType.FLOAT);
 	public static final Field MAPHIGHVALUEVOLTAGE = Field.create("MAPHIGHVALUEVOLTAGE", 1832, FieldType.FLOAT);
@@ -3499,7 +3506,7 @@ public class Fields {
 	public static final Field TCHARGEAIRFLOWMAX = Field.create("TCHARGEAIRFLOWMAX", 3356, FieldType.FLOAT);
 	public static final Field TCHARGEAIRINCRLIMIT = Field.create("TCHARGEAIRINCRLIMIT", 3360, FieldType.FLOAT);
 	public static final Field TCHARGEAIRDECRLIMIT = Field.create("TCHARGEAIRDECRLIMIT", 3364, FieldType.FLOAT);
-	public static final String[] tChargeMode_e = {"RPM+TPS (Default)", "Air Mass Interpolation"};
+	public static final String[] tChargeMode_e = {"RPM+TPS (Default)", "Air Mass Interpolation", "Table"};
 	public static final Field TCHARGEMODE = Field.create("TCHARGEMODE", 3368, FieldType.INT, tChargeMode_e);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 3372, FieldType.FLOAT);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 3404, FieldType.FLOAT);
@@ -4503,7 +4510,7 @@ public class Fields {
 	COASTINGFUELCUTVSSHIGH,
 	NOFUELTRIMAFTERDFCOTIME,
 	TPSACCELENRICHMENTTHRESHOLD,
-	ENGINELOADACCELLENGTH,
+	UNUSED1696,
 	UARTCONSOLESERIALSPEED,
 	TPSDECELENLEANMENTTHRESHOLD,
 	TPSDECELENLEANMENTMULTIPLIER,
@@ -4565,6 +4572,8 @@ public class Fields {
 	HPFPVALVEPIN,
 	HPFPVALVEPINMODE,
 	BOOSTCUTPRESSURE,
+	TCHARGEBINS,
+	TCHARGEVALUES,
 	UNUSEDMAPACCELTAPERBINS,
 	FIXEDTIMING,
 	MAPLOWVALUEVOLTAGE,

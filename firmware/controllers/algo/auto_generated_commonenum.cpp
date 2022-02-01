@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Thu Jan 27 23:42:26 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Jan 31 23:24:07 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -641,6 +641,8 @@ case Force_4bytes_size_tChargeMode_e:
   return "Force_4bytes_size_tChargeMode_e";
 case TCHARGE_MODE_AIR_INTERP:
   return "TCHARGE_MODE_AIR_INTERP";
+case TCHARGE_MODE_AIR_INTERP_TABLE:
+  return "TCHARGE_MODE_AIR_INTERP_TABLE";
 case TCHARGE_MODE_RPM_TPS:
   return "TCHARGE_MODE_RPM_TPS";
   }
@@ -755,8 +757,8 @@ case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MAP_V_TWIN_ANOTHER:
   return "VVT_MAP_V_TWIN_ANOTHER";
-case VVT_MIATA_NB2:
-  return "VVT_MIATA_NB2";
+case VVT_MIATA_NB:
+  return "VVT_MIATA_NB";
 case VVT_NISSAN_MR:
   return "VVT_NISSAN_MR";
 case VVT_NISSAN_VQ:

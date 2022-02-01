@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Jan 11 22:51:44 EST 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Jan 31 23:24:08 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -522,8 +522,8 @@ case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
   return "TT_VVT_JZ";
-case TT_VVT_MIATA_NB2:
-  return "TT_VVT_MIATA_NB2";
+case TT_VVT_MIATA_NB:
+  return "TT_VVT_MIATA_NB";
 case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
   }

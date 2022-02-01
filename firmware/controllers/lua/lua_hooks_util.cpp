@@ -35,7 +35,7 @@ void configureRusefiLuaUtilHooks(lua_State* l) {
 	lua_register(l, "interpolate", lua_interpolate);
 
 #if defined(STM32F4) || defined(STM32F7)
-	lua_register(l, "mcu_standby", [](lua_State* l) {
+	lua_register(l, "mcu_standby", [](lua_State*) {
 		stm32_standby();
 		return 0;
 	});

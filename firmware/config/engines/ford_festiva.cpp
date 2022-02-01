@@ -78,7 +78,7 @@ void setFordEscortGt() {
 	engineConfiguration->specs.displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	static const float veRpmBins[] = 
+	static const uint16_t veRpmBins[] = 
 	{
 		800,
 		1200,
@@ -211,7 +211,7 @@ void setFordEscortGt() {
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 	// VICS solenoid
-	static const float ignitionRpmBins[] =
+	static const uint16_t ignitionRpmBins[] =
 	{
 		800,
 		1200,

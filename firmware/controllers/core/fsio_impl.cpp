@@ -187,31 +187,6 @@ void runFsio() {
 	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
 }
 
-
-static void showFsio(const char *msg, LEElement *element) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	if (msg != NULL)
-		efiPrintf("%s:", msg);
-	while (element->action != LE_METHOD_RETURN) {
-		efiPrintf("action %d: fValue=%.2f", element->action, element->fValue);
-		element++;
-	}
-	efiPrintf("<end>");
-#endif
-}
-
-// todo: move somewhere else
-static void showFsioInfo() {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	for (int i = 0; i < SCRIPT_SETTING_COUNT; i++) {
-		float v = engineConfiguration->scriptSetting[i];
-		if (!cisnan(v)) {
-			efiPrintf("user property #%d: %.2f", i + 1, v);
-		}
-	}
-#endif
-}
-
 ValueProvider3D *getscriptTable(int index) {
 	switch (index) {
 	default:

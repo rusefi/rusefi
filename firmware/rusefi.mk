@@ -16,10 +16,11 @@ $(error Please run 'make' again. Please make sure you have 'git' command in PATH
 endif
 
 ifeq ($(PROJECT_BOARD),)
-  PROJECT_BOARD = st_stm32f4
+  PROJECT_BOARD = f407-discovery
 endif
 
 ifeq ($(PROJECT_CPU),)
+  # many boards all the way to Proteus use this F4 default
   PROJECT_CPU = ARCH_STM32F4
 endif
 
@@ -54,7 +55,7 @@ else ifeq ($(PROJECT_CPU),cypress)
 	CPU_HWLAYER = ports/cypress
 else ifeq ($(PROJECT_CPU),simulator)
 else
-$(error Unexpected PROJECT_CPU)
+$(error Unexpected PROJECT_CPU [$(PROJECT_CPU)])
 endif
 
 ifeq ($(CPU_STARTUP_DIR),)
