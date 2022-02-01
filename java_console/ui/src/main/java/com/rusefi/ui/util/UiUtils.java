@@ -68,7 +68,11 @@ public class UiUtils {
     }
 
     public static void setPauseButtonText(JButton pauseButton, boolean isPaused) {
-        pauseButton.setText(isPaused ? RESUME.getMessage() : PAUSE.getMessage());
+        setPauseButtonText(pauseButton, isPaused, "");
+    }
+
+    public static void setPauseButtonText(JButton pauseButton, boolean isPaused, String suffix) {
+        pauseButton.setText((isPaused ? RESUME.getMessage() : PAUSE.getMessage()) + suffix);
     }
 
     public static void centerWindow(Window w) {
@@ -141,7 +145,12 @@ public class UiUtils {
 
     @NotNull
     public static JButton createPauseButton() {
-        final JButton pauseButton = new JButton(PAUSE.getMessage());
+        return createPauseButton("");
+    }
+
+    @NotNull
+    public static JButton createPauseButton(String suffix) {
+        final JButton pauseButton = new JButton(PAUSE.getMessage() + suffix);
         pauseButton.setMnemonic('p');
         return pauseButton;
     }

@@ -88,6 +88,7 @@ struct_no_prefix engine_configuration_s
 
 ! Back in the day we wanted enums to be 32 bit integers.
 ! as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
+! todo: Technical debt: ENUM_32_BITS #3874
 #define ENUM_16_BITS 60000
 #define ENUM_32_BITS 2000000000
 
@@ -451,7 +452,7 @@ bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider?
 bit cj125isLsu49
 bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle;+Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
-bit showSdCardWarning
+bit unused164b14
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
@@ -1995,6 +1996,7 @@ end_struct
 #define ts_show_can2 true
 #define ts_show_software_knock false
 #define ts_show_hardware_simulator true
+#define ts_show_sd_pins true
 
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true

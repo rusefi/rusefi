@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 23:54:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 01 21:12:29 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -831,7 +831,7 @@ struct engine_configuration_s {
 	bool isDoubleSolenoidIdle : 1 {};
 	/**
 	offset 164 bit 14 */
-	bool showSdCardWarning : 1 {};
+	bool unused164b14 : 1 {};
 	/**
 	 * Is your UR CJ125 output wired to MCU via resistor divider?
 	 * Looks like 3v range should be enough, divider generally not needed.
@@ -4517,4 +4517,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 23:54:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 01 21:12:29 UTC 2022

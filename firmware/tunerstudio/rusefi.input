@@ -3149,10 +3149,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Serial Baud Rate",						auxSerialSpeed @@if_ts_show_auxserial_pins
 	
 	dialog = sdCard, "SD Card Logger"
+		field = "#rusEFI logs to SD when powered without USB connected"
+		field = "#rusEFI connects SD to your PC when powered by USB"
 		field = "Enable SD Card",						isSdCardEnabled
-		field = "showSdCardWarning",					showSdCardWarning
-		field = "CS Pin",								sdCardCsPin
-		field = "SPI",									sdCardSpiDevice
+		field = "CS Pin",								sdCardCsPin			@@if_ts_show_sd_pins
+		field = "SPI",									sdCardSpiDevice		@@if_ts_show_sd_pins
 		field = "Write Period",							sdCardPeriodMs
 	
 	dialog = gpsReceiver, "GPS Receiver" 
