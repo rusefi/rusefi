@@ -363,8 +363,6 @@ public class DoubleEvaluator extends AbstractEvaluator<Double> {
 			result = Math.log10(arguments.next());
 		} else if (RANDOM.equals(function)) {
 			result = Math.random();
-		} else if (MISC_FUNCTIONS.contains(function)) {
-			result = 333333.0;
 		} else {
 			result = super.evaluate(function, arguments, evaluationContext);
 		}
