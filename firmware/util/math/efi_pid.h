@@ -1,5 +1,5 @@
 /**
- * @file pid.h
+ * @file efi_pid.h
  *
  * @date Sep 16, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020

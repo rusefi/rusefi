@@ -11,7 +11,7 @@
 #include "electronic_throttle.h"
 
 #include "sensor.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "error_accumulator.h"
 
 /**
