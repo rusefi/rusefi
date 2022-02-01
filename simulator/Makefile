@@ -42,7 +42,7 @@ ifeq ($(USE_OPT),)
 	USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing
 
 #	If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
-	USE_OPT += -Os
+	USE_OPT += -O2
 #	USE_OPT += -O0 -g
 
 	ifeq ($(OS),Windows_NT)
