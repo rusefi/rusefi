@@ -50,7 +50,6 @@
 
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
-#include "fsio_impl.h"
 #include "mazda_miata_base_maps.h"
 #include "hip9011_logic.h"
 

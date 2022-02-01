@@ -7,7 +7,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 
 // Warning! This is a test config!
 

@@ -11,7 +11,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
