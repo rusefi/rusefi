@@ -119,10 +119,6 @@ FsioResult getEngineValue(le_action_e action) {
 
 #endif
 
-void onConfigurationChangeFsioCallback(engine_configuration_s *previousConfiguration) {
-	(void)previousConfiguration;
-}
-
 static LECalculator calc CCM_OPTIONAL;
 
 static const char * action2String(le_action_e action) {

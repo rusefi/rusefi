@@ -202,10 +202,6 @@ void incrementGlobalConfigurationVersion() {
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
 
-#if EFI_FSIO
-	onConfigurationChangeFsioCallback(&activeConfiguration);
-#endif /* EFI_FSIO */
-
 	engine->engineModules.apply_all([](auto & m) {
 			m.onConfigurationChange(&activeConfiguration);
 		});
