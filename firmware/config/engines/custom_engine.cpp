@@ -344,9 +344,6 @@ void setTle8888TestConfiguration() {
 	// IN2 PF14
 	// SF  PF11
 #if defined(STM32_HAS_GPIOF) && STM32_HAS_GPIOF
-#if EFI_FSIO
-	// todo lua setFsio(14, GPIOF_13, "1");
-#endif /* EFI_FSIO */
 	engineConfiguration->etbIo[0].directionPin1 = GPIOF_15;
 	engineConfiguration->etbIo[0].directionPin2 = GPIOF_14;
 	engineConfiguration->etbIo[0].disablePin = GPIOF_12;
@@ -360,9 +357,7 @@ void setTle8888TestConfiguration() {
 	// IN1 PE2
 	// IN2 PE4
 	// SF  PE3
-#if EFI_FSIO
-	// todo lua setFsio(15, GPIOE_6, "1");
-#endif
+
 	engineConfiguration->etbIo[0].directionPin1 = GPIOE_2;
 	engineConfiguration->etbIo[0].directionPin2 = GPIOE_4;
 	engineConfiguration->etbIo[0].disablePin = GPIOE_5;
