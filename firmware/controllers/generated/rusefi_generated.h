@@ -1894,7 +1894,7 @@
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
 #define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 4271694587
+#define SIGNATURE_HASH 2718739448
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2431,7 +2431,7 @@
 #define ts_show_tle8888 false
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.02.01.core8.4271694587"
+#define TS_SIGNATURE "rusEFI 2022.02.01.core8.2718739448"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

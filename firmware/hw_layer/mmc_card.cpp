@@ -517,12 +517,6 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	#endif
 
 	while (true) {
-		// if the SPI device got un-picked somehow, cancel SD card
-#if EFI_PROD_CODE
-		if (engineConfiguration->sdCardSpiDevice == SPI_NONE) {
-			return;
-		}
-#endif
 
 		if (engineConfiguration->debugMode == DBG_SD_CARD) {
 			engine->outputChannels.debugIntField1 = totalLoggedBytes;

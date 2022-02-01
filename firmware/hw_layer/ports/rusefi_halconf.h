@@ -30,7 +30,9 @@
 #endif
 
 // If USB and File logging, enable USB Mass Storage & community
-#define HAL_USE_USB_MSD (EFI_FILE_LOGGING && EFI_USB_SERIAL)
+#if !defined(HAL_USE_USB_MSD)
+	#define HAL_USE_USB_MSD (EFI_FILE_LOGGING && EFI_USB_SERIAL)
+#endif
 #define HAL_USE_COMMUNITY (EFI_FILE_LOGGING && EFI_USB_SERIAL)
 #define USB_MSD_LUN_COUNT 2
 
