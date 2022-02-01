@@ -166,4 +166,8 @@ void setSdCardConfigurationOverrides() {
 	engineConfiguration->spi2sckPin = H_SPI2_SCK;
 	engineConfiguration->sdCardCsPin = H_SPI2_CS;
 	engineConfiguration->is_enabled_spi_2 = true;
+
+	if (engineConfiguration->trigger.type == TT_MAZDA_MIATA_NB1) {
+	    engineConfiguration->trigger.type = TT_MIATA_VVT;
+	}
 }
