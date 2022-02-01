@@ -78,13 +78,6 @@ public class ReversePolishNotationParserTest {
     }
 
     @Test
-    public void testListOfFunctions() {
-        String readableListOfFunctions = InfixConverter.getReadableListOfFunctions();
-        assertTrue(readableListOfFunctions.contains(Fields.FSIO_METHOD_FSIO_DIGITAL_INPUT));
-        assertTrue(readableListOfFunctions.contains(Fields.FSIO_METHOD_FSIO_TABLE));
-    }
-
-    @Test
     public void testUnaryMinus() {
         /**
          * do we even need to and/or should to support unary minus?
