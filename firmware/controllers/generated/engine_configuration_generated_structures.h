@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 23:54:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:12 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -831,7 +831,7 @@ struct engine_configuration_s {
 	bool isDoubleSolenoidIdle : 1 {};
 	/**
 	offset 164 bit 14 */
-	bool showSdCardWarning : 1 {};
+	bool unused164b14 : 1 {};
 	/**
 	 * Is your UR CJ125 output wired to MCU via resistor divider?
 	 * Looks like 3v range should be enough, divider generally not needed.
@@ -4513,8 +4513,13 @@ struct persistent_config_s {
 	 * offset 20804
 	 */
 	cyl_trim_s fuelTrims[12];
-	/** total size 20996*/
+	/**
+	ratio
+	 * offset 20996
+	 */
+	uint16_t crankingFuelCoefE100[CRANKING_CURVE_SIZE];
+	/** total size 21012*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Jan 31 23:54:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:12 UTC 2022

@@ -58,8 +58,6 @@
 #define BOARD_MC33972_COUNT			0
 #define BOARD_TLE8888_COUNT 	0
 
-#define EFI_FSIO TRUE
-
 #define EFI_TEXT_LOGGING TRUE
 
 #define EFI_MEMS FALSE

@@ -839,8 +839,7 @@ static void disableSpi(int index) {
 }
 
 /**
- * See 'Engine::needToStopEngine' for code which actually stops engine
- * weird: we stop pins from here? we probably should stop engine from the code which is actually stopping engine?
+ * See 'LimpManager::isEngineStop' for code which actually stops engine
  */
 void scheduleStopEngine(void) {
 	doScheduleStopEngine();

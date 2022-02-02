@@ -50,7 +50,6 @@
 
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
-#include "fsio_impl.h"
 #include "mazda_miata_base_maps.h"
 #include "hip9011_logic.h"
 
@@ -445,8 +444,6 @@ void setMazdaMiata2003EngineConfiguration() {
 	engineConfiguration->scriptSetting[2] = 105; // #3 CLT threshold
 	engineConfiguration->scriptSetting[3] = 12.0; // #4 voltage threshold
 
-//	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT);
-
 	// enable auto_idle
 	// enable verbose_idle
 	engineConfiguration->isVerboseIAC = false;
@@ -617,12 +614,6 @@ void setMiataNB2_MRE_ETB() {
 	setMiataNB2_MRE_common();
 
 	engineConfiguration->useETBforIdleControl = true;
-
-#if EFI_FSIO
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	// todo lua ETB setFsio(7, GPIOC_8, "0");
-#endif /* EFI_FSIO */
 
 	//set idle_offset 0
 	engineConfiguration->idleRpmPid.offset = 0;

@@ -23,7 +23,6 @@ Bits: 'bits';
 Bit: 'bit';
 Array: 'array';
 Scalar: 'scalar';
-FsioVisible: 'fsio_visible';
 Autoscale: 'autoscale';
 
 ArrayDimensionSeparator: 'x';
@@ -94,7 +93,7 @@ fieldOptionsList
 
 arrayLengthSpec: numexpr (ArrayDimensionSeparator numexpr)?;
 
-scalarField: identifier Autoscale? FsioVisible? identifier (fieldOptionsList)?;
+scalarField: identifier Autoscale? identifier (fieldOptionsList)?;
 arrayField: identifier '[' arrayLengthSpec Iterate? ']' Autoscale? identifier SemicolonedString? (fieldOptionsList)?;
 bitField: Bit identifier (',' QuotedString ',' QuotedString)? ('(' 'comment' ':' QuotedString ')')? SemicolonedSuffix?;
 

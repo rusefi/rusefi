@@ -63,7 +63,6 @@
 #include "pch.h"
 
 #include "bmw_m73.h"
-#include "fsio_impl.h"
 
 void setEngineBMW_M73_microRusEfi() {
 	 m73engine();
@@ -80,11 +79,6 @@ void setEngineBMW_M73_microRusEfi() {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
 	engineConfiguration->injectionMode = IM_BATCH;
-
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	// TODO LUA setFsio(7, GPIOC_8, "0");
-
 
 	engineConfiguration->etb.pFactor = 2.00;
 	engineConfiguration->etb.iFactor = 0.35;

@@ -274,7 +274,6 @@ public:
 	scheduling_s tdcScheduler[2];
 #endif /* EFI_ENGINE_CONTROL */
 
-	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
@@ -297,12 +296,6 @@ public:
 	efitimems64_t callFromPitStopEndTime = 0;
 
 	RpmCalculator rpmCalculator;
-
-	/**
-	 * this is about 'stopengine' command
-	 */
-	efitick_t stopEngineRequestTimeNt = 0;
-
 
 	bool startStopState = false;
 	int startStopStateToggleCounter = 0;
@@ -360,8 +353,6 @@ public:
 	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
-
-	FsioState fsioState;
 
 	/**
 	 * are we running any kind of functional test? this affect
