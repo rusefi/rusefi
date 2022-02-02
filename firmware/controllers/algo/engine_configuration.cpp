@@ -1110,9 +1110,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration();
 		break;
-	case VAG_18_TURBO:
-		vag_18_Turbo();
-		break;
 	case TEST_33816:
 		setTest33816EngineConfiguration();
 		break;
