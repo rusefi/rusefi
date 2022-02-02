@@ -37,7 +37,7 @@ public:
 };
 
 
-TEST(misc, cppPlainStructMemoryLayout) {
+TEST(CppMemoryLayout, PlainStruct) {
 	TestPlainChild c;
 	// validate field initializers just for fun
 	ASSERT_EQ(540, c.field0);
@@ -55,15 +55,12 @@ TEST(misc, cppPlainStructMemoryLayout) {
 
 static int valueWePointAt;
 
-TEST(misc, cppVirtualStructMemoryLayout) {
+TEST(CppMemoryLayout, VirtualStruct) {
 	TestChildWithVirtual c;
-
-	int pointerSize = sizeof(int*);
-
 
 	// '4' in case of 32 bit target
 	// '8' in case of 64 bit target
-	int MAGIC_VTABLE_SIZE = pointerSize;
+	int MAGIC_VTABLE_SIZE = sizeof(void*);
 
 	// validate field initializers just for fun
 	ASSERT_EQ(540, c.field0);
@@ -85,7 +82,7 @@ TEST(misc, cppVirtualStructMemoryLayout) {
 
 }
 
-TEST(misc, cppPlainExtraFieldsStructMemoryLayout) {
+TEST(CppMemoryLayout, PlainExtraFieldsStruct) {
 	TestPlainChildExtraFields c;
 
 	ASSERT_EQ(sizeof(c), sizeof(TestParent) + 8);
