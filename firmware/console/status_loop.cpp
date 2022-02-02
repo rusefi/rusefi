@@ -165,7 +165,7 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 		hwPinName = "smart";
 	}
 
-	efiPrintfProto(PROTOCOL_OUTPIN "%s@%s", pinName, hwPinName);
+	efiPrintfProto(PROTOCOL_OUTPIN, "%s@%s", pinName, hwPinName);
 }
 #endif /* EFI_PROD_CODE */
 
