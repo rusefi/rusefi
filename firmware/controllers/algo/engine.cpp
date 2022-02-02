@@ -528,6 +528,7 @@ void Engine::checkShutdown() {
 	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
 	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
 	// in shutdown mode, we need a small cooldown time between the ignition off and on
+/* this needs work or tests
 	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
@@ -543,6 +544,7 @@ void Engine::checkShutdown() {
 			}
 		}
 	}
+*/
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
