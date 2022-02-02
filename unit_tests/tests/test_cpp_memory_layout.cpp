@@ -93,3 +93,12 @@ TEST(CppMemoryLayout, PlainExtraFieldsStruct) {
 	ASSERT_EQ(540, destimationInt);
 	ASSERT_EQ(0, (uintptr_t)&c.field0 - (uintptr_t)&c);
 }
+
+TEST(CppMemoryLayout, structSize) {
+	ASSERT_EQ(1, sizeof(adc_channel_e)) << "small enum size";
+	ASSERT_EQ(1, sizeof(pin_input_mode_e)) << "small enum size";
+	ASSERT_EQ(1, sizeof(pin_output_mode_e)) << "small enum size";
+	ASSERT_EQ(1, sizeof(brain_pin_e)) << "small enum size";
+	ASSERT_EQ(16, sizeof(air_pressure_sensor_config_s));
+	ASSERT_EQ(TOTAL_CONFIG_SIZE, sizeof(persistent_config_s));
+}
