@@ -644,6 +644,7 @@
 #define crankingCycleCoef_offset 13956
 #define crankingFuelBins_offset 13924
 #define crankingFuelCoef_offset 13892
+#define crankingFuelCoefE100_offset 20996
 #define crankingIACposition_offset 1848
 #define crankingInjectionMode_offset 436
 #define crankingTimingAngle_offset 448
@@ -1774,7 +1775,7 @@
 #define pedalToTpsRpmBins_offset 5484
 #define pedalToTpsTable_offset 5412
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 20996
+#define persistent_config_s_size 21012
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1924,7 +1925,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2166788358
+#define SIGNATURE_HASH 1125900793
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2122,7 +2123,7 @@
 #define TORQUE_CURVE_SIZE 8
 #define torqueRpmBins_offset 4602
 #define torqueValues_offset 4594
-#define TOTAL_CONFIG_SIZE 20996
+#define TOTAL_CONFIG_SIZE 21012
 #define tps1_1AdcChannel_offset 520
 #define tps1_2AdcChannel_offset 689
 #define tps1SecondaryMax_offset 830
@@ -2455,7 +2456,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.02.02.all.2166788358"
+#define TS_SIGNATURE "rusEFI 2022.02.02.all.1125900793"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
