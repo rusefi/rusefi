@@ -108,14 +108,6 @@ int warningEnabled = true;
 extern int maxTriggerReentrant;
 extern uint32_t maxLockedDuration;
 
-
-#if !defined(STATUS_LOGGING_BUFFER_SIZE)
-#define STATUS_LOGGING_BUFFER_SIZE 1800
-#endif /* STATUS_LOGGING_BUFFER_SIZE */
-
-static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE];
-static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-
 static void setWarningEnabled(int value) {
 	warningEnabled = value;
 }
@@ -172,7 +164,8 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 	} else {
 		hwPinName = "smart";
 	}
-	logger.appendPrintf(PROTOCOL_OUTPIN LOG_DELIMITER "%s@%s" LOG_DELIMITER, pinName, hwPinName);
+
+	efiPrintfProto(PROTOCOL_OUTPIN "%s@%s", pinName, hwPinName);
 }
 #endif /* EFI_PROD_CODE */
 
@@ -194,7 +187,7 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	}
 	timeOfPreviousPrintVersion = nowSeconds;
 	int seconds = getTimeNowSeconds();
-	printCurrentState(&logger, seconds, getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
+	printCurrentState(seconds, getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, engineConfiguration->triggerInputPins[0]);
 	printOutPin(PROTOCOL_CRANK2, engineConfiguration->triggerInputPins[1]);
@@ -220,10 +213,18 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	}
 
 #endif /* EFI_PROD_CODE */
-	scheduleLogging(&logger);
 }
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
+
+#if !defined(STATUS_LOGGING_BUFFER_SIZE)
+#define STATUS_LOGGING_BUFFER_SIZE 1800
+#endif /* STATUS_LOGGING_BUFFER_SIZE */
+
+#if EFI_LOGIC_ANALYZER
+static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE];
+static Logging logger("logic analyzer", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+#endif // EFI_LOGIC_ANALYZER
 
 /**
  * @brief Sends all pending data to rusEfi console
@@ -267,9 +268,8 @@ void updateDevConsoleState(void) {
 
 #if EFI_LOGIC_ANALYZER
 	printWave(&logger);
-#endif /* EFI_LOGIC_ANALYZER */
-
 	scheduleLogging(&logger);
+#endif /* EFI_LOGIC_ANALYZER */
 }
 
 /*

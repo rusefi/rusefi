@@ -27,4 +27,4 @@ void setMockMapVoltage(float voltage);
 void setMockAfrVoltage(float voltage);
 void setMockMafVoltage(float voltage);
 
-void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);
+void printCurrentState(int seconds, const char *engineTypeName, const char *firmwareBuildId);
