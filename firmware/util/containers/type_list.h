@@ -159,6 +159,11 @@ public:
 		f(*me);
 	}
 
+	template<typename return_t, typename func_t>
+	auto aggregate(func_t const& accumulator, return_t seed) {
+		return accumulator(*me, seed);
+	}
+
 	template<typename has_t>
 	static constexpr bool has() {
 		return std::is_same_v<has_t, base_t>;
