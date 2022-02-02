@@ -3,7 +3,11 @@
 #include "engine_module.h"
 #include "main_relay_generated.h"
 
-struct MainRelayController : public EngineModule, public main_relay_s {
+class MainRelayController : public EngineModule, public main_relay_s {
+public:
 	void onSlowCallback() override;
-	void onIgnitionStateChanged(bool ignitionOn) override;
+	bool needsDelayedShutoff() override;
+
+private:
+	Timer m_lastIgnitionTime;
 };
