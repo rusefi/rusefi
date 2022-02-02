@@ -17,7 +17,7 @@ using ::testing::_;
 using ::testing::Ne;
 using ::testing::StrictMock;
 
-TEST(ElectronicThrottle, initializationNoPedal) {
+TEST(etb, initializationNoPedal) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -33,7 +33,7 @@ TEST(ElectronicThrottle, initializationNoPedal) {
 	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle());
 }
 
-TEST(ElectronicThrottle, initializationMissingThrottle) {
+TEST(etb, initializationMissingThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
@@ -56,7 +56,7 @@ TEST(ElectronicThrottle, initializationMissingThrottle) {
 	EXPECT_FATAL_ERROR(doInitElectronicThrottle());
 }
 
-TEST(ElectronicThrottle, initializationSingleThrottle) {
+TEST(etb, initializationSingleThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
@@ -81,7 +81,7 @@ TEST(ElectronicThrottle, initializationSingleThrottle) {
 	doInitElectronicThrottle();
 }
 
-TEST(ElectronicThrottle, initializationSingleThrottleInSecondSlot) {
+TEST(etb, initializationSingleThrottleInSecondSlot) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
@@ -106,7 +106,7 @@ TEST(ElectronicThrottle, initializationSingleThrottleInSecondSlot) {
 	doInitElectronicThrottle();
 }
 
-TEST(ElectronicThrottle, initializationDualThrottle) {
+TEST(etb, initializationDualThrottle) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -134,7 +134,7 @@ TEST(ElectronicThrottle, initializationDualThrottle) {
 	doInitElectronicThrottle();
 }
 
-TEST(ElectronicThrottle, initializationWastegate) {
+TEST(etb, initializationWastegate) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	EngineTestHelper eth(TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
@@ -155,7 +155,7 @@ TEST(ElectronicThrottle, initializationWastegate) {
 	doInitElectronicThrottle();
 }
 
-TEST(ElectronicThrottle, initializationNoFunction) {
+TEST(etb, initializationNoFunction) {
 	StrictMock<MockMotor> motor;
 
 	EtbController dut;
@@ -167,7 +167,7 @@ TEST(ElectronicThrottle, initializationNoFunction) {
 	dut.setOutput(0.5f);
 }
 
-TEST(ElectronicThrottle, initializationNotRedundantTps) {
+TEST(etb, initializationNotRedundantTps) {
 	EtbController dut;
 
 	// Needs pedal for init
@@ -180,7 +180,7 @@ TEST(ElectronicThrottle, initializationNotRedundantTps) {
 	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
 }
 
-TEST(ElectronicThrottle, initializationNotRedundantPedal) {
+TEST(etb, initializationNotRedundantPedal) {
 	EtbController dut;
 
 	// Init pedal without redundancy
@@ -193,7 +193,7 @@ TEST(ElectronicThrottle, initializationNotRedundantPedal) {
 	EXPECT_FATAL_ERROR(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
 }
 
-TEST(ElectronicThrottle, initializationNoPrimarySensor) {
+TEST(etb, initializationNoPrimarySensor) {
 	Sensor::resetAllMocks();
 
 	EtbController dut;
@@ -213,7 +213,7 @@ TEST(ElectronicThrottle, initializationNoPrimarySensor) {
 	EXPECT_TRUE(dut.init(ETB_Throttle1, nullptr, nullptr, nullptr, true));
 }
 
-TEST(ElectronicThrottle, initializationNoThrottles) {
+TEST(etb, initializationNoThrottles) {
 	// This tests the case where you don't want an ETB, and expect everything to go fine
 	EtbController duts[2];
 
@@ -237,7 +237,7 @@ TEST(ElectronicThrottle, initializationNoThrottles) {
 	EXPECT_NO_FATAL_ERROR(doInitElectronicThrottle());
 }
 
-TEST(ElectronicThrottle, idlePlumbing) {
+TEST(etb, idlePlumbing) {
 	StrictMock<MockEtb> mocks[ETB_COUNT];
 
 	EngineTestHelper eth(TEST_ENGINE);
@@ -254,7 +254,7 @@ TEST(ElectronicThrottle, idlePlumbing) {
 	applyIACposition(33.0f);
 }
 
-TEST(ElectronicThrottle, testSetpointOnlyPedal) {
+TEST(etb, testSetpointOnlyPedal) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Don't use ETB for idle, we aren't testing that yet - just pedal table for now
@@ -323,7 +323,7 @@ TEST(ElectronicThrottle, testSetpointOnlyPedal) {
 	EXPECT_EQ(90, etb.getSetpoint().value_or(-1));
 }
 
-TEST(ElectronicThrottle, setpointIdle) {
+TEST(etb, setpointIdle) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Use ETB for idle, but don't give it any range (yet)
@@ -380,7 +380,7 @@ TEST(ElectronicThrottle, setpointIdle) {
 	EXPECT_FLOAT_EQ(55, etb.getSetpoint().value_or(-1));
 }
 
-TEST(ElectronicThrottle, setpointRevLimit) {
+TEST(etb, setpointRevLimit) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Configure 5000 limit start, with 750 rpm taper
@@ -423,7 +423,7 @@ TEST(ElectronicThrottle, setpointRevLimit) {
 	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 }
 
-TEST(ElectronicThrottle, setpointNoPedalMap) {
+TEST(etb, setpointNoPedalMap) {
 	EtbController etb;
 
 	// Must have TPS & PPS initialized for ETB setup
@@ -436,7 +436,7 @@ TEST(ElectronicThrottle, setpointNoPedalMap) {
 	EXPECT_EQ(etb.getSetpoint(), unexpected);
 }
 
-TEST(ElectronicThrottle, setpointIdleValveController) {
+TEST(etb, setpointIdleValveController) {
 	EtbController etb;
 
 	etb.init(ETB_IdleValve, nullptr, nullptr, nullptr, false);
@@ -455,7 +455,7 @@ TEST(ElectronicThrottle, setpointIdleValveController) {
 	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
 }
 
-TEST(ElectronicThrottle, setpointWastegateController) {
+TEST(etb, setpointWastegateController) {
 	EtbController etb;
 
 	etb.init(ETB_Wastegate, nullptr, nullptr, nullptr, false);
@@ -474,7 +474,7 @@ TEST(ElectronicThrottle, setpointWastegateController) {
 	EXPECT_FLOAT_EQ(100, etb.getSetpoint().value_or(-1));
 }
 
-TEST(ElectronicThrottle, etbTpsSensor) {
+TEST(etb, etbTpsSensor) {
 	// Throw some distinct values on the TPS sensors so we can identify that we're getting the correct one
 	Sensor::setMockValue(SensorType::Tps1, 25.0f, true);
 	Sensor::setMockValue(SensorType::Tps2, 75.0f, true);
@@ -513,7 +513,7 @@ TEST(ElectronicThrottle, etbTpsSensor) {
 	}
 }
 
-TEST(ElectronicThrottle, setOutputInvalid) {
+TEST(etb, setOutputInvalid) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
@@ -532,7 +532,7 @@ TEST(ElectronicThrottle, setOutputInvalid) {
 	etb.setOutput(unexpected);
 }
 
-TEST(ElectronicThrottle, setOutputValid) {
+TEST(etb, setOutputValid) {
 	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
@@ -552,7 +552,7 @@ TEST(ElectronicThrottle, setOutputValid) {
 	etb.setOutput(25.0f);
 }
 
-TEST(ElectronicThrottle, setOutputValid2) {
+TEST(etb, setOutputValid2) {
 	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
@@ -572,7 +572,7 @@ TEST(ElectronicThrottle, setOutputValid2) {
 	etb.setOutput(-25.0f);
 }
 
-TEST(ElectronicThrottle, setOutputOutOfRangeHigh) {
+TEST(etb, setOutputOutOfRangeHigh) {
 	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
@@ -592,7 +592,7 @@ TEST(ElectronicThrottle, setOutputOutOfRangeHigh) {
 	etb.setOutput(110);
 }
 
-TEST(ElectronicThrottle, setOutputOutOfRangeLow) {
+TEST(etb, setOutputOutOfRangeLow) {
 	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
@@ -612,7 +612,7 @@ TEST(ElectronicThrottle, setOutputOutOfRangeLow) {
 	etb.setOutput(-110);
 }
 
-TEST(ElectronicThrottle, setOutputPauseControl) {
+TEST(etb, setOutputPauseControl) {
 	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
@@ -633,7 +633,7 @@ TEST(ElectronicThrottle, setOutputPauseControl) {
 	etb.setOutput(25.0f);
 }
 
-TEST(ElectronicThrottle, setOutputLimpHome) {
+TEST(etb, setOutputLimpHome) {
 	EngineTestHelper eth(TEST_ENGINE);
 	StrictMock<MockMotor> motor;
 
@@ -654,7 +654,7 @@ TEST(ElectronicThrottle, setOutputLimpHome) {
 	etb.setOutput(25.0f);
 }
 
-TEST(ElectronicThrottle, closedLoopPid) {
+TEST(etb, closedLoopPid) {
 	pid_s pid = {};
 	pid.pFactor = 5;
 	pid.maxValue = 75;
@@ -683,7 +683,7 @@ TEST(ElectronicThrottle, closedLoopPid) {
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 30).value_or(-1), 75);
 }
 
-TEST(ElectronicThrottle, openLoopThrottle) {
+TEST(etb, openLoopThrottle) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
@@ -705,7 +705,7 @@ TEST(ElectronicThrottle, openLoopThrottle) {
 	EXPECT_NEAR(50, etb.getOpenLoop(100).value_or(-1), EPS4D);
 }
 
-TEST(ElectronicThrottle, openLoopNonThrottle) {
+TEST(etb, openLoopNonThrottle) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
