@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Mon Jan 31 23:24:08 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Feb 01 22:07:18 EST 2022
 // see also gen_config_and_enums.bat
 
 
@@ -321,12 +321,12 @@ case SUBARUEG33_DEFAULTS:
   return "SUBARUEG33_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
-case TEST_108:
-  return "TEST_108";
-case TEST_109:
-  return "TEST_109";
-case TEST_110:
-  return "TEST_110";
+case TEST_100:
+  return "TEST_100";
+case TEST_101:
+  return "TEST_101";
+case TEST_102:
+  return "TEST_102";
 case TEST_33816:
   return "TEST_33816";
 case TEST_CRANK_ENGINE:
@@ -349,30 +349,14 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED100:
-  return "UNUSED100";
-case UNUSED101:
-  return "UNUSED101";
-case UNUSED18:
-  return "UNUSED18";
-case UNUSED30:
-  return "UNUSED30";
 case UNUSED39:
   return "UNUSED39";
 case UNUSED60:
   return "UNUSED60";
 case UNUSED61:
   return "UNUSED61";
-case UNUSED_19:
-  return "UNUSED_19";
 case UNUSED_48:
   return "UNUSED_48";
-case UNUSED_50:
-  return "UNUSED_50";
-case UNUSED_51:
-  return "UNUSED_51";
-case VAG_18_TURBO:
-  return "VAG_18_TURBO";
 case VW_ABA:
   return "VW_ABA";
 case VW_B6:
