@@ -282,7 +282,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 ! we have some unused bytes to allow compatible TS changes
 	float autoscale calibrationValue2;;"", 1, 0, 0, 0, 0
-	uint8_t[92 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+    bit isMainRelayOn;
+
+	uint8_t[88 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition
