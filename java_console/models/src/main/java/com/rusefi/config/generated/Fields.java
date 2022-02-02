@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:12 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 03:57:17 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -772,8 +772,8 @@ public class Fields {
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
 	public static final int engine_type_e_BMW_M73_M = 24;
-	public static final int engine_type_e_BMW_M73_MRE = 104;
-	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 105;
+	public static final int engine_type_e_BMW_M73_MRE = 50;
+	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 51;
 	public static final int engine_type_e_CAMARO_4 = 35;
 	public static final int engine_type_e_CITROEN_TU3JP = 65;
 	public static final int engine_type_e_DEFAULT_FRANKENSO = 0;
@@ -840,7 +840,7 @@ public class Fields {
 	public static final int engine_type_e_MRE_SECONDARY_CAN = 4;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
-	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 106;
+	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 30;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
 	public static final int engine_type_e_PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9;
 	public static final int engine_type_e_PROTEUS_HARLEY = 6;
@@ -854,32 +854,24 @@ public class Fields {
 	public static final int engine_type_e_SACHS = 29;
 	public static final int engine_type_e_SUBARU_2003_WRX = 22;
 	public static final int engine_type_e_SUBARUEG33_DEFAULTS = 70;
-	public static final int engine_type_e_TEST_108 = 108;
-	public static final int engine_type_e_TEST_109 = 109;
-	public static final int engine_type_e_TEST_110 = 110;
-	public static final int engine_type_e_TEST_33816 = 103;
+	public static final int engine_type_e_TEST_100 = 100;
+	public static final int engine_type_e_TEST_101 = 101;
+	public static final int engine_type_e_TEST_102 = 102;
+	public static final int engine_type_e_TEST_33816 = 18;
 	public static final int engine_type_e_TEST_CRANK_ENGINE = 28;
 	public static final int engine_type_e_TEST_ENGINE = 26;
 	public static final int engine_type_e_TEST_ENGINE_VVT = 45;
 	public static final int engine_type_e_TEST_ISSUE_366_BOTH = 52;
 	public static final int engine_type_e_TEST_ISSUE_366_RISE = 53;
 	public static final int engine_type_e_TEST_ISSUE_898 = 27;
-	public static final int engine_type_e_TEST_ROTARY = 107;
+	public static final int engine_type_e_TEST_ROTARY = 19;
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
-	public static final int engine_type_e_UNUSED100 = 100;
-	public static final int engine_type_e_UNUSED101 = 101;
-	public static final int engine_type_e_UNUSED18 = 18;
-	public static final int engine_type_e_UNUSED30 = 30;
 	public static final int engine_type_e_UNUSED39 = 39;
 	public static final int engine_type_e_UNUSED60 = 60;
 	public static final int engine_type_e_UNUSED61 = 61;
-	public static final int engine_type_e_UNUSED_19 = 19;
 	public static final int engine_type_e_UNUSED_48 = 48;
-	public static final int engine_type_e_UNUSED_50 = 50;
-	public static final int engine_type_e_UNUSED_51 = 51;
-	public static final int engine_type_e_VAG_18_TURBO = 102;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_VW_B6 = 62;
 	public static final int engineChartSize_offset = 1276;
@@ -1853,7 +1845,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 1125900793;
+	public static final int SIGNATURE_HASH = 1093133295;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2327,7 +2319,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.02.02.all.1125900793";
+	public static final String TS_SIGNATURE = "rusEFI 2022.02.02.all.1093133295";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;

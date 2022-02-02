@@ -93,7 +93,7 @@ typedef enum {
 
 	SACHS = 29,
 
-	TEST_ROTARY = 30,
+	PROTEUS_ANALOG_PWM_TEST = 30,
 
 	MRE_BOARD_NEW_TEST = 31,
 
@@ -161,8 +161,6 @@ typedef enum {
 	UNUSED60 = 60,
 
 	UNUSED61 = 61,
-
-	PROTEUS_ANALOG_PWM_TEST = 106,
 
 	VW_B6 = 62,
 
