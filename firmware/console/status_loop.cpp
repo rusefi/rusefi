@@ -650,7 +650,7 @@ static void updateIgnition(int rpm) {
 }
 
 static void updateFlags() {
-	tsOutputChannels.isMainRelayOn = enginePins.mainRelay.getLogicValue();
+	engine->outputChannels.isMainRelayOn = enginePins.mainRelay.getLogicValue();
 	engine->outputChannels.isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
 	engine->outputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();

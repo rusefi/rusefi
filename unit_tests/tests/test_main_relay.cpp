@@ -2,18 +2,17 @@
 
 #include "main_relay.h"
 
-TEST(MainRelay, mr) {
+TEST(MainRelay, mainRelayLogic) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	MainRelayController dut;
 
 	// Ignition is off, MR is off
-	dut.onIgnitionStateChanged(false);
 	dut.onSlowCallback();
 	EXPECT_EQ(enginePins.mainRelay.getLogicValue(), false);
 
-	// Ignition is now on, MR is on
-	dut.onIgnitionStateChanged(true);
+	// Battery above threshold - MR is on
+	Sensor::setMockValue(SensorType::BatteryVoltage, 13);
 	dut.onSlowCallback();
 	EXPECT_EQ(enginePins.mainRelay.getLogicValue(), true);
 }
