@@ -66,6 +66,10 @@ public:
 	// Other subsystems call these APIs to indicate a problem has occured
 	void etbProblem();
 	void fatalError();
+	void stopEngine();
+
+	bool isEngineStop(efitick_t nowNt) const;
+	float getTimeSinceEngineStop(efitick_t nowNt) const;
 
 private:
 	void setFaultRevLimit(int limit);
@@ -82,4 +86,6 @@ private:
 	Clearable m_transientAllowIgnition = true;
 
 	bool m_hadOilPressureAfterStart = false;
+
+	Timer m_engineStopTimer;
 };
