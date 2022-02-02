@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 01 21:12:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:10 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4513,8 +4513,13 @@ struct persistent_config_s {
 	 * offset 20804
 	 */
 	cyl_trim_s fuelTrims[12];
-	/** total size 20996*/
+	/**
+	ratio
+	 * offset 20996
+	 */
+	uint16_t crankingFuelCoefE100[CRANKING_CURVE_SIZE];
+	/** total size 21012*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 01 21:12:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:10 UTC 2022

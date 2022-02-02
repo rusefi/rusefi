@@ -1,6 +1,6 @@
 <roms>
 
-<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Wed Dec 22 13:13:00 UTC 2021 -->
+<!-- was generated automatically by rusEFI tool ConfigDefinition.jar based on gen_config.sh Wed Feb 02 02:42:33 UTC 2022 -->
 
     <rom>
         <romid>
@@ -10,7 +10,7 @@
             <ecuid>RUSEFI</ecuid>
             <make>rusEfi</make>
             <model>rusEfi</model>
-            <filesize>20996</filesize>
+            <filesize>21012</filesize>
         </romid>
 
         <table type="3D" name="Ignition Advance"

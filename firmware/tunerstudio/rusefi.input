@@ -498,6 +498,14 @@ enable2ndByteCanID = false
       yBins       = crankingFuelCoef
       gauge       = CLTGauge
 
+	curve = crankingCltCurveE100, "Cranking Coolant Temperature Multiplier (Flex Fuel E100)"
+      columnLabel = "Coolant", "Multiplier"
+      xAxis       =  -40, 120, 9
+      yAxis       =  0,  3, 10
+      xBins       = crankingFuelBins, coolant
+      yBins       = crankingFuelCoefE100
+      gauge       = CLTGauge
+
 	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
       columnLabel = "TPS", "duty bias"
       xAxis       =  0, 50, 11
@@ -1427,6 +1435,7 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
+		subMenu = crankingCltCurveE100,		"Fuel CLT multiplier (Flex Fuel E100)", 0, { flexSensorPin != @@ADC_CHANNEL_NONE@@ }
 		subMenu = crankingDurationCurve,	"Fuel duration multiplier"	
 		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
 		subMenu = std_separator
@@ -1572,9 +1581,10 @@ menuDialog = main
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
+		subMenu = vrThreshold,				"VR Sensor Threshold"
+		subMenu = fancyHardwareDialog,      "Fancy Hardware"
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = rotaryDialog, 			"Rotary"
-		subMenu = vrThreshold,				"VR Sensor Threshold"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -3699,10 +3709,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = mapCamDialog, "Engine Phase by MAP sensor"
 		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
 
-	dialog = parkingLot, "Experimental/Broken"
+	dialog = fancyHardwareDialog, "Fancy Boards"
 	    field = "boardUseTachPullUp",                   boardUseTachPullUp
 	    field = "boardUseTempPullUp",                   boardUseTempPullUp
 	    field = "boardUseCrankPullUp",                  boardUseCrankPullUp
+
+	dialog = parkingLot, "Experimental/Broken"
 	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"
 		field = "tempBooleanForVerySpecialCases",       tempBooleanForVerySpecialCases

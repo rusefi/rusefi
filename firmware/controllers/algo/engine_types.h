@@ -51,7 +51,7 @@ typedef enum {
 	MRE_MIATA_NA6_MAP = 66,
 	MRE_MIATA_NB2_MAF = 15,
 
-	UNUSED_19 = 19,
+	TEST_ROTARY = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
 	MRE_MIATA_94_MAP = 20,
@@ -66,7 +66,7 @@ typedef enum {
 	 */
 	HONDA_ACCORD_CD_TWO_WIRES = 17,
 
-	UNUSED18 = 18,
+	TEST_33816 = 18,
 
 
 	SUBARU_2003_WRX = 22,
@@ -93,7 +93,7 @@ typedef enum {
 
 	SACHS = 29,
 
-	UNUSED30 = 30,
+	TEST_ROTARY = 30,
 
 	MRE_BOARD_NEW_TEST = 31,
 
@@ -134,9 +134,9 @@ typedef enum {
 
 	FRANKENSO_QA_ENGINE = 49,
 
-	UNUSED_50 = 50,
+	BMW_M73_MRE = 50,
 
-	UNUSED_51 = 51,
+	BMW_M73_MRE_SLAVE = 51,
 
 
 	TEST_ISSUE_366_BOTH = 52,
@@ -228,20 +228,10 @@ typedef enum {
 	 * this configuration has as few pins configured as possible
 	 */
 	MINIMAL_PINS = 99,
-	UNUSED100 = 100,
-	UNUSED101 = 101,
-	VAG_18_TURBO = 102,
 
-	TEST_33816 = 103,
-
-	BMW_M73_MRE = 104,
-	BMW_M73_MRE_SLAVE = 105,
-
-	TEST_ROTARY = 107,
-
-	TEST_108 = 108,
-	TEST_109 = 109,
-	TEST_110 = 110,
+	TEST_100 = 100,
+	TEST_101 = 101,
+	TEST_102 = 102,
    // todo: Technical debt: ENUM_32_BITS #3874
 	Force_4_bytes_size_engine_type = ENUM_32_BITS,
 } engine_type_e;

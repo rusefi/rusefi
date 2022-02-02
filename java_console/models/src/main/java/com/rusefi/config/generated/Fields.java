@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Feb 01 21:12:29 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:12 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -366,6 +366,40 @@ public class Fields {
 	public static final int brain_pin_e_GPIOI_7 = 137;
 	public static final int brain_pin_e_GPIOI_8 = 138;
 	public static final int brain_pin_e_GPIOI_9 = 139;
+	public static final int brain_pin_e_L9779_IGN_1 = 215;
+	public static final int brain_pin_e_L9779_IGN_2 = 216;
+	public static final int brain_pin_e_L9779_IGN_3 = 217;
+	public static final int brain_pin_e_L9779_IGN_4 = 218;
+	public static final int brain_pin_e_L9779_OUT_1 = 219;
+	public static final int brain_pin_e_L9779_OUT_10 = 228;
+	public static final int brain_pin_e_L9779_OUT_11 = 229;
+	public static final int brain_pin_e_L9779_OUT_12 = 230;
+	public static final int brain_pin_e_L9779_OUT_13 = 231;
+	public static final int brain_pin_e_L9779_OUT_14 = 232;
+	public static final int brain_pin_e_L9779_OUT_15 = 233;
+	public static final int brain_pin_e_L9779_OUT_16 = 234;
+	public static final int brain_pin_e_L9779_OUT_17 = 235;
+	public static final int brain_pin_e_L9779_OUT_18 = 236;
+	public static final int brain_pin_e_L9779_OUT_19 = 237;
+	public static final int brain_pin_e_L9779_OUT_2 = 220;
+	public static final int brain_pin_e_L9779_OUT_20 = 238;
+	public static final int brain_pin_e_L9779_OUT_25 = 243;
+	public static final int brain_pin_e_L9779_OUT_26 = 244;
+	public static final int brain_pin_e_L9779_OUT_27 = 245;
+	public static final int brain_pin_e_L9779_OUT_28 = 246;
+	public static final int brain_pin_e_L9779_OUT_3 = 221;
+	public static final int brain_pin_e_L9779_OUT_4 = 222;
+	public static final int brain_pin_e_L9779_OUT_5 = 223;
+	public static final int brain_pin_e_L9779_OUT_6 = 224;
+	public static final int brain_pin_e_L9779_OUT_7 = 225;
+	public static final int brain_pin_e_L9779_OUT_8 = 226;
+	public static final int brain_pin_e_L9779_OUT_9 = 227;
+	public static final int brain_pin_e_L9779_OUT_A = 239;
+	public static final int brain_pin_e_L9779_OUT_B = 240;
+	public static final int brain_pin_e_L9779_OUT_C = 241;
+	public static final int brain_pin_e_L9779_OUT_D = 242;
+	public static final int brain_pin_e_L9779_OUT_MRD = 247;
+	public static final int brain_pin_e_L9779_PIN_KEY = 248;
 	public static final int brain_pin_e_MC33972_PIN_1 = 146;
 	public static final int brain_pin_e_MC33972_PIN_21 = 166;
 	public static final int brain_pin_e_MC33972_PIN_22 = 167;
@@ -592,6 +626,7 @@ public class Fields {
 	public static final int crankingCycleCoef_offset = 13956;
 	public static final int crankingFuelBins_offset = 13924;
 	public static final int crankingFuelCoef_offset = 13892;
+	public static final int crankingFuelCoefE100_offset = 20996;
 	public static final int crankingIACposition_offset = 1848;
 	public static final int crankingInjectionMode_offset = 436;
 	public static final int crankingTimingAngle_offset = 448;
@@ -1679,7 +1714,7 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 5476;
 	public static final int pedalToTpsRpmBins_offset = 5484;
 	public static final int pedalToTpsTable_offset = 5412;
-	public static final int persistent_config_s_size = 20996;
+	public static final int persistent_config_s_size = 21012;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1818,6 +1853,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 1125900793;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2005,7 +2041,7 @@ public class Fields {
 	public static final int TORQUE_CURVE_SIZE = 8;
 	public static final int torqueRpmBins_offset = 4602;
 	public static final int torqueValues_offset = 4594;
-	public static final int TOTAL_CONFIG_SIZE = 20996;
+	public static final int TOTAL_CONFIG_SIZE = 21012;
 	public static final int tps1_1AdcChannel_offset = 520;
 	public static final int tps1_2AdcChannel_offset = 689;
 	public static final int tps1SecondaryMax_offset = 830;
@@ -2291,7 +2327,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.02.01.all.2608863047";
+	public static final String TS_SIGNATURE = "rusEFI 2022.02.02.all.1125900793";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -3811,6 +3847,7 @@ public class Fields {
 	public static final Field FUELTRIMS10_TABLE = Field.create("FUELTRIMS10_TABLE", 20948, FieldType.INT8);
 	public static final Field FUELTRIMS11_TABLE = Field.create("FUELTRIMS11_TABLE", 20964, FieldType.INT8);
 	public static final Field FUELTRIMS12_TABLE = Field.create("FUELTRIMS12_TABLE", 20980, FieldType.INT8);
+	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 20996, FieldType.INT16);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -5099,5 +5136,6 @@ public class Fields {
 	FUELTRIMS10_TABLE,
 	FUELTRIMS11_TABLE,
 	FUELTRIMS12_TABLE,
+	CRANKINGFUELCOEFE100,
 	};
 }
