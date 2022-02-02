@@ -93,7 +93,7 @@ typedef enum {
 
 	SACHS = 29,
 
-	TEST_ROTARY = 30,
+	UNUSED30 = 30,
 
 	MRE_BOARD_NEW_TEST = 31,
 
