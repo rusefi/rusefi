@@ -850,7 +850,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case UNUSED60:
 	case UNUSED61:
 	case HELLEN72_ETB:
-	case UNUSED100:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -882,11 +881,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case MRE_SECONDARY_CAN:
 		mreSecondaryCan();
 		break;
-	case UNUSED101:
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
 		break;
-	case UNUSED30:
 	case MRE_BOARD_NEW_TEST:
 		mreBoardNewTest();
 		break;
@@ -1050,7 +1047,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24();
 		break;
-	case UNUSED18:
 	case MITSU_4G93:
 		setMitsubishiConfiguration();
 		break;
@@ -1069,7 +1065,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
-	case UNUSED_19:
 	case MIATA_1996:
 		setFrankensteinMiata1996();
 		break;
@@ -1112,9 +1107,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TEST_33816:
 		setTest33816EngineConfiguration();
 		break;
-	case TEST_108:
-	case TEST_109:
-	case TEST_110:
+	case TEST_100:
+	case TEST_101:
+	case TEST_102:
 	case TEST_ROTARY:
 		setRotary();
 		break;
