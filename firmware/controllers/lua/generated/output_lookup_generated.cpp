@@ -346,6 +346,8 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tpsAccelTo;
 	if (strEqualCaseInsensitive(name, "calibrationValue2"))
 		return engine->outputChannels.calibrationValue2;
+	if (strEqualCaseInsensitive(name, "isMainRelayOn"))
+		return engine->outputChannels.isMainRelayOn;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
