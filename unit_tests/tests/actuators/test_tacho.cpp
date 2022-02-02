@@ -3,7 +3,7 @@
 extern float getTachFreq(void);
 extern float getTachDuty(void);
 
-TEST(tachometer, testPulsePerRev) {
+TEST(Actuators, Tachometer) {
     // This engine has a tach pin set - we need that
     EngineTestHelper eth(FRANKENSO_MAZDA_MIATA_2003);
 
