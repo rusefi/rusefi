@@ -1581,9 +1581,10 @@ menuDialog = main
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
+		subMenu = vrThreshold,				"VR Sensor Threshold"
+		subMenu = fancyHardwareDialog,      "Fancy Hardware"
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = rotaryDialog, 			"Rotary"
-		subMenu = vrThreshold,				"VR Sensor Threshold"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -3708,10 +3709,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = mapCamDialog, "Engine Phase by MAP sensor"
 		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
 
-	dialog = parkingLot, "Experimental/Broken"
+	dialog = fancyHardwareDialog, "Fancy Boards"
 	    field = "boardUseTachPullUp",                   boardUseTachPullUp
 	    field = "boardUseTempPullUp",                   boardUseTempPullUp
 	    field = "boardUseCrankPullUp",                  boardUseCrankPullUp
+
+	dialog = parkingLot, "Experimental/Broken"
 	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"
 		field = "tempBooleanForVerySpecialCases",       tempBooleanForVerySpecialCases
