@@ -20,8 +20,6 @@
 typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, float, uint16_t, uint16_t> fsio8_Map3D_f32t;
 typedef Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, uint16_t, uint16_t> fsio8_Map3D_u8t;
 
-expected<float> getEngineValue(le_action_e action);
-
 void initFsioImpl();
 
 float getCurveValue(int index, float key);
