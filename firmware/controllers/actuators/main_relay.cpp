@@ -12,11 +12,9 @@ void MainRelayController::onSlowCallback() {
 		m_lastIgnitionTime.reset();
 	}
 
-	delayedShutoffRequested = engine->module<MainRelayController>()->needsDelayedShutoff();
-
 	// Query whether any engine modules want to keep the lights on
-// todo: fix this amazing C++ lambda magic
-//	delayedShutoffRequested = engine->engineModules.aggregate([](auto& m, bool prev) { return m->needsDelayedShutoff() | prev; }, false);
+	delayedShutoffRequested = engine->engineModules.aggregate([](auto& m, bool prev) { return m.needsDelayedShutoff() | prev; }, false);
+
 	// TODO: delayed shutoff timeout?
 
 	mainRelayState = isBenchTest | hasIgnitionVoltage | delayedShutoffRequested;
