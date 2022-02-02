@@ -444,8 +444,6 @@ void setMazdaMiata2003EngineConfiguration() {
 	engineConfiguration->scriptSetting[2] = 105; // #3 CLT threshold
 	engineConfiguration->scriptSetting[3] = 12.0; // #4 voltage threshold
 
-//	setFsio(1, GPIOE_6, COMBINED_WARNING_LIGHT);
-
 	// enable auto_idle
 	// enable verbose_idle
 	engineConfiguration->isVerboseIAC = false;

@@ -239,7 +239,5 @@ void setFordEscortGt() {
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
 
 	engineConfiguration->isSdCardEnabled = true;
-
-	// end of Ford Escort GT config
 }
 

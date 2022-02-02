@@ -357,6 +357,8 @@ void setTle8888TestConfiguration() {
 	// IN1 PE2
 	// IN2 PE4
 	// SF  PE3
+
+
 	engineConfiguration->etbIo[0].directionPin1 = GPIOE_2;
 	engineConfiguration->etbIo[0].directionPin2 = GPIOE_4;
 	engineConfiguration->etbIo[0].disablePin = GPIOE_5;

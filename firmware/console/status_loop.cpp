@@ -650,6 +650,7 @@ static void updateIgnition(int rpm) {
 }
 
 static void updateFlags() {
+	engine->outputChannels.isMainRelayOn = enginePins.mainRelay.getLogicValue();
 	engine->outputChannels.isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
 	engine->outputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
@@ -710,7 +711,7 @@ void updateTunerStudioState() {
 
 	// 104
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
-	
+
 	// Output both the estimated air flow, and measured air flow (if available)
 	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
 	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;
