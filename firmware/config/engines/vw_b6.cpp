@@ -19,7 +19,7 @@
  * has to be microRusEFI 0.5.2
  */
 void setVwPassatB6() {
-#if (BOARD_TLE8888_COUNT > 0)
+#if HW_MICRO_RUSEFI
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
@@ -169,5 +169,5 @@ void setVwPassatB6() {
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-#endif /* BOARD_TLE8888_COUNT */
+#endif /* HW_MICRO_RUSEFI */
 }
