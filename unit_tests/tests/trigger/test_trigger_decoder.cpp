@@ -46,7 +46,7 @@ static int getTriggerZeroEventIndex(engine_type_e engineType) {
 			engineConfiguration->trigger);
 }
 
-TEST(misc, testSkipped2_0) {
+TEST(trigger, testSkipped2_0) {
 	EngineTestHelper eth(TEST_ENGINE);
 	// for this test we need a trigger with isSynchronizationNeeded=true
 	engineConfiguration->trigger.customTotalToothCount = 2;
@@ -109,7 +109,7 @@ static void assertTriggerPosition(event_trigger_position_s *position, int eventI
 	assertEqualsM("angleOffset", angleOffset, position->angleOffsetFromTriggerEvent);
 }
 
-TEST(misc, testSomethingWeird) {
+TEST(trigger, testSomethingWeird) {
 	EngineTestHelper eth(FORD_INLINE_6_1995);
 
 	TriggerState state_;
@@ -145,7 +145,7 @@ TEST(misc, testSomethingWeird) {
 	ASSERT_EQ(0, sta->getCurrentIndex()); // new revolution
 }
 
-TEST(misc, test1995FordInline6TriggerDecoder) {
+TEST(trigger, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(FORD_INLINE_6_1995)) << "triggerIndex ";
 
 	EngineTestHelper eth(FORD_INLINE_6_1995);
@@ -450,11 +450,11 @@ TEST(misc, testRpmCalculator) {
 	engine->executor.clear();
 }
 
-TEST(misc, testAnotherTriggerDecoder) {
+TEST(trigger, testAnotherTriggerDecoder) {
 	testTriggerDecoder2("Miata 2003", FRANKENSO_MAZDA_MIATA_2003, 3, 0.38888889, 0.0);
 }
 
-TEST(misc, testTriggerDecoder) {
+TEST(trigger, testTriggerDecoder) {
 	printf("====================================================================================== testTriggerDecoder\r\n");
 
 	{
