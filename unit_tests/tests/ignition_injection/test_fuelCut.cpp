@@ -8,7 +8,6 @@
 #include "pch.h"
 
 #include "event_queue.h"
-#include "fsio_impl.h"
 
 using ::testing::_;
 

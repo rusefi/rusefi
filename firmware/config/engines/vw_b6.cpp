@@ -19,7 +19,7 @@
  * has to be microRusEFI 0.5.2
  */
 void setVwPassatB6() {
-#if (BOARD_TLE8888_COUNT > 0)
+#if HW_MICRO_RUSEFI
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
@@ -124,6 +124,7 @@ void setVwPassatB6() {
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
 	// Volkswage wants 10% for fan to be OFF, between pull-up and low side control we need to invert that value
+	// todo system lua for duty driven by CLT? (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25);
 	int value = 100 - 10;
 	coolantControl->dutyIfError = value;
 	setTable(coolantControl->table, (uint8_t)value);
@@ -168,5 +169,5 @@ void setVwPassatB6() {
 	engineConfiguration->useETBforIdleControl = true;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-#endif /* BOARD_TLE8888_COUNT */
+#endif /* HW_MICRO_RUSEFI */
 }

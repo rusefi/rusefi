@@ -50,8 +50,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->etb_use_two_wires;
 	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
 		return engineConfiguration->isDoubleSolenoidIdle;
-	if (strEqualCaseInsensitive(name, "showSdCardWarning"))
-		return engineConfiguration->showSdCardWarning;
 	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
 		return engineConfiguration->cj125isUrDivided;
 	if (strEqualCaseInsensitive(name, "useCicPidForIdle"))
@@ -1044,11 +1042,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
 	{
 		engineConfiguration->isDoubleSolenoidIdle = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "showSdCardWarning"))
-	{
-		engineConfiguration->showSdCardWarning = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))

@@ -1,18 +1,34 @@
 #include "global.h"
 #include "obd_error_codes.h"
-// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Mon Nov 22 23:11:14 UTC 2021
+// was generated automatically by rusEFI tool  from obd_error_codes.h // by enum2string.jar tool on Wed Feb 02 07:16:30 UTC 2022
 // see also gen_config_and_enums.bat
 
 
 
 const char *getObd_code_e(obd_code_e value){
 switch(value) {
+case CUSTOM_6005:
+  return "CUSTOM_6005";
+case CUSTOM_6006:
+  return "CUSTOM_6006";
+case CUSTOM_6007:
+  return "CUSTOM_6007";
+case CUSTOM_6008:
+  return "CUSTOM_6008";
+case CUSTOM_6009:
+  return "CUSTOM_6009";
+case CUSTOM_6010:
+  return "CUSTOM_6010";
+case CUSTOM_6011:
+  return "CUSTOM_6011";
 case CUSTOM_6037:
   return "CUSTOM_6037";
 case CUSTOM_6043:
   return "CUSTOM_6043";
 case CUSTOM_6051:
   return "CUSTOM_6051";
+case CUSTOM_6503:
+  return "CUSTOM_6503";
 case CUSTOM_ADD_BASE:
   return "CUSTOM_ADD_BASE";
 case CUSTOM_ADVANCE_SPARK:
@@ -55,8 +71,6 @@ case CUSTOM_EC_NULL:
   return "CUSTOM_EC_NULL";
 case CUSTOM_EGO_TYPE:
   return "CUSTOM_EGO_TYPE";
-case CUSTOM_EMPTY_FSIO_STACK:
-  return "CUSTOM_EMPTY_FSIO_STACK";
 case CUSTOM_ERROR_ICU:
   return "CUSTOM_ERROR_ICU";
 case CUSTOM_ERR_2ND_WATCHDOG:
@@ -329,8 +343,6 @@ case CUSTOM_ERR_EXT_MODE:
   return "CUSTOM_ERR_EXT_MODE";
 case CUSTOM_ERR_FLASH_CRC_FAILED:
   return "CUSTOM_ERR_FLASH_CRC_FAILED";
-case CUSTOM_ERR_FSIO_POOL:
-  return "CUSTOM_ERR_FSIO_POOL";
 case CUSTOM_ERR_FUEL_TABLE_NOT_READY:
   return "CUSTOM_ERR_FUEL_TABLE_NOT_READY";
 case CUSTOM_ERR_ICU:
@@ -469,14 +481,6 @@ case CUSTOM_FIRING_LENGTH:
   return "CUSTOM_FIRING_LENGTH";
 case CUSTOM_FLSTACK:
   return "CUSTOM_FLSTACK";
-case CUSTOM_FSIO_INVALID_EXPRESSION:
-  return "CUSTOM_FSIO_INVALID_EXPRESSION";
-case CUSTOM_FSIO_PARSING:
-  return "CUSTOM_FSIO_PARSING";
-case CUSTOM_FSIO_STACK_SIZE:
-  return "CUSTOM_FSIO_STACK_SIZE";
-case CUSTOM_FSIO_UNEXPECTED:
-  return "CUSTOM_FSIO_UNEXPECTED";
 case CUSTOM_HW_TIMER:
   return "CUSTOM_HW_TIMER";
 case CUSTOM_ICU_DRIVER:
@@ -523,8 +527,6 @@ case CUSTOM_NAN_ENGINE_LOAD_2:
   return "CUSTOM_NAN_ENGINE_LOAD_2";
 case CUSTOM_NO_ETB_FOR_IDLE:
   return "CUSTOM_NO_ETB_FOR_IDLE";
-case CUSTOM_NO_FSIO:
-  return "CUSTOM_NO_FSIO";
 case CUSTOM_NULL_ENGINE_PTR:
   return "CUSTOM_NULL_ENGINE_PTR";
 case CUSTOM_NULL_EXECUTOR:
@@ -743,8 +745,6 @@ case CUSTOM_UNEXPECTED_TDC_ANGLE:
   return "CUSTOM_UNEXPECTED_TDC_ANGLE";
 case CUSTOM_UNKNOWN_ALGORITHM:
   return "CUSTOM_UNKNOWN_ALGORITHM";
-case CUSTOM_UNKNOWN_FSIO:
-  return "CUSTOM_UNKNOWN_FSIO";
 case CUSTOM_VVT_MODE_NOT_SELECTED:
   return "CUSTOM_VVT_MODE_NOT_SELECTED";
 case CUSTOM_VVT_SYNC_POSITION:
