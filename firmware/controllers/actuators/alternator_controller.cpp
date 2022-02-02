@@ -49,7 +49,6 @@ void AlternatorController::onFastCallback() {
 	alternatorPid.postState(&engine->outputChannels.alternatorStatus);
 #endif /* EFI_TUNER_STUDIO */
 
-	// todo: migrate this to FSIO
 	bool alternatorShouldBeEnabledAtCurrentRpm = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->cranking.rpm;
 
 	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {

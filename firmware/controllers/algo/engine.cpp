@@ -52,15 +52,6 @@ extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-FsioState::FsioState() {
-#if EFI_ENABLE_ENGINE_WARNING
-	isEngineWarning = FALSE;
-#endif
-#if EFI_ENABLE_CRITICAL_ENGINE_STOP
-	isCriticalEngineCondition = FALSE;
-#endif
-}
-
 void Engine::resetEngineSnifferIfInTestMode() {
 #if EFI_ENGINE_SNIFFER
 	if (isFunctionalTestMode) {

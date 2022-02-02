@@ -278,12 +278,6 @@ void setMiataNA6_MAP_Frankenso() {
 
 	engineConfiguration->isSdCardEnabled = true;
 
-//	/**
-//	 * oil pressure line
-//	 * adc4/pa4/W47
-//	 */
-//	engineConfiguration->fsioAdc[0] = EFI_ADC_NONE;
-
 	engineConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
 	engineConfiguration->injectionPins[1] = GPIOE_2; // #2&4 pin 3V
 	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
