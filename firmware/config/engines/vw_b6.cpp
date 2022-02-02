@@ -124,6 +124,7 @@ void setVwPassatB6() {
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
 	// Volkswage wants 10% for fan to be OFF, between pull-up and low side control we need to invert that value
+	// todo system lua for duty driven by CLT? (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25);
 	int value = 100 - 10;
 	coolantControl->dutyIfError = value;
 	setTable(coolantControl->table, (uint8_t)value);
