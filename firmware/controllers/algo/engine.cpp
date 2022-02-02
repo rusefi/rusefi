@@ -354,15 +354,6 @@ Engine::Engine() {
 	reset();
 }
 
-/**
- * @see scheduleStopEngine()
- * @return true if there is a reason to stop engine
- */
-bool Engine::needToStopEngine(efitick_t nowNt) const {
-	return stopEngineRequestTimeNt != 0 &&
-			nowNt - stopEngineRequestTimeNt	< 3 * NT_PER_SECOND;
-}
-
 int Engine::getGlobalConfigurationVersion(void) const {
 	return globalConfigurationVersion;
 }
@@ -537,6 +528,7 @@ void Engine::checkShutdown() {
 	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
 	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
 	// in shutdown mode, we need a small cooldown time between the ignition off and on
+/* this needs work or tests
 	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
@@ -552,6 +544,7 @@ void Engine::checkShutdown() {
 			}
 		}
 	}
+*/
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
@@ -563,7 +556,8 @@ bool Engine::isInMainRelayBench() {
 }
 
 bool Engine::isInShutdownMode() const {
-#if EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
+	// TODO: this logic is currently broken
+#if 0 && EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
 	// if we are in "ignition_on" mode and not in shutdown mode
 	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
 		const float vBattThresholdOff = 5.0f;
@@ -661,7 +655,7 @@ void Engine::periodicFastCallback() {
 
 void doScheduleStopEngine() {
 	efiPrintf("Starting doScheduleStopEngine");
-	engine->stopEngineRequestTimeNt = getTimeNowNt();
+	engine->limpManager.stopEngine();
 	engine->ignitionOnTimeNt = 0;
 	// todo: initiate stepper motor parking
 	// make sure we have stored all the info
