@@ -17,8 +17,6 @@
 
 #define EFI_DYNO_VIEW TRUE
 
-#define EFI_FSIO TRUE
-
 #ifndef EFI_CDM_INTEGRATION
 #define EFI_CDM_INTEGRATION FALSE
 #endif

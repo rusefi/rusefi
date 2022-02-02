@@ -2,10 +2,7 @@
  * @file fsio_impl.cpp
  * @brief FSIO as it's used for GPIO
  *
- * set debug_mode 23
- * https://rusefi.com/wiki/index.php?title=Manual:Flexible_Logic
- *
- * 'fsioinfo' command in console shows current state of FSIO - formulas and current value
+ * TODO: rename this file, FSIO is gone!
  *
  * @date Oct 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -15,151 +12,10 @@
 
 #include "fsio_impl.h"
 
-#if EFI_PROD_CODE
-
-// todo: that's about bench test mode, wrong header for sure!
-#include "bench_test.h"
-#endif // EFI_PROD_CODE
-
-#if EFI_FSIO
-
-#include "os_access.h"
-
-/**
- * in case of zero frequency pin is operating as simple on/off. '1' for ON and '0' for OFF
- *
- */
-#define NO_PWM 0
-
 static fsio8_Map3D_f32t scriptTable1;
 static fsio8_Map3D_u8t scriptTable2;
 static fsio8_Map3D_u8t scriptTable3;
 static fsio8_Map3D_u8t scriptTable4;
-
-/**
- * Here we define all rusEfi-specific methods
- */
-static LENameOrdinalPair leRpm(LE_METHOD_RPM, "rpm");
-static LENameOrdinalPair leTps(LE_METHOD_TPS, "tps");
-static LENameOrdinalPair lePps(LE_METHOD_PPS, "pps");
-static LENameOrdinalPair leMaf(LE_METHOD_MAF, "maf");
-static LENameOrdinalPair leMap(LE_METHOD_MAP, "map");
-static LENameOrdinalPair leVBatt(LE_METHOD_VBATT, "vbatt");
-static LENameOrdinalPair leFan(LE_METHOD_FAN, "fan");
-static LENameOrdinalPair leCoolant(LE_METHOD_COOLANT, "coolant");
-static LENameOrdinalPair leIntakeTemp(LE_METHOD_INTAKE_AIR, "iat");
-static LENameOrdinalPair leIsCoolantBroken(LE_METHOD_IS_COOLANT_BROKEN, "is_clt_broken");
-static LENameOrdinalPair leOilPressure(LE_METHOD_OIL_PRESSURE, "oilp");
-
-// @returns boolean state of A/C toggle switch
-static LENameOrdinalPair leAcToggle(LE_METHOD_AC_TOGGLE, "ac_on_switch");
-// @returns float number of seconds since last A/C toggle
-static LENameOrdinalPair leTimeSinceAcToggle(LE_METHOD_TIME_SINCE_AC_TOGGLE, "time_since_ac_on_switch");
-static LENameOrdinalPair leFsioSetting(LE_METHOD_FSIO_SETTING, FSIO_METHOD_FSIO_SETTING);
-static LENameOrdinalPair leFsioAnalogInput(LE_METHOD_FSIO_ANALOG_INPUT, FSIO_METHOD_FSIO_ANALOG_INPUT);
-static LENameOrdinalPair leFsioDigitalInput(LE_METHOD_FSIO_DIGITAL_INPUT, FSIO_METHOD_FSIO_DIGITAL_INPUT);
-static LENameOrdinalPair leIntakeVVT(LE_METHOD_INTAKE_VVT, "ivvt");
-static LENameOrdinalPair leExhaustVVT(LE_METHOD_EXHAUST_VVT, "evvt");
-static LENameOrdinalPair leCrankingRpm(LE_METHOD_CRANKING_RPM, "cranking_rpm");
-static LENameOrdinalPair leFuelRate(LE_METHOD_FUEL_FLOW_RATE, "fuel_flow");
-
-#define SYS_ELEMENT_POOL_SIZE 24
-#define UD_ELEMENT_POOL_SIZE 64
-
-static LEElement sysElements[SYS_ELEMENT_POOL_SIZE];
-CCM_OPTIONAL LEElementPool sysPool(sysElements, SYS_ELEMENT_POOL_SIZE);
-
-#if EFI_PROD_CODE || EFI_SIMULATOR
-
-FsioResult getEngineValue(le_action_e action) {
-	switch (action) {
-	case LE_METHOD_FAN:
-		return enginePins.fanRelay.getLogicValue();
-	case LE_METHOD_TIME_SINCE_AC_TOGGLE:
-		return (getTimeNowUs() - engine->acSwitchLastChangeTime) / US_PER_SECOND_F;
-	case LE_METHOD_AC_TOGGLE:
-		return getAcToggle();
-	case LE_METHOD_COOLANT:
-		return Sensor::getOrZero(SensorType::Clt);
-	case LE_METHOD_IS_COOLANT_BROKEN:
-		return !Sensor::get(SensorType::Clt).Valid;
-	case LE_METHOD_INTAKE_AIR:
-		return Sensor::getOrZero(SensorType::Iat);
-	case LE_METHOD_RPM:
-		return Sensor::getOrZero(SensorType::Rpm);
-	case LE_METHOD_MAF:
-		return Sensor::getOrZero(SensorType::Maf);
-	case LE_METHOD_MAP:
-		return Sensor::getOrZero(SensorType::Map);
-#if EFI_SHAFT_POSITION_INPUT
-	case LE_METHOD_INTAKE_VVT:
-		return engine->triggerCentral.getVVTPosition(0, 0);
-	case LE_METHOD_EXHAUST_VVT:
-		return engine->triggerCentral.getVVTPosition(0, 1);
-#endif
-	case LE_METHOD_CRANKING_RPM:
-		return engineConfiguration->cranking.rpm;
-	case LE_METHOD_VBATT:
-		return Sensor::getOrZero(SensorType::BatteryVoltage);
-	case LE_METHOD_TPS:
-		return Sensor::getOrZero(SensorType::DriverThrottleIntent);
-	case LE_METHOD_FUEL_FLOW_RATE:
-		return engine->engineState.fuelConsumption.getConsumptionGramPerSecond();
-	case LE_METHOD_OIL_PRESSURE:
-		return Sensor::getOrZero(SensorType::OilPressure);
-	// cfg_xxx references are code generated
-	default:
-		warning(CUSTOM_FSIO_UNEXPECTED, "FSIO ERROR no data for action=%d", action);
-		return unexpected;
-	}
-}
-
-#endif
-
-static LECalculator calc CCM_OPTIONAL;
-
-static const char * action2String(le_action_e action) {
-	static char buffer[_MAX_FILLER];
-	switch(action) {
-		case LE_METHOD_RPM:
-			return "RPM";
-		case LE_METHOD_CRANKING_RPM:
-			return "cranking_rpm";
-		case LE_METHOD_COOLANT:
-			return "CLT";
-		case LE_METHOD_FAN:
-			return "fan";
-
-		default: {
-			// this is here to make compiler happy
-		}
-	}
-	itoa10(buffer, (int)action);
-	return buffer;
-}
-
-static void setPinState(const char * msg, OutputPin *pin, LEElement *element) {
-#if EFI_PROD_CODE
-	if (isRunningBenchTest()) {
-		return; // let's not mess with bench testing
-	}
-#endif /* EFI_PROD_CODE */
-
-	if (!element) {
-		warning(CUSTOM_FSIO_INVALID_EXPRESSION, "invalid expression for %s", msg);
-	} else {
-		int value = (int)calc.evaluate(msg, pin->getLogicValue(), element);
-		if (pin->isInitialized() && value != pin->getLogicValue()) {
-
-			for (int i = 0;i < calc.currentCalculationLogPosition;i++) {
-				efiPrintf("calc %d: action %s value %.2f", i, action2String(calc.calcLogAction[i]), calc.calcLogValue[i]);
-			}
-
-			efiPrintf("setPin %s %s", msg, value ? "on" : "off");
-			pin->setValue(value);
-		}
-	}
-}
 
 ValueProvider3D *getscriptTable(int index) {
 	switch (index) {
@@ -223,6 +79,7 @@ float getCurveValue(int index, float key) {
 	}
 }
 
+// TODO: rename
 void initFsioImpl() {
 	scriptTable1.init(config->scriptTable1, config->scriptTable1LoadBins,
 			config->scriptTable1RpmBins);
@@ -232,7 +89,4 @@ void initFsioImpl() {
 			config->scriptTable3RpmBins);
 	scriptTable4.init(config->scriptTable4, config->scriptTable4LoadBins,
 			config->scriptTable4RpmBins);
-
 }
-
-#endif /* EFI_FSIO */
