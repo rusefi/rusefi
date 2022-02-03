@@ -4,15 +4,9 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case EFI_ADC_1: return "TPS1";
-		case EFI_ADC_0: return "2C - O2S";
 		case GPIOC_1: return "3D - MAP";
 		case GPIOA_3: return "PPS1";
 		case GPIOA_1: return "TPS1";
-		case EFI_ADC_5: return "1B - Battery Sense";
-		case EFI_ADC_4: return "3E - TPS";
-		case EFI_ADC_3: return "1G - Steering/RES2";
-		case EFI_ADC_2: return "intMAP";
 		case GPIOG_4: return "1E - Check Engine Light";
 		case GPIOC_8: return "ETB +";
 		case GPIOA_9: return "1I AC Fan Relay";
@@ -46,20 +40,9 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOE_13: return "3I - Clutch";
 		case GPIOE_12: return "4B - DIGITAL/FLEX";
 		case GPIOE_14: return "1V - Neutral";
-		case EFI_ADC_10: return "2L - MAF";
-		case EFI_ADC_11: return "3D - MAP";
-		case EFI_ADC_12: return "2E - Coolant";
-		case EFI_ADC_13: return "2B - IAT";
-		case EFI_ADC_14: return "4C - IN TEMP/PPS2";
-		case ADC3_CHANNEL_7: return "1F - Brake/RES1";
-		case EFI_ADC_15: return "1P - AC Switch";
 		case GPIOF_10: return "1G - Steering/RES2";
-		case EFI_ADC_9: return "2J - CRANK";
-		case EFI_ADC_8: return "2A - Pressure Input";
 		case GPIOF_14: return "3Q - VICS";
 		case GPIOF_11: return "2D - VSS";
-		case EFI_ADC_7: return "3S - EGR BOOST IN";
-		case EFI_ADC_6: return "2H - CAM";
 		case GPIOF_12: return "3T/4D - BOOST OUT";
 		default: return nullptr;
 	}

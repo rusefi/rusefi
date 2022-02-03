@@ -5,7 +5,6 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case GPIOB_1: return "16 - CRANK";
-		case EFI_ADC_4: return "73 - TPS";
 		case GPIOD_9: return "3 - INJ_5";
 		case GPIOC_9: return "29 - Idle";
 		case GPIOB_8: return "24 - Coil 6";
@@ -19,18 +18,11 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOG_7: return "33 - INJ_1";
 		case GPIOG_14: return "1 - OUT_PUMP";
 		case GPIOC_13: return "50 - Coil 1";
-		case EFI_ADC_10: return "41 - MAF";
-		case EFI_ADC_11: return "Aux MAP";
-		case EFI_ADC_12: return "78 - CLT";
-		case EFI_ADC_13: return "77 - IAT";
 		case GPIOD_10: return "5 - INJ_4";
 		case GPIOF_13: return "7 - INJ_7/VVT";
-		case EFI_ADC_9: return "16 - CRANK";
 		case GPIOF_14: return "35 - INJ_8";
 		case GPIOD_12: return "2 - IdleC";
-		case EFI_ADC_7: return "Aux BARO";
 		case GPIOF_12: return "4 - INJ_6";
-		case EFI_ADC_6: return "17 - CAM";
 		case GPIOD_11: return "31 - INJ_3";
 		case GPIOD_15: return "47 - Tach";
 		default: return nullptr;

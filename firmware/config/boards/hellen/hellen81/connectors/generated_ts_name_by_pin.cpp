@@ -4,12 +4,6 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case EFI_ADC_1: return "55 - IN_O2S2";
-		case EFI_ADC_0: return "18 - IN_O2S";
-		case EFI_ADC_5: return "13 - IN_VIGN";
-		case EFI_ADC_4: return "16 - IN_TPS";
-		case EFI_ADC_3: return "78 - IN_PPS";
-		case EFI_ADC_2: return "41 - IN_MAP3";
 		case GPIOC_9: return "64 - OUT_COIL_B2";
 		case GPIOI_2: return "14 - OUT_MAIN";
 		case GPIOE_6: return "21 - IGN_8";
@@ -48,20 +42,10 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOF_5: return "9 - IN_SENS3";
 		case GPIOB_9: return "22 - IGN_7";
 		case GPIOB_8: return "23 - IGN_6";
-		case EFI_ADC_10: return "37 - IN_MAP1";
-		case EFI_ADC_11: return "38 - IN_MAP2";
-		case EFI_ADC_12: return "39 - IN_CLT";
-		case EFI_ADC_13: return "40 - IN_IAT";
-		case EFI_ADC_14: return "75 - IN_AUX2";
-		case EFI_ADC_15: return "76 - IN_AUX3";
-		case EFI_ADC_9: return "15 - IN_CRANK (A24)";
 		case GPIOF_13: return "72 - INJ_7";
 		case GPIOF_14: return "73 - INJ_8";
-		case EFI_ADC_8: return "74 - IN_AUX1";
 		case GPIOF_11: return "59 - IN_VSS";
-		case EFI_ADC_7: return "77 - IN_AUX4";
 		case GPIOF_12: return "25 - INJ_6";
-		case EFI_ADC_6: return "79 - IN_CAM";
 		default: return nullptr;
 	}
 	return nullptr;

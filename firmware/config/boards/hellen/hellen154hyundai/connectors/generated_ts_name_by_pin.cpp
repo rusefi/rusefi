@@ -5,9 +5,6 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case GPIOB_1: return "Crank - K17";
-		case EFI_ADC_5: return "K2 Ignition Key Voltage";
-		case EFI_ADC_4: return "TPS 1";
-		case EFI_ADC_3: return "PPS 1";
 		case GPIOD_9: return "VVT1";
 		case GPIOG_5: return "Aux P68";
 		case GPIOG_4: return "Fan Relay HI";
@@ -27,14 +24,9 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOG_12: return "K87 AC Relay";
 		case GPIOG_13: return "Fuel Pump K70";
 		case GPIOC_13: return "Coil 1";
-		case EFI_ADC_10: return "Map Sensor K31";
-		case EFI_ADC_12: return "CLT";
-		case EFI_ADC_13: return "IAT";
-		case EFI_ADC_14: return "PPS 2";
 		case GPIOF_10: return "A43 Clutch Input";
 		case GPIOD_10: return "INJ_4 k28";
 		case GPIOF_13: return "K48 BK1 Wastegate Solenoid";
-		case EFI_ADC_8: return "TPS 2";
 		case GPIOF_11: return "K40 VSS";
 		case GPIOD_12: return "MIL";
 		case GPIOD_11: return "INJ_3 k27";

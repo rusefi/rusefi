@@ -7,18 +7,12 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOE_0: return "Lowside 14";
 		case GPIOC_2: return "Analog Volt 3";
 		case GPIOA_4: return "Analog Volt 9";
-		case EFI_ADC_1: return "Analog Volt 6";
-		case EFI_ADC_0: return "Analog Volt 5";
 		case GPIOC_1: return "Analog Volt 2";
 		case GPIOA_3: return "Analog Volt 8";
 		case GPIOC_0: return "Analog Volt 1";
 		case GPIOA_2: return "Analog Volt 7";
 		case GPIOA_1: return "Analog Volt 6";
 		case GPIOA_0: return "Analog Volt 5";
-		case EFI_ADC_5: return "Analog Volt 10";
-		case EFI_ADC_4: return "Analog Volt 9";
-		case EFI_ADC_3: return "Analog Volt 8";
-		case EFI_ADC_2: return "Analog Volt 7";
 		case GPIOG_6: return "Ign 8";
 		case GPIOE_8: return "VR 2";
 		case GPIOC_9: return "Ign 3";
@@ -71,16 +65,6 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOE_12: return "Digital 3";
 		case GPIOE_15: return "Digital 6";
 		case GPIOE_14: return "Digital 4";
-		case EFI_ADC_10: return "Analog Volt 1";
-		case EFI_ADC_11: return "Analog Volt 2";
-		case EFI_ADC_12: return "Analog Volt 3";
-		case EFI_ADC_13: return "Analog Volt 4";
-		case EFI_ADC_14: return "Analog Temp 1";
-		case EFI_ADC_15: return "Analog Temp 2";
-		case EFI_ADC_9: return "Analog Temp 4";
-		case EFI_ADC_8: return "Analog Temp 3";
-		case EFI_ADC_7: return "Battery Sense";
-		case EFI_ADC_6: return "Analog Volt 11";
 		default: return nullptr;
 	}
 	return nullptr;

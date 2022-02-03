@@ -4,11 +4,6 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case EFI_ADC_1: return "Analog 3L";
-		case EFI_ADC_0: return "Analog 3O";
-		case EFI_ADC_4: return "Analog 3I";
-		case EFI_ADC_3: return "Analog 3J";
-		case EFI_ADC_2: return "Analog 3M";
 		case GPIOE_8: return "Coil 1L";
 		case GPIOD_9: return "Coil 1P";
 		case GPIOC_9: return "Coil 1F";
@@ -29,13 +24,6 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOE_12: return "Coil 1M";
 		case GPIOE_14: return "Coil 1G";
 		case GPIOC_13: return "Injector 2M";
-		case EFI_ADC_11: return "Analog 3P";
-		case EFI_ADC_12: return "Analog 3Q";
-		case EFI_ADC_13: return "Analog 3N";
-		case EFI_ADC_14: return "Analog VBatt";
-		case EFI_ADC_15: return "Analog 3E";
-		case EFI_ADC_7: return "Analog 3G";
-		case EFI_ADC_6: return "Analog 3H";
 		default: return nullptr;
 	}
 	return nullptr;
