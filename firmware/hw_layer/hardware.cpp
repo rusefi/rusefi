@@ -428,6 +428,11 @@ void initHardwareNoConfig() {
 #if EFI_FILE_LOGGING
 	initEarlyMmcCard();
 #endif // EFI_FILE_LOGGING
+
+#if HAL_USE_PAL && EFI_PROD_CODE
+	// this should be initialized before detectBoardType()
+	efiExtiInit();
+#endif // HAL_USE_PAL
 }
 
 void stopHardware() {
@@ -475,10 +480,6 @@ __attribute__((weak)) void boardInitHardware() { }
 __attribute__((weak)) void setPinConfigurationOverrides() { }
 
 void initHardware() {
-#if HAL_USE_PAL && EFI_PROD_CODE
-	efiExtiInit();
-#endif // HAL_USE_PAL
-
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
 	if (hasFirmwareError())
