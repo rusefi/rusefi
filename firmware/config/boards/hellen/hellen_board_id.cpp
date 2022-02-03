@@ -143,7 +143,8 @@ float HellenBoardIdFinderBase::findClosestResistor(float R, bool testOnlyMajorSe
 float HellenBoardIdFinderBase::calcEstimatedResistance(float Tc1_us, float C) {
 	constexpr float Vcc = 3.3f - 0.1f;	// STM32 digital I/O voltage (adjusted for minor voltage drop)
 	constexpr float V01 = Vcc * 0.5f;	// let it be 1.6 volts (closer to the datasheet value), the exact value doesn't matter
-	constexpr float log1V01Vcc = log(1.0f - V01 / Vcc);
+	// macos compiler doesn't like log() in constexpr
+	float log1V01Vcc = log(1.0f - V01 / Vcc);
 	// this is only an estimated value, we cannot use it for Board-ID detection!
 	float Rest = -Tc1_us / (C * log1V01Vcc);
 	return Rest;
