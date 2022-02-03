@@ -161,6 +161,7 @@ public class PinoutLogic {
                 getTsNameByIdFile.append("\t\tcase " + e.getKey() + ": return " + quote(e.getValue()) + ";\n");
             }
 
+            getTsNameByIdFile.append("\t\tdefault: return nullptr;\n");
             getTsNameByIdFile.append("\t}\n");
 
             getTsNameByIdFile.append("\treturn nullptr;\n}\n");
