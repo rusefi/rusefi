@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 07:17:32 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 03 13:05:42 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1731,7 +1731,6 @@ public class Fields {
 	public static final int primeBins_offset = 2280;
 	public static final int primeValues_offset = 3496;
 	public static final int primingDelay_offset = 1947;
-	public static final int primingSquirtDurationMs_offset = 184;
 	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";
 	public static final String PROTOCOL_CRANK1 = "t1";
@@ -1841,7 +1840,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 2015435497;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2315,7 +2313,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.02.02.all.2015435497";
+	public static final String TS_SIGNATURE = "rusEFI 2022.02.03.all.3250092409";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2357,6 +2355,7 @@ public class Fields {
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
+	public static final int unused184_offset = 184;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
 	public static final int unused_1484_bit_26_offset = 1272;
@@ -2582,7 +2581,7 @@ public class Fields {
 	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 176, FieldType.FLOAT);
 	public static final Field CRANKING_RPM = Field.create("CRANKING_RPM", 180, FieldType.INT16);
 	public static final Field CRANKING_ALIGNMENTFILL_AT_6 = Field.create("CRANKING_ALIGNMENTFILL_AT_6", 182, FieldType.INT8);
-	public static final Field PRIMINGSQUIRTDURATIONMS = Field.create("PRIMINGSQUIRTDURATIONMS", 184, FieldType.FLOAT);
+	public static final Field UNUSED184 = Field.create("UNUSED184", 184, FieldType.FLOAT);
 	public static final Field IGNITIONDWELLFORCRANKINGMS = Field.create("IGNITIONDWELLFORCRANKINGMS", 188, FieldType.FLOAT);
 	public static final Field ETBREVLIMITSTART = Field.create("ETBREVLIMITSTART", 192, FieldType.INT16);
 	public static final Field ETBREVLIMITRANGE = Field.create("ETBREVLIMITRANGE", 194, FieldType.INT16);
@@ -3895,7 +3894,7 @@ public class Fields {
 	CRANKING_BASEFUEL,
 	CRANKING_RPM,
 	CRANKING_ALIGNMENTFILL_AT_6,
-	PRIMINGSQUIRTDURATIONMS,
+	UNUSED184,
 	IGNITIONDWELLFORCRANKINGMS,
 	ETBREVLIMITSTART,
 	ETBREVLIMITRANGE,

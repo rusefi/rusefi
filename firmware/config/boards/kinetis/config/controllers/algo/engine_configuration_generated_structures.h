@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 03 13:05:35 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -931,10 +931,9 @@ struct engine_configuration_s {
 	 */
 	cranking_parameters_s cranking;
 	/**
-	*C
 	 * offset 184
 	 */
-	float primingSquirtDurationMs;
+	float unused184;
 	/**
 	 * Dwell duration while cranking
 	ms
@@ -4516,4 +4515,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 03 13:05:35 UTC 2022

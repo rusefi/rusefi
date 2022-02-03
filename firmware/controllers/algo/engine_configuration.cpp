@@ -673,8 +673,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->engineChartSize = 400;
 #endif
 
-	engineConfiguration->primingSquirtDurationMs = 5;
-
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 

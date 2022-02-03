@@ -1,8 +1,7 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/alphax-2chan/board_configuration.cpp \
-    $(BOARDS_DIR)/hellen/hellen_common.cpp
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/alphax-2chan/board_configuration.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/alphax-2chan
 
 # Set this if you want a default engine type other than normal alphax-2chan
@@ -17,11 +16,6 @@ endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-DDEFS += -DLED_ERROR_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_RUNING_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_WARNING_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_COMMUNICATION_BRAIN_PIN_MODE=INVERTED_OUTPUT
-
 DDEFS += -DTS_NO_SECONDARY
 
 # Add them all together
@@ -34,6 +28,5 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 # Enable serial pins on expansion header
 DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOD_6 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOD_5 -DTS_PRIMARY_PORT=UARTD2 -DSTM32_UART_USE_USART2=1
 
-# We are running on Hellen-One hardware!
-DDEFS += -DHW_HELLEN=1
+include $(BOARDS_DIR)/hellen/hellen-common.mk
 
