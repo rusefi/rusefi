@@ -36,6 +36,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case EFI_ADC_15: return "Analog 3E";
 		case EFI_ADC_7: return "Analog 3G";
 		case EFI_ADC_6: return "Analog 3H";
+		default: return nullptr;
 	}
 	return nullptr;
 }

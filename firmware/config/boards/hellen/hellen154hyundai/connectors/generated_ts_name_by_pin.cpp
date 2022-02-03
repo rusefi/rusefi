@@ -40,6 +40,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOD_11: return "INJ_3 k27";
 		case GPIOF_12: return "VVT2";
 		case GPIOD_15: return "Tacho";
+		default: return nullptr;
 	}
 	return nullptr;
 }

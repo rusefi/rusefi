@@ -33,6 +33,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case EFI_ADC_6: return "17 - CAM";
 		case GPIOD_11: return "31 - INJ_3";
 		case GPIOD_15: return "47 - Tach";
+		default: return nullptr;
 	}
 	return nullptr;
 }

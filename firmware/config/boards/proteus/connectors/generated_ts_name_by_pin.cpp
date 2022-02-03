@@ -81,6 +81,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case EFI_ADC_8: return "Analog Temp 3";
 		case EFI_ADC_7: return "Battery Sense";
 		case EFI_ADC_6: return "Analog Volt 11";
+		default: return nullptr;
 	}
 	return nullptr;
 }
