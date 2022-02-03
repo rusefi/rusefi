@@ -263,13 +263,6 @@ pins:
   - pin: D2
     function: Test Point P4
 
-  - pin: D3
-    id: GPIOI_0
-    class: outputs
-    ts_name: D3 - Starter Enable
-    function: low side relay control
-    type: ls
-
   - pin: D4
     function: NC
 
