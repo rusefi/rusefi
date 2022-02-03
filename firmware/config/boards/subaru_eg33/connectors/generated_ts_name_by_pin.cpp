@@ -59,6 +59,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case TLE6240_PIN_10: return "D06 - Absorber purge valve";
 		case TLE6240_PIN_9: return "D18 - Auxillary air valve";
 		case TLE6240_PIN_8: return "C15 - AUX1 OD out";
+		default: return nullptr;
 	}
 	return nullptr;
 }

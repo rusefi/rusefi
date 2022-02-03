@@ -37,6 +37,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOD_12: return "113 Fuel Pump Relay";
 		case GPIOD_11: return "22 - INJ_3";
 		case GPIOF_12: return "40 - INJ_6";
+		default: return nullptr;
 	}
 	return nullptr;
 }

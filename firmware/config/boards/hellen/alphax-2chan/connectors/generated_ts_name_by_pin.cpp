@@ -25,6 +25,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOC_13: return "A6 - Ignition A";
 		case GPIOE_14: return "C2 - Crank- (hall)";
 		case GPIOD_13: return "C8 - Idle";
+		default: return nullptr;
 	}
 	return nullptr;
 }

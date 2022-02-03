@@ -62,6 +62,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case EFI_ADC_7: return "77 - IN_AUX4";
 		case GPIOF_12: return "25 - INJ_6";
 		case EFI_ADC_6: return "79 - IN_CAM";
+		default: return nullptr;
 	}
 	return nullptr;
 }

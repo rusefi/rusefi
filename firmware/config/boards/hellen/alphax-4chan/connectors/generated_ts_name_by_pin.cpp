@@ -4,6 +4,7 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		default: return nullptr;
 	}
 	return nullptr;
 }

@@ -63,6 +63,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case EFI_ADC_7: return "4J - VTCS/AUX4 (A20)";
 		case GPIOF_12: return "2N - VTSC / INJ_6";
 		case EFI_ADC_6: return "3V - CAM (A19)";
+		default: return nullptr;
 	}
 	return nullptr;
 }

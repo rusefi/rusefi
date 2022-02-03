@@ -61,6 +61,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case EFI_ADC_6: return "26 - AN volt 2";
 		case GPIOB_10: return "AUX J13";
 		case GPIOB_11: return "AUX J12";
+		default: return nullptr;
 	}
 	return nullptr;
 }

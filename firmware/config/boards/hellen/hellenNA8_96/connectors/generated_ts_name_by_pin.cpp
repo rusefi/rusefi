@@ -53,6 +53,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case EFI_ADC_7: return "3S - EGR BOOST IN";
 		case EFI_ADC_6: return "3G - CAM";
 		case GPIOF_12: return "4D - BOOST OUT";
+		default: return nullptr;
 	}
 	return nullptr;
 }

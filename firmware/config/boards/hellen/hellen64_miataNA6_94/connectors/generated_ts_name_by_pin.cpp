@@ -37,6 +37,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOF_12: return "2J - Boost Control";
 		case GPIOD_11: return "3Y - Injector 3";
 		case GPIOD_14: return "3W - IDLE";
+		default: return nullptr;
 	}
 	return nullptr;
 }
