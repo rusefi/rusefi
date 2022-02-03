@@ -6,16 +6,20 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.*;
 
 public class PinoutLogic {
-    public static void processYamls(VariableRegistry registry, File[] yamlFiles, ReaderState state) throws IOException {
-        ArrayList<Map<String, Object>> listPins = new ArrayList<>();
-        for (File yamlFile : yamlFiles) {
-            processYamlFile(yamlFile, listPins);
-        }
-        registerPins(listPins, registry, state);
+    private static final String CONFIG_BOARDS = "config/boards/";
+    private static final String CONNECTORS = "/connectors";
+
+    private final File[] boardYamlFiles;
+    private final String boardName;
+
+    public PinoutLogic(String boardName, File[] boardYamlFiles) {
+        this.boardName = boardName;
+        this.boardYamlFiles = boardYamlFiles;
     }
 
     private static void registerPins(ArrayList<Map<String, Object>> listPins, VariableRegistry registry, ReaderState state) {
@@ -140,5 +144,32 @@ public class PinoutLogic {
         thisPin.put("ts_name", pinName);
         thisPin.put("class", pinClass);
         thisPinList.add(thisPin);
+    }
+
+    public static PinoutLogic create(String boardName) {
+        String dirPath = PinoutLogic.CONFIG_BOARDS + boardName + PinoutLogic.CONNECTORS;
+        File dirName = new File(dirPath);
+        FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
+        File[] boardYamlFiles = dirName.listFiles(filter);
+        if (boardYamlFiles == null)
+            return null;
+        return new PinoutLogic(boardName, boardYamlFiles);
+    }
+
+    public void processYamls(VariableRegistry registry, ReaderState state) throws IOException {
+        ArrayList<Map<String, Object>> listPins = new ArrayList<>();
+        for (File yamlFile : boardYamlFiles) {
+            processYamlFile(yamlFile, listPins);
+        }
+        registerPins(listPins, registry, state);
+    }
+
+    public List<String> getInputFiles() {
+        List<String> result = new ArrayList<>();
+        for (File yamlFile : boardYamlFiles) {
+            result.add(PinoutLogic.CONFIG_BOARDS + boardName + PinoutLogic.CONNECTORS +
+                    File.separator + yamlFile.getName());
+        }
+        return result;
     }
 }
