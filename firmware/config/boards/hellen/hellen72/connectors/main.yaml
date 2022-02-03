@@ -334,13 +334,15 @@ pins:
     function: Sensor +5V
     color: red W3, sliced for MAP
 
-# huh? EFI_ADC_5? same as VBATTT?
-#  - pin: 4M
+# EFI_ADC_5 same as VBATTT
+# channel 5 on ADC1/2 is VBATT, and channel 5 on ADC3 is knock
+# knock configuration is hard-coded at the moment, we only use this entry for interactive pinout
+  - pin: 4M
 #    id: EFI_ADC_5
 #    class: analog_inputs
 #    ts_name: 4M - KNOCK (A6)
-#    function: Knock sens. in
-#    color: white R5
+    function: Knock sens. in
+    color: white R5
 
   - pin: 4N
     id: EFI_ADC_13
