@@ -246,42 +246,6 @@ static void testTriggerDecoder3(const char *msg, engine_type_e type, int synchPo
 	assertEqualsM2("actual gap ratio", expectedGap, actualSynchGap, 0.001);
 }
 
-TEST(misc, testStartupFuelPumping) {
-	EngineTestHelper eth(FORD_INLINE_6_1995);
-
-	StartupFuelPumping sf;
-
-	Sensor::setMockValue(SensorType::Rpm, 0);
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 60);
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#1";
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pumpsCounter#2";
-
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#3";
-
-	Sensor::setMockValue(SensorType::Rpm, 10);
-	sf.update();
-	ASSERT_EQ( 0,  sf.pumpsCounter) << "pc#4";
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
-	Sensor::setMockValue(SensorType::Rpm,  0);
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#5";
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
-	sf.update();
-	ASSERT_EQ( 1,  sf.pumpsCounter) << "pc#6";
-
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 70);
-	sf.update();
-	ASSERT_EQ( 2,  sf.pumpsCounter) << "pc#7";
-}
-
 static void assertREquals(void *expected, void *actual) {
 	ASSERT_EQ((float)(uint64_t)expected, (float)(uint64_t)actual);
 }

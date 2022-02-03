@@ -214,41 +214,6 @@ int MockAdcState::getMockAdcValue(int hwChannel) const {
 	return fakeAdcValues[hwChannel];
 }
 
-StartupFuelPumping::StartupFuelPumping() {
-	isTpsAbove50 = false;
-	pumpsCounter = 0;
-}
-
-void StartupFuelPumping::setPumpsCounter(int newValue) {
-	if (pumpsCounter != newValue) {
-		pumpsCounter = newValue;
-
-		if (pumpsCounter == PUMPS_TO_PRIME) {
-			efiPrintf("let's squirt prime pulse %.2f", pumpsCounter);
-			pumpsCounter = 0;
-		} else {
-			efiPrintf("setPumpsCounter %d", pumpsCounter);
-		}
-	}
-}
-
-void StartupFuelPumping::update() {
-	if (Sensor::getOrZero(SensorType::Rpm) == 0) {
-		bool isTpsAbove50 = Sensor::getOrZero(SensorType::DriverThrottleIntent) >= 50;
-
-		if (this->isTpsAbove50 != isTpsAbove50) {
-			setPumpsCounter(pumpsCounter + 1);
-		}
-
-	} else {
-		/**
-		 * Engine is not stopped - not priming pumping mode
-		 */
-		setPumpsCounter(0);
-		isTpsAbove50 = false;
-	}
-}
-
 #if EFI_SIMULATOR
 #define VCS_VERSION "123"
 #endif
