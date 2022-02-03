@@ -25,6 +25,9 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
+### Added
+- Use board-specific output and digital input pin names in error messages #3886
+
 ### Fixed
  - SD card logging with SDIO hardware #3873 
 
