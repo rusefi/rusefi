@@ -220,13 +220,11 @@ public class GaugesPanel {
     }
 
     private Component createPauseButton() {
-        final JButton pauseButton = UiUtils.createPauseButton();
-        pauseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                IS_PAUSED = !IS_PAUSED;
-                UiUtils.setPauseButtonText(pauseButton, IS_PAUSED);
-            }
+        String suffix = " Gauges";
+        final JButton pauseButton = UiUtils.createPauseButton(suffix);
+        pauseButton.addActionListener(e -> {
+            IS_PAUSED = !IS_PAUSED;
+            UiUtils.setPauseButtonText(pauseButton, IS_PAUSED, suffix);
         });
         return pauseButton;
     }

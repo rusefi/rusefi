@@ -15,7 +15,6 @@
 #include "pch.h"
 
 #include "custom_engine.h"
-#include "fsio_impl.h"
 #include "mazda_miata_1_6.h"
 #include "mazda_miata_base_maps.h"
 #include "mre_meta.h"
@@ -278,12 +277,6 @@ void setMiataNA6_MAP_Frankenso() {
 	engineConfiguration->vbattDividerCoeff = 9.75;// ((float) (8.2 + 33)) / 8.2 * 2;
 
 	engineConfiguration->isSdCardEnabled = true;
-
-//	/**
-//	 * oil pressure line
-//	 * adc4/pa4/W47
-//	 */
-//	engineConfiguration->fsioAdc[0] = EFI_ADC_NONE;
 
 	engineConfiguration->injectionPins[0] = GPIOD_3; // #1&3 pin 3U
 	engineConfiguration->injectionPins[1] = GPIOE_2; // #2&4 pin 3V

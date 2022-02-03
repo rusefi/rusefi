@@ -18,7 +18,6 @@
 
 #include "mazda_miata_vvt.h"
 #include "custom_engine.h"
-#include "fsio_impl.h"
 
 // todo: why would this not work?
 //extern const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT];

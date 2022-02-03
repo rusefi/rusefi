@@ -50,8 +50,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->etb_use_two_wires;
 	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
 		return engineConfiguration->isDoubleSolenoidIdle;
-	if (strEqualCaseInsensitive(name, "showSdCardWarning"))
-		return engineConfiguration->showSdCardWarning;
 	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
 		return engineConfiguration->cj125isUrDivided;
 	if (strEqualCaseInsensitive(name, "useCicPidForIdle"))
@@ -96,8 +94,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->cranking.baseFuel;
 	if (strEqualCaseInsensitive(name, "cranking.rpm"))
 		return engineConfiguration->cranking.rpm;
-	if (strEqualCaseInsensitive(name, "primingSquirtDurationMs"))
-		return engineConfiguration->primingSquirtDurationMs;
 	if (strEqualCaseInsensitive(name, "ignitionDwellForCrankingMs"))
 		return engineConfiguration->ignitionDwellForCrankingMs;
 	if (strEqualCaseInsensitive(name, "etbRevLimitStart"))
@@ -1046,11 +1042,6 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->isDoubleSolenoidIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "showSdCardWarning"))
-	{
-		engineConfiguration->showSdCardWarning = (int)value;
-		return;
-	}
 	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
 	{
 		engineConfiguration->cj125isUrDivided = (int)value;
@@ -1159,11 +1150,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "cranking.rpm"))
 	{
 		engineConfiguration->cranking.rpm = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "primingSquirtDurationMs"))
-	{
-		engineConfiguration->primingSquirtDurationMs = value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "ignitionDwellForCrankingMs"))

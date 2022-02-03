@@ -498,6 +498,14 @@ enable2ndByteCanID = false
       yBins       = crankingFuelCoef
       gauge       = CLTGauge
 
+	curve = crankingCltCurveE100, "Cranking Coolant Temperature Multiplier (Flex Fuel E100)"
+      columnLabel = "Coolant", "Multiplier"
+      xAxis       =  -40, 120, 9
+      yAxis       =  0,  3, 10
+      xBins       = crankingFuelBins, coolant
+      yBins       = crankingFuelCoefE100
+      gauge       = CLTGauge
+
 	curve = etbTpsBiasCurve, "Electronic TB Bias Curve"
       columnLabel = "TPS", "duty bias"
       xAxis       =  0, 50, 11
@@ -1266,6 +1274,7 @@ gaugeCategory = DynoView
 	; minor info	
     indicator = { isFanOn },   "fan off",     "fan on",     white, black, green,   black
 	indicator = { isFan2On }, "fan 2 off",   "fan 2 on",   white, black, green,   black
+	indicator = { isMainRelayOn }, "main relay off",   "main relay on",   white, black, green,   black
     indicator = { isCylinderCleanupActivated}, "no cyl cleanup",   "cyl cleanup",   white, black, yellow,   black
     indicator = { isFuelPumpOn}, "pump off",   "pump on",   white, black, green,   black
     indicator = { clutchUpState }, "Clutch Up",   "clutch Up",   white, black, red,   black
@@ -1427,7 +1436,8 @@ menuDialog = main
 		subMenu = std_separator
 
 		subMenu = crankingCltCurve,			"Fuel CLT multiplier"
-		subMenu = crankingDurationCurve,	"Fuel duration multiplier"	
+		subMenu = crankingCltCurveE100,		"Fuel CLT multiplier (Flex Fuel E100)", 0, { flexSensorPin != @@ADC_CHANNEL_NONE@@ }
+		subMenu = crankingDurationCurve,	"Fuel duration multiplier"
 		subMenu = crankingTpsCurve,			"Fuel TPS multiplier"
 		subMenu = std_separator
 
@@ -1572,9 +1582,10 @@ menuDialog = main
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
+		subMenu = vrThreshold,				"VR Sensor Threshold"
+		subMenu = fancyHardwareDialog,      "Fancy Hardware"
 		subMenu = parkingLot,				"Experimental/Broken"
 		subMenu = rotaryDialog, 			"Rotary"
-		subMenu = vrThreshold,				"VR Sensor Threshold"
 		subMenu = std_separator
 		
 		subMenu = hipFunction,				"HIP9011 settings (knock sensor) (alpha version)" @@if_ts_show_hip9011
@@ -2101,7 +2112,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Offset cyl 8",                       timing_offset_cylinder8, {cylindersCount > 7}
 		field = "Offset cyl 9",                       timing_offset_cylinder9, {cylindersCount > 8}
 		field = "Offset cyl 10",                       timing_offset_cylinder10, {cylindersCount > 9}
-		field = "Offset cyl 11",                       timing_offset_cylinder11, {cylindersCount > 10} 
+		field = "Offset cyl 11",                       timing_offset_cylinder11, {cylindersCount > 10}
 		field = "Offset cyl 12",                       timing_offset_cylinder12, {cylindersCount > 11}
 
 	dialog = multisparkDwellParams, "Delay & Dwell"
@@ -3149,10 +3160,11 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Serial Baud Rate",						auxSerialSpeed @@if_ts_show_auxserial_pins
 	
 	dialog = sdCard, "SD Card Logger"
+		field = "#rusEFI logs to SD when powered without USB connected"
+		field = "#rusEFI connects SD to your PC when powered by USB"
 		field = "Enable SD Card",						isSdCardEnabled
-		field = "showSdCardWarning",					showSdCardWarning
-		field = "CS Pin",								sdCardCsPin
-		field = "SPI",									sdCardSpiDevice
+		field = "CS Pin",								sdCardCsPin			@@if_ts_show_sd_pins
+		field = "SPI",									sdCardSpiDevice		@@if_ts_show_sd_pins
 		field = "Write Period",							sdCardPeriodMs
 	
 	dialog = gpsReceiver, "GPS Receiver" 
@@ -3698,10 +3710,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
     dialog = mapCamDialog, "Engine Phase by MAP sensor"
 		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
 
-	dialog = parkingLot, "Experimental/Broken"
+	dialog = fancyHardwareDialog, "Fancy Boards"
 	    field = "boardUseTachPullUp",                   boardUseTachPullUp
 	    field = "boardUseTempPullUp",                   boardUseTempPullUp
 	    field = "boardUseCrankPullUp",                  boardUseCrankPullUp
+
+	dialog = parkingLot, "Experimental/Broken"
 	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"
 		field = "tempBooleanForVerySpecialCases",       tempBooleanForVerySpecialCases

@@ -123,10 +123,9 @@ void setToyota_2jz_vics() {
 	strcpy(engineConfiguration->engineCode, "2JZ");
 	strcpy(engineConfiguration->vehicleName, "VVT example");
 
-
 	// todo: these magic values would be hardcoded once we find out proper magic values
-//	engineConfiguration->fsio_setting[14] = 175 - 45;
-//	engineConfiguration->fsio_setting[15] = 175 + 45;
+	//	engineConfiguration->scriptSetting[4] = 175 - 45;
+	//	engineConfiguration->scriptSetting[5] = 175 + 45;
 
 	engineConfiguration->vvtPins[0] = GPIOE_3; // VVT solenoid control
 

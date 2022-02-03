@@ -622,6 +622,7 @@
 #define crankingCycleCoef_offset 13956
 #define crankingFuelBins_offset 13924
 #define crankingFuelCoef_offset 13892
+#define crankingFuelCoefE100_offset 20996
 #define crankingIACposition_offset 1848
 #define crankingInjectionMode_offset 436
 #define crankingTimingAngle_offset 448
@@ -699,7 +700,7 @@
 #define debug_mode_e_DBG_VVT_2_PID 49
 #define debug_mode_e_DBG_VVT_3_PID 50
 #define debug_mode_e_DBG_VVT_4_PID 51
-#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 #define debug_mode_e_Force_4_bytes_size_debug_mode_e ENUM_32_BITS
 #define debug_mode_e_UNUSED23 23
 #define debugMapAveraging_offset 815
@@ -777,10 +778,10 @@
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_NOISE_CURVE_SIZE 8
 #define ENGINE_SNIFFER_UNIT_US 10
-#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "MRE_SECONDARY_CAN", "NISSAN_PRIMERA", "PROTEUS_HARLEY", "FORD_INLINE_6_1995", "GY6_139QMB", "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE", "HELLEN_NA8_96", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "UNUSED18", "UNUSED_19", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "PROTEUS_LUA_DEMO", "TEST_ENGINE", "TEST_ISSUE_898", "TEST_CRANK_ENGINE", "SACHS", "UNUSED30", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "UNUSED39", "FRANKENSO_BMW_M73_F", "FRANKENSO_MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "FRANKENSO_MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "UNUSED_50", "UNUSED_51", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "FRANKENSO_MAZDA_MIATA_NA8", "FRANKENSO_MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "UNUSED60", "UNUSED61", "VW_B6", "PROTEUS_BMW_M73", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG_4_CYL", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "HELLEN_121_NISSAN_8_CYL", "HELLEN_NB2_36", "HELLEN_121_NISSAN_ALMERA_N16", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "HELLEN_NB1_36", "HELLEN_154_HYUNDAI_COUPE_BK2", "ET_UNUSED96", "ET_UNUSED97", "ET_UNUSED98", "MINIMAL_PINS", "UNUSED100", "UNUSED101", "VAG_18_TURBO", "TEST_33816", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "PROTEUS_ANALOG_PWM_TEST", "TEST_ROTARY", "TEST_108", "TEST_109", "TEST_110"
+#define engine_type_e_auto_enum "DEFAULT_FRANKENSO", "MIATA_PROTEUS_TCU", "DODGE_NEON_1995", "FORD_ASPIRE_1996", "MRE_SECONDARY_CAN", "NISSAN_PRIMERA", "PROTEUS_HARLEY", "FORD_INLINE_6_1995", "GY6_139QMB", "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE", "HELLEN_NA8_96", "MRE_MIATA_NB2_MAP", "MRE_MIATA_NA6_VAF", "MRE_MIATA_NB2_ETB", "FORD_ESCORT_GT", "MRE_MIATA_NB2_MAF", "MITSU_4G93", "HONDA_ACCORD_CD_TWO_WIRES", "TEST_33816", "TEST_ROTARY", "MRE_MIATA_94_MAP", "MIATA_1996", "SUBARU_2003_WRX", "MRE_BODY_CONTROL", "BMW_M73_M", "PROTEUS_LUA_DEMO", "TEST_ENGINE", "TEST_ISSUE_898", "TEST_CRANK_ENGINE", "SACHS", "PROTEUS_ANALOG_PWM_TEST", "MRE_BOARD_NEW_TEST", "VW_ABA", "HELLEN72_ETB", "HELLEN_NA6", "CAMARO_4", "HELLEN_128_MERCEDES_4_CYL", "MRE_SUBARU_EJ18", "TOYOTA_JZS147", "UNUSED39", "FRANKENSO_BMW_M73_F", "FRANKENSO_MIATA_NA6_MAP", "PROTEUS_QC_TEST_BOARD", "HONDA_600", "TOYOTA_2JZ_GTE_VVTi", "TEST_ENGINE_VVT", "DODGE_NEON_2003_CRANK", "FRANKENSO_MAZDA_MIATA_2003", "UNUSED_48", "FRANKENSO_QA_ENGINE", "BMW_M73_MRE", "BMW_M73_MRE_SLAVE", "TEST_ISSUE_366_BOTH", "TEST_ISSUE_366_RISE", "MAZDA_MIATA_2003_NA_RAIL", "MAZDA_MIATA_2003_BOARD_TEST", "FRANKENSO_MAZDA_MIATA_NA8", "FRANKENSO_MIATA_NA6_VAF", "ETB_BENCH_ENGINE", "TLE8888_BENCH_ENGINE", "UNUSED60", "UNUSED61", "VW_B6", "PROTEUS_BMW_M73", "DODGE_RAM", "CITROEN_TU3JP", "MRE_MIATA_NA6_MAP", "PROTEUS_MIATA_NB2", "MRE_M111", "HELLEN_NB2", "SUBARUEG33_DEFAULTS", "HELLEN_121_VAG_4_CYL", "HELLEN_121_NISSAN_6_CYL", "HELLEN_55_BMW", "HELLEN_88_BMW", "HELLEN_134_BMW", "HELLEN_154_VAG", "HELLEN_121_VAG_5_CYL", "HELLEN_121_VAG_V6_CYL", "HELLEN_121_VAG_VR6_CYL", "HELLEN_NA94", "HELLEN_121_VAG_8_CYL", "HELLEN_154_HYUNDAI_COUPE_BK1", "HELLEN_NB1", "HELLEN_121_NISSAN_4_CYL", "HELLEN_121_NISSAN_8_CYL", "HELLEN_NB2_36", "HELLEN_121_NISSAN_ALMERA_N16", "HELLEN_128_MERCEDES_6_CYL", "HELLEN_128_MERCEDES_8_CYL", "PROTEUS_HONDA_ELEMENT_2003", "PROTEUS_HONDA_OBD2A", "PROTEUS_VAG_80_18T", "PROTEUS_N73", "HELLEN_NB1_36", "HELLEN_154_HYUNDAI_COUPE_BK2", "ET_UNUSED96", "ET_UNUSED97", "ET_UNUSED98", "MINIMAL_PINS", "TEST_100", "TEST_101", "TEST_102"
 #define engine_type_e_BMW_M73_M 24
-#define engine_type_e_BMW_M73_MRE 104
-#define engine_type_e_BMW_M73_MRE_SLAVE 105
+#define engine_type_e_BMW_M73_MRE 50
+#define engine_type_e_BMW_M73_MRE_SLAVE 51
 #define engine_type_e_CAMARO_4 35
 #define engine_type_e_CITROEN_TU3JP 65
 #define engine_type_e_DEFAULT_FRANKENSO 0
@@ -848,7 +849,7 @@
 #define engine_type_e_MRE_SECONDARY_CAN 4
 #define engine_type_e_MRE_SUBARU_EJ18 37
 #define engine_type_e_NISSAN_PRIMERA 5
-#define engine_type_e_PROTEUS_ANALOG_PWM_TEST 106
+#define engine_type_e_PROTEUS_ANALOG_PWM_TEST 30
 #define engine_type_e_PROTEUS_BMW_M73 63
 #define engine_type_e_PROTEUS_E65_6H_MAN_IN_THE_MIDDLE 9
 #define engine_type_e_PROTEUS_HARLEY 6
@@ -862,32 +863,24 @@
 #define engine_type_e_SACHS 29
 #define engine_type_e_SUBARU_2003_WRX 22
 #define engine_type_e_SUBARUEG33_DEFAULTS 70
-#define engine_type_e_TEST_108 108
-#define engine_type_e_TEST_109 109
-#define engine_type_e_TEST_110 110
-#define engine_type_e_TEST_33816 103
+#define engine_type_e_TEST_100 100
+#define engine_type_e_TEST_101 101
+#define engine_type_e_TEST_102 102
+#define engine_type_e_TEST_33816 18
 #define engine_type_e_TEST_CRANK_ENGINE 28
 #define engine_type_e_TEST_ENGINE 26
 #define engine_type_e_TEST_ENGINE_VVT 45
 #define engine_type_e_TEST_ISSUE_366_BOTH 52
 #define engine_type_e_TEST_ISSUE_366_RISE 53
 #define engine_type_e_TEST_ISSUE_898 27
-#define engine_type_e_TEST_ROTARY 107
+#define engine_type_e_TEST_ROTARY 19
 #define engine_type_e_TLE8888_BENCH_ENGINE 59
 #define engine_type_e_TOYOTA_2JZ_GTE_VVTi 44
 #define engine_type_e_TOYOTA_JZS147 38
-#define engine_type_e_UNUSED100 100
-#define engine_type_e_UNUSED101 101
-#define engine_type_e_UNUSED18 18
-#define engine_type_e_UNUSED30 30
 #define engine_type_e_UNUSED39 39
 #define engine_type_e_UNUSED60 60
 #define engine_type_e_UNUSED61 61
-#define engine_type_e_UNUSED_19 19
 #define engine_type_e_UNUSED_48 48
-#define engine_type_e_UNUSED_50 50
-#define engine_type_e_UNUSED_51 51
-#define engine_type_e_VAG_18_TURBO 102
 #define engine_type_e_VW_ABA 32
 #define engine_type_e_VW_B6 62
 #define engineChartSize_offset 1276
@@ -965,10 +958,6 @@
 #define fixedTiming_offset 1824
 #define FLASH_DATA_VERSION 10009
 #define flexSensorPin_offset 806
-#define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
-#define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
-#define FSIO_METHOD_FSIO_SETTING "fsio_setting"
-#define FSIO_METHOD_FSIO_TABLE "fsio_table"
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
@@ -1752,7 +1741,7 @@
 #define pedalToTpsRpmBins_offset 5484
 #define pedalToTpsTable_offset 5412
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 20996
+#define persistent_config_s_size 21012
 #define pid_s_size 20
 #define PidAutoTune_AutoTunerState_AUTOTUNER_OFF 0
 #define PidAutoTune_AutoTunerState_CONVERGED 16
@@ -1787,7 +1776,6 @@
 #define primeBins_offset 2280
 #define primeValues_offset 3496
 #define primingDelay_offset 1947
-#define primingSquirtDurationMs_offset 184
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_COIL1_SHORT_NAME "c1"
 #define PROTOCOL_CRANK1 "t1"
@@ -1903,8 +1891,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define showSdCardWarning_offset 164
-#define SIGNATURE_HASH 2500542127
+#define SIGNATURE_HASH 2685343992
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2102,7 +2089,7 @@
 #define TORQUE_CURVE_SIZE 8
 #define torqueRpmBins_offset 4602
 #define torqueValues_offset 4594
-#define TOTAL_CONFIG_SIZE 20996
+#define TOTAL_CONFIG_SIZE 21012
 #define tps1_1AdcChannel_offset 520
 #define tps1_2AdcChannel_offset 689
 #define tps1SecondaryMax_offset 830
@@ -2430,11 +2417,12 @@
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_sd_card true
+#define ts_show_sd_pins false
 #define ts_show_software_knock false
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.02.01.subaru_eg33_f7.2500542127"
+#define TS_SIGNATURE "rusEFI 2022.02.03.subaru_eg33_f7.2685343992"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2474,10 +2462,12 @@
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
+#define unused164b14_offset 164
 #define unused1696_offset 1696
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
+#define unused184_offset 184
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272

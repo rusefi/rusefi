@@ -72,49 +72,6 @@ public:
 	warningBuffer_t recentWarnings;
 };
 
-class FsioState {
-public:
-	FsioState();
-
-#if EFI_UNIT_TEST
-	float mockFan = 0;
-	float mockCrankingRpm = 0;
-	float mockTimeSinceBoot = 0;
-	int mockAcToggle = 0;
-#endif
-
-#if EFI_ENABLE_ENGINE_WARNING
-	/**
-	 * Shall we purposely miss on some cylinders in order to attract driver's attention to some problem
-	 * like getting too hot
-	 */
-	float isEngineWarning;
-#endif /* EFI_ENABLE_ENGINE_WARNING */
-
-#if EFI_ENABLE_CRITICAL_ENGINE_STOP
-	/**
-	 * Shall we stop engine due to some critical condition in order to save the engine
-	 */
-	float isCriticalEngineCondition;
-#endif /* EFI_ENABLE_CRITICAL_ENGINE_STOP */
-};
-
-/**
- * 6 crossing over 50% TPS means pressing and releasing three times
- * TODO: looks like this code is not finished / not used?
- */
-#define PUMPS_TO_PRIME 6
-
-class StartupFuelPumping {
-public:
-	StartupFuelPumping();
-	void update();
-	bool isTpsAbove50;
-	int pumpsCounter;
-private:
-	void setPumpsCounter(int newValue);
-};
-
 struct multispark_state
 {
 	efitick_t delay = 0;

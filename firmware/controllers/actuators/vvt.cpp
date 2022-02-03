@@ -10,8 +10,6 @@
 #include "local_version_holder.h"
 #include "vvt.h"
 
-#include "fsio_impl.h"
-
 #define NO_PIN_PERIOD 500
 
 #if defined(HAS_OS_ACCESS)

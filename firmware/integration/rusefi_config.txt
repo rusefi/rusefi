@@ -88,6 +88,7 @@ struct_no_prefix engine_configuration_s
 
 ! Back in the day we wanted enums to be 32 bit integers.
 ! as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
+! todo: Technical debt: ENUM_32_BITS #3874
 #define ENUM_16_BITS 60000
 #define ENUM_32_BITS 2000000000
 
@@ -226,11 +227,6 @@ struct_no_prefix engine_configuration_s
 #define SCRIPT_CURVE_8 8
 #define SCRIPT_CURVE_16 16
 
-#define FSIO_METHOD_FSIO_SETTING "fsio_setting"
-#define FSIO_METHOD_FSIO_TABLE "fsio_table"
-#define FSIO_METHOD_FSIO_ANALOG_INPUT "fsio_analog_input"
-#define FSIO_METHOD_FSIO_DIGITAL_INPUT "fsio_digital_input"
-
 #define TPS_TPS_ACCEL_TABLE 8
 #define ADC_CHANNEL_NONE 0
 
@@ -294,7 +290,7 @@ float baseFuel;+Base mass of the per-cylinder fuel injected during cranking. Thi
 int16_t rpm;+This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 3000, 0
 end_struct
 
-#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
+#define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"
 custom debug_mode_e 4 bits, U32, @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define VM_VVT_INACTIVE 0
@@ -456,7 +452,7 @@ bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider?
 bit cj125isLsu49
 bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle;+Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
-bit showSdCardWarning
+bit unused164b14
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
@@ -483,7 +479,7 @@ int16_t tpsErrorDetectionTooLow;+TPS error detection: what throttle % is unreali
 int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%", 1, 0, 100, 110, 0
 
 cranking_parameters_s cranking
-float primingSquirtDurationMs;;"*C", 1, 0, -40, 200, 1
+float unused184;;"",1,0,0,0,0
 	float ignitionDwellForCrankingMs;+Dwell duration while cranking;"ms", 1, 0, 0, 200, 1
 	uint16_t etbRevLimitStart;+Once engine speed passes this value, start reducing ETB angle.;"rpm", 1, 0, 0, 15000, 0
 	uint16_t etbRevLimitRange;+This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.;"rpm", 1, 0, 0, 2000, 0
@@ -1557,7 +1553,7 @@ float[CLT_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2
 float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C", 1, 0, -100, 250, 2
 float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
-	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0.1, 50, 2
+	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0, 50, 2
 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C", 1, 0, -80, 170, 2
 
 	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"ratio", 1, 0, 0, 5, 2
@@ -1650,6 +1646,8 @@ cyl_trim_s[12 iterate] ignTrims
 uint16_t[TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 400, 0
 uint16_t[TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
 cyl_trim_s[12 iterate] fuelTrims
+
+uint16_t[CRANKING_CURVE_SIZE] crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 end_struct
 
 #define MOCK_MAP_COMMAND "mock_map_voltage"
@@ -2000,6 +1998,7 @@ end_struct
 #define ts_show_can2 true
 #define ts_show_software_knock false
 #define ts_show_hardware_simulator true
+#define ts_show_sd_pins true
 
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true

@@ -25,7 +25,6 @@
 
 #include "os_access.h"
 #include "trigger_central.h"
-#include "fsio_core.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
@@ -505,9 +504,8 @@ void commonInitEngineController() {
 
 	initAccelEnrichment();
 
-#if EFI_FSIO
+	// TODO: rename
 	initFsioImpl();
-#endif /* EFI_FSIO */
 
 	initGpPwm();
 
