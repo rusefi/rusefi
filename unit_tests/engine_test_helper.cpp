@@ -114,9 +114,6 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	commonInitEngineController();
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine.engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0);
-
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents() method
 	engine.periodicSlowCallback();
