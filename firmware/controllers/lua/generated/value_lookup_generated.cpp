@@ -94,8 +94,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->cranking.baseFuel;
 	if (strEqualCaseInsensitive(name, "cranking.rpm"))
 		return engineConfiguration->cranking.rpm;
-	if (strEqualCaseInsensitive(name, "primingSquirtDurationMs"))
-		return engineConfiguration->primingSquirtDurationMs;
 	if (strEqualCaseInsensitive(name, "ignitionDwellForCrankingMs"))
 		return engineConfiguration->ignitionDwellForCrankingMs;
 	if (strEqualCaseInsensitive(name, "etbRevLimitStart"))
@@ -1152,11 +1150,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "cranking.rpm"))
 	{
 		engineConfiguration->cranking.rpm = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "primingSquirtDurationMs"))
-	{
-		engineConfiguration->primingSquirtDurationMs = value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "ignitionDwellForCrankingMs"))
