@@ -5,10 +5,6 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case GPIOB_1: return "13 - Crank";
-		case EFI_ADC_5: return "109 Ignition Key Voltage";
-		case EFI_ADC_4: return "50 - TPS 1";
-		case EFI_ADC_3: return "106 - PPS 1";
-		case EFI_ADC_2: return "Aux P68";
 		case GPIOD_9: return "21 - INJ_5";
 		case GPIOG_5: return "104 ETB Relay";
 		case GPIOB_8: return "79 - Coil 6";
@@ -24,16 +20,10 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOG_7: return "23 - INJ_1";
 		case GPIOG_14: return "111 Main Relay";
 		case GPIOC_13: return "62 - Coil 1";
-		case EFI_ADC_10: return "Aux P66";
-		case EFI_ADC_11: return "Aux P67";
-		case EFI_ADC_12: return "73 - CLT";
-		case EFI_ADC_13: return "34 - IAT";
-		case EFI_ADC_14: return "98 - PPS 2";
 		case GPIOF_10: return "102 - Power Steering Input";
 		case GPIOF_13: return "10 - VTC Left";
 		case GPIOD_10: return "41 - INJ_4";
 		case GPIOF_14: return "11 - VTC Right";
-		case EFI_ADC_8: return "69 - TPS 2";
 		case GPIOD_12: return "113 Fuel Pump Relay";
 		case GPIOD_11: return "22 - INJ_3";
 		case GPIOF_12: return "40 - INJ_6";

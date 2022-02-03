@@ -4,14 +4,9 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case EFI_ADC_1: return "2N - Temperature Sensor";
 		case GPIOC_1: return "2M - Pressure Sensor";
-		case EFI_ADC_0: return "3N - O2S";
 		case GPIOB_1: return "3E - CRANK";
 		case GPIOA_1: return "2N - Temperature Sensor";
-		case EFI_ADC_5: return "1B - Battery Sense";
-		case EFI_ADC_4: return "TPS Input";
-		case EFI_ADC_2: return "intMAP (A15)";
 		case GPIOD_9: return "3S - A/C Fan 94-95";
 		case GPIOE_5: return "1H - Ignition 2 & 3";
 		case GPIOF_3: return "2L - Flex Fuel";
@@ -24,12 +19,6 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOG_9: return "1E - Check Engine Light";
 		case GPIOG_8: return "3V - Injector 2";
 		case GPIOG_7: return "3U - Injector 1";
-		case EFI_ADC_10: return "3O - MAF";
-		case EFI_ADC_11: return "2M - Pressure Sensor";
-		case EFI_ADC_12: return "3Q - CLT";
-		case EFI_ADC_13: return "3P - IAT";
-		case EFI_ADC_14: return "1V - Clutch Switch";
-		case EFI_ADC_15: return "1Q AC Switch";
 		case GPIOD_10: return "3Z - Injector 4";
 		case GPIOH_15: return "1J - AC Relay";
 		case GPIOD_12: return "Radiator Fan";

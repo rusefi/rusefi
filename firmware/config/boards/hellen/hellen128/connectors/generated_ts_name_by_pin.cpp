@@ -4,17 +4,11 @@
 
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case EFI_ADC_1: return "P32_IN_O2S2";
 		case GPIOC_2: return "E29 - Coolant Temp";
 		case GPIOA_4: return "E31 - TPS1";
-		case EFI_ADC_0: return "P36_IN_O2S";
 		case GPIOA_3: return "C24 - PPS1";
 		case GPIOC_1: return "E23 - MAP";
 		case GPIOC_0: return "E47 - MAF";
-		case EFI_ADC_5: return "Battery Sense";
-		case EFI_ADC_4: return "E31 - TPS1";
-		case EFI_ADC_3: return "C24 - PPS1";
-		case EFI_ADC_2: return "P40_IN_MAP3";
 		case GPIOC_9: return "P33_PWM5";
 		case GPIOI_1: return "P19_OUT_LOW11";
 		case GPIOE_5: return "F16 - IGN 2";
@@ -41,20 +35,10 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOB_1: return "E37 - Crank Input";
 		case GPIOB_0: return "E34 - TPS2";
 		case GPIOD_9: return "E13 - INJ 4";
-		case EFI_ADC_10: return "E47 - MAF";
-		case EFI_ADC_11: return "E23 - MAP";
-		case EFI_ADC_12: return "E29 - Coolant Temp";
-		case EFI_ADC_13: return "E45 - IAT";
-		case EFI_ADC_14: return "C25 - PPS2";
-		case EFI_ADC_15: return "P41_IN_AUX3";
 		case GPIOF_10: return "C40 - start button";
 		case GPIOF_13: return "E25 - INJ 1";
-		case EFI_ADC_9: return "E37 - Crank Input";
 		case GPIOF_14: return "E26 - INJ 3";
-		case EFI_ADC_8: return "E34 - TPS2";
-		case EFI_ADC_7: return "P30_IN_AUX4";
 		case GPIOF_12: return "E14 - INJ 2";
-		case EFI_ADC_6: return "E40 - IN_CAM";
 		default: return nullptr;
 	}
 	return nullptr;
