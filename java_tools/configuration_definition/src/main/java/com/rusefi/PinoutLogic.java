@@ -16,6 +16,9 @@ public class PinoutLogic {
 
     private final File[] boardYamlFiles;
     private final String boardName;
+    private final ArrayList<PinState> globalList = new ArrayList<>();
+    private final Map</*id*/String, /*tsName*/String> tsNameById = new HashMap<>();
+
 
     public PinoutLogic(String boardName, File[] boardYamlFiles) {
         this.boardName = boardName;
@@ -48,7 +51,7 @@ public class PinoutLogic {
                     for (int ii = classList.size(); ii <= index; ii++) {
                         classList.add(null);
                     }
-                    classList.set(index, listPin.getPinName());
+                    classList.set(index, listPin.getPinTsName());
                     break;
                 }
             }
@@ -85,8 +88,7 @@ public class PinoutLogic {
     }
 
     @SuppressWarnings("unchecked")
-    private static void processYamlFile(File yamlFile,
-                                        ArrayList<PinState> listPins) throws IOException {
+    private void processYamlFile(File yamlFile) throws IOException {
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData = yaml.load(new FileReader(yamlFile));
         if (yamlData == null) {
@@ -101,11 +103,10 @@ public class PinoutLogic {
         SystemOut.println(data);
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
-            ArrayList<PinState> thisPinList = new ArrayList<>();
             Object pinId = pin.get("id");
             Object pinClass = pin.get("class");
-            String pinName = (String) pin.get("ts_name");
-            if (pinId == null || pinClass == null || pinName == null) {
+            String pinTsName = (String) pin.get("ts_name");
+            if (pinId == null || pinClass == null || pinTsName == null) {
                 continue;
             }
             if (pinId instanceof ArrayList) {
@@ -114,34 +115,27 @@ public class PinoutLogic {
                     throw new IllegalStateException("Expected multiple classes for " + pinIds);
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
-                    addPinToList(listPins, thisPinList, id, pinName, ((ArrayList<String>) pinClass).get(i));
+                    addPinToList(id, pinTsName, ((ArrayList<String>) pinClass).get(i));
                 }
             } else if (pinId instanceof String) {
                 String pinIdString = (String) pinId;
                 if (pinIdString.length() == 0) {
                     throw new IllegalStateException("Unexpected empty ID field");
                 }
-                addPinToList(listPins, thisPinList, pinIdString, pinName, (String) pinClass);
+                addPinToList(pinIdString, pinTsName, (String) pinClass);
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
-            listPins.addAll(thisPinList);
         }
     }
 
-    private static void addPinToList(ArrayList<PinState> listPins, ArrayList<PinState> thisPinList, String id, String pinName, String pinClass) {
-/*
- This doesn't work as expected because it's possible that a board has multiple connector pins connected to the same MCU pin.
- https://github.com/rusefi/rusefi/issues/2897
- https://github.com/rusefi/rusefi/issues/2925
-        for (int i = 0; i < listPins.size(); i++) {
-            if (id.equals(listPins.get(i).get("id"))) {
-                throw new IllegalStateException("ID used multiple times: " + id);
-            }
-        }
-*/
-        PinState thisPin = new PinState(id, pinName, pinClass);
-        thisPinList.add(thisPin);
+    private void addPinToList(String id, String pinTsName, String pinClass) {
+        String existingTsName = tsNameById.get(id);
+        if (existingTsName != null && !existingTsName.equals(pinTsName))
+            throw new IllegalStateException("ID used multiple times with different ts_name: " + id);
+        tsNameById.put(id, pinTsName);
+        PinState thisPin = new PinState(id, pinTsName, pinClass);
+        globalList.add(thisPin);
     }
 
     public static PinoutLogic create(String boardName) {
@@ -155,11 +149,10 @@ public class PinoutLogic {
     }
 
     public void processYamls(VariableRegistry registry, ReaderState state) throws IOException {
-        ArrayList<PinState> listPins = new ArrayList<>();
         for (File yamlFile : boardYamlFiles) {
-            processYamlFile(yamlFile, listPins);
+            processYamlFile(yamlFile);
         }
-        registerPins(listPins, registry, state);
+        registerPins(globalList, registry, state);
     }
 
     public List<String> getInputFiles() {
@@ -172,13 +165,16 @@ public class PinoutLogic {
     }
 
     private static class PinState {
+        /**
+         * ID is not unique
+         */
         private final String id;
-        private final String pinName;
+        private final String pinTsName;
         private final String pinClass;
 
         public PinState(String id, String pinName, String pinClass) {
             this.id = id;
-            this.pinName = pinName;
+            this.pinTsName = pinName;
             this.pinClass = pinClass;
         }
 
@@ -186,8 +182,8 @@ public class PinoutLogic {
             return id;
         }
 
-        public String getPinName() {
-            return pinName;
+        public String getPinTsName() {
+            return pinTsName;
         }
 
         public String getPinClass() {
