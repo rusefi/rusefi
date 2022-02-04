@@ -12,18 +12,7 @@
 
 #define MOCK_ADC_SIZE 26
 
-class MockAdcState {
-public:
-	MockAdcState();
-	bool hasMockAdc[MOCK_ADC_SIZE];
-	int fakeAdcValues[MOCK_ADC_SIZE];
-
-	void setMockVoltage(int hwChannel, float voltage);
-	int getMockAdcValue(int hwChannel) const;
-};
-
-class Accelerometer {
-public:
+struct Accelerometer {
 	float x = 0; // G value
 	float y = 0;
 	float z = 0;
@@ -31,10 +20,7 @@ public:
 	float roll = 0;
 };
 
-class SensorsState {
-public:
-	SensorsState();
-
+struct SensorsState {
 	Accelerometer accelerometer;
 };
 

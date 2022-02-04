@@ -33,11 +33,6 @@
  #define EFI_ENABLE_ASSERTS FALSE
 #endif /* EFI_ENABLE_ASSERTS */
 
-#if !defined(EFI_ENABLE_MOCK_ADC) || defined(__DOXYGEN__)
- #define EFI_ENABLE_MOCK_ADC FALSE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
-
 #define EFI_TEXT_LOGGING FALSE
 
 //#define EFI_UART_ECHO_TEST_MODE FALSE

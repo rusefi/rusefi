@@ -12,7 +12,7 @@
 #include "adc_math.h"
 
 int getAdcValue(const char *msg, int hwChannel) {
-	return engine->engineState.mockAdcState.getMockAdcValue(hwChannel);
+	return 0;
 }
 
 // voltage in MCU universe, from zero to VDD

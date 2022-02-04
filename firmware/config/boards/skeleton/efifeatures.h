@@ -90,11 +90,6 @@
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
 
-#if !defined(EFI_ENABLE_MOCK_ADC)
- #define EFI_ENABLE_MOCK_ADC TRUE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
-
 #define EFI_ICU_INPUTS TRUE
 
 #ifndef HAL_TRIGGER_USE_PAL
