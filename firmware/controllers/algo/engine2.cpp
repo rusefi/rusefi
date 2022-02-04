@@ -56,20 +56,6 @@ bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator) const {
 	return absI(now - timeOfPreviousWarning) < period;
 }
 
-MockAdcState::MockAdcState() {
-	memset(hasMockAdc, 0, sizeof(hasMockAdc));
-}
-
-#if EFI_ENABLE_MOCK_ADC
-void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
-	efiPrintf("fake voltage: channel %d value %.2f", hwChannel, voltage);
-
-	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
-	hasMockAdc[hwChannel] = true;
-}
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
 	m_consumedGrams += grams;
 
@@ -204,14 +190,6 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 		timeSinceLastTChargeK = curTime;
 	}
 #endif
-}
-
-SensorsState::SensorsState() {
-}
-
-int MockAdcState::getMockAdcValue(int hwChannel) const {
-	efiAssert(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds", -1);
-	return fakeAdcValues[hwChannel];
 }
 
 #if EFI_SIMULATOR
