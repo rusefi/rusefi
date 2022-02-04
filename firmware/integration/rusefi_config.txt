@@ -1650,9 +1650,6 @@ cyl_trim_s[12 iterate] fuelTrims
 uint16_t[CRANKING_CURVE_SIZE] crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 end_struct
 
-#define MOCK_MAP_COMMAND "mock_map_voltage"
-#define MOCK_AFR_COMMAND "mock_afr_voltage"
-#define MOCK_MAF_COMMAND "mock_maf_voltage"
 ! Pedal Position Sensor
 #define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
 #define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"

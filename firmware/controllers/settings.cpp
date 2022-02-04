@@ -1007,11 +1007,6 @@ struct command_f_s {
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
-#if EFI_ENABLE_MOCK_ADC
-		{MOCK_MAF_COMMAND, setMockMafVoltage},
-		{MOCK_AFR_COMMAND, setMockAfrVoltage},
-		{MOCK_MAP_COMMAND, setMockMapVoltage},
-#endif // EFI_ENABLE_MOCK_ADC
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},
