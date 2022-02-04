@@ -73,5 +73,34 @@ void setBoardDefaultConfiguration(void) {
 	
 	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
 	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
+	
 
+	// TLE9201 driver
+	// This chip has three control pins:
+	// DIR - sets direction of the motor
+	// PWM - pwm control (enable high, coast low)
+	// DIS - disables motor (enable low)
+
+	// Throttle #1
+	// PWM pin
+	engineConfiguration->etbIo[0].controlPin = GPIOB_8;
+	// DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = GPIOB_9;
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = GPIOB_7;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+
+	// Throttle #2
+	// PWM pin
+	engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
+	// DIR pin
+	engineConfiguration->etbIo[1].directionPin1 = GPIO_UNASSIGNED;
+	// Disable pin
+	engineConfiguration->etbIo[1].disablePin = GPIO_UNASSIGNED;
+	// Unused
+	engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
+
+	// we only have pwm/dir, no dira/dirb
+	engineConfiguration->etb_use_two_wires = false;
 }
