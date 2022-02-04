@@ -410,7 +410,6 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.sendCommand("set_fuel_map 2000 4 15.66");
         ecu.sendCommand("set_fuel_map 2200 4.2 15.66");
         ecu.sendCommand("set_fuel_map 2000 4.2 15.66");
-
         sendComplexCommand("set global_trigger_offset_angle 175");
         chart = nextChart();
         assertWaveNotNull(msg + " fuel", chart, EngineChart.INJECTOR_1);
