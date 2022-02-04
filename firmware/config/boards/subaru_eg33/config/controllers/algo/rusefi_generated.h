@@ -1681,9 +1681,6 @@
 #define minOilPressureAfterStart_offset 458
 #define MLQ_FIELD_HEADER_SIZE 55
 #define MLQ_HEADER_SIZE 22
-#define MOCK_AFR_COMMAND "mock_afr_voltage"
-#define MOCK_MAF_COMMAND "mock_maf_voltage"
-#define MOCK_MAP_COMMAND "mock_map_voltage"
 #define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
 #define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"
 #define multisparkDwell_offset 1546
@@ -1891,7 +1888,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2685343992
+#define SIGNATURE_HASH 660963715
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2422,7 +2419,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.02.03.subaru_eg33_f7.2685343992"
+#define TS_SIGNATURE "rusEFI 2022.02.04.subaru_eg33_f7.660963715"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
