@@ -30,7 +30,7 @@ Important note - we now use submodules:
  * [Simulator](/simulator) win32 or posix version of firmware allows to explore without any hardware 
  * [Unit Tests](/unit_tests) Unit tests of firmware pieces
  * [Misc tools](/java_tools) Misc development utilities
- * [misc/Jenkins](/misc/jenkins) Jenkins Continues Integration scripts
+ * [misc/Jenkins](/misc/jenkins) Jenkins Continuous Integration scripts
  * [Software Development process](misc/SoftwareDevelopmentProcess.md)
  * [Work in progress status](work_in_progress.md)
 
