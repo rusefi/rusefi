@@ -6,3 +6,4 @@ DDEFS += -DSTM32F407xx
 
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
+DDEFS += -DHAL_USE_EEPROM=TRUE
