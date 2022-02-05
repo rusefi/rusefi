@@ -6,4 +6,7 @@ DDEFS += -DSTM32F407xx
 
 # We are running on Frankenso hardware!
 DDEFS += -DHW_FRANKENSO=1
+
+ifndef IS_RE_BOOTLOADER
 DDEFS += -DHAL_USE_EEPROM=TRUE
+endif
