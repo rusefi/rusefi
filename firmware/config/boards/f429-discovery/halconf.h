@@ -17,6 +17,5 @@
 
 #include "../../../hw_layer/ports/stm32/stm32f4/cfg/halconf.h"
 
-#include "halconf_community.h"
 
 #endif /* _HALCONF_F429_ */
