@@ -280,7 +280,7 @@ public class StartupFrame {
 
     /**
      * Here we listen to keystrokes while console start-up frame is being displayed and if magic "test" word is typed
-     * we launch a functional test on real hardware, same as Jenkins runs within continues integration
+     * we launch a functional test on real hardware, same as Jenkins runs within continuous integration
      */
     @NotNull
     private KeyListener functionalTestEasterEgg() {
