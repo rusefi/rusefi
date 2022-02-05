@@ -184,3 +184,8 @@ void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardCsPin = H_SPI2_CS;
 	engineConfiguration->is_enabled_spi_2 = true;
 }
+
+void boardPrepareForStop() {
+	// Wake on the CAN RX pin
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
+}
