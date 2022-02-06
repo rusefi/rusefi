@@ -302,6 +302,9 @@ void setIssue898() {
 }
 #endif /* EFI_UNIT_TEST */
 
+void setEepromTestConfiguration() {
+}
+
 // F407 discovery
 void setL9779TestConfiguration() {
 	// enable_spi 3

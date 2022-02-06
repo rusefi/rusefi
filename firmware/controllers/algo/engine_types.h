@@ -160,7 +160,7 @@ typedef enum {
 
 	L9779_BENCH_ENGINE = 60,
 
-	UNUSED61 = 61,
+	EEPROM_BENCH_ENGINE = 61,
 
 	VW_B6 = 62,
 
