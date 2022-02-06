@@ -137,11 +137,25 @@
 /*
  * I2C driver system settings.
  */
+#ifndef STM32_I2C_USE_I2C1
 #define STM32_I2C_USE_I2C1                  FALSE
-/* PB10/PB11 like some Hellen likes */
+#endif
+
+#ifndef STM32_I2C_USE_I2C2
+/* PB10/PB11 like some Hellen likes AF4 */
 #define STM32_I2C_USE_I2C2                  TRUE
+#endif
+
+#ifndef STM32_I2C_USE_I2C3
+// PC9 I2C3_SDA AF4
+// PA8 I2C3_SCL AF4
 #define STM32_I2C_USE_I2C3                  FALSE
+#endif
+
+#ifndef STM32_I2C_USE_I2C4
 #define STM32_I2C_USE_I2C4                  FALSE
+#endif
+
 #define STM32_I2C_BUSY_TIMEOUT              50
 #define STM32_I2C_I2C1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 0)
 #define STM32_I2C_I2C1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 6)
