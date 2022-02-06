@@ -201,9 +201,8 @@ public:
 	GearControllerBase *gearController;
 #if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;
-#endif // EFI_LAUNCH_CONTROL
-
 	SoftSparkLimiter softSparkLimiter;
+#endif // EFI_LAUNCH_CONTROL
 
 #if EFI_BOOST_CONTROL
 	BoostController boostController;
