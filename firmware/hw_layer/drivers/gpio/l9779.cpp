@@ -78,6 +78,8 @@ typedef enum {
 #define MSG_GET_PARITY(rx)			(((rx) >>  0) & 0x01)
 /* D8:D1 - DATA IN */
 #define MSG_GET_DATA(rx)			(((rx) >>  1) & 0xff)
+/* D8:D1 or 5 bits of subaddr in case of read access */
+#define MSG_GET_SUBADDR(rx)			(MSG_GET_DATA(rx) & 0x1f)
 /* D 9 - W/R flag, 1 if we read */
 #define MSG_GET_WR(rx)				(((rx) >>  9) & 0x01)
 /* D14:D10 - Addr of DATA IN */
@@ -148,8 +150,10 @@ struct L9779 : public GpioChip {
 
 	l9779_drv_state				drv_state;
 
-	/* last accessed register, for validation on next SPI access */
-	uint8_t						last_reg;
+	/* last accesed register */
+	uint8_t						last_addr;
+	/* last requested subaddr in case of read */
+	uint8_t						last_subaddr;
 
 	/* chip needs reintialization due to some critical issue */
 	bool						need_init;
@@ -210,17 +214,28 @@ int L9779::spi_validate(uint16_t rx)
 		return -1;
 	}
 
-	uint8_t reg = MSG_GET_DATA(rx);
+	/* check that correct register is returned */
+	if (last_subaddr != REG_INVALID) {
+		if (!MSG_GET_WR(rx)) {
+			return -2;
+		}
+		if (MSG_GET_SUBADDR(rx) != last_subaddr) {
+			/* unexpected SPI answer */
+			spi_err++;
 
-	/* TODO: also check WR bit */
-	if ((last_reg != REG_INVALID) && (last_reg != reg)) {
-		/* unexpected SPI answer */
-		spi_err++;
+			/* should ve restart? */
+			//need_init = true;
 
-		/* should ve restart? */
-		//need_init = true;
+			return -1;
+		}
+	}
 
-		return -1;
+	/* LOCK_UNLOCK_SW_RST */
+	if (last_addr == 0x0c) {
+		/* BIT(0) = LOCK flag */
+	/* START_REACT */
+	} else if (last_addr == 0x0d) {
+		/* BIT(0) = OUT_DIS */
 	}
 
 	return 0;
@@ -259,11 +274,15 @@ int L9779::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	if (rx_ptr)
 		*rx_ptr = rx;
 
-	/* validate reply and save last accessed register */
+	/* validate reply */
 	ret = spi_validate(rx);
-	last_reg = MSG_GET_ADDR(tx);
+	/* save last accessed register */
+	last_addr = MSG_GET_ADDR(this->tx);
+	if (last_addr == MSG_READ_ADDR)
+		last_subaddr = MSG_GET_SUBADDR(this->tx);
+	else
+		last_subaddr = REG_INVALID;
 
-	/* no errors for now */
 	return ret;
 }
 /**
@@ -274,14 +293,6 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	int ret;
 	uint16_t rxdata;
 	SPIDriver *spi = cfg->spi_bus;
-
-	/**
-	 * 15.1 SPI Protocol
-	 *
-	 * after a read or write command: the address and content of the selected register
-	 * is transmitted with the next SPI transmission (for not existing addresses or
-	 * wrong access mode the data is always 0)
-	 */
 
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
@@ -304,9 +315,14 @@ int L9779::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 		this->rx = rxdata;
 		this->spi_cnt++;
 
-		/* validate reply and save last accessed register */
+		/* validate reply  */
 		ret = spi_validate(rxdata);
-		last_reg = getRegisterFromResponse(tx[i]);
+		/* save last accessed register */
+		last_addr = MSG_GET_ADDR(this->tx);
+		if (last_addr == MSG_READ_ADDR)
+			last_subaddr = MSG_GET_SUBADDR(this->tx);
+		else
+			last_subaddr = REG_INVALID;
 
 		if (ret < 0)
 			break;
@@ -431,7 +447,8 @@ int L9779::chip_reset() {
 	 */
 	chThdSleepMilliseconds(3);
 
-	last_reg = REG_INVALID;
+	last_addr = REG_INVALID;
+	last_subaddr = REG_INVALID;
 
 	return ret;
 }
