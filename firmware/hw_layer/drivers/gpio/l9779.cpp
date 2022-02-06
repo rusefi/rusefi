@@ -73,17 +73,21 @@ typedef enum {
 #define MSG_W(a, d)					(static_cast<uint16_t>((MSG_SET_ADDR(a) | MSG_SET_DATA(d))))
 #define MSG_R(a)					(static_cast<uint16_t>((MSG_SET_ADDR(MSG_READ_ADDR) | MSG_SET_SUBADDR(d))))
 
-/* In frame */
+/* Both DIN and DO */
 /* D0 - parity */
-#define MSG_GET_PARITY(rx)			(((rx) >>  0) & 0x01)
+#define MSG_GET_PARITY(x)			(((x) >>  0) & 0x01)
+/* D14:D10 - Addr of DATA IN or DATA OUT */
+#define MSG_GET_ADDR(x)				(((x) >> 10) & 0x1f)
 /* D8:D1 - DATA IN */
-#define MSG_GET_DATA(rx)			(((rx) >>  1) & 0xff)
+#define MSG_GET_DATA(x)				(((x) >>  1) & 0xff)
+
+/* DIN / to chip */
 /* D8:D1 or 5 bits of subaddr in case of read access */
-#define MSG_GET_SUBADDR(rx)			(MSG_GET_DATA(rx) & 0x1f)
+#define MSG_GET_SUBADDR(tx)			(MSG_GET_DATA(tx) & 0x1f)
+
+/* DOUT / from chip */
 /* D 9 - W/R flag, 1 if we read */
 #define MSG_GET_WR(rx)				(((rx) >>  9) & 0x01)
-/* D14:D10 - Addr of DATA IN */
-#define MSG_GET_ADDR(rx)			(((rx) >> 10) & 0x1f)
 /* D15 - SPI error flag */
 #define MSG_GET_SPIERROR(rx)		(((rx) >> 15) & 0x01)
 
@@ -216,10 +220,12 @@ int L9779::spi_validate(uint16_t rx)
 
 	/* check that correct register is returned */
 	if (last_subaddr != REG_INVALID) {
+		/* MISO DO returns 1 at D9 bit and 5bit sub address in
+		 * ADD[4:0] field */
 		if (!MSG_GET_WR(rx)) {
 			return -2;
 		}
-		if (MSG_GET_SUBADDR(rx) != last_subaddr) {
+		if (MSG_GET_ADDR(rx) != last_subaddr) {
 			/* unexpected SPI answer */
 			spi_err++;
 
