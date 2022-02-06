@@ -353,7 +353,7 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case UNUSED39:
   return "UNUSED39";
-case UNUSED61:
+case EEPROM_BENCH_ENGINE:
   return "UNUSED61";
 case UNUSED_48:
   return "UNUSED_48";
