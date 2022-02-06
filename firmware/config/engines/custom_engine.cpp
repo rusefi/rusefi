@@ -302,6 +302,16 @@ void setIssue898() {
 }
 #endif /* EFI_UNIT_TEST */
 
+// F407 discovery
+void setL9779TestConfiguration() {
+	// enable_spi 3
+	engineConfiguration->is_enabled_spi_3 = true;
+	// Wire up spi3
+	engineConfiguration->spi3mosiPin = GPIOB_5;
+	engineConfiguration->spi3misoPin = GPIOB_4;
+	engineConfiguration->spi3sckPin = GPIOB_3;
+}
+
 // TLE8888_BENCH_ENGINE
 // todo: remove this? this was used to play with "secret" red boards prior to MRE reality
 // set engine_type 59
