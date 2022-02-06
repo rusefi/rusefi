@@ -158,7 +158,7 @@ struct L9779 : public GpioChip {
 	//int						por_cnt;
 	//int						wdr_cnt;
 	//int						comfe_cnt;
-	//int						init_cnt;
+	int							init_cnt;
 	//int						init_req_cnt;
 	int							spi_cnt;
 	int							spi_err_parity;		/* parity errors in rx data */
@@ -637,6 +637,28 @@ err_gpios:
 			gpio_pin_markUnused(cfg->direct_gpio[i].port, cfg->direct_gpio[i].pad);
 		}
 	}
+
+	return ret;
+}
+
+int L9779::chip_init()
+{
+	int ret;
+
+	/* statistic */
+	init_cnt++;
+
+	/* Unlock, while unlocked by default. */
+	ret = spi_rw(CMD_CLOCK_UNLOCK_SW_RST(0), NULL);
+	if (ret)
+		return ret;
+
+	/* Enable power stages */
+	ret = spi_rw(CMD_START_REACT(BIT(1)), NULL);
+	if (ret)
+		return ret;
+
+	/* TODO: add spi communication test: read IDENT_REG */
 
 	return ret;
 }
