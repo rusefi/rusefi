@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Feb 06 17:54:41 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Feb 06 19:02:12 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -171,6 +171,8 @@ case DODGE_NEON_2003_CRANK:
   return "DODGE_NEON_2003_CRANK";
 case DODGE_RAM:
   return "DODGE_RAM";
+case EEPROM_BENCH_ENGINE:
+  return "EEPROM_BENCH_ENGINE";
 case ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
 case ET_UNUSED96:
@@ -353,8 +355,6 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case UNUSED39:
   return "UNUSED39";
-case EEPROM_BENCH_ENGINE:
-  return "UNUSED61";
 case UNUSED_48:
   return "UNUSED_48";
 case VW_ABA:
