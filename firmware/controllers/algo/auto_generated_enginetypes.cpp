@@ -351,7 +351,7 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case UNUSED39:
   return "UNUSED39";
-case UNUSED60:
+case L9779_BENCH_ENGINE:
   return "UNUSED60";
 case UNUSED61:
   return "UNUSED61";

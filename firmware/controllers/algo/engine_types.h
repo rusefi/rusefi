@@ -158,7 +158,7 @@ typedef enum {
 
 	TLE8888_BENCH_ENGINE = 59,
 
-	UNUSED60 = 60,
+	L9779_BENCH_ENGINE = 60,
 
 	UNUSED61 = 61,
 
