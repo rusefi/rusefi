@@ -845,7 +845,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case UNUSED60:
+	case L9779_BENCH_ENGINE:
 	case UNUSED61:
 	case HELLEN72_ETB:
 	case MINIMAL_PINS:
