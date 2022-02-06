@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Feb 01 22:07:18 EST 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sun Feb 06 17:54:41 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -257,6 +257,8 @@ case HONDA_600:
   return "HONDA_600";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
+case L9779_BENCH_ENGINE:
+  return "L9779_BENCH_ENGINE";
 case MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case MAZDA_MIATA_2003_NA_RAIL:
@@ -351,8 +353,6 @@ case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
 case UNUSED39:
   return "UNUSED39";
-case L9779_BENCH_ENGINE:
-  return "UNUSED60";
 case UNUSED61:
   return "UNUSED61";
 case UNUSED_48:
