@@ -3,7 +3,7 @@
  *
  *  Created on: Jan 10, 2022
  *
- *
+ * Andrey Gusakov, (c) 2022
  *
  * Masks/inputs bits:
  * 0..3   - IGN1 .. 4 - Ignition pre-drivers
