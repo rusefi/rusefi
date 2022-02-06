@@ -1038,7 +1038,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setL9779TestConfiguration();
 		break;
 	case EEPROM_BENCH_ENGINE:
-	    setEepromTestConfiguration();
+#if EFI_PROD_CODE
+		setEepromTestConfiguration();
+#endif
 		break;
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration();
