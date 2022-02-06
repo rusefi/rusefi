@@ -116,6 +116,23 @@ struct l9779_config l9779_cfg = {
 			0,
 		.cr2 = SPI_CR2_16BIT_MODE
 	},
+	.direct_gpio = {
+		/* IGNI1..IGNI4 */
+		[0]  = {.port = NULL,	.pad = 0},
+		[1]  = {.port = NULL,	.pad = 0},
+		[2]  = {.port = NULL,	.pad = 0},
+		[3]  = {.port = NULL,	.pad = 0},
+		/* IN1..IN7 */
+		[4]  = {.port = NULL,	.pad = 0},
+		[5]  = {.port = NULL,	.pad = 0},
+		[6]  = {.port = NULL,	.pad = 0},
+		[7]  = {.port = NULL,	.pad = 0},
+		[8]  = {.port = NULL,	.pad = 0},
+		[9]  = {.port = NULL,	.pad = 0},
+		[10] = {.port = NULL,	.pad = 0},
+	},
+	/* PWM (IN8) */
+	.pwm_gpio = {.port = NULL,	.pad = 0},
 };
 #endif /* (BOARD_L9779_COUNT > 0) */
 
