@@ -302,7 +302,7 @@ void setIssue898() {
 }
 #endif /* EFI_UNIT_TEST */
 
-#if HW_FRANKENSO
+#if HW_FRANKENSO && EFI_PROD_CODE
 
 static const I2CConfig i2cfg = {
     OPMODE_I2C,
@@ -341,9 +341,12 @@ static I2CEepromFileStream ifile;
  * set engine_type 61
  */
 void setEepromTestConfiguration() {
-//    i2cStart(&EE_U2CD, &i2cfg);
-//    efiSetPadMode("I2C", GPIOA_8, PAL_MODE_ALTERNATE(4));
-//    efiSetPadMode("I2C", GPIOC_9, PAL_MODE_ALTERNATE(4));
+    i2cStart(&EE_U2CD, &i2cfg);
+	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
+	// dirty hack
+	brain_pin_markUnused(GPIOC_9);
+    efiSetPadMode("I2C", GPIOA_8, PAL_MODE_ALTERNATE(4));
+    efiSetPadMode("I2C", GPIOC_9, PAL_MODE_ALTERNATE(4));
 
 
     	addConsoleActionI("ee_read",
