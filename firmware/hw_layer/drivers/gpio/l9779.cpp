@@ -72,6 +72,9 @@ struct L9779 : public GpioChip {
 	int spi_validate(uint16_t rx);
 	int spi_rw(uint16_t tx, uint16_t *rx_ptr);
 
+	brain_pin_diag_e getOutputDiag(size_t pin);
+	brain_pin_diag_e getInputDiag(size_t pin);
+
 	const l9779_config	*cfg;
 
 	/* last accessed register, for validation on next SPI access */
@@ -215,12 +218,37 @@ int L9779::writePad(unsigned int pin, int value) {
 	return 0;
 }
 
+brain_pin_diag_e L9779::getOutputDiag(size_t pin)
+{
+	(void)pin;
+
+	return PIN_OK;
+}
+
+brain_pin_diag_e L9779::getInputDiag(unsigned int pin)
+{
+	(void)pin;
+
+	return PIN_OK;
+}
+
 int L9779::readPad(size_t pin) {
 	if (pin >= L9779_SIGNALS)
 		return -1;
 
 	/* unknown pin */
 	return -1;
+}
+
+brain_pin_diag_e L9779::getDiag(size_t pin)
+{
+	if (pin >= TLE8888_SIGNALS)
+		return PIN_INVALID;
+
+	if (pin < L9779_OUTPUTS)
+		return getOutputDiag(pin);
+	else
+		return getInputDiag(pin);
 }
 
 int L9779::init()
