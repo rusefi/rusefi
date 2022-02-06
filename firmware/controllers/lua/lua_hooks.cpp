@@ -497,11 +497,13 @@ void configureRusefiLuaHooks(lua_State* l) {
 			return 1;
 	});
 
+#if EFI_LAUNCH_CONTROL
 	lua_register(l, "setSparkSkipRatio", [](lua_State* l) {
 		auto targetSkipRatio = luaL_checknumber(l, 1);
 		engine->softSparkLimiter.setTargetSkipRatio(targetSkipRatio);
 		return 1;
 	});
+#endif // EFI_LAUNCH_CONTROL
 
 	lua_register(l, "enableCanTx", [](lua_State* l) {
 		engine->allowCanTx = lua_toboolean(l, 1);
