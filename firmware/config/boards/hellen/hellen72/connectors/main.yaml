@@ -334,10 +334,13 @@ pins:
     function: Sensor +5V
     color: red W3, sliced for MAP
 
+# EFI_ADC_5 same as VBATTT
+# channel 5 on ADC1/2 is VBATT, and channel 5 on ADC3 is knock
+# knock configuration is hard-coded at the moment, we only use this entry for interactive pinout
   - pin: 4M
-    id: EFI_ADC_5
-    class: analog_inputs
-    ts_name: 4M - KNOCK (A6)
+#    id: EFI_ADC_5
+#    class: analog_inputs
+#    ts_name: 4M - KNOCK (A6)
     function: Knock sens. in
     color: white R5
 
@@ -371,19 +374,25 @@ pins:
     type: ls
     color: white B2
 
-  - pin: 4S
+# on one hand we need unique TS name for pin
+# on another hand we need clarity for interactive pinout
+
+  - pin: 4S_4T
+    # this entry for TS
     # todo: mention is this one is 2002 or 2003 vbatt sensor input here
     id: EFI_ADC_5
     class: analog_inputs
-    ts_name: 4S - Alternator voltage (A5)
+    ts_name: 4S/4T - Alternator voltage
+
+  - pin: 4S
+    # this entry for interactive pinout
+    # todo: mention is this one is 2002 or 2003 vbatt sensor input here
     function: +12V engine fuse 15A, ECU power source, run/start
     color: red B2
 
   - pin: 4T
+    # this entry for interactive pinout
     # todo: mention is this one is 2002 or 2003 vbatt sensor input here
-    id: EFI_ADC_5
-    class: analog_inputs
-    ts_name: 4T - Alternator voltage (A5)
     function: Alternator output voltage
 
   - pin: 4U
@@ -423,24 +432,24 @@ pins:
     function: ECU - TCM, Communication for A/T
 
   - pin: 4AA
-    id: EFI_ADC_9
-    class: analog_inputs
-    ts_name: 4AA - O2S2 (A12)
+# huh?   id: EFI_ADC_9
+# huh?    class: analog_inputs
+# huh?    ts_name: 4AA - O2S2 (A12)
     function: Rear O2 Sensor Signal
 
   - pin: 4AB
-    id: EFI_ADC_3
-    class: analog_inputs
-    ts_name: 4AB - FTP/PPS (A18)
+    # huh?    id: EFI_ADC_3
+    # huh?    class: analog_inputs
+    # huh?    ts_name: 4AB - FTP/PPS (A18)
     function: Fuel Tank Pressure Sensor, PPS
 
   - pin: 4AC
     function: ECU - TCM, Communication for A/T
 
   - pin: 4AD
-    id: EFI_ADC_14
-    class: analog_inputs
-    ts_name: 4AD - FUEL_LEVEL (A21)
+    # huh?  id: EFI_ADC_14
+    # huh?   class: analog_inputs
+    # huh?   ts_name: 4AD - FUEL_LEVEL (A21)
     function: Fuel Level Sensor
 
   - pin: 4AE

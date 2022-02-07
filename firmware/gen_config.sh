@@ -14,7 +14,6 @@ mkdir build
 #
 #
 for BOARD in \
-   "f429-discovery f429-discovery" \
    "hellen/alphax-2chan alphax-2chan" \
    "hellen/alphax-4chan alphax-4chan" \
    "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
@@ -35,8 +34,13 @@ for BOARD in \
    "proteus proteus_f7" \
    "proteus proteus_f4" \
    "proteus proteus_h7" \
+<<<<<<< HEAD
    "atlas atlas" \ 
    "core8 core8" \
+=======
+   "f429-discovery f429-discovery" \
+   "atlas atlas"\
+>>>>>>> d6b4ad972550391a5d0754e2fe1d379f6415a102
    ; do
  BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)

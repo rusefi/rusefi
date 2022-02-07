@@ -3716,6 +3716,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	    field = "boardUseCrankPullUp",                  boardUseCrankPullUp
 
 	dialog = parkingLot, "Experimental/Broken"
+        field = useEeprom,                              useEeprom
 	    field = "disablePrimaryUart",                   disablePrimaryUart
 		field = "#System hacks"
 		field = "tempBooleanForVerySpecialCases",       tempBooleanForVerySpecialCases

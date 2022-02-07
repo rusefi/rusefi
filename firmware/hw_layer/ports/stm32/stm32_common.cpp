@@ -808,8 +808,12 @@ __attribute__((weak)) void boardPrepareForStop() {
 
 void boardPreparePA0ForStandby() {
 #ifdef STM32F4XX
+	//Enable Wakeup Pin for PA0
+	PWR->CSR |= PWR_CSR_EWUP;
+
+	// Clear wakeup flag - it may be set if PA0 is already
+	// high when we enable it as a wake source
 	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
-	PWR->CSR |= PWR_CSR_EWUP; //Enable Wakeup Pin for PA0
 #endif
 
 #ifdef STM32F7XX

@@ -635,9 +635,11 @@ bool validateConfig() {
 		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
 	}
 
+#if EFI_BOOST_CONTROL
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
 	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+#endif // EFI_BOOST_CONTROL
 
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);

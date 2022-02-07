@@ -845,8 +845,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case UNUSED60:
-	case UNUSED61:
 	case HELLEN72_ETB:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
@@ -1035,6 +1033,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case ETB_BENCH_ENGINE:
 		setEtbTestConfiguration();
+		break;
+	case L9779_BENCH_ENGINE:
+		setL9779TestConfiguration();
+		break;
+	case EEPROM_BENCH_ENGINE:
+#if EFI_PROD_CODE
+		setEepromTestConfiguration();
+#endif
 		break;
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration();

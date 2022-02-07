@@ -50,6 +50,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->etb_use_two_wires;
 	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
 		return engineConfiguration->isDoubleSolenoidIdle;
+	if (strEqualCaseInsensitive(name, "useEeprom"))
+		return engineConfiguration->useEeprom;
 	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
 		return engineConfiguration->cj125isUrDivided;
 	if (strEqualCaseInsensitive(name, "useCicPidForIdle"))
@@ -1040,6 +1042,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
 	{
 		engineConfiguration->isDoubleSolenoidIdle = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "useEeprom"))
+	{
+		engineConfiguration->useEeprom = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))

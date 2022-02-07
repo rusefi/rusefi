@@ -15,6 +15,9 @@ void runSchedulingPrecisionTestIfNeeded(void);
 void setFrankensoBoardTestConfiguration();
 void setEtbTestConfiguration();
 void setTle8888TestConfiguration();
+void setL9779TestConfiguration();
+
+void setEepromTestConfiguration();
 
 void setIssue898();
 void setTestQuadCam();
