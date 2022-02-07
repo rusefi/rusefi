@@ -304,18 +304,14 @@ void setIssue898() {
 
 #if HW_FRANKENSO && EFI_PROD_CODE
 
-static const I2CConfig i2cfg = {
-    OPMODE_I2C,
-    400000,
-    FAST_DUTY_CYCLE_2,
-};
-
 #define EE_PAGE_SIZE 32
 
 // todo: page_size + 2
 // todo:  CC_SECTION(".nocache")
 static uint8_t write_buf[EE_PAGE_SIZE + 10];
 
+
+#define EE_SIZE 4096
 #define EE_U2CD I2CD3
 #define EEPROM_WRITE_TIME_MS    10          /* time to write one page in ms. Consult datasheet! */
 
@@ -324,14 +320,14 @@ static uint8_t write_buf[EE_PAGE_SIZE + 10];
  * CAT24C32
  */
 static const I2CEepromFileConfig i2cee = {
-		0,
-		0,
-		EE_PAGE_SIZE,
-		4096,
-		TIME_MS2I(EEPROM_WRITE_TIME_MS),
-    &EE_U2CD,
-    0x50,
-	write_buf
+		.barrier_low = 0,
+		.barrier_hi = EE_SIZE - 1,
+		.size = EE_SIZE,
+		.pagesize = EE_PAGE_SIZE,
+		.write_time = TIME_MS2I(EEPROM_WRITE_TIME_MS),
+    .i2cp = &EE_U2CD,
+    .addr = 0x50,
+	.write_buf = write_buf
 };
 
 extern EepromDevice eepdev_24xx;
@@ -341,7 +337,7 @@ static I2CEepromFileStream ifile;
  * set engine_type 61
  */
 void setEepromTestConfiguration() {
-    i2cStart(&EE_U2CD, &i2cfg);
+    engineConfiguration->useEeprom = true;
 	engineConfiguration->ignitionPins[2] = GPIO_UNASSIGNED;
 	// dirty hack
 	brain_pin_markUnused(GPIOC_9);
@@ -351,7 +347,9 @@ void setEepromTestConfiguration() {
 
     	addConsoleActionI("ee_read",
     		[](int value) {
-    			EepromFileOpen((EepromFileStream *)&ifile, (EepromFileConfig *)&i2cee, &eepdev_24xx);
+    			if (ifile.vmt != eepdev_24xx.efsvmt) {
+    				EepromFileOpen((EepromFileStream *)&ifile, (EepromFileConfig *)&i2cee, &eepdev_24xx);
+    			}
 
     			ifile.vmt->setposition(&ifile, 0);
 //    			chFileStreamSeek(&ifile, 0);
