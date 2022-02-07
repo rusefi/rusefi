@@ -1909,7 +1909,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2082932670
+#define SIGNATURE_HASH 3129976564
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2440,7 +2440,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.02.06.hellen_cypress.2082932670"
+#define TS_SIGNATURE "rusEFI 2022.02.07.hellen_cypress.3129976564"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2480,7 +2480,6 @@
 #define unused1476b19_offset 1272
 #define unused1476b20_offset 1272
 #define unused1476b8_offset 1272
-#define unused164b14_offset 164
 #define unused1696_offset 1696
 #define unused1740b0_offset 1740
 #define unused1740b1_offset 1740
@@ -2537,6 +2536,7 @@
 #define unusedShort_offset 4640
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164
+#define useEeprom_offset 164
 #define useETBforIdleControl_offset 748
 #define useFixedBaroCorrFromMap_offset 1272
 #define useFordRedundantTps_offset 164
