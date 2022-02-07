@@ -479,6 +479,13 @@ __attribute__((weak)) void boardInitHardware() { }
 
 __attribute__((weak)) void setPinConfigurationOverrides() { }
 
+const I2CConfig i2cfg = {
+    OPMODE_I2C,
+    400000,
+    FAST_DUTY_CYCLE_2,
+};
+
+
 void initHardware() {
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
@@ -491,6 +498,10 @@ void initHardware() {
 
 	if (hasFirmwareError()) {
 		return;
+	}
+
+	if (engineConfiguration->useEeprom) {
+	    i2cStart(&I2CD3, &i2cfg);
 	}
 
 	boardInitHardware();
