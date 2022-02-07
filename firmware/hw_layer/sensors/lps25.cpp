@@ -42,8 +42,10 @@ bool Lps25::init(brain_pin_e scl, brain_pin_e sda) {
 	{
 	case expectedWhoAmILps22:
 		m_type = Type::Lps22;
+		break;
 	case expectedWhoAmILps25:
 		m_type = Type::Lps25;
+		break;
 	default:
 		// chip not detected
 		return false;
@@ -129,4 +131,5 @@ uint8_t Lps25::regCr1() const {
 	case Type::Lps25:
 	default:
 		return REG_Cr1_Lps25;
+	}
 }
