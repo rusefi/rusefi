@@ -171,9 +171,11 @@ CSRC =  $(ALLCSRC) \
 	$(FATFSSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
+# todo: reduce code duplication with primary Makefile!!!
 # setting.
 CPPSRC = $(ALLCPPSRC) \
 	$(HW_LAYER_EMS_CPP) \
+	$(BOARDCPPSRC) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
