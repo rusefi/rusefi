@@ -479,12 +479,13 @@ __attribute__((weak)) void boardInitHardware() { }
 
 __attribute__((weak)) void setPinConfigurationOverrides() { }
 
+#if HAL_USE_I2C
 const I2CConfig i2cfg = {
     OPMODE_I2C,
     400000,
     FAST_DUTY_CYCLE_2,
 };
-
+#endif
 
 void initHardware() {
 #if EFI_HD44780_LCD
@@ -500,9 +501,11 @@ void initHardware() {
 		return;
 	}
 
+#if HAL_USE_I2C
 	if (engineConfiguration->useEeprom) {
 	    i2cStart(&I2CD3, &i2cfg);
 	}
+#endif // HAL_USE_I2C
 
 	boardInitHardware();
 
