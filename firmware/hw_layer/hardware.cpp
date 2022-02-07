@@ -501,11 +501,11 @@ void initHardware() {
 		return;
 	}
 
-#if HAL_USE_I2C
+#if STM32_I2C_USE_I2C3
 	if (engineConfiguration->useEeprom) {
 	    i2cStart(&I2CD3, &i2cfg);
 	}
-#endif // HAL_USE_I2C
+#endif // STM32_I2C_USE_I2C3
 
 	boardInitHardware();
 
