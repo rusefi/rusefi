@@ -85,11 +85,14 @@ expected<float> Lps25::readPressureKpa() {
 
 	/*
 	TODO: why doesn't this work?
+
 		// Sequential multi-byte reads need to set the high bit of the
 		// register address to enable multi-byte read
 		constexpr uint8_t readAddr = REG_PressureOutXl | 0x80;
+
 		uint8_t buffer[3];
 		m_i2c.writeRead(addr, &readAddr, 1, buffer, 3);
+
 		// Glue the 3 bytes back in to a 24 bit integer
 		uint32_t counts = buffer[2] << 16 | buffer[1] << 8 | buffer[0];
 	*/
