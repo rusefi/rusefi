@@ -13,6 +13,7 @@ void setHellenDefaultVrThresholds();
 void setHellen144LedPins();
 void setHellen176LedPins();
 
+int detectHellenBoardId();
 void detectHellenBoardType();
 
 // stm32 UART8

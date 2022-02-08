@@ -80,10 +80,6 @@ public:
 
 	angle_t injectionOffset = 0;
 
-#if EFI_ENABLE_MOCK_ADC
-	MockAdcState mockAdcState;
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 	multispark_state multispark;
 
 	float targetLambda = 0.0f;

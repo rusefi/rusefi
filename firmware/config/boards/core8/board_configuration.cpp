@@ -3,10 +3,39 @@
  *
  * @brief Configuration defaults for the core8 board
  *
- * @author Ben Brazdziunas, (c) 2021
+ * @author Ben Brazdziunas,  2022
  */
 
 #include "pch.h"
+
+static void setInjectorPins() {
+	
+	engineConfiguration->injectionPinMode = OM_DEFAULT;
+
+	engineConfiguration->injectionPins[0] = GPIOF_13;
+	engineConfiguration->injectionPins[1] = GPIOF_14;
+	engineConfiguration->injectionPins[2] = GPIOD_8;
+	engineConfiguration->injectionPins[3] = GPIOD_9;
+	engineConfiguration->injectionPins[4] = GPIOD_10;
+	engineConfiguration->injectionPins[5] = GPIOD_11;
+	engineConfiguration->injectionPins[6] = GPIOD_12;
+	engineConfiguration->injectionPins[7] = GPIOD_13;
+}
+
+static void setIgnitionPins() {
+	
+	engineConfiguration->ignitionPinMode = OM_DEFAULT;
+
+	engineConfiguration->ignitionPins[0] = GPIOE_15;
+	engineConfiguration->ignitionPins[1] = GPIOE_14;
+	engineConfiguration->ignitionPins[2] = GPIOE_13;
+	engineConfiguration->ignitionPins[3] = GPIOE_12;
+	engineConfiguration->ignitionPins[4] = GPIOE_11;
+	engineConfiguration->ignitionPins[5] = GPIOF_15;
+	engineConfiguration->ignitionPins[6] = GPIOG_0;
+	engineConfiguration->ignitionPins[7] = GPIOG_1;
+}
+
 
 void setSdCardConfigurationOverrides(void) {
 }
@@ -43,11 +72,34 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 
+	engineConfiguration->afr.hwChannel = EFI_ADC_11;
+	setEgoSensor(ES_14Point7_Free);
+	
+	engineConfiguration->clt.config.bias_resistor = 2490;
+	engineConfiguration->iat.config.bias_resistor = 2490;
+
+	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
+
+	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
+	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
+
+}
+
+
+static void setLedPins() {
+	// PE3 is error LED, configured in board.mk
+	engineConfiguration->communicationLedPin = GPIOG_12;
+	engineConfiguration->runningLedPin = GPIOG_9;
+	engineConfiguration->warningLedPin = GPIOG_10;
 }
 
 void setBoardDefaultConfiguration(void) {
 	
-	setupVbatt();
+	setInjectorPins();
+	setIgnitionPins();
+	setupVbatt();	
+	setLedPins();
+
 	
 	engineConfiguration->sdCardPeriodMs = 50;
 	engineConfiguration->isSdCardEnabled = true;
@@ -65,14 +117,6 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->can2RxPin = GPIOB_5;
 	engineConfiguration->can2TxPin = GPIOB_6;
 	engineConfiguration->can2BaudRate = B500KBPS;
-
-	
-	engineConfiguration->clt.config.bias_resistor = 2490;
-	engineConfiguration->iat.config.bias_resistor = 2490;
-
-	
-	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
-	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
 	
 
 	// TLE9201 driver

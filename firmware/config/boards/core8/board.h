@@ -1,8 +1,7 @@
 /**
- * @file boards/subaru_eg33/board_io.c
+ * @file boards/core8/board.h
  *
- * @date Feb 06, 2021
- * @author Andrey Gusakov, 2021
+ * @author Ben Brazdziunas, 2022
  */
 
 #define BOARD_NAME "core8"
@@ -58,17 +57,8 @@
 #undef HAL_VSS_USE_PAL
 #define HAL_VSS_USE_PAL TRUE
 
-#undef LED_RUNING_BRAIN_PIN
-#define LED_RUNING_BRAIN_PIN GPIOG_9
-
-#undef LED_WARNING_BRAIN_PIN
-#define LED_WARNING_BRAIN_PINE	GPIOG_10
-
 #undef LED_CRITICAL_ERROR_BRAIN_PIN
 #define LED_CRITICAL_ERROR_BRAIN_PIN GPIOG_11
-
-#undef LED_COMMUNICATION_BRAIN_PIN
-#define LED_COMMUNICATION_BRAIN_PIN GPIOG_12	
 
 // Ignore USB VBUS pin (we're never a host, only a device)
 #define BOARD_OTG_NOVBUSSENS TRUE

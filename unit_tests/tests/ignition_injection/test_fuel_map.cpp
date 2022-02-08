@@ -58,7 +58,6 @@ TEST(misc, testFuelMap) {
 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5);
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
@@ -67,8 +66,6 @@ TEST(misc, testFuelMap) {
 	// Check that runningFuel corrects appropriately
 	EXPECT_EQ( 42,  getRunningFuel(1)) << "v1";
 	EXPECT_EQ( 84,  getRunningFuel(2)) << "v1";
-
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0);
 
 	engineConfiguration->cranking.baseFuel = 4000;
 
