@@ -1437,11 +1437,12 @@
 #define ignTrims8_table_offset 20708
 #define ignTrims9_offset 20724
 #define ignTrims9_table_offset 20724
-#define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_MM5_10", "IMU_TYPE_3", "IMU_TYPE_4"
+#define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_MM5_10", "IMU_TYPE_3", "IMU_TYPE_4", "IMU_TYPE_MB_A0065422618"
 #define imu_type_e_IMU_MM5_10 2
 #define imu_type_e_IMU_NONE 0
 #define imu_type_e_IMU_TYPE_3 3
 #define imu_type_e_IMU_TYPE_4 4
+#define imu_type_e_IMU_TYPE_MB_A0065422618 5
 #define imu_type_e_IMU_VAG 1
 #define imuType_offset 777
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
