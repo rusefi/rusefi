@@ -6,7 +6,6 @@
 #define GIT_HASH "37532f600c682cceba45ee0b19a69b6df2512d06"
 #endif
 
-
 #ifndef VCS_VERSION
 #define VCS_VERSION "36557"
 #endif
