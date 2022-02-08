@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Mon Jan 31 23:24:07 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Feb 08 21:18:21 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -440,6 +440,8 @@ case IMU_TYPE_3:
   return "IMU_TYPE_3";
 case IMU_TYPE_4:
   return "IMU_TYPE_4";
+case IMU_TYPE_MB_A0065422618:
+  return "IMU_TYPE_MB_A0065422618";
 case IMU_VAG:
   return "IMU_VAG";
   }
