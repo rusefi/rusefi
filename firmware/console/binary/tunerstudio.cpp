@@ -600,7 +600,7 @@ static void handleGetVersion(TsChannelBase* tsChannel) {
 static void handleGetText(TsChannelBase* tsChannel) {
 	tsState.textCommandCounter++;
 
-	printOverallStatus(getTimeNowSeconds());
+	printOverallStatus();
 
 	size_t outputSize;
 	const char* output = swapOutputBuffers(&outputSize);
