@@ -235,13 +235,14 @@ void printOverallStatus() {
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
 
-#if !defined(STATUS_LOGGING_BUFFER_SIZE)
-#define STATUS_LOGGING_BUFFER_SIZE 1800
-#endif /* STATUS_LOGGING_BUFFER_SIZE */
+#if !defined(LOGIC_ANALYZER_BUFFER_SIZE)
+// TODO: how small can this be?
+#define LOGIC_ANALYZER_BUFFER_SIZE 1000
+#endif /* LOGIC_ANALYZER_BUFFER_SIZE */
 
 #if EFI_LOGIC_ANALYZER
-static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE];
-static Logging logger("logic analyzer", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
+static char logicAnalyzerBuffer[LOGIC_ANALYZER_BUFFER_SIZE];
+static Logging logicAnalyzerLogger("logic analyzer", logicAnalyzerBuffer, sizeof(logicAnalyzerBuffer));
 #endif // EFI_LOGIC_ANALYZER
 
 /**
@@ -285,8 +286,8 @@ void updateDevConsoleState(void) {
 #endif
 
 #if EFI_LOGIC_ANALYZER
-	printWave(&logger);
-	scheduleLogging(&logger);
+	printWave(&logicAnalyzerLogger);
+	scheduleLogging(&logicAnalyzerLogger);
 #endif /* EFI_LOGIC_ANALYZER */
 }
 
