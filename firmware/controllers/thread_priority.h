@@ -43,6 +43,7 @@
 
 // USB mass storage
 #define MSD_THD_PRIO LOWPRIO + 20
+#define MSD_CACHE_PRIO MSD_THD_PRIO - 1
 
 // Lua interpreter must be lowest priority, as the user's code may get stuck in an infinite loop
 #define PRIO_LUA LOWPRIO + 10
