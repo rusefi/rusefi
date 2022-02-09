@@ -100,12 +100,27 @@ void registerCanSensor(CanSensorBase& sensor) {
 	sensor.Register();
 }
 
+/*
+ * TODO:
+ *  - convert to CanListener
+ *  - move to hw_layer/sensors/yaw_rate_sensor.cpp | accelerometer.cpp ?
+ */
+
 #define VAG_YAW_RATE_G_LAT 0x130
 #define VAG_YAW_ACCEL_G_LONG 0x131
 
-#define MM5_10_YAW_Y 0x174
-#define MM5_10_ROLL_X 0x178
-#define MM5_10_Z 0x17C
+/* Bosch Acceleration Sensor MM5.10 quantizations */
+#define MM5_10_RATE_QUANT			0.005
+#define MM5_10_ACC_QUANT			0.0001274
+
+/* Bosch Acceleration Sensor MM5.10 CAN IDs */
+#define MM5_10_YAW_Y				0x174
+#define MM5_10_ROLL_X				0x178
+#define MM5_10_Z					0x17C
+
+/* Mercedes pn: A 006 542 26 18 CAN IDs */
+#define MM5_10_MB_YAW_Y_CANID		0x150
+#define MM5_10_MB_ROLL_X_CANID		0x151
 
 static uint16_t getLSB_intel(const CANRxFrame& frame, int offset) {
 	return (frame.data8[offset + 1] << 8) + frame.data8[offset];
@@ -113,6 +128,30 @@ static uint16_t getLSB_intel(const CANRxFrame& frame, int offset) {
 
 static int16_t getShiftedLSB_intel(const CANRxFrame& frame, int offset) {
 	return getLSB_intel(frame, offset) - 0x8000;
+}
+
+static void processCanRxImu_BoschM5_10_YawY(const CANRxFrame& frame) {
+	float yaw = getShiftedLSB_intel(frame, 0);
+	float accY = getShiftedLSB_intel(frame, 4);
+
+	efiPrintf("CAN_rx MM5_10_YAW_Y %f %f", yaw, accY);
+	engine->sensors.accelerometer.yaw = yaw * MM5_10_RATE_QUANT;
+	engine->sensors.accelerometer.y = accY * MM5_10_ACC_QUANT;
+}
+
+static void processCanRxImu_BoschM5_10_RollX(const CANRxFrame& frame) {
+	float roll = getShiftedLSB_intel(frame, 0);
+	float accX = getShiftedLSB_intel(frame, 4);
+	efiPrintf("CAN_rx MM5_10_ROLL_X %f %f", roll, accX);
+
+	engine->sensors.accelerometer.roll = roll * MM5_10_RATE_QUANT;
+	engine->sensors.accelerometer.x = accX * MM5_10_ACC_QUANT;
+}
+
+static void processCanRxImu_BoschM5_10_Z(const CANRxFrame& frame) {
+	float accZ = getShiftedLSB_intel(frame, 4);
+	efiPrintf("CAN_rx MM5_10_Z %f", accZ);
+	engine->sensors.accelerometer.z = accZ * MM5_10_ACC_QUANT;
 }
 
 static void processCanRxImu(const CANRxFrame& frame) {
@@ -132,30 +171,19 @@ static void processCanRxImu(const CANRxFrame& frame) {
 	}
 	*/
 
-
-
 	if (engineConfiguration->imuType == IMU_MM5_10) {
-#define MM5_10_RATE_QUANT 0.005
-#define MM5_10_ACC_QUANT 0.0001274
-
 		if (CAN_SID(frame) == MM5_10_YAW_Y) {
-			float yaw = getShiftedLSB_intel(frame, 0);
-			float accY = getShiftedLSB_intel(frame, 4);
-
-			efiPrintf("CAN_rx MM5_10_YAW_Y %f %f", yaw, accY);
-			engine->sensors.accelerometer.yaw = yaw * MM5_10_RATE_QUANT;
-			engine->sensors.accelerometer.y = accY * MM5_10_ACC_QUANT;
+			processCanRxImu_BoschM5_10_YawY(frame);
 		} else if (CAN_SID(frame) == MM5_10_ROLL_X) {
-			float roll = getShiftedLSB_intel(frame, 0);
-			float accX = getShiftedLSB_intel(frame, 4);
-			efiPrintf("CAN_rx MM5_10_ROLL_X %f %f", roll, accX);
-
-			engine->sensors.accelerometer.roll = roll * MM5_10_RATE_QUANT;
-			engine->sensors.accelerometer.x = accX * MM5_10_ACC_QUANT;
+			processCanRxImu_BoschM5_10_RollX(frame);
 		} else if (CAN_SID(frame) == MM5_10_Z) {
-			float accZ = getShiftedLSB_intel(frame, 4);
-			efiPrintf("CAN_rx MM5_10_Z %f", accZ);
-			engine->sensors.accelerometer.z = accZ * MM5_10_ACC_QUANT;
+			processCanRxImu_BoschM5_10_Z(frame);
+		}
+	} else if (engineConfiguration->imuType == IMU_TYPE_MB_A0065422618) {
+		if (CAN_SID(frame) == MM5_10_MB_YAW_Y_CANID) {
+			processCanRxImu_BoschM5_10_YawY(frame);
+		} else if (CAN_SID(frame) == MM5_10_MB_ROLL_X_CANID) {
+			processCanRxImu_BoschM5_10_RollX(frame);
 		}
 	}
 }
