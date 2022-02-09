@@ -29,7 +29,7 @@ import java.util.Date;
  * @see EngineReport
  */
 public class UpDownImage extends JPanel {
-    private static final int TIMESCALE_MULT = (int) (100 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS); // 100ms
+    private static final int TIMESCALE_MULT = (int) (20 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS); // 20ms
     private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
     private static final int LINE_SIZE = 20;
     public static final Color TIME_SCALE_COLOR = Color.red;
