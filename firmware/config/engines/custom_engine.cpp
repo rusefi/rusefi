@@ -373,11 +373,15 @@ void setL9779TestConfiguration() {
 	// enable_spi 3
 	engineConfiguration->is_enabled_spi_3 = true;
 	// Wire up spi3
+	// green
 	engineConfiguration->spi3mosiPin = GPIOB_5;
+	// blue
 	engineConfiguration->spi3misoPin = GPIOB_4;
+	// white
 	engineConfiguration->spi3sckPin = GPIOB_3;
 
 	engineConfiguration->l9779spiDevice = SPI_DEVICE_3;
+	// orange
 	engineConfiguration->l9779_cs = GPIOD_5;
 }
 
