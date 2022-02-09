@@ -11,6 +11,9 @@ void setEngineProteusBMW_N73_GDI() {
 
 }
 
+/**
+ * set engine_type 9
+ */
 void setEngineProteusGearboxManInTheMiddle() {
 	strncpy(config->luaScript, R"(
 

@@ -931,6 +931,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case PROTEUS_HONDA_OBD2A:
 		setProteusHondaOBD2A();
 		break;
+	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+		setEngineProteusGearboxManInTheMiddle();
+		break;
 	case PROTEUS_VAG_80_18T:
 	case PROTEUS_N73:
 	case PROTEUS_MIATA_NB2:
@@ -1062,9 +1065,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case HONDA_600:
 		setHonda600();
-		break;
-	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
-		setEngineProteusGearboxManInTheMiddle();
 		break;
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
