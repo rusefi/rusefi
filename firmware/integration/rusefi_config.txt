@@ -452,7 +452,7 @@ bit cj125isUaDivided;+Is your UA CJ125 output wired to MCU via resistor divider?
 bit cj125isLsu49
 bit etb_use_two_wires;+TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 bit isDoubleSolenoidIdle;+Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
-bit unused164b14
+bit useEeprom
 bit cj125isUrDivided;+Is your UR CJ125 output wired to MCU via resistor divider?\nLooks like 3v range should be enough, divider generally not needed.
 bit useCicPidForIdle;+Switch between Industrial and Cic PID implementation
 bit useTLE8888_cranking_hack;
@@ -479,7 +479,7 @@ int16_t tpsErrorDetectionTooLow;+TPS error detection: what throttle % is unreali
 int16_t tpsErrorDetectionTooHigh;+TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equiped.;"%", 1, 0, 100, 110, 0
 
 cranking_parameters_s cranking
-float primingSquirtDurationMs;;"*C", 1, 0, -40, 200, 1
+float unused184;;"",1,0,0,0,0
 	float ignitionDwellForCrankingMs;+Dwell duration while cranking;"ms", 1, 0, 0, 200, 1
 	uint16_t etbRevLimitStart;+Once engine speed passes this value, start reducing ETB angle.;"rpm", 1, 0, 0, 15000, 0
 	uint16_t etbRevLimitRange;+This far above 'Soft limiter start', fully close the throttle. At the bottom of the range, throttle control is normal. At the top of the range, the throttle is fully closed.;"rpm", 1, 0, 0, 2000, 0
@@ -1650,9 +1650,6 @@ cyl_trim_s[12 iterate] fuelTrims
 uint16_t[CRANKING_CURVE_SIZE] crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 end_struct
 
-#define MOCK_MAP_COMMAND "mock_map_voltage"
-#define MOCK_AFR_COMMAND "mock_afr_voltage"
-#define MOCK_MAF_COMMAND "mock_maf_voltage"
 ! Pedal Position Sensor
 #define MOCK_PPS_POSITION_COMMAND "mock_pps_position"
 #define MOCK_PPS_VOLTAGE_COMMAND "mock_pps_voltage"

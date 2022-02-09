@@ -1,8 +1,4 @@
 pins:
-  - pin: J6
-    id: GPIOE_0
-    class: outputs
-    ts_name: AUX J6 PE0
 
   - pin: J10
     id: GPIOE_6

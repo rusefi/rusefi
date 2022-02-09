@@ -54,11 +54,6 @@
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
 
-#if !defined(EFI_ENABLE_MOCK_ADC)
- #define EFI_ENABLE_MOCK_ADC TRUE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
-
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 
 /**

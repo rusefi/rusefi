@@ -335,8 +335,8 @@ pins:
     function: WBO
     
   - pin: int_pps1
-    id: [GPIOA_3, EFI_ADC_3]
-    class: [switch_inputs, analog_inputs]
+    id: [GPIOA_3]
+    class: [switch_inputs]
     ts_name: PPS1
     
   - pin: int_tps2

@@ -650,6 +650,10 @@ static void updateIgnition(int rpm) {
 }
 
 static void updateFlags() {
+#if EFI_USB_SERIAL
+	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
+#endif // EFI_USB_SERIAL
+
 	engine->outputChannels.isMainRelayOn = enginePins.mainRelay.getLogicValue();
 	engine->outputChannels.isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();

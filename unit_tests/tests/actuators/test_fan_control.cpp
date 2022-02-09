@@ -2,7 +2,7 @@
 
 #include "fan_control.h"
 
-TEST(FanControl, fan1) {
+TEST(Actuators, Fan) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	engineConfiguration->fanOnTemperature = 90;

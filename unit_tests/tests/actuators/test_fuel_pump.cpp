@@ -11,7 +11,7 @@
 
 extern int timeNowUs;
 
-TEST(fsio, fuelPump) {
+TEST(Actuators, FuelPump) {
 	EngineTestHelper eth(TEST_ENGINE);
 
 	FuelPumpController dut;

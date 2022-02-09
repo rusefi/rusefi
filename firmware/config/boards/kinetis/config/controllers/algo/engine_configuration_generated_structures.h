@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 07 00:02:45 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -831,7 +831,7 @@ struct engine_configuration_s {
 	bool isDoubleSolenoidIdle : 1 {};
 	/**
 	offset 164 bit 14 */
-	bool unused164b14 : 1 {};
+	bool useEeprom : 1 {};
 	/**
 	 * Is your UR CJ125 output wired to MCU via resistor divider?
 	 * Looks like 3v range should be enough, divider generally not needed.
@@ -931,10 +931,9 @@ struct engine_configuration_s {
 	 */
 	cranking_parameters_s cranking;
 	/**
-	*C
 	 * offset 184
 	 */
-	float primingSquirtDurationMs;
+	float unused184;
 	/**
 	 * Dwell duration while cranking
 	ms
@@ -4516,4 +4515,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Feb 02 02:43:07 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 07 00:02:45 UTC 2022

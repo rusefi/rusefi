@@ -123,10 +123,10 @@ void setBoardConfigOverrides() {
 
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -183,4 +183,9 @@ void setSdCardConfigurationOverrides() {
 	engineConfiguration->spi2sckPin = H_SPI2_SCK;
 	engineConfiguration->sdCardCsPin = H_SPI2_CS;
 	engineConfiguration->is_enabled_spi_2 = true;
+}
+
+void boardPrepareForStop() {
+	// Wake on the CAN RX pin
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }

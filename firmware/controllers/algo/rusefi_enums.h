@@ -362,6 +362,11 @@ typedef enum  __attribute__ ((__packed__)) {
 	IMU_MM5_10 = 2,
 	IMU_TYPE_3 = 3,
 	IMU_TYPE_4 = 4,
+	/**
+	 * Mercedes pn: A 006 542 26 18
+	 * Almost the same as BOSCH above, but XY only and different CAN IDs
+	 */
+	IMU_TYPE_MB_A0065422618 = 5,
 } imu_type_e;
 
 typedef enum {

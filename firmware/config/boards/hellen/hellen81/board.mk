@@ -1,8 +1,7 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen81/board_configuration.cpp \
-    $(BOARDS_DIR)/hellen/hellen_common.cpp
+BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen81/board_configuration.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen81
 
 # Set this if you want a default engine type other than normal Hellen81
@@ -19,11 +18,6 @@ ifeq ($(LED_COMMUNICATION_BRAIN_PIN),)
 endif
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
-
-DDEFS += -DLED_ERROR_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_RUNING_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_WARNING_BRAIN_PIN_MODE=INVERTED_OUTPUT
-DDEFS += -DLED_COMMUNICATION_BRAIN_PIN_MODE=INVERTED_OUTPUT
 
 # Disable serial ports on this board as UART3 causes a DMA conflict with the SD card
 DDEFS += -DTS_NO_PRIMARY -DTS_NO_SECONDARY
@@ -48,5 +42,4 @@ TRIGGER_USE_ADC = yes
 DDEFS += -DEFI_OVERRIDE_FAST_ADC_FOR_STM32H7=TRUE -DADC_FAST_DEVICE=ADCD1 -DEFI_USE_ONLY_FAST_ADC=TRUE -DEFI_FASTER_UNIFORM_ADC=TRUE -DADC_MAX_CHANNELS_COUNT=16 -DADC_BUF_DEPTH_FAST=1 -DADC_BUF_NUM_AVG=1
 #DDEFS += -DADC_SLOW_DEVICE=ADCD1
 
-# We are running on Hellen-One hardware!
-DDEFS += -DHW_HELLEN=1
+include $(BOARDS_DIR)/hellen/hellen-common.mk
