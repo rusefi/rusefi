@@ -47,9 +47,6 @@
  */
 #define DEEP_IN_THE_PAST_SECONDS -10
 
-// todo: implement a function to work with times considering counter overflow
-#define overflowDiff(now, time) ((now) - (time))
-
 #ifdef __cplusplus
 /**
  * Provide a 62-bit counter from a 32-bit counter source that wraps around.
