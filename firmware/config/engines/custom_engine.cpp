@@ -376,6 +376,9 @@ void setL9779TestConfiguration() {
 	engineConfiguration->spi3mosiPin = GPIOB_5;
 	engineConfiguration->spi3misoPin = GPIOB_4;
 	engineConfiguration->spi3sckPin = GPIOB_3;
+
+	engineConfiguration->l9779spiDevice = SPI_DEVICE_3;
+	engineConfiguration->l9779_cs = GPIOD_5;
 }
 
 // TLE8888_BENCH_ENGINE
