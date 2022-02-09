@@ -1422,11 +1422,12 @@
 #define ignTrims8_table_offset 20680
 #define ignTrims9_offset 20696
 #define ignTrims9_table_offset 20696
-#define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_MM5_10", "IMU_TYPE_3", "IMU_TYPE_4"
+#define imu_type_e_auto_enum "IMU_NONE", "IMU_VAG", "IMU_MM5_10", "IMU_TYPE_3", "IMU_TYPE_4", "IMU_TYPE_MB_A0065422618"
 #define imu_type_e_IMU_MM5_10 2
 #define imu_type_e_IMU_NONE 0
 #define imu_type_e_IMU_TYPE_3 3
 #define imu_type_e_IMU_TYPE_4 4
+#define imu_type_e_IMU_TYPE_MB_A0065422618 5
 #define imu_type_e_IMU_VAG 1
 #define imuType_offset 777
 #define INDICATOR_NAME_AC_SWITCH "AC switch"
@@ -2425,7 +2426,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.02.07.kin.562429891"
+#define TS_SIGNATURE "rusEFI 2022.02.08.kin.562429891"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
