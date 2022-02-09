@@ -243,7 +243,8 @@ public class UpDownImage extends JPanel {
         g2.setStroke(TIME_SCALE_STROKE);
         g2.setColor(TIME_SCALE_COLOR);
 
-        for (int ms = fromMs; ms <= toMs; ms++) {
+        // start at +1 so we don't render a line at the left edge
+        for (int ms = fromMs + 1; ms <= toMs; ms++) {
             int tick = ms * TIMESCALE_MULT;
             int x = translator.timeToScreen(tick, d.width);
             g2.drawLine(x, 0, x, d.height);
