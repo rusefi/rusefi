@@ -153,7 +153,7 @@ static int prevCkpEventCounter = -1;
  */
 static Timer printVersionTimer;
 
-void printRusefiVersion(const char *engineTypeName, const char *firmwareBuildId) {
+static void printRusefiVersion(const char *engineTypeName, const char *firmwareBuildId) {
 	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
 	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%s %s %s %d",
 			getRusEfiVersion(), VCS_VERSION,
@@ -181,7 +181,7 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 // Print out the current mapping between logical and physical pins that
 // the engine sniffer cares about, so we can display a physical pin
 // in each engine sniffer row
-void printEngineSnifferPinMappings() {
+static void printEngineSnifferPinMappings() {
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, engineConfiguration->triggerInputPins[0]);
 	printOutPin(PROTOCOL_CRANK2, engineConfiguration->triggerInputPins[1]);
