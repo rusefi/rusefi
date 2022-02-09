@@ -195,14 +195,13 @@ public class TriggerImage {
 
         triggerPanel.removeAll();
         UpDownImage upDownImage0 = new UpDownImage(re0, "trigger");
-        upDownImage0.showMouseOverText = false;
-        triggerPanel.add(upDownImage0);
+        upDownImage0.setRenderText(false);
 
         UpDownImage upDownImage1 = new UpDownImage(re1, "trigger");
-        upDownImage1.showMouseOverText = false;
+        upDownImage1.setRenderText(false);
 
         UpDownImage upDownImage2 = new UpDownImage(re2, "trigger");
-        upDownImage2.showMouseOverText = false;
+        upDownImage2.setRenderText(false);
 
         boolean isSingleSensor = re1.getList().isEmpty();
         boolean isThirdVisible = !re2.getList().isEmpty();
@@ -218,8 +217,12 @@ public class TriggerImage {
 
         triggerPanel.setLayout(new GridLayout(height, 1));
 
+        // always render the first channel
+        triggerPanel.add(upDownImage0);
+
         if (!isSingleSensor)
             triggerPanel.add(upDownImage1);
+
         if (isThirdVisible)
             triggerPanel.add(upDownImage2);
 
