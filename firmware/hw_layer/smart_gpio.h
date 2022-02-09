@@ -13,7 +13,7 @@
  #include "drivers/gpio/mc33972.h"
  #include "drivers/gpio/tle8888.h"
  #include "drivers/gpio/drv8860.h"
- # we seem OK without L9779 here do we need those includes at all?
+ // we seem OK without L9779 here do we need those includes at all?
 #endif /* EFI_PROD_CODE */
 
 #if EFI_UNIT_TEST
