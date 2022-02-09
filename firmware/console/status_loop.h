@@ -16,4 +16,4 @@ void initStatusLoop(void);
 
 struct Writer;
 void writeLogLine(Writer& buffer);
-void printOverallStatus(efitimesec_t nowSeconds);
+void printOverallStatus();

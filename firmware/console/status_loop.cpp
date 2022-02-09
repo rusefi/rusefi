@@ -148,12 +148,22 @@ static int packEngineMode() {
 static int prevCkpEventCounter = -1;
 
 /**
- * Time when the firmware version was reported last time, in seconds
+ * Time when the firmware version was last reported
  * TODO: implement a request/response instead of just constantly sending this out
  */
-static systime_t timeOfPreviousPrintVersion = 0;
+static Timer printVersionTimer;
 
-#if EFI_PROD_CODE
+void printRusefiVersion(const char *engineTypeName, const char *firmwareBuildId) {
+	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
+	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%s %s %s %d",
+			getRusEfiVersion(), VCS_VERSION,
+			firmwareBuildId,
+			engineTypeName,
+			getTimeNowSeconds());
+}
+
+// Inform the console about the mapping between a pin's logical name (for example, injector 3)
+// and the physical MCU pin backing that function (for example, PE3)
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
 		return;
@@ -167,27 +177,11 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 
 	efiPrintfProto(PROTOCOL_OUTPIN, "%s@%s", pinName, hwPinName);
 }
-#endif /* EFI_PROD_CODE */
 
-void printOverallStatus(efitimesec_t nowSeconds) {
-#if EFI_ENGINE_SNIFFER
-	waveChart.publishIfFull();
-#endif /* EFI_ENGINE_SNIFFER */
-
-#if EFI_SENSOR_CHART
-	publishSensorChartIfFull();
-#endif // EFI_SENSOR_CHART
-
-	/**
-	 * we report the version every 4 seconds - this way the console does not need to
-	 * request it and we will display it pretty soon
-	 */
-	if (overflowDiff(nowSeconds, timeOfPreviousPrintVersion) < 4) {
-		return;
-	}
-	timeOfPreviousPrintVersion = nowSeconds;
-	int seconds = getTimeNowSeconds();
-	printCurrentState(seconds, getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
+// Print out the current mapping between logical and physical pins that
+// the engine sniffer cares about, so we can display a physical pin
+// in each engine sniffer row
+void printEngineSnifferPinMappings() {
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, engineConfiguration->triggerInputPins[0]);
 	printOutPin(PROTOCOL_CRANK2, engineConfiguration->triggerInputPins[1]);
@@ -211,8 +205,32 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		printOutPin(enginePins.auxValve[i].getShortName(), engineConfiguration->auxValves[i]);
 	}
-
 #endif /* EFI_PROD_CODE */
+}
+
+void printOverallStatus() {
+#if EFI_ENGINE_SNIFFER
+	waveChart.publishIfFull();
+#endif /* EFI_ENGINE_SNIFFER */
+
+#if EFI_SENSOR_CHART
+	publishSensorChartIfFull();
+#endif // EFI_SENSOR_CHART
+
+	/**
+	 * we report the version every second - this way the console does not need to
+	 * request it and we will display it pretty soon
+	 */
+	if (printVersionTimer.hasElapsedSec(1)) {
+		// we're sending, reset the timer
+		printVersionTimer.reset();
+
+		// Output the firmware version, board type, git hash, uptime in seconds, etc
+		printRusefiVersion(getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
+
+		// Output the current engine sniffer pin mappings
+		printEngineSnifferPinMappings();
+	}
 }
 
 static systime_t timeOfPreviousReport = (systime_t) -1;

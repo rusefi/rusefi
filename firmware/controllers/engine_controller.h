@@ -18,5 +18,3 @@ void initStartStopButton();
 void initDataStructures();
 
 void slowStartStopButtonCallback();
-
-void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId);

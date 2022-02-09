@@ -196,15 +196,6 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 #define VCS_VERSION "123"
 #endif
 
-void printCurrentState(int seconds, const char *engineTypeName, const char *firmwareBuildId) {
-	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
-	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%s %s %s %d",
-			getRusEfiVersion(), VCS_VERSION,
-			firmwareBuildId,
-			engineTypeName,
-			seconds);
-}
-
 void TriggerConfiguration::update() {
 	UseOnlyRisingEdgeForTrigger = isUseOnlyRisingEdgeForTrigger();
 	VerboseTriggerSynchDetails = isVerboseTriggerSynchDetails();
