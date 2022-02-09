@@ -2473,6 +2473,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Aux Valve #2", 						auxValves2
 		field = "TLE8888 Chip Select",                  tle8888_cs @@if_ts_show_spi
 		field = "TLE 8888 spi",                         tle8888spiDevice @@if_ts_show_spi
+		field = "L9779 Chip Select",                    l9779_cs @@if_ts_show_spi
 		field = "AUX Serial TX", 						auxSerialTxPin
 		field = "AUX Serial RX", 						auxSerialRxPin
 		field = "Start/Stop Button",					startStopButtonPin
@@ -3189,6 +3190,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "useTLE8888 cranking reset hack",		useTLE8888_cranking_hack
 		field = "useTLE8888 stepper",					useTLE8888_stepper
 		commandButton = "Reinit",						cmd_tle8888_init
+		field = "L9779 SPI",                            tle8888spiDevice @@if_ts_show_spi
 
 	dialog = connection, "", 	yAxis
 		field = "ADC vRef voltage",						adcVcc
