@@ -189,9 +189,12 @@ static void processCanRxImu(const CANRxFrame& frame) {
 }
 
 void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
-	if (engineConfiguration->verboseCan) {
+	if (engineConfiguration->verboseCan && busIndex == 0) {
+		printPacket(busIndex, frame);
+	} else if (engineConfiguration->verboseCan2 && busIndex == 1) {
 		printPacket(busIndex, frame);
 	}
+
 
 	serviceCanSubscribers(frame, nowNt);
 

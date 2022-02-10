@@ -466,7 +466,7 @@ bit displayLogicLevelsInEngineSniffer;+Shall we display real life signal or just
 bit useTLE8888_stepper
 bit enableMapEstimationTableFallback;+If enabled, the MAP estimate table will be used if the MAP sensor fails to estimate manifold pressure based on RPM and TPS.
 bit usescriptTableForCanSniffingFiltering
-bit verboseCan,"Print all","Do not print";Print incoming and outgoing CAN messages in rusEFI console
+bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in rusEFI console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
 bit issue_294_31,"si_example","nada_example"
 
@@ -925,7 +925,8 @@ custom maf_sensor_type_e 4 bits, S32, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit tcuEnabled
 bit canBroadcastUseChannelTwo,"second","first"
 	bit useRawOutputToDriveIdleStepper;+If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
-bit unusedBit_310_31
+bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bus CAN messages in rusEFI console
+
 
 	dc_io[ETB_COUNT iterate] etbIo
 
