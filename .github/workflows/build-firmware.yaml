@@ -19,6 +19,7 @@ jobs:
         build-target: [
             alphax-2chan,
             alphax-4chan,
+            hellen81hd,
             hellen72,
             hellen81,
             hellen88bmw,
@@ -70,7 +71,7 @@ jobs:
             ini-file: rusefi_alphax-4chan.ini
 
           - build-target: hellen81hd
-            folder: hellen/hellen81hd
+            folder: hellen/harley81
             ini-file: rusefi_hellen81hd.ini
 
           - build-target: hellen88bmw
