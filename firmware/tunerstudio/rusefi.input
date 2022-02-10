@@ -3126,12 +3126,14 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "RX pin",                               binarySerialRxPin, {useSerialPort == 1}
 
 	dialog = canHw1, "Primary CAN"
+		field = "Verbose Can",  verboseCan
 		field = "Bitrate",		canBaudRate
 		field = "RX pin",		canRxPin @@if_ts_show_can_pins
 		field = "TX pin",		canTxPin @@if_ts_show_can_pins
 
 	dialog = canHw2, "Secondary CAN"
-		field = "Bitrate",	can2BaudRate
+		field = "Verbose Can2", verboseCan2
+		field = "Bitrate",	    can2BaudRate
 		field = "RX pin",		can2RxPin @@if_ts_show_can_pins
 		field = "TX pin",		can2TxPin @@if_ts_show_can_pins
 
@@ -3139,7 +3141,6 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "CAN read enabled",						canReadEnabled
 		field = "CAN write enabled",					canWriteEnabled
 		field = "CAN dash type",						canNbcType
-		field = "Verbose Can",                          verboseCan
 		field = "inertia measurement unit",             imuType
 		field = "Enable rusEFI CAN broadcast",			enableVerboseCanTx
 		field = "rusEFI CAN data bus",    canBroadcastUseChannelTwo
