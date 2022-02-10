@@ -60,7 +60,7 @@ public class BinaryProtocolServer {
         return serverSocket;
     };
 
-    private static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
+    private final static ConcurrentHashMap<String, ThreadFactory> THREAD_FACTORIES_BY_NAME = new ConcurrentHashMap<>();
 
     public void start(LinkManager linkManager) {
         try {

@@ -130,8 +130,7 @@ public class SensorSnifferPane {
         maxX = keys.get(keys.size() - 1);
         FileLog.MAIN.logLine("Analog chart from " + minX + " to " + maxX);
 
-        TreeSet<Double> sortedValues = new TreeSet<>();
-        sortedValues.addAll(values.values());
+        TreeSet<Double> sortedValues = new TreeSet<>(values.values());
         List<Double> values = new ArrayList<>(sortedValues);
 
         minY = values.get(0);
