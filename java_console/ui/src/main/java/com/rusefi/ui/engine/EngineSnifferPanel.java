@@ -206,12 +206,12 @@ public class EngineSnifferPanel {
 
         statusPanel.setRevolutions(revolutions);
 
-        /**
-         * First let's create images for new keys
-         */
-        for (String imageName : map.getMap().keySet())
+        // Create images for any new keys
+        for (String imageName : map.getMap().keySet()) {
             createSecondaryImage(imageName);
+        }
 
+        // Update existing images
         for (String imageName : images.keySet()) {
             UpDownImage image = images.get(imageName);
             if (image == null)
@@ -237,8 +237,15 @@ public class EngineSnifferPanel {
     }
 
     private void createSecondaryImage(String name) {
-        if (images.containsKey(name) || Fields.TOP_DEAD_CENTER_MESSAGE.equalsIgnoreCase(name))
+        if (images.containsKey(name)) {
+            // already created, skip
             return;
+        }
+
+        // Don't render a row for the TDC mark
+        if (Fields.TOP_DEAD_CENTER_MESSAGE.equalsIgnoreCase(name)) {
+            return;
+        }
 
         int index = getInsertIndex(name, images.keySet());
 
@@ -275,6 +282,7 @@ public class EngineSnifferPanel {
     private UpDownImage createImage(final String name) {
         Color signalBody = Color.lightGray;
         Color signalBorder = Color.blue;
+
         if (name.startsWith("tach") || name.startsWith("dizzy")) {
             signalBody = Color.yellow;
         } else if (name.startsWith("t")) {
