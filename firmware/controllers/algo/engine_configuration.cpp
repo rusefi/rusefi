@@ -505,6 +505,7 @@ static void setDefaultEngineConfiguration() {
 
     // OBD-II default rate is 500kbps
     engineConfiguration->canBaudRate = B500KBPS;
+    engineConfiguration->can2BaudRate = B500KBPS;
 
 	engineConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);
