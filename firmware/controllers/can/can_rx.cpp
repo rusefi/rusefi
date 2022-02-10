@@ -62,10 +62,10 @@ bool acceptCanRx(int /*sid*/) {
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
  */
 static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
-	bool accept = acceptCanRx(CAN_SID(rx));
-	if (!accept) {
-		return;
-	}
+//	bool accept = acceptCanRx(CAN_SID(rx));
+//	if (!accept) {
+//		return;
+//	}
 
 	// only print info if we're in can debug mode
 
