@@ -34,8 +34,8 @@ public final class Histograms {
     @NotNull
     public List<String> dumpStats() {
         Collection<StatisticsGroup> values = takeAndResetSnapshot();
-        List<StatisticsGroup> al = new ArrayList<>();
-        al.addAll(values);
+        List<StatisticsGroup> al = new ArrayList<>(values);
+
         synchronized (total_stats) {
             for (StatisticsGroup source : values) {
                 String type = source.type + ".TOTAL";
@@ -368,7 +368,7 @@ public final class Histograms {
     private String toString(StatisticsGroup sg, long duration) {
         StringBuffer sb = new StringBuffer(100 + sg.data.size() * 100);
         appendHeader(sb, sg, duration);
-        Statistics[] sts = sg.data.values().toArray(new Statistics[sg.data.size()]);
+        Statistics[] sts = sg.data.values().toArray(new Statistics[0]);
         sortStatistics(sg, sts);
         for (Statistics st : sts) {
             appendStatistics(sb, st, new ArrayList<>());

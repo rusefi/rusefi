@@ -185,8 +185,7 @@ public class RecentCommands {
                 });
 
                 synchronized (entries) {
-                    Set<Entry> sorted = new TreeSet<>();
-                    sorted.addAll(entries.keySet());
+                    Set<Entry> sorted = new TreeSet<>(entries.keySet());
 
                     for (Entry entry : sorted) {
                         content.add(createButton(uiContext, reentrant, entry.command));

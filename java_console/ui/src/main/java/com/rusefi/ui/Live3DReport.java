@@ -49,9 +49,9 @@ public class Live3DReport {
         if (v.length != 3)
             return;
 
-        int rpm = Integer.valueOf(v[0]);
-        float key = Integer.valueOf(v[1]) / 100.0f;
-        float value = Integer.valueOf(v[2]) / 100.0f;
+        int rpm = Integer.parseInt(v[0]);
+        float key = Integer.parseInt(v[1]) / 100.0f;
+        float value = Integer.parseInt(v[2]) / 100.0f;
 
         primary.setPoint(new Point3D(rpm, key, value));
         primary.saveToFile("_mult.csv");

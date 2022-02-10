@@ -56,7 +56,7 @@ public class ConsoleUI {
     /**
      * We can listen to tab activation event if we so desire
      */
-    private final Map<JComponent, ActionListener> tabSelectedListeners = new HashMap<>();
+    private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public static Frame getFrame() {
         return staticFrame;
