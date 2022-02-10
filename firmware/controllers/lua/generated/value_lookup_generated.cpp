@@ -408,6 +408,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->canBroadcastUseChannelTwo;
 	if (strEqualCaseInsensitive(name, "useRawOutputToDriveIdleStepper"))
 		return engineConfiguration->useRawOutputToDriveIdleStepper;
+	if (strEqualCaseInsensitive(name, "verboseCan2"))
+		return engineConfiguration->verboseCan2;
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
 		return engineConfiguration->boostPid.pFactor;
 	if (strEqualCaseInsensitive(name, "boostPid.iFactor"))
@@ -1937,6 +1939,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "useRawOutputToDriveIdleStepper"))
 	{
 		engineConfiguration->useRawOutputToDriveIdleStepper = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "verboseCan2"))
+	{
+		engineConfiguration->verboseCan2 = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
