@@ -44,13 +44,12 @@ public class FuelTunePane {
 
 
     private final List<FuelDataPoint> incomingDataPoints = new ArrayList<>();
-    private final double veLoadBins[] = new double[Fields.FUEL_LOAD_COUNT];
-    private final double veRpmBins[] = new double[Fields.FUEL_RPM_COUNT];
+    private final double[] veLoadBins = new double[Fields.FUEL_LOAD_COUNT];
+    private final double[] veRpmBins = new double[Fields.FUEL_RPM_COUNT];
     private final Table3D veTable = new Table3D();
     private final Table3D changeMap = new Table3D();
     private final JButton upload = new JButton("Upload");
     private final JCheckBox collect = new JCheckBox("enable");
-    private final JButton clean = new JButton("clear");
     private final UIContext uiContext;
     private byte[] newVeMap;
     private DataOutputStream dos;
@@ -72,6 +71,7 @@ public class FuelTunePane {
                 uploadCurrentResult();
             }
         });
+        final JButton clean = new JButton("clear");
         clean.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -190,7 +190,7 @@ public class FuelTunePane {
     }
 
     private void doJob() {
-        double veTable[][] = new double[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
+        double[][] veTable = new double[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
         loadMap(veTable, Fields.VETABLE.getOffset());
         logMap("source", veTable);
 
