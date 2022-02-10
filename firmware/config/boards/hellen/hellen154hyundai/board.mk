@@ -17,7 +17,7 @@ endif
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
 # Disable serial ports on this board as UART3 causes a DMA conflict with the SD card
-DDEFS += -DTS_NO_PRIMARY=1 -DTS_NO_SECONDARY=1
+DDEFS += -DTS_NO_PRIMARY=1
 
 # Add them all together
 DDEFS += -DEFI_USE_OSC=TRUE -DFIRMWARE_ID=\"hellen154hyundai\" $(DEFAULT_ENGINE_TYPE) $(LED_CRITICAL_ERROR_BRAIN_PIN) $(LED_COMMUNICATION_BRAIN_PIN)
