@@ -267,7 +267,7 @@ public class ConsoleTools {
 
     private static void readTune() {
         startAndConnect(linkManager -> {
-            System.out.println("Loaded! Exiting");;
+            System.out.println("Loaded! Exiting");
             System.exit(0);
             return null;
         });
@@ -377,8 +377,10 @@ public class ConsoleTools {
             EngineState.ValueCallback<String> callback = new EngineState.ValueCallback<String>() {
                 @Override
                 public void onUpdate(String value) {
-                    if (value.startsWith(Fields.PROTOCOL_HELLO_PREFIX))
-                        messages.append(value + "\n");
+                    if (value.startsWith(Fields.PROTOCOL_HELLO_PREFIX)) {
+                        messages.append(value);
+                        messages.append("\n");
+                    }
                 }
             };
             while (!unpack.isEmpty()) {

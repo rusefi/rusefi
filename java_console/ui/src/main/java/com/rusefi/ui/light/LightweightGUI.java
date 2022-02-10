@@ -20,15 +20,11 @@ import static com.rusefi.StartupFrame.createLogoLabel;
 
 public class LightweightGUI {
 
-    private final UIContext uiContext;
-    private FrameHelper frameHelper = new FrameHelper();
-    private JPanel content = new JPanel(new BorderLayout());
-
     private JPanel connectedPanel = new JPanel();
     private JLabel connectedLabel = new JLabel();
 
     public LightweightGUI(UIContext uiContext) {
-        this.uiContext = uiContext;
+        final FrameHelper frameHelper = new FrameHelper();
         frameHelper.getFrame().setTitle("rusEFI Lightweight " + rusEFIVersion.CONSOLE_VERSION);
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -48,11 +44,11 @@ public class LightweightGUI {
         SensorCentral.getInstance().addListener(Sensor.FIRMWARE_VERSION, value -> firmwareVersion.setText(Integer.toString((int) value)));
         leftPanel.add(firmwareVersion);
 
+        final JPanel content = new JPanel(new BorderLayout());
         content.add(topPanel, BorderLayout.NORTH);
         content.add(leftPanel, BorderLayout.WEST);
 
         content.add(createLogoUrlPanel(), BorderLayout.EAST);
-
 
         frameHelper.showFrame(content, true);
     }

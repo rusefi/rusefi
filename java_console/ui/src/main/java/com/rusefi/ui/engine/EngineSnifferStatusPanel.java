@@ -54,10 +54,7 @@ public class EngineSnifferStatusPanel {
         }
     };
 
-    private ZoomProvider zoomProvider;
-
-    public EngineSnifferStatusPanel(ZoomProvider zoomProvider) {
-        this.zoomProvider = zoomProvider;
+    public EngineSnifferStatusPanel() {
         infoPanel.add(new JLabel("X: "));
         infoPanel.add(xLabel);
         infoPanel.add(new JLabel(" time: "));
