@@ -8,14 +8,9 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
   IS_STM32F429 = yes
 endif
 
-# Set this if you want a default engine type other than normal Proteus
-ifeq ($(DEFAULT_ENGINE_TYPE),)
-  DEFAULT_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS
-endif
-
 DDEFS += -DEFI_USE_OSC=TRUE
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=GPIOE_3
-DDEFS += -DFIRMWARE_ID=\"proteus\" $(DEFAULT_ENGINE_TYPE)
+DDEFS += -DFIRMWARE_ID=\"proteus\"
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 

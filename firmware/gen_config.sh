@@ -16,6 +16,7 @@ mkdir build
 for BOARD in \
    "hellen/alphax-2chan alphax-2chan" \
    "hellen/alphax-4chan alphax-4chan" \
+   "hellen/harley81 harley81" \
    "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
    "hellen/hellen121vag hellen121vag" \
    "hellen/hellen121nissan hellen121nissan" \
