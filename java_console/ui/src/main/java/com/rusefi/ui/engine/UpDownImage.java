@@ -30,7 +30,6 @@ import java.util.Date;
  */
 public class UpDownImage extends JPanel {
     private static final int TIMESCALE_MULT = (int) (20 * EngineReport.ENGINE_SNIFFER_TICKS_PER_MS); // 20ms
-    private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
     private static final int LINE_SIZE = 20;
     public static final Color TIME_SCALE_COLOR = Color.red;
     public static final Color ENGINE_CYCLE_COLOR = new Color(0, 153, 0);
@@ -54,13 +53,6 @@ public class UpDownImage extends JPanel {
      */
     private Color signalBody = Color.lightGray;
     private Color signalBorder = Color.GRAY;
-
-    private final Timer repaintTimer = new Timer(1000, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            UiUtils.trueRepaint(UpDownImage.this);
-        }
-    });
 
     private boolean renderText = true;
 
@@ -174,7 +166,6 @@ public class UpDownImage extends JPanel {
         g2.setColor(Color.black);
 
         int line = 0;
-        Font f = getFont();
 
         if (!this.renderText) {
             return;
@@ -277,7 +268,7 @@ public class UpDownImage extends JPanel {
             return;
         }
 
-        int duration = upDown.getDuration();
+        final int duration = upDown.getDuration();
 
         // don't render duration for zero duration or for trigger
         if (duration != 0 && upDown.upTriggerCycleIndex == -1) {
@@ -286,13 +277,14 @@ public class UpDownImage extends JPanel {
             g.drawString(durationString, x1, 15);
         }
 
-        g.setColor(Color.darkGray);
         if (upDown.upTriggerCycleIndex != -1) {
+            g.setColor(Color.darkGray);
             g.drawString("" + upDown.upTriggerCycleIndex, x1, (int) (0.25 * d.height));
         }
 
         // Skip second index if invalid or equal to start index
         if (upDown.downTriggerCycleIndex != -1 && upDown.upTriggerCycleIndex != upDown.downTriggerCycleIndex) {
+            g.setColor(Color.darkGray);
             g.drawString("" + upDown.downTriggerCycleIndex, x2, (int) (0.25 * d.height));
         }
 

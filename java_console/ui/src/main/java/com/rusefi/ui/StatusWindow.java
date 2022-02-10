@@ -19,17 +19,17 @@ public class StatusWindow implements StatusConsumer {
     private final JTextArea logTextArea = new JTextArea();
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel bottomStatusLabel = new JLabel();
-    private final JScrollPane messagesScroll = new JScrollPane(logTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(400, 400);
-        }
-    };
     @NotNull
     protected final FrameHelper frameHelper = new FrameHelper();
 
     public StatusWindow() {
         logTextArea.setLineWrap(true);
+        JScrollPane messagesScroll = new JScrollPane(logTextArea, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(400, 400);
+            }
+        };
         content.add(messagesScroll, BorderLayout.CENTER);
         content.add(bottomStatusLabel, BorderLayout.SOUTH);
     }

@@ -239,7 +239,7 @@ public class TriggerImage {
     @NotNull
     private static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
                                            TriggerWheelInfo shape) {
-        JPanel clock = new JPanel() {
+        return new JPanel() {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
@@ -297,8 +297,6 @@ public class TriggerImage {
                 return new Dimension(WHEEL_DIAMETER + 2 * WHEEL_BORDER, WHEEL_DIAMETER + 2 * WHEEL_BORDER);
             }
         };
-//        clock.setBackground(Color.orange);
-        return clock;
     }
 
     private static double arcToRusEFI(double angle) {

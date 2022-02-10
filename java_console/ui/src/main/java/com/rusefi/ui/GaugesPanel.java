@@ -139,21 +139,15 @@ public class GaugesPanel {
         JPanel rightUpperPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
 
         final JPopupMenu selectorMenu = new JPopupMenu();
-        selectorMenu.add(new SizeSelectorPanel(new SizeSelectorPanel.SizeSelectorListener() {
-            @Override
-            public void onSelected(int row, int column) {
-                System.out.println("new size " + row + "/" + column);
-                setSensorGridDimensions(row, column);
-            }
+        selectorMenu.add(new SizeSelectorPanel((row, column) -> {
+            System.out.println("new size " + row + "/" + column);
+            setSensorGridDimensions(row, column);
         }));
 
         JButton selector = new JButton("O");
-        selector.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Component c = (Component) e.getSource();
-                selectorMenu.show(c, -1, c.getHeight());
-            }
+        selector.addActionListener(e -> {
+            Component c = (Component) e.getSource();
+            selectorMenu.show(c, -1, c.getHeight());
         });
         rightUpperPanel.add(selector);
 
@@ -166,29 +160,23 @@ public class GaugesPanel {
     private JPopupMenu createMenu(final Node config) {
         JPopupMenu menu = new JPopupMenu();
         final JCheckBoxMenuItem saveDetailedLogs = new JCheckBoxMenuItem("Save detailed logs");
-        saveDetailedLogs.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                FileLog.suspendLogging = !saveDetailedLogs.isSelected();
-                getConfig().getRoot().setBoolProperty(DISABLE_LOGS, FileLog.suspendLogging);
-            }
+        saveDetailedLogs.addActionListener(e -> {
+            FileLog.suspendLogging = !saveDetailedLogs.isSelected();
+            getConfig().getRoot().setBoolProperty(DISABLE_LOGS, FileLog.suspendLogging);
         });
         saveDetailedLogs.setSelected(!FileLog.suspendLogging);
 
         final JCheckBoxMenuItem showRpmItem = new JCheckBoxMenuItem("Show RPM");
         final JCheckBoxMenuItem showCommandsItem = new JCheckBoxMenuItem("Show Commands");
         showRpmItem.setSelected(showRpmPanel);
-        ActionListener showCheckboxListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showRpmPanel = showRpmItem.isSelected();
-                showMessagesPanel = showCommandsItem.isSelected();
-                config.setProperty(SHOW_RPM, showRpmPanel);
-                config.setProperty(SHOW_MESSAGES, showMessagesPanel);
-                applyShowFlags();
-                // todo: this is not needed if we show/hide RPM panel. TODO: split into two different listeners
-                middleSplitPanel.setDividerLocation(0.5);
-            }
+        ActionListener showCheckboxListener = e -> {
+            showRpmPanel = showRpmItem.isSelected();
+            showMessagesPanel = showCommandsItem.isSelected();
+            config.setProperty(SHOW_RPM, showRpmPanel);
+            config.setProperty(SHOW_MESSAGES, showMessagesPanel);
+            applyShowFlags();
+            // todo: this is not needed if we show/hide RPM panel. TODO: split into two different listeners
+            middleSplitPanel.setDividerLocation(0.5);
         };
         showRpmItem.addActionListener(showCheckboxListener);
         showCommandsItem.addActionListener(showCheckboxListener);
@@ -232,13 +220,10 @@ public class GaugesPanel {
     @NotNull
     private JButton createSaveImageButton() {
         JButton saveImageButton = UiUtils.createSaveImageButton();
-        saveImageButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String fileName = Logger.getDate() + "_gauges.png";
+        saveImageButton.addActionListener(e -> {
+            String fileName = Logger.getDate() + "_gauges.png";
 
-                UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
-            }
+            UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
         });
         return saveImageButton;
     }

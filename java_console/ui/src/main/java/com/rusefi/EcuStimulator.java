@@ -29,8 +29,6 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Date: 3/24/13
  * Andrey Belomutskiy, (c) 2013-2020
- *
- * @see EcuStimulatorSandbox
  */
 public class EcuStimulator {
     private static final String DELIMITER = ",";
@@ -308,7 +306,7 @@ public class EcuStimulator {
         return result;
     }
 
-    private class MultipleMeasurements {
+    private static class MultipleMeasurements {
         private List<Double> dwells = new ArrayList<>(MEASURES);
         private List<Double> advances = new ArrayList<>(MEASURES);
 
