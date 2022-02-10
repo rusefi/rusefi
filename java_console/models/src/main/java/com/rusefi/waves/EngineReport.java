@@ -82,8 +82,14 @@ public class EngineReport {
 
         @Override
         public int timeToScreen(int time, int width) {
-            double translated = (time - minTime) * 1.0 / getDuration();
-            return (int) (width * translated);
+            // 0 = left side
+            // 1 = right side
+            double fraction = (time - minTime) * 1.0 / getDuration();
+
+            // Space to leave on the left side to avoid overlap
+            int offset = 150;
+
+            return (int) (offset + (width - offset) * fraction);
         }
 
         @Override

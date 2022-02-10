@@ -73,7 +73,7 @@ public class EngineSnifferStatusPanel {
         green.setForeground(UpDownImage.ENGINE_CYCLE_COLOR);
         infoPanel.add(green);
 
-        JLabel red = new JLabel("  Red line is time scale");
+        JLabel red = new JLabel("  Red line is every 20ms");
         red.setForeground(UpDownImage.TIME_SCALE_COLOR);
         infoPanel.add(red);
     }
