@@ -82,8 +82,8 @@ public class BinarySensorLog implements SensorLog {
 
                 byte[] byteArray = baos.toByteArray();
                 byte checkSum = 0;
-                for (int i = 0; i < byteArray.length; i++) {
-                    checkSum += byteArray[i];
+                for (byte b : byteArray) {
+                    checkSum += b;
                 }
                 stream.write(byteArray);
                 stream.write(checkSum);

@@ -58,13 +58,12 @@ public class EngineSnifferPanel {
         public Dimension getPreferredSize() {
             Dimension d = chartPanel.getSize();
             Dimension s = super.getPreferredSize();
-            Dimension dimension = new Dimension((int) (d.width * zoomControl.getZoomProvider().getZoomValue()), s.height);
-            return dimension;
+            return new Dimension((int) (d.width * zoomControl.getZoomProvider().getZoomValue()), s.height);
         }
     };
 
     private final ZoomControl zoomControl = new ZoomControl();
-    private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel(zoomControl.getZoomProvider());
+    private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel();
     private final UpDownImage crank = createImage(Fields.PROTOCOL_CRANK1);
     private final ChartScrollControl scrollControl;
     private AnyCommand command;
@@ -114,12 +113,7 @@ public class EngineSnifferPanel {
 
         upperPanel.add(zoomControl);
 
-        scrollControl = ChartRepository.getInstance().createControls(new ChartRepository.ChartRepositoryListener() {
-            @Override
-            public void onDigitalChart(String chart) {
-                displayChart(chart);
-            }
-        });
+        scrollControl = ChartRepository.getInstance().createControls(chart -> displayChart(chart));
         if (uiContext.getLinkManager().isLogViewer())
             upperPanel.add(scrollControl.getContent());
 
@@ -145,15 +139,12 @@ public class EngineSnifferPanel {
         chartPanel.add(pane, BorderLayout.CENTER);
         chartPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        zoomControl.listener = new ZoomControl.ZoomControlListener() {
-            @Override
-            public void onZoomChange() {
-                System.out.println("onZoomChange");
-                /**
-                 * We have scroll pane size which depends on zoom, that's a long chain of dependencies
-                 */
-                UiUtils.trueLayout(imagePanel.getParent());
-            }
+        zoomControl.listener = () -> {
+            System.out.println("onZoomChange");
+            /**
+             * We have scroll pane size which depends on zoom, that's a long chain of dependencies
+             */
+            UiUtils.trueLayout(imagePanel.getParent());
         };
 
         resetImagePanel();
@@ -180,7 +171,7 @@ public class EngineSnifferPanel {
         engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
-                String pinInfo[] = value.split("@");
+                String[] pinInfo = value.split("@");
                 if (pinInfo.length != 2)
                     return;
                 String channel = pinInfo[0];
