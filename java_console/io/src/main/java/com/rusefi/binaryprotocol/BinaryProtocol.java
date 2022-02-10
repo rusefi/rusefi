@@ -130,7 +130,7 @@ public class BinaryProtocol {
 
     public boolean isClosed;
 
-    public CommunicationLoggingListener communicationLoggingListener = CommunicationLoggingListener.VOID;
+    public CommunicationLoggingListener communicationLoggingListener;
 
     public byte[] getCurrentOutputs() {
         return state.getCurrentOutputs();
@@ -282,7 +282,7 @@ public class BinaryProtocol {
         if (needCompositeLogger) {
             getComposite();
         } else if (isCompositeLoggerEnabled) {
-            byte packet[] = new byte[2];
+            byte[] packet = new byte[2];
             packet[0] = Fields.TS_SET_LOGGER_SWITCH;
             packet[1] = Fields.TS_COMPOSITE_DISABLE;
             executeCommand(packet, "disable composite");
@@ -614,7 +614,7 @@ public class BinaryProtocol {
         if (isClosed)
             return;
 
-        byte packet[] = new byte[1];
+        byte[] packet = new byte[1];
         packet[0] = Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY;
         // get command would enable composite logging in controller but we need to turn it off from our end
         // todo: actually if console gets disconnected composite logging might end up enabled in controller?
