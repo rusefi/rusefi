@@ -40,13 +40,13 @@ CAN_BMW_E90_DSC_SPEED = 0x1A0
 CAN_BMW_E90_COOLANT = 0x1D0
 -- 1E1 klima?
 CAN_BMW_E90_LOCKING = 0x2FC
--- 308 Status MSA ECU
+CAN_BMW_E90_MSA = 0x308
 -- 310 outside temperature Kombi
 -- 330 fuel, range
 CAN_BMW_E90_DASH_ON = 0x332
 -- 34F
 -- 0x3EF	OBD Daten Motor ECU
--- CAN_BMW_E90_ECU_NETWORK = 0x492
+CAN_BMW_E90_ECU_NETWORK = 0x492
 -- CAN_BMW_E90_ECU2_NETWORK = 0x493
 
 CAN_BMW_GEAR_TORQUE_DEMAND2 = 0x0B5
@@ -71,7 +71,9 @@ canRxAdd(CAN_BMW_E90_DSC_STATUS)
 canRxAdd(CAN_BMW_E90_DSC_SPEED)
 canRxAdd(CAN_BMW_E90_COOLANT)
 canRxAdd(CAN_BMW_E90_LOCKING)
+canRxAdd(CAN_BMW_E90_MSA)
 canRxAdd(CAN_BMW_E90_DASH_ON)
+canRxAdd(CAN_BMW_E90_ECU_NETWORK)
 
 canRxAdd(CAN_BMW_GEAR_TORQUE_DEMAND2)
 canRxAdd(CAN_BMW_GEAR_TRANSMISSION_DATA)
@@ -134,8 +136,14 @@ function onCanRx(bus, id, dlc, data)
 	elseif id == CAN_BMW_E90_LOCKING then
 		printDebug('CAN_BMW_E90_LOCKING')
 		relayToTcu(id, data)
+	elseif id == CAN_BMW_E90_MSA then
+		printDebug('CAN_BMW_E90_MSA')
+		relayToTcu(id, data)
     elseif id == CAN_BMW_E90_DASH_ON then
 		printDebug('CAN_BMW_E90_DASH_ON')
+		relayToTcu(id, data)
+    elseif id == CAN_BMW_E90_ECU_NETWORK then
+		printDebug('CAN_BMW_E90_ECU_NETWORK')
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_GEAR_TORQUE_DEMAND2 then
 		printDebug('*******CAN_BMW_GEAR_TORQUE_DEMAND2')
