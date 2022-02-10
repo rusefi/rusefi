@@ -11,6 +11,7 @@ DDEFS += -DLED_COMMUNICATION_BRAIN_PIN_MODE=INVERTED_OUTPUT
 
 # We are running on Hellen-One hardware!
 DDEFS += -DHW_HELLEN=1
+DDEFS += -DEFI_USE_OSC=TRUE
 
 # todo: is it broken?
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
