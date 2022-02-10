@@ -15,7 +15,7 @@ endif
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
 # Disable serial ports on this board as UART3 causes a DMA conflict with the SD card
-DDEFS += -DTS_NO_PRIMARY -DTS_NO_SECONDARY
+DDEFS += -DTS_NO_PRIMARY
 DDEFS += -DEFI_CAN_SERIAL=TRUE
 # todo debug:
 DDEFS += -DDISABLE_CAN_UPDATE_DASH=TRUE
