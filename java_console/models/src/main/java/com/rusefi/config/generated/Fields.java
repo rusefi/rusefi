@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 10 00:07:59 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 10 15:27:27 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1838,6 +1838,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 427452272;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2311,7 +2312,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.02.10.all.2241174264";
+	public static final String TS_SIGNATURE = "rusEFI 2022.02.10.all.427452272";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2361,7 +2362,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1272;
 	public static final int unused_1484_bit_30_offset = 1272;
 	public static final int unused_1484_bit_31_offset = 1272;
-	public static final int unusedBit_310_31_offset = 896;
 	public static final int unusedBit_48_31_offset = 164;
 	public static final int unusedBit_505_10_offset = 1740;
 	public static final int unusedBit_505_11_offset = 1740;
@@ -2444,6 +2444,7 @@ public class Fields {
 	public static final int vehicleWeight_offset = 786;
 	public static final int veLoadBins_offset = 19300;
 	public static final int veOverrideMode_offset = 1733;
+	public static final int verboseCan2_offset = 896;
 	public static final int verboseCan_offset = 164;
 	public static final int verboseCanBaseAddress_offset = 760;
 	public static final int verboseTLE8888_offset = 748;
@@ -2973,7 +2974,7 @@ public class Fields {
 	public static final Field TCUENABLED = Field.create("TCUENABLED", 896, FieldType.BIT, 28);
 	public static final Field CANBROADCASTUSECHANNELTWO = Field.create("CANBROADCASTUSECHANNELTWO", 896, FieldType.BIT, 29);
 	public static final Field USERAWOUTPUTTODRIVEIDLESTEPPER = Field.create("USERAWOUTPUTTODRIVEIDLESTEPPER", 896, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_310_31 = Field.create("UNUSEDBIT_310_31", 896, FieldType.BIT, 31);
+	public static final Field VERBOSECAN2 = Field.create("VERBOSECAN2", 896, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 900, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 901, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN = Field.create("ETBIO1_CONTROLPIN", 902, FieldType.INT8, brain_pin_e);
@@ -4274,7 +4275,7 @@ public class Fields {
 	TCUENABLED,
 	CANBROADCASTUSECHANNELTWO,
 	USERAWOUTPUTTODRIVEIDLESTEPPER,
-	UNUSEDBIT_310_31,
+	VERBOSECAN2,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN,

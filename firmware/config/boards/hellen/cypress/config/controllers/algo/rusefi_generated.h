@@ -1910,7 +1910,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3210771780
+#define SIGNATURE_HASH 596607180
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2441,7 +2441,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.02.10.hellen_cypress.3210771780"
+#define TS_SIGNATURE "rusEFI 2022.02.10.hellen_cypress.596607180"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2494,7 +2494,6 @@
 #define unused_1484_bit_29_offset 1272
 #define unused_1484_bit_30_offset 1272
 #define unused_1484_bit_31_offset 1272
-#define unusedBit_310_31_offset 896
 #define unusedBit_48_31_offset 164
 #define unusedBit_505_10_offset 1740
 #define unusedBit_505_11_offset 1740
@@ -2579,6 +2578,7 @@
 #define vehicleWeight_offset 786
 #define veLoadBins_offset 19300
 #define veOverrideMode_offset 1733
+#define verboseCan2_offset 896
 #define verboseCan_offset 164
 #define verboseCanBaseAddress_offset 760
 #define verboseTLE8888_offset 748

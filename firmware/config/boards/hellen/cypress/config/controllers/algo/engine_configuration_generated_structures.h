@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 07 00:02:47 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 10 15:27:22 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -882,7 +882,7 @@ struct engine_configuration_s {
 	offset 164 bit 27 */
 	bool usescriptTableForCanSniffingFiltering : 1 {};
 	/**
-	 * Print incoming and outgoing CAN messages in rusEFI console
+	 * Print incoming and outgoing first bus CAN messages in rusEFI console
 	offset 164 bit 28 */
 	bool verboseCan : 1 {};
 	/**
@@ -2122,8 +2122,9 @@ struct engine_configuration_s {
 	offset 896 bit 30 */
 	bool useRawOutputToDriveIdleStepper : 1 {};
 	/**
+	 * Print incoming and outgoing second bus CAN messages in rusEFI console
 	offset 896 bit 31 */
-	bool unusedBit_310_31 : 1 {};
+	bool verboseCan2 : 1 {};
 	/**
 	 * offset 900
 	 */
@@ -4521,4 +4522,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Mon Feb 07 00:02:47 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 10 15:27:22 UTC 2022
