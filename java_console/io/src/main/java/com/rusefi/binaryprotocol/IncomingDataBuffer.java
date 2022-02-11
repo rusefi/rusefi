@@ -30,23 +30,17 @@ public class IncomingDataBuffer {
     }
 
     private static final int BUFFER_SIZE = 32768;
-    private static String loggingPrefix;
+    private final String loggingPrefix;
     /**
      * buffer for response bytes from controller
      */
     private final CircularByteBuffer cbb;
     private final AbstractIoStream.StreamStats streamStats;
 
-    public IncomingDataBuffer(AbstractIoStream.StreamStats streamStats) {
+    public IncomingDataBuffer(String loggingPrefix, AbstractIoStream.StreamStats streamStats) {
+        this.loggingPrefix = loggingPrefix;
         this.streamStats = Objects.requireNonNull(streamStats, "streamStats");
         this.cbb = new CircularByteBuffer(BUFFER_SIZE);
-    }
-
-    public static IncomingDataBuffer createDataBuffer(String loggingPrefix, IoStream stream) {
-        IncomingDataBuffer.loggingPrefix = loggingPrefix;
-        IncomingDataBuffer incomingData = new IncomingDataBuffer(stream.getStreamStats());
-        stream.setInputListener(incomingData::addData);
-        return incomingData;
     }
 
     public byte[] getPacket(String msg) throws EOFException {
@@ -104,7 +98,7 @@ public class IncomingDataBuffer {
         synchronized (cbb) {
             if (cbb.size() - cbb.length() < freshData.length) {
                 log.error("buffer overflow not expected");
-                cbb.clear();
+                throw new IllegalStateException("buffer overflow not expected");
             }
             cbb.put(freshData);
             cbb.notifyAll();
