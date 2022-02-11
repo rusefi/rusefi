@@ -282,10 +282,7 @@ public class BinaryProtocol {
         if (needCompositeLogger) {
             getComposite();
         } else if (isCompositeLoggerEnabled) {
-            byte[] packet = new byte[2];
-            packet[0] = Fields.TS_SET_LOGGER_SWITCH;
-            packet[1] = Fields.TS_COMPOSITE_DISABLE;
-            executeCommand(packet, "disable composite");
+            executeCommand(Fields.TS_SET_LOGGER_SWITCH, new byte[] { Fields.TS_COMPOSITE_DISABLE }, "disable composite");
             isCompositeLoggerEnabled = false;
             closeComposites();
         }
@@ -379,12 +376,12 @@ public class BinaryProtocol {
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
-            byte[] packet = new byte[5];
+            byte[] packet = new byte[4];
             packet[0] = Fields.TS_READ_COMMAND;
-            putShort(packet, 1, swap16(offset));
-            putShort(packet, 3, swap16(requestSize));
+            putShort(packet, 0, swap16(offset));
+            putShort(packet, 2, swap16(requestSize));
 
-            byte[] response = executeCommand(packet, "load image offset=" + offset);
+            byte[] response = executeCommand(Fields.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != requestSize + 1) {
                 String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
@@ -455,7 +452,7 @@ public class BinaryProtocol {
 
     public int getCrcFromController(int configSize) {
         byte[] packet = createCrcCommand(configSize);
-        byte[] response = executeCommand(packet, "get CRC32");
+        byte[] response = executeCommand(Fields.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
 
         if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) && response.length == 5) {
             ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
@@ -472,15 +469,22 @@ public class BinaryProtocol {
     }
 
     public static byte[] createCrcCommand(int size) {
-        byte[] packet = new byte[5];
-        packet[0] = Fields.TS_CRC_CHECK_COMMAND;
-        putShort(packet, 1, swap16(/*offset = */ 0));
-        putShort(packet, 3, swap16(size));
+        byte[] packet = new byte[4];
+        putShort(packet, 0, swap16(/*offset = */ 0));
+        putShort(packet, 2, swap16(size));
         return packet;
     }
 
-    public byte[] executeCommand(byte[] packet, String msg) {
-        return executeCommand(packet, msg, false);
+    public byte[] executeCommand(char opcode, String msg) {
+        return executeCommand(opcode, null, msg);
+    }
+
+    public byte[] executeCommand(char opcode, String msg, boolean allowLongResponse) {
+        return executeCommand(opcode, null, msg, allowLongResponse);
+    }
+
+    public byte[] executeCommand(char opcode, byte[] data, String msg) {
+        return executeCommand(opcode, data, msg, false);
     }
 
     /**
@@ -488,14 +492,26 @@ public class BinaryProtocol {
      *
      * @return null in case of IO issues
      */
-    public byte[] executeCommand(byte[] packet, String msg, boolean allowLongResponse) {
+    public byte[] executeCommand(char opcode, byte[] packet, String msg, boolean allowLongResponse) {
         if (isClosed)
             return null;
+
+        byte[] fullRequest;
+
+        if (packet != null) {
+            fullRequest = new byte[packet.length + 1];
+            System.arraycopy(packet, 0, fullRequest, 1, packet.length);
+        } else {
+            fullRequest = new byte[1];
+        }
+
+        fullRequest[0] = (byte)opcode;
+
         try {
             linkManager.assertCommunicationThread();
             dropPending();
 
-            sendPacket(packet);
+            sendPacket(fullRequest);
             return receivePacket(msg, allowLongResponse);
         } catch (IOException e) {
             log.error(msg + ": executeCommand failed: " + e);
@@ -517,16 +533,15 @@ public class BinaryProtocol {
     public void writeData(byte[] content, int contentOffset, int ecuOffset, int size) {
         isBurnPending = true;
 
-        byte[] packet = new byte[5 + size];
-        packet[0] = Fields.TS_CHUNK_WRITE_COMMAND;
-        putShort(packet, 1, swap16(ecuOffset));
-        putShort(packet, 3, swap16(size));
+        byte[] packet = new byte[4 + size];
+        putShort(packet, 0, swap16(ecuOffset));
+        putShort(packet, 2, swap16(size));
 
-        System.arraycopy(content, contentOffset, packet, 5, size);
+        System.arraycopy(content, contentOffset, packet, 4, size);
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(packet, "writeImage");
+            byte[] response = executeCommand(Fields.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != 1) {
                 log.error("writeData: Something is wrong, retrying...");
                 continue;
@@ -543,7 +558,7 @@ public class BinaryProtocol {
         while (true) {
             if (isClosed)
                 return;
-            byte[] response = executeCommand(new byte[]{Fields.TS_BURN_COMMAND}, "burn");
+            byte[] response = executeCommand(Fields.TS_BURN_COMMAND, "burn");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_BURN_OK) || response.length != 1) {
                 continue;
             }
@@ -579,7 +594,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(command, "execute", false);
+            byte[] response = executeCommand(Fields.TS_EXECUTE, command, "execute", false);
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_COMMAND_OK) || response.length != 1) {
                 continue;
             }
@@ -590,17 +605,14 @@ public class BinaryProtocol {
 
     public static byte[] getTextCommandBytes(String text) {
         byte[] asBytes = text.getBytes();
-        byte[] command = new byte[asBytes.length + 1];
-        command[0] = Fields.TS_EXECUTE;
-        System.arraycopy(asBytes, 0, command, 1, asBytes.length);
-        return command;
+        return asBytes;
     }
 
     private String requestPendingMessages() {
         if (isClosed)
             return null;
         try {
-            byte[] response = executeCommand(new byte[]{Fields.TS_GET_TEXT}, "text", true);
+            byte[] response = executeCommand(Fields.TS_GET_TEXT, "text", true);
             if (response != null && response.length == 1)
                 Thread.sleep(100);
             return new String(response, 1, response.length - 1);
@@ -614,13 +626,11 @@ public class BinaryProtocol {
         if (isClosed)
             return;
 
-        byte[] packet = new byte[1];
-        packet[0] = Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY;
         // get command would enable composite logging in controller but we need to turn it off from our end
         // todo: actually if console gets disconnected composite logging might end up enabled in controller?
         isCompositeLoggerEnabled = true;
 
-        byte[] response = executeCommand(packet, "composite log", true);
+        byte[] response = executeCommand(Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY, "composite log", true);
         if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK)) {
             List<CompositeEvent> events = CompositeParser.parse(response);
             createCompositesIfNeeded();
@@ -635,7 +645,7 @@ public class BinaryProtocol {
 
         byte[] packet = GetOutputsCommand.createRequest();
 
-        byte[] response = executeCommand(packet, "output channels", false);
+        byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, "output channels", false);
         if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != Fields.TS_RESPONSE_OK)
             return false;
 

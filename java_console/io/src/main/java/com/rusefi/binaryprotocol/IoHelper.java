@@ -36,8 +36,7 @@ public class IoHelper {
             log.info("makeCrc32Packet: raw packet " + IoStream.printByteArray(command));
         byte[] packet = new byte[command.length + 6];
 
-        packet[0] = (byte) (command.length / 256);
-        packet[1] = (byte) command.length;
+        putShort(packet, 0, command.length);
 
         System.arraycopy(command, 0, packet, 2, command.length);
         int crc = getCrc32(command);
@@ -57,19 +56,15 @@ public class IoHelper {
     }
 
     public static void putInt(byte[] packet, int offset, int value) {
-        int index = offset + 3;
-        for (int i = 0; i < 4; i++) {
-            packet[index--] = (byte) value;
-            value >>= 8;
-        }
+        packet[offset + 3] = (byte) value;
+        packet[offset + 2] = (byte) (value >> 8);
+        packet[offset + 1] = (byte) (value >> 16);
+        packet[offset] = (byte) (value >> 24);
     }
 
     public static void putShort(byte[] packet, int offset, int value) {
-        int index = offset + 1;
-        for (int i = 0; i < 2; i++) {
-            packet[index--] = (byte) value;
-            value >>= 8;
-        }
+        packet[offset + 1] = (byte) value;
+        packet[offset] = (byte) (value >> 8);
     }
 
     /**
