@@ -29,6 +29,7 @@ for BOARD in \
    "hellen/hellenNA8_96 hellenNA8_96" \
    "microrusefi mre_f7" \
    "microrusefi mre_f4" \
+   "core8 core8" \
    "frankenso frankenso_na6" \
    "prometheus prometheus_469" \
    "prometheus prometheus_405" \
