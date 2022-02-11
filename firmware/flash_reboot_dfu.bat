@@ -7,6 +7,5 @@ echo Sending rusEFI DFU request
 java -jar ../java_console_binary/rusefi_console.jar reboot_dfu
 echo Now sleeping before DFU
 sleep 5
-rem TODO migrate this to stm32prog
 echo Invoking DFU process
-..\misc\install\DfuSe\DfuSeCommand.exe -c -d --fn deliver/rusefi.dfu
+"../misc/install/STM32_Programmer_CLI/bin/STM32_Programmer_CLI.exe" -c port=usb1 -w deliver/rusefi.hex -v -s
