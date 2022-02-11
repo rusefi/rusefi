@@ -117,43 +117,43 @@ pins:
   # Grey C line
   
   - pin: Grey C1
-    id: GPIOA_6
+    id: EFI_ADC_6
     class: analog_inputs
     function: Sensor Input
     ts_name: Grey C1 - Analog Sensor Input
     
   - pin: Grey C2
-    id: GPIOA_7
+    id: EFI_ADC_7
     class: analog_inputs
     function: Sensor Input
     ts_name: Grey C2 - Analog Sensor Input
     
   - pin: Grey C3
-    id: GPIOC_4
+    id: EFI_ADC_14
     class: analog_inputs
     function: Sensor Input
     ts_name: Grey C3 - Analog Sensor Input
     
   - pin: Grey C4
-    id: GPIOA_1
+    id: EFI_ADC_1
     class: analog_inputs
     function: Sensor Input
     ts_name: Grey C4 - Analog Sensor Input
     
   - pin: Grey C5
-    id: GPIOA_2
+    id: EFI_ADC_2
     class: analog_inputs
     function: Sensor Input
     ts_name: Grey C5 - Analog Sensor Input
     
   - pin: Grey C6
-    id: GPIOA_3
+    id: EFI_ADC_3
     class: analog_inputs
     function: Sensor Input
     ts_name: Grey C6 - Analog Sensor Input
     
   - pin: Grey C7
-    id: GPIOA_4
+    id: EFI_ADC_4
     class: analog_inputs
     function: Sensor Input
     ts_name: Grey C7 - Analog Sensor Input
@@ -252,7 +252,7 @@ pins:
     ts_name: Black B4 - Digital Input 3
 
   - pin: Black B5
-    id: GPIOC_0
+    id: EFI_ADC_10
     class: analog_inputs
     function: Sensor Input / Knock 2
     ts_name: Black B5 - Analog Sensor Input / Knock 2
@@ -312,7 +312,7 @@ pins:
         
   - pin: Black C6
     id: GPIOC_5
-    class: analog_inputs
+    class: EFI_ADC_15
     function: Sensor Input / Knock 1
     ts_name: Black C6 - Analog Sensor Input / Knock 1
 
