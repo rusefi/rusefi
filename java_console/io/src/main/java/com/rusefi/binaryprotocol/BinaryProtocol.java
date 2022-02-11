@@ -132,28 +132,15 @@ public class BinaryProtocol {
 
     public CommunicationLoggingListener communicationLoggingListener;
 
-    public byte[] getCurrentOutputs() {
-        return state.getCurrentOutputs();
-    }
-
-    public void setCurrentOutputs(byte[] currentOutputs) {
-        state.setCurrentOutputs(currentOutputs);
-    }
-
     private SensorCentral.SensorListener rpmListener;
 
-    private final Thread hook = new Thread(() -> closeComposites(), "BinaryProtocol::hook");
+    private final Thread hook = new Thread(this::closeComposites, "BinaryProtocol::hook");
 
     public BinaryProtocol(LinkManager linkManager, IoStream stream) {
         this.linkManager = linkManager;
         this.stream = stream;
 
-        communicationLoggingListener = new CommunicationLoggingListener() {
-            @Override
-            public void onPortHolderMessage(Class clazz, String message) {
-                linkManager.messageListener.postMessage(clazz, message);
-            }
-        };
+        communicationLoggingListener = linkManager.messageListener::postMessage;
 
         incomingData = stream.getDataBuffer();
         Runtime.getRuntime().addShutdownHook(hook);
@@ -249,30 +236,27 @@ public class BinaryProtocol {
         if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
             log.info("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
         }
-        Runnable textPull = new Runnable() {
-            @Override
-            public void run() {
-                while (!isClosed) {
+        Runnable textPull = () -> {
+            while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
-                    if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
-                        linkManager.submit(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (requestOutputChannels())
-                                    HeartBeatListeners.onDataArrived();
-                                compositeLogic();
-                                String text = requestPendingMessages();
-                                if (text != null)
-                                    listener.onDataArrived((text + "\r\n").getBytes());
-                                LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider(BinaryProtocol.this);
-                                LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
-                            }
-                        });
-                    }
-                    sleep(Timeouts.TEXT_PULL_PERIOD);
+                if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
+                    linkManager.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (requestOutputChannels())
+                                HeartBeatListeners.onDataArrived();
+                            compositeLogic();
+                            String text = requestPendingMessages();
+                            if (text != null)
+                                listener.onDataArrived((text + "\r\n").getBytes());
+                            LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider(BinaryProtocol.this);
+                            LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
+                        }
+                    });
                 }
-                log.info("Stopping text pull");
+                sleep(Timeouts.TEXT_PULL_PERIOD);
             }
+            log.info("Stopping text pull");
         };
         Thread tr = THREAD_FACTORY.newThread(textPull);
         tr.start();
@@ -595,8 +579,7 @@ public class BinaryProtocol {
     }
 
     public static byte[] getTextCommandBytes(String text) {
-        byte[] asBytes = text.getBytes();
-        return asBytes;
+        return text.getBytes();
     }
 
     private String requestPendingMessages() {
@@ -634,20 +617,37 @@ public class BinaryProtocol {
         if (isClosed)
             return false;
 
-        byte[] packet = GetOutputsCommand.createRequest();
+        // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
+        //  of the reassembled packet.
+        byte[] reassemblyBuffer = new byte[Fields.TS_OUTPUT_SIZE + 1];
+        reassemblyBuffer[0] = Fields.TS_RESPONSE_OK;
 
-        byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, "output channels");
-        if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != Fields.TS_RESPONSE_OK)
-            return false;
+        int reassemblyIdx = 0;
+        int remaining = Fields.TS_OUTPUT_SIZE;
 
-        state.setCurrentOutputs(response);
+        while (remaining > 0) {
+            // If less than one full chunk left, do a smaller read
+            int chunkSize = Math.min(remaining, Fields.BLOCKING_FACTOR);
 
-        SensorCentral.getInstance().grabSensorValues(response);
+            byte[] response = executeCommand(
+                Fields.TS_OUTPUT_COMMAND,
+                GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
+                "output channels"
+            );
+
+            if (response == null || response.length != (chunkSize + 1) || response[0] != Fields.TS_RESPONSE_OK) {
+                return false;
+            }
+
+            // Copy this chunk in to the reassembly buffer
+            System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
+            remaining -= chunkSize;
+        }
+
+        state.setCurrentOutputs(reassemblyBuffer);
+
+        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer);
         return true;
-    }
-
-    public void setRange(byte[] src, int scrPos, int offset, int count) {
-        state.setRange(src, scrPos, offset, count);
     }
 
     public BinaryProtocolState getBinaryProtocolState() {
