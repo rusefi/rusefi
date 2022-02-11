@@ -350,6 +350,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isMainRelayOn;
 	if (strEqualCaseInsensitive(name, "isUsbConnected"))
 		return engine->outputChannels.isUsbConnected;
+	if (strEqualCaseInsensitive(name, "luaInvocationCounter"))
+		return engine->outputChannels.luaInvocationCounter;
+	if (strEqualCaseInsensitive(name, "luaLastCycleDuration"))
+		return engine->outputChannels.luaLastCycleDuration;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
