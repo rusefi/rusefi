@@ -41,9 +41,46 @@ void setSdCardConfigurationOverrides(void) {
 }
 
 void setBoardConfigOverrides(void) {
+	
+	// TLE9201 driver
+	// This chip has three control pins:
+	// DIR - sets direction of the motor
+	// PWM - pwm control (enable high, coast low)
+	// DIS - disables motor (enable low)
+
+	// Throttle #1
+	// PWM pin
+	engineConfiguration->etbIo[0].controlPin = GPIOB_8;
+	// DIR pin
+	engineConfiguration->etbIo[0].directionPin1 = GPIOB_9;
+	// Disable pin
+	engineConfiguration->etbIo[0].disablePin = GPIOB_7;
+	// Unused
+	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+
+	// Throttle #2
+	// PWM pin
+	engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
+	// DIR pin
+	engineConfiguration->etbIo[1].directionPin1 = GPIO_UNASSIGNED;
+	// Disable pin
+	engineConfiguration->etbIo[1].disablePin = GPIO_UNASSIGNED;
+	// Unused
+	engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
+
+	// we only have pwm/dir, no dira/dirb
+	engineConfiguration->etb_use_two_wires = false;
 }
 
 void setPinConfigurationOverrides(void) {
+
+	//CAN 1 bus overwrites
+	engineConfiguration->canTxPin = GPIOD_0;
+	engineConfiguration->canRxPin = GPIOD_1;
+
+	//CAN 2 bus overwrites
+	engineConfiguration->can2RxPin = GPIOB_5;
+	engineConfiguration->can2TxPin = GPIOB_6;
 }
 
 void setSerialConfigurationOverrides(void) {
@@ -108,43 +145,9 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = true;
 	engineConfiguration->canSleepPeriodMs = 50;
-	
-	engineConfiguration->canTxPin = GPIOD_0;
-	engineConfiguration->canRxPin = GPIOD_1;
-	engineConfiguration->canBaudRate = B500KBPS;
 
-	
-	engineConfiguration->can2RxPin = GPIOB_5;
-	engineConfiguration->can2TxPin = GPIOB_6;
+	engineConfiguration->canBaudRate = B500KBPS;
 	engineConfiguration->can2BaudRate = B500KBPS;
 	
 
-	// TLE9201 driver
-	// This chip has three control pins:
-	// DIR - sets direction of the motor
-	// PWM - pwm control (enable high, coast low)
-	// DIS - disables motor (enable low)
-
-	// Throttle #1
-	// PWM pin
-	engineConfiguration->etbIo[0].controlPin = GPIOB_8;
-	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = GPIOB_9;
-	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = GPIOB_7;
-	// Unused
-	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
-
-	// Throttle #2
-	// PWM pin
-	engineConfiguration->etbIo[1].controlPin = GPIO_UNASSIGNED;
-	// DIR pin
-	engineConfiguration->etbIo[1].directionPin1 = GPIO_UNASSIGNED;
-	// Disable pin
-	engineConfiguration->etbIo[1].disablePin = GPIO_UNASSIGNED;
-	// Unused
-	engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
-
-	// we only have pwm/dir, no dira/dirb
-	engineConfiguration->etb_use_two_wires = false;
 }
