@@ -323,6 +323,38 @@ pins:
   - pin: Black C8
     function: Power Ground
     type: gnd
+  
+  - pin: On-board MAP
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: On-board MAP
+    
+  - pin: On-board BARO
+    id: EFI_ADC_8
+    class: analog_inputs
+    function: BARO Sensor Input
+    ts_name: On-board BARO (optional)
+
+  - pin: On-board O2
+    id: EFI_ADC_11
+    class: analog_inputs
+    function: O2 Sensor Input
+    ts_name: On-board O2
+
+  - pin: On-board O2(Secondary)
+    id: EFI_ADC_12
+    class: analog_inputs
+    function: O2 Sensor Input
+    ts_name: On-board O2(Secondary)
+    
+  - pin: On-board Battery Sense
+    id: EFI_ADC_0
+    class: analog_inputs
+    function: +12V
+    ts_name: On-board Battery Sense
+    type: 12v
+
 
 info:
   title: Core8
