@@ -112,7 +112,7 @@ public class TestingUtils {
     }
 
     static String getNextWaveChart(CommandQueue commandQueue) {
-        IoUtil.sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
+        IoUtil.sendBlockingCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
         String result = getEngineChart(commandQueue);
         FileLog.MAIN.logLine("current chart: " + result);
         return result;
