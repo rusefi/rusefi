@@ -119,7 +119,7 @@ public class LocalApplicationProxy implements Closeable {
                         System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
 
                         // we do not really need the data, we just need to take response from the socket
-                        authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker", false);
+                        authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker");
                     }
 
                     if (isTimeForApplicationToConnect(lastActivity.get(), context.startUpIdle())) {
