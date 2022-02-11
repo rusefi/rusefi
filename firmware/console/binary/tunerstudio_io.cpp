@@ -91,7 +91,10 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 	bool isBigPacket = size > BLOCKING_FACTOR + 7;
 
 	if (isBigPacket && !allowLongPackets) {
-		firmwareError(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
+		// TODO: turn this in to an error once console output channel reads are chunked!
+		// Hardware CI may fail before that time.
+		//firmwareError(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
+		warning(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
 	}
 
 	if (isBigPacket) {
