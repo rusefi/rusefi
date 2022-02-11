@@ -22,7 +22,7 @@ public class BufferedSerialIoStream extends SerialIoStream {
      */
     private BufferedSerialIoStream(SerialPort sp, String port) {
         super(sp, port);
-        this.dataBuffer = IncomingDataBuffer.createDataBuffer("[serial] ", this);
+        this.dataBuffer = this.createDataBuffer("[serial] ");
     }
 
     @Override
