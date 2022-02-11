@@ -79,8 +79,7 @@ public class IncomingDataBuffer {
 
         boolean isCrcOk = actualCrc == packetCrc;
         if (!isCrcOk) {
-            if (log.debugEnabled())
-                log.debug(String.format("CRC mismatch %x: vs %x", actualCrc, packetCrc));
+            log.error(String.format("CRC mismatch %x: vs %x", actualCrc, packetCrc));
             return null;
         }
         onPacketArrived();
