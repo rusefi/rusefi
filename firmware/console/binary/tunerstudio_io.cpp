@@ -88,7 +88,14 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 		size = 0;
 	}
 
-	if (size <= BLOCKING_FACTOR + 7) {
+	bool isBigPacket = size > BLOCKING_FACTOR + 7;
+
+	if (isBigPacket && !allowLongPackets) {
+		firmwareError(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
+		isBigPacket = false;
+	}
+
+	if (isBigPacket) {
 		// for small packets we use a buffer for CRC calculation
 		writeCrcPacketSmall(responseCode, buf, size);
 	} else {
