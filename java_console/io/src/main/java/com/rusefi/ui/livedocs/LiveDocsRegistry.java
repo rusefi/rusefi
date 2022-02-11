@@ -50,12 +50,11 @@ public enum LiveDocsRegistry {
         return context -> {
             Field[] values = StateDictionary.INSTANCE.getFields(context);
             int size = Field.getStructureSize(values);
-            byte[] packet = new byte[5];
-            packet[0] = Fields.TS_GET_STRUCT;
-            putShort(packet, 1, swap16(context.ordinal())); // offset
-            putShort(packet, 3, swap16(size));
+            byte[] packet = new byte[4];
+            putShort(packet, 0, swap16(context.ordinal())); // offset
+            putShort(packet, 2, swap16(size));
 
-            byte[] responseWithCode = binaryProtocol.executeCommand(packet, "get LiveDoc");
+            byte[] responseWithCode = binaryProtocol.executeCommand(Fields.TS_GET_STRUCT, packet, "get LiveDoc");
             if (responseWithCode == null || responseWithCode.length != (size + 1) || responseWithCode[0] != Fields.TS_RESPONSE_OK)
                 return null;
 

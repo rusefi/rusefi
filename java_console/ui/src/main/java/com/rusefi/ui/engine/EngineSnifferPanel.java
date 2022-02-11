@@ -240,7 +240,7 @@ public class EngineSnifferPanel {
 
         int index = getInsertIndex(name, images.keySet());
 
-        FileLog.MAIN.logLine("Registering " + name + "@" + index);
+        FileLog.MAIN.logLine("Engine sniffer register channel " + name + " at idx " + index);
 
         UpDownImage image = createImage(name);
         images.put(name, image);

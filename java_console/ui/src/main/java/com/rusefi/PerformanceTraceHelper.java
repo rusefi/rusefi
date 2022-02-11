@@ -21,12 +21,12 @@ public class PerformanceTraceHelper {
             JOptionPane.showMessageDialog(parent, "Failed to located serial ports");
             return;
         }
-        bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_BEGIN}, "begin trace");
+        bp.executeCommand(Fields.TS_PERF_TRACE_BEGIN, "begin trace");
 
         try {
             Thread.sleep(500);
 
-            byte[] packet = bp.executeCommand(new byte[]{Fields.TS_PERF_TRACE_GET_BUFFER}, "get trace", true);
+            byte[] packet = bp.executeCommand(Fields.TS_PERF_TRACE_GET_BUFFER, "get trace", true);
             if (!checkResponseCode(packet, (byte) Fields.TS_RESPONSE_OK) || ((packet.length - 1) % 8) != 0)
                 throw new IllegalStateException("Unexpected packet, length=" + (packet != null ? 0 : packet.length));
 
