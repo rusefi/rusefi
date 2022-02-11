@@ -1,6 +1,7 @@
 package com.rusefi.binaryprotocol.test;
 
 import com.rusefi.autodetect.PortDetector;
+import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.HeartBeatListeners;
 import com.rusefi.io.LinkManager;
@@ -14,17 +15,18 @@ public class SerialSandbox {
 
         long startTime = System.currentTimeMillis();
 
-        String port = PortDetector.autoDetectSerial(callbackContext -> null).getSerialPort();
+        SerialAutoChecker.AutoDetectResult autoDetectResult = PortDetector.autoDetectSerial(callbackContext -> null);
+        String port = autoDetectResult.getSerialPort();
         System.out.println("Serial detected on " + port);
 
         HeartBeatListeners.INSTANCE.addListener(() -> {
             int seconds = (int) ((System.currentTimeMillis() - startTime) / 1000);
-            System.out.println(new Date() + ": onDataArrival alive for " + seconds + " second(s)");
+            System.out.println(new Date() + ": onDataArrival alive for " + seconds + " second(s) " + autoDetectResult.getSignature());
         });
 
         LinkManager linkManager = new LinkManager()
                 .setNeedPullText(false)
-                .setNeedPullLiveData(false);
+                .setNeedPullLiveData(true);
         CountDownLatch connected = linkManager.connect(port);
         if (connected.getCount() > 0)
             throw new IllegalStateException("Not connected in time");
