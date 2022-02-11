@@ -2,7 +2,6 @@ package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.Timeouts;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.AbstractIoStream;
 import etch.util.CircularByteBuffer;

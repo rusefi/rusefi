@@ -64,9 +64,6 @@ public class BinaryProtocol {
     BinaryProtocolLogger binaryProtocolLogger;
     public static boolean DISABLE_LOCAL_CACHE;
 
-    // hack needed by
-    public static int tsOutputSize = TS_OUTPUT_SIZE;
-
     public static String findCommand(byte command) {
         switch (command) {
             case Fields.TS_PAGE_COMMAND:
@@ -104,17 +101,11 @@ public class BinaryProtocol {
 
     public CommunicationLoggingListener communicationLoggingListener;
 
-
     public BinaryProtocol(LinkManager linkManager, IoStream stream) {
         this.linkManager = linkManager;
         this.stream = stream;
 
-        communicationLoggingListener = new CommunicationLoggingListener() {
-            @Override
-            public void onPortHolderMessage(Class clazz, String message) {
-                linkManager.messageListener.postMessage(clazz, message);
-            }
-        };
+        communicationLoggingListener = linkManager.messageListener::postMessage;
 
         incomingData = stream.getDataBuffer();
         binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
@@ -522,8 +513,7 @@ public class BinaryProtocol {
     }
 
     public static byte[] getTextCommandBytes(String text) {
-        byte[] asBytes = text.getBytes();
-        return asBytes;
+        return text.getBytes();
     }
 
     private String requestPendingMessages() {
@@ -544,21 +534,37 @@ public class BinaryProtocol {
         if (isClosed)
             return false;
 
-        byte[] packet = GetOutputsCommand.createRequest(tsOutputSize);
+        // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
+        //  of the reassembled packet.
+        byte[] reassemblyBuffer = new byte[Fields.TS_OUTPUT_SIZE + 1];
+        reassemblyBuffer[0] = Fields.TS_RESPONSE_OK;
 
-        byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, "output channels");
-        if (response == null || response.length != (tsOutputSize + 1) || response[0] != Fields.TS_RESPONSE_OK)
-            return false;
+        int reassemblyIdx = 0;
+        int remaining = Fields.TS_OUTPUT_SIZE;
 
-        state.setCurrentOutputs(response);
+        while (remaining > 0) {
+            // If less than one full chunk left, do a smaller read
+            int chunkSize = Math.min(remaining, Fields.BLOCKING_FACTOR);
 
-        if (tsOutputSize == Fields.TS_OUTPUT_SIZE) // do not care about sensor values in test mode
-            SensorCentral.getInstance().grabSensorValues(response);
+            byte[] response = executeCommand(
+                Fields.TS_OUTPUT_COMMAND,
+                GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
+                "output channels"
+            );
+
+            if (response == null || response.length != (chunkSize + 1) || response[0] != Fields.TS_RESPONSE_OK) {
+                return false;
+            }
+
+            // Copy this chunk in to the reassembly buffer
+            System.arraycopy(response, 1, reassemblyBuffer, reassemblyIdx + 1, chunkSize);
+            remaining -= chunkSize;
+        }
+
+        state.setCurrentOutputs(reassemblyBuffer);
+
+        SensorCentral.getInstance().grabSensorValues(reassemblyBuffer);
         return true;
-    }
-
-    public void setRange(byte[] src, int scrPos, int offset, int count) {
-        state.setRange(src, scrPos, offset, count);
     }
 
     public BinaryProtocolState getBinaryProtocolState() {
