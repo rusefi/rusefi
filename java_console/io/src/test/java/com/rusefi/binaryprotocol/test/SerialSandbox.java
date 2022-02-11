@@ -12,10 +12,15 @@ public class SerialSandbox {
     public static void main(String[] args) {
         BinaryProtocol.tsOutputSize = 100;
 
+        long startTime = System.currentTimeMillis();
+
         String port = PortDetector.autoDetectSerial(callbackContext -> null).getSerialPort();
         System.out.println("Serial detected on " + port);
 
-        HeartBeatListeners.INSTANCE.addListener(() -> System.out.println(new Date() + ": onDataArrival"));
+        HeartBeatListeners.INSTANCE.addListener(() -> {
+            int seconds = (int) ((System.currentTimeMillis() - startTime) / 1000);
+            System.out.println(new Date() + ": onDataArrival alive for " + seconds + " second(s)");
+        });
 
         LinkManager linkManager = new LinkManager()
                 .setNeedPullText(false)
