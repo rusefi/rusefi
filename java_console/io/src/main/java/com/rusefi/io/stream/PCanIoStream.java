@@ -79,7 +79,7 @@ public class PCanIoStream extends AbstractIoStream {
 
     public PCanIoStream(PCANBasic can) {
         this.can = can;
-        this.dataBuffer = this.createDataBuffer("");
+        dataBuffer = createDataBuffer("");
     }
 
     @Override
