@@ -91,7 +91,11 @@ public class LocalApplicationProxyTest {
                 applicationConnection.getDataBuffer().read(protocolResponse);
                 assertArrayEquals(protocolResponse, TS_PROTOCOL.getBytes());
 
-                byte[] commandPacket = GetOutputsCommand.createRequest();
+                // TODO: why is this logic duplicated from BinaryProtocol?
+                byte[] commandPacket = new byte[5];
+                commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+                System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+
                 applicationConnection.sendPacket(commandPacket);
                 BinaryProtocolServer.Packet response = applicationConnection.readPacket();
                 assertEquals(Fields.TS_OUTPUT_SIZE + 1, response.getPacket().length);

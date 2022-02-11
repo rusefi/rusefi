@@ -82,13 +82,20 @@ TsChannelBase::TsChannelBase(const char *name) {
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets) {
 	// don't transmit a null buffer...
 	if (!buf) {
 		size = 0;
 	}
 
-	if (size <= BLOCKING_FACTOR + 7) {
+	bool isBigPacket = size > BLOCKING_FACTOR + 7;
+
+	if (isBigPacket && !allowLongPackets) {
+		firmwareError(OBD_PCM_Processor_Fault, "tried to send disallowed long packet of size %d", size);
+		isBigPacket = false;
+	}
+
+	if (isBigPacket) {
 		// for small packets we use a buffer for CRC calculation
 		writeCrcPacketSmall(responseCode, buf, size);
 	} else {
@@ -97,9 +104,9 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 	}
 }
 
-void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {
+void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets /* = false */) {
 	if (mode == TS_CRC) {
-		writeCrcPacket(TS_RESPONSE_OK, buffer, size);
+		writeCrcPacket(TS_RESPONSE_OK, buffer, size, allowLongPackets);
 	} else {
 		if (size > 0) {
 			write(buffer, size, true);

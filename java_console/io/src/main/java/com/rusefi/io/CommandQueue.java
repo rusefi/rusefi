@@ -69,7 +69,6 @@ public class CommandQueue {
      * this method keeps retrying till a confirmation is received
      */
     private void sendCommand(final IMethodInvocation commandRequest) throws InterruptedException {
-        int counter = 0;
         String command = commandRequest.getCommand();
 
         CountDownLatch cl = new CountDownLatch(1);
