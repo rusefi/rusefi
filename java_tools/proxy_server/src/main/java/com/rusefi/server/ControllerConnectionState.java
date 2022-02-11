@@ -128,7 +128,11 @@ public class ControllerConnectionState {
     }
 
     public void getOutputs() throws IOException {
-        byte[] commandPacket = GetOutputsCommand.createRequest();
+        // TODO: why is this logic duplicated from BinaryProtocol?
+        byte[] commandPacket = new byte[5];
+        commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+        System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+
         long start = System.currentTimeMillis();
         stream.sendPacket(commandPacket);
 

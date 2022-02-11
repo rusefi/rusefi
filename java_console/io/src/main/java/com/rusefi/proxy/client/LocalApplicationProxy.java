@@ -113,7 +113,11 @@ public class LocalApplicationProxy implements Closeable {
                 while (true) {
                     sleep(context.gaugePokingPeriod());
                     if (isTimeForApplicationToConnect(lastActivity.get(), BINARY_IO_TIMEOUT / 2)) {
-                        byte[] commandPacket = GetOutputsCommand.createRequest();
+                        // TODO: why is this logic duplicated from BinaryProtocol?
+                        byte[] commandPacket = new byte[5];
+                        commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+                        System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+
                         // we do not really need the data, we just need to take response from the socket
                         authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker");
                     }

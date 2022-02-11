@@ -11,9 +11,13 @@ import static com.rusefi.binaryprotocol.IoHelper.swap16;
 
 public class GetOutputsCommand {
     public static byte[] createRequest() {
+        return createRequest(Fields.TS_OUTPUT_SIZE);
+    }
+
+    public static byte[] createRequest(int size) {
         byte[] packet = new byte[4];
         putShort(packet, 0, 0); // offset
-        putShort(packet, 2, swap16(Fields.TS_OUTPUT_SIZE));
+        putShort(packet, 2, swap16(size));
         return packet;
     }
 
