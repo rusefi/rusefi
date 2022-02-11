@@ -199,7 +199,7 @@
 #define benchTestOnTime_offset 1746
 #define binarySerialRxPin_offset 1575
 #define binarySerialTxPin_offset 1574
-#define BLOCKING_FACTOR 256
+#define BLOCKING_FACTOR 1024
 #define boardUseCrankPullUp_offset 1260
 #define boardUseTachPullUp_offset 1260
 #define boardUseTempPullUp_offset 1260

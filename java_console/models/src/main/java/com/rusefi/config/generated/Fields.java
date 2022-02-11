@@ -186,7 +186,7 @@ public class Fields {
 	public static final int benchTestOnTime_offset = 1746;
 	public static final int binarySerialRxPin_offset = 1575;
 	public static final int binarySerialTxPin_offset = 1574;
-	public static final int BLOCKING_FACTOR = 256;
+	public static final int BLOCKING_FACTOR = 1024;
 	public static final int boardUseCrankPullUp_offset = 1260;
 	public static final int boardUseTachPullUp_offset = 1260;
 	public static final int boardUseTempPullUp_offset = 1260;

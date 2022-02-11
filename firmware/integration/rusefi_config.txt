@@ -84,7 +84,7 @@ struct_no_prefix engine_configuration_s
 #define LE_COMMAND_LENGTH 200
 
 ! see 'blockingFactor' in rusefi.ini
-#define BLOCKING_FACTOR 256
+#define BLOCKING_FACTOR 1024
 
 ! Back in the day we wanted enums to be 32 bit integers.
 ! as of 2020 preference is with ' __attribute__ ((__packed__))' allowing one-byte enums
