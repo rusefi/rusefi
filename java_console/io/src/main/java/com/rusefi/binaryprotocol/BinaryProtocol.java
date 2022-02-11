@@ -64,6 +64,9 @@ public class BinaryProtocol {
     BinaryProtocolLogger binaryProtocolLogger;
     public static boolean DISABLE_LOCAL_CACHE;
 
+    // hack needed by
+    public static int tsOutputSize = TS_OUTPUT_SIZE;
+
     public static String findCommand(byte command) {
         switch (command) {
             case Fields.TS_PAGE_COMMAND:
@@ -201,11 +204,15 @@ public class BinaryProtocol {
                                 if (requestOutputChannels())
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
-                                String text = requestPendingMessages();
-                                if (text != null)
-                                    textListener.onDataArrived((text + "\r\n").getBytes());
-                                LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider(BinaryProtocol.this);
-                                LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
+                                if (linkManager.isNeedPullText()) {
+                                    String text = requestPendingMessages();
+                                    if (text != null)
+                                        textListener.onDataArrived((text + "\r\n").getBytes());
+                                }
+                                if (linkManager.isNeedPullLiveData()) {
+                                    LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider(BinaryProtocol.this);
+                                    LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
+                                }
                             }
                         });
                     }
@@ -546,15 +553,16 @@ public class BinaryProtocol {
         if (isClosed)
             return false;
 
-        byte[] packet = GetOutputsCommand.createRequest();
+        byte[] packet = GetOutputsCommand.createRequest(tsOutputSize);
 
         byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, "output channels", false);
-        if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != Fields.TS_RESPONSE_OK)
+        if (response == null || response.length != (tsOutputSize + 1) || response[0] != Fields.TS_RESPONSE_OK)
             return false;
 
         state.setCurrentOutputs(response);
 
-        SensorCentral.getInstance().grabSensorValues(response);
+        if (tsOutputSize == Fields.TS_OUTPUT_SIZE) // do not care about sensor values in test mode
+            SensorCentral.getInstance().grabSensorValues(response);
         return true;
     }
 
