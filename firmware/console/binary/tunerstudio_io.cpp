@@ -82,7 +82,7 @@ TsChannelBase::TsChannelBase(const char *name) {
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets) {
 	// don't transmit a null buffer...
 	if (!buf) {
 		size = 0;
