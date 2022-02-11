@@ -125,7 +125,7 @@ static void* myAlloc(void* /*ud*/, void* ptr, size_t /*osize*/, size_t nsize) {
 }
 #endif // EFI_PROD_CODE
 
-static int luaTickPeriodMs;
+static int luaTickPeriodUs;
 
 static int lua_setTickRate(lua_State* l) {
 	float freq = luaL_checknumber(l, 1);
@@ -133,7 +133,7 @@ static int lua_setTickRate(lua_State* l) {
 	// Limit to 1..100 hz
 	freq = clampF(1, freq, 100);
 
-	luaTickPeriodMs = 1000.0f / freq;
+	luaTickPeriodUs = 1000000.0f / freq;
 	return 0;
 }
 
@@ -305,13 +305,14 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 	}
 
 	// Reset default tick rate
-	luaTickPeriodMs = 100;
+	luaTickPeriodUs = MS2US(100);
 
 	if (!loadScript(ls, script)) {
 		return false;
 	}
 
 	while (!needsReset && !chThdShouldTerminateX()) {
+		efitick_t beforeNt = getTimeNowNt();
 #if EFI_CAN_SUPPORT
 		// First, process any pending can RX messages
 		doLuaCanRx(ls);
@@ -322,7 +323,9 @@ static bool runOneLua(lua_Alloc alloc, const char* script) {
 
 		invokeTick(ls);
 
-		chThdSleepMilliseconds(luaTickPeriodMs);
+		chThdSleep(TIME_US2I(luaTickPeriodUs));
+		engine->outputChannels.luaLastCycleDuration = (getTimeNowNt() - beforeNt);
+		engine->outputChannels.luaInvocationCounter++;
 	}
 
 #if EFI_CAN_SUPPORT

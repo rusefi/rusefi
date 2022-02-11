@@ -987,6 +987,8 @@ triggerSecondaryFallGauge = triggerSecondaryFall,"triggerSecondaryFall", "", -10
 triggerSecondaryRiseGauge = triggerSecondaryRise,"triggerSecondaryRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 triggerVvtFallGauge = triggerVvtFall,"triggerVvtFall", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 triggerVvtRiseGauge = triggerVvtRise,"triggerVvtRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
+luaInvocationCounterGauge = luaInvocationCounter,"luaInvocationCounter", "count", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+luaLastCycleDurationGauge = luaLastCycleDuration,"luaLastCycleDuration", "nt", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 
 gaugeCategory = PIDs
 alternatorStatus_iTermGauge = alternatorStatus_iTerm,"alternatorStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
