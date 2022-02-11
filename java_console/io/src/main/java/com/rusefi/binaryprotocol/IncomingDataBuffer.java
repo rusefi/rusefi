@@ -66,7 +66,7 @@ public class IncomingDataBuffer {
         if (packetSize < 0)
             return null;
         if (!allowLongResponse && packetSize > Math.max(Fields.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
-            throw new IllegalArgumentException(packetSize + " packet while not allowLongResponse");
+            throw new IllegalArgumentException(packetSize + " packet while not allowLongResponse"); // this is about CRC calculation and mutable buffers on firmware side
 
         isTimeout = waitForBytes(loggingPrefix + msg + " body", start, packetSize + 4);
         if (isTimeout)
