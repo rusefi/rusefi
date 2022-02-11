@@ -377,7 +377,6 @@ public class BinaryProtocol {
             int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
 
             byte[] packet = new byte[4];
-            packet[0] = Fields.TS_READ_COMMAND;
             putShort(packet, 0, swap16(offset));
             putShort(packet, 2, swap16(requestSize));
 
