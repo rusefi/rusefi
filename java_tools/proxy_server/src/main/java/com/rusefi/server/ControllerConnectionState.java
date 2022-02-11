@@ -132,7 +132,7 @@ public class ControllerConnectionState {
         long start = System.currentTimeMillis();
         stream.sendPacket(commandPacket);
 
-        byte[] packet = incomingData.getPacket("msg", true);
+        byte[] packet = incomingData.getPacket("msg");
         outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");

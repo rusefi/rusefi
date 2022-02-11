@@ -328,10 +328,10 @@ public class BinaryProtocol {
         setController(newVersion);
     }
 
-    private byte[] receivePacket(String msg, boolean allowLongResponse) throws IOException {
+    private byte[] receivePacket(String msg) throws IOException {
         long start = System.currentTimeMillis();
         synchronized (ioLock) {
-            return incomingData.getPacket(msg, allowLongResponse, start);
+            return incomingData.getPacket(msg, start);
         }
     }
 
@@ -479,20 +479,12 @@ public class BinaryProtocol {
         return executeCommand(opcode, null, msg);
     }
 
-    public byte[] executeCommand(char opcode, String msg, boolean allowLongResponse) {
-        return executeCommand(opcode, null, msg, allowLongResponse);
-    }
-
-    public byte[] executeCommand(char opcode, byte[] data, String msg) {
-        return executeCommand(opcode, data, msg, false);
-    }
-
     /**
      * Blocking sending binary packet and waiting for a response
      *
      * @return null in case of IO issues
      */
-    public byte[] executeCommand(char opcode, byte[] packet, String msg, boolean allowLongResponse) {
+    public byte[] executeCommand(char opcode, byte[] packet, String msg) {
         if (isClosed)
             return null;
 
@@ -512,7 +504,7 @@ public class BinaryProtocol {
             dropPending();
 
             sendPacket(fullRequest);
-            return receivePacket(msg, allowLongResponse);
+            return receivePacket(msg);
         } catch (IOException e) {
             log.error(msg + ": executeCommand failed: " + e);
             close();
@@ -583,7 +575,6 @@ public class BinaryProtocol {
         stream.sendPacket(command);
     }
 
-
     /**
      * This method blocks until a confirmation is received or {@link Timeouts#BINARY_IO_TIMEOUT} is reached
      *
@@ -594,7 +585,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(Fields.TS_EXECUTE, command, "execute", false);
+            byte[] response = executeCommand(Fields.TS_EXECUTE, command, "execute");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_COMMAND_OK) || response.length != 1) {
                 continue;
             }
@@ -612,7 +603,7 @@ public class BinaryProtocol {
         if (isClosed)
             return null;
         try {
-            byte[] response = executeCommand(Fields.TS_GET_TEXT, "text", true);
+            byte[] response = executeCommand(Fields.TS_GET_TEXT, "text");
             if (response != null && response.length == 1)
                 Thread.sleep(100);
             return new String(response, 1, response.length - 1);
@@ -630,7 +621,7 @@ public class BinaryProtocol {
         // todo: actually if console gets disconnected composite logging might end up enabled in controller?
         isCompositeLoggerEnabled = true;
 
-        byte[] response = executeCommand(Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY, "composite log", true);
+        byte[] response = executeCommand(Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY, "composite log");
         if (checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK)) {
             List<CompositeEvent> events = CompositeParser.parse(response);
             createCompositesIfNeeded();
@@ -645,7 +636,7 @@ public class BinaryProtocol {
 
         byte[] packet = GetOutputsCommand.createRequest();
 
-        byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, "output channels", false);
+        byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, "output channels");
         if (response == null || response.length != (Fields.TS_OUTPUT_SIZE + 1) || response[0] != Fields.TS_RESPONSE_OK)
             return false;
 

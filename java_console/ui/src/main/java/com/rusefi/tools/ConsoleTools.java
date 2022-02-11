@@ -358,13 +358,13 @@ public class ConsoleTools {
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
         stream.sendPacket(commandBytes);
         // skipping response
-        incomingData.getPacket("", true);
+        incomingData.getPacket("");
 
         sleep(300);
         stream.sendPacket(new byte[]{Fields.TS_GET_TEXT});
         sleep(300);
 
-        byte[] response = incomingData.getPacket("", true);
+        byte[] response = incomingData.getPacket("");
         if (response == null) {
             System.out.println("No response");
             return;

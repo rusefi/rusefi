@@ -31,31 +31,27 @@ public class IncomingDataBuffer {
 
     private static final int BUFFER_SIZE = 32768;
     private final String loggingPrefix;
+
     /**
-     * buffer for response bytes from controller
+     * buffer for queued response bytes from controller
      */
-    private final CircularByteBuffer cbb;
+    private final CircularByteBuffer cbb = new CircularByteBuffer(BUFFER_SIZE);
     private final AbstractIoStream.StreamStats streamStats;
 
     public IncomingDataBuffer(String loggingPrefix, AbstractIoStream.StreamStats streamStats) {
         this.loggingPrefix = loggingPrefix;
         this.streamStats = Objects.requireNonNull(streamStats, "streamStats");
-        this.cbb = new CircularByteBuffer(BUFFER_SIZE);
     }
 
     public byte[] getPacket(String msg) throws EOFException {
-        return getPacket(msg, false, System.currentTimeMillis());
-    }
-
-    public byte[] getPacket(String msg, boolean allowLongResponse) throws EOFException {
-        return getPacket(msg, allowLongResponse, System.currentTimeMillis());
+        return getPacket(msg, System.currentTimeMillis());
     }
 
     /**
      * why does this method return NULL in case of timeout?!
      * todo: there is a very similar BinaryProtocolServer#readPromisedBytes which throws exception in case of timeout
      */
-    public byte[] getPacket(String msg, boolean allowLongResponse, long start) throws EOFException {
+    public byte[] getPacket(String msg, long start) throws EOFException {
         boolean isTimeout = waitForBytes(msg + " header", start, 2);
         if (isTimeout)
             return null;
@@ -65,8 +61,6 @@ public class IncomingDataBuffer {
         //     log.debug(loggingPrefix + "Got packet size " + packetSize);
         if (packetSize < 0)
             return null;
-        if (!allowLongResponse && packetSize > Math.max(Fields.BLOCKING_FACTOR, Fields.TS_OUTPUT_SIZE) + 10)
-            throw new IllegalArgumentException(packetSize + " packet while not allowLongResponse"); // this is about CRC calculation and mutable buffers on firmware side
 
         isTimeout = waitForBytes(loggingPrefix + msg + " body", start, packetSize + 4);
         if (isTimeout)
@@ -74,15 +68,17 @@ public class IncomingDataBuffer {
 
         byte[] packet = new byte[packetSize];
         getData(packet);
+
+        // Compare the sent and computed CRCs, make sure they match!
         int packetCrc = swap32(getInt());
         int actualCrc = getCrc32(packet);
-
-        boolean isCrcOk = actualCrc == packetCrc;
-        if (!isCrcOk) {
-            if (log.debugEnabled())
-                log.debug(String.format("CRC mismatch %x: vs %x", actualCrc, packetCrc));
+        if (actualCrc != packetCrc) {
+            String errorMessage = String.format("CRC mismatch on recv packet for %s: got %x but expected %x", msg, actualCrc, packetCrc);
+            System.out.println(errorMessage);
+            log.warn(errorMessage);
             return null;
         }
+
         onPacketArrived();
         // if (log.debugEnabled())
         //     log.trace("packet arrived: " + Arrays.toString(packet) + ": crc OK");

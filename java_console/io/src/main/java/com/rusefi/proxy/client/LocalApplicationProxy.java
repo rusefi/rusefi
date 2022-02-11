@@ -115,7 +115,7 @@ public class LocalApplicationProxy implements Closeable {
                     if (isTimeForApplicationToConnect(lastActivity.get(), BINARY_IO_TIMEOUT / 2)) {
                         byte[] commandPacket = GetOutputsCommand.createRequest();
                         // we do not really need the data, we just need to take response from the socket
-                        authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker", false);
+                        authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker");
                     }
 
                     if (isTimeForApplicationToConnect(lastActivity.get(), context.startUpIdle())) {

@@ -101,11 +101,11 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
         return getDataBuffer().readShort();
     }
 
-    default byte[] sendAndGetPacket(byte[] packet, String message, boolean allowLongResponse) throws IOException {
+    default byte[] sendAndGetPacket(byte[] packet, String message) throws IOException {
         // synchronization is needed for example to help SD card download to live with gauge poker
         synchronized (this) {
             sendPacket(packet);
-            return getDataBuffer().getPacket(message, allowLongResponse);
+            return getDataBuffer().getPacket(message);
         }
     }
 }
