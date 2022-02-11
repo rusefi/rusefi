@@ -1998,6 +1998,16 @@ end_struct
 #define ts_show_hardware_simulator true
 #define ts_show_sd_pins true
 
+#define ts_show_tle8888 true
+#define ts_show_rotary true
+#define ts_show_gdi true
+#define ts_show_experimental true
+#define ts_show_fancy_hardware true
+#define ts_show_transmission true
+#define ts_show_rolling_launch false
+#define ts_show_antilag false
+#define ts_show_launchcontrol true
+
 ! we need to improve this further - at the moment we need too many boards to prepend 'false'
 #define show_test_presets true
 #define show_Frankenso_presets true
