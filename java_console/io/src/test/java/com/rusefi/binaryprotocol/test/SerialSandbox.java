@@ -11,6 +11,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class SerialSandbox {
     public static void main(String[] args) {
+        // todo: open issue #1
         BinaryProtocol.tsOutputSize = 100;
 
         long startTime = System.currentTimeMillis();
@@ -25,7 +26,7 @@ public class SerialSandbox {
         });
 
         LinkManager linkManager = new LinkManager()
-                .setNeedPullText(false)
+                .setNeedPullText(false) // todo: open issue #2
                 .setNeedPullLiveData(true);
         CountDownLatch connected = linkManager.connect(port);
         if (connected.getCount() > 0)
