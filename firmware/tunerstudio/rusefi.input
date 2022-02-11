@@ -1579,8 +1579,8 @@ menuDialog = main
 
 		# EXPERIMENTAL FEATURES
                 subMenu = mc33Dialog,                           "GDI Dreams" @@if_ts_show_gdi
-		subMenu = hpfpCamDialog,			"HPFP Cam Configuration"
-		subMenu = hpfpPumpDialog,			"HPFP Pump Configuration", {hpfpCamLobes != 0}
+		subMenu = hpfpCamDialog,			"HPFP Cam Configuration" 		 @@if_ts_show_hpfp_cam
+		subMenu = hpfpPumpDialog,			"HPFP Pump Configuration", {hpfpCamLobes != 0} 
                 subMenu = hpfpTargetTable,                      "HPFP Target Pressure", {hpfpCamLobes != 0}
                 subMenu = hpfpCompensationTable,                "HPFP Pump Compensation", {hpfpCamLobes != 0}
                 subMenu = std_separator
