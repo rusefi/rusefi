@@ -89,9 +89,10 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 	}
 
 	if (size <= BLOCKING_FACTOR + 7) {
-		// small packets use small packet optimization
+		// for small packets we use a buffer for CRC calculation
 		writeCrcPacketSmall(responseCode, buf, size);
 	} else {
+		// for larger packets we do not use a buffer for CRC calculation meaning data is now allowed to modify while pending
 		writeCrcPacketLarge(responseCode, buf, size);
 	}
 }
