@@ -11,9 +11,6 @@ import java.util.concurrent.CountDownLatch;
 
 public class SerialSandbox {
     public static void main(String[] args) {
-        // todo: open issue #1
-        BinaryProtocol.tsOutputSize = 100;
-
         long startTime = System.currentTimeMillis();
 
         SerialAutoChecker.AutoDetectResult autoDetectResult = PortDetector.autoDetectSerial(callbackContext -> null);

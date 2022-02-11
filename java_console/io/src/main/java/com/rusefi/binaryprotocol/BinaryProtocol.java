@@ -183,8 +183,10 @@ public class BinaryProtocol {
         if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
             log.info("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
         }
-        Runnable textPull = () -> {
-            while (!isClosed) {
+        Runnable textPull = new Runnable() {
+            @Override
+            public void run() {
+                while (!isClosed) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
                         linkManager.submit(new Runnable() {
@@ -207,9 +209,8 @@ public class BinaryProtocol {
                     }
                     sleep(Timeouts.TEXT_PULL_PERIOD);
                 }
-                sleep(Timeouts.TEXT_PULL_PERIOD);
+                log.info("Stopping text pull");
             }
-            log.info("Stopping text pull");
         };
         Thread tr = THREAD_FACTORY.newThread(textPull);
         tr.start();
