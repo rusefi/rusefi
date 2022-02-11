@@ -21,6 +21,8 @@ function twoBytes(data, offset, factor)
 	return (data[offset + 2] * 256 + data[offset + 1]) * factor
 end
 
+-- this controls onCanRx rate as well!
+setTickRate(300)
 --
 -- crazy copy-pasta, at some point move to sets/bags
 
