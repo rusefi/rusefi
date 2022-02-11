@@ -218,7 +218,7 @@ pins:
     
   - pin: Black A8
     function: LSU1_HEATER- / Sensor +5v Power Feed
-    type: [gnd, 5v]
+    type: gnd
     ts_name: Black A8 - LSU4.9 PIN 3 / Sensor +5v Power Feed
 
  # Black B line
