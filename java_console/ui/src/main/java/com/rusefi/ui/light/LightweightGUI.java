@@ -1,5 +1,6 @@
 package com.rusefi.ui.light;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.Autoupdate;
@@ -16,12 +17,14 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.createLogoLabel;
 
 public class LightweightGUI {
+    private static final Logging log = getLogging(LightweightGUI.class);
 
-    private JPanel connectedPanel = new JPanel();
-    private JLabel connectedLabel = new JLabel();
+    private final JPanel connectedPanel = new JPanel();
+    private final JLabel connectedLabel = new JLabel();
 
     public LightweightGUI(UIContext uiContext) {
         final FrameHelper frameHelper = new FrameHelper();
@@ -102,7 +105,7 @@ public class LightweightGUI {
         linkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
 
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-            FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
+            log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
             linkManager.restart();
         }).start();
     }

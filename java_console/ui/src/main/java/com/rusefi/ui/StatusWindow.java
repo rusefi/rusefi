@@ -1,6 +1,8 @@
 package com.rusefi.ui;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
+import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -8,11 +10,15 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/7/2015
  */
 public class StatusWindow implements StatusConsumer {
+    private static final Logging log = getLogging(StatusWindow.class);
+
     private static final Color LIGHT_RED = new Color(255, 102, 102);
     private static final Color LIGHT_GREEN = new Color(102, 255 ,102);
     // todo: extract driver from console bundle? find a separate driver bundle?
@@ -66,7 +72,7 @@ public class StatusWindow implements StatusConsumer {
     public void append(final String string) {
         SwingUtilities.invokeLater(() -> {
             String s = string.replaceAll(Character.toString((char) 219), "");
-            FileLog.MAIN.logLine(s);
+            log.info(s);
             logTextArea.append(s + "\r\n");
             UiUtils.trueLayout(logTextArea);
         });

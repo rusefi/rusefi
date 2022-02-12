@@ -13,6 +13,7 @@ import java.io.*;
  * 6/30/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
+@Deprecated
 public enum FileLog {
     MAIN,
     SIMULATOR_CONSOLE;

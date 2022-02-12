@@ -1,5 +1,6 @@
 package com.rusefi.ui.console;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
@@ -15,9 +16,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 import java.util.TimeZone;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class MainFrame {
+    private static final Logging log = getLogging(Launcher.class);
+
     @NotNull
     private final ConsoleUI consoleUI;
     private final TabbedPanel tabbedPane;
@@ -27,7 +31,7 @@ public class MainFrame {
     private final FrameHelper frame = new FrameHelper() {
         @Override
         protected void onWindowOpened() {
-            FileLog.MAIN.logLine("onWindowOpened");
+            log.info("onWindowOpened");
             windowOpenedHandler();
         }
 
@@ -40,7 +44,7 @@ public class MainFrame {
             /**
              * here we would close the log file
              */
-            FileLog.MAIN.logLine("onWindowClosed");
+            log.info("onWindowClosed");
             FileLog.MAIN.close();
         }
     };

@@ -126,6 +126,21 @@ class Log4j2Logging extends DefaultLogging {
 	}
 
 	@Override
+	void configureLogFileAndConsole(String logFile) {
+		reconfigure(logFile);
+
+		LoggerContext ctx = (LoggerContext)LogManager.getContext(false);
+		Configuration config = ctx.getConfiguration();
+
+		Appender appender = ConsoleAppender.newBuilder()
+				.withName("common")
+				.withLayout(getDetailedLayout())
+				.setTarget(ConsoleAppender.Target.SYSTEM_OUT)
+				.build();
+		config.getRootLogger().addAppender(appender, DEBUG, null);
+	}
+
+	@Override
 	Map<String, Exception> configureLogFile(String logFile) {
 		return reconfigure(logFile);
 	}

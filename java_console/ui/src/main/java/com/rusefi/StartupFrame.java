@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.autoupdate.Autoupdate;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.*;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
@@ -38,6 +40,8 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  * @see FirmwareFlasher
  */
 public class StartupFrame {
+    private static final Logging log = getLogging(Launcher.class);
+
     public static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
     public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
@@ -219,7 +223,7 @@ public class StartupFrame {
     private void applyKnownPorts() {
         List<String> ports = SerialPortScanner.INSTANCE.getKnownPorts();
         if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
-            FileLog.MAIN.logLine("Rendering available ports: " + ports);
+            log.info("Rendering available ports: " + ports);
             isFirstTimeApplyingPorts = false;
             connectPanel.setVisible(!ports.isEmpty());
             noPortsMessage.setVisible(ports.isEmpty());
