@@ -28,6 +28,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -193,6 +194,8 @@ public class ConsoleUI {
 
     static void startUi(String[] args) throws InterruptedException, InvocationTargetException {
         FileLog.MAIN.start();
+        log.info("OS name: " + FileLog.getOsName());
+        log.info("OS version: " + System.getProperty(FileLog.OS_VERSION));
 
         getConfig().load();
         FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);

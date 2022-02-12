@@ -47,8 +47,6 @@ public enum FileLog {
             return;
         }
         new Thread(FileLog::writeReadmeFile).start();
-        // a bit strange spot for this invocation for sure
-        printOsInfo();
     }
 
     private static void writeReadmeFile() {
@@ -61,12 +59,7 @@ public enum FileLog {
         }
     }
 
-    private static void printOsInfo() {
-        MAIN.logLine("OS name: " + getOsName());
-        MAIN.logLine("OS version: " + System.getProperty(OS_VERSION));
-    }
-
-    private static String getOsName() {
+    public static String getOsName() {
         return System.getProperty("os.name");
     }
 
