@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
@@ -19,11 +20,14 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Date: 12/21/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class SensorSnifferPane {
+    private static final Logging log = getLogging(SensorSnifferPane.class);
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Analog_Chart";
 
     private final TreeMap<Double, Double> values = new TreeMap<>();
@@ -127,7 +131,7 @@ public class SensorSnifferPane {
         List<Double> keys = new ArrayList<>(values.keySet());
         minX = keys.get(0);
         maxX = keys.get(keys.size() - 1);
-        FileLog.MAIN.logLine("Analog chart from " + minX + " to " + maxX);
+        log.info("Analog chart from " + minX + " to " + maxX);
 
         TreeSet<Double> sortedValues = new TreeSet<>(values.values());
         List<Double> values = new ArrayList<>(sortedValues);
