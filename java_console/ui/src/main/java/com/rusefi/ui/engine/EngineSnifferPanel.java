@@ -1,11 +1,13 @@
 package com.rusefi.ui.engine;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.*;
+import com.rusefi.ui.config.BaseConfigField;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigField;
 import com.rusefi.ui.storage.Node;
@@ -23,6 +25,8 @@ import java.awt.event.ActionListener;
 import java.util.*;
 import java.util.List;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Engine Sniffer control consists of a set of {@link UpDownImage}
  * <p/>
@@ -34,6 +38,7 @@ import java.util.List;
  * @see com.rusefi.ui.test.WavePanelSandbox
  */
 public class EngineSnifferPanel {
+    private static final Logging log = getLogging(EngineSnifferPanel.class);
     private static final int EFI_DEFAULT_CHART_SIZE = 180;
     public static final Comparator<String> INSTANCE = new ImageOrderComparator();
     private static final String HELP_URL = "http://rusefi.com/wiki/index.php?title=Manual:DevConsole#Digital_Chart";
@@ -239,7 +244,7 @@ public class EngineSnifferPanel {
 
         int index = getInsertIndex(name, images.keySet());
 
-        FileLog.MAIN.logLine("Engine sniffer register channel " + name + " at idx " + index);
+        log.info("Engine sniffer register channel " + name + " at idx " + index);
 
         UpDownImage image = createImage(name);
         images.put(name, image);

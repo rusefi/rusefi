@@ -1,12 +1,16 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.FieldPosition;
 import java.text.NumberFormat;
 import java.util.*;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public final class Histograms {
+    private static final Logging log = getLogging(Histograms.class);
     private static final String MAGIC = "total";
     public static final double H_ACCURACY = 0.05;
     public static final int BOUND_LENGTH = (int) (Math.log(Long.MAX_VALUE) / Math.log(1.0 + H_ACCURACY));
@@ -115,7 +119,7 @@ public final class Histograms {
         confidence_bounds = new double[]{0.5 - H_CONFIDENCE * 0.5, 0.5, 0.5 + H_CONFIDENCE * 0.5};
         confidence_separators = new String[]{"(", " [", "-", "-", "] ", ")"};
 
-        FileLog.MAIN.logLine("BOUND_LENGTH=" + BOUND_LENGTH);
+        log.info("BOUND_LENGTH=" + BOUND_LENGTH);
 
         bounds = new long[BOUND_LENGTH];
         bounds[0] = 0;

@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
@@ -13,6 +14,7 @@ import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
+import com.rusefi.ui.config.BaseConfigField;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -30,6 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -38,6 +41,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see StartupFrame
  */
 public class ConsoleUI {
+    private static final Logging log = getLogging(ConsoleUI.class);
     private static final int DEFAULT_TAB_INDEX = 0;
     private static SensorCentral.SensorListener wrongVersionListener;
 
@@ -68,9 +72,9 @@ public class ConsoleUI {
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
         setFrameIcon(ConsoleUI.staticFrame);
-        FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
+        log.info("Console " + CONSOLE_VERSION);
 
-        FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
+        log.info("Hardware: " + FirmwareFlasher.getHardwareKind());
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
@@ -89,7 +93,7 @@ public class ConsoleUI {
         // TODO: this is a race if the ECU is slow to connect
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
             uiContext.getLinkManager().execute(() -> {
-                FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
+                log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
                 linkManager.restart();
             });
         }).start();
