@@ -31,6 +31,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 
 ### Fixed
  - SD card logging with SDIO hardware #3873 
+ - rusEFI console stability improvement #3912 
 
 ## Removed
  - Miata NB1 trigger was merged with Miata NB2 trigger
