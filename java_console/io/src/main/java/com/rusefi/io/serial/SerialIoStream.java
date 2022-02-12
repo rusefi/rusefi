@@ -55,10 +55,16 @@ public class SerialIoStream extends AbstractIoStream {
     }
 
     @Override
-    public void write(byte[] bytes) {
+    public void write(byte[] bytes) throws IOException {
         if (Bug3923.obscene)
             log.info("Writing " + bytes.length + " byte(s)");
-        sp.writeBytes(bytes, bytes.length);
+
+        int written = sp.writeBytes(bytes, bytes.length);
+
+        // If we failed to write all the bytes, the ECU probably disconnected
+        if (written != bytes.length) {
+            throw new IOException("write failed: wrote " + written + " but expected " + bytes.length);
+        }
     }
 
     @Override
@@ -87,7 +93,7 @@ public class SerialIoStream extends AbstractIoStream {
             @Override
             public void serialEvent(SerialPortEvent event) {
                 if (Bug3923.obscene)
-                    log.info("serialEvent " + event);
+                    log.info("serialEvent " + event.getEventType());
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
                 if (isFirstEvent) {
@@ -100,10 +106,16 @@ public class SerialIoStream extends AbstractIoStream {
                     log.info("serialEvent bytesAvailable " + bytesAvailable);
                 if (bytesAvailable <= 0)
                     return; // sometimes negative value is returned at least on Mac
-                byte[] newData = new byte[bytesAvailable];
-                int numRead = sp.readBytes(newData, newData.length);
-                byte[] data = new byte[numRead];
-                System.arraycopy(newData, 0, data, 0, numRead);
+                byte[] data = new byte[bytesAvailable];
+                int numRead = sp.readBytes(data, data.length);
+
+                // Copy in to a smaller array if the read was incomplete
+                if (numRead != bytesAvailable) {
+                    byte[] dataSmaller = new byte[numRead];
+                    System.arraycopy(data, 0, dataSmaller, 0, numRead);
+                    data = dataSmaller;
+                }
+
                 listener.onDataArrived(data);
             }
         });
