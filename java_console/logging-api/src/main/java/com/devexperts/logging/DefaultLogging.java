@@ -49,9 +49,10 @@ class DefaultLogging {
 			handler.getLevel() == Level.INFO;
 	}
 
-	void configureLogFileAndConsole(String log_file) {
-		configureLogFile(log_file);
+	Map<String, Exception> configureLogFileAndConsole(String log_file) {
+		Map<String, Exception> result = configureLogFile(log_file);
 		initAndAdd(new ConsoleHandler(), Level.ALL, getRootLogger());
+		return result;
 	}
 
 	Map<String, Exception> configureLogFile(String log_file) {
