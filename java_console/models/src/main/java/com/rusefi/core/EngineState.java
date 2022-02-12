@@ -6,7 +6,6 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -86,24 +85,26 @@ public class EngineState {
      * @return null in case of error, line message if valid packed ine
      * @see #packString(String)
      */
-    public static String unpackString(String message, Logger logger) {
+/*
+    public static String unpackString(String message) {
         String prefix = "line" + PACKING_DELIMITER;
         /**
          * If we get this tag we have probably connected to the wrong port
          * todo: as of 2019 this logic maybe makes no sense any more since pure text protocol was reduce/removed?
          */
+/*
         if (message.contains(Fields.PROTOCOL_TEST_RESPONSE_TAG)) {
             JOptionPane.showMessageDialog(null, "Are you sure you are not connected to TS port?");
             return null;
         }
         if (!message.startsWith(prefix)) {
-            logger.info("EngineState: unexpected header: " + message + " while looking for " + prefix);
+            log.info("EngineState: unexpected header: " + message + " while looking for " + prefix);
             return null;
         }
         message = message.substring(prefix.length());
         int delimiterIndex = message.indexOf(PACKING_DELIMITER);
         if (delimiterIndex == -1) {
-            logger.info("Delimiter not found in: " + message);
+            log.info("Delimiter not found in: " + message);
             return null;
         }
         String lengthToken = message.substring(0, delimiterIndex);
@@ -111,18 +112,18 @@ public class EngineState {
         try {
             expectedLen = Integer.parseInt(lengthToken);
         } catch (NumberFormatException e) {
-            logger.info("invalid len: " + lengthToken);
+            log.info("invalid len: " + lengthToken);
             return null;
         }
 
         String response = message.substring(delimiterIndex + 1);
         if (response.length() != expectedLen) {
-            logger.info("message len does not match header: " + message);
+            log.info("message len does not match header: " + message);
             response = null;
         }
         return response;
     }
-
+*/
     /**
      * @param response input string
      * @param listener obviously

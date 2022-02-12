@@ -1,6 +1,5 @@
 package com.rusefi.ui.engine;
 
-import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
@@ -191,7 +190,7 @@ public class EngineSnifferPanel {
     }
 
     public void displayChart(String value) {
-        EngineChart map = EngineChartParser.unpackToMap(value, FileLog.LOGGER);
+        EngineChart map = EngineChartParser.unpackToMap(value);
 
         StringBuilder revolutions = map.get(Fields.TOP_DEAD_CENTER_MESSAGE);
 
@@ -265,7 +264,7 @@ public class EngineSnifferPanel {
     private void saveImage() {
         int rpm = RpmModel.getInstance().getValue();
         double maf = SensorCentral.getInstance().getValue(Sensor.MAF);
-        String fileName = Logger.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
+        String fileName = FileLog.getDate() + "rpm_" + rpm + "_maf_" + maf + ".png";
 
         UiUtils.saveImageWithPrompt(fileName, mainPanel, imagePanel);
     }

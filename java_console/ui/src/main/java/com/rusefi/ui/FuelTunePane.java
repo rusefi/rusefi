@@ -258,7 +258,7 @@ public class FuelTunePane {
 
     private DataOutputStream getTuneLogStream() {
         if (dos == null) {
-            String fileName = Logger.DIR + "tune_" + Logger.getDate() + ".txt";
+            String fileName = Logger.DIR + "tune_" + FileLog.getDate() + ".txt";
             try {
                 dos = new DataOutputStream(new FileOutputStream(fileName));
             } catch (FileNotFoundException e) {

@@ -7,6 +7,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * what the hell is this anyway? todo: migrate to log4j2
@@ -20,34 +22,19 @@ public enum FileLog {
 
     public static final String LOG_INFO_TEXT = "Writing logs to '" + Logger.DIR + "'";
     public static final String OS_VERSION = "os.version";
+    public static final String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
     private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
     public static String currentLogName;
-    public static final Logger LOGGER = new Logger() {
-        @Override
-        public void trace(String msg) {
-        }
-
-        @Override
-        public boolean isTradeEnabled() {
-            return false;
-        }
-
-        @Override
-        public void info(String msg) {
-            MAIN.logLine(msg);
-        }
-
-        @Override
-        public void error(String msg) {
-            MAIN.logLine(msg);
-        }
-    };
 
     @Nullable
     private OutputStream fileLog; // null if not opened yet or already closed
     public static boolean suspendLogging;
 
     FileLog() {
+    }
+
+    public static String getDate() {
+        return new SimpleDateFormat(DATE_PATTERN).format(new Date());
     }
 
     public void start() {
@@ -88,7 +75,7 @@ public enum FileLog {
     }
 
     private FileOutputStream openLog() throws FileNotFoundException {
-        String date = Logger.getDate();
+        String date = getDate();
         createFolderIfNeeded();
         String shortFileName = name() + "_rfi_report_" + date;
         Logging.configureLogFile(Logger.DIR + shortFileName + ".log");
@@ -108,7 +95,7 @@ public enum FileLog {
     }
 
     public synchronized void logLine(String fullLine) {
-        String withDate = Logger.getDate() + Logger.END_OF_TIMESTAND_TAG + fullLine;
+        String withDate = getDate() + Logger.END_OF_TIMESTAND_TAG + fullLine;
         System.out.println(withDate);
         if (suspendLogging)
             return;
