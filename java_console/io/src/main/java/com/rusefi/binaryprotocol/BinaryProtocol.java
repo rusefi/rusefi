@@ -8,6 +8,7 @@ import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.SignatureHelper;
 import com.rusefi.Timeouts;
+import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorCentral;
@@ -422,7 +423,8 @@ public class BinaryProtocol {
         try {
             linkManager.assertCommunicationThread();
             dropPending();
-
+            if (Bug3923.obscene)
+                log.info("Sending opcode " + opcode + " payload " + packet.length);
             sendPacket(fullRequest);
             return receivePacket(msg);
         } catch (IOException e) {

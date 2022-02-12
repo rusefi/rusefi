@@ -54,6 +54,8 @@ public class SerialIoStream extends AbstractIoStream {
 
     @Override
     public void write(byte[] bytes) {
+        if (Bug3923.obscene)
+            log.info("Writing " + bytes.length + " byte(s)");
         sp.writeBytes(bytes, bytes.length);
     }
 
@@ -78,7 +80,7 @@ public class SerialIoStream extends AbstractIoStream {
             @Override
             public void serialEvent(SerialPortEvent event) {
                 if (Bug3923.obscene)
-                    System.out.println("serialEvent " + event);
+                    log.info("serialEvent " + event);
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
                 if (isFirstEvent) {
@@ -96,10 +98,7 @@ public class SerialIoStream extends AbstractIoStream {
                 byte[] data = new byte[numRead];
                 System.arraycopy(newData, 0, data, 0, numRead);
                 listener.onDataArrived(data);
-                //System.out.println("Read " + numRead + " bytes.");
             }
         });
-
     }
-
 }
