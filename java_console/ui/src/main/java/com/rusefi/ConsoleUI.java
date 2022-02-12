@@ -86,6 +86,7 @@ public class ConsoleUI {
         if (LinkManager.isLogViewerMode(port))
             tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
 
+        // TODO: this is a race if the ECU is slow to connect
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
             uiContext.getLinkManager().execute(() -> {
                 FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);

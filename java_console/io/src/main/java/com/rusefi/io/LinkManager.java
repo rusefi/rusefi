@@ -253,7 +253,7 @@ public class LinkManager implements Closeable {
                 @Override
                 public IoStream call() {
                     messageListener.postMessage(getClass(), "Opening port: " + port);
-                    IoStream stream = ((Callable<IoStream>) () -> BufferedSerialIoStream.openPort(port)).call();
+                    IoStream stream = BufferedSerialIoStream.openPort(port);
                     if (stream == null) {
                         // error already reported
                         return null;
@@ -293,7 +293,7 @@ public class LinkManager implements Closeable {
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
         String[] ports = getCommPorts();
-        boolean isPortAvailableAgain = Arrays.stream(ports).anyMatch(lastTriedPort::equals);
+        boolean isPortAvailableAgain = Arrays.asList(ports).contains(lastTriedPort);
         if (isPortAvailableAgain) {
             connect(lastTriedPort);
         }
