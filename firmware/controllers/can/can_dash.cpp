@@ -1103,6 +1103,9 @@ void canDashboardHaltech(CanCycle cycle) {
 	}
 }
 
+//Based on AIM can protocol
+//https://www.aimtechnologies.com/support/racingecu/AiM_CAN_101_eng.pdf
+
 struct Aim5f0 {
 	scaled_channel<uint16_t, 1> Rpm;
 	scaled_channel<uint16_t, 650> Tps;
