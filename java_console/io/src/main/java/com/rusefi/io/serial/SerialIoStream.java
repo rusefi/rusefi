@@ -64,7 +64,7 @@ public class SerialIoStream extends AbstractIoStream {
 
         // If we failed to write all the bytes, the ECU probably disconnected
         if (written != bytes.length) {
-            throw new IOException("write failed");
+            throw new IOException("write failed: " + written);
         }
     }
 
