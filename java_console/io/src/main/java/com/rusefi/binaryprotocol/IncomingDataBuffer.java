@@ -10,6 +10,7 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -53,8 +54,11 @@ public class IncomingDataBuffer {
      */
     public byte[] getPacket(String msg, long start) throws EOFException {
         boolean isTimeout = waitForBytes(msg + " header", start, 2);
-        if (isTimeout)
+        if (isTimeout) {
+            if (Bug3923.obscene)
+                log.info("Timeout waiting for header");
             return null;
+        }
 
         int packetSize = swap16(getShort());
         // if (log.debugEnabled())
@@ -78,6 +82,8 @@ public class IncomingDataBuffer {
             log.warn(errorMessage);
             return null;
         }
+        if (Bug3923.obscene && packet.length < 10)
+            log.info("got packet: " + Arrays.toString(packet));
 
         onPacketArrived();
         // if (log.debugEnabled())
@@ -100,7 +106,7 @@ public class IncomingDataBuffer {
             cbb.notifyAll();
         }
         if (log.debugEnabled() || Bug3923.obscene)
-            log.debug(freshData.length + " byte(s) arrived, total " + cbb.length());
+            log.info(freshData.length + " byte(s) arrived, total " + cbb.length());
     }
 
     /**
@@ -165,8 +171,8 @@ public class IncomingDataBuffer {
         streamStats.onArrived(2);
         synchronized (cbb) {
             int result = cbb.getShort();
-            if (log.debugEnabled())
-                log.debug("Consumed some, " + cbb.length() + " remaining");
+            if (log.debugEnabled() || Bug3923.obscene)
+                log.info("Consumed short, " + cbb.length() + " remaining");
             return result;
         }
     }
@@ -174,13 +180,18 @@ public class IncomingDataBuffer {
     public int getInt() throws EOFException {
         streamStats.onArrived(4);
         synchronized (cbb) {
-            return cbb.getInt();
+            int result = cbb.getInt();
+            if (log.debugEnabled() || Bug3923.obscene)
+                log.info("Consumed int, " + cbb.length() + " remaining");
+            return result;
         }
     }
 
     public void getData(byte[] packet) {
         synchronized (cbb) {
             cbb.get(packet);
+            if (log.debugEnabled() || Bug3923.obscene)
+                log.info(packet.length + " consumed, " + cbb.length() + " remaining");
         }
         streamStats.onArrived(packet.length);
     }
