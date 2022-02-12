@@ -34,7 +34,7 @@ public class DfuFlasher {
 
     public static void doAutoDfu(Object selectedItem, JComponent parent) {
         if (selectedItem == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to located serial ports");
+            JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
             return;
         }
         String port = selectedItem.toString();
