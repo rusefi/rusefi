@@ -95,7 +95,7 @@ public class PortDetector {
         if (autoDetectResult == null)
             autoDetectResult = new SerialAutoChecker.AutoDetectResult(null, null);
         log.debug("Found " + autoDetectResult + " now stopping threads");
-//        FileLog.MAIN.logLine("Returning " + result.get());
+//        log.info("Returning " + result.get());
         return autoDetectResult;
     }
 
@@ -106,7 +106,7 @@ public class PortDetector {
     private static String[] getPortNames() {
 //        long now = System.currentTimeMillis();
         String[] portNames = LinkManager.getCommPorts();
-//        FileLog.MAIN.logLine("Took " + (System.currentTimeMillis() - now));
+//        log.info("Took " + (System.currentTimeMillis() - now));
         return portNames;
     }
 
