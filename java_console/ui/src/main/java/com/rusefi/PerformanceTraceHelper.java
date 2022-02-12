@@ -18,7 +18,7 @@ import static com.rusefi.tools.ConsoleTools.startAndConnect;
 public class PerformanceTraceHelper {
     public static void grabPerformanceTrace(JComponent parent, BinaryProtocol bp) {
         if (bp == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to located serial ports");
+            JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
             return;
         }
         bp.executeCommand(Fields.TS_PERF_TRACE_BEGIN, "begin trace");
