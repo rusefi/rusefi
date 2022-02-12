@@ -11,7 +11,6 @@ import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -64,7 +63,7 @@ public class SerialIoStream extends AbstractIoStream {
 
         // If we failed to write all the bytes, the ECU probably disconnected
         if (written != bytes.length) {
-            throw new IOException("write failed: " + written);
+            throw new IOException("write failed: wrote " + written + " but expected " + bytes.length);
         }
     }
 
