@@ -69,7 +69,7 @@ public class SerialIoStream extends AbstractIoStream {
 
     @Override
     public void flush() throws IOException {
-        sp.flushIOBuffers();
+  //      sp.flushIOBuffers(); todo uncomment once we migrate to fresh reliable version of connector
     }
 
     @Override
