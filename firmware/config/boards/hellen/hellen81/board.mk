@@ -4,10 +4,6 @@
 BOARDCPPSRC = $(BOARDS_DIR)/hellen/hellen81/board_configuration.cpp
 BOARDINC = $(BOARDS_DIR)/hellen/hellen81
 
-ifeq ($(LED_COMMUNICATION_BRAIN_PIN),)
-  LED_COMMUNICATION_BRAIN_PIN = -DEFI_COMMUNICATION_PIN=GPIOH_10
-endif
-
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
 # Disable serial ports on this board as UART3 causes a DMA conflict with the SD card
