@@ -1103,17 +1103,20 @@ void canDashboardHaltech(CanCycle cycle) {
 	}
 }
 
+//Based on AIM can protocol
+//https://www.aimtechnologies.com/support/racingecu/AiM_CAN_101_eng.pdf
+
 struct Aim5f0 {
 	scaled_channel<uint16_t, 1> Rpm;
-	scaled_channel<uint16_t, 65> Tps;
-	scaled_channel<uint16_t, 65> Pps;
+	scaled_channel<uint16_t, 650> Tps;
+	scaled_channel<uint16_t, 650> Pps;
 	scaled_channel<uint16_t, 100> Vss;
 };
 
 static void populateFrame(Aim5f0& msg) {
 	msg.Rpm = Sensor::getOrZero(SensorType::Rpm);
-	msg.Tps = 10 * Sensor::getOrZero(SensorType::Tps1);
-	msg.Pps = 10 * Sensor::getOrZero(SensorType::AcceleratorPedal);
+	msg.Tps = Sensor::getOrZero(SensorType::Tps1);
+	msg.Pps = Sensor::getOrZero(SensorType::AcceleratorPedal);
 	msg.Vss = Sensor::getOrZero(SensorType::VehicleSpeed);
 }
 
@@ -1133,17 +1136,17 @@ static void populateFrame(Aim5f1& msg) {
 }
 
 struct Aim5f2 {
-	scaled_channel<uint16_t, 19> Iat;
-	scaled_channel<uint16_t, 19> Ect;
-	scaled_channel<uint16_t, 19> FuelT;
-	scaled_channel<uint16_t, 19> OilT;
+	scaled_channel<uint16_t, 190> Iat;
+	scaled_channel<uint16_t, 190> Ect;
+	scaled_channel<uint16_t, 190> FuelT;
+	scaled_channel<uint16_t, 190> OilT;
 };
 
 static void populateFrame(Aim5f2& msg) {
-	msg.Iat = (10 * Sensor::getOrZero(SensorType::Iat)) + 450;
-	msg.Ect = (10 * Sensor::getOrZero(SensorType::Clt)) + 450;
-	msg.FuelT = (10 * Sensor::getOrZero(SensorType::AuxTemp1)) + 450;
-	msg.OilT = (10 * Sensor::getOrZero(SensorType::AuxTemp2)) + 450;
+	msg.Iat = Sensor::getOrZero(SensorType::Iat) + 45;
+	msg.Ect = Sensor::getOrZero(SensorType::Clt) + 45;
+	msg.FuelT = Sensor::getOrZero(SensorType::AuxTemp1) + 45;
+	msg.OilT = Sensor::getOrZero(SensorType::AuxTemp2) + 45;
 }
 
 struct Aim5f3 {
@@ -1165,7 +1168,7 @@ static void populateFrame(Aim5f3& msg) {
 
 struct Aim5f4 {
 	scaled_channel<uint16_t, 10000> Boost;
-	scaled_channel<uint16_t, 32> Vbat;
+	scaled_channel<uint16_t, 3200> Vbat;
 	scaled_channel<uint16_t, 10> FuelUse;
 	scaled_channel<uint16_t, 10> Gear;
 };
@@ -1176,7 +1179,7 @@ static void populateFrame(Aim5f4& msg) {
 	float boostBar = deltaKpa / 100;
 
 	msg.Boost = boostBar;
-	msg.Vbat = 100 * Sensor::getOrZero(SensorType::BatteryVoltage);
+	msg.Vbat = Sensor::getOrZero(SensorType::BatteryVoltage);
 	msg.FuelUse = 0;
 	msg.Gear = 0;
 }
