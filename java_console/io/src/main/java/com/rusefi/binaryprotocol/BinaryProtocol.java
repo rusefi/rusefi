@@ -501,7 +501,7 @@ public class BinaryProtocol {
      * @return true in case of timeout, false if got proper confirmation
      */
     private boolean sendTextCommand(String text) {
-        byte[] command = getTextCommandBytesOnlyTest(text);
+        byte[] command = getTextCommandBytesOnlyText(text);
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
@@ -522,7 +522,7 @@ public class BinaryProtocol {
         return command;
     }
 
-    public static byte[] getTextCommandBytesOnlyTest(String text) {
+    public static byte[] getTextCommandBytesOnlyText(String text) {
         return text.getBytes();
     }
 
