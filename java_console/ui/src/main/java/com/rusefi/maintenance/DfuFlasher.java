@@ -178,9 +178,14 @@ public class DfuFlasher {
         String hexFileName = IniFileModel.findFile(Launcher.INPUT_FILES_PATH, prefix, suffix);
         if (hexFileName == null)
             throw new FileNotFoundException("File not found " + prefix + "*" + suffix);
-        String hexAbsolutePath = new File(hexFileName).getAbsolutePath();
+        // we need quotes in case if absolute path contains spaces
+        String hexAbsolutePath = quote(new File(hexFileName).getAbsolutePath());
 
         return DFU_BINARY_LOCATION + "/" + DFU_BINARY + " -c port=usb1 -w " + hexAbsolutePath + " -v -s";
+    }
+
+    private static String quote(String absolutePath) {
+        return "\"" + absolutePath + "\"";
     }
 
     private static String getDfuEraseCommand() {
