@@ -71,7 +71,9 @@ public class SerialAutoChecker {
             /**
              * propagating result after closing the port so that it could be used right away
              */
-            result.set(new AutoDetectResult(serialPort, signature));
+            AutoDetectResult value = new AutoDetectResult(serialPort, signature);
+            log.info("Propagating " + value);
+            result.set(value);
             portFound.countDown();
         }
     }
@@ -121,6 +123,14 @@ public class SerialAutoChecker {
         @Nullable
         public String getSignature() {
             return signature;
+        }
+
+        @Override
+        public String toString() {
+            return "AutoDetectResult{" +
+                    "serialPort='" + serialPort + '\'' +
+                    ", signature='" + signature + '\'' +
+                    '}';
         }
     }
 }
