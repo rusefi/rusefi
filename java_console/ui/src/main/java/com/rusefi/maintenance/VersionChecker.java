@@ -72,7 +72,7 @@ public class VersionChecker {
         String criticalUrl = map.get("critical_url");
         if (criticalUrl != null && !criticalUrl.trim().isEmpty()) {
             JPanel panel = new JPanel(new BorderLayout());
-            panel.add(new JLabel("WARNING! CRITICAL ISSUE! Are you sure you want to run rusEfi?"), BorderLayout.NORTH);
+            panel.add(new JLabel("WARNING! CRITICAL ISSUE! Are you sure you want to run rusEFI?"), BorderLayout.NORTH);
             panel.add(new URLLabel(criticalUrl, criticalUrl), BorderLayout.CENTER);
             JOptionPane.showMessageDialog(getPaneParent(), panel);
         }
