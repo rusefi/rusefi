@@ -11,6 +11,10 @@ import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -20,6 +24,10 @@ public class SerialIoStream extends AbstractIoStream {
     protected final SerialPort sp;
     protected final String port;
     private boolean withListener;
+
+    static {
+        log.info("Using com.fazecast.jSerialComm " + SerialPort.getVersion());
+    }
 
     public SerialIoStream(SerialPort sp, String port) {
         this.sp = sp;
