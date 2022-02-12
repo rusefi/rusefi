@@ -55,7 +55,7 @@ public class BinarySensorLog implements SensorLog {
     public void writeSensorLogLine() {
         if (stream == null) {
             FileLog.createFolderIfNeeded();
-            fileName = Logger.DIR + "rusEFI_gauges_" + Logger.getDate() + ".mlg";
+            fileName = Logger.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".mlg";
 
             try {
                 stream = new DataOutputStream(new FileOutputStream(fileName));

@@ -1,8 +1,6 @@
 package com.rusefi.ui;
 
-import com.opensr5.Logger;
 import com.rusefi.FileLog;
-import com.rusefi.PaneSettings;
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.UiUtils;
@@ -13,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -221,7 +218,7 @@ public class GaugesPanel {
     private JButton createSaveImageButton() {
         JButton saveImageButton = UiUtils.createSaveImageButton();
         saveImageButton.addActionListener(e -> {
-            String fileName = Logger.getDate() + "_gauges.png";
+            String fileName = FileLog.getDate() + "_gauges.png";
 
             UiUtils.saveImageWithPrompt(fileName, content, gauges.panel);
         });

@@ -106,7 +106,7 @@ public class TestingUtils {
 
     public static EngineChart nextChart(CommandQueue commandQueue) {
         long start = System.currentTimeMillis();
-        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue), FileLog.LOGGER);
+        EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue));
         FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
         return chart;
     }
