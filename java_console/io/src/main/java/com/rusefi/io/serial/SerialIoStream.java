@@ -10,6 +10,8 @@ import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+
 import static com.devexperts.logging.Logging.getLogging;
 
 public class SerialIoStream extends AbstractIoStream {
@@ -57,6 +59,11 @@ public class SerialIoStream extends AbstractIoStream {
         if (Bug3923.obscene)
             log.info("Writing " + bytes.length + " byte(s)");
         sp.writeBytes(bytes, bytes.length);
+    }
+
+    @Override
+    public void flush() throws IOException {
+        sp.flushIOBuffers();
     }
 
     @Override
