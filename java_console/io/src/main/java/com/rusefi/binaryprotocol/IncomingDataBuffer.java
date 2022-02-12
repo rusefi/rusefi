@@ -2,6 +2,7 @@ package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.Timeouts;
+import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.serial.AbstractIoStream;
 import etch.util.CircularByteBuffer;
@@ -98,7 +99,7 @@ public class IncomingDataBuffer {
             cbb.put(freshData);
             cbb.notifyAll();
         }
-        if (log.debugEnabled())
+        if (log.debugEnabled() || Bug3923.obscene)
             log.debug(freshData.length + " byte(s) arrived, total " + cbb.length());
     }
 

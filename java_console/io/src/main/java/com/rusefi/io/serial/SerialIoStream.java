@@ -6,6 +6,7 @@ import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
+import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,6 +77,8 @@ public class SerialIoStream extends AbstractIoStream {
 
             @Override
             public void serialEvent(SerialPortEvent event) {
+                if (Bug3923.obscene)
+                    System.out.println("serialEvent " + event);
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
                 if (isFirstEvent) {
@@ -84,6 +87,8 @@ public class SerialIoStream extends AbstractIoStream {
                     isFirstEvent = false;
                 }
                 int bytesAvailable = sp.bytesAvailable();
+                if (Bug3923.obscene)
+                    log.info("serialEvent bytesAvailable " + bytesAvailable);
                 if (bytesAvailable <= 0)
                     return; // sometimes negative value is returned at least on Mac
                 byte[] newData = new byte[bytesAvailable];
