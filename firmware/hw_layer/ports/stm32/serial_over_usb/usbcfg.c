@@ -83,8 +83,8 @@ static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
                          NUM_INTERFACES,/* bNumInterfaces.                  */
                          0x01,          /* bConfigurationValue.             */
                          0,             /* iConfiguration.                  */
-                         0xC0,          /* bmAttributes (self powered).     */
-                         100),           /* bMaxPower (200mA).              */
+                         0x80,          /* bmAttributes (bus powered).      */
+                         200),          /* bMaxPower (400mA).               */
 #if HAL_USE_USB_MSD
   USB_DESC_INTERFACE    (MSD_IF,        /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
