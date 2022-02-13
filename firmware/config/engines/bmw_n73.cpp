@@ -17,8 +17,13 @@ void setEngineProteusBMW_N73_GDI() {
 void setEngineProteusGearboxManInTheMiddle() {
 	strncpy(config->luaScript, R"(
 
-function twoBytes(data, offset, factor)
+function getTwoBytes(data, offset, factor)
 	return (data[offset + 2] * 256 + data[offset + 1]) * factor
+end
+
+function setTwoBytes(data, offset, value)
+	data[offset + 1] = value % 255
+	data[offset + 2] = (value >> 8) % 255
 end
 
 -- this controls onCanRx rate as well!
@@ -103,15 +108,15 @@ function onCanRx(bus, id, dlc, data)
 	-- local output = string.format("%x", id)
 
 	if id == CAN_BMW_E90_TORQUE_1 then
-		TORQ_AVL = 0.5 * (twoBytes(data, 1, 1) >> 4)
-		TORQ_AVL_DMEE = 0.5 * (twoBytes(data, 3, 1) >> 4)
+		TORQ_AVL = 0.5 * (getTwoBytes(data, 1, 1) >> 4)
+		TORQ_AVL_DMEE = 0.5 * (getTwoBytes(data, 3, 1) >> 4)
 		print('CAN_BMW_E90_TORQUE_1 TORQ_AVL=' ..TORQ_AVL ..' TORQ_AVL_DMEE=' ..TORQ_AVL_DMEE)
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_TORQUE_2 then
 		printDebug('CAN_BMW_E90_TORQUE_2')
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_RPM_THROTTLE then
-		rpm = twoBytes(data, 4, 0.25)
+		rpm = getTwoBytes(data, 4, 0.25)
 		print('CAN_BMW_E90_RPM_THROTTLE rpm=' ..rpm)
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_DSC_TORQUE_DEMAND then
