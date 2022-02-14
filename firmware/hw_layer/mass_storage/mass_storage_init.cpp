@@ -2,7 +2,6 @@
 
 #include "mass_storage_init.h"
 #include "mass_storage_device.h"
-#include "block_cache.h"
 #include "null_device.h"
 
 #if HAL_USE_USB_MSD
@@ -73,12 +72,8 @@ static const scsi_inquiry_response_t sdCardInquiry = {
     {'v',CH_KERNEL_MAJOR+'0','.',CH_KERNEL_MINOR+'0'}
 };
 
-static BlockCache sdReadPrefetch;
-
 void attachMsdSdCard(BaseBlockDevice* blkdev) {
-	// Start the prefetcher
-	sdReadPrefetch.start(blkdev);
-	msd.attachLun(1, reinterpret_cast<BaseBlockDevice*>(&sdReadPrefetch), blkbuf1, &sdCardInquiry, nullptr);
+	msd.attachLun(1, blkdev, blkbuf1, &sdCardInquiry, nullptr);
 
 #if EFI_TUNER_STUDIO
 	// SD MSD attached, enable indicator in TS
