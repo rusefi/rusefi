@@ -86,7 +86,7 @@ jobs:
 
           - build-target: hellenNA8_96
             folder: hellen/hellenNA8_96
-            ini-file: rusefi_hellenNA8_96
+            ini-file: rusefi_hellenNA8_96.ini
 
           - build-target: hellenNA6
             folder: hellen/hellen64_miataNA6_94
