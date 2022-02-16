@@ -11,10 +11,6 @@ import com.rusefi.io.IoStream;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -95,7 +91,7 @@ public class SerialIoStream extends AbstractIoStream {
 
             @Override
             public int getListeningEvents() {
-                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE | SerialPort.LISTENING_EVENT_PORT_DISCONNECTED;
+                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
 //todo: requires jSerialComm newer than 2.7 even if we want it               return SerialPort.LISTENING_EVENT_DATA_AVAILABLE | SerialPort.LISTENING_EVENT_PORT_DISCONNECTED;
             }
 
