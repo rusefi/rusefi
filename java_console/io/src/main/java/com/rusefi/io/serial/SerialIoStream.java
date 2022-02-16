@@ -96,6 +96,7 @@ public class SerialIoStream extends AbstractIoStream {
             @Override
             public int getListeningEvents() {
                 return SerialPort.LISTENING_EVENT_DATA_AVAILABLE | SerialPort.LISTENING_EVENT_PORT_DISCONNECTED;
+//todo: requires jSerialComm newer than 2.7 even if we want it               return SerialPort.LISTENING_EVENT_DATA_AVAILABLE | SerialPort.LISTENING_EVENT_PORT_DISCONNECTED;
             }
 
             @Override
@@ -103,11 +104,13 @@ public class SerialIoStream extends AbstractIoStream {
                 if (Bug3923.obscene)
                     log.info("serialEvent " + event.getEventType());
 
+/*
+requires jSerialComm newer than 2.7
                 if (event.getEventType() == SerialPort.LISTENING_EVENT_PORT_DISCONNECTED) {
                     System.out.println("got event SerialPort.LISTENING_EVENT_PORT_DISCONNECTED");
                     return;
                 }
-
+*/
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
                     return;
                 if (isFirstEvent) {
