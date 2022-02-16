@@ -7,6 +7,7 @@ import com.rusefi.io.LinkManager;
 
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 public class SerialSandbox {
     public static void main(String[] args) {
@@ -25,8 +26,11 @@ public class SerialSandbox {
         LinkManager linkManager = new LinkManager()
                 .setNeedPullText(textPull) // todo: open issue #2
                 .setNeedPullLiveData(true);
-        CountDownLatch connected = linkManager.connect(port);
-        if (connected.getCount() > 0)
+
+        try {
+            linkManager.connect(port).await(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
             throw new IllegalStateException("Not connected in time");
+        }
     }
 }

@@ -160,8 +160,10 @@ public class IoUtil {
         linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
 
-        CountDownLatch connected = linkManager.connect(port);
-        if (connected.getCount() > 0)
+        try {
+            linkManager.connect(port).await(60, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
             throw new IllegalStateException("Not connected in time");
+        }
     }
 }

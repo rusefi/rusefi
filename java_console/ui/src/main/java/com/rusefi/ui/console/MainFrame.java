@@ -84,6 +84,13 @@ public class MainFrame {
 
             @Override
             public void onConnectionEstablished() {
+                new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
+                    linkManager.execute(() -> {
+                        log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
+                        linkManager.restart();
+                    });
+                }).start();
+
                 tabbedPane.settingsTab.showContent();
                 tabbedPane.logsManager.showContent();
                 tabbedPane.fuelTunePane.showContent();
