@@ -114,7 +114,7 @@ public class PortDetector {
     public static SerialAutoChecker.AutoDetectResult autoDetectPort(JFrame parent) {
         SerialAutoChecker.AutoDetectResult autoDetectedPort = autoDetectSerial(null);
         if (autoDetectedPort.getSerialPort() == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to locate rusEFU");
+            JOptionPane.showMessageDialog(parent, "Failed to locate rusEFI");
             return null;
         }
         return autoDetectedPort;
