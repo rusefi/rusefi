@@ -187,7 +187,7 @@ pins:
 
   - pin: C7
     # H144_IN_CAM
-    id: [GPIOA_6, EFI_ADC_6]
+    id: [GPIOA_6, GPIOA_6, EFI_ADC_6]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Camshaft HALL Sensor or Generic Digital Input
     type: hall
