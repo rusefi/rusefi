@@ -262,8 +262,11 @@ public class StartupFrame {
     private static ImageIcon getBundleIcon() {
         String bundle = Autoupdate.readBundleFullNameNotNull();
         String logoName;
+        // these should be about 213px wide
         if (bundle.contains("proteus")) {
             logoName = LOGO_PATH + "logo_proteus.png";
+        } else if (bundle.contains("_alphax")) {
+            logoName = LOGO_PATH + "logo_alphax.png";
         } else if (bundle.contains("_mre")) {
             logoName = LOGO_PATH + "logo_mre.png";
         } else {
