@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,9 +112,13 @@ public class DfuFlasher {
 
     public static void runDfuErase() {
         StatusWindow wnd = createStatusWindow();
-        submitAction(() -> ExecHelper.executeCommand(DFU_BINARY_LOCATION,
-                getDfuEraseCommand(),
-                DFU_BINARY, wnd, new StringBuffer()));
+        submitAction(() -> {
+            ExecHelper.executeCommand(DFU_BINARY_LOCATION,
+                    getDfuEraseCommand(),
+                    DFU_BINARY, wnd, new StringBuffer());
+            // it's a lengthy operation let's signal end
+            Toolkit.getDefaultToolkit().beep();
+        });
     }
 
     public static void runDfuProgramming() {
