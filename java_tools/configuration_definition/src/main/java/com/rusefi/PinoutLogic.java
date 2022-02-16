@@ -102,6 +102,7 @@ public class PinoutLogic {
         for (Map<String, Object> pin : data) {
             Object pinId = pin.get("id");
             Object pinClass = pin.get("class");
+            String pinName = (String) pin.get("pin");
             String pinTsName = (String) pin.get("ts_name");
             if (pinId == null || pinClass == null || pinTsName == null) {
                 continue;
@@ -110,9 +111,12 @@ public class PinoutLogic {
                 ArrayList<String> pinIds = (ArrayList<String>) pinId;
                 if (!(pinClass instanceof ArrayList))
                     throw new IllegalStateException("Expected multiple classes for " + pinIds);
+                ArrayList<String> pinClassArray = (ArrayList<String>) pinClass;
+                if (pinIds.size()!=pinClassArray.size())
+                    throw new IllegalStateException(pinName + ": id array length should match class array length");
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
-                    addPinToList(id, pinTsName, ((ArrayList<String>) pinClass).get(i));
+                    addPinToList(id, pinTsName, pinClassArray.get(i));
                 }
             } else if (pinId instanceof String) {
                 String pinIdString = (String) pinId;
