@@ -112,8 +112,8 @@ public class PinoutLogic {
                 if (!(pinClass instanceof ArrayList))
                     throw new IllegalStateException("Expected multiple classes for " + pinIds);
                 ArrayList<String> pinClassArray = (ArrayList<String>) pinClass;
-                if (pinIds.size()!=pinClassArray.size())
-                    throw new IllegalStateException(pinName + ": id array length should match class array length");
+                if (pinIds.size() != pinClassArray.size())
+                    throw new IllegalStateException(pinName + ": id array length should match class array length: " + pinId + " vs " + pinClassArray);
                 for (int i = 0; i < pinIds.size(); i++) {
                     String id = pinIds.get(i);
                     addPinToList(id, pinTsName, pinClassArray.get(i));
