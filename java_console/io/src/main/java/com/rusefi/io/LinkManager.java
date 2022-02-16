@@ -89,6 +89,7 @@ public class LinkManager implements Closeable {
     @NotNull
     public CountDownLatch connect(String port) {
         final CountDownLatch connected = new CountDownLatch(1);
+
         startAndConnect(port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
@@ -101,11 +102,7 @@ public class LinkManager implements Closeable {
                 connected.countDown();
             }
         });
-        try {
-            connected.await(60, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
+
         return connected;
     }
 
