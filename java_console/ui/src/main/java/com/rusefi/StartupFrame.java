@@ -188,11 +188,15 @@ public class StartupFrame {
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
         if (Autoupdate.readBundleFullNameNotNull().contains("proteus_f7")) {
-            URLLabel urlLabel = new URLLabel("WARNING: Proteus F7", "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
+            String text = "WARNING: Proteus F7";
+            URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
+            Color originalColor = urlLabel.getForeground();
             new Timer(500, new ActionListener() {
+                int counter;
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    urlLabel.setVisible(!urlLabel.isVisible());
+                    // URL color is hard-coded, let's blink isUnderlined attribute as second best option
+                    urlLabel.setText(text, counter++ % 2 == 0);
                 }
             }).start();
             rightPanel.add(urlLabel);
