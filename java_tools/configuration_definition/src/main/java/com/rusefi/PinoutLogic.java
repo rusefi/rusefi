@@ -102,7 +102,7 @@ public class PinoutLogic {
         for (Map<String, Object> pin : data) {
             Object pinId = pin.get("id");
             Object pinClass = pin.get("class");
-            String pinName = (String) pin.get("pin");
+            Object pinName = (String) pin.get("pin");
             String pinTsName = (String) pin.get("ts_name");
             if (pinId == null || pinClass == null || pinTsName == null) {
                 continue;
