@@ -1,6 +1,9 @@
 #!/bin/bash
 
 misc/actions/pinouts-create.sh
+if [ $? -ne 0 ]; then
+  exit 1
+fi
 
 if [ -n "$RUSEFI_SSH_SERVER" ]; then
   echo "Uploading Pinouts..."
