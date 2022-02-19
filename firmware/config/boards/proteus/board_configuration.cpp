@@ -7,7 +7,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {
@@ -162,10 +161,10 @@ void setBoardConfigOverrides() {
 
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -215,17 +214,6 @@ void setBoardDefaultConfiguration() {
 }
 
 void boardPrepareForStop() {
-	#ifdef STM32F7XX
-	// enable EXTI on PD0 - CAN RX pin
-	palSetPadMode(GPIOD, 0, PAL_MODE_INPUT); //Select Pin 0 on D Port - PD0, CAN RX as input
-	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE); // Set PD0 to interrupt on rising edge
-	#endif
-
-	#ifdef STM32F4XX
-	// enable EXTI on PA0 - The only WKUP pin F4 has.
-	PWR->CR |= PWR_CR_CWUF; //Clear Wakeup Pin flag for PA0
-	palSetPadMode(GPIOA, 0, PAL_MODE_INPUT); //Select Pin 0 on A Port - PA0, Wkup
-	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE); // Set PA0 to interrupt on rising edge
-
-	#endif
+	// Wake on the CAN RX pin
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }

@@ -285,8 +285,8 @@ void readFromFlash() {
 	 * HW_CHECK_MODE mode where we would not need actual address
 	 * todo: rename method to emphasis the fact of validation check?
 	 */
-	auto firstCopyAddr = getFlashAddrFirstCopy();
-	auto secondyCopyAddr = getFlashAddrSecondCopy();
+	getFlashAddrFirstCopy();
+	getFlashAddrSecondCopy();
 
 	resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 #else

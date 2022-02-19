@@ -11,7 +11,7 @@
 #include "engine_module.h"
 #include "rusefi_types.h"
 #include "periodic_task.h"
-#include "pid.h"
+#include "efi_pid.h"
 
 struct IIdleController {
 	enum class Phase : uint8_t {

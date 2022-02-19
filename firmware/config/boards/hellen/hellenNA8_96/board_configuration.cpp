@@ -11,7 +11,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
@@ -95,14 +94,19 @@ void setBoardConfigOverrides() {
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
+
+	engineConfiguration->etb_use_two_wires = true;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_7;	// PWM 3
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_8;	// PWM 4
+	engineConfiguration->etbIo[0].controlPin = GPIOC_6;		// PWM 2
 }
 
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 

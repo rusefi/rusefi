@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.autoupdate.Autoupdate;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.*;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
@@ -38,6 +40,8 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  * @see FirmwareFlasher
  */
 public class StartupFrame {
+    private static final Logging log = getLogging(Launcher.class);
+
     public static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
     public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
@@ -184,11 +188,15 @@ public class StartupFrame {
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
         if (Autoupdate.readBundleFullNameNotNull().contains("proteus_f7")) {
-            URLLabel urlLabel = new URLLabel("WARNING: Proteus F7", "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
+            String text = "WARNING: Proteus F7";
+            URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
+            Color originalColor = urlLabel.getForeground();
             new Timer(500, new ActionListener() {
+                int counter;
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    urlLabel.setVisible(!urlLabel.isVisible());
+                    // URL color is hard-coded, let's blink isUnderlined attribute as second best option
+                    urlLabel.setText(text, counter++ % 2 == 0);
                 }
             }).start();
             rightPanel.add(urlLabel);
@@ -219,7 +227,7 @@ public class StartupFrame {
     private void applyKnownPorts() {
         List<String> ports = SerialPortScanner.INSTANCE.getKnownPorts();
         if (!currentlyDisplayedPorts.equals(ports) || isFirstTimeApplyingPorts) {
-            FileLog.MAIN.logLine("Rendering available ports: " + ports);
+            log.info("Rendering available ports: " + ports);
             isFirstTimeApplyingPorts = false;
             connectPanel.setVisible(!ports.isEmpty());
             noPortsMessage.setVisible(ports.isEmpty());
@@ -254,8 +262,11 @@ public class StartupFrame {
     private static ImageIcon getBundleIcon() {
         String bundle = Autoupdate.readBundleFullNameNotNull();
         String logoName;
+        // these should be about 213px wide
         if (bundle.contains("proteus")) {
             logoName = LOGO_PATH + "logo_proteus.png";
+        } else if (bundle.contains("_alphax")) {
+            logoName = LOGO_PATH + "logo_alphax.png";
         } else if (bundle.contains("_mre")) {
             logoName = LOGO_PATH + "logo_mre.png";
         } else {
@@ -280,7 +291,7 @@ public class StartupFrame {
 
     /**
      * Here we listen to keystrokes while console start-up frame is being displayed and if magic "test" word is typed
-     * we launch a functional test on real hardware, same as Jenkins runs within continues integration
+     * we launch a functional test on real hardware, same as Jenkins runs within continuous integration
      */
     @NotNull
     private KeyListener functionalTestEasterEgg() {

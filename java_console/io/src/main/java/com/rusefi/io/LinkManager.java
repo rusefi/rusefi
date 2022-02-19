@@ -52,6 +52,8 @@ public class LinkManager implements Closeable {
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
+    private boolean needPullText = true;
+    private boolean needPullLiveData = true;
     public final MessagesListener messageListener = (source, message) -> System.out.println(source + ": " + message);
     private Thread communicationThread;
 
@@ -87,6 +89,7 @@ public class LinkManager implements Closeable {
     @NotNull
     public CountDownLatch connect(String port) {
         final CountDownLatch connected = new CountDownLatch(1);
+
         startAndConnect(port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
@@ -99,11 +102,7 @@ public class LinkManager implements Closeable {
                 connected.countDown();
             }
         });
-        try {
-            connected.await(60, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
+
         return connected;
     }
 
@@ -150,8 +149,26 @@ public class LinkManager implements Closeable {
         return needPullData;
     }
 
+    public boolean isNeedPullText() {
+        return needPullText;
+    }
+
+    public boolean isNeedPullLiveData() {
+        return needPullLiveData;
+    }
+
+    public LinkManager setNeedPullLiveData(boolean needPullLiveData) {
+        this.needPullLiveData = needPullLiveData;
+        return this;
+    }
+
     public LinkManager setNeedPullData(boolean needPullData) {
         this.needPullData = needPullData;
+        return this;
+    }
+
+    public LinkManager setNeedPullText(boolean needPullText) {
+        this.needPullText = needPullText;
         return this;
     }
 
@@ -233,7 +250,7 @@ public class LinkManager implements Closeable {
                 @Override
                 public IoStream call() {
                     messageListener.postMessage(getClass(), "Opening port: " + port);
-                    IoStream stream = ((Callable<IoStream>) () -> BufferedSerialIoStream.openPort(port)).call();
+                    IoStream stream = BufferedSerialIoStream.openPort(port);
                     if (stream == null) {
                         // error already reported
                         return null;
@@ -273,7 +290,7 @@ public class LinkManager implements Closeable {
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
         String[] ports = getCommPorts();
-        boolean isPortAvailableAgain = Arrays.stream(ports).anyMatch(lastTriedPort::equals);
+        boolean isPortAvailableAgain = Arrays.asList(ports).contains(lastTriedPort);
         if (isPortAvailableAgain) {
             connect(lastTriedPort);
         }

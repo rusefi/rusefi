@@ -1,8 +1,9 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.AutoupdateUtil;
-import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
@@ -13,6 +14,7 @@ import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.FirmwareFlasher;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.*;
+import com.rusefi.ui.config.BaseConfigField;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
@@ -26,10 +28,12 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.setFrameIcon;
 import static com.rusefi.rusEFIVersion.CONSOLE_VERSION;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
@@ -38,6 +42,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * @see StartupFrame
  */
 public class ConsoleUI {
+    private static final Logging log = getLogging(ConsoleUI.class);
     private static final int DEFAULT_TAB_INDEX = 0;
     private static SensorCentral.SensorListener wrongVersionListener;
 
@@ -56,7 +61,7 @@ public class ConsoleUI {
     /**
      * We can listen to tab activation event if we so desire
      */
-    private final Map<JComponent, ActionListener> tabSelectedListeners = new HashMap<>();
+    private final Map<Component, ActionListener> tabSelectedListeners = new HashMap<>();
 
     public static Frame getFrame() {
         return staticFrame;
@@ -68,9 +73,9 @@ public class ConsoleUI {
         MainFrame mainFrame = new MainFrame(this, tabbedPane);
         ConsoleUI.staticFrame = mainFrame.getFrame().getFrame();
         setFrameIcon(ConsoleUI.staticFrame);
-        FileLog.MAIN.logLine("Console " + CONSOLE_VERSION);
+        log.info("Console " + CONSOLE_VERSION);
 
-        FileLog.MAIN.logLine("Hardware: " + FirmwareFlasher.getHardwareKind());
+        log.info("Hardware: " + FirmwareFlasher.getHardwareKind());
 
         getConfig().getRoot().setProperty(PORT_KEY, port);
         getConfig().getRoot().setProperty(SPEED_KEY, BaudRateHolder.INSTANCE.baudRate);
@@ -85,13 +90,6 @@ public class ConsoleUI {
 
         if (LinkManager.isLogViewerMode(port))
             tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
-
-        new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-            uiContext.getLinkManager().execute(() -> {
-                FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-                linkManager.restart();
-            });
-        }).start();
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
         uiContext.DetachedRepositoryINSTANCE.load();
@@ -152,7 +150,7 @@ public class ConsoleUI {
                 tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
         }
 
-        MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocol.COMPOSITE_OFF_RPM);
+        MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
 
         tabbedPane.addTab("rusEFI Online", new OnlineTab(uiContext).getContent());
 
@@ -188,6 +186,8 @@ public class ConsoleUI {
 
     static void startUi(String[] args) throws InterruptedException, InvocationTargetException {
         FileLog.MAIN.start();
+        log.info("OS name: " + FileLog.getOsName());
+        log.info("OS version: " + System.getProperty(FileLog.OS_VERSION));
 
         getConfig().load();
         FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);

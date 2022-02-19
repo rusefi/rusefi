@@ -40,7 +40,7 @@ import static javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED;
 public class LiveDataParserPanel {
     private static final Logging log = getLogging(LiveDataParserPanel.class);
 
-    {
+    static {
 //        log.configureDebugEnabled(true);
     }
 
@@ -206,7 +206,7 @@ public class LiveDataParserPanel {
                 //log.error("BAD condition, should be variable: " + name);
                 return null;
             }
-            double number = f.getValue(new ConfigurationImage(bytes)).doubleValue();
+            double number = f.getValue(new ConfigurationImage(bytes));
             if (log.debugEnabled()) {
                 log.debug("getValue(" + name + "): " + number);
             }

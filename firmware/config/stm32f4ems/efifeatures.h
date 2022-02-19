@@ -17,8 +17,6 @@
 
 #define EFI_DYNO_VIEW TRUE
 
-#define EFI_FSIO TRUE
-
 #ifndef EFI_CDM_INTEGRATION
 #define EFI_CDM_INTEGRATION FALSE
 #endif
@@ -55,11 +53,6 @@
 #if !defined(EFI_ENABLE_ASSERTS)
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
-
-#if !defined(EFI_ENABLE_MOCK_ADC)
- #define EFI_ENABLE_MOCK_ADC TRUE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 

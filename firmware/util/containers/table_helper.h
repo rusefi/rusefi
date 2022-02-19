@@ -166,6 +166,17 @@ constexpr void copyTable(TDest (&dest)[N][M], const TSource (&source)[N][M], flo
 	}
 }
 
+// specialization that can use memcpy when src and dest types match
+template <typename TDest, size_t N, size_t M>
+constexpr void copyTable(scaled_channel<TDest, 1, 1> (&dest)[N][M], const TDest (&source)[N][M]) {
+	memcpy(dest, source, N * M * sizeof(TDest));
+}
+
+template <typename TDest, size_t N, size_t M>
+constexpr void copyTable(TDest (&dest)[N][M], const TDest (&source)[N][M]) {
+	memcpy(dest, source, N * M * sizeof(TDest));
+}
+
 template<typename kType>
 void setRpmBin(kType array[], int size, float idleRpm, float topRpm) {
 	array[0] = idleRpm - 150;

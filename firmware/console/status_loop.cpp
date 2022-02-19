@@ -79,10 +79,6 @@ extern int icuFallingCallbackCounter;
 #include "map_averaging.h"
 #endif
 
-#if EFI_FSIO
-#include "fsio_impl.h"
-#endif /* EFI_FSIO */
-
 #if (BOARD_TLE8888_COUNT > 0)
 #include "tle8888.h"
 #endif /* BOARD_TLE8888_COUNT */
@@ -111,14 +107,6 @@ int warningEnabled = true;
 
 extern int maxTriggerReentrant;
 extern uint32_t maxLockedDuration;
-
-
-#if !defined(STATUS_LOGGING_BUFFER_SIZE)
-#define STATUS_LOGGING_BUFFER_SIZE 1800
-#endif /* STATUS_LOGGING_BUFFER_SIZE */
-
-static char LOGGING_BUFFER[STATUS_LOGGING_BUFFER_SIZE];
-static Logging logger("status loop", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
 
 static void setWarningEnabled(int value) {
 	warningEnabled = value;
@@ -160,12 +148,22 @@ static int packEngineMode() {
 static int prevCkpEventCounter = -1;
 
 /**
- * Time when the firmware version was reported last time, in seconds
+ * Time when the firmware version was last reported
  * TODO: implement a request/response instead of just constantly sending this out
  */
-static systime_t timeOfPreviousPrintVersion = 0;
+static Timer printVersionTimer;
 
-#if EFI_PROD_CODE
+static void printRusefiVersion(const char *engineTypeName, const char *firmwareBuildId) {
+	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
+	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%s %s %s %d",
+			getRusEfiVersion(), VCS_VERSION,
+			firmwareBuildId,
+			engineTypeName,
+			getTimeNowSeconds());
+}
+
+// Inform the console about the mapping between a pin's logical name (for example, injector 3)
+// and the physical MCU pin backing that function (for example, PE3)
 static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 	if (hwPin == GPIO_UNASSIGNED || hwPin == GPIO_INVALID) {
 		return;
@@ -176,29 +174,14 @@ static void printOutPin(const char *pinName, brain_pin_e hwPin) {
 	} else {
 		hwPinName = "smart";
 	}
-	logger.appendPrintf(PROTOCOL_OUTPIN LOG_DELIMITER "%s@%s" LOG_DELIMITER, pinName, hwPinName);
+
+	efiPrintfProto(PROTOCOL_OUTPIN, "%s@%s", pinName, hwPinName);
 }
-#endif /* EFI_PROD_CODE */
 
-void printOverallStatus(efitimesec_t nowSeconds) {
-#if EFI_ENGINE_SNIFFER
-	waveChart.publishIfFull();
-#endif /* EFI_ENGINE_SNIFFER */
-
-#if EFI_SENSOR_CHART
-	publishSensorChartIfFull();
-#endif // EFI_SENSOR_CHART
-
-	/**
-	 * we report the version every 4 seconds - this way the console does not need to
-	 * request it and we will display it pretty soon
-	 */
-	if (overflowDiff(nowSeconds, timeOfPreviousPrintVersion) < 4) {
-		return;
-	}
-	timeOfPreviousPrintVersion = nowSeconds;
-	int seconds = getTimeNowSeconds();
-	printCurrentState(&logger, seconds, getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
+// Print out the current mapping between logical and physical pins that
+// the engine sniffer cares about, so we can display a physical pin
+// in each engine sniffer row
+static void printEngineSnifferPinMappings() {
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, engineConfiguration->triggerInputPins[0]);
 	printOutPin(PROTOCOL_CRANK2, engineConfiguration->triggerInputPins[1]);
@@ -222,12 +205,45 @@ void printOverallStatus(efitimesec_t nowSeconds) {
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
 		printOutPin(enginePins.auxValve[i].getShortName(), engineConfiguration->auxValves[i]);
 	}
-
 #endif /* EFI_PROD_CODE */
-	scheduleLogging(&logger);
+}
+
+void printOverallStatus() {
+#if EFI_ENGINE_SNIFFER
+	waveChart.publishIfFull();
+#endif /* EFI_ENGINE_SNIFFER */
+
+#if EFI_SENSOR_CHART
+	publishSensorChartIfFull();
+#endif // EFI_SENSOR_CHART
+
+	/**
+	 * we report the version every second - this way the console does not need to
+	 * request it and we will display it pretty soon
+	 */
+	if (printVersionTimer.hasElapsedSec(1)) {
+		// we're sending, reset the timer
+		printVersionTimer.reset();
+
+		// Output the firmware version, board type, git hash, uptime in seconds, etc
+		printRusefiVersion(getEngine_type_e(engineConfiguration->engineType), FIRMWARE_ID);
+
+		// Output the current engine sniffer pin mappings
+		printEngineSnifferPinMappings();
+	}
 }
 
 static systime_t timeOfPreviousReport = (systime_t) -1;
+
+#if !defined(LOGIC_ANALYZER_BUFFER_SIZE)
+// TODO: how small can this be?
+#define LOGIC_ANALYZER_BUFFER_SIZE 1000
+#endif /* LOGIC_ANALYZER_BUFFER_SIZE */
+
+#if EFI_LOGIC_ANALYZER
+static char logicAnalyzerBuffer[LOGIC_ANALYZER_BUFFER_SIZE];
+static Logging logicAnalyzerLogger("logic analyzer", logicAnalyzerBuffer, sizeof(logicAnalyzerBuffer));
+#endif // EFI_LOGIC_ANALYZER
 
 /**
  * @brief Sends all pending data to rusEfi console
@@ -270,10 +286,9 @@ void updateDevConsoleState(void) {
 #endif
 
 #if EFI_LOGIC_ANALYZER
-	printWave(&logger);
+	printWave(&logicAnalyzerLogger);
+	scheduleLogging(&logicAnalyzerLogger);
 #endif /* EFI_LOGIC_ANALYZER */
-
-	scheduleLogging(&logger);
 }
 
 /*
@@ -654,6 +669,11 @@ static void updateIgnition(int rpm) {
 }
 
 static void updateFlags() {
+#if EFI_USB_SERIAL
+	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
+#endif // EFI_USB_SERIAL
+
+	engine->outputChannels.isMainRelayOn = enginePins.mainRelay.getLogicValue();
 	engine->outputChannels.isFuelPumpOn = enginePins.fuelPumpRelay.getLogicValue();
 	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
 	engine->outputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
@@ -714,7 +734,7 @@ void updateTunerStudioState() {
 
 	// 104
 	tsOutputChannels->rpmAcceleration = engine->rpmCalculator.getRpmAcceleration();
-	
+
 	// Output both the estimated air flow, and measured air flow (if available)
 	tsOutputChannels->mafMeasured = Sensor::getOrZero(SensorType::Maf);
 	tsOutputChannels->mafEstimate = engine->engineState.airflowEstimate;

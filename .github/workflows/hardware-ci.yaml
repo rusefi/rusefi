@@ -13,7 +13,7 @@ jobs:
         include:
           - build-target: f4-disco
             script: hardware_ci_f4_discovery
-            board: st_stm32f4
+            board: f407-discovery
             runs-on: hw-ci-f4-discovery
 
           - build-target: proteus

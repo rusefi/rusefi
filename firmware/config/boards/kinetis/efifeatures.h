@@ -12,8 +12,6 @@
 
 #define EFI_GPIO_HARDWARE TRUE
 
-#define EFI_FSIO FALSE
-
 #define EFI_CDM_INTEGRATION FALSE
 
 #define EFI_TOOTH_LOGGER FALSE
@@ -34,11 +32,6 @@
 #if !defined(EFI_ENABLE_ASSERTS) || defined(__DOXYGEN__)
  #define EFI_ENABLE_ASSERTS FALSE
 #endif /* EFI_ENABLE_ASSERTS */
-
-#if !defined(EFI_ENABLE_MOCK_ADC) || defined(__DOXYGEN__)
- #define EFI_ENABLE_MOCK_ADC FALSE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 
 #define EFI_TEXT_LOGGING FALSE
 
@@ -299,8 +292,7 @@
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
-#define STATUS_LOGGING_BUFFER_SIZE 120 /*1800*/
-#define SETTINGS_LOGGING_BUFFER_SIZE 100 /*1000*/
+#define LOGIC_ANALYZER_BUFFER_SIZE 120 /*1800*/
 #define DL_OUTPUT_BUFFER 10 /*6500*/
 
 #define UTILITY_THREAD_STACK_SIZE 270 /*400*/

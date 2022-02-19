@@ -76,7 +76,7 @@ public class ConfigDefinition {
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
         boolean withC_Defines = true;
-        File[] boardYamlFiles = null;
+        PinoutLogic pinoutLogic = null;
         String tsOutputsDestination = null;
         String definitionInputFile = null;
 
@@ -162,15 +162,9 @@ public class ConfigDefinition {
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
-                    String dirPath = "./config/boards/" + boardName + "/connectors";
-                    File dirName = new File(dirPath);
-                    FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
-                    boardYamlFiles = dirName.listFiles(filter);
-                    if (boardYamlFiles != null) {
-                        for (File yamlFile : boardYamlFiles) {
-                            inputFiles.add("config/boards/" + boardName + "/connectors/" + yamlFile.getName());
-                        }
-                    }
+                    pinoutLogic = PinoutLogic.create(boardName);
+                    if (pinoutLogic != null)
+                        inputFiles.addAll(pinoutLogic.getInputFiles());
                     break;
             }
         }
@@ -198,8 +192,8 @@ public class ConfigDefinition {
         for (String prependFile : prependFiles)
             state.variableRegistry.readPrependValues(prependFile);
 
-        if (boardYamlFiles != null) {
-            PinoutLogic.processYamls(state.variableRegistry, boardYamlFiles, state);
+        if (pinoutLogic != null) {
+            pinoutLogic.processYamls(state.variableRegistry, state);
         }
 
         // Parse the input files

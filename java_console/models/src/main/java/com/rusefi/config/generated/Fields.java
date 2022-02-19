@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:27 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 19 01:10:44 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -366,6 +366,40 @@ public class Fields {
 	public static final int brain_pin_e_GPIOI_7 = 137;
 	public static final int brain_pin_e_GPIOI_8 = 138;
 	public static final int brain_pin_e_GPIOI_9 = 139;
+	public static final int brain_pin_e_L9779_IGN_1 = 215;
+	public static final int brain_pin_e_L9779_IGN_2 = 216;
+	public static final int brain_pin_e_L9779_IGN_3 = 217;
+	public static final int brain_pin_e_L9779_IGN_4 = 218;
+	public static final int brain_pin_e_L9779_OUT_1 = 219;
+	public static final int brain_pin_e_L9779_OUT_10 = 228;
+	public static final int brain_pin_e_L9779_OUT_11 = 229;
+	public static final int brain_pin_e_L9779_OUT_12 = 230;
+	public static final int brain_pin_e_L9779_OUT_13 = 231;
+	public static final int brain_pin_e_L9779_OUT_14 = 232;
+	public static final int brain_pin_e_L9779_OUT_15 = 233;
+	public static final int brain_pin_e_L9779_OUT_16 = 234;
+	public static final int brain_pin_e_L9779_OUT_17 = 235;
+	public static final int brain_pin_e_L9779_OUT_18 = 236;
+	public static final int brain_pin_e_L9779_OUT_19 = 237;
+	public static final int brain_pin_e_L9779_OUT_2 = 220;
+	public static final int brain_pin_e_L9779_OUT_20 = 238;
+	public static final int brain_pin_e_L9779_OUT_25 = 243;
+	public static final int brain_pin_e_L9779_OUT_26 = 244;
+	public static final int brain_pin_e_L9779_OUT_27 = 245;
+	public static final int brain_pin_e_L9779_OUT_28 = 246;
+	public static final int brain_pin_e_L9779_OUT_3 = 221;
+	public static final int brain_pin_e_L9779_OUT_4 = 222;
+	public static final int brain_pin_e_L9779_OUT_5 = 223;
+	public static final int brain_pin_e_L9779_OUT_6 = 224;
+	public static final int brain_pin_e_L9779_OUT_7 = 225;
+	public static final int brain_pin_e_L9779_OUT_8 = 226;
+	public static final int brain_pin_e_L9779_OUT_9 = 227;
+	public static final int brain_pin_e_L9779_OUT_A = 239;
+	public static final int brain_pin_e_L9779_OUT_B = 240;
+	public static final int brain_pin_e_L9779_OUT_C = 241;
+	public static final int brain_pin_e_L9779_OUT_D = 242;
+	public static final int brain_pin_e_L9779_OUT_MRD = 247;
+	public static final int brain_pin_e_L9779_PIN_KEY = 248;
 	public static final int brain_pin_e_MC33972_PIN_1 = 146;
 	public static final int brain_pin_e_MC33972_PIN_21 = 166;
 	public static final int brain_pin_e_MC33972_PIN_22 = 167;
@@ -592,6 +626,7 @@ public class Fields {
 	public static final int crankingCycleCoef_offset = 13956;
 	public static final int crankingFuelBins_offset = 13924;
 	public static final int crankingFuelCoef_offset = 13892;
+	public static final int crankingFuelCoefE100_offset = 20996;
 	public static final int crankingIACposition_offset = 1848;
 	public static final int crankingInjectionMode_offset = 436;
 	public static final int crankingTimingAngle_offset = 448;
@@ -737,14 +772,15 @@ public class Fields {
 	public static final int ENGINE_NOISE_CURVE_SIZE = 8;
 	public static final int ENGINE_SNIFFER_UNIT_US = 10;
 	public static final int engine_type_e_BMW_M73_M = 24;
-	public static final int engine_type_e_BMW_M73_MRE = 104;
-	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 105;
+	public static final int engine_type_e_BMW_M73_MRE = 50;
+	public static final int engine_type_e_BMW_M73_MRE_SLAVE = 51;
 	public static final int engine_type_e_CAMARO_4 = 35;
 	public static final int engine_type_e_CITROEN_TU3JP = 65;
 	public static final int engine_type_e_DEFAULT_FRANKENSO = 0;
 	public static final int engine_type_e_DODGE_NEON_1995 = 2;
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
+	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
 	public static final int engine_type_e_ET_UNUSED96 = 96;
 	public static final int engine_type_e_ET_UNUSED97 = 97;
 	public static final int engine_type_e_ET_UNUSED98 = 98;
@@ -787,6 +823,7 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_NB2_36 = 86;
 	public static final int engine_type_e_HONDA_600 = 43;
 	public static final int engine_type_e_HONDA_ACCORD_CD_TWO_WIRES = 17;
+	public static final int engine_type_e_L9779_BENCH_ENGINE = 60;
 	public static final int engine_type_e_MAZDA_MIATA_2003_BOARD_TEST = 55;
 	public static final int engine_type_e_MAZDA_MIATA_2003_NA_RAIL = 54;
 	public static final int engine_type_e_MIATA_1996 = 21;
@@ -805,7 +842,7 @@ public class Fields {
 	public static final int engine_type_e_MRE_SECONDARY_CAN = 4;
 	public static final int engine_type_e_MRE_SUBARU_EJ18 = 37;
 	public static final int engine_type_e_NISSAN_PRIMERA = 5;
-	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 106;
+	public static final int engine_type_e_PROTEUS_ANALOG_PWM_TEST = 30;
 	public static final int engine_type_e_PROTEUS_BMW_M73 = 63;
 	public static final int engine_type_e_PROTEUS_E65_6H_MAN_IN_THE_MIDDLE = 9;
 	public static final int engine_type_e_PROTEUS_HARLEY = 6;
@@ -819,38 +856,27 @@ public class Fields {
 	public static final int engine_type_e_SACHS = 29;
 	public static final int engine_type_e_SUBARU_2003_WRX = 22;
 	public static final int engine_type_e_SUBARUEG33_DEFAULTS = 70;
-	public static final int engine_type_e_TEST_108 = 108;
-	public static final int engine_type_e_TEST_109 = 109;
-	public static final int engine_type_e_TEST_110 = 110;
-	public static final int engine_type_e_TEST_33816 = 103;
+	public static final int engine_type_e_TEST_100 = 100;
+	public static final int engine_type_e_TEST_101 = 101;
+	public static final int engine_type_e_TEST_102 = 102;
+	public static final int engine_type_e_TEST_33816 = 18;
 	public static final int engine_type_e_TEST_CRANK_ENGINE = 28;
 	public static final int engine_type_e_TEST_ENGINE = 26;
 	public static final int engine_type_e_TEST_ENGINE_VVT = 45;
 	public static final int engine_type_e_TEST_ISSUE_366_BOTH = 52;
 	public static final int engine_type_e_TEST_ISSUE_366_RISE = 53;
 	public static final int engine_type_e_TEST_ISSUE_898 = 27;
-	public static final int engine_type_e_TEST_ROTARY = 107;
+	public static final int engine_type_e_TEST_ROTARY = 19;
 	public static final int engine_type_e_TLE8888_BENCH_ENGINE = 59;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_TOYOTA_JZS147 = 38;
-	public static final int engine_type_e_UNUSED100 = 100;
-	public static final int engine_type_e_UNUSED101 = 101;
-	public static final int engine_type_e_UNUSED18 = 18;
-	public static final int engine_type_e_UNUSED30 = 30;
 	public static final int engine_type_e_UNUSED39 = 39;
-	public static final int engine_type_e_UNUSED60 = 60;
-	public static final int engine_type_e_UNUSED61 = 61;
-	public static final int engine_type_e_UNUSED_19 = 19;
 	public static final int engine_type_e_UNUSED_48 = 48;
-	public static final int engine_type_e_UNUSED_50 = 50;
-	public static final int engine_type_e_UNUSED_51 = 51;
-	public static final int engine_type_e_VAG_18_TURBO = 102;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_VW_B6 = 62;
 	public static final int engineChartSize_offset = 1276;
 	public static final int engineCode_offset = 1044;
 	public static final int engineConfiguration_offset = 0;
-	public static final int engineLoadAccelLength_offset = 1696;
 	public static final int engineMake_offset = 1012;
 	public static final int engineSnifferRpmThreshold_offset = 7;
 	public static final int engineType_offset = 0;
@@ -922,10 +948,6 @@ public class Fields {
 	public static final int fixedTiming_offset = 1824;
 	public static final int FLASH_DATA_VERSION = 10009;
 	public static final int flexSensorPin_offset = 806;
-	public static final String FSIO_METHOD_FSIO_ANALOG_INPUT = "fsio_analog_input";
-	public static final String FSIO_METHOD_FSIO_DIGITAL_INPUT = "fsio_digital_input";
-	public static final String FSIO_METHOD_FSIO_SETTING = "fsio_setting";
-	public static final String FSIO_METHOD_FSIO_TABLE = "fsio_table";
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int FUEL_RPM_COUNT = 16;
@@ -1378,6 +1400,7 @@ public class Fields {
 	public static final int imu_type_e_IMU_NONE = 0;
 	public static final int imu_type_e_IMU_TYPE_3 = 3;
 	public static final int imu_type_e_IMU_TYPE_4 = 4;
+	public static final int imu_type_e_IMU_TYPE_MB_A0065422618 = 5;
 	public static final int imu_type_e_IMU_VAG = 1;
 	public static final int imuType_offset = 777;
 	public static final String INDICATOR_NAME_AC_SWITCH = "AC switch";
@@ -1625,9 +1648,6 @@ public class Fields {
 	public static final int minOilPressureAfterStart_offset = 458;
 	public static final int MLQ_FIELD_HEADER_SIZE = 55;
 	public static final int MLQ_HEADER_SIZE = 22;
-	public static final String MOCK_AFR_COMMAND = "mock_afr_voltage";
-	public static final String MOCK_MAF_COMMAND = "mock_maf_voltage";
-	public static final String MOCK_MAP_COMMAND = "mock_map_voltage";
 	public static final String MOCK_PPS_POSITION_COMMAND = "mock_pps_position";
 	public static final String MOCK_PPS_VOLTAGE_COMMAND = "mock_pps_voltage";
 	public static final int multisparkDwell_offset = 1546;
@@ -1680,7 +1700,7 @@ public class Fields {
 	public static final int pedalToTpsPedalBins_offset = 5476;
 	public static final int pedalToTpsRpmBins_offset = 5484;
 	public static final int pedalToTpsTable_offset = 5412;
-	public static final int persistent_config_s_size = 20996;
+	public static final int persistent_config_s_size = 21012;
 	public static final int pid_s_size = 20;
 	public static final int PidAutoTune_AutoTunerState_AUTOTUNER_OFF = 0;
 	public static final int PidAutoTune_AutoTunerState_CONVERGED = 16;
@@ -1709,7 +1729,6 @@ public class Fields {
 	public static final int primeBins_offset = 2280;
 	public static final int primeValues_offset = 3496;
 	public static final int primingDelay_offset = 1947;
-	public static final int primingSquirtDurationMs_offset = 184;
 	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_COIL1_SHORT_NAME = "c1";
 	public static final String PROTOCOL_CRANK1 = "t1";
@@ -1819,8 +1838,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int showSdCardWarning_offset = 164;
-	public static final int SIGNATURE_HASH = 1903147655;
+	public static final int SIGNATURE_HASH = 105536734;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2008,7 +2026,7 @@ public class Fields {
 	public static final int TORQUE_CURVE_SIZE = 8;
 	public static final int torqueRpmBins_offset = 4602;
 	public static final int torqueValues_offset = 4594;
-	public static final int TOTAL_CONFIG_SIZE = 20996;
+	public static final int TOTAL_CONFIG_SIZE = 21012;
 	public static final int tps1_1AdcChannel_offset = 520;
 	public static final int tps1_2AdcChannel_offset = 689;
 	public static final int tps1SecondaryMax_offset = 830;
@@ -2130,7 +2148,7 @@ public class Fields {
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int trigger_type_e_TT_VVT_JZ = 17;
-	public static final int trigger_type_e_TT_VVT_MIATA_NB2 = 43;
+	public static final int trigger_type_e_TT_VVT_MIATA_NB = 43;
 	public static final int trigger_type_e_TT_VVT_NISSAN_VQ35 = 59;
 	public static final int trigger_type_offset = 532;
 	public static final int trigger_unusedBit_4_10_offset = 536;
@@ -2271,6 +2289,7 @@ public class Fields {
 	public static final char TS_GET_CONFIG_ERROR = 'e';
 	public static final char TS_GET_FIRMWARE_VERSION = 'V';
 	public static final char TS_GET_LOGGER_GET_BUFFER = 'L';
+	public static final char TS_GET_OUTPUTS_SIZE = '4';
 	public static final char TS_GET_STRUCT = '9';
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
@@ -2293,7 +2312,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.01.30.all.1903147655";
+	public static final String TS_SIGNATURE = "rusEFI 2022.02.19.all.105536734";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2330,9 +2349,11 @@ public class Fields {
 	public static final int unused1476b19_offset = 1272;
 	public static final int unused1476b20_offset = 1272;
 	public static final int unused1476b8_offset = 1272;
+	public static final int unused1696_offset = 1696;
 	public static final int unused1740b0_offset = 1740;
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
+	public static final int unused184_offset = 184;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
 	public static final int unused_1484_bit_26_offset = 1272;
@@ -2341,7 +2362,6 @@ public class Fields {
 	public static final int unused_1484_bit_29_offset = 1272;
 	public static final int unused_1484_bit_30_offset = 1272;
 	public static final int unused_1484_bit_31_offset = 1272;
-	public static final int unusedBit_310_31_offset = 896;
 	public static final int unusedBit_48_31_offset = 164;
 	public static final int unusedBit_505_10_offset = 1740;
 	public static final int unusedBit_505_11_offset = 1740;
@@ -2384,6 +2404,7 @@ public class Fields {
 	public static final int unusedShort_offset = 4640;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
+	public static final int useEeprom_offset = 164;
 	public static final int useETBforIdleControl_offset = 748;
 	public static final int useFixedBaroCorrFromMap_offset = 1272;
 	public static final int useFordRedundantTps_offset = 164;
@@ -2423,6 +2444,7 @@ public class Fields {
 	public static final int vehicleWeight_offset = 786;
 	public static final int veLoadBins_offset = 19300;
 	public static final int veOverrideMode_offset = 1733;
+	public static final int verboseCan2_offset = 896;
 	public static final int verboseCan_offset = 164;
 	public static final int verboseCanBaseAddress_offset = 760;
 	public static final int verboseTLE8888_offset = 748;
@@ -2456,7 +2478,7 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_HONDA_K = 10;
 	public static final int vvt_mode_e_VVT_INACTIVE = 0;
 	public static final int vvt_mode_e_VVT_MAP_V_TWIN_ANOTHER = 13;
-	public static final int vvt_mode_e_VVT_MIATA_NB2 = 3;
+	public static final int vvt_mode_e_VVT_MIATA_NB = 3;
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SECOND_HALF = 1;
@@ -2533,7 +2555,7 @@ public class Fields {
 	public static final Field CJ125ISLSU49 = Field.create("CJ125ISLSU49", 164, FieldType.BIT, 11);
 	public static final Field ETB_USE_TWO_WIRES = Field.create("ETB_USE_TWO_WIRES", 164, FieldType.BIT, 12);
 	public static final Field ISDOUBLESOLENOIDIDLE = Field.create("ISDOUBLESOLENOIDIDLE", 164, FieldType.BIT, 13);
-	public static final Field SHOWSDCARDWARNING = Field.create("SHOWSDCARDWARNING", 164, FieldType.BIT, 14);
+	public static final Field USEEEPROM = Field.create("USEEEPROM", 164, FieldType.BIT, 14);
 	public static final Field CJ125ISURDIVIDED = Field.create("CJ125ISURDIVIDED", 164, FieldType.BIT, 15);
 	public static final Field USECICPIDFORIDLE = Field.create("USECICPIDFORIDLE", 164, FieldType.BIT, 16);
 	public static final Field USETLE8888_CRANKING_HACK = Field.create("USETLE8888_CRANKING_HACK", 164, FieldType.BIT, 17);
@@ -2558,7 +2580,7 @@ public class Fields {
 	public static final Field CRANKING_BASEFUEL = Field.create("CRANKING_BASEFUEL", 176, FieldType.FLOAT);
 	public static final Field CRANKING_RPM = Field.create("CRANKING_RPM", 180, FieldType.INT16);
 	public static final Field CRANKING_ALIGNMENTFILL_AT_6 = Field.create("CRANKING_ALIGNMENTFILL_AT_6", 182, FieldType.INT8);
-	public static final Field PRIMINGSQUIRTDURATIONMS = Field.create("PRIMINGSQUIRTDURATIONMS", 184, FieldType.FLOAT);
+	public static final Field UNUSED184 = Field.create("UNUSED184", 184, FieldType.FLOAT);
 	public static final Field IGNITIONDWELLFORCRANKINGMS = Field.create("IGNITIONDWELLFORCRANKINGMS", 188, FieldType.FLOAT);
 	public static final Field ETBREVLIMITSTART = Field.create("ETBREVLIMITSTART", 192, FieldType.INT16);
 	public static final Field ETBREVLIMITRANGE = Field.create("ETBREVLIMITRANGE", 194, FieldType.INT16);
@@ -2628,7 +2650,7 @@ public class Fields {
 	public static final Field TPS2_1ADCCHANNEL = Field.create("TPS2_1ADCCHANNEL", 523, FieldType.INT8, adc_channel_e);
 	public static final Field IDLE_DERIVATIVEFILTERLOSS = Field.create("IDLE_DERIVATIVEFILTERLOSS", 524, FieldType.FLOAT);
 	public static final Field TRAILINGSPARKANGLE = Field.create("TRAILINGSPARKANGLE", 528, FieldType.INT);
-	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "Miata NB", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata VVT", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "trg70", "trg71"};
+	public static final String[] trigger_type_e = {"custom toothed wheel", "Ford Aspire", "Dodge Neon 1995", "Miata NA", "INVALID", "GM_7X", "Cooper R50", "Mazda SOHC 4", "60/2", "36/1", "Mercedes Two Segment", "Mitsubishi", "Honda 4+24", "Honda 1+4+24", "Dodge Neon 2003", "Mazda DOHC 1+4", "1+1", "INVALID", "Single Tooth", "Dodge Ram 1+16", "60/2 VW", "Honda 1+24", "Dodge Stratus", "36_2_2_2", "Nissan Primera", "dev 2JZ 3/34 simulator", "Rover K", "GM LS 24", "Honda CBR 600", "2JZ_1_12", "Honda CBR 600 custom", "3/1 skipped", "Dodge Neon 2003 crank", "Miata NB", "trg34", "trg35", "Subaru 7+6", "Jeep 18-2-2-2", "WIP", "Dodge Neon 1995 crank only", "Jeep XJ 4 cyl", "FiatIAQ_P8", "Mazda Z5", "INVALID", "Renix 44-2-2", "Renix 66-2-2-2", "Honda K 12+1", "INVALID", "36/2", "Subaru SVX", "1+16", "Subaru 7 without 6", "INVALID", "TriTach", "GM 60/2/2/2", "Skoda Favorit", "Barra 3+1 Cam", "Kawa KX450F", "Nissan VQ35", "INVALID", "Nissan VQ30", "Nissan QR25", "INVALID", "Subaru SVX Crank 1", "Subaru SVX Cam VVT", "Ford PIP", "Suzuki G13B", "Honda K 4+1", "Nissan MR18 Crank", "32/2", "trg70", "trg71"};
 	public static final Field TRIGGER_TYPE = Field.create("TRIGGER_TYPE", 532, FieldType.INT, trigger_type_e);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY0 = Field.create("TRIGGER_TODOREMOVEMEONEDAY0", 536, FieldType.BIT, 0);
 	public static final Field TRIGGER_TODOREMOVEMEONEDAY1 = Field.create("TRIGGER_TODOREMOVEMEONEDAY1", 536, FieldType.BIT, 1);
@@ -2952,7 +2974,7 @@ public class Fields {
 	public static final Field TCUENABLED = Field.create("TCUENABLED", 896, FieldType.BIT, 28);
 	public static final Field CANBROADCASTUSECHANNELTWO = Field.create("CANBROADCASTUSECHANNELTWO", 896, FieldType.BIT, 29);
 	public static final Field USERAWOUTPUTTODRIVEIDLESTEPPER = Field.create("USERAWOUTPUTTODRIVEIDLESTEPPER", 896, FieldType.BIT, 30);
-	public static final Field UNUSEDBIT_310_31 = Field.create("UNUSEDBIT_310_31", 896, FieldType.BIT, 31);
+	public static final Field VERBOSECAN2 = Field.create("VERBOSECAN2", 896, FieldType.BIT, 31);
 	public static final Field ETBIO1_DIRECTIONPIN1 = Field.create("ETBIO1_DIRECTIONPIN1", 900, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_DIRECTIONPIN2 = Field.create("ETBIO1_DIRECTIONPIN2", 901, FieldType.INT8, brain_pin_e);
 	public static final Field ETBIO1_CONTROLPIN = Field.create("ETBIO1_CONTROLPIN", 902, FieldType.INT8, brain_pin_e);
@@ -3211,12 +3233,12 @@ public class Fields {
 	public static final Field COASTINGFUELCUTVSSHIGH = Field.create("COASTINGFUELCUTVSSHIGH", 1690, FieldType.INT8);
 	public static final Field NOFUELTRIMAFTERDFCOTIME = Field.create("NOFUELTRIMAFTERDFCOTIME", 1691, FieldType.INT8);
 	public static final Field TPSACCELENRICHMENTTHRESHOLD = Field.create("TPSACCELENRICHMENTTHRESHOLD", 1692, FieldType.FLOAT);
-	public static final Field ENGINELOADACCELLENGTH = Field.create("ENGINELOADACCELLENGTH", 1696, FieldType.INT);
+	public static final Field UNUSED1696 = Field.create("UNUSED1696", 1696, FieldType.INT);
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1700, FieldType.INT);
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1704, FieldType.FLOAT);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 1708, FieldType.FLOAT);
 	public static final Field SLOWADCALPHA = Field.create("SLOWADCALPHA", 1712, FieldType.FLOAT);
-	public static final String[] debug_mode_e = {"INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "FSIO_COMPOSITE_LOG", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"};
+	public static final String[] debug_mode_e = {"INVALID", "TPS acceleration enrichment", "GPPWM", "Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "VVT1 PID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "CJ125", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "rusEFI Wideband", "TCU", "Lua", "VVT2 PID", "VVT3 PID", "VVT4 PID", "mode 52", "mode 53"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 1716, FieldType.INT, debug_mode_e);
 	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 1720, FieldType.INT);
 	public static final Field THROTTLEPEDALSECONDARYUPVOLTAGE = Field.create("THROTTLEPEDALSECONDARYUPVOLTAGE", 1724, FieldType.FLOAT);
@@ -3811,6 +3833,7 @@ public class Fields {
 	public static final Field FUELTRIMS10_TABLE = Field.create("FUELTRIMS10_TABLE", 20948, FieldType.INT8);
 	public static final Field FUELTRIMS11_TABLE = Field.create("FUELTRIMS11_TABLE", 20964, FieldType.INT8);
 	public static final Field FUELTRIMS12_TABLE = Field.create("FUELTRIMS12_TABLE", 20980, FieldType.INT8);
+	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 20996, FieldType.INT16);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	SENSORSNIFFERRPMTHRESHOLD,
@@ -3845,7 +3868,7 @@ public class Fields {
 	CJ125ISLSU49,
 	ETB_USE_TWO_WIRES,
 	ISDOUBLESOLENOIDIDLE,
-	SHOWSDCARDWARNING,
+	USEEEPROM,
 	CJ125ISURDIVIDED,
 	USECICPIDFORIDLE,
 	USETLE8888_CRANKING_HACK,
@@ -3870,7 +3893,7 @@ public class Fields {
 	CRANKING_BASEFUEL,
 	CRANKING_RPM,
 	CRANKING_ALIGNMENTFILL_AT_6,
-	PRIMINGSQUIRTDURATIONMS,
+	UNUSED184,
 	IGNITIONDWELLFORCRANKINGMS,
 	ETBREVLIMITSTART,
 	ETBREVLIMITRANGE,
@@ -4252,7 +4275,7 @@ public class Fields {
 	TCUENABLED,
 	CANBROADCASTUSECHANNELTWO,
 	USERAWOUTPUTTODRIVEIDLESTEPPER,
-	UNUSEDBIT_310_31,
+	VERBOSECAN2,
 	ETBIO1_DIRECTIONPIN1,
 	ETBIO1_DIRECTIONPIN2,
 	ETBIO1_CONTROLPIN,
@@ -4509,7 +4532,7 @@ public class Fields {
 	COASTINGFUELCUTVSSHIGH,
 	NOFUELTRIMAFTERDFCOTIME,
 	TPSACCELENRICHMENTTHRESHOLD,
-	ENGINELOADACCELLENGTH,
+	UNUSED1696,
 	UARTCONSOLESERIALSPEED,
 	TPSDECELENLEANMENTTHRESHOLD,
 	TPSDECELENLEANMENTMULTIPLIER,
@@ -5099,5 +5122,6 @@ public class Fields {
 	FUELTRIMS10_TABLE,
 	FUELTRIMS11_TABLE,
 	FUELTRIMS12_TABLE,
+	CRANKINGFUELCOEFE100,
 	};
 }

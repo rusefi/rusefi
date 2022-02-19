@@ -102,7 +102,7 @@ public class EcuTestHelper {
 
     public void sendCommand(String command, int timeoutMs) {
         TestHelper.INSTANCE.assertNotFatal();
-        IoUtil.sendCommand(command, timeoutMs, commandQueue);
+        IoUtil.sendBlockingCommand(command, timeoutMs, commandQueue);
     }
 
     /**

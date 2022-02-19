@@ -11,10 +11,13 @@ ifeq ($(DEBUG_LEVEL_OPT),)
   DDEFS += -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
 endif
 
+# let everyone know that we are compiling bootloader
+IS_RE_BOOTLOADER = yes
+
 # disable some modules to shrink bootloader binary
 DDEFS += -DEFI_BOOTLOADER
 DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE -DEF_LUA=FALSE
-#disable ChibiOS flsah driver and prevent header from include
+#disable ChibiOS flash driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
 DDEFS += -DEFI_USE_UART_DMA=FALSE
@@ -168,9 +171,11 @@ CSRC =  $(ALLCSRC) \
 	$(FATFSSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
+# todo: reduce code duplication with primary Makefile!!!
 # setting.
 CPPSRC = $(ALLCPPSRC) \
 	$(HW_LAYER_EMS_CPP) \
+	$(BOARDCPPSRC) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \

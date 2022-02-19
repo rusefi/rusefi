@@ -21,6 +21,13 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Install Tools
+      run: sudo apt-get install subversion
+
+    - name: Update version header in git
+      working-directory: ./firmware/
+      run: bash update_version.sh
+
     - name: Write Date File
       run: |
         echo -e -n "#pragma once\n#define VCS_DATE $(date "+%Y%m%d")\n" > ./firmware/controllers/date_stamp.h

@@ -1,7 +1,7 @@
 package com.rusefi.ui;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.AverageAnglesUtil;
-import com.rusefi.FileLog;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
@@ -28,6 +28,8 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  */
 
 public class RecentCommands {
+    private final static Logging log = Logging.getLogging(RecentCommands.class);
+
     private final static int NUMBER_OF_COMMANDS = 40;
     private static final String KEY = "recent_commands";
     private static final String DELIMETER = "|";
@@ -185,8 +187,7 @@ public class RecentCommands {
                 });
 
                 synchronized (entries) {
-                    Set<Entry> sorted = new TreeSet<>();
-                    sorted.addAll(entries.keySet());
+                    Set<Entry> sorted = new TreeSet<>(entries.keySet());
 
                     for (Entry entry : sorted) {
                         content.add(createButton(uiContext, reentrant, entry.command));
@@ -294,7 +295,7 @@ public class RecentCommands {
                     String fileName = fc.getSelectedFile().getAbsolutePath();
                     String report;
                     try {
-                        report = AverageAnglesUtil.runUtil(fileName, FileLog.LOGGER);
+                        report = AverageAnglesUtil.runUtil(fileName);
                     } catch (IOException e) {
                         throw new IllegalStateException(e);
                     }

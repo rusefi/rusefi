@@ -55,7 +55,7 @@ public class BinarySensorLog implements SensorLog {
     public void writeSensorLogLine() {
         if (stream == null) {
             FileLog.createFolderIfNeeded();
-            fileName = Logger.DIR + "rusEFI_gauges_" + Logger.getDate() + ".mlg";
+            fileName = Logger.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".mlg";
 
             try {
                 stream = new DataOutputStream(new FileOutputStream(fileName));
@@ -82,8 +82,8 @@ public class BinarySensorLog implements SensorLog {
 
                 byte[] byteArray = baos.toByteArray();
                 byte checkSum = 0;
-                for (int i = 0; i < byteArray.length; i++) {
-                    checkSum += byteArray[i];
+                for (byte b : byteArray) {
+                    checkSum += b;
                 }
                 stream.write(byteArray);
                 stream.write(checkSum);

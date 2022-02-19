@@ -19,7 +19,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "mre_meta.h"
 
 static void setInjectorPins() {
@@ -180,10 +179,10 @@ void setBoardConfigOverrides() {
 void setSerialConfigurationOverrides() {
 	// why would MRE disable serial by default? we definitely have pads exposed
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 

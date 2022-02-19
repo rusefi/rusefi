@@ -11,7 +11,7 @@
 
 #if EFI_ALTERNATOR_CONTROL
 #include "alternator_controller.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "local_version_holder.h"
 #include "periodic_task.h"
 
@@ -49,7 +49,6 @@ void AlternatorController::onFastCallback() {
 	alternatorPid.postState(&engine->outputChannels.alternatorStatus);
 #endif /* EFI_TUNER_STUDIO */
 
-	// todo: migrate this to FSIO
 	bool alternatorShouldBeEnabledAtCurrentRpm = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->cranking.rpm;
 
 	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {

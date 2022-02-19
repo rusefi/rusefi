@@ -47,7 +47,7 @@ public enum trigger_type_e {
 	TT_JEEP_4_CYL,
 	TT_FIAT_IAW_P8,
 	TT_FORD_ST170,
-	TT_VVT_MIATA_NB2,
+	TT_VVT_MIATA_NB,
 	TT_RENIX_44_2_2,
 	TT_RENIX_66_2_2_2,
 	TT_HONDA_K_12_1,

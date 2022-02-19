@@ -50,8 +50,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->etb_use_two_wires;
 	if (strEqualCaseInsensitive(name, "isDoubleSolenoidIdle"))
 		return engineConfiguration->isDoubleSolenoidIdle;
-	if (strEqualCaseInsensitive(name, "showSdCardWarning"))
-		return engineConfiguration->showSdCardWarning;
+	if (strEqualCaseInsensitive(name, "useEeprom"))
+		return engineConfiguration->useEeprom;
 	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
 		return engineConfiguration->cj125isUrDivided;
 	if (strEqualCaseInsensitive(name, "useCicPidForIdle"))
@@ -96,8 +96,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->cranking.baseFuel;
 	if (strEqualCaseInsensitive(name, "cranking.rpm"))
 		return engineConfiguration->cranking.rpm;
-	if (strEqualCaseInsensitive(name, "primingSquirtDurationMs"))
-		return engineConfiguration->primingSquirtDurationMs;
 	if (strEqualCaseInsensitive(name, "ignitionDwellForCrankingMs"))
 		return engineConfiguration->ignitionDwellForCrankingMs;
 	if (strEqualCaseInsensitive(name, "etbRevLimitStart"))
@@ -410,6 +408,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->canBroadcastUseChannelTwo;
 	if (strEqualCaseInsensitive(name, "useRawOutputToDriveIdleStepper"))
 		return engineConfiguration->useRawOutputToDriveIdleStepper;
+	if (strEqualCaseInsensitive(name, "verboseCan2"))
+		return engineConfiguration->verboseCan2;
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
 		return engineConfiguration->boostPid.pFactor;
 	if (strEqualCaseInsensitive(name, "boostPid.iFactor"))
@@ -658,8 +658,6 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->noFuelTrimAfterDfcoTime;
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
 		return engineConfiguration->tpsAccelEnrichmentThreshold;
-	if (strEqualCaseInsensitive(name, "engineLoadAccelLength"))
-		return engineConfiguration->engineLoadAccelLength;
 	if (strEqualCaseInsensitive(name, "uartConsoleSerialSpeed"))
 		return engineConfiguration->uartConsoleSerialSpeed;
 	if (strEqualCaseInsensitive(name, "tpsDecelEnleanmentThreshold"))
@@ -1048,9 +1046,9 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->isDoubleSolenoidIdle = (int)value;
 		return;
 	}
-	if (strEqualCaseInsensitive(name, "showSdCardWarning"))
+	if (strEqualCaseInsensitive(name, "useEeprom"))
 	{
-		engineConfiguration->showSdCardWarning = (int)value;
+		engineConfiguration->useEeprom = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "cj125isUrDivided"))
@@ -1161,11 +1159,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "cranking.rpm"))
 	{
 		engineConfiguration->cranking.rpm = (int)value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "primingSquirtDurationMs"))
-	{
-		engineConfiguration->primingSquirtDurationMs = value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "ignitionDwellForCrankingMs"))
@@ -1948,6 +1941,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useRawOutputToDriveIdleStepper = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "verboseCan2"))
+	{
+		engineConfiguration->verboseCan2 = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "boostPid.pFactor"))
 	{
 		engineConfiguration->boostPid.pFactor = value;
@@ -2566,11 +2564,6 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "tpsAccelEnrichmentThreshold"))
 	{
 		engineConfiguration->tpsAccelEnrichmentThreshold = value;
-		return;
-	}
-	if (strEqualCaseInsensitive(name, "engineLoadAccelLength"))
-	{
-		engineConfiguration->engineLoadAccelLength = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "uartConsoleSerialSpeed"))

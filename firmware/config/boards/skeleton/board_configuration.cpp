@@ -28,7 +28,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 
 // An example of how to configure complex features on the board.
 // Generally these should be local (static) functions, one function per chip.
@@ -111,10 +110,10 @@ static void setupDefaultSensorInputs() {
 // Future: configure USART3 for LIN bus and UART4 for console
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 

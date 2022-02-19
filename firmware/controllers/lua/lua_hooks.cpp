@@ -497,11 +497,13 @@ void configureRusefiLuaHooks(lua_State* l) {
 			return 1;
 	});
 
+#if EFI_LAUNCH_CONTROL
 	lua_register(l, "setSparkSkipRatio", [](lua_State* l) {
 		auto targetSkipRatio = luaL_checknumber(l, 1);
 		engine->softSparkLimiter.setTargetSkipRatio(targetSkipRatio);
 		return 1;
 	});
+#endif // EFI_LAUNCH_CONTROL
 
 	lua_register(l, "enableCanTx", [](lua_State* l) {
 		engine->allowCanTx = lua_toboolean(l, 1);
@@ -602,7 +604,7 @@ void configureRusefiLuaHooks(lua_State* l) {
 	lua_register(l, "getAirmass", lua_getAirmass);
 	lua_register(l, "setAirmass", lua_setAirmass);
 
-	lua_register(l, "stopEngine", [](lua_State* l) {
+	lua_register(l, "stopEngine", [](lua_State*) {
 		doScheduleStopEngine();
 		return 0;
 	});

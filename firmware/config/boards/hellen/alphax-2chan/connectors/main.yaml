@@ -141,20 +141,29 @@ pins:
 
   - pin: C2
     # H144_IN_D_3
-    id: GPIOE_14
-    class: switch_inputs
-    function: Crank Sensor VR- Negative Input or HALL Input 2
+    id: [GPIOE_14, GPIOE_14]
+    class: [event_inputs, switch_inputs]
+    function: Crank Sensor -
     type: hall
-    ts_name: C2 - Hall 2 (Crank VR-)
+    ts_name: C2 - Crank- (hall)
     color: white
 
   - pin: C3
-    # H144_IN_CRANK, H144_IN_D_1
-    id: [GPIOB_1, GPIOE_12]
+    # H144_IN_D_1
+    id: [GPIOE_12, GPIOE_12]
     class: [event_inputs, switch_inputs]
-    function: Crank Sensor VR+ Positive Input or HALL Input 1
+    function: Crank Sensor +
     type: hall
-    ts_name: C3 - Crank VR+ / Hall 1
+    ts_name: C3 - Crank+ (hall)
+    color: gray
+
+  - pin: C2C3
+    # H144_IN_CRANK
+    id: GPIOB_1
+    class: event_inputs
+    function: Crank Sensor (VR)
+    type: hall
+    ts_name: C2/C3 Crank Sensor VR
     color: gray
 
   - pin: C4
@@ -178,7 +187,7 @@ pins:
 
   - pin: C7
     # H144_IN_CAM
-    id: [GPIOA_6, EFI_ADC_6]
+    id: [GPIOA_6, GPIOA_6, EFI_ADC_6]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Camshaft HALL Sensor or Generic Digital Input
     type: hall

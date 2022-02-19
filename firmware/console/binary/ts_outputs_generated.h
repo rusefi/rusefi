@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jan 28 01:14:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Feb 11 01:21:34 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -945,9 +945,116 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<float, 1, 1> calibrationValue2 = (float)0;
 	/**
-	 * offset 376
+	offset 376 bit 0 */
+	bool isMainRelayOn : 1 {};
+	/**
+	 * Original reason for this is to check if USB is connected from Lua
+	offset 376 bit 1 */
+	bool isUsbConnected : 1 {};
+	/**
+	offset 376 bit 2 */
+	bool unusedBit_182_2 : 1 {};
+	/**
+	offset 376 bit 3 */
+	bool unusedBit_182_3 : 1 {};
+	/**
+	offset 376 bit 4 */
+	bool unusedBit_182_4 : 1 {};
+	/**
+	offset 376 bit 5 */
+	bool unusedBit_182_5 : 1 {};
+	/**
+	offset 376 bit 6 */
+	bool unusedBit_182_6 : 1 {};
+	/**
+	offset 376 bit 7 */
+	bool unusedBit_182_7 : 1 {};
+	/**
+	offset 376 bit 8 */
+	bool unusedBit_182_8 : 1 {};
+	/**
+	offset 376 bit 9 */
+	bool unusedBit_182_9 : 1 {};
+	/**
+	offset 376 bit 10 */
+	bool unusedBit_182_10 : 1 {};
+	/**
+	offset 376 bit 11 */
+	bool unusedBit_182_11 : 1 {};
+	/**
+	offset 376 bit 12 */
+	bool unusedBit_182_12 : 1 {};
+	/**
+	offset 376 bit 13 */
+	bool unusedBit_182_13 : 1 {};
+	/**
+	offset 376 bit 14 */
+	bool unusedBit_182_14 : 1 {};
+	/**
+	offset 376 bit 15 */
+	bool unusedBit_182_15 : 1 {};
+	/**
+	offset 376 bit 16 */
+	bool unusedBit_182_16 : 1 {};
+	/**
+	offset 376 bit 17 */
+	bool unusedBit_182_17 : 1 {};
+	/**
+	offset 376 bit 18 */
+	bool unusedBit_182_18 : 1 {};
+	/**
+	offset 376 bit 19 */
+	bool unusedBit_182_19 : 1 {};
+	/**
+	offset 376 bit 20 */
+	bool unusedBit_182_20 : 1 {};
+	/**
+	offset 376 bit 21 */
+	bool unusedBit_182_21 : 1 {};
+	/**
+	offset 376 bit 22 */
+	bool unusedBit_182_22 : 1 {};
+	/**
+	offset 376 bit 23 */
+	bool unusedBit_182_23 : 1 {};
+	/**
+	offset 376 bit 24 */
+	bool unusedBit_182_24 : 1 {};
+	/**
+	offset 376 bit 25 */
+	bool unusedBit_182_25 : 1 {};
+	/**
+	offset 376 bit 26 */
+	bool unusedBit_182_26 : 1 {};
+	/**
+	offset 376 bit 27 */
+	bool unusedBit_182_27 : 1 {};
+	/**
+	offset 376 bit 28 */
+	bool unusedBit_182_28 : 1 {};
+	/**
+	offset 376 bit 29 */
+	bool unusedBit_182_29 : 1 {};
+	/**
+	offset 376 bit 30 */
+	bool unusedBit_182_30 : 1 {};
+	/**
+	offset 376 bit 31 */
+	bool unusedBit_182_31 : 1 {};
+	/**
+	count
+	 * offset 380
 	 */
-	uint8_t unusedAtTheEnd[92];
+	int luaInvocationCounter = (int)0;
+	/**
+	nt
+	 * offset 384
+	 */
+	int luaLastCycleDuration = (int)0;
+	/**
+	 * offset 388
+	 */
+	uint8_t unusedAtTheEnd[80];
 	/**
 	offset 468 bit 0 */
 	bool launchSpeedCondition : 1 {};
@@ -977,73 +1084,73 @@ struct ts_outputs_s {
 	bool tpsAccelActive : 1 {};
 	/**
 	offset 468 bit 9 */
-	bool unusedBit_190_9 : 1 {};
+	bool unusedBit_224_9 : 1 {};
 	/**
 	offset 468 bit 10 */
-	bool unusedBit_190_10 : 1 {};
+	bool unusedBit_224_10 : 1 {};
 	/**
 	offset 468 bit 11 */
-	bool unusedBit_190_11 : 1 {};
+	bool unusedBit_224_11 : 1 {};
 	/**
 	offset 468 bit 12 */
-	bool unusedBit_190_12 : 1 {};
+	bool unusedBit_224_12 : 1 {};
 	/**
 	offset 468 bit 13 */
-	bool unusedBit_190_13 : 1 {};
+	bool unusedBit_224_13 : 1 {};
 	/**
 	offset 468 bit 14 */
-	bool unusedBit_190_14 : 1 {};
+	bool unusedBit_224_14 : 1 {};
 	/**
 	offset 468 bit 15 */
-	bool unusedBit_190_15 : 1 {};
+	bool unusedBit_224_15 : 1 {};
 	/**
 	offset 468 bit 16 */
-	bool unusedBit_190_16 : 1 {};
+	bool unusedBit_224_16 : 1 {};
 	/**
 	offset 468 bit 17 */
-	bool unusedBit_190_17 : 1 {};
+	bool unusedBit_224_17 : 1 {};
 	/**
 	offset 468 bit 18 */
-	bool unusedBit_190_18 : 1 {};
+	bool unusedBit_224_18 : 1 {};
 	/**
 	offset 468 bit 19 */
-	bool unusedBit_190_19 : 1 {};
+	bool unusedBit_224_19 : 1 {};
 	/**
 	offset 468 bit 20 */
-	bool unusedBit_190_20 : 1 {};
+	bool unusedBit_224_20 : 1 {};
 	/**
 	offset 468 bit 21 */
-	bool unusedBit_190_21 : 1 {};
+	bool unusedBit_224_21 : 1 {};
 	/**
 	offset 468 bit 22 */
-	bool unusedBit_190_22 : 1 {};
+	bool unusedBit_224_22 : 1 {};
 	/**
 	offset 468 bit 23 */
-	bool unusedBit_190_23 : 1 {};
+	bool unusedBit_224_23 : 1 {};
 	/**
 	offset 468 bit 24 */
-	bool unusedBit_190_24 : 1 {};
+	bool unusedBit_224_24 : 1 {};
 	/**
 	offset 468 bit 25 */
-	bool unusedBit_190_25 : 1 {};
+	bool unusedBit_224_25 : 1 {};
 	/**
 	offset 468 bit 26 */
-	bool unusedBit_190_26 : 1 {};
+	bool unusedBit_224_26 : 1 {};
 	/**
 	offset 468 bit 27 */
-	bool unusedBit_190_27 : 1 {};
+	bool unusedBit_224_27 : 1 {};
 	/**
 	offset 468 bit 28 */
-	bool unusedBit_190_28 : 1 {};
+	bool unusedBit_224_28 : 1 {};
 	/**
 	offset 468 bit 29 */
-	bool unusedBit_190_29 : 1 {};
+	bool unusedBit_224_29 : 1 {};
 	/**
 	offset 468 bit 30 */
-	bool unusedBit_190_30 : 1 {};
+	bool unusedBit_224_30 : 1 {};
 	/**
 	offset 468 bit 31 */
-	bool unusedBit_190_31 : 1 {};
+	bool unusedBit_224_31 : 1 {};
 	/**
 	 * offset 472
 	 */
@@ -1241,4 +1348,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Jan 28 01:14:16 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Feb 11 01:21:34 UTC 2022

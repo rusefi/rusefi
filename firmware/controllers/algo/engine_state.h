@@ -10,7 +10,7 @@
 
 #include "global.h"
 #include "engine_parts.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "engine_state_generated.h"
 
 struct LuaAdjustments {
@@ -79,10 +79,6 @@ public:
 	floatms_t tpsAccelEnrich = 0;
 
 	angle_t injectionOffset = 0;
-
-#if EFI_ENABLE_MOCK_ADC
-	MockAdcState mockAdcState;
-#endif /* EFI_ENABLE_MOCK_ADC */
 
 	multispark_state multispark;
 

@@ -8,7 +8,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 
 #ifdef STM32F469xx
 static bool is469 = true;

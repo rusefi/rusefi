@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 10 15:27:27 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -831,7 +831,7 @@ struct engine_configuration_s {
 	bool isDoubleSolenoidIdle : 1 {};
 	/**
 	offset 164 bit 14 */
-	bool showSdCardWarning : 1 {};
+	bool useEeprom : 1 {};
 	/**
 	 * Is your UR CJ125 output wired to MCU via resistor divider?
 	 * Looks like 3v range should be enough, divider generally not needed.
@@ -882,7 +882,7 @@ struct engine_configuration_s {
 	offset 164 bit 27 */
 	bool usescriptTableForCanSniffingFiltering : 1 {};
 	/**
-	 * Print incoming and outgoing CAN messages in rusEFI console
+	 * Print incoming and outgoing first bus CAN messages in rusEFI console
 	offset 164 bit 28 */
 	bool verboseCan : 1 {};
 	/**
@@ -931,10 +931,9 @@ struct engine_configuration_s {
 	 */
 	cranking_parameters_s cranking;
 	/**
-	*C
 	 * offset 184
 	 */
-	float primingSquirtDurationMs;
+	float unused184;
 	/**
 	 * Dwell duration while cranking
 	ms
@@ -2123,8 +2122,9 @@ struct engine_configuration_s {
 	offset 896 bit 30 */
 	bool useRawOutputToDriveIdleStepper : 1 {};
 	/**
+	 * Print incoming and outgoing second bus CAN messages in rusEFI console
 	offset 896 bit 31 */
-	bool unusedBit_310_31 : 1 {};
+	bool verboseCan2 : 1 {};
 	/**
 	 * offset 900
 	 */
@@ -2882,10 +2882,9 @@ struct engine_configuration_s {
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
-	cycles
 	 * offset 1696
 	 */
-	int engineLoadAccelLength;
+	int unused1696;
 	/**
 	 * Band rate for primary TTL
 	BPs
@@ -4514,8 +4513,13 @@ struct persistent_config_s {
 	 * offset 20804
 	 */
 	cyl_trim_s fuelTrims[12];
-	/** total size 20996*/
+	/**
+	ratio
+	 * offset 20996
+	 */
+	uint16_t crankingFuelCoefE100[CRANKING_CURVE_SIZE];
+	/** total size 21012*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Jan 30 13:59:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 10 15:27:27 UTC 2022

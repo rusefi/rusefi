@@ -11,7 +11,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
@@ -113,10 +112,10 @@ void setBoardConfigOverrides() {
 
 void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 

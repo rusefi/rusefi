@@ -428,6 +428,11 @@ void initHardwareNoConfig() {
 #if EFI_FILE_LOGGING
 	initEarlyMmcCard();
 #endif // EFI_FILE_LOGGING
+
+#if HAL_USE_PAL && EFI_PROD_CODE
+	// this should be initialized before detectBoardType()
+	efiExtiInit();
+#endif // HAL_USE_PAL
 }
 
 void stopHardware() {
@@ -474,11 +479,15 @@ __attribute__((weak)) void boardInitHardware() { }
 
 __attribute__((weak)) void setPinConfigurationOverrides() { }
 
-void initHardware() {
-#if HAL_USE_PAL && EFI_PROD_CODE
-	efiExtiInit();
-#endif // HAL_USE_PAL
+#if HAL_USE_I2C
+const I2CConfig i2cfg = {
+    OPMODE_I2C,
+    400000,
+    FAST_DUTY_CYCLE_2,
+};
+#endif
 
+void initHardware() {
 #if EFI_HD44780_LCD
 	lcd_HD44780_init();
 	if (hasFirmwareError())
@@ -491,6 +500,12 @@ void initHardware() {
 	if (hasFirmwareError()) {
 		return;
 	}
+
+#if STM32_I2C_USE_I2C3
+	if (engineConfiguration->useEeprom) {
+	    i2cStart(&I2CD3, &i2cfg);
+	}
+#endif // STM32_I2C_USE_I2C3
 
 	boardInitHardware();
 

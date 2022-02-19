@@ -25,7 +25,6 @@
 
 #include "os_access.h"
 #include "trigger_central.h"
-#include "fsio_core.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
@@ -505,9 +504,8 @@ void commonInitEngineController() {
 
 	initAccelEnrichment();
 
-#if EFI_FSIO
+	// TODO: rename
 	initFsioImpl();
-#endif /* EFI_FSIO */
 
 	initGpPwm();
 
@@ -637,9 +635,11 @@ bool validateConfig() {
 		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
 	}
 
+#if EFI_BOOST_CONTROL
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
 	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+#endif // EFI_BOOST_CONTROL
 
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);

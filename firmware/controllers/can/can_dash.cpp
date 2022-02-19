@@ -1103,10 +1103,13 @@ void canDashboardHaltech(CanCycle cycle) {
 	}
 }
 
+//Based on AIM can protocol
+//https://www.aimtechnologies.com/support/racingecu/AiM_CAN_101_eng.pdf
+
 struct Aim5f0 {
 	scaled_channel<uint16_t, 1> Rpm;
-	scaled_channel<uint16_t, 65> Tps;
-	scaled_channel<uint16_t, 65> Pps;
+	scaled_channel<uint16_t, 650> Tps;
+	scaled_channel<uint16_t, 650> Pps;
 	scaled_channel<uint16_t, 100> Vss;
 };
 
@@ -1133,10 +1136,10 @@ static void populateFrame(Aim5f1& msg) {
 }
 
 struct Aim5f2 {
-	scaled_channel<uint16_t, 10> Iat;
-	scaled_channel<uint16_t, 10> Ect;
-	scaled_channel<uint16_t, 10> FuelT;
-	scaled_channel<uint16_t, 10> OilT;
+	scaled_channel<uint16_t, 190> Iat;
+	scaled_channel<uint16_t, 190> Ect;
+	scaled_channel<uint16_t, 190> FuelT;
+	scaled_channel<uint16_t, 190> OilT;
 };
 
 static void populateFrame(Aim5f2& msg) {
@@ -1165,7 +1168,7 @@ static void populateFrame(Aim5f3& msg) {
 
 struct Aim5f4 {
 	scaled_channel<uint16_t, 10000> Boost;
-	scaled_channel<uint16_t, 10> Vbat;
+	scaled_channel<uint16_t, 3200> Vbat;
 	scaled_channel<uint16_t, 10> FuelUse;
 	scaled_channel<uint16_t, 10> Gear;
 };

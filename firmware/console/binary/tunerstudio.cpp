@@ -600,7 +600,7 @@ static void handleGetVersion(TsChannelBase* tsChannel) {
 static void handleGetText(TsChannelBase* tsChannel) {
 	tsState.textCommandCounter++;
 
-	printOverallStatus(getTimeNowSeconds());
+	printOverallStatus();
 
 	size_t outputSize;
 	const char* output = swapOutputBuffers(&outputSize);
@@ -608,7 +608,7 @@ static void handleGetText(TsChannelBase* tsChannel) {
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<const uint8_t*>(output), outputSize);
+	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<const uint8_t*>(output), outputSize, true);
 #if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
@@ -775,14 +775,14 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 
 			if (currentEnd > transmitted) {
 				// more normal case - tail after head
-				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
+				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted), true);
 				transmitted = currentEnd;
 			} else if (currentEnd == transmitted) {
 				tsChannel->sendResponse(TS_CRC, start, 0);
 			} else {
 				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
 				// sending end of the buffer, next transmission would take care of the rest
-				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted));
+				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted), true);
 				transmitted = 0;
 			}
 		}
@@ -790,7 +790,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
-			tsChannel->sendResponse(TS_CRC, toothBuffer.Buffer, toothBuffer.Length);
+			tsChannel->sendResponse(TS_CRC, toothBuffer.Buffer, toothBuffer.Length, true);
 		}
 
 		break;
@@ -803,7 +803,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
 			auto trace = perfTraceGetBuffer();
-			tsChannel->sendResponse(TS_CRC, trace.Buffer, trace.Size);
+			tsChannel->sendResponse(TS_CRC, trace.Buffer, trace.Size, true);
 		}
 
 		break;
@@ -816,7 +816,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 			strcpy((char*)configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
 		}
 #endif // HW_CHECK_MODE
-		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
+		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
 		break;
 	}
 	default:

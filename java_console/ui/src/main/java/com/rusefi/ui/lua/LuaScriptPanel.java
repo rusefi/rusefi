@@ -26,9 +26,6 @@ public class LuaScriptPanel {
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
     private final TextEditor scriptText = new TextEditor();
-    private boolean isFirstRender = true;
-    private boolean alreadyRequestedFromListener;
-    private boolean renderedBeforeConnected;
 
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
@@ -37,14 +34,12 @@ public class LuaScriptPanel {
         // Upper panel: command entry, etc
         JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-        JButton readButton = new JButton("Read from ECU");
         JButton writeButton = new JButton("Write to ECU");
         JButton resetButton = new JButton("Reset/Reload Lua");
         JButton formatButton = new JButton("Format");
 
         MessagesPanel mp = new MessagesPanel(null, config);
 
-        readButton.addActionListener(e -> readFromECU());
         writeButton.addActionListener(e -> {
             write();
             // resume messages on 'write new script to ECU'
@@ -64,7 +59,6 @@ public class LuaScriptPanel {
                 }            }
         });
 
-        upperPanel.add(readButton);
         upperPanel.add(formatButton);
         upperPanel.add(writeButton);
         upperPanel.add(resetButton);
@@ -81,28 +75,19 @@ public class LuaScriptPanel {
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
-            if (renderedBeforeConnected && !alreadyRequestedFromListener) {
-                // this whole listener is one huge hack :(
-                alreadyRequestedFromListener = true;
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
                         readFromECU();
+                    } catch (Throwable e) {
+                        System.out.println(e);
                     }
-                });
-            }
+                }
+            });
         });
 
-        JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel) {
-            @Override
-            public void paint(Graphics g) {
-                super.paint(g);
-                if (isFirstRender) {
-                    readFromECU();
-                    isFirstRender = false;
-                }
-            }
-        };
+        JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel);
 
         mainPanel.add(upperPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -127,7 +112,6 @@ public class LuaScriptPanel {
 
         if (bp == null) {
             scriptText.setText("No ECU located");
-            renderedBeforeConnected = true;
             return;
         }
 

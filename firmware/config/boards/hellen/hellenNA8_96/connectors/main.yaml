@@ -300,12 +300,12 @@ pins:
   - pin: int_etb-
     id: GPIOC_8
     class: outputs
-    ts_name: ETB +
+    ts_name: ETB -
     
   - pin: int_etb_EN
     id: GPIOC_6
     class: outputs
-    ts_name: ETB +
+    ts_name: ETB EN
  
 
 info:
