@@ -26,6 +26,9 @@
 
 #define EFI_USE_COMPRESSED_INI_MSD
 
+#undef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD TRUE
+
 // H7 has dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #define EFI_FLASH_WRITE_THREAD TRUE
 
