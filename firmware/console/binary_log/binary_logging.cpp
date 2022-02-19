@@ -27,7 +27,7 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.intake, GAUGE_NAME_IAT, "C", 1},
 	{engine->outputChannels.auxTemp1, GAUGE_NAME_AUX_TEMP1, "C", 1},
 	{engine->outputChannels.auxTemp2, GAUGE_NAME_AUX_TEMP2, "C", 1},
-	{engine->outputChannels.throttlePedalPosition, GAUGE_NAME_TPS, "%", 2},
+	{engine->outputChannels.TPSValue, GAUGE_NAME_TPS, "%", 2},
 	{engine->outputChannels.TPS2Value, GAUGE_NAME_TPS2, "%", 2},
 	{engine->outputChannels.throttlePedalPosition, GAUGE_NAME_THROTTLE_PEDAL, "%", 2},
 	{engine->outputChannels.MAPValue, GAUGE_NAME_MAP, "kPa", 1},
