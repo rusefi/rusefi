@@ -27,7 +27,8 @@
 MEMORY
 {
     bl          : org = 0x08000000, len = 16k       /* bootloader section */
-    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? (768k - 32k) : 768k  /* change address & length if bootloader */
+	/* TODO: 512k flash limit is a mitigation for https://github.com/rusefi/rusefi/issues/3566 and https://github.com/rusefi/rusefi/issues/3775 */
+    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? (512k - 32k) : 512k  /* change address & length if bootloader */
     flash1 (rx) : org = DEFINED(BOOTLOADER) ? 0x00208000 : 0x00200000, len = DEFINED(BOOTLOADER) ? (2m - 32k) : 2m /* Flash as ITCM */
     flash2 (rx) : org = 0x00000000, len = 0
     flash3 (rx) : org = 0x00000000, len = 0
