@@ -8,12 +8,12 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOA_3: return "PPS1";
 		case GPIOA_1: return "TPS1";
 		case GPIOG_4: return "1E - Check Engine Light";
-		case GPIOC_8: return "ETB +";
+		case GPIOC_8: return "ETB -";
 		case GPIOA_9: return "1I AC Fan Relay";
 		case GPIOE_5: return "3H - IGN_2 (2&3)";
 		case GPIOC_7: return "ETB +";
 		case GPIOG_2: return "2M US / 2P EUROPE - FPUMP";
-		case GPIOC_6: return "ETB +";
+		case GPIOC_6: return "ETB EN";
 		case GPIOC_5: return "1P - AC Switch";
 		case GPIOA_7: return "3S - EGR BOOST IN";
 		case GPIOA_6: return "2H - CAM";
