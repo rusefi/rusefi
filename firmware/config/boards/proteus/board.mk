@@ -36,12 +36,6 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=GPIOD_5 -DEFI_CONSOLE_RX_BRAIN_PIN=GPIOD_6
 endif
 
-# If on F7, disable ini ramdisk as a mitigation of https://github.com/rusefi/rusefi/issues/3775
-# See STM32F7.ld for more info
-ifeq ($(PROJECT_CPU),ARCH_STM32F7)
-	DDEFS += -DEFI_EMBED_INI_MSD=FALSE
-endif
-
 # We are running on Proteus hardware!
 DDEFS += -DHW_PROTEUS=1
 
