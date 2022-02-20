@@ -158,6 +158,9 @@ function onCanRx(bus, id, dlc, data)
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_COOLANT then
 		printDebug('CAN_BMW_E90_COOLANT')
+	    cltByte = data[1 + 0]
+        mapByte = data[1 + 3]
+        fuelWord = getTwoBytes(data, 4, 1)
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_LOCKING then
 		printDebug('CAN_BMW_E90_LOCKING')
