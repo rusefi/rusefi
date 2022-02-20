@@ -26,10 +26,22 @@ function setTwoBytes(data, offset, value)
 	data[offset + 2] = (value >> 8) % 255
 end
 
+	function bmwChecksum(canID, data, offset, length)
+		checksum = canID
+		for i = offset, offset + length - 1,1
+		do
+	   		checksum = checksum + data[i]
+		end
+		checksum = (checksum >> 8) + (checksum & 0xff)
+		return checksum
+	end
+
 -- this controls onCanRx rate as well!
 setTickRate(300)
 --
 -- crazy copy-pasta, at some point move to sets/bags
+
+ignitionKeyByte0 = 256
 
 tcuMessages = { }
 -- 'ecu' means not-TCU
@@ -126,7 +138,14 @@ function onCanRx(bus, id, dlc, data)
 		printDebug('CAN_BMW_E90_WHEEL_SPEED')
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_IGNITION_KEY then
-		printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY')
+		if ignitionKeyByte0 != data[1] then
+		    ignitionKeyByte0 = data[1]
+		    if ignitionKeyByte0 == 0x55
+  		        printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY CRANKING')
+  		    elseif
+  		        printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY ' .. ignitionKeyByte0)
+            end
+  		end
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E65_GEAR_SELECTOR then
 		printDebug('CAN_BMW_E65_GEAR_SELECTOR')
@@ -157,6 +176,10 @@ function onCanRx(bus, id, dlc, data)
 		relayToEcu(id, data)
 	elseif id == CAN_BMW_GEAR_TRANSMISSION_DATA then
 		printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DATA')
+		gearBits = data[1] & 0xF
+		if (gearBits >= 5 && gearBits <= 0xA) then
+		    printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DATA gear ' .. (gearBits - 4))
+		end
 		relayToEcu(id, data)
 	elseif id == CAN_BMW_GEAR_GEARBOX_DATA_2 then
 		printDebug('*******CAN_BMW_GEAR_GEARBOX_DATA_2')

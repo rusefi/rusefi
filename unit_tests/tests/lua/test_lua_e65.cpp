@@ -41,6 +41,17 @@ TEST(LuaE65, Rpm) {
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 845);
 }
 
+TEST(LuaE65, gear) {
+	const char* realdata = TWO_BYTES R"(
+
+	function testFunc()
+		data = {0x58}
+		return data[1] & 0xF
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 8);
+}
+
 TEST(LuaE65, sumChecksum) {
 	// checksum is first byte
 	// id = A8, packet:
