@@ -22,8 +22,8 @@ for c in $CONNECTORS; do
   echo "${I_AM} NAME "$NAME
   mkdir -p $DIR
   if [ "$(yqdir/yq e '.info.id' $c)" == "null" ]; then
-    echo "${I_AM} Missing id field in info section of $c"
-    exit 1
+    echo "${I_AM} Missing yaml id field in info section of $c"
+# todo fail once all pages are compliant    exit 1
   fi
   if [ -f $DIR/index.html ]; then
     bash misc/pinout-gen/append.sh "$(yqdir/yq -j e $c)" $DIR/index.html

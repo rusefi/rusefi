@@ -222,3 +222,6 @@ pins:
     class: outputs
     ts_name: Injector 3Z
     function: Injector #4
+
+info:
+  id: Frankenso
