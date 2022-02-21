@@ -78,6 +78,7 @@ CAN_BMW_E90_DASH_ON = 0x332
 -- 0x3EF	OBD Daten Motor ECU
 CAN_BMW_E90_ECU_NETWORK = 0x492
 -- CAN_BMW_E90_ECU2_NETWORK = 0x493
+CAN_BMW_E90_INPA_TCU = 0x618
 
 CAN_BMW_GEAR_TORQUE_DEMAND2 = 0x0B5
 CAN_BMW_GEAR_TRANSMISSION_DATA = 0x0BA
@@ -86,6 +87,7 @@ CAN_BMW_GEAR_TRANSMISSION_DISP = 0x1D2
 CAN_BMW_GEAR_GANG_STATUS = 0x304
 CAN_BMW_GEAR_NETWORK = 0x498
 CAN_BMW_GEAR_SERVICE = 0x598
+CAN_BMW_GEAR_INPA_RESPONSE = 0x6f1
 
 ECU_BUS = 1
 GEAR_BUS = 2
@@ -104,6 +106,7 @@ canRxAdd(CAN_BMW_E90_LOCKING)
 canRxAdd(CAN_BMW_E90_MSA)
 canRxAdd(CAN_BMW_E90_DASH_ON)
 canRxAdd(CAN_BMW_E90_ECU_NETWORK)
+canRxAdd(CAN_BMW_E90_INPA_TCU)
 
 canRxAdd(CAN_BMW_GEAR_TORQUE_DEMAND2)
 canRxAdd(CAN_BMW_GEAR_TRANSMISSION_DATA)
@@ -112,6 +115,7 @@ canRxAdd(CAN_BMW_GEAR_TRANSMISSION_DISP)
 canRxAdd(CAN_BMW_GEAR_GANG_STATUS)
 canRxAdd(CAN_BMW_GEAR_NETWORK)
 canRxAdd(CAN_BMW_GEAR_SERVICE)
+canRxAdd(CAN_BMW_GEAR_INPA_RESPONSE)
 
 
 function relayToTcu(id, data)
@@ -185,6 +189,9 @@ function onCanRx(bus, id, dlc, data)
 	elseif id == CAN_BMW_E90_ECU_NETWORK then
 		printDebug('CAN_BMW_E90_ECU_NETWORK')
 		relayToTcu(id, data)
+	elseif id == CAN_BMW_E90_INPA_TCU then
+		print('CAN_BMW_E90_INPA_TCU')
+		relayToTcu(id, data)
 	elseif id == CAN_BMW_GEAR_TORQUE_DEMAND2 then
 	    TORQ_TAR_EGS = getBitRange(data, 12, 12)
 	    ST_TORQ_TAR_EGS = getBitRange(data, 36, 2)
@@ -211,6 +218,9 @@ function onCanRx(bus, id, dlc, data)
 		relayToEcu(id, data)
 	elseif id == CAN_BMW_GEAR_SERVICE then
 		printDebug('*******CAN_BMW_GEAR_SERVICE')
+		relayToEcu(id, data)
+	elseif id == CAN_BMW_GEAR_INPA_RESPONSE then
+		print('*******CAN_BMW_GEAR_INPA_RESPONSE')
 		relayToEcu(id, data)
 	else
 		print('No handler for ' ..id)
