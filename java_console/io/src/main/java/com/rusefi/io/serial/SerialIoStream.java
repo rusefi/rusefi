@@ -8,7 +8,7 @@ import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.io.IoStream;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -17,6 +17,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class SerialIoStream extends AbstractIoStream {
     static Logging log = getLogging(SerialIoStream.class);
 
+    @Nullable // null in case of port open error, for instance lack of permissions on Unix
     protected final SerialPort sp;
     protected final String port;
     private boolean withListener;
@@ -25,7 +26,7 @@ public class SerialIoStream extends AbstractIoStream {
         log.info("Using com.fazecast.jSerialComm " + SerialPort.getVersion());
     }
 
-    public SerialIoStream(SerialPort sp, String port) {
+    public SerialIoStream(@Nullable SerialPort sp, String port) {
         this.sp = sp;
         this.port = port;
     }
@@ -37,11 +38,16 @@ public class SerialIoStream extends AbstractIoStream {
         return new SerialIoStream(serialPort, port);
     }
 
-    @NotNull
+    @Nullable
     protected static SerialPort openSerial(String port) {
         SerialPort serialPort = SerialPort.getCommPort(port);
         serialPort.setBaudRate(BaudRateHolder.INSTANCE.baudRate);
-        serialPort.openPort(0);
+        boolean openedOk = serialPort.openPort(0);
+        if (!openedOk) {
+            log.error("Error opening " + port + " maybe no permissions?");
+            // todo: leverage jSerialComm method once we start using version 2.9+
+            return null;
+        }
         return serialPort;
     }
 
@@ -54,7 +60,8 @@ public class SerialIoStream extends AbstractIoStream {
     public void close() {
         log.info(port + ": Closing port...");
         super.close();
-        sp.closePort();
+        if (sp != null)
+            sp.closePort();
         log.info(port + ": Closed port.");
     }
 
@@ -62,6 +69,8 @@ public class SerialIoStream extends AbstractIoStream {
     public void write(byte[] bytes) throws IOException {
         if (Bug3923.obscene)
             log.info("Writing " + bytes.length + " byte(s)");
+        if (sp == null)
+            throw new IOException("Port was never opened");
 
         int written = sp.writeBytes(bytes, bytes.length);
 
@@ -86,6 +95,8 @@ public class SerialIoStream extends AbstractIoStream {
             throw new IllegalStateException("Not possible to change listener");
         }
         withListener = true;
+        if (sp == null)
+            return;
         sp.addDataListener(new SerialPortDataListener() {
             private boolean isFirstEvent = true;
 
