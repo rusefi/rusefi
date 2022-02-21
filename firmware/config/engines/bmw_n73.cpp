@@ -26,6 +26,17 @@ function setTwoBytes(data, offset, value)
 	data[offset + 2] = (value >> 8) % 255
 end
 
+function getBitRange(data, bitIndex, bitWidth)
+	byteIndex = bitIndex >> 3
+	shift = bitIndex - byteIndex * 8
+	value = data[1 + byteIndex]
+	if (shift + bitIndex > 8) then
+		value = value + data[2 + byteIndex] * 256
+	end
+	mask = (1 << bitWidth) - 1
+	return (value >> shift) & mask
+end
+
 	function bmwChecksum(canID, data, offset, length)
 		checksum = canID
 		for i = offset, offset + length - 1,1
@@ -175,7 +186,9 @@ function onCanRx(bus, id, dlc, data)
 		printDebug('CAN_BMW_E90_ECU_NETWORK')
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_GEAR_TORQUE_DEMAND2 then
-		printDebug('*******CAN_BMW_GEAR_TORQUE_DEMAND2')
+	    TORQ_TAR_EGS = getBitRange(data, 12, 12)
+	    ST_TORQ_TAR_EGS = getBitRange(data, 36, 2)
+		printDebug('*******CAN_BMW_GEAR_TORQUE_DEMAND2 ' .. TORQ_TAR_EGS .. ' ' .. ST_TORQ_TAR_EGS)
 		relayToEcu(id, data)
 	elseif id == CAN_BMW_GEAR_TRANSMISSION_DATA then
 		printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DATA')
