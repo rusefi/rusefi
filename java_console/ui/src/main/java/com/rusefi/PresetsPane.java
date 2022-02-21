@@ -43,7 +43,7 @@ public class PresetsPane {
         private final String labelTest;
 
         public SetEngineTypeCommandControl(UIContext uiContext, String labelTest, String imageFileName, engine_type_e engineType) {
-            super(uiContext, labelTest, imageFileName, CommandControl.SET, "set " + Fields.CMD_ENGINE_TYPE + " " + engineType.ordinal());
+            super(uiContext, labelTest, imageFileName, CommandControl.SET, Fields.CMD_SET + " " + Fields.CMD_ENGINE_TYPE + " " + engineType.ordinal());
             this.labelTest = labelTest;
         }
 

@@ -193,8 +193,12 @@ public class LinkManager implements Closeable {
             new NamedThreadFactory("communication executor"));
 
     public void assertCommunicationThread() {
-        if (Thread.currentThread() != communicationThread)
-            throw new IllegalStateException("Communication on wrong thread");
+        if (Thread.currentThread() != communicationThread) {
+            IllegalStateException e = new IllegalStateException("Communication on wrong thread");
+            e.printStackTrace();
+            log.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
     private final EngineState engineState;
