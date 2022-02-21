@@ -13,6 +13,7 @@ import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -61,20 +62,17 @@ public class MainFrame {
 
     private void windowOpenedHandler() {
         setTitle();
-        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {
-                setTitle();
-                UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
-                if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
-                    long unixGmtTime = System.currentTimeMillis() / 1000L;
-                    long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
-                    consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Fields.CMD_DATE) +
-                                    " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
-                            InvocationConfirmationListener.VOID, false);
-                }
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
+            setTitle();
+            UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
+            if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
+                long unixGmtTime = System.currentTimeMillis() / 1000L;
+                long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
+                consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Fields.CMD_DATE) +
+                                " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
+                        InvocationConfirmationListener.VOID, false);
             }
-        });
+        }));
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
         linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStateListener() {

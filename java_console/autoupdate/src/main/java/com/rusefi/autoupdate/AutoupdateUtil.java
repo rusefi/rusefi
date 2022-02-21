@@ -22,6 +22,7 @@ public class AutoupdateUtil {
     private static final String APPICON = "/appicon.png";
 
     public static JComponent wrap(JComponent component) {
+        AutoupdateUtil.assertAwtThread();
         JPanel result = new JPanel();
         result.add(component);
         return result;
@@ -93,11 +94,17 @@ public class AutoupdateUtil {
     }
 
     public static void trueLayout(Component component) {
+        assertAwtThread();
         if (component == null)
             return;
         component.invalidate();
         component.validate();
         component.repaint();
+    }
+
+    public static void assertAwtThread() {
+        if (!SwingUtilities.isEventDispatchThread())
+            throw new IllegalStateException("Not on AWT thread but " + Thread.currentThread().getName());
     }
 
     public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {
