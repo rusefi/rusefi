@@ -82,21 +82,24 @@ public class MainFrame {
 
             @Override
             public void onConnectionEstablished() {
-                new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-                    linkManager.execute(() -> {
-                        log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-                        linkManager.restart();
-                    });
-                }).start();
+                SwingUtilities.invokeLater(() -> {
+                    new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
+                        linkManager.execute(() -> {
+                            log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
+                            linkManager.restart();
+                        });
+                    }).start();
 
-                tabbedPane.settingsTab.showContent();
-                tabbedPane.logsManager.showContent();
-                tabbedPane.fuelTunePane.showContent();
-                /**
-                 * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server
-                 * before launching new instance
-                 */
-                new BinaryProtocolServer().start(linkManager);
+                    tabbedPane.settingsTab.showContent();
+                    tabbedPane.logsManager.showContent();
+                    tabbedPane.fuelTunePane.showContent();
+                    /**
+                     * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server
+                     * before launching new instance
+                     */
+                    new BinaryProtocolServer().start(linkManager);
+                });
+
             }
         });
 
