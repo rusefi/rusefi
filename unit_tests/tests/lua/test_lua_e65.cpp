@@ -1,6 +1,16 @@
 #include "pch.h"
 #include "rusefi_lua.h"
 
+#define BMW_CHECKSUM "	function bmwChecksum(canID, data, offset, length) \
+		checksum = canID   \
+		for i = offset, offset + length - 1,1 \
+		do \
+	   		checksum = checksum + data[i] \
+		end \
+		checksum = (checksum >> 8) + (checksum & 0xff) \
+		return checksum \
+	end "
+
 #define TWO_BYTES "function twoBytes(data, offset, factor)        \
 		return (data[offset + 2] * 256 + data[offset + 1]) * factor   \
 	end"
@@ -81,17 +91,7 @@ TEST(LuaE65, sumChecksum) {
 	// id = A8, packet:
 	// 12 AD 05 A0 05 0F 00 02
 
-	const char* realdata = R"(
-
-	function bmwChecksum(canID, data, offset, length)
-		checksum = canID
-		for i = offset, offset + length - 1,1
-		do
-	   		checksum = checksum + data[i]
-		end
-		checksum = (checksum >> 8) + (checksum & 0xff)
-		return checksum
-	end
+	const char* realdata = BMW_CHECKSUM R"(
 
 	function testFunc()
 	    canID = 0xA8
