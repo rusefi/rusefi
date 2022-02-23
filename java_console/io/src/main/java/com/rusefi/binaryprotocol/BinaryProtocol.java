@@ -182,7 +182,7 @@ public class BinaryProtocol {
 
     private void startPullThread(final DataListener textListener) {
         if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
-            log.info("Current queue: " + linkManager.COMMUNICATION_QUEUE.size());
+            log.info("Current queue size: " + linkManager.COMMUNICATION_QUEUE.size());
         }
         Runnable textPull = new Runnable() {
             @Override
