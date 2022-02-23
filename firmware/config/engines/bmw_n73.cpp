@@ -96,9 +96,9 @@ canRxAdd(E90_GEAR_SELECTOR)
 canRxAdd(E90_DSC_STATUS)
 canRxAdd(E90_DSC_SPEED)
 canRxAdd(E90_COOLANT)
-canRxAdd(E90_LOCKING)
-canRxAdd(E90_MSA)
-canRxAdd(E90_DASH_ON)
+--canRxAdd(E90_LOCKING)
+--canRxAdd(E90_MSA)
+--canRxAdd(E90_DASH_ON)
 canRxAdd(E90_ECU_NETWORK)
 canRxAdd(E90_INPA_TCU)
 
@@ -152,12 +152,11 @@ end
 
 function onCanRx(bus, id, dlc, data)
 	id = id % 2048
-	-- local output = string.format("%x", id)
 
 	if id == E90_TORQUE_1 then
 		TORQ_AVL = 0.5 * (getTwoBytes(data, 1, 1) >> 4)
 		TORQ_AVL_DMEE = 0.5 * (getTwoBytes(data, 3, 1) >> 4)
-		print('E90_TORQUE_1 TORQ_AVL=' ..TORQ_AVL ..' TORQ_AVL_DMEE=' ..TORQ_AVL_DMEE)
+		printDebug('E90_TORQUE_1 TORQ_AVL=' ..TORQ_AVL ..' TORQ_AVL_DMEE=' ..TORQ_AVL_DMEE)
 		relayToTcu(id, data)
 	elseif id == E90_TORQUE_2 then
 		printDebug('E90_TORQUE_2')
@@ -165,14 +164,17 @@ function onCanRx(bus, id, dlc, data)
 	elseif id == E90_RPM_THROTTLE then
 		rpm = getTwoBytes(data, 4, 0.25)
 		pedal = data [1 + 3] * 100 / 256.0
-		print('E90_RPM_THROTTLE rpm=' .. rpm .. ' pedal=' .. pedal)
+		printDebug('E90_RPM_THROTTLE rpm=' .. rpm .. ' pedal=' .. pedal)
 
 		output = {0, 0, 0, data [1 + 3], data [1 + 4], data [1 + 5], 0, 0}
         counterE90_RPM_THROTTLE = (counterE90_RPM_THROTTLE + 1) % 15
         output[2] = counterE90_RPM_THROTTLE
         output[1] = bmwChecksum(E90_RPM_THROTTLE, output, 2, 7)
 
-		relayToTcu(id, data)
+--		print('original ' ..print_array(data))
+--		print('repacked ' ..print_array(output))
+
+		relayToTcu(id, output)
 	elseif id == E90_DSC_TORQUE_DEMAND then
 		printDebug('E90_DSC_TORQUE_DEMAND')
 		relayToTcu(id, data)
@@ -217,7 +219,7 @@ function onCanRx(bus, id, dlc, data)
 		printDebug('E90_ECU_NETWORK')
 		relayToTcu(id, data)
 	elseif id == E90_INPA_TCU then
-		print('E90_INPA_TCU')
+		printDebug('E90_INPA_TCU')
 		relayToTcu(id, data)
 	elseif id == TCU_TORQUE_DEMAND2 then
 	    TORQ_TAR_EGS = getBitRange(data, 12, 12)
@@ -228,7 +230,11 @@ function onCanRx(bus, id, dlc, data)
 		printDebug('*******TCU_TRANSMISSION_DATA')
 		gearBits = data[1] & 0xF
 		if (gearBits >= 5 and gearBits <= 0xA) then
-		    printDebug('*******TCU_TRANSMISSION_DATA gear ' .. (gearBits - 4))
+			print('*******TCU_TRANSMISSION_DATA gear ' ..(gearBits - 4))
+		elseif gearBits == 1 or gearBits == 2 or gearBits == 3 then
+		    printDebug('*******TCU_TRANSMISSION_DATA gear R/N/P')
+		else
+		    printDebug('*******TCU_TRANSMISSION_DATA gear ' .. gearBits)
 		end
 		relayToEcu(id, data)
 	elseif id == TCU_GEARBOX_DATA_2 then
@@ -247,7 +253,7 @@ function onCanRx(bus, id, dlc, data)
 		printDebug('*******TCU_SERVICE')
 		relayToEcu(id, data)
 	elseif id == TCU_INPA_RESPONSE then
-		print('*******TCU_INPA_RESPONSE')
+		printDebug('*******TCU_INPA_RESPONSE')
 		relayToEcu(id, data)
 	else
 		print('No handler for ' ..id)
