@@ -5,6 +5,8 @@ import com.rusefi.Timeouts;
 
 import javax.swing.*;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import static com.devexperts.logging.Logging.getLogging;
 
 /**
@@ -24,14 +26,21 @@ public class ConnectionWatchdog {
     }
 
     public synchronized static void init(LinkManager linkManager) {
+        final AtomicBoolean isPending = new AtomicBoolean();
+
         if (isCreated)
             return; // only one instance is needed
         isCreated = true;
         new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-            linkManager.execute(() -> {
-                log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-                linkManager.restart();
-            });
+            if (isPending.compareAndSet(false, true)) {
+                linkManager.execute(() -> {
+                    log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
+                    linkManager.restart();
+                    isPending.set(false);
+                });
+            } else {
+                log.info("restart already pending...");
+            }
         }).start();
     }
 
