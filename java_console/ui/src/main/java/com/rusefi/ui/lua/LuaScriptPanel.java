@@ -37,6 +37,7 @@ public class LuaScriptPanel {
         JButton writeButton = new JButton("Write to ECU");
         JButton resetButton = new JButton("Reset/Reload Lua");
         JButton formatButton = new JButton("Format");
+        JButton burnButton = new JButton("Burn to ECU");
 
         MessagesPanel mp = new MessagesPanel(null, config);
 
@@ -59,9 +60,19 @@ public class LuaScriptPanel {
                 }            }
         });
 
+        burnButton.addActionListener(e -> {
+            LinkManager linkManager = context.getLinkManager();
+
+            linkManager.submit(() -> {
+                BinaryProtocol bp = linkManager.getCurrentStreamState();
+                bp.burn();
+            });
+        });
+
         upperPanel.add(formatButton);
         upperPanel.add(writeButton);
         upperPanel.add(resetButton);
+        upperPanel.add(burnButton);
         upperPanel.add(command.getContent());
         upperPanel.add(new URLLabel("Lua Wiki", "https://github.com/rusefi/rusefi/wiki/Lua-Scripting"));
 
@@ -162,7 +173,10 @@ public class LuaScriptPanel {
                 remaining -= thisWrite;
             } while (remaining > 0);
 
-            bp.burn();
+// need a way to modify script on the fly with shorter execution gaps to keep E65 CAN network happy
+// todo: auto-burn on console close check box in case of Lua changes?
+// todo: check box for auto-burn?
+//            bp.burn();
 
             // Burning doesn't reload lua script, so we have to do it manually
             resetLua();
