@@ -15,6 +15,21 @@
 		return (data[offset + 2] * 256 + data[offset + 1]) * factor   \
 	end"
 
+#define ARRAY_EQUALS "function equals(data1, data2) \
+ \
+  local index = 1 \
+  while data1[index] ~= nil do \
+	if data1[index] ~= data1[index] then \
+       return -1 - index \
+    end \
+	index = index + 1 \
+  end \
+	if nil ~= data2[index] then \
+       return -1 - index \
+    end \
+  return 0 \
+end \
+	"
 
 #define GET_BIT_RANGE "function getBitRange(data, bitIndex, bitWidth)  \
 	byteIndex = bitIndex >> 3  \
@@ -72,6 +87,20 @@ TEST(LuaE65, gear) {
 	end)";
 
 	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 8);
+}
+
+TEST(LuaE65, repackAA) {
+	const char* realdata = ARRAY_EQUALS TWO_BYTES R"(
+
+	function testFunc()
+rpm = 673.75
+pedal = 50
+		data = {0x58, 12, 14}
+		expected = {0x58, 12, 14}
+		return equals(data, expected)
+	end)";
+
+	EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0);
 }
 
 TEST(LuaE65, gearTorque) {

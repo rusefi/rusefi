@@ -175,7 +175,9 @@ function onCanRx(bus, id, dlc, data)
 		print('CAN_BMW_E90_RPM_THROTTLE rpm=' .. rpm .. ' pedal=' .. pedal)
 
 		output = {0, 0, 0, data [1 + 3], data [1 + 4], data [1 + 5], 0, 0}
-
+        counterCAN_BMW_E90_RPM_THROTTLE = (counterCAN_BMW_E90_RPM_THROTTLE + 1) % 15
+        output[2] = counterCAN_BMW_E90_RPM_THROTTLE
+        output[1] = bmwChecksum(CAN_BMW_E90_RPM_THROTTLE, output, 2, 7)
 
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_DSC_TORQUE_DEMAND then
