@@ -34,6 +34,9 @@ DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 DDEFS += -DHAL_USE_UART=FALSE
 DDEFS += -DUART_USE_WAIT=FALSE
 
+#Linker options, flash size
+USE_OPT += -Wl,--defsym=FLASH_SIZE=1m
+
 # Shared variables
 ALLINC    += $(BOARDINC)
 
