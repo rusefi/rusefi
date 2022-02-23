@@ -140,7 +140,8 @@ static int lua_setTickRate(lua_State* l) {
 
 static void loadLibraries(LuaHandle& ls) {
 	constexpr luaL_Reg libs[] = {
-		{ LUA_GNAME, luaopen_base },
+		// TODO: do we even need the base lib?
+		//{ LUA_GNAME, luaopen_base },
 		{ LUA_MATHLIBNAME, luaopen_math },
 	};
 
