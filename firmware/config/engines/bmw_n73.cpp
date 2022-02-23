@@ -16,7 +16,6 @@ void setEngineProteusBMW_N73_GDI() {
  */
 void setEngineProteusGearboxManInTheMiddle() {
 	strncpy(config->luaScript, R"(
-
 function getTwoBytes(data, offset, factor)
 	return (data[offset + 2] * 256 + data[offset + 1]) * factor
 end
@@ -37,15 +36,15 @@ function getBitRange(data, bitIndex, bitWidth)
 	return (value >> shift) & mask
 end
 
-	function bmwChecksum(canID, data, offset, length)
-		checksum = canID
-		for i = offset, offset + length - 1,1
-		do
-	   		checksum = checksum + data[i]
-		end
-		checksum = (checksum >> 8) + (checksum & 0xff)
-		return checksum
+function bmwChecksum(canID, data, offset, length)
+	checksum = canID
+	for i = offset, offset + length - 1, 1
+	do
+		checksum = checksum + data[i]
 	end
+	checksum = (checksum >> 8) + (checksum & 0xff)
+	return checksum
+end
 
 -- this controls onCanRx rate as well!
 setTickRate(300)
@@ -58,65 +57,59 @@ tcuMessages = { }
 -- 'ecu' means not-TCU
 ecuMessages = { }
 
-CAN_BMW_E90_TORQUE_1 = 0x0A8
-CAN_BMW_E90_TORQUE_2 = 0x0A9
-counterCAN_BMW_E90_RPM_THROTTLE = 0
-CAN_BMW_E90_RPM_THROTTLE = 0x0AA
-CAN_BMW_E90_DSC_TORQUE_DEMAND = 0x0B6
-CAN_BMW_E90_WHEEL_SPEED = 0x0CE
-CAN_BMW_E90_IGNITION_KEY = 0x130
-CAN_BMW_E65_GEAR_SELECTOR = 0x192
-CAN_BMW_E90_DSC_STATUS = 0x19E
-CAN_BMW_E90_DSC_SPEED = 0x1A0
-CAN_BMW_E90_COOLANT = 0x1D0
--- 1E1 klima?
-CAN_BMW_E90_LOCKING = 0x2FC
-CAN_BMW_E90_MSA = 0x308
--- 310 outside temperature Kombi
--- 330 fuel, range
-CAN_BMW_E90_DASH_ON = 0x332
--- 34F
--- 0x3EF	OBD Daten Motor ECU
-CAN_BMW_E90_ECU_NETWORK = 0x492
--- CAN_BMW_E90_ECU2_NETWORK = 0x493
-CAN_BMW_E90_INPA_TCU = 0x618
+E90_TORQUE_1 = 0x0A8
+E90_TORQUE_2 = 0x0A9
+counterE90_RPM_THROTTLE = 0
+E90_RPM_THROTTLE = 0x0AA
+E90_DSC_TORQUE_DEMAND = 0x0B6
+E90_WHEEL_SPEED = 0x0CE
+E90_IGNITION_KEY = 0x130
+E90_GEAR_SELECTOR = 0x192
+E90_DSC_STATUS = 0x19E
+E90_DSC_SPEED = 0x1A0
+E90_COOLANT = 0x1D0
+E90_LOCKING = 0x2FC
+E90_MSA = 0x308
+E90_DASH_ON = 0x332
+E90_ECU_NETWORK = 0x492
+E90_INPA_TCU = 0x618
 
-CAN_BMW_GEAR_TORQUE_DEMAND2 = 0x0B5
-CAN_BMW_GEAR_TRANSMISSION_DATA = 0x0BA
-CAN_BMW_GEAR_GEARBOX_DATA_2 = 0x1A2
-CAN_BMW_GEAR_TRANSMISSION_DISP = 0x1D2
-CAN_BMW_GEAR_GANG_STATUS = 0x304
-CAN_BMW_GEAR_NETWORK = 0x498
-CAN_BMW_GEAR_SERVICE = 0x598
-CAN_BMW_GEAR_INPA_RESPONSE = 0x6f1
+TCU_TORQUE_DEMAND2 = 0x0B5
+TCU_TRANSMISSION_DATA = 0x0BA
+TCU_GEARBOX_DATA_2 = 0x1A2
+TCU_TRANSMISSION_DISP = 0x1D2
+TCU_GANG_STATUS = 0x304
+TCU_NETWORK = 0x498
+TCU_SERVICE = 0x598
+TCU_INPA_RESPONSE = 0x6f1
 
 ECU_BUS = 1
 GEAR_BUS = 2
 
-canRxAdd(CAN_BMW_E90_TORQUE_1)
-canRxAdd(CAN_BMW_E90_TORQUE_2)
-canRxAdd(CAN_BMW_E90_RPM_THROTTLE)
-canRxAdd(CAN_BMW_E90_DSC_TORQUE_DEMAND)
-canRxAdd(CAN_BMW_E90_WHEEL_SPEED)
-canRxAdd(CAN_BMW_E90_IGNITION_KEY)
-canRxAdd(CAN_BMW_E65_GEAR_SELECTOR)
-canRxAdd(CAN_BMW_E90_DSC_STATUS)
-canRxAdd(CAN_BMW_E90_DSC_SPEED)
-canRxAdd(CAN_BMW_E90_COOLANT)
-canRxAdd(CAN_BMW_E90_LOCKING)
-canRxAdd(CAN_BMW_E90_MSA)
-canRxAdd(CAN_BMW_E90_DASH_ON)
-canRxAdd(CAN_BMW_E90_ECU_NETWORK)
-canRxAdd(CAN_BMW_E90_INPA_TCU)
+canRxAdd(E90_TORQUE_1)
+canRxAdd(E90_TORQUE_2)
+canRxAdd(E90_RPM_THROTTLE)
+canRxAdd(E90_DSC_TORQUE_DEMAND)
+canRxAdd(E90_WHEEL_SPEED)
+canRxAdd(E90_IGNITION_KEY)
+canRxAdd(E90_GEAR_SELECTOR)
+canRxAdd(E90_DSC_STATUS)
+canRxAdd(E90_DSC_SPEED)
+canRxAdd(E90_COOLANT)
+canRxAdd(E90_LOCKING)
+canRxAdd(E90_MSA)
+canRxAdd(E90_DASH_ON)
+canRxAdd(E90_ECU_NETWORK)
+canRxAdd(E90_INPA_TCU)
 
-canRxAdd(CAN_BMW_GEAR_TORQUE_DEMAND2)
-canRxAdd(CAN_BMW_GEAR_TRANSMISSION_DATA)
-canRxAdd(CAN_BMW_GEAR_GEARBOX_DATA_2)
-canRxAdd(CAN_BMW_GEAR_TRANSMISSION_DISP)
-canRxAdd(CAN_BMW_GEAR_GANG_STATUS)
-canRxAdd(CAN_BMW_GEAR_NETWORK)
-canRxAdd(CAN_BMW_GEAR_SERVICE)
-canRxAdd(CAN_BMW_GEAR_INPA_RESPONSE)
+canRxAdd(TCU_TORQUE_DEMAND2)
+canRxAdd(TCU_TRANSMISSION_DATA)
+canRxAdd(TCU_GEARBOX_DATA_2)
+canRxAdd(TCU_TRANSMISSION_DISP)
+canRxAdd(TCU_GANG_STATUS)
+canRxAdd(TCU_NETWORK)
+canRxAdd(TCU_SERVICE)
+canRxAdd(TCU_INPA_RESPONSE)
 
 
 function relayToTcu(id, data)
@@ -161,100 +154,100 @@ function onCanRx(bus, id, dlc, data)
 	id = id % 2048
 	-- local output = string.format("%x", id)
 
-	if id == CAN_BMW_E90_TORQUE_1 then
+	if id == E90_TORQUE_1 then
 		TORQ_AVL = 0.5 * (getTwoBytes(data, 1, 1) >> 4)
 		TORQ_AVL_DMEE = 0.5 * (getTwoBytes(data, 3, 1) >> 4)
-		print('CAN_BMW_E90_TORQUE_1 TORQ_AVL=' ..TORQ_AVL ..' TORQ_AVL_DMEE=' ..TORQ_AVL_DMEE)
+		print('E90_TORQUE_1 TORQ_AVL=' ..TORQ_AVL ..' TORQ_AVL_DMEE=' ..TORQ_AVL_DMEE)
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_TORQUE_2 then
-		printDebug('CAN_BMW_E90_TORQUE_2')
+	elseif id == E90_TORQUE_2 then
+		printDebug('E90_TORQUE_2')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_RPM_THROTTLE then
+	elseif id == E90_RPM_THROTTLE then
 		rpm = getTwoBytes(data, 4, 0.25)
 		pedal = data [1 + 3] * 100 / 256.0
-		print('CAN_BMW_E90_RPM_THROTTLE rpm=' .. rpm .. ' pedal=' .. pedal)
+		print('E90_RPM_THROTTLE rpm=' .. rpm .. ' pedal=' .. pedal)
 
 		output = {0, 0, 0, data [1 + 3], data [1 + 4], data [1 + 5], 0, 0}
-        counterCAN_BMW_E90_RPM_THROTTLE = (counterCAN_BMW_E90_RPM_THROTTLE + 1) % 15
-        output[2] = counterCAN_BMW_E90_RPM_THROTTLE
-        output[1] = bmwChecksum(CAN_BMW_E90_RPM_THROTTLE, output, 2, 7)
+        counterE90_RPM_THROTTLE = (counterE90_RPM_THROTTLE + 1) % 15
+        output[2] = counterE90_RPM_THROTTLE
+        output[1] = bmwChecksum(E90_RPM_THROTTLE, output, 2, 7)
 
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_DSC_TORQUE_DEMAND then
-		printDebug('CAN_BMW_E90_DSC_TORQUE_DEMAND')
+	elseif id == E90_DSC_TORQUE_DEMAND then
+		printDebug('E90_DSC_TORQUE_DEMAND')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_WHEEL_SPEED then
-		printDebug('CAN_BMW_E90_WHEEL_SPEED')
+	elseif id == E90_WHEEL_SPEED then
+		printDebug('E90_WHEEL_SPEED')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_IGNITION_KEY then
+	elseif id == E90_IGNITION_KEY then
 		if ignitionKeyByte0 ~= data[1] then
 		    ignitionKeyByte0 = data[1]
 		    if ignitionKeyByte0 == 0x55 then
-		        printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY CRANKING')
+		        printDebug('!!!!!!!!!!!!! E90_IGNITION_KEY CRANKING')
   		    else
-  		        printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY ' .. ignitionKeyByte0)
+  		        printDebug('!!!!!!!!!!!!! E90_IGNITION_KEY ' .. ignitionKeyByte0)
             end
   		end
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E65_GEAR_SELECTOR then
-		printDebug('CAN_BMW_E65_GEAR_SELECTOR')
+	elseif id == E90_GEAR_SELECTOR then
+		printDebug('E90_GEAR_SELECTOR')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_DSC_STATUS then
-		printDebug('CAN_BMW_E90_DSC_STATUS')
+	elseif id == E90_DSC_STATUS then
+		printDebug('E90_DSC_STATUS')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_DSC_SPEED then
-		printDebug('CAN_BMW_E90_DSC_SPEED')
+	elseif id == E90_DSC_SPEED then
+		printDebug('E90_DSC_SPEED')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_COOLANT then
-		printDebug('CAN_BMW_E90_COOLANT')
+	elseif id == E90_COOLANT then
+		printDebug('E90_COOLANT')
 	    cltByte = data[1 + 0]
         mapByte = data[1 + 3]
         fuelWord = getTwoBytes(data, 4, 1)
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_LOCKING then
-		printDebug('CAN_BMW_E90_LOCKING')
+	elseif id == E90_LOCKING then
+		printDebug('E90_LOCKING')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_MSA then
-		printDebug('CAN_BMW_E90_MSA')
+	elseif id == E90_MSA then
+		printDebug('E90_MSA')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_DASH_ON then
-		printDebug('CAN_BMW_E90_DASH_ON')
+	elseif id == E90_DASH_ON then
+		printDebug('E90_DASH_ON')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_ECU_NETWORK then
-		printDebug('CAN_BMW_E90_ECU_NETWORK')
+	elseif id == E90_ECU_NETWORK then
+		printDebug('E90_ECU_NETWORK')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_E90_INPA_TCU then
-		print('CAN_BMW_E90_INPA_TCU')
+	elseif id == E90_INPA_TCU then
+		print('E90_INPA_TCU')
 		relayToTcu(id, data)
-	elseif id == CAN_BMW_GEAR_TORQUE_DEMAND2 then
+	elseif id == TCU_TORQUE_DEMAND2 then
 	    TORQ_TAR_EGS = getBitRange(data, 12, 12)
 	    ST_TORQ_TAR_EGS = getBitRange(data, 36, 2)
-		printDebug('*******CAN_BMW_GEAR_TORQUE_DEMAND2 ' .. TORQ_TAR_EGS .. ' ' .. ST_TORQ_TAR_EGS)
+		printDebug('*******TCU_TORQUE_DEMAND2 ' .. TORQ_TAR_EGS .. ' ' .. ST_TORQ_TAR_EGS)
 		relayToEcu(id, data)
-	elseif id == CAN_BMW_GEAR_TRANSMISSION_DATA then
-		printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DATA')
+	elseif id == TCU_TRANSMISSION_DATA then
+		printDebug('*******TCU_TRANSMISSION_DATA')
 		gearBits = data[1] & 0xF
 		if (gearBits >= 5 and gearBits <= 0xA) then
-		    printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DATA gear ' .. (gearBits - 4))
+		    printDebug('*******TCU_TRANSMISSION_DATA gear ' .. (gearBits - 4))
 		end
 		relayToEcu(id, data)
-	elseif id == CAN_BMW_GEAR_GEARBOX_DATA_2 then
-		printDebug('*******CAN_BMW_GEAR_GEARBOX_DATA_2')
+	elseif id == TCU_GEARBOX_DATA_2 then
+		printDebug('*******TCU_GEARBOX_DATA_2')
 		relayToEcu(id, data)
-	elseif id == CAN_BMW_GEAR_TRANSMISSION_DISP then
-		printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DISP')
+	elseif id == TCU_TRANSMISSION_DISP then
+		printDebug('*******TCU_TRANSMISSION_DISP')
 		relayToEcu(id, data)
-	elseif id == CAN_BMW_GEAR_GANG_STATUS then
-		printDebug('*******CAN_BMW_GEAR_GANG_STATUS')
+	elseif id == TCU_GANG_STATUS then
+		printDebug('*******TCU_GANG_STATUS')
 		relayToEcu(id, data)
-	elseif id == CAN_BMW_GEAR_NETWORK then
-		printDebug('*******CAN_BMW_GEAR_NETWORK')
+	elseif id == TCU_NETWORK then
+		printDebug('*******TCU_NETWORK')
 		relayToEcu(id, data)
-	elseif id == CAN_BMW_GEAR_SERVICE then
-		printDebug('*******CAN_BMW_GEAR_SERVICE')
+	elseif id == TCU_SERVICE then
+		printDebug('*******TCU_SERVICE')
 		relayToEcu(id, data)
-	elseif id == CAN_BMW_GEAR_INPA_RESPONSE then
-		print('*******CAN_BMW_GEAR_INPA_RESPONSE')
+	elseif id == TCU_INPA_RESPONSE then
+		print('*******TCU_INPA_RESPONSE')
 		relayToEcu(id, data)
 	else
 		print('No handler for ' ..id)
