@@ -32,7 +32,7 @@ MEMORY
 {
     bl          : org = 0x08000000, len = 16k       /* bootloader section */
     /* change address & length if bootloader */
-    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? (flash_size - 32k) : FLASH_SIZE
+    flash0 (rx) : org = DEFINED(BOOTLOADER) ? 0x08008000 : 0x08000000, len = DEFINED(BOOTLOADER) ? (flash_size - 32k) : flash_size
     /* TODO: should we use same flash_size for flash@ITCM? */
     flash1 (rx) : org = DEFINED(BOOTLOADER) ? 0x00208000 : 0x00200000, len = DEFINED(BOOTLOADER) ? (2m - 32k) : 2m /* Flash as ITCM */
     flash2 (rx) : org = 0x00000000, len = 0
