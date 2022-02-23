@@ -295,6 +295,7 @@ public class LinkManager implements Closeable {
 
         String[] ports = getCommPorts();
         boolean isPortAvailableAgain = Arrays.asList(ports).contains(lastTriedPort);
+        log.info("restart isPortAvailableAgain=" + isPortAvailableAgain);
         if (isPortAvailableAgain) {
             connect(lastTriedPort);
         }
