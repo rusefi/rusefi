@@ -104,10 +104,7 @@ public class LightweightGUI {
 
         linkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
 
-        new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-            log.info("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-            linkManager.restart();
-        }).start();
+        ConnectionWatchdog.init(linkManager);
     }
 
     private static String detectPortUntilDetected() {
