@@ -60,6 +60,7 @@ ecuMessages = { }
 
 CAN_BMW_E90_TORQUE_1 = 0x0A8
 CAN_BMW_E90_TORQUE_2 = 0x0A9
+counterCAN_BMW_E90_RPM_THROTTLE = 0
 CAN_BMW_E90_RPM_THROTTLE = 0x0AA
 CAN_BMW_E90_DSC_TORQUE_DEMAND = 0x0B6
 CAN_BMW_E90_WHEEL_SPEED = 0x0CE
@@ -144,7 +145,12 @@ function onCanRx(bus, id, dlc, data)
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_RPM_THROTTLE then
 		rpm = getTwoBytes(data, 4, 0.25)
-		print('CAN_BMW_E90_RPM_THROTTLE rpm=' ..rpm)
+		pedal = data [1 + 3] * 100 / 256.0
+		print('CAN_BMW_E90_RPM_THROTTLE rpm=' .. rpm .. ' pedal=' .. pedal)
+
+		output = {0, 0, 0, data [1 + 3], data [1 + 4], data [1 + 5], 0, 0}
+
+
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_DSC_TORQUE_DEMAND then
 		printDebug('CAN_BMW_E90_DSC_TORQUE_DEMAND')
@@ -153,11 +159,11 @@ function onCanRx(bus, id, dlc, data)
 		printDebug('CAN_BMW_E90_WHEEL_SPEED')
 		relayToTcu(id, data)
 	elseif id == CAN_BMW_E90_IGNITION_KEY then
-		if ignitionKeyByte0 != data[1] then
+		if ignitionKeyByte0 ~= data[1] then
 		    ignitionKeyByte0 = data[1]
-		    if ignitionKeyByte0 == 0x55
-  		        printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY CRANKING')
-  		    elseif
+		    if ignitionKeyByte0 == 0x55 then
+		        printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY CRANKING')
+  		    else
   		        printDebug('!!!!!!!!!!!!! CAN_BMW_E90_IGNITION_KEY ' .. ignitionKeyByte0)
             end
   		end
@@ -200,7 +206,7 @@ function onCanRx(bus, id, dlc, data)
 	elseif id == CAN_BMW_GEAR_TRANSMISSION_DATA then
 		printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DATA')
 		gearBits = data[1] & 0xF
-		if (gearBits >= 5 && gearBits <= 0xA) then
+		if (gearBits >= 5 and gearBits <= 0xA) then
 		    printDebug('*******CAN_BMW_GEAR_TRANSMISSION_DATA gear ' .. (gearBits - 4))
 		end
 		relayToEcu(id, data)
