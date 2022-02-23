@@ -25,25 +25,6 @@ TEST(LuaBasic, MathLib) {
 	EXPECT_FLOAT_EQ(result, 1.0f);
 }
 
-TEST(LuaBasic, iPairs) {
-	auto script = R"(
-		function testFunc()
-			counter = 0
-data = {0x5F, 0x59, 0xFF, 0x00, 0x34, 0x0D, 0x80, 0x99}
-for i, v in ipairs(data) do
-      counter = counter + 1
-    end
-
-			return counter
-		end
-	)";
-
-	float result = testLuaReturnsNumber(script);
-
-	EXPECT_FLOAT_EQ(result, 8);
-}
-
-
 TEST(LuaBasic, MathLibFloor) {
 	auto script = R"(
 		function testFunc()
