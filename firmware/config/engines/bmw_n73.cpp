@@ -131,6 +131,32 @@ function printDebug(msg)
 	print(msg)
 end
 
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function decimalToHex(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function print_array(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..decimalToHex(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
 function onCanRx(bus, id, dlc, data)
 	id = id % 2048
 	-- local output = string.format("%x", id)
