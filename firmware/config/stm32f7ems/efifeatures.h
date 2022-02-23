@@ -9,6 +9,12 @@
  * @date Aug 29, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
+
+// Disable ini ramdisk as a mitigation of https://github.com/rusefi/rusefi/issues/3775
+// See STM32F7.ld for more info
+#ifndef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD FALSE
+#endif
  
 #include "../stm32f4ems/efifeatures.h"
 
@@ -55,11 +61,6 @@
 #define EFI_CONSOLE_RX_BRAIN_PIN GPIOD_9
 
 #define EFI_USE_COMPRESSED_INI_MSD
-
-// Disable ini ramdisk as a mitigation of https://github.com/rusefi/rusefi/issues/3775
-// See STM32F7.ld for more info
-#undef EFI_EMBED_INI_MSD
-#define EFI_EMBED_INI_MSD FALSE
 
 #undef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE TRUE
