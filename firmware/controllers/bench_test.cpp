@@ -148,14 +148,15 @@ static void pinbench(const char *startDelayStr, const char *onTimeStr, const cha
 		pinParam, brainPinParam);
 }
 
-static void doRunFuel(size_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
-		const char *countStr) {
+/*==========================================================================*/
+
+static void doRunFuelInjBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
 	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = engineConfiguration->injectionPins[humanIndex - 1];
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.injectors[humanIndex - 1], b);
+	pinbench_float(delay, onTime, offTime, count,
+		&enginePins.injectors[humanIndex - 1], engineConfiguration->injectionPins[humanIndex - 1]);
 }
 
 static void doTestSolenoid(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
@@ -181,12 +182,17 @@ static void doBenchTestFsio(int /*humanIndex*/, const char * /*delayStr*/, const
 
 /**
  * delay 100, cylinder #2, 5ms ON, 1000ms OFF, repeat 3 times
- * fuelbench2 100 2 5 1000 3
+ * fuelInjBenchExt 100 2 5 1000 3
  */
-static void fuelbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
-		const char *countStr) {
-	int index = atoi(indexStr);
-	doRunFuel(index, delayStr, onTimeStr, offTimeStr, countStr);
+static void fuelInjBenchExt(float delay, float humanIndex, float onTime, float offTime, float count) {
+	doRunFuelInjBench((int)humanIndex, delay, onTime, offTime, (int)count);
+}
+
+/**
+ * fuelbench 5 1000 2
+ */
+static void fuelInjBench(float onTime, float offTime, float count) {
+	fuelInjBenchExt(0.0, 1, onTime, offTime, count);
 }
 
 /**
@@ -232,8 +238,8 @@ void starterRelayBench(void) {
 	pinbench("0", "6000", "100", "1", &enginePins.starterControl, engineConfiguration->starterControlPin);
 }
 
-void fuelPumpBenchExt(const char *durationMs) {
-	pinbench("0", durationMs, "100", "1", &enginePins.fuelPumpRelay, engineConfiguration->fuelPumpPin);
+void fuelPumpBenchExt(float durationMs) {
+	pinbench_float(0.0, durationMs, 100.0, 1.0, &enginePins.fuelPumpRelay, engineConfiguration->fuelPumpPin);
 }
 
 void acRelayBench(void) {
@@ -250,12 +256,7 @@ void hpfpValveBench(void) {
 }
 
 void fuelPumpBench(void) {
-	fuelPumpBenchExt("3000");
-}
-
-// fuelbench 5 1000 2
-static void fuelbench(const char * onTimeStr, const char *offTimeStr, const char *countStr) {
-	fuelbench2("0", "1", onTimeStr, offTimeStr, countStr);
+	fuelPumpBenchExt(3000.0);
 }
 
 static void doRunSpark(size_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
@@ -466,7 +467,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case TS_INJECTOR_CATEGORY:
 		if (!running) {
-			doRunFuel(index, "300", /*onTime*/"4", offTimeBuffer, counterBuffer);
+			doRunFuelInjBench(index, 300.0 , engineConfiguration->benchTestOnTime,
+				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
 
@@ -548,8 +550,13 @@ void onConfigurationChangeBenchTest() {
 
 void initBenchTest() {
 	addConsoleAction("fuelpumpbench", fuelPumpBench);
+	addConsoleActionF("fuelpumpbench2", fuelPumpBenchExt);
+
+	addConsoleActionFFF(CMD_FUEL_BENCH, fuelInjBench);
+	addConsoleActionFFFFF("fuelbench2", fuelInjBenchExt);
+
 	addConsoleAction(CMD_AC_RELAY_BENCH, acRelayBench);
-	addConsoleActionS("fuelpumpbench2", fuelPumpBenchExt);
+
 	addConsoleAction(CMD_FAN_BENCH, fanBench);
 	addConsoleAction(CMD_FAN2_BENCH, fan2Bench);
 	addConsoleAction("mainrelaybench", mainRelayBench);
@@ -562,11 +569,9 @@ void initBenchTest() {
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
-	addConsoleActionSSS(CMD_FUEL_BENCH, fuelbench);
 	addConsoleActionSSS(CMD_SPARK_BENCH, sparkbench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
-	addConsoleActionSSSSS("fuelbench2", fuelbench2);
 	addConsoleActionSSSSS("tcusolbench", tcusolbench);
 	addConsoleActionSSSSS("fsiobench2", fsioBench2);
 	addConsoleActionSSSSS("sparkbench2", sparkbench2);
