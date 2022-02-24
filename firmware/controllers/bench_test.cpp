@@ -129,16 +129,23 @@ static int count;
 static brain_pin_e brainPin;
 static OutputPin* pinX;
 
-static void pinbench(const char *delayStr, const char *onTimeStr, const char *offTimeStr, const char *countStr,
-		OutputPin* pinParam, brain_pin_e brainPinParam) {
-	delayMs = atoff(delayStr);
-	onTime = atoff(onTimeStr);
-	offTime = atoff(offTimeStr);
-	count = atoi(countStr);
-
-	brainPin = brainPinParam;
+static void pinbench_float(float dly, float on, float off, int cnt,
+	OutputPin* pinParam, brain_pin_e brainPinParam)
+{
+	startDelayMs = dly;
+	onTime = on;
+	offTime = off;
+	count = cnt;
 	pinX = pinParam;
-	isBenchTestPending = true; // let's signal bench thread to wake up
+	brainPin = brainPinParam;
+	// let's signal bench thread to wake up
+	isBenchTestPending = true;
+}
+
+static void pinbench(const char *startDelayStr, const char *onTimeStr, const char *offTimeStr, const char *countStr,
+		OutputPin* pinParam, brain_pin_e brainPinParam) {
+	pinbench_float(atoff(startDelayStr), atoff(onTimeStr), atoff(offTimeStr), atoi(countStr),
+		pinParam, brainPinParam);
 }
 
 static void doRunFuel(size_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
