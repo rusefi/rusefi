@@ -21,6 +21,9 @@
 #include "eficonsole.h"
 #endif /* ! EFI_UNIT_TEST */
 
+/* for isspace() */
+#include <ctype.h>
+
 // todo: support \t as well
 #define SPACE_CHAR ' '
 
@@ -38,7 +41,7 @@ static void doAddAction(const char *token, action_type_e type, Void callback, vo
 #if !defined(EFI_DISABLE_CONSOLE_ACTIONS)
 	for (uint32_t i = 0; i < efiStrlen(token);i++) {
 		char ch = token[i];
-		if (ch != mytolower(ch)) {
+		if (isupper(ch)) {
 			firmwareError(CUSTOM_ERR_COMMAND_LOWER_CASE_EXPECTED, "lowerCase expected [%s]", token);
 		}
 	}
@@ -130,6 +133,14 @@ void addConsoleActionFF(const char *token, VoidFloatFloat callback) {
 	doAddAction(token, FLOAT_FLOAT_PARAMETER, (Void) callback, NULL);
 }
 
+void addConsoleActionFFF(const char *token, VoidFloatFloatFloat callback) {
+	doAddAction(token, FLOAT_FLOAT_FLOAT_PARAMETER, (Void) callback, NULL);
+}
+
+void addConsoleActionFFFFF(const char *token, VoidFloatFloatFloatFloatFloat callback) {
+	doAddAction(token, FLOAT_FLOAT_FLOAT_FLOAT_FLOAT_PARAMETER, (Void) callback, NULL);
+}
+
 void addConsoleActionFFP(const char *token, VoidFloatFloatVoidPtr callback, void *param) {
 	doAddAction(token, FLOAT_FLOAT_PARAMETER_P, (Void) callback, param);
 }
@@ -153,8 +164,10 @@ static int getParameterCount(action_type_e parameterType) {
 	case INT_FLOAT_PARAMETER:
 		return 2;
 	case STRING3_PARAMETER:
+	case FLOAT_FLOAT_FLOAT_PARAMETER:
 		return 3;
 	case STRING5_PARAMETER:
+	case FLOAT_FLOAT_FLOAT_FLOAT_FLOAT_PARAMETER:
 		return 5;
 	default:
 		return -1;
@@ -165,7 +178,6 @@ static int getParameterCount(action_type_e parameterType) {
  * @brief This function prints out a list of all available commands
  */
 void helpCommand(void) {
-
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	efiPrintf("%d actions available", consoleActionCount);
 	for (int i = 0; i < consoleActionCount; i++) {
@@ -183,287 +195,227 @@ static void echo(int value) {
 	efiPrintf("got value: %d", value);
 }
 
-char *unquote(char *line) {
-	if (line[0] == '"') {
-		int len = strlen(line);
-		if (line[len - 1] == '"') {
-			line[len - 1] = 0;
-			return line + 1;
+static int setargs(char *args, char **argv, int max_args)
+{
+	int count = 0;
+
+	while (isspace(*args)) {
+		*args = '\0';
+		args++;
+	}
+	while ((*args) && (count < max_args)) {
+		if (argv) {
+			argv[count] = args;
 		}
-	}
-	return line;
-}
-
-int findEndOfToken(const char *line) {
-	if (line[0] == '"') {
-		/**
-		 * Looks like this is a quoted token
-		 */
-		int v = indexOf(line + 1, '"');
-		if (v == -1) {
-			/**
-			 * Matching closing quote not found
-			 */
-			return -1;
+		while ((*args) && (!isspace(*args))) {
+			if (*args == '"') {
+				/* skip starting */
+				args++;
+				argv[count] = args;
+				/* find closing quote */
+				while ((*args) && (*args != '"')) {
+					args++;
+				}
+				/* failed? */
+				if (*args == '\0') {
+					return -1;
+				}
+				/* skip closing */
+				*args = '\0';
+			}
+			args++;
 		}
-		/**
-		 * Skipping first quote and the symbol after closing quote
-		 */
-		return v + 2;
+		if (*args) {
+			*args = '\0';
+			args++;
+		}
+		while (isspace(*args)) {
+			*args = '\0';
+			args++;
+		}
+		count++;
 	}
-	return indexOf(line, SPACE_CHAR);
+	return count;
 }
 
-#define REPLACE_SPACES_WITH_ZERO { \
-	    while (parameter[spaceIndex + 1] == SPACE_CHAR) { \
-			parameter[spaceIndex++] = 0; \
-		} \
-		parameter[spaceIndex] = 0; \
-}
+int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
+	(void)argc;
 
-void handleActionWithParameter(TokenCallback *current, char *parameter) {
-    while (parameter[0] == SPACE_CHAR) {
-		parameter[0] = 0;
-		parameter++;
+	switch (current->parameterType) {
+	case NO_PARAMETER:
+	{
+		(*current->callback)();
+		return 0;
 	}
-
-    switch (current->parameterType) {
+	case NO_PARAMETER_P:
+	{
+		VoidPtr callbackS = (VoidPtr) current->callback;
+		(*callbackS)(current->param);
+		return 0;
+	}
 	case STRING_PARAMETER:
 	{
 		VoidCharPtr callbackS = (VoidCharPtr) current->callback;
-		(*callbackS)(parameter);
-		return;
+		(*callbackS)(argv[0]);
+		return 0;
 	}
 	case STRING_PARAMETER_P:
 	{
-			VoidCharPtrVoidPtr callbackS = (VoidCharPtrVoidPtr) current->callback;
-			(*callbackS)(parameter, current->param);
-			return;
+		VoidCharPtrVoidPtr callbackS = (VoidCharPtrVoidPtr) current->callback;
+		(*callbackS)(argv[0], current->param);
+		return 0;
 	}
-	default:
-		// todo: handle all cases explicitly
-		break;
+	case STRING2_PARAMETER:
+	{
+		VoidCharPtrCharPtr callbackS = (VoidCharPtrCharPtr) current->callback;
+		(*callbackS)(argv[0], argv[1]);
+		return 0;
 	}
-
-
-
-	// todo: refactor this hell!
-	if (current->parameterType == STRING2_PARAMETER || current->parameterType == STRING2_PARAMETER_P) {
-		int spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1) {
-			return;
-		}
-		REPLACE_SPACES_WITH_ZERO;
-		char * param0 = parameter;
-
-		parameter += spaceIndex + 1;
-		char * param1 = parameter;
-
-		if (current->parameterType == STRING2_PARAMETER) {
-			VoidCharPtrCharPtr callbackS = (VoidCharPtrCharPtr) current->callback;
-			(*callbackS)(param0, param1);
-		} else {
-			VoidCharPtrCharPtrVoidPtr callbackS = (VoidCharPtrCharPtrVoidPtr) current->callback;
-			(*callbackS)(param0, param1, current->param);
-		}
-		return;
+	case STRING2_PARAMETER_P:
+	{
+		VoidCharPtrCharPtrVoidPtr callbackS = (VoidCharPtrCharPtrVoidPtr) current->callback;
+		(*callbackS)(argv[0], argv[1], current->param);
+		return 0;
 	}
-
-	if (current->parameterType == STRING3_PARAMETER) {
-		int spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1) {
-			return;
-		}
-		REPLACE_SPACES_WITH_ZERO;
-		char * param0 = parameter;
-
-		parameter += spaceIndex + 1;
-		spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1)
-			return;
-		REPLACE_SPACES_WITH_ZERO;
-		char * param1 = parameter;
-		parameter += spaceIndex + 1;
-		char * param2 = parameter;
-
+	case STRING3_PARAMETER:
+	{
 		VoidCharPtrCharPtrCharPtr callbackS = (VoidCharPtrCharPtrCharPtr) current->callback;
-		(*callbackS)(param0, param1, param2);
-		return;
-
+		(*callbackS)(argv[0], argv[1], argv[2]);
+		return 0;
 	}
-
-	// todo: refactor this hell!
-	if (current->parameterType == STRING5_PARAMETER) {
-		int spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1) {
-			return;
-		}
-		REPLACE_SPACES_WITH_ZERO;
-		char * param0 = parameter;
-
-		parameter += spaceIndex + 1;
-		spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1)
-			return;
-		REPLACE_SPACES_WITH_ZERO;
-		char * param1 = parameter;
-
-		parameter += spaceIndex + 1;
-		spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1)
-			return;
-		REPLACE_SPACES_WITH_ZERO;
-		char * param2 = parameter;
-
-		parameter += spaceIndex + 1;
-		spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1)
-			return;
-		REPLACE_SPACES_WITH_ZERO;
-		char * param3 = parameter;
-
-		parameter += spaceIndex + 1;
-		char * param4 = parameter;
-
+	case STRING5_PARAMETER:
+	{
 		VoidCharPtrCharPtrCharPtrCharPtrCharPtr callbackS = (VoidCharPtrCharPtrCharPtrCharPtrCharPtr) current->callback;
-		(*callbackS)(param0, param1, param2, param3, param4);
-		return;
-
+		(*callbackS)(argv[0], argv[1], argv[2], argv[3], argv[4]);
+		return 0;
 	}
-
-	if (current->parameterType == TWO_INTS_PARAMETER) {
-		int spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1)
-			return;
-		REPLACE_SPACES_WITH_ZERO;
-		int value1 = atoi(parameter);
-		if (absI(value1) == ERROR_CODE) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-			efiPrintf("not an integer [%s]", parameter);
-#endif
-			return;
-		}
-		parameter += spaceIndex + 1;
-		int value2 = atoi(parameter);
-		if (absI(value2) == ERROR_CODE) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-			efiPrintf("not an integer [%s]", parameter);
-#endif
-			return;
+	case TWO_INTS_PARAMETER:
+	{
+		int value[2];
+		for (int i = 0; i < 2; i++) {
+			value[i] = atoi(argv[i]);
+			if (absI(value[i]) == ERROR_CODE) {
+				#if EFI_PROD_CODE || EFI_SIMULATOR
+					efiPrintf("not an integer [%s]", argv[0]);
+				#endif
+				return -1;
+			}
 		}
 		VoidIntInt callbackS = (VoidIntInt) current->callback;
-		(*callbackS)(value1, value2);
-		return;
+		(*callbackS)(value[0], value[1]);
+		return 0;
 	}
-
-	if (current->parameterType == FLOAT_PARAMETER_NAN_ALLOWED) {
-		float value = atoff(parameter);
+	case FLOAT_PARAMETER_NAN_ALLOWED:
+	{
+		float value = atoff(argv[0]);
 		VoidFloat callbackF = (VoidFloat) current->callback;
-
-		// invoke callback function by reference
 		(*callbackF)(value);
-		return;
+		return 0;
 	}
 
-	if (current->parameterType == FLOAT_PARAMETER) {
-		float value = atoff(parameter);
+	case FLOAT_PARAMETER:
+	{
+		float value = atoff(argv[0]);
 		if (cisnan(value)) {
-			efiPrintf("invalid float [%s]", parameter);
-			return;
+			efiPrintf("invalid float [%s]", argv[0]);
+			return -1;
 		}
 		VoidFloat callbackF = (VoidFloat) current->callback;
-
-		// invoke callback function by reference
 		(*callbackF)(value);
-		return;
+		return 0;
 	}
 
-	if (current->parameterType == FLOAT_FLOAT_PARAMETER || current->parameterType == FLOAT_FLOAT_PARAMETER_P) {
-		int spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1)
-			return;
-		REPLACE_SPACES_WITH_ZERO;
-		float value1 = atoff(parameter);
-		if (cisnan(value1)) {
-			efiPrintf("invalid float [%s]", parameter);
-			return;
+	case FLOAT_FLOAT_PARAMETER:
+	case FLOAT_FLOAT_PARAMETER_P:
+	{
+		float value[2];
+		for (int i = 0; i < 2; i++) {
+			value[i] = atoff(argv[i]);
+			if (cisnan(value[i])) {
+				efiPrintf("invalid float [%s]", argv[i]);
+				return -1;
+			}
 		}
-
-		parameter += spaceIndex + 1;
-		float value2 = atoff(parameter);
-
-		if (cisnan(value2)) {
-			efiPrintf("invalid float [%s]", parameter);
-			return;
-		}
-	if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
+		if (current->parameterType == FLOAT_FLOAT_PARAMETER) {
 			VoidFloatFloat callbackS = (VoidFloatFloat) current->callback;
-			(*callbackS)(value1, value2);
+			(*callbackS)(value[0], value[1]);
 		} else {
 			VoidFloatFloatVoidPtr callbackS = (VoidFloatFloatVoidPtr) current->callback;
-			(*callbackS)(value1, value2, current->param);
+			(*callbackS)(value[0], value[1], current->param);
 		}
-		return;
+		return 0;
 	}
-
-	if (current->parameterType == INT_FLOAT_PARAMETER) {
-		int spaceIndex = findEndOfToken(parameter);
-		if (spaceIndex == -1)
-			return;
-		REPLACE_SPACES_WITH_ZERO;
-		int value1 = atoi(parameter);
+	case FLOAT_FLOAT_FLOAT_PARAMETER:
+	{
+		float value[3];
+		for (int i = 0; i < 3; i++) {
+			value[i] = atoff(argv[i]);
+			if (cisnan(value[i])) {
+				efiPrintf("invalid float [%s]", argv[i]);
+				return -1;
+			}
+		}
+		VoidFloatFloatFloat callbackS = (VoidFloatFloatFloat) current->callback;
+		(*callbackS)(value[0], value[1], value[2]);
+		return 0;
+	}
+	case FLOAT_FLOAT_FLOAT_FLOAT_FLOAT_PARAMETER:
+	{
+		float value[5];
+		for (int i = 0; i < 5; i++) {
+			value[i] = atoff(argv[i]);
+			if (cisnan(value[i])) {
+				efiPrintf("invalid float [%s]", argv[i]);
+				return -1;
+			}
+		}
+		VoidFloatFloatFloatFloatFloat callbackS = (VoidFloatFloatFloatFloatFloat) current->callback;
+		(*callbackS)(value[0], value[1], value[2], value[3], value[4]);
+		return 0;
+	}
+	case INT_FLOAT_PARAMETER:
+	{
+		int value1 = atoi(argv[0]);
 		if (absI(value1) == ERROR_CODE) {
-#if EFI_PROD_CODE || EFI_SIMULATOR
-			efiPrintf("not an integer [%s]", parameter);
-#endif
-			return;
+			#if EFI_PROD_CODE || EFI_SIMULATOR
+				efiPrintf("not an integer [%s]", argv[0]);
+			#endif
+			return -1;
 		}
-		parameter += spaceIndex + 1;
-		float value2 = atoff(parameter);
-
+		float value2 = atoff(argv[1]);
 		if (cisnan(value2)) {
-			efiPrintf("invalid float [%s]", parameter);
-			return;
+			efiPrintf("invalid float [%s]", argv[1]);
+			return -1;
 		}
-		
 		VoidIntFloat callback = (VoidIntFloat) current->callback;
 		callback(value1, value2);
-
-		return;
+		return 0;
 	}
-
-	int value = atoi(parameter);
-	if (absI(value) == ERROR_CODE) {
-		efiPrintf("invalid integer [%s]", parameter);
-		return;
-	}
-
-	if (current->parameterType == ONE_PARAMETER_P) {
-		VoidIntVoidPtr callback1 = (VoidIntVoidPtr) current->callback;
-		// invoke callback function by reference
-		(*callback1)(value, current->param);
-
-	} else {
-		VoidInt callback1 = (VoidInt) current->callback;
-		// invoke callback function by reference
-		(*callback1)(value);
-	}
-
-}
-
-/**
- * @return Number of space-separated tokens in the string
- */
-int tokenLength(const char *msgp) {
-	int result = 0;
-	while (*msgp) {
-		char ch = *msgp++;
-		if (ch == SPACE_CHAR) {
-			break;
+	case ONE_PARAMETER_P:
+	case ONE_PARAMETER:
+	{
+		int value = atoi(argv[0]);
+		if (absI(value) == ERROR_CODE) {
+			#if EFI_PROD_CODE || EFI_SIMULATOR
+				efiPrintf("not an integer [%s]", argv[0]);
+			#endif
+			return -1;
 		}
-		result++;
+		if (current->parameterType == ONE_PARAMETER_P) {
+			VoidIntVoidPtr callback1 = (VoidIntVoidPtr) current->callback;
+			(*callback1)(value, current->param);
+
+		} else {
+			VoidInt callback1 = (VoidInt) current->callback;
+			(*callback1)(value);
+		}
+		return 0;
 	}
-	return result;
+	default:
+		efiPrintf("Unsupported parameterType %d", current->parameterType);
+		break;
+	}
+	return -1;
 }
 
 void initConsoleLogic() {
@@ -509,41 +461,42 @@ char *validateSecureLine(char *line) {
 static char handleBuffer[200];
 
 static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
-	strncpy(handleBuffer, commandLine, sizeof(handleBuffer) - 1);
-	handleBuffer[sizeof(handleBuffer) - 1] = 0; // we want this to be null-terminated for sure
-	char *line = handleBuffer;
-	int firstTokenLength = tokenLength(line);
+	int len = minI(lineLength, sizeof(handleBuffer) - 1);
 
-//	print("processing [%s] with %d actions\r\n", line, consoleActionCount);
+	strncpy(handleBuffer, commandLine, len);
+	handleBuffer[len] = 0; // we want this to be null-terminated for sure
 
-	if (firstTokenLength == lineLength) {
-		// no-param actions are processed here
-		for (int i = 0; i < consoleActionCount; i++) {
-			TokenCallback *current = &consoleActions[i];
-			if (strEqual(line, current->token)) {
-				if (current->parameterType == NO_PARAMETER) {
-					(*current->callback)();
-				} else if (current->parameterType == NO_PARAMETER_P) {
-					VoidPtr cb = (VoidPtr) current->callback;
-					(*cb)(current->param);
-				}
-				return true;
+	efiPrintf("input: %s", handleBuffer);
+
+	char *argv[10];
+	int argc = setargs(handleBuffer, argv, 10);
+
+	if (argc <= 0) {
+		efiPrintf("invalid input");
+		return false;
+	}
+
+	efiPrintf("Got %d:", argc);
+	for (int i = 0; i < argc; i++) {
+		efiPrintf("[%d]: %s", i, argv[i]);
+	}
+
+	for (int i = 0; i < consoleActionCount; i++) {
+		TokenCallback *current = &consoleActions[i];
+		if (strEqual(argv[0], current->token)) {
+			if ((argc - 1) != getParameterCount(current->parameterType)) {
+				efiPrintf("Incorrect argument count %d, expected %d",
+					(argc - 1), getParameterCount(current->parameterType));
+				return false;
 			}
-		}
-	} else {
-		char *ptr = line + firstTokenLength;
-		ptr[0] = 0; // change space into line end
-		ptr++; // start from next symbol
 
-		for (int i = 0; i < consoleActionCount; i++) {
-			TokenCallback *current = &consoleActions[i];
-			if (strEqual(line, current->token)) {
-				handleActionWithParameter(current, ptr);
-				return true;
-			}
+			/* skip commant name */
+			return handleActionWithParameter(current, argv + 1, argc - 1);
 		}
 	}
-	return false;
+
+	/* unknown command */
+	return 0;
 }
 
 /**
@@ -562,10 +515,13 @@ void handleConsoleLine(char *line) {
 		return;
 	}
 
-	bool isKnownComman = handleConsoleLineInternal(line, lineLength);
+	int ret = handleConsoleLineInternal(line, lineLength);
 
-	if (!isKnownComman) {
+	if (ret == 0) {
 		efiPrintf("unknown command [%s]", line);
+		return;
+	} else if (ret < 0) {
+		efiPrintf("failed to handle command [%s]", line);
 		return;
 	}
 
