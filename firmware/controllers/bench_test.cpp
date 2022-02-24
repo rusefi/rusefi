@@ -126,13 +126,13 @@ static int count;
 static brain_pin_e brainPin;
 static OutputPin* pinX;
 
-static void pinbench(float dly, float on, float off, int cnt,
+static void pinbench(float startdelay, float ontime, float offtime, int iterations,
 	OutputPin* pinParam, brain_pin_e brainPinParam)
 {
-	startDelayMs = dly;
-	onTime = on;
-	offTime = off;
-	count = cnt;
+	startDelayMs = startdelay;
+	onTime = ontime;
+	offTime = offtime;
+	count = iterations;
 	pinX = pinParam;
 	brainPin = brainPinParam;
 	// let's signal bench thread to wake up
