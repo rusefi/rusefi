@@ -168,14 +168,13 @@ static void doRunSparkBench(size_t humanIndex, float delay, float onTime, float 
 		&enginePins.coils[humanIndex - 1], engineConfiguration->ignitionPins[humanIndex - 1]);
 }
 
-static void doTestSolenoid(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
-		const char *countStr) {
+static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
 	if (humanIndex < 1 || humanIndex > TCU_SOLENOID_COUNT) {
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	brain_pin_e b = engineConfiguration->tcu_solenoid[humanIndex - 1];
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.tcuSolenoids[humanIndex - 1], b);
+	pinbench_float(delay, onTime, offTime, count,
+		&enginePins.tcuSolenoids[humanIndex - 1], engineConfiguration->tcu_solenoid[humanIndex - 1]);
 }
 
 static void doBenchTestFsio(int /*humanIndex*/, const char * /*delayStr*/, const char * /*onTimeStr*/, const char * /*offTimeStr*/,
@@ -223,10 +222,8 @@ static void sparkBench(float onTime, float offTime, float count) {
  * delay 100, solenoid #2, 1000ms ON, 1000ms OFF, repeat 3 times
  * tcusolbench 100 2 1000 1000 3
  */
-static void tcusolbench(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
-		const char *countStr) {
-	int index = atoi(indexStr);
-	doTestSolenoid(index, delayStr, onTimeStr, offTimeStr, countStr);
+static void tcuSolenoidBench(float delay, float humanIndex, float onTime, float offTime, float count) {
+	doRunSolenoidBench((int)humanIndex, delay, onTime, offTime, (int)count);
 }
 
 /**
@@ -473,7 +470,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case CMD_TS_SOLENOID_CATEGORY:
 		if (!running) {
-			doTestSolenoid(index, "300", "1000", "1000", counterBuffer);
+			doRunSolenoidBench(index, 300.0, 1000.0,
+				1000.0, engineConfiguration->benchTestCount);
 		}
 		break;
 
@@ -557,6 +555,8 @@ void initBenchTest() {
 	addConsoleActionFFF(CMD_SPARK_BENCH, sparkBench);
 	addConsoleActionFFFFF("sparkbench2", sparkBenchExt);
 
+	addConsoleActionFFFFF("tcusolbench", tcuSolenoidBench);
+
 	addConsoleAction(CMD_AC_RELAY_BENCH, acRelayBench);
 
 	addConsoleAction(CMD_FAN_BENCH, fanBench);
@@ -573,7 +573,6 @@ void initBenchTest() {
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
-	addConsoleActionSSSSS("tcusolbench", tcusolbench);
 	addConsoleActionSSSSS("fsiobench2", fsioBench2);
 	instance.setPeriod(200 /*ms*/);
 	instance.Start();
