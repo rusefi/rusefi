@@ -177,15 +177,14 @@ static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, flo
 		&enginePins.tcuSolenoids[humanIndex - 1], engineConfiguration->tcu_solenoid[humanIndex - 1]);
 }
 
-static void doBenchTestFsio(int /*humanIndex*/, const char * /*delayStr*/, const char * /*onTimeStr*/, const char * /*offTimeStr*/,
-		const char * /*countStr*/) {
+static void doRunBenchTestFsio(size_t /* humanIndex */, float /* delay */, float /* onTime */, float /* offTime */, int /* count */) {
 //	if (humanIndex < 1 || humanIndex > FSIO_COMMAND_COUNT) {
 //		efiPrintf("Invalid index: %d", humanIndex);
 //		return;
 //	}
 // todo: convert in lua bench test
-//	brain_pin_e b = engineConfiguration->fsioOutputPins[humanIndex - 1];
-//	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.fsioOutputs[humanIndex - 1], b);
+//	pinbench_float(delay, onTime, offTime, count,
+//		&enginePins.fsioOutputs[humanIndex - 1], engineConfiguration->fsioOutputPins[humanIndex - 1]);
 }
 
 /**
@@ -230,41 +229,45 @@ static void tcuSolenoidBench(float delay, float humanIndex, float onTime, float 
  * delay 100, channel #1, 5ms ON, 1000ms OFF, repeat 3 times
  * fsiobench2 100 1 5 1000 3
  */
-static void fsioBench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
-		const char *countStr) {
-	int index = atoi(indexStr);
-	doBenchTestFsio(index, delayStr, onTimeStr, offTimeStr, countStr);
+static void fsioBench2(float delay, float humanIndex, float onTime, float offTime, float count) {
+	doRunBenchTestFsio((int)humanIndex, delay, onTime, offTime, (int)count);
 }
 
-static void fanBenchExt(const char *durationMs) {
-	pinbench("0", durationMs, "100", "1", &enginePins.fanRelay, engineConfiguration->fanPin);
+static void fanBenchExt(float onTime) {
+	pinbench_float(0.0, onTime, 100.0, 1.0,
+		&enginePins.fanRelay, engineConfiguration->fanPin);
 }
 
 void fanBench(void) {
-	fanBenchExt("3000");
+	fanBenchExt(3000.0);
 }
 
 void fan2Bench(void) {
-	pinbench("0", "3000", "100", "1", &enginePins.fanRelay2, engineConfiguration->fan2Pin);
+	pinbench_float(0.0, 3000.0, 100.0, 1.0,
+		&enginePins.fanRelay2, engineConfiguration->fan2Pin);
 }
 
 /**
  * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
  */
 void milBench(void) {
-	pinbench("0", "500", "500", "16", &enginePins.checkEnginePin, engineConfiguration->malfunctionIndicatorPin);
+	pinbench_float(0.0, 500.0, 500.0, 16,
+		&enginePins.checkEnginePin, engineConfiguration->malfunctionIndicatorPin);
 }
 
 void starterRelayBench(void) {
-	pinbench("0", "6000", "100", "1", &enginePins.starterControl, engineConfiguration->starterControlPin);
+	pinbench_float(0.0, 6000.0, 100.0, 1,
+		&enginePins.starterControl, engineConfiguration->starterControlPin);
 }
 
 void fuelPumpBenchExt(float durationMs) {
-	pinbench_float(0.0, durationMs, 100.0, 1.0, &enginePins.fuelPumpRelay, engineConfiguration->fuelPumpPin);
+	pinbench_float(0.0, durationMs, 100.0, 1.0,
+		&enginePins.fuelPumpRelay, engineConfiguration->fuelPumpPin);
 }
 
 void acRelayBench(void) {
-	pinbench("0", "1000", "100", "1", &enginePins.acRelay, engineConfiguration->acRelayPin);
+	pinbench_float(0.0, 1000.0, 100.0, 1,
+		&enginePins.acRelay, engineConfiguration->acRelayPin);
 }
 
 void mainRelayBench(void) {
@@ -273,7 +276,8 @@ void mainRelayBench(void) {
 }
 
 void hpfpValveBench(void) {
-	pinbench(/*delay*/"1000", /* onTime */"20", offTimeBuffer, counterBuffer, &enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
+	pinbench_float(1000.0, 20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
+		&enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
 }
 
 void fuelPumpBench(void) {
@@ -477,7 +481,8 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case CMD_TS_FSIO_CATEGORY:
 		if (!running) {
-			doBenchTestFsio(index, "300", "4", offTimeBuffer, counterBuffer);
+			doRunBenchTestFsio(index, 300.0, 4.0,
+				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
 
@@ -561,8 +566,9 @@ void initBenchTest() {
 
 	addConsoleAction(CMD_FAN_BENCH, fanBench);
 	addConsoleAction(CMD_FAN2_BENCH, fan2Bench);
+	addConsoleActionF("fanbench2", fanBenchExt);
+
 	addConsoleAction("mainrelaybench", mainRelayBench);
-	addConsoleActionS("fanbench2", fanBenchExt);
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 	addConsoleAction("update_wideband", []() { widebandUpdatePending = true; });
@@ -573,7 +579,7 @@ void initBenchTest() {
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
-	addConsoleActionSSSSS("fsiobench2", fsioBench2);
+	addConsoleActionFFFFF("fsiobench2", fsioBench2);
 	instance.setPeriod(200 /*ms*/);
 	instance.Start();
 	onConfigurationChangeBenchTest();
