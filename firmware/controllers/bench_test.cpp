@@ -53,9 +53,6 @@
 #endif // BOARD_TLE8888_COUNT
 
 static bool isRunningBench = false;
-// yes that's a bit lazy/crazy to have those as strings
-static char offTimeBuffer[8];
-static char counterBuffer[8];
 
 bool isRunningBenchTest(void) {
 	return isRunningBench;
@@ -83,9 +80,9 @@ static void benchOff(OutputPin* output) {
 	output->setValue(false);
 }
 
-static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, float onTimeMs, float offTimeMs,
+static void runBench(brain_pin_e brainPin, OutputPin *output, float startDelayMs, float onTimeMs, float offTimeMs,
 		int count) {
-	int delayUs = MS2US(maxF(0.1, delayMs));
+	int startDelayUs = MS2US(maxF(0.1, startDelayMs));
 	int onTimeUs = MS2US(maxF(0.1, onTimeMs));
 	int offTimeUs = MS2US(maxF(0.1, offTimeMs));
 
@@ -97,7 +94,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float delayMs, flo
 	efiPrintf("Running bench: ON_TIME=%d us OFF_TIME=%d us Counter=%d", onTimeUs, offTimeUs, count);
 	efiPrintf("output on %s", hwPortname(brainPin));
 
-	chThdSleepMicroseconds(delayUs);
+	chThdSleepMicroseconds(startDelayUs);
 
 	isRunningBench = true;
 
@@ -124,12 +121,12 @@ static volatile bool isBenchTestPending = false;
 static bool widebandUpdatePending = false;
 static float onTime;
 static float offTime;
-static float delayMs;
+static float startDelayMs;
 static int count;
 static brain_pin_e brainPin;
 static OutputPin* pinX;
 
-static void pinbench_float(float dly, float on, float off, int cnt,
+static void pinbench(float dly, float on, float off, int cnt,
 	OutputPin* pinParam, brain_pin_e brainPinParam)
 {
 	startDelayMs = dly;
@@ -142,12 +139,6 @@ static void pinbench_float(float dly, float on, float off, int cnt,
 	isBenchTestPending = true;
 }
 
-static void pinbench(const char *startDelayStr, const char *onTimeStr, const char *offTimeStr, const char *countStr,
-		OutputPin* pinParam, brain_pin_e brainPinParam) {
-	pinbench_float(atoff(startDelayStr), atoff(onTimeStr), atoff(offTimeStr), atoi(countStr),
-		pinParam, brainPinParam);
-}
-
 /*==========================================================================*/
 
 static void doRunFuelInjBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
@@ -155,7 +146,7 @@ static void doRunFuelInjBench(size_t humanIndex, float delay, float onTime, floa
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench_float(delay, onTime, offTime, count,
+	pinbench(delay, onTime, offTime, count,
 		&enginePins.injectors[humanIndex - 1], engineConfiguration->injectionPins[humanIndex - 1]);
 }
 
@@ -164,7 +155,7 @@ static void doRunSparkBench(size_t humanIndex, float delay, float onTime, float 
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench_float(delay, onTime, offTime, count,
+	pinbench(delay, onTime, offTime, count,
 		&enginePins.coils[humanIndex - 1], engineConfiguration->ignitionPins[humanIndex - 1]);
 }
 
@@ -173,7 +164,7 @@ static void doRunSolenoidBench(size_t humanIndex, float delay, float onTime, flo
 		efiPrintf("Invalid index: %d", humanIndex);
 		return;
 	}
-	pinbench_float(delay, onTime, offTime, count,
+	pinbench(delay, onTime, offTime, count,
 		&enginePins.tcuSolenoids[humanIndex - 1], engineConfiguration->tcu_solenoid[humanIndex - 1]);
 }
 
@@ -183,7 +174,7 @@ static void doRunBenchTestFsio(size_t /* humanIndex */, float /* delay */, float
 //		return;
 //	}
 // todo: convert in lua bench test
-//	pinbench_float(delay, onTime, offTime, count,
+//	pinbench(delay, onTime, offTime, count,
 //		&enginePins.fsioOutputs[humanIndex - 1], engineConfiguration->fsioOutputPins[humanIndex - 1]);
 }
 
@@ -234,7 +225,7 @@ static void fsioBench2(float delay, float humanIndex, float onTime, float offTim
 }
 
 static void fanBenchExt(float onTime) {
-	pinbench_float(0.0, onTime, 100.0, 1.0,
+	pinbench(0.0, onTime, 100.0, 1.0,
 		&enginePins.fanRelay, engineConfiguration->fanPin);
 }
 
@@ -243,7 +234,7 @@ void fanBench(void) {
 }
 
 void fan2Bench(void) {
-	pinbench_float(0.0, 3000.0, 100.0, 1.0,
+	pinbench(0.0, 3000.0, 100.0, 1.0,
 		&enginePins.fanRelay2, engineConfiguration->fan2Pin);
 }
 
@@ -251,32 +242,32 @@ void fan2Bench(void) {
  * we are blinking for 16 seconds so that one can click the button and walk around to see the light blinking
  */
 void milBench(void) {
-	pinbench_float(0.0, 500.0, 500.0, 16,
+	pinbench(0.0, 500.0, 500.0, 16,
 		&enginePins.checkEnginePin, engineConfiguration->malfunctionIndicatorPin);
 }
 
 void starterRelayBench(void) {
-	pinbench_float(0.0, 6000.0, 100.0, 1,
+	pinbench(0.0, 6000.0, 100.0, 1,
 		&enginePins.starterControl, engineConfiguration->starterControlPin);
 }
 
-void fuelPumpBenchExt(float durationMs) {
-	pinbench_float(0.0, durationMs, 100.0, 1.0,
+static void fuelPumpBenchExt(float durationMs) {
+	pinbench(0.0, durationMs, 100.0, 1.0,
 		&enginePins.fuelPumpRelay, engineConfiguration->fuelPumpPin);
 }
 
 void acRelayBench(void) {
-	pinbench_float(0.0, 1000.0, 100.0, 1,
+	pinbench(0.0, 1000.0, 100.0, 1,
 		&enginePins.acRelay, engineConfiguration->acRelayPin);
 }
 
-void mainRelayBench(void) {
+static void mainRelayBench(void) {
 	// main relay is usually "ON" via FSIO thus bench testing that one is pretty unusual
 	engine->mainRelayBenchStartNt = getTimeNowNt();
 }
 
-void hpfpValveBench(void) {
-	pinbench_float(1000.0, 20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
+static void hpfpValveBench(void) {
+	pinbench(1000.0, 20.0, engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount,
 		&enginePins.hpfpValve, engineConfiguration->hpfpValvePin);
 }
 
@@ -297,7 +288,7 @@ private:
 		// naive inter-thread communication - waiting for a flag
 		if (isBenchTestPending) {
 			isBenchTestPending = false;
-			runBench(brainPin, pinX, delayMs, onTime, offTime, count);
+			runBench(brainPin, pinX, startDelayMs, onTime, offTime, count);
 		}
 
 		if (widebandUpdatePending) {
@@ -546,8 +537,6 @@ void onConfigurationChangeBenchTest() {
 		engineConfiguration->benchTestOffTime = 500; // default value if configuration was not specified
 	if (engineConfiguration->benchTestCount < 1)
 		engineConfiguration->benchTestCount = 3; // default value if configuration was not specified
-	itoa10(offTimeBuffer, engineConfiguration->benchTestOffTime);
-	itoa10(counterBuffer, engineConfiguration->benchTestCount);
 }
 
 void initBenchTest() {
