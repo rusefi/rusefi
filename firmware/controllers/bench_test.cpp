@@ -159,6 +159,15 @@ static void doRunFuelInjBench(size_t humanIndex, float delay, float onTime, floa
 		&enginePins.injectors[humanIndex - 1], engineConfiguration->injectionPins[humanIndex - 1]);
 }
 
+static void doRunSparkBench(size_t humanIndex, float delay, float onTime, float offTime, int count) {
+	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
+		efiPrintf("Invalid index: %d", humanIndex);
+		return;
+	}
+	pinbench_float(delay, onTime, offTime, count,
+		&enginePins.coils[humanIndex - 1], engineConfiguration->ignitionPins[humanIndex - 1]);
+}
+
 static void doTestSolenoid(int humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
 		const char *countStr) {
 	if (humanIndex < 1 || humanIndex > TCU_SOLENOID_COUNT) {
@@ -193,6 +202,21 @@ static void fuelInjBenchExt(float delay, float humanIndex, float onTime, float o
  */
 static void fuelInjBench(float onTime, float offTime, float count) {
 	fuelInjBenchExt(0.0, 1, onTime, offTime, count);
+}
+
+/**
+ * sparkbench2 0 1 5 1000 2
+ */
+static void sparkBenchExt(float delay, float humanIndex, float onTime, float offTime, float count) {
+	doRunSparkBench((int)humanIndex, delay, onTime, offTime, (int)count);
+}
+
+/**
+ * sparkbench 5 400 2
+ * 5 ms ON, 400 ms OFF, two times
+ */
+static void sparkBench(float onTime, float offTime, float count) {
+	sparkBenchExt(0.0, 1, onTime, offTime, count);
 }
 
 /**
@@ -257,33 +281,6 @@ void hpfpValveBench(void) {
 
 void fuelPumpBench(void) {
 	fuelPumpBenchExt(3000.0);
-}
-
-static void doRunSpark(size_t humanIndex, const char *delayStr, const char * onTimeStr, const char *offTimeStr,
-		const char *countStr) {
-	if (humanIndex < 1 || humanIndex > engineConfiguration->specs.cylindersCount) {
-		efiPrintf("Invalid index: %d", humanIndex);
-		return;
-	}
-	brain_pin_e b = engineConfiguration->ignitionPins[humanIndex - 1];
-	pinbench(delayStr, onTimeStr, offTimeStr, countStr, &enginePins.coils[humanIndex - 1], b);
-}
-
-/**
- * sparkbench2 0 1 5 1000 2
- */
-static void sparkbench2(const char *delayStr, const char *indexStr, const char * onTimeStr, const char *offTimeStr,
-		const char *countStr) {
-	int index = atoi(indexStr);
-	doRunSpark(index, delayStr, onTimeStr, offTimeStr, countStr);
-}
-
-/**
- * sparkbench 5 400 2
- * 5 ms ON, 400 ms OFF, two times
- */
-static void sparkbench(const char * onTimeStr, const char *offTimeStr, const char *countStr) {
-	sparkbench2("0", "1", onTimeStr, offTimeStr, countStr);
 }
 
 class BenchController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
@@ -461,7 +458,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 
 	case TS_IGNITION_CATEGORY:
 		if (!running) {
-			doRunSpark(index, "300", "4", offTimeBuffer, counterBuffer);
+			/* WARN: fixed charge time */
+			doRunSparkBench(index, 300.0, 4.0,
+				engineConfiguration->benchTestOffTime, engineConfiguration->benchTestCount);
 		}
 		break;
 
@@ -555,6 +554,9 @@ void initBenchTest() {
 	addConsoleActionFFF(CMD_FUEL_BENCH, fuelInjBench);
 	addConsoleActionFFFFF("fuelbench2", fuelInjBenchExt);
 
+	addConsoleActionFFF(CMD_SPARK_BENCH, sparkBench);
+	addConsoleActionFFFFF("sparkbench2", sparkBenchExt);
+
 	addConsoleAction(CMD_AC_RELAY_BENCH, acRelayBench);
 
 	addConsoleAction(CMD_FAN_BENCH, fanBench);
@@ -569,12 +571,10 @@ void initBenchTest() {
 
 	addConsoleAction(CMD_STARTER_BENCH, starterRelayBench);
 	addConsoleAction(CMD_MIL_BENCH, milBench);
-	addConsoleActionSSS(CMD_SPARK_BENCH, sparkbench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
 	addConsoleActionSSSSS("tcusolbench", tcusolbench);
 	addConsoleActionSSSSS("fsiobench2", fsioBench2);
-	addConsoleActionSSSSS("sparkbench2", sparkbench2);
 	instance.setPeriod(200 /*ms*/);
 	instance.Start();
 	onConfigurationChangeBenchTest();
