@@ -27,6 +27,7 @@
 #include "sensor_chart.h"
 #include "serial_hw.h"
 #include "idle_thread.h"
+#include "odometer.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -503,7 +504,7 @@ void initHardware() {
 
 #if STM32_I2C_USE_I2C3
 	if (engineConfiguration->useEeprom) {
-	    i2cStart(&I2CD3, &i2cfg);
+	    i2cStart(&EE_U2CD, &i2cfg);
 	}
 #endif // STM32_I2C_USE_I2C3
 

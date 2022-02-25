@@ -17,6 +17,7 @@
 #include "mre_meta.h"
 #include "proteus_meta.h"
 #include "hellen_meta.h"
+#include "odometer.h"
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"
@@ -304,15 +305,12 @@ void setIssue898() {
 
 #if HW_FRANKENSO && EFI_PROD_CODE
 
-#define EE_PAGE_SIZE 32
 
 // todo: page_size + 2
 // todo:  CC_SECTION(".nocache")
 static uint8_t write_buf[EE_PAGE_SIZE + 10];
 
 
-#define EE_SIZE 4096
-#define EE_U2CD I2CD3
 #define EEPROM_WRITE_TIME_MS    10          /* time to write one page in ms. Consult datasheet! */
 
 /**
