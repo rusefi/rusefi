@@ -31,6 +31,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
 	$(PROJECT_DIR)/config/boards/hellen/hellen_board_id.cpp \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
+	$(PROJECT_DIR)/../unit_tests/native/native_impl.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \
 	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/../unit_tests/mocks.cpp \
