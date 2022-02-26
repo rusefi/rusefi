@@ -9,6 +9,7 @@ ifeq ($(BUILDDIR),.)
   BUILDDIR = build
 endif
 BINARY_OUTPUT = $(BUILDDIR)/$(PROJECT)
+SHARED_OUTPUT = $(BUILDDIR)/lib_$(PROJECT)
 
 # Automatic compiler options
 OPT = $(USE_OPT)
@@ -87,7 +88,7 @@ VPATH     = $(SRCPATHS)
 # Makefile rules
 #
 
-all: $(OBJS) $(BINARY_OUTPUT) MAKE_ALL_RULE_HOOK
+all: $(OBJS) $(BINARY_OUTPUT) $(SHARED_OUTPUT) MAKE_ALL_RULE_HOOK
 
 MAKE_ALL_RULE_HOOK:
 
@@ -165,6 +166,10 @@ else
 	@echo Linking $@
 	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@
 endif
+
+$(SHARED_OUTPUT): $(OBJS)
+	@echo Linking shared library $@
+	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@ -shared
 
 clean: CLEAN_RULE_HOOK
 	@echo Cleaning
