@@ -255,9 +255,7 @@ static int setargs(char *args, char **argv, int max_args)
 		}
 		while ((*args) && (!isspace(*args))) {
 			if (*args == '"') {
-				/* skip starting */
 				args++;
-				argv[count] = args;
 				/* find closing quote */
 				while ((*args) && (*args != '"')) {
 					args++;
@@ -266,8 +264,6 @@ static int setargs(char *args, char **argv, int max_args)
 				if (*args == '\0') {
 					return -1;
 				}
-				/* skip closing */
-				*args = '\0';
 			}
 			args++;
 		}
