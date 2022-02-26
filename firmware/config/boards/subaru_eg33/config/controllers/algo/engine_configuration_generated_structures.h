@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 01:38:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 14:29:11 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -617,11 +617,11 @@ struct idle_hardware_s {
 	/**
 	 * offset 5
 	 */
-	output_pin_e stepperDirectionPin;
+	brain_pin_e stepperDirectionPin;
 	/**
 	 * offset 6
 	 */
-	output_pin_e stepperStepPin;
+	brain_pin_e stepperStepPin;
 	/**
 	 * offset 7
 	 */
@@ -3532,7 +3532,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2696
 	 */
-	output_pin_e stepperEnablePin;
+	brain_pin_e stepperEnablePin;
 	/**
 	 * offset 2697
 	 */
@@ -4537,4 +4537,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 01:38:24 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 14:29:11 UTC 2022
