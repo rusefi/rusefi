@@ -88,6 +88,10 @@
         </javac>
     </target>
 
+    <target name="native_header">
+        <javah classpath="io/src/main/java" destdir="../unit_tests/native" class="com.rusefi.native_.EngineLogic"/>
+    </target>
+
     <target name="test" depends="compile, copy_c_sources">
         <junit fork="no"
                maxmemory="512m"
