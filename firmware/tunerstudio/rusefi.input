@@ -2060,17 +2060,17 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 	dialog = testInjectors, "Injector Test"
 		commandButton = "Injector #1", cmd_test_inj1
-		commandButton = "Injector #2", cmd_test_inj2
-		commandButton = "Injector #3", cmd_test_inj3
-		commandButton = "Injector #4", cmd_test_inj4
-		commandButton = "Injector #5", cmd_test_inj5
-		commandButton = "Injector #6", cmd_test_inj6
-		commandButton = "Injector #7", cmd_test_inj7
-		commandButton = "Injector #8", cmd_test_inj8
-		commandButton = "Injector #9", cmd_test_inj9
-		commandButton = "Injector #10", cmd_test_inj10
-		commandButton = "Injector #11", cmd_test_inj11
-		commandButton = "Injector #12", cmd_test_inj12
+		commandButton = "Injector #2", cmd_test_inj2,   { cylindersCount >= 2 }
+		commandButton = "Injector #3", cmd_test_inj3,   { cylindersCount >= 3 }
+		commandButton = "Injector #4", cmd_test_inj4,   { cylindersCount >= 4 }
+		commandButton = "Injector #5", cmd_test_inj5,   { cylindersCount >= 5 }
+		commandButton = "Injector #6", cmd_test_inj6,   { cylindersCount >= 6 }
+		commandButton = "Injector #7", cmd_test_inj7,   { cylindersCount >= 7 }
+		commandButton = "Injector #8", cmd_test_inj8,   { cylindersCount >= 8 }
+		commandButton = "Injector #9", cmd_test_inj9,   { cylindersCount >= 9 }
+		commandButton = "Injector #10", cmd_test_inj10, { cylindersCount >= 10 }
+		commandButton = "Injector #11", cmd_test_inj11, { cylindersCount >= 11 }
+		commandButton = "Injector #12", cmd_test_inj12, { cylindersCount >= 12 }
 
 	dialog = testSolenoids, "TCU Solenoid Test"
 		commandButton = "Solenoid #1", cmd_test_sol1
@@ -3523,18 +3523,18 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 
 
 	dialog = testSpark, "Spark"
-		commandButton = "Spark #1", cmd_test_spk1
-		commandButton = "Spark #2", cmd_test_spk2
-		commandButton = "Spark #3", cmd_test_spk3
-		commandButton = "Spark #4", cmd_test_spk4
-		commandButton = "Spark #5", cmd_test_spk5
-		commandButton = "Spark #6", cmd_test_spk6
-		commandButton = "Spark #7", cmd_test_spk7
-		commandButton = "Spark #8", cmd_test_spk8
-		commandButton = "Spark #9", cmd_test_spk9
-		commandButton = "Spark #10",cmd_test_spk10
-		commandButton = "Spark #11",cmd_test_spk11
-		commandButton = "Spark #12",cmd_test_spk12
+		commandButton = "Spark #1",  cmd_test_spk1
+		commandButton = "Spark #2",  cmd_test_spk2,  { cylindersCount >= 2 }
+		commandButton = "Spark #3",  cmd_test_spk3,  { cylindersCount >= 3 }
+		commandButton = "Spark #4",  cmd_test_spk4,  { cylindersCount >= 4 }
+		commandButton = "Spark #5",  cmd_test_spk5,  { cylindersCount >= 5 }
+		commandButton = "Spark #6",  cmd_test_spk6,  { cylindersCount >= 6 }
+		commandButton = "Spark #7",  cmd_test_spk7,  { cylindersCount >= 7 }
+		commandButton = "Spark #8",  cmd_test_spk8,  { cylindersCount >= 8 }
+		commandButton = "Spark #9",  cmd_test_spk9,  { cylindersCount >= 9 }
+		commandButton = "Spark #10", cmd_test_spk10, { cylindersCount >= 10 }
+		commandButton = "Spark #11", cmd_test_spk11, { cylindersCount >= 11 }
+		commandButton = "Spark #12", cmd_test_spk12, { cylindersCount >= 12 }
 
 	dialog = testMisc, "Misc"
 ;		commandButton = "Come To Pit", cmd_call_from_pit
