@@ -80,7 +80,7 @@ VPATH     = $(SRCPATHS)
 # Makefile rules
 #
 
-all: $(OBJS) $(BINARY_OUTPUT) MAKE_ALL_RULE_HOOK
+all: $(OBJS) $(BINARY_OUTPUT) $(SHARED_OUTPUT) MAKE_ALL_RULE_HOOK
 
 MAKE_ALL_RULE_HOOK:
 
@@ -143,7 +143,7 @@ endif
 
 $(SHARED_OUTPUT): $(OBJS)
 	@echo Linking shared library $@
-	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@ -shared
+	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@.dll -shared
 
 clean: CLEAN_RULE_HOOK
 	@echo Cleaning

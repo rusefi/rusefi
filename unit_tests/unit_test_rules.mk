@@ -132,8 +132,7 @@ OD   = $(TRGT)objdump
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
 
-# ARM-specific options here
-AOPT =
+AOPT = -fPIC
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition
