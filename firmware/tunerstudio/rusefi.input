@@ -320,14 +320,6 @@ enable2ndByteCanID = false
       yBins       = knockNoise
       gauge       = RPMGauge
 
-	curve = torqueCurve, "Engine Torque"
-      columnLabel = "RPM", "Nm"
-      xAxis       =  0, 8000, 9
-      yAxis       =  0,  8, 10
-      xBins       = torqueRpmBins, RPMValue
-      yBins       = torqueValues
-      gauge       = RPMGauge
-
 	curve = swKnockThresholdCurve, "Engine knock threshold RPM based"
       columnLabel = "RPM", "Threshold dB"
       xAxis       =  0, 8000, 9
@@ -737,6 +729,13 @@ enable2ndByteCanID = false
 ;      gridHeight  = 2.0
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
+
+	curve = torqueTableTbl, torqueTableMap, "Engine Torque"
+      xBins       = torqueRpmBins, RPMValue
+      yBins       = torqueLoadBins
+      zBins       = torqueTable
+      gauge       = RPMGauge
+
 
    table = veTableTbl,  veTableMap,  "VE Table",   1
       ;       constant, variable
@@ -3735,7 +3734,7 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Always use instant RPM",				alwaysInstantRpm
 		panel = mapCamDialog
 		panel = allTriggerDebug
-		panel = torqueCurve
+		panel = torqueTableTbl
 
        help = helpGeneral, "rusEFI General Help"
         webHelp = @@MAIN_HELP_URL@@
