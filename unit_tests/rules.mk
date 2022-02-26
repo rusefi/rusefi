@@ -19,17 +19,11 @@ ifeq ($(USE_LINK_GC),yes)
   OPT += -ffunction-sections -fdata-sections -fno-common
 endif
 
-# Source files groups and paths
-ifeq ($(USE_THUMB),yes)
-  TCSRC += $(CSRC)
-  TCPPSRC += $(CPPSRC)
-else
-  ACSRC += $(CSRC)
-  ACPPSRC += $(CPPSRC)
-endif
+ACSRC += $(CSRC)
+ACPPSRC += $(CPPSRC)
+
 ASRC	  = $(ACSRC)$(ACPPSRC)
-TSRC	  = $(TCSRC)$(TCPPSRC)
-SRCPATHS  = $(sort $(dir $(ASMXSRC)) $(dir $(ASMSRC)) $(dir $(ASRC)) $(dir $(TSRC)))
+SRCPATHS  = $(sort $(dir $(ASMXSRC)) $(dir $(ASMSRC)) $(dir $(ASRC)))
 
 # Various directories
 OBJDIR    = $(BUILDDIR)/obj
@@ -38,11 +32,9 @@ LSTDIR    = $(BUILDDIR)/lst
 # Object files groups
 ACOBJS    = $(addprefix $(OBJDIR)/, $(notdir $(ACSRC:.c=.o)))
 ACPPOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ACPPSRC:.cpp=.o)))
-TCOBJS    = $(addprefix $(OBJDIR)/, $(notdir $(TCSRC:.c=.o)))
-TCPPOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(TCPPSRC:.cpp=.o)))
 ASMOBJS   = $(addprefix $(OBJDIR)/, $(notdir $(ASMSRC:.s=.o)))
 ASMXOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ASMXSRC:.S=.o)))
-OBJS	  = $(ASMXOBJS) $(ASMOBJS) $(ACOBJS) $(TCOBJS) $(ACPPOBJS) $(TCPPOBJS)
+OBJS	  = $(ASMXOBJS) $(ASMOBJS) $(ACOBJS) $(ACPPOBJS)
 
 # Paths
 IINCDIR   = $(patsubst %,-I%,$(INCDIR) $(DINCDIR) $(UINCDIR))
@@ -112,15 +104,6 @@ else
 	@$(CPPC) -c $(CPPFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
 endif
 
-$(TCPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo
-	$(CPPC) -c $(CPPFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
-else
-	@echo Compiling $(<F)
-	@$(CPPC) -c $(CPPFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
-endif
-
 $(ACOBJS) : $(OBJDIR)/%.o : %.c Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
@@ -128,15 +111,6 @@ ifeq ($(USE_VERBOSE_COMPILE),yes)
 else
 	@echo Compiling $(<F)
 	@$(CC) -c $(CFLAGS) $(AOPT) -I. $(IINCDIR) $< -o $@
-endif
-
-$(TCOBJS) : $(OBJDIR)/%.o : %.c Makefile
-ifeq ($(USE_VERBOSE_COMPILE),yes)
-	@echo
-	$(CC) -c $(CFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
-else
-	@echo Compiling $(<F)
-	@$(CC) -c $(CFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
 endif
 
 $(ASMOBJS) : $(OBJDIR)/%.o : %.s Makefile

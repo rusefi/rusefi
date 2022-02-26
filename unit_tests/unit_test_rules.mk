@@ -83,11 +83,6 @@ ifeq ($(USE_LINK_GC),)
   USE_LINK_GC = yes
 endif
 
-# If enabled, this option allows to compile the application in THUMB mode.
-ifeq ($(USE_THUMB),)
-  USE_THUMB = no
-endif
-
 # Enable this if you want to see the full log while compiling.
 ifeq ($(USE_VERBOSE_COMPILE),)
   USE_VERBOSE_COMPILE = no
@@ -98,12 +93,6 @@ ACSRC =
 
 # C++ sources to be compiled in ARM mode regardless of the global setting.
 ACPPSRC =
-
-# C sources to be compiled in THUMB mode regardless of the global setting.
-TCSRC =
-
-# C sources to be compiled in THUMB mode regardless of the global setting.
-TCPPSRC =
 
 # List ASM source files here
 ASMSRC =
@@ -145,9 +134,6 @@ BIN  = $(CP) -O binary
 
 # ARM-specific options here
 AOPT =
-
-# THUMB-specific options here
-TOPT = -mthumb -DTHUMB
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition
