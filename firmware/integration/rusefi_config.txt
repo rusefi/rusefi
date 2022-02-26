@@ -1314,7 +1314,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	pin_mode_e spi3MosiMode;
 	pin_mode_e spi3MisoMode;
 	
-	brain_pin_e stepperEnablePinMode;
+	pin_output_mode_e stepperEnablePinMode;
 	brain_pin_e mc33816_rstb;ResetB
 	brain_pin_e mc33816_driven
 
@@ -1345,7 +1345,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	float[SCRIPT_CURVE_8] scriptCurve4Bins;;"x", 1, 0, -999, 1000, 3
 	float[SCRIPT_CURVE_8] scriptCurve4;;"y", 1, 0, -999, 1000, 3
 
-	output_pin_e stepperEnablePin;
+	brain_pin_e stepperEnablePin;
 	brain_pin_e tle8888_cs;
 	pin_output_mode_e tle8888_csPinMode;
 	brain_pin_e mc33816_cs;
