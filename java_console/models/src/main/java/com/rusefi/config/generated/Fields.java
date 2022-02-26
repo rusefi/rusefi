@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Fri Feb 25 05:52:42 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 01:38:27 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1579,7 +1579,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 714;
 	public static final int mainRelayPinMode_offset = 756;
-	public static final int mainUnusedEnd_offset = 4690;
+	public static final int mainUnusedEnd_offset = 4750;
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
@@ -1838,7 +1838,6 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 105536734;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2023,9 +2022,10 @@ public class Fields {
 	public static final int TOOTH_PACKET_COUNT = 1000;
 	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
-	public static final int TORQUE_CURVE_SIZE = 8;
-	public static final int torqueRpmBins_offset = 4602;
-	public static final int torqueValues_offset = 4594;
+	public static final int TORQUE_CURVE_SIZE = 6;
+	public static final int torqueLoadBins_offset = 4738;
+	public static final int torqueRpmBins_offset = 4726;
+	public static final int torqueTable_offset = 4690;
 	public static final int TOTAL_CONFIG_SIZE = 21012;
 	public static final int tps1_1AdcChannel_offset = 520;
 	public static final int tps1_2AdcChannel_offset = 689;
@@ -2312,7 +2312,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.02.25.all.105536734";
+	public static final String TS_SIGNATURE = "rusEFI 2022.02.26.all.2210831041";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2401,7 +2401,9 @@ public class Fields {
 	public static final int unusedFiller_4703_offset = 4171;
 	public static final int unusedHere2_offset = 1747;
 	public static final int unusedMapAccelTaperBins_offset = 1792;
+	public static final int unusedRpmBins_offset = 4602;
 	public static final int unusedShort_offset = 4640;
+	public static final int unusedSSValues_offset = 4594;
 	public static final int useAdvanceCorrectionsForCranking_offset = 1272;
 	public static final int useCicPidForIdle_offset = 164;
 	public static final int useEeprom_offset = 164;
@@ -3709,8 +3711,8 @@ public class Fields {
 	public static final Field HPFPCOMPENSATION = Field.create("HPFPCOMPENSATION", 4464, FieldType.INT8);
 	public static final Field HPFPCOMPENSATIONLOADBINS = Field.create("HPFPCOMPENSATIONLOADBINS", 4564, FieldType.INT16);
 	public static final Field HPFPCOMPENSATIONRPMBINS = Field.create("HPFPCOMPENSATIONRPMBINS", 4584, FieldType.INT8);
-	public static final Field TORQUEVALUES = Field.create("TORQUEVALUES", 4594, FieldType.INT8);
-	public static final Field TORQUERPMBINS = Field.create("TORQUERPMBINS", 4602, FieldType.INT16);
+	public static final Field UNUSEDSSVALUES = Field.create("UNUSEDSSVALUES", 4594, FieldType.INT8);
+	public static final Field UNUSEDRPMBINS = Field.create("UNUSEDRPMBINS", 4602, FieldType.INT16);
 	public static final Field STEPPER_RAW_OUTPUT1 = Field.create("STEPPER_RAW_OUTPUT1", 4618, FieldType.INT8, output_pin_e);
 	public static final Field STEPPER_RAW_OUTPUT2 = Field.create("STEPPER_RAW_OUTPUT2", 4619, FieldType.INT8, output_pin_e);
 	public static final Field STEPPER_RAW_OUTPUT3 = Field.create("STEPPER_RAW_OUTPUT3", 4620, FieldType.INT8, output_pin_e);
@@ -3731,7 +3733,10 @@ public class Fields {
 	public static final Field WWMAPBINS = Field.create("WWMAPBINS", 4666, FieldType.INT8);
 	public static final Field WWTAUMAPVALUES = Field.create("WWTAUMAPVALUES", 4674, FieldType.INT8);
 	public static final Field WWBETAMAPVALUES = Field.create("WWBETAMAPVALUES", 4682, FieldType.INT8);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4690, FieldType.INT8);
+	public static final Field TORQUETABLE = Field.create("TORQUETABLE", 4690, FieldType.INT8);
+	public static final Field TORQUERPMBINS = Field.create("TORQUERPMBINS", 4726, FieldType.INT16);
+	public static final Field TORQUELOADBINS = Field.create("TORQUELOADBINS", 4738, FieldType.INT16);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4750, FieldType.INT8);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5020, 120, FieldType.STRING);
 	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5140, FieldType.FLOAT);
 	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5172, FieldType.FLOAT);
@@ -4998,8 +5003,8 @@ public class Fields {
 	HPFPCOMPENSATION,
 	HPFPCOMPENSATIONLOADBINS,
 	HPFPCOMPENSATIONRPMBINS,
-	TORQUEVALUES,
-	TORQUERPMBINS,
+	UNUSEDSSVALUES,
+	UNUSEDRPMBINS,
 	STEPPER_RAW_OUTPUT1,
 	STEPPER_RAW_OUTPUT2,
 	STEPPER_RAW_OUTPUT3,
@@ -5020,6 +5025,9 @@ public class Fields {
 	WWMAPBINS,
 	WWTAUMAPVALUES,
 	WWBETAMAPVALUES,
+	TORQUETABLE,
+	TORQUERPMBINS,
+	TORQUELOADBINS,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,

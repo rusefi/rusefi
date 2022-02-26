@@ -1635,7 +1635,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4690
+#define mainUnusedEnd_offset 4750
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1910,7 +1910,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1019198306
+#define SIGNATURE_HASH 3107159421
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2105,9 +2105,10 @@
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
-#define TORQUE_CURVE_SIZE 8
-#define torqueRpmBins_offset 4602
-#define torqueValues_offset 4594
+#define TORQUE_CURVE_SIZE 6
+#define torqueLoadBins_offset 4738
+#define torqueRpmBins_offset 4726
+#define torqueTable_offset 4690
 #define TOTAL_CONFIG_SIZE 21012
 #define tps1_1AdcChannel_offset 520
 #define tps1_2AdcChannel_offset 689
@@ -2441,7 +2442,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.02.25.hellen_cypress.1019198306"
+#define TS_SIGNATURE "rusEFI 2022.02.26.hellen_cypress.3107159421"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2533,7 +2534,9 @@
 #define unusedFiller_4703_offset 4171
 #define unusedHere2_offset 1747
 #define unusedMapAccelTaperBins_offset 1792
+#define unusedRpmBins_offset 4602
 #define unusedShort_offset 4640
+#define unusedSSValues_offset 4594
 #define useAdvanceCorrectionsForCranking_offset 1272
 #define useCicPidForIdle_offset 164
 #define useEeprom_offset 164

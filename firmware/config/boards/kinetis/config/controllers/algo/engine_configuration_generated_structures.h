@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 10 15:27:21 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 01:38:21 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4036,12 +4036,12 @@ struct engine_configuration_s {
 	Nm
 	 * offset 4566
 	 */
-	scaled_channel<uint8_t, 1, 10> torqueValues[TORQUE_CURVE_SIZE];
+	uint8_t unusedSSValues[8];
 	/**
 	RPM
 	 * offset 4574
 	 */
-	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
+	uint16_t unusedRpmBins[8];
 	/**
 	 * offset 4590
 	 */
@@ -4089,10 +4089,25 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 100, 1> wwBetaMapValues[WWAE_TABLE_SIZE];
 	/**
-	units
+	Nm
 	 * offset 4662
 	 */
-	uint8_t mainUnusedEnd[330];
+	scaled_channel<uint8_t, 1, 10> torqueTable[TORQUE_CURVE_SIZE][TORQUE_CURVE_SIZE];
+	/**
+	RPM
+	 * offset 4698
+	 */
+	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
+	/**
+	Load
+	 * offset 4710
+	 */
+	uint16_t torqueLoadBins[TORQUE_CURVE_SIZE];
+	/**
+	units
+	 * offset 4722
+	 */
+	uint8_t mainUnusedEnd[270];
 	/** total size 4992*/
 };
 
@@ -4516,4 +4531,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Feb 10 15:27:21 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 01:38:21 UTC 2022
