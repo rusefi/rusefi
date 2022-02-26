@@ -137,7 +137,11 @@ AOPT = -fPIC -I$(JAVA_HOME)/include
 ifeq ($(OS),Windows_NT)
  AOPT += -I$(JAVA_HOME)/include/win32
 else
- AOPT += -I$(JAVA_HOME)/include/linux
+ ifeq ($(IS_MAC),yes)
+  AOPT += -I$(JAVA_HOME)/include/darwin
+ else
+  AOPT += -I$(JAVA_HOME)/include/linux
+ endif
 endif
 
 # Define C warning options here
