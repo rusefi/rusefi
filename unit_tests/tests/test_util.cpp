@@ -239,6 +239,16 @@ static void testEchoSSS(const char *first, const char *second, const char *third
 	lastThird = third;
 }
 
+static float fFirst;
+static float fSecond;
+static float fThird;
+
+static void testEchoFFF(float first, float second, float third) {
+	fFirst = first;
+	fSecond = second;
+	fThird = third;
+}
+
 #define UNKNOWN_COMMAND "dfadasdasd"
 
 static loc_t GPSdata;
@@ -360,6 +370,15 @@ TEST(misc, testConsoleLogic) {
 	strcpy(buffer, "echosss \" 1\" 222 333");
 	handleConsoleLine(buffer);
 	ASSERT_TRUE(strEqual("\" 1\"", lastFirst));
+
+	printf("\r\addConsoleActionFFF\r\n");
+	addConsoleActionFFF("echofff", testEchoFFF);
+	strcpy(buffer, "echofff 1.0 2 00003.0");
+	handleConsoleLine(buffer);
+
+	ASSERT_EQ(1.0, fFirst);
+	ASSERT_EQ(2.0, fSecond);
+	ASSERT_EQ(3.0, fThird);
 
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
