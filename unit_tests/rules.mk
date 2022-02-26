@@ -8,7 +8,7 @@ ifeq ($(BUILDDIR),.)
   # Redefine if pointing at current folder
   BUILDDIR = build
 endif
-OUTFILES = $(BUILDDIR)/$(PROJECT)
+BINARY_OUTPUT = $(BUILDDIR)/$(PROJECT)
 
 # Automatic compiler options
 OPT = $(USE_OPT)
@@ -70,9 +70,9 @@ else
 	CFLAGS    = $(MCFLAGS) $(OPT) $(COPT) $(CWARN) $(DEFS)
 	CPPFLAGS  = $(MCFLAGS) $(OPT) $(CPPOPT) $(CPPWARN) $(DEFS)
 	ifeq ($(USE_LINK_GC),yes)
-	  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
+	  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BINARY_OUTPUT).map,--cref,--no-warn-mismatch,--gc-sections $(LLIBDIR)
 	else
-	  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BUILDDIR)/$(PROJECT).map,--cref,--no-warn-mismatch $(LLIBDIR)
+	  LDFLAGS = $(MCFLAGS) -Wl,-Map=$(BINARY_OUTPUT).map,--cref,--no-warn-mismatch $(LLIBDIR)
 	endif
 endif
 
@@ -87,7 +87,7 @@ VPATH     = $(SRCPATHS)
 # Makefile rules
 #
 
-all: $(OBJS) $(OUTFILES) MAKE_ALL_RULE_HOOK
+all: $(OBJS) $(BINARY_OUTPUT) MAKE_ALL_RULE_HOOK
 
 MAKE_ALL_RULE_HOOK:
 
@@ -156,7 +156,7 @@ else
 	@$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
 endif
 
-$(BUILDDIR)/$(PROJECT): $(OBJS)
+$(BINARY_OUTPUT): $(OBJS)
 	rm -rf $(BUILDDIR)/obj/*gcda
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo
