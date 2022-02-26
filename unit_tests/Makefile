@@ -43,6 +43,7 @@ INCDIR += \
 	$(PROJECT_DIR)/config/boards/hellen \
 	$(UNIT_TESTS_DIR)/test_data_structures \
 	$(UNIT_TESTS_DIR)/chibios-mock \
+	$(UNIT_TESTS_DIR)/native \
 	$(UNIT_TESTS_DIR)/tests \
 	$(UNIT_TESTS_DIR)/tests/sensor \
 	$(UNIT_TESTS_DIR)/test_basic_math

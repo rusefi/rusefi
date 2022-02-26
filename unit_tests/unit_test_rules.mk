@@ -132,7 +132,13 @@ OD   = $(TRGT)objdump
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
 
-AOPT = -fPIC
+AOPT = -fPIC -I$(JAVA_HOME)/include
+
+ifeq ($(OS),Windows_NT)
+ AOPT += -I$(JAVA_HOME)/include/win32
+else
+ AOPT += -I$(JAVA_HOME)/include/linux
+endif
 
 # Define C warning options here
 CWARN = -Wall -Wextra -Wstrict-prototypes -pedantic -Wmissing-prototypes -Wold-style-definition
