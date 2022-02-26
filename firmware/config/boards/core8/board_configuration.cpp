@@ -9,7 +9,6 @@
 #include "pch.h"
 
 static void setInjectorPins() {
-	
 	engineConfiguration->injectionPinMode = OM_DEFAULT;
 
 	engineConfiguration->injectionPins[0] = GPIOF_13;
@@ -23,7 +22,6 @@ static void setInjectorPins() {
 }
 
 static void setIgnitionPins() {
-	
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 
 	engineConfiguration->ignitionPins[0] = GPIOE_15;
@@ -40,8 +38,7 @@ static void setIgnitionPins() {
 void setSdCardConfigurationOverrides(void) {
 }
 
-void setBoardConfigOverrides(void) {
-	
+static void setEtbConfig() {
 	// TLE9201 driver
 	// This chip has three control pins:
 	// DIR - sets direction of the motor
@@ -72,28 +69,6 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->etb_use_two_wires = false;
 }
 
-void setPinConfigurationOverrides(void) {
-
-	//CAN 1 bus overwrites
-	engineConfiguration->canTxPin = GPIOD_0;
-	engineConfiguration->canRxPin = GPIOD_1;
-
-	//CAN 2 bus overwrites
-	engineConfiguration->can2RxPin = GPIOB_5;
-	engineConfiguration->can2TxPin = GPIOB_6;
-}
-
-void setSerialConfigurationOverrides(void) {
-}
-
-
-/**
- * @brief   Board-specific configuration defaults.
- *
- * See also setDefaultEngineConfiguration
- *
- * @todo    Add your board-specific code, if any.
- */
 static void setupVbatt() {
 	// 5.6k high side/10k low side = 1.56 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 1.47f;
@@ -107,14 +82,39 @@ static void setupVbatt() {
 	engineConfiguration->adcVcc = 3.3f;
 }
 
+static void setStepperConfig() {
+	engineConfiguration->idle.stepperDirectionPin = GPIOF_7;
+	engineConfiguration->idle.stepperStepPin = GPIOF_8;
+	engineConfiguration->stepperEnablePin = GPIOF_9;
+}
+
+void setBoardConfigOverrides() {
+	setupVbatt();
+	setEtbConfig();
+	setStepperConfig();
+
+	// PE3 is error LED, configured in board.mk
+	engineConfiguration->communicationLedPin = GPIOG_12;
+	engineConfiguration->runningLedPin = GPIOG_9;
+	engineConfiguration->warningLedPin = GPIOG_10;
+
+	engineConfiguration->clt.config.bias_resistor = 2490;
+	engineConfiguration->iat.config.bias_resistor = 2490;
+
+	//CAN 1 bus overwrites
+	engineConfiguration->canTxPin = GPIOD_0;
+	engineConfiguration->canRxPin = GPIOD_1;
+
+	//CAN 2 bus overwrites
+	engineConfiguration->can2RxPin = GPIOB_5;
+	engineConfiguration->can2TxPin = GPIOB_6;
+}
+
 static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_11;
 	setEgoSensor(ES_14Point7_Free);
 	
-	engineConfiguration->clt.config.bias_resistor = 2490;
-	engineConfiguration->iat.config.bias_resistor = 2490;
-
 	engineConfiguration->baroSensor.hwChannel = EFI_ADC_NONE;
 
 	engineConfiguration->lps25BaroSensorScl = GPIOB_10;
@@ -122,25 +122,12 @@ static void setupDefaultSensorInputs() {
 
 }
 
-
-static void setLedPins() {
-	// PE3 is error LED, configured in board.mk
-	engineConfiguration->communicationLedPin = GPIOG_12;
-	engineConfiguration->runningLedPin = GPIOG_9;
-	engineConfiguration->warningLedPin = GPIOG_10;
-}
-
 void setBoardDefaultConfiguration(void) {
-	
 	setInjectorPins();
 	setIgnitionPins();
-	setupVbatt();	
-	setLedPins();
 
-	
 	engineConfiguration->sdCardPeriodMs = 50;
 	engineConfiguration->isSdCardEnabled = true;
-
 
 	engineConfiguration->canWriteEnabled = true;
 	engineConfiguration->canReadEnabled = true;
@@ -148,6 +135,4 @@ void setBoardDefaultConfiguration(void) {
 
 	engineConfiguration->canBaudRate = B500KBPS;
 	engineConfiguration->can2BaudRate = B500KBPS;
-	
-
 }
