@@ -195,6 +195,52 @@ static void echo(int value) {
 	efiPrintf("got value: %d", value);
 }
 
+int findEndOfToken(const char *line) {
+	if (line[0] == '"') {
+		/**
+		 * Looks like this is a quoted token
+		 */
+		int v = indexOf(line + 1, '"');
+		if (v == -1) {
+			/**
+			 * Matching closing quote not found
+			 */
+			return -1;
+		}
+		/**
+		 * Skipping first quote and the symbol after closing quote
+		 */
+		return v + 2;
+	}
+	return indexOf(line, SPACE_CHAR);
+}
+
+/**
+ * @return Number of space-separated tokens in the string
+ */
+int tokenLength(const char *msgp) {
+	int result = 0;
+	while (*msgp) {
+		char ch = *msgp++;
+		if (ch == SPACE_CHAR) {
+			break;
+		}
+		result++;
+	}
+	return result;
+}
+
+char *unquote(char *line) {
+	if (line[0] == '"') {
+		int len = strlen(line);
+		if (line[len - 1] == '"') {
+			line[len - 1] = 0;
+			return line + 1;
+		}
+	}
+	return line;
+}
+
 static int setargs(char *args, char **argv, int max_args)
 {
 	int count = 0;

@@ -40,6 +40,12 @@ typedef struct {
 	void *param;
 } TokenCallback;
 
+
+int tokenLength(const char *msgp);
+int findEndOfToken(const char *line);
+char *unquote(char *line);
+
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -50,7 +56,6 @@ void resetConsoleActions(void);
 void helpCommand(void);
 void initConsoleLogic();
 void handleConsoleLine(char *line);
-
 void addConsoleAction(const char *token, Void callback);
 void addConsoleActionP(const char *token, VoidPtr callback, void *param);
 
