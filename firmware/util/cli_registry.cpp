@@ -508,19 +508,12 @@ static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
 	strncpy(handleBuffer, commandLine, len);
 	handleBuffer[len] = 0; // we want this to be null-terminated for sure
 
-	efiPrintf("input: %s", handleBuffer);
-
 	char *argv[10];
 	int argc = setargs(handleBuffer, argv, 10);
 
 	if (argc <= 0) {
 		efiPrintf("invalid input");
 		return false;
-	}
-
-	efiPrintf("Got %d:", argc);
-	for (int i = 0; i < argc; i++) {
-		efiPrintf("[%d]: %s", i, argv[i]);
 	}
 
 	for (int i = 0; i < consoleActionCount; i++) {
