@@ -23,6 +23,22 @@ JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setSensor
   (JNIEnv *, jobject, jstring, jdouble);
 
+/*
+ * Class:     com_rusefi_native__EngineLogic
+ * Method:    getConfiguration
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getConfiguration
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
+ * Method:    setConfiguration
+ * Signature: ([BII)V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setConfiguration
+  (JNIEnv *, jobject, jbyteArray, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif
