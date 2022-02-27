@@ -9,6 +9,7 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 BOARDINC = $(BOARD_DIR)
 
 # STM32F429 has FSMC with SDRAM support
+DDEFS += -DFIRMWARE_ID=\"stm32f429\"
 IS_STM32F429 = yes
 EFI_HAS_EXT_SDRAM = yes
 
