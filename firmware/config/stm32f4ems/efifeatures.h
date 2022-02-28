@@ -265,13 +265,13 @@
 	#define EFI_USE_COMPRESSED_INI_MSD
 	#define ENABLE_PERF_TRACE TRUE
 
-	#define LUA_USER_HEAP 20000
+	#define LUA_USER_HEAP 25000
 	#define LUA_SYSTEM_HEAP 20000
 #else
 	// small memory F40x can't fit perf trace
 	#define ENABLE_PERF_TRACE FALSE
 
-	#define LUA_USER_HEAP 15000
+	#define LUA_USER_HEAP 25000
 	#define LUA_SYSTEM_HEAP 12000
 #endif
 
