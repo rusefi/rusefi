@@ -132,6 +132,10 @@ OD   = $(TRGT)objdump
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
 
+ifndef JAVA_HOME
+$(error JAVA_HOME is undefined - due to JNI integration unit tests depend on JAVA_HOME)
+endif
+
 AOPT = -fPIC -I$(JAVA_HOME)/include
 
 ifeq ($(OS),Windows_NT)
