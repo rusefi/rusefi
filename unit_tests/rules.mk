@@ -11,6 +11,14 @@ endif
 BINARY_OUTPUT = $(BUILDDIR)/$(PROJECT)
 SHARED_OUTPUT = $(BUILDDIR)/lib_$(PROJECT)
 
+ifeq ($(OS),Windows_NT)
+    # todo: something is not right here how can we avoid explicit suffix?
+    # should not gcc figure it out based on 'shared' option?
+	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).dll
+else
+	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).so
+endif
+
 # Automatic compiler options
 OPT = $(USE_OPT)
 COPT = $(USE_COPT)
@@ -129,14 +137,6 @@ ifeq ($(USE_VERBOSE_COMPILE),yes)
 else
 	@echo Compiling $(<F)
 	@$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
-endif
-
-ifneq ($(OS),Windows_NT)
-    # todo: something is not right here how can we avoid explicit suffix?
-    # should not gcc figure it out based on 'shared' option?
-	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).dll
-else
-	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).so
 endif
 
 $(BINARY_OUTPUT): $(OBJS)
