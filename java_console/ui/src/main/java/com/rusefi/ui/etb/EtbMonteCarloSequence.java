@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.Timeouts.SECOND;
+import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.config.generated.Fields.CMD_ETB_DUTY;
 import static com.rusefi.etb.TestSequenceStep.count;
 import static com.rusefi.ui.etb.DirectDrivePanel.CANCEL_DIRECT_DRIVE_COMMAND;
