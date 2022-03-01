@@ -132,11 +132,11 @@ else
 endif
 
 ifneq ($(OS),Windows_NT)
-    # todo: something is not right here how can we avoid explicit .dll suffix?
-    # why does GCC use .exe on Windows withtout it?!
+    # todo: something is not right here how can we avoid explicit suffix?
+    # should not gcc figure it out based on 'shared' option?
 	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).dll
 else
-	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT)
+	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).so
 endif
 
 $(BINARY_OUTPUT): $(OBJS)
@@ -150,7 +150,7 @@ else
 endif
 
 $(SHARED_OUTPUT): $(OBJS)
-	@echo Linking shared library $@
+	@echo Linking shared library $@ output $SHARED_OUTPUT_OPT
 	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $SHARED_OUTPUT_OPT -shared
 
 clean: CLEAN_RULE_HOOK
