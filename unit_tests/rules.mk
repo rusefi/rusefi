@@ -151,7 +151,7 @@ endif
 
 $(SHARED_OUTPUT): $(OBJS)
 	@echo Linking shared library $@ output $(SHARED_OUTPUT_OPT)
-	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $SHARED_OUTPUT_OPT -shared
+	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $(SHARED_OUTPUT_OPT) -shared
 
 clean: CLEAN_RULE_HOOK
 	@echo Cleaning
