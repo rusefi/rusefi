@@ -131,6 +131,14 @@ else
 	@$(CC) -c $(ASXFLAGS) $(TOPT) -I. $(IINCDIR) $< -o $@
 endif
 
+ifneq ($(OS),Windows_NT)
+    # todo: something is not right here how can we avoid explicit .dll suffix?
+    # why does GCC use .exe on Windows withtout it?!
+	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).dll
+else
+	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT)
+endif
+
 $(BINARY_OUTPUT): $(OBJS)
 	rm -rf $(BUILDDIR)/obj/*gcda
 ifeq ($(USE_VERBOSE_COMPILE),yes)
@@ -143,7 +151,7 @@ endif
 
 $(SHARED_OUTPUT): $(OBJS)
 	@echo Linking shared library $@
-	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $@.dll -shared
+	@$(LD) $(OBJS) $(LDFLAGS) $(LIBS) -o $SHARED_OUTPUT_OPT -shared
 
 clean: CLEAN_RULE_HOOK
 	@echo Cleaning
