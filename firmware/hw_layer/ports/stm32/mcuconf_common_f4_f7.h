@@ -225,12 +225,25 @@
 /*
  * SERIAL driver system settings.
  */
+#ifndef STM32_SERIAL_USE_USART1
 #define STM32_SERIAL_USE_USART1             TRUE
+#endif
+
+#ifndef STM32_SERIAL_USE_USART2
 #define STM32_SERIAL_USE_USART2             FALSE
+#endif
+
+#ifndef STM32_SERIAL_USE_USART3
 #define STM32_SERIAL_USE_USART3             FALSE
+#endif
+
 #define STM32_SERIAL_USE_UART4              FALSE
 #define STM32_SERIAL_USE_UART5              FALSE
+
+#ifndef STM32_SERIAL_USE_USART6
 #define STM32_SERIAL_USE_USART6             TRUE
+#endif
+
 #define STM32_SERIAL_USE_UART7              FALSE
 #define STM32_SERIAL_USE_UART8              FALSE
 #define STM32_IRQ_USART1_PRIORITY           (PRECISE_SCHEDULING_TIMER_PRIORITY + 2)
