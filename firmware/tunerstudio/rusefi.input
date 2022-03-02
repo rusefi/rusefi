@@ -730,12 +730,10 @@ enable2ndByteCanID = false
       gridOrient  = 250,   0, 340 ; Space 123 rotation of grid in degrees.
       upDownLabel = "(RICHER)", "(LEANER)"
 
-	curve = torqueTableTbl, torqueTableMap, "Engine Torque"
+   table = torqueTableTbl, torqueTableMap, "Engine Torque", 1
       xBins       = torqueRpmBins, RPMValue
-      yBins       = torqueLoadBins
+      yBins       = torqueLoadBins, veTableYAxis
       zBins       = torqueTable
-      gauge       = RPMGauge
-
 
    table = veTableTbl,  veTableMap,  "VE Table",   1
       ;       constant, variable
