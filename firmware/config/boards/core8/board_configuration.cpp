@@ -102,8 +102,8 @@ void setBoardConfigOverrides() {
 	engineConfiguration->iat.config.bias_resistor = 2490;
 
 	//CAN 1 bus overwrites
-	engineConfiguration->canTxPin = GPIOD_0;
-	engineConfiguration->canRxPin = GPIOD_1;
+	engineConfiguration->canRxPin = GPIOD_0;
+	engineConfiguration->canTxPin = GPIOD_1;
 
 	//CAN 2 bus overwrites
 	engineConfiguration->can2RxPin = GPIOB_5;
