@@ -248,6 +248,8 @@ static FlashState readOneConfigurationCopy(flashaddr_t address) {
  * in this method we read first copy of configuration in flash. if that first copy has CRC or other issues we read second copy.
  */
 static FlashState readConfiguration() {
+	FlashState result = FlashState::Ok;
+
 #if EFI_STORAGE_EXT_SNOR == TRUE
 	mfs_error_t err;
 	size_t settings_size = sizeof(persistentState);
@@ -263,7 +265,7 @@ static FlashState readConfiguration() {
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
-	FlashState result = readOneConfigurationCopy(firstCopyAddr);
+	result = readOneConfigurationCopy(firstCopyAddr);
 
 	if (result != FlashState::Ok) {
 		efiPrintf("Reading second configuration copy");
