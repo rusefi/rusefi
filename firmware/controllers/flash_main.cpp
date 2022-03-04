@@ -251,14 +251,13 @@ static FlashState readConfiguration() {
 	FlashState result = FlashState::Ok;
 
 #if EFI_STORAGE_EXT_SNOR == TRUE
-	mfs_error_t err;
 	size_t settings_size = sizeof(persistentState);
-	err = mfsReadRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
+	mfs_error_t err = mfsReadRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
 						&settings_size, (uint8_t *)&persistentState);
 
-	// TODO: check err result
-	//if ((err == MFS_NO_ERROR) && (sizeof(persistentState) == settings_size))
-	//	result = PC_OK;
+	// TODO: check err result better?
+	if ((err == MFS_NO_ERROR) && (sizeof(persistentState) == settings_size))
+		result = FlashState::Ok;
 #endif
 
 #if EFI_STORAGE_INT_FLASH == TRUE
