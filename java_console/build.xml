@@ -75,7 +75,6 @@
             <src path="logging-api/src/main/java"/>
             <src path="ui/src/main/java"/>
             <src path="ui/src/test/java"/>
-            <src path="romraider/src/main/java"/>
             <src path="logging/src/main/java"/>
             <!-- not really used at the moment but let's compile for the sake of Eclipse users -->
             <src path="tools/src/main/java"/>
@@ -112,7 +111,6 @@
                 <fileset dir="inifile/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="models/src/test/java" includes="**/*Test.java"/>
                 <fileset dir="ui/src/test/java" includes="**/*Test.java"/>
-                <fileset dir="romraider/src/main/java" includes="**/test/**/*Test.java"/>
                 <fileset dir="logging/src/main/java" includes="**/test/**/*Test.java"/>
             </batchtest>
         </junit>
@@ -154,7 +152,6 @@
             <fileset dir="ui/resources" includes="**/*.gif"/>
             <fileset dir="ui/resources" includes="**/*.png"/>
             <fileset dir="ui/resources" includes="**/*.jpg"/>
-            <fileset dir="romraider/resources" includes="**/*.*"/>
         </copy>
 
         <tstamp>

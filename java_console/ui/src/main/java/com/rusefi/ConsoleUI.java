@@ -128,8 +128,6 @@ public class ConsoleUI {
             tabbedPane.addTab("ECU stimulation", stimulator.getPanel());
         }
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
-//        if (!LinkManager.isLogViewer())
-//            tabbedPane.addTab("Table Editor", tabbedPane.romEditorPane);
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
         if (!linkManager.isLogViewer())
@@ -141,8 +139,6 @@ public class ConsoleUI {
 
         if (!linkManager.isLogViewer() && false) // todo: fix it & better name?
             tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
-        if (tabbedPane.paneSettings.showFuelTunePane)
-            tabbedPane.addTab("Fuel Tune", tabbedPane.fuelTunePane.getContent());
 
 
         if (!linkManager.isLogViewer()) {
