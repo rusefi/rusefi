@@ -221,10 +221,8 @@ public class EngineSnifferPanel {
             image.setWaveReport(wr, revolutions);
         }
 
-        /**
-         * this is to fix the UI glitch when images tab shows a tiny square
-         */
-        UiUtils.trueLayout(chartPanel.getParent());
+        // Repaint now that we've updated state
+        SwingUtilities.invokeLater(() -> UiUtils.trueRepaint(imagePanel));
     }
 
     public JPanel getPanel() {

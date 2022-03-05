@@ -129,7 +129,6 @@ public class UpDownImage extends JPanel {
         this.engineReport = wr;
         propagateDwellIntoSensor(wr);
         this.revolutions = revolutions;
-        UiUtils.trueRepaint(this);
     }
 
     private void propagateDwellIntoSensor(EngineReport wr) {
