@@ -2,6 +2,10 @@
 
 #include "limp_manager.h"
 
+#include "fuel_math.h"
+
+#define CLEANUP_MODE_TPS 90
+
 void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
@@ -66,6 +70,19 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		 * todo: we need explicit clarification on why do we cut fuel but do not cut spark here!
 		 */
 		allowFuel.clear(ClearReason::StopRequested);
+	}
+
+	// If duty cycle is high, impose a fuel cut rev limiter.
+	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
+	if (getInjectorDutyCycle(rpm) > 96.0f) {
+		allowFuel.clear(ClearReason::InjectorDutyCycle);
+	}
+
+	// If the pedal is pushed while not running, cut fuel to clear a flood condition.
+	if (!engine->rpmCalculator.isRunning() &&
+		engineConfiguration->isCylinderCleanupEnabled &&
+		Sensor::getOrZero(SensorType::DriverThrottleIntent) > CLEANUP_MODE_TPS) {
+		allowFuel.clear(ClearReason::FloodClear);
 	}
 
 	if (!engine->isMainRelayEnabled()) {

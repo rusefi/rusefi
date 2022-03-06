@@ -390,12 +390,6 @@ public:
 	efitick_t mainRelayBenchStartNt = 0;
 
 	/**
-	 * This field is true if we are in 'cylinder cleanup' state right now
-	 * see isCylinderCleanupEnabled
-	 */
-	bool isCylinderCleanupMode = false;
-
-	/**
 	 * value of 'triggerShape.getLength()'
 	 * pre-calculating this value is a performance optimization
 	 */

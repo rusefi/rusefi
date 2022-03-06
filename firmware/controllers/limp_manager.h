@@ -14,6 +14,8 @@ enum class ClearReason : uint8_t {
 	OilPressure,
 	StopRequested, // 7
 	EtbProblem,
+	InjectorDutyCycle,
+	FloodClear,
 };
 
 // Only allows clearing the value, but never resetting it.

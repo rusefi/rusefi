@@ -6,7 +6,7 @@ bit sd_present
 bit isIgnitionEnabledIndicator;
 bit isInjectionEnabledIndicator;
 bit sd_logging_internal
-bit isCylinderCleanupActivated;
+bit unusedb4;
 bit isFuelPumpOn;
 bit isFanOn;"radiator fan"
 bit isO2HeaterOn;
