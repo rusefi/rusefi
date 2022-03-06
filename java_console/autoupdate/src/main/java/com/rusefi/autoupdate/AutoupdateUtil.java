@@ -102,9 +102,32 @@ public class AutoupdateUtil {
         component.repaint();
     }
 
+    private static Window getSelectedWindow(Window[] windows) {
+        for (Window window : windows) {
+            if (window.isActive()) {
+                return window;
+            } else {
+                Window[] ownedWindows = window.getOwnedWindows();
+                if (ownedWindows != null) {
+                    return getSelectedWindow(ownedWindows);
+                }
+            }
+        }
+        return null;
+    }
+
     public static void assertAwtThread() {
-        if (!SwingUtilities.isEventDispatchThread())
-            throw new IllegalStateException("Not on AWT thread but " + Thread.currentThread().getName());
+        if (!SwingUtilities.isEventDispatchThread()) {
+            Exception e = new IllegalStateException("Not on AWT thread but " + Thread.currentThread().getName());
+
+            StringBuilder trace = new StringBuilder(e + "\n");
+            for(StackTraceElement element : e.getStackTrace())
+                trace.append(element.toString()).append("\n");
+            SwingUtilities.invokeLater(() -> {
+                Window w = getSelectedWindow(Window.getWindows());
+                JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
+            });
+        }
     }
 
     public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {
