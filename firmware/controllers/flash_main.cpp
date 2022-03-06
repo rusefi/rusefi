@@ -276,6 +276,9 @@ static FlashState readConfiguration() {
 	efiPrintf("Reading second configuration copy");
 	return readOneConfigurationCopy(secondyCopyAddr);
 #endif
+
+	// In case of neither of those cases, return that things went OK?
+	return FlashState::Ok;
 }
 
 void readFromFlash() {
