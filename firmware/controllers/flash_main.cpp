@@ -302,7 +302,7 @@ void readFromFlash() {
 		case FlashState::CrcFailed:
 			warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 			efiPrintf("Need to reset flash to default due to CRC mismatch");
-			// falls through
+			[[fallthrough]];
 		case FlashState::BlankChip:
 			resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 			break;
