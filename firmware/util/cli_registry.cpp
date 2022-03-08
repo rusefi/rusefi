@@ -502,7 +502,7 @@ char *validateSecureLine(char *line) {
 
 static char handleBuffer[200];
 
-static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
+static int handleConsoleLineInternal(const char *commandLine, int lineLength) {
 	int len = minI(lineLength, sizeof(handleBuffer) - 1);
 
 	strncpy(handleBuffer, commandLine, len);
@@ -513,7 +513,7 @@ static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
 
 	if (argc <= 0) {
 		efiPrintf("invalid input");
-		return false;
+		return -1;
 	}
 
 	for (int i = 0; i < consoleActionCount; i++) {
@@ -522,7 +522,7 @@ static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
 			if ((argc - 1) != getParameterCount(current->parameterType)) {
 				efiPrintf("Incorrect argument count %d, expected %d",
 					(argc - 1), getParameterCount(current->parameterType));
-				return false;
+				return -1;
 			}
 
 			/* skip commant name */
@@ -530,8 +530,8 @@ static bool handleConsoleLineInternal(const char *commandLine, int lineLength) {
 		}
 	}
 
-	/* unknown command */
-	return 0;
+	efiPrintf("unknown command [%s]", commandLine);
+	return -1;
 }
 
 /**
@@ -552,10 +552,7 @@ void handleConsoleLine(char *line) {
 
 	int ret = handleConsoleLineInternal(line, lineLength);
 
-	if (ret == 0) {
-		efiPrintf("unknown command [%s]", line);
-		return;
-	} else if (ret < 0) {
+	if (ret < 0) {
 		efiPrintf("failed to handle command [%s]", line);
 		return;
 	}
