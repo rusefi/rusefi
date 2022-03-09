@@ -287,7 +287,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     int luaInvocationCounter;;"count",1, 0, 0, 0, 0
     int luaLastCycleDuration;;"nt",1, 0, 0, 0, 0
-	uint8_t[80 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+    uint8_t testBenchIter;;"count",1, 0, 0, 0, 0
+	uint8_t[79 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition
