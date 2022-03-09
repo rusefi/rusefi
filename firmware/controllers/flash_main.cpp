@@ -71,8 +71,8 @@ const MFSConfig mfsd_nor_config = {
  * should be in a different sector of flash since complete flash sectors are erased on write.
  */
 
-static crc_t flashStateCrc(const persistent_config_container_s& state) {
-	return calc_crc((const crc_t*) &state.persistentConfiguration, sizeof(persistent_config_s));
+static uint32_t flashStateCrc(const persistent_config_container_s& state) {
+	return crc32(&state.persistentConfiguration, sizeof(persistent_config_s));
 }
 
 #if EFI_FLASH_WRITE_THREAD
@@ -229,7 +229,7 @@ static FlashState readOneConfigurationCopy(flashaddr_t address) {
 
 	if (flashCrc != persistentState.value) {
 		// If the stored crc is all 1s, that probably means the flash is actually blank, not that the crc failed.
-		if (persistentState.value == ((crc_t)-1)) {
+		if (persistentState.value == ((decltype(persistentState.value))-1)) {
 			return FlashState::BlankChip;
 		} else {
 			return FlashState::CrcFailed;
@@ -302,9 +302,7 @@ void readFromFlash() {
 		case FlashState::CrcFailed:
 			warning(CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 			efiPrintf("Need to reset flash to default due to CRC mismatch");
-			// todo: use [[fallthrough]]? jenkins has different version on Windows
-			resetConfigurationExt(DEFAULT_ENGINE_TYPE);
-			break;
+			[[fallthrough]];
 		case FlashState::BlankChip:
 			resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 			break;
