@@ -131,6 +131,9 @@ LimpState LimpManager::allowInjection() const {
 	if (!m_transientAllowInjection) {
 		return {false, m_transientAllowInjection.clearReason};
 	}
+	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {
+		return {false, ClearReason::LaunchFuel};
+	}
 	return {true, ClearReason::None};
 }
 
@@ -140,6 +143,9 @@ LimpState LimpManager::allowIgnition() const {
 	}
 	if (!m_transientAllowIgnition) {
 		return {false, m_transientAllowIgnition.clearReason};
+	}	
+	if (engine->launchController.isLaunchSparkRpmRetardCondition()) {
+		return {false, ClearReason::LaunchSpark};
 	}
 	return {true, ClearReason::None};
 }
