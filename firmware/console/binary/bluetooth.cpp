@@ -158,10 +158,10 @@ static THD_FUNCTION(btThreadEntryPoint, arg) {
 	chThdExit(MSG_OK);
 }
 
-void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
+void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
 	static const char *usage = "Usage: bluetooth_hc06 <baud> <name> <pincode>";
 
-	tsChannel = btChan;
+	tsChannel = getBluetoothChannel();
 	
 	// if a binary protocol uses USB, we cannot init the bluetooth module!
 	if (!engineConfiguration->useSerialPort) {

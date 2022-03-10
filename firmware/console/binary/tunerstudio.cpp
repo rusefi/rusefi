@@ -829,16 +829,16 @@ void startTunerStudioConnectivity(void) {
 	// Example: "bluetooth_hc06 38400 rusefi 1234"
 	// bluetooth_jdy 115200 alphax 1234
 	addConsoleActionSSS("bluetooth_hc05", [](const char *baudRate, const char *name, const char *pinCode) {
-		bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_05, baudRate, name, pinCode);
+		bluetoothStart(BLUETOOTH_HC_05, baudRate, name, pinCode);
 	});
 	addConsoleActionSSS("bluetooth_hc06", [](const char *baudRate, const char *name, const char *pinCode) {
-		bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_06, baudRate, name, pinCode);
+		bluetoothStart(BLUETOOTH_HC_06, baudRate, name, pinCode);
 	});
 	addConsoleActionSSS("bluetooth_bk", [](const char *baudRate, const char *name, const char *pinCode) {
-		bluetoothStart(getBluetoothChannel(), BLUETOOTH_BK3231, baudRate, name, pinCode);
+		bluetoothStart(BLUETOOTH_BK3231, baudRate, name, pinCode);
 	});
 	addConsoleActionSSS("bluetooth_jdy", [](const char *baudRate, const char *name, const char *pinCode) {
-		bluetoothStart(getBluetoothChannel(), BLUETOOTH_JDY_3x, baudRate, name, pinCode);
+		bluetoothStart(BLUETOOTH_JDY_3x, baudRate, name, pinCode);
 	});
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
