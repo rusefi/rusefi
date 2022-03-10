@@ -121,15 +121,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canRxPin = GPIOD_0;
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *
