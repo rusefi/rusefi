@@ -44,7 +44,7 @@ public class StartupFrame {
 
     public static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2021";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2022";
     private static final String URI = "http://rusefi.com/?java_console";
     // private static final int RUSEFI_ORANGE = 0xff7d03;
 
