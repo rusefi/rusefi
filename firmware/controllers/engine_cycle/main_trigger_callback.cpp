@@ -409,8 +409,8 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	if (engine->launchController.isLaunchCondition && !limitedSpark && !limitedFuel) {
 		/* in case we are not already on a limited conditions, check launch as well */
 
-		limitedSpark &= engine->launchController.isLaunchSparkRpmRetardCondition();
-		limitedFuel &= engine->launchController.isLaunchFuelRpmRetardCondition();
+		limitedSpark = engine->launchController.isLaunchSparkRpmRetardCondition();
+		limitedFuel = engine->launchController.isLaunchFuelRpmRetardCondition();
 	}
 #endif
 	if (trgEventIndex == 0) {
