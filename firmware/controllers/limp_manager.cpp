@@ -75,6 +75,17 @@ todo AndreiKA this change breaks 22 unit tests?
 		allowSpark.clear();
 */
 	}
+	
+	// Fuel cut if launch control engaged
+	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {
+		allowFuel.clear(ClearReason::LaunchCut);
+	}
+
+	
+	// Spark cut if launch control engaged
+	if (engine->launchController.isLaunchSparkRpmRetardCondition()) {
+		allowSpark.clear(ClearReason::LaunchCut);
+	}
 
 
 	m_transientAllowInjection = allowFuel;
@@ -131,9 +142,6 @@ LimpState LimpManager::allowInjection() const {
 	if (!m_transientAllowInjection) {
 		return {false, m_transientAllowInjection.clearReason};
 	}
-	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {
-		return {false, ClearReason::LaunchFuel};
-	}
 	return {true, ClearReason::None};
 }
 
@@ -144,8 +152,5 @@ LimpState LimpManager::allowIgnition() const {
 	if (!m_transientAllowIgnition) {
 		return {false, m_transientAllowIgnition.clearReason};
 	}	
-	if (engine->launchController.isLaunchSparkRpmRetardCondition()) {
-		return {false, ClearReason::LaunchSpark};
-	}
 	return {true, ClearReason::None};
 }
