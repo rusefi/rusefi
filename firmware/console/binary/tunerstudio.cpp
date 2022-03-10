@@ -134,24 +134,6 @@ static void setTsSpeed(int value) {
 	printTsStats();
 }
 
-#if EFI_BLUETOOTH_SETUP
-
-// Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_05, baudRate, name, pinCode);
-}
-
-// Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_06, baudRate, name, pinCode);
-}
-
-// Bluetooth SPP-C module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothSPP(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_SPP, baudRate, name, pinCode);
-}
-#endif  /* EFI_BLUETOOTH_SETUP */
-
 #endif // EFI_TUNER_STUDIO
 
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
@@ -842,11 +824,22 @@ void startTunerStudioConnectivity(void) {
 	addConsoleActionI("set_ts_speed", setTsSpeed);
 	
 #if EFI_BLUETOOTH_SETUP
+	// module initialization start (it waits for disconnect and then communicates to the module)
 	// Usage:   "bluetooth_hc06 <baud> <name> <pincode>"
 	// Example: "bluetooth_hc06 38400 rusefi 1234"
-	addConsoleActionSSS("bluetooth_hc05", bluetoothHC05);
-	addConsoleActionSSS("bluetooth_hc06", bluetoothHC06);
-	addConsoleActionSSS("bluetooth_spp", bluetoothSPP);
+	// bluetooth_jdy 115200 alphax 1234
+	addConsoleActionSSS("bluetooth_hc05", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_05, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_hc06", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_06, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_bk", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(getBluetoothChannel(), BLUETOOTH_BK3231, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_jdy", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(getBluetoothChannel(), BLUETOOTH_JDY_3x, baudRate, name, pinCode);
+	});
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 }

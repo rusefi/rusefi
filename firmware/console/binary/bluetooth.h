@@ -21,7 +21,11 @@
 typedef enum {
 	BLUETOOTH_HC_05,
 	BLUETOOTH_HC_06,
-	BLUETOOTH_SPP,
+	/**
+	 * See https://rusefi.com/forum/viewtopic.php?f=13&t=1999
+	 */
+	BLUETOOTH_BK3231,
+	BLUETOOTH_JDY_3x,
 } bluetooth_module_e;
 
 /**
