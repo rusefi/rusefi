@@ -239,8 +239,14 @@ void bluetoothStart(SerialTsChannelBase *btChan, bluetooth_module_e moduleType, 
 		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s", name);
 		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s", pinCode);
 		break;
-	case BLUETOOTH_SPP:
+	case BLUETOOTH_BK3231:
 		chsnprintf(cmdHello, sizeof(cmdHello), "AT\r\n");
+		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%c\r\n", '0' + setBaudIdx);
+		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s\r\n", name);
+		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s\r\n", pinCode);
+		break;
+	case BLUETOOTH_JDY_3x:
+		chsnprintf(cmdHello, sizeof(cmdHello), "AT+VERSION\r\n");
 		chsnprintf(cmdBaud, sizeof(cmdBaud), "AT+BAUD%c\r\n", '0' + setBaudIdx);
 		chsnprintf(cmdName, sizeof(cmdName), "AT+NAME%s\r\n", name);
 		chsnprintf(cmdPin, sizeof(cmdPin), "AT+PIN%s\r\n", pinCode);
