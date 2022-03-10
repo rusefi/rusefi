@@ -25,10 +25,10 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOD_1: return "12 - Ignition 4";
 		case GPIOB_1: return "40 - AN volt 9, Aux Reuse";
 		case GPIOB_0: return "36 - AN volt 8, Aux Reuse";
-		case GPIOB_9: return "AUX J2 PB9";
 		case GPIOD_7: return "14 - GP Out 5";
-		case GPIOB_8: return "AUX J2 PB8";
+		case GPIOB_9: return "AUX J2 PB9";
 		case GPIOD_6: return "13 - GP Out 6";
+		case GPIOB_8: return "AUX J2 PB8";
 		case GPIOB_7: return "AUX J18 PB7";
 		case GPIOD_4: return "9 - Ignition 1";
 		case GPIOD_3: return "10 - Ignition 2";
