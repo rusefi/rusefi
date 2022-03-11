@@ -14,7 +14,7 @@ public class PinoutLogic {
     private final File[] boardYamlFiles;
     private final String boardName;
     private final ArrayList<PinState> globalList = new ArrayList<>();
-    private final Map</*id*/String, /*tsName*/String> tsNameById = new HashMap<>();
+    private final Map</*id*/String, /*tsName*/String> tsNameById = new TreeMap<>();
 
 
     public PinoutLogic(String boardName, File[] boardYamlFiles) {

@@ -26,7 +26,7 @@ static const char *commands[5];
 static int numCommands = 0;
 static int setBaudIdx = -1;
 
-static char cmdHello[5];
+static char cmdHello[30];
 static char cmdBaud[25];
 static char cmdName[30];
 static char cmdPin[16];
@@ -51,6 +51,7 @@ static void runCommands() {
 	if (!btProcessIsStarted)
 		return;
 	
+	efiPrintf("Sleeping...");
 	chThdSleepMilliseconds(1000);	// safety
 
 	// Store current serial port speed - we're going to change it
@@ -80,25 +81,34 @@ static void runCommands() {
 			// change the port speed
 			engineConfiguration->tunerStudioSerialSpeed = restoreAndExit ? savedSerialSpeed : baudRates[baudIdx];
 
+			efiPrintf("Restarting at %d", engineConfiguration->tunerStudioSerialSpeed);
+
 			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
 
 			chThdSleepMilliseconds(10);	// safety
 			prevBaudIdx = baudIdx;
+		} else {
+			efiPrintf("Running at %d", engineConfiguration->tunerStudioSerialSpeed);
 		}
 
 		// exit if all commands were sent
 		if (restoreAndExit)
 			break;
 
+		const char * command = commands[cmdIdx];
+		efiPrintf("Sending %s", command);
+
 		// send current command
-		tsChannel->write((uint8_t*)commands[cmdIdx], strlen(commands[cmdIdx]));
+		tsChannel->write((uint8_t*)command, strlen(command));
 		
 		// waiting for an answer
 		bool wasAnswer = false;
-		if (tsChannel->readTimeout(buffer, 2, btModuleTimeout) == 2) {
+		int received = tsChannel->readTimeout(buffer, 2, btModuleTimeout);
+		if (received == 2) {
 			wasAnswer = (buffer[0] == 'O' && buffer[1] == 'K') || 
 				(buffer[0] == '+' && (buffer[1] >= 'A' && buffer[1] <= 'Z'));
 		}
+		efiPrintf("received %d byte(s) %d [%c][%c]", received, wasAnswer, buffer[0], buffer[1]);
 
 		// wait 1 second and skip all remaining response bytes from the bluetooth module
 		while (true) {
@@ -123,10 +133,11 @@ static void runCommands() {
 	}
 
 	// the connection is already restored to the current baud rate, so print the result
-	if (cmdIdx == numCommands)
+	if (cmdIdx == numCommands) {
 		efiPrintf("SUCCESS! All commands (%d of %d) passed to the Bluetooth module!", cmdIdx, numCommands);
-	else
+	} else {
 		efiPrintf("FAIL! Only %d commands (of %d total) were passed to the Bluetooth module!", cmdIdx, numCommands);
+	}
 }
 
 static THD_FUNCTION(btThreadEntryPoint, arg) {
