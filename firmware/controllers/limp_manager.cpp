@@ -151,6 +151,6 @@ LimpState LimpManager::allowIgnition() const {
 	}
 	if (!m_transientAllowIgnition) {
 		return {false, m_transientAllowIgnition.clearReason};
-	}	
+	}
 	return {true, ClearReason::None};
 }
