@@ -13,7 +13,8 @@ enum class ClearReason : uint8_t {
 	BoostCut, // 5
 	OilPressure,
 	StopRequested, // 7
-	EtbProblem,
+	EtbProblem, // 8
+	LaunchCut, // 9
 };
 
 // Only allows clearing the value, but never resetting it.
