@@ -85,7 +85,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.injectorLagMs, GAUGE_NAME_INJECTOR_LAG, "ms", 3},
 	{engine->outputChannels.fuelPidCorrection[0], GAUGE_NAME_FUEL_TRIM, "%", 2},
 	{engine->outputChannels.fuelPidCorrection[1], GAUGE_NAME_FUEL_TRIM_2, "%", 2},
-	{engine->outputChannels.wallFuelCorrection, GAUGE_NAME_FUEL_WALL_CORRECTION, "ms", 3},
+	{engine->outputChannels.wallFuelCorrection, GAUGE_NAME_FUEL_WALL_CORRECTION, "mg", 3},
+	{engine->outputChannels.wallFuelAmount, GAUGE_NAME_FUEL_WALL_CORRECTION, "mg", 3},
 	{engine->outputChannels.tpsAccelFuel, GAUGE_NAME_FUEL_TPS_EXTRA, "ms", 3},
 	{engine->outputChannels.ignitionAdvance, GAUGE_NAME_TIMING_ADVANCE, "deg", 1},
 	{engine->outputChannels.sparkDwellValue, GAUGE_COIL_DWELL_TIME, "ms", 1},
@@ -117,6 +118,8 @@ static constexpr LogField fields[] = {
 	{engine->outputChannels.knock[9],  GAUGE_NAME_KNOCK_10, "dBv", 0},
 	{engine->outputChannels.knock[10], GAUGE_NAME_KNOCK_11, "dBv", 0},
 	{engine->outputChannels.knock[11], GAUGE_NAME_KNOCK_12, "dBv", 0},
+	{engine->outputChannels.sparkCutReason, "Spark Cut Code", "", 0},
+	{engine->outputChannels.fuelCutReason, "Fuel Cut Code", "", 0},
 };
 
 static constexpr uint16_t computeFieldsRecordLength() {
