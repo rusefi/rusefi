@@ -16,10 +16,10 @@ void setHellen144LedPins() {
 #ifdef EFI_COMMUNICATION_PIN
 	engineConfiguration->communicationLedPin = EFI_COMMUNICATION_PIN;
 #else
-	engineConfiguration->communicationLedPin = GPIOE_7;
+	engineConfiguration->communicationLedPin = H144_LED3;
 #endif /* EFI_COMMUNICATION_PIN */
-	engineConfiguration->runningLedPin = GPIOG_1;
-	engineConfiguration->warningLedPin = GPIOE_8;
+	engineConfiguration->runningLedPin = H144_LED2;
+	engineConfiguration->warningLedPin = H144_LED4;
 }
 
 void setHellen176LedPins() {
