@@ -484,6 +484,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->canWriteEnabled;
 	if (strEqualCaseInsensitive(name, "useLinearIatSensor"))
 		return engineConfiguration->useLinearIatSensor;
+	if (strEqualCaseInsensitive(name, "boardUse2stepPullDown"))
+		return engineConfiguration->boardUse2stepPullDown;
 	if (strEqualCaseInsensitive(name, "tachPulseDurationAsDutyCycle"))
 		return engineConfiguration->tachPulseDurationAsDutyCycle;
 	if (strEqualCaseInsensitive(name, "isAlternatorControlEnabled"))
@@ -502,6 +504,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->launchSparkCutEnable;
 	if (strEqualCaseInsensitive(name, "boardUseCrankPullUp"))
 		return engineConfiguration->boardUseCrankPullUp;
+	if (strEqualCaseInsensitive(name, "boardUseCamPullDown"))
+		return engineConfiguration->boardUseCamPullDown;
 	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
 		return engineConfiguration->useFSIO5ForCriticalIssueEngineStop;
 	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
@@ -2131,6 +2135,11 @@ void setConfigValueByName(const char *name, float value) {
 		engineConfiguration->useLinearIatSensor = (int)value;
 		return;
 	}
+	if (strEqualCaseInsensitive(name, "boardUse2stepPullDown"))
+	{
+		engineConfiguration->boardUse2stepPullDown = (int)value;
+		return;
+	}
 	if (strEqualCaseInsensitive(name, "tachPulseDurationAsDutyCycle"))
 	{
 		engineConfiguration->tachPulseDurationAsDutyCycle = (int)value;
@@ -2174,6 +2183,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "boardUseCrankPullUp"))
 	{
 		engineConfiguration->boardUseCrankPullUp = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boardUseCamPullDown"))
+	{
+		engineConfiguration->boardUseCamPullDown = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 14:29:12 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 12 15:07:40 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2343,7 +2343,7 @@ struct engine_configuration_s {
 	bool useLinearIatSensor : 1 {};
 	/**
 	offset 1260 bit 11 */
-	bool unusedBitWasHere16 : 1 {};
+	bool boardUse2stepPullDown : 1 {};
 	/**
 	 * Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	offset 1260 bit 12 */
@@ -2378,7 +2378,7 @@ struct engine_configuration_s {
 	bool boardUseCrankPullUp : 1 {};
 	/**
 	offset 1260 bit 21 */
-	bool unusedBitWasHere1 : 1 {};
+	bool boardUseCamPullDown : 1 {};
 	/**
 	offset 1260 bit 22 */
 	bool unusedBitWasHere2 : 1 {};
@@ -4537,4 +4537,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Feb 26 14:29:12 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 12 15:07:40 UTC 2022
