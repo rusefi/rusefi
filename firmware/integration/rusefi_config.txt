@@ -1010,7 +1010,7 @@ end_struct
 	bit canReadEnabled;enable can_read/disable can_read
 	bit canWriteEnabled;enable can_write/disable can_write
 	bit useLinearIatSensor
-	bit unusedBitWasHere16
+	bit boardUse2stepPullDown
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";+Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
@@ -1021,7 +1021,7 @@ bit cutSparkOnHardLimit,"yes","no"
 bit launchFuelCutEnable
 bit launchSparkCutEnable;+This is the Cut Mode normally used
 	bit boardUseCrankPullUp,"with pull-up","without pull-up"
-	bit unusedBitWasHere1
+	bit boardUseCamPullDown
 	bit unusedBitWasHere2
 	bit unusedBitWasHere3
 	bit unusedBitWasHere4
