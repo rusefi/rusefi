@@ -19,6 +19,8 @@ static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
 static OutputPin alphaCrankNPullUp;
+static OutputPin alpha2stepPullDown;
+static OutputPin alphaCamPullDown;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -99,6 +101,8 @@ void boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
 	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
 	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
+	alpha2stepPullDown.initPin("a-2step", H144_OUT_IO7);
+	alphaCamPullDown.initPin("a-cam", H144_OUT_IO8);
 	boardOnConfigurationChange(nullptr);
 }
 
@@ -107,6 +111,8 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
 	alphaCrankNPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
+	alpha2stepPullDown.setValue(engineConfiguration->boardUse2stepPullDown);
+	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
 }
 
 void setBoardConfigOverrides() {
