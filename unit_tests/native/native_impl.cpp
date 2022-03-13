@@ -43,3 +43,8 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setSensor
 
 	env->ReleaseStringUTFChars(sensorName, sensorNameNative);
 }
+
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallback
+  (JNIEnv *, jobject) {
+
+}
