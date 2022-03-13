@@ -9,7 +9,7 @@
 #include "com_rusefi_native__EngineLogic.h"
 #include "auto_generated_sensor.h"
 
-//static EngineTestHelper eth(TEST_ENGINE);
+static EngineTestHelper eth(TEST_ENGINE);
 
 JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv * env, jobject) {
 	const char msg[60] = "Hello from unit tests";
