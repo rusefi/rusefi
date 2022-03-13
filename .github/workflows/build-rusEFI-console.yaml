@@ -29,7 +29,7 @@ jobs:
         working-directory: .
         run: gcc -v
 
-      - name: Build Tests
+      - name: Build Native Unit Tests as shared library
         working-directory: ./unit_tests/
 # we have a unit test of JNI thus we need to build shared library
         run: make -j4
