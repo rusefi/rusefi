@@ -10,6 +10,9 @@ import java.io.*;
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.util.IoUtils.CHARSET;
 
+/**
+ * [Constants]
+ */
 public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_FILE_INPUT_NAME = "rusefi.input";
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
