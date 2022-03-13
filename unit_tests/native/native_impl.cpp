@@ -7,6 +7,7 @@
 
 #include "pch.h"
 #include "com_rusefi_native__EngineLogic.h"
+#include "auto_generated_sensor.h"
 
 //static EngineTestHelper eth(TEST_ENGINE);
 
@@ -18,7 +19,7 @@ JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv
 	return result;
 }
 
-JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getConfiguration(JNIEnv *env, jobject) {
+JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getConfiguration(JNIEnv *env, jobject instance) {
 	return nullptr;
 }
 
@@ -28,4 +29,17 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setConfiguration(JNI
 
 	printf("[native] setConfiguration %d %d\n", offset, size);
 //	printf("[native] engine %d %d\n", engineConfiguration->engineType);
+}
+
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setSensor
+  (JNIEnv *env, jobject instance, jstring sensorName, jdouble sensorValue) {
+
+	const char *sensorNameNative = env->GetStringUTFChars(sensorName, 0);
+
+	SensorType type = findSensorTypeByName(sensorNameNative);
+
+	printf("Setting [%s] to %f\n", getSensorType(type), sensorValue);
+	Sensor::setMockValue(type, sensorValue);
+
+	env->ReleaseStringUTFChars(sensorName, sensorNameNative);
 }
