@@ -16,6 +16,7 @@ public class JniSandbox {
 
         EngineLogic engineLogic = new EngineLogic();
         System.out.println(engineLogic.getVersion());
+        engineLogic.setSensor("clt", 90);
         engineLogic.setConfiguration(new byte[4], 24, 14);
     }
 
