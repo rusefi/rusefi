@@ -24,6 +24,8 @@
 /* for isspace() */
 #include <ctype.h>
 
+#define MAX_CMD_LINE_LENGTH		100
+
 // todo: support \t as well
 #define SPACE_CHAR ' '
 
@@ -500,7 +502,7 @@ char *validateSecureLine(char *line) {
 	return line;
 }
 
-static char handleBuffer[200];
+static char handleBuffer[MAX_CMD_LINE_LENGTH + 1];
 
 static int handleConsoleLineInternal(const char *commandLine, int lineLength) {
 	int len = minI(lineLength, sizeof(handleBuffer) - 1);
@@ -543,8 +545,7 @@ void handleConsoleLine(char *line) {
 		return; // error detected
 
 	int lineLength = strlen(line);
-	if (lineLength > 100) {
-		// todo: better max size logic
+	if (lineLength > MAX_CMD_LINE_LENGTH) {
 		// todo: better reaction to excessive line
 		efiPrintf("Long line?");
 		return;
