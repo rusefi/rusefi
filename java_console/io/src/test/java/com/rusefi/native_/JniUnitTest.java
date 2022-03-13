@@ -1,13 +1,11 @@
 package com.rusefi.native_;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertTrue;
 
 public class JniUnitTest {
     @Test
-    @Ignore
     public void run() {
         JniSandbox.loadLibrary();
 

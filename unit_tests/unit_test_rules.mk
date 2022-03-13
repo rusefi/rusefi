@@ -15,7 +15,8 @@ PCHSUB = unit_tests
 include $(PROJECT_DIR)/rusefi_rules.mk
 
 ifneq ($(OS),Windows_NT)
-	SANITIZE = yes
+# at the moment lib asan breaks JNI static library
+	SANITIZE = no
 else
 	SANITIZE = no
 endif
