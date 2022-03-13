@@ -506,6 +506,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->boardUseCrankPullUp;
 	if (strEqualCaseInsensitive(name, "boardUseCamPullDown"))
 		return engineConfiguration->boardUseCamPullDown;
+	if (strEqualCaseInsensitive(name, "boardUseCamVrPullUp"))
+		return engineConfiguration->boardUseCamVrPullUp;
 	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
 		return engineConfiguration->useFSIO5ForCriticalIssueEngineStop;
 	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
@@ -2188,6 +2190,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "boardUseCamPullDown"))
 	{
 		engineConfiguration->boardUseCamPullDown = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boardUseCamVrPullUp"))
+	{
+		engineConfiguration->boardUseCamVrPullUp = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))

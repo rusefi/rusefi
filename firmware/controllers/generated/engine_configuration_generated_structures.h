@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 12 15:07:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 13 15:59:29 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2381,7 +2381,7 @@ struct engine_configuration_s {
 	bool boardUseCamPullDown : 1 {};
 	/**
 	offset 1260 bit 22 */
-	bool unusedBitWasHere2 : 1 {};
+	bool boardUseCamVrPullUp : 1 {};
 	/**
 	offset 1260 bit 23 */
 	bool unusedBitWasHere3 : 1 {};
@@ -4537,4 +4537,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 12 15:07:40 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 13 15:59:29 UTC 2022
