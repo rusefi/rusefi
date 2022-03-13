@@ -30,7 +30,13 @@ extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
 
-EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) { 
+bool isTestingInitialized = false;
+
+EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
+    if (!isTestingInitialized) {
+	    testing::InitGoogleTest();
+	    isTestingInitialized = true;
+	}
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
 	minCrankingRpm = 0;
