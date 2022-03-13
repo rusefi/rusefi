@@ -132,6 +132,8 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
+    engineConfiguration->boardUseTempPullUp = true;
+
 	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
 	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
 	engineConfiguration->fanPin = H144_OUT_PWM4;

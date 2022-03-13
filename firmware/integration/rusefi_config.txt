@@ -1002,15 +1002,15 @@ end_struct
 	bit disablePrimaryUart
 	bit fuelClosedLoopCorrectionEnabled;+Enables lambda sensor closed loop feedback for fuelling.
 	bit isVerboseIAC;+Print details into rusEfi console\nenable verbose_idle
-	bit boardUseTachPullUp,"with pull-up","without pull-up"
-	bit boardUseTempPullUp,"with pull-up","without pull-up"
+	bit boardUseTachPullUp,"12v","5v"
+	bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
 	bit isEngineChartEnabled;+This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	bit silentTriggerError;+Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
 	bit canReadEnabled;enable can_read/disable can_read
 	bit canWriteEnabled;enable can_write/disable can_write
 	bit useLinearIatSensor
-	bit boardUse2stepPullDown
+	bit boardUse2stepPullDown,"With Pull Down","With Pull Up"
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";+Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;+This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal;+This setting flips the signal from the primary engine speed sensor.
@@ -1020,9 +1020,9 @@ bit cutFuelOnHardLimit,"yes","no"
 bit cutSparkOnHardLimit,"yes","no"
 bit launchFuelCutEnable
 bit launchSparkCutEnable;+This is the Cut Mode normally used
-	bit boardUseCrankPullUp,"with pull-up","without pull-up"
-	bit boardUseCamPullDown
-	bit unusedBitWasHere2
+	bit boardUseCrankPullUp,"Hall","VR"
+	bit boardUseCamPullDown,"With Pull Down","With Pull Up"
+	bit boardUseCamVrPullUp,"Hall","VR"
 	bit unusedBitWasHere3
 	bit unusedBitWasHere4
 	bit unusedBitWasHere5
