@@ -56,4 +56,15 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallba
   (JNIEnv *, jobject) {
 
     EngineTestHelper* eth = getEth();
+    eth->engine.periodicSlowCallback();
+    eth->engine.periodicFastCallback();
+}
+
+JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNIEnv * env, jobject instance) {
+	jbyteArray retVal = env->NewByteArray(sizeof(TunerStudioOutputChannels));
+	jbyte *buf = env->GetByteArrayElements(retVal, NULL);
+	memcpy(buf, (const void*)&eth->engine.outputChannels, sizeof(TunerStudioOutputChannels));
+	env->ReleaseByteArrayElements(retVal, buf, 0);
+
+	return retVal;
 }
