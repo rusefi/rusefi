@@ -72,6 +72,7 @@ static void showStats() {
     efiPrintf("MC driver status 0x%x", mcDriverStatus);
 }
 
+static void initMc33816IfNeeded();
 static void mcRestart();
 
 
@@ -420,8 +421,6 @@ static void download_register(int r_target) {
 	   spiUnselect(driver);
 }
 
-static bool haveMc33816 = false;
-
 void initMc33816() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
@@ -461,8 +460,7 @@ void initMc33816() {
 	addConsoleAction("mc33_restart", mcRestart);
 	//addConsoleActionI("mc33_send", sendWord);
 
-	haveMc33816 = true;
-	mcRestart();
+	initMc33816IfNeeded();
 }
 
 static void mcShutdown() {
@@ -571,14 +569,13 @@ static void mcRestart() {
     }
 }
 
-void initMc33816IfNeeded() {
-	if (!haveMc33816) {
-		return;
-	}
+static void initMc33816IfNeeded() {
 	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
 		isInitializaed = false;
 	} else {
 		if (!isInitializaed) {
+			// WARNING: 'mcRestart' current implementation works in non-irq user content only
+			// note all the locking SPI API usage
 			mcRestart();
 			isInitializaed = true;
 		}

@@ -20,15 +20,14 @@
  *
  * These initialization functions are called from
  * firmware/controllers/algo/engine_configuration.cpp
- *  void setBoardDefaultConfiguration(void);
- *  void setPinConfigurationOverrides(void);
- *  void setSerialConfigurationOverrides(void);
+ *  void setBoardDefaultConfiguration();
+ *  void setPinConfigurationOverrides();
+ *  void setSerialConfigurationOverrides();
  *
  * Future: Clean up the distinction between these functions.
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 
 // An example of how to configure complex features on the board.
 // Generally these should be local (static) functions, one function per chip.
@@ -108,16 +107,13 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.config.bias_resistor = 2700;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
 // Future: configure USART3 for LIN bus and UART4 for console
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -128,7 +124,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add any board-specific code
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 
 	// Set indicator LED pins.
 	// This is often redundant with efifeatures.h or the run-time config

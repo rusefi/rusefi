@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Jan 04 03:36:48 UTC 2022
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Tue Feb 08 21:18:21 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -41,6 +41,39 @@ case MINIMUM:
   return "MINIMUM";
 case NOT_A_PEAK:
   return "NOT_A_PEAK";
+  }
+ return NULL;
+}
+const char *getTsCalMode(TsCalMode value){
+switch(value) {
+case TsCalMode::EtbKd:
+  return "EtbKd";
+case TsCalMode::EtbKi:
+  return "EtbKi";
+case TsCalMode::EtbKp:
+  return "EtbKp";
+case TsCalMode::None:
+  return "None";
+case TsCalMode::PedalMax:
+  return "PedalMax";
+case TsCalMode::PedalMin:
+  return "PedalMin";
+case TsCalMode::Tps1Max:
+  return "Tps1Max";
+case TsCalMode::Tps1Min:
+  return "Tps1Min";
+case TsCalMode::Tps1SecondaryMax:
+  return "Tps1SecondaryMax";
+case TsCalMode::Tps1SecondaryMin:
+  return "Tps1SecondaryMin";
+case TsCalMode::Tps2Max:
+  return "Tps2Max";
+case TsCalMode::Tps2Min:
+  return "Tps2Min";
+case TsCalMode::Tps2SecondaryMax:
+  return "Tps2SecondaryMax";
+case TsCalMode::Tps2SecondaryMin:
+  return "Tps2SecondaryMin";
   }
  return NULL;
 }
@@ -407,6 +440,8 @@ case IMU_TYPE_3:
   return "IMU_TYPE_3";
 case IMU_TYPE_4:
   return "IMU_TYPE_4";
+case IMU_TYPE_MB_A0065422618:
+  return "IMU_TYPE_MB_A0065422618";
 case IMU_VAG:
   return "IMU_VAG";
   }
@@ -608,6 +643,8 @@ case Force_4bytes_size_tChargeMode_e:
   return "Force_4bytes_size_tChargeMode_e";
 case TCHARGE_MODE_AIR_INTERP:
   return "TCHARGE_MODE_AIR_INTERP";
+case TCHARGE_MODE_AIR_INTERP_TABLE:
+  return "TCHARGE_MODE_AIR_INTERP_TABLE";
 case TCHARGE_MODE_RPM_TPS:
   return "TCHARGE_MODE_RPM_TPS";
   }
@@ -722,8 +759,8 @@ case VVT_INACTIVE:
   return "VVT_INACTIVE";
 case VVT_MAP_V_TWIN_ANOTHER:
   return "VVT_MAP_V_TWIN_ANOTHER";
-case VVT_MIATA_NB2:
-  return "VVT_MIATA_NB2";
+case VVT_MIATA_NB:
+  return "VVT_MIATA_NB";
 case VVT_NISSAN_MR:
   return "VVT_NISSAN_MR";
 case VVT_NISSAN_VQ:

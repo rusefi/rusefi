@@ -1,12 +1,15 @@
 package com.rusefi.ui.util;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
+import com.rusefi.ui.light.LightweightGUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Launcher.*;
 
 /**
@@ -14,6 +17,8 @@ import static com.rusefi.Launcher.*;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler {
+    private static final Logging log = getLogging(DefaultExceptionHandler.class);
+
     private static boolean hadExceptionAlready;
 
     public void uncaughtException(Thread t, Throwable e) {
@@ -22,7 +27,7 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
 
     public static void handleException(Throwable e) {
         if (e == null) {
-            FileLog.MAIN.logLine("Null exception?");
+            log.info("Null exception?");
             throw new NullPointerException("Throwable e");
         }
         e.printStackTrace(); // output to error log
@@ -51,7 +56,7 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
         content.add(scrollPane, BorderLayout.CENTER);
 
         JOptionPane.showConfirmDialog(findActiveFrame(), content, CONSOLE_VERSION + ": Exception Occurred", JOptionPane.DEFAULT_OPTION);
-        FileLog.MAIN.logLine("handleException: " + baos.toString());
+        log.info("handleException: " + baos.toString());
     }
 
     private static Frame findActiveFrame() {

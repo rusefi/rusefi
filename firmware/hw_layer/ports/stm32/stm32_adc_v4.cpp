@@ -80,6 +80,8 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
 	// Thresholds aren't used
 	.ltr1 = 0, .htr1 = 0, .ltr2 = 0, .htr2 = 0, .ltr3 = 0, .htr3 = 0,
+	.awd2cr = 0,
+	.awd3cr = 0,
 	.smpr = {
 		// Configure all channels to use ADC_SAMPLING_SLOW time
 		ADC_SMPR1_SMP_AN0(ADC_SAMPLING_SLOW) |

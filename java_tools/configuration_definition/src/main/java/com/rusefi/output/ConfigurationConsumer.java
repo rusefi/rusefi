@@ -5,9 +5,13 @@ import com.rusefi.ReaderState;
 import java.io.IOException;
 
 public interface ConfigurationConsumer {
-    void startFile() throws IOException;
+    default void startFile() {
 
-    void endFile() throws IOException;
+    }
+
+    default void endFile() throws IOException {
+
+    }
 
     void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException;
 }

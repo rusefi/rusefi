@@ -36,7 +36,7 @@ static void populateFrame(Status& msg) {
 	msg.warningCounter = engine->engineState.warnings.warningCounter;
 	msg.lastErrorCode = engine->engineState.warnings.lastErrorCode;
 
-	msg.revLimit = GET_RPM() > engineConfiguration->rpmHardLimit;
+	msg.revLimit = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->rpmHardLimit;
 	msg.mainRelay = enginePins.mainRelay.getLogicValue();
 	msg.fuelPump = enginePins.fuelPumpRelay.getLogicValue();
 	msg.checkEngine = enginePins.checkEnginePin.getLogicValue();
@@ -53,7 +53,7 @@ struct Speeds {
 };
 
 static void populateFrame(Speeds& msg) {
-	auto rpm = GET_RPM();
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 	msg.rpm = rpm;
 
 	auto timing = engine->engineState.timingAdvance[0];
@@ -125,7 +125,7 @@ struct Fueling {
 
 static void populateFrame(Fueling& msg) {
 	msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
-	msg.estAirflow = engine->engineState.airFlow;
+	msg.estAirflow = engine->engineState.airflowEstimate;
 	msg.fuel_pulse = engine->actualLastInjection[0];
 }
 

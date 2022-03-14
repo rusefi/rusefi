@@ -132,7 +132,7 @@ static void handleGetDataRequest(const CANRxFrame& rx) {
 		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::Map));
 		break;
 	case PID_RPM:
-		obdSendValue(_1_MODE, pid, 2, GET_RPM() * ODB_RPM_MULT);	//	rotation/min.	(A*256+B)/4
+		obdSendValue(_1_MODE, pid, 2, Sensor::getOrZero(SensorType::Rpm) * ODB_RPM_MULT);	//	rotation/min.	(A*256+B)/4
 		break;
 	case PID_SPEED:
 		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::VehicleSpeed));

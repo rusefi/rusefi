@@ -11,7 +11,7 @@
 #include "persistent_configuration.h"
 
 #ifndef DEFAULT_ENGINE_TYPE
-#define DEFAULT_ENGINE_TYPE DEFAULT_FRANKENSO
+#define DEFAULT_ENGINE_TYPE MINIMAL_PINS
 #endif
 
 #define CLT_MANUAL_IDLE_CORRECTION config->cltIdleCorrBins, config->cltIdleCorr, CLT_CURVE_SIZE
@@ -62,6 +62,7 @@ void rememberCurrentConfiguration();
 
 void setBoardDefaultConfiguration(void);
 void setBoardConfigOverrides(void);
+void boardOnConfigurationChange(engine_configuration_s *previousConfiguration);
 
 #if !EFI_UNIT_TEST
 extern persistent_config_container_s persistentState;

@@ -22,7 +22,7 @@ void Biquad::reset() {
 }
 
 static float getK(float samplingFrequency, float cutoff) {
-	return tanf_taylor(3.14159f * cutoff / samplingFrequency);
+	return tanf_taylor(CONST_PI * cutoff / samplingFrequency);
 }
 
 static float getNorm(float K, float Q) {

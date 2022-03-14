@@ -27,7 +27,7 @@ public class Wizard {
         Component getContent();
     }
 
-    abstract class WizardStepImpl implements WizardStep {
+    abstract static class WizardStepImpl implements WizardStep {
         protected WizardStep nextStep;
 
         public WizardStepImpl() {

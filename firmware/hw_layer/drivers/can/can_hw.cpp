@@ -276,14 +276,14 @@ void initCan(void) {
 	auto device1 = detectCanDevice(engineConfiguration->canRxPin, engineConfiguration->canTxPin);
 	auto device2 = detectCanDevice(engineConfiguration->can2RxPin, engineConfiguration->can2TxPin);
 
-	// Devices can't be the same!
-	if (device1 == device2) {
-		firmwareError(OBD_PCM_Processor_Fault, "CAN pins must be set to different devices");
+	// If both devices are null, a firmware error was already thrown by detectCanDevice, but we shouldn't continue
+	if (!device1 && !device2) {
 		return;
 	}
 
-	// If both devices are null, a firmware error was already thrown by detectCanDevice, but we shouldn't continue
-	if (!device1 && !device2) {
+	// Devices can't be the same!
+	if (device1 == device2) {
+		firmwareError(OBD_PCM_Processor_Fault, "CAN pins must be set to different devices");
 		return;
 	}
 

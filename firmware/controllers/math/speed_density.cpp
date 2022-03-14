@@ -23,6 +23,48 @@ lambda_Map3D_t lambdaMap;
 
 #define tpMin 0
 #define tpMax 100
+
+static float getTChargeCoefficient(int rpm, float tps) {
+	engine->engineState.sd.isTChargeAirModel = engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP;
+
+	// First, do TPS mode since it doesn't need any of the airflow math.
+	if (engineConfiguration->tChargeMode == TCHARGE_MODE_RPM_TPS) {
+		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin,
+				engineConfiguration->tChargeMinRpmMinTps, tpMax,
+				engineConfiguration->tChargeMinRpmMaxTps, tps);
+		float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin,
+				engineConfiguration->tChargeMaxRpmMinTps, tpMax,
+				engineConfiguration->tChargeMaxRpmMaxTps, tps);
+
+		return interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
+	}
+
+	constexpr floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;
+	// We're actually using an 'old' airMass calculated for the previous cycle, but it's ok, we're not having any self-excitaton issues
+	floatms_t airMassForEngine = engine->engineState.sd.airMassInOneCylinder * engineConfiguration->specs.cylindersCount;
+	// airMass is in grams per 1 cycle for 1 cyl. Convert it to airFlow in kg/h for the engine.
+	// And if the engine is stopped (0 rpm), then airFlow is also zero (avoiding NaN division)
+	floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm);
+
+	if (engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP) {
+		// just interpolate between user-specified min and max coefs, based on the max airFlow value
+		return interpolateClamped(
+			0.0, engineConfiguration->tChargeAirCoefMin,
+			engineConfiguration->tChargeAirFlowMax, engineConfiguration->tChargeAirCoefMax,
+			airFlow
+		);
+	} else if (engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP_TABLE) {
+		return interpolate2d(
+			airFlow,
+			engineConfiguration->tchargeBins,
+			engineConfiguration->tchargeValues
+		);
+	} else {
+		firmwareError(OBD_PCM_Processor_Fault, "Unexpected tChargeMode: %d", engineConfiguration->tChargeMode);
+		return 0;
+	}
+}
+
 //  http://rusefi.com/math/t_charge.html
 /***panel:Charge Temperature*/
 temperature_t getTCharge(int rpm, float tps) {
@@ -47,38 +89,18 @@ temperature_t getTCharge(int rpm, float tps) {
 
 	float coolantTemp = clt.Value;
 
-	if ((engine->engineState.sd.isTChargeAirModel = (engineConfiguration->tChargeMode == TCHARGE_MODE_AIR_INTERP))) {
-		const floatms_t gramsPerMsToKgPerHour = (3600.0f * 1000.0f) / 1000.0f;
-		// We're actually using an 'old' airMass calculated for the previous cycle, but it's ok, we're not having any self-excitaton issues
-		floatms_t airMassForEngine = engine->engineState.sd.airMassInOneCylinder * engineConfiguration->specs.cylindersCount;
-		// airMass is in grams per 1 cycle for 1 cyl. Convert it to airFlow in kg/h for the engine.
-		// And if the engine is stopped (0 rpm), then airFlow is also zero (avoiding NaN division)
-		floatms_t airFlow = (rpm == 0) ? 0 : airMassForEngine * gramsPerMsToKgPerHour / getEngineCycleDuration(rpm);
-		// just interpolate between user-specified min and max coefs, based on the max airFlow value
-		engine->engineState.airFlow = airFlow;
-		engine->engineState.sd.Tcharge_coff = interpolateClamped(0.0,
-				engineConfiguration->tChargeAirCoefMin,
-				engineConfiguration->tChargeAirFlowMax,
-				engineConfiguration->tChargeAirCoefMax, airFlow);
-		// save it for console output (instead of MAF massAirFlow)
-	} else {
-		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin,
-				engineConfiguration->tChargeMinRpmMinTps, tpMax,
-				engineConfiguration->tChargeMinRpmMaxTps, tps);
-		float maxRpmKcurrentTPS = interpolateMsg("maxRpm", tpMin,
-				engineConfiguration->tChargeMaxRpmMinTps, tpMax,
-				engineConfiguration->tChargeMaxRpmMaxTps, tps);
+	auto coefficient = getTChargeCoefficient(rpm, tps);
+	engine->engineState.sd.Tcharge_coff = coefficient;
 
-		engine->engineState.sd.Tcharge_coff = interpolateMsg("Kcurr", rpmMin, minRpmKcurrentTPS, rpmMax, maxRpmKcurrentTPS, rpm);
-	}
-
-	if (cisnan(engine->engineState.sd.Tcharge_coff)) {
+	if (cisnan(coefficient)) {
 		warning(CUSTOM_ERR_T2_CHARGE, "t2-getTCharge NaN");
 		return coolantTemp;
 	}
 
-	// We use a robust interp. function for proper tcharge_coff clamping.
-	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, engine->engineState.sd.Tcharge_coff);
+	// Interpolate between CLT and IAT:
+	// 0.0 coefficient -> use CLT (full heat transfer)
+	// 1.0 coefficient -> use IAT (no heat transfer)
+	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, coefficient);
 
 	if (cisnan(Tcharge)) {
 		// we can probably end up here while resetting engine state - interpolation would fail

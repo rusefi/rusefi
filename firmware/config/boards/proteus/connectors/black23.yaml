@@ -2,21 +2,21 @@ pins:
   - pin: 1
     id: [GPIOE_11, GPIOE_11]
     class: [event_inputs, switch_inputs]
-    function: Digital trigger/switch input
+    function: Digital trigger/switch input for instance Hall type CAM
     ts_name: Digital 2
     type: din
 
   - pin: 2
     id: [GPIOE_12, GPIOE_12]
     class: [event_inputs, switch_inputs]
-    function: Digital trigger/switch input
+    function: Digital trigger/switch input for instance VSS
     ts_name: Digital 3
     type: din
 
   - pin: 3
     id: [GPIOE_14, GPIOE_14]
     class: [event_inputs, switch_inputs]
-    function: Digital trigger/switch input
+    function: Digital trigger/switch input for instance Start Button
     ts_name: Digital 4
     type: din
 
@@ -151,6 +151,7 @@ pins:
 info:
   title: Proteus
   name: Black23
+  board_url: "https://wiki.rusefi.com/Hardware/Proteus/Proteus/"
   id: black23
   image:
     file: black23.jpg

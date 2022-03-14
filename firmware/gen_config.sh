@@ -14,7 +14,9 @@ mkdir build
 #
 #
 for BOARD in \
-   "f429-discovery f429-discovery" \
+   "hellen/alphax-2chan alphax-2chan" \
+   "hellen/alphax-4chan alphax-4chan" \
+   "hellen/harley81 harley81" \
    "hellen/hellen128 hellen128 rusefi_hellen128mercedes.ini" \
    "hellen/hellen121vag hellen121vag" \
    "hellen/hellen121nissan hellen121nissan" \
@@ -27,11 +29,14 @@ for BOARD in \
    "hellen/hellenNA8_96 hellenNA8_96" \
    "microrusefi mre_f7" \
    "microrusefi mre_f4" \
+   "core8 core8" \
    "frankenso frankenso_na6" \
    "prometheus prometheus_469" \
    "prometheus prometheus_405" \
    "proteus proteus_f7" \
    "proteus proteus_f4" \
+   "proteus proteus_h7" \
+   "f429-discovery f429-discovery" \
    "atlas atlas"\
    ; do
  BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)

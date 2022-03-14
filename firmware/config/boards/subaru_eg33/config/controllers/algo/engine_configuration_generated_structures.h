@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Jan 04 04:47:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 13 15:59:27 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -617,11 +617,11 @@ struct idle_hardware_s {
 	/**
 	 * offset 5
 	 */
-	output_pin_e stepperDirectionPin;
+	brain_pin_e stepperDirectionPin;
 	/**
 	 * offset 6
 	 */
-	output_pin_e stepperStepPin;
+	brain_pin_e stepperStepPin;
 	/**
 	 * offset 7
 	 */
@@ -831,7 +831,7 @@ struct engine_configuration_s {
 	bool isDoubleSolenoidIdle : 1 {};
 	/**
 	offset 164 bit 14 */
-	bool showSdCardWarning : 1 {};
+	bool useEeprom : 1 {};
 	/**
 	 * Is your UR CJ125 output wired to MCU via resistor divider?
 	 * Looks like 3v range should be enough, divider generally not needed.
@@ -882,7 +882,7 @@ struct engine_configuration_s {
 	offset 164 bit 27 */
 	bool usescriptTableForCanSniffingFiltering : 1 {};
 	/**
-	 * Print incoming and outgoing CAN messages in rusEFI console
+	 * Print incoming and outgoing first bus CAN messages in rusEFI console
 	offset 164 bit 28 */
 	bool verboseCan : 1 {};
 	/**
@@ -931,10 +931,9 @@ struct engine_configuration_s {
 	 */
 	cranking_parameters_s cranking;
 	/**
-	*C
 	 * offset 184
 	 */
-	float primingSquirtDurationMs;
+	float unused184;
 	/**
 	 * Dwell duration while cranking
 	ms
@@ -1293,7 +1292,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 623
 	 */
-	uint8_t mapCamDetectionThreshold;
+	uint8_t unusedDtectionThreshold;
 	/**
 	 * Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.
 	ratio
@@ -1309,7 +1308,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 627
 	 */
-	uint8_t mapCamAveragingLength;
+	brain_pin_e l9779_cs;
 	/**
 	 * Same RPM is used for two ways of producing simulated RPM. See also triggerSimulatorPins (with wires)
 	 * See also directSelfStimulation (no wires, bypassing input hardware)
@@ -1532,10 +1531,15 @@ struct engine_configuration_s {
 	 */
 	uint8_t acIdleExtraOffset;
 	/**
-	ms
+	ratio
 	 * offset 720
 	 */
-	int unused720;
+	scaled_channel<uint16_t, 10, 1> finalGearRatio;
+	/**
+	m
+	 * offset 722
+	 */
+	scaled_channel<uint16_t, 1000, 1> wheelDiameter;
 	/**
 	 * Voltage when the wastegate is closed.
 	 * You probably don't have one of these!
@@ -1758,7 +1762,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 768
 	 */
-	uint8_t mapCamSkipFactor;
+	spi_device_e l9779spiDevice;
 	/**
 	volts
 	 * offset 769
@@ -2054,7 +2058,7 @@ struct engine_configuration_s {
 	bool stftIgnoreErrorMagnitude : 1 {};
 	/**
 	offset 896 bit 11 */
-	bool mapCamLookForLowPeaks : 1 {};
+	bool tempBooleanForVerySpecialCases : 1 {};
 	/**
 	offset 896 bit 12 */
 	bool enableSoftwareKnock : 1 {};
@@ -2114,11 +2118,13 @@ struct engine_configuration_s {
 	offset 896 bit 29 */
 	bool canBroadcastUseChannelTwo : 1 {};
 	/**
+	 * If enabled we use four Push-Pull outputs to directly drive stepper idle air valve coilss
 	offset 896 bit 30 */
-	bool unusedBit_310_30 : 1 {};
+	bool useRawOutputToDriveIdleStepper : 1 {};
 	/**
+	 * Print incoming and outgoing second bus CAN messages in rusEFI console
 	offset 896 bit 31 */
-	bool unusedBit_310_31 : 1 {};
+	bool verboseCan2 : 1 {};
 	/**
 	 * offset 900
 	 */
@@ -2297,7 +2303,7 @@ struct engine_configuration_s {
 	uint16_t tps2SecondaryMax;
 	/**
 	offset 1260 bit 0 */
-	bool unused1464b0 : 1 {};
+	bool disablePrimaryUart : 1 {};
 	/**
 	 * Enables lambda sensor closed loop feedback for fuelling.
 	offset 1260 bit 1 */
@@ -2309,10 +2315,10 @@ struct engine_configuration_s {
 	bool isVerboseIAC : 1 {};
 	/**
 	offset 1260 bit 3 */
-	bool unused1464b3 : 1 {};
+	bool boardUseTachPullUp : 1 {};
 	/**
 	offset 1260 bit 4 */
-	bool unused1464b4 : 1 {};
+	bool boardUseTempPullUp : 1 {};
 	/**
 	 * This options enables data for 'engine sniffer' tab in console, which comes at some CPU price
 	offset 1260 bit 5 */
@@ -2337,7 +2343,7 @@ struct engine_configuration_s {
 	bool useLinearIatSensor : 1 {};
 	/**
 	offset 1260 bit 11 */
-	bool unusedBitWasHere16 : 1 {};
+	bool boardUse2stepPullDown : 1 {};
 	/**
 	 * Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	offset 1260 bit 12 */
@@ -2369,13 +2375,13 @@ struct engine_configuration_s {
 	bool launchSparkCutEnable : 1 {};
 	/**
 	offset 1260 bit 20 */
-	bool unused1464b20 : 1 {};
+	bool boardUseCrankPullUp : 1 {};
 	/**
 	offset 1260 bit 21 */
-	bool unusedBitWasHere1 : 1 {};
+	bool boardUseCamPullDown : 1 {};
 	/**
 	offset 1260 bit 22 */
-	bool unusedBitWasHere2 : 1 {};
+	bool boardUseCamVrPullUp : 1 {};
 	/**
 	offset 1260 bit 23 */
 	bool unusedBitWasHere3 : 1 {};
@@ -2442,11 +2448,12 @@ struct engine_configuration_s {
 	offset 1272 bit 2 */
 	bool isCylinderCleanupEnabled : 1 {};
 	/**
+	 * Should we use tables to vary tau/beta based on CLT/MAP, or just with fixed values?
 	offset 1272 bit 3 */
-	bool unused1476b3 : 1 {};
+	bool complexWallModel : 1 {};
 	/**
 	offset 1272 bit 4 */
-	bool unusedBit4_1476 : 1 {};
+	bool alwaysInstantRpm : 1 {};
 	/**
 	offset 1272 bit 5 */
 	bool isMapAveragingEnabled : 1 {};
@@ -2845,11 +2852,29 @@ struct engine_configuration_s {
 	 */
 	brain_pin_e LIS302DLCsPin;
 	/**
-	 * This is the number of engine cycles that the TPS position change can occur over, a longer duration will make the enrichment more active but too long may affect steady state driving, a good default is 30-60 cycles.
-	cycles
+	 * How long to look back for TPS-based acceleration enrichment. Increasing this time will trigger enrichment for longer when a throttle position change occurs.
+	sec
 	 * offset 1688
 	 */
-	int tpsAccelLength;
+	scaled_channel<uint8_t, 20, 1> tpsAccelLookback;
+	/**
+	 * Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
+	kph
+	 * offset 1689
+	 */
+	uint8_t coastingFuelCutVssLow;
+	/**
+	 * Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
+	kph
+	 * offset 1690
+	 */
+	uint8_t coastingFuelCutVssHigh;
+	/**
+	 * Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
+	sec
+	 * offset 1691
+	 */
+	scaled_channel<uint8_t, 10, 1> noFuelTrimAfterDfcoTime;
 	/**
 	 * Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.
 	roc
@@ -2857,10 +2882,9 @@ struct engine_configuration_s {
 	 */
 	float tpsAccelEnrichmentThreshold;
 	/**
-	cycles
 	 * offset 1696
 	 */
-	int engineLoadAccelLength;
+	int unused1696;
 	/**
 	 * Band rate for primary TTL
 	BPs
@@ -2978,76 +3002,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1740 bit 8 */
-	bool unusedBit_501_8 : 1 {};
+	bool unusedBit_505_8 : 1 {};
 	/**
 	offset 1740 bit 9 */
-	bool unusedBit_501_9 : 1 {};
+	bool unusedBit_505_9 : 1 {};
 	/**
 	offset 1740 bit 10 */
-	bool unusedBit_501_10 : 1 {};
+	bool unusedBit_505_10 : 1 {};
 	/**
 	offset 1740 bit 11 */
-	bool unusedBit_501_11 : 1 {};
+	bool unusedBit_505_11 : 1 {};
 	/**
 	offset 1740 bit 12 */
-	bool unusedBit_501_12 : 1 {};
+	bool unusedBit_505_12 : 1 {};
 	/**
 	offset 1740 bit 13 */
-	bool unusedBit_501_13 : 1 {};
+	bool unusedBit_505_13 : 1 {};
 	/**
 	offset 1740 bit 14 */
-	bool unusedBit_501_14 : 1 {};
+	bool unusedBit_505_14 : 1 {};
 	/**
 	offset 1740 bit 15 */
-	bool unusedBit_501_15 : 1 {};
+	bool unusedBit_505_15 : 1 {};
 	/**
 	offset 1740 bit 16 */
-	bool unusedBit_501_16 : 1 {};
+	bool unusedBit_505_16 : 1 {};
 	/**
 	offset 1740 bit 17 */
-	bool unusedBit_501_17 : 1 {};
+	bool unusedBit_505_17 : 1 {};
 	/**
 	offset 1740 bit 18 */
-	bool unusedBit_501_18 : 1 {};
+	bool unusedBit_505_18 : 1 {};
 	/**
 	offset 1740 bit 19 */
-	bool unusedBit_501_19 : 1 {};
+	bool unusedBit_505_19 : 1 {};
 	/**
 	offset 1740 bit 20 */
-	bool unusedBit_501_20 : 1 {};
+	bool unusedBit_505_20 : 1 {};
 	/**
 	offset 1740 bit 21 */
-	bool unusedBit_501_21 : 1 {};
+	bool unusedBit_505_21 : 1 {};
 	/**
 	offset 1740 bit 22 */
-	bool unusedBit_501_22 : 1 {};
+	bool unusedBit_505_22 : 1 {};
 	/**
 	offset 1740 bit 23 */
-	bool unusedBit_501_23 : 1 {};
+	bool unusedBit_505_23 : 1 {};
 	/**
 	offset 1740 bit 24 */
-	bool unusedBit_501_24 : 1 {};
+	bool unusedBit_505_24 : 1 {};
 	/**
 	offset 1740 bit 25 */
-	bool unusedBit_501_25 : 1 {};
+	bool unusedBit_505_25 : 1 {};
 	/**
 	offset 1740 bit 26 */
-	bool unusedBit_501_26 : 1 {};
+	bool unusedBit_505_26 : 1 {};
 	/**
 	offset 1740 bit 27 */
-	bool unusedBit_501_27 : 1 {};
+	bool unusedBit_505_27 : 1 {};
 	/**
 	offset 1740 bit 28 */
-	bool unusedBit_501_28 : 1 {};
+	bool unusedBit_505_28 : 1 {};
 	/**
 	offset 1740 bit 29 */
-	bool unusedBit_501_29 : 1 {};
+	bool unusedBit_505_29 : 1 {};
 	/**
 	offset 1740 bit 30 */
-	bool unusedBit_501_30 : 1 {};
+	bool unusedBit_505_30 : 1 {};
 	/**
 	offset 1740 bit 31 */
-	bool unusedBit_501_31 : 1 {};
+	bool unusedBit_505_31 : 1 {};
 	/**
 	ms
 	 * offset 1744
@@ -3113,15 +3137,20 @@ struct engine_configuration_s {
 	 */
 	float boostCutPressure;
 	/**
-	counter
+	kg/h
 	 * offset 1760
 	 */
-	float mapAccelTaperBins[MAP_ACCEL_TAPER];
+	uint8_t tchargeBins[16];
 	/**
-	mult
+	ratio
+	 * offset 1776
+	 */
+	uint8_t tchargeValues[16];
+	/**
+	counter
 	 * offset 1792
 	 */
-	float mapAccelTaperMult[MAP_ACCEL_TAPER];
+	float unusedMapAccelTaperBins[8];
 	/**
 	 * Fixed timing, useful for TDC testing
 	deg
@@ -3503,7 +3532,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 2696
 	 */
-	output_pin_e stepperEnablePin;
+	brain_pin_e stepperEnablePin;
 	/**
 	 * offset 2697
 	 */
@@ -3546,7 +3575,7 @@ struct engine_configuration_s {
 	 */
 	int16_t coastingFuelCutRpmLow;
 	/**
-	 * Throttle position below which fuel cut is active.
+	 * Throttle position below which fuel cut is active. With an electronic throttle enabled, this checks against pedal position.
 	%
 	 * offset 2744
 	 */
@@ -4013,23 +4042,78 @@ struct engine_configuration_s {
 	Nm
 	 * offset 4594
 	 */
-	scaled_channel<uint8_t, 1, 10> torqueValues[TORQUE_CURVE_SIZE];
+	uint8_t unusedSSValues[8];
 	/**
 	RPM
 	 * offset 4602
 	 */
-	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
+	uint16_t unusedRpmBins[8];
 	/**
-	 * need 4 byte alignment
-	units
 	 * offset 4618
 	 */
-	uint8_t alignmentFill_at_4618[2];
+	output_pin_e stepper_raw_output[4];
+	/**
+	ratio
+	 * offset 4622
+	 */
+	scaled_channel<uint16_t, 100, 1> gearRatio[GEARS_COUNT];
+	/**
+	 * We need to give engine time to build oil pressure without diverting it to VVT
+	ms
+	 * offset 4638
+	 */
+	uint16_t vvtActivationDelayMs;
+	/**
+	RPM
+	 * offset 4640
+	 */
+	uint16_t unusedShort;
+	/**
+	deg C
+	 * offset 4642
+	 */
+	int8_t wwCltBins[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4650
+	 */
+	scaled_channel<uint8_t, 100, 1> wwTauCltValues[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4658
+	 */
+	scaled_channel<uint8_t, 100, 1> wwBetaCltValues[WWAE_TABLE_SIZE];
+	/**
+	kPa
+	 * offset 4666
+	 */
+	int8_t wwMapBins[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4674
+	 */
+	scaled_channel<uint8_t, 100, 1> wwTauMapValues[WWAE_TABLE_SIZE];
+	/**
+	 * offset 4682
+	 */
+	scaled_channel<uint8_t, 100, 1> wwBetaMapValues[WWAE_TABLE_SIZE];
+	/**
+	Nm
+	 * offset 4690
+	 */
+	scaled_channel<uint8_t, 1, 10> torqueTable[TORQUE_CURVE_SIZE][TORQUE_CURVE_SIZE];
+	/**
+	RPM
+	 * offset 4726
+	 */
+	uint16_t torqueRpmBins[TORQUE_CURVE_SIZE];
+	/**
+	Load
+	 * offset 4738
+	 */
+	uint16_t torqueLoadBins[TORQUE_CURVE_SIZE];
 	/**
 	units
-	 * offset 4620
+	 * offset 4750
 	 */
-	int mainUnusedEnd[100];
+	uint8_t mainUnusedEnd[270];
 	/** total size 5020*/
 };
 
@@ -4130,17 +4214,20 @@ struct persistent_config_s {
 	 */
 	float idleAdvance[IDLE_ADVANCE_CURVE_SIZE];
 	/**
-	 * Optional VE table for Idle (see useSeparateVEForIdle)
 	RPM
 	 * offset 5596
 	 */
-	scaled_channel<uint8_t, 1, 50> idleVeBins[IDLE_VE_CURVE_SIZE];
+	scaled_channel<uint8_t, 1, 10> idleVeRpmBins[IDLE_VE_SIZE];
 	/**
-	 * Optional VE table for Idle (see useSeparateVEForIdle)
+	load
+	 * offset 5600
+	 */
+	scaled_channel<uint8_t, 1, 1> idleVeLoadBins[IDLE_VE_SIZE];
+	/**
 	%
 	 * offset 5604
 	 */
-	float idleVe[IDLE_VE_CURVE_SIZE];
+	scaled_channel<uint16_t, 10, 1> idleVeTable[IDLE_VE_SIZE][IDLE_VE_SIZE];
 	/**
 	 * offset 5636
 	 */
@@ -4441,8 +4528,13 @@ struct persistent_config_s {
 	 * offset 20804
 	 */
 	cyl_trim_s fuelTrims[12];
-	/** total size 20996*/
+	/**
+	ratio
+	 * offset 20996
+	 */
+	uint16_t crankingFuelCoefE100[CRANKING_CURVE_SIZE];
+	/** total size 21012*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on config/boards/subaru_eg33/config/gen_config.sh integration/rusefi_config.txt Tue Jan 04 04:47:05 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 13 15:59:27 UTC 2022

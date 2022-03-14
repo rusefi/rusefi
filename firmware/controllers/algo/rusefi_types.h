@@ -35,6 +35,8 @@ typedef unsigned int time_t;
 
 // gasoline E0
 #define STOICH_RATIO				14.7f
+#define CONST_PI           3.14159265358979323846
+
 
 // time in seconds
 typedef time_t efitimesec_t;
@@ -118,6 +120,8 @@ typedef void (*VoidInt)(int);
 typedef void (*VoidIntVoidPtr)(int, void*);
 typedef void (*VoidFloat)(float);
 typedef void (*VoidFloatFloat)(float, float);
+typedef void (*VoidFloatFloatFloat)(float, float, float);
+typedef void (*VoidFloatFloatFloatFloatFloat)(float, float, float, float, float);
 typedef void (*VoidFloatFloatVoidPtr)(float, float, void*);
 typedef void (*VoidIntInt)(int, int);
 typedef void (*VoidIntIntVoidPtr)(int, int, void*);

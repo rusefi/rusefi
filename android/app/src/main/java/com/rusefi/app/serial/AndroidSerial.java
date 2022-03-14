@@ -38,7 +38,7 @@ public class AndroidSerial extends AbstractIoStream {
 
     public AndroidSerial(UsbSerialPort usbSerialPort) {
         this.usbSerialPort = usbSerialPort;
-        dataBuffer = IncomingDataBuffer.createDataBuffer("", this);
+        dataBuffer = createDataBuffer("");
     }
 
     @SuppressLint("SetTextI18n")

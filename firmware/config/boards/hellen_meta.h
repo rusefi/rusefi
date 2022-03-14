@@ -7,6 +7,30 @@
 
 #pragma once
 
+void hellenWbo();
+void setHellenDefaultVrThresholds();
+
+void setHellen144LedPins();
+void setHellen176LedPins();
+
+int detectHellenBoardId();
+void detectHellenBoardType();
+
+// stm32 UART8
+#define H144_UART1_RX GPIOE_0
+#define H144_UART1_TX GPIOE_1
+
+// stm32 UART2
+#define H144_UART2_RX GPIOD_6
+#define H144_UART2_TX GPIOD_5
+
+#define H144_LED1_RED GPIOG_0
+#define H144_LED2 GPIOG_1
+#define H144_LED3 GPIOE_7
+#define H144_LED4 GPIOE_8
+
+#define H176_LED1_RED GPIOH_8
+
 #define H144_LS_1 GPIOG_7
 #define H144_LS_2 GPIOG_8
 #define H144_LS_3 GPIOD_11
@@ -56,17 +80,22 @@
 
 // IN_CLT AIN11 PC2
 #define H144_IN_CLT EFI_ADC_12
+// IN_IAT AIN14 PC3
 #define H144_IN_IAT EFI_ADC_13
 
+// IN_PPS AIN18 PA3
+#define H144_IN_PPS EFI_ADC_3
 // IN_TPS AIN17 PA4
 #define H144_IN_TPS EFI_ADC_4
-
-#define H144_IN_PPS EFI_ADC_3
+// VIGN PA5
+#define H144_IN_VBATT EFI_ADC_5
 
 // IN_MAP1 AIN9 PC0
 #define H144_IN_MAP1 EFI_ADC_10
 // AIN10 PC1
 #define H144_IN_MAP2 EFI_ADC_11
+// AIN15 A15 PA2
+#define H144_IN_MAP3 EFI_ADC_2
 
 // AIN7
 #define H144_IN_RES1 GPIOF_9
@@ -96,9 +125,14 @@
 // A4 AIN4 no code to use ADC3 as analog
 #define H144_IN_SENS4 GPIOF_6
 
+// IN_O2S2 AIN12 PA1
 #define H144_IN_O2S2 EFI_ADC_1
 
+#define H144_IN_D_1 GPIOE_12
 #define H144_IN_D_2 GPIOE_13
+#define H144_IN_D_3 GPIOE_14
+#define H144_IN_D_4 GPIOE_15
+
 // A22
 #define H144_IN_D_AUX3 GPIOC_5
 // A20 AIN20

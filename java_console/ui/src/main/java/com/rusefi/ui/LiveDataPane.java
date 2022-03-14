@@ -1,25 +1,36 @@
 package com.rusefi.ui;
 
+import com.camick.RXTextUtilities;
 import com.rusefi.CodeWalkthrough;
+import com.rusefi.config.Field;
 import com.rusefi.core.Sensor;
+import com.rusefi.enums.live_data_e;
+import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.livedata.LiveDataParserPanel;
-import com.rusefi.livedata.LiveDataView;
+import com.rusefi.livedata.ParseResult;
+import com.rusefi.livedata.generated.CPP14Parser;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.IntGaugeLabel;
+import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.tree.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
+ *
  * @see LiveDataParserPanel
+ * See LiveDataPaneSandbox
  */
 public class LiveDataPane {
+    public static final String CPP_SUFFIX = ".cpp";
+
     /**
      * this is the panel we expose to the outside world
      */
@@ -29,28 +40,68 @@ public class LiveDataPane {
     public LiveDataPane(UIContext uiContext) {
 
 
-        JPanel vertical = new JPanel(new VerticalFlowLayout());
+        JPanel vertical = new JPanel(new MigLayout("wrap 1", "[grow,fill]"));
+        vertical.setBorder(BorderFactory.createLineBorder(Color.orange));
         JScrollPane scroll = new JScrollPane(vertical, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel legend = populateLegend();
 
 
-        JPanel leftList = new JPanel(new VerticalFlowLayout());
-        for (LiveDataView view : LiveDataView.values()) {
-            JPanel liveDataParserContent = LiveDataParserPanel.createLiveDataParserContent(uiContext, view);
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode();
+        for (live_data_e view : live_data_e.values()) {
+            String fileName = StateDictionary.INSTANCE.getFileName(view) + CPP_SUFFIX;
+            Field[] values = StateDictionary.INSTANCE.getFields(view);
+            LiveDataParserPanel liveDataParserPanel = LiveDataParserPanel.createLiveDataParserPanel(uiContext, view, values, fileName);
+            ParseResult parseResult = liveDataParserPanel.getParseResult();
+            JPanel liveDataParserContent = liveDataParserPanel.getContent();
 
-            JButton shortCut = new JButton(view.getFileName());
-            shortCut.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    scroll.getVerticalScrollBar().setValue(liveDataParserContent.getLocation().y);
-                }
-            });
-            leftList.add(shortCut);
+            DefaultMutableTreeNode child = new DefaultMutableTreeNode(fileName);
+            child.setUserObject(new PanelAndName(liveDataParserContent, fileName));
 
-            vertical.add(liveDataParserContent);
+            for (CPP14Parser.UnqualifiedIdContext functionId : parseResult.getFunctions()) {
+                DefaultMutableTreeNode methodNode = new DefaultMutableTreeNode();
+                methodNode.setUserObject(new SpecificMethod(liveDataParserPanel, functionId));
+                child.add(methodNode);
+            }
+
+            root.add(child);
+
+            vertical.add(liveDataParserContent, "grow, wrap");
         }
 
-        content.add(leftList, BorderLayout.WEST);
+        JTree tree = new JTree(new DefaultTreeModel(root));
+        tree.setRootVisible(false);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+
+        MouseListener ml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+                Object payload = node.getUserObject();
+
+                if (payload instanceof PanelAndName) {
+                    PanelAndName panel = (PanelAndName) payload;
+                    scrollToPanel(panel.panel, 0);
+                } else if (payload instanceof SpecificMethod) {
+                    SpecificMethod method = (SpecificMethod) payload;
+                    JTextPane jTextPane = method.liveDataParserPanel.getText();
+                    int position = RXTextUtilities.getStartOfLineOffset(jTextPane, method.method.getStart().getLine());
+                    Rectangle r;
+                    try {
+                        r = jTextPane.modelToView(position);
+                    } catch (BadLocationException ex) {
+                        return;
+                    }
+                    scrollToPanel(method.liveDataParserPanel.getContent(), r.y);
+                }
+            }
+
+            private void scrollToPanel(JPanel panel, int yOffset) {
+                scroll.getVerticalScrollBar().setValue(panel.getLocation().y + yOffset);
+                // we want focus there so that mouse wheel scrolling would be active
+                scroll.requestFocus();
+            }
+        };
+        tree.addMouseListener(ml);
+        content.add(tree, BorderLayout.WEST);
         content.add(scroll, BorderLayout.CENTER);
         content.add(legend, BorderLayout.EAST);
 
@@ -108,5 +159,39 @@ public class LiveDataPane {
 
     public JPanel getContent() {
         return content;
+    }
+
+    static class PanelAndName {
+        public final JPanel panel;
+        public final String name;
+
+        public PanelAndName(JPanel panel, String name) {
+            this.panel = panel;
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    static class SpecificMethod {
+        private final LiveDataParserPanel liveDataParserPanel;
+        private final CPP14Parser.UnqualifiedIdContext method;
+
+        public SpecificMethod(LiveDataParserPanel liveDataParserPanel, CPP14Parser.UnqualifiedIdContext method) {
+            this.liveDataParserPanel = liveDataParserPanel;
+            this.method = method;
+        }
+
+        public LiveDataParserPanel getLiveDataParserPanel() {
+            return liveDataParserPanel;
+        }
+
+        @Override
+        public String toString() {
+            return method.getText();
+        }
     }
 }

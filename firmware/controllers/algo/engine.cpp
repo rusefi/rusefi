@@ -20,7 +20,6 @@
 #include "os_access.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
-#include "fsio_impl.h"
 #include "perf_trace.h"
 #include "backup_ram.h"
 #include "idle_thread.h"
@@ -53,15 +52,6 @@ extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-FsioState::FsioState() {
-#if EFI_ENABLE_ENGINE_WARNING
-	isEngineWarning = FALSE;
-#endif
-#if EFI_ENABLE_CRITICAL_ENGINE_STOP
-	isCriticalEngineCondition = FALSE;
-#endif
-}
-
 void Engine::resetEngineSnifferIfInTestMode() {
 #if EFI_ENGINE_SNIFFER
 	if (isFunctionalTestMode) {
@@ -81,8 +71,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_ONE;
 	case VVT_2JZ:
 		return TT_VVT_JZ;
-	case VVT_MIATA_NB2:
-		return TT_VVT_MIATA_NB2;
+	case VVT_MIATA_NB:
+		return TT_VVT_MIATA_NB;
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
 	case VVT_HONDA_K:
@@ -147,12 +137,16 @@ void Engine::initializeTriggerWaveform() {
 	 */
 	if (engineConfiguration->overrideTriggerGaps) {
 		int gapIndex = 0;
-		for (;gapIndex<=engineConfiguration->overrideTriggerGaps;gapIndex++) {
+
+		// copy however many the user wants
+		for (; gapIndex < engineConfiguration->gapTrackingLengthOverride; gapIndex++) {
 			float gapOverrideFrom = engineConfiguration->triggerGapOverrideFrom[gapIndex];
 			float gapOverrideTo = engineConfiguration->triggerGapOverrideTo[gapIndex];
 			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
 		}
-		for (;gapIndex<GAP_TRACKING_LENGTH;gapIndex++) {
+
+		// fill the remainder with the default gaps
+		for (; gapIndex < GAP_TRACKING_LENGTH; gapIndex++) {
 			engine->triggerCentral.triggerShape.syncronizationRatioFrom[gapIndex] = NAN;
 			engine->triggerCentral.triggerShape.syncronizationRatioTo[gapIndex] = NAN;
 		}
@@ -221,13 +215,12 @@ void Engine::periodicSlowCallback() {
 	updateSlowSensors();
 	checkShutdown();
 
+	tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
+
 	updateVrPwm();
 
-#if EFI_FSIO
-	runFsio();
-#else
-	runHardcodedFsio();
-#endif /* EFI_FSIO */
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 
 	updateGppwm();
 
@@ -291,7 +284,7 @@ void Engine::updateSlowSensors() {
 	updateSwitchInputs();
 
 #if EFI_ENGINE_CONTROL
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	isEngineChartEnabled = engineConfiguration->isEngineChartEnabled && rpm < engineConfiguration->engineSnifferRpmThreshold;
 	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
@@ -302,9 +295,6 @@ void Engine::updateSlowSensors() {
 	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
 #endif /* BOARD_TLE8888_COUNT */
 
-#if EFI_MC33816
-	initMc33816IfNeeded();
-#endif // EFI_MC33816
 #endif
 }
 
@@ -343,7 +333,7 @@ void Engine::updateSwitchInputs() {
 	engine->clutchUpState = getClutchUpState();
 
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
-		engine->idle.throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
+		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
 	engine->brakePedalState = getBrakePedalState();
@@ -357,15 +347,6 @@ void Engine::onTriggerSignalEvent() {
 
 Engine::Engine() {
 	reset();
-}
-
-/**
- * @see scheduleStopEngine()
- * @return true if there is a reason to stop engine
- */
-bool Engine::needToStopEngine(efitick_t nowNt) const {
-	return stopEngineRequestTimeNt != 0 &&
-			nowNt - stopEngineRequestTimeNt	< 3 * NT_PER_SECOND;
 }
 
 int Engine::getGlobalConfigurationVersion(void) const {
@@ -444,7 +425,7 @@ void Engine::OnTriggerSynchronizationLost() {
 
 void Engine::OnTriggerInvalidIndex(int currentIndex) {
 	// let's not show a warning if we are just starting to spin
-	if (GET_RPM() != 0) {
+	if (Sensor::getOrZero(SensorType::Rpm) != 0) {
 		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
 		triggerCentral.triggerState.setTriggerErrorState();
 	}
@@ -517,9 +498,7 @@ void Engine::watchdog() {
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 */
-	float secondsSinceTriggerEvent = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
-
-	if (secondsSinceTriggerEvent < 0.5f) {
+	if (engine->triggerCentral.engineMovedRecently()) {
 		// Engine moved recently, no need to safe pins.
 		return;
 	}
@@ -544,6 +523,7 @@ void Engine::checkShutdown() {
 	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
 	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
 	// in shutdown mode, we need a small cooldown time between the ignition off and on
+/* this needs work or tests
 	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
@@ -559,6 +539,7 @@ void Engine::checkShutdown() {
 			}
 		}
 	}
+*/
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
@@ -570,7 +551,8 @@ bool Engine::isInMainRelayBench() {
 }
 
 bool Engine::isInShutdownMode() const {
-#if EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
+	// TODO: this logic is currently broken
+#if 0 && EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
 	// if we are in "ignition_on" mode and not in shutdown mode
 	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
 		const float vBattThresholdOff = 5.0f;
@@ -668,7 +650,7 @@ void Engine::periodicFastCallback() {
 
 void doScheduleStopEngine() {
 	efiPrintf("Starting doScheduleStopEngine");
-	engine->stopEngineRequestTimeNt = getTimeNowNt();
+	engine->limpManager.stopEngine();
 	engine->ignitionOnTimeNt = 0;
 	// todo: initiate stepper motor parking
 	// make sure we have stored all the info

@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.opensr5.Logger;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -8,7 +7,6 @@ import com.rusefi.file.TableGenerator;
 import com.rusefi.models.Point3D;
 import com.rusefi.models.Range;
 import com.rusefi.models.XYData;
-import com.rusefi.test.EcuStimulatorSandbox;
 import com.rusefi.ui.ChartHelper;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.widgets.PotCommand;
@@ -30,8 +28,6 @@ import java.util.concurrent.CountDownLatch;
 /**
  * Date: 3/24/13
  * Andrey Belomutskiy, (c) 2013-2020
- *
- * @see EcuStimulatorSandbox
  */
 public class EcuStimulator {
     private static final String DELIMITER = ",";
@@ -80,7 +76,7 @@ public class EcuStimulator {
 //        if (1 == 1)
 //            return;
 
-        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + Logger.getDate() + ".csv";
+        String csvFileName = "table_" + inputs.getRpmStep() + "_" + inputs.getEngineLoadStep() + FileLog.getDate() + ".csv";
         FileLog.MAIN.logLine("Wring to " + csvFileName);
 
         final BufferedWriter csv;
@@ -121,7 +117,7 @@ public class EcuStimulator {
             throw new IllegalStateException(e);
         }
 
-        TableGenerator.writeAsC(data, C_PREFIX, "map" + Logger.getDate() + ".c");
+        TableGenerator.writeAsC(data, C_PREFIX, "map" + FileLog.getDate() + ".c");
     }
 
     private void buildTable(ResultListener listener, Sensor dwellSensor) {
@@ -309,7 +305,7 @@ public class EcuStimulator {
         return result;
     }
 
-    private class MultipleMeasurements {
+    private static class MultipleMeasurements {
         private List<Double> dwells = new ArrayList<>(MEASURES);
         private List<Double> advances = new ArrayList<>(MEASURES);
 

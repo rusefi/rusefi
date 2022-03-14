@@ -14,7 +14,6 @@
 #include "pch.h"
 
 #include "ford_festiva.h"
-#include "fsio_impl.h"
 #include "mazda_miata.h"
 #include "custom_engine.h"
 
@@ -78,7 +77,7 @@ void setFordEscortGt() {
 	engineConfiguration->specs.displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-	static const float veRpmBins[] = 
+	static const uint16_t veRpmBins[] = 
 	{
 		800,
 		1200,
@@ -211,7 +210,7 @@ void setFordEscortGt() {
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
 
 	// VICS solenoid
-	static const float ignitionRpmBins[] =
+	static const uint16_t ignitionRpmBins[] =
 	{
 		800,
 		1200,
@@ -240,11 +239,5 @@ void setFordEscortGt() {
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
 
 	engineConfiguration->isSdCardEnabled = true;
-
-//	engineConfiguration->useFSIO16ForTimingAdjustment = true;
-//  we wanted to have a timinig table adjustment switch here
-//	engineConfiguration->fsioAdc[0] = EFI_ADC_12; // PC2
-
-	// end of Ford Escort GT config
 }
 

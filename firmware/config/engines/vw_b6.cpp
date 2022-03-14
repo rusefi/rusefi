@@ -19,13 +19,14 @@
  * has to be microRusEFI 0.5.2
  */
 void setVwPassatB6() {
-#if (BOARD_TLE8888_COUNT > 0)
+#if HW_MICRO_RUSEFI
 	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
 	engineConfiguration->map.sensor.type = MT_BOSCH_2_5;
 
 	engineConfiguration->tps1_2AdcChannel = MRE_IN_ANALOG_VOLT_9;
+	engineConfiguration->canNbcType = CAN_BUS_NBC_VAG;
 
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
@@ -40,6 +41,7 @@ void setVwPassatB6() {
 	
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_VAG);
 	strcpy(engineConfiguration->engineCode, "BPY");
+	strcpy(engineConfiguration->vehicleName, "test");
 
 	engineConfiguration->throttlePedalUpVoltage = 0.36;
 	engineConfiguration->throttlePedalWOTVoltage = 2.13;
@@ -107,6 +109,7 @@ void setVwPassatB6() {
 
 
 	gppwm_channel *lowPressureFuelPumpControl = &engineConfiguration->gppwm[1];
+	strcpy(engineConfiguration->gpPwmNote[1], "LPFP");
 	lowPressureFuelPumpControl->pwmFrequency = 20;
 	lowPressureFuelPumpControl->loadAxis = GPPWM_FuelLoad;
 	lowPressureFuelPumpControl->dutyIfError = 50;
@@ -116,10 +119,12 @@ void setVwPassatB6() {
 
 
 	gppwm_channel *coolantControl = &engineConfiguration->gppwm[0];
+	strcpy(engineConfiguration->gpPwmNote[0], "Rad Fan");
 
 	coolantControl->pwmFrequency = 25;
 	coolantControl->loadAxis = GPPWM_FuelLoad;
 	// Volkswage wants 10% for fan to be OFF, between pull-up and low side control we need to invert that value
+	// todo system lua for duty driven by CLT? (3, GPIOE_0, "0.15 90 coolant 120 min max 90 - 30 / 0.8 * +", 25);
 	int value = 100 - 10;
 	coolantControl->dutyIfError = value;
 	setTable(coolantControl->table, (uint8_t)value);
@@ -134,17 +139,25 @@ void setVwPassatB6() {
 */
 	coolantControl->pin = TLE8888_PIN_5; // "3 - Lowside 2"
 	// "7 - Lowside 1"
-	engineConfiguration->hpfpValvePin = MRE_LS_1;
+	//engineConfiguration->hpfpValvePin = MRE_LS_1;
+	engineConfiguration->disablePrimaryUart = true;
+	engineConfiguration->hpfpValvePin = GPIOB_10; // AUX J13
 	engineConfiguration->hpfpCamLobes = 3;
 	engineConfiguration->hpfpPumpVolume = 0.290;
 	engineConfiguration->hpfpMinAngle = 10;
 	engineConfiguration->hpfpActivationAngle = 30;
 	engineConfiguration->hpfpTargetDecay = 2000;
-	engineConfiguration->hpfpPidP = 0.301;
-	engineConfiguration->hpfpPidI = 0.00012;
+	engineConfiguration->hpfpPidP = 0.01;
+	engineConfiguration->hpfpPidI = 0.0003;
 
+	engineConfiguration->hpfpPeakPos = 10;
+
+	setTable(config->veTable, 55);
 
 	setBoschVAGETB();
+
+	// random number just to take position away from zero
+	engineConfiguration->vvtOffsets[0] = 180;
 
 
 	// https://rusefi.com/forum/viewtopic.php?p=38235#p38235
@@ -154,7 +167,7 @@ void setVwPassatB6() {
 	engineConfiguration->fanPin = GPIO_UNASSIGNED;
 
 	engineConfiguration->useETBforIdleControl = true;
-	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-#endif /* BOARD_TLE8888_COUNT */
+#endif /* HW_MICRO_RUSEFI */
 }

@@ -46,7 +46,7 @@ TEST(ignition, trailingSpark) {
 	 */
 	engine->enableOverdwellProtection = false;
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
@@ -65,7 +65,7 @@ TEST(ignition, trailingSpark) {
 	eth.fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
-	ASSERT_EQ( 3000,  GET_RPM()) << "RPM#0";
+	ASSERT_EQ( 3000,  Sensor::getOrZero(SensorType::Rpm)) << "RPM#0";
 	eth.clearQueue();
 
 	/**

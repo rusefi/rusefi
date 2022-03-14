@@ -17,6 +17,11 @@
 
 #define MAP_CAM_BUFFER 64
 
+#ifndef RPM_LOW_THRESHOLD
+// no idea what is the best value, 25 is as good as any other guess
+#define RPM_LOW_THRESHOLD 25
+#endif
+
 class Engine;
 typedef void (*ShaftPositionListener)(trigger_event_e signal, uint32_t index, efitick_t edgeTimestamp);
 
@@ -66,15 +71,25 @@ public:
 
 	expected<float> getCurrentEnginePhase(efitick_t nowNt) const;
 
-	float getTimeSinceTriggerEvent(efitick_t nowNt) const {
+	float getSecondsSinceTriggerEvent(efitick_t nowNt) const {
 		return m_lastEventTimer.getElapsedSeconds(nowNt);
 	}
 
+	bool engineMovedRecently(efitick_t nowNt) const {
+		constexpr float oneRevolutionLimitInSeconds = 60.0 / RPM_LOW_THRESHOLD;
+		auto maxAverageToothTime = oneRevolutionLimitInSeconds / triggerShape.getSize();
+
+		// Some triggers may have long gaps (with many teeth), don't count that as stopped!
+		auto maxAllowedGap = maxAverageToothTime * 10;
+
+		// Clamp between 0.1 seconds ("instant" for a human) and worst case of one engine cycle on low tooth count wheel
+		maxAllowedGap = clampF(0.1f, maxAllowedGap, oneRevolutionLimitInSeconds);
+
+		return getSecondsSinceTriggerEvent(nowNt) < maxAllowedGap;
+	}
+
 	bool engineMovedRecently() const {
-		// Trigger event some time in the past second = engine moving
-		// distributor single tooth, large engines crank at close to 120 RPM
-		// todo: make this logic account current trigger to stop idle much faster if we have more teeth on trigger wheels?
-		return getTimeSinceTriggerEvent(getTimeNowNt()) < 1.0f;
+		return engineMovedRecently(getTimeNowNt());
 	}
 
 	TriggerNoiseFilter noiseFilter;

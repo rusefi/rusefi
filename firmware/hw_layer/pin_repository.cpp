@@ -189,6 +189,10 @@ void printSpiConfig(const char *msg, spi_device_e device) {
 #endif // HAL_USE_SPI
 }
 
+__attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e brainPin) {
+	return nullptr;
+}
+
 const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_INVALID) {
 		return "INVALID";
@@ -196,6 +200,11 @@ const char *hwPortname(brain_pin_e brainPin) {
 	if (brainPin == GPIO_UNASSIGNED) {
 		return "NONE";
 	}
+	const char * boardSpecificPinName = getBoardSpecificPinName(brainPin);
+	if (boardSpecificPinName != nullptr) {
+		return boardSpecificPinName;
+	}
+
 	portNameStream.eos = 0; // reset
 	if (brain_pin_is_onchip(brainPin)) {
 

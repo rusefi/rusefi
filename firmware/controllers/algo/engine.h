@@ -36,6 +36,7 @@
 #include "boost_control.h"
 #include "ignition_controller.h"
 #include "alternator_controller.h"
+#include "dfco.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -168,7 +169,7 @@ public:
 	type_list<
 		Mockable<InjectorModel>,
 #if EFI_IDLE_CONTROL
-		IdleController,
+		Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL
 		TriggerScheduler,
 #if EFI_HPFP && EFI_ENGINE_CONTROL
@@ -182,6 +183,8 @@ public:
 		IgnitionController,
 		AcController,
 		PrimeController,
+		DfcoController,
+		Mockable<WallFuelController>,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -198,9 +201,8 @@ public:
 	GearControllerBase *gearController;
 #if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;
-#endif // EFI_LAUNCH_CONTROL
-
 	SoftSparkLimiter softSparkLimiter;
+#endif // EFI_LAUNCH_CONTROL
 
 #if EFI_BOOST_CONTROL
 	BoostController boostController;
@@ -271,7 +273,6 @@ public:
 	scheduling_s tdcScheduler[2];
 #endif /* EFI_ENGINE_CONTROL */
 
-	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
@@ -294,12 +295,6 @@ public:
 	efitimems64_t callFromPitStopEndTime = 0;
 
 	RpmCalculator rpmCalculator;
-
-	/**
-	 * this is about 'stopengine' command
-	 */
-	efitick_t stopEngineRequestTimeNt = 0;
-
 
 	bool startStopState = false;
 	int startStopStateToggleCounter = 0;
@@ -358,8 +353,6 @@ public:
 
 	bool isRunningPwmTest = false;
 
-	FsioState fsioState;
-
 	/**
 	 * are we running any kind of functional test? this affect
 	 * some areas
@@ -385,7 +378,6 @@ public:
 	 */
 	void onTriggerSignalEvent();
 	EngineState engineState;
-	idle_state_s idle;
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
 	 */

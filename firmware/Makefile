@@ -192,17 +192,8 @@ ifeq ($(USE_FATFS),yes)
 include $(PROJECT_DIR)/ext/fatfs.mk
 endif
 
-include $(PROJECT_DIR)/config/engines/engines.mk
-include $(PROJECT_DIR)/console/console.mk
-include $(PROJECT_DIR)/controllers/controllers.mk
-include $(PROJECT_DIR)/controllers/lua/lua.mk
-include $(PROJECT_DIR)/development/development.mk
-include $(PROJECT_DIR)/hw_layer/hw_layer.mk
-include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
-include $(PROJECT_DIR)/hw_layer/sensors/sensors.mk
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
-include $(PROJECT_DIR)/init/init.mk
-include $(PROJECT_DIR)/util/util.mk
+include $(PROJECT_DIR)/common.mk
 
 ifeq ($(BOOTLOADERINC),)
   # include default bootloader code
@@ -228,49 +219,27 @@ $(info LDSCRIPT:      $(LDSCRIPT))
 # check.c goes first to throw error as soon as possible
 CSRC =  check.c \
 	$(ALLCSRC) \
-	$(CHIBIOS)/os/various/syscalls.c \
+	$(BOARDSRC) \
 	$(CHIBIOS_CONTRIB)/os/various/ramdisk.c \
 	$(CHIBIOS)/os/various/evtimer.c \
-	$(TRIGGER_SRC) \
-	$(TRIGGER_DECODERS_SRC) \
 	$(DEV_SRC) \
 	$(BOOTLOADERSRC) \
 	${HW_MASS_STORAGE_SRC_C} \
-	$(UTILSRC) \
-	$(SYSTEMSRC) \
-	$(ENGINES_SRC) \
-	$(CONSOLESRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(HW_LAYER_DRIVERS) \
-	$(CONTROLLERSSRC) \
-	$(CONTROLLERS_ALGO_SRC) \
-	$(CONTROLLERS_CORE_SRC) \
-	$(CONTROLLERS_SENSORS_SRC) \
 	main_hardfault.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
-CPPSRC = $(ALLCPPSRC) \
-	$(TRIGGER_SRC_CPP) \
-	$(TRIGGER_DECODERS_SRC_CPP) \
+CPPSRC = \
+    $(ALLCPPSRC) \
+    $(BOARDCPPSRC) \
 	$(DEV_SRC_CPP) \
-	$(CONTROLLERS_ALGO_SRC_CPP) \
-	$(UTILSRC_CPP) \
-	$(SYSTEMSRC_CPP) \
-	$(ENGINES_SRC_CPP) \
-	$(HW_LAYER_EMS_CPP) \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(HW_LAYER_DRIVERS_CPP) \
-	$(HW_SENSORS_CPP) \
-	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
-	$(CONTROLLERS_SENSORS_SRC_CPP) \
-	$(CONTROLLERS_SRC_CPP) \
-	$(CONTROLLERS_CORE_SRC_CPP) \
-	$(CONTROLLERS_MATH_SRC_CPP) \
-	$(INIT_SRC_CPP) \
-	rusefi.cpp \
+rusefi.cpp \
 	main.cpp
 
 # C sources to be compiled in ARM mode regardless of the global setting.
@@ -297,36 +266,26 @@ TCPPSRC =
 ASMXSRC = $(ALLXASMSRC) \
 	$(RUSEFIASM)
 
+#
+# WARNING! order of variables is important here - for instance cypress own folders should go before default folders
+#
 INCDIR = \
 	$(PCH_DIR) \
+	$(BOARDINC) \
 	$(ALLINC) \
 	$(TESTINC) \
 	$(BOOTLOADERINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/hal/lib/peripherals/sensors \
 	$(CONFDIR) \
-	config/engines \
-	config/boards \
-	config \
 	ext \
-	ext_algo \
-	console_util \
-	$(CONSOLE_INC) \
-	$(HW_LAYER_INC) \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/serial_over_usb \
-	$(PROJECT_DIR)/hw_layer/algo \
 	$(PROJECT_DIR)/hw_layer/lcd \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
-	$(HW_SENSORS_INC) \
 	$(HW_INC) \
-	$(HW_LAYER_DRIVERS_INC) \
-	$(UTIL_INC) \
-	init \
-	$(DEVELOPMENT_DIR) \
 	development/hw_layer \
 	development/test \
-	$(CONTROLLERS_INC) \
 	$(CHIBIOS_CONTRIB)/os/various
 	# contrib/os/various must go at the end because it also contains pid.h which conflicts with our pid.h
 
@@ -337,10 +296,6 @@ INCDIR = \
 ##############################################################################
 # Compiler settings
 #
-
-ifeq ($(MCU),)
-	MCU = cortex-m4
-endif
 
 ifeq ($(CROSS_COMPILE),)
   TRGT = arm-none-eabi-

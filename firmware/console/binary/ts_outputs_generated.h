@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 03 23:43:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 11 20:52:01 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -144,7 +144,7 @@ struct ts_outputs_s {
 	 */
 	uint16_t rpmAcceleration = (uint16_t)0;
 	/**
-	 * s2rpm
+	 * @@GAUGE_NAME_GEAR_RATIO@@
 	value
 	 * offset 8
 	 */
@@ -201,17 +201,16 @@ struct ts_outputs_s {
 	 */
 	uint16_t tpsADC = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_MAF@@
 	V
 	 * offset 26
 	 */
-	scaled_channel<uint16_t, 1000, 1> MAFValue = (uint16_t)0;
+	scaled_channel<uint16_t, 1000, 1> rawMaf = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_AIR_FLOW@@
-	Kg/h
+	 * @@GAUGE_NAME_AIR_FLOW_MEASURED@@
+	kg/h
 	 * offset 28
 	 */
-	scaled_channel<uint16_t, 10, 1> massAirFlowValue = (uint16_t)0;
+	scaled_channel<uint16_t, 10, 1> mafMeasured = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_MAP@@
 	kPa
@@ -348,13 +347,13 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<uint16_t, 1, 1> currentEnginePhase = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
+	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
 	mg
 	 * offset 72
 	 */
 	scaled_channel<uint16_t, 100, 1> wallFuelAmount = (uint16_t)0;
 	/**
-	 * @@GAUGE_NAME_FUEL_WALL_AMOUNT@@
+	 * @@GAUGE_NAME_FUEL_WALL_CORRECTION@@
 	mg
 	 * offset 74
 	 */
@@ -864,11 +863,17 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<int16_t, 30, 1> boostControlTarget = (int16_t)0;
 	/**
-	 * "Pump Angle"
-	deg
+	 * "Spark Cut Code"
+	code
 	 * offset 338
 	 */
-	scaled_channel<int16_t, 30, 1> unusedHere1111 = (int16_t)0;
+	scaled_channel<int8_t, 1, 1> sparkCutReason = (int8_t)0;
+	/**
+	 * "Fuel Cut Code"
+	code
+	 * offset 339
+	 */
+	scaled_channel<int8_t, 1, 1> fuelCutReason = (int8_t)0;
 	/**
 	 * "DI: fuel_requested_percent"
 	v
@@ -894,9 +899,167 @@ struct ts_outputs_s {
 	 */
 	float m_pressureTarget_kPa = (float)0;
 	/**
+	 * @@GAUGE_NAME_AIR_FLOW_ESTIMATE@@
+	kg/h
 	 * offset 356
 	 */
-	int unusedAtTheEnd[28];
+	scaled_channel<uint16_t, 10, 1> mafEstimate = (uint16_t)0;
+	/**
+	rpm
+	 * offset 358
+	 */
+	uint16_t instantRpm = (uint16_t)0;
+	/**
+	 * "DI: next start"
+	v
+	 * offset 360
+	 */
+	float di_nextStart = (float)0;
+	/**
+	counter
+	 * offset 364
+	 */
+	uint16_t systemEventReuse = (uint16_t)0;
+	/**
+	V
+	 * offset 366
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawMap = (uint16_t)0;
+	/**
+	V
+	 * offset 368
+	 */
+	scaled_channel<uint16_t, 1000, 1> rawAfr = (uint16_t)0;
+	/**
+	%
+	 * offset 370
+	 */
+	uint8_t tpsAccelFrom = (uint8_t)0;
+	/**
+	%
+	 * offset 371
+	 */
+	uint8_t tpsAccelTo = (uint8_t)0;
+	/**
+	 * offset 372
+	 */
+	scaled_channel<float, 1, 1> calibrationValue2 = (float)0;
+	/**
+	offset 376 bit 0 */
+	bool isMainRelayOn : 1 {};
+	/**
+	 * Original reason for this is to check if USB is connected from Lua
+	offset 376 bit 1 */
+	bool isUsbConnected : 1 {};
+	/**
+	offset 376 bit 2 */
+	bool unusedBit_182_2 : 1 {};
+	/**
+	offset 376 bit 3 */
+	bool unusedBit_182_3 : 1 {};
+	/**
+	offset 376 bit 4 */
+	bool unusedBit_182_4 : 1 {};
+	/**
+	offset 376 bit 5 */
+	bool unusedBit_182_5 : 1 {};
+	/**
+	offset 376 bit 6 */
+	bool unusedBit_182_6 : 1 {};
+	/**
+	offset 376 bit 7 */
+	bool unusedBit_182_7 : 1 {};
+	/**
+	offset 376 bit 8 */
+	bool unusedBit_182_8 : 1 {};
+	/**
+	offset 376 bit 9 */
+	bool unusedBit_182_9 : 1 {};
+	/**
+	offset 376 bit 10 */
+	bool unusedBit_182_10 : 1 {};
+	/**
+	offset 376 bit 11 */
+	bool unusedBit_182_11 : 1 {};
+	/**
+	offset 376 bit 12 */
+	bool unusedBit_182_12 : 1 {};
+	/**
+	offset 376 bit 13 */
+	bool unusedBit_182_13 : 1 {};
+	/**
+	offset 376 bit 14 */
+	bool unusedBit_182_14 : 1 {};
+	/**
+	offset 376 bit 15 */
+	bool unusedBit_182_15 : 1 {};
+	/**
+	offset 376 bit 16 */
+	bool unusedBit_182_16 : 1 {};
+	/**
+	offset 376 bit 17 */
+	bool unusedBit_182_17 : 1 {};
+	/**
+	offset 376 bit 18 */
+	bool unusedBit_182_18 : 1 {};
+	/**
+	offset 376 bit 19 */
+	bool unusedBit_182_19 : 1 {};
+	/**
+	offset 376 bit 20 */
+	bool unusedBit_182_20 : 1 {};
+	/**
+	offset 376 bit 21 */
+	bool unusedBit_182_21 : 1 {};
+	/**
+	offset 376 bit 22 */
+	bool unusedBit_182_22 : 1 {};
+	/**
+	offset 376 bit 23 */
+	bool unusedBit_182_23 : 1 {};
+	/**
+	offset 376 bit 24 */
+	bool unusedBit_182_24 : 1 {};
+	/**
+	offset 376 bit 25 */
+	bool unusedBit_182_25 : 1 {};
+	/**
+	offset 376 bit 26 */
+	bool unusedBit_182_26 : 1 {};
+	/**
+	offset 376 bit 27 */
+	bool unusedBit_182_27 : 1 {};
+	/**
+	offset 376 bit 28 */
+	bool unusedBit_182_28 : 1 {};
+	/**
+	offset 376 bit 29 */
+	bool unusedBit_182_29 : 1 {};
+	/**
+	offset 376 bit 30 */
+	bool unusedBit_182_30 : 1 {};
+	/**
+	offset 376 bit 31 */
+	bool unusedBit_182_31 : 1 {};
+	/**
+	count
+	 * offset 380
+	 */
+	int luaInvocationCounter = (int)0;
+	/**
+	nt
+	 * offset 384
+	 */
+	int luaLastCycleDuration = (int)0;
+	/**
+	count
+	 * offset 388
+	 */
+	uint8_t testBenchIter = (uint8_t)0;
+	/**
+	 * offset 389
+	 */
+	uint8_t unusedAtTheEnd[79];
 	/**
 	offset 468 bit 0 */
 	bool launchSpeedCondition : 1 {};
@@ -920,79 +1083,79 @@ struct ts_outputs_s {
 	bool launchActivatePinState : 1 {};
 	/**
 	offset 468 bit 7 */
-	bool unusedBit_178_7 : 1 {};
+	bool dfcoActive : 1 {};
 	/**
 	offset 468 bit 8 */
-	bool unusedBit_178_8 : 1 {};
+	bool tpsAccelActive : 1 {};
 	/**
 	offset 468 bit 9 */
-	bool unusedBit_178_9 : 1 {};
+	bool unusedBit_225_9 : 1 {};
 	/**
 	offset 468 bit 10 */
-	bool unusedBit_178_10 : 1 {};
+	bool unusedBit_225_10 : 1 {};
 	/**
 	offset 468 bit 11 */
-	bool unusedBit_178_11 : 1 {};
+	bool unusedBit_225_11 : 1 {};
 	/**
 	offset 468 bit 12 */
-	bool unusedBit_178_12 : 1 {};
+	bool unusedBit_225_12 : 1 {};
 	/**
 	offset 468 bit 13 */
-	bool unusedBit_178_13 : 1 {};
+	bool unusedBit_225_13 : 1 {};
 	/**
 	offset 468 bit 14 */
-	bool unusedBit_178_14 : 1 {};
+	bool unusedBit_225_14 : 1 {};
 	/**
 	offset 468 bit 15 */
-	bool unusedBit_178_15 : 1 {};
+	bool unusedBit_225_15 : 1 {};
 	/**
 	offset 468 bit 16 */
-	bool unusedBit_178_16 : 1 {};
+	bool unusedBit_225_16 : 1 {};
 	/**
 	offset 468 bit 17 */
-	bool unusedBit_178_17 : 1 {};
+	bool unusedBit_225_17 : 1 {};
 	/**
 	offset 468 bit 18 */
-	bool unusedBit_178_18 : 1 {};
+	bool unusedBit_225_18 : 1 {};
 	/**
 	offset 468 bit 19 */
-	bool unusedBit_178_19 : 1 {};
+	bool unusedBit_225_19 : 1 {};
 	/**
 	offset 468 bit 20 */
-	bool unusedBit_178_20 : 1 {};
+	bool unusedBit_225_20 : 1 {};
 	/**
 	offset 468 bit 21 */
-	bool unusedBit_178_21 : 1 {};
+	bool unusedBit_225_21 : 1 {};
 	/**
 	offset 468 bit 22 */
-	bool unusedBit_178_22 : 1 {};
+	bool unusedBit_225_22 : 1 {};
 	/**
 	offset 468 bit 23 */
-	bool unusedBit_178_23 : 1 {};
+	bool unusedBit_225_23 : 1 {};
 	/**
 	offset 468 bit 24 */
-	bool unusedBit_178_24 : 1 {};
+	bool unusedBit_225_24 : 1 {};
 	/**
 	offset 468 bit 25 */
-	bool unusedBit_178_25 : 1 {};
+	bool unusedBit_225_25 : 1 {};
 	/**
 	offset 468 bit 26 */
-	bool unusedBit_178_26 : 1 {};
+	bool unusedBit_225_26 : 1 {};
 	/**
 	offset 468 bit 27 */
-	bool unusedBit_178_27 : 1 {};
+	bool unusedBit_225_27 : 1 {};
 	/**
 	offset 468 bit 28 */
-	bool unusedBit_178_28 : 1 {};
+	bool unusedBit_225_28 : 1 {};
 	/**
 	offset 468 bit 29 */
-	bool unusedBit_178_29 : 1 {};
+	bool unusedBit_225_29 : 1 {};
 	/**
 	offset 468 bit 30 */
-	bool unusedBit_178_30 : 1 {};
+	bool unusedBit_225_30 : 1 {};
 	/**
 	offset 468 bit 31 */
-	bool unusedBit_178_31 : 1 {};
+	bool unusedBit_225_31 : 1 {};
 	/**
 	 * offset 472
 	 */
@@ -1190,4 +1353,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Jan 03 23:43:55 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 11 20:52:01 UTC 2022

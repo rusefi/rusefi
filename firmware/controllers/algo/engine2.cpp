@@ -56,20 +56,6 @@ bool WarningCodeState::isWarningNow(efitimesec_t now, bool forIndicator) const {
 	return absI(now - timeOfPreviousWarning) < period;
 }
 
-MockAdcState::MockAdcState() {
-	memset(hasMockAdc, 0, sizeof(hasMockAdc));
-}
-
-#if EFI_ENABLE_MOCK_ADC
-void MockAdcState::setMockVoltage(int hwChannel, float voltage) {
-	efiAssertVoid(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds");
-	efiPrintf("fake voltage: channel %d value %.2f", hwChannel, voltage);
-
-	fakeAdcValues[hwChannel] = voltsToAdc(voltage);
-	hasMockAdc[hwChannel] = true;
-}
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 void FuelConsumptionState::consumeFuel(float grams, efitick_t nowNt) {
 	m_consumedGrams += grams;
 
@@ -114,7 +100,7 @@ void EngineState::periodicFastCallback() {
 	}
 	recalculateAuxValveTiming();
 
-	int rpm = engine->rpmCalculator.getRpm();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	sparkDwell = getSparkDwell(rpm);
 	dwellAngle = cisnan(rpm) ? NAN :  sparkDwell / getOneDegreeTimeMs(rpm);
 
@@ -123,8 +109,7 @@ void EngineState::periodicFastCallback() {
 	// todo: move this into slow callback, no reason for CLT corr to be here
 	running.coolantTemperatureCoefficient = getCltFuelCorrection();
 
-	// Fuel cut-off isn't just 0 or 1, it can be tapered
-	fuelCutoffCorrection = getFuelCutOffCorrection(nowNt, rpm);
+	engine->module<DfcoController>()->update();
 
 	// post-cranking fuel enrichment.
 	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
@@ -207,61 +192,9 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 #endif
 }
 
-SensorsState::SensorsState() {
-}
-
-int MockAdcState::getMockAdcValue(int hwChannel) const {
-	efiAssert(OBD_PCM_Processor_Fault, hwChannel >= 0 && hwChannel < MOCK_ADC_SIZE, "hwChannel out of bounds", -1);
-	return fakeAdcValues[hwChannel];
-}
-
-StartupFuelPumping::StartupFuelPumping() {
-	isTpsAbove50 = false;
-	pumpsCounter = 0;
-}
-
-void StartupFuelPumping::setPumpsCounter(int newValue) {
-	if (pumpsCounter != newValue) {
-		pumpsCounter = newValue;
-
-		if (pumpsCounter == PUMPS_TO_PRIME) {
-			efiPrintf("let's squirt prime pulse %.2f", pumpsCounter);
-			pumpsCounter = 0;
-		} else {
-			efiPrintf("setPumpsCounter %d", pumpsCounter);
-		}
-	}
-}
-
-void StartupFuelPumping::update() {
-	if (GET_RPM() == 0) {
-		bool isTpsAbove50 = Sensor::getOrZero(SensorType::DriverThrottleIntent) >= 50;
-
-		if (this->isTpsAbove50 != isTpsAbove50) {
-			setPumpsCounter(pumpsCounter + 1);
-		}
-
-	} else {
-		/**
-		 * Engine is not stopped - not priming pumping mode
-		 */
-		setPumpsCounter(0);
-		isTpsAbove50 = false;
-	}
-}
-
 #if EFI_SIMULATOR
 #define VCS_VERSION "123"
 #endif
-
-void printCurrentState(Logging *logging, int seconds, const char *engineTypeName, const char *firmwareBuildId) {
-	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
-	logging->appendPrintf(PROTOCOL_VERSION_TAG LOG_DELIMITER "%d@%s %s %s %d" LOG_DELIMITER,
-			getRusEfiVersion(), VCS_VERSION,
-			firmwareBuildId,
-			engineTypeName,
-			seconds);
-}
 
 void TriggerConfiguration::update() {
 	UseOnlyRisingEdgeForTrigger = isUseOnlyRisingEdgeForTrigger();

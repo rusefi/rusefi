@@ -92,7 +92,6 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 }
 
 #if HAL_USE_ADC
-static int fastMapCounter = 0;
 
 /**
  * This method is invoked from ADC callback.
@@ -172,7 +171,7 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif /* EFI_TUNER_STUDIO */
 
 void refreshMapAveragingPreCalc() {
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
@@ -211,7 +210,7 @@ void mapAveragingTriggerCallback(
 	if (index != (uint32_t)engineConfiguration->mapAveragingSchedulingAtIndex)
 		return;
 
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (!isValidRpm(rpm)) {
 		return;
 	}

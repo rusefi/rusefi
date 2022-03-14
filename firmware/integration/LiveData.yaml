@@ -1,11 +1,17 @@
-Destination: "../java_console"
-
 Usages:
-  - "controllers/actuators/idle_thread.cpp"
-  - "controllers/trigger/trigger_decoder.cpp"
-  - "controllers/sensors/thermistors.cpp"
-  - "controllers/sensors/tps.cpp"
-  - "controllers/math/speed_density.cpp"
-  - "controllers/algo/fuel_math.cpp"
-  - "controllers/actuators/electronic_throttle.cpp"
-  - "controllers/algo/accel_enrichment.cpp"
+  high_pressure_fuel_pump: [ "HighPressureFuelPump.java", "controllers/engine_cycle" ]
+  injector_model: [ "InjectorModel.java", "controllers/algo/fuel" ]
+  launch_control_state: [ "LaunchControl.java", "controllers/algo" ]
+  boost_control: [ "BoostControl.java", "controllers/actuators" ]
+  ac_control: [ "AcControl.java", "controllers/actuators" ]
+  fan_control: [ "FanControl.java", "controllers/actuators" ]
+  fuel_pump: [ "FuelPump.java", "controllers/actuators" ]
+  main_relay: [ "MainRelay.java", "controllers/actuators" ]
+  #todo: handle ETB pid and Idle pid which point at same pid_state.txt
+  #pid_state: [ "PidState.java", "util/math" ]
+  engine_state: [ "EngineState.java", "controllers/algo" ]
+  tps_accel_state: [ "TpsAccelState.java", "controllers/algo" ]
+  trigger_central: [ "TriggerCentral.java", "controllers/trigger" ]
+  trigger_state: [ "TriggerState.java", "controllers/trigger" ]
+  wall_fuel_state: [ "WallFuelState.java", "controllers/algo" ]
+  idle_state: [ "IdleState.java", "controllers/actuators" ]

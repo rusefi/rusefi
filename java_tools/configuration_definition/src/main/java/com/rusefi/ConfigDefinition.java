@@ -4,7 +4,6 @@ import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
 import com.rusefi.util.IoUtils;
-import com.rusefi.util.LazyFile;
 import com.rusefi.util.SystemOut;
 
 import java.io.*;
@@ -17,26 +16,21 @@ import java.util.*;
  * @see ConfigurationConsumer
  */
 public class ConfigDefinition {
-    static final String SIGNATURE_HASH = "SIGNATURE_HASH";
-    private static String TS_OUTPUTS_DESTINATION = null;
-    public static String MESSAGE;
+    public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
     private static final String ROM_RAIDER_XML_TEMPLATE = "rusefi_template.xml";
     public static final String KEY_DEFINITION = "-definition";
     private static final String KEY_ROMRAIDER_INPUT = "-romraider";
-    public static final String KEY_TS_DESTINATION = "-ts_destination";
-    private static final String KEY_C_DESTINATION = "-c_destination";
+    private static final String KEY_TS_DESTINATION = "-ts_destination";
+    public static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
-    /**
-     * @see CHeaderConsumer#withC_Defines
-     */
     private static final String KEY_WITH_C_DEFINES = "-with_c_defines";
-    private static final String KEY_JAVA_DESTINATION = "-java_destination";
+    public static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_ROMRAIDER_DESTINATION = "-romraider_destination";
     private static final String KEY_FIRING = "-firing_order";
-    public static final String KEY_PREPEND = "-prepend";
-    public static final String KEY_SIGNATURE = "-signature";
-    public static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
+    private static final String KEY_PREPEND = "-prepend";
+    private static final String KEY_SIGNATURE = "-signature";
+    private static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     private static final String KEY_BOARD_NAME = "-board";
     /**
@@ -45,7 +39,6 @@ public class ConfigDefinition {
      * This could be related to configuration header use-case versus "live data" (not very alive idea) use-case
      */
     public static boolean needZeroInit = true;
-    public static String definitionInputFile = null;
 
     public static void main(String[] args) {
         try {
@@ -73,9 +66,7 @@ public class ConfigDefinition {
         SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
-        String destCHeaderFileName = null;
         String destCDefinesFileName = null;
-        String javaDestinationFileName = null;
         String romRaiderDestination = null;
         // we postpone reading so that in case of cache hit we do less work
         List<String> prependFiles = new ArrayList<>();
@@ -84,13 +75,13 @@ public class ConfigDefinition {
         String signatureDestination = null;
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
-        CHeaderConsumer.withC_Defines = true;
-        File[] boardYamlFiles = null;
+        boolean withC_Defines = true;
+        PinoutLogic pinoutLogic = null;
+        String tsOutputsDestination = null;
+        String definitionInputFile = null;
 
         // used to update other files
         List<String> inputFiles = new ArrayList<>();
-        // disable the lazy checks because we use timestamps to detect changes
-        LazyFile.setLazyFileEnabled(true);
 
         List<ConfigurationConsumer> destinations = new ArrayList<>();
         ReaderState state = new ReaderState();
@@ -103,28 +94,29 @@ public class ConfigDefinition {
                     break;
                 case KEY_DEFINITION:
                     definitionInputFile = args[i + 1];
+                    state.headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
                     inputFiles.add(definitionInputFile);
                     break;
                 case KEY_TS_DESTINATION:
                     tsInputFileFolder = args[i + 1];
                     break;
                 case "-ts_outputs_section":
-                    TS_OUTPUTS_DESTINATION = args[i + 1];
+                    tsOutputsDestination = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
-                    destCHeaderFileName = args[i + 1];
+                    destinations.add(new CHeaderConsumer(state, args[i + 1], withC_Defines));
                     break;
                 case KEY_ZERO_INIT:
                     needZeroInit = Boolean.parseBoolean(args[i + 1]);
                     break;
                 case KEY_WITH_C_DEFINES:
-                    CHeaderConsumer.withC_Defines = Boolean.parseBoolean(args[i + 1]);
+                    withC_Defines = Boolean.parseBoolean(args[i + 1]);
                     break;
                 case KEY_C_DEFINES:
                     destCDefinesFileName = args[i + 1];
                     break;
                 case KEY_JAVA_DESTINATION:
-                    javaDestinationFileName = args[i + 1];
+                    destinations.add(new FileJavaFieldsConsumer(state, args[i + 1]));
                     break;
                 case "-field_lookup_file":
                     destinations.add(new GetConfigValueConsumer(args[i + 1]));
@@ -170,15 +162,9 @@ public class ConfigDefinition {
                     break;
                 case KEY_BOARD_NAME:
                     String boardName = args[i + 1];
-                    String dirPath = "./config/boards/" + boardName + "/connectors";
-                    File dirName = new File(dirPath);
-                    FilenameFilter filter = (f, name) -> name.endsWith(".yaml");
-                    boardYamlFiles = dirName.listFiles(filter);
-                    if (boardYamlFiles != null) {
-                        for (File yamlFile : boardYamlFiles) {
-                            inputFiles.add("config/boards/" + boardName + "/connectors/" + yamlFile.getName());
-                        }
-                    }
+                    pinoutLogic = PinoutLogic.create(boardName);
+                    if (pinoutLogic != null)
+                        inputFiles.addAll(pinoutLogic.getInputFiles());
                     break;
             }
         }
@@ -202,21 +188,16 @@ public class ConfigDefinition {
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
 
-        MESSAGE = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
-
-        SystemOut.println("Reading definition from " + definitionInputFile);
 
         for (String prependFile : prependFiles)
             state.variableRegistry.readPrependValues(prependFile);
 
-        if (boardYamlFiles != null) {
-            PinoutLogic.processYamls(state.variableRegistry, boardYamlFiles, state);
+        if (pinoutLogic != null) {
+            pinoutLogic.processYamls(state.variableRegistry, state);
         }
 
         // Parse the input files
         {
-            // First process yaml files
-            //processYamls(parseState, yamlFiles);
 
             // Load prepend files
             {
@@ -244,12 +225,10 @@ public class ConfigDefinition {
             // writer.writeTunerstudio(parseState, tsPath + "/rusefi.input", tsPath + "/" + TSProjectConsumer.TS_FILE_OUTPUT_NAME);
         }
 
-        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
-
-        if (TS_OUTPUTS_DESTINATION != null) {
-            destinations.add(new OutputsSectionConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/output_channels.ini", state));
-            destinations.add(new DataLogConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/data_logs.ini"));
-            destinations.add(new GaugeConsumer(TS_OUTPUTS_DESTINATION + File.separator + "generated/gauges.ini", state));
+        if (tsOutputsDestination != null) {
+            destinations.add(new OutputsSectionConsumer(tsOutputsDestination + File.separator + "generated/output_channels.ini", state));
+            destinations.add(new DataLogConsumer(tsOutputsDestination + File.separator + "generated/data_logs.ini"));
+            destinations.add(new GaugeConsumer(tsOutputsDestination + File.separator + "generated/gauges.ini", state));
         }
         if (tsInputFileFolder != null) {
             CharArrayWriter tsWriter = new CharArrayWriter();
@@ -262,23 +241,18 @@ public class ConfigDefinition {
             destinations.add(new SignatureConsumer(signatureDestination, tmpRegistry));
         }
 
-        if (destCHeaderFileName != null) {
-            destinations.add(new CHeaderConsumer(state.variableRegistry, destCHeaderFileName));
-        }
-        if (javaDestinationFileName != null) {
-            destinations.add(new FileJavaFieldsConsumer(state, javaDestinationFileName));
-        }
-
         if (destinations.isEmpty())
             throw new IllegalArgumentException("No destinations specified");
         /*
          * this is the most important invocation - here we read the primary input file and generated code into all
          * the destinations/writers
          */
+        SystemOut.println("Reading definition from " + definitionInputFile);
+        BufferedReader definitionReader = new BufferedReader(new InputStreamReader(new FileInputStream(definitionInputFile), IoUtils.CHARSET.name()));
         state.readBufferedReader(definitionReader, destinations);
 
         if (destCDefinesFileName != null) {
-            ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName);
+            ExtraUtil.writeDefinesToFile(state.variableRegistry, destCDefinesFileName, definitionInputFile);
         }
 
         if (romRaiderDestination != null && romRaiderInputFile != null) {

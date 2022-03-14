@@ -23,29 +23,29 @@ TEST(cranking, realCrankingFromFile) {
 		reader.readLine(&eth);
 	}
 
-	EXPECT_EQ(0, GET_RPM())<< reader.lineIndex();
+	EXPECT_EQ(0, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 	EXPECT_EQ( 0, eth.recentWarnings()->getCount());
 
 	// This tooth should be first sync point
 	reader.readLine(&eth);
 
-	EXPECT_EQ(228, GET_RPM())<< reader.lineIndex() << " @ 1";
+	EXPECT_EQ(228, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex() << " @ 1";
 
 	for (int i = 0; i < 42; i++) {
 		reader.readLine(&eth);
 	}
-	ASSERT_EQ(224, GET_RPM())<< reader.lineIndex();
+	ASSERT_EQ(224, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 
 
 	for (int i = 0; i < 30; i++) {
 		reader.readLine(&eth);
 	}
-	ASSERT_EQ(456, GET_RPM())<< reader.lineIndex() << " @ 2";
+	ASSERT_EQ(456, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex() << " @ 2";
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 	}
 
 	ASSERT_EQ(0, eth.recentWarnings()->getCount())<< "warningCounter#realCranking";
-	ASSERT_EQ(407, GET_RPM())<< reader.lineIndex();
+	ASSERT_EQ(407, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }

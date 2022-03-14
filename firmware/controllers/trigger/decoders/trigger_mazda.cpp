@@ -120,10 +120,6 @@ static void initializeMazdaMiataNb1ShapeWithOffset(TriggerWaveform *s, float off
 	s->addEvent720(720.0f, T_PRIMARY, TV_RISE);
 }
 
-void initializeMazdaMiataNb1Shape(TriggerWaveform *s) {
-	initializeMazdaMiataNb1ShapeWithOffset(s, 0);
-}
-
 void initializeMazdaMiataVVtTestShape(TriggerWaveform *s) {
 	initializeMazdaMiataNb1ShapeWithOffset(s, -22);
 }

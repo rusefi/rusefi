@@ -21,7 +21,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Autoupdate {
-    private static final String TITLE = "rusEFI Bundle Updater 20200607";
+    private static final String TITLE = "rusEFI Bundle Updater 20210212";
     private static final String BUNDLE_NAME_FILE = "../bundle_name.txt";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";

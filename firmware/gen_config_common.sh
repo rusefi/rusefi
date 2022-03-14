@@ -5,4 +5,6 @@ COMMON_GEN_CONFIG="-jar ../java_tools/ConfigDefinition.jar \
  -readfile DATALOG_SECTION console/binary/generated/data_logs.ini \
  -ts_destination tunerstudio \
  -firing_order controllers/algo/firing_order.h \
+ -with_c_defines false \
+ -initialize_to_zero false \
  -definition integration/rusefi_config.txt"

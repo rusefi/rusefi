@@ -1,11 +1,11 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigurationConsumer;
-import com.rusefi.util.SystemOut;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.*;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigField.BOOLEAN_T;
 
 /**
@@ -22,6 +23,8 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  * 12/19/18
  */
 public class ReaderState {
+    private static final Logging log = getLogging(ReaderState.class);
+
     public static final String BIT = "bit";
     private static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
@@ -31,6 +34,7 @@ public class ReaderState {
     public final Map<String, Integer> tsCustomSize = new HashMap<>();
     public final Map<String, String> tsCustomLine = new HashMap<>();
     public final Map<String, ConfigStructure> structures = new HashMap<>();
+    public String headerMessage;
 
     public final EnumsReader enumsReader = new EnumsReader();
     public final VariableRegistry variableRegistry = new VariableRegistry();
@@ -150,7 +154,8 @@ public class ReaderState {
         if (stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = stack.pop();
-        SystemOut.println("Ending structure " + structure.getName());
+        if (log.debugEnabled())
+            log.debug("Ending structure " + structure.getName());
         structure.addAlignmentFill(this);
 
         structures.put(structure.getName(), structure);
@@ -232,7 +237,8 @@ public class ReaderState {
         }
         ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
         state.stack.push(structure);
-        SystemOut.println("Starting structure " + structure.getName());
+        if (log.debugEnabled())
+            log.debug("Starting structure " + structure.getName());
     }
 
     private static void processField(ReaderState state, String line) {
@@ -255,7 +261,8 @@ public class ReaderState {
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
         if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
-            SystemOut.println("Need to align before " + cf.getName());
+            if (log.debugEnabled())
+                log.debug("Need to align before " + cf.getName());
             structure.addAlignmentFill(state);
         } else {
             // adding a structure instance - had to be aligned
@@ -277,4 +284,9 @@ public class ReaderState {
         }
     }
 
+    public String getHeader() {
+        if (headerMessage == null)
+            throw new NullPointerException("No header message yet");
+        return headerMessage;
+    }
 }

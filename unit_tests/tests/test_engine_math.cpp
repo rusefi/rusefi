@@ -11,17 +11,6 @@
 #include "maf.h"
 #include "advance_map.h"
 
-TEST(misc, structSize) {
-	ASSERT_EQ(1, sizeof(adc_channel_e)) << "small enum size";
-	ASSERT_EQ(1, sizeof(pin_input_mode_e)) << "small enum size";
-	ASSERT_EQ(1, sizeof(pin_output_mode_e)) << "small enum size";
-	ASSERT_EQ(1, sizeof(brain_pin_e)) << "small enum size";
-	ASSERT_EQ(16, sizeof(air_pressure_sensor_config_s));
-/* no longer the case at least for Proteus
-	ASSERT_EQ(20000, sizeof(persistent_config_s));
-*/
-}
-
 TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
 	EngineTestHelper eth(FORD_ESCORT_GT);
@@ -38,6 +27,7 @@ TEST(misc, testEngineMath) {
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
 	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
 	ASSERT_NEAR( 50,  getOneDegreeTimeMs(600) * 180, EPS4D) << "600 RPM";
 	ASSERT_EQ( 5,  getOneDegreeTimeMs(6000) * 180) << "6000 RPM";
@@ -64,9 +54,14 @@ TEST(misc, testEngineMath) {
 
 	Sensor::setMockValue(SensorType::Clt, 90);
 	Sensor::setMockValue(SensorType::Iat, 20);
+	Sensor::setMockValue(SensorType::Map, 100);
+	Sensor::setMockValue(SensorType::Tps1, 0);
+	Sensor::setMockValue(SensorType::Rpm, 1000);
+
 	// calc. airFlow using airMass, and find tCharge
-	ASSERT_FLOAT_EQ(59.1175f, getTCharge(/*RPM*/1000, /*TPS*/0));
-	ASSERT_FLOAT_EQ(65.5625f/*kg/h*/, engine->engineState.airFlow);
+	engine->periodicFastCallback();
+	ASSERT_NEAR(59.1175f, engine->engineState.sd.tCharge, EPS4D);
+	ASSERT_NEAR(56.9762f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
 
 TEST(misc, testIgnitionMapGenerator) {

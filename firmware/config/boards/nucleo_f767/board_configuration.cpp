@@ -7,17 +7,13 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 
 // Warning! This is a test config!
 
 #undef SERIAL_SPEED
 #define SERIAL_SPEED 115200
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = true;
 	engineConfiguration->binarySerialTxPin = GPIOD_8;
 	engineConfiguration->binarySerialRxPin = GPIOD_9;
@@ -27,14 +23,14 @@ void setSerialConfigurationOverrides(void) {
 	engineConfiguration->uartConsoleSerialSpeed = SERIAL_SPEED;
 }
 
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }
 
 /**
  * @brief   Board-specific configuration defaults.
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setSerialConfigurationOverrides();
 
 	engineConfiguration->runningLedPin = GPIOB_0; //green LED

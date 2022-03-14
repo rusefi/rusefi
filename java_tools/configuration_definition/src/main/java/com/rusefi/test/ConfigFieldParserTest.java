@@ -71,19 +71,16 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderState state = new ReaderState();
 
-        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
-            @Override
-            public void endFile() {
-            }
-        };
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
         state.readBufferedReader(test, Collections.singletonList(consumer));
     }
 
     @Test
     public void testCustomEnum() throws IOException {
         String test = "struct pid_s\n" +
+                "#define ego_sensor_e_size 4\n" +
                 "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
-                "custom ego_sensor_e 4 bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
+                "custom ego_sensor_e @@ego_sensor_e_size@@ bits, S32, @OFFSET@, [0:1], @@ego_sensor_e_enum@@\n" +
                 "ego_sensor_e afr_type;\n" +
                 "end_struct\n";
         ReaderState state = new ReaderState();
@@ -282,11 +279,7 @@ public class ConfigFieldParserTest {
                 "int[ERROR_BUFFER_SIZE iterate] field\n" +
                 "end_struct\n" +
                 "";
-        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer() {
-            @Override
-            public void endFile() {
-            }
-        };
+        BaseCHeaderConsumer consumer = new BaseCHeaderConsumer();
         new ReaderState().readBufferedReader(test, Collections.singletonList(consumer));
         assertEquals("// start of pid_s\n" +
                 "struct pid_s {\n" +

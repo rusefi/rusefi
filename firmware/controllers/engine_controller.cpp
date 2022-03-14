@@ -25,7 +25,6 @@
 
 #include "os_access.h"
 #include "trigger_central.h"
-#include "fsio_core.h"
 #include "fsio_impl.h"
 #include "idle_thread.h"
 #include "advance_map.h"
@@ -505,9 +504,8 @@ void commonInitEngineController() {
 
 	initAccelEnrichment();
 
-#if EFI_FSIO
+	// TODO: rename
 	initFsioImpl();
-#endif /* EFI_FSIO */
 
 	initGpPwm();
 
@@ -618,8 +616,11 @@ bool validateConfig() {
 	if (engineConfiguration->iacCoastingBins[1] != 0) { // only validate map if not all zeroes default
 		ensureArrayIsAscending("Idle coasting position", engineConfiguration->iacCoastingBins);
 	}
-	if (config->idleVeBins[1] != 0) { // only validate map if not all zeroes default
-		ensureArrayIsAscending("Idle VE", config->idleVeBins);
+	if (config->idleVeRpmBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Idle VE RPM", config->idleVeRpmBins);
+	}
+	if (config->idleVeLoadBins[1] != 0) { // only validate map if not all zeroes default
+		ensureArrayIsAscending("Idle VE Load", config->idleVeLoadBins);
 	}
 	if (config->idleAdvanceBins[1] != 0) { // only validate map if not all zeroes default
 		ensureArrayIsAscending("Idle timing", config->idleAdvanceBins);
@@ -632,12 +633,13 @@ bool validateConfig() {
 			continue;
 		}
 		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
-		ensureArrayIsAscending("VR values", cfg.values);
 	}
 
+#if EFI_BOOST_CONTROL
 	// Boost
 	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
 	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+#endif // EFI_BOOST_CONTROL
 
 	// ETB
 	ensureArrayIsAscending("Pedal map pedal", config->pedalToTpsPedalBins);

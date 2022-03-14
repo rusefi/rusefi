@@ -65,6 +65,10 @@ public:
 	uint8_t pin = 0;
 #endif /* EFI_GPIO_HARDWARE */
 
+#if EFI_UNIT_TEST
+	int unitTestTurnedOnCounter = 0;
+#endif
+
 	brain_pin_e brainPin = GPIO_UNASSIGNED;
 
 #if (EFI_GPIO_HARDWARE && (BOARD_EXT_GPIOCHIPS > 0))
@@ -248,6 +252,5 @@ const char *portname(ioportid_t GPIOx);
 
 void printSpiConfig(const char *msg, spi_device_e device);
 brain_pin_e parseBrainPin(const char *str);
-const char *hwPortname(brain_pin_e brainPin);
 
 extern EnginePins enginePins;

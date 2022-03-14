@@ -235,7 +235,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	if (printFuelDebug) {
 		InjectorOutputPin *output = outputs[0];
 		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->name, (int)durationUs,
-				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM())) / 1000.0);
+				(int)MS2US(getCrankshaftRevolutionTimeMs(Sensor::getOrZero(SensorType::Rpm))) / 1000.0);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
@@ -285,7 +285,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	engine->tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
 	if (trgEventIndex == 0) {
 		engine->tpsAccelEnrichment.onEngineCycleTps();
 	}
@@ -384,7 +383,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 		return;
 	}
 
-	int rpm = GET_RPM();
+	int rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {
 		// this happens while we just start cranking
 
@@ -398,17 +397,14 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 		return;
 	}
 
-	bool limitedSpark = !engine->limpManager.allowIgnition();
-	bool limitedFuel = !engine->limpManager.allowInjection();
+	LimpState limitedSparkState = engine->limpManager.allowIgnition();
+	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;
+	bool limitedSpark = !limitedSparkState.value;
 
-#if EFI_LAUNCH_CONTROL
-	if (engine->launchController.isLaunchCondition && !limitedSpark && !limitedFuel) {
-		/* in case we are not already on a limited conditions, check launch as well */
-
-		limitedSpark &= engine->launchController.isLaunchSparkRpmRetardCondition();
-		limitedFuel &= engine->launchController.isLaunchFuelRpmRetardCondition();
-	}
-#endif
+	LimpState limitedFuelState = engine->limpManager.allowInjection();
+	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
+	bool limitedFuel = !limitedFuelState.value;
+	
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
 			engine->triggerCentral.validateCamVvtCounters();
@@ -545,7 +541,7 @@ void updatePrimeInjectionPulseState() {
 
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	float el = getFuelingLoad();
 	efiPrintf("rpm %d engine_load %.2f", rpm, el);
 	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance[0]);

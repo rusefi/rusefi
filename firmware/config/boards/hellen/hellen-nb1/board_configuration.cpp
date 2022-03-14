@@ -11,7 +11,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
@@ -63,11 +62,6 @@ static void setupVbatt() {
 }
 
 static void setupDefaultSensorInputs() {
-	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = GPIOA_6;
-	engineConfiguration->triggerInputPins[1] = GPIOB_1;
-	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
@@ -77,15 +71,15 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_13;
+	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
@@ -97,15 +91,12 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canRxPin = GPIOD_0;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -116,7 +107,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -161,7 +152,7 @@ void setBoardDefaultConfiguration(void) {
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
@@ -169,4 +160,14 @@ void setSdCardConfigurationOverrides(void) {
 	engineConfiguration->spi2sckPin = H_SPI2_SCK;
 	engineConfiguration->sdCardCsPin = H_SPI2_CS;
 	engineConfiguration->is_enabled_spi_2 = true;
+
+	if (engineConfiguration->trigger.type == TT_MAZDA_MIATA_NB1) {
+	    engineConfiguration->trigger.type = TT_MIATA_VVT;
+	}
+
+	// trigger inputs, hall
+	engineConfiguration->triggerInputPins[0] = H144_IN_CRANK;
+	engineConfiguration->triggerInputPins[1] = GPIO_UNASSIGNED;
+	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
+	engineConfiguration->camInputs[0] = H144_IN_CAM;
 }

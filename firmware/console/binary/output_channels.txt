@@ -41,7 +41,7 @@ uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 0, 0
 
 uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
-	uint16_t autoscale speedToRpmRatio;s2rpm;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	uint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint8_t autoscale vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",1, 0, 0, 0, 0
 	int8_t autoscale internalMcuTemperature;@@GAUGE_NAME_CPU_TEMP@@;"deg C",1, 0, 0, 0, 0
 
@@ -55,9 +55,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	int16_t autoscale throttlePedalPosition;@@GAUGE_NAME_THROTTLE_PEDAL@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	uint16_t tpsADC;;"ADC", 1, 0, 0, 0, 0
-	uint16_t autoscale MAFValue;@@GAUGE_NAME_MAF@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	uint16_t autoscale rawMaf;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	uint16_t autoscale massAirFlowValue;@@GAUGE_NAME_AIR_FLOW@@;"Kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t autoscale mafMeasured;@@GAUGE_NAME_AIR_FLOW_MEASURED@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
 	uint16_t autoscale MAPValue;@@GAUGE_NAME_MAP@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	uint16_t autoscale baroPressure;;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 
@@ -93,8 +93,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t autoscale baroCorrection;@@GAUGE_NAME_FUEL_BARO_CORR@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	uint16_t autoscale currentEnginePhase;"Engine Phase";"deg",1, 0, 0, 0, 0
 ! Wall model AE
-	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
-	int16_t autoscale wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	uint16_t autoscale wallFuelAmount;@@GAUGE_NAME_FUEL_WALL_AMOUNT@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
+	int16_t autoscale wallFuelCorrection;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 0
 
 	uint16_t revolutionCounterSinceStart;;"",1, 0, 0, 0, 0
 	int16_t autoscale deltaTps;@@GAUGE_NAME_FUEL_TPS_ROC@@;"ratio",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
@@ -188,31 +188,31 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	int16_t autoscale TPS2Value;@@GAUGE_NAME_TPS2@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	int16_t autoscale rawTps1Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	int16_t autoscale rawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	int16_t autoscale rawClt;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	int16_t autoscale rawIat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	int16_t autoscale rawOilPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	int16_t autoscale rawTps1Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawClt;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawIat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawOilPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	uint16_t autoscale tuneCrc16;@@GAUGE_NAME_TUNE_CRC16@@;"crc16", 1, 0, 0, 0, 0
 	uint8_t autoscale fuelClosedLoopBinIdx;;"", 1, 0, 0, 0, 0
 	uint8_t autoscale tcuCurrentGear;@@GAUGE_NAME_CURRENT_GEAR@@;"gear", 1, 0, 0, 0, 0
 
-	int16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	int16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
 
 	uint8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, 0, 0, 0
 	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
 
-	int16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	int16_t autoscale rawWastegatePosition;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	int16_t autoscale rawIdlePositionSensor;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawWastegatePosition;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int16_t autoscale wastegatePositionSensor;@@GAUGE_NAME_WG_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	int16_t autoscale idlePositionSensor;@@GAUGE_NAME_IDLE_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	int16_t autoscale rawLowFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	int16_t autoscale rawHighFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	int16_t autoscale rawLowFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawHighFuelPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int16_t autoscale lowFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_LOW@@;"kpa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
 	int16_t autoscale highFuelPressure;@@GAUGE_NAME_FUEL_PRESSURE_HIGH@@;"bar",{1/@@PACK_MULT_HIGH_PRESSURE@@}, 0, 0, 0, 0
@@ -230,10 +230,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	int16_t[2 iterate] autoscale fuelPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
-	int16_t autoscale rawTps1Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
-	int16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	int16_t autoscale rawTps1Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	int16_t autoscale rawTps2Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
+	int16_t autoscale rawTps2Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	uint16_t knockCount;"knock: count";"",1, 0, 0, 0, 0
 
 	int16_t autoscale accelerationZ;@@GAUGE_NAME_ACCEL_Z@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
@@ -261,15 +261,34 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     int16_t autoscale m_requested_pump;"DI: Pump Angle";"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
     int16_t autoscale boostControlTarget;"Pump Angle";"deg",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-    int16_t autoscale unusedHere1111;"Pump Angle";"deg",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+    int8_t autoscale sparkCutReason;"Spark Cut Code";"code",1, 0, 0, 0, 0
+    int8_t autoscale fuelCutReason;"Fuel Cut Code";"code",1, 0, 0, 0, 0
     float fuel_requested_percent;"DI: fuel_requested_percent";"v", 1, 0, 0, 100, 0
     float fuel_requested_percent_pi;"DI: fuel_requested_percent_pi";"v", 1, 0, 0, 100, 0
     float m_I_sum_percent;"DI: m_I_sum_percent";"v", 1, 0, 0, 100, 0
     float m_pressureTarget_kPa;"DI: m_pressureTarget_kPa";"v", 1, 0, 0, 100, 0
 
+	uint16_t autoscale mafEstimate;@@GAUGE_NAME_AIR_FLOW_ESTIMATE@@;"kg/h",{1/@@PACK_MULT_MASS_FLOW@@}, 0, 0, 0, 0
+	uint16_t instantRpm;;"rpm", 1, 0, 0, 0, 0
+
+    float di_nextStart;"DI: next start";"v", 1, 0, 0, 100, 0
+
+    uint16_t systemEventReuse;;"counter", 1, 0, 0, 0, 0
+	uint16_t autoscale rawMap;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	uint16_t autoscale rawAfr;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+
+	uint8_t tpsAccelFrom;;"%", 1, 0, 0, 100, 0
+	uint8_t tpsAccelTo;;"%", 1, 0, 0, 100, 0
 
 ! we have some unused bytes to allow compatible TS changes
-	int[28 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	float autoscale calibrationValue2;;"", 1, 0, 0, 0, 0
+    bit isMainRelayOn;
+    bit isUsbConnected;Original reason for this is to check if USB is connected from Lua
+
+    int luaInvocationCounter;;"count",1, 0, 0, 0, 0
+    int luaLastCycleDuration;;"nt",1, 0, 0, 0, 0
+    uint8_t testBenchIter;;"count",1, 0, 0, 0, 0
+	uint8_t[79 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition
@@ -278,6 +297,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	bit launchIsLaunchCondition;
 	bit launchCombinedConditions
 	bit launchActivatePinState
+	bit dfcoActive
+	bit tpsAccelActive
 
     uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
     uint8_t boostControllerOutput;;"", 1, 0, -10000, 10000, 0

@@ -144,7 +144,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 	case LL_RPM:
 	{
 		int seconds = minI(9999, getTimeNowSeconds());
-		lcdPrintf("RPM %d %d ", GET_RPM(), seconds);
+		lcdPrintf("RPM %d %d ", (int)Sensor::getOrZero(SensorType::Rpm), seconds);
 	}
 #if EFI_FILE_LOGGING
 		{
@@ -198,7 +198,7 @@ static void showLine(lcd_line_e line, int /*screenY*/) {
 #if	EFI_ANALOG_SENSORS
 	case LL_BARO:
 		if (Sensor::hasSensor(SensorType::BarometricPressure)) {
-			lcdPrintf("Baro: %.2f", getBaroPressure());
+			lcdPrintf("Baro: %.2f", Sensor::getOrZero(SensorType::BarometricPressure));
 		} else {
 			lcdPrintf("Baro: none");
 		}
@@ -300,7 +300,7 @@ void updateHD44780lcd(void) {
 //	}
 //	lcd_HD44780_set_position(0, 10);
 //
-//	char * ptr = itoa10(buffer, GET_RPM());
+//	char * ptr = itoa10(buffer, Sensor::getOrZero(SensorType::Rpm));
 //	ptr[0] = 0;
 //	int len = ptr - buffer;
 //	for (int i = 0; i < 6 - len; i++) {

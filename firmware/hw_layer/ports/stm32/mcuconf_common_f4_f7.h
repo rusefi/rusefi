@@ -137,10 +137,25 @@
 /*
  * I2C driver system settings.
  */
+#ifndef STM32_I2C_USE_I2C1
 #define STM32_I2C_USE_I2C1                  FALSE
-#define STM32_I2C_USE_I2C2                  FALSE
+#endif
+
+#ifndef STM32_I2C_USE_I2C2
+/* PB10/PB11 like some Hellen likes AF4 */
+#define STM32_I2C_USE_I2C2                  TRUE
+#endif
+
+#ifndef STM32_I2C_USE_I2C3
+// PC9 I2C3_SDA AF4
+// PA8 I2C3_SCL AF4
 #define STM32_I2C_USE_I2C3                  FALSE
+#endif
+
+#ifndef STM32_I2C_USE_I2C4
 #define STM32_I2C_USE_I2C4                  FALSE
+#endif
+
 #define STM32_I2C_BUSY_TIMEOUT              50
 #define STM32_I2C_I2C1_RX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 0)
 #define STM32_I2C_I2C1_TX_DMA_STREAM        STM32_DMA_STREAM_ID(1, 6)
@@ -210,12 +225,25 @@
 /*
  * SERIAL driver system settings.
  */
+#ifndef STM32_SERIAL_USE_USART1
 #define STM32_SERIAL_USE_USART1             TRUE
+#endif
+
+#ifndef STM32_SERIAL_USE_USART2
 #define STM32_SERIAL_USE_USART2             FALSE
+#endif
+
+#ifndef STM32_SERIAL_USE_USART3
 #define STM32_SERIAL_USE_USART3             FALSE
+#endif
+
 #define STM32_SERIAL_USE_UART4              FALSE
 #define STM32_SERIAL_USE_UART5              FALSE
+
+#ifndef STM32_SERIAL_USE_USART6
 #define STM32_SERIAL_USE_USART6             TRUE
+#endif
+
 #define STM32_SERIAL_USE_UART7              FALSE
 #define STM32_SERIAL_USE_UART8              FALSE
 #define STM32_IRQ_USART1_PRIORITY           (PRECISE_SCHEDULING_TIMER_PRIORITY + 2)
@@ -321,8 +349,14 @@
 /*
  * USB driver system settings.
  */
+#ifndef STM32_USB_USE_OTG1
 #define STM32_USB_USE_OTG1                  TRUE
+#endif
+
+#ifndef STM32_USB_USE_OTG2
 #define STM32_USB_USE_OTG2                  FALSE
+#endif
+
 #define STM32_USB_OTG1_IRQ_PRIORITY         14
 #define STM32_USB_OTG2_IRQ_PRIORITY         14
 #define STM32_USB_OTG1_RX_FIFO_SIZE         512
@@ -335,12 +369,15 @@
  */
 #define STM32_WDG_USE_IWDG                  FALSE
 
-// Pretend we have a 25MHz external crystal.  This value isn't actually used since we
-// configure the PLL to start on the HSI oscillator, then compute HSE's speed at runtime
-// and reconfigure the PLL appropriately.
-#define STM32_HSECLK 25000000
+/* Some boards need to know clock early on boot.
+ * F429-Discovery board configures clock and then SDRAM early on boot */
+#ifndef STM32_HSECLK
+    // Pretend we have a 25MHz external crystal.  This value isn't actually used since we
+    // configure the PLL to start on the HSI oscillator, then compute HSE's speed at runtime
+    // and reconfigure the PLL appropriately.
+    #define STM32_HSECLK 25000000
 
-// After boot, we will detect the real frequency, and adjust the PLL M value to suit
+    // After boot, we will detect the real frequency, and adjust the PLL M value to suit
 
-#define ENABLE_AUTO_DETECT_HSE
-
+    #define ENABLE_AUTO_DETECT_HSE
+#endif

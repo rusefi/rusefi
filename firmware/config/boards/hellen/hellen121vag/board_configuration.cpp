@@ -11,14 +11,9 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "custom_engine.h"
 #include "electronic_throttle_impl.h"
 #include "hellen_meta.h"
-
-static void hellenWbo() {
-	engineConfiguration->enableAemXSeries = true;
-}
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = GPIOG_7; // 96 - INJ_1
@@ -93,15 +88,15 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_13;
+	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
@@ -113,15 +108,12 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->canRxPin = GPIOD_0;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -132,7 +124,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -193,7 +185,7 @@ void setBoardDefaultConfiguration(void) {
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 
 	engineConfiguration->spi3mosiPin = GPIOC_12;

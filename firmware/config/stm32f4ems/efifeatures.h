@@ -17,8 +17,6 @@
 
 #define EFI_DYNO_VIEW TRUE
 
-#define EFI_FSIO TRUE
-
 #ifndef EFI_CDM_INTEGRATION
 #define EFI_CDM_INTEGRATION FALSE
 #endif
@@ -55,11 +53,6 @@
 #if !defined(EFI_ENABLE_ASSERTS)
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
-
-#if !defined(EFI_ENABLE_MOCK_ADC)
- #define EFI_ENABLE_MOCK_ADC TRUE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 
 //#define EFI_UART_ECHO_TEST_MODE TRUE
 
@@ -154,6 +147,10 @@
 
 #ifndef BOARD_TLE8888_COUNT
 #define BOARD_TLE8888_COUNT 	1
+#endif
+
+#ifndef BOARD_L9779_COUNT
+#define BOARD_L9779_COUNT 	1
 #endif
 
 #ifndef BOARD_DRV8860_COUNT
@@ -257,20 +254,24 @@
 
 #define EFI_CONSOLE_USB_DEVICE SDU1
 
-// F42x has more memory, so we can:
-//  - use compressed USB MSD image (requires 32k of memory)
-//  - use perf trace (requires ~16k of memory)
-#ifdef EFI_IS_F42x
+#if defined(EFI_HAS_EXT_SDRAM)
+    #define ENABLE_PERF_TRACE TRUE
+    #define LUA_USER_HEAP (1 * 1024 * 1024)
+    #define LUA_SYSTEM_HEAP (1 * 1024 * 1024)
+#elif defined(EFI_IS_F42x)
+    // F42x has more memory, so we can:
+    //  - use compressed USB MSD image (requires 32k of memory)
+    //  - use perf trace (requires ~16k of memory)
 	#define EFI_USE_COMPRESSED_INI_MSD
 	#define ENABLE_PERF_TRACE TRUE
 
-	#define LUA_USER_HEAP 20000
+	#define LUA_USER_HEAP 25000
 	#define LUA_SYSTEM_HEAP 20000
 #else
 	// small memory F40x can't fit perf trace
 	#define ENABLE_PERF_TRACE FALSE
 
-	#define LUA_USER_HEAP 15000
+	#define LUA_USER_HEAP 25000
 	#define LUA_SYSTEM_HEAP 12000
 #endif
 

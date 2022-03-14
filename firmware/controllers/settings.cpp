@@ -38,10 +38,6 @@ extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-#if !defined(SETTINGS_LOGGING_BUFFER_SIZE)
-#define SETTINGS_LOGGING_BUFFER_SIZE 1000
-#endif /* SETTINGS_LOGGING_BUFFER_SIZE */
-
 void printSpiState(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),
@@ -750,6 +746,12 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
 		engineConfiguration->twoWireBatchInjection = isEnabled;
 		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "boardUseTempPullUp")) {
+		engineConfiguration->boardUseTempPullUp = isEnabled;
+		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "boardUseTachPullUp")) {
+		engineConfiguration->boardUseTachPullUp = isEnabled;
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();
@@ -833,8 +835,7 @@ static void disableSpi(int index) {
 }
 
 /**
- * See 'Engine::needToStopEngine' for code which actually stops engine
- * weird: we stop pins from here? we probably should stop engine from the code which is actually stopping engine?
+ * See 'LimpManager::isEngineStop' for code which actually stops engine
  */
 void scheduleStopEngine(void) {
 	doScheduleStopEngine();
@@ -1002,11 +1003,6 @@ struct command_f_s {
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
-#if EFI_ENABLE_MOCK_ADC
-		{MOCK_MAF_COMMAND, setMockMafVoltage},
-		{MOCK_AFR_COMMAND, setMockAfrVoltage},
-		{MOCK_MAP_COMMAND, setMockMapVoltage},
-#endif // EFI_ENABLE_MOCK_ADC
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},
@@ -1199,8 +1195,6 @@ void initSettings(void) {
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-	addConsoleAction(CMD_CALIBRATE_PEDAL_UP, grabPedalIsUp);
-	addConsoleAction(CMD_CALIBRATE_PEDAL_DOWN, grabPedalIsWideOpen);
 	addConsoleAction("info", printAllInfo);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);

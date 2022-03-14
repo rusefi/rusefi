@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * @see LiveDataParserPanelSandbox
+ *
  */
 public class LiveDataParserSandbox {
     public static void main(String[] args) {
@@ -27,12 +27,11 @@ public class LiveDataParserSandbox {
 
     @Nullable
     public static VariableValueSource getVariableValueSource(Map<String, Double> values) {
-        VariableValueSource valueSource = name -> {
+        return name -> {
             Double value = values.get(name);
             if (value == null)
                 return null;
             return new VariableValueSource.VariableState(new Field(name, 0, FieldType.BIT), value);
         };
-        return valueSource;
     }
 }

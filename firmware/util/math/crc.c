@@ -6,43 +6,6 @@
 
 #include "crc.h"
 
-#define WIDTH  (8)
-#define TOPBIT (1 << (WIDTH - 1))
-#define POLYNOMIAL 0xD8
-
-crc_t calc_crc(const crc_t message[], int nBytes) {
-	crc_t remainder = 0;
-
-	/*
-	 * Perform modulo-2 division, a byte at a time.
-	 */
-	for (int byte = 0; byte < nBytes; ++byte) {
-		/*
-		 * Bring the next byte into the remainder.
-		 */
-		remainder ^= (message[byte] << (WIDTH - 8));
-
-		/*
-		 * Perform modulo-2 division, a bit at a time.
-		 */
-		for (unsigned char bit = 8; bit > 0; --bit) {
-			/*
-			 * Try to divide the current data bit.
-			 */
-			if (remainder & TOPBIT) {
-				remainder = (remainder << 1) ^ POLYNOMIAL;
-			} else {
-				remainder = (remainder << 1);
-			}
-		}
-	}
-
-	/*
-	 * The final remainder is the CRC result.
-	 */
-	return remainder;
-}
-
 static const uint32_t crc32_tab[] = { 0x00000000, 0x77073096, 0xee0e612c, 0x990951ba,
 		0x076dc419, 0x706af48f, 0xe963a535, 0x9e6495a3, 0x0edb8832, 0x79dcb8a4,
 		0xe0d5e91e, 0x97d2d988, 0x09b64c2b, 0x7eb17cbd, 0xe7b82d07, 0x90bf1d91,
@@ -95,6 +58,19 @@ uint32_t crc32(const void *buf, uint32_t size) {
 	return crc32inc(buf, 0, size);
 }
 
+uint32_t crc32inc(const void *buf, uint32_t crc, uint32_t size) {
+	const uint8_t *p;
+
+	p = buf;
+	crc = crc ^ 0xFFFFFFFF;
+
+	while (size--) {
+		crc = crc32_tab[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
+	}
+
+	return crc ^ 0xFFFFFFFF;
+}
+
 /**
  * http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
  * https://stackoverflow.com/questions/38639423/understanding-results-of-crc8-sae-j1850-normal-vs-zero
@@ -116,15 +92,3 @@ uint8_t crc8(const uint8_t *data, uint8_t len) {
 	return crc;
 }
 
-uint32_t crc32inc(const void *buf, uint32_t crc, uint32_t size) {
-	const uint8_t *p;
-
-	p = buf;
-	crc = crc ^ 0xFFFFFFFF;
-
-	while (size--) {
-		crc = crc32_tab[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
-	}
-
-	return crc ^ 0xFFFFFFFF;
-}

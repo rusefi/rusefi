@@ -11,7 +11,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
 
@@ -77,15 +76,15 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;
+	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 
-	engineConfiguration->iat.adcChannel = EFI_ADC_13;
+	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 
 	engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_NONE;
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setHellen144LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
@@ -95,17 +94,19 @@ void setBoardConfigOverrides(void) {
 
 	engineConfiguration->canTxPin = GPIOD_1;
 	engineConfiguration->canRxPin = GPIOD_0;
+
+	engineConfiguration->etb_use_two_wires = true;
+	engineConfiguration->etbIo[0].directionPin1 = GPIOC_7;	// PWM 3
+	engineConfiguration->etbIo[0].directionPin2 = GPIOC_8;	// PWM 4
+	engineConfiguration->etbIo[0].controlPin = GPIOC_6;		// PWM 2
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -116,7 +117,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -161,7 +162,7 @@ void setBoardDefaultConfiguration(void) {
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;

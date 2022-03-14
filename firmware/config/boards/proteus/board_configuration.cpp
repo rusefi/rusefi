@@ -7,7 +7,6 @@
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "proteus_meta.h"
 
 static const brain_pin_e injPins[] = {
@@ -50,7 +49,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPinMode = OM_DEFAULT;
 }
 
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }
 
 static void setLedPins() {
@@ -140,7 +139,7 @@ static void setupSdCard() {
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setupSdCard();
 	setLedPins();
 	setupVbatt();
@@ -160,15 +159,12 @@ void setBoardConfigOverrides(void) {
 	engineConfiguration->lps25BaroSensorSda = GPIOB_11;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -179,7 +175,7 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setupEtb();
@@ -215,4 +211,9 @@ void setBoardDefaultConfiguration(void) {
 	engineConfiguration->triggerSimulatorPins[0] = GPIOG_3;
 	engineConfiguration->triggerSimulatorPins[1] = GPIOG_2;
 #endif
+}
+
+void boardPrepareForStop() {
+	// Wake on the CAN RX pin
+	palEnableLineEvent(PAL_LINE(GPIOD, 0), PAL_EVENT_MODE_RISING_EDGE);
 }

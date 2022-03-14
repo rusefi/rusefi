@@ -1,9 +1,10 @@
 package com.rusefi.ui.livedata;
 
 import com.rusefi.CodeWalkthrough;
+import com.rusefi.enums.live_data_e;
+import com.rusefi.ldmp.StateDictionary;
 import com.rusefi.livedata.LiveDataParserPanel;
 import com.rusefi.livedata.LiveDataParserSandbox;
-import com.rusefi.livedata.LiveDataView;
 import com.rusefi.livedata.ParseResult;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -15,8 +16,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import static com.rusefi.CodeWalkthrough.TRUE_CONDITION;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static com.rusefi.ui.LiveDataPane.CPP_SUFFIX;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -28,6 +29,7 @@ public class LiveDataParserTest {
                 "\tbool isEnabled = getAcState();\n" +
                 "\n" +
                 "\tm_acEnabled = isEnabled;\n" +
+                "auto [cltValid, clt] = Sensor::get(SensorType::Clt);\n" +
                 "\n" +
                 "\tenginePins.acRelay.setValue(isEnabled);\n" +
                 "\n" +
@@ -37,7 +39,26 @@ public class LiveDataParserTest {
                 "}\n";
 
         SourceCodePainter painter = run(name -> null, sourceCode);
-        verify(painter, times(4)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
+        verify(painter, times(7)).paintBackground(eq(CodeWalkthrough.ACTIVE_STATEMENT), any());
+    }
+
+    @Test
+    public void testMethodNamesCode() {
+        String sourceCode = "void AcController::onSlowCallback() {\n" +
+                "}\n" +
+                "void onSlowCallback2() {\n" +
+                "                }\n" +
+                "int onSlowCallback3() {\n" +
+                "                }\n" +
+                ""
+                ;
+
+        SourceCodePainter painter = mock(SourceCodePainter.class);
+        ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
+
+        printTree(tree);
+        ParseResult result = CodeWalkthrough.applyVariables(name -> null, sourceCode, painter, tree);
+        assertEquals(3, result.getFunctions().size());
     }
 
     @Test
@@ -81,19 +102,25 @@ public class LiveDataParserTest {
         SourceCodePainter painter = mock(SourceCodePainter.class);
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
 
-        System.out.println("******************************************* Just print everything for educational purposes");
-        new ParseTreeWalker().walk(new PrintCPP14ParserListener(), tree);
-        System.out.println("******************************************* Now running FOR REAL");
+        printTree(tree);
         CodeWalkthrough.applyVariables(valueSource, sourceCode, painter, tree);
         return painter;
     }
 
+    private static void printTree(ParseTree tree) {
+        System.out.println("******************************************* Just print everything for educational purposes");
+        new ParseTreeWalker().walk(new PrintCPP14ParserListener(), tree);
+        System.out.println("******************************************* Now running FOR REAL");
+    }
+
     @Test
     public void testConfigurationInRealSourceCode() throws IOException, URISyntaxException {
-        String sourceCode = LiveDataParserPanel.getContent(LiveDataParserPanel.class, LiveDataView.BOOST_CONTROL.getFileName());
+        String fileName = StateDictionary.INSTANCE.getFileName(live_data_e.LDS_boost_control);
+        String sourceCode = LiveDataParserPanel.getContent(LiveDataParserPanel.class, fileName + CPP_SUFFIX);
         assertTrue(sourceCode.length() > 100);
 
         ParseTree tree = LiveDataParserPanel.getParseTree(sourceCode);
+        LiveDataParserTest.printTree(tree);
         ParseResult parseResult = CodeWalkthrough.applyVariables(VariableValueSource.VOID, sourceCode, SourceCodePainter.VOID, tree);
         assertFalse(parseResult.getConfigTokens().isEmpty());
     }

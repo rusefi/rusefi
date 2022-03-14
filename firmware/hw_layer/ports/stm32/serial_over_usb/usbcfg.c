@@ -83,8 +83,8 @@ static const uint8_t vcom_configuration_descriptor_data[DESCRIPTOR_SIZE] = {
                          NUM_INTERFACES,/* bNumInterfaces.                  */
                          0x01,          /* bConfigurationValue.             */
                          0,             /* iConfiguration.                  */
-                         0xC0,          /* bmAttributes (self powered).     */
-                         100),           /* bMaxPower (200mA).              */
+                         0x80,          /* bmAttributes (bus powered).      */
+                         200),          /* bMaxPower (400mA).               */
 #if HAL_USE_USB_MSD
   USB_DESC_INTERFACE    (MSD_IF,        /* bInterfaceNumber.                */
                          0x00,          /* bAlternateSetting.               */
@@ -451,7 +451,13 @@ const USBConfig usbcfg = {
  * Serial over USB driver configuration.
  */
 const SerialUSBConfig serusbcfg = {
+#if STM32_USB_USE_OTG1
   .usbp = &USBD1,
+#elif STM32_USB_USE_OTG2
+  .usbp = &USBD2,
+#else
+  #error Serial over USB needs OTG1 or OTG2 to be enabled
+#endif
   .bulk_in = USBD1_DATA_REQUEST_EP,
   .bulk_out = USBD1_DATA_AVAILABLE_EP,
   .int_in = USBD1_INTERRUPT_REQUEST_EP

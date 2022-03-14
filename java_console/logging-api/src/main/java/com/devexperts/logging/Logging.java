@@ -65,7 +65,7 @@ public class Logging {
 	 * overrides the value of {@link #LOG_FILE_PROPERTY} system property.
 	 */
 	public static void configureLogFile(String log_file) {
-		reportErrors(IMPL, IMPL.configureLogFile(log_file));
+		reportErrors(IMPL, IMPL.configureLogFileAndConsole(log_file));
 	}
 
 	// ========== Instance =========

@@ -3,7 +3,6 @@ package com.rusefi;
 import com.rusefi.core.Sensor;
 import com.rusefi.ui.GaugesGridElement;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.etb.CalibrationPanel;
 import com.rusefi.ui.etb.EtbCommandsPanel;
 
 import javax.swing.*;
@@ -25,7 +24,6 @@ public class ETBPane {
 
         content.add(new EtbCommandsPanel(uiContext).getContent(), BorderLayout.WEST);
         content.add(centerPanel, BorderLayout.CENTER);
-        content.add(new CalibrationPanel(uiContext).getContent(), BorderLayout.EAST);
     }
 
     public JPanel getContent() {

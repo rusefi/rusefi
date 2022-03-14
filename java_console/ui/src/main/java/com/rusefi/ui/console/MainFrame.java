@@ -1,5 +1,6 @@
 package com.rusefi.ui.console;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
@@ -10,9 +11,9 @@ import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.ui.storage.Node;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.util.Objects;
 import java.util.TimeZone;
 
@@ -20,6 +21,8 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
 public class MainFrame {
+    private static final Logging log = getLogging(Launcher.class);
+
     @NotNull
     private final ConsoleUI consoleUI;
     private final TabbedPanel tabbedPane;
@@ -29,7 +32,7 @@ public class MainFrame {
     private final FrameHelper frame = new FrameHelper() {
         @Override
         protected void onWindowOpened() {
-            FileLog.MAIN.logLine("onWindowOpened");
+            log.info("onWindowOpened");
             windowOpenedHandler();
         }
 
@@ -42,7 +45,7 @@ public class MainFrame {
             /**
              * here we would close the log file
              */
-            FileLog.MAIN.logLine("onWindowClosed");
+            log.info("onWindowClosed");
             FileLog.MAIN.close();
         }
     };
@@ -59,20 +62,17 @@ public class MainFrame {
 
     private void windowOpenedHandler() {
         setTitle();
-        ConnectionStatusLogic.INSTANCE.addListener(new ConnectionStatusLogic.Listener() {
-            @Override
-            public void onConnectionStatus(boolean isConnected) {
-                setTitle();
-                UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
-                if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
-                    long unixGmtTime = System.currentTimeMillis() / 1000L;
-                    long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
-                    consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Fields.CMD_DATE) +
-                                    " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
-                            InvocationConfirmationListener.VOID, false);
-                }
+        ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
+            setTitle();
+            UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
+            if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
+                long unixGmtTime = System.currentTimeMillis() / 1000L;
+                long withOffset = unixGmtTime + TimeZone.getDefault().getOffset(System.currentTimeMillis()) / 1000;
+                consoleUI.uiContext.getLinkManager().execute(() -> consoleUI.uiContext.getCommandQueue().write(IoUtil.getSetCommand(Fields.CMD_DATE) +
+                                " " + withOffset, CommandQueue.DEFAULT_TIMEOUT,
+                        InvocationConfirmationListener.VOID, false));
             }
-        });
+        }));
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
         linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStateListener() {
@@ -82,14 +82,18 @@ public class MainFrame {
 
             @Override
             public void onConnectionEstablished() {
-                tabbedPane.settingsTab.showContent();
-                tabbedPane.logsManager.showContent();
-                tabbedPane.fuelTunePane.showContent();
-                /**
-                 * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server
-                 * before launching new instance
-                 */
-                new BinaryProtocolServer().start(linkManager);
+                ConnectionWatchdog.init(linkManager);
+
+                SwingUtilities.invokeLater(() -> {
+                    tabbedPane.settingsTab.showContent();
+                    tabbedPane.logsManager.showContent();
+                    /**
+                     * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server
+                     * before launching new instance
+                     */
+                    new BinaryProtocolServer().start(linkManager);
+                });
+
             }
         });
 

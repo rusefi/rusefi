@@ -10,7 +10,6 @@
 #include "trigger_structure.h"
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s);
-void initializeMazdaMiataNb1Shape(TriggerWaveform *s);
 void initializeMazdaMiataNb2Crank(TriggerWaveform *s);
 void initializeMazdaMiataVVtTestShape(TriggerWaveform *s);
 void configureMazdaProtegeSOHC(TriggerWaveform *s);

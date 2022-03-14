@@ -10,7 +10,7 @@
 
 #include "global.h"
 #include "engine_parts.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "engine_state_generated.h"
 
 struct LuaAdjustments {
@@ -37,10 +37,8 @@ public:
 
 	WarningCodeState warnings;
 
-	/**
-	 * speed-density logic, calculated air flow in kg/h for tCharge Air-Interp. method
-	 */
-	float airFlow = 0;
+	// Estimated airflow based on whatever airmass model is active
+	float airflowEstimate = 0;
 
 	float knockThreshold = 0;
 
@@ -60,10 +58,6 @@ public:
 
 	// Angle between firing the main (primary) spark and the secondary (trailing) spark
 	angle_t trailingSparkAngle = 0;
-
-	// fuel-related;
-	float fuelCutoffCorrection = 0;
-	efitick_t coastingFuelCutStartTime = 0;
 
 	efitick_t timeSinceLastTChargeK;
 
@@ -85,10 +79,6 @@ public:
 	floatms_t tpsAccelEnrich = 0;
 
 	angle_t injectionOffset = 0;
-
-#if EFI_ENABLE_MOCK_ADC
-	MockAdcState mockAdcState;
-#endif /* EFI_ENABLE_MOCK_ADC */
 
 	multispark_state multispark;
 

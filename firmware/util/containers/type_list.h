@@ -45,6 +45,14 @@ struct type_list {
 		others.apply_all(f);
 	}
 
+	// Applies an accumulator function over the sequence of elements.
+	// The specified seed value is used as the initial accumulator value,
+	// and the specified function is used to select the result value.
+	template<typename return_t, typename func_t>
+	auto aggregate(func_t const& accumulator, return_t seed) {
+		return others.aggregate(accumulator, first.aggregate(accumulator, seed));
+	}
+
 	/*
 	 * Return the container object for type get_t.
 	 *
@@ -90,6 +98,11 @@ public:
 	template<typename func_t>
 	void apply_all(func_t const & f) {
 		f(me);
+	}
+
+	template<typename return_t, typename func_t>
+	auto aggregate(func_t const& accumulator, return_t seed) {
+		return accumulator(me, seed);
 	}
 
 	template<typename has_t>
@@ -144,6 +157,11 @@ public:
 	template<typename func_t>
 	void apply_all(func_t const & f) {
 		f(*me);
+	}
+
+	template<typename return_t, typename func_t>
+	auto aggregate(func_t const& accumulator, return_t seed) {
+		return accumulator(*me, seed);
 	}
 
 	template<typename has_t>

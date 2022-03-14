@@ -200,7 +200,14 @@ public class ParseState {
 
     @Override
     public void enterEnumTypedefSuffix(RusefiConfigGrammarParser.EnumTypedefSuffixContext ctx) {
-        int endBit = Integer.parseInt(ctx.integer(2).getText());
+        String replacementIdent = ctx.replacementIdent().getText();
+        int endBit;
+        if (replacementIdent == null) {
+            RusefiConfigGrammarParser.IntegerContext integer = ctx.integer(2);
+            endBit = Integer.parseInt(integer.getText());
+        } else {
+            endBit = Integer.parseInt(replacementIdent);
+        }
         Type datatype = Type.findByTsType(ctx.Datatype().getText());
 
         String rhs = ctx.enumRhs().getText();
