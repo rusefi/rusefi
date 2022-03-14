@@ -1,6 +1,5 @@
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
 #include "AemXSeriesLambda.h"
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
@@ -62,5 +61,3 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 
 	setValidValue(lambdaFloat, nowNt);
 }
-
-#endif
