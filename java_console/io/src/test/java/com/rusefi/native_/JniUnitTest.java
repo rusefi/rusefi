@@ -12,5 +12,7 @@ public class JniUnitTest {
         EngineLogic engineLogic = new EngineLogic();
         String version = engineLogic.getVersion();
         assertTrue("Got " + version, version.contains("Hello"));
+
+        engineLogic.invokePeriodicCallback();
     }
 }
