@@ -11,13 +11,13 @@
 
 #include <memory>
 
-static std::unique_ptr<EngineTestHelper> eth;
+static std::unique_ptr<EngineTestHelper> ethPtr;
 
 static EngineTestHelper* getEth() {
-	if (!eth) {
-		eth = std::make_unique<EngineTestHelper>(TEST_ENGINE);
+	if (!ethPtr) {
+		ethPtr = std::make_unique<EngineTestHelper>(TEST_ENGINE);
 	}
-	return eth.get();
+	return ethPtr.get();
 }
 
 JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv * env, jobject) {
@@ -63,6 +63,7 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallba
 JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNIEnv * env, jobject instance) {
 	jbyteArray retVal = env->NewByteArray(sizeof(TunerStudioOutputChannels));
 	jbyte *buf = env->GetByteArrayElements(retVal, NULL);
+	EngineTestHelper* eth = getEth();
 	memcpy(buf, (const void*)&eth->engine.outputChannels, sizeof(TunerStudioOutputChannels));
 	env->ReleaseByteArrayElements(retVal, buf, 0);
 
