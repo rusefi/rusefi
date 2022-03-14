@@ -9,7 +9,11 @@
 #include "pch.h"
 #include <stdlib.h>
 
+bool hasInitGtest = false;
+
 GTEST_API_ int main(int argc, char **argv) {
+	hasInitGtest = true;
+
 	testing::InitGoogleTest(&argc, argv);
 	// uncomment if you only want to run selected tests
 	/**
@@ -21,4 +25,3 @@ GTEST_API_ int main(int argc, char **argv) {
 	// windows ERRORLEVEL in Jenkins batch file seems to want negative value to detect failure
 	return result == 0 ? 0 : -1;
 }
-
