@@ -13,4 +13,6 @@ public class EngineLogic {
     public native void setConfiguration(byte[] content, int offset, int size);
 
     public native void invokePeriodicCallback();
+
+    public native byte[] getOutputs();
 }
