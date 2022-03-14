@@ -47,6 +47,14 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setConfiguration
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallback
   (JNIEnv *, jobject);
 
+/*
+ * Class:     com_rusefi_native__EngineLogic
+ * Method:    getOutputs
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif
