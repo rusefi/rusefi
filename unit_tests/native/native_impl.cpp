@@ -9,7 +9,16 @@
 #include "com_rusefi_native__EngineLogic.h"
 #include "auto_generated_sensor.h"
 
-//static EngineTestHelper eth(TEST_ENGINE);
+#include <memory>
+
+static std::unique_ptr<EngineTestHelper> eth;
+
+static EngineTestHelper* getEth() {
+	if (!eth) {
+		eth = std::make_unique<EngineTestHelper>(TEST_ENGINE);
+	}
+	return eth.get();
+}
 
 JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv * env, jobject) {
 	const char msg[60] = "Hello from unit tests";
@@ -22,7 +31,6 @@ JNIEXPORT jstring JNICALL Java_com_rusefi_native_1_EngineLogic_getVersion(JNIEnv
 JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getConfiguration(JNIEnv *env, jobject instance) {
 	return nullptr;
 }
-
 
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setConfiguration(JNIEnv *env, jobject instance,
 		jbyteArray data, jint offset, jint size) {
@@ -47,4 +55,5 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setSensor
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallback
   (JNIEnv *, jobject) {
 
+    EngineTestHelper* eth = getEth();
 }
