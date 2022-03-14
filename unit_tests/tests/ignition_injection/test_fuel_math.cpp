@@ -138,7 +138,7 @@ TEST(FuelMath, testDifferentInjectionModes) {
 	EngineTestHelper eth(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
 	setInjectionMode((int)IM_BATCH);
@@ -164,7 +164,7 @@ TEST(FuelMath, deadtime) {
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{1.3440001f, 50.0f}));
 
 	// First test with no deadtime
@@ -182,7 +182,7 @@ TEST(FuelMath, deadtime) {
 TEST(FuelMath, CylinderFuelTrim) {
 	EngineTestHelper eth(TEST_ENGINE);
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{1, 50.0f}));
 
 	setTable(config->fuelTrims[0].table, -4);
