@@ -84,6 +84,7 @@ TESTS_SRC_CPP = \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \
 	tests/trigger/test_all_triggers.cpp \
+	tests/test_can_rx.cpp \
 	tests/test_can_serial.cpp \
 	tests/test_hellen_board_id.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
