@@ -16,6 +16,10 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 {}
 
 bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
+	if (frame.DLC != 8) {
+		return false;
+	}
+	
 	uint32_t id = CAN_ID(frame);
 
 	// 0th sensor is 0x180, 1st sensor is 0x181, etc
@@ -31,11 +35,6 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 }
 
 void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
-	if (frame.DLC != 8) {
-		invalidate();
-		return;
-	}
-
 	int32_t id = CAN_ID(frame);
 
 	// accept frame has already checked if the message belongs to

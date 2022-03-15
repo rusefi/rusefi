@@ -6,9 +6,9 @@ class AemXSeriesWideband final : public CanSensorBase {
 public:
 	AemXSeriesWideband(uint8_t sensorIndex, SensorType type);
 
-protected:
 	bool acceptFrame(const CANRxFrame& frame) const override;
 
+protected:
 	// Dispatches to one of the three decoders below
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override;
 
