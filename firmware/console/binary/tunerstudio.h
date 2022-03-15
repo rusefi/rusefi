@@ -35,9 +35,6 @@ uint8_t* getWorkingPageAddr();
 #include "thread_controller.h"
 #include "thread_priority.h"
 
-
-#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
-
 /**
  * handle non CRC wrapped command
  */
@@ -70,6 +67,9 @@ post_packed {
 	short int count;
 } TunerStudioWriteChunkRequest;
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
+#define CONNECTIVITY_THREAD_STACK (2 * UTILITY_THREAD_STACK_SIZE)
+
 class TunerstudioThread : public ThreadController<CONNECTIVITY_THREAD_STACK> {
 public:
 	TunerstudioThread(const char* name)
@@ -81,7 +81,9 @@ public:
 	virtual TsChannelBase* setupChannel() = 0;
 
 	void ThreadTask() override;
+
 };
+#endif
 
 #endif /* EFI_TUNER_STUDIO */
 

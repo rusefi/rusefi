@@ -497,7 +497,7 @@ TEST(misc, testMenuTree) {
 }
 
 int getRusEfiVersion(void) {
-	return 776655;
+	return TS_FILE_VERSION;
 }
 
 TEST(util, PeakDetect) {

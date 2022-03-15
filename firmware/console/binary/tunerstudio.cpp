@@ -374,7 +374,7 @@ void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	efiPrintf("BURN in %dms", currentTimeMillis() - nowMs);
 }
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
@@ -526,6 +526,7 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 
 #if EFI_TUNER_STUDIO
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 /**
  * Query with CRC takes place while re-establishing connection
  * Query without CRC takes place on TunerStudio startup
@@ -809,6 +810,8 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 
 	return true;
 }
+
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 void startTunerStudioConnectivity(void) {
 	// Assert tune & output channel struct sizes
