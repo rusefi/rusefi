@@ -374,7 +374,7 @@ void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	efiPrintf("BURN in %dms", currentTimeMillis() - nowMs);
 }
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
@@ -544,6 +544,7 @@ void handleQueryCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
  * rusEfi own test command
  */
 static void handleTestCommand(TsChannelBase* tsChannel) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	tsState.testCommandCounter++;
 	char testOutputBuffer[64];
 	/**
@@ -568,14 +569,17 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 		tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 	}
 	tsChannel->flush();
+#endif
 }
 
 extern CommandHandler console_line_callback;
 
 static void handleGetVersion(TsChannelBase* tsChannel) {
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), VCS_VERSION);
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
+#endif
 }
 
 #if EFI_TEXT_LOGGING
