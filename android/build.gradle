@@ -8,11 +8,19 @@ buildscript {
     }
 }
 
+apply from: 'dependencies.gradle'
+
 allprojects {
     repositories {
         google()
         jcenter()
         maven { url 'https://jitpack.io' }
+    }
+
+    plugins.withType(JavaPlugin) {
+        dependencies {
+            implementation libs.annotations
+        }
     }
 }
 
