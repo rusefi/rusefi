@@ -8,7 +8,7 @@ static constexpr uint32_t rusefi_base = 0x190;
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
-		aem_base + sensorIndex,	// 0th sensor is 0x180, others sequential above that
+		0,	// ID passed here doesn't matter since we override acceptFrame
 		type,
 		MS2NT(21)	// sensor transmits at 100hz, allow a frame to be missed
 	)
