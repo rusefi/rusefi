@@ -1,6 +1,6 @@
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "AemXSeriesLambda.h"
 
 static constexpr uint32_t aem_base    = 0x180;
