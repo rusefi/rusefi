@@ -315,6 +315,12 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	// 100% target from table -> 100% target position
 	percent_t targetPosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
+	// Apply any adjustment from Lua
+	targetPosition += engine->engineState.luaAdjustments.etbTargetPositionAdd;
+
+	// Apply any adjustment that this throttle alone needs
+	targetPosition == getThrottleTrim(rpm, targetPosition);
+
 	// Lastly, apply ETB rev limiter
 	auto etbRpmLimit = engineConfiguration->etbRevLimitStart;
 	if (etbRpmLimit != 0) {
@@ -322,14 +328,6 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 		// Linearly taper throttle to closed from the limit across the range
 		targetPosition = interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
 	}
-	// todo: this does not mix well with etbRevLimitStart interpolation does it?
-	targetPosition += engine->engineState.luaAdjustments.etbTargetPositionAdd;
-
-#if EFI_TUNER_STUDIO
-	if (m_function == ETB_Throttle1) {
-		engine->outputChannels.etbTarget = targetPosition;
-	}
-#endif // EFI_TUNER_STUDIO
 
 	// Keep the throttle just barely off the lower stop, and less than the user-configured maximum
 	float maxPosition = engineConfiguration->etbMaximumPosition;
@@ -341,7 +339,20 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 		maxPosition = minF(maxPosition, 100);
 	}
 
-	return clampF(1, targetPosition, maxPosition);
+	targetPosition = clampF(1, targetPosition, maxPosition);
+
+#if EFI_TUNER_STUDIO
+	if (m_function == ETB_Throttle1) {
+		engine->outputChannels.etbTarget = targetPosition;
+	}
+#endif // EFI_TUNER_STUDIO
+
+	return targetPosition;
+}
+
+percent_t EtbController2::getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
+	// TODO: implement me #3680
+	return 0;
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) {
@@ -578,7 +589,9 @@ void EtbController::autoCalibrateTps() {
  * Since ETB is a safety critical device, we need the hard RTOS guarantee that it will be scheduled over other less important tasks.
  */
 #include "periodic_thread_controller.h"
-struct EtbImpl final : public EtbController {
+
+template <typename TBase>
+struct EtbImpl final : public TBase {
 	void update() override {
 #if EFI_TUNER_STUDIO
 	if (m_isAutocal) {
@@ -650,16 +663,18 @@ struct EtbImpl final : public EtbController {
 };
 
 // real implementation (we mock for some unit tests)
-static EtbImpl etbControllers[ETB_COUNT];
+static EtbImpl<EtbController1> etb1;
+static EtbImpl<EtbController2> etb2;
+
+static_assert(ETB_COUNT == 2);
 
 struct EtbThread final : public PeriodicController<512> {
 	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
 
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
-		for (int i = 0 ; i < ETB_COUNT; i++) {
-			etbControllers[i].update();
-		}
+		etb1.update();
+		etb2.update();
 	}
 };
 
