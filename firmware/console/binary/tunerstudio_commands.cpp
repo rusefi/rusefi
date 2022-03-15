@@ -6,7 +6,7 @@
 
 #include "status_loop.h"
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 
 /**
  * @brief 'Output' command sends out a snapshot of current values
