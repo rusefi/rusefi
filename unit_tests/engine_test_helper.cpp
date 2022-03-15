@@ -135,9 +135,12 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 EngineTestHelper::~EngineTestHelper() {
 	// Write history to file
-	std::stringstream filePath;
-	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
-	writeEvents(filePath.str().c_str());
+	extern bool hasInitGtest;
+	if (hasInitGtest) {
+    	std::stringstream filePath;
+    	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+	    writeEvents(filePath.str().c_str());
+	}
 
 	// Cleanup
 	enginePins.reset();
