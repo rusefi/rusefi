@@ -659,13 +659,15 @@ struct EtbImpl final : public TBase {
 	}
 #endif /* EFI_TUNER_STUDIO */
 
-		EtbController::update();
+		TBase::update();
 	}
 };
 
 // real implementation (we mock for some unit tests)
 static EtbImpl<EtbController1> etb1;
 static EtbImpl<EtbController2> etb2;
+
+static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 static_assert(ETB_COUNT == 2);
 
@@ -674,8 +676,9 @@ struct EtbThread final : public PeriodicController<512> {
 
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
-		etb1.update();
-		etb2.update();
+		for (int i = 0 ; i < ETB_COUNT; i++) {
+			etbControllers[i]->update();
+		}
 	}
 };
 
@@ -878,7 +881,7 @@ void setDefaultEtbParameters() {
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 #if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
-		etbControllers[i].onConfigurationChange(&previousConfiguration->etb);
+		etbControllers[i]->onConfigurationChange(&previousConfiguration->etb);
 	}
 #endif
 }
@@ -999,7 +1002,7 @@ void initElectronicThrottle() {
 
 #if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
-		engine->etbControllers[i] = &etbControllers[i];
+		engine->etbControllers[i] = etbControllers[i];
 	}
 #endif
 
