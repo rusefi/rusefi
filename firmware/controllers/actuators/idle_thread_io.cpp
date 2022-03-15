@@ -81,10 +81,6 @@ void setIdleMode(idle_mode_e value) {
 	showIdleInfo();
 }
 
-percent_t getIdlePosition() {
-	return engine->module<IdleController>().unmock().currentIdlePosition;
-}
-
 void setManualIdleValvePosition(int positionPercent) {
 	if (positionPercent < 1 || positionPercent > 99)
 		return;
@@ -95,6 +91,10 @@ void setManualIdleValvePosition(int positionPercent) {
 }
 
 #endif /* EFI_UNIT_TEST */
+
+percent_t getIdlePosition() {
+	return engine->module<IdleController>().unmock().currentIdlePosition;
+}
 
 void startPedalPins() {
 #if EFI_PROD_CODE
