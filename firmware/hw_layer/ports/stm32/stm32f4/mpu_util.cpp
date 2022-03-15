@@ -64,8 +64,8 @@ void stm32_stop() {
 	NVIC_SystemReset();
 }
 /* 
-Standby for both F4 & F7 works perfectly, with very little curent consumption. Downside is that theres a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
-Cannot be used for CAN wakeup without hardware modificatinos.
+ * Standby for both F4 & F7 works perfectly, with very little current consumption.
+ * Downside is that theres a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
 */
 void stm32_standby() {
 	// Don't get bothered by interrupts
