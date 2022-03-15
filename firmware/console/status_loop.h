@@ -10,7 +10,6 @@
 #include "rusefi_types.h"
 
 void updateDevConsoleState(void);
-void prepareTunerStudioOutputs(void);
 void startStatusThreads(void);
 void initStatusLoop(void);
 
