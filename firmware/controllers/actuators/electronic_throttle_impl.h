@@ -60,7 +60,7 @@ public:
 	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
 	void autoCalibrateTps() override;
 
-	// Override if this throttle 
+	// Override if this throttle needs special per-throttle adjustment (bank-to-bank trim, for example)
 	virtual percent_t getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
 		return 0;
 	}

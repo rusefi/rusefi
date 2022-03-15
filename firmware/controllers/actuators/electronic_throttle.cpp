@@ -319,7 +319,8 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	targetPosition += engine->engineState.luaAdjustments.etbTargetPositionAdd;
 
 	// Apply any adjustment that this throttle alone needs
-	targetPosition == getThrottleTrim(rpm, targetPosition);
+	// Clamped to +-10 to prevent anything too wild
+	targetPosition += clampF(-10, getThrottleTrim(rpm, targetPosition), 10);
 
 	// Lastly, apply ETB rev limiter
 	auto etbRpmLimit = engineConfiguration->etbRevLimitStart;
