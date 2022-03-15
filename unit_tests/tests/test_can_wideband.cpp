@@ -2,10 +2,49 @@
 
 #include "AemXSeriesLambda.h"
 
-using ::testing::StrictMock;
-using ::testing::_;
+TEST(CanWideband, AcceptFrameId0) {
+	AemXSeriesWideband dut(0, SensorType::Lambda1);
 
-TEST(CanWideband, DecodeValid) {
+	CANRxFrame frame;
+
+	frame.IDE = false;
+	frame.DLC = 8;
+
+	// Check that the AEM format frame is accepted
+	frame.SID = 0x180;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI standard data is accepted
+	frame.SID = 0x190;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI extended data is accepted
+	frame.SID = 0x191;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+}
+
+TEST(CanWideband, AcceptFrameId1) {
+	AemXSeriesWideband dut(1, SensorType::Lambda2);
+
+	CANRxFrame frame;
+
+	frame.IDE = false;
+	frame.DLC = 8;
+
+	// Check that the AEM format frame is accepted
+	frame.SID = 0x181;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI standard data is accepted
+	frame.SID = 0x192;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Check that the rusEFI extended data is accepted
+	frame.SID = 0x193;
+	EXPECT_TRUE(dut.acceptFrame(frame));
+}
+
+TEST(CanWideband, DecodeValidAemFormat) {
 	Sensor::resetRegistry();
 
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
