@@ -71,10 +71,10 @@ static void setEtbConfig() {
 
 static void setupVbatt() {
 	// 5.6k high side/10k low side = 1.56 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 1.47f;
-
-	// 6.34k high side/1k low side = 9.2
-	engineConfiguration->vbattDividerCoeff = (6.34f / 1.0f);
+	engineConfiguration->analogInputDividerCoefficient = 1.56f;
+	
+	// 6.34k high side/ 1k low side
+	engineConfiguration->vbattDividerCoeff = (6.34 + 1) / 1; 
 
 	// Battery sense on PA7
 	engineConfiguration->vbattAdcChannel = EFI_ADC_0;
