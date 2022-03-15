@@ -14,5 +14,7 @@ public class JniUnitTest {
         assertTrue("Got " + version, version.contains("Hello"));
 
         engineLogic.invokePeriodicCallback();
+
+        byte[] outputs = engineLogic.getOutputs();
     }
 }
