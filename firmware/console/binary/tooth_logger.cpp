@@ -72,7 +72,6 @@ int copyCompositeEvents(CompositeEvent *events) {
 
 static void setToothLogReady(bool value) {
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
-	efiAssertVoid(OBD_PCM_Processor_Fault, engine != nullptr, "engine null");
 	engine->outputChannels.toothLogReady = value;
 #endif // EFI_TUNER_STUDIO
 }
