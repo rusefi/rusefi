@@ -27,8 +27,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(FRAMEWORK_SRC_CPP) \
 	$(TESTS_SRC_CPP) \
 	$(DEVELOPMENT_DIR)/engine_sniffer.cpp \
-	$(PROJECT_DIR)/console/binary/tooth_logger.cpp \
-	$(PROJECT_DIR)/console/binary_log/log_field.cpp \
+	$(CONSOLE_COMMON_SRC_CPP) \
 	$(PROJECT_DIR)/config/boards/hellen/hellen_board_id.cpp \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
 	$(PROJECT_DIR)/../unit_tests/native/native_impl.cpp \

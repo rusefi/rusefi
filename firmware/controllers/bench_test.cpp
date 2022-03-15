@@ -99,6 +99,7 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float startDelayMs
 	isRunningBench = true;
 
 	for (int i = 0; i < count; i++) {
+		engine->outputChannels.testBenchIter = i;
 		efitick_t nowNt = getTimeNowNt();
 		// start in a short time so the scheduler can precisely schedule the start event
 		efitick_t startTime = nowNt + US2NT(50);
@@ -111,7 +112,8 @@ static void runBench(brain_pin_e brainPin, OutputPin *output, float startDelayMs
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);
 	}
-
+	/* last */
+	engine->outputChannels.testBenchIter++;
 
 	efiPrintf("Done!");
 	isRunningBench = false;

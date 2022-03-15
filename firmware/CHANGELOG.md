@@ -28,6 +28,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  - Use board-specific output and digital input pin names in error messages #3886
  - Support LPS22 in addition to LPS25 baro sensors #3900
+ - Proteus F7 flashing work-around 
 
 ### Fixed
  - SD card logging with SDIO hardware #3873 

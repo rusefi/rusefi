@@ -338,7 +338,7 @@ float IdleController::getIdlePosition() {
 			iacPosition = clampPercentValue(iacPosition);
 		}
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 		engine->outputChannels.isIdleClosedLoop = phase == Phase::Idling;
 		engine->outputChannels.isIdleCoasting = phase == Phase::Coasting;
 

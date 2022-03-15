@@ -24,7 +24,7 @@ void FunctionalSensor::showInfo(const char* sensorName) const {
 	}
 }
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 #include "can_sensor.h"
 
 void CanSensorBase::showInfo(const char* sensorName) const {

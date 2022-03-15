@@ -20,9 +20,9 @@
  *
  * These initialization functions are called from
  * firmware/controllers/algo/engine_configuration.cpp
- *  void setBoardDefaultConfiguration(void);
- *  void setPinConfigurationOverrides(void);
- *  void setSerialConfigurationOverrides(void);
+ *  void setBoardDefaultConfiguration();
+ *  void setPinConfigurationOverrides();
+ *  void setSerialConfigurationOverrides();
  *
  * Future: Clean up the distinction between these functions.
  */

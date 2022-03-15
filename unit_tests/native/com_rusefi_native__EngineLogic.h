@@ -39,6 +39,22 @@ JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getConfigurati
 JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setConfiguration
   (JNIEnv *, jobject, jbyteArray, jint, jint);
 
+/*
+ * Class:     com_rusefi_native__EngineLogic
+ * Method:    invokePeriodicCallback
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_invokePeriodicCallback
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_rusefi_native__EngineLogic
+ * Method:    getOutputs
+ * Signature: ()[B
+ */
+JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs
+  (JNIEnv *, jobject);
+
 #ifdef __cplusplus
 }
 #endif

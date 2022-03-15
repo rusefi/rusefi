@@ -6,7 +6,7 @@
 
 #include "status_loop.h"
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 
 /**
  * @brief 'Output' command sends out a snapshot of current values
@@ -21,7 +21,7 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 	}
 
 	tsState.outputChannelsCommandCounter++;
-	prepareTunerStudioOutputs();
+	updateTunerStudioState();
 	// this method is invoked too often to print any debug information
 	tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(&engine->outputChannels) + offset, count);
 }

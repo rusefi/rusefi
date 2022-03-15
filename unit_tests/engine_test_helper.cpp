@@ -30,7 +30,7 @@ extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
 
-EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) { 
+EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
 	minCrankingRpm = 0;
@@ -118,9 +118,14 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 //todo: reuse 	initPeriodicEvents() method
 	engine.periodicSlowCallback();
 
-	// Setup running in mock airmass mode
-	engineConfiguration->fuelAlgorithm = LM_MOCK;
-	engine.mockAirmassModel = &mockAirmass;
+	extern bool hasInitGtest;
+	if (hasInitGtest) {
+		// Setup running in mock airmass mode if running actual tests
+		engineConfiguration->fuelAlgorithm = LM_MOCK;
+
+		mockAirmass = std::make_unique<::testing::NiceMock<MockAirmass>>();
+		engine.mockAirmassModel = mockAirmass.get();
+	}
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 
@@ -130,9 +135,12 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 EngineTestHelper::~EngineTestHelper() {
 	// Write history to file
-	std::stringstream filePath;
-	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
-	writeEvents(filePath.str().c_str());
+	extern bool hasInitGtest;
+	if (hasInitGtest) {
+    	std::stringstream filePath;
+    	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+	    writeEvents(filePath.str().c_str());
+	}
 
 	// Cleanup
 	enginePins.reset();

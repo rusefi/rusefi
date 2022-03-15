@@ -92,7 +92,19 @@ todo AndreiKA this change breaks 22 unit tests?
 		allowSpark.clear();
 */
 	}
+	
+#if EFI_LAUNCH_CONTROL
+	// Fuel cut if launch control engaged
+	if (engine->launchController.isLaunchFuelRpmRetardCondition()) {
+		allowFuel.clear(ClearReason::LaunchCut);
+	}
 
+	
+	// Spark cut if launch control engaged
+	if (engine->launchController.isLaunchSparkRpmRetardCondition()) {
+		allowSpark.clear(ClearReason::LaunchCut);
+	}
+#endif // EFI_LAUNCH_CONTROL
 
 	m_transientAllowInjection = allowFuel;
 	m_transientAllowIgnition = allowSpark;

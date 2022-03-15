@@ -706,6 +706,7 @@ static void updateTpsDebug() {
 	engine->outputChannels.debugFloatField5 = 100 * Sensor::getOrZero(SensorType::Tps1Primary) / Sensor::getOrZero(SensorType::Tps1Secondary);
 }
 
+// sensor state for EFI Analytics Tuner Studio
 void updateTunerStudioState() {
 	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
 #if EFI_SHAFT_POSITION_INPUT
@@ -901,13 +902,6 @@ void updateTunerStudioState() {
 	default:
 		;
 	}
-}
-
-void prepareTunerStudioOutputs(void) {
-	// sensor state for EFI Analytics Tuner Studio
-	updateTunerStudioState();
-	engine->outputChannels.idleStatus.resetCounter = 0x12345653;
-	engine->outputChannels.etbStatus.resetCounter  = 0x12345654;
 }
 
 #endif /* EFI_TUNER_STUDIO */

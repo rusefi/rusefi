@@ -19,6 +19,8 @@ static OutputPin alphaTachPullUp;
 static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
 static OutputPin alphaCrankNPullUp;
+static OutputPin alpha2stepPullDown;
+static OutputPin alphaCamPullDown;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
@@ -76,7 +78,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
-	engineConfiguration->mafAdcChannel = H144_IN_MAP1;
+	engineConfiguration->mafAdcChannel = EFI_ADC_NONE;
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 	engineConfiguration->baroSensor.type = MT_MPXH6400;
 	engineConfiguration->baroSensor.hwChannel = H144_IN_MAP3;
@@ -99,6 +101,8 @@ void boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", H144_OUT_IO4);
 	alphaCrankPPullUp.initPin("a-crank-p", H144_OUT_IO2);
 	alphaCrankNPullUp.initPin("a-crank-n", H144_OUT_IO5);
+	alpha2stepPullDown.initPin("a-2step", H144_OUT_IO7);
+	alphaCamPullDown.initPin("a-cam", H144_OUT_IO8);
 	boardOnConfigurationChange(nullptr);
 }
 
@@ -107,6 +111,8 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
 	alphaCrankNPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
+	alpha2stepPullDown.setValue(engineConfiguration->boardUse2stepPullDown);
+	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
 }
 
 void setBoardConfigOverrides() {
@@ -121,15 +127,6 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canRxPin = GPIOD_0;
 }
 
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
 /**
  * @brief   Board-specific configuration defaults.
  *
@@ -140,6 +137,8 @@ void setSerialConfigurationOverrides() {
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
+
+    engineConfiguration->boardUseTempPullUp = true;
 
 	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
 	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;

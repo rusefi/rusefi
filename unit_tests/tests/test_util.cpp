@@ -48,7 +48,6 @@ TEST(util, crc) {
 
 	const char * A = "A";
 
-	ASSERT_EQ( 168,  calc_crc((const crc_t *) A, 1)) << "crc8";
 	uint32_t c = crc32(A, 1);
 	printf("crc32(A)=%x\r\n", c);
 	assertEqualsM("crc32 1", 0xd3d99e8b, c);
@@ -498,7 +497,7 @@ TEST(misc, testMenuTree) {
 }
 
 int getRusEfiVersion(void) {
-	return 776655;
+	return TS_FILE_VERSION;
 }
 
 TEST(util, PeakDetect) {

@@ -4,6 +4,9 @@ import com.rusefi.ReaderState;
 
 import java.io.*;
 
+/**
+ * [OutputChannels]
+ */
 public class OutputsSectionConsumer extends AbstractConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;

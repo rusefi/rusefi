@@ -986,6 +986,7 @@ triggerVvtFallGauge = triggerVvtFall,"triggerVvtFall", "", -10000.0,10000.0, -10
 triggerVvtRiseGauge = triggerVvtRise,"triggerVvtRise", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
 luaInvocationCounterGauge = luaInvocationCounter,"luaInvocationCounter", "count", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
 luaLastCycleDurationGauge = luaLastCycleDuration,"luaLastCycleDuration", "nt", 0.0,0.0, 0.0,0.0, 0.0,0.0, 0,0
+testBenchIterGauge = testBenchIter, "Test Bench Iterations", "count", -10, {benchTestCount + 10}, -5, 0, {benchTestCount}, {benchTestCount + 5}, 1, 1
 
 gaugeCategory = PIDs
 alternatorStatus_iTermGauge = alternatorStatus_iTerm,"alternatorStatus_ iTerm", "", -10000.0,10000.0, -10000.0,10000.0, -10000.0,10000.0, 3,3
@@ -1554,6 +1555,7 @@ menuDialog = main
 		subMenu = ecuStimulator,			"ECU stimulator"
 		subMenu = datalogSettings,			"Datalogging"
 		subMenu = ioTest,					"Bench test"
+		subMenu = injTest,					"Injector test"
 		subMenu = engineTypeDialog,			"Popular vehicles"
 		subMenu = std_separator
 		
@@ -3561,6 +3563,20 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		panel = testFsio
 		panel = testMisc
 
+	; Injectors test
+	dialog = injTest_l, "Output test modes", yAxis
+		field = "Iterations", benchTestCount
+		field = "ON time", benchTestOffTime
+		field = "OFF time", benchTestOnTime
+
+	dialog = injTest_r, "Reference gauges", yAxis
+		gauge = VBattGauge,North
+		gauge = testBenchIterGauge,South
+
+	dialog = injTest, "", xAxis
+		panel = injTest_l
+		panel = injTest_r
+
 	dialog = widebandConfig, "rusEFI Wideband Config"
 		field = "!Please connect exactly one wideband controller before pressing these buttons!"
 		commandButton = "Update Firmware", cmd_wideband_firmare_update
@@ -3713,9 +3729,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
 
 	dialog = fancyHardwareDialog, "Fancy Boards"
-	    field = "boardUseTachPullUp",                   boardUseTachPullUp
+	    field = "Tachometer Output",                    boardUseTachPullUp
 	    field = "boardUseTempPullUp",                   boardUseTempPullUp
 	    field = "boardUseCrankPullUp",                  boardUseCrankPullUp
+	    field = "2-step input",                         boardUse2stepPullDown
+	    field = "boardUseCamPullDown",                  boardUseCamPullDown
+	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
 
 	dialog = parkingLot, "Experimental/Broken"
         field = useEeprom,                              useEeprom

@@ -261,8 +261,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     int16_t autoscale m_requested_pump;"DI: Pump Angle";"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
     int16_t autoscale boostControlTarget;"Pump Angle";"deg",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
-    int8_t sparkCutReason;"Spark Cut Code";"code",1, 0, 0, 0, 0
-    int8_t fuelCutReason;"Fuel Cut Code";"code",1, 0, 0, 0, 0
+    int8_t autoscale sparkCutReason;"Spark Cut Code";"code",1, 0, 0, 0, 0
+    int8_t autoscale fuelCutReason;"Fuel Cut Code";"code",1, 0, 0, 0, 0
     float fuel_requested_percent;"DI: fuel_requested_percent";"v", 1, 0, 0, 100, 0
     float fuel_requested_percent_pi;"DI: fuel_requested_percent_pi";"v", 1, 0, 0, 100, 0
     float m_I_sum_percent;"DI: m_I_sum_percent";"v", 1, 0, 0, 100, 0
@@ -287,7 +287,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     int luaInvocationCounter;;"count",1, 0, 0, 0, 0
     int luaLastCycleDuration;;"nt",1, 0, 0, 0, 0
-	uint8_t[80 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+    uint8_t testBenchIter;;"count",1, 0, 0, 0, 0
+	uint8_t[79 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
 	bit launchSpeedCondition
 	bit launchRpmCondition

@@ -264,7 +264,7 @@ TEST(misc, testRpmCalculator) {
 	// These tests were written when the default target AFR was 14.0, so replicate that
 	engineConfiguration->stoichRatioPrimary = 14;
 
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	IgnitionEventList *ilist = &engine->ignitionEvents;
@@ -520,7 +520,7 @@ static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int i
 
 static void setTestBug299(EngineTestHelper *eth) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
-	EXPECT_CALL(eth->mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth->mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008001f, 50.0f}));
 
 	Engine *engine = &eth->engine;
@@ -892,7 +892,7 @@ TEST(big, testFuelSchedulerBug299smallAndMedium) {
 TEST(big, testTwoWireBatch) {
 	EngineTestHelper eth(TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	engineConfiguration->injectionMode = IM_BATCH;
@@ -919,7 +919,7 @@ TEST(big, testTwoWireBatch) {
 
 TEST(big, testSequential) {
 	EngineTestHelper eth(TEST_ENGINE);
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);

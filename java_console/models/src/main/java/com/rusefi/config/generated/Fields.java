@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 06 00:42:31 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 15 00:48:59 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -187,6 +187,9 @@ public class Fields {
 	public static final int binarySerialRxPin_offset = 1575;
 	public static final int binarySerialTxPin_offset = 1574;
 	public static final int BLOCKING_FACTOR = 256;
+	public static final int boardUse2stepPullDown_offset = 1260;
+	public static final int boardUseCamPullDown_offset = 1260;
+	public static final int boardUseCamVrPullUp_offset = 1260;
 	public static final int boardUseCrankPullUp_offset = 1260;
 	public static final int boardUseTachPullUp_offset = 1260;
 	public static final int boardUseTempPullUp_offset = 1260;
@@ -1838,7 +1841,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 1427832150;
+	public static final int SIGNATURE_HASH = 1919784788;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2313,7 +2316,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.03.06.all.1427832150";
+	public static final String TS_SIGNATURE = "rusEFI 2022.03.15.all.1919784788";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2392,9 +2395,6 @@ public class Fields {
 	public static final int unusedBitHere2_offset = 1260;
 	public static final int unusedBitHere3_offset = 1260;
 	public static final int unusedBitHere4_offset = 1260;
-	public static final int unusedBitWasHere16_offset = 1260;
-	public static final int unusedBitWasHere1_offset = 1260;
-	public static final int unusedBitWasHere2_offset = 1260;
 	public static final int unusedBitWasHere3_offset = 1260;
 	public static final int unusedBitWasHere4_offset = 1260;
 	public static final int unusedBitWasHere5_offset = 1260;
@@ -3093,7 +3093,7 @@ public class Fields {
 	public static final Field CANREADENABLED = Field.create("CANREADENABLED", 1260, FieldType.BIT, 8);
 	public static final Field CANWRITEENABLED = Field.create("CANWRITEENABLED", 1260, FieldType.BIT, 9);
 	public static final Field USELINEARIATSENSOR = Field.create("USELINEARIATSENSOR", 1260, FieldType.BIT, 10);
-	public static final Field UNUSEDBITWASHERE16 = Field.create("UNUSEDBITWASHERE16", 1260, FieldType.BIT, 11);
+	public static final Field BOARDUSE2STEPPULLDOWN = Field.create("BOARDUSE2STEPPULLDOWN", 1260, FieldType.BIT, 11);
 	public static final Field TACHPULSEDURATIONASDUTYCYCLE = Field.create("TACHPULSEDURATIONASDUTYCYCLE", 1260, FieldType.BIT, 12);
 	public static final Field ISALTERNATORCONTROLENABLED = Field.create("ISALTERNATORCONTROLENABLED", 1260, FieldType.BIT, 13);
 	public static final Field INVERTPRIMARYTRIGGERSIGNAL = Field.create("INVERTPRIMARYTRIGGERSIGNAL", 1260, FieldType.BIT, 14);
@@ -3103,8 +3103,8 @@ public class Fields {
 	public static final Field LAUNCHFUELCUTENABLE = Field.create("LAUNCHFUELCUTENABLE", 1260, FieldType.BIT, 18);
 	public static final Field LAUNCHSPARKCUTENABLE = Field.create("LAUNCHSPARKCUTENABLE", 1260, FieldType.BIT, 19);
 	public static final Field BOARDUSECRANKPULLUP = Field.create("BOARDUSECRANKPULLUP", 1260, FieldType.BIT, 20);
-	public static final Field UNUSEDBITWASHERE1 = Field.create("UNUSEDBITWASHERE1", 1260, FieldType.BIT, 21);
-	public static final Field UNUSEDBITWASHERE2 = Field.create("UNUSEDBITWASHERE2", 1260, FieldType.BIT, 22);
+	public static final Field BOARDUSECAMPULLDOWN = Field.create("BOARDUSECAMPULLDOWN", 1260, FieldType.BIT, 21);
+	public static final Field BOARDUSECAMVRPULLUP = Field.create("BOARDUSECAMVRPULLUP", 1260, FieldType.BIT, 22);
 	public static final Field UNUSEDBITWASHERE3 = Field.create("UNUSEDBITWASHERE3", 1260, FieldType.BIT, 23);
 	public static final Field UNUSEDBITWASHERE4 = Field.create("UNUSEDBITWASHERE4", 1260, FieldType.BIT, 24);
 	public static final Field UNUSEDBITWASHERE5 = Field.create("UNUSEDBITWASHERE5", 1260, FieldType.BIT, 25);
@@ -4395,7 +4395,7 @@ public class Fields {
 	CANREADENABLED,
 	CANWRITEENABLED,
 	USELINEARIATSENSOR,
-	UNUSEDBITWASHERE16,
+	BOARDUSE2STEPPULLDOWN,
 	TACHPULSEDURATIONASDUTYCYCLE,
 	ISALTERNATORCONTROLENABLED,
 	INVERTPRIMARYTRIGGERSIGNAL,
@@ -4405,8 +4405,8 @@ public class Fields {
 	LAUNCHFUELCUTENABLE,
 	LAUNCHSPARKCUTENABLE,
 	BOARDUSECRANKPULLUP,
-	UNUSEDBITWASHERE1,
-	UNUSEDBITWASHERE2,
+	BOARDUSECAMPULLDOWN,
+	BOARDUSECAMVRPULLUP,
 	UNUSEDBITWASHERE3,
 	UNUSEDBITWASHERE4,
 	UNUSEDBITWASHERE5,
