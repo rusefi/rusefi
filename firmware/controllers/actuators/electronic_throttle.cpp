@@ -595,20 +595,20 @@ template <typename TBase>
 struct EtbImpl final : public TBase {
 	void update() override {
 #if EFI_TUNER_STUDIO
-	if (m_isAutocal) {
+	if (TBase::m_isAutocal) {
 		// Don't allow if engine is running!
 		if (Sensor::getOrZero(SensorType::Rpm) > 0) {
-			m_isAutocal = false;
+			TBase::m_isAutocal = false;
 			return;
 		}
 
-		auto motor = getMotor();
+		auto motor = TBase::getMotor();
 		if (!motor) {
-			m_isAutocal = false;
+			TBase::m_isAutocal = false;
 			return;
 		}
 
-		auto myFunction = getFunction();
+		auto myFunction = TBase::getFunction();
 
 		// First grab open
 		motor->set(0.5f);
@@ -633,7 +633,7 @@ struct EtbImpl final : public TBase {
 		// Check that the calibrate actually moved the throttle
 		if (absF(primaryMax - primaryMin) < 0.5f) {
 			firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
-			m_isAutocal = false;
+			TBase::m_isAutocal = false;
 			return;
 		}
 
@@ -654,7 +654,7 @@ struct EtbImpl final : public TBase {
 
 		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
 
-		m_isAutocal = false;
+		TBase::m_isAutocal = false;
 		return;
 	}
 #endif /* EFI_TUNER_STUDIO */
@@ -667,9 +667,8 @@ struct EtbImpl final : public TBase {
 static EtbImpl<EtbController1> etb1;
 static EtbImpl<EtbController2> etb2;
 
-static EtbController* etbControllers[] = { &etb1, &etb2 };
-
 static_assert(ETB_COUNT == 2);
+static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 struct EtbThread final : public PeriodicController<512> {
 	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
