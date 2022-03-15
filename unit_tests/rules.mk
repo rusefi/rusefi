@@ -9,13 +9,14 @@ ifeq ($(BUILDDIR),.)
   BUILDDIR = build
 endif
 BINARY_OUTPUT = $(BUILDDIR)/$(PROJECT)
-SHARED_OUTPUT = $(BUILDDIR)/lib_$(PROJECT)
 
 ifeq ($(OS),Windows_NT)
     # todo: something is not right here how can we avoid explicit suffix?
     # should not gcc figure it out based on 'shared' option?
+    SHARED_OUTPUT = $(BUILDDIR)/_$(PROJECT)
 	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).dll
 else
+    SHARED_OUTPUT = $(BUILDDIR)/lib_$(PROJECT)
 	SHARED_OUTPUT_OPT = $(SHARED_OUTPUT).so
 endif
 

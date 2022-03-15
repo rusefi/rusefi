@@ -13,7 +13,7 @@ using ::testing::_;
 
 TEST(fuelCut, coasting) {
 	EngineTestHelper eth(TEST_ENGINE);
-	EXPECT_CALL(eth.mockAirmass, getAirmass(_))
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	// configure coastingFuelCut

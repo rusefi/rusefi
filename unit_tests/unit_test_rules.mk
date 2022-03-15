@@ -15,7 +15,8 @@ PCHSUB = unit_tests
 include $(PROJECT_DIR)/rusefi_rules.mk
 
 ifneq ($(OS),Windows_NT)
-	SANITIZE = yes
+# at the moment lib asan breaks JNI library
+	SANITIZE = no
 else
 	SANITIZE = no
 endif
@@ -139,6 +140,7 @@ endif
 AOPT = -fPIC -I$(JAVA_HOME)/include
 
 ifeq ($(OS),Windows_NT)
+# TODO: add validation to assert that we do not have Windows slash in JAVA_HOME variable
  AOPT += -I$(JAVA_HOME)/include/win32
 else
  ifeq ($(IS_MAC),yes)

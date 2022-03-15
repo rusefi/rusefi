@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Mar 09 01:30:11 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 11 20:52:01 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -867,13 +867,13 @@ struct ts_outputs_s {
 	code
 	 * offset 338
 	 */
-	int8_t sparkCutReason = (int8_t)0;
+	scaled_channel<int8_t, 1, 1> sparkCutReason = (int8_t)0;
 	/**
 	 * "Fuel Cut Code"
 	code
 	 * offset 339
 	 */
-	int8_t fuelCutReason = (int8_t)0;
+	scaled_channel<int8_t, 1, 1> fuelCutReason = (int8_t)0;
 	/**
 	 * "DI: fuel_requested_percent"
 	v
@@ -1353,4 +1353,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Mar 09 01:30:11 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 11 20:52:01 UTC 2022

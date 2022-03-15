@@ -3729,9 +3729,12 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "mapCamDetectionAnglePosition",         mapCamDetectionAnglePosition
 
 	dialog = fancyHardwareDialog, "Fancy Boards"
-	    field = "boardUseTachPullUp",                   boardUseTachPullUp
+	    field = "Tachometer Output",                    boardUseTachPullUp
 	    field = "boardUseTempPullUp",                   boardUseTempPullUp
 	    field = "boardUseCrankPullUp",                  boardUseCrankPullUp
+	    field = "2-step input",                         boardUse2stepPullDown
+	    field = "boardUseCamPullDown",                  boardUseCamPullDown
+	    field = "boardUseCamVrPullUp",                  boardUseCamVrPullUp
 
 	dialog = parkingLot, "Experimental/Broken"
         field = useEeprom,                              useEeprom

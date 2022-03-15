@@ -9,19 +9,21 @@ import java.util.Arrays;
  */
 public class JniSandbox {
 
-    private static final String LIBNAME = "lib_rusefi_test";
+    private static final String LIBNAME = "_rusefi_test";
 
     public static void main(String[] args) {
         loadLibrary();
 
         EngineLogic engineLogic = new EngineLogic();
         System.out.println(engineLogic.getVersion());
+        engineLogic.setSensor("clt", 90);
         engineLogic.setConfiguration(new byte[4], 24, 14);
     }
 
     public static void loadLibrary() {
         String libPath = System.getProperty("java.library.path");
-        String[] list = new File(libPath).list((dir, name) -> name.startsWith(LIBNAME));
+        System.out.println("Checking " + libPath);
+        String[] list = new File(libPath).list((dir, name) -> name.contains(LIBNAME));
         System.out.println(" " + Arrays.toString(list));
         System.loadLibrary(LIBNAME);
     }

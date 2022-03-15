@@ -25,6 +25,10 @@ void detectHellenBoardType();
 #define H144_UART2_TX GPIOD_5
 
 #define H144_LED1_RED GPIOG_0
+#define H144_LED2 GPIOG_1
+#define H144_LED3 GPIOE_7
+#define H144_LED4 GPIOE_8
+
 #define H176_LED1_RED GPIOH_8
 
 #define H144_LS_1 GPIOG_7
