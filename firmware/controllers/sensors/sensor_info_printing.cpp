@@ -24,12 +24,14 @@ void FunctionalSensor::showInfo(const char* sensorName) const {
 	}
 }
 
+#if EFI_CAN_SUPPORT
 #include "can_sensor.h"
 
 void CanSensorBase::showInfo(const char* sensorName) const {
 	const auto [valid, value] = get();
 	efiPrintf("CAN Sensor \"%s\": valid: %s value: %.2f", sensorName, boolToString(valid), value);
 }
+#endif // EFI_CAN_SUPPORT
 
 void RedundantSensor::showInfo(const char* sensorName) const {
 	efiPrintf("Sensor \"%s\" is redundant combining \"%s\" and \"%s\"", sensorName, getSensorName(m_first), getSensorName(m_second));
