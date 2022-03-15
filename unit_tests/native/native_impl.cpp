@@ -8,6 +8,7 @@
 #include "pch.h"
 #include "com_rusefi_native__EngineLogic.h"
 #include "auto_generated_sensor.h"
+#include "tunerstudio.h"
 
 #include <memory>
 
@@ -64,6 +65,7 @@ JNIEXPORT jbyteArray JNICALL Java_com_rusefi_native_1_EngineLogic_getOutputs(JNI
 	jbyteArray retVal = env->NewByteArray(sizeof(TunerStudioOutputChannels));
 	jbyte *buf = env->GetByteArrayElements(retVal, NULL);
 	EngineTestHelper* eth = getEth();
+	updateTunerStudioState();
 	memcpy(buf, (const void*)&eth->engine.outputChannels, sizeof(TunerStudioOutputChannels));
 	env->ReleaseByteArrayElements(retVal, buf, 0);
 
