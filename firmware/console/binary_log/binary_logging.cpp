@@ -17,7 +17,7 @@ static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
 // todo: we are at the edge of sdLogBuffer size and at the moment we have no code to make sure buffer does not overflow
 // todo: make this logic smarter
-// The list of logged fields lives in a separate file so it can one day be tool-generated
+// The list of logged fields lives in a separate file so it can eventually be tool-generated
 #include "log_fields_generated.h"
 
 static constexpr uint16_t computeFieldsRecordLength() {
