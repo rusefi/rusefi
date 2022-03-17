@@ -18,7 +18,7 @@ static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 // todo: we are at the edge of sdLogBuffer size and at the moment we have no code to make sure buffer does not overflow
 // todo: make this logic smarter
 // minor hack to facilitate code generation while still enjoying constexpr access to generated array
-#include "log_fields_generated.cpp"
+#include "log_fields_generated.h"
 
 static constexpr uint16_t computeFieldsRecordLength() {
 	uint16_t recLength = 0;

@@ -1104,6 +1104,8 @@ gaugeCategory = Sensors - Extra 1
    AuxT2Gauge        = auxTemp2,     @@GAUGE_NAME_AUX_TEMP2@@,        "C",      -40,    140,     -15,      1,      95,   110,   1,   1
    lowFuelPressureGauge = lowFuelPressure, @@GAUGE_NAME_FUEL_PRESSURE_LOW@@, @@GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS@@, 0, 700, 0, 0, 700, 700, 1, 0
    flexPercentGauge = flexPercent, @@GAUGE_NAME_FLEX@@, "%", 0, 100, 0, 0, 100, 100, 0, 0
+   AuxL1Gauge        = auxLinear1,     @@GAUGE_NAME_AUX_LINEAR_1@@, "", -100, 100, -100, -100, 100, 100, 2, 2
+   AuxL2Gauge        = auxLinear2,     @@GAUGE_NAME_AUX_LINEAR_2@@, "", -100, 100, -100, -100, 100, 100, 2, 2
 
 gaugeCategory = VVT
 	vvtPositionB1IGauge = vvtPositionB1I, @@GAUGE_NAME_VVT_B1I@@, "deg", -60, 60, -60, -60, 60, 60, 1, 1
@@ -1550,6 +1552,9 @@ menuDialog = main
 		subMenu = fuelLevelDialog,			"Fuel level sensor"
 		subMenu = egtInputs,				"EGT" @@if_ts_show_egt
 		subMenu = wastegateIdlePos,			"Wastegate and idle position sensors"
+		subMenu = std_separator
+
+		subMenu = auxLinearSensors,			"Aux Linear Sensors"
 
 	menu = "&Controller"
 		subMenu = ecuStimulator,			"ECU stimulator"
@@ -2605,6 +2610,24 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 	dialog = fuelPressureSensor, "", border
 		panel = fuelp_settings, West
 		panel = fuelPressureGauges, East
+
+	dialog = auxLinearSensor1, "Aux Linear Sensor #1"
+		field = "ADC input",	auxLinear1_hwChannel
+		field = "Low voltage",	auxLinear1_v1, {auxLinear1_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Low value",	auxLinear1_value1, {auxLinear1_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "High voltage",	auxLinear1_v2, {auxLinear1_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "High value",	auxLinear1_value2, {auxLinear1_hwChannel != @@ADC_CHANNEL_NONE@@}
+
+	dialog = auxLinearSensor2, "Aux Linear Sensor #2"
+		field = "ADC input",	auxLinear2_hwChannel
+		field = "Low voltage",	auxLinear2_v1, {auxLinear2_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "Low value",	auxLinear2_value1, {auxLinear2_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "High voltage",	auxLinear2_v2, {auxLinear2_hwChannel != @@ADC_CHANNEL_NONE@@}
+		field = "High value",	auxLinear2_value2, {auxLinear2_hwChannel != @@ADC_CHANNEL_NONE@@}
+
+	dialog = auxLinearSensors
+		panel = auxLinearSensor1
+		panel = auxLinearSensor2
 
 ;			Sensors->MAP sensor
 	dialog = mapSensorAnalog, "MAP sensor", yAxis		
