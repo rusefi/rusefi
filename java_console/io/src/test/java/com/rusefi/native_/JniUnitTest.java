@@ -7,8 +7,7 @@ import java.nio.ByteBuffer;
 
 import static com.rusefi.config.generated.Fields.TS_FILE_VERSION;
 import static com.rusefi.shared.FileUtil.littleEndianWrap;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class JniUnitTest {
     @Test
@@ -23,9 +22,14 @@ public class JniUnitTest {
 
         byte[] outputs = engineLogic.getOutputs();
 
-        Sensor sensor = Sensor.FIRMWARE_VERSION;
+        assertEquals(TS_FILE_VERSION, (int) getValue(outputs, Sensor.FIRMWARE_VERSION));
+
+        assertEquals(14.0, getValue(outputs, Sensor.TARGET_AFR));
+//        assertEquals(1, getValue(outputs, Sensor.veValue));
+    }
+
+    private double getValue(byte[] outputs, Sensor sensor) {
         ByteBuffer bb = littleEndianWrap(outputs, sensor.getOffset(), 4);
-        double value = sensor.getValueForChannel(bb);
-        assertEquals(TS_FILE_VERSION, (int)value);
+        return sensor.getValueForChannel(bb) * sensor.getScale();
     }
 }
