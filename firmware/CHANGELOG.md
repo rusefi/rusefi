@@ -25,6 +25,8 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
+## March 2022 Release - "Day 22"
+
 ### Added
  - Use board-specific output and digital input pin names in error messages #3886
  - Support LPS22 in addition to LPS25 baro sensors #3900
