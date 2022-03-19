@@ -6,6 +6,7 @@
  */
 
 #include "trigger_mitsubishi.h"
+#include "trigger_universal.h"
 
 void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
@@ -52,7 +53,33 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
 }
 
 void initialize36_2_1_1(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	int totalTeethCount = 36;
 
+	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
+	float toothWidth = 0.5;
+
+	float oneTooth = 720 / totalTeethCount;
+
+	float offset = (36 - 11) * oneTooth;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 11 * oneTooth + 1);
+
+	offset += (11 + 1) * oneTooth;
+
+//	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+//			NO_LEFT_FILTER, offset + 11 * oneTooth);
+
+
+	offset += (11 + 1) * oneTooth;
+
+//	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+//			NO_LEFT_FILTER, offset + 10 * oneTooth);
+
+	s->shapeWithoutTdc = true;
+
+	s->isSynchronizationNeeded = false;
 }
 
 void initializeVvt3A92(TriggerWaveform *s) {
