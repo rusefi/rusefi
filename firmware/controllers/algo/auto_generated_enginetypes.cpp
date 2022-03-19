@@ -489,6 +489,7 @@ case TT_SUZUKI_G13B:
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
 case TT_36_2_1:
+case TT_36_2_1_1:
 case TT_TOOTHED_WHEEL_32_2:
   return "TT_TOOTHED_WHEEL_32_2";
 case TT_TOOTHED_WHEEL_36_1:
