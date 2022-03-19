@@ -55,10 +55,11 @@ public enum Sensor {
     crankingFuel(GAUGE_NAME_FUEL_CRANKING, SensorCategory.FUEL, FieldType.UINT16, 46, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
     TARGET_AFR(GAUGE_NAME_TARGET_AFR, SensorCategory.OPERATIONS, FieldType.INT16, 48, 1.0 / PACK_MULT_AFR, 10, 20, "afr"),
     baseFuel(Fields.GAUGE_NAME_FUEL_BASE, SensorCategory.FUEL, FieldType.UINT16, 50, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
-    runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.UINT16, 52, 1.0 / PACK_MULT_MS, 0, 15, "ms"),
+    runningFuel(GAUGE_NAME_FUEL_RUNNING, SensorCategory.FUEL, FieldType.UINT16, 52, 1.0 / PACK_MULT_FUEL_MASS, 0, 15, "ms"),
     actualLastInjection(GAUGE_NAME_FUEL_LAST_INJECTION, SensorCategory.FUEL, FieldType.UINT16, 54, 1.0 / PACK_MULT_MS, 0, 30, "ms"),
     injectorDutyCycle(Fields.GAUGE_NAME_FUEL_INJ_DUTY, SensorCategory.FUEL, FieldType.UINT8, 56, 0.5, 0, 100, "%"),
-    veValue(GAUGE_NAME_FUEL_VE, SensorCategory.FUEL, FieldType.FLOAT, 57, 0.5, 0, 100, "%"),
+    veValue(GAUGE_NAME_FUEL_VE, SensorCategory.FUEL, FieldType.UINT8, 57, 0.5, 0, 100, "%"),
+    // injectionOffset
     tCharge(GAUGE_NAME_TCHARGE, SensorCategory.FUEL, FieldType.FLOAT, 60, 1.0 / PACK_MULT_TEMPERATURE, 30, 140, "C"),
 
     // Corrections
