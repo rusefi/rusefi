@@ -21,22 +21,19 @@ public class JniUnitTest {
 
         engineLogic.invokePeriodicCallback();
 
-        byte[] outputs = engineLogic.getOutputs();
+        assertEquals(TS_FILE_VERSION, (int) getValue(engineLogic.getOutputs(), Sensor.FIRMWARE_VERSION));
 
-        assertEquals(TS_FILE_VERSION, (int) getValue(outputs, Sensor.FIRMWARE_VERSION));
-
-        assertEquals(14.0, getValue(outputs, Sensor.TARGET_AFR));
-        double veValue = getValue(outputs, Sensor.veValue);
+        assertEquals(14.0, getValue(engineLogic.getOutputs(), Sensor.TARGET_AFR));
+        double veValue = getValue(engineLogic.getOutputs(), Sensor.veValue);
         assertTrue("veValue", veValue > 40 && veValue < 90);
 
-        assertEquals(18.11, getValue(outputs, Sensor.runningFuel));
+        assertEquals(18.11, getValue(engineLogic.getOutputs(), Sensor.runningFuel));
 
         engineLogic.setSensor(SensorType.Rpm.name(), 4000);
         engineLogic.invokePeriodicCallback();
-        // huh?
-        assertEquals(0.0, getValue(outputs, Sensor.RPM));
+        assertEquals(4000.0, getValue(engineLogic.getOutputs(), Sensor.RPM));
 
-        assertEquals(18.11, getValue(outputs, Sensor.runningFuel));
+        assertEquals(18.11, getValue(engineLogic.getOutputs(), Sensor.runningFuel));
     }
 
     private double getValue(byte[] outputs, Sensor sensor) {
