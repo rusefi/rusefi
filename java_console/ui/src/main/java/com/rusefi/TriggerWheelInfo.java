@@ -15,13 +15,15 @@ class TriggerWheelInfo {
     final String triggerName;
     final List<WaveState> waves;
     final List<TriggerSignal> signals;
+    private final boolean isCrankBased;
 
-    public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<WaveState> waves, List<TriggerSignal> signals) {
+    public TriggerWheelInfo(int id, double tdcPosition, String triggerName, List<WaveState> waves, List<TriggerSignal> signals, boolean isCrankBased) {
         this.id = findByOrdinal(id);
         this.tdcPosition = tdcPosition;
         this.triggerName = triggerName;
         this.waves = waves;
         this.signals = signals;
+        this.isCrankBased = isCrankBased;
     }
 
     public static trigger_type_e findByOrdinal(int id) {
@@ -44,17 +46,24 @@ class TriggerWheelInfo {
 
         System.out.println("id=" + id + ", count=" + eventCount + ", name=" + triggerName);
 
+        line = reader.readLine();
+        String[] keyValue = line.split("=");
+        if (keyValue.length!=2)
+            throw new IllegalStateException("Key/value lines expected");
+        boolean isCrankBased = Boolean.valueOf(keyValue[1]);
+
         List<TriggerSignal> signals = TriggerImage.readSignals(reader, eventCount);
 
         List<WaveState> waves = TriggerImage.convertSignalsToWaves(signals);
 
-        return new TriggerWheelInfo(id, tdcPosition, triggerName, waves, signals);
+        return new TriggerWheelInfo(id, tdcPosition, triggerName, waves, signals, isCrankBased);
     }
 
     @NotNull
     List<TriggerSignal> getFirstWheeTriggerSignals() {
         List<TriggerSignal> firstWheel = getTriggerSignals(0);
-        if (isFirstCrankBased()) {
+        // todo: support symmetrical crank
+        if (isCrankBased) {
             return takeFirstHalf(firstWheel);
         } else {
             return compressAngle(firstWheel);
@@ -62,7 +71,7 @@ class TriggerWheelInfo {
     }
 
     public double getTdcPositionIn360() {
-        return isFirstCrankBased() ? tdcPosition : getCompressedAngle(tdcPosition);
+        return isCrankBased ? tdcPosition : getCompressedAngle(tdcPosition);
     }
 
     @NotNull
@@ -97,24 +106,6 @@ class TriggerWheelInfo {
         } else {
             return takeFirstHalf(secondWheel);
         }
-    }
-
-    // todo: this 'isFirstCrankBased' should be taken from triggers.txt not hard-coded here!
-    // todo: open question if current firmware even has info to provide this info or not?
-    // todo: https://github.com/rusefi/rusefi/issues/2077
-    private boolean isFirstCrankBased() {
-        return id == trigger_type_e.TT_GM_LS_24 ||
-                id == trigger_type_e.TT_HONDA_K_12_1 ||
-                id == trigger_type_e.TT_RENIX_44_2_2 ||
-                id == trigger_type_e.TT_RENIX_66_2_2_2 ||
-                id == trigger_type_e.TT_MIATA_VVT ||
-                id == trigger_type_e.TT_TRI_TACH ||
-                id == trigger_type_e.TT_60_2_VW ||
-                id == trigger_type_e.TT_SKODA_FAVORIT ||
-                id == trigger_type_e.TT_KAWA_KX450F ||
-                id == trigger_type_e.TT_NISSAN_VQ35 ||
-                id == trigger_type_e.TT_NISSAN_QR25 ||
-                id == trigger_type_e.TT_GM_7X;
     }
 
     // todo: this 'isFirstCrankBased' should be taken from triggers.txt not hard-coded here!
