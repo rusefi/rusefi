@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 19 20:08:52 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 19 21:00:01 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2124,7 +2124,6 @@ public class Fields {
 	public static final int trigger_type_e_TT_MERCEDES_2_SEGMENT = 10;
 	public static final int trigger_type_e_TT_MIATA_VVT = 33;
 	public static final int trigger_type_e_TT_MITSUBISHI = 11;
-	public static final int trigger_type_e_TT_MITSUBISHI_3A92 = 62;
 	public static final int trigger_type_e_TT_NISSAN_MR18_CAM_VVT = 52;
 	public static final int trigger_type_e_TT_NISSAN_MR18_CRANK = 68;
 	public static final int trigger_type_e_TT_NISSAN_QR25 = 61;
@@ -2150,11 +2149,13 @@ public class Fields {
 	public static final int trigger_type_e_TT_TOOTHED_WHEEL_36_2 = 48;
 	public static final int trigger_type_e_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
-	public static final int trigger_type_e_TT_UNUSED = 72;
+	public static final int trigger_type_e_TT_UNUSED = 73;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int trigger_type_e_TT_VVT_JZ = 17;
 	public static final int trigger_type_e_TT_VVT_MIATA_NB = 43;
+	public static final int trigger_type_e_TT_VVT_MITSUBISHI_3A92 = 62;
+	public static final int trigger_type_e_TT_VVT_MITSUBISHI_6G75 = 72;
 	public static final int trigger_type_e_TT_VVT_NISSAN_VQ35 = 59;
 	public static final int trigger_type_offset = 532;
 	public static final int trigger_unusedBit_4_10_offset = 536;

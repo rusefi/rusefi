@@ -66,7 +66,7 @@ public enum trigger_type_e {
 	TT_VVT_NISSAN_VQ35,
 	TT_NISSAN_VQ30,
 	TT_NISSAN_QR25,
-	TT_MITSUBISHI_3A92,
+	TT_VVT_MITSUBISHI_3A92,
 	TT_SUBARU_SVX_CRANK_1,
 	TT_SUBARU_SVX_CAM_VVT,
 	TT_FORD_TFI_PIP,
@@ -76,6 +76,7 @@ public enum trigger_type_e {
 	TT_TOOTHED_WHEEL_32_2,
 	TT_36_2_1,
 	TT_36_2_1_1,
+	TT_VVT_MITSUBISHI_6G75,
 	TT_UNUSED,
 	Force_4_bytes_size_trigger_type,
 }
