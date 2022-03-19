@@ -1,6 +1,7 @@
 package com.rusefi.native_;
 
 import com.rusefi.core.Sensor;
+import com.rusefi.enums.SensorType;
 import org.junit.Test;
 
 import java.nio.ByteBuffer;
@@ -25,7 +26,17 @@ public class JniUnitTest {
         assertEquals(TS_FILE_VERSION, (int) getValue(outputs, Sensor.FIRMWARE_VERSION));
 
         assertEquals(14.0, getValue(outputs, Sensor.TARGET_AFR));
-//        assertEquals(1, getValue(outputs, Sensor.veValue));
+        double veValue = getValue(outputs, Sensor.veValue);
+        assertTrue("veValue", veValue > 40 && veValue < 90);
+
+        assertEquals(18.11, getValue(outputs, Sensor.runningFuel));
+
+        engineLogic.setSensor(SensorType.Rpm.name(), 4000);
+        engineLogic.invokePeriodicCallback();
+        // huh?
+        assertEquals(0.0, getValue(outputs, Sensor.RPM));
+
+        assertEquals(18.11, getValue(outputs, Sensor.runningFuel));
     }
 
     private double getValue(byte[] outputs, Sensor sensor) {
