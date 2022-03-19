@@ -14,6 +14,7 @@
 #include "datalogging.h"
 #include "histogram.h"
 
+// also known as bool2string and boolean2string
 const char * boolToString(bool value) {
 	return value ? "Yes" : "No";
 }
