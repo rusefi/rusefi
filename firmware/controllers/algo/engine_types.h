@@ -510,6 +510,8 @@ typedef enum {
 	// Mitsubishi 4B11 would be this with half moon camshaft
 	TT_36_2_1 = 70,
 
+	// Mitsubishi 3 cyl and 6 cyl
+	TT_36_2_1_1 = 71,
 
 
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
@@ -518,7 +520,7 @@ typedef enum {
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 71, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 72, // this is used if we want to iterate over all trigger types
 
 	// todo: convert to ENUM_16_BITS? I can see 257 triggers but not 65K triggers
 	Force_4_bytes_size_trigger_type = ENUM_32_BITS,
