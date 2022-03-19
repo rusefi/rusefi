@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Mar 19 16:29:23 UTC 2022
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Mar 19 20:08:03 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -374,6 +374,10 @@ case TT_2JZ_1_12:
   return "TT_2JZ_1_12";
 case TT_2JZ_3_34:
   return "TT_2JZ_3_34";
+case TT_36_2_1:
+  return "TT_36_2_1";
+case TT_36_2_1_1:
+  return "TT_36_2_1_1";
 case TT_36_2_2_2:
   return "TT_36_2_2_2";
 case TT_3_1_CAM:
@@ -488,8 +492,6 @@ case TT_SUZUKI_G13B:
   return "TT_SUZUKI_G13B";
 case TT_TOOTHED_WHEEL:
   return "TT_TOOTHED_WHEEL";
-case TT_36_2_1:
-case TT_36_2_1_1:
 case TT_TOOTHED_WHEEL_32_2:
   return "TT_TOOTHED_WHEEL_32_2";
 case TT_TOOTHED_WHEEL_36_1:

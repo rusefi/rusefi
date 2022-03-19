@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 19 16:30:12 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Mar 19 20:08:52 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2086,6 +2086,8 @@ public class Fields {
 	public static final int trigger_type_e_TT_1_16 = 50;
 	public static final int trigger_type_e_TT_2JZ_1_12 = 29;
 	public static final int trigger_type_e_TT_2JZ_3_34 = 25;
+	public static final int trigger_type_e_TT_36_2_1 = 70;
+	public static final int trigger_type_e_TT_36_2_1_1 = 71;
 	public static final int trigger_type_e_TT_36_2_2_2 = 23;
 	public static final int trigger_type_e_TT_3_1_CAM = 31;
 	public static final int trigger_type_e_TT_60_2_VW = 20;
@@ -2148,7 +2150,7 @@ public class Fields {
 	public static final int trigger_type_e_TT_TOOTHED_WHEEL_36_2 = 48;
 	public static final int trigger_type_e_TT_TOOTHED_WHEEL_60_2 = 8;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
-	public static final int trigger_type_e_TT_UNUSED = 70;
+	public static final int trigger_type_e_TT_UNUSED = 72;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int trigger_type_e_TT_VVT_JZ = 17;
