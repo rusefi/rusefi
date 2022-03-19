@@ -10,8 +10,16 @@
 #include "trigger_structure.h"
 
 void MultiChannelStateSequence::checkSwitchTimes(const float scale) const {
+	efiAssertVoid(CUSTOM_ERR_WAVE_1, phaseCount > 0, "StateSequence cannot be empty");
 	if (getSwitchTime(phaseCount - 1) != 1) {
-		firmwareError(CUSTOM_ERR_WAVE_1, "last switch time has to be 1/%f not %.2f/%f",
+#if EFI_UNIT_TESTS
+		for (int index = 0;index < phaseCount;index ++) {
+			printf("switch time index=%d angle=%f\n", index, getSwitchTime(index));
+		}
+#endif // EFI_UNIT_TESTS
+
+		firmwareError(CUSTOM_ERR_WAVE_1, "[count=%d] last switch time has to be 1/%f not %.2f/%f",
+				phaseCount,
 			      scale, getSwitchTime(phaseCount - 1),
 			      scale * getSwitchTime(phaseCount - 1));
 		return;
