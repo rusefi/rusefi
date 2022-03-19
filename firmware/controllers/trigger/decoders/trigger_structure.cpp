@@ -598,6 +598,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
 		break;
 
+	case TT_36_2_1:
 	case TT_TOOTHED_WHEEL_32_2:
 		setToothedWheelConfiguration(this, 32, 2, ambiguousOperationMode);
 		// todo: add this second/third into 'setToothedWheelConfiguration' as long as we have enough tooth?
