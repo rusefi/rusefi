@@ -50,3 +50,15 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
 	s->addEvent720(720.0, T_SECONDARY, TV_FALL);
 	s->useOnlyPrimaryForSync = true;
 }
+
+void initialize36_2_1_1(TriggerWaveform *s) {
+
+}
+
+void initializeVvt3A92(TriggerWaveform *s) {
+
+}
+
+void initializeVvt6G75(TriggerWaveform *s) {
+
+}
