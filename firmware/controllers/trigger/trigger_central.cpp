@@ -158,6 +158,8 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_FORD_ST170:
 	case VVT_BARRA_3_PLUS_1:
 	case VVT_NISSAN_MR:
+	case VVT_MITSUBISHI_3A92:
+	case VVT_MITSUBISHI_6G75:
 		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->tempBooleanForVerySpecialCases ? 1 : 0);
 	case VVT_HONDA_K:
 		firmwareError(OBD_PCM_Processor_Fault, "Undecided on VVT phase of %s", getVvt_mode_e(vvtMode));
