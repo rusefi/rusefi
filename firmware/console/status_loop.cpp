@@ -680,7 +680,6 @@ static void updateFlags() {
 	engine->outputChannels.isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	engine->outputChannels.isIgnitionEnabledIndicator = engine->limpManager.allowIgnition().value;
 	engine->outputChannels.isInjectionEnabledIndicator = engine->limpManager.allowInjection().value;
-	engine->outputChannels.isCylinderCleanupActivated = engine->isCylinderCleanupMode;
 	engine->outputChannels.dfcoActive = engine->module<DfcoController>()->cutFuel();
 
 #if EFI_LAUNCH_CONTROL

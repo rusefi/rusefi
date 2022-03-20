@@ -292,16 +292,6 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	if (limitedFuel) {
 		return;
 	}
-	if (engine->isCylinderCleanupMode) {
-		return;
-	}
-
-	// If duty cycle is high, impose a fuel cut rev limiter.
-	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
-	if (getInjectorDutyCycle(rpm) > 96.0f) {
-		warning(CUSTOM_OBD_63, "Injector Duty cycle cut");
-		return;
-	}
 
 	/**
 	 * Injection events are defined by addFuelEvents() according to selected
