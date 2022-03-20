@@ -6,6 +6,7 @@
  */
 
 #include "trigger_mitsubishi.h"
+#include "trigger_universal.h"
 
 void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
@@ -49,4 +50,59 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
 	s->addEvent720(653.15, T_SECONDARY, TV_RISE);
 	s->addEvent720(720.0, T_SECONDARY, TV_FALL);
 	s->useOnlyPrimaryForSync = true;
+}
+
+void initialize36_2_1_1(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->tdcPosition = 90;
+	int totalTeethCount = 36;
+
+	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
+	float toothWidth = 0.5;
+
+	float oneTooth = 720 / totalTeethCount;
+
+	float offset = (36 - 11 - 12 - 11) * oneTooth;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 11 * oneTooth + 1);
+
+	offset += (11 + 1) * oneTooth;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 11 * oneTooth + 1);
+
+
+	offset += (11 + 1) * oneTooth;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 10 * oneTooth + 1);
+
+	s->setTriggerSynchronizationGap(3);
+	s->setSecondTriggerSynchronizationGap(1); // redundancy
+}
+
+void initializeVvt3A92(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+
+	int w = 5;
+	s->addEvent360(120 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(120, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(12 + 120 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(12 + 120, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(240 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(240, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(360 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(360, T_PRIMARY, TV_FALL);
+
+	s->setTriggerSynchronizationGap(9);
+	s->setSecondTriggerSynchronizationGap(0.11); // redundancy
+}
+
+void initializeVvt6G75(TriggerWaveform *s) {
+	//	s->shapeWithoutTdc = true;
+	//	s->isSynchronizationNeeded = false;
 }
