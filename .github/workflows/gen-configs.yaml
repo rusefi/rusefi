@@ -125,8 +125,8 @@ jobs:
         fi
 
     - name: Push fresh triggers.txt
-      if: ${{github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true' }}
+      if: ${{env.NOCOMMIT != 'true'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
-        branch: master
+        branch: ${{ steps.extract_branch.outputs.branch }}
