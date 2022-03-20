@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 20 00:04:58 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 20 02:16:39 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1841,6 +1841,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 89606035;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2319,7 +2320,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.03.20.all.3196069398";
+	public static final String TS_SIGNATURE = "rusEFI 2022.03.20.all.89606035";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2475,7 +2476,6 @@ public class Fields {
 	public static final int vssFilterReciprocal_offset = 17440;
 	public static final int vssGearRatio_offset = 624;
 	public static final int vssToothCount_offset = 626;
-	public static final int vvt_mode_e_VVT_12 = 12;
 	public static final int vvt_mode_e_VVT_2JZ = 2;
 	public static final int vvt_mode_e_VVT_BARRA_3_PLUS_1 = 8;
 	public static final int vvt_mode_e_VVT_BOSCH_QUICK_START = 5;
@@ -2485,6 +2485,8 @@ public class Fields {
 	public static final int vvt_mode_e_VVT_INACTIVE = 0;
 	public static final int vvt_mode_e_VVT_MAP_V_TWIN_ANOTHER = 13;
 	public static final int vvt_mode_e_VVT_MIATA_NB = 3;
+	public static final int vvt_mode_e_VVT_MITSUBISHI_3A92 = 12;
+	public static final int vvt_mode_e_VVT_MITSUBISHI_6G75 = 14;
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SECOND_HALF = 1;
@@ -3332,7 +3334,7 @@ public class Fields {
 	public static final Field ALTERNATORPWMFREQUENCY = Field.create("ALTERNATORPWMFREQUENCY", 1876, FieldType.INT);
 	public static final Field NARROWTOWIDEOXYGENBINS = Field.create("NARROWTOWIDEOXYGENBINS", 1880, FieldType.FLOAT);
 	public static final Field NARROWTOWIDEOXYGEN = Field.create("NARROWTOWIDEOXYGEN", 1912, FieldType.FLOAT);
-	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "INVALID", "VTwin by MAP", "vvt14", "vvt15"};
+	public static final String[] vvt_mode_e = {"Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "vvt15", "vvt16", "vvt17"};
 	public static final Field VVTMODE1 = Field.create("VVTMODE1", 1944, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODE2 = Field.create("VVTMODE2", 1945, FieldType.INT8, vvt_mode_e);
 	public static final Field VVTMODEPADDING = Field.create("VVTMODEPADDING", 1946, FieldType.INT8);
