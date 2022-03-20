@@ -25,6 +25,11 @@ Release template (copy/paste this for new release):
 
 All notable user-facing or behavior-altering changes will be documented in this file.
 
+### Added
+ - Mitsubishi 36-2-1-1 trigger wheel
+ - Mitsubishi 3A92 VVT trigger
+
+
 ## March 2022 Release - "Day 22"
 
 ### Added
