@@ -8,8 +8,6 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.isInjectionEnabledIndicator;
 	if (strEqualCaseInsensitive(name, "sd_logging_internal"))
 		return engine->outputChannels.sd_logging_internal;
-	if (strEqualCaseInsensitive(name, "isCylinderCleanupActivated"))
-		return engine->outputChannels.isCylinderCleanupActivated;
 	if (strEqualCaseInsensitive(name, "isFuelPumpOn"))
 		return engine->outputChannels.isFuelPumpOn;
 	if (strEqualCaseInsensitive(name, "isFanOn"))
