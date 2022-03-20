@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 13 15:59:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 20 15:17:37 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4110,10 +4110,22 @@ struct engine_configuration_s {
 	 */
 	uint16_t torqueLoadBins[TORQUE_CURVE_SIZE];
 	/**
-	units
 	 * offset 4750
 	 */
-	uint8_t mainUnusedEnd[270];
+	uint8_t unused4750[2];
+	/**
+	 * offset 4752
+	 */
+	linear_sensor_s auxLinear1;
+	/**
+	 * offset 4772
+	 */
+	linear_sensor_s auxLinear2;
+	/**
+	units
+	 * offset 4792
+	 */
+	uint8_t mainUnusedEnd[228];
 	/** total size 5020*/
 };
 
@@ -4537,4 +4549,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 13 15:59:25 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 20 15:17:37 UTC 2022

@@ -125,6 +125,20 @@
 #define auxAnalogInputs7_offset 1954
 #define auxAnalogInputs8_offset 1955
 #define auxFastSensor1_adcChannel_offset 688
+#define auxLinear1_alignmentFill_offset 4753
+#define auxLinear1_hwChannel_offset 4752
+#define auxLinear1_offset 4752
+#define auxLinear1_v1_offset 4756
+#define auxLinear1_v2_offset 4764
+#define auxLinear1_value1_offset 4760
+#define auxLinear1_value2_offset 4768
+#define auxLinear2_alignmentFill_offset 4773
+#define auxLinear2_hwChannel_offset 4772
+#define auxLinear2_offset 4772
+#define auxLinear2_v1_offset 4776
+#define auxLinear2_v2_offset 4784
+#define auxLinear2_value1_offset 4780
+#define auxLinear2_value2_offset 4788
 #define auxPid1_dFactor_offset 2216
 #define auxPid1_iFactor_offset 2212
 #define auxPid1_maxValue_offset 2226
@@ -1023,6 +1037,8 @@
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF sensor"
 #define GAUGE_NAME_AIR_MASS "air mass"
+#define GAUGE_NAME_AUX_LINEAR_1 "Aux Linear 1"
+#define GAUGE_NAME_AUX_LINEAR_2 "Aux Linear 2"
 #define GAUGE_NAME_AUX_TEMP1 "Aux temp 1"
 #define GAUGE_NAME_AUX_TEMP2 "Aux temp 2"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
@@ -1616,7 +1632,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4750
+#define mainUnusedEnd_offset 4792
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1892,7 +1908,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3262023679
+#define SIGNATURE_HASH 2007158855
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2428,7 +2444,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.03.20.subaru_eg33_f7.3262023679"
+#define TS_SIGNATURE "rusEFI 2022.03.20.subaru_eg33_f7.2007158855"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2473,6 +2489,7 @@
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
 #define unused184_offset 184
+#define unused4750_offset 4750
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272
