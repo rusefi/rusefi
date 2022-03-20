@@ -82,6 +82,31 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap(1); // redundancy
 }
 
+void initialize36_2_1(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->tdcPosition = 90;
+	int totalTeethCount = 36;
+
+	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
+	float toothWidth = 0.5;
+
+	float oneTooth = 720 / totalTeethCount;
+
+	float offset = (36 - 17 - 2 - 16) * oneTooth;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 17 * oneTooth + 1);
+
+	offset += (17 + 2) * oneTooth;
+
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 16 * oneTooth + 1);
+
+
+	s->setTriggerSynchronizationGap(3);
+	s->setSecondTriggerSynchronizationGap(1); // redundancy
+}
+
 void initializeVvt3A92(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
 
