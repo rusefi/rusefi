@@ -38,7 +38,7 @@ public class UpDownImage extends JPanel {
     private static final BasicStroke ENGINE_CYCLE_STROKE = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 10.0f,
             new float[]{21.0f, 7.0f}, 0.0f);
 
-    private EngineReport engineReport;
+    public EngineReport engineReport;
     private StringBuilder revolutions;
     private final String name;
     private TimeAxisTranslator translator;
@@ -96,7 +96,7 @@ public class UpDownImage extends JPanel {
 
     private final TimeAxisTranslator _translator = new TimeAxisTranslator() {
             @Override
-            public int timeToScreen(int time, int width) {
+            public int timeToScreen(double time, int width) {
                 return UpDownImage.this.engineReport.getTimeAxisTranslator().timeToScreen(time, width);
             }
 
