@@ -922,6 +922,22 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->hpfpTargetDecay;
 	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
 		return engineConfiguration->vvtActivationDelayMs;
+	if (strEqualCaseInsensitive(name, "auxLinear1.v1"))
+		return engineConfiguration->auxLinear1.v1;
+	if (strEqualCaseInsensitive(name, "auxLinear1.value1"))
+		return engineConfiguration->auxLinear1.value1;
+	if (strEqualCaseInsensitive(name, "auxLinear1.v2"))
+		return engineConfiguration->auxLinear1.v2;
+	if (strEqualCaseInsensitive(name, "auxLinear1.value2"))
+		return engineConfiguration->auxLinear1.value2;
+	if (strEqualCaseInsensitive(name, "auxLinear2.v1"))
+		return engineConfiguration->auxLinear2.v1;
+	if (strEqualCaseInsensitive(name, "auxLinear2.value1"))
+		return engineConfiguration->auxLinear2.value1;
+	if (strEqualCaseInsensitive(name, "auxLinear2.v2"))
+		return engineConfiguration->auxLinear2.v2;
+	if (strEqualCaseInsensitive(name, "auxLinear2.value2"))
+		return engineConfiguration->auxLinear2.value2;
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
 		return config->vssFilterReciprocal;
 	return EFI_ERROR_CODE;
@@ -3230,6 +3246,46 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "vvtActivationDelayMs"))
 	{
 		engineConfiguration->vvtActivationDelayMs = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "auxLinear1.v1"))
+	{
+		engineConfiguration->auxLinear1.v1 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "auxLinear1.value1"))
+	{
+		engineConfiguration->auxLinear1.value1 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "auxLinear1.v2"))
+	{
+		engineConfiguration->auxLinear1.v2 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "auxLinear1.value2"))
+	{
+		engineConfiguration->auxLinear1.value2 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "auxLinear2.v1"))
+	{
+		engineConfiguration->auxLinear2.v1 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "auxLinear2.value1"))
+	{
+		engineConfiguration->auxLinear2.value1 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "auxLinear2.v2"))
+	{
+		engineConfiguration->auxLinear2.v2 = value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "auxLinear2.value2"))
+	{
+		engineConfiguration->auxLinear2.value2 = value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "vssFilterReciprocal"))
