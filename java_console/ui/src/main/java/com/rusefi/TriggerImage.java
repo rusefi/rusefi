@@ -126,20 +126,22 @@ public class TriggerImage {
         };
 
         JPanel topPanel = new JPanel(new FlowLayout());
-        content.add(topPanel, BorderLayout.NORTH);
-        content.add(triggerPanel, BorderLayout.CENTER);
 
-        f.showFrame(content);
-        f.getFrame().setSize(900, 700);
+        SwingUtilities.invokeAndWait(() -> {
+            content.add(topPanel, BorderLayout.NORTH);
+            content.add(triggerPanel, BorderLayout.CENTER);
 
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    generateImages(workingFolder, triggerPanel, topPanel, content);
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
+            f.showFrame(content);
+            f.getFrame().setSize(900, 700);
+
+            UiUtils.trueRepaint(content);
+        });
+
+        SwingUtilities.invokeAndWait(() -> {
+            try {
+                generateImages(workingFolder, triggerPanel, topPanel, content);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
         });
         Thread.sleep(1000 * sleepAtEnd);
