@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 11 20:52:01 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Mar 20 13:32:09 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -44,7 +44,7 @@ struct ts_outputs_s {
 	bool sd_logging_internal : 1 {};
 	/**
 	offset 0 bit 4 */
-	bool isCylinderCleanupActivated : 1 {};
+	bool unusedb4 : 1 {};
 	/**
 	offset 0 bit 5 */
 	bool isFuelPumpOn : 1 {};
@@ -1353,4 +1353,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Fri Mar 11 20:52:01 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Mar 20 13:32:09 UTC 2022

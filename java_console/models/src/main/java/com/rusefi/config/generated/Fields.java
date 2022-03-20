@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 20 02:45:34 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 20 15:17:42 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -112,6 +112,20 @@ public class Fields {
 	public static final int auxAnalogInputs7_offset = 1954;
 	public static final int auxAnalogInputs8_offset = 1955;
 	public static final int auxFastSensor1_adcChannel_offset = 688;
+	public static final int auxLinear1_alignmentFill_offset = 4753;
+	public static final int auxLinear1_hwChannel_offset = 4752;
+	public static final int auxLinear1_offset = 4752;
+	public static final int auxLinear1_v1_offset = 4756;
+	public static final int auxLinear1_v2_offset = 4764;
+	public static final int auxLinear1_value1_offset = 4760;
+	public static final int auxLinear1_value2_offset = 4768;
+	public static final int auxLinear2_alignmentFill_offset = 4773;
+	public static final int auxLinear2_hwChannel_offset = 4772;
+	public static final int auxLinear2_offset = 4772;
+	public static final int auxLinear2_v1_offset = 4776;
+	public static final int auxLinear2_v2_offset = 4784;
+	public static final int auxLinear2_value1_offset = 4780;
+	public static final int auxLinear2_value2_offset = 4788;
 	public static final int auxPid1_dFactor_offset = 2216;
 	public static final int auxPid1_iFactor_offset = 2212;
 	public static final int auxPid1_maxValue_offset = 2226;
@@ -1013,6 +1027,8 @@ public class Fields {
 	public static final String GAUGE_NAME_AIR_FLOW_ESTIMATE = "MAF estimate";
 	public static final String GAUGE_NAME_AIR_FLOW_MEASURED = "MAF sensor";
 	public static final String GAUGE_NAME_AIR_MASS = "air mass";
+	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux Linear 1";
+	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux Linear 2";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
@@ -1582,7 +1598,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int mainRelayPin_offset = 714;
 	public static final int mainRelayPinMode_offset = 756;
-	public static final int mainUnusedEnd_offset = 4750;
+	public static final int mainUnusedEnd_offset = 4792;
 	public static final int malfunctionIndicatorPin_offset = 668;
 	public static final int malfunctionIndicatorPinMode_offset = 669;
 	public static final int manIdlePosition_offset = 616;
@@ -1841,6 +1857,7 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
+	public static final int SIGNATURE_HASH = 370520518;
 	public static final int silentTriggerError_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
@@ -2319,7 +2336,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.03.20.all.2748966526";
+	public static final String TS_SIGNATURE = "rusEFI 2022.03.20.all.370520518";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2361,6 +2378,7 @@ public class Fields {
 	public static final int unused1740b1_offset = 1740;
 	public static final int unused1740b2_offset = 1740;
 	public static final int unused184_offset = 184;
+	public static final int unused4750_offset = 4750;
 	public static final int unused_1484_bit_24_offset = 1272;
 	public static final int unused_1484_bit_25_offset = 1272;
 	public static final int unused_1484_bit_26_offset = 1272;
@@ -3741,7 +3759,20 @@ public class Fields {
 	public static final Field TORQUETABLE = Field.create("TORQUETABLE", 4690, FieldType.INT8);
 	public static final Field TORQUERPMBINS = Field.create("TORQUERPMBINS", 4726, FieldType.INT16);
 	public static final Field TORQUELOADBINS = Field.create("TORQUELOADBINS", 4738, FieldType.INT16);
-	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4750, FieldType.INT8);
+	public static final Field UNUSED4750 = Field.create("UNUSED4750", 4750, FieldType.INT8);
+	public static final Field AUXLINEAR1_HWCHANNEL = Field.create("AUXLINEAR1_HWCHANNEL", 4752, FieldType.INT8, adc_channel_e);
+	public static final Field AUXLINEAR1_ALIGNMENTFILL = Field.create("AUXLINEAR1_ALIGNMENTFILL", 4753, FieldType.INT8);
+	public static final Field AUXLINEAR1_V1 = Field.create("AUXLINEAR1_V1", 4756, FieldType.FLOAT);
+	public static final Field AUXLINEAR1_VALUE1 = Field.create("AUXLINEAR1_VALUE1", 4760, FieldType.FLOAT);
+	public static final Field AUXLINEAR1_V2 = Field.create("AUXLINEAR1_V2", 4764, FieldType.FLOAT);
+	public static final Field AUXLINEAR1_VALUE2 = Field.create("AUXLINEAR1_VALUE2", 4768, FieldType.FLOAT);
+	public static final Field AUXLINEAR2_HWCHANNEL = Field.create("AUXLINEAR2_HWCHANNEL", 4772, FieldType.INT8, adc_channel_e);
+	public static final Field AUXLINEAR2_ALIGNMENTFILL = Field.create("AUXLINEAR2_ALIGNMENTFILL", 4773, FieldType.INT8);
+	public static final Field AUXLINEAR2_V1 = Field.create("AUXLINEAR2_V1", 4776, FieldType.FLOAT);
+	public static final Field AUXLINEAR2_VALUE1 = Field.create("AUXLINEAR2_VALUE1", 4780, FieldType.FLOAT);
+	public static final Field AUXLINEAR2_V2 = Field.create("AUXLINEAR2_V2", 4784, FieldType.FLOAT);
+	public static final Field AUXLINEAR2_VALUE2 = Field.create("AUXLINEAR2_VALUE2", 4788, FieldType.FLOAT);
+	public static final Field MAINUNUSEDEND = Field.create("MAINUNUSEDEND", 4792, FieldType.INT8);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5020, 120, FieldType.STRING);
 	public static final Field AFTERSTARTCOOLANTBINS = Field.create("AFTERSTARTCOOLANTBINS", 5140, FieldType.FLOAT);
 	public static final Field AFTERSTARTHOLDTIME = Field.create("AFTERSTARTHOLDTIME", 5172, FieldType.FLOAT);
@@ -5033,6 +5064,19 @@ public class Fields {
 	TORQUETABLE,
 	TORQUERPMBINS,
 	TORQUELOADBINS,
+	UNUSED4750,
+	AUXLINEAR1_HWCHANNEL,
+	AUXLINEAR1_ALIGNMENTFILL,
+	AUXLINEAR1_V1,
+	AUXLINEAR1_VALUE1,
+	AUXLINEAR1_V2,
+	AUXLINEAR1_VALUE2,
+	AUXLINEAR2_HWCHANNEL,
+	AUXLINEAR2_ALIGNMENTFILL,
+	AUXLINEAR2_V1,
+	AUXLINEAR2_VALUE1,
+	AUXLINEAR2_V2,
+	AUXLINEAR2_VALUE2,
 	MAINUNUSEDEND,
 	WARNING_MESSAGE,
 	AFTERSTARTCOOLANTBINS,

@@ -116,6 +116,20 @@
 #define auxAnalogInputs7_offset 1946
 #define auxAnalogInputs8_offset 1947
 #define auxFastSensor1_adcChannel_offset 688
+#define auxLinear1_alignmentFill_offset 4725
+#define auxLinear1_hwChannel_offset 4724
+#define auxLinear1_offset 4724
+#define auxLinear1_v1_offset 4728
+#define auxLinear1_v2_offset 4736
+#define auxLinear1_value1_offset 4732
+#define auxLinear1_value2_offset 4740
+#define auxLinear2_alignmentFill_offset 4745
+#define auxLinear2_hwChannel_offset 4744
+#define auxLinear2_offset 4744
+#define auxLinear2_v1_offset 4748
+#define auxLinear2_v2_offset 4756
+#define auxLinear2_value1_offset 4752
+#define auxLinear2_value2_offset 4760
 #define auxPid1_dFactor_offset 2208
 #define auxPid1_iFactor_offset 2204
 #define auxPid1_maxValue_offset 2218
@@ -1030,6 +1044,8 @@
 #define GAUGE_NAME_AIR_FLOW_ESTIMATE "MAF estimate"
 #define GAUGE_NAME_AIR_FLOW_MEASURED "MAF sensor"
 #define GAUGE_NAME_AIR_MASS "air mass"
+#define GAUGE_NAME_AUX_LINEAR_1 "Aux Linear 1"
+#define GAUGE_NAME_AUX_LINEAR_2 "Aux Linear 2"
 #define GAUGE_NAME_AUX_TEMP1 "Aux temp 1"
 #define GAUGE_NAME_AUX_TEMP2 "Aux temp 2"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
@@ -1623,7 +1639,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define mainRelayPin_offset 714
 #define mainRelayPinMode_offset 756
-#define mainUnusedEnd_offset 4722
+#define mainUnusedEnd_offset 4764
 #define malfunctionIndicatorPin_offset 668
 #define malfunctionIndicatorPinMode_offset 669
 #define manIdlePosition_offset 616
@@ -1898,7 +1914,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1720307006
+#define SIGNATURE_HASH 3544554118
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2434,7 +2450,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.03.20.kin.1720307006"
+#define TS_SIGNATURE "rusEFI 2022.03.20.kin.3544554118"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2479,6 +2495,7 @@
 #define unused1740b1_offset 1740
 #define unused1740b2_offset 1740
 #define unused184_offset 184
+#define unused4750_offset 4722
 #define unused_1484_bit_24_offset 1272
 #define unused_1484_bit_25_offset 1272
 #define unused_1484_bit_26_offset 1272

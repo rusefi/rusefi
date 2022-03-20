@@ -15,6 +15,8 @@ enum class ClearReason : uint8_t {
 	StopRequested, // 7
 	EtbProblem, // 8
 	LaunchCut, // 9
+	InjectorDutyCycle,
+	FloodClear,
 };
 
 // Only allows clearing the value, but never resetting it.
