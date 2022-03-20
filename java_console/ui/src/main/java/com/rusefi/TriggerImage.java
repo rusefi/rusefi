@@ -36,6 +36,7 @@ public class TriggerImage {
     private static final int WHEEL_DIAMETER = 500;
     private static final int SMALL_DIAMETER = 420;
     private static final int _180 = 180;
+    public static final int MIN_TIME = 720;
 
     /**
      * number of extra frames
@@ -46,7 +47,7 @@ public class TriggerImage {
 
     /**
      * todo: https://github.com/rusefi/rusefi/issues/2077
-     * @see TriggerWheelInfo#isFirstCrankBased
+     * @see TriggerWheelInfo#isCrankBased
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (triggerName.id) {
@@ -188,14 +189,15 @@ public class TriggerImage {
         triggerPanel.tdcPosition = triggerWheelInfo.tdcPosition;
         List<WaveState> waves = triggerWheelInfo.waves;
 
-        EngineReport re0 = new EngineReport(waves.get(0).list, 720, 720 * (1 + EXTRA_COUNT));
+        EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
-        EngineReport re1 = new EngineReport(waves.get(1).list, 720, 720 * (1 + EXTRA_COUNT));
-        EngineReport re2 = new EngineReport(waves.get(2).list, 720, 720 * (1 + EXTRA_COUNT));
+        EngineReport re1 = new EngineReport(waves.get(1).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
+        EngineReport re2 = new EngineReport(waves.get(2).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
 
         triggerPanel.removeAll();
         UpDownImage upDownImage0 = new UpDownImage(re0, "trigger");
         upDownImage0.setRenderText(false);
+        triggerPanel.image = upDownImage0;
 
         UpDownImage upDownImage1 = new UpDownImage(re1, "trigger");
         upDownImage1.setRenderText(false);
@@ -379,6 +381,7 @@ public class TriggerImage {
         public String name = "";
         public String id;
         public double tdcPosition;
+        public UpDownImage image;
 
         @Override
         public void paint(Graphics g) {
@@ -415,7 +418,9 @@ public class TriggerImage {
             }
             g.drawString("     " + tdcMessage, 0, tdcFontSize);
 
-            int tdcX = (int) (w / 720.0 * tdcPosition);
+            if (image == null)
+                return;
+            int tdcX = image.engineReport.getTimeAxisTranslator().timeToScreen(MIN_TIME + tdcPosition, w);
             g.drawLine(tdcX, 0, tdcX, h);
             Graphics2D g2 = (Graphics2D) g;
             g2.rotate(Math.PI / 2);
