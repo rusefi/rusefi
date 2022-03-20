@@ -83,10 +83,26 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 }
 
 void initializeVvt3A92(TriggerWaveform *s) {
-//	s->shapeWithoutTdc = true;
-//	s->isSynchronizationNeeded = false;
+	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+
+	int w = 5;
+	s->addEvent360(120 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(120, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(12 + 120 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(12 + 120, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(240 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(240, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(360 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(360, T_PRIMARY, TV_FALL);
+
+	s->setTriggerSynchronizationGap(9);
+	s->setSecondTriggerSynchronizationGap(0.11); // redundancy
 }
 
 void initializeVvt6G75(TriggerWaveform *s) {
-
+	//	s->shapeWithoutTdc = true;
+	//	s->isSynchronizationNeeded = false;
 }

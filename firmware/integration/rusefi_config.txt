@@ -296,8 +296,8 @@ custom debug_mode_e 4 bits, U32, @OFFSET@, [0:5], @@debug_mode_e_enum@@
 
 #define VM_VVT_INACTIVE 0
 
-#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "INVALID", "VTwin by MAP", "vvt14", "vvt15"
-custom vvt_mode_e 1 bits, U08, @OFFSET@, [0:3], @@vvt_mode_e_enum@@
+#define vvt_mode_e_enum "Inactive", "Single Tooth Second Half", "2GZ", "Miata NB2", "Single Tooth First Half", "Bosch Quick Start", "4/1", "ST 170", "Ford Barra 3+1", "Nissan VQ", "Honda K 4+1", "Nissan MR18", "Mitsu 3A92", "VTwin by MAP", "Mitsu 6G75", "vvt15", "vvt16", "vvt17"
+custom vvt_mode_e 1 bits, U08, @OFFSET@, [0:4], @@vvt_mode_e_enum@@
 
 ! At the moment TIM1, TIM2, TIM3 and TIM9 are configured as ICU
 ! todo: as of ChibiOS3, only channels 1 & 2 are allowed to capture input, that's a ChibiOS driver limitation
