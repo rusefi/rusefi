@@ -255,6 +255,7 @@ public class TriggerImage {
 
                     int tdcMarkRadius = 8;
                     g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
+                    // draw TDC mark and text on the round wheel
                     g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
                             2 * tdcMarkRadius,
                             2 * tdcMarkRadius);
@@ -380,6 +381,7 @@ public class TriggerImage {
     private static class TriggerPanel extends JPanel {
         public String name = "";
         public String id;
+        // angle
         public double tdcPosition;
         public UpDownImage image;
 
