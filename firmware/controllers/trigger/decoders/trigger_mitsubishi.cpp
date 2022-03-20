@@ -54,6 +54,7 @@ void initializeMitsubishi4g18(TriggerWaveform *s) {
 
 void initialize36_2_1_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR);
+	s->tdcPosition = 90;
 	int totalTeethCount = 36;
 
 	float engineCycle = FOUR_STROKE_ENGINE_CYCLE;
