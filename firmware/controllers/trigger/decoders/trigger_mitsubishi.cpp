@@ -61,29 +61,29 @@ void initialize36_2_1_1(TriggerWaveform *s) {
 
 	float oneTooth = 720 / totalTeethCount;
 
-	float offset = (36 - 11) * oneTooth;
+	float offset = (36 - 11 - 12 - 11) * oneTooth;
 
 	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
 			NO_LEFT_FILTER, offset + 11 * oneTooth + 1);
 
 	offset += (11 + 1) * oneTooth;
 
-//	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
-//			NO_LEFT_FILTER, offset + 11 * oneTooth);
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 11 * oneTooth + 1);
 
 
 	offset += (11 + 1) * oneTooth;
 
-//	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
-//			NO_LEFT_FILTER, offset + 10 * oneTooth);
+	addSkippedToothTriggerEvents(T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/offset, engineCycle,
+			NO_LEFT_FILTER, offset + 10 * oneTooth + 1);
 
-	s->shapeWithoutTdc = true;
-
-	s->isSynchronizationNeeded = false;
+	s->setTriggerSynchronizationGap(3);
+	s->setSecondTriggerSynchronizationGap(1); // redundancy
 }
 
 void initializeVvt3A92(TriggerWaveform *s) {
-
+//	s->shapeWithoutTdc = true;
+//	s->isSynchronizationNeeded = false;
 }
 
 void initializeVvt6G75(TriggerWaveform *s) {
