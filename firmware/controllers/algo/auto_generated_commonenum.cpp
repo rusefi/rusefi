@@ -741,7 +741,8 @@ case VE_TPS:
 }
 const char *getVvt_mode_e(vvt_mode_e value){
 switch(value) {
-case VVT_12:
+case VVT_MITSUBISHI_3A92:
+case VVT_MITSUBISHI_6G75:
   return "VVT_12";
 case VVT_2JZ:
   return "VVT_2JZ";
