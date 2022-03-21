@@ -14,6 +14,7 @@
 #include "pch.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
+#include "i2c_bb.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
@@ -120,6 +121,15 @@ void setSerialConfigurationOverrides() {
  * @todo    Add your board-specific code, if any.
  */
 void setBoardDefaultConfiguration() {
+
+	BitbangI2c m_i2c;
+	uint16_t variant;
+
+	//same pins as for LPS25
+	m_i2c.init(GPIOB_10, GPIOB_11);
+	m_i2c.read(0x20, &variant, sizeof(variant));
+
+
 	setInjectorPins();
 	setIgnitionPins();
 
@@ -153,11 +163,45 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
 
-	//Set default ETB config
-	engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
-	engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
-	engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
-	engineConfiguration->etb_use_two_wires = true;
+
+	//Rev C is different then Rev A/B
+	if (variant == 0x0063) {
+		// TLE9201 driver
+		// This chip has three control pins:
+		// DIR - sets direction of the motor
+		// PWM - pwm control (enable high, coast low)
+		// DIS - disables motor (enable low)
+		
+		//ETB1
+		// PWM pin
+		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM3;
+		// DIR pin
+		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2
+		// Disable pin
+		engineConfiguration->etbIo[0].disablePin = H176_OUT_PWM1;
+		// Unused
+		engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+
+		//ETB2
+		// PWM pin
+		engineConfiguration->etbIo[1].controlPin = GPIOI_2;
+		// DIR pin
+		engineConfiguration->etbIo[1].directionPin1 = GPIOH_13
+		// Disable pin
+		engineConfiguration->etbIo[1].disablePin = GPIOB_7;
+		// Unused
+		engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
+
+		// we only have pwm/dir, no dira/dirb
+		engineConfiguration->etb_use_two_wires = false;
+
+	} else {
+		//Set default ETB config
+		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
+		engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
+		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
+		engineConfiguration->etb_use_two_wires = true;
+	}
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MERCEDES);
 	strcpy(engineConfiguration->engineCode, "");
