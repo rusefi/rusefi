@@ -354,6 +354,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.luaLastCycleDuration;
 	if (strEqualCaseInsensitive(name, "testBenchIter"))
 		return engine->outputChannels.testBenchIter;
+	if (strEqualCaseInsensitive(name, "auxLinear1"))
+		return engine->outputChannels.auxLinear1;
+	if (strEqualCaseInsensitive(name, "auxLinear2"))
+		return engine->outputChannels.auxLinear2;
 	if (strEqualCaseInsensitive(name, "launchSpeedCondition"))
 		return engine->outputChannels.launchSpeedCondition;
 	if (strEqualCaseInsensitive(name, "launchRpmCondition"))
