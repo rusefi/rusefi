@@ -88,6 +88,9 @@ enum class SensorType : unsigned char {
 	// MAP decoding happens only that often thus this is NOT raw MAP as flows from ADC
 	MapSlow,
 
+	AuxLinear1,
+	AuxLinear2,
+
 	// Leave me at the end!
 	PlaceholderLast,
 };
