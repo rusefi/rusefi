@@ -91,81 +91,18 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
-void setBoardConfigOverrides() {
-	setHellen176LedPins();
-	setupVbatt();
-	setSdCardConfigurationOverrides();
-
-    // this specific Hellen has less common pull-up value R49
-	engineConfiguration->clt.config.bias_resistor = 2700;
-	engineConfiguration->iat.config.bias_resistor = 2700;
-
-	engineConfiguration->canTxPin = H176_CAN_TX;
-	engineConfiguration->canRxPin = H176_CAN_RX;
-}
-
-void setSerialConfigurationOverrides() {
-	engineConfiguration->useSerialPort = false;
-
-
-
-
-}
-
-
-/**
- * @brief   Board-specific configuration defaults.
- *
- * See also setDefaultEngineConfiguration
- *
- * @todo    Add your board-specific code, if any.
- */
-void setBoardDefaultConfiguration() {
-
+void setHellen128ETBConfig() {
 	BitbangI2c m_i2c;
-	uint8_t variant[2];
+	uint8_t variant[2]={0xff,0xff};
 
 	//same pins as for LPS25
 	m_i2c.init(GPIOB_10, GPIOB_11);
 	m_i2c.read(0x20, variant, sizeof(variant));
 
-
-	setInjectorPins();
-	setIgnitionPins();
-
-	engineConfiguration->isSdCardEnabled = true;
-
-	engineConfiguration->enableSoftwareKnock = true;
-
-	engineConfiguration->fuelPumpPin = GPIOD_15;
-	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
-	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
-	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
-
-	engineConfiguration->starterControlPin = H176_OUT_IO10;
-	engineConfiguration->startStopButtonPin = H176_IN_A16;
-	engineConfiguration->startStopButtonMode = PI_PULLDOWN;
-
-	// "required" hardware is done - set some reasonable defaults
-	setupDefaultSensorInputs();
-
-	// Some sensible defaults for other options
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
-	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
-	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
-	setAlgorithm(LM_SPEED_DENSITY);
-
-	engineConfiguration->specs.cylindersCount = 4;
-	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-	engineConfiguration->specs.displacement = 2.295f;
-
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
-	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
-
+	efiPrintf ("BoardID [%02x%02x] ", variant[0],variant[1] );
 
 	//Rev C is different then Rev A/B
-	if ((variant[0] == 0x63) && (variant[1] = 0x00)) {
+	if ((variant[0] == 0x63) && (variant[1] == 0x00)) {
 		// TLE9201 driver
 		// This chip has three control pins:
 		// DIR - sets direction of the motor
@@ -201,7 +138,72 @@ void setBoardDefaultConfiguration() {
 		engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
 		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
 		engineConfiguration->etb_use_two_wires = true;
-	}
+	}	
+}
+
+void setBoardConfigOverrides() {
+	setHellen176LedPins();
+	setupVbatt();
+	setSdCardConfigurationOverrides();
+	setHellen128ETBConfig();
+
+    // this specific Hellen has less common pull-up value R49
+	engineConfiguration->clt.config.bias_resistor = 2700;
+	engineConfiguration->iat.config.bias_resistor = 2700;
+
+	engineConfiguration->canTxPin = H176_CAN_TX;
+	engineConfiguration->canRxPin = H176_CAN_RX;
+}
+
+void setSerialConfigurationOverrides() {
+	engineConfiguration->useSerialPort = false;
+
+
+
+
+}
+
+
+/**
+ * @brief   Board-specific configuration defaults.
+ *
+ * See also setDefaultEngineConfiguration
+ *
+ * @todo    Add your board-specific code, if any.
+ */
+void setBoardDefaultConfiguration() {
+	setInjectorPins();
+	setIgnitionPins();
+
+	engineConfiguration->isSdCardEnabled = true;
+
+	engineConfiguration->enableSoftwareKnock = true;
+
+	engineConfiguration->fuelPumpPin = GPIOD_15;
+	engineConfiguration->idle.solenoidPin = GPIO_UNASSIGNED;
+	engineConfiguration->fanPin = GPIOD_12;	// OUT_PWM8
+	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
+
+	engineConfiguration->starterControlPin = H176_OUT_IO10;
+	engineConfiguration->startStopButtonPin = H176_IN_A16;
+	engineConfiguration->startStopButtonMode = PI_PULLDOWN;
+
+	// "required" hardware is done - set some reasonable defaults
+	setupDefaultSensorInputs();
+
+	// Some sensible defaults for other options
+	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
+	engineConfiguration->useOnlyRisingEdgeForTrigger = true;
+	setAlgorithm(LM_SPEED_DENSITY);
+
+	engineConfiguration->specs.cylindersCount = 4;
+	engineConfiguration->specs.firingOrder = FO_1_3_4_2;
+	engineConfiguration->specs.displacement = 2.295f;
+
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MERCEDES);
 	strcpy(engineConfiguration->engineCode, "");
