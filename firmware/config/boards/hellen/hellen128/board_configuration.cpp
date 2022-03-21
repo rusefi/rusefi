@@ -123,11 +123,11 @@ void setSerialConfigurationOverrides() {
 void setBoardDefaultConfiguration() {
 
 	BitbangI2c m_i2c;
-	uint16_t variant;
+	uint8_t variant[2];
 
 	//same pins as for LPS25
 	m_i2c.init(GPIOB_10, GPIOB_11);
-	m_i2c.read(0x20, &variant, sizeof(variant));
+	m_i2c.read(0x20, variant, sizeof(variant));
 
 
 	setInjectorPins();
@@ -165,7 +165,7 @@ void setBoardDefaultConfiguration() {
 
 
 	//Rev C is different then Rev A/B
-	if (variant == 0x0063) {
+	if ((variant[0] == 0x63) && (variant[1] = 0x00)) {
 		// TLE9201 driver
 		// This chip has three control pins:
 		// DIR - sets direction of the motor
@@ -176,7 +176,7 @@ void setBoardDefaultConfiguration() {
 		// PWM pin
 		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM3;
 		// DIR pin
-		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2
+		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
 		// Disable pin
 		engineConfiguration->etbIo[0].disablePin = H176_OUT_PWM1;
 		// Unused
@@ -186,7 +186,7 @@ void setBoardDefaultConfiguration() {
 		// PWM pin
 		engineConfiguration->etbIo[1].controlPin = GPIOI_2;
 		// DIR pin
-		engineConfiguration->etbIo[1].directionPin1 = GPIOH_13
+		engineConfiguration->etbIo[1].directionPin1 = GPIOH_13;
 		// Disable pin
 		engineConfiguration->etbIo[1].disablePin = GPIOB_7;
 		// Unused
