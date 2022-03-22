@@ -14,6 +14,7 @@
 #include "pch.h"
 #include "custom_engine.h"
 #include "hellen_meta.h"
+#include "i2c_bb.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1;
@@ -90,10 +91,61 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->auxTempSensor2.adcChannel = EFI_ADC_NONE;
 }
 
+void setHellen128ETBConfig() {
+	BitbangI2c m_i2c;
+	uint8_t variant[2]={0xff,0xff};
+
+	//same pins as for LPS25
+	m_i2c.init(GPIOB_10, GPIOB_11);
+	m_i2c.read(0x20, variant, sizeof(variant));
+
+	efiPrintf ("BoardID [%02x%02x] ", variant[0],variant[1] );
+
+	//Rev C is different then Rev A/B
+	if ((variant[0] == 0x63) && (variant[1] == 0x00)) {
+		// TLE9201 driver
+		// This chip has three control pins:
+		// DIR - sets direction of the motor
+		// PWM - pwm control (enable high, coast low)
+		// DIS - disables motor (enable low)
+		
+		//ETB1
+		// PWM pin
+		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM3;
+		// DIR pin
+		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
+		// Disable pin
+		engineConfiguration->etbIo[0].disablePin = H176_OUT_PWM1;
+		// Unused
+		engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
+
+		//ETB2
+		// PWM pin
+		engineConfiguration->etbIo[1].controlPin = GPIOI_2;
+		// DIR pin
+		engineConfiguration->etbIo[1].directionPin1 = GPIOH_13;
+		// Disable pin
+		engineConfiguration->etbIo[1].disablePin = GPIOB_7;
+		// Unused
+		engineConfiguration->etbIo[1].directionPin2 = GPIO_UNASSIGNED;
+
+		// we only have pwm/dir, no dira/dirb
+		engineConfiguration->etb_use_two_wires = false;
+
+	} else {
+		//Set default ETB config
+		engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
+		engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
+		engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
+		engineConfiguration->etb_use_two_wires = true;
+	}	
+}
+
 void setBoardConfigOverrides() {
 	setHellen176LedPins();
 	setupVbatt();
 	setSdCardConfigurationOverrides();
+	setHellen128ETBConfig();
 
     // this specific Hellen has less common pull-up value R49
 	engineConfiguration->clt.config.bias_resistor = 2700;
@@ -152,12 +204,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS; // IM_WASTED_SPARK
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;//IM_BATCH;// IM_SEQUENTIAL;
-
-	//Set default ETB config
-	engineConfiguration->etbIo[0].directionPin1 = H176_OUT_PWM2;
-	engineConfiguration->etbIo[0].directionPin2 = H176_OUT_PWM3;
-	engineConfiguration->etbIo[0].controlPin = H176_OUT_PWM1; // ETB_EN
-	engineConfiguration->etb_use_two_wires = true;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MERCEDES);
 	strcpy(engineConfiguration->engineCode, "");

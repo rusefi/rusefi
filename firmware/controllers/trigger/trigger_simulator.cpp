@@ -80,7 +80,9 @@ void TriggerStimulatorHelper::feedSimulatedEvent(
 			pin_state_t currentValue = multiChannelStateSequence.getChannelState(/*phaseIndex*/i, stateIndex);
 			trigger_event_e event = (currentValue ? riseEvents : fallEvents)[i];
 			if (isUsefulSignal(event, triggerConfiguration)) {
-				state.decodeTriggerEvent(shape,
+				state.decodeTriggerEvent(
+					"sim",
+						shape,
 					triggerCycleCallback,
 					/* override */ nullptr,
 					triggerConfiguration,
