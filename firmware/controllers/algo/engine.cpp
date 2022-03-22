@@ -76,7 +76,6 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
 	case VVT_HONDA_K:
-	case VVT_TOYOTA_4_1:
 	case VVT_FIRST_HALF:
 	case VVT_SECOND_HALF:
 	case VVT_MAP_V_TWIN_ANOTHER:
@@ -87,6 +86,8 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_BARRA_3_PLUS_1;
 	case VVT_NISSAN_VQ:
 		return TT_VVT_NISSAN_VQ35;
+	case VVT_TOYOTA_4_1:
+		return TT_VVT_TOYOTA_4_1;
 	case VVT_MITSUBISHI_3A92:
 		return TT_VVT_MITSUBISHI_3A92;
 	case VVT_MITSUBISHI_6G75:
