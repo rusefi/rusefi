@@ -513,8 +513,14 @@ void TriggerState::decodeTriggerEvent(
 
 	currentCycle.eventCount[triggerWheel]++;
 
-	if (toothed_previous_time > nowNt) {
-		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d", msg, toothed_previous_time, nowNt);
+	{
+		chibios_rt::CriticalSectionLocker csl;
+
+		efitick_t timeSinceLast = nowNt - toothed_previous_time;
+
+		if (timeSinceLast < 0) {
+			firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", msg, toothed_previous_time, nowNt, timeSinceLast);
+		}
 	}
 
 	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
