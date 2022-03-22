@@ -515,11 +515,11 @@ void TriggerState::decodeTriggerEvent(
 
 	auto prevTimeLocal = toothed_previous_time;
 
-	if (prevTimeLocal - nowNt < 0) {
-		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", msg, prevTimeLocal, nowNt);
-	}
-
 	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - prevTimeLocal;
+
+	if (currentDurationLong < 0) {
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%ld now=%ld", msg, prevTimeLocal, nowNt);
+	}
 
 	/**
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
