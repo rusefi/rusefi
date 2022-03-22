@@ -6,6 +6,9 @@
 
 #if HAL_USE_USB_MSD
 
+#undef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD FALSE
+
 #if EFI_EMBED_INI_MSD
 	#ifdef EFI_USE_COMPRESSED_INI_MSD
 		#include "compressed_block_device.h"
