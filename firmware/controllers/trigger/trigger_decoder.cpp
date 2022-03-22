@@ -513,19 +513,13 @@ void TriggerState::decodeTriggerEvent(
 
 	currentCycle.eventCount[triggerWheel]++;
 
-	{
-		chibios_rt::CriticalSectionLocker csl;
+	auto prevTimeLocal = toothed_previous_time;
 
-		auto prevTimeLocal = toothed_previous_time;
-
-		efitick_t timeSinceLast = nowNt - prevTimeLocal;
-
-		if (timeSinceLast < 0) {
-			efiPrintf("toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", prevTimeLocal, nowNt, timeSinceLast);
-		}
+	if (prevTimeLocal - nowNt < 0) {
+		efiPrintf("toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", prevTimeLocal, nowNt, timeSinceLast);
 	}
 
-	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
+	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - prevTimeLocal;
 
 	/**
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
