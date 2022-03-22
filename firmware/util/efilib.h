@@ -133,9 +133,9 @@ constexpr void clear(T& obj) {
 }
 } // namespace efi
 
-#define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg)
+#define assertIsInBounds(length, array, msg) efiAssertVoid(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg)
 
-#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, (length) >= 0 && (length) < efi::size(array), msg, failedResult)
+#define assertIsInBoundsWithResult(length, array, msg, failedResult) efiAssert(OBD_PCM_Processor_Fault, std::is_unsigned_v<decltype(length)> && (length) < efi::size(array), msg, failedResult)
 
 /**
  * Copies an array from src to dest.  The lengths of the arrays must match.
