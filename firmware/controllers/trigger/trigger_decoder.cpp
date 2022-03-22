@@ -513,11 +513,14 @@ void TriggerState::decodeTriggerEvent(
 
 	currentCycle.eventCount[triggerWheel]++;
 
-	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
-
-	if (currentDurationLong <= 0) {
-		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d delta=%d", msg, (int)toothed_previous_time, (int)nowNt, (int)currentDurationLong);
+	if (toothed_previous_time > nowNt) {
+		int prevTooth = toothed_previous_time;
+		int now2 = nowNt;
+		int delta = prevTooth - now2;
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d delta=%d", msg, prevTooth, now2, delta);
 	}
+
+	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
 
 	/**
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
