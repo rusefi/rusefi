@@ -516,7 +516,7 @@ void TriggerState::decodeTriggerEvent(
 	auto prevTimeLocal = toothed_previous_time;
 
 	if (prevTimeLocal - nowNt < 0) {
-		efiPrintf("toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", prevTimeLocal, nowNt, timeSinceLast);
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", msg, prevTimeLocal, nowNt);
 	}
 
 	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - prevTimeLocal;
