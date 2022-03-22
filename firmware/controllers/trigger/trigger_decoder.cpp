@@ -468,8 +468,7 @@ void TriggerState::onShaftSynchronization(
 #endif /* EFI_UNIT_TEST */
 }
 
-static trigger_wheel_e lastTriggerWheel;
-static trigger_value_e lastType;
+static trigger_event_e lastSignal;
 
 /**
  * @brief Trigger decoding happens here
@@ -520,11 +519,10 @@ void TriggerState::decodeTriggerEvent(
 		int prevTooth = toothed_previous_time;
 		int now2 = nowNt;
 		int delta = prevTooth - now2;
-		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d delta=%d wheel=%d value=%d lastWheel=%d lastValue=%d", msg, prevTooth, now2, delta, triggerWheel, type, lastTriggerWheel, lastType);
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d delta=%d event=%d lastEvent=%d", msg, prevTooth, now2, delta, signal, lastSignal);
 	}
 
-	lastTriggerWheel = triggerWheel;
-	lastType = type;
+	lastSignal = signal;
 
 	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
 
