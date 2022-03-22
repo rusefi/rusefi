@@ -138,7 +138,7 @@ void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t tota
 	auto toothCount = patternTeeth - missing;
 	
 	float currentAngle = missing * toothAngle;
-	for (int i = 0; i < toothCount; i++) {
+	for (size_t i = 0; i < toothCount; i++) {
 		currentAngle += toothAngle;
 		s->addEventAngle(currentAngle - 5, T_PRIMARY, TV_RISE);
 		s->addEventAngle(currentAngle, T_PRIMARY, TV_FALL);
