@@ -8,7 +8,7 @@ import java.io.IOException;
 /**
  * Configuration consumer which writes Signature header file
  */
-public class SignatureConsumer implements ConfigurationConsumer {
+public class SignatureConsumer extends AbstractConfigurationConsumer {
     private final String destHeader;
     VariableRegistry registry;
 
@@ -19,15 +19,7 @@ public class SignatureConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void startFile() {
-    }
-
-    @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
-        ConfigDefinition.writeDefinesToFile(registry, destHeader);
-    }
-
-    @Override
-    public void endFile() throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
+        ExtraUtil.writeDefinesToFile(registry, destHeader, null);
     }
 }

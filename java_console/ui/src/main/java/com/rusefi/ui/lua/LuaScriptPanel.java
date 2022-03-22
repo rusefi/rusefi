@@ -26,9 +26,6 @@ public class LuaScriptPanel {
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
     private final TextEditor scriptText = new TextEditor();
-    private boolean isFirstRender = true;
-    private boolean alreadyRequestedFromListener;
-    private boolean renderedBeforeConnected;
 
     public LuaScriptPanel(UIContext context, Node config) {
         this.context = context;
@@ -37,14 +34,13 @@ public class LuaScriptPanel {
         // Upper panel: command entry, etc
         JPanel upperPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
 
-        JButton readButton = new JButton("Read from ECU");
         JButton writeButton = new JButton("Write to ECU");
         JButton resetButton = new JButton("Reset/Reload Lua");
         JButton formatButton = new JButton("Format");
+        JButton burnButton = new JButton("Burn to ECU");
 
         MessagesPanel mp = new MessagesPanel(null, config);
 
-        readButton.addActionListener(e -> readFromECU());
         writeButton.addActionListener(e -> {
             write();
             // resume messages on 'write new script to ECU'
@@ -64,10 +60,19 @@ public class LuaScriptPanel {
                 }            }
         });
 
-        upperPanel.add(readButton);
+        burnButton.addActionListener(e -> {
+            LinkManager linkManager = context.getLinkManager();
+
+            linkManager.submit(() -> {
+                BinaryProtocol bp = linkManager.getCurrentStreamState();
+                bp.burn();
+            });
+        });
+
         upperPanel.add(formatButton);
         upperPanel.add(writeButton);
         upperPanel.add(resetButton);
+        upperPanel.add(burnButton);
         upperPanel.add(command.getContent());
         upperPanel.add(new URLLabel("Lua Wiki", "https://github.com/rusefi/rusefi/wiki/Lua-Scripting"));
 
@@ -81,28 +86,19 @@ public class LuaScriptPanel {
         messagesPanel.add(BorderLayout.CENTER, mp.getMessagesScroll());
 
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> {
-            if (renderedBeforeConnected && !alreadyRequestedFromListener) {
-                // this whole listener is one huge hack :(
-                alreadyRequestedFromListener = true;
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
                         readFromECU();
+                    } catch (Throwable e) {
+                        System.out.println(e);
                     }
-                });
-            }
+                }
+            });
         });
 
-        JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel) {
-            @Override
-            public void paint(Graphics g) {
-                super.paint(g);
-                if (isFirstRender) {
-                    readFromECU();
-                    isFirstRender = false;
-                }
-            }
-        };
+        JSplitPane centerPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, scriptPanel, messagesPanel);
 
         mainPanel.add(upperPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
@@ -127,7 +123,6 @@ public class LuaScriptPanel {
 
         if (bp == null) {
             scriptText.setText("No ECU located");
-            renderedBeforeConnected = true;
             return;
         }
 
@@ -178,7 +173,10 @@ public class LuaScriptPanel {
                 remaining -= thisWrite;
             } while (remaining > 0);
 
-            bp.burn();
+// need a way to modify script on the fly with shorter execution gaps to keep E65 CAN network happy
+// todo: auto-burn on console close check box in case of Lua changes?
+// todo: check box for auto-burn?
+//            bp.burn();
 
             // Burning doesn't reload lua script, so we have to do it manually
             resetLua();

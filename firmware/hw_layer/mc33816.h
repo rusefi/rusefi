@@ -25,4 +25,3 @@ enum {
 };
 
 void initMc33816();
-void initMc33816IfNeeded();

@@ -63,39 +63,39 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 19 */ EVENT(/* timestamp*/1.383534, T_SECONDARY, /*value*/true);
 	/* 22 */ EVENT(/* timestamp*/1.45352675, T_PRIMARY, /*value*/true);
 	/* 23 */ EVENT(/* timestamp*/1.46291525, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(0, GET_RPM());
+	EXPECT_EQ(0, round(Sensor::getOrZero(SensorType::Rpm)));
 	// ^^ All teeth above are pre-sync ^^
 
 	// THIS TOOTH IS SYNC POINT!
 	// Should get instantRpm from here on
 	/* 25 */ EVENT(/* timestamp*/1.49939025, T_PRIMARY, /*value*/false);
-	EXPECT_EQ(239, GET_RPM());
+	EXPECT_EQ(239, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 27 */ EVENT(/* timestamp*/1.511785, T_SECONDARY, /*value*/true);
-	EXPECT_EQ(234, GET_RPM());
+	EXPECT_EQ(234, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 28 */ EVENT(/* timestamp*/1.5908545, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(231, GET_RPM());
+	EXPECT_EQ(231, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 31 */ EVENT(/* timestamp*/1.6399845, T_SECONDARY, /*value*/true);
-	EXPECT_EQ(234, GET_RPM());
+	EXPECT_EQ(234, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 32 */ EVENT(/* timestamp*/1.70975875, T_PRIMARY, /*value*/true);
-	EXPECT_EQ(225, GET_RPM());
+	EXPECT_EQ(225, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 33 */ EVENT(/* timestamp*/1.7194455, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(231, GET_RPM());
+	EXPECT_EQ(231, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 36 */ EVENT(/* timestamp*/1.7697125, T_SECONDARY, /*value*/true);
-	EXPECT_EQ(231, GET_RPM());
+	EXPECT_EQ(231, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 37 */ EVENT(/* timestamp*/1.817179, T_PRIMARY, /*value*/true);
-	EXPECT_EQ(217, GET_RPM());
+	EXPECT_EQ(217, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 38 */ EVENT(/* timestamp*/1.8511055, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(225, GET_RPM());
+	EXPECT_EQ(225, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 41 */ EVENT(/* timestamp*/1.9011835, T_SECONDARY, /*value*/true);
-	EXPECT_EQ(243, GET_RPM());
+	EXPECT_EQ(243, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 42 */ EVENT(/* timestamp*/1.97691675, T_PRIMARY, /*value*/true);
-	EXPECT_EQ(207, GET_RPM());
+	EXPECT_EQ(207, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 43 */ EVENT(/* timestamp*/1.9822455, T_SECONDARY, /*value*/false);
-	EXPECT_EQ(226, GET_RPM());
+	EXPECT_EQ(226, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// Second sync point, should transition to non-instant RPM
 	/* 44 */ EVENT(/* timestamp*/2.001249, T_PRIMARY, /*value*/false);
-	EXPECT_EQ(239, GET_RPM());
+	EXPECT_EQ(239, round(Sensor::getOrZero(SensorType::Rpm)));
 	/* 45 */ EVENT(/* timestamp*/2.0070235, T_SECONDARY, /*value*/true);
 	/* 48 */ EVENT(/* timestamp*/2.04448175, T_SECONDARY, /*value*/false);
 	/* 49 */ EVENT(/* timestamp*/2.06135875, T_SECONDARY, /*value*/true);
@@ -109,10 +109,10 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 61 */ EVENT(/* timestamp*/2.188138, T_SECONDARY, /*value*/false);
 
 	// rpm should now only update at sync point
-	EXPECT_EQ(239, GET_RPM());
+	EXPECT_EQ(239, round(Sensor::getOrZero(SensorType::Rpm)));
 	// Third sync point
 	/* 62 */ EVENT(/* timestamp*/2.20460875, T_PRIMARY, /*value*/false);
-	EXPECT_EQ(590, GET_RPM());
+	EXPECT_EQ(590, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	/* 63 */ EVENT(/* timestamp*/2.20940075, T_SECONDARY, /*value*/true);
 	/* 64 */ EVENT(/* timestamp*/2.2446445, T_SECONDARY, /*value*/false);
@@ -163,7 +163,7 @@ TEST(cranking, hardcodedRealCranking) {
 
 	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
 
-	EXPECT_EQ(755,  GET_RPM()) << "RPM at the end";
+	EXPECT_EQ(755,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM at the end";
 }
 
 TEST(cranking, naCrankFromFile) {
@@ -178,5 +178,5 @@ TEST(cranking, naCrankFromFile) {
 	}
 
 	EXPECT_EQ(0, eth.recentWarnings()->getCount());
-	EXPECT_EQ(698, GET_RPM());
+	EXPECT_EQ(698, round(Sensor::getOrZero(SensorType::Rpm)));
 }

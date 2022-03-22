@@ -4,17 +4,18 @@ import com.rusefi.*;
 
 import static com.rusefi.ToolUtil.EOL;
 
-public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
+public class BaseCHeaderConsumer extends AbstractConfigurationConsumer {
     private static final String BOOLEAN_TYPE = "bool";
     private final StringBuilder content = new StringBuilder();
 
-    private static String getHeaderText(ConfigField configField, int currentOffset, int bitIndex) {
+    private static String getHeaderText(FieldIteratorWithOffset iterator) {
+        ConfigField configField = iterator.cf;
         if (configField.isBit()) {
-            String comment = "\t/**" + EOL + ConfigDefinition.packComment(configField.getCommentContent(), "\t") + "\toffset " + currentOffset + " bit " + bitIndex + " */" + EOL;
+            String comment = "\t/**" + EOL + packComment(configField.getCommentContent(), "\t") + "\toffset " + iterator.currentOffset + " bit " + iterator.bitState.get() + " */" + EOL;
             return comment + "\t" + BOOLEAN_TYPE + " " + configField.getName() + " : 1 {};" + EOL;
         }
 
-        String cEntry = ConfigDefinition.getComment(configField.getCommentContent(), currentOffset, configField.getUnits());
+        String cEntry = getComment(configField.getCommentContent(), iterator.currentOffset, configField.getUnits());
 
         String typeName = configField.getType();
 
@@ -37,35 +38,51 @@ public abstract class BaseCHeaderConsumer implements ConfigurationConsumer {
         return cEntry;
     }
 
+    private static String getComment(String comment, int currentOffset, String units) {
+        String start = "\t/**";
+        String packedComment = packComment(comment, "\t");
+        String unitsComment = units.isEmpty() ? "" : "\t" + units + EOL;
+        return start + EOL +
+                packedComment +
+                unitsComment +
+                "\t * offset " + currentOffset + EOL + "\t */" + EOL;
+    }
+
+    public static String packComment(String comment, String linePrefix) {
+        if (comment == null)
+            return "";
+        if (comment.trim().isEmpty())
+            return "";
+        String result = "";
+        for (String line : comment.split("\\\\n")) {
+            result += linePrefix + " * " + line + EOL;
+        }
+        return result;
+    }
+
     @Override
-    public void handleEndStruct(ConfigStructure structure) {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) {
         if (structure.comment != null) {
-            content.append("/**" + EOL + ConfigDefinition.packComment(structure.comment, "") + EOL + "*/" + EOL);
+            content.append("/**" + EOL + packComment(structure.comment, "") + EOL + "*/" + EOL);
         }
 
         content.append("// start of " + structure.name + EOL);
         content.append("struct " + structure.name + " {" + EOL);
 
-        int currentOffset = 0;
-
-        FieldIterator iterator = new FieldIterator(structure.cFields);
+        FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(structure.cFields);
         for (int i = 0; i < structure.cFields.size(); i++) {
             iterator.start(i);
-            content.append(getHeaderText(iterator.cf, currentOffset, iterator.bitState.get()));
+            content.append(getHeaderText(iterator));
 
-            currentOffset += iterator.cf.getSize(iterator.next);
+            iterator.currentOffset += iterator.cf.getSize(iterator.next);
             iterator.end();
         }
 
-        content.append("\t/** total size " + currentOffset + "*/" + EOL);
+        content.append("\t/** total size " + iterator.currentOffset + "*/" + EOL);
         content.append("};" + EOL + EOL);
     }
 
     public StringBuilder getContent() {
         return content;
-    }
-
-    @Override
-    public void startFile() {
     }
 }

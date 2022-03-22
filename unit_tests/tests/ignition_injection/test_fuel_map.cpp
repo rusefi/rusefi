@@ -58,7 +58,6 @@ TEST(misc, testFuelMap) {
 
 
 	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 5);
 
 	// 1005 * 2 for IAT correction
 	printf("*************************************************** getRunningFuel 2\r\n");
@@ -67,8 +66,6 @@ TEST(misc, testFuelMap) {
 	// Check that runningFuel corrects appropriately
 	EXPECT_EQ( 42,  getRunningFuel(1)) << "v1";
 	EXPECT_EQ( 84,  getRunningFuel(2)) << "v1";
-
-	engine->engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0);
 
 	engineConfiguration->cranking.baseFuel = 4000;
 
@@ -79,11 +76,11 @@ TEST(misc, testFuelMap) {
 	Sensor::setMockValue(SensorType::Clt, 0);
 	EXPECT_NEAR(7.7333, getCrankingFuel3(2, 4), EPS4D);
 	Sensor::setMockValue(SensorType::Clt, 8);
-	EXPECT_NEAR(7, getCrankingFuel3(2, 15), EPS4D);
+	EXPECT_NEAR_M4(7, getCrankingFuel3(2, 15));
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(8, getCrankingFuel3(2, 0), EPS4D);
+	EXPECT_NEAR_M4(8, getCrankingFuel3(2, 0));
 	Sensor::setMockValue(SensorType::Clt, 70);
-	EXPECT_NEAR(4, getCrankingFuel3(2, 50), EPS4D);
+	EXPECT_NEAR_M4(4, getCrankingFuel3(2, 50));
 }
 
 

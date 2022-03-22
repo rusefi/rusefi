@@ -20,3 +20,37 @@ public:
 	void resetWF();
 	int invocationCounter = 0;
 };
+
+struct IWallFuelController {
+	virtual bool getEnable() const = 0;
+	virtual float getAlpha() const = 0;
+	virtual float getBeta() const = 0;
+};
+
+class WallFuelController : public IWallFuelController, public EngineModule {
+public:
+	using interface_t = IWallFuelController;
+
+	void onFastCallback() override;
+
+	bool getEnable() const override {
+		return m_enable;
+	}
+
+	float getAlpha() const override {
+		return m_alpha;
+	}
+
+	float getBeta() const override {
+		return m_beta;
+	}
+
+protected:
+	float computeTau() const;
+	float computeBeta() const;
+
+private:
+	bool m_enable = false;
+	float m_alpha = 0;
+	float m_beta = 0;
+};

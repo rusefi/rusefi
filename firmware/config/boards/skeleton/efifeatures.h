@@ -19,9 +19,6 @@
 #define EFI_INTERNAL_ADC TRUE
 #define EFI_ANALOG_SENSORS TRUE
 
-// Console I/O features to monitor formulas and pin state
-#define EFI_FSIO TRUE
-
 // Log crank/cam sensor events, a frequently needed diag for new installations
 #define EFI_TOOTH_LOGGER TRUE
 
@@ -92,11 +89,6 @@
 #if !defined(EFI_ENABLE_ASSERTS)
  #define EFI_ENABLE_ASSERTS TRUE
 #endif /* EFI_ENABLE_ASSERTS */
-
-#if !defined(EFI_ENABLE_MOCK_ADC)
- #define EFI_ENABLE_MOCK_ADC TRUE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 
 #define EFI_ICU_INPUTS FALSE
 

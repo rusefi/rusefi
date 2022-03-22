@@ -23,8 +23,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(int rpm) {
 		return {};
 	}
 #if EFI_PRINTF_FUEL_DETAILS
-	printf("getSpeedDensityAirmass map=%.2f\n",
-			map);
+	printf("getSpeedDensityAirmass map=%.2f\n", map);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
 	return {

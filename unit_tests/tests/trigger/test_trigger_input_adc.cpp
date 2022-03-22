@@ -84,7 +84,7 @@ TEST(big, testTriggerInputAdc) {
 	eth.setTriggerType(TT_TOOTHED_WHEEL_60_2);
 
 	ASSERT_EQ(0, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	ASSERT_EQ(0,  GET_RPM()) << "testTriggerInputAdc RPM #1";
+	ASSERT_EQ(0,  Sensor::getOrZero(SensorType::Rpm)) << "testTriggerInputAdc RPM #1";
 
 	trigAdcState.init();
 	setTriggerAdcMode(TRIGGER_ADC_ADC);
@@ -95,6 +95,6 @@ TEST(big, testTriggerInputAdc) {
 	simulateTrigger(trigAdcState, reader, 2.0f, 3.3f);
 
 	ASSERT_EQ(0,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	ASSERT_EQ(0,  GET_RPM()) << "testTriggerInputAdc RPM #2";
+	ASSERT_EQ(0,  Sensor::getOrZero(SensorType::Rpm)) << "testTriggerInputAdc RPM #2";
 }
 

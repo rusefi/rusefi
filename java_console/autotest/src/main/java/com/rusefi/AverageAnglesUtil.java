@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import com.rusefi.config.generated.Fields;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
  * 2/15/2015
  */
 public class AverageAnglesUtil {
+    private final static Logging log = Logging.getLogging(AverageAnglesUtil.class);
 
     public static final String KEY = Fields.PROTOCOL_ANALOG_CHART;
     public static final String ANALOG_CHART = KEY + ",";
@@ -26,10 +28,10 @@ public class AverageAnglesUtil {
             System.exit(-1);
         }
         String fileName = args[0];
-        runUtil(fileName, Logger.CONSOLE);
+        runUtil(fileName);
     }
 
-    public static String runUtil(String fileName, Logger logger) throws IOException {
+    public static String runUtil(String fileName) throws IOException {
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
         String line;
@@ -47,7 +49,7 @@ public class AverageAnglesUtil {
                 if (f.length > 3 && f[2].equals("rpm")) {
 
                     currentRpm = Integer.parseInt(f[3]);
-                    logger.info("New rpm " + currentRpm);
+                    log.info("New rpm " + currentRpm);
                 }
                 continue;
             }
@@ -60,7 +62,7 @@ public class AverageAnglesUtil {
             line = p[0];
 
             aa.add(currentRpm, line);
-            logger.info("Got " + line);
+            log.info("Got " + line);
         }
 
         String report = aa.getReport();

@@ -129,7 +129,7 @@ static void setDefaultStftSettings() {
 	cfg.deadband = 5;
 
 	// Sensible region defaults
-	cfg.maxIdleRegionRpm = 1000 / RPM_1_BYTE_PACKING_MULT;
+	cfg.maxIdleRegionRpm = 1000;
 	cfg.maxOverrunLoad = 35;
 	cfg.minPowerLoad = 85;
 
@@ -183,6 +183,40 @@ static void setDefaultLambdaTable() {
 	}
 }
 
+void setDefaultWallWetting() {
+#if !EFI_UNIT_TEST
+	// todo: this is a reasonable default for what kinds of engines exactly?
+	engineConfiguration->wwaeTau = 0.3;
+	engineConfiguration->wwaeBeta = 0.3;
+#endif // EFI_UNIT_TEST
+
+	// linear reasonable bins
+	setLinearCurve(engineConfiguration->wwCltBins, -40, 100, 1);
+	setLinearCurve(engineConfiguration->wwMapBins, 10, 80, 1);
+
+	// These values are derived from the GM factory tune for a gen3 LS engine
+	// Who knows if they're good for anything else, but at least they look nice?
+	static constexpr float tauClt[] = {
+		1.45, 1.30, 1.17, 1.05, 0.90, 0.82, 0.75, 0.70
+	};
+	copyArray(engineConfiguration->wwTauCltValues, tauClt);
+
+	static constexpr float tauMap[] = {
+		0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00
+	};
+	copyArray(engineConfiguration->wwTauMapValues, tauMap);
+
+	static constexpr float betaClt[] = {
+		0.73, 0.66, 0.57, 0.46, 0.38, 0.31, 0.24, 0.19
+	};
+	copyArray(engineConfiguration->wwBetaCltValues, betaClt);
+
+	static constexpr float betaMap[] = {
+		0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00
+	};
+	copyArray(engineConfiguration->wwBetaMapValues, betaMap);
+}
+
 void setDefaultFuel() {
 	// Base injection configuration
 	engineConfiguration->isInjectionEnabled = true;
@@ -231,19 +265,10 @@ void setDefaultFuel() {
 	// Decel fuel cut
 	setDefaultFuelCutParameters();
 
-	engineConfiguration->tpsAccelLength = 12;
 	engineConfiguration->tpsAccelEnrichmentThreshold = 40; // TPS % change, per engine cycle
 
-#if !EFI_UNIT_TEST
-	// todo: this is a reasonable default for what kinds of engines exactly?
-	engineConfiguration->wwaeTau = 0.3;
-	engineConfiguration->wwaeBeta = 0.3;
-#endif // EFI_UNIT_TEST
+	setDefaultWallWetting();
 
 	// TPS/TPS AE curve
 	setMazdaMiataNbTpsTps();
-
-	// AE load taper
-	setLinearCurve(engineConfiguration->mapAccelTaperBins, 0, 32, 4);
-	setArrayValues(engineConfiguration->mapAccelTaperMult, 1.0f);
 }

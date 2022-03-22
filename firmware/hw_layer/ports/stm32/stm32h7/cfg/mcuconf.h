@@ -258,7 +258,7 @@
  * CAN driver system settings.
  */
 #define STM32_CAN_USE_FDCAN1                TRUE
-#define STM32_CAN_USE_FDCAN2                FALSE
+#define STM32_CAN_USE_FDCAN2                TRUE
 
 /*
  * DAC driver system settings.
@@ -504,8 +504,5 @@
 #define STM32_SYSCLK STM32_SYS_CK
 
 #define ENABLE_AUTO_DETECT_HSE
-
-/* common for all STM32 */
-#include "../../cfg/mcuconf_community.h"
 
 #endif /* MCUCONF_H */

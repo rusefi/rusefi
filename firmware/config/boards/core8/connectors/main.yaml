@@ -1,0 +1,517 @@
+pins:
+  # Grey A line
+  - pin: Grey A1
+    id: GPIOF_13
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Grey A1 - Injector 1
+    
+  - pin: Grey A2
+    id: GPIOF_14
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Grey A2 - Injector 2
+
+  - pin: Grey A3
+    id: GPIOD_8
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Grey A3 - Injector 3
+    
+  - pin: Grey A4
+    id: GPIOD_9
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Grey A4 - Injector 4
+    
+  - pin: Grey A5
+    id: GPIOD_10
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Grey A5 - Injector 5
+    
+  - pin: Grey A6
+    id: GPIOD_11
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Grey A6 - Injector 6
+    
+  - pin: Grey A7
+    id: GPIOD_12
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Grey A7 - Injector 7
+    
+  - pin: Grey A8
+    id: GPIOD_13
+    class: outputs
+    function: Low Side Output
+    type: inj
+    ts_name: Grey A8 - Injector 8
+    
+  # Grey B line
+  
+  - pin: Grey B1
+    id: GPIOE_15
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Grey B1 - Ignition 1
+    
+  - pin: Grey B2
+    id: GPIOE_14
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Grey B2 - Ignition 2
+    
+  - pin: Grey B3
+    id: GPIOE_13
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Grey B3 - Ignition 3
+    
+  - pin: Grey B4
+    id: GPIOE_12
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Grey B4 - Ignition 4
+    
+  - pin: Grey B5
+    id: GPIOE_11
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Grey B5 - Ignition 5
+    
+  - pin: Grey B6
+    id: GPIOF_15
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Grey B6 - Ignition 6
+    
+  - pin: Grey B7
+    id: GPIOG_0
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Grey B7 - Ignition 7
+    
+  - pin: Grey B8
+    id: GPIOG_1
+    class: outputs
+    function: High Side Output
+    type: ign
+    ts_name: Grey B8 - Ignition 8
+    
+  # Grey C line
+  
+  - pin: Grey C1
+    id: EFI_ADC_6
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Grey C1 - Analog Sensor Input
+    
+  - pin: Grey C2
+    id: EFI_ADC_7
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Grey C2 - Analog Sensor Input
+    
+  - pin: Grey C3
+    id: EFI_ADC_14
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Grey C3 - Analog Sensor Input
+    
+  - pin: Grey C4
+    id: EFI_ADC_1
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Grey C4 - Analog Sensor Input
+    
+  - pin: Grey C5
+    id: EFI_ADC_2
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Grey C5 - Analog Sensor Input
+    
+  - pin: Grey C6
+    id: EFI_ADC_3
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Grey C6 - Analog Sensor Input
+    
+  - pin: Grey C7
+    id: EFI_ADC_4
+    class: analog_inputs
+    function: Sensor Input
+    ts_name: Grey C7 - Analog Sensor Input
+
+  - pin: Grey C8
+    id: GPIOD_14
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Grey C8 - Low Side Output
+    
+  # Black A line
+  
+  - pin: Black A1
+    id: GPIOG_3
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Black A1 - Low Side Output
+
+  - pin: Black A2
+    id: GPIOG_4
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Black A2 - Low Side Output
+    
+  - pin: Black A3
+    id: GPIOG_5
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Black A3 - Low Side Output
+    
+  - pin: Black A4
+    id: GPIOG_6
+    class: outputs
+    function: Low Side Output / DBW_OUT+
+    type: ls
+    ts_name: Black A4 - Low Side Output / DBW_OUT+
+    
+  - pin: Black A5
+    id: GPIOG_7
+    class: outputs
+    function: Low Side Output / DBW_OUT-
+    type: ls
+    ts_name: Black A5 - Low Side Output / DBW_OUT-
+    
+  - pin: Black A6
+    id: GPIOC_13
+    class: switch_inputs
+    function: LSU1_IA / Digital Input
+    type: hall
+    ts_name: Black A6 - LSU4.9 PIN 5 / Digital Input 8
+    
+  - pin: Black A7
+    id: GPIOF_1
+    class: switch_inputs
+    function: LSU1_VGND / Digital Input
+    type: hall
+    ts_name: Black A7 - LSU4.9 PIN 2 / Digital Input 5
+    
+  - pin: Black A8
+    function: LSU1_HEATER- / Sensor +5v Power Feed
+    type: gnd
+    ts_name: Black A8 - LSU4.9 PIN 3 / Sensor +5v Power Feed
+
+ # Black B line
+  
+  - pin: Black B1
+    id: GPIOG_2
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Black B1 - Low Side Output
+    
+  - pin: Black B2
+    id: GPIOF_5
+    class: switch_inputs
+    function: Digital Input
+    type: hall
+    ts_name: Black B2 - Digital Input 1
+
+  - pin: Black B3
+    id: GPIOF_4
+    class: switch_inputs
+    function: Digital Input
+    type: hall
+    ts_name: Black B3 - Digital Input 2
+
+  - pin: Black B4
+    id: GPIOF_3
+    class: switch_inputs
+    function: Digital Input
+    type: hall
+    ts_name: Black B4 - Digital Input 3
+
+  - pin: Black B5
+    id: EFI_ADC_10
+    class: analog_inputs
+    function: Sensor Input / Knock 2
+    ts_name: Black B5 - Analog Sensor Input / Knock 2
+
+  - pin: Black B6
+    id: GPIOE_6
+    class: switch_inputs
+    function: LSU1_NERMEST / Digital Input
+    type: hall
+    ts_name: Black B6 - LSU4.9 PIN 6 / Digital Input 7
+    
+  - pin: Black B7
+    id: GPIOF_0
+    class: switch_inputs
+    function: LSU1_IP / Digital Input
+    type: hall
+    ts_name: Black B7 - LSU4.9 PIN 1 / Digital Input 6
+    
+  - pin: Black B8
+    function: +12V
+    type: 12v
+
+  # Black C line
+  
+  - pin: Black C1
+    id: GPIOD_15
+    class: outputs
+    function: Low Side Output
+    type: ls
+    ts_name: Black C1 - Low Side Output
+
+  - pin: Black C2
+    id: [GPIOE_2, GPIOE_2]
+    class: [event_inputs, switch_inputs]
+    function: Camshaft Sensor (VR+/Hall)
+    type: hall
+    ts_name: Camshaft Sensor VR+/Hall
+
+  - pin: Black C3
+    class: event_inputs
+    function: Camshaft Sensor (VR-)
+    type: hall
+    ts_name: Camshaft Sensor VR-
+
+  - pin: Black C4
+    class: event_inputs
+    function: Crank Sensor (VR-)
+    type: hall
+    ts_name: Crank Sensor VR-
+    
+  - pin: Black C5
+    id: [GPIOE_3, GPIOE_3]
+    class: [event_inputs, switch_inputs]
+    function: Crank Sensor (VR+/Hall)
+    type: hall
+    ts_name: Crank Sensor VR+/Hall
+        
+  - pin: Black C6
+    id: EFI_ADC_15
+    class: analog_inputs
+    function: Sensor Input / Knock 1
+    ts_name: Black C6 - Analog Sensor Input / Knock 1
+
+  - pin: Black C7
+    function: Sensor +5v Power Feed
+    type: 5v
+    
+  - pin: Black C8
+    function: Power Ground
+    type: gnd
+  
+
+  #On-board
+  
+  - pin: On-board MAP
+    id: EFI_ADC_5
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: On-board MAP
+    
+  - pin: On-board BARO
+    id: EFI_ADC_8
+    class: analog_inputs
+    function: BARO Sensor Input
+    ts_name: On-board BARO (optional)
+
+  - pin: On-board O2
+    id: EFI_ADC_11
+    class: analog_inputs
+    function: O2 Sensor Input
+    ts_name: On-board O2
+
+  - pin: On-board O2(Secondary)
+    id: EFI_ADC_12
+    class: analog_inputs
+    function: O2 Sensor Input
+    ts_name: On-board O2(Secondary)
+    
+  - pin: On-board Battery Sense
+    id: EFI_ADC_0
+    class: analog_inputs
+    function: +12V
+    ts_name: On-board Battery Sense
+    type: 12v
+
+info:
+  title: Core8
+  name: Core8
+  board_url: https://rusefi.com/s/core8
+  image:
+    file: main.jpg
+  pins:
+    - pin: Grey A8
+      x: 716
+      y: 346
+    - pin: Grey A7
+      x: 652
+      y: 346
+    - pin: Grey A6
+      x: 600
+      y: 346
+    - pin: Grey A5
+      x: 551
+      y: 346
+    - pin: Grey A4
+      x: 498
+      y: 346
+    - pin: Grey A3
+      x: 446
+      y: 346
+    - pin: Grey A2
+      x: 385
+      y: 346
+    - pin: Grey A1
+      x: 335
+      y: 346
+
+    - pin: Grey B8
+      x: 716
+      y: 270
+    - pin: Grey B7
+      x: 649
+      y: 270
+    - pin: Grey B6
+      x: 595
+      y: 270
+    - pin: Grey B5
+      x: 545
+      y: 270
+    - pin: Grey B4
+      x: 496
+      y: 270
+    - pin: Grey B3
+      x: 446
+      y: 270
+    - pin: Grey B2
+      x: 399
+      y: 270
+    - pin: Grey B1
+      x: 335
+      y: 270
+
+    - pin: Grey C8
+      x: 705
+      y: 195
+    - pin: Grey C7
+      x: 649
+      y: 195
+    - pin: Grey C6
+      x: 597
+      y: 195
+    - pin: Grey C5
+      x: 545
+      y: 195
+    - pin: Grey C4
+      x: 497
+      y: 195
+    - pin: Grey C3
+      x: 446
+      y: 195
+    - pin: Grey C2
+      x: 396
+      y: 195
+    - pin: Grey C1
+      x: 329
+      y: 195
+
+
+    - pin: Black A8
+      x: 1471
+      y: 346
+    - pin: Black A7
+      x: 1420
+      y: 346
+    - pin: Black A6
+      x: 1369
+      y: 346
+    - pin: Black A5
+      x: 1315
+      y: 346
+    - pin: Black A4
+      x: 1266
+      y: 346
+    - pin: Black A3
+      x: 1217
+      y: 346
+    - pin: Black A2
+      x: 1161
+      y: 346
+    - pin: Black A1
+      x: 1105
+      y: 346
+
+    - pin: Black B8
+      x: 1467
+      y: 270
+    - pin: Black B7
+      x: 1413
+      y: 270
+    - pin: Black B6
+      x: 1369
+      y: 270
+    - pin: Black B5
+      x: 1313
+      y: 270
+    - pin: Black B4
+      x: 1265
+      y: 270
+    - pin: Black B3
+      x: 1212
+      y: 270
+    - pin: Black B2
+      x: 1168
+      y: 270
+    - pin: Black B1
+      x: 1101
+      y: 270
+
+    - pin: Black C8
+      x: 1471
+      y: 195
+    - pin: Black C7
+      x: 1418
+      y: 195
+    - pin: Black C6
+      x: 1365
+      y: 195
+    - pin: Black C5
+      x: 1313
+      y: 195
+    - pin: Black C4
+      x: 1268
+      y: 195
+    - pin: Black C3
+      x: 1219
+      y: 195
+    - pin: Black C2
+      x: 1167
+      y: 195
+    - pin: Black C1
+      x: 1107
+      y: 195

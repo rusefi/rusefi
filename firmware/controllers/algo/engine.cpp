@@ -20,7 +20,6 @@
 #include "os_access.h"
 #include "aux_valves.h"
 #include "map_averaging.h"
-#include "fsio_impl.h"
 #include "perf_trace.h"
 #include "backup_ram.h"
 #include "idle_thread.h"
@@ -53,15 +52,6 @@ extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-FsioState::FsioState() {
-#if EFI_ENABLE_ENGINE_WARNING
-	isEngineWarning = FALSE;
-#endif
-#if EFI_ENABLE_CRITICAL_ENGINE_STOP
-	isCriticalEngineCondition = FALSE;
-#endif
-}
-
 void Engine::resetEngineSnifferIfInTestMode() {
 #if EFI_ENGINE_SNIFFER
 	if (isFunctionalTestMode) {
@@ -77,10 +67,12 @@ void Engine::resetEngineSnifferIfInTestMode() {
  */
 trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	switch (vvtMode) {
+	case VVT_INACTIVE:
+		return TT_ONE;
 	case VVT_2JZ:
 		return TT_VVT_JZ;
-	case VVT_MIATA_NB2:
-		return TT_VVT_MIATA_NB2;
+	case VVT_MIATA_NB:
+		return TT_VVT_MIATA_NB;
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
 	case VVT_HONDA_K:
@@ -95,10 +87,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_BARRA_3_PLUS_1;
 	case VVT_NISSAN_VQ:
 		return TT_VVT_NISSAN_VQ35;
+	case VVT_MITSUBISHI_3A92:
+		return TT_VVT_MITSUBISHI_3A92;
+	case VVT_MITSUBISHI_6G75:
 	case VVT_NISSAN_MR:
 		return TT_NISSAN_MR18_CAM_VVT;
-	case VVT_MAP_V_TWIN:
-		return TT_VVT_MAP_45_V_TWIN;
 	default:
 		firmwareError(OBD_PCM_Processor_Fault, "getVvtTriggerType for %s", getVvt_mode_e(vvtMode));
 		return TT_ONE; // we have to return something for the sake of -Werror=return-type
@@ -107,28 +100,21 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 
 static void initVvtShape(int camIndex, TriggerState &initState) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
-	TriggerWaveform *shape = &engine->triggerCentral.vvtShape[camIndex];
-
-	// not ideas but good for now code
-	engine->triggerCentral.vvtState[0][0].name = "vvt00";
-	engine->triggerCentral.vvtState[0][1].name = "vvt01";
-	engine->triggerCentral.vvtState[1][0].name = "vvt10";
-	engine->triggerCentral.vvtState[1][1].name = "vvt11";
 
 	if (vvtMode != VVT_INACTIVE) {
 		trigger_config_s config;
 		// todo: should 'vvtWithRealDecoder' be used here?
-		engine->triggerCentral.vvtTriggerType[camIndex] = config.type = getVvtTriggerType(vvtMode);
+		config.type = getVvtTriggerType(vvtMode);
 
-		shape->initializeTriggerWaveform(
+		auto& shape = engine->triggerCentral.vvtShape[camIndex];
+		shape.initializeTriggerWaveform(
 				engineConfiguration->ambiguousOperationMode,
 				engineConfiguration->vvtCamSensorUseRise, &config);
 
-		shape->initializeSyncPoint(initState,
+		shape.initializeSyncPoint(initState,
 				engine->vvtTriggerConfiguration[camIndex],
 				config);
 	}
-
 }
 
 void Engine::initializeTriggerWaveform() {
@@ -154,12 +140,16 @@ void Engine::initializeTriggerWaveform() {
 	 */
 	if (engineConfiguration->overrideTriggerGaps) {
 		int gapIndex = 0;
-		for (;gapIndex<=engineConfiguration->overrideTriggerGaps;gapIndex++) {
+
+		// copy however many the user wants
+		for (; gapIndex < engineConfiguration->gapTrackingLengthOverride; gapIndex++) {
 			float gapOverrideFrom = engineConfiguration->triggerGapOverrideFrom[gapIndex];
 			float gapOverrideTo = engineConfiguration->triggerGapOverrideTo[gapIndex];
 			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
 		}
-		for (;gapIndex<GAP_TRACKING_LENGTH;gapIndex++) {
+
+		// fill the remainder with the default gaps
+		for (; gapIndex < GAP_TRACKING_LENGTH; gapIndex++) {
 			engine->triggerCentral.triggerShape.syncronizationRatioFrom[gapIndex] = NAN;
 			engine->triggerCentral.triggerShape.syncronizationRatioTo[gapIndex] = NAN;
 		}
@@ -177,31 +167,19 @@ void Engine::initializeTriggerWaveform() {
 		engine->engineCycleEventCount = TRIGGER_WAVEFORM(getLength());
 	}
 
+	engine->triggerCentral.vvtState[0][0].name = "VVT B1 Int";
+	engine->triggerCentral.vvtState[0][1].name = "VVT B1 Exh";
+	engine->triggerCentral.vvtState[1][0].name = "VVT B2 Int";
+	engine->triggerCentral.vvtState[1][1].name = "VVT B2 Exh";
 
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
 		initVvtShape(camIndex, initState);
 	}
 
-
 	if (!TRIGGER_WAVEFORM(shapeDefinitionError)) {
 		prepareOutputSignals();
 	}
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
-}
-
-static void cylinderCleanupControl() {
-#if EFI_ENGINE_CONTROL
-	bool newValue;
-	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning() && Sensor::getOrZero(SensorType::DriverThrottleIntent) > CLEANUP_MODE_TPS;
-	} else {
-		newValue = false;
-	}
-	if (newValue != engine->isCylinderCleanupMode) {
-		engine->isCylinderCleanupMode = newValue;
-		efiPrintf("isCylinderCleanupMode %s", boolToString(newValue));
-	}
-#endif
 }
 
 #if ANALOG_HW_CHECK_MODE
@@ -225,13 +203,12 @@ void Engine::periodicSlowCallback() {
 	updateSlowSensors();
 	checkShutdown();
 
+	tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
+
 	updateVrPwm();
 
-#if EFI_FSIO
-	runFsio();
-#else
-	runHardcodedFsio();
-#endif /* EFI_FSIO */
+	enginePins.o2heater.setValue(engine->rpmCalculator.isRunning());
+	enginePins.starterRelayDisable.setValue(Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm);
 
 	updateGppwm();
 
@@ -242,8 +219,6 @@ void Engine::periodicSlowCallback() {
 #if EFI_BOOST_CONTROL
 	updateBoostControl();
 #endif // EFI_BOOST_CONTROL
-
-	cylinderCleanupControl();
 
 	standardAirCharge = getStandardAirCharge();
 
@@ -295,7 +270,7 @@ void Engine::updateSlowSensors() {
 	updateSwitchInputs();
 
 #if EFI_ENGINE_CONTROL
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	isEngineChartEnabled = engineConfiguration->isEngineChartEnabled && rpm < engineConfiguration->engineSnifferRpmThreshold;
 	sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 
@@ -306,10 +281,25 @@ void Engine::updateSlowSensors() {
 	vBattForTle8888 = Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
 #endif /* BOARD_TLE8888_COUNT */
 
-#if EFI_MC33816
-	initMc33816IfNeeded();
-#endif // EFI_MC33816
 #endif
+}
+
+static bool getClutchUpState() {
+#if EFI_GPIO_HARDWARE
+	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
+		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
+	}
+#endif // EFI_GPIO_HARDWARE
+	return engine->engineState.luaAdjustments.clutchUpState;
+}
+
+static bool getBrakePedalState() {
+#if EFI_GPIO_HARDWARE
+	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
+		return efiReadPin(engineConfiguration->brakePedalPin);
+	}
+	return engine->engineState.luaAdjustments.brakePedalState;
+#endif // EFI_GPIO_HARDWARE
 }
 
 void Engine::updateSwitchInputs() {
@@ -326,16 +316,14 @@ void Engine::updateSwitchInputs() {
 		}
 		engine->acSwitchState = result;
 	}
-	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
-		engine->clutchUpState = engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
-	}
+	engine->clutchUpState = getClutchUpState();
+
 	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
-		engine->idle.throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
+		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
 	}
 
-	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-		engine->brakePedalState = efiReadPin(engineConfiguration->brakePedalPin);
-	}
+	engine->brakePedalState = getBrakePedalState();
+
 #endif // EFI_GPIO_HARDWARE
 }
 
@@ -345,15 +333,6 @@ void Engine::onTriggerSignalEvent() {
 
 Engine::Engine() {
 	reset();
-}
-
-/**
- * @see scheduleStopEngine()
- * @return true if there is a reason to stop engine
- */
-bool Engine::needToStopEngine(efitick_t nowNt) const {
-	return stopEngineRequestTimeNt != 0 &&
-			nowNt - stopEngineRequestTimeNt	< 3 * NT_PER_SECOND;
 }
 
 int Engine::getGlobalConfigurationVersion(void) const {
@@ -420,11 +399,19 @@ void Engine::OnTriggerStateProperState(efitick_t nowNt) {
 void Engine::OnTriggerSynchronizationLost() {
 	// Needed for early instant-RPM detection
 	rpmCalculator.setStopSpinning();
+
+	triggerCentral.triggerState.resetTriggerState();
+
+	for (size_t i = 0; i < efi::size(triggerCentral.vvtState); i++) {
+		for (size_t j = 0; j < efi::size(triggerCentral.vvtState[0]); j++) {
+			triggerCentral.vvtState[i][j].resetTriggerState();
+		}
+	}
 }
 
 void Engine::OnTriggerInvalidIndex(int currentIndex) {
 	// let's not show a warning if we are just starting to spin
-	if (GET_RPM() != 0) {
+	if (Sensor::getOrZero(SensorType::Rpm) != 0) {
 		warning(CUSTOM_SYNC_ERROR, "sync error: index #%d above total size %d", currentIndex, triggerCentral.triggerShape.getSize());
 		triggerCentral.triggerState.setTriggerErrorState();
 	}
@@ -497,9 +484,7 @@ void Engine::watchdog() {
 	 * todo: better watch dog implementation should be implemented - see
 	 * http://sourceforge.net/p/rusefi/tickets/96/
 	 */
-	float secondsSinceTriggerEvent = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
-
-	if (secondsSinceTriggerEvent < 0.5f) {
+	if (engine->triggerCentral.engineMovedRecently()) {
 		// Engine moved recently, no need to safe pins.
 		return;
 	}
@@ -524,6 +509,7 @@ void Engine::checkShutdown() {
 	// here we are in the shutdown (the ignition is off) or initial mode (after the firmware fresh start)
 	const efitick_t engineStopWaitTimeoutUs = 500000LL;	// 0.5 sec
 	// in shutdown mode, we need a small cooldown time between the ignition off and on
+/* this needs work or tests
 	if (stopEngineRequestTimeNt == 0 || (getTimeNowNt() - stopEngineRequestTimeNt) > US2NT(engineStopWaitTimeoutUs)) {
 		// if the ignition key is turned on again,
 		// we cancel the shutdown mode, but only if all shutdown procedures are complete
@@ -539,6 +525,7 @@ void Engine::checkShutdown() {
 			}
 		}
 	}
+*/
 #endif /* EFI_MAIN_RELAY_CONTROL */
 }
 
@@ -550,7 +537,8 @@ bool Engine::isInMainRelayBench() {
 }
 
 bool Engine::isInShutdownMode() const {
-#if EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
+	// TODO: this logic is currently broken
+#if 0 && EFI_MAIN_RELAY_CONTROL && EFI_PROD_CODE
 	// if we are in "ignition_on" mode and not in shutdown mode
 	if (stopEngineRequestTimeNt == 0 && ignitionOnTimeNt > 0) {
 		const float vBattThresholdOff = 5.0f;
@@ -648,7 +636,7 @@ void Engine::periodicFastCallback() {
 
 void doScheduleStopEngine() {
 	efiPrintf("Starting doScheduleStopEngine");
-	engine->stopEngineRequestTimeNt = getTimeNowNt();
+	engine->limpManager.stopEngine();
 	engine->ignitionOnTimeNt = 0;
 	// todo: initiate stepper motor parking
 	// make sure we have stored all the info

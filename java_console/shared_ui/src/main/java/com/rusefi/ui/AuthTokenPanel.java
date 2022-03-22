@@ -31,7 +31,7 @@ public class AuthTokenPanel {
         authTokenTestField.setPreferredSize(new Dimension(200, 24));
 
         String authToken = getAuthToken();
-        System.out.println("Got from settings: " + authToken);
+        log.info("Auth token from settings: " + authToken);
 
         authTokenTestField.getDocument().addDocumentListener(new DocumentListener() {
             @Override

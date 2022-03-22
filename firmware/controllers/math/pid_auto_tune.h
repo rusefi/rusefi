@@ -20,7 +20,6 @@ typedef unsigned char	byte;
 #endif
 
   // irrational constants
-#define CONST_PI           3.14159265358979323846
 #define CONST_SQRT2_DIV_2  0.70710678118654752440
 
 

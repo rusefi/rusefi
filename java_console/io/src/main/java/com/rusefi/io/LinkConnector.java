@@ -2,7 +2,6 @@ package com.rusefi.io;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -17,10 +16,6 @@ public interface LinkConnector extends LinkDecoder {
 
         @Override
         public void send(String command, boolean fireEvent) {
-        }
-
-        @Override
-        public void restart() {
         }
 
         @Override
@@ -48,11 +43,6 @@ public interface LinkConnector extends LinkDecoder {
             }
 
             @Override
-            public void restart() {
-                throw new UnsupportedOperationException();
-            }
-
-            @Override
             public BinaryProtocol getBinaryProtocol() {
                 throw new UnsupportedOperationException();
             }
@@ -62,8 +52,6 @@ public interface LinkConnector extends LinkDecoder {
     void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener);
 
     void send(String command, boolean fireEvent) throws InterruptedException;
-
-    void restart();
 
     BinaryProtocol getBinaryProtocol();
 

@@ -74,6 +74,7 @@ int maxI(int i1, int i2);
 int minI(int i1, int i2);
 float maxF(float i1, float i2);
 float minF(float i1, float i2);
+// sometimes known as 'itoa'
 char* itoa10(char *p, int num);
 bool isSameF(float v1, float v2);
 
@@ -139,11 +140,22 @@ constexpr void clear(T& obj) {
 /**
  * Copies an array from src to dest.  The lengths of the arrays must match.
  */
-template <typename TElement, size_t N>
-constexpr void copyArray(TElement (&dest)[N], const TElement (&src)[N]) {
+template <typename DElement, typename SElement, size_t N>
+constexpr void copyArray(DElement (&dest)[N], const SElement (&src)[N]) {
 	for (size_t i = 0; i < N; i++) {
 		dest[i] = src[i];
 	}
+}
+
+// specialization that can use memcpy when src and dest types match
+template <typename DElement, size_t N>
+constexpr void copyArray(scaled_channel<DElement, 1, 1> (&dest)[N], const DElement (&src)[N]) {
+	memcpy(dest, src, sizeof(DElement) * N);
+}
+
+template <typename DElement, size_t N>
+constexpr void copyArray(DElement (&dest)[N], const DElement (&src)[N]) {
+	memcpy(dest, src, sizeof(DElement) * N);
 }
 
 /**
@@ -158,6 +170,11 @@ constexpr void copyArrayPartial(TElement (&dest)[NDest], const TElement (&src)[N
 	for (size_t i = 0; i < NSrc; i++) {
 		dest[i] = src[i];
 	}
+}
+
+template <typename T>
+bool isInRange(T min, T val, T max) {
+	return val >= min && val <= max;
 }
 
 #endif /* __cplusplus */

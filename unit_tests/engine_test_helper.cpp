@@ -30,7 +30,7 @@ extern bool printTriggerTrace;
 extern bool printFuelDebug;
 extern int minCrankingRpm;
 
-EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) { 
+EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	timeNowUs = 0; 
 	minCrankingRpm = 0;
@@ -114,16 +114,18 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	commonInitEngineController();
 
-	engineConfiguration->mafAdcChannel = EFI_ADC_10;
-	engine.engineState.mockAdcState.setMockVoltage(EFI_ADC_10, 0);
-
 	// this is needed to have valid CLT and IAT.
 //todo: reuse 	initPeriodicEvents() method
 	engine.periodicSlowCallback();
 
-	// Setup running in mock airmass mode
-	engineConfiguration->fuelAlgorithm = LM_MOCK;
-	engine.mockAirmassModel = &mockAirmass;
+	extern bool hasInitGtest;
+	if (hasInitGtest) {
+		// Setup running in mock airmass mode if running actual tests
+		engineConfiguration->fuelAlgorithm = LM_MOCK;
+
+		mockAirmass = std::make_unique<::testing::NiceMock<MockAirmass>>();
+		engine.mockAirmassModel = mockAirmass.get();
+	}
 
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 
@@ -133,9 +135,12 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 EngineTestHelper::~EngineTestHelper() {
 	// Write history to file
-	std::stringstream filePath;
-	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
-	writeEvents(filePath.str().c_str());
+	extern bool hasInitGtest;
+	if (hasInitGtest) {
+    	std::stringstream filePath;
+    	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+	    writeEvents(filePath.str().c_str());
+	}
 
 	// Cleanup
 	enginePins.reset();
@@ -277,7 +282,7 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 	timeNowUs = targetTime;
 }
 
-efitimeus_t EngineTestHelper::getTimeNowUs(void) {
+efitimeus_t EngineTestHelper::getTimeNowUs() {
 	return timeNowUs;
 }
 
@@ -344,7 +349,7 @@ void EngineTestHelper::applyTriggerWaveform() {
 void EngineTestHelper::assertRpm(int expectedRpm, const char *msg) {
 	Engine *engine = &this->engine;
 
-	EXPECT_EQ(expectedRpm, GET_RPM()) << msg;
+	EXPECT_EQ(expectedRpm, Sensor::getOrZero(SensorType::Rpm)) << msg;
 }
 
 void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode,

@@ -10,16 +10,16 @@
 #include "local_version_holder.h"
 #include "vvt.h"
 
-#include "fsio_impl.h"
-
 #define NO_PIN_PERIOD 500
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
 #endif /* HAS_OS_ACCESS */
 
-static fsio8_Map3D_u8t vvtTable1;
-static fsio8_Map3D_u8t vvtTable2;
+using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, uint8_t, uint16_t, uint16_t>;
+
+static vvt_map_t vvtTable1;
+static vvt_map_t vvtTable2;
 
 void VvtController::init(int index, int bankIndex, int camIndex, const ValueProvider3D* targetMap) {
 	this->index = index;
@@ -50,7 +50,7 @@ expected<angle_t> VvtController::observePlant() const {
 }
 
 expected<angle_t> VvtController::getSetpoint() {
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	float load = getFuelingLoad();
 	float target = m_targetMap->getValue(rpm, load);
 
@@ -88,7 +88,7 @@ expected<percent_t> VvtController::getClosedLoop(angle_t target, angle_t observa
 }
 
 void VvtController::setOutput(expected<percent_t> outputValue) {
-	float rpm = GET_RPM();
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	// todo: make this configurable?
 	bool enabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;

@@ -1,11 +1,11 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigurationConsumer;
-import com.rusefi.util.SystemOut;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.*;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigField.BOOLEAN_T;
 
 /**
@@ -22,6 +23,8 @@ import static com.rusefi.ConfigField.BOOLEAN_T;
  * 12/19/18
  */
 public class ReaderState {
+    private static final Logging log = getLogging(ReaderState.class);
+
     public static final String BIT = "bit";
     private static final String CUSTOM = "custom";
     private static final String END_STRUCT = "end_struct";
@@ -31,6 +34,7 @@ public class ReaderState {
     public final Map<String, Integer> tsCustomSize = new HashMap<>();
     public final Map<String, String> tsCustomLine = new HashMap<>();
     public final Map<String, ConfigStructure> structures = new HashMap<>();
+    public String headerMessage;
 
     public final EnumsReader enumsReader = new EnumsReader();
     public final VariableRegistry variableRegistry = new VariableRegistry();
@@ -53,7 +57,7 @@ public class ReaderState {
         String trueName = bitNameParts.length > 1 ? bitNameParts[1].replaceAll("\"", "") : null;
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
 
-        ConfigField bitField = new ConfigField(state, bitNameParts[0], comment, null, BOOLEAN_T, new int[0], null, false, false, false, null, -1, trueName, falseName);
+        ConfigField bitField = new ConfigField(state, bitNameParts[0], comment, null, BOOLEAN_T, new int[0], null, false, false, false, trueName, falseName);
         if (state.stack.isEmpty())
             throw new IllegalStateException("Parent structure expected");
         ConfigStructure structure = state.stack.peek();
@@ -150,13 +154,14 @@ public class ReaderState {
         if (stack.isEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructure structure = stack.pop();
-        SystemOut.println("Ending structure " + structure.getName());
+        if (log.debugEnabled())
+            log.debug("Ending structure " + structure.getName());
         structure.addAlignmentFill(this);
 
         structures.put(structure.getName(), structure);
 
         for (ConfigurationConsumer consumer : consumers)
-            consumer.handleEndStruct(structure);
+            consumer.handleEndStruct(this, structure);
     }
 
     public void readBufferedReader(String inputString, List<ConfigurationConsumer> consumers) throws IOException {
@@ -232,7 +237,8 @@ public class ReaderState {
         }
         ConfigStructure structure = new ConfigStructure(name, comment, withPrefix);
         state.stack.push(structure);
-        SystemOut.println("Starting structure " + structure.getName());
+        if (log.debugEnabled())
+            log.debug("Starting structure " + structure.getName());
     }
 
     private static void processField(ReaderState state, String line) {
@@ -240,10 +246,10 @@ public class ReaderState {
         ConfigField cf = ConfigField.parse(state, line);
 
         if (cf == null) {
-            if (ConfigField.isPreprocessorDirective(state, line)) {
+            if (ConfigField.isPreprocessorDirective(line)) {
                 cf = new ConfigField(state, "", line, null,
-                        ConfigField.DIRECTIVE_T, new int[0], null, false, false, false, null, 0,
-			null, null);
+                        ConfigField.DIRECTIVE_T, new int[0], null, false, false, false,
+                        null, null);
             } else {
                 throw new IllegalStateException("Cannot parse line [" + line + "]");
             }
@@ -255,7 +261,8 @@ public class ReaderState {
 
         Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
         if (getPrimitiveSize != null && getPrimitiveSize % 4 == 0) {
-            SystemOut.println("Need to align before " + cf.getName());
+            if (log.debugEnabled())
+                log.debug("Need to align before " + cf.getName());
             structure.addAlignmentFill(state);
         } else {
             // adding a structure instance - had to be aligned
@@ -266,7 +273,8 @@ public class ReaderState {
             structure.addC(cf);
             for (int i = 1; i <= cf.getArraySizes()[0]; i++) {
                 ConfigField element = new ConfigField(state, cf.getName() + i, cf.getComment(), null,
-                        cf.getType(), new int[0], cf.getTsInfo(), false, false, false, cf.getName(), i, null, null);
+                        cf.getType(), new int[0], cf.getTsInfo(), false, false, false, null, null);
+                element.isFromIterate(true);
                 structure.addTs(element);
             }
         } else if (cf.isDirective()) {
@@ -276,4 +284,9 @@ public class ReaderState {
         }
     }
 
+    public String getHeader() {
+        if (headerMessage == null)
+            throw new NullPointerException("No header message yet");
+        return headerMessage;
+    }
 }

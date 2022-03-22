@@ -40,6 +40,8 @@
 #include "gpio/gpio_ext.h"
 #include "os_util.h"
 
+static Timer diagResponse;
+
 /*
  * TODO list:
  */
@@ -286,21 +288,21 @@ static const char* tle8888_pin_names[TLE8888_SIGNALS] = {
 
 #if EFI_TUNER_STUDIO
 // set debug_mode 31
-void tle8888PostState(TsDebugChannels *debugChannels) {
+void tle8888PostState() {
 	Tle8888 *chip = &chips[0];
 
-	debugChannels->debugIntField1 = chip->wwd_err_cnt;
-	debugChannels->debugIntField2 = chip->fwd_err_cnt;
-	debugChannels->debugIntField3 = chip->tot_err_cnt;
-	//debugChannels->debugIntField1 = chip->spi_cnt;
-	//debugChannels->debugIntField2 = chip->tx;
-	//debugChannels->debugIntField3 = chip->rx;
-	debugChannels->debugIntField5 = chip->init_cnt;
+	engine->outputChannels.debugIntField1 = chip->wwd_err_cnt;
+	engine->outputChannels.debugIntField2 = chip->fwd_err_cnt;
+	engine->outputChannels.debugIntField3 = chip->tot_err_cnt;
+	//engine->outputChannels.debugIntField1 = chip->spi_cnt;
+	//engine->outputChannels.debugIntField2 = chip->tx;
+	//engine->outputChannels.debugIntField3 = chip->rx;
+	engine->outputChannels.debugIntField5 = chip->init_cnt;
 
-	debugChannels->debugFloatField3 = chip->OpStat[1];
-	debugChannels->debugFloatField4 = chip->por_cnt * 1000000 + chip->init_req_cnt * 10000 + lowVoltageResetCounter;
-	debugChannels->debugFloatField5 = 0;
-	debugChannels->debugFloatField6 = 0;
+	engine->outputChannels.debugFloatField3 = chip->OpStat[1];
+	engine->outputChannels.debugFloatField4 = chip->por_cnt * 1000000 + chip->init_req_cnt * 10000 + lowVoltageResetCounter;
+	engine->outputChannels.debugFloatField5 = 0;
+	engine->outputChannels.debugFloatField6 = 0;
 }
 #endif /* EFI_TUNER_STUDIO */
 
@@ -889,6 +891,8 @@ static THD_FUNCTION(tle8888_driver_thread, p) {
 			ret = chip->update_status_and_diag();
 			if (ret) {
 				/* set state to TLE8888_FAILED or force reinit? */
+			} else {
+				diagResponse.reset();
 			}
 			/* TODO:
 			 * Procedure to switch on after failure condition occurred:
@@ -989,8 +993,11 @@ int Tle8888::readPad(size_t pin) {
 	return -1;
 }
 
-brain_pin_diag_e Tle8888::getOutputDiag(size_t pin)
-{
+brain_pin_diag_e Tle8888::getOutputDiag(size_t pin) {
+	if (diagResponse.hasElapsedMs(500)) {
+		// has been to long since we've recieved diagnostics
+		return PIN_DRIVER_OFF;
+	}
 	/* OUT1..OUT4, indexes 0..3 */
 	if (pin < 4)
 		return tle8888_2b_to_diag_with_temp((OutDiag[0] >> ((pin - 0) * 2)) & 0x03);
@@ -1108,6 +1115,10 @@ int Tle8888::chip_init_data() {
 		}
 
 		if ((out < 0) || (cfg->direct_gpio[i].port == NULL))
+			continue;
+
+		/* TODO: implement PP pin driving throught direct gpio */
+		if ((cfg->stepper) && (out >= 20) && (out <= 23))
 			continue;
 
 		/* calculate mask */

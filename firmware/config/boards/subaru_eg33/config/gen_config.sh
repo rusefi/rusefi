@@ -20,10 +20,7 @@ echo "Using COMMON_GEN_CONFIG [$COMMON_GEN_CONFIG]"
 java \
  -DSystemOut.name=logs/gen_config_subaru_eg33 \
  $COMMON_GEN_CONFIG \
- -cache ${SHORT_BOARDNAME} \
  -tool ${BOARD_DIR}/config/gen_config.sh \
- -with_c_defines false \
- -initialize_to_zero false \
  -ts_output_name generated/rusefi_${SHORT_BOARDNAME}.ini \
  -c_defines ${BOARD_DIR}/config/controllers/algo/rusefi_generated.h \
  -c_destination ${BOARD_DIR}/config/controllers/algo/engine_configuration_generated_structures.h \

@@ -92,7 +92,6 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 }
 
 #if HAL_USE_ADC
-static int fastMapCounter = 0;
 
 /**
  * This method is invoked from ADC callback.
@@ -107,24 +106,6 @@ void mapAveragingAdcCallback(adcsample_t adcValue) {
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
-
-	if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
-			((fastMapCounter++ % engineConfiguration->mapCamSkipFactor) == 0)) {
-		engine->triggerCentral.mapState.add(instantMap);
-		bool isPeak = engine->triggerCentral.mapState.isPeak(engineConfiguration->mapCamLookForLowPeaks);
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.TEMPLOG_map_length = MAP_CAM_BUFFER;
-		engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE = engine->triggerCentral.mapState.current;
-		if (isPeak) {
-			engine->outputChannels.TEMPLOG_map_peak++;
-		}
-#endif //EFI_TUNER_STUDIO
-		if (isPeak) {
-			efitick_t stamp = getTimeNowNt();
-			hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
-			hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
-		}
-	}
 
 	/* Calculates the average values from the ADC samples.*/
 	if (isAveraging) {
@@ -190,7 +171,7 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
 #endif /* EFI_TUNER_STUDIO */
 
 void refreshMapAveragingPreCalc() {
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
@@ -229,7 +210,7 @@ void mapAveragingTriggerCallback(
 	if (index != (uint32_t)engineConfiguration->mapAveragingSchedulingAtIndex)
 		return;
 
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (!isValidRpm(rpm)) {
 		return;
 	}

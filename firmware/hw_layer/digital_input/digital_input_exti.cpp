@@ -108,7 +108,7 @@ void efiExtiDisablePin(brain_pin_e brainPin)
 	channel.CallbackData = nullptr;
 }
 
-digital_input_s* startDigitalCaptureExti(const char *msg, brain_pin_e brainPin) {
+digital_input_s* startDigitalCaptureExti(const char * /*msg*/, brain_pin_e /*brainPin*/) {
 	return nullptr;
 }
 

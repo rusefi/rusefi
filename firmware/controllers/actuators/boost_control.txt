@@ -1,9 +1,10 @@
 struct_no_prefix boost_control_s
 
-bit isTpsValid
+bit isTpsInvalid
 bit m_shouldResetPid
 bit isBelowClosedLoopThreshold;
 bit isNotClosedLoop;
+bit isZeroRpm
 
 float openLoopPart;
 float closedLoopPart;

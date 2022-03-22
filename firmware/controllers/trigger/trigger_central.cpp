@@ -41,8 +41,7 @@ static scheduling_s debugToggleScheduling;
 TriggerCentral::TriggerCentral() :
 		vvtEventRiseCounter(),
 		vvtEventFallCounter(),
-		vvtPosition(),
-		vvtSyncTimeNt()
+		vvtPosition()
 {
 	memset(&hwEventCounters, 0, sizeof(hwEventCounters));
 	triggerState.resetTriggerState();
@@ -140,24 +139,36 @@ static angle_t adjustCrankPhase(int camIndex) {
 	TriggerCentral *tc = &engine->triggerCentral;
 	operation_mode_e operationMode = engine->getOperationMode();
 
-	switch (engineConfiguration->vvtMode[camIndex]) {
+	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
+	switch (vvtMode) {
 	case VVT_FIRST_HALF:
 	case VVT_MAP_V_TWIN_ANOTHER:
 		return syncAndReport(tc, getCrankDivider(operationMode), 1);
 	case VVT_SECOND_HALF:
+	case VVT_NISSAN_VQ:
+	case VVT_BOSCH_QUICK_START:
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
-	case VVT_MIATA_NB2:
+	case VVT_MIATA_NB:
 		/**
 		 * NB2 is a symmetrical crank, there are four phases total
 		 */
 		return syncAndReport(tc, getCrankDivider(operationMode), 0);
-	case VVT_NISSAN_VQ:
-		return syncAndReport(tc, getCrankDivider(operationMode), 0);
-	default:
+	case VVT_2JZ:
+	case VVT_TOYOTA_4_1:
+	case VVT_FORD_ST170:
+	case VVT_BARRA_3_PLUS_1:
+	case VVT_NISSAN_MR:
+	case VVT_MITSUBISHI_3A92:
+	case VVT_MITSUBISHI_6G75:
+		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->tempBooleanForVerySpecialCases ? 1 : 0);
+	case VVT_HONDA_K:
+		firmwareError(OBD_PCM_Processor_Fault, "Undecided on VVT phase of %s", getVvt_mode_e(vvtMode));
+		return 0;
 	case VVT_INACTIVE:
 		// do nothing
 		return 0;
 	}
+	return 0;
 }
 
 /**
@@ -264,14 +275,8 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 	logFront(isImportantFront, nowNt, index);
 
-
-	auto currentPhase = tc->getCurrentEnginePhase(nowNt);
-	if (!currentPhase) {
-		// todo: this code branch is slowing NB2 cranking since we require RPM sync for VVT sync!
-		// todo: smarter code
-		//
-		// we are here if we are getting VVT position signals while engine is not running
-		// for example if crank position sensor is broken :)
+	// If the main trigger is not synchronized, don't decode VVT yet
+	if (!tc->triggerState.getShaftSynchronized()) {
 		return;
 	}
 
@@ -291,6 +296,13 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 
 	tc->vvtCamCounter++;
 
+	auto currentPhase = tc->getCurrentEnginePhase(nowNt);
+	if (!currentPhase) {
+		// If we couldn't resolve engine speed (yet primary trigger is sync'd), this
+		// probably means that we have partial crank sync, but not RPM information yet
+		return;
+	}
+
 	angle_t currentPosition = currentPhase.Value;
 	// convert engine cycle angle into trigger cycle angle
 	currentPosition -= tdcPosition();
@@ -304,6 +316,11 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		engine->outputChannels.vvtCurrentPosition = currentPosition;
 #endif /* EFI_TUNER_STUDIO */
 
+	if (isVvtWithRealDecoder && tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
+		// this is not sync tooth - exiting
+		return;
+	}
+
 	switch(engineConfiguration->vvtMode[camIndex]) {
 	case VVT_2JZ:
 		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
@@ -313,25 +330,14 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 			return;
 		}
 		break;
-	case VVT_MIATA_NB2:
-	case VVT_BOSCH_QUICK_START:
-	case VVT_BARRA_3_PLUS_1:
-	case VVT_NISSAN_VQ:
-	 {
-		if (tc->vvtState[bankIndex][camIndex].currentCycle.current_index != 0) {
-			// this is not sync tooth - exiting
-			return;
-		}
-#if EFI_TUNER_STUDIO
-		engine->outputChannels.vvtCounter++;
-#endif /* EFI_TUNER_STUDIO */
-	}
 	default:
 		// else, do nothing
 		break;
 	}
 
-	tc->vvtSyncTimeNt[bankIndex][camIndex] = nowNt;
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.vvtCounter++;
+#endif /* EFI_TUNER_STUDIO */
 
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 
@@ -463,7 +469,9 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 
 #if EFI_TOOTH_LOGGER
 	if (logLogicState) {
+		// first log rising normally
 		LogTriggerTooth(signal, timestamp);
+		// in 'logLogicState' mode we log opposite front right after logical rising away
 		if (signal == SHAFT_PRIMARY_RISING) {
 			LogTriggerTooth(SHAFT_PRIMARY_FALLING, timestamp);
 		} else {
@@ -668,7 +676,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		engine->outputChannels.currentEnginePhase = toothAngle;
 #endif // EFI_TUNER_STUDIO
 
-		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER) {
+#if WITH_TS_STATE
+		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN_ANOTHER &&
+				Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm) {
 			// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
 			auto toothAngle360 = toothAngle;
 			while (toothAngle360 >= 360) {
@@ -678,33 +688,30 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 			if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle360 > engineConfiguration->mapCamDetectionAnglePosition) {
 				// we are somewhere close to 'mapCamDetectionAnglePosition'
 
-				float map = Sensor::getOrZero(SensorType::Map);
+				// warning: hack hack hack
+				float map = engine->outputChannels.instantMAPValue;
 
-				if (map > mapCamPrevCycleValue) {
-#if WITH_TS_STATE
-					engine->outputChannels.TEMPLOG_map_peak++;
-#endif // WITH_TS_STATE
-
-					efitick_t stamp = getTimeNowNt();
-					hwHandleVvtCamSignal(TV_RISE, stamp, /*index*/0);
-					hwHandleVvtCamSignal(TV_FALL, stamp, /*index*/0);
-				}
-#if WITH_TS_STATE
-				engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT = map;
-				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = map - mapCamPrevCycleValue;
-#endif // WITH_TS_STATE
-
+				// Compute diff against the last time we were here
+				float diff = map - mapCamPrevCycleValue;
 				mapCamPrevCycleValue = map;
 
+				if (diff > 0) {
+					engine->outputChannels.TEMPLOG_map_peak++;
+					int revolutionCounter = engine->triggerCentral.triggerState.getTotalRevolutionCounter();
+					engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
+					prevChangeAtCycle = revolutionCounter;
 
+					hwHandleVvtCamSignal(TV_RISE, timestamp, /*index*/0);
+					hwHandleVvtCamSignal(TV_FALL, timestamp, /*index*/0);
+				}
 
+				engine->outputChannels.TEMPLOG_MAP_AT_SPECIAL_POINT = map;
+				engine->outputChannels.TEMPLOG_MAP_AT_DIFF = diff;
 			}
 
 			mapCamPrevToothAngle = toothAngle360;
-
 		}
-
-
+#endif // WITH_TS_STATE
 	}
 }
 

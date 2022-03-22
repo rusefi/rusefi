@@ -66,7 +66,7 @@ TEST(DynoView, VSS_fast) {
 
     // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; //kg
-    engine->rpmCalculator.mockRpm = 2200;
+    Sensor::setMockValue(SensorType::Rpm,  2200);
     eth.moveTimeForwardMs(50);
 	
 	Sensor::setMockValue(SensorType::VehicleSpeed, 50.0);
@@ -89,7 +89,7 @@ TEST(DynoView, VSS_Torque) {
 
     // Test Speed threshold
     engineConfiguration->vehicleWeight = 900; //kg
-    engine->rpmCalculator.mockRpm = 2200;
+    Sensor::setMockValue(SensorType::Rpm,  2200);
     eth.moveTimeForwardMs(50);
 	
 	Sensor::setMockValue(SensorType::VehicleSpeed, 80.0);

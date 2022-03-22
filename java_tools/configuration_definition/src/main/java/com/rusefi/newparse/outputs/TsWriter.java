@@ -8,6 +8,9 @@ import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * proposed alternative which does not seem to be covered by any unit tests
+ */
 public class TsWriter {
     // matches strings in the form of @@MY_var_123@@
     private static final Pattern VAR = Pattern.compile("@@([a-zA-Z0-9_]+?)@@");

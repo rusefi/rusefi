@@ -113,8 +113,8 @@ static void resetTs() {
 void printTsStats(void) {
 #if EFI_PROD_CODE
 #ifdef EFI_CONSOLE_RX_BRAIN_PIN
-	efiPrintf("Primary Channel RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
-	efiPrintf("Primary Channel TX", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
+	efiPrintf("Primary UART RX", hwPortname(EFI_CONSOLE_RX_BRAIN_PIN));
+	efiPrintf("Primary UART TX", hwPortname(EFI_CONSOLE_TX_BRAIN_PIN));
 #endif
 
 	if (false) {
@@ -133,24 +133,6 @@ static void setTsSpeed(int value) {
 	engineConfiguration->tunerStudioSerialSpeed = value;
 	printTsStats();
 }
-
-#if EFI_BLUETOOTH_SETUP
-
-// Bluetooth HC-05 module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothHC05(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_05, baudRate, name, pinCode);
-}
-
-// Bluetooth HC-06 module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothHC06(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_HC_06, baudRate, name, pinCode);
-}
-
-// Bluetooth SPP-C module initialization start (it waits for disconnect and then communicates to the module)
-static void bluetoothSPP(const char *baudRate, const char *name, const char *pinCode) {
-	bluetoothStart(getBluetoothChannel(), BLUETOOTH_SPP, baudRate, name, pinCode);
-}
-#endif  /* EFI_BLUETOOTH_SETUP */
 
 #endif // EFI_TUNER_STUDIO
 
@@ -190,35 +172,39 @@ static void handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format
 
 static const void * getStructAddr(live_data_e structId) {
 	switch (structId) {
-	case LDS_ENGINE:
+	case LDS_engine_state:
 		return static_cast<engine_state2_s*>(&engine->engineState);
-	case LDS_FUEL_TRIM:
+	case LDS_wall_fuel_state:
 		return static_cast<wall_fuel_state*>(&engine->injectionEvents.elements[0].wallFuel);
-	case LDS_TRIGGER_CENTRAL:
+	case LDS_trigger_central:
 		return static_cast<trigger_central_s*>(&engine->triggerCentral);
-	case LDS_TRIGGER_STATE:
+	case LDS_trigger_state:
 		return static_cast<trigger_state_s*>(&engine->triggerCentral.triggerState);
-	case LDS_AC_CONTROL:
+	case LDS_ac_control:
 		return static_cast<ac_control_s*>(&engine->module<AcController>().unmock());
-	case LDS_FUEL_PUMP:
+	case LDS_fuel_pump:
 		return static_cast<fuel_pump_control_s*>(&engine->module<FuelPumpController>().unmock());
-#if EFI_ELECTRONIC_THROTTLE_BODY
-	case LDS_ETB_PID:
-		return engine->etbControllers[0]->getPidState();
-#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
-
-#ifndef EFI_IDLE_CONTROL
-	case LDS_IDLE_PID:
-		return static_cast<pid_state_s*>(getIdlePid());
-#endif /* EFI_IDLE_CONTROL */
-	case LDS_IDLE:
-		return static_cast<idle_state_s*>(&engine->idle);
-	case LDS_TPS_ACCEL:
+//#if EFI_ELECTRONIC_THROTTLE_BODY
+//	case LDS_ETB_PID:
+//		return engine->etbControllers[0]->getPidState();
+//#endif /* EFI_ELECTRONIC_THROTTLE_BODY */
+//
+//#ifndef EFI_IDLE_CONTROL
+//	case LDS_IDLE_PID:
+//		return static_cast<pid_state_s*>(getIdlePid());
+//#endif /* EFI_IDLE_CONTROL */
+	case LDS_idle_state:
+		return static_cast<idle_state_s*>(&engine->module<IdleController>().unmock());
+	case LDS_tps_accel_state:
 		return static_cast<tps_accel_state_s*>(&engine->tpsAccelEnrichment);
-	case LDS_MAIN_RELAY:
+#if EFI_HPFP
+	case LDS_high_pressure_fuel_pump:
+		return static_cast<high_pressure_fuel_pump_s*>(&engine->module<HpfpController>().unmock());
+#endif // EFI_HPFP
+	case LDS_main_relay:
 		return static_cast<main_relay_s*>(&engine->module<MainRelayController>().unmock());
 #if EFI_BOOST_CONTROL
-	case LDS_BOOST_CONTROL:
+	case LDS_boost_control:
 		return static_cast<boost_control_s*>(&engine->boostController);
 #endif // EFI_BOOST_CONTROL
 	default:
@@ -388,7 +374,7 @@ void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
 	efiPrintf("BURN in %dms", currentTimeMillis() - nowMs);
 }
 
-#if EFI_TUNER_STUDIO
+#if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
@@ -540,6 +526,7 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 
 #if EFI_TUNER_STUDIO
 
+#if EFI_PROD_CODE || EFI_SIMULATOR
 /**
  * Query with CRC takes place while re-establishing connection
  * Query without CRC takes place on TunerStudio startup
@@ -570,10 +557,10 @@ static void handleTestCommand(TsChannelBase* tsChannel) {
 	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %d %d", engine->engineState.warnings.lastErrorCode, tsState.testCommandCounter);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds", getTimeNowSeconds());
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " uptime=%ds ", (int)getTimeNowSeconds());
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
-	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer), " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
+	chsnprintf(testOutputBuffer, sizeof(testOutputBuffer),  __DATE__ " %s\r\n", PROTOCOL_TEST_RESPONSE_TAG);
 	tsChannel->write((const uint8_t*)testOutputBuffer, strlen(testOutputBuffer));
 
 	if (hasFirmwareError()) {
@@ -596,7 +583,7 @@ static void handleGetVersion(TsChannelBase* tsChannel) {
 static void handleGetText(TsChannelBase* tsChannel) {
 	tsState.textCommandCounter++;
 
-	printOverallStatus(getTimeNowSeconds());
+	printOverallStatus();
 
 	size_t outputSize;
 	const char* output = swapOutputBuffers(&outputSize);
@@ -604,7 +591,7 @@ static void handleGetText(TsChannelBase* tsChannel) {
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<const uint8_t*>(output), outputSize);
+	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<const uint8_t*>(output), outputSize, true);
 #if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
@@ -771,14 +758,14 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 
 			if (currentEnd > transmitted) {
 				// more normal case - tail after head
-				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted));
+				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (currentEnd - transmitted), true);
 				transmitted = currentEnd;
 			} else if (currentEnd == transmitted) {
 				tsChannel->sendResponse(TS_CRC, start, 0);
 			} else {
 				// we are here if tail of buffer has reached the end of buffer and re-started from the start of buffer
 				// sending end of the buffer, next transmission would take care of the rest
-				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted));
+				tsChannel->sendResponse(TS_CRC, start, COMPOSITE_PACKET_SIZE * (COMPOSITE_PACKET_COUNT - transmitted), true);
 				transmitted = 0;
 			}
 		}
@@ -786,7 +773,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 	case TS_GET_LOGGER_GET_BUFFER:
 		{
 			auto toothBuffer = GetToothLoggerBuffer();
-			tsChannel->sendResponse(TS_CRC, toothBuffer.Buffer, toothBuffer.Length);
+			tsChannel->sendResponse(TS_CRC, toothBuffer.Buffer, toothBuffer.Length, true);
 		}
 
 		break;
@@ -799,7 +786,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
 			auto trace = perfTraceGetBuffer();
-			tsChannel->sendResponse(TS_CRC, trace.Buffer, trace.Size);
+			tsChannel->sendResponse(TS_CRC, trace.Buffer, trace.Size, true);
 		}
 
 		break;
@@ -812,7 +799,7 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 			strcpy((char*)configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
 		}
 #endif // HW_CHECK_MODE
-		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError));
+		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
 		break;
 	}
 	default:
@@ -823,6 +810,8 @@ int TunerStudioBase::handleCrcCommand(TsChannelBase* tsChannel, char *data, int 
 
 	return true;
 }
+
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 void startTunerStudioConnectivity(void) {
 	// Assert tune & output channel struct sizes
@@ -838,11 +827,22 @@ void startTunerStudioConnectivity(void) {
 	addConsoleActionI("set_ts_speed", setTsSpeed);
 	
 #if EFI_BLUETOOTH_SETUP
+	// module initialization start (it waits for disconnect and then communicates to the module)
 	// Usage:   "bluetooth_hc06 <baud> <name> <pincode>"
 	// Example: "bluetooth_hc06 38400 rusefi 1234"
-	addConsoleActionSSS("bluetooth_hc05", bluetoothHC05);
-	addConsoleActionSSS("bluetooth_hc06", bluetoothHC06);
-	addConsoleActionSSS("bluetooth_spp", bluetoothSPP);
+	// bluetooth_jdy 115200 alphax 1234
+	addConsoleActionSSS("bluetooth_hc05", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(BLUETOOTH_HC_05, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_hc06", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(BLUETOOTH_HC_06, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_bk", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(BLUETOOTH_BK3231, baudRate, name, pinCode);
+	});
+	addConsoleActionSSS("bluetooth_jdy", [](const char *baudRate, const char *name, const char *pinCode) {
+		bluetoothStart(BLUETOOTH_JDY_3x, baudRate, name, pinCode);
+	});
 	addConsoleAction("bluetooth_cancel", bluetoothCancel);
 #endif /* EFI_BLUETOOTH_SETUP */
 }

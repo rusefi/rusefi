@@ -192,7 +192,7 @@ static void reportWave(Logging *logging, int index) {
 		logging->appendPrintf("%s", LOG_DELIMITER);
 
 		uint32_t offsetUs = getWaveOffset(index);
-		int rpm = GET_RPM();
+		int rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (rpm != 0) {
 			float oneDegreeUs = getOneDegreeTimeUs(rpm);
 

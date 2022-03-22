@@ -24,7 +24,7 @@ static SensorType getSensorForBankIndex(size_t index) {
 
 size_t computeStftBin(int rpm, float load, stft_s& cfg) {
 	// Low RPM -> idle
-	if (idleDeadband.lt(rpm, cfg.maxIdleRegionRpm * RPM_1_BYTE_PACKING_MULT))
+	if (idleDeadband.lt(rpm, cfg.maxIdleRegionRpm))
 	{
 		return 0;
 	}
@@ -83,6 +83,12 @@ bool shouldUpdateCorrection(SensorType sensor) {
 		return false;
 	}
 
+	// Pause correction if DFCO was active recently
+	auto timeSinceDfco = engine->module<DfcoController>()->getTimeSinceCut();
+	if (timeSinceDfco < engineConfiguration->noFuelTrimAfterDfcoTime) {
+		return false;
+	}
+
 	return true;
 }
 
@@ -91,7 +97,7 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 		return {};
 	}
 
-	size_t binIdx = computeStftBin(GET_RPM(), getFuelingLoad(), engineConfiguration->stft);
+	size_t binIdx = computeStftBin(Sensor::getOrZero(SensorType::Rpm), getFuelingLoad(), engineConfiguration->stft);
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.fuelClosedLoopBinIdx = binIdx;

@@ -13,8 +13,6 @@
 
 #define EFI_GPIO_HARDWARE TRUE
 
-#define EFI_FSIO TRUE
-
 #define EFI_CDM_INTEGRATION FALSE
 
 #define EFI_TOOTH_LOGGER FALSE
@@ -35,11 +33,6 @@
 #if !defined(EFI_ENABLE_ASSERTS) || defined(__DOXYGEN__)
  #define EFI_ENABLE_ASSERTS FALSE
 #endif /* EFI_ENABLE_ASSERTS */
-
-#if !defined(EFI_ENABLE_MOCK_ADC) || defined(__DOXYGEN__)
- #define EFI_ENABLE_MOCK_ADC FALSE
-#endif /* EFI_ENABLE_MOCK_ADC */
-
 
 #define EFI_TEXT_LOGGING TRUE
 
@@ -330,8 +323,6 @@
 /**
  * This is the size of the MemoryStream used by chvprintf
  */
-#define STATUS_LOGGING_BUFFER_SIZE 1800
-#define SETTINGS_LOGGING_BUFFER_SIZE 1000
 #define DL_OUTPUT_BUFFER 6500
 
 //#define UTILITY_THREAD_STACK_SIZE 270 /*400*/
@@ -343,6 +334,7 @@
 #define BOARD_TLE8888_COUNT 0
 #define BOARD_DRV8860_COUNT 1
 #define BOARD_MC33810_COUNT 0
+#define BOARD_L9779_COUNT 0
 
 #define DRV8860_SS_PORT GPIOH
 #define DRV8860_SS_PAD  11U

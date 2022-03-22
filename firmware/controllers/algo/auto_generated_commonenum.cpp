@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Wed Dec 08 12:08:09 UTC 2021
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum2string.jar tool on Sun Mar 20 02:15:51 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -44,6 +44,39 @@ case NOT_A_PEAK:
   }
  return NULL;
 }
+const char *getTsCalMode(TsCalMode value){
+switch(value) {
+case TsCalMode::EtbKd:
+  return "EtbKd";
+case TsCalMode::EtbKi:
+  return "EtbKi";
+case TsCalMode::EtbKp:
+  return "EtbKp";
+case TsCalMode::None:
+  return "None";
+case TsCalMode::PedalMax:
+  return "PedalMax";
+case TsCalMode::PedalMin:
+  return "PedalMin";
+case TsCalMode::Tps1Max:
+  return "Tps1Max";
+case TsCalMode::Tps1Min:
+  return "Tps1Min";
+case TsCalMode::Tps1SecondaryMax:
+  return "Tps1SecondaryMax";
+case TsCalMode::Tps1SecondaryMin:
+  return "Tps1SecondaryMin";
+case TsCalMode::Tps2Max:
+  return "Tps2Max";
+case TsCalMode::Tps2Min:
+  return "Tps2Min";
+case TsCalMode::Tps2SecondaryMax:
+  return "Tps2SecondaryMax";
+case TsCalMode::Tps2SecondaryMin:
+  return "Tps2SecondaryMin";
+  }
+ return NULL;
+}
 const char *getAdc_channel_mode_e(adc_channel_mode_e value){
 switch(value) {
 case ADC_FAST:
@@ -54,21 +87,6 @@ case ADC_SLOW:
   return "ADC_SLOW";
 case Force_4_bytes_size_adc_channel_mode:
   return "Force_4_bytes_size_adc_channel_mode";
-  }
- return NULL;
-}
-const char *getAfr_override_e(afr_override_e value){
-switch(value) {
-case AFR_AccPedal:
-  return "AFR_AccPedal";
-case AFR_CylFilling:
-  return "AFR_CylFilling";
-case AFR_MAP:
-  return "AFR_MAP";
-case AFR_None:
-  return "AFR_None";
-case AFR_Tps:
-  return "AFR_Tps";
   }
  return NULL;
 }
@@ -128,6 +146,27 @@ case Force_4bytes_size_boostType_e:
   return "Force_4bytes_size_boostType_e";
 case OPEN_LOOP:
   return "OPEN_LOOP";
+  }
+ return NULL;
+}
+const char *getBrain_pin_diag_e(brain_pin_diag_e value){
+switch(value) {
+case PIN_DRIVER_OFF:
+  return "PIN_DRIVER_OFF";
+case PIN_DRIVER_OVERTEMP:
+  return "PIN_DRIVER_OVERTEMP";
+case PIN_INVALID:
+  return "PIN_INVALID";
+case PIN_OK:
+  return "PIN_OK";
+case PIN_OPEN:
+  return "PIN_OPEN";
+case PIN_OVERLOAD:
+  return "PIN_OVERLOAD";
+case PIN_SHORT_TO_BAT:
+  return "PIN_SHORT_TO_BAT";
+case PIN_SHORT_TO_GND:
+  return "PIN_SHORT_TO_GND";
   }
  return NULL;
 }
@@ -401,6 +440,8 @@ case IMU_TYPE_3:
   return "IMU_TYPE_3";
 case IMU_TYPE_4:
   return "IMU_TYPE_4";
+case IMU_TYPE_MB_A0065422618:
+  return "IMU_TYPE_MB_A0065422618";
 case IMU_VAG:
   return "IMU_VAG";
   }
@@ -451,6 +492,21 @@ case Force_4bytes_size_launchActivationMode_e:
   return "Force_4bytes_size_launchActivationMode_e";
 case SWITCH_INPUT_LAUNCH:
   return "SWITCH_INPUT_LAUNCH";
+  }
+ return NULL;
+}
+const char *getLoad_override_e(load_override_e value){
+switch(value) {
+case AFR_AccPedal:
+  return "AFR_AccPedal";
+case AFR_CylFilling:
+  return "AFR_CylFilling";
+case AFR_MAP:
+  return "AFR_MAP";
+case AFR_None:
+  return "AFR_None";
+case AFR_Tps:
+  return "AFR_Tps";
   }
  return NULL;
 }
@@ -587,6 +643,8 @@ case Force_4bytes_size_tChargeMode_e:
   return "Force_4bytes_size_tChargeMode_e";
 case TCHARGE_MODE_AIR_INTERP:
   return "TCHARGE_MODE_AIR_INTERP";
+case TCHARGE_MODE_AIR_INTERP_TABLE:
+  return "TCHARGE_MODE_AIR_INTERP_TABLE";
 case TCHARGE_MODE_RPM_TPS:
   return "TCHARGE_MODE_RPM_TPS";
   }
@@ -697,12 +755,14 @@ case VVT_HONDA_K:
   return "VVT_HONDA_K";
 case VVT_INACTIVE:
   return "VVT_INACTIVE";
-case VVT_MAP_V_TWIN:
-  return "VVT_MAP_V_TWIN";
 case VVT_MAP_V_TWIN_ANOTHER:
   return "VVT_MAP_V_TWIN_ANOTHER";
-case VVT_MIATA_NB2:
-  return "VVT_MIATA_NB2";
+case VVT_MIATA_NB:
+  return "VVT_MIATA_NB";
+case VVT_MITSUBISHI_3A92:
+  return "VVT_MITSUBISHI_3A92";
+case VVT_MITSUBISHI_6G75:
+  return "VVT_MITSUBISHI_6G75";
 case VVT_NISSAN_MR:
   return "VVT_NISSAN_MR";
 case VVT_NISSAN_VQ:

@@ -13,13 +13,12 @@
  * MRE_BOARD_NEW_TEST
  * set engine_type 31
  *
- * See https://github.com/rusefi/rusefi/wiki/Hardware_microRusEfi_wiring
+ * See https://github.com/rusefi/rusefi/wiki/Hardware-microRusEfi-wiring
  *
  * @author Matthew Kennedy, (c) 2019
  */
 
 #include "pch.h"
-#include "fsio_impl.h"
 #include "mre_meta.h"
 
 static void setInjectorPins() {
@@ -156,7 +155,7 @@ static void setupDefaultSensorInputs() {
 #endif // HW_CHECK_MODE
 }
 
-void setBoardConfigOverrides(void) {
+void setBoardConfigOverrides() {
 	setLedPins();
 	setupVbatt();
 	setupTle8888();
@@ -171,23 +170,19 @@ void setBoardConfigOverrides(void) {
 	// SPI for SD card
 	engineConfiguration->is_enabled_spi_3 = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
-	engineConfiguration->sdCardCsPin = GPIOB_9;
 
 	engineConfiguration->spi3mosiPin = GPIOC_12;
 	engineConfiguration->spi3misoPin = GPIOC_11;
 	engineConfiguration->spi3sckPin = GPIOC_10;
 }
 
-void setPinConfigurationOverrides(void) {
-}
-
-void setSerialConfigurationOverrides(void) {
+void setSerialConfigurationOverrides() {
 	// why would MRE disable serial by default? we definitely have pads exposed
 	engineConfiguration->useSerialPort = false;
-	engineConfiguration->binarySerialTxPin = GPIO_UNASSIGNED;
-	engineConfiguration->binarySerialRxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialTxPin = GPIO_UNASSIGNED;
-//	engineConfiguration->consoleSerialRxPin = GPIO_UNASSIGNED;
+
+
+
+
 }
 
 
@@ -198,9 +193,10 @@ void setSerialConfigurationOverrides(void) {
  *
  * @todo    Add your board-specific code, if any.
  */
-void setBoardDefaultConfiguration(void) {
+void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
+	engineConfiguration->sdCardCsPin = GPIOB_9;
 
 	// MRE has a special main relay control low side pin
 	// rusEfi firmware is totally not involved with main relay control on microRusEfi board
@@ -240,5 +236,5 @@ void setBoardDefaultConfiguration(void) {
  * @brief   Board-specific SD card configuration code overrides. Needed by bootloader code.
  * @todo    Add your board-specific code, if any.
  */
-void setSdCardConfigurationOverrides(void) {
+void setSdCardConfigurationOverrides() {
 }

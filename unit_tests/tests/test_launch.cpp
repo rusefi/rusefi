@@ -108,11 +108,11 @@ TEST(LaunchControl, CombinedCondition) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
-	engine->rpmCalculator.mockRpm = 1200;
+	Sensor::setMockValue(SensorType::Rpm,  1200);
 
     EXPECT_FALSE(dut.isLaunchConditionMet(1200));
 
-	engine->rpmCalculator.mockRpm = 3200;
+    Sensor::setMockValue(SensorType::Rpm,  3200);
 	EXPECT_TRUE(dut.isLaunchConditionMet(3200));
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
@@ -156,7 +156,7 @@ TEST(LaunchControl, CompleteRun) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 20.0f);
 	
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
-	engine->rpmCalculator.mockRpm = 1200;
+	Sensor::setMockValue(SensorType::Rpm, 1200);
 
 	engine->launchController.update();
 
@@ -166,7 +166,7 @@ TEST(LaunchControl, CompleteRun) {
 	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 
-	engine->rpmCalculator.mockRpm = 3510;
+	Sensor::setMockValue(SensorType::Rpm, 3510);
 	//update condition check
 	engine->launchController.update();
 

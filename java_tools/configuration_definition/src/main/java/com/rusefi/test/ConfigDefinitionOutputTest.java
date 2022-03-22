@@ -1,6 +1,6 @@
 package com.rusefi.test;
 
-import com.rusefi.ConfigDefinition;
+import com.rusefi.output.BaseCHeaderConsumer;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -8,9 +8,9 @@ import static org.junit.Assert.assertEquals;
 public class ConfigDefinitionOutputTest {
     @Test
     public void testComment() {
-        assertEquals("", ConfigDefinition.packComment("", "\t"));
-        assertEquals("\t * abc\n", ConfigDefinition.packComment("abc", "\t"));
+        assertEquals("", BaseCHeaderConsumer.packComment("", "\t"));
+        assertEquals("\t * abc\n", BaseCHeaderConsumer.packComment("abc", "\t"));
         assertEquals("\t * abc\n" +
-                "\t * vbn\n", ConfigDefinition.packComment("abc\\nvbn", "\t"));
+                "\t * vbn\n", BaseCHeaderConsumer.packComment("abc\\nvbn", "\t"));
     }
 }

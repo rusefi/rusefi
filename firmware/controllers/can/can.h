@@ -7,10 +7,9 @@
 
 #pragma once
 
-#if ! EFI_PROD_CODE
+#if !EFI_PROD_CODE || !EFI_CAN_SUPPORT
 #include "can_mocks.h"
 #endif // EFI_PROD_CODE
-
 
 #if !EFI_UNIT_TEST
 #include "hal.h"
@@ -46,7 +45,7 @@ class CanListener;
 class CanSensorBase;
 
 #if EFI_CAN_SUPPORT
-void processCanRxMessage(const CANRxFrame& msg, efitick_t nowNt);
+void processCanRxMessage(const size_t busIndex, const CANRxFrame& msg, efitick_t nowNt);
 #endif // EFI_CAN_SUPPORT
 
 void registerCanListener(CanListener& listener);

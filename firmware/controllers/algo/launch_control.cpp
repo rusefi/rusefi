@@ -21,8 +21,11 @@
  * In case we are dependent on VSS we just return true.
  */
 bool LaunchControlBase::isInsideSwitchCondition() {
-	switch (engineConfiguration->launchActivationMode) {
-	case SWITCH_INPUT_LAUNCH:
+	isSwitchActivated = engineConfiguration->launchActivationMode == SWITCH_INPUT_LAUNCH;
+	isClutchActivated = engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH;
+
+
+	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
 		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {
 			//todo: we should take into consideration if this sw is pulled high or low!
@@ -30,15 +33,13 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 		}
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
-
-	case CLUTCH_INPUT_LAUNCH:
+	} else if (isClutchActivated) {
 		if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
 			return engine->clutchDownState;
 		} else {
 			return false;
 		}
-		
-	default:
+	} else {
 		// ALWAYS_ACTIVE_LAUNCH
 		return true;
 	}
@@ -80,21 +81,25 @@ bool LaunchControlBase::isInsideRPMCondition(int rpm) const {
 
 bool LaunchControlBase::isLaunchConditionMet(int rpm) {
 
-	bool activateSwitchCondition = isInsideSwitchCondition();
-	bool rpmCondition = isInsideRPMCondition(rpm);
-	bool speedCondition = isInsideSpeedCondition();
-	bool tpsCondition = isInsideTpsCondition();
+	activateSwitchCondition = isInsideSwitchCondition();
+	rpmCondition = isInsideRPMCondition(rpm);
+	speedCondition = isInsideSpeedCondition();
+	tpsCondition = isInsideTpsCondition();
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		engine->outputChannels.debugIntField1 = rpmCondition;
-		engine->outputChannels.debugIntField2 = tpsCondition;
-		engine->outputChannels.debugIntField3 = speedCondition;
-		engine->outputChannels.debugIntField4 = activateSwitchCondition;
-	}
+	// todo: implement fancy logging of all live data
+	engine->outputChannels.launchSpeedCondition = speedCondition;
+	engine->outputChannels.launchRpmCondition = rpmCondition;
+	engine->outputChannels.launchTpsCondition = tpsCondition;
+	engine->outputChannels.launchActivateSwitchCondition = activateSwitchCondition;
 #endif /* EFI_TUNER_STUDIO */
 
 	return speedCondition && activateSwitchCondition && rpmCondition && tpsCondition;
+}
+
+LaunchControlBase::LaunchControlBase() {
+	launchActivatePinState = false;
+	isLaunchCondition = false;
 }
 
 void LaunchControlBase::update() {
@@ -102,10 +107,10 @@ void LaunchControlBase::update() {
 		return;
 	}
 
-	int rpm = GET_RPM();
-	bool combinedConditions = isLaunchConditionMet(rpm);
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	combinedConditions = isLaunchConditionMet(rpm);
 
-	//and still recalculat in case user changed the values
+	//and still recalculate in case user changed the values
 	retardThresholdRpm = engineConfiguration->launchRpm + (engineConfiguration->enableLaunchRetard ? 
 	                     engineConfiguration->launchAdvanceRpmRange : 0) + engineConfiguration->hardCutRpmRange;
 
@@ -119,17 +124,15 @@ void LaunchControlBase::update() {
 	}
 
 #if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_LAUNCH) {
-		engine->outputChannels.debugIntField5 = engine->clutchDownState;
-		engine->outputChannels.debugFloatField1 = launchActivatePinState;
-		engine->outputChannels.debugFloatField2 = isLaunchCondition;
-		engine->outputChannels.debugFloatField3 = combinedConditions;
-	}
+	engine->outputChannels.clutchDownState = engine->clutchDownState;
+	engine->outputChannels.launchActivatePinState = launchActivatePinState;
+	engine->outputChannels.launchIsLaunchCondition = isLaunchCondition;
+	engine->outputChannels.launchCombinedConditions = combinedConditions;
 #endif /* EFI_TUNER_STUDIO */
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
-	return isLaunchCondition && (retardThresholdRpm < GET_RPM());
+	return isLaunchCondition && (retardThresholdRpm < Sensor::getOrZero(SensorType::Rpm));
 }
 
 bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {

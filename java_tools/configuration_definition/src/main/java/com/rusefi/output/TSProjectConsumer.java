@@ -10,6 +10,9 @@ import java.io.*;
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.util.IoUtils.CHARSET;
 
+/**
+ * [Constants]
+ */
 public class TSProjectConsumer implements ConfigurationConsumer {
     private static final String TS_FILE_INPUT_NAME = "rusefi.input";
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
@@ -51,7 +54,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
         tsHeader.write(tsContent.getPrefix());
 
         tsHeader.write("; " + CONFIG_DEFINITION_START + ToolUtil.EOL);
-        tsHeader.write("; this section " + ConfigDefinition.MESSAGE + ToolUtil.EOL + ToolUtil.EOL);
+        tsHeader.write("; this section " + state.getHeader() + ToolUtil.EOL + ToolUtil.EOL);
         tsHeader.write("pageSize            = " + totalTsSize + ToolUtil.EOL);
         tsHeader.write("page = 1" + ToolUtil.EOL);
         tsHeader.write(fieldsSection);
@@ -139,16 +142,12 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     @Override
-    public void startFile() {
-    }
-
-    @Override
     public void endFile() throws IOException {
         writeTunerStudioFile(tsPath, tsWriter.toString());
     }
 
     @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         state.variableRegistry.register(structure.name + "_size", structure.getTotalSize());
         if (state.stack.isEmpty()) {
             totalTsSize = tsOutput.writeTunerStudio(structure, "", tsWriter, 0);

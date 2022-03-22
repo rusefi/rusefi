@@ -4,7 +4,10 @@ import com.rusefi.ReaderState;
 
 import java.io.*;
 
-public class OutputsSectionConsumer implements ConfigurationConsumer {
+/**
+ * [OutputChannels]
+ */
+public class OutputsSectionConsumer extends AbstractConfigurationConsumer {
     private final String tsOutputsSectionFileName;
     private final TsOutput tsOutput;
     private final ReaderState state;
@@ -16,20 +19,12 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
         this.state = state;
     }
 
-    @Override
-    public void startFile() throws IOException {
-    }
-
     public CharArrayWriter getTsWriter() {
         return tsWriter;
     }
 
     @Override
-    public void endFile() throws IOException {
-    }
-
-    @Override
-    public void handleEndStruct(ConfigStructure structure) throws IOException {
+    public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         System.out.println("handleEndStruct");
 
         if (state.stack.isEmpty()) {

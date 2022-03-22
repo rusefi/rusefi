@@ -10,8 +10,7 @@ void FuelPumpController::onSlowCallback() {
 	isPrime = timeSinceIgn >= 0 && timeSinceIgn < engineConfiguration->startUpFuelPumpDuration;
 
 	// If there was a trigger event recently, turn on the pump, the engine is running!
-	auto timeSinceTrigger = engine->triggerCentral.getTimeSinceTriggerEvent(getTimeNowNt());
-	engineTurnedRecently = timeSinceTrigger < 1;
+	engineTurnedRecently = engine->triggerCentral.engineMovedRecently();
 
 	isPumpOn = isPrime || engineTurnedRecently;
 
@@ -22,7 +21,9 @@ void FuelPumpController::onSlowCallback() {
 #endif
 }
 
-void FuelPumpController::onIgnitionStateChanged(bool ignitionOn) {
+void FuelPumpController::onIgnitionStateChanged(bool ignitionOnParam) {
+	// live data parser convention is asking for a field
+	ignitionOn = ignitionOnParam;
 	if (ignitionOn) {
 		m_ignOnTimer.reset();
 	}

@@ -188,20 +188,22 @@ TEST(HPFP, Angle) {
 		engineConfiguration->hpfpLobeProfileAngle[i] = 150. * i / (HPFP_LOBE_PROFILE_SIZE - 1);
 	}
 
+	HpfpController model;
+
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1000), 25); // Double check baseline
 	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 0); // Validate no PI
-	EXPECT_NEAR(math.pumpAngleFuel(1000), 37.5, 0.4); // Given the profile, should be 50% higher
+	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 37.5, 0.4); // Given the profile, should be 50% higher
 
 	engine->injectionMass[0] = 0.08 /* cc/cyl */ * fuelDensity;
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1000), 40); // Double check baseline
 	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 0); // Validate no PI
-	EXPECT_NEAR(math.pumpAngleFuel(1000), 60, 0.4); // Given the profile, should be 50% higher
+	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 60, 0.4); // Given the profile, should be 50% higher
 
 	engineConfiguration->hpfpPidP = 0.01;
 	Sensor::setMockValue(SensorType::Map, 40);
 	Sensor::setMockValue(SensorType::FuelPressureHigh, 1000);
 	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 10.1);
-	EXPECT_NEAR(math.pumpAngleFuel(1000), 50.1 * 1.5, 0.4); // Given the profile, should be 50% higher
+	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 50.1 * 1.5, 0.4); // Given the profile, should be 50% higher
 }
 
 TEST(HPFP, Schedule) {
@@ -248,7 +250,7 @@ TEST(HPFP, Schedule) {
 	{
 		testing::InSequence is;
 
-		// First call to assignRpmValue will cause a dummy call to fast periodic timer.
+		// First call to setRpmValue will cause a dummy call to fast periodic timer.
 		// Injection Mass will be 0 so expect a no-op.
 		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &hpfp.m_event.scheduling, nt0, action_s(HpfpController::pinTurnOff, &hpfp)));
 
@@ -264,12 +266,12 @@ TEST(HPFP, Schedule) {
 	// peak pos occurs after the next tooth.
 	engineConfiguration->hpfpPeakPos = 90;
 	// This will call the fast callback routine
-	engine->rpmCalculator.assignRpmValue(1000);
+	engine->rpmCalculator.setRpmValue(1000);
 	engine->injectionMass[0] = 0.05 /* cc/cyl */ * fuelDensity;
 	engineConfiguration->hpfpValvePin = GPIOA_2; // arbitrary
 
 	hpfp.onFastCallback();
-	// First event was scheduled by assignRpmValue with 0 injection mass.  So, it's off.
+	// First event was scheduled by setRpmValue with 0 injection mass.  So, it's off.
 	eth.assertTriggerEvent("h0", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOff,
 			       1, angle0 - 0);
 

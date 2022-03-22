@@ -20,11 +20,12 @@
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 
 int findIndex(const float array[], int size, float value);
-#define findIndexMsg(msg, array, size, value) findIndexMsgExt<float>(msg, array, size, value)
 int findIndex2(const float array[], unsigned size, float value);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
 
+// _technically_ and _theoretically_ we can support flat line for both bins and values but I am not sure if
+// such a rare case is something we want to support
 template<typename TValue, int TSize>
 void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 	for (size_t i = 0; i < TSize - 1; i++) {
@@ -203,15 +204,18 @@ int findIndexMsgExt(const char *msg, const kType array[], int size, kType value)
 	return middle;
 }
 
-void setCurveValue(float bins[], float values[], int size, float key, float value);
-void initInterpolation();
+#define findIndexMsg(msg, array, size, value) findIndexMsgExt(msg, array, size, value)
 
-class FastInterpolation {
-public:
-	FastInterpolation();
-	FastInterpolation(float x1, float y1, float x2, float y2);
-	void init(float x1, float y1, float x2, float y2);
-	float getValue(float x) const;
-private:
-	float a, b;
-};
+/**
+ * Sets specified value for specified key in a correction curve
+ * see also setLinearCurve()
+ */
+template<typename VType, typename kType>
+void setCurveValue(const kType bins[], VType values[], int size, float key, float value) {
+	int index = findIndexMsg("tbVl", bins, size, key);
+	if (index == -1)
+		index = 0;
+	values[index] = value;
+}
+
+void initInterpolation();

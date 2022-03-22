@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Tue Dec 07 20:56:44 EST 2021
+// was generated automatically by rusEFI tool  from engine_types.h // by enum2string.jar tool on Sat Mar 19 20:59:13 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -52,6 +52,8 @@ case DBG_16:
   return "DBG_16";
 case DBG_20:
   return "DBG_20";
+case DBG_24:
+  return "DBG_24";
 case DBG_26:
   return "DBG_26";
 case DBG_29:
@@ -60,8 +62,12 @@ case DBG_34:
   return "DBG_34";
 case DBG_35:
   return "DBG_35";
+case DBG_36:
+  return "DBG_36";
 case DBG_37:
   return "DBG_37";
+case DBG_38:
+  return "DBG_38";
 case DBG_43:
   return "DBG_43";
 case DBG_8:
@@ -74,8 +80,6 @@ case DBG_ANALOG_INPUTS2:
   return "DBG_ANALOG_INPUTS2";
 case DBG_BENCH_TEST:
   return "DBG_BENCH_TEST";
-case DBG_BOOST:
-  return "DBG_BOOST";
 case DBG_CJ125:
   return "DBG_CJ125";
 case DBG_COMPOSITE_LOG:
@@ -102,8 +106,6 @@ case DBG_ION:
   return "DBG_ION";
 case DBG_KNOCK:
   return "DBG_KNOCK";
-case DBG_LAUNCH:
-  return "DBG_LAUNCH";
 case DBG_LOGIC_ANALYZER:
   return "DBG_LOGIC_ANALYZER";
 case DBG_LUA:
@@ -120,8 +122,6 @@ case DBG_SOFT_SPARK_CUT:
   return "DBG_SOFT_SPARK_CUT";
 case DBG_SR5_PROTOCOL:
   return "DBG_SR5_PROTOCOL";
-case DBG_STATUS:
-  return "DBG_STATUS";
 case DBG_TCU:
   return "DBG_TCU";
 case DBG_TLE8888:
@@ -171,6 +171,8 @@ case DODGE_NEON_2003_CRANK:
   return "DODGE_NEON_2003_CRANK";
 case DODGE_RAM:
   return "DODGE_RAM";
+case EEPROM_BENCH_ENGINE:
+  return "EEPROM_BENCH_ENGINE";
 case ETB_BENCH_ENGINE:
   return "ETB_BENCH_ENGINE";
 case ET_UNUSED96:
@@ -241,6 +243,8 @@ case HELLEN_88_BMW:
   return "HELLEN_88_BMW";
 case HELLEN_NA6:
   return "HELLEN_NA6";
+case HELLEN_NA8_96:
+  return "HELLEN_NA8_96";
 case HELLEN_NA94:
   return "HELLEN_NA94";
 case HELLEN_NB1:
@@ -255,6 +259,8 @@ case HONDA_600:
   return "HONDA_600";
 case HONDA_ACCORD_CD_TWO_WIRES:
   return "HONDA_ACCORD_CD_TWO_WIRES";
+case L9779_BENCH_ENGINE:
+  return "L9779_BENCH_ENGINE";
 case MAZDA_MIATA_2003_BOARD_TEST:
   return "MAZDA_MIATA_2003_BOARD_TEST";
 case MAZDA_MIATA_2003_NA_RAIL:
@@ -295,6 +301,8 @@ case PROTEUS_ANALOG_PWM_TEST:
   return "PROTEUS_ANALOG_PWM_TEST";
 case PROTEUS_BMW_M73:
   return "PROTEUS_BMW_M73";
+case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+  return "PROTEUS_E65_6H_MAN_IN_THE_MIDDLE";
 case PROTEUS_HARLEY:
   return "PROTEUS_HARLEY";
 case PROTEUS_HONDA_ELEMENT_2003:
@@ -317,12 +325,12 @@ case SUBARUEG33_DEFAULTS:
   return "SUBARUEG33_DEFAULTS";
 case SUBARU_2003_WRX:
   return "SUBARU_2003_WRX";
-case TEST_108:
-  return "TEST_108";
-case TEST_109:
-  return "TEST_109";
-case TEST_110:
-  return "TEST_110";
+case TEST_100:
+  return "TEST_100";
+case TEST_101:
+  return "TEST_101";
+case TEST_102:
+  return "TEST_102";
 case TEST_33816:
   return "TEST_33816";
 case TEST_CRANK_ENGINE:
@@ -345,34 +353,10 @@ case TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case TOYOTA_JZS147:
   return "TOYOTA_JZS147";
-case UNUSED10:
-  return "UNUSED10";
-case UNUSED100:
-  return "UNUSED100";
-case UNUSED101:
-  return "UNUSED101";
-case UNUSED18:
-  return "UNUSED18";
-case UNUSED30:
-  return "UNUSED30";
 case UNUSED39:
   return "UNUSED39";
-case UNUSED60:
-  return "UNUSED60";
-case UNUSED61:
-  return "UNUSED61";
-case UNUSED9:
-  return "UNUSED9";
-case UNUSED_19:
-  return "UNUSED_19";
 case UNUSED_48:
   return "UNUSED_48";
-case UNUSED_50:
-  return "UNUSED_50";
-case UNUSED_51:
-  return "UNUSED_51";
-case VAG_18_TURBO:
-  return "VAG_18_TURBO";
 case VW_ABA:
   return "VW_ABA";
 case VW_B6:
@@ -390,6 +374,10 @@ case TT_2JZ_1_12:
   return "TT_2JZ_1_12";
 case TT_2JZ_3_34:
   return "TT_2JZ_3_34";
+case TT_36_2_1:
+  return "TT_36_2_1";
+case TT_36_2_1_1:
+  return "TT_36_2_1_1";
 case TT_36_2_2_2:
   return "TT_36_2_2_2";
 case TT_3_1_CAM:
@@ -520,10 +508,12 @@ case TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case TT_VVT_JZ:
   return "TT_VVT_JZ";
-case TT_VVT_MAP_45_V_TWIN:
-  return "TT_VVT_MAP_45_V_TWIN";
-case TT_VVT_MIATA_NB2:
-  return "TT_VVT_MIATA_NB2";
+case TT_VVT_MIATA_NB:
+  return "TT_VVT_MIATA_NB";
+case TT_VVT_MITSUBISHI_3A92:
+  return "TT_VVT_MITSUBISHI_3A92";
+case TT_VVT_MITSUBISHI_6G75:
+  return "TT_VVT_MITSUBISHI_6G75";
 case TT_VVT_NISSAN_VQ35:
   return "TT_VVT_NISSAN_VQ35";
   }

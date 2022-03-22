@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_hw_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Mon Jul 12 21:09:56 EDT 2021
+// was generated automatically by rusEFI tool  from rusefi_hw_enums.h // by enum2string.jar tool on Tue Feb 01 22:39:48 UTC 2022
 // see also gen_config_and_enums.bat
 
 
@@ -45,25 +45,6 @@ case EFI_ADC_LAST_CHANNEL:
   return "EFI_ADC_LAST_CHANNEL";
 case EFI_ADC_NONE:
   return "EFI_ADC_NONE";
-  }
- return NULL;
-}
-const char *getBrain_pin_diag_e(brain_pin_diag_e value){
-switch(value) {
-case PIN_DRIVER_OVERTEMP:
-  return "PIN_DRIVER_OVERTEMP";
-case PIN_INVALID:
-  return "PIN_INVALID";
-case PIN_OK:
-  return "PIN_OK";
-case PIN_OPEN:
-  return "PIN_OPEN";
-case PIN_OVERLOAD:
-  return "PIN_OVERLOAD";
-case PIN_SHORT_TO_BAT:
-  return "PIN_SHORT_TO_BAT";
-case PIN_SHORT_TO_GND:
-  return "PIN_SHORT_TO_GND";
   }
  return NULL;
 }
@@ -361,6 +342,74 @@ case GPIO_INVALID:
   return "GPIO_INVALID";
 case GPIO_UNASSIGNED:
   return "GPIO_UNASSIGNED";
+case L9779_IGN_1:
+  return "L9779_IGN_1";
+case L9779_IGN_2:
+  return "L9779_IGN_2";
+case L9779_IGN_3:
+  return "L9779_IGN_3";
+case L9779_IGN_4:
+  return "L9779_IGN_4";
+case L9779_OUT_1:
+  return "L9779_OUT_1";
+case L9779_OUT_10:
+  return "L9779_OUT_10";
+case L9779_OUT_11:
+  return "L9779_OUT_11";
+case L9779_OUT_12:
+  return "L9779_OUT_12";
+case L9779_OUT_13:
+  return "L9779_OUT_13";
+case L9779_OUT_14:
+  return "L9779_OUT_14";
+case L9779_OUT_15:
+  return "L9779_OUT_15";
+case L9779_OUT_16:
+  return "L9779_OUT_16";
+case L9779_OUT_17:
+  return "L9779_OUT_17";
+case L9779_OUT_18:
+  return "L9779_OUT_18";
+case L9779_OUT_19:
+  return "L9779_OUT_19";
+case L9779_OUT_2:
+  return "L9779_OUT_2";
+case L9779_OUT_20:
+  return "L9779_OUT_20";
+case L9779_OUT_25:
+  return "L9779_OUT_25";
+case L9779_OUT_26:
+  return "L9779_OUT_26";
+case L9779_OUT_27:
+  return "L9779_OUT_27";
+case L9779_OUT_28:
+  return "L9779_OUT_28";
+case L9779_OUT_3:
+  return "L9779_OUT_3";
+case L9779_OUT_4:
+  return "L9779_OUT_4";
+case L9779_OUT_5:
+  return "L9779_OUT_5";
+case L9779_OUT_6:
+  return "L9779_OUT_6";
+case L9779_OUT_7:
+  return "L9779_OUT_7";
+case L9779_OUT_8:
+  return "L9779_OUT_8";
+case L9779_OUT_9:
+  return "L9779_OUT_9";
+case L9779_OUT_A:
+  return "L9779_OUT_A";
+case L9779_OUT_B:
+  return "L9779_OUT_B";
+case L9779_OUT_C:
+  return "L9779_OUT_C";
+case L9779_OUT_D:
+  return "L9779_OUT_D";
+case L9779_OUT_MRD:
+  return "L9779_OUT_MRD";
+case L9779_PIN_KEY:
+  return "L9779_PIN_KEY";
 case MC33972_PIN_1:
   return "MC33972_PIN_1";
 case MC33972_PIN_21:

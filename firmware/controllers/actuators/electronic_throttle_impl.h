@@ -11,7 +11,7 @@
 #include "electronic_throttle.h"
 
 #include "sensor.h"
-#include "pid.h"
+#include "efi_pid.h"
 #include "error_accumulator.h"
 
 /**
@@ -60,6 +60,11 @@ public:
 	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
 	void autoCalibrateTps() override;
 
+	// Override if this throttle needs special per-throttle adjustment (bank-to-bank trim, for example)
+	virtual percent_t getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
+		return 0;
+	}
+
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
@@ -97,4 +102,11 @@ private:
 
 	uint8_t m_autotuneCounter = 0;
 	uint8_t m_autotuneCurrentParam = 0;
+};
+
+class EtbController1 : public EtbController { };
+
+class EtbController2 : public EtbController {
+public:
+	percent_t getThrottleTrim(float rpm, percent_t /*targetPosition*/) const override;
 };

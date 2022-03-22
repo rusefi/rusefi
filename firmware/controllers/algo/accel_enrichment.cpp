@@ -29,15 +29,14 @@ static tps_tps_Map3D_t tpsTpsMap;
 floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
-	int maxDeltaIndex = getMaxDeltaIndex();
+	if (engineConfiguration->tpsAccelLookback == 0) {
+		// If disabled, return 0.
+		return 0;
+	}
+	if (!engine->rpmCalculator.isRunning()) {
+		return 0;
+	}
 
-//	FuelSchedule *fs = engineConfiguration->injectionEvents;
-	percent_t tpsTo = cb.get(maxDeltaIndex);
-	percent_t tpsFrom = cb.get(maxDeltaIndex - 1);
-	percent_t deltaTps = tpsTo - tpsFrom;
-
-	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;
-	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
 	if (isAboveAccelThreshold) {
 		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
 		extraFuel = valueFromTable;
@@ -120,9 +119,9 @@ void TpsAccelEnrichment::onEngineCycleTps() {
 }
 
 int TpsAccelEnrichment::getMaxDeltaIndex() {
-
 	int len = minI(cb.getSize(), cb.getCount());
-	if (len < 2)
+	tooShort = len < 2;
+	if (tooShort)
 		return 0;
 	int ci = cb.currentIndex - 1;
 	float maxValue = cb.get(ci) - cb.get(ci - 1);
@@ -166,7 +165,24 @@ void TpsAccelEnrichment::setLength(int length) {
 }
 
 void TpsAccelEnrichment::onNewValue(float currentValue) {
+	// Push new value in to the history buffer
 	cb.add(currentValue);
+
+	// Update deltas
+	int maxDeltaIndex = getMaxDeltaIndex();
+	tpsFrom = cb.get(maxDeltaIndex - 1);
+	tpsTo = cb.get(maxDeltaIndex);
+	deltaTps = tpsTo - tpsFrom;
+
+	// Update threshold detection
+	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;
+
+	// TODO: can deltaTps actually be negative? Will this ever trigger?
+	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
+
+	engine->outputChannels.tpsAccelActive = isAboveAccelThreshold;
+	engine->outputChannels.tpsAccelFrom = tpsFrom;
+	engine->outputChannels.tpsAccelTo = tpsTo;
 }
 
 TpsAccelEnrichment::TpsAccelEnrichment() {
@@ -208,7 +224,8 @@ void setTpsAccelLen(int length) {
 }
 
 void updateAccelParameters() {
-	setTpsAccelLen(engineConfiguration->tpsAccelLength);
+	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
+	setTpsAccelLen(engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond);
 }
 
 #endif /* ! EFI_UNIT_TEST */

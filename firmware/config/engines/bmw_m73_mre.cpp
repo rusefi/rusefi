@@ -63,13 +63,11 @@
 #include "pch.h"
 
 #include "bmw_m73.h"
-#include "fsio_impl.h"
 
 void setEngineBMW_M73_microRusEfi() {
+	 m73engine();
 	// 13641435991 injector
 	engineConfiguration->injector.flow = 180; // cc/min, who knows if this number is real - no good source of info
-
-	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 
 	strcpy(engineConfiguration->vehicleName, "microRusEFIx2");
 
@@ -82,16 +80,9 @@ void setEngineBMW_M73_microRusEfi() {
 
 	engineConfiguration->injectionMode = IM_BATCH;
 
-	// enable ETB
-	// set_rpn_expression 8 "0"
-	// TODO LUA setFsio(7, GPIOC_8, "0");
-
-
-	engineConfiguration->debugMode = DBG_ELECTRONIC_THROTTLE_PID;
 	engineConfiguration->etb.pFactor = 2.00;
 	engineConfiguration->etb.iFactor = 0.35;
 
-	// set debug_mode 37
 	// 22 - AN Temp 4, orange wire
 	engineConfiguration->startStopButtonPin = GPIOA_3;
 
@@ -101,7 +92,6 @@ void setEngineBMW_M73_microRusEfi() {
 #endif /* BOARD_TLE8888_COUNT */
 
 
-	engineConfiguration->canNbcType = CAN_BUS_NBC_NONE;
 	// set_analog_input_pin pps PA7
 	// EFI_ADC_7: "31 - AN volt 3" - PA7
 	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
@@ -113,17 +103,6 @@ void setEngineBMW_M73_microRusEfi() {
 
 	// do I have VR wires flipped?
 	engineConfiguration->trigger.type = TT_60_2_VW;
-
-	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
-	engineConfiguration->cranking.rpm = 280;
-
-	engineConfiguration->crankingTimingAngle = 30;
-
-	// I am too lazy to add MAP sensor
-	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
-
-	// set cranking_fuel 15
-	engineConfiguration->cranking.baseFuel = 15;
 
 	//set tps_min 891
 	engineConfiguration->tpsMin = 891;

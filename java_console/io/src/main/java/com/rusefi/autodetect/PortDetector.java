@@ -95,7 +95,7 @@ public class PortDetector {
         if (autoDetectResult == null)
             autoDetectResult = new SerialAutoChecker.AutoDetectResult(null, null);
         log.debug("Found " + autoDetectResult + " now stopping threads");
-//        FileLog.MAIN.logLine("Returning " + result.get());
+//        log.info("Returning " + result.get());
         return autoDetectResult;
     }
 
@@ -106,7 +106,7 @@ public class PortDetector {
     private static String[] getPortNames() {
 //        long now = System.currentTimeMillis();
         String[] portNames = LinkManager.getCommPorts();
-//        FileLog.MAIN.logLine("Took " + (System.currentTimeMillis() - now));
+//        log.info("Took " + (System.currentTimeMillis() - now));
         return portNames;
     }
 
@@ -114,7 +114,7 @@ public class PortDetector {
     public static SerialAutoChecker.AutoDetectResult autoDetectPort(JFrame parent) {
         SerialAutoChecker.AutoDetectResult autoDetectedPort = autoDetectSerial(null);
         if (autoDetectedPort.getSerialPort() == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to located device");
+            JOptionPane.showMessageDialog(parent, "Failed to locate rusEFI");
             return null;
         }
         return autoDetectedPort;

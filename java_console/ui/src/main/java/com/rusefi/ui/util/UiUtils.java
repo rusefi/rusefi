@@ -1,6 +1,5 @@
 package com.rusefi.ui.util;
 
-import com.rusefi.StartupFrame;
 import com.rusefi.autoupdate.AutoupdateUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +16,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
@@ -59,6 +57,7 @@ public class UiUtils {
     }
 
     private static BufferedImage getScreenShot(Component component) {
+        AutoupdateUtil.assertAwtThread();
         // http://stackoverflow.com/questions/5853879/swing-obtain-image-of-jframe/5853992
         BufferedImage image = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
         // call the Component's paint method, using
@@ -68,7 +67,11 @@ public class UiUtils {
     }
 
     public static void setPauseButtonText(JButton pauseButton, boolean isPaused) {
-        pauseButton.setText(isPaused ? RESUME.getMessage() : PAUSE.getMessage());
+        setPauseButtonText(pauseButton, isPaused, "");
+    }
+
+    public static void setPauseButtonText(JButton pauseButton, boolean isPaused, String suffix) {
+        pauseButton.setText((isPaused ? RESUME.getMessage() : PAUSE.getMessage()) + suffix);
     }
 
     public static void centerWindow(Window w) {
@@ -141,7 +144,12 @@ public class UiUtils {
 
     @NotNull
     public static JButton createPauseButton() {
-        final JButton pauseButton = new JButton(PAUSE.getMessage());
+        return createPauseButton("");
+    }
+
+    @NotNull
+    public static JButton createPauseButton(String suffix) {
+        final JButton pauseButton = new JButton(PAUSE.getMessage() + suffix);
         pauseButton.setMnemonic('p');
         return pauseButton;
     }

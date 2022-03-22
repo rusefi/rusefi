@@ -16,5 +16,3 @@ void configureFordST170(TriggerWaveform * s);
 void configureTriTach(TriggerWaveform * s);
 // TT_VVT_BARRA_3_PLUS_1
 void configureBarra3plus1cam(TriggerWaveform *s);
-void configureVvt45VTwin(TriggerWaveform *s);
-

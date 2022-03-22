@@ -7,11 +7,11 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.core.EngineState;
-import com.rusefi.io.serial.StreamConnector;
 import com.rusefi.io.serial.BufferedSerialIoStream;
+import com.rusefi.io.serial.StreamConnector;
+import com.rusefi.io.stream.PCanIoStream;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
@@ -31,6 +31,7 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class LinkManager implements Closeable {
     private static final Logging log = getLogging(LinkManager.class);
+    public static final String PCAN = "PCAN";
 
     @NotNull
     public static LogLevel LOG_LEVEL = LogLevel.INFO;
@@ -45,16 +46,15 @@ public class LinkManager implements Closeable {
     public static final String LOG_VIEWER = "log viewer";
     private final CommandQueue commandQueue;
 
+    private String lastTriedPort;
+
     private LinkConnector connector = LinkConnector.VOID;
     private boolean isStarted;
     private boolean compositeLogicEnabled = true;
     private boolean needPullData = true;
-    public MessagesListener messageListener = new MessagesListener() {
-        @Override
-        public void postMessage(Class<?> source, String message) {
-            System.out.println(source + ": " + message);
-        }
-    };
+    private boolean needPullText = true;
+    private boolean needPullLiveData = true;
+    public final MessagesListener messageListener = (source, message) -> System.out.println(source + ": " + message);
     private Thread communicationThread;
 
     public LinkManager() {
@@ -89,6 +89,7 @@ public class LinkManager implements Closeable {
     @NotNull
     public CountDownLatch connect(String port) {
         final CountDownLatch connected = new CountDownLatch(1);
+
         startAndConnect(port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed() {
@@ -101,11 +102,7 @@ public class LinkManager implements Closeable {
                 connected.countDown();
             }
         });
-        try {
-            connected.await(60, TimeUnit.SECONDS);
-        } catch (InterruptedException e) {
-            throw new IllegalStateException(e);
-        }
+
         return connected;
     }
 
@@ -152,8 +149,26 @@ public class LinkManager implements Closeable {
         return needPullData;
     }
 
+    public boolean isNeedPullText() {
+        return needPullText;
+    }
+
+    public boolean isNeedPullLiveData() {
+        return needPullLiveData;
+    }
+
+    public LinkManager setNeedPullLiveData(boolean needPullLiveData) {
+        this.needPullLiveData = needPullLiveData;
+        return this;
+    }
+
     public LinkManager setNeedPullData(boolean needPullData) {
         this.needPullData = needPullData;
+        return this;
+    }
+
+    public LinkManager setNeedPullText(boolean needPullText) {
+        this.needPullText = needPullText;
         return this;
     }
 
@@ -178,8 +193,12 @@ public class LinkManager implements Closeable {
             new NamedThreadFactory("communication executor"));
 
     public void assertCommunicationThread() {
-        if (Thread.currentThread() != communicationThread)
-            throw new IllegalStateException("Communication on wrong thread");
+        if (Thread.currentThread() != communicationThread) {
+            IllegalStateException e = new IllegalStateException("Communication on wrong thread");
+            e.printStackTrace();
+            log.error(e.getMessage(), e);
+            throw e;
+        }
     }
 
     private final EngineState engineState;
@@ -208,8 +227,12 @@ public class LinkManager implements Closeable {
     public void start(String port, ConnectionFailedListener stateListener) {
         Objects.requireNonNull(port, "port");
         log.info("LinkManager: Starting " + port);
+        lastTriedPort = port; // Save port before connection attempt
         if (isLogViewerMode(port)) {
             setConnector(LinkConnector.VOID);
+        } else if (PCAN.equals(port)) {
+            Callable<IoStream> streamFactory = PCanIoStream::getPCANIoStream;
+            setConnector(new StreamConnector(this, streamFactory));
         } else if (TcpConnector.isTcpPort(port)) {
             Callable<IoStream> streamFactory = new Callable<IoStream>() {
                 @Override
@@ -231,7 +254,7 @@ public class LinkManager implements Closeable {
                 @Override
                 public IoStream call() {
                     messageListener.postMessage(getClass(), "Opening port: " + port);
-                    IoStream stream = ((Callable<IoStream>) () -> BufferedSerialIoStream.openPort(port)).call();
+                    IoStream stream = BufferedSerialIoStream.openPort(port);
                     if (stream == null) {
                         // error already reported
                         return null;
@@ -268,13 +291,21 @@ public class LinkManager implements Closeable {
 
     public void restart() {
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.NOT_CONNECTED);
-        connector.restart();
+        close(); // Explicitly kill the connection (call connectors destructor??????)
+
+        String[] ports = getCommPorts();
+        boolean isPortAvailableAgain = Arrays.asList(ports).contains(lastTriedPort);
+        log.info("restart isPortAvailableAgain=" + isPortAvailableAgain);
+        if (isPortAvailableAgain) {
+            connect(lastTriedPort);
+        }
     }
 
     @Override
     public void close() {
         if (connector != null)
             connector.stop();
+        isStarted = false; // Connector is dead and cant be in started state (Otherwise the Exception will raised)
     }
 
     public static String unpackConfirmation(String message) {

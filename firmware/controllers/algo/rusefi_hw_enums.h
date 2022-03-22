@@ -22,6 +22,7 @@ typedef enum __attribute__ ((__packed__)) {
  */
 typedef enum __attribute__ ((__packed__)) {
 	GPIO_UNASSIGNED = 0,
+	// only used as return value of 'parseBrainPin' function do we really this this logic special value at all?!
 	GPIO_INVALID = 1,
 
 	GPIOA_0 = 2,
@@ -232,27 +233,49 @@ typedef enum __attribute__ ((__packed__)) {
 	TLE6240_PIN_14 = 212,
 	TLE6240_PIN_15 = 213,
 	TLE6240_PIN_16 = 214,
+
+	/* L9779 */
+	L9779_IGN_1  = 215,
+	L9779_IGN_2  = 216,
+	L9779_IGN_3  = 217,
+	L9779_IGN_4  = 218,
+	L9779_OUT_1  = 219,
+	L9779_OUT_2  = 220,
+	L9779_OUT_3  = 221,
+	L9779_OUT_4  = 222,
+	L9779_OUT_5  = 223,
+	L9779_OUT_6  = 224,
+	L9779_OUT_7  = 225,
+	L9779_OUT_8  = 226,
+	L9779_OUT_9  = 227,
+	L9779_OUT_10 = 228,
+	L9779_OUT_11 = 229,
+	L9779_OUT_12 = 230,
+	L9779_OUT_13 = 231,
+	L9779_OUT_14 = 232,
+	L9779_OUT_15 = 233,
+	L9779_OUT_16 = 234,
+	L9779_OUT_17 = 235,
+	L9779_OUT_18 = 236,
+	L9779_OUT_19 = 237,
+	L9779_OUT_20 = 238,
+	L9779_OUT_A  = 239,
+	L9779_OUT_B  = 240,
+	L9779_OUT_C  = 241,
+	L9779_OUT_D  = 242,
+	L9779_OUT_25 = 243,
+	L9779_OUT_26 = 244,
+	L9779_OUT_27 = 245,
+	L9779_OUT_28 = 246,
+	L9779_OUT_MRD = 247,
+	L9779_PIN_KEY = 248,
 } brain_pin_e;
 
 /* Please keep updating these defines */
 #define BRAIN_PIN_ONCHIP_LAST	GPIOI_15
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
-#define BRAIN_PIN_LAST 			TLE8888_PIN_WAKE
+#define BRAIN_PIN_LAST 			L9779_PIN_KEY
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - GPIOA_0 + 1)
-
-/* diagnostic for brain pins
- * can be combination of few bits
- * defined as bit mask */
-typedef enum __attribute__ ((__packed__))
-{
-	PIN_OK = 0,
-	PIN_OPEN = 0x01,
-	PIN_SHORT_TO_GND = 0x02,
-	PIN_SHORT_TO_BAT = 0x04,
-	PIN_OVERLOAD =	0x08,
-	PIN_DRIVER_OVERTEMP = 0x10,
-	PIN_INVALID = 0x80
-} brain_pin_diag_e;
 
 /**
  * Frankenso analog #1 PC2 ADC12

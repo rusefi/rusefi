@@ -11,10 +11,13 @@ ifeq ($(DEBUG_LEVEL_OPT),)
   DDEFS += -DEFI_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_ASSERTS=FALSE -DCH_DBG_ENABLE_STACK_CHECK=FALSE -DCH_DBG_FILL_THREADS=FALSE -DCH_DBG_THREADS_PROFILING=FALSE
 endif
 
+# let everyone know that we are compiling bootloader
+IS_RE_BOOTLOADER = yes
+
 # disable some modules to shrink bootloader binary
 DDEFS += -DEFI_BOOTLOADER
 DDEFS += -DHAL_USE_EXT=FALSE -DHAL_USE_ICU=FALSE -DHAL_USE_PWM=FALSE -DHAL_USE_RTC=FALSE -DEF_LUA=FALSE
-#disable ChibiOS flsah driver and prevent header from include
+#disable ChibiOS flash driver and prevent header from include
 DDEFS += -DHAL_USE_FLASH=FALSE
 
 DDEFS += -DEFI_USE_UART_DMA=FALSE
@@ -161,19 +164,18 @@ include $(PROJECT_DIR)/hw_layer/drivers/drivers.mk
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CSRC =  $(ALLCSRC) \
-	$(CHIBIOS)/os/various/syscalls.c \
-	$(CONSOLESRC) \
+	$(BOARDSRC) \
 	$(DEV_SRC) \
 	$(HW_LAYER_EMS) \
 	$(HW_LAYER_DRIVERS_CORE) \
 	$(FATFSSRC) \
-	$(SYSTEMSRC) \
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
+# todo: reduce code duplication with primary Makefile!!!
 # setting.
 CPPSRC = $(ALLCPPSRC) \
-	$(DEV_SRC_CPP) \
 	$(HW_LAYER_EMS_CPP) \
+	$(BOARDCPPSRC) \
 	$(HW_SENSORS_SRC) \
 	$(TUNERSTUDIO_SRC_CPP) \
 	$(CONSOLE_SRC_CPP) \
@@ -239,6 +241,7 @@ INCDIR = $(ALLINC) \
 	$(PROJECT_DIR)/hw_layer/sensors \
 	$(PROJECT_DIR)/hw_layer/mass_storage \
 	$(PROJECT_DIR)/hw_layer/ports \
+	$(PROJECT_DIR)/console/binary/generated \
 	$(PROJECT_DIR)/hw_layer/$(CPU_HWLAYER) \
 	$(HW_INC) \
 	$(HW_LAYER_DRIVERS_INC) \

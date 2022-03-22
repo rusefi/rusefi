@@ -1,5 +1,7 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
+import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
 import com.rusefi.models.Utils;
 import com.rusefi.ui.util.URLLabel;
@@ -14,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Launcher.*;
 import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
 
@@ -24,6 +27,7 @@ import static com.rusefi.ui.storage.PersistentConfiguration.getConfig;
  * 8/10/14
  */
 public class VersionChecker {
+    private static final Logging log = getLogging(ConsoleUI.class);
     private static final String JAVA_CONSOLE_TAG = "java_console";
     private static final String FIRMWARE_TAG = "firmware";
     private static final String VERSIONS_URL = "https://rusefi.com/console/versions.txt";
@@ -55,7 +59,7 @@ public class VersionChecker {
         URL url = new URL(VERSIONS_URL);
         BufferedReader s = new BufferedReader(new InputStreamReader(url.openStream()));
 
-        FileLog.MAIN.logLine("Reading from " + VERSIONS_URL);
+        log.info("Reading from " + VERSIONS_URL);
 
         String line;
         while ((line = s.readLine()) != null) {
@@ -65,14 +69,14 @@ public class VersionChecker {
         }
 
         final Integer javaVersion = parseNotNull(map.get(JAVA_CONSOLE_TAG), "VC value");
-        System.out.println(new Date() + ": Server recommends java_console version " + javaVersion + " or newer");
+        log.info("Server recommends java_console version " + javaVersion + " or newer");
         showUpdateWarningIfNeeded("dev console", javaVersion, CONSOLE_VERSION);
-        System.out.println(new Date() + ": Server recommends firmware " + map.get(FIRMWARE_TAG) + " or newer");
+        log.info("Server recommends firmware " + map.get(FIRMWARE_TAG) + " or newer");
 
         String criticalUrl = map.get("critical_url");
         if (criticalUrl != null && !criticalUrl.trim().isEmpty()) {
             JPanel panel = new JPanel(new BorderLayout());
-            panel.add(new JLabel("WARNING! CRITICAL ISSUE! Are you sure you want to run rusEfi?"), BorderLayout.NORTH);
+            panel.add(new JLabel("WARNING! CRITICAL ISSUE! Are you sure you want to run rusEFI?"), BorderLayout.NORTH);
             panel.add(new URLLabel(criticalUrl, criticalUrl), BorderLayout.CENTER);
             JOptionPane.showMessageDialog(getPaneParent(), panel);
         }

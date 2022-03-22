@@ -1,4 +1,0 @@
-Options +Indexes
-<IfModule mod_autoindex.c>
-  IndexOptions NameWidth=*
-</ifModule>

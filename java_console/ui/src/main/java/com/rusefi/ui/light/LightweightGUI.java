@@ -1,5 +1,6 @@
 package com.rusefi.ui.light;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autoupdate.Autoupdate;
@@ -16,19 +17,17 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.StartupFrame.createLogoLabel;
 
 public class LightweightGUI {
+    private static final Logging log = getLogging(LightweightGUI.class);
 
-    private final UIContext uiContext;
-    private FrameHelper frameHelper = new FrameHelper();
-    private JPanel content = new JPanel(new BorderLayout());
-
-    private JPanel connectedPanel = new JPanel();
-    private JLabel connectedLabel = new JLabel();
+    private final JPanel connectedPanel = new JPanel();
+    private final JLabel connectedLabel = new JLabel();
 
     public LightweightGUI(UIContext uiContext) {
-        this.uiContext = uiContext;
+        final FrameHelper frameHelper = new FrameHelper();
         frameHelper.getFrame().setTitle("rusEFI Lightweight " + rusEFIVersion.CONSOLE_VERSION);
 
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -48,11 +47,11 @@ public class LightweightGUI {
         SensorCentral.getInstance().addListener(Sensor.FIRMWARE_VERSION, value -> firmwareVersion.setText(Integer.toString((int) value)));
         leftPanel.add(firmwareVersion);
 
+        final JPanel content = new JPanel(new BorderLayout());
         content.add(topPanel, BorderLayout.NORTH);
         content.add(leftPanel, BorderLayout.WEST);
 
         content.add(createLogoUrlPanel(), BorderLayout.EAST);
-
 
         frameHelper.showFrame(content, true);
     }
@@ -105,10 +104,7 @@ public class LightweightGUI {
 
         linkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
 
-        new ConnectionWatchdog(Timeouts.CONNECTION_RESTART_DELAY, () -> {
-            FileLog.MAIN.logLine("ConnectionWatchdog.reconnectTimer restarting: " + Timeouts.CONNECTION_RESTART_DELAY);
-            linkManager.restart();
-        }).start();
+        ConnectionWatchdog.init(linkManager);
     }
 
     private static String detectPortUntilDetected() {

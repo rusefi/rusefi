@@ -35,6 +35,8 @@
 
 #include "rusefi_halconf.h"
 
+#include "../../cfg/halconf_community.h"
+
 /**
  * @brief   Enables the FLASH subsystem.
  */
@@ -64,7 +66,7 @@
  * @brief   Enables the I2C subsystem.
  */
 #if !defined(HAL_USE_I2C) || defined(__DOXYGEN__)
-#define HAL_USE_I2C                 FALSE
+#define HAL_USE_I2C                 TRUE
 #endif
 
 /**
@@ -203,9 +205,6 @@
 #if !defined(UART_USE_MUTUAL_EXCLUSION) || defined(__DOXYGEN__)
 #define UART_USE_MUTUAL_EXCLUSION   FALSE
 #endif
-
-/* common for all STM32 */
-#include "../../cfg/halconf_community.h"
 
 #endif /* HALCONF_H */
 

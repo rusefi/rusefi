@@ -17,6 +17,15 @@ jobs:
       - name: Test Compiler
         run: javac -version
 
+      - name: Print GCC version
+        working-directory: .
+        run: gcc -v
+
+      - name: Build Native Unit Tests as shared library
+        working-directory: ./unit_tests/
+        # we have a unit test of JNI thus we need to build shared library
+        run: make -j4
+
       - name: Build Android
         env:
           RUSEFI_ANDROID_KEYPASS: ${{ secrets.RUSEFI_ANDROID_KEYPASS }}
@@ -48,4 +57,4 @@ jobs:
       - name: Upload rusEFI Android application
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         working-directory: .
-        run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} . android/app/build/outputs/apk/release/rusEFI-release.apk
+        run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} build_server android/app/build/outputs/apk/release/rusEFI-release.apk

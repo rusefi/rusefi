@@ -12,36 +12,17 @@
 #if EFI_CAN_SUPPORT
 #include "can_dash.h"
 #include "can_msg_tx.h"
+#include "can_bmw.h"
+#include "can_vag.h"
 
 #include "rtc_helper.h"
 #include "fuel_math.h"
 // CAN Bus ID for broadcast
-/**
- * e46 data is from http://forums.bimmerforums.com/forum/showthread.php?1887229
- *
- * Same for Mini Cooper? http://vehicle-reverse-engineering.wikia.com/wiki/MINI
- *
- * All the below packets are using 500kb/s
- *
- * for verbose use "set debug_mode 26" command in console
- *
- */
-#define CAN_BMW_E46_SPEED             0x153
-#define CAN_BMW_E46_RPM               0x316
-#define CAN_BMW_E46_DME2              0x329
-#define CAN_BMW_E46_CLUSTER_STATUS    0x613
-#define CAN_BMW_E46_CLUSTER_STATUS_2  0x615
 #define CAN_FIAT_MOTOR_INFO           0x561
 #define CAN_MAZDA_RX_RPM_SPEED        0x201
 #define CAN_MAZDA_RX_STEERING_WARNING 0x300
 #define CAN_MAZDA_RX_STATUS_1         0x212
 #define CAN_MAZDA_RX_STATUS_2         0x420
-
-// https://wiki.openstreetmap.org/wiki/VW-CAN
-#define CAN_VAG_RPM      0x280 /* _10ms cycle */
-#define CAN_VAG_CLT      0x288 /* _10ms cycle */
-#define CAN_VAG_CLT_V2   0x420 /* _10ms cycle */
-#define CAN_VAG_IMMO     0x3D0 /* _10ms cycle */
 
 //w202 DASH
 #define W202_STAT_1	     0x308 /* _20ms cycle */
@@ -101,7 +82,6 @@ constexpr uint8_t e90_temp_offset = 49;
 
 void canDashboardBMW(CanCycle cycle);
 void canDashboardFiat(CanCycle cycle);
-void canDashboardVAG(CanCycle cycle);
 void canMazdaRX8(CanCycle cycle);
 void canDashboardW202(CanCycle cycle);
 void canDashboardBMWE90(CanCycle cycle);
@@ -160,7 +140,7 @@ void canDashboardBMW(CanCycle cycle) {
 
 		{
 			CanTxMessage msg(CAN_BMW_E46_RPM);
-			msg.setShortValue((int) (GET_RPM() * 6.4), 2);
+			msg.setShortValue((int) (Sensor::getOrZero(SensorType::Rpm) * 6.4), 2);
 		}
 
 		{
@@ -183,7 +163,7 @@ void canMazdaRX8(CanCycle cycle) {
 
 			float kph = Sensor::getOrZero(SensorType::VehicleSpeed);
 
-			msg.setShortValue(SWAP_UINT16(GET_RPM() * 4), 0);
+			msg.setShortValue(SWAP_UINT16(Sensor::getOrZero(SensorType::Rpm) * 4), 0);
 			msg.setShortValue(0xFFFF, 2);
 			msg.setShortValue(SWAP_UINT16((int )(100 * kph + 10000)), 4);
 			msg.setShortValue(0, 6);
@@ -212,7 +192,7 @@ void canMazdaRX8(CanCycle cycle) {
 			msg[4] = 0x01; //Oil Pressure (not really a gauge)
 			msg[5] = 0x00; //check engine light
 			msg[6] = 0x00; //Coolant, oil and battery
-			if ((GET_RPM()>0) && (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE)<13)) {
+			if ((Sensor::getOrZero(SensorType::Rpm)>0) && (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE)<13)) {
 				msg.setBit(6, 6); // battery light
 			}
 			if (!clt.Valid || clt.Value > 105) {
@@ -233,7 +213,7 @@ void canDashboardFiat(CanCycle cycle) {
 			//Fiat Dashboard
 			CanTxMessage msg(CAN_FIAT_MOTOR_INFO);
 			msg.setShortValue((int) (Sensor::getOrZero(SensorType::Clt) - 40), 3); //Coolant Temp
-			msg.setShortValue(GET_RPM() / 32, 6); //RPM
+			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) / 32, 6); //RPM
 		}
 	}
 }
@@ -242,14 +222,14 @@ void canDashboardVAG(CanCycle cycle) {
 	if (cycle.isInterval(CI::_10ms)) {
 		{
 			//VAG Dashboard
-			CanTxMessage msg(CAN_VAG_RPM);
-			msg.setShortValue(GET_RPM() * 4, 2); //RPM
+			CanTxMessage msg(CAN_VAG_Motor_1);
+			msg.setShortValue(Sensor::getOrZero(SensorType::Rpm) * 4, 2); //RPM
 		}
 
 		float clt = Sensor::getOrZero(SensorType::Clt);
 
 		{
-			CanTxMessage msg(CAN_VAG_CLT);
+			CanTxMessage msg(CAN_VAG_Motor_2);
 			msg.setShortValue((int) ((clt + 48.373) / 0.75), 1); //Coolant Temp
 		}
 
@@ -269,7 +249,7 @@ void canDashboardW202(CanCycle cycle) {
 	if (cycle.isInterval(CI::_20ms)) {
 		{
 			CanTxMessage msg(W202_STAT_1);
-			uint16_t tmp = GET_RPM();
+			uint16_t tmp = Sensor::getOrZero(SensorType::Rpm);
 			msg[0] = 0x08; // Unknown
 			msg[1] = (tmp >> 8); //RPM
 			msg[2] = (tmp & 0xff); //RPM
@@ -328,7 +308,7 @@ void canDashboardGenesisCoupe(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
 		{
 			CanTxMessage msg(GENESIS_COUPLE_RPM_316, 8);
-			int rpm8 = GET_RPM() * 4;
+			int rpm8 = Sensor::getOrZero(SensorType::Rpm) * 4;
 			msg[3] = rpm8 >> 8;
 			msg[4] = rpm8 & 0xFF;
 		}
@@ -345,7 +325,7 @@ void canDashboardNissanVQ(CanCycle cycle) {
 		{
 			CanTxMessage msg(NISSAN_RPM_1F9, 8);
 			msg[0] = 0x20;
-			int rpm8 = (int)(GET_RPM() * 8);
+			int rpm8 = (int)(Sensor::getOrZero(SensorType::Rpm) * 8);
 			msg[2] = rpm8 >> 8;
 			msg[3] = rpm8 & 0xFF;
 		}
@@ -369,7 +349,7 @@ void canDashboardNissanVQ(CanCycle cycle) {
 
 			// thank you "102 CAN Communication decoded"
 #define CAN_23D_RPM_MULT 3.15
-			int rpm315 = (int)(GET_RPM() / CAN_23D_RPM_MULT);
+			int rpm315 = (int)(Sensor::getOrZero(SensorType::Rpm) / CAN_23D_RPM_MULT);
 			msg[3] = rpm315 & 0xFF;
 			msg[4] = rpm315 >> 8;
 
@@ -392,8 +372,8 @@ void canDashboardVagMqb(CanCycle cycle) {
 	
 		{ //RPM
 			CanTxMessage msg(0x107, 8);
-			msg[3] = ((int)(GET_RPM() / 3.5)) & 0xFF;
-			msg[4] = ((int)(GET_RPM() / 3.5)) >> 8;
+			msg[3] = ((int)(Sensor::getOrZero(SensorType::Rpm) / 3.5)) & 0xFF;
+			msg[4] = ((int)(Sensor::getOrZero(SensorType::Rpm) / 3.5)) >> 8;
 		}
 	}
 }
@@ -424,8 +404,8 @@ void canDashboardBMWE90(CanCycle cycle)
 				rpmcounter = 0xF0;
 			CanTxMessage msg(E90_RPM, 3);
 			msg[0] = rpmcounter;
-			msg[1] = (GET_RPM() * 4) & 0xFF;
-			msg[2] = (GET_RPM() * 4) >> 8;
+			msg[1] = ((int)(Sensor::getOrZero(SensorType::Rpm)) * 4) & 0xFF;
+			msg[2] = ((int)(Sensor::getOrZero(SensorType::Rpm)) * 4) >> 8;
 		}
 
 		{ //oil & coolant temp (all in C, despite gauge being F)
@@ -554,7 +534,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		/* 0x360 - 50Hz rate */
 		{
 			CanTxMessage msg(0x360, 8);
-			tmp = GET_RPM();
+			tmp = Sensor::getOrZero(SensorType::Rpm);
 			/* RPM */
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
@@ -595,7 +575,7 @@ void canDashboardHaltech(CanCycle cycle) {
 		{ 
 			CanTxMessage msg(0x362, 6);
 			/* Injection Stage 1 Duty Cycle - y = x/10 */
-			uint16_t rpm = GET_RPM();
+			uint16_t rpm = Sensor::getOrZero(SensorType::Rpm);
 			tmp = (uint16_t)( getInjectorDutyCycle(rpm) * 10) ;
 			msg[0] = (tmp >> 8);
 			msg[1] = (tmp & 0x00ff);
@@ -973,7 +953,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[4] = 0x00;
 			msg[5] = 0x00;
 			/* Barometric pressure */
-			tmp = (uint16_t)(getBaroPressure()*10);
+			tmp = (uint16_t)(Sensor::getOrZero(SensorType::BarometricPressure) * 10);
 			msg[6] = (tmp >> 8);
 			msg[7] = (tmp & 0x00ff);
 		}
@@ -1123,10 +1103,13 @@ void canDashboardHaltech(CanCycle cycle) {
 	}
 }
 
+//Based on AIM can protocol
+//https://www.aimtechnologies.com/support/racingecu/AiM_CAN_101_eng.pdf
+
 struct Aim5f0 {
 	scaled_channel<uint16_t, 1> Rpm;
-	scaled_channel<uint16_t, 65> Tps;
-	scaled_channel<uint16_t, 65> Pps;
+	scaled_channel<uint16_t, 650> Tps;
+	scaled_channel<uint16_t, 650> Pps;
 	scaled_channel<uint16_t, 100> Vss;
 };
 
@@ -1153,10 +1136,10 @@ static void populateFrame(Aim5f1& msg) {
 }
 
 struct Aim5f2 {
-	scaled_channel<uint16_t, 10> Iat;
-	scaled_channel<uint16_t, 10> Ect;
-	scaled_channel<uint16_t, 10> FuelT;
-	scaled_channel<uint16_t, 10> OilT;
+	scaled_channel<uint16_t, 190> Iat;
+	scaled_channel<uint16_t, 190> Ect;
+	scaled_channel<uint16_t, 190> FuelT;
+	scaled_channel<uint16_t, 190> OilT;
 };
 
 static void populateFrame(Aim5f2& msg) {
@@ -1185,7 +1168,7 @@ static void populateFrame(Aim5f3& msg) {
 
 struct Aim5f4 {
 	scaled_channel<uint16_t, 10000> Boost;
-	scaled_channel<uint16_t, 10> Vbat;
+	scaled_channel<uint16_t, 3200> Vbat;
 	scaled_channel<uint16_t, 10> FuelUse;
 	scaled_channel<uint16_t, 10> Gear;
 };

@@ -36,6 +36,7 @@
 #include "boost_control.h"
 #include "ignition_controller.h"
 #include "alternator_controller.h"
+#include "dfco.h"
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -168,7 +169,7 @@ public:
 	type_list<
 		Mockable<InjectorModel>,
 #if EFI_IDLE_CONTROL
-		IdleController,
+		Mockable<IdleController>,
 #endif // EFI_IDLE_CONTROL
 		TriggerScheduler,
 #if EFI_HPFP && EFI_ENGINE_CONTROL
@@ -182,6 +183,8 @@ public:
 		IgnitionController,
 		AcController,
 		PrimeController,
+		DfcoController,
+		Mockable<WallFuelController>,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -196,8 +199,10 @@ public:
 	cyclic_buffer<int> triggerErrorDetection;
 
 	GearControllerBase *gearController;
+#if EFI_LAUNCH_CONTROL
 	LaunchControlBase launchController;
 	SoftSparkLimiter softSparkLimiter;
+#endif // EFI_LAUNCH_CONTROL
 
 #if EFI_BOOST_CONTROL
 	BoostController boostController;
@@ -268,7 +273,6 @@ public:
 	scheduling_s tdcScheduler[2];
 #endif /* EFI_ENGINE_CONTROL */
 
-	bool needToStopEngine(efitick_t nowNt) const;
 	bool etbAutoTune = false;
 	/**
 	 * this is based on isEngineChartEnabled and engineSnifferRpmThreshold settings
@@ -291,12 +295,6 @@ public:
 	efitimems64_t callFromPitStopEndTime = 0;
 
 	RpmCalculator rpmCalculator;
-
-	/**
-	 * this is about 'stopengine' command
-	 */
-	efitick_t stopEngineRequestTimeNt = 0;
-
 
 	bool startStopState = false;
 	int startStopStateToggleCounter = 0;
@@ -329,14 +327,12 @@ public:
 	floatms_t injectionDuration = 0;
 
 	// Per-injection fuel mass, including TPS accel enrich
-	float injectionMass[STFT_BANK_COUNT] = {0};
+	float injectionMass[MAX_CYLINDER_COUNT] = {0};
 
 	float stftCorrection[STFT_BANK_COUNT] = {0};
 
-	/**
-	 * This one with wall wetting accounted for, used for logging.
-	 */
-	floatms_t actualLastInjection[STFT_BANK_COUNT] = {0};
+	// Stores the actual pulse duration of the last injection for every cylinder
+	floatms_t actualLastInjection[MAX_CYLINDER_COUNT] = {0};
 
 	// Standard cylinder air charge - 100% VE at standard temperature, grams per cylinder
 	float standardAirCharge = 0;
@@ -356,8 +352,6 @@ public:
 	efitimeus_t acSwitchLastChangeTime = 0;
 
 	bool isRunningPwmTest = false;
-
-	FsioState fsioState;
 
 	/**
 	 * are we running any kind of functional test? this affect
@@ -384,7 +378,6 @@ public:
 	 */
 	void onTriggerSignalEvent();
 	EngineState engineState;
-	idle_state_s idle;
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
 	 */
@@ -395,12 +388,6 @@ public:
 
 	SensorsState sensors;
 	efitick_t mainRelayBenchStartNt = 0;
-
-	/**
-	 * This field is true if we are in 'cylinder cleanup' state right now
-	 * see isCylinderCleanupEnabled
-	 */
-	bool isCylinderCleanupMode = false;
 
 	/**
 	 * value of 'triggerShape.getLength()'
@@ -460,6 +447,8 @@ private:
 
 	void injectEngineReferences();
 };
+
+trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode);
 
 void prepareShapes();
 void applyNonPersistentConfiguration();

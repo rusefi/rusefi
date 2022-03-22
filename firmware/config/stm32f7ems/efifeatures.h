@@ -9,6 +9,12 @@
  * @date Aug 29, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
+
+// Disable ini ramdisk as a mitigation of https://github.com/rusefi/rusefi/issues/3775
+// See STM32F7.ld for more info
+#ifndef EFI_EMBED_INI_MSD
+#define EFI_EMBED_INI_MSD FALSE
+#endif
  
 #include "../stm32f4ems/efifeatures.h"
 
@@ -40,7 +46,9 @@
 #ifndef TS_NO_PRIMARY
 #define TS_NO_PRIMARY 1
 #endif
+#ifndef TS_NO_SECONDARY
 #define TS_NO_SECONDARY 1
+#endif
 
 #define AUX_SERIAL_DEVICE (&SD6)
 

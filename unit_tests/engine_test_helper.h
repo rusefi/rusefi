@@ -95,12 +95,12 @@ public:
 	int executeActions();
 	void moveTimeForwardMs(float deltaTimeMs);
 	void moveTimeForwardSec(float deltaTimeSec);
-	efitimeus_t getTimeNowUs(void);
+	efitimeus_t getTimeNowUs();
 
 	Engine engine;
 	persistent_config_s persistentConfig;
 
-	::testing::NiceMock<MockAirmass> mockAirmass;
+	std::unique_ptr<::testing::NiceMock<MockAirmass>> mockAirmass;
 
 private:
 	void writeEvents(const char *fileName);

@@ -23,7 +23,6 @@ Bits: 'bits';
 Bit: 'bit';
 Array: 'array';
 Scalar: 'scalar';
-FsioVisible: 'fsio_visible';
 Autoscale: 'autoscale';
 
 ArrayDimensionSeparator: 'x';
@@ -39,7 +38,7 @@ FloatChars: IntegerChars [.] ([0-9]+)?;
 IdentifierChars : [a-zA-Z_]([a-zA-Z0-9_]*);
 
 // TODO: do we need replacementIdent AND identifier to be here?
-replacementIdent: '@@' IdentifierChars '@@' | identifier;
+replacementIdent: integer | '@@' IdentifierChars '@@' | identifier;
 
 String: [a-zA-Z_0-9.']+;
 
@@ -94,7 +93,7 @@ fieldOptionsList
 
 arrayLengthSpec: numexpr (ArrayDimensionSeparator numexpr)?;
 
-scalarField: identifier Autoscale? FsioVisible? identifier (fieldOptionsList)?;
+scalarField: identifier Autoscale? identifier (fieldOptionsList)?;
 arrayField: identifier '[' arrayLengthSpec Iterate? ']' Autoscale? identifier SemicolonedString? (fieldOptionsList)?;
 bitField: Bit identifier (',' QuotedString ',' QuotedString)? ('(' 'comment' ':' QuotedString ')')? SemicolonedSuffix?;
 
@@ -121,7 +120,7 @@ enumRhs
     | enumVal (',' enumVal)*
     ;
 
-enumTypedefSuffix: /*ignored*/integer Bits ',' Datatype ',' '@OFFSET@' ',' '[' integer ':' integer ']' ',' enumRhs ;
+enumTypedefSuffix: /*ignored*/replacementIdent Bits ',' Datatype ',' '@OFFSET@' ',' '[' integer ':' integer ']' ',' enumRhs ;
 scalarTypedefSuffix: /*ignored*/integer Scalar ',' Datatype ',' '@OFFSET@' fieldOptionsList ;
 stringTypedefSuffix: /*ignored*/replacementIdent 'string' ',' 'ASCII' ',' '@OFFSET@' ',' numexpr;
 

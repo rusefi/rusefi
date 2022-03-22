@@ -23,12 +23,12 @@
 #include "pch.h"
 
 #include "os_access.h"
-#include "fsio_impl.h"
 #include "speed_density.h"
 #include "advance_map.h"
 #include "flash_main.h"
 
 #include "hip9011_logic.h"
+#include "bench_test.h"
 
 #if EFI_MEMS
 #include "accelerometer.h"
@@ -68,7 +68,6 @@
 #include "m111.h"
 #include "mercedes.h"
 #include "mitsubishi.h"
-#include "me7pnp.h"
 
 #include "subaru.h"
 #include "test_engine.h"
@@ -156,6 +155,9 @@ void onBurnRequest() {
 	incrementGlobalConfigurationVersion();
 }
 
+// Weak link a stub so that every board doesn't have to implement this function
+__attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
+
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration
  * online tuning of most values in the maps does not count as configuration change, but 'Burn' command does
@@ -170,6 +172,8 @@ void incrementGlobalConfigurationVersion() {
 #endif /* EFI_DEFAILED_LOGGING */
 
 	applyNewHardwareSettings();
+
+	boardOnConfigurationChange(&activeConfiguration);
 
 /**
  * All these callbacks could be implemented as listeners, but these days I am saving RAM
@@ -186,16 +190,16 @@ void incrementGlobalConfigurationVersion() {
 	onConfigurationChangeElectronicThrottleCallback(&activeConfiguration);
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+	onConfigurationChangeBenchTest();
+#endif
+
 #if EFI_SHAFT_POSITION_INPUT
 	onConfigurationChangeTriggerCallback();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 #if EFI_EMULATE_POSITION_SENSORS && ! EFI_UNIT_TEST
 	onConfigurationChangeRpmEmulatorCallback(&activeConfiguration);
 #endif /* EFI_EMULATE_POSITION_SENSORS */
-
-#if EFI_FSIO
-	onConfigurationChangeFsioCallback(&activeConfiguration);
-#endif /* EFI_FSIO */
 
 	engine->engineModules.apply_all([](auto & m) {
 			m.onConfigurationChange(&activeConfiguration);
@@ -390,7 +394,7 @@ void setDefaultGppwmParameters() {
 		}
 
 		for (size_t j = 0; j < efi::size(cfg.rpmBins); j++) {
-			cfg.rpmBins[j] = 1000 * j / RPM_1_BYTE_PACKING_MULT;
+			cfg.rpmBins[j] = 1000 * j;
 		}
 	}
 }
@@ -501,6 +505,7 @@ static void setDefaultEngineConfiguration() {
 
     // OBD-II default rate is 500kbps
     engineConfiguration->canBaudRate = B500KBPS;
+    engineConfiguration->can2BaudRate = B500KBPS;
 
 	engineConfiguration->mafSensorType = Bosch0280218037;
 	setBosch0280218037(config);
@@ -618,9 +623,6 @@ static void setDefaultEngineConfiguration() {
 	// performance optimization
 	engineConfiguration->sensorChartMode = SC_OFF;
 
-
-	engineConfiguration->extraInjectionOffset = 0;
-
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(5);
 	engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(0);
@@ -650,6 +652,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->cylinderBore = 87.5;
 
+	setBoschHDEV_5_injectors();
+
 	setEgoSensor(ES_14Point7_Free);
 
 	engineConfiguration->globalFuelCorrection = 1;
@@ -669,8 +673,6 @@ static void setDefaultEngineConfiguration() {
 	// need more events for automated test
 	engineConfiguration->engineChartSize = 400;
 #endif
-
-	engineConfiguration->primingSquirtDurationMs = 5;
 
 	engineConfiguration->isMapAveragingEnabled = true;
 	engineConfiguration->isWaveAnalyzerEnabled = true;
@@ -812,6 +814,8 @@ void loadConfiguration() {
 	resetConfigurationExt(engineConfiguration->engineType);
 #endif /* EFI_INTERNAL_FLASH */
 
+	detectBoardType();
+
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();
 }
@@ -842,10 +846,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case UNUSED60:
-// todo: is it time to replace MICRO_RUS_EFI, PROTEUS, PROMETHEUS_DEFAULTS with MINIMAL_PINS? maybe rename MINIMAL_PINS to DEFAULT?
-	case UNUSED61:
-	case UNUSED100:
+	case HELLEN72_ETB:
 	case MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
@@ -868,17 +869,18 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
+	case VW_B6:
+		setVwPassatB6();
+		break;
 	case MRE_M111:
 		setM111EngineConfiguration();
 		break;
 	case MRE_SECONDARY_CAN:
 		mreSecondaryCan();
 		break;
-	case UNUSED101:
 	case MRE_SUBARU_EJ18:
 		setSubaruEJ18_MRE();
 		break;
-	case UNUSED30:
 	case MRE_BOARD_NEW_TEST:
 		mreBoardNewTest();
 		break;
@@ -930,6 +932,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case PROTEUS_HONDA_OBD2A:
 		setProteusHondaOBD2A();
 		break;
+	case PROTEUS_E65_6H_MAN_IN_THE_MIDDLE:
+		setEngineProteusGearboxManInTheMiddle();
+		break;
 	case PROTEUS_VAG_80_18T:
 	case PROTEUS_N73:
 	case PROTEUS_MIATA_NB2:
@@ -958,10 +963,8 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setMiataNB2_Hellen72_36();
 		break;
 	case HELLEN_NB1:
+	case HELLEN_NA8_96:
 		setHellenNB1();
-		break;
-	case HELLEN72_ETB:
-		setHellen72etb();
 		break;
 	case HELLEN_121_NISSAN_4_CYL:
 		setHellen121nissanQR();
@@ -1035,6 +1038,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case ETB_BENCH_ENGINE:
 		setEtbTestConfiguration();
 		break;
+	case L9779_BENCH_ENGINE:
+		setL9779TestConfiguration();
+		break;
+	case EEPROM_BENCH_ENGINE:
+#if EFI_PROD_CODE
+		setEepromTestConfiguration();
+#endif
+		break;
 	case TLE8888_BENCH_ENGINE:
 		setTle8888TestConfiguration();
 		break;
@@ -1044,7 +1055,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_ACCORD_CD_TWO_WIRES:
 		setHondaAccordConfiguration1_24();
 		break;
-	case UNUSED18:
 	case MITSU_4G93:
 		setMitsubishiConfiguration();
 		break;
@@ -1057,11 +1067,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case HONDA_600:
 		setHonda600();
 		break;
-	case UNUSED9:
 	case FORD_ESCORT_GT:
 		setFordEscortGt();
 		break;
-	case UNUSED_19:
 	case MIATA_1996:
 		setFrankensteinMiata1996();
 		break;
@@ -1073,9 +1081,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case DODGE_RAM:
 		setDodgeRam1996();
-		break;
-	case VW_B6:
-		setVwPassatB6();
 		break;
 	case VW_ABA:
 		setVwAba();
@@ -1104,17 +1109,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case TOYOTA_JZS147:
 		setToyota_jzs147EngineConfiguration();
 		break;
-	case VAG_18_TURBO:
-		vag_18_Turbo();
-		break;
 	case TEST_33816:
 		setTest33816EngineConfiguration();
 		break;
-	case TEST_108:
-		setVrThresholdTest();
-		break;
-	case TEST_109:
-	case TEST_110:
+	case TEST_100:
+	case TEST_101:
+	case TEST_102:
 	case TEST_ROTARY:
 		setRotary();
 		break;
@@ -1195,5 +1195,6 @@ void setFrankenso0_1_joystick(engine_configuration_s *engineConfiguration) {
 }
 
 // These symbols are weak so that a board_configuration.cpp file can override them
-__attribute__((weak)) void setBoardDefaultConfiguration(void) { }
-__attribute__((weak)) void setBoardConfigOverrides(void) { }
+__attribute__((weak)) void setBoardDefaultConfiguration() { }
+__attribute__((weak)) void setBoardConfigOverrides() { }
+__attribute__((weak)) void setSerialConfigurationOverrides() { }

@@ -5,6 +5,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.live_data_e;
 import com.rusefi.ldmp.StateDictionary;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,34 +26,47 @@ public enum LiveDocsRegistry {
         liveDocs.add(holder);
     }
 
-    public void refresh(BinaryProtocol binaryProtocol) {
+    public void refresh(LiveDataProvider liveDataProvider) {
         for (LiveDocHolder holder : liveDocs) {
             boolean visible = holder.isVisible();
             if (visible) {
-                for (live_data_e context : holder.getActions().getActions().keySet()) {
-                    refresh(binaryProtocol, holder, context);
-                }
+                live_data_e context = holder.getId();
+                refresh(holder, context, liveDataProvider);
             }
         }
     }
 
-    private void refresh(BinaryProtocol binaryProtocol, LiveDocHolder holder, live_data_e context) {
-        Field[] values = StateDictionary.INSTANCE.getFields(context);
-        int size = Field.getStructureSize(values);
+    private void refresh(LiveDocHolder holder, live_data_e context, LiveDataProvider liveDataProvider) {
 
-        byte[] packet = new byte[5];
-        packet[0] = Fields.TS_GET_STRUCT;
-        putShort(packet, 1, swap16(context.ordinal())); // offset
-        putShort(packet, 3, swap16(size));
-
-        byte[] responseWithCode = binaryProtocol.executeCommand(packet, "get LiveDoc");
-        if (responseWithCode == null || responseWithCode.length != (size + 1) || responseWithCode[0] != Fields.TS_RESPONSE_OK)
+        byte[] response = liveDataProvider.provide(context);
+        if (response == null)
             return;
 
-        byte[] response = new byte[size];
-
-        System.arraycopy(responseWithCode, 1, response, 0, size);
-
-        holder.update(binaryProtocol, context, response);
+        holder.update(response);
     }
+
+    @NotNull
+    public static LiveDataProvider getLiveDataProvider(BinaryProtocol binaryProtocol) {
+        return context -> {
+            Field[] values = StateDictionary.INSTANCE.getFields(context);
+            int size = Field.getStructureSize(values);
+            byte[] packet = new byte[4];
+            putShort(packet, 0, swap16(context.ordinal())); // offset
+            putShort(packet, 2, swap16(size));
+
+            byte[] responseWithCode = binaryProtocol.executeCommand(Fields.TS_GET_STRUCT, packet, "get LiveDoc");
+            if (responseWithCode == null || responseWithCode.length != (size + 1) || responseWithCode[0] != Fields.TS_RESPONSE_OK)
+                return null;
+
+            byte[] response = new byte[size];
+
+            System.arraycopy(responseWithCode, 1, response, 0, size);
+            return response;
+        };
+    }
+
+    public interface LiveDataProvider {
+        byte[] provide(live_data_e context);
+    }
+
 }

@@ -36,6 +36,7 @@ public class TriggerImage {
     private static final int WHEEL_DIAMETER = 500;
     private static final int SMALL_DIAMETER = 420;
     private static final int _180 = 180;
+    public static final int MIN_TIME = 720;
 
     /**
      * number of extra frames
@@ -46,7 +47,7 @@ public class TriggerImage {
 
     /**
      * todo: https://github.com/rusefi/rusefi/issues/2077
-     * @see TriggerWheelInfo#isFirstCrankBased
+     * @see TriggerWheelInfo#isCrankBased
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
         switch (triggerName.id) {
@@ -125,20 +126,22 @@ public class TriggerImage {
         };
 
         JPanel topPanel = new JPanel(new FlowLayout());
-        content.add(topPanel, BorderLayout.NORTH);
-        content.add(triggerPanel, BorderLayout.CENTER);
 
-        f.showFrame(content);
-        f.getFrame().setSize(900, 700);
+        SwingUtilities.invokeAndWait(() -> {
+            content.add(topPanel, BorderLayout.NORTH);
+            content.add(triggerPanel, BorderLayout.CENTER);
 
-        SwingUtilities.invokeAndWait(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    generateImages(workingFolder, triggerPanel, topPanel, content);
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
+            f.showFrame(content);
+            f.getFrame().setSize(900, 700);
+
+            UiUtils.trueRepaint(content);
+        });
+
+        SwingUtilities.invokeAndWait(() -> {
+            try {
+                generateImages(workingFolder, triggerPanel, topPanel, content);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
             }
         });
         Thread.sleep(1000 * sleepAtEnd);
@@ -188,21 +191,21 @@ public class TriggerImage {
         triggerPanel.tdcPosition = triggerWheelInfo.tdcPosition;
         List<WaveState> waves = triggerWheelInfo.waves;
 
-        EngineReport re0 = new EngineReport(waves.get(0).list, 720, 720 * (1 + EXTRA_COUNT));
+        EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
-        EngineReport re1 = new EngineReport(waves.get(1).list, 720, 720 * (1 + EXTRA_COUNT));
-        EngineReport re2 = new EngineReport(waves.get(2).list, 720, 720 * (1 + EXTRA_COUNT));
+        EngineReport re1 = new EngineReport(waves.get(1).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
+        EngineReport re2 = new EngineReport(waves.get(2).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
 
         triggerPanel.removeAll();
         UpDownImage upDownImage0 = new UpDownImage(re0, "trigger");
-        upDownImage0.showMouseOverText = false;
-        triggerPanel.add(upDownImage0);
+        upDownImage0.setRenderText(false);
+        triggerPanel.image = upDownImage0;
 
         UpDownImage upDownImage1 = new UpDownImage(re1, "trigger");
-        upDownImage1.showMouseOverText = false;
+        upDownImage1.setRenderText(false);
 
         UpDownImage upDownImage2 = new UpDownImage(re2, "trigger");
-        upDownImage2.showMouseOverText = false;
+        upDownImage2.setRenderText(false);
 
         boolean isSingleSensor = re1.getList().isEmpty();
         boolean isThirdVisible = !re2.getList().isEmpty();
@@ -218,8 +221,12 @@ public class TriggerImage {
 
         triggerPanel.setLayout(new GridLayout(height, 1));
 
+        // always render the first channel
+        triggerPanel.add(upDownImage0);
+
         if (!isSingleSensor)
             triggerPanel.add(upDownImage1);
+
         if (isThirdVisible)
             triggerPanel.add(upDownImage2);
 
@@ -236,7 +243,7 @@ public class TriggerImage {
     @NotNull
     private static JPanel createWheelPanel(List<TriggerSignal> wheel, boolean showTdc,
                                            TriggerWheelInfo shape) {
-        JPanel clock = new JPanel() {
+        return new JPanel() {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
@@ -250,6 +257,7 @@ public class TriggerImage {
 
                     int tdcMarkRadius = 8;
                     g.setColor(UpDownImage.ENGINE_CYCLE_COLOR);
+                    // draw TDC mark and text on the round wheel
                     g.fillOval(middle + smallX - tdcMarkRadius, middle + smallY - tdcMarkRadius,
                             2 * tdcMarkRadius,
                             2 * tdcMarkRadius);
@@ -294,8 +302,6 @@ public class TriggerImage {
                 return new Dimension(WHEEL_DIAMETER + 2 * WHEEL_BORDER, WHEEL_DIAMETER + 2 * WHEEL_BORDER);
             }
         };
-//        clock.setBackground(Color.orange);
-        return clock;
     }
 
     private static double arcToRusEFI(double angle) {
@@ -377,7 +383,9 @@ public class TriggerImage {
     private static class TriggerPanel extends JPanel {
         public String name = "";
         public String id;
+        // angle
         public double tdcPosition;
+        public UpDownImage image;
 
         @Override
         public void paint(Graphics g) {
@@ -414,7 +422,9 @@ public class TriggerImage {
             }
             g.drawString("     " + tdcMessage, 0, tdcFontSize);
 
-            int tdcX = (int) (w / 720.0 * tdcPosition);
+            if (image == null)
+                return;
+            int tdcX = image.engineReport.getTimeAxisTranslator().timeToScreen(MIN_TIME + tdcPosition, w);
             g.drawLine(tdcX, 0, tdcX, h);
             Graphics2D g2 = (Graphics2D) g;
             g2.rotate(Math.PI / 2);

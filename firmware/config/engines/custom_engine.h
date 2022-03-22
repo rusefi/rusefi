@@ -8,7 +8,6 @@
 #pragma once
 
 #include "engine_configuration.h"
-void setHellenDefaultVrThresholds();
 void setFrankensoConfiguration();
 void setFrankenso_01_LCD(engine_configuration_s *engineConfiguration);
 void disableLCD(engine_configuration_s *engineConfiguration);
@@ -16,6 +15,9 @@ void runSchedulingPrecisionTestIfNeeded(void);
 void setFrankensoBoardTestConfiguration();
 void setEtbTestConfiguration();
 void setTle8888TestConfiguration();
+void setL9779TestConfiguration();
+
+void setEepromTestConfiguration();
 
 void setIssue898();
 void setTestQuadCam();
@@ -38,5 +40,4 @@ void setHellen72etb();
 void setRotary();
 void setVrThresholdTest();
 
-void setHellen144LedPins();
-void setHellen176LedPins();
+void detectBoardType();

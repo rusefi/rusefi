@@ -71,11 +71,12 @@ pins:
     function: OUT_INJ8
     type: inj
 
-  - pin: 26a
-    id: EFI_ADC_13
-    class: analog_inputs
-    ts_name: 26 - IAT
-    function: IAT sensor
+# something wird same IAT on pin 85? figure this out one day
+#  - pin: 26a
+#    id: EFI_ADC_13
+#    class: analog_inputs
+#    ts_name: 26 - IAT
+#    function: IAT sensor
 
   - pin: 27a
     function: GNDA

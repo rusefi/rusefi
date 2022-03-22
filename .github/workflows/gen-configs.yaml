@@ -51,6 +51,7 @@ jobs:
         git config --local user.name "GitHub build-firmware Action"
         git add firmware/tunerstudio/generated
         git add firmware/controllers/generated
+        git add 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
         git add java_console/io/src/main/java/com/rusefi/enums
         git add java_console/models/src/main/java/com/rusefi/config/generated
         # get the original ramdisk images back in order to not overwrite the default placeholder
@@ -124,8 +125,8 @@ jobs:
         fi
 
     - name: Push fresh triggers.txt
-      if: ${{github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true' }}
+      if: ${{env.NOCOMMIT != 'true'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
-        branch: master
+        branch: ${{ steps.extract_branch.outputs.branch }}

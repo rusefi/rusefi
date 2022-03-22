@@ -4,6 +4,7 @@ import com.rusefi.shared.ConnectionAndMeta;
 import com.rusefi.shared.FileUtil;
 import com.rusefi.ui.storage.PersistentConfiguration;
 import com.rusefi.ui.util.FrameHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -20,7 +21,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Autoupdate {
-    private static final String TITLE = "rusEFI Bundle Updater 20200607";
+    private static final String TITLE = "rusEFI Bundle Updater 20210212";
     private static final String BUNDLE_NAME_FILE = "../bundle_name.txt";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
@@ -202,6 +203,13 @@ public class Autoupdate {
             System.err.println(new Date() + ": Error reading " + BUNDLE_NAME_FILE);
             return null;
         }
+    }
+
+    @NotNull
+    public static String readBundleFullNameNotNull() {
+        String bundle = readBundleFullName();
+        bundle = bundle == null ? "unknown bundle" : bundle;
+        return bundle;
     }
 
     enum UpdateMode {

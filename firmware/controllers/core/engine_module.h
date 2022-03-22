@@ -12,5 +12,8 @@ public:
 	virtual void onFastCallback() { }
 
 	// Called whenever the ignition switch state changes
-	virtual void onIgnitionStateChanged(bool ignitionOn) { }
+	virtual void onIgnitionStateChanged(bool /*ignitionOn*/) { }
+
+	// Queried to determine whether this module needs a delayed shutoff, defaults to false
+	virtual bool needsDelayedShutoff() { return false; }
 };

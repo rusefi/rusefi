@@ -29,9 +29,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class DetachedSensor {
     private static final String NAME = "name";
     private static final String WIDTH = "width";
-    /**
-     * @see Fields#MOCK_IAT_COMMAND
-     */
+
     private static final Collection<Sensor> MOCKABLE = Arrays.asList(
             Sensor.CLT,
             Sensor.Lambda,

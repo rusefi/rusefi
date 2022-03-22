@@ -17,30 +17,9 @@
 #include "can_hw.h"
 #endif
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-static const uint8_t default_custom_timing_table[16][16] = {
-  /* RPM			   0   500   1000   1500   2000   2500   3000   3500   4000    4500   5000    5500   6000   6500   7000	 */
-  /* Load  0% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
-  /* Load 10% */{	10,  10,    10,    12,    12,   12,    12,   15,    15,     15,    15,     26,    28,    30,    32},
-  /* Load 20% */{	10,  10,    10,    10,    10,   10,    12,   15,    20,     22,    24,     26,    28,    30,    32},
-  /* Load 30% */{ 10,  10,    10,    10,    10,   10,    12,   15,    20,     22,    24,     26,    28,    30,    32},
-  /* Load 40% */{ 10,  10,    10,    10,    10,   10,    12,   15,    20,     22,    24,     26,    28,    30,    32},
-  /* Load 50% */{ 10,  10,    10,    10,    10,   10,    12,   15,    20,     22,    24,     26,    28,    30,    32},
-  /* Load 60% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
-  /* Load 70% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
-  /* Load 80% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
-  /* Load 90% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
- /* Load 100% */{ 10,  10,    10,    10,    10,   10,    15,   18,    20,     22,    24,     26,    28,    30,    32},
-};
-#endif
-
 static void setDefaultCustomMaps() {
 	setTimingLoadBin(0,100);
 	setTimingRpmBin(0,7000);
-
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
-	copyTable(config->ignitionTable, default_custom_timing_table);
-#endif
 }
 
 void setHonda600() {
@@ -61,7 +40,6 @@ void setHonda600() {
     engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
   engineConfiguration->specs.firingOrder = FO_1_3_4_2;
-  engineConfiguration->extraInjectionOffset = 320;
   engineConfiguration->cranking.rpm = 800;
 //	engineConfiguration->ignitionMode = IM_WASTED_SPARK; //IM_INDIVIDUAL_COILS;
 

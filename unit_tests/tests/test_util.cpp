@@ -21,6 +21,12 @@
 #include "crc.h"
 #include "fl_stack.h"
 
+TEST(util, testitoa) {
+	char buffer[12];
+	itoa10(buffer, 239);
+	ASSERT_TRUE(strEqual(buffer, "239"));
+}
+
 TEST(util, negativeZero) {
 	ASSERT_TRUE(IS_NEGATIVE_ZERO(-0.0));
 
@@ -42,7 +48,6 @@ TEST(util, crc) {
 
 	const char * A = "A";
 
-	ASSERT_EQ( 168,  calc_crc((const crc_t *) A, 1)) << "crc8";
 	uint32_t c = crc32(A, 1);
 	printf("crc32(A)=%x\r\n", c);
 	assertEqualsM("crc32 1", 0xd3d99e8b, c);
@@ -233,6 +238,16 @@ static void testEchoSSS(const char *first, const char *second, const char *third
 	lastThird = third;
 }
 
+static float fFirst;
+static float fSecond;
+static float fThird;
+
+static void testEchoFFF(float first, float second, float third) {
+	fFirst = first;
+	fSecond = second;
+	fThird = third;
+}
+
 #define UNKNOWN_COMMAND "dfadasdasd"
 
 static loc_t GPSdata;
@@ -355,6 +370,15 @@ TEST(misc, testConsoleLogic) {
 	handleConsoleLine(buffer);
 	ASSERT_TRUE(strEqual("\" 1\"", lastFirst));
 
+	printf("\r\addConsoleActionFFF\r\n");
+	addConsoleActionFFF("echofff", testEchoFFF);
+	strcpy(buffer, "echofff 1.0 2 00003.0");
+	handleConsoleLine(buffer);
+
+	ASSERT_EQ(1.0, fFirst);
+	ASSERT_EQ(2.0, fSecond);
+	ASSERT_EQ(3.0, fThird);
+
 	//addConsoleActionSSS("GPS", testGpsParser);
 }
 
@@ -473,16 +497,7 @@ TEST(misc, testMenuTree) {
 }
 
 int getRusEfiVersion(void) {
-	return 776655;
-}
-
-TEST(util, datalogging) {
-	char LOGGING_BUFFER[1000];
-	Logging logger("settings control", LOGGING_BUFFER, sizeof(LOGGING_BUFFER));
-
-	printCurrentState(&logger, 239, "DEFAULT_FRANKENSO", "ID");
-//	printf("Got [%s]\r\n", LOGGING_BUFFER);
-//	ASSERT_STREQ("rusEfiVersion,776655@321ID DEFAULT_FRANKENSO 239,", LOGGING_BUFFER);
+	return TS_FILE_VERSION;
 }
 
 TEST(util, PeakDetect) {
@@ -570,4 +585,12 @@ TEST(util, WrapAround62) {
 		EXPECT_EQ(t.update(0x42342323), 0x042342323LL);
 		EXPECT_EQ(t.update(0x03453455), 0x003453455LL);
 	}
+}
+
+TEST(util, isInRange) {
+	EXPECT_FALSE(isInRange(5, 4, 10));
+	EXPECT_TRUE(isInRange(5, 5, 10));
+	EXPECT_TRUE(isInRange(5, 7, 10));
+	EXPECT_TRUE(isInRange(5, 10, 10));
+	EXPECT_FALSE(isInRange(5, 11, 10));
 }

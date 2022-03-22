@@ -165,9 +165,8 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 		return;
 	}
 
-	// Select fuel mass from the correct bank
-	uint8_t bankIndex = engineConfiguration->cylinderBankSelect[this->cylinderNumber];
-	float injectionMassGrams = engine->injectionMass[bankIndex];
+	// Select fuel mass from the correct cylinder
+	auto injectionMassGrams = engine->injectionMass[this->cylinderNumber];
 
 	// Perform wall wetting adjustment on fuel mass, not duration, so that
 	// it's correct during fuel pressure (injector flow) or battery voltage (deadtime) transients
@@ -195,7 +194,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 
 	engine->engineState.fuelConsumption.consumeFuel(injectionMassGrams * numberOfInjections, nowNt);
 
-	engine->actualLastInjection[bankIndex] = injectionDuration;
+	engine->actualLastInjection[this->cylinderNumber] = injectionDuration;
 
 	if (cisnan(injectionDuration)) {
 		warning(CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
@@ -236,7 +235,7 @@ void InjectionEvent::onTriggerTooth(size_t trgEventIndex, int rpm, efitick_t now
 	if (printFuelDebug) {
 		InjectorOutputPin *output = outputs[0];
 		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->name, (int)durationUs,
-				(int)MS2US(getCrankshaftRevolutionTimeMs(GET_RPM())) / 1000.0);
+				(int)MS2US(getCrankshaftRevolutionTimeMs(Sensor::getOrZero(SensorType::Rpm))) / 1000.0);
 	}
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 
@@ -286,22 +285,11 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 	efiAssertVoid(CUSTOM_STACK_6627, getCurrentRemainingStack() > 128, "lowstck#3");
 	efiAssertVoid(CUSTOM_ERR_6628, trgEventIndex < engine->engineCycleEventCount, "handleFuel/event index");
 
-	engine->tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
 	if (trgEventIndex == 0) {
 		engine->tpsAccelEnrichment.onEngineCycleTps();
 	}
 
 	if (limitedFuel) {
-		return;
-	}
-	if (engine->isCylinderCleanupMode) {
-		return;
-	}
-
-	// If duty cycle is high, impose a fuel cut rev limiter.
-	// This is safer than attempting to limp along with injectors or a pump that are out of flow.
-	if (getInjectorDutyCycle(rpm) > 96.0f) {
-		warning(CUSTOM_OBD_63, "Injector Duty cycle cut");
 		return;
 	}
 
@@ -330,8 +318,18 @@ static void handleFuel(const bool limitedFuel, uint32_t trgEventIndex, int rpm, 
 uint32_t *cyccnt = (uint32_t*) &DWT->CYCCNT;
 #endif
 
-static bool noFiringUntilVvtSync(vvt_mode_e mode) {
-	return mode == VVT_MIATA_NB2 || mode == VVT_MAP_V_TWIN;
+static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
+	auto operationMode = engine->getOperationMode();
+
+	// V-Twin MAP phase sense needs to always wait for sync
+	if (vvtMode == VVT_MAP_V_TWIN_ANOTHER) {
+		return true;
+	}
+
+	// Symmetrical crank modes require cam sync before firing
+	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
+	// Examples include Nissan MR/VQ, Miata NB, etc
+	return operationMode == FOUR_STROKE_SYMMETRICAL_CRANK_SENSOR || operationMode == FOUR_STROKE_THREE_TIMES_CRANK_SENSOR;
 }
 
 /**
@@ -341,11 +339,12 @@ static bool noFiringUntilVvtSync(vvt_mode_e mode) {
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) && engine->triggerCentral.vvtSyncTimeNt == 0) {
-		// this is a bit spaghetti code for sure
-		// do not spark & do not fuel until we have VVT sync.
-		// NB2 is a special case due to symmetrical crank wheel and we need to make sure no spark happens out of sync
-		// VTwin is another special case where we really need to know phase before firing
+	if (noFiringUntilVvtSync(engineConfiguration->vvtMode[0]) 
+		&& !engine->triggerCentral.triggerState.hasSynchronizedSymmetrical()) {
+		// Any engine that requires cam-assistance for a full crank sync (symmetrical crank) can't schedule until we have cam sync
+		// examples:
+		// NB2, Nissan VQ/MR: symmetrical crank wheel and we need to make sure no spark happens out of sync
+		// VTwin Harley: uneven firing order, so we need "cam" MAP sync to make sure no spark happens out of sync
 		return;
 	}
 
@@ -374,7 +373,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 		return;
 	}
 
-	int rpm = GET_RPM();
+	int rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {
 		// this happens while we just start cranking
 
@@ -388,17 +387,14 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp) {
 		return;
 	}
 
-	bool limitedSpark = !engine->limpManager.allowIgnition();
-	bool limitedFuel = !engine->limpManager.allowInjection();
+	LimpState limitedSparkState = engine->limpManager.allowIgnition();
+	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;
+	bool limitedSpark = !limitedSparkState.value;
 
-#if EFI_LAUNCH_CONTROL
-	if (engine->launchController.isLaunchCondition && !limitedSpark && !limitedFuel) {
-		/* in case we are not already on a limited conditions, check launch as well */
-
-		limitedSpark &= engine->launchController.isLaunchSparkRpmRetardCondition();
-		limitedFuel &= engine->launchController.isLaunchFuelRpmRetardCondition();
-	}
-#endif
+	LimpState limitedFuelState = engine->limpManager.allowInjection();
+	engine->outputChannels.fuelCutReason = (int8_t)limitedFuelState.reason;
+	bool limitedFuel = !limitedFuelState.value;
+	
 	if (trgEventIndex == 0) {
 		if (HAVE_CAM_INPUT()) {
 			engine->triggerCentral.validateCamVvtCounters();
@@ -535,7 +531,7 @@ void updatePrimeInjectionPulseState() {
 
 static void showMainInfo(Engine *engine) {
 #if EFI_PROD_CODE
-	int rpm = GET_RPM();
+	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	float el = getFuelingLoad();
 	efiPrintf("rpm %d engine_load %.2f", rpm, el);
 	efiPrintf("fuel %.2fms timing %.2f", engine->injectionDuration, engine->engineState.timingAdvance[0]);

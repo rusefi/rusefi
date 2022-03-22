@@ -65,16 +65,6 @@
 #define STM32_VDD                   300U
 
 /*
- * MCU type as defined in the ST header.
- * this declaration would cause stm32_registry.h to define STM32F40_41xxx and STM32F4XX automatically
- *
- * See also STM32F4xx_MCUCONF is defined in mcuconf.h
- */
-#ifndef STM32F407xx
-#define STM32F407xx
-#endif
-
-/*
  * IO pins assignments.
  */
 #define GPIOA_SWDIO                 13

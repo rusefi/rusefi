@@ -8,8 +8,7 @@
 #include "pch.h"
 
 #include "advance_map.h"
-#include "pid.h"
-#include "fsio_impl.h"
+#include "efi_pid.h"
 #include "idle_thread.h"
 #include "electronic_throttle.h"
 
@@ -24,11 +23,10 @@ TEST(idle_v2, timingPid) {
 
 	engineConfiguration->useIdleTimingPidControl = true;
 
-	pid_s pidCfg{};
-	pidCfg.pFactor = 0.1;
-	pidCfg.minValue = -10;
-	pidCfg.maxValue = 10;
-	dut.init(&pidCfg);
+	engineConfiguration->idleTimingPid.pFactor = 0.1;
+	engineConfiguration->idleTimingPid.minValue = -10;
+	engineConfiguration->idleTimingPid.maxValue = 10;
+	dut.init();
 
 	// Check that out of idle mode it doesn't do anything
 	EXPECT_EQ(0, dut.getIdleTimingAdjustment(1050, 1000, ICP::Cranking));
@@ -300,6 +298,7 @@ extern int timeNowUs;
 TEST(idle_v2, closedLoopBasic) {
 	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
+	dut.init();
 
 	// Not testing PID here, so we can set very simple PID gains
 	engineConfiguration->idleRpmPid.pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
@@ -327,6 +326,8 @@ TEST(idle_v2, closedLoopBasic) {
 TEST(idle_v2, closedLoopDeadzone) {
 	EngineTestHelper eth(TEST_ENGINE);
 	IdleController dut;
+	dut.init();
+
 
 	// Not testing PID here, so we can set very simple PID gains
 	engineConfiguration->idleRpmPid.pFactor = 0.5;	// 0.5 output per 1 RPM error = 50% per 100 rpm
@@ -352,8 +353,8 @@ TEST(idle_v2, closedLoopDeadzone) {
 }
 
 struct IntegrationIdleMock : public IdleController {
-	MOCK_METHOD(int, getTargetRpm, (float clt), (const, override));
-	MOCK_METHOD(ICP, determinePhase, (int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (const, override));
+	MOCK_METHOD(int, getTargetRpm, (float clt), (override));
+	MOCK_METHOD(ICP, determinePhase, (int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
 	MOCK_METHOD(float, getOpenLoop, (ICP phase, float clt, SensorResult tps, float crankingTaperFraction), (override));
 	MOCK_METHOD(float, getClosedLoop, (ICP phase, float tps, int rpm, int target), (override));
 	MOCK_METHOD(float, getCrankingTaperFraction, (), (const, override));
@@ -368,7 +369,7 @@ TEST(idle_v2, IntegrationManual) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	engine->rpmCalculator.mockRpm = 950;
+	Sensor::setMockValue(SensorType::Rpm,  950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -402,7 +403,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	engine->rpmCalculator.mockRpm = 950;
+	Sensor::setMockValue(SensorType::Rpm,  950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -439,7 +440,7 @@ TEST(idle_v2, IntegrationClamping) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-	engine->rpmCalculator.mockRpm = 950;
+	Sensor::setMockValue(SensorType::Rpm,  950);
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))

@@ -13,13 +13,13 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_real_volkswagen.cpp \
 	tests/trigger/test_real_nb2_cranking.cpp \
 	tests/trigger/test_real_gm_24x.cpp \
+	tests/trigger/test_real_k24a2.cpp \
 	tests/trigger/test_map_cam.cpp \
 	tests/trigger/test_rpm_multiplier.cpp \
 	tests/trigger/test_quad_cam.cpp \
 	tests/trigger/test_nissan_vq_vvt.cpp \
 	tests/trigger/test_override_gaps.cpp \
 	tests/trigger/test_injection_scheduling.cpp \
-	tests/trigger/test_instant_map.cpp \
 	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
 	tests/ignition_injection/test_multispark.cpp \
@@ -28,6 +28,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/lua/test_lua_basic.cpp \
+	tests/lua/test_lua_e65.cpp \
 	tests/lua/test_lua_with_engine.cpp \
 	tests/lua/test_lua_hooks.cpp \
 	tests/sensor/test_cj125.cpp \
@@ -39,33 +40,25 @@ TESTS_SRC_CPP = \
 	tests/test_start_stop.cpp \
 	tests/test_hardware_reinit.cpp \
 	tests/test_ion.cpp \
-	tests/test_aux_valves.cpp \
 	tests/test_hip9011.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
 	tests/test_dwell_corner_case_issue_796.cpp \
 	tests/test_idle_controller.cpp \
 	tests/test_issue_898.cpp \
-	tests/test_etb.cpp \
-	tests/test_dc_motor.cpp \
-	tests/test_fan_control.cpp \
-	tests/test_main_relay.cpp \
-	tests/test_vvt.cpp \
+	tests/test_scattered_outputs.cpp \
 	tests/test_launch.cpp \
 	tests/test_fuel_map.cpp \
 	tests/ignition_injection/test_fuel_wall_wetting.cpp \
 	tests/test_one_cylinder_logic.cpp \
 	tests/test_tunerstudio.cpp \
 	tests/test_pwm_generator.cpp \
-	tests/test_logic_expression.cpp \
 	tests/test_log_buffer.cpp \
 	tests/test_signal_executor.cpp \
 	tests/test_cpp_memory_layout.cpp \
-	tests/test_sensors.cpp \
 	tests/test_pid_auto.cpp \
 	tests/test_pid.cpp \
 	tests/test_accel_enrichment.cpp \
-	tests/test_tacho.cpp \
 	tests/test_gpiochip.cpp \
 	tests/test_deadband.cpp \
 	tests/test_knock.cpp \
@@ -83,17 +76,29 @@ TESTS_SRC_CPP = \
 	tests/sensor/table_func.cpp \
 	tests/util/test_closed_loop_controller.cpp \
 	tests/test_stft.cpp \
-	tests/test_boost.cpp \
-	tests/test_gppwm.cpp \
 	tests/test_hpfp.cpp \
+	tests/test_hpfp_integrated.cpp \
 	tests/test_fuel_math.cpp \
 	tests/test_binary_log.cpp \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \
 	tests/trigger/test_all_triggers.cpp \
+	tests/test_can_rx.cpp \
 	tests/test_can_serial.cpp \
-	tests/test_stepper.cpp \
+	tests/test_can_wideband.cpp \
+	tests/test_hellen_board_id.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
 	tests/sensor/test_turbocharger_speed_converter.cpp \
-	tests/sensor/test_vehicle_speed_converter.cpp
+	tests/sensor/test_vehicle_speed_converter.cpp \
+	tests/actuators/test_aux_valves.cpp \
+	tests/actuators/test_boost.cpp \
+	tests/actuators/test_dc_motor.cpp \
+	tests/actuators/test_etb.cpp \
+	tests/actuators/test_fan_control.cpp \
+	tests/actuators/test_fuel_pump.cpp \
+	tests/actuators/test_gppwm.cpp \
+	tests/actuators/test_main_relay.cpp \
+	tests/actuators/test_stepper.cpp \
+	tests/actuators/test_tacho.cpp \
+	tests/actuators/test_vvt.cpp \

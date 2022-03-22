@@ -38,10 +38,6 @@ extern int waveChartUsedSize;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-#if !defined(SETTINGS_LOGGING_BUFFER_SIZE)
-#define SETTINGS_LOGGING_BUFFER_SIZE 1000
-#endif /* SETTINGS_LOGGING_BUFFER_SIZE */
-
 void printSpiState(const engine_configuration_s *engineConfiguration) {
 	efiPrintf("spi 1=%s/2=%s/3=%s/4=%s",
 		boolToString(engineConfiguration->is_enabled_spi_1),
@@ -688,20 +684,6 @@ static void showPinFunction(const char *pinName) {
 
 #endif /* EFI_PROD_CODE */
 
-static void setTimingMap(const char * rpmStr, const char *loadStr, const char *valueStr) {
-	float rpm = atoff(rpmStr);
-	float engineLoad = atoff(loadStr);
-	float value = atoff(valueStr);
-
-	int rpmIndex = findIndexMsg("setTM", config->ignitionRpmBins, IGN_RPM_COUNT, rpm);
-	rpmIndex = rpmIndex < 0 ? 0 : rpmIndex;
-	int loadIndex = findIndexMsg("setTM", config->ignitionLoadBins, IGN_LOAD_COUNT, engineLoad);
-	loadIndex = loadIndex < 0 ? 0 : loadIndex;
-
-	config->ignitionTable[loadIndex][rpmIndex] = value;
-	efiPrintf("Setting timing map entry %d:%d to %.2f", rpmIndex, loadIndex, value);
-}
-
 static void setSpiMode(int index, bool mode) {
 	switch (index) {
 	case 1:
@@ -764,13 +746,17 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 	} else if (strEqualCaseInsensitive(param, "two_wire_batch_injection")) {
 		engineConfiguration->twoWireBatchInjection = isEnabled;
 		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "boardUseTempPullUp")) {
+		engineConfiguration->boardUseTempPullUp = isEnabled;
+		incrementGlobalConfigurationVersion();
+	} else if (strEqualCaseInsensitive(param, "boardUseTachPullUp")) {
+		engineConfiguration->boardUseTachPullUp = isEnabled;
+		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "HIP9011")) {
 		engineConfiguration->isHip9011Enabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "verbose_etb")) {
-		engineConfiguration->isVerboseETB = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verbose_idle")) {
 		engineConfiguration->isVerboseIAC = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "auxdebug1")) {
@@ -849,8 +835,7 @@ static void disableSpi(int index) {
 }
 
 /**
- * See 'Engine::needToStopEngine' for code which actually stops engine
- * weird: we stop pins from here? we probably should stop engine from the code which is actually stopping engine?
+ * See 'LimpManager::isEngineStop' for code which actually stops engine
  */
 void scheduleStopEngine(void) {
 	doScheduleStopEngine();
@@ -897,7 +882,7 @@ const plain_get_integer_s getI_plain[] = {
 //		{"timing_mode", setTimingMode},
 //		{"engine_type", setEngineType},
 		{"warning_period", (int*)&engineConfiguration->warningPeriod},
-		{"hard_limit", &engineConfiguration->rpmHardLimit},
+//		{"hard_limit", &engineConfiguration->rpmHardLimit},
 //		{"firing_order", setFiringOrder},
 //		{"injection_pin_mode", setInjectionPinMode},
 //		{"ignition_pin_mode", setIgnitionPinMode},
@@ -1018,11 +1003,6 @@ struct command_f_s {
 
 const command_f_s commandsF[] = {
 #if EFI_ENGINE_CONTROL
-#if EFI_ENABLE_MOCK_ADC
-		{MOCK_MAF_COMMAND, setMockMafVoltage},
-		{MOCK_AFR_COMMAND, setMockAfrVoltage},
-		{MOCK_MAP_COMMAND, setMockMapVoltage},
-#endif // EFI_ENABLE_MOCK_ADC
 		{"injection_offset", setInjectionOffset},
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"global_fuel_correction", setGlobalFuelCorrection},
@@ -1182,6 +1162,10 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
 		engineConfiguration->wwaeBeta = valueF;
+	} else if (strEqualCaseInsensitive(paramStr, "benchTestOffTime")) {
+		engineConfiguration->benchTestOffTime = valueI;
+	} else if (strEqualCaseInsensitive(paramStr, "benchTestCount")) {
+		engineConfiguration->benchTestCount = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 #if EFI_PROD_CODE
@@ -1211,8 +1195,6 @@ void initSettings(void) {
 	addConsoleAction("tpsinfo", printTPSInfo);
 	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
 	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-	addConsoleAction(CMD_CALIBRATE_PEDAL_UP, grabPedalIsUp);
-	addConsoleAction(CMD_CALIBRATE_PEDAL_DOWN, grabPedalIsWideOpen);
 	addConsoleAction("info", printAllInfo);
 
 	addConsoleAction("set_one_coil_ignition", setOneCoilIgnition);
@@ -1223,8 +1205,6 @@ void initSettings(void) {
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
 	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
-
-	addConsoleActionSSS("set_timing_map", setTimingMap);
 
 	addConsoleAction("stopengine", (Void) scheduleStopEngine);
 

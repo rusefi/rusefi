@@ -12,7 +12,7 @@ static void updateVrPwm(int rpm, size_t index) {
 		return;
 	}
 
-	float thresholdVoltage = interpolate2d(rpm / RPM_1_BYTE_PACKING_MULT, cfg.rpmBins, cfg.values) / PACK_PERCENT_BYTE_MULT;
+	float thresholdVoltage = interpolate2d(rpm, cfg.rpmBins, cfg.values);
 
 	// 0v   threshold voltage = 3.3v output from mcu = 100% duty
 	// 2.5v threshold voltage = 0v   output from mcu = 0% duty
@@ -22,7 +22,7 @@ static void updateVrPwm(int rpm, size_t index) {
 }
 
 void updateVrPwm() {
-	auto rpm = GET_RPM();
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->vrThreshold); i++) {
 		updateVrPwm(rpm, i);

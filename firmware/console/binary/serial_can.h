@@ -24,7 +24,8 @@
 
 #define CAN_TIME_IMMEDIATE ((can_sysinterval_t)0)
 
-#define CAN_FIFO_BUF_SIZE 64
+// most efficient sizes are 6 + x * 7 that way whole buffer is transmitted as (x+1) full packets
+#define CAN_FIFO_BUF_SIZE 76
 #define CAN_FIFO_FRAME_SIZE 8
 
 #define CAN_FLOW_STATUS_OK 0
