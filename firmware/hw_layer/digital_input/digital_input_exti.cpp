@@ -138,12 +138,12 @@ CH_IRQ_HANDLER(STM32_I2C1_EVENT_HANDLER) {
 		channel.Timestamp = 0;
 		__enable_irq();
 
-		if (now - timestamp > MS2NT(10)) {
-			efiPrintf("EXTI skipped late event ch %d", i);
-			continue;
-		}
-
 		if (timestamp != 0) {
+			if (now - timestamp > MS2NT(10)) {
+				efiPrintf("EXTI skipped late event ch %d", i);
+				continue;
+			}
+
 			channel.Callback(channel.CallbackData, timestamp);
 		}
 	}
