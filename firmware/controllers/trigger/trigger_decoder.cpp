@@ -516,10 +516,12 @@ void TriggerState::decodeTriggerEvent(
 	{
 		chibios_rt::CriticalSectionLocker csl;
 
-		efitick_t timeSinceLast = nowNt - toothed_previous_time;
+		auto prevTimeLocal = toothed_previous_time;
+
+		efitick_t timeSinceLast = nowNt - prevTimeLocal;
 
 		if (timeSinceLast < 0) {
-			firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", msg, toothed_previous_time, nowNt, timeSinceLast);
+			efiPrintf("toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", prevTimeLocal, nowNt, timeSinceLast);
 		}
 	}
 
