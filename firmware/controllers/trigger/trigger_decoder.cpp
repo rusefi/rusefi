@@ -473,7 +473,7 @@ efitick_t deltaAndThrowIfNegative(const char* msg, efitick_t nowNt, efitick_t la
 
 	static_assert(std::is_same_v<decltype(delta), int64_t>);
 
-	if (delta >= 0) {
+	if (delta > 0) {
 		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", msg, lastToothTime, nowNt, delta);
 	}
 
