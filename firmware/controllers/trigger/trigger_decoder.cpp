@@ -516,6 +516,7 @@ void TriggerState::decodeTriggerEvent(
 	{
 		chibios_rt::CriticalSectionLocker csl;
 
+
 		efitick_t timeSinceLast = nowNt - toothed_previous_time;
 
 		if (timeSinceLast < 0) {
