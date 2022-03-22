@@ -91,6 +91,7 @@ public:
 	efitime_t getTotalEventCounter() const;
 
 	void decodeTriggerEvent(
+			const char *msg,
 			const TriggerWaveform& triggerShape,
 			const TriggerStateCallback triggerCycleCallback,
 			TriggerStateListener* triggerStateListener,

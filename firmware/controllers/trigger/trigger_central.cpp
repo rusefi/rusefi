@@ -284,6 +284,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		TriggerState *vvtState = &tc->vvtState[bankIndex][camIndex];
 
 		vvtState->decodeTriggerEvent(
+				"vvt",
 			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
@@ -617,7 +618,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(triggerShape,
+	triggerState.decodeTriggerEvent(
+			"trigger",
+			triggerShape,
 			nullptr,
 			engine,
 			engine->primaryTriggerConfiguration,

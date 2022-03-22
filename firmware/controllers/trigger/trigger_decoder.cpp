@@ -477,6 +477,7 @@ void TriggerState::onShaftSynchronization(
  * @param nowNt current time
  */
 void TriggerState::decodeTriggerEvent(
+		const char *msg,
 		const TriggerWaveform& triggerShape,
 		const TriggerStateCallback triggerCycleCallback,
 		TriggerStateListener* triggerStateListener,
@@ -513,7 +514,7 @@ void TriggerState::decodeTriggerEvent(
 	currentCycle.eventCount[triggerWheel]++;
 
 	if (toothed_previous_time > nowNt) {
-		firmwareError(CUSTOM_OBD_93, "toothed_previous_time after nowNt %d %d", toothed_previous_time, nowNt);
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d", msg, toothed_previous_time, nowNt);
 	}
 
 	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
