@@ -469,23 +469,15 @@ void TriggerState::onShaftSynchronization(
 }
 
 efitick_t deltaAndThrowIfNegative(const char* msg, efitick_t nowNt, efitick_t lastToothTime) {
-	auto delta = nowNt - lastToothTime;
+	auto delta = lastToothTime - nowNt;
 
 	static_assert(std::is_same_v<decltype(delta), int64_t>);
 
-	if (delta < 0) {
-		uint8_t* ptr = reinterpret_cast<uint8_t*>(&msg) - 32;
-
-		for (size_t i = 0; i < 64; i++)
-		{
-			efiPrintf("******** stack dump near things: %d %d", i, *ptr);
-			ptr++;
-		}
-
+	if (delta >= 0) {
 		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", msg, lastToothTime, nowNt, delta);
 	}
 
-	return delta;
+	return -delta;
 }
 
 /**
