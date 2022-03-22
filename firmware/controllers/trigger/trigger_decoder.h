@@ -240,5 +240,3 @@ void calculateTriggerSynchPoint(
 	TriggerState& state);
 
 void prepareEventAngles(TriggerWaveform *shape, TriggerFormDetails *details);
-
-efitick_t deltaAndThrowIfNegative(const char* msg, efitick_t nowNt, efitick_t lastToothTime);

@@ -468,18 +468,6 @@ void TriggerState::onShaftSynchronization(
 #endif /* EFI_UNIT_TEST */
 }
 
-efitick_t deltaAndThrowIfNegative(const char* msg, efitick_t nowNt, efitick_t lastToothTime) {
-	auto delta = lastToothTime - nowNt;
-
-	static_assert(std::is_same_v<decltype(delta), int64_t>);
-
-	if (delta > 0) {
-		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%ld now=%ld delta=%ld", msg, lastToothTime, nowNt, delta);
-	}
-
-	return -delta;
-}
-
 /**
  * @brief Trigger decoding happens here
  * VR falls are filtered out and some VR noise detection happens prior to invoking this method, for
@@ -525,7 +513,11 @@ void TriggerState::decodeTriggerEvent(
 
 	currentCycle.eventCount[triggerWheel]++;
 
-	efitick_t currentDurationLong = isFirstEvent ? 0 : deltaAndThrowIfNegative(msg, nowNt, toothed_previous_time);
+	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
+
+	if (currentDurationLong <= 0) {
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d delta=%d", msg, (int)toothed_previous_time, (int)nowNt, (int)currentDurationLong);
+	}
 
 	/**
 	 * For performance reasons, we want to work with 32 bit values. If there has been more then
