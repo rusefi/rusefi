@@ -17,7 +17,7 @@ DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"hellenNB1\" $(DEFAULT_ENGINE_TYPE)
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
-DDEFS += -DHAL_TRIGGER_USE_PAL=TRUE
+
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 # Enable serial pins on expansion header
