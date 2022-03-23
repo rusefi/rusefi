@@ -537,6 +537,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		break;
 
     case TT_VVT_TOYOTA_4_1:
+    	initializeToyota4_1(this);
+		break;
+
     case TT_VVT_MITSUBISHI_6G75:
 	case TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
