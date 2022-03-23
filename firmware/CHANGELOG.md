@@ -28,7 +28,7 @@ All notable user-facing or behavior-altering changes will be documented in this 
 ### Added
  - Mitsubishi 36-2-1-1 trigger wheel
  - Mitsubishi 3A92 VVT trigger
-
+ - Toyota 4-1 VVT trigger
 
 ## March 2022 Release - "Day 22"
 
