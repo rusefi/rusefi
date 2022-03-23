@@ -1129,7 +1129,8 @@
 #define GAUGE_NAME_TIMING_ADVANCE "timing"
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
-#define GAUGE_NAME_TRG_ERR "trg err"
+#define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
+#define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
 #define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
 #define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
 #define GAUGE_NAME_UPTIME "Uptime"
@@ -1908,7 +1909,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1369730652
+#define SIGNATURE_HASH 2948359028
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2445,7 +2446,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.03.23.subaru_eg33_f7.1369730652"
+#define TS_SIGNATURE "rusEFI 2022.03.23.subaru_eg33_f7.2948359028"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

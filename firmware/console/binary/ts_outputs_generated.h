@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Mar 21 00:17:34 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Mar 23 23:19:34 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1199,6 +1199,7 @@ struct ts_outputs_s {
 	 */
 	scaled_channel<float, 1, 1> vvtCurrentPosition = (float)0;
 	/**
+	 * @@GAUGE_NAME_TRG_GAP@@
 	 * offset 492
 	 */
 	scaled_channel<float, 1, 1> triggerSyncGapRatio = (float)0;
@@ -1363,4 +1364,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Mon Mar 21 00:17:34 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Wed Mar 23 23:19:34 UTC 2022
