@@ -314,7 +314,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
     float autoscale     vvtSyncGapRatio;;"", 1, 0, -10000, 10000, 3
     float autoscale vvtCurrentPosition;;"", 1, 0, -10000, 10000, 3
 
-    float autoscale triggerSyncGapRatio;;"", 1, 0, -10000, 10000, 3
+    float autoscale triggerSyncGapRatio;@@GAUGE_NAME_TRG_GAP@@;"", 1, 0, -10000, 10000, 3
 
     uint8_t triggerStateIndex;;"", 1, 0, -10000, 10000, 3
     uint8_t vvtCounter;;"", 1, 0, -10000, 10000, 3
