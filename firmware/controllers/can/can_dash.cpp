@@ -128,7 +128,9 @@ void updateDash(CanCycle cycle) {
 		break;
 	case CAN_AIM_DASH:
 		canDashboardAim(cycle);
+		break;
 	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
 		break;
 	}
 }
