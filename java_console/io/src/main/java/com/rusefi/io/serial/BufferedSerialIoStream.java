@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.Nullable;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -34,9 +35,12 @@ public class BufferedSerialIoStream extends SerialIoStream {
      * Just open physical serial and not much more
      * @see PortHolder#connectAndReadConfiguration(com.rusefi.binaryprotocol.BinaryProtocol.Arguments)
      */
+    @Nullable
     public static IoStream openPort(String port) {
         log.info("[BufferedSerialIoStream] openPort " + port);
         SerialPort serialPort = openSerial(port);
+        if (serialPort == null)
+            return null;
 //        FileLog.LOGGER.info("[SerialIoStreamJSerialComm] opened " + port);
         return new BufferedSerialIoStream(serialPort, port);
     }
