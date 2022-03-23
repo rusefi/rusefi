@@ -11,6 +11,7 @@ import com.rusefi.maintenance.*;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.util.IoUtils;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -83,7 +84,7 @@ public class StartupFrame {
             public void windowClosed(WindowEvent ev) {
                 if (!isProceeding) {
                     getConfig().save();
-                    System.exit(0);
+                    IoUtils.exit("windowClosed", 0);
                 }
             }
         });

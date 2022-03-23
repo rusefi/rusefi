@@ -7,6 +7,7 @@ import com.rusefi.io.ConnectionStateListener;
 import com.opensr5.io.DataListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
+import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -89,7 +90,7 @@ public class PortHolder {
                 Window window = windows.length == 0 ? null : windows[0];
                 JOptionPane.showMessageDialog(window, "No connectivity, will close",
                         "Error", JOptionPane.ERROR_MESSAGE);
-                System.exit(-1);
+                IoUtils.exit("No connectivity, will close",-1);
             });
         }
 
