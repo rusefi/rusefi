@@ -520,7 +520,7 @@ void TriggerState::decodeTriggerEvent(
 		int now2 = nowNt;
 		int delta = prevTooth - now2;
 		int now3 = getTimeNowNt();
-		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d delta=%d event=%d lastEvent=%d actualNow=%d", msg, prevTooth, now2, delta, signal, lastSignal, now3);
+		firmwareError(CUSTOM_OBD_93, "[%s] out of order trigger p=%d n=%d d=%d e=%d let=%d an=%d", msg, prevTooth, now2, delta, signal, lastSignal, now3);
 	}
 
 	lastSignal = signal;
