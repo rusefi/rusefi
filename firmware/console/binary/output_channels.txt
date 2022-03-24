@@ -63,7 +63,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint8_t autoscale knockRetard;;"deg",{1/10}, 0, 0, 0, 0
-	uint8_t idleCurrentPosition;;"",1, 0, 0, 0, 0
+	uint8_t autoscale idleCurrentPosition;;"%", 0.5, 0, 0, 100, 1
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
@@ -200,7 +200,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	int16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	int8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
+	int8_t[12 iterate] autoscale knock;;"dBv",1, 0, 0, 0, 0
 
 	uint8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, 0, 0, 0
 	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
@@ -228,7 +228,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	int16_t autoscale vvtPositionB2I;@@GAUGE_NAME_VVT_B2I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 	int16_t autoscale vvtPositionB2E;@@GAUGE_NAME_VVT_B2E@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
 
-	int16_t[2 iterate] autoscale fuelPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t[2 iterate] autoscale fuelPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 
 	int16_t autoscale rawTps1Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
@@ -237,18 +237,18 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t knockCount;"knock: count";"",1, 0, 0, 0, 0
 
 	int16_t autoscale accelerationZ;@@GAUGE_NAME_ACCEL_Z@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale accelerationYaw;@@GAUGE_NAME_ACCEL_YAW@@;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale accelerationYaw;@@GAUGE_NAME_ACCEL_YAW@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	int8_t[4 iterate] autoscale vvtTargets;;"deg",1, 0, 0, 0, 0
 	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
 
     struct pid_status_s
-    	float iTerm;;"", 1, 0, -10000, 10000, 3
-    	float dTerm;;"", 1, 0, -10000, 10000, 3
-    	float output;;"", 1, 0, -10000, 10000, 3
-    	float error;;"", 1, 0, -10000, 10000, 3
-    	int resetCounter;;"", 1, 0, -10000, 10000, 0
+    	int16_t autoscale iTerm;;"", 0.01, 0, -327, 327, 2
+    	int16_t autoscale dTerm;;"", 0.01, 0, -327, 327, 2
+    	int16_t autoscale output;;"", 0.01, 0, -327, 327, 2
+    	int16_t autoscale error;;"", 0.01, 0, -327, 327, 2
+    	uint32_t resetCounter;;"", 1, 0, 0, 10000, 0
     end_struct
 
 	uint16_t[2 iterate] wbTemperature;;"deg C", 1, 0, 0, 1000, 0
@@ -260,7 +260,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	int16_t autoscale accPedalSplit;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
     int16_t autoscale m_requested_pump;"DI: Pump Angle";"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 0
-    int16_t autoscale boostControlTarget;"Pump Angle";"deg",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+    int16_t autoscale boostControlTarget;@@GAUGE_NAME_BOOST_TARGET@@;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
     int8_t autoscale sparkCutReason;"Spark Cut Code";"code",1, 0, 0, 0, 0
     int8_t autoscale fuelCutReason;"Fuel Cut Code";"code",1, 0, 0, 0, 0
     float fuel_requested_percent;"DI: fuel_requested_percent";"v", 1, 0, 0, 100, 0
@@ -288,7 +288,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
     int luaInvocationCounter;;"count",1, 0, 0, 0, 0
     int luaLastCycleDuration;;"nt",1, 0, 0, 0, 0
     uint8_t testBenchIter;;"count",1, 0, 0, 0, 0
-	uint8_t[75 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[15 iterate] unusedInTheMiddle;;"",1, 0, 0, 0, 0
 
 	int16_t autoscale auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 0.01, 0, 0, 0, 0
 	int16_t autoscale auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 0.01, 0, 0, 0, 0
@@ -304,9 +304,9 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	bit tpsAccelActive
 
     uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
-    uint8_t boostControllerOutput;;"", 1, 0, -10000, 10000, 0
-    uint8_t boostControllerClosedLoopPart;;"", 1, 0, -10000, 10000, 0
-    uint8_t boostControllerOpenLoopPart;;"", 1, 0, -10000, 10000, 0
+    uint8_t TEMPLOG_map_peak;;"", 1, 0, -10000, 10000, 3
+	uint8_t autoscale boostControllerOutput;@@GAUGE_NAME_BOOST_OUTPUT@@;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale boostControllerOpenLoopPart;@@GAUGE_NAME_BOOST_OPEN_LOOP@@;"%", 0.5, 0, 0, 100, 1
 
     float autoscale TEMPLOG_MAP_AT_SPECIAL_POINT;;"", 1, 0, -10000, 10000, 3
     float autoscale TEMPLOG_MAP_AT_DIFF;;"", 1, 0, -10000, 10000, 3
@@ -321,26 +321,21 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
     uint8_t vvtSyncCounter;;"", 1, 0, -10000, 10000, 3
     uint8_t vvtStateIndex;;"", 1, 0, -10000, 10000, 3
 
+	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
 
-    float autoscale TEMPLOG_MAP_INSTANT_AVERAGE;;"", 1, 0, -10000, 10000, 3
+	int8_t autoscale boostControllerClosedLoopPart;@@GAUGE_NAME_BOOST_CLOSED_LOOP@@;"%", 0.5, 0, -50, 50, 1
+	uint8_t unused503;;"", 1, 0, 0, 0, 0
 
-    uint8_t fallbackMap;;"", 1, 0, -10000, 10000, 3
-    uint8_t TEMPLOG_map_peak;;"", 1, 0, -10000, 10000, 3
-    uint8_t TEMPLOG_map_length;;"", 1, 0, -10000, 10000, 3
-    uint8_t TEMPLOG_mapIndex;;"", 1, 0, -10000, 10000, 3
-
-
-	uint16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale timingIatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale timingPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	int16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingIatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 655, 2
 
     uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
     uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
 
     uint16_t maxLockedDuration;;"", 1, 0, -10000, 10000, 3
     uint16_t maxTriggerReentrant;;"", 1, 0, -10000, 10000, 3
-
 
     uint16_t canWriteOk;;"", 1, 0, -10000, 10000, 3
     uint16_t canWriteNotOk;;"", 1, 0, -10000, 10000, 3
@@ -361,14 +356,16 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
     int idleState;;"", 1, 0, -10000, 10000, 3
 
     float injectorFlowPressureRatio;;"", 1, 0, -10000, 10000, 3
-    float injectorFlowPressureDelta;;"", 1, 0, -10000, 10000, 3
+    float injectorFlowPressureDelta;;"kPa", 1, 0, -10000, 10000, 1
 
 
-    float etbFeedForward;;"", 1, 0, -10000, 10000, 3
+    float etbFeedForward;;"%", 1, 0, -10000, 10000, 3
     float etbIntegralError;;"", 1, 0, -10000, 10000, 3
-    float etbCurrentTarget;;"", 1, 0, -10000, 10000, 3
+    float etbCurrentTarget;;"%", 1, 0, -10000, 10000, 3
 	pid_status_s alternatorStatus
 	pid_status_s idleStatus
 	pid_status_s etbStatus
+	pid_status_s boostStatus
 
+	uint8_t[76 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
