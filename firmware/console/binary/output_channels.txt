@@ -305,8 +305,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
     uint8_t TEMPLOG_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
     uint8_t TEMPLOG_map_peak;;"", 1, 0, -10000, 10000, 3
-	uint8_t autoscale boostControllerOutput;@@GAUGE_NAME_BOOST_OUTPUT@@;"", 1, 0, 0, 100, 1
-	uint8_t autoscale boostControllerOpenLoopPart;@@GAUGE_NAME_BOOST_OPEN_LOOP@@;"", 0.5, 0, 0, 100, 1
+	uint8_t autoscale boostControllerOutput;@@GAUGE_NAME_BOOST_OUTPUT@@;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale boostControllerOpenLoopPart;@@GAUGE_NAME_BOOST_OPEN_LOOP@@;"%", 0.5, 0, 0, 100, 1
 
     float autoscale TEMPLOG_MAP_AT_SPECIAL_POINT;;"", 1, 0, -10000, 10000, 3
     float autoscale TEMPLOG_MAP_AT_DIFF;;"", 1, 0, -10000, 10000, 3
@@ -323,7 +323,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1
 
-	int8_t autoscale boostControllerClosedLoopPart;@@GAUGE_NAME_BOOST_CLOSED_LOOP@@;"", 0.5, 0, -50, 50, 1
+	int8_t autoscale boostControllerClosedLoopPart;@@GAUGE_NAME_BOOST_CLOSED_LOOP@@;"%", 0.5, 0, -50, 50, 1
 	uint8_t unused503;;"", 1, 0, 0, 0, 0
 
 	int16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
