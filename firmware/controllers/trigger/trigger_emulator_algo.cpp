@@ -118,11 +118,14 @@ static bool hasInitTriggerEmulator = false;
 
 # if !EFI_UNIT_TEST
 
+int emulatorType = 0;
+
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
 	if (engine->directSelfStimulation) {
 		/**
 		 * this callback would invoke the input signal handlers directly
 		 */
+		emulatorType = 1;
 		helper.handleEmulatorCallback(
 				*state->multiChannelStateSequence,
 				stateIndex);
@@ -131,6 +134,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 #if EFI_PROD_CODE
 	// Only set pins if they're configured - no need to waste the cycles otherwise
 	else if (hasStimPins) {
+		emulatorType = 2;
 		applyPinState(stateIndex, state);
 	}
 #endif /* EFI_PROD_CODE */

@@ -468,7 +468,7 @@ void TriggerState::onShaftSynchronization(
 #endif /* EFI_UNIT_TEST */
 }
 
-static trigger_event_e lastSignal;
+static int lastEmulatorType = -1;
 
 /**
  * @brief Trigger decoding happens here
@@ -515,15 +515,17 @@ void TriggerState::decodeTriggerEvent(
 
 	currentCycle.eventCount[triggerWheel]++;
 
+	extern int emulatorType;
+
 	if (toothed_previous_time > nowNt) {
 		int prevTooth = toothed_previous_time;
 		int now2 = nowNt;
 		int delta = prevTooth - now2;
 		int now3 = getTimeNowNt();
-		firmwareError(CUSTOM_OBD_93, "[%s] out of order trigger p=%d n=%d d=%d e=%d let=%d an=%d", msg, prevTooth, now2, delta, signal, lastSignal, now3);
+		firmwareError(CUSTOM_OBD_93, "out of order trigger p=%d n=%d an=%d et=%d let=%d", prevTooth, now2, now3, emulatorType, lastEmulatorType);
 	}
 
-	lastSignal = signal;
+	lastEmulatorType = emulatorType;
 
 	efitick_t currentDurationLong = isFirstEvent ? 0 : nowNt - toothed_previous_time;
 
