@@ -125,6 +125,7 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.boostControlTarget = target;
+	m_pid.postState(engine->outputChannels.boostStatus);
 #endif /* EFI_TUNER_STUDIO */
 
 	return closedLoop;
