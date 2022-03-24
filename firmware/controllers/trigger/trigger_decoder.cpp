@@ -519,7 +519,8 @@ void TriggerState::decodeTriggerEvent(
 		int prevTooth = toothed_previous_time;
 		int now2 = nowNt;
 		int delta = prevTooth - now2;
-		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d delta=%d event=%d lastEvent=%d", msg, prevTooth, now2, delta, signal, lastSignal);
+		int now3 = getTimeNowNt();
+		firmwareError(CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d delta=%d event=%d lastEvent=%d actualNow=%d", msg, prevTooth, now2, delta, signal, lastSignal, now3);
 	}
 
 	lastSignal = signal;
