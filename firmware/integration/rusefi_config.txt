@@ -1734,6 +1734,10 @@ end_struct
 #define GAUGE_NAME_AUX_LINEAR_1 "Aux Linear 1"
 #define GAUGE_NAME_AUX_LINEAR_2 "Aux Linear 2"
 
+#define GAUGE_NAME_BOOST_OUTPUT "Boost Output"
+#define GAUGE_NAME_BOOST_CLOSED_LOOP "Boost Closed Loop"
+#define GAUGE_NAME_BOOST_OPEN_LOOP "Boost Open Loop"
+#define GAUGE_NAME_BOOST_TARGET "Boost Target"
 
 #define INDICATOR_NAME_CLUTCH_UP "clutch: up"
 #define INDICATOR_NAME_CLUTCH_DOWN "clutch: down"
