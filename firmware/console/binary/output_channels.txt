@@ -63,7 +63,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint8_t autoscale knockRetard;;"deg",{1/10}, 0, 0, 0, 0
-	uint8_t idleCurrentPosition;;"",1, 0, 0, 0, 0
+	uint8_t idleCurrentPosition;;"%", 0.5, 0, 0, 100, 1
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
@@ -200,7 +200,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	int16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	int8_t[12 iterate] autoscale knock;;"",1, 0, 0, 0, 0
+	int8_t[12 iterate] autoscale knock;;"dBv",1, 0, 0, 0, 0
 
 	uint8_t autoscale tcuDesiredGear;@@GAUGE_NAME_DESIRED_GEAR@@;"gear",1, 0, 0, 0, 0
 	uint8_t autoscale flexPercent;@@GAUGE_NAME_FLEX@@;"%",{1/2}, 0, 0, 0, 0
@@ -237,8 +237,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	uint16_t knockCount;"knock: count";"",1, 0, 0, 0, 0
 
 	int16_t autoscale accelerationZ;@@GAUGE_NAME_ACCEL_Z@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale accelerationYaw;@@GAUGE_NAME_ACCEL_YAW@@;"",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale accelerationRoll;@@GAUGE_NAME_ACCEL_ROLL@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
+	int16_t autoscale accelerationYaw;@@GAUGE_NAME_ACCEL_YAW@@;"G",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 
 	int8_t[4 iterate] autoscale vvtTargets;;"deg",1, 0, 0, 0, 0
 	uint16_t turboSpeed;@@GAUGE_NAME_TURBO_SPEED@@;"hz",1, 0, 0, 0, 0
@@ -356,12 +356,12 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
     int idleState;;"", 1, 0, -10000, 10000, 3
 
     float injectorFlowPressureRatio;;"", 1, 0, -10000, 10000, 3
-    float injectorFlowPressureDelta;;"", 1, 0, -10000, 10000, 3
+    float injectorFlowPressureDelta;;"kPa", 1, 0, -10000, 10000, 1
 
 
-    float etbFeedForward;;"", 1, 0, -10000, 10000, 3
+    float etbFeedForward;;"%", 1, 0, -10000, 10000, 3
     float etbIntegralError;;"", 1, 0, -10000, 10000, 3
-    float etbCurrentTarget;;"", 1, 0, -10000, 10000, 3
+    float etbCurrentTarget;;"%", 1, 0, -10000, 10000, 3
 	pid_status_s alternatorStatus
 	pid_status_s idleStatus
 	pid_status_s etbStatus
