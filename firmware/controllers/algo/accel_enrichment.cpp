@@ -215,7 +215,7 @@ void setTpsDecelMult(float value) {
 }
 
 void setTpsAccelLen(int length) {
-	if (length < 1) {
+	if (length < 0) {
 		efiPrintf("Length should be positive");
 		return;
 	}
