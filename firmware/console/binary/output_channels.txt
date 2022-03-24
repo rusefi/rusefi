@@ -326,10 +326,10 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	int8_t autoscale boostControllerClosedLoopPart;@@GAUGE_NAME_BOOST_CLOSED_LOOP@@;"", 0.5, 0, -50, 50, 1
 	uint8_t unused503;;"", 1, 0, 0, 0, 0
 
-	int16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale timingIatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	int16_t autoscale timingPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
-	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 0, 0
+	int16_t autoscale timingCltCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingIatCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t autoscale timingPidCorrection;;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	uint16_t autoscale instantMAPValue;Instant MAP;"kPa",{1/@@PACK_MULT_PRESSURE@@}, 0, 0, 655, 2
 
     uint16_t mostRecentTimeBetweenSparkEvents;;"", 1, 0, -10000, 10000, 3
     uint16_t mostRecentTimeBetweenIgnitionEvents;;"", 1, 0, -10000, 10000, 3
