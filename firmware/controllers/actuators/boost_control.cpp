@@ -116,7 +116,7 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 	}
 
 	closedLoopPart = m_pid.getOutput(target, manifoldPressure, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
-	engine->outputChannels.boostControllerClosedLoopPart = closedLoopPart;
+	m_pid.postState(engine->outputChannels.boostStatus);
 	return closedLoopPart;
 }
 
@@ -125,7 +125,6 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.boostControlTarget = target;
-	m_pid.postState(engine->outputChannels.boostStatus);
 #endif /* EFI_TUNER_STUDIO */
 
 	return closedLoop;

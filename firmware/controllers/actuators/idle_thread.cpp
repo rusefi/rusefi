@@ -344,7 +344,7 @@ float IdleController::getIdlePosition() {
 
 			if (engineConfiguration->idleMode == IM_AUTO) {
 				// see also tsOutputChannels->idlePosition
-				getIdlePid()->postState(&engine->outputChannels.idleStatus);
+				getIdlePid()->postState(engine->outputChannels.idleStatus);
 				engine->outputChannels.idleState = idleState;
 			} else {
 				engine->outputChannels.idleCurrentPosition = iacPosition;
