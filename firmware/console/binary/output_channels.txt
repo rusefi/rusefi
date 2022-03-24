@@ -63,7 +63,7 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 
 	uint16_t autoscale lambdaValue;@@GAUGE_NAME_LAMBDA@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 0
 	uint8_t autoscale knockRetard;;"deg",{1/10}, 0, 0, 0, 0
-	uint8_t idleCurrentPosition;;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale idleCurrentPosition;;"%", 0.5, 0, 0, 100, 1
 
 	uint16_t autoscale VBatt;@@GAUGE_NAME_VBAT@@;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 0, 0
 
