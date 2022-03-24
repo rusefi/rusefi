@@ -378,10 +378,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.tpsAccelActive;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_CYCLE_COUNT"))
 		return engine->outputChannels.TEMPLOG_MAP_AT_CYCLE_COUNT;
+	if (strEqualCaseInsensitive(name, "TEMPLOG_map_peak"))
+		return engine->outputChannels.TEMPLOG_map_peak;
 	if (strEqualCaseInsensitive(name, "boostControllerOutput"))
 		return engine->outputChannels.boostControllerOutput;
-	if (strEqualCaseInsensitive(name, "boostControllerClosedLoopPart"))
-		return engine->outputChannels.boostControllerClosedLoopPart;
 	if (strEqualCaseInsensitive(name, "boostControllerOpenLoopPart"))
 		return engine->outputChannels.boostControllerOpenLoopPart;
 	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_AT_SPECIAL_POINT"))
@@ -402,16 +402,10 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.vvtSyncCounter;
 	if (strEqualCaseInsensitive(name, "vvtStateIndex"))
 		return engine->outputChannels.vvtStateIndex;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_MAP_INSTANT_AVERAGE"))
-		return engine->outputChannels.TEMPLOG_MAP_INSTANT_AVERAGE;
 	if (strEqualCaseInsensitive(name, "fallbackMap"))
 		return engine->outputChannels.fallbackMap;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_map_peak"))
-		return engine->outputChannels.TEMPLOG_map_peak;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_map_length"))
-		return engine->outputChannels.TEMPLOG_map_length;
-	if (strEqualCaseInsensitive(name, "TEMPLOG_mapIndex"))
-		return engine->outputChannels.TEMPLOG_mapIndex;
+	if (strEqualCaseInsensitive(name, "boostControllerClosedLoopPart"))
+		return engine->outputChannels.boostControllerClosedLoopPart;
 	if (strEqualCaseInsensitive(name, "timingCltCorrection"))
 		return engine->outputChannels.timingCltCorrection;
 	if (strEqualCaseInsensitive(name, "timingIatCorrection"))
@@ -494,5 +488,15 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.etbStatus.error;
 	if (strEqualCaseInsensitive(name, "etbStatus.resetCounter"))
 		return engine->outputChannels.etbStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "boostStatus.iTerm"))
+		return engine->outputChannels.boostStatus.iTerm;
+	if (strEqualCaseInsensitive(name, "boostStatus.dTerm"))
+		return engine->outputChannels.boostStatus.dTerm;
+	if (strEqualCaseInsensitive(name, "boostStatus.output"))
+		return engine->outputChannels.boostStatus.output;
+	if (strEqualCaseInsensitive(name, "boostStatus.error"))
+		return engine->outputChannels.boostStatus.error;
+	if (strEqualCaseInsensitive(name, "boostStatus.resetCounter"))
+		return engine->outputChannels.boostStatus.resetCounter;
 	return EFI_ERROR_CODE;
 }

@@ -1042,6 +1042,10 @@
 #define GAUGE_NAME_AUX_TEMP1 "Aux temp 1"
 #define GAUGE_NAME_AUX_TEMP2 "Aux temp 2"
 #define GAUGE_NAME_BARO_PRESSURE "Barometric pressure"
+#define GAUGE_NAME_BOOST_CLOSED_LOOP "Boost Closed Loop"
+#define GAUGE_NAME_BOOST_OPEN_LOOP "Boost Open Loop"
+#define GAUGE_NAME_BOOST_OUTPUT "Boost Output"
+#define GAUGE_NAME_BOOST_TARGET "Boost Target"
 #define GAUGE_NAME_CLT "CLT"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
 #define GAUGE_NAME_CURRENT_GEAR "Current Gear"
@@ -1909,7 +1913,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2948359028
+#define SIGNATURE_HASH 2698005804
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2446,7 +2450,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.03.24.subaru_eg33_f7.2948359028"
+#define TS_SIGNATURE "rusEFI 2022.03.24.subaru_eg33_f7.2698005804"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'

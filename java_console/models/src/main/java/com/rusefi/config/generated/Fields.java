@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 24 00:12:31 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 24 13:03:37 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1032,6 +1032,10 @@ public class Fields {
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
+	public static final String GAUGE_NAME_BOOST_CLOSED_LOOP = "Boost Closed Loop";
+	public static final String GAUGE_NAME_BOOST_OPEN_LOOP = "Boost Open Loop";
+	public static final String GAUGE_NAME_BOOST_OUTPUT = "Boost Output";
+	public static final String GAUGE_NAME_BOOST_TARGET = "Boost Target";
 	public static final String GAUGE_NAME_CLT = "CLT";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
 	public static final String GAUGE_NAME_CURRENT_GEAR = "Current Gear";
@@ -2337,7 +2341,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.03.24.all.3456828149";
+	public static final String TS_SIGNATURE = "rusEFI 2022.03.24.all.3244764333";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
