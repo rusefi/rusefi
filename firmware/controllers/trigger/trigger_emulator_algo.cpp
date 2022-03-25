@@ -129,6 +129,7 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 		helper.handleEmulatorCallback(
 				*state->multiChannelStateSequence,
 				stateIndex);
+		emulatorType = 0;
 	}
 
 #if EFI_PROD_CODE
