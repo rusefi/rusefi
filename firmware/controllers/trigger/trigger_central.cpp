@@ -11,6 +11,7 @@
 
 #include "trigger_central.h"
 #include "trigger_decoder.h"
+#include "trigger_input.h"
 #include "main_trigger_callback.h"
 #include "listener_array.h"
 #include "tooth_logger.h"
