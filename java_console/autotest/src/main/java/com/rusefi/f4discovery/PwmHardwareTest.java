@@ -60,6 +60,11 @@ public class PwmHardwareTest extends RusefiTestBase {
         ecu.setEngineType(engine_type_e.FRANKENSO_MIATA_NA6_MAP);
         ecu.changeRpm(1000);
 
+        // disable trigger pins to avoid interference
+        ecu.sendCommand(CMD_TRIGGER_PIN + " 0 none");
+        ecu.sendCommand(CMD_TRIGGER_PIN + " 1 none");
+        ecu.sendCommand(CMD_TRIGGER_PIN + " 2 none");
+
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 0 none");
         ecu.sendCommand(CMD_TRIGGER_SIMULATOR_PIN + " 1 none");
         ecu.sendCommand(CMD_IDLE_PIN + " PD2");
@@ -68,8 +73,6 @@ public class PwmHardwareTest extends RusefiTestBase {
         ecu.sendCommand(CMD_IGNITION_PIN + " 1 none");
         ecu.sendCommand(CMD_IGNITION_PIN + " 2 none");
         ecu.sendCommand(CMD_IGNITION_PIN + " 3 none");
-
-        ecu.sendCommand(CMD_TRIGGER_PIN + " 1 PA8");
 
         /* DBG_LOGIC_ANALYZER */
         ecu.sendCommand("set debug_mode " +  com.rusefi.enums.debug_mode_e.DBG_LOGIC_ANALYZER.ordinal());
