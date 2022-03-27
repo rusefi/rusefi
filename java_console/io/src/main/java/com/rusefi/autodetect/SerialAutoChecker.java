@@ -34,6 +34,8 @@ public class SerialAutoChecker {
      * @return ECU signature from specified stream
      */
     public String checkResponse(IoStream stream, Function<CallbackContext, Void> callback) {
+        if (stream == null)
+            return null;
         if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
             if (Elm327Connector.checkConnection(serialPort, stream)) {
                 // todo: this method is supposed to return signature not serial port!
