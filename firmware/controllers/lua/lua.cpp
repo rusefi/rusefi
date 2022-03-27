@@ -33,7 +33,7 @@ public:
 	memory_heap_t m_heap;
 
 	size_t m_memoryUsed = 0;
-	const size_t m_size;
+	size_t m_size;
 
 	void* alloc(size_t n) {
 		return chHeapAlloc(&m_heap, n);
@@ -49,6 +49,12 @@ public:
 		: m_size(TSize)
 	{
 		chHeapObjectInit(&m_heap, buffer, TSize);
+	}
+
+	void reinit(char *buffer, size_t m_size) {
+		efiAssertVoid(OBD_PCM_Processor_Fault, m_memoryUsed == 0, "Too late to reinit Lua heap");
+		chHeapObjectInit(&m_heap, buffer, m_size);
+		this->m_size = m_size;
 	}
 
 	void* realloc(void* ptr, size_t osize, size_t nsize) {
@@ -363,6 +369,14 @@ static LuaThread luaThread;
 #endif
 
 void startLua() {
+#if HW_MICRO_RUSEFI && defined(STM32F4)
+	// cute hack: let's check at runtime if you are a lucky owner of microRusEFI with extra RAM and use that extra RAM for extra Lua
+	if (isStm32F42x()) {
+		char *buffer = (char *)0x20020000;
+		heaps[0].reinit(buffer, 60000);
+	}
+#endif
+
 #if LUA_USER_HEAP > 1
 #if EFI_CAN_SUPPORT
 	initLuaCanRx();
