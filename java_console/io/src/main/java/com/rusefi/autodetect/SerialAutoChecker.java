@@ -78,7 +78,7 @@ public class SerialAutoChecker {
         }
     }
 
-    @NotNull
+    @Nullable
     private IoStream getStreamByMode(PortDetector.DetectorMode mode) {
         if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
             return SerialIoStream.openPort(serialPort);
