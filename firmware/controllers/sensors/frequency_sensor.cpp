@@ -13,6 +13,16 @@ static void freqSensorExtiCallback(void* arg, efitick_t nowNt) {
 	reinterpret_cast<FrequencySensor*>(arg)->onEdge(nowNt);
 }
 
+void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter) {
+	if (!isBrainPinValid(pin)) {
+		return;
+	}
+	setFunction(converter);
+	init(pin);
+	init(pin);
+	Register();
+}
+
 void FrequencySensor::init(brain_pin_e pin) {
 	m_pin = pin;
 
