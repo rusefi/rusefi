@@ -10,4 +10,7 @@ void setBoardConfigOverrides() {
 	// 10k/100k divider
 	engineConfiguration->vbattDividerCoeff = 11;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_4;
+
+	engineConfiguration->canTxPin = GPIOA_12;
+	engineConfiguration->canRxPin = GPIOA_11;
 }
