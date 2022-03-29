@@ -498,5 +498,9 @@ float getOutputValueByName(const char *name) {
 		return engine->outputChannels.boostStatus.error;
 	if (strEqualCaseInsensitive(name, "boostStatus.resetCounter"))
 		return engine->outputChannels.boostStatus.resetCounter;
+	if (strEqualCaseInsensitive(name, "auxSpeed1"))
+		return engine->outputChannels.auxSpeed1;
+	if (strEqualCaseInsensitive(name, "auxSpeed2"))
+		return engine->outputChannels.auxSpeed2;
 	return EFI_ERROR_CODE;
 }
