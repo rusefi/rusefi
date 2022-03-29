@@ -48,5 +48,7 @@ public enum SensorType {
 	MapSlow,
 	AuxLinear1,
 	AuxLinear2,
+	AuxSpeed1,
+	AuxSpeed2,
 	PlaceholderLast,
 }
