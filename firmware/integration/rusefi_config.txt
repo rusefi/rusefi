@@ -1174,7 +1174,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t autoscale noFuelTrimAfterDfcoTime;Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.;"sec", 0.1, 0, 0, 10, 1
 	float tpsAccelEnrichmentThreshold;+Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 1
 
-	int unused1696;;"", 1, 0, 0, 1, 0
+    brain_input_pin_e[2 iterate] auxSpeedSensorInputPin;
+	uint8_t unused1696;;"", 1, 0, 0, 1, 0
+	uint8_t unused16962;;"", 1, 0, 0, 1, 0
 
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
