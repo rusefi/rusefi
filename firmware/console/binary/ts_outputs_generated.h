@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Mar 24 13:02:50 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 29 06:39:31 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1371,11 +1371,23 @@ struct ts_outputs_s {
 	 */
 	pid_status_s boostStatus;
 	/**
+	 * "aux speed 1"
+	s
 	 * offset 564
 	 */
-	uint8_t unusedAtTheEnd[76];
+	uint16_t auxSpeed1 = (uint16_t)0;
+	/**
+	 * "aux speed 2"
+	s
+	 * offset 566
+	 */
+	uint16_t auxSpeed2 = (uint16_t)0;
+	/**
+	 * offset 568
+	 */
+	uint8_t unusedAtTheEnd[72];
 	/** total size 640*/
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Thu Mar 24 13:02:50 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 29 06:39:31 UTC 2022
