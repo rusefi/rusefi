@@ -61,6 +61,7 @@ void initNewSensors() {
 	initAuxSensors();
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
+	initAuxSpeedSensors();
 
 	#if !EFI_UNIT_TEST
 		initFuelLevel();
@@ -83,6 +84,7 @@ void stopSensors() {
 	deInitFlexSensor();
 	deInitVehicleSpeedSensor();
 	deinitTurbochargerSpeedSensor();
+	deinitAuxSpeedSensors();
 	deinitMap();
 }
 

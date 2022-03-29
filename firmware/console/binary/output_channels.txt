@@ -367,5 +367,8 @@ uint16_t rpmAcceleration;dRPM;"RPM/s",1, 0, 0, 0, 0
 	pid_status_s etbStatus
 	pid_status_s boostStatus
 
-	uint8_t[76 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint16_t auxSpeed1;"aux speed 1";"s",1, 0, 0, 0, 0
+	uint16_t auxSpeed2;"aux speed 2";"s",1, 0, 0, 0, 0
+
+	uint8_t[72 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

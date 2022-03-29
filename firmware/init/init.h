@@ -32,6 +32,7 @@ void initBaro();
 void initAuxSensors();
 void initVehicleSpeedSensor();
 void initTurbochargerSpeedSensor();
+void initAuxSpeedSensors();
 
 // Sensor reconfiguration
 void deinitVbatt();
@@ -42,3 +43,4 @@ void deInitFlexSensor();
 void deInitVehicleSpeedSensor();
 void deinitTurbochargerSpeedSensor();
 void deinitMap();
+void deinitAuxSpeedSensors();
