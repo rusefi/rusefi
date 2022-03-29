@@ -10,17 +10,7 @@ static TurbochargerSpeedConverter turbochargerSpeedConverter;
 
 
 void initTurbochargerSpeedSensor() {
-
-	auto pin = engineConfiguration->turboSpeedSensorInputPin;
-
-	// Nothing to do if no sensor configured
-	if (!isBrainPinValid(pin)) {
-		return;
-	}
-
-	turbochargerSpeedSensor.setFunction(turbochargerSpeedConverter);
-	turbochargerSpeedSensor.init(pin);
-	turbochargerSpeedSensor.Register();
+	turbochargerSpeedSensor.initIfValid(engineConfiguration->turboSpeedSensorInputPin, turbochargerSpeedConverter);
 }
 
 void deinitTurbochargerSpeedSensor() {
