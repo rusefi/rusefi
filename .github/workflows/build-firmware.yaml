@@ -51,7 +51,7 @@ jobs:
             f429-discovery,
             core8,
             atlas,
-            tdg-pdm,
+            tdg-pdm8,
         ]
 
         include:
