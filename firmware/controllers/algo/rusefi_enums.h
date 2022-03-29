@@ -101,7 +101,6 @@ typedef enum  __attribute__ ((__packed__)) {
 	/**
 	 * 1.8l Toyota 1ZZ-FE https://rusefi.com/forum/viewtopic.php?f=3&t=1735
 	 * 4 minus one
-	 * looks abandoned and unfinished?
 	 */
 	VVT_TOYOTA_4_1 = 6,
 
@@ -118,9 +117,11 @@ typedef enum  __attribute__ ((__packed__)) {
 
 	VVT_NISSAN_MR = 11,
 
-	VVT_12 = 12,
+	VVT_MITSUBISHI_3A92 = 12,
 
 	VVT_MAP_V_TWIN_ANOTHER = 13,
+
+	VVT_MITSUBISHI_6G75 = 14,
 
 } vvt_mode_e;
 

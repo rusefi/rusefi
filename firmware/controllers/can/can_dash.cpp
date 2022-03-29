@@ -80,6 +80,7 @@ static bool cluster_time_set;
 
 constexpr uint8_t e90_temp_offset = 49;
 
+// todo: those forward declarations are out of overall code style
 void canDashboardBMW(CanCycle cycle);
 void canDashboardFiat(CanCycle cycle);
 void canMazdaRX8(CanCycle cycle);
@@ -89,13 +90,19 @@ void canDashboardVagMqb(CanCycle cycle);
 void canDashboardNissanVQ(CanCycle cycle);
 void canDashboardGenesisCoupe(CanCycle cycle);
 void canDashboardAim(CanCycle cycle);
+void canDashboardHaltech(CanCycle cycle);
 
 void updateDash(CanCycle cycle) {
 
 	// Transmit dash data, if enabled
 	switch (engineConfiguration->canNbcType) {
+	case CAN_BUS_NBC_NONE:
+		break;
 	case CAN_BUS_NBC_BMW:
 		canDashboardBMW(cycle);
+		break;
+	case CAN_BUS_Haltech:
+		canDashboardHaltech(cycle);
 		break;
 	case CAN_BUS_NBC_FIAT:
 		canDashboardFiat(cycle);
@@ -123,7 +130,9 @@ void updateDash(CanCycle cycle) {
 		break;
 	case CAN_AIM_DASH:
 		canDashboardAim(cycle);
+		break;
 	default:
+		firmwareError(OBD_PCM_Processor_Fault, "Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
 		break;
 	}
 }

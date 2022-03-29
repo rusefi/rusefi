@@ -189,7 +189,7 @@ void printSpiConfig(const char *msg, spi_device_e device) {
 #endif // HAL_USE_SPI
 }
 
-__attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e brainPin) {
+__attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPin*/) {
 	return nullptr;
 }
 

@@ -76,7 +76,6 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_BOSCH_QUICK_START:
 		return TT_VVT_BOSCH_QUICK_START;
 	case VVT_HONDA_K:
-	case VVT_TOYOTA_4_1:
 	case VVT_FIRST_HALF:
 	case VVT_SECOND_HALF:
 	case VVT_MAP_V_TWIN_ANOTHER:
@@ -87,6 +86,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 		return TT_VVT_BARRA_3_PLUS_1;
 	case VVT_NISSAN_VQ:
 		return TT_VVT_NISSAN_VQ35;
+	case VVT_TOYOTA_4_1:
+		return TT_VVT_TOYOTA_4_1;
+	case VVT_MITSUBISHI_3A92:
+		return TT_VVT_MITSUBISHI_3A92;
+	case VVT_MITSUBISHI_6G75:
 	case VVT_NISSAN_MR:
 		return TT_NISSAN_MR18_CAM_VVT;
 	default:
@@ -179,21 +183,6 @@ void Engine::initializeTriggerWaveform() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-static void cylinderCleanupControl() {
-#if EFI_ENGINE_CONTROL
-	bool newValue;
-	if (engineConfiguration->isCylinderCleanupEnabled) {
-		newValue = !engine->rpmCalculator.isRunning() && Sensor::getOrZero(SensorType::DriverThrottleIntent) > CLEANUP_MODE_TPS;
-	} else {
-		newValue = false;
-	}
-	if (newValue != engine->isCylinderCleanupMode) {
-		engine->isCylinderCleanupMode = newValue;
-		efiPrintf("isCylinderCleanupMode %s", boolToString(newValue));
-	}
-#endif
-}
-
 #if ANALOG_HW_CHECK_MODE
 static void assertCloseTo(const char * msg, float actual, float expected) {
 	if (actual < 0.75 * expected || actual > 1.25 * expected) {
@@ -231,8 +220,6 @@ void Engine::periodicSlowCallback() {
 #if EFI_BOOST_CONTROL
 	updateBoostControl();
 #endif // EFI_BOOST_CONTROL
-
-	cylinderCleanupControl();
 
 	standardAirCharge = getStandardAirCharge();
 

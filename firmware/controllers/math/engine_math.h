@@ -49,8 +49,8 @@ ignition_mode_e getCurrentIgnitionMode();
  */
 void prepareIgnitionPinIndices(ignition_mode_e ignitionMode);
 
-int getCylinderId(int index);
-int getNextFiringCylinderId(int prevCylinderId);
+size_t getCylinderId(size_t index);
+size_t getNextFiringCylinderId(size_t prevCylinderId);
 
 void setTimingRpmBin(float from, float to);
 void setTimingLoadBin(float from, float to);

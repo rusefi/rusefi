@@ -173,7 +173,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	if (!useOnlyRisingEdgeForTrigger) {
 		for (size_t i = 0; i < efi::size(expectedEventCount); i++) {
 			if (getExpectedEventCount(i) % 2 != 0) {
-				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even %d %d", i, getExpectedEventCount(i));
+				firmwareError(ERROR_TRIGGER_DRAMA, "Trigger: should be even number of events index=%d count=%d", i, getExpectedEventCount(i));
 			}
 		}
 	}
@@ -181,7 +181,7 @@ void TriggerWaveform::calculateExpectedEventCounts(bool useOnlyRisingEdgeForTrig
 	bool isSingleToothOnPrimaryChannel = useOnlyRisingEdgeForTrigger ? getExpectedEventCount(0) == 1 : getExpectedEventCount(0) == 2;
 	// todo: next step would be to set 'isSynchronizationNeeded' automatically based on the logic we have here
 	if (!shapeWithoutTdc && isSingleToothOnPrimaryChannel != !isSynchronizationNeeded) {
-		firmwareError(ERROR_TRIGGER_DRAMA, "trigger sync constraint violation");
+		firmwareError(ERROR_TRIGGER_DRAMA, "shapeWithoutTdc isSynchronizationNeeded isSingleToothOnPrimaryChannel constraint violation");
 	}
 	if (isSingleToothOnPrimaryChannel) {
 		useOnlyPrimaryForSync = true;
@@ -237,7 +237,10 @@ void TriggerWaveform::addEvent(angle_t angle, trigger_wheel_e const channelIndex
 		expectedEventCount[channelIndex]++;
 	}
 
-	efiAssertVoid(CUSTOM_ERR_6599, angle > 0 && angle <= 1, "angle should be positive not above 1");
+	if (angle <= 0 || angle > 1) {
+		firmwareError(CUSTOM_ERR_6599, "angle should be positive not above 1: index=%d angle %f", channelIndex, angle);
+		return;
+	}
 	if (wave.phaseCount > 0) {
 		if (angle <= previousAngle) {
 			warning(CUSTOM_ERR_TRG_ANGLE_ORDER, "invalid angle order %s %s: new=%.2f/%f and prev=%.2f/%f, size=%d",
@@ -529,7 +532,15 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 		initializeNissanVQvvt(this);
 		break;
 
-    case TT_UNUSED_62:
+    case TT_VVT_MITSUBISHI_3A92:
+		initializeVvt3A92(this);
+		break;
+
+    case TT_VVT_TOYOTA_4_1:
+    	initializeToyota4_1(this);
+		break;
+
+    case TT_VVT_MITSUBISHI_6G75:
 	case TT_NISSAN_QR25:
 		initializeNissanQR25crank(this);
 		break;
@@ -597,6 +608,14 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 	case TT_VVT_JZ:
 		setToothedWheelConfiguration(this, 3, 0, ambiguousOperationMode);
 		break;
+
+	case TT_36_2_1_1:
+	    initialize36_2_1_1(this);
+	    break;
+
+	case TT_36_2_1:
+	    initialize36_2_1(this);
+	    break;
 
 	case TT_TOOTHED_WHEEL_32_2:
 		setToothedWheelConfiguration(this, 32, 2, ambiguousOperationMode);

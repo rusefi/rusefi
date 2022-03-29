@@ -315,6 +315,13 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 	// 100% target from table -> 100% target position
 	percent_t targetPosition = interpolateClamped(0, etbIdleAddition, 100, 100, targetFromTable);
 
+	// Apply any adjustment from Lua
+	targetPosition += engine->engineState.luaAdjustments.etbTargetPositionAdd;
+
+	// Apply any adjustment that this throttle alone needs
+	// Clamped to +-10 to prevent anything too wild
+	targetPosition += clampF(-10, getThrottleTrim(rpm, targetPosition), 10);
+
 	// Lastly, apply ETB rev limiter
 	auto etbRpmLimit = engineConfiguration->etbRevLimitStart;
 	if (etbRpmLimit != 0) {
@@ -322,14 +329,6 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 		// Linearly taper throttle to closed from the limit across the range
 		targetPosition = interpolateClamped(etbRpmLimit, targetPosition, fullyLimitedRpm, 0, rpm);
 	}
-	// todo: this does not mix well with etbRevLimitStart interpolation does it?
-	targetPosition += engine->engineState.luaAdjustments.etbTargetPositionAdd;
-
-#if EFI_TUNER_STUDIO
-	if (m_function == ETB_Throttle1) {
-		engine->outputChannels.etbTarget = targetPosition;
-	}
-#endif // EFI_TUNER_STUDIO
 
 	// Keep the throttle just barely off the lower stop, and less than the user-configured maximum
 	float maxPosition = engineConfiguration->etbMaximumPosition;
@@ -341,7 +340,20 @@ expected<percent_t> EtbController::getSetpointEtb() const {
 		maxPosition = minF(maxPosition, 100);
 	}
 
-	return clampF(1, targetPosition, maxPosition);
+	targetPosition = clampF(1, targetPosition, maxPosition);
+
+#if EFI_TUNER_STUDIO
+	if (m_function == ETB_Throttle1) {
+		engine->outputChannels.etbTarget = targetPosition;
+	}
+#endif // EFI_TUNER_STUDIO
+
+	return targetPosition;
+}
+
+percent_t EtbController2::getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
+	// TODO: implement me #3680
+	return 0;
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) {
@@ -531,7 +543,7 @@ void EtbController::update() {
 #if EFI_TUNER_STUDIO
 	// Only debug throttle #1
 	if (m_function == ETB_Throttle1) {
-		m_pid.postState(&engine->outputChannels.etbStatus);
+		m_pid.postState(engine->outputChannels.etbStatus);
 		engine->outputChannels.etbFeedForward = engine->engineState.etbFeedForward;
 		engine->outputChannels.etbStatus.output = directPwmValue;
 	}
@@ -578,23 +590,25 @@ void EtbController::autoCalibrateTps() {
  * Since ETB is a safety critical device, we need the hard RTOS guarantee that it will be scheduled over other less important tasks.
  */
 #include "periodic_thread_controller.h"
-struct EtbImpl final : public EtbController {
+
+template <typename TBase>
+struct EtbImpl final : public TBase {
 	void update() override {
 #if EFI_TUNER_STUDIO
-	if (m_isAutocal) {
+	if (TBase::m_isAutocal) {
 		// Don't allow if engine is running!
 		if (Sensor::getOrZero(SensorType::Rpm) > 0) {
-			m_isAutocal = false;
+			TBase::m_isAutocal = false;
 			return;
 		}
 
-		auto motor = getMotor();
+		auto motor = TBase::getMotor();
 		if (!motor) {
-			m_isAutocal = false;
+			TBase::m_isAutocal = false;
 			return;
 		}
 
-		auto myFunction = getFunction();
+		auto myFunction = TBase::getFunction();
 
 		// First grab open
 		motor->set(0.5f);
@@ -619,7 +633,7 @@ struct EtbImpl final : public EtbController {
 		// Check that the calibrate actually moved the throttle
 		if (absF(primaryMax - primaryMin) < 0.5f) {
 			firmwareError(OBD_Throttle_Position_Sensor_Circuit_Malfunction, "Auto calibrate failed, check your wiring!\r\nClosed voltage: %.1fv Open voltage: %.1fv", primaryMin, primaryMax);
-			m_isAutocal = false;
+			TBase::m_isAutocal = false;
 			return;
 		}
 
@@ -640,17 +654,21 @@ struct EtbImpl final : public EtbController {
 
 		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
 
-		m_isAutocal = false;
+		TBase::m_isAutocal = false;
 		return;
 	}
 #endif /* EFI_TUNER_STUDIO */
 
-		EtbController::update();
+		TBase::update();
 	}
 };
 
 // real implementation (we mock for some unit tests)
-static EtbImpl etbControllers[ETB_COUNT];
+static EtbImpl<EtbController1> etb1;
+static EtbImpl<EtbController2> etb2;
+
+static_assert(ETB_COUNT == 2);
+static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 struct EtbThread final : public PeriodicController<512> {
 	EtbThread() : PeriodicController("ETB", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
@@ -658,7 +676,7 @@ struct EtbThread final : public PeriodicController<512> {
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
 		for (int i = 0 ; i < ETB_COUNT; i++) {
-			etbControllers[i].update();
+			etbControllers[i]->update();
 		}
 	}
 };
@@ -862,7 +880,7 @@ void setDefaultEtbParameters() {
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {
 #if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
-		etbControllers[i].onConfigurationChange(&previousConfiguration->etb);
+		etbControllers[i]->onConfigurationChange(&previousConfiguration->etb);
 	}
 #endif
 }
@@ -983,7 +1001,7 @@ void initElectronicThrottle() {
 
 #if !EFI_UNIT_TEST
 	for (int i = 0; i < ETB_COUNT; i++) {
-		engine->etbControllers[i] = &etbControllers[i];
+		engine->etbControllers[i] = etbControllers[i];
 	}
 #endif
 

@@ -158,7 +158,8 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_FORD_ST170:
 	case VVT_BARRA_3_PLUS_1:
 	case VVT_NISSAN_MR:
-	case VVT_12:
+	case VVT_MITSUBISHI_3A92:
+	case VVT_MITSUBISHI_6G75:
 		return syncAndReport(tc, getCrankDivider(operationMode), engineConfiguration->tempBooleanForVerySpecialCases ? 1 : 0);
 	case VVT_HONDA_K:
 		firmwareError(OBD_PCM_Processor_Fault, "Undecided on VVT phase of %s", getVvt_mode_e(vvtMode));
@@ -283,6 +284,7 @@ void hwHandleVvtCamSignal(trigger_value_e front, efitick_t nowNt, int index) {
 		TriggerState *vvtState = &tc->vvtState[bankIndex][camIndex];
 
 		vvtState->decodeTriggerEvent(
+				"vvt",
 			tc->vvtShape[camIndex],
 			nullptr,
 			nullptr,
@@ -616,7 +618,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 	/**
 	 * This invocation changes the state of triggerState
 	 */
-	triggerState.decodeTriggerEvent(triggerShape,
+	triggerState.decodeTriggerEvent(
+			"trigger",
+			triggerShape,
 			nullptr,
 			engine,
 			engine->primaryTriggerConfiguration,

@@ -135,11 +135,11 @@ void Pid::postState(TunerStudioOutputChannels *tsOutputChannels) const {
 	postState(tsOutputChannels, 1);
 }
 
-void Pid::postState(pid_status_s *pidStatus) const {
-	pidStatus->output = output;
-	pidStatus->error = getPrevError();
-	pidStatus->iTerm = iTerm;
-	pidStatus->dTerm = dTerm;
+void Pid::postState(pid_status_s& pidStatus) const {
+	pidStatus.output = output;
+	pidStatus.error = getPrevError();
+	pidStatus.iTerm = iTerm;
+	pidStatus.dTerm = dTerm;
 }
 
 /**

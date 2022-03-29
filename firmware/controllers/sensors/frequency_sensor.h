@@ -11,6 +11,7 @@ public:
 	}
 
 	void init(brain_pin_e pin);
+	void initIfValid(brain_pin_e pin, SensorConverter &converter);
 	void deInit();
 
 	void onEdge(efitick_t nowNt);

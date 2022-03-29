@@ -46,5 +46,7 @@ public enum SensorType {
 	TurbochargerSpeed,
 	MapFast,
 	MapSlow,
+	AuxLinear1,
+	AuxLinear2,
 	PlaceholderLast,
 }

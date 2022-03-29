@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 13 15:59:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 29 03:05:59 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2884,7 +2884,15 @@ struct engine_configuration_s {
 	/**
 	 * offset 1696
 	 */
-	int unused1696;
+	brain_input_pin_e auxSpeedSensorInputPin[2];
+	/**
+	 * offset 1698
+	 */
+	uint8_t unused1696;
+	/**
+	 * offset 1699
+	 */
+	uint8_t unused16962;
 	/**
 	 * Band rate for primary TTL
 	BPs
@@ -3002,76 +3010,76 @@ struct engine_configuration_s {
 	bool unused1130 : 1 {};
 	/**
 	offset 1740 bit 8 */
-	bool unusedBit_505_8 : 1 {};
+	bool unusedBit_507_8 : 1 {};
 	/**
 	offset 1740 bit 9 */
-	bool unusedBit_505_9 : 1 {};
+	bool unusedBit_507_9 : 1 {};
 	/**
 	offset 1740 bit 10 */
-	bool unusedBit_505_10 : 1 {};
+	bool unusedBit_507_10 : 1 {};
 	/**
 	offset 1740 bit 11 */
-	bool unusedBit_505_11 : 1 {};
+	bool unusedBit_507_11 : 1 {};
 	/**
 	offset 1740 bit 12 */
-	bool unusedBit_505_12 : 1 {};
+	bool unusedBit_507_12 : 1 {};
 	/**
 	offset 1740 bit 13 */
-	bool unusedBit_505_13 : 1 {};
+	bool unusedBit_507_13 : 1 {};
 	/**
 	offset 1740 bit 14 */
-	bool unusedBit_505_14 : 1 {};
+	bool unusedBit_507_14 : 1 {};
 	/**
 	offset 1740 bit 15 */
-	bool unusedBit_505_15 : 1 {};
+	bool unusedBit_507_15 : 1 {};
 	/**
 	offset 1740 bit 16 */
-	bool unusedBit_505_16 : 1 {};
+	bool unusedBit_507_16 : 1 {};
 	/**
 	offset 1740 bit 17 */
-	bool unusedBit_505_17 : 1 {};
+	bool unusedBit_507_17 : 1 {};
 	/**
 	offset 1740 bit 18 */
-	bool unusedBit_505_18 : 1 {};
+	bool unusedBit_507_18 : 1 {};
 	/**
 	offset 1740 bit 19 */
-	bool unusedBit_505_19 : 1 {};
+	bool unusedBit_507_19 : 1 {};
 	/**
 	offset 1740 bit 20 */
-	bool unusedBit_505_20 : 1 {};
+	bool unusedBit_507_20 : 1 {};
 	/**
 	offset 1740 bit 21 */
-	bool unusedBit_505_21 : 1 {};
+	bool unusedBit_507_21 : 1 {};
 	/**
 	offset 1740 bit 22 */
-	bool unusedBit_505_22 : 1 {};
+	bool unusedBit_507_22 : 1 {};
 	/**
 	offset 1740 bit 23 */
-	bool unusedBit_505_23 : 1 {};
+	bool unusedBit_507_23 : 1 {};
 	/**
 	offset 1740 bit 24 */
-	bool unusedBit_505_24 : 1 {};
+	bool unusedBit_507_24 : 1 {};
 	/**
 	offset 1740 bit 25 */
-	bool unusedBit_505_25 : 1 {};
+	bool unusedBit_507_25 : 1 {};
 	/**
 	offset 1740 bit 26 */
-	bool unusedBit_505_26 : 1 {};
+	bool unusedBit_507_26 : 1 {};
 	/**
 	offset 1740 bit 27 */
-	bool unusedBit_505_27 : 1 {};
+	bool unusedBit_507_27 : 1 {};
 	/**
 	offset 1740 bit 28 */
-	bool unusedBit_505_28 : 1 {};
+	bool unusedBit_507_28 : 1 {};
 	/**
 	offset 1740 bit 29 */
-	bool unusedBit_505_29 : 1 {};
+	bool unusedBit_507_29 : 1 {};
 	/**
 	offset 1740 bit 30 */
-	bool unusedBit_505_30 : 1 {};
+	bool unusedBit_507_30 : 1 {};
 	/**
 	offset 1740 bit 31 */
-	bool unusedBit_505_31 : 1 {};
+	bool unusedBit_507_31 : 1 {};
 	/**
 	ms
 	 * offset 1744
@@ -4110,10 +4118,22 @@ struct engine_configuration_s {
 	 */
 	uint16_t torqueLoadBins[TORQUE_CURVE_SIZE];
 	/**
-	units
 	 * offset 4750
 	 */
-	uint8_t mainUnusedEnd[270];
+	uint8_t unused4750[2];
+	/**
+	 * offset 4752
+	 */
+	linear_sensor_s auxLinear1;
+	/**
+	 * offset 4772
+	 */
+	linear_sensor_s auxLinear2;
+	/**
+	units
+	 * offset 4792
+	 */
+	uint8_t mainUnusedEnd[228];
 	/** total size 5020*/
 };
 
@@ -4537,4 +4557,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 13 15:59:27 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Tue Mar 29 03:05:59 UTC 2022

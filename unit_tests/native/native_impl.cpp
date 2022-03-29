@@ -47,7 +47,7 @@ JNIEXPORT void JNICALL Java_com_rusefi_native_1_EngineLogic_setSensor
 
 	SensorType type = findSensorTypeByName(sensorNameNative);
 
-	printf("Setting [%s] to %f\n", getSensorType(type), sensorValue);
+	printf("[native] Setting [%s] to %f\n", getSensorType(type), sensorValue);
 	Sensor::setMockValue(type, sensorValue);
 
 	env->ReleaseStringUTFChars(sensorName, sensorNameNative);

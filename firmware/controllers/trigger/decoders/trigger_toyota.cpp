@@ -121,3 +121,19 @@ void initialize2jzGE3_34_simulation_shape(TriggerWaveform *s) {
 	s->shapeWithoutTdc = true;
 	s->isSynchronizationNeeded = false;
 }
+
+void initializeToyota4_1(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->useRiseEdge = false;
+
+	int w = 10;
+
+	s->addEvent360(180 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(180, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(270 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(270, T_PRIMARY, TV_FALL);
+
+	s->addEvent360(360 - w, T_PRIMARY, TV_RISE);
+	s->addEvent360(360, T_PRIMARY, TV_FALL);
+}
