@@ -2401,6 +2401,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Injection Pin 10 ",	    			injectionPins10
 		field = "Injection Pin 11 ",					injectionPins11
 		field = "Injection Pin 12 ",					injectionPins12
+		field = auxSpeedSensorInputPin1,                auxSpeedSensorInputPin1
+		field = auxSpeedSensorInputPin2,                auxSpeedSensorInputPin2
 
 
 	dialog = allPins2_2
