@@ -19,7 +19,6 @@ void FrequencySensor::initIfValid(brain_pin_e pin, SensorConverter &converter) {
 	}
 	setFunction(converter);
 	init(pin);
-	init(pin);
 	Register();
 }
 
