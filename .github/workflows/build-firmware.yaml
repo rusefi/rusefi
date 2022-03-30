@@ -51,6 +51,7 @@ jobs:
             f429-discovery,
             core8,
             atlas,
+            tdg-pdm8,
         ]
 
         include:
@@ -209,6 +210,11 @@ jobs:
           - build-target: atlas
             folder: atlas
             ini-file: rusefi_atlas.ini
+            skip-rate: 90
+
+          - build-target: tdg-pdm8
+            folder: tdg-pdm8
+            ini-file: rusefi_tdg-pdm8.ini
             skip-rate: 90
 
     steps:
