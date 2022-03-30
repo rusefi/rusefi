@@ -113,10 +113,6 @@ static void setupEtb() {
 	// Unused
 	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
-	// set_analog_input_pin pps PA7
-	// EFI_ADC_7: "31 - AN volt 3" - PA7
-	// engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
-
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 }
