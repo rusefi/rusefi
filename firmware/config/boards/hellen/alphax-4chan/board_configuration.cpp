@@ -94,7 +94,8 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
-	engineConfiguration->tps2_1AdcChannel = H144_IN_AUX1;
+	engineConfiguration->tps1_2AdcChannel = H144_IN_AUX1;
+	engineConfiguration->tps2_1AdcChannel = EFI_ADC_NONE;
 
 	engineConfiguration->throttlePedalPositionAdcChannel = H144_IN_PPS;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = H144_IN_AUX2;
@@ -159,7 +160,7 @@ void setBoardDefaultConfiguration() {
     engineConfiguration->boardUseTempPullUp = true;
 
 	engineConfiguration->acSwitch = GPIO_UNASSIGNED;
-	engineConfiguration->fuelPumpPin = H144_OUT_PWM2;
+	engineConfiguration->fuelPumpPin = H144_OUT_IO12;
 	engineConfiguration->fanPin = H144_OUT_PWM4;
 	engineConfiguration->mainRelayPin = GPIO_UNASSIGNED;
     engineConfiguration->tachOutputPin = H144_OUT_PWM3;
