@@ -57,6 +57,12 @@ void detectHellenBoardType();
 #define H144_OUT_PWM8 GPIOD_12
 
 
+// also IO1/IO5 on rev 0.6
+#define H144_GP1 GPIOD_4
+// also IO2/IO5 on rev 0.6
+#define H144_GP2 GPIOD_7
+
+
 #define H144_OUT_IO1 GPIOD_3
 #define H144_OUT_IO2 GPIOA_9
 #define H144_OUT_IO3 GPIOG_14

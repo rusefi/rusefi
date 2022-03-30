@@ -49,9 +49,9 @@ static void setupEtb() {
 	// PWM pin
 	engineConfiguration->etbIo[0].controlPin = H144_OUT_PWM2;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = H144_OUT_IO1;
+	engineConfiguration->etbIo[0].directionPin1 = H144_GP1;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = H144_OUT_IO2;
+	engineConfiguration->etbIo[0].disablePin = H144_GP2;
 	// Unused
 	engineConfiguration->etbIo[0].directionPin2 = GPIO_UNASSIGNED;
 
