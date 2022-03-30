@@ -38,6 +38,7 @@ for BOARD in \
    "proteus proteus_h7" \
    "f429-discovery f429-discovery" \
    "atlas atlas"\
+   "tdg-pdm8 tdg-pdm8"\
    ; do
  BOARD_NAME=$(echo "$BOARD" | cut -d " " -f 1)
  BOARD_SHORT_NAME=$(echo "$BOARD" | cut -d " " -f 2)
