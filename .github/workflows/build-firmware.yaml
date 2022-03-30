@@ -215,7 +215,7 @@ jobs:
           - build-target: tdg-pdm8
             folder: tdg-pdm8
             ini-file: rusefi_tdg-pdm8.ini
-            # skip-rate: 90
+            skip-rate: 90
 
     steps:
     - name: Execution throttle early exit
