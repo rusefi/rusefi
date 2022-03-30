@@ -15,8 +15,8 @@ pins:
     color: red
 
   - pin: A3
-    # H144_OUT_PWM2
-    id: GPIOC_6
+    # H144_OUT_IO12
+    id: GPIOA_8
     class: outputs
     function: Fuel Pump Relay Output (low)
     type: ls
