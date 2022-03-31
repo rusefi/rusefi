@@ -13,4 +13,4 @@ struct ProtectedGpioConfig {
 };
 
 int protectedGpio_add(brain_pin_e base, const ProtectedGpioConfig* const configs);
-void protectedGpio_check();
+void protectedGpio_check(efitick_t nowNt);
