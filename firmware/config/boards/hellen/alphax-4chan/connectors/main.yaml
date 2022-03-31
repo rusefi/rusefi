@@ -242,8 +242,8 @@ pins:
     type: etb
 
   - pin: F2
-    # GPIOD_15
-    id: GPIOD_10
+    # H144_OUT_PWM7
+    id: GPIOD_15
     function: VVT#1
     class: outputs
     type: inj
