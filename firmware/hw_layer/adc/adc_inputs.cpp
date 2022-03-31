@@ -380,6 +380,8 @@ public:
 			slowAdcCounter++;
 
 			AdcSubscription::UpdateSubscribers(nowNt);
+
+			protectedGpio_check(nowNt);
 		}
 	}
 };

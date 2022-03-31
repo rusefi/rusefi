@@ -14,7 +14,7 @@ public:
 	brain_pin_diag_e getDiag() const;
 
 	void configure(const ProtectedGpioConfig& config);
-	void check();
+	void check(efitick_t nowNt);
 
 private:
 	ProtState m_state = ProtState::Off;
@@ -55,7 +55,7 @@ int ProtectedGpio::get() const {
 	return m_output.getLogicValue();
 }
 
-void ProtectedGpio::check() {
+void ProtectedGpio::check(efitick_t /*nowNt*/) {
 	if (!m_config) {
 		return;
 	}
@@ -84,7 +84,7 @@ public:
 	brain_pin_diag_e getDiag(size_t pin) override;
 
 	void configure(const ProtectedGpioConfig* const configs);
-	void check();
+	void check(efitick_t nowNt);
 
 private:
 	ProtectedGpio m_channels[PROTECTED_CHANNEL_COUNT];
@@ -128,20 +128,29 @@ void ProtectedGpios::configure(const ProtectedGpioConfig* const configs) {
 	}
 }
 
-void ProtectedGpios::check() {
+void ProtectedGpios::check(efitick_t nowNt) {
 	for (size_t i = 0; i < efi::size(m_channels); i++) {
-		m_channels[i].check();
+		m_channels[i].check(nowNt);
 	}
 }
 
 static ProtectedGpios protectedGpios;
+static bool didInit = false;
 
 int protectedGpio_add(brain_pin_e base, const ProtectedGpioConfig* const configs) {
 	protectedGpios.configure(configs);
 
-	return gpiochip_register(base, "protected", protectedGpios, PROTECTED_CHANNEL_COUNT);
+	int result = gpiochip_register(base, "protected", protectedGpios, PROTECTED_CHANNEL_COUNT);
+
+	if (result == 0) {
+		didInit = true;
+	}
+
+	return result;
 }
 
-void protectedGpio_check() {
-	protectedGpios.check();
+void protectedGpio_check(efitick_t nowNt) {
+	if (didInit) {
+		protectedGpios.check(nowNt);
+	}
 }
