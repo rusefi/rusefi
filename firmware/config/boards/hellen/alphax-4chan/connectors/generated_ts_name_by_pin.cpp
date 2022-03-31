@@ -10,13 +10,17 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOC_13: return "A6 - Ignition A";
 		case GPIOC_7: return "A4 - Tachometer";
 		case GPIOC_8: return "C1 - Fan Relay";
+		case GPIOD_10: return "E1 - Injector 4";
+		case GPIOD_11: return "D1 - Injector 3";
+		case GPIOD_12: return "F4 - VVT#2";
 		case GPIOD_13: return "C8 - Idle";
+		case GPIOD_15: return "F2 - VVT#1";
 		case GPIOE_12: return "C3 - Crank+ (hall)";
 		case GPIOE_14: return "C2 - Crank- (hall)";
 		case GPIOE_5: return "A7 - Ignition B";
 		case GPIOF_11: return "C4 - 2Step/Digital";
-		case GPIOG_7: return "A8 - Injector A";
-		case GPIOG_8: return "B8 - Injector B";
+		case GPIOG_7: return "A8 - Injector 1";
+		case GPIOG_8: return "B8 - Injector 2";
 		default: return nullptr;
 	}
 	return nullptr;
