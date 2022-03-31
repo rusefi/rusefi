@@ -7,56 +7,56 @@ pins:
     ts_name: Battery Sense
 
   - pin: 3/13
-    id: GPIOA_10
+    id: GPIOI_7
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 8
 
   - pin: 4/14
-    id: GPIOA_9
+    id: GPIOI_6
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 7
 
   - pin: 5/15
-    id: GPIOA_8
+    id: GPIOI_5
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 6
 
   - pin: 6/16
-    id: GPIOC_9
+    id: GPIOI_4
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 5
 
   - pin: 7/17
-    id: GPIOA_3
+    id: GPIOI_3
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 4
 
   - pin: 8/18
-    id: GPIOA_2
+    id: GPIOI_2
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 3
 
   - pin: 9/19
-    id: GPIOA_1
+    id: GPIOI_1
     class: outputs
     function: High Side Output
     type: hs
     ts_name: Out 2
 
   - pin: 10/20
-    id: GPIOA_0
+    id: GPIOI_0
     class: outputs
     function: High Side Output
     type: hs

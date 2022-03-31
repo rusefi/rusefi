@@ -272,7 +272,10 @@ typedef enum __attribute__ ((__packed__)) {
 } brain_pin_e;
 
 /* Please keep updating these defines */
+#ifndef BRAIN_PIN_ONCHIP_LAST
 #define BRAIN_PIN_ONCHIP_LAST	GPIOI_15
+#endif
+
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - GPIOA_0 + 1)
 #define BRAIN_PIN_LAST 			L9779_PIN_KEY
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - GPIOA_0 + 1)
