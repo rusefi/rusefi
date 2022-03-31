@@ -57,10 +57,10 @@ pins:
   - pin: A8
     # H144_LS_1
     id: GPIOG_7
-    function: Injector A Output
+    function: Injector 1 Output
     class: outputs
     type: inj
-    ts_name: A8 - Injector A
+    ts_name: A8 - Injector 1
     color: blue
 
   - pin: B1
@@ -124,10 +124,10 @@ pins:
   - pin: B8
     # H144_LS_2
     id: GPIOG_8
-    function: Injector B Output
+    function: Injector 2 Output
     class: outputs
     type: inj
-    ts_name: B8 - Injector B
+    ts_name: B8 - Injector 2
     color: blue
 
   - pin: C1
@@ -203,6 +203,15 @@ pins:
     ts_name: C8 - Idle
     color: purple
 
+  - pin: D1
+    # H144_LS_3
+    id: GPIOD_11
+    function: Injector 3
+    class: outputs
+    type: inj
+    ts_name: D1 - Injector 3
+    color: blue
+
   - pin: D4
     # H144_IN_AUX1
     id: EFI_ADC_8
@@ -219,6 +228,35 @@ pins:
     ts_name: D5 - PPS
     color: orange
 
+  - pin: E1
+    # H144_LS_4
+    id: GPIOD_10
+    function: Injector 4
+    class: outputs
+    type: inj
+    ts_name: E1 - Injector 4
+    color: blue
+
+  - pin: E8
+    function: ETB negative
+    type: etb
+
+  - pin: F2
+    # GPIOD_15
+    id: GPIOD_10
+    function: VVT#1
+    class: outputs
+    type: inj
+    ts_name: F2 - VVT#1
+
+  - pin: F4
+    # H144_OUT_PWM8
+    id: GPIOD_12
+    function: VVT#2
+    class: outputs
+    type: inj
+    ts_name: F4 - VVT#2
+
   - pin: F6
     # H144_IN_AUX2
     id: EFI_ADC_14
@@ -226,10 +264,6 @@ pins:
     function: PPS2 Sensor Input
     ts_name: F6 - PPS2
     color: orange
-
-  - pin: E8
-    function: ETB negative
-    type: etb
 
   - pin: F8
     function: ETB positive
@@ -248,7 +282,7 @@ info:
 
     - pin: B5
       x: 362
-      y: 150
+      y: 226
 
     - pin: B8
       x: 197
@@ -266,6 +300,14 @@ info:
       x: 197
       y: 305
 
+    - pin: D1
+      x: 1384
+      y: 150
+
+    - pin: D2
+      x: 1320
+      y: 150
+
     - pin: D4
       x: 1209
       y: 150
@@ -282,6 +324,14 @@ info:
       x: 998
       y: 150
 
+    - pin: E1
+      x: 1384
+      y: 226
+
+    - pin: E2
+      x: 1320
+      y: 226
+
     - pin: E4
       x: 1209
       y: 226
@@ -297,6 +347,18 @@ info:
     - pin: E8
       x: 998
       y: 226
+
+    - pin: F1
+      x: 1384
+      y: 305
+
+    - pin: F2
+      x: 1320
+      y: 305
+
+    - pin: F4
+      x: 1213
+      y: 305
 
     - pin: F4
       x: 1209

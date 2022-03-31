@@ -23,8 +23,8 @@ static OutputPin alphaCrankNPullUp;
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H144_LS_1;
 	engineConfiguration->injectionPins[1] = H144_LS_2;
-	engineConfiguration->injectionPins[2] = GPIO_UNASSIGNED;
-	engineConfiguration->injectionPins[3] = GPIO_UNASSIGNED;
+	engineConfiguration->injectionPins[2] = H144_LS_3;
+	engineConfiguration->injectionPins[3] = H144_LS_4;
 
 	// Disable remainder
 	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
@@ -156,6 +156,8 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 	setupEtb();
+	engineConfiguration->vvtPins[0] = H144_OUT_PWM7;
+	engineConfiguration->vvtPins[1] = H144_OUT_PWM8;
 
     engineConfiguration->boardUseTempPullUp = true;
 
