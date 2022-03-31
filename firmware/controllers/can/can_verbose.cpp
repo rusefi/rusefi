@@ -120,13 +120,14 @@ struct Fueling {
 	scaled_channel<uint16_t, 1000> cylAirmass;
 	scaled_channel<uint16_t, 100> estAirflow;
 	scaled_ms fuel_pulse;
-	uint16_t pad;
+	uint16_t knockCount;
 };
 
 static void populateFrame(Fueling& msg) {
 	msg.cylAirmass = engine->engineState.sd.airMassInOneCylinder;
 	msg.estAirflow = engine->engineState.airflowEstimate;
 	msg.fuel_pulse = engine->actualLastInjection[0];
+	msg.knockCount = engine->outputChannels.knockCount;
 }
 
 struct Fueling2 {
