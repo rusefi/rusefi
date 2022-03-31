@@ -17,11 +17,7 @@ public:
 	void check(efitick_t nowNt);
 
 private:
-	ProtState m_state = ProtState::Off;
-
 	OutputPin m_output;
-
-	bool m_desiredState = false;
 
 	const ProtectedGpioConfig* m_config;
 };
