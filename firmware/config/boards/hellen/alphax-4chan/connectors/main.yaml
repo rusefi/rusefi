@@ -24,8 +24,8 @@ pins:
     color: purple
 
   - pin: A4
-    # H144_OUT_PWM3
-    id: GPIOC_7
+    # H144_OUT_IO13
+    id: GPIOG_6
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer
