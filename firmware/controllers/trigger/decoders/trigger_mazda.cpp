@@ -26,6 +26,7 @@
 
 void initializeMazdaMiataNaShape(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->isSecondWheelCam = true;
 
 	// nominal gap is 0.325
 	s->setTriggerSynchronizationGap2(0.1, 0.5);
@@ -154,6 +155,7 @@ void configureMazdaProtegeSOHC(TriggerWaveform *s) {
 
 void configureMazdaProtegeLx(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
+	s->isSecondWheelCam = true;
 	/**
 	 * based on https://svn.code.sf.net/p/rusefi/code/trunk/misc/logs/1993_escort_gt/MAIN_rfi_report_2015-02-01%2017_39.csv
 	 */
