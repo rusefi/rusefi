@@ -276,6 +276,13 @@ pins:
     ts_name: E2 - Out NOS
     color: blue
 
+  - pin: E7
+    # H144_IN_D_AUX4
+    id: GPIOA_7
+    class: event_inputs
+    ts_name: E7 - Flex
+    function: DIGITAL
+
   - pin: E8
     function: ETB negative
     type: etb
