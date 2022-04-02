@@ -1915,7 +1915,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2450024542
+#define SIGNATURE_HASH 2821749201
 #define silentTriggerError_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
@@ -2162,6 +2162,7 @@
 #define trigger_event_e_SHAFT_PRIMARY_RISING 1
 #define trigger_event_e_SHAFT_SECONDARY_FALLING 2
 #define trigger_event_e_SHAFT_SECONDARY_RISING 3
+#define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
 #define TRIGGER_INPUT_PIN_COUNT 3
 #define TRIGGER_IS_CRANK_KEY "crankBased"
 #define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
@@ -2453,7 +2454,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.04.02.subaru_eg33_f7.2450024542"
+#define TS_SIGNATURE "rusEFI 2022.04.02.subaru_eg33_f7.2821749201"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
