@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 02 22:38:56 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 02 23:22:43 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -2100,6 +2100,7 @@ public class Fields {
 	public static final int trigger_event_e_SHAFT_PRIMARY_RISING = 1;
 	public static final int trigger_event_e_SHAFT_SECONDARY_FALLING = 2;
 	public static final int trigger_event_e_SHAFT_SECONDARY_RISING = 3;
+	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
 	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
 	public static final int TRIGGER_INPUT_PIN_COUNT = 3;
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
@@ -2345,7 +2346,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.04.02.all.3381074000";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.03.all.4043944664";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
