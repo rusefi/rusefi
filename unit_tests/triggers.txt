@@ -4,6 +4,7 @@
 TRIGGERTYPE 1 10 TT_FORD_ASPIRE 0.00
 crankBased=false
 isSecondWheelCam=true
+hasSecondChannel=true
 # duty 0.50 0.38
 event 0 0 1 0.00
 event 1 1 1 52.76
@@ -18,6 +19,7 @@ event 9 1 0 661.90
 TRIGGERTYPE 2 36 TT_DODGE_NEON_1995 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.49 0.21
 event 0 0 0 0.00
 event 1 1 1 20.00
@@ -58,6 +60,7 @@ event 35 1 0 676.00
 TRIGGERTYPE 3 12 TT_MAZDA_MIATA_NA 5.18
 crankBased=false
 isSecondWheelCam=true
+hasSecondChannel=true
 # duty 0.30 0.61
 event 0 0 0 0.00
 event 1 1 0 13.83
@@ -74,6 +77,7 @@ event 11 1 1 663.82
 TRIGGERTYPE 4 22 TT_MAZDA_MIATA_NB1 276.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.08 0.04
 event 0 0 0 0.00
 event 1 1 1 4.00
@@ -100,6 +104,7 @@ event 21 0 1 700.00
 TRIGGERTYPE 5 28 TT_GM_7X 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.90 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -132,6 +137,7 @@ event 27 0 0 665.00
 TRIGGERTYPE 6 8 TT_DAIHATSU 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.94 0.00
 event 0 0 1 0.00
 event 1 0 0 10.00
@@ -144,6 +150,7 @@ event 7 0 0 700.00
 TRIGGERTYPE 7 8 TT_MAZDA_SOHC_4 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.63 0.00
 event 0 0 1 0.00
 event 1 0 0 66.96
@@ -156,6 +163,7 @@ event 7 0 0 606.96
 TRIGGERTYPE 8 116 TT_TOOTHED_WHEEL_60_2 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.48 0.00
 event 0 0 1 0.00
 event 1 0 0 6.00
@@ -276,6 +284,7 @@ event 115 0 0 714.00
 TRIGGERTYPE 9 70 TT_TOOTHED_WHEEL_36_1 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.49 0.00
 event 0 0 1 0.00
 event 1 0 0 10.00
@@ -350,6 +359,7 @@ event 69 0 0 710.00
 TRIGGERTYPE 10 12 TT_MERCEDES_2_SEGMENT 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.92 0.00
 event 0 0 1 0.00
 event 1 0 0 10.00
@@ -366,6 +376,7 @@ event 11 0 0 550.00
 TRIGGERTYPE 11 12 TT_MITSUBISHI 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.36 0.38
 event 0 0 0 0.00
 event 1 1 1 13.32
@@ -382,6 +393,7 @@ event 11 1 0 613.22
 TRIGGERTYPE 12 56 TT_HONDA_4_24 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.81 0.50
 event 0 0 1 0.00
 event 1 1 1 8.37
@@ -442,6 +454,7 @@ event 55 1 0 713.37
 TRIGGERTYPE 13 58 TT_HONDA_1_4_24 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.50 0.50
 event 0 0 1 0.00
 event 1 1 1 7.50
@@ -504,6 +517,7 @@ event 57 2 0 712.50
 TRIGGERTYPE 14 14 TT_DODGE_NEON_2003_CAM 496.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 144.00
@@ -522,6 +536,7 @@ event 13 0 0 684.00
 TRIGGERTYPE 15 10 TT_MAZDA_DOHC_1_4 137.12
 crankBased=false
 isSecondWheelCam=true
+hasSecondChannel=true
 # duty 0.81 0.38
 event 0 0 1 0.00
 event 1 1 1 14.88
@@ -536,6 +551,7 @@ event 9 1 0 624.67
 TRIGGERTYPE 16 4 TT_ONE_PLUS_ONE 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.75 0.25
 event 0 0 1 0.00
 event 1 0 0 180.00
@@ -544,6 +560,7 @@ event 3 1 0 540.00
 TRIGGERTYPE 17 6 TT_VVT_JZ 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 120.00
@@ -554,12 +571,14 @@ event 5 0 0 600.00
 TRIGGERTYPE 18 2 TT_ONE 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 360.00
 TRIGGERTYPE 19 34 TT_DODGE_RAM 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.50 0.06
 event 0 0 1 0.00
 event 1 1 1 17.30
@@ -598,6 +617,7 @@ event 33 1 0 695.00
 TRIGGERTYPE 20 232 TT_60_2_VW 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 9.00
@@ -834,6 +854,7 @@ event 231 0 0 711.00
 TRIGGERTYPE 21 50 TT_HONDA_1_24 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.92 0.50
 event 0 0 1 0.00
 event 1 1 1 7.50
@@ -888,6 +909,7 @@ event 49 1 0 712.50
 TRIGGERTYPE 22 24 TT_DODGE_STRATUS 150.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.88 0.00
 event 0 0 1 0.00
 event 1 0 0 7.00
@@ -916,6 +938,7 @@ event 23 0 0 607.00
 TRIGGERTYPE 23 120 TT_36_2_2_2 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -1040,6 +1063,7 @@ event 119 0 0 715.00
 TRIGGERTYPE 24 8 TT_NISSAN_SR20VE 630.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.96 0.00
 event 0 0 1 0.00
 event 1 0 0 4.00
@@ -1052,6 +1076,7 @@ event 7 0 0 544.00
 TRIGGERTYPE 25 142 TT_2JZ_3_34 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.01 0.53
 event 0 1 1 0.00
 event 1 1 0 5.00
@@ -1198,6 +1223,7 @@ event 141 1 0 695.00
 TRIGGERTYPE 26 128 TT_ROVER_K 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.56 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -1330,6 +1356,7 @@ event 127 0 0 705.00
 TRIGGERTYPE 27 96 TT_GM_LS_24 50.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -1430,6 +1457,7 @@ event 95 0 0 710.00
 TRIGGERTYPE 28 54 TT_HONDA_CBR_600 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.51 0.50
 event 0 0 1 0.00
 event 1 1 0 0.20
@@ -1488,6 +1516,7 @@ event 53 0 0 710.00
 TRIGGERTYPE 29 50 TT_2JZ_1_12 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.99 0.50
 event 0 0 1 0.00
 event 1 1 0 10.00
@@ -1542,6 +1571,7 @@ event 49 1 1 715.00
 TRIGGERTYPE 30 64 TT_CHRYSLER_NGC_36_2_2 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.49 0.00
 event 0 0 1 0.00
 event 1 0 0 10.00
@@ -1610,6 +1640,7 @@ event 63 0 0 710.00
 TRIGGERTYPE 31 10 TT_3_1_CAM 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.94 0.33
 event 0 0 1 0.00
 event 1 0 0 40.00
@@ -1624,6 +1655,7 @@ event 9 1 0 710.00
 TRIGGERTYPE 32 14 TT_DODGE_NEON_2003_CRANK 496.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 144.00
@@ -1642,6 +1674,7 @@ event 13 0 0 684.00
 TRIGGERTYPE 33 16 TT_MIATA_VVT 715.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.04 0.00
 event 0 0 1 0.00
 event 1 0 0 106.00
@@ -1662,6 +1695,7 @@ event 15 0 0 716.00
 TRIGGERTYPE 34 50 TT_HONDA_ACCORD_1_24_SHIFTED 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.97 0.50
 event 0 0 1 0.00
 event 1 1 0 14.90
@@ -1716,6 +1750,7 @@ event 49 1 1 719.90
 TRIGGERTYPE 35 22 TT_MAZDA_MIATA_VVT_TEST 276.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.08 0.04
 event 0 0 0 0.00
 event 1 1 1 4.00
@@ -1742,6 +1777,7 @@ event 21 0 1 700.00
 TRIGGERTYPE 36 38 TT_SUBARU_7_6 520.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.95 0.08
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -1784,6 +1820,7 @@ event 37 1 0 695.00
 TRIGGERTYPE 37 50 TT_JEEP_18_2_2_2 581.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.50 0.07
 event 0 0 1 0.00
 event 1 1 1 26.00
@@ -1838,6 +1875,7 @@ event 49 1 0 688.00
 TRIGGERTYPE 38 186 TT_NISSAN_SR20VE_360 630.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.96 0.12
 event 0 0 1 0.00
 event 1 0 0 4.00
@@ -2028,6 +2066,7 @@ event 185 0 0 544.00
 TRIGGERTYPE 39 32 TT_DODGE_NEON_1995_ONLY_CRANK 279.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.80 0.00
 event 0 0 1 0.00
 event 1 0 0 4.00
@@ -2064,6 +2103,7 @@ event 31 0 0 615.00
 TRIGGERTYPE 40 34 TT_JEEP_4_CYL 484.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.50 0.04
 event 0 0 1 0.00
 event 1 1 1 58.00
@@ -2102,6 +2142,7 @@ event 33 1 0 660.00
 TRIGGERTYPE 41 4 TT_FIAT_IAW_P8 60.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.17 0.00
 event 0 0 1 0.00
 event 1 0 0 120.00
@@ -2110,6 +2151,7 @@ event 3 0 0 660.00
 TRIGGERTYPE 42 10 TT_FORD_ST170 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.93 0.00
 event 0 0 1 0.00
 event 1 0 0 10.00
@@ -2124,6 +2166,7 @@ event 9 0 0 550.00
 TRIGGERTYPE 43 6 TT_VVT_MIATA_NB 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.13 0.00
 event 0 0 1 0.00
 event 1 0 0 281.00
@@ -2134,6 +2177,7 @@ event 5 0 0 685.00
 TRIGGERTYPE 44 168 TT_RENIX_44_2_2 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 8.18
@@ -2306,6 +2350,7 @@ event 167 0 0 711.82
 TRIGGERTYPE 45 252 TT_RENIX_66_2_2_2 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 1 0.00
 event 1 0 0 5.45
@@ -2562,6 +2607,7 @@ event 251 0 0 714.55
 TRIGGERTYPE 46 52 TT_HONDA_K_12_1 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.86 0.00
 event 0 0 1 0.00
 event 1 0 0 4.00
@@ -2618,6 +2664,7 @@ event 51 0 0 704.00
 TRIGGERTYPE 47 8 TT_VVT_BOSCH_QUICK_START 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.50 0.00
 event 0 0 0 0.00
 event 1 0 1 40.00
@@ -2630,6 +2677,7 @@ event 7 0 1 580.00
 TRIGGERTYPE 48 68 TT_TOOTHED_WHEEL_36_2 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.47 0.00
 event 0 0 1 0.00
 event 1 0 0 10.00
@@ -2702,6 +2750,7 @@ event 67 0 0 710.00
 TRIGGERTYPE 49 50 TT_SUBARU_SVX 690.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.01 0.17
 event 0 0 0 0.00
 event 1 1 1 15.00
@@ -2756,6 +2805,7 @@ event 49 0 1 715.00
 TRIGGERTYPE 50 34 TT_1_16 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.99 0.50
 event 0 0 1 0.00
 event 1 0 0 4.00
@@ -2794,6 +2844,7 @@ event 33 1 0 719.00
 TRIGGERTYPE 51 14 TT_SUBARU_7_WITHOUT_6 520.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.95 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -2812,6 +2863,7 @@ event 13 0 0 560.00
 TRIGGERTYPE 52 20 TT_NISSAN_MR18_CAM_VVT 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.89 0.00
 event 0 0 1 0.00
 event 1 0 0 8.00
@@ -2836,6 +2888,7 @@ event 19 0 0 582.00
 TRIGGERTYPE 53 544 TT_TRI_TACH 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 1.00 0.50
 event 0 0 1 0.00
 event 1 1 1 0.05
@@ -3384,6 +3437,7 @@ event 543 1 0 718.67
 TRIGGERTYPE 54 110 TT_GM_60_2_2_2 0.00
 crankBased=false
 isSecondWheelCam=true
+hasSecondChannel=true
 # duty 0.98 0.45
 event 0 0 1 0.00
 event 1 1 1 2.00
@@ -3498,6 +3552,7 @@ event 109 1 0 716.00
 TRIGGERTYPE 55 12 TT_SKODA_FAVORIT 134.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.26 0.00
 event 0 0 1 0.00
 event 1 0 0 131.00
@@ -3514,6 +3569,7 @@ event 11 0 0 674.00
 TRIGGERTYPE 56 8 TT_VVT_BARRA_3_PLUS_1 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.94 0.00
 event 0 0 1 0.00
 event 1 0 0 10.00
@@ -3526,6 +3582,7 @@ event 7 0 0 490.00
 TRIGGERTYPE 57 72 TT_KAWA_KX450F 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.83 0.00
 event 0 0 1 0.00
 event 1 0 0 3.00
@@ -3602,6 +3659,7 @@ event 71 0 0 703.00
 TRIGGERTYPE 58 120 TT_NISSAN_VQ35 675.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.58 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -3726,6 +3784,7 @@ event 119 0 0 715.00
 TRIGGERTYPE 59 12 TT_VVT_NISSAN_VQ35 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.83 0.00
 event 0 0 1 0.00
 event 1 0 0 20.00
@@ -3742,6 +3801,7 @@ event 11 0 0 540.00
 TRIGGERTYPE 60 42 TT_NISSAN_VQ30 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.77 0.00
 event 0 0 1 0.00
 event 1 0 0 8.00
@@ -3788,6 +3848,7 @@ event 41 0 0 624.00
 TRIGGERTYPE 61 128 TT_NISSAN_QR25 585.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.56 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -3920,6 +3981,7 @@ event 127 0 0 715.00
 TRIGGERTYPE 62 16 TT_VVT_MITSUBISHI_3A92 0.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.94 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -3940,6 +4002,7 @@ event 15 0 0 617.00
 TRIGGERTYPE 63 50 TT_SUBARU_SVX_CRANK_1 690.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.01 0.17
 event 0 0 0 0.00
 event 1 1 1 15.00
@@ -3994,6 +4057,7 @@ event 49 0 1 715.00
 TRIGGERTYPE 64 50 TT_SUBARU_SVX_CAM_VVT 690.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=true
 # duty 0.01 0.17
 event 0 0 0 0.00
 event 1 1 1 15.00
@@ -4048,6 +4112,7 @@ event 49 0 1 715.00
 TRIGGERTYPE 65 16 TT_FORD_TFI_PIP 662.50
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.53 0.00
 event 0 0 1 0.00
 event 1 0 0 45.00
@@ -4068,6 +4133,7 @@ event 15 0 0 675.00
 TRIGGERTYPE 66 10 TT_SUZUKI_G13B 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.97 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -4082,6 +4148,7 @@ event 9 0 0 685.00
 TRIGGERTYPE 67 10 TT_HONDA_K_4_1 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.81 0.00
 event 0 0 1 0.00
 event 1 0 0 30.00
@@ -4096,6 +4163,7 @@ event 9 0 0 609.00
 TRIGGERTYPE 68 128 TT_NISSAN_MR18_CRANK 80.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.56 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -4228,6 +4296,7 @@ event 127 0 0 715.00
 TRIGGERTYPE 69 60 TT_TOOTHED_WHEEL_32_2 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.47 0.00
 event 0 0 1 0.00
 event 1 0 0 11.25
@@ -4292,6 +4361,7 @@ event 59 0 0 708.75
 TRIGGERTYPE 70 132 TT_36_2_1 90.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.54 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -4428,6 +4498,7 @@ event 131 0 0 695.00
 TRIGGERTYPE 71 128 TT_36_2_1_1 90.00
 crankBased=true
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.56 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -4560,6 +4631,7 @@ event 127 0 0 695.00
 TRIGGERTYPE 72 128 TT_VVT_MITSUBISHI_6G75 585.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.56 0.00
 event 0 0 1 0.00
 event 1 0 0 5.00
@@ -4692,6 +4764,7 @@ event 127 0 0 715.00
 TRIGGERTYPE 73 6 TT_VVT_TOYOTA_4_1 0.00
 crankBased=false
 isSecondWheelCam=false
+hasSecondChannel=false
 # duty 0.08 0.00
 event 0 0 0 0.00
 event 1 0 1 160.00
