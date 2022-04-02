@@ -83,6 +83,9 @@ public:
 	 */
 	bool isSynchronizationNeeded;
 
+	/**
+	 * trigger meta information: is second wheel mounted on crank shaft ('false') or cam shaft ('true')
+	 */
 	bool isSecondWheelCam;
 	/**
 	 * number of consecutive trigger gaps needed to synchronize
