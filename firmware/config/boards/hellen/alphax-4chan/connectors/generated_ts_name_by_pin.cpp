@@ -5,6 +5,7 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case GPIOA_6: return "C7 - CAM Hall/Digital";
+		case GPIOA_7: return "E7 - Flex";
 		case GPIOA_8: return "A3 - Fuel Pump";
 		case GPIOB_1: return "C2/C3 Crank Sensor VR";
 		case GPIOC_13: return "A6 - Ignition 1";
