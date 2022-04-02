@@ -882,7 +882,7 @@ void onConfigurationChangeTriggerCallback() {
 
 	if (changed) {
 	#if EFI_ENGINE_CONTROL
-		engine->initializeTriggerWaveform();
+		engine->updateTriggerWaveform();
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}
