@@ -457,6 +457,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e ambiguousOperat
 	switch (triggerConfig->type) {
 
 	case TT_TOOTHED_WHEEL:
+		/**
+		 * huh? why all know skipped wheel shapes use 'setToothedWheelConfiguration' method
+		 * which touches 'useRiseEdge' flag while here we do not touch it?!
+		 */
 		initializeSkippedToothTriggerWaveformExt(this, triggerConfig->customTotalToothCount,
 				triggerConfig->customSkippedToothCount, ambiguousOperationMode);
 		break;
