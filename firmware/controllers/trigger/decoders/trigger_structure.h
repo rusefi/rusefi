@@ -118,7 +118,6 @@ public:
 
 	/**
 	 * this variable is incremented after each trigger shape redefinition
-	 * See also
 	 */
 	int version = 0;
 
