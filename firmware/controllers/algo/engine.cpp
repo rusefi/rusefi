@@ -118,7 +118,7 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 	}
 }
 
-void Engine::initializeTriggerWaveform() {
+void Engine::updateTriggerWaveform() {
 	static TriggerState initState;
 
 	// Re-read config in case it's changed

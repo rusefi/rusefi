@@ -1160,7 +1160,7 @@ void applyNonPersistentConfiguration() {
 #endif
 
 #if EFI_ENGINE_CONTROL
-	engine->initializeTriggerWaveform();
+	engine->updateTriggerWaveform();
 #endif // EFI_ENGINE_CONTROL
 }
 
