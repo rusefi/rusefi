@@ -82,6 +82,8 @@ public:
 	 * one primary channel tooth each raising (or falling depending on configuration) front would synchronize
 	 */
 	bool isSynchronizationNeeded;
+
+	bool isSecondWheelCam;
 	/**
 	 * number of consecutive trigger gaps needed to synchronize
 	 */
