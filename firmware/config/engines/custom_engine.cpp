@@ -257,7 +257,7 @@ void setEtbTestConfiguration() {
 	// yes, 30K - that's a test configuration
 	engineConfiguration->rpmHardLimit = 30000;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode(engineConfiguration);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
 

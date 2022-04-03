@@ -20,7 +20,7 @@ void setCitroenBerlingoTU3JPConfiguration() {
 	/**
 	 * Base engine setting
 	 */
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode(engineConfiguration);
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 	engineConfiguration->globalTriggerAngleOffset = 114;
 	engineConfiguration->specs.cylindersCount = 4;

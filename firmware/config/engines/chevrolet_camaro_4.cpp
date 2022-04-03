@@ -32,7 +32,7 @@ void setCamaro4() {
 	// set ignition_mode 2
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode(engineConfiguration);
 	engineConfiguration->trigger.type = TT_GM_LS_24;
 
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_0; // PA0
