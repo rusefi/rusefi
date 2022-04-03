@@ -432,24 +432,24 @@ pins:
     function: ECU - TCM, Communication for A/T
 
   - pin: 4AA
-# huh?   id: EFI_ADC_9
-# huh?    class: analog_inputs
-# huh?    ts_name: 4AA - O2S2 (A12)
+    id: EFI_ADC_9
+    class: analog_inputs
+    ts_name: 4AA - O2S2 (A12)
     function: Rear O2 Sensor Signal
 
   - pin: 4AB
-    # huh?    id: EFI_ADC_3
-    # huh?    class: analog_inputs
-    # huh?    ts_name: 4AB - FTP/PPS (A18)
+    id: EFI_ADC_3
+    class: analog_inputs
+    ts_name: 4AB - FTP/PPS (A18)
     function: Fuel Tank Pressure Sensor, PPS
 
   - pin: 4AC
     function: ECU - TCM, Communication for A/T
 
   - pin: 4AD
-    # huh?  id: EFI_ADC_14
-    # huh?   class: analog_inputs
-    # huh?   ts_name: 4AD - FUEL_LEVEL (A21)
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: 4AD - FUEL_LEVEL (A21)
     function: Fuel Level Sensor
 
   - pin: 4AE
