@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 29 06:39:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 03 22:03:23 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1243,17 +1243,17 @@ struct ts_outputs_s {
 	 */
 	uint8_t unused503 = (uint8_t)0;
 	/**
-	%
+	deg
 	 * offset 444
 	 */
 	scaled_channel<int16_t, 100, 1> timingCltCorrection = (int16_t)0;
 	/**
-	%
+	deg
 	 * offset 446
 	 */
 	scaled_channel<int16_t, 100, 1> timingIatCorrection = (int16_t)0;
 	/**
-	%
+	deg
 	 * offset 448
 	 */
 	scaled_channel<int16_t, 100, 1> timingPidCorrection = (int16_t)0;
@@ -1390,4 +1390,4 @@ struct ts_outputs_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Tue Mar 29 06:39:31 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 03 22:03:23 UTC 2022
