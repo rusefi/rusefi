@@ -1917,7 +1917,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 3127497611
+#define SIGNATURE_HASH 1804910022
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2158,7 +2158,7 @@
 #define trailingSparkAngle_offset 528
 #define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 16
-#define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 20 || trigger_type == 23 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71
+#define TRIGGER_CRANK_BASED trigger_type == 5 || trigger_type == 10 || trigger_type == 20 || trigger_type == 26 || trigger_type == 27 || trigger_type == 39 || trigger_type == 46 || trigger_type == 53 || trigger_type == 55 || trigger_type == 57 || trigger_type == 62 || trigger_type == 70 || trigger_type == 71
 #define trigger_customSkippedToothCount_offset 544
 #define trigger_customTotalToothCount_offset 540
 #define trigger_event_e_SHAFT_3RD_FALLING 4
@@ -2462,7 +2462,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.04.03.subaru_eg33_f7.3127497611"
+#define TS_SIGNATURE "rusEFI 2022.04.03.subaru_eg33_f7.1804910022"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
