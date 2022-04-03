@@ -202,6 +202,10 @@
 #define boardUseCamPullDown_offset 1260
 #define boardUseCamVrPullUp_offset 1260
 #define boardUseCrankPullUp_offset 1260
+#define boardUseD2PullDown_offset 1260
+#define boardUseD3PullDown_offset 1260
+#define boardUseD4PullDown_offset 1260
+#define boardUseD5PullDown_offset 1260
 #define boardUseTachPullUp_offset 1260
 #define boardUseTempPullUp_offset 1260
 #define BOOST_LOAD_COUNT 8
@@ -1919,7 +1923,7 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 4224031767
+#define SIGNATURE_HASH 1860638686
 #define silentTriggerError_offset 1260
 #define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
@@ -2461,7 +2465,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.03.kin.4224031767"
+#define TS_SIGNATURE "rusEFI 2022.04.03.kin.1860638686"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2542,11 +2546,7 @@
 #define unusedBit_507_31_offset 1740
 #define unusedBit_507_8_offset 1740
 #define unusedBit_507_9_offset 1740
-#define unusedBitHere1_offset 1260
 #define unusedBitHere2_offset 1260
-#define unusedBitWasHere3_offset 1260
-#define unusedBitWasHere4_offset 1260
-#define unusedBitWasHere5_offset 1260
 #define unusedDtectionThreshold_offset 623
 #define unusedFiller_4703_offset 4143
 #define unusedHere2_offset 1747

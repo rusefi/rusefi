@@ -19,10 +19,16 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOD_15: return "F2 - VVT#1";
 		case GPIOE_12: return "C3 - Crank+ (hall)";
 		case GPIOE_14: return "C2 - Crank- (hall)";
+		case GPIOE_15: return "C3 - Cam+ (hall)";
 		case GPIOE_3: return "D7 - Ignition 4";
 		case GPIOE_4: return "D6 - Ignition 3";
 		case GPIOE_5: return "A7 - Ignition 2";
 		case GPIOF_11: return "C4 - 2Step/Digital";
+		case GPIOF_3: return "D3 - Digital In 2";
+		case GPIOF_4: return "D3 - Digital In 3";
+		case GPIOF_5: return "D3 - Digital In 4";
+		case GPIOF_6: return "F3 - Digital In 5";
+		case GPIOF_9: return "E5/E6 Cam Sensor VR";
 		case GPIOG_11: return "E2 - Out NOS";
 		case GPIOG_12: return "F5 - MAIN";
 		case GPIOG_6: return "A4 - Tachometer";

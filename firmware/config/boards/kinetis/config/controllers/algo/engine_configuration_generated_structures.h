@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 08:26:45 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 13:35:21 UTC 2022
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2382,16 +2382,16 @@ struct engine_configuration_s {
 	bool boardUseCamVrPullUp : 1 {};
 	/**
 	offset 1260 bit 23 */
-	bool unusedBitWasHere3 : 1 {};
+	bool boardUseD2PullDown : 1 {};
 	/**
 	offset 1260 bit 24 */
-	bool unusedBitWasHere4 : 1 {};
+	bool boardUseD3PullDown : 1 {};
 	/**
 	offset 1260 bit 25 */
-	bool unusedBitWasHere5 : 1 {};
+	bool boardUseD4PullDown : 1 {};
 	/**
 	offset 1260 bit 26 */
-	bool unusedBitHere1 : 1 {};
+	bool boardUseD5PullDown : 1 {};
 	/**
 	 * Sometimes we just have to shut the engine down. Use carefully!
 	offset 1260 bit 27 */
@@ -4550,4 +4550,4 @@ struct persistent_config_s {
 };
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 08:26:45 UTC 2022
+// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 13:35:21 UTC 2022
