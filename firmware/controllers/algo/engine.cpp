@@ -608,7 +608,6 @@ injection_mode_e Engine::getCurrentInjectionMode() {
 static bool doesTriggerImplyOperationMode(trigger_type_e type) {
 	return type != TT_TOOTHED_WHEEL
 			&& type != TT_ONE
-			&& type != TT_ONE_PLUS_ONE
 			&& type != TT_3_1_CAM
 			&& type != TT_36_2_2_2
 			&& type != TT_TOOTHED_WHEEL_60_2
