@@ -3,6 +3,7 @@ package com.rusefi;
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.parsing.Definition;
 import com.rusefi.output.*;
+import com.rusefi.trigger.TriggerWheelTSLogic;
 import com.rusefi.util.IoUtils;
 import com.rusefi.util.SystemOut;
 
@@ -72,6 +73,7 @@ public class ConfigDefinition {
         List<String> prependFiles = new ArrayList<>();
         String romRaiderInputFile = null;
         String firingEnumFileName = null;
+        String triggersFolder = null;
         String signatureDestination = null;
         String signaturePrependFile = null;
         List<String> enumInputFiles = new ArrayList<>();
@@ -134,6 +136,9 @@ public class ConfigDefinition {
                     firingEnumFileName = args[i + 1];
                     inputFiles.add(firingEnumFileName);
                     break;
+                case "-triggerFolder":
+                    triggersFolder = args[i + 1];
+                    break;
                 case KEY_ROMRAIDER_DESTINATION:
                     romRaiderDestination = args[i + 1];
                     break;
@@ -187,6 +192,8 @@ public class ConfigDefinition {
         long crc32 = IoUtil2.signatureHash(state, parseState, tsInputFileFolder, inputFiles);
 
         ExtraUtil.handleFiringOrder(firingEnumFileName, state.variableRegistry, parseState);
+
+        new TriggerWheelTSLogic().execute(triggersFolder, state.variableRegistry);
 
 
         for (String prependFile : prependFiles)

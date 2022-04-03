@@ -1,7 +1,6 @@
 package com.rusefi.trigger;
 
 import com.rusefi.StartupFrame;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.trigger_type_e;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.ui.util.FrameHelper;
@@ -11,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,10 +23,8 @@ import java.util.List;
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class TriggerImage {
-    private static final String TRIGGERTYPE = "TRIGGERTYPE";
     private static final String OUTPUT_FOLDER = "triggers";
     private static final String TOP_MESSAGE = StartupFrame.LINK_TEXT;
-    private static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
 
     private static final int WHEEL_BORDER = 20;
     private static final int WHEEL_DIAMETER = 500;
@@ -104,7 +98,7 @@ public class TriggerImage {
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
         final String workingFolder;
         if (args.length < 1) {
-            workingFolder = DEFAULT_WORK_FOLDER;
+            workingFolder = TriggerWheelInfo.DEFAULT_WORK_FOLDER;
         } else {
             workingFolder = args[0];
         }
@@ -138,38 +132,10 @@ public class TriggerImage {
         });
 
         SwingUtilities.invokeAndWait(() -> {
-            try {
-                generateImages(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+            TriggerWheelInfo.readWheels(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
         });
         Thread.sleep(1000L * sleepAtEnd);
         System.exit(-1);
-    }
-
-    private static void generateImages(String workingFolder, TriggerWheelInfo.TriggerWheelInfoConsumer consumer) throws IOException {
-        String fileName = workingFolder + File.separator + Fields.TRIGGERS_FILE_NAME;
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
-
-        System.out.println("Reading " + fileName);
-        String line;
-        while ((line = br.readLine()) != null) {
-            if (line.trim().startsWith("#")) {
-                // skipping a comment
-                continue;
-            }
-
-            if (line.startsWith(TRIGGERTYPE)) {
-                readTrigger(br, line, consumer);
-            }
-        }
-    }
-
-    private static void readTrigger(BufferedReader reader, String line, TriggerWheelInfo.TriggerWheelInfoConsumer consumer) throws IOException {
-        TriggerWheelInfo triggerWheelInfo = TriggerWheelInfo.readTriggerWheelInfo(line, reader);
-
-        consumer.onWheel(triggerWheelInfo);
     }
 
     private static void onWheel(TriggerPanel triggerPanel, JPanel topPanel, JPanel content, TriggerWheelInfo triggerWheelInfo) {
