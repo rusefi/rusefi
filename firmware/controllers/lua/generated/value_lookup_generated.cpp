@@ -510,6 +510,14 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->boardUseCamPullDown;
 	if (strEqualCaseInsensitive(name, "boardUseCamVrPullUp"))
 		return engineConfiguration->boardUseCamVrPullUp;
+	if (strEqualCaseInsensitive(name, "boardUseD2PullDown"))
+		return engineConfiguration->boardUseD2PullDown;
+	if (strEqualCaseInsensitive(name, "boardUseD3PullDown"))
+		return engineConfiguration->boardUseD3PullDown;
+	if (strEqualCaseInsensitive(name, "boardUseD4PullDown"))
+		return engineConfiguration->boardUseD4PullDown;
+	if (strEqualCaseInsensitive(name, "boardUseD5PullDown"))
+		return engineConfiguration->boardUseD5PullDown;
 	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
 		return engineConfiguration->useFSIO5ForCriticalIssueEngineStop;
 	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
@@ -2222,6 +2230,26 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "boardUseCamVrPullUp"))
 	{
 		engineConfiguration->boardUseCamVrPullUp = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boardUseD2PullDown"))
+	{
+		engineConfiguration->boardUseD2PullDown = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boardUseD3PullDown"))
+	{
+		engineConfiguration->boardUseD3PullDown = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boardUseD4PullDown"))
+	{
+		engineConfiguration->boardUseD4PullDown = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "boardUseD5PullDown"))
+	{
+		engineConfiguration->boardUseD5PullDown = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "useFSIO5ForCriticalIssueEngineStop"))
