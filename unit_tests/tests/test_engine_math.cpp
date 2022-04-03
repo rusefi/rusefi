@@ -26,7 +26,7 @@ TEST(misc, testEngineMath) {
 
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
-	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+    setCamOperationMode();
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 
 	ASSERT_NEAR( 50,  getOneDegreeTimeMs(600) * 180, EPS4D) << "600 RPM";

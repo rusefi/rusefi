@@ -9,7 +9,7 @@ TEST(trigger, testQuadCam) {
 	// setting some weird engine
 	EngineTestHelper eth(FORD_ESCORT_GT);
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 
 	// changing to 'ONE TOOTH' trigger on CRANK with CAM/VVT
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

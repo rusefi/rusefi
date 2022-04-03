@@ -99,6 +99,14 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
+static operation_mode_e lookupOperationMode() {
+	if (engineConfiguration->twoStroke) {
+		return TWO_STROKE;
+	} else {
+		return engineConfiguration->skippedWheelOnCam ? FOUR_STROKE_CAM_SENSOR : FOUR_STROKE_CRANK_SENSOR;
+	}
+}
+
 static void initVvtShape(int camIndex, TriggerState &initState) {
 	vvt_mode_e vvtMode = engineConfiguration->vvtMode[camIndex];
 
@@ -109,7 +117,7 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 
 		auto& shape = engine->triggerCentral.vvtShape[camIndex];
 		shape.initializeTriggerWaveform(
-				engineConfiguration->ambiguousOperationMode,
+				lookupOperationMode(),
 				engineConfiguration->vvtCamSensorUseRise, &config);
 
 		shape.initializeSyncPoint(initState,
@@ -118,7 +126,7 @@ static void initVvtShape(int camIndex, TriggerState &initState) {
 	}
 }
 
-void Engine::initializeTriggerWaveform() {
+void Engine::updateTriggerWaveform() {
 	static TriggerState initState;
 
 	// Re-read config in case it's changed
@@ -132,7 +140,7 @@ void Engine::initializeTriggerWaveform() {
 	chibios_rt::CriticalSectionLocker csl;
 
 	TRIGGER_WAVEFORM(initializeTriggerWaveform(
-			engineConfiguration->ambiguousOperationMode,
+			lookupOperationMode(),
 			engineConfiguration->useOnlyRisingEdgeForTrigger, &engineConfiguration->trigger));
 
 	/**
@@ -612,7 +620,7 @@ operation_mode_e Engine::getOperationMode() {
 	 * here we ignore user-provided setting for well known triggers.
 	 * For instance for Miata NA, there is no reason to allow user to set FOUR_STROKE_CRANK_SENSOR
 	 */
-	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : engineConfiguration->ambiguousOperationMode;
+	return doesTriggerImplyOperationMode(engineConfiguration->trigger.type) ? triggerCentral.triggerShape.getOperationMode() : lookupOperationMode();
 }
 
 /**

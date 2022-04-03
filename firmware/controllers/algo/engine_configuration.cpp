@@ -1160,7 +1160,7 @@ void applyNonPersistentConfiguration() {
 #endif
 
 #if EFI_ENGINE_CONTROL
-	engine->initializeTriggerWaveform();
+	engine->updateTriggerWaveform();
 #endif // EFI_ENGINE_CONTROL
 }
 
@@ -1174,8 +1174,16 @@ void prepareShapes() {
 
 #endif
 
-void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode) {
-	engineConfiguration->ambiguousOperationMode = mode;
+void setTwoStrokeOperationMode() {
+	engineConfiguration->twoStroke = true;
+}
+
+void setCamOperationMode() {
+	engineConfiguration->skippedWheelOnCam = true;
+}
+
+void setCrankOperationMode() {
+	engineConfiguration->skippedWheelOnCam = false;
 }
 
 void commonFrankensoAnalogInputs(engine_configuration_s *engineConfiguration) {

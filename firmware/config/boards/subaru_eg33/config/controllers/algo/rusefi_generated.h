@@ -1915,8 +1915,9 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 1112734931
+#define SIGNATURE_HASH 614673036
 #define silentTriggerError_offset 1260
+#define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
 #define sparkDwellValues_offset 64
@@ -2153,6 +2154,7 @@
 #define trailingCoilPins8_offset 1963
 #define trailingCoilPins9_offset 1964
 #define trailingSparkAngle_offset 528
+#define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 16
 #define trigger_customSkippedToothCount_offset 544
 #define trigger_customTotalToothCount_offset 540
@@ -2162,8 +2164,11 @@
 #define trigger_event_e_SHAFT_PRIMARY_RISING 1
 #define trigger_event_e_SHAFT_SECONDARY_FALLING 2
 #define trigger_event_e_SHAFT_SECONDARY_RISING 3
+#define TRIGGER_HARDCODED_OPERATION_MODE "knownOperationMode"
+#define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
 #define TRIGGER_INPUT_PIN_COUNT 3
 #define TRIGGER_IS_CRANK_KEY "crankBased"
+#define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
 #define trigger_offset 532
 #define TRIGGER_SIMULATOR_PIN_COUNT 3
 #define trigger_todoRemoveMeOneDay0_offset 536
@@ -2452,7 +2457,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.03.31.subaru_eg33_f7.1112734931"
+#define TS_SIGNATURE "rusEFI 2022.04.03.subaru_eg33_f7.614673036"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2474,6 +2479,7 @@
 #define tunerStudioSerialSpeed_offset 732
 #define turboSpeedSensorInputPin_offset 1527
 #define turboSpeedSensorMultiplier_offset 1280
+#define twoStroke_offset 1260
 #define twoWireBatchIgnition_offset 1272
 #define twoWireBatchInjection_offset 1272
 #define uart_device_e_auto_enum "UART_NONE", "UART_DEVICE_1", "UART_DEVICE_2", "UART_DEVICE_3", "UART_DEVICE_4"
@@ -2534,8 +2540,6 @@
 #define unusedBit_507_9_offset 1740
 #define unusedBitHere1_offset 1260
 #define unusedBitHere2_offset 1260
-#define unusedBitHere3_offset 1260
-#define unusedBitHere4_offset 1260
 #define unusedBitWasHere3_offset 1260
 #define unusedBitWasHere4_offset 1260
 #define unusedBitWasHere5_offset 1260

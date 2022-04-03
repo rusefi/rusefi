@@ -18,10 +18,8 @@
 void setTestCamEngineConfiguration() {
 	setDefaultFrankensoConfiguration();
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
 	engineConfiguration->trigger.type = TT_ONE_PLUS_ONE;
 
-//	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 //	trigger_config_s *triggerConfig = &engineConfiguration->trigger;
 //	triggerConfig->customTotalToothCount = 60;
@@ -56,12 +54,14 @@ void setTestCrankEngineConfiguration() {
 
 	engineConfiguration->trigger.type = TT_ONE;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
+	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
+	engineConfiguration->skippedWheelOnCam = false;
 }
 
 void setTestVVTEngineConfiguration() {
 	setDefaultFrankensoConfiguration();
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 3;

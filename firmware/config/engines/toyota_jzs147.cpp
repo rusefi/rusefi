@@ -70,11 +70,11 @@ static void common2jz() {
 void setToyota_jzs147EngineConfiguration() {
 	common2jz();
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	setCamOperationMode();
 	engineConfiguration->trigger.type = TT_2JZ_1_12;
 
 //// temporary while I am fixing trigger bug
-//	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+//	setCrankOperationMode();
 //	//set trigger_type 16
 //	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 //	engineConfiguration->trigger.customTotalToothCount = 36;
@@ -102,7 +102,7 @@ void setToyota_jzs147EngineConfiguration() {
 void setToyota_2jz_vics() {
 	common2jz();
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_36_2;
 
 	engineConfiguration->triggerInputPins[0] = GPIOA_5; // crank sensor

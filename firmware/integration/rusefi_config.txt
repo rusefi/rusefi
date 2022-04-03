@@ -192,6 +192,10 @@ struct_no_prefix engine_configuration_s
 
 #define TRIGGERS_FILE_NAME "triggers.txt"
 #define TRIGGER_IS_CRANK_KEY "crankBased"
+#define TRIGGER_IS_SECOND_WHEEL_CAM "isSecondWheelCam"
+#define TRIGGER_HAS_SECOND_CHANNEL "hasSecondChannel"
+#define TRIGGER_HARDCODED_OPERATION_MODE "knownOperationMode"
+#define TRIGGER_COMMENT "#"
 
 ! 
 ! all the xxx_PACKING_xxx constants are about persisting tables in compact for, for example packing RPM with 50 increment in a byte
@@ -555,9 +559,7 @@ can_nbc_e canNbcType;set can_mode X
 
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
 
-
-custom operation_mode_e 4 bits, U32, @OFFSET@, [0:2], "INVALID", "4 stroke without cam sensor", "4 stroke with cam sensor", "2 stroke", "4 stroke with symmetrical crank (requires VVT input)", "INVALID", "INVALID", "INVALID"
-operation_mode_e ambiguousOperationMode;+'Some triggers could be mounted differently. Most well-known triggers imply specific sensor setup. 4 stroke with symmetrical crank' is a pretty special case for example on Miata NB2\nSee engineCycle\nset operation_mode X
+	int weHaveUnusedHere;;"index", 1, 0, 0, 300, 0
 
 custom display_mode_e 4 bits, U32, @OFFSET@, [0:1], "none", "hd44780", "hd44780 over pcf8574", "INVALID"
 display_mode_e displayMode;
@@ -1031,8 +1033,8 @@ bit unusedBitHere1
 bit useFSIO5ForCriticalIssueEngineStop;Sometimes we just have to shut the engine down. Use carefully!
 bit useFSIO4ForSeriousEngineWarning;Sometimes we have to miss injection on purpose to attract driver's attention
 bit unusedBitHere2
-bit unusedBitHere3
-bit unusedBitHere4
+bit twoStroke,"Two Stroke","Four Stroke"
+bit skippedWheelOnCam,"On camshaft","On crankshaft";+Where is your primary skipped wheel located?
 
 	adc_channel_e hipOutputChannel;
 	switch_input_pin_e acSwitch;A/C button input;

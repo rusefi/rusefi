@@ -73,7 +73,7 @@ class TriggerConfiguration;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(operation_mode_e ambiguousOperationMode,
+	void initializeTriggerWaveform(operation_mode_e triggerOperationMode,
 			bool useOnlyRisingEdgeForTrigger, const trigger_config_s *triggerConfig);
 	void setShapeDefinitionError(bool value);
 
@@ -82,6 +82,11 @@ public:
 	 * one primary channel tooth each raising (or falling depending on configuration) front would synchronize
 	 */
 	bool isSynchronizationNeeded;
+
+	/**
+	 * trigger meta information: is second wheel mounted on crank shaft ('false') or cam shaft ('true')
+	 */
+	bool isSecondWheelCam;
 	/**
 	 * number of consecutive trigger gaps needed to synchronize
 	 */
@@ -113,7 +118,6 @@ public:
 
 	/**
 	 * this variable is incremented after each trigger shape redefinition
-	 * See also
 	 */
 	int version = 0;
 

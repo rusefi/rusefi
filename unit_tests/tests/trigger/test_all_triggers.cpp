@@ -58,17 +58,19 @@ TEST_P(AllTriggersFixture, TestTrigger) {
 	EngineTestHelperBase base(engine, &pc.engineConfiguration, &pc);
 
 	engineConfiguration->trigger.type = tt;
-	engineConfiguration->ambiguousOperationMode = FOUR_STROKE_CAM_SENSOR;
+    setCamOperationMode();
 
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->initializeTriggerWaveform();
+	engine->updateTriggerWaveform();
 
 	ASSERT_FALSE(shape->shapeDefinitionError) << "Trigger shapeDefinitionError";
 
 	fprintf(fp, "TRIGGERTYPE %d %d %s %.2f\n", tt, shape->getLength(), getTrigger_type_e(tt), shape->tdcPosition);
-	// todo: use getCrankDivider insread to support symmetrical crank wheels?
+	// todo: use getCrankDivider instead to support symmetrical crank wheels?
 	fprintf(fp, "%s=%s\n", TRIGGER_IS_CRANK_KEY, shape->getOperationMode() == FOUR_STROKE_CRANK_SENSOR ? "true" : "false");
+	fprintf(fp, "%s=%s\n", TRIGGER_IS_SECOND_WHEEL_CAM, shape->isSecondWheelCam ? "true" : "false");
+	fprintf(fp, "%s=%s\n", TRIGGER_HAS_SECOND_CHANNEL, shape->needSecondTriggerInput ? "true" : "false");
 	fprintf(fp, "# duty %.2f %.2f\n", shape->expectedDutyCycle[0], shape->expectedDutyCycle[1]);
 
 	for (size_t i = 0; i < shape->getLength(); i++) {

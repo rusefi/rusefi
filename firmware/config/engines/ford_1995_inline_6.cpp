@@ -23,7 +23,7 @@ void setFordInline6() {
 
 	engineConfiguration->specs.cylindersCount = 6;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	setCamOperationMode();
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->specs.firingOrder = FO_1_5_3_6_2_4;
@@ -33,13 +33,14 @@ void setFordInline6() {
 
 
 	/**
-	 * 0.5ms dweel time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
+	 * 0.5ms dwell time just to be sure it would fit within camshaft revolution, dwell is not controlled by us anyway
 	 */
 	setConstantDwell(0.5);
 
 	/**
 	 * We treat the trigger as 6/0 toothed wheel
 	 */
+	engineConfiguration->skippedWheelOnCam = true;
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 6;
 	engineConfiguration->trigger.customSkippedToothCount = 0;

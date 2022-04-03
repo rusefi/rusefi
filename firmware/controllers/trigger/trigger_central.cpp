@@ -872,7 +872,8 @@ void onConfigurationChangeTriggerCallback() {
 	}
 
 	changed |= isConfigurationChanged(trigger.type);
-	changed |= isConfigurationChanged(ambiguousOperationMode);
+	changed |= isConfigurationChanged(skippedWheelOnCam);
+	changed |= isConfigurationChanged(twoStroke);
 	changed |= isConfigurationChanged(useOnlyRisingEdgeForTrigger);
 	changed |= isConfigurationChanged(globalTriggerAngleOffset);
 	changed |= isConfigurationChanged(trigger.customTotalToothCount);
@@ -882,7 +883,7 @@ void onConfigurationChangeTriggerCallback() {
 
 	if (changed) {
 	#if EFI_ENGINE_CONTROL
-		engine->initializeTriggerWaveform();
+		engine->updateTriggerWaveform();
 		engine->triggerCentral.noiseFilter.resetAccumSignalData();
 	#endif
 	}

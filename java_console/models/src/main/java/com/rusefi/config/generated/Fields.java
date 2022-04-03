@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 30 23:47:08 UTC 2022
+// this file was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 03 02:30:31 UTC 2022
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1864,8 +1864,9 @@ public class Fields {
 	public static final int servoOutputPins7_offset = 2738;
 	public static final int servoOutputPins8_offset = 2739;
 	public static final int showHumanReadableWarning_offset = 896;
-	public static final int SIGNATURE_HASH = 602250578;
+	public static final int SIGNATURE_HASH = 1158957837;
 	public static final int silentTriggerError_offset = 1260;
+	public static final int skippedWheelOnCam_offset = 1260;
 	public static final int slowAdcAlpha_offset = 1712;
 	public static final int sparkDwellRpmBins_offset = 54;
 	public static final int sparkDwellValues_offset = 64;
@@ -2092,6 +2093,7 @@ public class Fields {
 	public static final int trailingCoilPins8_offset = 1963;
 	public static final int trailingCoilPins9_offset = 1964;
 	public static final int trailingSparkAngle_offset = 528;
+	public static final String TRIGGER_COMMENT = "#";
 	public static final int trigger_config_s_size = 16;
 	public static final int trigger_customSkippedToothCount_offset = 544;
 	public static final int trigger_customTotalToothCount_offset = 540;
@@ -2101,8 +2103,11 @@ public class Fields {
 	public static final int trigger_event_e_SHAFT_PRIMARY_RISING = 1;
 	public static final int trigger_event_e_SHAFT_SECONDARY_FALLING = 2;
 	public static final int trigger_event_e_SHAFT_SECONDARY_RISING = 3;
+	public static final String TRIGGER_HARDCODED_OPERATION_MODE = "knownOperationMode";
+	public static final String TRIGGER_HAS_SECOND_CHANNEL = "hasSecondChannel";
 	public static final int TRIGGER_INPUT_PIN_COUNT = 3;
 	public static final String TRIGGER_IS_CRANK_KEY = "crankBased";
+	public static final String TRIGGER_IS_SECOND_WHEEL_CAM = "isSecondWheelCam";
 	public static final int trigger_offset = 532;
 	public static final int TRIGGER_SIMULATOR_PIN_COUNT = 3;
 	public static final int trigger_todoRemoveMeOneDay0_offset = 536;
@@ -2344,7 +2349,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI 2022.03.31.all.602250578";
+	public static final String TS_SIGNATURE = "rusEFI 2022.04.03.all.1158957837";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TsCalMode_EtbKd = 5;
@@ -2364,6 +2369,7 @@ public class Fields {
 	public static final int tunerStudioSerialSpeed_offset = 732;
 	public static final int turboSpeedSensorInputPin_offset = 1527;
 	public static final int turboSpeedSensorMultiplier_offset = 1280;
+	public static final int twoStroke_offset = 1260;
 	public static final int twoWireBatchIgnition_offset = 1272;
 	public static final int twoWireBatchInjection_offset = 1272;
 	public static final int uart_device_e_UART_DEVICE_1 = 1;
@@ -2423,8 +2429,6 @@ public class Fields {
 	public static final int unusedBit_507_9_offset = 1740;
 	public static final int unusedBitHere1_offset = 1260;
 	public static final int unusedBitHere2_offset = 1260;
-	public static final int unusedBitHere3_offset = 1260;
-	public static final int unusedBitHere4_offset = 1260;
 	public static final int unusedBitWasHere3_offset = 1260;
 	public static final int unusedBitWasHere4_offset = 1260;
 	public static final int unusedBitWasHere5_offset = 1260;
@@ -3143,8 +3147,8 @@ public class Fields {
 	public static final Field USEFSIO5FORCRITICALISSUEENGINESTOP = Field.create("USEFSIO5FORCRITICALISSUEENGINESTOP", 1260, FieldType.BIT, 27);
 	public static final Field USEFSIO4FORSERIOUSENGINEWARNING = Field.create("USEFSIO4FORSERIOUSENGINEWARNING", 1260, FieldType.BIT, 28);
 	public static final Field UNUSEDBITHERE2 = Field.create("UNUSEDBITHERE2", 1260, FieldType.BIT, 29);
-	public static final Field UNUSEDBITHERE3 = Field.create("UNUSEDBITHERE3", 1260, FieldType.BIT, 30);
-	public static final Field UNUSEDBITHERE4 = Field.create("UNUSEDBITHERE4", 1260, FieldType.BIT, 31);
+	public static final Field TWOSTROKE = Field.create("TWOSTROKE", 1260, FieldType.BIT, 30);
+	public static final Field SKIPPEDWHEELONCAM = Field.create("SKIPPEDWHEELONCAM", 1260, FieldType.BIT, 31);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1264, FieldType.INT8, adc_channel_e);
 	public static final Field ACSWITCH = Field.create("ACSWITCH", 1265, FieldType.INT8, switch_input_pin_e);
 	public static final Field VREFADCCHANNEL = Field.create("VREFADCCHANNEL", 1266, FieldType.INT8, adc_channel_e);
@@ -4461,8 +4465,8 @@ public class Fields {
 	USEFSIO5FORCRITICALISSUEENGINESTOP,
 	USEFSIO4FORSERIOUSENGINEWARNING,
 	UNUSEDBITHERE2,
-	UNUSEDBITHERE3,
-	UNUSEDBITHERE4,
+	TWOSTROKE,
+	SKIPPEDWHEELONCAM,
 	HIPOUTPUTCHANNEL,
 	ACSWITCH,
 	VREFADCCHANNEL,

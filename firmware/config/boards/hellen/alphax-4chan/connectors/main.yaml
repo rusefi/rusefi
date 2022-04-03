@@ -24,8 +24,8 @@ pins:
     color: purple
 
   - pin: A4
-    # H144_OUT_PWM3
-    id: GPIOC_7
+    # H144_OUT_IO13
+    id: GPIOG_6
     class: outputs
     function: Tachometer Output
     ts_name: A4 - Tachometer
@@ -40,18 +40,18 @@ pins:
     # H144_IGN_1
     id: GPIOC_13
     class: outputs
-    function: Smart Ignition A Output
+    function: Smart Ignition 1
     type: ign
-    ts_name: A6 - Ignition A
+    ts_name: A6 - Ignition 1
     color: yellow
 
   - pin: A7
     # H144_IGN_2
     id: GPIOE_5
     class: outputs
-    function: Smart Ignition B Output
+    function: Smart Ignition 2 Output
     type: ign
-    ts_name: A7 - Ignition B
+    ts_name: A7 - Ignition 2
     color: yellow
 
   - pin: A8
@@ -212,6 +212,14 @@ pins:
     ts_name: D1 - Injector 3
     color: blue
 
+  - pin: D2
+    # H144_OUT_PWM3
+    id: GPIOC_7
+    function: Out Boost
+    class: outputs
+    ts_name: D2 - Out Boost
+    color: blue
+
   - pin: D4
     # H144_IN_AUX1
     id: EFI_ADC_8
@@ -228,6 +236,29 @@ pins:
     ts_name: D5 - PPS
     color: orange
 
+  - pin: D6
+    # H144_IGN_3
+    id: GPIOE_4
+    class: outputs
+    function: Smart Ignition 3 Output
+    type: ign
+    ts_name: D6 - Ignition 3
+    color: yellow
+
+  - pin: D7
+    # H144_IGN_4
+    id: GPIOE_3
+    class: outputs
+    function: Smart Ignition 4 Output
+    type: ign
+    ts_name: D7 - Ignition 4
+    color: yellow
+
+  - pin: D8
+    function: Power Ground
+    type: gnd
+    color: black
+
   - pin: E1
     # H144_LS_4
     id: GPIOD_10
@@ -237,9 +268,33 @@ pins:
     ts_name: E1 - Injector 4
     color: blue
 
+  - pin: E2
+    # H144_OUT_IO6
+    id: GPIOG_11
+    function: Out NOS
+    class: outputs
+    ts_name: E2 - Out NOS
+    color: blue
+
+  - pin: E7
+    # H144_IN_D_AUX4
+    id: GPIOA_7
+    class: event_inputs
+    ts_name: E7 - Flex
+    function: DIGITAL
+
   - pin: E8
     function: ETB negative
     type: etb
+
+  - pin: F1
+    # H144_OUT_PWM5
+    id: GPIOC_9
+    class: outputs
+    function: Idle2 Output (low)
+    type: ls
+    ts_name: F1 - Idle2
+    color: purple
 
   - pin: F2
     # H144_OUT_PWM7
@@ -256,6 +311,15 @@ pins:
     class: outputs
     type: inj
     ts_name: F4 - VVT#2
+
+  - pin: F5
+    # H144_OUT_IO10
+    id: GPIOG_12
+    class: outputs
+    ts_name: F5 - MAIN
+    function: Main relay control
+    type: ls
+    color: white
 
   - pin: F6
     # H144_IN_AUX2

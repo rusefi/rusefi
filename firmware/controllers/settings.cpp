@@ -202,11 +202,6 @@ static void setSensorChartMode(int value) {
 	doPrintConfiguration();
 }
 
-static void setOperationMode(int value) {
-	engineConfiguration->ambiguousOperationMode = (operation_mode_e)value;
-	doPrintConfiguration();
-}
-
 static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
 	auto tps = Sensor::get(sensor);
 	auto raw = Sensor::getRaw(sensor);
@@ -355,6 +350,7 @@ static void setInjectorLag(float voltage, float value) {
 	setCurveValue(INJECTOR_LAG_CURVE, voltage, value);
 }
 
+/*
 static void setToothedWheel(int total, int skipped) {
 	if (total < 1 || skipped >= total) {
 		efiPrintf("invalid parameters %d %d", total, skipped);
@@ -369,6 +365,7 @@ static void setToothedWheel(int total, int skipped) {
 	incrementGlobalConfigurationVersion();
 	doPrintConfiguration();
 }
+*/
 
 static void setGlobalFuelCorrection(float value) {
 	if (value < 0.01 || value > 50)
@@ -1068,7 +1065,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"idle_pin_mode", setIdlePinMode},
 		{"fuel_pump_pin_mode", setFuelPumpPinMode},
 		{"malfunction_indicator_pin_mode", setMalfunctionIndicatorPinMode},
-		{"operation_mode", setOperationMode},
 		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
@@ -1154,8 +1150,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		engineConfiguration->vvtOffsets[0] = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
 		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "operation_mode")) {
-		engineConfiguration->ambiguousOperationMode = (operation_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "vvtCamSensorUseRise")) {
 		engineConfiguration->vvtCamSensorUseRise = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
@@ -1215,7 +1209,7 @@ void initSettings(void) {
 	addConsoleActionS(CMD_ENABLE, enable);
 	addConsoleActionS(CMD_DISABLE, disable);
 
-	addConsoleActionII("set_toothed_wheel", setToothedWheel);
+//	addConsoleActionII("set_toothed_wheel", setToothedWheel);
 
 	addConsoleActionFF("set_injector_lag", setInjectorLag);
 

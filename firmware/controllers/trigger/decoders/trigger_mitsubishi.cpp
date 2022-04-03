@@ -11,6 +11,7 @@
 void configureFordAspireTriggerWaveform(TriggerWaveform * s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR);
 	s->isSynchronizationNeeded = false;
+	s->isSecondWheelCam = true;
 
 	float x = 121.90;
 	float y = 110.86;

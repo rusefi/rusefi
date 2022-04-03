@@ -21,7 +21,9 @@
 
 #define MOCK_UNDEFINED -1
 
-void setOperationMode(engine_configuration_s *engineConfiguration, operation_mode_e mode);
+void setCrankOperationMode();
+void setCamOperationMode();
+void setTwoStrokeOperationMode();
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm);

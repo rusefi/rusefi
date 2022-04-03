@@ -66,7 +66,7 @@ void setSubaruEJ18_MRE() {
  */
 
 void setSubaruEG33Defaults() {
-	setOperationMode(engineConfiguration, FOUR_STROKE_CAM_SENSOR);
+	setCamOperationMode();
 
 	engineConfiguration->trigger.type = TT_SUBARU_SVX;
 	engineConfiguration->useOnlyRisingEdgeForTrigger = true;

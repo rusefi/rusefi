@@ -1906,7 +1906,8 @@ cmd_set_engine_type_default					= "@@TS_IO_TEST_COMMAND_char@@\x00\x31\x00\x00"
 		field = "Missing/skipped tooth count",					trigger_customSkippedToothCount, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}, {trigger_type == @@trigger_type_e_TT_TOOTHED_WHEEL@@}
 
 		; see also in firmware '[doesTriggerImplyOperationMode]' tag
-		field = "Operation mode / speed",				ambiguousOperationMode
+		field = "What kind of engine",                  twoStroke
+		field = "Skipped wheel location",               skippedWheelOnCam, { twoStroke == 0 }
 		field = "#Please use '4 stroke with cam' only if primary trigger sensor is actually on cam"
 		field = "#Separate cam input not part of Trigger Pattern does not count here"
 		field = "With VR sensors only rising edge has reliable position"

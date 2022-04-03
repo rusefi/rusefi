@@ -341,7 +341,7 @@ public:
 	void periodicSlowCallback();
 	void updateSlowSensors();
 	void updateSwitchInputs();
-	void initializeTriggerWaveform();
+	void updateTriggerWaveform();
 
 	bool clutchUpState = false;
 	bool clutchDownState = false;

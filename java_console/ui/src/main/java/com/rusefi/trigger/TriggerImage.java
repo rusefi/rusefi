@@ -1,8 +1,8 @@
-package com.rusefi;
+package com.rusefi.trigger;
 
+import com.rusefi.StartupFrame;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.trigger_type_e;
-import com.rusefi.trigger.WaveState;
 import com.rusefi.ui.engine.UpDownImage;
 import com.rusefi.ui.util.FrameHelper;
 import com.rusefi.ui.util.UiUtils;
@@ -50,7 +50,7 @@ public class TriggerImage {
      * @see TriggerWheelInfo#isCrankBased
      */
     private static String getTriggerName(TriggerWheelInfo triggerName) {
-        switch (triggerName.id) {
+        switch (findByOrdinal(triggerName.getId())) {
             case TT_FORD_ASPIRE:
                 return "Ford Aspire";
             case TT_VVT_BOSCH_QUICK_START:
@@ -98,7 +98,7 @@ public class TriggerImage {
             case TT_GM_60_2_2_2:
                 return "GM 60/2/2/2";
         }
-        return triggerName.triggerName;
+        return triggerName.getTriggerName();
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
@@ -110,7 +110,7 @@ public class TriggerImage {
         }
 
         if (args.length > 1)
-            onlyOneTrigger = TriggerWheelInfo.findByOrdinal(Integer.parseInt(args[1]));
+            onlyOneTrigger = findByOrdinal(Integer.parseInt(args[1]));
 
         if (args.length > 2)
             sleepAtEnd = Integer.parseInt(args[2]);
@@ -139,16 +139,16 @@ public class TriggerImage {
 
         SwingUtilities.invokeAndWait(() -> {
             try {
-                generateImages(workingFolder, triggerPanel, topPanel, content);
+                generateImages(workingFolder, wheelInfo -> onWheel(triggerPanel, topPanel, content, wheelInfo));
             } catch (IOException e) {
                 throw new IllegalStateException(e);
             }
         });
-        Thread.sleep(1000 * sleepAtEnd);
+        Thread.sleep(1000L * sleepAtEnd);
         System.exit(-1);
     }
 
-    private static void generateImages(String workingFolder, TriggerPanel trigger, JPanel topPanel, JPanel content) throws IOException {
+    private static void generateImages(String workingFolder, TriggerWheelInfo.TriggerWheelInfoConsumer consumer) throws IOException {
         String fileName = workingFolder + File.separator + Fields.TRIGGERS_FILE_NAME;
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
@@ -161,14 +161,19 @@ public class TriggerImage {
             }
 
             if (line.startsWith(TRIGGERTYPE)) {
-                readTrigger(br, line, trigger, topPanel, content);
+                readTrigger(br, line, consumer);
             }
         }
     }
 
-    private static void readTrigger(BufferedReader reader, String line, TriggerPanel triggerPanel, JPanel topPanel, JPanel content) throws IOException {
+    private static void readTrigger(BufferedReader reader, String line, TriggerWheelInfo.TriggerWheelInfoConsumer consumer) throws IOException {
         TriggerWheelInfo triggerWheelInfo = TriggerWheelInfo.readTriggerWheelInfo(line, reader);
-        if (onlyOneTrigger != null && triggerWheelInfo.id != onlyOneTrigger)
+
+        consumer.onWheel(triggerWheelInfo);
+    }
+
+    private static void onWheel(TriggerPanel triggerPanel, JPanel topPanel, JPanel content, TriggerWheelInfo triggerWheelInfo) {
+        if (onlyOneTrigger != null && findByOrdinal(triggerWheelInfo.getId()) != onlyOneTrigger)
             return;
 
         topPanel.removeAll();
@@ -179,7 +184,9 @@ public class TriggerImage {
         topPanel.add(firstWheelControl);
         topPanel.add(StartupFrame.createLogoLabel());
 
-        if (!triggerWheelInfo.waves.get(1).list.isEmpty()) {
+        List<WaveState> waves = TriggerImage.convertSignalsToWaves(triggerWheelInfo.getSignals());
+
+        if (!waves.get(1).list.isEmpty()) {
             JPanel secondWheelControl = createWheelPanel(triggerWheelInfo.getSecondWheeTriggerSignals(), false,
                     triggerWheelInfo);
             topPanel.add(secondWheelControl);
@@ -188,8 +195,7 @@ public class TriggerImage {
         UiUtils.trueLayout(topPanel);
         UiUtils.trueLayout(content);
 
-        triggerPanel.tdcPosition = triggerWheelInfo.tdcPosition;
-        List<WaveState> waves = triggerWheelInfo.waves;
+        triggerPanel.tdcPosition = triggerWheelInfo.getTdcPosition();
 
         EngineReport re0 = new EngineReport(waves.get(0).list, MIN_TIME, 720 * (1 + EXTRA_COUNT));
         System.out.println(re0);
@@ -237,7 +243,7 @@ public class TriggerImage {
         UiUtils.trueRepaint(triggerPanel);
         content.paintImmediately(content.getVisibleRect());
         new File(OUTPUT_FOLDER).mkdir();
-        UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + triggerWheelInfo.id + ".png", content);
+        UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + findByOrdinal(triggerWheelInfo.getId()) + ".png", content);
     }
 
     @NotNull
@@ -269,7 +275,7 @@ public class TriggerImage {
                 for (int i = 0; i < wheel.size(); i++) {
                     TriggerSignal current = wheel.get(i);
 
-                    drawRadialLine(g, current.angle);
+                    drawRadialLine(g, current.getAngle());
                     /**
                      * java arc API is
                      *      * Angles are interpreted such that 0&nbsp;degrees
@@ -280,10 +286,10 @@ public class TriggerImage {
                      * we want zero to be at 12'clock position and clockwise rotation
                      */
 
-                    double nextAngle = i == wheel.size() - 1 ? 360 + wheel.get(0).angle : wheel.get(i + 1).angle;
-                    int arcDuration = (int) (current.angle - nextAngle);
+                    double nextAngle = i == wheel.size() - 1 ? 360 + wheel.get(0).getAngle() : wheel.get(i + 1).getAngle();
+                    int arcDuration = (int) (current.getAngle() - nextAngle);
                     int arcStart = (int) arcToRusEFI(nextAngle);
-                    if (current.state == 1) {
+                    if (current.getState() == 1) {
                         g.drawArc(WHEEL_BORDER, WHEEL_BORDER, WHEEL_DIAMETER, WHEEL_DIAMETER, arcStart, arcDuration);
                     } else {
                         int corner = WHEEL_BORDER + (WHEEL_DIAMETER - SMALL_DIAMETER) / 2;
@@ -330,7 +336,7 @@ public class TriggerImage {
         List<TriggerSignal> toShow = new ArrayList<>(signals);
         for (int i = 1; i <= 2 + EXTRA_COUNT; i++) {
             for (TriggerSignal s : signals)
-                toShow.add(new TriggerSignal(s.waveIndex, s.state, s.angle + i * 720));
+                toShow.add(new TriggerSignal(s.getWaveIndex(), s.getState(), s.getAngle() + i * 720));
         }
 
         List<WaveState> waves = new ArrayList<>();
@@ -339,10 +345,10 @@ public class TriggerImage {
         waves.add(new WaveState());
 
         for (TriggerSignal s : toShow) {
-            WaveState.trigger_value_e signal = (s.state == 0) ? WaveState.trigger_value_e.TV_LOW : WaveState.trigger_value_e.TV_HIGH;
+            WaveState.trigger_value_e signal = (s.getState() == 0) ? WaveState.trigger_value_e.TV_LOW : WaveState.trigger_value_e.TV_HIGH;
 
-            WaveState waveState = waves.get(s.waveIndex);
-            waveState.handle(signal, s.angle);
+            WaveState waveState = waves.get(s.getWaveIndex());
+            waveState.handle(signal, s.getAngle());
         }
         for (WaveState wave : waves)
             wave.wrap();
@@ -350,34 +356,13 @@ public class TriggerImage {
         return waves;
     }
 
-    @NotNull
-    static List<TriggerSignal> readSignals(BufferedReader reader, int count) throws IOException {
-        String line;
-        String[] tokens;
-        List<TriggerSignal> signals = new ArrayList<>();
-
-        int index = 0;
-        while (index < count) {
-            line = reader.readLine();
-            if (line.trim().startsWith("#"))
-                continue;
-            tokens = line.split(" ");
-            if (tokens.length < 4)
-                throw new IllegalStateException("Unexpected [" + line + "]");
-            int signalIndex = Integer.parseInt(tokens[2]);
-            int signalState = Integer.parseInt(tokens[3]);
-            double angle = Double.parseDouble(tokens[4]);
-
-            TriggerSignal s = new TriggerSignal(signalIndex, signalState, angle);
-//            System.out.println(s);
-            signals.add(s);
-            index++;
+    public static trigger_type_e findByOrdinal(int id) {
+        // todo: do we care about quicker implementation? probably not
+        for (trigger_type_e type : trigger_type_e.values()) {
+            if (type.ordinal() == id)
+                return type;
         }
-        return signals;
-    }
-
-    public static int angleToTime(double prevUp) {
-        return (int) (prevUp);
+        throw new IllegalArgumentException("No type for " + id);
     }
 
     private static class TriggerPanel extends JPanel {

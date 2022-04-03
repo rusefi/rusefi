@@ -5,11 +5,13 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case GPIOA_6: return "C7 - CAM Hall/Digital";
+		case GPIOA_7: return "E7 - Flex";
 		case GPIOA_8: return "A3 - Fuel Pump";
 		case GPIOB_1: return "C2/C3 Crank Sensor VR";
-		case GPIOC_13: return "A6 - Ignition A";
-		case GPIOC_7: return "A4 - Tachometer";
+		case GPIOC_13: return "A6 - Ignition 1";
+		case GPIOC_7: return "D2 - Out Boost";
 		case GPIOC_8: return "C1 - Fan Relay";
+		case GPIOC_9: return "F1 - Idle2";
 		case GPIOD_10: return "E1 - Injector 4";
 		case GPIOD_11: return "D1 - Injector 3";
 		case GPIOD_12: return "F4 - VVT#2";
@@ -17,8 +19,13 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case GPIOD_15: return "F2 - VVT#1";
 		case GPIOE_12: return "C3 - Crank+ (hall)";
 		case GPIOE_14: return "C2 - Crank- (hall)";
-		case GPIOE_5: return "A7 - Ignition B";
+		case GPIOE_3: return "D7 - Ignition 4";
+		case GPIOE_4: return "D6 - Ignition 3";
+		case GPIOE_5: return "A7 - Ignition 2";
 		case GPIOF_11: return "C4 - 2Step/Digital";
+		case GPIOG_11: return "E2 - Out NOS";
+		case GPIOG_12: return "F5 - MAIN";
+		case GPIOG_6: return "A4 - Tachometer";
 		case GPIOG_7: return "A8 - Injector 1";
 		case GPIOG_8: return "B8 - Injector 2";
 		default: return nullptr;

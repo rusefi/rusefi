@@ -257,7 +257,7 @@ void setEtbTestConfiguration() {
 	// yes, 30K - that's a test configuration
 	engineConfiguration->rpmHardLimit = 30000;
 
-	setOperationMode(engineConfiguration, FOUR_STROKE_CRANK_SENSOR);
+	setCrankOperationMode();
 	engineConfiguration->trigger.type = TT_TOOTHED_WHEEL_60_2;
 
 
@@ -813,7 +813,8 @@ void setRotary() {
 	engineConfiguration->specs.firingOrder = FO_1_2;
 
 	engineConfiguration->trigger.type = TT_36_2_2_2;
-	setOperationMode(engineConfiguration, TWO_STROKE);
+	// todo: fix UI to make this possible via TS
+	setTwoStrokeOperationMode();
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "13B");
