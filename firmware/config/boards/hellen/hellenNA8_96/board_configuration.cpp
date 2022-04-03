@@ -63,8 +63,8 @@ static void setupVbatt() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = GPIOA_6;
-	engineConfiguration->triggerInputPins[1] = GPIOB_1;
+	engineConfiguration->triggerInputPins[0] = H144_IN_CAM;
+	engineConfiguration->triggerInputPins[1] = H144_IN_CRANK;
 	engineConfiguration->triggerInputPins[2] = GPIO_UNASSIGNED;
 	engineConfiguration->camInputs[0] = GPIO_UNASSIGNED;
 
