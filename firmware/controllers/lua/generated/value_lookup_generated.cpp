@@ -512,6 +512,8 @@ float getConfigValueByName(const char *name) {
 		return engineConfiguration->useFSIO5ForCriticalIssueEngineStop;
 	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
 		return engineConfiguration->useFSIO4ForSeriousEngineWarning;
+	if (strEqualCaseInsensitive(name, "skippedWheelOnCam"))
+		return engineConfiguration->skippedWheelOnCam;
 	if (strEqualCaseInsensitive(name, "etbNeutralPosition"))
 		return engineConfiguration->etbNeutralPosition;
 	if (strEqualCaseInsensitive(name, "isInjectionEnabled"))
@@ -2221,6 +2223,11 @@ void setConfigValueByName(const char *name, float value) {
 	if (strEqualCaseInsensitive(name, "useFSIO4ForSeriousEngineWarning"))
 	{
 		engineConfiguration->useFSIO4ForSeriousEngineWarning = (int)value;
+		return;
+	}
+	if (strEqualCaseInsensitive(name, "skippedWheelOnCam"))
+	{
+		engineConfiguration->skippedWheelOnCam = (int)value;
 		return;
 	}
 	if (strEqualCaseInsensitive(name, "etbNeutralPosition"))

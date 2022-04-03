@@ -1915,8 +1915,9 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 2428425049
+#define SIGNATURE_HASH 3914861302
 #define silentTriggerError_offset 1260
+#define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
 #define sparkDwellValues_offset 64
@@ -2153,6 +2154,7 @@
 #define trailingCoilPins8_offset 1963
 #define trailingCoilPins9_offset 1964
 #define trailingSparkAngle_offset 528
+#define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 16
 #define trigger_customSkippedToothCount_offset 544
 #define trigger_customTotalToothCount_offset 540
@@ -2455,7 +2457,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port false
-#define TS_SIGNATURE "rusEFI 2022.04.03.subaru_eg33_f7.2428425049"
+#define TS_SIGNATURE "rusEFI 2022.04.03.subaru_eg33_f7.3914861302"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2538,7 +2540,6 @@
 #define unusedBitHere1_offset 1260
 #define unusedBitHere2_offset 1260
 #define unusedBitHere3_offset 1260
-#define unusedBitHere4_offset 1260
 #define unusedBitWasHere3_offset 1260
 #define unusedBitWasHere4_offset 1260
 #define unusedBitWasHere5_offset 1260

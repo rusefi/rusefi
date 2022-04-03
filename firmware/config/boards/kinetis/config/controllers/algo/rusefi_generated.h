@@ -1921,8 +1921,9 @@
 #define show_Frankenso_presets true
 #define show_test_presets true
 #define showHumanReadableWarning_offset 896
-#define SIGNATURE_HASH 878287256
+#define SIGNATURE_HASH 1304379447
 #define silentTriggerError_offset 1260
+#define skippedWheelOnCam_offset 1260
 #define slowAdcAlpha_offset 1712
 #define sparkDwellRpmBins_offset 54
 #define sparkDwellValues_offset 64
@@ -2159,6 +2160,7 @@
 #define trailingCoilPins8_offset 1955
 #define trailingCoilPins9_offset 1956
 #define trailingSparkAngle_offset 528
+#define TRIGGER_COMMENT "#"
 #define trigger_config_s_size 16
 #define trigger_customSkippedToothCount_offset 544
 #define trigger_customTotalToothCount_offset 540
@@ -2461,7 +2463,7 @@
 #define ts_show_spi true
 #define ts_show_trigger_comparator true
 #define ts_show_tunerstudio_port true
-#define TS_SIGNATURE "rusEFI 2022.04.03.kin.878287256"
+#define TS_SIGNATURE "rusEFI 2022.04.03.kin.1304379447"
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
@@ -2544,7 +2546,6 @@
 #define unusedBitHere1_offset 1260
 #define unusedBitHere2_offset 1260
 #define unusedBitHere3_offset 1260
-#define unusedBitHere4_offset 1260
 #define unusedBitWasHere3_offset 1260
 #define unusedBitWasHere4_offset 1260
 #define unusedBitWasHere5_offset 1260
